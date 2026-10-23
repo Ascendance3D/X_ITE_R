@@ -49,7 +49,8 @@ pub(crate) struct XmlParser<'a> {
     /// `protoNames`: PROTO name and its upper case form → the name.
     proto_names: std::collections::HashMap<String, String>,
     /// `protoFields`: per PROTO or EXTERNPROTO, field name and lower case form → the name.
-    proto_fields: std::collections::HashMap<(bool, usize), std::collections::HashMap<String, String>>,
+    proto_fields:
+        std::collections::HashMap<(bool, usize), std::collections::HashMap<String, String>>,
 }
 
 /// GoldenGate with an XML input of `""` (whitespace-only text): `$.parseXML` throws, the input
@@ -101,7 +102,12 @@ fn source_text_index(scene: &Scene, id: NodeId) -> Option<usize> {
     let node = scene.node(id);
 
     match node.kind {
-        NodeKind::Builtin(_) if matches!(scene.type_name(id).as_str(), "Script" | "ShaderPart" | "ShaderProgram" | "PackagedShader") => {
+        NodeKind::Builtin(_)
+            if matches!(
+                scene.type_name(id).as_str(),
+                "Script" | "ShaderPart" | "ShaderProgram" | "PackagedShader"
+            ) =>
+        {
             node.fields.iter().position(|f| f.name == "url")
         }
         _ => None,
@@ -133,7 +139,9 @@ impl<'a> XmlParser<'a> {
             self.scene().profile = Some(canonical);
         } else {
             // XMLParser.x3dElement: catch (error) { console .error (error); }
-            self.p.scene.error(format!("Error: Profile '{profile}' is not supported."));
+            self.p
+                .scene
+                .error(format!("Error: Profile '{profile}' is not supported."));
         }
 
         // Specification version
@@ -180,8 +188,14 @@ impl<'a> XmlParser<'a> {
 
     fn component_element(&mut self, el: &Element) {
         let (Some(name), Some(level)) = (el.attr("name"), el.attr("level")) else {
-            let which = if el.attr("name").is_none() { "name" } else { "level" };
-            return self.warn(format!("XML Parser: Bad component statement. Expected {which} attribute."));
+            let which = if el.attr("name").is_none() {
+                "name"
+            } else {
+                "level"
+            };
+            return self.warn(format!(
+                "XML Parser: Bad component statement. Expected {which} attribute."
+            ));
         };
 
         // X3DBrowser.getComponent: unknown names throw (logged with console.log, not a warning);
@@ -191,7 +205,11 @@ impl<'a> XmlParser<'a> {
         };
 
         let level = jsmath::to_int32(js_parse_int(level));
-        let level = if level == 0 { supported } else { level.clamp(1, supported) };
+        let level = if level == 0 {
+            supported
+        } else {
+            level.clamp(1, supported)
+        };
 
         self.scene().update_component(name, level);
     }
@@ -199,19 +217,31 @@ impl<'a> XmlParser<'a> {
     fn unit_element(&mut self, el: &Element) {
         for a in ["category", "name", "conversionFactor"] {
             if el.attr(a).is_none() {
-                return self.warn(format!("XML Parser: Bad unit statement. Expected {a} attribute."));
+                return self.warn(format!(
+                    "XML Parser: Bad unit statement. Expected {a} attribute."
+                ));
             }
         }
 
         let factor = js_parse_float(el.attr("conversionFactor").unwrap());
 
-        self.scene().update_unit(el.attr("category").unwrap(), el.attr("name").unwrap(), factor);
+        self.scene().update_unit(
+            el.attr("category").unwrap(),
+            el.attr("name").unwrap(),
+            factor,
+        );
     }
 
     fn meta_element(&mut self, el: &Element) {
         let (Some(key), Some(value)) = (el.attr("name"), el.attr("content")) else {
-            let which = if el.attr("name").is_none() { "name" } else { "content" };
-            return self.warn(format!("XML Parser: Bad meta statement. Expected {which} attribute."));
+            let which = if el.attr("name").is_none() {
+                "name"
+            } else {
+                "content"
+            };
+            return self.warn(format!(
+                "XML Parser: Bad meta statement. Expected {which} attribute."
+            ));
         };
 
         if key.is_empty() {
@@ -249,7 +279,9 @@ impl<'a> XmlParser<'a> {
     }
 
     fn extern_proto_declare_element(&mut self, el: &'a Element) {
-        let Some(name) = id(el.attr("name")) else { return };
+        let Some(name) = id(el.attr("name")) else {
+            return;
+        };
 
         // this .parser .setInput (url ?? ""); this .parser .sfstringValues (this .url)
         self.p.set_input(el.attr("url").unwrap_or("").as_bytes());
@@ -257,7 +289,10 @@ impl<'a> XmlParser<'a> {
         let url = self.p.string_values();
 
         if url.is_empty() {
-            self.warn("XML Parser: Bad ExternProtoDeclare statement. Expected url attribute with value.".into());
+            self.warn(
+                "XML Parser: Bad ExternProtoDeclare statement. Expected url attribute with value."
+                    .into(),
+            );
         }
 
         let ctx = self.ctx();
@@ -269,10 +304,13 @@ impl<'a> XmlParser<'a> {
         self.add_proto_field_names((true, e));
 
         if let Some(existing) = self.p.scene.ctx(ctx).externprotos.get(name) {
-            self.warn(format!("A extern proto named '{name}' is already defined and will be overridden."));
+            self.warn(format!(
+                "A extern proto named '{name}' is already defined and will be overridden."
+            ));
 
             let unique = self.p.scene.get_unique_extern_proto_name(ctx, name);
-            self.scene().update_extern_proto_declaration(ctx, &unique, existing);
+            self.scene()
+                .update_extern_proto_declaration(ctx, &unique, existing);
         }
 
         self.scene().update_extern_proto_declaration(ctx, name, e);
@@ -280,7 +318,9 @@ impl<'a> XmlParser<'a> {
     }
 
     fn proto_declare_element(&mut self, el: &'a Element) {
-        let Some(name) = id(el.attr("name")) else { return };
+        let Some(name) = id(el.attr("name")) else {
+            return;
+        };
         let ctx = self.ctx();
         let proto = self.scene().new_proto(ctx);
 
@@ -310,10 +350,13 @@ impl<'a> XmlParser<'a> {
         }
 
         if let Some(existing) = self.p.scene.ctx(ctx).protos.get(name) {
-            self.warn(format!("A proto named '{name}' is already defined and will be overridden."));
+            self.warn(format!(
+                "A proto named '{name}' is already defined and will be overridden."
+            ));
 
             let unique = self.p.scene.get_unique_proto_name(ctx, name);
-            self.scene().update_proto_declaration(ctx, &unique, existing);
+            self.scene()
+                .update_proto_declaration(ctx, &unique, existing);
         }
 
         self.scene().update_proto_declaration(ctx, name, proto);
@@ -331,7 +374,9 @@ impl<'a> XmlParser<'a> {
     }
 
     fn field_element(&mut self, el: &'a Element) {
-        let Some(parent) = self.parents.last().copied() else { return };
+        let Some(parent) = self.parents.last().copied() else {
+            return;
+        };
 
         let can = match parent {
             Parent::Node(n) => self.p.scene.node(n).can_user_defined_fields,
@@ -351,8 +396,12 @@ impl<'a> XmlParser<'a> {
             _ => access::INITIALIZE_ONLY,
         };
 
-        let Some(ty) = el.attr("type").and_then(FieldType::from_name) else { return };
-        let Some(name) = id(el.attr("name")) else { return };
+        let Some(ty) = el.attr("type").and_then(FieldType::from_name) else {
+            return;
+        };
+        let Some(name) = id(el.attr("name")) else {
+            return;
+        };
 
         let mut field = Field::new(name, access_type, FieldValue::default_for(ty));
         let initializable = access_type & access::INITIALIZE_ONLY != 0;
@@ -367,7 +416,10 @@ impl<'a> XmlParser<'a> {
         // node .addUserDefinedField (accessType, name, field), after the children were added
         // to the field; adding first and then filling it gives the same field.
         let target = match parent {
-            Parent::Node(n) => FieldTarget::Node(n, FieldLoc::User(self.scene().add_user_defined_field(n, field))),
+            Parent::Node(n) => FieldTarget::Node(
+                n,
+                FieldLoc::User(self.scene().add_user_defined_field(n, field)),
+            ),
             Parent::Proto(p) => {
                 let d = &mut self.p.scene.protos[p];
                 Scene::add_interface_field(&mut d.fields, &mut d.has_metadata, field);
@@ -404,15 +456,21 @@ impl<'a> XmlParser<'a> {
 
     fn connect_element(&mut self, el: &Element) {
         let Some(node_field_name) = el.attr("nodeField") else {
-            return self.warn("XML Parser: Bad connect statement. Expected nodeField attribute.".into());
+            return self
+                .warn("XML Parser: Bad connect statement. Expected nodeField attribute.".into());
         };
 
         let Some(proto_field_name) = el.attr("protoField") else {
-            return self.warn("XML Parser: Bad connect statement. Expected protoField attribute.".into());
+            return self
+                .warn("XML Parser: Bad connect statement. Expected protoField attribute.".into());
         };
 
-        let Some(Parent::Node(node)) = self.parents.last().copied() else { return };
-        let Some(proto) = self.p.outer_proto() else { return };
+        let Some(Parent::Node(node)) = self.parents.last().copied() else {
+            return;
+        };
+        let Some(proto) = self.p.outer_proto() else {
+            return;
+        };
 
         let Some(loc) = self.p.scene.get_field(node, node_field_name) else {
             let type_name = self.p.scene.type_name(node);
@@ -432,8 +490,15 @@ impl<'a> XmlParser<'a> {
         }
 
         if !reference.is_reference(field.access) {
-            let message = format!("Field '{}' and '{}' in PROTO {} are incompatible as an IS mapping.", field.name, reference.name, self.p.outer_name());
-            return self.warn(format!("XML Parser: Couldn't create IS reference. {message}"));
+            let message = format!(
+                "Field '{}' and '{}' in PROTO {} are incompatible as an IS mapping.",
+                field.name,
+                reference.name,
+                self.p.outer_name()
+            );
+            return self.warn(format!(
+                "XML Parser: Couldn't create IS reference. {message}"
+            ));
         }
 
         let f = self.p.scene.field_mut(node, loc);
@@ -443,11 +508,17 @@ impl<'a> XmlParser<'a> {
             f.add_reference(fr);
 
             // X3DField.addReference: initializeOnly / inputOutput relations copy the value.
-            if matches!(f.access & reference.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT) {
+            if matches!(
+                f.access & reference.access,
+                access::INITIALIZE_ONLY | access::INPUT_OUTPUT
+            ) {
                 f.value = reference.value.clone();
             }
 
-            if matches!(f.access & reference.access, access::OUTPUT_ONLY | access::INPUT_OUTPUT) {
+            if matches!(
+                f.access & reference.access,
+                access::OUTPUT_ONLY | access::INPUT_OUTPUT
+            ) {
                 let value = f.value.clone();
                 self.links.push((node, loc, proto, r, value));
             }
@@ -473,11 +544,15 @@ impl<'a> XmlParser<'a> {
             return;
         }
 
-        let Some(name) = id(el.attr("name")) else { return };
+        let Some(name) = id(el.attr("name")) else {
+            return;
+        };
         let ctx = self.ctx();
 
         let Some(node) = self.scene().create_proto_instance(ctx, name) else {
-            return self.warn(format!("XML Parser:  Unknown proto or externproto type '{name}'."));
+            return self.warn(format!(
+                "XML Parser:  Unknown proto or externproto type '{name}'."
+            ));
         };
 
         self.def_attribute(el, node);
@@ -493,13 +568,17 @@ impl<'a> XmlParser<'a> {
     }
 
     fn field_value_element(&mut self, el: &'a Element) {
-        let Some(Parent::Node(node)) = self.parents.last().copied() else { return };
+        let Some(Parent::Node(node)) = self.parents.last().copied() else {
+            return;
+        };
 
         if !matches!(self.p.scene.node(node).kind, NodeKind::Instance(_)) {
             return;
         }
 
-        let Some(name) = id(el.attr("name")) else { return };
+        let Some(name) = id(el.attr("name")) else {
+            return;
+        };
 
         let Some(loc) = self.p.scene.get_field(node, name) else {
             let type_name = self.p.scene.type_name(node);
@@ -527,7 +606,8 @@ impl<'a> XmlParser<'a> {
             f.modified = true;
         }
 
-        self.parents.push(Parent::Field(FieldTarget::Node(node, loc)));
+        self.parents
+            .push(Parent::Field(FieldTarget::Node(node, loc)));
         self.children_elements(el);
         self.parents.pop();
     }
@@ -540,7 +620,15 @@ impl<'a> XmlParser<'a> {
         let ctx = self.ctx();
         // nodeNameToCamelCase and protoNameToCamelCase: `undefined` reads as the name "undefined".
         let (node_name, proto_name) = if self.html {
-            (self.node_name_to_camel_case(&el.name).unwrap_or("undefined").to_string(), self.proto_names.get(&el.name).cloned().unwrap_or_else(|| "undefined".into()))
+            (
+                self.node_name_to_camel_case(&el.name)
+                    .unwrap_or("undefined")
+                    .to_string(),
+                self.proto_names
+                    .get(&el.name)
+                    .cloned()
+                    .unwrap_or_else(|| "undefined".into()),
+            )
         } else {
             (el.name.clone(), el.name.clone())
         };
@@ -584,17 +672,25 @@ impl<'a> XmlParser<'a> {
 
         for a in attrs {
             if el.attr(a).is_none() {
-                return self.warn(format!("XML Parser: Bad ROUTE specification: Expected {a} attribute."));
+                return self.warn(format!(
+                    "XML Parser: Bad ROUTE specification: Expected {a} attribute."
+                ));
             }
         }
 
         let [from, from_field, to, to_field] = attrs.map(|a| el.attr(a).unwrap());
         let ctx = self.ctx();
 
-        let result = match (self.p.scene.get_local_node(ctx, from), self.p.scene.get_local_node(ctx, to)) {
+        let result = match (
+            self.p.scene.get_local_node(ctx, from),
+            self.p.scene.get_local_node(ctx, to),
+        ) {
             (None, _) => Err(format!("Unknown named or imported node '{from}'.")),
             (_, None) => Err(format!("Unknown named or imported node '{to}'.")),
-            (Some(f), Some(t)) => self.scene().add_route(ctx, f, from_field, t, to_field).map(|_| ()),
+            (Some(f), Some(t)) => self
+                .scene()
+                .add_route(ctx, f, from_field, t, to_field)
+                .map(|_| ()),
         };
 
         if let Err(e) = result {
@@ -607,11 +703,13 @@ impl<'a> XmlParser<'a> {
         let exported_name = id(el.attr("importedDEF")).or(el.attr("exportedDEF"));
 
         let Some(inline_name) = inline_name else {
-            return self.warn("XML Parser: Bad IMPORT statement: Expected inlineDEF attribute.".into());
+            return self
+                .warn("XML Parser: Bad IMPORT statement: Expected inlineDEF attribute.".into());
         };
 
         let Some(exported_name) = exported_name else {
-            return self.warn("XML Parser: Bad IMPORT statement: Expected importedDEF attribute.".into());
+            return self
+                .warn("XML Parser: Bad IMPORT statement: Expected importedDEF attribute.".into());
         };
 
         let local_name = id(el.attr("AS")).unwrap_or(exported_name);
@@ -624,10 +722,18 @@ impl<'a> XmlParser<'a> {
 
         self.scene().rename_existing_node(ctx, local_name);
 
-        match self.scene().add_imported_node(ctx, inline, exported_name, local_name, description) {
+        match self
+            .scene()
+            .add_imported_node(ctx, inline, exported_name, local_name, description)
+        {
             Ok(imp) => {
                 let instance = self.p.scene.imported[imp].instance;
-                self.p.imported_names.entry(ctx).or_default().entry(local_name.to_string()).or_insert(instance);
+                self.p
+                    .imported_names
+                    .entry(ctx)
+                    .or_default()
+                    .entry(local_name.to_string())
+                    .or_insert(instance);
             }
             Err(e) => self.warn(format!("XML Parser: {e}")),
         }
@@ -635,7 +741,8 @@ impl<'a> XmlParser<'a> {
 
     fn export_element(&mut self, el: &Element) {
         let Some(local_name) = el.attr("localDEF") else {
-            return self.warn("XML Parser: Bad EXPORT statement: Expected localDEF attribute.".into());
+            return self
+                .warn("XML Parser: Bad EXPORT statement: Expected localDEF attribute.".into());
         };
 
         let exported_name = id(el.attr("AS")).unwrap_or(local_name);
@@ -643,23 +750,34 @@ impl<'a> XmlParser<'a> {
         let ctx = self.ctx();
 
         let Some(local) = self.p.scene.get_local_node(ctx, local_name) else {
-            return self.warn(format!("XML Parser: Unknown named or imported node '{local_name}'."));
+            return self.warn(format!(
+                "XML Parser: Unknown named or imported node '{local_name}'."
+            ));
         };
 
         // An existing export of that name moves to a unique name.
         if let Some(existing) = self.p.scene.get_exported_node(ROOT, exported_name) {
             let unique = self.p.scene.get_unique_export_name(exported_name);
-            let _ = self.scene().update_exported_node(ROOT, &unique, existing, "");
+            let _ = self
+                .scene()
+                .update_exported_node(ROOT, &unique, existing, "");
         }
 
-        if let Err(e) = self.scene().update_exported_node(ROOT, exported_name, local, description) {
+        if let Err(e) = self
+            .scene()
+            .update_exported_node(ROOT, exported_name, local, description)
+        {
             self.warn(format!("XML Parser: {e}"));
         }
     }
 
     fn cdata_node(&mut self, data: &str) {
-        let Some(Parent::Node(node)) = self.parents.last().copied() else { return };
-        let Some(i) = source_text_index(&self.p.scene, node) else { return };
+        let Some(Parent::Node(node)) = self.parents.last().copied() else {
+            return;
+        };
+        let Some(i) = source_text_index(&self.p.scene, node) else {
+            return;
+        };
         let f = &mut self.scene().node_mut(node).fields[i];
 
         if let FieldValue::MFString(v) = &mut f.value {
@@ -669,14 +787,28 @@ impl<'a> XmlParser<'a> {
     }
 
     fn use_attribute(&mut self, el: &'a Element) -> bool {
-        let Some(name) = id(el.attr("USE")) else { return false };
+        let Some(name) = id(el.attr("USE")) else {
+            return false;
+        };
 
-        let node_name = if self.html { self.node_name_to_camel_case(&el.name).unwrap_or("undefined").to_string() } else { el.name.clone() };
+        let node_name = if self.html {
+            self.node_name_to_camel_case(&el.name)
+                .unwrap_or("undefined")
+                .to_string()
+        } else {
+            el.name.clone()
+        };
 
         let ty = if node_name == "ProtoInstance" {
             UseType::Instance
         } else {
-            self.p.scene.table.by_name.get(node_name.as_str()).map(|t| UseType::Concrete(*t)).unwrap_or(UseType::Unknown)
+            self.p
+                .scene
+                .table
+                .by_name
+                .get(node_name.as_str())
+                .map(|t| UseType::Concrete(*t))
+                .unwrap_or(UseType::Unknown)
         };
 
         let ctx = self.ctx();
@@ -687,13 +819,22 @@ impl<'a> XmlParser<'a> {
             return true;
         }
 
-        let existing = self.p.placeholders.get(&ctx).and_then(|l| l.iter().find(|(n, _)| n == name)).map(|(_, p)| *p);
+        let existing = self
+            .p
+            .placeholders
+            .get(&ctx)
+            .and_then(|l| l.iter().find(|(n, _)| n == name))
+            .map(|(_, p)| *p);
 
         let placeholder = match existing {
             Some(p) => p,
             None => {
                 let p = self.scene().create_placeholder(ctx);
-                self.p.placeholders.entry(ctx).or_default().push((name.to_string(), p));
+                self.p
+                    .placeholders
+                    .entry(ctx)
+                    .or_default()
+                    .push((name.to_string(), p));
                 self.placeholder_types.insert(p, ty);
                 p
             }
@@ -715,13 +856,24 @@ impl<'a> XmlParser<'a> {
             UseType::Instance => match scene.node(node).kind {
                 NodeKind::Instance(_) => {
                     let actual = scene.type_name(node);
-                    (type_name != Some(actual.as_str())).then(|| format!("XML Parser: DEF/USE mismatch, '{name}', name {} != {actual}.", type_name.unwrap_or("null")))
+                    (type_name != Some(actual.as_str())).then(|| {
+                        format!(
+                            "XML Parser: DEF/USE mismatch, '{name}', name {} != {actual}.",
+                            type_name.unwrap_or("null")
+                        )
+                    })
                 }
-                _ => Some(format!("XML Parser: DEF/USE mismatch, '{name}', referenced node is not of type X3DPrototypeInstance.")),
+                _ => Some(format!(
+                    "XML Parser: DEF/USE mismatch, '{name}', referenced node is not of type X3DPrototypeInstance."
+                )),
             },
             UseType::Concrete(t) => match scene.node(node).kind {
                 NodeKind::Builtin(k) if k == t => None,
-                _ => Some(format!("XML Parser: DEF/USE mismatch, '{name}', {} != {}.", scene.table.types[t].name, scene.type_name(node))),
+                _ => Some(format!(
+                    "XML Parser: DEF/USE mismatch, '{name}', {} != {}.",
+                    scene.table.types[t].name,
+                    scene.type_name(node)
+                )),
             },
         };
 
@@ -731,10 +883,17 @@ impl<'a> XmlParser<'a> {
     }
 
     fn def_attribute(&mut self, el: &Element, node: NodeId) {
-        let Some(name) = id(el.attr("DEF")) else { return };
+        let Some(name) = id(el.attr("DEF")) else {
+            return;
+        };
         let ctx = self.ctx();
 
-        self.p.named_nodes.entry(ctx).or_default().entry(name.to_string()).or_insert(node);
+        self.p
+            .named_nodes
+            .entry(ctx)
+            .or_default()
+            .entry(name.to_string())
+            .or_insert(node);
         self.scene().rename_existing_node(ctx, name);
         self.scene().update_named_node(ctx, name, node);
     }
@@ -748,7 +907,8 @@ impl<'a> XmlParser<'a> {
     fn add_proto_name(&mut self, name: &str) {
         if self.html {
             self.proto_names.insert(name.to_string(), name.to_string());
-            self.proto_names.insert(name.to_uppercase(), name.to_string());
+            self.proto_names
+                .insert(name.to_uppercase(), name.to_string());
         }
     }
 
@@ -758,11 +918,18 @@ impl<'a> XmlParser<'a> {
             return;
         }
 
-        let fields = if key.0 { &self.p.scene.externprotos[key.1].fields } else { &self.p.scene.protos[key.1].fields };
+        let fields = if key.0 {
+            &self.p.scene.externprotos[key.1].fields
+        } else {
+            &self.p.scene.protos[key.1].fields
+        };
         let mut map = std::collections::HashMap::new();
 
         for f in fields {
-            if matches!(f.name.as_str(), "DEF" | "USE" | "containerField" | "def" | "use" | "containerfield") {
+            if matches!(
+                f.name.as_str(),
+                "DEF" | "USE" | "containerField" | "def" | "use" | "containerfield"
+            ) {
                 continue;
             }
 
@@ -784,7 +951,9 @@ impl<'a> XmlParser<'a> {
             return self.proto_fields.get(&key)?.get(name).cloned();
         }
 
-        crate::html_support::get().field_name(name).map(String::from)
+        crate::html_support::get()
+            .field_name(name)
+            .map(String::from)
     }
 
     fn node_attributes(&mut self, el: &'a Element, node: NodeId) {
@@ -803,9 +972,11 @@ impl<'a> XmlParser<'a> {
                 // An alias of a private child object (GeoViewpoint navType and headlight up to 3.2).
                 if let Some(p) = self.p.scene.child_alias(node, name) {
                     let field = &self.p.scene.node(node).private_fields[p];
-                    let (ty, current, field_name) = (field.ty(), field.value.clone(), field.name.clone());
+                    let (ty, current, field_name) =
+                        (field.ty(), field.value.clone(), field.name.clone());
 
-                    if let Some(v) = self.field_value(&field_name, ty, &current, Some(value), None) {
+                    if let Some(v) = self.field_value(&field_name, ty, &current, Some(value), None)
+                    {
                         let f = &mut self.scene().node_mut(node).private_fields[p];
                         f.value = v;
                         f.modified = true;
@@ -835,7 +1006,14 @@ impl<'a> XmlParser<'a> {
     /// XMLParser.fieldValue: the new value, or `None` when the attribute is missing, the value
     /// did not parse, or reading it threw (the callers ignore or log that).
     /// `name` is the field object's name (`field .getName ()`): "" for the value of a `<field>` definition, which is not named yet.
-    fn field_value(&mut self, name: &str, ty: FieldType, current: &FieldValue, value: Option<&'a str>, unit: Option<String>) -> Option<FieldValue> {
+    fn field_value(
+        &mut self,
+        name: &str,
+        ty: FieldType,
+        current: &FieldValue,
+        value: Option<&'a str>,
+        unit: Option<String>,
+    ) -> Option<FieldValue> {
         let value = value?;
         let ctx = self.ctx();
 
@@ -883,17 +1061,26 @@ impl<'a> XmlParser<'a> {
 
         let (target_node, loc): (Option<NodeId>, FieldLoc) = match parent {
             Parent::Field(FieldTarget::Node(n, loc)) => (Some(n), loc),
-            Parent::Field(FieldTarget::Proto(p, i)) => return self.push_node_value(&mut |s| &mut s.protos[p].fields[i], node),
-            Parent::Field(FieldTarget::Extern(e, i)) => return self.push_node_value(&mut |s| &mut s.externprotos[e].fields[i], node),
+            Parent::Field(FieldTarget::Proto(p, i)) => {
+                return self.push_node_value(&mut |s| &mut s.protos[p].fields[i], node);
+            }
+            Parent::Field(FieldTarget::Extern(e, i)) => {
+                return self.push_node_value(&mut |s| &mut s.externprotos[e].fields[i], node);
+            }
             Parent::Node(n) => {
-                let container_field = id(el.attr("containerField")).map(String::from).or_else(|| node.and_then(|n| self.container_field_of(n)));
+                let container_field = id(el.attr("containerField"))
+                    .map(String::from)
+                    .or_else(|| node.and_then(|n| self.container_field_of(n)));
 
                 let Some(container_field) = container_field else {
-                    return self.warn("XML Parser: Node must have a container field attribute.".into());
+                    return self
+                        .warn("XML Parser: Node must have a container field attribute.".into());
                 };
 
                 let Some(loc) = self.p.scene.get_field(n, &container_field) else {
-                    let what = node.map(|n| self.p.scene.type_name(n)).unwrap_or_else(|| "null".into());
+                    let what = node
+                        .map(|n| self.p.scene.type_name(n))
+                        .unwrap_or_else(|| "null".into());
                     let type_name = self.p.scene.type_name(n);
                     return self.warn(format!(
                         "XML Parser: Container field for node {what} not found. Unknown field '{container_field}' in node class {type_name}."
@@ -909,7 +1096,11 @@ impl<'a> XmlParser<'a> {
         self.push_node_value(&mut |s| s.field_mut(n, loc), node);
     }
 
-    fn push_node_value(&mut self, field: &mut dyn FnMut(&mut Scene) -> &mut Field, node: Option<NodeId>) {
+    fn push_node_value(
+        &mut self,
+        field: &mut dyn FnMut(&mut Scene) -> &mut Field,
+        node: Option<NodeId>,
+    ) {
         let f = field(&mut self.p.scene);
 
         match &mut f.value {
@@ -929,7 +1120,12 @@ impl<'a> XmlParser<'a> {
         let of_type = |t: usize| {
             let ty = &scene.table.types[t];
 
-            if ty.name.starts_with("Metadata") && scene.specification_version.parse::<f64>().is_ok_and(|v| v <= 3.3) {
+            if ty.name.starts_with("Metadata")
+                && scene
+                    .specification_version
+                    .parse::<f64>()
+                    .is_ok_and(|v| v <= 3.3)
+            {
                 return "metadata".to_string();
             }
 
@@ -946,7 +1142,10 @@ impl<'a> XmlParser<'a> {
             },
             NodeKind::Imported(imp) => {
                 let record = &scene.imported[*imp];
-                let ctx = scene.contexts.iter().position(|c| c.outer == Outer::Inline(Some(record.inline)))?;
+                let ctx = scene
+                    .contexts
+                    .iter()
+                    .position(|c| c.outer == Outer::Inline(Some(record.inline)))?;
                 let local = scene.get_exported_node(ctx, &record.exported_name)?;
                 self.container_field_of(local)
             }

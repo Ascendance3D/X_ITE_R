@@ -22,7 +22,13 @@ pub fn case_dir() -> PathBuf {
 pub fn case_names() -> Vec<String> {
     let mut names: Vec<String> = std::fs::read_dir(case_dir())
         .unwrap()
-        .filter_map(|e| e.ok()?.file_name().to_str()?.strip_suffix(".json").map(String::from))
+        .filter_map(|e| {
+            e.ok()?
+                .file_name()
+                .to_str()?
+                .strip_suffix(".json")
+                .map(String::from)
+        })
         .collect();
 
     names.sort();
@@ -59,7 +65,8 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
 
     let root = oracle_root();
     let dir = case_dir();
-    let text = std::fs::read_to_string(dir.join(format!("{name}.json"))).map_err(|e| format!("{name}.json: {e}"))?;
+    let text = std::fs::read_to_string(dir.join(format!("{name}.json")))
+        .map_err(|e| format!("{name}.json: {e}"))?;
     let scenario: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
     let t0 = scenario["t0"].as_f64().unwrap_or(946684800.0);
     let dt = scenario["dt"].as_f64().unwrap_or(0.1);
@@ -67,12 +74,21 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
     let actions = scenario["actions"].as_array().cloned().unwrap_or_default();
     let world = scenario["world"].as_str().ok_or("scenario has no world")?;
 
-    let url = format!("{ORACLE_PREFIX}{}", encode_path(&format!("synthetic-externproto-reload/{world}")));
+    let url = format!(
+        "{ORACLE_PREFIX}{}",
+        encode_path(&format!("synthetic-externproto-reload/{world}"))
+    );
     let data = std::fs::read(dir.join(world)).map_err(|e| format!("{world}: {e}"))?;
     let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
 
     let overlay = Overlay::default();
-    let fetcher = Box::new(OverlayFetcher { inner: LocalFetcher { root: root.clone(), prefix: ORACLE_PREFIX.to_string() }, overlay: overlay.clone() });
+    let fetcher = Box::new(OverlayFetcher {
+        inner: LocalFetcher {
+            root: root.clone(),
+            prefix: ORACLE_PREFIX.to_string(),
+        },
+        overlay: overlay.clone(),
+    });
     let mut rt = Runtime::new(scene, fetcher);
 
     rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
@@ -130,23 +146,45 @@ fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
         let path = a["path"].as_str().ok_or("publish needs path")?;
         let data = std::fs::read(case_dir().join(from)).map_err(|e| format!("{from}: {e}"))?;
 
-        overlay.0.borrow_mut().insert(format!("/synthetic-externproto-reload/{path}"), data);
+        overlay
+            .0
+            .borrow_mut()
+            .insert(format!("/synthetic-externproto-reload/{path}"), data);
         return Ok(());
     }
 
-    let name = a["name"].as_str().ok_or("action needs a declaration name")?;
+    let name = a["name"]
+        .as_str()
+        .ok_or("action needs a declaration name")?;
 
     if kind == "remove" {
-        return rt.extern_remove(x3d_scene::ROOT, name).map(|_| ()).ok_or_else(|| format!("no EXTERNPROTO '{name}'"));
+        return rt
+            .extern_remove(x3d_scene::ROOT, name)
+            .map(|_| ())
+            .ok_or_else(|| format!("no EXTERNPROTO '{name}'"));
     }
 
-    let e = rt.extern_find(x3d_scene::ROOT, name).ok_or_else(|| format!("no EXTERNPROTO '{name}'"))?;
+    let e = rt
+        .extern_find(x3d_scene::ROOT, name)
+        .ok_or_else(|| format!("no EXTERNPROTO '{name}'"))?;
 
     match kind {
-        "url" => rt.extern_set_url(e, a["url"].as_array().map(|u| u.iter().filter_map(|s| s.as_str().map(String::from)).collect()).unwrap_or_default()),
+        "url" => rt.extern_set_url(
+            e,
+            a["url"]
+                .as_array()
+                .map(|u| {
+                    u.iter()
+                        .filter_map(|s| s.as_str().map(String::from))
+                        .collect()
+                })
+                .unwrap_or_default(),
+        ),
         "load" => rt.extern_set_load(e, a["value"].as_bool().unwrap_or(true)),
         "autoRefresh" => rt.extern_set_auto_refresh(e, a["value"].as_f64().unwrap_or(0.0)),
-        "autoRefreshTimeLimit" => rt.extern_set_auto_refresh_time_limit(e, a["value"].as_f64().unwrap_or(0.0)),
+        "autoRefreshTimeLimit" => {
+            rt.extern_set_auto_refresh_time_limit(e, a["value"].as_f64().unwrap_or(0.0))
+        }
         "loadNow" => rt.extern_load_now(e),
         other => return Err(format!("unknown action {other}")),
     }
@@ -166,7 +204,10 @@ fn state_name(s: x3d_runtime::nodes::LoadState) -> &'static str {
 }
 
 fn record(rt: &mut Runtime, k: u64, seen: &mut usize, last_vrml: &mut Option<String>) -> Value {
-    let console: Vec<String> = rt.console[*seen..].iter().map(|l| l.split('\n').next().unwrap_or("").to_string()).collect();
+    let console: Vec<String> = rt.console[*seen..]
+        .iter()
+        .map(|l| l.split('\n').next().unwrap_or("").to_string())
+        .collect();
     *seen = rt.console.len();
 
     let root = x3d_scene::ROOT;
@@ -196,7 +237,10 @@ fn record(rt: &mut Runtime, k: u64, seen: &mut usize, last_vrml: &mut Option<Str
             continue;
         }
 
-        instances.insert(rt.scene.node(n).name.clone(), json!({ "type": rt.type_name(n), "body": rt.instance_body_roots(n) }));
+        instances.insert(
+            rt.scene.node(n).name.clone(),
+            json!({ "type": rt.type_name(n), "body": rt.instance_body_roots(n) }),
+        );
     }
 
     rt.publish_clone_counts();
@@ -220,5 +264,10 @@ fn record(rt: &mut Runtime, k: u64, seen: &mut usize, last_vrml: &mut Option<Str
 
 /// Run on a thread with a big stack (QuickJS).
 pub fn big_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {
-    std::thread::Builder::new().stack_size(64 << 20).spawn(f).unwrap().join().unwrap()
+    std::thread::Builder::new()
+        .stack_size(64 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap()
 }

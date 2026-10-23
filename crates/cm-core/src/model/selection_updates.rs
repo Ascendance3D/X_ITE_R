@@ -5,10 +5,12 @@ use std::cmp::Ordering;
 
 use super::changes::BeforeSelectionChange;
 use super::doc::Doc;
-use super::history::{add_selection_to_history, HistEvent, SelHistOpts};
+use super::history::{HistEvent, SelHistOpts, add_selection_to_history};
 use super::mark_text::{SideFind, TextMarker};
-use super::selection::{new_sel, normalize_selection, sel_equals, simple_selection, Range, Sel, SelRange};
-use crate::pos::{cmp, cmp_num, Pos, PosRef};
+use super::selection::{
+    Range, Sel, SelRange, new_sel, normalize_selection, sel_equals, simple_selection,
+};
+use crate::pos::{Pos, PosRef, cmp, cmp_num};
 
 /// Selection update options (`{origin, bias, scroll, clearRedo}`). Whether options
 /// are passed *at all* matters in the JS (`options && options.clearRedo !== false`),
@@ -22,7 +24,12 @@ pub struct SelOptions {
 }
 
 /// `extendRange(range, head, other, extend)`.
-pub(crate) fn extend_range(range: &Range, head: PosRef, other: Option<PosRef>, extend: bool) -> Range {
+pub(crate) fn extend_range(
+    range: &Range,
+    head: PosRef,
+    other: Option<PosRef>,
+    extend: bool,
+) -> Range {
     if extend {
         let mut anchor = range.anchor.clone();
         let mut head = head;
@@ -42,17 +49,32 @@ pub(crate) fn extend_range(range: &Range, head: PosRef, other: Option<PosRef>, e
 }
 
 /// `extendSelection(doc, head, other, options, extend)`.
-pub(crate) fn extend_selection(doc: &Doc, head: PosRef, other: Option<PosRef>, options: Option<&SelOptions>, extend: Option<bool>) {
+pub(crate) fn extend_selection(
+    doc: &Doc,
+    head: PosRef,
+    other: Option<PosRef>,
+    options: Option<&SelOptions>,
+    extend: Option<bool>,
+) {
     let extend = extend.unwrap_or_else(|| doc.extend_flag());
     let prim = doc.inner().sel.primary().clone();
-    set_selection(doc, new_sel(vec![extend_range(&prim, head, other, extend)], 0), options);
+    set_selection(
+        doc,
+        new_sel(vec![extend_range(&prim, head, other, extend)], 0),
+        options,
+    );
 }
 
 /// `extendSelections(doc, heads, options)`.
 pub(crate) fn extend_selections(doc: &Doc, heads: Vec<PosRef>, options: Option<&SelOptions>) {
     let extend = doc.extend_flag();
     let sel = doc.inner().sel.clone();
-    let out: Vec<Range> = sel.ranges.iter().zip(heads).map(|(r, h)| extend_range(r, h, None, extend)).collect();
+    let out: Vec<Range> = sel
+        .ranges
+        .iter()
+        .zip(heads)
+        .map(|(r, h)| extend_range(r, h, None, extend))
+        .collect();
     let new_sel = normalize_selection(doc.selections_may_touch(), out, sel.prim_index);
     set_selection(doc, new_sel, options);
 }
@@ -60,15 +82,29 @@ pub(crate) fn extend_selections(doc: &Doc, heads: Vec<PosRef>, options: Option<&
 /// `replaceOneSelection(doc, i, range, options)`.
 // Ported for completeness; only the (unported) view layer calls it.
 #[allow(dead_code)]
-pub(crate) fn replace_one_selection(doc: &Doc, i: usize, range: Range, options: Option<&SelOptions>) {
+pub(crate) fn replace_one_selection(
+    doc: &Doc,
+    i: usize,
+    range: Range,
+    options: Option<&SelOptions>,
+) {
     let sel = doc.inner().sel.clone();
     let mut ranges = sel.ranges.clone();
     ranges[i] = range;
-    set_selection(doc, normalize_selection(doc.selections_may_touch(), ranges, sel.prim_index), options);
+    set_selection(
+        doc,
+        normalize_selection(doc.selections_may_touch(), ranges, sel.prim_index),
+        options,
+    );
 }
 
 /// `setSimpleSelection(doc, anchor, head, options)`.
-pub(crate) fn set_simple_selection(doc: &Doc, anchor: PosRef, head: Option<PosRef>, options: Option<&SelOptions>) {
+pub(crate) fn set_simple_selection(
+    doc: &Doc,
+    anchor: PosRef,
+    head: Option<PosRef>,
+    options: Option<&SelOptions>,
+) {
     set_selection(doc, simple_selection(anchor, head), options);
 }
 
@@ -76,7 +112,13 @@ pub(crate) fn set_simple_selection(doc: &Doc, anchor: PosRef, head: Option<PosRe
 fn filter_selection_change(doc: &Doc, sel: Sel, options: Option<&SelOptions>) -> Sel {
     let handlers = doc.inner().before_selection_change.clone();
     let mut obj = BeforeSelectionChange::new(
-        sel.ranges.iter().map(|r| SelRange { anchor: r.anchor.get(), head: r.head.get() }).collect(),
+        sel.ranges
+            .iter()
+            .map(|r| SelRange {
+                anchor: r.anchor.get(),
+                head: r.head.get(),
+            })
+            .collect(),
         options.and_then(|o| o.origin.clone()),
     );
     let mut updated: Option<Vec<Range>> = None;
@@ -85,9 +127,20 @@ fn filter_selection_change(doc: &Doc, sel: Sel, options: Option<&SelOptions>) ->
         if let Some(rs) = obj.updated.take() {
             let clipped: Vec<Range> = rs
                 .iter()
-                .map(|r| Range::new(PosRef::new(doc.clip_pos(r.anchor)), PosRef::new(doc.clip_pos(r.head))))
+                .map(|r| {
+                    Range::new(
+                        PosRef::new(doc.clip_pos(r.anchor)),
+                        PosRef::new(doc.clip_pos(r.head)),
+                    )
+                })
                 .collect();
-            obj.ranges = clipped.iter().map(|r| SelRange { anchor: r.anchor.get(), head: r.head.get() }).collect();
+            obj.ranges = clipped
+                .iter()
+                .map(|r| SelRange {
+                    anchor: r.anchor.get(),
+                    head: r.head.get(),
+                })
+                .collect();
             updated = Some(clipped);
         }
     }
@@ -120,18 +173,29 @@ pub(crate) fn set_selection(doc: &Doc, sel: Sel, options: Option<&SelOptions>) {
         doc,
         cur,
         doc.op_id(),
-        options.map(|o| SelHistOpts { origin: o.origin.as_deref(), clear_redo: o.clear_redo }),
+        options.map(|o| SelHistOpts {
+            origin: o.origin.as_deref(),
+            clear_redo: o.clear_redo,
+        }),
     );
 }
 
 /// `setSelectionNoUndo(doc, sel, options)`.
 pub(crate) fn set_selection_no_undo(doc: &Doc, sel: Sel, options: Option<&SelOptions>) {
-    let sel = if doc.inner().before_selection_change.is_empty() { sel } else { filter_selection_change(doc, sel, options) };
+    let sel = if doc.inner().before_selection_change.is_empty() {
+        sel
+    } else {
+        filter_selection_change(doc, sel, options)
+    };
     let bias = match options.and_then(|o| o.bias) {
         Some(b) if b != 0 => b,
         _ => {
             let cur_head = doc.inner().sel.primary().head.get();
-            if cmp(&sel.primary().head.get(), &cur_head) == Ordering::Less { -1 } else { 1 }
+            if cmp(&sel.primary().head.get(), &cur_head) == Ordering::Less {
+                -1
+            } else {
+                1
+            }
         }
     };
     let skipped = skip_atomic_in_selection(doc, &sel, Some(bias), true);
@@ -165,14 +229,33 @@ fn skip_atomic_in_selection(doc: &Doc, sel: &Sel, bias: Option<i64>, may_clear: 
     for i in 0..sel.ranges.len() {
         let range = &sel.ranges[i];
         let cur = doc.inner().sel.clone();
-        let old = if sel.ranges.len() == cur.ranges.len() { Some(cur.ranges[i].clone()) } else { None };
-        let new_anchor = skip_atomic(doc, &range.anchor, old.as_ref().map(|o| &o.anchor), bias, may_clear);
+        let old = if sel.ranges.len() == cur.ranges.len() {
+            Some(cur.ranges[i].clone())
+        } else {
+            None
+        };
+        let new_anchor = skip_atomic(
+            doc,
+            &range.anchor,
+            old.as_ref().map(|o| &o.anchor),
+            bias,
+            may_clear,
+        );
         let new_head = if PosRef::same(&range.head, &range.anchor) {
             new_anchor.clone()
         } else {
-            skip_atomic(doc, &range.head, old.as_ref().map(|o| &o.head), bias, may_clear)
+            skip_atomic(
+                doc,
+                &range.head,
+                old.as_ref().map(|o| &o.head),
+                bias,
+                may_clear,
+            )
         };
-        if out.is_some() || !PosRef::same(&new_anchor, &range.anchor) || !PosRef::same(&new_head, &range.head) {
+        if out.is_some()
+            || !PosRef::same(&new_anchor, &range.anchor)
+            || !PosRef::same(&new_head, &range.head)
+        {
             let o = out.get_or_insert_with(|| sel.ranges[..i].to_vec());
             o.push(Range::new(new_anchor, new_head));
         }
@@ -205,7 +288,13 @@ thread_local! {
 /// as a RangeError. Legitimate chains are bounded by the number of markers.
 const MAX_SKIP_DEPTH: usize = 1000;
 
-fn skip_atomic_inner(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir: i64, may_clear: bool) -> Option<PosRef> {
+fn skip_atomic_inner(
+    doc: &Doc,
+    pos: &PosRef,
+    old_pos: Option<&PosRef>,
+    dir: i64,
+    may_clear: bool,
+) -> Option<PosRef> {
     let depth = SKIP_DEPTH.with(|d| {
         d.set(d.get() + 1);
         d.get()
@@ -223,7 +312,13 @@ fn skip_atomic_inner(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir: i64
     skip_atomic_inner_body(doc, pos, old_pos, dir, may_clear)
 }
 
-fn skip_atomic_inner_body(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir: i64, may_clear: bool) -> Option<PosRef> {
+fn skip_atomic_inner_body(
+    doc: &Doc,
+    pos: &PosRef,
+    old_pos: Option<&PosRef>,
+    dir: i64,
+    may_clear: bool,
+) -> Option<PosRef> {
     let line = doc.get_line_ref(pos.line());
     let mut i: i64 = 0;
     loop {
@@ -240,11 +335,23 @@ fn skip_atomic_inner_body(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir
         let p = pos.get();
         let left_ok = match sp.from {
             None => true,
-            Some(f) => if prevent_left { f <= p.ch } else { f < p.ch },
+            Some(f) => {
+                if prevent_left {
+                    f <= p.ch
+                } else {
+                    f < p.ch
+                }
+            }
         };
         let right_ok = match sp.to {
             None => true,
-            Some(t) => if prevent_right { t >= p.ch } else { t > p.ch },
+            Some(t) => {
+                if prevent_right {
+                    t >= p.ch
+                } else {
+                    t > p.ch
+                }
+            }
         };
         if left_ok && right_ok {
             if may_clear {
@@ -274,14 +381,17 @@ fn skip_atomic_inner_body(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir
                     // A `{from, to}` object: truthy, but `.line` is undefined.
                     SideFind::Object => {
                         if if dir < 0 { prevent_right } else { prevent_left } {
-                            panic!("JS TypeError: Cannot read properties of undefined (reading 'chunkSize')");
+                            panic!(
+                                "JS TypeError: Cannot read properties of undefined (reading 'chunkSize')"
+                            );
                         }
                         None
                     }
                     SideFind::None => None,
                 };
                 if if dir < 0 { prevent_right } else { prevent_left } {
-                    let n = near.expect("JS TypeError: Cannot read properties of undefined (reading 'ch')");
+                    let n = near
+                        .expect("JS TypeError: Cannot read properties of undefined (reading 'ch')");
                     let same_line = n.line() == p.line;
                     near = move_pos(doc, &n, -dir, if same_line { Some(&line) } else { None });
                 }
@@ -298,11 +408,14 @@ fn skip_atomic_inner_body(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir
             let mut far = match m.find_side(if dir < 0 { -1 } else { 1 }) {
                 SideFind::Pos(p) => Some(PosRef::new(p)),
                 // getLine(doc, undefined) walks the tree with NaN and throws.
-                SideFind::Object => panic!("JS TypeError: Cannot read properties of undefined (reading 'chunkSize')"),
+                SideFind::Object => panic!(
+                    "JS TypeError: Cannot read properties of undefined (reading 'chunkSize')"
+                ),
                 SideFind::None => None,
             };
             if if dir < 0 { prevent_left } else { prevent_right } {
-                let f = far.expect("JS TypeError: Cannot read properties of undefined (reading 'ch')");
+                let f =
+                    far.expect("JS TypeError: Cannot read properties of undefined (reading 'ch')");
                 let same_line = f.line() == p.line;
                 far = move_pos(doc, &f, dir, if same_line { Some(&line) } else { None });
             }
@@ -318,15 +431,33 @@ fn skip_atomic_inner_body(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, dir
 
 /// `skipAtomic(doc, pos, oldPos, bias, mayClear)`: ensure a position is not inside
 /// an atomic range. Returns the *same* object when nothing moved.
-pub(crate) fn skip_atomic(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, bias: Option<i64>, may_clear: bool) -> PosRef {
+pub(crate) fn skip_atomic(
+    doc: &Doc,
+    pos: &PosRef,
+    old_pos: Option<&PosRef>,
+    bias: Option<i64>,
+    may_clear: bool,
+) -> PosRef {
     let dir = match bias {
         Some(b) if b != 0 => b,
         _ => 1,
     };
     let found = skip_atomic_inner(doc, pos, old_pos, dir, may_clear)
-        .or_else(|| if !may_clear { skip_atomic_inner(doc, pos, old_pos, dir, true) } else { None })
+        .or_else(|| {
+            if !may_clear {
+                skip_atomic_inner(doc, pos, old_pos, dir, true)
+            } else {
+                None
+            }
+        })
         .or_else(|| skip_atomic_inner(doc, pos, old_pos, -dir, may_clear))
-        .or_else(|| if !may_clear { skip_atomic_inner(doc, pos, old_pos, -dir, true) } else { None });
+        .or_else(|| {
+            if !may_clear {
+                skip_atomic_inner(doc, pos, old_pos, -dir, true)
+            } else {
+                None
+            }
+        });
     match found {
         Some(f) => f,
         None => {
@@ -336,7 +467,12 @@ pub(crate) fn skip_atomic(doc: &Doc, pos: &PosRef, old_pos: Option<&PosRef>, bia
     }
 }
 
-fn move_pos(doc: &Doc, pos: &PosRef, dir: i64, line: Option<&super::line::LineRef>) -> Option<PosRef> {
+fn move_pos(
+    doc: &Doc,
+    pos: &PosRef,
+    dir: i64,
+    line: Option<&super::line::LineRef>,
+) -> Option<PosRef> {
     let p = pos.get();
     if dir < 0 && p.ch == 0 {
         if p.line > doc.first_line() {
@@ -344,14 +480,20 @@ fn move_pos(doc: &Doc, pos: &PosRef, dir: i64, line: Option<&super::line::LineRe
         } else {
             None
         }
-    } else if dir > 0 && p.ch == {
-        let len = match line {
-            Some(l) => l.borrow().text.len(),
-            None => doc.get_line_ref(p.line).borrow().text.len(),
-        };
-        len as i64
-    } {
-        if p.line < doc.first_line() + doc.size() as i64 - 1 { Some(PosRef::lc(p.line + 1, 0)) } else { None }
+    } else if dir > 0
+        && p.ch == {
+            let len = match line {
+                Some(l) => l.borrow().text.len(),
+                None => doc.get_line_ref(p.line).borrow().text.len(),
+            };
+            len as i64
+        }
+    {
+        if p.line < doc.first_line() + doc.size() as i64 - 1 {
+            Some(PosRef::lc(p.line + 1, 0))
+        } else {
+            None
+        }
     } else {
         Some(PosRef::lc(p.line, p.ch + dir))
     }
@@ -361,5 +503,13 @@ fn move_pos(doc: &Doc, pos: &PosRef, dir: i64, line: Option<&super::line::LineRe
 pub(crate) fn select_all(doc: &Doc) {
     let a = PosRef::new(doc.clip_pos(Pos::new(doc.first_line(), 0)));
     let h = PosRef::new(doc.clip_pos(Pos::line_end(doc.last_line())));
-    set_simple_selection(doc, a, Some(h), Some(&SelOptions { scroll: Some(false), ..Default::default() }));
+    set_simple_selection(
+        doc,
+        a,
+        Some(h),
+        Some(&SelOptions {
+            scroll: Some(false),
+            ..Default::default()
+        }),
+    );
 }

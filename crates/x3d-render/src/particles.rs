@@ -14,10 +14,24 @@ use x3d_fields::math::{Matrix4, Vector3};
 use x3d_runtime::particles::{GeometryType, Particle, Ramps};
 
 /// `QuadGeometry` texture coordinates (p1 p2 p3, p1 p3 p4).
-const QUAD_TEX_COORDS: [[f32; 2]; 6] = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 0.0], [1.0, 1.0], [0.0, 1.0]];
+const QUAD_TEX_COORDS: [[f32; 2]; 6] = [
+    [0.0, 0.0],
+    [1.0, 0.0],
+    [1.0, 1.0],
+    [0.0, 0.0],
+    [1.0, 1.0],
+    [0.0, 1.0],
+];
 
 /// `QuadGeometry` vertices.
-const QUAD: [[f64; 2]; 6] = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]];
+const QUAD: [[f64; 2]; 6] = [
+    [-0.5, -0.5],
+    [0.5, -0.5],
+    [0.5, 0.5],
+    [-0.5, -0.5],
+    [0.5, 0.5],
+    [-0.5, 0.5],
+];
 
 /// The texCoord ramp's `map [gl_VertexID]`: the ramp entry of each quad vertex.
 pub const QUAD_RAMP_MAP: [usize; 6] = [0, 1, 2, 0, 2, 3];
@@ -27,8 +41,16 @@ fn bounds(g: &mut Geometry) {
     let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
 
     for v in g.vertices.chunks_exact(4) {
-        min = Vector3::new(min.x.min(v[0] as f64), min.y.min(v[1] as f64), min.z.min(v[2] as f64));
-        max = Vector3::new(max.x.max(v[0] as f64), max.y.max(v[1] as f64), max.z.max(v[2] as f64));
+        min = Vector3::new(
+            min.x.min(v[0] as f64),
+            min.y.min(v[1] as f64),
+            min.z.min(v[2] as f64),
+        );
+        max = Vector3::new(
+            max.x.max(v[0] as f64),
+            max.y.max(v[1] as f64),
+            max.z.max(v[2] as f64),
+        );
     }
 
     g.min = min;
@@ -37,7 +59,13 @@ fn bounds(g: &mut Geometry) {
 
 /// POINT: `PointGeometry`, one point at the origin (`geometryContext .geometryType` 0, no normals).
 pub fn point_geometry(color_material: bool) -> Geometry {
-    let mut g = Geometry { geometry_type: 0, vertices: vec![0.0, 0.0, 0.0, 1.0], solid: true, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 0,
+        vertices: vec![0.0, 0.0, 0.0, 1.0],
+        solid: true,
+        ccw: true,
+        ..Default::default()
+    };
 
     if color_material {
         g.colors = vec![1.0; 4];
@@ -50,7 +78,13 @@ pub fn point_geometry(color_material: bool) -> Geometry {
 /// LINE: the private LineSet, `vertexCount [2]`, points `0 0 -size.y/2` and `0 0 size.y/2` (`set_particleSize__`).
 pub fn line_geometry(particle_size_y: f64, color_material: bool) -> Geometry {
     let h = (particle_size_y / 2.0) as f32;
-    let mut g = Geometry { geometry_type: 1, vertices: vec![0.0, 0.0, -h, 1.0, 0.0, 0.0, h, 1.0], solid: true, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 1,
+        vertices: vec![0.0, 0.0, -h, 1.0, 0.0, 0.0, h, 1.0],
+        solid: true,
+        ccw: true,
+        ..Default::default()
+    };
 
     if color_material {
         g.colors = vec![1.0; 8];
@@ -73,7 +107,11 @@ pub fn quad_geometry(sprite: Option<(&[Vector3; 3], [f64; 2])>, color_material: 
             for q in QUAD {
                 let (x, y) = (q[0] * size[0], q[1] * size[1]);
                 // multVecMatrix of a Matrix3 (rows x, y, z): v .x * x + v .y * y + v .z * z, z = 0 here.
-                let v = [x * rows[0].x + y * rows[1].x, x * rows[0].y + y * rows[1].y, x * rows[0].z + y * rows[1].z];
+                let v = [
+                    x * rows[0].x + y * rows[1].x,
+                    x * rows[0].y + y * rows[1].y,
+                    x * rows[0].z + y * rows[1].z,
+                ];
 
                 vertices.extend_from_slice(&[v[0] as f32, v[1] as f32, v[2] as f32, 1.0]);
             }
@@ -91,7 +129,10 @@ pub fn quad_geometry(sprite: Option<(&[Vector3; 3], [f64; 2])>, color_material: 
         geometry_type: 2,
         vertices,
         normals: normal.repeat(6),
-        tex_coords: QUAD_TEX_COORDS.iter().flat_map(|t| [t[0], t[1], 0.0, 1.0]).collect(),
+        tex_coords: QUAD_TEX_COORDS
+            .iter()
+            .flat_map(|t| [t[0], t[1], 0.0, 1.0])
+            .collect(),
         solid: true,
         ccw: true,
         ..Default::default()
@@ -139,9 +180,21 @@ pub struct ParticleInstances {
     pub tex_coords: Vec<[[f32; 4]; 4]>,
 }
 
-pub fn instances(particles: &[Particle], ramps: &Ramps, geometry_type: GeometryType, color_material: bool) -> ParticleInstances {
-    let tex_ramp = ramps.tex_coords.as_ref().filter(|_| geometry_type.tex_coord_count() == 4);
-    let mut out = ParticleInstances { matrices: vec![], colors: vec![], tex_coords: vec![] };
+pub fn instances(
+    particles: &[Particle],
+    ramps: &Ramps,
+    geometry_type: GeometryType,
+    color_material: bool,
+) -> ParticleInstances {
+    let tex_ramp = ramps
+        .tex_coords
+        .as_ref()
+        .filter(|_| geometry_type.tex_coord_count() == 4);
+    let mut out = ParticleInstances {
+        matrices: vec![],
+        colors: vec![],
+        tex_coords: vec![],
+    };
 
     for p in particles {
         if p[24..28].iter().any(|v| v.is_nan()) {
@@ -164,7 +217,8 @@ pub fn instances(particles: &[Particle], ramps: &Ramps, geometry_type: GeometryT
             // texelFetch (x3d_TexCoordRamp, int (x3d_Particle [3]) + map [gl_VertexID], 0).
             let index0 = p[3] as i64;
 
-            out.tex_coords.push(std::array::from_fn(|k| r.fetch(index0 + k as i64)));
+            out.tex_coords
+                .push(std::array::from_fn(|k| r.fetch(index0 + k as i64)));
         }
     }
 
@@ -189,13 +243,34 @@ mod tests {
 
     #[test]
     fn instances_skip_hidden_particles_and_read_the_record() {
-        let ramp = Ramp { count: 1, texels: vec![[0.0; 4], [0.1, 0.2, 0.0, 1.0], [0.3, 0.4, 0.0, 1.0], [0.5, 0.6, 0.0, 1.0], [0.7, 0.8, 0.0, 1.0]] };
-        let ramps = Ramps { tex_coords: Some(ramp), tex_coords_count: 4, ..Default::default() };
-        let records = [particle([1.0, 2.0, 3.0, 1.0], [1.0, 0.5, 0.25, 0.5], 1.0), particle([f32::NAN; 4], [0.0; 4], 1.0)];
+        let ramp = Ramp {
+            count: 1,
+            texels: vec![
+                [0.0; 4],
+                [0.1, 0.2, 0.0, 1.0],
+                [0.3, 0.4, 0.0, 1.0],
+                [0.5, 0.6, 0.0, 1.0],
+                [0.7, 0.8, 0.0, 1.0],
+            ],
+        };
+        let ramps = Ramps {
+            tex_coords: Some(ramp),
+            tex_coords_count: 4,
+            ..Default::default()
+        };
+        let records = [
+            particle([1.0, 2.0, 3.0, 1.0], [1.0, 0.5, 0.25, 0.5], 1.0),
+            particle([f32::NAN; 4], [0.0; 4], 1.0),
+        ];
         let i = instances(&records, &ramps, GeometryType::Quad, true);
 
         assert_eq!(i.matrices.len(), 1);
-        assert_eq!(i.matrices[0].0, [2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 1.0, 2.0, 3.0, 1.0]);
+        assert_eq!(
+            i.matrices[0].0,
+            [
+                2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 1.0, 2.0, 3.0, 1.0
+            ]
+        );
         assert_eq!(i.colors, vec![[1.0, 0.5, 0.25, 0.5]]);
         assert_eq!(i.tex_coords[0][0], [0.1, 0.2, 0.0, 1.0]);
         assert_eq!(i.tex_coords[0][3], [0.7, 0.8, 0.0, 1.0]);

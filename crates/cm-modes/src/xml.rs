@@ -17,7 +17,7 @@ use std::sync::OnceLock;
 
 use cm_core::util::string_stream::{RegexMatch, StringStream};
 
-use crate::js::{self, is_js_space, is_js_word, JsStr};
+use crate::js::{self, JsStr, is_js_space, is_js_word};
 use crate::{ConfigValue, JsArg, MimeTarget, Mode, ModeOptions, ModeSpec, Registry, State};
 
 /// `htmlConfig` / `xmlConfig` plus the spec's own options.
@@ -40,11 +40,24 @@ pub struct XmlConfig {
     pub align_cdata: bool,
 }
 
-fn html_dicts() -> &'static (HashSet<&'static str>, HashSet<&'static str>, HashMap<&'static str, HashSet<&'static str>>) {
-    static D: OnceLock<(HashSet<&'static str>, HashSet<&'static str>, HashMap<&'static str, HashSet<&'static str>>)> = OnceLock::new();
+fn html_dicts() -> &'static (
+    HashSet<&'static str>,
+    HashSet<&'static str>,
+    HashMap<&'static str, HashSet<&'static str>>,
+) {
+    static D: OnceLock<(
+        HashSet<&'static str>,
+        HashSet<&'static str>,
+        HashMap<&'static str, HashSet<&'static str>>,
+    )> = OnceLock::new();
     D.get_or_init(|| {
-        let auto = ["area", "base", "br", "col", "command", "embed", "frame", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr", "menuitem"];
-        let implicit = ["dd", "li", "optgroup", "option", "p", "rp", "rt", "tbody", "td", "tfoot", "th", "tr"];
+        let auto = [
+            "area", "base", "br", "col", "command", "embed", "frame", "hr", "img", "input",
+            "keygen", "link", "meta", "param", "source", "track", "wbr", "menuitem",
+        ];
+        let implicit = [
+            "dd", "li", "optgroup", "option", "p", "rp", "rt", "tbody", "td", "tfoot", "th", "tr",
+        ];
         let grab: &[(&str, &[&str])] = &[
             ("dd", &["dd", "dt"]),
             ("dt", &["dd", "dt"]),
@@ -54,8 +67,33 @@ fn html_dicts() -> &'static (HashSet<&'static str>, HashSet<&'static str>, HashM
             (
                 "p",
                 &[
-                    "address", "article", "aside", "blockquote", "dir", "div", "dl", "fieldset", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr",
-                    "menu", "nav", "ol", "p", "pre", "section", "table", "ul",
+                    "address",
+                    "article",
+                    "aside",
+                    "blockquote",
+                    "dir",
+                    "div",
+                    "dl",
+                    "fieldset",
+                    "footer",
+                    "form",
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6",
+                    "header",
+                    "hgroup",
+                    "hr",
+                    "menu",
+                    "nav",
+                    "ol",
+                    "p",
+                    "pre",
+                    "section",
+                    "table",
+                    "ul",
                 ],
             ),
             ("rp", &["rp", "rt"]),
@@ -70,7 +108,9 @@ fn html_dicts() -> &'static (HashSet<&'static str>, HashSet<&'static str>, HashM
         (
             auto.into_iter().collect(),
             implicit.into_iter().collect(),
-            grab.iter().map(|(k, v)| (*k, v.iter().copied().collect())).collect(),
+            grab.iter()
+                .map(|(k, v)| (*k, v.iter().copied().collect()))
+                .collect(),
         )
     })
 }
@@ -85,15 +125,24 @@ impl XmlConfig {
         let truthy_or = |k: &str, d: bool| opt(k).map_or(d, ConfigValue::truthy);
         XmlConfig {
             auto_self_closers: if html { auto.clone() } else { HashSet::new() },
-            implicitly_closed: if html { implicit.clone() } else { HashSet::new() },
+            implicitly_closed: if html {
+                implicit.clone()
+            } else {
+                HashSet::new()
+            },
             context_grabbers: if html { grab.clone() } else { HashMap::new() },
-            do_not_indent: if html { ["pre"].into_iter().collect() } else { HashSet::new() },
+            do_not_indent: if html {
+                ["pre"].into_iter().collect()
+            } else {
+                HashSet::new()
+            },
             allow_unquoted: truthy_or("allowUnquoted", html),
             allow_missing: truthy_or("allowMissing", html),
             allow_missing_tag_name: truthy_or("allowMissingTagName", false),
             html_mode: html,
             match_closing_false: opt("matchClosing") == Some(&ConfigValue::Bool(false)),
-            multiline_tag_indent_past_tag: opt("multilineTagIndentPastTag") != Some(&ConfigValue::Bool(false)),
+            multiline_tag_indent_past_tag: opt("multilineTagIndentPastTag")
+                != Some(&ConfigValue::Bool(false)),
             multiline_tag_indent_factor: match opt("multilineTagIndentFactor") {
                 Some(v) if v.truthy() => v.as_num().unwrap_or(f64::NAN),
                 _ => 1.0,
@@ -174,7 +223,10 @@ fn name_char(c: u16) -> bool {
 fn re_word(s: &[u16]) -> Option<RegexMatch> {
     let a = |c: u16| !is_js_space(c) && !matches!(c, 0x3d | 0x3c | 0x3e | 0x22 | 0x27);
     let run = s.iter().take_while(|&&c| a(c)).count();
-    (1..=run).rev().find(|&k| s[k - 1] != b'/' as u16).map(|k| RegexMatch { index: 0, len: k })
+    (1..=run)
+        .rev()
+        .find(|&k| s[k - 1] != b'/' as u16)
+        .map(|k| RegexMatch { index: 0, len: k })
 }
 
 fn lower(s: &[u16]) -> String {
@@ -183,7 +235,12 @@ fn lower(s: &[u16]) -> String {
 
 impl XmlMode {
     pub fn new(options: &ModeOptions, spec: &ModeSpec) -> XmlMode {
-        XmlMode { config: XmlConfig::from_spec(spec), indent_unit: options.indent_unit as f64, ty: Cell::new(None), set_style: Cell::new(None) }
+        XmlMode {
+            config: XmlConfig::from_spec(spec),
+            indent_unit: options.indent_unit as f64,
+            ty: Cell::new(None),
+            set_style: Cell::new(None),
+        }
     }
 
     /// xml.js: `inText`
@@ -212,7 +269,11 @@ impl XmlMode {
                 state.tokenize = Tokenize::InBlock("meta", "?>");
                 JsStr::s("meta")
             } else {
-                self.ty.set(Some(if stream.eat(b'/' as u16).is_some() { "closeTag" } else { "openTag" }));
+                self.ty.set(Some(if stream.eat(b'/' as u16).is_some() {
+                    "closeTag"
+                } else {
+                    "openTag"
+                }));
                 state.tokenize = Tokenize::InTag;
                 JsStr::s("tag bracket")
             }
@@ -224,7 +285,9 @@ impl XmlMode {
                     stream.eat_while(js::is_digit) && stream.eat(b';' as u16).is_some()
                 }
             } else {
-                stream.eat_while(|c| is_js_word(c) || c == b'.' as u16 || c == b'-' as u16 || c == b':' as u16) && stream.eat(b';' as u16).is_some()
+                stream.eat_while(|c| {
+                    is_js_word(c) || c == b'.' as u16 || c == b'-' as u16 || c == b':' as u16
+                }) && stream.eat(b';' as u16).is_some()
             };
             JsStr::s(if ok { "atom" } else { "error" })
         } else {
@@ -238,7 +301,11 @@ impl XmlMode {
         let ch = stream.next();
         if ch == Some(GT) || (ch == Some(b'/' as u16) && stream.eat(GT).is_some()) {
             state.tokenize = Tokenize::InText;
-            self.ty.set(Some(if ch == Some(GT) { "endTag" } else { "selfcloseTag" }));
+            self.ty.set(Some(if ch == Some(GT) {
+                "endTag"
+            } else {
+                "selfcloseTag"
+            }));
             JsStr::s("tag bracket")
         } else if ch == Some(b'=' as u16) {
             self.ty.set(Some("equals"));
@@ -249,7 +316,11 @@ impl XmlMode {
             state.tag_name = None;
             state.tag_start = None;
             let next = self.tokenize(stream, state);
-            if next.truthy() { next.concat(" tag error") } else { JsStr::s("tag error") }
+            if next.truthy() {
+                next.concat(" tag error")
+            } else {
+                JsStr::s("tag error")
+            }
         } else if let Some(q @ (0x22 | 0x27)) = ch {
             state.tokenize = Tokenize::InAttribute(q);
             state.string_start_col = Some(stream.column() as f64);
@@ -319,7 +390,9 @@ impl XmlMode {
         loop {
             let Some(cx) = &state.context else { return };
             let parent = lower(&cx.tag_name);
-            let Some(grab) = self.config.context_grabbers.get(parent.as_str()) else { return };
+            let Some(grab) = self.config.context_grabbers.get(parent.as_str()) else {
+                return;
+            };
             let Some(next) = next_tag_name else { return };
             if !grab.contains(lower(next).as_str()) {
                 return;
@@ -331,12 +404,28 @@ impl XmlMode {
     /// xml.js: `new Context(state, tagName, startOfLine)`
     fn push_context(&self, state: &mut XmlState, tag_name: Option<Vec<u16>>, start_of_line: bool) {
         let tag_name = tag_name.unwrap_or_default();
-        let no_indent = self.config.do_not_indent.contains(js::from_u16(&tag_name).as_str()) || state.context.as_ref().is_some_and(|c| c.no_indent);
-        state.context = Some(Rc::new(Context { prev: state.context.take(), tag_name, indent: state.indented, start_of_line, no_indent }));
+        let no_indent = self
+            .config
+            .do_not_indent
+            .contains(js::from_u16(&tag_name).as_str())
+            || state.context.as_ref().is_some_and(|c| c.no_indent);
+        state.context = Some(Rc::new(Context {
+            prev: state.context.take(),
+            tag_name,
+            indent: state.indented,
+            start_of_line,
+            no_indent,
+        }));
     }
 
     /// The state functions (`baseState`, `tagNameState`, ...).
-    fn apply(&self, f: StateFn, ty: &str, stream: &mut StringStream<'_>, state: &mut XmlState) -> StateFn {
+    fn apply(
+        &self,
+        f: StateFn,
+        ty: &str,
+        stream: &mut StringStream<'_>,
+        state: &mut XmlState,
+    ) -> StateFn {
         let c = &self.config;
         match f {
             StateFn::Base => match ty {
@@ -364,11 +453,18 @@ impl XmlMode {
                 if ty == "word" {
                     let tag_name = stream.current().to_vec();
                     if let Some(cx) = &state.context {
-                        if cx.tag_name != tag_name && c.implicitly_closed.contains(lower(&cx.tag_name).as_str()) {
+                        if cx.tag_name != tag_name
+                            && c.implicitly_closed.contains(lower(&cx.tag_name).as_str())
+                        {
                             Self::pop_context(state);
                         }
                     }
-                    if state.context.as_ref().is_some_and(|cx| cx.tag_name == tag_name) || c.match_closing_false {
+                    if state
+                        .context
+                        .as_ref()
+                        .is_some_and(|cx| cx.tag_name == tag_name)
+                        || c.match_closing_false
+                    {
                         self.set_style.set(Some("tag"));
                         StateFn::Close
                     } else {
@@ -402,7 +498,9 @@ impl XmlMode {
                 } else if ty == "endTag" || ty == "selfcloseTag" {
                     let tag_name = state.tag_name.take();
                     let tag_start = state.tag_start.take();
-                    let auto = tag_name.as_ref().is_some_and(|t| c.auto_self_closers.contains(lower(t).as_str()));
+                    let auto = tag_name
+                        .as_ref()
+                        .is_some_and(|t| c.auto_self_closers.contains(lower(t).as_str()));
                     self.maybe_pop_context(state, tag_name.as_deref());
                     if !(ty == "selfcloseTag" || auto) {
                         let sol = tag_start == Some(state.indented);
@@ -463,14 +561,23 @@ impl XmlMode {
             };
             state.state = self.apply(state.state, &t, stream, state);
             if let Some(set) = self.set_style.get() {
-                style = if set == "error" { style.concat(" error") } else { JsStr::s(set) };
+                style = if set == "error" {
+                    style.concat(" error")
+                } else {
+                    JsStr::s(set)
+                };
             }
         }
         style
     }
 
     /// The JS mode's `indent`.
-    pub fn indent_js(&self, state: &XmlState, text_after: &[u16], full_line: &[u16]) -> Option<f64> {
+    pub fn indent_js(
+        &self,
+        state: &XmlState,
+        text_after: &[u16],
+        full_line: &[u16],
+    ) -> Option<f64> {
         let c = &self.config;
         let mut context = state.context.clone();
         // Indent multi-line strings (e.g. css).
@@ -499,14 +606,21 @@ impl XmlMode {
                 });
             }
         }
-        if c.align_cdata && cm_core::text::index_of(text_after, &js::to_u16("<![CDATA["), 0).is_some() {
+        if c.align_cdata
+            && cm_core::text::index_of(text_after, &js::to_u16("<![CDATA["), 0).is_some()
+        {
             return Some(0.0);
         }
         // `/^<(\/)?([\w_:\.-]*)/.exec(textAfter)`
         if text_after.first() == Some(&LT) {
             let close = text_after.get(1) == Some(&(b'/' as u16));
             let s = if close { 2 } else { 1 };
-            let n = text_after[s..].iter().take_while(|&&c| is_js_word(c) || c == b':' as u16 || c == b'.' as u16 || c == b'-' as u16).count();
+            let n = text_after[s..]
+                .iter()
+                .take_while(|&&c| {
+                    is_js_word(c) || c == b':' as u16 || c == b'.' as u16 || c == b'-' as u16
+                })
+                .count();
             let name = &text_after[s..s + n];
             if close {
                 // Closing tag spotted
@@ -570,7 +684,8 @@ impl Mode for XmlMode {
         Some(State::new(self.start_state_js(a1)))
     }
     fn token(&self, stream: &mut StringStream<'_>, state: &mut State) -> Option<String> {
-        self.token_js(stream, state.get_mut::<XmlState>()).into_style()
+        self.token_js(stream, state.get_mut::<XmlState>())
+            .into_style()
     }
     fn indent(&self, state: &State, text_after: &[u16], line: &[u16]) -> Option<f64> {
         self.indent_js(state.get::<XmlState>(), text_after, line)
@@ -580,12 +695,22 @@ impl Mode for XmlMode {
     }
     /// `electricInput: /<\/[\s\w:]+>$/`
     fn electric_input(&self, text: &[u16]) -> Option<bool> {
-        let Some((&last, rest)) = text.split_last() else { return Some(false) };
+        let Some((&last, rest)) = text.split_last() else {
+            return Some(false);
+        };
         if last != GT {
             return Some(false);
         }
-        let n = rest.iter().rev().take_while(|&&c| is_js_space(c) || is_js_word(c) || c == b':' as u16).count();
-        Some(n > 0 && rest.len() >= n + 2 && rest[rest.len() - n - 2..rest.len() - n] == [LT, b'/' as u16])
+        let n = rest
+            .iter()
+            .rev()
+            .take_while(|&&c| is_js_space(c) || is_js_word(c) || c == b':' as u16)
+            .count();
+        Some(
+            n > 0
+                && rest.len() >= n + 2
+                && rest[rest.len() - n - 2..rest.len() - n] == [LT, b'/' as u16],
+        )
     }
     fn block_comment_start(&self) -> Option<&str> {
         Some("<!--")
@@ -598,7 +723,9 @@ impl Mode for XmlMode {
     }
     fn prop(&self, name: &str) -> Option<ConfigValue> {
         match name {
-            "configuration" | "helperType" => Some(ConfigValue::Str(if self.config.html_mode { "html" } else { "xml" }.into())),
+            "configuration" | "helperType" => Some(ConfigValue::Str(
+                if self.config.html_mode { "html" } else { "xml" }.into(),
+            )),
             "blockCommentStart" => Some(ConfigValue::Str("<!--".into())),
             "blockCommentEnd" => Some(ConfigValue::Str("-->".into())),
             _ => None,
@@ -618,7 +745,10 @@ pub fn skip_attribute(state: &mut State) {
 /// sets, so it is always false.
 pub fn xml_current_tag(state: &State) -> Option<(Vec<u16>, bool)> {
     let s = state.get::<XmlState>();
-    s.tag_name.clone().filter(|t| !t.is_empty()).map(|t| (t, false))
+    s.tag_name
+        .clone()
+        .filter(|t| !t.is_empty())
+        .map(|t| (t, false))
 }
 
 /// xml.js: `xmlCurrentContext(state)`: tag names, outermost first.
@@ -636,11 +766,17 @@ pub fn xml_current_context(state: &State) -> Vec<Vec<u16>> {
 /// `defineMode("xml", ...)`, `defineMIME("text/xml" | "application/xml", "xml")`, and
 /// `text/html` -> `{name: "xml", htmlMode: true}` unless already defined.
 pub fn register(r: &mut Registry) {
-    r.define_mode("xml", Rc::new(|_, options, spec| Rc::new(XmlMode::new(options, spec)) as Rc<dyn Mode>));
+    r.define_mode(
+        "xml",
+        Rc::new(|_, options, spec| Rc::new(XmlMode::new(options, spec)) as Rc<dyn Mode>),
+    );
     r.define_mime("text/xml", MimeTarget::Name("xml".into()));
     r.define_mime("application/xml", MimeTarget::Name("xml".into()));
     if !r.has_mime("text/html") {
-        r.define_mime("text/html", MimeTarget::Spec(ModeSpec::named("xml").with("htmlMode", ConfigValue::Bool(true))));
+        r.define_mime(
+            "text/html",
+            MimeTarget::Spec(ModeSpec::named("xml").with("htmlMode", ConfigValue::Bool(true))),
+        );
     }
 }
 

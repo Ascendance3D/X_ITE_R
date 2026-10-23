@@ -14,7 +14,11 @@ fn oracle() -> Option<Value> {
 }
 
 fn nums(v: &Value) -> Vec<f64> {
-    v.as_array().unwrap().iter().map(|x| x.as_f64().unwrap()).collect()
+    v.as_array()
+        .unwrap()
+        .iter()
+        .map(|x| x.as_f64().unwrap())
+        .collect()
 }
 
 /// Parses the FontStyle field strings used by oracle/x_ite-text.mjs.
@@ -165,10 +169,26 @@ fn font_metrics_kerning_and_glyphs() {
     for (name, info) in fonts {
         let font = load_font(name);
 
-        assert_eq!(font.units_per_em, info["unitsPerEm"].as_f64().unwrap(), "{name} unitsPerEm");
-        assert_eq!(font.ascender, info["ascender"].as_f64().unwrap(), "{name} ascender");
-        assert_eq!(font.descender, info["descender"].as_f64().unwrap(), "{name} descender");
-        assert_eq!(font.num_glyphs as f64, info["numGlyphs"].as_f64().unwrap(), "{name} numGlyphs");
+        assert_eq!(
+            font.units_per_em,
+            info["unitsPerEm"].as_f64().unwrap(),
+            "{name} unitsPerEm"
+        );
+        assert_eq!(
+            font.ascender,
+            info["ascender"].as_f64().unwrap(),
+            "{name} ascender"
+        );
+        assert_eq!(
+            font.descender,
+            info["descender"].as_f64().unwrap(),
+            "{name} descender"
+        );
+        assert_eq!(
+            font.num_glyphs as f64,
+            info["numGlyphs"].as_f64().unwrap(),
+            "{name} numGlyphs"
+        );
 
         // Kerning over the same character set.
         let mut chars: Vec<char> = "AVTWYoaeLrP.,fgijl 0123yvkwtT".chars().collect();
@@ -198,16 +218,39 @@ fn font_metrics_kerning_and_glyphs() {
             let c = ch.chars().next().unwrap();
             let gid = font.char_to_glyph(c as u16);
 
-            assert_eq!(gid as f64, g["index"].as_f64().unwrap(), "{name} {ch:?} index");
-            assert_eq!(font.advance_width(gid), g["advance"].as_f64().unwrap(), "{name} {ch:?} advance");
+            assert_eq!(
+                gid as f64,
+                g["index"].as_f64().unwrap(),
+                "{name} {ch:?} index"
+            );
+            assert_eq!(
+                font.advance_width(gid),
+                g["advance"].as_f64().unwrap(),
+                "{name} {ch:?} advance"
+            );
 
             let tri = font.glyph_geometry(gid, PrimitiveQuality::Medium);
 
-            assert_eq!(tri.len() as f64 / 3.0, g["triangles"].as_f64().unwrap(), "{name} {ch:?} triangle count");
+            assert_eq!(
+                tri.len() as f64 / 3.0,
+                g["triangles"].as_f64().unwrap(),
+                "{name} {ch:?} triangle count"
+            );
 
-            let area: f64 = tri.chunks(3).map(|c| ((c[1][0] - c[0][0]) * (c[2][1] - c[0][1]) - (c[2][0] - c[0][0]) * (c[1][1] - c[0][1])) / 2.0).sum();
+            let area: f64 = tri
+                .chunks(3)
+                .map(|c| {
+                    ((c[1][0] - c[0][0]) * (c[2][1] - c[0][1])
+                        - (c[2][0] - c[0][0]) * (c[1][1] - c[0][1]))
+                        / 2.0
+                })
+                .sum();
 
-            assert!((area - g["area"].as_f64().unwrap()).abs() < 1e-9, "{name} {ch:?} area {area} vs {}", g["area"]);
+            assert!(
+                (area - g["area"].as_f64().unwrap()).abs() < 1e-9,
+                "{name} {ch:?} area {area} vs {}",
+                g["area"]
+            );
             glyph_checks += 1;
 
             if let Some(v) = g["vertices"].as_array() {
@@ -216,7 +259,12 @@ fn font_metrics_kerning_and_glyphs() {
                 assert_eq!(v.len(), tri.len() * 2, "{name} {ch:?} vertex count");
 
                 for (i, p) in tri.iter().enumerate() {
-                    assert!((p[0] - v[i * 2]).abs() < 1e-9 && (p[1] - v[i * 2 + 1]).abs() < 1e-9, "{name} {ch:?} vertex {i}: {p:?} vs ({}, {})", v[i * 2], v[i * 2 + 1]);
+                    assert!(
+                        (p[0] - v[i * 2]).abs() < 1e-9 && (p[1] - v[i * 2 + 1]).abs() < 1e-9,
+                        "{name} {ch:?} vertex {i}: {p:?} vs ({}, {})",
+                        v[i * 2],
+                        v[i * 2 + 1]
+                    );
                 }
 
                 vertex_checks += 1;
@@ -236,17 +284,31 @@ fn text_layouts() {
     let mut checked = 0;
 
     for (name, l) in o["layouts"].as_object().unwrap() {
-        let strings: Vec<String> = l["strings"].as_array().unwrap().iter().map(|s| s.as_str().unwrap().to_string()).collect();
+        let strings: Vec<String> = l["strings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|s| s.as_str().unwrap().to_string())
+            .collect();
         let (family, style, fs) = parse_font_style(l["fontStyle"].as_str().unwrap());
         let (length, max_extent) = parse_text_fields(l["text"].as_str().unwrap());
         let font = select_default_font(&family, &style);
         let text = TextParams::from_strings(&strings, &length, max_extent);
-        let out = layout(font.as_deref(), &text, &fs, PrimitiveQuality::Medium, TextCompression::CharSpacing);
+        let out = layout(
+            font.as_deref(),
+            &text,
+            &fs,
+            PrimitiveQuality::Medium,
+            TextCompression::CharSpacing,
+        );
         let close = |a: &[f64], b: &[f64], what: &str| {
             assert_eq!(a.len(), b.len(), "{name} {what} length");
 
             for (i, (x, y)) in a.iter().zip(b).enumerate() {
-                assert!((x - y).abs() <= 1e-6 * (1.0 + y.abs()), "{name} {what}[{i}]: {x} vs {y}");
+                assert!(
+                    (x - y).abs() <= 1e-6 * (1.0 + y.abs()),
+                    "{name} {what}[{i}]: {x} vs {y}"
+                );
             }
         };
 
@@ -254,7 +316,9 @@ fn text_layouts() {
         close(&out.tex_coords, &nums(&l["texCoords"]), "texCoords");
         close(&out.normals, &nums(&l["normals"]), "normals");
 
-        if !out.vertices.is_empty() || l["vertices"].as_array().unwrap().is_empty() && !strings.is_empty() {
+        if !out.vertices.is_empty()
+            || l["vertices"].as_array().unwrap().is_empty() && !strings.is_empty()
+        {
             close(&out.min, &nums(&l["min"]), "min");
             close(&out.max, &nums(&l["max"]), "max");
         }
@@ -262,7 +326,12 @@ fn text_layouts() {
         close(&out.origin, &nums(&l["origin"]), "origin");
         close(&out.text_bounds, &nums(&l["textBounds"]), "textBounds");
 
-        let lb: Vec<f64> = l["lineBounds"].as_array().unwrap().iter().flat_map(|v| nums(v)).collect();
+        let lb: Vec<f64> = l["lineBounds"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .flat_map(|v| nums(v))
+            .collect();
         let mine: Vec<f64> = out.line_bounds.iter().flat_map(|v| v.to_vec()).collect();
 
         close(&mine, &lb, "lineBounds");

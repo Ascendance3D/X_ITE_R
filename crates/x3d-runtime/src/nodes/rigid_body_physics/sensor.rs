@@ -47,7 +47,10 @@ impl Runtime {
     pub(super) fn sensor_set_live(&mut self, node: NodeId) {
         let sensor = self.sensor_events_field();
 
-        if self.phys_live(node) && self.get_bool(node, "enabled") && self.sensor_rt(node).collider.is_some() {
+        if self.phys_live(node)
+            && self.get_bool(node, "enabled")
+            && self.sensor_rt(node).collider.is_some()
+        {
             self.add_interest(sensor, node, Cb::Physics(PhysicsCb::SensorUpdate));
         } else {
             self.remove_interest(sensor, node, Cb::Physics(PhysicsCb::SensorUpdate));
@@ -111,7 +114,15 @@ impl Runtime {
                 (0..pw.w.num_manifolds())
                     .map(|i| {
                         let m = pw.w.manifold_by_index(i);
-                        let points = m.points.iter().map(|p| Point { distance: p.distance1, position_on_a: p.position_world_on_a, normal_on_b: p.normal_world_on_b }).collect();
+                        let points = m
+                            .points
+                            .iter()
+                            .map(|p| Point {
+                                distance: p.distance1,
+                                position_on_a: p.position_world_on_a,
+                                normal_on_b: p.normal_world_on_b,
+                            })
+                            .collect();
 
                         (m.body0, m.body1, points)
                     })
@@ -135,8 +146,20 @@ impl Runtime {
                         continue;
                     };
 
-                    self.set_v3(contact, "position", Vector3::new(pt.position_on_a[0], pt.position_on_a[1], pt.position_on_a[2]));
-                    self.set_v3(contact, "contactNormal", Vector3::new(pt.normal_on_b[0], pt.normal_on_b[1], pt.normal_on_b[2]));
+                    self.set_v3(
+                        contact,
+                        "position",
+                        Vector3::new(
+                            pt.position_on_a[0],
+                            pt.position_on_a[1],
+                            pt.position_on_a[2],
+                        ),
+                    );
+                    self.set_v3(
+                        contact,
+                        "contactNormal",
+                        Vector3::new(pt.normal_on_b[0], pt.normal_on_b[1], pt.normal_on_b[2]),
+                    );
                     self.set_f(contact, "depth", -pt.distance);
 
                     // frictionDirection is commented out upstream.
@@ -150,7 +173,10 @@ impl Runtime {
                         ("softnessConstantForceMix", "softnessConstantForceMix"),
                         ("softnessErrorCorrection", "softnessErrorCorrection"),
                     ] {
-                        if let (Some(t), Some(v)) = (self.pre(contact, to), self.pre_value(collider, from).cloned()) {
+                        if let (Some(t), Some(v)) = (
+                            self.pre(contact, to),
+                            self.pre_value(collider, from).cloned(),
+                        ) {
                             self.set_value(t, v);
                         }
                     }
@@ -176,13 +202,19 @@ impl Runtime {
 
         if !intersections.is_empty() {
             if let Some(k) = self.pre(node, "intersections") {
-                self.set_value(k, FieldValue::MFNode(intersections.into_iter().map(Some).collect()));
+                self.set_value(
+                    k,
+                    FieldValue::MFNode(intersections.into_iter().map(Some).collect()),
+                );
             }
         }
 
         if !contacts.is_empty() {
             if let Some(k) = self.pre(node, "contacts") {
-                self.set_value(k, FieldValue::MFNode(contacts.into_iter().map(Some).collect()));
+                self.set_value(
+                    k,
+                    FieldValue::MFNode(contacts.into_iter().map(Some).collect()),
+                );
             }
         }
     }

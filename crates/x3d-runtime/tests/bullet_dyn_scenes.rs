@@ -3,8 +3,8 @@
 //! recorded quantity per scene. The target, and the assertion, is zero.
 
 use std::collections::BTreeMap;
+use x3d_runtime::physics::bt::body::{BodyId, ConstructionInfo};
 use x3d_runtime::physics::bt::constraint::Constraint;
-use x3d_runtime::physics::bt::body::{ConstructionInfo, BodyId};
 use x3d_runtime::physics::bt::math::*;
 use x3d_runtime::physics::bt::shape::ShapeId;
 use x3d_runtime::physics::bt::world::World;
@@ -101,10 +101,20 @@ impl P<'_> {
             }
             _ => {
                 let st = self.i;
-                while self.i < self.s.len() && matches!(self.s[self.i], b'-' | b'+' | b'.' | b'e' | b'E' | b'0'..=b'9') {
+                while self.i < self.s.len()
+                    && matches!(
+                        self.s[self.i],
+                        b'-' | b'+' | b'.' | b'e' | b'E' | b'0'..=b'9'
+                    )
+                {
                     self.i += 1;
                 }
-                J::Num(std::str::from_utf8(&self.s[st..self.i]).unwrap().parse().unwrap())
+                J::Num(
+                    std::str::from_utf8(&self.s[st..self.i])
+                        .unwrap()
+                        .parse()
+                        .unwrap(),
+                )
             }
         }
     }
@@ -154,22 +164,36 @@ impl J {
 
 /// RigidBody.js / CollidableShape.js toTransform: a column-major Matrix4 to a btTransform.
 fn to_transform(m: &[f64]) -> Tf {
-    rt(Tf { b: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]], o: [m[12], m[13], m[14]] })
+    rt(Tf {
+        b: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]],
+        o: [m[12], m[13], m[14]],
+    })
 }
 
 fn make_primitive(w: &mut World, s: &J) -> ShapeId {
     match s.get("type").s() {
         "sphere" => w.shapes.new_sphere(s.get("radius").f()),
         "box" => w.shapes.new_box(s.get("half").v3()),
-        "cylinder" => w.shapes.new_cylinder([s.get("radius").f(), s.get("half_height").f(), s.get("radius").f()]),
+        "cylinder" => w.shapes.new_cylinder([
+            s.get("radius").f(),
+            s.get("half_height").f(),
+            s.get("radius").f(),
+        ]),
         "cone" => w.shapes.new_cone(s.get("radius").f(), s.get("height").f()),
-        "capsule" => w.shapes.new_capsule(s.get("radius").f(), s.get("height").f()),
+        "capsule" => w
+            .shapes
+            .new_capsule(s.get("radius").f(), s.get("height").f()),
         "hull" => {
             let pts: Vec<V3> = s.get("points").a().iter().map(|p| p.v3()).collect();
             w.shapes.new_convex_hull(&pts)
         }
         "mesh" => {
-            let tris: Vec<[V3; 3]> = s.get("triangles").a().iter().map(|t| [t.a()[0].v3(), t.a()[1].v3(), t.a()[2].v3()]).collect();
+            let tris: Vec<[V3; 3]> = s
+                .get("triangles")
+                .a()
+                .iter()
+                .map(|t| [t.a()[0].v3(), t.a()[1].v3(), t.a()[2].v3()])
+                .collect();
             w.shapes.new_bvh_triangle_mesh(&tris)
         }
         t => panic!("shape {t}"),
@@ -218,7 +242,13 @@ fn feedback(w: &mut World, built: &[Built]) {
             let mut orientation = Rotation4::identity();
             orientation.set_quaternion(&quaternion);
             let mut m = Matrix4::IDENTITY;
-            m.set_transform(Some(&Vector3::new(tf.o[0], tf.o[1], tf.o[2])), Some(&orientation), None, None, None);
+            m.set_transform(
+                Some(&Vector3::new(tf.o[0], tf.o[1], tf.o[2])),
+                Some(&orientation),
+                None,
+                None,
+                None,
+            );
             let mut im = m;
             im.inverse();
             let body = w.body(b.rb);
@@ -242,12 +272,13 @@ fn feedback(w: &mut World, built: &[Built]) {
                 let o = s.get("offset").v3();
                 lm.translate(&Vector3::new(o[0], o[1], o[2]));
             }
-            w.shapes.update_child_transform(b.ccs[k], 0, to_transform(&lm.0), true);
+            w.shapes
+                .update_child_transform(b.ccs[k], 0, to_transform(&lm.0), true);
         }
     }
 
     for (b, n) in built.iter().zip(&next) {
-        set_transform_with(w, b, &n.0 .0, &n.1 .0);
+        set_transform_with(w, b, &n.0.0, &n.1.0);
     }
 }
 
@@ -273,7 +304,10 @@ impl Errors {
 }
 
 fn load(name: &str) -> J {
-    let path = format!("{}/tests/data/bullet_dyn/{name}.json", env!("CARGO_MANIFEST_DIR"));
+    let path = format!(
+        "{}/tests/data/bullet_dyn/{name}.json",
+        env!("CARGO_MANIFEST_DIR")
+    );
     let text = std::fs::read(&path).unwrap_or_else(|e| panic!("{path}: {e}"));
     P { s: &text, i: 0 }.val()
 }
@@ -291,7 +325,15 @@ fn make_ccs(w: &mut World, b: &J, xflow: bool) -> Vec<ShapeId> {
             if xflow {
                 w.shapes.set_local_scaling(cc, [1.0; 3]);
             }
-            w.shapes.add_child_shape(cc, if xflow { Tf::IDENTITY } else { to_transform(&s.get("local").v()) }, prim);
+            w.shapes.add_child_shape(
+                cc,
+                if xflow {
+                    Tf::IDENTITY
+                } else {
+                    to_transform(&s.get("local").v())
+                },
+                prim,
+            );
             w.shapes.set_local_scaling(cc, [1.0; 3]);
             cc
         })
@@ -304,11 +346,23 @@ fn init_body(w: &mut World, bt: &Built) -> V3 {
     let b = &bt.spec;
     let fixed = b.get("fixed").b();
     let body = w.body_mut(bt.rb);
-    body.set_linear_velocity(if fixed { ZERO } else { b.get("linear_velocity").v3() });
+    body.set_linear_velocity(if fixed {
+        ZERO
+    } else {
+        b.get("linear_velocity").v3()
+    });
     body.activate(false);
-    body.set_angular_velocity(if fixed { ZERO } else { b.get("angular_velocity").v3() });
+    body.set_angular_velocity(if fixed {
+        ZERO
+    } else {
+        b.get("angular_velocity").v3()
+    });
     body.activate(false);
-    body.set_angular_factor(if b.get("use_finite_rotation").b() { b.get("finite_rotation_axis").v3() } else { [1.0; 3] });
+    body.set_angular_factor(if b.get("use_finite_rotation").b() {
+        b.get("finite_rotation_axis").v3()
+    } else {
+        [1.0; 3]
+    });
 
     if b.get("auto_damp").b() {
         body.set_damping(b.get("linear_damping").f(), b.get("angular_damping").f());
@@ -316,7 +370,10 @@ fn init_body(w: &mut World, bt: &Built) -> V3 {
         body.set_damping(0.0, 0.0);
     }
     body.activate(false);
-    body.set_center_of_mass_transform(Tf { b: IDENTITY3, o: b.get("center_of_mass").v3() });
+    body.set_center_of_mass_transform(Tf {
+        b: IDENTITY3,
+        o: b.get("center_of_mass").v3(),
+    });
 
     let mass = if fixed { 0.0 } else { b.get("mass").f() };
     let li = w.shapes.calculate_local_inertia(bt.compound, mass);
@@ -336,28 +393,55 @@ fn init_body(w: &mut World, bt: &Built) -> V3 {
 
 fn run_scene(name: &str) -> Errors {
     let root = load(name);
-    run_one(root.get("scene"), root.get("steps").a(), &mut Errors::default())
+    run_one(
+        root.get("scene"),
+        root.get("steps").a(),
+        &mut Errors::default(),
+    )
 }
 
 fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
-
     let mut w = World::new();
     let mut built: Vec<Built> = vec![];
 
     let xflow = spec.get("xflow").b();
-    let zero = Tf { b: [[0.0; 3]; 3], o: ZERO };
+    let zero = Tf {
+        b: [[0.0; 3]; 3],
+        o: ZERO,
+    };
 
     // X_ITE makes every CollidableShape before the RigidBodies that hold them.
-    let pre: Vec<Vec<ShapeId>> = if xflow { spec.get("bodies").a().iter().map(|b| make_ccs(&mut w, b, true)).collect() } else { vec![] };
+    let pre: Vec<Vec<ShapeId>> = if xflow {
+        spec.get("bodies")
+            .a()
+            .iter()
+            .map(|b| make_ccs(&mut w, b, true))
+            .collect()
+    } else {
+        vec![]
+    };
 
     for (bi, b) in spec.get("bodies").a().iter().enumerate() {
         let compound = w.shapes.new_compound();
-        let ms = w.create_motion_state(Tf { b: [[0.0; 3]; 3], o: ZERO });
+        let ms = w.create_motion_state(Tf {
+            b: [[0.0; 3]; 3],
+            o: ZERO,
+        });
         // new btDefaultMotionState (): identity
         w.set_motion_state_world_transform(ms, Tf::IDENTITY);
         let info = ConstructionInfo::new(0.0, Some(ms), compound);
         let rb = w.create_rigid_body(&info);
-        let mut bt = Built { rb, ms, compound, ccs: if xflow { pre[bi].clone() } else { make_ccs(&mut w, b, false) }, spec: b.clone() };
+        let mut bt = Built {
+            rb,
+            ms,
+            compound,
+            ccs: if xflow {
+                pre[bi].clone()
+            } else {
+                make_ccs(&mut w, b, false)
+            },
+            spec: b.clone(),
+        };
 
         // RigidBody.set_compoundShape__: the transform is replaced by updateChildTransform
         for cc in bt.ccs.clone() {
@@ -380,12 +464,20 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
     let collider = spec.get("collider");
 
     for b in &built {
-        let (fr, rfr) = if collider.is_null() { (0.5, 0.0) } else { (collider.get("friction").v()[0], collider.get("friction").v()[1]) };
+        let (fr, rfr) = if collider.is_null() {
+            (0.5, 0.0)
+        } else {
+            (
+                collider.get("friction").v()[0],
+                collider.get("friction").v()[1],
+            )
+        };
         let body = w.body_mut(b.rb);
         body.friction = f(fr);
         body.rolling_friction = f(rfr);
         let shape = body.shape;
-        w.shapes.set_margin(shape, spec.get("contact_surface_thickness").f());
+        w.shapes
+            .set_margin(shape, spec.get("contact_surface_thickness").f());
     }
 
     for b in &built {
@@ -396,7 +488,9 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
 
     // X_ITE's load, as the call log of the real run shows it: see ammo_dyn_vectors.mjs.
     if xflow {
-        let rebuilds = |s: &J| s.get("rebuild").b() || matches!(s.get("type").s(), "sphere" | "cone" | "cylinder");
+        let rebuilds = |s: &J| {
+            s.get("rebuild").b() || matches!(s.get("type").s(), "sphere" | "cone" | "cylinder")
+        };
         let local_of = |b: &Built, k: usize| -> Vec<f64> {
             let mut m = x3d_fields::math::Matrix4::IDENTITY;
             m.0.copy_from_slice(&b.spec.get("m").v());
@@ -421,7 +515,8 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
         }
         for bt in &built {
             for k in 0..bt.ccs.len() {
-                w.shapes.update_child_transform(bt.ccs[k], 0, to_transform(&local_of(bt, k)), true);
+                w.shapes
+                    .update_child_transform(bt.ccs[k], 0, to_transform(&local_of(bt, k)), true);
             }
         }
         for bt in &built {
@@ -446,13 +541,15 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
                 if !s.get("margin").is_null() {
                     w.shapes.set_margin(prim, s.get("margin").f());
                 }
-                w.shapes.add_child_shape(cc, to_transform(&s.get("local").v()), prim);
+                w.shapes
+                    .add_child_shape(cc, to_transform(&s.get("local").v()), prim);
                 w.shapes.set_local_scaling(cc, [1.0; 3]);
             }
 
             remake(&mut w, bt);
             for k in 0..bt.ccs.len() {
-                w.shapes.update_child_transform(bt.ccs[k], 0, to_transform(&local_of(bt, k)), true);
+                w.shapes
+                    .update_child_transform(bt.ccs[k], 0, to_transform(&local_of(bt, k)), true);
             }
             set_transform(&mut w, bt);
         }
@@ -463,12 +560,22 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
         let fixed = bt.spec.get("fixed").b();
         let mass = if fixed { 0.0 } else { bt.spec.get("mass").f() };
         let li = w.shapes.calculate_local_inertia(bt.compound, mass);
-        errors.upd("inertia", &li, &steps[0].get("bodies").a()[i].get("inertia").v());
+        errors.upd(
+            "inertia",
+            &li,
+            &steps[0].get("bodies").a()[i].get("inertia").v(),
+        );
     }
 
     if !spec.get("joints").is_null() {
         for j in spec.get("joints").a() {
-            let find = |n: &str| built.iter().find(|b| b.spec.get("name").s() == n).unwrap().rb;
+            let find = |n: &str| {
+                built
+                    .iter()
+                    .find(|b| b.spec.get("name").s() == n)
+                    .unwrap()
+                    .rb
+            };
             let (b1, b2) = (find(j.get("body1").s()), find(j.get("body2").s()));
             let mut c = match j.get("type").s() {
                 "ball" => {
@@ -477,9 +584,25 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
                     c.set_pivot_b(j.get("pivot_b").v3());
                     c
                 }
-                "hinge" => Constraint::hinge(&w.bodies, b1, b2, j.get("pivot_a").v3(), j.get("pivot_b").v3(), j.get("axis_a").v3(), j.get("axis_b").v3(), false),
+                "hinge" => Constraint::hinge(
+                    &w.bodies,
+                    b1,
+                    b2,
+                    j.get("pivot_a").v3(),
+                    j.get("pivot_b").v3(),
+                    j.get("axis_a").v3(),
+                    j.get("axis_b").v3(),
+                    false,
+                ),
                 "slider" => {
-                    let mut c = Constraint::slider(&w.bodies, b1, b2, to_transform(&j.get("frame_a").v()), to_transform(&j.get("frame_b").v()), true);
+                    let mut c = Constraint::slider(
+                        &w.bodies,
+                        b1,
+                        b2,
+                        to_transform(&j.get("frame_a").v()),
+                        to_transform(&j.get("frame_b").v()),
+                        true,
+                    );
                     c.set_lower_ang_limit(0.0);
                     c.set_upper_ang_limit(0.0);
                     c.set_lower_lin_limit(j.get("lower").f());
@@ -507,14 +630,30 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
                     ("lin", body.lin_vel.to_vec(), sb.get("lin").v()),
                     ("ang", body.ang_vel.to_vec(), sb.get("ang").v()),
                     ("wpos", body.world_tf.o.to_vec(), sb.get("wpos").v()),
-                    ("wbasis", body.world_tf.b.iter().flatten().copied().collect::<Vec<f64>>(), sb.get("wbasis").v()),
-                    ("wquat", rq(body.world_tf.rotation()).to_vec(), sb.get("wquat").v()),
+                    (
+                        "wbasis",
+                        body.world_tf
+                            .b
+                            .iter()
+                            .flatten()
+                            .copied()
+                            .collect::<Vec<f64>>(),
+                        sb.get("wbasis").v(),
+                    ),
+                    (
+                        "wquat",
+                        rq(body.world_tf.rotation()).to_vec(),
+                        sb.get("wquat").v(),
+                    ),
                     ("quat", rq(t.rotation()).to_vec(), sb.get("quat").v()),
                 ];
                 let (lo, hi) = w.shapes.aabb(body.shape, &body.world_tf);
                 let aabb: Vec<f64> = lo.iter().chain(hi.iter()).copied().collect();
                 if aabb != sb.get("aabb").v() {
-                    eprintln!("step {step_no} body {i} aabb: ours {aabb:?} want {:?}", sb.get("aabb").v());
+                    eprintln!(
+                        "step {step_no} body {i} aabb: ours {aabb:?} want {:?}",
+                        sb.get("aabb").v()
+                    );
                     debug_hit = true;
                 }
 
@@ -533,11 +672,25 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
             errors.upd("lin", &body.lin_vel, &sb.get("lin").v());
             errors.upd("ang", &body.ang_vel, &sb.get("ang").v());
             errors.upd("wpos", &body.world_tf.o, &sb.get("wpos").v());
-            errors.upd("wbasis", &body.world_tf.b.iter().flatten().copied().collect::<Vec<f64>>(), &sb.get("wbasis").v());
+            errors.upd(
+                "wbasis",
+                &body
+                    .world_tf
+                    .b
+                    .iter()
+                    .flatten()
+                    .copied()
+                    .collect::<Vec<f64>>(),
+                &sb.get("wbasis").v(),
+            );
             errors.upd("wquat", &rq(body.world_tf.rotation()), &sb.get("wquat").v());
             errors.count("active", body.is_active() != sb.get("active").b());
             let (lo, hi) = w.shapes.aabb(body.shape, &body.world_tf);
-            errors.upd("aabb", &[lo[0], lo[1], lo[2], hi[0], hi[1], hi[2]], &sb.get("aabb").v());
+            errors.upd(
+                "aabb",
+                &[lo[0], lo[1], lo[2], hi[0], hi[1], hi[2]],
+                &sb.get("aabb").v(),
+            );
         }
 
         let ms = step.get("manifolds").a();
@@ -550,7 +703,10 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
 
         for (k, m) in ms.iter().enumerate().take(n) {
             let mf = w.manifold_by_index(k);
-            errors.count("manifold_bodies", mf.body0 != m.get("b0").f() as usize || mf.body1 != m.get("b1").f() as usize);
+            errors.count(
+                "manifold_bodies",
+                mf.body0 != m.get("b0").f() as usize || mf.body1 != m.get("b1").f() as usize,
+            );
             let pts = m.get("points").a();
             errors.count("point_count", mf.points.len() != pts.len());
 
@@ -563,17 +719,27 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
                         ("b", p.position_world_on_b.to_vec(), jp.get("b").v()),
                         ("n", p.normal_world_on_b.to_vec(), jp.get("n").v()),
                         ("distance", vec![p.distance1], vec![jp.get("distance").f()]),
-                        ("impulse", vec![p.applied_impulse], vec![jp.get("impulse").f()]),
+                        (
+                            "impulse",
+                            vec![p.applied_impulse],
+                            vec![jp.get("impulse").f()],
+                        ),
                     ];
                     for (nm, o, wnt) in pairs {
                         if o != wnt {
-                            eprintln!("step {step_no} manifold {k} point {pi} {nm}: ours {o:?} want {wnt:?}");
+                            eprintln!(
+                                "step {step_no} manifold {k} point {pi} {nm}: ours {o:?} want {wnt:?}"
+                            );
                             debug_hit = true;
                         }
                     }
                 }
                 if mf.points.len() != pts.len() {
-                    eprintln!("step {step_no} manifold {k}: {} points, want {}", mf.points.len(), pts.len());
+                    eprintln!(
+                        "step {step_no} manifold {k}: {} points, want {}",
+                        mf.points.len(),
+                        pts.len()
+                    );
                     debug_hit = true;
                 }
             }
@@ -591,12 +757,30 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
             for k in 0..n {
                 let mf = w.manifold_by_index(k);
                 for p in &mf.points {
-                    eprintln!("  ours manifold {k} b{}-b{}: a {:?} b {:?} n {:?} d {:?} imp {:?} lat {:?} life {}", mf.body0, mf.body1, p.position_world_on_a, p.position_world_on_b, p.normal_world_on_b, p.distance1, p.applied_impulse, p.applied_impulse_lateral1, p.life_time);
+                    eprintln!(
+                        "  ours manifold {k} b{}-b{}: a {:?} b {:?} n {:?} d {:?} imp {:?} lat {:?} life {}",
+                        mf.body0,
+                        mf.body1,
+                        p.position_world_on_a,
+                        p.position_world_on_b,
+                        p.normal_world_on_b,
+                        p.distance1,
+                        p.applied_impulse,
+                        p.applied_impulse_lateral1,
+                        p.life_time
+                    );
                 }
             }
             for (k, m) in ms.iter().enumerate() {
                 for jp in m.get("points").a() {
-                    eprintln!("  want manifold {k}: a {:?} b {:?} n {:?} d {:?} imp {:?}", jp.get("a").v(), jp.get("b").v(), jp.get("n").v(), jp.get("distance").f(), jp.get("impulse").f());
+                    eprintln!(
+                        "  want manifold {k}: a {:?} b {:?} n {:?} d {:?} imp {:?}",
+                        jp.get("a").v(),
+                        jp.get("b").v(),
+                        jp.get("n").v(),
+                        jp.get("distance").f(),
+                        jp.get("impulse").f()
+                    );
                 }
             }
             std::process::exit(3);
@@ -615,7 +799,13 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
         if collider_bounce {
             for b in &built {
                 let v = w.body(b.rb).lin_vel;
-                let r = if (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt() >= collider.get("min_bounce_speed").f() { collider.get("bounce").f() } else { 0.0 };
+                let r = if (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt()
+                    >= collider.get("min_bounce_speed").f()
+                {
+                    collider.get("bounce").f()
+                } else {
+                    0.0
+                };
                 w.body_mut(b.rb).restitution = f(r);
             }
         } else {
@@ -629,7 +819,11 @@ fn run_one(spec: &J, steps: &[J], errors: &mut Errors) -> Errors {
                 if b.spec.get("fixed").b() {
                     continue;
                 }
-                let g = if b.spec.get("use_global_gravity").b() { gravity } else { ZERO };
+                let g = if b.spec.get("use_global_gravity").b() {
+                    gravity
+                } else {
+                    ZERO
+                };
                 let body = w.body_mut(b.rb);
                 body.set_gravity(g);
                 body.apply_force(b.spec.get("force").v3(), ZERO);
@@ -694,20 +888,60 @@ fn check_pairs(name: &str) {
                 continue;
             }
         }
-        let depth0 = c.get("steps").a()[0].get("manifolds").a().iter().flat_map(|m| m.get("points").a().iter().map(|p| p.get("distance").f()).collect::<Vec<_>>()).fold(0.0, f64::min);
+        let depth0 = c.get("steps").a()[0]
+            .get("manifolds")
+            .a()
+            .iter()
+            .flat_map(|m| {
+                m.get("points")
+                    .a()
+                    .iter()
+                    .map(|p| p.get("distance").f())
+                    .collect::<Vec<_>>()
+            })
+            .fold(0.0, f64::min);
         if std::env::var("BT_DEBUG").is_ok() && depth0 < DEEP {
             continue;
         }
         if std::env::var("BT_DEBUG").is_ok() {
-            eprintln!("case {ci}: {}", c.get("scene").get("bodies").a().iter().map(|b| format!("{:?} {:?} {:?}", b.get("position").v(), b.get("rotation").v(), b.get("shapes").a()[0].get("type").s())).collect::<Vec<_>>().join(" | "));
+            eprintln!(
+                "case {ci}: {}",
+                c.get("scene")
+                    .get("bodies")
+                    .a()
+                    .iter()
+                    .map(|b| format!(
+                        "{:?} {:?} {:?}",
+                        b.get("position").v(),
+                        b.get("rotation").v(),
+                        b.get("shapes").a()[0].get("type").s()
+                    ))
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            );
         }
         let mut e = Errors::default();
         run_one(c.get("scene"), c.get("steps").a(), &mut e);
         let worst = e.0.values().cloned().fold(0.0, f64::max);
-        let depth = c.get("steps").a()[0].get("manifolds").a().iter().flat_map(|m| m.get("points").a().iter().map(|p| p.get("distance").f()).collect::<Vec<_>>()).fold(0.0, f64::min);
+        let depth = c.get("steps").a()[0]
+            .get("manifolds")
+            .a()
+            .iter()
+            .flat_map(|m| {
+                m.get("points")
+                    .a()
+                    .iter()
+                    .map(|p| p.get("distance").f())
+                    .collect::<Vec<_>>()
+            })
+            .fold(0.0, f64::min);
         let deep = depth < DEEP;
         if worst > 0.0 {
-            println!("  case {ci} differs{}: worst {worst:e} {:?}", if deep { " (deep)" } else { "" }, e.0.iter().filter(|(_, v)| **v > 0.0).collect::<Vec<_>>());
+            println!(
+                "  case {ci} differs{}: worst {worst:e} {:?}",
+                if deep { " (deep)" } else { "" },
+                e.0.iter().filter(|(_, v)| **v > 0.0).collect::<Vec<_>>()
+            );
             if deep {
                 deep_bad += 1;
             } else {
@@ -730,7 +964,10 @@ fn check_pairs(name: &str) {
         }
     }
 
-    println!("pairs {name}: {bad} of {} shallow cases differ; {deep_bad} of {deep_total} deep (penetration beyond {DEEP}, EPA) cases differ", cases.len() - deep_total);
+    println!(
+        "pairs {name}: {bad} of {} shallow cases differ; {deep_bad} of {deep_total} deep (penetration beyond {DEEP}, EPA) cases differ",
+        cases.len() - deep_total
+    );
     for (k, v) in &deep_err.0 {
         println!("  deep MAX ABS ERROR {k:>16} = {v:e}");
     }

@@ -12,7 +12,10 @@ pub struct Server {
 }
 
 pub fn content_type(path: &Path) -> &'static str {
-    let ext = path.extension().map(|e| e.to_string_lossy().to_ascii_lowercase()).unwrap_or_default();
+    let ext = path
+        .extension()
+        .map(|e| e.to_string_lossy().to_ascii_lowercase())
+        .unwrap_or_default();
     match ext.as_str() {
         "html" => "text/html",
         "js" | "mjs" => "text/javascript",
@@ -65,7 +68,8 @@ fn url_pathname(target: &str) -> String {
                     segs.push("");
                 }
             }
-            ".." | ".%2e" | ".%2E" | "%2e." | "%2E." | "%2e%2e" | "%2E%2E" | "%2e%2E" | "%2E%2e" => {
+            ".." | ".%2e" | ".%2E" | "%2e." | "%2E." | "%2e%2e" | "%2E%2E" | "%2e%2E"
+            | "%2E%2e" => {
                 segs.pop();
                 if last {
                     segs.push("");
@@ -101,7 +105,10 @@ fn respond(stream: &mut TcpStream, root: &Path, method: &str, target: &str) -> s
     if !status.starts_with("403") {
         head.push_str("Cache-Control: no-store\r\n");
     }
-    head.push_str(&format!("Content-Length: {}\r\nConnection: keep-alive\r\n\r\n", body.len()));
+    head.push_str(&format!(
+        "Content-Length: {}\r\nConnection: keep-alive\r\n\r\n",
+        body.len()
+    ));
     stream.write_all(head.as_bytes())?;
     if method != "HEAD" {
         stream.write_all(&body)?;
@@ -111,7 +118,9 @@ fn respond(stream: &mut TcpStream, root: &Path, method: &str, target: &str) -> s
 
 fn serve(stream: TcpStream, root: PathBuf) {
     let _ = stream.set_nodelay(true);
-    let Ok(read_half) = stream.try_clone() else { return };
+    let Ok(read_half) = stream.try_clone() else {
+        return;
+    };
     let mut reader = BufReader::new(read_half);
     let mut stream = stream;
     loop {
@@ -120,7 +129,9 @@ fn serve(stream: TcpStream, root: PathBuf) {
             return;
         }
         let mut parts = line.split_whitespace();
-        let (Some(method), Some(target)) = (parts.next(), parts.next()) else { return };
+        let (Some(method), Some(target)) = (parts.next(), parts.next()) else {
+            return;
+        };
         let (method, target) = (method.to_string(), target.to_string());
         let mut length = 0usize;
         loop {
@@ -133,9 +144,10 @@ fn serve(stream: TcpStream, root: PathBuf) {
                 break;
             }
             if let Some((k, v)) = h.split_once(':')
-                && k.eq_ignore_ascii_case("content-length") {
-                    length = v.trim().parse().unwrap_or(0);
-                }
+                && k.eq_ignore_ascii_case("content-length")
+            {
+                length = v.trim().parse().unwrap_or(0);
+            }
         }
         if length > 0 {
             let mut skip = vec![0u8; length];
@@ -157,7 +169,9 @@ impl Server {
         thread::Builder::new().name("http".into()).spawn(move || {
             for stream in listener.incoming().flatten() {
                 let root = root.clone();
-                let _ = thread::Builder::new().name("http-conn".into()).spawn(move || serve(stream, root));
+                let _ = thread::Builder::new()
+                    .name("http-conn".into())
+                    .spawn(move || serve(stream, root));
             }
         })?;
         Ok(Server { port })
@@ -172,8 +186,14 @@ mod tests {
     fn pathname_and_join() {
         assert_eq!(url_pathname("/a/./b/../c.wrl?x=1"), "/a/c.wrl");
         assert_eq!(url_pathname("/../../etc/passwd"), "/etc/passwd");
-        assert_eq!(join_normalize(Path::new("/r/oracle"), "/x/../y.wrl"), PathBuf::from("/r/oracle/y.wrl"));
-        assert_eq!(join_normalize(Path::new("/r/oracle"), "/../../z"), PathBuf::from("/z"));
+        assert_eq!(
+            join_normalize(Path::new("/r/oracle"), "/x/../y.wrl"),
+            PathBuf::from("/r/oracle/y.wrl")
+        );
+        assert_eq!(
+            join_normalize(Path::new("/r/oracle"), "/../../z"),
+            PathBuf::from("/z")
+        );
         assert_eq!(content_type(Path::new("a.WRL")), "model/vrml");
         assert_eq!(content_type(Path::new("a.mjs")), "text/javascript");
     }
@@ -186,7 +206,11 @@ mod tests {
         let s = Server::start(dir.clone()).unwrap();
         let get = |path: &str| {
             let mut c = TcpStream::connect(("127.0.0.1", s.port)).unwrap();
-            write!(c, "GET {path} HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n").unwrap();
+            write!(
+                c,
+                "GET {path} HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n"
+            )
+            .unwrap();
             let mut r = BufReader::new(c);
             let mut head = String::new();
             loop {
@@ -197,7 +221,12 @@ mod tests {
                 }
                 head.push_str(&l);
             }
-            let len: usize = head.lines().find_map(|l| l.strip_prefix("Content-Length: ")).unwrap().parse().unwrap();
+            let len: usize = head
+                .lines()
+                .find_map(|l| l.strip_prefix("Content-Length: "))
+                .unwrap()
+                .parse()
+                .unwrap();
             let mut body = vec![0; len];
             r.read_exact(&mut body).unwrap();
             (head, body)

@@ -45,12 +45,18 @@ pub fn nodes() -> impl Iterator<Item = Node> {
 
 /// All components with their highest supported level.
 pub fn components() -> impl Iterator<Item = (&'static str, i32)> {
-    scene::table().components.iter().map(|c| (c.name.as_str(), c.level))
+    scene::table()
+        .components
+        .iter()
+        .map(|c| (c.name.as_str(), c.level))
 }
 
 /// All profiles, each with its (component, level) list.
 pub fn profiles() -> impl Iterator<Item = (&'static str, &'static [(String, i32)])> {
-    scene::table().profiles.iter().map(|p| (p.name.as_str(), p.components.as_slice()))
+    scene::table()
+        .profiles
+        .iter()
+        .map(|p| (p.name.as_str(), p.components.as_slice()))
 }
 
 impl Node {

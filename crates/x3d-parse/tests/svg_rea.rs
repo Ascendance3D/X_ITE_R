@@ -21,11 +21,17 @@ const MAX_CHANNEL_DIFF: i32 = 1;
 const MAX_DIFF_FRACTION: f64 = 0.001;
 
 fn first_difference(expected: &str, actual: &str) -> String {
-    let (e, a): (Vec<&str>, Vec<&str>) = (expected.split('\n').collect(), actual.split('\n').collect());
+    let (e, a): (Vec<&str>, Vec<&str>) =
+        (expected.split('\n').collect(), actual.split('\n').collect());
 
     for i in 0..e.len().max(a.len()) {
         if e.get(i) != a.get(i) {
-            return format!("line {}:\n  X_ITE: {:.300}\n  Rust:  {:.300}", i + 1, e.get(i).unwrap_or(&"<EOF>"), a.get(i).unwrap_or(&"<EOF>"));
+            return format!(
+                "line {}:\n  X_ITE: {:.300}\n  Rust:  {:.300}",
+                i + 1,
+                e.get(i).unwrap_or(&"<EOF>"),
+                a.get(i).unwrap_or(&"<EOF>")
+            );
         }
     }
 
@@ -66,7 +72,10 @@ fn base64_decode(s: &str) -> Vec<u8> {
 
 /// (width, height, RGBA) of an 8-bit RGBA, non-interlaced PNG.
 fn decode_png(data: &[u8]) -> (usize, usize, Vec<u8>) {
-    assert_eq!(&data[..8], &[0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a]);
+    assert_eq!(
+        &data[..8],
+        &[0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a]
+    );
 
     let mut pos = 8;
     let (mut w, mut h) = (0, 0);
@@ -81,7 +90,11 @@ fn decode_png(data: &[u8]) -> (usize, usize, Vec<u8>) {
             b"IHDR" => {
                 w = u32::from_be_bytes(body[0..4].try_into().unwrap()) as usize;
                 h = u32::from_be_bytes(body[4..8].try_into().unwrap()) as usize;
-                assert_eq!((body[8], body[9], body[12]), (8, 6, 0), "only 8-bit RGBA, not interlaced");
+                assert_eq!(
+                    (body[8], body[9], body[12]),
+                    (8, 6, 0),
+                    "only 8-bit RGBA, not interlaced"
+                );
             }
             b"IDAT" => idat.extend_from_slice(body),
             _ => {}
@@ -92,7 +105,9 @@ fn decode_png(data: &[u8]) -> (usize, usize, Vec<u8>) {
 
     let mut raw = vec![];
 
-    flate2::read::ZlibDecoder::new(&idat[..]).read_to_end(&mut raw).unwrap();
+    flate2::read::ZlibDecoder::new(&idat[..])
+        .read_to_end(&mut raw)
+        .unwrap();
 
     let stride = w * 4;
     let mut out = vec![0u8; stride * h];
@@ -102,9 +117,21 @@ fn decode_png(data: &[u8]) -> (usize, usize, Vec<u8>) {
         let line = &raw[y * (stride + 1) + 1..(y + 1) * (stride + 1)];
 
         for i in 0..stride {
-            let a = if i >= 4 { out[y * stride + i - 4] as i32 } else { 0 };
-            let b = if y > 0 { out[(y - 1) * stride + i] as i32 } else { 0 };
-            let c = if y > 0 && i >= 4 { out[(y - 1) * stride + i - 4] as i32 } else { 0 };
+            let a = if i >= 4 {
+                out[y * stride + i - 4] as i32
+            } else {
+                0
+            };
+            let b = if y > 0 {
+                out[(y - 1) * stride + i] as i32
+            } else {
+                0
+            };
+            let c = if y > 0 && i >= 4 {
+                out[(y - 1) * stride + i - 4] as i32
+            } else {
+                0
+            };
             let predictor = match filter {
                 0 => 0,
                 1 => a,
@@ -143,7 +170,9 @@ fn extract_pngs(text: &str) -> (String, Vec<(usize, usize, Vec<u8>)>) {
         out.push_str(&rest[..i]);
 
         let body = &rest[i + PREFIX.len()..];
-        let end = body.find(|c: char| !(c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '=')).unwrap_or(body.len());
+        let end = body
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '='))
+            .unwrap_or(body.len());
         let (w, h, rgba) = decode_png(&base64_decode(&body[..end]));
 
         out.push_str(&format!("PNG {w}x{h}"));
@@ -163,7 +192,10 @@ fn compare_pixels(a: &(usize, usize, Vec<u8>), b: &(usize, usize, Vec<u8>)) -> (
     let mut differing = 0;
 
     for (pa, pb) in a.2.chunks_exact(4).zip(b.2.chunks_exact(4)) {
-        let d = (0..4).map(|k| (pa[k] as i32 - pb[k] as i32).abs()).max().unwrap();
+        let d = (0..4)
+            .map(|k| (pa[k] as i32 - pb[k] as i32).abs())
+            .max()
+            .unwrap();
 
         max = max.max(d);
         differing += (d > 0) as usize;
@@ -184,7 +216,11 @@ fn svg_matches_x_ite() {
 fn svg_quality_options_match_x_ite() {
     use x3d_parse::SvgQuality::{High, Low};
 
-    for (baseline, primitive, texture) in [("baseline-low-low.json", Low, Low), ("baseline-high-high.json", High, High), ("baseline-low-high.json", Low, High)] {
+    for (baseline, primitive, texture) in [
+        ("baseline-low-low.json", Low, Low),
+        ("baseline-high-high.json", High, High),
+        ("baseline-low-high.json", Low, High),
+    ] {
         x3d_parse::set_svg_quality(primitive, texture);
         check("synthetic-rea-svg-quality", baseline, baseline);
     }
@@ -193,8 +229,11 @@ fn svg_quality_options_match_x_ite() {
 }
 
 fn check(dir: &str, baseline_file: &str, what: &str) {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle").join(dir);
-    let baseline: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(root.join(baseline_file)).unwrap()).unwrap();
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .join(dir);
+    let baseline: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(root.join(baseline_file)).unwrap()).unwrap();
     let only = std::env::var("SVG_ONLY").ok();
     let out = std::env::var("SVG_OUT").ok();
     let mut failures = vec![];
@@ -217,7 +256,10 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
             checks += 1;
 
             match parsed {
-                Ok(_) => failures.push(format!("{file}: X_ITE rejected it ({}), Rust parsed it", entry["error"])),
+                Ok(_) => failures.push(format!(
+                    "{file}: X_ITE rejected it ({}), Rust parsed it",
+                    entry["error"]
+                )),
                 Err(e) => {
                     // X_ITE's rejection is "Couldn't load X3D file."; the cause is its one console
                     // error: `Couldn't load URL '<url>'. Error: <message>` with the url appended to a
@@ -229,8 +271,14 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
                     };
                     let message = actual.trim_end_matches('.');
 
-                    if entry["error"].as_str() != Some("Couldn't load X3D file.") || log.len() != 1 || !log[0].as_str().unwrap().contains(message) {
-                        failures.push(format!("{file}: error text\n  X_ITE: {} {log:?}\n  Rust:  {actual}", entry["error"]));
+                    if entry["error"].as_str() != Some("Couldn't load X3D file.")
+                        || log.len() != 1
+                        || !log[0].as_str().unwrap().contains(message)
+                    {
+                        failures.push(format!(
+                            "{file}: error text\n  X_ITE: {} {log:?}\n  Rust:  {actual}",
+                            entry["error"]
+                        ));
                     }
                 }
             }
@@ -251,13 +299,22 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
         checks += 1;
 
         if scene.encoding != encoding {
-            failures.push(format!("{file}: encoding X_ITE {encoding}, Rust {}", scene.encoding));
+            failures.push(format!(
+                "{file}: encoding X_ITE {encoding}, Rust {}",
+                scene.encoding
+            ));
         }
 
         let mut images: Option<Vec<((usize, usize, Vec<u8>), (usize, usize, Vec<u8>))>> = None;
 
-        for (key, actual) in [("vrml", scene.to_vrml_string()), ("xml", scene.to_xml_string()), ("json", scene.to_json_string())] {
-            let Some(expected) = entry[key].as_str() else { continue };
+        for (key, actual) in [
+            ("vrml", scene.to_vrml_string()),
+            ("xml", scene.to_xml_string()),
+            ("json", scene.to_json_string()),
+        ] {
+            let Some(expected) = entry[key].as_str() else {
+                continue;
+            };
 
             checks += 1;
 
@@ -265,20 +322,35 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
             let (actual_text, actual_images) = extract_pngs(&actual);
 
             if expected_images.len() != actual_images.len() {
-                failures.push(format!("{file} [{key}]: {} textures in X_ITE, {} in Rust", expected_images.len(), actual_images.len()));
+                failures.push(format!(
+                    "{file} [{key}]: {} textures in X_ITE, {} in Rust",
+                    expected_images.len(),
+                    actual_images.len()
+                ));
             } else if key == "xml" {
                 images = Some(expected_images.into_iter().zip(actual_images).collect());
             }
 
             if expected_text != actual_text {
-                failures.push(format!("{file} [{key}]: {}", first_difference(&expected_text, &actual_text)));
+                failures.push(format!(
+                    "{file} [{key}]: {}",
+                    first_difference(&expected_text, &actual_text)
+                ));
 
                 if let Some(dir) = &out {
                     let name = file.replace('/', "__");
 
                     std::fs::create_dir_all(dir).unwrap();
-                    std::fs::write(Path::new(dir).join(format!("{name}.{key}.rust")), &actual_text).unwrap();
-                    std::fs::write(Path::new(dir).join(format!("{name}.{key}.xite")), &expected_text).unwrap();
+                    std::fs::write(
+                        Path::new(dir).join(format!("{name}.{key}.rust")),
+                        &actual_text,
+                    )
+                    .unwrap();
+                    std::fs::write(
+                        Path::new(dir).join(format!("{name}.{key}.xite")),
+                        &expected_text,
+                    )
+                    .unwrap();
                 }
             }
         }
@@ -298,7 +370,11 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
 
                 for (k, (pa, pb)) in e.2.chunks_exact(4).zip(a.2.chunks_exact(4)).enumerate() {
                     if pa != pb && shown < 12 {
-                        println!("{file} pixel ({}, {}): X_ITE {pa:?} Rust {pb:?}", k % e.0, k / e.0);
+                        println!(
+                            "{file} pixel ({}, {}): X_ITE {pa:?} Rust {pb:?}",
+                            k % e.0,
+                            k / e.0
+                        );
                         shown += 1;
                     }
                 }
@@ -310,6 +386,17 @@ fn check(dir: &str, baseline_file: &str, what: &str) {
         }
     }
 
-    println!("{what}: {checks} checks, {} failed; {textures} gradient textures, worst: max channel difference {} with {} of {} pixels differing", failures.len(), worst.0, worst.1, worst.2);
-    assert!(failures.is_empty(), "{what}: {} of {checks} checks failed:\n{}", failures.len(), failures.join("\n"));
+    println!(
+        "{what}: {checks} checks, {} failed; {textures} gradient textures, worst: max channel difference {} with {} of {} pixels differing",
+        failures.len(),
+        worst.0,
+        worst.1,
+        worst.2
+    );
+    assert!(
+        failures.is_empty(),
+        "{what}: {} of {checks} checks failed:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

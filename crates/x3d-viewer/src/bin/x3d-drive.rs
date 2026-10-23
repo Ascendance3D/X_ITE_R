@@ -30,15 +30,23 @@ static PHYSICS_TEXT: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(No
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
+    let opt = |f: &str| {
+        args.iter()
+            .position(|a| a == f)
+            .and_then(|i| args.get(i + 1))
+            .cloned()
+    };
 
     if args.len() < 3 {
-        eprintln!("usage: x3d-drive <file.wrl> <script.json> [--oracle dir] [--out result.json] [--png-dir dir]");
+        eprintln!(
+            "usage: x3d-drive <file.wrl> <script.json> [--oracle dir] [--out result.json] [--png-dir dir]"
+        );
         std::process::exit(2);
     }
 
     let file = PathBuf::from(&args[1]);
-    let script: Value = serde_json::from_str(&std::fs::read_to_string(&args[2]).expect("script")).expect("script json");
+    let script: Value = serde_json::from_str(&std::fs::read_to_string(&args[2]).expect("script"))
+        .expect("script json");
     let oracle = opt("--oracle");
     let out = opt("--out");
     let png_dir = opt("--png-dir");
@@ -50,7 +58,16 @@ fn main() {
     let out_path = out.clone();
     let r = std::thread::Builder::new()
         .stack_size(256 << 20)
-        .spawn(move || run(&file, &script, oracle.as_deref().map(Path::new), png_dir.as_deref().map(Path::new), warmup_override, out_path.as_deref()))
+        .spawn(move || {
+            run(
+                &file,
+                &script,
+                oracle.as_deref().map(Path::new),
+                png_dir.as_deref().map(Path::new),
+                warmup_override,
+                out_path.as_deref(),
+            )
+        })
         .unwrap()
         .join()
         .unwrap();
@@ -89,12 +106,32 @@ fn pose(v: &mut Viewer3d) -> Value {
     j
 }
 
-fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path>, warmup_override: Option<u64>, out: Option<&str>) -> Value {
-    let size = script["size"].as_array().map(|a| (a[0].as_u64().unwrap_or(512) as u32, a[1].as_u64().unwrap_or(512) as u32)).unwrap_or((512, 512));
+fn run(
+    file: &Path,
+    script: &Value,
+    oracle: Option<&Path>,
+    png_dir: Option<&Path>,
+    warmup_override: Option<u64>,
+    out: Option<&str>,
+) -> Value {
+    let size = script["size"]
+        .as_array()
+        .map(|a| {
+            (
+                a[0].as_u64().unwrap_or(512) as u32,
+                a[1].as_u64().unwrap_or(512) as u32,
+            )
+        })
+        .unwrap_or((512, 512));
     let t0 = script["t0"].as_f64().unwrap_or(946684800.0);
     let dt = script["dt"].as_f64().unwrap_or(1.0 / 60.0);
     let frames = script["frames"].as_u64().unwrap_or(1);
-    let list = |k: &str| script[k].as_array().map(|a| a.iter().filter_map(Value::as_u64).collect::<Vec<_>>()).unwrap_or_default();
+    let list = |k: &str| {
+        script[k]
+            .as_array()
+            .map(|a| a.iter().filter_map(Value::as_u64).collect::<Vec<_>>())
+            .unwrap_or_default()
+    };
     let (capture, dump) = (list("capture"), list("dump"));
     let events = script["events"].as_array().cloned().unwrap_or_default();
 
@@ -126,16 +163,33 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     // The rendered buffer is written next to --out as <out>.audio.f32 (planar float32).
     let audio = script["audio"].is_object().then(|| {
         let a = &script["audio"];
-        (a["sampleRate"].as_f64().unwrap_or(48000.0), a["channels"].as_u64().unwrap_or(2) as usize, a["tail"].as_u64().unwrap_or(4) as usize)
+        (
+            a["sampleRate"].as_f64().unwrap_or(48000.0),
+            a["channels"].as_u64().unwrap_or(2) as usize,
+            a["tail"].as_u64().unwrap_or(4) as usize,
+        )
     });
     let quantum = |k: u64, rate: f64| ((k as f64 * dt * rate).round() / 128.0).ceil() as usize;
 
     if let Some((rate, channels, tail)) = audio {
         let length = (quantum(frames, rate) + tail) * 128;
-        x3d_runtime::sound::set_default_mode(x3d_runtime::sound::AudioMode::Offline { channels, sample_rate: rate as f32, length });
+        x3d_runtime::sound::set_default_mode(x3d_runtime::sound::AudioMode::Offline {
+            channels,
+            sample_rate: rate as f32,
+            length,
+        });
     }
 
-    let mut v = match Viewer3d::load_attributes(file, oracle, t0, size.0, size.1, pinned, console, &attributes) {
+    let mut v = match Viewer3d::load_attributes(
+        file,
+        oracle,
+        t0,
+        size.0,
+        size.1,
+        pinned,
+        console,
+        &attributes,
+    ) {
         Ok(v) => v,
         Err(e) => return json!({ "ok": false, "error": e }),
     };
@@ -152,7 +206,9 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         v.pointing_gpu = match x3d_render::pointing_gpu::PointingGpu::new_headless() {
             Ok(g) => {
                 // The collision depth buffer shares the device.
-                v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()))));
+                v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(
+                    x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()),
+                )));
                 Some(g)
             }
             Err(e) => {
@@ -162,12 +218,17 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         };
     }
 
-    let mut gpu = if png_dir.is_some() { x3d_render::gpu::Gpu::new().ok() } else { None };
+    let mut gpu = if png_dir.is_some() {
+        x3d_render::gpu::Gpu::new().ok()
+    } else {
+        None
+    };
     // The RenderingProperties of the page (Multisampling 0 for anim.html, N for `--msaa N`).
     if let Some(g) = gpu.as_mut() {
         v.rendering_properties().apply(&mut g.renderer);
         // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
-        g.renderer.set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
+        g.renderer
+            .set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
     }
 
     // The browser draws every frame; GeneratedCubeMapTextures and RenderedTextures (rendered
@@ -178,7 +239,10 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     let mut live_textures = gpu.is_some() && {
         let f = v.build_frame();
         let text = v.rt.scene.to_vrml_string();
-        !f.cube_passes.is_empty() || !f.rendered_passes.is_empty() || text.contains("GeneratedCubeMapTexture") || text.contains("RenderedTexture")
+        !f.cube_passes.is_empty()
+            || !f.rendered_passes.is_empty()
+            || text.contains("GeneratedCubeMapTexture")
+            || text.contains("RenderedTexture")
     };
 
     for _ in 0..warmup {
@@ -188,7 +252,13 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
             let _ = g.renderer.render_cube_passes(&v.build_frame());
         }
     }
-    let physics_spec = if physics { physics_nodes(&std::fs::read_to_string(std::env::args().nth(2).unwrap()).unwrap_or_default()) } else { vec![] };
+    let physics_spec = if physics {
+        physics_nodes(
+            &std::fs::read_to_string(std::env::args().nth(2).unwrap()).unwrap_or_default(),
+        )
+    } else {
+        vec![]
+    };
     let mut physics_frames: Vec<(u64, String)> = vec![];
     let mut physics_dt: Vec<Value> = vec![];
 
@@ -273,7 +343,10 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
                 // X3DRenderingContext.reshape: the drawing buffer is the canvas size × ContentScale (the oracle's PNG is that buffer).
                 let (fw, fh) = v.framebuffer_size();
                 let rgba = g.render(&frame, fw, fh);
-                let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+                let rgba: Vec<u8> = rgba
+                    .chunks_exact(4)
+                    .flat_map(|p| [p[0], p[1], p[2], 255])
+                    .collect();
                 std::fs::create_dir_all(dir).ok();
                 let _ = x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba);
             }
@@ -352,9 +425,16 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     }
 
     if physics {
-        let frames: Vec<String> = physics_frames.iter().map(|(k, f)| format!("\"{k}\":{f}")).collect();
+        let frames: Vec<String> = physics_frames
+            .iter()
+            .map(|(k, f)| format!("\"{k}\":{f}"))
+            .collect();
 
-        *PHYSICS_TEXT.lock().unwrap() = Some(format!("{{\"dt\":{},\"frames\":{{{}}}}}", Value::Array(physics_dt), frames.join(",")));
+        *PHYSICS_TEXT.lock().unwrap() = Some(format!(
+            "{{\"dt\":{},\"frames\":{{{}}}}}",
+            Value::Array(physics_dt),
+            frames.join(",")
+        ));
         result["physics"] = json!("@@physics@@");
     }
 
@@ -372,7 +452,12 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
 /// The scene text of every DEF-named Inline of `ctx` (nested Inlines as `A/B`): `null` while the
 /// Inline has no scene (Inline.getInternalScene () is the empty default scene).
-fn inline_scenes(rt: &mut x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
+fn inline_scenes(
+    rt: &mut x3d_runtime::Runtime,
+    ctx: usize,
+    prefix: &str,
+    out: &mut serde_json::Map<String, Value>,
+) {
     for n in rt.scene.ctx(ctx).named_nodes.values().to_vec() {
         if rt.builtin_name(n) != Some("Inline") {
             continue;
@@ -427,7 +512,11 @@ fn physics_resolve(rt: &x3d_runtime::Runtime, path: &str) -> Option<x3d_fields::
 fn node_name(rt: &x3d_runtime::Runtime, n: x3d_fields::NodeId) -> Value {
     let name = &rt.scene.node(n).name;
 
-    if name.is_empty() { json!(format!("<{}>", rt.type_name(n))) } else { json!(name) }
+    if name.is_empty() {
+        json!(format!("<{}>", rt.type_name(n)))
+    } else {
+        json!(name)
+    }
 }
 
 fn plain(rt: &x3d_runtime::Runtime, value: &x3d_fields::FieldValue) -> Value {
@@ -447,9 +536,17 @@ fn plain(rt: &x3d_runtime::Runtime, value: &x3d_fields::FieldValue) -> Value {
         }
         F::SFNode(None) => Value::Null,
         F::SFNode(Some(n)) => node_name(rt, *n),
-        F::MFNode(list) => Value::Array(list.iter().map(|n| n.map_or(Value::Null, |n| node_name(rt, n))).collect()),
+        F::MFNode(list) => Value::Array(
+            list.iter()
+                .map(|n| n.map_or(Value::Null, |n| node_name(rt, n)))
+                .collect(),
+        ),
         F::MFString(list) => json!(list),
-        F::MFVec3f(v) => Value::Array(v.chunks_exact(3).map(|c| json!([c[0], c[1], c[2]])).collect()),
+        F::MFVec3f(v) => Value::Array(
+            v.chunks_exact(3)
+                .map(|c| json!([c[0], c[1], c[2]]))
+                .collect(),
+        ),
         F::MFFloat(v) => json!(v),
         other => json!(format!("{other:?}")),
     }
@@ -548,7 +645,8 @@ fn physics_snapshot(v: &mut Viewer3d, nodes: &[(String, Vec<String>)]) -> String
 
         for f in fields {
             let value = if f == "@bodyActive" {
-                v.rt.physics_body_active(node).map_or("null".to_string(), |b| b.to_string())
+                v.rt.physics_body_active(node)
+                    .map_or("null".to_string(), |b| b.to_string())
             } else if f == "contacts" && ty == "CollisionSensor" {
                 let list = match v.rt.pre_value(node, "contacts") {
                     Some(x3d_fields::FieldValue::MFNode(l)) => l.clone(),
@@ -558,10 +656,24 @@ fn physics_snapshot(v: &mut Viewer3d, nodes: &[(String, Vec<String>)]) -> String
                     .into_iter()
                     .flatten()
                     .map(|c| {
-                        let members: Vec<String> = ["position", "contactNormal", "depth", "geometry1", "geometry2", "body1", "body2"]
-                            .iter()
-                            .map(|n| format!("\"{n}\":{}", v.rt.pre_value(c, n).map_or(Value::Null, |x| plain(&v.rt, x))))
-                            .collect();
+                        let members: Vec<String> = [
+                            "position",
+                            "contactNormal",
+                            "depth",
+                            "geometry1",
+                            "geometry2",
+                            "body1",
+                            "body2",
+                        ]
+                        .iter()
+                        .map(|n| {
+                            format!(
+                                "\"{n}\":{}",
+                                v.rt.pre_value(c, n)
+                                    .map_or(Value::Null, |x| plain(&v.rt, x))
+                            )
+                        })
+                        .collect();
 
                         format!("{{{}}}", members.join(","))
                     })
@@ -569,7 +681,9 @@ fn physics_snapshot(v: &mut Viewer3d, nodes: &[(String, Vec<String>)]) -> String
 
                 format!("[{}]", items.join(","))
             } else {
-                v.rt.pre_value(node, f).map_or(Value::Null, |x| plain(&v.rt, x)).to_string()
+                v.rt.pre_value(node, f)
+                    .map_or(Value::Null, |x| plain(&v.rt, x))
+                    .to_string()
             };
 
             o.push(format!("{}:{value}", serde_json::to_string(f).unwrap()));

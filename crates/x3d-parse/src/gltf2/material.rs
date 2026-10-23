@@ -35,7 +35,11 @@ impl<'j, 's> P<'j, 's> {
 
     fn set_mapping(&mut self, node: NodeId, name: &str, mapping: Option<String>) {
         // `undefined` assigned to an SFString.
-        self.set_f(node, name, FieldValue::SFString(mapping.unwrap_or_else(|| "undefined".into())));
+        self.set_f(
+            node,
+            name,
+            FieldValue::SFString(mapping.unwrap_or_else(|| "undefined".into())),
+        );
     }
 
     pub(super) fn get_default_appearance(&mut self) -> R<NodeId> {
@@ -46,7 +50,11 @@ impl<'j, 's> P<'j, 's> {
         let appearance = self.create("Appearance")?;
         let material = self.create("PhysicalMaterial")?;
 
-        self.set(appearance, "alphaMode", FieldValue::SFString("OPAQUE".into()));
+        self.set(
+            appearance,
+            "alphaMode",
+            FieldValue::SFString("OPAQUE".into()),
+        );
         self.set_node(appearance, "material", Some(material));
         self.set(material, "metallic", FieldValue::SFFloat(0.0));
 
@@ -58,7 +66,9 @@ impl<'j, 's> P<'j, 's> {
 
     /// `materialObject ({ material })`
     pub(super) fn material_object(&mut self, mi: Option<usize>) -> R<NodeId> {
-        let Some(mi) = mi else { return self.get_default_appearance() };
+        let Some(mi) = mi else {
+            return self.get_default_appearance();
+        };
         let material = self.materials.at(mi);
 
         if !material.is_obj() {
@@ -71,7 +81,10 @@ impl<'j, 's> P<'j, 's> {
 
         let indices = self.get_tex_coord_indices("", material, &mut vec![]);
 
-        self.tex_coord_index = indices.iter().copied().fold(-1.0, x3d_fields::jsmath::js_max);
+        self.tex_coord_index = indices
+            .iter()
+            .copied()
+            .fold(-1.0, x3d_fields::jsmath::js_max);
         self.texture_transform_nodes = vec![];
         self.tex_coord_mappings = vec![];
         self.tex_coord_of_node = HashMap::new();
@@ -110,7 +123,11 @@ impl<'j, 's> P<'j, 's> {
 
                     // Flip Y
                     self.set(tt, "mapping", FieldValue::SFString(mapping.clone()));
-                    self.set(tt, "translation", FieldValue::SFVec2f(Vector2::new(0.0, -1.0)));
+                    self.set(
+                        tt,
+                        "translation",
+                        FieldValue::SFVec2f(Vector2::new(0.0, -1.0)),
+                    );
                     self.set(tt, "scale", FieldValue::SFVec2f(Vector2::new(1.0, -1.0)));
                     self.setup(tt);
                     self.texture_transform_nodes.push(tt);
@@ -124,12 +141,23 @@ impl<'j, 's> P<'j, 's> {
             self.named(&name, appearance)?;
         }
 
-        let alpha_mode = material.get("alphaMode").str().unwrap_or("OPAQUE").to_string();
+        let alpha_mode = material
+            .get("alphaMode")
+            .str()
+            .unwrap_or("OPAQUE")
+            .to_string();
 
         self.set(appearance, "alphaMode", FieldValue::SFString(alpha_mode));
-        self.set(appearance, "alphaCutoff", FieldValue::SFFloat(material.get("alphaCutoff").number_or(0.5)));
+        self.set(
+            appearance,
+            "alphaCutoff",
+            FieldValue::SFFloat(material.get("alphaCutoff").number_or(0.5)),
+        );
 
-        let final_material = self.khr_materials_unlit_object(material.get("extensions").get("KHR_materials_unlit"), material_node)?;
+        let final_material = self.khr_materials_unlit_object(
+            material.get("extensions").get("KHR_materials_unlit"),
+            material_node,
+        )?;
 
         self.set_node(appearance, "material", Some(final_material));
 
@@ -145,7 +173,11 @@ impl<'j, 's> P<'j, 's> {
     }
 
     fn set_mapping_entry(&mut self, mapping: String, i: f64) {
-        match self.tex_coord_mappings.iter_mut().find(|(k, _)| *k == mapping) {
+        match self
+            .tex_coord_mappings
+            .iter_mut()
+            .find(|(k, _)| *k == mapping)
+        {
             Some(e) => e.1 = i,
             None => self.tex_coord_mappings.push((mapping, i)),
         }
@@ -156,7 +188,12 @@ impl<'j, 's> P<'j, 's> {
             return indices.clone();
         }
 
-        if key.ends_with("Texture") && !object.get("extensions").get("KHR_texture_transform").truthy() {
+        if key.ends_with("Texture")
+            && !object
+                .get("extensions")
+                .get("KHR_texture_transform")
+                .truthy()
+        {
             let i = tex_coord_or_zero(object.get("texCoord"));
 
             if !indices.iter().any(|x| *x == i) {
@@ -176,7 +213,11 @@ impl<'j, 's> P<'j, 's> {
             return Ok(n);
         }
 
-        if let Some(n) = self.pbr_specular_glossiness_object(material.get("extensions").get("KHR_materials_pbrSpecularGlossiness"))? {
+        if let Some(n) = self.pbr_specular_glossiness_object(
+            material
+                .get("extensions")
+                .get("KHR_materials_pbrSpecularGlossiness"),
+        )? {
             return Ok(n);
         }
 
@@ -210,8 +251,16 @@ impl<'j, 's> P<'j, 's> {
             self.set(node, "transparency", FieldValue::SFFloat(1.0 - a));
         }
 
-        self.set(node, "metallic", FieldValue::SFFloat(pbr.get("metallicFactor").number_or(1.0)));
-        self.set(node, "roughness", FieldValue::SFFloat(pbr.get("roughnessFactor").number_or(1.0)));
+        self.set(
+            node,
+            "metallic",
+            FieldValue::SFFloat(pbr.get("metallicFactor").number_or(1.0)),
+        );
+        self.set(
+            node,
+            "roughness",
+            FieldValue::SFFloat(pbr.get("roughnessFactor").number_or(1.0)),
+        );
 
         let t = self.texture_info(pbr.get("baseColorTexture"))?;
 
@@ -261,7 +310,11 @@ impl<'j, 's> P<'j, 's> {
             None => self.set(node, "specularColor", FieldValue::SFColor(Color3::WHITE)),
         }
 
-        self.set(node, "glossiness", FieldValue::SFFloat(sg.get("glossinessFactor").number_or(1.0)));
+        self.set(
+            node,
+            "glossiness",
+            FieldValue::SFFloat(sg.get("glossinessFactor").number_or(1.0)),
+        );
 
         let t = self.texture_info(sg.get("specularGlossinessTexture"))?;
 
@@ -280,7 +333,11 @@ impl<'j, 's> P<'j, 's> {
             return Ok(());
         }
 
-        self.set_f(material, "occlusionStrength", FieldValue::SFFloat(tex.get("strength").number_or(1.0)));
+        self.set_f(
+            material,
+            "occlusionStrength",
+            FieldValue::SFFloat(tex.get("strength").number_or(1.0)),
+        );
 
         let t = self.texture_info(tex)?;
 
@@ -297,7 +354,11 @@ impl<'j, 's> P<'j, 's> {
             return Ok(());
         }
 
-        self.set_f(material, "normalScale", FieldValue::SFFloat(tex.get("scale").number_or(1.0)));
+        self.set_f(
+            material,
+            "normalScale",
+            FieldValue::SFFloat(tex.get("scale").number_or(1.0)),
+        );
 
         let t = self.texture_info(tex)?;
 
@@ -317,7 +378,10 @@ impl<'j, 's> P<'j, 's> {
 
         let tex_coord = tex_coord_or_zero(texture.get("texCoord"));
         let mapping = if texture.get("extensions").is_obj() {
-            self.texture_transform_object(texture.get("extensions").get("KHR_texture_transform"), tex_coord)?
+            self.texture_transform_object(
+                texture.get("extensions").get("KHR_texture_transform"),
+                tex_coord,
+            )?
         } else {
             Some(tc_name(tex_coord))
         };
@@ -344,7 +408,11 @@ impl<'j, 's> P<'j, 's> {
             return Ok(None);
         }
 
-        let tex_coord = if ext.get("texCoord").nn() { ext.get("texCoord").to_number() } else { tex_coord };
+        let tex_coord = if ext.get("texCoord").nn() {
+            ext.get("texCoord").to_number()
+        } else {
+            tex_coord
+        };
 
         let mut translation = Vector2::new(0.0, 0.0);
         let mut scale = Vector2::new(1.0, 1.0);
@@ -386,7 +454,8 @@ impl<'j, 's> P<'j, 's> {
 
         // Create new TextureTransformMatrix3D.
         let node = self.create("TextureTransformMatrix3D")?;
-        let mapping = tc_name(self.tex_coord_index + self.texture_transform_nodes.len() as f64 + 1.0);
+        let mapping =
+            tc_name(self.tex_coord_index + self.texture_transform_nodes.len() as f64 + 1.0);
 
         self.set(node, "mapping", FieldValue::SFString(mapping.clone()));
         self.set(node, "matrix", FieldValue::SFMatrix4f(matrix));
@@ -397,7 +466,15 @@ impl<'j, 's> P<'j, 's> {
         self.tex_coord_of_node.insert(node, tex_coord);
         self.tex_coord_ext_of_node.insert(node, addr(ext));
 
-        self.pointers.insert(addr(ext), Ptr::TextureTransform { node, translation: [translation.x, translation.y], rotation: angle, scale: [scale.x, scale.y] });
+        self.pointers.insert(
+            addr(ext),
+            Ptr::TextureTransform {
+                node,
+                translation: [translation.x, translation.y],
+                rotation: angle,
+                scale: [scale.x, scale.y],
+            },
+        );
 
         Ok(Some(mapping))
     }
@@ -415,7 +492,9 @@ impl<'j, 's> P<'j, 's> {
             match key.as_str() {
                 "KHR_materials_anisotropy" => self.ext_anisotropy(value, material)?,
                 "KHR_materials_clearcoat" => self.ext_clearcoat(value, material)?,
-                "KHR_materials_diffuse_transmission" => self.ext_diffuse_transmission(value, material)?,
+                "KHR_materials_diffuse_transmission" => {
+                    self.ext_diffuse_transmission(value, material)?
+                }
                 "KHR_materials_dispersion" => self.ext_dispersion(value, material)?,
                 "KHR_materials_emissive_strength" => self.ext_emissive_strength(value, material)?,
                 "KHR_materials_ior" => self.ext_ior(value, material)?,
@@ -425,7 +504,9 @@ impl<'j, 's> P<'j, 's> {
                 "KHR_materials_specular" => self.ext_specular(value, material)?,
                 "KHR_materials_transmission" => self.ext_transmission(value, material)?,
                 "KHR_materials_volume" => self.ext_volume(value, material)?,
-                "KHR_materials_scatter" | "KHR_materials_volume_scatter" => self.ext_scatter(value, material)?,
+                "KHR_materials_scatter" | "KHR_materials_volume_scatter" => {
+                    self.ext_scatter(value, material)?
+                }
                 _ => {}
             }
         }
@@ -453,7 +534,9 @@ impl<'j, 's> P<'j, 's> {
 
     fn null_read(v: V, prop: &str) -> R<()> {
         if matches!(v.0, Some(J::Null)) {
-            return Err(format!("TypeError: Cannot read properties of null (reading '{prop}')"));
+            return Err(format!(
+                "TypeError: Cannot read properties of null (reading '{prop}')"
+            ));
         }
 
         Ok(())
@@ -466,8 +549,16 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("AnisotropyMaterialExtension", "anisotropyStrength")?;
 
-        self.set(e, "anisotropyStrength", FieldValue::SFFloat(v.get("anisotropyStrength").number_or(0.0)));
-        self.set(e, "anisotropyRotation", FieldValue::SFFloat(v.get("anisotropyRotation").number_or(0.0)));
+        self.set(
+            e,
+            "anisotropyStrength",
+            FieldValue::SFFloat(v.get("anisotropyStrength").number_or(0.0)),
+        );
+        self.set(
+            e,
+            "anisotropyRotation",
+            FieldValue::SFFloat(v.get("anisotropyRotation").number_or(0.0)),
+        );
         self.tex(e, "anisotropyTexture", v.get("anisotropyTexture"))?;
         self.finish_extension(v, e, material);
         Ok(())
@@ -480,10 +571,22 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("ClearcoatMaterialExtension", "clearcoat")?;
 
-        self.set(e, "clearcoat", FieldValue::SFFloat(v.get("clearcoatFactor").number_or(0.0)));
+        self.set(
+            e,
+            "clearcoat",
+            FieldValue::SFFloat(v.get("clearcoatFactor").number_or(0.0)),
+        );
         self.tex(e, "clearcoatTexture", v.get("clearcoatTexture"))?;
-        self.set(e, "clearcoatRoughness", FieldValue::SFFloat(v.get("clearcoatRoughnessFactor").number_or(0.0)));
-        self.tex(e, "clearcoatRoughnessTexture", v.get("clearcoatRoughnessTexture"))?;
+        self.set(
+            e,
+            "clearcoatRoughness",
+            FieldValue::SFFloat(v.get("clearcoatRoughnessFactor").number_or(0.0)),
+        );
+        self.tex(
+            e,
+            "clearcoatRoughnessTexture",
+            v.get("clearcoatRoughnessTexture"),
+        )?;
         self.tex(e, "clearcoatNormalTexture", v.get("clearcoatNormalTexture"))?;
         self.finish_extension(v, e, material);
         Ok(())
@@ -494,16 +597,31 @@ impl<'j, 's> P<'j, 's> {
             return Ok(());
         }
 
-        let e = self.create_ext("DiffuseTransmissionMaterialExtension", "diffuseTransmission")?;
+        let e = self.create_ext(
+            "DiffuseTransmissionMaterialExtension",
+            "diffuseTransmission",
+        )?;
 
-        self.set(e, "diffuseTransmission", FieldValue::SFFloat(v.get("diffuseTransmissionFactor").number_or(0.0)));
-        self.tex(e, "diffuseTransmissionTexture", v.get("diffuseTransmissionTexture"))?;
+        self.set(
+            e,
+            "diffuseTransmission",
+            FieldValue::SFFloat(v.get("diffuseTransmissionFactor").number_or(0.0)),
+        );
+        self.tex(
+            e,
+            "diffuseTransmissionTexture",
+            v.get("diffuseTransmissionTexture"),
+        )?;
 
         if let Some(c) = vector_value(v.get("diffuseTransmissionColorFactor"), 3) {
             self.set(e, "diffuseTransmissionColor", col3(&c));
         }
 
-        self.tex(e, "diffuseTransmissionColorTexture", v.get("diffuseTransmissionColorTexture"))?;
+        self.tex(
+            e,
+            "diffuseTransmissionColorTexture",
+            v.get("diffuseTransmissionColorTexture"),
+        )?;
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -515,7 +633,11 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("DispersionMaterialExtension", "dispersion")?;
 
-        self.set(e, "dispersion", FieldValue::SFFloat(v.get("dispersion").number_or(0.0)));
+        self.set(
+            e,
+            "dispersion",
+            FieldValue::SFFloat(v.get("dispersion").number_or(0.0)),
+        );
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -527,7 +649,11 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("EmissiveStrengthMaterialExtension", "emissiveStrength")?;
 
-        self.set(e, "emissiveStrength", FieldValue::SFFloat(v.get("emissiveStrength").number_or(1.0)));
+        self.set(
+            e,
+            "emissiveStrength",
+            FieldValue::SFFloat(v.get("emissiveStrength").number_or(1.0)),
+        );
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -536,7 +662,11 @@ impl<'j, 's> P<'j, 's> {
         Self::null_read(v, "ior")?;
         let e = self.create_ext("IORMaterialExtension", "indexOfRefraction")?;
 
-        self.set(e, "indexOfRefraction", FieldValue::SFFloat(v.get("ior").number_or(1.5)));
+        self.set(
+            e,
+            "indexOfRefraction",
+            FieldValue::SFFloat(v.get("ior").number_or(1.5)),
+        );
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -545,12 +675,32 @@ impl<'j, 's> P<'j, 's> {
         Self::null_read(v, "iridescenceFactor")?;
         let e = self.create_ext("IridescenceMaterialExtension", "iridescence")?;
 
-        self.set(e, "iridescence", FieldValue::SFFloat(v.get("iridescenceFactor").number_or(0.0)));
+        self.set(
+            e,
+            "iridescence",
+            FieldValue::SFFloat(v.get("iridescenceFactor").number_or(0.0)),
+        );
         self.tex(e, "iridescenceTexture", v.get("iridescenceTexture"))?;
-        self.set(e, "iridescenceIndexOfRefraction", FieldValue::SFFloat(v.get("iridescenceIor").number_or(1.3)));
-        self.set(e, "iridescenceThicknessMinimum", FieldValue::SFFloat(v.get("iridescenceThicknessMinimum").number_or(100.0)));
-        self.set(e, "iridescenceThicknessMaximum", FieldValue::SFFloat(v.get("iridescenceThicknessMaximum").number_or(400.0)));
-        self.tex(e, "iridescenceThicknessTexture", v.get("iridescenceThicknessTexture"))?;
+        self.set(
+            e,
+            "iridescenceIndexOfRefraction",
+            FieldValue::SFFloat(v.get("iridescenceIor").number_or(1.3)),
+        );
+        self.set(
+            e,
+            "iridescenceThicknessMinimum",
+            FieldValue::SFFloat(v.get("iridescenceThicknessMinimum").number_or(100.0)),
+        );
+        self.set(
+            e,
+            "iridescenceThicknessMaximum",
+            FieldValue::SFFloat(v.get("iridescenceThicknessMaximum").number_or(400.0)),
+        );
+        self.tex(
+            e,
+            "iridescenceThicknessTexture",
+            v.get("iridescenceThicknessTexture"),
+        )?;
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -562,7 +712,11 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("RetroreflectionMaterialExtension", "retroreflection")?;
 
-        self.set(e, "retroreflection", FieldValue::SFFloat(v.get("retroreflectionFactor").number_or(0.0)));
+        self.set(
+            e,
+            "retroreflection",
+            FieldValue::SFFloat(v.get("retroreflectionFactor").number_or(0.0)),
+        );
         self.tex(e, "retroreflectionTexture", v.get("retroreflectionTexture"))?;
         self.finish_extension(v, e, material);
         Ok(())
@@ -580,7 +734,11 @@ impl<'j, 's> P<'j, 's> {
         }
 
         self.tex(e, "sheenColorTexture", v.get("sheenColorTexture"))?;
-        self.set(e, "sheenRoughness", FieldValue::SFFloat(v.get("sheenRoughnessFactor").number_or(0.0)));
+        self.set(
+            e,
+            "sheenRoughness",
+            FieldValue::SFFloat(v.get("sheenRoughnessFactor").number_or(0.0)),
+        );
         self.tex(e, "sheenRoughnessTexture", v.get("sheenRoughnessTexture"))?;
         self.finish_extension(v, e, material);
         Ok(())
@@ -593,13 +751,24 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("SpecularMaterialExtension", "specular")?;
 
-        self.set(e, "specular", FieldValue::SFFloat(v.get("specularFactor").number_or(1.0)));
+        self.set(
+            e,
+            "specular",
+            FieldValue::SFFloat(v.get("specularFactor").number_or(1.0)),
+        );
         self.tex(e, "specularTexture", v.get("specularTexture"))?;
 
         if let Some(c) = vector_value(v.get("specularColorFactor"), 3) {
-            let strength = c.iter().copied().fold(f64::NEG_INFINITY, x3d_fields::jsmath::js_max);
+            let strength = c
+                .iter()
+                .copied()
+                .fold(f64::NEG_INFINITY, x3d_fields::jsmath::js_max);
             let color: Vec<f64> = c.iter().map(|x| x / strength).collect();
-            let color = if strength != 0.0 && !strength.is_nan() { color } else { vec![0.0, 0.0, 0.0] };
+            let color = if strength != 0.0 && !strength.is_nan() {
+                color
+            } else {
+                vec![0.0, 0.0, 0.0]
+            };
 
             self.set(e, "specularColor", col3(&color));
             self.set(e, "specularStrength", FieldValue::SFFloat(strength));
@@ -617,7 +786,11 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("TransmissionMaterialExtension", "transmission")?;
 
-        self.set(e, "transmission", FieldValue::SFFloat(v.get("transmissionFactor").number_or(0.0)));
+        self.set(
+            e,
+            "transmission",
+            FieldValue::SFFloat(v.get("transmissionFactor").number_or(0.0)),
+        );
         self.tex(e, "transmissionTexture", v.get("transmissionTexture"))?;
         self.finish_extension(v, e, material);
         Ok(())
@@ -627,9 +800,17 @@ impl<'j, 's> P<'j, 's> {
         Self::null_read(v, "thicknessFactor")?;
         let e = self.create_ext("VolumeMaterialExtension", "thickness")?;
 
-        self.set(e, "thickness", FieldValue::SFFloat(v.get("thicknessFactor").number_or(0.0)));
+        self.set(
+            e,
+            "thickness",
+            FieldValue::SFFloat(v.get("thicknessFactor").number_or(0.0)),
+        );
         self.tex(e, "thicknessTexture", v.get("thicknessTexture"))?;
-        self.set(e, "attenuationDistance", FieldValue::SFFloat(v.get("attenuationDistance").number_or(1_000_000.0)));
+        self.set(
+            e,
+            "attenuationDistance",
+            FieldValue::SFFloat(v.get("attenuationDistance").number_or(1_000_000.0)),
+        );
 
         if let Some(c) = vector_value(v.get("attenuationColor"), 3) {
             self.set(e, "attenuationColor", col3(&c));
@@ -646,7 +827,11 @@ impl<'j, 's> P<'j, 's> {
 
         let e = self.create_ext("VolumeScatterMaterialExtension", "scatterStrength")?;
 
-        self.set(e, "scatterStrength", FieldValue::SFFloat(v.get("scatterStrengthFactor").number_or(0.0)));
+        self.set(
+            e,
+            "scatterStrength",
+            FieldValue::SFFloat(v.get("scatterStrengthFactor").number_or(0.0)),
+        );
 
         // extension ._scatterStrengthTexture = textureInfo (scatterStrengthTexture)
         let t = self.texture_info(v.get("scatterStrengthTexture"))?;
@@ -656,14 +841,26 @@ impl<'j, 's> P<'j, 's> {
         // extension ._scatterTextureMapping = textureMapping (scatterTexture)
         let m = self.texture_mapping(v.get("scatterTexture"));
 
-        self.set_f(e, "scatterTextureMapping", FieldValue::SFString(m.unwrap_or_default()));
+        self.set_f(
+            e,
+            "scatterTextureMapping",
+            FieldValue::SFString(m.unwrap_or_default()),
+        );
 
         if let Some(c) = vector_value(v.get("multiscatterColorFactor"), 3) {
             self.set(e, "multiscatterColor", col3(&c));
         }
 
-        self.tex(e, "multiscatterColorTexture", v.get("multiscatterColorTexture"))?;
-        self.set(e, "scatterAnisotropy", FieldValue::SFFloat(v.get("scatterAnisotropy").number_or(0.0)));
+        self.tex(
+            e,
+            "multiscatterColorTexture",
+            v.get("multiscatterColorTexture"),
+        )?;
+        self.set(
+            e,
+            "scatterAnisotropy",
+            FieldValue::SFFloat(v.get("scatterAnisotropy").number_or(0.0)),
+        );
         self.finish_extension(v, e, material);
         Ok(())
     }
@@ -675,7 +872,15 @@ impl<'j, 's> P<'j, 's> {
 
         let node = self.create("UnlitMaterial")?;
 
-        for (to, from) in [("emissiveColor", "baseColor"), ("emissiveTextureMapping", "baseTextureMapping"), ("emissiveTexture", "baseTexture"), ("normalScale", "normalScale"), ("normalTextureMapping", "normalTextureMapping"), ("normalTexture", "normalTexture"), ("transparency", "transparency")] {
+        for (to, from) in [
+            ("emissiveColor", "baseColor"),
+            ("emissiveTextureMapping", "baseTextureMapping"),
+            ("emissiveTexture", "baseTexture"),
+            ("normalScale", "normalScale"),
+            ("normalTextureMapping", "normalTextureMapping"),
+            ("normalTexture", "normalTexture"),
+            ("transparency", "transparency"),
+        ] {
             if self.has_field(material, from) {
                 let value = self.get(material, from);
 
@@ -696,7 +901,9 @@ impl<'j, 's> P<'j, 's> {
     pub(super) fn has_textures(&self, material: Option<NodeId>) -> bool {
         let Some(m) = material else { return false };
         let has = |n: NodeId| -> bool {
-            self.scene.node(n).fields.iter().any(|f| f.name.ends_with("Texture") && matches!(f.value, FieldValue::SFNode(Some(_))))
+            self.scene.node(n).fields.iter().any(|f| {
+                f.name.ends_with("Texture") && matches!(f.value, FieldValue::SFNode(Some(_)))
+            })
         };
 
         if has(m) {
@@ -712,7 +919,10 @@ impl<'j, 's> P<'j, 's> {
         false
     }
 
-    pub(super) fn create_multi_texture_transform(&mut self, material: Option<NodeId>) -> R<Option<NodeId>> {
+    pub(super) fn create_multi_texture_transform(
+        &mut self,
+        material: Option<NodeId>,
+    ) -> R<Option<NodeId>> {
         if !self.has_textures(material) {
             return Ok(None);
         }
@@ -734,7 +944,11 @@ impl<'j, 's> P<'j, 's> {
                 let tt = self.create("TextureTransform")?;
 
                 // Flip Y
-                self.set(tt, "translation", FieldValue::SFVec2f(Vector2::new(0.0, -1.0)));
+                self.set(
+                    tt,
+                    "translation",
+                    FieldValue::SFVec2f(Vector2::new(0.0, -1.0)),
+                );
                 self.set(tt, "scale", FieldValue::SFVec2f(Vector2::new(1.0, -1.0)));
                 self.setup(tt);
                 self.default_texture_transform = Some(tt);
@@ -744,7 +958,11 @@ impl<'j, 's> P<'j, 's> {
             _ => {
                 let tt = self.create("MultiTextureTransform")?;
 
-                self.set(tt, "textureTransform", FieldValue::MFNode(nodes.into_iter().map(Some).collect()));
+                self.set(
+                    tt,
+                    "textureTransform",
+                    FieldValue::MFNode(nodes.into_iter().map(Some).collect()),
+                );
                 self.setup(tt);
                 Ok(Some(tt))
             }

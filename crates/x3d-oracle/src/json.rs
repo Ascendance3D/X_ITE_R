@@ -27,7 +27,11 @@ impl J {
     }
 
     pub fn num(x: f64) -> J {
-        if x.is_finite() { J::Tok(js_number(x)) } else { J::Tok("null".into()) }
+        if x.is_finite() {
+            J::Tok(js_number(x))
+        } else {
+            J::Tok("null".into())
+        }
     }
 
     pub fn bool(b: bool) -> J {
@@ -40,7 +44,9 @@ impl J {
 
     /// `o [key] = value`: an existing key keeps its position (as for a JavaScript object).
     pub fn set(&mut self, key: &str, value: J) {
-        let J::Obj(members) = self else { panic!("set on a non-object") };
+        let J::Obj(members) = self else {
+            panic!("set on a non-object")
+        };
         let k = escape(key);
         match members.iter_mut().find(|(m, _)| *m == k) {
             Some(m) => m.1 = value,
@@ -56,9 +62,15 @@ impl J {
 
     /// The member `key` of a parsed object (key given unescaped).
     pub fn member(&self, key: &str) -> J {
-        let J::Obj(members) = self else { return J::Undef };
+        let J::Obj(members) = self else {
+            return J::Undef;
+        };
         let k = escape(key);
-        members.iter().find(|(m, _)| *m == k).map(|m| m.1.clone()).unwrap_or(J::Undef)
+        members
+            .iter()
+            .find(|(m, _)| *m == k)
+            .map(|m| m.1.clone())
+            .unwrap_or(J::Undef)
     }
 
     /// `JSON.stringify (value)` (no whitespace); "undefined" for a top-level `undefined` (a page argument).
@@ -215,8 +227,16 @@ pub fn js_number(x: f64) -> String {
         format!("0.{}{digits}", "0".repeat((-n) as usize))
     } else {
         let e = n - 1;
-        let es = if e < 0 { format!("-{}", -e) } else { format!("+{e}") };
-        if k == 1 { format!("{digits}e{es}") } else { format!("{}.{}e{es}", &digits[..1], &digits[1..]) }
+        let es = if e < 0 {
+            format!("-{}", -e)
+        } else {
+            format!("+{e}")
+        };
+        if k == 1 {
+            format!("{digits}e{es}")
+        } else {
+            format!("{}.{}e{es}", &digits[..1], &digits[1..])
+        }
     };
     format!("{sign}{body}")
 }
@@ -324,7 +344,9 @@ fn value(b: &[u8], i: &mut usize) -> Result<J, String> {
         }
         Some(_) => {
             let a = *i;
-            while *i < b.len() && !matches!(b[*i], b',' | b']' | b'}' | b' ' | b'\n' | b'\r' | b'\t') {
+            while *i < b.len()
+                && !matches!(b[*i], b',' | b']' | b'}' | b' ' | b'\n' | b'\r' | b'\t')
+            {
                 *i += 1;
             }
             if a == *i {
@@ -381,7 +403,10 @@ pub fn decode_uri_component(s: &str) -> Option<String> {
 /// Standard base64 decoding (as Node's `Buffer.from (s, "base64")` for valid input).
 pub fn base64_decode(s: &str) -> Vec<u8> {
     let mut table = [255u8; 256];
-    for (i, c) in b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".iter().enumerate() {
+    for (i, c) in b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+        .iter()
+        .enumerate()
+    {
         table[*c as usize] = i as u8;
     }
     let mut out = Vec::with_capacity(s.len() * 3 / 4);
@@ -408,9 +433,21 @@ mod tests {
     #[test]
     fn numbers_print_like_javascript() {
         for (x, s) in [
-            (0.0, "0"), (-0.0, "0"), (1.0, "1"), (-1.5, "-1.5"), (0.1, "0.1"), (1e21, "1e+21"), (1e20, "100000000000000000000"),
-            (1e-6, "0.000001"), (1e-7, "1e-7"), (123456789.125, "123456789.125"), (1.2345e-9, "1.2345e-9"),
-            (946684800.0, "946684800"), (1.0 / 3.0, "0.3333333333333333"), (5e-324, "5e-324"), (1.7976931348623157e308, "1.7976931348623157e+308"),
+            (0.0, "0"),
+            (-0.0, "0"),
+            (1.0, "1"),
+            (-1.5, "-1.5"),
+            (0.1, "0.1"),
+            (1e21, "1e+21"),
+            (1e20, "100000000000000000000"),
+            (1e-6, "0.000001"),
+            (1e-7, "1e-7"),
+            (123456789.125, "123456789.125"),
+            (1.2345e-9, "1.2345e-9"),
+            (946684800.0, "946684800"),
+            (1.0 / 3.0, "0.3333333333333333"),
+            (5e-324, "5e-324"),
+            (1.7976931348623157e308, "1.7976931348623157e+308"),
         ] {
             assert_eq!(js_number(x), s, "{x:e}");
         }
@@ -428,17 +465,26 @@ mod tests {
         o.set("u", J::Undef);
         o.set("n", J::Arr(vec![J::Undef, J::int(2)]));
         o.set("ok", J::bool(true));
-        assert_eq!(o.pretty().unwrap(), "{\n  \"ok\": true,\n  \"n\": [\n    null,\n    2\n  ]\n}");
+        assert_eq!(
+            o.pretty().unwrap(),
+            "{\n  \"ok\": true,\n  \"n\": [\n    null,\n    2\n  ]\n}"
+        );
     }
 
     #[test]
     fn strings_escape_like_json_stringify() {
-        assert_eq!(escape("a\u{1}\u{1f}\u{7f}é\t\\"), "\"a\\u0001\\u001f\u{7f}é\\t\\\\\"");
+        assert_eq!(
+            escape("a\u{1}\u{1f}\u{7f}é\t\\"),
+            "\"a\\u0001\\u001f\u{7f}é\\t\\\\\""
+        );
     }
 
     #[test]
     fn uri_components() {
-        assert_eq!(encode_uri_component("a b/ü(1).wrl"), "a%20b%2F%C3%BC(1).wrl");
+        assert_eq!(
+            encode_uri_component("a b/ü(1).wrl"),
+            "a%20b%2F%C3%BC(1).wrl"
+        );
         assert_eq!(decode_uri_component("a%20b%C3%BC").as_deref(), Some("a bü"));
         assert_eq!(decode_uri_component("%E0%A4%A"), None);
     }

@@ -19,8 +19,8 @@
 
 use crate::backend::{self, GpuErrors};
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
-use crate::script::apply;
 use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
+use crate::script::apply;
 use crate::viewer::UiEvent;
 use serde_json::Value;
 use std::path::PathBuf;
@@ -148,24 +148,41 @@ impl ScriptedRun {
                     return Tick::Retry;
                 }
 
-                return Tick::Failed(format!("scripted run: no surface for frame {k} of {} after {} attempts ({why}); {} frames completed", self.frames, self.misses, self.done));
+                return Tick::Failed(format!(
+                    "scripted run: no surface for frame {k} of {} after {} attempts ({why}); {} frames completed",
+                    self.frames, self.misses, self.done
+                ));
             }
         };
 
         self.misses = 0;
 
         // The frame's events, then the step that sees them.
-        for e in self.events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
-            host.event(self.t0 + (k - 1) as f64 * self.dt + e["t"].as_f64().unwrap_or(0.0), e);
+        for e in self
+            .events
+            .iter()
+            .filter(|e| e["frame"].as_u64() == Some(k))
+        {
+            host.event(
+                self.t0 + (k - 1) as f64 * self.dt + e["t"].as_f64().unwrap_or(0.0),
+                e,
+            );
         }
 
         if let Err(e) = host.step_and_present(frame, self.t0 + k as f64 * self.dt) {
-            return Tick::Failed(format!("scripted run: frame {k} of {}: render: {e}", self.frames));
+            return Tick::Failed(format!(
+                "scripted run: frame {k} of {}: render: {e}",
+                self.frames
+            ));
         }
 
         self.done = k;
 
-        if self.complete() { Tick::Finished } else { Tick::Next }
+        if self.complete() {
+            Tick::Finished
+        } else {
+            Tick::Next
+        }
     }
 }
 
@@ -173,9 +190,17 @@ impl ScriptedRun {
 /// the Unix epoch (to compare with the clock of whatever launched the viewer).
 fn startup_mark(what: &str) {
     static T0: OnceLock<Option<Instant>> = OnceLock::new();
-    let Some(t0) = T0.get_or_init(|| std::env::var("X3D_VIEW_STARTUP").is_ok().then(Instant::now)) else { return };
-    let epoch = SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_millis());
-    eprintln!("startup {what}: {:.1} ms (epoch {epoch} ms)", t0.elapsed().as_secs_f64() * 1e3);
+    let Some(t0) = T0.get_or_init(|| std::env::var("X3D_VIEW_STARTUP").is_ok().then(Instant::now))
+    else {
+        return;
+    };
+    let epoch = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_or(0, |d| d.as_millis());
+    eprintln!(
+        "startup {what}: {:.1} ms (epoch {epoch} ms)",
+        t0.elapsed().as_secs_f64() * 1e3
+    );
 }
 
 /// The window as the host of a scripted run.
@@ -204,14 +229,18 @@ impl ScriptedHost for WindowHost<'_> {
     fn step_and_present(&mut self, (frame, acquire): Self::Frame, now: f64) -> Result<(), String> {
         let g = self.gfx.as_deref_mut().ok_or("no window")?;
         render_present(g, self.stats, self.presented, frame, acquire, now)?;
-        g.gpu_errors.take().map_or(Ok(()), |e| Err(format!("GPU error: {e}")))
+        g.gpu_errors
+            .take()
+            .map_or(Ok(()), |e| Err(format!("GPU error: {e}")))
     }
 }
 
 /// The surface texture for the next frame. When the surface is not ready, reconfigure it and say why.
 fn acquire(g: &mut Gfx) -> Result<wgpu::SurfaceTexture, String> {
     let why = match g.surface.get_current_texture() {
-        wgpu::CurrentSurfaceTexture::Success(f) | wgpu::CurrentSurfaceTexture::Suboptimal(f) => return Ok(f),
+        wgpu::CurrentSurfaceTexture::Success(f) | wgpu::CurrentSurfaceTexture::Suboptimal(f) => {
+            return Ok(f);
+        }
         wgpu::CurrentSurfaceTexture::Timeout => "timeout",
         wgpu::CurrentSurfaceTexture::Occluded => "occluded",
         wgpu::CurrentSurfaceTexture::Outdated => "outdated",
@@ -225,8 +254,18 @@ fn acquire(g: &mut Gfx) -> Result<wgpu::SurfaceTexture, String> {
 
 /// Step and draw the viewer into `frame`, present it. The frame is presented even when drawing
 /// fails; the error is returned after.
-fn render_present(g: &mut Gfx, s: &mut Stats, presented: &mut u64, frame: wgpu::SurfaceTexture, acquire: f64, now: f64) -> Result<FrameInfo, String> {
-    let view = frame.texture.create_view(&wgpu::TextureViewDescriptor { format: Some(g.view_format), ..Default::default() });
+fn render_present(
+    g: &mut Gfx,
+    s: &mut Stats,
+    presented: &mut u64,
+    frame: wgpu::SurfaceTexture,
+    acquire: f64,
+    now: f64,
+) -> Result<FrameInfo, String> {
+    let view = frame.texture.create_view(&wgpu::TextureViewDescriptor {
+        format: Some(g.view_format),
+        ..Default::default()
+    });
     let (w, h) = (g.config.width, g.config.height);
     let result = g.viewer.frame(now, &view, g.view_format, w, h);
     let info = result.as_ref().copied().unwrap_or_default();
@@ -307,17 +346,35 @@ impl ViewerWindow {
 
         let world = {
             let t = g.viewer.title();
-            if t.is_empty() { self.opts.path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default() } else { t }
+            if t.is_empty() {
+                self.opts
+                    .path
+                    .file_name()
+                    .map(|n| n.to_string_lossy().to_string())
+                    .unwrap_or_default()
+            } else {
+                t
+            }
         };
 
-        let vp = g.viewer.viewpoints().into_iter().find(|v| v.bound).map(|v| v.description).unwrap_or_default();
+        let vp = g
+            .viewer
+            .viewpoints()
+            .into_iter()
+            .find(|v| v.bound)
+            .map(|v| v.description)
+            .unwrap_or_default();
         let mut title = format!("{world} - {}", g.viewer.navigation_type());
 
         if !vp.is_empty() {
             title.push_str(&format!(" - {vp}"));
         }
 
-        let prints = g.viewer.core().map(|c| c.rt.prints.clone()).unwrap_or_default();
+        let prints = g
+            .viewer
+            .core()
+            .map(|c| c.rt.prints.clone())
+            .unwrap_or_default();
 
         if let Some(p) = prints.last() {
             title.push_str(&format!(" | print: {p}"));
@@ -345,7 +402,9 @@ impl ViewerWindow {
 
     fn key_action(&mut self, event_loop: &ActiveEventLoop, action: KeyAction) {
         match action {
-            KeyAction::Dom { down, key, code } => self.input(UiEvent::NativeKey { down, key, code }),
+            KeyAction::Dom { down, key, code } => {
+                self.input(UiEvent::NativeKey { down, key, code })
+            }
             KeyAction::Shortcut(s) => self.shortcut(event_loop, s),
             KeyAction::None => {}
         }
@@ -410,7 +469,10 @@ impl ViewerWindow {
         let g = self.gfx.as_mut().ok_or("no window")?;
         let (w, h) = g.viewer.size();
         let rgba = g.viewer.screenshot_rgba(w, h).ok_or("nothing to render")?;
-        let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+        let rgba: Vec<u8> = rgba
+            .chunks_exact(4)
+            .flat_map(|p| [p[0], p[1], p[2], 255])
+            .collect();
         x3d_render::write_png(path, w, h, &rgba)
     }
 
@@ -421,7 +483,14 @@ impl ViewerWindow {
         let frame = acquire(g).ok()?;
         let t1 = Instant::now();
 
-        match render_present(g, &mut self.stats, &mut self.presented, frame, (t1 - t0).as_secs_f64(), now) {
+        match render_present(
+            g,
+            &mut self.stats,
+            &mut self.presented,
+            frame,
+            (t1 - t0).as_secs_f64(),
+            now,
+        ) {
             Ok(i) => Some(i),
             Err(e) => {
                 eprintln!("render: {e}");
@@ -438,8 +507,21 @@ impl ViewerWindow {
         }
 
         let n = s.frames as f64;
-        let adapter = self.gfx.as_ref().map(|g| format!("{} ({:?}, {:?})", g.adapter_info.name, g.adapter_info.backend, g.adapter_info.device_type)).unwrap_or_default();
-        let gpu = if s.gpu_frames > 0 { format!("{:.2} ms", s.gpu / s.gpu_frames as f64) } else { "n/a".to_string() };
+        let adapter = self
+            .gfx
+            .as_ref()
+            .map(|g| {
+                format!(
+                    "{} ({:?}, {:?})",
+                    g.adapter_info.name, g.adapter_info.backend, g.adapter_info.device_type
+                )
+            })
+            .unwrap_or_default();
+        let gpu = if s.gpu_frames > 0 {
+            format!("{:.2} ms", s.gpu / s.gpu_frames as f64)
+        } else {
+            "n/a".to_string()
+        };
         eprintln!(
             "stats: {} frames on {adapter}: step {:.2} ms, build {:.2} ms, render submit {:.2} ms, GPU {gpu}, acquire {:.2} ms, present {:.2} ms (CPU, per frame)",
             s.frames,
@@ -457,7 +539,10 @@ impl ViewerWindow {
             self.redraw_frame(event_loop);
 
             if self.presented > 0 {
-                let pipelines = self.gfx.as_mut().map_or(0, |g| g.viewer.renderer().stats.pipelines_created);
+                let pipelines = self
+                    .gfx
+                    .as_mut()
+                    .map_or(0, |g| g.viewer.renderer().stats.pipelines_created);
                 startup_mark(&format!("first frame presented ({pipelines} pipelines)"));
             }
 
@@ -487,8 +572,14 @@ impl ViewerWindow {
 
     /// One redraw of a scripted run, on the script's virtual clock.
     fn scripted_redraw(&mut self, event_loop: &ActiveEventLoop) {
-        let Some(run) = self.scripted.as_mut() else { return };
-        let tick = run.tick(&mut WindowHost { gfx: self.gfx.as_mut(), stats: &mut self.stats, presented: &mut self.presented });
+        let Some(run) = self.scripted.as_mut() else {
+            return;
+        };
+        let tick = run.tick(&mut WindowHost {
+            gfx: self.gfx.as_mut(),
+            stats: &mut self.stats,
+            presented: &mut self.presented,
+        });
         self.update_title();
 
         match tick {
@@ -508,7 +599,14 @@ impl ViewerWindow {
                 if let Some(g) = &mut self.gfx {
                     if let Some(v) = g.viewer.core() {
                         let (p, _, _) = v.user_pose();
-                        eprintln!("final pose: position [{:.6}, {:.6}, {:.6}] viewer {} status {:?} presented {presented} frames", p.x, p.y, p.z, v.viewer_kind(), v.status);
+                        eprintln!(
+                            "final pose: position [{:.6}, {:.6}, {:.6}] viewer {} status {:?} presented {presented} frames",
+                            p.x,
+                            p.y,
+                            p.z,
+                            v.viewer_kind(),
+                            v.status
+                        );
                     }
                 }
 
@@ -526,18 +624,28 @@ impl ViewerWindow {
 /// The window, surface, device and viewer.
 fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, String> {
     let (w, h) = opts.size;
-    let attrs = Window::default_attributes().with_inner_size(LogicalSize::new(w as f64, h as f64)).with_resizable(opts.script.is_none()).with_title("x3d-view");
+    let attrs = Window::default_attributes()
+        .with_inner_size(LogicalSize::new(w as f64, h as f64))
+        .with_resizable(opts.script.is_none())
+        .with_title("x3d-view");
     // Windows: the window shows once its first frame can be drawn (see `resumed`). Until then
     // the event loop is not running, and a visible window would be marked as not responding
     // after a few seconds.
     let attrs = attrs.with_visible(!cfg!(windows));
-    let window = Arc::new(event_loop.create_window(attrs).map_err(|e| format!("create_window: {e}"))?);
+    let window = Arc::new(
+        event_loop
+            .create_window(attrs)
+            .map_err(|e| format!("create_window: {e}"))?,
+    );
     startup_mark("window");
 
     let desc = backend::instance_descriptor()?;
     let backends = desc.backends;
-    let instance = wgpu::Instance::new(desc.with_display_handle(Box::new(event_loop.owned_display_handle())));
-    let surface = instance.create_surface(window.clone()).map_err(|e| format!("create_surface: {e}"))?;
+    let instance =
+        wgpu::Instance::new(desc.with_display_handle(Box::new(event_loop.owned_display_handle())));
+    let surface = instance
+        .create_surface(window.clone())
+        .map_err(|e| format!("create_surface: {e}"))?;
     let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
         power_preference: wgpu::PowerPreference::HighPerformance,
         force_fallback_adapter: false,
@@ -564,7 +672,12 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         .iter()
         .copied()
         .find(|f| x3d_render::gpu::target_format_ok(*f))
-        .or_else(|| caps.formats.iter().copied().find(|f| x3d_render::gpu::target_format_ok(f.remove_srgb_suffix())))
+        .or_else(|| {
+            caps.formats
+                .iter()
+                .copied()
+                .find(|f| x3d_render::gpu::target_format_ok(f.remove_srgb_suffix()))
+        })
         .ok_or_else(|| format!("no usable surface format in {:?}", caps.formats))?;
     let view_format = surface_format.remove_srgb_suffix();
     let size = window.inner_size();
@@ -578,9 +691,17 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         _ => wgpu::PresentMode::Fifo,
     };
     // Fifo is always supported; fall back to it when the requested mode is not.
-    let present_mode = if caps.present_modes.contains(&requested) { requested } else { wgpu::PresentMode::Fifo };
+    let present_mode = if caps.present_modes.contains(&requested) {
+        requested
+    } else {
+        wgpu::PresentMode::Fifo
+    };
     // The picture is opaque; do not let the compositor blend it with what is behind the window.
-    let alpha_mode = if caps.alpha_modes.contains(&wgpu::CompositeAlphaMode::Opaque) { wgpu::CompositeAlphaMode::Opaque } else { caps.alpha_modes[0] };
+    let alpha_mode = if caps.alpha_modes.contains(&wgpu::CompositeAlphaMode::Opaque) {
+        wgpu::CompositeAlphaMode::Opaque
+    } else {
+        caps.alpha_modes[0]
+    };
     let config = wgpu::SurfaceConfiguration {
         usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
         format: surface_format,
@@ -588,18 +709,39 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         height: size.height.max(1),
         present_mode,
         alpha_mode,
-        view_formats: if view_format != surface_format { vec![view_format] } else { vec![] },
+        view_formats: if view_format != surface_format {
+            vec![view_format]
+        } else {
+            vec![]
+        },
         desired_maximum_frame_latency: 2,
         color_space: wgpu::SurfaceColorSpace::Auto,
     };
     surface.configure(&device, &config);
 
     if std::env::var("X3D_VIEW_STATS").is_ok() {
-        eprintln!("adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?} of {:?}; alpha {:?} of {:?}", adapter_info.name, adapter_info.backend, adapter_info.device_type, surface_format, view_format, present_mode, caps.present_modes, alpha_mode, caps.alpha_modes);
+        eprintln!(
+            "adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?} of {:?}; alpha {:?} of {:?}",
+            adapter_info.name,
+            adapter_info.backend,
+            adapter_info.device_type,
+            surface_format,
+            view_format,
+            present_mode,
+            caps.present_modes,
+            alpha_mode,
+            caps.alpha_modes
+        );
     }
 
     startup_mark("surface");
-    let mut viewer = backend::create_viewer(&device, &queue, (config.width, config.height), &adapter, view_format)?;
+    let mut viewer = backend::create_viewer(
+        &device,
+        &queue,
+        (config.width, config.height),
+        &adapter,
+        view_format,
+    )?;
     startup_mark("renderer");
     viewer.renderer().clear_color = [0.0, 0.0, 0.0, 1.0];
 
@@ -612,10 +754,24 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
     }
 
     if std::env::var("X3D_VIEW_STATS").is_ok() {
-        eprintln!("multisampling {} (supported {:?})", viewer.multisampling(), viewer.supported_multisampling());
+        eprintln!(
+            "multisampling {} (supported {:?})",
+            viewer.multisampling(),
+            viewer.supported_multisampling()
+        );
     }
 
-    Ok(Gfx { window, surface, config, view_format, device, queue, adapter_info, gpu_errors, viewer })
+    Ok(Gfx {
+        window,
+        surface,
+        config,
+        view_format,
+        device,
+        queue,
+        adapter_info,
+        gpu_errors,
+        viewer,
+    })
 }
 
 impl ApplicationHandler for ViewerWindow {
@@ -629,10 +785,23 @@ impl ApplicationHandler for ViewerWindow {
             Err(e) => return self.fail(event_loop, e),
         };
 
-        let t0 = self.opts.script.as_ref().map(|s| s["t0"].as_f64().unwrap_or(946684800.0));
+        let t0 = self
+            .opts
+            .script
+            .as_ref()
+            .map(|s| s["t0"].as_f64().unwrap_or(946684800.0));
 
-        if let Err(e) = gfx.viewer.load(&self.opts.path, LoadOptions { root: self.opts.oracle.clone(), start_time: t0 }) {
-            return self.fail(event_loop, format!("load {}: {e}", self.opts.path.display()));
+        if let Err(e) = gfx.viewer.load(
+            &self.opts.path,
+            LoadOptions {
+                root: self.opts.oracle.clone(),
+                start_time: t0,
+            },
+        ) {
+            return self.fail(
+                event_loop,
+                format!("load {}: {e}", self.opts.path.display()),
+            );
         }
 
         startup_mark("load");
@@ -680,12 +849,23 @@ impl ApplicationHandler for ViewerWindow {
             }
             WindowEvent::ModifiersChanged(m) => {
                 self.mods = m.state();
-                self.input(UiEvent::Mods { shift: self.mods.shift_key(), ctrl: self.mods.control_key(), alt: self.mods.alt_key() });
+                self.input(UiEvent::Mods {
+                    shift: self.mods.shift_key(),
+                    ctrl: self.mods.control_key(),
+                    alt: self.mods.alt_key(),
+                });
             }
             WindowEvent::CursorMoved { position, .. } => {
-                let h = self.gfx.as_ref().map(|g| g.viewer.size().1 as f64).unwrap_or(0.0);
+                let h = self
+                    .gfx
+                    .as_ref()
+                    .map(|g| g.viewer.size().1 as f64)
+                    .unwrap_or(0.0);
                 self.cursor = (position.x, h - position.y);
-                self.input(UiEvent::MouseMove { x: self.cursor.0, y: self.cursor.1 });
+                self.input(UiEvent::MouseMove {
+                    x: self.cursor.0,
+                    y: self.cursor.1,
+                });
             }
             WindowEvent::MouseInput { state, button, .. } => {
                 let b = match button {
@@ -695,14 +875,24 @@ impl ApplicationHandler for ViewerWindow {
                     _ => return,
                 };
                 let (x, y) = self.cursor;
-                self.input(if state == ElementState::Pressed { UiEvent::MouseDown { button: b, x, y } } else { UiEvent::MouseUp { button: b, x, y } });
+                self.input(if state == ElementState::Pressed {
+                    UiEvent::MouseDown { button: b, x, y }
+                } else {
+                    UiEvent::MouseUp { button: b, x, y }
+                });
 
                 // The second release of a double click fires the DOM "dblclick" event (LOOKAT, PLANE).
                 if b == 0 && state == ElementState::Released {
                     let now = std::time::Instant::now();
 
                     match self.last_left_up.take() {
-                        Some((t, px, py)) if now.duration_since(t).as_millis() < 500 && (px - x).abs() <= 4.0 && (py - y).abs() <= 4.0 => self.input(UiEvent::DblClick { x, y }),
+                        Some((t, px, py))
+                            if now.duration_since(t).as_millis() < 500
+                                && (px - x).abs() <= 4.0
+                                && (py - y).abs() <= 4.0 =>
+                        {
+                            self.input(UiEvent::DblClick { x, y })
+                        }
                         _ => self.last_left_up = Some((now, x, y)),
                     }
                 }
@@ -716,9 +906,22 @@ impl ApplicationHandler for ViewerWindow {
                 let (x, y) = self.cursor;
                 self.input(UiEvent::Wheel { delta_y: dy, x, y });
             }
-            WindowEvent::KeyboardInput { event, is_synthetic, .. } => {
+            WindowEvent::KeyboardInput {
+                event,
+                is_synthetic,
+                ..
+            } => {
                 let pressed = event.state == ElementState::Pressed;
-                let action = self.keys.event(Platform::current(), pressed, event.repeat, is_synthetic, &event.logical_key, &event.key_without_modifiers(), &event.physical_key, self.mods);
+                let action = self.keys.event(
+                    Platform::current(),
+                    pressed,
+                    event.repeat,
+                    is_synthetic,
+                    &event.logical_key,
+                    &event.key_without_modifiers(),
+                    &event.physical_key,
+                    self.mods,
+                );
                 self.key_action(event_loop, action);
             }
             WindowEvent::Focused(false) => {
@@ -754,14 +957,19 @@ pub fn run(opts: Options) -> Result<u64, String> {
     event_loop.set_control_flow(ControlFlow::Poll);
     startup_mark("event loop");
     let mut app = ViewerWindow::new(opts);
-    event_loop.run_app(&mut app).map_err(|e| format!("run: {e}"))?;
+    event_loop
+        .run_app(&mut app)
+        .map_err(|e| format!("run: {e}"))?;
     app.print_stats();
     let pending = app.gfx.as_ref().and_then(|g| g.gpu_errors.take());
 
     match (first_error(app.exit_error, pending), &app.scripted) {
         (Some(e), _) => Err(e),
         // Closed (window manager, Quit) before the last frame: the run did not happen.
-        (None, Some(s)) if !s.complete() => Err(format!("scripted run: the event loop ended after {} of {} frames", s.done, s.frames)),
+        (None, Some(s)) if !s.complete() => Err(format!(
+            "scripted run: the event loop ended after {} of {} frames",
+            s.done, s.frames
+        )),
         (None, _) => Ok(app.presented),
     }
 }
@@ -780,8 +988,14 @@ mod tests {
     #[test]
     fn a_gpu_error_after_the_last_frame_fails_the_run() {
         assert_eq!(first_error(None, None), None);
-        assert_eq!(first_error(None, Some("lost".into())).as_deref(), Some("GPU error: lost"));
-        assert_eq!(first_error(Some("screenshot: x".into()), Some("lost".into())).as_deref(), Some("screenshot: x"));
+        assert_eq!(
+            first_error(None, Some("lost".into())).as_deref(),
+            Some("GPU error: lost")
+        );
+        assert_eq!(
+            first_error(Some("screenshot: x".into()), Some("lost".into())).as_deref(),
+            Some("screenshot: x")
+        );
     }
 
     /// A window whose surface is not ready on the listed acquire attempts (1-based), or never.
@@ -802,7 +1016,11 @@ mod tests {
         fn acquire(&mut self) -> Result<(), String> {
             self.attempts += 1;
 
-            if self.never_ready || self.not_ready.contains(&self.attempts) { Err("surface outdated".into()) } else { Ok(()) }
+            if self.never_ready || self.not_ready.contains(&self.attempts) {
+                Err("surface outdated".into())
+            } else {
+                Ok(())
+            }
         }
 
         fn event(&mut self, date_now: f64, e: &Value) {
@@ -813,7 +1031,11 @@ mod tests {
             self.log.push(format!("step {now}"));
             self.steps.push(now);
 
-            if self.render_error_at == Some(now) { Err("x3d-render: empty target".into()) } else { Ok(()) }
+            if self.render_error_at == Some(now) {
+                Err("x3d-render: empty target".into())
+            } else {
+                Ok(())
+            }
         }
     }
 
@@ -842,7 +1064,15 @@ mod tests {
         panic!("the scripted run neither finished nor failed");
     }
 
-    const EXPECTED: [&str; 7] = ["step 100.5", "event \"a\" at 100.75", "event \"b\" at 101", "step 101", "step 101.5", "event \"c\" at 101.5", "step 102"];
+    const EXPECTED: [&str; 7] = [
+        "step 100.5",
+        "event \"a\" at 100.75",
+        "event \"b\" at 101",
+        "step 101",
+        "step 101.5",
+        "event \"c\" at 101.5",
+        "step 102",
+    ];
 
     #[test]
     fn every_frame_is_stepped_and_presented() {
@@ -857,7 +1087,10 @@ mod tests {
     fn a_surface_that_is_not_ready_does_not_count_as_a_frame() {
         // Not ready on the 2nd and 3rd attempts (frame 2, which has events) and the 6th (frame 4).
         let mut run = ScriptedRun::new(&script());
-        let mut host = FakeHost { not_ready: vec![2, 3, 6], ..Default::default() };
+        let mut host = FakeHost {
+            not_ready: vec![2, 3, 6],
+            ..Default::default()
+        };
         let ticks = drive(&mut run, &mut host);
 
         assert_eq!(ticks.last(), Some(&Tick::Finished));
@@ -871,24 +1104,44 @@ mod tests {
     #[test]
     fn a_surface_that_never_becomes_ready_fails_the_run() {
         let mut run = ScriptedRun::new(&script());
-        let mut host = FakeHost { never_ready: true, ..Default::default() };
+        let mut host = FakeHost {
+            never_ready: true,
+            ..Default::default()
+        };
         let ticks = drive(&mut run, &mut host);
 
-        let Some(Tick::Failed(e)) = ticks.last() else { panic!("the run did not fail: {:?}", ticks.last()) };
-        assert!(e.contains("frame 1 of 4") && e.contains("surface outdated"), "{e}");
+        let Some(Tick::Failed(e)) = ticks.last() else {
+            panic!("the run did not fail: {:?}", ticks.last())
+        };
+        assert!(
+            e.contains("frame 1 of 4") && e.contains("surface outdated"),
+            "{e}"
+        );
         assert_eq!(host.attempts, MAX_SURFACE_MISSES);
-        assert!(host.log.is_empty(), "the world moved without a surface: {:?}", host.log);
+        assert!(
+            host.log.is_empty(),
+            "the world moved without a surface: {:?}",
+            host.log
+        );
         assert!(!run.complete());
     }
 
     #[test]
     fn a_render_error_fails_the_run() {
         let mut run = ScriptedRun::new(&script());
-        let mut host = FakeHost { render_error_at: Some(101.0), ..Default::default() };
+        let mut host = FakeHost {
+            render_error_at: Some(101.0),
+            ..Default::default()
+        };
         let ticks = drive(&mut run, &mut host);
 
-        let Some(Tick::Failed(e)) = ticks.last() else { panic!("the run did not fail: {:?}", ticks.last()) };
-        assert!(e.contains("frame 2 of 4") && e.contains("empty target"), "{e}");
+        let Some(Tick::Failed(e)) = ticks.last() else {
+            panic!("the run did not fail: {:?}", ticks.last())
+        };
+        assert!(
+            e.contains("frame 2 of 4") && e.contains("empty target"),
+            "{e}"
+        );
         assert_eq!(run.done, 1);
         assert!(!run.complete());
     }
@@ -897,9 +1150,14 @@ mod tests {
     fn misses_are_counted_consecutively() {
         // MAX - 1 misses before every frame: slow, but never stuck.
         let n = MAX_SURFACE_MISSES - 1;
-        let not_ready = (0..4).flat_map(|f| (1..=n).map(move |i| f * (n + 1) + i)).collect();
+        let not_ready = (0..4)
+            .flat_map(|f| (1..=n).map(move |i| f * (n + 1) + i))
+            .collect();
         let mut run = ScriptedRun::new(&script());
-        let mut host = FakeHost { not_ready, ..Default::default() };
+        let mut host = FakeHost {
+            not_ready,
+            ..Default::default()
+        };
         assert_eq!(drive(&mut run, &mut host).last(), Some(&Tick::Finished));
         assert_eq!(host.log, EXPECTED);
     }
@@ -907,7 +1165,10 @@ mod tests {
     #[test]
     fn zero_frames_still_draws_one() {
         let mut run = ScriptedRun::new(&json!({ "t0": 0.0, "dt": 1.0, "frames": 0 }));
-        let mut host = FakeHost { not_ready: vec![1], ..Default::default() };
+        let mut host = FakeHost {
+            not_ready: vec![1],
+            ..Default::default()
+        };
         assert_eq!(drive(&mut run, &mut host), [Tick::Retry, Tick::Finished]);
         assert_eq!(host.steps, [1.0]);
     }

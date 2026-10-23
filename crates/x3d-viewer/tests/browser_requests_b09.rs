@@ -57,7 +57,12 @@ fn bind_viewpoint_resize_and_dispose_reach_the_browser() {
     send(&mut v, "check");
     steps(&mut v, 1);
     // The viewer shows prints in its status line; the recorded console keeps them.
-    assert_eq!(v.rt.console.last().map(String::as_str), Some("log: active V2 true"), "{:?}", v.rt.log);
+    assert_eq!(
+        v.rt.console.last().map(String::as_str),
+        Some("log: active V2 true"),
+        "{:?}",
+        v.rt.log
+    );
 
     send(&mut v, "size");
     steps(&mut v, 1);

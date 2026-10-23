@@ -118,16 +118,28 @@ impl Manifold {
         let (mut res0, mut res1, mut res2, mut res3) = (0.0, 0.0, 0.0, 0.0);
 
         if max_penetration_index != 0 {
-            res0 = area(sub(pt.local_a, c[1].local_a), sub(c[3].local_a, c[2].local_a));
+            res0 = area(
+                sub(pt.local_a, c[1].local_a),
+                sub(c[3].local_a, c[2].local_a),
+            );
         }
         if max_penetration_index != 1 {
-            res1 = area(sub(pt.local_a, c[0].local_a), sub(c[3].local_a, c[2].local_a));
+            res1 = area(
+                sub(pt.local_a, c[0].local_a),
+                sub(c[3].local_a, c[2].local_a),
+            );
         }
         if max_penetration_index != 2 {
-            res2 = area(sub(pt.local_a, c[0].local_a), sub(c[3].local_a, c[1].local_a));
+            res2 = area(
+                sub(pt.local_a, c[0].local_a),
+                sub(c[3].local_a, c[1].local_a),
+            );
         }
         if max_penetration_index != 3 {
-            res3 = area(sub(pt.local_a, c[0].local_a), sub(c[2].local_a, c[1].local_a));
+            res3 = area(
+                sub(pt.local_a, c[0].local_a),
+                sub(c[2].local_a, c[1].local_a),
+            );
         }
 
         // btVector4.closestAxis4 (maxAxis4 of the absolute values)
@@ -211,7 +223,10 @@ impl Manifold {
                 self.remove_contact_point(i);
             } else {
                 // contact also becomes invalid when relative movement orthogonal to normal exceeds margin
-                let projected_point = sub(mp.position_world_on_a, scale(mp.normal_world_on_b, mp.distance1));
+                let projected_point = sub(
+                    mp.position_world_on_a,
+                    scale(mp.normal_world_on_b, mp.distance1),
+                );
                 let projected_difference = sub(mp.position_world_on_b, projected_point);
                 let distance2d = dot(projected_difference, projected_difference);
                 if distance2d > self.contact_breaking_threshold * self.contact_breaking_threshold {
@@ -241,8 +256,21 @@ impl ManifoldPool {
     }
 
     /// btCollisionDispatcher::getNewManifold.
-    pub fn new_manifold(&mut self, body0: BodyId, body1: BodyId, breaking: f64, processing: f64) -> ManifoldId {
-        let m = Manifold { body0, body1, points: vec![], contact_breaking_threshold: f(breaking), contact_processing_threshold: processing, index1a: self.order.len() };
+    pub fn new_manifold(
+        &mut self,
+        body0: BodyId,
+        body1: BodyId,
+        breaking: f64,
+        processing: f64,
+    ) -> ManifoldId {
+        let m = Manifold {
+            body0,
+            body1,
+            points: vec![],
+            contact_breaking_threshold: f(breaking),
+            contact_processing_threshold: processing,
+            index1a: self.order.len(),
+        };
         let id = match self.free.pop() {
             Some(i) => {
                 self.pool[i] = Some(m);
@@ -305,11 +333,22 @@ pub fn calculate_combined_restitution(b0: &RigidBody, b1: &RigidBody) -> f64 {
 
 impl ManifoldResult {
     pub fn new(body0: BodyId, body1: BodyId) -> ManifoldResult {
-        ManifoldResult { manifold: None, body0, body1 }
+        ManifoldResult {
+            manifold: None,
+            body0,
+            body1,
+        }
     }
 
     /// btManifoldResult::addContactPoint (normalOnBInWorld, pointInWorld, depth).
-    pub fn add_contact_point(&self, pool: &mut ManifoldPool, bodies: &[RigidBody], normal_on_b_in_world: V3, point_in_world: V3, depth: f64) {
+    pub fn add_contact_point(
+        &self,
+        pool: &mut ManifoldPool,
+        bodies: &[RigidBody],
+        normal_on_b_in_world: V3,
+        point_in_world: V3,
+        depth: f64,
+    ) {
         let mf = self.manifold.expect("manifold result without manifold");
         let m = pool.get_mut(mf);
 
@@ -325,9 +364,15 @@ impl ManifoldResult {
         let point_a = add(point, scale(normal, depth));
 
         let (local_a, local_b) = if is_swapped {
-            (bodies[self.body1].world_tf.inv_xform(point_a), bodies[self.body0].world_tf.inv_xform(point))
+            (
+                bodies[self.body1].world_tf.inv_xform(point_a),
+                bodies[self.body0].world_tf.inv_xform(point),
+            )
         } else {
-            (bodies[self.body0].world_tf.inv_xform(point_a), bodies[self.body1].world_tf.inv_xform(point))
+            (
+                bodies[self.body0].world_tf.inv_xform(point_a),
+                bodies[self.body1].world_tf.inv_xform(point),
+            )
         };
 
         let mut new_pt = ManifoldPoint::new(local_a, local_b, normal, depth);

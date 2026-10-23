@@ -12,9 +12,16 @@ thread_local! {
 
 /// Run `f` with `fetch` as the resource loader of glTF buffers (called with the buffer `uri`
 /// and the base URL of the scene).
-pub fn with_fetcher<T>(fetch: &dyn Fn(&str, &str) -> Result<Vec<u8>, String>, f: impl FnOnce() -> T) -> T {
+pub fn with_fetcher<T>(
+    fetch: &dyn Fn(&str, &str) -> Result<Vec<u8>, String>,
+    f: impl FnOnce() -> T,
+) -> T {
     // SAFETY: the pointer is only dereferenced inside `f`, while `fetch` is borrowed.
-    let ptr: *const FetchFn = unsafe { std::mem::transmute::<&dyn Fn(&str, &str) -> Result<Vec<u8>, String>, &'static FetchFn>(fetch) };
+    let ptr: *const FetchFn = unsafe {
+        std::mem::transmute::<&dyn Fn(&str, &str) -> Result<Vec<u8>, String>, &'static FetchFn>(
+            fetch,
+        )
+    };
     let previous = FETCHER.with(|c| c.borrow_mut().replace(ptr));
     let result = f();
 
@@ -37,7 +44,9 @@ pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
     let trimmed = uri.trim_start();
 
     if let Some(rest) = trimmed.strip_prefix("data:") {
-        let Some(comma) = rest.find(',') else { return Err("TypeError: Failed to fetch".into()) };
+        let Some(comma) = rest.find(',') else {
+            return Err("TypeError: Failed to fetch".into());
+        };
         let (meta, data) = (&rest[..comma], &rest[comma + 1..]);
 
         if meta.ends_with(";base64") {
@@ -47,7 +56,12 @@ pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
         return Ok(percent_decode_bytes(data));
     }
 
-    let has_scheme = trimmed.find(':').is_some_and(|i| i > 0 && trimmed[..i].bytes().all(|b| b.is_ascii_alphanumeric() || matches!(b, b'+' | b'-' | b'.')));
+    let has_scheme = trimmed.find(':').is_some_and(|i| {
+        i > 0
+            && trimmed[..i]
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'+' | b'-' | b'.'))
+    });
 
     // `new URL (uri, base)` throws for a malformed http(s) authority.
     for scheme in ["http://", "https://"] {
@@ -55,7 +69,11 @@ pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
             let host = rest.split(['/', '?', '#']).next().unwrap_or("");
             let bracketed = host.starts_with('[');
 
-            if host.is_empty() || host.contains(char::is_whitespace) || (bracketed && !host.contains(']')) || (!bracketed && host.contains(['[', ']'])) {
+            if host.is_empty()
+                || host.contains(char::is_whitespace)
+                || (bracketed && !host.contains(']'))
+                || (!bracketed && host.contains(['[', ']']))
+            {
                 return Err("TypeError: Failed to construct 'URL': Invalid URL".into());
             }
         }
@@ -67,12 +85,21 @@ pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
             None => return Err("TypeError: Failed to fetch".into()),
         }
     } else {
-        let Some(base) = base.strip_prefix("file://") else { return Err("TypeError: Failed to fetch".into()) };
+        let Some(base) = base.strip_prefix("file://") else {
+            return Err("TypeError: Failed to fetch".into());
+        };
         let base = percent_decode_string(base);
-        let dir = std::path::Path::new(&base).parent().unwrap_or(std::path::Path::new("/")).to_path_buf();
+        let dir = std::path::Path::new(&base)
+            .parent()
+            .unwrap_or(std::path::Path::new("/"))
+            .to_path_buf();
         let rel = percent_decode_string(trimmed.split(['?', '#']).next().unwrap_or(""));
 
-        if rel.starts_with('/') { std::path::PathBuf::from(rel) } else { dir.join(rel) }
+        if rel.starts_with('/') {
+            std::path::PathBuf::from(rel)
+        } else {
+            dir.join(rel)
+        }
     };
 
     std::fs::read(path).map_err(|_| "Error: Not Found".to_string())
@@ -114,7 +141,11 @@ pub(crate) fn parse_glb(data: &[u8], world_url: &str) -> R<Scene> {
 
     while i < data.len() {
         let u32_at = |k: usize| -> R<u32> {
-            data.get(k..k + 4).map(|b| u32::from_le_bytes([b[0], b[1], b[2], b[3]])).ok_or_else(|| "RangeError: Offset is outside the bounds of the DataView".to_string())
+            data.get(k..k + 4)
+                .map(|b| u32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+                .ok_or_else(|| {
+                    "RangeError: Offset is outside the bounds of the DataView".to_string()
+                })
         };
 
         let length = u32_at(i)? as usize;
@@ -135,7 +166,9 @@ pub(crate) fn parse_glb(data: &[u8], world_url: &str) -> R<Scene> {
     }
 
     for text in &json {
-        let Ok(value) = crate::json::json_parse(text) else { continue };
+        let Ok(value) = crate::json::json_parse(text) else {
+            continue;
+        };
 
         if !is_valid_gltf(&value) {
             continue;

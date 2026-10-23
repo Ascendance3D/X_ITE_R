@@ -6,13 +6,18 @@ use x3d_runtime::particles::{self, polyline_texture};
 #[test]
 fn polylines_texture_layout_is_x_ites() {
     // Two segments: (0,0,0)-(3,4,0) of length 5 and (3,4,0)-(3,4,12) of length 12.
-    let v = [0.0, 0.0, 0.0, 1.0, 3.0, 4.0, 0.0, 1.0, 3.0, 4.0, 0.0, 1.0, 3.0, 4.0, 12.0, 1.0];
+    let v = [
+        0.0, 0.0, 0.0, 1.0, 3.0, 4.0, 0.0, 1.0, 3.0, 4.0, 0.0, 1.0, 3.0, 4.0, 12.0, 1.0,
+    ];
     let t = polyline_texture(&v);
 
     // numVertices 4, numLengthSoFar 3, polylineArraySize ceil (sqrt (3 + 4)) = 3.
     assert_eq!(t.vertices_index, 3);
     assert_eq!(t.array.len(), 9);
-    assert_eq!([t.array[0][0], t.array[1][0], t.array[2][0]], [0.0, 5.0, 17.0]);
+    assert_eq!(
+        [t.array[0][0], t.array[1][0], t.array[2][0]],
+        [0.0, 5.0, 17.0]
+    );
     assert_eq!(t.array[3], [0.0, 0.0, 0.0, 1.0]);
     assert_eq!(t.array[6], [3.0, 4.0, 12.0, 1.0]);
 }

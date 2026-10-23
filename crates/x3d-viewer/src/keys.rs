@@ -162,7 +162,11 @@ pub enum Platform {
 
 impl Platform {
     pub const fn current() -> Platform {
-        if cfg!(target_os = "macos") { Platform::MacOs } else { Platform::Linux }
+        if cfg!(target_os = "macos") {
+            Platform::MacOs
+        } else {
+            Platform::Linux
+        }
     }
 
     /// Only the shortcut modifier is down: Shift, Alt and the other platform's modifier make the
@@ -246,7 +250,17 @@ impl KeyTracker {
     /// A winit key event. `synthetic`: winit's focus-change events (X11, Windows), which a browser
     /// does not send; their releases count only for keys X3D saw pressed.
     #[allow(clippy::too_many_arguments)]
-    pub fn event(&mut self, platform: Platform, pressed: bool, repeat: bool, synthetic: bool, logical: &Key, without_mods: &Key, physical: &PhysicalKey, mods: ModifiersState) -> KeyAction {
+    pub fn event(
+        &mut self,
+        platform: Platform,
+        pressed: bool,
+        repeat: bool,
+        synthetic: bool,
+        logical: &Key,
+        without_mods: &Key,
+        physical: &PhysicalKey,
+        mods: ModifiersState,
+    ) -> KeyAction {
         if pressed {
             if synthetic || self.consumed.contains(physical) {
                 // A synthetic press on focus gain, or a repeat of a shortcut: the shortcut ran once.
@@ -269,7 +283,11 @@ impl KeyTracker {
             }
 
             // Repeats are keydowns, as in the browser.
-            return KeyAction::Dom { down: true, key, code };
+            return KeyAction::Dom {
+                down: true,
+                key,
+                code,
+            };
         }
 
         if let Some(i) = self.consumed.iter().position(|p| p == physical) {
@@ -281,13 +299,21 @@ impl KeyTracker {
             Some(i) => {
                 self.pressed.remove(i);
                 let (key, code) = dom_event(logical, physical);
-                KeyAction::Dom { down: false, key, code }
+                KeyAction::Dom {
+                    down: false,
+                    key,
+                    code,
+                }
             }
             // Pressed before the window had focus (or a synthetic release of such a key).
             None if synthetic => KeyAction::None,
             None => {
                 let (key, code) = dom_event(logical, physical);
-                KeyAction::Dom { down: false, key, code }
+                KeyAction::Dom {
+                    down: false,
+                    key,
+                    code,
+                }
             }
         }
     }
@@ -295,7 +321,14 @@ impl KeyTracker {
     /// Focus lost: a keyup for every key X3D still holds, in press order, with its keydown key.
     pub fn release_all(&mut self) -> Vec<KeyAction> {
         self.consumed.clear();
-        self.pressed.drain(..).map(|(_, key, code)| KeyAction::Dom { down: false, key, code }).collect()
+        self.pressed
+            .drain(..)
+            .map(|(_, key, code)| KeyAction::Dom {
+                down: false,
+                key,
+                code,
+            })
+            .collect()
     }
 }
 
@@ -324,16 +357,43 @@ mod tests {
         assert_eq!(dom_event(&ch("a"), &code(KeyCode::KeyA)), ("a".into(), 65));
         assert_eq!(dom_event(&ch("A"), &code(KeyCode::KeyA)), ("A".into(), 65));
         assert_eq!(dom_event(&ch("z"), &code(KeyCode::KeyZ)), ("z".into(), 90));
-        assert_eq!(dom_event(&ch("0"), &code(KeyCode::Digit0)), ("0".into(), 48));
-        assert_eq!(dom_event(&ch("9"), &code(KeyCode::Digit9)), ("9".into(), 57));
+        assert_eq!(
+            dom_event(&ch("0"), &code(KeyCode::Digit0)),
+            ("0".into(), 48)
+        );
+        assert_eq!(
+            dom_event(&ch("9"), &code(KeyCode::Digit9)),
+            ("9".into(), 57)
+        );
         // US Shift + digit / punctuation: the key is the shifted character, the keyCode the key's.
-        assert_eq!(dom_event(&ch("!"), &code(KeyCode::Digit1)), ("!".into(), 49));
-        assert_eq!(dom_event(&ch("@"), &code(KeyCode::Digit2)), ("@".into(), 50));
-        assert_eq!(dom_event(&ch("?"), &code(KeyCode::Slash)), ("?".into(), 191));
-        assert_eq!(dom_event(&ch(":"), &code(KeyCode::Semicolon)), (":".into(), 186));
-        assert_eq!(dom_event(&ch("\""), &code(KeyCode::Quote)), ("\"".into(), 222));
-        assert_eq!(dom_event(&ch("{"), &code(KeyCode::BracketLeft)), ("{".into(), 219));
-        assert_eq!(dom_event(&named(NamedKey::Space), &code(KeyCode::Space)), (" ".into(), 32));
+        assert_eq!(
+            dom_event(&ch("!"), &code(KeyCode::Digit1)),
+            ("!".into(), 49)
+        );
+        assert_eq!(
+            dom_event(&ch("@"), &code(KeyCode::Digit2)),
+            ("@".into(), 50)
+        );
+        assert_eq!(
+            dom_event(&ch("?"), &code(KeyCode::Slash)),
+            ("?".into(), 191)
+        );
+        assert_eq!(
+            dom_event(&ch(":"), &code(KeyCode::Semicolon)),
+            (":".into(), 186)
+        );
+        assert_eq!(
+            dom_event(&ch("\""), &code(KeyCode::Quote)),
+            ("\"".into(), 222)
+        );
+        assert_eq!(
+            dom_event(&ch("{"), &code(KeyCode::BracketLeft)),
+            ("{".into(), 219)
+        );
+        assert_eq!(
+            dom_event(&named(NamedKey::Space), &code(KeyCode::Space)),
+            (" ".into(), 32)
+        );
     }
 
     #[test]
@@ -342,10 +402,22 @@ mod tests {
         assert_eq!(dom_event(&ch("a"), &code(KeyCode::KeyQ)), ("a".into(), 65));
         // A character the keyCode table does not know takes the physical key's US keyCode,
         // so the sensors get the text (German ö on the US ; key, French é on the US 2 key).
-        assert_eq!(dom_event(&ch("ö"), &code(KeyCode::Semicolon)), ("ö".into(), 186));
-        assert_eq!(dom_event(&ch("é"), &code(KeyCode::Digit2)), ("é".into(), 50));
+        assert_eq!(
+            dom_event(&ch("ö"), &code(KeyCode::Semicolon)),
+            ("ö".into(), 186)
+        );
+        assert_eq!(
+            dom_event(&ch("é"), &code(KeyCode::Digit2)),
+            ("é".into(), 50)
+        );
         // No physical code either: keyCode 0, so no text is made up for it.
-        assert_eq!(dom_event(&ch("ö"), &PhysicalKey::Unidentified(winit::keyboard::NativeKeyCode::Unidentified)), ("ö".into(), 0));
+        assert_eq!(
+            dom_event(
+                &ch("ö"),
+                &PhysicalKey::Unidentified(winit::keyboard::NativeKeyCode::Unidentified)
+            ),
+            ("ö".into(), 0)
+        );
     }
 
     #[test]
@@ -374,29 +446,70 @@ mod tests {
         ];
 
         for (n, key, c) in cases {
-            assert_eq!(dom_event(&named(n), &PhysicalKey::Unidentified(winit::keyboard::NativeKeyCode::Unidentified)), (key.to_string(), c), "{n:?}");
+            assert_eq!(
+                dom_event(
+                    &named(n),
+                    &PhysicalKey::Unidentified(winit::keyboard::NativeKeyCode::Unidentified)
+                ),
+                (key.to_string(), c),
+                "{n:?}"
+            );
         }
 
-        let f = [NamedKey::F1, NamedKey::F2, NamedKey::F3, NamedKey::F4, NamedKey::F5, NamedKey::F6, NamedKey::F7, NamedKey::F8, NamedKey::F9, NamedKey::F10, NamedKey::F11, NamedKey::F12];
+        let f = [
+            NamedKey::F1,
+            NamedKey::F2,
+            NamedKey::F3,
+            NamedKey::F4,
+            NamedKey::F5,
+            NamedKey::F6,
+            NamedKey::F7,
+            NamedKey::F8,
+            NamedKey::F9,
+            NamedKey::F10,
+            NamedKey::F11,
+            NamedKey::F12,
+        ];
 
         for (i, n) in f.into_iter().enumerate() {
-            assert_eq!(dom_event(&named(n), &code(KeyCode::Escape)), (format!("F{}", i + 1), 112 + i as u32));
+            assert_eq!(
+                dom_event(&named(n), &code(KeyCode::Escape)),
+                (format!("F{}", i + 1), 112 + i as u32)
+            );
         }
     }
 
     #[test]
     fn unknown_keys() {
         let none = PhysicalKey::Unidentified(winit::keyboard::NativeKeyCode::Unidentified);
-        assert_eq!(dom_event(&named(NamedKey::MediaPlayPause), &none), ("Unidentified".into(), 0));
-        assert_eq!(dom_event(&Key::Unidentified(winit::keyboard::NativeKey::Unidentified), &none), ("Unidentified".into(), 0));
-        assert_eq!(dom_event(&Key::Dead(Some('´')), &code(KeyCode::Equal)), ("Dead".into(), 187));
+        assert_eq!(
+            dom_event(&named(NamedKey::MediaPlayPause), &none),
+            ("Unidentified".into(), 0)
+        );
+        assert_eq!(
+            dom_event(
+                &Key::Unidentified(winit::keyboard::NativeKey::Unidentified),
+                &none
+            ),
+            ("Unidentified".into(), 0)
+        );
+        assert_eq!(
+            dom_event(&Key::Dead(Some('´')), &code(KeyCode::Equal)),
+            ("Dead".into(), 187)
+        );
     }
 
     #[test]
     fn shortcut_modifier_per_platform() {
-        assert_eq!(shortcut(Platform::Linux, &ch("q"), CTRL), Some(Shortcut::Quit));
+        assert_eq!(
+            shortcut(Platform::Linux, &ch("q"), CTRL),
+            Some(Shortcut::Quit)
+        );
         assert_eq!(shortcut(Platform::Linux, &ch("q"), CMD), None);
-        assert_eq!(shortcut(Platform::MacOs, &ch("q"), CMD), Some(Shortcut::Quit));
+        assert_eq!(
+            shortcut(Platform::MacOs, &ch("q"), CMD),
+            Some(Shortcut::Quit)
+        );
         assert_eq!(shortcut(Platform::MacOs, &ch("q"), CTRL), None);
 
         for p in [Platform::Linux, Platform::MacOs] {
@@ -417,7 +530,13 @@ mod tests {
             assert_eq!(shortcut(p, &ch("q"), m | ModifiersState::ALT), None);
             assert_eq!(shortcut(p, &ch("q"), CTRL | CMD), None);
 
-            for n in [NamedKey::Escape, NamedKey::Home, NamedKey::End, NamedKey::PageUp, NamedKey::PageDown] {
+            for n in [
+                NamedKey::Escape,
+                NamedKey::Home,
+                NamedKey::End,
+                NamedKey::PageUp,
+                NamedKey::PageDown,
+            ] {
                 assert_eq!(shortcut(p, &named(n), m), None, "{n:?}");
                 assert_eq!(shortcut(p, &named(n), NONE), None, "{n:?}");
             }
@@ -427,48 +546,146 @@ mod tests {
         for k in ["1", "2", "3", "4", "q", "m", "z", "r", "l", "s", "Q", "S"] {
             assert_eq!(shortcut(Platform::Linux, &ch(k), NONE), None);
             assert_eq!(shortcut(Platform::MacOs, &ch(k), NONE), None);
-            assert_eq!(shortcut(Platform::Linux, &ch(k), ModifiersState::SHIFT), None);
+            assert_eq!(
+                shortcut(Platform::Linux, &ch(k), ModifiersState::SHIFT),
+                None
+            );
         }
     }
 
-    fn ev(t: &mut KeyTracker, p: Platform, down: bool, repeat: bool, k: Key, c: KeyCode, mods: ModifiersState) -> KeyAction {
+    fn ev(
+        t: &mut KeyTracker,
+        p: Platform,
+        down: bool,
+        repeat: bool,
+        k: Key,
+        c: KeyCode,
+        mods: ModifiersState,
+    ) -> KeyAction {
         t.event(p, down, repeat, false, &k, &k, &code(c), mods)
     }
 
     fn dom(down: bool, key: &str, code: u32) -> KeyAction {
-        KeyAction::Dom { down, key: key.into(), code }
+        KeyAction::Dom {
+            down,
+            key: key.into(),
+            code,
+        }
     }
 
     #[test]
     fn tracker_forwards_keys_and_repeats() {
         let mut t = KeyTracker::default();
         let p = Platform::Linux;
-        assert_eq!(ev(&mut t, p, true, false, ch("q"), KeyCode::KeyQ, NONE), dom(true, "q", 81));
-        assert_eq!(ev(&mut t, p, true, true, ch("q"), KeyCode::KeyQ, NONE), dom(true, "q", 81));
-        assert_eq!(ev(&mut t, p, true, true, ch("q"), KeyCode::KeyQ, NONE), dom(true, "q", 81));
-        assert_eq!(ev(&mut t, p, false, false, ch("q"), KeyCode::KeyQ, NONE), dom(false, "q", 81));
+        assert_eq!(
+            ev(&mut t, p, true, false, ch("q"), KeyCode::KeyQ, NONE),
+            dom(true, "q", 81)
+        );
+        assert_eq!(
+            ev(&mut t, p, true, true, ch("q"), KeyCode::KeyQ, NONE),
+            dom(true, "q", 81)
+        );
+        assert_eq!(
+            ev(&mut t, p, true, true, ch("q"), KeyCode::KeyQ, NONE),
+            dom(true, "q", 81)
+        );
+        assert_eq!(
+            ev(&mut t, p, false, false, ch("q"), KeyCode::KeyQ, NONE),
+            dom(false, "q", 81)
+        );
         assert!(t.pressed.is_empty());
         // Escape is an X3D key.
-        assert_eq!(ev(&mut t, p, true, false, named(NamedKey::Escape), KeyCode::Escape, NONE), dom(true, "Escape", 27));
-        assert_eq!(ev(&mut t, p, false, false, named(NamedKey::Escape), KeyCode::Escape, NONE), dom(false, "Escape", 27));
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                true,
+                false,
+                named(NamedKey::Escape),
+                KeyCode::Escape,
+                NONE
+            ),
+            dom(true, "Escape", 27)
+        );
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                false,
+                false,
+                named(NamedKey::Escape),
+                KeyCode::Escape,
+                NONE
+            ),
+            dom(false, "Escape", 27)
+        );
         // Home / End / PageUp / PageDown: one keydown each, even with the shortcut modifier.
-        assert_eq!(ev(&mut t, p, true, false, named(NamedKey::Home), KeyCode::Home, CTRL), dom(true, "Home", 36));
-        assert_eq!(ev(&mut t, p, false, false, named(NamedKey::Home), KeyCode::Home, CTRL), dom(false, "Home", 36));
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                true,
+                false,
+                named(NamedKey::Home),
+                KeyCode::Home,
+                CTRL
+            ),
+            dom(true, "Home", 36)
+        );
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                false,
+                false,
+                named(NamedKey::Home),
+                KeyCode::Home,
+                CTRL
+            ),
+            dom(false, "Home", 36)
+        );
     }
 
     #[test]
     fn tracker_shortcuts_consume_press_repeat_and_release() {
         for (p, m) in [(Platform::Linux, CTRL), (Platform::MacOs, CMD)] {
             let mut t = KeyTracker::default();
-            let modifier = if p == Platform::Linux { NamedKey::Control } else { NamedKey::Super };
-            let (mk, mc) = if p == Platform::Linux { (KeyCode::ControlLeft, 17) } else { (KeyCode::SuperLeft, 91) };
-            let mname = if p == Platform::Linux { "Control" } else { "Meta" };
+            let modifier = if p == Platform::Linux {
+                NamedKey::Control
+            } else {
+                NamedKey::Super
+            };
+            let (mk, mc) = if p == Platform::Linux {
+                (KeyCode::ControlLeft, 17)
+            } else {
+                (KeyCode::SuperLeft, 91)
+            };
+            let mname = if p == Platform::Linux {
+                "Control"
+            } else {
+                "Meta"
+            };
             // The modifier itself reaches X3D (KeySensor controlKey on Linux).
-            assert_eq!(ev(&mut t, p, true, false, named(modifier), mk, m), dom(true, mname, mc));
-            assert_eq!(ev(&mut t, p, true, false, ch("r"), KeyCode::KeyR, m), KeyAction::Shortcut(Shortcut::Reload));
-            assert_eq!(ev(&mut t, p, true, true, ch("r"), KeyCode::KeyR, m), KeyAction::None);
-            assert_eq!(ev(&mut t, p, false, false, ch("r"), KeyCode::KeyR, m), KeyAction::None);
-            assert_eq!(ev(&mut t, p, false, false, named(modifier), mk, NONE), dom(false, mname, mc));
+            assert_eq!(
+                ev(&mut t, p, true, false, named(modifier), mk, m),
+                dom(true, mname, mc)
+            );
+            assert_eq!(
+                ev(&mut t, p, true, false, ch("r"), KeyCode::KeyR, m),
+                KeyAction::Shortcut(Shortcut::Reload)
+            );
+            assert_eq!(
+                ev(&mut t, p, true, true, ch("r"), KeyCode::KeyR, m),
+                KeyAction::None
+            );
+            assert_eq!(
+                ev(&mut t, p, false, false, ch("r"), KeyCode::KeyR, m),
+                KeyAction::None
+            );
+            assert_eq!(
+                ev(&mut t, p, false, false, named(modifier), mk, NONE),
+                dom(false, mname, mc)
+            );
             assert!(t.pressed.is_empty() && t.consumed.is_empty());
         }
     }
@@ -478,30 +695,98 @@ mod tests {
         let mut t = KeyTracker::default();
         let p = Platform::Linux;
         let s = ModifiersState::SHIFT;
-        assert_eq!(ev(&mut t, p, true, false, named(NamedKey::Shift), KeyCode::ShiftLeft, s), dom(true, "Shift", 16));
-        assert_eq!(ev(&mut t, p, true, false, ch("B"), KeyCode::KeyB, s), dom(true, "B", 66));
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                true,
+                false,
+                named(NamedKey::Shift),
+                KeyCode::ShiftLeft,
+                s
+            ),
+            dom(true, "Shift", 16)
+        );
+        assert_eq!(
+            ev(&mut t, p, true, false, ch("B"), KeyCode::KeyB, s),
+            dom(true, "B", 66)
+        );
         // Shift released first: the keyup carries the key as it is now, as in the browser.
-        assert_eq!(ev(&mut t, p, false, false, named(NamedKey::Shift), KeyCode::ShiftLeft, NONE), dom(false, "Shift", 16));
-        assert_eq!(ev(&mut t, p, false, false, ch("b"), KeyCode::KeyB, NONE), dom(false, "b", 66));
+        assert_eq!(
+            ev(
+                &mut t,
+                p,
+                false,
+                false,
+                named(NamedKey::Shift),
+                KeyCode::ShiftLeft,
+                NONE
+            ),
+            dom(false, "Shift", 16)
+        );
+        assert_eq!(
+            ev(&mut t, p, false, false, ch("b"), KeyCode::KeyB, NONE),
+            dom(false, "b", 66)
+        );
     }
 
     #[test]
     fn tracker_focus_loss_releases_held_keys_once() {
         let mut t = KeyTracker::default();
         let p = Platform::Linux;
-        ev(&mut t, p, true, false, named(NamedKey::Shift), KeyCode::ShiftLeft, ModifiersState::SHIFT);
-        ev(&mut t, p, true, false, ch("A"), KeyCode::KeyA, ModifiersState::SHIFT);
-        ev(&mut t, p, true, false, named(NamedKey::Control), KeyCode::ControlLeft, ModifiersState::SHIFT | CTRL);
+        ev(
+            &mut t,
+            p,
+            true,
+            false,
+            named(NamedKey::Shift),
+            KeyCode::ShiftLeft,
+            ModifiersState::SHIFT,
+        );
+        ev(
+            &mut t,
+            p,
+            true,
+            false,
+            ch("A"),
+            KeyCode::KeyA,
+            ModifiersState::SHIFT,
+        );
+        ev(
+            &mut t,
+            p,
+            true,
+            false,
+            named(NamedKey::Control),
+            KeyCode::ControlLeft,
+            ModifiersState::SHIFT | CTRL,
+        );
         ev(&mut t, p, true, false, ch("s"), KeyCode::KeyS, CTRL);
-        assert_eq!(t.release_all(), vec![dom(false, "Shift", 16), dom(false, "A", 65), dom(false, "Control", 17)]);
+        assert_eq!(
+            t.release_all(),
+            vec![
+                dom(false, "Shift", 16),
+                dom(false, "A", 65),
+                dom(false, "Control", 17)
+            ]
+        );
         assert!(t.release_all().is_empty());
         // X11's synthetic releases after that, and synthetic presses on focus gain: nothing.
         let k = ch("a");
-        assert_eq!(t.event(p, false, false, true, &k, &k, &code(KeyCode::KeyA), NONE), KeyAction::None);
-        assert_eq!(t.event(p, true, false, true, &k, &k, &code(KeyCode::KeyA), NONE), KeyAction::None);
+        assert_eq!(
+            t.event(p, false, false, true, &k, &k, &code(KeyCode::KeyA), NONE),
+            KeyAction::None
+        );
+        assert_eq!(
+            t.event(p, true, false, true, &k, &k, &code(KeyCode::KeyA), NONE),
+            KeyAction::None
+        );
         // The shortcut key's real release after focus came back is a plain keyup (X3D never saw a press;
         // KeySensor and StringSensor ignore it unless they are active, as for a key pressed elsewhere).
-        assert_eq!(ev(&mut t, p, false, false, ch("s"), KeyCode::KeyS, NONE), dom(false, "s", 83));
+        assert_eq!(
+            ev(&mut t, p, false, false, ch("s"), KeyCode::KeyS, NONE),
+            dom(false, "s", 83)
+        );
     }
 
     #[test]
@@ -510,7 +795,10 @@ mod tests {
         let p = Platform::Linux;
         ev(&mut t, p, true, false, ch("x"), KeyCode::KeyX, NONE);
         let k = ch("x");
-        assert_eq!(t.event(p, false, false, true, &k, &k, &code(KeyCode::KeyX), NONE), dom(false, "x", 88));
+        assert_eq!(
+            t.event(p, false, false, true, &k, &k, &code(KeyCode::KeyX), NONE),
+            dom(false, "x", 88)
+        );
         assert!(t.release_all().is_empty());
     }
 }

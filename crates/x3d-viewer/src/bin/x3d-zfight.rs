@@ -23,18 +23,33 @@ use x3d_viewer::viewer::Viewer3d;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
+    let opt = |f: &str| {
+        args.iter()
+            .position(|a| a == f)
+            .and_then(|i| args.get(i + 1))
+            .cloned()
+    };
     let file = PathBuf::from(&args[1]);
     let script: Value = serde_json::from_str(&std::fs::read_to_string(&args[2]).unwrap()).unwrap();
-    let frames: Vec<u64> = opt("--frames").unwrap().split(',').map(|v| v.parse().unwrap()).collect();
+    let frames: Vec<u64> = opt("--frames")
+        .unwrap()
+        .split(',')
+        .map(|v| v.parse().unwrap())
+        .collect();
     let out = PathBuf::from(opt("--out").unwrap_or("/tmp/zfight".into()));
     let jitter: f64 = opt("--jitter").map(|v| v.parse().unwrap()).unwrap_or(1e-4);
     let n: usize = opt("--n").map(|v| v.parse().unwrap()).unwrap_or(12);
-    let mode = opt("--depth").map(|v| DepthMode::parse(&v).expect("depth mode")).unwrap_or_default();
+    let mode = opt("--depth")
+        .map(|v| DepthMode::parse(&v).expect("depth mode"))
+        .unwrap_or_default();
     let color_dir = opt("--color-dir").map(PathBuf::from);
-    let jitters: Option<Vec<[f64; 3]>> = opt("--jitters").map(|f| serde_json::from_str(&std::fs::read_to_string(f).unwrap()).unwrap());
+    let jitters: Option<Vec<[f64; 3]>> = opt("--jitters")
+        .map(|f| serde_json::from_str(&std::fs::read_to_string(f).unwrap()).unwrap());
     let (size, t0, dt) = (
-        script["size"].as_array().map(|a| (a[0].as_u64().unwrap() as u32, a[1].as_u64().unwrap() as u32)).unwrap_or((512, 512)),
+        script["size"]
+            .as_array()
+            .map(|a| (a[0].as_u64().unwrap() as u32, a[1].as_u64().unwrap() as u32))
+            .unwrap_or((512, 512)),
         script["t0"].as_f64().unwrap_or(946684800.0),
         script["dt"].as_f64().unwrap_or(1.0 / 60.0),
     );

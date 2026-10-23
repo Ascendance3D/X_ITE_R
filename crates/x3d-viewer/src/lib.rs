@@ -1,5 +1,6 @@
 #[cfg(feature = "gpu")]
 pub mod backend;
+pub mod bullet;
 pub mod chaser;
 pub mod collision;
 #[cfg(feature = "embed")]
@@ -11,7 +12,6 @@ pub mod keys;
 pub mod layer;
 pub mod lookat;
 pub mod nav;
-pub mod bullet;
 pub mod pick_shapes;
 pub mod picking;
 pub mod pointer;

@@ -222,7 +222,11 @@ fn at_or(array: &[i32], i: usize, fallback: i64) -> i64 {
 }
 
 /// X3DGeometryNode.refineNormals.
-pub fn refine_normals(normal_index: &[(i64, Vec<usize>)], normals: &[Vector3], crease_angle: f64) -> Vec<Vector3> {
+pub fn refine_normals(
+    normal_index: &[(i64, Vec<usize>)],
+    normals: &[Vector3],
+    crease_angle: f64,
+) -> Vec<Vector3> {
     if crease_angle <= 0.0 {
         return normals.to_vec();
     }
@@ -336,14 +340,21 @@ fn triangulate(input: &IfsInput, coord_index: &[i32]) -> Vec<Polygon> {
             0..=2 => vertices.clear(),
             3 => {
                 let v = std::mem::take(&mut vertices);
-                polygons.push(Polygon { triangles: v.clone(), vertices: v, face });
+                polygons.push(Polygon {
+                    triangles: v.clone(),
+                    vertices: v,
+                    face,
+                });
             }
             _ => {
                 let triangles = if input.convex {
                     tess::triangulate_convex(&vertices)
                 } else {
                     // IndexedFaceSet.triangulatePolygon → Triangle3.triangulatePolygon (libtess, ODD).
-                    let points: Vec<([f64; 3], usize)> = vertices.iter().map(|&v| (coord.get(coord_index[v] as i64).to_array(), v)).collect();
+                    let points: Vec<([f64; 3], usize)> = vertices
+                        .iter()
+                        .map(|&v| (coord.get(coord_index[v] as i64).to_array(), v))
+                        .collect();
                     x3d_text::libtess::triangulate_indexed(&points)
                 };
 
@@ -351,7 +362,11 @@ fn triangulate(input: &IfsInput, coord_index: &[i32]) -> Vec<Polygon> {
                     vertices.clear();
                 } else {
                     let v = std::mem::take(&mut vertices);
-                    polygons.push(Polygon { vertices: v, triangles, face });
+                    polygons.push(Polygon {
+                        vertices: v,
+                        triangles,
+                        face,
+                    });
                 }
             }
         }
@@ -383,7 +398,12 @@ fn polygon_normal(vertices: &[usize], coord_index: &[i32], coord: &Coords) -> Ve
 
 /// IndexedFaceSet.build + X3DGeometryNode.rebuild. Returns no geometry if nothing is drawn.
 pub fn indexed_face_set(input: &IfsInput) -> Geometry {
-    let mut g = Geometry { geometry_type: 3, solid: input.solid, ccw: input.ccw, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid: input.solid,
+        ccw: input.ccw,
+        ..Default::default()
+    };
 
     // "Add -1 (polygon end marker) to coordIndex if not present."
     let mut coord_index = input.coord_index.to_vec();
@@ -391,7 +411,11 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
         coord_index.push(-1);
     }
 
-    let polygons = if input.coord.is_some() { triangulate(input, &coord_index) } else { vec![] };
+    let polygons = if input.coord.is_some() {
+        triangulate(input, &coord_index)
+    } else {
+        vec![]
+    };
 
     if !polygons.is_empty() {
         let coord = Coords(input.coord.unwrap());
@@ -407,7 +431,11 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
                 extras.add_attribs_and_fog(index, &mut g);
 
                 if let Some(c) = &input.color {
-                    let ci = if input.color_per_vertex { at_or(input.color_index, i, index) } else { at_or(input.color_index, p.face, p.face as i64) };
+                    let ci = if input.color_per_vertex {
+                        at_or(input.color_index, i, index)
+                    } else {
+                        at_or(input.color_index, p.face, p.face as i64)
+                    };
                     c.add_color(ci, &mut g.colors);
                 }
 
@@ -417,7 +445,11 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
                     add_tex_point(t, at_or(input.tex_coord_index, i, index), &mut g.tex_coords);
                 }
 
-                let ni = if input.normal_per_vertex { at_or(input.normal_index, i, index) } else { at_or(input.normal_index, p.face, p.face as i64) };
+                let ni = if input.normal_per_vertex {
+                    at_or(input.normal_index, i, index)
+                } else {
+                    at_or(input.normal_index, p.face, p.face as i64)
+                };
 
                 extras.add_tangent(ni, &mut g);
 
@@ -438,8 +470,17 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
             for p in &polygons {
                 let v = &p.vertices;
                 let mut normal = match v.len() {
-                    3 => coord.normal(coord_index[v[0]] as i64, coord_index[v[1]] as i64, coord_index[v[2]] as i64),
-                    4 => coord.quad_normal(coord_index[v[0]] as i64, coord_index[v[1]] as i64, coord_index[v[2]] as i64, coord_index[v[3]] as i64),
+                    3 => coord.normal(
+                        coord_index[v[0]] as i64,
+                        coord_index[v[1]] as i64,
+                        coord_index[v[2]] as i64,
+                    ),
+                    4 => coord.quad_normal(
+                        coord_index[v[0]] as i64,
+                        coord_index[v[1]] as i64,
+                        coord_index[v[2]] as i64,
+                        coord_index[v[3]] as i64,
+                    ),
                     _ => polygon_normal(v, &coord_index, &coord),
                 };
 
@@ -453,7 +494,11 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
                 }
             }
 
-            let normals = if input.normal_per_vertex { refine_normals(&normal_index.order, &normals, input.crease_angle) } else { normals };
+            let normals = if input.normal_per_vertex {
+                refine_normals(&normal_index.order, &normals, input.crease_angle)
+            } else {
+                normals
+            };
 
             for p in &polygons {
                 for &i in &p.triangles {
@@ -464,7 +509,11 @@ pub fn indexed_face_set(input: &IfsInput) -> Geometry {
     }
 
     // rebuild: generateTexCoords when no channel was made (no texCoord node, or one with none).
-    let has_tex = if input.extras.tex.is_some() { input.extras.channels() > 0 } else { input.tex_coord.is_some() };
+    let has_tex = if input.extras.tex.is_some() {
+        input.extras.channels() > 0
+    } else {
+        input.tex_coord.is_some()
+    };
     finish(&mut g, has_tex);
     g
 }
@@ -500,7 +549,11 @@ impl mikktspace::Geometry for MikkMesh<'_> {
 
     fn position(&self, face: usize, vert: usize) -> [f32; 3] {
         let i = (face * 3 + vert) * 3;
-        [self.positions[i], self.positions[i + 1], self.positions[i + 2]]
+        [
+            self.positions[i],
+            self.positions[i + 1],
+            self.positions[i + 2],
+        ]
     }
 
     fn normal(&self, face: usize, vert: usize) -> [f32; 3] {
@@ -527,8 +580,16 @@ pub fn generate_tangents(g: &mut Geometry) {
         return;
     }
 
-    let positions: Vec<f32> = g.vertices.chunks_exact(4).flat_map(|v| [v[0], v[1], v[2]]).collect();
-    let tex_coords: Vec<f32> = g.tex_coords.chunks_exact(4).flat_map(|v| [v[0], v[1]]).collect();
+    let positions: Vec<f32> = g
+        .vertices
+        .chunks_exact(4)
+        .flat_map(|v| [v[0], v[1], v[2]])
+        .collect();
+    let tex_coords: Vec<f32> = g
+        .tex_coords
+        .chunks_exact(4)
+        .flat_map(|v| [v[0], v[1]])
+        .collect();
     let n = positions.len() / 3;
 
     // The wasm indexes the arrays per face vertex: anything shorter traps there.
@@ -537,9 +598,17 @@ pub fn generate_tangents(g: &mut Geometry) {
     }
 
     // The wasm returns one tangent per vertex of a whole triangle (a trailing partial face has none).
-    let mut mesh = MikkMesh { positions: &positions, normals: &g.normals, tex_coords: &tex_coords, tangents: vec![0.0; (n / 3) * 12] };
+    let mut mesh = MikkMesh {
+        positions: &positions,
+        normals: &g.normals,
+        tex_coords: &tex_coords,
+        tangents: vec![0.0; (n / 3) * 12],
+    };
 
-    let ok = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| mikktspace::generate_tangents(&mut mesh))).unwrap_or(false);
+    let ok = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        mikktspace::generate_tangents(&mut mesh)
+    }))
+    .unwrap_or(false);
 
     if !ok {
         return;
@@ -597,7 +666,11 @@ fn finish_bbox(g: &mut Geometry, extents: Option<(Vector3, Vector3)>) {
     let half = |a: f64, b: f64| (b - a) / 2.0;
     let center = |a: f64, b: f64| (b + a) / 2.0;
     let (sx, sy, sz) = (half(min.x, max.x), half(min.y, max.y), half(min.z, max.z));
-    let (cx, cy, cz) = (center(min.x, max.x), center(min.y, max.y), center(min.z, max.z));
+    let (cx, cy, cz) = (
+        center(min.x, max.x),
+        center(min.y, max.y),
+        center(min.z, max.z),
+    );
 
     g.min = Vector3::new(-sx + cx, -sy + cy, -sz + cz);
     g.max = Vector3::new(sx + cx, sy + cy, sz + cz);
@@ -659,11 +732,18 @@ fn f32v(v: &[f64]) -> Vec<f32> {
 
 /// BoxOptions.getGeometry.
 pub fn box_options() -> Geometry {
-    let tex_coord_index = [0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1];
-    let coord_index = [0, 1, 2, 3, -1, 5, 4, 7, 6, -1, 1, 5, 6, 2, -1, 4, 0, 3, 7, -1, 4, 5, 1, 0, -1, 3, 2, 6, 7, -1];
+    let tex_coord_index = [
+        0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3, -1, 0, 1, 2, 3,
+        -1,
+    ];
+    let coord_index = [
+        0, 1, 2, 3, -1, 5, 4, 7, 6, -1, 1, 5, 6, 2, -1, 4, 0, 3, 7, -1, 4, 5, 1, 0, -1, 3, 2, 6, 7,
+        -1,
+    ];
     let tex_coord = [1.0f32, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0];
     let coord = [
-        1.0f32, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
+        1.0f32, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, -1.0, -1.0,
+        1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
     ];
     let mut input = IfsInput::new(&coord, &coord_index);
     input.tex_coord = Some(&tex_coord);
@@ -674,7 +754,12 @@ pub fn box_options() -> Geometry {
 /// Box.build.
 pub fn make_box(size: Vector3, solid: bool) -> Geometry {
     let options = box_options();
-    let mut g = Geometry { geometry_type: 3, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     g.tex_coords = options.tex_coords.clone();
     g.tangents = options.tangents.clone();
@@ -687,10 +772,19 @@ pub fn make_box(size: Vector3, solid: bool) -> Geometry {
         min = options.min;
         max = options.max;
     } else {
-        let (x, y, z) = ((size.x / 2.0).abs(), (size.y / 2.0).abs(), (size.z / 2.0).abs());
+        let (x, y, z) = (
+            (size.x / 2.0).abs(),
+            (size.y / 2.0).abs(),
+            (size.z / 2.0).abs(),
+        );
 
         for v in options.vertices.chunks_exact(4) {
-            g.vertices.extend_from_slice(&[(x * v[0] as f64) as f32, (y * v[1] as f64) as f32, (z * v[2] as f64) as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                (x * v[0] as f64) as f32,
+                (y * v[1] as f64) as f32,
+                (z * v[2] as f64) as f32,
+                1.0,
+            ]);
         }
 
         min = Vector3::new(-x, -y, -z);
@@ -711,12 +805,23 @@ pub fn sphere_options() -> Geometry {
     // createTexCoordIndex
     let mut tci: Vec<i32> = vec![];
     for u in 0..x_dimension - 1 {
-        tci.extend_from_slice(&[u as i32, (u + x_dimension - 1) as i32, (u + x_dimension) as i32, -1]);
+        tci.extend_from_slice(&[
+            u as i32,
+            (u + x_dimension - 1) as i32,
+            (u + x_dimension) as i32,
+            -1,
+        ]);
     }
     let mut p = x_dimension - 1;
     for _v in 0..y_dimension - 3 {
         for _u in 0..x_dimension - 1 {
-            tci.extend_from_slice(&[p as i32, (p + x_dimension) as i32, (p + x_dimension + 1) as i32, (p + 1) as i32, -1]);
+            tci.extend_from_slice(&[
+                p as i32,
+                (p + x_dimension) as i32,
+                (p + x_dimension + 1) as i32,
+                (p + 1) as i32,
+                -1,
+            ]);
             p += 1;
         }
         p += 1;
@@ -754,10 +859,22 @@ pub fn sphere_options() -> Geometry {
     let mut p = 1usize;
     for _v in 0..y_dimension - 3 {
         for _u in 0..x_dimension - 2 {
-            ci.extend_from_slice(&[p as i32, (p + x_dimension - 1) as i32, (p + x_dimension) as i32, (p + 1) as i32, -1]);
+            ci.extend_from_slice(&[
+                p as i32,
+                (p + x_dimension - 1) as i32,
+                (p + x_dimension) as i32,
+                (p + 1) as i32,
+                -1,
+            ]);
             p += 1;
         }
-        ci.extend_from_slice(&[p as i32, (p + x_dimension - 1) as i32, (p + 1) as i32, (p + 2 - x_dimension) as i32, -1]);
+        ci.extend_from_slice(&[
+            p as i32,
+            (p + x_dimension - 1) as i32,
+            (p + 1) as i32,
+            (p + 2 - x_dimension) as i32,
+            -1,
+        ]);
         p += 1;
     }
     let last = p + x_dimension - 1;
@@ -792,7 +909,12 @@ pub fn sphere_options() -> Geometry {
 pub fn make_sphere(radius: f64, solid: bool) -> Geometry {
     let options = sphere_options();
     let radius = radius.abs();
-    let mut g = Geometry { geometry_type: 3, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     g.tex_coords = options.tex_coords.clone();
     g.normals = options.normals.clone();
@@ -802,11 +924,22 @@ pub fn make_sphere(radius: f64, solid: bool) -> Geometry {
         g.vertices = options.vertices.clone();
     } else {
         for v in options.vertices.chunks_exact(4) {
-            g.vertices.extend_from_slice(&[(radius * v[0] as f64) as f32, (radius * v[1] as f64) as f32, (radius * v[2] as f64) as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                (radius * v[0] as f64) as f32,
+                (radius * v[1] as f64) as f32,
+                (radius * v[2] as f64) as f32,
+                1.0,
+            ]);
         }
     }
 
-    finish_bbox(&mut g, Some((Vector3::new(-radius, -radius, -radius), Vector3::new(radius, radius, radius))));
+    finish_bbox(
+        &mut g,
+        Some((
+            Vector3::new(-radius, -radius, -radius),
+            Vector3::new(radius, radius, radius),
+        )),
+    );
     g
 }
 
@@ -884,12 +1017,23 @@ pub fn cone_options() -> (Geometry, Geometry) {
 }
 
 /// Cone.build.
-pub fn make_cone(height: f64, bottom_radius: f64, side: bool, bottom: bool, solid: bool) -> Geometry {
+pub fn make_cone(
+    height: f64,
+    bottom_radius: f64,
+    side: bool,
+    bottom: bool,
+    solid: bool,
+) -> Geometry {
     let (side_g, bottom_g) = cone_options();
     let h = height.abs();
     let h1_2 = h / 2.0;
     let r = bottom_radius.abs();
-    let mut g = Geometry { geometry_type: 3, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     if side {
         g.tex_coords.extend_from_slice(&side_g.tex_coords);
@@ -908,7 +1052,12 @@ pub fn make_cone(height: f64, bottom_radius: f64, side: bool, bottom: bool, soli
         let _ = &mut rz;
 
         for v in side_g.vertices.chunks_exact(4) {
-            g.vertices.extend_from_slice(&[(r * v[0] as f64) as f32, (h1_2 * v[1] as f64) as f32, (r * v[2] as f64) as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                (r * v[0] as f64) as f32,
+                (h1_2 * v[1] as f64) as f32,
+                (r * v[2] as f64) as f32,
+                1.0,
+            ]);
         }
     }
 
@@ -917,7 +1066,12 @@ pub fn make_cone(height: f64, bottom_radius: f64, side: bool, bottom: bool, soli
         g.normals.extend_from_slice(&bottom_g.normals);
 
         for v in bottom_g.vertices.chunks_exact(4) {
-            g.vertices.extend_from_slice(&[(r * v[0] as f64) as f32, (h1_2 * v[1] as f64) as f32, (r * v[2] as f64) as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                (r * v[0] as f64) as f32,
+                (h1_2 * v[1] as f64) as f32,
+                (r * v[2] as f64) as f32,
+                1.0,
+            ]);
         }
     }
 
@@ -946,7 +1100,13 @@ pub fn cylinder_options() -> (Geometry, Geometry, Geometry) {
 
     let mut side_tci: Vec<i32> = vec![];
     for i in 0..d {
-        side_tci.extend_from_slice(&[i as i32, (i + 1) as i32, (i + 2 + d) as i32, (i + 1 + d) as i32, -1]);
+        side_tci.extend_from_slice(&[
+            i as i32,
+            (i + 1) as i32,
+            (i + 2 + d) as i32,
+            (i + 1 + d) as i32,
+            -1,
+        ]);
     }
     let mut bottom_tci: Vec<i32> = (0..d).rev().map(|i| (2 * (d + 1) + i) as i32).collect();
     bottom_tci.push(-1);
@@ -971,7 +1131,13 @@ pub fn cylinder_options() -> (Geometry, Geometry, Geometry) {
 
     let mut side_ni: Vec<i32> = vec![];
     for i in 0..d {
-        side_ni.extend_from_slice(&[i as i32, ((i + 1) % d) as i32, ((i + 1) % d) as i32, i as i32, -1]);
+        side_ni.extend_from_slice(&[
+            i as i32,
+            ((i + 1) % d) as i32,
+            ((i + 1) % d) as i32,
+            i as i32,
+            -1,
+        ]);
     }
     let mut bottom_ni: Vec<i32> = vec![d as i32; d];
     bottom_ni.push(-1);
@@ -987,7 +1153,13 @@ pub fn cylinder_options() -> (Geometry, Geometry, Geometry) {
 
     let mut side_ci: Vec<i32> = vec![];
     for i in 0..d {
-        side_ci.extend_from_slice(&[i as i32, ((i + 1) % d) as i32, ((i + 1) % d + d) as i32, (i + d) as i32, -1]);
+        side_ci.extend_from_slice(&[
+            i as i32,
+            ((i + 1) % d) as i32,
+            ((i + 1) % d + d) as i32,
+            (i + d) as i32,
+            -1,
+        ]);
     }
     let mut bottom_ci: Vec<i32> = (0..d).rev().map(|i| i as i32).collect();
     bottom_ci.push(-1);
@@ -1020,15 +1192,31 @@ pub fn cylinder_options() -> (Geometry, Geometry, Geometry) {
     bottom.tex_coord_index = &bottom_tci;
     bottom.normal_index = &bottom_ni;
 
-    (indexed_face_set(&side), indexed_face_set(&top), indexed_face_set(&bottom))
+    (
+        indexed_face_set(&side),
+        indexed_face_set(&top),
+        indexed_face_set(&bottom),
+    )
 }
 
 /// Cylinder.build.
-pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bool, solid: bool) -> Geometry {
+pub fn make_cylinder(
+    height: f64,
+    radius: f64,
+    side: bool,
+    top: bool,
+    bottom: bool,
+    solid: bool,
+) -> Geometry {
     let (side_g, top_g, bottom_g) = cylinder_options();
     let h1_2 = height.abs() / 2.0;
     let r = radius.abs();
-    let mut g = Geometry { geometry_type: 3, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     for (on, part) in [(side, &side_g), (top, &top_g), (bottom, &bottom_g)] {
         if !on {
@@ -1040,7 +1228,12 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
         g.normals.extend_from_slice(&part.normals);
 
         for v in part.vertices.chunks_exact(4) {
-            g.vertices.extend_from_slice(&[(r * v[0] as f64) as f32, (h1_2 * v[1] as f64) as f32, (r * v[2] as f64) as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                (r * v[0] as f64) as f32,
+                (h1_2 * v[1] as f64) as f32,
+                (r * v[2] as f64) as f32,
+                1.0,
+            ]);
         }
     }
 
@@ -1049,11 +1242,20 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
     let ext = if !top && !side && !bottom {
         (Vector3::ZERO, Vector3::ZERO)
     } else if !top && !side {
-        (Vector3::new(-radius, y2, -radius), Vector3::new(radius, y2, radius))
+        (
+            Vector3::new(-radius, y2, -radius),
+            Vector3::new(radius, y2, radius),
+        )
     } else if !bottom && !side {
-        (Vector3::new(-radius, y1, -radius), Vector3::new(radius, y1, radius))
+        (
+            Vector3::new(-radius, y1, -radius),
+            Vector3::new(radius, y1, radius),
+        )
     } else {
-        (Vector3::new(-radius, y2, -radius), Vector3::new(radius, y1, radius))
+        (
+            Vector3::new(-radius, y2, -radius),
+            Vector3::new(radius, y1, radius),
+        )
     };
 
     finish_bbox(&mut g, Some(ext));
@@ -1066,8 +1268,21 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
 /// IndexedLineSet.build.
 /// `normal`: the Normal node's vectors, indexed by the coord index (IndexedLineSet.build: `normalNode ?.addVector (index, normalArray)`;
 /// normalIndex and normalPerVertex are not read).
-pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool, normal: Option<&[f32]>, extras: &crate::extras::Extras) -> Geometry {
-    let mut g = Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() };
+pub fn indexed_line_set(
+    coord: Option<&[f32]>,
+    coord_index: &[i32],
+    color: Option<Colors>,
+    color_index: &[i32],
+    color_per_vertex: bool,
+    normal: Option<&[f32]>,
+    extras: &crate::extras::Extras,
+) -> Geometry {
+    let mut g = Geometry {
+        geometry_type: 1,
+        solid: false,
+        ccw: true,
+        ..Default::default()
+    };
     extras.init(&mut g);
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
@@ -1099,7 +1314,11 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
                         extras.add_attribs_and_fog(index, &mut g);
 
                         if let Some(c) = &color {
-                            let ci = if color_per_vertex { at_or(color_index, i, index) } else { at_or(color_index, face, face as i64) };
+                            let ci = if color_per_vertex {
+                                at_or(color_index, i, index)
+                            } else {
+                                at_or(color_index, face, face as i64)
+                            };
                             c.add_color(ci, &mut g.colors);
                         }
 
@@ -1122,7 +1341,12 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
 /// PointSet.build.
 /// `normal`: the Normal node's vectors (PointSet.build: `normalNode ?.addVectors (normalArray, numPoints)`).
 pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>, normal: Option<&[f32]>) -> Geometry {
-    let mut g = Geometry { geometry_type: 0, solid: false, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 0,
+        solid: false,
+        ccw: true,
+        ..Default::default()
+    };
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
         let n = points.len() / 3;
@@ -1134,7 +1358,11 @@ pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>, normal: Option<&[
         // Normal.addVectors: every point's vector, or zeros for an empty Normal node.
         if let Some(nv) = normal {
             for i in 0..n {
-                add_vector(nv, if nv.len() >= 3 { i as i64 } else { -1 }, &mut g.normals);
+                add_vector(
+                    nv,
+                    if nv.len() >= 3 { i as i64 } else { -1 },
+                    &mut g.normals,
+                );
             }
         }
 
@@ -1174,7 +1402,12 @@ pub struct ElevationInput<'a> {
 
 /// ElevationGrid.build (also GeoElevationGrid.build).
 pub fn elevation_grid(e: &ElevationInput) -> Geometry {
-    let mut g = Geometry { geometry_type: 3, solid: e.solid, ccw: e.ccw, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid: e.solid,
+        ccw: e.ccw,
+        ..Default::default()
+    };
 
     if e.x_dimension < 2 || e.z_dimension < 2 {
         finish(&mut g, true);
@@ -1191,7 +1424,11 @@ pub fn elevation_grid(e: &ElevationInput) -> Geometry {
             let mut points = Vec::with_capacity(xd * zd);
             for z in 0..zd {
                 for x in 0..xd {
-                    points.push(Vector3::new(e.x_spacing * x as f64, height(x + z * xd), e.z_spacing * z as f64));
+                    points.push(Vector3::new(
+                        e.x_spacing * x as f64,
+                        height(x + z * xd),
+                        e.z_spacing * z as f64,
+                    ));
                 }
             }
             points
@@ -1235,7 +1472,11 @@ pub fn elevation_grid(e: &ElevationInput) -> Geometry {
         }
     }
 
-    let normals = if e.normal_per_vertex { refine_normals(&normal_index.order, &normals, e.crease_angle) } else { normals };
+    let normals = if e.normal_per_vertex {
+        refine_normals(&normal_index.order, &normals, e.crease_angle)
+    } else {
+        normals
+    };
 
     let extras = &e.extras;
 
@@ -1247,10 +1488,24 @@ pub fn elevation_grid(e: &ElevationInput) -> Geometry {
         extras.add_attribs_and_fog(index as i64, &mut g);
 
         if let Some(c) = &e.color {
-            c.add_color(if e.color_per_vertex { index as i64 } else { face as i64 }, &mut g.colors);
+            c.add_color(
+                if e.color_per_vertex {
+                    index as i64
+                } else {
+                    face as i64
+                },
+                &mut g.colors,
+            );
         }
 
-        extras.add_tangent(if e.normal_per_vertex { index as i64 } else { face as i64 }, &mut g);
+        extras.add_tangent(
+            if e.normal_per_vertex {
+                index as i64
+            } else {
+                face as i64
+            },
+            &mut g,
+        );
 
         match e.tex_coord {
             _ if extras.tex.is_some() => extras.add_tex(index as i64, &mut g),
@@ -1258,17 +1513,31 @@ pub fn elevation_grid(e: &ElevationInput) -> Geometry {
             None => {
                 let x = (index % xd) as f64;
                 let z = (index / xd) as f64;
-                g.tex_coords.extend_from_slice(&[(x / x_size) as f32, (z / z_size) as f32, 0.0, 1.0]);
+                g.tex_coords.extend_from_slice(&[
+                    (x / x_size) as f32,
+                    (z / z_size) as f32,
+                    0.0,
+                    1.0,
+                ]);
             }
         }
 
         match e.normal {
-            Some(n) => add_vector(n, if e.normal_per_vertex { index as i64 } else { face as i64 }, &mut g.normals),
+            Some(n) => add_vector(
+                n,
+                if e.normal_per_vertex {
+                    index as i64
+                } else {
+                    face as i64
+                },
+                &mut g.normals,
+            ),
             None => push3(&mut g.normals, &normals[k]),
         }
 
         let p = points[index];
-        g.vertices.extend_from_slice(&[p.x as f32, p.y as f32, p.z as f32, 1.0]);
+        g.vertices
+            .extend_from_slice(&[p.x as f32, p.y as f32, p.z as f32, 1.0]);
     }
 
     finish(&mut g, extras.tex.is_none() || extras.channels() > 0);
@@ -1319,7 +1588,9 @@ fn closed_rot(a: &[f64]) -> bool {
 }
 
 fn set_rows(m: &mut Matrix4, x: &Vector3, y: &Vector3, z: &Vector3, s: &Vector3) {
-    m.0 = [x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, s.x, s.y, s.z, 1.0];
+    m.0 = [
+        x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, s.x, s.y, s.z, 1.0,
+    ];
 }
 
 /// Extrusion.createRotations.
@@ -1472,7 +1743,13 @@ fn extrusion_rotations(spine: &[f32]) -> Vec<Matrix4> {
 
         x_axis = y_axis;
         x_axis.cross(&z_axis);
-        set_rows(&mut rotations[num_spines - 1], &x_axis, &y_axis, &z_axis, &s);
+        set_rows(
+            &mut rotations[num_spines - 1],
+            &x_axis,
+            &y_axis,
+            &z_axis,
+            &s,
+        );
     }
 
     rotations
@@ -1480,7 +1757,12 @@ fn extrusion_rotations(spine: &[f32]) -> Vec<Matrix4> {
 
 /// Extrusion.build.
 pub fn extrusion(e: &ExtrusionInput) -> Geometry {
-    let mut g = Geometry { geometry_type: 3, solid: e.solid, ccw: e.ccw, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid: e.solid,
+        ccw: e.ccw,
+        ..Default::default()
+    };
     let cw = !e.ccw;
     let num_cross = e.cross_section.len() / 2;
     let num_spines = e.spine.len() / 3;
@@ -1503,7 +1785,11 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
     let mut cap_size = max;
     cap_size.subtract(&min);
     let cap_max = jsmath::js_max(cap_size.x, cap_size.y);
-    let num_cap_points = if closed_cross { num_cross - 1 } else { num_cross };
+    let num_cap_points = if closed_cross {
+        num_cross - 1
+    } else {
+        num_cross
+    };
 
     // createPoints
     let mut rotations = extrusion_rotations(e.spine);
@@ -1538,12 +1824,21 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
     let ns1 = num_spines - 1;
     let mut index_left = index(0, 0);
     let mut index_right = index(0, if closed_cross { 0 } else { nc1 });
-    let tex = |a: f64, b: f64, t: &mut Vec<f32>| t.extend_from_slice(&[a as f32, b as f32, 0.0, 1.0]);
+    let tex =
+        |a: f64, b: f64, t: &mut Vec<f32>| t.extend_from_slice(&[a as f32, b as f32, 0.0, 1.0]);
 
     for n in 0..ns1 {
         for k in 0..nc1 {
-            let n1 = if closed && n == num_spines - 2 { 0 } else { n + 1 };
-            let k1 = if closed_cross && k == num_cross - 2 { 0 } else { k + 1 };
+            let n1 = if closed && n == num_spines - 2 {
+                0
+            } else {
+                n + 1
+            };
+            let k1 = if closed_cross && k == num_cross - 2 {
+                0
+            } else {
+                k + 1
+            };
 
             let mut i1 = index(n, k);
             let i2 = index(n, k1);
@@ -1594,24 +1889,28 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
                 }
                 normal_index.order[i1].1.push(normals.len());
                 normals.push(normal1);
-                g.vertices.extend_from_slice(&[p1.x as f32, p1.y as f32, p1.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p1.x as f32, p1.y as f32, p1.z as f32, 1.0]);
 
                 tex((kf + 1.0) / nc1f, nf / ns1f, &mut g.tex_coords);
                 normal_index.order[i2].1.push(normals.len());
                 normals.push(normal1);
-                g.vertices.extend_from_slice(&[p2.x as f32, p2.y as f32, p2.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p2.x as f32, p2.y as f32, p2.z as f32, 1.0]);
 
                 tex((kf + 1.0) / nc1f, (nf + 1.0) / ns1f, &mut g.tex_coords);
                 normal_index.order[i3].1.push(normals.len());
                 normals.push(normal1);
-                g.vertices.extend_from_slice(&[p3.x as f32, p3.y as f32, p3.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p3.x as f32, p3.y as f32, p3.z as f32, 1.0]);
             }
 
             if l2 {
                 tex(kf / nc1f, nf / ns1f, &mut g.tex_coords);
                 normal_index.order[i1].1.push(normals.len());
                 normals.push(normal2);
-                g.vertices.extend_from_slice(&[p1.x as f32, p1.y as f32, p1.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p1.x as f32, p1.y as f32, p1.z as f32, 1.0]);
 
                 if l1 {
                     tex((kf + 1.0) / nc1f, (nf + 1.0) / ns1f, &mut g.tex_coords);
@@ -1621,12 +1920,14 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
                 }
                 normal_index.order[i3].1.push(normals.len());
                 normals.push(normal2);
-                g.vertices.extend_from_slice(&[p3.x as f32, p3.y as f32, p3.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p3.x as f32, p3.y as f32, p3.z as f32, 1.0]);
 
                 tex(kf / nc1f, (nf + 1.0) / ns1f, &mut g.tex_coords);
                 normal_index.order[i4].1.push(normals.len());
                 normals.push(normal2);
-                g.vertices.extend_from_slice(&[p4.x as f32, p4.y as f32, p4.z as f32, 1.0]);
+                g.vertices
+                    .extend_from_slice(&[p4.x as f32, p4.y as f32, p4.z as f32, 1.0]);
             }
         }
     }
@@ -1636,7 +1937,10 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
     }
 
     if cap_max != 0.0 && num_cap_points > 2 {
-        for (on, j, reverse) in [(e.begin_cap, 0usize, true), (e.end_cap, num_spines - 1, false)] {
+        for (on, j, reverse) in [
+            (e.begin_cap, 0usize, true),
+            (e.end_cap, num_spines - 1, false),
+        ] {
             if !on {
                 continue;
             }
@@ -1657,12 +1961,17 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
                 tess::triangulate_convex(&idx)
             } else {
                 // Triangle3.triangulatePolygon (libtess, ODD) of the cap points with their indices, as IndexedFaceSet.
-                let pts: Vec<([f64; 3], usize)> = idx.iter().map(|&i| (points[i].to_array(), i)).collect();
+                let pts: Vec<([f64; 3], usize)> =
+                    idx.iter().map(|&i| (points[i].to_array(), i)).collect();
                 x3d_text::libtess::triangulate_indexed(&pts)
             };
 
             if triangles.len() >= 3 {
-                let mut normal = triangle_normal(&points[triangles[0]], &points[triangles[1]], &points[triangles[2]]);
+                let mut normal = triangle_normal(
+                    &points[triangles[0]],
+                    &points[triangles[1]],
+                    &points[triangles[2]],
+                );
                 if cw {
                     normal.negate();
                 }
@@ -1670,10 +1979,12 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
                 for tri in triangles.chunks_exact(3) {
                     for &i in tri {
                         let t = tcs[&i];
-                        g.tex_coords.extend_from_slice(&[t.x as f32, t.y as f32, 0.0, 1.0]);
+                        g.tex_coords
+                            .extend_from_slice(&[t.x as f32, t.y as f32, 0.0, 1.0]);
                         push3(&mut g.normals, &normal);
                         let p = points[i];
-                        g.vertices.extend_from_slice(&[p.x as f32, p.y as f32, p.z as f32, 1.0]);
+                        g.vertices
+                            .extend_from_slice(&[p.x as f32, p.y as f32, p.z as f32, 1.0]);
                     }
                 }
             }

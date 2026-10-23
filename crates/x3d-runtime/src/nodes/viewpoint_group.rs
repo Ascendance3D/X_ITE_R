@@ -17,7 +17,12 @@ impl Runtime {
         self.nrt_mut(sensor);
         self.construct_node(sensor);
 
-        let holder = self.add_private_field(node, "proximitySensor", access::INITIALIZE_ONLY, FieldValue::SFNode(None));
+        let holder = self.add_private_field(
+            node,
+            "proximitySensor",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFNode(None),
+        );
         self.set_raw(holder, FieldValue::SFNode(Some(sensor)));
 
         self.interest(node, "size", Cb::ViewpointGroupSetSize);
@@ -45,7 +50,10 @@ impl Runtime {
 
     /// The private ProximitySensor of a ViewpointGroup.
     pub fn viewpoint_group_sensor(&self, node: NodeId) -> Option<NodeId> {
-        match self.private_field(node, "proximitySensor").map(|k| self.value(k)) {
+        match self
+            .private_field(node, "proximitySensor")
+            .map(|k| self.value(k))
+        {
             Some(FieldValue::SFNode(n)) => *n,
             _ => None,
         }
@@ -58,7 +66,10 @@ impl Runtime {
             _ => Vector3::ZERO,
         };
 
-        if let Some(k) = self.viewpoint_group_sensor(node).and_then(|s| self.pre(s, "enabled")) {
+        if let Some(k) = self
+            .viewpoint_group_sensor(node)
+            .and_then(|s| self.pre(s, "enabled"))
+        {
             self.set_value(k, FieldValue::SFBool(size != Vector3::ZERO));
         }
 
@@ -69,7 +80,9 @@ impl Runtime {
     /// `displayed` (the field and `active`), read when they are computed: a later change of the
     /// `displayed` field alone does not change them.
     pub(crate) fn viewpoint_group_set_active(&mut self, node: NodeId) {
-        let Some(sensor) = self.viewpoint_group_sensor(node) else { return };
+        let Some(sensor) = self.viewpoint_group_sensor(node) else {
+            return;
+        };
         let active = self.get_bool(sensor, "isActive") || !self.get_bool(sensor, "enabled");
         let displayed = self.get_bool(node, "displayed") && active;
 
@@ -78,6 +91,9 @@ impl Runtime {
 
     /// ViewpointGroup (`active`, getDisplayed ()).
     pub fn viewpoint_group_state(&self, node: NodeId) -> (bool, bool) {
-        self.viewpoint_groups.get(&node).copied().unwrap_or((false, false))
+        self.viewpoint_groups
+            .get(&node)
+            .copied()
+            .unwrap_or((false, false))
     }
 }

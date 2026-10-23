@@ -14,7 +14,10 @@ use x3d_render::gpu::Gpu;
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
     let size = opt(&args, "--size").unwrap_or_else(|| "512x512".into());
-    let (w, h) = size.split_once('x').map(|(a, b)| (a.parse().unwrap_or(512), b.parse().unwrap_or(512))).unwrap_or((512, 512));
+    let (w, h) = size
+        .split_once('x')
+        .map(|(a, b)| (a.parse().unwrap_or(512), b.parse().unwrap_or(512)))
+        .unwrap_or((512, 512));
 
     // QuickJS wants a big stack; run everything on a worker thread.
     let r = std::thread::Builder::new()
@@ -48,13 +51,18 @@ fn main() -> ExitCode {
 }
 
 fn opt(args: &[String], f: &str) -> Option<String> {
-    args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned()
+    args.iter()
+        .position(|a| a == f)
+        .and_then(|i| args.get(i + 1))
+        .cloned()
 }
 
 /// `--msaa N`: X_ITE's Multisampling (default here 0 = off, so the baselines stay valid).
 fn msaa() -> u32 {
     let args: Vec<String> = std::env::args().collect();
-    opt(&args, "--msaa").and_then(|v| v.parse().ok()).unwrap_or(0)
+    opt(&args, "--msaa")
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0)
 }
 
 fn gpu() -> Gpu {
@@ -64,12 +72,15 @@ fn gpu() -> Gpu {
             // `--depth log|reversed`: X_ITE's LogarithmicDepthBuffer (oracle: x_ite-shot-log.mjs) or the reversed-Z extra.
             let args: Vec<String> = std::env::args().collect();
 
-            if let Some(m) = opt(&args, "--depth").and_then(|v| x3d_render::gpu::DepthMode::parse(&v)) {
+            if let Some(m) =
+                opt(&args, "--depth").and_then(|v| x3d_render::gpu::DepthMode::parse(&v))
+            {
                 g.renderer.set_depth_mode(m);
             }
 
             // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
-            g.renderer.set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
+            g.renderer
+                .set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
             g
         }
         Err(e) => {
@@ -82,8 +93,14 @@ fn gpu() -> Gpu {
 fn info() -> u8 {
     let g = gpu();
     let i = &g.adapter_info;
-    println!("supported sample counts: {:?}", g.renderer.supported_samples());
-    println!("adapter: {} | backend {:?} | driver {} {} | type {:?}", i.name, i.backend, i.driver, i.driver_info, i.device_type);
+    println!(
+        "supported sample counts: {:?}",
+        g.renderer.supported_samples()
+    );
+    println!(
+        "adapter: {} | backend {:?} | driver {} {} | type {:?}",
+        i.name, i.backend, i.driver, i.driver_info, i.device_type
+    );
     0
 }
 
@@ -96,7 +113,10 @@ fn find_oracle_root(file: &Path) -> PathBuf {
         }
         p = d.parent();
     }
-    file.parent().and_then(|p| p.parent()).unwrap_or(Path::new("/")).to_path_buf()
+    file.parent()
+        .and_then(|p| p.parent())
+        .unwrap_or(Path::new("/"))
+        .to_path_buf()
 }
 
 fn single(file: &str, out: &str, w: u32, h: u32, oracle: Option<String>) -> u8 {
@@ -107,12 +127,18 @@ fn single(file: &str, out: &str, w: u32, h: u32, oracle: Option<String>) -> u8 {
             return 1;
         }
     };
-    let root = oracle.map(|o| std::fs::canonicalize(o).unwrap()).unwrap_or_else(|| find_oracle_root(&file));
+    let root = oracle
+        .map(|o| std::fs::canonicalize(o).unwrap())
+        .unwrap_or_else(|| find_oracle_root(&file));
     let mut g = gpu();
 
     match x3d_render::render_file(&mut g, &root, &file, w, h) {
         Ok(shot) => {
-            let rgba: Vec<u8> = shot.rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+            let rgba: Vec<u8> = shot
+                .rgba
+                .chunks_exact(4)
+                .flat_map(|p| [p[0], p[1], p[2], 255])
+                .collect();
             if let Err(e) = x3d_render::write_png(Path::new(out), w, h, &rgba) {
                 eprintln!("error: {e}");
                 return 1;
@@ -135,7 +161,10 @@ fn walk(d: &Path, out: &mut Vec<PathBuf>) {
             let p = e.path();
             if p.is_dir() {
                 walk(&p, out);
-            } else if p.extension().is_some_and(|x| x == "wrl" || x == "wrz" || x == "gz") {
+            } else if p
+                .extension()
+                .is_some_and(|x| x == "wrl" || x == "wrz" || x == "gz")
+            {
                 out.push(p);
             }
         }
@@ -158,14 +187,31 @@ fn batch(corpus: &str, out_dir: &str, w: u32, h: u32, only: Option<String>) -> u
     let t0 = std::time::Instant::now();
 
     for f in &files {
-        let rel = f.strip_prefix(&corpus).unwrap().to_string_lossy().to_string();
+        let rel = f
+            .strip_prefix(&corpus)
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
         let out = out_dir.join(format!("{rel}.png"));
         match x3d_render::render_file(&mut g, &root, f, w, h) {
             Ok(shot) => {
-                let rgba: Vec<u8> = shot.rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+                let rgba: Vec<u8> = shot
+                    .rgba
+                    .chunks_exact(4)
+                    .flat_map(|p| [p[0], p[1], p[2], 255])
+                    .collect();
                 let _ = x3d_render::write_png(&out, w, h, &rgba);
-                println!("ok   {rel}{}", if shot.unsupported.is_empty() { String::new() } else { format!("  [not rendered: {}]", shot.unsupported.join(", ")) });
-                index.push(serde_json::json!({ "file": rel, "ok": true, "unsupported": shot.unsupported }));
+                println!(
+                    "ok   {rel}{}",
+                    if shot.unsupported.is_empty() {
+                        String::new()
+                    } else {
+                        format!("  [not rendered: {}]", shot.unsupported.join(", "))
+                    }
+                );
+                index.push(
+                    serde_json::json!({ "file": rel, "ok": true, "unsupported": shot.unsupported }),
+                );
             }
             Err(e) => {
                 println!("FAIL {rel}  {e}");
@@ -181,12 +227,26 @@ fn batch(corpus: &str, out_dir: &str, w: u32, h: u32, only: Option<String>) -> u
         "results": index,
     });
     let _ = std::fs::create_dir_all(&out_dir);
-    let _ = std::fs::write(out_dir.join("index.json"), serde_json::to_string_pretty(&json).unwrap());
-    eprintln!("{} files in {:.1}s", files.len(), t0.elapsed().as_secs_f64());
+    let _ = std::fs::write(
+        out_dir.join("index.json"),
+        serde_json::to_string_pretty(&json).unwrap(),
+    );
+    eprintln!(
+        "{} files in {:.1}s",
+        files.len(),
+        t0.elapsed().as_secs_f64()
+    );
     0
 }
 
-fn compare_dirs(baseline: &str, rust: &str, threshold: u8, max_pct: f64, diff_dir: Option<String>, json: Option<String>) -> u8 {
+fn compare_dirs(
+    baseline: &str,
+    rust: &str,
+    threshold: u8,
+    max_pct: f64,
+    diff_dir: Option<String>,
+    json: Option<String>,
+) -> u8 {
     let baseline = PathBuf::from(baseline);
     let rust = PathBuf::from(rust);
     let mut files = vec![];
@@ -251,7 +311,9 @@ fn compare_dirs(baseline: &str, rust: &str, threshold: u8, max_pct: f64, diff_di
         }));
     }
 
-    println!("\n{pass} within tolerance, {fail} over, {missing} missing (threshold {threshold}, max {max_pct}% of pixels)");
+    println!(
+        "\n{pass} within tolerance, {fail} over, {missing} missing (threshold {threshold}, max {max_pct}% of pixels)"
+    );
 
     if let Some(j) = json {
         let _ = std::fs::write(j, serde_json::to_string_pretty(&serde_json::json!({ "threshold": threshold, "maxPct": max_pct, "pass": pass, "fail": fail, "missing": missing, "results": rows })).unwrap());

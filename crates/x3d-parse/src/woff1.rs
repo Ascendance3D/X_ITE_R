@@ -5,7 +5,12 @@
 use std::io::Read;
 
 fn be32(d: &[u8], o: usize) -> Option<u32> {
-    Some(u32::from_be_bytes([*d.get(o)?, *d.get(o + 1)?, *d.get(o + 2)?, *d.get(o + 3)?]))
+    Some(u32::from_be_bytes([
+        *d.get(o)?,
+        *d.get(o + 1)?,
+        *d.get(o + 2)?,
+        *d.get(o + 3)?,
+    ]))
 }
 
 fn be16(d: &[u8], o: usize) -> Option<u16> {
@@ -25,11 +30,18 @@ pub fn woff1_to_sfnt(data: &[u8]) -> Option<Vec<u8>> {
     for i in 0..count {
         let e = 44 + i * 20;
         let tag: [u8; 4] = data.get(e..e + 4)?.try_into().ok()?;
-        let (offset, comp, orig, checksum) = (be32(data, e + 4)? as usize, be32(data, e + 8)? as usize, be32(data, e + 12)? as usize, be32(data, e + 16)?);
+        let (offset, comp, orig, checksum) = (
+            be32(data, e + 4)? as usize,
+            be32(data, e + 8)? as usize,
+            be32(data, e + 12)? as usize,
+            be32(data, e + 16)?,
+        );
         let raw = data.get(offset..offset.checked_add(comp)?)?;
         let body = if comp < orig {
             let mut out = Vec::with_capacity(orig);
-            flate2::read::ZlibDecoder::new(raw).read_to_end(&mut out).ok()?;
+            flate2::read::ZlibDecoder::new(raw)
+                .read_to_end(&mut out)
+                .ok()?;
 
             if out.len() != orig {
                 return None;

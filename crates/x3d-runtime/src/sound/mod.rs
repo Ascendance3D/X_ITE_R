@@ -33,7 +33,10 @@ pub mod wave_shaper;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context as TaskContext, Poll};
-use web_audio_api::context::{AudioContext, AudioContextOptions, BaseAudioContext, ConcreteBaseAudioContext, OfflineAudioContext};
+use web_audio_api::context::{
+    AudioContext, AudioContextOptions, BaseAudioContext, ConcreteBaseAudioContext,
+    OfflineAudioContext,
+};
 use web_audio_api::node::*;
 use web_audio_api::{AudioBuffer, AudioBufferOptions, AudioListener, AudioParam};
 
@@ -42,7 +45,11 @@ use web_audio_api::{AudioBuffer, AudioBufferOptions, AudioListener, AudioParam};
 pub enum AudioMode {
     #[default]
     Silent,
-    Offline { channels: usize, sample_rate: f32, length: usize },
+    Offline {
+        channels: usize,
+        sample_rate: f32,
+        length: usize,
+    },
     Realtime,
 }
 
@@ -78,9 +85,15 @@ pub enum ANode {
     /// The Chromium-style convolver (convolver.rs); true when its output is stereo.
     Convolver(web_audio_api::worklet::AudioWorkletNode, bool),
     /// The Chromium-style compressor (compressor.rs) and its `reduction`.
-    Compressor(web_audio_api::worklet::AudioWorkletNode, Arc<compressor::Reduction>),
+    Compressor(
+        web_audio_api::worklet::AudioWorkletNode,
+        Arc<compressor::Reduction>,
+    ),
     /// The Chromium RealtimeAnalyser worklet and its control-thread half.
-    Analyser(web_audio_api::worklet::AudioWorkletNode, Box<analyser::Analyser>),
+    Analyser(
+        web_audio_api::worklet::AudioWorkletNode,
+        Box<analyser::Analyser>,
+    ),
     Splitter(ChannelSplitterNode),
     Merger(ChannelMergerNode),
     /// The Chromium-style equal-power panner (panner.rs) and, for "HRTF", web-audio-api's.
@@ -100,7 +113,11 @@ pub struct PannerSet {
 
 impl PannerSet {
     fn active(&self) -> &dyn AudioNode {
-        if self.hrtf_active { &self.hrtf } else { &self.equal_power }
+        if self.hrtf_active {
+            &self.hrtf
+        } else {
+            &self.equal_power
+        }
     }
 }
 
@@ -204,16 +221,45 @@ fn block_on<F: std::future::Future + ?Sized>(mut f: Pin<&mut F>) -> F::Output {
 impl AudioEngine {
     pub fn new(mode: AudioMode) -> AudioEngine {
         let ctx = match &mode {
-            AudioMode::Silent => Ctx::Offline(Arc::new(OfflineAudioContext::new(2, RENDER_QUANTUM, 48000.0))),
-            AudioMode::Offline { channels, sample_rate, length } => Ctx::Offline(Arc::new(OfflineAudioContext::new(*channels, *length, *sample_rate))),
+            AudioMode::Silent => Ctx::Offline(Arc::new(OfflineAudioContext::new(
+                2,
+                RENDER_QUANTUM,
+                48000.0,
+            ))),
+            AudioMode::Offline {
+                channels,
+                sample_rate,
+                length,
+            } => Ctx::Offline(Arc::new(OfflineAudioContext::new(
+                *channels,
+                *length,
+                *sample_rate,
+            ))),
             AudioMode::Realtime => match AudioContext::try_new(AudioContextOptions::default()) {
                 Ok(c) => Ctx::Realtime(c),
                 // No output device: the graph still works, nothing is heard.
-                Err(_) => Ctx::Offline(Arc::new(OfflineAudioContext::new(2, RENDER_QUANTUM, 48000.0))),
+                Err(_) => Ctx::Offline(Arc::new(OfflineAudioContext::new(
+                    2,
+                    RENDER_QUANTUM,
+                    48000.0,
+                ))),
             },
         };
 
-        let mut engine = AudioEngine { ctx, mode, nodes: vec![], connections: vec![], destination: AId(0), stepping: None, rendered: None, waves: Default::default(), convolver_normalize: Default::default(), listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0], stream_destinations: Default::default(), pulled: Default::default() };
+        let mut engine = AudioEngine {
+            ctx,
+            mode,
+            nodes: vec![],
+            connections: vec![],
+            destination: AId(0),
+            stepping: None,
+            rendered: None,
+            waves: Default::default(),
+            convolver_normalize: Default::default(),
+            listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0],
+            stream_destinations: Default::default(),
+            pulled: Default::default(),
+        };
         let destination = engine.base().destination();
         engine.destination = engine.add(ANode::Destination(destination));
         engine
@@ -280,7 +326,12 @@ impl AudioEngine {
         }
 
         self.disconnect(id);
-        let incoming: Vec<_> = self.connections.iter().filter(|c| c.2 == id).copied().collect();
+        let incoming: Vec<_> = self
+            .connections
+            .iter()
+            .filter(|c| c.2 == id)
+            .copied()
+            .collect();
 
         for (from, output, to, input) in incoming {
             self.disconnect_to(from, output, to, input);
@@ -313,7 +364,7 @@ impl AudioEngine {
         let mut reached: std::collections::HashSet<usize> = (0..self.nodes.len())
             .filter(|&i| match &self.nodes[i] {
                 Some(ANode::Destination(_)) => true,
-                Some(ANode::Analyser(..)) => !self.connections.iter().any(|c| c.0 .0 == i),
+                Some(ANode::Analyser(..)) => !self.connections.iter().any(|c| c.0.0 == i),
                 Some(_) => self.stream_destinations.contains(&i),
                 None => false,
             })
@@ -321,9 +372,9 @@ impl AudioEngine {
         let mut stack: Vec<usize> = reached.iter().copied().collect();
 
         while let Some(to) = stack.pop() {
-            for c in self.connections.iter().filter(|c| c.2 .0 == to) {
-                if reached.insert(c.0 .0) {
-                    stack.push(c.0 .0);
+            for c in self.connections.iter().filter(|c| c.2.0 == to) {
+                if reached.insert(c.0.0) {
+                    stack.push(c.0.0);
                 }
             }
         }
@@ -334,11 +385,13 @@ impl AudioEngine {
             if pulled != self.pulled.contains(&i) {
                 let source = match &self.nodes[i] {
                     Some(ANode::BufferSource(n)) => {
-                        n.port().post_message(Some(buffer_source::Message::Pulled(pulled)));
+                        n.port()
+                            .post_message(Some(buffer_source::Message::Pulled(pulled)));
                         true
                     }
                     Some(ANode::Oscillator(n)) => {
-                        n.port().post_message(Some(oscillator::Message::Pulled(pulled)));
+                        n.port()
+                            .post_message(Some(oscillator::Message::Pulled(pulled)));
                         true
                     }
                     _ => false,
@@ -434,12 +487,20 @@ impl AudioEngine {
 
         // Web Audio throws NotSupportedError for counts the node cannot take (the setter is
         // skipped like the rest of the callback would be).
-        if matches!(self.get(id), ANode::Destination(_) | ANode::Splitter(_) | ANode::Merger(_)) && node.channel_count() != count {
+        if matches!(
+            self.get(id),
+            ANode::Destination(_) | ANode::Splitter(_) | ANode::Merger(_)
+        ) && node.channel_count() != count
+        {
             return;
         }
 
         // DynamicsCompressorHandler, PannerHandler and ConvolverHandler::SetChannelCount: 1 or 2.
-        if matches!(self.get(id), ANode::Compressor(..) | ANode::Panner(_) | ANode::Convolver(..)) && !(1..=2).contains(&count) {
+        if matches!(
+            self.get(id),
+            ANode::Compressor(..) | ANode::Panner(_) | ANode::Convolver(..)
+        ) && !(1..=2).contains(&count)
+        {
             return;
         }
 
@@ -456,13 +517,19 @@ impl AudioEngine {
         };
         let node = self.get(id).node();
 
-        if matches!(self.get(id), ANode::Splitter(_) | ANode::Merger(_)) && node.channel_count_mode() != mode {
+        if matches!(self.get(id), ANode::Splitter(_) | ANode::Merger(_))
+            && node.channel_count_mode() != mode
+        {
             return;
         }
 
         // DynamicsCompressorHandler, PannerHandler and ConvolverHandler::SetChannelCountMode:
         // "max" is a NotSupportedError.
-        if matches!(self.get(id), ANode::Compressor(..) | ANode::Panner(_) | ANode::Convolver(..)) && mode == ChannelCountMode::Max {
+        if matches!(
+            self.get(id),
+            ANode::Compressor(..) | ANode::Panner(_) | ANode::Convolver(..)
+        ) && mode == ChannelCountMode::Max
+        {
             return;
         }
 
@@ -472,15 +539,24 @@ impl AudioEngine {
     }
 
     pub fn set_channel_interpretation(&self, id: AId, interpretation: &str) {
-        let interpretation = if interpretation == "discrete" { ChannelInterpretation::Discrete } else { ChannelInterpretation::Speakers };
+        let interpretation = if interpretation == "discrete" {
+            ChannelInterpretation::Discrete
+        } else {
+            ChannelInterpretation::Speakers
+        };
         let node = self.get(id).node();
 
-        if matches!(self.get(id), ANode::Splitter(_)) && node.channel_interpretation() != interpretation {
+        if matches!(self.get(id), ANode::Splitter(_))
+            && node.channel_interpretation() != interpretation
+        {
             return;
         }
 
         if let ANode::Analyser(_, a) = self.get(id) {
-            a.shared().discrete.store(interpretation == ChannelInterpretation::Discrete, std::sync::atomic::Ordering::Relaxed);
+            a.shared().discrete.store(
+                interpretation == ChannelInterpretation::Discrete,
+                std::sync::atomic::Ordering::Relaxed,
+            );
         }
 
         for n in self.get(id).all() {
@@ -495,14 +571,26 @@ impl AudioEngine {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
         let shared = Arc::new(gain::Shared::new(gain));
-        let options = AudioWorkletNodeOptions { number_of_inputs: 1, number_of_outputs: 1, output_channel_count: vec![], parameter_data: Default::default(), processor_options: Arc::clone(&shared), audio_node_options: Default::default() };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 1,
+            number_of_outputs: 1,
+            output_channel_count: vec![],
+            parameter_data: Default::default(),
+            processor_options: Arc::clone(&shared),
+            audio_node_options: Default::default(),
+        };
         let node = AudioWorkletNode::new::<gain::Processor>(self.base(), options);
         self.add(ANode::Gain(node, shared))
     }
 
     fn post_gain(&self, id: AId, kind: param_timeline::Kind, value: f32, time: f64) {
         if let ANode::Gain(n, _) = self.get(id) {
-            n.port().post_message(Some(gain::Message::Event(param_timeline::Event { kind, value, time })));
+            n.port()
+                .post_message(Some(gain::Message::Event(param_timeline::Event {
+                    kind,
+                    value,
+                    time,
+                })));
         }
     }
 
@@ -521,9 +609,13 @@ impl AudioEngine {
         Some(match (self.get(id), name) {
             (ANode::Oscillator(n), "frequency" | "detune") => n.parameters().get(name)?,
             (ANode::BufferSource(n), "playbackRate" | "detune") => n.parameters().get(name)?,
-            (ANode::Biquad(n), "frequency" | "detune" | "Q" | "gain") => n.parameters().get(name)?,
+            (ANode::Biquad(n), "frequency" | "detune" | "Q" | "gain") => {
+                n.parameters().get(name)?
+            }
             (ANode::Delay(n), "delayTime") => n.parameters().get(name)?,
-            (ANode::Compressor(n, _), "attack" | "knee" | "ratio" | "release" | "threshold") => n.parameters().get(name)?,
+            (ANode::Compressor(n, _), "attack" | "knee" | "ratio" | "release" | "threshold") => {
+                n.parameters().get(name)?
+            }
             _ => return None,
         })
     }
@@ -552,14 +644,22 @@ impl AudioEngine {
         let now = self.current_time();
 
         match (self.get(id), name) {
-            (ANode::Oscillator(n), "frequency" | "detune") => n.port().post_message(Some(oscillator::Message::ParamEvent(name == "frequency", now))),
+            (ANode::Oscillator(n), "frequency" | "detune") => n.port().post_message(Some(
+                oscillator::Message::ParamEvent(name == "frequency", now),
+            )),
             (ANode::Biquad(n), "frequency" | "Q" | "gain" | "detune") => {
-                let index = ["frequency", "Q", "gain", "detune"].iter().position(|p| *p == name).unwrap();
-                n.port().post_message(Some(biquad::Message::ParamEvent(index, now)));
+                let index = ["frequency", "Q", "gain", "detune"]
+                    .iter()
+                    .position(|p| *p == name)
+                    .unwrap();
+                n.port()
+                    .post_message(Some(biquad::Message::ParamEvent(index, now)));
             }
             (ANode::Panner(p), _) => {
                 if let Some(index) = panner::PARAM_NAMES.iter().position(|p| *p == name) {
-                    p.equal_power.port().post_message(Some(panner::Message::SetValue(index, v, now)));
+                    p.equal_power
+                        .port()
+                        .post_message(Some(panner::Message::SetValue(index, v, now)));
                 }
             }
             _ => {}
@@ -594,7 +694,14 @@ impl AudioEngine {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
         let wave = self.basic_wave(oscillator::Shape::Sine);
-        let options = AudioWorkletNodeOptions { number_of_inputs: 0, number_of_outputs: 1, output_channel_count: vec![1], parameter_data: Default::default(), processor_options: wave, audio_node_options: AudioNodeOptions::default() };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 0,
+            number_of_outputs: 1,
+            output_channel_count: vec![1],
+            parameter_data: Default::default(),
+            processor_options: wave,
+            audio_node_options: AudioNodeOptions::default(),
+        };
         let node = AudioWorkletNode::new::<oscillator::Processor>(self.base(), options);
         self.add(ANode::Oscillator(node))
     }
@@ -602,7 +709,11 @@ impl AudioEngine {
     /// The context's PeriodicWave of a basic type (BaseAudioContext.GetPeriodicWave), made once.
     fn basic_wave(&mut self, shape: oscillator::Shape) -> Arc<oscillator::WaveTables> {
         let rate = self.sample_rate();
-        Arc::clone(self.waves.entry(shape).or_insert_with(|| Arc::new(oscillator::WaveTables::basic(rate, shape))))
+        Arc::clone(
+            self.waves
+                .entry(shape)
+                .or_insert_with(|| Arc::new(oscillator::WaveTables::basic(rate, shape))),
+        )
     }
 
     fn post(&self, id: AId, message: oscillator::Message) {
@@ -619,7 +730,12 @@ impl AudioEngine {
 
     /// `oscillatorNode .setPeriodicWave (audioContext .createPeriodicWave (real, imag))`.
     pub fn oscillator_set_periodic_wave(&mut self, id: AId, real: &[f32], imag: &[f32]) {
-        let wave = Arc::new(oscillator::WaveTables::new(self.sample_rate(), real, imag, false));
+        let wave = Arc::new(oscillator::WaveTables::new(
+            self.sample_rate(),
+            real,
+            imag,
+            false,
+        ));
         self.post(id, oscillator::Message::Wave(wave));
     }
 
@@ -638,9 +754,23 @@ impl AudioEngine {
     pub fn buffer_source(&mut self, buffer: Option<&AudioBuffer>) -> AId {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
-        let shared = buffer.map(|b| Arc::new(buffer_source::Buffer { channels: (0..b.number_of_channels()).map(|c| b.get_channel_data(c).to_vec()).collect(), sample_rate: b.sample_rate() }));
+        let shared = buffer.map(|b| {
+            Arc::new(buffer_source::Buffer {
+                channels: (0..b.number_of_channels())
+                    .map(|c| b.get_channel_data(c).to_vec())
+                    .collect(),
+                sample_rate: b.sample_rate(),
+            })
+        });
         let channels = buffer.map_or(1, |b| b.number_of_channels());
-        let options = AudioWorkletNodeOptions { number_of_inputs: 0, number_of_outputs: 1, output_channel_count: vec![channels], parameter_data: Default::default(), processor_options: shared, audio_node_options: Default::default() };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 0,
+            number_of_outputs: 1,
+            output_channel_count: vec![channels],
+            parameter_data: Default::default(),
+            processor_options: shared,
+            audio_node_options: Default::default(),
+        };
         let node = AudioWorkletNode::new::<buffer_source::Processor>(self.base(), options);
         self.add(ANode::BufferSource(node))
     }
@@ -657,7 +787,14 @@ impl AudioEngine {
         let value = |name| self.param(id, name).map_or(0.0, |p| p.value());
         let unit_rate = value("playbackRate") == 1.0 && value("detune") == 0.0;
         let when = when.max(self.current_time());
-        self.post_buffer_source(id, buffer_source::Message::Start { when, offset, unit_rate });
+        self.post_buffer_source(
+            id,
+            buffer_source::Message::Start {
+                when,
+                offset,
+                unit_rate,
+            },
+        );
     }
 
     /// `audioBufferSource .stop (when)`.
@@ -681,7 +818,10 @@ impl AudioEngine {
     pub fn biquad(&mut self) -> AId {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
-        let node = AudioWorkletNode::new::<biquad::Processor>(self.base(), AudioWorkletNodeOptions::<()>::default());
+        let node = AudioWorkletNode::new::<biquad::Processor>(
+            self.base(),
+            AudioWorkletNodeOptions::<()>::default(),
+        );
         self.add(ANode::Biquad(node))
     }
 
@@ -703,7 +843,9 @@ impl AudioEngine {
 
         let mut options = AudioWorkletNodeOptions::<f64>::default();
         options.processor_options = max_delay_time;
-        options.parameter_data.insert("delayTime".into(), delay_time);
+        options
+            .parameter_data
+            .insert("delayTime".into(), delay_time);
         let node = AudioWorkletNode::new::<delay::Processor>(self.base(), options);
         Some(self.add(ANode::Delay(node)))
     }
@@ -720,14 +862,16 @@ impl AudioEngine {
     /// `waveShaperNode .curve = curve`.
     pub fn wave_shaper_set_curve(&self, id: AId, curve: Vec<f32>) {
         if let ANode::WaveShaper(n) = self.get(id) {
-            n.port().post_message(Some(wave_shaper::Message::Curve(Arc::new(curve))));
+            n.port()
+                .post_message(Some(wave_shaper::Message::Curve(Arc::new(curve))));
         }
     }
 
     /// `waveShaperNode .oversample = value`.
     pub fn wave_shaper_set_oversample(&self, id: AId, value: wave_shaper::Oversample) {
         if let ANode::WaveShaper(n) = self.get(id) {
-            n.port().post_message(Some(wave_shaper::Message::Oversample(value)));
+            n.port()
+                .post_message(Some(wave_shaper::Message::Oversample(value)));
         }
     }
 
@@ -744,9 +888,19 @@ impl AudioEngine {
     fn convolver_node(&self, stereo: bool) -> web_audio_api::worklet::AudioWorkletNode {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
-        let audio_node_options = AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::ClampedMax, channel_interpretation: ChannelInterpretation::Speakers };
+        let audio_node_options = AudioNodeOptions {
+            channel_count: 2,
+            channel_count_mode: ChannelCountMode::ClampedMax,
+            channel_interpretation: ChannelInterpretation::Speakers,
+        };
         let output_channel_count = if stereo { vec![2] } else { vec![] };
-        let options = AudioWorkletNodeOptions::<()> { number_of_inputs: 1, number_of_outputs: 1, output_channel_count, audio_node_options, ..Default::default() };
+        let options = AudioWorkletNodeOptions::<()> {
+            number_of_inputs: 1,
+            number_of_outputs: 1,
+            output_channel_count,
+            audio_node_options,
+            ..Default::default()
+        };
         AudioWorkletNode::new::<convolver::Processor>(self.base(), options)
     }
 
@@ -757,21 +911,31 @@ impl AudioEngine {
 
     /// `convolverNode .buffer = buffer` (ConvolverHandler::SetBuffer): 1, 2 or 4 channels.
     pub fn convolver_set_buffer(&mut self, id: AId, buffer: AudioBuffer) {
-        let channels: Vec<Vec<f32>> = (0..buffer.number_of_channels()).map(|c| buffer.get_channel_data(c).to_vec()).collect();
+        let channels: Vec<Vec<f32>> = (0..buffer.number_of_channels())
+            .map(|c| buffer.get_channel_data(c).to_vec())
+            .collect();
 
         if !matches!(channels.len(), 1 | 2 | 4) {
             return;
         }
 
         let normalize = self.convolver_normalize.get(&id.0).copied().unwrap_or(true);
-        let reverb = Box::new(convolver::Reverb::new(&channels, buffer.sample_rate(), normalize));
+        let reverb = Box::new(convolver::Reverb::new(
+            &channels,
+            buffer.sample_rate(),
+            normalize,
+        ));
         let stereo = reverb.response_channels() > 1;
 
         if matches!(self.get(id), ANode::Convolver(_, s) if *s != stereo) {
             let node = self.convolver_node(stereo);
             let (count, mode, interpretation) = {
                 let n = self.get(id).node();
-                (n.channel_count(), n.channel_count_mode(), n.channel_interpretation())
+                (
+                    n.channel_count(),
+                    n.channel_count_mode(),
+                    n.channel_interpretation(),
+                )
             };
             node.set_channel_count(count);
             node.set_channel_count_mode(mode);
@@ -780,14 +944,25 @@ impl AudioEngine {
         }
 
         if let ANode::Convolver(n, _) = self.get(id) {
-            n.port().post_message(Some(convolver::Message::Reverb(Some(reverb))));
+            n.port()
+                .post_message(Some(convolver::Message::Reverb(Some(reverb))));
         }
     }
 
     /// Put another Web Audio node in the place of `id`, with the same connections.
     fn replace(&mut self, id: AId, node: ANode) {
-        let incoming: Vec<_> = self.connections.iter().filter(|c| c.2 == id).copied().collect();
-        let outgoing: Vec<_> = self.connections.iter().filter(|c| c.0 == id).copied().collect();
+        let incoming: Vec<_> = self
+            .connections
+            .iter()
+            .filter(|c| c.2 == id)
+            .copied()
+            .collect();
+        let outgoing: Vec<_> = self
+            .connections
+            .iter()
+            .filter(|c| c.0 == id)
+            .copied()
+            .collect();
 
         for &(from, ..) in incoming.iter() {
             for a in self.get(from).outputs() {
@@ -821,8 +996,19 @@ impl AudioEngine {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
         let reduction = Arc::new(compressor::Reduction::default());
-        let audio_node_options = AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::ClampedMax, channel_interpretation: ChannelInterpretation::Speakers };
-        let options = AudioWorkletNodeOptions { number_of_inputs: 1, number_of_outputs: 1, output_channel_count: vec![2], parameter_data: Default::default(), processor_options: Arc::clone(&reduction), audio_node_options };
+        let audio_node_options = AudioNodeOptions {
+            channel_count: 2,
+            channel_count_mode: ChannelCountMode::ClampedMax,
+            channel_interpretation: ChannelInterpretation::Speakers,
+        };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 1,
+            number_of_outputs: 1,
+            output_channel_count: vec![2],
+            parameter_data: Default::default(),
+            processor_options: Arc::clone(&reduction),
+            audio_node_options,
+        };
         let node = AudioWorkletNode::new::<compressor::Processor>(self.base(), options);
         self.add(ANode::Compressor(node, reduction))
     }
@@ -840,19 +1026,45 @@ impl AudioEngine {
 
         let shared = Arc::new(analyser::Shared::default());
         // AnalyserNode: channelCount 2, "max", "speakers"; the output follows the input.
-        let audio_node_options = AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::Max, channel_interpretation: ChannelInterpretation::Speakers };
-        let options = AudioWorkletNodeOptions { number_of_inputs: 1, number_of_outputs: 1, output_channel_count: vec![], parameter_data: Default::default(), processor_options: Arc::clone(&shared), audio_node_options };
+        let audio_node_options = AudioNodeOptions {
+            channel_count: 2,
+            channel_count_mode: ChannelCountMode::Max,
+            channel_interpretation: ChannelInterpretation::Speakers,
+        };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 1,
+            number_of_outputs: 1,
+            output_channel_count: vec![],
+            parameter_data: Default::default(),
+            processor_options: Arc::clone(&shared),
+            audio_node_options,
+        };
         let node = AudioWorkletNode::new::<analyser::Processor>(self.base(), options);
-        self.add(ANode::Analyser(node, Box::new(analyser::Analyser::new(shared))))
+        self.add(ANode::Analyser(
+            node,
+            Box::new(analyser::Analyser::new(shared)),
+        ))
     }
 
     pub fn splitter(&mut self, number_of_outputs: usize) -> AId {
-        let node = ChannelSplitterNode::new(self.base(), ChannelSplitterOptions { number_of_outputs, ..Default::default() });
+        let node = ChannelSplitterNode::new(
+            self.base(),
+            ChannelSplitterOptions {
+                number_of_outputs,
+                ..Default::default()
+            },
+        );
         self.add(ANode::Splitter(node))
     }
 
     pub fn merger(&mut self, number_of_inputs: usize) -> AId {
-        let node = ChannelMergerNode::new(self.base(), ChannelMergerOptions { number_of_inputs, ..Default::default() });
+        let node = ChannelMergerNode::new(
+            self.base(),
+            ChannelMergerOptions {
+                number_of_inputs,
+                ..Default::default()
+            },
+        );
         self.add(ANode::Merger(node))
     }
 
@@ -860,19 +1072,39 @@ impl AudioEngine {
     pub fn panner(&mut self) -> AId {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
-        let audio_node_options = AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::ClampedMax, channel_interpretation: ChannelInterpretation::Speakers };
-        let options = AudioWorkletNodeOptions { number_of_inputs: 1, number_of_outputs: 1, output_channel_count: vec![2], parameter_data: Default::default(), processor_options: self.listener_values, audio_node_options };
+        let audio_node_options = AudioNodeOptions {
+            channel_count: 2,
+            channel_count_mode: ChannelCountMode::ClampedMax,
+            channel_interpretation: ChannelInterpretation::Speakers,
+        };
+        let options = AudioWorkletNodeOptions {
+            number_of_inputs: 1,
+            number_of_outputs: 1,
+            output_channel_count: vec![2],
+            parameter_data: Default::default(),
+            processor_options: self.listener_values,
+            audio_node_options,
+        };
         let equal_power = AudioWorkletNode::new::<panner::Processor>(self.base(), options);
         let hrtf = PannerNode::new(self.base(), PannerOptions::default());
-        self.add(ANode::Panner(Box::new(PannerSet { equal_power, hrtf, hrtf_active: false, attributes: Default::default() })))
+        self.add(ANode::Panner(Box::new(PannerSet {
+            equal_power,
+            hrtf,
+            hrtf_active: false,
+            attributes: Default::default(),
+        })))
     }
 
     /// The PannerNode attribute setters.
     pub fn panner_set(&mut self, id: AId, f: impl FnOnce(&mut panner::Attributes)) {
-        let ANode::Panner(p) = self.get_mut(id) else { return };
+        let ANode::Panner(p) = self.get_mut(id) else {
+            return;
+        };
         f(&mut p.attributes);
         let a = p.attributes;
-        p.equal_power.port().post_message(Some(panner::Message::Attributes(a)));
+        p.equal_power
+            .port()
+            .post_message(Some(panner::Message::Attributes(a)));
         let h = &mut p.hrtf;
         h.set_distance_model(match a.distance_model {
             panner::DistanceModel::Linear => DistanceModelType::Linear,
@@ -890,13 +1122,20 @@ impl AudioEngine {
     /// `pannerNode .panningModel = hrtf ? "HRTF" : "equalpower"`: the inputs move to the other
     /// node.
     pub fn panner_set_hrtf(&mut self, id: AId, hrtf: bool) {
-        let ANode::Panner(p) = self.get(id) else { return };
+        let ANode::Panner(p) = self.get(id) else {
+            return;
+        };
 
         if p.hrtf_active == hrtf {
             return;
         }
 
-        let incoming: Vec<_> = self.connections.iter().filter(|c| c.2 == id).copied().collect();
+        let incoming: Vec<_> = self
+            .connections
+            .iter()
+            .filter(|c| c.2 == id)
+            .copied()
+            .collect();
         let sources: Vec<AId> = incoming.iter().map(|c| c.0).collect();
 
         for &from in sources.iter() {
@@ -928,7 +1167,20 @@ impl AudioEngine {
     pub fn set_listener(&mut self, values: [f32; 9]) {
         let l = self.listener();
 
-        for (param, v) in [l.position_x(), l.position_y(), l.position_z(), l.forward_x(), l.forward_y(), l.forward_z(), l.up_x(), l.up_y(), l.up_z()].into_iter().zip(values) {
+        for (param, v) in [
+            l.position_x(),
+            l.position_y(),
+            l.position_z(),
+            l.forward_x(),
+            l.forward_y(),
+            l.forward_z(),
+            l.up_x(),
+            l.up_y(),
+            l.up_z(),
+        ]
+        .into_iter()
+        .zip(values)
+        {
             param.set_value(v);
         }
 
@@ -938,7 +1190,9 @@ impl AudioEngine {
         for n in self.nodes.iter().flatten() {
             if let ANode::Panner(p) = n {
                 for (k, v) in values.into_iter().enumerate() {
-                    p.equal_power.port().post_message(Some(panner::Message::SetValue(6 + k, v, now)));
+                    p.equal_power
+                        .port()
+                        .post_message(Some(panner::Message::SetValue(6 + k, v, now)));
                 }
             }
         }
@@ -966,7 +1220,14 @@ impl AudioEngine {
             return id;
         }
 
-        let node = MediaStreamAudioDestinationNode::new(self.base(), AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::Explicit, channel_interpretation: ChannelInterpretation::Speakers });
+        let node = MediaStreamAudioDestinationNode::new(
+            self.base(),
+            AudioNodeOptions {
+                channel_count: 2,
+                channel_count_mode: ChannelCountMode::Explicit,
+                channel_interpretation: ChannelInterpretation::Speakers,
+            },
+        );
         let id = self.add(ANode::StreamDestination(node));
         self.stream_destinations.insert(id.0);
         id
@@ -979,9 +1240,14 @@ impl AudioEngine {
             return Err("Requested device not found".to_string());
         };
 
-        use web_audio_api::media_devices::{self, MediaDeviceInfoKind, MediaStreamConstraints, MediaTrackConstraints};
+        use web_audio_api::media_devices::{
+            self, MediaDeviceInfoKind, MediaStreamConstraints, MediaTrackConstraints,
+        };
 
-        let inputs: Vec<_> = media_devices::enumerate_devices_sync().into_iter().filter(|d| d.kind() == MediaDeviceInfoKind::AudioInput).collect();
+        let inputs: Vec<_> = media_devices::enumerate_devices_sync()
+            .into_iter()
+            .filter(|d| d.kind() == MediaDeviceInfoKind::AudioInput)
+            .collect();
 
         if inputs.is_empty() {
             return Err("Requested device not found".to_string());
@@ -999,14 +1265,25 @@ impl AudioEngine {
             MediaStreamConstraints::Audio
         };
 
-        let stream = std::panic::catch_unwind(|| media_devices::get_user_media_sync(constraints)).map_err(|_| "Could not start audio source".to_string())?;
+        let stream = std::panic::catch_unwind(|| media_devices::get_user_media_sync(constraints))
+            .map_err(|_| "Could not start audio source".to_string())?;
         let node = ctx.create_media_stream_source(&stream);
         Ok(self.add(ANode::StreamSource(node)))
     }
 
     /// audioContext .createBuffer (channels, length, sampleRate) filled with `data` (planar).
-    pub fn create_buffer(&self, channels: usize, length: usize, sample_rate: f32, data: Option<&[f32]>) -> AudioBuffer {
-        let mut buffer = AudioBuffer::new(AudioBufferOptions { number_of_channels: channels, length, sample_rate });
+    pub fn create_buffer(
+        &self,
+        channels: usize,
+        length: usize,
+        sample_rate: f32,
+        data: Option<&[f32]>,
+    ) -> AudioBuffer {
+        let mut buffer = AudioBuffer::new(AudioBufferOptions {
+            number_of_channels: channels,
+            length,
+            sample_rate,
+        });
 
         if let Some(data) = data {
             for c in 0..channels {
@@ -1022,7 +1299,14 @@ impl AudioEngine {
     pub fn decode(&self, bytes: Vec<u8>) -> Result<AudioBuffer, String> {
         if let Some((channels, rate)) = decode::decode_wav(&bytes) {
             let context_rate = self.sample_rate();
-            let channels: Vec<Vec<f32>> = if rate == context_rate { channels } else { channels.iter().map(|c| decode::resample(c, rate as f64, context_rate as f64)).collect() };
+            let channels: Vec<Vec<f32>> = if rate == context_rate {
+                channels
+            } else {
+                channels
+                    .iter()
+                    .map(|c| decode::resample(c, rate as f64, context_rate as f64))
+                    .collect()
+            };
             let length = channels[0].len();
 
             // A file without frames: decodeAudioData rejects (EncodingError).
@@ -1034,7 +1318,9 @@ impl AudioEngine {
             return Ok(self.create_buffer(channels.len(), length, context_rate, Some(&data)));
         }
 
-        self.base().decode_audio_data_sync(std::io::Cursor::new(bytes)).map_err(|e| e.to_string())
+        self.base()
+            .decode_audio_data_sync(std::io::Cursor::new(bytes))
+            .map_err(|e| e.to_string())
     }
 
     // --- offline rendering in step with the frames -------------------------------------------
@@ -1053,7 +1339,8 @@ impl AudioEngine {
             let c = Arc::clone(ctx);
             // The engine rounds a suspend time up to a quantum: half a frame before its start.
             let t = (q * RENDER_QUANTUM) as f64 / rate - 0.5 / rate;
-            let mut f: Pin<Box<dyn std::future::Future<Output = ()> + Send>> = Box::pin(async move { c.suspend(t).await });
+            let mut f: Pin<Box<dyn std::future::Future<Output = ()> + Send>> =
+                Box::pin(async move { c.suspend(t).await });
             // The first poll registers the suspension (before rendering starts).
             let _ = f.as_mut().poll(&mut cx);
             suspends.push(f);
@@ -1065,7 +1352,12 @@ impl AudioEngine {
             block_on(f.as_mut())
         });
 
-        self.stepping = Some(Stepping { suspends, next: 0, render: Some(render), waiting: false });
+        self.stepping = Some(Stepping {
+            suspends,
+            next: 0,
+            render: Some(render),
+            waiting: false,
+        });
     }
 
     /// Wait until rendering is suspended before the next frame. Returns the suspended frame.
@@ -1081,7 +1373,9 @@ impl AudioEngine {
     /// Resume rendering after the frame's events.
     pub fn resume(&mut self) {
         let Ctx::Offline(ctx) = &self.ctx else { return };
-        let Some(s) = self.stepping.as_mut() else { return };
+        let Some(s) = self.stepping.as_mut() else {
+            return;
+        };
 
         if s.waiting {
             s.waiting = false;
@@ -1104,7 +1398,11 @@ impl Drop for AudioEngine {
     fn drop(&mut self) {
         // A suspended render thread would wait forever: run it to the end.
         if self.stepping.as_ref().is_some_and(|s| s.render.is_some()) {
-            while self.stepping.as_ref().is_some_and(|s| s.next < s.suspends.len()) {
+            while self
+                .stepping
+                .as_ref()
+                .is_some_and(|s| s.next < s.suspends.len())
+            {
                 self.resume();
                 let _ = self.wait();
             }

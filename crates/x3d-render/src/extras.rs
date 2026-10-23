@@ -9,23 +9,43 @@ use crate::geometry::Geometry;
 #[derive(Clone, Copy, Debug)]
 pub enum TexChannel<'a> {
     /// TextureCoordinate (2), TextureCoordinate3D (3), TextureCoordinate4D (4) points.
-    Point { values: &'a [f32], components: usize, mapping: &'a str },
+    Point {
+        values: &'a [f32],
+        components: usize,
+        mapping: &'a str,
+    },
     /// TextureCoordinateGenerator: the channel holds 0 0 0 1 per vertex; the shader generates.
-    Generator { mode: i32, parameter: [f32; 6], mapping: &'a str },
+    Generator {
+        mode: i32,
+        parameter: [f32; 6],
+        mapping: &'a str,
+    },
 }
 
 /// One X3DVertexAttributeNode.
 #[derive(Clone, Copy, Debug)]
 pub enum Attrib<'a> {
-    Float { name: &'a str, components: usize, values: &'a [f32] },
-    Matrix3 { name: &'a str, values: &'a [f32] },
-    Matrix4 { name: &'a str, values: &'a [f32] },
+    Float {
+        name: &'a str,
+        components: usize,
+        values: &'a [f32],
+    },
+    Matrix3 {
+        name: &'a str,
+        values: &'a [f32],
+    },
+    Matrix4 {
+        name: &'a str,
+        values: &'a [f32],
+    },
 }
 
 impl Attrib<'_> {
     pub fn name(&self) -> &str {
         match self {
-            Attrib::Float { name, .. } | Attrib::Matrix3 { name, .. } | Attrib::Matrix4 { name, .. } => name,
+            Attrib::Float { name, .. }
+            | Attrib::Matrix3 { name, .. }
+            | Attrib::Matrix4 { name, .. } => name,
         }
     }
 
@@ -40,7 +60,9 @@ impl Attrib<'_> {
     /// addValue (index, array).
     pub fn add_value(&self, index: i64, array: &mut Vec<f32>) {
         match self {
-            Attrib::Float { components, values, .. } => {
+            Attrib::Float {
+                components, values, ..
+            } => {
                 let n = *components as i64;
                 let (first, last) = (index * n, index * n + n);
 
@@ -74,7 +96,10 @@ impl Attrib<'_> {
                 } else if size == 9 {
                     array.extend_from_slice(&[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
                 } else {
-                    array.extend_from_slice(&[1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+                    array.extend_from_slice(&[
+                        1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+                        1.0,
+                    ]);
                 }
             }
         }
@@ -93,7 +118,9 @@ pub struct Extras<'a> {
 impl Extras<'_> {
     /// Number of texture coordinate channels `init` makes (MultiTextureCoordinate: at most 4).
     pub fn channels(&self) -> usize {
-        self.tex.map(|t| t.len().min(crate::extras::MAX_TEX_COORDS)).unwrap_or(0)
+        self.tex
+            .map(|t| t.len().min(crate::extras::MAX_TEX_COORDS))
+            .unwrap_or(0)
     }
 
     /// texCoordNode ?.init (multiTexCoordArray) and the attribute arrays.
@@ -101,8 +128,19 @@ impl Extras<'_> {
         let n = self.channels();
 
         g.tex_coords_extra = vec![vec![]; n.saturating_sub(1)];
-        g.tex_channels = self.tex.map(|t| t[..n].iter().map(channel_info).collect()).unwrap_or_default();
-        g.attribs = self.attribs.iter().map(|a| crate::geometry::AttribArray { name: a.name().to_string(), components: a.components(), values: vec![] }).collect();
+        g.tex_channels = self
+            .tex
+            .map(|t| t[..n].iter().map(channel_info).collect())
+            .unwrap_or_default();
+        g.attribs = self
+            .attribs
+            .iter()
+            .map(|a| crate::geometry::AttribArray {
+                name: a.name().to_string(),
+                components: a.components(),
+                values: vec![],
+            })
+            .collect();
     }
 
     /// texCoordNode ?.addPoint (index, multiTexCoordArray).
@@ -110,10 +148,16 @@ impl Extras<'_> {
         let Some(tex) = self.tex else { return };
 
         for (i, c) in tex.iter().take(MAX_TEX_COORDS).enumerate() {
-            let array = if i == 0 { &mut g.tex_coords } else { &mut g.tex_coords_extra[i - 1] };
+            let array = if i == 0 {
+                &mut g.tex_coords
+            } else {
+                &mut g.tex_coords_extra[i - 1]
+            };
 
             match c {
-                TexChannel::Point { values, components, .. } => {
+                TexChannel::Point {
+                    values, components, ..
+                } => {
                     let n = *components;
                     let length = values.len() / n;
 
@@ -121,7 +165,12 @@ impl Extras<'_> {
                         let k = (index as usize % length) * n;
                         match n {
                             2 => array.extend_from_slice(&[values[k], values[k + 1], 0.0, 1.0]),
-                            3 => array.extend_from_slice(&[values[k], values[k + 1], values[k + 2], 1.0]),
+                            3 => array.extend_from_slice(&[
+                                values[k],
+                                values[k + 1],
+                                values[k + 2],
+                                1.0,
+                            ]),
                             _ => array.extend_from_slice(&values[k..k + 4]),
                         }
                     } else {
@@ -169,8 +218,20 @@ pub const MAX_TEX_COORDS: usize = 4;
 
 fn channel_info(c: &TexChannel) -> crate::geometry::TexChannelInfo {
     match c {
-        TexChannel::Point { mapping, .. } => crate::geometry::TexChannelInfo { mode: 0, parameter: [0.0; 6], mapping: mapping.to_string() },
-        TexChannel::Generator { mode, parameter, mapping } => crate::geometry::TexChannelInfo { mode: *mode, parameter: *parameter, mapping: mapping.to_string() },
+        TexChannel::Point { mapping, .. } => crate::geometry::TexChannelInfo {
+            mode: 0,
+            parameter: [0.0; 6],
+            mapping: mapping.to_string(),
+        },
+        TexChannel::Generator {
+            mode,
+            parameter,
+            mapping,
+        } => crate::geometry::TexChannelInfo {
+            mode: *mode,
+            parameter: *parameter,
+            mapping: mapping.to_string(),
+        },
     }
 }
 

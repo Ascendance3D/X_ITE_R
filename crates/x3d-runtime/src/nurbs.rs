@@ -81,7 +81,13 @@ pub fn curve2d_closed(order: usize, weights: Option<&[f64]>, points: &[[f64; 2]]
 }
 
 /// NURBS.getUClosed with the ISO weight rule: every v row must close.
-pub fn u_closed(order: usize, u_dimension: usize, v_dimension: usize, weights: Option<&[f64]>, point: impl Fn(usize) -> [f64; 3]) -> bool {
+pub fn u_closed(
+    order: usize,
+    u_dimension: usize,
+    v_dimension: usize,
+    weights: Option<&[f64]>,
+    point: impl Fn(usize) -> [f64; 3],
+) -> bool {
     for v in 0..v_dimension {
         let first = v * u_dimension;
         let last = v * u_dimension + u_dimension - 1;
@@ -101,7 +107,13 @@ pub fn u_closed(order: usize, u_dimension: usize, v_dimension: usize, weights: O
 }
 
 /// NURBS.getVClosed with the ISO weight rule: every u column must close.
-pub fn v_closed(order: usize, u_dimension: usize, v_dimension: usize, weights: Option<&[f64]>, point: impl Fn(usize) -> [f64; 3]) -> bool {
+pub fn v_closed(
+    order: usize,
+    u_dimension: usize,
+    v_dimension: usize,
+    weights: Option<&[f64]>,
+    point: impl Fn(usize) -> [f64; 3],
+) -> bool {
     for u in 0..u_dimension {
         let first = u;
         let last = (v_dimension - 1) * u_dimension + u;
@@ -195,7 +207,10 @@ pub fn knots(closed: bool, order: usize, dimension: usize, knot: &[f64]) -> Vec<
 
 /// `array [i]` with JS `undefined` (→ NaN in arithmetic) outside the array.
 fn at(a: &[f64], i: impl TryInto<usize>) -> f64 {
-    i.try_into().ok().and_then(|i: usize| a.get(i).copied()).unwrap_or(f64::NAN)
+    i.try_into()
+        .ok()
+        .and_then(|i: usize| a.get(i).copied())
+        .unwrap_or(f64::NAN)
 }
 
 /// A B-spline curve (one parameter) or surface (two), evaluated like X_ITE's lib/nurbs with an
@@ -212,12 +227,34 @@ pub struct Spline {
 
 impl Spline {
     pub fn curve(degree: usize, knots: Vec<f64>, components: usize, points: Vec<f64>) -> Self {
-        let size = if components > 0 { points.len() / components } else { 0 };
-        Spline { degree: vec![degree], knots: vec![knots], size: vec![size], components, points }
+        let size = if components > 0 {
+            points.len() / components
+        } else {
+            0
+        };
+        Spline {
+            degree: vec![degree],
+            knots: vec![knots],
+            size: vec![size],
+            components,
+            points,
+        }
     }
 
-    pub fn surface(degree: [usize; 2], knots: [Vec<f64>; 2], size: [usize; 2], components: usize, points: Vec<f64>) -> Self {
-        Spline { degree: degree.to_vec(), knots: knots.to_vec(), size: size.to_vec(), components, points }
+    pub fn surface(
+        degree: [usize; 2],
+        knots: [Vec<f64>; 2],
+        size: [usize; 2],
+        components: usize,
+        points: Vec<f64>,
+    ) -> Self {
+        Spline {
+            degree: degree.to_vec(),
+            knots: knots.to_vec(),
+            size: size.to_vec(),
+            components,
+            points,
+        }
     }
 
     /// nurbs.domain: [k [degree], k [size]] per parameter.
@@ -268,11 +305,19 @@ impl Spline {
                 let pu = j[0] as i64 + a as i64 - p0 as i64;
                 let pv = j[1] as i64 + b as i64 - p1 as i64;
 
-                if pu < 0 || pv < 0 || pu as usize >= self.size[0] || (dims == 2 && pv as usize >= self.size[1]) {
+                if pu < 0
+                    || pv < 0
+                    || pu as usize >= self.size[0]
+                    || (dims == 2 && pv as usize >= self.size[1])
+                {
                     continue;
                 }
 
-                let base = if dims == 2 { (pu as usize * self.size[1] + pv as usize) * c } else { pu as usize * c };
+                let base = if dims == 2 {
+                    (pu as usize * self.size[1] + pv as usize) * c
+                } else {
+                    pu as usize * c
+                };
 
                 for comp in 0..c {
                     x[idx(a, b, comp)] = self.points[base + comp];
@@ -283,20 +328,27 @@ impl Spline {
         // De Boor's algorithm, last parameter first (`for (let d = n.length - 1; d >= 0; -- d)`).
         for d in (0..dims).rev() {
             let p = self.degree[d];
-            let der = derivative.map(|v| v.get(d).copied().unwrap_or(0)).unwrap_or(0);
+            let der = derivative
+                .map(|v| v.get(d).copied().unwrap_or(0))
+                .unwrap_or(0);
             let kv = &kl[d];
             let kv = |i: usize| kv[i];
 
             for i in 0..p {
                 for jj in (i + 1..=p).rev() {
-                    let is_derivative = derivative.is_some() && (p as i64 - i as i64 - der as i64) <= 0;
+                    let is_derivative =
+                        derivative.is_some() && (p as i64 - i as i64 - der as i64) <= 0;
                     let lo = kv(jj - 1);
                     let hi = kv(jj - i + p - 1);
 
                     // The other parameter runs over its whole range while it is not reduced yet
                     // (d = 1 first: every a), else it sits at its degree.
                     let others: Vec<(usize, usize)> = if dims == 2 {
-                        if d == 1 { (0..=p0).map(|a| (a, jj)).collect() } else { vec![(jj, p1)] }
+                        if d == 1 {
+                            (0..=p0).map(|a| (a, jj)).collect()
+                        } else {
+                            vec![(jj, p1)]
+                        }
                     } else {
                         vec![(jj, 0)]
                     };
@@ -306,7 +358,11 @@ impl Spline {
                         let coeff = (i + 1) as f64;
 
                         for (a, b) in others {
-                            let (a1, b1) = if dims == 2 && d == 1 { (a, b - 1) } else { (a - 1, b) };
+                            let (a1, b1) = if dims == 2 && d == 1 {
+                                (a, b - 1)
+                            } else {
+                                (a - 1, b)
+                            };
 
                             for comp in 0..c {
                                 let v = coeff * (x[idx(a, b, comp)] - x[idx(a1, b1, comp)]) * m;
@@ -318,7 +374,11 @@ impl Spline {
                         let beta = 1.0 - alpha;
 
                         for (a, b) in others {
-                            let (a1, b1) = if dims == 2 && d == 1 { (a, b - 1) } else { (a - 1, b) };
+                            let (a1, b1) = if dims == 2 && d == 1 {
+                                (a, b - 1)
+                            } else {
+                                (a - 1, b)
+                            };
 
                             for comp in 0..c {
                                 let v = beta * x[idx(a1, b1, comp)] + alpha * x[idx(a, b, comp)];
@@ -367,7 +427,10 @@ pub fn sample_curve(spline: &Spline, resolution: usize, closed: bool, have_weigh
         }
     }
 
-    Mesh { points, faces: vec![] }
+    Mesh {
+        points,
+        faces: vec![],
+    }
 }
 
 /// The `key` of sample.js uvSeam: the decimal strings of the values. Equal strings ⇔ equal
@@ -389,7 +452,14 @@ fn seam_key(values: &[f64]) -> Vec<u64> {
 
 /// sample.js, two parameters: a (nu + 1) × (nv + 1) grid, seam points merged when equal, two
 /// triangles per cell.
-pub fn sample_surface(spline: &Spline, nu: usize, nv: usize, u_closed: bool, v_closed: bool, have_weights: bool) -> Mesh {
+pub fn sample_surface(
+    spline: &Spline,
+    nu: usize,
+    nv: usize,
+    u_closed: bool,
+    v_closed: bool,
+    have_weights: bool,
+) -> Mesh {
     use std::collections::HashMap;
 
     let dimension = spline.components - have_weights as usize;
@@ -436,8 +506,10 @@ pub fn sample_surface(spline: &Spline, nu: usize, nv: usize, u_closed: bool, v_c
         }
     };
 
-    let u_seam = |u: usize, f: &mut dyn FnMut(usize)| (0..nv_bound).for_each(|v| f(u + nu_bound * v));
-    let v_seam = |v: usize, f: &mut dyn FnMut(usize)| (0..nu_bound).for_each(|u| f(u + nu_bound * v));
+    let u_seam =
+        |u: usize, f: &mut dyn FnMut(usize)| (0..nv_bound).for_each(|v| f(u + nu_bound * v));
+    let v_seam =
+        |v: usize, f: &mut dyn FnMut(usize)| (0..nu_bound).for_each(|u| f(u + nu_bound * v));
 
     u_seam(0, &mut |i| uv_seam(i, &points));
     v_seam(0, &mut |i| uv_seam(i, &points));
@@ -472,7 +544,12 @@ pub fn sample_surface(spline: &Spline, nu: usize, nv: usize, u_closed: bool, v_c
 
 /// The control net of a curve: x y z (or x y), homogeneous when weighted (ISO: multiplied by
 /// the weight, the weight appended), closed curves extended by order − 2 points.
-pub fn curve_control_points<const N: usize>(closed: bool, order: usize, weights: Option<&[f64]>, points: &[[f64; N]]) -> Vec<f64> {
+pub fn curve_control_points<const N: usize>(
+    closed: bool,
+    order: usize,
+    weights: Option<&[f64]>,
+    points: &[[f64; N]],
+) -> Vec<f64> {
     let mut out = vec![];
     let push = |out: &mut Vec<f64>, i: usize| {
         let p = &points[i];
@@ -547,7 +624,10 @@ pub fn surface_control_points(
         }
     }
 
-    let size = [columns.len(), columns.first().map(|c| c.len() / components).unwrap_or(0)];
+    let size = [
+        columns.len(),
+        columns.first().map(|c| c.len() / components).unwrap_or(0),
+    ];
 
     (columns.concat(), size)
 }

@@ -33,7 +33,12 @@ pub trait ShaderCompiler {
     /// `Ok` carries the deprecation warnings of getDefaultUniformsAndAttributes (text after the node's type and name).
     /// `transform_feedback_varyings`: ComposedShader.setTransformFeedbackVaryings, handed to
     /// `gl.transformFeedbackVaryings` before the link.
-    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource], transform_feedback_varyings: &[String]) -> Result<Vec<String>, String>;
+    fn link(
+        &self,
+        vertex: &[ShaderSource],
+        fragment: &[ShaderSource],
+        transform_feedback_varyings: &[String],
+    ) -> Result<Vec<String>, String>;
 }
 
 /// What a ShaderPart keeps after a compile (X_ITE: `this .shader`).
@@ -180,7 +185,11 @@ impl Runtime {
 
     /// ShaderPart.loadData: FileLoader, compile, then the load state.
     pub(crate) fn shader_part_load(&mut self, node: NodeId) {
-        let loader = FileLoader { type_name: "ShaderPart".into(), base: self.base_url(node), data_as_string: false };
+        let loader = FileLoader {
+            type_name: "ShaderPart".into(),
+            base: self.base_url(node),
+            data_as_string: false,
+        };
         let urls = self.url_strings(node);
         let shader_type = match self.pre_value(node, "type") {
             Some(FieldValue::SFString(s)) => s.clone(),
@@ -225,7 +234,14 @@ impl Runtime {
             }
         });
 
-        self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
+        self.set_load_state(
+            node,
+            if ok {
+                nodes::LoadState::Complete
+            } else {
+                nodes::LoadState::Failed
+            },
+        );
     }
 
     // ---- ComposedShader ------------------------------------------------------------------------
@@ -252,7 +268,17 @@ impl Runtime {
         let sensor = self.scene.instantiate_builtin(ctx, index);
         self.nrt_mut(sensor);
         self.construct_node(sensor);
-        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None, clip_planes: Default::default(), gl: Default::default(), transform_feedback_varyings: vec![] });
+        self.shaders.composed.insert(
+            node,
+            ComposedState {
+                load_sensor: Some(sensor),
+                valid: false,
+                linked: None,
+                clip_planes: Default::default(),
+                gl: Default::default(),
+                transform_feedback_varyings: vec![],
+            },
+        );
     }
 
     /// ComposedShader.initialize.
@@ -265,7 +291,9 @@ impl Runtime {
         };
 
         // `this ._parts .addFieldInterest (this .loadSensor ._children)`
-        if let (Some(parts), Some(children)) = (self.pre(node, "parts"), self.pre(sensor, "children")) {
+        if let (Some(parts), Some(children)) =
+            (self.pre(node, "parts"), self.pre(sensor, "children"))
+        {
             self.add_field_interest(parts, children);
         }
 
@@ -276,7 +304,9 @@ impl Runtime {
         self.add_interest(is_loaded, node, Cb::Shader(ShaderCb::ComposedConnectLoaded));
 
         // `this .loadSensor ._children = this ._parts`, setPrivate, setup.
-        if let (Some(parts), Some(children)) = (self.pre(node, "parts"), self.pre(sensor, "children")) {
+        if let (Some(parts), Some(children)) =
+            (self.pre(node, "parts"), self.pre(sensor, "children"))
+        {
             let value = self.value(parts).clone();
             self.set_raw(children, value);
         }
@@ -345,7 +375,12 @@ impl Runtime {
 
         self.shaders.links += 1;
 
-        let varyings = self.shaders.composed.get(&node).map(|c| c.transform_feedback_varyings.clone()).unwrap_or_default();
+        let varyings = self
+            .shaders
+            .composed
+            .get(&node)
+            .map(|c| c.transform_feedback_varyings.clone())
+            .unwrap_or_default();
         let result = match &self.shaders.compiler {
             Some(c) => c.link(&vertex, &fragment, &varyings),
             None => Err("no shader compiler is installed".to_string()),
@@ -394,11 +429,20 @@ impl Runtime {
 
         for _ in 0..256 {
             if let NodeKind::Instance(_) = self.scene.node(n).kind {
-                n = self.scene.ctx(self.instance_body(n)?).root_nodes.first().copied().flatten()?;
+                n = self
+                    .scene
+                    .ctx(self.instance_body(n)?)
+                    .root_nodes
+                    .first()
+                    .copied()
+                    .flatten()?;
                 continue;
             }
 
-            return self.builtin_name(n).is_some_and(is_shader_node).then_some(n);
+            return self
+                .builtin_name(n)
+                .is_some_and(is_shader_node)
+                .then_some(n);
         }
 
         None
@@ -412,7 +456,12 @@ impl Runtime {
 
     /// Appearance.set_shaders__.
     fn appearance_set_shaders(&mut self, node: NodeId) {
-        let old = self.shaders.appearances.get(&node).map(|s| s.nodes.clone()).unwrap_or_default();
+        let old = self
+            .shaders
+            .appearances
+            .get(&node)
+            .map(|s| s.nodes.clone())
+            .unwrap_or_default();
 
         for s in old {
             if let Some(k) = self.pre(s, "isValid") {
@@ -424,7 +473,11 @@ impl Runtime {
             Some(FieldValue::MFNode(v)) => v.clone(),
             _ => vec![],
         };
-        let nodes: Vec<NodeId> = listed.iter().flatten().filter_map(|n| self.cast_shader_node(*n)).collect();
+        let nodes: Vec<NodeId> = listed
+            .iter()
+            .flatten()
+            .filter_map(|n| self.cast_shader_node(*n))
+            .collect();
 
         for &s in &nodes {
             if let Some(k) = self.pre(s, "isValid") {
@@ -491,18 +544,32 @@ impl Runtime {
 
     /// Appearance.shaderNode: the shader the Appearance draws with, if any.
     pub fn appearance_shader(&self, appearance: NodeId) -> Option<NodeId> {
-        self.shaders.appearances.get(&appearance).and_then(|s| s.selected)
+        self.shaders
+            .appearances
+            .get(&appearance)
+            .and_then(|s| s.selected)
     }
 
     /// ComposedShader.setTransformFeedbackVaryings: stored, used by the next link (X_ITE's `createShader`
     /// calls it before `setup`; a later call changes nothing until the shader links again).
-    pub fn composed_set_transform_feedback_varyings(&mut self, node: NodeId, varyings: Vec<String>) {
-        self.shaders.composed.entry(node).or_default().transform_feedback_varyings = varyings;
+    pub fn composed_set_transform_feedback_varyings(
+        &mut self,
+        node: NodeId,
+        varyings: Vec<String>,
+    ) {
+        self.shaders
+            .composed
+            .entry(node)
+            .or_default()
+            .transform_feedback_varyings = varyings;
     }
 
     /// The program-resident `x3d_ClipPlane` values of a linked ComposedShader.
     pub fn composed_clip_planes(&self, node: NodeId) -> Option<Rc<RefCell<[[f32; 4]; 6]>>> {
-        self.shaders.composed.get(&node).map(|c| c.clip_planes.clone())
+        self.shaders
+            .composed
+            .get(&node)
+            .map(|c| c.clip_planes.clone())
     }
 
     /// The program-resident texture state of a linked ComposedShader.
@@ -510,8 +577,14 @@ impl Runtime {
         self.shaders.composed.get(&node).map(|c| c.gl.clone())
     }
 
-    pub fn composed_shader_sources(&self, node: NodeId) -> Option<&(Vec<ShaderSource>, Vec<ShaderSource>)> {
-        self.shaders.composed.get(&node).and_then(|c| c.linked.as_ref())
+    pub fn composed_shader_sources(
+        &self,
+        node: NodeId,
+    ) -> Option<&(Vec<ShaderSource>, Vec<ShaderSource>)> {
+        self.shaders
+            .composed
+            .get(&node)
+            .and_then(|c| c.linked.as_ref())
     }
 
     // ---- dispatch ------------------------------------------------------------------------------
@@ -545,7 +618,10 @@ fn _state_marker(_: &State) {}
 /// stays), base64 decoded when the media type ends in `;base64`.
 pub fn fetch_data_url(url: &str) -> Result<Vec<u8>, String> {
     let url = url.trim_start();
-    let Some(rest) = url.strip_prefix("data:").or_else(|| url.strip_prefix("DATA:")) else {
+    let Some(rest) = url
+        .strip_prefix("data:")
+        .or_else(|| url.strip_prefix("DATA:"))
+    else {
         return Err("TypeError: Failed to fetch".into());
     };
     let Some((head, payload)) = rest.split_once(',') else {
@@ -557,7 +633,11 @@ pub fn fetch_data_url(url: &str) -> Result<Vec<u8>, String> {
     let mut i = 0;
 
     while i < b.len() {
-        if b[i] == b'%' && i + 2 < b.len() + 0 && b[i + 1].is_ascii_hexdigit() && b[i + 2].is_ascii_hexdigit() {
+        if b[i] == b'%'
+            && i + 2 < b.len() + 0
+            && b[i + 1].is_ascii_hexdigit()
+            && b[i + 2].is_ascii_hexdigit()
+        {
             bytes.push(u8::from_str_radix(&payload[i + 1..i + 3], 16).unwrap());
             i += 3;
         } else {
@@ -567,7 +647,10 @@ pub fn fetch_data_url(url: &str) -> Result<Vec<u8>, String> {
     }
 
     if head.trim_end().to_ascii_lowercase().ends_with(";base64") {
-        let text: Vec<u8> = bytes.into_iter().filter(|c| !c.is_ascii_whitespace()).collect();
+        let text: Vec<u8> = bytes
+            .into_iter()
+            .filter(|c| !c.is_ascii_whitespace())
+            .collect();
         return decode_base64(&text).ok_or_else(|| "TypeError: Failed to fetch".to_string());
     }
 

@@ -32,7 +32,9 @@ fn spec(mut s: &str) -> Vec<Doc> {
     let mut names: HashMap<String, usize> = HashMap::new();
     let mut editors: Vec<Doc> = Vec::new();
     while !s.is_empty() {
-        let name_len = s.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).unwrap_or(s.len());
+        let name_len = s
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .unwrap_or(s.len());
         let name = s[..name_len].to_string();
         s = &s[name_len..];
         let is_doc = s.starts_with('*');
@@ -51,13 +53,18 @@ fn spec(mut s: &str) -> Vec<Doc> {
                 Some(r) => (true, r),
                 None => (false, rest),
             };
-            let olen = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).unwrap_or(rest.len());
+            let olen = rest
+                .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+                .unwrap_or(rest.len());
             let other = rest[..olen].to_string();
             let mut rest = &rest[olen..];
             let (mut from, mut to) = (None, None);
             if let Some(r) = rest.strip_prefix('/') {
                 let dash = r.find('-').unwrap();
-                let tend = r[dash + 1..].find(|c: char| !c.is_ascii_digit()).map(|i| dash + 1 + i).unwrap_or(r.len());
+                let tend = r[dash + 1..]
+                    .find(|c: char| !c.is_ascii_digit())
+                    .map(|i| dash + 1 + i)
+                    .unwrap_or(r.len());
                 from = Some(r[..dash].parse().unwrap());
                 to = Some(r[dash + 1..tend].parse().unwrap());
                 rest = &r[tend..];
@@ -68,7 +75,12 @@ fn spec(mut s: &str) -> Vec<Doc> {
                 editors.push(editor(Doc::new("")));
             }
             let d = editors[names[&other]]
-                .linked_doc(LinkedDocOptions { shared_hist: !sep, from, to, mode: None })
+                .linked_doc(LinkedDocOptions {
+                    shared_hist: !sep,
+                    from,
+                    to,
+                    mode: None,
+                })
                 .unwrap();
             if is_doc { d } else { editor(d) }
         };
@@ -235,7 +247,16 @@ fn doc_undo_keep_ranges() {
     // testDoc("undoKeepRanges", ...)
     let e = spec("A='abcdefg' B<A");
     let (a, b) = (&e[0], &e[1]);
-    let m = a.mark_text(p(0, 1), p(0, 3), MarkOptions { class_name: Some("foo".into()), ..Default::default() }).unwrap();
+    let m = a
+        .mark_text(
+            p(0, 1),
+            p(0, 3),
+            MarkOptions {
+                class_name: Some("foo".into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
     b.replace_range("x", p(0, 0), None, None);
     eq_char_pos(from_of(&m), p(0, 2));
     b.replace_range("yzzy", p(0, 1), Some(pl(0)), None);
@@ -375,7 +396,15 @@ fn doc_shared_marker() {
     let e = spec("A='ab\ncd\nef\ngh' B<A C<~A/1-2");
     let (a, b, c) = (&e[0], &e[1], &e[2]);
     let mark = b
-        .mark_text(p(0, 1), p(3, 1), MarkOptions { class_name: Some("cm-searching".into()), shared: true, ..Default::default() })
+        .mark_text(
+            p(0, 1),
+            p(3, 1),
+            MarkOptions {
+                class_name: Some("cm-searching".into()),
+                shared: true,
+                ..Default::default()
+            },
+        )
         .unwrap();
     let found = a.find_marks_at(p(0, 2));
     assert_eq!(found.len(), 1);
@@ -387,7 +416,9 @@ fn doc_shared_marker() {
     eq_char_pos(from_of(&mark), p(2, 1));
     eq_char_pos(to_of(&mark), p(5, 1));
     let cleared = Rc::new(Cell::new(0));
-    let Marker::Shared(sm) = &mark else { panic!("shared") };
+    let Marker::Shared(sm) = &mark else {
+        panic!("shared")
+    };
     let c2 = cleared.clone();
     sm.on_clear(move || c2.set(c2.get() + 1));
     b.operation(|| mark.clear());
@@ -403,7 +434,16 @@ fn doc_shared_marker_copy() {
     // testDoc("sharedMarkerCopy", ...)
     let e = spec("A='abcde'");
     let a = &e[0];
-    let shared = a.mark_text(p(0, 1), p(0, 3), MarkOptions { shared: true, ..Default::default() }).unwrap();
+    let shared = a
+        .mark_text(
+            p(0, 1),
+            p(0, 3),
+            MarkOptions {
+                shared: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
     let b = a.linked_doc(LinkedDocOptions::default()).unwrap();
     let found = b.find_marks_at(p(0, 2));
     assert_eq!(found.len(), 1);
@@ -418,7 +458,16 @@ fn doc_shared_marker_detach() {
     // testDoc("sharedMarkerDetach", ...)
     let e = spec("A='abcde' B<A C<B");
     let (a, b, c) = (&e[0], &e[1], &e[2]);
-    let shared = a.mark_text(p(0, 1), p(0, 3), MarkOptions { shared: true, ..Default::default() }).unwrap();
+    let shared = a
+        .mark_text(
+            p(0, 1),
+            p(0, 3),
+            MarkOptions {
+                shared: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
     a.unlink_doc(b);
     let in_b = b.find_marks_at(p(0, 2));
     assert_eq!(in_b.len(), 1);
@@ -444,7 +493,9 @@ fn doc_shared_bookmark() {
     b.replace_range("x\ny\n", p(0, 0), None, None);
     assert!(matches!(mark.find(), Some(MarkerFind::Point(q)) if (q.line, q.ch) == (3, 1)));
     let cleared = Rc::new(Cell::new(0));
-    let Marker::Shared(sm) = &mark else { panic!("shared") };
+    let Marker::Shared(sm) = &mark else {
+        panic!("shared")
+    };
     let c2 = cleared.clone();
     sm.on_clear(move || c2.set(c2.get() + 1));
     b.operation(|| mark.clear());

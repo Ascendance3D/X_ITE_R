@@ -102,7 +102,10 @@ enum Step {
     /// The load finished.
     Done,
     /// The candidate failed (X_ITE logs it and tries the next one).
-    Failed { error: String, resolved: Option<url::Url> },
+    Failed {
+        error: String,
+        resolved: Option<url::Url>,
+    },
 }
 
 impl ExternState {
@@ -131,17 +134,26 @@ impl Runtime {
 
     fn xs(&mut self, e: ExternId) -> &mut ExternState {
         let now = self.now_ms();
-        self.extern_states.entry(e).or_insert_with(|| ExternState::new(now))
+        self.extern_states
+            .entry(e)
+            .or_insert_with(|| ExternState::new(now))
     }
 
     /// X3DUrlObject.checkLoadState.
     pub fn extern_load_state(&self, e: ExternId) -> LoadState {
-        self.extern_states.get(&e).map(|s| s.load_state).unwrap_or_default()
+        self.extern_states
+            .get(&e)
+            .map(|s| s.load_state)
+            .unwrap_or_default()
     }
 
     /// Name of the PROTO the declaration holds (`getProtoDeclaration () .getName ()`).
     pub fn extern_proto_name(&self, e: ExternId) -> Option<String> {
-        self.extern_loaded.get(&e).copied().flatten().map(|p| self.scene.protos[p].name.clone())
+        self.extern_loaded
+            .get(&e)
+            .copied()
+            .flatten()
+            .map(|p| self.scene.protos[p].name.clone())
     }
 
     /// `executionContext .externprotos .get (name)`.
@@ -218,7 +230,10 @@ impl Runtime {
     /// X3DUrlObject.requestUnload (`load` became FALSE). X3DExternProtoDeclaration has no
     /// `unloadData`: the PROTO and the instances' bodies stay.
     fn extern_request_unload(&mut self, e: ExternId) {
-        if matches!(self.extern_load_state(e), LoadState::NotStarted | LoadState::Failed) {
+        if matches!(
+            self.extern_load_state(e),
+            LoadState::NotStarted | LoadState::Failed
+        ) {
             return;
         }
 
@@ -310,7 +325,8 @@ impl Runtime {
 
         let now = self.now_ms();
         let st = self.xs(e);
-        let interval = url_object::refresh_interval(st.auto_refresh, (now - st.complete_ms) / 1000.0);
+        let interval =
+            url_object::refresh_interval(st.auto_refresh, (now - st.complete_ms) / 1000.0);
 
         self.extern_set_auto_refresh_timer(e, interval);
     }
@@ -320,7 +336,13 @@ impl Runtime {
         let now = self.now_ms();
         let st = self.xs(e);
 
-        st.timer = url_object::refresh_timer_due(now, st.start_ms, st.auto_refresh, st.auto_refresh_time_limit, interval);
+        st.timer = url_object::refresh_timer_due(
+            now,
+            st.start_ms,
+            st.auto_refresh,
+            st.auto_refresh_time_limit,
+            interval,
+        );
     }
 
     /// The due time (ms) and declaration of the earliest auto refresh timer due by `now` (seconds).
@@ -361,9 +383,19 @@ impl Runtime {
         };
 
         let inlines = (0..self.scene.nodes.len() as NodeId)
-            .filter(|&n| self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == LoadState::InProgress && attached(self.scene.node(n).ctx))
+            .filter(|&n| {
+                self.builtin_name(n) == Some("Inline")
+                    && self.url_load_state(n) == LoadState::InProgress
+                    && attached(self.scene.node(n).ctx)
+            })
             .count();
-        let externs = self.extern_states.iter().filter(|(e, s)| s.load_state == LoadState::InProgress && attached(self.scene.externprotos[**e].ctx)).count();
+        let externs = self
+            .extern_states
+            .iter()
+            .filter(|(e, s)| {
+                s.load_state == LoadState::InProgress && attached(self.scene.externprotos[**e].ctx)
+            })
+            .count();
 
         (inlines + externs) as i32
     }
@@ -391,9 +423,21 @@ impl Runtime {
         ExternDiagnostics {
             pending_scenes: self.pending_externs.len() + self.extern_frame_waiters.len(),
             load_events: self.extern_load_events.len(),
-            in_progress: self.extern_states.values().filter(|s| s.load_state == LoadState::InProgress).count(),
-            pending_cache: self.extern_cache.iter().filter(|(_, e)| matches!(e, CacheEntry::Pending(_))).count(),
-            timers: self.extern_states.values().filter(|s| s.timer.is_some()).count(),
+            in_progress: self
+                .extern_states
+                .values()
+                .filter(|s| s.load_state == LoadState::InProgress)
+                .count(),
+            pending_cache: self
+                .extern_cache
+                .iter()
+                .filter(|(_, e)| matches!(e, CacheEntry::Pending(_)))
+                .count(),
+            timers: self
+                .extern_states
+                .values()
+                .filter(|s| s.timer.is_some())
+                .count(),
             disposed_bodies: self.bodies_disposed,
         }
     }
@@ -416,7 +460,12 @@ impl Runtime {
         st.generation = request;
         let empty = urls.is_empty();
 
-        st.fetch = Some(ExternFetch { request, urls, next: 0, attempts: 0 });
+        st.fetch = Some(ExternFetch {
+            request,
+            urls,
+            next: 0,
+            attempts: 0,
+        });
 
         if empty {
             // FileLoader.loadDocument: `loadDocumentError ()` without an error prints nothing.
@@ -427,7 +476,9 @@ impl Runtime {
     }
 
     fn extern_fetch_is(&self, e: ExternId, request: u64) -> bool {
-        self.extern_states.get(&e).is_some_and(|s| s.generation == request && s.fetch.as_ref().is_some_and(|f| f.request == request))
+        self.extern_states.get(&e).is_some_and(|s| {
+            s.generation == request && s.fetch.as_ref().is_some_and(|f| f.request == request)
+        })
     }
 
     /// FileLoader.loadDocument / loadDocumentError: try the candidates from where the loader is,
@@ -462,19 +513,43 @@ impl Runtime {
     }
 
     /// FileLoader.printError for the candidate that just failed. Returns whether another candidate remains.
-    fn extern_fail_candidate(&mut self, e: ExternId, request: u64, error: String, resolved: Option<url::Url>) -> bool {
+    fn extern_fail_candidate(
+        &mut self,
+        e: ExternId,
+        request: u64,
+        error: String,
+        resolved: Option<url::Url>,
+    ) -> bool {
         if !self.extern_fetch_is(e, request) {
             return false;
         }
 
-        let loader = FileLoader { type_name: "X3DExternProtoDeclaration".into(), base: self.scene.world_url_of(self.scene.externprotos[e].ctx).to_string(), data_as_string: false };
+        let loader = FileLoader {
+            type_name: "X3DExternProtoDeclaration".into(),
+            base: self
+                .scene
+                .world_url_of(self.scene.externprotos[e].ctx)
+                .to_string(),
+            data_as_string: false,
+        };
         let fetch = self.xs(e).fetch.as_mut().unwrap();
 
         fetch.attempts += 1;
 
-        let (attempts, remaining, candidate) = (fetch.attempts, fetch.urls.len() - fetch.next, fetch.urls[fetch.next - 1].clone());
+        let (attempts, remaining, candidate) = (
+            fetch.attempts,
+            fetch.urls.len() - fetch.next,
+            fetch.urls[fetch.next - 1].clone(),
+        );
 
-        self.print_load_error(&loader, &candidate, resolved.as_ref(), &error, attempts, remaining);
+        self.print_load_error(
+            &loader,
+            &candidate,
+            resolved.as_ref(),
+            &error,
+            attempts,
+            remaining,
+        );
 
         if remaining == 0 {
             self.extern_exhausted(e, request);
@@ -492,22 +567,39 @@ impl Runtime {
     /// FileLoader.loadDocumentAsync for one candidate of a declaration.
     fn extern_candidate(&mut self, e: ExternId, request: u64, candidate: &str) -> Step {
         if candidate.is_empty() {
-            return Step::Failed { error: "Error: Empty URL.".into(), resolved: None };
+            return Step::Failed {
+                error: "Error: Empty URL.".into(),
+                resolved: None,
+            };
         }
 
         // Script URLs are no scenes.
         let trimmed = candidate.trim_start();
 
-        if ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| trimmed.starts_with(s)) {
-            return Step::Failed { error: "Error: Couldn't parse X3D. No suitable file handler found.".into(), resolved: None };
+        if ["ecmascript:", "javascript:", "vrmlscript:"]
+            .iter()
+            .any(|s| trimmed.starts_with(s))
+        {
+            return Step::Failed {
+                error: "Error: Couldn't parse X3D. No suitable file handler found.".into(),
+                resolved: None,
+            };
         }
 
         let base = match url::Url::parse(self.scene.world_url_of(self.scene.externprotos[e].ctx)) {
             Ok(b) => b,
-            Err(err) => return Step::Failed { error: format!("TypeError: {err}"), resolved: None },
+            Err(err) => {
+                return Step::Failed {
+                    error: format!("TypeError: {err}"),
+                    resolved: None,
+                };
+            }
         };
         let Ok(resolved) = base.join(candidate) else {
-            return Step::Failed { error: "TypeError: Failed to construct 'URL': Invalid URL".into(), resolved: None };
+            return Step::Failed {
+                error: "TypeError: Failed to construct 'URL': Invalid URL".into(),
+                resolved: None,
+            };
         };
 
         // Cached scenes: not for a URL with a query; the key has no fragment.
@@ -522,12 +614,18 @@ impl Runtime {
 
         if let Some(key) = &key {
             if self.extern_wait_cycle(e, key) {
-                return Step::Failed { error: "Error: EXTERNPROTO URL refers to the scene that is loading it.".into(), resolved: Some(resolved) };
+                return Step::Failed {
+                    error: "Error: EXTERNPROTO URL refers to the scene that is loading it.".into(),
+                    resolved: Some(resolved),
+                };
             }
 
             // A cached scene that went with the world is no scene: it is fetched again. So is one whose
             // context slot was released and perhaps taken by another scene (generation).
-            if self.extern_cache.iter().any(|(k, entry)| k == key && matches!(entry, CacheEntry::Ready(c, g) if self.extern_cache_stale(*c, *g))) {
+            if self.extern_cache.iter().any(|(k, entry)| {
+                k == key
+                    && matches!(entry, CacheEntry::Ready(c, g) if self.extern_cache_stale(*c, *g))
+            }) {
                 self.extern_cache.retain(|(k, _)| k != key);
             }
 
@@ -549,15 +647,27 @@ impl Runtime {
             Ok(d) => d,
             Err(error) => {
                 self.extern_cache_fail(key.as_deref(), &error, &resolved);
-                return Step::Failed { error, resolved: Some(resolved) };
+                return Step::Failed {
+                    error,
+                    resolved: Some(resolved),
+                };
             }
         };
 
-        match self.extern_scene(e, request, &x3d_parse::gunzip(&data), &resolved, key.clone()) {
+        match self.extern_scene(
+            e,
+            request,
+            &x3d_parse::gunzip(&data),
+            &resolved,
+            key.clone(),
+        ) {
             Ok(()) => Step::Wait,
             Err(error) => {
                 self.extern_cache_fail(key.as_deref(), &error, &resolved);
-                Step::Failed { error, resolved: Some(resolved) }
+                Step::Failed {
+                    error,
+                    resolved: Some(resolved),
+                }
             }
         }
     }
@@ -565,10 +675,18 @@ impl Runtime {
     /// FileLoader.createX3DFromString for an EXTERNPROTO: the scene is parsed and its nodes are
     /// set up (like `inline_scene`); it waits for its loadCount and the next frame before
     /// `extern_attach`. Whether the file has the PROTO is decided then (setInternalScene).
-    fn extern_scene(&mut self, e: ExternId, request: u64, data: &[u8], url: &url::Url, key: Option<String>) -> Result<(), String> {
+    fn extern_scene(
+        &mut self,
+        e: ExternId,
+        request: u64,
+        data: &[u8],
+        url: &url::Url,
+        key: Option<String>,
+    ) -> Result<(), String> {
         self.sync_svg_quality();
 
-        let mut scene = x3d_parse::parse_bytes(data, url.as_str()).map_err(|err| format!("Error: {err}"))?;
+        let mut scene =
+            x3d_parse::parse_bytes(data, url.as_str()).map_err(|err| format!("Error: {err}"))?;
 
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
@@ -582,11 +700,22 @@ impl Runtime {
         // (X3DExternProtoDeclaration.setInternalScene) and never disposes it with a user's scene.
         // Here that is the world: an Inline that declared it first may go, the next one finds it.
         // An uncached scene (a URL with a query) is the declaration's own and goes with it.
-        let parent = if key.is_some() { self.scene.world } else { self.scene.externprotos[e].ctx };
+        let parent = if key.is_some() {
+            self.scene.world
+        } else {
+            self.scene.externprotos[e].ctx
+        };
         let m = self.scene.merge_extern(scene, parent);
 
         let (scene_node, count) = self.new_load_count_scene();
-        self.pending_externs.push(PendingExtern { ext: e, request, ctx: m.root_ctx, scene_node, url: url.clone(), key });
+        self.pending_externs.push(PendingExtern {
+            ext: e,
+            request,
+            ctx: m.root_ctx,
+            scene_node,
+            url: url.clone(),
+            key,
+        });
 
         // `new X3DScene (browser)`: setLive (false) until extern_attach.
         self.inline_live.insert(m.root_ctx, false);
@@ -601,7 +730,14 @@ impl Runtime {
     /// FileLoader.set_loadCount__, after the frame (see `finish_frame`): the scene is cached and
     /// handed to setInternalScene; the declarations that waited for it follow.
     pub(crate) fn extern_attach(&mut self, p: PendingExtern) {
-        let PendingExtern { ext, request, ctx, url, key, .. } = p;
+        let PendingExtern {
+            ext,
+            request,
+            ctx,
+            url,
+            key,
+            ..
+        } = p;
         let waiters = match &key {
             Some(key) => self.extern_cache_ready(key, ctx),
             None => vec![],
@@ -628,15 +764,30 @@ impl Runtime {
         }
     }
 
-    fn extern_deliver(&mut self, e: ExternId, request: u64, ctx: CtxId, url: &url::Url, cached: bool) -> Step {
+    fn extern_deliver(
+        &mut self,
+        e: ExternId,
+        request: u64,
+        ctx: CtxId,
+        url: &url::Url,
+        cached: bool,
+    ) -> Step {
         match self.extern_set_internal_scene(e, request, Some((ctx, url, cached))) {
             Ok(()) => Step::Done,
-            Err(error) => Step::Failed { error, resolved: Some(url.clone()) },
+            Err(error) => Step::Failed {
+                error,
+                resolved: Some(url.clone()),
+            },
         }
     }
 
     /// X3DExternProtoDeclaration.setInternalScene. An `Err` is a thrown error (the candidate fails).
-    fn extern_set_internal_scene(&mut self, e: ExternId, request: u64, scene: Option<(CtxId, &url::Url, bool)>) -> Result<(), String> {
+    fn extern_set_internal_scene(
+        &mut self,
+        e: ExternId,
+        request: u64,
+        scene: Option<(CtxId, &url::Url, bool)>,
+    ) -> Result<(), String> {
         // A scene of an older request (or of a disabled declaration) is not used.
         if self.xs(e).generation != request {
             return Ok(());
@@ -661,9 +812,17 @@ impl Runtime {
         self.xs(e).scene = Some((ctx, cached));
 
         // `scene .protos .get (hash)` or `scene .protos [0]`; a data: URL has no fragment.
-        let fragment = if url.scheme() == "data" { "" } else { url.fragment().unwrap_or("") };
+        let fragment = if url.scheme() == "data" {
+            ""
+        } else {
+            url.fragment().unwrap_or("")
+        };
         let root = self.scene.ctx(ctx);
-        let found = if fragment.is_empty() { root.protos.values().first().copied() } else { root.protos.get(fragment) };
+        let found = if fragment.is_empty() {
+            root.protos.values().first().copied()
+        } else {
+            root.protos.get(fragment)
+        };
 
         let Some(proto) = found else {
             return Err("Error: PROTO not found.".into());
@@ -685,7 +844,10 @@ impl Runtime {
         self.extern_loaded.insert(e, proto);
 
         if let Some(p) = proto {
-            let (fields, has_metadata) = (self.scene.protos[p].fields.clone(), self.scene.protos[p].has_metadata);
+            let (fields, has_metadata) = (
+                self.scene.protos[p].fields.clone(),
+                self.scene.protos[p].has_metadata,
+            );
 
             self.scene.externprotos[e].fields = fields;
             self.scene.externprotos[e].has_metadata = has_metadata;
@@ -703,7 +865,10 @@ impl Runtime {
     /// Every live instance node of an EXTERNPROTO declaration, in the order they were created.
     fn extern_instances(&self, e: ExternId) -> Vec<NodeId> {
         (0..self.scene.nodes.len() as NodeId)
-            .filter(|&n| matches!(self.scene.node(n).kind, NodeKind::Instance(ProtoRef::Extern(x)) if x == e) && !self.ctx_dead(self.scene.node(n).ctx))
+            .filter(|&n| {
+                matches!(self.scene.node(n).kind, NodeKind::Instance(ProtoRef::Extern(x)) if x == e)
+                    && !self.ctx_dead(self.scene.node(n).ctx)
+            })
             .collect()
     }
 }
@@ -715,11 +880,19 @@ impl Runtime {
     /// The entry is pending and its owner's scene is parsed but waits for its loadCount; `e` is
     /// declared in that scene, or in a scene that waits for such a scene.
     fn extern_wait_cycle(&self, e: ExternId, key: &str) -> bool {
-        if !self.extern_cache.iter().any(|(k, entry)| k == key && matches!(entry, CacheEntry::Pending(_))) {
+        if !self
+            .extern_cache
+            .iter()
+            .any(|(k, entry)| k == key && matches!(entry, CacheEntry::Pending(_)))
+        {
             return false;
         }
 
-        let Some(owner) = self.pending_externs.iter().find(|p| p.key.as_deref() == Some(key)) else {
+        let Some(owner) = self
+            .pending_externs
+            .iter()
+            .find(|p| p.key.as_deref() == Some(key))
+        else {
             return false;
         };
         let mut root = self.scene.scene_root(self.scene.externprotos[e].ctx);
@@ -741,7 +914,14 @@ impl Runtime {
     /// A `Ready` entry that names no cached scene: the scene was disposed or emptied, or its context
     /// slot was released since (its generation moved on).
     pub fn extern_cache_stale(&self, ctx: CtxId, generation: u32) -> bool {
-        self.scene.resolve_ctx(CtxHandle { id: ctx, generation }).is_none() || self.ctx_dead(ctx) || self.emptied_ctxs.contains(&ctx)
+        self.scene
+            .resolve_ctx(CtxHandle {
+                id: ctx,
+                generation,
+            })
+            .is_none()
+            || self.ctx_dead(ctx)
+            || self.emptied_ctxs.contains(&ctx)
     }
 
     /// FileLoader.getScene: the entry moves to the end of the list.
@@ -767,16 +947,19 @@ impl Runtime {
         let generation = self.scene.ctx_slots.generation(ctx);
 
         match self.extern_cache.iter_mut().find(|(k, _)| k == key) {
-            Some((_, entry)) => match std::mem::replace(entry, CacheEntry::Ready(ctx, generation)) {
-                CacheEntry::Pending(waiters) => waiters,
-                CacheEntry::Ready(..) => vec![],
-            },
+            Some((_, entry)) => {
+                match std::mem::replace(entry, CacheEntry::Ready(ctx, generation)) {
+                    CacheEntry::Pending(waiters) => waiters,
+                    CacheEntry::Ready(..) => vec![],
+                }
+            }
             None => {
                 if self.extern_cache.len() >= MAX_CACHED_SCENES {
                     self.extern_cache.remove(0);
                 }
 
-                self.extern_cache.push((key.to_string(), CacheEntry::Ready(ctx, generation)));
+                self.extern_cache
+                    .push((key.to_string(), CacheEntry::Ready(ctx, generation)));
                 vec![]
             }
         }
@@ -796,7 +979,12 @@ impl Runtime {
 
         if let CacheEntry::Pending(waiters) = entry {
             for (we, wrequest, _) in waiters {
-                if self.extern_fail_candidate(we, wrequest, error.to_string(), Some(resolved.clone())) {
+                if self.extern_fail_candidate(
+                    we,
+                    wrequest,
+                    error.to_string(),
+                    Some(resolved.clone()),
+                ) {
                     self.tasks.push_back(Task::ExternLoad(we, wrequest));
                 }
             }
@@ -880,16 +1068,32 @@ impl Runtime {
     /// modified from then on). A field the declaration lacks is added.
     pub(crate) fn extern_instance_defaults(&mut self, inst: NodeId, proto: ProtoId) {
         for pf in self.scene.protos[proto].fields.clone() {
-            let Some(i) = self.scene.node(inst).fields.iter().position(|f| f.name == pf.name) else {
+            let Some(i) = self
+                .scene
+                .node(inst)
+                .fields
+                .iter()
+                .position(|f| f.name == pf.name)
+            else {
                 // addPredefinedField
-                self.scene.node_mut(inst).fields.push(Field::new(&pf.name, pf.access, pf.value.clone()));
+                self.scene.node_mut(inst).fields.push(Field::new(
+                    &pf.name,
+                    pf.access,
+                    pf.value.clone(),
+                ));
                 continue;
             };
 
             let k = (inst, FieldLoc::Pre(i));
             let f = &self.scene.node(inst).fields[i];
-            let has_references = !f.references.is_empty() || self.frt.get(&k).is_some_and(|r| !r.references.is_empty());
-            let skip = f.access != pf.access || f.ty() != pf.ty() || !f.is_initializable() || f.modified || has_references || f.value.equals(&pf.value);
+            let has_references = !f.references.is_empty()
+                || self.frt.get(&k).is_some_and(|r| !r.references.is_empty());
+            let skip = f.access != pf.access
+                || f.ty() != pf.ty()
+                || !f.is_initializable()
+                || f.modified
+                || has_references
+                || f.value.equals(&pf.value);
 
             if !skip {
                 self.set_value(k, pf.value.clone());
@@ -909,13 +1113,27 @@ impl Runtime {
         let mut defs: Vec<Field> = vec![];
 
         if decl.has_metadata {
-            defs.push(Field::new("metadata", access::INPUT_OUTPUT, FieldValue::SFNode(None)));
+            defs.push(Field::new(
+                "metadata",
+                access::INPUT_OUTPUT,
+                FieldValue::SFNode(None),
+            ));
         }
 
-        defs.extend(decl.fields.iter().map(|f| Field::new(&f.name, f.access, f.value.clone())));
+        defs.extend(
+            decl.fields
+                .iter()
+                .map(|f| Field::new(&f.name, f.access, f.value.clone())),
+        );
 
         let old = self.scene.node(inst).fields.clone();
-        let reuse: Vec<Option<usize>> = defs.iter().map(|d| old.iter().position(|o| o.name == d.name && o.ty() == d.ty())).collect();
+        let reuse: Vec<Option<usize>> = defs
+            .iter()
+            .map(|d| {
+                old.iter()
+                    .position(|o| o.name == d.name && o.ty() == d.ty())
+            })
+            .collect();
 
         // The routes of the reused fields, then the routes of the fields that are gone. They are
         // deleted now (in the old field layout) and added again after the fields are replaced; a
@@ -925,7 +1143,13 @@ impl Runtime {
         for (j, r) in reuse.iter().enumerate() {
             if let Some(i) = r {
                 for (input, c, route) in self.instance_routes(inst, FieldLoc::Pre(*i)) {
-                    self.delete_route(c, route.source_node, &route.source_field, route.destination_node, &route.destination_field);
+                    self.delete_route(
+                        c,
+                        route.source_node,
+                        &route.source_field,
+                        route.destination_node,
+                        &route.destination_field,
+                    );
                     readd.push((c, route, input, j));
                 }
             }
@@ -934,7 +1158,13 @@ impl Runtime {
         for (i, _) in old.iter().enumerate() {
             if !reuse.contains(&Some(i)) {
                 for (_, c, route) in self.instance_routes(inst, FieldLoc::Pre(i)) {
-                    self.delete_route(c, route.source_node, &route.source_field, route.destination_node, &route.destination_field);
+                    self.delete_route(
+                        c,
+                        route.source_node,
+                        &route.source_field,
+                        route.destination_node,
+                        &route.destination_field,
+                    );
                 }
             }
         }
@@ -970,7 +1200,11 @@ impl Runtime {
         for j in 0..defs.len() {
             if reuse[j].is_some() {
                 let k = (inst, FieldLoc::Pre(j));
-                let references = self.frt.get(&k).map(|r| r.references.clone()).unwrap_or_default();
+                let references = self
+                    .frt
+                    .get(&k)
+                    .map(|r| r.references.clone())
+                    .unwrap_or_default();
 
                 // Remove the field interests (the old body's IS relations), then add the references again.
                 if let Some(r) = self.frt.get_mut(&k) {
@@ -998,7 +1232,13 @@ impl Runtime {
             let result = if input {
                 self.add_route(c, route.source_node, &route.source_field, inst, &name)
             } else {
-                self.add_route(c, inst, &name, route.destination_node, &route.destination_field)
+                self.add_route(
+                    c,
+                    inst,
+                    &name,
+                    route.destination_node,
+                    &route.destination_field,
+                )
             };
 
             // A route that cannot be made again is dropped (`catch { }`).
@@ -1036,7 +1276,9 @@ impl Runtime {
     fn remap_instance_fields(&mut self, inst: NodeId, map: &[Option<usize>]) {
         let remap = |k: FKey| -> Option<FKey> {
             match k {
-                (n, FieldLoc::Pre(i)) if n == inst => map.get(i).copied().flatten().map(|j| (n, FieldLoc::Pre(j))),
+                (n, FieldLoc::Pre(i)) if n == inst => {
+                    map.get(i).copied().flatten().map(|j| (n, FieldLoc::Pre(j)))
+                }
                 other => Some(other),
             }
         };
@@ -1048,7 +1290,11 @@ impl Runtime {
                 continue;
             };
 
-            rt.field_interests = rt.field_interests.iter().filter_map(|x| remap(*x)).collect();
+            rt.field_interests = rt
+                .field_interests
+                .iter()
+                .filter_map(|x| remap(*x))
+                .collect();
             rt.references = rt.references.iter().filter_map(|x| remap(*x)).collect();
             self.frt.insert(nk, rt);
         }

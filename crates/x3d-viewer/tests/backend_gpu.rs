@@ -20,13 +20,24 @@ const FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8Unorm;
 
 /// An adapter and device of `desc` (with the viewer's wanted features, as `x3d-view` asks, when
 /// `wanted`); why not, when there is none.
-fn start(desc: wgpu::InstanceDescriptor, wanted: bool) -> Result<(wgpu::Adapter, wgpu::Device, wgpu::Queue), String> {
+fn start(
+    desc: wgpu::InstanceDescriptor,
+    wanted: bool,
+) -> Result<(wgpu::Adapter, wgpu::Device, wgpu::Queue), String> {
     serialized(|| {
         let instance = wgpu::Instance::new(desc);
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions { power_preference: wgpu::PowerPreference::HighPerformance, ..Default::default() })).map_err(|e| e.to_string())?;
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            ..Default::default()
+        }))
+        .map_err(|e| e.to_string())?;
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
             label: Some("backend test"),
-            required_features: if wanted { x3d_viewer::embed::EmbeddedViewer::wanted_features(&adapter) } else { wgpu::Features::empty() },
+            required_features: if wanted {
+                x3d_viewer::embed::EmbeddedViewer::wanted_features(&adapter)
+            } else {
+                wgpu::Features::empty()
+            },
             ..Default::default()
         }))
         .map_err(|e| e.to_string())?;
@@ -52,7 +63,10 @@ fn gl_backend_cannot_run_the_renderer_and_says_so() {
             eprintln!("{e}");
             assert!(e.contains("Gl backend cannot run this renderer"), "{e}");
         }
-        Ok(_) => panic!("the renderer started on GL ({}); update this test", adapter.get_info().name),
+        Ok(_) => panic!(
+            "the renderer started on GL ({}); update this test",
+            adapter.get_info().name
+        ),
     }
 }
 
@@ -64,11 +78,21 @@ fn gl_backend_cannot_run_the_renderer_and_says_so() {
 fn windows_default_dx12_draws_offscreen_frames() {
     let t = Instant::now();
     let desc = instance_descriptor().expect("instance options");
-    assert_eq!(desc.backends, wgpu::Backends::DX12, "the Windows default backend (WGPU_BACKEND unset)");
-    eprintln!("DX12 compiler: {:?}", desc.backend_options.dx12.shader_compiler);
+    assert_eq!(
+        desc.backends,
+        wgpu::Backends::DX12,
+        "the Windows default backend (WGPU_BACKEND unset)"
+    );
+    eprintln!(
+        "DX12 compiler: {:?}",
+        desc.backend_options.dx12.shader_compiler
+    );
     let (adapter, device, queue) = start(desc, true).expect("a DX12 device");
     let info = adapter.get_info();
-    eprintln!("adapter: {} ({:?}, {:?}, driver {} {})", info.name, info.backend, info.device_type, info.driver, info.driver_info);
+    eprintln!(
+        "adapter: {} ({:?}, {:?}, driver {} {})",
+        info.name, info.backend, info.device_type, info.driver, info.driver_info
+    );
     assert_eq!(info.backend, wgpu::Backend::Dx12);
     eprintln!("device: {:.3} s", t.elapsed().as_secs_f64());
 
@@ -82,14 +106,28 @@ fn windows_default_dx12_draws_offscreen_frames() {
         std::fs::create_dir_all(&dir).unwrap();
         let world = dir.join("box.wrl");
         std::fs::write(&world, "#VRML V2.0 utf8\nShape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Box {} }\n").unwrap();
-        v.load(&world, LoadOptions { root: None, start_time: Some(T0) }).expect("load");
+        v.load(
+            &world,
+            LoadOptions {
+                root: None,
+                start_time: Some(T0),
+            },
+        )
+        .expect("load");
         let t = Instant::now();
         v.renderer().finish_prepared();
-        eprintln!("prepared pipeline: {:.3} s after load", t.elapsed().as_secs_f64());
+        eprintln!(
+            "prepared pipeline: {:.3} s after load",
+            t.elapsed().as_secs_f64()
+        );
 
         let target = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("offscreen target"),
-            size: wgpu::Extent3d { width: w, height: h, depth_or_array_layers: 1 },
+            size: wgpu::Extent3d {
+                width: w,
+                height: h,
+                depth_or_array_layers: 1,
+            },
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
@@ -102,11 +140,19 @@ fn windows_default_dx12_draws_offscreen_frames() {
 
         for k in 1..=30 {
             let t = Instant::now();
-            let f = v.frame(T0 + k as f64 / 60.0, &view, FORMAT, w, h).expect("frame");
-            device.poll(wgpu::PollType::wait_indefinitely()).expect("poll");
+            let f = v
+                .frame(T0 + k as f64 / 60.0, &view, FORMAT, w, h)
+                .expect("frame");
+            device
+                .poll(wgpu::PollType::wait_indefinitely())
+                .expect("poll");
             times.push(t.elapsed().as_secs_f64());
             assert_eq!(f.draw_calls, 1, "frame {k}");
-            assert_eq!(v.renderer().stats.pipelines_created, 0, "frame {k}: the box draws with the prepared pipeline");
+            assert_eq!(
+                v.renderer().stats.pipelines_created,
+                0,
+                "frame {k}: the box draws with the prepared pipeline"
+            );
             assert_eq!(errors.take(), None, "GPU error in frame {k}");
         }
 

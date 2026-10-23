@@ -75,7 +75,11 @@ fn split_separators(s: &str) -> Vec<String> {
 /// .map (string => string .split (/[\s,]+/s))`.
 fn parse_channels(s: &str) -> Vec<Vec<String>> {
     let trim = |c: char| separator(c) || c.is_ascii_digit();
-    let s: Vec<char> = s.trim_start_matches(trim).trim_end_matches(trim).chars().collect();
+    let s: Vec<char> = s
+        .trim_start_matches(trim)
+        .trim_end_matches(trim)
+        .chars()
+        .collect();
     let mut parts = vec![];
     let mut start = 0;
     let mut i = 0;
@@ -89,7 +93,11 @@ fn parse_channels(s: &str) -> Vec<Vec<String>> {
             k
         };
         let j = run(i, &separator);
-        let k = if j > i { run(j, &|c: char| c.is_ascii_digit()) } else { j };
+        let k = if j > i {
+            run(j, &|c: char| c.is_ascii_digit())
+        } else {
+            j
+        };
         let m = if k > j { run(k, &separator) } else { k };
 
         if j > i && k > j && m > k {
@@ -108,7 +116,8 @@ fn parse_channels(s: &str) -> Vec<Vec<String>> {
 impl Runtime {
     /// X3DCast (type, node): through PROTO instances.
     fn hanim_cast(&self, node: Option<NodeId>, type_name: &str) -> Option<NodeId> {
-        node.and_then(|n| self.inner_node(n)).filter(|n| self.builtin_name(*n) == Some(type_name))
+        node.and_then(|n| self.inner_node(n))
+            .filter(|n| self.builtin_name(*n) == Some(type_name))
     }
 
     fn hanim_nodes(&self, node: NodeId, field: &str) -> Vec<Option<NodeId>> {
@@ -160,7 +169,12 @@ impl Runtime {
     // --- HAnimHumanoid ----------------------------------------------------------------------
 
     pub(crate) fn hanim_humanoid_construct(&mut self, node: NodeId) {
-        self.add_private_field(node, "jointName", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+        self.add_private_field(
+            node,
+            "jointName",
+            access::OUTPUT_ONLY,
+            FieldValue::SFTime(0.0),
+        );
     }
 
     pub(crate) fn hanim_humanoid_initialize(&mut self, node: NodeId) {
@@ -189,7 +203,11 @@ impl Runtime {
         self.interest(node, "segments", Cb::HAnimHumanoidDeprecated);
         self.interest(node, "sites", Cb::HAnimHumanoidDeprecated);
 
-        let version = self.scene.spec_version_of(self.scene.node(node).ctx).parse::<f64>().unwrap_or(4.0);
+        let version = self
+            .scene
+            .spec_version_of(self.scene.node(node).ctx)
+            .parse::<f64>()
+            .unwrap_or(4.0);
 
         for field in ["segments", "sites"] {
             if version >= 4.1 {
@@ -204,7 +222,10 @@ impl Runtime {
             return;
         }
 
-        let type_name = self.builtin_name(node).unwrap_or("HAnimHumanoid").to_string();
+        let type_name = self
+            .builtin_name(node)
+            .unwrap_or("HAnimHumanoid")
+            .to_string();
         self.log_warn(format!("Use of field {type_name}.{field} is deprecated. This field may be removed in future versions of X3D."));
     }
 
@@ -223,7 +244,11 @@ impl Runtime {
             self.hanim_pose_remove_joints(pose, node);
         }
 
-        let poses: Vec<NodeId> = self.hanim_nodes(node, "children").into_iter().filter_map(|c| self.hanim_cast(c, "HAnimPose")).collect();
+        let poses: Vec<NodeId> = self
+            .hanim_nodes(node, "children")
+            .into_iter()
+            .filter_map(|c| self.hanim_cast(c, "HAnimPose"))
+            .collect();
 
         if let Some(h) = self.hanim_humanoids.get_mut(&node) {
             h.poses = poses.clone();
@@ -266,7 +291,8 @@ impl Runtime {
         }
     }
 
-    const MOTION_CONNECT_FIELDS: [&'static str; 4] = ["joints", "channelsEnabled", "channels", "values"];
+    const MOTION_CONNECT_FIELDS: [&'static str; 4] =
+        ["joints", "channelsEnabled", "channels", "values"];
 
     pub(crate) fn hanim_humanoid_set_motions(&mut self, node: NodeId) {
         for motion in self.humanoid(node).motions {
@@ -339,7 +365,11 @@ impl Runtime {
             }
         }
 
-        let joints: Vec<NodeId> = self.hanim_nodes(node, "joints").into_iter().filter_map(|c| self.hanim_cast(c, "HAnimJoint")).collect();
+        let joints: Vec<NodeId> = self
+            .hanim_nodes(node, "joints")
+            .into_iter()
+            .filter_map(|c| self.hanim_cast(c, "HAnimJoint"))
+            .collect();
 
         if let Some(h) = self.hanim_humanoids.get_mut(&node) {
             h.joints = joints.clone();
@@ -381,7 +411,9 @@ impl Runtime {
             Some(FieldValue::SFNode(c)) => *c,
             _ => None,
         };
-        let coord = self.hanim_cast(coord, "Coordinate").or_else(|| self.hanim_cast(coord, "CoordinateDouble"));
+        let coord = self
+            .hanim_cast(coord, "Coordinate")
+            .or_else(|| self.hanim_cast(coord, "CoordinateDouble"));
 
         if let Some(h) = self.hanim_humanoids.get_mut(&node) {
             h.skin_coord = coord;
@@ -401,7 +433,10 @@ impl Runtime {
     // --- HAnimPose --------------------------------------------------------------------------
 
     fn hanim_time_sensor(&self, node: NodeId) -> Option<NodeId> {
-        match self.private_field(node, "timeSensor").map(|k| self.value(k)) {
+        match self
+            .private_field(node, "timeSensor")
+            .map(|k| self.value(k))
+        {
             Some(FieldValue::SFNode(n)) => *n,
             _ => None,
         }
@@ -410,7 +445,12 @@ impl Runtime {
     /// The private TimeSensor, held by a private field.
     fn hanim_make_time_sensor(&mut self, node: NodeId) -> Option<NodeId> {
         let ts = self.hanim_create(self.scene.node(node).ctx, "TimeSensor")?;
-        let holder = self.add_private_field(node, "timeSensor", access::INITIALIZE_ONLY, FieldValue::SFNode(None));
+        let holder = self.add_private_field(
+            node,
+            "timeSensor",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFNode(None),
+        );
         self.set_raw(holder, FieldValue::SFNode(Some(ts)));
         Some(ts)
     }
@@ -430,13 +470,18 @@ impl Runtime {
     pub(crate) fn hanim_pose_initialize(&mut self, node: NodeId) {
         self.hanim_poses.insert(node, PoseState::default());
 
-        let Some(ts) = self.hanim_make_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_make_time_sensor(node) else {
+            return;
+        };
 
         self.hanim_field_interest((node, "enabled"), (ts, "enabled"));
         self.hanim_field_interest((node, "transitionDuration"), (ts, "cycleInterval"));
         self.hanim_field_interest((ts, "isActive"), (node, "isActive"));
 
-        for (from, to) in [("enabled", "enabled"), ("transitionDuration", "cycleInterval")] {
+        for (from, to) in [
+            ("enabled", "enabled"),
+            ("transitionDuration", "cycleInterval"),
+        ] {
             if let (Some(a), Some(b)) = (self.pre(node, from), self.pre(ts, to)) {
                 let v = self.value(a).clone();
                 self.set_raw(b, v);
@@ -471,8 +516,12 @@ impl Runtime {
     }
 
     fn hanim_pose_update_interpolators(&mut self, pose: NodeId, reset: bool) {
-        let Some(state) = self.hanim_poses.get(&pose).cloned() else { return };
-        let Some(ts) = self.hanim_time_sensor(pose) else { return };
+        let Some(state) = self.hanim_poses.get(&pose).cloned() else {
+            return;
+        };
+        let Some(ts) = self.hanim_time_sensor(pose) else {
+            return;
+        };
         let fraction_changed = self.pre(ts, "fraction_changed");
 
         if let Some(p) = self.hanim_poses.get_mut(&pose) {
@@ -489,7 +538,13 @@ impl Runtime {
 
         for humanoid in state.humanoids {
             for joint in self.humanoid(humanoid).joints {
-                self.hanim_pose_process_joint(pose, &state.pose_joints, joint, reset, &mut interpolators);
+                self.hanim_pose_process_joint(
+                    pose,
+                    &state.pose_joints,
+                    joint,
+                    reset,
+                    &mut interpolators,
+                );
             }
         }
 
@@ -504,12 +559,22 @@ impl Runtime {
         }
     }
 
-    fn hanim_pose_process_joint(&mut self, pose: NodeId, pose_joints: &[(String, NodeId)], joint: NodeId, reset: bool, out: &mut Vec<NodeId>) {
+    fn hanim_pose_process_joint(
+        &mut self,
+        pose: NodeId,
+        pose_joints: &[(String, NodeId)],
+        joint: NodeId,
+        reset: bool,
+        out: &mut Vec<NodeId>,
+    ) {
         let mut pose_joint = None;
 
         if !reset {
             let name = self.hanim_string(joint, "name");
-            pose_joint = pose_joints.iter().find(|(n, _)| *n == name).map(|(_, j)| *j);
+            pose_joint = pose_joints
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, j)| *j);
 
             if pose_joint.is_none() && !pose_joints.is_empty() {
                 return;
@@ -518,8 +583,14 @@ impl Runtime {
 
         let ctx = self.scene.node(pose).ctx;
 
-        for (name, interpolator_name) in [("translation", "PositionInterpolator"), ("rotation", "OrientationInterpolator"), ("scale", "PositionInterpolator")] {
-            let Some(joint_field) = self.pre(joint, name) else { continue };
+        for (name, interpolator_name) in [
+            ("translation", "PositionInterpolator"),
+            ("rotation", "OrientationInterpolator"),
+            ("scale", "PositionInterpolator"),
+        ] {
+            let Some(joint_field) = self.pre(joint, name) else {
+                continue;
+            };
             let current = self.value(joint_field).clone();
             let destination = match pose_joint.and_then(|p| self.pre_value(p, name)) {
                 Some(v) => v.clone(),
@@ -540,15 +611,21 @@ impl Runtime {
                 continue;
             }
 
-            let Some(interpolator) = self.hanim_create(ctx, interpolator_name) else { continue };
+            let Some(interpolator) = self.hanim_create(ctx, interpolator_name) else {
+                continue;
+            };
 
             if let Some(v) = self.pre(interpolator, "value_changed") {
                 self.add_field_interest(v, joint_field);
             }
 
             let key_value = match (current, destination) {
-                (FieldValue::SFVec3f(a), FieldValue::SFVec3f(b)) => FieldValue::MFVec3f([a.x, a.y, a.z, b.x, b.y, b.z].map(|v| v as f32).to_vec()),
-                (FieldValue::SFRotation(mut a), FieldValue::SFRotation(mut b)) => FieldValue::MFRotation([a.components(), b.components()].concat()),
+                (FieldValue::SFVec3f(a), FieldValue::SFVec3f(b)) => {
+                    FieldValue::MFVec3f([a.x, a.y, a.z, b.x, b.y, b.z].map(|v| v as f32).to_vec())
+                }
+                (FieldValue::SFRotation(mut a), FieldValue::SFRotation(mut b)) => {
+                    FieldValue::MFRotation([a.components(), b.components()].concat())
+                }
                 _ => continue,
             };
 
@@ -603,7 +680,12 @@ impl Runtime {
 
         let fraction = self.get_f64(node, "set_fraction");
 
-        for i in self.hanim_poses.get(&node).map(|p| p.interpolators.clone()).unwrap_or_default() {
+        for i in self
+            .hanim_poses
+            .get(&node)
+            .map(|p| p.interpolators.clone())
+            .unwrap_or_default()
+        {
             self.hanim_set(i, "set_fraction", FieldValue::SFFloat(fraction));
         }
     }
@@ -632,15 +714,24 @@ impl Runtime {
     pub(crate) fn hanim_motion_initialize(&mut self, node: NodeId) {
         self.hanim_motions.insert(node, MotionState::default());
 
-        let Some(ts) = self.hanim_make_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_make_time_sensor(node) else {
+            return;
+        };
 
         self.hanim_field_interest((node, "loop"), (ts, "loop"));
         self.hanim_field_interest((ts, "cycleTime"), (node, "cycleTime"));
         self.hanim_field_interest((ts, "elapsedTime"), (node, "elapsedTime"));
 
-        let looping = self.pre_value(node, "loop").cloned().unwrap_or(FieldValue::SFBool(false));
+        let looping = self
+            .pre_value(node, "loop")
+            .cloned()
+            .unwrap_or(FieldValue::SFBool(false));
 
-        for (field, value) in [("enabled", FieldValue::SFBool(false)), ("loop", looping), ("stopTime", FieldValue::SFTime(1.0))] {
+        for (field, value) in [
+            ("enabled", FieldValue::SFBool(false)),
+            ("loop", looping),
+            ("stopTime", FieldValue::SFTime(1.0)),
+        ] {
             if let Some(k) = self.pre(ts, field) {
                 self.set_raw(k, value);
             }
@@ -682,7 +773,10 @@ impl Runtime {
         let mut index: Vec<(String, Option<NodeId>)> = vec![];
 
         for &j in joint_nodes {
-            let name = self.hanim_string(j, "name").trim_matches(js_space).to_string();
+            let name = self
+                .hanim_string(j, "name")
+                .trim_matches(js_space)
+                .to_string();
 
             match index.iter_mut().find(|(n, _)| *n == name) {
                 Some(e) => e.1 = Some(j),
@@ -691,7 +785,10 @@ impl Runtime {
         }
 
         index.retain(|(n, _)| n != "IGNORED");
-        let root = index.iter().find(|(n, _)| n == "humanoid_root").and_then(|(_, j)| *j);
+        let root = index
+            .iter()
+            .find(|(n, _)| n == "humanoid_root")
+            .and_then(|(_, j)| *j);
 
         match index.iter_mut().find(|(n, _)| n == "HumanoidRoot") {
             Some(e) => e.1 = root,
@@ -703,10 +800,20 @@ impl Runtime {
                 continue;
             }
 
-            let Some(joint) = state.joints.get(j).and_then(|name| index.iter().find(|(n, _)| n == name)).and_then(|(_, j)| *j) else { continue };
+            let Some(joint) = state
+                .joints
+                .get(j)
+                .and_then(|name| index.iter().find(|(n, _)| n == name))
+                .and_then(|(_, j)| *j)
+            else {
+                continue;
+            };
 
             for (field, interpolator) in JOINT_FIELDS.iter().zip(interpolators) {
-                if let (Some(i), Some(to)) = (interpolator.and_then(|i| self.pre(i, "value_changed")), self.pre(joint, field)) {
+                if let (Some(i), Some(to)) = (
+                    interpolator.and_then(|i| self.pre(i, "value_changed")),
+                    self.pre(joint, field),
+                ) {
                     self.add_field_interest(i, to);
                 }
             }
@@ -727,7 +834,9 @@ impl Runtime {
     }
 
     pub(crate) fn hanim_motion_set_enabled(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
         let now = self.now;
 
         if self.get_bool(node, "enabled") {
@@ -749,8 +858,12 @@ impl Runtime {
     }
 
     pub(crate) fn hanim_motion_set_interpolators(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
-        let Some(fraction_changed) = self.pre(ts, "fraction_changed") else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
+        let Some(fraction_changed) = self.pre(ts, "fraction_changed") else {
+            return;
+        };
 
         if let Some(f) = self.frt.get_mut(&fraction_changed) {
             f.field_interests.clear();
@@ -762,7 +875,11 @@ impl Runtime {
             _ => vec![],
         };
         let num_channels: usize = channels.iter().map(Vec::len).sum();
-        let frame_count = if num_channels > 0 { values.len() / num_channels } else { 0 };
+        let frame_count = if num_channels > 0 {
+            values.len() / num_channels
+        } else {
+            0
+        };
         let ctx = self.scene.node(node).ctx;
         let mut interpolators: Vec<[Option<NodeId>; 3]> = vec![[None; 3]; channels.len()];
         let mut keys: Vec<[Vec<f32>; 3]> = vec![Default::default(); channels.len()];
@@ -865,7 +982,11 @@ impl Runtime {
                 }
 
                 if let Some(k) = self.pre(i, "keyValue") {
-                    let value = if s == 1 { FieldValue::MFRotation(key_values[j][s].clone()) } else { FieldValue::MFVec3f(key_values[j][s].iter().map(|v| *v as f32).collect()) };
+                    let value = if s == 1 {
+                        FieldValue::MFRotation(key_values[j][s].clone())
+                    } else {
+                        FieldValue::MFVec3f(key_values[j][s].iter().map(|v| *v as f32).collect())
+                    };
                     self.set_raw(k, value);
                 }
             }
@@ -883,7 +1004,11 @@ impl Runtime {
 
         self.hanim_set(node, "frameIndex", FieldValue::SFInt32(0));
         self.hanim_set(node, "startFrame", FieldValue::SFInt32(0));
-        self.hanim_set(node, "endFrame", FieldValue::SFInt32((frame_count as i32 - 1).max(0)));
+        self.hanim_set(
+            node,
+            "endFrame",
+            FieldValue::SFInt32((frame_count as i32 - 1).max(0)),
+        );
         self.hanim_set(node, "frameCount", FieldValue::SFInt32(frame_count as i32));
 
         self.hanim_motion_set_frame_duration(node);
@@ -891,7 +1016,12 @@ impl Runtime {
 
     /// getFraction: the set_fraction value of the first interpolator the TimeSensor drives.
     fn hanim_motion_fraction(&self, node: NodeId) -> f64 {
-        let Some(k) = self.hanim_time_sensor(node).and_then(|ts| self.pre(ts, "fraction_changed")) else { return 0.0 };
+        let Some(k) = self
+            .hanim_time_sensor(node)
+            .and_then(|ts| self.pre(ts, "fraction_changed"))
+        else {
+            return 0.0;
+        };
 
         match self.frt.get(&k).and_then(|f| f.field_interests.first()) {
             Some(f) => match self.value(*f) {
@@ -910,7 +1040,11 @@ impl Runtime {
         let fraction = self.hanim_motion_fraction(node);
         let frame_count = self.hanim_i32(node, "frameCount");
         let frame_increment = self.hanim_i32(node, "frameIncrement");
-        let frame_index = (if frame_count > 1 { (fraction * (frame_count - 1) as f64).floor() } else { 0.0 }) + (frame_increment * direction) as f64;
+        let frame_index = (if frame_count > 1 {
+            (fraction * (frame_count - 1) as f64).floor()
+        } else {
+            0.0
+        }) + (frame_increment * direction) as f64;
         let state = self.motion(node);
         let looping = self.get_bool(node, "loop");
 
@@ -919,20 +1053,30 @@ impl Runtime {
                 return;
             }
 
-            self.hanim_set(node, "frameIndex", FieldValue::SFInt32(state.start_frame.unwrap_or(0)));
+            self.hanim_set(
+                node,
+                "frameIndex",
+                FieldValue::SFInt32(state.start_frame.unwrap_or(0)),
+            );
         } else if state.start_frame.is_some_and(|s| frame_index < s as f64) {
             if !looping {
                 return;
             }
 
-            self.hanim_set(node, "frameIndex", FieldValue::SFInt32(state.end_frame.unwrap_or(0)));
+            self.hanim_set(
+                node,
+                "frameIndex",
+                FieldValue::SFInt32(state.end_frame.unwrap_or(0)),
+            );
         } else {
             self.hanim_set(node, "frameIndex", FieldValue::SFInt32(frame_index as i32));
         }
     }
 
     fn hanim_motion_range(&mut self, ts: NodeId, values: &[(usize, f64)]) {
-        let Some(k) = self.private_field(ts, "range") else { return };
+        let Some(k) = self.private_field(ts, "range") else {
+            return;
+        };
         let mut range = match self.value(k) {
             FieldValue::MFFloat(v) => v.clone(),
             _ => vec![0.0, 0.0, 1.0],
@@ -948,10 +1092,18 @@ impl Runtime {
     }
 
     pub(crate) fn hanim_motion_set_frame_index(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
         let frame_count = self.hanim_i32(node, "frameCount");
-        let frame_index = self.hanim_i32(node, "frameIndex").clamp(0, frame_count.max(0));
-        let fraction = if frame_count > 1 { frame_index as f64 / (frame_count - 1) as f64 } else { 0.0 };
+        let frame_index = self
+            .hanim_i32(node, "frameIndex")
+            .clamp(0, frame_count.max(0));
+        let fraction = if frame_count > 1 {
+            frame_index as f64 / (frame_count - 1) as f64
+        } else {
+            0.0
+        };
 
         self.hanim_motion_range(ts, &[(0, fraction)]);
 
@@ -959,33 +1111,58 @@ impl Runtime {
             return;
         }
 
-        let Some(k) = self.pre(ts, "fraction_changed") else { return };
+        let Some(k) = self.pre(ts, "fraction_changed") else {
+            return;
+        };
 
-        for f in self.frt.get(&k).map(|f| f.field_interests.clone()).unwrap_or_default() {
+        for f in self
+            .frt
+            .get(&k)
+            .map(|f| f.field_interests.clone())
+            .unwrap_or_default()
+        {
             self.set_value(f, FieldValue::SFFloat(fraction));
         }
     }
 
     pub(crate) fn hanim_motion_set_frame_duration(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
         let frame_count = self.hanim_i32(node, "frameCount");
         let frame_duration = self.get_f64(node, "frameDuration").max(0.0);
 
-        self.hanim_set(ts, "cycleInterval", FieldValue::SFTime(if frame_count > 1 { (frame_count - 1) as f64 * frame_duration } else { 0.0 }));
+        self.hanim_set(
+            ts,
+            "cycleInterval",
+            FieldValue::SFTime(if frame_count > 1 {
+                (frame_count - 1) as f64 * frame_duration
+            } else {
+                0.0
+            }),
+        );
     }
 
     pub(crate) fn hanim_motion_set_frame_increment(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
         let increment = self.hanim_i32(node, "frameIncrement");
 
         self.hanim_set(ts, "enabled", FieldValue::SFBool(increment != 0));
     }
 
     pub(crate) fn hanim_motion_set_start_or_end_frame(&mut self, node: NodeId) {
-        let Some(ts) = self.hanim_time_sensor(node) else { return };
+        let Some(ts) = self.hanim_time_sensor(node) else {
+            return;
+        };
         let frame_count = self.hanim_i32(node, "frameCount");
-        let start = self.hanim_i32(node, "startFrame").clamp(0, frame_count.max(0));
-        let end = self.hanim_i32(node, "endFrame").clamp(0, frame_count.max(0));
+        let start = self
+            .hanim_i32(node, "startFrame")
+            .clamp(0, frame_count.max(0));
+        let end = self
+            .hanim_i32(node, "endFrame")
+            .clamp(0, frame_count.max(0));
         let (start, end) = (start.min(end), start.max(end));
 
         if let Some(m) = self.hanim_motions.get_mut(&node) {
@@ -993,7 +1170,13 @@ impl Runtime {
             m.end_frame = Some(end);
         }
 
-        let fraction = |f: i32| if frame_count > 1 { f as f64 / (frame_count - 1) as f64 } else { 0.0 };
+        let fraction = |f: i32| {
+            if frame_count > 1 {
+                f as f64 / (frame_count - 1) as f64
+            } else {
+                0.0
+            }
+        };
         self.hanim_motion_range(ts, &[(1, fraction(start)), (2, fraction(end))]);
     }
 }
@@ -1004,10 +1187,31 @@ mod tests {
 
     #[test]
     fn channels_split_like_the_regular_expressions() {
-        let c = parse_channels("6 Xposition Yposition Zposition Zrotation Xrotation Yrotation 3 Zrotation Xrotation Yrotation");
-        assert_eq!(c, vec![vec!["Xposition", "Yposition", "Zposition", "Zrotation", "Xrotation", "Yrotation"], vec!["Zrotation", "Xrotation", "Yrotation"]]);
+        let c = parse_channels(
+            "6 Xposition Yposition Zposition Zrotation Xrotation Yrotation 3 Zrotation Xrotation Yrotation",
+        );
+        assert_eq!(
+            c,
+            vec![
+                vec![
+                    "Xposition",
+                    "Yposition",
+                    "Zposition",
+                    "Zrotation",
+                    "Xrotation",
+                    "Yrotation"
+                ],
+                vec!["Zrotation", "Xrotation", "Yrotation"]
+            ]
+        );
         assert_eq!(parse_channels(""), vec![vec![""]]);
-        assert_eq!(parse_channels("3,Xrotation,Yrotation,Zrotation, 1 Xposition 2"), vec![vec!["Xrotation", "Yrotation", "Zrotation"], vec!["Xposition"]]);
+        assert_eq!(
+            parse_channels("3,Xrotation,Yrotation,Zrotation, 1 Xposition 2"),
+            vec![
+                vec!["Xrotation", "Yrotation", "Zrotation"],
+                vec!["Xposition"]
+            ]
+        );
         assert_eq!(split_separators("a, b  c"), vec!["a", "b", "c"]);
         assert_eq!(split_separators(""), vec![""]);
     }

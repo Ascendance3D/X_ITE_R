@@ -17,7 +17,8 @@ pub fn decode_wav(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
     }
 
     let u16_at = |p: usize| u16::from_le_bytes([bytes[p], bytes[p + 1]]);
-    let u32_at = |p: usize| u32::from_le_bytes([bytes[p], bytes[p + 1], bytes[p + 2], bytes[p + 3]]);
+    let u32_at =
+        |p: usize| u32::from_le_bytes([bytes[p], bytes[p + 1], bytes[p + 2], bytes[p + 3]]);
     let mut pos = 12;
     let mut format = None;
 
@@ -59,15 +60,27 @@ fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Opti
     // 1 / (zero - min), both computed in float.
     let s16 = |v: i16| {
         let x = v as f32;
-        if x < 0.0 { x * (1.0f32 / 32768.0) } else { x * (1.0f32 / 32767.0) }
+        if x < 0.0 {
+            x * (1.0f32 / 32768.0)
+        } else {
+            x * (1.0f32 / 32767.0)
+        }
     };
     let u8f = |v: u8| {
         let x = (v as i32 - 128) as f32;
-        if x < 0.0 { x * (1.0f32 / 128.0) } else { x * (1.0f32 / 127.0) }
+        if x < 0.0 {
+            x * (1.0f32 / 128.0)
+        } else {
+            x * (1.0f32 / 127.0)
+        }
     };
     let s32 = |v: i32| {
         let x = v as f32;
-        if x < 0.0 { x * (1.0f32 / 2147483648.0f32) } else { x * (1.0f32 / 2147483647i32 as f32) }
+        if x < 0.0 {
+            x * (1.0f32 / 2147483648.0f32)
+        } else {
+            x * (1.0f32 / 2147483647i32 as f32)
+        }
     };
 
     let width = match (tag, bits) {
@@ -104,7 +117,11 @@ const REQUEST_FRAMES: usize = 64;
 
 /// ScopedSubnormalFloatDisabler: denormal inputs and results are zero.
 fn ftz(x: f32) -> f32 {
-    if x.is_subnormal() { 0.0 * x.signum() } else { x }
+    if x.is_subnormal() {
+        0.0 * x.signum()
+    } else {
+        x
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -120,7 +137,8 @@ enum Convolve {
 fn convolve_proc() -> Convolve {
     #[cfg(target_arch = "x86_64")]
     {
-        if std::arch::is_x86_feature_detected!("avx2") && std::arch::is_x86_feature_detected!("fma") {
+        if std::arch::is_x86_feature_detected!("avx2") && std::arch::is_x86_feature_detected!("fma")
+        {
             return Convolve::Avx2;
         }
 
@@ -164,7 +182,9 @@ fn convolve(proc_: Convolve, input: &[f32], k1: &[f32], k2: &[f32], factor: f64)
 
             let a = ftz((1.0 - factor) as f32);
             let b = ftz(factor as f32);
-            let m: Vec<f32> = (0..4).map(|j| ftz(ftz(s1[j] * a) + ftz(s2[j] * b))).collect();
+            let m: Vec<f32> = (0..4)
+                .map(|j| ftz(ftz(s1[j] * a) + ftz(s2[j] * b)))
+                .collect();
 
             // SSE: movehl + add, then lane 0 + lane 1. NEON: high + low, then pairwise.
             let h0 = ftz(m[2] + m[0]);
@@ -185,7 +205,9 @@ fn convolve(proc_: Convolve, input: &[f32], k1: &[f32], k2: &[f32], factor: f64)
 
             let a = ftz((1.0 - factor) as f32);
             let b = ftz(factor as f32);
-            let m: Vec<f32> = (0..4).map(|j| ftz(ftz(ftz(s1[j] + s1[j + 4]) * a) + ftz(ftz(s2[j] + s2[j + 4]) * b))).collect();
+            let m: Vec<f32> = (0..4)
+                .map(|j| ftz(ftz(ftz(s1[j] + s1[j + 4]) * a) + ftz(ftz(s2[j] + s2[j + 4]) * b)))
+                .collect();
             let h0 = ftz(m[2] + m[0]);
             let h1 = ftz(m[3] + m[1]);
             ftz(h0 + h1)
@@ -231,7 +253,11 @@ impl<'a> SincResampler<'a> {
     }
 
     fn update_regions(&mut self, second_load: bool) {
-        self.r0 = if second_load { KERNEL_SIZE } else { KERNEL_SIZE / 2 };
+        self.r0 = if second_load {
+            KERNEL_SIZE
+        } else {
+            KERNEL_SIZE / 2
+        };
         self.r3 = self.r0 + REQUEST_FRAMES - KERNEL_SIZE;
         self.r4 = self.r0 + REQUEST_FRAMES - KERNEL_SIZE / 2;
         self.block_size = self.r4 - KERNEL_SIZE / 2;
@@ -241,7 +267,11 @@ impl<'a> SincResampler<'a> {
         let (alpha, pi) = (0.16f64, std::f64::consts::PI);
         let (a0, a1, a2) = (0.5 * (1.0 - alpha), 0.5, 0.5 * alpha);
         // SincScaleFactor for kMinKernelSize.
-        let sinc_scale_factor = (if self.ratio > 1.0 { 1.0 / self.ratio } else { 1.0 }) * 0.90;
+        let sinc_scale_factor = (if self.ratio > 1.0 {
+            1.0 / self.ratio
+        } else {
+            1.0
+        }) * 0.90;
         let n = KERNEL_SIZE as i32;
 
         for offset_idx in 0..=KERNEL_OFFSET_COUNT {
@@ -251,9 +281,15 @@ impl<'a> SincResampler<'a> {
                 let idx = i as usize + offset_idx * KERNEL_SIZE;
                 let pre_sinc = std::f32::consts::PI * ((i - n / 2) as f32 - subsample_offset);
                 let x = (i as f32 - subsample_offset) / n as f32;
-                let window = (a0 - a1 * (2.0 * pi * x as f64).cos() + a2 * (4.0 * pi * x as f64).cos()) as f32;
+                let window = (a0 - a1 * (2.0 * pi * x as f64).cos()
+                    + a2 * (4.0 * pi * x as f64).cos()) as f32;
                 let p = pre_sinc as f64;
-                self.kernel[idx] = (window as f64 * if pre_sinc != 0.0 { (sinc_scale_factor * p).sin() / p } else { sinc_scale_factor }) as f32;
+                self.kernel[idx] = (window as f64
+                    * if pre_sinc != 0.0 {
+                        (sinc_scale_factor * p).sin() / p
+                    } else {
+                        sinc_scale_factor
+                    }) as f32;
             }
         }
     }
@@ -279,7 +315,8 @@ impl<'a> SincResampler<'a> {
         while remaining > 0 {
             while self.virtual_source_idx < self.block_size as f64 {
                 let source_idx = self.virtual_source_idx as usize;
-                let virtual_offset_idx = (self.virtual_source_idx - source_idx as f64) * KERNEL_OFFSET_COUNT as f64;
+                let virtual_offset_idx =
+                    (self.virtual_source_idx - source_idx as f64) * KERNEL_OFFSET_COUNT as f64;
                 let offset_idx = virtual_offset_idx as usize;
                 let start = offset_idx * KERNEL_SIZE;
                 let k1 = &self.kernel[start..start + KERNEL_SIZE];
@@ -298,7 +335,8 @@ impl<'a> SincResampler<'a> {
             }
 
             self.virtual_source_idx -= self.block_size as f64;
-            self.input_buffer.copy_within(self.r3..self.r3 + KERNEL_SIZE, 0);
+            self.input_buffer
+                .copy_within(self.r3..self.r3 + KERNEL_SIZE, 0);
 
             if self.r0 == KERNEL_SIZE / 2 {
                 self.update_regions(true);
@@ -344,10 +382,16 @@ mod tests {
 
     #[test]
     fn int16_uses_chromium_asymmetric_scale() {
-        let data: Vec<u8> = [i16::MIN, -1, 0, 1, i16::MAX].iter().flat_map(|v| v.to_le_bytes()).collect();
+        let data: Vec<u8> = [i16::MIN, -1, 0, 1, i16::MAX]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
         let (channels, rate) = decode_wav(&wav(1, 16, 1, 22050, &data)).unwrap();
         assert_eq!(rate, 22050.0);
-        assert_eq!(channels[0], vec![-1.0, -1.0 / 32768.0, 0.0, 1.0 / 32767.0, 1.0]);
+        assert_eq!(
+            channels[0],
+            vec![-1.0, -1.0 / 32768.0, 0.0, 1.0 / 32767.0, 1.0]
+        );
     }
 
     #[test]
@@ -359,6 +403,9 @@ mod tests {
     #[test]
     fn resample_length_is_chromium_truncation() {
         let source: Vec<f32> = (0..1000).map(|i| (i as f32 * 0.01).sin()).collect();
-        assert_eq!(resample(&source, 22050.0, 48000.0).len(), (1000.0 / (22050.0 / 48000.0)) as usize);
+        assert_eq!(
+            resample(&source, 22050.0, 48000.0).len(),
+            (1000.0 / (22050.0 / 48000.0)) as usize
+        );
     }
 }

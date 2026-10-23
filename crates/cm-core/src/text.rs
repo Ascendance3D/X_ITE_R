@@ -20,7 +20,11 @@ pub fn js_slice(s: &[u16], start: i64, end: Option<i64>) -> &[u16] {
     let norm = |v: i64| if v < 0 { (len + v).max(0) } else { v.min(len) };
     let a = norm(start);
     let b = end.map(norm).unwrap_or(len);
-    if b <= a { &[] } else { &s[a as usize..b as usize] }
+    if b <= a {
+        &[]
+    } else {
+        &s[a as usize..b as usize]
+    }
 }
 
 /// JavaScript `indexOf(needle, from)` on UTF-16 units.

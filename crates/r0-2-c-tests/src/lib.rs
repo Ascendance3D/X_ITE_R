@@ -33,7 +33,10 @@ pub const LANE: &str = "XITE_RUST_R0_2_C_COMPAT_TESTS";
 
 /// Workspace root of the checkout this crate was built from.
 pub fn workspace_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().expect("workspace root")
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .expect("workspace root")
 }
 
 /// Directory of this crate.
@@ -97,7 +100,14 @@ pub fn compile_probe(tmp: &str, name: &str, body: &str) -> ProbeResult {
     .unwrap();
 
     let out = Command::new(env!("CARGO"))
-        .args(["check", "--offline", "--quiet", "--color", "never", "--manifest-path"])
+        .args([
+            "check",
+            "--offline",
+            "--quiet",
+            "--color",
+            "never",
+            "--manifest-path",
+        ])
         .arg(dir.join("Cargo.toml"))
         .env("CARGO_TARGET_DIR", scratch_dir(tmp).join("probe-target"))
         .output()
@@ -114,7 +124,11 @@ pub fn compile_probe(tmp: &str, name: &str, body: &str) -> ProbeResult {
         }
     }
 
-    ProbeResult { compiled: out.status.success(), codes, stderr }
+    ProbeResult {
+        compiled: out.status.success(),
+        codes,
+        stderr,
+    }
 }
 
 /// Assert that a probe fails with exactly the given set of rustc error codes.
@@ -135,5 +149,9 @@ pub fn assert_probe_fails(tmp: &str, name: &str, body: &str, codes: &[&str]) {
 /// Assert that a probe compiles.
 pub fn assert_probe_compiles(tmp: &str, name: &str, body: &str) {
     let r = compile_probe(tmp, name, body);
-    assert!(r.compiled, "{name}: the probe does not compile\n{}", r.stderr);
+    assert!(
+        r.compiled,
+        "{name}: the probe does not compile\n{}",
+        r.stderr
+    );
 }

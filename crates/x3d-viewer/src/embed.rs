@@ -34,12 +34,20 @@ pub const DEFAULT_MULTISAMPLING: u32 = 4;
 
 /// Seconds since the Unix epoch: the browser clock (`getCurrentTime`) of a live viewer.
 pub fn realtime_now() -> f64 {
-    SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs_f64()).unwrap_or(0.0)
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs_f64())
+        .unwrap_or(0.0)
 }
 
 /// Run `f` on a thread with the stack QuickJS needs and wait for its result.
 pub fn spawn_big_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).expect("spawn viewer thread").join().expect("viewer thread panicked")
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .expect("spawn viewer thread")
+        .join()
+        .expect("viewer thread panicked")
 }
 
 /// Where a world's relative files (Inline, textures, Script urls) are served from.
@@ -105,15 +113,30 @@ impl EmbeddedViewer {
 
     /// [`EmbeddedViewer::new`] for a host that draws into targets of `format`: the renderer starts
     /// creating its most common pipeline for them right away (see [`Renderer::new_preparing`]).
-    pub fn new_preparing(device: wgpu::Device, queue: wgpu::Queue, size: (u32, u32), format: wgpu::TextureFormat) -> Self {
-        Self::with_renderer(Renderer::new_preparing(device, queue, format, DEFAULT_MULTISAMPLING), size)
+    pub fn new_preparing(
+        device: wgpu::Device,
+        queue: wgpu::Queue,
+        size: (u32, u32),
+        format: wgpu::TextureFormat,
+    ) -> Self {
+        Self::with_renderer(
+            Renderer::new_preparing(device, queue, format, DEFAULT_MULTISAMPLING),
+            size,
+        )
     }
 
     fn with_renderer(mut renderer: Renderer, size: (u32, u32)) -> Self {
         // BrowserOptions / RenderingProperties: Multisampling defaults to 4 (clamped to the
         // device maximum, which is 4 here until `configure_samples` has seen the adapter).
         renderer.set_sample_count(DEFAULT_MULTISAMPLING);
-        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)), closed_prints: vec![], globals: BrowserGlobals::default() }
+        EmbeddedViewer {
+            core: None,
+            renderer,
+            source: None,
+            size: (size.0.max(1), size.1.max(1)),
+            closed_prints: vec![],
+            globals: BrowserGlobals::default(),
+        }
     }
 
     /// Start of a call that runs or builds the world: this viewer's thread-wide options.
@@ -198,7 +221,16 @@ impl EmbeddedViewer {
 
         // A host page has no `<x3d-canvas>` attributes: the BrowserOptions keep X_ITE's defaults.
         self.enter();
-        let v = Viewer3d::load_attributes(path, options.root.as_deref(), options.start_time.unwrap_or_else(realtime_now), self.size.0, self.size.1, None, false, &[]);
+        let v = Viewer3d::load_attributes(
+            path,
+            options.root.as_deref(),
+            options.start_time.unwrap_or_else(realtime_now),
+            self.size.0,
+            self.size.1,
+            None,
+            false,
+            &[],
+        );
         self.leave();
         self.core = Some(v?);
         Ok(())
@@ -219,7 +251,9 @@ impl EmbeddedViewer {
 
     /// Load the same file again (the file changed on disk), keeping the navigation type.
     pub fn reload(&mut self) -> Result<(), String> {
-        let Some((path, options)) = self.source.clone() else { return Err("nothing loaded".into()) };
+        let Some((path, options)) = self.source.clone() else {
+            return Err("nothing loaded".into());
+        };
         let keep = self.core.as_ref().map(|c| c.viewer_kind().to_string());
         self.load(&path, options)?;
 
@@ -273,12 +307,18 @@ impl EmbeddedViewer {
 
     /// "EXAMINE", "WALK", "FLY", "LOOKAT", "PLANE" or "NONE".
     pub fn navigation_type(&self) -> &str {
-        self.core.as_ref().map(|c| c.viewer_kind()).unwrap_or("NONE")
+        self.core
+            .as_ref()
+            .map(|c| c.viewer_kind())
+            .unwrap_or("NONE")
     }
 
     /// The navigation types the world's NavigationInfo allows ("ANY" allows all).
     pub fn available_navigation_types(&self) -> Vec<String> {
-        self.core.as_ref().map(|c| c.available_viewers()).unwrap_or_default()
+        self.core
+            .as_ref()
+            .map(|c| c.available_viewers())
+            .unwrap_or_default()
     }
 
     pub fn set_navigation_type(&mut self, kind: &str) {
@@ -289,8 +329,18 @@ impl EmbeddedViewer {
 
     /// The world's viewpoints that have a description (the ones a viewer menu lists).
     pub fn viewpoints(&self) -> Vec<ViewpointInfo> {
-        let Some(c) = self.core.as_ref() else { return vec![] };
-        c.user_viewpoints().iter().enumerate().map(|(index, n)| ViewpointInfo { index, description: c.viewpoint_description(*n), bound: c.rt.get_bool(*n, "isBound") }).collect()
+        let Some(c) = self.core.as_ref() else {
+            return vec![];
+        };
+        c.user_viewpoints()
+            .iter()
+            .enumerate()
+            .map(|(index, n)| ViewpointInfo {
+                index,
+                description: c.viewpoint_description(*n),
+                bound: c.rt.get_bool(*n, "isBound"),
+            })
+            .collect()
     }
 
     pub fn bind_viewpoint(&mut self, index: usize) {
@@ -350,7 +400,10 @@ impl EmbeddedViewer {
 
     /// Anchor activations since the last call (urls and parameters; the viewer never opens them).
     pub fn take_anchor_activations(&mut self) -> Vec<crate::pointer::AnchorActivation> {
-        self.core.as_mut().map(|c| std::mem::take(&mut c.anchors)).unwrap_or_default()
+        self.core
+            .as_mut()
+            .map(|c| std::mem::take(&mut c.anchors))
+            .unwrap_or_default()
     }
 
     /// The core viewer, for everything the API above does not cover.
@@ -395,7 +448,14 @@ impl EmbeddedViewer {
 
     /// Step the world to `now` and draw it into `target`. With no world loaded the target is
     /// cleared. Returns the frame's costs.
-    pub fn frame(&mut self, now: f64, target: &wgpu::TextureView, format: wgpu::TextureFormat, width: u32, height: u32) -> Result<FrameInfo, String> {
+    pub fn frame(
+        &mut self,
+        now: f64,
+        target: &wgpu::TextureView,
+        format: wgpu::TextureFormat,
+        width: u32,
+        height: u32,
+    ) -> Result<FrameInfo, String> {
         if (width, height) != self.size {
             self.resize(width, height);
         }
@@ -403,10 +463,14 @@ impl EmbeddedViewer {
         let t0 = Instant::now();
         self.step(now);
         let t1 = Instant::now();
-        let mut info = FrameInfo { step_ms: (t1 - t0).as_secs_f64() * 1e3, ..Default::default() };
+        let mut info = FrameInfo {
+            step_ms: (t1 - t0).as_secs_f64() * 1e3,
+            ..Default::default()
+        };
 
         let Some(core) = self.core.as_mut() else {
-            self.renderer.render(&empty_frame(), target, format, width, height)?;
+            self.renderer
+                .render(&empty_frame(), target, format, width, height)?;
             return Ok(info);
         };
 
@@ -418,7 +482,8 @@ impl EmbeddedViewer {
         self.globals = browser_globals();
         let t2 = Instant::now();
         info.build_ms = (t2 - t1).as_secs_f64() * 1e3;
-        self.renderer.render(&frame, target, format, width, height)?;
+        self.renderer
+            .render(&frame, target, format, width, height)?;
         info.render_ms = t2.elapsed().as_secs_f64() * 1e3;
         info.gpu_ms = self.renderer.gpu_time_ms(false);
         info.draw_calls = self.renderer.stats.draw_calls;

@@ -46,18 +46,58 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
 
 impl ScatterDepthCopy {
     pub fn new(device: &wgpu::Device) -> ScatterDepthCopy {
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("scatter depth"), source: wgpu::ShaderSource::Wgsl(DEPTH_WGSL.into()) });
-        let entry = |binding: u32, ty: wgpu::BindingType| wgpu::BindGroupLayoutEntry { binding, visibility: wgpu::ShaderStages::COMPUTE, ty, count: None };
+        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("scatter depth"),
+            source: wgpu::ShaderSource::Wgsl(DEPTH_WGSL.into()),
+        });
+        let entry = |binding: u32, ty: wgpu::BindingType| wgpu::BindGroupLayoutEntry {
+            binding,
+            visibility: wgpu::ShaderStages::COMPUTE,
+            ty,
+            count: None,
+        };
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("scatter depth"),
             entries: &[
-                entry(0, wgpu::BindingType::Texture { sample_type: wgpu::TextureSampleType::Depth, view_dimension: wgpu::TextureViewDimension::D2, multisampled: false }),
-                entry(1, wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Storage { read_only: false }, has_dynamic_offset: false, min_binding_size: None }),
-                entry(2, wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: false, min_binding_size: None }),
+                entry(
+                    0,
+                    wgpu::BindingType::Texture {
+                        sample_type: wgpu::TextureSampleType::Depth,
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        multisampled: false,
+                    },
+                ),
+                entry(
+                    1,
+                    wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: false },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                ),
+                entry(
+                    2,
+                    wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                ),
             ],
         });
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { label: Some("scatter depth"), bind_group_layouts: &[Some(&layout)], ..Default::default() });
-        let pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor { label: Some("scatter depth"), layout: Some(&pipeline_layout), module: &module, entry_point: Some("main"), compilation_options: Default::default(), cache: None });
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("scatter depth"),
+            bind_group_layouts: &[Some(&layout)],
+            ..Default::default()
+        });
+        let pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+            label: Some("scatter depth"),
+            layout: Some(&pipeline_layout),
+            module: &module,
+            entry_point: Some("main"),
+            compilation_options: Default::default(),
+            cache: None,
+        });
         ScatterDepthCopy { layout, pipeline }
     }
 }
@@ -67,7 +107,11 @@ impl ScatterGpu {
         let stride = (width * 16).div_ceil(256) * 256 / 16;
         let color = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("volume scatter buffer"),
-            size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
+            size: wgpu::Extent3d {
+                width,
+                height,
+                depth_or_array_layers: 1,
+            },
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
@@ -76,32 +120,99 @@ impl ScatterGpu {
             view_formats: &[],
         });
         let color_view = color.create_view(&Default::default());
-        let color_buffer = device.create_buffer(&wgpu::BufferDescriptor { label: Some("volume scatter colors"), size: stride as u64 * height as u64 * 16, usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
-        let depth_buffer = device.create_buffer(&wgpu::BufferDescriptor { label: Some("volume scatter depth"), size: stride as u64 * height as u64 * 4, usage: wgpu::BufferUsages::STORAGE, mapped_at_creation: false });
-        let params = device.create_buffer(&wgpu::BufferDescriptor { label: Some("volume scatter params"), size: 16, usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
-        ScatterGpu { width, height, stride, color, color_view, color_buffer, depth_buffer, params, used: frame_no }
+        let color_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("volume scatter colors"),
+            size: stride as u64 * height as u64 * 16,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let depth_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("volume scatter depth"),
+            size: stride as u64 * height as u64 * 4,
+            usage: wgpu::BufferUsages::STORAGE,
+            mapped_at_creation: false,
+        });
+        let params = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("volume scatter params"),
+            size: 16,
+            usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        ScatterGpu {
+            width,
+            height,
+            stride,
+            color,
+            color_view,
+            color_buffer,
+            depth_buffer,
+            params,
+            used: frame_no,
+        }
     }
 
     /// Copies the color texture and the depth of `depth` (the pass's depth texture) into the buffers.
-    pub fn read_back(&self, device: &wgpu::Device, queue: &wgpu::Queue, encoder: &mut wgpu::CommandEncoder, copy: &ScatterDepthCopy, depth: &wgpu::Texture) {
+    pub fn read_back(
+        &self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        encoder: &mut wgpu::CommandEncoder,
+        copy: &ScatterDepthCopy,
+        depth: &wgpu::Texture,
+    ) {
         encoder.copy_texture_to_buffer(
-            wgpu::TexelCopyTextureInfo { texture: &self.color, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
-            wgpu::TexelCopyBufferInfo { buffer: &self.color_buffer, layout: wgpu::TexelCopyBufferLayout { offset: 0, bytes_per_row: Some(self.stride * 16), rows_per_image: Some(self.height) } },
-            wgpu::Extent3d { width: self.width, height: self.height, depth_or_array_layers: 1 },
+            wgpu::TexelCopyTextureInfo {
+                texture: &self.color,
+                mip_level: 0,
+                origin: wgpu::Origin3d::ZERO,
+                aspect: wgpu::TextureAspect::All,
+            },
+            wgpu::TexelCopyBufferInfo {
+                buffer: &self.color_buffer,
+                layout: wgpu::TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(self.stride * 16),
+                    rows_per_image: Some(self.height),
+                },
+            },
+            wgpu::Extent3d {
+                width: self.width,
+                height: self.height,
+                depth_or_array_layers: 1,
+            },
         );
 
-        queue.write_buffer(&self.params, 0, bytemuck::cast_slice(&[self.width, self.height, self.stride, 0u32]));
-        let view = depth.create_view(&wgpu::TextureViewDescriptor { aspect: wgpu::TextureAspect::DepthOnly, ..Default::default() });
+        queue.write_buffer(
+            &self.params,
+            0,
+            bytemuck::cast_slice(&[self.width, self.height, self.stride, 0u32]),
+        );
+        let view = depth.create_view(&wgpu::TextureViewDescriptor {
+            aspect: wgpu::TextureAspect::DepthOnly,
+            ..Default::default()
+        });
         let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("scatter depth"),
             layout: &copy.layout,
             entries: &[
-                wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::TextureView(&view) },
-                wgpu::BindGroupEntry { binding: 1, resource: self.depth_buffer.as_entire_binding() },
-                wgpu::BindGroupEntry { binding: 2, resource: self.params.as_entire_binding() },
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::TextureView(&view),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: self.depth_buffer.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 2,
+                    resource: self.params.as_entire_binding(),
+                },
             ],
         });
-        let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor { label: Some("scatter depth"), timestamp_writes: None });
+        let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
+            label: Some("scatter depth"),
+            timestamp_writes: None,
+        });
         pass.set_pipeline(&copy.pipeline);
         pass.set_bind_group(0, &group, &[]);
         pass.dispatch_workgroups(self.width.div_ceil(8), self.height.div_ceil(8), 1);

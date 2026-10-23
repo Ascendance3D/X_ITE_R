@@ -17,12 +17,18 @@ const GROUPS: [(&str, &[usize], f64, f64); 6] = [
 ];
 
 fn floats(path: &PathBuf) -> Vec<f32> {
-    std::fs::read(path).unwrap().chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect()
+    std::fs::read(path)
+        .unwrap()
+        .chunks_exact(4)
+        .map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+        .collect()
 }
 
 /// (max position error, max velocity error, violations) of the Rust driver against the saved run.
 fn compare(case: &str) -> (f64, f64, usize) {
-    let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/rea-batch06-rem").join(case);
+    let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle/rea-batch06-rem")
+        .join(case);
     let out = std::env::temp_dir().join(format!("rem-{case}-{}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
@@ -37,15 +43,23 @@ fn compare(case: &str) -> (f64, f64, usize) {
         .unwrap();
     assert!(status.success(), "{case}: the driver failed");
 
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let rs: Value = serde_json::from_str(&std::fs::read_to_string(&rs_json).unwrap()).unwrap();
     let (a, b) = (floats(&dir.join("js.f32")), floats(&out.join("rs.f32")));
     let (mut position, mut velocity, mut violations) = (0.0f64, 0.0f64, 0usize);
 
     for (frame, d) in js["dumps"].as_object().unwrap() {
         let n = d["numParticles"].as_u64().unwrap() as usize;
-        let (oa, ob) = (d["offset"].as_u64().unwrap() as usize, rs["dumps"][frame]["offset"].as_u64().unwrap() as usize);
-        assert_eq!(rs["dumps"][frame]["numParticles"].as_u64().unwrap() as usize, n, "{case} frame {frame}: particle count");
+        let (oa, ob) = (
+            d["offset"].as_u64().unwrap() as usize,
+            rs["dumps"][frame]["offset"].as_u64().unwrap() as usize,
+        );
+        assert_eq!(
+            rs["dumps"][frame]["numParticles"].as_u64().unwrap() as usize,
+            n,
+            "{case} frame {frame}: particle count"
+        );
 
         for i in 0..n {
             for (name, cols, abs, rel) in GROUPS {

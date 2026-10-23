@@ -12,11 +12,11 @@
 
 use std::path::PathBuf;
 
-use cm_core::{clock, Pos, Sticky};
+use cm_core::{Pos, Sticky, clock};
 use cm_modes::Spec;
 use cm_view::editor::set_last_copied;
 use cm_view::{Editor, EditorOptions, Metrics};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 fn root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -64,7 +64,12 @@ fn snap(cm: &Editor) -> Vec<Value> {
     let hs = cm.doc.history_size();
     vec![
         hash_text(&cm.doc.get_value_utf16(None)),
-        Value::Array(sel.ranges.iter().map(|r| json!([pj(r.anchor), pj(r.head)])).collect()),
+        Value::Array(
+            sel.ranges
+                .iter()
+                .map(|r| json!([pj(r.anchor), pj(r.head)]))
+                .collect(),
+        ),
         json!(sel.primary),
         json!(hs.undo),
         json!(hs.redo),
@@ -81,15 +86,22 @@ fn mode_spec(v: &Value) -> Spec {
 
 #[test]
 fn cmd_fuzz_oracle() {
-    let path = std::env::var("CM_CMD_BASELINE").map(PathBuf::from).unwrap_or_else(|_| root().join("oracle/cm5-cmd-ops-baseline.json"));
-    let data: Value = serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline")).unwrap();
-    let known: Vec<i64> = std::fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/cmd-fuzz-known.tsv"))
-        .unwrap_or_default()
-        .lines()
-        .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
-        .map(|l| l.split('\t').next().unwrap().trim().parse().unwrap())
-        .collect();
-    let only: Option<i64> = std::env::var("CM_CMD_SEED").ok().map(|s| s.parse().unwrap());
+    let path = std::env::var("CM_CMD_BASELINE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| root().join("oracle/cm5-cmd-ops-baseline.json"));
+    let data: Value =
+        serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline")).unwrap();
+    let known: Vec<i64> = std::fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/cmd-fuzz-known.tsv"),
+    )
+    .unwrap_or_default()
+    .lines()
+    .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+    .map(|l| l.split('\t').next().unwrap().trim().parse().unwrap())
+    .collect();
+    let only: Option<i64> = std::env::var("CM_CMD_SEED")
+        .ok()
+        .map(|s| s.parse().unwrap());
     let seqs = data["sequences"].as_array().unwrap();
     let (mut nseq, mut nsteps, mut bad, mut known_bad) = (0, 0, Vec::new(), 0);
     for seq in seqs {
@@ -100,12 +112,19 @@ fn cmd_fuzz_oracle() {
         nseq += 1;
         let init = &seq["init"];
         let text = match init["path"].as_str() {
-            Some(rel) => String::from_utf8(std::fs::read(root().join("oracle").join(rel)).unwrap()).unwrap(),
+            Some(rel) => {
+                String::from_utf8(std::fs::read(root().join("oracle").join(rel)).unwrap()).unwrap()
+            }
             None => init["text"].as_str().unwrap().to_string(),
         };
         let clk = clock::manual(1e12);
         set_last_copied(None);
-        let mut cm = Editor::new(&text, mode_spec(&init["mode"]), EditorOptions::default(), Metrics::oracle());
+        let mut cm = Editor::new(
+            &text,
+            mode_spec(&init["mode"]),
+            EditorOptions::default(),
+            Metrics::oracle(),
+        );
         cm.display.window_height = Some(900.0);
         cm.set_size(900.0, 500.0);
         let mut clipboard = String::new();
@@ -126,11 +145,19 @@ fn cmd_fuzz_oracle() {
                 }
                 "type" => cm.apply_text_input(o["text"].as_str().unwrap(), 0, None),
                 "select" => {
-                    let head = if o["head"].is_null() { None } else { Some(p(&o["head"])) };
+                    let head = if o["head"].is_null() {
+                        None
+                    } else {
+                        Some(p(&o["head"]))
+                    };
                     cm.doc.set_selection(p(&o["anchor"]), head, None);
                 }
                 "addSelection" => {
-                    let head = if o["head"].is_null() { None } else { Some(p(&o["head"])) };
+                    let head = if o["head"].is_null() {
+                        None
+                    } else {
+                        Some(p(&o["head"]))
+                    };
                     cm.doc.add_selection(p(&o["anchor"]), head, None);
                 }
                 "setSelections" => {
@@ -138,14 +165,24 @@ fn cmd_fuzz_oracle() {
                         .as_array()
                         .unwrap()
                         .iter()
-                        .map(|r| (p(&r[0]), Some(if r[1].is_null() { p(&r[0]) } else { p(&r[1]) })))
+                        .map(|r| {
+                            (
+                                p(&r[0]),
+                                Some(if r[1].is_null() { p(&r[0]) } else { p(&r[1]) }),
+                            )
+                        })
                         .collect();
-                    cm.doc.set_selections(&rs, Some(o["primary"].as_u64().unwrap() as usize), None);
+                    cm.doc
+                        .set_selections(&rs, Some(o["primary"].as_u64().unwrap() as usize), None);
                 }
                 "extending" => cm.doc.set_extending(o["val"].as_bool().unwrap()),
                 "tick" => clk.set(clk.get() + o["ms"].as_f64().unwrap()),
                 "copy" | "cut" => {
-                    let t = if o["op"] == "copy" { cm.copy() } else { cm.cut() };
+                    let t = if o["op"] == "copy" {
+                        cm.copy()
+                    } else {
+                        cm.cut()
+                    };
                     if let Some(t) = &t {
                         clipboard = t.clone();
                     }
@@ -171,19 +208,30 @@ fn cmd_fuzz_oracle() {
             }
             let want = outs[k].as_array().unwrap();
             if want.iter().any(|v| v.get("err").is_some()) {
-                eprintln!("seed {seed} step {k}: JS threw {:?}; skipping rest", want.last());
+                eprintln!(
+                    "seed {seed} step {k}: JS threw {:?}; skipping rest",
+                    want.last()
+                );
                 break;
             }
             if Value::Array(got.clone()) != Value::Array(want.clone()) {
                 let short = |v: &Value| {
                     let s = v.to_string();
-                    if s.len() > 600 { format!("{}…", &s[..600]) } else { s }
+                    if s.len() > 600 {
+                        format!("{}…", &s[..600])
+                    } else {
+                        s
+                    }
                 };
                 let msg = format!(
                     "seed {seed} ({}) step {k} op {}\n  prev: {}\n  want: {}\n  got:  {}",
                     init["path"].as_str().unwrap_or("random"),
                     o,
-                    if k > 0 { short(&Value::Array(outs[k - 1].as_array().unwrap()[1..].to_vec())) } else { String::new() },
+                    if k > 0 {
+                        short(&Value::Array(outs[k - 1].as_array().unwrap()[1..].to_vec()))
+                    } else {
+                        String::new()
+                    },
                     short(&Value::Array(want.clone())),
                     short(&Value::Array(got))
                 );
@@ -202,7 +250,10 @@ fn cmd_fuzz_oracle() {
         }
         clock::set_override(None);
     }
-    eprintln!("cmd fuzz: {nseq} sequences, {nsteps} steps, {} mismatching sequences ({known_bad} known)", bad.len());
+    eprintln!(
+        "cmd fuzz: {nseq} sequences, {nsteps} steps, {} mismatching sequences ({known_bad} known)",
+        bad.len()
+    );
     for m in bad.iter().take(15) {
         eprintln!("{m}");
     }

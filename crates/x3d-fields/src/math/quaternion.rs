@@ -19,8 +19,18 @@ impl Default for Quaternion {
 }
 
 impl Quaternion {
-    pub const IDENTITY: Quaternion = Quaternion { x: 0.0, y: 0.0, z: 0.0, w: 1.0 };
-    pub const ZERO: Quaternion = Quaternion { x: 0.0, y: 0.0, z: 0.0, w: 0.0 };
+    pub const IDENTITY: Quaternion = Quaternion {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 1.0,
+    };
+    pub const ZERO: Quaternion = Quaternion {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 0.0,
+    };
 
     pub fn new(x: f64, y: f64, z: f64, w: f64) -> Self {
         Self { x, y, z, w }
@@ -263,12 +273,42 @@ impl Quaternion {
         let (cx, cy, cz) = (jsmath::cos(x), jsmath::cos(y), jsmath::cos(z));
 
         let (qx, qy, qz, qw) = match order {
-            "XYZ" => (sx * cy * cz + cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz - sx * sy * sz),
-            "ZYX" => (sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz),
-            "YXZ" => (sx * cy * cz + cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz),
-            "ZXY" => (sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz - sx * sy * sz),
-            "YZX" => (sx * cy * cz + cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz - sx * sy * sz),
-            "XZY" => (sx * cy * cz - cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz + sx * sy * sz),
+            "XYZ" => (
+                sx * cy * cz + cx * sy * sz,
+                cx * sy * cz - sx * cy * sz,
+                cx * cy * sz + sx * sy * cz,
+                cx * cy * cz - sx * sy * sz,
+            ),
+            "ZYX" => (
+                sx * cy * cz - cx * sy * sz,
+                cx * sy * cz + sx * cy * sz,
+                cx * cy * sz - sx * sy * cz,
+                cx * cy * cz + sx * sy * sz,
+            ),
+            "YXZ" => (
+                sx * cy * cz + cx * sy * sz,
+                cx * sy * cz - sx * cy * sz,
+                cx * cy * sz - sx * sy * cz,
+                cx * cy * cz + sx * sy * sz,
+            ),
+            "ZXY" => (
+                sx * cy * cz - cx * sy * sz,
+                cx * sy * cz + sx * cy * sz,
+                cx * cy * sz + sx * sy * cz,
+                cx * cy * cz - sx * sy * sz,
+            ),
+            "YZX" => (
+                sx * cy * cz + cx * sy * sz,
+                cx * sy * cz + sx * cy * sz,
+                cx * cy * sz - sx * sy * cz,
+                cx * cy * cz - sx * sy * sz,
+            ),
+            "XZY" => (
+                sx * cy * cz - cx * sy * sz,
+                cx * sy * cz - sx * cy * sz,
+                cx * cy * sz + sx * sy * cz,
+                cx * cy * cz + sx * sy * sz,
+            ),
             _ => return false,
         };
 
@@ -318,7 +358,11 @@ impl Quaternion {
     pub fn log(&mut self) -> &mut Self {
         let (x, y, z, w) = (self.x, self.y, self.z, self.w);
         let r = hypot(&[x, y, z]);
-        let t = if r > 0.0 { jsmath::atan2(r, w) / r } else { 0.0 };
+        let t = if r > 0.0 {
+            jsmath::atan2(r, w) / r
+        } else {
+            0.0
+        };
 
         self.x = x * t;
         self.y = y * t;
@@ -331,7 +375,11 @@ impl Quaternion {
         let (x, y, z, w) = (self.x, self.y, self.z, self.w);
         let r = hypot(&[x, y, z]);
         let et = jsmath::exp(w);
-        let s = if r > 0.0 { (et * jsmath::sin(r)) / r } else { 0.0 };
+        let s = if r > 0.0 {
+            (et * jsmath::sin(r)) / r
+        } else {
+            0.0
+        };
 
         self.x = x * s;
         self.y = y * s;

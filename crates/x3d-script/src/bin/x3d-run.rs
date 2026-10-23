@@ -12,19 +12,31 @@ use x3d_script::compare::{DumpFormat, Outcome, compare_corpus, run_world_as};
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
     let flag = |f: &str| args.iter().any(|a| a == f);
-    let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
+    let opt = |f: &str| {
+        args.iter()
+            .position(|a| a == f)
+            .and_then(|i| args.get(i + 1))
+            .cloned()
+    };
     let scripts = !flag("--no-scripts");
 
     match args.get(1).map(String::as_str) {
         Some("dump") if args.len() >= 3 => {
             let file = std::fs::canonicalize(&args[2]).expect("file");
-            let oracle = opt("--oracle").map(|o| std::fs::canonicalize(o).unwrap()).unwrap_or_else(|| file.parent().unwrap().parent().unwrap().to_path_buf());
+            let oracle = opt("--oracle")
+                .map(|o| std::fs::canonicalize(o).unwrap())
+                .unwrap_or_else(|| file.parent().unwrap().parent().unwrap().to_path_buf());
             let format = match opt("--format").as_deref() {
                 Some("xml") => DumpFormat::Xml,
                 Some("json") => DumpFormat::Json,
                 _ => DumpFormat::Vrml,
             };
-            let r = std::thread::Builder::new().stack_size(64 << 20).spawn(move || run_world_as(&oracle, &file, scripts, format)).unwrap().join().unwrap();
+            let r = std::thread::Builder::new()
+                .stack_size(64 << 20)
+                .spawn(move || run_world_as(&oracle, &file, scripts, format))
+                .unwrap()
+                .join()
+                .unwrap();
 
             if flag("--log") {
                 for l in &r.log {
@@ -43,29 +55,54 @@ fn main() -> ExitCode {
                 }
             }
         }
-        Some("compare") if args.len() >= 4 => compare(&args[2], &args[3], opt("--known"), opt("--out"), scripts, flag("--logs")),
+        Some("compare") if args.len() >= 4 => compare(
+            &args[2],
+            &args[3],
+            opt("--known"),
+            opt("--out"),
+            scripts,
+            flag("--logs"),
+        ),
         _ => {
-            eprintln!("usage: x3d-run dump <file> [--oracle <dir>] [--no-scripts] [--log] [--format vrml|xml|json]\n       x3d-run compare <baseline.json> <corpus-dir> [--known <tsv>] [--out <dir>] [--no-scripts] [--logs]");
+            eprintln!(
+                "usage: x3d-run dump <file> [--oracle <dir>] [--no-scripts] [--log] [--format vrml|xml|json]\n       x3d-run compare <baseline.json> <corpus-dir> [--known <tsv>] [--out <dir>] [--no-scripts] [--logs]"
+            );
             ExitCode::from(2)
         }
     }
 }
 
-fn compare(baseline: &str, corpus: &str, known: Option<String>, out_dir: Option<String>, scripts: bool, show_logs: bool) -> ExitCode {
+fn compare(
+    baseline: &str,
+    corpus: &str,
+    known: Option<String>,
+    out_dir: Option<String>,
+    scripts: bool,
+    show_logs: bool,
+) -> ExitCode {
     let mut known_map: HashMap<String, (String, String)> = HashMap::new();
 
     if let Some(k) = &known {
         if let Ok(text) = std::fs::read_to_string(k) {
-            for line in text.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()) {
+            for line in text
+                .lines()
+                .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+            {
                 let parts: Vec<&str> = line.splitn(3, '\t').collect();
                 if parts.len() == 3 {
-                    known_map.insert(parts[0].to_string(), (parts[1].to_string(), parts[2].to_string()));
+                    known_map.insert(
+                        parts[0].to_string(),
+                        (parts[1].to_string(), parts[2].to_string()),
+                    );
                 }
             }
         }
     }
 
-    let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(8).max(8);
+    let threads = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(8)
+        .max(8);
     let results = match compare_corpus(Path::new(baseline), Path::new(corpus), scripts, threads) {
         Ok(r) => r,
         Err(e) => {
@@ -98,18 +135,26 @@ fn compare(baseline: &str, corpus: &str, known: Option<String>, out_dir: Option<
                 timeouts += 1;
                 println!("TIMEOUT    {}  (oracle timed out; not compared)", r.file);
             }
-            Outcome::Mismatch { line, expected, actual } => {
+            Outcome::Mismatch {
+                line,
+                expected,
+                actual,
+            } => {
                 mismatched += 1;
 
                 match known_map.get(&r.file) {
-                    Some((phase, cause)) => println!("MISMATCH   {}  [needs {phase}] {cause}", r.file),
+                    Some((phase, cause)) => {
+                        println!("MISMATCH   {}  [needs {phase}] {cause}", r.file)
+                    }
                     None => {
                         unexplained += 1;
                         println!("MISMATCH   {}  [unexplained]", r.file);
                     }
                 }
 
-                println!("           line {line}\n             x_ite: {expected}\n             rust:  {actual}");
+                println!(
+                    "           line {line}\n             x_ite: {expected}\n             rust:  {actual}"
+                );
             }
             Outcome::RustRejected(e) => {
                 mismatched += 1;
@@ -164,8 +209,14 @@ fn compare(baseline: &str, corpus: &str, known: Option<String>, out_dir: Option<
             if !matches!(r.outcome, Outcome::Match | Outcome::ExpectedFailure(_)) {
                 let name = r.file.replace('/', "__");
                 let _ = std::fs::create_dir_all(dir);
-                let _ = std::fs::write(Path::new(dir).join(format!("{name}.rust")), r.rust.as_deref().unwrap_or(""));
-                let _ = std::fs::write(Path::new(dir).join(format!("{name}.xite")), r.expected.as_deref().unwrap_or(""));
+                let _ = std::fs::write(
+                    Path::new(dir).join(format!("{name}.rust")),
+                    r.rust.as_deref().unwrap_or(""),
+                );
+                let _ = std::fs::write(
+                    Path::new(dir).join(format!("{name}.xite")),
+                    r.expected.as_deref().unwrap_or(""),
+                );
             }
         }
     }
@@ -175,5 +226,9 @@ fn compare(baseline: &str, corpus: &str, known: Option<String>, out_dir: Option<
         results.len()
     );
 
-    if unexplained == 0 && log_unexplained == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
+    if unexplained == 0 && log_unexplained == 0 {
+        ExitCode::SUCCESS
+    } else {
+        ExitCode::FAILURE
+    }
 }

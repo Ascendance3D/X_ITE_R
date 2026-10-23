@@ -17,7 +17,10 @@ use crate::dom::{Element, XNode};
 use crate::{LoadError, ParseError};
 use x3d_scene::Scene;
 
-const VOID: &[&str] = &["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+const VOID: &[&str] = &[
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source",
+    "track", "wbr",
+];
 const RAW_TEXT: &[&str] = &["script", "style", "textarea", "title"];
 const IGNORED: &[&str] = &["html", "head", "body"];
 
@@ -29,7 +32,9 @@ fn decode_references(s: &str) -> String {
         out.push_str(&rest[..i]);
 
         let tail = &rest[i + 1..];
-        let end = tail.find(|c: char| !(c.is_ascii_alphanumeric() || c == '#')).unwrap_or(tail.len());
+        let end = tail
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '#'))
+            .unwrap_or(tail.len());
         let name = &tail[..end];
         let decoded = match name {
             "amp" => Some('&'),
@@ -38,10 +43,13 @@ fn decode_references(s: &str) -> String {
             "quot" => Some('"'),
             "apos" => Some('\''),
             "nbsp" => Some('\u{a0}'),
-            _ => name.strip_prefix('#').and_then(|n| match n.strip_prefix(['x', 'X']) {
-                Some(hex) => u32::from_str_radix(hex, 16).ok(),
-                None => n.parse::<u32>().ok(),
-            }).and_then(char::from_u32),
+            _ => name
+                .strip_prefix('#')
+                .and_then(|n| match n.strip_prefix(['x', 'X']) {
+                    Some(hex) => u32::from_str_radix(hex, 16).ok(),
+                    None => n.parse::<u32>().ok(),
+                })
+                .and_then(char::from_u32),
         };
 
         match decoded {
@@ -116,7 +124,11 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
         if bytes[pos] != b'<' {
             let end = text[pos..].find('<').map(|i| pos + i).unwrap_or(text.len());
 
-            push(&mut stack, &mut roots, XNode::Text(decode_references(&text[pos..end])));
+            push(
+                &mut stack,
+                &mut roots,
+                XNode::Text(decode_references(&text[pos..end])),
+            );
             pos = end;
             continue;
         }
@@ -124,7 +136,10 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
         let rest = &text[pos..];
 
         if rest.starts_with("<!--") {
-            let end = rest[4..].find("-->").map(|i| pos + 4 + i + 3).unwrap_or(text.len());
+            let end = rest[4..]
+                .find("-->")
+                .map(|i| pos + 4 + i + 3)
+                .unwrap_or(text.len());
             let body = &text[pos + 4..end.saturating_sub(3).max(pos + 4)];
 
             push(&mut stack, &mut roots, XNode::Comment(body.to_string()));
@@ -139,7 +154,10 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
         }
 
         if rest.starts_with("</") {
-            let name_end = rest[2..].find(|c: char| c.is_ascii_whitespace() || c == '>' || c == '/').map(|i| 2 + i).unwrap_or(rest.len());
+            let name_end = rest[2..]
+                .find(|c: char| c.is_ascii_whitespace() || c == '>' || c == '/')
+                .map(|i| 2 + i)
+                .unwrap_or(rest.len());
             let name = rest[2..name_end].to_ascii_lowercase();
 
             pos = rest.find('>').map(|i| pos + i + 1).unwrap_or(text.len());
@@ -164,7 +182,10 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
             continue;
         }
 
-        let name_end = rest[1..].find(|c: char| c.is_ascii_whitespace() || c == '>' || c == '/').map(|i| 1 + i).unwrap_or(rest.len());
+        let name_end = rest[1..]
+            .find(|c: char| c.is_ascii_whitespace() || c == '>' || c == '/')
+            .map(|i| 1 + i)
+            .unwrap_or(rest.len());
         let name = rest[1..name_end].to_ascii_lowercase();
         let mut i = name_end;
         let mut attrs: Vec<(String, String)> = vec![];
@@ -182,7 +203,12 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
 
             let start = i;
 
-            while i < r.len() && !r[i].is_ascii_whitespace() && r[i] != b'=' && r[i] != b'>' && !(r[i] == b'/' && start != i) {
+            while i < r.len()
+                && !r[i].is_ascii_whitespace()
+                && r[i] != b'='
+                && r[i] != b'>'
+                && !(r[i] == b'/' && start != i)
+            {
                 i += 1;
             }
 
@@ -204,7 +230,10 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
                 if i < r.len() && (r[i] == b'"' || r[i] == b'\'') {
                     let quote = r[i];
                     let from = i + 1;
-                    let to = rest[from..].find(quote as char).map(|k| from + k).unwrap_or(rest.len());
+                    let to = rest[from..]
+                        .find(quote as char)
+                        .map(|k| from + k)
+                        .unwrap_or(rest.len());
 
                     value = decode_references(&rest[from..to]);
                     i = (to + 1).min(rest.len());
@@ -239,7 +268,13 @@ pub(crate) fn parse_fragment(text: &str) -> Vec<XNode> {
             // Everything up to the matching end tag is text.
             let lower = text[pos..].to_ascii_lowercase();
             let (body_end, after) = match lower.find(&format!("</{name}")) {
-                Some(k) => (pos + k, text[pos + k..].find('>').map(|g| pos + k + g + 1).unwrap_or(text.len())),
+                Some(k) => (
+                    pos + k,
+                    text[pos + k..]
+                        .find('>')
+                        .map(|g| pos + k + g + 1)
+                        .unwrap_or(text.len()),
+                ),
                 None => (text.len(), text.len()),
             };
             let body = &text[pos..body_end];
@@ -293,7 +328,10 @@ fn find_x3d(nodes: &[XNode]) -> Option<&Element> {
 pub fn parse_html_x3d(html: &str, world_url: &str) -> Result<Scene, LoadError> {
     let nodes = parse_fragment(html);
     let Some(x3d) = find_x3d(&nodes) else {
-        return Err(LoadError::Parse(ParseError { message: "No x3d element found.".into(), line: 0 }));
+        return Err(LoadError::Parse(ParseError {
+            message: "No x3d element found.".into(),
+            line: 0,
+        }));
     };
     let mut scene = crate::xml::parse_x3d_html_element(x3d, world_url).map_err(LoadError::Parse)?;
 

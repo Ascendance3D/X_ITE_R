@@ -14,7 +14,8 @@ const FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Rgba8Unorm;
 /// A world whose only draw is opaque solid triangles: the pipeline the renderer prepares. In a
 /// directory of the test's own (`test`), as the tests run in parallel.
 fn world(test: &str) -> (PathBuf, PathBuf) {
-    let dir = std::env::temp_dir().join(format!("x3d-render-prepared-{}-{test}", std::process::id()));
+    let dir =
+        std::env::temp_dir().join(format!("x3d-render-prepared-{}-{test}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
     let file = dir.join("box.wrl");
     std::fs::write(&file, "#VRML V2.0 utf8\nShape { appearance Appearance { material Material { diffuseColor 1 0.4 0.2 } } geometry Box {} }\n").unwrap();
@@ -40,7 +41,9 @@ fn renderer(g: &Gpu, prepared: Option<u32>, samples: u32) -> Renderer {
 
 #[test]
 fn a_prepared_pipeline_draws_the_same_picture() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let (dir, file) = world("same");
 
     for samples in [1, 4] {
@@ -53,12 +56,18 @@ fn a_prepared_pipeline_draws_the_same_picture() {
         g.renderer.finish_prepared();
         let (picture, made) = shot(&mut g, &dir, &file);
         assert_eq!(made, 0, "{samples}x: the frame uses the prepared pipeline");
-        assert!(picture == reference, "{samples}x: the prepared pipeline draws another picture");
+        assert!(
+            picture == reference,
+            "{samples}x: the prepared pipeline draws another picture"
+        );
 
         // Not waited for: the frame takes it when it gets there.
         g.renderer = renderer(&g, Some(samples), samples);
         let (picture, _) = shot(&mut g, &dir, &file);
-        assert!(picture == reference, "{samples}x: the prepared pipeline, taken by the frame, draws another picture");
+        assert!(
+            picture == reference,
+            "{samples}x: the prepared pipeline, taken by the frame, draws another picture"
+        );
         let (_, made) = shot(&mut g, &dir, &file);
         assert_eq!(made, 0, "{samples}x: the second frame reuses the pipeline");
     }
@@ -68,7 +77,9 @@ fn a_prepared_pipeline_draws_the_same_picture() {
 
 #[test]
 fn a_prepared_pipeline_that_no_longer_fits_is_not_used() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let (dir, file) = world("unfit");
 
     // Prepared for 4 samples, drawn with 1.
@@ -77,7 +88,10 @@ fn a_prepared_pipeline_that_no_longer_fits_is_not_used() {
     g.renderer = renderer(&g, Some(4), 1);
     g.renderer.finish_prepared();
     let (picture, made) = shot(&mut g, &dir, &file);
-    assert_eq!(made, 1, "another sample count: the frame makes its own pipeline");
+    assert_eq!(
+        made, 1,
+        "another sample count: the frame makes its own pipeline"
+    );
     assert!(picture == reference, "another sample count: wrong picture");
 
     // Prepared with the standard shader, drawn with the reversed depth variant.
@@ -88,8 +102,14 @@ fn a_prepared_pipeline_that_no_longer_fits_is_not_used() {
     g.renderer.set_depth_mode(DepthMode::Reversed);
     g.renderer.finish_prepared();
     let (picture, made) = shot(&mut g, &dir, &file);
-    assert_eq!(made, 1, "another shader variant: the frame makes its own pipeline");
-    assert!(picture == reference, "another shader variant: wrong picture");
+    assert_eq!(
+        made, 1,
+        "another shader variant: the frame makes its own pipeline"
+    );
+    assert!(
+        picture == reference,
+        "another shader variant: wrong picture"
+    );
     g.renderer.set_depth_mode(DepthMode::Standard);
 
     let _ = std::fs::remove_dir_all(&dir);

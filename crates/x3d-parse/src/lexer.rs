@@ -44,11 +44,17 @@ pub fn comment(input: &[u8], pos: usize) -> Option<usize> {
 
 /// A literal keyword regex such as `/PROTO/y` (no word boundary, like X_ITE).
 pub fn literal(input: &[u8], pos: usize, word: &str) -> Option<usize> {
-    input[pos..].starts_with(word.as_bytes()).then_some(pos + word.len())
+    input[pos..]
+        .starts_with(word.as_bytes())
+        .then_some(pos + word.len())
 }
 
 fn is_id_rest(b: u8) -> bool {
-    !(b <= 0x20 || matches!(b, 0x22 | 0x23 | 0x27 | 0x2c | 0x2e | 0x5b | 0x5c | 0x5d | 0x7b | 0x7d | 0x7f))
+    !(b <= 0x20
+        || matches!(
+            b,
+            0x22 | 0x23 | 0x27 | 0x2c | 0x2e | 0x5b | 0x5c | 0x5d | 0x7b | 0x7d | 0x7f
+        ))
 }
 
 fn is_id_first(b: u8) -> bool {
@@ -95,7 +101,18 @@ pub fn field_type(input: &[u8], pos: usize) -> Option<usize> {
 
     let rest = &s[2..];
 
-    let simple: &[&str] = &["Bool", "Double", "Float", "Image", "Int32", "Node", "Quaternion", "Rotation", "String", "Time"];
+    let simple: &[&str] = &[
+        "Bool",
+        "Double",
+        "Float",
+        "Image",
+        "Int32",
+        "Node",
+        "Quaternion",
+        "Rotation",
+        "String",
+        "Time",
+    ];
 
     if rest.starts_with(b"ColorRGBA") {
         return Some(pos + 2 + 9);
@@ -111,11 +128,19 @@ pub fn field_type(input: &[u8], pos: usize) -> Option<usize> {
         }
     }
 
-    if rest.starts_with(b"Matrix") && rest.len() >= 8 && matches!(rest[6], b'3' | b'4') && matches!(rest[7], b'd' | b'f') {
+    if rest.starts_with(b"Matrix")
+        && rest.len() >= 8
+        && matches!(rest[6], b'3' | b'4')
+        && matches!(rest[7], b'd' | b'f')
+    {
         return Some(pos + 2 + 8);
     }
 
-    if rest.starts_with(b"Vec") && rest.len() >= 5 && matches!(rest[3], b'2' | b'3' | b'4') && matches!(rest[4], b'd' | b'f') {
+    if rest.starts_with(b"Vec")
+        && rest.len() >= 5
+        && matches!(rest[3], b'2' | b'3' | b'4')
+        && matches!(rest[4], b'd' | b'f')
+    {
         return Some(pos + 2 + 5);
     }
 
@@ -185,7 +210,11 @@ pub fn double(input: &[u8], pos: usize) -> Option<usize> {
 
     // Second alternative: \d+\.?
     if end.is_none() && int_end > i {
-        end = Some(if int_end < s.len() && s[int_end] == b'.' { int_end + 1 } else { int_end });
+        end = Some(if int_end < s.len() && s[int_end] == b'.' {
+            int_end + 1
+        } else {
+            int_end
+        });
     }
 
     let mut end = end?;
@@ -243,11 +272,14 @@ pub fn constant(input: &[u8], pos: usize) -> Option<(usize, bool, String)> {
     let word = String::from_utf8_lossy(&input[i..j]).to_ascii_uppercase();
 
     const NAMES: &[&str] = &[
-        "NAN", "INFINITY", "INF", "PI", "PI2", "PI1_4", "PI2_4", "PI3_4", "PI4_4", "PI5_4", "PI6_4", "PI7_4", "PI8_4",
-        "PI1_2", "PI2_2", "PI3_2", "PI4_2", "PI1_3", "PI2_3", "PI3_3", "PI4_3", "PI5_3", "PI6_3", "SQRT1_2", "SQRT2",
+        "NAN", "INFINITY", "INF", "PI", "PI2", "PI1_4", "PI2_4", "PI3_4", "PI4_4", "PI5_4",
+        "PI6_4", "PI7_4", "PI8_4", "PI1_2", "PI2_2", "PI3_2", "PI4_2", "PI1_3", "PI2_3", "PI3_3",
+        "PI4_3", "PI5_3", "PI6_3", "SQRT1_2", "SQRT2",
     ];
 
-    NAMES.contains(&word.as_str()).then_some((j, negative, word))
+    NAMES
+        .contains(&word.as_str())
+        .then_some((j, negative, word))
 }
 
 pub fn constant_value(name: &str) -> f64 {
@@ -335,7 +367,19 @@ pub fn parse_float(text: &str) -> f64 {
 
 /// JS StrWhiteSpaceChar (WhiteSpace and LineTerminator), as `parseFloat` / `parseInt` skip it.
 fn is_js_space(c: char) -> bool {
-    matches!(c, '\t' | '\n' | '\u{b}' | '\u{c}' | '\r' | ' ' | '\u{a0}' | '\u{feff}' | '\u{1680}' | '\u{2000}'..='\u{200a}' | '\u{2028}' | '\u{2029}' | '\u{202f}' | '\u{205f}' | '\u{3000}')
+    matches!(
+        c,
+        '\t' | '\n'
+            | '\u{b}'
+            | '\u{c}'
+            | '\r'
+            | ' '
+            | '\u{a0}'
+            | '\u{feff}'
+            | '\u{1680}'
+            | '\u{2000}'
+            ..='\u{200a}' | '\u{2028}' | '\u{2029}' | '\u{202f}' | '\u{205f}' | '\u{3000}'
+    )
 }
 
 /// JS global `parseFloat (string)` on any string: the longest decimal (or `Infinity`) prefix
@@ -350,7 +394,11 @@ pub fn js_parse_float(text: &str) -> f64 {
     }
 
     if s[i..].starts_with("Infinity") {
-        return if b.first() == Some(&b'-') { f64::NEG_INFINITY } else { f64::INFINITY };
+        return if b.first() == Some(&b'-') {
+            f64::NEG_INFINITY
+        } else {
+            f64::INFINITY
+        };
     }
 
     let digits = |i: &mut usize| {
@@ -417,7 +465,11 @@ pub fn js_parse_int(text: &str) -> f64 {
     }
 
     let digits = &s[..n];
-    let v = if radix == 10 { digits.parse::<f64>().unwrap_or(f64::NAN) } else { parse_int(&format!("0x{digits}")) };
+    let v = if radix == 10 {
+        digits.parse::<f64>().unwrap_or(f64::NAN)
+    } else {
+        parse_int(&format!("0x{digits}"))
+    };
 
     if negative { -v } else { v }
 }

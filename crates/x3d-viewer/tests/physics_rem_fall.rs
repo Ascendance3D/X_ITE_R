@@ -3,13 +3,14 @@
 //! 2e-6. P6 closed: `rb-a.json` pins `currentFrameRate` to 1 / dt (`pinFrameRate`) like the oracle page, so
 //! X_ITE's physics step sees the same frame rate; unpinned, a clock-measured rate put frame 8 one substep off.
 
-
 use serde_json::Value;
 use std::path::PathBuf;
 use std::process::Command;
 
 fn number(text: &str, pattern: &str, group: usize) -> f64 {
-    let at = text.find(pattern).unwrap_or_else(|| panic!("no {pattern:?}"));
+    let at = text
+        .find(pattern)
+        .unwrap_or_else(|| panic!("no {pattern:?}"));
     let rest = &text[at + pattern.len()..];
     rest.split_whitespace().nth(group).unwrap().parse().unwrap()
 }
@@ -17,7 +18,10 @@ fn number(text: &str, pattern: &str, group: usize) -> f64 {
 fn body(text: &str) -> (f64, f64) {
     // The Transform TR's translation y and the RigidBody R's linearVelocity y.
     let tr = &text[text.find("DEF TR Transform").unwrap()..];
-    (number(tr, "translation ", 1), number(text, "linearVelocity ", 1))
+    (
+        number(tr, "translation ", 1),
+        number(text, "linearVelocity ", 1),
+    )
 }
 
 #[test]
@@ -43,7 +47,9 @@ fn fall(frames: usize) {
         .unwrap();
     assert!(status.success());
 
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("rb-a-xite.json")).unwrap()).unwrap();
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("rb-a-xite.json")).unwrap())
+            .unwrap();
     let rs: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap()).unwrap();
     let _ = std::fs::remove_file(&out);
     let mut worst = (0.0f64, 0.0f64);
@@ -54,7 +60,10 @@ fn fall(frames: usize) {
         let (rp, rv) = body(rs["vrml"][&key].as_str().unwrap());
 
         worst = (worst.0.max((jp - rp).abs()), worst.1.max((jv - rv).abs()));
-        assert!((jp - rp).abs() <= 2e-6 && (jv - rv).abs() <= 2e-6, "frame {frame}: position {jp} / {rp}, velocity {jv} / {rv}");
+        assert!(
+            (jp - rp).abs() <= 2e-6 && (jv - rv).abs() <= 2e-6,
+            "frame {frame}: position {jp} / {rp}, velocity {jv} / {rv}"
+        );
     }
 
     eprintln!("worst position {:e}, velocity {:e}", worst.0, worst.1);

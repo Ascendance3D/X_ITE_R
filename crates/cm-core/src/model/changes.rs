@@ -6,11 +6,14 @@ use std::rc::Rc;
 use super::change_measurement::compute_sel_after_change;
 use super::doc::Doc;
 use super::document_data::update_doc;
-use super::history::{add_change_to_history, history_change_from_change, merge_old_spans, push_selection_to_history, ChangeEvent, HistEvent, HistRef};
-use super::selection::{new_sel, Range, Sel, SelRange};
-use super::selection_updates::{set_selection, set_selection_no_undo, skip_atomic, SelOptions};
-use super::spans::{remove_read_only_ranges, stretch_spans_over_change, NewSpans};
-use crate::pos::{cmp, Pos, PosRef};
+use super::history::{
+    ChangeEvent, HistEvent, HistRef, add_change_to_history, history_change_from_change,
+    merge_old_spans, push_selection_to_history,
+};
+use super::selection::{Range, Sel, SelRange, new_sel};
+use super::selection_updates::{SelOptions, set_selection, set_selection_no_undo, skip_atomic};
+use super::spans::{NewSpans, remove_read_only_ranges, stretch_spans_over_change};
+use crate::pos::{Pos, PosRef, cmp};
 use crate::text::Text;
 
 /// An `updateDoc`-style change object.
@@ -63,9 +66,23 @@ impl BeforeChange {
     ///
     /// # Panics
     /// When `can_update()` is false — calling the missing method throws in the JS.
-    pub fn update(&mut self, from: Option<Pos>, to: Option<Pos>, text: Option<Vec<String>>, origin: Option<Option<String>>) {
-        assert!(self.can_update, "TypeError: change.update is not a function");
-        let p = self.pending.get_or_insert(PendingUpdate { from: None, to: None, text: None, origin: None });
+    pub fn update(
+        &mut self,
+        from: Option<Pos>,
+        to: Option<Pos>,
+        text: Option<Vec<String>>,
+        origin: Option<Option<String>>,
+    ) {
+        assert!(
+            self.can_update,
+            "TypeError: change.update is not a function"
+        );
+        let p = self.pending.get_or_insert(PendingUpdate {
+            from: None,
+            to: None,
+            text: None,
+            origin: None,
+        });
         if from.is_some() {
             p.from = from;
         }
@@ -88,7 +105,11 @@ fn filter_change(doc: &Doc, change: &Change, update: bool) -> Option<Change> {
     let mut obj = BeforeChange {
         from: change.from,
         to: change.to,
-        text: change.text().iter().map(|t| crate::text::from_u16(t)).collect(),
+        text: change
+            .text()
+            .iter()
+            .map(|t| crate::text::from_u16(t))
+            .collect(),
         origin: change.origin.clone(),
         canceled: false,
         can_update: update,
@@ -117,7 +138,13 @@ fn filter_change(doc: &Doc, change: &Change, update: bool) -> Option<Change> {
     if obj.canceled {
         return None;
     }
-    Some(Change { from: obj.from, to: obj.to, text: Some(text_u16), origin: obj.origin, full: false })
+    Some(Change {
+        from: obj.from,
+        to: obj.to,
+        text: Some(text_u16),
+        origin: obj.origin,
+        full: false,
+    })
 }
 
 /// `makeChange(doc, change, ignoreReadOnly)`.
@@ -136,14 +163,28 @@ pub(crate) fn make_change(doc: &Doc, change: Change, ignore_read_only: bool) {
         }
         // Possibly split or suppress the update based on the presence of read-only
         // spans in its range.
-        let split = if ignore_read_only { None } else { remove_read_only_ranges(doc, change.from, change.to) };
+        let split = if ignore_read_only {
+            None
+        } else {
+            remove_read_only_ranges(doc, change.from, change.to)
+        };
         match split {
             Some(split) => {
                 for i in (0..split.len()).rev() {
-                    let text = if i > 0 { vec![Vec::new()] } else { change.text().clone() };
+                    let text = if i > 0 {
+                        vec![Vec::new()]
+                    } else {
+                        change.text().clone()
+                    };
                     make_change_inner(
                         doc,
-                        Change { from: split[i].0, to: split[i].1, text: Some(text), origin: change.origin.clone(), full: false },
+                        Change {
+                            from: split[i].0,
+                            to: split[i].1,
+                            text: Some(text),
+                            origin: change.origin.clone(),
+                            full: false,
+                        },
                     );
                 }
             }
@@ -208,18 +249,33 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
     loop {
         let popped = {
             let mut hist = hist_rc.borrow_mut();
-            let source = if undo { &mut hist.done } else { &mut hist.undone };
+            let source = if undo {
+                &mut hist.done
+            } else {
+                &mut hist.undone
+            };
             source.pop().expect("usable event exists")
         };
         match popped {
             HistEvent::Sel(s) => {
                 {
                     let mut hist = hist_rc.borrow_mut();
-                    if undo { push_selection_to_history(&s, &mut hist.undone) } else { hist.push_sel_done(&s) }
+                    if undo {
+                        push_selection_to_history(&s, &mut hist.undone)
+                    } else {
+                        hist.push_sel_done(&s)
+                    }
                 }
                 let cur_sel = doc.inner().sel.clone();
                 if allow_selection_only && !super::selection::sel_equals(&s, &cur_sel) {
-                    set_selection(doc, s, Some(&SelOptions { clear_redo: Some(false), ..Default::default() }));
+                    set_selection(
+                        doc,
+                        s,
+                        Some(&SelOptions {
+                            clear_redo: Some(false),
+                            ..Default::default()
+                        }),
+                    );
                     return;
                 }
                 sel_after = s;
@@ -228,7 +284,11 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
                 if suppress {
                     // `else if (suppress) { source.push(event); return }`
                     let mut hist = hist_rc.borrow_mut();
-                    let source = if undo { &mut hist.done } else { &mut hist.undone };
+                    let source = if undo {
+                        &mut hist.done
+                    } else {
+                        &mut hist.undone
+                    };
                     source.push(HistEvent::Change(c));
                     return;
                 }
@@ -242,9 +302,20 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
     let dest_idx = {
         let mut hist = hist_rc.borrow_mut();
         let generation = hist.generation;
-        if undo { push_selection_to_history(&sel_after, &mut hist.undone) } else { hist.push_sel_done(&sel_after) }
-        let dest = if undo { &mut hist.undone } else { &mut hist.done };
-        dest.push(HistEvent::Change(ChangeEvent { changes: Vec::new(), generation: Some(generation) }));
+        if undo {
+            push_selection_to_history(&sel_after, &mut hist.undone)
+        } else {
+            hist.push_sel_done(&sel_after)
+        }
+        let dest = if undo {
+            &mut hist.undone
+        } else {
+            &mut hist.done
+        };
+        dest.push(HistEvent::Change(ChangeEvent {
+            changes: Vec::new(),
+            generation: Some(generation),
+        }));
         let idx = dest.len() - 1;
         hist.generation = match event.generation {
             Some(g) if g != 0 => g,
@@ -269,7 +340,11 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
         };
         if filter && filter_change(doc, &change, false).is_none() {
             let mut hist = hist_rc.borrow_mut();
-            let source = if undo { &mut hist.done } else { &mut hist.undone };
+            let source = if undo {
+                &mut hist.done
+            } else {
+                &mut hist.undone
+            };
             source.clear();
             return;
         }
@@ -277,7 +352,11 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
         let anti = history_change_from_change(doc, &change);
         {
             let mut hist = hist_rc.borrow_mut();
-            let dest = if undo { &mut hist.undone } else { &mut hist.done };
+            let dest = if undo {
+                &mut hist.undone
+            } else {
+                &mut hist.done
+            };
             if let Some(HistEvent::Change(ev)) = dest.get_mut(dest_idx) {
                 ev.changes.push(anti);
             }
@@ -287,7 +366,11 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
             Some(compute_sel_after_change(doc, &change))
         } else {
             let hist = hist_rc.borrow();
-            let last = if undo { hist.lst_done() } else { hist.undone.last() };
+            let last = if undo {
+                hist.lst_done()
+            } else {
+                hist.undone.last()
+            };
             match last {
                 Some(HistEvent::Sel(s)) => Some(s.clone()),
                 None => None,
@@ -334,10 +417,18 @@ fn shift_doc(doc: &Doc, distance: i64) {
 
 /// `makeChangeSingleDoc(doc, change, selAfter, spans)`: apply to one document,
 /// clipping the change to a sub-view's range.
-fn make_change_single_doc(doc: &Doc, change: &Change, sel_after: Option<Sel>, spans: Option<NewSpans>) {
+fn make_change_single_doc(
+    doc: &Doc,
+    change: &Change,
+    sel_after: Option<Sel>,
+    spans: Option<NewSpans>,
+) {
     let text = change.text();
     if change.to.line < doc.first_line() {
-        shift_doc(doc, text.len() as i64 - 1 - (change.to.line - change.from.line));
+        shift_doc(
+            doc,
+            text.len() as i64 - 1 - (change.to.line - change.from.line),
+        );
         return;
     }
     if change.from.line > doc.last_line() {
@@ -381,7 +472,14 @@ fn make_change_single_doc(doc: &Doc, change: &Change, sel_after: Option<Sel>, sp
             origin: change.origin.clone(),
         });
     }
-    set_selection_no_undo(doc, sel_after, Some(&SelOptions { scroll: Some(false), ..Default::default() }));
+    set_selection_no_undo(
+        doc,
+        sel_after,
+        Some(&SelOptions {
+            scroll: Some(false),
+            ..Default::default()
+        }),
+    );
 
     if doc.inner().cant_edit {
         // `skipAtomic` always returns a truthy position, so this always resets.
@@ -391,9 +489,29 @@ fn make_change_single_doc(doc: &Doc, change: &Change, sel_after: Option<Sel>, sp
 }
 
 /// `replaceRange(doc, code, from, to, origin)` with clipped positions.
-pub(crate) fn replace_range(doc: &Doc, code: Vec<Text>, from: Pos, to: Pos, origin: Option<String>) {
-    let (from, to) = if cmp(&to, &from).is_lt() { (to, from) } else { (from, to) };
-    make_change(doc, Change { from, to, text: Some(code), origin, full: false }, false);
+pub(crate) fn replace_range(
+    doc: &Doc,
+    code: Vec<Text>,
+    from: Pos,
+    to: Pos,
+    origin: Option<String>,
+) {
+    let (from, to) = if cmp(&to, &from).is_lt() {
+        (to, from)
+    } else {
+        (from, to)
+    };
+    make_change(
+        doc,
+        Change {
+            from,
+            to,
+            text: Some(code),
+            origin,
+            full: false,
+        },
+        false,
+    );
 }
 
 fn rebase_hist_sel_single(pos: &PosRef, from: i64, to: i64, diff: i64) {
@@ -468,7 +586,11 @@ pub struct BeforeSelectionChange {
 
 impl BeforeSelectionChange {
     pub(crate) fn new(ranges: Vec<SelRange>, origin: Option<String>) -> Self {
-        BeforeSelectionChange { ranges, origin, updated: None }
+        BeforeSelectionChange {
+            ranges,
+            origin,
+            updated: None,
+        }
     }
     /// `obj.update(ranges)`: replace the new selection. Positions are clipped when
     /// the update is applied.

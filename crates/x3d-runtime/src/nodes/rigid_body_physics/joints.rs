@@ -5,7 +5,7 @@
 
 use super::*;
 use crate::physics::bt::constraint::Constraint;
-use crate::physics::bt::math::{rt, Tf, V3};
+use crate::physics::bt::math::{Tf, V3, rt};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum JointKind {
@@ -166,8 +166,22 @@ impl Runtime {
         let kind = self.joint_rt(node).kind;
         let all: &[&str] = match kind {
             JointKind::Ball => &["body1AnchorPoint", "body2AnchorPoint"],
-            JointKind::SingleAxisHinge => &["body1AnchorPoint", "body2AnchorPoint", "angle", "angularRate"],
-            JointKind::DoubleAxisHinge => &["body1AnchorPoint", "body2AnchorPoint", "body1Axis", "body2Axis", "hinge1Angle", "hinge2Angle", "hinge1AngleRate", "hinge2AngleRate"],
+            JointKind::SingleAxisHinge => &[
+                "body1AnchorPoint",
+                "body2AnchorPoint",
+                "angle",
+                "angularRate",
+            ],
+            JointKind::DoubleAxisHinge => &[
+                "body1AnchorPoint",
+                "body2AnchorPoint",
+                "body1Axis",
+                "body2Axis",
+                "hinge1Angle",
+                "hinge2Angle",
+                "hinge1AngleRate",
+                "hinge2AngleRate",
+            ],
             JointKind::Slider => &["separation", "separationRate"],
             // The base class's set_forceOutput__ does nothing.
             JointKind::Universal | JointKind::Motor => return,
@@ -196,7 +210,11 @@ impl Runtime {
     pub(super) fn joint_set_body(&mut self, node: NodeId, which: u8) {
         self.joint_remove(node);
 
-        let (update_cb, old) = if which == 1 { (PhysicsCb::JointUpdate1, self.joint_rt(node).body_node1) } else { (PhysicsCb::JointUpdate2, self.joint_rt(node).body_node2) };
+        let (update_cb, old) = if which == 1 {
+            (PhysicsCb::JointUpdate1, self.joint_rt(node).body_node1)
+        } else {
+            (PhysicsCb::JointUpdate2, self.joint_rt(node).body_node2)
+        };
 
         if let Some(b) = old {
             self.remove_node_interest(b, node, Cb::Physics(update_cb));
@@ -206,7 +224,11 @@ impl Runtime {
             }
         }
 
-        let body = self.phys_cast_field(node, if which == 1 { "body1" } else { "body2" }, is_rigid_body);
+        let body = self.phys_cast_field(
+            node,
+            if which == 1 { "body1" } else { "body2" },
+            is_rigid_body,
+        );
 
         {
             let j = self.joint_rt_mut(node);
@@ -254,7 +276,9 @@ impl Runtime {
         let j = self.joint_rt(node);
         let (b1, b2) = (j.body_node1?, j.body_node2?);
 
-        if self.body_collection(b1) != Some(collection) || self.body_collection(b2) != Some(collection) {
+        if self.body_collection(b1) != Some(collection)
+            || self.body_collection(b2) != Some(collection)
+        {
             return None;
         }
 
@@ -311,7 +335,18 @@ impl Runtime {
                     j.local_anchor2 = a2;
                 }
 
-                self.with_world(Some(collection), |pw| Constraint::hinge(&pw.w.bodies, body_a, body_b, v3a(&a1), v3a(&a2), v3a(&x1), v3a(&x2), false))
+                self.with_world(Some(collection), |pw| {
+                    Constraint::hinge(
+                        &pw.w.bodies,
+                        body_a,
+                        body_b,
+                        v3a(&a1),
+                        v3a(&a2),
+                        v3a(&x1),
+                        v3a(&x2),
+                        false,
+                    )
+                })
             }
             JointKind::DoubleAxisHinge => {
                 let anchor = self.pv3(node, "anchorPoint");
@@ -325,7 +360,18 @@ impl Runtime {
                 inv2.mult_dir_matrix(&mut x2);
                 x2.normalize();
 
-                self.with_world(Some(collection), |pw| Constraint::hinge(&pw.w.bodies, body_a, body_b, v3a(&a1), v3a(&a2), v3a(&x1), v3a(&x2), false))
+                self.with_world(Some(collection), |pw| {
+                    Constraint::hinge(
+                        &pw.w.bodies,
+                        body_a,
+                        body_b,
+                        v3a(&a1),
+                        v3a(&a2),
+                        v3a(&x1),
+                        v3a(&x2),
+                        false,
+                    )
+                })
             }
             JointKind::Slider => {
                 let axis = self.pv3(node, "axis");
@@ -342,10 +388,25 @@ impl Runtime {
                 let matrix_b = transform_matrix(&position, &orientation);
                 // frameInA gets the basis of matrixA, then (a typo upstream) the basis of matrixB; frameInB
                 // only gets an origin, its basis stays the identity.
-                let frame_a = rt(Tf { b: [[matrix_b.0[0], matrix_b.0[4], matrix_b.0[8]], [matrix_b.0[1], matrix_b.0[5], matrix_b.0[9]], [matrix_b.0[2], matrix_b.0[6], matrix_b.0[10]]], o: [matrix_a.0[12], matrix_a.0[13], matrix_a.0[14]] });
-                let frame_b = rt(Tf { b: [[0.0; 3]; 3], o: [matrix_b.0[12], matrix_b.0[13], matrix_b.0[14]] });
-                let (lower, upper) = (self.get_f64(node, "minSeparation"), self.get_f64(node, "maxSeparation"));
-                let mut c = self.with_world(Some(collection), |pw| Constraint::slider(&pw.w.bodies, body_a, body_b, frame_a, frame_b, true));
+                let frame_a = rt(Tf {
+                    b: [
+                        [matrix_b.0[0], matrix_b.0[4], matrix_b.0[8]],
+                        [matrix_b.0[1], matrix_b.0[5], matrix_b.0[9]],
+                        [matrix_b.0[2], matrix_b.0[6], matrix_b.0[10]],
+                    ],
+                    o: [matrix_a.0[12], matrix_a.0[13], matrix_a.0[14]],
+                });
+                let frame_b = rt(Tf {
+                    b: [[0.0; 3]; 3],
+                    o: [matrix_b.0[12], matrix_b.0[13], matrix_b.0[14]],
+                });
+                let (lower, upper) = (
+                    self.get_f64(node, "minSeparation"),
+                    self.get_f64(node, "maxSeparation"),
+                );
+                let mut c = self.with_world(Some(collection), |pw| {
+                    Constraint::slider(&pw.w.bodies, body_a, body_b, frame_a, frame_b, true)
+                });
 
                 c.set_lower_ang_limit(0.0);
                 c.set_upper_ang_limit(0.0);
@@ -371,7 +432,9 @@ impl Runtime {
 
         if matches!(self.phys(collection), Some(PhysState::Collection(rt)) if rt.world.is_some()) {
             self.with_world(Some(collection), |pw| pw.w.remove_constraint(id));
-            self.coll_rt_mut(collection).constraint_ids.retain(|&c| c != id);
+            self.coll_rt_mut(collection)
+                .constraint_ids
+                .retain(|&c| c != id);
         }
     }
 
@@ -404,7 +467,10 @@ impl Runtime {
         let Some((collection, id)) = self.joint_rt(node).constraint else {
             return;
         };
-        let (lower, upper) = (self.get_f64(node, "minSeparation"), self.get_f64(node, "maxSeparation"));
+        let (lower, upper) = (
+            self.get_f64(node, "minSeparation"),
+            self.get_f64(node, "maxSeparation"),
+        );
 
         self.with_world(Some(collection), |pw| {
             pw.w.joints[id].set_lower_lin_limit(lower);
@@ -419,7 +485,11 @@ impl Runtime {
     /// `update1 ()` and `update2 ()`: the body moved (`which` names the body).
     pub(super) fn joint_update(&mut self, node: NodeId, which: u8) {
         let kind = self.joint_rt(node).kind;
-        let body = if which == 1 { self.joint_rt(node).body_node1 } else { self.joint_rt(node).body_node2 };
+        let body = if which == 1 {
+            self.joint_rt(node).body_node1
+        } else {
+            self.joint_rt(node).body_node2
+        };
         let Some(body) = body else {
             return;
         };
@@ -434,9 +504,19 @@ impl Runtime {
             }
         };
         let (anchor_name, axis_name, angle_name, rate_name) = if which == 1 {
-            ("body1AnchorPoint", "body1Axis", "hinge1Angle", "hinge1AngleRate")
+            (
+                "body1AnchorPoint",
+                "body1Axis",
+                "hinge1Angle",
+                "hinge1AngleRate",
+            )
         } else {
-            ("body2AnchorPoint", "body2Axis", "hinge2Angle", "hinge2AngleRate")
+            (
+                "body2AnchorPoint",
+                "body2Axis",
+                "hinge2Angle",
+                "hinge2AngleRate",
+            )
         };
 
         // body .getMatrix () .multVecMatrix (initialInverseMatrix .multVecMatrix (localAnchorPoint))

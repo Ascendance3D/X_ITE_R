@@ -7,7 +7,7 @@
 
 use super::*;
 use crate::glsl_compat::{Program, Scalar, Ty};
-use crate::shader_gpu::{link_sources, CustomDraw};
+use crate::shader_gpu::{CustomDraw, link_sources};
 use x3d_fields::FieldValue;
 use x3d_fields::access;
 
@@ -47,25 +47,55 @@ fn f32s<T: Copy + Into<f64>>(v: &[T]) -> Vec<f32> {
 fn elements(v: &FieldValue) -> Option<(Class, Vec<Vec<f32>>, bool)> {
     use FieldValue::*;
 
-    let chunks = |flat: Vec<f32>, n: usize| -> Vec<Vec<f32>> { flat.chunks_exact(n).map(|c| c.to_vec()).collect() };
+    let chunks = |flat: Vec<f32>, n: usize| -> Vec<Vec<f32>> {
+        flat.chunks_exact(n).map(|c| c.to_vec()).collect()
+    };
 
     Some(match v {
         SFBool(b) => (Class::Int, vec![vec![*b as u32 as f32]], false),
         SFInt32(i) => (Class::Int, vec![vec![*i as f32]], false),
         SFFloat(f) | SFDouble(f) | SFTime(f) => (Class::Float, vec![vec![*f as f32]], false),
         SFVec2f(x) | SFVec2d(x) => (Class::F2, vec![vec![x.x as f32, x.y as f32]], false),
-        SFColor(c) => (Class::F3, vec![vec![c.r() as f32, c.g() as f32, c.b() as f32]], false),
-        SFVec3f(x) | SFVec3d(x) => (Class::F3, vec![vec![x.x as f32, x.y as f32, x.z as f32]], false),
-        SFColorRGBA(c) => (Class::F4, vec![c.components().iter().map(|v| *v as f32).collect()], false),
-        SFVec4f(x) | SFVec4d(x) => (Class::F4, vec![vec![x.x as f32, x.y as f32, x.z as f32, x.w as f32]], false),
+        SFColor(c) => (
+            Class::F3,
+            vec![vec![c.r() as f32, c.g() as f32, c.b() as f32]],
+            false,
+        ),
+        SFVec3f(x) | SFVec3d(x) => (
+            Class::F3,
+            vec![vec![x.x as f32, x.y as f32, x.z as f32]],
+            false,
+        ),
+        SFColorRGBA(c) => (
+            Class::F4,
+            vec![c.components().iter().map(|v| *v as f32).collect()],
+            false,
+        ),
+        SFVec4f(x) | SFVec4d(x) => (
+            Class::F4,
+            vec![vec![x.x as f32, x.y as f32, x.z as f32, x.w as f32]],
+            false,
+        ),
         SFMatrix3f(m) | SFMatrix3d(m) => (Class::M3, vec![f32s(&m.0)], false),
         SFMatrix4f(m) | SFMatrix4d(m) => (Class::M4, vec![f32s(&m.0)], false),
         SFRotation(r) => (Class::M3, vec![f32s(&r.get_matrix().0)], false),
         SFQuaternion(q) => (Class::M3, vec![f32s(&q.get_matrix3().0)], false),
-        MFBool(b) => (Class::Int, b.iter().map(|x| vec![*x as u32 as f32]).collect(), true),
-        MFInt32(i) => (Class::Int, i.iter().map(|x| vec![*x as f32]).collect(), true),
+        MFBool(b) => (
+            Class::Int,
+            b.iter().map(|x| vec![*x as u32 as f32]).collect(),
+            true,
+        ),
+        MFInt32(i) => (
+            Class::Int,
+            i.iter().map(|x| vec![*x as f32]).collect(),
+            true,
+        ),
         MFFloat(f) => (Class::Float, f.iter().map(|x| vec![*x]).collect(), true),
-        MFDouble(f) | MFTime(f) => (Class::Float, f.iter().map(|x| vec![*x as f32]).collect(), true),
+        MFDouble(f) | MFTime(f) => (
+            Class::Float,
+            f.iter().map(|x| vec![*x as f32]).collect(),
+            true,
+        ),
         MFVec2f(f) => (Class::F2, chunks(f.clone(), 2), true),
         MFVec2d(f) => (Class::F2, chunks(f32s(f), 2), true),
         MFColor(f) | MFVec3f(f) => (Class::F3, chunks(f.clone(), 3), true),
@@ -78,12 +108,28 @@ fn elements(v: &FieldValue) -> Option<(Class, Vec<Vec<f32>>, bool)> {
         MFMatrix4d(f) => (Class::M4, chunks(f32s(f), 16), true),
         MFRotation(f) => (
             Class::M3,
-            f.chunks_exact(4).map(|c| f32s(&x3d_fields::math::Rotation4::new(c[0], c[1], c[2], c[3]).get_matrix().0)).collect(),
+            f.chunks_exact(4)
+                .map(|c| {
+                    f32s(
+                        &x3d_fields::math::Rotation4::new(c[0], c[1], c[2], c[3])
+                            .get_matrix()
+                            .0,
+                    )
+                })
+                .collect(),
             true,
         ),
         MFQuaternion(f) => (
             Class::M3,
-            f.chunks_exact(4).map(|c| f32s(&x3d_fields::math::Quaternion::new(c[0], c[1], c[2], c[3]).get_matrix3().0)).collect(),
+            f.chunks_exact(4)
+                .map(|c| {
+                    f32s(
+                        &x3d_fields::math::Quaternion::new(c[0], c[1], c[2], c[3])
+                            .get_matrix3()
+                            .0,
+                    )
+                })
+                .collect(),
             true,
         ),
         _ => return None,
@@ -97,22 +143,41 @@ fn write_field(p: &Program, buf: &mut [[f32; 4]], name: &str, value: &FieldValue
 
     // SFImage / MFImage: int arrays [width, height, components, pixels...].
     let images: Option<Vec<f32>> = match value {
-        FieldValue::SFImage(i) => Some([i.width as f32, i.height as f32, i.comp as f32].into_iter().chain(i.array.iter().map(|v| *v as f32)).collect()),
-        FieldValue::MFImage(list) => Some(list.iter().flat_map(|i| [i.width as f32, i.height as f32, i.comp as f32].into_iter().chain(i.array.iter().map(|v| *v as f32))).collect()),
+        FieldValue::SFImage(i) => Some(
+            [i.width as f32, i.height as f32, i.comp as f32]
+                .into_iter()
+                .chain(i.array.iter().map(|v| *v as f32))
+                .collect(),
+        ),
+        FieldValue::MFImage(list) => Some(
+            list.iter()
+                .flat_map(|i| {
+                    [i.width as f32, i.height as f32, i.comp as f32]
+                        .into_iter()
+                        .chain(i.array.iter().map(|v| *v as f32))
+                })
+                .collect(),
+        ),
         _ => None,
     };
 
     if let Some(flat) = images {
         if let (Some(len), Ty::Scalar(Scalar::Int)) = (decl.array, &decl.ty) {
             for k in 0..len as usize {
-                p.set(buf, &format!("{name}[{k}]"), &[flat.get(k).copied().unwrap_or(0.0)]);
+                p.set(
+                    buf,
+                    &format!("{name}[{k}]"),
+                    &[flat.get(k).copied().unwrap_or(0.0)],
+                );
             }
         }
 
         return;
     }
 
-    let Some((class, elems, is_array)) = elements(value) else { return };
+    let Some((class, elems, is_array)) = elements(value) else {
+        return;
+    };
 
     if !compatible(class, &decl.ty) {
         return;
@@ -142,7 +207,11 @@ fn write_field(p: &Program, buf: &mut [[f32; 4]], name: &str, value: &FieldValue
 
 impl Builder<'_> {
     /// The CustomDraw of an Appearance whose `shaders` selected a valid ComposedShader.
-    pub(super) fn custom_draw(&mut self, sg: &Sg, appearance: Option<NodeId>) -> Option<Rc<CustomDraw>> {
+    pub(super) fn custom_draw(
+        &mut self,
+        sg: &Sg,
+        appearance: Option<NodeId>,
+    ) -> Option<Rc<CustomDraw>> {
         let a = appearance?;
         let shader = sg.rt.appearance_shader(a)?;
         let (vs, fs) = sg.rt.composed_shader_sources(shader)?;
@@ -154,13 +223,21 @@ impl Builder<'_> {
         // The texture locations that hold a texture node now, in field order (the Set's members).
         let mut present: Vec<String> = vec![];
 
-        for f in node.user_fields.iter().filter(|f| f.access != access::OUTPUT_ONLY) {
+        for f in node
+            .user_fields
+            .iter()
+            .filter(|f| f.access != access::OUTPUT_ONLY)
+        {
             match &f.value {
                 FieldValue::SFNode(n) => {
                     if let Some(t) = n {
                         let tex = self.shader_texture(sg, *t);
 
-                        if let Some(k) = program.samplers.iter().position(|s| s.name == f.name && s.index.is_none()) {
+                        if let Some(k) = program
+                            .samplers
+                            .iter()
+                            .position(|s| s.name == f.name && s.index.is_none())
+                        {
                             if tex.is_some() {
                                 present.push(f.name.clone());
                             }
@@ -174,7 +251,11 @@ impl Builder<'_> {
                         let Some(t) = n else { continue };
                         let tex = self.shader_texture(sg, *t);
 
-                        if let Some(k) = program.samplers.iter().position(|s| s.name == f.name && s.index == Some(i as u32)) {
+                        if let Some(k) = program
+                            .samplers
+                            .iter()
+                            .position(|s| s.name == f.name && s.index == Some(i as u32))
+                        {
                             if tex.is_some() {
                                 present.push(format!("{}[{i}]", f.name));
                             }
@@ -201,9 +282,19 @@ impl Builder<'_> {
         }
 
         // Appearance.getAlphaCutoff () (x3d_AlphaCutoff).
-        program.set(&mut user, "x3d_AlphaCutoff", &[sg.f64(a, "alphaCutoff", 0.5) as f32]);
+        program.set(
+            &mut user,
+            "x3d_AlphaCutoff",
+            &[sg.f64(a, "alphaCutoff", 0.5) as f32],
+        );
 
-        Some(Rc::new(CustomDraw { program, user, user_textures, clip_planes: sg.rt.composed_clip_planes(shader).unwrap_or_default(), gl }))
+        Some(Rc::new(CustomDraw {
+            program,
+            user,
+            user_textures,
+            clip_planes: sg.rt.composed_clip_planes(shader).unwrap_or_default(),
+            gl,
+        }))
     }
 
     /// X3DCast (X3DTextureNode, field): the texture a field names; one that has not loaded binds the

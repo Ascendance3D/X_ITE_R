@@ -3,7 +3,10 @@
 //! struct member (vertices, closest points, barycentric weights, the separating axis).
 //! The EPA fallback is `crate::bullet::calc_pen_depth`, a transcription of the same build's btGjkEpaSolver2.
 
-use crate::bullet::{self, add, closest_point_triangle, cross, dot, len2, mul, sub, ClosestPoints, Convex, Placed, SubResult, Transform, V};
+use crate::bullet::{
+    self, ClosestPoints, Convex, Placed, SubResult, Transform, V, add, closest_point_triangle,
+    cross, dot, len2, mul, sub,
+};
 
 fn f(x: f64) -> f64 {
     x as f32 as f64
@@ -44,7 +47,20 @@ struct Voronoi {
 
 impl Voronoi {
     fn new() -> Voronoi {
-        Voronoi { n: 0, w: [[0.0; 3]; 5], p: [[0.0; 3]; 5], q: [[0.0; 3]; 5], cp1: [0.0; 3], cp2: [0.0; 3], cv: [0.0; 3], last_w: [f(1e30); 3], valid: false, bc: SubResult::default(), needs_update: true, degenerate_bc: false }
+        Voronoi {
+            n: 0,
+            w: [[0.0; 3]; 5],
+            p: [[0.0; 3]; 5],
+            q: [[0.0; 3]; 5],
+            cp1: [0.0; 3],
+            cp2: [0.0; 3],
+            cv: [0.0; 3],
+            last_w: [f(1e30); 3],
+            valid: false,
+            bc: SubResult::default(),
+            needs_update: true,
+            degenerate_bc: false,
+        }
     }
 
     fn remove_vertex(&mut self, i: usize) {
@@ -126,8 +142,14 @@ impl Voronoi {
                 let r = closest_point_triangle([0.0; 3], self.w[0], self.w[1], self.w[2]);
                 let b = [f(r.bary[0]), f(r.bary[1]), f(r.bary[2])];
                 self.bc.bary = [b[0], b[1], b[2], 0.0];
-                let a = add(add(mul(self.p[0], b[0]), mul(self.p[1], b[1])), mul(self.p[2], b[2]));
-                let c = add(add(mul(self.q[0], b[0]), mul(self.q[1], b[1])), mul(self.q[2], b[2]));
+                let a = add(
+                    add(mul(self.p[0], b[0]), mul(self.p[1], b[1])),
+                    mul(self.p[2], b[2]),
+                );
+                let c = add(
+                    add(mul(self.q[0], b[0]), mul(self.q[1], b[1])),
+                    mul(self.q[2], b[2]),
+                );
                 self.cp1 = fv(a);
                 self.cp2 = fv(c);
                 self.cv = fv(sub(a, c));
@@ -135,7 +157,8 @@ impl Voronoi {
                 self.valid = b[0] >= 0.0 && b[1] >= 0.0 && b[2] >= 0.0;
             }
             4 => {
-                let (separated, r) = closest_point_tetrahedron([0.0; 3], self.w[0], self.w[1], self.w[2], self.w[3]);
+                let (separated, r) =
+                    closest_point_tetrahedron([0.0; 3], self.w[0], self.w[1], self.w[2], self.w[3]);
                 self.bc = r;
                 self.bc.bary = self.bc.bary.map(f);
 
@@ -178,8 +201,14 @@ pub fn gjk_pair(a: Placed, b: Placed, max_distance2: f64) -> Option<ClosestPoint
     let max_distance2 = f(max_distance2);
     let (oa, ob) = (a.t.origin, b.t.origin);
     let offset = mul(add(oa, ob), 0.5);
-    let ta = Transform { basis: a.t.basis, origin: fv(sub(oa, offset)) };
-    let tb = Transform { basis: b.t.basis, origin: fv(sub(ob, offset)) };
+    let ta = Transform {
+        basis: a.t.basis,
+        origin: fv(sub(oa, offset)),
+    };
+    let tb = Transform {
+        basis: b.t.basis,
+        origin: fv(sub(ob, offset)),
+    };
     let (sa, sb) = (a.shape, b.shape);
     let margin_a = sa.margin();
     let margin_b = sb.margin();
@@ -343,7 +372,11 @@ pub fn gjk_pair(a: Placed, b: Placed, max_distance2: f64) -> Option<ClosestPoint
     }
 
     let _ = cross;
-    Some(ClosestPoints { normal, point_on_b: add(point_b, offset), distance })
+    Some(ClosestPoints {
+        normal,
+        point_on_b: add(point_b, offset),
+        distance,
+    })
 }
 
 /// btVoronoiSimplexSolver.pointOutsideOfPlane. The degenerate limit is the float product
@@ -363,8 +396,17 @@ fn point_outside_of_plane(p: V, a: V, b: V, c: V, d: V) -> i32 {
 /// btVoronoiSimplexSolver.closestPtPointTetrahedron: (separated, result). The closest points of
 /// the faces are stored as floats before they are compared.
 fn closest_point_tetrahedron(p: V, a: V, b: V, c: V, d: V) -> (bool, SubResult) {
-    let mut fin = SubResult { closest: p, used: [true; 4], ..SubResult::default() };
-    let outside = [point_outside_of_plane(p, a, b, c, d), point_outside_of_plane(p, a, c, d, b), point_outside_of_plane(p, a, d, b, c), point_outside_of_plane(p, b, d, c, a)];
+    let mut fin = SubResult {
+        closest: p,
+        used: [true; 4],
+        ..SubResult::default()
+    };
+    let outside = [
+        point_outside_of_plane(p, a, b, c, d),
+        point_outside_of_plane(p, a, c, d, b),
+        point_outside_of_plane(p, a, d, b, c),
+        point_outside_of_plane(p, b, d, c, a),
+    ];
 
     if outside.iter().any(|&o| o < 0) {
         fin.degenerate = true;
@@ -376,7 +418,12 @@ fn closest_point_tetrahedron(p: V, a: V, b: V, c: V, d: V) -> (bool, SubResult) 
     }
 
     let mut best = f32::MAX as f64;
-    let faces = [([a, b, c], [0, 1, 2]), ([a, c, d], [0, 2, 3]), ([a, d, b], [0, 3, 1]), ([b, d, c], [1, 3, 2])];
+    let faces = [
+        ([a, b, c], [0, 1, 2]),
+        ([a, c, d], [0, 2, 3]),
+        ([a, d, b], [0, 3, 1]),
+        ([b, d, c], [1, 3, 2]),
+    ];
 
     for (k, (t, map)) in faces.iter().enumerate() {
         if outside[k] == 0 {

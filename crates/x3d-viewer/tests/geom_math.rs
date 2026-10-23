@@ -5,8 +5,13 @@
 
 use serde_json::Value;
 use x3d_fields::math::{Matrix3, Matrix4, Vector2, Vector3, Vector4};
-use x3d_viewer::geom::{Camera, Cylinder3, Line2, Line3, Plane3, Sphere3, Triangle3, Uvt, ViewVolume};
-use x3d_viewer::geom2::{Bezier, Box2, Sat, Spheroid3, Triangle2, ViewVolumeObject, eigen_decomposition, merge_sort, quick_sort};
+use x3d_viewer::geom::{
+    Camera, Cylinder3, Line2, Line3, Plane3, Sphere3, Triangle3, Uvt, ViewVolume,
+};
+use x3d_viewer::geom2::{
+    Bezier, Box2, Sat, Spheroid3, Triangle2, ViewVolumeObject, eigen_decomposition, merge_sort,
+    quick_sort,
+};
 use x3d_viewer::lookat::Box3;
 
 /// The inputs of one case, read in order.
@@ -112,7 +117,10 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
         "line3.points" => {
             let (a, b, q) = (i.v3(), i.v3(), i.v3());
             let l = Line3::from_points(&a, &b);
-            o.v3(&l.point).v3(&l.direction).v3(&l.get_closest_point_to_point(&q)).v3(&l.get_perpendicular_vector_to_point(&q));
+            o.v3(&l.point)
+                .v3(&l.direction)
+                .v3(&l.get_closest_point_to_point(&q))
+                .v3(&l.get_perpendicular_vector_to_point(&q));
         }
         "line3.line" => {
             let (a, b, c, d) = (i.v3(), i.v3(), i.v3(), i.v3());
@@ -124,7 +132,11 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
         "line3.triangle" => {
             let (a, b, ta, mut tb, mut tc) = (i.v3(), i.v3(), i.v3(), i.v3(), i.v3());
             let l = Line3::from_points(&a, &b);
-            let mut uvt = Uvt { u: 0.0, v: 0.0, t: 0.0 };
+            let mut uvt = Uvt {
+                u: 0.0,
+                v: 0.0,
+                t: 0.0,
+            };
             let hit = l.intersects_triangle(&ta, &mut tb, &mut tc, &mut uvt);
             o.b(hit).f(uvt.u).f(uvt.v).f(uvt.t).v3(&tb).v3(&tc);
         }
@@ -134,7 +146,10 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             let (mut l1, mut l2) = (l.copy(), l.copy());
             l1.mult_matrix_line(&m);
             l2.mult_line_matrix(&m);
-            o.v3(&l1.point).v3(&l1.direction).v3(&l2.point).v3(&l2.direction);
+            o.v3(&l1.point)
+                .v3(&l1.direction)
+                .v3(&l2.point)
+                .v3(&l2.direction);
         }
         "line2" => {
             let (a, b, q, c, d, m) = (i.v2(), i.v2(), i.v2(), i.v2(), i.v2(), i.m3());
@@ -144,8 +159,16 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             let (mut l1, mut l2) = (l.copy(), l.copy());
             l1.mult_matrix_line(&m);
             l2.mult_line_matrix(&m);
-            o.v2(&l.point).v2(&l.direction).v2(&l.get_closest_point_to_point(&q)).v2(&l.get_perpendicular_vector_to_point(&q));
-            o.b(hit).v2(&p).v2(&l1.point).v2(&l1.direction).v2(&l2.point).v2(&l2.direction);
+            o.v2(&l.point)
+                .v2(&l.direction)
+                .v2(&l.get_closest_point_to_point(&q))
+                .v2(&l.get_perpendicular_vector_to_point(&q));
+            o.b(hit)
+                .v2(&p)
+                .v2(&l1.point)
+                .v2(&l1.direction)
+                .v2(&l2.point)
+                .v2(&l2.direction);
         }
         "plane3" => {
             let (p, n, q, a, b, m) = (i.v3(), i.v3(), i.v3(), i.v3(), i.v3(), i.m4());
@@ -155,20 +178,35 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             let (mut s1, mut s2) = (s.copy(), s.copy());
             s1.mult_right(&m);
             s2.mult_left(&m);
-            o.v3(&s.normal).f(s.distance_from_origin).f(s.get_distance_to_point(&q)).v3(&s.get_closest_point_to_point(&q));
-            o.v3(&s.get_perpendicular_vector_to_point(&q)).b(hit).v3(&x).v3(&s1.normal).f(s1.distance_from_origin);
+            o.v3(&s.normal)
+                .f(s.distance_from_origin)
+                .f(s.get_distance_to_point(&q))
+                .v3(&s.get_closest_point_to_point(&q));
+            o.v3(&s.get_perpendicular_vector_to_point(&q))
+                .b(hit)
+                .v3(&x)
+                .v3(&s1.normal)
+                .f(s1.distance_from_origin);
             o.v3(&s2.normal).f(s2.distance_from_origin);
         }
         "sphere3" => {
             let (radius, c, a, b) = (i.f(), i.v3(), i.v3(), i.v3());
             let (mut enter, mut exit) = (Vector3::default(), Vector3::default());
-            let hit = Sphere3::new(radius, c).intersects_line(&Line3::from_points(&a, &b), &mut enter, &mut exit);
+            let hit = Sphere3::new(radius, c).intersects_line(
+                &Line3::from_points(&a, &b),
+                &mut enter,
+                &mut exit,
+            );
             o.b(hit).v3(&enter).v3(&exit);
         }
         "cylinder3" => {
             let (a, b, radius, c, d) = (i.v3(), i.v3(), i.f(), i.v3(), i.v3());
             let (mut enter, mut exit) = (Vector3::default(), Vector3::default());
-            let hit = Cylinder3::new(Line3::from_points(&a, &b), radius).intersects_line(&Line3::from_points(&c, &d), &mut enter, &mut exit);
+            let hit = Cylinder3::new(Line3::from_points(&a, &b), radius).intersects_line(
+                &Line3::from_points(&c, &d),
+                &mut enter,
+                &mut exit,
+            );
             o.b(hit).v3(&enter).v3(&exit);
         }
         "triangle3" => {
@@ -179,7 +217,8 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             o.f(Triangle3::area(&a, &b, &c)).v3(&n).v3(&q);
         }
         "viewvolume" => {
-            let (mv, pm, vp, win, pt, a, b) = (i.m4(), i.m4(), i.v4(), i.v3(), i.v3(), i.v3(), i.v3());
+            let (mv, pm, vp, win, pt, a, b) =
+                (i.m4(), i.m4(), i.v4(), i.v3(), i.v3(), i.v3(), i.v3());
             let (mut u, mut out) = (Vector3::default(), Vector3::default());
             let mut ray = Line3::new(Vector3::default(), Vector3::new(0.0, 0.0, 1.0));
             let mut l2 = Line2::new(Vector2::default(), Vector2::new(0.0, 1.0));
@@ -187,7 +226,12 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             ViewVolume::unproject_ray(win.x, win.y, &mv, &pm, &vp, &mut ray);
             ViewVolume::project_point(&pt, &mv, &pm, &vp, &mut out);
             ViewVolume::project_line(&Line3::from_points(&a, &b), &mv, &pm, &vp, &mut l2);
-            o.v3(&u).v3(&ray.point).v3(&ray.direction).v3(&out).v2(&l2.point).v2(&l2.direction);
+            o.v3(&u)
+                .v3(&ray.point)
+                .v3(&ray.direction)
+                .v3(&out)
+                .v2(&l2.point)
+                .v2(&l2.direction);
         }
         "camera.ortho" => {
             let (l, r, b, t, n, f) = (i.f(), i.f(), i.f(), i.f(), i.f(), i.f());
@@ -203,11 +247,16 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             o.v3(&lo).v3(&hi);
         }
         "box2" => {
-            let (min, max, m, mb, p, size, center) = (i.v2(), i.v2(), i.m3(), i.m3(), i.v2(), i.v2(), i.v2());
+            let (min, max, m, mb, p, size, center) =
+                (i.v2(), i.v2(), i.m3(), i.m3(), i.v2(), i.v2(), i.v2());
             let (q1, q2, q3, omin, omax) = (i.v2(), i.v2(), i.v2(), i.v2(), i.v2());
             let mut b = Box2::from_extents(&min, &max);
             let c = Box2::new(&size, &center);
-            o.m3(&c.matrix).b(b.is_empty()).b(Box2::default().is_empty()).b(b.contains_point(&p)).b(b.equals(&b.copy()));
+            o.m3(&c.matrix)
+                .b(b.is_empty())
+                .b(Box2::default().is_empty())
+                .b(b.contains_point(&p))
+                .b(b.equals(&b.copy()));
             o.v2(&b.size()).v2(&b.center());
             b.mult_right(&m);
             let (lo, hi) = b.extents();
@@ -229,7 +278,11 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
         "triangle2" => {
             let (a, b, c, p) = (i.v2(), i.v2(), i.v2(), i.v2());
             let bc = Triangle2::to_barycentric(&p, &a, &b, &c);
-            o.f(Triangle2::area(&a, &b, &c)).b(Triangle2::is_point_in_triangle(&p, &a, &b, &c)).f(bc.u).f(bc.v).f(bc.t);
+            o.f(Triangle2::area(&a, &b, &c))
+                .b(Triangle2::is_point_in_triangle(&p, &a, &b, &c))
+                .f(bc.u)
+                .f(bc.v)
+                .f(bc.t);
         }
         "spheroid3" => {
             let (a, c, f) = (i.f(), i.f(), i.b());
@@ -237,14 +290,23 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             o.f(s.semi_major_axis).f(s.semi_minor_axis).b(s.equals(&s));
         }
         "box3.more" => {
-            let (size, center, m, min, max, mo, p) = (i.v3(), i.v3(), i.m4(), i.v3(), i.v3(), i.m4(), i.v3());
+            let (size, center, m, min, max, mo, p) =
+                (i.v3(), i.v3(), i.m4(), i.v3(), i.v3(), i.m4(), i.v3());
             let arr = i.rest();
             let mut a = Box3::default();
             a.set(Some((&size, &center)));
             let mut b = Box3::from_extents(&min, &max);
             b.mult_left(&mo);
-            o.m4(&a.matrix).b(a.is_empty()).b(Box3::default().is_empty()).v3s(&a.points()).v3s(&a.axes()).v3s(&a.normals());
-            o.b(a.contains_point(&p)).b(a.intersects_box(&b)).b(b.intersects_box(&a)).b(a.intersects_box(&Box3::default()));
+            o.m4(&a.matrix)
+                .b(a.is_empty())
+                .b(Box3::default().is_empty())
+                .v3s(&a.points())
+                .v3s(&a.axes())
+                .v3s(&a.normals());
+            o.b(a.contains_point(&p))
+                .b(a.intersects_box(&b))
+                .b(b.intersects_box(&a))
+                .b(a.intersects_box(&Box3::default()));
             o.v3s(&b.points()).v3s(&b.normals());
             let mut c = a.clone();
             c.mult_left(&m);
@@ -263,21 +325,35 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             o.v3(&lo).v3(&hi);
             let (lo, hi) = Box3::from_array(&arr, 4).extents();
             o.v3(&lo).v3(&hi);
-            o.m4(&Box3::from_points(&[]).matrix).m4(&Box3::from_array(&[], 3).matrix).v3(&a.size());
+            o.m4(&Box3::from_points(&[]).matrix)
+                .m4(&Box3::from_array(&[], 3).matrix)
+                .v3(&a.size());
             let mut om = Matrix4([0.0; 16]);
             Camera::ortho_box(&b, &mut om);
             o.m4(&om);
         }
         "camera" => {
-            let (l, r, b, t, n, f, fov, w, h) = (i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f());
-            let (mut m1, mut m2, mut m3) = (Matrix4([0.0; 16]), Matrix4([0.0; 16]), Matrix4([0.0; 16]));
+            let (l, r, b, t, n, f, fov, w, h) = (
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+            );
+            let (mut m1, mut m2, mut m3) =
+                (Matrix4([0.0; 16]), Matrix4([0.0; 16]), Matrix4([0.0; 16]));
             Camera::frustum(l, r, b, t, n, f, &mut m1);
             Camera::perspective(fov, n, f, w, h, &mut m2);
             Camera::perspective2(fov, n, f, &mut m3);
             o.m4(&m1).m4(&m2).m4(&m3);
         }
         "viewvolume.object" => {
-            let (pm, vp, radius, center, size, bc, m) = (i.m4(), i.v4(), i.f(), i.v3(), i.v3(), i.v3(), i.m4());
+            let (pm, vp, radius, center, size, bc, m) =
+                (i.m4(), i.v4(), i.f(), i.v3(), i.v3(), i.v3(), i.m4());
             let mut v = ViewVolumeObject::new(&pm, &vp);
             let mut b = Box3::default();
             b.set(Some((&size, &bc)));
@@ -287,7 +363,10 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
                 o.v3(&p.normal).f(p.distance_from_origin);
             }
             let edges = v.edges();
-            o.v3s(&edges).v4(&v.viewport().clone()).b(v.intersects_sphere(radius, &center)).b(v.intersects_box(&b));
+            o.v3s(&edges)
+                .v4(&v.viewport().clone())
+                .b(v.intersects_sphere(radius, &center))
+                .b(v.intersects_box(&b));
             let mut c = Box3::default();
             c.set(Some((&size, &center)));
             o.b(v.intersects_box(&c));
@@ -301,12 +380,33 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
         "bezier" => {
             let c: Vec<f64> = (0..12).map(|_| i.f()).collect();
             let steps = i.f() as i64;
-            let (ax, ay, rx, ry, rot, large, sweep, x, y, st) = (i.f(), i.f(), i.f(), i.f(), i.f(), i.b(), i.b(), i.f(), i.f(), i.f());
+            let (ax, ay, rx, ry, rot, large, sweep, x, y, st) = (
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.f(),
+                i.b(),
+                i.b(),
+                i.f(),
+                i.f(),
+                i.f(),
+            );
             let (mut q, mut k, mut a) = (vec![], vec![], vec![]);
-            Bezier::quadric(c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], steps, &mut q);
-            Bezier::cubic(c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], c[10], c[11], steps, &mut k);
+            Bezier::quadric(
+                c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], steps, &mut q,
+            );
+            Bezier::cubic(
+                c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], c[10], c[11], steps,
+                &mut k,
+            );
             Bezier::arc(ax, ay, rx, ry, rot, large, sweep, x, y, st, &mut a);
-            o.f(q.len() as f64).v3s(&q).f(k.len() as f64).v3s(&k).f(a.len() as f64).v3s(&a);
+            o.f(q.len() as f64)
+                .v3s(&q)
+                .f(k.len() as f64)
+                .v3s(&k)
+                .f(a.len() as f64)
+                .v3s(&a);
         }
         "eigen" => {
             let order = i.f() as usize;
@@ -332,7 +432,10 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             merge_sort(&mut mn, first, last, &num);
             let mut qn = keys.clone();
             quick_sort(&mut qn, first, last, &num);
-            o.fs(&m.iter().map(|x| x.1 as f64).collect::<Vec<_>>()).fs(&q.iter().map(|x| x.1 as f64).collect::<Vec<_>>()).fs(&mn).fs(&qn);
+            o.fs(&m.iter().map(|x| x.1 as f64).collect::<Vec<_>>())
+                .fs(&q.iter().map(|x| x.1 as f64).collect::<Vec<_>>())
+                .fs(&mn)
+                .fs(&qn);
         }
         _ => panic!("unknown op {op}"),
     }
@@ -343,7 +446,10 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
 #[test]
 fn geometry_matches_x_ite_bit_for_bit() {
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
-    let baseline: Value = serde_json::from_str(&std::fs::read_to_string(root.join("oracle/geom-math-baseline.json")).unwrap()).unwrap();
+    let baseline: Value = serde_json::from_str(
+        &std::fs::read_to_string(root.join("oracle/geom-math-baseline.json")).unwrap(),
+    )
+    .unwrap();
     let cases = baseline["cases"].as_array().unwrap();
     let mut failures = vec![];
 
@@ -356,10 +462,16 @@ fn geometry_matches_x_ite_bit_for_bit() {
 
         assert_eq!(i.1, i.0.len(), "case {n} {op}: inputs left over");
 
-        let same = got.len() == expected.len() && got.iter().zip(&expected).all(|(a, b)| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan()));
+        let same = got.len() == expected.len()
+            && got
+                .iter()
+                .zip(&expected)
+                .all(|(a, b)| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan()));
 
         if !same {
-            failures.push(format!("case {n} {op}:\n  x_ite {expected:?}\n  port  {got:?}"));
+            failures.push(format!(
+                "case {n} {op}:\n  x_ite {expected:?}\n  port  {got:?}"
+            ));
         }
     }
 
@@ -371,10 +483,29 @@ fn geometry_matches_x_ite_bit_for_bit() {
         let got = x3d_render::traverse::perspective(fov, n, f, w, h);
         let want = &expected[16..32];
 
-        if !got.0.iter().zip(want).all(|(a, b)| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan())) {
-            failures.push(format!("x3d-render perspective {input:?}:\n  x_ite {want:?}\n  port  {:?}", got.0));
+        if !got
+            .0
+            .iter()
+            .zip(want)
+            .all(|(a, b)| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan()))
+        {
+            failures.push(format!(
+                "x3d-render perspective {input:?}:\n  x_ite {want:?}\n  port  {:?}",
+                got.0
+            ));
         }
     }
 
-    assert!(failures.is_empty(), "{} of {} cases differ:\n{}", failures.len(), cases.len(), failures.iter().take(20).cloned().collect::<Vec<_>>().join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} of {} cases differ:\n{}",
+        failures.len(),
+        cases.len(),
+        failures
+            .iter()
+            .take(20)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
 }

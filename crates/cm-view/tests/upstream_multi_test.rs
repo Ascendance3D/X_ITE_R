@@ -14,7 +14,15 @@ fn multi_get_selection() {
     select(&mut cm, &[S::R(p(0, 0), p(1, 2)), S::R(p(2, 2), p(2, 0))]);
     assert_eq!(cm.doc.get_selection(None), "1234\n56\n90");
     // getSelection(false) returns the line array.
-    assert_eq!(cm.doc.get_selections(None).join("\n").split('\n').collect::<Vec<_>>().join("|"), "1234|56|90");
+    assert_eq!(
+        cm.doc
+            .get_selections(None)
+            .join("\n")
+            .split('\n')
+            .collect::<Vec<_>>()
+            .join("|"),
+        "1234|56|90"
+    );
     assert_eq!(cm.doc.get_selections(None).join("|"), "1234\n56|90");
 }
 
@@ -22,13 +30,32 @@ fn multi_get_selection() {
 #[test]
 fn multi_set_selection() {
     let mut cm = cm("abcde\nabcde\nabcde\n");
-    select(&mut cm, &[S::C(p(3, 0)), S::C(p(0, 0)), S::R(p(2, 5), p(1, 0))]);
+    select(
+        &mut cm,
+        &[S::C(p(3, 0)), S::C(p(0, 0)), S::R(p(2, 5), p(1, 0))],
+    );
     has_selections(&cm, &[(0, 0, 0, 0), (2, 5, 1, 0), (3, 0, 3, 0)]);
     cm.doc.set_selection(p(1, 2), Some(p(1, 1)), None);
     has_selections(&cm, &[(1, 2, 1, 1)]);
-    select(&mut cm, &[S::R(p(1, 1), p(2, 4)), S::R(p(0, 0), p(1, 3)), S::C(p(3, 0)), S::C(p(2, 2))]);
+    select(
+        &mut cm,
+        &[
+            S::R(p(1, 1), p(2, 4)),
+            S::R(p(0, 0), p(1, 3)),
+            S::C(p(3, 0)),
+            S::C(p(2, 2)),
+        ],
+    );
     has_selections(&cm, &[(0, 0, 2, 4), (3, 0, 3, 0)]);
-    cm.doc.set_selections(&[(p(0, 1), Some(p(0, 2))), (p(1, 1), Some(p(1, 2))), (p(2, 1), Some(p(2, 2)))], Some(1), None);
+    cm.doc.set_selections(
+        &[
+            (p(0, 1), Some(p(0, 2))),
+            (p(1, 1), Some(p(1, 2))),
+            (p(2, 1), Some(p(2, 2))),
+        ],
+        Some(1),
+        None,
+    );
     eq_char_pos(cm.doc.get_cursor(Some("head")), p(1, 2));
     eq_char_pos(cm.doc.get_cursor(Some("anchor")), p(1, 1));
     eq_char_pos(cm.doc.get_cursor(Some("from")), p(1, 1));
@@ -74,29 +101,92 @@ fn multi_add_selection() {
 #[test]
 fn multi_replace_selection() {
     let mut cm = cm("");
-    let selections = [(p(0, 0), Some(p(0, 1))), (p(0, 2), Some(p(0, 3))), (p(0, 4), Some(p(0, 5))), (p(2, 1), Some(p(2, 4))), (p(2, 5), Some(p(2, 6)))];
+    let selections = [
+        (p(0, 0), Some(p(0, 1))),
+        (p(0, 2), Some(p(0, 3))),
+        (p(0, 4), Some(p(0, 5))),
+        (p(2, 1), Some(p(2, 4))),
+        (p(2, 5), Some(p(2, 6))),
+    ];
     let val = "123456\n123456\n123456";
     cm.set_value(val);
     cm.doc.set_selections(&selections, None, None);
     cm.doc.replace_selection("ab", Some("around"), None);
     assert_eq!(cm.get_value(), "ab2ab4ab6\n123456\n1ab5ab");
-    has_selections(&cm, &[(0, 0, 0, 2), (0, 3, 0, 5), (0, 6, 0, 8), (2, 1, 2, 3), (2, 4, 2, 6)]);
+    has_selections(
+        &cm,
+        &[
+            (0, 0, 0, 2),
+            (0, 3, 0, 5),
+            (0, 6, 0, 8),
+            (2, 1, 2, 3),
+            (2, 4, 2, 6),
+        ],
+    );
     cm.set_value(val);
     cm.doc.set_selections(&selections, None, None);
     cm.doc.replace_selection("", Some("around"), None);
     assert_eq!(cm.get_value(), "246\n123456\n15");
-    has_selections(&cm, &[(0, 0, 0, 0), (0, 1, 0, 1), (0, 2, 0, 2), (2, 1, 2, 1), (2, 2, 2, 2)]);
+    has_selections(
+        &cm,
+        &[
+            (0, 0, 0, 0),
+            (0, 1, 0, 1),
+            (0, 2, 0, 2),
+            (2, 1, 2, 1),
+            (2, 2, 2, 2),
+        ],
+    );
     cm.set_value(val);
     cm.doc.set_selections(&selections, None, None);
     cm.doc.replace_selection("X\nY\nZ", Some("around"), None);
-    has_selections(&cm, &[(0, 0, 2, 1), (2, 2, 4, 1), (4, 2, 6, 1), (8, 1, 10, 1), (10, 2, 12, 1)]);
+    has_selections(
+        &cm,
+        &[
+            (0, 0, 2, 1),
+            (2, 2, 4, 1),
+            (4, 2, 6, 1),
+            (8, 1, 10, 1),
+            (10, 2, 12, 1),
+        ],
+    );
     cm.doc.replace_selection("a", Some("around"), None);
-    has_selections(&cm, &[(0, 0, 0, 1), (0, 2, 0, 3), (0, 4, 0, 5), (2, 1, 2, 2), (2, 3, 2, 4)]);
+    has_selections(
+        &cm,
+        &[
+            (0, 0, 0, 1),
+            (0, 2, 0, 3),
+            (0, 4, 0, 5),
+            (2, 1, 2, 2),
+            (2, 3, 2, 4),
+        ],
+    );
     cm.doc.replace_selection("xy", Some("start"), None);
-    has_selections(&cm, &[(0, 0, 0, 0), (0, 3, 0, 3), (0, 6, 0, 6), (2, 1, 2, 1), (2, 4, 2, 4)]);
+    has_selections(
+        &cm,
+        &[
+            (0, 0, 0, 0),
+            (0, 3, 0, 3),
+            (0, 6, 0, 6),
+            (2, 1, 2, 1),
+            (2, 4, 2, 4),
+        ],
+    );
     cm.doc.replace_selection("z\nf", None, None);
-    has_selections(&cm, &[(1, 1, 1, 1), (2, 1, 2, 1), (3, 1, 3, 1), (6, 1, 6, 1), (7, 1, 7, 1)]);
-    assert_eq!(cm.get_value(), "z\nfxy2z\nfxy4z\nfxy6\n123456\n1z\nfxy5z\nfxy");
+    has_selections(
+        &cm,
+        &[
+            (1, 1, 1, 1),
+            (2, 1, 2, 1),
+            (3, 1, 3, 1),
+            (6, 1, 6, 1),
+            (7, 1, 7, 1),
+        ],
+    );
+    assert_eq!(
+        cm.get_value(),
+        "z\nfxy2z\nfxy4z\nfxy6\n123456\n1z\nfxy5z\nfxy"
+    );
 }
 
 /// multi_test.js "indentSelection"
@@ -133,7 +223,10 @@ fn multi_kill_line() {
 #[test]
 fn multi_delete_line() {
     let mut cm = cm("1\n2\n3\n4\n5\n6\n7");
-    select(&mut cm, &[S::C(p(0, 0)), S::R(p(2, 0), p(0, 1)), S::C(p(4, 0))]);
+    select(
+        &mut cm,
+        &[S::C(p(0, 0)), S::R(p(2, 0), p(0, 1)), S::C(p(4, 0))],
+    );
     cm.exec_command("deleteLine");
     assert_eq!(cm.get_value(), "4\n6\n7");
     select(&mut cm, &[S::C(p(2, 1))]);
@@ -194,7 +287,10 @@ fn multi_move_v() {
 #[test]
 fn multi_move_h() {
     let mut cm = cm("12345\n12345\n12345");
-    select(&mut cm, &[S::C(p(0, 1)), S::C(p(0, 3)), S::C(p(0, 5)), S::C(p(2, 3))]);
+    select(
+        &mut cm,
+        &[S::C(p(0, 1)), S::C(p(0, 3)), S::C(p(0, 5)), S::C(p(2, 3))],
+    );
     cm.exec_command("goCharRight");
     has_cursors(&cm, &[(0, 2), (0, 4), (1, 0), (2, 4)]);
     cm.exec_command("goCharLeft");
@@ -243,7 +339,10 @@ fn multi_go_doc_start_end() {
 fn multi_selection_history() {
     let mut cm = cm("1 2 3");
     for i in 0..3 {
-        cm.run_op(|cm| cm.doc.add_selection(p(0, i * 2), Some(p(0, i * 2 + 1)), None));
+        cm.run_op(|cm| {
+            cm.doc
+                .add_selection(p(0, i * 2), Some(p(0, i * 2 + 1)), None)
+        });
     }
     cm.exec_command("undoSelection");
     assert_eq!(cm.doc.get_selection(None), "1\n2");
@@ -264,7 +363,10 @@ fn multi_selection_history() {
 #[test]
 fn multi_selections_may_touch() {
     let mut cm = cm("1234");
-    cm.doc.attach_editor_semantics(EditorSemantics { selections_may_touch: true, ..Default::default() });
+    cm.doc.attach_editor_semantics(EditorSemantics {
+        selections_may_touch: true,
+        ..Default::default()
+    });
     select(&mut cm, &[S::C(p(0, 0)), S::C(p(0, 2))]);
     cm.doc.set_extending(true);
     cm.doc.extend_selections(&[p(0, 2), p(0, 4)], None);

@@ -10,7 +10,12 @@ fn vrml2_registered_node_classes_match_x_ite() {
     let t = table();
     let scene = parse_bytes(b"#VRML V2.0 utf8\n", "file:///synthetic.wrl").unwrap();
 
-    let mut available: Vec<String> = t.types.iter().filter(|ty| scene.component_loaded(&ty.component)).map(|ty| ty.name.clone()).collect();
+    let mut available: Vec<String> = t
+        .types
+        .iter()
+        .filter(|ty| scene.component_loaded(&ty.component))
+        .map(|ty| ty.name.clone())
+        .collect();
     let mut expected = t.vrml2_available.clone();
 
     available.sort();

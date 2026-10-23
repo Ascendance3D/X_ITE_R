@@ -50,7 +50,8 @@ enum Section {
 }
 
 const DOUBLE_MULTIPLIERS: [f64; 23] = [
-    1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22,
+    1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16,
+    1e17, 1e18, 1e19, 1e20, 1e21, 1e22,
 ];
 
 impl Quantity {
@@ -93,7 +94,12 @@ impl Quantity {
 
     /// DecimalQuantity::setToDouble for a finite, positive, non-zero double.
     fn from_double(mut n: f64) -> Quantity {
-        let mut q = Quantity { digits: vec![], scale: 0, approximate: true, original: n };
+        let mut q = Quantity {
+            digits: vec![],
+            scale: 0,
+            approximate: true,
+            original: n,
+        };
         let exponent = ((n.to_bits() >> 52) & 0x7ff) as i32 - 0x3ff;
 
         if exponent <= 52 && n.trunc() == n && n < 9.3e18 {
@@ -107,7 +113,8 @@ impl Quantity {
             return q;
         }
 
-        let frac_length = ((52 - exponent) as f64 / 3.32192809488736234787031942948939017586) as i32;
+        let frac_length =
+            ((52 - exponent) as f64 / 3.32192809488736234787031942948939017586) as i32;
 
         if frac_length >= 0 {
             let mut i = frac_length;
@@ -328,7 +335,11 @@ fn icu_digits(value: f64, precision: usize) -> (String, i32) {
 /// `Intl.NumberFormat ("en", { notation: "standard", maximumSignificantDigits: precision, useGrouping: false })`.
 pub fn intl_standard(value: f64, precision: usize) -> String {
     if value == 0.0 {
-        return if value.is_sign_negative() { "-0".into() } else { "0".into() };
+        return if value.is_sign_negative() {
+            "-0".into()
+        } else {
+            "0".into()
+        };
     }
 
     let negative = value.is_sign_negative();
@@ -367,7 +378,11 @@ pub fn intl_standard(value: f64, precision: usize) -> String {
 /// then lower-cased like X_ITE does (`1.5E-5` → `1.5e-5`).
 pub fn intl_scientific_lower(value: f64, precision: usize) -> String {
     if value == 0.0 {
-        return if value.is_sign_negative() { "-0e0".into() } else { "0e0".into() };
+        return if value.is_sign_negative() {
+            "-0e0".into()
+        } else {
+            "0e0".into()
+        };
     }
 
     let negative = value.is_sign_negative();

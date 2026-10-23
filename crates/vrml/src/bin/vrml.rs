@@ -45,19 +45,32 @@ fn main() -> ExitCode {
                 println!("{file}: OK ({} warnings)", scene.warnings.len());
                 for w in &scene.warnings {
                     // Entries marked "\u{1}error\u{1}" are console.error messages of the scene (Scene::error).
-                    println!("  warning: {}", w.trim_start_matches("\u{1}error\u{1}").lines().next().unwrap_or(""));
+                    println!(
+                        "  warning: {}",
+                        w.trim_start_matches("\u{1}error\u{1}")
+                            .lines()
+                            .next()
+                            .unwrap_or("")
+                    );
                 }
             }
             ("fmt", Ok(scene)) => print!("{}", scene.to_vrml_string()),
             (_, Ok(scene)) => {
                 let s = vrml::summarize(&scene);
                 println!("{file}");
-                println!("  header      {:?}{}", vrml::detect(&data), if vrml::is_gzip(&data) { " (gzip)" } else { "" });
+                println!(
+                    "  header      {:?}{}",
+                    vrml::detect(&data),
+                    if vrml::is_gzip(&data) { " (gzip)" } else { "" }
+                );
                 println!("  bytes       {}", data.len());
                 println!("  profile     {}", s.profile.as_deref().unwrap_or("-"));
                 println!("  root nodes  {}", s.root_nodes);
                 println!("  nodes       {}", s.nodes);
-                println!("  PROTOs      {}  EXTERNPROTOs {}", s.protos, s.externprotos);
+                println!(
+                    "  PROTOs      {}  EXTERNPROTOs {}",
+                    s.protos, s.externprotos
+                );
                 println!("  ROUTEs      {}", s.routes);
                 println!("  warnings    {}", s.warnings);
                 let mut top: Vec<_> = s.node_types.iter().collect();
@@ -69,5 +82,9 @@ fn main() -> ExitCode {
         }
     }
 
-    if failed { ExitCode::FAILURE } else { ExitCode::SUCCESS }
+    if failed {
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    }
 }

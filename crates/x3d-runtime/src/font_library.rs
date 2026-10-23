@@ -54,12 +54,21 @@ impl Runtime {
 
     /// `browser .loadFont (fileURL, node)`: the font, or `None` for a failed fetch; `Err (())` when the file does not
     /// parse (the promise never resolves).
-    fn font_library_load_font(&mut self, node: NodeId, file_url: &url::Url) -> Result<Option<Rc<x3d_text::Font>>, ()> {
+    fn font_library_load_font(
+        &mut self,
+        node: NodeId,
+        file_url: &url::Url,
+    ) -> Result<Option<Rc<x3d_text::Font>>, ()> {
         let href = file_url.as_str().to_string();
-        let cached = !file_url.query().is_some_and(|q| !q.is_empty()) && self.font_cache.contains_key(&href);
+        let cached =
+            !file_url.query().is_some_and(|q| !q.is_empty()) && self.font_cache.contains_key(&href);
 
         if !cached {
-            let loader = FileLoader { type_name: self.type_name(node), base: href.clone(), data_as_string: false };
+            let loader = FileLoader {
+                type_name: self.type_name(node),
+                base: href.clone(),
+                data_as_string: false,
+            };
             let mut parsed: Option<Result<Rc<x3d_text::Font>, x3d_text::FontError>> = None;
             let ok = self.load_document(&loader, std::slice::from_ref(&href), |_, loaded| {
                 if let crate::loader::Loaded::Data(data, _) = loaded {
@@ -102,7 +111,9 @@ impl Runtime {
 
     /// FontLibrary.loadData.
     pub(crate) fn font_library_load(&mut self, node: NodeId) {
-        let Ok(base) = url::Url::parse(&self.base_url(node)) else { return };
+        let Ok(base) = url::Url::parse(&self.base_url(node)) else {
+            return;
+        };
         // `Array .from (this ._url) .map (fileURL => new URL (fileURL, base))`: one bad url rejects the whole load.
         let mut urls = vec![];
 
@@ -131,7 +142,14 @@ impl Runtime {
 
         self.font_library_fonts.insert(node, font);
         self.font_library_set_family(node);
-        self.set_load_state(node, if failed { LoadState::Failed } else { LoadState::Complete });
+        self.set_load_state(
+            node,
+            if failed {
+                LoadState::Failed
+            } else {
+                LoadState::Complete
+            },
+        );
         self.font_styles_resume();
     }
 
@@ -172,7 +190,10 @@ impl Runtime {
 
     /// Is a FontLibrary loading (`getLoadingObjects ()` filtered by FontLibrary)?
     pub(crate) fn font_library_loading(&self) -> bool {
-        (0..self.scene.nodes.len() as NodeId).any(|n| self.builtin_name(n) == Some("FontLibrary") && self.url_load_state(n) == LoadState::InProgress)
+        (0..self.scene.nodes.len() as NodeId).any(|n| {
+            self.builtin_name(n) == Some("FontLibrary")
+                && self.url_load_state(n) == LoadState::InProgress
+        })
     }
 
     /// A FontLibrary load ended: the FontStyle loops that waited for it look again.
@@ -186,7 +207,9 @@ impl Runtime {
 
     /// FontLibrary.set_family__: `registerFontLibrary (executionContext, familyName, font)`.
     pub(crate) fn font_library_set_family(&mut self, node: NodeId) {
-        let Some(Some(font)) = self.font_library_fonts.get(&node).cloned() else { return };
+        let Some(Some(font)) = self.font_library_fonts.get(&node).cloned() else {
+            return;
+        };
         let family = match self.pre_value(node, "family") {
             Some(FieldValue::SFString(s)) => s.clone(),
             _ => String::new(),
@@ -198,12 +221,18 @@ impl Runtime {
 
         let ctx = self.scene.node(node).ctx;
 
-        self.font_libraries.entry(ctx).or_default().insert(family.to_uppercase(), font);
+        self.font_libraries
+            .entry(ctx)
+            .or_default()
+            .insert(family.to_uppercase(), font);
         self.font_epoch += 1;
     }
 
     /// X3DTextContext.getFont (without the wait): the font a FontLibrary of `ctx` registered under `family`.
     pub fn font_library_font(&self, ctx: CtxId, family: &str) -> Option<Rc<x3d_text::Font>> {
-        self.font_libraries.get(&ctx)?.get(&family.to_uppercase()).cloned()
+        self.font_libraries
+            .get(&ctx)?
+            .get(&family.to_uppercase())
+            .cloned()
     }
 }

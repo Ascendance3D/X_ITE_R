@@ -49,12 +49,20 @@ impl Generator {
 
     /// ToUnit (field .getUnit (), value).
     pub fn to_unit(&self, value: f64) -> f64 {
-        if self.unit_factor == 1.0 { value } else { value / self.unit_factor }
+        if self.unit_factor == 1.0 {
+            value
+        } else {
+            value / self.unit_factor
+        }
     }
 
     /// ToUnit ("angle", value).
     pub fn to_unit_angle(&self, value: f64) -> f64 {
-        if self.angle_factor == 1.0 { value } else { value / self.angle_factor }
+        if self.angle_factor == 1.0 {
+            value
+        } else {
+            value / self.angle_factor
+        }
     }
 
     pub fn new(style: Style) -> Self {
@@ -187,7 +195,10 @@ impl Generator {
     pub fn dec_indent(&mut self) {
         let n = self.indent.len().saturating_sub(self.indent_char.len());
         self.indent.truncate(n);
-        let n = self.list_indent_str.len().saturating_sub(self.list_indent_char.len());
+        let n = self
+            .list_indent_str
+            .len()
+            .saturating_sub(self.list_indent_char.len());
         self.list_indent_str.truncate(n);
     }
 
@@ -214,7 +225,11 @@ impl Generator {
         let last = values.len() - 1;
 
         for (i, v) in values.iter().enumerate() {
-            let s = if double { self.double_format(*v) } else { self.float_format(*v) };
+            let s = if double {
+                self.double_format(*v)
+            } else {
+                self.float_format(*v)
+            };
             self.string.push_str(&s);
 
             if i != last {

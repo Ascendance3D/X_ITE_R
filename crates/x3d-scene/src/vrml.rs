@@ -33,7 +33,15 @@ pub struct VrmlGenerator<'a> {
 
 impl<'a> VrmlGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None, raw_field: None, unit_base: 0 }
+        VrmlGenerator {
+            g: Generator::default(),
+            scene,
+            stack: vec![],
+            index: HashMap::new(),
+            unit_field: None,
+            raw_field: None,
+            unit_base: 0,
+        }
     }
 
     pub fn push_ctx(&mut self, ctx: Option<CtxId>) {
@@ -109,7 +117,12 @@ impl<'a> VrmlGenerator<'a> {
 
     /// X3DGenerator.NeedsName: clone count > 1 (known once the runtime ran), or routes.
     pub(crate) fn needs_name(&self, node: NodeId) -> bool {
-        if self.scene.clone_counts.as_ref().is_some_and(|c| c.get(&node).is_some_and(|n| *n > 1)) {
+        if self
+            .scene
+            .clone_counts
+            .as_ref()
+            .is_some_and(|c| c.get(&node).is_some_and(|n| *n > 1))
+        {
             return true;
         }
 
@@ -123,7 +136,14 @@ impl<'a> VrmlGenerator<'a> {
         };
         let c = self.scene.ctx(ctx);
 
-        c.imported.values().iter().any(|&i| self.scene.imported[i].inline == node) || c.exported.values().iter().any(|&e| self.scene.exported[e].local == node)
+        c.imported
+            .values()
+            .iter()
+            .any(|&i| self.scene.imported[i].inline == node)
+            || c.exported
+                .values()
+                .iter()
+                .any(|&e| self.scene.exported[e].local == node)
     }
 
     /// X3DGenerator.ImportedName.
@@ -269,7 +289,11 @@ impl<'a> VrmlGenerator<'a> {
         }
 
         // UnitInfo.toVRMLStream for the units whose conversion factor is not 1.
-        let units: Vec<_> = scene.units_of(root).iter().filter(|u| u.conversion_factor != 1.0).collect();
+        let units: Vec<_> = scene
+            .units_of(root)
+            .iter()
+            .filter(|u| u.conversion_factor != 1.0)
+            .collect();
 
         if !units.is_empty() {
             for u in units {
@@ -389,14 +413,23 @@ impl<'a> VrmlGenerator<'a> {
         {
             let index = self.cur_index();
 
-            if !index.route_nodes.contains(&route.source_node) || !index.route_nodes.contains(&route.destination_node) {
+            if !index.route_nodes.contains(&route.source_node)
+                || !index.route_nodes.contains(&route.destination_node)
+            {
                 return false;
             }
         }
 
-        let source = if scene_is_imported(self.scene, route.source_node) { self.imported_name(route.source_node) } else { self.name(route.source_node) };
-        let destination =
-            if scene_is_imported(self.scene, route.destination_node) { self.imported_name(route.destination_node) } else { self.name(route.destination_node) };
+        let source = if scene_is_imported(self.scene, route.source_node) {
+            self.imported_name(route.source_node)
+        } else {
+            self.name(route.source_node)
+        };
+        let destination = if scene_is_imported(self.scene, route.destination_node) {
+            self.imported_name(route.destination_node)
+        } else {
+            self.name(route.destination_node)
+        };
         let g = &mut self.g;
 
         g.indent();
@@ -428,7 +461,11 @@ impl<'a> VrmlGenerator<'a> {
             g.tidy_space();
         } else {
             let type_len = fields.iter().map(|f| f.ty().name().len()).max().unwrap();
-            let access_len = fields.iter().map(|f| access::name(f.access).len()).max().unwrap();
+            let access_len = fields
+                .iter()
+                .map(|f| access::name(f.access).len())
+                .max()
+                .unwrap();
 
             self.g.tidy_break();
             self.g.inc_indent();
@@ -525,13 +562,18 @@ impl<'a> VrmlGenerator<'a> {
             },
             _ => {
                 let converted = match self.take_raw(value) {
-                    Some(RawOut::Texts(texts)) => return write_raw(&mut self.g, &texts, value, false),
+                    Some(RawOut::Texts(texts)) => {
+                        return write_raw(&mut self.g, &texts, value, false);
+                    }
                     Some(RawOut::Value(v)) => Some(v),
                     None => None,
                 };
 
                 self.apply_units();
-                converted.as_ref().unwrap_or(value).to_vrml_stream(&mut self.g);
+                converted
+                    .as_ref()
+                    .unwrap_or(value)
+                    .to_vrml_stream(&mut self.g);
                 self.g.set_unit_factors(1.0, 1.0);
             }
         }
@@ -548,13 +590,19 @@ impl<'a> VrmlGenerator<'a> {
         let (id, loc) = self.raw_field.take()?;
         let raw = self.scene.raw_tokens.get(&(id, loc))?;
         let unit = match loc {
-            FieldLoc::Pre(i) => self.scene.field_has_unit(id, &self.scene.node(id).fields[i].name),
+            FieldLoc::Pre(i) => self
+                .scene
+                .field_has_unit(id, &self.scene.node(id).fields[i].name),
             _ => false,
         };
         let number = unit && self.units_apply();
         let supplied = match &mut *self.scene.raw_print.borrow_mut() {
             RawPrint::Log(log) => {
-                log.push(RawRequest { host: raw.host, token: raw.token, number });
+                log.push(RawRequest {
+                    host: raw.host,
+                    token: raw.token,
+                    number,
+                });
                 None
             }
             RawPrint::Supply(queue) => queue.pop_front().flatten(),
@@ -569,7 +617,16 @@ impl<'a> VrmlGenerator<'a> {
         self.unit_field = None;
 
         let texts = match supplied {
-            Some(components) => components.into_iter().map(|c| if let Some(RawComponent::Text(t)) = c { Some(t) } else { None }).collect(),
+            Some(components) => components
+                .into_iter()
+                .map(|c| {
+                    if let Some(RawComponent::Text(t)) = c {
+                        Some(t)
+                    } else {
+                        None
+                    }
+                })
+                .collect(),
             None => raw.texts.to_vec(),
         };
 
@@ -667,8 +724,16 @@ impl<'a> VrmlGenerator<'a> {
         let user_fields = &node.user_fields;
 
         if node.can_user_defined_fields && !user_fields.is_empty() {
-            let type_len = user_fields.iter().map(|f| f.ty().name().len()).max().unwrap();
-            let access_len = user_fields.iter().map(|f| access::name(f.access).len()).max().unwrap();
+            let type_len = user_fields
+                .iter()
+                .map(|f| f.ty().name().len())
+                .max()
+                .unwrap();
+            let access_len = user_fields
+                .iter()
+                .map(|f| access::name(f.access).len())
+                .max()
+                .unwrap();
 
             self.g.tidy_break();
             self.g.inc_indent();
@@ -733,7 +798,13 @@ impl<'a> VrmlGenerator<'a> {
     }
 
     /// X3DNode.toVRMLStreamUserDefinedField.
-    fn user_defined_field_to_vrml(&mut self, id: NodeId, field: &Field, type_len: usize, access_len: usize) {
+    fn user_defined_field_to_vrml(
+        &mut self,
+        id: NodeId,
+        field: &Field,
+        type_len: usize,
+        access_len: usize,
+    ) {
         let shared = self.is_shared_node(id);
 
         if field.references.is_empty() || self.current().is_none() || shared {
@@ -747,7 +818,13 @@ impl<'a> VrmlGenerator<'a> {
             if field.is_initializable() {
                 self.g.space();
 
-                self.raw_field = self.scene.node(id).user_fields.iter().position(|f| std::ptr::eq(f, field)).map(|k| (id, FieldLoc::User(k)));
+                self.raw_field = self
+                    .scene
+                    .node(id)
+                    .user_fields
+                    .iter()
+                    .position(|f| std::ptr::eq(f, field))
+                    .map(|k| (id, FieldLoc::User(k)));
                 self.value_to_vrml(&field.value);
             }
         } else {
@@ -774,7 +851,10 @@ impl<'a> VrmlGenerator<'a> {
                 }
             }
 
-            if field.access == access::INPUT_OUTPUT && !initializable_references && !field.value.is_default_value() {
+            if field.access == access::INPUT_OUTPUT
+                && !initializable_references
+                && !field.value.is_default_value()
+            {
                 self.g.brk();
                 self.g.indent();
                 self.pad(access::name(field.access), access_len);
@@ -825,7 +905,10 @@ impl<'a> VrmlGenerator<'a> {
                 }
             }
 
-            if field.access == access::INPUT_OUTPUT && !initializable_references && !scene.is_default_value(id, FieldLoc::Pre(i)) {
+            if field.access == access::INPUT_OUTPUT
+                && !initializable_references
+                && !scene.is_default_value(id, FieldLoc::Pre(i))
+            {
                 self.g.brk();
                 self.g.indent();
                 self.g.push(&field.name);
@@ -925,18 +1008,34 @@ impl Scene {
             FieldValue::MFNode(list) => match list.len() {
                 0 => "[ ]".to_string(),
                 1 => one(&list[0]),
-                _ => format!("[\n{}\n]", list.iter().map(|n| format!("  {}", one(n))).collect::<Vec<_>>().join("\n")),
+                _ => format!(
+                    "[\n{}\n]",
+                    list.iter()
+                        .map(|n| format!("  {}", one(n)))
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                ),
             },
             _ => String::new(),
         }
     }
 
     /// Remove a route (X3DExecutionContext.deleteRoute); the removed route, if any.
-    pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<Route> {
+    pub fn delete_route(
+        &mut self,
+        ctx: CtxId,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Option<Route> {
         let src = self.get_field(source, source_field)?;
         let dst = self.get_field(destination, destination_field)?;
         let i = self.contexts[ctx].routes.iter().position(|r| {
-            r.source_node == source && r.source_loc == src && r.destination_node == destination && r.destination_loc == dst
+            r.source_node == source
+                && r.source_loc == src
+                && r.destination_node == destination
+                && r.destination_loc == dst
         })?;
         let r = self.contexts[ctx].routes.remove(i);
 
@@ -946,10 +1045,14 @@ impl Scene {
     }
 }
 
-
 /// SFVecPrototypeTemplate / SFColor toStream (or toJSONStreamValue, `json`) of a value with raw components: `String (raw)` for each
 /// one that is not a number (X3DGenerator.FloatFormat, JSONGenerator.Number), the format of the number for the others.
-pub(crate) fn write_raw(g: &mut Generator, texts: &[Option<String>], value: &FieldValue, json: bool) {
+pub(crate) fn write_raw(
+    g: &mut Generator,
+    texts: &[Option<String>],
+    value: &FieldValue,
+    json: bool,
+) {
     let (numbers, double): (Vec<f64>, bool) = match value {
         FieldValue::SFColor(c) => (c.components().to_vec(), false),
         FieldValue::SFColorRGBA(c) => (c.components().to_vec(), false),
@@ -971,7 +1074,11 @@ pub(crate) fn write_raw(g: &mut Generator, texts: &[Option<String>], value: &Fie
             None => g.float_format(*v),
         };
 
-        g.push(&if json { crate::json::json_number(text) } else { text });
+        g.push(&if json {
+            crate::json::json_number(text)
+        } else {
+            text
+        });
 
         if i != last {
             if json {
@@ -999,12 +1106,34 @@ fn with_numbers(value: &FieldValue, components: &[Option<RawComponent>]) -> Fiel
     };
 
     match value {
-        FieldValue::SFVec2f(v) => FieldValue::SFVec2f(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
-        FieldValue::SFVec2d(v) => FieldValue::SFVec2d(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
-        FieldValue::SFVec3f(v) => FieldValue::SFVec3f(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
-        FieldValue::SFVec3d(v) => FieldValue::SFVec3d(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
-        FieldValue::SFVec4f(v) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
-        FieldValue::SFVec4d(v) => FieldValue::SFVec4d(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
+        FieldValue::SFVec2f(v) => {
+            FieldValue::SFVec2f(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y)))
+        }
+        FieldValue::SFVec2d(v) => {
+            FieldValue::SFVec2d(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y)))
+        }
+        FieldValue::SFVec3f(v) => FieldValue::SFVec3f(x3d_fields::math::Vector3::new(
+            n(0, v.x),
+            n(1, v.y),
+            n(2, v.z),
+        )),
+        FieldValue::SFVec3d(v) => FieldValue::SFVec3d(x3d_fields::math::Vector3::new(
+            n(0, v.x),
+            n(1, v.y),
+            n(2, v.z),
+        )),
+        FieldValue::SFVec4f(v) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(
+            n(0, v.x),
+            n(1, v.y),
+            n(2, v.z),
+            n(3, v.w),
+        )),
+        FieldValue::SFVec4d(v) => FieldValue::SFVec4d(x3d_fields::math::Vector4::new(
+            n(0, v.x),
+            n(1, v.y),
+            n(2, v.z),
+            n(3, v.w),
+        )),
         other => other.clone(),
     }
 }

@@ -721,7 +721,11 @@ impl Cylinder3 {
     /// Cylinder3.js:unitCylinderIntersectsLine. Intersects a line with the radius 1 cylinder
     /// aligned with the y axis. Returns `false` (out parameters untouched) for a negative
     /// discriminant.
-    pub fn unit_cylinder_intersects_line(line: &Line3, enter: &mut Vector3, exit: &mut Vector3) -> bool {
+    pub fn unit_cylinder_intersects_line(
+        line: &Line3,
+        enter: &mut Vector3,
+        exit: &mut Vector3,
+    ) -> bool {
         let (pos, dir) = (&line.point, &line.direction);
 
         let a = dir.x * dir.x + dir.z * dir.z;
@@ -785,11 +789,7 @@ impl Triangle3 {
         let y2 = a.y - b.y;
         let z2 = a.z - b.z;
 
-        normal.set(
-            y1 * z2 - z1 * y2,
-            z1 * x2 - x1 * z2,
-            x1 * y2 - y1 * x2,
-        );
+        normal.set(y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2);
         normal.normalize();
     }
 
@@ -802,11 +802,7 @@ impl Triangle3 {
         let y2 = d.y - b.y;
         let z2 = d.z - b.z;
 
-        normal.set(
-            y1 * z2 - z1 * y2,
-            z1 * x2 - x1 * z2,
-            x1 * y2 - y1 * x2,
-        );
+        normal.set(y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2);
         normal.normalize();
     }
 
@@ -1025,13 +1021,23 @@ impl ViewVolume {
         result: &mut Line2,
     ) {
         let mut near3 = Vector3::default();
-        Self::project_point_matrix(&line.point, model_view_projection_matrix, viewport, &mut near3);
+        Self::project_point_matrix(
+            &line.point,
+            model_view_projection_matrix,
+            viewport,
+            &mut near3,
+        );
 
         let mut direction = line.direction;
         direction.multiply(1e9).add(&line.point);
 
         let mut far3 = Vector3::default();
-        Self::project_point_matrix(&direction, model_view_projection_matrix, viewport, &mut far3);
+        Self::project_point_matrix(
+            &direction,
+            model_view_projection_matrix,
+            viewport,
+            &mut far3,
+        );
 
         let near = Vector2::new(near3.x, near3.y);
         let far = Vector2::new(far3.x, far3.y);
@@ -1137,7 +1143,10 @@ mod tests {
         let plane = Plane3::new(Vector3::new(2.0, 0.0, 0.0), Vector3::new(1.0, 0.0, 0.0));
 
         assert_close(plane.distance_from_origin, 2.0);
-        assert_close(plane.get_distance_to_point(&Vector3::new(5.0, 0.0, 0.0)), 3.0);
+        assert_close(
+            plane.get_distance_to_point(&Vector3::new(5.0, 0.0, 0.0)),
+            3.0,
+        );
         assert_vec3_close(
             &plane.get_closest_point_to_point(&Vector3::new(5.0, 7.0, -1.0)),
             &Vector3::new(2.0, 7.0, -1.0),

@@ -44,15 +44,22 @@ const KNOWN_GAPS: &[(&str, &str)] = &[
 ];
 
 fn json(path: &Path) -> Value {
-    serde_json::from_str(&std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display()))).unwrap()
+    serde_json::from_str(
+        &std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display())),
+    )
+    .unwrap()
 }
 
 /// Numbers equal as f64 (X_ITE writes `0`, Rust `0.0`), everything else equal.
 fn same(a: &Value, b: &Value) -> bool {
     match (a, b) {
         (Value::Number(x), Value::Number(y)) => x.as_f64() == y.as_f64(),
-        (Value::Array(x), Value::Array(y)) => x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same(p, q)),
-        (Value::Object(x), Value::Object(y)) => x.len() == y.len() && x.iter().all(|(k, v)| y.get(k).is_some_and(|w| same(v, w))),
+        (Value::Array(x), Value::Array(y)) => {
+            x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same(p, q))
+        }
+        (Value::Object(x), Value::Object(y)) => {
+            x.len() == y.len() && x.iter().all(|(k, v)| y.get(k).is_some_and(|w| same(v, w)))
+        }
         _ => a == b,
     }
 }
@@ -72,7 +79,11 @@ fn compare_probes(want: &Value, got: &Value) -> (usize, usize, Option<String>) {
 
         if g.len() != w.len() {
             selections += w.len().max(g.len());
-            first.get_or_insert(format!("frame {frame}: {} probes, X_ITE {}", g.len(), w.len()));
+            first.get_or_insert(format!(
+                "frame {frame}: {} probes, X_ITE {}",
+                g.len(),
+                w.len()
+            ));
             continue;
         }
 
@@ -95,9 +106,15 @@ fn compare_probes(want: &Value, got: &Value) -> (usize, usize, Option<String>) {
 }
 
 fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
-    let base = root.join("oracle/rea-batch14-particle-pick-baseline").join(name);
-    let world = root.join("oracle/synthetic-rea-b14-particle-pick").join(format!("{name}.x3dv"));
-    let script_path = root.join("oracle/synthetic-rea-b14-particle-pick/scripts").join(format!("{name}.json"));
+    let base = root
+        .join("oracle/rea-batch14-particle-pick-baseline")
+        .join(name);
+    let world = root
+        .join("oracle/synthetic-rea-b14-particle-pick")
+        .join(format!("{name}.x3dv"));
+    let script_path = root
+        .join("oracle/synthetic-rea-b14-particle-pick/scripts")
+        .join(format!("{name}.json"));
     let script = json(&script_path);
     let js = json(&base.join("js.json"));
     let out = std::env::temp_dir().join(format!("rea-b14-pick-{}-{name}", std::process::id()));
@@ -105,7 +122,14 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 
     // --png-dir sizes the canvas like the oracle page (512 x 512); the images are not compared here (rea_b13_particles is).
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-particles-drive"));
-    cmd.arg(&world).arg(&script_path).arg("--records-from").arg(base.join("js.json")).arg("--out").arg(out.join("rs.json")).arg("--png-dir").arg(out.join("png"));
+    cmd.arg(&world)
+        .arg(&script_path)
+        .arg("--records-from")
+        .arg(base.join("js.json"))
+        .arg("--out")
+        .arg(out.join("rs.json"))
+        .arg("--png-dir")
+        .arg(out.join("png"));
 
     if script["seedFree"] != Value::Bool(true) {
         cmd.arg("--seeds-from").arg(base.join("js.json"));
@@ -115,24 +139,55 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
     let mut fail = |what: String| failures.push(format!("{name}: {what}"));
 
     if !status.success() {
-        return fail(format!("x3d-particles-drive exited with {status}: {}", std::fs::read_to_string(out.join("rs.json")).unwrap_or_default()));
+        return fail(format!(
+            "x3d-particles-drive exited with {status}: {}",
+            std::fs::read_to_string(out.join("rs.json")).unwrap_or_default()
+        ));
     }
 
     let rs = json(&out.join("rs.json"));
 
-    if js["ok"] != Value::Bool(true) || rs["ok"] != Value::Bool(true) || rs["pointingGpu"] != Value::Bool(true) {
-        return fail(format!("ok js {} rs {}, pointing GPU {}", js["ok"], rs["ok"], rs["pointingGpu"]));
+    if js["ok"] != Value::Bool(true)
+        || rs["ok"] != Value::Bool(true)
+        || rs["pointingGpu"] != Value::Bool(true)
+    {
+        return fail(format!(
+            "ok js {} rs {}, pointing GPU {}",
+            js["ok"], rs["ok"], rs["pointingGpu"]
+        ));
     }
 
-    let counts = |r: &Value| r["steps"].as_array().unwrap().iter().map(|s| s["numParticles"].as_u64()).collect::<Vec<_>>();
+    let counts = |r: &Value| {
+        r["steps"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|s| s["numParticles"].as_u64())
+            .collect::<Vec<_>>()
+    };
 
     if counts(&js) != counts(&rs) {
-        fail(format!("numParticles per step: X_ITE {:?} / Rust {:?}", counts(&js), counts(&rs)));
+        fail(format!(
+            "numParticles per step: X_ITE {:?} / Rust {:?}",
+            counts(&js),
+            counts(&rs)
+        ));
     }
 
     let want = &js["pickProbes"];
-    let probes: usize = want.as_object().unwrap().values().map(|v| v.as_array().unwrap().len()).sum();
-    let hits: usize = want.as_object().unwrap().values().flat_map(|v| v.as_array().unwrap()).filter(|p| p["id"] == 1).count();
+    let probes: usize = want
+        .as_object()
+        .unwrap()
+        .values()
+        .map(|v| v.as_array().unwrap().len())
+        .sum();
+    let hits: usize = want
+        .as_object()
+        .unwrap()
+        .values()
+        .flat_map(|v| v.as_array().unwrap())
+        .filter(|p| p["id"] == 1)
+        .count();
     let (values, selections, first) = compare_probes(want, &rs["pickProbesReference"]);
     let (own_values, own_selections, own_first) = compare_probes(want, &rs["pickProbes"]);
 
@@ -141,13 +196,23 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
     );
 
     if own_selections > 0 {
-        fail(format!("own records: {own_selections} probes hit another shape; first {}", own_first.unwrap_or_default()));
+        fail(format!(
+            "own records: {own_selections} probes hit another shape; first {}",
+            own_first.unwrap_or_default()
+        ));
     }
 
     match KNOWN_GAPS.iter().find(|(gap, _)| *gap == name) {
-        Some((_, why)) if selections == 0 && values == 0 => fail(format!("matches X_ITE now; remove it from KNOWN_GAPS ({why})")),
-        Some((_, why)) if selections == 0 => eprintln!("{name}: known gap, {values} value differences ({why})"),
-        _ if selections + values > 0 => fail(format!("X_ITE records: {selections} hit and {values} value differences; first {}", first.unwrap_or_default())),
+        Some((_, why)) if selections == 0 && values == 0 => fail(format!(
+            "matches X_ITE now; remove it from KNOWN_GAPS ({why})"
+        )),
+        Some((_, why)) if selections == 0 => {
+            eprintln!("{name}: known gap, {values} value differences ({why})")
+        }
+        _ if selections + values > 0 => fail(format!(
+            "X_ITE records: {selections} hit and {values} value differences; first {}",
+            first.unwrap_or_default()
+        )),
         _ => {}
     }
 
@@ -160,17 +225,30 @@ fn rea_b14_particle_pick_matches_x_ite() {
         return eprintln!("no adapter: the pointing pass needs a GPU, skipped");
     }
 
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
     let only = std::env::var("REA_ONLY").ok();
-    let mut names: Vec<String> = std::fs::read_dir(root.join("oracle/rea-batch14-particle-pick-baseline")).unwrap().map(|e| e.unwrap().file_name().to_string_lossy().into_owned()).collect();
+    let mut names: Vec<String> =
+        std::fs::read_dir(root.join("oracle/rea-batch14-particle-pick-baseline"))
+            .unwrap()
+            .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
     names.sort();
     names.retain(|n| only.as_deref().is_none_or(|o| n.contains(o)));
 
-    assert!(only.is_some() || names.len() >= 20, "baselines missing: {names:?}");
+    assert!(
+        only.is_some() || names.len() >= 20,
+        "baselines missing: {names:?}"
+    );
 
     // Every known gap names a case that exists.
     for (gap, _) in KNOWN_GAPS {
-        assert!(only.is_some() || names.iter().any(|n| n == gap), "KNOWN_GAPS names {gap}, which has no baseline");
+        assert!(
+            only.is_some() || names.iter().any(|n| n == gap),
+            "KNOWN_GAPS names {gap}, which has no baseline"
+        );
     }
 
     // Four drives at a time: more processes than that ran the GPU out of memory on the reference machine, and a drive
@@ -180,18 +258,25 @@ fn rea_b14_particle_pick_matches_x_ite() {
 
     std::thread::scope(|scope| {
         for _ in 0..4 {
-            scope.spawn(|| loop {
-                let i = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-                let Some(name) = names.get(i) else { break };
-                let mut own = vec![];
+            scope.spawn(|| {
+                loop {
+                    let i = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                    let Some(name) = names.get(i) else { break };
+                    let mut own = vec![];
 
-                run_case(&root, name, &mut own);
-                failures.lock().unwrap().extend(own);
+                    run_case(&root, name, &mut own);
+                    failures.lock().unwrap().extend(own);
+                }
             });
         }
     });
 
     let failures = failures.into_inner().unwrap();
     eprintln!("{} cases checked", names.len());
-    assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} failures:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

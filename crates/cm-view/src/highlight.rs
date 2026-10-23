@@ -13,7 +13,7 @@ use cm_core::text::Text;
 use cm_core::util::misc::count_column;
 use cm_core::util::string_stream::{LineOracle, StringStream};
 use cm_core::{Doc, LineHandle, Pos};
-use cm_modes::{copy_state, inner_mode, read_token, start_state, JsArg, Mode, State};
+use cm_modes::{JsArg, Mode, State, copy_state, inner_mode, read_token, start_state};
 
 /// `SavedContext` / a bare saved state: what `line.stateAfter` holds.
 #[derive(Debug)]
@@ -72,12 +72,23 @@ impl Context {
     }
     /// `save(copy)`.
     pub fn save(&self, mode: &dyn Mode, copy: bool) -> Rc<dyn Any> {
-        let state = if copy { copy_state(mode, &self.state) } else { self.state.clone() };
-        Rc::new(SavedContext { state, look_ahead: self.max_look_ahead })
+        let state = if copy {
+            copy_state(mode, &self.state)
+        } else {
+            self.state.clone()
+        };
+        Rc::new(SavedContext {
+            state,
+            look_ahead: self.max_look_ahead,
+        })
     }
     /// `Context.fromSaved(doc, saved, line)`.
     pub fn from_saved(mode: &dyn Mode, saved: &SavedContext, line: i64) -> Context {
-        Context { state: copy_state(mode, &saved.state), line, max_look_ahead: saved.look_ahead }
+        Context {
+            state: copy_state(mode, &saved.state),
+            line,
+            max_look_ahead: saved.look_ahead,
+        }
     }
 }
 
@@ -98,20 +109,31 @@ pub struct HighlightState {
 
 impl HighlightState {
     pub fn new(first: i64) -> HighlightState {
-        HighlightState { mode_frontier: first, highlight_frontier: first, mode_gen: 1, tab_size: 4, max_highlight_length: 10000, flatten_spans: true, view_from: first, view_to: first }
+        HighlightState {
+            mode_frontier: first,
+            highlight_frontier: first,
+            mode_gen: 1,
+            tab_size: 4,
+            max_highlight_length: 10000,
+            flatten_spans: true,
+            view_from: first,
+            view_to: first,
+        }
     }
 }
 
 /// The JS `mode.startState` presence test (`if (!doc.mode.startState)`).
 fn has_start_state(mode: &dyn Mode) -> bool {
-    mode.start_state(JsArg::Undefined, JsArg::Undefined).is_some()
+    mode.start_state(JsArg::Undefined, JsArg::Undefined)
+        .is_some()
 }
 
 fn saved_of(h: &LineHandle) -> Option<Rc<dyn Any>> {
     h.state_after()
 }
 fn as_saved(v: &Rc<dyn Any>) -> &SavedContext {
-    v.downcast_ref::<SavedContext>().expect("stateAfter holds a SavedContext")
+    v.downcast_ref::<SavedContext>()
+        .expect("stateAfter holds a SavedContext")
 }
 
 /// `callBlankLine(mode, state)`.
@@ -131,8 +153,19 @@ fn call_blank_line(mode: &Rc<dyn Mode>, state: &mut State) {
 }
 
 /// `processLine(cm, text, context, startAt)`.
-pub fn process_line(doc: &Doc, mode: &Rc<dyn Mode>, hs: &HighlightState, text: &[u16], ctx: &mut Context, start_at: usize) {
-    let oracle = CtxOracle { doc, line: ctx.line, max_look_ahead: Cell::new(ctx.max_look_ahead) };
+pub fn process_line(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &HighlightState,
+    text: &[u16],
+    ctx: &mut Context,
+    start_at: usize,
+) {
+    let oracle = CtxOracle {
+        doc,
+        line: ctx.line,
+        max_look_ahead: Cell::new(ctx.max_look_ahead),
+    };
     {
         let mut stream = StringStream::new(text, Some(hs.tab_size), Some(&oracle));
         stream.start = start_at;
@@ -151,10 +184,20 @@ pub fn process_line(doc: &Doc, mode: &Rc<dyn Mode>, hs: &HighlightState, text: &
 }
 
 /// `findStartLine(cm, n, precise)`.
-fn find_start_line(doc: &Doc, mode: &Rc<dyn Mode>, hs: &HighlightState, n: i64, precise: bool) -> i64 {
+fn find_start_line(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &HighlightState,
+    n: i64,
+    precise: bool,
+) -> i64 {
     let first = doc.first_line();
     let has_inner = mode_has_inner(mode);
-    let lim = if precise { -1 } else { n - if has_inner { 1000 } else { 100 } };
+    let lim = if precise {
+        -1
+    } else {
+        n - if has_inner { 1000 } else { 100 }
+    };
     let mut minindent: Option<i64> = None;
     let mut minline: i64 = 0;
     let mut search = n;
@@ -187,16 +230,34 @@ pub fn mode_has_inner(mode: &Rc<dyn Mode>) -> bool {
 }
 
 /// `getContextBefore(cm, n, precise)`.
-pub fn get_context_before(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState, n: i64, precise: bool) -> Context {
+pub fn get_context_before(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &mut HighlightState,
+    n: i64,
+    precise: bool,
+) -> Context {
     if !has_start_state(&**mode) {
-        return Context { state: State::True, line: n, max_look_ahead: 0 };
+        return Context {
+            state: State::True,
+            line: n,
+            max_look_ahead: 0,
+        };
     }
     let first = doc.first_line();
     let start = find_start_line(doc, mode, hs, n, precise);
-    let saved = if start > first { doc.get_line_handle(start - 1).and_then(|l| saved_of(&l)) } else { None };
+    let saved = if start > first {
+        doc.get_line_handle(start - 1).and_then(|l| saved_of(&l))
+    } else {
+        None
+    };
     let mut ctx = match saved {
         Some(s) => Context::from_saved(&**mode, as_saved(&s), start),
-        None => Context { state: start_state(&**mode, JsArg::Undefined, JsArg::Undefined), line: start, max_look_ahead: 0 },
+        None => Context {
+            state: start_state(&**mode, JsArg::Undefined, JsArg::Undefined),
+            line: start,
+            max_look_ahead: 0,
+        },
     };
     for ln in start..n {
         let line = doc.get_line_handle(ln).expect("line in range");
@@ -204,7 +265,11 @@ pub fn get_context_before(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightStat
         process_line(doc, mode, hs, &text, &mut ctx, 0);
         let pos = ctx.line;
         let keep = pos == n - 1 || pos % 5 == 0 || (pos >= hs.view_from && pos < hs.view_to);
-        line.set_state_after(if keep { Some(ctx.save(&**mode, true)) } else { None });
+        line.set_state_after(if keep {
+            Some(ctx.save(&**mode, true))
+        } else {
+            None
+        });
         ctx.next_line();
     }
     if precise {
@@ -214,7 +279,10 @@ pub fn get_context_before(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightStat
 }
 
 /// `extractLineClasses(type, output)`.
-fn extract_line_classes(ty: Option<String>, output: &mut (Option<String>, Option<String>)) -> Option<String> {
+fn extract_line_classes(
+    ty: Option<String>,
+    output: &mut (Option<String>, Option<String>),
+) -> Option<String> {
     let mut ty = ty?;
     loop {
         // /(?:^|\s+)line-(background-)?(\S+)/
@@ -230,8 +298,14 @@ fn extract_line_classes(ty: Option<String>, output: &mut (Option<String>, Option
                     ws -= 1;
                 }
                 let rest = &ty[i + 5..];
-                let (bg, rest2, off) = if let Some(r) = rest.strip_prefix("background-") { (true, r, i + 5 + 11) } else { (false, rest, i + 5) };
-                let cls_len = rest2.find(|c: char| c.is_whitespace()).unwrap_or(rest2.len());
+                let (bg, rest2, off) = if let Some(r) = rest.strip_prefix("background-") {
+                    (true, r, i + 5 + 11)
+                } else {
+                    (false, rest, i + 5)
+                };
+                let cls_len = rest2
+                    .find(|c: char| c.is_whitespace())
+                    .unwrap_or(rest2.len());
                 if cls_len > 0 {
                     found = Some((ws, off + cls_len, bg, rest2[..cls_len].to_string()));
                     break;
@@ -269,7 +343,11 @@ fn run_mode_line(
     let mut flatten = hs.flatten_spans;
     let mut cur_start = 0usize;
     let mut cur_style: Option<String> = None;
-    let oracle = CtxOracle { doc, line: ctx.line, max_look_ahead: Cell::new(ctx.max_look_ahead) };
+    let oracle = CtxOracle {
+        doc,
+        line: ctx.line,
+        max_look_ahead: Cell::new(ctx.max_look_ahead),
+    };
     let mut need_process_rest: Option<usize> = None;
     let final_pos;
     {
@@ -289,7 +367,8 @@ fn run_mode_line(
                 stream.pos = text.len();
                 style = None;
             } else {
-                let tok = read_token(mode, &mut stream, &mut ctx.state, None).unwrap_or_else(|e| panic!("{e}"));
+                let tok = read_token(mode, &mut stream, &mut ctx.state, None)
+                    .unwrap_or_else(|e| panic!("{e}"));
                 style = extract_line_classes(tok, line_classes);
             }
             if !flatten || cur_style != style {
@@ -320,16 +399,46 @@ fn run_mode_line(
 }
 
 /// `highlightLine(cm, line, context, forceToEnd)` (no overlays).
-pub fn highlight_line(doc: &Doc, mode: &Rc<dyn Mode>, hs: &HighlightState, text: &[u16], ctx: &mut Context, force_to_end: bool) -> Styles {
+pub fn highlight_line(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &HighlightState,
+    text: &[u16],
+    ctx: &mut Context,
+    force_to_end: bool,
+) -> Styles {
     let mut spans: Vec<(usize, Option<Rc<str>>)> = Vec::new();
     let mut classes = (None, None);
-    run_mode_line(doc, mode, hs, text, ctx, &mut |end, style| spans.push((end, style.map(|s| Rc::from(s.as_str())))), &mut classes, force_to_end);
-    let classes = if classes.0.is_some() || classes.1.is_some() { Some(classes) } else { None };
-    Styles { mode_gen: hs.mode_gen, spans, classes }
+    run_mode_line(
+        doc,
+        mode,
+        hs,
+        text,
+        ctx,
+        &mut |end, style| spans.push((end, style.map(|s| Rc::from(s.as_str())))),
+        &mut classes,
+        force_to_end,
+    );
+    let classes = if classes.0.is_some() || classes.1.is_some() {
+        Some(classes)
+    } else {
+        None
+    };
+    Styles {
+        mode_gen: hs.mode_gen,
+        spans,
+        classes,
+    }
 }
 
 /// `getLineStyles(cm, line, updateFrontier)`.
-pub fn get_line_styles(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState, line_no: i64, update_frontier: Option<i64>) -> Rc<Styles> {
+pub fn get_line_styles(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &mut HighlightState,
+    line_no: i64,
+    update_frontier: Option<i64>,
+) -> Rc<Styles> {
     let line = doc.get_line_handle(line_no).expect("line in range");
     if let Some(s) = line.styles() {
         if let Ok(st) = s.downcast::<Styles>() {
@@ -340,7 +449,11 @@ pub fn get_line_styles(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState, 
     }
     let mut ctx = get_context_before(doc, mode, hs, line_no, false);
     let text = line.text_utf16();
-    let reset_state = if text.len() > hs.max_highlight_length { Some(copy_state(&**mode, &ctx.state)) } else { None };
+    let reset_state = if text.len() > hs.max_highlight_length {
+        Some(copy_state(&**mode, &ctx.state))
+    } else {
+        None
+    };
     let result = highlight_line(doc, mode, hs, &text, &mut ctx, false);
     let copy = reset_state.is_none();
     if let Some(r) = reset_state {
@@ -392,7 +505,12 @@ pub fn reset_mode_state(doc: &Doc, hs: &mut HighlightState) {
 
 /// `highlightWorker(cm)` with a line budget instead of a time budget. Returns the
 /// lines whose styles changed, and whether more work remains.
-pub fn highlight_worker(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState, max_lines: usize) -> (Vec<i64>, bool) {
+pub fn highlight_worker(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &mut HighlightState,
+    max_lines: usize,
+) -> (Vec<i64>, bool) {
     let mut changed = Vec::new();
     if hs.highlight_frontier >= hs.view_to {
         return (changed, false);
@@ -406,14 +524,20 @@ pub fn highlight_worker(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState,
         let text = line.text_utf16();
         if ctx.line >= hs.view_from {
             let old = line.styles().and_then(|s| s.downcast::<Styles>().ok());
-            let reset_state = if text.len() > hs.max_highlight_length { Some(copy_state(&**mode, &ctx.state)) } else { None };
+            let reset_state = if text.len() > hs.max_highlight_length {
+                Some(copy_state(&**mode, &ctx.state))
+            } else {
+                None
+            };
             let st = highlight_line(doc, mode, hs, &text, &mut ctx, true);
             if let Some(r) = reset_state {
                 ctx.state = r;
             }
             let is_change = match &old {
                 None => true,
-                Some(o) => o.spans != st.spans || o.classes != st.classes || o.mode_gen != st.mode_gen,
+                Some(o) => {
+                    o.spans != st.spans || o.classes != st.classes || o.mode_gen != st.mode_gen
+                }
             };
             if is_change {
                 changed.push(ctx.line);
@@ -424,7 +548,11 @@ pub fn highlight_worker(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState,
             if text.len() <= hs.max_highlight_length {
                 process_line(doc, mode, hs, &text, &mut ctx, 0);
             }
-            line.set_state_after(if ctx.line % 5 == 0 { Some(ctx.save(&**mode, true)) } else { None });
+            line.set_state_after(if ctx.line % 5 == 0 {
+                Some(ctx.save(&**mode, true))
+            } else {
+                None
+            });
         }
         ctx.next_line();
         done += 1;
@@ -449,22 +577,46 @@ pub struct Token {
 }
 
 /// `takeToken(cm, pos, precise, asArray)`.
-pub fn take_token(doc: &Doc, mode: &Rc<dyn Mode>, hs: &mut HighlightState, pos: Pos, precise: bool, as_array: bool) -> (Token, Vec<Token>) {
+pub fn take_token(
+    doc: &Doc,
+    mode: &Rc<dyn Mode>,
+    hs: &mut HighlightState,
+    pos: Pos,
+    precise: bool,
+    as_array: bool,
+) -> (Token, Vec<Token>) {
     let pos = doc.clip_pos(pos);
     let line = doc.get_line_handle(pos.line).expect("line in range");
     let mut ctx = get_context_before(doc, mode, hs, pos.line, precise);
     let text = line.text_utf16();
-    let oracle = CtxOracle { doc, line: ctx.line, max_look_ahead: Cell::new(ctx.max_look_ahead) };
+    let oracle = CtxOracle {
+        doc,
+        line: ctx.line,
+        max_look_ahead: Cell::new(ctx.max_look_ahead),
+    };
     let mut stream = StringStream::new(&text, Some(hs.tab_size), Some(&oracle));
     let mut tokens = Vec::new();
     let mut style = None;
     while (as_array || (stream.pos as i64) < pos.ch) && !stream.eol() {
         stream.start = stream.pos;
-        style = read_token(mode, &mut stream, &mut ctx.state, None).unwrap_or_else(|e| panic!("{e}"));
+        style =
+            read_token(mode, &mut stream, &mut ctx.state, None).unwrap_or_else(|e| panic!("{e}"));
         if as_array {
-            tokens.push(Token { start: stream.start, end: stream.pos, string: stream.current_string(), ty: style.clone(), state: copy_state(&**mode, &ctx.state) });
+            tokens.push(Token {
+                start: stream.start,
+                end: stream.pos,
+                string: stream.current_string(),
+                ty: style.clone(),
+                state: copy_state(&**mode, &ctx.state),
+            });
         }
     }
-    let tok = Token { start: stream.start, end: stream.pos, string: stream.current_string(), ty: style, state: ctx.state.clone() };
+    let tok = Token {
+        start: stream.start,
+        end: stream.pos,
+        string: stream.current_string(),
+        ty: style,
+        state: ctx.state.clone(),
+    };
     (tok, tokens)
 }

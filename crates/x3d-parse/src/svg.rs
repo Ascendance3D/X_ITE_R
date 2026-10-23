@@ -24,7 +24,10 @@ use x3d_scene::*;
 type R<T> = Result<T, LoadError>;
 
 fn error<T>(message: impl Into<String>) -> R<T> {
-    Err(LoadError::Parse(ParseError { message: message.into(), line: 0 }))
+    Err(LoadError::Parse(ParseError {
+        message: message.into(),
+        line: 0,
+    }))
 }
 
 // Constants.
@@ -85,14 +88,24 @@ fn parse_float_token(t: &str) -> f64 {
 
     // "5." and "5.e3": Rust wants a digit after the point only in some forms.
     let fixed = t.replacen(".e", ".0e", 1).replacen(".E", ".0E", 1);
-    let fixed = if fixed.ends_with('.') { format!("{fixed}0") } else { fixed };
+    let fixed = if fixed.ends_with('.') {
+        format!("{fixed}0")
+    } else {
+        fixed
+    };
 
     fixed.parse::<f64>().unwrap_or(f64::NAN)
 }
 
 impl Lex {
     fn new() -> Lex {
-        Lex { s: String::new(), p: 0, value: f64::NAN, r0: String::new(), r1: String::new() }
+        Lex {
+            s: String::new(),
+            p: 0,
+            value: f64::NAN,
+            r0: String::new(),
+            r1: String::new(),
+        }
     }
 
     /// `parseValue (value)`: `null` is read as the text "null" by every expression.
@@ -171,7 +184,11 @@ impl Lex {
                 end += 1;
             }
         } else if i > digits_start {
-            end = if i < b.len() && b[i] == b'.' { i + 1 } else { i };
+            end = if i < b.len() && b[i] == b'.' {
+                i + 1
+            } else {
+                i
+            };
         } else {
             return None;
         }
@@ -207,7 +224,11 @@ impl Lex {
         }
 
         let rest = &self.s[i + 1..];
-        let upper: String = rest.chars().take(3).collect::<String>().to_ascii_uppercase();
+        let upper: String = rest
+            .chars()
+            .take(3)
+            .collect::<String>()
+            .to_ascii_uppercase();
 
         let value = if upper == "NAN" {
             f64::NAN
@@ -256,7 +277,9 @@ impl Lex {
             }
 
             if k > i + 2 {
-                self.value = u64::from_str_radix(&self.s[i + 2..k], 16).map(|v| v as f64).unwrap_or(f64::INFINITY);
+                self.value = u64::from_str_radix(&self.s[i + 2..k], 16)
+                    .map(|v| v as f64)
+                    .unwrap_or(f64::INFINITY);
                 self.r0 = self.s[i..k].to_string();
                 self.p = k;
                 return true;
@@ -280,7 +303,11 @@ impl Lex {
         }
 
         self.r0 = self.s[start..i].to_string();
-        self.value = self.r0.trim_start_matches('+').parse::<f64>().unwrap_or(f64::NAN);
+        self.value = self
+            .r0
+            .trim_start_matches('+')
+            .parse::<f64>()
+            .unwrap_or(f64::NAN);
         self.p = i;
         true
     }
@@ -411,7 +438,11 @@ fn length_of_number(value: f64, default: f64) -> f64 {
 
     lex.s = jsmath::number_to_string(value);
 
-    if lex.double() { value_with_unit(&mut lex, "", None) } else { default }
+    if lex.double() {
+        value_with_unit(&mut lex, "", None)
+    } else {
+        default
+    }
 }
 
 /// The unit conversion of `lengthAttribute` after the number has been read.
@@ -477,7 +508,9 @@ fn skew_y(m: &mut Matrix3, angle: f64) {
 fn matrix4_from_matrix3(m: &Matrix3) -> Matrix4 {
     let m = &m.0;
 
-    Matrix4([m[0], m[1], 0.0, 0.0, m[3], m[4], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, m[6], m[7], 0.0, 1.0])
+    Matrix4([
+        m[0], m[1], 0.0, 0.0, m[3], m[4], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, m[6], m[7], 0.0, 1.0,
+    ])
 }
 
 /// standard/Math/Geometry/Box2.js (only what the parser uses).
@@ -488,11 +521,25 @@ struct Box2 {
 
 impl Box2 {
     fn empty() -> Box2 {
-        Box2 { matrix: Matrix3([0.0; 9]) }
+        Box2 {
+            matrix: Matrix3([0.0; 9]),
+        }
     }
 
     fn new(size: [f64; 2], center: [f64; 2]) -> Box2 {
-        Box2 { matrix: Matrix3([size[0] / 2.0, 0.0, 0.0, 0.0, size[1] / 2.0, 0.0, center[0], center[1], 1.0]) }
+        Box2 {
+            matrix: Matrix3([
+                size[0] / 2.0,
+                0.0,
+                0.0,
+                0.0,
+                size[1] / 2.0,
+                0.0,
+                center[0],
+                center[1],
+                1.0,
+            ]),
+        }
     }
 
     fn set_extents(&mut self, min: [f64; 2], max: [f64; 2]) {
@@ -524,7 +571,10 @@ impl Box2 {
         }
 
         // getExtents: min .add (this .center)
-        (([min[0] + m[6], min[1] + m[7]]), ([max[0] + m[6], max[1] + m[7]]))
+        (
+            ([min[0] + m[6], min[1] + m[7]]),
+            ([max[0] + m[6], max[1] + m[7]]),
+        )
     }
 
     fn add(&mut self, other: &Box2) {
@@ -541,8 +591,14 @@ impl Box2 {
         let (rmin, rmax) = other.get_extents();
 
         self.set_extents(
-            [jsmath::js_min(lmin[0], rmin[0]), jsmath::js_min(lmin[1], rmin[1])],
-            [jsmath::js_max(lmax[0], rmax[0]), jsmath::js_max(lmax[1], rmax[1])],
+            [
+                jsmath::js_min(lmin[0], rmin[0]),
+                jsmath::js_min(lmin[1], rmin[1]),
+            ],
+            [
+                jsmath::js_max(lmax[0], rmax[0]),
+                jsmath::js_max(lmax[1], rmax[1]),
+            ],
         );
     }
 
@@ -570,7 +626,9 @@ impl Box2 {
 
 /// Bezier.quadric
 fn bezier_quadric(p0: P3, p1: P3, p2: P3, steps: usize, points: &mut Vec<P3>) {
-    let mut p = Matrix3([p0[0], p0[1], p0[2], p1[0], p1[1], p1[2], p2[0], p2[1], p2[2]]);
+    let mut p = Matrix3([
+        p0[0], p0[1], p0[2], p1[0], p1[1], p1[2], p2[0], p2[1], p2[2],
+    ]);
 
     p.mult_left(&Matrix3([1.0, 0.0, 0.0, -2.0, 2.0, 0.0, 1.0, -2.0, 1.0]));
 
@@ -587,9 +645,14 @@ fn bezier_quadric(p0: P3, p1: P3, p2: P3, steps: usize, points: &mut Vec<P3>) {
 
 /// Bezier.cubic
 fn bezier_cubic(p0: P3, p1: P3, p2: P3, p3: P3, steps: usize, points: &mut Vec<P3>) {
-    let mut p = Matrix4([p0[0], p0[1], p0[2], 0.0, p1[0], p1[1], p1[2], 0.0, p2[0], p2[1], p2[2], 0.0, p3[0], p3[1], p3[2], 0.0]);
+    let mut p = Matrix4([
+        p0[0], p0[1], p0[2], 0.0, p1[0], p1[1], p1[2], 0.0, p2[0], p2[1], p2[2], 0.0, p3[0], p3[1],
+        p3[2], 0.0,
+    ]);
 
-    p.mult_left(&Matrix4([1.0, 0.0, 0.0, 0.0, -3.0, 3.0, 0.0, 0.0, 3.0, -6.0, 3.0, 0.0, -1.0, 3.0, -3.0, 1.0]));
+    p.mult_left(&Matrix4([
+        1.0, 0.0, 0.0, 0.0, -3.0, 3.0, 0.0, 0.0, 3.0, -6.0, 3.0, 0.0, -1.0, 3.0, -3.0, 1.0,
+    ]));
 
     let d = steps as f64 - 1.0;
 
@@ -604,7 +667,19 @@ fn bezier_cubic(p0: P3, p1: P3, p2: P3, p3: P3, steps: usize, points: &mut Vec<P
 
 /// Bezier.arc
 #[allow(clippy::too_many_arguments)]
-fn bezier_arc(ax: f64, ay: f64, rx: f64, ry: f64, x_axis_rotation: f64, large_arc: f64, sweep: f64, x: f64, y: f64, steps: usize, points: &mut Vec<P3>) {
+fn bezier_arc(
+    ax: f64,
+    ay: f64,
+    rx: f64,
+    ry: f64,
+    x_axis_rotation: f64,
+    large_arc: f64,
+    sweep: f64,
+    x: f64,
+    y: f64,
+    steps: usize,
+    points: &mut Vec<P3>,
+) {
     use std::f64::consts::PI;
 
     // If the endpoints are identical, then this is equivalent to omitting the elliptical arc segment entirely.
@@ -631,7 +706,10 @@ fn bezier_arc(ax: f64, ay: f64, rx: f64, ry: f64, x_axis_rotation: f64, large_ar
 
     // Step #1: Compute transformedPoint
     let d = [(ax - x) / 2.0, (ay - y) / 2.0];
-    let tp = [cos_rotation * d[0] + sin_rotation * d[1], -sin_rotation * d[0] + cos_rotation * d[1]];
+    let tp = [
+        cos_rotation * d[0] + sin_rotation * d[1],
+        -sin_rotation * d[0] + cos_rotation * d[1],
+    ];
     let tp2 = [tp[0] * tp[0], tp[1] * tp[1]];
 
     // Ensure radii are large enough
@@ -654,7 +732,10 @@ fn bezier_arc(ax: f64, ay: f64, rx: f64, ry: f64, x_axis_rotation: f64, large_ar
     let tc = [c_coef * rx * tp[1] / ry, -c_coef * ry * tp[0] / rx];
 
     // Step #3: Compute center
-    let center = [cos_rotation * tc[0] - sin_rotation * tc[1] + ((ax + x) / 2.0), sin_rotation * tc[0] + cos_rotation * tc[1] + ((ay + y) / 2.0)];
+    let center = [
+        cos_rotation * tc[0] - sin_rotation * tc[1] + ((ax + x) / 2.0),
+        sin_rotation * tc[0] + cos_rotation * tc[1] + ((ay + y) / 2.0),
+    ];
 
     // Step #4: Compute start/sweep angles
     let start_vector = [(tp[0] - tc[0]) / rx, (tp[1] - tc[1]) / ry];
@@ -698,7 +779,11 @@ fn bezier_arc(ax: f64, ay: f64, rx: f64, ry: f64, x_axis_rotation: f64, large_ar
         let px = rx * jsmath::cos(angle);
         let py = ry * jsmath::sin(angle);
 
-        points.push([cos_rotation * px - sin_rotation * py + center[0], sin_rotation * px + cos_rotation * py + center[1], 0.0]);
+        points.push([
+            cos_rotation * px - sin_rotation * py + center[0],
+            sin_rotation * px + cos_rotation * py + center[1],
+            0.0,
+        ]);
         i += 1.0;
     }
 
@@ -873,12 +958,20 @@ fn percent_encode_fragment(s: &str) -> String {
 /// `new URL (attribute, base) .hash .slice (1)`.
 fn url_hash(attribute: &str, base: &str) -> Result<String, String> {
     let trimmed = attribute.trim_matches(|c: char| c <= ' ');
-    let cleaned: String = trimmed.chars().filter(|c| !matches!(c, '\t' | '\n' | '\r')).collect();
+    let cleaned: String = trimmed
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\n' | '\r'))
+        .collect();
     let has_scheme = {
         let mut chars = cleaned.chars();
         let first = chars.next().is_some_and(|c| c.is_ascii_alphabetic());
 
-        first && cleaned.find(':').is_some_and(|i| cleaned[..i].chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.')))
+        first
+            && cleaned.find(':').is_some_and(|i| {
+                cleaned[..i]
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
+            })
     };
 
     // A relative reference needs a base that can be one: a data: URL cannot.
@@ -910,7 +1003,10 @@ fn find_by_id<'a>(el: &'a Element, id: &str) -> Option<&'a Element> {
 
 /// `xmlElement .getAttribute ("href") || xmlElement .getAttribute ("xlink:href")`
 fn href_of(el: &Element) -> Option<String> {
-    el.attr("href").filter(|v| !v.is_empty()).or_else(|| el.attr("xlink:href")).map(String::from)
+    el.attr("href")
+        .filter(|v| !v.is_empty())
+        .or_else(|| el.attr("xlink:href"))
+        .map(String::from)
 }
 
 impl<'a> Svg<'a> {
@@ -926,7 +1022,9 @@ impl<'a> Svg<'a> {
 
     /// `lengthAttribute (attribute, defaultValue, percent)`
     fn length_attribute(&mut self, attribute: Option<&str>, default: f64, percent: &str) -> f64 {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return default };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return default;
+        };
 
         self.lex.parse_value(Some(attribute));
 
@@ -977,7 +1075,9 @@ impl<'a> Svg<'a> {
 
     /// `hrefAttribute`
     fn href_attribute(&self, attribute: Option<&str>) -> R<Option<&'a Element>> {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return Ok(None) };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return Ok(None);
+        };
 
         let hash = match url_hash(attribute, &self.world_url) {
             Ok(h) => h,
@@ -993,7 +1093,9 @@ impl<'a> Svg<'a> {
 
     /// `pointsAttribute`
     fn points_attribute(&mut self, attribute: Option<&str>, points: &mut Vec<P3>) -> bool {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return false };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return false;
+        };
 
         self.lex.parse_value(Some(attribute));
 
@@ -1027,7 +1129,11 @@ impl<'a> Svg<'a> {
                 self.lex.comma();
             }
 
-            let ok = if *int { self.lex.int32() } else { self.lex.double() };
+            let ok = if *int {
+                self.lex.int32()
+            } else {
+                self.lex.double()
+            };
 
             if !ok {
                 return None;
@@ -1041,7 +1147,9 @@ impl<'a> Svg<'a> {
 
     /// `dAttribute`
     fn d_attribute(&mut self, attribute: Option<&str>, contours: &mut Vec<Contour>) -> bool {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return false };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return false;
+        };
 
         self.lex.parse_value(Some(attribute));
 
@@ -1052,7 +1160,9 @@ impl<'a> Svg<'a> {
         loop {
             self.lex.whitespaces();
 
-            let Some(c) = self.lex.path_command() else { break };
+            let Some(c) = self.lex.path_command() else {
+                break;
+            };
             let previous = command;
 
             command = c;
@@ -1063,7 +1173,11 @@ impl<'a> Svg<'a> {
                 'm' => {
                     // moveto
                     if points.len() > 2 {
-                        contours.push(Contour { pts: std::mem::take(&mut points), closed: false, index: 0 });
+                        contours.push(Contour {
+                            pts: std::mem::take(&mut points),
+                            closed: false,
+                            index: 0,
+                        });
                     }
 
                     points = vec![];
@@ -1138,7 +1252,13 @@ impl<'a> Svg<'a> {
                             y += ay;
                         }
 
-                        bezier_quadric([ax, ay, 0.0], [x1, y1, 0.0], [x, y, 0.0], self.bezier_steps, &mut points);
+                        bezier_quadric(
+                            [ax, ay, 0.0],
+                            [x1, y1, 0.0],
+                            [x, y, 0.0],
+                            self.bezier_steps,
+                            &mut points,
+                        );
 
                         ax = x;
                         ay = y;
@@ -1162,7 +1282,13 @@ impl<'a> Svg<'a> {
                             _ => (ax, ay),
                         };
 
-                        bezier_quadric([ax, ay, 0.0], [x1, y1, 0.0], [x, y, 0.0], self.bezier_steps, &mut points);
+                        bezier_quadric(
+                            [ax, ay, 0.0],
+                            [x1, y1, 0.0],
+                            [x, y, 0.0],
+                            self.bezier_steps,
+                            &mut points,
+                        );
 
                         ax = x;
                         ay = y;
@@ -1172,7 +1298,8 @@ impl<'a> Svg<'a> {
                 'c' => {
                     // curveto, cubic Bezier curve
                     while let Some(v) = self.numbers(&[false; 6]) {
-                        let (mut x1, mut y1, mut x2, mut y2, mut x, mut y) = (v[0], v[1], v[2], v[3], v[4], v[5]);
+                        let (mut x1, mut y1, mut x2, mut y2, mut x, mut y) =
+                            (v[0], v[1], v[2], v[3], v[4], v[5]);
 
                         if relative {
                             x1 += ax;
@@ -1183,7 +1310,14 @@ impl<'a> Svg<'a> {
                             y += ay;
                         }
 
-                        bezier_cubic([ax, ay, 0.0], [x1, y1, 0.0], [x2, y2, 0.0], [x, y, 0.0], self.bezier_steps, &mut points);
+                        bezier_cubic(
+                            [ax, ay, 0.0],
+                            [x1, y1, 0.0],
+                            [x2, y2, 0.0],
+                            [x, y, 0.0],
+                            self.bezier_steps,
+                            &mut points,
+                        );
 
                         ax = x;
                         ay = y;
@@ -1209,7 +1343,14 @@ impl<'a> Svg<'a> {
                             _ => (ax, ay),
                         };
 
-                        bezier_cubic([ax, ay, 0.0], [x1, y1, 0.0], [x2, y2, 0.0], [x, y, 0.0], self.bezier_steps, &mut points);
+                        bezier_cubic(
+                            [ax, ay, 0.0],
+                            [x1, y1, 0.0],
+                            [x2, y2, 0.0],
+                            [x, y, 0.0],
+                            self.bezier_steps,
+                            &mut points,
+                        );
 
                         ax = x;
                         ay = y;
@@ -1220,7 +1361,9 @@ impl<'a> Svg<'a> {
                 }
                 'a' => {
                     // elliptical arc
-                    while let Some(v) = self.numbers(&[false, false, false, true, true, false, false]) {
+                    while let Some(v) =
+                        self.numbers(&[false, false, false, true, true, false, false])
+                    {
                         let (rx, ry) = (v[0], v[1]);
                         let x_axis_rotation = v[2] * (std::f64::consts::PI / 180.0);
                         let (large_arc_flag, sweep_flag) = (v[3], v[4]);
@@ -1231,7 +1374,19 @@ impl<'a> Svg<'a> {
                             y += ay;
                         }
 
-                        bezier_arc(ax, ay, rx, ry, x_axis_rotation, large_arc_flag, sweep_flag, x, y, self.circle_steps, &mut points);
+                        bezier_arc(
+                            ax,
+                            ay,
+                            rx,
+                            ry,
+                            x_axis_rotation,
+                            large_arc_flag,
+                            sweep_flag,
+                            x,
+                            y,
+                            self.circle_steps,
+                            &mut points,
+                        );
 
                         ax = x;
                         ay = y;
@@ -1244,7 +1399,11 @@ impl<'a> Svg<'a> {
                         ax = points[0][0];
                         ay = points[0][1];
 
-                        contours.push(Contour { pts: std::mem::take(&mut points), closed: true, index: 0 });
+                        contours.push(Contour {
+                            pts: std::mem::take(&mut points),
+                            closed: true,
+                            index: 0,
+                        });
                     }
 
                     points = vec![];
@@ -1254,7 +1413,11 @@ impl<'a> Svg<'a> {
         }
 
         if points.len() > 2 {
-            contours.push(Contour { pts: points, closed: false, index: 0 });
+            contours.push(Contour {
+                pts: points,
+                closed: false,
+                index: 0,
+            });
         }
 
         !contours.is_empty()
@@ -1263,7 +1426,9 @@ impl<'a> Svg<'a> {
     /// `transformAttribute`
     fn transform_attribute(&mut self, attribute: Option<&str>) -> Matrix3 {
         let mut matrix = Matrix3::IDENTITY;
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return matrix };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return matrix;
+        };
 
         self.lex.parse_value(Some(attribute));
 
@@ -1311,7 +1476,11 @@ impl<'a> Svg<'a> {
                     let ty: Option<f64>;
 
                     if self.lex.comma() {
-                        ty = if self.lex.double() { Some(self.lex.value) } else { None };
+                        ty = if self.lex.double() {
+                            Some(self.lex.value)
+                        } else {
+                            None
+                        };
                     } else {
                         ty = Some(0.0);
                     }
@@ -1359,7 +1528,11 @@ impl<'a> Svg<'a> {
                     let sy: Option<f64>;
 
                     if self.lex.comma() {
-                        sy = if self.lex.double() { Some(self.lex.value) } else { None };
+                        sy = if self.lex.double() {
+                            Some(self.lex.value)
+                        } else {
+                            None
+                        };
                     } else {
                         sy = Some(sx);
                     }
@@ -1428,7 +1601,9 @@ impl<'a> Svg<'a> {
     }
 
     fn style_attribute(&mut self, attribute: Option<&str>) {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return };
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return;
+        };
 
         for value in attribute.split(';') {
             let pair: Vec<&str> = value.split(':').collect();
@@ -1437,7 +1612,10 @@ impl<'a> Svg<'a> {
                 continue;
             }
 
-            self.parse_style(pair[0].trim_matches(is_js_space), pair[1].trim_matches(is_js_space));
+            self.parse_style(
+                pair[0].trim_matches(is_js_space),
+                pair[1].trim_matches(is_js_space),
+            );
         }
     }
 
@@ -1450,7 +1628,11 @@ impl<'a> Svg<'a> {
 
         match style {
             "display" => {
-                self.style_mut().display = if value == "default" { "inline".into() } else { value.into() };
+                self.style_mut().display = if value == "default" {
+                    "inline".into()
+                } else {
+                    value.into()
+                };
             }
             "fill" => self.fill_style(value),
             "fill-opacity" => {
@@ -1467,7 +1649,11 @@ impl<'a> Svg<'a> {
             "fill-rule" => {
                 let initial = self.styles[0].fill_rule.clone();
 
-                self.style_mut().fill_rule = if value == "default" { initial } else { value.into() };
+                self.style_mut().fill_rule = if value == "default" {
+                    initial
+                } else {
+                    value.into()
+                };
             }
             "stroke" => self.stroke_style(value),
             "stroke-opacity" => {
@@ -1529,7 +1715,11 @@ impl<'a> Svg<'a> {
             "vector-effect" => {
                 let initial = self.styles[0].vector_effect.clone();
 
-                self.style_mut().vector_effect = if value == "default" { initial } else { value.into() };
+                self.style_mut().vector_effect = if value == "default" {
+                    initial
+                } else {
+                    value.into()
+                };
             }
             _ => {}
         }
@@ -1540,7 +1730,11 @@ impl<'a> Svg<'a> {
         let token = self.lex.color_token()?;
 
         // `div .style .color = value` keeps the previous value when the CSS parser rejects it.
-        let parsed = if token.eq_ignore_ascii_case("currentcolor") { Some(DivColor::Current) } else { try_convert_color(&token).map(DivColor::Color) };
+        let parsed = if token.eq_ignore_ascii_case("currentcolor") {
+            Some(DivColor::Current)
+        } else {
+            try_convert_color(&token).map(DivColor::Color)
+        };
 
         if parsed.is_some() {
             self.div_color = parsed;
@@ -1636,8 +1830,17 @@ impl<'a> Svg<'a> {
     }
 
     /// `idAttribute (attribute, suffix, node, { named, exported })`
-    fn id_attribute(&mut self, attribute: Option<&str>, suffix: &str, node: NodeId, named: bool, exported: bool) {
-        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else { return };
+    fn id_attribute(
+        &mut self,
+        attribute: Option<&str>,
+        suffix: &str,
+        node: NodeId,
+        named: bool,
+        exported: bool,
+    ) {
+        let Some(attribute) = attribute.filter(|a| !a.is_empty()) else {
+            return;
+        };
         let name = crate::formats::sanitize_name(attribute);
 
         if name.is_empty() {
@@ -1678,12 +1881,38 @@ impl<'a> Svg<'a> {
         let mut scale = Vector3::new(1.0, 1.0, 1.0);
         let mut scale_orientation = Rotation4::identity();
 
-        matrix.get_transform(Some(&mut translation), Some(&mut rotation), Some(&mut scale), Some(&mut scale_orientation), None);
+        matrix.get_transform(
+            Some(&mut translation),
+            Some(&mut rotation),
+            Some(&mut scale),
+            Some(&mut scale_orientation),
+            None,
+        );
 
-        set(&mut self.scene, transform, "translation", FieldValue::SFVec3f(translation));
-        set(&mut self.scene, transform, "rotation", FieldValue::SFRotation(rotation));
-        set(&mut self.scene, transform, "scale", FieldValue::SFVec3f(scale));
-        set(&mut self.scene, transform, "scaleOrientation", FieldValue::SFRotation(scale_orientation));
+        set(
+            &mut self.scene,
+            transform,
+            "translation",
+            FieldValue::SFVec3f(translation),
+        );
+        set(
+            &mut self.scene,
+            transform,
+            "rotation",
+            FieldValue::SFRotation(rotation),
+        );
+        set(
+            &mut self.scene,
+            transform,
+            "scale",
+            FieldValue::SFVec3f(scale),
+        );
+        set(
+            &mut self.scene,
+            transform,
+            "scaleOrientation",
+            FieldValue::SFRotation(scale_orientation),
+        );
 
         self.id_attribute(el.attr("id"), "", transform, true, true);
 
@@ -1706,11 +1935,25 @@ impl<'a> Svg<'a> {
             "none" => return Ok(None),
             "COLOR" => {
                 let material = self.node("UnlitMaterial")?;
-                let (c, fill_opacity, opacity) = (self.style().fill_color, self.style().fill_opacity, self.style().opacity);
+                let (c, fill_opacity, opacity) = (
+                    self.style().fill_color,
+                    self.style().fill_opacity,
+                    self.style().opacity,
+                );
 
                 set_node(&mut self.scene, appearance, "material", Some(material));
-                set(&mut self.scene, material, "emissiveColor", FieldValue::SFColor(Color3::new(c[0], c[1], c[2])));
-                set(&mut self.scene, material, "transparency", FieldValue::SFFloat(1.0 - fill_opacity * opacity));
+                set(
+                    &mut self.scene,
+                    material,
+                    "emissiveColor",
+                    FieldValue::SFColor(Color3::new(c[0], c[1], c[2])),
+                );
+                set(
+                    &mut self.scene,
+                    material,
+                    "transparency",
+                    FieldValue::SFFloat(1.0 - fill_opacity * opacity),
+                );
             }
             "URL" => {
                 // Gradient
@@ -1721,8 +1964,18 @@ impl<'a> Svg<'a> {
                 // Get image from url.
                 let Some(url) = url else { return Ok(None) };
 
-                set(&mut self.scene, texture, "url", FieldValue::MFString(vec![url]));
-                set_node(&mut self.scene, texture, "textureProperties", Some(self.texture_properties));
+                set(
+                    &mut self.scene,
+                    texture,
+                    "url",
+                    FieldValue::MFString(vec![url]),
+                );
+                set_node(
+                    &mut self.scene,
+                    texture,
+                    "textureProperties",
+                    Some(self.texture_properties),
+                );
                 set_node(&mut self.scene, appearance, "texture", Some(texture));
             }
             _ => {}
@@ -1732,7 +1985,9 @@ impl<'a> Svg<'a> {
     }
 
     fn get_fill_url(&mut self, fill_url: &str, bbox: &Box2) -> R<Option<String>> {
-        let Some(el) = self.href_attribute(Some(fill_url))? else { return Ok(None) };
+        let Some(el) = self.href_attribute(Some(fill_url))? else {
+            return Ok(None);
+        };
 
         match el.name.as_str() {
             "linearGradient" => {
@@ -1740,7 +1995,12 @@ impl<'a> Svg<'a> {
 
                 self.linear_gradient_element(el, bbox, &mut g)?;
 
-                let kind = GradientKind::Linear { x1: g.x1.unwrap_or(f64::NAN), y1: g.y1.unwrap_or(f64::NAN), x2: g.x2.unwrap_or(f64::NAN), y2: g.y2.unwrap_or(f64::NAN) };
+                let kind = GradientKind::Linear {
+                    x1: g.x1.unwrap_or(f64::NAN),
+                    y1: g.y1.unwrap_or(f64::NAN),
+                    x2: g.x2.unwrap_or(f64::NAN),
+                    y2: g.y2.unwrap_or(f64::NAN),
+                };
 
                 self.draw_gradient(kind, &g, bbox)
             }
@@ -1768,11 +2028,25 @@ impl<'a> Svg<'a> {
     fn create_stroke_appearance(&mut self) -> R<NodeId> {
         let appearance = self.node("Appearance")?;
         let material = self.node("UnlitMaterial")?;
-        let (c, stroke_opacity, opacity) = (self.style().stroke_color, self.style().stroke_opacity, self.style().opacity);
+        let (c, stroke_opacity, opacity) = (
+            self.style().stroke_color,
+            self.style().stroke_opacity,
+            self.style().opacity,
+        );
 
         set_node(&mut self.scene, appearance, "material", Some(material));
-        set(&mut self.scene, material, "emissiveColor", FieldValue::SFColor(Color3::new(c[0], c[1], c[2])));
-        set(&mut self.scene, material, "transparency", FieldValue::SFFloat(1.0 - stroke_opacity * opacity));
+        set(
+            &mut self.scene,
+            material,
+            "emissiveColor",
+            FieldValue::SFColor(Color3::new(c[0], c[1], c[2])),
+        );
+        set(
+            &mut self.scene,
+            material,
+            "transparency",
+            FieldValue::SFFloat(1.0 - stroke_opacity * opacity),
+        );
 
         // `this .vectorEffect` is never set (the value lives in `this .style`), so this is always
         // getStokeWidth ().
@@ -1781,7 +2055,12 @@ impl<'a> Svg<'a> {
         if stroke_width > 1.0 {
             let properties = self.get_line_properties(stroke_width)?;
 
-            set_node(&mut self.scene, appearance, "lineProperties", Some(properties));
+            set_node(
+                &mut self.scene,
+                appearance,
+                "lineProperties",
+                Some(properties),
+            );
         }
 
         Ok(appearance)
@@ -1803,7 +2082,12 @@ impl<'a> Svg<'a> {
 
         let node = self.node("LineProperties")?;
 
-        set(&mut self.scene, node, "linewidthScaleFactor", FieldValue::SFFloat(stroke_width));
+        set(
+            &mut self.scene,
+            node,
+            "linewidthScaleFactor",
+            FieldValue::SFFloat(stroke_width),
+        );
         self.line_properties.insert(number_key(stroke_width), node);
         Ok(node)
     }
@@ -1811,13 +2095,48 @@ impl<'a> Svg<'a> {
     fn create_texture_properties(&mut self) -> R<NodeId> {
         let node = self.node("TextureProperties")?;
 
-        set(&mut self.scene, node, "generateMipMaps", FieldValue::SFBool(true));
-        set(&mut self.scene, node, "minificationFilter", FieldValue::SFString("NICEST".into()));
-        set(&mut self.scene, node, "magnificationFilter", FieldValue::SFString("NICEST".into()));
-        set(&mut self.scene, node, "boundaryModeS", FieldValue::SFString("CLAMP_TO_EDGE".into()));
-        set(&mut self.scene, node, "boundaryModeT", FieldValue::SFString("CLAMP_TO_EDGE".into()));
-        set(&mut self.scene, node, "boundaryModeR", FieldValue::SFString("CLAMP_TO_EDGE".into()));
-        set(&mut self.scene, node, "textureCompression", FieldValue::SFString("DEFAULT".into()));
+        set(
+            &mut self.scene,
+            node,
+            "generateMipMaps",
+            FieldValue::SFBool(true),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "minificationFilter",
+            FieldValue::SFString("NICEST".into()),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "magnificationFilter",
+            FieldValue::SFString("NICEST".into()),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "boundaryModeS",
+            FieldValue::SFString("CLAMP_TO_EDGE".into()),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "boundaryModeT",
+            FieldValue::SFString("CLAMP_TO_EDGE".into()),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "boundaryModeR",
+            FieldValue::SFString("CLAMP_TO_EDGE".into()),
+        );
+        set(
+            &mut self.scene,
+            node,
+            "textureCompression",
+            FieldValue::SFString("DEFAULT".into()),
+        );
         Ok(node)
     }
 
@@ -1841,7 +2160,11 @@ impl<'a> Svg<'a> {
         g.y1 = Some(self.length_attribute(el.attr("y1"), or(g.y1, 0.0), "height"));
         g.x2 = Some(self.length_attribute(el.attr("x2"), or(g.x2, 1.0), "width"));
         g.y2 = Some(self.length_attribute(el.attr("y2"), or(g.y2, 0.0), "height"));
-        g.units = el.attr("gradientUnits").filter(|u| !u.is_empty()).unwrap_or("objectBoundingBox").to_string();
+        g.units = el
+            .attr("gradientUnits")
+            .filter(|u| !u.is_empty())
+            .unwrap_or("objectBoundingBox")
+            .to_string();
         g.transform = self.transform_attribute(el.attr("gradientTransform"));
 
         // Spread matrix
@@ -1880,7 +2203,11 @@ impl<'a> Svg<'a> {
         g.fx = Some(self.length_attribute(el.attr("fx"), or(g.fx, g.cx.unwrap()), "width"));
         g.fy = Some(self.length_attribute(el.attr("fy"), or(g.fy, g.cy.unwrap()), "height"));
         g.fr = Some(self.length_attribute(el.attr("fr"), or(g.fr, 0.0), ""));
-        g.units = el.attr("gradientUnits").filter(|u| !u.is_empty()).unwrap_or("objectBoundingBox").to_string();
+        g.units = el
+            .attr("gradientUnits")
+            .filter(|u| !u.is_empty())
+            .unwrap_or("objectBoundingBox")
+            .to_string();
         g.spread_method = el.attr("spreadMethod").map(String::from);
         g.transform = self.transform_attribute(el.attr("gradientTransform"));
 
@@ -1940,9 +2267,15 @@ impl<'a> Svg<'a> {
     }
 
     /// `drawGradient (gradient, g, bbox)`: the stops as the canvas gets them, the matrix, the PNG.
-    fn draw_gradient(&mut self, kind: GradientKind, g: &Gradient, bbox: &Box2) -> R<Option<String>> {
+    fn draw_gradient(
+        &mut self,
+        kind: GradientKind,
+        g: &Gradient,
+        bbox: &Box2,
+    ) -> R<Option<String>> {
         let mut stops: Vec<(f64, [f64; 4])> = vec![];
-        let css = |c: &[f64; 4], a: f64| -> [f64; 4] { [c[0] * 255.0, c[1] * 255.0, c[2] * 255.0, a] };
+        let css =
+            |c: &[f64; 4], a: f64| -> [f64; 4] { [c[0] * 255.0, c[1] * 255.0, c[2] * 255.0, a] };
         let mut spread_matrix = g.spread_matrix;
 
         match g.spread_method.as_deref() {
@@ -1960,7 +2293,10 @@ impl<'a> Svg<'a> {
                     let s = i as f64 / SPREAD;
 
                     for (o, c, a) in &g.stops {
-                        stops.push((s + (if i % 2 == 1 { 1.0 - o } else { *o }) / SPREAD, css(c, *a)));
+                        stops.push((
+                            s + (if i % 2 == 1 { 1.0 - o } else { *o }) / SPREAD,
+                            css(c, *a),
+                        ));
                     }
                 }
             }
@@ -1995,7 +2331,12 @@ impl<'a> Svg<'a> {
         m.mult_left(&spread_matrix);
 
         // Paint.
-        match svg_canvas::paint(self.gradient_size, &kind, &stops, [m.0[0], m.0[1], m.0[3], m.0[4], m.0[6], m.0[7]]) {
+        match svg_canvas::paint(
+            self.gradient_size,
+            &kind,
+            &stops,
+            [m.0[0], m.0[1], m.0[3], m.0[4], m.0[6], m.0[7]],
+        ) {
             Ok(rgba) => Ok(Some(svg_canvas::png_data_url(self.gradient_size, &rgba))),
             Err(message) => error(message),
         }
@@ -2043,7 +2384,9 @@ impl<'a> Svg<'a> {
     fn use_element(&mut self, el: &'a Element) -> R<()> {
         // Get href.
         let reference = href_of(el);
-        let Some(used) = self.href_attribute(reference.as_deref())? else { return Ok(()) };
+        let Some(used) = self.href_attribute(reference.as_deref())? else {
+            return Ok(());
+        };
 
         // Determine style.
         if !self.style_attributes(el) {
@@ -2092,11 +2435,18 @@ impl<'a> Svg<'a> {
         let switch = self.node("Switch")?;
 
         push_child(&mut self.scene, transform, "children", switch);
-        set(&mut self.scene, switch, "whichChoice", FieldValue::SFInt32(0));
+        set(
+            &mut self.scene,
+            switch,
+            "whichChoice",
+            FieldValue::SFInt32(0),
+        );
 
         self.num_switch_nodes += 1;
 
-        let unique = self.scene.get_unique_export_name(&format!("Switch{}", self.num_switch_nodes));
+        let unique = self
+            .scene
+            .get_unique_export_name(&format!("Switch{}", self.num_switch_nodes));
 
         let _ = self.scene.update_exported_node(ROOT, &unique, switch, "");
 
@@ -2117,7 +2467,10 @@ impl<'a> Svg<'a> {
 
         // Get attributes.
         let href = href_of(el);
-        let title = el.attr("title").filter(|t| !t.is_empty()).or_else(|| el.attr("xlink:title"));
+        let title = el
+            .attr("title")
+            .filter(|t| !t.is_empty())
+            .or_else(|| el.attr("xlink:title"));
         let target = el.attr("target");
 
         // Create Transform node.
@@ -2127,11 +2480,26 @@ impl<'a> Svg<'a> {
         push_child(&mut self.scene, transform, "children", anchor);
 
         // `anchorNode .description = title` with title `null` is the text "null".
-        set(&mut self.scene, anchor, "description", FieldValue::SFString(title.unwrap_or("null").to_string()));
-        set(&mut self.scene, anchor, "url", FieldValue::MFString(vec![href.unwrap_or_else(|| "null".into())]));
+        set(
+            &mut self.scene,
+            anchor,
+            "description",
+            FieldValue::SFString(title.unwrap_or("null").to_string()),
+        );
+        set(
+            &mut self.scene,
+            anchor,
+            "url",
+            FieldValue::MFString(vec![href.unwrap_or_else(|| "null".into())]),
+        );
 
         if let Some(target) = target.filter(|t| !t.is_empty()) {
-            set(&mut self.scene, anchor, "parameter", FieldValue::MFString(vec![format!("target={target}")]));
+            set(
+                &mut self.scene,
+                anchor,
+                "parameter",
+                FieldValue::MFString(vec![format!("target={target}")]),
+            );
         }
 
         // Get child elements.
@@ -2206,10 +2574,23 @@ impl<'a> Svg<'a> {
         points.pop();
 
         // Create nodes.
-        self.path_like_element(el, vec![Contour { pts: points, closed: true, index: 0 }])
+        self.path_like_element(
+            el,
+            vec![Contour {
+                pts: points,
+                closed: true,
+                index: 0,
+            }],
+        )
     }
 
-    fn rect_shapes(&mut self, el: &Element, transform: NodeId, bbox: &Box2, size: [f64; 2]) -> R<()> {
+    fn rect_shapes(
+        &mut self,
+        el: &Element,
+        transform: NodeId,
+        bbox: &Box2,
+        size: [f64; 2],
+    ) -> R<()> {
         if self.style().fill_type != "none" {
             let shape = self.node("Shape")?;
             let rectangle = self.fill_geometries.get(&key(el)).copied();
@@ -2228,8 +2609,18 @@ impl<'a> Svg<'a> {
                 self.fill_geometries.insert(key(el), rectangle);
 
                 set_node(&mut self.scene, shape, "geometry", Some(rectangle));
-                set(&mut self.scene, rectangle, "solid", FieldValue::SFBool(false));
-                set(&mut self.scene, rectangle, "size", FieldValue::SFVec2f(Vector2::new(size[0], size[1])));
+                set(
+                    &mut self.scene,
+                    rectangle,
+                    "solid",
+                    FieldValue::SFBool(false),
+                );
+                set(
+                    &mut self.scene,
+                    rectangle,
+                    "size",
+                    FieldValue::SFVec2f(Vector2::new(size[0], size[1])),
+                );
             }
         }
 
@@ -2252,7 +2643,12 @@ impl<'a> Svg<'a> {
                 self.stroke_geometries.insert(key(el), polyline);
 
                 set_node(&mut self.scene, shape, "geometry", Some(polyline));
-                set_numbers(&mut self.scene, polyline, "lineSegments", &[w, h, -w, h, -w, -h, w, -h, w, h]);
+                set_numbers(
+                    &mut self.scene,
+                    polyline,
+                    "lineSegments",
+                    &[w, h, -w, h, -w, -h, w, -h, w, h],
+                );
             }
         }
 
@@ -2305,7 +2701,16 @@ impl<'a> Svg<'a> {
 
     /// The Disk2D fill and Circle2D stroke of `circle` and `ellipse`.
     #[allow(clippy::too_many_arguments)]
-    fn round_shapes(&mut self, el: &Element, transform: NodeId, bbox: &Box2, stroke_type: &str, stroke_field: &str, outer_radius: f64, radius: f64) -> R<()> {
+    fn round_shapes(
+        &mut self,
+        el: &Element,
+        transform: NodeId,
+        bbox: &Box2,
+        stroke_type: &str,
+        stroke_field: &str,
+        outer_radius: f64,
+        radius: f64,
+    ) -> R<()> {
         if self.style().fill_type != "none" {
             let shape = self.node("Shape")?;
             let disk = self.fill_geometries.get(&key(el)).copied();
@@ -2325,7 +2730,12 @@ impl<'a> Svg<'a> {
 
                 set_node(&mut self.scene, shape, "geometry", Some(disk));
                 set(&mut self.scene, disk, "solid", FieldValue::SFBool(false));
-                set(&mut self.scene, disk, "outerRadius", FieldValue::SFFloat(outer_radius));
+                set(
+                    &mut self.scene,
+                    disk,
+                    "outerRadius",
+                    FieldValue::SFFloat(outer_radius),
+                );
             }
         }
 
@@ -2347,7 +2757,12 @@ impl<'a> Svg<'a> {
                 self.stroke_geometries.insert(key(el), circle);
 
                 set_node(&mut self.scene, shape, "geometry", Some(circle));
-                set(&mut self.scene, circle, stroke_field, FieldValue::SFFloat(radius));
+                set(
+                    &mut self.scene,
+                    circle,
+                    stroke_field,
+                    FieldValue::SFFloat(radius),
+                );
             }
         }
 
@@ -2373,7 +2788,8 @@ impl<'a> Svg<'a> {
         let width = self.length_attribute(el.attr("width"), 0.0, "width");
         let height = self.length_attribute(el.attr("height"), 0.0, "height");
         let href = href_of(el);
-        let transform = self.create_transform(el, [x + width / 2.0, y + height / 2.0], [1.0, -1.0])?;
+        let transform =
+            self.create_transform(el, [x + width / 2.0, y + height / 2.0], [1.0, -1.0])?;
 
         self.fill_geometries.insert(key(el), transform);
         self.group_nodes.push(transform);
@@ -2387,10 +2803,30 @@ impl<'a> Svg<'a> {
         set_node(&mut self.scene, shape, "appearance", Some(appearance));
         set_node(&mut self.scene, shape, "geometry", Some(rectangle));
         set_node(&mut self.scene, appearance, "texture", Some(texture));
-        set(&mut self.scene, texture, "url", FieldValue::MFString(vec![href.unwrap_or_else(|| "null".into())]));
-        set_node(&mut self.scene, texture, "textureProperties", Some(self.texture_properties));
-        set(&mut self.scene, rectangle, "solid", FieldValue::SFBool(false));
-        set(&mut self.scene, rectangle, "size", FieldValue::SFVec2f(Vector2::new(width, height)));
+        set(
+            &mut self.scene,
+            texture,
+            "url",
+            FieldValue::MFString(vec![href.unwrap_or_else(|| "null".into())]),
+        );
+        set_node(
+            &mut self.scene,
+            texture,
+            "textureProperties",
+            Some(self.texture_properties),
+        );
+        set(
+            &mut self.scene,
+            rectangle,
+            "solid",
+            FieldValue::SFBool(false),
+        );
+        set(
+            &mut self.scene,
+            rectangle,
+            "size",
+            FieldValue::SFVec2f(Vector2::new(width, height)),
+        );
 
         push_child(&mut self.scene, transform, "children", shape);
 
@@ -2407,7 +2843,14 @@ impl<'a> Svg<'a> {
         }
 
         // Create nodes.
-        self.path_like_element(el, vec![Contour { pts: points, closed: false, index: 0 }])
+        self.path_like_element(
+            el,
+            vec![Contour {
+                pts: points,
+                closed: false,
+                index: 0,
+            }],
+        )
     }
 
     fn polygon_element(&mut self, el: &'a Element) -> R<()> {
@@ -2419,7 +2862,14 @@ impl<'a> Svg<'a> {
         }
 
         // Create nodes.
-        self.path_like_element(el, vec![Contour { pts: points, closed: true, index: 0 }])
+        self.path_like_element(
+            el,
+            vec![Contour {
+                pts: points,
+                closed: true,
+                index: 0,
+            }],
+        )
     }
 
     fn path_element(&mut self, el: &'a Element) -> R<()> {
@@ -2451,13 +2901,27 @@ impl<'a> Svg<'a> {
                 let n = c.pts.len();
 
                 if c.closed {
-                    let pts = (0..n).filter(|i| distance(&c.pts[*i], &c.pts[(i + 1) % n]) > EPSILON).map(|i| c.pts[i]).collect();
+                    let pts = (0..n)
+                        .filter(|i| distance(&c.pts[*i], &c.pts[(i + 1) % n]) > EPSILON)
+                        .map(|i| c.pts[i])
+                        .collect();
 
-                    Contour { pts, closed: true, index: 0 }
+                    Contour {
+                        pts,
+                        closed: true,
+                        index: 0,
+                    }
                 } else {
-                    let pts = (0..n).filter(|i| *i == 0 || distance(&c.pts[*i], &c.pts[i - 1]) > EPSILON).map(|i| c.pts[i]).collect();
+                    let pts = (0..n)
+                        .filter(|i| *i == 0 || distance(&c.pts[*i], &c.pts[i - 1]) > EPSILON)
+                        .map(|i| c.pts[i])
+                        .collect();
 
-                    Contour { pts, closed: false, index: 0 }
+                    Contour {
+                        pts,
+                        closed: false,
+                        index: 0,
+                    }
                 }
             })
             .filter(|c| c.pts.len() > 2)
@@ -2487,7 +2951,13 @@ impl<'a> Svg<'a> {
         result
     }
 
-    fn path_shapes(&mut self, el: &Element, transform: NodeId, contours: &[Contour], bbox: &Box2) -> R<()> {
+    fn path_shapes(
+        &mut self,
+        el: &Element,
+        transform: NodeId,
+        contours: &[Contour],
+        bbox: &Box2,
+    ) -> R<()> {
         // Create nodes.
         let coordinate = self.node("Coordinate")?;
         let mut vertices: Vec<f64> = vec![];
@@ -2517,7 +2987,12 @@ impl<'a> Svg<'a> {
                 self.fill_geometries.insert(key(el), geometry);
 
                 set_node(&mut self.scene, shape, "geometry", Some(geometry));
-                set(&mut self.scene, geometry, "solid", FieldValue::SFBool(false));
+                set(
+                    &mut self.scene,
+                    geometry,
+                    "solid",
+                    FieldValue::SFBool(false),
+                );
 
                 let index = self.triangulate_polygon(contours, &mut vertices);
 
@@ -2602,9 +3077,18 @@ impl<'a> Svg<'a> {
     /// `triangulatePolygon (contours, coordinateNode)`; libtess appends vertices to `vertices`.
     fn triangulate_polygon(&mut self, contours: &[Contour], vertices: &mut Vec<f64>) -> Vec<f64> {
         let winding_odd = self.style().fill_rule == "evenodd";
-        let input: Vec<Vec<([f64; 2], usize)>> =
-            contours.iter().map(|c| c.pts.iter().enumerate().map(|(i, p)| ([p[0], p[1]], c.index + i)).collect()).collect();
-        let (triangles, added) = x3d_text::libtess::triangulate_svg(&input, winding_odd, vertices.len() / 3);
+        let input: Vec<Vec<([f64; 2], usize)>> = contours
+            .iter()
+            .map(|c| {
+                c.pts
+                    .iter()
+                    .enumerate()
+                    .map(|(i, p)| ([p[0], p[1]], c.index + i))
+                    .collect()
+            })
+            .collect();
+        let (triangles, added) =
+            x3d_text::libtess::triangulate_svg(&input, winding_odd, vertices.len() / 3);
 
         for v in added {
             vertices.extend_from_slice(&v);
@@ -2615,7 +3099,10 @@ impl<'a> Svg<'a> {
 }
 
 fn node_has_texture(scene: &Scene, appearance: NodeId) -> bool {
-    matches!(crate::formats::node_field(scene, appearance, "texture"), FieldValue::SFNode(Some(_)))
+    matches!(
+        crate::formats::node_field(scene, appearance, "texture"),
+        FieldValue::SFNode(Some(_))
+    )
 }
 
 // --- entry ---------------------------------------------------------------------------------------
@@ -2673,7 +3160,12 @@ pub(crate) fn parse_svg(root: &Element, world_url: &str) -> R<Scene> {
     // X_ITE sets each node up as it is created; the port does the same side effects after the parse, like the XML parser.
     scene.setup_nodes();
 
-    crate::optimizer::Optimizer { remove_empty_groups: true, combine_grouping_nodes: true, ..Default::default() }.optimize_scene_graph(&mut scene, ROOT);
+    crate::optimizer::Optimizer {
+        remove_empty_groups: true,
+        combine_grouping_nodes: true,
+        ..Default::default()
+    }
+    .optimize_scene_graph(&mut scene, ROOT);
     Ok(scene)
 }
 
@@ -2698,7 +3190,12 @@ impl<'a> Svg<'a> {
             &mut self.scene,
             navigation_info,
             "type",
-            FieldValue::MFString(["PLANE", "PLANE_create3000.github.io", "EXAMINE", "ANY"].iter().map(|s| s.to_string()).collect()),
+            FieldValue::MFString(
+                ["PLANE", "PLANE_create3000.github.io", "EXAMINE", "ANY"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+            ),
         );
 
         // Get attributes of svg element.
@@ -2735,15 +3232,40 @@ impl<'a> Svg<'a> {
         let x = (view_box[0] + width / 2.0) * PIXEL;
         let y = -(view_box[1] + height / 2.0) * PIXEL;
 
-        set_node(&mut self.scene, viewpoint, "navigationInfo", Some(navigation_info));
-        set(&mut self.scene, viewpoint, "position", FieldValue::SFVec3f(Vector3::new(x, y, 10.0)));
-        set(&mut self.scene, viewpoint, "centerOfRotation", FieldValue::SFVec3f(Vector3::new(x, y, 0.0)));
+        set_node(
+            &mut self.scene,
+            viewpoint,
+            "navigationInfo",
+            Some(navigation_info),
+        );
+        set(
+            &mut self.scene,
+            viewpoint,
+            "position",
+            FieldValue::SFVec3f(Vector3::new(x, y, 10.0)),
+        );
+        set(
+            &mut self.scene,
+            viewpoint,
+            "centerOfRotation",
+            FieldValue::SFVec3f(Vector3::new(x, y, 0.0)),
+        );
         // `viewpoint .fieldOfView = new Vector4 (...)`: an SFVec4f in an X3D 4.1 scene (the SVG parser's), an MFFloat in a scene up to
         // 4.0 (OrthoViewpoint's legacy changeField).
-        let fov = [-width / 2.0 * PIXEL, -height / 2.0 * PIXEL, width / 2.0 * PIXEL, height / 2.0 * PIXEL];
-        let i = self.scene.get_predefined_field(viewpoint, "fieldOfView").unwrap();
+        let fov = [
+            -width / 2.0 * PIXEL,
+            -height / 2.0 * PIXEL,
+            width / 2.0 * PIXEL,
+            height / 2.0 * PIXEL,
+        ];
+        let i = self
+            .scene
+            .get_predefined_field(viewpoint, "fieldOfView")
+            .unwrap();
         let value = match self.scene.node(viewpoint).fields[i].value {
-            FieldValue::SFVec4f(_) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(fov[0], fov[1], fov[2], fov[3])),
+            FieldValue::SFVec4f(_) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(
+                fov[0], fov[1], fov[2], fov[3],
+            )),
             _ => FieldValue::MFFloat(fov.iter().map(|v| *v as f32).collect()),
         };
 
@@ -2752,9 +3274,18 @@ impl<'a> Svg<'a> {
         self.scene.ctx_mut(ROOT).root_nodes.push(Some(viewpoint));
 
         // Create view matrix.
-        let scale = Vector3::new(width * PIXEL / view_box[2], -height * PIXEL / view_box[3], 1.0);
+        let scale = Vector3::new(
+            width * PIXEL / view_box[2],
+            -height * PIXEL / view_box[3],
+            1.0,
+        );
 
-        set(&mut self.scene, root_transform, "scale", FieldValue::SFVec3f(scale));
+        set(
+            &mut self.scene,
+            root_transform,
+            "scale",
+            FieldValue::SFVec3f(scale),
+        );
 
         // Parse elements.
         self.elements(el)?;
@@ -2766,8 +3297,13 @@ impl<'a> Svg<'a> {
 
         let exported = self.scene.get_unique_export_name("ViewBox");
 
-        let _ = self.scene.update_exported_node(ROOT, &exported, root_transform, "");
-        self.scene.ctx_mut(ROOT).root_nodes.push(Some(root_transform));
+        let _ = self
+            .scene
+            .update_exported_node(ROOT, &exported, root_transform, "");
+        self.scene
+            .ctx_mut(ROOT)
+            .root_nodes
+            .push(Some(root_transform));
 
         Ok(())
     }

@@ -46,7 +46,11 @@ fn eigen_decomposition(matrix: &Matrix3, values: &mut [f64; 3], vectors: &mut [[
             break;
         }
 
-        let thresh = if sweep < 3 { 0.2 * sm / SIZE as f64 } else { 0.0 };
+        let thresh = if sweep < 3 {
+            0.2 * sm / SIZE as f64
+        } else {
+            0.0
+        };
 
         for p in 0..ORDER - 1 {
             for q in p + 1..ORDER {
@@ -183,7 +187,17 @@ impl Matrix3 {
         let b4 = (m0 * m8 - m6 * m2) * d;
         let b5 = -(m0 * m5 - m3 * m2) * d;
 
-        self.0 = [b0, b1, b2, b3, b4, b5, (t10 - t14) * d, -(t6 - t12) * d, (t4 - t8) * d];
+        self.0 = [
+            b0,
+            b1,
+            b2,
+            b3,
+            b4,
+            b5,
+            (t10 - t14) * d,
+            -(t6 - t12) * d,
+            (t4 - t8) * d,
+        ];
         self
     }
 
@@ -280,8 +294,9 @@ impl Matrix3 {
 }
 
 impl Matrix4 {
-    pub const IDENTITY: Matrix4 =
-        Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+    pub const IDENTITY: Matrix4 = Matrix4([
+        1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+    ]);
     pub const ZERO: Matrix4 = Matrix4([0.0; 16]);
 
     pub fn equals(&self, other: &Self) -> bool {
@@ -289,7 +304,24 @@ impl Matrix4 {
     }
 
     pub fn determinant(&self) -> f64 {
-        let [m00, m01, m02, m03, m04, m05, m06, m07, m08, m09, m10, m11, m12, m13, m14, m15] = self.0;
+        let [
+            m00,
+            m01,
+            m02,
+            m03,
+            m04,
+            m05,
+            m06,
+            m07,
+            m08,
+            m09,
+            m10,
+            m11,
+            m12,
+            m13,
+            m14,
+            m15,
+        ] = self.0;
 
         let b0 = m00 * m05 - m01 * m04;
         let b1 = m00 * m06 - m02 * m04;
@@ -317,7 +349,24 @@ impl Matrix4 {
     }
 
     pub fn inverse(&mut self) -> &mut Self {
-        let [m00, m01, m02, m03, m04, m05, m06, m07, m08, m09, m10, m11, m12, m13, m14, m15] = self.0;
+        let [
+            m00,
+            m01,
+            m02,
+            m03,
+            m04,
+            m05,
+            m06,
+            m07,
+            m08,
+            m09,
+            m10,
+            m11,
+            m12,
+            m13,
+            m14,
+            m15,
+        ] = self.0;
 
         let b00 = m00 * m05 - m01 * m04;
         let b01 = m00 * m06 - m02 * m04;
@@ -371,7 +420,8 @@ impl Matrix4 {
             let (b0, b1, b2, b3) = (b[row * 4], b[row * 4 + 1], b[row * 4 + 2], b[row * 4 + 3]);
 
             for col in 0..4 {
-                r[row * 4 + col] = a[col] * b0 + a[4 + col] * b1 + a[8 + col] * b2 + a[12 + col] * b3;
+                r[row * 4 + col] =
+                    a[col] * b0 + a[4 + col] * b1 + a[8 + col] * b2 + a[12 + col] * b3;
             }
         }
 
@@ -388,7 +438,8 @@ impl Matrix4 {
             let (a0, a1, a2, a3) = (a[row * 4], a[row * 4 + 1], a[row * 4 + 2], a[row * 4 + 3]);
 
             for col in 0..4 {
-                r[row * 4 + col] = a0 * b[col] + a1 * b[4 + col] + a2 * b[8 + col] + a3 * b[12 + col];
+                r[row * 4 + col] =
+                    a0 * b[col] + a1 * b[4 + col] + a2 * b[8 + col] + a3 * b[12 + col];
             }
         }
 
@@ -573,9 +624,15 @@ impl Matrix4 {
         eigen_decomposition(&b, &mut values, &mut vectors);
 
         let mut so = Matrix3([
-            vectors[0][0], vectors[1][0], vectors[2][0],
-            vectors[0][1], vectors[1][1], vectors[2][1],
-            vectors[0][2], vectors[1][2], vectors[2][2],
+            vectors[0][0],
+            vectors[1][0],
+            vectors[2][0],
+            vectors[0][1],
+            vectors[1][1],
+            vectors[2][1],
+            vectors[0][2],
+            vectors[1][2],
+            vectors[2][2],
         ]);
 
         if let Some(sorient) = scale_orientation {

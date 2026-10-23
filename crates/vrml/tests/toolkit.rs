@@ -11,7 +11,10 @@ ROUTE OI.value_changed TO T.set_rotation
 fn detects_versions() {
     assert_eq!(vrml::detect(WORLD), vrml::Version::Vrml2);
     assert_eq!(vrml::detect(b"#VRML V1.0 ascii\n"), vrml::Version::Vrml1);
-    assert_eq!(vrml::detect(b"#X3D V4.0 utf8\n"), vrml::Version::X3d("4.0".into()));
+    assert_eq!(
+        vrml::detect(b"#X3D V4.0 utf8\n"),
+        vrml::Version::X3d("4.0".into())
+    );
     assert_eq!(vrml::detect(b"Shape {}"), vrml::Version::Unknown);
 }
 
@@ -19,7 +22,10 @@ fn detects_versions() {
 fn summarizes_a_scene() {
     let scene = vrml::parse_bytes(WORLD, "memory:").unwrap();
     let s = vrml::summarize(&scene);
-    assert_eq!((s.root_nodes, s.protos, s.externprotos, s.routes), (3, 1, 0, 2));
+    assert_eq!(
+        (s.root_nodes, s.protos, s.externprotos, s.routes),
+        (3, 1, 0, 2)
+    );
     assert_eq!(s.node_types.get("Box"), Some(&1));
     assert_eq!(s.node_types.get("TimeSensor"), Some(&1));
 }

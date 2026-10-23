@@ -38,12 +38,16 @@ impl Runtime {
     /// `X3DCast (X3DConstants .X3DGeometryNode, node)`: the node itself or, for a PROTO instance, the first root
     /// node of its body (getInnerNode).
     fn cast_geometry(&self, node: NodeId) -> Option<NodeId> {
-        self.inner_node(node).filter(|&n| self.is_geometry_node(n) && self.builtin_name(n) != Some("InlineGeometry"))
+        self.inner_node(node)
+            .filter(|&n| self.is_geometry_node(n) && self.builtin_name(n) != Some("InlineGeometry"))
     }
 
     /// InlineGeometry.getGeometryFromArray.
     fn geometry_from_array(&self, nodes: &[Option<NodeId>], depth: usize) -> Option<NodeId> {
-        nodes.iter().flatten().find_map(|&n| self.geometry_from_node(n, depth))
+        nodes
+            .iter()
+            .flatten()
+            .find_map(|&n| self.geometry_from_node(n, depth))
     }
 
     /// InlineGeometry.getGeometryFromNode: the node if it is a geometry, else the first geometry found in its
@@ -76,8 +80,16 @@ impl Runtime {
 
     /// The geometry `setInternalScene` picks in the scene of root context `root` loaded from `url`: the node named
     /// by the fragment, else the first geometry of the root nodes.
-    pub(crate) fn inline_geometry_find(&self, root: CtxId, url: &url::Url) -> Result<NodeId, String> {
-        let hash = if url.scheme() == "data" { "" } else { url.fragment().unwrap_or("") };
+    pub(crate) fn inline_geometry_find(
+        &self,
+        root: CtxId,
+        url: &url::Url,
+    ) -> Result<NodeId, String> {
+        let hash = if url.scheme() == "data" {
+            ""
+        } else {
+            url.fragment().unwrap_or("")
+        };
 
         let found = if hash.is_empty() {
             self.geometry_from_array(&self.scene.ctx(root).root_nodes, 0)
@@ -105,7 +117,10 @@ impl Runtime {
             Some("Rectangle2D" | "ArcClose2D" | "TriangleSet2D") => 2,
             // Disk2D.build: a point (both radii 0), a circle (equal radii), else a disk or an annulus.
             Some("Disk2D") => {
-                let (a, b) = (self.get_f64(n, "innerRadius").abs(), self.get_f64(n, "outerRadius").abs());
+                let (a, b) = (
+                    self.get_f64(n, "innerRadius").abs(),
+                    self.get_f64(n, "outerRadius").abs(),
+                );
                 let (inner, outer) = (a.min(b), a.max(b));
 
                 if inner == outer {
@@ -138,7 +153,9 @@ impl Runtime {
 
     /// InlineGeometry.set_solid__.
     pub(crate) fn inline_geometry_set_solid(&mut self, node: NodeId) {
-        let Some(&g) = self.inline_geometries.get(&node) else { return };
+        let Some(&g) = self.inline_geometries.get(&node) else {
+            return;
+        };
 
         if self.geometry_type(g) < 2 {
             return;
@@ -154,13 +171,18 @@ impl Runtime {
     /// InlineGeometry.set_smooth__, quirks included: a geometry type below 3 or a `normal` node is left alone, and
     /// a `creaseAngle` that already has the wanted value ends the function before `normalPerVertex` is looked at.
     pub(crate) fn inline_geometry_set_smooth(&mut self, node: NodeId) {
-        let Some(&g) = self.inline_geometries.get(&node) else { return };
+        let Some(&g) = self.inline_geometries.get(&node) else {
+            return;
+        };
 
         if self.geometry_type(g) < 3 {
             return;
         }
 
-        if matches!(self.pre_value(g, "normal"), Some(FieldValue::SFNode(Some(_)))) {
+        if matches!(
+            self.pre_value(g, "normal"),
+            Some(FieldValue::SFNode(Some(_)))
+        ) {
             return;
         }
 
@@ -191,9 +213,17 @@ impl Runtime {
     }
 
     /// The load state InlineGeometry.setInternalScene ends in for `scene`.
-    pub(crate) fn inline_geometry_state(&mut self, node: NodeId, scene: SceneArg) -> Option<LoadState> {
+    pub(crate) fn inline_geometry_state(
+        &mut self,
+        node: NodeId,
+        scene: SceneArg,
+    ) -> Option<LoadState> {
         match scene {
-            SceneArg::Scene(ctx) => Some(if self.inline_geometry_set_scene(node, ctx) { LoadState::Complete } else { LoadState::Failed }),
+            SceneArg::Scene(ctx) => Some(if self.inline_geometry_set_scene(node, ctx) {
+                LoadState::Complete
+            } else {
+                LoadState::Failed
+            }),
             // unloadData: `setInternalScene (null)`, a FAILED state (requestUnload then makes it NOT_STARTED).
             SceneArg::Default | SceneArg::None => Some(LoadState::Failed),
         }

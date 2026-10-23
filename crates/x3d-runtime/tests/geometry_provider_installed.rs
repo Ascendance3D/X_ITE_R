@@ -3,7 +3,9 @@
 //! `OnceLock`: the first install wins, and every Runtime of the process uses it. Nothing is logged and
 //! the geometry is present. (The case without a provider is `geometry_provider_bare.rs`, its own binary.)
 
-use x3d_runtime::nodes::particle_systems::{GeometryProvider, GeometryRequest, GeometrySoup, geometry_provider, set_geometry_provider};
+use x3d_runtime::nodes::particle_systems::{
+    GeometryProvider, GeometryRequest, GeometrySoup, geometry_provider, set_geometry_provider,
+};
 use x3d_runtime::{Fetcher, Runtime};
 
 struct NoFetch;
@@ -16,7 +18,14 @@ impl Fetcher for NoFetch {
 
 /// A 2x2 quad at y = 0 (two triangles, normal +y) for every geometry node.
 fn first(_: &Runtime, _: &GeometryRequest) -> Option<GeometrySoup> {
-    let v = [[-1.0, 0.0, -1.0], [1.0, 0.0, -1.0], [1.0, 0.0, 1.0], [-1.0, 0.0, -1.0], [1.0, 0.0, 1.0], [-1.0, 0.0, 1.0]];
+    let v = [
+        [-1.0, 0.0, -1.0],
+        [1.0, 0.0, -1.0],
+        [1.0, 0.0, 1.0],
+        [-1.0, 0.0, -1.0],
+        [1.0, 0.0, 1.0],
+        [-1.0, 0.0, 1.0],
+    ];
 
     Some(GeometrySoup {
         vertices: v.iter().flat_map(|p| [p[0], p[1], p[2], 1.0]).collect(),
@@ -51,14 +60,23 @@ fn run(rt: &mut Runtime) {
 }
 
 fn big(f: impl FnOnce() + Send + 'static) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 fn visible(rt: &Runtime, name: &str) -> usize {
     let n = rt.scene.get_named_node(x3d_scene::ROOT, name).unwrap();
     let sim = rt.particle_sim(n).unwrap();
 
-    sim.particles.iter().take(sim.num_particles).filter(|p| !p[24].is_nan()).count()
+    sim.particles
+        .iter()
+        .take(sim.num_particles)
+        .filter(|p| !p[24].is_nan())
+        .count()
 }
 
 #[test]
@@ -68,7 +86,11 @@ fn runtimes_with_an_installed_provider_do_not_warn_and_share_it() {
 
         // A second install (another Viewer, another embedder) is ignored: the first one wins.
         set_geometry_provider(second as GeometryProvider);
-        assert_eq!(geometry_provider().unwrap() as usize, first as GeometryProvider as usize, "first install wins");
+        assert_eq!(
+            geometry_provider().unwrap() as usize,
+            first as GeometryProvider as usize,
+            "first install wins"
+        );
 
         x3d_runtime::particles::use_random_seeds();
 
@@ -79,10 +101,18 @@ fn runtimes_with_an_installed_provider_do_not_warn_and_share_it() {
         run(&mut b);
 
         for rt in [&a, &b] {
-            assert!(rt.log.iter().all(|l| !l.contains("no geometry provider")), "{:?}", rt.log);
+            assert!(
+                rt.log.iter().all(|l| !l.contains("no geometry provider")),
+                "{:?}",
+                rt.log
+            );
             assert!(visible(rt, "S") > 0, "the surface emits visible particles");
         }
 
-        assert_eq!(visible(&a, "S"), visible(&b, "S"), "two Runtimes, one provider, the same particles");
+        assert_eq!(
+            visible(&a, "S"),
+            visible(&b, "S"),
+            "two Runtimes, one provider, the same particles"
+        );
     });
 }

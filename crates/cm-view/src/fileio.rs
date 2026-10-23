@@ -40,7 +40,10 @@ pub fn decode(path: &Path, bytes: &[u8]) -> std::io::Result<(String, FileInfo)> 
     };
     let (text, encoding) = match String::from_utf8(raw) {
         Ok(s) => (s, Encoding::Utf8),
-        Err(e) => (e.into_bytes().iter().map(|&b| b as char).collect(), Encoding::Latin1),
+        Err(e) => (
+            e.into_bytes().iter().map(|&b| b as char).collect(),
+            Encoding::Latin1,
+        ),
     };
     let crlf = text.matches("\r\n").count();
     let cr = text.matches('\r').count() - crlf;
@@ -53,7 +56,16 @@ pub fn decode(path: &Path, bytes: &[u8]) -> std::io::Result<(String, FileInfo)> 
     } else {
         None
     };
-    Ok((text, FileInfo { path: path.to_path_buf(), gzip, encoding, line_separator, mixed_newlines: kinds > 1 }))
+    Ok((
+        text,
+        FileInfo {
+            path: path.to_path_buf(),
+            gzip,
+            encoding,
+            line_separator,
+            mixed_newlines: kinds > 1,
+        },
+    ))
 }
 
 /// Read a file.
@@ -71,7 +83,10 @@ pub fn encode(text: &str, info: &FileInfo) -> std::io::Result<Vec<u8>> {
             for c in text.chars() {
                 let u = c as u32;
                 if u > 0xff {
-                    return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, format!("character U+{u:04X} cannot be saved in this Latin-1 file")));
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        format!("character U+{u:04X} cannot be saved in this Latin-1 file"),
+                    ));
                 }
                 v.push(u as u8);
             }
@@ -90,7 +105,10 @@ pub fn encode(text: &str, info: &FileInfo) -> std::io::Result<Vec<u8>> {
 /// Write a file (to a temporary sibling, then rename).
 pub fn save(path: &Path, text: &str, info: &FileInfo) -> std::io::Result<()> {
     let bytes = encode(text, info)?;
-    let tmp = path.with_extension(format!("{}.cm-edit-tmp", path.extension().and_then(|e| e.to_str()).unwrap_or("")));
+    let tmp = path.with_extension(format!(
+        "{}.cm-edit-tmp",
+        path.extension().and_then(|e| e.to_str()).unwrap_or("")
+    ));
     {
         let mut f = std::fs::File::create(&tmp)?;
         f.write_all(&bytes)?;
@@ -106,7 +124,12 @@ mod tests {
     #[test]
     fn roundtrips() {
         let p = Path::new("/tmp/x.wrl");
-        for bytes in [&b"#VRML V2.0 utf8\r\nShape {}\r\n"[..], b"a\nb\n", b"caf\xe9\n", b"x\ry\r"] {
+        for bytes in [
+            &b"#VRML V2.0 utf8\r\nShape {}\r\n"[..],
+            b"a\nb\n",
+            b"caf\xe9\n",
+            b"x\ry\r",
+        ] {
             let (t, info) = decode(p, bytes).unwrap();
             let lines: Vec<&str> = t.split(['\r', '\n']).collect();
             assert!(!lines.is_empty());

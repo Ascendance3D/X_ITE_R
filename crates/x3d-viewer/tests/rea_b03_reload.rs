@@ -7,7 +7,7 @@
 
 use std::path::{Path, PathBuf};
 use x3d_viewer::embed::spawn_big_stack;
-use x3d_viewer::viewer::{UiEvent, Viewer3d, ORACLE_PAGE_ATTRIBUTES};
+use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, UiEvent, Viewer3d};
 
 const T0: f64 = 946684800.0;
 const DT: f64 = 1.0 / 30.0;
@@ -19,7 +19,17 @@ struct Driver {
 
 impl Driver {
     fn load(world: &Path, oracle: &Path) -> Driver {
-        let mut v = Viewer3d::load_attributes(world, Some(oracle), T0, 64, 64, None, false, ORACLE_PAGE_ATTRIBUTES).unwrap();
+        let mut v = Viewer3d::load_attributes(
+            world,
+            Some(oracle),
+            T0,
+            64,
+            64,
+            None,
+            false,
+            ORACLE_PAGE_ATTRIBUTES,
+        )
+        .unwrap();
         v.frame_rate = 1.0 / DT;
 
         for _ in 0..8 {
@@ -64,7 +74,10 @@ fn rea_b03_pick_state_is_released_on_reload() {
 
         let first = d.v.pick_shapes.len();
         assert!(first > 0, "the pick sensors keep no state");
-        assert!(d.active_count() > 0, "the PointPickSensor never became active");
+        assert!(
+            d.active_count() > 0,
+            "the PointPickSensor never became active"
+        );
         let mut sizes = vec![];
 
         for cycle in 0..30 {
@@ -74,7 +87,10 @@ fn rea_b03_pick_state_is_released_on_reload() {
             d.frames(130);
             let before = d.active_count();
             d.frames(130);
-            assert!(d.active_count() > before, "cycle {cycle}: no pick events after the reload");
+            assert!(
+                d.active_count() > before,
+                "cycle {cycle}: no pick events after the reload"
+            );
             sizes.push(d.v.pick_shapes.len());
         }
 
@@ -86,6 +102,9 @@ fn rea_b03_pick_state_is_released_on_reload() {
 
         eprintln!("pick state: first {first}, after reloads {sizes:?}");
         let max = *sizes.iter().max().unwrap();
-        assert!(max <= first, "pick state grows with reloads: first {first}, then {sizes:?}");
+        assert!(
+            max <= first,
+            "pick state grows with reloads: first {first}, then {sizes:?}"
+        );
     });
 }

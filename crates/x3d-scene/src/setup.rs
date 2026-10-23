@@ -14,11 +14,16 @@ impl Scene {
         }
 
         match &self.node(node).kind {
-            NodeKind::Builtin(t) => matches!(self.table.types[*t].name.as_str(), "Coordinate" | "CoordinateDouble" | "GeoCoordinate"),
-            NodeKind::Instance(ProtoRef::Proto(p)) => match self.ctx(self.protos[*p].body).root_nodes.first() {
-                Some(Some(inner)) => self.coordinate_node(*inner, depth + 1),
-                _ => false,
-            },
+            NodeKind::Builtin(t) => matches!(
+                self.table.types[*t].name.as_str(),
+                "Coordinate" | "CoordinateDouble" | "GeoCoordinate"
+            ),
+            NodeKind::Instance(ProtoRef::Proto(p)) => {
+                match self.ctx(self.protos[*p].body).root_nodes.first() {
+                    Some(Some(inner)) => self.coordinate_node(*inner, depth + 1),
+                    _ => false,
+                }
+            }
             _ => false,
         }
     }
@@ -41,18 +46,30 @@ impl Scene {
                 "ScalarInterpolator" | "SplineScalarInterpolator" => &[("keyValue", &[0.0])],
                 "PositionInterpolator" | "ColorInterpolator" => &[("keyValue", &[0.0, 0.0, 0.0])],
                 "PositionInterpolator2D" => &[("keyValue", &[0.0, 0.0])],
-                "OrientationInterpolator" | "SquadOrientationInterpolator" => &[("keyValue", &[0.0, 0.0, 1.0, 0.0])],
-                "SplinePositionInterpolator" => &[("keyValue", &[0.0, 0.0, 0.0]), ("keyVelocity", &[0.0, 0.0, 0.0])],
-                "SplinePositionInterpolator2D" => &[("keyValue", &[0.0, 0.0]), ("keyVelocity", &[0.0, 0.0])],
+                "OrientationInterpolator" | "SquadOrientationInterpolator" => {
+                    &[("keyValue", &[0.0, 0.0, 1.0, 0.0])]
+                }
+                "SplinePositionInterpolator" => &[
+                    ("keyValue", &[0.0, 0.0, 0.0]),
+                    ("keyVelocity", &[0.0, 0.0, 0.0]),
+                ],
+                "SplinePositionInterpolator2D" => {
+                    &[("keyValue", &[0.0, 0.0]), ("keyVelocity", &[0.0, 0.0])]
+                }
                 "EaseInEaseOut" => &[("easeInEaseOut", &[0.0, 0.0])],
                 _ => &[],
             };
 
             if !resize.is_empty() {
-                let key_len = self.get_predefined_field(id, "key").map(|k| self.node(id).fields[k].value.len()).unwrap_or(0);
+                let key_len = self
+                    .get_predefined_field(id, "key")
+                    .map(|k| self.node(id).fields[k].value.len())
+                    .unwrap_or(0);
 
                 for (name, default) in resize {
-                    let Some(i) = self.get_predefined_field(id, name) else { continue };
+                    let Some(i) = self.get_predefined_field(id, name) else {
+                        continue;
+                    };
                     let value = &mut self.node_mut(id).fields[i].value;
                     let len = value.len();
 
@@ -108,7 +125,9 @@ fn last_element(value: &FieldValue) -> Option<Vec<f64>> {
     let c = value.field_type().components();
 
     match value {
-        V::MFColor(v) | V::MFFloat(v) | V::MFVec2f(v) | V::MFVec3f(v) => (v.len() >= c).then(|| v[v.len() - c..].iter().map(|x| *x as f64).collect()),
+        V::MFColor(v) | V::MFFloat(v) | V::MFVec2f(v) | V::MFVec3f(v) => {
+            (v.len() >= c).then(|| v[v.len() - c..].iter().map(|x| *x as f64).collect())
+        }
         V::MFRotation(v) => (v.len() >= c).then(|| v[v.len() - c..].to_vec()),
         _ => None,
     }

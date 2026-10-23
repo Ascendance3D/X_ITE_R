@@ -28,7 +28,8 @@ impl Shared {
 
     /// AudioParamHandler::SetValue (the range of gain is the whole float range).
     pub fn set(&self, value: f32) {
-        self.0.store(value.clamp(f32::MIN, f32::MAX).to_bits(), Ordering::Relaxed)
+        self.0
+            .store(value.clamp(f32::MIN, f32::MAX).to_bits(), Ordering::Relaxed)
     }
 }
 
@@ -51,7 +52,9 @@ impl Processor {
         let intrinsic = self.shared.get();
         let mut values = std::mem::take(&mut self.values);
         values.resize(frames, 0.0);
-        let last = self.timeline.timeline_values(intrinsic, frame, &mut values, sample_rate);
+        let last = self
+            .timeline
+            .timeline_values(intrinsic, frame, &mut values, sample_rate);
         self.values = values;
         self.shared.set(last);
     }
@@ -61,16 +64,30 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = Arc<Shared>;
 
     fn constructor(shared: Arc<Shared>) -> Self {
-        Processor { shared, timeline: Events::default(), pending: vec![], values: vec![0.0; 128], last_non_silent_time: 0.0 }
+        Processor {
+            shared,
+            timeline: Events::default(),
+            pending: vec![],
+            values: vec![0.0; 128],
+            last_non_silent_time: 0.0,
+        }
     }
 
     fn onmessage(&mut self, msg: &mut dyn Any) {
-        if let Some(Some(Message::Event(e))) = msg.downcast_mut::<Option<Message>>().map(Option::take) {
+        if let Some(Some(Message::Event(e))) =
+            msg.downcast_mut::<Option<Message>>().map(Option::take)
+        {
             self.pending.push(e);
         }
     }
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], _params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        _params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let sample_rate = scope.sample_rate as f64;
         let frame = scope.current_frame;
 
@@ -90,7 +107,10 @@ impl AudioWorkletProcessor for Processor {
             dest.iter_mut().for_each(|d| d.fill(0.0));
         } else if source.is_empty() {
             dest.iter_mut().for_each(|d| d.fill(0.0));
-        } else if self.timeline.has_sample_accurate_values(frame, sample_rate, frames) {
+        } else if self
+            .timeline
+            .has_sample_accurate_values(frame, sample_rate, frames)
+        {
             self.timeline_values(frame, frames, sample_rate);
 
             for (c, d) in dest.iter_mut().enumerate() {
@@ -101,7 +121,9 @@ impl AudioWorkletProcessor for Processor {
             }
         } else {
             // Value (): the timeline value for the quantum's first frame, if there is one.
-            let gain = self.timeline.final_value(self.shared.get(), frame, sample_rate);
+            let gain = self
+                .timeline
+                .final_value(self.shared.get(), frame, sample_rate);
             self.shared.set(gain);
 
             for (c, d) in dest.iter_mut().enumerate() {

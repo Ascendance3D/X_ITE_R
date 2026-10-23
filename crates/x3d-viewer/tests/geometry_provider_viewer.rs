@@ -8,8 +8,8 @@
 //! 4. the Viewer's own Runtime never warns, and the early Runtime does not change its mind: the emitter
 //!    geometry it cached while empty stays empty (the cache key is the geometry, not the provider).
 
-use x3d_runtime::loader::LocalFetcher;
 use x3d_runtime::Runtime;
+use x3d_runtime::loader::LocalFetcher;
 use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, Viewer3d};
 
 const WORLD: &str = "#X3D V3.3 utf8\nPROFILE Full\nCOMPONENT ParticleSystems:2\n\
@@ -18,7 +18,13 @@ const WORLD: &str = "#X3D V3.3 utf8\nPROFILE Full\nCOMPONENT ParticleSystems:2\n
 
 fn bare() -> Runtime {
     let scene = x3d_parse::parse_bytes(WORLD.as_bytes(), "http://oracle/t.x3dv").unwrap();
-    let mut rt = Runtime::new(scene, Box::new(LocalFetcher { root: std::env::temp_dir(), prefix: "http://oracle/".into() }));
+    let mut rt = Runtime::new(
+        scene,
+        Box::new(LocalFetcher {
+            root: std::env::temp_dir(),
+            prefix: "http://oracle/".into(),
+        }),
+    );
 
     rt.live = true;
     rt.load_world();
@@ -34,14 +40,21 @@ fn run(rt: &mut Runtime, from: usize, to: usize) {
 }
 
 fn warnings(rt: &Runtime) -> usize {
-    rt.log.iter().filter(|l| l.contains("no geometry provider")).count()
+    rt.log
+        .iter()
+        .filter(|l| l.contains("no geometry provider"))
+        .count()
 }
 
 fn visible(rt: &Runtime, name: &str) -> usize {
     let n = rt.scene.get_named_node(x3d_scene::ROOT, name).unwrap();
     let sim = rt.particle_sim(n).unwrap();
 
-    sim.particles.iter().take(sim.num_particles).filter(|p| !p[24].is_nan()).count()
+    sim.particles
+        .iter()
+        .take(sim.num_particles)
+        .filter(|p| !p[24].is_nan())
+        .count()
 }
 
 #[test]
@@ -56,7 +69,12 @@ fn a_viewer_installs_the_provider_for_every_runtime_of_the_process() {
             let mut early = bare();
 
             run(&mut early, 0, 90);
-            assert_eq!(warnings(&early), 2, "S (surface) and B (bounded) warn: {:?}", early.log);
+            assert_eq!(
+                warnings(&early),
+                2,
+                "S (surface) and B (bounded) warn: {:?}",
+                early.log
+            );
             assert_eq!(visible(&early, "S"), 0, "empty surface, hidden particles");
 
             // 2. A Viewer.
@@ -68,7 +86,17 @@ fn a_viewer_installs_the_provider_for_every_runtime_of_the_process() {
 
             std::fs::write(&p, WORLD).unwrap();
 
-            let mut v = Viewer3d::load_attributes(&p, Some(&d), 946684800.0, 64, 64, Some(30.0), false, ORACLE_PAGE_ATTRIBUTES).expect("load");
+            let mut v = Viewer3d::load_attributes(
+                &p,
+                Some(&d),
+                946684800.0,
+                64,
+                64,
+                Some(30.0),
+                false,
+                ORACLE_PAGE_ATTRIBUTES,
+            )
+            .expect("load");
 
             v.frame_rate = 30.0;
 
@@ -77,7 +105,10 @@ fn a_viewer_installs_the_provider_for_every_runtime_of_the_process() {
                 v.step(v.date_now);
             }
 
-            assert!(x3d_runtime::nodes::particle_systems::geometry_provider().is_some(), "the Viewer installed it");
+            assert!(
+                x3d_runtime::nodes::particle_systems::geometry_provider().is_some(),
+                "the Viewer installed it"
+            );
             assert_eq!(warnings(&v.rt), 0, "{:?}", v.rt.log);
             assert!(visible(&v.rt, "S") > 0);
 
@@ -85,7 +116,12 @@ fn a_viewer_installs_the_provider_for_every_runtime_of_the_process() {
             let mut late = bare();
 
             run(&mut late, 0, 90);
-            assert_eq!(warnings(&late), 0, "masked by the Viewer's provider: {:?}", late.log);
+            assert_eq!(
+                warnings(&late),
+                0,
+                "masked by the Viewer's provider: {:?}",
+                late.log
+            );
             assert!(visible(&late, "S") > 0, "geometry present");
 
             // 4. The early Runtime: nothing more is logged, and it keeps what it cached.

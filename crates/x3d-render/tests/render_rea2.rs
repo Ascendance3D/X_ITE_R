@@ -10,16 +10,35 @@
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
-const WORLDS: [&str; 10] = ["blendmode", "clipplane", "depthmode", "fillprops", "lineprops", "pointprops", "textureprops", "textureprops-v33", "twosided", "unlit"];
+const WORLDS: [&str; 10] = [
+    "blendmode",
+    "clipplane",
+    "depthmode",
+    "fillprops",
+    "lineprops",
+    "pointprops",
+    "textureprops",
+    "textureprops-v33",
+    "twosided",
+    "unlit",
+];
 
 #[test]
 fn render_nodes_match_x_ite() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap();
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap();
     let mut failures = vec![];
     let mut checked = 0;
 
-    for (samples, baseline) in [(0u32, "render-rea2-baseline"), (4, "render-msaa4-rea2-baseline")] {
+    for (samples, baseline) in [
+        (0u32, "render-rea2-baseline"),
+        (4, "render-msaa4-rea2-baseline"),
+    ] {
         g.renderer.set_sample_count(samples);
         g.renderer.set_gl_sample_orientation(samples > 1);
 
@@ -29,13 +48,29 @@ fn render_nodes_match_x_ite() {
         }
 
         for name in WORLDS {
-            let (w, h, want) = x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.wrl.png"))).unwrap();
-            let shot = x3d_render::render_file(&mut g, &root, &root.join(format!("synthetic-rea-render2/{name}.wrl")), w, h).unwrap();
-            let rgba: Vec<u8> = shot.rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+            let (w, h, want) =
+                x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.wrl.png")))
+                    .unwrap();
+            let shot = x3d_render::render_file(
+                &mut g,
+                &root,
+                &root.join(format!("synthetic-rea-render2/{name}.wrl")),
+                w,
+                h,
+            )
+            .unwrap();
+            let rgba: Vec<u8> = shot
+                .rgba
+                .chunks_exact(4)
+                .flat_map(|p| [p[0], p[1], p[2], 255])
+                .collect();
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
             if s.pixels_over * 1000 > (w * h) as usize * 5 {
-                failures.push(format!("{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+                failures.push(format!(
+                    "{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}",
+                    s.pixels_over, s.pct_over, s.max_delta
+                ));
             }
 
             checked += 1;

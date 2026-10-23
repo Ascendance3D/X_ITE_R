@@ -1,6 +1,6 @@
 //! Batch 08 shaders lane: the GLSL ES -> GLSL 450 -> naga -> WGSL rewriter (src/glsl_compat.rs).
 
-use x3d_render::glsl_compat::{compile_part, link, Stage};
+use x3d_render::glsl_compat::{Stage, compile_part, link};
 
 fn parts(vs: &str, fs: &str) -> Result<x3d_render::glsl_compat::Program, String> {
     link(&[(vs.to_string(), vec![])], &[(fs.to_string(), vec![])])
@@ -38,7 +38,13 @@ fn es100_pair_links() {
     let p = parts(VS100, FS100).unwrap_or_else(|e| panic!("{e}"));
     assert!(p.has("x3d_ModelViewMatrix") && p.has("tint"));
     assert_eq!(p.samplers.len(), 1);
-    assert_eq!(p.attributes.iter().map(|a| (a.name.as_str(), a.location)).collect::<Vec<_>>(), vec![("x3d_Vertex", 0), ("x3d_Normal", 1), ("x3d_TexCoord", 2)]);
+    assert_eq!(
+        p.attributes
+            .iter()
+            .map(|a| (a.name.as_str(), a.location))
+            .collect::<Vec<_>>(),
+        vec![("x3d_Vertex", 0), ("x3d_Normal", 1), ("x3d_TexCoord", 2)]
+    );
     assert!(p.vs_wgsl.contains("fn main"), "{}", p.vs_wgsl);
 }
 
@@ -86,7 +92,10 @@ void main() {
 }
 ";
     let e = compile_part(Stage::Fragment, fs, &[]).unwrap_err();
-    assert!(e.starts_with("ERROR: 0:5:") || e.starts_with("ERROR: 0:6:"), "{e}");
+    assert!(
+        e.starts_with("ERROR: 0:5:") || e.starts_with("ERROR: 0:6:"),
+        "{e}"
+    );
 }
 
 #[test]
@@ -118,21 +127,33 @@ void main() { gl_FragColor = vec4(a[2] * four + fogc.x); }
 #[test]
 fn varying_without_vertex_output_is_a_link_error() {
     let vs = "attribute vec4 x3d_Vertex; void main() { gl_Position = x3d_Vertex; }";
-    let fs = "precision mediump float; varying vec3 q; void main() { gl_FragColor = vec4(q, 1.0); }";
+    let fs =
+        "precision mediump float; varying vec3 q; void main() { gl_FragColor = vec4(q, 1.0); }";
     assert!(parts(vs, fs).is_err());
 }
 
 #[test]
 fn missing_stage_message() {
-    let e = link(&[("attribute vec4 x3d_Vertex; void main() { gl_Position = x3d_Vertex; }".into(), vec![])], &[]).unwrap_err();
-    assert_eq!(e, "The program must contain objects to form both a vertex and fragment shader.");
+    let e = link(
+        &[(
+            "attribute vec4 x3d_Vertex; void main() { gl_Position = x3d_Vertex; }".into(),
+            vec![],
+        )],
+        &[],
+    )
+    .unwrap_err();
+    assert_eq!(
+        e,
+        "The program must contain objects to form both a vertex and fragment shader."
+    );
 }
 
 #[test]
 fn matrix_attribute_is_assembled_from_columns() {
     let vs = "attribute vec4 x3d_Vertex; attribute mat3 rot; varying vec3 c;
 void main() { c = rot * vec3 (1.0, 0.5, 0.25); gl_Position = x3d_Vertex; }";
-    let fs = "precision mediump float; varying vec3 c; void main() { gl_FragColor = vec4 (c, 1.0); }";
+    let fs =
+        "precision mediump float; varying vec3 c; void main() { gl_FragColor = vec4 (c, 1.0); }";
     let p = parts(vs, fs).unwrap_or_else(|e| panic!("{e}"));
     let rot = p.attributes.iter().find(|a| a.name == "rot").unwrap();
     assert_eq!((rot.components, rot.location), (9, 9));
@@ -208,13 +229,31 @@ fn a_define_in_the_head_selects_the_x_ite_types() {
 #[test]
 fn link_logs_use_the_driver_texts() {
     let vs = "attribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvarying vec3 vN;\nvoid main() { vN = vec3 (1.0); gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\n";
-    let fs = |decl: &str, body: &str| format!("precision mediump float;\n{decl}\nvoid main() {{ gl_FragColor = {body}; }}\n");
+    let fs = |decl: &str, body: &str| {
+        format!("precision mediump float;\n{decl}\nvoid main() {{ gl_FragColor = {body}; }}\n")
+    };
 
     for (decl, body, want) in [
-        ("varying vec3 vX;", "vec4 (vX, 1.0)", "FRAGMENT varying vX does not match any VERTEX varying"),
-        ("varying vec4 vN;", "vN", "Types of varying 'vN' differ between VERTEX and FRAGMENT shaders."),
-        ("uniform vec3 x3d_ModelViewMatrix;", "vec4 (x3d_ModelViewMatrix, 1.0)", "Types of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders."),
-        ("uniform mediump mat4 x3d_ModelViewMatrix;", "x3d_ModelViewMatrix [0]", "Precisions of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders."),
+        (
+            "varying vec3 vX;",
+            "vec4 (vX, 1.0)",
+            "FRAGMENT varying vX does not match any VERTEX varying",
+        ),
+        (
+            "varying vec4 vN;",
+            "vN",
+            "Types of varying 'vN' differ between VERTEX and FRAGMENT shaders.",
+        ),
+        (
+            "uniform vec3 x3d_ModelViewMatrix;",
+            "vec4 (x3d_ModelViewMatrix, 1.0)",
+            "Types of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders.",
+        ),
+        (
+            "uniform mediump mat4 x3d_ModelViewMatrix;",
+            "x3d_ModelViewMatrix [0]",
+            "Precisions of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders.",
+        ),
     ] {
         assert_eq!(parts(vs, &fs(decl, body)).err().as_deref(), Some(want));
     }
@@ -227,12 +266,26 @@ fn transform_feedback_varyings_follow_the_driver() {
     let vs = "attribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nvarying vec3 vP;\nvarying float vArr [2];\nvoid main() { vP = x3d_Vertex.xyz; vArr [0] = 1.0; vArr [1] = 2.0; gl_Position = x3d_ProjectionMatrix * x3d_Vertex; }\n";
     let fs = "precision mediump float;\nvarying vec3 vP;\nvoid main() { gl_FragColor = vec4 (vP, 1.0); }\n";
     let p = parts(vs, fs).unwrap();
-    let check = |names: &[&str]| check_transform_feedback(&p, &names.iter().map(|s| s.to_string()).collect::<Vec<_>>());
+    let check = |names: &[&str]| {
+        check_transform_feedback(&p, &names.iter().map(|s| s.to_string()).collect::<Vec<_>>())
+    };
 
     assert_eq!(check(&[]), Ok(()));
     assert_eq!(check(&["vP", "gl_Position", ""]), Ok(()));
-    assert_eq!(check(&["nope"]), Err("Transform feedback varying nope does not exist in the vertex shader.".into()));
-    assert_eq!(check(&["vP", "vP"]), Err("Two transform feedback varyings specify the same output variable (vP).".into()));
-    assert_eq!(check(&["vArr"]), Err("Capture of arrays is undefined and not supported.".into()));
-    assert_eq!(check(&["vArr[0]"]), Err("Capture of array elements is undefined and not supported.".into()));
+    assert_eq!(
+        check(&["nope"]),
+        Err("Transform feedback varying nope does not exist in the vertex shader.".into())
+    );
+    assert_eq!(
+        check(&["vP", "vP"]),
+        Err("Two transform feedback varyings specify the same output variable (vP).".into())
+    );
+    assert_eq!(
+        check(&["vArr"]),
+        Err("Capture of arrays is undefined and not supported.".into())
+    );
+    assert_eq!(
+        check(&["vArr[0]"]),
+        Err("Capture of array elements is undefined and not supported.".into())
+    );
 }

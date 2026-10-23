@@ -31,14 +31,17 @@ const HATCHING: [&[u8]; 19] = [
     include_bytes!("../../../oracle/x_ite-pin/src/assets/hatching/19.png"),
 ];
 
-const LINETYPES: &[u8] = include_bytes!("../../../oracle/x_ite-pin/src/assets/linetype/linetypes.png");
+const LINETYPES: &[u8] =
+    include_bytes!("../../../oracle/x_ite-pin/src/assets/linetype/linetypes.png");
 
 thread_local! {
     static CACHE: RefCell<HashMap<i32, Rc<TextureImage>>> = RefCell::new(HashMap::new());
 }
 
 fn decode(data: &[u8]) -> TextureImage {
-    let img = image::load_from_memory(data).expect("X_ITE style texture").to_rgba8();
+    let img = image::load_from_memory(data)
+        .expect("X_ITE style texture")
+        .to_rgba8();
     let (width, height) = img.dimensions();
     let rgba = img.into_raw();
     let transparent = rgba.chunks_exact(4).any(|p| p[3] != 255);
@@ -54,7 +57,15 @@ fn decode(data: &[u8]) -> TextureImage {
         nearest: true,
         no_mipmaps: true,
         url: String::new(),
-        sampler: Sampler { mag: Filter::Nearest, min: Filter::Nearest, mipmap: None, wrap_s: Wrap::Repeat, wrap_t: Wrap::Repeat, wrap_r: Wrap::Repeat, anisotropy: 1.0 },
+        sampler: Sampler {
+            mag: Filter::Nearest,
+            min: Filter::Nearest,
+            mipmap: None,
+            wrap_s: Wrap::Repeat,
+            wrap_t: Wrap::Repeat,
+            wrap_r: Wrap::Repeat,
+            anisotropy: 1.0,
+        },
         cube: false,
         generated: None,
         volume: false,
@@ -64,7 +75,12 @@ fn decode(data: &[u8]) -> TextureImage {
 }
 
 fn cached(key: i32, data: &'static [u8]) -> Rc<TextureImage> {
-    CACHE.with(|c| c.borrow_mut().entry(key).or_insert_with(|| Rc::new(decode(data))).clone())
+    CACHE.with(|c| {
+        c.borrow_mut()
+            .entry(key)
+            .or_insert_with(|| Rc::new(decode(data)))
+            .clone()
+    })
 }
 
 /// getHatchStyleTexture (hatchStyle), hatchStyle in 1 … 19.

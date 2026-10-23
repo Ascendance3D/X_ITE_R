@@ -8,13 +8,23 @@ pub fn refresh_interval(auto_refresh: f64, elapsed: f64) -> f64 {
     let auto_refresh = auto_refresh.max(0.0);
     let interval = auto_refresh - elapsed;
 
-    if interval < 0.0 { (elapsed / auto_refresh).ceil() * auto_refresh - elapsed } else { interval }
+    if interval < 0.0 {
+        (elapsed / auto_refresh).ceil() * auto_refresh - elapsed
+    } else {
+        interval
+    }
 }
 
 /// X3DUrlObject.setAutoRefreshTimer: the due time (ms) of the one timer, `None` when there is none.
 /// `auto_refresh <= 0` has no timer, and `limit` (autoRefreshTimeLimit, seconds, 0 = no limit)
 /// stops the refreshes once the node is older than `limit - interval`.
-pub fn refresh_timer_due(now_ms: f64, start_ms: f64, auto_refresh: f64, limit: f64, interval: f64) -> Option<f64> {
+pub fn refresh_timer_due(
+    now_ms: f64,
+    start_ms: f64,
+    auto_refresh: f64,
+    limit: f64,
+    interval: f64,
+) -> Option<f64> {
     if auto_refresh <= 0.0 {
         return None;
     }

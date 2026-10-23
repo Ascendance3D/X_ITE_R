@@ -25,7 +25,7 @@ use std::rc::Rc;
 use cm_core::text::{is_js_space, is_js_word, js_slice};
 use cm_core::util::string_stream::{RegexMatch, StringStream};
 
-use crate::js::{eq, JsNum, JsStr};
+use crate::js::{JsNum, JsStr, eq};
 use crate::{ConfigValue, JsArg, MimeTarget, Mode, ModeOptions, ModeSpec, Registry, State};
 
 type U = Vec<u16>;
@@ -77,7 +77,10 @@ fn exponent_len(s: &[u16], i: usize) -> usize {
     if is_c(at(s, j), b'+') || is_c(at(s, j), b'-') {
         j += 1;
     }
-    let k = s[j.min(s.len())..].iter().take_while(|&&c| is_d_(c)).count();
+    let k = s[j.min(s.len())..]
+        .iter()
+        .take_while(|&&c| is_d_(c))
+        .count();
     if k > 0 { j + k - i } else { 0 }
 }
 
@@ -169,36 +172,54 @@ fn re_async_lookahead(s: &[u16]) -> Option<RegexMatch> {
 }
 
 fn spaces(s: &[u16], i: usize) -> usize {
-    i + s[i.min(s.len())..].iter().take_while(|&&c| is_js_space(c)).count()
+    i + s[i.min(s.len())..]
+        .iter()
+        .take_while(|&&c| is_js_space(c))
+        .count()
 }
 
 /// `/^\s*$/`
 fn re_blank(s: &[u16]) -> Option<RegexMatch> {
-    (spaces(s, 0) == s.len()).then(|| RegexMatch { index: 0, len: s.len() })
+    (spaces(s, 0) == s.len()).then(|| RegexMatch {
+        index: 0,
+        len: s.len(),
+    })
 }
 
 /// `/^\s*\w/`
 fn re_sp_word(s: &[u16]) -> Option<RegexMatch> {
     let i = spaces(s, 0);
-    at(s, i).is_some_and(is_js_word).then(|| RegexMatch { index: 0, len: i + 1 })
+    at(s, i).is_some_and(is_js_word).then(|| RegexMatch {
+        index: 0,
+        len: i + 1,
+    })
 }
 
 /// `/^\s*:/`
 fn re_sp_colon(s: &[u16]) -> Option<RegexMatch> {
     let i = spaces(s, 0);
-    is_c(at(s, i), b':').then(|| RegexMatch { index: 0, len: i + 1 })
+    is_c(at(s, i), b':').then(|| RegexMatch {
+        index: 0,
+        len: i + 1,
+    })
 }
 
 /// `/^\s*:\s*/`
 fn re_sp_colon_sp(s: &[u16]) -> Option<RegexMatch> {
     let i = spaces(s, 0);
-    is_c(at(s, i), b':').then(|| RegexMatch { index: 0, len: spaces(s, i + 1) })
+    is_c(at(s, i), b':').then(|| RegexMatch {
+        index: 0,
+        len: spaces(s, i + 1),
+    })
 }
 
 /// `/^\s*[?:]/`
 fn re_sp_q_colon(s: &[u16]) -> Option<RegexMatch> {
     let i = spaces(s, 0);
-    (is_c(at(s, i), b'?') || is_c(at(s, i), b':')).then(|| RegexMatch { index: 0, len: i + 1 })
+    (is_c(at(s, i), b'?') || is_c(at(s, i), b':')).then(|| RegexMatch {
+        index: 0,
+        len: i + 1,
+    })
 }
 
 /// `/^\s*\w+\s+is\b/`
@@ -227,7 +248,10 @@ fn re_class_modifier(s: &[u16]) -> Option<RegexMatch> {
     if is_c(at(s, i), b'#') {
         i += 1;
     }
-    at(s, i).is_some_and(is_word_re).then(|| RegexMatch { index: 0, len: i + 1 })
+    at(s, i).is_some_and(is_word_re).then(|| RegexMatch {
+        index: 0,
+        len: i + 1,
+    })
 }
 
 /// `/^([^<>]|<[^<>]*>)*>\s*\(/`
@@ -250,7 +274,10 @@ fn re_ts_call_type_args(s: &[u16]) -> Option<RegexMatch> {
         return None;
     }
     let j = spaces(s, i + 1);
-    is_c(at(s, j), b'(').then(|| RegexMatch { index: 0, len: j + 1 })
+    is_c(at(s, j), b'(').then(|| RegexMatch {
+        index: 0,
+        len: j + 1,
+    })
 }
 
 /// `/^@(context|id|value|language|type|container|list|set|reverse|index|base|vocab|graph)"/`
@@ -258,7 +285,21 @@ fn re_jsonld_keyword(s: &[u16]) -> Option<RegexMatch> {
     if !is_c(at(s, 0), b'@') {
         return None;
     }
-    for kw in ["context", "id", "value", "language", "type", "container", "list", "set", "reverse", "index", "base", "vocab", "graph"] {
+    for kw in [
+        "context",
+        "id",
+        "value",
+        "language",
+        "type",
+        "container",
+        "list",
+        "set",
+        "reverse",
+        "index",
+        "base",
+        "vocab",
+        "graph",
+    ] {
         let n = kw.len();
         if s.len() > n + 1 && eq(&s[1..1 + n], kw) && s[1 + n] == b'"' as u16 {
             return m(n + 2);
@@ -455,7 +496,10 @@ enum C {
 
 impl C {
     fn lex(&self) -> bool {
-        matches!(self, C::PushLex(..) | C::PopLex | C::PushContext | C::PushBlockContext | C::PopContext)
+        matches!(
+            self,
+            C::PushLex(..) | C::PopLex | C::PushContext | C::PushBlockContext | C::PopContext
+        )
     }
 }
 
@@ -560,7 +604,9 @@ fn bracket_index(c: u16) -> i64 {
 }
 
 fn is_modifier(v: &Option<U>) -> bool {
-    ["public", "private", "protected", "abstract", "readonly"].iter().any(|k| val_is(v, k))
+    ["public", "private", "protected", "abstract", "readonly"]
+        .iter()
+        .any(|k| val_is(v, k))
 }
 
 fn in_list(name: Option<&[u16]>, mut list: Option<&Rc<Var>>) -> bool {
@@ -580,12 +626,16 @@ fn truthy_num(v: Option<i64>) -> bool {
 impl JsMode {
     pub fn new(config: &ModeOptions, pc: &ModeSpec) -> JsMode {
         let jsonld_mode = pc.truthy("jsonld");
-        let double_off = matches!(pc.get("doubleIndentSwitch"),
-            Some(ConfigValue::Bool(false)) | Some(ConfigValue::Num(0.0)))
-            || matches!(pc.get("doubleIndentSwitch"), Some(ConfigValue::Str(s)) if s.is_empty() || s == "0");
+        let double_off = matches!(
+            pc.get("doubleIndentSwitch"),
+            Some(ConfigValue::Bool(false)) | Some(ConfigValue::Num(0.0))
+        ) || matches!(pc.get("doubleIndentSwitch"), Some(ConfigValue::Str(s)) if s.is_empty() || s == "0");
         JsMode {
             indent_unit: config.indent_unit as f64,
-            statement_indent: pc.get("statementIndent").and_then(ConfigValue::as_num).filter(|&x| x != 0.0 && !x.is_nan()),
+            statement_indent: pc
+                .get("statementIndent")
+                .and_then(ConfigValue::as_num)
+                .filter(|&x| x != 0.0 && !x.is_nan()),
             jsonld_mode,
             json_mode: pc.truthy("json") || jsonld_mode,
             track_scope: pc.get("trackScope") != Some(&ConfigValue::Bool(false)),
@@ -689,7 +739,9 @@ impl JsMode {
         } else if is(b'#') && stream.eat_while(is_word_re) {
             return self.ret("variable", "property".into(), None);
         } else if is(b'<') && stream.match_str("!--", true, false)
-            || (is(b'-') && stream.match_str("->", true, false) && !crate::js::has_non_space(js_slice(stream.string, 0, Some(stream.start as i64))))
+            || (is(b'-')
+                && stream.match_str("->", true, false)
+                && !crate::js::has_non_space(js_slice(stream.string, 0, Some(stream.start as i64))))
         {
             stream.skip_to_end();
             return self.ret("comment", "comment".into(), None);
@@ -732,9 +784,17 @@ impl JsMode {
     }
 
     /// javascript.js: `tokenString(quote)`.
-    fn token_string(&self, quote: u16, stream: &mut StringStream<'_>, state: &mut JsState) -> JsStr {
+    fn token_string(
+        &self,
+        quote: u16,
+        stream: &mut StringStream<'_>,
+        state: &mut JsState,
+    ) -> JsStr {
         let mut escaped = false;
-        if self.jsonld_mode && stream.peek() == Some(b'@' as u16) && stream.match_with(re_jsonld_keyword, true).is_some() {
+        if self.jsonld_mode
+            && stream.peek() == Some(b'@' as u16)
+            && stream.match_with(re_jsonld_keyword, true).is_some()
+        {
             state.tokenize = Tok::Base;
             return self.ret("jsonld-keyword", "meta".into(), None);
         }
@@ -767,7 +827,9 @@ impl JsMode {
     fn token_quasi(&self, stream: &mut StringStream<'_>, state: &mut JsState) -> JsStr {
         let mut escaped = false;
         while let Some(next) = stream.next() {
-            if !escaped && (next == b'`' as u16 || next == b'$' as u16 && stream.eat(b'{' as u16).is_some()) {
+            if !escaped
+                && (next == b'`' as u16 || next == b'$' as u16 && stream.eat(b'{' as u16).is_some())
+            {
                 state.tokenize = Tok::Base;
                 break;
             }
@@ -783,7 +845,9 @@ impl JsMode {
             state.fat_arrow_at = None;
         }
         let s = stream.string;
-        let Some(mut arrow) = cm_core::text::index_of(s, &[b'=' as u16, b'>' as u16], stream.start).map(|a| a as i64) else {
+        let Some(mut arrow) =
+            cm_core::text::index_of(s, &[b'=' as u16, b'>' as u16], stream.start).map(|a| a as i64)
+        else {
             return;
         };
         if self.is_ts {
@@ -793,7 +857,13 @@ impl JsMode {
                 arrow = mi as i64;
             }
         }
-        let char_at = |p: i64| -> Option<u16> { if p < 0 { None } else { s.get(p as usize).copied() } };
+        let char_at = |p: i64| -> Option<u16> {
+            if p < 0 {
+                None
+            } else {
+                s.get(p as usize).copied()
+            }
+        };
         let (mut depth, mut saw_something) = (0, false);
         let mut pos = arrow - 1;
         while pos >= 0 {
@@ -839,8 +909,32 @@ impl JsMode {
     }
 
     /// javascript.js: `expressionAllowed`.
-    fn expression_allowed(&self, stream: &StringStream<'_>, state: &JsState, back_up: usize) -> bool {
-        const OK: &[&str] = &["operator", "sof", "keyword b", "keyword c", "keyword d", "case", "new", "export", "default", "spread", "[", "{", "}", "(", ",", ";", ":", "=>"];
+    fn expression_allowed(
+        &self,
+        stream: &StringStream<'_>,
+        state: &JsState,
+        back_up: usize,
+    ) -> bool {
+        const OK: &[&str] = &[
+            "operator",
+            "sof",
+            "keyword b",
+            "keyword c",
+            "keyword d",
+            "case",
+            "new",
+            "export",
+            "default",
+            "spread",
+            "[",
+            "{",
+            "}",
+            "(",
+            ",",
+            ";",
+            ":",
+            "=>",
+        ];
         state.tokenize == Tok::Base && state.last_type.is_some_and(|t| OK.contains(&t))
             || (state.last_type == Some("quasi") && {
                 // `/\{\s*$/.test(stream.string.slice(0, stream.pos - backUp))`
@@ -854,14 +948,27 @@ impl JsMode {
     }
 
     /// javascript.js: `parseJS`.
-    fn parse_js(&self, state: &mut JsState, style: JsStr, ty: Option<&'static str>, content: Option<U>, stream: &mut StringStream<'_>) -> JsStr {
+    fn parse_js(
+        &self,
+        state: &mut JsState,
+        style: JsStr,
+        ty: Option<&'static str>,
+        content: Option<U>,
+        stream: &mut StringStream<'_>,
+    ) -> JsStr {
         {
             let mut lex = state.lexical.borrow_mut();
             if lex.align.is_none() {
                 lex.align = Some(true);
             }
         }
-        let mut cx = Cx { m: self, state, stream, marked: None, style };
+        let mut cx = Cx {
+            m: self,
+            state,
+            stream,
+            marked: None,
+            style,
+        };
         loop {
             let combinator = match cx.state.cc.pop() {
                 Some(c) => c,
@@ -914,11 +1021,21 @@ impl Cx<'_, '_> {
         self.stream.match_with(f, false)
     }
     /// javascript.js: `contCommasep(what, end, info, ...rest)`.
-    fn cont_commasep(&mut self, what: C, end: &'static str, info: Option<&str>, rest: Vec<C>) -> bool {
+    fn cont_commasep(
+        &mut self,
+        what: C,
+        end: &'static str,
+        info: Option<&str>,
+        rest: Vec<C>,
+    ) -> bool {
         for c in rest {
             self.state.cc.push(c);
         }
-        self.cont(vec![C::PushLex(end, info.map(u)), commasep(what, end, None), C::PopLex])
+        self.cont(vec![
+            C::PushLex(end, info.map(u)),
+            commasep(what, end, None),
+            C::PopLex,
+        ])
     }
 
     /// javascript.js: `inScope`.
@@ -947,7 +1064,13 @@ impl Cx<'_, '_> {
         }
         let name = varname.clone();
         if let Some(context) = self.state.context.clone() {
-            let info_var = self.state.lexical.borrow().info.as_deref().is_some_and(|i| eq(i, "var"));
+            let info_var = self
+                .state
+                .lexical
+                .borrow()
+                .info
+                .as_deref()
+                .is_some_and(|i| eq(i, "var"));
             if info_var && context.block {
                 // FIXME function decls are also not block scoped
                 if let Some(nc) = register_var_scoped(name.as_deref(), Some(&context)) {
@@ -955,7 +1078,10 @@ impl Cx<'_, '_> {
                     return;
                 }
             } else if !in_list(name.as_deref(), self.state.local_vars.as_ref()) {
-                self.state.local_vars = Some(Rc::new(Var { name, next: self.state.local_vars.take() }));
+                self.state.local_vars = Some(Rc::new(Var {
+                    name,
+                    next: self.state.local_vars.take(),
+                }));
                 return;
             }
         }
@@ -994,8 +1120,15 @@ impl Cx<'_, '_> {
                     }
                 }
                 let column = self.stream.column() as f64;
-                self.state.lexical =
-                    Rc::new(RefCell::new(Lexical { indented: indent, column, ty: lt, prev: Some(lexical), info, align: None, pos: None }));
+                self.state.lexical = Rc::new(RefCell::new(Lexical {
+                    indented: indent,
+                    column,
+                    ty: lt,
+                    prev: Some(lexical),
+                    info,
+                    align: None,
+                    pos: None,
+                }));
                 false
             }
             PopLex => {
@@ -1012,19 +1145,31 @@ impl Cx<'_, '_> {
             }
             PushContext => {
                 // javascript.js: `pushcontext`
-                self.state.context = Some(Rc::new(Ctx { prev: self.state.context.take(), vars: self.state.local_vars.take(), block: false }));
+                self.state.context = Some(Rc::new(Ctx {
+                    prev: self.state.context.take(),
+                    vars: self.state.local_vars.take(),
+                    block: false,
+                }));
                 self.state.local_vars = Some(default_vars());
                 false
             }
             PushBlockContext => {
                 // javascript.js: `pushblockcontext`
-                self.state.context = Some(Rc::new(Ctx { prev: self.state.context.take(), vars: self.state.local_vars.take(), block: true }));
+                self.state.context = Some(Rc::new(Ctx {
+                    prev: self.state.context.take(),
+                    vars: self.state.local_vars.take(),
+                    block: true,
+                }));
                 self.state.local_vars = None;
                 false
             }
             PopContext => {
                 // javascript.js: `popcontext`
-                let c = self.state.context.clone().expect("TypeError: popcontext without a context");
+                let c = self
+                    .state
+                    .context
+                    .clone()
+                    .expect("TypeError: popcontext without a context");
                 self.state.local_vars = c.vars.clone();
                 self.state.context = c.prev.clone();
                 false
@@ -1093,15 +1238,30 @@ impl Cx<'_, '_> {
                 if t(".") {
                     self.cont(vec![if no_comma { TargetNoComma } else { Target }])
                 } else if t("variable") && is_ts {
-                    self.cont(vec![MaybeTypeArgs, if no_comma { MaybeOperatorNoComma } else { MaybeOperatorComma }])
+                    self.cont(vec![
+                        MaybeTypeArgs,
+                        if no_comma {
+                            MaybeOperatorNoComma
+                        } else {
+                            MaybeOperatorComma
+                        },
+                    ])
                 } else {
-                    self.pass(vec![if no_comma { ExpressionNoComma } else { Expression }])
+                    self.pass(vec![if no_comma {
+                        ExpressionNoComma
+                    } else {
+                        Expression
+                    }])
                 }
             }
             Target | TargetNoComma => {
                 if v("target") {
                     self.mark("keyword");
-                    return self.cont(vec![if matches!(c, Target) { MaybeOperatorComma } else { MaybeOperatorNoComma }]);
+                    return self.cont(vec![if matches!(c, Target) {
+                        MaybeOperatorComma
+                    } else {
+                        MaybeOperatorNoComma
+                    }]);
                 }
                 false
             }
@@ -1151,10 +1311,12 @@ impl Cx<'_, '_> {
                     let lex = self.state.lexical.clone();
                     let mut lb = lex.borrow_mut();
                     if lb.info.as_deref().is_some_and(|i| eq(i, "call")) {
-                        lb.pos = Some(match lb.pos {
-                            Some(p) if p != 0.0 && !p.is_nan() => p,
-                            _ => 0.0,
-                        } + 1.0);
+                        lb.pos = Some(
+                            match lb.pos {
+                                Some(p) if p != 0.0 && !p.is_nan() => p,
+                                _ => 0.0,
+                            } + 1.0,
+                        );
                     }
                     drop(lb);
                     return self.cont(vec![CommaNext(cs.clone()), Proceed(cs)]);
@@ -1237,7 +1399,12 @@ impl Cx<'_, '_> {
                 } else if t(":") {
                     self.cont(vec![TypeExpr])
                 } else if t("[") {
-                    self.cont(vec![Expect("variable"), MaybeTypeOrIn, Expect("]"), TypeProp])
+                    self.cont(vec![
+                        Expect("variable"),
+                        MaybeTypeOrIn,
+                        Expect("]"),
+                        TypeProp,
+                    ])
                 } else if t("(") {
                     self.pass(vec![FunctionDecl, TypeProp])
                 } else if !Self::ty_in(ty, ";})],") {
@@ -1277,7 +1444,12 @@ impl Cx<'_, '_> {
             }
             AfterType => {
                 if v("<") {
-                    return self.cont(vec![pushlex(">"), commasep(TypeExpr, ">", None), PopLex, AfterType]);
+                    return self.cont(vec![
+                        pushlex(">"),
+                        commasep(TypeExpr, ">", None),
+                        PopLex,
+                        AfterType,
+                    ]);
                 }
                 if v("|") || t(".") || v("&") {
                     return self.cont(vec![TypeExpr]);
@@ -1296,7 +1468,12 @@ impl Cx<'_, '_> {
             }
             MaybeTypeArgs => {
                 if v("<") {
-                    return self.cont(vec![pushlex(">"), commasep(TypeExpr, ">", None), PopLex, AfterType]);
+                    return self.cont(vec![
+                        pushlex(">"),
+                        commasep(TypeExpr, ">", None),
+                        PopLex,
+                        AfterType,
+                    ]);
                 }
                 false
             }
@@ -1415,13 +1592,33 @@ impl Cx<'_, '_> {
                 }
                 if t("(") {
                     return if matches!(c, FunctionDef) {
-                        self.cont(vec![PushContext, pushlex(")"), commasep(FunArg, ")", None), PopLex, MaybeRetType, Statement, PopContext])
+                        self.cont(vec![
+                            PushContext,
+                            pushlex(")"),
+                            commasep(FunArg, ")", None),
+                            PopLex,
+                            MaybeRetType,
+                            Statement,
+                            PopContext,
+                        ])
                     } else {
-                        self.cont(vec![PushContext, pushlex(")"), commasep(FunArg, ")", None), PopLex, MaybeRetType, PopContext])
+                        self.cont(vec![
+                            PushContext,
+                            pushlex(")"),
+                            commasep(FunArg, ")", None),
+                            PopLex,
+                            MaybeRetType,
+                            PopContext,
+                        ])
                     };
                 }
                 if is_ts && v("<") {
-                    return self.cont(vec![pushlex(">"), commasep(TypeParam, ">", None), PopLex, me]);
+                    return self.cont(vec![
+                        pushlex(">"),
+                        commasep(TypeParam, ">", None),
+                        PopLex,
+                        me,
+                    ]);
                 }
                 false
             }
@@ -1467,13 +1664,21 @@ impl Cx<'_, '_> {
             }
             ClassNameAfter => {
                 if v("<") {
-                    return self.cont(vec![pushlex(">"), commasep(TypeParam, ">", None), PopLex, ClassNameAfter]);
+                    return self.cont(vec![
+                        pushlex(">"),
+                        commasep(TypeParam, ">", None),
+                        PopLex,
+                        ClassNameAfter,
+                    ]);
                 }
                 if v("extends") || v("implements") || (is_ts && t(",")) {
                     if v("implements") {
                         self.mark("keyword");
                     }
-                    return self.cont(vec![if is_ts { TypeExpr } else { Expression }, ClassNameAfter]);
+                    return self.cont(vec![
+                        if is_ts { TypeExpr } else { Expression },
+                        ClassNameAfter,
+                    ]);
                 }
                 if t("{") {
                     return self.cont(vec![pushlex("}"), ClassBody, PopLex]);
@@ -1497,7 +1702,13 @@ impl Cx<'_, '_> {
                     return self.cont(vec![ClassField, ClassBody]);
                 }
                 if t("[") {
-                    return self.cont(vec![Expression, MaybeType, Expect("]"), ClassField, ClassBody]);
+                    return self.cont(vec![
+                        Expression,
+                        MaybeType,
+                        Expect("]"),
+                        ClassField,
+                        ClassBody,
+                    ]);
                 }
                 if v("*") {
                     self.mark("keyword");
@@ -1527,8 +1738,17 @@ impl Cx<'_, '_> {
                 if v("=") {
                     return self.cont(vec![ExpressionNoComma]);
                 }
-                let is_interface = self.state.lexical.borrow().prev.as_ref().is_some_and(|p| p.borrow().info.as_deref().is_some_and(|i| eq(i, "interface")));
-                self.pass(vec![if is_interface { FunctionDecl } else { FunctionDef }])
+                let is_interface = self.state.lexical.borrow().prev.as_ref().is_some_and(|p| {
+                    p.borrow()
+                        .info
+                        .as_deref()
+                        .is_some_and(|i| eq(i, "interface"))
+                });
+                self.pass(vec![if is_interface {
+                    FunctionDecl
+                } else {
+                    FunctionDef
+                }])
             }
             AfterExport => {
                 if v("*") {
@@ -1540,7 +1760,11 @@ impl Cx<'_, '_> {
                     return self.cont(vec![Expression, Expect(";")]);
                 }
                 if t("{") {
-                    return self.cont(vec![commasep(ExportField, "}", None), MaybeFrom, Expect(";")]);
+                    return self.cont(vec![
+                        commasep(ExportField, "}", None),
+                        MaybeFrom,
+                        Expect(";"),
+                    ]);
                 }
                 self.pass(vec![Statement])
             }
@@ -1604,7 +1828,15 @@ impl Cx<'_, '_> {
                 }
                 self.pass(vec![commasep(ExpressionNoComma, "]", None)])
             }
-            EnumDef => self.pass(vec![pushlex("form"), Pattern, Expect("{"), pushlex("}"), commasep(EnumMember, "}", None), PopLex, PopLex]),
+            EnumDef => self.pass(vec![
+                pushlex("form"),
+                Pattern,
+                Expect("{"),
+                pushlex("}"),
+                commasep(EnumMember, "}", None),
+                PopLex,
+                PopLex,
+            ]),
             EnumMember => self.pass(vec![Pattern, MaybeAssign]),
             MaybeCatchBinding => {
                 if t("(") {
@@ -1622,7 +1854,12 @@ impl Cx<'_, '_> {
         let t = |s: &str| ty == Some(s);
         let v = |s: &str| val_is(val, s);
         if t("var") {
-            return self.cont(vec![C::PushLex("vardef", val.clone()), VarDef, Expect(";"), PopLex]);
+            return self.cont(vec![
+                C::PushLex("vardef", val.clone()),
+                VarDef,
+                Expect(";"),
+                PopLex,
+            ]);
         }
         if t("keyword a") {
             return self.cont(vec![pushlex("form"), ParenExpr, Statement, PopLex]);
@@ -1641,42 +1878,82 @@ impl Cx<'_, '_> {
             return self.cont(vec![Expect(";")]);
         }
         if t("{") {
-            return self.cont(vec![pushlex("}"), PushBlockContext, Block, PopLex, PopContext]);
+            return self.cont(vec![
+                pushlex("}"),
+                PushBlockContext,
+                Block,
+                PopLex,
+                PopContext,
+            ]);
         }
         if t(";") {
             return self.cont(vec![]);
         }
         if t("if") {
-            let info_else = self.state.lexical.borrow().info.as_deref().is_some_and(|i| eq(i, "else"));
+            let info_else = self
+                .state
+                .lexical
+                .borrow()
+                .info
+                .as_deref()
+                .is_some_and(|i| eq(i, "else"));
             if info_else && matches!(self.state.cc.last(), Some(PopLex)) {
                 let c = self.state.cc.pop().unwrap();
                 self.call(c, None, &None);
             }
-            return self.cont(vec![pushlex("form"), ParenExpr, Statement, PopLex, MaybeElse]);
+            return self.cont(vec![
+                pushlex("form"),
+                ParenExpr,
+                Statement,
+                PopLex,
+                MaybeElse,
+            ]);
         }
         if t("function") {
             return self.cont(vec![FunctionDef]);
         }
         if t("for") {
-            return self.cont(vec![pushlex("form"), PushBlockContext, ForSpec, Statement, PopContext, PopLex]);
+            return self.cont(vec![
+                pushlex("form"),
+                PushBlockContext,
+                ForSpec,
+                Statement,
+                PopContext,
+                PopLex,
+            ]);
         }
         if t("class") || (is_ts && v("interface")) {
             self.mark("keyword");
-            let info = if t("class") { Some(u("class")) } else { val.clone() };
+            let info = if t("class") {
+                Some(u("class"))
+            } else {
+                val.clone()
+            };
             return self.cont(vec![C::PushLex("form", info), ClassName, PopLex]);
         }
         if t("variable") {
             if is_ts && v("declare") {
                 self.mark("keyword");
                 return self.cont(vec![Statement]);
-            } else if is_ts && (v("module") || v("enum") || v("type")) && self.matches(re_sp_word).is_some() {
+            } else if is_ts
+                && (v("module") || v("enum") || v("type"))
+                && self.matches(re_sp_word).is_some()
+            {
                 self.mark("keyword");
                 if v("enum") {
                     return self.cont(vec![EnumDef]);
                 } else if v("type") {
                     return self.cont(vec![TypeName, Expect("operator"), TypeExpr, Expect(";")]);
                 } else {
-                    return self.cont(vec![pushlex("form"), Pattern, Expect("{"), pushlex("}"), Block, PopLex, PopLex]);
+                    return self.cont(vec![
+                        pushlex("form"),
+                        Pattern,
+                        Expect("{"),
+                        pushlex("}"),
+                        Block,
+                        PopLex,
+                        PopLex,
+                    ]);
                 }
             } else if is_ts && v("namespace") {
                 self.mark("keyword");
@@ -1689,7 +1966,17 @@ impl Cx<'_, '_> {
             }
         }
         if t("switch") {
-            return self.cont(vec![pushlex("form"), ParenExpr, Expect("{"), C::PushLex("}", Some(u("switch"))), PushBlockContext, Block, PopLex, PopLex, PopContext]);
+            return self.cont(vec![
+                pushlex("form"),
+                ParenExpr,
+                Expect("{"),
+                C::PushLex("}", Some(u("switch"))),
+                PushBlockContext,
+                Block,
+                PopLex,
+                PopLex,
+                PopContext,
+            ]);
         }
         if t("case") {
             return self.cont(vec![Expression, Expect(":")]);
@@ -1698,7 +1985,14 @@ impl Cx<'_, '_> {
             return self.cont(vec![Expect(":")]);
         }
         if t("catch") {
-            return self.cont(vec![pushlex("form"), PushContext, MaybeCatchBinding, Statement, PopLex, PopContext]);
+            return self.cont(vec![
+                pushlex("form"),
+                PushContext,
+                MaybeCatchBinding,
+                Statement,
+                PopLex,
+                PopContext,
+            ]);
         }
         if t("export") {
             return self.cont(vec![pushlex("stat"), AfterExport, PopLex]);
@@ -1716,20 +2010,50 @@ impl Cx<'_, '_> {
     }
 
     /// javascript.js: `expressionInner`.
-    fn expression_inner(&mut self, ty: Option<&'static str>, val: &Option<U>, no_comma: bool) -> bool {
+    fn expression_inner(
+        &mut self,
+        ty: Option<&'static str>,
+        val: &Option<U>,
+        no_comma: bool,
+    ) -> bool {
         use C::*;
         let is_ts = self.m.is_ts;
         let t = |s: &str| ty == Some(s);
         if self.state.fat_arrow_at == Some(self.stream.start as i64) {
-            let body = if no_comma { ArrowBodyNoComma } else { ArrowBody };
+            let body = if no_comma {
+                ArrowBodyNoComma
+            } else {
+                ArrowBody
+            };
             if t("(") {
-                return self.cont(vec![PushContext, pushlex(")"), commasep(FunArg, ")", None), PopLex, Expect("=>"), body, PopContext]);
+                return self.cont(vec![
+                    PushContext,
+                    pushlex(")"),
+                    commasep(FunArg, ")", None),
+                    PopLex,
+                    Expect("=>"),
+                    body,
+                    PopContext,
+                ]);
             } else if t("variable") {
                 return self.pass(vec![PushContext, Pattern, Expect("=>"), body, PopContext]);
             }
         }
-        let maybeop = if no_comma { MaybeOperatorNoComma } else { MaybeOperatorComma };
-        const ATOMIC: &[&str] = &["atom", "number", "variable", "string", "regexp", "this", "import", "jsonld-keyword"];
+        let maybeop = if no_comma {
+            MaybeOperatorNoComma
+        } else {
+            MaybeOperatorComma
+        };
+        const ATOMIC: &[&str] = &[
+            "atom",
+            "number",
+            "variable",
+            "string",
+            "regexp",
+            "this",
+            "import",
+            "jsonld-keyword",
+        ];
         if ty.is_some_and(|t| ATOMIC.contains(&t)) {
             return self.cont(vec![maybeop]);
         }
@@ -1741,13 +2065,27 @@ impl Cx<'_, '_> {
             return self.cont(vec![pushlex("form"), ClassExpression, PopLex]);
         }
         if t("keyword c") || t("async") {
-            return self.cont(vec![if no_comma { ExpressionNoComma } else { Expression }]);
+            return self.cont(vec![if no_comma {
+                ExpressionNoComma
+            } else {
+                Expression
+            }]);
         }
         if t("(") {
-            return self.cont(vec![pushlex(")"), MaybeExpression, Expect(")"), PopLex, maybeop]);
+            return self.cont(vec![
+                pushlex(")"),
+                MaybeExpression,
+                Expect(")"),
+                PopLex,
+                maybeop,
+            ]);
         }
         if t("operator") || t("spread") {
-            return self.cont(vec![if no_comma { ExpressionNoComma } else { Expression }]);
+            return self.cont(vec![if no_comma {
+                ExpressionNoComma
+            } else {
+                Expression
+            }]);
         }
         if t("[") {
             return self.cont(vec![pushlex("]"), ArrayLiteral, PopLex, maybeop]);
@@ -1768,24 +2106,52 @@ impl Cx<'_, '_> {
     /// `false` when reached from `maybeoperatorComma` and undefined when the
     /// combinator runs on its own (then `noComma == false` is false, and
     /// `noComma ? arrowBodyNoComma : arrowBody` picks `arrowBody`).
-    fn maybe_operator_no_comma(&mut self, ty: Option<&'static str>, val: &Option<U>, no_comma: Option<bool>) -> bool {
+    fn maybe_operator_no_comma(
+        &mut self,
+        ty: Option<&'static str>,
+        val: &Option<U>,
+        no_comma: Option<bool>,
+    ) -> bool {
         use C::*;
         let is_ts = self.m.is_ts;
         let t = |s: &str| ty == Some(s);
         let v = |s: &str| val_is(val, s);
-        let me = if no_comma == Some(false) { MaybeOperatorComma } else { MaybeOperatorNoComma };
-        let expr = if no_comma == Some(false) { Expression } else { ExpressionNoComma };
+        let me = if no_comma == Some(false) {
+            MaybeOperatorComma
+        } else {
+            MaybeOperatorNoComma
+        };
+        let expr = if no_comma == Some(false) {
+            Expression
+        } else {
+            ExpressionNoComma
+        };
         if t("=>") {
-            return self.cont(vec![PushContext, if no_comma == Some(true) { ArrowBodyNoComma } else { ArrowBody }, PopContext]);
+            return self.cont(vec![
+                PushContext,
+                if no_comma == Some(true) {
+                    ArrowBodyNoComma
+                } else {
+                    ArrowBody
+                },
+                PopContext,
+            ]);
         }
         if t("operator") {
             // `/\+\+|--/.test(value)`
-            let incdec = val.as_ref().is_some_and(|s| s.windows(2).any(|w| w == [0x2b, 0x2b] || w == [0x2d, 0x2d]));
+            let incdec = val
+                .as_ref()
+                .is_some_and(|s| s.windows(2).any(|w| w == [0x2b, 0x2b] || w == [0x2d, 0x2d]));
             if incdec || is_ts && v("!") {
                 return self.cont(vec![me]);
             }
             if is_ts && v("<") && self.matches(re_ts_call_type_args).is_some() {
-                return self.cont(vec![pushlex(">"), commasep(TypeExpr, ">", None), PopLex, me]);
+                return self.cont(vec![
+                    pushlex(">"),
+                    commasep(TypeExpr, ">", None),
+                    PopLex,
+                    me,
+                ]);
             }
             if v("?") {
                 return self.cont(vec![Expression, Expect(":"), expr]);
@@ -1843,7 +2209,11 @@ impl Cx<'_, '_> {
             }
             self.cont(vec![AfterProp])
         } else if t("number") || t("string") {
-            self.marked = Some(if self.m.jsonld_mode { "property".to_string() } else { self.style.concat(" property").as_js_string() });
+            self.marked = Some(if self.m.jsonld_mode {
+                "property".to_string()
+            } else {
+                self.style.concat(" property").as_js_string()
+            });
             self.cont(vec![AfterProp])
         } else if t("jsonld-keyword") {
             self.cont(vec![AfterProp])
@@ -1871,7 +2241,11 @@ impl Cx<'_, '_> {
         let v = |s: &str| val_is(val, s);
         if v("keyof") || v("typeof") || v("infer") || v("readonly") {
             self.mark("keyword");
-            return self.cont(vec![if v("typeof") { ExpressionNoComma } else { TypeExpr }]);
+            return self.cont(vec![if v("typeof") {
+                ExpressionNoComma
+            } else {
+                TypeExpr
+            }]);
         }
         if t("variable") || v("void") {
             self.mark("type");
@@ -1884,13 +2258,22 @@ impl Cx<'_, '_> {
             return self.cont(vec![AfterType]);
         }
         if t("[") {
-            return self.cont(vec![pushlex("]"), commasep(TypeExpr, "]", Some(",")), PopLex, AfterType]);
+            return self.cont(vec![
+                pushlex("]"),
+                commasep(TypeExpr, "]", Some(",")),
+                PopLex,
+                AfterType,
+            ]);
         }
         if t("{") {
             return self.cont(vec![pushlex("}"), TypeProps, PopLex, AfterType]);
         }
         if t("(") {
-            return self.cont(vec![commasep(TypeArg, ")", None), MaybeReturnType, AfterType]);
+            return self.cont(vec![
+                commasep(TypeArg, ")", None),
+                MaybeReturnType,
+                AfterType,
+            ]);
         }
         if t("<") {
             return self.cont(vec![commasep(TypeExpr, ">", None), TypeExpr]);
@@ -1910,7 +2293,13 @@ fn ends_with_dollar_brace(val: &Option<U>) -> bool {
 
 /// javascript.js: `defaultVars = new Var("this", new Var("arguments", null))`.
 fn default_vars() -> Rc<Var> {
-    Rc::new(Var { name: Some(u("this")), next: Some(Rc::new(Var { name: Some(u("arguments")), next: None })) })
+    Rc::new(Var {
+        name: Some(u("this")),
+        next: Some(Rc::new(Var {
+            name: Some(u("arguments")),
+            next: None,
+        })),
+    })
 }
 
 /// javascript.js: `registerVarScoped`.
@@ -1921,13 +2310,20 @@ fn register_var_scoped(varname: Option<&[u16]>, context: Option<&Rc<Ctx>>) -> Op
         if context.prev.as_ref().is_some_and(|p| Rc::ptr_eq(p, &inner)) {
             return Some(context.clone());
         }
-        Some(Rc::new(Ctx { prev: Some(inner), vars: context.vars.clone(), block: true }))
+        Some(Rc::new(Ctx {
+            prev: Some(inner),
+            vars: context.vars.clone(),
+            block: true,
+        }))
     } else if in_list(varname, context.vars.as_ref()) {
         Some(context.clone())
     } else {
         Some(Rc::new(Ctx {
             prev: context.prev.clone(),
-            vars: Some(Rc::new(Var { name: varname.map(<[u16]>::to_vec), next: context.vars.clone() })),
+            vars: Some(Rc::new(Var {
+                name: varname.map(<[u16]>::to_vec),
+                next: context.vars.clone(),
+            })),
             block: false,
         }))
     }
@@ -1984,9 +2380,16 @@ impl Mode for JsMode {
             return style.into_style();
         }
         let content = self.content.borrow().clone();
-        let incdec = content.as_deref().is_some_and(|c| eq(c, "++") || eq(c, "--"));
-        state.last_type = if ty == Some("operator") && incdec { Some("incdec") } else { ty };
-        self.parse_js(state, style, ty, content, stream).into_style()
+        let incdec = content
+            .as_deref()
+            .is_some_and(|c| eq(c, "++") || eq(c, "--"));
+        state.last_type = if ty == Some("operator") && incdec {
+            Some("incdec")
+        } else {
+            ty
+        };
+        self.parse_js(state, style, ty, content, stream)
+            .into_style()
     }
 
     fn has_indent(&self) -> bool {
@@ -2004,7 +2407,12 @@ impl Mode for JsMode {
         }
         let first_char = text_after.first().copied();
         let mut lexical = state.lexical.clone();
-        let prev_of = |l: &LexRef| l.borrow().prev.clone().expect("TypeError: lexical.prev is null");
+        let prev_of = |l: &LexRef| {
+            l.borrow()
+                .prev
+                .clone()
+                .expect("TypeError: lexical.prev is null")
+        };
         // Kludge to prevent 'maybelse' from blocking lexical scope pops
         if !starts_else(text_after) {
             for c in state.cc.iter().rev() {
@@ -2021,14 +2429,20 @@ impl Mode for JsMode {
                 break;
             }
             let cont = first_char == Some(b'}' as u16)
-                || (matches!(state.cc.last(), Some(C::MaybeOperatorComma | C::MaybeOperatorNoComma))
-                    && !first_char.is_some_and(|c| c < 0x80 && b",.=+-*:?[(".contains(&(c as u8))));
+                || (matches!(
+                    state.cc.last(),
+                    Some(C::MaybeOperatorComma | C::MaybeOperatorNoComma)
+                ) && !first_char
+                    .is_some_and(|c| c < 0x80 && b",.=+-*:?[(".contains(&(c as u8))));
             if !cont {
                 break;
             }
             lexical = prev_of(&lexical);
         }
-        if self.statement_indent.is_some() && lexical.borrow().ty == ")" && prev_of(&lexical).borrow().ty == "stat" {
+        if self.statement_indent.is_some()
+            && lexical.borrow().ty == ")"
+            && prev_of(&lexical).borrow().ty == "stat"
+        {
             lexical = prev_of(&lexical);
         }
         let lb = lexical.borrow();
@@ -2037,7 +2451,11 @@ impl Mode for JsMode {
         let unit = self.indent_unit;
         Some(if ty == "vardef" {
             let cont = state.last_type == Some("operator") || state.last_type == Some(",");
-            lb.indented.plus(if cont { lb.info.as_ref().expect("TypeError: info").len() as f64 + 1.0 } else { 0.0 })
+            lb.indented.plus(if cont {
+                lb.info.as_ref().expect("TypeError: info").len() as f64 + 1.0
+            } else {
+                0.0
+            })
         } else if ty == "form" && first_char == Some(b'{' as u16) {
             return lb.indented.value();
         } else if ty == "form" {
@@ -2049,9 +2467,20 @@ impl Mode for JsMode {
                 || first_char.is_some_and(is_operator_char)
                 || first_char == Some(b',' as u16)
                 || first_char == Some(b'.' as u16);
-            lb.indented.plus(if cont { self.statement_indent.unwrap_or(unit) } else { 0.0 })
-        } else if lb.info.as_deref().is_some_and(|i| eq(i, "switch")) && !closing && self.double_indent_switch {
-            lb.indented.plus(if starts_case_default(text_after) { unit } else { 2.0 * unit })
+            lb.indented.plus(if cont {
+                self.statement_indent.unwrap_or(unit)
+            } else {
+                0.0
+            })
+        } else if lb.info.as_deref().is_some_and(|i| eq(i, "switch"))
+            && !closing
+            && self.double_indent_switch
+        {
+            lb.indented.plus(if starts_case_default(text_after) {
+                unit
+            } else {
+                2.0 * unit
+            })
         } else if lb.align == Some(true) {
             lb.column + if closing { 0.0 } else { 1.0 }
         } else {
@@ -2068,7 +2497,9 @@ impl Mode for JsMode {
             || (s.len() >= 6
                 && eq(&s[..5], "case ")
                 && s[s.len() - 1] == b':' as u16
-                && s[5..s.len() - 1].iter().all(|&c| cm_core::text::is_js_dot(c)));
+                && s[5..s.len() - 1]
+                    .iter()
+                    .all(|&c| cm_core::text::is_js_dot(c)));
         Some(r)
     }
 
@@ -2086,7 +2517,11 @@ impl Mode for JsMode {
     }
     fn prop(&self, name: &str) -> Option<ConfigValue> {
         match name {
-            "blockCommentContinue" => Some(if self.json_mode { ConfigValue::Null } else { ConfigValue::Str(" * ".into()) }),
+            "blockCommentContinue" => Some(if self.json_mode {
+                ConfigValue::Null
+            } else {
+                ConfigValue::Str(" * ".into())
+            }),
             "fold" => Some(ConfigValue::Str("brace".into())),
             "closeBrackets" => Some(ConfigValue::Str("()[]{}''\"\"``".into())),
             "jsonldMode" => Some(ConfigValue::Bool(self.jsonld_mode)),
@@ -2098,11 +2533,21 @@ impl Mode for JsMode {
 
 /// `CodeMirror.defineMode("javascript", ...)` and the file's `defineMIME` calls.
 pub fn register(r: &mut Registry) {
-    r.define_mode("javascript", Rc::new(|_, config, spec| Rc::new(JsMode::new(config, spec)) as Rc<dyn Mode>));
-    for mime in ["text/javascript", "text/ecmascript", "application/javascript", "application/x-javascript", "application/ecmascript"] {
+    r.define_mode(
+        "javascript",
+        Rc::new(|_, config, spec| Rc::new(JsMode::new(config, spec)) as Rc<dyn Mode>),
+    );
+    for mime in [
+        "text/javascript",
+        "text/ecmascript",
+        "application/javascript",
+        "application/x-javascript",
+        "application/ecmascript",
+    ] {
         r.define_mime(mime, MimeTarget::Name("javascript".into()));
     }
-    let js = |k: &str| MimeTarget::Spec(ModeSpec::named("javascript").with(k, ConfigValue::Bool(true)));
+    let js =
+        |k: &str| MimeTarget::Spec(ModeSpec::named("javascript").with(k, ConfigValue::Bool(true)));
     r.define_mime("application/json", js("json"));
     r.define_mime("application/x-json", js("json"));
     r.define_mime("application/manifest+json", js("json"));

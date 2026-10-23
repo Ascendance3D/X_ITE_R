@@ -23,8 +23,8 @@
 //!   z unless the renderer uses reversed depth, and flips y when drawing into a texture.
 //!   `gl_FragCoord.y` counts from the bottom as in WebGL.
 
-use std::collections::{BTreeMap, HashMap, HashSet};
 use std::collections::hash_map::DefaultHasher;
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::hash::{Hash, Hasher};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -36,7 +36,11 @@ pub enum Stage {
 impl Stage {
     pub fn from_type(t: &str) -> Stage {
         // ShaderPart.getShaderType: anything but FRAGMENT that is known is not a fragment shader.
-        if t == "FRAGMENT" { Stage::Fragment } else { Stage::Vertex }
+        if t == "FRAGMENT" {
+            Stage::Fragment
+        } else {
+            Stage::Vertex
+        }
     }
 }
 
@@ -209,17 +213,36 @@ fn lex(s: &str) -> Vec<Tok> {
                 i += 1;
             }
 
-            out.push(Tok { kind: Kind::Ident, start, end: i });
-        } else if c.is_ascii_digit() || (c == b'.' && i + 1 < b.len() && b[i + 1].is_ascii_digit()) {
+            out.push(Tok {
+                kind: Kind::Ident,
+                start,
+                end: i,
+            });
+        } else if c.is_ascii_digit() || (c == b'.' && i + 1 < b.len() && b[i + 1].is_ascii_digit())
+        {
             let start = i;
 
-            while i < b.len() && (b[i].is_ascii_alphanumeric() || b[i] == b'.' || ((b[i] == b'+' || b[i] == b'-') && matches!(b[i - 1], b'e' | b'E') && !s[start..i].starts_with("0x"))) {
+            while i < b.len()
+                && (b[i].is_ascii_alphanumeric()
+                    || b[i] == b'.'
+                    || ((b[i] == b'+' || b[i] == b'-')
+                        && matches!(b[i - 1], b'e' | b'E')
+                        && !s[start..i].starts_with("0x")))
+            {
                 i += 1;
             }
 
-            out.push(Tok { kind: Kind::Number, start, end: i });
+            out.push(Tok {
+                kind: Kind::Number,
+                start,
+                end: i,
+            });
         } else {
-            out.push(Tok { kind: Kind::Punct, start: i, end: i + 1 });
+            out.push(Tok {
+                kind: Kind::Punct,
+                start: i,
+                end: i + 1,
+            });
             i += 1;
         }
     }
@@ -308,7 +331,12 @@ impl Expr<'_> {
         let p = self.peek()?.to_string();
 
         // A one character operator must not be the first half of a two character one.
-        let two_follows = self.punct2().is_some_and(|q| matches!(q.as_str(), "&&" | "||" | "==" | "!=" | "<=" | ">=" | "<<" | ">>"));
+        let two_follows = self.punct2().is_some_and(|q| {
+            matches!(
+                q.as_str(),
+                "&&" | "||" | "==" | "!=" | "<=" | ">=" | "<<" | ">>"
+            )
+        });
 
         if ops.contains(&p.as_str()) && !two_follows {
             self.pos += 1;
@@ -319,7 +347,14 @@ impl Expr<'_> {
     }
 
     fn binary(&mut self, level: usize) -> Result<i64, String> {
-        const LEVELS: &[&[&str]] = &[&["||"], &["&&"], &["==", "!="], &["<", ">", "<=", ">="], &["+", "-"], &["*", "/", "%"]];
+        const LEVELS: &[&[&str]] = &[
+            &["||"],
+            &["&&"],
+            &["==", "!="],
+            &["<", ">", "<=", ">="],
+            &["+", "-"],
+            &["*", "/", "%"],
+        ];
 
         if level == LEVELS.len() {
             return self.unary();
@@ -413,15 +448,32 @@ impl Expr<'_> {
 
                 if tok.kind == Kind::Number {
                     let digits = t.trim_end_matches(['u', 'U']);
-                    return if let Some(h) = digits.strip_prefix("0x").or_else(|| digits.strip_prefix("0X")) { i64::from_str_radix(h, 16).map_err(|e| e.to_string()) } else { digits.parse::<i64>().map_err(|e| e.to_string()) };
+                    return if let Some(h) = digits
+                        .strip_prefix("0x")
+                        .or_else(|| digits.strip_prefix("0X"))
+                    {
+                        i64::from_str_radix(h, 16).map_err(|e| e.to_string())
+                    } else {
+                        digits.parse::<i64>().map_err(|e| e.to_string())
+                    };
                 }
 
                 // A macro: evaluate its body; an unknown identifier is 0.
                 match self.defines.get(&t) {
                     Some(body) if self.depth < 16 => {
                         let toks = lex(body);
-                        let mut e = Expr { toks, src: body, pos: 0, defines: self.defines, depth: self.depth + 1 };
-                        if e.toks.is_empty() { Ok(0) } else { e.binary(0) }
+                        let mut e = Expr {
+                            toks,
+                            src: body,
+                            pos: 0,
+                            defines: self.defines,
+                            depth: self.depth + 1,
+                        };
+                        if e.toks.is_empty() {
+                            Ok(0)
+                        } else {
+                            e.binary(0)
+                        }
                     }
                     _ => Ok(0),
                 }
@@ -432,7 +484,13 @@ impl Expr<'_> {
 }
 
 fn eval_expr(s: &str, defines: &Defines) -> Result<i64, String> {
-    let mut e = Expr { toks: lex(s), src: s, pos: 0, defines, depth: 0 };
+    let mut e = Expr {
+        toks: lex(s),
+        src: s,
+        pos: 0,
+        defines,
+        depth: 0,
+    };
     let v = e.binary(0)?;
 
     if e.pos != e.toks.len() {
@@ -468,7 +526,9 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
         };
 
         let rest = rest.trim_start();
-        let word_end = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).unwrap_or(rest.len());
+        let word_end = rest
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .unwrap_or(rest.len());
         let (word, arg) = (&rest[..word_end], rest[word_end..].trim());
         let err = |m: String| format!("ERROR: 0:{}: '#{}' : {}", n + 1, word, m);
 
@@ -479,17 +539,29 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
                 stack.push((active && v, v, active));
             }
             "if" => {
-                let v = if active { eval_expr(arg, defines).map_err(|m| err(m))? != 0 } else { false };
+                let v = if active {
+                    eval_expr(arg, defines).map_err(|m| err(m))? != 0
+                } else {
+                    false
+                };
                 stack.push((active && v, v, active));
             }
             "elif" => {
-                let Some(top) = stack.last().copied() else { return Err(err("unexpected #elif".into())) };
-                let v = if top.2 && !top.1 { eval_expr(arg, defines).map_err(|m| err(m))? != 0 } else { false };
+                let Some(top) = stack.last().copied() else {
+                    return Err(err("unexpected #elif".into()));
+                };
+                let v = if top.2 && !top.1 {
+                    eval_expr(arg, defines).map_err(|m| err(m))? != 0
+                } else {
+                    false
+                };
                 let l = stack.last_mut().unwrap();
                 *l = (top.2 && !top.1 && v, top.1 || v, top.2);
             }
             "else" => {
-                let Some(top) = stack.last_mut() else { return Err(err("unexpected #else".into())) };
+                let Some(top) = stack.last_mut() else {
+                    return Err(err("unexpected #else".into()));
+                };
                 let v = top.2 && !top.1;
                 *top = (v, true, top.2);
             }
@@ -499,18 +571,29 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
                 }
             }
             "define" if active => {
-                let name_end = arg.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).unwrap_or(arg.len());
+                let name_end = arg
+                    .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+                    .unwrap_or(arg.len());
                 let name = &arg[..name_end];
                 let body = &arg[name_end..];
                 // A function-like macro has `(` right after the name: remember the name only.
-                defines.insert(name.to_string(), if body.starts_with('(') { String::new() } else { body.trim().to_string() });
+                defines.insert(
+                    name.to_string(),
+                    if body.starts_with('(') {
+                        String::new()
+                    } else {
+                        body.trim().to_string()
+                    },
+                );
                 out.push_str(line);
             }
             "undef" if active => {
                 defines.remove(arg.split_whitespace().next().unwrap_or(""));
                 out.push_str(line);
             }
-            "version" if active => version = arg.split_whitespace().next().and_then(|v| v.parse().ok()),
+            "version" if active => {
+                version = arg.split_whitespace().next().and_then(|v| v.parse().ok())
+            }
             "extension" if active => {}
             // ANGLE: `'' :  message` (two spaces).
             "error" if active => return Err(format!("ERROR: 0:{}: '' :  {}", n + 1, arg)),
@@ -525,7 +608,10 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
     }
 
     if !stack.is_empty() {
-        return Err(format!("ERROR: 0:{}: '#if' : unterminated conditional directive", newlines(s) + 1));
+        return Err(format!(
+            "ERROR: 0:{}: '#if' : unterminated conditional directive",
+            newlines(s) + 1
+        ));
     }
 
     Ok((out, version))
@@ -665,7 +751,8 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
 
                     if brace == 0 && paren == 0 {
                         // A function body ends the item; a struct or initializer continues to `;`.
-                        let head: Vec<&str> = toks[first..i].iter().map(|t| text_of(text, t)).collect();
+                        let head: Vec<&str> =
+                            toks[first..i].iter().map(|t| text_of(text, t)).collect();
                         let is_struct = head.first() == Some(&"struct") || head.contains(&"struct");
 
                         if !is_struct && head.contains(&"(") && saw_brace {
@@ -688,7 +775,10 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
 
         let Some(last) = end else {
             // ANGLE reports the end of the source (the line after the last one), no token.
-            return Err(format!("ERROR: 0:{}: '' : syntax error", line_of(text.len())));
+            return Err(format!(
+                "ERROR: 0:{}: '' : syntax error",
+                line_of(text.len())
+            ));
         };
 
         let item: Vec<&Tok> = toks[first..=last].iter().collect();
@@ -730,14 +820,25 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                 }
 
                 let type_name = words.get(k).copied().unwrap_or("");
-                let ty = parse_scalar_ty(type_name, &structs).or_else(|| sampler_dim(type_name).map(|_| Ty::Scalar(Scalar::Int)));
+                let ty = parse_scalar_ty(type_name, &structs)
+                    .or_else(|| sampler_dim(type_name).map(|_| Ty::Scalar(Scalar::Int)));
 
                 let Some(ty) = ty else {
-                    return Err(format!("ERROR: 0:{}: '{}' : unsupported type in struct '{}'", line_of(item[k.min(item.len() - 1)].start), type_name, name));
+                    return Err(format!(
+                        "ERROR: 0:{}: '{}' : unsupported type in struct '{}'",
+                        line_of(item[k.min(item.len() - 1)].start),
+                        type_name,
+                        name
+                    ));
                 };
 
                 if sampler_dim(type_name).is_some() {
-                    return Err(format!("ERROR: 0:{}: '{}' : samplers in structs are not supported (struct '{}')", line_of(item[k].start), type_name, name));
+                    return Err(format!(
+                        "ERROR: 0:{}: '{}' : samplers in structs are not supported (struct '{}')",
+                        line_of(item[k].start),
+                        type_name,
+                        name
+                    ));
                 }
 
                 k += 1;
@@ -758,10 +859,16 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                         }
 
                         k += 1;
-                        array = Some(eval_size(&e, defines).map_err(|m| format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start)))?);
+                        array = Some(eval_size(&e, defines).map_err(|m| {
+                            format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start))
+                        })?);
                     }
 
-                    members.push(Member { name: member, ty: ty.clone(), array });
+                    members.push(Member {
+                        name: member,
+                        ty: ty.clone(),
+                        array,
+                    });
 
                     match words.get(k) {
                         Some(&",") => k += 1,
@@ -787,7 +894,8 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
         while k < words.len() {
             let w = words[k];
 
-            if matches!(w, "attribute" | "varying" | "uniform" | "in" | "out") && storage.is_none() {
+            if matches!(w, "attribute" | "varying" | "uniform" | "in" | "out") && storage.is_none()
+            {
                 storage = Some(w.to_string());
                 k += 1;
             } else if w == "layout" && words.get(k + 1) == Some(&"(") {
@@ -801,7 +909,11 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
 
                 k += 1;
                 layout = Some(e);
-            } else if matches!(w, "flat" | "smooth" | "centroid" | "invariant" | "const" | "inout") || is_precision(w) {
+            } else if matches!(
+                w,
+                "flat" | "smooth" | "centroid" | "invariant" | "const" | "inout"
+            ) || is_precision(w)
+            {
                 qualifiers.push(w.to_string());
                 k += 1;
             } else {
@@ -813,15 +925,25 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
             // A plain global (`float a;`, `const float a = 1.0;`): only the name matters, for the redefinition check.
             let mut k = k;
 
-            while words.get(k).is_some_and(|w| matches!(*w, "const" | "highp" | "mediump" | "lowp")) {
+            while words
+                .get(k)
+                .is_some_and(|w| matches!(*w, "const" | "highp" | "mediump" | "lowp"))
+            {
                 k += 1;
             }
 
             if let (Some(ty), Some(name)) = (words.get(k), words.get(k + 1)) {
                 let known = parse_scalar_ty(ty, &structs).is_some() || sampler_dim(ty).is_some();
 
-                if known && name.as_bytes().first().is_some_and(|c| is_ident_start(*c)) && matches!(words.get(k + 2), Some(&";" | &"[" | &"=" | &",")) && !globals.insert(name.to_string()) {
-                    return Err(format!("ERROR: 0:{}: '{name}' : redefinition", line_of(item[k + 1].start)));
+                if known
+                    && name.as_bytes().first().is_some_and(|c| is_ident_start(*c))
+                    && matches!(words.get(k + 2), Some(&";" | &"[" | &"=" | &","))
+                    && !globals.insert(name.to_string())
+                {
+                    return Err(format!(
+                        "ERROR: 0:{}: '{name}' : redefinition",
+                        line_of(item[k + 1].start)
+                    ));
                 }
             }
 
@@ -835,8 +957,15 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
         loop {
             let name = words.get(k).copied().unwrap_or("").to_string();
 
-            if name.is_empty() || name == ";" || !name.as_bytes().first().is_some_and(|c| is_ident_start(*c)) {
-                return Err(format!("ERROR: 0:{}: '{}' : syntax error", line_of(item[0].start), name));
+            if name.is_empty()
+                || name == ";"
+                || !name.as_bytes().first().is_some_and(|c| is_ident_start(*c))
+            {
+                return Err(format!(
+                    "ERROR: 0:{}: '{}' : syntax error",
+                    line_of(item[0].start),
+                    name
+                ));
             }
 
             k += 1;
@@ -853,7 +982,10 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                 }
 
                 k += 1;
-                array = Some(eval_size(&e, defines).map_err(|m| format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start)))?);
+                array = Some(
+                    eval_size(&e, defines)
+                        .map_err(|m| format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start)))?,
+                );
             }
 
             names.push(Declarator { name, array });
@@ -861,20 +993,47 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
             match words.get(k) {
                 Some(&",") => k += 1,
                 Some(&";") => break,
-                _ => return Err(format!("ERROR: 0:{}: '{}' : syntax error", line_of(item[0].start), words.get(k).copied().unwrap_or(""))),
+                _ => {
+                    return Err(format!(
+                        "ERROR: 0:{}: '{}' : syntax error",
+                        line_of(item[0].start),
+                        words.get(k).copied().unwrap_or("")
+                    ));
+                }
             }
         }
 
         for n in &names {
             if !globals.insert(n.name.clone()) {
-                return Err(format!("ERROR: 0:{}: '{}' : redefinition", line_of(item[0].start), n.name));
+                return Err(format!(
+                    "ERROR: 0:{}: '{}' : redefinition",
+                    line_of(item[0].start),
+                    n.name
+                ));
             }
         }
 
-        decls.push(Decl { range, storage, qualifiers, layout, type_name, names });
+        decls.push(Decl {
+            range,
+            storage,
+            qualifiers,
+            layout,
+            type_name,
+            names,
+        });
     }
 
-    Ok(Scan { text: text_full.to_string(), masked: masked.clone(), decls, structs, struct_ranges, has_main, default_precision, main_rename, es3 })
+    Ok(Scan {
+        text: text_full.to_string(),
+        masked: masked.clone(),
+        decls,
+        structs,
+        struct_ranges,
+        has_main,
+        default_precision,
+        main_rename,
+        es3,
+    })
 }
 
 fn text_of<'a>(s: &'a str, t: &Tok) -> &'a str {
@@ -887,7 +1046,12 @@ fn ty_slots(ty: &Ty, structs: &HashMap<String, StructDef>) -> u32 {
     match ty {
         Ty::Scalar(_) | Ty::Vec(..) => 1,
         Ty::Mat(n) => *n as u32,
-        Ty::Struct(s) => structs.get(s).map_or(0, |d| d.members.iter().map(|m| ty_slots(&m.ty, structs) * m.array.unwrap_or(1)).sum()),
+        Ty::Struct(s) => structs.get(s).map_or(0, |d| {
+            d.members
+                .iter()
+                .map(|m| ty_slots(&m.ty, structs) * m.array.unwrap_or(1))
+                .sum()
+        }),
     }
 }
 
@@ -897,14 +1061,30 @@ fn glsl_ty_name(ty: &Ty) -> String {
         Ty::Scalar(Scalar::Int) => "int".into(),
         Ty::Scalar(Scalar::Uint) => "uint".into(),
         Ty::Scalar(Scalar::Bool) => "bool".into(),
-        Ty::Vec(s, n) => format!("{}vec{n}", match s { Scalar::Float => "", Scalar::Int => "i", Scalar::Uint => "u", Scalar::Bool => "b" }),
+        Ty::Vec(s, n) => format!(
+            "{}vec{n}",
+            match s {
+                Scalar::Float => "",
+                Scalar::Int => "i",
+                Scalar::Uint => "u",
+                Scalar::Bool => "b",
+            }
+        ),
         Ty::Mat(n) => format!("mat{n}"),
         Ty::Struct(s) => s.clone(),
     }
 }
 
 /// The copy statements of one uniform value: `target = <expr from slot>;` for every leaf.
-fn emit_copy(out: &mut String, target: &str, ty: &Ty, slot: &mut u32, structs: &HashMap<String, StructDef>, leaves: &mut HashMap<String, Leaf>, copy: bool) {
+fn emit_copy(
+    out: &mut String,
+    target: &str,
+    ty: &Ty,
+    slot: &mut u32,
+    structs: &HashMap<String, StructDef>,
+    leaves: &mut HashMap<String, Leaf>,
+    copy: bool,
+) {
     match ty {
         Ty::Scalar(s) => {
             let e = format!("_u[{slot}].x");
@@ -919,7 +1099,13 @@ fn emit_copy(out: &mut String, target: &str, ty: &Ty, slot: &mut u32, structs: &
                 out.push_str(&format!("{target} = {e};"));
             }
 
-            leaves.insert(target.to_string(), Leaf { slot: *slot, ty: ty.clone() });
+            leaves.insert(
+                target.to_string(),
+                Leaf {
+                    slot: *slot,
+                    ty: ty.clone(),
+                },
+            );
             *slot += 1;
         }
         Ty::Vec(s, n) => {
@@ -936,18 +1122,32 @@ fn emit_copy(out: &mut String, target: &str, ty: &Ty, slot: &mut u32, structs: &
                 out.push_str(&format!("{target} = {e};"));
             }
 
-            leaves.insert(target.to_string(), Leaf { slot: *slot, ty: ty.clone() });
+            leaves.insert(
+                target.to_string(),
+                Leaf {
+                    slot: *slot,
+                    ty: ty.clone(),
+                },
+            );
             *slot += 1;
         }
         Ty::Mat(n) => {
             let sw = &"xyzw"[..*n as usize];
-            let cols: Vec<String> = (0..*n as u32).map(|c| format!("_u[{}].{sw}", *slot + c)).collect();
+            let cols: Vec<String> = (0..*n as u32)
+                .map(|c| format!("_u[{}].{sw}", *slot + c))
+                .collect();
 
             if copy {
                 out.push_str(&format!("{target} = mat{n}({});", cols.join(", ")));
             }
 
-            leaves.insert(target.to_string(), Leaf { slot: *slot, ty: ty.clone() });
+            leaves.insert(
+                target.to_string(),
+                Leaf {
+                    slot: *slot,
+                    ty: ty.clone(),
+                },
+            );
             *slot += *n as u32;
         }
         Ty::Struct(name) => {
@@ -956,10 +1156,26 @@ fn emit_copy(out: &mut String, target: &str, ty: &Ty, slot: &mut u32, structs: &
                     match m.array {
                         Some(len) => {
                             for k in 0..len {
-                                emit_copy(out, &format!("{target}.{}[{k}]", m.name), &m.ty, slot, structs, leaves, copy);
+                                emit_copy(
+                                    out,
+                                    &format!("{target}.{}[{k}]", m.name),
+                                    &m.ty,
+                                    slot,
+                                    structs,
+                                    leaves,
+                                    copy,
+                                );
                             }
                         }
-                        None => emit_copy(out, &format!("{target}.{}", m.name), &m.ty, slot, structs, leaves, copy),
+                        None => emit_copy(
+                            out,
+                            &format!("{target}.{}", m.name),
+                            &m.ty,
+                            slot,
+                            structs,
+                            leaves,
+                            copy,
+                        ),
                     }
                 }
             }
@@ -1005,7 +1221,10 @@ fn used_names(code: &str, skip: &[(usize, usize)]) -> Used {
 
     for (a, b) in skip {
         if *a < masked.len() && *b <= masked.len() {
-            let blank: String = masked[*a..*b].chars().map(|c| if c == '\n' { '\n' } else { ' ' }).collect();
+            let blank: String = masked[*a..*b]
+                .chars()
+                .map(|c| if c == '\n' { '\n' } else { ' ' })
+                .collect();
             masked.replace_range(*a..*b, &blank);
         }
     }
@@ -1065,7 +1284,15 @@ fn base_defines(stage: Stage, es3: bool, options: &[String]) -> Defines {
     d.insert("GL_ES".into(), "1".into());
     d.insert("__VERSION__".into(), if es3 { "300" } else { "100" }.into());
     d.insert("X_ITE".into(), String::new());
-    d.insert(if stage == Stage::Vertex { "X3D_VERTEX_SHADER" } else { "X3D_FRAGMENT_SHADER" }.into(), String::new());
+    d.insert(
+        if stage == Stage::Vertex {
+            "X3D_VERTEX_SHADER"
+        } else {
+            "X3D_FRAGMENT_SHADER"
+        }
+        .into(),
+        String::new(),
+    );
 
     for o in options {
         d.insert(o.clone(), String::new());
@@ -1111,9 +1338,14 @@ fn head_defines(source: &str) -> Defines {
             continue;
         }
 
-        let Some(rest) = t.strip_prefix('#') else { break };
+        let Some(rest) = t.strip_prefix('#') else {
+            break;
+        };
         let rest = rest.trim_start();
-        let word: String = rest.chars().take_while(|c| c.is_ascii_alphabetic()).collect();
+        let word: String = rest
+            .chars()
+            .take_while(|c| c.is_ascii_alphabetic())
+            .collect();
         let mut full = rest.to_string();
 
         while full.ends_with('\\') {
@@ -1130,7 +1362,10 @@ fn head_defines(source: &str) -> Defines {
             "endif" => depth -= 1,
             "define" if depth == 0 => {
                 let body = full["define".len()..].trim_start();
-                let name: String = body.chars().take_while(|c| c.is_ascii() && is_ident(*c as u8)).collect();
+                let name: String = body
+                    .chars()
+                    .take_while(|c| c.is_ascii() && is_ident(*c as u8))
+                    .collect();
 
                 if !name.is_empty() && !body[name.len()..].starts_with('(') {
                     out.insert(name.clone(), body[name.len()..].trim().to_string());
@@ -1167,9 +1402,26 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
 
     let s = scan(&combined, &defines, es3).map_err(|e| shift_error(&e, prefix_lines))?;
     let boundary_at = types.len() + 1;
-    let skip: Vec<(usize, usize)> = s.decls.iter().filter(|d| d.range.0 >= boundary_at).map(|d| (d.range.0 - boundary_at, d.range.1 - boundary_at)).collect();
+    let skip: Vec<(usize, usize)> = s
+        .decls
+        .iter()
+        .filter(|d| d.range.0 >= boundary_at)
+        .map(|d| (d.range.0 - boundary_at, d.range.1 - boundary_at))
+        .collect();
     let used = used_names(&s.text[boundary_at.min(s.text.len())..], &skip);
-    let mut a = Analysis { stage, scan: s, uniforms: vec![], samplers: vec![], attributes: vec![], varyings: vec![], outputs: vec![], prefix_lines, es3, used, uniform_precision: HashMap::new() };
+    let mut a = Analysis {
+        stage,
+        scan: s,
+        uniforms: vec![],
+        samplers: vec![],
+        attributes: vec![],
+        varyings: vec![],
+        outputs: vec![],
+        prefix_lines,
+        es3,
+        used,
+        uniform_precision: HashMap::new(),
+    };
 
     // Only the user's declarations count: those after the injected types.
     let boundary = types.len() + 1;
@@ -1192,16 +1444,24 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
 
                     // float and int based types: explicit precision, else the stage's default.
                     let category = match d.type_name.as_str() {
-                        "float" | "vec2" | "vec3" | "vec4" | "mat2" | "mat3" | "mat4" | "mat2x2" | "mat2x3" | "mat2x4" | "mat3x2" | "mat3x3" | "mat3x4" | "mat4x2" | "mat4x3" | "mat4x4" => Some("float"),
-                        "int" | "ivec2" | "ivec3" | "ivec4" | "uint" | "uvec2" | "uvec3" | "uvec4" => Some("int"),
+                        "float" | "vec2" | "vec3" | "vec4" | "mat2" | "mat3" | "mat4"
+                        | "mat2x2" | "mat2x3" | "mat2x4" | "mat3x2" | "mat3x3" | "mat3x4"
+                        | "mat4x2" | "mat4x3" | "mat4x4" => Some("float"),
+                        "int" | "ivec2" | "ivec3" | "ivec4" | "uint" | "uvec2" | "uvec3"
+                        | "uvec4" => Some("int"),
                         _ => None,
                     };
                     let precision = category.and_then(|c| {
-                        d.qualifiers.iter().find(|q| is_precision(q)).cloned().or_else(|| a.scan.default_precision.get(c).cloned()).or_else(|| match (stage, c) {
-                            (Stage::Vertex, _) => Some("highp".to_string()),
-                            (Stage::Fragment, "int") => Some("mediump".to_string()),
-                            _ => None,
-                        })
+                        d.qualifiers
+                            .iter()
+                            .find(|q| is_precision(q))
+                            .cloned()
+                            .or_else(|| a.scan.default_precision.get(c).cloned())
+                            .or_else(|| match (stage, c) {
+                                (Stage::Vertex, _) => Some("highp".to_string()),
+                                (Stage::Fragment, "int") => Some("mediump".to_string()),
+                                _ => None,
+                            })
                     });
 
                     for n in &d.names {
@@ -1215,27 +1475,42 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
             }
             "attribute" | "in" if stage == Stage::Vertex => {
                 for n in &d.names {
-                    a.attributes.push((n.name.clone(), d.type_name.clone(), d.layout.clone()));
+                    a.attributes
+                        .push((n.name.clone(), d.type_name.clone(), d.layout.clone()));
                 }
             }
             "varying" | "in" if stage == Stage::Fragment => {
                 for n in &d.names {
-                    a.varyings.push((n.name.clone(), d.type_name.clone(), d.qualifiers.clone(), n.array));
+                    a.varyings.push((
+                        n.name.clone(),
+                        d.type_name.clone(),
+                        d.qualifiers.clone(),
+                        n.array,
+                    ));
                 }
             }
             "varying" | "out" if stage == Stage::Vertex => {
                 for n in &d.names {
-                    a.varyings.push((n.name.clone(), d.type_name.clone(), d.qualifiers.clone(), n.array));
+                    a.varyings.push((
+                        n.name.clone(),
+                        d.type_name.clone(),
+                        d.qualifiers.clone(),
+                        n.array,
+                    ));
                 }
             }
             "out" if stage == Stage::Fragment => {
                 for n in &d.names {
-                    a.outputs.push((n.name.clone(), d.type_name.clone(), d.qualifiers.clone()));
+                    a.outputs
+                        .push((n.name.clone(), d.type_name.clone(), d.qualifiers.clone()));
                 }
             }
             "attribute" | "varying" => {
                 // ANGLE: `'attribute' :  supported in vertex shaders only` (two spaces).
-                return Err(format!("ERROR: 0:{line}: '{}' :  supported in vertex shaders only", d.storage));
+                return Err(format!(
+                    "ERROR: 0:{line}: '{}' :  supported in vertex shaders only",
+                    d.storage
+                ));
             }
             _ => {}
         }
@@ -1264,7 +1539,9 @@ fn shift_error(e: &str, prefix_lines: usize) -> String {
 // ---- link and emit ----------------------------------------------------------------------------
 
 fn find_word(s: &str, word: &str) -> bool {
-    lex(s).iter().any(|t| t.kind == Kind::Ident && text(s, t) == word)
+    lex(s)
+        .iter()
+        .any(|t| t.kind == Kind::Ident && text(s, t) == word)
 }
 
 /// The rewritten text of one stage.
@@ -1306,7 +1583,8 @@ const BUILTIN_FETCH: &[&str] = &["texelFetch", "textureSize", "textureQueryLevel
 fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     let text = &a.scan.text;
     let boundary_line = a.prefix_lines;
-    let line_of = |pos: usize| newlines(&text[..pos]) + 1 - boundary_line.min(newlines(&text[..pos]) + 1);
+    let line_of =
+        |pos: usize| newlines(&text[..pos]) + 1 - boundary_line.min(newlines(&text[..pos]) + 1);
     let mut edits: Vec<(usize, usize, String)> = vec![];
 
     // Declarations.
@@ -1322,7 +1600,12 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                     // Declared in the preamble.
                     edits.push((d.range.0, d.range.1, pad));
                 } else {
-                    let quals: String = d.qualifiers.iter().filter(|q| is_precision(q)).map(|q| format!("{q} ")).collect();
+                    let quals: String = d
+                        .qualifiers
+                        .iter()
+                        .filter(|q| is_precision(q))
+                        .map(|q| format!("{q} "))
+                        .collect();
                     let decls: Vec<String> = d
                         .names
                         .iter()
@@ -1344,14 +1627,21 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                     // the wrapper main assembles it.
                     if let Some((cols, col_ty)) = matrix_columns(&d.type_name) {
                         for k in 0..cols {
-                            parts.push(format!("layout(location={}) in {col_ty} _x3d_a_{}_{k};", loc + k, n.name));
+                            parts.push(format!(
+                                "layout(location={}) in {col_ty} _x3d_a_{}_{k};",
+                                loc + k,
+                                n.name
+                            ));
                         }
 
                         parts.push(format!("{} {};", d.type_name, n.name));
                         continue;
                     }
 
-                    parts.push(format!("layout(location={loc}) in {} {};", d.type_name, n.name));
+                    parts.push(format!(
+                        "layout(location={loc}) in {} {};",
+                        d.type_name, n.name
+                    ));
                 }
 
                 edits.push((d.range.0, d.range.1, format!("{}{pad}", parts.join(" "))));
@@ -1361,9 +1651,17 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
                 for n in &d.names {
                     let loc = info.varying_locations.get(&n.name).copied().unwrap_or(0);
-                    let q: String = d.qualifiers.iter().filter(|q| matches!(q.as_str(), "flat" | "smooth" | "centroid")).map(|q| format!("{q} ")).collect();
+                    let q: String = d
+                        .qualifiers
+                        .iter()
+                        .filter(|q| matches!(q.as_str(), "flat" | "smooth" | "centroid"))
+                        .map(|q| format!("{q} "))
+                        .collect();
                     let arr = n.array.map(|l| format!("[{l}]")).unwrap_or_default();
-                    parts.push(format!("layout(location={loc}) {q}out {} {}{arr};", d.type_name, n.name));
+                    parts.push(format!(
+                        "layout(location={loc}) {q}out {} {}{arr};",
+                        d.type_name, n.name
+                    ));
                 }
 
                 edits.push((d.range.0, d.range.1, format!("{}{pad}", parts.join(" "))));
@@ -1373,11 +1671,23 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
                 for n in &d.names {
                     let Some(loc) = info.varying_locations.get(&n.name).copied() else {
-                        return Err(format!("ERROR: 0:{}: '{}' : fragment input has no matching output in the vertex shader", line_of(d.range.0), n.name));
+                        return Err(format!(
+                            "ERROR: 0:{}: '{}' : fragment input has no matching output in the vertex shader",
+                            line_of(d.range.0),
+                            n.name
+                        ));
                     };
-                    let q: String = d.qualifiers.iter().filter(|q| matches!(q.as_str(), "flat" | "smooth" | "centroid")).map(|q| format!("{q} ")).collect();
+                    let q: String = d
+                        .qualifiers
+                        .iter()
+                        .filter(|q| matches!(q.as_str(), "flat" | "smooth" | "centroid"))
+                        .map(|q| format!("{q} "))
+                        .collect();
                     let arr = n.array.map(|l| format!("[{l}]")).unwrap_or_default();
-                    parts.push(format!("layout(location={loc}) {q}in {} {}{arr};", d.type_name, n.name));
+                    parts.push(format!(
+                        "layout(location={loc}) {q}in {} {}{arr};",
+                        d.type_name, n.name
+                    ));
                 }
 
                 edits.push((d.range.0, d.range.1, format!("{}{pad}", parts.join(" "))));
@@ -1386,8 +1696,21 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 let mut parts = vec![];
 
                 for (k, n) in d.names.iter().enumerate() {
-                    let loc = d.layout.as_deref().and_then(|l| l.split(',').find_map(|p| p.trim().strip_prefix("location=").and_then(|v| v.trim().parse::<u32>().ok()))).unwrap_or(k as u32);
-                    parts.push(format!("layout(location={loc}) out {} {};", d.type_name, n.name));
+                    let loc = d
+                        .layout
+                        .as_deref()
+                        .and_then(|l| {
+                            l.split(',').find_map(|p| {
+                                p.trim()
+                                    .strip_prefix("location=")
+                                    .and_then(|v| v.trim().parse::<u32>().ok())
+                            })
+                        })
+                        .unwrap_or(k as u32);
+                    parts.push(format!(
+                        "layout(location={loc}) out {} {};",
+                        d.type_name, n.name
+                    ));
                 }
 
                 edits.push((d.range.0, d.range.1, format!("{}{pad}", parts.join(" "))));
@@ -1406,20 +1729,43 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     let toks = lex(masked);
 
     for t in &toks {
-        if t.kind == Kind::Ident && is_precision(text_of(masked, t)) && a.scan.struct_ranges.iter().any(|r| t.start >= r.0 && t.start < r.1) {
+        if t.kind == Kind::Ident
+            && is_precision(text_of(masked, t))
+            && a.scan
+                .struct_ranges
+                .iter()
+                .any(|r| t.start >= r.0 && t.start < r.1)
+        {
             edits.push((t.start, t.end, " ".repeat(t.end - t.start)));
         }
     }
 
     // Identifier level rewrites outside declarations.
-    let in_decl = |pos: usize| a.scan.decls.iter().any(|d| pos >= d.range.0 && pos < d.range.1);
+    let in_decl = |pos: usize| {
+        a.scan
+            .decls
+            .iter()
+            .any(|d| pos >= d.range.0 && pos < d.range.1)
+    };
     let sampler_names: HashSet<&str> = info.samplers.iter().map(|s| s.name.as_str()).collect();
     let mut used_frag_output = false;
 
     // Arrays declared with a literal size (`float a [2];`), by name.
     let array_sizes: HashMap<&str, u32> = (1..toks.len().saturating_sub(4))
-        .filter(|&k| toks[k].kind == Kind::Ident && toks[k - 1].kind == Kind::Ident && text_of(masked, &toks[k + 1]) == "[" && toks[k + 2].kind == Kind::Number && text_of(masked, &toks[k + 3]) == "]" && matches!(text_of(masked, &toks[k + 4]), ";" | "," | "="))
-        .filter_map(|k| Some((text_of(masked, &toks[k]), text_of(masked, &toks[k + 2]).parse::<u32>().ok()?)))
+        .filter(|&k| {
+            toks[k].kind == Kind::Ident
+                && toks[k - 1].kind == Kind::Ident
+                && text_of(masked, &toks[k + 1]) == "["
+                && toks[k + 2].kind == Kind::Number
+                && text_of(masked, &toks[k + 3]) == "]"
+                && matches!(text_of(masked, &toks[k + 4]), ";" | "," | "=")
+        })
+        .filter_map(|k| {
+            Some((
+                text_of(masked, &toks[k]),
+                text_of(masked, &toks[k + 2]).parse::<u32>().ok()?,
+            ))
+        })
         .collect();
     let mut i = 0;
 
@@ -1438,36 +1784,68 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
         // Two ANGLE checks naga does not make (it accepts both): a statement that assigns to a uniform, and a
         // constant index past the end of an array declared with a constant size.
-        if prev.is_none_or(|p| matches!(p, ";" | "{" | "}")) && tok(i + 1) == Some("=") && tok(i + 2) != Some("=") && a.uniforms.iter().any(|(n, ..)| n == word) {
-            return Err(format!("ERROR: 0:{}: 'assign' : l-value required (can't modify a uniform \"{word}\")", user_line()));
+        if prev.is_none_or(|p| matches!(p, ";" | "{" | "}"))
+            && tok(i + 1) == Some("=")
+            && tok(i + 2) != Some("=")
+            && a.uniforms.iter().any(|(n, ..)| n == word)
+        {
+            return Err(format!(
+                "ERROR: 0:{}: 'assign' : l-value required (can't modify a uniform \"{word}\")",
+                user_line()
+            ));
         }
 
-        if tok(i + 1) == Some("[") && tok(i + 3) == Some("]") && prev.is_none_or(|p| p == "return" || !p.as_bytes().first().is_some_and(|c| is_ident_start(*c))) {
-            if let (Some(index), Some(size)) = (tok(i + 2).and_then(|n| n.parse::<u32>().ok()), array_sizes.get(word)) {
+        if tok(i + 1) == Some("[")
+            && tok(i + 3) == Some("]")
+            && prev.is_none_or(|p| {
+                p == "return" || !p.as_bytes().first().is_some_and(|c| is_ident_start(*c))
+            })
+        {
+            if let (Some(index), Some(size)) = (
+                tok(i + 2).and_then(|n| n.parse::<u32>().ok()),
+                array_sizes.get(word),
+            ) {
                 if index >= *size {
-                    return Err(format!("ERROR: 0:{}: '[]' : array index out of range", user_line()));
+                    return Err(format!(
+                        "ERROR: 0:{}: '[]' : array index out of range",
+                        user_line()
+                    ));
                 }
             }
         }
 
         match word {
             // GLSL ES 1.00 / 3.00 `const in` parameter (read-only); naga takes `in` and `const` alone.
-            "const" if toks.get(i + 1).is_some_and(|x| x.kind == Kind::Ident && text_of(masked, x) == "in") => {
+            "const"
+                if toks
+                    .get(i + 1)
+                    .is_some_and(|x| x.kind == Kind::Ident && text_of(masked, x) == "in") =>
+            {
                 edits.push((t.start, toks[i + 1].end, "in".into()));
                 i += 2;
                 continue;
             }
-            "gl_Position" | "gl_PointSize" if a.stage == Stage::Fragment => return Err(format!("ERROR: 0:{}: '{word}' : undeclared identifier", user_line())),
+            "gl_Position" | "gl_PointSize" if a.stage == Stage::Fragment => {
+                return Err(format!(
+                    "ERROR: 0:{}: '{word}' : undeclared identifier",
+                    user_line()
+                ));
+            }
             "gl_FragColor" if a.stage == Stage::Fragment => {
                 edits.push((t.start, t.end, "_x3d_FragColor".into()));
                 used_frag_output = true;
             }
             "gl_FragData" if a.stage == Stage::Fragment => {
                 // gl_FragData [ 0 ]
-                let ok = toks.get(i + 1).map(|x| text_of(text, x)) == Some("[") && toks.get(i + 2).map(|x| text_of(text, x)) == Some("0") && toks.get(i + 3).map(|x| text_of(text, x)) == Some("]");
+                let ok = toks.get(i + 1).map(|x| text_of(text, x)) == Some("[")
+                    && toks.get(i + 2).map(|x| text_of(text, x)) == Some("0")
+                    && toks.get(i + 3).map(|x| text_of(text, x)) == Some("]");
 
                 if !ok {
-                    return Err(format!("ERROR: 0:{}: 'gl_FragData' : only gl_FragData [0] is supported", user_line()));
+                    return Err(format!(
+                        "ERROR: 0:{}: 'gl_FragData' : only gl_FragData [0] is supported",
+                        user_line()
+                    ));
                 }
 
                 edits.push((t.start, toks[i + 3].end, "_x3d_FragColor".into()));
@@ -1475,10 +1853,16 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 i += 4;
                 continue;
             }
-            "gl_FragCoord" if a.stage == Stage::Fragment => edits.push((t.start, t.end, "_x3d_FragCoord()".into())),
+            "gl_FragCoord" if a.stage == Stage::Fragment => {
+                edits.push((t.start, t.end, "_x3d_FragCoord()".into()))
+            }
             // wgpu draws a point as one pixel (no point size): the centre of a one pixel sprite.
-            "gl_PointCoord" if a.stage == Stage::Fragment => edits.push((t.start, t.end, "vec2 (0.5)".into())),
-            "gl_PointSize" if a.stage == Stage::Vertex => edits.push((t.start, t.end, "_x3d_PointSize".into())),
+            "gl_PointCoord" if a.stage == Stage::Fragment => {
+                edits.push((t.start, t.end, "vec2 (0.5)".into()))
+            }
+            "gl_PointSize" if a.stage == Stage::Vertex => {
+                edits.push((t.start, t.end, "_x3d_PointSize".into()))
+            }
             w if BUILTIN_SAMPLING.iter().any(|(n, _)| *n == w) || BUILTIN_FETCH.contains(&w) => {
                 // name ( sampler , …
                 if toks.get(i + 1).map(|x| text_of(text, x)) == Some("(") {
@@ -1491,25 +1875,38 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                             let mut last = i + 2;
 
                             if toks.get(i + 3).map(|x| text_of(text, x)) == Some("[") {
-                                let lit = toks.get(i + 4).filter(|x| x.kind == Kind::Number).and_then(|x| text_of(text, x).parse::<u32>().ok());
+                                let lit = toks
+                                    .get(i + 4)
+                                    .filter(|x| x.kind == Kind::Number)
+                                    .and_then(|x| text_of(text, x).parse::<u32>().ok());
 
-                                if lit.is_none() || toks.get(i + 5).map(|x| text_of(text, x)) != Some("]") {
-                                    return Err(format!("ERROR: 0:{}: '{sname}' : an array of samplers must be indexed with a constant", user_line()));
+                                if lit.is_none()
+                                    || toks.get(i + 5).map(|x| text_of(text, x)) != Some("]")
+                                {
+                                    return Err(format!(
+                                        "ERROR: 0:{}: '{sname}' : an array of samplers must be indexed with a constant",
+                                        user_line()
+                                    ));
                                 }
 
                                 index = lit;
                                 last = i + 5;
                             }
 
-                            let Some(&e) = info.sampler_elem.get(&(sname.to_string(), index)) else {
-                                return Err(format!("ERROR: 0:{}: '{sname}' : sampler index out of range", user_line()));
+                            let Some(&e) = info.sampler_elem.get(&(sname.to_string(), index))
+                            else {
+                                return Err(format!(
+                                    "ERROR: 0:{}: '{sname}' : sampler index out of range",
+                                    user_line()
+                                ));
                             };
                             let decl = &info.samplers[e];
                             let base = format!("_x3d_t{}", decl.binding);
                             let call = if BUILTIN_FETCH.contains(&w) {
                                 format!("{w} ({base}")
                             } else {
-                                let target = BUILTIN_SAMPLING.iter().find(|(n, _)| *n == w).unwrap().1;
+                                let target =
+                                    BUILTIN_SAMPLING.iter().find(|(n, _)| *n == w).unwrap().1;
                                 let ctor = match decl.dim {
                                     SamplerDim::D2 => "sampler2D",
                                     SamplerDim::D3 => "sampler3D",
@@ -1525,7 +1922,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 }
             }
             w if sampler_names.contains(w) => {
-                return Err(format!("ERROR: 0:{}: '{w}' : a sampler can only be used as the first argument of a texture function", user_line()));
+                return Err(format!(
+                    "ERROR: 0:{}: '{w}' : a sampler can only be used as the first argument of a texture function",
+                    user_line()
+                ));
             }
             _ => {}
         }
@@ -1555,7 +1955,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
     // The preamble: one line each.
     let mut head = String::from("#version 450\n#define x3d_MaxLights 8\n");
-    head.push_str(&format!("layout(std140, set=0, binding=0) uniform _X3DU {{ vec4 _u[{}]; }};\n", info.slots.max(1)));
+    head.push_str(&format!(
+        "layout(std140, set=0, binding=0) uniform _X3DU {{ vec4 _u[{}]; }};\n",
+        info.slots.max(1)
+    ));
 
     for s in info.samplers {
         let (tex, ctor) = match s.dim {
@@ -1564,8 +1967,15 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             SamplerDim::Cube => ("textureCube", ""),
         };
         let _ = ctor;
-        head.push_str(&format!("layout(set=1, binding={}) uniform {tex} _x3d_t{};\n", s.binding, s.binding));
-        head.push_str(&format!("layout(set=1, binding={}) uniform sampler _x3d_s{};\n", s.binding + 1, s.binding));
+        head.push_str(&format!(
+            "layout(set=1, binding={}) uniform {tex} _x3d_t{};\n",
+            s.binding, s.binding
+        ));
+        head.push_str(&format!(
+            "layout(set=1, binding={}) uniform sampler _x3d_s{};\n",
+            s.binding + 1,
+            s.binding
+        ));
     }
 
     match a.stage {
@@ -1596,10 +2006,26 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
         match u.array {
             Some(len) => {
                 for k in 0..len {
-                    emit_copy(&mut copy, &format!("{}[{k}]", u.name), &u.ty, &mut slot, info.structs, &mut leaves_unused, true);
+                    emit_copy(
+                        &mut copy,
+                        &format!("{}[{k}]", u.name),
+                        &u.ty,
+                        &mut slot,
+                        info.structs,
+                        &mut leaves_unused,
+                        true,
+                    );
                 }
             }
-            None => emit_copy(&mut copy, &u.name, &u.ty, &mut slot, info.structs, &mut leaves_unused, true),
+            None => emit_copy(
+                &mut copy,
+                &u.name,
+                &u.ty,
+                &mut slot,
+                info.structs,
+                &mut leaves_unused,
+                true,
+            ),
         }
 
         copy.push('\n');
@@ -1619,13 +2045,18 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
     if a.stage == Stage::Vertex {
         main.push_str("gl_Position.y = gl_Position.y * _u[0].z;\n");
-        main.push_str("if (_u[0].y == 0.0) { gl_Position.z = 0.5 * (gl_Position.z + gl_Position.w); }\n");
+        main.push_str(
+            "if (_u[0].y == 0.0) { gl_Position.z = 0.5 * (gl_Position.z + gl_Position.w); }\n",
+        );
     }
 
     main.push_str("}\n");
 
     let _ = a.es3;
-    Ok(Emitted { text: format!("{head}{body}{main}"), line_base: line_base + a.prefix_lines })
+    Ok(Emitted {
+        text: format!("{head}{body}{main}"),
+        line_base: line_base + a.prefix_lines,
+    })
 }
 
 /// The column count and column type of a matrix attribute type.
@@ -1648,16 +2079,26 @@ fn mask_sampler_precision(src: &str) -> String {
         out.push_str(before);
 
         // Only a whole word at a statement start.
-        let word_start = before.chars().next_back().is_none_or(|c| !(c.is_alphanumeric() || c == '_'));
+        let word_start = before
+            .chars()
+            .next_back()
+            .is_none_or(|c| !(c.is_alphanumeric() || c == '_'));
         let end = after.find(';');
         let masked = end.filter(|_| word_start).and_then(|e| {
             let words: Vec<&str> = after[..e].split_whitespace().collect();
-            (words.len() == 3 && is_precision(words[1]) && (words[2].contains("sampler") || words[2].contains("image"))).then_some(e + 1)
+            (words.len() == 3
+                && is_precision(words[1])
+                && (words[2].contains("sampler") || words[2].contains("image")))
+            .then_some(e + 1)
         });
 
         match masked {
             Some(len) => {
-                out.extend(after[..len].chars().map(|c| if c == '\n' { '\n' } else { ' ' }));
+                out.extend(
+                    after[..len]
+                        .chars()
+                        .map(|c| if c == '\n' { '\n' } else { ' ' }),
+                );
                 rest = &after[len..];
             }
             None => {
@@ -1699,7 +2140,9 @@ fn calls_in(block: &naga::Block, out: &mut Vec<usize>) {
                 calls_in(reject, out);
             }
             S::Switch { cases, .. } => cases.iter().for_each(|c| calls_in(&c.body, out)),
-            S::Loop { body, continuing, .. } => {
+            S::Loop {
+                body, continuing, ..
+            } => {
                 calls_in(body, out);
                 calls_in(continuing, out);
             }
@@ -1720,7 +2163,9 @@ fn remap_calls(block: &mut naga::Block, map: &[naga::Handle<naga::Function>]) {
                 remap_calls(reject, map);
             }
             S::Switch { cases, .. } => cases.iter_mut().for_each(|c| remap_calls(&mut c.body, map)),
-            S::Loop { body, continuing, .. } => {
+            S::Loop {
+                body, continuing, ..
+            } => {
                 remap_calls(body, map);
                 remap_calls(continuing, map);
             }
@@ -1747,7 +2192,9 @@ fn ends_in_terminator(block: &naga::Block) -> bool {
     match block.iter().last() {
         Some(S::Return { .. } | S::Break | S::Continue | S::Kill) => true,
         Some(S::Block(b)) => ends_in_terminator(b),
-        Some(S::If { accept, reject, .. }) => ends_in_terminator(accept) && ends_in_terminator(reject),
+        Some(S::If { accept, reject, .. }) => {
+            ends_in_terminator(accept) && ends_in_terminator(reject)
+        }
         _ => false,
     }
 }
@@ -1773,7 +2220,9 @@ fn fix_fall_through(block: &mut naga::Block) {
                     }
                 }
             }
-            S::Loop { body, continuing, .. } => {
+            S::Loop {
+                body, continuing, ..
+            } => {
                 fix_fall_through(body);
                 fix_fall_through(continuing);
             }
@@ -1822,7 +2271,11 @@ fn sort_functions(module: &mut naga::Module) {
         return;
     }
 
-    let mut old: Vec<Option<(naga::Function, naga::Span)>> = module.functions.drain().map(|(_, f, s)| Some((f, s))).collect();
+    let mut old: Vec<Option<(naga::Function, naga::Span)>> = module
+        .functions
+        .drain()
+        .map(|(_, f, s)| Some((f, s)))
+        .collect();
     let mut map = vec![None; n];
 
     for &i in &order {
@@ -1830,7 +2283,8 @@ fn sort_functions(module: &mut naga::Module) {
         map[i] = Some(module.functions.append(f, s));
     }
 
-    let map: Vec<naga::Handle<naga::Function>> = map.into_iter().map(|h| h.expect("mapped")).collect();
+    let map: Vec<naga::Handle<naga::Function>> =
+        map.into_iter().map(|h| h.expect("mapped")).collect();
 
     for (_, f) in module.functions.iter_mut() {
         remap_function(f, &map);
@@ -1869,18 +2323,47 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
             // The compiler of the pinned X_ITE is ANGLE: its texts for the two commonest mistakes.
             if let Some(name) = message.strip_prefix("Unknown variable: ") {
                 out.push(format!("ERROR: 0:{line}: '{name}' : undeclared identifier"));
-            } else if let Some(name) = message.strip_prefix("Unknown function '").and_then(|m| m.strip_suffix('\'')) {
-                out.push(format!("ERROR: 0:{line}: '{name}' : no matching overloaded function found"));
-            } else if let Some(sel) = message.strip_prefix("Invalid swizzle for vector \"").and_then(|m| m.strip_suffix('"')) {
+            } else if let Some(name) = message
+                .strip_prefix("Unknown function '")
+                .and_then(|m| m.strip_suffix('\''))
+            {
+                out.push(format!(
+                    "ERROR: 0:{line}: '{name}' : no matching overloaded function found"
+                ));
+            } else if let Some(sel) = message
+                .strip_prefix("Invalid swizzle for vector \"")
+                .and_then(|m| m.strip_suffix('"'))
+            {
                 let sets = ["xyzw", "rgba", "stpq"];
                 let known = sets.iter().any(|s| sel.chars().all(|c| s.contains(c)));
-                out.push(format!("ERROR: 0:{line}: '{sel}' : {}", if known || sets.iter().any(|s| sel.chars().any(|c| s.contains(c))) { "vector field selection out of range" } else { "illegal vector field selection" }));
+                out.push(format!(
+                    "ERROR: 0:{line}: '{sel}' : {}",
+                    if known || sets.iter().any(|s| sel.chars().any(|c| s.contains(c))) {
+                        "vector field selection out of range"
+                    } else {
+                        "illegal vector field selection"
+                    }
+                ));
             } else if message.starts_with("Expected ") && message.contains(", found ") {
-                let token = err.meta.to_range().and_then(|r| e.text.get(r)).map(str::trim).filter(|t| !t.is_empty() && t.len() < 40).map(str::to_string).or_else(|| {
-                    let found = message.rsplit(", found ").next()?;
-                    found.strip_prefix("Identifier(\"").and_then(|x| x.strip_suffix("\")")).map(str::to_string).or_else(|| (found == "Semicolon").then(|| ";".to_string()))
-                });
-                out.push(format!("ERROR: 0:{line}: '{}' : syntax error", token.unwrap_or_default()));
+                let token = err
+                    .meta
+                    .to_range()
+                    .and_then(|r| e.text.get(r))
+                    .map(str::trim)
+                    .filter(|t| !t.is_empty() && t.len() < 40)
+                    .map(str::to_string)
+                    .or_else(|| {
+                        let found = message.rsplit(", found ").next()?;
+                        found
+                            .strip_prefix("Identifier(\"")
+                            .and_then(|x| x.strip_suffix("\")"))
+                            .map(str::to_string)
+                            .or_else(|| (found == "Semicolon").then(|| ";".to_string()))
+                    });
+                out.push(format!(
+                    "ERROR: 0:{line}: '{}' : syntax error",
+                    token.unwrap_or_default()
+                ));
             } else {
                 out.push(format!("ERROR: 0:{line}: {message}"));
             }
@@ -1899,19 +2382,34 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
         fix_fall_through(&mut ep.function.body);
     }
 
-    let info = naga::valid::Validator::new(naga::valid::ValidationFlags::all(), naga::valid::Capabilities::empty())
-        .validate(&module)
-        .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
-    let wgsl = naga::back::wgsl::write_string(&module, &info, naga::back::wgsl::WriterFlags::empty()).map_err(|err| format!("ERROR: 0:1: {err}"))?;
-    let again = naga::front::wgsl::parse_str(&wgsl).map_err(|err| format!("ERROR: 0:1: {}", err.message()))?;
-    naga::valid::Validator::new(naga::valid::ValidationFlags::all(), naga::valid::Capabilities::empty()).validate(&again).map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
+    let info = naga::valid::Validator::new(
+        naga::valid::ValidationFlags::all(),
+        naga::valid::Capabilities::empty(),
+    )
+    .validate(&module)
+    .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
+    let wgsl =
+        naga::back::wgsl::write_string(&module, &info, naga::back::wgsl::WriterFlags::empty())
+            .map_err(|err| format!("ERROR: 0:1: {err}"))?;
+    let again = naga::front::wgsl::parse_str(&wgsl)
+        .map_err(|err| format!("ERROR: 0:1: {}", err.message()))?;
+    naga::valid::Validator::new(
+        naga::valid::ValidationFlags::all(),
+        naga::valid::Capabilities::empty(),
+    )
+    .validate(&again)
+    .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
     Ok(wgsl)
 }
 
 // ---- public API -------------------------------------------------------------------------------
 
 fn parse_options(options: &[String]) -> Vec<String> {
-    if options.is_empty() { CUSTOM_OPTIONS.iter().map(|s| s.to_string()).collect() } else { options.to_vec() }
+    if options.is_empty() {
+        CUSTOM_OPTIONS.iter().map(|s| s.to_string()).collect()
+    } else {
+        options.to_vec()
+    }
 }
 
 /// ShaderPart.loadData's compile: does `source` compile as a `stage` shader? The error is the
@@ -1925,12 +2423,17 @@ pub fn compile_part(stage: Stage, source: &str, options: &[String]) -> Result<()
 }
 
 /// ComposedShader.set_loaded__: link the vertex and fragment parts.
-pub fn link(vertex: &[(String, Vec<String>)], fragment: &[(String, Vec<String>)]) -> Result<Program, String> {
+pub fn link(
+    vertex: &[(String, Vec<String>)],
+    fragment: &[(String, Vec<String>)],
+) -> Result<Program, String> {
     // X_ITE attaches every part; the program must contain both stages. ANGLE links several parts of one
     // stage (each has its own `main`; measured: the program draws, oracle/synthetic-rea-b08-shaders/bad-two-vertex.wrl);
     // which one wins is not known, this port links the first of each.
     let (Some(v), Some(f)) = (vertex.first(), fragment.first()) else {
-        return Err("The program must contain objects to form both a vertex and fragment shader.".into());
+        return Err(
+            "The program must contain objects to form both a vertex and fragment shader.".into(),
+        );
     };
 
     let va = analyze(Stage::Vertex, &v.0, &parse_options(&v.1))?;
@@ -1955,26 +2458,41 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, ty, array) in &p.uniforms {
             if let Some(u) = uniforms.iter().find(|u| u.name == *name) {
                 if u.ty != *ty || u.array != *array {
-                    return Err(format!("Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
+                    return Err(format!(
+                        "Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."
+                    ));
                 }
 
-                let precisions: Vec<&String> = parts.iter().filter_map(|q| q.uniform_precision.get(name)).collect();
+                let precisions: Vec<&String> = parts
+                    .iter()
+                    .filter_map(|q| q.uniform_precision.get(name))
+                    .collect();
 
                 if precisions.len() > 1 && precisions.windows(2).any(|w| w[0] != w[1]) {
-                    return Err(format!("Precisions of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
+                    return Err(format!(
+                        "Precisions of uniform '{name}' differ between VERTEX and FRAGMENT shaders."
+                    ));
                 }
 
                 continue;
             }
 
             let slots = ty_slots(ty, &structs) * array.unwrap_or(1);
-            uniforms.push(UniformDecl { name: name.clone(), ty: ty.clone(), array: *array, slot: next, slots });
+            uniforms.push(UniformDecl {
+                name: name.clone(),
+                ty: ty.clone(),
+                array: *array,
+                slot: next,
+                slots,
+            });
             next += slots;
         }
     }
 
     if next > MAX_SLOTS {
-        return Err(format!("ERROR: The uniforms need {next} vec4 slots, the limit is {MAX_SLOTS}."));
+        return Err(format!(
+            "ERROR: The uniforms need {next} vec4 slots, the limit is {MAX_SLOTS}."
+        ));
     }
 
     let mut leaves = HashMap::new();
@@ -1986,10 +2504,26 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         match u.array {
             Some(len) => {
                 for k in 0..len {
-                    emit_copy(&mut unused, &format!("{}[{k}]", u.name), &u.ty, &mut slot, &structs, &mut leaves, false);
+                    emit_copy(
+                        &mut unused,
+                        &format!("{}[{k}]", u.name),
+                        &u.ty,
+                        &mut slot,
+                        &structs,
+                        &mut leaves,
+                        false,
+                    );
                 }
             }
-            None => emit_copy(&mut unused, &u.name, &u.ty, &mut slot, &structs, &mut leaves, false),
+            None => emit_copy(
+                &mut unused,
+                &u.name,
+                &u.ty,
+                &mut slot,
+                &structs,
+                &mut leaves,
+                false,
+            ),
         }
     }
 
@@ -2002,7 +2536,9 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, array, dim) in &p.samplers {
             if let Some((d, a)) = seen.get(name) {
                 if d != dim || a != array {
-                    return Err(format!("Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
+                    return Err(format!(
+                        "Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."
+                    ));
                 }
 
                 continue;
@@ -2014,19 +2550,32 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
                 Some(len) => {
                     for k in 0..*len {
                         sampler_elem.insert((name.clone(), Some(k)), samplers.len());
-                        samplers.push(SamplerDecl { name: name.clone(), index: Some(k), dim: *dim, binding: 2 * samplers.len() as u32 });
+                        samplers.push(SamplerDecl {
+                            name: name.clone(),
+                            index: Some(k),
+                            dim: *dim,
+                            binding: 2 * samplers.len() as u32,
+                        });
                     }
                 }
                 None => {
                     sampler_elem.insert((name.clone(), None), samplers.len());
-                    samplers.push(SamplerDecl { name: name.clone(), index: None, dim: *dim, binding: 2 * samplers.len() as u32 });
+                    samplers.push(SamplerDecl {
+                        name: name.clone(),
+                        index: None,
+                        dim: *dim,
+                        binding: 2 * samplers.len() as u32,
+                    });
                 }
             }
         }
     }
 
     if samplers.len() > 8 {
-        return Err(format!("ERROR: {} samplers; at most 8 are supported.", samplers.len()));
+        return Err(format!(
+            "ERROR: {} samplers; at most 8 are supported.",
+            samplers.len()
+        ));
     }
 
     // Attributes.
@@ -2061,7 +2610,11 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
             }
 
             attr_locations.insert(name.clone(), loc);
-            attributes.push(AttrDecl { name: name.clone(), location: loc, components });
+            attributes.push(AttrDecl {
+                name: name.clone(),
+                location: loc,
+                components,
+            });
         }
     }
 
@@ -2077,7 +2630,14 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
             }
 
             varying_locations.insert(name.clone(), loc);
-            loc += array.unwrap_or(1) * if ty == "mat4" { 4 } else if ty == "mat3" { 3 } else { 1 };
+            loc += array.unwrap_or(1)
+                * if ty == "mat4" {
+                    4
+                } else if ty == "mat3" {
+                    3
+                } else {
+                    1
+                };
         }
     }
 
@@ -2088,8 +2648,16 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, ty, ..) in &f.varyings {
             match v.varyings.iter().find(|(n, ..)| n == name) {
                 Some((_, vty, ..)) if vty == ty => {}
-                Some(_) => return Err(format!("Types of varying '{name}' differ between VERTEX and FRAGMENT shaders.")),
-                None => return Err(format!("FRAGMENT varying {name} does not match any VERTEX varying")),
+                Some(_) => {
+                    return Err(format!(
+                        "Types of varying '{name}' differ between VERTEX and FRAGMENT shaders."
+                    ));
+                }
+                None => {
+                    return Err(format!(
+                        "FRAGMENT varying {name} does not match any VERTEX varying"
+                    ));
+                }
             }
         }
     } else {
@@ -2101,7 +2669,16 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         }
     }
 
-    let info = LinkInfo { slots: next, samplers: &samplers, sampler_elem: &sampler_elem, attr_locations: &attr_locations, varying_locations: &varying_locations, structs: &structs, leaves: &leaves, uniforms: &uniforms };
+    let info = LinkInfo {
+        slots: next,
+        samplers: &samplers,
+        sampler_elem: &sampler_elem,
+        attr_locations: &attr_locations,
+        varying_locations: &varying_locations,
+        structs: &structs,
+        leaves: &leaves,
+        uniforms: &uniforms,
+    };
     let mut vs_wgsl = String::new();
     let mut fs_wgsl = String::new();
     let mut h = DefaultHasher::new();
@@ -2119,9 +2696,28 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
 
     let warnings = deprecated_warnings(parts, &leaves, &samplers, &attributes);
 
-    let vertex_outputs = parts.iter().filter(|p| p.stage == Stage::Vertex).flat_map(|p| p.varyings.iter().map(|(n, _, _, a)| (n.clone(), a.is_some()))).collect();
+    let vertex_outputs = parts
+        .iter()
+        .filter(|p| p.stage == Stage::Vertex)
+        .flat_map(|p| {
+            p.varyings
+                .iter()
+                .map(|(n, _, _, a)| (n.clone(), a.is_some()))
+        })
+        .collect();
 
-    Ok(Program { key: h.finish(), vs_wgsl, fs_wgsl, slots: next, uniforms, leaves, samplers, attributes, warnings, vertex_outputs })
+    Ok(Program {
+        key: h.finish(),
+        vs_wgsl,
+        fs_wgsl,
+        slots: next,
+        uniforms,
+        leaves,
+        samplers,
+        attributes,
+        warnings,
+        vertex_outputs,
+    })
 }
 
 // ---- helpers for the host ---------------------------------------------------------------------
@@ -2135,7 +2731,9 @@ impl Program {
     /// Write floats at a leaf path (`x3d_ModelViewMatrix`, `x3d_LightSource[0].color`). Columns of
     /// a matrix come in column-major order; ints and bools are written as numbers.
     pub fn set(&self, buf: &mut [[f32; 4]], path: &str, values: &[f32]) -> bool {
-        let Some(leaf) = self.leaves.get(path) else { return false };
+        let Some(leaf) = self.leaves.get(path) else {
+            return false;
+        };
         let (rows, cols) = match &leaf.ty {
             Ty::Scalar(_) => (1, 1),
             Ty::Vec(_, n) => (*n as usize, 1),
@@ -2172,7 +2770,12 @@ impl Program {
 
 /// X3DProgrammableShaderObject.getDefaultUniformsAndAttributes: a legacy name found where the new one is
 /// absent logs a warning, in the order the code asks (fog, lights, material, cube maps, texture coordinates).
-fn deprecated_warnings(parts: &[&Analysis], leaves: &HashMap<String, Leaf>, samplers: &[SamplerDecl], attributes: &[AttrDecl]) -> Vec<String> {
+fn deprecated_warnings(
+    parts: &[&Analysis],
+    leaves: &HashMap<String, Leaf>,
+    samplers: &[SamplerDecl],
+    attributes: &[AttrDecl],
+) -> Vec<String> {
     let active_leaf = |path: &str| -> bool {
         if !leaves.contains_key(path) {
             return false;
@@ -2189,8 +2792,18 @@ fn deprecated_warnings(parts: &[&Analysis], leaves: &HashMap<String, Leaf>, samp
                 }
         })
     };
-    let active_sampler = |name: &str, index: u32| samplers.iter().any(|s| s.name == name && s.index == Some(index) && parts.iter().any(|p| p.used.idents.contains(name)));
-    let uniform = |old: &str, new: &str| format!("Using uniform location name '{old}' is deprecated, use '{new}'. See https://create3000.github.io/x_ite/custom-shaders.");
+    let active_sampler = |name: &str, index: u32| {
+        samplers.iter().any(|s| {
+            s.name == name
+                && s.index == Some(index)
+                && parts.iter().any(|p| p.used.idents.contains(name))
+        })
+    };
+    let uniform = |old: &str, new: &str| {
+        format!(
+            "Using uniform location name '{old}' is deprecated, use '{new}'. See https://create3000.github.io/x_ite/custom-shaders."
+        )
+    };
     let mut warnings = vec![];
     let mut check = |old: String, new: String| {
         if !active_leaf(&new) && active_leaf(&old) {
@@ -2198,7 +2811,12 @@ fn deprecated_warnings(parts: &[&Analysis], leaves: &HashMap<String, Leaf>, samp
         }
     };
 
-    for (new, old) in [("color", "Color"), ("visibilityStart", "VisibilityStart"), ("visibilityRange", "VisibilityRange"), ("matrix", "Matrix")] {
+    for (new, old) in [
+        ("color", "Color"),
+        ("visibilityStart", "VisibilityStart"),
+        ("visibilityRange", "VisibilityRange"),
+        ("matrix", "Matrix"),
+    ] {
         check(format!("x3d_Fog{old}"), format!("x3d_Fog.{new}"));
     }
 
@@ -2216,22 +2834,43 @@ fn deprecated_warnings(parts: &[&Analysis], leaves: &HashMap<String, Leaf>, samp
             ("radius", "Radius"),
             ("matrix", "Matrix"),
         ] {
-            check(format!("x3d_Light{old}[{i}]"), format!("x3d_LightSource[{i}].{new}"));
+            check(
+                format!("x3d_Light{old}[{i}]"),
+                format!("x3d_LightSource[{i}].{new}"),
+            );
         }
     }
 
-    for m in ["ambientIntensity", "diffuseColor", "specularColor", "emissiveColor", "shininess", "transparency"] {
-        check(format!("x3d_FrontMaterial.{m}"), format!("x3d_Material.{m}"));
+    for m in [
+        "ambientIntensity",
+        "diffuseColor",
+        "specularColor",
+        "emissiveColor",
+        "shininess",
+        "transparency",
+    ] {
+        check(
+            format!("x3d_FrontMaterial.{m}"),
+            format!("x3d_Material.{m}"),
+        );
     }
 
     for i in 0..4 {
         if !active_sampler("x3d_TextureCube", i) && active_sampler("x3d_CubeMapTexture", i) {
-            warnings.push(uniform(&format!("x3d_CubeMapTexture[{i}]"), &format!("x3d_TextureCube[{i}]")));
+            warnings.push(uniform(
+                &format!("x3d_CubeMapTexture[{i}]"),
+                &format!("x3d_TextureCube[{i}]"),
+            ));
         }
     }
 
     // The attribute x3d_TexCoord (texture coordinate 0) is deprecated for x3d_TexCoord0.
-    let attribute = |n: &str| attributes.iter().any(|a| a.name == n) && parts.iter().any(|p| p.stage == Stage::Vertex && p.used.idents.contains(n));
+    let attribute = |n: &str| {
+        attributes.iter().any(|a| a.name == n)
+            && parts
+                .iter()
+                .any(|p| p.stage == Stage::Vertex && p.used.idents.contains(n))
+    };
 
     if !attribute("x3d_TexCoord0") && attribute("x3d_TexCoord") {
         warnings.push("Using attribute location name 'x3d_TexCoord' is deprecated, use 'x3d_TexCoord0'. See https://create3000.github.io/x_ite/custom-shaders.".to_string());
@@ -2258,16 +2897,24 @@ pub fn check_transform_feedback(program: &Program, varyings: &[String]) -> Resul
         }
 
         if seen.contains(&name.as_str()) {
-            return Err(format!("Two transform feedback varyings specify the same output variable ({name})."));
+            return Err(format!(
+                "Two transform feedback varyings specify the same output variable ({name})."
+            ));
         }
 
         seen.push(name);
 
         match program.vertex_outputs.iter().find(|(n, _)| n == name) {
-            Some((_, true)) => return Err("Capture of arrays is undefined and not supported.".into()),
+            Some((_, true)) => {
+                return Err("Capture of arrays is undefined and not supported.".into());
+            }
             Some(_) => {}
             None if matches!(name.as_str(), "gl_Position" | "gl_PointSize") => {}
-            None => return Err(format!("Transform feedback varying {name} does not exist in the vertex shader.")),
+            None => {
+                return Err(format!(
+                    "Transform feedback varying {name} does not exist in the vertex shader."
+                ));
+            }
         }
     }
 
@@ -2275,7 +2922,10 @@ pub fn check_transform_feedback(program: &Program, varyings: &[String]) -> Resul
 }
 
 /// Memoized link (the node link and the renderer ask for the same program).
-pub fn link_cached(vertex: &[(String, Vec<String>)], fragment: &[(String, Vec<String>)]) -> Result<std::rc::Rc<Program>, String> {
+pub fn link_cached(
+    vertex: &[(String, Vec<String>)],
+    fragment: &[(String, Vec<String>)],
+) -> Result<std::rc::Rc<Program>, String> {
     thread_local! {
         static CACHE: std::cell::RefCell<HashMap<u64, Result<std::rc::Rc<Program>, String>>> = Default::default();
     }

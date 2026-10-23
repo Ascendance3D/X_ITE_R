@@ -17,19 +17,32 @@ use std::cell::{Ref, RefCell, RefMut};
 use std::rc::Rc;
 use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 
-use super::changes::{make_change, make_change_from_history, replace_range, BeforeChange, BeforeSelectionChange, Change};
 use super::change_measurement::compute_replaced_sel;
-use super::history::{copy_history_array, data_to_events, events_to_data, HistRef, History, HistoryData, HistorySize};
-use super::line::{new_line, LineHandle, LineRef};
-use super::mark_text::{copy_shared_markers, detach_shared_markers, find_shared_markers, mark_text, MarkOptions, Marker, MarkerType, TextMarker};
-use super::selection::{normalize_selection, simple_selection, Range, Sel, SelRange, Selection};
-use super::selection_updates::{extend_selection, extend_selections, select_all, set_selection, set_selection_replace_history, set_simple_selection, SelOptions};
-use super::spans::{height_at_line, line_is_hidden, line_length, visual_line, visual_line_end_no, visual_line_no};
+use super::changes::{
+    BeforeChange, BeforeSelectionChange, Change, make_change, make_change_from_history,
+    replace_range,
+};
+use super::history::{
+    HistRef, History, HistoryData, HistorySize, copy_history_array, data_to_events, events_to_data,
+};
+use super::line::{LineHandle, LineRef, new_line};
+use super::mark_text::{
+    MarkOptions, Marker, MarkerType, TextMarker, copy_shared_markers, detach_shared_markers,
+    find_shared_markers, mark_text,
+};
+use super::selection::{Range, Sel, SelRange, Selection, normalize_selection, simple_selection};
+use super::selection_updates::{
+    SelOptions, extend_selection, extend_selections, select_all, set_selection,
+    set_selection_replace_history, set_simple_selection,
+};
+use super::spans::{
+    height_at_line, line_is_hidden, line_length, visual_line, visual_line_end_no, visual_line_no,
+};
 use super::tree::Tree;
-use crate::pos::{Pos, PosRef, CH_END};
-use crate::text::{from_u16, join, split_by, split_lines_auto, to_u16, Text};
-use crate::util::bidi::Direction;
 use crate::CmError;
+use crate::pos::{CH_END, Pos, PosRef};
+use crate::text::{Text, from_u16, join, split_by, split_lines_auto, to_u16};
+use crate::util::bidi::Direction;
 
 static NEXT_DOC_ID: AtomicU32 = AtomicU32::new(0);
 static NEXT_OP_ID: AtomicU64 = AtomicU64::new(0);
@@ -49,7 +62,12 @@ pub struct EditorSemantics {
 
 impl Default for EditorSemantics {
     fn default() -> Self {
-        EditorSemantics { history_event_delay: 1250.0, whole_line_update_before: true, selections_may_touch: false, undo_depth: 200.0 }
+        EditorSemantics {
+            history_event_delay: 1250.0,
+            whole_line_update_before: true,
+            selections_may_touch: false,
+            undo_depth: 200.0,
+        }
     }
 }
 
@@ -148,15 +166,36 @@ impl Doc {
     // Construction
 
     pub fn new(text: &str) -> Doc {
-        Doc::with_options(DocOptions { text: text.to_string(), ..Default::default() })
+        Doc::with_options(DocOptions {
+            text: text.to_string(),
+            ..Default::default()
+        })
     }
 
     pub fn with_options(o: DocOptions) -> Doc {
         let lines = o.lines.map(|ls| ls.iter().map(|l| to_u16(l)).collect());
-        Doc::construct(lines, &o.text, o.mode, o.first_line, o.line_sep.map(|s| to_u16(&s)), if o.rtl { Direction::Rtl } else { Direction::Ltr })
+        Doc::construct(
+            lines,
+            &o.text,
+            o.mode,
+            o.first_line,
+            o.line_sep.map(|s| to_u16(&s)),
+            if o.rtl {
+                Direction::Rtl
+            } else {
+                Direction::Ltr
+            },
+        )
     }
 
-    fn construct(lines: Option<Vec<Text>>, text: &str, mode: Option<String>, first_line: i64, line_sep: Option<Text>, direction: Direction) -> Doc {
+    fn construct(
+        lines: Option<Vec<Text>>,
+        text: &str,
+        mode: Option<String>,
+        first_line: i64,
+        line_sep: Option<Text>,
+        direction: Direction,
+    ) -> Doc {
         let start = PosRef::lc(first_line, 0);
         let inner = DocInner {
             id: NEXT_DOC_ID.fetch_add(1, Ordering::Relaxed) + 1,
@@ -187,8 +226,22 @@ impl Doc {
             None => doc.split_lines_u16(&to_u16(text)),
         };
         let p = Pos::new(first_line, 0);
-        super::document_data::update_doc(&doc, &Change { from: p, to: p, text: Some(text), origin: None, full: false }, None);
-        set_selection(&doc, simple_selection(PosRef::lc(first_line, 0), None), Some(&dont_scroll()));
+        super::document_data::update_doc(
+            &doc,
+            &Change {
+                from: p,
+                to: p,
+                text: Some(text),
+                origin: None,
+                full: false,
+            },
+            None,
+        );
+        set_selection(
+            &doc,
+            simple_selection(PosRef::lc(first_line, 0), None),
+            Some(&dont_scroll()),
+        );
         doc
     }
 
@@ -218,10 +271,15 @@ impl Doc {
         self.inner().editor.is_some()
     }
     pub(crate) fn history_event_delay(&self) -> f64 {
-        self.inner().editor.map(|e| e.history_event_delay).unwrap_or(500.0)
+        self.inner()
+            .editor
+            .map(|e| e.history_event_delay)
+            .unwrap_or(500.0)
     }
     pub(crate) fn whole_line_update_before(&self) -> bool {
-        self.inner().editor.is_none_or(|e| e.whole_line_update_before)
+        self.inner()
+            .editor
+            .is_none_or(|e| e.whole_line_update_before)
     }
     pub(crate) fn selections_may_touch(&self) -> bool {
         self.inner().editor.is_some_and(|e| e.selections_may_touch)
@@ -256,7 +314,7 @@ impl Doc {
         struct End<'a>(&'a Doc);
         impl Drop for End<'_> {
             fn drop(&mut self) {
-                if let Ok(mut i) = self.0 .0.try_borrow_mut() {
+                if let Ok(mut i) = self.0.0.try_borrow_mut() {
                     i.cur_op = None;
                     i.op_span_arrays.clear();
                 }
@@ -338,8 +396,19 @@ impl Doc {
     /// `linkedDocs(doc, f, sharedHistOnly)` as a list of `(doc, sharedHist)` in the
     /// order the JS visits them.
     pub(crate) fn linked_docs(&self, shared_hist_only: bool) -> Vec<(Doc, bool)> {
-        fn propagate(doc: &Doc, skip: Option<&Doc>, shared_hist: bool, only: bool, out: &mut Vec<(Doc, bool)>) {
-            let links: Vec<(Doc, bool)> = doc.inner().linked.iter().map(|l| (l.doc.clone(), l.shared_hist)).collect();
+        fn propagate(
+            doc: &Doc,
+            skip: Option<&Doc>,
+            shared_hist: bool,
+            only: bool,
+            out: &mut Vec<(Doc, bool)>,
+        ) {
+            let links: Vec<(Doc, bool)> = doc
+                .inner()
+                .linked
+                .iter()
+                .map(|l| (l.doc.clone(), l.shared_hist))
+                .collect();
             for (d, rel_shared) in links {
                 if skip.is_some_and(|s| s.ptr_eq(&d)) {
                     continue;
@@ -378,7 +447,12 @@ impl Doc {
         }
     }
 
-    pub(crate) fn find_marks_filtered(&self, from: Pos, to: Pos, filter: Option<&dyn Fn(&TextMarker) -> bool>) -> Vec<Marker> {
+    pub(crate) fn find_marks_filtered(
+        &self,
+        from: Pos,
+        to: Pos,
+        filter: Option<&dyn Fn(&TextMarker) -> bool>,
+    ) -> Vec<Marker> {
         let from = self.clip_pos(from);
         let to = self.clip_pos(to);
         let mut found = Vec::new();
@@ -387,7 +461,9 @@ impl Doc {
             let spans = line.borrow().marked_spans.as_ref().map(|a| a.get());
             if let Some(spans) = spans {
                 for span in &spans {
-                    let excluded = span.to.is_some_and(|t| line_no == from.line && from.ch >= t)
+                    let excluded = span
+                        .to
+                        .is_some_and(|t| line_no == from.line && from.ch >= t)
                         || span.from.is_none() && line_no != from.line
                         || span.from.is_some_and(|f| line_no == to.line && f >= to.ch);
                     if !excluded && filter.is_none_or(|f| f(&span.marker)) {
@@ -464,7 +540,12 @@ impl Doc {
     }
     /// `goalColumn` of each current selection range (`moveV`, src/edit/methods.js).
     pub fn goal_columns(&self) -> Vec<Option<f64>> {
-        self.inner().sel.ranges.iter().map(|r| r.goal_column.get()).collect()
+        self.inner()
+            .sel
+            .ranges
+            .iter()
+            .map(|r| r.goal_column.get())
+            .collect()
     }
     /// `doc.sel.ranges[i].goalColumn = v`.
     pub fn set_goal_column(&self, i: usize, v: Option<f64>) {
@@ -484,7 +565,13 @@ impl Doc {
         super::selection_updates::skip_atomic(self, &p, o.as_ref(), Some(bias), may_clear).get()
     }
     /// `replaceOneSelection(doc, i, range, options)` (src/model/selection_updates.js).
-    pub fn replace_one_selection(&self, i: usize, anchor: Pos, head: Pos, options: Option<SelOptions>) {
+    pub fn replace_one_selection(
+        &self,
+        i: usize,
+        anchor: Pos,
+        head: Pos,
+        options: Option<SelOptions>,
+    ) {
         self.in_op(|| {
             let range = if anchor == head {
                 let p = PosRef::new(anchor);
@@ -499,11 +586,24 @@ impl Doc {
     /// positions passed through unclipped, as `applyTextInput` does.
     pub fn make_change_lines(&self, from: Pos, to: Pos, lines: Vec<String>, origin: Option<&str>) {
         let text: Vec<Text> = lines.iter().map(|l| to_u16(l)).collect();
-        make_change(self, Change { from, to, text: Some(text), origin: origin.map(|s| s.to_string()), full: false }, false);
+        make_change(
+            self,
+            Change {
+                from,
+                to,
+                text: Some(text),
+                origin: origin.map(|s| s.to_string()),
+                full: false,
+            },
+            false,
+        );
     }
 
     /// `on("beforeSelectionChange", f)`.
-    pub fn on_before_selection_change<F: Fn(&Doc, &mut BeforeSelectionChange) + 'static>(&self, f: F) {
+    pub fn on_before_selection_change<F: Fn(&Doc, &mut BeforeSelectionChange) + 'static>(
+        &self,
+        f: F,
+    ) {
         self.inner_mut().before_selection_change.push(Rc::new(f));
     }
 
@@ -524,11 +624,17 @@ impl Doc {
     }
     /// `getValue(false)`.
     pub fn get_value_lines(&self) -> Vec<String> {
-        self.get_value_lines_utf16().iter().map(|l| from_u16(l)).collect()
+        self.get_value_lines_utf16()
+            .iter()
+            .map(|l| from_u16(l))
+            .collect()
     }
     fn get_value_lines_utf16(&self) -> Vec<Text> {
         let (first, size) = (self.first_line(), self.size() as i64);
-        self.iter_lines(first, first + size).iter().map(|l| l.borrow().text.clone()).collect()
+        self.iter_lines(first, first + size)
+            .iter()
+            .map(|l| l.borrow().text.clone())
+            .collect()
     }
 
     /// `setValue(code)`.
@@ -539,8 +645,22 @@ impl Doc {
             let top = Pos::new(first, 0);
             let end = Pos::new(last, self.get_line_ref(last).borrow().text.len() as i64);
             let text = self.split_lines_u16(&to_u16(code));
-            make_change(self, Change { from: top, to: end, text: Some(text), origin: Some("setValue".into()), full: true }, true);
-            set_selection(self, simple_selection(PosRef::new(top), None), Some(&dont_scroll()));
+            make_change(
+                self,
+                Change {
+                    from: top,
+                    to: end,
+                    text: Some(text),
+                    origin: Some("setValue".into()),
+                    full: true,
+                },
+                true,
+            );
+            set_selection(
+                self,
+                simple_selection(PosRef::new(top), None),
+                Some(&dont_scroll()),
+            );
         })
     }
 
@@ -550,15 +670,33 @@ impl Doc {
         self.replace_range_lines_u16(lines, from, to, origin);
     }
     /// `replaceRange(arrayOfLines, from, to, origin)`.
-    pub fn replace_range_lines(&self, lines: &[&str], from: Pos, to: Option<Pos>, origin: Option<&str>) {
+    pub fn replace_range_lines(
+        &self,
+        lines: &[&str],
+        from: Pos,
+        to: Option<Pos>,
+        origin: Option<&str>,
+    ) {
         self.replace_range_lines_u16(lines.iter().map(|l| to_u16(l)).collect(), from, to, origin);
     }
     /// `replaceRange(code, from, to, origin)` with UTF-16 text (keeps lone surrogates).
-    pub fn replace_range_utf16(&self, code: &[u16], from: Pos, to: Option<Pos>, origin: Option<&str>) {
+    pub fn replace_range_utf16(
+        &self,
+        code: &[u16],
+        from: Pos,
+        to: Option<Pos>,
+        origin: Option<&str>,
+    ) {
         let lines = self.split_lines_u16(code);
         self.replace_range_lines_u16(lines, from, to, origin);
     }
-    fn replace_range_lines_u16(&self, lines: Vec<Text>, from: Pos, to: Option<Pos>, origin: Option<&str>) {
+    fn replace_range_lines_u16(
+        &self,
+        lines: Vec<Text>,
+        from: Pos,
+        to: Option<Pos>,
+        origin: Option<&str>,
+    ) {
         let from = self.clip_pos(from);
         let to = match to {
             Some(t) => self.clip_pos(t),
@@ -582,7 +720,10 @@ impl Doc {
     }
     /// `getRange(from, to, false)`.
     pub fn get_range_lines(&self, from: Pos, to: Pos) -> Vec<String> {
-        self.get_between(self.clip_pos(from), self.clip_pos(to)).iter().map(|l| from_u16(l)).collect()
+        self.get_between(self.clip_pos(from), self.clip_pos(to))
+            .iter()
+            .map(|l| from_u16(l))
+            .collect()
     }
 
     /// `getLine(n)`: `None` (JS undefined) outside the document.
@@ -593,7 +734,11 @@ impl Doc {
         self.get_line_handle(line).map(|h| h.text_utf16())
     }
     pub fn get_line_handle(&self, line: i64) -> Option<LineHandle> {
-        if self.is_line(line) { Some(LineHandle(self.get_line_ref(line))) } else { None }
+        if self.is_line(line) {
+            Some(LineHandle(self.get_line_ref(line)))
+        } else {
+            None
+        }
     }
     /// `getLineNumber(handle)`: `None` once the line has been removed.
     pub fn get_line_number(&self, handle: &LineHandle) -> Option<i64> {
@@ -709,7 +854,12 @@ impl Doc {
     }
     /// `setSelections(ranges, primary, options)`; each range is `(anchor, head)` with
     /// `head == None` meaning a cursor. An empty slice does nothing.
-    pub fn set_selections(&self, ranges: &[(Pos, Option<Pos>)], primary: Option<usize>, options: Option<SelOptions>) {
+    pub fn set_selections(
+        &self,
+        ranges: &[(Pos, Option<Pos>)],
+        primary: Option<usize>,
+        options: Option<SelOptions>,
+    ) {
         if ranges.is_empty() {
             return;
         }
@@ -722,7 +872,8 @@ impl Doc {
                     Range::new(self.clip_pos_ref(&a), self.clip_pos_ref(&h))
                 })
                 .collect();
-            let primary = primary.unwrap_or_else(|| (ranges.len() - 1).min(self.inner().sel.prim_index));
+            let primary =
+                primary.unwrap_or_else(|| (ranges.len() - 1).min(self.inner().sel.prim_index));
             let sel = normalize_selection(self.selections_may_touch(), out, primary);
             set_selection(self, sel, options.as_ref());
         })
@@ -762,7 +913,10 @@ impl Doc {
     }
     /// `getSelections(lineSep)`.
     pub fn get_selections(&self, line_sep: Option<&str>) -> Vec<String> {
-        self.get_selections_utf16(line_sep).iter().map(|t| from_u16(t)).collect()
+        self.get_selections_utf16(line_sep)
+            .iter()
+            .map(|t| from_u16(t))
+            .collect()
     }
     pub fn get_selections_utf16(&self, line_sep: Option<&str>) -> Vec<Text> {
         let sel = self.inner().sel.clone();
@@ -770,7 +924,10 @@ impl Doc {
             Some(s) if !s.is_empty() => to_u16(s),
             _ => self.line_separator_u16(),
         };
-        sel.ranges.iter().map(|r| join(&self.get_between(r.from().get(), r.to().get()), &sep)).collect()
+        sel.ranges
+            .iter()
+            .map(|r| join(&self.get_between(r.from().get(), r.to().get()), &sep))
+            .collect()
     }
     /// `replaceSelection(code, collapse, origin)`; origin defaults to `"+input"`.
     pub fn replace_selection(&self, code: &str, collapse: Option<&str>, origin: Option<&str>) {
@@ -800,7 +957,9 @@ impl Doc {
                 })
                 .collect();
             let new_sel = match collapse {
-                Some(c) if !c.is_empty() && c != "end" => Some(compute_replaced_sel(self, &changes, c)),
+                Some(c) if !c.is_empty() && c != "end" => {
+                    Some(compute_replaced_sel(self, &changes, c))
+                }
                 _ => None,
             };
             for change in changes.into_iter().rev() {
@@ -879,7 +1038,10 @@ impl Doc {
     pub fn get_history(&self) -> HistoryData {
         let h = self.history_rc();
         let h = h.borrow();
-        HistoryData { done: events_to_data(&h.done), undone: events_to_data(&h.undone) }
+        HistoryData {
+            done: events_to_data(&h.done),
+            undone: events_to_data(&h.undone),
+        }
     }
     /// `setHistory(data)`. Like the JS, this gives *only this document* a new history
     /// object, even when it was shared with linked documents.
@@ -914,15 +1076,30 @@ impl Doc {
         mark_text(self, f, t, &options, MarkerType::Range)
     }
     /// `setBookmark(pos, {insertLeft, shared})`. Widgets are view-only.
-    pub fn set_bookmark(&self, pos: Pos, insert_left: bool, shared: bool) -> Result<Marker, CmError> {
-        let opts = MarkOptions { insert_left, clear_when_empty: Some(false), shared, ..Default::default() };
+    pub fn set_bookmark(
+        &self,
+        pos: Pos,
+        insert_left: bool,
+        shared: bool,
+    ) -> Result<Marker, CmError> {
+        let opts = MarkOptions {
+            insert_left,
+            clear_when_empty: Some(false),
+            shared,
+            ..Default::default()
+        };
         let p = self.clip_pos(pos);
         mark_text(self, p, p, &opts, MarkerType::Bookmark)
     }
     /// `findMarksAt(pos)`.
     pub fn find_marks_at(&self, pos: Pos) -> Vec<Marker> {
         let pos = self.clip_pos(pos);
-        let spans = self.get_line_ref(pos.line).borrow().marked_spans.as_ref().map(|a| a.get());
+        let spans = self
+            .get_line_ref(pos.line)
+            .borrow()
+            .marked_spans
+            .as_ref()
+            .map(|a| a.get());
         let mut markers = Vec::new();
         for span in spans.iter().flatten() {
             if span.from.is_none_or(|f| f <= pos.ch) && span.to.is_none_or(|t| t >= pos.ch) {
@@ -932,7 +1109,12 @@ impl Doc {
         markers
     }
     /// `findMarks(from, to, filter)`.
-    pub fn find_marks(&self, from: Pos, to: Pos, filter: Option<&dyn Fn(&TextMarker) -> bool>) -> Vec<Marker> {
+    pub fn find_marks(
+        &self,
+        from: Pos,
+        to: Pos,
+        filter: Option<&dyn Fn(&TextMarker) -> bool>,
+    ) -> Vec<Marker> {
         self.find_marks_filtered(from, to, filter)
     }
     /// `getAllMarks()`: note this returns the per-document markers, not their shared
@@ -940,7 +1122,14 @@ impl Doc {
     pub fn get_all_marks(&self) -> Vec<TextMarker> {
         let mut markers = Vec::new();
         for line in self.iter_all_js() {
-            for s in line.borrow().marked_spans.as_ref().map(|a| a.get()).iter().flatten() {
+            for s in line
+                .borrow()
+                .marked_spans
+                .as_ref()
+                .map(|a| a.get())
+                .iter()
+                .flatten()
+            {
                 if s.from.is_some() {
                     markers.push(s.marker.clone());
                 }
@@ -990,7 +1179,11 @@ impl Doc {
     /// `copy(copyHistory)`. The copy shares the selection object.
     pub fn copy(&self, copy_history: bool) -> Doc {
         let (first, size) = (self.first_line(), self.size() as i64);
-        let lines: Vec<Text> = self.iter_lines(first, first + size).iter().map(|l| l.borrow().text.clone()).collect();
+        let lines: Vec<Text> = self
+            .iter_lines(first, first + size)
+            .iter()
+            .map(|l| l.borrow().text.clone())
+            .collect();
         let (mode, sep, dir) = {
             let i = self.inner();
             (i.mode_option.clone(), i.line_sep.clone(), i.direction)
@@ -1024,18 +1217,34 @@ impl Doc {
                 to = t;
             }
         }
-        let lines: Vec<Text> = self.iter_lines(from, to).iter().map(|l| l.borrow().text.clone()).collect();
+        let lines: Vec<Text> = self
+            .iter_lines(from, to)
+            .iter()
+            .map(|l| l.borrow().text.clone())
+            .collect();
         let (mode, sep, dir) = {
             let i = self.inner();
-            (options.mode.clone().or_else(|| i.mode_option.clone()), i.line_sep.clone(), i.direction)
+            (
+                options.mode.clone().or_else(|| i.mode_option.clone()),
+                i.line_sep.clone(),
+                i.direction,
+            )
         };
         let copy = Doc::construct(Some(lines), "", mode, from, sep, dir);
         if options.shared_hist {
             let h = self.history_rc();
             copy.inner_mut().history = h;
         }
-        self.inner_mut().linked.push(Link { doc: copy.clone(), is_parent: false, shared_hist: options.shared_hist });
-        copy.inner_mut().linked = vec![Link { doc: self.clone(), is_parent: true, shared_hist: options.shared_hist }];
+        self.inner_mut().linked.push(Link {
+            doc: copy.clone(),
+            is_parent: false,
+            shared_hist: options.shared_hist,
+        });
+        copy.inner_mut().linked = vec![Link {
+            doc: self.clone(),
+            is_parent: true,
+            shared_hist: options.shared_hist,
+        }];
         copy_shared_markers(&copy, &find_shared_markers(self))?;
         Ok(copy)
     }
@@ -1063,7 +1272,10 @@ impl Doc {
                 (Vec::new(), Vec::new())
             } else {
                 let mut h = src.borrow_mut();
-                (copy_history_array(&mut h.done, Some(&split_ids), false), copy_history_array(&mut h.undone, Some(&split_ids), false))
+                (
+                    copy_history_array(&mut h.done, Some(&split_ids), false),
+                    copy_history_array(&mut h.undone, Some(&split_ids), false),
+                )
             };
             let mut n = new.borrow_mut();
             n.done = done;
@@ -1080,7 +1292,10 @@ impl Doc {
 
     /// `splitLines(str)`.
     pub fn split_lines(&self, s: &str) -> Vec<String> {
-        self.split_lines_u16(&to_u16(s)).iter().map(|l| from_u16(l)).collect()
+        self.split_lines_u16(&to_u16(s))
+            .iter()
+            .map(|l| from_u16(l))
+            .collect()
     }
     /// `lineSeparator()`.
     pub fn line_separator(&self) -> String {
@@ -1102,22 +1317,33 @@ impl Doc {
     pub fn set_line_separator_option(&self, sep: Option<&str>) {
         self.in_op(|| {
             self.set_line_separator(sep);
-            let Some(val) = sep.map(to_u16).filter(|v| !v.is_empty()) else { return };
+            let Some(val) = sep.map(to_u16).filter(|v| !v.is_empty()) else {
+                return;
+            };
             let mut breaks = Vec::new();
             let mut line_no = self.first_line();
-            self.each_line(self.first_line(), self.first_line() + self.line_count() as i64, |h| {
-                let text = h.text_utf16();
-                let mut pos = 0;
-                while let Some(found) = crate::text::index_of(&text, &val, pos) {
-                    pos = found + val.len();
-                    breaks.push(Pos::new(line_no, found as i64));
-                }
-                line_no += 1;
-                false
-            });
+            self.each_line(
+                self.first_line(),
+                self.first_line() + self.line_count() as i64,
+                |h| {
+                    let text = h.text_utf16();
+                    let mut pos = 0;
+                    while let Some(found) = crate::text::index_of(&text, &val, pos) {
+                        pos = found + val.len();
+                        breaks.push(Pos::new(line_no, found as i64));
+                    }
+                    line_no += 1;
+                    false
+                },
+            );
             let val_s = from_u16(&val);
             for b in breaks.iter().rev() {
-                self.replace_range(&val_s, *b, Some(Pos::new(b.line, b.ch + val.len() as i64)), None);
+                self.replace_range(
+                    &val_s,
+                    *b,
+                    Some(Pos::new(b.line, b.ch + val.len() as i64)),
+                    None,
+                );
             }
         })
     }
@@ -1168,7 +1394,16 @@ impl Doc {
         let (first, size) = (self.first_line(), self.size() as i64);
         self.iter_lines(first, first + size)
             .iter()
-            .map(|l| l.borrow().marked_spans.as_ref().map(|a| a.get()).iter().flatten().map(|s| (s.marker.clone(), s.from, s.to)).collect())
+            .map(|l| {
+                l.borrow()
+                    .marked_spans
+                    .as_ref()
+                    .map(|a| a.get())
+                    .iter()
+                    .flatten()
+                    .map(|s| (s.marker.clone(), s.from, s.to))
+                    .collect()
+            })
             .collect()
     }
 
@@ -1182,10 +1417,20 @@ impl Doc {
     /// Debug aid: (lastOrigin, lastSelOrigin, generation, maxGeneration, done.len,
     /// undone.len, undoDepth).
     #[doc(hidden)]
-    pub fn debug_history_state(&self) -> (Option<String>, Option<String>, u64, u64, usize, usize, f64) {
+    pub fn debug_history_state(
+        &self,
+    ) -> (Option<String>, Option<String>, u64, u64, usize, usize, f64) {
         let h = self.history_rc();
         let h = h.borrow();
-        (h.last_origin.clone(), h.last_sel_origin.clone(), h.generation, h.max_generation, h.done.len(), h.undone.len(), h.undo_depth)
+        (
+            h.last_origin.clone(),
+            h.last_sel_origin.clone(),
+            h.generation,
+            h.max_generation,
+            h.done.len(),
+            h.undone.len(),
+            h.undo_depth,
+        )
     }
 
     #[doc(hidden)]
@@ -1203,6 +1448,8 @@ impl Doc {
 }
 
 pub(crate) fn dont_scroll() -> SelOptions {
-    SelOptions { scroll: Some(false), ..Default::default() }
+    SelOptions {
+        scroll: Some(false),
+        ..Default::default()
+    }
 }
-

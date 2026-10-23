@@ -70,9 +70,23 @@ pub struct Sampler {
 }
 
 impl Sampler {
-    pub fn new(mag: Filter, min: Filter, mipmap: Option<Filter>, repeat_s: bool, repeat_t: bool) -> Self {
+    pub fn new(
+        mag: Filter,
+        min: Filter,
+        mipmap: Option<Filter>,
+        repeat_s: bool,
+        repeat_t: bool,
+    ) -> Self {
         let wrap = |r: bool| if r { Wrap::Repeat } else { Wrap::ClampToEdge };
-        Sampler { mag, min, mipmap, wrap_s: wrap(repeat_s), wrap_t: wrap(repeat_t), wrap_r: Wrap::ClampToEdge, anisotropy: 1.0 }
+        Sampler {
+            mag,
+            min,
+            mipmap,
+            wrap_s: wrap(repeat_s),
+            wrap_t: wrap(repeat_t),
+            wrap_r: Wrap::ClampToEdge,
+            anisotropy: 1.0,
+        }
     }
 }
 
@@ -118,7 +132,10 @@ pub const MAX_ANISOTROPY: f64 = 16.0;
 /// repeatS / repeatT, no small-image NEAREST rule, mipmaps only when generateMipMaps and the
 /// texture can mipmap (`can_mipmap`: ImageTexture; PixelTexture never sets mipMaps).
 pub fn apply_texture_properties(t: &mut TextureImage, sg: &Sg, texture: NodeId, can_mipmap: bool) {
-    let Some(tp) = sg.node(texture, "textureProperties").filter(|p| sg.type_name(*p) == Some("TextureProperties")) else {
+    let Some(tp) = sg
+        .node(texture, "textureProperties")
+        .filter(|p| sg.type_name(*p) == Some("TextureProperties"))
+    else {
         return;
     };
 
@@ -126,8 +143,11 @@ pub fn apply_texture_properties(t: &mut TextureImage, sg: &Sg, texture: NodeId, 
     let i = mipmaps as usize;
     // DEFAULT and unknown names: the browser default TextureProperties (TextureQuality).
     let (default_min, default_mag) = default_filters();
-    let (min, mipmap) = minification_filter(&sg.string(tp, "minificationFilter", "DEFAULT")).map(|f| f[i]).unwrap_or(minification_filter(default_min).unwrap()[i]);
-    let mag = magnification_filter(&sg.string(tp, "magnificationFilter", "DEFAULT")).unwrap_or(magnification_filter(default_mag).unwrap());
+    let (min, mipmap) = minification_filter(&sg.string(tp, "minificationFilter", "DEFAULT"))
+        .map(|f| f[i])
+        .unwrap_or(minification_filter(default_min).unwrap()[i]);
+    let mag = magnification_filter(&sg.string(tp, "magnificationFilter", "DEFAULT"))
+        .unwrap_or(magnification_filter(default_mag).unwrap());
 
     t.nearest = false;
     t.no_mipmaps = !mipmaps;
@@ -138,7 +158,9 @@ pub fn apply_texture_properties(t: &mut TextureImage, sg: &Sg, texture: NodeId, 
         wrap_s: boundary_mode(&sg.string(tp, "boundaryModeS", "REPEAT")),
         wrap_t: boundary_mode(&sg.string(tp, "boundaryModeT", "REPEAT")),
         wrap_r: boundary_mode(&sg.string(tp, "boundaryModeR", "REPEAT")),
-        anisotropy: sg.f64(tp, "anisotropicDegree", 1.0).clamp(0.0, MAX_ANISOTROPY),
+        anisotropy: sg
+            .f64(tp, "anisotropicDegree", 1.0)
+            .clamp(0.0, MAX_ANISOTROPY),
     };
 }
 
@@ -146,7 +168,16 @@ impl TextureImage {
     /// ScreenText's canvas as a PixelTexture: transparent whatever its alpha, TextureProperties NEAREST_PIXEL both ways,
     /// CLAMP_TO_EDGE, no mipmaps (X3DLayoutContext.getScreenTextureProperties).
     pub fn screen_text(width: u32, height: u32, rgba: Vec<u8>) -> Self {
-        let mut t = finish(width, height, rgba, false, false, false, String::new(), false);
+        let mut t = finish(
+            width,
+            height,
+            rgba,
+            false,
+            false,
+            false,
+            String::new(),
+            false,
+        );
 
         t.transparent = true;
         t.nearest = true;
@@ -192,7 +223,16 @@ fn default_filters() -> (&'static str, &'static str) {
 /// The texture parameters without a TextureProperties node: below getMinTextureSize (16) NEAREST
 /// without mipmaps; else the browser default TextureProperties (TextureQuality MEDIUM: mag LINEAR,
 /// min LINEAR_MIPMAP_NEAREST with mipmaps, LINEAR without); repeatS / repeatT.
-fn finish(width: u32, height: u32, rgba: Vec<u8>, flip_y: bool, repeat_s: bool, repeat_t: bool, url: String, can_mipmap: bool) -> TextureImage {
+fn finish(
+    width: u32,
+    height: u32,
+    rgba: Vec<u8>,
+    flip_y: bool,
+    repeat_s: bool,
+    repeat_t: bool,
+    url: String,
+    can_mipmap: bool,
+) -> TextureImage {
     let transparent = rgba.chunks_exact(4).any(|p| p[3] != 255);
     let nearest = width.max(height) < 16;
     let sampler = if nearest {
@@ -200,15 +240,43 @@ fn finish(width: u32, height: u32, rgba: Vec<u8>, flip_y: bool, repeat_s: bool, 
     } else {
         let (min_name, mag_name) = default_filters();
         let (min, mipmap) = minification_filter(min_name).unwrap()[can_mipmap as usize];
-        Sampler::new(magnification_filter(mag_name).unwrap(), min, mipmap, repeat_s, repeat_t)
+        Sampler::new(
+            magnification_filter(mag_name).unwrap(),
+            min,
+            mipmap,
+            repeat_s,
+            repeat_t,
+        )
     };
 
-    TextureImage { width, height, rgba, transparent, flip_y, repeat_s, repeat_t, nearest, no_mipmaps: !nearest && !can_mipmap, url, sampler, cube: false, generated: None, volume: false, depth: 1, float: false }
+    TextureImage {
+        width,
+        height,
+        rgba,
+        transparent,
+        flip_y,
+        repeat_s,
+        repeat_t,
+        nearest,
+        no_mipmaps: !nearest && !can_mipmap,
+        url,
+        sampler,
+        cube: false,
+        generated: None,
+        volume: false,
+        depth: 1,
+        float: false,
+    }
 }
 
 /// ImageTexture.loadData: FileLoader URL fallback; a candidate that does not decode fails and
 /// the next one is tried.
-pub fn load_image_texture(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runtime::Fetcher) -> Option<TextureImage> {
+pub fn load_image_texture(
+    sg: &Sg,
+    n: NodeId,
+    base: &str,
+    fetcher: &dyn x3d_runtime::Fetcher,
+) -> Option<TextureImage> {
     if !sg.bool(n, "load", true) {
         return None;
     }
@@ -225,12 +293,27 @@ pub fn load_image_texture(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runt
         if candidate.is_empty() {
             continue;
         }
-        let Ok(resolved) = base.join(&candidate) else { continue };
-        let Ok(data) = fetcher.fetch(&resolved) else { continue };
-        let Ok(img) = image::load_from_memory(&data) else { continue };
+        let Ok(resolved) = base.join(&candidate) else {
+            continue;
+        };
+        let Ok(data) = fetcher.fetch(&resolved) else {
+            continue;
+        };
+        let Ok(img) = image::load_from_memory(&data) else {
+            continue;
+        };
         let img = img.to_rgba8();
         let (w, h) = img.dimensions();
-        let mut t = finish(w, h, img.into_raw(), true, repeat_s, repeat_t, resolved.to_string(), true);
+        let mut t = finish(
+            w,
+            h,
+            img.into_raw(),
+            true,
+            repeat_s,
+            repeat_t,
+            resolved.to_string(),
+            true,
+        );
         apply_texture_properties(&mut t, sg, n, true);
         return Some(t);
     }
@@ -242,19 +325,38 @@ pub fn load_image_texture(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runt
 /// texture's `url`, the browser's backgroundTextureProperties (X3DEnvironmentalEffectsContext.js:
 /// CLAMP_TO_EDGE, NICEST filters, generateMipMaps FALSE) replace the default TextureProperties,
 /// so there is no mipmap chain, no small-image NEAREST rule and no repeat.
-pub fn load_background_texture(urls: &[String], base: &str, fetcher: &dyn x3d_runtime::Fetcher) -> Option<TextureImage> {
+pub fn load_background_texture(
+    urls: &[String],
+    base: &str,
+    fetcher: &dyn x3d_runtime::Fetcher,
+) -> Option<TextureImage> {
     let base = url::Url::parse(base).ok()?;
 
     for candidate in urls {
         if candidate.is_empty() {
             continue;
         }
-        let Ok(resolved) = base.join(candidate) else { continue };
-        let Ok(data) = fetcher.fetch(&resolved) else { continue };
-        let Ok(img) = image::load_from_memory(&data) else { continue };
+        let Ok(resolved) = base.join(candidate) else {
+            continue;
+        };
+        let Ok(data) = fetcher.fetch(&resolved) else {
+            continue;
+        };
+        let Ok(img) = image::load_from_memory(&data) else {
+            continue;
+        };
         let img = img.to_rgba8();
         let (w, h) = img.dimensions();
-        let mut t = finish(w, h, img.into_raw(), true, false, false, resolved.to_string(), false);
+        let mut t = finish(
+            w,
+            h,
+            img.into_raw(),
+            true,
+            false,
+            false,
+            resolved.to_string(),
+            false,
+        );
 
         t.nearest = false;
         t.no_mipmaps = true;
@@ -287,7 +389,16 @@ pub fn pixel_texture(sg: &Sg, n: NodeId) -> Option<TextureImage> {
         rgba.extend_from_slice(&px);
     }
 
-    let mut t = finish(w, h, rgba, false, sg.bool(n, "repeatS", true), sg.bool(n, "repeatT", true), String::new(), false);
+    let mut t = finish(
+        w,
+        h,
+        rgba,
+        false,
+        sg.bool(n, "repeatS", true),
+        sg.bool(n, "repeatT", true),
+        String::new(),
+        false,
+    );
     apply_texture_properties(&mut t, sg, n, false);
     Some(t)
 }
@@ -305,7 +416,11 @@ fn taps(n: u32, x: u32) -> Vec<(u32, f64)> {
     let k = (n / 2) as f64;
     let d = n as f64;
     let xf = x as f64;
-    vec![(2 * x, (k - xf) / d), (2 * x + 1, k / d), (2 * x + 2, (xf + 1.0) / d)]
+    vec![
+        (2 * x, (k - xf) / d),
+        (2 * x + 1, k / d),
+        (2 * x + 2, (xf + 1.0) / d),
+    ]
 }
 
 /// Mip chain like gl.generateMipmap (level sizes floor (n / 2)). Level 0 is the image itself.
@@ -354,7 +469,15 @@ const SLOT_LAYER: [usize; 6] = [4, 5, 1, 0, 2, 3];
 /// A cube map from six square faces in slot order, each with its rows in GL face order (row 0
 /// first), with the X3DEnvironmentTextureNode texture parameters (no repeat; below 16 texels
 /// NEAREST without mipmaps unless the node has TextureProperties).
-fn cube_texture(sg: &Sg, n: NodeId, size: u32, faces: &[Vec<u8>; 6], transparent: bool, can_mipmap: bool, url: String) -> TextureImage {
+fn cube_texture(
+    sg: &Sg,
+    n: NodeId,
+    size: u32,
+    faces: &[Vec<u8>; 6],
+    transparent: bool,
+    can_mipmap: bool,
+    url: String,
+) -> TextureImage {
     let mut rgba = vec![0u8; (size * size * 4 * 6) as usize];
     let face_bytes = (size * size * 4) as usize;
 
@@ -386,11 +509,21 @@ pub fn white_cube() -> TextureImage {
 /// square images of one size, the faces copied from them (an ImageTexture, texture type 1, as
 /// stored; any other node flipped vertically); otherwise the cleared texture. `face` loads the
 /// texture of a slot node (`None` for one that is not complete).
-pub fn composed_cube(sg: &Sg, n: NodeId, slots: [Option<NodeId>; 6], mut face: impl FnMut(NodeId) -> Option<std::rc::Rc<TextureImage>>) -> TextureImage {
+pub fn composed_cube(
+    sg: &Sg,
+    n: NodeId,
+    slots: [Option<NodeId>; 6],
+    mut face: impl FnMut(NodeId) -> Option<std::rc::Rc<TextureImage>>,
+) -> TextureImage {
     let mut images = vec![];
 
     for slot in slots {
-        let Some(node) = slot.filter(|s| matches!(sg.type_name(*s), Some("ImageTexture" | "PixelTexture" | "MovieTexture"))) else {
+        let Some(node) = slot.filter(|s| {
+            matches!(
+                sg.type_name(*s),
+                Some("ImageTexture" | "PixelTexture" | "MovieTexture")
+            )
+        }) else {
             return white_cube();
         };
         let Some(image) = face(node) else {
@@ -401,7 +534,10 @@ pub fn composed_cube(sg: &Sg, n: NodeId, slots: [Option<NodeId>; 6], mut face: i
 
     let size = images[0].1.width;
 
-    if images.iter().any(|(_, t)| t.width != size || t.height != size) {
+    if images
+        .iter()
+        .any(|(_, t)| t.width != size || t.height != size)
+    {
         return white_cube();
     }
 
@@ -416,7 +552,9 @@ pub fn composed_cube(sg: &Sg, n: NodeId, slots: [Option<NodeId>; 6], mut face: i
     });
     // setTransparent (some face transparent), setMipMaps (every face can mipmap: ImageTexture).
     let transparent = images.iter().any(|(_, t)| t.transparent);
-    let can_mipmap = images.iter().all(|(node, _)| sg.type_name(*node) == Some("ImageTexture"));
+    let can_mipmap = images
+        .iter()
+        .all(|(node, _)| sg.type_name(*node) == Some("ImageTexture"));
 
     cube_texture(sg, n, size, &faces, transparent, can_mipmap, String::new())
 }
@@ -424,7 +562,12 @@ pub fn composed_cube(sg: &Sg, n: NodeId, slots: [Option<NodeId>; 6], mut face: i
 /// ImageCubeMapTexture.loadData / setImage: the first url that loads and decodes; a 4:3 image is
 /// a sky box cross (skyBoxToCubeMap), a 2:1 image a panorama (panoramaToCubeMap); any other image
 /// leaves the cleared texture.
-pub fn load_image_cube(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runtime::Fetcher) -> Option<TextureImage> {
+pub fn load_image_cube(
+    sg: &Sg,
+    n: NodeId,
+    base: &str,
+    fetcher: &dyn x3d_runtime::Fetcher,
+) -> Option<TextureImage> {
     if !sg.bool(n, "load", true) {
         return None;
     }
@@ -436,9 +579,15 @@ pub fn load_image_cube(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runtime
         if candidate.is_empty() {
             continue;
         }
-        let Ok(resolved) = base.join(&candidate) else { continue };
-        let Ok(data) = fetcher.fetch(&resolved) else { continue };
-        let Ok(img) = image::load_from_memory(&data) else { continue };
+        let Ok(resolved) = base.join(&candidate) else {
+            continue;
+        };
+        let Ok(data) = fetcher.fetch(&resolved) else {
+            continue;
+        };
+        let Ok(img) = image::load_from_memory(&data) else {
+            continue;
+        };
         let img = img.to_rgba8();
         let (w, h) = img.dimensions();
         let rgba = img.into_raw();
@@ -544,7 +693,16 @@ fn panorama_cube(sg: &Sg, n: NodeId, w: u32, h: u32, rgba: &[u8], url: String) -
 /// `size` × `size` faces drawn by the renderer (no mipmaps; below 16 NEAREST unless the node has
 /// TextureProperties). `transparent` is setTransparent (background .isTransparent ()).
 pub fn generated_cube(sg: &Sg, n: NodeId, size: u32, transparent: bool) -> TextureImage {
-    let mut t = finish(size, size, vec![], false, false, false, String::new(), false);
+    let mut t = finish(
+        size,
+        size,
+        vec![],
+        false,
+        false,
+        false,
+        String::new(),
+        false,
+    );
     t.transparent = transparent;
     t.cube = true;
     t.generated = Some((sg.rt.uid, n));
@@ -574,13 +732,39 @@ fn incomplete_3d() -> TextureImage {
 /// `width` × `height` × `depth` texture. Without TextureProperties: below getMinTextureSize (16) in
 /// width and height (the depth is not tested) NEAREST without mipmaps, else the browser default
 /// filters (with mipmaps when the node can mipmap); repeatS / repeatT / repeatR.
-fn finish_3d(sg: &Sg, n: NodeId, width: u32, height: u32, depth: u32, rgba: Vec<u8>, transparent: bool, can_mipmap: bool) -> TextureImage {
-    let (repeat_s, repeat_t, repeat_r) = (sg.bool(n, "repeatS", false), sg.bool(n, "repeatT", false), sg.bool(n, "repeatR", false));
-    let mut t = finish(width, height, rgba, false, repeat_s, repeat_t, String::new(), can_mipmap);
+fn finish_3d(
+    sg: &Sg,
+    n: NodeId,
+    width: u32,
+    height: u32,
+    depth: u32,
+    rgba: Vec<u8>,
+    transparent: bool,
+    can_mipmap: bool,
+) -> TextureImage {
+    let (repeat_s, repeat_t, repeat_r) = (
+        sg.bool(n, "repeatS", false),
+        sg.bool(n, "repeatT", false),
+        sg.bool(n, "repeatR", false),
+    );
+    let mut t = finish(
+        width,
+        height,
+        rgba,
+        false,
+        repeat_s,
+        repeat_t,
+        String::new(),
+        can_mipmap,
+    );
     t.volume = true;
     t.depth = depth;
     t.transparent = transparent;
-    t.sampler.wrap_r = if repeat_r { Wrap::Repeat } else { Wrap::ClampToEdge };
+    t.sampler.wrap_r = if repeat_r {
+        Wrap::Repeat
+    } else {
+        Wrap::ClampToEdge
+    };
     apply_texture_properties(&mut t, sg, n, can_mipmap);
     t
 }
@@ -609,7 +793,14 @@ pub fn pixel_texture_3d(sg: &Sg, n: NodeId) -> TextureImage {
     // `new Uint8Array (size3D)` throws for a negative size; setTextureData throws above the limit.
     let size = width as i64 * height as i64 * depth as i64;
 
-    if width < 0 || height < 0 || depth < 0 || size < 0 || [width, height, depth].iter().any(|&d| d > MAX_3D_TEXTURE_SIZE) {
+    if width < 0
+        || height < 0
+        || depth < 0
+        || size < 0
+        || [width, height, depth]
+            .iter()
+            .any(|&d| d > MAX_3D_TEXTURE_SIZE)
+    {
         return white_3d();
     }
 
@@ -630,7 +821,16 @@ pub fn pixel_texture_3d(sg: &Sg, n: NodeId) -> TextureImage {
         rgba.extend_from_slice(&px);
     }
 
-    finish_3d(sg, n, width as u32, height as u32, depth as u32, rgba, components % 2 == 0, false)
+    finish_3d(
+        sg,
+        n,
+        width as u32,
+        height as u32,
+        depth as u32,
+        rgba,
+        components % 2 == 0,
+        false,
+    )
 }
 
 /// gl.MAX_3D_TEXTURE_SIZE of the oracle's GPU (NVIDIA under ANGLE).
@@ -641,7 +841,12 @@ pub const MAX_3D_TEXTURE_SIZE: i32 = 2048;
 /// another size warns and stays transparent black. An ImageTexture or MovieTexture slice (texture
 /// type 1) is copied with its rows flipped. Transparent if any slice is; mipmaps if every slice
 /// can (ImageTexture). Otherwise the cleared texture.
-pub fn composed_texture_3d(sg: &Sg, n: NodeId, slices: &[(NodeId, Option<std::rc::Rc<TextureImage>>)], warn: &mut dyn FnMut(&str)) -> TextureImage {
+pub fn composed_texture_3d(
+    sg: &Sg,
+    n: NodeId,
+    slices: &[(NodeId, Option<std::rc::Rc<TextureImage>>)],
+    warn: &mut dyn FnMut(&str),
+) -> TextureImage {
     if slices.is_empty() || slices.iter().any(|(_, t)| t.is_none()) {
         return white_3d();
     }
@@ -678,7 +883,9 @@ pub fn composed_texture_3d(sg: &Sg, n: NodeId, slices: &[(NodeId, Option<std::rc
     }
 
     let transparent = slices.iter().any(|(_, t)| t.as_ref().unwrap().transparent);
-    let can_mipmap = slices.iter().all(|(node, _)| sg.type_name(*node) == Some("ImageTexture"));
+    let can_mipmap = slices
+        .iter()
+        .all(|(node, _)| sg.type_name(*node) == Some("ImageTexture"));
 
     finish_3d(sg, n, width, height, depth, rgba, transparent, can_mipmap)
 }
@@ -689,18 +896,42 @@ pub fn composed_texture_3d(sg: &Sg, n: NodeId, slices: &[(NodeId, Option<std::rc
 /// image's row order (row 0 = top). Transparent as X_ITE tests it (see `atlas_tiles`); mipmaps. A zero size
 /// leaves an incomplete texture. Returns the texture and the outputs (width, height, depth,
 /// colorDepth).
-pub fn image_texture_atlas(sg: &Sg, n: NodeId, data: &[u8], [over_x, over_y, slices]: [i32; 3]) -> Option<(TextureImage, [i32; 4])> {
+pub fn image_texture_atlas(
+    sg: &Sg,
+    n: NodeId,
+    data: &[u8],
+    [over_x, over_y, slices]: [i32; 3],
+) -> Option<(TextureImage, [i32; 4])> {
     let img = image::load_from_memory(data).ok()?.to_rgba8();
     let (w, h) = img.dimensions();
-    let (width, height, depth, rgba, transparent) = x3d_runtime::nodes::texture_projector::atlas_tiles(img.as_raw(), w, h, over_x, over_y, slices);
+    let (width, height, depth, rgba, transparent) =
+        x3d_runtime::nodes::texture_projector::atlas_tiles(
+            img.as_raw(),
+            w,
+            h,
+            over_x,
+            over_y,
+            slices,
+        );
 
     if width == 0 || height == 0 || depth == 0 {
-        return Some((incomplete_3d(), [width as i32, height as i32, depth as i32, 3]));
+        return Some((
+            incomplete_3d(),
+            [width as i32, height as i32, depth as i32, 3],
+        ));
     }
 
     let t = finish_3d(sg, n, width, height, depth, rgba, transparent, true);
 
-    Some((t, [width as i32, height as i32, depth as i32, if transparent { 4 } else { 3 }]))
+    Some((
+        t,
+        [
+            width as i32,
+            height as i32,
+            depth as i32,
+            if transparent { 4 } else { 3 },
+        ],
+    ))
 }
 
 /// gl.generateMipmap of a TEXTURE_3D: level sizes floor (n / 2) in each dimension, the same taps
@@ -731,11 +962,15 @@ pub fn mip_chain_3d(t: &TextureImage) -> Vec<(u32, u32, u32, Vec<u8>)> {
                         for &(sz, wz) in &tz {
                             for &(sy, wy) in &ty {
                                 for &(sx, wx) in &tx {
-                                    sum += wx * wy * wz * src[(((sz * h + sy) * w + sx) * 4 + c) as usize] as f64;
+                                    sum += wx
+                                        * wy
+                                        * wz
+                                        * src[(((sz * h + sy) * w + sx) * 4 + c) as usize] as f64;
                                 }
                             }
                         }
-                        dst[(((z * nh + y) * nw + x) * 4 + c) as usize] = sum.round().clamp(0.0, 255.0) as u8;
+                        dst[(((z * nh + y) * nw + x) * 4 + c) as usize] =
+                            sum.round().clamp(0.0, 255.0) as u8;
                     }
                 }
             }
@@ -750,7 +985,12 @@ pub fn mip_chain_3d(t: &TextureImage) -> Vec<(u32, u32, u32, Vec<u8>)> {
 /// ImageTextureAtlas.loadData: FileLoader URL fallback like ImageTexture, sliced as when the
 /// runtime's load ended (a later slicesOverX … change waits for the next load); `None` while the
 /// runtime shows the cleared texture.
-pub fn load_image_texture_atlas(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runtime::Fetcher) -> Option<TextureImage> {
+pub fn load_image_texture_atlas(
+    sg: &Sg,
+    n: NodeId,
+    base: &str,
+    fetcher: &dyn x3d_runtime::Fetcher,
+) -> Option<TextureImage> {
     let slicing = sg.rt.atlas_slicing(n)?;
 
     let base = url::Url::parse(base).ok()?;
@@ -760,8 +1000,12 @@ pub fn load_image_texture_atlas(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3
         if candidate.is_empty() {
             continue;
         }
-        let Ok(resolved) = base.join(&candidate) else { continue };
-        let Ok(data) = fetcher.fetch(&resolved) else { continue };
+        let Ok(resolved) = base.join(&candidate) else {
+            continue;
+        };
+        let Ok(data) = fetcher.fetch(&resolved) else {
+            continue;
+        };
         if let Some((mut t, _)) = image_texture_atlas(sg, n, &data, slicing) {
             t.url = resolved.to_string();
             return Some(t);
@@ -785,7 +1029,16 @@ pub fn rendered_texture(sg: &Sg, n: NodeId, transparent: bool) -> TextureImage {
         return t;
     }
 
-    let mut t = finish(width as u32, height as u32, vec![], false, sg.bool(n, "repeatS", true), sg.bool(n, "repeatT", true), String::new(), false);
+    let mut t = finish(
+        width as u32,
+        height as u32,
+        vec![],
+        false,
+        sg.bool(n, "repeatS", true),
+        sg.bool(n, "repeatT", true),
+        String::new(),
+        false,
+    );
     apply_texture_properties(&mut t, sg, n, false);
     t.generated = Some((sg.rt.uid, n));
     t.float = sg.bool(n, "depthMap", false);
@@ -800,9 +1053,14 @@ pub fn rendered_texture(sg: &Sg, n: NodeId, transparent: bool) -> TextureImage {
 /// size an incomplete texture, sampled (0, 0, 0, 1). No data (an NRRD without `encoding`) is null:
 /// zeros. setTransparent (components even; NaN counts as even), mipmaps (ImageTexture3D
 /// `setMipMaps (true)`).
-pub fn image_texture_3d(sg: &Sg, n: NodeId, v: &x3d_runtime::nodes::image_texture_3d::Volume) -> TextureImage {
+pub fn image_texture_3d(
+    sg: &Sg,
+    n: NodeId,
+    v: &x3d_runtime::nodes::image_texture_3d::Volume,
+) -> TextureImage {
     let int = |x: f64| if x.is_nan() { 0.0 } else { x.trunc() };
-    let (width, height, depth, components) = (int(v.width), int(v.height), int(v.depth), v.components);
+    let (width, height, depth, components) =
+        (int(v.width), int(v.height), int(v.depth), v.components);
     let transparent = components.is_nan() || (components as i64) & 1 == 0;
     let incomplete = || {
         let mut t = incomplete_3d();
@@ -843,5 +1101,14 @@ pub fn image_texture_3d(sg: &Sg, n: NodeId, v: &x3d_runtime::nodes::image_textur
         }
     }
 
-    finish_3d(sg, n, width as u32, height as u32, depth as u32, rgba, transparent, true)
+    finish_3d(
+        sg,
+        n,
+        width as u32,
+        height as u32,
+        depth as u32,
+        rgba,
+        transparent,
+        true,
+    )
 }

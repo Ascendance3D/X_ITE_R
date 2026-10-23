@@ -86,7 +86,11 @@ fn dot(a: &Vector3, b: &Vector3) -> f64 {
 }
 
 fn cross(a: &Vector3, b: &Vector3) -> Vector3 {
-    v(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x)
+    v(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x,
+    )
 }
 
 fn norm(a: &Vector3) -> f64 {
@@ -96,7 +100,11 @@ fn norm(a: &Vector3) -> f64 {
 /// Vector3.normalize: a zero vector stays zero.
 fn normalize(a: &Vector3) -> Vector3 {
     let l = norm(a);
-    if l != 0.0 { v(a.x / l, a.y / l, a.z / l) } else { *a }
+    if l != 0.0 {
+        v(a.x / l, a.y / l, a.z / l)
+    } else {
+        *a
+    }
 }
 
 fn squared(a: &Vector3) -> f64 {
@@ -115,14 +123,40 @@ fn mult_vec_matrix(m: &Matrix4, p: &Vector3) -> Vector3 {
 #[derive(Clone, Copy)]
 struct Box3(Matrix4);
 
-const AXES: [Vector3; 3] = [Vector3 { x: 1.0, y: 0.0, z: 0.0 }, Vector3 { x: 0.0, y: 1.0, z: 0.0 }, Vector3 { x: 0.0, y: 0.0, z: 1.0 }];
+const AXES: [Vector3; 3] = [
+    Vector3 {
+        x: 1.0,
+        y: 0.0,
+        z: 0.0,
+    },
+    Vector3 {
+        x: 0.0,
+        y: 1.0,
+        z: 0.0,
+    },
+    Vector3 {
+        x: 0.0,
+        y: 0.0,
+        z: 1.0,
+    },
+];
 
 impl Box3 {
     /// setExtents.
     fn extents(min: &Vector3, max: &Vector3) -> Box3 {
-        let (sx, sy, sz) = ((max.x - min.x) / 2.0, (max.y - min.y) / 2.0, (max.z - min.z) / 2.0);
-        let (cx, cy, cz) = ((max.x + min.x) / 2.0, (max.y + min.y) / 2.0, (max.z + min.z) / 2.0);
-        Box3(Matrix4([sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, cx, cy, cz, 1.0]))
+        let (sx, sy, sz) = (
+            (max.x - min.x) / 2.0,
+            (max.y - min.y) / 2.0,
+            (max.z - min.z) / 2.0,
+        );
+        let (cx, cy, cz) = (
+            (max.x + min.x) / 2.0,
+            (max.y + min.y) / 2.0,
+            (max.z + min.z) / 2.0,
+        );
+        Box3(Matrix4([
+            sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, cx, cy, cz, 1.0,
+        ]))
     }
 
     fn mult_right(mut self, m: &Matrix4) -> Box3 {
@@ -161,7 +195,12 @@ impl Box3 {
     fn normals(&self) -> [Vector3; 3] {
         let (mut x, mut y, mut z) = (self.axis(0), self.axis(1), self.axis(2));
 
-        let fix = |a: &mut Vector3, b: &Vector3, c: &Vector3, first: &Vector3, second: &Vector3, fallback: Vector3| {
+        let fix = |a: &mut Vector3,
+                   b: &Vector3,
+                   c: &Vector3,
+                   first: &Vector3,
+                   second: &Vector3,
+                   fallback: Vector3| {
             if squared(a) == 0.0 {
                 *a = cross(b, c);
 
@@ -196,7 +235,11 @@ impl Box3 {
         let (x2, y2) = (x, y);
         fix(&mut z, &x2, &y2, &x2, &y2, AXES[2]);
 
-        [normalize(&cross(&y, &z)), normalize(&cross(&z, &x)), normalize(&cross(&x, &y))]
+        [
+            normalize(&cross(&y, &z)),
+            normalize(&cross(&z, &x)),
+            normalize(&cross(&x, &y)),
+        ]
     }
 
     /// intersectsBox.
@@ -314,7 +357,13 @@ fn quick_sort(a: &mut [usize], d: &dyn Fn(usize) -> f64) {
 /// infinite line.
 fn intersects_bbox(g: &Geometry, point: &Vector3, dir: &Vector3) -> bool {
     let (min, max) = (g.min, g.max);
-    let planes = [(max, v(0.0, 0.0, 1.0)), (min, v(0.0, 0.0, -1.0)), (max, v(0.0, 1.0, 0.0)), (min, v(0.0, -1.0, 0.0)), (max, v(1.0, 0.0, 0.0))];
+    let planes = [
+        (max, v(0.0, 0.0, 1.0)),
+        (min, v(0.0, 0.0, -1.0)),
+        (max, v(0.0, 1.0, 0.0)),
+        (min, v(0.0, -1.0, 0.0)),
+        (max, v(1.0, 0.0, 0.0)),
+    ];
 
     for (i, (p, normal)) in planes.iter().enumerate() {
         // Plane3.intersectsLine.
@@ -325,7 +374,11 @@ fn intersects_bbox(g: &Geometry, point: &Vector3, dir: &Vector3) -> bool {
         }
 
         let t = (dot(normal, p) - dot(normal, point)) / theta;
-        let x = v(dir.x * t + point.x, dir.y * t + point.y, dir.z * t + point.z);
+        let x = v(
+            dir.x * t + point.x,
+            dir.y * t + point.y,
+            dir.z * t + point.z,
+        );
 
         let inside = match i {
             0 | 1 => x.x >= min.x && x.x <= max.x && x.y >= min.y && x.y <= max.y,
@@ -348,7 +401,13 @@ fn intersects_line(g: &Geometry, point: &Vector3, dir: &Vector3, out: &mut Vec<I
         return;
     }
 
-    let vert = |k: usize| v(g.vertices[k * 4] as f64, g.vertices[k * 4 + 1] as f64, g.vertices[k * 4 + 2] as f64);
+    let vert = |k: usize| {
+        v(
+            g.vertices[k * 4] as f64,
+            g.vertices[k * 4 + 1] as f64,
+            g.vertices[k * 4 + 2] as f64,
+        )
+    };
     let tex = |k: usize, c: usize| g.tex_coords.get(k * 4 + c).copied().unwrap_or(0.0) as f64;
     let nor = |k: usize, c: usize| g.normals.get(k * 3 + c).copied().unwrap_or(0.0) as f64;
 
@@ -381,15 +440,24 @@ fn intersects_line(g: &Geometry, point: &Vector3, dir: &Vector3, out: &mut Vec<I
         }
 
         let (w0, w1, w2) = (1.0 - u - vv, u, vv);
-        let point = v(w0 * a.x + w1 * b.x + w2 * c.x, w0 * a.y + w1 * b.y + w2 * c.y, w0 * a.z + w1 * b.z + w2 * c.z);
-        let tex_coord = [0, 1, 2, 3].map(|k| w0 * tex(i, k) + w1 * tex(i + 1, k) + w2 * tex(i + 2, k));
+        let point = v(
+            w0 * a.x + w1 * b.x + w2 * c.x,
+            w0 * a.y + w1 * b.y + w2 * c.y,
+            w0 * a.z + w1 * b.z + w2 * c.z,
+        );
+        let tex_coord =
+            [0, 1, 2, 3].map(|k| w0 * tex(i, k) + w1 * tex(i + 1, k) + w2 * tex(i + 2, k));
         let normal = v(
             w0 * nor(i, 0) + w1 * nor(i + 1, 0) + w2 * nor(i + 2, 0),
             w0 * nor(i, 1) + w1 * nor(i + 1, 1) + w2 * nor(i + 2, 1),
             w0 * nor(i, 2) + w1 * nor(i + 1, 2) + w2 * nor(i + 2, 2),
         );
 
-        out.push(Intersection { tex_coord, normal, point });
+        out.push(Intersection {
+            tex_coord,
+            normal,
+            point,
+        });
     }
 }
 
@@ -411,13 +479,24 @@ fn set_if_changed(rt: &mut Runtime, n: NodeId, name: &str, value: FieldValue) {
 }
 
 fn mf_vec3f(values: impl Iterator<Item = Vector3>) -> FieldValue {
-    FieldValue::MFVec3f(values.flat_map(|p| [p.x as f32, p.y as f32, p.z as f32]).collect())
+    FieldValue::MFVec3f(
+        values
+            .flat_map(|p| [p.x as f32, p.y as f32, p.z as f32])
+            .collect(),
+    )
 }
 
 /// The geometry nodes LinePickSensor.process reads: the picking geometry of each sensor and every
 /// collected target.
-pub fn geometry_nodes(rt: &Runtime, sensors: &[PickSensorInfo], collected: &[(NodeId, NodeId, Matrix4)]) -> Vec<NodeId> {
-    let mut out: Vec<NodeId> = sensors.iter().filter_map(|s| picking_geometry(rt, s.node)).collect();
+pub fn geometry_nodes(
+    rt: &Runtime,
+    sensors: &[PickSensorInfo],
+    collected: &[(NodeId, NodeId, Matrix4)],
+) -> Vec<NodeId> {
+    let mut out: Vec<NodeId> = sensors
+        .iter()
+        .filter_map(|s| picking_geometry(rt, s.node))
+        .collect();
     out.extend(collected.iter().map(|(_, g, _)| *g));
     out.sort_unstable();
     out.dedup();
@@ -428,7 +507,9 @@ pub fn geometry_nodes(rt: &Runtime, sensors: &[PickSensorInfo], collected: &[(No
 /// PointPickSensor X3DCast (PointSet), PrimitivePickSensor a Box, Cone, Cylinder or Sphere,
 /// VolumePickSensor X3DCast (X3DGeometryNode).
 fn picking_geometry(rt: &Runtime, sensor: NodeId) -> Option<NodeId> {
-    let Some(FieldValue::SFNode(Some(n))) = rt.pre_value(sensor, "pickingGeometry") else { return None };
+    let Some(FieldValue::SFNode(Some(n))) = rt.pre_value(sensor, "pickingGeometry") else {
+        return None;
+    };
     let n = rt.inner_node(*n)?;
     let ty = rt.builtin_name(n)?;
 
@@ -437,7 +518,12 @@ fn picking_geometry(rt: &Runtime, sensor: NodeId) -> Option<NodeId> {
         "PointPickSensor" => ty == "PointSet",
         "PrimitivePickSensor" => matches!(ty, "Box" | "Cone" | "Cylinder" | "Sphere"),
         // X3DGeometryNode: the node types whose container field is "geometry".
-        _ => rt.scene.table.by_name.get(ty).is_some_and(|&i| rt.scene.table.types[i].container_field == "geometry"),
+        _ => rt
+            .scene
+            .table
+            .by_name
+            .get(ty)
+            .is_some_and(|&i| rt.scene.table.types[i].container_field == "geometry"),
     };
 
     ok.then_some(n)
@@ -446,18 +532,39 @@ fn picking_geometry(rt: &Runtime, sensor: NodeId) -> Option<NodeId> {
 /// LinePickSensor.process with the model matrices of the sensor and its collected targets
 /// (geometry, model matrix), in traversal order. `geometry` maps a geometry node to its built
 /// geometry (None: no vertices).
-pub fn line_pick_process(rt: &mut Runtime, geometry: &HashMap<NodeId, Option<Rc<Geometry>>>, sensor: NodeId, model_matrices: &[Matrix4], collected: Vec<(NodeId, Matrix4)>) {
-    let Some(pg_node) = picking_geometry(rt, sensor) else { return };
+pub fn line_pick_process(
+    rt: &mut Runtime,
+    geometry: &HashMap<NodeId, Option<Rc<Geometry>>>,
+    sensor: NodeId,
+    model_matrices: &[Matrix4],
+    collected: Vec<(NodeId, Matrix4)>,
+) {
+    let Some(pg_node) = picking_geometry(rt, sensor) else {
+        return;
+    };
 
     let empty = Geometry::default();
     let get = |n: NodeId| geometry.get(&n).cloned().flatten();
-    let bounds = |g: &Option<Rc<Geometry>>| g.as_ref().map(|g| (g.min, g.max)).unwrap_or((Vector3::ZERO, Vector3::ZERO));
+    let bounds = |g: &Option<Rc<Geometry>>| {
+        g.as_ref()
+            .map(|g| (g.min, g.max))
+            .unwrap_or((Vector3::ZERO, Vector3::ZERO))
+    };
 
     let pg = get(pg_node);
     let (pg_min, pg_max) = bounds(&pg);
     let bounds_mode = string(rt, sensor, "intersectionType") != "GEOMETRY";
 
-    let mut targets: Vec<Target> = collected.into_iter().map(|(geometry, matrix)| Target { geometry, matrix, intersected: false, distance: 0.0, intersections: vec![] }).collect();
+    let mut targets: Vec<Target> = collected
+        .into_iter()
+        .map(|(geometry, matrix)| Target {
+            geometry,
+            matrix,
+            intersected: false,
+            distance: 0.0,
+            intersections: vec![],
+        })
+        .collect();
 
     for model in model_matrices {
         let picking_box = Box3::extents(&pg_min, &pg_max).mult_right(model);
@@ -486,8 +593,14 @@ pub fn line_pick_process(rt: &mut Runtime, geometry: &HashMap<NodeId, Option<Rc<
 
             for s in (0..lines.vertices.len() / 8).map(|k| k * 8) {
                 let vs = &lines.vertices;
-                let point1 = mult_vec_matrix(&matrix, &v(vs[s] as f64, vs[s + 1] as f64, vs[s + 2] as f64));
-                let point2 = mult_vec_matrix(&matrix, &v(vs[s + 4] as f64, vs[s + 5] as f64, vs[s + 6] as f64));
+                let point1 = mult_vec_matrix(
+                    &matrix,
+                    &v(vs[s] as f64, vs[s + 1] as f64, vs[s + 2] as f64),
+                );
+                let point2 = mult_vec_matrix(
+                    &matrix,
+                    &v(vs[s + 4] as f64, vs[s + 5] as f64, vs[s + 6] as f64),
+                );
                 let dir = normalize(&sub(&point2, &point1));
                 let mut intersections = vec![];
 
@@ -514,7 +627,9 @@ pub fn line_pick_process(rt: &mut Runtime, geometry: &HashMap<NodeId, Option<Rc<
     }
 
     // getPickedGeometries.
-    let mut picked: Vec<usize> = (0..targets.len()).filter(|&i| targets[i].intersected).collect();
+    let mut picked: Vec<usize> = (0..targets.len())
+        .filter(|&i| targets[i].intersected)
+        .collect();
     let sort_order = string(rt, sensor, "sortOrder");
     let sort_order = match sort_order.as_str() {
         "ANY" | "CLOSEST" | "ALL" | "ALL_SORTED" => sort_order.as_str(),
@@ -549,7 +664,13 @@ pub fn line_pick_process(rt: &mut Runtime, geometry: &HashMap<NodeId, Option<Rc<
     }
 
     let all = || picked.iter().flat_map(|&i| targets[i].intersections.iter());
-    let tex_coords = mf_vec3f(all().map(|x| v(x.tex_coord[0] / x.tex_coord[3], x.tex_coord[1] / x.tex_coord[3], x.tex_coord[2] / x.tex_coord[3])));
+    let tex_coords = mf_vec3f(all().map(|x| {
+        v(
+            x.tex_coord[0] / x.tex_coord[3],
+            x.tex_coord[1] / x.tex_coord[3],
+            x.tex_coord[2] / x.tex_coord[3],
+        )
+    }));
     let normals = mf_vec3f(all().map(|x| x.normal));
     let points = mf_vec3f(all().map(|x| x.point));
 
@@ -560,7 +681,13 @@ pub fn line_pick_process(rt: &mut Runtime, geometry: &HashMap<NodeId, Option<Rc<
 
 /// getPickedGeometries: the intersected targets (sorted for CLOSEST and ALL_SORTED, in place as
 /// X_ITE sorts `pickedTargets`), and the picked geometry nodes the sort order selects.
-fn picked(rt: &Runtime, sensor: NodeId, intersected: Vec<usize>, distance: &dyn Fn(usize) -> f64, geometry: &dyn Fn(usize) -> NodeId) -> (Vec<usize>, Vec<Option<NodeId>>) {
+fn picked(
+    rt: &Runtime,
+    sensor: NodeId,
+    intersected: Vec<usize>,
+    distance: &dyn Fn(usize) -> f64,
+    geometry: &dyn Fn(usize) -> NodeId,
+) -> (Vec<usize>, Vec<Option<NodeId>>) {
     let mut picked = intersected;
     let sort_order = string(rt, sensor, "sortOrder");
     let sort_order = match sort_order.as_str() {
@@ -598,11 +725,18 @@ fn send_picked(rt: &mut Runtime, sensor: NodeId, geometries: Vec<Option<NodeId>>
 
 /// The points of the PointSet's coord (`coord .get1Point (i)` for `i < coord .getSize ()`).
 fn coord_points(rt: &Runtime, point_set: NodeId) -> Vec<Vector3> {
-    let Some(FieldValue::SFNode(Some(c))) = rt.pre_value(point_set, "coord") else { return vec![] };
-    let Some(c) = rt.inner_node(*c) else { return vec![] };
+    let Some(FieldValue::SFNode(Some(c))) = rt.pre_value(point_set, "coord") else {
+        return vec![];
+    };
+    let Some(c) = rt.inner_node(*c) else {
+        return vec![];
+    };
 
     match rt.pre_value(c, "point") {
-        Some(FieldValue::MFVec3f(p)) => p.chunks_exact(3).map(|p| v(p[0] as f64, p[1] as f64, p[2] as f64)).collect(),
+        Some(FieldValue::MFVec3f(p)) => p
+            .chunks_exact(3)
+            .map(|p| v(p[0] as f64, p[1] as f64, p[2] as f64))
+            .collect(),
         Some(FieldValue::MFVec3d(p)) => p.chunks_exact(3).map(|p| v(p[0], p[1], p[2])).collect(),
         _ => vec![],
     }
@@ -610,14 +744,27 @@ fn coord_points(rt: &Runtime, point_set: NodeId) -> Vec<Vector3> {
 
 /// PointPickSensor, PrimitivePickSensor and VolumePickSensor `process` with the model matrices
 /// of the sensor and its collected targets (geometry, model matrix), in traversal order.
-pub fn volume_pick_process(rt: &mut Runtime, shapes: &mut crate::pick_shapes::PickShapes, geometry: &HashMap<NodeId, Option<Rc<Geometry>>>, sensor: NodeId, model_matrices: &[Matrix4], collected: Vec<(NodeId, Matrix4)>) {
-    use crate::pick_shapes::{base_shape, PickShapes};
+pub fn volume_pick_process(
+    rt: &mut Runtime,
+    shapes: &mut crate::pick_shapes::PickShapes,
+    geometry: &HashMap<NodeId, Option<Rc<Geometry>>>,
+    sensor: NodeId,
+    model_matrices: &[Matrix4],
+    collected: Vec<(NodeId, Matrix4)>,
+) {
+    use crate::pick_shapes::{PickShapes, base_shape};
 
-    let Some(pg_node) = picking_geometry(rt, sensor) else { return };
+    let Some(pg_node) = picking_geometry(rt, sensor) else {
+        return;
+    };
     let points_sensor = rt.builtin_name(sensor) == Some("PointPickSensor");
 
     let get = |n: NodeId| geometry.get(&n).cloned().flatten();
-    let bounds = |g: &Option<Rc<Geometry>>| g.as_ref().map(|g| (g.min, g.max)).unwrap_or((Vector3::ZERO, Vector3::ZERO));
+    let bounds = |g: &Option<Rc<Geometry>>| {
+        g.as_ref()
+            .map(|g| (g.min, g.max))
+            .unwrap_or((Vector3::ZERO, Vector3::ZERO))
+    };
 
     let pg = get(pg_node);
     let (pg_min, pg_max) = bounds(&pg);
@@ -631,10 +778,30 @@ pub fn volume_pick_process(rt: &mut Runtime, shapes: &mut crate::pick_shapes::Pi
         picked_point: Vec<Vector3>,
     }
 
-    let mut targets: Vec<VTarget> = collected.into_iter().map(|(geometry, matrix)| VTarget { geometry, matrix, intersected: false, distance: 0.0, picked_point: vec![] }).collect();
-    let points = if points_sensor { coord_points(rt, pg_node) } else { vec![] };
-    let picking_base = if points_sensor { None } else { base_shape(rt, pg_node, pg.as_deref()) };
-    let target_bases: Vec<_> = targets.iter().map(|t| base_shape(rt, t.geometry, get(t.geometry).as_deref())).collect();
+    let mut targets: Vec<VTarget> = collected
+        .into_iter()
+        .map(|(geometry, matrix)| VTarget {
+            geometry,
+            matrix,
+            intersected: false,
+            distance: 0.0,
+            picked_point: vec![],
+        })
+        .collect();
+    let points = if points_sensor {
+        coord_points(rt, pg_node)
+    } else {
+        vec![]
+    };
+    let picking_base = if points_sensor {
+        None
+    } else {
+        base_shape(rt, pg_node, pg.as_deref())
+    };
+    let target_bases: Vec<_> = targets
+        .iter()
+        .map(|t| base_shape(rt, t.geometry, get(t.geometry).as_deref()))
+        .collect();
 
     for model in model_matrices {
         let picking_box = Box3::extents(&pg_min, &pg_max).mult_right(model);
@@ -678,7 +845,9 @@ pub fn volume_pick_process(rt: &mut Runtime, shapes: &mut crate::pick_shapes::Pi
 
         // setChildShape1 / setChildShape2 run (and scale the shapes) even when the picking
         // shape is empty.
-        let placed_picker = picking_base.as_ref().map(|b| shapes.place(pg_node, b, model));
+        let placed_picker = picking_base
+            .as_ref()
+            .map(|b| shapes.place(pg_node, b, model));
         shapes.set_child(sensor, 0, placed_picker.as_ref());
 
         for (target, base) in targets.iter_mut().zip(&target_bases) {
@@ -686,7 +855,10 @@ pub fn volume_pick_process(rt: &mut Runtime, shapes: &mut crate::pick_shapes::Pi
             let placed = shapes.place(target.geometry, base, &target.matrix);
             shapes.set_child(sensor, 1, Some(&placed));
 
-            if placed_picker.as_ref().is_some_and(|p| shapes.contact(sensor, p, &placed)) {
+            if placed_picker
+                .as_ref()
+                .is_some_and(|p| shapes.contact(sensor, p, &placed))
+            {
                 let (t_min, t_max) = bounds(&get(target.geometry));
                 let target_box = Box3::extents(&t_min, &t_max).mult_right(&target.matrix);
                 target.intersected = true;
@@ -695,13 +867,22 @@ pub fn volume_pick_process(rt: &mut Runtime, shapes: &mut crate::pick_shapes::Pi
         }
     }
 
-    let intersected: Vec<usize> = (0..targets.len()).filter(|&i| targets[i].intersected).collect();
-    let (picked_targets, geometries) = picked(rt, sensor, intersected, &|i| targets[i].distance, &|i| targets[i].geometry);
+    let intersected: Vec<usize> = (0..targets.len())
+        .filter(|&i| targets[i].intersected)
+        .collect();
+    let (picked_targets, geometries) =
+        picked(rt, sensor, intersected, &|i| targets[i].distance, &|i| {
+            targets[i].geometry
+        });
 
     send_picked(rt, sensor, geometries);
 
     if points_sensor && !bounds_mode {
-        let points = mf_vec3f(picked_targets.iter().flat_map(|&i| targets[i].picked_point.iter().copied()));
+        let points = mf_vec3f(
+            picked_targets
+                .iter()
+                .flat_map(|&i| targets[i].picked_point.iter().copied()),
+        );
         set_if_changed(rt, sensor, "pickedPoint", points);
     }
 }

@@ -4,11 +4,11 @@
 //! padding, y is document y without the top padding); the renderer converts window
 //! pixels with [`Editor::div_from_window`].
 
+use cm_core::Pos;
 use cm_core::pos::cmp;
 use cm_core::util::misc::{count_column, find_column};
-use cm_core::Pos;
 
-use crate::editor::{sel_mouse, Editor, MouseState};
+use crate::editor::{Editor, MouseState, sel_mouse};
 use crate::measure::PosInfo;
 
 const DOUBLECLICK_DELAY: f64 = 400.0;
@@ -35,7 +35,9 @@ struct PastClick {
 
 impl PastClick {
     fn compare(&self, time: f64, pos: Pos, button: u8) -> bool {
-        self.time + DOUBLECLICK_DELAY > time && cmp(&pos, &self.pos).is_eq() && button == self.button
+        self.time + DOUBLECLICK_DELAY > time
+            && cmp(&pos, &self.pos).is_eq()
+            && button == self.button
     }
 }
 
@@ -56,16 +58,27 @@ pub enum Repeat {
 impl ClickTracker {
     /// `clickRepeat(pos, button)`.
     fn click_repeat(&mut self, pos: Pos, button: u8, now: f64) -> Repeat {
-        if self.last_double.is_some_and(|c| c.compare(now, pos, button)) {
+        if self
+            .last_double
+            .is_some_and(|c| c.compare(now, pos, button))
+        {
             self.last_click = None;
             self.last_double = None;
             Repeat::Triple
         } else if self.last_click.is_some_and(|c| c.compare(now, pos, button)) {
-            self.last_double = Some(PastClick { time: now, pos, button });
+            self.last_double = Some(PastClick {
+                time: now,
+                pos,
+                button,
+            });
             self.last_click = None;
             Repeat::Double
         } else {
-            self.last_click = Some(PastClick { time: now, pos, button });
+            self.last_click = Some(PastClick {
+                time: now,
+                pos,
+                button,
+            });
             self.last_double = None;
             Repeat::Single
         }
@@ -92,15 +105,31 @@ pub struct Behavior {
 #[derive(Clone, Debug)]
 pub(crate) enum SelectDrag {
     /// `leftButtonSelect` in progress.
-    Select { start: Pos, behavior: Behavior, our_index: usize, our_range: (Pos, Pos), start_sel: Vec<(Pos, Pos)>, last_pos: Pos },
+    Select {
+        start: Pos,
+        behavior: Behavior,
+        our_index: usize,
+        our_range: (Pos, Pos),
+        start_sel: Vec<(Pos, Pos)>,
+        last_pos: Pos,
+    },
     /// `leftButtonStartDrag`: a press inside the selection.
-    Drag { pos: Pos, behavior: Behavior, start_x: f64, start_y: f64, moved: bool },
+    Drag {
+        pos: Pos,
+        behavior: Behavior,
+        start_x: f64,
+        start_y: f64,
+        moved: bool,
+    },
 }
 
 impl Editor {
     /// Window pixels (relative to the editor's top-left) to "div" coordinates.
     pub fn div_from_window(&self, wx: f64, wy: f64) -> (f64, f64) {
-        (wx - self.gutter_width + self.display.scroll_left, wy + self.display.scroll_top - self.metrics.padding_top)
+        (
+            wx - self.gutter_width + self.display.scroll_left,
+            wy + self.display.scroll_top - self.metrics.padding_top,
+        )
     }
 
     /// `posFromMouse(cm, e, liberal, forRect)`.
@@ -109,9 +138,18 @@ impl Editor {
         if for_rect && coords.x_rel > 0.0 {
             let line = self.line_text(coords.line);
             if line.len() as i64 == coords.ch {
-                let col_diff = count_column(&line, Some(line.len()), self.options.tab_size, 0, 0) - line.len() as i64;
-                let ch = (((x - self.metrics.padding_h) / self.metrics.char_width).round() as i64 - col_diff).max(0);
-                coords = PosInfo { line: coords.line, ch, sticky: None, outside: 0, x_rel: 0.0 };
+                let col_diff = count_column(&line, Some(line.len()), self.options.tab_size, 0, 0)
+                    - line.len() as i64;
+                let ch = (((x - self.metrics.padding_h) / self.metrics.char_width).round() as i64
+                    - col_diff)
+                    .max(0);
+                coords = PosInfo {
+                    line: coords.line,
+                    ch,
+                    sticky: None,
+                    outside: 0,
+                    x_rel: 0.0,
+                };
             }
         }
         coords
@@ -164,9 +202,22 @@ impl Editor {
         let pos = info.pos();
         let ranges = self.doc.list_selections();
         if self.options.drag_drop && !self.is_read_only() && repeat == Repeat::Single {
-            if let Some(c) = ranges.iter().find(|r| cmp(&pos, &r.from()).is_ge() && cmp(&pos, &r.to()).is_le()) {
-                if (cmp(&c.from(), &pos).is_lt() || info.x_rel > 0.0) && (cmp(&c.to(), &pos).is_gt() || info.x_rel < 0.0) {
-                    self.mouse = Some(MouseState { sel: SelectDrag::Drag { pos, behavior, start_x: e.x, start_y: e.y, moved: false } });
+            if let Some(c) = ranges
+                .iter()
+                .find(|r| cmp(&pos, &r.from()).is_ge() && cmp(&pos, &r.to()).is_le())
+            {
+                if (cmp(&c.from(), &pos).is_lt() || info.x_rel > 0.0)
+                    && (cmp(&c.to(), &pos).is_gt() || info.x_rel < 0.0)
+                {
+                    self.mouse = Some(MouseState {
+                        sel: SelectDrag::Drag {
+                            pos,
+                            behavior,
+                            start_x: e.x,
+                            start_y: e.y,
+                            moved: false,
+                        },
+                    });
                     return;
                 }
             }
@@ -178,7 +229,10 @@ impl Editor {
     fn range_for_unit(&self, pos: Pos, unit: MouseUnit) -> (Pos, Pos) {
         match unit {
             MouseUnit::Word => self.find_word_at(pos),
-            MouseUnit::Line => (Pos::new(pos.line, 0), self.doc.clip_pos(Pos::new(pos.line + 1, 0))),
+            MouseUnit::Line => (
+                Pos::new(pos.line, 0),
+                self.doc.clip_pos(Pos::new(pos.line + 1, 0)),
+            ),
             _ => (pos, pos),
         }
     }
@@ -187,7 +241,11 @@ impl Editor {
     fn left_button_select(&mut self, e: &MouseEvent, start: Pos, behavior: Behavior) {
         let sel = self.doc.selection();
         let ranges: Vec<(Pos, Pos)> = sel.ranges.iter().map(|r| (r.anchor, r.head)).collect();
-        let contains = |p: Pos| sel.ranges.iter().position(|r| cmp(&p, &r.from()).is_ge() && cmp(&p, &r.to()).is_le());
+        let contains = |p: Pos| {
+            sel.ranges
+                .iter()
+                .position(|r| cmp(&p, &r.from()).is_ge() && cmp(&p, &r.to()).is_le())
+        };
         let (mut our_range, mut our_index): ((Pos, Pos), i64);
         if behavior.add_new && !behavior.extend {
             match contains(start) {
@@ -213,54 +271,165 @@ impl Editor {
             our_index = -1;
         } else {
             let range = self.range_for_unit(start, behavior.unit);
-            our_range = if behavior.extend { extend_range(our_range, range.0, Some(range.1), true) } else { range };
+            our_range = if behavior.extend {
+                extend_range(our_range, range.0, Some(range.1), true)
+            } else {
+                range
+            };
         }
         let mut start_sel = ranges.clone();
         if !behavior.add_new {
             our_index = 0;
-            self.doc.set_selections(&[(our_range.0, Some(our_range.1))], Some(0), sel_mouse());
-            start_sel = self.doc.list_selections().iter().map(|r| (r.anchor, r.head)).collect();
+            self.doc
+                .set_selections(&[(our_range.0, Some(our_range.1))], Some(0), sel_mouse());
+            start_sel = self
+                .doc
+                .list_selections()
+                .iter()
+                .map(|r| (r.anchor, r.head))
+                .collect();
         } else if our_index == -1 {
             our_index = ranges.len() as i64;
-            let mut rs: Vec<(Pos, Option<Pos>)> = ranges.iter().map(|(a, h)| (*a, Some(*h))).collect();
+            let mut rs: Vec<(Pos, Option<Pos>)> =
+                ranges.iter().map(|(a, h)| (*a, Some(*h))).collect();
             rs.push((our_range.0, Some(our_range.1)));
-            self.doc.set_selections(&rs, Some(our_index as usize), Some(cm_core::SelOptions { scroll: Some(false), origin: Some("*mouse".into()), ..Default::default() }));
-        } else if ranges.len() > 1 && ranges[our_index as usize].0 == ranges[our_index as usize].1 && behavior.unit == MouseUnit::Char && !behavior.extend {
-            let rs: Vec<(Pos, Option<Pos>)> = ranges.iter().enumerate().filter(|(i, _)| *i as i64 != our_index).map(|(_, (a, h))| (*a, Some(*h))).collect();
-            self.doc.set_selections(&rs, Some(0), Some(cm_core::SelOptions { scroll: Some(false), origin: Some("*mouse".into()), ..Default::default() }));
-            start_sel = self.doc.list_selections().iter().map(|r| (r.anchor, r.head)).collect();
+            self.doc.set_selections(
+                &rs,
+                Some(our_index as usize),
+                Some(cm_core::SelOptions {
+                    scroll: Some(false),
+                    origin: Some("*mouse".into()),
+                    ..Default::default()
+                }),
+            );
+        } else if ranges.len() > 1
+            && ranges[our_index as usize].0 == ranges[our_index as usize].1
+            && behavior.unit == MouseUnit::Char
+            && !behavior.extend
+        {
+            let rs: Vec<(Pos, Option<Pos>)> = ranges
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| *i as i64 != our_index)
+                .map(|(_, (a, h))| (*a, Some(*h)))
+                .collect();
+            self.doc.set_selections(
+                &rs,
+                Some(0),
+                Some(cm_core::SelOptions {
+                    scroll: Some(false),
+                    origin: Some("*mouse".into()),
+                    ..Default::default()
+                }),
+            );
+            start_sel = self
+                .doc
+                .list_selections()
+                .iter()
+                .map(|r| (r.anchor, r.head))
+                .collect();
         } else {
-            self.doc.replace_one_selection(our_index as usize, our_range.0, our_range.1, sel_mouse());
+            self.doc.replace_one_selection(
+                our_index as usize,
+                our_range.0,
+                our_range.1,
+                sel_mouse(),
+            );
         }
-        self.mouse = Some(MouseState { sel: SelectDrag::Select { start, behavior, our_index: our_index.max(0) as usize, our_range, start_sel, last_pos: start } });
+        self.mouse = Some(MouseState {
+            sel: SelectDrag::Select {
+                start,
+                behavior,
+                our_index: our_index.max(0) as usize,
+                our_range,
+                start_sel,
+                last_pos: start,
+            },
+        });
     }
 
     /// Mouse motion with the button held (`extend(e)` / drag tracking).
     pub fn mouse_move(&mut self, e: &MouseEvent) {
-        let Some(state) = self.mouse.take() else { return };
+        let Some(state) = self.mouse.take() else {
+            return;
+        };
         match state.sel {
-            SelectDrag::Drag { pos, behavior, start_x, start_y, moved } => {
+            SelectDrag::Drag {
+                pos,
+                behavior,
+                start_x,
+                start_y,
+                moved,
+            } => {
                 let moved = moved || (start_x - e.x).abs() + (start_y - e.y).abs() >= 10.0;
-                self.mouse = Some(MouseState { sel: SelectDrag::Drag { pos, behavior, start_x, start_y, moved } });
+                self.mouse = Some(MouseState {
+                    sel: SelectDrag::Drag {
+                        pos,
+                        behavior,
+                        start_x,
+                        start_y,
+                        moved,
+                    },
+                });
             }
-            SelectDrag::Select { start, behavior, our_index, our_range, start_sel, last_pos } => {
-                let cur = self.pos_from_mouse(e.x, e.y, behavior.unit == MouseUnit::Rectangle).pos();
+            SelectDrag::Select {
+                start,
+                behavior,
+                our_index,
+                our_range,
+                start_sel,
+                last_pos,
+            } => {
+                let cur = self
+                    .pos_from_mouse(e.x, e.y, behavior.unit == MouseUnit::Rectangle)
+                    .pos();
                 let mut last = last_pos;
                 if cmp(&cur, &last_pos).is_ne() {
                     last = cur;
-                    self.run_op(|cm| cm.extend_to(cur, start, behavior, our_index, our_range, &start_sel));
+                    self.run_op(|cm| {
+                        cm.extend_to(cur, start, behavior, our_index, our_range, &start_sel)
+                    });
                 }
-                self.mouse = Some(MouseState { sel: SelectDrag::Select { start, behavior, our_index, our_range, start_sel, last_pos: last } });
+                self.mouse = Some(MouseState {
+                    sel: SelectDrag::Select {
+                        start,
+                        behavior,
+                        our_index,
+                        our_range,
+                        start_sel,
+                        last_pos: last,
+                    },
+                });
             }
         }
     }
 
     /// `extendTo(pos)` inside `leftButtonSelect`.
-    fn extend_to(&mut self, pos: Pos, start: Pos, behavior: Behavior, our_index: usize, our_range: (Pos, Pos), start_sel: &[(Pos, Pos)]) {
+    fn extend_to(
+        &mut self,
+        pos: Pos,
+        start: Pos,
+        behavior: Behavior,
+        our_index: usize,
+        our_range: (Pos, Pos),
+        start_sel: &[(Pos, Pos)],
+    ) {
         if behavior.unit == MouseUnit::Rectangle {
             let tab_size = self.options.tab_size;
-            let start_col = count_column(&self.line_text(start.line), Some(start.ch.max(0) as usize), tab_size, 0, 0);
-            let pos_col = count_column(&self.line_text(pos.line), Some(pos.ch.max(0) as usize), tab_size, 0, 0);
+            let start_col = count_column(
+                &self.line_text(start.line),
+                Some(start.ch.max(0) as usize),
+                tab_size,
+                0,
+                0,
+            );
+            let pos_col = count_column(
+                &self.line_text(pos.line),
+                Some(pos.ch.max(0) as usize),
+                tab_size,
+                0,
+                0,
+            );
             let (left, right) = (start_col.min(pos_col), start_col.max(pos_col));
             let mut ranges: Vec<(Pos, Option<Pos>)> = Vec::new();
             let end = self.last_line().min(start.line.max(pos.line));
@@ -270,15 +439,29 @@ impl Editor {
                 if left == right {
                     ranges.push((Pos::new(line, left_pos), Some(Pos::new(line, left_pos))));
                 } else if text.len() as i64 > left_pos {
-                    ranges.push((Pos::new(line, left_pos), Some(Pos::new(line, find_column(&text, right, tab_size)))));
+                    ranges.push((
+                        Pos::new(line, left_pos),
+                        Some(Pos::new(line, find_column(&text, right, tab_size))),
+                    ));
                 }
             }
             if ranges.is_empty() {
                 ranges.push((start, Some(start)));
             }
-            let mut all: Vec<(Pos, Option<Pos>)> = start_sel[..our_index.min(start_sel.len())].iter().map(|(a, h)| (*a, Some(*h))).collect();
+            let mut all: Vec<(Pos, Option<Pos>)> = start_sel[..our_index.min(start_sel.len())]
+                .iter()
+                .map(|(a, h)| (*a, Some(*h)))
+                .collect();
             all.extend(ranges);
-            self.doc.set_selections(&all, Some(our_index), Some(cm_core::SelOptions { origin: Some("*mouse".into()), scroll: Some(false), ..Default::default() }));
+            self.doc.set_selections(
+                &all,
+                Some(our_index),
+                Some(cm_core::SelOptions {
+                    origin: Some("*mouse".into()),
+                    scroll: Some(false),
+                    ..Default::default()
+                }),
+            );
         } else {
             let old = our_range;
             let range = self.range_for_unit(pos, behavior.unit);
@@ -292,7 +475,8 @@ impl Editor {
                 head = range.0;
                 anchor = max_pos(&old_to, &range.1);
             }
-            let mut rs: Vec<(Pos, Option<Pos>)> = start_sel.iter().map(|(a, h)| (*a, Some(*h))).collect();
+            let mut rs: Vec<(Pos, Option<Pos>)> =
+                start_sel.iter().map(|(a, h)| (*a, Some(*h))).collect();
             let r = (self.doc.clip_pos(anchor), Some(head));
             if our_index < rs.len() {
                 rs[our_index] = r;
@@ -305,12 +489,19 @@ impl Editor {
 
     /// Mouse button release (`done(e)` / `dragEnd`). `e` is `None` to cancel.
     pub fn mouse_up(&mut self, e: Option<&MouseEvent>) {
-        let Some(state) = self.mouse.take() else { return };
+        let Some(state) = self.mouse.take() else {
+            return;
+        };
         match state.sel {
             SelectDrag::Select { .. } => {
                 self.doc.clear_last_sel_origin();
             }
-            SelectDrag::Drag { pos, behavior, moved, .. } => {
+            SelectDrag::Drag {
+                pos,
+                behavior,
+                moved,
+                ..
+            } => {
                 let e = match e {
                     Some(e) => *e,
                     None => return,
@@ -326,7 +517,11 @@ impl Editor {
                     if self.is_read_only() {
                         return;
                     }
-                    let inside = self.doc.list_selections().iter().any(|r| cmp(&drop, &r.from()).is_ge() && cmp(&drop, &r.to()).is_le());
+                    let inside = self
+                        .doc
+                        .list_selections()
+                        .iter()
+                        .any(|r| cmp(&drop, &r.from()).is_ge() && cmp(&drop, &r.to()).is_le());
                     if inside {
                         return;
                     }
@@ -336,14 +531,20 @@ impl Editor {
                     }
                     let copy = !behavior.move_on_drag;
                     self.run_op(|cm| {
-                        let selected = if copy { None } else { Some(cm.doc.list_selections()) };
+                        let selected = if copy {
+                            None
+                        } else {
+                            Some(cm.doc.list_selections())
+                        };
                         cm.doc.set_cursor(drop, None);
                         if let Some(sel) = selected {
                             for r in &sel {
-                                cm.doc.replace_range("", r.anchor, Some(r.head), Some("drag"));
+                                cm.doc
+                                    .replace_range("", r.anchor, Some(r.head), Some("drag"));
                             }
                         }
-                        cm.doc.replace_selection(&text, Some("around"), Some("paste"));
+                        cm.doc
+                            .replace_selection(&text, Some("around"), Some("paste"));
                     });
                 }
             }

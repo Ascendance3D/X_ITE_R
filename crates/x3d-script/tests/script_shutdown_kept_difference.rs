@@ -26,7 +26,10 @@ struct Files(Rc<HashMap<String, Vec<u8>>>);
 
 impl Fetcher for Files {
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
-        self.0.get(url.path().trim_start_matches("/shutdown-kept/")).cloned().ok_or_else(|| "Error: Not Found".to_string())
+        self.0
+            .get(url.path().trim_start_matches("/shutdown-kept/"))
+            .cloned()
+            .ok_or_else(|| "Error: Not Found".to_string())
     }
 }
 
@@ -51,7 +54,10 @@ DEF Maker Script {
 fn world(files: &[(&str, &str)], body: &str) -> Runtime {
     let text = format!("#VRML V2.0 utf8\n{body}");
     let scene = x3d_parse::parse_bytes(text.as_bytes(), &format!("{BASE}main.wrl")).unwrap();
-    let map: HashMap<String, Vec<u8>> = files.iter().map(|(n, c)| (n.to_string(), c.as_bytes().to_vec())).collect();
+    let map: HashMap<String, Vec<u8>> = files
+        .iter()
+        .map(|(n, c)| (n.to_string(), c.as_bytes().to_vec()))
+        .collect();
     let mut rt = Runtime::new(scene, Box::new(Files(Rc::new(map))));
 
     rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
@@ -93,7 +99,12 @@ DEF Inl Inline { url "content.wrl" }
 "#;
 
 fn big_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {
-    std::thread::Builder::new().stack_size(64 << 20).spawn(f).unwrap().join().unwrap()
+    std::thread::Builder::new()
+        .stack_size(64 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap()
 }
 
 /// Unloading the world (what replacing it does) runs `shutdown ()` of every Script once, nested scene included.
@@ -102,8 +113,19 @@ fn unloading_the_world_runs_shutdown_once_per_script() {
     big_stack(|| {
         let mut rt = world(&[("content.wrl", CONTENT)], MAIN);
 
-        assert_eq!((count(&rt, "log: Outer initialize"), count(&rt, "log: Maker initialize")), (1, 1), "{:?}", rt.console);
-        assert_eq!(count(&rt, "log: Outer shutdown") + count(&rt, "log: Maker shutdown"), 0);
+        assert_eq!(
+            (
+                count(&rt, "log: Outer initialize"),
+                count(&rt, "log: Maker initialize")
+            ),
+            (1, 1),
+            "{:?}",
+            rt.console
+        );
+        assert_eq!(
+            count(&rt, "log: Outer shutdown") + count(&rt, "log: Maker shutdown"),
+            0
+        );
 
         rt.unload_world();
         rt.settle();
@@ -128,16 +150,30 @@ fn replacing_an_inline_scene_runs_shutdown_once_each_time() {
             rt.settle();
             step(&mut rt);
             step(&mut rt);
-            assert_eq!(count(&rt, "log: Maker shutdown"), round, "round {round}: {:?}", rt.console);
+            assert_eq!(
+                count(&rt, "log: Maker shutdown"),
+                round,
+                "round {round}: {:?}",
+                rt.console
+            );
 
             set_load(&mut rt, true);
             rt.settle();
             step(&mut rt);
             step(&mut rt);
-            assert_eq!(count(&rt, "log: Maker initialize"), round + 1, "round {round}: {:?}", rt.console);
+            assert_eq!(
+                count(&rt, "log: Maker initialize"),
+                round + 1,
+                "round {round}: {:?}",
+                rt.console
+            );
         }
 
-        assert_eq!(count(&rt, "log: Outer shutdown"), 0, "the world itself is still there");
+        assert_eq!(
+            count(&rt, "log: Outer shutdown"),
+            0,
+            "the world itself is still there"
+        );
     });
 }
 
@@ -190,7 +226,12 @@ fn twenty_load_unload_cycles_release_everything() {
                 step(&mut rt);
             }
 
-            assert_eq!(count(&rt, "log: Maker shutdown"), cycle, "cycle {cycle}: {:?}", rt.console);
+            assert_eq!(
+                count(&rt, "log: Maker shutdown"),
+                cycle,
+                "cycle {cycle}: {:?}",
+                rt.console
+            );
             live_off.push(arena_live(&rt));
             arena.push(rt.scene.nodes.len());
 
@@ -201,20 +242,47 @@ fn twenty_load_unload_cycles_release_everything() {
                 step(&mut rt);
             }
 
-            assert_eq!(count(&rt, "log: Maker initialize"), cycle + 1, "cycle {cycle}");
+            assert_eq!(
+                count(&rt, "log: Maker initialize"),
+                cycle + 1,
+                "cycle {cycle}"
+            );
         }
 
         // With the Inline off, what is live is the same after every cycle (the nodes the Script made went with its scene).
-        assert!(live_off.windows(2).all(|w| w[0] == w[1]), "live nodes while unloaded: {live_off:?}");
-        assert!(arena[2..].windows(2).all(|w| w[0] == w[1]), "the arena keeps growing: {arena:?}");
-        assert!(rt.released_total > 20, "nothing was released: {}", rt.released_total);
-        assert!(rt.release_pending() < 64, "candidates pile up: {}", rt.release_pending());
-        assert!(rt.dynamic_nodes.len() < 64, "Script-created nodes pile up: {}", rt.dynamic_nodes.len());
+        assert!(
+            live_off.windows(2).all(|w| w[0] == w[1]),
+            "live nodes while unloaded: {live_off:?}"
+        );
+        assert!(
+            arena[2..].windows(2).all(|w| w[0] == w[1]),
+            "the arena keeps growing: {arena:?}"
+        );
+        assert!(
+            rt.released_total > 20,
+            "nothing was released: {}",
+            rt.released_total
+        );
+        assert!(
+            rt.release_pending() < 64,
+            "candidates pile up: {}",
+            rt.release_pending()
+        );
+        assert!(
+            rt.dynamic_nodes.len() < 64,
+            "Script-created nodes pile up: {}",
+            rt.dynamic_nodes.len()
+        );
 
         rt.unload_world();
         rt.settle();
         step(&mut rt);
         assert_eq!(count(&rt, "log: Outer shutdown"), 1);
-        assert_eq!(count(&rt, "log: Maker shutdown"), 20 + 1, "the last load is shut down by the unload: {:?}", rt.console);
+        assert_eq!(
+            count(&rt, "log: Maker shutdown"),
+            20 + 1,
+            "the last load is shut down by the unload: {:?}",
+            rt.console
+        );
     });
 }

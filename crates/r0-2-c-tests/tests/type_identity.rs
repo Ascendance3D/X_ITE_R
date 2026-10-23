@@ -23,16 +23,31 @@ const TMP: &str = env!("CARGO_TARGET_TMPDIR");
 
 #[test]
 fn scene_facade_is_the_engine_type() {
-    assert_eq!(TypeId::of::<vrml97::Scene>(), TypeId::of::<x3d_scene::Scene>());
+    assert_eq!(
+        TypeId::of::<vrml97::Scene>(),
+        TypeId::of::<x3d_scene::Scene>()
+    );
 }
 
 #[test]
 fn shared_shape_types_are_one_type() {
     // R0.2-B section 4.4: same shape on both sides. Option B leaves one Rust type each.
-    assert_eq!(TypeId::of::<vrml97::fields::FieldValue>(), TypeId::of::<x3d_fields::value::FieldValue>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Matrix4>(), TypeId::of::<x3d_fields::math::matrix::Matrix4>());
-    assert_eq!(TypeId::of::<vrml97::ParseError>(), TypeId::of::<x3d_parse::ParseError>());
-    assert_eq!(TypeId::of::<vrml97::LoadError>(), TypeId::of::<x3d_parse::LoadError>());
+    assert_eq!(
+        TypeId::of::<vrml97::fields::FieldValue>(),
+        TypeId::of::<x3d_fields::value::FieldValue>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Matrix4>(),
+        TypeId::of::<x3d_fields::math::matrix::Matrix4>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::ParseError>(),
+        TypeId::of::<x3d_parse::ParseError>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::LoadError>(),
+        TypeId::of::<x3d_parse::LoadError>()
+    );
 }
 
 #[test]
@@ -63,10 +78,19 @@ fn engine_parse_error_is_accepted_where_facade_is_expected() {
 #[test]
 fn matrix4_published_has_set_transform() {
     let mut m = vrml97::fields::math::Matrix4::IDENTITY;
-    let t = vrml97::fields::math::Vector3 { x: 1.0, y: 2.0, z: 3.0 };
+    let t = vrml97::fields::math::Vector3 {
+        x: 1.0,
+        y: 2.0,
+        z: 3.0,
+    };
     m.set_transform(Some(&t), None, None, None, None);
     // Translation lands in elements 12..15 (X_ITE Matrix4.js translate).
-    assert_eq!(m.0, [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 2.0, 3.0, 1.0]);
+    assert_eq!(
+        m.0,
+        [
+            1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 2.0, 3.0, 1.0
+        ]
+    );
 }
 
 #[test]
@@ -123,7 +147,11 @@ fn field_types_and_default_variants_match_on_both_sides() {
 
 #[test]
 fn node_kind_facade_has_imported_variant() {
-    assert_probe_compiles(TMP, "node_kind_facade_has_imported", "let _ = vrml97::scene::scene::NodeKind::Imported(0);");
+    assert_probe_compiles(
+        TMP,
+        "node_kind_facade_has_imported",
+        "let _ = vrml97::scene::scene::NodeKind::Imported(0);",
+    );
 }
 
 #[test]
@@ -154,20 +182,39 @@ fn node_kind_four_arm_match_is_not_exhaustive_through_the_facade() {
 
 const ROUTE_SIX: &str = "source_node: 0, source_field: String::new(), destination_node: 0,
     destination_field: String::new(), source_loc: {P}::FieldLoc::Pre(0), destination_loc: {P}::FieldLoc::Pre(0),";
-const ROUTE_EXTRA: &str = "id: 0, conn: None, raw_source_field: String::new(), raw_destination_field: String::new(),";
+const ROUTE_EXTRA: &str =
+    "id: 0, conn: None, raw_source_field: String::new(), raw_destination_field: String::new(),";
 
 #[test]
 fn route_facade_is_exactly_the_ten_field_literal() {
     let six = ROUTE_SIX.replace("{P}", "vrml97::scene");
-    assert_probe_compiles(TMP, "route_facade_ten", &format!("let _ = vrml97::scene::scene::Route {{ {six} {ROUTE_EXTRA} }};"));
-    assert_probe_fails(TMP, "route_facade_six", &format!("let _ = vrml97::scene::scene::Route {{ {six} }};"), &["E0063"]);
+    assert_probe_compiles(
+        TMP,
+        "route_facade_ten",
+        &format!("let _ = vrml97::scene::scene::Route {{ {six} {ROUTE_EXTRA} }};"),
+    );
+    assert_probe_fails(
+        TMP,
+        "route_facade_six",
+        &format!("let _ = vrml97::scene::scene::Route {{ {six} }};"),
+        &["E0063"],
+    );
 }
 
 #[test]
 fn route_engine_is_exactly_the_ten_field_literal() {
     let six = ROUTE_SIX.replace("{P}", "x3d_scene");
-    assert_probe_compiles(TMP, "route_engine_ten", &format!("let _ = x3d_scene::scene::Route {{ {six} {ROUTE_EXTRA} }};"));
-    assert_probe_fails(TMP, "route_engine_six", &format!("let _ = x3d_scene::scene::Route {{ {six} }};"), &["E0063"]);
+    assert_probe_compiles(
+        TMP,
+        "route_engine_ten",
+        &format!("let _ = x3d_scene::scene::Route {{ {six} {ROUTE_EXTRA} }};"),
+    );
+    assert_probe_fails(
+        TMP,
+        "route_engine_six",
+        &format!("let _ = x3d_scene::scene::Route {{ {six} }};"),
+        &["E0063"],
+    );
 }
 
 // -------------------------------------------------------------------------
@@ -181,15 +228,33 @@ const CTX_EXTRA: &str = "imported: Default::default(), exported: Default::defaul
 #[test]
 fn execution_context_facade_is_exactly_the_nine_field_literal() {
     let seven = CTX_SEVEN.replace("{P}", "vrml97::scene");
-    assert_probe_compiles(TMP, "ctx_facade_nine", &format!("let _ = vrml97::scene::scene::ExecutionContext {{ {seven} {CTX_EXTRA} }};"));
-    assert_probe_fails(TMP, "ctx_facade_seven", &format!("let _ = vrml97::scene::scene::ExecutionContext {{ {seven} }};"), &["E0063"]);
+    assert_probe_compiles(
+        TMP,
+        "ctx_facade_nine",
+        &format!("let _ = vrml97::scene::scene::ExecutionContext {{ {seven} {CTX_EXTRA} }};"),
+    );
+    assert_probe_fails(
+        TMP,
+        "ctx_facade_seven",
+        &format!("let _ = vrml97::scene::scene::ExecutionContext {{ {seven} }};"),
+        &["E0063"],
+    );
 }
 
 #[test]
 fn execution_context_engine_is_exactly_the_nine_field_literal() {
     let seven = CTX_SEVEN.replace("{P}", "x3d_scene");
-    assert_probe_compiles(TMP, "ctx_engine_nine", &format!("let _ = x3d_scene::scene::ExecutionContext {{ {seven} {CTX_EXTRA} }};"));
-    assert_probe_fails(TMP, "ctx_engine_seven", &format!("let _ = x3d_scene::scene::ExecutionContext {{ {seven} }};"), &["E0063"]);
+    assert_probe_compiles(
+        TMP,
+        "ctx_engine_nine",
+        &format!("let _ = x3d_scene::scene::ExecutionContext {{ {seven} {CTX_EXTRA} }};"),
+    );
+    assert_probe_fails(
+        TMP,
+        "ctx_engine_seven",
+        &format!("let _ = x3d_scene::scene::ExecutionContext {{ {seven} }};"),
+        &["E0063"],
+    );
 }
 
 // -------------------------------------------------------------------------
@@ -222,8 +287,18 @@ fn scene_engine_has_the_four_engine_fields() {
 #[test]
 fn load_error_is_not_clone_on_either_side() {
     // One type since R0.2-D; both paths are kept so the record names both.
-    assert_probe_fails(TMP, "load_error_published_not_clone", "fn c<T: Clone>() {} c::<vrml97::LoadError>();", &["E0277"]);
-    assert_probe_fails(TMP, "load_error_engine_not_clone", "fn c<T: Clone>() {} c::<x3d_parse::LoadError>();", &["E0277"]);
+    assert_probe_fails(
+        TMP,
+        "load_error_published_not_clone",
+        "fn c<T: Clone>() {} c::<vrml97::LoadError>();",
+        &["E0277"],
+    );
+    assert_probe_fails(
+        TMP,
+        "load_error_engine_not_clone",
+        "fn c<T: Clone>() {} c::<x3d_parse::LoadError>();",
+        &["E0277"],
+    );
 }
 
 #[test]

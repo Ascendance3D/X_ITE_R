@@ -5,10 +5,10 @@
 
 use super::body::{BodyId, RigidBody};
 use super::boxbox;
-use super::contact::{ManifoldId, ManifoldPool, ManifoldResult, G_CONTACT_BREAKING_THRESHOLD};
+use super::contact::{G_CONTACT_BREAKING_THRESHOLD, ManifoldId, ManifoldPool, ManifoldResult};
 use super::dbvt::Aabb;
 use super::math::*;
-use super::shape::{to_bt, Shape, ShapeId, ShapeType, Shapes};
+use super::shape::{Shape, ShapeId, ShapeType, Shapes, to_bt};
 use crate::bullet::{self, Convex, Placed};
 
 /// A btCollisionObjectWrapper: shape, world transform and the owning object.
@@ -59,14 +59,21 @@ impl Cx<'_> {
     /// btCollisionDispatcher::needsResponse.
     pub fn needs_response(&self, b0: BodyId, b1: BodyId) -> bool {
         let (o0, o1) = (&self.bodies[b0], &self.bodies[b1]);
-        o0.has_contact_response() && o1.has_contact_response() && (!o0.is_static_or_kinematic() || !o1.is_static_or_kinematic())
+        o0.has_contact_response()
+            && o1.has_contact_response()
+            && (!o0.is_static_or_kinematic() || !o1.is_static_or_kinematic())
     }
 
     /// btCollisionDispatcher::getNewManifold for two collision objects.
     pub fn new_manifold(&mut self, b0: BodyId, b1: BodyId) -> ManifoldId {
-        let threshold = |b: BodyId| self.shapes.contact_breaking_threshold(self.bodies[b].shape, G_CONTACT_BREAKING_THRESHOLD);
+        let threshold = |b: BodyId| {
+            self.shapes
+                .contact_breaking_threshold(self.bodies[b].shape, G_CONTACT_BREAKING_THRESHOLD)
+        };
         let breaking = threshold(b0).min(threshold(b1));
-        let processing = self.bodies[b0].contact_processing_threshold.min(self.bodies[b1].contact_processing_threshold);
+        let processing = self.bodies[b0]
+            .contact_processing_threshold
+            .min(self.bodies[b1].contact_processing_threshold);
         self.pool.new_manifold(b0, b1, breaking, processing)
     }
 }
@@ -76,12 +83,32 @@ impl Cx<'_> {
 pub enum Algo {
     /// Nothing registered for the pair of shape types.
     Empty,
-    SphereSphere { manifold: ManifoldId, own: bool },
-    BoxBox { manifold: Option<ManifoldId>, own: bool },
-    ConvexConvex { manifold: Option<ManifoldId>, own: bool },
-    ConvexConcave { swapped: bool, manifold: ManifoldId },
-    Compound { swapped: bool, revision: i32, children: Vec<Option<Box<Algo>>> },
-    CompoundCompound { rev0: i32, rev1: i32, cache: Vec<(usize, usize, Box<Algo>)> },
+    SphereSphere {
+        manifold: ManifoldId,
+        own: bool,
+    },
+    BoxBox {
+        manifold: Option<ManifoldId>,
+        own: bool,
+    },
+    ConvexConvex {
+        manifold: Option<ManifoldId>,
+        own: bool,
+    },
+    ConvexConcave {
+        swapped: bool,
+        manifold: ManifoldId,
+    },
+    Compound {
+        swapped: bool,
+        revision: i32,
+        children: Vec<Option<Box<Algo>>>,
+    },
+    CompoundCompound {
+        rev0: i32,
+        rev1: i32,
+        cache: Vec<(usize, usize, Box<Algo>)>,
+    },
 }
 
 /// btCollisionDispatcher::findAlgorithm for wrappers (w0, w1).
@@ -91,32 +118,55 @@ pub fn find_algorithm(cx: &mut Cx, w0: &Wrap, w1: &Wrap) -> Algo {
 
     if t0 == ShapeType::Sphere && t1 == ShapeType::Sphere {
         let manifold = cx.new_manifold(w0.body, w1.body);
-        return Algo::SphereSphere { manifold, own: true };
+        return Algo::SphereSphere {
+            manifold,
+            own: true,
+        };
     }
 
     if t0 == ShapeType::Box && t1 == ShapeType::Box {
-        let manifold = if cx.needs_collision(w0.body, w1.body) { Some(cx.new_manifold(w0.body, w1.body)) } else { None };
-        return Algo::BoxBox { manifold, own: manifold.is_some() };
+        let manifold = if cx.needs_collision(w0.body, w1.body) {
+            Some(cx.new_manifold(w0.body, w1.body))
+        } else {
+            None
+        };
+        return Algo::BoxBox {
+            manifold,
+            own: manifold.is_some(),
+        };
     }
 
     if t0.is_convex() && t1.is_convex() {
-        return Algo::ConvexConvex { manifold: None, own: false };
+        return Algo::ConvexConvex {
+            manifold: None,
+            own: false,
+        };
     }
 
     if t0.is_convex() && t1.is_concave() {
         let manifold = cx.new_manifold(w0.body, w1.body);
-        return Algo::ConvexConcave { swapped: false, manifold };
+        return Algo::ConvexConcave {
+            swapped: false,
+            manifold,
+        };
     }
 
     if t1.is_convex() && t0.is_concave() {
         let manifold = cx.new_manifold(w1.body, w0.body);
-        return Algo::ConvexConcave { swapped: true, manifold };
+        return Algo::ConvexConcave {
+            swapped: true,
+            manifold,
+        };
     }
 
     if t0.is_compound() && t1.is_compound() {
         let rev0 = cx.shapes.update_revision(w0.shape);
         let rev1 = cx.shapes.update_revision(w1.shape);
-        return Algo::CompoundCompound { rev0, rev1, cache: vec![] };
+        return Algo::CompoundCompound {
+            rev0,
+            rev1,
+            cache: vec![],
+        };
     }
 
     if t0.is_compound() || t1.is_compound() {
@@ -125,7 +175,11 @@ pub fn find_algorithm(cx: &mut Cx, w0: &Wrap, w1: &Wrap) -> Algo {
         let revision = cx.shapes.update_revision(comp);
         let n = cx.shapes.num_child_shapes(comp);
         // the compound has a dynamic AABB tree, so no child algorithms are preallocated
-        return Algo::Compound { swapped, revision, children: (0..n).map(|_| None).collect() };
+        return Algo::Compound {
+            swapped,
+            revision,
+            children: (0..n).map(|_| None).collect(),
+        };
     }
 
     Algo::Empty
@@ -202,7 +256,11 @@ impl Algo {
             Algo::BoxBox { manifold, own } => {
                 let Some(m) = *manifold else { return };
                 res.manifold = Some(m);
-                let (Shape::Conv(c0), Shape::Conv(c1)) = (&cx.shapes.v[w0.shape], &cx.shapes.v[w1.shape]) else { return };
+                let (Shape::Conv(c0), Shape::Conv(c1)) =
+                    (&cx.shapes.v[w0.shape], &cx.shapes.v[w1.shape])
+                else {
+                    return;
+                };
                 let side1 = scale(add(c0.implicit, [c0.margin; 3]), 2.0);
                 let side2 = scale(add(c1.implicit, [c1.margin; 3]), 2.0);
                 let contacts = boxbox::box_box(w0.tf.o, &w0.tf.b, side1, w1.tf.o, &w1.tf.b, side2);
@@ -228,15 +286,29 @@ impl Algo {
                     res.refresh_contact_points(cx.pool, cx.bodies);
                 }
             }
-            Algo::ConvexConcave { swapped, manifold } => convex_concave(cx, *swapped, *manifold, w0, w1, res),
-            Algo::Compound { swapped, revision, children } => compound(cx, *swapped, *revision, children, w0, w1, res),
-            Algo::CompoundCompound { rev0, rev1, cache } => compound_compound(cx, *rev0, *rev1, cache, w0, w1, res),
+            Algo::ConvexConcave { swapped, manifold } => {
+                convex_concave(cx, *swapped, *manifold, w0, w1, res)
+            }
+            Algo::Compound {
+                swapped,
+                revision,
+                children,
+            } => compound(cx, *swapped, *revision, children, w0, w1, res),
+            Algo::CompoundCompound { rev0, rev1, cache } => {
+                compound_compound(cx, *rev0, *rev1, cache, w0, w1, res)
+            }
         }
     }
 }
 
 /// btSphereSphereCollisionAlgorithm::processCollision.
-fn sphere_sphere(cx: &mut Cx, manifold: ManifoldId, w0: &Wrap, w1: &Wrap, res: &mut ManifoldResult) {
+fn sphere_sphere(
+    cx: &mut Cx,
+    manifold: ManifoldId,
+    w0: &Wrap,
+    w1: &Wrap,
+    res: &mut ManifoldResult,
+) {
     res.manifold = Some(manifold);
     let r0 = cx.shapes.get_margin(w0.shape);
     let r1 = cx.shapes.get_margin(w1.shape);
@@ -273,23 +345,56 @@ fn core_of(shapes: &Shapes, id: ShapeId) -> Option<Convex> {
 
 /// btConvexConvexAlgorithm::processCollision for the GJK path (no polyhedron data, no
 /// perturbation iterations, no capsule-capsule special case).
-fn convex_convex(cx: &mut Cx, manifold: ManifoldId, w0: &Wrap, w1: &Wrap, res: &mut ManifoldResult) {
-    let (Some(a), Some(b)) = (core_of(cx.shapes, w0.shape), core_of(cx.shapes, w1.shape)) else { return };
+fn convex_convex(
+    cx: &mut Cx,
+    manifold: ManifoldId,
+    w0: &Wrap,
+    w1: &Wrap,
+    res: &mut ManifoldResult,
+) {
+    let (Some(a), Some(b)) = (core_of(cx.shapes, w0.shape), core_of(cx.shapes, w1.shape)) else {
+        return;
+    };
     let threshold = cx.pool.get(manifold).contact_breaking_threshold;
     let m = a.margin() + b.margin() + threshold;
     let max_d2 = m * m;
 
-    if let Some(r) = super::gjk::gjk_pair(Placed { shape: &a, t: to_bt(&w0.tf) }, Placed { shape: &b, t: to_bt(&w1.tf) }, max_d2) {
-        res.add_contact_point(cx.pool, cx.bodies, r3(r.normal), r3(r.point_on_b), r.distance);
+    if let Some(r) = super::gjk::gjk_pair(
+        Placed {
+            shape: &a,
+            t: to_bt(&w0.tf),
+        },
+        Placed {
+            shape: &b,
+            t: to_bt(&w1.tf),
+        },
+        max_d2,
+    ) {
+        res.add_contact_point(
+            cx.pool,
+            cx.bodies,
+            r3(r.normal),
+            r3(r.point_on_b),
+            r.distance,
+        );
     }
 }
 
 /// btConvexConcaveCollisionAlgorithm::processCollision with btConvexTriangleCallback.
-fn convex_concave(cx: &mut Cx, swapped: bool, manifold: ManifoldId, w0: &Wrap, w1: &Wrap, res: &mut ManifoldResult) {
+fn convex_concave(
+    cx: &mut Cx,
+    swapped: bool,
+    manifold: ManifoldId,
+    w0: &Wrap,
+    w1: &Wrap,
+    res: &mut ManifoldResult,
+) {
     let convex_w = if swapped { w1 } else { w0 };
     let tri_w = if swapped { w0 } else { w1 };
 
-    if !cx.shapes.shape_type(tri_w.shape).is_concave() || !cx.shapes.shape_type(convex_w.shape).is_convex() {
+    if !cx.shapes.shape_type(tri_w.shape).is_concave()
+        || !cx.shapes.shape_type(convex_w.shape).is_convex()
+    {
         return;
     }
 
@@ -304,7 +409,9 @@ fn convex_concave(cx: &mut Cx, swapped: bool, manifold: ManifoldId, w0: &Wrap, w
     cx.pool.get_mut(manifold).body0 = convex_w.body;
     cx.pool.get_mut(manifold).body1 = tri_w.body;
 
-    let Some(convex) = core_of(cx.shapes, convex_w.shape) else { return };
+    let Some(convex) = core_of(cx.shapes, convex_w.shape) else {
+        return;
+    };
     let tt = to_bt(&tri_w.tf);
     let tc = to_bt(&convex_w.tf);
     let threshold = cx.pool.get(manifold).contact_breaking_threshold;
@@ -325,15 +432,36 @@ fn convex_concave(cx: &mut Cx, swapped: bool, manifold: ManifoldId, w0: &Wrap, w
         if let Convex::Sphere { radius } = &convex {
             // btSphereTriangleCollisionAlgorithm (the sphere is body0 of the child pair)
             let in_tri = tt.inverse_times(&tc);
-            if let Some((point, normal, depth)) = bullet::sphere_triangle(in_tri.origin, *radius, &v, threshold) {
-                res.add_contact_point(cx.pool, cx.bodies, r3(tt.rotate(normal)), r3(tt.apply(point)), depth);
+            if let Some((point, normal, depth)) =
+                bullet::sphere_triangle(in_tri.origin, *radius, &v, threshold)
+            {
+                res.add_contact_point(
+                    cx.pool,
+                    cx.bodies,
+                    r3(tt.rotate(normal)),
+                    r3(tt.apply(point)),
+                    depth,
+                );
             }
         } else {
             let tri = Convex::Triangle { v, margin: extra };
             let max_d2 = (convex.margin() + tri.margin() + threshold).powi(2);
 
-            if let Some(r) = super::gjk::gjk_pair(Placed { shape: &convex, t: tc }, Placed { shape: &tri, t: tt }, max_d2) {
-                res.add_contact_point(cx.pool, cx.bodies, r3(r.normal), r3(r.point_on_b), r.distance);
+            if let Some(r) = super::gjk::gjk_pair(
+                Placed {
+                    shape: &convex,
+                    t: tc,
+                },
+                Placed { shape: &tri, t: tt },
+                max_d2,
+            ) {
+                res.add_contact_point(
+                    cx.pool,
+                    cx.bodies,
+                    r3(r.normal),
+                    r3(r.point_on_b),
+                    r.distance,
+                );
             }
         }
     }
@@ -344,11 +472,23 @@ fn convex_concave(cx: &mut Cx, swapped: bool, manifold: ManifoldId, w0: &Wrap, w
 /// The child wrapper of a compound: world transform = parent * child, rounded as a stored btTransform.
 fn child_wrap(cx: &Cx, parent: &Wrap, index: usize) -> Wrap {
     let ct = cx.shapes.child_transform(parent.shape, index);
-    Wrap { shape: cx.shapes.child_shape(parent.shape, index), tf: rt(parent.tf.mul(&ct)), body: parent.body }
+    Wrap {
+        shape: cx.shapes.child_shape(parent.shape, index),
+        tf: rt(parent.tf.mul(&ct)),
+        body: parent.body,
+    }
 }
 
 /// btCompoundCollisionAlgorithm::processCollision (with a dynamic AABB tree).
-fn compound(cx: &mut Cx, swapped: bool, revision: i32, children: &mut Vec<Option<Box<Algo>>>, w0: &Wrap, w1: &Wrap, res: &mut ManifoldResult) {
+fn compound(
+    cx: &mut Cx,
+    swapped: bool,
+    revision: i32,
+    children: &mut Vec<Option<Box<Algo>>>,
+    w0: &Wrap,
+    w1: &Wrap,
+    res: &mut ManifoldResult,
+) {
     let col = if swapped { w1 } else { w0 };
     let other = if swapped { w0 } else { w1 };
 
@@ -411,7 +551,14 @@ fn compound(cx: &mut Cx, swapped: bool, revision: i32, children: &mut Vec<Option
 }
 
 /// btCompoundLeafCallback::ProcessChildShape.
-fn process_child_shape(cx: &mut Cx, children: &mut [Option<Box<Algo>>], col: &Wrap, other: &Wrap, index: usize, res: &mut ManifoldResult) {
+fn process_child_shape(
+    cx: &mut Cx,
+    children: &mut [Option<Box<Algo>>],
+    col: &Wrap,
+    other: &Wrap,
+    index: usize,
+    res: &mut ManifoldResult,
+) {
     let cw = child_wrap(cx, col, index);
     let a0 = cx.shapes.aabb(cw.shape, &cw.tf);
     let a1 = cx.shapes.aabb(other.shape, &other.tf);
@@ -428,7 +575,15 @@ fn process_child_shape(cx: &mut Cx, children: &mut [Option<Box<Algo>>], col: &Wr
 }
 
 /// btCompoundCompoundCollisionAlgorithm::processCollision.
-fn compound_compound(cx: &mut Cx, rev0: i32, rev1: i32, cache: &mut Vec<(usize, usize, Box<Algo>)>, w0: &Wrap, w1: &Wrap, res: &mut ManifoldResult) {
+fn compound_compound(
+    cx: &mut Cx,
+    rev0: i32,
+    rev1: i32,
+    cache: &mut Vec<(usize, usize, Box<Algo>)>,
+    w0: &Wrap,
+    w1: &Wrap,
+    res: &mut ManifoldResult,
+) {
     let r0 = cx.shapes.update_revision(w0.shape);
     let r1 = cx.shapes.update_revision(w1.shape);
 
@@ -472,7 +627,9 @@ fn compound_compound(cx: &mut Cx, rev0: i32, rev1: i32, cache: &mut Vec<(usize, 
     };
     let mut pairs: Vec<(usize, usize)> = vec![];
 
-    if let (Shape::Compound(c0), Shape::Compound(c1)) = (&cx.shapes.v[w0.shape], &cx.shapes.v[w1.shape]) {
+    if let (Shape::Compound(c0), Shape::Compound(c1)) =
+        (&cx.shapes.v[w0.shape], &cx.shapes.v[w1.shape])
+    {
         if c0.tree.root != super::dbvt::NIL && c1.tree.root != super::dbvt::NIL {
             let mut stack = vec![(c0.tree.root, c1.tree.root)];
 

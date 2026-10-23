@@ -20,7 +20,10 @@ pub struct Aabb {
 
 impl Aabb {
     pub fn from_mm(mi: V3, mx: V3) -> Aabb {
-        Aabb { mi: r3(mi), mx: r3(mx) }
+        Aabb {
+            mi: r3(mi),
+            mx: r3(mx),
+        }
     }
 
     pub fn center(&self) -> V3 {
@@ -28,7 +31,12 @@ impl Aabb {
     }
 
     pub fn contain(&self, a: &Aabb) -> bool {
-        self.mi[0] <= a.mi[0] && self.mi[1] <= a.mi[1] && self.mi[2] <= a.mi[2] && self.mx[0] >= a.mx[0] && self.mx[1] >= a.mx[1] && self.mx[2] >= a.mx[2]
+        self.mi[0] <= a.mi[0]
+            && self.mi[1] <= a.mi[1]
+            && self.mi[2] <= a.mi[2]
+            && self.mx[0] >= a.mx[0]
+            && self.mx[1] >= a.mx[1]
+            && self.mx[2] >= a.mx[2]
     }
 
     /// Expand (e): mi -= e, mx += e.
@@ -50,7 +58,12 @@ impl Aabb {
 
 /// Intersect (a, b).
 pub fn intersect(a: &Aabb, b: &Aabb) -> bool {
-    a.mi[0] <= b.mx[0] && a.mx[0] >= b.mi[0] && a.mi[1] <= b.mx[1] && a.mx[1] >= b.mi[1] && a.mi[2] <= b.mx[2] && a.mx[2] >= b.mi[2]
+    a.mi[0] <= b.mx[0]
+        && a.mx[0] >= b.mi[0]
+        && a.mi[1] <= b.mx[1]
+        && a.mx[1] >= b.mi[1]
+        && a.mi[2] <= b.mx[2]
+        && a.mx[2] >= b.mi[2]
 }
 
 /// Proximity (a, b).
@@ -61,7 +74,11 @@ fn proximity(a: &Aabb, b: &Aabb) -> f64 {
 
 /// Select (o, a, b), generic implementation.
 fn select(o: &Aabb, a: &Aabb, b: &Aabb) -> usize {
-    if proximity(o, a) < proximity(o, b) { 0 } else { 1 }
+    if proximity(o, a) < proximity(o, b) {
+        0
+    } else {
+        1
+    }
 }
 
 /// Merge (a, b).
@@ -117,7 +134,17 @@ impl Default for Dbvt {
 
 impl Dbvt {
     pub fn new() -> Dbvt {
-        Dbvt { nodes: vec![], root: NIL, free_node: NIL, lkhd: -1, leaves: 0, opath: 0, next_addr: 1, free_addrs: vec![], spare: vec![] }
+        Dbvt {
+            nodes: vec![],
+            root: NIL,
+            free_node: NIL,
+            lkhd: -1,
+            leaves: 0,
+            opath: 0,
+            next_addr: 1,
+            free_addrs: vec![],
+            spare: vec![],
+        }
     }
 
     pub fn empty(&self) -> bool {
@@ -155,11 +182,23 @@ impl Dbvt {
             let i = self.free_node;
             self.free_node = NIL;
             let addr = self.nodes[i].addr;
-            self.nodes[i] = Node { volume, parent, childs: [NIL, NIL], data, addr };
+            self.nodes[i] = Node {
+                volume,
+                parent,
+                childs: [NIL, NIL],
+                data,
+                addr,
+            };
             i
         } else {
             let addr = self.alloc_addr();
-            self.new_slot(Node { volume, parent, childs: [NIL, NIL], data, addr })
+            self.new_slot(Node {
+                volume,
+                parent,
+                childs: [NIL, NIL],
+                data,
+                addr,
+            })
         }
     }
 
@@ -183,7 +222,11 @@ impl Dbvt {
         if !self.nodes[root].is_leaf() {
             loop {
                 let [c0, c1] = self.nodes[root].childs;
-                let which = select(&self.nodes[leaf].volume, &self.nodes[c0].volume, &self.nodes[c1].volume);
+                let which = select(
+                    &self.nodes[leaf].volume,
+                    &self.nodes[c0].volume,
+                    &self.nodes[c1].volume,
+                );
                 root = [c0, c1][which];
                 if self.nodes[root].is_leaf() {
                     break;
@@ -288,7 +331,13 @@ impl Dbvt {
     }
 
     /// btDbvt::update (leaf, volume, velocity, margin).
-    pub fn update_margin(&mut self, leaf: usize, mut volume: Aabb, velocity: V3, margin: f64) -> bool {
+    pub fn update_margin(
+        &mut self,
+        leaf: usize,
+        mut volume: Aabb,
+        velocity: V3,
+        margin: f64,
+    ) -> bool {
         if self.nodes[leaf].volume.contain(&volume) {
             return false;
         }
@@ -415,7 +464,14 @@ impl Dbvt {
 /// btDbvt::collideTTpersistentStack / collideTT on two (possibly different) trees, emitting leaf
 /// pairs (leaf of tree0, leaf of tree1) in policy order. `same` is true when both roots belong to
 /// the same tree and may be the same node (the `p.a == p.b` case).
-pub fn collide_tt(t0: &Dbvt, root0: usize, t1: &Dbvt, root1: usize, same_tree: bool, out: &mut Vec<(usize, usize)>) {
+pub fn collide_tt(
+    t0: &Dbvt,
+    root0: usize,
+    t1: &Dbvt,
+    root1: usize,
+    same_tree: bool,
+    out: &mut Vec<(usize, usize)>,
+) {
     if root0 == NIL || root1 == NIL {
         return;
     }

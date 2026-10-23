@@ -24,7 +24,13 @@ pub fn case_dir() -> PathBuf {
 pub fn case_names() -> Vec<String> {
     let mut names: Vec<String> = std::fs::read_dir(case_dir())
         .unwrap()
-        .filter_map(|e| e.ok()?.file_name().to_str()?.strip_suffix(".json").map(String::from))
+        .filter_map(|e| {
+            e.ok()?
+                .file_name()
+                .to_str()?
+                .strip_suffix(".json")
+                .map(String::from)
+        })
         .collect();
 
     names.sort();
@@ -32,7 +38,8 @@ pub fn case_names() -> Vec<String> {
 }
 
 pub fn scenario(name: &str) -> Value {
-    let text = std::fs::read_to_string(case_dir().join(format!("{name}.json"))).unwrap_or_else(|e| panic!("{name}.json: {e}"));
+    let text = std::fs::read_to_string(case_dir().join(format!("{name}.json")))
+        .unwrap_or_else(|e| panic!("{name}.json: {e}"));
     serde_json::from_str(&text).unwrap()
 }
 
@@ -76,11 +83,20 @@ impl Run {
         x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
         let root = oracle_root();
-        let url = format!("{ORACLE_PREFIX}{}", encode_path(&format!("{CASE_DIR}/{world}")));
+        let url = format!(
+            "{ORACLE_PREFIX}{}",
+            encode_path(&format!("{CASE_DIR}/{world}"))
+        );
         let data = std::fs::read(case_dir().join(world)).map_err(|e| format!("{world}: {e}"))?;
         let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
         let overlay = Overlay::default();
-        let fetcher = Box::new(OverlayFetcher { inner: LocalFetcher { root, prefix: ORACLE_PREFIX.to_string() }, overlay: overlay.clone() });
+        let fetcher = Box::new(OverlayFetcher {
+            inner: LocalFetcher {
+                root,
+                prefix: ORACLE_PREFIX.to_string(),
+            },
+            overlay: overlay.clone(),
+        });
         let mut rt = Runtime::new(scene, fetcher);
 
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
@@ -96,7 +112,14 @@ impl Run {
         rt.frame();
         rt.settle();
 
-        Ok(Run { rt, overlay, t0, dt, seen: 0, last_vrml: None })
+        Ok(Run {
+            rt,
+            overlay,
+            t0,
+            dt,
+            seen: 0,
+            last_vrml: None,
+        })
     }
 
     /// One step k (k >= 1): the actions of frame k at the previous frame's time, settle, one frame, settle.
@@ -135,7 +158,11 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
     let mut steps = vec![run.record(0)];
 
     for k in 1..=frames {
-        let todo: Vec<Value> = actions.iter().filter(|a| a["frame"].as_u64() == Some(k)).cloned().collect();
+        let todo: Vec<Value> = actions
+            .iter()
+            .filter(|a| a["frame"].as_u64() == Some(k))
+            .cloned()
+            .collect();
 
         run.step(k, &todo)?;
         steps.push(run.record(k));
@@ -166,7 +193,12 @@ pub fn inline_at(rt: &Runtime, path: &str) -> Result<x3d_fields::NodeId, String>
     let mut node = None;
 
     for part in path.split('/') {
-        let n = rt.scene.ctx(ctx).named_nodes.get(part).ok_or_else(|| format!("Named node '{part}' not found."))?;
+        let n = rt
+            .scene
+            .ctx(ctx)
+            .named_nodes
+            .get(part)
+            .ok_or_else(|| format!("Named node '{part}' not found."))?;
 
         node = Some(n);
 
@@ -179,7 +211,13 @@ pub fn inline_at(rt: &Runtime, path: &str) -> Result<x3d_fields::NodeId, String>
 }
 
 fn strings(v: &Value) -> Vec<String> {
-    v.as_array().map(|u| u.iter().filter_map(|s| s.as_str().map(String::from)).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|u| {
+            u.iter()
+                .filter_map(|s| s.as_str().map(String::from))
+                .collect()
+        })
+        .unwrap_or_default()
 }
 
 fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
@@ -192,13 +230,17 @@ fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
         let path = a["path"].as_str().ok_or("publish needs path")?;
         let data = std::fs::read(case_dir().join(from)).map_err(|e| format!("{from}: {e}"))?;
 
-        overlay.0.borrow_mut().insert(format!("/{CASE_DIR}/{path}"), data);
+        overlay
+            .0
+            .borrow_mut()
+            .insert(format!("/{CASE_DIR}/{path}"), data);
         return Ok(());
     }
 
     let name = a["name"].as_str().ok_or("action needs an Inline name")?;
     let node = inline_at(rt, name)?;
-    let field = |rt: &Runtime, f: &str| rt.get_field(node, f).ok_or_else(|| format!("no field {f}"));
+    let field =
+        |rt: &Runtime, f: &str| rt.get_field(node, f).ok_or_else(|| format!("no field {f}"));
 
     match kind {
         "url" => {
@@ -226,7 +268,10 @@ fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
                 return Err("children is not an MFNode".into());
             };
 
-            rt.set_value(k, FieldValue::MFNode(list.into_iter().filter(|c| *c != Some(node)).collect()));
+            rt.set_value(
+                k,
+                FieldValue::MFNode(list.into_iter().filter(|c| *c != Some(node)).collect()),
+            );
         }
         other => return Err(format!("unknown action {other}")),
     }
@@ -281,7 +326,10 @@ fn inlines(rt: &Runtime, ctx: usize, prefix: &str, out: &mut Vec<Value>) {
 }
 
 fn record(rt: &mut Runtime, k: u64, seen: &mut usize, last_vrml: &mut Option<String>) -> Value {
-    let console: Vec<String> = rt.console[*seen..].iter().map(|l| l.split('\n').next().unwrap_or("").to_string()).collect();
+    let console: Vec<String> = rt.console[*seen..]
+        .iter()
+        .map(|l| l.split('\n').next().unwrap_or("").to_string())
+        .collect();
     *seen = rt.console.len();
 
     let mut list = vec![];
@@ -307,7 +355,12 @@ fn record(rt: &mut Runtime, k: u64, seen: &mut usize, last_vrml: &mut Option<Str
 
 /// Run on a thread with a big stack (QuickJS).
 pub fn big_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {
-    std::thread::Builder::new().stack_size(64 << 20).spawn(f).unwrap().join().unwrap()
+    std::thread::Builder::new()
+        .stack_size(64 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap()
 }
 
 // --- helpers for the safety tests ----------------------------------------------------------------
@@ -319,7 +372,11 @@ pub fn trace(world: &str, frames: u64, actions: &[Value]) -> (Run, Vec<Value>) {
     let mut steps = vec![run.record(0)];
 
     for k in 1..=frames {
-        let todo: Vec<Value> = actions.iter().filter(|a| a["frame"].as_u64() == Some(k)).cloned().collect();
+        let todo: Vec<Value> = actions
+            .iter()
+            .filter(|a| a["frame"].as_u64() == Some(k))
+            .cloned()
+            .collect();
 
         run.step(k, &todo).unwrap();
         steps.push(run.record(k));
@@ -345,11 +402,22 @@ pub fn lines(steps: &[Value], from: u64, to: u64) -> Vec<String> {
     steps
         .iter()
         .filter(|s| s["k"].as_u64().is_some_and(|k| k >= from && k <= to))
-        .flat_map(|s| s["console"].as_array().unwrap().iter().map(|l| l.as_str().unwrap().to_string()))
+        .flat_map(|s| {
+            s["console"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|l| l.as_str().unwrap().to_string())
+        })
         .collect()
 }
 
 /// The record of the Inline `path` in a step.
 pub fn inline_of<'a>(step: &'a Value, path: &str) -> &'a Value {
-    step["inlines"].as_array().unwrap().iter().find(|i| i["path"] == path).unwrap_or_else(|| panic!("no Inline {path} in step {}", step["k"]))
+    step["inlines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|i| i["path"] == path)
+        .unwrap_or_else(|| panic!("no Inline {path} in step {}", step["k"]))
 }

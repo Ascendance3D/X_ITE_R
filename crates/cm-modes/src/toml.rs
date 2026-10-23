@@ -39,8 +39,14 @@ fn re_string_chunk(s: &[u16]) -> Option<RegexMatch> {
     if matches!(first, 0x0a | 0x0d | 0x2028 | 0x2029) {
         return None;
     }
-    let rest = s[1..].iter().take_while(|&&c| c != BACKSLASH && c != DQUOTE && c != SQUOTE).count();
-    Some(RegexMatch { index: 0, len: 1 + rest })
+    let rest = s[1..]
+        .iter()
+        .take_while(|&&c| c != BACKSLASH && c != DQUOTE && c != SQUOTE)
+        .count();
+    Some(RegexMatch {
+        index: 0,
+        len: 1 + rest,
+    })
 }
 
 /// `/^\d\d\d\d[\d\-\:\.T]*Z/`. The class never contains `Z`, so backtracking can
@@ -49,8 +55,20 @@ fn re_date(s: &[u16]) -> Option<RegexMatch> {
     if s.len() < 4 || !s[..4].iter().all(|&c| is_digit(c)) {
         return None;
     }
-    let run = s[4..].iter().take_while(|&&c| is_digit(c) || c == b'-' as u16 || c == b':' as u16 || c == b'.' as u16 || c == b'T' as u16).count();
-    (s.get(4 + run) == Some(&(b'Z' as u16))).then_some(RegexMatch { index: 0, len: 4 + run + 1 })
+    let run = s[4..]
+        .iter()
+        .take_while(|&&c| {
+            is_digit(c)
+                || c == b'-' as u16
+                || c == b':' as u16
+                || c == b'.' as u16
+                || c == b'T' as u16
+        })
+        .count();
+    (s.get(4 + run) == Some(&(b'Z' as u16))).then_some(RegexMatch {
+        index: 0,
+        len: 4 + run + 1,
+    })
 }
 
 /// `/^\-?\d+(?:\.\d+)?/`
@@ -76,7 +94,12 @@ impl Mode for TomlMode {
     }
 
     fn start_state(&self, _a1: JsArg, _a2: JsArg) -> Option<State> {
-        Some(State::new(TomlState { in_string: false, string_type: None, lhs: true, in_array: 0 }))
+        Some(State::new(TomlState {
+            in_string: false,
+            string_type: None,
+            lhs: true,
+            in_array: 0,
+        }))
     }
 
     fn token(&self, stream: &mut StringStream<'_>, state: &mut State) -> Option<String> {
@@ -105,12 +128,22 @@ impl Mode for TomlMode {
                     panic!("toml mode: JS spins forever on a line separator inside a string");
                 }
             }
-            return Some(if state.lhs { "property string" } else { "string" }.into()); // Token style
+            return Some(
+                if state.lhs {
+                    "property string"
+                } else {
+                    "string"
+                }
+                .into(),
+            ); // Token style
         } else if state.in_array != 0 && stream.peek() == Some(b']' as u16) {
             stream.next();
             state.in_array -= 1;
             return Some("bracket".into());
-        } else if state.lhs && stream.peek() == Some(b'[' as u16) && stream.skip_to_char(b']' as u16) {
+        } else if state.lhs
+            && stream.peek() == Some(b'[' as u16)
+            && stream.skip_to_char(b']' as u16)
+        {
             stream.next(); //skip closing ]
             // array of objects has an extra open & close []
             if stream.peek() == Some(b']' as u16) {
@@ -130,7 +163,9 @@ impl Mode for TomlMode {
             return None;
         } else if !state.lhs && stream.match_with(re_date, true).is_some() {
             return Some("atom".into()); //date
-        } else if !state.lhs && (stream.match_str("true", true, false) || stream.match_str("false", true, false)) {
+        } else if !state.lhs
+            && (stream.match_str("true", true, false) || stream.match_str("false", true, false))
+        {
             return Some("atom".into());
         } else if !state.lhs && stream.peek() == Some(b'[' as u16) {
             state.in_array += 1;
@@ -161,7 +196,10 @@ mod tests {
         assert_eq!(re_number(&to_u16("-12.5x")).map(|m| m.len), Some(5));
         assert_eq!(re_number(&to_u16("12.x")).map(|m| m.len), Some(2));
         assert_eq!(re_number(&to_u16("-x")), None);
-        assert_eq!(re_date(&to_u16("1979-05-27T07:32:00Z")).map(|m| m.len), Some(20));
+        assert_eq!(
+            re_date(&to_u16("1979-05-27T07:32:00Z")).map(|m| m.len),
+            Some(20)
+        );
         assert_eq!(re_date(&to_u16("1979-05-27")), None);
         assert_eq!(re_string_chunk(&to_u16("ab\\c")).map(|m| m.len), Some(2));
         assert_eq!(re_string_chunk(&to_u16("\"ab")).map(|m| m.len), Some(3));

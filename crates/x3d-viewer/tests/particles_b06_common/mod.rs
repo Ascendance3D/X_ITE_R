@@ -18,15 +18,27 @@ pub fn oracle() -> PathBuf {
 }
 
 pub fn big(f: impl FnOnce() + Send + 'static) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 pub fn json(path: &Path) -> Value {
-    serde_json::from_str(&std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display()))).unwrap()
+    serde_json::from_str(
+        &std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display())),
+    )
+    .unwrap()
 }
 
 pub fn f32s(path: &Path) -> Vec<f32> {
-    std::fs::read(path).unwrap_or_else(|e| panic!("{}: {e}", path.display())).chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect()
+    std::fs::read(path)
+        .unwrap_or_else(|e| panic!("{}: {e}", path.display()))
+        .chunks_exact(4)
+        .map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+        .collect()
 }
 
 /// One frame of a run: what `rea_b06_particles.py` compares per step.
@@ -57,7 +69,10 @@ impl Baseline {
     pub fn load(name: &str) -> Baseline {
         let dir = oracle().join("rea-batch06-baseline").join(name);
 
-        Baseline { js: json(&dir.join("js.json")), dir }
+        Baseline {
+            js: json(&dir.join("js.json")),
+            dir,
+        }
     }
 
     pub fn steps(&self) -> &Vec<Value> {
@@ -66,7 +81,10 @@ impl Baseline {
 
     /// The recorded `randomSeed` uniform of every emitter pass, in order.
     pub fn seeds(&self) -> Vec<f64> {
-        self.steps().iter().filter_map(|s| s["randomSeed"].as_f64()).collect()
+        self.steps()
+            .iter()
+            .filter_map(|s| s["randomSeed"].as_f64())
+            .collect()
     }
 
     /// frame -> records (exact cases: js.f32 with the dump index of js.json).
@@ -75,8 +93,17 @@ impl Baseline {
         let mut out = BTreeMap::new();
 
         for (k, d) in self.js["dumps"].as_object().unwrap() {
-            let (n, off) = (d["numParticles"].as_u64().unwrap() as usize, d["offset"].as_u64().unwrap() as usize);
-            let rows = (0..n).map(|i| data[off + i * STRIDE..off + (i + 1) * STRIDE].try_into().unwrap()).collect();
+            let (n, off) = (
+                d["numParticles"].as_u64().unwrap() as usize,
+                d["offset"].as_u64().unwrap() as usize,
+            );
+            let rows = (0..n)
+                .map(|i| {
+                    data[off + i * STRIDE..off + (i + 1) * STRIDE]
+                        .try_into()
+                        .unwrap()
+                })
+                .collect();
 
             out.insert(k.parse().unwrap(), rows);
         }
@@ -86,7 +113,9 @@ impl Baseline {
 }
 
 fn set_field(v: &mut Viewer3d, node: NodeId, field: &str, value: &Value) {
-    let k = v.rt.get_field(node, field).unwrap_or_else(|| panic!("no field {field}"));
+    let k =
+        v.rt.get_field(node, field)
+            .unwrap_or_else(|| panic!("no field {field}"));
     let new = match v.rt.value(k) {
         FieldValue::SFBool(_) => FieldValue::SFBool(value.as_bool().unwrap()),
         FieldValue::SFFloat(_) => FieldValue::SFFloat(value.as_f64().unwrap() as f32 as f64),
@@ -114,7 +143,17 @@ pub fn load(world: &Path, script: &Value) -> Loaded {
 
     particles::use_random_seeds();
 
-    let mut v = Viewer3d::load_attributes(world, None, t0, 256, 256, Some(1.0 / dt), false, ORACLE_PAGE_ATTRIBUTES).expect("load");
+    let mut v = Viewer3d::load_attributes(
+        world,
+        None,
+        t0,
+        256,
+        256,
+        Some(1.0 / dt),
+        false,
+        ORACLE_PAGE_ATTRIBUTES,
+    )
+    .expect("load");
 
     v.frame_rate = 1.0 / dt;
 
@@ -122,7 +161,10 @@ pub fn load(world: &Path, script: &Value) -> Loaded {
         v.step(t0);
     }
 
-    let ps = v.rt.scene.contexts[ROOT].named_nodes.get(name).unwrap_or_else(|| panic!("no node {name}"));
+    let ps = v.rt.scene.contexts[ROOT]
+        .named_nodes
+        .get(name)
+        .unwrap_or_else(|| panic!("no node {name}"));
 
     v.rt.particle_system_reset(ps, t0);
     Loaded { v, ps, t0, dt }
@@ -134,15 +176,24 @@ pub fn replay(world: &Path, script: &Value, seeds: Vec<f64>) -> Run {
     let frames = script["frames"].as_u64().unwrap_or(1);
     let born_only = script["filter"].as_str() == Some("born");
     let dump_all = script["dumpAll"].as_bool().unwrap_or(false);
-    let dump: Vec<u64> = script["dump"].as_array().map(|a| a.iter().filter_map(Value::as_u64).collect()).unwrap_or_else(|| vec![frames]);
+    let dump: Vec<u64> = script["dump"]
+        .as_array()
+        .map(|a| a.iter().filter_map(Value::as_u64).collect())
+        .unwrap_or_else(|| vec![frames]);
     let events = script["events"].as_array().cloned().unwrap_or_default();
-    let mut run = Run { steps: vec![], dumps: BTreeMap::new() };
+    let mut run = Run {
+        steps: vec![],
+        dumps: BTreeMap::new(),
+    };
 
     particles::set_seed_list(seeds);
 
     for k in 1..=frames {
         for e in events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
-            let node = l.v.rt.scene.contexts[ROOT].named_nodes.get(e["node"].as_str().unwrap()).expect("event node");
+            let node = l.v.rt.scene.contexts[ROOT]
+                .named_nodes
+                .get(e["node"].as_str().unwrap())
+                .expect("event node");
 
             set_field(&mut l.v, node, e["field"].as_str().unwrap(), &e["value"]);
         }
@@ -165,13 +216,22 @@ pub fn replay(world: &Path, script: &Value, seeds: Vec<f64>) -> Run {
         });
 
         if dump_all || dump.contains(&k) {
-            let rows = sim.particles.iter().take(sim.num_particles).filter(|p| !born_only || p[2] == 0.0).copied().collect();
+            let rows = sim
+                .particles
+                .iter()
+                .take(sim.num_particles)
+                .filter(|p| !born_only || p[2] == 0.0)
+                .copied()
+                .collect();
 
             run.dumps.insert(k, rows);
         }
     }
 
-    assert!(!particles::seed_list_exhausted(), "the run used more random seeds than the X_ITE baseline recorded");
+    assert!(
+        !particles::seed_list_exhausted(),
+        "the run used more random seeds than the X_ITE baseline recorded"
+    );
     particles::use_random_seeds();
     run
 }
@@ -187,20 +247,36 @@ pub const GROUPS: [(&str, &[usize], f64, f64); 6] = [
 ];
 
 /// Max abs error per group over all dumps, panicking with the first violation of the tolerance.
-pub fn compare_dumps(label: &str, reference: &BTreeMap<u64, Vec<[f32; STRIDE]>>, got: &BTreeMap<u64, Vec<[f32; STRIDE]>>) -> Vec<(&'static str, f64)> {
+pub fn compare_dumps(
+    label: &str,
+    reference: &BTreeMap<u64, Vec<[f32; STRIDE]>>,
+    got: &BTreeMap<u64, Vec<[f32; STRIDE]>>,
+) -> Vec<(&'static str, f64)> {
     let mut max = vec![0.0f64; GROUPS.len()];
 
     for (frame, rows) in reference {
-        let g = got.get(frame).unwrap_or_else(|| panic!("{label}: no dump for frame {frame}"));
+        let g = got
+            .get(frame)
+            .unwrap_or_else(|| panic!("{label}: no dump for frame {frame}"));
 
-        assert_eq!(rows.len(), g.len(), "{label}: frame {frame}: {} records, X_ITE has {}", g.len(), rows.len());
+        assert_eq!(
+            rows.len(),
+            g.len(),
+            "{label}: frame {frame}: {} records, X_ITE has {}",
+            g.len(),
+            rows.len()
+        );
 
         for (i, (a, b)) in rows.iter().zip(g).enumerate() {
             for (gi, (name, cols, abs, rel)) in GROUPS.iter().enumerate() {
                 for &c in *cols {
                     let (x, y) = (f64::from(a[c]), f64::from(b[c]));
 
-                    assert_eq!(x.is_nan(), y.is_nan(), "{label}: frame {frame} particle {i} {name}[{c}]: X_ITE {x}, port {y}");
+                    assert_eq!(
+                        x.is_nan(),
+                        y.is_nan(),
+                        "{label}: frame {frame} particle {i} {name}[{c}]: X_ITE {x}, port {y}"
+                    );
 
                     if x.is_nan() {
                         continue;
@@ -209,7 +285,10 @@ pub fn compare_dumps(label: &str, reference: &BTreeMap<u64, Vec<[f32; STRIDE]>>,
                     let d = (x - y).abs();
 
                     max[gi] = max[gi].max(d);
-                    assert!(d <= abs + rel * x.abs(), "{label}: frame {frame} particle {i} {name}[{c}]: X_ITE {x}, port {y}, error {d:e}");
+                    assert!(
+                        d <= abs + rel * x.abs(),
+                        "{label}: frame {frame} particle {i} {name}[{c}]: X_ITE {x}, port {y}, error {d:e}"
+                    );
                 }
             }
         }
@@ -227,20 +306,42 @@ pub fn compare_steps(label: &str, baseline: &Baseline, run: &Run) {
     for (x, s) in b.iter().zip(&run.steps) {
         let f = s.frame;
 
-        assert_eq!(x["numParticles"].as_u64().unwrap() as usize, s.num_particles, "{label}: frame {f}: numParticles");
-        assert_eq!(x["createParticles"].as_bool().unwrap(), s.create_particles, "{label}: frame {f}: createParticles");
+        assert_eq!(
+            x["numParticles"].as_u64().unwrap() as usize,
+            s.num_particles,
+            "{label}: frame {f}: numParticles"
+        );
+        assert_eq!(
+            x["createParticles"].as_bool().unwrap(),
+            s.create_particles,
+            "{label}: frame {f}: createParticles"
+        );
 
-        let (dt, ct) = (x["deltaTime"].as_f64().unwrap(), x["creationTime"].as_f64().unwrap());
+        let (dt, ct) = (
+            x["deltaTime"].as_f64().unwrap(),
+            x["creationTime"].as_f64().unwrap(),
+        );
 
-        assert!((dt - s.delta_time).abs() <= 1e-12 * dt.abs(), "{label}: frame {f}: deltaTime X_ITE {dt}, port {}", s.delta_time);
-        assert!((ct - s.creation_time).abs() <= 1e-9, "{label}: frame {f}: creationTime X_ITE {ct}, port {}", s.creation_time);
+        assert!(
+            (dt - s.delta_time).abs() <= 1e-12 * dt.abs(),
+            "{label}: frame {f}: deltaTime X_ITE {dt}, port {}",
+            s.delta_time
+        );
+        assert!(
+            (ct - s.creation_time).abs() <= 1e-9,
+            "{label}: frame {f}: creationTime X_ITE {ct}, port {}",
+            s.creation_time
+        );
 
         if let Some(active) = x["isActive"].as_bool() {
             assert_eq!(active, s.is_active, "{label}: frame {f}: isActive");
         }
 
         if let Some(max) = x["maxParticles"].as_u64() {
-            assert_eq!(max as usize, s.max_particles, "{label}: frame {f}: maxParticles");
+            assert_eq!(
+                max as usize, s.max_particles,
+                "{label}: frame {f}: maxParticles"
+            );
         }
     }
 }
@@ -252,14 +353,36 @@ pub fn compact(dumps: &BTreeMap<u64, Vec<[f32; STRIDE]>>, cap: usize) -> Vec<[f3
 
     for (frame, d) in dumps {
         for p in d {
-            rows.push([*frame as f32, p[1], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[24], p[25], p[26], p[27]]);
+            rows.push([
+                *frame as f32,
+                p[1],
+                p[4],
+                p[5],
+                p[6],
+                p[7],
+                p[8],
+                p[9],
+                p[10],
+                p[24],
+                p[25],
+                p[26],
+                p[27],
+            ]);
         }
     }
 
     if rows.len() > cap {
         let step = (rows.len() - 1) as f64 / (cap - 1) as f64;
 
-        rows = (0..cap).map(|i| rows[if i == cap - 1 { rows.len() - 1 } else { (i as f64 * step) as usize }]).collect();
+        rows = (0..cap)
+            .map(|i| {
+                rows[if i == cap - 1 {
+                    rows.len() - 1
+                } else {
+                    (i as f64 * step) as usize
+                }]
+            })
+            .collect();
     }
 
     rows

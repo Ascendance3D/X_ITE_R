@@ -93,7 +93,9 @@ pub fn encode_source_text(s: &str) -> String {
 pub(crate) fn is_source_url(s: &str) -> bool {
     let t = s.trim_start();
 
-    ["data:", "ecmascript:", "javascript:", "vrmlscript:"].iter().any(|p| t.starts_with(p))
+    ["data:", "ecmascript:", "javascript:", "vrmlscript:"]
+        .iter()
+        .any(|p| t.starts_with(p))
 }
 
 /// X3DNode.getSourceText: the `url` field of a Script or a shader node, when the node type has one.
@@ -101,7 +103,12 @@ pub(crate) fn source_text_index(scene: &Scene, id: NodeId) -> Option<usize> {
     let node = scene.node(id);
 
     match &node.kind {
-        NodeKind::Builtin(_) if matches!(scene.type_name(id).as_str(), "Script" | "ShaderPart" | "ShaderProgram" | "PackagedShader") => {
+        NodeKind::Builtin(_)
+            if matches!(
+                scene.type_name(id).as_str(),
+                "Script" | "ShaderPart" | "ShaderProgram" | "PackagedShader"
+            ) =>
+        {
             node.fields.iter().position(|f| f.name == "url")
         }
         _ => None,
@@ -151,21 +158,32 @@ pub(crate) fn must_output_pre(scene: &Scene, id: NodeId, i: usize) -> bool {
 
     field.access == access::INPUT_OUTPUT
         && !field.references.is_empty()
-        && !field.references.iter().any(|r| reference_initializable(scene, r))
+        && !field
+            .references
+            .iter()
+            .any(|r| reference_initializable(scene, r))
         && !scene.is_default_value(id, FieldLoc::Pre(i))
 }
 
 /// `mustOutputValue` of a user-defined field: as [`must_output_pre`], but without the default check
 /// (X3DNode.toXMLStream and toJSONStream test a user field's value only where they print it).
 pub(crate) fn must_output_user(scene: &Scene, field: &Field) -> bool {
-    field.access == access::INPUT_OUTPUT && !field.references.is_empty() && !field.references.iter().any(|r| reference_initializable(scene, r))
+    field.access == access::INPUT_OUTPUT
+        && !field.references.is_empty()
+        && !field
+            .references
+            .iter()
+            .any(|r| reference_initializable(scene, r))
 }
 
 /// The exported node an IMPORT refers to: the Inline's loaded root context exports it. `None` when the
 /// Inline has not loaded.
 pub(crate) fn imported_local(scene: &Scene, imp: ImportedId) -> Option<NodeId> {
     let record = &scene.imported[imp];
-    let ctx = scene.contexts.iter().position(|c| c.outer == Outer::Inline(Some(record.inline)))?;
+    let ctx = scene
+        .contexts
+        .iter()
+        .position(|c| c.outer == Outer::Inline(Some(record.inline)))?;
 
     scene.get_exported_node(ctx, &record.exported_name)
 }
@@ -185,7 +203,9 @@ pub(crate) fn type_name_of(scene: &Scene, id: NodeId) -> String {
 pub(crate) fn container_field_of(scene: &Scene, id: NodeId) -> Option<String> {
     match &scene.node(id).kind {
         NodeKind::Builtin(t) => Some(scene.table.types[*t].container_field.clone()),
-        NodeKind::Imported(imp) => imported_local(scene, *imp).and_then(|local| container_field_of(scene, local)),
+        NodeKind::Imported(imp) => {
+            imported_local(scene, *imp).and_then(|local| container_field_of(scene, local))
+        }
         // X3DPrototypeInstance has the static containerField "children".
         NodeKind::Instance(_) => Some("children".to_string()),
         _ => None,
@@ -194,7 +214,10 @@ pub(crate) fn container_field_of(scene: &Scene, id: NodeId) -> Option<String> {
 
 impl<'a> XmlGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        XmlGenerator { base: VrmlGenerator::new(scene), container_fields: vec![] }
+        XmlGenerator {
+            base: VrmlGenerator::new(scene),
+            container_fields: vec![],
+        }
     }
 
     fn scene(&self) -> &'a Scene {
@@ -296,7 +319,8 @@ impl<'a> XmlGenerator<'a> {
         self.g().indent();
         self.g().push("<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D ");
         self.g().push(LATEST_VERSION);
-        self.g().push("//EN\" \"https://www.web3d.org/specifications/x3d-");
+        self.g()
+            .push("//EN\" \"https://www.web3d.org/specifications/x3d-");
         self.g().push(LATEST_VERSION);
         self.g().push(".dtd\">");
         self.g().tidy_break();
@@ -305,7 +329,10 @@ impl<'a> XmlGenerator<'a> {
         self.attribute("profile", scene.profile_of(scene_root).unwrap_or("Full"));
         self.attribute("version", LATEST_VERSION);
         self.attribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance");
-        self.attribute("xsd:noNamespaceSchemaLocation", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"));
+        self.attribute(
+            "xsd:noNamespaceSchemaLocation",
+            &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"),
+        );
         self.end_tag();
         self.g().inc_indent();
 
@@ -313,7 +340,11 @@ impl<'a> XmlGenerator<'a> {
 
         let components = scene.components_of(scene_root);
         let metadata = scene.meta_of(scene_root);
-        let units: Vec<_> = scene.units_of(scene_root).iter().filter(|u| u.conversion_factor != 1.0).collect();
+        let units: Vec<_> = scene
+            .units_of(scene_root)
+            .iter()
+            .filter(|u| u.conversion_factor != 1.0)
+            .collect();
 
         if !components.is_empty() || !units.is_empty() || !metadata.is_empty() {
             self.opening_tag("head");
@@ -323,7 +354,10 @@ impl<'a> XmlGenerator<'a> {
             for (name, level) in components {
                 self.open_tag("component");
                 self.attribute("name", name);
-                self.attribute("level", &scene.component_level_text(scene_root, name, *level));
+                self.attribute(
+                    "level",
+                    &scene.component_level_text(scene_root, name, *level),
+                );
                 self.close_tag("component");
                 self.g().tidy_break();
             }
@@ -332,7 +366,10 @@ impl<'a> XmlGenerator<'a> {
                 self.open_tag("unit");
                 self.attribute("category", &u.category);
                 self.attribute("name", &u.name);
-                self.attribute("conversionFactor", &x3d_fields::jsmath::number_to_string(u.conversion_factor));
+                self.attribute(
+                    "conversionFactor",
+                    &x3d_fields::jsmath::number_to_string(u.conversion_factor),
+                );
                 self.close_tag("unit");
                 self.g().tidy_break();
             }
@@ -561,7 +598,11 @@ impl<'a> XmlGenerator<'a> {
 
         let has_user_fields = node.can_user_defined_fields && !node.user_fields.is_empty();
 
-        if !has_user_fields && (references.is_empty() || shared) && children.is_empty() && cdata.is_none() {
+        if !has_user_fields
+            && (references.is_empty() || shared)
+            && children.is_empty()
+            && cdata.is_none()
+        {
             self.close_tag(&type_name);
             return;
         }
@@ -629,7 +670,16 @@ impl<'a> XmlGenerator<'a> {
 
     /// X3DNode.toXMLStreamUserDefinedField: one `<field>` element of a node with user-defined fields.
     #[allow(clippy::too_many_arguments)]
-    fn user_field_to_xml(&mut self, scene: &'a Scene, id: NodeId, k: usize, field: &Field, in_ctx: bool, shared: bool, references: &mut Vec<FieldLoc>) {
+    fn user_field_to_xml(
+        &mut self,
+        scene: &'a Scene,
+        id: NodeId,
+        k: usize,
+        field: &Field,
+        in_ctx: bool,
+        shared: bool,
+        references: &mut Vec<FieldLoc>,
+    ) {
         self.open_tag("field");
         self.attribute("accessType", access::name(field.access));
         self.attribute("type", field.ty().name());
@@ -642,7 +692,10 @@ impl<'a> XmlGenerator<'a> {
                 references.push(FieldLoc::User(k));
             }
 
-            if !field.is_initializable() || (field.value.is_default_value() && !scene.raw_tokens.contains_key(&(id, FieldLoc::User(k)))) {
+            if !field.is_initializable()
+                || (field.value.is_default_value()
+                    && !scene.raw_tokens.contains_key(&(id, FieldLoc::User(k))))
+            {
                 self.close_tag("field");
                 self.g().tidy_break();
             } else {
@@ -978,14 +1031,23 @@ impl<'a> XmlGenerator<'a> {
         {
             let index = self.base.cur_index();
 
-            if !index.route_nodes.contains(&route.source_node) || !index.route_nodes.contains(&route.destination_node) {
+            if !index.route_nodes.contains(&route.source_node)
+                || !index.route_nodes.contains(&route.destination_node)
+            {
                 return false;
             }
         }
 
-        let source = if scene.is_imported(route.source_node) { self.base.imported_name(route.source_node) } else { self.base.name(route.source_node) };
-        let destination =
-            if scene.is_imported(route.destination_node) { self.base.imported_name(route.destination_node) } else { self.base.name(route.destination_node) };
+        let source = if scene.is_imported(route.source_node) {
+            self.base.imported_name(route.source_node)
+        } else {
+            self.base.name(route.source_node)
+        };
+        let destination = if scene.is_imported(route.destination_node) {
+            self.base.imported_name(route.destination_node)
+        } else {
+            self.base.name(route.destination_node)
+        };
 
         self.open_tag("ROUTE");
         self.attribute("fromNode", &source);
@@ -1003,7 +1065,9 @@ impl<'a> XmlGenerator<'a> {
     /// value, or the elements of a multi-valued field, separated by `, `, MFString elements quoted.
     fn value_field_to_xml(&mut self, value: &FieldValue, source_text: bool) {
         let converted = match self.base.take_raw(value) {
-            Some(crate::vrml::RawOut::Texts(texts)) => return crate::vrml::write_raw(self.g(), &texts, value, false),
+            Some(crate::vrml::RawOut::Texts(texts)) => {
+                return crate::vrml::write_raw(self.g(), &texts, value, false);
+            }
             Some(crate::vrml::RawOut::Value(v)) => Some(v),
             None => None,
         };
@@ -1046,7 +1110,11 @@ impl<'a> XmlGenerator<'a> {
         match value {
             FieldValue::SFBool(b) => self.g().push(if *b { "true" } else { "false" }),
             FieldValue::SFString(s) => {
-                let text = if source_text { encode_source_text(s) } else { encode_string(s) };
+                let text = if source_text {
+                    encode_source_text(s)
+                } else {
+                    encode_string(s)
+                };
 
                 self.g().push(&text);
             }
