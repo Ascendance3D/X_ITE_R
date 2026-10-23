@@ -1,0 +1,5 @@
+# Formatting-only commits, skipped by `git blame --ignore-revs-file .git-blame-ignore-revs`
+# (GitHub blame reads this file by name).
+
+# Format the workspace with cargo fmt
+3a065470d442a9760325420418ea5e3eb1cdb065
