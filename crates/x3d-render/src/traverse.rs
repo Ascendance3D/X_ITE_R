@@ -961,6 +961,9 @@ pub struct RenderCache {
     skinned: HashMap<(u64, NodeId, usize), SkinnedEntry>,
     /// GaussianSplats data (see [`crate::splats`]), by node; `used` is the frame it was last drawn.
     splats: HashMap<(u64, NodeId), (u64, Rc<crate::splats::SplatData>, u64)>,
+    /// The POINT, LINE, TRIANGLE, QUAD or SPRITE geometry of each ParticleSystem, the bits it was built from and the
+    /// frame it was last used, so the GPU keeps one buffer per system (X_ITE rebuilds it only when one of these changes).
+    particles: HashMap<(u64, NodeId), (Vec<u64>, Rc<Geometry>, u64)>,
     frame: u64,
     /// Counters for tests and tools: geometries (re)built / reused in the last frame.
     pub built: usize,
@@ -1004,6 +1007,7 @@ impl RenderCache {
         self.faces.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.skinned.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.splats.retain(|_, e| e.2 + crate::splats_gpu::KEEP_FRAMES >= frame);
+        self.particles.retain(|_, e| e.2 + CACHE_KEEP_FRAMES >= frame);
     }
 }
 
@@ -3026,14 +3030,44 @@ impl<'a> Builder<'a> {
         let size = sg.vec2(n, "particleSize", Vector2::new(0.02, 0.02));
 
         let geometry = match gt {
-            GeometryType::Point => Rc::new(crate::particles::point_geometry(color_material)),
-            GeometryType::Line => Rc::new(crate::particles::line_geometry(size.y, color_material)),
-            GeometryType::Triangle | GeometryType::Quad => Rc::new(crate::particles::quad_geometry(None, color_material)),
-            GeometryType::Sprite => {
-                let rows = crate::particles::screen_aligned_rotation(mv);
-                Rc::new(crate::particles::quad_geometry(Some((&rows, [size.x, size.y])), color_material))
-            }
             GeometryType::Geometry => self.geometry(sg, sg.node(n, "geometry")?)?,
+            _ => {
+                let rows = (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
+                let mut bits = vec![gt as u64, color_material as u64];
+
+                match (gt, &rows) {
+                    (GeometryType::Line, _) => bits.push(size.y.to_bits()),
+                    (GeometryType::Sprite, Some(r)) => bits.extend([size.x, size.y].into_iter().chain(r.iter().flat_map(|v| [v.x, v.y, v.z])).map(f64::to_bits)),
+                    _ => (),
+                }
+
+                let ckey = (sg.rt.uid, n);
+
+                match self.cache.as_deref_mut().and_then(|c| {
+                    let frame = c.frame;
+                    c.particles.get_mut(&ckey).filter(|e| e.0 == bits).map(|e| {
+                        e.2 = frame;
+                        e.1.clone()
+                    })
+                }) {
+                    Some(g) => g,
+                    None => {
+                        let g = Rc::new(match gt {
+                            GeometryType::Point => crate::particles::point_geometry(color_material),
+                            GeometryType::Line => crate::particles::line_geometry(size.y, color_material),
+                            GeometryType::Sprite => crate::particles::quad_geometry(rows.as_ref().map(|r| (r, [size.x, size.y])), color_material),
+                            _ => crate::particles::quad_geometry(None, color_material),
+                        });
+
+                        if let Some(c) = self.cache.as_deref_mut() {
+                            let frame = c.frame;
+                            c.particles.insert(ckey, (bits, g.clone(), frame));
+                        }
+
+                        g
+                    }
+                }
+            }
         };
 
         if particles.matrices.is_empty() {
