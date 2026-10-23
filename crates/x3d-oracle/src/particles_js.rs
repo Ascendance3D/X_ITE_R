@@ -418,3 +418,22 @@ pub const INFO_B07: &str = r###"() =>
 pub const GET_LOG_OPT: &str = r###"() => window .getLog ?.() ?? [ ]"###;
 
 pub const CALLS: &str = r###"() => window .__calls"###;
+
+/// Additive (not in the Node tools): script key `pickProbes` ({ frames, points }). After each listed frame,
+/// `browser .touch (x, y)` picks every point into the pointing buffer, like anim's PICK_PROBES, and also records the
+/// DEF name of the hit shape node (a ParticleSystem or a Shape; "" when unnamed).
+pub const PICK_PROBES_NAMED: &str = r###"points =>
+      {
+         const browser = document .getElementById ("c") .browser;
+
+         return points .map (([ x, y ]) =>
+         {
+            if (!browser .touch (x, y))
+               return { id: 0 };
+
+            const h = browser .getHit ();
+
+            return { id: 1, shape: h .shapeNode .getName (), point: [ h .point .x, h .point .y, h .point .z ],
+                     normal: [ h .normal .x, h .normal .y, h .normal .z ], texCoord: [ h .texCoord .x, h .texCoord .y, h .texCoord .z, h .texCoord .w ] };
+         });
+      }"###;

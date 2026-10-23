@@ -201,6 +201,15 @@ impl Runtime {
         }
     }
 
+    /// The particle records of a ParticleSystem, for tools that put a reference buffer in place (x3d-particles-drive
+    /// `pickProbes`: X_ITE's records under the pointing pass, then the run's own back).
+    pub fn particle_records_mut(&mut self, node: NodeId) -> Option<&mut [crate::particles::Particle]> {
+        match &mut self.nrt_mut(node).state {
+            State::ParticleSystem(s) => Some(&mut s.sim.particles[..]),
+            _ => None,
+        }
+    }
+
     /// The ramps of a ParticleSystem as its last `animateParticles` used them.
     pub fn particle_ramps(&self, node: NodeId) -> Option<&Ramps> {
         match &self.nrt(node)?.state {

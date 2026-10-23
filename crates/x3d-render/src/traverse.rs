@@ -4023,6 +4023,64 @@ impl<'a> Builder<'a> {
     }
 }
 
+/// A ParticleSystem in the pointing pass (X3DShapeNode.traverse POINTER → X3DRenderObject.pointing →
+/// ParticleSystem.displaySimple): its instance matrices, the geometry each instance draws and the system's bbox.
+pub struct ParticlePointing {
+    /// The geometry the instances draw; `None` for GEOMETRY, which draws the `geometry` node's own.
+    pub geometry: Option<Rc<Geometry>>,
+    /// `x3d_InstanceMatrix` of the drawn particles, in buffer order (hidden particles left out, they cover no pixel).
+    pub matrices: Vec<Matrix4>,
+    /// The ParticleSystem's bbox (bboxSize / bboxCenter or set_bbox__), min and max: addPointingShape's view volume
+    /// test and `hit .shapeNode .getBBox ()`.
+    pub bbox: (Vector3, Vector3),
+}
+
+/// [`ParticlePointing`] of the ParticleSystem `n` with model-view `mv`, `None` unless it is a pointing object
+/// (set_pointingObject__: isEnabled () and pointerEvents). displaySimple enables only the vertex, x3d_Particle and
+/// x3d_InstanceMatrix attributes, so TRIANGLE, QUAD and SPRITE (geometryContext .hasNormals, X3D_NORMALS) read the
+/// disabled x3d_Normal and x3d_TexCoord0 as the generic attribute value 0 0 0 1: their hits have normal 0 0 0 and
+/// texCoord 0 0 0 1 in X_ITE. There is no X3D_INSTANCE_NORMAL, and no color or texCoord ramp in this pass.
+pub fn particle_pointing(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePointing> {
+    let mut builder = Builder::new(sg.rt);
+
+    if !sg.bool(n, "pointerEvents", true) || !builder.particle_system_enabled(sg, n) {
+        return None;
+    }
+
+    let sim = sg.rt.particle_sim(n)?;
+    let num = sim.num_particles.min(sim.particles.len());
+    let gt = sg.rt.particle_geometry_type(n);
+    let matrices = crate::particles::instances(&sim.particles[..num], &Default::default(), gt, false).matrices;
+    let size = sg.vec2(n, "particleSize", Vector2::new(0.02, 0.02));
+    let geometry = match gt {
+        GeometryType::Geometry => None,
+        GeometryType::Point => Some(crate::particles::point_geometry(false)),
+        GeometryType::Line => Some(crate::particles::line_geometry(size.y, false)),
+        _ => {
+            let rows = (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
+            let mut g = crate::particles::quad_geometry(rows.as_ref().map(|r| (r, [size.x, size.y])), false);
+
+            g.normals = vec![0.0; g.normals.len()];
+            g.tex_coords = [0.0, 0.0, 0.0, 1.0].repeat(g.vertex_count());
+            Some(g)
+        }
+    };
+
+    Some(ParticlePointing { geometry: geometry.map(Rc::new), matrices, bbox: builder.particle_system_bbox(sg, n).extents() })
+}
+
+/// addPointingShape: `viewVolume .intersectsSphere (radius, bboxCenter)` of a shape's `bbox` (min, max) under `mv`.
+pub fn bbox_in_view_volume(projection: &Matrix4, mv: &Matrix4, bbox: &(Vector3, Vector3)) -> bool {
+    let mut size = bbox.1;
+    size.subtract(&bbox.0);
+    let mut center = Box3::from_extents(&bbox.0, &bbox.1).center();
+
+    mv.mult_dir_matrix(&mut size);
+    mv.mult_vec_matrix3(&mut center);
+
+    view_volume_intersects_sphere(projection, size.norm() / 2.0, &center)
+}
+
 /// The arrays X_ITE would upload for a geometry node (X3DGeometryNode after rebuild), for tests
 /// and tools. Returns None for unsupported node types.
 pub fn geometry_of(rt: &x3d_runtime::Runtime, n: NodeId) -> Option<Geometry> {

@@ -73,6 +73,12 @@ pub struct ShapeInst {
     pub style: Option<x3d_render::traverse::StyleParams>,
     /// X3D_TEXTURE and X3D_MATERIAL_TEXTURES of the pointing shader (appearance and material texture nodes).
     pub textures: (bool, bool),
+    /// One drawn particle of a ParticleSystem (`shape`): `instance` is its x3d_InstanceMatrix, which does not turn
+    /// normals (no X3D_INSTANCE_NORMAL); it is a pointing object only (no collision, the ParticleSystem's bbox in
+    /// `explicit_bbox` is addPointingShape's view volume test).
+    pub particle: bool,
+    /// The particle's own geometry (POINT, LINE, TRIANGLE, QUAD, SPRITE); `None` draws `geometry`.
+    pub particle_geometry: Option<Rc<x3d_render::geometry::Geometry>>,
 }
 
 /// The layer a walk covers (X3DLayerNode.traverse): its children, its viewport rectangle, and the
@@ -392,6 +398,33 @@ fn visible_object(sg: &Sg, n: NodeId, memo: &mut std::collections::HashMap<NodeI
 
     memo.insert(n, v);
     v
+}
+
+/// geometryContext .geometryType of a geometry node: 0 points, 1 lines, 2 the rest.
+fn node_geometry_type(sg: &Sg, g: NodeId) -> u8 {
+    match sg.type_name(g) {
+        Some("PointSet") => 0,
+        Some("IndexedLineSet" | "LineSet" | "Polyline2D" | "Arc2D" | "Circle2D" | "ArcClose2D") => 1,
+        _ => 2,
+    }
+}
+
+/// The pointing shader's appearance inputs of the shape `n`: Appearance.getStyleProperties (geometryType) and
+/// X3D_TEXTURE / X3D_MATERIAL_TEXTURES (the appearance's and the material's texture nodes).
+fn pointing_appearance(sg: &Sg, n: NodeId, geometry_type: u8) -> (Option<x3d_render::traverse::StyleParams>, (bool, bool)) {
+    let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
+    let style = appearance.and_then(|a| x3d_render::traverse::style_params(sg, a, geometry_type));
+    let textures = appearance.map_or((false, false), |a| {
+        let material = sg.node(a, "material");
+        let material_texture = material.is_some_and(|m| {
+            ["ambientTexture", "diffuseTexture", "specularTexture", "emissiveTexture", "shininessTexture", "occlusionTexture", "normalTexture", "baseTexture", "metallicRoughnessTexture"]
+                .iter()
+                .any(|field| sg.node(m, field).is_some())
+        });
+        (sg.node(a, "texture").is_some(), material_texture)
+    });
+
+    (style, textures)
 }
 
 const PICK_SENSORS: &[&str] = &["LinePickSensor", "PointPickSensor", "PrimitivePickSensor", "VolumePickSensor"];
@@ -796,24 +829,10 @@ impl<'a> Walker<'a> {
                     vec![(*mv, None)]
                 };
 
-                let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
-                let style = sg.node(n, "geometry").and_then(|g| {
-                    let geometry_type = match sg.type_name(g) {
-                        Some("PointSet") => 0,
-                        Some("IndexedLineSet" | "LineSet" | "Polyline2D" | "Arc2D" | "Circle2D" | "ArcClose2D") => 1,
-                        _ => 2,
-                    };
-                    appearance.and_then(|a| x3d_render::traverse::style_params(sg, a, geometry_type))
-                });
-                let textures = appearance.map_or((false, false), |a| {
-                    let material = sg.node(a, "material");
-                    let material_texture = material.is_some_and(|m| {
-                        ["ambientTexture", "diffuseTexture", "specularTexture", "emissiveTexture", "shininessTexture", "occlusionTexture", "normalTexture", "baseTexture", "metallicRoughnessTexture"]
-                            .iter()
-                            .any(|field| sg.node(m, field).is_some())
-                    });
-                    (sg.node(a, "texture").is_some(), material_texture)
-                });
+                let (style, textures) = match sg.node(n, "geometry") {
+                    Some(g) => pointing_appearance(sg, n, node_geometry_type(sg, g)),
+                    None => (None, pointing_appearance(sg, n, 2).1),
+                };
 
                 for (model_view, instance) in instance_matrices.iter().filter(|_| sg.node(n, "geometry").is_some()) {
                     let g = sg.node(n, "geometry").unwrap();
@@ -834,6 +853,49 @@ impl<'a> Walker<'a> {
                         skin: self.hanim.last().cloned().flatten(),
                         style,
                         textures,
+                        particle: false,
+                        particle_geometry: None,
+                    });
+                }
+            }
+            // ParticleSystem.traverse POINTER (X3DShapeNode.traverse → addPointingShape): one instanced draw of the
+            // particles in the pointing pass, so each drawn particle is a hit candidate in buffer order under its
+            // instance matrix. The pointer and display walks (not the CAMERA one) collect it; it is no collision shape (particle
+            // collision is not ported) and the PICKING walk keeps X3DShapeNode.picking's own rules.
+            "ParticleSystem" if !self.camera && self.pick.is_none() && self.picking.is_none() => {
+                let Some(p) = x3d_render::traverse::particle_pointing(sg, n, mv) else { return };
+                let (geometry, geometry_type) = match &p.geometry {
+                    Some(g) => (n, g.geometry_type),
+                    None => {
+                        let Some(g) = sg.node(n, "geometry") else { return };
+                        (g, node_geometry_type(sg, g))
+                    }
+                };
+                let (style, textures) = pointing_appearance(sg, n, geometry_type);
+
+                for m in &p.matrices {
+                    let mut model_view = *m;
+                    model_view.mult_right(mv);
+
+                    self.scan.shapes.push(ShapeInst {
+                        shape: me(),
+                        geometry,
+                        model_view,
+                        shape_model_view: *mv,
+                        instance: Some(*m),
+                        all_instances: None,
+                        explicit_bbox: Some(p.bbox),
+                        sensors: sensors.to_vec(),
+                        collidable: false,
+                        collisions: vec![],
+                        anchors: anchors.to_vec(),
+                        clip_planes: self.clip_planes.clone(),
+                        viewport: self.viewport(),
+                        skin: self.hanim.last().cloned().flatten(),
+                        style,
+                        textures,
+                        particle: true,
+                        particle_geometry: p.geometry.clone(),
                     });
                 }
             }
