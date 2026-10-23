@@ -22,10 +22,14 @@
 //! * script `events` (the 06R format, values: bool, number, string, number arrays for vector / MF fields,
 //!   `{"def": NAME | null}` for SFNode and `{"nodes": [...]}` for MFNode) are applied before the frame's step.
 //! * steps carry `isActive`, `maxParticles`, `numForces`; `geometry.polyline` is the `polylines` texture.
+//!
+//! `--png-dir <dir>` renders the frame after each dump frame's step into `<dir>/<frame>.png` (the 256 x 256 page of
+//! the particle oracle, `antialiased="false"`); `--msaa N` renders it like the MSAA page (`antialiased="true"
+//! multisampling="N"`). The simulation is the same with or without them.
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
-use x3d_fields::math::Vector3;
+use x3d_fields::math::{Vector2, Vector3};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_runtime::particles::{self, STRIDE};
 use x3d_scene::ROOT;
@@ -50,7 +54,8 @@ fn main() {
         steps.iter().any(|s| s.get("forceDraws").is_some()).then(|| steps.iter().map(|s| s["forceDraws"].as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()).collect())
     });
     let out = PathBuf::from(opt("--out").unwrap());
-    let result = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(&world, &script, seeds, force_draws, &out)).unwrap().join().unwrap();
+    let capture = Capture { png_dir: opt("--png-dir").map(PathBuf::from), msaa: opt("--msaa") };
+    let result = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(&world, &script, seeds, force_draws, &out, &capture)).unwrap().join().unwrap();
 
     match result {
         Ok((json, f32s, out)) => {
@@ -70,7 +75,13 @@ fn main() {
 
 type Output = (Value, Vec<f32>, PathBuf);
 
-fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Option<Vec<Vec<f64>>>, out: &Path) -> Result<Output, (String, PathBuf)> {
+/// `--png-dir` and `--msaa`.
+struct Capture {
+    png_dir: Option<PathBuf>,
+    msaa: Option<String>,
+}
+
+fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Option<Vec<Vec<f64>>>, out: &Path, capture: &Capture) -> Result<Output, (String, PathBuf)> {
     let fail = |e: String| (e, out.to_path_buf());
     let t0 = script["t0"].as_f64().unwrap_or(946684800.0);
     let dt = script["dt"].as_f64().unwrap_or(1.0 / 60.0);
@@ -87,7 +98,23 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
     // The load frames and the warm-up animate with random seeds nobody reads.
     particles::use_random_seeds();
 
-    let mut v = Viewer3d::load_attributes(world, None, t0, 256, 256, Some(1.0 / dt), false, ORACLE_PAGE_ATTRIBUTES).map_err(fail)?;
+    let mut attributes = ORACLE_PAGE_ATTRIBUTES.to_vec();
+
+    if let Some(n) = capture.msaa.as_deref() {
+        attributes.retain(|(a, _)| *a != "antialiased");
+        attributes.extend([("antialiased", "true"), ("multisampling", n)]);
+    }
+
+    let mut v = Viewer3d::load_attributes(world, None, t0, 256, 256, Some(1.0 / dt), false, &attributes).map_err(fail)?;
+    let mut gpu = match &capture.png_dir {
+        Some(_) => {
+            let mut g = x3d_render::gpu::Gpu::new().map_err(|e| fail(format!("no GPU for --png-dir: {e}")))?;
+
+            v.rendering_properties().apply(&mut g.renderer);
+            Some(g)
+        }
+        None => None,
+    };
 
     v.frame_rate = 1.0 / dt;
 
@@ -171,6 +198,16 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
             }
 
             dumps.insert(k.to_string(), json!({ "numParticles": count, "total": sim.num_particles, "offset": offset }));
+
+            if let (Some(g), Some(dir)) = (gpu.as_mut(), &capture.png_dir) {
+                let frame = v.build_frame();
+                let (fw, fh) = v.framebuffer_size();
+                let rgba = g.render(&frame, fw, fh);
+                let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+
+                std::fs::create_dir_all(dir).map_err(|e| fail(format!("{}: {e}", dir.display())))?;
+                x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba).map_err(|e| fail(format!("png: {e}")))?;
+            }
         }
     }
 
@@ -225,6 +262,15 @@ fn apply_event(v: &mut Viewer3d, e: &Value) -> Result<(), String> {
             }
 
             FieldValue::SFVec3f(Vector3::new(a[0], a[1], a[2]))
+        }
+        FieldValue::SFVec2f(_) => {
+            let a = nums(val);
+
+            if a.len() != 2 {
+                return Err("event: two numbers expected".into());
+            }
+
+            FieldValue::SFVec2f(Vector2::new(a[0], a[1]))
         }
         FieldValue::MFVec3f(_) => FieldValue::MFVec3f(nums(val).iter().map(|&x| x as f32).collect()),
         FieldValue::MFVec3d(_) => FieldValue::MFVec3d(nums(val)),
