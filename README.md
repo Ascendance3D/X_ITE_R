@@ -182,17 +182,25 @@ A packaged build must be obtained from an approved build source. The project has
 
 ### Viewer controls
 
+The viewer shortcuts use Ctrl on Linux and Command on macOS. All other keys go to the world
+(KeySensor, StringSensor).
+
 | Key | Action |
 |---|---|
-| `1` | EXAMINE navigation |
-| `2` | WALK navigation |
-| `3` | FLY navigation |
-| `4` | NONE navigation |
+| Ctrl/Command + `1` | EXAMINE navigation |
+| Ctrl/Command + `2` | WALK navigation |
+| Ctrl/Command + `3` | FLY navigation |
+| Ctrl/Command + `4` | NONE navigation |
 | `Page Up` / `Page Down` | Change viewpoint |
 | `Home` / `End` | Viewpoint navigation |
-| `l` | List viewpoints |
-| `s` | Save screenshot |
-| `q` / `Esc` | Exit viewer |
+| Ctrl/Command + `l` | List viewpoints |
+| Ctrl/Command + `m` | Cycle multisampling |
+| Ctrl/Command + `z` | Cycle depth buffer |
+| Ctrl/Command + `r` | Reload |
+| Ctrl/Command + `s` | Save screenshot |
+| Ctrl/Command + `q` | Exit viewer |
+
+`Esc` does not exit the viewer. It goes to the world. Close the window to exit.
 
 Mouse controls depend on the selected navigation mode.
 
