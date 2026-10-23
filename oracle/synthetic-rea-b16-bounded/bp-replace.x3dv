@@ -1,0 +1,19 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 4
+  particleLifetime 2
+  lifetimeVariation 0
+  emitter PointEmitter { position 0.3 2 -0.2 direction 0 -1 0 speed 3 variation 0 }
+  physics [ DEF BM BoundedPhysicsModel { damping 0.5 geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.0 0 -1.0, 1.0 0 -1.0, 1.0 0 1.0, -1.0 0 1.0 ] } coordIndex [ 0 3 2 1 -1 ] } } ]
+}
+DEF SW Script {
+  inputOnly SFBool go
+  inputOutput SFNode model USE BM
+  initializeOnly SFNode next IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.0 0.7 -1.0, 1.0 0.7 -1.0, 1.0 0.7 1.0, -1.0 0.7 1.0 ] } coordIndex [ 0 3 2 1 -1 ] }
+  directOutput TRUE
+  url "ecmascript: function go (value) { if (value) { model .geometry = next; } }"
+}
