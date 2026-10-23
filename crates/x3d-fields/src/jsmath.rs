@@ -9,7 +9,9 @@
 //!   Its `Math.sin/cos/tan/asin/acos/atan2/exp/log/log10` are *correctly rounded*: on 100,000
 //!   random inputs per function Chrome's results equal the CORE-MATH library (the `core-math`
 //!   crate) bit for bit (0 differences), and equal an arbitrary-precision reference on 40,000
-//!   inputs. glibc (Rust's `f64::sin` ...) differs from Chrome in 0.05% to 0.25% of inputs (log10:
+//!   inputs. They are computed with `pxfm` (pure Rust, no C compiler on any platform), which
+//!   equals CORE-MATH bit for bit on 1,000,029 inputs per function (tests/js_math_golden.rs);
+//!   its `atan2` needs the sign of a zero result fixed. glibc (Rust's `f64::sin` ...) differs from Chrome in 0.05% to 0.25% of inputs (log10:
 //!   4%), node's fdlibm in 3% to 12%. Selected with [`set_flavor`] by the runtime; see
 //!   oracle/README.md ("Followers"). Found through a last-digit rotation axis in a
 //!   OrientationChaser trace.
@@ -40,43 +42,51 @@ fn chrome() -> bool {
 }
 
 pub fn sin(x: f64) -> f64 {
-    if chrome() { core_math::sin(x) } else { crate::fdlibm::sin(x) }
+    if chrome() { pxfm::f_sin(x) } else { crate::fdlibm::sin(x) }
 }
 
 pub fn cos(x: f64) -> f64 {
-    if chrome() { core_math::cos(x) } else { crate::fdlibm::cos(x) }
+    if chrome() { pxfm::f_cos(x) } else { crate::fdlibm::cos(x) }
 }
 
 pub fn exp(x: f64) -> f64 {
-    if chrome() { core_math::exp(x) } else { crate::fdlibm::exp(x) }
+    if chrome() { pxfm::f_exp(x) } else { crate::fdlibm::exp(x) }
 }
 
 pub fn log(x: f64) -> f64 {
-    if chrome() { core_math::log(x) } else { crate::fdlibm::log(x) }
+    if chrome() { pxfm::f_log(x) } else { crate::fdlibm::log(x) }
 }
 
 pub fn tan(x: f64) -> f64 {
-    if chrome() { core_math::tan(x) } else { libm::tan(x) }
+    if chrome() { pxfm::f_tan(x) } else { libm::tan(x) }
 }
 
 pub fn acos(x: f64) -> f64 {
-    if chrome() { core_math::acos(x) } else { crate::fdlibm::acos(x) }
+    if chrome() { pxfm::f_acos(x) } else { crate::fdlibm::acos(x) }
 }
 
 pub fn asin(x: f64) -> f64 {
-    if chrome() { core_math::asin(x) } else { libm::asin(x) }
+    if chrome() { pxfm::f_asin(x) } else { libm::asin(x) }
 }
 
 pub fn atan(x: f64) -> f64 {
-    if chrome() { core_math::atan(x) } else { libm::atan(x) }
+    if chrome() { pxfm::f_atan(x) } else { libm::atan(x) }
 }
 
 pub fn atan2(y: f64, x: f64) -> f64 {
-    if chrome() { core_math::atan2(y, x) } else { libm::atan2(y, x) }
+    if chrome() { chrome_atan2(y, x) } else { libm::atan2(y, x) }
+}
+
+/// pxfm's `atan2` gives +0 where the result underflows to -0 (y < 0 tiny, x > 0 huge); the sign of
+/// a zero result is y's (CORE-MATH, Chrome). Only x > 0 (or +0) gives a zero result.
+fn chrome_atan2(y: f64, x: f64) -> f64 {
+    let r = pxfm::f_atan2(y, x);
+
+    if r == 0.0 { 0.0f64.copysign(y) } else { r }
 }
 
 pub fn log10(x: f64) -> f64 {
-    if chrome() { core_math::log10(x) } else { crate::fdlibm::log10(x) }
+    if chrome() { pxfm::f_log10(x) } else { crate::fdlibm::log10(x) }
 }
 
 pub fn sqrt(x: f64) -> f64 {

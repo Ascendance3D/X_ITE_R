@@ -8,5 +8,6 @@ description = "X3D/VRML field types, number formatting and math, ported from X_I
 
 [dependencies]
 libm = "0.2"
-core-math = "1.4"
+# Chrome-flavor Math: correctly rounded, equal to CORE-MATH (tests/js_math_golden.rs).
+pxfm = "0.1.30"
 serde_json = { version = "1", features = ["float_roundtrip"] }
