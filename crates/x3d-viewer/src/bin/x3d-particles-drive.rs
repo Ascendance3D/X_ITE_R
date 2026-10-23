@@ -23,9 +23,9 @@
 //!   `{"def": NAME | null}` for SFNode and `{"nodes": [...]}` for MFNode) are applied before the frame's step.
 //! * steps carry `isActive`, `maxParticles`, `numForces`; `geometry.polyline` is the `polylines` texture.
 //!
-//! `--png-dir <dir>` renders the frame after each dump frame's step into `<dir>/<frame>.png` (the 256 x 256 page of
-//! the particle oracle, `antialiased="false"`); `--msaa N` renders it like the MSAA page (`antialiased="true"
-//! multisampling="N"`). The simulation is the same with or without them.
+//! `--png-dir <dir>` renders the frame after each dump frame's step into `<dir>/<frame>.png` (`x3d-oracle particles
+//! --png-dir`: anim.html's 512 x 512 canvas, `antialiased="false"`; `--png-size WxH` for another size); `--msaa N`
+//! renders it like the MSAA page (`antialiased="true" multisampling="N"`). The simulation is the same with or without them.
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
@@ -47,14 +47,18 @@ fn main() {
     let world = PathBuf::from(&args[1]);
     let script: Value = serde_json::from_str(&std::fs::read_to_string(&args[2]).expect("script")).expect("script json");
     let base: Option<Value> = opt("--seeds-from").map(|p| serde_json::from_str(&std::fs::read_to_string(p).expect("baseline")).expect("baseline json"));
-    let seeds = base.as_ref().map(|base| base["steps"].as_array().expect("baseline steps").iter().map(|s| s["randomSeed"].as_f64().expect("randomSeed")).collect::<Vec<f64>>());
+    // A step without a seed ran no emitter pass (the system was disabled or had stopped emitting): nothing to replay.
+    let seeds = base.as_ref().map(|base| base["steps"].as_array().expect("baseline steps").iter().filter_map(|s| s["randomSeed"].as_f64()).collect::<Vec<f64>>());
     let force_draws: Option<Vec<Vec<f64>>> = base.as_ref().and_then(|base| {
         let steps = base["steps"].as_array()?;
 
         steps.iter().any(|s| s.get("forceDraws").is_some()).then(|| steps.iter().map(|s| s["forceDraws"].as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()).collect())
     });
     let out = PathBuf::from(opt("--out").unwrap());
-    let capture = Capture { png_dir: opt("--png-dir").map(PathBuf::from), msaa: opt("--msaa") };
+    let size = opt("--png-size").map(|s| s.split_once('x').and_then(|(w, h)| Some((w.parse().ok()?, h.parse().ok()?))).expect("--png-size WxH"));
+    let png_dir = opt("--png-dir").map(PathBuf::from);
+    let size = size.unwrap_or(if png_dir.is_some() { (512, 512) } else { (256, 256) });
+    let capture = Capture { png_dir, msaa: opt("--msaa"), size };
     let result = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(&world, &script, seeds, force_draws, &out, &capture)).unwrap().join().unwrap();
 
     match result {
@@ -79,6 +83,7 @@ type Output = (Value, Vec<f32>, PathBuf);
 struct Capture {
     png_dir: Option<PathBuf>,
     msaa: Option<String>,
+    size: (u32, u32),
 }
 
 fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Option<Vec<Vec<f64>>>, out: &Path, capture: &Capture) -> Result<Output, (String, PathBuf)> {
@@ -105,7 +110,7 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
         attributes.extend([("antialiased", "true"), ("multisampling", n)]);
     }
 
-    let mut v = Viewer3d::load_attributes(world, None, t0, 256, 256, Some(1.0 / dt), false, &attributes).map_err(fail)?;
+    let mut v = Viewer3d::load_attributes(world, None, t0, capture.size.0, capture.size.1, Some(1.0 / dt), false, &attributes).map_err(fail)?;
     let mut gpu = match &capture.png_dir {
         Some(_) => {
             let mut g = x3d_render::gpu::Gpu::new().map_err(|e| fail(format!("no GPU for --png-dir: {e}")))?;
