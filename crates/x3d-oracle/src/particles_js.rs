@@ -437,3 +437,42 @@ pub const PICK_PROBES_NAMED: &str = r###"points =>
                      normal: [ h .normal .x, h .normal .y, h .normal .z ], texCoord: [ h .texCoord .x, h .texCoord .y, h .texCoord .z, h .texCoord .w ] };
          });
       }"###;
+
+/// Additive (not in the Node tools): script key `collisionProbes` ({ frames, directions, translations, nodes }). After
+/// each listed frame, the shapes the frame's COLLISION traversal collected (X3DRenderObject .collisionShapes, DEF names),
+/// `getClosestObject (direction)` for every direction (the depth pass over those shapes: id, DEF name, distance, normal),
+/// `constrainTranslation (translation)` for every translation (the avatar's blocked move), the user pose, the
+/// viewpoint's positionOffset (WALK gravity) and isActive / collideTime of the named Collision nodes.
+pub const COLLISION_PROBES_NAMED: &str = r###"({ directions, translations, nodes }) =>
+      {
+         const
+            browser = document .getElementById ("c") .browser,
+            layer   = browser .getActiveLayer (),
+            vp      = browser .getActiveViewpoint (),
+            scene   = browser .currentScene,
+            Vector3 = vp .getPosition () .constructor,
+            name    = id => id < 0 ? null : layer .collisionShapes [id] .shapeNode .getName (),
+            vec     = v => [ v .x, v .y, v .z ];
+
+         const shapes = layer .collisionShapes .slice (0, layer .numCollisionShapes) .map (c => c .shapeNode .getName ());
+
+         const closest = directions .map (([ x, y, z ]) =>
+         {
+            const c = layer .getClosestObject (new Vector3 (x, y, z));
+
+            return { id: c .id, shape: name (c .id), distance: c .distance, normal: vec (c .normal) };
+         });
+
+         const constrained = translations .map (([ x, y, z ]) => vec (layer .constrainTranslation (new Vector3 (x, y, z))));
+
+         const collisions = { };
+
+         for (const n of nodes)
+         {
+            const c = scene .getNamedNode (n) .getValue ();
+
+            collisions [n] = { isActive: c .getField ("isActive") .getValue (), collideTime: c .getField ("collideTime") .getValue () };
+         }
+
+         return { shapes, closest, constrained, pose: window .pose (), positionOffset: vec (vp ._positionOffset .getValue ()), collisions };
+      }"###;
