@@ -14,7 +14,9 @@ impl<'j, 's> P<'j, 's> {
     // --- buffers -----------------------------------------------------------------------------------
 
     pub(super) fn buffers_array(&mut self, buffers: V<'j>) -> R<()> {
-        let Some(list) = buffers.arr() else { return Ok(()) };
+        let Some(list) = buffers.arr() else {
+            return Ok(());
+        };
         let previous = std::mem::take(&mut self.buffers);
         let mut out = Vec::with_capacity(list.len());
 
@@ -28,7 +30,12 @@ impl<'j, 's> P<'j, 's> {
         Ok(())
     }
 
-    fn buffer_object(&mut self, buffer: V<'j>, i: usize, previous: &[Option<Rc<Vec<u8>>>]) -> R<Option<Rc<Vec<u8>>>> {
+    fn buffer_object(
+        &mut self,
+        buffer: V<'j>,
+        i: usize,
+        previous: &[Option<Rc<Vec<u8>>>],
+    ) -> R<Option<Rc<Vec<u8>>>> {
         if !buffer.is_obj() {
             return Ok(None);
         }
@@ -58,7 +65,11 @@ impl<'j, 's> P<'j, 's> {
     }
 
     /// `bufferView .getBuffer (componentType)`; `Ok (None)` is `undefined`.
-    pub(super) fn buffer_view_buffer(&mut self, index: usize, component_type: Option<Ct>) -> R<Option<Rc<Vec<u8>>>> {
+    pub(super) fn buffer_view_buffer(
+        &mut self,
+        index: usize,
+        component_type: Option<Ct>,
+    ) -> R<Option<Rc<Vec<u8>>>> {
         let view = self.buffer_views.at(index);
 
         if !view.is_obj() {
@@ -72,20 +83,38 @@ impl<'j, 's> P<'j, 's> {
         let ext = view.get("extensions");
         let meshopt = {
             let a = ext.get("KHR_meshopt_compression");
-            if a.nn() { a } else { ext.get("EXT_meshopt_compression") }
+            if a.nn() {
+                a
+            } else {
+                ext.get("EXT_meshopt_compression")
+            }
         };
 
         if meshopt.is_obj() {
-            let byte_offset = if meshopt.get("byteOffset").truthy() { meshopt.get("byteOffset").to_number() } else { 0.0 };
+            let byte_offset = if meshopt.get("byteOffset").truthy() {
+                meshopt.get("byteOffset").to_number()
+            } else {
+                0.0
+            };
             let byte_length = meshopt.get("byteLength");
             let byte_stride = meshopt.get("byteStride");
             let count = meshopt.get("count");
             let mode = meshopt.get("mode");
-            let filter = if meshopt.get("filter").truthy() { meshopt.get("filter").to_js_string() } else { "NONE".into() };
-            let buffer = meshopt.get("buffer").index(self.buffers.len()).and_then(|i| self.buffers[i].clone());
+            let filter = if meshopt.get("filter").truthy() {
+                meshopt.get("filter").to_js_string()
+            } else {
+                "NONE".into()
+            };
+            let buffer = meshopt
+                .get("buffer")
+                .index(self.buffers.len())
+                .and_then(|i| self.buffers[i].clone());
 
             if !self.meshopt {
-                return Err("TypeError: Cannot read properties of undefined (reading 'decodeGltfBuffer')".into());
+                return Err(
+                    "TypeError: Cannot read properties of undefined (reading 'decodeGltfBuffer')"
+                        .into(),
+                );
             }
 
             let stride = byte_stride.to_number();
@@ -93,20 +122,41 @@ impl<'j, 's> P<'j, 's> {
             let size = component_type.map(|c| c.size() as f64).unwrap_or(f64::NAN);
             let component_count = stride / size;
             let view_length = n * component_count * size;
-            let encoded = typed_array(Ct::U8, buffer.as_deref().map(|b| b.as_slice()), byte_offset, Some(byte_length.to_number()))?;
+            let encoded = typed_array(
+                Ct::U8,
+                buffer.as_deref().map(|b| b.as_slice()),
+                byte_offset,
+                Some(byte_length.to_number()),
+            )?;
             let decoded_len = to_index(view_length)?;
             let encoded: Vec<u8> = encoded.v.iter().map(|v| *v as u8).collect();
-            let decoded = super::meshopt::decode_gltf_buffer(decoded_len, n as usize, stride as usize, &encoded, mode.to_js_string().as_str(), filter.as_str())?;
+            let decoded = super::meshopt::decode_gltf_buffer(
+                decoded_len,
+                n as usize,
+                stride as usize,
+                &encoded,
+                mode.to_js_string().as_str(),
+                filter.as_str(),
+            )?;
             let decoded = Rc::new(decoded);
 
             self.bv_cache[index] = Some(decoded.clone());
             return Ok(Some(decoded));
         }
 
-        let buffer = view.get("buffer").index(self.buffers.len()).and_then(|i| self.buffers[i].clone());
-        let Some(buffer) = buffer else { return Ok(None) };
+        let buffer = view
+            .get("buffer")
+            .index(self.buffers.len())
+            .and_then(|i| self.buffers[i].clone());
+        let Some(buffer) = buffer else {
+            return Ok(None);
+        };
 
-        let byte_offset = if view.get("byteOffset").truthy() { view.get("byteOffset").to_number() } else { 0.0 };
+        let byte_offset = if view.get("byteOffset").truthy() {
+            view.get("byteOffset").to_number()
+        } else {
+            0.0
+        };
         let byte_length = view.get("byteLength").num().unwrap_or(f64::NAN);
         let (s, e) = js_slice(buffer.len(), byte_offset, byte_offset + byte_length);
         let slice = Rc::new(buffer[s..e].to_vec());
@@ -146,12 +196,22 @@ impl<'j, 's> P<'j, 's> {
         let ct = Ct::from_component_type(accessor.get("componentType"));
         let bv_index = {
             let b = accessor.get("bufferView");
-            if b.truthy() { b } else { V::new(&J::Number(0.0)) }
+            if b.truthy() {
+                b
+            } else {
+                V::new(&J::Number(0.0))
+            }
         };
         let bv = self.buffer_view(bv_index);
-        let byte_offset = if accessor.get("byteOffset").truthy() { accessor.get("byteOffset").to_number() } else { 0.0 };
+        let byte_offset = if accessor.get("byteOffset").truthy() {
+            accessor.get("byteOffset").to_number()
+        } else {
+            0.0
+        };
 
-        let Some(bv) = bv else { return Err(undefined_read("byteStride")) };
+        let Some(bv) = bv else {
+            return Err(undefined_read("byteStride"));
+        };
 
         let view = self.buffer_views.at(bv);
 
@@ -159,7 +219,11 @@ impl<'j, 's> P<'j, 's> {
             return Err(undefined_read("byteStride"));
         }
 
-        let byte_stride = if view.get("byteStride").truthy() { view.get("byteStride").to_number() } else { 0.0 };
+        let byte_stride = if view.get("byteStride").truthy() {
+            view.get("byteStride").to_number()
+        } else {
+            0.0
+        };
         let components = match accessor.get("type").str() {
             Some("SCALAR") => Some(1.0),
             Some("VEC2") => Some(2.0),
@@ -170,21 +234,34 @@ impl<'j, 's> P<'j, 's> {
             Some("MAT4") => Some(16.0),
             _ => None,
         };
-        let count = if accessor.get("count").truthy() { accessor.get("count").to_number() } else { 0.0 };
+        let count = if accessor.get("count").truthy() {
+            accessor.get("count").to_number()
+        } else {
+            0.0
+        };
 
         let stride = if byte_stride != 0.0 && !byte_stride.is_nan() {
-            let Some(ct) = ct else { return Err(undefined_read("BYTES_PER_ELEMENT")) };
+            let Some(ct) = ct else {
+                return Err(undefined_read("BYTES_PER_ELEMENT"));
+            };
             byte_stride / ct.size() as f64
         } else {
             components.unwrap_or(f64::NAN)
         };
 
-        let Some(ct) = ct else { return Err(undefined_read("BYTES_PER_ELEMENT")) };
+        let Some(ct) = ct else {
+            return Err(undefined_read("BYTES_PER_ELEMENT"));
+        };
 
         let bv_len = view.get("byteLength").num().unwrap_or(f64::NAN);
         let length = js_min(stride * count, (bv_len - byte_offset) / ct.size() as f64);
         let buffer = self.buffer_view_buffer(bv, Some(ct))?;
-        let array = typed_array(ct, buffer.as_deref().map(|b| b.as_slice()), byte_offset, Some(length))?;
+        let array = typed_array(
+            ct,
+            buffer.as_deref().map(|b| b.as_slice()),
+            byte_offset,
+            Some(length),
+        )?;
 
         let components_n = components.unwrap_or(f64::NAN);
         let value = self.dense_array(ct, components_n, count, stride, array);
@@ -202,7 +279,11 @@ impl<'j, 's> P<'j, 's> {
         }
 
         let length = count * components;
-        let length = if length.is_nan() { 0 } else { length.max(0.0) as usize };
+        let length = if length.is_nan() {
+            0
+        } else {
+            length.max(0.0) as usize
+        };
         let mut dense = vec![ct.store(0.0); length];
         let (stride_n, comp_n) = (stride, components);
         let mut i = 0usize;
@@ -260,14 +341,28 @@ impl<'j, 's> P<'j, 's> {
             }
         };
 
-        let Some(ibv) = self.buffer_view(sparse.get("indices").get("bufferView")) else { return Err(undefined_read("getBuffer")) };
+        let Some(ibv) = self.buffer_view(sparse.get("indices").get("bufferView")) else {
+            return Err(undefined_read("getBuffer"));
+        };
         let ibuf = self.buffer_view_buffer(ibv, Some(it))?;
         let count = sparse.get("count").to_number();
-        let indices = typed_array(it, ibuf.as_deref().map(|b| b.as_slice()), sparse.get("indices").get("byteOffset").to_number_or_zero(), Some(count))?;
+        let indices = typed_array(
+            it,
+            ibuf.as_deref().map(|b| b.as_slice()),
+            sparse.get("indices").get("byteOffset").to_number_or_zero(),
+            Some(count),
+        )?;
 
-        let Some(vbv) = self.buffer_view(sparse.get("values").get("bufferView")) else { return Err(undefined_read("getBuffer")) };
+        let Some(vbv) = self.buffer_view(sparse.get("values").get("bufferView")) else {
+            return Err(undefined_read("getBuffer"));
+        };
         let vbuf = self.buffer_view_buffer(vbv, None)?;
-        let values = typed_array(array.ct, vbuf.as_deref().map(|b| b.as_slice()), sparse.get("values").get("byteOffset").to_number_or_zero(), Some(count * components))?;
+        let values = typed_array(
+            array.ct,
+            vbuf.as_deref().map(|b| b.as_slice()),
+            sparse.get("values").get("byteOffset").to_number_or_zero(),
+            Some(count * components),
+        )?;
 
         let mut out = array;
         let comps = components as usize;
@@ -276,7 +371,11 @@ impl<'j, 's> P<'j, 's> {
         for idx in &indices.v {
             for c in 0..comps {
                 let target = *idx as usize * comps + c;
-                let value = values.v.get(v).copied().unwrap_or(if out.ct.is_float() { f64::NAN } else { 0.0 });
+                let value = values.v.get(v).copied().unwrap_or(if out.ct.is_float() {
+                    f64::NAN
+                } else {
+                    0.0
+                });
 
                 if target < out.v.len() {
                     out.v[target] = out.ct.store(value);
@@ -330,7 +429,11 @@ impl<'j, 's> P<'j, 's> {
             _ => "AVG_PIXEL",
         };
 
-        self.set(node, "magnificationFilter", FieldValue::SFString(mag.into()));
+        self.set(
+            node,
+            "magnificationFilter",
+            FieldValue::SFString(mag.into()),
+        );
 
         let boundary = |v: V| match v.num().map(|n| n as i64) {
             Some(33071) => "CLAMP_TO_EDGE",
@@ -338,9 +441,21 @@ impl<'j, 's> P<'j, 's> {
             _ => "REPEAT",
         };
 
-        self.set(node, "boundaryModeS", FieldValue::SFString(boundary(sampler.get("wrapS")).into()));
-        self.set(node, "boundaryModeT", FieldValue::SFString(boundary(sampler.get("wrapT")).into()));
-        self.set(node, "anisotropicDegree", FieldValue::SFFloat(MAX_ANISOTROPIC_DEGREE));
+        self.set(
+            node,
+            "boundaryModeS",
+            FieldValue::SFString(boundary(sampler.get("wrapS")).into()),
+        );
+        self.set(
+            node,
+            "boundaryModeT",
+            FieldValue::SFString(boundary(sampler.get("wrapT")).into()),
+        );
+        self.set(
+            node,
+            "anisotropicDegree",
+            FieldValue::SFFloat(MAX_ANISOTROPIC_DEGREE),
+        );
 
         self.setup(node);
         self.sampler_nodes[i] = Some(node);
@@ -350,7 +465,9 @@ impl<'j, 's> P<'j, 's> {
     // --- images -------------------------------------------------------------------------------------------
 
     pub(super) fn images_array(&mut self, images: V<'j>) -> R<()> {
-        let Some(list) = images.arr() else { return Ok(()) };
+        let Some(list) = images.arr() else {
+            return Ok(());
+        };
         let mut out = Vec::with_capacity(list.len());
 
         for (i, image) in list.iter().enumerate() {
@@ -362,7 +479,9 @@ impl<'j, 's> P<'j, 's> {
     }
 
     pub(super) fn videos_array(&mut self, videos: V<'j>) -> R<()> {
-        let Some(list) = videos.arr() else { return Ok(()) };
+        let Some(list) = videos.arr() else {
+            return Ok(());
+        };
         let mut out = Vec::with_capacity(list.len());
 
         for (i, image) in list.iter().enumerate() {
@@ -382,11 +501,19 @@ impl<'j, 's> P<'j, 's> {
         let uri = image.get("uri");
 
         if uri.truthy() {
-            return Ok(Some(Img { index, uri: Some(uri.to_js_string()), name }));
+            return Ok(Some(Img {
+                index,
+                uri: Some(uri.to_js_string()),
+                name,
+            }));
         }
 
         let Some(bv) = self.buffer_view(image.get("bufferView")) else {
-            return Ok(Some(Img { index, uri: None, name }));
+            return Ok(Some(Img {
+                index,
+                uri: None,
+                name,
+            }));
         };
 
         let buffer = self.buffer_view_buffer(bv, None)?;
@@ -394,16 +521,30 @@ impl<'j, 's> P<'j, 's> {
 
         // new Blob ([...], { type: image .mimeType }) → FileReader.readAsDataURL
         let mime = match image.get("mimeType").0 {
-            Some(J::String(s)) if s.bytes().all(|b| (0x20..=0x7e).contains(&b)) => s.to_ascii_lowercase(),
+            Some(J::String(s)) if s.bytes().all(|b| (0x20..=0x7e).contains(&b)) => {
+                s.to_ascii_lowercase()
+            }
             Some(J::String(_)) | None => String::new(),
             Some(_) => {
                 let s = image.get("mimeType").to_js_string();
-                if s.bytes().all(|b| (0x20..=0x7e).contains(&b)) { s.to_ascii_lowercase() } else { String::new() }
+                if s.bytes().all(|b| (0x20..=0x7e).contains(&b)) {
+                    s.to_ascii_lowercase()
+                } else {
+                    String::new()
+                }
             }
         };
-        let mime = if mime.is_empty() { "application/octet-stream".to_string() } else { mime };
+        let mime = if mime.is_empty() {
+            "application/octet-stream".to_string()
+        } else {
+            mime
+        };
 
-        Ok(Some(Img { index, uri: Some(format!("data:{mime};base64,{}", base64_encode(bytes))), name }))
+        Ok(Some(Img {
+            index,
+            uri: Some(format!("data:{mime};base64,{}", base64_encode(bytes))),
+            name,
+        }))
     }
 
     // --- textures ------------------------------------------------------------------------------------------------
@@ -421,7 +562,9 @@ impl<'j, 's> P<'j, 's> {
             return Err(undefined_read(&index.to_js_string()));
         };
 
-        let Some(ti) = index.index(textures.arr().map(|a| a.len()).unwrap_or(0)) else { return Ok(None) };
+        let Some(ti) = index.index(textures.arr().map(|a| a.len()).unwrap_or(0)) else {
+            return Ok(None);
+        };
         let texture = textures.at(ti);
 
         if !texture.is_obj() {
@@ -436,7 +579,10 @@ impl<'j, 's> P<'j, 's> {
         let mut videos: Vec<(usize, Option<String>, Option<String>)> = vec![];
 
         if self.has_extension("EXT_texture_video") {
-            let source = texture.get("extensions").get("EXT_texture_video").get("source");
+            let source = texture
+                .get("extensions")
+                .get("EXT_texture_video")
+                .get("source");
 
             let Some(list) = &self.videos else {
                 return Err(undefined_read(&source.to_js_string()));
@@ -460,9 +606,14 @@ impl<'j, 's> P<'j, 's> {
                     continue;
                 }
 
-                if matches!(key.as_str(), "KHR_texture_basisu" | "EXT_texture_avif" | "EXT_texture_webp") {
+                if matches!(
+                    key.as_str(),
+                    "KHR_texture_basisu" | "EXT_texture_avif" | "EXT_texture_webp"
+                ) {
                     let source = extension.get("source");
-                    let Some(list) = &self.images else { return Err(undefined_read(&source.to_js_string())) };
+                    let Some(list) = &self.images else {
+                        return Err(undefined_read(&source.to_js_string()));
+                    };
 
                     if let Some(i) = source.index(list.len()) {
                         if let Some(v) = &list[i] {
@@ -475,7 +626,9 @@ impl<'j, 's> P<'j, 's> {
 
         {
             let source = texture.get("source");
-            let Some(list) = &self.images else { return Err(undefined_read(&source.to_js_string())) };
+            let Some(list) = &self.images else {
+                return Err(undefined_read(&source.to_js_string()));
+            };
 
             if let Some(i) = source.index(list.len()) {
                 if let Some(v) = &list[i] {
@@ -491,7 +644,15 @@ impl<'j, 's> P<'j, 's> {
             return Ok(None);
         }
 
-        let key = format!("{}:{}", medias.iter().map(|m| m.0.to_string()).collect::<Vec<_>>().join(","), texture.get("sampler").to_js_string());
+        let key = format!(
+            "{}:{}",
+            medias
+                .iter()
+                .map(|m| m.0.to_string())
+                .collect::<Vec<_>>()
+                .join(","),
+            texture.get("sampler").to_js_string()
+        );
 
         if let Some(cached) = self.texture_cache.get(&key) {
             let cached = *cached;
@@ -500,15 +661,32 @@ impl<'j, 's> P<'j, 's> {
             return Ok(Some(cached));
         }
 
-        let node = self.create(if is_video { "MovieTexture" } else { "ImageTexture" })?;
+        let node = self.create(if is_video {
+            "MovieTexture"
+        } else {
+            "ImageTexture"
+        })?;
         let tname = texture.get("name");
-        let name = if tname.truthy() { self.sanitize(tname) } else { self.sanitize_str(medias[0].2.as_deref().unwrap_or("")) };
+        let name = if tname.truthy() {
+            self.sanitize(tname)
+        } else {
+            self.sanitize_str(medias[0].2.as_deref().unwrap_or(""))
+        };
 
         if !name.is_empty() {
             self.named(&name, node)?;
         }
 
-        self.set(node, "url", FieldValue::MFString(medias.iter().map(|m| m.1.clone().unwrap_or_default()).collect()));
+        self.set(
+            node,
+            "url",
+            FieldValue::MFString(
+                medias
+                    .iter()
+                    .map(|m| m.1.clone().unwrap_or_default())
+                    .collect(),
+            ),
+        );
 
         // MovieTexture has no such field; the JS assignment is a plain property write.
         if !is_video {

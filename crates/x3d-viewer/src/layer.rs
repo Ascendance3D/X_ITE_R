@@ -6,12 +6,12 @@
 //! [`Vp`] here, not in node fields. Transitions (the viewpoint's private TimeSensor,
 //! EaseInEaseOut and interpolators) are a small [`Transition`] ticked on the frame clock.
 
-use std::collections::HashMap;
-use x3d_fields::{FieldValue, NodeId};
-use x3d_fields::math::{Matrix4, Rotation4, Vector3};
-use x3d_runtime::Runtime;
-use x3d_render::traverse::{perspective, straighten};
 use crate::geom::Camera;
+use std::collections::HashMap;
+use x3d_fields::math::{Matrix4, Rotation4, Vector3};
+use x3d_fields::{FieldValue, NodeId};
+use x3d_render::traverse::{perspective, straighten};
+use x3d_runtime::Runtime;
 
 /// The layer's default Viewpoint / NavigationInfo / Background / Fog (stack bottom).
 pub const DEFAULT: NodeId = NodeId::MAX;
@@ -88,7 +88,8 @@ impl NavInfo {
 
     /// NavigationInfo.set_type__: availableViewers.
     pub fn available_viewers(&self) -> Vec<String> {
-        let (mut examine, mut walk, mut fly, mut plane, mut none, mut lookat) = (false, false, false, false, false, false);
+        let (mut examine, mut walk, mut fly, mut plane, mut none, mut lookat) =
+            (false, false, false, false, false, false);
 
         if self.types.is_empty() {
             examine = true;
@@ -121,7 +122,14 @@ impl NavInfo {
         }
 
         let mut v = vec![];
-        for (on, name) in [(examine, "EXAMINE"), (walk, "WALK"), (fly, "FLY"), (plane, "PLANE"), (lookat, "LOOKAT"), (none, "NONE")] {
+        for (on, name) in [
+            (examine, "EXAMINE"),
+            (walk, "WALK"),
+            (fly, "FLY"),
+            (plane, "PLANE"),
+            (lookat, "LOOKAT"),
+            (none, "NONE"),
+        ] {
             if on {
                 v.push(name.to_string());
             }
@@ -231,12 +239,17 @@ impl VpBase {
         let mut position = sg.vec3(n, "position", Vector3::new(0.0, 0.0, 10.0));
         let mut orientation = sg.rotation(n, "orientation");
         let mut center_of_rotation = sg.vec3(n, "centerOfRotation", Vector3::ZERO);
-        let mut geo = (rt.builtin_name(n) == Some("GeoViewpoint")).then(|| GeoVp { object: sg.geo_object(n), speed_factor: sg.f64(n, "speedFactor", 1.0), location_rotation: Rotation4::identity() });
+        let mut geo = (rt.builtin_name(n) == Some("GeoViewpoint")).then(|| GeoVp {
+            object: sg.geo_object(n),
+            speed_factor: sg.f64(n, "speedFactor", 1.0),
+            location_rotation: Rotation4::identity(),
+        });
 
         if let Some(g) = &mut geo {
             // GeoViewpoint.getOrientation: the location frame's rotation at `position`, then
             // `multLeft (this ._orientation)`.
-            g.location_rotation.set_matrix(&g.object.get_location_matrix(&position).submatrix());
+            g.location_rotation
+                .set_matrix(&g.object.get_location_matrix(&position).submatrix());
             let mut r = g.location_rotation;
             r.mult_left(&orientation);
             orientation = r;
@@ -267,10 +280,16 @@ impl VpBase {
     /// X3DViewpointNode.getUpVector (the Y axis) and GeoViewpoint.getUpVector: the geo up vector
     /// at the user position, or with `dynamic` the Z axis once the user is 6.5e6 m away.
     pub fn up_vector(&self, vp: &Vp, dynamic: bool) -> Vector3 {
-        let Some(g) = &self.geo else { return Vector3::Y_AXIS };
+        let Some(g) = &self.geo else {
+            return Vector3::Y_AXIS;
+        };
         let position = vp.user_position(self);
 
-        if !dynamic || position.norm() < 6.5e6 { g.object.get_geo_up_vector(&position) } else { Vector3::Z_AXIS }
+        if !dynamic || position.norm() < 6.5e6 {
+            g.object.get_geo_up_vector(&position)
+        } else {
+            Vector3::Z_AXIS
+        }
     }
 
     /// X3DViewpointNode.getSpeedFactor (1) and GeoViewpoint.getSpeedFactor: faster with the
@@ -284,7 +303,8 @@ impl VpBase {
 
     /// `_orientation⁻¹ · getOrientation ()` (identity but for a GeoViewpoint).
     pub fn local_orientation(&self) -> Rotation4 {
-        self.geo.map_or(Rotation4::identity(), |g| g.location_rotation)
+        self.geo
+            .map_or(Rotation4::identity(), |g| g.location_rotation)
     }
 
     /// X3DViewpointNode.straightenHorizon (orientation, getUpVector (true)).
@@ -300,7 +320,11 @@ impl VpBase {
     /// Viewpoint.getFieldOfView.
     pub fn fov(&self) -> f64 {
         let f = self.field_of_view;
-        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+        if f > 0.0 && f < std::f64::consts::PI {
+            f
+        } else {
+            std::f64::consts::FRAC_PI_4
+        }
     }
 }
 
@@ -340,8 +364,12 @@ impl Default for Vp {
             near_override: None,
             far_override: None,
             model: Matrix4::IDENTITY,
-            camera_space: Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 10.0, 1.0]),
-            view: Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -10.0, 1.0]),
+            camera_space: Matrix4([
+                1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 10.0, 1.0,
+            ]),
+            view: Matrix4([
+                1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -10.0, 1.0,
+            ]),
             vrml_transition: false,
             transition: None,
             transition_description: String::new(),
@@ -435,7 +463,11 @@ impl Vp {
     /// Viewpoint.getUserFieldOfView.
     pub fn user_fov(&self, base: &VpBase) -> f64 {
         let f = base.field_of_view * self.field_of_view_scale;
-        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+        if f > 0.0 && f < std::f64::consts::PI {
+            f
+        } else {
+            std::f64::consts::FRAC_PI_4
+        }
     }
 
     /// OrthoViewpoint.getUserMinimumX / Y, getUserMaximumX / Y (index 0..3).
@@ -463,7 +495,14 @@ impl Vp {
     }
 
     /// Viewpoint / OrthoViewpoint.getProjectionMatrixWithLimits.
-    pub fn projection(&self, base: &VpBase, near: f64, far: f64, width: f64, height: f64) -> Matrix4 {
+    pub fn projection(
+        &self,
+        base: &VpBase,
+        near: f64,
+        far: f64,
+        width: f64,
+        height: f64,
+    ) -> Matrix4 {
         if !base.is_ortho {
             return perspective(self.user_fov(base), near, far, width, height);
         }
@@ -475,11 +514,27 @@ impl Vp {
         if ratio > size_x / size_y {
             let center = (self.user_extent(base, 0) + self.user_extent(base, 2)) / 2.0;
             let size1_2 = (size_y * ratio) / 2.0;
-            Camera::ortho(center - size1_2, center + size1_2, self.user_extent(base, 1), self.user_extent(base, 3), near, far, &mut m);
+            Camera::ortho(
+                center - size1_2,
+                center + size1_2,
+                self.user_extent(base, 1),
+                self.user_extent(base, 3),
+                near,
+                far,
+                &mut m,
+            );
         } else {
             let center = (self.user_extent(base, 1) + self.user_extent(base, 3)) / 2.0;
             let size1_2 = (size_x / ratio) / 2.0;
-            Camera::ortho(self.user_extent(base, 0), self.user_extent(base, 2), center - size1_2, center + size1_2, near, far, &mut m);
+            Camera::ortho(
+                self.user_extent(base, 0),
+                self.user_extent(base, 2),
+                center - size1_2,
+                center + size1_2,
+                near,
+                far,
+                &mut m,
+            );
         }
 
         m
@@ -498,13 +553,25 @@ impl Vp {
             Some(o) => o,
             None => base.far_field,
         };
-        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { Self::max_far_value(base) })
+        v.unwrap_or_else(|| {
+            if nav.far_value() != 0.0 {
+                nav.far_value()
+            } else {
+                Self::max_far_value(base)
+            }
+        })
     }
 
     /// X3DViewpointNode.update.
     pub fn update(&mut self, base: &VpBase) {
         let mut m = Matrix4::IDENTITY;
-        m.set_transform(Some(&self.user_position(base)), Some(&self.user_orientation(base)), Some(&self.scale_offset), Some(&self.scale_orientation_offset), None);
+        m.set_transform(
+            Some(&self.user_position(base)),
+            Some(&self.user_orientation(base)),
+            Some(&self.scale_offset),
+            Some(&self.scale_orientation_offset),
+            None,
+        );
         m.mult_right(&self.model);
         self.camera_space = m;
         let mut v = m;
@@ -555,13 +622,22 @@ impl Vp {
         inv.inverse();
         orientation.mult_left(&inv);
 
-        Relative { position, orientation, scale, scale_orientation }
+        Relative {
+            position,
+            orientation,
+            scale,
+            scale_orientation,
+        }
     }
 
     /// Viewpoint.setInterpolators / OrthoViewpoint.setInterpolators (called by transitionStart and
     /// by lookAt with `from` = this viewpoint): sets the field of view scale (and the ortho offsets)
     /// at once and returns the interpolator key values: (scale from, to), (offset from, to).
-    pub fn set_interpolators(&mut self, base: &VpBase, from: &FromState) -> ((f64, f64), Option<([f64; 4], [f64; 4])>) {
+    pub fn set_interpolators(
+        &mut self,
+        base: &VpBase,
+        from: &FromState,
+    ) -> ((f64, f64), Option<([f64; 4], [f64; 4])>) {
         if !from.same {
             self.field_of_view_scale = 1.0;
             let offset = self.field_of_view_offset;
@@ -587,7 +663,16 @@ impl Vp {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn start_transition(&mut self, now: f64, interval: f64, easing: bool, nav_info: NodeId, rel: &Relative, from: &FromState, base: &VpBase) {
+    fn start_transition(
+        &mut self,
+        now: f64,
+        interval: f64,
+        easing: bool,
+        nav_info: NodeId,
+        rel: &Relative,
+        from: &FromState,
+        base: &VpBase,
+    ) {
         // ANIMATE: easeInEaseOut = [(0, 1), (1, 0)] → easeOut = [0].y = 1, easeIn = [1].x = 1.
         let (ease_out, ease_in) = if easing { (1.0, 1.0) } else { (0.0, 0.0) };
 
@@ -625,7 +710,11 @@ impl Vp {
         if t.lazy_start {
             // TimeSensor.set_start (offset = true): the sensor starts in the first event processing of
             // this frame; cycle = currentTime - fract ((currentTime - startTime) / interval) * interval.
-            let offset = if t.interval != 0.0 { (now - t.start) / t.interval } else { 0.0 };
+            let offset = if t.interval != 0.0 {
+                (now - t.start) / t.interval
+            } else {
+                0.0
+            };
             t.start = now - (offset % 1.0) * t.interval;
             t.lazy_start = false;
         }
@@ -633,7 +722,13 @@ impl Vp {
         let t = t.clone();
         let elapsed = now - t.start;
         let done = elapsed >= t.interval;
-        let f = if done { 1.0 } else if t.interval > 0.0 { ((elapsed / t.interval) % 1.0).max(0.0) } else { 1.0 };
+        let f = if done {
+            1.0
+        } else if t.interval > 0.0 {
+            ((elapsed / t.interval) % 1.0).max(0.0)
+        } else {
+            1.0
+        };
         let w = ease(f, t.ease_out, t.ease_in);
 
         self.position_offset = lerp3(&t.position.0, &t.position.1, w);
@@ -764,7 +859,8 @@ impl Layer {
     /// Nodes the runtime released (their ids may belong to other nodes soon): their saved state goes.
     /// The stacks and lists drop them in the next scan, which no longer finds them.
     pub fn forget(&mut self, released: &[NodeId]) {
-        self.vps.retain(|n, _| is_default(*n) || !released.contains(n));
+        self.vps
+            .retain(|n, _| is_default(*n) || !released.contains(n));
         self.transition_active.retain(|n, _| !released.contains(n));
         self.vp_descriptions.retain(|n, _| !released.contains(n));
     }
@@ -791,7 +887,11 @@ impl Layer {
         }
 
         let sg = x3d_render::sg::Sg::new(rt);
-        let own: Vec<NodeId> = list[1..].iter().copied().filter(|n| !sg.in_inline(*n)).collect();
+        let own: Vec<NodeId> = list[1..]
+            .iter()
+            .copied()
+            .filter(|n| !sg.in_inline(*n))
+            .collect();
 
         if let Some(name) = name {
             for &n in &own {
@@ -840,7 +940,12 @@ impl Layer {
 
     /// BindableStack.update. Returns (from, top, transition) when the viewpoint stack needs
     /// `top .transitionStart (layerNode, fromNode)`.
-    fn stack_update(stack: &mut Vec<NodeId>, rt: &mut Runtime, removed: &[NodeId], changed: &[NodeId]) -> Option<(NodeId, NodeId)> {
+    fn stack_update(
+        stack: &mut Vec<NodeId>,
+        rt: &mut Runtime,
+        removed: &[NodeId],
+        changed: &[NodeId],
+    ) -> Option<(NodeId, NodeId)> {
         if removed.is_empty() && changed.is_empty() {
             return None;
         }
@@ -888,7 +993,11 @@ impl Layer {
         }
     }
 
-    fn lists_update(&mut self, rt: &Runtime, scan: &crate::walk::Scan) -> [(Vec<NodeId>, Vec<NodeId>); 4] {
+    fn lists_update(
+        &mut self,
+        rt: &Runtime,
+        scan: &crate::walk::Scan,
+    ) -> [(Vec<NodeId>, Vec<NodeId>); 4] {
         for (n, m) in &scan.viewpoints {
             self.vp(n.node).model = *m;
         }
@@ -908,8 +1017,21 @@ impl Layer {
                 _ => (&mut self.fog_list, &mut self.fog_mod),
             };
 
-            let changed: Vec<NodeId> = collected.iter().copied().filter(|n| !is_default(*n) && rt.bind_modifications.get(n).copied().unwrap_or(0) > *modc).collect();
-            let removed: Vec<NodeId> = if *list != collected { list.iter().copied().filter(|n| !collected.contains(n)).collect() } else { vec![] };
+            let changed: Vec<NodeId> = collected
+                .iter()
+                .copied()
+                .filter(|n| {
+                    !is_default(*n) && rt.bind_modifications.get(n).copied().unwrap_or(0) > *modc
+                })
+                .collect();
+            let removed: Vec<NodeId> = if *list != collected {
+                list.iter()
+                    .copied()
+                    .filter(|n| !collected.contains(n))
+                    .collect()
+            } else {
+                vec![]
+            };
 
             *list = collected;
             *modc = rt.bind_counter;
@@ -920,7 +1042,11 @@ impl Layer {
     }
 
     fn collected(scan: &crate::walk::Scan, which: usize, default_viewpoint: NodeId) -> Vec<NodeId> {
-        let mut v = vec![if which == 1 { default_viewpoint } else { DEFAULT }];
+        let mut v = vec![if which == 1 {
+            default_viewpoint
+        } else {
+            DEFAULT
+        }];
 
         match which {
             0 => v.extend(scan.navigation_infos.iter().map(|n| n.node)),
@@ -933,7 +1059,13 @@ impl Layer {
     }
 
     /// X3DLayerNode.bindBindables: the first CAMERA pass binds the first bindables.
-    pub fn bind_bindables(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, viewpoint_name: Option<&str>, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
+    pub fn bind_bindables(
+        &mut self,
+        rt: &mut Runtime,
+        scan: &crate::walk::Scan,
+        viewpoint_name: Option<&str>,
+        bbox: &dyn Fn() -> Option<crate::lookat::Box3>,
+    ) {
         let _ = self.lists_update(rt, scan);
 
         let nav = Self::get_bound(rt, &self.nav_list, None);
@@ -958,7 +1090,12 @@ impl Layer {
 
     /// X3DLayerNode.camera after the traversal: lists, stacks, viewpoint transitions,
     /// `getViewpoint () .update ()`.
-    pub fn camera(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
+    pub fn camera(
+        &mut self,
+        rt: &mut Runtime,
+        scan: &crate::walk::Scan,
+        bbox: &dyn Fn() -> Option<crate::lookat::Box3>,
+    ) {
         let [nav, vp, bg, fog] = self.lists_update(rt, scan);
 
         Self::stack_update(&mut self.nav_stack, rt, &nav.0, &nav.1);
@@ -969,7 +1106,10 @@ impl Layer {
         // Bound NavigationInfo's own transitions are no-ops; a viewpoint starts a transition.
         // NavigationInfo.set_isBound__: unbinding ends an active transition.
         for n in self.nav_list.clone() {
-            if n != DEFAULT && !rt.get_bool(n, "isBound") && self.transition_active.get(&n).copied().unwrap_or(false) {
+            if n != DEFAULT
+                && !rt.get_bool(n, "isBound")
+                && self.transition_active.get(&n).copied().unwrap_or(false)
+            {
                 self.transition_active.insert(n, false);
             }
         }
@@ -1024,7 +1164,13 @@ impl Layer {
     }
 
     /// X3DViewpointNode.transitionStart.
-    fn transition_start(&mut self, rt: &mut Runtime, top: NodeId, from: NodeId, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
+    fn transition_start(
+        &mut self,
+        rt: &mut Runtime,
+        top: NodeId,
+        from: NodeId,
+        bbox: &dyn Fn() -> Option<crate::lookat::Box3>,
+    ) {
         let base = VpBase::read(rt, top);
         let from_base = VpBase::read(rt, from);
         let from_view = self.vp(from).view;
@@ -1033,7 +1179,9 @@ impl Layer {
         let now = rt.now;
 
         if base.jump {
-            if self.vp(top).transition.is_some() && self.vp(top).transition_description == "transitionStart" {
+            if self.vp(top).transition.is_some()
+                && self.vp(top).transition_description == "transitionStart"
+            {
                 return;
             }
 
@@ -1054,7 +1202,11 @@ impl Layer {
 
             // VRML behavior
             if rt.scene.spec_version_of(rt.scene.world).parse::<f64>().ok() == Some(2.0) {
-                kind = if self.vp(top).vrml_transition { "LINEAR".into() } else { "TELEPORT".into() };
+                kind = if self.vp(top).vrml_transition {
+                    "LINEAR".into()
+                } else {
+                    "TELEPORT".into()
+                };
             }
 
             self.vp(top).vrml_transition = false;
@@ -1075,7 +1227,15 @@ impl Layer {
 
             self.nav_start(rt, nav_node);
             let vp = self.vp(top);
-            vp.start_transition(now, nav.transition_time, kind == "ANIMATE", nav_node, &rel, &from_state, &base);
+            vp.start_transition(
+                now,
+                nav.transition_time,
+                kind == "ANIMATE",
+                nav_node,
+                &rel,
+                &from_state,
+                &base,
+            );
         } else {
             self.vp(top).transition_stop();
             self.nav_complete(rt, nav_node);
@@ -1103,7 +1263,13 @@ impl Layer {
     }
 
     /// X3DViewpointNode.getLookAtDistance (Viewpoint).
-    pub fn look_at_distance(&self, base: &VpBase, vp: &Vp, viewport: (f64, f64), bbox_size: &Vector3) -> f64 {
+    pub fn look_at_distance(
+        &self,
+        base: &VpBase,
+        vp: &Vp,
+        viewport: (f64, f64),
+        bbox_size: &Vector3,
+    ) -> f64 {
         if base.is_ortho {
             // OrthoViewpoint.getLookAtDistance.
             return bbox_size.norm() / 2.0 + 10.0;
@@ -1111,7 +1277,11 @@ impl Layer {
 
         let (w, h) = viewport;
         let size = if w < h {
-            if w / h < bbox_size.x / bbox_size.y { bbox_size.x } else { bbox_size.y * w / h }
+            if w / h < bbox_size.x / bbox_size.y {
+                bbox_size.x
+            } else {
+                bbox_size.y * w / h
+            }
         } else if w / h < bbox_size.x / bbox_size.y {
             bbox_size.x * h / w
         } else {
@@ -1128,7 +1298,11 @@ impl Layer {
         let size_x = base.ortho_fov[2] - base.ortho_fov[0];
         let size_y = base.ortho_fov[3] - base.ortho_fov[1];
 
-        let (sx, sy) = if ratio > size_x / size_y { (size_y * ratio, size_y) } else { (size_x, size_x / ratio) };
+        let (sx, sy) = if ratio > size_x / size_y {
+            (size_y * ratio, size_y)
+        } else {
+            (size_x, size_x / ratio)
+        };
         let scale_x = bbox_size.x / sx;
         let scale_y = bbox_size.y / sy;
         let scale = x3d_fields::jsmath::js_max(scale_x, scale_y);
@@ -1137,7 +1311,13 @@ impl Layer {
     }
 
     /// X3DViewpointNode.viewAll with the layer's bounding box (X3DLayerNode.getBBox, a Box3) in world space.
-    pub fn view_all(&mut self, rt: &Runtime, n: NodeId, base: &VpBase, bbox: Option<crate::lookat::Box3>) {
+    pub fn view_all(
+        &mut self,
+        rt: &Runtime,
+        n: NodeId,
+        base: &VpBase,
+        bbox: Option<crate::lookat::Box3>,
+    ) {
         let Some(bbox) = bbox else {
             let vp = self.vp(n);
             vp.near_override = None;
@@ -1211,7 +1391,17 @@ pub fn factor_simple(m: &Matrix4) -> (Vector3, Rotation4, Vector3, Rotation4) {
     let det = m.determinant();
     let sign = if det < 0.0 { -1.0 } else { 1.0 };
     let (sx, sy, sz) = (sign * sx, sign * sy, sign * sz);
-    let r = x3d_fields::math::Matrix3([a[0] / sx, a[1] / sx, a[2] / sx, a[4] / sy, a[5] / sy, a[6] / sy, a[8] / sz, a[9] / sz, a[10] / sz]);
+    let r = x3d_fields::math::Matrix3([
+        a[0] / sx,
+        a[1] / sx,
+        a[2] / sx,
+        a[4] / sy,
+        a[5] / sy,
+        a[6] / sy,
+        a[8] / sz,
+        a[9] / sz,
+        a[10] / sz,
+    ]);
     let mut rot = Rotation4::identity();
     rot.set_matrix(&r);
     (t, rot, Vector3::new(sx, sy, sz), Rotation4::identity())

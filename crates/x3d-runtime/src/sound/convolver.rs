@@ -68,10 +68,20 @@ fn vsvesq(source: &[f32], avx_alignment_offset: usize) -> f32 {
     let mut sum = 0f32;
     let mut o = 0;
 
-    for (count, width) in [(c_scalar_a, 1), (c_sse_a, 4), (c_avx, 8), (c_sse, 4), (rest, 1)] {
+    for (count, width) in [
+        (c_scalar_a, 1),
+        (c_sse_a, 4),
+        (c_avx, 8),
+        (c_sse, 4),
+        (rest, 1),
+    ] {
         if count > 0 {
             let part = &source[o..o + count];
-            sum += if width == 1 { scalar(part) } else { lanes(part, width) };
+            sum += if width == 1 {
+                scalar(part)
+            } else {
+                lanes(part, width)
+            };
             o += count;
         }
     }
@@ -160,7 +170,15 @@ struct Stage {
 
 impl Stage {
     #[allow(clippy::too_many_arguments)]
-    fn new(response: &[f32], stage_offset: usize, stage_length: usize, fft_size: usize, render_phase: usize, scale: f32, direct: bool) -> Stage {
+    fn new(
+        response: &[f32],
+        stage_offset: usize,
+        stage_length: usize,
+        fft_size: usize,
+        render_phase: usize,
+        scale: f32,
+        direct: bool,
+    ) -> Stage {
         let convolver = if direct {
             let mut kernel = vec![0f32; fft_size / 2];
             kernel[..stage_length].copy_from_slice(&response[..stage_length]);
@@ -189,14 +207,23 @@ impl Stage {
         }
 
         let max_pre_delay_length = half_size.min(total_delay);
-        let mut pre_delay_length = if total_delay > 0 { render_phase % max_pre_delay_length } else { 0 };
+        let mut pre_delay_length = if total_delay > 0 {
+            render_phase % max_pre_delay_length
+        } else {
+            0
+        };
         pre_delay_length = (pre_delay_length / RENDER_SLICE_SIZE) * RENDER_SLICE_SIZE;
 
         if pre_delay_length > total_delay {
             pre_delay_length = 0;
         }
 
-        let delay_buffer_size = if pre_delay_length < fft_size { fft_size } else { pre_delay_length }.max(RENDER_SLICE_SIZE);
+        let delay_buffer_size = if pre_delay_length < fft_size {
+            fft_size
+        } else {
+            pre_delay_length
+        }
+        .max(RENDER_SLICE_SIZE);
 
         Stage {
             convolver,
@@ -225,7 +252,10 @@ impl Stage {
             // temporary buffer.
             let (input, temporary): (Vec<f32>, &mut [f32]) = if self.pre_delay_length > 0 {
                 let i = self.pre_read_write_index;
-                (self.pre_delay[i..i + frames].to_vec(), &mut self.temporary[..frames])
+                (
+                    self.pre_delay[i..i + frames].to_vec(),
+                    &mut self.temporary[..frames],
+                )
             } else {
                 (source.to_vec(), &mut self.pre_delay[..frames])
             };
@@ -235,7 +265,11 @@ impl Stage {
                 StageConvolver::Fft(kernel, c) => c.process(kernel, &input, temporary),
             }
 
-            accumulation.accumulate(temporary, &mut self.accumulation_read_index, self.post_delay_length);
+            accumulation.accumulate(
+                temporary,
+                &mut self.accumulation_read_index,
+                self.post_delay_length,
+            );
         }
 
         if self.pre_delay_length > 0 {
@@ -275,7 +309,15 @@ impl ReverbConvolver {
 
             let render_phase = convolver_render_phase + i * RENDER_SLICE_SIZE;
             let direct = stage_offset == 0;
-            stages.push(Stage::new(response, stage_offset, stage_size, fft_size, render_phase, scale, direct));
+            stages.push(Stage::new(
+                response,
+                stage_offset,
+                stage_size,
+                fft_size,
+                render_phase,
+                scale,
+                direct,
+            ));
             stage_offset += stage_size;
             i += 1;
 
@@ -286,7 +328,13 @@ impl ReverbConvolver {
             fft_size = fft_size.min(MAX_FFT_SIZE);
         }
 
-        ReverbConvolver { stages, accumulation: Accumulation { buffer: vec![0.0; total_response_length + RENDER_SLICE_SIZE], read_index: 0 } }
+        ReverbConvolver {
+            stages,
+            accumulation: Accumulation {
+                buffer: vec![0.0; total_response_length + RENDER_SLICE_SIZE],
+                read_index: 0,
+            },
+        }
     }
 
     fn process(&mut self, source: &[f32], dest: &mut [f32]) {
@@ -308,11 +356,21 @@ pub struct Reverb {
 impl Reverb {
     /// Reverb::TryCreate: `channels` are the 1, 2 or 4 channels of the response.
     pub fn new(channels: &[Vec<f32>], sample_rate: f32, normalize: bool) -> Reverb {
-        let scale = if normalize { normalization_scale(channels, sample_rate) } else { 1.0 };
+        let scale = if normalize {
+            normalization_scale(channels, sample_rate)
+        } else {
+            1.0
+        };
         let n = channels.len();
-        let convolvers = (0..n.max(2)).map(|i| ReverbConvolver::new(&channels[i.min(n - 1)], i * RENDER_SLICE_SIZE, scale)).collect();
+        let convolvers = (0..n.max(2))
+            .map(|i| ReverbConvolver::new(&channels[i.min(n - 1)], i * RENDER_SLICE_SIZE, scale))
+            .collect();
 
-        Reverb { convolvers, response_channels: n, response_length: channels[0].len() }
+        Reverb {
+            convolvers,
+            response_channels: n,
+            response_length: channels[0].len(),
+        }
     }
 
     pub fn response_channels(&self) -> usize {
@@ -323,7 +381,13 @@ impl Reverb {
         let (inputs, outputs, r) = (source.len(), dest.len(), self.response_channels);
         let frames = dest[0].len();
         let zero = vec![0f32; frames];
-        let channel = |c: usize| source.get(c).copied().filter(|s| s.len() == frames).unwrap_or(&zero);
+        let channel = |c: usize| {
+            source
+                .get(c)
+                .copied()
+                .filter(|s| s.len() == frames)
+                .unwrap_or(&zero)
+        };
         let c = &mut self.convolvers;
 
         if inputs == 2 && (r == 1 || r == 2) && outputs == 2 {
@@ -369,17 +433,29 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = ();
 
     fn constructor(_: ()) -> Self {
-        Processor { reverb: None, silent_frames: 0.0, last_non_silent_time: 0.0 }
+        Processor {
+            reverb: None,
+            silent_frames: 0.0,
+            last_non_silent_time: 0.0,
+        }
     }
 
     fn onmessage(&mut self, msg: &mut dyn Any) {
-        if let Some(Some(Message::Reverb(r))) = msg.downcast_mut::<Option<Message>>().map(Option::take) {
+        if let Some(Some(Message::Reverb(r))) =
+            msg.downcast_mut::<Option<Message>>().map(Option::take)
+        {
             // The old reverb is dropped here, in the render thread; it holds only buffers.
             self.reverb = r;
         }
     }
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], _params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        _params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let dest = &mut outputs[0];
         let frames = dest.first().map_or(128, |d| d.len());
         let silent = inputs[0].iter().all(|c| c.iter().all(|x| *x == 0.0));
@@ -405,7 +481,11 @@ impl AudioWorkletProcessor for Processor {
         }
 
         let tail = self.reverb.as_ref().map_or(0, |r| r.response_length) as f64;
-        self.silent_frames = if silent { self.silent_frames + 128.0 } else { 0.0 };
+        self.silent_frames = if silent {
+            self.silent_frames + 128.0
+        } else {
+            0.0
+        };
         self.silent_frames <= tail + 128.0
     }
 }

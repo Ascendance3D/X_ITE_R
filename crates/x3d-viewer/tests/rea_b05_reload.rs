@@ -10,7 +10,7 @@
 
 use std::path::{Path, PathBuf};
 use x3d_viewer::embed::spawn_big_stack;
-use x3d_viewer::viewer::{UiEvent, Viewer3d, ORACLE_PAGE_ATTRIBUTES};
+use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, UiEvent, Viewer3d};
 
 const T0: f64 = 946684800.0;
 const DT: f64 = 1.0 / 30.0;
@@ -22,7 +22,17 @@ struct Driver {
 
 impl Driver {
     fn load(world: &Path, oracle: &Path) -> Driver {
-        let mut v = Viewer3d::load_attributes(world, Some(oracle), T0, 64, 64, None, false, ORACLE_PAGE_ATTRIBUTES).unwrap();
+        let mut v = Viewer3d::load_attributes(
+            world,
+            Some(oracle),
+            T0,
+            64,
+            64,
+            None,
+            false,
+            ORACLE_PAGE_ATTRIBUTES,
+        )
+        .unwrap();
         v.frame_rate = 1.0 / DT;
 
         for _ in 0..8 {
@@ -58,7 +68,10 @@ impl Driver {
     /// Sound state entries, live Web Audio nodes, connections.
     fn state(&self) -> [usize; 3] {
         let rt = &self.v.rt;
-        let (nodes, connections) = rt.audio.as_ref().map_or((0, 0), |e| (e.node_count(), e.connection_count()));
+        let (nodes, connections) = rt
+            .audio
+            .as_ref()
+            .map_or((0, 0), |e| (e.node_count(), e.connection_count()));
         [rt.sound.len(), nodes, connections]
     }
 }
@@ -76,7 +89,10 @@ fn rea_b05_sound_state_is_released_on_reload() {
         d.key("s");
         d.frames(5);
         let empty = d.state();
-        assert!(empty.iter().zip(first.iter()).all(|(a, b)| a < b), "the unload released nothing: {first:?} -> {empty:?}");
+        assert!(
+            empty.iter().zip(first.iter()).all(|(a, b)| a < b),
+            "the unload released nothing: {first:?} -> {empty:?}"
+        );
         d.key("r");
         d.frames(20);
         let mut states = vec![d.state()];
@@ -84,11 +100,19 @@ fn rea_b05_sound_state_is_released_on_reload() {
         for cycle in 0..30 {
             d.key("s");
             d.frames(5);
-            assert_eq!(d.state(), empty, "cycle {cycle}: sound state or audio nodes kept after the unload");
+            assert_eq!(
+                d.state(),
+                empty,
+                "cycle {cycle}: sound state or audio nodes kept after the unload"
+            );
             let before = d.starts();
             d.key("r");
             d.frames(20);
-            assert_eq!(d.starts(), before + 1, "cycle {cycle}: the oscillator did not start after the reload");
+            assert_eq!(
+                d.starts(),
+                before + 1,
+                "cycle {cycle}: the oscillator did not start after the reload"
+            );
             states.push(d.state());
         }
 
@@ -98,10 +122,15 @@ fn rea_b05_sound_state_is_released_on_reload() {
             states.push(d.state());
         }
 
-        eprintln!("batch 05 state [sound, audio nodes, connections]: loaded {first:?}, unloaded {empty:?}, after reloads {states:?}");
+        eprintln!(
+            "batch 05 state [sound, audio nodes, connections]: loaded {first:?}, unloaded {empty:?}, after reloads {states:?}"
+        );
 
         for s in &states {
-            assert_eq!(s, &first, "the sound state changes with reloads: first {first:?}, then {states:?}");
+            assert_eq!(
+                s, &first,
+                "the sound state changes with reloads: first {first:?}, then {states:?}"
+            );
         }
     });
 }

@@ -37,7 +37,11 @@ enum Convolver {
 
 impl Convolver {
     fn new(block: usize, kernel: Vec<f32>, direct: bool) -> Convolver {
-        if direct { Convolver::Direct(DirectConvolver::new(block, kernel)) } else { Convolver::Fft(SimpleFftConvolver::new(block, &kernel)) }
+        if direct {
+            Convolver::Direct(DirectConvolver::new(block, kernel))
+        } else {
+            Convolver::Fft(SimpleFftConvolver::new(block, &kernel))
+        }
     }
 
     fn process(&mut self, source: &[f32], dest: &mut [f32]) {
@@ -67,7 +71,8 @@ fn up_kernel() -> Vec<f32> {
             let s = std::f64::consts::PI * (i as f64 - half_size as f64 - subsample_offset);
             let sinc = if s == 0.0 { 1.0 } else { s.sin() / s };
             let x = (i as f64 - subsample_offset) / n as f64;
-            let window = a0 - a1 * (std::f64::consts::TAU * x).cos() + a2 * (std::f64::consts::TAU * 2.0 * x).cos();
+            let window = a0 - a1 * (std::f64::consts::TAU * x).cos()
+                + a2 * (std::f64::consts::TAU * 2.0 * x).cos();
             (sinc * window) as f32
         })
         .collect()
@@ -86,7 +91,8 @@ fn down_kernel() -> Vec<f32> {
         let mut sinc = if s == 0.0 { 1.0 } else { s.sin() / s };
         sinc *= sinc_scale_factor;
         let x = i as f64 / n as f64;
-        let window = a0 - a1 * (std::f64::consts::TAU * x).cos() + a2 * (std::f64::consts::TAU * 2.0 * x).cos();
+        let window = a0 - a1 * (std::f64::consts::TAU * x).cos()
+            + a2 * (std::f64::consts::TAU * 2.0 * x).cos();
         kernel[(i as usize - 1) / 2] = (sinc * window) as f32;
     }
 
@@ -101,7 +107,11 @@ struct UpSampler {
 
 impl UpSampler {
     fn new(block: usize) -> UpSampler {
-        UpSampler { convolver: Convolver::new(block, up_kernel(), block <= UP_KERNEL_SIZE), input: vec![0.0; UP_KERNEL_SIZE / 2 + block], odd: vec![0.0; block] }
+        UpSampler {
+            convolver: Convolver::new(block, up_kernel(), block <= UP_KERNEL_SIZE),
+            input: vec![0.0; UP_KERNEL_SIZE / 2 + block],
+            odd: vec![0.0; block],
+        }
     }
 
     fn process(&mut self, source: &[f32], dest: &mut [f32]) {
@@ -136,7 +146,11 @@ struct DownSampler {
 
 impl DownSampler {
     fn new(block: usize) -> DownSampler {
-        DownSampler { convolver: Convolver::new(block / 2, down_kernel(), block <= DOWN_KERNEL_SIZE), input: vec![0.0; DOWN_KERNEL_SIZE / 2 + block], odd: vec![0.0; block / 2] }
+        DownSampler {
+            convolver: Convolver::new(block / 2, down_kernel(), block <= DOWN_KERNEL_SIZE),
+            input: vec![0.0; DOWN_KERNEL_SIZE / 2 + block],
+            odd: vec![0.0; block / 2],
+        }
     }
 
     fn process(&mut self, source: &[f32], dest: &mut [f32]) {
@@ -176,7 +190,14 @@ struct Kernel {
 impl Kernel {
     fn new() -> Kernel {
         let b = SUB_BLOCK_FRAMES;
-        Kernel { temp: vec![0.0; b * 2], temp2: vec![0.0; b * 4], up: UpSampler::new(b), down: DownSampler::new(b * 2), up2: UpSampler::new(b * 2), down2: DownSampler::new(b * 4) }
+        Kernel {
+            temp: vec![0.0; b * 2],
+            temp2: vec![0.0; b * 4],
+            up: UpSampler::new(b),
+            down: DownSampler::new(b * 2),
+            up2: UpSampler::new(b * 2),
+            down2: DownSampler::new(b * 4),
+        }
     }
 }
 
@@ -208,11 +229,18 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = ();
 
     fn constructor(_: ()) -> Self {
-        Processor { curve: None, oversample: Oversample::None, kernels: vec![], silent_frames: 0.0 }
+        Processor {
+            curve: None,
+            oversample: Oversample::None,
+            kernels: vec![],
+            silent_frames: 0.0,
+        }
     }
 
     fn onmessage(&mut self, msg: &mut dyn Any) {
-        let Some(m) = msg.downcast_mut::<Option<Message>>() else { return };
+        let Some(m) = msg.downcast_mut::<Option<Message>>() else {
+            return;
+        };
 
         match m.take() {
             Some(Message::Curve(c)) => self.curve = Some(c),
@@ -242,7 +270,13 @@ impl AudioWorkletProcessor for Processor {
         }
     }
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], _params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        _params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let source = inputs[0];
         let dest = &mut outputs[0];
         let channels = dest.len();
@@ -303,7 +337,13 @@ impl AudioWorkletProcessor for Processor {
             z[0] != 0.0
         });
 
-        self.silent_frames = if silent { self.silent_frames + 128.0 } else { 0.0 };
-        tail_infinite || self.silent_frames < (UP_KERNEL_SIZE + DOWN_KERNEL_SIZE) as f64 || scope.current_frame == 0
+        self.silent_frames = if silent {
+            self.silent_frames + 128.0
+        } else {
+            0.0
+        };
+        tail_infinite
+            || self.silent_frames < (UP_KERNEL_SIZE + DOWN_KERNEL_SIZE) as f64
+            || scope.current_frame == 0
     }
 }

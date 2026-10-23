@@ -47,17 +47,28 @@ fn run(rt: &mut Runtime, frames: usize) {
 }
 
 fn provider_warnings(rt: &Runtime) -> Vec<&String> {
-    rt.log.iter().filter(|l| l.contains("no geometry provider")).collect()
+    rt.log
+        .iter()
+        .filter(|l| l.contains("no geometry provider"))
+        .collect()
 }
 
 fn big(f: impl FnOnce() + Send + 'static) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 #[test]
 fn bare_runtime_warns_once_per_node_and_its_geometry_is_empty() {
     big(|| {
-        assert!(x3d_runtime::nodes::particle_systems::geometry_provider().is_none(), "this binary never installs a provider");
+        assert!(
+            x3d_runtime::nodes::particle_systems::geometry_provider().is_none(),
+            "this binary never installs a provider"
+        );
 
         let mut rt = runtime(&particles());
 
@@ -68,26 +79,50 @@ fn bare_runtime_warns_once_per_node_and_its_geometry_is_empty() {
         let w = provider_warnings(&rt);
 
         assert_eq!(w.len(), 3, "{:?}", rt.log);
-        assert!(w.iter().all(|l| l.starts_with("warn: ParticleSystem: no geometry provider is installed")), "{w:?}");
-        assert!(w.iter().any(|l| l.contains("SurfaceEmitter")) && w.iter().any(|l| l.contains("VolumeEmitter")) && w.iter().any(|l| l.contains("BoundedPhysicsModel")), "{w:?}");
+        assert!(
+            w.iter()
+                .all(|l| l.starts_with("warn: ParticleSystem: no geometry provider is installed")),
+            "{w:?}"
+        );
+        assert!(
+            w.iter().any(|l| l.contains("SurfaceEmitter"))
+                && w.iter().any(|l| l.contains("VolumeEmitter"))
+                && w.iter().any(|l| l.contains("BoundedPhysicsModel")),
+            "{w:?}"
+        );
 
         // More frames: no repeat.
         run(&mut rt, 90);
-        assert_eq!(provider_warnings(&rt).len(), 3, "once per node, not per frame");
+        assert_eq!(
+            provider_warnings(&rt).len(),
+            3,
+            "once per node, not per frame"
+        );
 
         let sim = |rt: &Runtime, name: &str| {
             let n = rt.scene.get_named_node(x3d_scene::ROOT, name).unwrap();
             let sim = rt.particle_sim(n).expect("state");
-            sim.particles.iter().take(sim.num_particles).copied().collect::<Vec<[f32; 28]>>()
+            sim.particles
+                .iter()
+                .take(sim.num_particles)
+                .copied()
+                .collect::<Vec<[f32; 28]>>()
         };
 
         // Surface: every particle is hidden (NaN position); Bounded: nothing stops the particles.
         let s = sim(&rt, "S");
 
-        assert!(!s.is_empty() && s.iter().all(|p| p[24].is_nan()), "an empty surface emits hidden particles");
+        assert!(
+            !s.is_empty() && s.iter().all(|p| p[24].is_nan()),
+            "an empty surface emits hidden particles"
+        );
 
         let b = sim(&rt, "B");
-        let far = b.iter().filter(|p| !p[24].is_nan()).map(|p| (p[24] * p[24] + p[25] * p[25] + p[26] * p[26]).sqrt()).fold(0.0f32, f32::max);
+        let far = b
+            .iter()
+            .filter(|p| !p[24].is_nan())
+            .map(|p| (p[24] * p[24] + p[25] * p[25] + p[26] * p[26]).sqrt())
+            .fold(0.0f32, f32::max);
 
         assert!(far > 1.0, "no walls: {far}");
     });
@@ -102,14 +137,22 @@ fn two_bare_runtimes_in_one_process_each_warn() {
         run(&mut a, 10);
         run(&mut b, 10);
         assert_eq!(provider_warnings(&a).len(), 3);
-        assert_eq!(provider_warnings(&b).len(), 3, "the second Runtime warns too: the log is per Runtime");
+        assert_eq!(
+            provider_warnings(&b).len(),
+            3,
+            "the second Runtime warns too: the log is per Runtime"
+        );
     });
 }
 
 #[test]
 fn a_concave_collidable_shape_without_provider_warns_and_has_no_collision_shape() {
     big(|| {
-        let text = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../oracle/synthetic-rea-b06/shape-ifs-floor.x3dv")).unwrap();
+        let text = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../oracle/synthetic-rea-b06/shape-ifs-floor.x3dv"
+        ))
+        .unwrap();
         let mut rt = runtime(&text);
 
         for k in 0..120 {
@@ -120,7 +163,12 @@ fn a_concave_collidable_shape_without_provider_warns_and_has_no_collision_shape(
 
         let w = provider_warnings(&rt);
 
-        assert_eq!(w.len(), 1, "one warning for the one concave shape: {:?}", rt.log);
+        assert_eq!(
+            w.len(),
+            1,
+            "one warning for the one concave shape: {:?}",
+            rt.log
+        );
         assert!(w[0].contains("concave CollidableShape"), "{w:?}");
 
         // The floor has no collision shape, so the sphere falls through it.

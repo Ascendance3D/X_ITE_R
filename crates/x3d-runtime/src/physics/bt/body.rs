@@ -159,7 +159,9 @@ impl RigidBody {
             additional_damping: info.additional_damping,
             additional_damping_factor: f(info.additional_damping_factor),
             additional_linear_damping_threshold_sqr: f(info.additional_linear_damping_threshold_sqr),
-            additional_angular_damping_threshold_sqr: f(info.additional_angular_damping_threshold_sqr),
+            additional_angular_damping_threshold_sqr: f(
+                info.additional_angular_damping_threshold_sqr
+            ),
             additional_angular_damping_factor: f(info.additional_angular_damping_factor),
             lin_sleeping_threshold: f(info.linear_sleeping_threshold),
             ang_sleeping_threshold: f(info.angular_sleeping_threshold),
@@ -192,7 +194,8 @@ impl RigidBody {
     }
 
     pub fn merges_simulation_islands(&self) -> bool {
-        self.collision_flags & (CF_STATIC_OBJECT | CF_KINEMATIC_OBJECT | CF_NO_CONTACT_RESPONSE) == 0
+        self.collision_flags & (CF_STATIC_OBJECT | CF_KINEMATIC_OBJECT | CF_NO_CONTACT_RESPONSE)
+            == 0
     }
 
     pub fn is_active(&self) -> bool {
@@ -201,7 +204,9 @@ impl RigidBody {
 
     /// btCollisionObject::setActivationState.
     pub fn set_activation_state(&mut self, s: i32) {
-        if self.activation_state != DISABLE_DEACTIVATION && self.activation_state != DISABLE_SIMULATION {
+        if self.activation_state != DISABLE_DEACTIVATION
+            && self.activation_state != DISABLE_SIMULATION
+        {
             self.activation_state = s;
         }
     }
@@ -228,7 +233,12 @@ impl RigidBody {
 
     /// btRigidBody::setMassProps.
     pub fn set_mass_props(&mut self, mass: f64, inertia: V3) {
-        super::trace(|| format!("[\"btRigidBody\",\"setMassProps\",{mass},{}]", super::vj(&inertia)));
+        super::trace(|| {
+            format!(
+                "[\"btRigidBody\",\"setMassProps\",{mass},{}]",
+                super::vj(&inertia)
+            )
+        });
         if mass == 0.0 {
             self.collision_flags |= CF_STATIC_OBJECT;
             self.inverse_mass = 0.0;
@@ -240,9 +250,21 @@ impl RigidBody {
         // Fg = m * a
         self.gravity = r3(scale(self.gravity_acceleration, mass));
         self.inv_inertia_local = r3([
-            if inertia[0] != 0.0 { 1.0 / inertia[0] } else { 0.0 },
-            if inertia[1] != 0.0 { 1.0 / inertia[1] } else { 0.0 },
-            if inertia[2] != 0.0 { 1.0 / inertia[2] } else { 0.0 },
+            if inertia[0] != 0.0 {
+                1.0 / inertia[0]
+            } else {
+                0.0
+            },
+            if inertia[1] != 0.0 {
+                1.0 / inertia[1]
+            } else {
+                0.0
+            },
+            if inertia[2] != 0.0 {
+                1.0 / inertia[2]
+            } else {
+                0.0
+            },
         ]);
     }
 
@@ -254,7 +276,12 @@ impl RigidBody {
 
     /// btRigidBody::setGravity.
     pub fn set_gravity(&mut self, acceleration: V3) {
-        super::trace(|| format!("[\"btRigidBody\",\"setGravity\",{}]", super::vj(&acceleration)));
+        super::trace(|| {
+            format!(
+                "[\"btRigidBody\",\"setGravity\",{}]",
+                super::vj(&acceleration)
+            )
+        });
         let acceleration = r3(acceleration);
         if self.inverse_mass != 0.0 {
             self.gravity = r3(scale(acceleration, 1.0 / self.inverse_mass));
@@ -264,7 +291,12 @@ impl RigidBody {
 
     /// btRigidBody::setCenterOfMassTransform.
     pub fn set_center_of_mass_transform(&mut self, xform: Tf) {
-        super::trace(|| format!("[\"btRigidBody\",\"setCenterOfMassTransform\",{}]", super::tj(&xform)));
+        super::trace(|| {
+            format!(
+                "[\"btRigidBody\",\"setCenterOfMassTransform\",{}]",
+                super::tj(&xform)
+            )
+        });
         let xform = rt(xform);
         if self.is_kinematic() {
             self.interp_tf = self.world_tf;
@@ -309,7 +341,13 @@ impl RigidBody {
 
     /// btRigidBody::applyForce (force, rel_pos).
     pub fn apply_force(&mut self, force: V3, rel_pos: V3) {
-        super::trace(|| format!("[\"btRigidBody\",\"applyForce\",{},{}]", super::vj(&force), super::vj(&rel_pos)));
+        super::trace(|| {
+            format!(
+                "[\"btRigidBody\",\"applyForce\",{},{}]",
+                super::vj(&force),
+                super::vj(&rel_pos)
+            )
+        });
         let _quiet = super::StepGuard::new();
         let force = r3(force);
         self.apply_central_force(force);
@@ -332,7 +370,10 @@ impl RigidBody {
 
     /// btRigidBody::applyCentralImpulse.
     pub fn apply_central_impulse(&mut self, impulse: V3) {
-        self.lin_vel = r3(add(self.lin_vel, scale(mulv(impulse, self.lin_factor), self.inverse_mass)));
+        self.lin_vel = r3(add(
+            self.lin_vel,
+            scale(mulv(impulse, self.lin_factor), self.inverse_mass),
+        ));
     }
 
     /// btRigidBody::applyTorqueImpulse.
@@ -356,12 +397,20 @@ impl RigidBody {
 
     /// btRigidBody::applyDamping.
     pub fn apply_damping(&mut self, time_step: f64) {
-        self.lin_vel = r3(scale(self.lin_vel, (1.0 - self.lin_damping).powf(time_step)));
-        self.ang_vel = r3(scale(self.ang_vel, (1.0 - self.ang_damping).powf(time_step)));
+        self.lin_vel = r3(scale(
+            self.lin_vel,
+            (1.0 - self.lin_damping).powf(time_step),
+        ));
+        self.ang_vel = r3(scale(
+            self.ang_vel,
+            (1.0 - self.ang_damping).powf(time_step),
+        ));
 
         if self.additional_damping {
             // Additional damping can help avoiding lowpass jitter motion, help stability for ragdolls etc.
-            if len2(self.ang_vel) < self.additional_angular_damping_threshold_sqr && len2(self.lin_vel) < self.additional_linear_damping_threshold_sqr {
+            if len2(self.ang_vel) < self.additional_angular_damping_threshold_sqr
+                && len2(self.lin_vel) < self.additional_linear_damping_threshold_sqr
+            {
                 self.ang_vel = r3(scale(self.ang_vel, self.additional_damping_factor));
                 self.lin_vel = r3(scale(self.lin_vel, self.additional_damping_factor));
             }
@@ -392,16 +441,24 @@ impl RigidBody {
 
     /// btRigidBody::predictIntegratedTransform.
     pub fn predict_integrated_transform(&self, time_step: f64) -> Tf {
-        rt(integrate_transform(&self.world_tf, self.lin_vel, self.ang_vel, time_step))
+        rt(integrate_transform(
+            &self.world_tf,
+            self.lin_vel,
+            self.ang_vel,
+            time_step,
+        ))
     }
 
     /// btRigidBody::updateDeactivation.
     pub fn update_deactivation(&mut self, time_step: f64) {
-        if self.activation_state == ISLAND_SLEEPING || self.activation_state == DISABLE_DEACTIVATION {
+        if self.activation_state == ISLAND_SLEEPING || self.activation_state == DISABLE_DEACTIVATION
+        {
             return;
         }
 
-        if len2(self.lin_vel) < self.lin_sleeping_threshold * self.lin_sleeping_threshold && len2(self.ang_vel) < self.ang_sleeping_threshold * self.ang_sleeping_threshold {
+        if len2(self.lin_vel) < self.lin_sleeping_threshold * self.lin_sleeping_threshold
+            && len2(self.ang_vel) < self.ang_sleeping_threshold * self.ang_sleeping_threshold
+        {
             self.deactivation_time = f(self.deactivation_time + time_step);
         } else {
             self.deactivation_time = 0.0;
@@ -428,10 +485,17 @@ impl RigidBody {
     }
 
     /// btCollisionObject::checkCollideWith for the constraint refs of btRigidBody.
-    pub fn can_collide_with(&self, other: BodyId, constraints_enabled_between: impl Fn(usize, BodyId) -> bool) -> bool {
+    pub fn can_collide_with(
+        &self,
+        other: BodyId,
+        constraints_enabled_between: impl Fn(usize, BodyId) -> bool,
+    ) -> bool {
         if !self.check_collide_with {
             return true;
         }
-        !self.constraint_refs.iter().any(|c| constraints_enabled_between(*c, other))
+        !self
+            .constraint_refs
+            .iter()
+            .any(|c| constraints_enabled_between(*c, other))
     }
 }

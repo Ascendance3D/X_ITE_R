@@ -1,9 +1,9 @@
 //! RigidBody (X_ITE `RigidBody.js`).
 
-use super::arena::{clone_body, clone_shape_tree, Home, PWorld};
+use super::arena::{Home, PWorld, clone_body, clone_shape_tree};
 use super::*;
 use crate::physics::bt::body::{BodyId, ConstructionInfo, MotionStateId};
-use crate::physics::bt::math::{rq, rt, Tf, IDENTITY3, V3, ZERO};
+use crate::physics::bt::math::{IDENTITY3, Tf, V3, ZERO, rq, rt};
 use crate::physics::bt::shape::ShapeId;
 use std::collections::HashMap;
 use x3d_fields::math::Quaternion;
@@ -31,7 +31,10 @@ fn v3a(v: &Vector3) -> V3 {
 
 /// A column-major Matrix4 to a btTransform (`t .getBasis () .setValue (m [0], m [4], m [8], ...)`).
 pub(super) fn to_transform(m: &[f64; 16]) -> Tf {
-    rt(Tf { b: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]], o: [m[12], m[13], m[14]] })
+    rt(Tf {
+        b: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]],
+        o: [m[12], m[13], m[14]],
+    })
 }
 
 impl Runtime {
@@ -178,7 +181,11 @@ impl Runtime {
 
     pub(super) fn body_set_linear_velocity(&mut self, node: NodeId) {
         let (home, _, _, body) = self.body_ids(node);
-        let v = if self.get_bool(node, "fixed") { ZERO } else { v3a(&self.pv3(node, "linearVelocity")) };
+        let v = if self.get_bool(node, "fixed") {
+            ZERO
+        } else {
+            v3a(&self.pv3(node, "linearVelocity"))
+        };
 
         self.with_world(home, |pw| {
             let b = pw.w.body_mut(body);
@@ -190,7 +197,11 @@ impl Runtime {
 
     pub(super) fn body_set_angular_velocity(&mut self, node: NodeId) {
         let (home, _, _, body) = self.body_ids(node);
-        let v = if self.get_bool(node, "fixed") { ZERO } else { v3a(&self.pv3(node, "angularVelocity")) };
+        let v = if self.get_bool(node, "fixed") {
+            ZERO
+        } else {
+            v3a(&self.pv3(node, "angularVelocity"))
+        };
 
         self.with_world(home, |pw| {
             let b = pw.w.body_mut(body);
@@ -202,14 +213,25 @@ impl Runtime {
 
     pub(super) fn body_set_finite_rotation_axis(&mut self, node: NodeId) {
         let (home, _, _, body) = self.body_ids(node);
-        let v = if self.get_bool(node, "useFiniteRotation") { v3a(&self.pv3(node, "finiteRotationAxis")) } else { [1.0, 1.0, 1.0] };
+        let v = if self.get_bool(node, "useFiniteRotation") {
+            v3a(&self.pv3(node, "finiteRotationAxis"))
+        } else {
+            [1.0, 1.0, 1.0]
+        };
 
         self.with_world(home, |pw| pw.w.body_mut(body).set_angular_factor(v));
     }
 
     pub(super) fn body_set_damping(&mut self, node: NodeId) {
         let (home, _, _, body) = self.body_ids(node);
-        let (l, a) = if self.get_bool(node, "autoDamp") { (self.get_f64(node, "linearDampingFactor"), self.get_f64(node, "angularDampingFactor")) } else { (0.0, 0.0) };
+        let (l, a) = if self.get_bool(node, "autoDamp") {
+            (
+                self.get_f64(node, "linearDampingFactor"),
+                self.get_f64(node, "angularDampingFactor"),
+            )
+        } else {
+            (0.0, 0.0)
+        };
 
         self.with_world(home, |pw| {
             let b = pw.w.body_mut(body);
@@ -223,12 +245,21 @@ impl Runtime {
         let (home, _, _, body) = self.body_ids(node);
         let com = v3a(&self.pv3(node, "centerOfMass"));
 
-        self.with_world(home, |pw| pw.w.body_mut(body).set_center_of_mass_transform(Tf { b: IDENTITY3, o: com }));
+        self.with_world(home, |pw| {
+            pw.w.body_mut(body).set_center_of_mass_transform(Tf {
+                b: IDENTITY3,
+                o: com,
+            })
+        });
     }
 
     pub(super) fn body_set_mass_props(&mut self, node: NodeId) {
         let (home, compound, _, body) = self.body_ids(node);
-        let mass = if self.get_bool(node, "fixed") { 0.0 } else { self.get_f64(node, "mass") };
+        let mass = if self.get_bool(node, "fixed") {
+            0.0
+        } else {
+            self.get_f64(node, "mass")
+        };
 
         // `localInertia` holds the row sums of `inertia`, and `calculateLocalInertia` overwrites it.
         self.with_world(home, |pw| {
@@ -260,7 +291,14 @@ impl Runtime {
 
     pub(super) fn body_set_disable(&mut self, node: NodeId) {
         let (home, _, _, body) = self.body_ids(node);
-        let (l, a) = if self.get_bool(node, "autoDisable") { (self.get_f64(node, "disableLinearSpeed"), self.get_f64(node, "disableAngularSpeed")) } else { (0.0, 0.0) };
+        let (l, a) = if self.get_bool(node, "autoDisable") {
+            (
+                self.get_f64(node, "disableLinearSpeed"),
+                self.get_f64(node, "disableAngularSpeed"),
+            )
+        } else {
+            (0.0, 0.0)
+        };
 
         self.with_world(home, |pw| {
             let b = pw.w.body_mut(body);
@@ -367,7 +405,12 @@ impl Runtime {
 
     pub(super) fn body_set_compound_shape(&mut self, node: NodeId) {
         let (home, compound, _, _) = self.body_ids(node);
-        let children: Vec<ShapeId> = self.body_rt(node).geometry_nodes.iter().map(|&g| self.collidable_compound(g)).collect();
+        let children: Vec<ShapeId> = self
+            .body_rt(node)
+            .geometry_nodes
+            .iter()
+            .map(|&g| self.collidable_compound(g))
+            .collect();
 
         self.with_world(home, |pw| {
             for i in (0..pw.w.shapes.num_child_shapes(compound)).rev() {
@@ -376,7 +419,14 @@ impl Runtime {
 
             for c in children {
                 // `new Ammo .btTransform ()`: nothing initializes the basis.
-                pw.w.shapes.add_child_shape(compound, Tf { b: [[0.0; 3]; 3], o: ZERO }, c);
+                pw.w.shapes.add_child_shape(
+                    compound,
+                    Tf {
+                        b: [[0.0; 3]; 3],
+                        o: ZERO,
+                    },
+                    c,
+                );
             }
         });
 
@@ -398,7 +448,11 @@ impl Runtime {
             return;
         }
 
-        let g = if self.get_bool(node, "useGlobalGravity") { v3a(gravity) } else { ZERO };
+        let g = if self.get_bool(node, "useGlobalGravity") {
+            v3a(gravity)
+        } else {
+            ZERO
+        };
         let (home, _, _, body) = self.body_ids(node);
         let (f, t) = {
             let b = self.body_rt(node);
@@ -432,14 +486,22 @@ impl Runtime {
 
         orientation.set_quaternion(&quaternion);
 
-        self.set_v3(node, "position", Vector3::new(origin[0], origin[1], origin[2]));
+        self.set_v3(
+            node,
+            "position",
+            Vector3::new(origin[0], origin[1], origin[2]),
+        );
 
         if let Some(k) = self.pre(node, "orientation") {
             self.set_value(k, FieldValue::SFRotation(orientation));
         }
 
         self.set_v3(node, "linearVelocity", Vector3::new(lin[0], lin[1], lin[2]));
-        self.set_v3(node, "angularVelocity", Vector3::new(ang[0], ang[1], ang[2]));
+        self.set_v3(
+            node,
+            "angularVelocity",
+            Vector3::new(ang[0], ang[1], ang[2]),
+        );
     }
 
     // --- worlds ------------------------------------------------------------------------------
@@ -562,9 +624,15 @@ impl Runtime {
     /// Take the world `home` names out of its owner (see [`Runtime::with_world`]).
     pub(super) fn take_world(&mut self, home: Home) -> Box<PWorld> {
         match home {
-            None => self.physics.nursery.take().unwrap_or_else(|| Box::new(PWorld::new())),
+            None => self
+                .physics
+                .nursery
+                .take()
+                .unwrap_or_else(|| Box::new(PWorld::new())),
             Some(c) => match self.phys_mut(c) {
-                Some(PhysState::Collection(rt)) => rt.world.take().expect("the dynamics world is in use"),
+                Some(PhysState::Collection(rt)) => {
+                    rt.world.take().expect("the dynamics world is in use")
+                }
                 _ => panic!("node {c} is not a RigidBodyCollection"),
             },
         }

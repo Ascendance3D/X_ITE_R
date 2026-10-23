@@ -15,10 +15,23 @@ use crate::geometry::{self, Geometry};
 pub const DISPLAYED_TYPES: &[&str] = &["ReceiverPdu", "SignalPdu", "TransmitterPdu"];
 
 /// The coordIndex and points of getBBoxShape ().
-const COORD_INDEX: [i32; 24] = [0, 1, 2, 3, 0, -1, 4, 5, 6, 7, 4, -1, 0, 4, -1, 1, 5, -1, 2, 6, -1, 3, 7, -1];
-const POINTS: [f32; 24] = [0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5];
+const COORD_INDEX: [i32; 24] = [
+    0, 1, 2, 3, 0, -1, 4, 5, 6, 7, 4, -1, 0, 4, -1, 1, 5, -1, 2, 6, -1, 3, 7, -1,
+];
+const POINTS: [f32; 24] = [
+    0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5,
+    -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5,
+];
 
 /// IndexedLineSet.build of the bbox shape.
 pub fn unit_box_lines() -> Geometry {
-    geometry::indexed_line_set(Some(&POINTS), &COORD_INDEX, None, &[], true, None, &Default::default())
+    geometry::indexed_line_set(
+        Some(&POINTS),
+        &COORD_INDEX,
+        None,
+        &[],
+        true,
+        None,
+        &Default::default(),
+    )
 }

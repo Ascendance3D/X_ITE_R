@@ -14,12 +14,18 @@ pub struct Spheroid {
 impl Spheroid {
     /// `new Spheroid3 (a, c)`.
     pub const fn new(a: f64, c: f64) -> Self {
-        Spheroid { semi_major_axis: a, semi_minor_axis: c }
+        Spheroid {
+            semi_major_axis: a,
+            semi_minor_axis: c,
+        }
     }
 
     /// `new Spheroid3 (a, f_1, true)`: the minor axis from the inverse flattening.
     pub fn from_f_1(a: f64, f_1: f64) -> Self {
-        Spheroid { semi_major_axis: a, semi_minor_axis: a * (1.0 - (1.0 / f_1)) }
+        Spheroid {
+            semi_major_axis: a,
+            semi_minor_axis: a * (1.0 - (1.0 / f_1)),
+        }
     }
 }
 
@@ -85,12 +91,23 @@ impl Geodetic {
         let a = spheroid.semi_major_axis;
         let c2a2 = jsmath::pow(spheroid.semi_minor_axis / a, 2.0);
 
-        Geodetic { longitude_first: !latitude_first, degrees: !radians, a, c: spheroid.semi_minor_axis, c2a2, ecc2: 1.0 - c2a2 }
+        Geodetic {
+            longitude_first: !latitude_first,
+            degrees: !radians,
+            a,
+            c: spheroid.semi_minor_axis,
+            c2a2,
+            ecc2: 1.0 - c2a2,
+        }
     }
 
     pub fn convert(&self, geodetic: &Vector3) -> Vector3 {
         let elevation = geodetic.z;
-        let (mut latitude, mut longitude) = if self.longitude_first { (geodetic.y, geodetic.x) } else { (geodetic.x, geodetic.y) };
+        let (mut latitude, mut longitude) = if self.longitude_first {
+            (geodetic.y, geodetic.x)
+        } else {
+            (geodetic.x, geodetic.y)
+        };
 
         if self.degrees {
             latitude *= std::f64::consts::PI / 180.0;
@@ -107,7 +124,11 @@ impl Geodetic {
         let n = self.a / (1.0 - self.ecc2 * slat2).sqrt();
         let nhl = (n + elevation) * clat;
 
-        Vector3::new(nhl * jsmath::cos(longitude), nhl * jsmath::sin(longitude), (n * self.c2a2 + elevation) * slat)
+        Vector3::new(
+            nhl * jsmath::cos(longitude),
+            nhl * jsmath::sin(longitude),
+            (n * self.c2a2 + elevation) * slat,
+        )
     }
 
     pub fn apply(&self, geocentric: &Vector3) -> Vector3 {
@@ -165,7 +186,11 @@ impl Geodetic {
         let (latitude, longitude) = (geodetic.x, geodetic.y);
         let clat = jsmath::cos(latitude);
 
-        Vector3::new(jsmath::cos(longitude) * clat, jsmath::sin(longitude) * clat, jsmath::sin(latitude))
+        Vector3::new(
+            jsmath::cos(longitude) * clat,
+            jsmath::sin(longitude) * clat,
+            jsmath::sin(latitude),
+        )
     }
 }
 
@@ -198,7 +223,12 @@ pub struct Utm {
 }
 
 impl Utm {
-    pub fn new(spheroid: Spheroid, zone: i64, northern_hemisphere: bool, northing_first: bool) -> Self {
+    pub fn new(
+        spheroid: Spheroid,
+        zone: i64,
+        northern_hemisphere: bool,
+        northing_first: bool,
+    ) -> Self {
         let a = spheroid.semi_major_axis;
         let ecc2 = 1.0 - jsmath::pow(spheroid.semi_minor_axis / a, 2.0);
         let ee = ecc2 / (1.0 - ecc2);
@@ -213,7 +243,11 @@ impl Utm {
             e8: 8.0 * ee,
             e9: 9.0 * ee,
             e252: 252.0 * ee,
-            big_a: K0 * (a * (1.0 - ecc2 / 4.0 - 3.0 * ecc2 * ecc2 / 64.0 - 5.0 * ecc2 * ecc2 * ecc2 / 256.0)),
+            big_a: K0
+                * (a * (1.0
+                    - ecc2 / 4.0
+                    - 3.0 * ecc2 * ecc2 / 64.0
+                    - 5.0 * ecc2 * ecc2 * ecc2 / 256.0)),
             big_b: 3.0 * e1 / 2.0 - 7.0 * e1 * e1 * e1 / 32.0,
             big_c: 21.0 * e1 * e1 / 16.0 - 55.0 * e1 * e1 * e1 * e1 / 32.0,
             big_d: 151.0 * e1 * e1 * e1 / 96.0,
@@ -228,7 +262,11 @@ impl Utm {
     }
 
     pub fn convert(&self, utm: &Vector3) -> Vector3 {
-        let (mut northing, mut easting) = if self.easting_first { (utm.y, utm.x) } else { (utm.x, utm.y) };
+        let (mut northing, mut easting) = if self.easting_first {
+            (utm.y, utm.x)
+        } else {
+            (utm.x, utm.y)
+        };
 
         // Check for southern hemisphere and remove offset from easting.
         let mut s = self.southern_hemisphere;
@@ -245,7 +283,10 @@ impl Utm {
         easting -= E0;
 
         let mu = northing / self.big_a;
-        let phi1 = mu + self.big_b * jsmath::sin(2.0 * mu) + self.big_c * jsmath::sin(4.0 * mu) + self.big_d * jsmath::sin(6.0 * mu);
+        let phi1 = mu
+            + self.big_b * jsmath::sin(2.0 * mu)
+            + self.big_c * jsmath::sin(4.0 * mu)
+            + self.big_d * jsmath::sin(6.0 * mu);
         let sinphi1 = jsmath::pow(jsmath::sin(phi1), 2.0);
         let cosphi1 = jsmath::cos(phi1);
         let tanphi1 = jsmath::tan(phi1);
@@ -257,10 +298,14 @@ impl Utm {
         let r1 = self.big_e / jsmath::pow(1.0 - self.ecc2 * sinphi1, 1.5);
         let i = easting / (n1 * K0);
         let j = (5.0 + 3.0 * t2 + 10.0 * c1 - 4.0 * c2 - self.e9) * jsmath::pow(i, 4.0) / 24.0;
-        let k = (61.0 + 90.0 * t2 + 298.0 * c1 + 45.0 * t8 - self.e252 - 3.0 * c2) * jsmath::pow(i, 6.0) / 720.0;
-        let l = (5.0 - 2.0 * c1 + 28.0 * t2 - 3.0 * c2 + self.e8 + 24.0 * t8) * jsmath::pow(i, 5.0) / 120.0;
+        let k = (61.0 + 90.0 * t2 + 298.0 * c1 + 45.0 * t8 - self.e252 - 3.0 * c2)
+            * jsmath::pow(i, 6.0)
+            / 720.0;
+        let l = (5.0 - 2.0 * c1 + 28.0 * t2 - 3.0 * c2 + self.e8 + 24.0 * t8) * jsmath::pow(i, 5.0)
+            / 120.0;
         let latitude = phi1 - (n1 * tanphi1 / r1) * (i * i / 2.0 - j + k);
-        let longitude = self.longitude0 + (i - (1.0 + 2.0 * t2 + c1) * jsmath::pow(i, 3.0) / 6.0 + l) / cosphi1;
+        let longitude =
+            self.longitude0 + (i - (1.0 + 2.0 * t2 + c1) * jsmath::pow(i, 3.0) / 6.0 + l) / cosphi1;
 
         self.geodetic.convert_radians(latitude, longitude, utm.z)
     }
@@ -276,9 +321,21 @@ impl Utm {
         let t6 = t * t * t;
         let c = ee * coslat * coslat;
         let a = coslat * (longitude - self.longitude0);
-        let m = self.a * (self.big_w * latitude - self.big_x * jsmath::sin(2.0 * latitude) + self.big_y * jsmath::sin(4.0 * latitude) - self.big_z * jsmath::sin(6.0 * latitude));
-        let easting = K0 * n * (a + (1.0 - t + c) * jsmath::pow(a, 3.0) / 6.0 + (5.0 - 18.0 * t6 + 72.0 * c - 58.0 * ee) * jsmath::pow(a, 5.0) / 120.0) + E0;
-        let mut northing = K0 * (m + n * tanlat * (a * a / 2.0 + (5.0 - t + 9.0 * c + 4.0 * c * c) * jsmath::pow(a, 4.0) / 24.0 + (61.0 - 58.0 * t6 + 600.0 * c - 330.0 * ee) * jsmath::pow(a, 6.0) / 720.0));
+        let m = self.a
+            * (self.big_w * latitude - self.big_x * jsmath::sin(2.0 * latitude)
+                + self.big_y * jsmath::sin(4.0 * latitude)
+                - self.big_z * jsmath::sin(6.0 * latitude));
+        let easting = K0
+            * n
+            * (a + (1.0 - t + c) * jsmath::pow(a, 3.0) / 6.0
+                + (5.0 - 18.0 * t6 + 72.0 * c - 58.0 * ee) * jsmath::pow(a, 5.0) / 120.0)
+            + E0;
+        let mut northing = K0
+            * (m + n
+                * tanlat
+                * (a * a / 2.0
+                    + (5.0 - t + 9.0 * c + 4.0 * c * c) * jsmath::pow(a, 4.0) / 24.0
+                    + (61.0 - 58.0 * t6 + 600.0 * c - 330.0 * ee) * jsmath::pow(a, 6.0) / 720.0));
 
         if latitude < 0.0 {
             northing += N0;
@@ -350,7 +407,10 @@ pub mod geo_system {
     }
 
     pub fn ellipsoid(geo_system: &[String]) -> Spheroid {
-        geo_system.iter().find_map(|gs| reference_ellipsoid(gs)).unwrap_or_else(|| reference_ellipsoid("WE").unwrap())
+        geo_system
+            .iter()
+            .find_map(|gs| reference_ellipsoid(gs))
+            .unwrap_or_else(|| reference_ellipsoid("WE").unwrap())
     }
 
     pub fn latitude_first(geo_system: &[String]) -> bool {
@@ -388,8 +448,17 @@ pub mod geo_system {
 
     pub fn reference_frame(geo_system: &[String], radians: bool) -> ReferenceFrame {
         match coordinate_system(geo_system) {
-            CoordinateSystem::Gd => ReferenceFrame::Gd(Geodetic::new(ellipsoid(geo_system), latitude_first(geo_system), radians)),
-            CoordinateSystem::Utm => ReferenceFrame::Utm(Utm::new(ellipsoid(geo_system), zone(geo_system), northern_hemisphere(geo_system), northing_first(geo_system))),
+            CoordinateSystem::Gd => ReferenceFrame::Gd(Geodetic::new(
+                ellipsoid(geo_system),
+                latitude_first(geo_system),
+                radians,
+            )),
+            CoordinateSystem::Utm => ReferenceFrame::Utm(Utm::new(
+                ellipsoid(geo_system),
+                zone(geo_system),
+                northern_hemisphere(geo_system),
+                northing_first(geo_system),
+            )),
             CoordinateSystem::Gc => ReferenceFrame::Gc,
         }
     }
@@ -436,7 +505,9 @@ fn location_frame(elevation_frame: &Geodetic, t: &Vector3) -> Matrix4 {
     x.normalize();
     z.normalize();
 
-    Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, t.x, t.y, t.z, 1.0])
+    Matrix4([
+        x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, t.x, t.y, t.z, 1.0,
+    ])
 }
 
 impl GeospatialObject {

@@ -186,7 +186,11 @@ impl Runtime {
                 if active && self.get_bool(node, "deletionAllowed") && !entered.is_empty() {
                     let mut units: Vec<u16> = entered.encode_utf16().collect();
                     units.pop();
-                    self.ks_set(node, "enteredText", FieldValue::SFString(String::from_utf16_lossy(&units)));
+                    self.ks_set(
+                        node,
+                        "enteredText",
+                        FieldValue::SFString(String::from_utf16_lossy(&units)),
+                    );
                 }
             }
             "Enter" => {

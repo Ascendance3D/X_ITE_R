@@ -52,9 +52,17 @@ pub enum KeyMapRef {
 impl KeyMap {
     /// Build from `(key, command)` pairs, normalizing names (`normalizeKeyMap`).
     pub fn from_pairs(name: &str, pairs: &[(&str, &str)], fallthrough: &[&str]) -> KeyMap {
-        let mut m = KeyMap { name: Some(name.to_string()), bindings: HashMap::new(), fallthrough: fallthrough.iter().map(|f| KeyMapRef::Named(f.to_string())).collect() };
+        let mut m = KeyMap {
+            name: Some(name.to_string()),
+            bindings: HashMap::new(),
+            fallthrough: fallthrough
+                .iter()
+                .map(|f| KeyMapRef::Named(f.to_string()))
+                .collect(),
+        };
         for (k, v) in pairs {
-            m.bind(k, Binding::Command(v.to_string())).expect("consistent map");
+            m.bind(k, Binding::Command(v.to_string()))
+                .expect("consistent map");
         }
         m
     }
@@ -62,9 +70,16 @@ impl KeyMap {
     /// Add one binding the way `normalizeKeyMap` does: normalize each stroke and
     /// register the prefixes of multi-stroke keys as `"..."`.
     pub fn bind(&mut self, keyname: &str, value: Binding) -> Result<(), String> {
-        let keys: Vec<String> = keyname.split(' ').map(normalize_key_name).collect::<Result<_, _>>()?;
+        let keys: Vec<String> = keyname
+            .split(' ')
+            .map(normalize_key_name)
+            .collect::<Result<_, _>>()?;
         for i in 0..keys.len() {
-            let (name, val) = if i == keys.len() - 1 { (keys.join(" "), value.clone()) } else { (keys[..=i].join(" "), Binding::Multi) };
+            let (name, val) = if i == keys.len() - 1 {
+                (keys.join(" "), value.clone())
+            } else {
+                (keys[..=i].join(" "), Binding::Multi)
+            };
             match self.bindings.get(&name) {
                 None => {
                     self.bindings.insert(name, val);
@@ -72,7 +87,9 @@ impl KeyMap {
                 Some(prev) => {
                     let same = match (prev, &val) {
                         (Binding::Command(a), Binding::Command(b)) => a == b,
-                        (Binding::Multi, Binding::Multi) | (Binding::Nothing, Binding::Nothing) => true,
+                        (Binding::Multi, Binding::Multi) | (Binding::Nothing, Binding::Nothing) => {
+                            true
+                        }
                         _ => false,
                     };
                     if !same {
@@ -144,11 +161,21 @@ impl KeyMaps {
         let basic = KeyMap::from_pairs(
             "basic",
             &[
-                ("Left", "goCharLeft"), ("Right", "goCharRight"), ("Up", "goLineUp"), ("Down", "goLineDown"),
-                ("End", "goLineEnd"), ("Home", "goLineStartSmart"), ("PageUp", "goPageUp"), ("PageDown", "goPageDown"),
-                ("Delete", "delCharAfter"), ("Backspace", "delCharBefore"), ("Shift-Backspace", "delCharBefore"),
-                ("Tab", "defaultTab"), ("Shift-Tab", "indentAuto"),
-                ("Enter", "newlineAndIndent"), ("Insert", "toggleOverwrite"),
+                ("Left", "goCharLeft"),
+                ("Right", "goCharRight"),
+                ("Up", "goLineUp"),
+                ("Down", "goLineDown"),
+                ("End", "goLineEnd"),
+                ("Home", "goLineStartSmart"),
+                ("PageUp", "goPageUp"),
+                ("PageDown", "goPageDown"),
+                ("Delete", "delCharAfter"),
+                ("Backspace", "delCharBefore"),
+                ("Shift-Backspace", "delCharBefore"),
+                ("Tab", "defaultTab"),
+                ("Shift-Tab", "indentAuto"),
+                ("Enter", "newlineAndIndent"),
+                ("Insert", "toggleOverwrite"),
                 ("Esc", "singleSelection"),
             ],
             &[],
@@ -156,43 +183,98 @@ impl KeyMaps {
         let pc = KeyMap::from_pairs(
             "pcDefault",
             &[
-                ("Ctrl-A", "selectAll"), ("Ctrl-D", "deleteLine"), ("Ctrl-Z", "undo"), ("Shift-Ctrl-Z", "redo"), ("Ctrl-Y", "redo"),
-                ("Ctrl-Home", "goDocStart"), ("Ctrl-End", "goDocEnd"), ("Ctrl-Up", "goLineUp"), ("Ctrl-Down", "goLineDown"),
-                ("Ctrl-Left", "goGroupLeft"), ("Ctrl-Right", "goGroupRight"), ("Alt-Left", "goLineStart"), ("Alt-Right", "goLineEnd"),
-                ("Ctrl-Backspace", "delGroupBefore"), ("Ctrl-Delete", "delGroupAfter"), ("Ctrl-S", "save"), ("Ctrl-F", "find"),
-                ("Ctrl-G", "findNext"), ("Shift-Ctrl-G", "findPrev"), ("Shift-Ctrl-F", "replace"), ("Shift-Ctrl-R", "replaceAll"),
-                ("Ctrl-[", "indentLess"), ("Ctrl-]", "indentMore"),
-                ("Ctrl-U", "undoSelection"), ("Shift-Ctrl-U", "redoSelection"), ("Alt-U", "redoSelection"),
+                ("Ctrl-A", "selectAll"),
+                ("Ctrl-D", "deleteLine"),
+                ("Ctrl-Z", "undo"),
+                ("Shift-Ctrl-Z", "redo"),
+                ("Ctrl-Y", "redo"),
+                ("Ctrl-Home", "goDocStart"),
+                ("Ctrl-End", "goDocEnd"),
+                ("Ctrl-Up", "goLineUp"),
+                ("Ctrl-Down", "goLineDown"),
+                ("Ctrl-Left", "goGroupLeft"),
+                ("Ctrl-Right", "goGroupRight"),
+                ("Alt-Left", "goLineStart"),
+                ("Alt-Right", "goLineEnd"),
+                ("Ctrl-Backspace", "delGroupBefore"),
+                ("Ctrl-Delete", "delGroupAfter"),
+                ("Ctrl-S", "save"),
+                ("Ctrl-F", "find"),
+                ("Ctrl-G", "findNext"),
+                ("Shift-Ctrl-G", "findPrev"),
+                ("Shift-Ctrl-F", "replace"),
+                ("Shift-Ctrl-R", "replaceAll"),
+                ("Ctrl-[", "indentLess"),
+                ("Ctrl-]", "indentMore"),
+                ("Ctrl-U", "undoSelection"),
+                ("Shift-Ctrl-U", "redoSelection"),
+                ("Alt-U", "redoSelection"),
             ],
             &["basic"],
         );
         let emacsy = KeyMap::from_pairs(
             "emacsy",
             &[
-                ("Ctrl-F", "goCharRight"), ("Ctrl-B", "goCharLeft"), ("Ctrl-P", "goLineUp"), ("Ctrl-N", "goLineDown"),
-                ("Ctrl-A", "goLineStart"), ("Ctrl-E", "goLineEnd"), ("Ctrl-V", "goPageDown"), ("Shift-Ctrl-V", "goPageUp"),
-                ("Ctrl-D", "delCharAfter"), ("Ctrl-H", "delCharBefore"), ("Alt-Backspace", "delWordBefore"), ("Ctrl-K", "killLine"),
-                ("Ctrl-T", "transposeChars"), ("Ctrl-O", "openLine"),
+                ("Ctrl-F", "goCharRight"),
+                ("Ctrl-B", "goCharLeft"),
+                ("Ctrl-P", "goLineUp"),
+                ("Ctrl-N", "goLineDown"),
+                ("Ctrl-A", "goLineStart"),
+                ("Ctrl-E", "goLineEnd"),
+                ("Ctrl-V", "goPageDown"),
+                ("Shift-Ctrl-V", "goPageUp"),
+                ("Ctrl-D", "delCharAfter"),
+                ("Ctrl-H", "delCharBefore"),
+                ("Alt-Backspace", "delWordBefore"),
+                ("Ctrl-K", "killLine"),
+                ("Ctrl-T", "transposeChars"),
+                ("Ctrl-O", "openLine"),
             ],
             &[],
         );
         let macd = KeyMap::from_pairs(
             "macDefault",
             &[
-                ("Cmd-A", "selectAll"), ("Cmd-D", "deleteLine"), ("Cmd-Z", "undo"), ("Shift-Cmd-Z", "redo"), ("Cmd-Y", "redo"),
-                ("Cmd-Home", "goDocStart"), ("Cmd-Up", "goDocStart"), ("Cmd-End", "goDocEnd"), ("Cmd-Down", "goDocEnd"), ("Alt-Left", "goGroupLeft"),
-                ("Alt-Right", "goGroupRight"), ("Cmd-Left", "goLineLeft"), ("Cmd-Right", "goLineRight"), ("Alt-Backspace", "delGroupBefore"),
-                ("Ctrl-Alt-Backspace", "delGroupAfter"), ("Alt-Delete", "delGroupAfter"), ("Cmd-S", "save"), ("Cmd-F", "find"),
-                ("Cmd-G", "findNext"), ("Shift-Cmd-G", "findPrev"), ("Cmd-Alt-F", "replace"), ("Shift-Cmd-Alt-F", "replaceAll"),
-                ("Cmd-[", "indentLess"), ("Cmd-]", "indentMore"), ("Cmd-Backspace", "delWrappedLineLeft"), ("Cmd-Delete", "delWrappedLineRight"),
-                ("Cmd-U", "undoSelection"), ("Shift-Cmd-U", "redoSelection"), ("Ctrl-Up", "goDocStart"), ("Ctrl-Down", "goDocEnd"),
+                ("Cmd-A", "selectAll"),
+                ("Cmd-D", "deleteLine"),
+                ("Cmd-Z", "undo"),
+                ("Shift-Cmd-Z", "redo"),
+                ("Cmd-Y", "redo"),
+                ("Cmd-Home", "goDocStart"),
+                ("Cmd-Up", "goDocStart"),
+                ("Cmd-End", "goDocEnd"),
+                ("Cmd-Down", "goDocEnd"),
+                ("Alt-Left", "goGroupLeft"),
+                ("Alt-Right", "goGroupRight"),
+                ("Cmd-Left", "goLineLeft"),
+                ("Cmd-Right", "goLineRight"),
+                ("Alt-Backspace", "delGroupBefore"),
+                ("Ctrl-Alt-Backspace", "delGroupAfter"),
+                ("Alt-Delete", "delGroupAfter"),
+                ("Cmd-S", "save"),
+                ("Cmd-F", "find"),
+                ("Cmd-G", "findNext"),
+                ("Shift-Cmd-G", "findPrev"),
+                ("Cmd-Alt-F", "replace"),
+                ("Shift-Cmd-Alt-F", "replaceAll"),
+                ("Cmd-[", "indentLess"),
+                ("Cmd-]", "indentMore"),
+                ("Cmd-Backspace", "delWrappedLineLeft"),
+                ("Cmd-Delete", "delWrappedLineRight"),
+                ("Cmd-U", "undoSelection"),
+                ("Shift-Cmd-U", "redoSelection"),
+                ("Ctrl-Up", "goDocStart"),
+                ("Ctrl-Down", "goDocEnd"),
             ],
             &["basic", "emacsy"],
         );
         let mut maps = HashMap::new();
         let pc = Rc::new(pc);
         let macd = Rc::new(macd);
-        maps.insert("default".to_string(), if mac { macd.clone() } else { pc.clone() });
+        maps.insert(
+            "default".to_string(),
+            if mac { macd.clone() } else { pc.clone() },
+        );
         maps.insert("basic".to_string(), Rc::new(basic));
         maps.insert("pcDefault".to_string(), pc);
         maps.insert("emacsy".to_string(), Rc::new(emacsy));
@@ -217,7 +299,12 @@ pub enum Lookup {
 }
 
 /// `lookupKey(key, map, handle, context)`. `None` is the JS `undefined`.
-pub fn lookup_key(maps: &KeyMaps, key: &str, map: &KeyMapRef, handle: &mut dyn FnMut(&Binding) -> bool) -> Option<Lookup> {
+pub fn lookup_key(
+    maps: &KeyMaps,
+    key: &str,
+    map: &KeyMapRef,
+    handle: &mut dyn FnMut(&Binding) -> bool,
+) -> Option<Lookup> {
     let map = maps.get(map)?;
     match map.bindings.get(key) {
         Some(Binding::Nothing) => return Some(Lookup::Nothing),
@@ -257,7 +344,10 @@ pub struct KeyEvent {
 
 impl KeyEvent {
     pub fn new(key: &str) -> KeyEvent {
-        KeyEvent { key: key.to_string(), ..Default::default() }
+        KeyEvent {
+            key: key.to_string(),
+            ..Default::default()
+        }
     }
     /// Parse `"Shift-Ctrl-Left"` style descriptions (test convenience).
     pub fn parse(desc: &str) -> KeyEvent {
@@ -321,7 +411,10 @@ mod tests {
     #[test]
     fn normalize() {
         assert_eq!(normalize_key_name("Ctrl-Shift-a").unwrap(), "Shift-Ctrl-a");
-        assert_eq!(normalize_key_name("Cmd-Alt-Ctrl-Shift-X").unwrap(), "Shift-Cmd-Ctrl-Alt-X");
+        assert_eq!(
+            normalize_key_name("Cmd-Alt-Ctrl-Shift-X").unwrap(),
+            "Shift-Cmd-Ctrl-Alt-X"
+        );
         assert_eq!(normalize_key_name("Ctrl--").unwrap(), "Ctrl--");
         assert_eq!(normalize_key_name("-").unwrap(), "-");
         assert!(normalize_key_name("Hyper-X").is_err());

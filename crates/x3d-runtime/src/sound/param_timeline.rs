@@ -22,7 +22,9 @@ pub struct Timeline {
 impl Timeline {
     /// IsEventCurrent for kSetValue events.
     fn is_current(&self, i: usize, frame: f64, sample_rate: f64) -> bool {
-        let Some(next) = self.times.get(i + 1) else { return true };
+        let Some(next) = self.times.get(i + 1) else {
+            return true;
+        };
 
         if next * sample_rate >= frame {
             return true;
@@ -34,7 +36,9 @@ impl Timeline {
 
     /// The leading events that are not current are removed; at least one stays (RemoveOldEvents).
     fn remove_old_events(&mut self, frame: f64, sample_rate: f64) {
-        let skipped = (0..self.times.len()).take_while(|i| !self.is_current(*i, frame, sample_rate)).count();
+        let skipped = (0..self.times.len())
+            .take_while(|i| !self.is_current(*i, frame, sample_rate))
+            .count();
         let n = self.times.len();
 
         if n > 1 {
@@ -51,7 +55,9 @@ impl Timeline {
 
     /// HasSampleAccurateValues (no connections) for the quantum at `frame`.
     pub fn has_sample_accurate_values(&self, frame: u64, sample_rate: f64, quantum: usize) -> bool {
-        let Some(first) = self.times.first() else { return false };
+        let Some(first) = self.times.first() else {
+            return false;
+        };
         let frame = frame as f64;
 
         if *first > (frame + quantum as f64) / sample_rate {
@@ -67,7 +73,9 @@ impl Timeline {
 
     /// The pruning of ValuesForFrameRange when the quantum's value is computed.
     pub fn after_values(&mut self, frame: u64, sample_rate: f64, quantum: usize) {
-        let Some(last) = self.times.last() else { return };
+        let Some(last) = self.times.last() else {
+            return;
+        };
         let frame_f = frame as f64;
         let current_time = frame_f / sample_rate;
 
@@ -109,7 +117,9 @@ pub struct Events {
 
 impl Events {
     fn is_current(&self, i: usize, frame: f64, sample_rate: f64) -> bool {
-        let Some(next) = self.events.get(i + 1) else { return true };
+        let Some(next) = self.events.get(i + 1) else {
+            return true;
+        };
 
         if next.time * sample_rate >= frame {
             return true;
@@ -130,7 +140,9 @@ impl Events {
 
     /// InsertEvent: old events go first, then the event after those at the same time or earlier.
     pub fn insert(&mut self, event: Event, frame: u64, sample_rate: f64) {
-        let skipped = (0..self.events.len()).take_while(|i| !self.is_current(*i, frame as f64, sample_rate)).count();
+        let skipped = (0..self.events.len())
+            .take_while(|i| !self.is_current(*i, frame as f64, sample_rate))
+            .count();
 
         if skipped > 0 {
             self.remove_old_events(skipped);
@@ -142,7 +154,9 @@ impl Events {
 
     /// HasSampleAccurateValues (no connections) for the quantum at `frame`.
     pub fn has_sample_accurate_values(&self, frame: u64, sample_rate: f64, quantum: usize) -> bool {
-        let Some(first) = self.events.first() else { return false };
+        let Some(first) = self.events.first() else {
+            return false;
+        };
         let frame = frame as f64;
 
         if first.time > (frame + quantum as f64) / sample_rate && first.kind == Kind::SetValue {
@@ -157,7 +171,17 @@ impl Events {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn process_exponential_ramp(fill_to_frame: usize, time1: f64, time2: f64, value1: f32, value2: f32, sample_rate: f64, values: &mut [f32], mut current_frame: u64, write_index: usize) -> (u64, f32, usize) {
+    fn process_exponential_ramp(
+        fill_to_frame: usize,
+        time1: f64,
+        time2: f64,
+        value1: f32,
+        value2: f32,
+        sample_rate: f64,
+        values: &mut [f32],
+        mut current_frame: u64,
+        write_index: usize,
+    ) -> (u64, f32, usize) {
         if value1 * value2 <= 0.0 || time1 >= time2 {
             values[write_index..fill_to_frame].fill(value1);
             return (current_frame, value1, fill_to_frame);
@@ -166,7 +190,10 @@ impl Events {
         let delta_time = time2 - time1;
         let num_sample_frames = delta_time * sample_rate;
         let multiplier = ((value2 / value1) as f64).powf(1.0 / num_sample_frames);
-        let mut value = (value1 as f64 * (value2 as f64 / value1 as f64).powf((current_frame as f64 / sample_rate - time1) / delta_time)) as f32;
+        let mut value = (value1 as f64
+            * (value2 as f64 / value1 as f64)
+                .powf((current_frame as f64 / sample_rate - time1) / delta_time))
+            as f32;
         let mut accumulator = value as f64;
 
         for v in values[write_index..fill_to_frame].iter_mut() {
@@ -184,7 +211,15 @@ impl Events {
     }
 
     /// ValuesForFrameRangeImpl for setValue and exponential ramp events.
-    fn values_for_frame_range(&mut self, start_frame: u64, end_frame: u64, default_value: f32, values: &mut [f32], sample_rate: f64, quantum: usize) -> f32 {
+    fn values_for_frame_range(
+        &mut self,
+        start_frame: u64,
+        end_frame: u64,
+        default_value: f32,
+        values: &mut [f32],
+        sample_rate: f64,
+        quantum: usize,
+    ) -> f32 {
         if self.events.is_empty() || end_frame as f64 / sample_rate <= self.events[0].time {
             values.fill(default_value);
             return default_value;
@@ -207,7 +242,11 @@ impl Events {
 
         if first_event_time > start_frame as f64 / sample_rate {
             let first_event_frame = (first_event_time * sample_rate).ceil();
-            let fill_to_end_frame = if (end_frame as f64) > first_event_frame { first_event_frame as u64 } else { end_frame };
+            let fill_to_end_frame = if (end_frame as f64) > first_event_frame {
+                first_event_frame as u64
+            } else {
+                end_frame
+            };
             let fill_to_frame = ((fill_to_end_frame - start_frame) as usize).min(values.len());
             values[..fill_to_frame].fill(default_value);
             write_index = fill_to_frame;
@@ -230,12 +269,30 @@ impl Events {
             let event = self.events[i];
             let next = self.events.get(i + 1).copied();
             let (value1, time1) = (event.value, event.time);
-            let (value2, time2) = next.map_or((value1, end_frame as f64 / sample_rate + 1.0), |e| (e.value, e.time));
-            let fill_to_end_frame = if end_frame as f64 > time2 * sample_rate { (time2 * sample_rate).ceil() as u64 } else { end_frame };
-            let fill_to_frame = (fill_to_end_frame.saturating_sub(start_frame) as usize).min(values.len());
+            let (value2, time2) = next
+                .map_or((value1, end_frame as f64 / sample_rate + 1.0), |e| {
+                    (e.value, e.time)
+                });
+            let fill_to_end_frame = if end_frame as f64 > time2 * sample_rate {
+                (time2 * sample_rate).ceil() as u64
+            } else {
+                end_frame
+            };
+            let fill_to_frame =
+                (fill_to_end_frame.saturating_sub(start_frame) as usize).min(values.len());
 
             if next.is_some_and(|e| e.kind == Kind::ExponentialRamp) {
-                (current_frame, value, write_index) = Self::process_exponential_ramp(fill_to_frame, time1, time2, value1, value2, sample_rate, values, current_frame, write_index);
+                (current_frame, value, write_index) = Self::process_exponential_ramp(
+                    fill_to_frame,
+                    time1,
+                    time2,
+                    value1,
+                    value2,
+                    sample_rate,
+                    values,
+                    current_frame,
+                    write_index,
+                );
             } else {
                 current_frame = fill_to_end_frame;
                 value = event.value;
@@ -255,7 +312,11 @@ impl Events {
     /// FinalValue (k-rate) and Value (): the timeline value at `frame`, else the intrinsic value.
     /// The caller stores the result as the new intrinsic value.
     pub fn final_value(&mut self, intrinsic: f32, frame: u64, sample_rate: f64) -> f32 {
-        if self.events.first().is_none_or(|e| (frame as f64 / sample_rate) < e.time) {
+        if self
+            .events
+            .first()
+            .is_none_or(|e| (frame as f64 / sample_rate) < e.time)
+        {
             return intrinsic;
         }
 
@@ -264,8 +325,21 @@ impl Events {
     }
 
     /// CalculateTimelineValues (a-rate): returns the last value, the new intrinsic value.
-    pub fn timeline_values(&mut self, intrinsic: f32, frame: u64, values: &mut [f32], sample_rate: f64) -> f32 {
-        self.values_for_frame_range(frame, frame + values.len() as u64, intrinsic, values, sample_rate, 128)
+    pub fn timeline_values(
+        &mut self,
+        intrinsic: f32,
+        frame: u64,
+        values: &mut [f32],
+        sample_rate: f64,
+    ) -> f32 {
+        self.values_for_frame_range(
+            frame,
+            frame + values.len() as u64,
+            intrinsic,
+            values,
+            sample_rate,
+            128,
+        )
     }
 }
 
@@ -279,8 +353,24 @@ mod tests {
     fn set_value_lands_on_the_frame_chromium_computes() {
         // 0.272 * 48000 is a little more than 13056, so the new value starts at the next frame.
         let mut e = Events::default();
-        e.insert(Event { kind: Kind::SetValue, value: 1.0, time: 0.0 }, 0, SR);
-        e.insert(Event { kind: Kind::SetValue, value: 2.0, time: 13056.0 / SR }, 13056, SR);
+        e.insert(
+            Event {
+                kind: Kind::SetValue,
+                value: 1.0,
+                time: 0.0,
+            },
+            0,
+            SR,
+        );
+        e.insert(
+            Event {
+                kind: Kind::SetValue,
+                value: 2.0,
+                time: 13056.0 / SR,
+            },
+            13056,
+            SR,
+        );
         let mut v = [0f32; 128];
         assert!(e.has_sample_accurate_values(13056, SR, 128));
         let last = e.timeline_values(1.0, 13056, &mut v, SR);
@@ -290,13 +380,31 @@ mod tests {
     #[test]
     fn exponential_ramp_is_chromium_pow_then_double_products() {
         let mut e = Events::default();
-        e.insert(Event { kind: Kind::SetValue, value: 0.5, time: 0.0 }, 0, SR);
-        e.insert(Event { kind: Kind::ExponentialRamp, value: 1e-3, time: 0.03 }, 0, SR);
+        e.insert(
+            Event {
+                kind: Kind::SetValue,
+                value: 0.5,
+                time: 0.0,
+            },
+            0,
+            SR,
+        );
+        e.insert(
+            Event {
+                kind: Kind::ExponentialRamp,
+                value: 1e-3,
+                time: 0.03,
+            },
+            0,
+            SR,
+        );
         let mut v = [0f32; 128];
         e.timeline_values(0.5, 128, &mut v, SR);
 
         let multiplier = ((1e-3f32 / 0.5f32) as f64).powf(1.0 / (0.03 * SR));
-        let mut accumulator = (0.5f32 as f64 * (1e-3f32 as f64 / 0.5f32 as f64).powf((128.0 / SR) / 0.03)) as f32 as f64;
+        let mut accumulator = (0.5f32 as f64
+            * (1e-3f32 as f64 / 0.5f32 as f64).powf((128.0 / SR) / 0.03))
+            as f32 as f64;
 
         for x in v {
             assert_eq!(x, accumulator as f32);

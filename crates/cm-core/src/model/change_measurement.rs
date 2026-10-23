@@ -4,16 +4,24 @@ use std::cmp::Ordering;
 
 use super::changes::Change;
 use super::doc::Doc;
-use super::selection::{new_sel, normalize_selection, Range, Sel};
-use crate::pos::{cmp, Pos, PosRef};
+use super::selection::{Range, Sel, new_sel, normalize_selection};
+use crate::pos::{Pos, PosRef, cmp};
 
 /// `changeEnd(change)`: the post-change end position.
 pub(crate) fn change_end(change: &Change) -> Pos {
-    let Some(text) = &change.text else { return change.to };
+    let Some(text) = &change.text else {
+        return change.to;
+    };
     // `lst(change.text).length` on an empty array is a TypeError in the JS; an empty
     // text array only comes out of history built from positions outside the document.
-    let last_len = text.last().map(|t| t.len() as i64).expect("JS TypeError: Cannot read properties of undefined (reading 'length')");
-    Pos::new(change.from.line + text.len() as i64 - 1, last_len + if text.len() == 1 { change.from.ch } else { 0 })
+    let last_len = text
+        .last()
+        .map(|t| t.len() as i64)
+        .expect("JS TypeError: Cannot read properties of undefined (reading 'length')");
+    Pos::new(
+        change.from.line + text.len() as i64 - 1,
+        last_len + if text.len() == 1 { change.from.ch } else { 0 },
+    )
 }
 
 /// `adjustForChange(pos, change)`. Returns the *same* object when the position is
@@ -41,7 +49,12 @@ pub(crate) fn compute_sel_after_change(doc: &Doc, change: &Change) -> Sel {
     let out: Vec<Range> = sel
         .ranges
         .iter()
-        .map(|r| Range::new(adjust_for_change(&r.anchor, change), adjust_for_change(&r.head, change)))
+        .map(|r| {
+            Range::new(
+                adjust_for_change(&r.anchor, change),
+                adjust_for_change(&r.head, change),
+            )
+        })
         .collect();
     normalize_selection(doc.selections_may_touch(), out, sel.prim_index)
 }
@@ -70,7 +83,10 @@ pub(crate) fn compute_replaced_sel(doc: &Doc, changes: &[Change], hint: &str) ->
         if hint == "around" {
             let range = &sel.ranges[i];
             let inv = cmp(&range.head.get(), &range.anchor.get()) == Ordering::Less;
-            out.push(Range::new(PosRef::new(if inv { to } else { from }), PosRef::new(if inv { from } else { to })));
+            out.push(Range::new(
+                PosRef::new(if inv { to } else { from }),
+                PosRef::new(if inv { from } else { to }),
+            ));
         } else {
             let p = PosRef::new(from);
             out.push(Range::new(p.clone(), p));

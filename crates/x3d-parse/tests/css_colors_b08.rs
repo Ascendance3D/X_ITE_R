@@ -7,16 +7,29 @@
 //! port does not know (hwb, lab, oklch, color()) are listed, not compared.
 
 fn channels(computed: &str) -> Option<[f64; 4]> {
-    let inner = computed.strip_prefix("rgba(").or_else(|| computed.strip_prefix("rgb("))?.strip_suffix(')')?;
-    let parts: Vec<f64> = inner.split(',').map(|s| s.trim().parse().unwrap()).collect();
+    let inner = computed
+        .strip_prefix("rgba(")
+        .or_else(|| computed.strip_prefix("rgb("))?
+        .strip_suffix(')')?;
+    let parts: Vec<f64> = inner
+        .split(',')
+        .map(|s| s.trim().parse().unwrap())
+        .collect();
 
-    Some([parts[0] / 255.0, parts[1] / 255.0, parts[2] / 255.0, *parts.get(3).unwrap_or(&1.0)])
+    Some([
+        parts[0] / 255.0,
+        parts[1] / 255.0,
+        parts[2] / 255.0,
+        *parts.get(3).unwrap_or(&1.0),
+    ])
 }
 
 #[test]
 fn css_colors_match_chrome() {
-    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-svg/css-colors-baseline.json");
-    let baseline: Vec<(String, Option<String>)> = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle/synthetic-rea-svg/css-colors-baseline.json");
+    let baseline: Vec<(String, Option<String>)> =
+        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
     let mut failures = vec![];
     let mut unknown = vec![];
 
@@ -25,9 +38,17 @@ fn css_colors_match_chrome() {
 
         match (computed, ours) {
             (None, None) => {}
-            (None, Some(c)) => failures.push(format!("{value}: Chrome rejects it, Rust gives {c:?}")),
+            (None, Some(c)) => {
+                failures.push(format!("{value}: Chrome rejects it, Rust gives {c:?}"))
+            }
             (Some(expected), None) => {
-                if value.starts_with("hwb") || value.starts_with("lab") || value.starts_with("oklch") || value.starts_with("color(") || value == "currentcolor" || value == "inherit" {
+                if value.starts_with("hwb")
+                    || value.starts_with("lab")
+                    || value.starts_with("oklch")
+                    || value.starts_with("color(")
+                    || value == "currentcolor"
+                    || value == "inherit"
+                {
                     unknown.push(value.clone());
                 } else {
                     failures.push(format!("{value}: Chrome gives {expected}, Rust rejects it"));
@@ -40,10 +61,19 @@ fn css_colors_match_chrome() {
                 };
 
                 // Compared as 8-bit channels; alpha to the 8-bit step Chrome keeps.
-                let bytes = |c: [f64; 4]| [(c[0] * 255.0).round(), (c[1] * 255.0).round(), (c[2] * 255.0).round()];
+                let bytes = |c: [f64; 4]| {
+                    [
+                        (c[0] * 255.0).round(),
+                        (c[1] * 255.0).round(),
+                        (c[2] * 255.0).round(),
+                    ]
+                };
 
                 if bytes(e) != bytes(c) || (e[3] - c[3]).abs() > 0.005 {
-                    failures.push(format!("{value}: Chrome gives {expected}, Rust gives {:?}", bytes(c)));
+                    failures.push(format!(
+                        "{value}: Chrome gives {expected}, Rust gives {:?}",
+                        bytes(c)
+                    ));
                 }
             }
         }
@@ -57,11 +87,39 @@ fn css_colors_match_chrome() {
 
     let (hsl, other): (Vec<_>, Vec<_>) = failures.iter().partition(|f| f.starts_with("hsl("));
 
-    for f in hsl.iter().filter(|f| !f.contains(",") || f.contains("turn") || f.contains("deg")) {
+    for f in hsl
+        .iter()
+        .filter(|f| !f.contains(",") || f.contains("turn") || f.contains("deg"))
+    {
         println!("{f}");
     }
 
-    println!("{} values, {} hsl ties, {} other failures, {} not compared: {:?}", baseline.len(), hsl.len(), other.len(), unknown.len(), unknown);
-    assert!(other.is_empty(), "{}", other.iter().take(30).map(|s| s.as_str()).collect::<Vec<_>>().join("\n"));
-    assert_eq!(hsl.len(), KNOWN_HSL_TIES, "the hsl () tie set changed:\n{}", hsl.iter().take(60).map(|s| s.as_str()).collect::<Vec<_>>().join("\n"));
+    println!(
+        "{} values, {} hsl ties, {} other failures, {} not compared: {:?}",
+        baseline.len(),
+        hsl.len(),
+        other.len(),
+        unknown.len(),
+        unknown
+    );
+    assert!(
+        other.is_empty(),
+        "{}",
+        other
+            .iter()
+            .take(30)
+            .map(|s| s.as_str())
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+    assert_eq!(
+        hsl.len(),
+        KNOWN_HSL_TIES,
+        "the hsl () tie set changed:\n{}",
+        hsl.iter()
+            .take(60)
+            .map(|s| s.as_str())
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
 }

@@ -25,7 +25,14 @@ pub enum CtxField {
 
 impl CtxField {
     pub fn from_index(i: u32) -> Option<CtxField> {
-        [CtxField::SceneGraph, CtxField::BBox, CtxField::Profile, CtxField::Metadata].get(i as usize).copied()
+        [
+            CtxField::SceneGraph,
+            CtxField::BBox,
+            CtxField::Profile,
+            CtxField::Metadata,
+        ]
+        .get(i as usize)
+        .copied()
     }
 }
 
@@ -51,7 +58,13 @@ pub struct CtxEvents {
 }
 
 /// Events of one cascade overlap (the field is tainted once): the rounds are the largest of them. Events of different frames add up.
-fn merge(list: &mut Vec<(CtxId, CtxField, u32)>, ctx: CtxId, field: CtxField, rounds: u32, sum: bool) {
+fn merge(
+    list: &mut Vec<(CtxId, CtxField, u32)>,
+    ctx: CtxId,
+    field: CtxField,
+    rounds: u32,
+    sum: bool,
+) {
     match list.iter_mut().find(|e| e.0 == ctx && e.1 == field) {
         Some(e) => e.2 = if sum { e.2 + rounds } else { e.2.max(rounds) },
         None => list.push((ctx, field, rounds)),
@@ -85,7 +98,6 @@ impl Runtime {
     /// `ctx ._sceneGraph_changed = time` and friends: the field of `ctx` (and, for the graph and bbox fields, of the contexts around it)
     /// fires `rounds` times.
     pub fn ctx_event(&mut self, ctx: CtxId, field: CtxField, rounds: u32) {
-
         if ctx >= self.scene.contexts.len() {
             return;
         }
@@ -145,10 +157,22 @@ impl Runtime {
             return;
         }
 
-        let bodies: Vec<CtxId> = self.scene.ctx(ctx).protos.values().iter().map(|&p| self.scene.protos[p].body).collect();
+        let bodies: Vec<CtxId> = self
+            .scene
+            .ctx(ctx)
+            .protos
+            .values()
+            .iter()
+            .map(|&p| self.scene.protos[p].body)
+            .collect();
 
         for body in bodies {
-            if self.ctx_events.wrapped_bodies.insert((body, self.scene.ctx_slots.generation(body))) && self.scene.ctx(body).root_nodes.iter().any(Option::is_some) {
+            if self
+                .ctx_events
+                .wrapped_bodies
+                .insert((body, self.scene.ctx_slots.generation(body)))
+                && self.scene.ctx(body).root_nodes.iter().any(Option::is_some)
+            {
                 for field in [CtxField::SceneGraph, CtxField::BBox] {
                     for c in self.ctx_chain(body, true) {
                         if self.scene_live {
@@ -200,7 +224,12 @@ impl Runtime {
 
         // A PROTO instance realizes its body after the world's setup: one `sceneGraph_changed` each. (A PROTO declaration's body fires
         // when a scene stream first reads it: see `ctx_streamed`.)
-        let instances = self.scene.nodes.iter().filter(|n| n.ctx == w && matches!(n.kind, NodeKind::Instance(_))).count() as u32;
+        let instances = self
+            .scene
+            .nodes
+            .iter()
+            .filter(|n| n.ctx == w && matches!(n.kind, NodeKind::Instance(_)))
+            .count() as u32;
         let later = self.root_nodes_rounds(w) - 1 + instances;
         for field in [CtxField::SceneGraph, CtxField::BBox] {
             // A replaced world's first event was queued when its scene was parsed (see `ctx_scene_parsed`).
@@ -227,14 +256,32 @@ impl Runtime {
         };
 
         if statement {
-            merge(&mut self.ctx_events.parsed, ctx, CtxField::Profile, 1, false);
+            merge(
+                &mut self.ctx_events.parsed,
+                ctx,
+                CtxField::Profile,
+                1,
+                false,
+            );
         }
 
         if meta {
-            merge(&mut self.ctx_events.parsed, ctx, CtxField::Metadata, 1, false);
+            merge(
+                &mut self.ctx_events.parsed,
+                ctx,
+                CtxField::Metadata,
+                1,
+                false,
+            );
         }
 
-        merge(&mut self.ctx_events.parsed, ctx, CtxField::SceneGraph, 1, false);
+        merge(
+            &mut self.ctx_events.parsed,
+            ctx,
+            CtxField::SceneGraph,
+            1,
+            false,
+        );
         merge(&mut self.ctx_events.parsed, ctx, CtxField::BBox, 1, false);
     }
 
@@ -244,7 +291,9 @@ impl Runtime {
             return;
         }
 
-        let (ready, waiting): (Vec<_>, Vec<_>) = std::mem::take(&mut self.ctx_events.parsed).into_iter().partition(|e| self.ctx_events.watched.contains(&e.0));
+        let (ready, waiting): (Vec<_>, Vec<_>) = std::mem::take(&mut self.ctx_events.parsed)
+            .into_iter()
+            .partition(|e| self.ctx_events.watched.contains(&e.0));
 
         self.ctx_events.parsed = waiting;
 
@@ -286,7 +335,13 @@ impl Runtime {
         }
 
         // Events nobody watches are gone with the frame; the parsed ones wait for their scene to become the world.
-        let worlds: Vec<CtxId> = self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).filter(|p| p.world).map(|p| p.ctx).collect();
+        let worlds: Vec<CtxId> = self
+            .pending_browser
+            .iter()
+            .chain(self.browser_frame_waiters.iter())
+            .filter(|p| p.world)
+            .map(|p| p.ctx)
+            .collect();
 
         self.ctx_events.parsed.retain(|e| worlds.contains(&e.0));
 

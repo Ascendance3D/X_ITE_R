@@ -26,7 +26,13 @@ impl Runtime {
         }
 
         self.set_field_tainted(k, true);
-        self.add_event_object(k, Event { origin: k, visited: vec![] });
+        self.add_event_object(
+            k,
+            Event {
+                origin: k,
+                visited: vec![],
+            },
+        );
     }
 
     /// X3DBaseNode.addEventObject (field, event).
@@ -42,7 +48,9 @@ impl Runtime {
 
         let access_type = self.field(k).access;
 
-        if access::is_input(access_type) || (self.extended_event_handling(k.0) && access::is_initializable(access_type)) {
+        if access::is_input(access_type)
+            || (self.extended_event_handling(k.0) && access::is_initializable(access_type))
+        {
             self.add_node_event(k.0);
         }
     }
@@ -72,7 +80,13 @@ impl Runtime {
 
     /// Push a field without an event object (browser .addTaintedField (field)).
     pub fn add_tainted_field(&mut self, k: FKey) {
-        self.tainted_fields.push((k, Event { origin: k, visited: vec![] }));
+        self.tainted_fields.push((
+            k,
+            Event {
+                origin: k,
+                visited: vec![],
+            },
+        ));
     }
 
     /// X3DField.processEvent (event).
@@ -98,14 +112,22 @@ impl Runtime {
         }
 
         // Process interests (snapshot, like X3DObject.processInterests over the current Map).
-        let interests = self.frt.get(&k).map(|f| f.interests.clone()).unwrap_or_default();
+        let interests = self
+            .frt
+            .get(&k)
+            .map(|f| f.interests.clone())
+            .unwrap_or_default();
 
         for i in interests {
             self.call_interest(i, k);
         }
 
         // Process routes.
-        let field_interests = self.frt.get(&k).map(|f| f.field_interests.clone()).unwrap_or_default();
+        let field_interests = self
+            .frt
+            .get(&k)
+            .map(|f| f.field_interests.clone())
+            .unwrap_or_default();
 
         for f in field_interests {
             if event.visited.contains(&f) {
@@ -140,7 +162,10 @@ impl Runtime {
     fn process_node_event(&mut self, node: NodeId) {
         self.nrt_mut(node).tainted = false;
 
-        let interests = self.nrt(node).map(|n| n.interests.clone()).unwrap_or_default();
+        let interests = self
+            .nrt(node)
+            .map(|n| n.interests.clone())
+            .unwrap_or_default();
 
         for i in interests {
             self.call_interest(i, (node, FieldLoc::Priv(usize::MAX)));
@@ -166,7 +191,8 @@ impl Runtime {
                     // set_StraightenHorizon__ (`getActiveLayer () ?.straightenView ()` when TRUE) and the ExamineViewer's
                     // `disconnect` interest: the viewer runs them, after the requests the Scripts made before.
                     if let Some(on) = self.browser_options.straighten_set.take() {
-                        self.browser_requests.push(format!("straightenHorizon:{on}"));
+                        self.browser_requests
+                            .push(format!("straightenHorizon:{on}"));
                     }
 
                     if self.browser_options.take_sound_intensity_changed() {
@@ -179,7 +205,8 @@ impl Runtime {
                         self.process_event(k, event);
                     }
 
-                    if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
+                    if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events()
+                    {
                         break;
                     }
                 }
@@ -212,13 +239,24 @@ impl Runtime {
     }
 
     pub fn has_pending_events(&self) -> bool {
-        !self.tainted_fields.is_empty() || !self.tainted_nodes.is_empty() || self.browser_options.has_pending_events()
+        !self.tainted_fields.is_empty()
+            || !self.tainted_nodes.is_empty()
+            || self.browser_options.has_pending_events()
     }
 
     /// X3DBrowserContext [_traverse] without rendering: the event phases of one frame. The scene
     /// loaded by createX3DFromURL is not the browser's world, so no traversal touches it.
     pub fn frame(&mut self) {
-        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "displayFinishEvents", "finishEvents"] {
+        for name in [
+            "prepareEvents",
+            "timePrepareEvents",
+            "timeEvents",
+            "cameraEvents",
+            "sensorEvents",
+            "displayEvents",
+            "displayFinishEvents",
+            "finishEvents",
+        ] {
             self.process_phase(name);
         }
     }
@@ -237,7 +275,9 @@ impl Runtime {
             }
         }
 
-        let k = self.private_field(self.browser_node, name).expect("browser event field");
+        let k = self
+            .private_field(self.browser_node, name)
+            .expect("browser event field");
         self.add_tainted_field(k);
         self.process_events();
 

@@ -21,7 +21,12 @@ pub fn sort<T: Clone, F: FnMut(&T, &T) -> i32>(array: &mut Vec<T>, compare: F) {
         return;
     }
 
-    let mut st = State { work: array, compare, min_gallop: MIN_GALLOP_WINS, runs: vec![] };
+    let mut st = State {
+        work: array,
+        compare,
+        min_gallop: MIN_GALLOP_WINS,
+        runs: vec![],
+    };
     let min_run = compute_min_run_length(length);
     let mut low = 0;
     let mut remaining = length;
@@ -111,7 +116,11 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
     }
 
     fn binary_insertion_sort(&mut self, low: usize, start_arg: usize, high: usize) {
-        let mut start = if low == start_arg { start_arg + 1 } else { start_arg };
+        let mut start = if low == start_arg {
+            start_arg + 1
+        } else {
+            start_arg
+        };
 
         while start < high {
             let mut left = low;
@@ -225,7 +234,15 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
         }
     }
 
-    fn gallop_left(&mut self, _unused: bool, key: &T, base: usize, length: usize, hint: usize, temp: Option<&Vec<T>>) -> usize {
+    fn gallop_left(
+        &mut self,
+        _unused: bool,
+        key: &T,
+        base: usize,
+        length: usize,
+        hint: usize,
+        temp: Option<&Vec<T>>,
+    ) -> usize {
         let mut last_ofs: isize = 0;
         let mut offset: isize = 1;
         let hint_i = hint as isize;
@@ -295,7 +312,15 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
         offset as usize
     }
 
-    fn gallop_right(&mut self, _unused: bool, key: &T, base: usize, length: usize, hint: usize, temp: Option<&Vec<T>>) -> usize {
+    fn gallop_right(
+        &mut self,
+        _unused: bool,
+        key: &T,
+        base: usize,
+        length: usize,
+        hint: usize,
+        temp: Option<&Vec<T>>,
+    ) -> usize {
         let mut last_ofs: isize = 0;
         let mut offset: isize = 1;
         let hint_i = hint as isize;
@@ -365,7 +390,13 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
         offset as usize
     }
 
-    fn merge_low(&mut self, base_a: usize, length_a_arg: usize, base_b: usize, length_b_arg: usize) {
+    fn merge_low(
+        &mut self,
+        base_a: usize,
+        length_a_arg: usize,
+        base_b: usize,
+        length_b_arg: usize,
+    ) {
         let mut length_a = length_a_arg;
         let mut length_b = length_b_arg;
         let temp: Vec<T> = self.work[base_a..base_a + length_a].to_vec();
@@ -510,7 +541,13 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
         }
     }
 
-    fn merge_high(&mut self, base_a: usize, length_a_arg: usize, base_b: usize, length_b_arg: usize) {
+    fn merge_high(
+        &mut self,
+        base_a: usize,
+        length_a_arg: usize,
+        base_b: usize,
+        length_b_arg: usize,
+    ) {
         let mut length_a = length_a_arg as isize;
         let mut length_b = length_b_arg as isize;
         let temp: Vec<T> = self.work[base_b..base_b + length_b as usize].to_vec();
@@ -586,7 +623,14 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
                     self.min_gallop = min_gallop;
 
                     let key = temp[cursor_temp as usize].clone();
-                    let k = self.gallop_right(false, &key, base_a, length_a as usize, (length_a - 1) as usize, None) as isize;
+                    let k = self.gallop_right(
+                        false,
+                        &key,
+                        base_a,
+                        length_a as usize,
+                        (length_a - 1) as usize,
+                        None,
+                    ) as isize;
                     wins_a = (length_a - k) as usize;
 
                     if wins_a > 0 {
@@ -612,7 +656,14 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
                     }
 
                     let key = self.work[cursor_a as usize].clone();
-                    let k = self.gallop_left(false, &key, 0, length_b as usize, (length_b - 1) as usize, Some(&temp)) as isize;
+                    let k = self.gallop_left(
+                        false,
+                        &key,
+                        0,
+                        length_b as usize,
+                        (length_b - 1) as usize,
+                        Some(&temp),
+                    ) as isize;
                     wins_b = (length_b - k) as usize;
 
                     if wins_b > 0 {
@@ -620,7 +671,8 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
                         cursor_temp -= wins_b as isize;
 
                         for j in 0..wins_b {
-                            self.work[(dest + 1) as usize + j] = temp[(cursor_temp + 1) as usize + j].clone();
+                            self.work[(dest + 1) as usize + j] =
+                                temp[(cursor_temp + 1) as usize + j].clone();
                         }
 
                         length_b -= wins_b as isize;
@@ -661,7 +713,11 @@ impl<T: Clone, F: FnMut(&T, &T) -> i32> State<'_, T, F> {
             dest -= length_a;
             cursor_a -= length_a;
 
-            self.copy_work((cursor_a + 1) as usize, (dest + 1) as usize, length_a as usize);
+            self.copy_work(
+                (cursor_a + 1) as usize,
+                (dest + 1) as usize,
+                length_a as usize,
+            );
 
             self.work[dest as usize] = temp[cursor_temp as usize].clone();
         }
@@ -676,7 +732,9 @@ mod tests {
     fn sorts_with_consistent_comparator() {
         let mut state = 12345u64;
         let mut next = || {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             (state >> 33) as i64 % 1000
         };
 
@@ -689,4 +747,3 @@ mod tests {
         }
     }
 }
-

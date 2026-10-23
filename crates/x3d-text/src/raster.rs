@@ -12,7 +12,14 @@ pub fn fill(width: usize, height: usize, contours: &[Vec<[f64; 2]>]) -> Vec<f64>
         let n = contour.len();
 
         for i in 0..n {
-            edge(&mut acc, stride, width, height, contour[i], contour[(i + 1) % n]);
+            edge(
+                &mut acc,
+                stride,
+                width,
+                height,
+                contour[i],
+                contour[(i + 1) % n],
+            );
         }
     }
 
@@ -37,7 +44,11 @@ fn edge(acc: &mut [f64], stride: usize, width: usize, height: usize, p0: [f64; 2
         return;
     }
 
-    let (dir, a, b) = if p0[1] < p1[1] { (1.0, p0, p1) } else { (-1.0, p1, p0) };
+    let (dir, a, b) = if p0[1] < p1[1] {
+        (1.0, p0, p1)
+    } else {
+        (-1.0, p1, p0)
+    };
     let dxdy = (b[0] - a[0]) / (b[1] - a[1]);
     let w = width as f64;
     let first = a[1].max(0.0).floor() as usize;
@@ -55,7 +66,11 @@ fn edge(acc: &mut [f64], stride: usize, width: usize, height: usize, p0: [f64; 2
         let x_top = (a[0] + (top - a[1]) * dxdy).clamp(0.0, w);
         let x_bottom = (a[0] + (bottom - a[1]) * dxdy).clamp(0.0, w);
         let d = dy * dir;
-        let (x0, x1) = if x_top < x_bottom { (x_top, x_bottom) } else { (x_bottom, x_top) };
+        let (x0, x1) = if x_top < x_bottom {
+            (x_top, x_bottom)
+        } else {
+            (x_bottom, x_top)
+        };
         let row = y * stride;
         let x0_floor = x0.floor();
         let x0_i = x0_floor as usize;
@@ -105,20 +120,32 @@ mod tests {
 
     #[test]
     fn a_pixel_aligned_square_covers_exactly_its_pixels() {
-        let c = fill(6, 5, &[vec![[1.0, 1.0], [4.0, 1.0], [4.0, 3.0], [1.0, 3.0]]]);
+        let c = fill(
+            6,
+            5,
+            &[vec![[1.0, 1.0], [4.0, 1.0], [4.0, 3.0], [1.0, 3.0]]],
+        );
 
         for y in 0..5 {
             for x in 0..6 {
                 let inside = (1..4).contains(&x) && (1..3).contains(&y);
 
-                assert_eq!(c[y * 6 + x], if inside { 1.0 } else { 0.0 }, "pixel {x} {y}");
+                assert_eq!(
+                    c[y * 6 + x],
+                    if inside { 1.0 } else { 0.0 },
+                    "pixel {x} {y}"
+                );
             }
         }
     }
 
     #[test]
     fn a_half_pixel_edge_gives_half_coverage_and_a_hole_cancels() {
-        let c = fill(4, 4, &[vec![[0.5, 0.0], [3.5, 0.0], [3.5, 4.0], [0.5, 4.0]]]);
+        let c = fill(
+            4,
+            4,
+            &[vec![[0.5, 0.0], [3.5, 0.0], [3.5, 4.0], [0.5, 4.0]]],
+        );
 
         assert_eq!((c[0], c[1], c[3]), (0.5, 1.0, 0.5));
 
@@ -126,7 +153,10 @@ mod tests {
         let c = fill(
             6,
             6,
-            &[vec![[0.0, 0.0], [6.0, 0.0], [6.0, 6.0], [0.0, 6.0]], vec![[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 2.0]]],
+            &[
+                vec![[0.0, 0.0], [6.0, 0.0], [6.0, 6.0], [0.0, 6.0]],
+                vec![[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 2.0]],
+            ],
         );
 
         assert_eq!((c[0], c[2 * 6 + 2], c[3 * 6 + 3]), (1.0, 0.0, 0.0));

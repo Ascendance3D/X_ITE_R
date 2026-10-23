@@ -5,7 +5,7 @@ use std::any::Any;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use super::spans::{attach_marked_spans, detach_marked_spans, SpanArr};
+use super::spans::{SpanArr, attach_marked_spans, detach_marked_spans};
 use super::tree::NodeId;
 use crate::text::Text;
 
@@ -26,7 +26,14 @@ pub(crate) type LineRef = Rc<RefCell<Line>>;
 /// `new Line(text, markedSpans, estimateHeight)`. Without an editor the height
 /// estimate is always 1.
 pub(crate) fn new_line(text: Text, spans: Option<SpanArr>) -> LineRef {
-    let line = Rc::new(RefCell::new(Line { text, marked_spans: None, height: 1.0, parent: None, state_after: None, styles: None }));
+    let line = Rc::new(RefCell::new(Line {
+        text,
+        marked_spans: None,
+        height: 1.0,
+        parent: None,
+        state_after: None,
+        styles: None,
+    }));
     attach_marked_spans(&line, spans);
     line
 }

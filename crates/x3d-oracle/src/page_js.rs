@@ -251,7 +251,8 @@ pub const SET_VIEWER: &str = r###"n => window .setViewer (n)"###;
 
 pub const RESIZE: &str = r###"([ w, h ]) => { const c = document .getElementById ("c"); c .style .width = w + "px"; c .style .height = h + "px"; }"###;
 
-pub const TWO_FRAMES: &str = r###"() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)))"###;
+pub const TWO_FRAMES: &str =
+    r###"() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)))"###;
 
 pub const PH_FRAME: &str = r###"k => { window .__phFrame = k; }"###;
 

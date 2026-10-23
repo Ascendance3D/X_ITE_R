@@ -36,16 +36,35 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = f64;
 
     fn constructor(max_delay_time: f64) -> Self {
-        Processor { max_delay_time, buffer_length: 0, buffers: vec![], write_index: 0, delay_times: vec![0.0; RENDER_QUANTUM_FRAMES], silent_frames: 0.0 }
+        Processor {
+            max_delay_time,
+            buffer_length: 0,
+            buffers: vec![],
+            write_index: 0,
+            delay_times: vec![0.0; RENDER_QUANTUM_FRAMES],
+            silent_frames: 0.0,
+        }
     }
 
     fn parameter_descriptors() -> Vec<AudioParamDescriptor> {
-        vec![AudioParamDescriptor { name: "delayTime".into(), automation_rate: AutomationRate::A, default_value: 0.0, min_value: f32::MIN, max_value: f32::MAX }]
+        vec![AudioParamDescriptor {
+            name: "delayTime".into(),
+            automation_rate: AutomationRate::A,
+            default_value: 0.0,
+            min_value: f32::MIN,
+            max_value: f32::MAX,
+        }]
     }
 
     fn onmessage(&mut self, _msg: &mut dyn Any) {}
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let sample_rate = scope.sample_rate;
         let source = inputs[0];
         let dest = &mut outputs[0];
@@ -53,7 +72,8 @@ impl AudioWorkletProcessor for Processor {
 
         // Delay::Delay, BufferLengthForDelay; new kernels when the channel count changes.
         if self.buffers.len() != channels {
-            self.buffer_length = RENDER_QUANTUM_FRAMES + time_to_frame_up(self.max_delay_time, sample_rate as f64);
+            self.buffer_length =
+                RENDER_QUANTUM_FRAMES + time_to_frame_up(self.max_delay_time, sample_rate as f64);
             self.buffers = vec![vec![0.0; self.buffer_length]; channels];
             self.write_index = 0;
         }
@@ -64,7 +84,11 @@ impl AudioWorkletProcessor for Processor {
         let frames = dest.first().map_or(RENDER_QUANTUM_FRAMES, |d| d.len());
 
         for i in 0..frames {
-            let v = if values.len() > 1 { values[i] } else { values[0] };
+            let v = if values.len() > 1 {
+                values[i]
+            } else {
+                values[0]
+            };
             // Delay::HandleNaN: a NaN delay time becomes the maximum.
             self.delay_times[i] = if v.is_nan() { max } else { v.clamp(0.0, max) };
         }
@@ -107,7 +131,11 @@ impl AudioWorkletProcessor for Processor {
                     r1 -= buffer_length;
                 }
 
-                let r2 = if r1 + 1 >= buffer_length { r1 + 1 - buffer_length } else { r1 + 1 };
+                let r2 = if r1 + 1 >= buffer_length {
+                    r1 + 1 - buffer_length
+                } else {
+                    r1 + 1
+                };
                 let f = read_position - r1 as f32;
                 let (s1, s2) = (buffer[r1], buffer[r2]);
                 d[k] = s1 + f * (s2 - s1);
@@ -115,7 +143,8 @@ impl AudioWorkletProcessor for Processor {
 
             for k in vector_frames..frames {
                 let w = (start_write_index + k) % buffer_length;
-                let desired_delay_frames = (self.delay_times[k] as f64).max(0.0) * sample_rate as f64;
+                let desired_delay_frames =
+                    (self.delay_times[k] as f64).max(0.0) * sample_rate as f64;
                 let mut read_position = (w + buffer_length) as f64 - desired_delay_frames;
 
                 if read_position >= buffer_length as f64 {
@@ -123,7 +152,11 @@ impl AudioWorkletProcessor for Processor {
                 }
 
                 let r1 = read_position as usize;
-                let r2 = if r1 + 1 >= buffer_length { r1 + 1 - buffer_length } else { r1 + 1 };
+                let r2 = if r1 + 1 >= buffer_length {
+                    r1 + 1 - buffer_length
+                } else {
+                    r1 + 1
+                };
                 let f = (read_position - r1 as f64) as f32;
                 let (s1, s2) = (buffer[r1], buffer[r2]);
                 d[k] = s1 + f * (s2 - s1);
@@ -133,7 +166,11 @@ impl AudioWorkletProcessor for Processor {
         self.write_index = (start_write_index + frames) % buffer_length.max(1);
 
         // TailTime: maxDelayTime.
-        self.silent_frames = if silent { self.silent_frames + frames as f64 } else { 0.0 };
+        self.silent_frames = if silent {
+            self.silent_frames + frames as f64
+        } else {
+            0.0
+        };
         self.silent_frames <= buffer_length as f64
     }
 }

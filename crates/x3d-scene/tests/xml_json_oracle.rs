@@ -23,10 +23,26 @@ const KNOWN_SYNTHETIC: &[(&str, &str, &str)] = &[
 
 /// (file, format, reason) for the corpus-x0 baseline.
 const KNOWN_X0: &[(&str, &str, &str)] = &[
-    ("07-bookcase.wrl", "xml", "runtime: X_ITE runs the Script at load (count becomes 1); the parse-only Rust side runs no scripts (x0-known.tsv X5+X6)"),
-    ("07-bookcase.wrl", "json", "runtime: X_ITE runs the Script at load (count becomes 1); the parse-only Rust side runs no scripts (x0-known.tsv X5+X6)"),
-    ("43-villasantzip.wrl", "xml", "runtime: a ROUTE from a TimeSensor sets translation to NaN at load; the parse-only Rust side runs no routes (x0-known.tsv X5+X6)"),
-    ("43-villasantzip.wrl", "json", "runtime: a ROUTE from a TimeSensor sets translation to NaN at load; the parse-only Rust side runs no routes (x0-known.tsv X5+X6)"),
+    (
+        "07-bookcase.wrl",
+        "xml",
+        "runtime: X_ITE runs the Script at load (count becomes 1); the parse-only Rust side runs no scripts (x0-known.tsv X5+X6)",
+    ),
+    (
+        "07-bookcase.wrl",
+        "json",
+        "runtime: X_ITE runs the Script at load (count becomes 1); the parse-only Rust side runs no scripts (x0-known.tsv X5+X6)",
+    ),
+    (
+        "43-villasantzip.wrl",
+        "xml",
+        "runtime: a ROUTE from a TimeSensor sets translation to NaN at load; the parse-only Rust side runs no routes (x0-known.tsv X5+X6)",
+    ),
+    (
+        "43-villasantzip.wrl",
+        "json",
+        "runtime: a ROUTE from a TimeSensor sets translation to NaN at load; the parse-only Rust side runs no routes (x0-known.tsv X5+X6)",
+    ),
 ];
 
 /// The first line where the two texts differ, for the failure report.
@@ -37,21 +53,37 @@ fn first_difference(expected: &str, actual: &str) -> String {
         }
     }
 
-    format!("line counts differ: x_ite {} rust {}", expected.lines().count(), actual.lines().count())
+    format!(
+        "line counts differ: x_ite {} rust {}",
+        expected.lines().count(),
+        actual.lines().count()
+    )
 }
 
 /// Compare one format of one file. `expected` is the baseline text, `None` when X_ITE failed to serialize.
-fn compare(file: &str, format: &str, expected: Option<&str>, actual: &str, known: &[(&str, &str, &str)], known_hits: &mut Vec<String>, failures: &mut Vec<String>) -> bool {
+fn compare(
+    file: &str,
+    format: &str,
+    expected: Option<&str>,
+    actual: &str,
+    known: &[(&str, &str, &str)],
+    known_hits: &mut Vec<String>,
+    failures: &mut Vec<String>,
+) -> bool {
     let Some(expected) = expected else {
         return false;
     };
 
-    let listed = known.iter().find(|(f, fmt, _)| *f == file && *fmt == format);
+    let listed = known
+        .iter()
+        .find(|(f, fmt, _)| *f == file && *fmt == format);
 
     match (expected == actual, listed) {
         (true, None) => true,
         (true, Some((_, _, reason))) => {
-            failures.push(format!("{file} {format}: listed as known ({reason}) but now matches; remove the entry"));
+            failures.push(format!(
+                "{file} {format}: listed as known ({reason}) but now matches; remove the entry"
+            ));
             true
         }
         (false, Some((_, _, reason))) => {
@@ -59,16 +91,27 @@ fn compare(file: &str, format: &str, expected: Option<&str>, actual: &str, known
             false
         }
         (false, None) => {
-            failures.push(format!("{file} {format}: {}", first_difference(expected, actual)));
+            failures.push(format!(
+                "{file} {format}: {}",
+                first_difference(expected, actual)
+            ));
             false
         }
     }
 }
 
 /// Run one baseline file against its inputs; returns the failures (empty when the oracle passes).
-fn run(name: &str, baseline_file: &str, corpus: &Path, known: &[(&str, &str, &str)]) -> Vec<String> {
-    let baseline = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-xml").join(baseline_file);
-    let json: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
+fn run(
+    name: &str,
+    baseline_file: &str,
+    corpus: &Path,
+    known: &[(&str, &str, &str)],
+) -> Vec<String> {
+    let baseline = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle/synthetic-rea-xml")
+        .join(baseline_file);
+    let json: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
     let results = json["results"].as_array().expect("baseline results");
 
     let mut failures = vec![];
@@ -81,7 +124,10 @@ fn run(name: &str, baseline_file: &str, corpus: &Path, known: &[(&str, &str, &st
 
         // X_ITE could not load the world, so there is no text to compare with.
         if !entry["ok"].as_bool().unwrap_or(false) {
-            skipped.push(format!("{file} (X_ITE: {})", entry["error"].as_str().unwrap_or("?")));
+            skipped.push(format!(
+                "{file} (X_ITE: {})",
+                entry["error"].as_str().unwrap_or("?")
+            ));
             continue;
         }
 
@@ -100,7 +146,15 @@ fn run(name: &str, baseline_file: &str, corpus: &Path, known: &[(&str, &str, &st
 
         if entry["xmlError"].is_string() {
             skipped.push(format!("{file} xml (X_ITE: {})", entry["xmlError"]));
-        } else if compare(file, "xml", expected_xml, &xml, known, &mut known_hits, &mut failures) {
+        } else if compare(
+            file,
+            "xml",
+            expected_xml,
+            &xml,
+            known,
+            &mut known_hits,
+            &mut failures,
+        ) {
             xml_exact += 1;
         }
 
@@ -109,7 +163,15 @@ fn run(name: &str, baseline_file: &str, corpus: &Path, known: &[(&str, &str, &st
 
         if entry["jsonError"].is_string() {
             skipped.push(format!("{file} json (X_ITE: {})", entry["jsonError"]));
-        } else if compare(file, "json", expected_json, &json_text, known, &mut known_hits, &mut failures) {
+        } else if compare(
+            file,
+            "json",
+            expected_json,
+            &json_text,
+            known,
+            &mut known_hits,
+            &mut failures,
+        ) {
             json_exact += 1;
         }
     }
@@ -130,7 +192,12 @@ fn run(name: &str, baseline_file: &str, corpus: &Path, known: &[(&str, &str, &st
 #[test]
 fn synthetic_worlds_match_x_ite() {
     let corpus = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-xml");
-    let failures = run("synthetic-rea-xml", "xml-baseline.json", &corpus, KNOWN_SYNTHETIC);
+    let failures = run(
+        "synthetic-rea-xml",
+        "xml-baseline.json",
+        &corpus,
+        KNOWN_SYNTHETIC,
+    );
 
     assert!(failures.is_empty(), "\n{}", failures.join("\n"));
 }

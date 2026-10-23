@@ -106,7 +106,12 @@ impl LookAt {
 
     fn dblclick(&mut self, x: f64, y: f64, cx: &mut Cx) {
         self.disconnect();
-        cx.requests.push(LookAtRequest { x, y, point: cx.env.alt, straighten: cx.env.straighten });
+        cx.requests.push(LookAtRequest {
+            x,
+            y,
+            point: cx.env.alt,
+            straighten: cx.env.straighten,
+        });
     }
 
     fn mousemove(&mut self, x: f64, y: f64, cx: &mut Cx) {
@@ -239,7 +244,8 @@ impl LookAt {
             self.pending.push(LPend::CorDest(p));
         } else {
             let p = add(&cx.vp.center_of_rotation_offset, cor_change);
-            self.pending.push(LPend::CorValue(cx.vp.center_of_rotation_offset));
+            self.pending
+                .push(LPend::CorValue(cx.vp.center_of_rotation_offset));
             self.cor_chaser.set_destination_value = p;
             self.pending.push(LPend::CorDest(p));
         }
@@ -252,7 +258,9 @@ impl LookAt {
     fn add_rotation(&mut self, from_vector: &Vector3, to_vector: &Vector3, cx: &mut Cx) {
         if self.orientation_chaser.is_active && self.orientation_chaser.connected {
             let mut user_orientation = set_vectors(to_vector, from_vector);
-            user_orientation.mult_right(&cx.base.orientation).mult_right(&self.orientation_chaser.set_destination_value);
+            user_orientation
+                .mult_right(&cx.base.orientation)
+                .mult_right(&self.orientation_chaser.set_destination_value);
             let user_orientation = cx.base.straighten_horizon(cx.vp, &user_orientation);
 
             let mut offset = inv(&cx.base.orientation);
@@ -280,7 +288,11 @@ impl LookAt {
     /// The browser's prepareEvents.
     pub fn prepare(&mut self, cx: &mut Cx) {
         let now = cx.env.now;
-        let (pa, ca, oa) = (self.position_chaser.is_active, self.cor_chaser.is_active, self.orientation_chaser.is_active);
+        let (pa, ca, oa) = (
+            self.position_chaser.is_active,
+            self.cor_chaser.is_active,
+            self.orientation_chaser.is_active,
+        );
 
         for p in std::mem::take(&mut self.pending) {
             match p {
@@ -310,9 +322,15 @@ impl LookAt {
 
         // prepareEvents runs the interests in the order the chasers became active (see Examine::prepare).
         let mut order: Vec<(u64, u8)> = Vec::new();
-        if pa && self.position_chaser.is_active { order.push((self.position_chaser.activated_at, 0)); }
-        if ca && self.cor_chaser.is_active { order.push((self.cor_chaser.activated_at, 1)); }
-        if oa && self.orientation_chaser.is_active { order.push((self.orientation_chaser.activated_at, 2)); }
+        if pa && self.position_chaser.is_active {
+            order.push((self.position_chaser.activated_at, 0));
+        }
+        if ca && self.cor_chaser.is_active {
+            order.push((self.cor_chaser.activated_at, 1));
+        }
+        if oa && self.orientation_chaser.is_active {
+            order.push((self.orientation_chaser.activated_at, 2));
+        }
         order.sort();
 
         for (_, which) in order {

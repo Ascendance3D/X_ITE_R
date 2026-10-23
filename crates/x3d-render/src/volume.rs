@@ -16,10 +16,11 @@ use crate::texture::{self, Filter, Sampler, TextureImage, Wrap};
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::rc::Rc;
-use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 use x3d_fields::NodeId;
+use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 
-pub const VOLUME_DATA_TYPES: [&str; 3] = ["VolumeData", "IsoSurfaceVolumeData", "SegmentedVolumeData"];
+pub const VOLUME_DATA_TYPES: [&str; 3] =
+    ["VolumeData", "IsoSurfaceVolumeData", "SegmentedVolumeData"];
 
 /// The textures a program binds: at most this many (one texture and sampler binding each; the
 /// fragment stage has 16 of each).
@@ -107,7 +108,15 @@ fn default_transfer_function() -> TextureImage {
         nearest: false,
         no_mipmaps: true,
         url: String::new(),
-        sampler: Sampler { mag: Filter::Linear, min: Filter::Linear, mipmap: None, wrap_s: Wrap::ClampToEdge, wrap_t: Wrap::Repeat, wrap_r: Wrap::ClampToEdge, anisotropy: 1.0 },
+        sampler: Sampler {
+            mag: Filter::Linear,
+            min: Filter::Linear,
+            mipmap: None,
+            wrap_s: Wrap::ClampToEdge,
+            wrap_t: Wrap::Repeat,
+            wrap_r: Wrap::ClampToEdge,
+            anisotropy: 1.0,
+        },
         cube: false,
         generated: None,
         volume: false,
@@ -128,7 +137,9 @@ fn default_tf_rc() -> Rc<TextureImage> {
 fn texture_dimension(ty: &str) -> Option<bool> {
     match ty {
         "ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture" => Some(false),
-        "ImageTexture3D" | "PixelTexture3D" | "ComposedTexture3D" | "ImageTextureAtlas" => Some(true),
+        "ImageTexture3D" | "PixelTexture3D" | "ComposedTexture3D" | "ImageTextureAtlas" => {
+            Some(true)
+        }
         _ => None,
     }
 }
@@ -137,7 +148,15 @@ fn texture_dimension(ty: &str) -> Option<bool> {
 fn composable(ty: &str) -> bool {
     matches!(
         ty,
-        "OpacityMapVolumeStyle" | "BlendedVolumeStyle" | "BoundaryEnhancementVolumeStyle" | "CartoonVolumeStyle" | "ComposedVolumeStyle" | "EdgeEnhancementVolumeStyle" | "ShadedVolumeStyle" | "SilhouetteEnhancementVolumeStyle" | "ToneMappedVolumeStyle"
+        "OpacityMapVolumeStyle"
+            | "BlendedVolumeStyle"
+            | "BoundaryEnhancementVolumeStyle"
+            | "CartoonVolumeStyle"
+            | "ComposedVolumeStyle"
+            | "EdgeEnhancementVolumeStyle"
+            | "ShadedVolumeStyle"
+            | "SilhouetteEnhancementVolumeStyle"
+            | "ToneMappedVolumeStyle"
     )
 }
 
@@ -169,7 +188,11 @@ impl<'a, 'b> Gen<'a, 'b> {
     /// A texture slot; the same texture and dimension share a slot. `None` when the program is
     /// out of bindings.
     fn slot(&mut self, texture: Rc<TextureImage>, three_d: bool) -> Option<usize> {
-        if let Some(i) = self.slots.iter().position(|s| Rc::ptr_eq(&s.texture, &texture) && s.three_d == three_d) {
+        if let Some(i) = self
+            .slots
+            .iter()
+            .position(|s| Rc::ptr_eq(&s.texture, &texture) && s.three_d == three_d)
+        {
             return Some(i);
         }
 
@@ -211,28 +234,65 @@ impl<'a, 'b> Gen<'a, 'b> {
 
         match normals {
             Some(n) => {
-                let _ = writeln!(s, "    let n = {}.xyz * 2.0 - vec3<f32>(1.0);", self.sample3(n, "tc"));
+                let _ = writeln!(
+                    s,
+                    "    let n = {}.xyz * 2.0 - vec3<f32>(1.0);",
+                    self.sample3(n, "tc")
+                );
             }
             None => {
-                let _ = writeln!(s, "    let offset = vec4<f32>(1.0 / vec3<f32>(textureDimensions(t{vox}, 0)), 0.0);");
-                let _ = writeln!(s, "    let i0 = {}.r;", self.sample3(vox, "tc + offset.xww"));
-                let _ = writeln!(s, "    let i1 = {}.r;", self.sample3(vox, "tc - offset.xww"));
-                let _ = writeln!(s, "    let i2 = {}.r;", self.sample3(vox, "tc + offset.wyw"));
-                let _ = writeln!(s, "    let i3 = {}.r;", self.sample3(vox, "tc - offset.wyw"));
-                let _ = writeln!(s, "    let i4 = {}.r;", self.sample3(vox, "tc + offset.wwz"));
-                let _ = writeln!(s, "    let i5 = {}.r;", self.sample3(vox, "tc - offset.wwz"));
+                let _ = writeln!(
+                    s,
+                    "    let offset = vec4<f32>(1.0 / vec3<f32>(textureDimensions(t{vox}, 0)), 0.0);"
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i0 = {}.r;",
+                    self.sample3(vox, "tc + offset.xww")
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i1 = {}.r;",
+                    self.sample3(vox, "tc - offset.xww")
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i2 = {}.r;",
+                    self.sample3(vox, "tc + offset.wyw")
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i3 = {}.r;",
+                    self.sample3(vox, "tc - offset.wyw")
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i4 = {}.r;",
+                    self.sample3(vox, "tc + offset.wwz")
+                );
+                let _ = writeln!(
+                    s,
+                    "    let i5 = {}.r;",
+                    self.sample3(vox, "tc - offset.wwz")
+                );
                 let _ = writeln!(s, "    let n = vec3<f32>(i1 - i0, i3 - i2, i5 - i4);");
             }
         }
 
-        let _ = writeln!(s, "    return vec4<f32>(normalize(normal_matrix() * n), length(n));");
+        let _ = writeln!(
+            s,
+            "    return vec4<f32>(normalize(normal_matrix() * n), length(n));"
+        );
         let _ = writeln!(s, "}}");
         self.decls.push_str(&s);
     }
 
     /// The surfaceNormals texture of a style (X3DCast (X3DTexture3DNode, ...)).
     fn surface_normals(&mut self, n: NodeId) -> Option<usize> {
-        let t = self.sg.node(n, "surfaceNormals").filter(|t| texture_dimension(self.sg.type_name(*t).unwrap_or("")) == Some(true))?;
+        let t = self
+            .sg
+            .node(n, "surfaceNormals")
+            .filter(|t| texture_dimension(self.sg.type_name(*t).unwrap_or("")) == Some(true))?;
         let image = (self.tex)(t)?;
         self.slot(image, true)
     }
@@ -262,7 +322,11 @@ impl<'a, 'b> Gen<'a, 'b> {
     fn default_opacity(&mut self, target: &str) -> String {
         let id = self.id();
         let slot = self.slot(default_tf_rc(), false).unwrap_or(0);
-        let _ = write!(self.decls, "\nfn get_opacity_map_{id}(c: vec4<f32>) -> vec4<f32> {{\n    return {};\n}}\n", format_args!("textureSampleLevel(t{slot}, s{slot}, c.rg, 0.0)"));
+        let _ = write!(
+            self.decls,
+            "\nfn get_opacity_map_{id}(c: vec4<f32>) -> vec4<f32> {{\n    return {};\n}}\n",
+            format_args!("textureSampleLevel(t{slot}, s{slot}, c.rg, 0.0)")
+        );
         format!("    {target} = get_opacity_map_{id}({target});\n")
     }
 
@@ -270,7 +334,9 @@ impl<'a, 'b> Gen<'a, 'b> {
     /// variable ("texture_color", or the blend color of a BlendedVolumeStyle), `vox` the slot of
     /// the voxels the style samples.
     fn style(&mut self, n: NodeId, target: &str, vox: usize) -> String {
-        let Some(ty) = self.sg.type_name(n) else { return String::new() };
+        let Some(ty) = self.sg.type_name(n) else {
+            return String::new();
+        };
 
         if !self.enabled(n) {
             return String::new();
@@ -283,7 +349,10 @@ impl<'a, 'b> Gen<'a, 'b> {
             "OpacityMapVolumeStyle" => {
                 let (slot, three_d) = self.transfer_function(n);
                 let coord = if three_d { "c.rgb" } else { "c.rg" };
-                let _ = write!(self.decls, "\nfn get_opacity_map_{id}(c: vec4<f32>) -> vec4<f32> {{\n    return textureSampleLevel(t{slot}, s{slot}, {coord}, 0.0);\n}}\n");
+                let _ = write!(
+                    self.decls,
+                    "\nfn get_opacity_map_{id}(c: vec4<f32>) -> vec4<f32> {{\n    return textureSampleLevel(t{slot}, s{slot}, {coord}, 0.0);\n}}\n"
+                );
                 format!("    {target} = get_opacity_map_{id}({target});\n")
             }
             "BoundaryEnhancementVolumeStyle" => {
@@ -291,7 +360,10 @@ impl<'a, 'b> Gen<'a, 'b> {
                 let boundary = self.scalar(self.sg.f64(n, "boundaryOpacity", 0.9));
                 let factor = self.scalar(self.sg.f64(n, "opacityFactor", 2.0));
                 let f0 = self.sample3(vox, "tc");
-                let f1 = self.sample3(vox, &format!("tc + vec3<f32>(0.0, 0.0, 1.0 / f32(textureDimensions(t{vox}, 0).z))"));
+                let f1 = self.sample3(
+                    vox,
+                    &format!("tc + vec3<f32>(0.0, 0.0, 1.0 / f32(textureDimensions(t{vox}, 0).z))"),
+                );
                 let _ = write!(
                     self.decls,
                     "\nfn get_boundary_{id}(original: vec4<f32>, tc: vec3<f32>, vertex: vec3<f32>) -> vec4<f32> {{\n    let f0 = {f0}.r;\n    let f1 = {f1}.r;\n    let f = abs(f0 - f1);\n    return vec4<f32>(original.rgb, original.a * ({retained} + {boundary} * pow(f, {factor})));\n}}\n"
@@ -301,7 +373,8 @@ impl<'a, 'b> Gen<'a, 'b> {
             "CartoonVolumeStyle" => {
                 self.hsv = true;
                 let steps = self.scalar(self.sg.i32(n, "colorSteps", 4) as f64);
-                let orthogonal = self.vec4(self.sg.color4(n, "orthogonalColor", [1.0, 1.0, 1.0, 1.0]));
+                let orthogonal =
+                    self.vec4(self.sg.color4(n, "orthogonalColor", [1.0, 1.0, 1.0, 1.0]));
                 let parallel = self.vec4(self.sg.color4(n, "parallelColor", [0.0, 0.0, 0.0, 1.0]));
                 let normals = self.surface_normals(n);
                 self.normal_fn(id, normals, vox);
@@ -407,7 +480,10 @@ impl<'a, 'b> Gen<'a, 'b> {
                     }
                 }
 
-                let _ = write!(self.decls, "\nfn get_composed_{id}(original: vec4<f32>, tc: vec3<f32>, vertex: vec3<f32>) -> vec4<f32> {{\n    var texture_color = original;\n{body}\n    return texture_color;\n}}\n");
+                let _ = write!(
+                    self.decls,
+                    "\nfn get_composed_{id}(original: vec4<f32>, tc: vec3<f32>, vertex: vec3<f32>) -> vec4<f32> {{\n    var texture_color = original;\n{body}\n    return texture_color;\n}}\n"
+                );
                 call("get_composed")
             }
             "BlendedVolumeStyle" => self.blended(n, id, target),
@@ -417,13 +493,17 @@ impl<'a, 'b> Gen<'a, 'b> {
     }
 
     fn shaded(&mut self, n: NodeId, id: u32, target: &str, vox: usize) -> String {
-        let material = self.sg.node(n, "material").filter(|m| matches!(self.sg.type_name(*m), Some("Material" | "TwoSidedMaterial")));
+        let material = self
+            .sg
+            .node(n, "material")
+            .filter(|m| matches!(self.sg.type_name(*m), Some("Material" | "TwoSidedMaterial")));
 
         if let Some(m) = self.sg.node(n, "material") {
             if material.is_none() {
                 // X3DMaterialNode without ambientIntensity, diffuseColor, ...: X_ITE's
                 // addShaderFields throws on `.copy ()` of the missing field.
-                self.unsupported.push(self.sg.type_name(m).unwrap_or("?").to_string());
+                self.unsupported
+                    .push(self.sg.type_name(m).unwrap_or("?").to_string());
             }
         }
 
@@ -432,7 +512,14 @@ impl<'a, 'b> Gen<'a, 'b> {
                 let d = self.sg.color(m, "diffuseColor", [0.8, 0.8, 0.8]);
                 let s = self.sg.color(m, "specularColor", [0.0, 0.0, 0.0]);
                 let e = self.sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]);
-                (self.sg.f64(m, "ambientIntensity", 0.2), [d[0], d[1], d[2], 0.0], [s[0], s[1], s[2], 0.0], [e[0], e[1], e[2], 0.0], self.sg.f64(m, "shininess", 0.2), self.sg.f64(m, "transparency", 0.0))
+                (
+                    self.sg.f64(m, "ambientIntensity", 0.2),
+                    [d[0], d[1], d[2], 0.0],
+                    [s[0], s[1], s[2], 0.0],
+                    [e[0], e[1], e[2], 0.0],
+                    self.sg.f64(m, "shininess", 0.2),
+                    self.sg.f64(m, "transparency", 0.0),
+                )
             }
             None => (0.0, [0.0; 4], [0.0; 4], [0.0; 4], 0.0, 0.0),
         };
@@ -449,7 +536,10 @@ impl<'a, 'b> Gen<'a, 'b> {
 
         if lighting {
             if material.is_some() {
-                let _ = write!(body, "    let diffuse_factor = {diffuse}.rgb;\n    let ambient_term = diffuse_factor * {ambient};\n    shaded.a = original.a * (1.0 - {transparency});\n");
+                let _ = write!(
+                    body,
+                    "    let diffuse_factor = {diffuse}.rgb;\n    let ambient_term = diffuse_factor * {ambient};\n    shaded.a = original.a * (1.0 - {transparency});\n"
+                );
             } else {
                 body.push_str("    let diffuse_factor = original.rgb;\n    let ambient_term = vec3<f32>(0.0);\n    shaded.a = original.a;\n");
             }
@@ -490,7 +580,10 @@ impl<'a, 'b> Gen<'a, 'b> {
 "
             );
         } else if material.is_some() {
-            let _ = write!(body, "    shaded = vec4<f32>({diffuse}.rgb, original.a * (1.0 - {transparency}));\n");
+            let _ = write!(
+                body,
+                "    shaded = vec4<f32>({diffuse}.rgb, original.a * (1.0 - {transparency}));\n"
+            );
         } else {
             body.push_str("    shaded = original;\n");
         }
@@ -515,11 +608,28 @@ impl<'a, 'b> Gen<'a, 'b> {
         let threshold = self.scalar(self.sg.f64(n, "intensityThreshold", 0.0));
         let ty = self.sg.string(n, "type", "MAX");
         let (init, loop_body) = match ty.as_str() {
-            "MIN" => ("1.0", format!("        if (intensity < {threshold}) {{ continue; }}\n        if (first && {threshold} > 0.0) {{ break; }}\n        if (intensity >= projection_color) {{ first = true; continue; }}\n        projection_color = intensity;\n")),
-            "AVERAGE" => ("0.0", "        projection_color = projection_color + intensity;\n".to_string()),
-            _ => ("0.0", format!("        if (intensity < {threshold}) {{ continue; }}\n        if (first && {threshold} > 0.0) {{ break; }}\n        if (intensity <= projection_color) {{ first = true; continue; }}\n        projection_color = intensity;\n")),
+            "MIN" => (
+                "1.0",
+                format!(
+                    "        if (intensity < {threshold}) {{ continue; }}\n        if (first && {threshold} > 0.0) {{ break; }}\n        if (intensity >= projection_color) {{ first = true; continue; }}\n        projection_color = intensity;\n"
+                ),
+            ),
+            "AVERAGE" => (
+                "0.0",
+                "        projection_color = projection_color + intensity;\n".to_string(),
+            ),
+            _ => (
+                "0.0",
+                format!(
+                    "        if (intensity < {threshold}) {{ continue; }}\n        if (first && {threshold} > 0.0) {{ break; }}\n        if (intensity <= projection_color) {{ first = true; continue; }}\n        projection_color = intensity;\n"
+                ),
+            ),
         };
-        let average = if ty == "AVERAGE" { "    projection_color = projection_color / f32(samples);\n" } else { "" };
+        let average = if ty == "AVERAGE" {
+            "    projection_color = projection_color / f32(samples);\n"
+        } else {
+            ""
+        };
         let vox = self.sample3(0, "ray");
         let _ = write!(
             self.decls,
@@ -551,13 +661,24 @@ impl<'a, 'b> Gen<'a, 'b> {
 
     fn blended(&mut self, n: NodeId, id: u32, target: &str) -> String {
         // X3DCast (X3DTexture3DNode, voxels): without voxels the style does nothing.
-        let Some(voxels) = self.sg.node(n, "voxels").filter(|t| texture_dimension(self.sg.type_name(*t).unwrap_or("")) == Some(true)) else { return String::new() };
+        let Some(voxels) = self
+            .sg
+            .node(n, "voxels")
+            .filter(|t| texture_dimension(self.sg.type_name(*t).unwrap_or("")) == Some(true))
+        else {
+            return String::new();
+        };
         let image = (self.tex)(voxels).unwrap_or_else(|| Rc::new(texture::white_3d()));
-        let Some(vox) = self.slot(image, true) else { return String::new() };
+        let Some(vox) = self.slot(image, true) else {
+            return String::new();
+        };
         let constant1 = self.scalar(self.sg.f64(n, "weightConstant1", 0.5));
         let constant2 = self.scalar(self.sg.f64(n, "weightConstant2", 0.5));
         let table = |g: &mut Self, name: &str| -> Option<usize> {
-            let t = g.sg.node(n, name).filter(|t| texture_dimension(g.sg.type_name(*t).unwrap_or("")) == Some(false))?;
+            let t = g
+                .sg
+                .node(n, name)
+                .filter(|t| texture_dimension(g.sg.type_name(*t).unwrap_or("")) == Some(false))?;
             let image = (g.tex)(t).unwrap_or_else(|| Rc::new(TextureImage::white()));
             g.slot(image, false)
         };
@@ -567,12 +688,20 @@ impl<'a, 'b> Gen<'a, 'b> {
         let mut body = format!("    var {bc} = {};\n", self.sample3(vox, "tc"));
         body.push_str(&self.default_opacity(&bc));
 
-        if let Some(inner) = self.sg.node(n, "renderStyle").filter(|c| composable(self.sg.type_name(*c).unwrap_or(""))) {
+        if let Some(inner) = self
+            .sg
+            .node(n, "renderStyle")
+            .filter(|c| composable(self.sg.type_name(*c).unwrap_or("")))
+        {
             let s = self.style(inner, &bc, vox);
             body.push_str(&s);
         }
 
-        let weight = |which: usize, function: String, constant: &str, table: Option<usize>| -> String {
+        let weight = |which: usize,
+                      function: String,
+                      constant: &str,
+                      table: Option<usize>|
+         -> String {
             let w = format!("w{which}_{id}");
             match function.as_str() {
                 "ALPHA0" => format!("    let {w} = original.a;\n"),
@@ -582,15 +711,30 @@ impl<'a, 'b> Gen<'a, 'b> {
                 "ONE_MINUS_ALPHA0" => format!("    let {w} = 1.0 - original.a;\n"),
                 "ONE_MINUS_ALPHA1" => format!("    let {w} = 1.0 - {bc}.a;\n"),
                 "TABLE" => match table {
-                    Some(t) => format!("    let {w} = textureSampleLevel(t{t}, s{t}, vec2<f32>(original.a, {bc}.a), 0.0).r;\n"),
+                    Some(t) => format!(
+                        "    let {w} = textureSampleLevel(t{t}, s{t}, vec2<f32>(original.a, {bc}.a), 0.0).r;\n"
+                    ),
                     None => format!("    let {w} = {constant};\n"),
                 },
                 _ => format!("    let {w} = {constant};\n"),
             }
         };
-        body.push_str(&weight(1, self.sg.string(n, "weightFunction1", "CONSTANT"), &constant1, table1));
-        body.push_str(&weight(2, self.sg.string(n, "weightFunction2", "CONSTANT"), &constant2, table2));
-        let _ = write!(self.decls, "\nfn get_blended_{id}(original: vec4<f32>, tc: vec3<f32>, vertex: vec3<f32>) -> vec4<f32> {{\n{body}\n    return clamp(original * w1_{id} + {bc} * w2_{id}, vec4<f32>(0.0), vec4<f32>(1.0));\n}}\n");
+        body.push_str(&weight(
+            1,
+            self.sg.string(n, "weightFunction1", "CONSTANT"),
+            &constant1,
+            table1,
+        ));
+        body.push_str(&weight(
+            2,
+            self.sg.string(n, "weightFunction2", "CONSTANT"),
+            &constant2,
+            table2,
+        ));
+        let _ = write!(
+            self.decls,
+            "\nfn get_blended_{id}(original: vec4<f32>, tc: vec3<f32>, vertex: vec3<f32>) -> vec4<f32> {{\n{body}\n    return clamp(original * w1_{id} + {bc} * w2_{id}, vec4<f32>(0.0), vec4<f32>(1.0));\n}}\n"
+        );
         format!("    {target} = get_blended_{id}({target}, tc, vertex);\n")
     }
 }
@@ -601,7 +745,11 @@ pub fn texture_matrix(dimensions: [f64; 3], orientation: &Rotation4) -> Matrix4 
     // and the ProximitySensor's rotation.
     let translation = Vector3::new(0.5, 0.5, 0.5);
     let center = Vector3::new(-0.5, -0.5, -0.5);
-    let scale = Vector3::new(1.0 / dimensions[0], 1.0 / dimensions[1], 1.0 / dimensions[2]);
+    let scale = Vector3::new(
+        1.0 / dimensions[0],
+        1.0 / dimensions[1],
+        1.0 / dimensions[2],
+    );
     let mut m = Matrix4::IDENTITY;
     let mut c = center;
     c.negate();
@@ -625,7 +773,11 @@ pub fn texture_matrix(dimensions: [f64; 3], orientation: &Rotation4) -> Matrix4 
 pub fn sensor_orientation(model_view: &Matrix4, dimensions: [f64; 3]) -> Option<Rotation4> {
     let mut inverse = *model_view;
     inverse.inverse();
-    let half = 100.0 * (dimensions[0] * dimensions[0] + dimensions[1] * dimensions[1] + dimensions[2] * dimensions[2]).sqrt();
+    let half = 100.0
+        * (dimensions[0] * dimensions[0]
+            + dimensions[1] * dimensions[1]
+            + dimensions[2] * dimensions[2])
+            .sqrt();
     let (x, y, z) = (inverse.0[12], inverse.0[13], inverse.0[14]);
 
     // ProximitySensor.containsPoint (min <= p <= max).
@@ -645,7 +797,16 @@ fn f32x16(m: &Matrix4) -> [f32; 16] {
 /// The volume node as a draw: the planes, their texture matrix and the fragment program of its
 /// render styles. `tex` loads a texture node; `quality` is the browser's TextureQuality;
 /// `orientation` the sensor's orientation (identity until the viewer is inside the sensor).
-pub fn build(sg: &Sg, n: NodeId, ty: &str, model_view: &Matrix4, quality: crate::traverse::Quality, orientation: Rotation4, tex: &mut dyn FnMut(NodeId) -> Option<Rc<TextureImage>>, unsupported: &mut Vec<String>) -> VolumeDraw {
+pub fn build(
+    sg: &Sg,
+    n: NodeId,
+    ty: &str,
+    model_view: &Matrix4,
+    quality: crate::traverse::Quality,
+    orientation: Rotation4,
+    tex: &mut dyn FnMut(NodeId) -> Option<Rc<TextureImage>>,
+    unsupported: &mut Vec<String>,
+) -> VolumeDraw {
     let d = sg.vec3(n, "dimensions", Vector3::ONE);
     let dimensions = [d.x, d.y, d.z];
     let size = (d.x * d.x + d.y * d.y + d.z * d.z).sqrt();
@@ -662,18 +823,42 @@ pub fn build(sg: &Sg, n: NodeId, ty: &str, model_view: &Matrix4, quality: crate:
     let mut normal_matrix = texture_matrix.submatrix();
     normal_matrix.inverse();
 
-    let mut g = Gen { sg, tex, unsupported, decls: String::new(), slots: vec![], values: vec![], next_id: 0, hsv: false, plane: false };
+    let mut g = Gen {
+        sg,
+        tex,
+        unsupported,
+        decls: String::new(),
+        slots: vec![],
+        values: vec![],
+        next_id: 0,
+        hsv: false,
+        plane: false,
+    };
 
     // Slot 0: the voxels (X3DCast (X3DTexture3DNode, voxels) ?? the default voxels).
-    let voxels = volume_voxels(sg, n, ty).filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true)).and_then(|t| (g.tex)(t)).unwrap_or_else(default_voxels_rc);
-    g.slots.push(Slot { texture: voxels, three_d: true });
+    let voxels = volume_voxels(sg, n, ty)
+        .filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true))
+        .and_then(|t| (g.tex)(t))
+        .unwrap_or_else(default_voxels_rc);
+    g.slots.push(Slot {
+        texture: voxels,
+        three_d: true,
+    });
 
     // The default OpacityMapVolumeStyle comes first in every program.
     let mut functions = g.default_opacity("texture_color");
 
     let styles: Vec<NodeId> = match ty {
-        "VolumeData" => sg.node(n, "renderStyle").filter(|c| render_style(sg.type_name(*c).unwrap_or(""))).into_iter().collect(),
-        _ => sg.nodes(n, "renderStyle").into_iter().filter(|c| composable(sg.type_name(*c).unwrap_or(""))).collect(),
+        "VolumeData" => sg
+            .node(n, "renderStyle")
+            .filter(|c| render_style(sg.type_name(*c).unwrap_or("")))
+            .into_iter()
+            .collect(),
+        _ => sg
+            .nodes(n, "renderStyle")
+            .into_iter()
+            .filter(|c| composable(sg.type_name(*c).unwrap_or("")))
+            .collect(),
     };
 
     match ty {
@@ -711,11 +896,24 @@ pub fn build(sg: &Sg, n: NodeId, ty: &str, model_view: &Matrix4, quality: crate:
         values.push(0.0);
     }
 
-    let program = Program { source, dims: g.slots.iter().map(|s| s.three_d).collect(), vec4s: values.len() / 4 };
+    let program = Program {
+        source,
+        dims: g.slots.iter().map(|s| s.three_d).collect(),
+        vec4s: values.len() / 4,
+    };
     let textures = g.slots.iter().map(|s| s.texture.clone()).collect();
     let nm = normal_matrix.0;
 
-    VolumeDraw { model_view: f32x16(&mv), tex_matrix: f32x16(&texture_matrix), normal_matrix: nm.map(|v| v as f32), planes: num_planes(quality), size: size as f32, program: Rc::new(program), values, textures }
+    VolumeDraw {
+        model_view: f32x16(&mv),
+        tex_matrix: f32x16(&texture_matrix),
+        normal_matrix: nm.map(|v| v as f32),
+        planes: num_planes(quality),
+        size: size as f32,
+        program: Rc::new(program),
+        values,
+        textures,
+    }
 }
 
 /// The `voxels` node of a volume. X_ITE's IsoSurfaceVolumeData and SegmentedVolumeData read `voxels`
@@ -772,7 +970,10 @@ fn iso_gradients(sg: &Sg, n: NodeId, styles: &[NodeId], surface_values: &[f64]) 
         step: sg.f64(n, "contourStepSize", 0.0),
         surface_values: surface_values.iter().map(|v| *v as f32).collect(),
         tolerance: sg.f64(n, "surfaceTolerance", 0.0),
-        styles: styles.iter().map(|s| (*s, style_stamp(sg, *s, 0))).collect(),
+        styles: styles
+            .iter()
+            .map(|s| (*s, style_stamp(sg, *s, 0)))
+            .collect(),
         gradients: sg.node(n, "gradients"),
     };
 
@@ -784,7 +985,12 @@ fn iso_gradients(sg: &Sg, n: NodeId, styles: &[NodeId], surface_values: &[f64]) 
         }
 
         let key = (sg.rt.uid, n);
-        let rebuild = m.get(&key).is_none_or(|s| s.step != current.step || s.surface_values != current.surface_values || s.tolerance != current.tolerance || s.styles != current.styles);
+        let rebuild = m.get(&key).is_none_or(|s| {
+            s.step != current.step
+                || s.surface_values != current.surface_values
+                || s.tolerance != current.tolerance
+                || s.styles != current.styles
+        });
 
         if rebuild {
             let gradients = current.gradients;
@@ -799,7 +1005,11 @@ fn iso_gradients(sg: &Sg, n: NodeId, styles: &[NodeId], surface_values: &[f64]) 
 /// IsoSurfaceVolumeData.createShader: the contour tests after the default opacity map.
 fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
     let sg = g.sg;
-    let surface_values: Vec<f64> = sg.f32s(n, "surfaceValues").iter().map(|v| *v as f64).collect();
+    let surface_values: Vec<f64> = sg
+        .f32s(n, "surfaceValues")
+        .iter()
+        .map(|v| *v as f64)
+        .collect();
     let tolerance = g.scalar(sg.f64(n, "surfaceTolerance", 0.0));
     // The styles' declarations (each style's getUniformsText), then the statements of each branch.
     let mut s = String::new();
@@ -808,17 +1018,26 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
     // IsoSurfaceVolumeData.set_gradients__ does not rebuild the shader (only contourStepSize,
     // surfaceValues, surfaceTolerance and renderStyle do): a gradients texture changed at run time is
     // used from the next rebuild on.
-    let gradients = iso_gradients(sg, n, styles, &surface_values).filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true)).and_then(|t| (g.tex)(t));
+    let gradients = iso_gradients(sg, n, styles, &surface_values)
+        .filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true))
+        .and_then(|t| (g.tex)(t));
 
     match gradients.and_then(|t| g.slot(t, true)) {
         Some(slot) => {
-            let _ = writeln!(s, "    if (length({}.xyz * 2.0 - vec3<f32>(1.0)) < {tolerance}) {{\n        discard;\n    }}", g.sample3(slot, "tc"));
+            let _ = writeln!(
+                s,
+                "    if (length({}.xyz * 2.0 - vec3<f32>(1.0)) < {tolerance}) {{\n        discard;\n    }}",
+                g.sample3(slot, "tc")
+            );
         }
         None => {
             // getNormal (texCoord) of the voxels.
             let id = g.id();
             g.normal_fn(id, None, 0);
-            let _ = writeln!(s, "    if (get_normal_{id}(tc).w < {tolerance}) {{\n        discard;\n    }}");
+            let _ = writeln!(
+                s,
+                "    if (get_normal_{id}(tc).w < {tolerance}) {{\n        discard;\n    }}"
+            );
         }
     }
 
@@ -828,7 +1047,10 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
     // Each style's code is generated for the first use only, as X_ITE emits one function per node.
     let mut generated: HashMap<usize, String> = HashMap::new();
     let mut branch = |g: &mut Gen, i: usize| -> String {
-        generated.entry(i).or_insert_with(|| g.style(styles[i], "texture_color", 0)).clone()
+        generated
+            .entry(i)
+            .or_insert_with(|| g.style(styles[i], "texture_color", 0))
+            .clone()
     };
     // getUniformsText of every style is part of the program, used or not.
     for i in 0..styles.len() {
@@ -840,7 +1062,10 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
 
         if step == 0.0 {
             let sv = g.scalar(surface_values[0]);
-            let _ = writeln!(s, "    if (intensity > {sv}) {{\n        texture_color = vec4<f32>(vec3<f32>({sv}), 1.0);");
+            let _ = writeln!(
+                s,
+                "    if (intensity > {sv}) {{\n        texture_color = vec4<f32>(vec3<f32>({sv}), 1.0);"
+            );
 
             if !styles.is_empty() {
                 s.push_str(&branch(g, 0));
@@ -867,7 +1092,10 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
             }
 
             let sv = g.scalar(values[0]);
-            let _ = writeln!(s, "    if (false) {{\n    }} else if (intensity > {sv}) {{\n        texture_color = vec4<f32>(vec3<f32>({sv}), 1.0);");
+            let _ = writeln!(
+                s,
+                "    if (false) {{\n    }} else if (intensity > {sv}) {{\n        texture_color = vec4<f32>(vec3<f32>({sv}), 1.0);"
+            );
 
             if !styles.is_empty() {
                 s.push_str(&branch(g, 0));
@@ -880,7 +1108,11 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
         s.push_str("    if (false) {\n    }");
 
         for i in (0..surface_values.len()).rev() {
-            let _ = writeln!(s, " else if (intensity > {}) {{\n        texture_color = vec4<f32>(vec3<f32>({}), 1.0);", svs[i], svs[i]);
+            let _ = writeln!(
+                s,
+                " else if (intensity > {}) {{\n        texture_color = vec4<f32>(vec3<f32>({}), 1.0);",
+                svs[i], svs[i]
+            );
 
             if !styles.is_empty() {
                 let r = i.min(styles.len() - 1);
@@ -900,11 +1132,18 @@ fn iso_surface(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
 fn segmented(g: &mut Gen, n: NodeId, styles: &[NodeId]) -> String {
     let sg = g.sg;
     let mut s = String::new();
-    let ids = sg.node(n, "segmentIdentifiers").filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true)).and_then(|t| (g.tex)(t));
+    let ids = sg
+        .node(n, "segmentIdentifiers")
+        .filter(|t| texture_dimension(sg.type_name(*t).unwrap_or("")) == Some(true))
+        .and_then(|t| (g.tex)(t));
 
     match ids.and_then(|t| g.slot(t, true)) {
         Some(slot) => {
-            let _ = writeln!(s, "\n    let segment = i32({}.r * 255.0);", g.sample3(slot, "tc"));
+            let _ = writeln!(
+                s,
+                "\n    let segment = i32({}.r * 255.0);",
+                g.sample3(slot, "tc")
+            );
         }
         None => s.push_str("    let segment = 0;\n"),
     }

@@ -4,8 +4,8 @@
 //! rasterizer's clipping and vertex snapping decide the depth, as they do in X_ITE; the caller
 //! reads the closest pixel back like TextureBuffer.readDepth.
 
-use bytemuck::{Pod, Zeroable};
 use crate::geometry::Geometry;
+use bytemuck::{Pod, Zeroable};
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -88,29 +88,67 @@ pub struct DepthGpu {
 
 impl DepthGpu {
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> DepthGpu {
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("depth"), source: wgpu::ShaderSource::Wgsl(DEPTH_WGSL.into()) });
+        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("depth"),
+            source: wgpu::ShaderSource::Wgsl(DEPTH_WGSL.into()),
+        });
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("depth"),
             entries: &[wgpu::BindGroupLayoutEntry {
                 binding: 0,
                 visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: true, min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64) },
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: true,
+                    min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
+                },
                 count: None,
             }],
         });
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { label: Some("depth"), bind_group_layouts: &[Some(&layout)], immediate_size: 0 });
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("depth"),
+            bind_group_layouts: &[Some(&layout)],
+            immediate_size: 0,
+        });
         let attributes = [
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x4, offset: 0, shader_location: 0 },
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x3, offset: 16, shader_location: 1 },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x4,
+                offset: 0,
+                shader_location: 0,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x3,
+                offset: 16,
+                shader_location: 1,
+            },
         ];
-        let buffers = [Some(wgpu::VertexBufferLayout { array_stride: std::mem::size_of::<Vertex>() as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes: &attributes })];
-        let target = || Some(wgpu::ColorTargetState { format: wgpu::TextureFormat::Rgba32Float, blend: None, write_mask: wgpu::ColorWrites::ALL });
+        let buffers = [Some(wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<Vertex>() as u64,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &attributes,
+        })];
+        let target = || {
+            Some(wgpu::ColorTargetState {
+                format: wgpu::TextureFormat::Rgba32Float,
+                blend: None,
+                write_mask: wgpu::ColorWrites::ALL,
+            })
+        };
         let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: Some("depth"),
             layout: Some(&pipeline_layout),
-            vertex: wgpu::VertexState { module: &module, entry_point: Some("vs_main"), compilation_options: Default::default(), buffers: &buffers },
+            vertex: wgpu::VertexState {
+                module: &module,
+                entry_point: Some("vs_main"),
+                compilation_options: Default::default(),
+                buffers: &buffers,
+            },
             // gl .disable (gl .CULL_FACE)
-            primitive: wgpu::PrimitiveState { topology: wgpu::PrimitiveTopology::TriangleList, cull_mode: None, ..Default::default() },
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::TriangleList,
+                cull_mode: None,
+                ..Default::default()
+            },
             // X3DRenderingContext: gl .enable (gl .DEPTH_TEST), gl .depthFunc (gl .LEQUAL)
             depth_stencil: Some(wgpu::DepthStencilState {
                 format: wgpu::TextureFormat::Depth24Plus,
@@ -120,14 +158,23 @@ impl DepthGpu {
                 bias: Default::default(),
             }),
             multisample: wgpu::MultisampleState::default(),
-            fragment: Some(wgpu::FragmentState { module: &module, entry_point: Some("fs_main"), compilation_options: Default::default(), targets: &[target(), target()] }),
+            fragment: Some(wgpu::FragmentState {
+                module: &module,
+                entry_point: Some("fs_main"),
+                compilation_options: Default::default(),
+                targets: &[target(), target()],
+            }),
             multiview_mask: None,
             cache: None,
         });
         let make = |i: u32| {
             device.create_texture(&wgpu::TextureDescriptor {
                 label: Some(&format!("depth buffer {i}")),
-                size: wgpu::Extent3d { width: SIZE, height: SIZE, depth_or_array_layers: 1 },
+                size: wgpu::Extent3d {
+                    width: SIZE,
+                    height: SIZE,
+                    depth_or_array_layers: 1,
+                },
                 mip_level_count: 1,
                 sample_count: 1,
                 dimension: wgpu::TextureDimension::D2,
@@ -137,10 +184,17 @@ impl DepthGpu {
             })
         };
         let targets = [make(0), make(1)];
-        let views = [targets[0].create_view(&Default::default()), targets[1].create_view(&Default::default())];
+        let views = [
+            targets[0].create_view(&Default::default()),
+            targets[1].create_view(&Default::default()),
+        ];
         let depth = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("depth buffer depth"),
-            size: wgpu::Extent3d { width: SIZE, height: SIZE, depth_or_array_layers: 1 },
+            size: wgpu::Extent3d {
+                width: SIZE,
+                height: SIZE,
+                depth_or_array_layers: 1,
+            },
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
@@ -149,9 +203,27 @@ impl DepthGpu {
             view_formats: &[],
         });
         let depth_view = depth.create_view(&Default::default());
-        let readback = device.create_buffer(&wgpu::BufferDescriptor { label: Some("depth readback"), size: 2 * ROW * SIZE as u64, usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+        let readback = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("depth readback"),
+            size: 2 * ROW * SIZE as u64,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
 
-        DepthGpu { device, queue, pipeline, layout, targets, views, depth_view, readback, uniforms: None, buffers: HashMap::new(), queries: 0, passes: 0 }
+        DepthGpu {
+            device,
+            queue,
+            pipeline,
+            layout,
+            targets,
+            views,
+            depth_view,
+            readback,
+            uniforms: None,
+            buffers: HashMap::new(),
+            queries: 0,
+            passes: 0,
+        }
     }
 
     /// Vertex buffers held (0 after `release`).
@@ -172,7 +244,11 @@ impl DepthGpu {
 
         for s in shapes {
             let key = Rc::as_ptr(s.geometry) as usize;
-            let count = if s.empty { 0 } else { (s.geometry.vertices.len() / 4) as u32 };
+            let count = if s.empty {
+                0
+            } else {
+                (s.geometry.vertices.len() / 4) as u32
+            };
 
             match self.buffers.get_mut(&key) {
                 Some(b) if b.count == count => b.used = stamp,
@@ -180,9 +256,18 @@ impl DepthGpu {
                     let g = &s.geometry;
                     let data: Vec<Vertex> = (0..count as usize)
                         .map(|i| Vertex {
-                            vertex: [g.vertices[i * 4], g.vertices[i * 4 + 1], g.vertices[i * 4 + 2], g.vertices[i * 4 + 3]],
+                            vertex: [
+                                g.vertices[i * 4],
+                                g.vertices[i * 4 + 1],
+                                g.vertices[i * 4 + 2],
+                                g.vertices[i * 4 + 3],
+                            ],
                             // No normals: the fragment shader's constant (0, 0, 1).
-                            normal: if g.normals.len() >= (i + 1) * 3 { [g.normals[i * 3], g.normals[i * 3 + 1], g.normals[i * 3 + 2]] } else { [0.0, 0.0, 1.0] },
+                            normal: if g.normals.len() >= (i + 1) * 3 {
+                                [g.normals[i * 3], g.normals[i * 3 + 1], g.normals[i * 3 + 2]]
+                            } else {
+                                [0.0, 0.0, 1.0]
+                            },
                         })
                         .collect();
                     let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
@@ -191,8 +276,17 @@ impl DepthGpu {
                         usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
                         mapped_at_creation: false,
                     });
-                    self.queue.write_buffer(&buffer, 0, bytemuck::cast_slice(&data));
-                    self.buffers.insert(key, Buffer { _geometry: s.geometry.clone(), buffer, count, used: stamp });
+                    self.queue
+                        .write_buffer(&buffer, 0, bytemuck::cast_slice(&data));
+                    self.buffers.insert(
+                        key,
+                        Buffer {
+                            _geometry: s.geometry.clone(),
+                            buffer,
+                            count,
+                            used: stamp,
+                        },
+                    );
                 }
             }
         }
@@ -204,11 +298,23 @@ impl DepthGpu {
 
         if self.uniforms.as_ref().is_none_or(|u| u.2 < needed) {
             let size = needed.next_power_of_two();
-            let buffer = self.device.create_buffer(&wgpu::BufferDescriptor { label: Some("depth uniforms"), size, usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+            let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("depth uniforms"),
+                size,
+                usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            });
             let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("depth"),
                 layout: &self.layout,
-                entries: &[wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding { buffer: &buffer, offset: 0, size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64) }) }],
+                entries: &[wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                        buffer: &buffer,
+                        offset: 0,
+                        size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
+                    }),
+                }],
             });
             self.uniforms = Some((buffer, group, size));
         }
@@ -224,24 +330,63 @@ impl DepthGpu {
             }
 
             let n = s.instance_normal;
-            let draw = Draw { projection: *projection, model_view: s.model_view, instance: s.instance, instance_normal: [[n[0], n[1], n[2], 0.0], [n[3], n[4], n[5], 0.0], [n[6], n[7], n[8], 0.0]], clip_planes: planes, params: [i as f32, s.clip_planes.len().min(MAX_CLIP_PLANES) as f32, 0.0, 0.0] };
-            blob[i * STRIDE as usize..i * STRIDE as usize + std::mem::size_of::<Draw>()].copy_from_slice(bytemuck::bytes_of(&draw));
+            let draw = Draw {
+                projection: *projection,
+                model_view: s.model_view,
+                instance: s.instance,
+                instance_normal: [
+                    [n[0], n[1], n[2], 0.0],
+                    [n[3], n[4], n[5], 0.0],
+                    [n[6], n[7], n[8], 0.0],
+                ],
+                clip_planes: planes,
+                params: [
+                    i as f32,
+                    s.clip_planes.len().min(MAX_CLIP_PLANES) as f32,
+                    0.0,
+                    0.0,
+                ],
+            };
+            blob[i * STRIDE as usize..i * STRIDE as usize + std::mem::size_of::<Draw>()]
+                .copy_from_slice(bytemuck::bytes_of(&draw));
         }
 
         if !blob.is_empty() {
             self.queue.write_buffer(uniforms, 0, &blob);
         }
 
-        let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("depth") });
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("depth"),
+            });
         {
             // depthClearColor: (1, -1, -1, -1), '1' for infinity, '-1' for no hit.
-            let clear = |view| Some(wgpu::RenderPassColorAttachment { view, depth_slice: None, resolve_target: None, ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color { r: 1.0, g: -1.0, b: -1.0, a: -1.0 }), store: wgpu::StoreOp::Store } });
+            let clear = |view| {
+                Some(wgpu::RenderPassColorAttachment {
+                    view,
+                    depth_slice: None,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: 1.0,
+                            g: -1.0,
+                            b: -1.0,
+                            a: -1.0,
+                        }),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })
+            };
             let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("depth"),
                 color_attachments: &[clear(&self.views[0]), clear(&self.views[1])],
                 depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
                     view: &self.depth_view,
-                    depth_ops: Some(wgpu::Operations { load: wgpu::LoadOp::Clear(1.0), store: wgpu::StoreOp::Store }),
+                    depth_ops: Some(wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(1.0),
+                        store: wgpu::StoreOp::Store,
+                    }),
                     stencil_ops: None,
                 }),
                 ..Default::default()
@@ -264,9 +409,25 @@ impl DepthGpu {
 
         for (i, texture) in self.targets.iter().enumerate() {
             encoder.copy_texture_to_buffer(
-                wgpu::TexelCopyTextureInfo { texture, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
-                wgpu::TexelCopyBufferInfo { buffer: &self.readback, layout: wgpu::TexelCopyBufferLayout { offset: i as u64 * ROW * SIZE as u64, bytes_per_row: Some(ROW as u32), rows_per_image: Some(SIZE) } },
-                wgpu::Extent3d { width: SIZE, height: SIZE, depth_or_array_layers: 1 },
+                wgpu::TexelCopyTextureInfo {
+                    texture,
+                    mip_level: 0,
+                    origin: wgpu::Origin3d::ZERO,
+                    aspect: wgpu::TextureAspect::All,
+                },
+                wgpu::TexelCopyBufferInfo {
+                    buffer: &self.readback,
+                    layout: wgpu::TexelCopyBufferLayout {
+                        offset: i as u64 * ROW * SIZE as u64,
+                        bytes_per_row: Some(ROW as u32),
+                        rows_per_image: Some(SIZE),
+                    },
+                },
+                wgpu::Extent3d {
+                    width: SIZE,
+                    height: SIZE,
+                    depth_or_array_layers: 1,
+                },
             );
         }
 
@@ -279,11 +440,16 @@ impl DepthGpu {
             (0..(SIZE * SIZE) as usize)
                 .map(|i| {
                     let o = t * (ROW * SIZE as u64) as usize + i * 16;
-                    std::array::from_fn(|k| f32::from_le_bytes(mapped[o + k * 4..o + k * 4 + 4].try_into().unwrap()))
+                    std::array::from_fn(|k| {
+                        f32::from_le_bytes(mapped[o + k * 4..o + k * 4 + 4].try_into().unwrap())
+                    })
                 })
                 .collect()
         };
-        let pixels = DepthPixels { data0: read(0), data1: read(1) };
+        let pixels = DepthPixels {
+            data0: read(0),
+            data1: read(1),
+        };
         drop(mapped);
         self.readback.unmap();
         pixels

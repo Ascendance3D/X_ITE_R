@@ -4,13 +4,16 @@
 #![allow(dead_code)]
 
 use std::io::Read;
-use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::{Path, PathBuf};
 
 use cm_core::text::to_u16;
 use cm_core::util::string_stream::StringStream;
-use cm_modes::{split_lines_runmode, start_state, ConfigValue, JsArg, LinesOracle, ModeOptions, ModeSpec, Registry, Spec};
-use serde_json::{json, Value};
+use cm_modes::{
+    ConfigValue, JsArg, LinesOracle, ModeOptions, ModeSpec, Registry, Spec, split_lines_runmode,
+    start_state,
+};
+use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
 pub fn root() -> PathBuf {
@@ -97,7 +100,10 @@ pub fn run(registry: &Registry, text: &[u16], spec: &Spec) -> RunResult {
             }
             if has_indent {
                 let line = &lines[i];
-                let ws = line.iter().take_while(|&&c| cm_core::text::is_js_space(c)).count();
+                let ws = line
+                    .iter()
+                    .take_while(|&&c| cm_core::text::is_js_space(c))
+                    .count();
                 indents.push(indent_value(mode.indent(&state, &line[ws..], line)));
             }
             let oracle = LinesOracle { lines: &lines, i };
@@ -119,9 +125,16 @@ pub fn run(registry: &Registry, text: &[u16], spec: &Spec) -> RunResult {
         }
     }));
     let error = r.err().map(|e| {
-        e.downcast_ref::<String>().cloned().or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string())).unwrap_or_default()
+        e.downcast_ref::<String>()
+            .cloned()
+            .or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string()))
+            .unwrap_or_default()
     });
-    RunResult { tokens, indents: has_indent.then_some(indents), error }
+    RunResult {
+        tokens,
+        indents: has_indent.then_some(indents),
+        error,
+    }
 }
 
 fn utf16le(h: &mut Sha256, s: &[u16]) {
@@ -167,7 +180,9 @@ pub fn read_text(path: &Path) -> (bool, Vec<u16>) {
     let gz = bytes.len() >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
     if gz {
         let mut out = Vec::new();
-        flate2::read::MultiGzDecoder::new(&bytes[..]).read_to_end(&mut out).expect("gunzip");
+        flate2::read::MultiGzDecoder::new(&bytes[..])
+            .read_to_end(&mut out)
+            .expect("gunzip");
         bytes = out;
     }
     (gz, to_u16(&String::from_utf8_lossy(&bytes)))
@@ -189,9 +204,19 @@ pub struct Report {
 /// Replays the whole baseline. Files are checked on `threads` worker threads.
 pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Report {
     let path = root().join(format!("oracle/cm5-{key}-baseline.json"));
-    let base: Value = serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline")).unwrap();
+    let base: Value =
+        serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline")).unwrap();
     let registry = Registry::with_all_modes();
-    let mut rep = Report { cases: 0, files: 0, callbacks: 0, indent_lines: 0, token_mismatches: vec![], indent_mismatches: vec![], pass_string_lines: vec![], js_errors: 0 };
+    let mut rep = Report {
+        cases: 0,
+        files: 0,
+        callbacks: 0,
+        indent_lines: 0,
+        token_mismatches: vec![],
+        indent_mismatches: vec![],
+        pass_string_lines: vec![],
+        js_errors: 0,
+    };
     for (i, c) in base["cases"].as_array().unwrap().iter().enumerate() {
         rep.cases += 1;
         let text = units(&c["text"]);
@@ -202,7 +227,12 @@ pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Rep
         let js_err = !c["error"].is_null();
         rep.js_errors += js_err as usize;
         if &got.tokens != want || js_err != got.error.is_some() {
-            let k = got.tokens.iter().zip(want).position(|(a, b)| a != b).unwrap_or(got.tokens.len().min(want.len()));
+            let k = got
+                .tokens
+                .iter()
+                .zip(want)
+                .position(|(a, b)| a != b)
+                .unwrap_or(got.tokens.len().min(want.len()));
             rep.token_mismatches.push(format!(
                 "{key} case {i} ({}, spec {}): first difference at callback {k}: js {:?} rust {:?} (js error {:?}, rust error {:?})",
                 c["kind"], c["spec"], want.get(k), got.tokens.get(k), c["error"], got.error
@@ -212,21 +242,48 @@ pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Rep
             rep.indent_lines += wi.len();
             let gi = got.indents.clone().unwrap_or_default();
             for (k, (w, g)) in wi.iter().zip(&gi).enumerate() {
-                if w.as_str().is_some_and(|w| w.starts_with("string:CodeMirror.Pass")) && g == "NaN" {
-                    rep.pass_string_lines.push(format!("{key} case {i} line {k}: js {w} rust NaN"));
+                if w.as_str()
+                    .is_some_and(|w| w.starts_with("string:CodeMirror.Pass"))
+                    && g == "NaN"
+                {
+                    rep.pass_string_lines
+                        .push(format!("{key} case {i} line {k}: js {w} rust NaN"));
                 }
             }
-            let same = |w: Option<&str>, g: Option<&str>| w == g || w.is_some_and(|w| w.starts_with("string:CodeMirror.Pass")) && g == Some("NaN");
-            if let Some(k) = (0..wi.len().max(gi.len())).find(|&k| !same(wi.get(k).and_then(Value::as_str), gi.get(k).map(String::as_str))) {
-                rep.indent_mismatches.push(format!("{key} case {i} ({}): indent of line {k}: js {:?} rust {:?}", c["kind"], wi.get(k), gi.get(k)));
+            let same = |w: Option<&str>, g: Option<&str>| {
+                w == g
+                    || w.is_some_and(|w| w.starts_with("string:CodeMirror.Pass"))
+                        && g == Some("NaN")
+            };
+            if let Some(k) = (0..wi.len().max(gi.len())).find(|&k| {
+                !same(
+                    wi.get(k).and_then(Value::as_str),
+                    gi.get(k).map(String::as_str),
+                )
+            }) {
+                rep.indent_mismatches.push(format!(
+                    "{key} case {i} ({}): indent of line {k}: js {:?} rust {:?}",
+                    c["kind"],
+                    wi.get(k),
+                    gi.get(k)
+                ));
             }
         } else if got.indents.is_some() {
-            rep.indent_mismatches.push(format!("{key} case {i}: rust mode has indent, js does not"));
+            rep.indent_mismatches
+                .push(format!("{key} case {i}: rust mode has indent, js does not"));
         }
     }
     let files = base["files"].as_array().unwrap();
     let threads = 12;
-    let chunks: Vec<Vec<(usize, &Value)>> = (0..threads).map(|t| files.iter().enumerate().filter(|(i, _)| i % threads == t).collect()).collect();
+    let chunks: Vec<Vec<(usize, &Value)>> = (0..threads)
+        .map(|t| {
+            files
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| i % threads == t)
+                .collect()
+        })
+        .collect();
     let results: Vec<(Vec<String>, Vec<String>)> = std::thread::scope(|s| {
         let hs: Vec<_> = chunks
             .iter()
@@ -275,7 +332,12 @@ pub fn no_special(id: &str) -> Spec {
 }
 
 pub fn print_and_assert(key: &str, rep: &Report) {
-    for m in rep.token_mismatches.iter().chain(&rep.indent_mismatches).take(40) {
+    for m in rep
+        .token_mismatches
+        .iter()
+        .chain(&rep.indent_mismatches)
+        .take(40)
+    {
         println!("{m}");
     }
     for m in &rep.pass_string_lines {
@@ -327,10 +389,17 @@ pub fn parse_tokens(strs: &[&str]) -> (Vec<(Option<String>, String)>, String) {
         while pos < s.len() {
             let (style, text);
             if s[pos] == '[' && s.get(pos + 1) != Some(&'[') {
-                let n = s[pos + 1..].iter().take_while(|&&c| style_name_char(c)).count();
-                let st: String = s[pos + 1..pos + 1 + n].iter().collect::<String>().replace('&', " ");
+                let n = s[pos + 1..]
+                    .iter()
+                    .take_while(|&&c| style_name_char(c))
+                    .count();
+                let st: String = s[pos + 1..pos + 1 + n]
+                    .iter()
+                    .collect::<String>()
+                    .replace('&', " ");
                 let text_start = pos + st.chars().count() + 2;
-                let end = find_single(&s, text_start, ']').unwrap_or_else(|| panic!("Unterminated token at {pos}"));
+                let end = find_single(&s, text_start, ']')
+                    .unwrap_or_else(|| panic!("Unterminated token at {pos}"));
                 text = s[text_start..end].iter().collect::<String>();
                 style = Some(st);
                 pos = end + 1;
@@ -355,12 +424,33 @@ fn sort_style(s: &str) -> String {
 }
 
 /// `test.mode(name, mode, tokens)`: highlight + compare + indentation check.
-pub fn mode_test(registry: &Registry, spec: &Spec, indent_unit: i64, strs: &[&str]) -> Result<(), String> {
+pub fn mode_test(
+    registry: &Registry,
+    spec: &Spec,
+    indent_unit: i64,
+    strs: &[&str],
+) -> Result<(), String> {
     let (expected, text) = parse_tokens(strs);
     // `if (sty && sty.indexOf(" ")) sty = sorted` — always, unless it starts with " ".
-    let expected: Vec<(Option<String>, String)> =
-        expected.into_iter().map(|(s, t)| (s.map(|s| if s.starts_with(' ') { s } else { sort_style(&s) }), t)).collect();
-    let options = ModeOptions { indent_unit, ..ModeOptions::default() };
+    let expected: Vec<(Option<String>, String)> = expected
+        .into_iter()
+        .map(|(s, t)| {
+            (
+                s.map(|s| {
+                    if s.starts_with(' ') {
+                        s
+                    } else {
+                        sort_style(&s)
+                    }
+                }),
+                t,
+            )
+        })
+        .collect();
+    let options = ModeOptions {
+        indent_unit,
+        ..ModeOptions::default()
+    };
     let mode = registry.get_mode(&options, spec);
     let mut state = start_state(&*mode, JsArg::Undefined, JsArg::Undefined);
     let lines: Vec<Vec<u16>> = text.replace("\r\n", "\n").split('\n').map(to_u16).collect();
@@ -370,11 +460,18 @@ pub fn mode_test(registry: &Registry, spec: &Spec, indent_unit: i64, strs: &[&st
         let line = &lines[i];
         let mut new_line = true;
         if mode.has_indent() {
-            let ws = line.iter().take_while(|&&c| cm_core::text::is_js_space(c)).count();
+            let ws = line
+                .iter()
+                .take_while(|&&c| cm_core::text::is_js_space(c))
+                .count();
             let indent = mode.indent(&state, &line[ws..], line);
             if let Some(ind) = indent {
                 if ind != ws as f64 {
-                    failures.push(format!("Indentation of line {} is {} (expected {ws})", i + 1, indent_value(Some(ind))));
+                    failures.push(format!(
+                        "Indentation of line {} is {} (expected {ws})",
+                        i + 1,
+                        indent_value(Some(ind))
+                    ));
                 }
             }
         }
@@ -404,10 +501,28 @@ pub fn mode_test(registry: &Registry, spec: &Spec, indent_unit: i64, strs: &[&st
             new_line = false;
         }
     }
-    let observed: Vec<(Option<String>, String)> = st.into_iter().map(|(s, t)| (s, String::from_utf16_lossy(&t))).collect();
+    let observed: Vec<(Option<String>, String)> = st
+        .into_iter()
+        .map(|(s, t)| (s, String::from_utf16_lossy(&t)))
+        .collect();
     if observed != expected {
-        let k = observed.iter().zip(&expected).position(|(a, b)| a != b).unwrap_or(observed.len().min(expected.len()));
-        failures.insert(0, format!("token {k}: expected {:?}, observed {:?}", expected.get(k), observed.get(k)));
+        let k = observed
+            .iter()
+            .zip(&expected)
+            .position(|(a, b)| a != b)
+            .unwrap_or(observed.len().min(expected.len()));
+        failures.insert(
+            0,
+            format!(
+                "token {k}: expected {:?}, observed {:?}",
+                expected.get(k),
+                observed.get(k)
+            ),
+        );
     }
-    if failures.is_empty() { Ok(()) } else { Err(failures.join("; ")) }
+    if failures.is_empty() {
+        Ok(())
+    } else {
+        Err(failures.join("; "))
+    }
 }

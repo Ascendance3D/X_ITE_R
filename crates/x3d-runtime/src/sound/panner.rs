@@ -43,7 +43,15 @@ pub struct Attributes {
 
 impl Default for Attributes {
     fn default() -> Self {
-        Attributes { distance_model: DistanceModel::Inverse, ref_distance: 1.0, max_distance: 10000.0, rolloff_factor: 1.0, cone_inner_angle: 360.0, cone_outer_angle: 360.0, cone_outer_gain: 0.0 }
+        Attributes {
+            distance_model: DistanceModel::Inverse,
+            ref_distance: 1.0,
+            max_distance: 10000.0,
+            rolloff_factor: 1.0,
+            cone_inner_angle: 360.0,
+            cone_outer_angle: 360.0,
+            cone_outer_gain: 0.0,
+        }
     }
 }
 
@@ -54,8 +62,14 @@ pub enum Message {
 }
 
 /// The names of the panner's own AudioParams, in the order of the param indexes.
-pub const PARAM_NAMES: [&str; 6] = ["positionX", "positionY", "positionZ", "orientationX", "orientationY", "orientationZ"];
-
+pub const PARAM_NAMES: [&str; 6] = [
+    "positionX",
+    "positionY",
+    "positionZ",
+    "orientationX",
+    "orientationY",
+    "orientationZ",
+];
 
 #[derive(Clone, Copy, PartialEq)]
 struct V3(f32, f32, f32);
@@ -66,7 +80,9 @@ impl V3 {
     }
 
     fn length_squared(self) -> f64 {
-        self.0 as f64 * self.0 as f64 + self.1 as f64 * self.1 as f64 + self.2 as f64 * self.2 as f64
+        self.0 as f64 * self.0 as f64
+            + self.1 as f64 * self.1 as f64
+            + self.2 as f64 * self.2 as f64
     }
 
     fn length(self) -> f32 {
@@ -91,7 +107,11 @@ impl V3 {
 
     fn cross(self, o: V3) -> V3 {
         let (dx, dy, dz) = (self.0 as f64, self.1 as f64, self.2 as f64);
-        V3((dy * o.2 as f64 - dz * o.1 as f64) as f32, (dz * o.0 as f64 - dx * o.2 as f64) as f32, (dx * o.1 as f64 - dy * o.0 as f64) as f32)
+        V3(
+            (dy * o.2 as f64 - dz * o.1 as f64) as f32,
+            (dz * o.0 as f64 - dx * o.2 as f64) as f32,
+            (dx * o.1 as f64 - dy * o.0 as f64) as f32,
+        )
     }
 
     fn dot(self, o: V3) -> f32 {
@@ -110,7 +130,9 @@ fn rad_to_deg(r: f32) -> f32 {
 
 /// gfx::AngleBetweenVectorsInDegrees.
 fn angle_between_vectors_in_degrees(base: V3, other: V3) -> f32 {
-    let c = (base.dot(other) / base.length() / other.length()).min(1.0).max(-1.0);
+    let c = (base.dot(other) / base.length() / other.length())
+        .min(1.0)
+        .max(-1.0);
     rad_to_deg(c.acos())
 }
 
@@ -131,7 +153,8 @@ fn azimuth(position: V3, listener_position: V3, listener_forward: V3, listener_u
     let up = listener_right.cross(listener_forward_norm);
     let up_projection = source_listener.dot(up);
     let projected_source = source_listener.sub(up.scale(up_projection)).normalized().1;
-    let mut azimuth = rad_to_deg(projected_source.dot(listener_right).clamp(-1.0, 1.0).acos()) as f64;
+    let mut azimuth =
+        rad_to_deg(projected_source.dot(listener_right).clamp(-1.0, 1.0).acos()) as f64;
     azimuth = ensure_finite(azimuth);
 
     let front_back = projected_source.dot(listener_forward_norm) as f64;
@@ -140,7 +163,11 @@ fn azimuth(position: V3, listener_position: V3, listener_forward: V3, listener_u
         azimuth = 360.0 - azimuth;
     }
 
-    if (0.0..=270.0).contains(&azimuth) { 90.0 - azimuth } else { 450.0 - azimuth }
+    if (0.0..=270.0).contains(&azimuth) {
+        90.0 - azimuth
+    } else {
+        450.0 - azimuth
+    }
 }
 
 /// DistanceEffect::Gain.
@@ -163,7 +190,8 @@ fn distance_gain(a: &Attributes, distance: f64) -> f64 {
             }
 
             let distance = distance.max(a.ref_distance);
-            a.ref_distance / (a.ref_distance + a.rolloff_factor.max(0.0) * (distance - a.ref_distance))
+            a.ref_distance
+                / (a.ref_distance + a.rolloff_factor.max(0.0) * (distance - a.ref_distance))
         }
         DistanceModel::Exponential => {
             if a.ref_distance == 0.0 {
@@ -177,8 +205,14 @@ fn distance_gain(a: &Attributes, distance: f64) -> f64 {
 }
 
 /// ConeEffect::Gain.
-fn cone_gain(a: &Attributes, source_position: V3, source_orientation: V3, listener_position: V3) -> f64 {
-    if source_orientation.is_zero() || (a.cone_inner_angle == 360.0 && a.cone_outer_angle == 360.0) {
+fn cone_gain(
+    a: &Attributes,
+    source_position: V3,
+    source_orientation: V3,
+    listener_position: V3,
+) -> f64 {
+    if source_orientation.is_zero() || (a.cone_inner_angle == 360.0 && a.cone_outer_angle == 360.0)
+    {
         return 1.0;
     }
 
@@ -201,7 +235,8 @@ fn cone_gain(a: &Attributes, source_position: V3, source_orientation: V3, listen
 /// PannerHandler::CalculateDistanceConeGain.
 fn distance_cone_gain(a: &Attributes, position: V3, orientation: V3, listener_position: V3) -> f32 {
     let listener_distance = position.sub(listener_position).length() as f64;
-    (distance_gain(a, listener_distance) * cone_gain(a, position, orientation, listener_position)) as f32
+    (distance_gain(a, listener_distance) * cone_gain(a, position, orientation, listener_position))
+        as f32
 }
 
 /// EqualPowerPanner::UpdateDesiredGain: (clamped azimuth, gain left, gain right).
@@ -257,14 +292,19 @@ impl Processor {
     }
 
     fn final_v3(&mut self, i: usize, frame: u64, sample_rate: f64) -> V3 {
-        V3(self.final_value(i, frame, sample_rate), self.final_value(i + 1, frame, sample_rate), self.final_value(i + 2, frame, sample_rate))
+        V3(
+            self.final_value(i, frame, sample_rate),
+            self.final_value(i + 1, frame, sample_rate),
+            self.final_value(i + 2, frame, sample_rate),
+        )
     }
 
     /// CalculateSampleAccurateValues of param `i` into `self.values[i]`.
     fn sample_accurate_values(&mut self, i: usize, frame: u64, frames: usize, sample_rate: f64) {
         let mut values = std::mem::take(&mut self.values[i]);
         values.resize(frames, 0.0);
-        self.intrinsic[i] = self.events[i].timeline_values(self.intrinsic[i], frame, &mut values, sample_rate);
+        self.intrinsic[i] =
+            self.events[i].timeline_values(self.intrinsic[i], frame, &mut values, sample_rate);
         self.values[i] = values;
     }
 }
@@ -274,7 +314,9 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = [f32; 9];
 
     fn constructor(listener: [f32; 9]) -> Self {
-        let mut intrinsic = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        let mut intrinsic = [
+            0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        ];
         intrinsic[6..].copy_from_slice(&listener);
 
         Processor {
@@ -310,16 +352,31 @@ impl AudioWorkletProcessor for Processor {
         }
     }
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], _params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        _params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let sample_rate = scope.sample_rate as f64;
         let frame = scope.current_frame;
 
         for (i, value, time) in std::mem::take(&mut self.pending) {
-            self.events[i].insert(Event { kind: Kind::SetValue, value, time }, frame, sample_rate);
+            self.events[i].insert(
+                Event {
+                    kind: Kind::SetValue,
+                    value,
+                    time,
+                },
+                frame,
+                sample_rate,
+            );
         }
 
         // AudioListenerHandler::UpdateState, before the quantum is rendered.
-        let listener: [f32; 9] = std::array::from_fn(|k| k + 6).map(|i| self.final_value(i, frame, sample_rate));
+        let listener: [f32; 9] =
+            std::array::from_fn(|k| k + 6).map(|i| self.final_value(i, frame, sample_rate));
         let listener_dirty = listener != self.last_listener;
         self.last_listener = listener;
 
@@ -345,7 +402,11 @@ impl AudioWorkletProcessor for Processor {
 
         let number_of_input_channels = source.len().clamp(1, 2);
         let source_l = source.first().copied().filter(|s| s.len() == frames);
-        let source_r = if number_of_input_channels > 1 { source.get(1).copied().filter(|s| s.len() == frames) } else { source_l };
+        let source_r = if number_of_input_channels > 1 {
+            source.get(1).copied().filter(|s| s.len() == frames)
+        } else {
+            source_l
+        };
         let a = self.attributes;
         let (l, r) = dest.split_at_mut(1);
         let (l, r) = (&mut l[0], &mut r[0]);
@@ -356,18 +417,31 @@ impl AudioWorkletProcessor for Processor {
             let input_r = source_r.map_or(0.0, |s| s[k]);
 
             let (out_l, out_r) = if number_of_input_channels == 1 {
-                ((input_l as f64 * gain_l) as f32, (input_l as f64 * gain_r) as f32)
+                (
+                    (input_l as f64 * gain_l) as f32,
+                    (input_l as f64 * gain_r) as f32,
+                )
             } else if azimuth <= 0.0 {
-                ((input_l as f64 + input_r as f64 * gain_l) as f32, (input_r as f64 * gain_r) as f32)
+                (
+                    (input_l as f64 + input_r as f64 * gain_l) as f32,
+                    (input_r as f64 * gain_r) as f32,
+                )
             } else {
-                ((input_l as f64 * gain_l) as f32, (input_r as f64 + input_l as f64 * gain_r) as f32)
+                (
+                    (input_l as f64 * gain_l) as f32,
+                    (input_r as f64 + input_l as f64 * gain_r) as f32,
+                )
             };
 
             l[k] = out_l * gain;
             r[k] = out_r * gain;
         };
 
-        if self.events.iter().any(|e| e.has_sample_accurate_values(frame, sample_rate, frames)) {
+        if self
+            .events
+            .iter()
+            .any(|e| e.has_sample_accurate_values(frame, sample_rate, frames))
+        {
             // ProcessSampleAccurateValues, CopyWithSampleAccurateGainValuesFrom.
             for i in 0..PARAMS {
                 self.sample_accurate_values(i, frame, frames, sample_rate);

@@ -78,7 +78,14 @@ pub struct PickCamera {
 /// X3DRenderObject.setHitRay.
 pub fn hit_ray(cam: &PickCamera, x: f64, y: f64) -> Line3 {
     let mut ray = Line3::new(Vector3::ZERO, Vector3::new(0.0, 0.0, -1.0));
-    ViewVolume::unproject_ray(x, y, &Matrix4::IDENTITY, &cam.projection, &cam.viewport, &mut ray);
+    ViewVolume::unproject_ray(
+        x,
+        y,
+        &Matrix4::IDENTITY,
+        &cam.projection,
+        &cam.viewport,
+        &mut ray,
+    );
     ray
 }
 
@@ -95,7 +102,12 @@ struct TriHit {
 /// Möller-Trumbore in object space; both faces.
 /// The nearest triangle hit along the ray whose point `keep` accepts (the pointing shader
 /// discards clipped fragments, so a clipped hit lets the ray reach the triangles behind it).
-fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f64) -> bool) -> Vec<TriHit> {
+fn ray_triangles(
+    g: &Geometry,
+    origin: &Vector3,
+    dir: &Vector3,
+    keep: &dyn Fn(f64) -> bool,
+) -> Vec<TriHit> {
     if g.geometry_type < 2 {
         return vec![];
     }
@@ -142,7 +154,13 @@ fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f6
         let t = e2.dot(&q) * inv;
 
         if keep(t) {
-            hits.push(TriHit { strict: (-EDGE..=1.0 + EDGE).contains(&u) && v >= -EDGE && u + v <= 1.0 + EDGE, t, u, v, tri });
+            hits.push(TriHit {
+                strict: (-EDGE..=1.0 + EDGE).contains(&u) && v >= -EDGE && u + v <= 1.0 + EDGE,
+                t,
+                u,
+                v,
+                tri,
+            });
         }
     }
 
@@ -175,11 +193,23 @@ struct Candidate {
 }
 
 /// gl_PointSize of the pointing shader in pixels: 2, or max (getPointSize (vertex), 2) with PointProperties (PointSize2.glsl).
-fn point_size(style: Option<&x3d_render::traverse::StyleParams>, textures: (bool, bool), eye: &Vector3) -> f64 {
-    let Some(x3d_render::traverse::StyleParams::Point(p)) = style else { return 2.0 };
+fn point_size(
+    style: Option<&x3d_render::traverse::StyleParams>,
+    textures: (bool, bool),
+    eye: &Vector3,
+) -> f64 {
+    let Some(x3d_render::traverse::StyleParams::Point(p)) = style else {
+        return 2.0;
+    };
     let dl = eye.norm();
-    let size = (p.scale_factor / (p.attenuation[0] + p.attenuation[1] * dl + p.attenuation[2] * dl * dl)).clamp(p.min_value, p.max_value);
-    let size = if textures.0 || size <= 1.0 { size } else { size + 1.0 };
+    let size = (p.scale_factor
+        / (p.attenuation[0] + p.attenuation[1] * dl + p.attenuation[2] * dl * dl))
+        .clamp(p.min_value, p.max_value);
+    let size = if textures.0 || size <= 1.0 {
+        size
+    } else {
+        size + 1.0
+    };
 
     size.max(2.0)
 }
@@ -194,7 +224,12 @@ fn line_width(style: Option<&x3d_render::traverse::StyleParams>) -> f64 {
 
 /// View-space point of an object-space vertex and its GL window coordinates in `viewport` (x, y up, depth unused);
 /// `None` behind the eye.
-fn window(model_view: &Matrix4, projection: &Matrix4, viewport: &[f64; 4], v: &[f32]) -> (Vector3, Option<[f64; 2]>) {
+fn window(
+    model_view: &Matrix4,
+    projection: &Matrix4,
+    viewport: &[f64; 4],
+    v: &[f32],
+) -> (Vector3, Option<[f64; 2]>) {
     let mut eye = Vector3::new(v[0] as f64, v[1] as f64, v[2] as f64);
     model_view.mult_vec_matrix3(&mut eye);
     let mut clip = Vector4::new(eye.x, eye.y, eye.z, 1.0);
@@ -204,7 +239,13 @@ fn window(model_view: &Matrix4, projection: &Matrix4, viewport: &[f64; 4], v: &[
         return (eye, None);
     }
 
-    (eye, Some([viewport[0] + (clip.x / clip.w + 1.0) / 2.0 * viewport[2], viewport[1] + (clip.y / clip.w + 1.0) / 2.0 * viewport[3]]))
+    (
+        eye,
+        Some([
+            viewport[0] + (clip.x / clip.w + 1.0) / 2.0 * viewport[2],
+            viewport[1] + (clip.y / clip.w + 1.0) / 2.0 * viewport[3],
+        ]),
+    )
 }
 
 /// Pick: the nearest shape under the pointer (X3DPointingDeviceSensorContext.touch, X3DRenderObject.pointing).
@@ -216,7 +257,15 @@ fn window(model_view: &Matrix4, projection: &Matrix4, viewport: &[f64; 4], v: &[
 /// order (depth test LEQUAL, so the nearest fragment and, on a depth tie, the last primitive drawn wins), and the buffer decides
 /// the shape and gives the point, normal and texCoord. Without one, the CPU ray cast picks the nearest triangle, point
 /// (inside its gl_PointSize square) or line (within half a pixel) and its double values are kept.
-pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>, cam: &PickCamera, x: f64, y: f64, pointing: bool, mut gpu: Option<&mut PointingGpu>) -> Hit {
+pub fn pick(
+    shapes: &[ShapeInst],
+    geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    pointing: bool,
+    mut gpu: Option<&mut PointingGpu>,
+) -> Hit {
     let ray = hit_ray(cam, x, y);
     // The hit point, normal and texCoord come from the pointing buffer: a 1x1 float buffer drawn
     // with the viewport shifted so that it covers the pixel under the pointer
@@ -224,14 +273,33 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
     // itself (setHitRay) uses the exact pointer.
     let (px, py) = (x.floor() + 0.5, y.floor() + 0.5);
     let sray = hit_ray(cam, px, py);
-    let mut hit = Hit { pointer: Vector2::new(x, y), ray: ray.copy(), view_matrix: cam.view, ..Default::default() };
+    let mut hit = Hit {
+        pointer: Vector2::new(x, y),
+        ray: ray.copy(),
+        view_matrix: cam.view,
+        ..Default::default()
+    };
 
     let shape_ray = |s: &ShapeInst| {
-        if s.viewport == [cam.viewport.x, cam.viewport.y, cam.viewport.z, cam.viewport.w] {
+        if s.viewport
+            == [
+                cam.viewport.x,
+                cam.viewport.y,
+                cam.viewport.z,
+                cam.viewport.w,
+            ]
+        {
             sray.copy()
         } else {
             let v = s.viewport;
-            hit_ray(&PickCamera { viewport: Vector4::new(v[0], v[1], v[2], v[3]), ..cam.clone() }, px, py)
+            hit_ray(
+                &PickCamera {
+                    viewport: Vector4::new(v[0], v[1], v[2], v[3]),
+                    ..cam.clone()
+                },
+                px,
+                py,
+            )
         }
     };
 
@@ -244,7 +312,11 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
         // addPointingShape: a ParticleSystem whose bbox is outside the view volume is not drawn into the pointing buffer
         // (a Shape's bbox holds its geometry, so the ray tests below decide the same for it).
-        if s.particle && !s.explicit_bbox.is_some_and(|b| x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)) {
+        if s.particle
+            && !s.explicit_bbox.is_some_and(|b| {
+                x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)
+            })
+        {
             continue;
         }
 
@@ -263,9 +335,17 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             }
 
             // normalMatrix * normal, then touch (): hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)
-            let mut n = Vector3::new(g.normals[j * 3] as f64, g.normals[j * 3 + 1] as f64, g.normals[j * 3 + 2] as f64);
+            let mut n = Vector3::new(
+                g.normals[j * 3] as f64,
+                g.normals[j * 3 + 1] as f64,
+                g.normals[j * 3 + 2] as f64,
+            );
             // A particle's instance matrix does not turn normals (no X3D_INSTANCE_NORMAL).
-            let normal_mv = if s.particle { s.shape_model_view } else { s.model_view };
+            let normal_mv = if s.particle {
+                s.shape_model_view
+            } else {
+                s.model_view
+            };
             let mut nm = normal_mv.submatrix();
             nm.inverse();
             nm.transpose();
@@ -283,24 +363,42 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             let mut cpu: Option<(f64, Vector3, Vector3, Vector4)> = None;
 
             for j in 0..g.vertex_count() {
-                let (eye, win) = window(&s.model_view, &cam.projection, &s.viewport, &g.vertices[j * 4..j * 4 + 3]);
+                let (eye, win) = window(
+                    &s.model_view,
+                    &cam.projection,
+                    &s.viewport,
+                    &g.vertices[j * 4..j * 4 + 3],
+                );
                 let Some([wx, wy]) = win else { continue };
                 let half = size_of(&eye) / 2.0;
 
                 // The square of gl_PointSize pixels around the point (one more pixel for the rasterizer's snapping).
-                if (wx - px).abs() > half + 1.0 || (wy - py).abs() > half + 1.0 || -eye.z < cam.near || -eye.z > cam.far {
+                if (wx - px).abs() > half + 1.0
+                    || (wy - py).abs() > half + 1.0
+                    || -eye.z < cam.near
+                    || -eye.z > cam.far
+                {
                     continue;
                 }
 
                 points.push(j);
 
-                if (wx - px).abs() < half && (wy - py).abs() < half && !clipped(&eye) && cpu.as_ref().is_none_or(|c| -eye.z < c.0) {
+                if (wx - px).abs() < half
+                    && (wy - py).abs() < half
+                    && !clipped(&eye)
+                    && cpu.as_ref().is_none_or(|c| -eye.z < c.0)
+                {
                     cpu = Some((-eye.z, eye, normal_at(j), Vector4::new(0.0, 0.0, 0.0, 1.0)));
                 }
             }
 
             if !points.is_empty() {
-                candidates.push(Candidate { shape: i, geometry: g, prims: Prims::Points(points), cpu });
+                candidates.push(Candidate {
+                    shape: i,
+                    geometry: g,
+                    prims: Prims::Points(points),
+                    cpu,
+                });
             }
 
             continue;
@@ -312,8 +410,18 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             let mut cpu: Option<(f64, Vector3, Vector3, Vector4)> = None;
 
             for k in 0..g.vertex_count() / 2 {
-                let (e0, w0) = window(&s.model_view, &cam.projection, &s.viewport, &g.vertices[k * 8..k * 8 + 3]);
-                let (e1, w1) = window(&s.model_view, &cam.projection, &s.viewport, &g.vertices[k * 8 + 4..k * 8 + 7]);
+                let (e0, w0) = window(
+                    &s.model_view,
+                    &cam.projection,
+                    &s.viewport,
+                    &g.vertices[k * 8..k * 8 + 3],
+                );
+                let (e1, w1) = window(
+                    &s.model_view,
+                    &cam.projection,
+                    &s.viewport,
+                    &g.vertices[k * 8 + 4..k * 8 + 7],
+                );
 
                 let (Some(a), Some(b)) = (w0, w1) else {
                     // An end behind the eye: the GPU clips it.
@@ -323,7 +431,11 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
                 let (dx, dy) = (b[0] - a[0], b[1] - a[1]);
                 let len2 = dx * dx + dy * dy;
-                let t = if len2 > 0.0 { (((px - a[0]) * dx + (py - a[1]) * dy) / len2).clamp(0.0, 1.0) } else { 0.0 };
+                let t = if len2 > 0.0 {
+                    (((px - a[0]) * dx + (py - a[1]) * dy) / len2).clamp(0.0, 1.0)
+                } else {
+                    0.0
+                };
                 let (cx, cy) = (a[0] + dx * t, a[1] + dy * t);
                 let distance = ((px - cx).powi(2) + (py - cy).powi(2)).sqrt();
 
@@ -333,15 +445,34 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
                 segments.push(k);
 
-                let eye = Vector3::new(e0.x + (e1.x - e0.x) * t, e0.y + (e1.y - e0.y) * t, e0.z + (e1.z - e0.z) * t);
+                let eye = Vector3::new(
+                    e0.x + (e1.x - e0.x) * t,
+                    e0.y + (e1.y - e0.y) * t,
+                    e0.z + (e1.z - e0.z) * t,
+                );
 
-                if distance <= width.max(1.0) / 2.0 && !clipped(&eye) && -eye.z >= cam.near && -eye.z <= cam.far && cpu.as_ref().is_none_or(|c| -eye.z < c.0) {
-                    cpu = Some((-eye.z, eye, normal_at(2 * k), Vector4::new(0.0, 0.0, 0.0, 1.0)));
+                if distance <= width.max(1.0) / 2.0
+                    && !clipped(&eye)
+                    && -eye.z >= cam.near
+                    && -eye.z <= cam.far
+                    && cpu.as_ref().is_none_or(|c| -eye.z < c.0)
+                {
+                    cpu = Some((
+                        -eye.z,
+                        eye,
+                        normal_at(2 * k),
+                        Vector4::new(0.0, 0.0, 0.0, 1.0),
+                    ));
                 }
             }
 
             if !segments.is_empty() {
-                candidates.push(Candidate { shape: i, geometry: g, prims: Prims::Lines(segments), cpu });
+                candidates.push(Candidate {
+                    shape: i,
+                    geometry: g,
+                    prims: Prims::Lines(segments),
+                    cpu,
+                });
             }
 
             continue;
@@ -384,55 +515,102 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
         }
 
         // The nearest strict hit is the CPU's own (a view-space depth between the near and the far plane).
-        let cpu = hits.iter().filter(|h| h.strict).min_by(|a, b| a.t.total_cmp(&b.t)).and_then(|th| {
-            let p = at(th.t);
+        let cpu = hits
+            .iter()
+            .filter(|h| h.strict)
+            .min_by(|a, b| a.t.total_cmp(&b.t))
+            .and_then(|th| {
+                let p = at(th.t);
 
-            if -p.z < cam.near || -p.z > cam.far {
-                return None;
-            }
+                if -p.z < cam.near || -p.z > cam.far {
+                    return None;
+                }
 
-            let w0 = 1.0 - th.u - th.v;
-            let k = th.tri * 3;
-            let mut normal = Vector3::Z_AXIS;
+                let w0 = 1.0 - th.u - th.v;
+                let k = th.tri * 3;
+                let mut normal = Vector3::Z_AXIS;
 
-            if !g.normals.is_empty() {
-                let (n0, n1, n2) = (normal_at(k), normal_at(k + 1), normal_at(k + 2));
-                normal = Vector3::new(n0.x * w0 + n1.x * th.u + n2.x * th.v, n0.y * w0 + n1.y * th.u + n2.y * th.v, n0.z * w0 + n1.z * th.u + n2.z * th.v);
-            }
+                if !g.normals.is_empty() {
+                    let (n0, n1, n2) = (normal_at(k), normal_at(k + 1), normal_at(k + 2));
+                    normal = Vector3::new(
+                        n0.x * w0 + n1.x * th.u + n2.x * th.v,
+                        n0.y * w0 + n1.y * th.u + n2.y * th.v,
+                        n0.z * w0 + n1.z * th.u + n2.z * th.v,
+                    );
+                }
 
-            let mut tc = Vector4::new(0.0, 0.0, 0.0, 1.0);
+                let mut tc = Vector4::new(0.0, 0.0, 0.0, 1.0);
 
-            if g.tex_coords.len() >= (k + 3) * 4 {
-                let tv = |j: usize| [g.tex_coords[j * 4] as f64, g.tex_coords[j * 4 + 1] as f64, g.tex_coords[j * 4 + 2] as f64, g.tex_coords[j * 4 + 3] as f64];
-                let (t0, t1, t2) = (tv(k), tv(k + 1), tv(k + 2));
-                let lerp = |c: usize| t0[c] * w0 + t1[c] * th.u + t2[c] * th.v;
-                tc = Vector4::new(lerp(0), lerp(1), lerp(2), lerp(3));
-            }
+                if g.tex_coords.len() >= (k + 3) * 4 {
+                    let tv = |j: usize| {
+                        [
+                            g.tex_coords[j * 4] as f64,
+                            g.tex_coords[j * 4 + 1] as f64,
+                            g.tex_coords[j * 4 + 2] as f64,
+                            g.tex_coords[j * 4 + 3] as f64,
+                        ]
+                    };
+                    let (t0, t1, t2) = (tv(k), tv(k + 1), tv(k + 2));
+                    let lerp = |c: usize| t0[c] * w0 + t1[c] * th.u + t2[c] * th.v;
+                    tc = Vector4::new(lerp(0), lerp(1), lerp(2), lerp(3));
+                }
 
-            Some((-p.z, p, normal, tc))
+                Some((-p.z, p, normal, tc))
+            });
+
+        candidates.push(Candidate {
+            shape: i,
+            geometry: g,
+            prims: Prims::Triangles(hits),
+            cpu,
         });
-
-        candidates.push(Candidate { shape: i, geometry: g, prims: Prims::Triangles(hits), cpu });
     }
 
     // The winner: the pointing buffer's id, or the nearest CPU hit (the last on a tie, like the LEQUAL depth test).
     let mut winner: Option<(usize, Vector3, Vector3, Vector4)> = None;
 
     if let Some(gpu) = gpu.as_deref_mut() {
-        let draws: Vec<PointingTriangle> = candidates.iter().enumerate().map(|(k, c)| pointing_draw(&shapes[c.shape], &c.geometry, &c.prims, cam, x, y, k as f32 + 1.0)).collect();
+        let draws: Vec<PointingTriangle> = candidates
+            .iter()
+            .enumerate()
+            .map(|(k, c)| {
+                pointing_draw(
+                    &shapes[c.shape],
+                    &c.geometry,
+                    &c.prims,
+                    cam,
+                    x,
+                    y,
+                    k as f32 + 1.0,
+                )
+            })
+            .collect();
 
         if let Some(sample) = gpu.sample_all(&draws) {
             let c = &candidates[sample.id as usize - 1];
             let s = &shapes[c.shape];
-            let p = Vector3::new(sample.point[0] as f64, sample.point[1] as f64, sample.point[2] as f64);
-            let tc = Vector4::new(sample.tex_coord[0] as f64, sample.tex_coord[1] as f64, sample.tex_coord[2] as f64, sample.tex_coord[3] as f64);
+            let p = Vector3::new(
+                sample.point[0] as f64,
+                sample.point[1] as f64,
+                sample.point[2] as f64,
+            );
+            let tc = Vector4::new(
+                sample.tex_coord[0] as f64,
+                sample.tex_coord[1] as f64,
+                sample.tex_coord[2] as f64,
+                sample.tex_coord[3] as f64,
+            );
 
             // touch (): hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)
             // when the geometry has normals, else the Z axis.
             let mut normal = Vector3::Z_AXIS;
 
             if !c.geometry.normals.is_empty() {
-                let mut n = Vector3::new(sample.normal[0] as f64, sample.normal[1] as f64, sample.normal[2] as f64);
+                let mut n = Vector3::new(
+                    sample.normal[0] as f64,
+                    sample.normal[1] as f64,
+                    sample.normal[2] as f64,
+                );
                 let mut mv = s.shape_model_view;
                 mv.0 = mv.0.map(|v| v as f32 as f64);
                 let mut inv3 = mv.submatrix();
@@ -448,11 +626,22 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             .iter()
             .enumerate()
             .filter_map(|(k, c)| c.cpu.map(|(dist, p, n, tc)| (k, dist, p, n, tc)))
-            .fold(None, |best: Option<(usize, f64, Vector3, Vector3, Vector4)>, h| if best.as_ref().is_none_or(|b| h.1 <= b.1) { Some(h) } else { best })
+            .fold(
+                None,
+                |best: Option<(usize, f64, Vector3, Vector3, Vector4)>, h| {
+                    if best.as_ref().is_none_or(|b| h.1 <= b.1) {
+                        Some(h)
+                    } else {
+                        best
+                    }
+                },
+            )
             .map(|(k, _, p, n, tc)| (k, p, n, tc));
     }
 
-    let Some((k, p, normal, tc)) = winner else { return hit };
+    let Some((k, p, normal, tc)) = winner else {
+        return hit;
+    };
     let (s, g) = (&shapes[candidates[k].shape], &candidates[k].geometry);
 
     hit.id = true;
@@ -491,14 +680,46 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 }
 
 /// One shape's draw in the pointing pass: its candidate primitives as the pointing shader receives them.
-fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x: f64, y: f64, id: f32) -> PointingTriangle {
+fn pointing_draw(
+    s: &ShapeInst,
+    g: &Geometry,
+    prims: &Prims,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    id: f32,
+) -> PointingTriangle {
     use x3d_render::pointing_gpu::{PointingPointStyle, PointingPrimitive};
 
     let has_normals = !g.normals.is_empty();
-    let vert = |j: usize| [g.vertices[j * 4], g.vertices[j * 4 + 1], g.vertices[j * 4 + 2], g.vertices[j * 4 + 3]];
-    let norm = |j: usize| if has_normals { [g.normals[j * 3], g.normals[j * 3 + 1], g.normals[j * 3 + 2]] } else { [0.0, 0.0, 1.0] };
+    let vert = |j: usize| {
+        [
+            g.vertices[j * 4],
+            g.vertices[j * 4 + 1],
+            g.vertices[j * 4 + 2],
+            g.vertices[j * 4 + 3],
+        ]
+    };
+    let norm = |j: usize| {
+        if has_normals {
+            [g.normals[j * 3], g.normals[j * 3 + 1], g.normals[j * 3 + 2]]
+        } else {
+            [0.0, 0.0, 1.0]
+        }
+    };
     let has_tex = g.geometry_type >= 2 && g.tex_coords.len() >= g.vertex_count() * 4;
-    let tex = |j: usize| if has_tex { [g.tex_coords[j * 4], g.tex_coords[j * 4 + 1], g.tex_coords[j * 4 + 2], g.tex_coords[j * 4 + 3]] } else { [0.0, 0.0, 0.0, 1.0] };
+    let tex = |j: usize| {
+        if has_tex {
+            [
+                g.tex_coords[j * 4],
+                g.tex_coords[j * 4 + 1],
+                g.tex_coords[j * 4 + 2],
+                g.tex_coords[j * 4 + 3],
+            ]
+        } else {
+            [0.0, 0.0, 0.0, 1.0]
+        }
+    };
     let v = s.viewport;
     let mut point_style = None;
     let mut offsets = vec![];
@@ -507,7 +728,12 @@ fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x
         Prims::Triangles(hits) => {
             let mut tris: Vec<usize> = hits.iter().map(|h| h.tri).collect();
             tris.sort_unstable();
-            (PointingPrimitive::Triangles, tris.iter().flat_map(|t| [t * 3, t * 3 + 1, t * 3 + 2]).collect())
+            (
+                PointingPrimitive::Triangles,
+                tris.iter()
+                    .flat_map(|t| [t * 3, t * 3 + 1, t * 3 + 2])
+                    .collect(),
+            )
         }
         Prims::Points(points) => {
             if let Some(x3d_render::traverse::StyleParams::Point(p)) = s.style {
@@ -521,20 +747,45 @@ fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x
                 });
             }
 
-            const SQUARE: [[f32; 2]; 6] = [[-1.0, -1.0], [1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0], [-1.0, 1.0]];
+            const SQUARE: [[f32; 2]; 6] = [
+                [-1.0, -1.0],
+                [1.0, -1.0],
+                [-1.0, 1.0],
+                [1.0, -1.0],
+                [1.0, 1.0],
+                [-1.0, 1.0],
+            ];
             offsets = points.iter().flat_map(|_| SQUARE).collect();
-            (PointingPrimitive::Points, points.iter().flat_map(|&j| [j; 6]).collect())
+            (
+                PointingPrimitive::Points,
+                points.iter().flat_map(|&j| [j; 6]).collect(),
+            )
         }
         Prims::Lines(segments) => {
             let width = line_width(s.style.as_ref());
 
             if width > x3d_render::gpu::MAX_LINE_WIDTH {
                 // displaySimpleThick: the transformed triangles of the DISPLAY pass, six vertices per segment.
-                let Some(x3d_render::traverse::StyleParams::Line(l)) = s.style else { unreachable!() };
-                let positions = x3d_render::gpu::transformed_line_positions(g, &s.model_view, &cam.projection, s.viewport, &l);
+                let Some(x3d_render::traverse::StyleParams::Line(l)) = s.style else {
+                    unreachable!()
+                };
+                let positions = x3d_render::gpu::transformed_line_positions(
+                    g,
+                    &s.model_view,
+                    &cam.projection,
+                    s.viewport,
+                    &l,
+                );
                 let ends = [0, 0, 1, 0, 1, 1];
-                let corners: Vec<usize> = segments.iter().flat_map(|&k| ends.map(|e| 2 * k + e)).collect();
-                let vertices: Vec<[f32; 4]> = segments.iter().flat_map(|&k| (0..6).map(move |c| k * 6 + c)).map(|i| positions[i]).collect();
+                let corners: Vec<usize> = segments
+                    .iter()
+                    .flat_map(|&k| ends.map(|e| 2 * k + e))
+                    .collect();
+                let vertices: Vec<[f32; 4]> = segments
+                    .iter()
+                    .flat_map(|&k| (0..6).map(move |c| k * 6 + c))
+                    .map(|i| positions[i])
+                    .collect();
 
                 return PointingTriangle {
                     primitive: PointingPrimitive::Triangles,
@@ -551,8 +802,18 @@ fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x
             let w = width.round().max(1.0) as f32 / 2.0;
 
             for &k in segments {
-                let (_, a) = window(&s.model_view, &cam.projection, &v, &g.vertices[k * 8..k * 8 + 3]);
-                let (_, b) = window(&s.model_view, &cam.projection, &v, &g.vertices[k * 8 + 4..k * 8 + 7]);
+                let (_, a) = window(
+                    &s.model_view,
+                    &cam.projection,
+                    &v,
+                    &g.vertices[k * 8..k * 8 + 3],
+                );
+                let (_, b) = window(
+                    &s.model_view,
+                    &cam.projection,
+                    &v,
+                    &g.vertices[k * 8 + 4..k * 8 + 7],
+                );
                 let x_major = match (a, b) {
                     (Some(a), Some(b)) => (b[0] - a[0]).abs() >= (b[1] - a[1]).abs(),
                     _ => true,
@@ -562,7 +823,13 @@ fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x
                 offsets.extend_from_slice(&[o, n, n, o, n, o]);
             }
 
-            (PointingPrimitive::WideLines, segments.iter().flat_map(|&k| [2 * k, 2 * k, 2 * k + 1, 2 * k, 2 * k + 1, 2 * k + 1]).collect())
+            (
+                PointingPrimitive::WideLines,
+                segments
+                    .iter()
+                    .flat_map(|&k| [2 * k, 2 * k, 2 * k + 1, 2 * k, 2 * k + 1, 2 * k + 1])
+                    .collect(),
+            )
         }
     };
 
@@ -579,7 +846,13 @@ fn pointing_draw(s: &ShapeInst, g: &Geometry, prims: &Prims, cam: &PickCamera, x
 }
 
 /// The uniforms of a shape's pointing draw: matrices, the shifted viewport, clip planes and x3d_Id.
-fn pointing_draw_base(s: &ShapeInst, cam: &PickCamera, x: f64, y: f64, id: f32) -> PointingTriangle {
+fn pointing_draw_base(
+    s: &ShapeInst,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    id: f32,
+) -> PointingTriangle {
     let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
     let v = s.viewport;
 
@@ -591,16 +864,27 @@ fn pointing_draw_base(s: &ShapeInst, cam: &PickCamera, x: f64, y: f64, id: f32) 
         offsets: vec![],
         projection: f32x16(&cam.projection),
         model_view: f32x16(&s.shape_model_view),
-        instance: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
+        instance: s
+            .instance
+            .as_ref()
+            .map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
         // Particles: X3D_INSTANCING without X3D_INSTANCE_NORMAL (ParticleSystem.getShapeKey 1 or 2).
-        instance_normal: s.instance.as_ref().filter(|_| !s.particle).map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
-            let mut n = m.submatrix();
-            n.transpose();
-            n.inverse();
-            n.0.map(|v| v as f32)
-        }),
+        instance_normal: s.instance.as_ref().filter(|_| !s.particle).map_or(
+            x3d_render::pointing_gpu::IDENTITY3,
+            |m| {
+                let mut n = m.submatrix();
+                n.transpose();
+                n.inverse();
+                n.0.map(|v| v as f32)
+            },
+        ),
         // gl .viewport (viewport .x - x, viewport .y - y, viewport .z, viewport .w): GLint arguments.
-        viewport: [(v[0] - x) as i32, (v[1] - y) as i32, v[2] as i32, v[3] as i32],
+        viewport: [
+            (v[0] - x) as i32,
+            (v[1] - y) as i32,
+            v[2] as i32,
+            v[3] as i32,
+        ],
         clip_planes: s.clip_planes.iter().map(|p| p.map(|c| c as f32)).collect(),
         point_style: None,
         constant_tex_coord: false,
@@ -612,7 +896,11 @@ fn ray_box(min: &Vector3, max: &Vector3, o: &Vector3, d: &Vector3) -> bool {
     let mut t0 = f64::NEG_INFINITY;
     let mut t1 = f64::INFINITY;
 
-    for (mn, mx, oo, dd) in [(min.x, max.x, o.x, d.x), (min.y, max.y, o.y, d.y), (min.z, max.z, o.z, d.z)] {
+    for (mn, mx, oo, dd) in [
+        (min.x, max.x, o.x, d.x),
+        (min.y, max.y, o.y, d.y),
+        (min.z, max.z, o.z, d.z),
+    ] {
         if dd.abs() < 1e-300 {
             if oo < mn || oo > mx {
                 return false;
@@ -763,7 +1051,15 @@ fn mult_dir_matrix(m: &Matrix4, v: Vector3) -> Vector3 {
 
 impl Pointer {
     pub fn new() -> Pointer {
-        Pointer { over: vec![], active: vec![], states: vec![], anchor_over: Default::default(), anchor_active: Default::default(), hit: Hit::default(), out: PointerOutput::default() }
+        Pointer {
+            over: vec![],
+            active: vec![],
+            states: vec![],
+            anchor_over: Default::default(),
+            anchor_active: Default::default(),
+            hit: Hit::default(),
+            out: PointerOutput::default(),
+        }
     }
 
     fn state(&mut self, n: &NodeRef) -> &mut SensorState {
@@ -789,7 +1085,9 @@ impl Pointer {
             return;
         }
 
-        let gone = |path: &[NodeId], n: NodeId| released.contains(&n) || path.iter().any(|p| released.contains(p));
+        let gone = |path: &[NodeId], n: NodeId| {
+            released.contains(&n) || path.iter().any(|p| released.contains(p))
+        };
         let dead = |r: &NodeRef| gone(&r.path, r.node);
 
         self.over.retain(|(n, _)| !dead(n));
@@ -808,7 +1106,13 @@ impl Pointer {
     }
 
     /// X3DPointingDeviceSensorContext.buttonPressEvent. `hit` is the fresh pick.
-    pub fn button_press(&mut self, root: &mut Runtime, hit: Hit, cam: &PickCamera, now: f64) -> bool {
+    pub fn button_press(
+        &mut self,
+        root: &mut Runtime,
+        hit: Hit,
+        cam: &PickCamera,
+        now: f64,
+    ) -> bool {
         self.hit = hit;
 
         if !self.hit.id {
@@ -898,13 +1202,19 @@ impl Pointer {
     // X3DPointingDeviceSensorNode.set_over__ and the X3DTouchSensorNode override.
     fn set_over(&mut self, root: &mut Runtime, s: &SensorRef, over: bool, hit: &Hit, _now: f64) {
         let ty = Self::ty(root, s);
-        let Some(rt) = rt_at_mut(root, &s.node.path) else { return };
+        let Some(rt) = rt_at_mut(root, &s.node.path) else {
+            return;
+        };
         let n = s.node.node;
         let is_anchor = ty == Some("Anchor");
 
         // Anchor: its hidden TouchSensor has the Anchor's description as description.
         if is_anchor {
-            let cur = self.anchor_over.get(&(s.node.path.to_vec(), n)).copied().unwrap_or(false);
+            let cur = self
+                .anchor_over
+                .get(&(s.node.path.to_vec(), n))
+                .copied()
+                .unwrap_or(false);
             if cur == over {
                 return;
             }
@@ -928,7 +1238,8 @@ impl Pointer {
             }
         }
 
-        if matches!(ty, Some("TouchSensor" | "GeoTouchSensor")) && over && rt.get_bool(n, "isOver") {
+        if matches!(ty, Some("TouchSensor" | "GeoTouchSensor")) && over && rt.get_bool(n, "isOver")
+        {
             let mut inv = s.model_view;
             inv.inverse();
             let w = hit.tex_coord.w;
@@ -955,7 +1266,14 @@ impl Pointer {
     }
 
     // set_active__ for all sensor types.
-    fn set_active(&mut self, root: &mut Runtime, s: &SensorRef, active: bool, cam: &PickCamera, now: f64) {
+    fn set_active(
+        &mut self,
+        root: &mut Runtime,
+        s: &SensorRef,
+        active: bool,
+        cam: &PickCamera,
+        now: f64,
+    ) {
         let ty = Self::ty(root, s);
         let hit = self.hit.clone();
         let key = (s.node.path.to_vec(), s.node.node);
@@ -982,13 +1300,20 @@ impl Pointer {
                         Some(FieldValue::SFString(d)) => d.clone(),
                         _ => String::new(),
                     };
-                    self.out.anchors.push(AnchorActivation { node: s.node.clone(), description, urls: strings("url"), parameters: strings("parameter") });
+                    self.out.anchors.push(AnchorActivation {
+                        node: s.node.clone(),
+                        description,
+                        urls: strings("url"),
+                        parameters: strings("parameter"),
+                    });
                 }
             }
             return;
         }
 
-        let Some(rt) = rt_at_mut(root, &s.node.path) else { return };
+        let Some(rt) = rt_at_mut(root, &s.node.path) else {
+            return;
+        };
         let n = s.node.node;
 
         if rt.get_bool(n, "isActive") == active {
@@ -1047,7 +1372,9 @@ impl Pointer {
 
     fn set_motion(&mut self, root: &mut Runtime, s: &SensorRef, hit: &Hit, _cam: &PickCamera) {
         let ty = Self::ty(root, s);
-        let Some(rt) = rt_at_mut(root, &s.node.path) else { return };
+        let Some(rt) = rt_at_mut(root, &s.node.path) else {
+            return;
+        };
         let n = s.node.node;
         let mut st = self.state(&s.node).clone();
 
@@ -1063,12 +1390,24 @@ impl Pointer {
 
     // --- PlaneSensor ---------------------------------------------------------------------------
 
-    fn line_track_point(st: &SensorState, pointer: &Vector2, line: &Line3, track_point: &mut Vector3) -> bool {
+    fn line_track_point(
+        st: &SensorState,
+        pointer: &Vector2,
+        line: &Line3,
+        track_point: &mut Vector3,
+    ) -> bool {
         let mut screen_line = Line2::new(Vector2::ZERO, Vector2::new(1.0, 0.0));
         ViewVolume::project_line(line, &st.mv, &st.projection, &st.viewport, &mut screen_line);
         let tp1 = screen_line.get_closest_point_to_point(pointer);
         let mut track_line = Line3::new(Vector3::ZERO, Vector3::new(0.0, 0.0, -1.0));
-        ViewVolume::unproject_ray(tp1.x, tp1.y, &st.mv, &st.projection, &st.viewport, &mut track_line);
+        ViewVolume::unproject_ray(
+            tp1.x,
+            tp1.y,
+            &st.mv,
+            &st.projection,
+            &st.viewport,
+            &mut track_line,
+        );
         line.get_closest_point_to_line(&track_line, track_point)
     }
 
@@ -1081,19 +1420,28 @@ impl Pointer {
 
         if min.x == max.x {
             st.plane_sensor = false;
-            let direction = rot_vec(&axis_rotation, Vector3::new(0.0, (max.y - min.y).abs(), 0.0));
+            let direction = rot_vec(
+                &axis_rotation,
+                Vector3::new(0.0, (max.y - min.y).abs(), 0.0),
+            );
             let mut d = direction;
             d.normalize();
             st.line = Line3::new(hit_point, d);
         } else if min.y == max.y {
             st.plane_sensor = false;
-            let direction = rot_vec(&axis_rotation, Vector3::new((max.x - min.x).abs(), 0.0, 0.0));
+            let direction = rot_vec(
+                &axis_rotation,
+                Vector3::new((max.x - min.x).abs(), 0.0, 0.0),
+            );
             let mut d = direction;
             d.normalize();
             st.line = Line3::new(hit_point, d);
         } else {
             st.plane_sensor = true;
-            st.plane = Plane3::new(hit_point, rot_vec(&axis_rotation, Vector3::new(0.0, 0.0, 1.0)));
+            st.plane = Plane3::new(
+                hit_point,
+                rot_vec(&axis_rotation, Vector3::new(0.0, 0.0, 1.0)),
+            );
         }
 
         if st.plane_sensor {
@@ -1122,7 +1470,12 @@ impl Pointer {
 
     fn plane_track_start(rt: &mut Runtime, n: NodeId, st: &mut SensorState, track_point: Vector3) {
         st.start_offset_v = get_v3(rt, n, "offset");
-        set(rt, n, "trackPoint_changed", FieldValue::SFVec3f(track_point));
+        set(
+            rt,
+            n,
+            "trackPoint_changed",
+            FieldValue::SFVec3f(track_point),
+        );
         let off = get_v3(rt, n, "offset");
         set(rt, n, "translation_changed", FieldValue::SFVec3f(off));
     }
@@ -1135,7 +1488,11 @@ impl Pointer {
             hit_ray.mult_line_matrix(&st.inv_mv);
             let mut end = Vector3::ZERO;
 
-            if st.plane.intersects_line(&hit_ray, &mut end) { Some((end, end)) } else { None }
+            if st.plane.intersects_line(&hit_ray, &mut end) {
+                Some((end, end))
+            } else {
+                None
+            }
         } else {
             let mut end = Vector3::ZERO;
 
@@ -1167,7 +1524,13 @@ impl Pointer {
         }
     }
 
-    fn plane_track(rt: &mut Runtime, n: NodeId, st: &mut SensorState, end_point: Vector3, track_point: Vector3) {
+    fn plane_track(
+        rt: &mut Runtime,
+        n: NodeId,
+        st: &mut SensorState,
+        end_point: Vector3,
+        track_point: Vector3,
+    ) {
         let axis_rotation = get_rot(rt, n, "axisRotation");
         let mut inv_ar = axis_rotation;
         inv_ar.inverse();
@@ -1187,11 +1550,21 @@ impl Pointer {
         let translation = rot_vec(&axis_rotation, translation);
 
         if !get_v3(rt, n, "trackPoint_changed").equals(&track_point) {
-            set(rt, n, "trackPoint_changed", FieldValue::SFVec3f(track_point));
+            set(
+                rt,
+                n,
+                "trackPoint_changed",
+                FieldValue::SFVec3f(track_point),
+            );
         }
 
         if !get_v3(rt, n, "translation_changed").equals(&translation) {
-            set(rt, n, "translation_changed", FieldValue::SFVec3f(translation));
+            set(
+                rt,
+                n,
+                "translation_changed",
+                FieldValue::SFVec3f(translation),
+            );
         }
     }
 
@@ -1211,7 +1584,11 @@ impl Pointer {
         let distance = st.sx_plane.get_distance_to_point(&z_point) / st.cylinder.radius;
         let section = ((distance + 1.0) / 2.0).floor();
         let sinp = interval(distance, -1.0, 1.0);
-        let phi = if section == 0.0 { sinp.asin() } else { sinp * std::f64::consts::PI / 2.0 };
+        let phi = if section == 0.0 {
+            sinp.asin()
+        } else {
+            sinp * std::f64::consts::PI / 2.0
+        };
         let angle = phi + section * std::f64::consts::PI;
         let d = st.cylinder.axis.direction;
         let rotation = Rotation4::new(d.x, d.y, d.z, angle);
@@ -1223,7 +1600,11 @@ impl Pointer {
     }
 
     fn cylinder_angle(st: &SensorState, rotation: &mut Rotation4) -> f64 {
-        if rotation.get_axis().dot(&st.cylinder.axis.direction) > 0.0 { rotation.angle() } else { -rotation.angle() }
+        if rotation.get_axis().dot(&st.cylinder.axis.direction) > 0.0 {
+            rotation.angle()
+        } else {
+            -rotation.angle()
+        }
     }
 
     fn cylinder_activate(rt: &mut Runtime, n: NodeId, st: &mut SensorState, hit: &Hit) {
@@ -1262,14 +1643,27 @@ impl Pointer {
             Self::cylinder_track_point(st, &hit_ray)
         };
 
-        let mut fv = st.cylinder.axis.get_perpendicular_vector_to_point(&track_point);
+        let mut fv = st
+            .cylinder
+            .axis
+            .get_perpendicular_vector_to_point(&track_point);
         fv.negate();
         st.from_vector = fv;
         let offset = get_f(rt, n, "offset");
         st.start_offset_r = Rotation4::new(y_axis.x, y_axis.y, y_axis.z, offset);
 
-        set(rt, n, "trackPoint_changed", FieldValue::SFVec3f(track_point));
-        set(rt, n, "rotation_changed", FieldValue::SFRotation(st.start_offset_r));
+        set(
+            rt,
+            n,
+            "trackPoint_changed",
+            FieldValue::SFVec3f(track_point),
+        );
+        set(
+            rt,
+            n,
+            "rotation_changed",
+            FieldValue::SFRotation(st.start_offset_r),
+        );
 
         st.angle = offset;
         let rc = get_rot(rt, n, "rotation_changed");
@@ -1290,9 +1684,17 @@ impl Pointer {
             Self::cylinder_track_point(st, &hit_ray)
         };
 
-        set(rt, n, "trackPoint_changed", FieldValue::SFVec3f(track_point));
+        set(
+            rt,
+            n,
+            "trackPoint_changed",
+            FieldValue::SFVec3f(track_point),
+        );
 
-        let mut to_vector = st.cylinder.axis.get_perpendicular_vector_to_point(&track_point);
+        let mut to_vector = st
+            .cylinder
+            .axis
+            .get_perpendicular_vector_to_point(&track_point);
         to_vector.negate();
         let mut rotation = Rotation4::identity();
         rotation.set_vectors(&st.from_vector, &to_vector);
@@ -1316,11 +1718,18 @@ impl Pointer {
             set(rt, n, "rotation_changed", FieldValue::SFRotation(rotation));
         } else {
             let axis_rotation = get_rot(rt, n, "axisRotation");
-            let end_vector = rot_vec(&rotation, rot_vec(&axis_rotation, Vector3::new(0.0, 0.0, 1.0)));
+            let end_vector = rot_vec(
+                &rotation,
+                rot_vec(&axis_rotation, Vector3::new(0.0, 0.0, 1.0)),
+            );
             let mut delta = Rotation4::identity();
             delta.set_vectors(&st.start_vector, &end_vector);
             let axis = rot_vec(&axis_rotation, Vector3::new(0.0, 1.0, 0.0));
-            let sign = if axis.dot(&delta.get_axis()) > 0.0 { 1.0 } else { -1.0 };
+            let sign = if axis.dot(&delta.get_axis()) > 0.0 {
+                1.0
+            } else {
+                -1.0
+            };
 
             st.angle += sign * delta.angle();
             st.start_vector = end_vector;
@@ -1343,7 +1752,12 @@ impl Pointer {
 
     // --- SphereSensor --------------------------------------------------------------------------
 
-    fn sphere_track_point(st: &SensorState, hit_ray: &Line3, track_point: &mut Vector3, behind: bool) -> bool {
+    fn sphere_track_point(
+        st: &SensorState,
+        hit_ray: &Line3,
+        track_point: &mut Vector3,
+        behind: bool,
+    ) -> bool {
         let mut exit = Vector3::ZERO;
 
         if st.sphere.intersects_line(hit_ray, track_point, &mut exit) {
@@ -1397,7 +1811,12 @@ impl Pointer {
             Self::sphere_track_point(st, &hit_ray, &mut track_point, false);
 
             let mut tri_normal = Vector3::ZERO;
-            Triangle3::normal(&st.sphere.center, &track_point, &st.start_point, &mut tri_normal);
+            Triangle3::normal(
+                &st.sphere.center,
+                &track_point,
+                &st.start_point,
+                &mut tri_normal,
+            );
             let mut dir_from_center = track_point;
             dir_from_center.subtract(&st.sphere.center).normalize();
             let mut normal = tri_normal;
@@ -1417,7 +1836,12 @@ impl Pointer {
             Self::sphere_track_point(st, &hit_ray, &mut track_point, false);
         }
 
-        set(rt, n, "trackPoint_changed", FieldValue::SFVec3f(track_point));
+        set(
+            rt,
+            n,
+            "trackPoint_changed",
+            FieldValue::SFVec3f(track_point),
+        );
 
         let mut to_vector = track_point;
         to_vector.subtract(&st.sphere.center);

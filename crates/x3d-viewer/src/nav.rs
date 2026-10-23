@@ -38,13 +38,31 @@ const CRITICAL_ANGLE_FLY: f64 = 0.99;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Input {
-    MouseDown { button: u8, x: f64, y: f64 },
-    MouseUp { button: u8, x: f64, y: f64 },
-    MouseMove { x: f64, y: f64 },
+    MouseDown {
+        button: u8,
+        x: f64,
+        y: f64,
+    },
+    MouseUp {
+        button: u8,
+        x: f64,
+        y: f64,
+    },
+    MouseMove {
+        x: f64,
+        y: f64,
+    },
     /// WheelEvent.deltaY (negative = zoom in / roll).
-    Wheel { delta_y: f64, x: f64, y: f64 },
+    Wheel {
+        delta_y: f64,
+        x: f64,
+        y: f64,
+    },
     /// The "dblclick" DOM event (after the second mouseup of a double click).
-    DblClick { x: f64, y: f64 },
+    DblClick {
+        x: f64,
+        y: f64,
+    },
     /// touchstart / touchmove / touchend with `event .touches` (pageX, pageY in viewport pixels).
     TouchStart(Touches),
     TouchMove(Touches),
@@ -193,7 +211,15 @@ fn point_on_center_plane(cx: &Cx, x: f64, y: f64) -> Vector3 {
     let far_v = cx.vp.far_distance(cx.base, cx.nav);
     let proj = cx.vp.projection(cx.base, near, far_v, v[2], v[3]);
     let mut far = Vector3::ZERO;
-    ViewVolume::unproject_point(x, y, 0.9, &Matrix4::IDENTITY, &proj, &Vector4::new(v[0], v[1], v[2], v[3]), &mut far);
+    ViewVolume::unproject_point(
+        x,
+        y,
+        0.9,
+        &Matrix4::IDENTITY,
+        &proj,
+        &Vector4::new(v[0], v[1], v[2], v[3]),
+        &mut far,
+    );
 
     if cx.base.is_ortho {
         return Vector3::new(far.x, far.y, -distance_to_center(cx, None).norm());
@@ -393,7 +419,12 @@ impl Examine {
         if cx.env.straighten {
             self.start_orientation = cx.vp.user_orientation(cx.base);
             let before = cx.vp.orientation_offset;
-            cx.vp.orientation_offset = self.get_orientation_offset(cx, &Rotation4::identity(), &Rotation4::identity(), &before);
+            cx.vp.orientation_offset = self.get_orientation_offset(
+                cx,
+                &Rotation4::identity(),
+                &Rotation4::identity(),
+                &before,
+            );
         }
 
         self.disconnect(cx.env.date_now);
@@ -411,7 +442,13 @@ impl Examine {
         self.spin_prepare = false;
     }
 
-    fn get_orientation_offset(&self, cx: &Cx, roll: &Rotation4, rotation: &Rotation4, before: &Rotation4) -> Rotation4 {
+    fn get_orientation_offset(
+        &self,
+        cx: &Cx,
+        roll: &Rotation4,
+        rotation: &Rotation4,
+        before: &Rotation4,
+    ) -> Rotation4 {
         let user = if cx.env.straighten {
             let mut u = *roll;
             u.mult_right(&self.start_orientation).mult_right(rotation);
@@ -427,7 +464,13 @@ impl Examine {
         after
     }
 
-    fn get_position_offset(&self, cx: &Cx, before: &Vector3, orientation_before: &Rotation4, orientation_after: &Rotation4) -> Vector3 {
+    fn get_position_offset(
+        &self,
+        cx: &Cx,
+        before: &Vector3,
+        orientation_before: &Rotation4,
+        orientation_after: &Rotation4,
+    ) -> Vector3 {
         let distance = distance_to_center(cx, Some(before));
         let mut oob = inv(orientation_before);
         oob.mult_right(orientation_after);
@@ -461,7 +504,12 @@ impl Examine {
     /// ExamineViewer.dblclick: disconnect, then lookAtPoint (Alt) or lookAtBBox, run by the caller.
     fn dblclick(&mut self, x: f64, y: f64, cx: &mut Cx) {
         self.disconnect(cx.env.date_now);
-        cx.requests.push(LookAtRequest { x, y, point: cx.env.alt, straighten: cx.env.straighten });
+        cx.requests.push(LookAtRequest {
+            x,
+            y,
+            point: cx.env.alt,
+            straighten: cx.env.straighten,
+        });
     }
 
     /// ExamineViewer.wheel after the pointer test (`event .zoomFactor || SCROLL_FACTOR`).
@@ -472,7 +520,11 @@ impl Examine {
 
         self.remove_spinning(cx.env.date_now);
         cx.vp.transition_stop();
-        let zf = if zoom_factor != 0.0 && !zoom_factor.is_nan() { zoom_factor } else { SCROLL_FACTOR };
+        let zf = if zoom_factor != 0.0 && !zoom_factor.is_nan() {
+            zoom_factor
+        } else {
+            SCROLL_FACTOR
+        };
         self.zoom(zf, delta_y, cx);
     }
 
@@ -541,7 +593,15 @@ impl Examine {
 
                 let dot = c1.dot(&c2);
                 let (move_, zoom) = (dot > 0.7, dot < -0.7);
-                let mode = if self.touch_mode != 0 { self.touch_mode } else if move_ { 1 } else if zoom { 2 } else { 0 };
+                let mode = if self.touch_mode != 0 {
+                    self.touch_mode
+                } else if move_ {
+                    1
+                } else if zoom {
+                    2
+                } else {
+                    0
+                };
                 let (x, y) = ((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0);
 
                 match mode {
@@ -617,7 +677,9 @@ impl Examine {
                 return;
             }
 
-            if angle_of(&self.delta_rotation).abs() > SPIN_ANGLE && cx.env.date_now * 1000.0 - self.motion_time < SPIN_RELEASE_TIME {
+            if angle_of(&self.delta_rotation).abs() > SPIN_ANGLE
+                && cx.env.date_now * 1000.0 - self.motion_time < SPIN_RELEASE_TIME
+            {
                 let d = self.delta_rotation;
                 self.add_spinning(&d, cx);
             }
@@ -664,7 +726,10 @@ impl Examine {
             let zaxis = rot_vec(&self.start_orientation, &Vector3::Z_AXIS);
             let start_roll = zaxis.dot(&up).clamp(-1.0, 1.0).acos();
             let roll = std::f64::consts::PI * 2.0 * ty / ppr_y;
-            let clamped_roll = (start_roll + roll).clamp(CRITICAL_ANGLE_EXAMINE, std::f64::consts::PI - CRITICAL_ANGLE_EXAMINE) - start_roll;
+            let clamped_roll = (start_roll + roll).clamp(
+                CRITICAL_ANGLE_EXAMINE,
+                std::f64::consts::PI - CRITICAL_ANGLE_EXAMINE,
+            ) - start_roll;
 
             if self.last_roll - roll.abs() > 0.0 {
                 self.from_pointer.y += (roll - clamped_roll) / (std::f64::consts::PI * 2.0) * ppr_y;
@@ -673,11 +738,21 @@ impl Examine {
             self.last_roll = roll.abs();
 
             if self.negate == 0.0 {
-                if std::f64::consts::PI / 2.0 - (start_roll - std::f64::consts::PI / 2.0).abs() < DISK_ANGLE {
+                if std::f64::consts::PI / 2.0 - (start_roll - std::f64::consts::PI / 2.0).abs()
+                    < DISK_ANGLE
+                {
                     if y - v[1] > v[3] / 2.0 {
-                        self.negate = if start_roll < std::f64::consts::PI / 4.0 { -1.0 } else { 1.0 };
+                        self.negate = if start_roll < std::f64::consts::PI / 4.0 {
+                            -1.0
+                        } else {
+                            1.0
+                        };
                     } else {
-                        self.negate = if start_roll > std::f64::consts::PI / 4.0 { -1.0 } else { 1.0 };
+                        self.negate = if start_roll > std::f64::consts::PI / 4.0 {
+                            -1.0
+                        } else {
+                            1.0
+                        };
                     }
                 } else {
                     self.negate = 1.0;
@@ -687,7 +762,12 @@ impl Examine {
             self.delta_rotation = self.rotation;
             self.roll = Rotation4::new(1.0, 0.0, 0.0, clamped_roll);
             let mut r = Rotation4::identity();
-            r.set(up.x, up.y, up.z, std::f64::consts::PI * 2.0 * -tx / ppr_x * self.negate);
+            r.set(
+                up.x,
+                up.y,
+                up.z,
+                std::f64::consts::PI * 2.0 * -tx / ppr_x * self.negate,
+            );
             self.rotation = r;
             let mut d = inv(&self.delta_rotation);
             d.mult_right(&self.rotation);
@@ -734,7 +814,15 @@ impl Examine {
             self.axis = up;
 
             let axis_dot = d.get_axis().dot(&up);
-            let sign = |v: f64| if v > 0.0 { 1.0 } else if v < 0.0 { -1.0 } else { v };
+            let sign = |v: f64| {
+                if v > 0.0 {
+                    1.0
+                } else if v < 0.0 {
+                    -1.0
+                } else {
+                    v
+                }
+            };
 
             if sign(axis_dot) != sign(d.angle()) {
                 self.axis.negate();
@@ -743,7 +831,9 @@ impl Examine {
             let interval = std::f64::consts::PI / (angle * SPIN_FACTOR * 25.0);
             self.spin_ts = Some((cx.env.date_now, interval));
 
-            let look = cx.vp.look_at_rotation(cx.base, &user_position, &user_center);
+            let look = cx
+                .vp
+                .look_at_rotation(cx.base, &user_position, &user_center);
             self.direction = direction;
             let mut oo = cx.vp.user_orientation(cx.base);
             oo.mult_right(&inv(&look));
@@ -758,10 +848,17 @@ impl Examine {
     fn spin(&mut self, cx: &mut Cx, fraction: f64) {
         if cx.env.straighten {
             let user_center = cx.vp.user_center_of_rotation(cx.base);
-            let rotation = Rotation4::new(self.axis.x, self.axis.y, self.axis.z, 2.0 * std::f64::consts::PI * fraction);
+            let rotation = Rotation4::new(
+                self.axis.x,
+                self.axis.y,
+                self.axis.z,
+                2.0 * std::f64::consts::PI * fraction,
+            );
             let mut user_position = rot_vec(&rotation, &self.direction);
             user_position.add(&user_center);
-            let look = cx.vp.look_at_rotation(cx.base, &user_position, &user_center);
+            let look = cx
+                .vp
+                .look_at_rotation(cx.base, &user_position, &user_center);
             cx.vp.position_offset = sub(&user_position, &cx.base.position);
             let mut oo = inv(&cx.base.orientation);
             oo.mult_right(&self.orientation_offset).mult_right(&look);
@@ -773,7 +870,12 @@ impl Examine {
             let before = self.orientation_offset;
             let new = self.get_orientation_offset(cx, &Rotation4::identity(), &rotation, &before);
             cx.vp.orientation_offset = new;
-            let po = self.get_position_offset(cx, &cx.vp.position_offset, &self.orientation_offset, &new);
+            let po = self.get_position_offset(
+                cx,
+                &cx.vp.position_offset,
+                &self.orientation_offset,
+                &new,
+            );
             cx.vp.position_offset = po;
         }
     }
@@ -825,14 +927,19 @@ impl Examine {
             self.cor_chaser.connected = true;
             let p = add(&cx.vp.center_of_rotation_offset, cor_change);
             self.cor_chaser.set_destination_value = p;
-            self.pending.push(Pend::CorValue(cx.vp.center_of_rotation_offset));
+            self.pending
+                .push(Pend::CorValue(cx.vp.center_of_rotation_offset));
             self.pending.push(Pend::CorDest(p));
         }
     }
 
     pub fn prepare(&mut self, cx: &mut Cx) {
         let now = cx.env.now;
-        let (pa, ca, ra) = (self.position_chaser.is_active, self.cor_chaser.is_active, self.rotation_chaser.is_active);
+        let (pa, ca, ra) = (
+            self.position_chaser.is_active,
+            self.cor_chaser.is_active,
+            self.rotation_chaser.is_active,
+        );
 
         for p in std::mem::take(&mut self.pending) {
             match p {
@@ -863,16 +970,22 @@ impl Examine {
         // prepareEvents runs the interests in the order the chasers became active. Chasers that
         // were not active when the frame began (activated by the events above) wait for the next one.
         let mut order: Vec<(u64, u8)> = Vec::new();
-        if pa && self.position_chaser.is_active { order.push((self.position_chaser.activated_at, 0)); }
-        if ca && self.cor_chaser.is_active { order.push((self.cor_chaser.activated_at, 1)); }
-        if ra && self.rotation_chaser.is_active { order.push((self.rotation_chaser.activated_at, 2)); }
+        if pa && self.position_chaser.is_active {
+            order.push((self.position_chaser.activated_at, 0));
+        }
+        if ca && self.cor_chaser.is_active {
+            order.push((self.cor_chaser.activated_at, 1));
+        }
+        if ra && self.rotation_chaser.is_active {
+            order.push((self.rotation_chaser.activated_at, 2));
+        }
         order.sort();
 
         for (_, which) in order {
             match which {
                 0 => {
                     let o = self.position_chaser.prepare(now);
-                                if self.position_chaser.connected {
+                    if self.position_chaser.connected {
                         cx.vp.position_offset = o;
                     }
                 }
@@ -884,7 +997,7 @@ impl Examine {
                 }
                 _ => {
                     let o = self.rotation_chaser.prepare(now);
-                                if self.rotation_chaser.connected {
+                    if self.rotation_chaser.connected {
                         self.set_rotation(cx, &o);
                     }
                 }
@@ -907,7 +1020,12 @@ impl Examine {
         let init = self.initial_orientation_offset;
         let oo = self.get_orientation_offset(cx, &roll, value, &init);
         cx.vp.orientation_offset = oo;
-        cx.vp.position_offset = self.get_position_offset(cx, &self.initial_position_offset, &self.initial_orientation_offset, &oo);
+        cx.vp.position_offset = self.get_position_offset(
+            cx,
+            &self.initial_position_offset,
+            &self.initial_orientation_offset,
+            &oo,
+        );
     }
 }
 
@@ -1001,7 +1119,10 @@ impl Fly {
                 }
             }
             // The Fly / Walk viewers' touch handlers are not ported (they have no dblclick).
-            Input::DblClick { .. } | Input::TouchStart(_) | Input::TouchMove(_) | Input::TouchEnd => {}
+            Input::DblClick { .. }
+            | Input::TouchStart(_)
+            | Input::TouchMove(_)
+            | Input::TouchEnd => {}
         }
     }
 
@@ -1122,13 +1243,21 @@ impl Fly {
         let dt = now - self.start_time;
 
         let axis_back = Vector3::new(0.0, 0.0, 1.0);
-        let mut rubber = if self.direction.z > 0.0 { set_vectors(&self.direction, &axis_back) } else { set_vectors(&Vector3::new(0.0, 0.0, -1.0), &self.direction) };
+        let mut rubber = if self.direction.z > 0.0 {
+            set_vectors(&self.direction, &axis_back)
+        } else {
+            set_vectors(&Vector3::new(0.0, 0.0, -1.0), &self.direction)
+        };
         let rubber_length = self.direction.norm();
 
         let mut speed_factor = 1.0 - rubber.angle() / (std::f64::consts::PI / 2.0);
         speed_factor *= cx.nav.speed;
         speed_factor *= cx.base.speed_factor(cx.vp);
-        speed_factor *= if cx.env.shift { SHIFT_SPEED_FACTOR } else { SPEED_FACTOR };
+        speed_factor *= if cx.env.shift {
+            SHIFT_SPEED_FACTOR
+        } else {
+            SPEED_FACTOR
+        };
         speed_factor *= dt;
 
         let mut d = self.direction;
@@ -1138,7 +1267,8 @@ impl Fly {
         constrained.add(&cx.vp.position_offset);
         cx.vp.position_offset = constrained;
 
-        let weight = ROTATION_SPEED_FACTOR * dt * (rubber_length / (rubber_length + ROTATION_LIMIT)).powi(2);
+        let weight =
+            ROTATION_SPEED_FACTOR * dt * (rubber_length / (rubber_length + ROTATION_LIMIT)).powi(2);
 
         let mut user_orientation = Rotation4::identity();
         user_orientation.slerp(&rubber, weight);
@@ -1166,7 +1296,11 @@ impl Fly {
         let mut speed_factor = 1.0;
         speed_factor *= cx.nav.speed;
         speed_factor *= cx.base.speed_factor(cx.vp);
-        speed_factor *= if cx.env.shift { PAN_SHIFT_SPEED_FACTOR } else { PAN_SPEED_FACTOR };
+        speed_factor *= if cx.env.shift {
+            PAN_SHIFT_SPEED_FACTOR
+        } else {
+            PAN_SPEED_FACTOR
+        };
         speed_factor *= dt;
 
         let uo = cx.vp.user_orientation(cx.base);
@@ -1189,7 +1323,8 @@ impl Fly {
 
         if self.chaser.is_active && self.chaser.connected {
             // `.multRight (viewpoint .getOrientation ()) .multRight (orientationChaser ._set_destination)`
-            oo.mult_right(&cx.base.orientation).mult_right(&self.chaser.set_destination_value);
+            oo.mult_right(&cx.base.orientation)
+                .mult_right(&self.chaser.set_destination_value);
             self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         } else {
@@ -1209,7 +1344,8 @@ impl Fly {
 
         if self.chaser.is_active && self.chaser.connected {
             let mut uo = set_vectors(to, from);
-            uo.mult_right(&cx.base.orientation).mult_right(&self.chaser.set_destination_value);
+            uo.mult_right(&cx.base.orientation)
+                .mult_right(&self.chaser.set_destination_value);
 
             if self.straighten_horizon(cx) {
                 uo = cx.base.straighten_horizon(cx.vp, &uo);

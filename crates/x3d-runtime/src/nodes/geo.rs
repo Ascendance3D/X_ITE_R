@@ -1,10 +1,10 @@
 //! Components/Geospatial runtime parts: X3DGeospatialObject state read from the node's fields and
 //! GeoPositionInterpolator.interpolate.
 
+use crate::geo::{GeoOriginInfo, GeospatialObject, geo_system, geocentric_slerp};
+use crate::nodes::LoadState;
 use crate::*;
 use x3d_fields::math::Vector3;
-use crate::geo::{GeoOriginInfo, GeospatialObject, geocentric_slerp, geo_system};
-use crate::nodes::LoadState;
 
 impl Runtime {
     fn geo_strings(&self, node: NodeId, name: &str) -> Vec<String> {
@@ -24,10 +24,13 @@ impl Runtime {
     /// X3DGeospatialObject: reference frames from `geoSystem`, origin from the `geoOrigin` GeoOrigin.
     pub fn geo_object(&self, node: NodeId) -> GeospatialObject {
         let origin = match self.pre_value(node, "geoOrigin") {
-            Some(FieldValue::SFNode(Some(o))) if self.builtin_name(*o) == Some("GeoOrigin") => Some(GeoOriginInfo {
-                origin: geo_system::reference_frame(&self.geo_strings(*o, "geoSystem"), false).convert(&self.geo_vec3(*o, "geoCoords")),
-                rotate_y_up: self.get_bool(*o, "rotateYUp"),
-            }),
+            Some(FieldValue::SFNode(Some(o))) if self.builtin_name(*o) == Some("GeoOrigin") => {
+                Some(GeoOriginInfo {
+                    origin: geo_system::reference_frame(&self.geo_strings(*o, "geoSystem"), false)
+                        .convert(&self.geo_vec3(*o, "geoCoords")),
+                    rotate_y_up: self.get_bool(*o, "rotateYUp"),
+                })
+            }
             _ => None,
         };
 
@@ -37,13 +40,20 @@ impl Runtime {
     /// X3DViewpointNode.set_navigationInfo__: X3DCast (NavigationInfo, navigationInfo), through
     /// PROTO instances.
     pub fn viewpoint_navigation_info(&self, node: NodeId) -> Option<NodeId> {
-        let Some(FieldValue::SFNode(Some(mut n))) = self.pre_value(node, "navigationInfo").cloned() else {
+        let Some(FieldValue::SFNode(Some(mut n))) = self.pre_value(node, "navigationInfo").cloned()
+        else {
             return None;
         };
 
         for _ in 0..256 {
             if let NodeKind::Instance(_) = self.scene.node(n).kind {
-                n = self.scene.ctx(self.instance_body(n)?).root_nodes.first().copied().flatten()?;
+                n = self
+                    .scene
+                    .ctx(self.instance_body(n)?)
+                    .root_nodes
+                    .first()
+                    .copied()
+                    .flatten()?;
                 continue;
             }
 
@@ -56,7 +66,10 @@ impl Runtime {
     /// The private NavigationInfo of a GeoViewpoint up to specification version 3.2 (its
     /// traverse adds it to the layer's NavigationInfo list).
     pub fn geo_navigation_info(&self, node: NodeId) -> Option<NodeId> {
-        match self.private_field(node, "geoNavigationInfo").map(|k| self.value(k)) {
+        match self
+            .private_field(node, "geoNavigationInfo")
+            .map(|k| self.value(k))
+        {
             Some(FieldValue::SFNode(n)) => *n,
             _ => None,
         }
@@ -79,7 +92,12 @@ impl Runtime {
         self.nrt_mut(nav);
         self.construct_node(nav);
 
-        let holder = self.add_private_field(node, "geoNavigationInfo", access::INITIALIZE_ONLY, FieldValue::SFNode(None));
+        let holder = self.add_private_field(
+            node,
+            "geoNavigationInfo",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFNode(None),
+        );
         self.set_raw(holder, FieldValue::SFNode(Some(nav)));
 
         for (from, to) in [("navType", "type"), ("headlight", "headlight")] {
@@ -99,11 +117,17 @@ impl Runtime {
 
     /// GeoLOD: its private root Inline and four child Inlines.
     pub fn geo_lod_inlines(&self, node: NodeId) -> Option<(NodeId, [NodeId; 4])> {
-        let root = match self.private_field(node, "rootInlineNode").map(|k| self.value(k)) {
+        let root = match self
+            .private_field(node, "rootInlineNode")
+            .map(|k| self.value(k))
+        {
             Some(FieldValue::SFNode(Some(n))) => *n,
             _ => return None,
         };
-        let children = match self.private_field(node, "childInlineNodes").map(|k| self.value(k)) {
+        let children = match self
+            .private_field(node, "childInlineNodes")
+            .map(|k| self.value(k))
+        {
             Some(FieldValue::MFNode(v)) if v.len() == 4 => [v[0]?, v[1]?, v[2]?, v[3]?],
             _ => return None,
         };
@@ -124,24 +148,37 @@ impl Runtime {
     /// before the displayFinishEvents and finishEvents of the frame change the state again.
     pub fn geo_lod_mode(&self, node: NodeId, display: bool) -> i32 {
         if display {
-            if let Some(FieldValue::SFInt32(v)) = self.private_field(node, "displayLevel").map(|k| self.value(k)) {
+            if let Some(FieldValue::SFInt32(v)) = self
+                .private_field(node, "displayLevel")
+                .map(|k| self.value(k))
+            {
                 return *v;
             }
         }
 
-        if self.geo_lod_children_loaded(node) { self.geo_lod_level(node) } else { 0 }
+        if self.geo_lod_children_loaded(node) {
+            self.geo_lod_level(node)
+        } else {
+            0
+        }
     }
 
     /// Record the traversal mode of a GeoLOD the DISPLAY traversal visited (after changeLevel).
     pub fn geo_lod_display(&mut self, node: NodeId) {
         let mode = self.geo_lod_mode(node, false);
-        let k = self.add_private_field(node, "displayLevel", access::INITIALIZE_ONLY, FieldValue::SFInt32(mode));
+        let k = self.add_private_field(
+            node,
+            "displayLevel",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFInt32(mode),
+        );
         self.set_raw(k, FieldValue::SFInt32(mode));
     }
 
     /// GeoLOD `childrenLoaded`.
     pub fn geo_lod_children_loaded(&self, node: NodeId) -> bool {
-        self.private_field(node, "childrenLoaded").is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)))
+        self.private_field(node, "childrenLoaded")
+            .is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)))
     }
 
     fn geo_lod_set_children_loaded(&mut self, node: NodeId, value: bool) {
@@ -152,7 +189,10 @@ impl Runtime {
 
     /// `inlineNode .getInternalScene () .getRootNodes ()` (no roots before a scene is attached).
     fn inline_root_nodes(&self, inline: NodeId) -> Vec<Option<NodeId>> {
-        self.inline_scenes.get(&inline).map(|ctx| self.scene.ctx(*ctx).root_nodes.clone()).unwrap_or_default()
+        self.inline_scenes
+            .get(&inline)
+            .map(|ctx| self.scene.ctx(*ctx).root_nodes.clone())
+            .unwrap_or_default()
     }
 
     fn geo_lod_set_children(&mut self, node: NodeId, nodes: Vec<Option<NodeId>>) {
@@ -188,19 +228,56 @@ impl Runtime {
             })
             .collect();
 
-        let root = self.add_private_field(node, "rootInlineNode", access::INITIALIZE_ONLY, FieldValue::SFNode(None));
+        let root = self.add_private_field(
+            node,
+            "rootInlineNode",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFNode(None),
+        );
         self.set_raw(root, FieldValue::SFNode(Some(inlines[0])));
-        let children = self.add_private_field(node, "childInlineNodes", access::INITIALIZE_ONLY, FieldValue::MFNode(vec![]));
-        self.set_raw(children, FieldValue::MFNode(inlines[1..].iter().map(|n| Some(*n)).collect()));
-        self.add_private_field(node, "childrenLoaded", access::INITIALIZE_ONLY, FieldValue::SFBool(false));
+        let children = self.add_private_field(
+            node,
+            "childInlineNodes",
+            access::INITIALIZE_ONLY,
+            FieldValue::MFNode(vec![]),
+        );
+        self.set_raw(
+            children,
+            FieldValue::MFNode(inlines[1..].iter().map(|n| Some(*n)).collect()),
+        );
+        self.add_private_field(
+            node,
+            "childrenLoaded",
+            access::INITIALIZE_ONLY,
+            FieldValue::SFBool(false),
+        );
 
         for (i, &inline) in inlines.iter().enumerate() {
-            let state = self.add_private_field(inline, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-            self.add_interest(state, node, if i == 0 { Cb::GeoLodRootLoadState } else { Cb::GeoLodChildLoadState });
+            let state = self.add_private_field(
+                inline,
+                "loadState",
+                access::OUTPUT_ONLY,
+                FieldValue::SFInt32(0),
+            );
+            self.add_interest(
+                state,
+                node,
+                if i == 0 {
+                    Cb::GeoLodRootLoadState
+                } else {
+                    Cb::GeoLodChildLoadState
+                },
+            );
         }
 
         for (i, &inline) in inlines.iter().enumerate() {
-            let url = ["rootUrl", "child1Url", "child2Url", "child3Url", "child4Url"][i];
+            let url = [
+                "rootUrl",
+                "child1Url",
+                "child2Url",
+                "child3Url",
+                "child4Url",
+            ][i];
 
             if let (Some(from), Some(to)) = (self.pre(node, url), self.pre(inline, "url")) {
                 self.add_field_interest(from, to);
@@ -214,7 +291,13 @@ impl Runtime {
         }
 
         for (i, &inline) in inlines.iter().enumerate() {
-            let url = ["rootUrl", "child1Url", "child2Url", "child3Url", "child4Url"][i];
+            let url = [
+                "rootUrl",
+                "child1Url",
+                "child2Url",
+                "child3Url",
+                "child4Url",
+            ][i];
 
             if let (Some(from), Some(to)) = (self.pre(node, url), self.pre(inline, "url")) {
                 let value = self.value(from).clone();
@@ -229,9 +312,14 @@ impl Runtime {
 
     /// GeoLOD.set_rootLoadState__.
     pub(crate) fn geo_lod_set_root_load_state(&mut self, node: NodeId) {
-        let Some((root, _)) = self.geo_lod_inlines(node) else { return };
+        let Some((root, _)) = self.geo_lod_inlines(node) else {
+            return;
+        };
 
-        if self.geo_lod_level(node) != 0 || !self.geo_lod_root_node(node).is_empty() || self.url_load_state(root) != LoadState::Complete {
+        if self.geo_lod_level(node) != 0
+            || !self.geo_lod_root_node(node).is_empty()
+            || self.url_load_state(root) != LoadState::Complete
+        {
             return;
         }
 
@@ -243,20 +331,33 @@ impl Runtime {
     /// GeoLOD.set_childLoadState__: once the four child Inlines are COMPLETE or FAILED, the
     /// children are their scenes' root nodes.
     pub(crate) fn geo_lod_set_child_load_state(&mut self, node: NodeId) {
-        let Some((_, children)) = self.geo_lod_inlines(node) else { return };
+        let Some((_, children)) = self.geo_lod_inlines(node) else {
+            return;
+        };
 
         if self.geo_lod_level(node) != 1 {
             return;
         }
 
-        let loaded = children.iter().filter(|c| matches!(self.url_load_state(**c), LoadState::Complete | LoadState::Failed)).count();
+        let loaded = children
+            .iter()
+            .filter(|c| {
+                matches!(
+                    self.url_load_state(**c),
+                    LoadState::Complete | LoadState::Failed
+                )
+            })
+            .count();
 
         if loaded != 4 {
             return;
         }
 
         self.geo_lod_set_children_loaded(node, true);
-        let roots = children.iter().flat_map(|c| self.inline_root_nodes(*c)).collect();
+        let roots = children
+            .iter()
+            .flat_map(|c| self.inline_root_nodes(*c))
+            .collect();
         self.geo_lod_set_children(node, roots);
     }
 
@@ -266,7 +367,9 @@ impl Runtime {
             return;
         }
 
-        let Some((root, children)) = self.geo_lod_inlines(node) else { return };
+        let Some((root, children)) = self.geo_lod_inlines(node) else {
+            return;
+        };
 
         if let Some(k) = self.pre(node, "level_changed") {
             self.set_value(k, FieldValue::SFInt32(level));
@@ -302,7 +405,13 @@ impl Runtime {
     }
 
     /// GeoPositionInterpolator.interpolate.
-    pub(crate) fn geo_position_interpolate(&mut self, node: NodeId, index0: usize, index1: usize, weight: f64) {
+    pub(crate) fn geo_position_interpolate(
+        &mut self,
+        node: NodeId,
+        index0: usize,
+        index1: usize,
+        weight: f64,
+    ) {
         let Some(FieldValue::MFVec3d(a)) = self.pre_value(node, "keyValue").cloned() else {
             return;
         };

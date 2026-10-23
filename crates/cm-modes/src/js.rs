@@ -9,7 +9,16 @@ pub use cm_core::text::{from_u16, is_js_space, is_js_word, to_u16};
 /// default case mapping (final sigma included).
 pub fn to_lower(s: &[u16]) -> Vec<u16> {
     if s.iter().all(|&c| c < 0x80) {
-        return s.iter().map(|&c| if (b'A' as u16..=b'Z' as u16).contains(&c) { c + 32 } else { c }).collect();
+        return s
+            .iter()
+            .map(|&c| {
+                if (b'A' as u16..=b'Z' as u16).contains(&c) {
+                    c + 32
+                } else {
+                    c
+                }
+            })
+            .collect();
     }
     map_runs(s, |t| t.to_lowercase())
 }
@@ -63,12 +72,18 @@ pub fn is_digit(c: u16) -> bool {
 }
 
 pub fn is_hex(c: u16) -> bool {
-    is_digit(c) || (b'a' as u16..=b'f' as u16).contains(&c) || (b'A' as u16..=b'F' as u16).contains(&c)
+    is_digit(c)
+        || (b'a' as u16..=b'f' as u16).contains(&c)
+        || (b'A' as u16..=b'F' as u16).contains(&c)
 }
 
 /// One code unit as a char for `match` arms; non-ASCII units map to U+FFFF.
 pub fn ch(c: u16) -> char {
-    if c < 0x80 { c as u8 as char } else { '\u{ffff}' }
+    if c < 0x80 {
+        c as u8 as char
+    } else {
+        '\u{ffff}'
+    }
 }
 
 /// A numeric mode-state field that may hold `CodeMirror.Pass` instead of a number:

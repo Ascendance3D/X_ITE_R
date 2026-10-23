@@ -84,15 +84,25 @@ fn text_equal(a: &str, b: &str, tol: f64) -> bool {
 
     let ((ta, na), (tb, nb)) = (split(a), split(b));
 
-    ta == tb && na.iter().zip(&nb).all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
+    ta == tb
+        && na
+            .iter()
+            .zip(&nb)
+            .all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
 }
 
 /// Equal JSON values where numbers are equal as doubles (JS prints 0 where Rust prints 0.0).
 fn same_bits(a: Option<&Value>, b: Option<&Value>) -> bool {
     match (a, b) {
-        (Some(Value::Array(x)), Some(Value::Array(y))) => x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same_bits(Some(p), Some(q))),
-        (Some(Value::Object(x)), Some(Value::Object(y))) => x.len() == y.len() && x.iter().all(|(k, v)| same_bits(Some(v), y.get(k))),
-        (Some(Value::Number(x)), Some(Value::Number(y))) => x.as_f64().map(f64::to_bits) == y.as_f64().map(f64::to_bits),
+        (Some(Value::Array(x)), Some(Value::Array(y))) => {
+            x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same_bits(Some(p), Some(q)))
+        }
+        (Some(Value::Object(x)), Some(Value::Object(y))) => {
+            x.len() == y.len() && x.iter().all(|(k, v)| same_bits(Some(v), y.get(k)))
+        }
+        (Some(Value::Number(x)), Some(Value::Number(y))) => {
+            x.as_f64().map(f64::to_bits) == y.as_f64().map(f64::to_bits)
+        }
         (x, y) => x == y,
     }
 }
@@ -103,19 +113,39 @@ fn same_bits(a: Option<&Value>, b: Option<&Value>) -> bool {
 const PROBE_TOL: f64 = 1e-6;
 
 fn nums(v: &Value) -> Vec<f64> {
-    v.as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default()
 }
 
 #[allow(clippy::too_many_arguments)]
-fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, text_tol: f64, gpu: bool, failures: &mut Vec<String>) {
+fn compare_case(
+    root: &Path,
+    name: &str,
+    world: &str,
+    script: &str,
+    msaa: u32,
+    text_tol: f64,
+    gpu: bool,
+    failures: &mut Vec<String>,
+) {
     let dir = root.join(format!("oracle/rea-batch09-nav-baseline/{name}-msaa{msaa}"));
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch09-{}-{name}-msaa{msaa}", std::process::id()));
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let out = std::env::temp_dir().join(format!(
+        "rea-batch09-{}-{name}-msaa{msaa}",
+        std::process::id()
+    ));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-drive"));
-    cmd.current_dir(root).args([world, script, "--oracle", "oracle"]).arg("--out").arg(&rs_json).arg("--warmup-from").arg(dir.join("js.json"));
+    cmd.current_dir(root)
+        .args([world, script, "--oracle", "oracle"])
+        .arg("--out")
+        .arg(&rs_json)
+        .arg("--warmup-from")
+        .arg(dir.join("js.json"));
 
     let images = gpu && dir.join("js").is_dir();
 
@@ -151,18 +181,39 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
         }
     }
 
-    let (a, b) = (js["pickProbes"].as_array().cloned().unwrap_or_default(), rs["pickProbes"].as_array().cloned().unwrap_or_default());
-    let bad: Vec<usize> = (0..a.len().max(b.len())).filter(|&i| !same_bits(a.get(i), b.get(i))).collect();
+    let (a, b) = (
+        js["pickProbes"].as_array().cloned().unwrap_or_default(),
+        rs["pickProbes"].as_array().cloned().unwrap_or_default(),
+    );
+    let bad: Vec<usize> = (0..a.len().max(b.len()))
+        .filter(|&i| !same_bits(a.get(i), b.get(i)))
+        .collect();
 
     if !bad.is_empty() {
-        fail(format!("{} of {} pick probes differ, first {}: X_ITE {} / Rust {}", bad.len(), a.len(), bad[0], a.get(bad[0]).unwrap_or(&Value::Null), b.get(bad[0]).unwrap_or(&Value::Null)));
+        fail(format!(
+            "{} of {} pick probes differ, first {}: X_ITE {} / Rust {}",
+            bad.len(),
+            a.len(),
+            bad[0],
+            a.get(bad[0]).unwrap_or(&Value::Null),
+            b.get(bad[0]).unwrap_or(&Value::Null)
+        ));
     }
 
     // collisionProbes: getClosestObject (direction) after the last frame. Both depth buffers are drawn
     // on the same GPU, the Rust one through Vulkan and X_ITE's through ANGLE on OpenGL: the hit flag
     // and normal agree, the window z of a pixel differs by a few float32 ulp (see PROBE_TOL).
     if js.get("collisionProbes").is_some() || rs.get("collisionProbes").is_some() {
-        let (a, b) = (js["collisionProbes"].as_array().cloned().unwrap_or_default(), rs["collisionProbes"].as_array().cloned().unwrap_or_default());
+        let (a, b) = (
+            js["collisionProbes"]
+                .as_array()
+                .cloned()
+                .unwrap_or_default(),
+            rs["collisionProbes"]
+                .as_array()
+                .cloned()
+                .unwrap_or_default(),
+        );
 
         if a.len() != b.len() {
             fail(format!("{} collision probes, X_ITE {}", b.len(), a.len()));
@@ -170,11 +221,19 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 
         for (i, (p, q)) in a.iter().zip(&b).enumerate() {
             let hit = |v: &Value| v["id"].as_i64().unwrap_or(-1) >= 0;
-            let dd = (p["distance"].as_f64().unwrap_or(f64::NAN) - q["distance"].as_f64().unwrap_or(f64::NAN)).abs();
-            let dn = nums(&p["normal"]).iter().zip(nums(&q["normal"])).map(|(x, y)| (x - y).abs()).fold(0.0, f64::max);
+            let dd = (p["distance"].as_f64().unwrap_or(f64::NAN)
+                - q["distance"].as_f64().unwrap_or(f64::NAN))
+            .abs();
+            let dn = nums(&p["normal"])
+                .iter()
+                .zip(nums(&q["normal"]))
+                .map(|(x, y)| (x - y).abs())
+                .fold(0.0, f64::max);
 
             if hit(p) != hit(q) || !(dd <= PROBE_TOL) || (hit(p) && !(dn <= PROBE_TOL)) {
-                fail(format!("collision probe {i}: X_ITE {p} / Rust {q} (distance {dd:.2e}, normal {dn:.2e})"));
+                fail(format!(
+                    "collision probe {i}: X_ITE {p} / Rust {q} (distance {dd:.2e}, normal {dn:.2e})"
+                ));
                 break;
             }
         }
@@ -189,15 +248,38 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
             fail(format!("pose at frame {k} missing"));
             continue;
         };
-        let d = |key: &str| nums(&a[key]).iter().zip(nums(&b[key])).map(|(p, q)| (p - q).abs()).fold(0.0, f64::max);
-        let (qa, qb) = (quat(&nums(&a["orientation"])), quat(&nums(&b["orientation"])));
+        let d = |key: &str| {
+            nums(&a[key])
+                .iter()
+                .zip(nums(&b[key]))
+                .map(|(p, q)| (p - q).abs())
+                .fold(0.0, f64::max)
+        };
+        let (qa, qb) = (
+            quat(&nums(&a["orientation"])),
+            quat(&nums(&b["orientation"])),
+        );
         let dot = qa.iter().zip(qb).map(|(p, q)| p * q).sum::<f64>().abs();
         let angle = 2.0 * dot.min(1.0).acos();
-        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0) - b["fieldOfViewScale"].as_f64().unwrap_or(1.0)).abs();
+        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0)
+            - b["fieldOfViewScale"].as_f64().unwrap_or(1.0))
+        .abs();
         let viewpoint = a["viewpoint"] == b["viewpoint"] || b["viewpoint"] == "<default>";
 
-        if d("position") > 1e-4 || d("centerOfRotation") > 1e-4 || angle > 1e-4 || fov > 1e-4 || a["viewer"] != b["viewer"] || !viewpoint {
-            fail(format!("pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}", d("position"), d("centerOfRotation"), a["viewer"], b["viewer"]));
+        if d("position") > 1e-4
+            || d("centerOfRotation") > 1e-4
+            || angle > 1e-4
+            || fov > 1e-4
+            || a["viewer"] != b["viewer"]
+            || !viewpoint
+        {
+            fail(format!(
+                "pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}",
+                d("position"),
+                d("centerOfRotation"),
+                a["viewer"],
+                b["viewer"]
+            ));
         }
     }
 
@@ -212,7 +294,10 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
                     if s.pixels_over * 1000 > (w * h) as usize * 5 {
-                        fail(format!("{file}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+                        fail(format!(
+                            "{file}: {} pixels over 8 ({:.3}%), max {}",
+                            s.pixels_over, s.pct_over, s.max_delta
+                        ));
                     }
                 }
                 Ok((rw, rh, _)) => fail(format!("{file}: size {rw}x{rh}, X_ITE {w}x{h}")),
@@ -227,11 +312,18 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 const SHARDS: usize = 4;
 
 fn run_shard(shard: usize) {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch09-nav-baseline/cases.txt")).unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let cases =
+        std::fs::read_to_string(root.join("oracle/rea-batch09-nav-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = renderer_available();
-    assert!(gpu, "the pointing and collision passes need a Vulkan adapter");
+    assert!(
+        gpu,
+        "the pointing and collision passes need a Vulkan adapter"
+    );
     let mut failures = vec![];
     let mut checked = 0;
 
@@ -248,13 +340,27 @@ fn run_shard(shard: usize) {
             continue;
         }
 
-        compare_case(&root, name, world, script, msaa, text_tol, gpu, &mut failures);
+        compare_case(
+            &root,
+            name,
+            world,
+            script,
+            msaa,
+            text_tol,
+            gpu,
+            &mut failures,
+        );
         checked += 1;
     }
 
     eprintln!("shard {shard}: {checked} cases checked");
     assert!(only.is_some() || checked > 20, "only {checked} cases ran");
-    assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} failures:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }
 
 #[test]

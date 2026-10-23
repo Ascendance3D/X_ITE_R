@@ -30,7 +30,11 @@ fn dir(tag: &str) -> PathBuf {
 /// center behind it.
 fn world(d: &Path, x: f64, boxed: bool) -> PathBuf {
     let p = d.join("w.x3dv");
-    let shape = if boxed { "Transform { translation 0 0 -1 children DEF BOX Shape { geometry Box { size 1 1 0.1 } } }\n" } else { "" };
+    let shape = if boxed {
+        "Transform { translation 0 0 -1 children DEF BOX Shape { geometry Box { size 1 1 0.1 } } }\n"
+    } else {
+        ""
+    };
 
     std::fs::write(
         &p,
@@ -46,7 +50,14 @@ fn world(d: &Path, x: f64, boxed: bool) -> PathBuf {
 }
 
 fn load(v: &mut EmbeddedViewer, p: &Path) {
-    v.load(p, LoadOptions { root: None, start_time: Some(T0) }).unwrap();
+    v.load(
+        p,
+        LoadOptions {
+            root: None,
+            start_time: Some(T0),
+        },
+    )
+    .unwrap();
 }
 
 fn steps(v: &mut EmbeddedViewer, from: u32, to: u32) {
@@ -61,7 +72,9 @@ fn hit_name(v: &mut EmbeddedViewer, x: f64, y: f64) -> String {
     let h = core.probe_pick(x, y);
 
     match (&h.shape, h.id) {
-        (Some(s), true) => x3d_viewer::walk::rt_at(&core.rt, &s.path).map(|rt| rt.scene.nodes[s.node as usize].name.clone()).unwrap_or_default(),
+        (Some(s), true) => x3d_viewer::walk::rt_at(&core.rt, &s.path)
+            .map(|rt| rt.scene.nodes[s.node as usize].name.clone())
+            .unwrap_or_default(),
         _ => String::new(),
     }
 }
@@ -72,9 +85,24 @@ fn row(v: &mut EmbeddedViewer) -> Vec<(String, [u64; 3])> {
         .map(|x| {
             let core = v.core().unwrap();
             let h = core.probe_pick(x as f64 + 0.5, H as f64 / 2.0 + 0.5);
-            let name = h.shape.as_ref().filter(|_| h.id).and_then(|s| x3d_viewer::walk::rt_at(&core.rt, &s.path).map(|rt| rt.scene.nodes[s.node as usize].name.clone())).unwrap_or_default();
+            let name = h
+                .shape
+                .as_ref()
+                .filter(|_| h.id)
+                .and_then(|s| {
+                    x3d_viewer::walk::rt_at(&core.rt, &s.path)
+                        .map(|rt| rt.scene.nodes[s.node as usize].name.clone())
+                })
+                .unwrap_or_default();
 
-            (name, [h.point.x.to_bits(), h.point.y.to_bits(), h.point.z.to_bits()])
+            (
+                name,
+                [
+                    h.point.x.to_bits(),
+                    h.point.y.to_bits(),
+                    h.point.z.to_bits(),
+                ],
+            )
         })
         .collect()
 }
@@ -93,7 +121,9 @@ const CENTER: (f64, f64) = (W as f64 / 2.0 + 0.5, H as f64 / 2.0 + 0.5);
 /// other viewer's particles hits nothing of them.
 #[test]
 fn particle_hits_stay_per_viewer() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let (a, b) = (world(&dir("a"), 0.0, false), world(&dir("b"), 1.0, true));
 
@@ -109,7 +139,10 @@ fn particle_hits_stay_per_viewer() {
         let b_alone = row(&mut alone);
         drop(alone);
 
-        let (mut va, mut vb) = (EmbeddedViewer::new(d.clone(), q.clone(), (W, H)), EmbeddedViewer::new(d, q, (W, H)));
+        let (mut va, mut vb) = (
+            EmbeddedViewer::new(d.clone(), q.clone(), (W, H)),
+            EmbeddedViewer::new(d, q, (W, H)),
+        );
         load(&mut va, &a);
         load(&mut vb, &b);
 
@@ -118,9 +151,20 @@ fn particle_hits_stay_per_viewer() {
             vb.step(T0 + k as f64 * DT);
         }
 
-        assert_eq!(hit_name(&mut va, CENTER.0, CENTER.1), "PS", "A's particle is at its center");
-        assert_eq!(hit_name(&mut vb, CENTER.0, CENTER.1), "BOX", "B has no particle at its center, its Box is behind it");
-        assert!(a_alone.iter().any(|h| h.0 == "PS") && b_alone.iter().any(|h| h.0 == "PS"), "both rows cross a particle");
+        assert_eq!(
+            hit_name(&mut va, CENTER.0, CENTER.1),
+            "PS",
+            "A's particle is at its center"
+        );
+        assert_eq!(
+            hit_name(&mut vb, CENTER.0, CENTER.1),
+            "BOX",
+            "B has no particle at its center, its Box is behind it"
+        );
+        assert!(
+            a_alone.iter().any(|h| h.0 == "PS") && b_alone.iter().any(|h| h.0 == "PS"),
+            "both rows cross a particle"
+        );
         assert!(row(&mut va) == a_alone, "A's hits equal A alone");
         assert!(row(&mut vb) == b_alone, "B's hits equal B alone");
     });
@@ -130,9 +174,14 @@ fn particle_hits_stay_per_viewer() {
 /// an unload and a load of another world no hit names the old world's ParticleSystem.
 #[test]
 fn particle_hits_follow_state_reload_and_unload() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
-        let (a, b) = (world(&dir("r-a"), 0.0, false), world(&dir("r-b"), 1.0, true));
+        let (a, b) = (
+            world(&dir("r-a"), 0.0, false),
+            world(&dir("r-b"), 1.0, true),
+        );
         let mut v = EmbeddedViewer::new(d, q, (W, H));
 
         load(&mut v, &a);
@@ -141,22 +190,38 @@ fn particle_hits_follow_state_reload_and_unload() {
 
         set_bool(&mut v, "PS", "visible", false);
         steps(&mut v, 20, 22);
-        assert_eq!(hit_name(&mut v, CENTER.0, CENTER.1), "", "an invisible ParticleSystem is no pointing object");
+        assert_eq!(
+            hit_name(&mut v, CENTER.0, CENTER.1),
+            "",
+            "an invisible ParticleSystem is no pointing object"
+        );
 
         set_bool(&mut v, "PS", "visible", true);
         set_bool(&mut v, "PS", "pointerEvents", false);
         steps(&mut v, 22, 24);
-        assert_eq!(hit_name(&mut v, CENTER.0, CENTER.1), "", "pointerEvents FALSE");
+        assert_eq!(
+            hit_name(&mut v, CENTER.0, CENTER.1),
+            "",
+            "pointerEvents FALSE"
+        );
 
         set_bool(&mut v, "PS", "pointerEvents", true);
         set_bool(&mut v, "PS", "enabled", false);
         steps(&mut v, 24, 26);
-        assert_eq!(hit_name(&mut v, CENTER.0, CENTER.1), "", "a disabled ParticleSystem has no particles");
+        assert_eq!(
+            hit_name(&mut v, CENTER.0, CENTER.1),
+            "",
+            "a disabled ParticleSystem has no particles"
+        );
 
         for _ in 0..3 {
             v.reload().unwrap();
             steps(&mut v, 1, 20);
-            assert_eq!(hit_name(&mut v, CENTER.0, CENTER.1), "PS", "the reloaded world's particle");
+            assert_eq!(
+                hit_name(&mut v, CENTER.0, CENTER.1),
+                "PS",
+                "the reloaded world's particle"
+            );
         }
 
         v.unload();
@@ -164,7 +229,11 @@ fn particle_hits_follow_state_reload_and_unload() {
 
         load(&mut v, &b);
         steps(&mut v, 1, 20);
-        assert_eq!(hit_name(&mut v, CENTER.0, CENTER.1), "BOX", "the old world's particle is gone");
+        assert_eq!(
+            hit_name(&mut v, CENTER.0, CENTER.1),
+            "BOX",
+            "the old world's particle is gone"
+        );
     });
 }
 
@@ -172,7 +241,9 @@ fn particle_hits_follow_state_reload_and_unload() {
 /// particle's plane; a click sets touchTime. Picking adds no renderer resource.
 #[test]
 fn touch_sensor_over_particles() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let a = world(&dir("t"), 0.0, false);
         let mut v = EmbeddedViewer::new(d, q, (W, H));
@@ -186,29 +257,53 @@ fn touch_sensor_over_particles() {
             hit_name(&mut v, CENTER.0, CENTER.1);
         }
 
-        assert_eq!(v.renderer().resource_counts(), before, "picking creates no renderer resource");
+        assert_eq!(
+            v.renderer().resource_counts(),
+            before,
+            "picking creates no renderer resource"
+        );
 
         // UiEvent coordinates are window pixels, y down; the center is the same both ways.
-        v.input(x3d_viewer::viewer::UiEvent::MouseMove { x: W as f64 / 2.0 + 0.5, y: H as f64 / 2.0 - 0.5 });
+        v.input(x3d_viewer::viewer::UiEvent::MouseMove {
+            x: W as f64 / 2.0 + 0.5,
+            y: H as f64 / 2.0 - 0.5,
+        });
         steps(&mut v, 20, 22);
 
         let rt = &v.core().unwrap().rt;
         let ts = rt.scene.contexts[ROOT].named_nodes.get("TS").unwrap();
-        assert!(rt.get_bool(ts, "isOver"), "the pointer is over the particle");
+        assert!(
+            rt.get_bool(ts, "isOver"),
+            "the pointer is over the particle"
+        );
 
         match rt.pre_value(ts, "hitPoint_changed") {
-            Some(FieldValue::SFVec3f(p)) => assert!(p.z.abs() < 1e-6 && p.x.abs() < 0.4 && p.y.abs() < 0.4, "hit point on the particle: {p:?}"),
+            Some(FieldValue::SFVec3f(p)) => assert!(
+                p.z.abs() < 1e-6 && p.x.abs() < 0.4 && p.y.abs() < 0.4,
+                "hit point on the particle: {p:?}"
+            ),
             other => panic!("hitPoint_changed: {other:?}"),
         }
 
-        v.input(x3d_viewer::viewer::UiEvent::MouseDown { button: 0, x: W as f64 / 2.0 + 0.5, y: H as f64 / 2.0 - 0.5 });
+        v.input(x3d_viewer::viewer::UiEvent::MouseDown {
+            button: 0,
+            x: W as f64 / 2.0 + 0.5,
+            y: H as f64 / 2.0 - 0.5,
+        });
         steps(&mut v, 22, 23);
-        v.input(x3d_viewer::viewer::UiEvent::MouseUp { button: 0, x: W as f64 / 2.0 + 0.5, y: H as f64 / 2.0 - 0.5 });
+        v.input(x3d_viewer::viewer::UiEvent::MouseUp {
+            button: 0,
+            x: W as f64 / 2.0 + 0.5,
+            y: H as f64 / 2.0 - 0.5,
+        });
         steps(&mut v, 23, 24);
 
         let rt = &v.core().unwrap().rt;
         let ts = rt.scene.contexts[ROOT].named_nodes.get("TS").unwrap();
-        assert!(matches!(rt.pre_value(ts, "touchTime"), Some(FieldValue::SFTime(t)) if *t > T0), "a click on the particle sets touchTime");
+        assert!(
+            matches!(rt.pre_value(ts, "touchTime"), Some(FieldValue::SFTime(t)) if *t > T0),
+            "a click on the particle sets touchTime"
+        );
 
         // Away from the particle: not over.
         v.input(x3d_viewer::viewer::UiEvent::MouseMove { x: 2.5, y: 2.5 });

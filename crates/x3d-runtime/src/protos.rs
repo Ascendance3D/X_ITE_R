@@ -8,7 +8,9 @@ impl Runtime {
     pub fn instance_proto(&self, inst: NodeId) -> Option<ProtoId> {
         match self.scene.node(inst).kind {
             NodeKind::Instance(ProtoRef::Proto(p)) => Some(p),
-            NodeKind::Instance(ProtoRef::Extern(e)) => self.extern_loaded.get(&e).copied().flatten(),
+            NodeKind::Instance(ProtoRef::Extern(e)) => {
+                self.extern_loaded.get(&e).copied().flatten()
+            }
             _ => None,
         }
     }
@@ -22,7 +24,14 @@ impl Runtime {
     pub fn instance_body_roots(&self, inst: NodeId) -> Option<Vec<Option<String>>> {
         let body = self.instance_body(inst)?;
 
-        Some(self.scene.ctx(body).root_nodes.iter().map(|n| n.map(|n| self.type_name(n))).collect())
+        Some(
+            self.scene
+                .ctx(body)
+                .root_nodes
+                .iter()
+                .map(|n| n.map(|n| self.type_name(n)))
+                .collect(),
+        )
     }
 
     /// X3DPrototypeInstance.initialize.
@@ -50,12 +59,26 @@ impl Runtime {
         self.instance_bodies.insert(inst, body);
 
         // addExternProtos / addProtos
-        let externprotos: Vec<(String, ExternId)> = self.scene.ctx(decl_body).externprotos.values().iter().map(|e| (self.scene.externprotos[*e].name.clone(), *e)).collect();
+        let externprotos: Vec<(String, ExternId)> = self
+            .scene
+            .ctx(decl_body)
+            .externprotos
+            .values()
+            .iter()
+            .map(|e| (self.scene.externprotos[*e].name.clone(), *e))
+            .collect();
         for (name, e) in externprotos {
             let _ = self.scene.ctx_mut(body).externprotos.add(&name, e);
         }
 
-        let protos: Vec<(String, ProtoId)> = self.scene.ctx(decl_body).protos.values().iter().map(|q| (self.scene.protos[*q].name.clone(), *q)).collect();
+        let protos: Vec<(String, ProtoId)> = self
+            .scene
+            .ctx(decl_body)
+            .protos
+            .values()
+            .iter()
+            .map(|q| (self.scene.protos[*q].name.clone(), *q))
+            .collect();
         for (name, q) in protos {
             let _ = self.scene.ctx_mut(body).protos.add(&name, q);
         }
@@ -88,12 +111,18 @@ impl Runtime {
 
             match (src, dst) {
                 (Some(s), Some(d)) => {
-                    if let Err(e) = self.add_route(body, s, &r.source_field, d, &r.destination_field) {
+                    if let Err(e) =
+                        self.add_route(body, s, &r.source_field, d, &r.destination_field)
+                    {
                         self.log_error(format!("Error: {e}"));
                     }
                 }
-                (None, _) => self.log_error(format!("Error: Unknown named or imported node '{src_name}'.")),
-                (_, None) => self.log_error(format!("Error: Unknown named or imported node '{dst_name}'.")),
+                (None, _) => self.log_error(format!(
+                    "Error: Unknown named or imported node '{src_name}'."
+                )),
+                (_, None) => self.log_error(format!(
+                    "Error: Unknown named or imported node '{dst_name}'."
+                )),
             }
         }
 
@@ -110,8 +139,18 @@ impl Runtime {
     }
 
     /// X3DExecutionContext.addRoute + X3DRoute.connect: the route becomes a field interest.
-    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
-        if let Some(index) = self.scene.add_route(ctx, source, source_field, destination, destination_field)? {
+    pub fn add_route(
+        &mut self,
+        ctx: CtxId,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<(), String> {
+        if let Some(index) =
+            self.scene
+                .add_route(ctx, source, source_field, destination, destination_field)?
+        {
             let r = self.scene.ctx(ctx).routes[index].clone();
             self.activate_route(&r);
         }
@@ -151,8 +190,14 @@ impl Runtime {
 
     fn copy_value(&mut self, value: &FieldValue, inst: NodeId, body: CtxId) -> FieldValue {
         match value {
-            FieldValue::SFNode(Some(n)) => FieldValue::SFNode(Some(self.copy_sfnode(*n, inst, body))),
-            FieldValue::MFNode(list) => FieldValue::MFNode(list.iter().map(|n| n.map(|n| self.copy_sfnode(n, inst, body))).collect()),
+            FieldValue::SFNode(Some(n)) => {
+                FieldValue::SFNode(Some(self.copy_sfnode(*n, inst, body)))
+            }
+            FieldValue::MFNode(list) => FieldValue::MFNode(
+                list.iter()
+                    .map(|n| n.map(|n| self.copy_sfnode(n, inst, body)))
+                    .collect(),
+            ),
             v => v.clone(),
         }
     }
@@ -169,7 +214,14 @@ impl Runtime {
         self.construct_node(n);
 
         // Interface default values of an instance hold their SFNode values (field copy).
-        let values: Vec<(usize, FieldValue)> = self.scene.node(n).fields.iter().map(|f| f.value.clone()).enumerate().collect();
+        let values: Vec<(usize, FieldValue)> = self
+            .scene
+            .node(n)
+            .fields
+            .iter()
+            .map(|f| f.value.clone())
+            .enumerate()
+            .collect();
         for (i, v) in values {
             for m in Self::node_values_pub(&v) {
                 self.add_parent_pub(m, Holder::Field((n, FieldLoc::Pre(i))));
@@ -210,7 +262,10 @@ impl Runtime {
             }
         }
 
-        if matches!(self.scene.node(src).kind, NodeKind::Placeholder | NodeKind::Internal(_)) {
+        if matches!(
+            self.scene.node(src).kind,
+            NodeKind::Placeholder | NodeKind::Internal(_)
+        ) {
             return src;
         }
 
@@ -234,11 +289,18 @@ impl Runtime {
 
         for sf in &src_fields {
             let Some(di) = self.scene.get_predefined_field(copy, &sf.name) else {
-                self.log_error(format!("Error: Unknown predefined field '{}' in node class {}.", sf.name, self.type_name(copy)));
+                self.log_error(format!(
+                    "Error: Unknown predefined field '{}' in node class {}.",
+                    sf.name,
+                    self.type_name(copy)
+                ));
                 continue;
             };
             let dk = (copy, FieldLoc::Pre(di));
-            let init_refs = sf.references.iter().any(|r| self.reference_initializable(r));
+            let init_refs = sf
+                .references
+                .iter()
+                .any(|r| self.reference_initializable(r));
 
             if sf.is_initializable() && !init_refs {
                 let v = self.copy_value(&sf.value, inst, body);
@@ -264,8 +326,15 @@ impl Runtime {
         let src_user = self.scene.node(src).user_fields.clone();
 
         for sf in &src_user {
-            let init_refs = sf.references.iter().any(|r| self.reference_initializable(r));
-            let value = if init_refs { FieldValue::default_for(sf.ty()) } else { self.copy_value(&sf.value, inst, body) };
+            let init_refs = sf
+                .references
+                .iter()
+                .any(|r| self.reference_initializable(r));
+            let value = if init_refs {
+                FieldValue::default_for(sf.ty())
+            } else {
+                self.copy_value(&sf.value, inst, body)
+            };
             let mut field = Field::new(&sf.name, sf.access, FieldValue::default_for(sf.ty()));
             field.modified = sf.modified;
 
@@ -280,7 +349,9 @@ impl Runtime {
                     Some(rk) => self.add_reference(dk, rk),
                     None => {
                         let (t, n) = (self.type_name(inst), self.scene.node(inst).name.clone());
-                        self.log_error(format!("No reference '{rname}' inside execution context {t} '{n}'."))
+                        self.log_error(format!(
+                            "No reference '{rname}' inside execution context {t} '{n}'."
+                        ))
                     }
                 }
             }
@@ -293,13 +364,20 @@ impl Runtime {
 
     /// X3DField.addReference (reference): create the IS relationship.
     pub fn add_reference(&mut self, k: FKey, reference: FKey) {
-        if self.frt.get(&k).is_some_and(|f| f.references.contains(&reference)) {
+        if self
+            .frt
+            .get(&k)
+            .is_some_and(|f| f.references.contains(&reference))
+        {
             return;
         }
 
         self.frt_mut(k).references.push(reference);
 
-        let from = Event { origin: reference, visited: vec![reference] };
+        let from = Event {
+            origin: reference,
+            visited: vec![reference],
+        };
 
         match self.field(k).access & self.field(reference).access {
             access::INITIALIZE_ONLY => {

@@ -14,7 +14,12 @@ use x3d_script::engine::slot_stats;
 use x3d_viewer::viewer::{UiEvent, Viewer3d};
 
 fn big(f: impl FnOnce() + Send + 'static) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 fn dir(tag: &str) -> PathBuf {
@@ -32,7 +37,13 @@ fn write(d: &Path, name: &str, text: &str) -> PathBuf {
 fn rss_kib() -> usize {
     std::fs::read_to_string("/proc/self/status")
         .ok()
-        .and_then(|s| s.lines().find_map(|l| l.strip_prefix("VmRSS:").and_then(|r| r.split_whitespace().next()).and_then(|n| n.parse().ok())))
+        .and_then(|s| {
+            s.lines().find_map(|l| {
+                l.strip_prefix("VmRSS:")
+                    .and_then(|r| r.split_whitespace().next())
+                    .and_then(|n| n.parse().ok())
+            })
+        })
         .unwrap_or(0)
 }
 
@@ -62,7 +73,11 @@ fn tables(rt: &Runtime) -> Vec<(&'static str, usize)> {
 
 fn line(workload: &str, cycle: usize, t: &[(&str, usize)], extra: &str) -> String {
     let cols: Vec<String> = t.iter().map(|(k, v)| format!("{k}={v}")).collect();
-    format!("MEM\t{workload}\t{cycle}\t{}\t{extra}\trss_kib={}", cols.join("\t"), rss_kib())
+    format!(
+        "MEM\t{workload}\t{cycle}\t{}\t{extra}\trss_kib={}",
+        cols.join("\t"),
+        rss_kib()
+    )
 }
 
 struct World {
@@ -79,7 +94,10 @@ impl World {
     }
 
     fn named(&self, ctx: CtxId, name: &str) -> NodeId {
-        self.v.rt.scene.contexts[ctx].named_nodes.get(name).unwrap_or_else(|| panic!("no {name}"))
+        self.v.rt.scene.contexts[ctx]
+            .named_nodes
+            .get(name)
+            .unwrap_or_else(|| panic!("no {name}"))
     }
 
     fn inline_ctx(&self) -> CtxId {
@@ -98,13 +116,24 @@ impl World {
 fn w6_viewer_pointer_slot_reuse() {
     big(|| {
         let d = dir("pointer");
-        let scene = |n: u32| format!("#VRML V2.0 utf8\nGroup {{ children [ DEF T TouchSensor {{ description \"Touch{n}\" }} Shape {{ geometry Box {{ size 4 4 4 }} }} ] }}\nDEF S Script {{ eventIn SFBool over url \"javascript: function over (v) {{ }}\" }}\nROUTE T.isOver TO S.over\n");
+        let scene = |n: u32| {
+            format!(
+                "#VRML V2.0 utf8\nGroup {{ children [ DEF T TouchSensor {{ description \"Touch{n}\" }} Shape {{ geometry Box {{ size 4 4 4 }} }} ] }}\nDEF S Script {{ eventIn SFBool over url \"javascript: function over (v) {{ }}\" }}\nROUTE T.isOver TO S.over\n"
+            )
+        };
 
         write(&d, "a.wrl", &scene(1));
         write(&d, "b.wrl", &scene(2));
 
-        let p = write(&d, "main.wrl", "#VRML V2.0 utf8\nViewpoint { position 0 0 10 }\nDEF Inl Inline { url \"a.wrl\" }\n");
-        let mut w = World { v: Viewer3d::load_opts(&p, Some(&d), 100.0, 256, 256, Some(60.0), true).expect("load"), t: 100.0 };
+        let p = write(
+            &d,
+            "main.wrl",
+            "#VRML V2.0 utf8\nViewpoint { position 0 0 10 }\nDEF Inl Inline { url \"a.wrl\" }\n",
+        );
+        let mut w = World {
+            v: Viewer3d::load_opts(&p, Some(&d), 100.0, 256, 256, Some(60.0), true).expect("load"),
+            t: 100.0,
+        };
         let mut base = None;
         let mut stale = 0;
 
@@ -114,10 +143,18 @@ fn w6_viewer_pointer_slot_reuse() {
             let inl = w.named(ROOT, "Inl");
 
             w.v.input(UiEvent::MouseMove { x: 128.0, y: 128.0 });
-            w.v.input(UiEvent::MouseDown { button: 0, x: 128.0, y: 128.0 });
+            w.v.input(UiEvent::MouseDown {
+                button: 0,
+                x: 128.0,
+                y: 128.0,
+            });
             w.field(inl, "load", FieldValue::SFBool(false));
             w.steps(2);
-            w.field(inl, "url", FieldValue::MFString(vec![if c % 2 == 0 { "a.wrl" } else { "b.wrl" }.into()]));
+            w.field(
+                inl,
+                "url",
+                FieldValue::MFString(vec![if c % 2 == 0 { "a.wrl" } else { "b.wrl" }.into()]),
+            );
             w.field(inl, "load", FieldValue::SFBool(true));
             w.steps(3);
 
@@ -128,9 +165,16 @@ fn w6_viewer_pointer_slot_reuse() {
                 stale += 1;
             }
 
-            w.v.input(UiEvent::MouseUp { button: 0, x: 128.0, y: 128.0 });
+            w.v.input(UiEvent::MouseUp {
+                button: 0,
+                x: 128.0,
+                y: 128.0,
+            });
             w.v.input(UiEvent::MouseMove { x: 129.0, y: 128.0 });
-            assert!(w.v.rt.get_bool(t, "isOver"), "cycle {c}: the pointer is over the new TouchSensor");
+            assert!(
+                w.v.rt.get_bool(t, "isOver"),
+                "cycle {c}: the pointer is over the new TouchSensor"
+            );
             w.v.input(UiEvent::MouseMove { x: 5.0, y: 5.0 });
             w.steps(1);
             w.v.rt.console.clear();
@@ -138,7 +182,15 @@ fn w6_viewer_pointer_slot_reuse() {
             let now = tables(&w.v.rt);
 
             if [10, 100, 500, 1000].contains(&c) {
-                println!("{}", line("viewer-pointer", c, &now, &format!("stale_pointer_events={stale}")));
+                println!(
+                    "{}",
+                    line(
+                        "viewer-pointer",
+                        c,
+                        &now,
+                        &format!("stale_pointer_events={stale}")
+                    )
+                );
             }
 
             if c == 10 {
@@ -150,7 +202,10 @@ fn w6_viewer_pointer_slot_reuse() {
             }
         }
 
-        assert_eq!(stale, 0, "pointer state of a released node reached the node that took its slot");
+        assert_eq!(
+            stale, 0,
+            "pointer state of a released node reached the node that took its slot"
+        );
         let _ = std::fs::remove_dir_all(&d);
     });
 }
@@ -167,7 +222,9 @@ mod embedded {
     /// handle table and the process stay flat.
     #[test]
     fn w7_embedded_viewer_load_and_unload() {
-        let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+        let Some((device, queue)) = device() else {
+            return eprintln!("no adapter, skipped");
+        };
         spawn_big_stack(move || {
             let d = dir("embedded");
             let sub = "#VRML V2.0 utf8\nDEF T Transform { }\nDEF S Script { field SFNode t USE T url \"javascript: function initialize () { t .translation = new SFVec3f (1, 2, 3); } function shutdown () { print ('shutdown sub'); }\" }\n";
@@ -181,7 +238,14 @@ mod embedded {
             let mut base = None;
 
             for c in 1..=1000 {
-                v.load(&p, LoadOptions { root: Some(d.clone()), start_time: Some(T0) }).unwrap();
+                v.load(
+                    &p,
+                    LoadOptions {
+                        root: Some(d.clone()),
+                        start_time: Some(T0),
+                    },
+                )
+                .unwrap();
                 inits += v.take_prints().iter().filter(|l| *l == "init").count();
 
                 for k in 1..=4 {
@@ -198,7 +262,12 @@ mod embedded {
                 let now = (js.len, js.capacity);
 
                 if [10, 100, 500, 1000].contains(&c) {
-                    println!("MEM\tembedded-load-unload\t{c}\tinit={inits}\tshutdown={downs}\tjs_slots={}/{}\trss_kib={}", now.0, now.1, rss_kib());
+                    println!(
+                        "MEM\tembedded-load-unload\t{c}\tinit={inits}\tshutdown={downs}\tjs_slots={}/{}\trss_kib={}",
+                        now.0,
+                        now.1,
+                        rss_kib()
+                    );
                 }
 
                 if c == 10 {
@@ -210,7 +279,11 @@ mod embedded {
                 }
             }
 
-            assert_eq!((inits, downs), (1000, 1000), "every world initializes and shuts down once");
+            assert_eq!(
+                (inits, downs),
+                (1000, 1000),
+                "every world initializes and shuts down once"
+            );
             let _ = std::fs::remove_dir_all(&d);
         });
     }

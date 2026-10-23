@@ -3,7 +3,7 @@
 //! IndexedTriangleFanSet,IndexedTriangleStripSet}.js and Components/CADGeometry/{QuadSet,
 //! IndexedQuadSet}.js.
 
-use crate::geometry::{finish, refine_normals, Colors, Coords, Geometry};
+use crate::geometry::{Colors, Coords, Geometry, finish, refine_normals};
 use x3d_fields::math::Vector3;
 
 /// Which composed node, with the field that defines its polygons.
@@ -61,7 +61,11 @@ fn strip_count_index(strip_count: &[i32]) -> Vec<i64> {
 
         for i in 0..count.max(0) {
             let odd = i & 1 == 1;
-            t.extend_from_slice(&[index + if odd { i + 1 } else { i }, index + if odd { i } else { i + 1 }, index + (i + 2)]);
+            t.extend_from_slice(&[
+                index + if odd { i + 1 } else { i },
+                index + if odd { i } else { i + 1 },
+                index + (i + 2),
+            ]);
         }
 
         index += vertex_count as i64;
@@ -169,7 +173,12 @@ fn check(n: usize, multiplier: usize) -> usize {
 }
 
 /// X3DComposedGeometryNode.getPolygonNormal (Newell's method).
-fn polygon_normal(index: usize, vertices_per_polygon: usize, polygons: &[i64], coord: &Coords) -> Vector3 {
+fn polygon_normal(
+    index: usize,
+    vertices_per_polygon: usize,
+    polygons: &[i64],
+    coord: &Coords,
+) -> Vector3 {
     let mut normal = Vector3::ZERO;
     let mut next = coord.get(polygons[index]);
 
@@ -186,7 +195,12 @@ fn polygon_normal(index: usize, vertices_per_polygon: usize, polygons: &[i64], c
 }
 
 /// X3DComposedGeometryNode.createFaceNormals.
-fn face_normals(vertices_per_polygon: usize, polygons: &[i64], coord: &Coords, ccw: bool) -> Vec<Vector3> {
+fn face_normals(
+    vertices_per_polygon: usize,
+    polygons: &[i64],
+    coord: &Coords,
+    ccw: bool,
+) -> Vec<Vector3> {
     let mut normals = vec![];
     let mut index = 0;
 
@@ -214,20 +228,41 @@ fn face_normals(vertices_per_polygon: usize, polygons: &[i64], coord: &Coords, c
 
 /// The build of every composed node except IndexedFaceSet.
 pub fn composed_geometry(input: &ComposedInput) -> Geometry {
-    let mut g = Geometry { geometry_type: 3, solid: true, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid: true,
+        ccw: true,
+        ..Default::default()
+    };
     let coord_len = input.coord.map(|c| c.len() / 3).unwrap_or(0);
 
     // Polygon index of each polygon vertex (getPolygonIndex), the per-polygon and per-face vertex
     // counts, and the triangle index into the polygon list (getTriangleIndex).
-    let (polygons, vertices_per_polygon, vertices_per_face, quads, face_only_normals): (Vec<i64>, usize, usize, bool, bool) = match input.kind {
+    let (polygons, vertices_per_polygon, vertices_per_face, quads, face_only_normals): (
+        Vec<i64>,
+        usize,
+        usize,
+        bool,
+        bool,
+    ) = match input.kind {
         Kind::TriangleSet => ((0..check(coord_len, 3) as i64).collect(), 3, 3, false, true),
         Kind::QuadSet => ((0..check(coord_len, 4) as i64).collect(), 4, 6, true, true),
         Kind::TriangleFanSet { fan_count } => (fan_count_index(fan_count), 3, 3, false, false),
-        Kind::TriangleStripSet { strip_count } => (strip_count_index(strip_count), 3, 3, false, false),
-        Kind::IndexedTriangleSet { index } => (index.iter().map(|i| *i as i64).collect(), 3, 3, false, false),
+        Kind::TriangleStripSet { strip_count } => {
+            (strip_count_index(strip_count), 3, 3, false, false)
+        }
+        Kind::IndexedTriangleSet { index } => (
+            index.iter().map(|i| *i as i64).collect(),
+            3,
+            3,
+            false,
+            false,
+        ),
         Kind::IndexedTriangleFanSet { index } => (indexed_fan_index(index), 3, 3, false, false),
         Kind::IndexedTriangleStripSet { index } => (indexed_strip_index(index), 3, 3, false, false),
-        Kind::IndexedQuadSet { index } => (index.iter().map(|i| *i as i64).collect(), 4, 6, true, false),
+        Kind::IndexedQuadSet { index } => {
+            (index.iter().map(|i| *i as i64).collect(), 4, 6, true, false)
+        }
     };
 
     let Some(points) = input.coord.filter(|_| coord_len > 0) else {
@@ -237,9 +272,15 @@ pub fn composed_geometry(input: &ComposedInput) -> Geometry {
 
     let coord = Coords(points);
     let polygons_size = check(polygons.len(), vertices_per_polygon);
-    let triangles_size = if quads { check(polygons_size / 4 * 6, vertices_per_face) } else { check(polygons_size, vertices_per_face) };
+    let triangles_size = if quads {
+        check(polygons_size / 4 * 6, vertices_per_face)
+    } else {
+        check(polygons_size, vertices_per_face)
+    };
     let polygons = &polygons[..polygons_size];
-    let triangles: Vec<usize> = (0..triangles_size).map(|i| if quads { quad_triangle_index(i) } else { i }).collect();
+    let triangles: Vec<usize> = (0..triangles_size)
+        .map(|i| if quads { quad_triangle_index(i) } else { i })
+        .collect();
     let extras = &input.extras;
 
     extras.init(&mut g);
@@ -250,11 +291,15 @@ pub fn composed_geometry(input: &ComposedInput) -> Geometry {
         let index = polygons.get(t).copied().unwrap_or(-1);
 
         // Uint32Array: undefined becomes 0.
-        g.coord_indices.push(polygons.get(t).map_or(0, |v| *v as u32));
+        g.coord_indices
+            .push(polygons.get(t).map_or(0, |v| *v as u32));
         extras.add_attribs_and_fog(index, &mut g);
 
         if let Some(c) = &input.color {
-            c.add_color(if input.color_per_vertex { index } else { face }, &mut g.colors);
+            c.add_color(
+                if input.color_per_vertex { index } else { face },
+                &mut g.colors,
+            );
         }
 
         if extras.tex.is_some() {
@@ -266,7 +311,11 @@ pub fn composed_geometry(input: &ComposedInput) -> Geometry {
         extras.add_tangent(if input.normal_per_vertex { index } else { face }, &mut g);
 
         if let Some(n) = input.normal {
-            crate::geometry::add_vector(n, if input.normal_per_vertex { index } else { face }, &mut g.normals);
+            crate::geometry::add_vector(
+                n,
+                if input.normal_per_vertex { index } else { face },
+                &mut g.normals,
+            );
         }
 
         coord.add_point(index, &mut g.vertices);
@@ -295,14 +344,22 @@ pub fn composed_geometry(input: &ComposedInput) -> Geometry {
         };
 
         for &t in &triangles {
-            let n = normals.get(t).copied().unwrap_or(Vector3::new(f64::NAN, f64::NAN, f64::NAN));
-            g.normals.extend_from_slice(&[n.x as f32, n.y as f32, n.z as f32]);
+            let n = normals
+                .get(t)
+                .copied()
+                .unwrap_or(Vector3::new(f64::NAN, f64::NAN, f64::NAN));
+            g.normals
+                .extend_from_slice(&[n.x as f32, n.y as f32, n.z as f32]);
         }
     }
 
     g.solid = input.solid;
     g.ccw = input.ccw;
-    let has_tex = if extras.tex.is_some() { extras.channels() > 0 } else { input.tex_coord.is_some() };
+    let has_tex = if extras.tex.is_some() {
+        extras.channels() > 0
+    } else {
+        input.tex_coord.is_some()
+    };
     finish(&mut g, has_tex);
     g
 }

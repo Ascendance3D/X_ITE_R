@@ -99,7 +99,12 @@ pub fn live_hosts() -> usize {
 }
 
 fn stats_of(s: &State) -> SlotStats {
-    SlotStats { len: s.slots.len(), capacity: s.slots.capacity(), free: s.free.len(), attached: s.attached.len() }
+    SlotStats {
+        len: s.slots.len(),
+        capacity: s.slots.capacity(),
+        free: s.free.len(),
+        attached: s.attached.len(),
+    }
 }
 
 /// A handle as JavaScript sees it.
@@ -117,7 +122,9 @@ fn decode(x: f64) -> Option<u32> {
     let (generation, h) = ((x / 4294967296.0).floor(), (x % 4294967296.0) as u32);
 
     with_state(|s| {
-        let live = (h as usize) < s.slots.len() && !matches!(s.slots[h as usize], Slot::Free) && s.generations[h as usize] as f64 == generation;
+        let live = (h as usize) < s.slots.len()
+            && !matches!(s.slots[h as usize], Slot::Free)
+            && s.generations[h as usize] as f64 == generation;
         live.then_some(h)
     })
 }
@@ -196,7 +203,11 @@ thread_local! {
 }
 
 fn with_state<T>(f: impl FnOnce(&mut State) -> T) -> T {
-    STATES.with(|s| f(s.borrow_mut().get_mut(&CURRENT.get()).expect("script engine state")))
+    STATES.with(|s| {
+        f(s.borrow_mut()
+            .get_mut(&CURRENT.get())
+            .expect("script engine state"))
+    })
 }
 
 /// The runtime of the world whose script is running.
@@ -229,7 +240,9 @@ impl QuickJsHost {
         let d = deadline.clone();
 
         // A script that never returns makes the oracle time out; stop it instead of hanging.
-        runtime.set_interrupt_handler(Some(Box::new(move || d.get().is_some_and(|t| std::time::Instant::now() > t))));
+        runtime.set_interrupt_handler(Some(Box::new(move || {
+            d.get().is_some_and(|t| std::time::Instant::now() > t)
+        })));
 
         let context = Context::full(&runtime).expect("QuickJS context");
 
@@ -237,17 +250,20 @@ impl QuickJsHost {
         NEXT_HOST.set(id + 1);
 
         STATES.with(|s| {
-            s.borrow_mut().insert(id, State {
-                rt: std::ptr::null_mut(),
-                slots: vec![],
-                generations: vec![],
-                owners: vec![],
-                children: vec![],
-                free: vec![],
-                fresh: vec![],
-                attached: HashMap::new(),
-                description: String::new(),
-            });
+            s.borrow_mut().insert(
+                id,
+                State {
+                    rt: std::ptr::null_mut(),
+                    slots: vec![],
+                    generations: vec![],
+                    owners: vec![],
+                    children: vec![],
+                    free: vec![],
+                    fresh: vec![],
+                    attached: HashMap::new(),
+                    description: String::new(),
+                },
+            );
         });
         CURRENT.set(id);
 
@@ -261,7 +277,12 @@ impl QuickJsHost {
             }
         });
 
-        QuickJsHost { id, _runtime: std::mem::ManuallyDrop::new(runtime), context: std::mem::ManuallyDrop::new(context), deadline }
+        QuickJsHost {
+            id,
+            _runtime: std::mem::ManuallyDrop::new(runtime),
+            context: std::mem::ManuallyDrop::new(context),
+            deadline,
+        }
     }
 
     /// Make this host's table the one native calls from JavaScript use.
@@ -272,7 +293,9 @@ impl QuickJsHost {
     fn enter(&self, rt: &mut Runtime) {
         self.select();
         with_state(|s| s.rt = rt as *mut Runtime);
-        self.deadline.set(Some(std::time::Instant::now() + std::time::Duration::from_secs(10)));
+        self.deadline.set(Some(
+            std::time::Instant::now() + std::time::Duration::from_secs(10),
+        ));
     }
 }
 
@@ -327,15 +350,27 @@ fn describe(ctx: &Ctx<'_>, e: rquickjs::Error) -> String {
 }
 
 impl ScriptHost for QuickJsHost {
-    fn create_context(&mut self, rt: &mut Runtime, node: NodeId, source: &str, callbacks: &[String]) -> Result<Vec<bool>, ScriptError> {
+    fn create_context(
+        &mut self,
+        rt: &mut Runtime,
+        node: NodeId,
+        source: &str,
+        callbacks: &[String],
+    ) -> Result<Vec<bool>, ScriptError> {
         self.enter(rt);
 
-        let fields: Vec<(String, u8, f64, &'static str)> = (0..rt.scene.node(node).user_fields.len())
-            .map(|i| {
-                let f = &rt.scene.node(node).user_fields[i];
-                (f.name.clone(), f.access, encode(attach((node, FieldLoc::User(i)))), f.ty().name())
-            })
-            .collect();
+        let fields: Vec<(String, u8, f64, &'static str)> =
+            (0..rt.scene.node(node).user_fields.len())
+                .map(|i| {
+                    let f = &rt.scene.node(node).user_fields[i];
+                    (
+                        f.name.clone(),
+                        f.access,
+                        encode(attach((node, FieldLoc::User(i)))),
+                        f.ty().name(),
+                    )
+                })
+                .collect();
 
         self.context.with(|ctx| {
             js_enter(&ctx);
@@ -366,7 +401,12 @@ impl ScriptHost for QuickJsHost {
         })
     }
 
-    fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError> {
+    fn call(
+        &mut self,
+        rt: &mut Runtime,
+        node: NodeId,
+        call: ScriptCall,
+    ) -> Result<(), ScriptError> {
         self.enter(rt);
 
         let time = rt.now;
@@ -379,14 +419,28 @@ impl ScriptHost for QuickJsHost {
             let result: rquickjs::Result<Value> = match call {
                 ScriptCall::Plain(name) => {
                     let reason = name.clone();
-                    f.call((node, name, Value::new_undefined(ctx.clone()), time, false, reason))
+                    f.call((
+                        node,
+                        name,
+                        Value::new_undefined(ctx.clone()),
+                        time,
+                        false,
+                        reason,
+                    ))
                 }
                 ScriptCall::Field(name, value) => {
                     // The header of an error names the field, not `set_<field>`.
-                    let reason = match name.strip_prefix("set_") {
-                        Some(field) if rt.scene.node(node).user_fields.iter().any(|f| f.name == field && f.access == access::INPUT_OUTPUT) => field.to_string(),
-                        _ => name.clone(),
-                    };
+                    let reason =
+                        match name.strip_prefix("set_") {
+                            Some(field)
+                                if rt.scene.node(node).user_fields.iter().any(|f| {
+                                    f.name == field && f.access == access::INPUT_OUTPUT
+                                }) =>
+                            {
+                                field.to_string()
+                            }
+                            _ => name.clone(),
+                        };
                     let h = detached(value);
                     let v = field_value_js(&ctx, h);
                     f.call((node, name, v, time, true, reason))
@@ -401,7 +455,9 @@ impl ScriptHost for QuickJsHost {
 
             match result {
                 Ok(v) if v.is_undefined() => Ok(()),
-                Ok(v) => Err(ScriptError(v.get::<Coerced<String>>().map(|c| c.0).unwrap_or_default())),
+                Ok(v) => Err(ScriptError(
+                    v.get::<Coerced<String>>().map(|c| c.0).unwrap_or_default(),
+                )),
                 Err(e) => Err(ScriptError(describe(&ctx, e))),
             }
         })
@@ -528,7 +584,11 @@ impl ScriptHost for QuickJsHost {
         });
     }
 
-    fn raw_coerce(&mut self, rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+    fn raw_coerce(
+        &mut self,
+        rt: &mut Runtime,
+        requests: &[RawRequest],
+    ) -> Vec<Option<Vec<Option<RawComponent>>>> {
         self.enter(rt);
 
         let supply = self.context.with(|ctx| raw_coerce_js(&ctx, requests));
@@ -549,13 +609,25 @@ impl ScriptHost for QuickJsHost {
         // prelude/rest.js: the candidates' objects are unpinned, garbage is collected, and the objects left are held.
         let ids: Vec<f64> = candidates.iter().map(|n| *n as f64).collect();
 
-        self.context.with(|ctx| ctx.globals().get::<_, Function>("__unpin").and_then(|f| f.call::<_, ()>((ids.clone(),)))).ok()?;
+        self.context
+            .with(|ctx| {
+                ctx.globals()
+                    .get::<_, Function>("__unpin")
+                    .and_then(|f| f.call::<_, ()>((ids.clone(),)))
+            })
+            .ok()?;
         self.collect();
 
-        let held = self.context.with(|ctx| match ctx.globals().get::<_, Function>("__heldNodes") {
-            Ok(f) => f.call::<_, Vec<f64>>((ids,)).ok().map(|ids| ids.into_iter().map(|i| i as NodeId).collect()),
-            Err(_) => None,
-        })?;
+        let held =
+            self.context.with(
+                |ctx| match ctx.globals().get::<_, Function>("__heldNodes") {
+                    Ok(f) => f
+                        .call::<_, Vec<f64>>((ids,))
+                        .ok()
+                        .map(|ids| ids.into_iter().map(|i| i as NodeId).collect()),
+                    Err(_) => None,
+                },
+            )?;
 
         self.context.with(|ctx| while ctx.execute_pending_job() {});
         Some(held)
@@ -568,7 +640,12 @@ impl ScriptHost for QuickJsHost {
         let dead: std::collections::HashSet<NodeId> = nodes.iter().copied().collect();
 
         let detached: Vec<f64> = with_state(|s| {
-            let stale: Vec<(FKey, u32)> = s.attached.iter().filter(|(k, _)| dead.contains(&k.0)).map(|(k, h)| (*k, *h)).collect();
+            let stale: Vec<(FKey, u32)> = s
+                .attached
+                .iter()
+                .filter(|(k, _)| dead.contains(&k.0))
+                .map(|(k, h)| (*k, *h))
+                .collect();
             let mut detached = vec![];
 
             for (k, h) in stale {
@@ -688,7 +765,10 @@ fn data_number<'js>(ctx: &Ctx<'js>, x: f64) -> Value<'js> {
     Value::new_number(ctx.clone(), x)
 }
 
-fn data_array<'js>(ctx: &Ctx<'js>, items: impl IntoIterator<Item = Value<'js>>) -> rquickjs::Result<Value<'js>> {
+fn data_array<'js>(
+    ctx: &Ctx<'js>,
+    items: impl IntoIterator<Item = Value<'js>>,
+) -> rquickjs::Result<Value<'js>> {
     let a = Array::new(ctx.clone())?;
 
     for (i, v) in items.into_iter().enumerate() {
@@ -699,8 +779,19 @@ fn data_array<'js>(ctx: &Ctx<'js>, items: impl IntoIterator<Item = Value<'js>>) 
 }
 
 fn image_data<'js>(ctx: &Ctx<'js>, img: &Image) -> rquickjs::Result<Value<'js>> {
-    let pixels = data_array(ctx, img.array.iter().map(|p| Value::new_int(ctx.clone(), *p)))?;
-    data_array(ctx, [Value::new_int(ctx.clone(), img.width), Value::new_int(ctx.clone(), img.height), Value::new_int(ctx.clone(), img.comp), pixels])
+    let pixels = data_array(
+        ctx,
+        img.array.iter().map(|p| Value::new_int(ctx.clone(), *p)),
+    )?;
+    data_array(
+        ctx,
+        [
+            Value::new_int(ctx.clone(), img.width),
+            Value::new_int(ctx.clone(), img.height),
+            Value::new_int(ctx.clone(), img.comp),
+            pixels,
+        ],
+    )
 }
 
 fn node_data<'js>(ctx: &Ctx<'js>, n: &Option<NodeId>) -> Value<'js> {
@@ -712,32 +803,75 @@ fn node_data<'js>(ctx: &Ctx<'js>, n: &Option<NodeId>) -> Value<'js> {
 
 /// FieldValue -> the plain data of a field object.
 fn value_data<'js>(ctx: &Ctx<'js>, v: &FieldValue) -> rquickjs::Result<Value<'js>> {
-    let nums = |xs: &mut dyn Iterator<Item = f64>| data_array(ctx, xs.map(|x| data_number(ctx, x)).collect::<Vec<_>>());
+    let nums = |xs: &mut dyn Iterator<Item = f64>| {
+        data_array(ctx, xs.map(|x| data_number(ctx, x)).collect::<Vec<_>>())
+    };
 
     Ok(match v {
         FieldValue::SFBool(b) => Value::new_bool(ctx.clone(), *b),
         FieldValue::SFInt32(x) => Value::new_int(ctx.clone(), *x),
-        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => data_number(ctx, *x),
+        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => {
+            data_number(ctx, *x)
+        }
         FieldValue::SFString(s) => rquickjs::String::from_str(ctx.clone(), s)?.into_value(),
         FieldValue::SFNode(n) => node_data(ctx, n),
         FieldValue::SFImage(img) => image_data(ctx, img)?,
         FieldValue::SFRotation(r) => {
             let (aa, tainted, q) = r.state();
-            nums(&mut aa.into_iter().chain([if tainted { 1.0 } else { 0.0 }, q.x, q.y, q.z, q.w]))?
+            nums(
+                &mut aa
+                    .into_iter()
+                    .chain([if tainted { 1.0 } else { 0.0 }, q.x, q.y, q.z, q.w]),
+            )?
         }
-        FieldValue::SFColor(_) | FieldValue::SFColorRGBA(_) | FieldValue::SFVec2d(_) | FieldValue::SFVec2f(_) | FieldValue::SFVec3d(_)
-        | FieldValue::SFVec3f(_) | FieldValue::SFVec4d(_) | FieldValue::SFVec4f(_) | FieldValue::SFQuaternion(_) | FieldValue::SFMatrix3d(_)
-        | FieldValue::SFMatrix3f(_) | FieldValue::SFMatrix4d(_) | FieldValue::SFMatrix4f(_) => nums(&mut sf_numbers(v).into_iter())?,
-        FieldValue::MFBool(a) => data_array(ctx, a.iter().map(|b| Value::new_bool(ctx.clone(), *b)))?,
+        FieldValue::SFColor(_)
+        | FieldValue::SFColorRGBA(_)
+        | FieldValue::SFVec2d(_)
+        | FieldValue::SFVec2f(_)
+        | FieldValue::SFVec3d(_)
+        | FieldValue::SFVec3f(_)
+        | FieldValue::SFVec4d(_)
+        | FieldValue::SFVec4f(_)
+        | FieldValue::SFQuaternion(_)
+        | FieldValue::SFMatrix3d(_)
+        | FieldValue::SFMatrix3f(_)
+        | FieldValue::SFMatrix4d(_)
+        | FieldValue::SFMatrix4f(_) => nums(&mut sf_numbers(v).into_iter())?,
+        FieldValue::MFBool(a) => {
+            data_array(ctx, a.iter().map(|b| Value::new_bool(ctx.clone(), *b)))?
+        }
         FieldValue::MFInt32(a) => nums(&mut a.iter().map(|x| *x as f64))?,
-        FieldValue::MFColor(a) | FieldValue::MFColorRGBA(a) | FieldValue::MFFloat(a) | FieldValue::MFMatrix3f(a) | FieldValue::MFMatrix4f(a)
-        | FieldValue::MFVec2f(a) | FieldValue::MFVec3f(a) | FieldValue::MFVec4f(a) => nums(&mut a.iter().map(|x| *x as f64))?,
-        FieldValue::MFDouble(a) | FieldValue::MFMatrix3d(a) | FieldValue::MFMatrix4d(a) | FieldValue::MFQuaternion(a) | FieldValue::MFRotation(a)
-        | FieldValue::MFTime(a) | FieldValue::MFVec2d(a) | FieldValue::MFVec3d(a) | FieldValue::MFVec4d(a) => nums(&mut a.iter().copied())?,
-        FieldValue::MFString(a) => data_array(ctx, a.iter().map(|s| rquickjs::String::from_str(ctx.clone(), s).unwrap().into_value()))?,
+        FieldValue::MFColor(a)
+        | FieldValue::MFColorRGBA(a)
+        | FieldValue::MFFloat(a)
+        | FieldValue::MFMatrix3f(a)
+        | FieldValue::MFMatrix4f(a)
+        | FieldValue::MFVec2f(a)
+        | FieldValue::MFVec3f(a)
+        | FieldValue::MFVec4f(a) => nums(&mut a.iter().map(|x| *x as f64))?,
+        FieldValue::MFDouble(a)
+        | FieldValue::MFMatrix3d(a)
+        | FieldValue::MFMatrix4d(a)
+        | FieldValue::MFQuaternion(a)
+        | FieldValue::MFRotation(a)
+        | FieldValue::MFTime(a)
+        | FieldValue::MFVec2d(a)
+        | FieldValue::MFVec3d(a)
+        | FieldValue::MFVec4d(a) => nums(&mut a.iter().copied())?,
+        FieldValue::MFString(a) => data_array(
+            ctx,
+            a.iter().map(|s| {
+                rquickjs::String::from_str(ctx.clone(), s)
+                    .unwrap()
+                    .into_value()
+            }),
+        )?,
         FieldValue::MFNode(a) => data_array(ctx, a.iter().map(|n| node_data(ctx, n)))?,
         FieldValue::MFImage(a) => {
-            let items = a.iter().map(|img| image_data(ctx, img)).collect::<rquickjs::Result<Vec<_>>>()?;
+            let items = a
+                .iter()
+                .map(|img| image_data(ctx, img))
+                .collect::<rquickjs::Result<Vec<_>>>()?;
             data_array(ctx, items)?
         }
     })
@@ -764,11 +898,26 @@ fn data_numbers(v: &Value<'_>) -> Vec<f64> {
 }
 
 fn data_image(v: &Value<'_>) -> Image {
-    let Some(a) = v.as_array() else { return Image::default() };
-    let n = |i: usize| a.get::<Value>(i).ok().and_then(|x| x.as_number()).unwrap_or(0.0);
-    let pixels = a.get::<Value>(3).map(|p| data_numbers(&p)).unwrap_or_default();
+    let Some(a) = v.as_array() else {
+        return Image::default();
+    };
+    let n = |i: usize| {
+        a.get::<Value>(i)
+            .ok()
+            .and_then(|x| x.as_number())
+            .unwrap_or(0.0)
+    };
+    let pixels = a
+        .get::<Value>(3)
+        .map(|p| data_numbers(&p))
+        .unwrap_or_default();
 
-    Image { width: n(0) as i32, height: n(1) as i32, comp: n(2) as i32, array: pixels.into_iter().map(|p| p as i32).collect() }
+    Image {
+        width: n(0) as i32,
+        height: n(1) as i32,
+        comp: n(2) as i32,
+        array: pixels.into_iter().map(|p| p as i32).collect(),
+    }
 }
 
 fn data_node(v: &Value<'_>) -> Option<NodeId> {
@@ -780,9 +929,21 @@ fn data_value(ty: FieldType, v: &Value<'_>) -> FieldValue {
     use FieldType as T;
 
     let list = |f: &dyn Fn(Value) -> FieldValue| -> Vec<FieldValue> {
-        v.as_array().map(|a| (0..a.len()).filter_map(|i| a.get::<Value>(i).ok()).map(f).collect()).unwrap_or_default()
+        v.as_array()
+            .map(|a| {
+                (0..a.len())
+                    .filter_map(|i| a.get::<Value>(i).ok())
+                    .map(f)
+                    .collect()
+            })
+            .unwrap_or_default()
     };
-    let f32s = || data_numbers(v).into_iter().map(|x| x as f32).collect::<Vec<f32>>();
+    let f32s = || {
+        data_numbers(v)
+            .into_iter()
+            .map(|x| x as f32)
+            .collect::<Vec<f32>>()
+    };
 
     match ty {
         T::SFBool => FieldValue::SFBool(v.as_bool().unwrap_or(false)),
@@ -790,13 +951,21 @@ fn data_value(ty: FieldType, v: &Value<'_>) -> FieldValue {
         T::SFFloat => FieldValue::SFFloat(v.as_number().unwrap_or(0.0)),
         T::SFDouble => FieldValue::SFDouble(v.as_number().unwrap_or(0.0)),
         T::SFTime => FieldValue::SFTime(v.as_number().unwrap_or(0.0)),
-        T::SFString => FieldValue::SFString(v.as_string().and_then(|s| s.to_string().ok()).unwrap_or_default()),
+        T::SFString => FieldValue::SFString(
+            v.as_string()
+                .and_then(|s| s.to_string().ok())
+                .unwrap_or_default(),
+        ),
         T::SFNode => FieldValue::SFNode(data_node(v)),
         T::SFImage => FieldValue::SFImage(data_image(v)),
         T::SFRotation => {
             let n = data_numbers(v);
             let g = |i: usize| n.get(i).copied().unwrap_or(0.0);
-            FieldValue::SFRotation(Rotation4::from_state([g(0), g(1), g(2), g(3)], g(4) != 0.0, Quaternion::new(g(5), g(6), g(7), g(8))))
+            FieldValue::SFRotation(Rotation4::from_state(
+                [g(0), g(1), g(2), g(3)],
+                g(4) != 0.0,
+                Quaternion::new(g(5), g(6), g(7), g(8)),
+            ))
         }
         T::SFColor => {
             let n = data_numbers(v);
@@ -808,8 +977,15 @@ fn data_value(ty: FieldType, v: &Value<'_>) -> FieldValue {
             let g = |i: usize| n.get(i).copied().unwrap_or(0.0);
             FieldValue::SFColorRGBA(Color4::from_raw(g(0), g(1), g(2), g(3)))
         }
-        T::MFBool => FieldValue::MFBool(list(&|x| FieldValue::SFBool(x.as_bool().unwrap_or(false))).into_iter().map(|x| matches!(x, FieldValue::SFBool(true))).collect()),
-        T::MFInt32 => FieldValue::MFInt32(data_numbers(v).into_iter().map(jsmath::to_int32).collect()),
+        T::MFBool => FieldValue::MFBool(
+            list(&|x| FieldValue::SFBool(x.as_bool().unwrap_or(false)))
+                .into_iter()
+                .map(|x| matches!(x, FieldValue::SFBool(true)))
+                .collect(),
+        ),
+        T::MFInt32 => {
+            FieldValue::MFInt32(data_numbers(v).into_iter().map(jsmath::to_int32).collect())
+        }
         T::MFColor => FieldValue::MFColor(f32s()),
         T::MFColorRGBA => FieldValue::MFColorRGBA(f32s()),
         T::MFFloat => FieldValue::MFFloat(f32s()),
@@ -827,9 +1003,34 @@ fn data_value(ty: FieldType, v: &Value<'_>) -> FieldValue {
         T::MFVec2d => FieldValue::MFVec2d(data_numbers(v)),
         T::MFVec3d => FieldValue::MFVec3d(data_numbers(v)),
         T::MFVec4d => FieldValue::MFVec4d(data_numbers(v)),
-        T::MFString => FieldValue::MFString(v.as_array().map(|a| (0..a.len()).map(|i| a.get::<Coerced<String>>(i).map(|c| c.0).unwrap_or_default()).collect()).unwrap_or_default()),
-        T::MFNode => FieldValue::MFNode(v.as_array().map(|a| (0..a.len()).map(|i| a.get::<Value>(i).ok().and_then(|x| data_node(&x))).collect()).unwrap_or_default()),
-        T::MFImage => FieldValue::MFImage(v.as_array().map(|a| (0..a.len()).filter_map(|i| a.get::<Value>(i).ok()).map(|x| data_image(&x)).collect()).unwrap_or_default()),
+        T::MFString => FieldValue::MFString(
+            v.as_array()
+                .map(|a| {
+                    (0..a.len())
+                        .map(|i| a.get::<Coerced<String>>(i).map(|c| c.0).unwrap_or_default())
+                        .collect()
+                })
+                .unwrap_or_default(),
+        ),
+        T::MFNode => FieldValue::MFNode(
+            v.as_array()
+                .map(|a| {
+                    (0..a.len())
+                        .map(|i| a.get::<Value>(i).ok().and_then(|x| data_node(&x)))
+                        .collect()
+                })
+                .unwrap_or_default(),
+        ),
+        T::MFImage => FieldValue::MFImage(
+            v.as_array()
+                .map(|a| {
+                    (0..a.len())
+                        .filter_map(|i| a.get::<Value>(i).ok())
+                        .map(|x| data_image(&x))
+                        .collect()
+                })
+                .unwrap_or_default(),
+        ),
         t => sf_from_numbers(t, &data_numbers(v)),
     }
 }
@@ -910,28 +1111,46 @@ fn sf_from_numbers(ty: FieldType, n: &[f64]) -> FieldValue {
 
     match ty {
         FieldType::SFColor => FieldValue::SFColor(Color3::new(g(0, 0.0), g(1, 0.0), g(2, 0.0))),
-        FieldType::SFColorRGBA => FieldValue::SFColorRGBA(Color4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0))),
+        FieldType::SFColorRGBA => {
+            FieldValue::SFColorRGBA(Color4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0)))
+        }
         FieldType::SFVec2d => FieldValue::SFVec2d(Vector2::new(g(0, 0.0), g(1, 0.0))),
         FieldType::SFVec2f => FieldValue::SFVec2f(Vector2::new(g(0, 0.0), g(1, 0.0))),
         FieldType::SFVec3d => FieldValue::SFVec3d(Vector3::new(g(0, 0.0), g(1, 0.0), g(2, 0.0))),
         FieldType::SFVec3f => FieldValue::SFVec3f(Vector3::new(g(0, 0.0), g(1, 0.0), g(2, 0.0))),
-        FieldType::SFVec4d => FieldValue::SFVec4d(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0))),
-        FieldType::SFVec4f => FieldValue::SFVec4f(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0))),
-        FieldType::SFRotation => FieldValue::SFRotation(Rotation4::new(g(0, 0.0), g(1, 0.0), g(2, 1.0), g(3, 0.0))),
-        FieldType::SFQuaternion => FieldValue::SFQuaternion(Quaternion::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0))),
+        FieldType::SFVec4d => {
+            FieldValue::SFVec4d(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0)))
+        }
+        FieldType::SFVec4f => {
+            FieldValue::SFVec4f(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0)))
+        }
+        FieldType::SFRotation => {
+            FieldValue::SFRotation(Rotation4::new(g(0, 0.0), g(1, 0.0), g(2, 1.0), g(3, 0.0)))
+        }
+        FieldType::SFQuaternion => {
+            FieldValue::SFQuaternion(Quaternion::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0)))
+        }
         FieldType::SFMatrix3d | FieldType::SFMatrix3f => {
             let mut m = Matrix3::default();
             if n.len() >= 9 {
                 m.0.copy_from_slice(&n[..9]);
             }
-            if ty == FieldType::SFMatrix3d { FieldValue::SFMatrix3d(m) } else { FieldValue::SFMatrix3f(m) }
+            if ty == FieldType::SFMatrix3d {
+                FieldValue::SFMatrix3d(m)
+            } else {
+                FieldValue::SFMatrix3f(m)
+            }
         }
         FieldType::SFMatrix4d | FieldType::SFMatrix4f => {
             let mut m = Matrix4::default();
             if n.len() >= 16 {
                 m.0.copy_from_slice(&n[..16]);
             }
-            if ty == FieldType::SFMatrix4d { FieldValue::SFMatrix4d(m) } else { FieldValue::SFMatrix4f(m) }
+            if ty == FieldType::SFMatrix4d {
+                FieldValue::SFMatrix4d(m)
+            } else {
+                FieldValue::SFMatrix4f(m)
+            }
         }
         FieldType::SFFloat => FieldValue::SFFloat(g(0, 0.0)),
         FieldType::SFDouble => FieldValue::SFDouble(g(0, 0.0)),
@@ -958,13 +1177,29 @@ pub fn mf_get(mf: &FieldValue, i: usize) -> Option<FieldValue> {
         FieldValue::MFString(v) => FieldValue::SFString(v[i].clone()),
         FieldValue::MFNode(v) => FieldValue::SFNode(v[i]),
         FieldValue::MFImage(v) => FieldValue::SFImage(v[i].clone()),
-        FieldValue::MFRotation(v) => FieldValue::SFRotation(Rotation4::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3])),
+        FieldValue::MFRotation(v) => FieldValue::SFRotation(Rotation4::new(
+            v[i * 4],
+            v[i * 4 + 1],
+            v[i * 4 + 2],
+            v[i * 4 + 3],
+        )),
         _ => {
             let c = mf.field_type().components();
             let nums: Vec<f64> = match mf {
-                FieldValue::MFColor(v) | FieldValue::MFColorRGBA(v) | FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)
-                | FieldValue::MFMatrix3f(v) | FieldValue::MFMatrix4f(v) => v[i * c..(i + 1) * c].iter().map(|x| *x as f64).collect(),
-                FieldValue::MFVec2d(v) | FieldValue::MFVec3d(v) | FieldValue::MFVec4d(v) | FieldValue::MFMatrix3d(v) | FieldValue::MFMatrix4d(v)
+                FieldValue::MFColor(v)
+                | FieldValue::MFColorRGBA(v)
+                | FieldValue::MFVec2f(v)
+                | FieldValue::MFVec3f(v)
+                | FieldValue::MFVec4f(v)
+                | FieldValue::MFMatrix3f(v)
+                | FieldValue::MFMatrix4f(v) => {
+                    v[i * c..(i + 1) * c].iter().map(|x| *x as f64).collect()
+                }
+                FieldValue::MFVec2d(v)
+                | FieldValue::MFVec3d(v)
+                | FieldValue::MFVec4d(v)
+                | FieldValue::MFMatrix3d(v)
+                | FieldValue::MFMatrix4d(v)
                 | FieldValue::MFQuaternion(v) => v[i * c..(i + 1) * c].to_vec(),
                 _ => vec![],
             };
@@ -1003,9 +1238,16 @@ pub fn mf_set(mf: &mut FieldValue, i: usize, sf: &FieldValue) {
 
     match mf {
         FieldValue::MFBool(v) => v[i] = matches!(sf, FieldValue::SFBool(true)),
-        FieldValue::MFInt32(v) => v[i] = sf_numbers(sf).first().map(|x| jsmath::to_int32(*x)).unwrap_or(0),
+        FieldValue::MFInt32(v) => {
+            v[i] = sf_numbers(sf)
+                .first()
+                .map(|x| jsmath::to_int32(*x))
+                .unwrap_or(0)
+        }
         FieldValue::MFFloat(v) => v[i] = sf_numbers(sf).first().copied().unwrap_or(0.0) as f32,
-        FieldValue::MFDouble(v) | FieldValue::MFTime(v) => v[i] = sf_numbers(sf).first().copied().unwrap_or(0.0),
+        FieldValue::MFDouble(v) | FieldValue::MFTime(v) => {
+            v[i] = sf_numbers(sf).first().copied().unwrap_or(0.0)
+        }
         FieldValue::MFString(v) => {
             v[i] = match sf {
                 FieldValue::SFString(s) => s.clone(),
@@ -1023,14 +1265,24 @@ pub fn mf_set(mf: &mut FieldValue, i: usize, sf: &FieldValue) {
                 v[i] = img.clone();
             }
         }
-        FieldValue::MFColor(v) | FieldValue::MFColorRGBA(v) | FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)
-        | FieldValue::MFMatrix3f(v) | FieldValue::MFMatrix4f(v) => {
+        FieldValue::MFColor(v)
+        | FieldValue::MFColorRGBA(v)
+        | FieldValue::MFVec2f(v)
+        | FieldValue::MFVec3f(v)
+        | FieldValue::MFVec4f(v)
+        | FieldValue::MFMatrix3f(v)
+        | FieldValue::MFMatrix4f(v) => {
             for (j, x) in mf_numbers_of(sf, c).into_iter().enumerate() {
                 v[i * c + j] = x as f32;
             }
         }
-        FieldValue::MFVec2d(v) | FieldValue::MFVec3d(v) | FieldValue::MFVec4d(v) | FieldValue::MFMatrix3d(v) | FieldValue::MFMatrix4d(v)
-        | FieldValue::MFQuaternion(v) | FieldValue::MFRotation(v) => {
+        FieldValue::MFVec2d(v)
+        | FieldValue::MFVec3d(v)
+        | FieldValue::MFVec4d(v)
+        | FieldValue::MFMatrix3d(v)
+        | FieldValue::MFMatrix4d(v)
+        | FieldValue::MFQuaternion(v)
+        | FieldValue::MFRotation(v) => {
             for (j, x) in mf_numbers_of(sf, c).into_iter().enumerate() {
                 v[i * c + j] = x;
             }
@@ -1059,7 +1311,15 @@ fn mf_push(mf: &mut FieldValue, sf: &FieldValue) {
 }
 
 fn is_scalar(t: FieldType) -> bool {
-    matches!(t, FieldType::SFBool | FieldType::SFInt32 | FieldType::SFFloat | FieldType::SFDouble | FieldType::SFTime | FieldType::SFString)
+    matches!(
+        t,
+        FieldType::SFBool
+            | FieldType::SFInt32
+            | FieldType::SFFloat
+            | FieldType::SFDouble
+            | FieldType::SFTime
+            | FieldType::SFString
+    )
 }
 
 /// A Script prints with each node's clone count as it is now (X3DGenerator.NeedsName: X3DNode.getCloneCount); what the host
@@ -1099,8 +1359,12 @@ fn print_raw_js<R>(ctx: &Ctx<'_>, print: impl Fn(&Scene) -> R) -> R {
 fn raw_coerce_js(ctx: &Ctx<'_>, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
     let cur = CURRENT.get();
     let none = || vec![None; requests.len()];
-    let Ok(f) = ctx.globals().get::<_, Function>("__rawCoerce") else { return none() };
-    let Ok(list) = Array::new(ctx.clone()) else { return none() };
+    let Ok(f) = ctx.globals().get::<_, Function>("__rawCoerce") else {
+        return none();
+    };
+    let Ok(list) = Array::new(ctx.clone()) else {
+        return none();
+    };
 
     for (i, r) in requests.iter().enumerate() {
         let token = if r.host == cur { r.token as f64 } else { -1.0 };
@@ -1144,7 +1408,9 @@ fn to_vrml(v: &FieldValue) -> String {
     let mut g = Generator::default();
 
     match v {
-        FieldValue::SFNode(_) | FieldValue::MFNode(_) => with_live_clone_counts(|| rt().scene.node_value_to_vrml_string(v)),
+        FieldValue::SFNode(_) | FieldValue::MFNode(_) => {
+            with_live_clone_counts(|| rt().scene.node_value_to_vrml_string(v))
+        }
         _ => {
             v.to_vrml_stream(&mut g);
             g.string
@@ -1254,7 +1520,9 @@ fn coerce_bool(v: &Value<'_>) -> bool {
 fn convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> Option<FieldValue> {
     match ty {
         FieldType::SFBool => return Some(FieldValue::SFBool(coerce_bool(v))),
-        FieldType::SFInt32 => return Some(FieldValue::SFInt32(jsmath::to_int32(coerce_f64(ctx, v)))),
+        FieldType::SFInt32 => {
+            return Some(FieldValue::SFInt32(jsmath::to_int32(coerce_f64(ctx, v))));
+        }
         FieldType::SFFloat => return Some(FieldValue::SFFloat(coerce_f64(ctx, v))),
         FieldType::SFDouble => return Some(FieldValue::SFDouble(coerce_f64(ctx, v))),
         FieldType::SFTime => return Some(FieldValue::SFTime(coerce_f64(ctx, v))),
@@ -1316,8 +1584,12 @@ fn primitive_or_handle<'js>(ctx: &Ctx<'js>, v: &FieldValue, h: u32, attached: bo
     match v {
         FieldValue::SFBool(b) => Value::new_bool(ctx.clone(), *b),
         FieldValue::SFInt32(x) => Value::new_int(ctx.clone(), *x),
-        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => data_number(ctx, *x),
-        FieldValue::SFString(s) => rquickjs::String::from_str(ctx.clone(), s).unwrap().into_value(),
+        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => {
+            data_number(ctx, *x)
+        }
+        FieldValue::SFString(s) => rquickjs::String::from_str(ctx.clone(), s)
+            .unwrap()
+            .into_value(),
         FieldValue::SFNode(n) => node_js(ctx, *n),
         _ => handle_js(ctx, h, v.field_type().name(), attached),
     }
@@ -1366,14 +1638,30 @@ fn throw_type<T>(ctx: &Ctx<'_>, msg: &str) -> rquickjs::Result<T> {
 /// (`value .length`, `value [i]`): arrays and strings (one element per UTF-16 unit). Other values have none.
 fn array_like<'js>(ctx: &Ctx<'js>, v: &Value<'js>) -> Option<Vec<Value<'js>>> {
     if let Some(arr) = v.as_array() {
-        return Some((0..arr.len()).map(|i| arr.get::<Value>(i).unwrap_or_else(|_| Value::new_undefined(ctx.clone()))).collect());
+        return Some(
+            (0..arr.len())
+                .map(|i| {
+                    arr.get::<Value>(i)
+                        .unwrap_or_else(|_| Value::new_undefined(ctx.clone()))
+                })
+                .collect(),
+        );
     }
 
     if let Some(s) = v.as_string() {
         let text = s.to_string().ok()?;
         let units: Vec<u16> = text.encode_utf16().collect();
 
-        return Some(units.iter().map(|u| rquickjs::String::from_str(ctx.clone(), &String::from_utf16_lossy(&[*u])).map(|s| s.into_value()).unwrap_or_else(|_| Value::new_undefined(ctx.clone()))).collect());
+        return Some(
+            units
+                .iter()
+                .map(|u| {
+                    rquickjs::String::from_str(ctx.clone(), &String::from_utf16_lossy(&[*u]))
+                        .map(|s| s.into_value())
+                        .unwrap_or_else(|_| Value::new_undefined(ctx.clone()))
+                })
+                .collect(),
+        );
     }
 
     None
@@ -1396,10 +1684,17 @@ fn same_family(a: FieldType, b: FieldType) -> bool {
 /// `X3DField.setValue (value)`: `set (value instanceof this .constructor ? value .getValue () : value)`, then the type's own `set`.
 /// `Ok (None)` leaves the field alone. X_ITE stores JavaScript `undefined` for a value of the wrong shape; a number cannot hold
 /// that, so those assignments (an array to an SFVec3f, a number to an MFFloat) are not modeled.
-fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::Result<Option<FieldValue>> {
+fn set_convert<'js>(
+    ctx: &Ctx<'js>,
+    ty: FieldType,
+    v: &Value<'js>,
+) -> rquickjs::Result<Option<FieldValue>> {
     use FieldType::*;
 
-    if matches!(ty, SFBool | SFInt32 | SFFloat | SFDouble | SFTime | SFString) {
+    if matches!(
+        ty,
+        SFBool | SFInt32 | SFFloat | SFDouble | SFTime | SFString
+    ) {
         return Ok(convert(ctx, ty, v));
     }
 
@@ -1447,13 +1742,18 @@ fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::
         }
 
         // A plain object with x, y, z, w (Vector3 .assign ({ x, y, z })).
-        if matches!(ty, SFVec2f | SFVec2d | SFVec3f | SFVec3d | SFVec4f | SFVec4d) {
+        if matches!(
+            ty,
+            SFVec2f | SFVec2d | SFVec3f | SFVec3d | SFVec4f | SFVec4d
+        ) {
             if let Some(o) = v.as_object() {
                 let n = ty.components();
                 let mut nums = vec![];
 
                 for key in ["x", "y", "z", "w"].iter().take(n) {
-                    let e: Value = o.get(*key).unwrap_or_else(|_| Value::new_undefined(ctx.clone()));
+                    let e: Value = o
+                        .get(*key)
+                        .unwrap_or_else(|_| Value::new_undefined(ctx.clone()));
                     nums.push(coerce_f64(ctx, &e));
                 }
 
@@ -1473,9 +1773,20 @@ fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::
         }
 
         // Another MF type: element by element through `value [i]` (one number per element for scalar types).
-        if value.field_type().is_multi() && ty.components() == 1 && value.field_type().components() == 1 && !matches!(ty, MFString | MFNode | MFImage) && !matches!(value.field_type(), MFString | MFNode | MFImage) {
+        if value.field_type().is_multi()
+            && ty.components() == 1
+            && value.field_type().components() == 1
+            && !matches!(ty, MFString | MFNode | MFImage)
+            && !matches!(value.field_type(), MFString | MFNode | MFImage)
+        {
             let mut mf = FieldValue::default_for(ty);
-            let nums: Vec<f64> = (0..value.len()).map(|i| mf_get(&value, i).map(|e| sf_numbers(&e).first().copied().unwrap_or(f64::NAN)).unwrap_or(f64::NAN)).collect();
+            let nums: Vec<f64> = (0..value.len())
+                .map(|i| {
+                    mf_get(&value, i)
+                        .map(|e| sf_numbers(&e).first().copied().unwrap_or(f64::NAN))
+                        .unwrap_or(f64::NAN)
+                })
+                .collect();
 
             mf.set_flat_numbers(&nums);
             return Ok(Some(mf));
@@ -1516,14 +1827,25 @@ fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::
         MFImage => Ok(convert(ctx, ty, v)),
         _ => {
             let components = ty.components();
-            let mut nums: Vec<f64> = elements.iter().map(|e| if arg_handle(e).is_some() { f64::NAN } else { coerce_f64(ctx, e) }).collect();
+            let mut nums: Vec<f64> = elements
+                .iter()
+                .map(|e| {
+                    if arg_handle(e).is_some() {
+                        f64::NAN
+                    } else {
+                        coerce_f64(ctx, e)
+                    }
+                })
+                .collect();
             let rest = nums.len() % components;
 
             if rest != 0 {
                 let keep = nums.len() - rest;
 
                 nums.truncate(keep);
-                rt().log_warn(format!("Array length must be multiple of components size, which is {components}."));
+                rt().log_warn(format!(
+                    "Array length must be multiple of components size, which is {components}."
+                ));
             }
 
             let mut mf = FieldValue::default_for(ty);
@@ -1535,7 +1857,9 @@ fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::
 }
 
 fn str_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> String {
-    args.get(i).map(|v| coerce_string(ctx, v)).unwrap_or_default()
+    args.get(i)
+        .map(|v| coerce_string(ctx, v))
+        .unwrap_or_default()
 }
 
 fn num_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> f64 {
@@ -1585,7 +1909,11 @@ fn native<'js>(ctx: Ctx<'js>, args: Rest<Value<'js>>) -> rquickjs::Result<Value<
 }
 
 fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>> {
-    let name = args.first().and_then(|v| v.as_string()).and_then(|s| s.to_string().ok()).unwrap_or_default();
+    let name = args
+        .first()
+        .and_then(|v| v.as_string())
+        .and_then(|s| s.to_string().ok())
+        .unwrap_or_default();
     let a = &args[1.min(args.len())..];
     let undefined = Value::new_undefined(ctx.clone());
 
@@ -1617,12 +1945,16 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "mathfn" => math_fn(ctx, &str_arg(ctx, a, 0)),
         "fname" => {
             let h = handle_at(ctx, a, 0)?;
-            let n = slot_key(h).map(|k| rt().field(k).name.clone()).unwrap_or_default();
+            let n = slot_key(h)
+                .map(|k| rt().field(k).name.clone())
+                .unwrap_or_default();
             Ok(rquickjs::String::from_str(ctx.clone(), &n)?.into_value())
         }
         "faccess" => {
             let h = handle_at(ctx, a, 0)?;
-            let n = slot_key(h).map(|k| rt().field(k).access).unwrap_or(access::INITIALIZE_ONLY);
+            let n = slot_key(h)
+                .map(|k| rt().field(k).access)
+                .unwrap_or(access::INITIALIZE_ONLY);
             Ok(Value::new_int(ctx.clone(), n as i32))
         }
         "set" => {
@@ -1649,7 +1981,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             match mf_get(&v, i) {
                 None => Ok(undefined),
-                Some(sf) if is_scalar(sf.field_type()) || sf.field_type() == FieldType::SFNode => Ok(primitive_or_handle(ctx, &sf, 0, false)),
+                Some(sf) if is_scalar(sf.field_type()) || sf.field_type() == FieldType::SFNode => {
+                    Ok(primitive_or_handle(ctx, &sf, 0, false))
+                }
                 Some(sf) => Ok(handle_js(ctx, element(h, i), sf.field_type().name(), false)),
             }
         }
@@ -1678,29 +2012,56 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
             let json = str_arg(ctx, a, 1) == "json";
-            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
+            let text = print_raw_js(ctx, |s| {
+                if json {
+                    s.field_value_to_json_string(&v)
+                } else {
+                    s.field_value_to_xml_string(&v)
+                }
+            });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "strn" => {
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
-            let text = if matches!(v, FieldValue::SFNode(_) | FieldValue::MFNode(_)) { rt().scene.node_value_to_string(&v) } else { to_vrml(&v) };
+            let text = if matches!(v, FieldValue::SFNode(_) | FieldValue::MFNode(_)) {
+                rt().scene.node_value_to_string(&v)
+            } else {
+                to_vrml(&v)
+            };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nprint" => {
             let id = num_arg(ctx, a, 0) as NodeId;
             let v = FieldValue::SFNode(Some(id));
             let json = str_arg(ctx, a, 1) == "json";
-            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
+            let text = print_raw_js(ctx, |s| {
+                if json {
+                    s.field_value_to_json_string(&v)
+                } else {
+                    s.field_value_to_xml_string(&v)
+                }
+            });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nstream" => {
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id)))))?.into_value())
+            Ok(rquickjs::String::from_str(
+                ctx.clone(),
+                &with_live_clone_counts(|| {
+                    rt().scene
+                        .node_value_to_string(&FieldValue::SFNode(Some(id)))
+                }),
+            )?
+            .into_value())
         }
         "nstr" => {
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| print_raw_js(ctx, |s| s.node_to_vrml_string(id))))?.into_value())
+            Ok(rquickjs::String::from_str(
+                ctx.clone(),
+                &with_live_clone_counts(|| print_raw_js(ctx, |s| s.node_to_vrml_string(id))),
+            )?
+            .into_value())
         }
         "nfields" => {
             let id = inner_node(num_arg(ctx, a, 0) as NodeId);
@@ -1710,7 +2071,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             // X3DBaseNode.getFieldDefinitions: a predefined field's definition holds the class's default value (`value`), a
             // user-defined field's the field itself (`handle`).
             let defs = match &n.kind {
-                NodeKind::Builtin(t) => Some(&rt().scene.table.types[*t].variant(rt().scene.spec_version_of(n.ctx)).fields),
+                NodeKind::Builtin(t) => Some(
+                    &rt().scene.table.types[*t]
+                        .variant(rt().scene.spec_version_of(n.ctx))
+                        .fields,
+                ),
                 _ => None,
             };
 
@@ -1746,9 +2111,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         // --- browser
-        "bname" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_name)?.into_value()),
-        "bversion" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_version)?.into_value()),
-        "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().description)?.into_value()),
+        "bname" => Ok(
+            rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_name)?.into_value(),
+        ),
+        "bversion" => Ok(rquickjs::String::from_str(
+            ctx.clone(),
+            &rt().scene.table.browser_version,
+        )?
+        .into_value()),
+        "bdescription" => {
+            Ok(rquickjs::String::from_str(ctx.clone(), &rt().description)?.into_value())
+        }
         "bsetdescription" => {
             let d = str_arg(ctx, a, 0);
             rt().description = d.clone();
@@ -1773,8 +2146,12 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 None => Value::new_null(ctx.clone()),
                 Some(OptionValue::Bool(v)) => Value::new_bool(ctx.clone(), *v),
                 Some(OptionValue::Int32(v)) => Value::new_int(ctx.clone(), *v),
-                Some(OptionValue::Float(v) | OptionValue::Double(v)) => Value::new_number(ctx.clone(), *v),
-                Some(OptionValue::String(v)) => rquickjs::String::from_str(ctx.clone(), v)?.into_value(),
+                Some(OptionValue::Float(v) | OptionValue::Double(v)) => {
+                    Value::new_number(ctx.clone(), *v)
+                }
+                Some(OptionValue::String(v)) => {
+                    rquickjs::String::from_str(ctx.clone(), v)?.into_value()
+                }
             })
         }
         // X3DBrowserContext.getBrowserOptions () … .getFieldDefinitions (): name, type, initial value.
@@ -1783,14 +2160,26 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             let list = Array::new(ctx.clone())?;
 
-            for (i, (name, v)) in x3d_runtime::browser_options::default_fields(&str_arg(ctx, a, 0)).entries().enumerate() {
+            for (i, (name, v)) in x3d_runtime::browser_options::default_fields(&str_arg(ctx, a, 0))
+                .entries()
+                .enumerate()
+            {
                 let value = match v {
                     OptionValue::Bool(b) => Value::new_bool(ctx.clone(), *b),
                     OptionValue::Int32(x) => Value::new_int(ctx.clone(), *x),
                     OptionValue::Float(x) | OptionValue::Double(x) => data_number(ctx, *x),
-                    OptionValue::String(s) => rquickjs::String::from_str(ctx.clone(), s)?.into_value(),
+                    OptionValue::String(s) => {
+                        rquickjs::String::from_str(ctx.clone(), s)?.into_value()
+                    }
                 };
-                let entry = data_array(ctx, [rquickjs::String::from_str(ctx.clone(), name)?.into_value(), rquickjs::String::from_str(ctx.clone(), v.type_name())?.into_value(), value])?;
+                let entry = data_array(
+                    ctx,
+                    [
+                        rquickjs::String::from_str(ctx.clone(), name)?.into_value(),
+                        rquickjs::String::from_str(ctx.clone(), v.type_name())?.into_value(),
+                        value,
+                    ],
+                )?;
 
                 list.set(i, entry)?;
             }
@@ -1812,7 +2201,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let n = rt().default_node(&str_arg(ctx, a, 0));
             Ok(node_data(ctx, &n))
         }
-        "bviewer" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().browser_active.viewer)?.into_value()),
+        "bviewer" => {
+            Ok(rquickjs::String::from_str(ctx.clone(), &rt().browser_active.viewer)?.into_value())
+        }
         "optionType" => {
             let name = str_arg(ctx, a, 0);
 
@@ -1826,9 +2217,13 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             use x3d_runtime::browser_options::OptionValue;
 
             let name = str_arg(ctx, a, 0);
-            let Some(current) = rt().browser_options.get_option(&name).cloned() else { return Ok(undefined) };
+            let Some(current) = rt().browser_options.get_option(&name).cloned() else {
+                return Ok(undefined);
+            };
             let value = match current {
-                OptionValue::Bool(_) => OptionValue::Bool(a.get(1).and_then(|v| v.as_bool()).unwrap_or(false)),
+                OptionValue::Bool(_) => {
+                    OptionValue::Bool(a.get(1).and_then(|v| v.as_bool()).unwrap_or(false))
+                }
                 OptionValue::Int32(_) => OptionValue::Int32(num_arg(ctx, a, 1) as i32),
                 OptionValue::Float(_) => OptionValue::Float(num_arg(ctx, a, 1)),
                 OptionValue::Double(_) => OptionValue::Double(num_arg(ctx, a, 1)),
@@ -1848,9 +2243,15 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             rt().report_script_error(node, &name, &text);
             Ok(undefined)
         }
-        "datenow" => Ok(Value::new_number(ctx.clone(), rt().date_override.unwrap_or(rt().now) * 1000.0)),
+        "datenow" => Ok(Value::new_number(
+            ctx.clone(),
+            rt().date_override.unwrap_or(rt().now) * 1000.0,
+        )),
         "framerate" => Ok(Value::new_number(ctx.clone(), rt().frame_rate)),
-        "browserTime" => Ok(Value::new_number(ctx.clone(), rt().world_state.initialized_time)),
+        "browserTime" => Ok(Value::new_number(
+            ctx.clone(),
+            rt().world_state.initialized_time,
+        )),
         // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
         "brequest" => {
             let r = str_arg(ctx, a, 0);
@@ -1860,14 +2261,21 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "specVersion" => {
             let script = num_arg(ctx, a, 0);
             let c = ctx_of_script(script);
-            Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?.into_value())
+            Ok(
+                rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?
+                    .into_value(),
+            )
         }
         // X3DBrowser.getBaseURL: the page's URL (an embedder without a page: the URL of the caller's scene).
         "baseURL" => {
             let script = num_arg(ctx, a, 0);
             let c = ctx_of_script(script);
             let page = rt().page_url.clone();
-            let url = if page.is_empty() { rt().scene.world_url_of(c).to_string() } else { page };
+            let url = if page.is_empty() {
+                rt().scene.world_url_of(c).to_string()
+            } else {
+                page
+            };
             Ok(rquickjs::String::from_str(ctx.clone(), &url)?.into_value())
         }
         "worldURL" => {
@@ -1897,7 +2305,10 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "cx" => ctx_api::op(ctx, a),
-        "ctxOf" => Ok(Value::new_number(ctx.clone(), ctx_of_script(num_arg(ctx, a, 0)) as f64)),
+        "ctxOf" => Ok(Value::new_number(
+            ctx.clone(),
+            ctx_of_script(num_arg(ctx, a, 0)) as f64,
+        )),
         // X3DBrowser.createX3DFromString / createX3DFromURL: the request, or the message of the rejection.
         "browserScene" => {
             let script = num_arg(ctx, a, 0);
@@ -1909,17 +2320,45 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             if kind == "create" {
                 // createScene (profile, ... components): the scene is there at once.
-                let profile = a.get(2).filter(|v| !v.is_undefined() && !v.is_null()).map(|v| coerce_string(ctx, v));
+                let profile = a
+                    .get(2)
+                    .filter(|v| !v.is_undefined() && !v.is_null())
+                    .map(|v| coerce_string(ctx, v));
                 let components: Vec<(String, i32)> = a
                     .get(3)
                     .and_then(|v| v.as_array())
-                    .map(|arr| arr.iter::<Value>().filter_map(Result::ok).filter_map(|e| e.as_array().and_then(|p| Some((p.get::<Coerced<String>>(0).ok()?.0, p.get::<Coerced<f64>>(1).ok()?.0 as i32)))).collect())
+                    .map(|arr| {
+                        arr.iter::<Value>()
+                            .filter_map(Result::ok)
+                            .filter_map(|e| {
+                                e.as_array().and_then(|p| {
+                                    Some((
+                                        p.get::<Coerced<String>>(0).ok()?.0,
+                                        p.get::<Coerced<f64>>(1).ok()?.0 as i32,
+                                    ))
+                                })
+                            })
+                            .collect()
+                    })
                     .unwrap_or_default();
 
-                o.set("ctx", rt().browser_create_scene(profile, components, parent) as f64)?;
+                o.set(
+                    "ctx",
+                    rt().browser_create_scene(profile, components, parent) as f64,
+                )?;
             } else if kind == "load" {
                 // Browser.loadURL (url, parameter): `id` is absent when the url only names a viewpoint of the world.
-                let strings = |i: usize| -> Vec<String> { a.get(i).and_then(|v| v.as_array()).map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect()).unwrap_or_default() };
+                let strings = |i: usize| -> Vec<String> {
+                    a.get(i)
+                        .and_then(|v| v.as_array())
+                        .map(|arr| {
+                            arr.iter::<Coerced<String>>()
+                                .filter_map(Result::ok)
+                                .map(|c| c.0)
+                                .collect()
+                        })
+                        .unwrap_or_default()
+                };
 
                 match rt().browser_load_url(strings(2), strings(3), parent, node) {
                     Ok(id) => o.set("id", id as f64)?,
@@ -1928,7 +2367,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 }
             } else if kind == "string" || kind == "json" {
                 let text = str_arg(ctx, a, 2);
-                let made = if kind == "string" { rt().browser_create_from_string(&text, parent, node) } else { rt().browser_import_json(&text, parent, node) };
+                let made = if kind == "string" {
+                    rt().browser_create_from_string(&text, parent, node)
+                } else {
+                    rt().browser_import_json(&text, parent, node)
+                };
 
                 match made {
                     Ok(id) => o.set("id", id as f64)?,
@@ -1938,10 +2381,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 let urls: Vec<String> = a
                     .get(2)
                     .and_then(|v| v.as_array())
-                    .map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect())
+                    .map(|arr| {
+                        arr.iter::<Coerced<String>>()
+                            .filter_map(Result::ok)
+                            .map(|c| c.0)
+                            .collect()
+                    })
                     .unwrap_or_default();
 
-                o.set("id", rt().browser_create_from_url(urls, parent, node) as f64)?;
+                o.set(
+                    "id",
+                    rt().browser_create_from_url(urls, parent, node) as f64,
+                )?;
             }
 
             Ok(o.into_value())
@@ -1977,11 +2428,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "addRoute" | "deleteRoute" => {
             let script = num_arg(ctx, a, 0);
             let ctx_id = ctx_of_script(script);
-            let (src, dst) = (a.get(1).and_then(arg_node).flatten(), a.get(3).and_then(arg_node).flatten());
+            let (src, dst) = (
+                a.get(1).and_then(arg_node).flatten(),
+                a.get(3).and_then(arg_node).flatten(),
+            );
             let (sf, df) = (str_arg(ctx, a, 2), str_arg(ctx, a, 4));
 
             let (Some(src), Some(dst)) = (src, dst) else {
-                return throw(ctx, "Bad ROUTE specification: source node must be of type X3DNode.");
+                return throw(
+                    ctx,
+                    "Bad ROUTE specification: source node must be of type X3DNode.",
+                );
             };
 
             if name == "addRoute" {
@@ -2001,7 +2458,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let s = &rt().scene;
             let o = Object::new(ctx.clone())?;
             let root = s.scene_root(c);
-            let encoding = s.scene_infos.get(&root).map(|i| i.encoding.clone()).unwrap_or_else(|| s.encoding.clone());
+            let encoding = s
+                .scene_infos
+                .get(&root)
+                .map(|i| i.encoding.clone())
+                .unwrap_or_else(|| s.encoding.clone());
 
             o.set("isScene", s.is_scene_root(c))?;
             o.set("encoding", encoding)?;
@@ -2091,12 +2552,19 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         // ComponentInfo the Script gave (any value; the printers write it).
         "addComponent" => {
             let script = num_arg(ctx, a, 0);
-            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
+            let (name, level, text) = (
+                str_arg(ctx, a, 1),
+                num_arg(ctx, a, 2) as i32,
+                str_arg(ctx, a, 3),
+            );
             let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
             if comps.iter().any(|(n, _)| *n == name) {
-                return throw(ctx, &format!("Couldn't add component. Component '{name}' already exists."));
+                return throw(
+                    ctx,
+                    &format!("Couldn't add component. Component '{name}' already exists."),
+                );
             }
 
             comps.push((name.clone(), level));
@@ -2106,7 +2574,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "updateComponent" => {
             // X3DScene.updateComponent: a component of that name is replaced where it stands, else added.
             let script = num_arg(ctx, a, 0);
-            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
+            let (name, level, text) = (
+                str_arg(ctx, a, 1),
+                num_arg(ctx, a, 2) as i32,
+                str_arg(ctx, a, 3),
+            );
             let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
@@ -2146,7 +2618,13 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "frawtok" => {
             let h = handle_at(ctx, a, 0)?;
 
-            match slot_key(h).and_then(|k| rt().scene.raw_tokens.get(&k).filter(|r| r.host == CURRENT.get()).map(|r| r.token)) {
+            match slot_key(h).and_then(|k| {
+                rt().scene
+                    .raw_tokens
+                    .get(&k)
+                    .filter(|r| r.host == CURRENT.get())
+                    .map(|r| r.token)
+            }) {
                 Some(t) => Ok(Value::new_number(ctx.clone(), t as f64)),
                 None => Ok(undefined),
             }
@@ -2155,7 +2633,13 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "frawlive" => {
             let arr = Array::new(ctx.clone())?;
             let cur = CURRENT.get();
-            let mut live: Vec<u32> = rt().scene.raw_tokens.values().filter(|r| r.host == cur).map(|r| r.token).collect();
+            let mut live: Vec<u32> = rt()
+                .scene
+                .raw_tokens
+                .values()
+                .filter(|r| r.host == cur)
+                .map(|r| r.token)
+                .collect();
 
             live.sort_unstable();
             live.dedup();
@@ -2172,7 +2656,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "fimport" => {
             let ty_name = str_arg(ctx, a, 0);
-            let ty = if ty_name == "VrmlMatrix" { FieldType::SFMatrix4f } else { FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool) };
+            let ty = if ty_name == "VrmlMatrix" {
+                FieldType::SFMatrix4f
+            } else {
+                FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool)
+            };
             let v = data_value(ty, a.get(1).unwrap_or(&undefined));
             Ok(Value::new_number(ctx.clone(), encode(detached(v))))
         }
@@ -2184,9 +2672,20 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 let texts: Vec<Option<String>> = a
                     .get(4)
                     .and_then(|v| v.as_array().cloned())
-                    .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
+                    .map(|arr| {
+                        arr.iter::<Value>()
+                            .map(|x| {
+                                x.ok()
+                                    .and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))
+                            })
+                            .collect()
+                    })
                     .unwrap_or_default();
-                x3d_scene::scene::RawValue { host: CURRENT.get(), token: t as u32, texts: texts.into() }
+                x3d_scene::scene::RawValue {
+                    host: CURRENT.get(),
+                    token: t as u32,
+                    texts: texts.into(),
+                }
             });
 
             if let Some(k) = slot_key(h) {
@@ -2235,19 +2734,28 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         // Script's execution context) or is null; a value that cannot be read throws X_ITE's error.
         "parsefield" => {
             let ty_name = str_arg(ctx, a, 0);
-            let ty = if ty_name == "VrmlMatrix" { FieldType::SFMatrix4f } else { FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool) };
+            let ty = if ty_name == "VrmlMatrix" {
+                FieldType::SFMatrix4f
+            } else {
+                FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool)
+            };
             let text = str_arg(ctx, a, 1);
             let xml = str_arg(ctx, a, 2) == "xml";
             let name = str_arg(ctx, a, 3);
             let scene = a.get(4).and_then(|v| v.as_number()).map(ctx_of_script);
-            let unit = a.get(5).and_then(|v| v.as_string()).and_then(|s| s.to_string().ok());
+            let unit = a
+                .get(5)
+                .and_then(|v| v.as_string())
+                .and_then(|s| s.to_string().ok());
 
             match rt().field_from_string(ty, &text, scene, xml, unit, &name) {
                 Ok(Some(v)) => value_data(ctx, &v),
                 Ok(None) => throw(ctx, &format!("Couldn't read value for field '{name}'.")),
                 Err(Some(message)) => throw(ctx, &message),
                 // VRMLParser without an execution context: `executionContext .createNode (…)` of null.
-                Err(None) => throw_type(ctx, "Cannot read properties of null (reading 'createNode')"),
+                Err(None) => {
+                    throw_type(ctx, "Cannot read properties of null (reading 'createNode')")
+                }
             }
         }
         "funit" => {
@@ -2262,7 +2770,12 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     (NodeKind::Builtin(t), FieldLoc::Pre(_)) => {
                         let name = &rt().field(k).name;
                         let spec = scene.spec_version_of(node.ctx);
-                        scene.table.types[t].variant(spec).fields.iter().find(|d| &d.name == name).and_then(|d| d.unit.clone())
+                        scene.table.types[t]
+                            .variant(spec)
+                            .fields
+                            .iter()
+                            .find(|d| &d.name == name)
+                            .and_then(|d| d.unit.clone())
                     }
                     _ => None,
                 }
@@ -2278,7 +2791,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let scientific = a.first().and_then(|v| v.as_bool()).unwrap_or(false);
             let precision = num_arg(ctx, a, 1) as usize;
             let value = num_arg(ctx, a, 2);
-            let text = if scientific { x3d_fields::format::intl_scientific_lower(value, precision) } else { x3d_fields::format::intl_standard(value, precision) };
+            let text = if scientific {
+                x3d_fields::format::intl_scientific_lower(value, precision)
+            } else {
+                x3d_fields::format::intl_standard(value, precision)
+            };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "ctxObserve" => {
@@ -2307,7 +2824,10 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "setProfile" => {
             let script = num_arg(ctx, a, 0);
-            let profile = a.get(1).filter(|v| v.is_string()).map(|_| str_arg(ctx, a, 1));
+            let profile = a
+                .get(1)
+                .filter(|v| v.is_string())
+                .map(|_| str_arg(ctx, a, 1));
             let root = rt().scene.scene_root(ctx_of_script(script));
 
             match rt().scene.scene_infos.get_mut(&root) {
@@ -2323,7 +2843,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
             let values: Vec<String> = match a.get(3).and_then(|v| v.as_array()) {
-                Some(arr) => arr.iter::<Value>().filter_map(|v| v.ok()).map(|v| coerce_string(ctx, &v)).collect(),
+                Some(arr) => arr
+                    .iter::<Value>()
+                    .filter_map(|v| v.ok())
+                    .map(|v| coerce_string(ctx, &v))
+                    .collect(),
                 None => vec![],
             };
 
@@ -2354,7 +2878,20 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "routeList" => {
             let script = num_arg(ctx, a, 0);
             let c = ctx_of_script(script);
-            let routes: Vec<_> = rt().scene.ctx(c).routes.iter().map(|r| (r.source_node, r.source_field.clone(), r.destination_node, r.destination_field.clone())).collect();
+            let routes: Vec<_> = rt()
+                .scene
+                .ctx(c)
+                .routes
+                .iter()
+                .map(|r| {
+                    (
+                        r.source_node,
+                        r.source_field.clone(),
+                        r.destination_node,
+                        r.destination_field.clone(),
+                    )
+                })
+                .collect();
             let arr = Array::new(ctx.clone())?;
 
             for (i, (sn, sf, dn, df)) in routes.into_iter().enumerate() {
@@ -2408,11 +2945,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
 
             if rt().scene.get_exported_node(root, &name).is_some() {
-                return throw(ctx, &format!("Couldn't add exported node: exported name '{name}' already in use."));
+                return throw(
+                    ctx,
+                    &format!("Couldn't add exported node: exported name '{name}' already in use."),
+                );
             }
 
             let Some(node) = a.get(3).and_then(arg_node).flatten() else {
-                return throw(ctx, "Couldn't update exported node: node must be of type X3DNode.");
+                return throw(
+                    ctx,
+                    "Couldn't update exported node: node must be of type X3DNode.",
+                );
             };
 
             match rt().scene.update_exported_node(root, &name, node, "") {
@@ -2481,7 +3024,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "worldInfos" => {
             let script = num_arg(ctx, a, 0);
             let c = ctx_of_script(script);
-            let list: Vec<Option<NodeId>> = rt().world_infos.get(&c).map(|l| l.iter().map(|n| Some(*n)).collect()).unwrap_or_default();
+            let list: Vec<Option<NodeId>> = rt()
+                .world_infos
+                .get(&c)
+                .map(|l| l.iter().map(|n| Some(*n)).collect())
+                .unwrap_or_default();
             Ok(new_value_js(ctx, FieldValue::MFNode(list)))
         }
         "rootNodes" => {
@@ -2539,7 +3086,10 @@ fn scene_meta_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mut Vec<
 }
 
 /// The COMPONENT list of the scene whose root context is `root`.
-fn scene_components_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mut Vec<(String, i32)> {
+fn scene_components_mut(
+    s: &mut x3d_scene::Scene,
+    root: x3d_scene::CtxId,
+) -> &mut Vec<(String, i32)> {
     if s.scene_infos.contains_key(&root) {
         &mut s.scene_infos.get_mut(&root).unwrap().components
     } else {
@@ -2548,7 +3098,13 @@ fn scene_components_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mu
 }
 
 /// The level text of a component (see `Scene::component_level_texts`); none when it is the number's own.
-fn set_component_level_text(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId, name: String, level: i32, text: String) {
+fn set_component_level_text(
+    s: &mut x3d_scene::Scene,
+    root: x3d_scene::CtxId,
+    name: String,
+    level: i32,
+    text: String,
+) {
     let texts = match s.scene_infos.get_mut(&root) {
         Some(i) => &mut i.component_level_texts,
         None => &mut s.component_level_texts,
@@ -2579,10 +3135,19 @@ fn math_fn<'js>(ctx: &Ctx<'js>, name: &str) -> rquickjs::Result<Value<'js>> {
         "log10" => f1!(jsmath::log10),
         "atan" => f1!(jsmath::atan),
         "sqrt" => f1!(jsmath::sqrt),
-        "pow" => Function::new(ctx.clone(), |x: Coerced<f64>, y: Coerced<f64>| jsmath::pow(x.0, y.0))?.into_value(),
+        "pow" => Function::new(ctx.clone(), |x: Coerced<f64>, y: Coerced<f64>| {
+            jsmath::pow(x.0, y.0)
+        })?
+        .into_value(),
         // V8 MathHypot: every argument is converted with ToNumber first.
-        "hypot" => Function::new(ctx.clone(), |a: Rest<Coerced<f64>>| jsmath::hypot(&a.0.iter().map(|x| x.0).collect::<Vec<_>>()))?.into_value(),
-        "atan2" => Function::new(ctx.clone(), |y: Coerced<f64>, x: Coerced<f64>| jsmath::atan2(y.0, x.0))?.into_value(),
+        "hypot" => Function::new(ctx.clone(), |a: Rest<Coerced<f64>>| {
+            jsmath::hypot(&a.0.iter().map(|x| x.0).collect::<Vec<_>>())
+        })?
+        .into_value(),
+        "atan2" => Function::new(ctx.clone(), |y: Coerced<f64>, x: Coerced<f64>| {
+            jsmath::atan2(y.0, x.0)
+        })?
+        .into_value(),
         _ => Value::new_null(ctx.clone()),
     })
 }
@@ -2611,8 +3176,15 @@ mod slot_tests {
         let n = detached(FieldValue::SFInt32(2));
 
         assert_eq!(n, h, "the slot is taken again");
-        assert_eq!(decode(old), None, "the old handle does not reach the new value");
-        assert!(matches!(decode(encode(n)).map(read), Some(FieldValue::SFInt32(2))), "the new handle works");
+        assert_eq!(
+            decode(old),
+            None,
+            "the old handle does not reach the new value"
+        );
+        assert!(
+            matches!(decode(encode(n)).map(read), Some(FieldValue::SFInt32(2))),
+            "the new handle works"
+        );
     }
 
     /// An element view keeps its MF slot; the MF slot goes after its last element.
@@ -2624,7 +3196,10 @@ mod slot_tests {
 
         with_state(|s| s.owners[e as usize] += 1);
         with_state(State::release_fresh);
-        assert!(decode(encode(mf)).is_some(), "the parent of a live element stays");
+        assert!(
+            decode(encode(mf)).is_some(),
+            "the parent of a live element stays"
+        );
         assert!(matches!(read(e), FieldValue::SFInt32(6)));
 
         let old = encode(mf);

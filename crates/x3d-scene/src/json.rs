@@ -7,7 +7,10 @@
 
 use crate::scene::*;
 use crate::vrml::VrmlGenerator;
-use crate::xml::{is_source_url, must_output_pre, must_output_user, printed_value, source_text_index, type_name_of};
+use crate::xml::{
+    is_source_url, must_output_pre, must_output_user, printed_value, source_text_index,
+    type_name_of,
+};
 use x3d_fields::{FieldValue, Generator, Image as SfImage, NodeId, access};
 
 /// JSONGenerator: no state beyond the output stream and the name bookkeeping.
@@ -66,7 +69,9 @@ pub(crate) fn json_number(text: String) -> String {
 
 impl<'a> JsonGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        JsonGenerator { base: VrmlGenerator::new(scene) }
+        JsonGenerator {
+            base: VrmlGenerator::new(scene),
+        }
     }
 
     fn scene(&self) -> &'a Scene {
@@ -221,7 +226,12 @@ impl<'a> JsonGenerator<'a> {
 
     /// X3DInfoArray.toJSONStream: each entry gets a comma when one came before it; an entry that throws
     /// before printing has its comma removed. Returns the comma state.
-    fn info_array_json<T: Copy>(&mut self, items: &[T], mut comma: bool, mut each: impl FnMut(&mut Self, T) -> bool) -> bool {
+    fn info_array_json<T: Copy>(
+        &mut self,
+        items: &[T],
+        mut comma: bool,
+        mut each: impl FnMut(&mut Self, T) -> bool,
+    ) -> bool {
         for &item in items {
             if comma {
                 self.g().push(",");
@@ -247,16 +257,33 @@ impl<'a> JsonGenerator<'a> {
 
         self.begin_object(Some("X3D"), false, true);
         self.string_property("encoding", "UTF-8", false);
-        self.string_property("@profile", scene.profile_of(scene_root).unwrap_or("Full"), true);
+        self.string_property(
+            "@profile",
+            scene.profile_of(scene_root).unwrap_or("Full"),
+            true,
+        );
         self.string_property("@version", LATEST_VERSION, true);
-        self.string_property("@xsd:noNamespaceSchemaLocation", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"), true);
-        self.string_property("JSON schema", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}-JSONSchema.json"), true);
+        self.string_property(
+            "@xsd:noNamespaceSchemaLocation",
+            &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"),
+            true,
+        );
+        self.string_property(
+            "JSON schema",
+            &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}-JSONSchema.json"),
+            true,
+        );
 
         // Head: meta data, then components, then units whose conversion factor is not 1.
 
         let components = scene.components_of(scene_root);
         let metadata = scene.meta_of(scene_root);
-        let units: Vec<_> = scene.units_of(scene_root).iter().filter(|u| u.conversion_factor != 1.0).cloned().collect();
+        let units: Vec<_> = scene
+            .units_of(scene_root)
+            .iter()
+            .filter(|u| u.conversion_factor != 1.0)
+            .cloned()
+            .collect();
 
         if !components.is_empty() || !units.is_empty() || !metadata.is_empty() {
             let mut head_last_property = false;
@@ -291,7 +318,11 @@ impl<'a> JsonGenerator<'a> {
 
                     self.begin_object(None, false, false);
                     self.string_property("@name", name, false);
-                    self.number_property("@level", &scene.component_level_text(scene_root, name, *level), true);
+                    self.number_property(
+                        "@level",
+                        &scene.component_level_text(scene_root, name, *level),
+                        true,
+                    );
                     self.end_object();
                     comma = true;
                 }
@@ -313,7 +344,11 @@ impl<'a> JsonGenerator<'a> {
                     self.begin_object(None, false, false);
                     self.string_property("@category", &u.category, false);
                     self.string_property("@name", &u.name, true);
-                    self.number_property("@conversionFactor", &x3d_fields::jsmath::number_to_string(u.conversion_factor), true);
+                    self.number_property(
+                        "@conversionFactor",
+                        &x3d_fields::jsmath::number_to_string(u.conversion_factor),
+                        true,
+                    );
                     self.end_object();
                 }
 
@@ -400,7 +435,15 @@ impl<'a> JsonGenerator<'a> {
         let routes = scene.ctx(ctx).routes.clone();
 
         self.info_array_json(&imported, comma, |this, i| this.imported_to_json(i));
-        self.info_array_json(&routes.iter().enumerate().map(|(i, _)| i).collect::<Vec<_>>(), comma, |this, i| this.route_to_json(&routes[i]));
+        self.info_array_json(
+            &routes
+                .iter()
+                .enumerate()
+                .map(|(i, _)| i)
+                .collect::<Vec<_>>(),
+            comma,
+            |this, i| this.route_to_json(&routes[i]),
+        );
 
         self.base.pop_ctx();
 
@@ -567,7 +610,10 @@ impl<'a> JsonGenerator<'a> {
                         references.push(FieldLoc::User(k));
                     }
 
-                    if field.is_initializable() && (!field.value.is_default_value() || scene.raw_tokens.contains_key(&(id, FieldLoc::User(k)))) {
+                    if field.is_initializable()
+                        && (!field.value.is_default_value()
+                            || scene.raw_tokens.contains_key(&(id, FieldLoc::User(k))))
+                    {
                         match &field.value {
                             FieldValue::SFNode(n) => {
                                 self.begin_array(Some("-children"), true);
@@ -633,7 +679,11 @@ impl<'a> JsonGenerator<'a> {
                 for (pi, r) in field.references.iter().enumerate() {
                     self.begin_object(None, ri != 0 || pi != 0, false);
                     self.string_property("@nodeField", &field.name, false);
-                    self.string_property("@protoField", &scene.protos[r.proto].fields[r.index].name, true);
+                    self.string_property(
+                        "@protoField",
+                        &scene.protos[r.proto].fields[r.index].name,
+                        true,
+                    );
                     self.end_object();
                 }
             }
@@ -735,7 +785,11 @@ impl<'a> JsonGenerator<'a> {
                     for (pi, r) in field.references.iter().enumerate() {
                         self.begin_object(None, ri != 0 || pi != 0, false);
                         self.string_property("@nodeField", &field.name, false);
-                        self.string_property("@protoField", &scene.protos[r.proto].fields[r.index].name, true);
+                        self.string_property(
+                            "@protoField",
+                            &scene.protos[r.proto].fields[r.index].name,
+                            true,
+                        );
                         self.end_object();
                     }
                 }
@@ -927,14 +981,23 @@ impl<'a> JsonGenerator<'a> {
         {
             let index = self.base.cur_index();
 
-            if !index.route_nodes.contains(&route.source_node) || !index.route_nodes.contains(&route.destination_node) {
+            if !index.route_nodes.contains(&route.source_node)
+                || !index.route_nodes.contains(&route.destination_node)
+            {
                 return false;
             }
         }
 
-        let source = if scene.is_imported(route.source_node) { self.base.imported_name(route.source_node) } else { self.base.name(route.source_node) };
-        let destination =
-            if scene.is_imported(route.destination_node) { self.base.imported_name(route.destination_node) } else { self.base.name(route.destination_node) };
+        let source = if scene.is_imported(route.source_node) {
+            self.base.imported_name(route.source_node)
+        } else {
+            self.base.name(route.source_node)
+        };
+        let destination = if scene.is_imported(route.destination_node) {
+            self.base.imported_name(route.destination_node)
+        } else {
+            self.base.name(route.destination_node)
+        };
 
         self.g().tidy_break();
         self.g().indent();
@@ -1071,7 +1134,11 @@ impl<'a> JsonGenerator<'a> {
                 }
 
                 for (i, v) in numbers.iter().enumerate() {
-                    let text = json_number(if double { self.g().double_format(*v) } else { self.g().float_format(*v) });
+                    let text = json_number(if double {
+                        self.g().double_format(*v)
+                    } else {
+                        self.g().float_format(*v)
+                    });
 
                     self.g().push(&text);
 

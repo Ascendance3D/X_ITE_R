@@ -28,6 +28,8 @@ pub fn gpu() -> Result<Gpu, String> {
         let _start = START.lock().unwrap_or_else(|e| e.into_inner());
         Gpu::new()?
     };
-    KEPT.lock().unwrap_or_else(|e| e.into_inner()).push((g.device.clone(), g.queue.clone()));
+    KEPT.lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .push((g.device.clone(), g.queue.clone()));
     Ok(g)
 }

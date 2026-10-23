@@ -4,7 +4,7 @@
 //! identical.
 
 use super::body::BodyId;
-use super::dbvt::{collide_tt, intersect, Aabb, Dbvt, NIL};
+use super::dbvt::{Aabb, Dbvt, NIL, collide_tt, intersect};
 use super::math::*;
 
 pub type ProxyId = usize;
@@ -190,10 +190,27 @@ impl<A> DbvtBroadphase<A> {
     // --- btDbvtBroadphase ---
 
     /// createProxy.
-    pub fn create_proxy(&mut self, aabb_min: V3, aabb_max: V3, client: BodyId, group: i16, mask: i16) -> ProxyId {
+    pub fn create_proxy(
+        &mut self,
+        aabb_min: V3,
+        aabb_max: V3,
+        client: BodyId,
+        group: i16,
+        mask: i16,
+    ) -> ProxyId {
         let aabb = Aabb::from_mm(aabb_min, aabb_max);
         self.gid += 1;
-        let proxy = Some(Proxy { aabb_min: r3(aabb_min), aabb_max: r3(aabb_max), leaf: NIL, stage: self.stage_current, unique_id: self.gid, client, group, mask, links: [None, None] });
+        let proxy = Some(Proxy {
+            aabb_min: r3(aabb_min),
+            aabb_max: r3(aabb_max),
+            leaf: NIL,
+            stage: self.stage_current,
+            unique_id: self.gid,
+            client,
+            group,
+            mask,
+            links: [None, None],
+        });
         let id = match self.free_proxies.pop() {
             Some(id) => {
                 self.proxies[id] = proxy;
@@ -272,7 +289,8 @@ impl<A> DbvtBroadphase<A> {
                 // Moving
                 let p = self.proxy(id);
                 let delta = sub(aabb_min, p.aabb_min);
-                let mut velocity = scale(r3(scale(sub(p.aabb_max, p.aabb_min), 0.5)), self.prediction);
+                let mut velocity =
+                    scale(r3(scale(sub(p.aabb_max, p.aabb_min), 0.5)), self.prediction);
                 if delta[0] < 0.0 {
                     velocity[0] = -velocity[0];
                 }

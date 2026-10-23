@@ -6,7 +6,10 @@
 use x3d_runtime::physics::bt::boxbox::box_box;
 
 fn nums(line: &str) -> Vec<f64> {
-    line.split_whitespace().skip(1).map(|t| t.parse().unwrap()).collect()
+    line.split_whitespace()
+        .skip(1)
+        .map(|t| t.parse().unwrap())
+        .collect()
 }
 
 fn m3(v: &[f64]) -> [[f64; 3]; 3] {
@@ -19,12 +22,18 @@ fn v3(v: &[f64]) -> [f64; 3] {
 
 #[test]
 fn box_box_aligned_stack_n4_f120_frame16_substep5() {
-    let path = format!("{}/tests/data/bullet_box_box/aligned_n4_f120_f16_s5.txt", env!("CARGO_MANIFEST_DIR"));
+    let path = format!(
+        "{}/tests/data/bullet_box_box/aligned_n4_f120_f16_s5.txt",
+        env!("CARGO_MANIFEST_DIR")
+    );
     let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path}: {e}"));
     let mut input = std::collections::BTreeMap::new();
     let mut want: Vec<Vec<f64>> = vec![];
 
-    for line in text.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()) {
+    for line in text
+        .lines()
+        .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+    {
         let key = line.split_whitespace().next().unwrap();
 
         if key == "out" {
@@ -34,12 +43,24 @@ fn box_box_aligned_stack_n4_f120_frame16_substep5() {
         }
     }
 
-    let got = box_box(v3(&input["p1"]), &m3(&input["r1"]), v3(&input["s1"]), v3(&input["p2"]), &m3(&input["r2"]), v3(&input["s2"]));
+    let got = box_box(
+        v3(&input["p1"]),
+        &m3(&input["r1"]),
+        v3(&input["s1"]),
+        v3(&input["p2"]),
+        &m3(&input["r2"]),
+        v3(&input["s2"]),
+    );
 
     assert_eq!(got.len(), want.len(), "contact count: got {got:?}");
 
     for (k, ((n, p, d), w)) in got.iter().zip(&want).enumerate() {
-        let g: Vec<f64> = n.iter().chain(p.iter()).chain(std::iter::once(d)).copied().collect();
+        let g: Vec<f64> = n
+            .iter()
+            .chain(p.iter())
+            .chain(std::iter::once(d))
+            .copied()
+            .collect();
         assert_eq!(g, *w, "contact {k}");
     }
 }

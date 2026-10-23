@@ -107,11 +107,31 @@ impl Vector2 {
 }
 
 impl Vector3 {
-    pub const ZERO: Vector3 = Vector3 { x: 0.0, y: 0.0, z: 0.0 };
-    pub const ONE: Vector3 = Vector3 { x: 1.0, y: 1.0, z: 1.0 };
-    pub const X_AXIS: Vector3 = Vector3 { x: 1.0, y: 0.0, z: 0.0 };
-    pub const Y_AXIS: Vector3 = Vector3 { x: 0.0, y: 1.0, z: 0.0 };
-    pub const Z_AXIS: Vector3 = Vector3 { x: 0.0, y: 0.0, z: 1.0 };
+    pub const ZERO: Vector3 = Vector3 {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+    };
+    pub const ONE: Vector3 = Vector3 {
+        x: 1.0,
+        y: 1.0,
+        z: 1.0,
+    };
+    pub const X_AXIS: Vector3 = Vector3 {
+        x: 1.0,
+        y: 0.0,
+        z: 0.0,
+    };
+    pub const Y_AXIS: Vector3 = Vector3 {
+        x: 0.0,
+        y: 1.0,
+        z: 0.0,
+    };
+    pub const Z_AXIS: Vector3 = Vector3 {
+        x: 0.0,
+        y: 0.0,
+        z: 1.0,
+    };
 
     pub fn cross(&mut self, b: &Vector3) -> &mut Self {
         let (ax, ay, az) = (self.x, self.y, self.z);
@@ -124,7 +144,22 @@ impl Vector3 {
 }
 
 impl Vector4 {
-    pub const ZERO: Vector4 = Vector4 { x: 0.0, y: 0.0, z: 0.0, w: 0.0 };
-    pub const W_AXIS: Vector4 = Vector4 { x: 0.0, y: 0.0, z: 0.0, w: 1.0 };
-    pub const Z_AXIS: Vector4 = Vector4 { x: 0.0, y: 0.0, z: 1.0, w: 0.0 };
+    pub const ZERO: Vector4 = Vector4 {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 0.0,
+    };
+    pub const W_AXIS: Vector4 = Vector4 {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 1.0,
+    };
+    pub const Z_AXIS: Vector4 = Vector4 {
+        x: 0.0,
+        y: 0.0,
+        z: 1.0,
+        w: 0.0,
+    };
 }

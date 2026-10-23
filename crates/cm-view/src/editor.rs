@@ -10,16 +10,16 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use cm_core::pos::{cmp, Sticky};
-use cm_core::text::{from_u16, is_js_space, split_lines_auto, to_u16, Text};
+use cm_core::pos::{Sticky, cmp};
+use cm_core::text::{Text, from_u16, is_js_space, split_lines_auto, to_u16};
 use cm_core::util::misc::count_column;
 use cm_core::{ChangeInfo, Doc, DocOptions, EditorSemantics, Pos, SelOptions, SelRange};
-use cm_modes::{inner_mode, ConfigValue, Mode, ModeOptions, ModeSpec, Registry, Spec};
+use cm_modes::{ConfigValue, Mode, ModeOptions, ModeSpec, Registry, Spec, inner_mode};
 
 use crate::highlight::{self, HighlightState, Styles, Token};
-use crate::keymap::{key_name, lookup_key, Binding, KeyEvent, KeyMap, KeyMapRef, KeyMaps, Lookup};
-use crate::measure::{coords_char_inner, LineLayout, Metrics, PosInfo, Rect};
-use crate::movement::{find_pos_h, find_pos_v, UnitH, UnitV};
+use crate::keymap::{Binding, KeyEvent, KeyMap, KeyMapRef, KeyMaps, Lookup, key_name, lookup_key};
+use crate::measure::{LineLayout, Metrics, PosInfo, Rect, coords_char_inner};
+use crate::movement::{UnitH, UnitV, find_pos_h, find_pos_v};
 
 /// A command (`CodeMirror.commands[name]`); `false` is `CodeMirror.Pass`.
 pub type CommandFn = Rc<dyn Fn(&mut Editor) -> bool>;
@@ -189,7 +189,12 @@ pub struct Editor {
 }
 
 fn sel_opts(origin: Option<&str>, bias: Option<i64>, scroll: Option<bool>) -> SelOptions {
-    SelOptions { origin: origin.map(str::to_string), bias, scroll, clear_redo: None }
+    SelOptions {
+        origin: origin.map(str::to_string),
+        bias,
+        scroll,
+        clear_redo: None,
+    }
 }
 /// `sel_move`.
 pub fn sel_move() -> Option<SelOptions> {
@@ -215,23 +220,49 @@ pub(crate) fn space_str(n: f64) -> String {
 impl Editor {
     /// `CodeMirror(place, {value, mode, ...})`.
     pub fn new(text: &str, mode: Spec, options: EditorOptions, metrics: Metrics) -> Editor {
-        Editor::with_registry(text, mode, options, metrics, Rc::new(Registry::with_all_modes()))
+        Editor::with_registry(
+            text,
+            mode,
+            options,
+            metrics,
+            Rc::new(Registry::with_all_modes()),
+        )
     }
 
-    pub fn with_registry(text: &str, mode: Spec, options: EditorOptions, metrics: Metrics, registry: Rc<Registry>) -> Editor {
-        let doc = Doc::with_options(DocOptions { text: text.to_string(), line_sep: options.line_separator.clone(), ..Default::default() });
+    pub fn with_registry(
+        text: &str,
+        mode: Spec,
+        options: EditorOptions,
+        metrics: Metrics,
+        registry: Rc<Registry>,
+    ) -> Editor {
+        let doc = Doc::with_options(DocOptions {
+            text: text.to_string(),
+            line_sep: options.line_separator.clone(),
+            ..Default::default()
+        });
         Editor::with_doc(doc, mode, options, metrics, registry)
     }
 
     /// An editor over an existing document (`CodeMirror(place, {value: doc})`).
-    pub fn with_doc(doc: Doc, mode: Spec, options: EditorOptions, metrics: Metrics, registry: Rc<Registry>) -> Editor {
+    pub fn with_doc(
+        doc: Doc,
+        mode: Spec,
+        options: EditorOptions,
+        metrics: Metrics,
+        registry: Rc<Registry>,
+    ) -> Editor {
         doc.attach_editor_semantics(EditorSemantics {
             history_event_delay: options.history_event_delay,
             whole_line_update_before: true,
             selections_may_touch: false,
             undo_depth: options.undo_depth,
         });
-        let mode_opts = ModeOptions { indent_unit: options.indent_unit, tab_size: options.tab_size, highlight_non_standard_property_keywords: None };
+        let mode_opts = ModeOptions {
+            indent_unit: options.indent_unit,
+            tab_size: options.tab_size,
+            highlight_non_standard_property_keywords: None,
+        };
         let m = registry.get_mode(&mode_opts, &mode);
         let first = doc.first_line();
         let mut hs = HighlightState::new(first);
@@ -252,7 +283,8 @@ impl Editor {
                     let a = (info.from.line - first).max(0) as usize;
                     let b = ((info.to.line - first + 1).max(0) as usize).min(h.heights.len());
                     if a <= b {
-                        h.heights.splice(a..b, std::iter::repeat_n(f64::NAN, info.text_lines));
+                        h.heights
+                            .splice(a..b, std::iter::repeat_n(f64::NAN, info.text_lines));
                     } else {
                         h.heights.clear();
                     }
@@ -268,7 +300,16 @@ impl Editor {
             mode: m,
             metrics,
             hs,
-            display: Display { width: 800.0, height: 600.0, window_height: None, scroll_top: 0.0, scroll_left: 0.0, shift: false, view_from: first, view_to: first },
+            display: Display {
+                width: 800.0,
+                height: 600.0,
+                window_height: None,
+                scroll_top: 0.0,
+                scroll_left: 0.0,
+                shift: false,
+                view_from: first,
+                view_to: first,
+            },
             overwrite: false,
             paste_incoming: -1.0,
             cut_incoming: -1.0,
@@ -296,7 +337,11 @@ impl Editor {
 
     /// `setOption("mode", spec)`: `loadMode` + `resetModeState`.
     pub fn set_mode(&mut self, spec: Spec) {
-        let mode_opts = ModeOptions { indent_unit: self.options.indent_unit, tab_size: self.options.tab_size, highlight_non_standard_property_keywords: None };
+        let mode_opts = ModeOptions {
+            indent_unit: self.options.indent_unit,
+            tab_size: self.options.tab_size,
+            highlight_non_standard_property_keywords: None,
+        };
         self.mode = self.registry.get_mode(&mode_opts, &spec);
         self.mode_spec = spec;
         highlight::reset_mode_state(&self.doc, &mut self.hs.borrow_mut());
@@ -398,7 +443,12 @@ impl Editor {
     /// `maxHighlightLength`, the state from *before* the line) and advancing the
     /// highlight frontier. Done at the end of every operation, like `endOperation`.
     pub fn render_view_styles(&self) {
-        let (from, to) = (self.display.view_from, self.display.view_to.min(self.first_line() + self.doc.line_count() as i64));
+        let (from, to) = (
+            self.display.view_from,
+            self.display
+                .view_to
+                .min(self.first_line() + self.doc.line_count() as i64),
+        );
         for n in from..to {
             self.line_styles(n);
         }
@@ -439,7 +489,12 @@ impl Editor {
         if let Some((from, to, margin)) = self.op.scroll_to_pos.take() {
             let f = self.estimate_coords(from);
             let t = self.estimate_coords(to);
-            let r = Rect { left: f.left.min(t.left), top: f.top.min(t.top) - margin, right: f.right.max(t.right), bottom: f.bottom.max(t.bottom) + margin };
+            let r = Rect {
+                left: f.left.min(t.left),
+                top: f.top.min(t.top) - margin,
+                right: f.right.max(t.right),
+                bottom: f.bottom.max(t.bottom) + margin,
+            };
             let (st, sl) = self.calculate_scroll_pos(r);
             if let Some(v) = st {
                 self.op.scroll_top = Some(v);
@@ -453,9 +508,18 @@ impl Editor {
     /// `estimateCoords(cm, pos)` ("local").
     fn estimate_coords(&self, pos: Pos) -> Rect {
         let pos = self.doc.clip_pos(pos);
-        let left = if self.options.line_wrapping { 0.0 } else { self.metrics.char_width * pos.ch as f64 };
+        let left = if self.options.line_wrapping {
+            0.0
+        } else {
+            self.metrics.char_width * pos.ch as f64
+        };
         let top = self.height_at_line(pos.line) + self.metrics.padding_top;
-        Rect { left, right: left, top, bottom: top + self.line_height(pos.line) }
+        Rect {
+            left,
+            right: left,
+            top,
+            bottom: top + self.line_height(pos.line),
+        }
     }
 
     /// Height of the text area (`displayHeight`).
@@ -486,7 +550,9 @@ impl Editor {
         if rect.top < screentop {
             st = Some(if at_top { 0.0 } else { rect.top });
         } else if rect.bottom > screentop + screen {
-            let new_top = rect.top.min((if at_bottom { doc_bottom } else { rect.bottom }) - screen);
+            let new_top = rect
+                .top
+                .min((if at_bottom { doc_bottom } else { rect.bottom }) - screen);
             if new_top != screentop {
                 st = Some(new_top);
             }
@@ -513,16 +579,37 @@ impl Editor {
     pub fn scroll_pos_into_view(&mut self, pos: Pos, end: Pos, margin: f64) -> Rect {
         let (mut pos, mut end) = (pos, end);
         if !self.options.line_wrapping && pos == end {
-            end = if pos.sticky == Some(Sticky::Before) { Pos::with_sticky(pos.line, pos.ch + 1, Some(Sticky::Before)) } else { pos };
+            end = if pos.sticky == Some(Sticky::Before) {
+                Pos::with_sticky(pos.line, pos.ch + 1, Some(Sticky::Before))
+            } else {
+                pos
+            };
             if pos.ch != 0 {
-                pos = Pos::with_sticky(pos.line, if pos.sticky == Some(Sticky::Before) { pos.ch - 1 } else { pos.ch }, Some(Sticky::After));
+                pos = Pos::with_sticky(
+                    pos.line,
+                    if pos.sticky == Some(Sticky::Before) {
+                        pos.ch - 1
+                    } else {
+                        pos.ch
+                    },
+                    Some(Sticky::After),
+                );
             }
         }
-        let mut rect = Rect { left: 0.0, right: 0.0, top: 0.0, bottom: 0.0 };
+        let mut rect = Rect {
+            left: 0.0,
+            right: 0.0,
+            top: 0.0,
+            bottom: 0.0,
+        };
         for _ in 0..5 {
             let mut changed = false;
             let coords = self.cursor_coords(pos, CoordSys::Local);
-            let end_coords = if end == pos { coords } else { self.cursor_coords(end, CoordSys::Local) };
+            let end_coords = if end == pos {
+                coords
+            } else {
+                self.cursor_coords(end, CoordSys::Local)
+            };
             rect = Rect {
                 left: coords.left.min(end_coords.left),
                 top: coords.top.min(end_coords.top) - margin,
@@ -552,8 +639,13 @@ impl Editor {
 
     /// Largest scroll offsets.
     pub fn max_scroll(&self) -> (f64, f64) {
-        let h = (self.doc_height() + 2.0 * self.metrics.padding_top - self.display_height()).max(0.0);
-        let w = if self.options.line_wrapping { 0.0 } else { (self.max_line_width() - self.text_area_width()).max(0.0) };
+        let h =
+            (self.doc_height() + 2.0 * self.metrics.padding_top - self.display_height()).max(0.0);
+        let w = if self.options.line_wrapping {
+            0.0
+        } else {
+            (self.max_line_width() - self.text_area_width()).max(0.0)
+        };
         (h, w)
     }
     /// `setScrollTop(cm, val)`.
@@ -586,15 +678,16 @@ impl Editor {
         let mut best_line = self.first_line();
         let first = self.first_line();
         let mut n = first;
-        self.doc.each_line(first, first + self.doc.line_count() as i64, |l| {
-            let len = l.text_utf16().len();
-            if len > best {
-                best = len;
-                best_line = n;
-            }
-            n += 1;
-            false
-        });
+        self.doc
+            .each_line(first, first + self.doc.line_count() as i64, |l| {
+                let len = l.text_utf16().len();
+                if len > best {
+                    best = len;
+                    best_line = n;
+                }
+                n += 1;
+                false
+            });
         let t = self.line_text(best_line);
         let w = LineLayout::new(&self.metrics, &t, self.options.tab_size, None).width;
         self.heights.borrow_mut().max_width = Some(w);
@@ -603,7 +696,9 @@ impl Editor {
 
     /// `visibleLines(display, doc)`: `[from, to)`.
     pub fn visible_lines(&self) -> (i64, i64) {
-        let top = (self.display.scroll_top - self.metrics.padding_top).floor().max(0.0);
+        let top = (self.display.scroll_top - self.metrics.padding_top)
+            .floor()
+            .max(0.0);
         let bottom = top + self.display.height;
         let from = self.line_at_height(top);
         let to = self.line_at_height(bottom);
@@ -646,14 +741,23 @@ impl Editor {
     }
     /// The layout of line `n` with text `text`.
     pub fn layout_for(&self, n: i64, text: &[u16]) -> LineLayout {
-        let wrap = if self.options.line_wrapping { Some(self.wrap_width()) } else { None };
+        let wrap = if self.options.line_wrapping {
+            Some(self.wrap_width())
+        } else {
+            None
+        };
         let mut l = LineLayout::new(&self.metrics, text, self.options.tab_size, wrap);
         // Style spans are separate text nodes in the DOM, and `measureCharInner`
         // does not widen an extending character's range across a node boundary;
         // that only matters on lines with extending characters. The styles are the
         // line's cached ones, as `buildLineContent` -> `getLineStyles` would use (no
         // frontier update, like an external measurement).
-        if text.iter().any(|&c| cm_core::util::misc::is_extending_char(c)) && n >= self.first_line() && n <= self.last_line() {
+        if text
+            .iter()
+            .any(|&c| cm_core::util::misc::is_extending_char(c))
+            && n >= self.first_line()
+            && n <= self.last_line()
+        {
             let styles = {
                 let mut hs = self.hs.borrow_mut();
                 highlight::get_line_styles(&self.doc, &self.mode, &mut hs, n, None)
@@ -696,7 +800,8 @@ impl Editor {
         for i in 0..n {
             if h.heights[i].is_nan() {
                 let t = self.line_text(first + i as i64);
-                h.heights[i] = LineLayout::new(&self.metrics, &t, self.options.tab_size, Some(ww)).height();
+                h.heights[i] =
+                    LineLayout::new(&self.metrics, &t, self.options.tab_size, Some(ww)).height();
             }
             acc += h.heights[i];
             prefix.push(acc);
@@ -712,7 +817,10 @@ impl Editor {
         self.ensure_heights();
         let h = self.heights.borrow();
         let i = (n - self.first_line()) as usize;
-        h.heights.get(i).copied().unwrap_or(self.metrics.text_height)
+        h.heights
+            .get(i)
+            .copied()
+            .unwrap_or(self.metrics.text_height)
     }
     /// `heightAtLine(line)`: top of line `n`, document coordinates.
     pub fn height_at_line(&self, n: i64) -> f64 {
@@ -734,7 +842,11 @@ impl Editor {
         let first = self.first_line();
         let size = self.doc.line_count() as i64;
         if !self.options.line_wrapping {
-            let n = if y < 0.0 { 0 } else { (y / self.metrics.text_height).floor() as i64 };
+            let n = if y < 0.0 {
+                0
+            } else {
+                (y / self.metrics.text_height).floor() as i64
+            };
             return first + n.min(size);
         }
         self.ensure_heights();
@@ -748,7 +860,11 @@ impl Editor {
         let mut hi = size as usize;
         while lo < hi {
             let mid = (lo + hi) / 2;
-            if p[mid + 1] > y { hi = mid } else { lo = mid + 1 }
+            if p[mid + 1] > y {
+                hi = mid
+            } else {
+                lo = mid + 1
+            }
         }
         first + lo as i64
     }
@@ -780,12 +896,24 @@ impl Editor {
     pub fn coords_char(&self, x: f64, y: f64) -> PosInfo {
         let first = self.first_line();
         if y < 0.0 {
-            return PosInfo { line: first, ch: 0, sticky: None, outside: -1, x_rel: -1.0 };
+            return PosInfo {
+                line: first,
+                ch: 0,
+                sticky: None,
+                outside: -1,
+                x_rel: -1.0,
+            };
         }
         let line_n = self.line_at_height(y);
         let last = self.last_line();
         if line_n > last {
-            return PosInfo { line: last, ch: self.line_text(last).len() as i64, sticky: None, outside: 1, x_rel: 1.0 };
+            return PosInfo {
+                line: last,
+                ch: self.line_text(last).len() as i64,
+                sticky: None,
+                outside: 1,
+                x_rel: 1.0,
+            };
         }
         let x = x.max(0.0);
         let (t, l) = self.layout(line_n);
@@ -840,7 +968,15 @@ impl Editor {
     /// `getLineTokens(line, precise)`.
     pub fn get_line_tokens(&self, line: i64, precise: bool) -> Vec<Token> {
         let mut hs = self.hs.borrow_mut();
-        highlight::take_token(&self.doc, &self.mode, &mut hs, Pos::line_end(line), precise, true).1
+        highlight::take_token(
+            &self.doc,
+            &self.mode,
+            &mut hs,
+            Pos::line_end(line),
+            precise,
+            true,
+        )
+        .1
     }
     /// `getTokenTypeAt(pos)`.
     pub fn get_token_type_at(&self, pos: Pos) -> Option<String> {
@@ -891,7 +1027,11 @@ impl Editor {
         self.doc.list_selections()
     }
     /// `extendSelectionsBy(f, options)`.
-    pub fn extend_selections_by(&mut self, f: impl Fn(&Editor, &SelRange) -> Pos, options: Option<SelOptions>) {
+    pub fn extend_selections_by(
+        &mut self,
+        f: impl Fn(&Editor, &SelRange) -> Pos,
+        options: Option<SelOptions>,
+    ) {
         self.run_op(|cm| {
             let heads: Vec<Pos> = cm.doc.list_selections().iter().map(|r| f(cm, r)).collect();
             cm.doc.extend_selections(&heads, options);
@@ -902,7 +1042,13 @@ impl Editor {
     // Motion (src/edit/methods.js)
 
     /// `findPosH(from, amount, unit, visually)`; the bool is `hitSide`.
-    pub fn find_pos_h_api(&self, from: Pos, amount: i64, unit: &str, visually: bool) -> (Pos, bool) {
+    pub fn find_pos_h_api(
+        &self,
+        from: Pos,
+        amount: i64,
+        unit: &str,
+        visually: bool,
+    ) -> (Pos, bool) {
         let mut dir = 1;
         let mut amount = amount;
         if amount < 0 {
@@ -945,14 +1091,24 @@ impl Editor {
             } else {
                 cm.delete_near_selection(|cm, range| {
                     let (other, _) = find_pos_h(cm, range.head, dir, unit, false);
-                    if dir < 0 { (other, range.head) } else { (range.head, other) }
+                    if dir < 0 {
+                        (other, range.head)
+                    } else {
+                        (range.head, other)
+                    }
                 });
             }
         });
     }
 
     /// `findPosV(from, amount, unit, goalColumn)`.
-    pub fn find_pos_v_api(&self, from: Pos, amount: i64, unit: UnitV, goal_column: Option<f64>) -> (Pos, bool) {
+    pub fn find_pos_v_api(
+        &self,
+        from: Pos,
+        amount: i64,
+        unit: UnitV,
+        goal_column: Option<f64>,
+    ) -> (Pos, bool) {
         let mut dir = 1;
         let mut amount = amount;
         let mut x = goal_column;
@@ -979,7 +1135,8 @@ impl Editor {
     /// `moveV(dir, unit)`.
     pub fn move_v(&mut self, dir: i64, unit: UnitV) {
         self.run_op(|cm| {
-            let collapse = !cm.display.shift && !cm.doc.get_extending() && cm.doc.something_selected();
+            let collapse =
+                !cm.display.shift && !cm.doc.get_extending() && cm.doc.something_selected();
             let ranges = cm.doc.list_selections();
             let goal_cols = cm.doc.goal_columns();
             let primary = cm.doc.selection().primary;
@@ -1039,8 +1196,13 @@ impl Editor {
             for (from, to) in kill.iter().rev() {
                 // Internal `replaceRange(doc, "", from, to, "+delete")`: no clipping,
                 // swapped when reversed.
-                let (f, t) = if cmp(to, from).is_lt() { (*to, *from) } else { (*from, *to) };
-                cm.doc.make_change_lines(f, t, vec![String::new()], Some("+delete"));
+                let (f, t) = if cmp(to, from).is_lt() {
+                    (*to, *from)
+                } else {
+                    (*from, *to)
+                };
+                cm.doc
+                    .make_change_lines(f, t, vec![String::new()], Some("+delete"));
             }
             cm.ensure_cursor_visible();
         });
@@ -1058,11 +1220,24 @@ impl Editor {
             } else {
                 end += 1;
             }
-            let char_at = |i: i64| -> Option<u16> { if i >= 0 && i < len { Some(line[i as usize]) } else { None } };
+            let char_at = |i: i64| -> Option<u16> {
+                if i >= 0 && i < len {
+                    Some(line[i as usize])
+                } else {
+                    None
+                }
+            };
             let start_char = char_at(start);
-            let is_w = |c: Option<u16>| c.is_some_and(|c| cm_core::util::misc::is_word_char(&[c], None));
+            let is_w =
+                |c: Option<u16>| c.is_some_and(|c| cm_core::util::misc::is_word_char(&[c], None));
             let is_s = |c: Option<u16>| c.is_some_and(is_js_space);
-            let kind = if is_w(start_char) { 0 } else if is_s(start_char) { 1 } else { 2 };
+            let kind = if is_w(start_char) {
+                0
+            } else if is_s(start_char) {
+                1
+            } else {
+                2
+            };
             let check = |c: Option<u16>| match kind {
                 0 => is_w(c),
                 1 => is_s(c),
@@ -1092,7 +1267,9 @@ impl Editor {
                 how = Indent::Prev;
             } else {
                 let mut hs = self.hs.borrow_mut();
-                state = Some(highlight::get_context_before(&self.doc, &self.mode, &mut hs, n, false).state);
+                state = Some(
+                    highlight::get_context_before(&self.doc, &self.mode, &mut hs, n, false).state,
+                );
             }
         }
         let tab_size = self.options.tab_size;
@@ -1101,14 +1278,19 @@ impl Editor {
         let cur_space = count_column(&text, None, tab_size, 0, 0) as f64;
         handle.set_state_after(None);
         // `line.text.match(/^\s*/)[0]`
-        let ws_len = text.iter().position(|&c| !is_js_space(c)).unwrap_or(text.len());
+        let ws_len = text
+            .iter()
+            .position(|&c| !is_js_space(c))
+            .unwrap_or(text.len());
         let cur_space_string: Text = text[..ws_len].to_vec();
         let mut indentation: f64 = 0.0;
         if !aggressive && !text.iter().any(|&c| !is_js_space(c)) {
             indentation = 0.0;
             how = Indent::Not;
         } else if how == Indent::Smart {
-            let r = self.mode.indent(state.as_ref().unwrap(), &text[ws_len..], &text);
+            let r = self
+                .mode
+                .indent(state.as_ref().unwrap(), &text[ws_len..], &text);
             match r {
                 Some(v) if v <= 150.0 || v.is_nan() => indentation = v,
                 _ => {
@@ -1122,7 +1304,11 @@ impl Editor {
         }
         match how {
             Indent::Prev => {
-                indentation = if n > self.first_line() { count_column(&self.line_text(n - 1), None, tab_size, 0, 0) as f64 } else { 0.0 };
+                indentation = if n > self.first_line() {
+                    count_column(&self.line_text(n - 1), None, tab_size, 0, 0) as f64
+                } else {
+                    0.0
+                };
             }
             Indent::Add => indentation = cur_space + self.options.indent_unit as f64,
             Indent::Subtract => indentation = cur_space - self.options.indent_unit as f64,
@@ -1147,7 +1333,12 @@ impl Editor {
             indent_string.push_str(&space_str(indentation - pos));
         }
         if to_u16(&indent_string) != cur_space_string {
-            self.doc.replace_range(&indent_string, Pos::new(n, 0), Some(Pos::new(n, cur_space_string.len() as i64)), Some("+input"));
+            self.doc.replace_range(
+                &indent_string,
+                Pos::new(n, 0),
+                Some(Pos::new(n, cur_space_string.len() as i64)),
+                Some("+input"),
+            );
             if let Some(h) = self.doc.get_line_handle(n) {
                 h.set_state_after(None);
             }
@@ -1168,7 +1359,11 @@ impl Editor {
 
     /// `cm.indentLine(n, dir, aggressive)` (methodOp); `dir == None` is smart/prev.
     pub fn indent_line(&mut self, n: i64, how: Option<Indent>, aggressive: bool) {
-        let how = how.unwrap_or(if self.options.smart_indent { Indent::Smart } else { Indent::Prev });
+        let how = how.unwrap_or(if self.options.smart_indent {
+            Indent::Smart
+        } else {
+            Indent::Prev
+        });
         self.run_op(|cm| {
             if n >= cm.first_line() && n <= cm.last_line() {
                 cm.indent_line_raw(n, how, aggressive);
@@ -1190,8 +1385,16 @@ impl Editor {
                         cm.indent_line_raw(j, how, false);
                     }
                     let new_ranges = cm.doc.list_selections();
-                    if from.ch == 0 && ranges.len() == new_ranges.len() && new_ranges[i].from().ch > 0 {
-                        cm.doc.replace_one_selection(i, from, new_ranges[i].to(), sel_dont_scroll());
+                    if from.ch == 0
+                        && ranges.len() == new_ranges.len()
+                        && new_ranges[i].from().ch > 0
+                    {
+                        cm.doc.replace_one_selection(
+                            i,
+                            from,
+                            new_ranges[i].to(),
+                            sel_dont_scroll(),
+                        );
                     }
                 } else if range.head.line > end {
                     cm.indent_line_raw(range.head.line, how, true);
@@ -1218,14 +1421,18 @@ impl Editor {
         let recent = cm_core::clock::now() - 200.0;
         let paste = origin == Some("paste") || self.paste_incoming > recent;
         let inserted16 = to_u16(inserted);
-        let text_lines: Vec<String> = split_lines_auto(&inserted16).iter().map(|l| from_u16(l)).collect();
+        let text_lines: Vec<String> = split_lines_auto(&inserted16)
+            .iter()
+            .map(|l| from_u16(l))
+            .collect();
         let mut multi_paste: Option<Vec<Vec<String>>> = None;
         let lc = last_copied();
         if paste && sel.len() > 1 {
             match &lc {
                 Some(l) if l.text.join("\n") == inserted => {
                     if sel.len() % l.text.len() == 0 {
-                        multi_paste = Some(l.text.iter().map(|t| self.doc.split_lines(t)).collect());
+                        multi_paste =
+                            Some(l.text.iter().map(|t| self.doc.split_lines(t)).collect());
                     }
                 }
                 _ => {
@@ -1246,7 +1453,11 @@ impl Editor {
                     let len = self.line_text(to.line).len() as i64;
                     let last_len = to_u16(text_lines.last().unwrap()).len() as i64;
                     to = Pos::new(to.line, len.min(to.ch + last_len));
-                } else if paste && lc.as_ref().is_some_and(|l| l.line_wise && l.text.join("\n") == text_lines.join("\n")) {
+                } else if paste
+                    && lc
+                        .as_ref()
+                        .is_some_and(|l| l.line_wise && l.text.join("\n") == text_lines.join("\n"))
+                {
                     from = Pos::new(from.line, 0);
                     to = from;
                 }
@@ -1328,14 +1539,20 @@ impl Editor {
     /// The `copy` event (`prepareCopyCut`): the text for the system clipboard.
     pub fn copy(&mut self) -> Option<String> {
         if self.doc.something_selected() {
-            set_last_copied(Some(LastCopied { line_wise: false, text: self.doc.get_selections(None) }));
+            set_last_copied(Some(LastCopied {
+                line_wise: false,
+                text: self.doc.get_selections(None),
+            }));
             Some(self.doc.get_selection(None))
         } else if !self.options.line_wise_copy_cut {
             None
         } else {
             let (text, _) = self.copyable_ranges();
             let joined = text.join("\n");
-            set_last_copied(Some(LastCopied { line_wise: true, text }));
+            set_last_copied(Some(LastCopied {
+                line_wise: true,
+                text,
+            }));
             Some(joined)
         }
     }
@@ -1345,13 +1562,19 @@ impl Editor {
     pub fn cut(&mut self) -> Option<String> {
         let out;
         if self.doc.something_selected() {
-            set_last_copied(Some(LastCopied { line_wise: false, text: self.doc.get_selections(None) }));
+            set_last_copied(Some(LastCopied {
+                line_wise: false,
+                text: self.doc.get_selections(None),
+            }));
             out = self.doc.get_selection(None);
         } else if !self.options.line_wise_copy_cut {
             return None;
         } else {
             let (text, ranges) = self.copyable_ranges();
-            set_last_copied(Some(LastCopied { line_wise: true, text }));
+            set_last_copied(Some(LastCopied {
+                line_wise: true,
+                text,
+            }));
             let rs: Vec<(Pos, Option<Pos>)> = ranges.iter().map(|(a, h)| (*a, Some(*h))).collect();
             self.run_op(|cm| cm.doc.set_selections(&rs, None, sel_dont_scroll()));
             out = self.doc.get_selection(None);
@@ -1416,7 +1639,11 @@ impl Editor {
     }
 
     /// `lookupKeyForEditor(cm, name, handle)`.
-    fn lookup_key_for_editor(&mut self, name: &str, handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool) -> Option<Lookup> {
+    fn lookup_key_for_editor(
+        &mut self,
+        name: &str,
+        handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool,
+    ) -> Option<Lookup> {
         let mut maps: Vec<KeyMapRef> = self.key_maps.clone();
         if let Some(e) = &self.extra_keys {
             maps.push(e.clone());
@@ -1433,7 +1660,11 @@ impl Editor {
     }
 
     /// `dispatchKey(cm, name, e, handle)`.
-    fn dispatch_key(&mut self, name: &str, handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool) -> bool {
+    fn dispatch_key(
+        &mut self,
+        name: &str,
+        handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool,
+    ) -> bool {
         if let Some(seq) = self.key_seq.clone() {
             if crate::keymap::is_modifier_key(name) {
                 return true;
@@ -1450,7 +1681,11 @@ impl Editor {
         self.dispatch_key_inner(name, handle)
     }
 
-    fn dispatch_key_inner(&mut self, name: &str, handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool) -> bool {
+    fn dispatch_key_inner(
+        &mut self,
+        name: &str,
+        handle: &mut dyn FnMut(&mut Editor, &Binding) -> bool,
+    ) -> bool {
         let result = self.lookup_key_for_editor(name, handle);
         if result == Some(Lookup::Multi) {
             self.key_seq = Some(name.to_string());
@@ -1463,16 +1698,25 @@ impl Editor {
 
     /// `handleKeyBinding(cm, e)`.
     fn handle_key_binding(&mut self, e: &KeyEvent) -> bool {
-        let Some(name) = key_name(e, true, self.options.mac) else { return false };
+        let Some(name) = key_name(e, true, self.options.mac) else {
+            return false;
+        };
         if e.shift && self.key_seq.is_none() {
-            self.dispatch_key(&format!("Shift-{name}"), &mut |cm, b| cm.do_handle_binding(b, true))
-                || self.dispatch_key(&name, &mut |cm, b| {
-                    let motion = match b {
-                        Binding::Command(c) => c.len() > 2 && c.starts_with("go") && c.as_bytes()[2].is_ascii_uppercase(),
-                        _ => false,
-                    };
-                    if motion { cm.do_handle_binding(b, false) } else { false }
-                })
+            self.dispatch_key(&format!("Shift-{name}"), &mut |cm, b| {
+                cm.do_handle_binding(b, true)
+            }) || self.dispatch_key(&name, &mut |cm, b| {
+                let motion = match b {
+                    Binding::Command(c) => {
+                        c.len() > 2 && c.starts_with("go") && c.as_bytes()[2].is_ascii_uppercase()
+                    }
+                    _ => false,
+                };
+                if motion {
+                    cm.do_handle_binding(b, false)
+                } else {
+                    false
+                }
+            })
         } else {
             self.dispatch_key(&name, &mut |cm, b| cm.do_handle_binding(b, false))
         }
@@ -1492,7 +1736,9 @@ impl Editor {
         if ch == "\u{8}" {
             return false;
         }
-        if self.dispatch_key(&format!("'{ch}'"), &mut |cm, b| cm.do_handle_binding(b, true)) {
+        if self.dispatch_key(&format!("'{ch}'"), &mut |cm, b| {
+            cm.do_handle_binding(b, true)
+        }) {
             return true;
         }
         self.type_text(ch)
@@ -1501,17 +1747,28 @@ impl Editor {
     /// `addKeyMap(map, bottom)`.
     pub fn add_key_map(&mut self, map: KeyMap, bottom: bool) {
         let r = KeyMapRef::Map(Rc::new(map));
-        if bottom { self.key_maps.push(r) } else { self.key_maps.insert(0, r) }
+        if bottom {
+            self.key_maps.push(r)
+        } else {
+            self.key_maps.insert(0, r)
+        }
     }
     /// `addKeyMap(map, bottom)` with a shared map, so it can later be removed by
     /// identity (`removeKeyMap(map)`: `maps[i] == map`).
     pub fn add_key_map_rc(&mut self, map: Rc<KeyMap>, bottom: bool) {
         let r = KeyMapRef::Map(map);
-        if bottom { self.key_maps.push(r) } else { self.key_maps.insert(0, r) }
+        if bottom {
+            self.key_maps.push(r)
+        } else {
+            self.key_maps.insert(0, r)
+        }
     }
     /// `removeKeyMap(map)` by identity.
     pub fn remove_key_map_rc(&mut self, map: &Rc<KeyMap>) -> bool {
-        let pos = self.key_maps.iter().position(|m| matches!(m, KeyMapRef::Map(m) if Rc::ptr_eq(m, map)));
+        let pos = self
+            .key_maps
+            .iter()
+            .position(|m| matches!(m, KeyMapRef::Map(m) if Rc::ptr_eq(m, map)));
         match pos {
             Some(i) => {
                 self.key_maps.remove(i);
@@ -1550,7 +1807,12 @@ impl Editor {
 }
 
 /// `lookupKey` with a handler that may mutate the editor.
-fn lookup_with(maps: &KeyMaps, key: &str, map: &KeyMapRef, handle: &mut dyn FnMut(&Binding) -> bool) -> Option<Lookup> {
+fn lookup_with(
+    maps: &KeyMaps,
+    key: &str,
+    map: &KeyMapRef,
+    handle: &mut dyn FnMut(&Binding) -> bool,
+) -> Option<Lookup> {
     lookup_key(maps, key, map, handle)
 }
 
@@ -1571,7 +1833,11 @@ pub enum Indent {
 pub fn mode_for_path(path: &str) -> Spec {
     let lower = path.to_ascii_lowercase();
     let ext = lower.rsplit('.').next().unwrap_or("");
-    let lower = if ext == "gz" { lower.trim_end_matches(".gz").to_string() } else { lower };
+    let lower = if ext == "gz" {
+        lower.trim_end_matches(".gz").to_string()
+    } else {
+        lower
+    };
     let ext = lower.rsplit('.').next().unwrap_or("");
     let mime = match ext {
         "wrl" | "vrml" | "wrz" => "model/vrml",

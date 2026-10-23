@@ -61,7 +61,11 @@ pub fn dot(a: V, b: V) -> f64 {
 }
 
 pub fn cross(a: V, b: V) -> V {
-    [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+    [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    ]
 }
 
 pub fn len2(a: V) -> f64 {
@@ -95,20 +99,34 @@ pub struct Transform {
 }
 
 impl Transform {
-    pub const IDENTITY: Transform = Transform { basis: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]], origin: [0.0; 3] };
+    pub const IDENTITY: Transform = Transform {
+        basis: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        origin: [0.0; 3],
+    };
 
     pub fn translation(origin: V) -> Transform {
-        Transform { origin, ..Transform::IDENTITY }
+        Transform {
+            origin,
+            ..Transform::IDENTITY
+        }
     }
 
     pub fn rotate(&self, d: V) -> V {
-        [dot(self.basis[0], d), dot(self.basis[1], d), dot(self.basis[2], d)]
+        [
+            dot(self.basis[0], d),
+            dot(self.basis[1], d),
+            dot(self.basis[2], d),
+        ]
     }
 
     /// `d * basis` (basis^T d).
     pub fn inv_rotate(&self, d: V) -> V {
         let b = &self.basis;
-        [b[0][0] * d[0] + b[1][0] * d[1] + b[2][0] * d[2], b[0][1] * d[0] + b[1][1] * d[1] + b[2][1] * d[2], b[0][2] * d[0] + b[1][2] * d[1] + b[2][2] * d[2]]
+        [
+            b[0][0] * d[0] + b[1][0] * d[1] + b[2][0] * d[2],
+            b[0][1] * d[0] + b[1][1] * d[1] + b[2][1] * d[2],
+            b[0][2] * d[0] + b[1][2] * d[1] + b[2][2] * d[2],
+        ]
     }
 
     pub fn apply(&self, p: V) -> V {
@@ -120,14 +138,24 @@ impl Transform {
     }
 
     pub fn mul(&self, o: &Transform) -> Transform {
-        let basis = std::array::from_fn(|i| std::array::from_fn(|j| (0..3).map(|k| self.basis[i][k] * o.basis[k][j]).sum()));
-        Transform { basis, origin: self.apply(o.origin) }
+        let basis = std::array::from_fn(|i| {
+            std::array::from_fn(|j| (0..3).map(|k| self.basis[i][k] * o.basis[k][j]).sum())
+        });
+        Transform {
+            basis,
+            origin: self.apply(o.origin),
+        }
     }
 
     /// inverseTimes: this^-1 * o.
     pub fn inverse_times(&self, o: &Transform) -> Transform {
-        let basis = std::array::from_fn(|i| std::array::from_fn(|j| (0..3).map(|k| self.basis[k][i] * o.basis[k][j]).sum()));
-        Transform { basis, origin: self.inv_xform(o.origin) }
+        let basis = std::array::from_fn(|i| {
+            std::array::from_fn(|j| (0..3).map(|k| self.basis[k][i] * o.basis[k][j]).sum())
+        });
+        Transform {
+            basis,
+            origin: self.inv_xform(o.origin),
+        }
     }
 
     /// Column `i` of the basis.
@@ -137,7 +165,11 @@ impl Transform {
 
     /// halfExtents.dot3 (abs_b[0], abs_b[1], abs_b[2]).
     fn abs_extent(&self, h: V) -> V {
-        std::array::from_fn(|i| self.basis[i][0].abs() * h[0] + self.basis[i][1].abs() * h[1] + self.basis[i][2].abs() * h[2])
+        std::array::from_fn(|i| {
+            self.basis[i][0].abs() * h[0]
+                + self.basis[i][1].abs() * h[1]
+                + self.basis[i][2].abs() * h[2]
+        })
     }
 
     /// btTransformAabb (localAabbMin, localAabbMax, margin, trans).
@@ -159,7 +191,11 @@ pub enum Convex {
     /// btCylinderShape (Y axis): implicit half extents.
     Cylinder { half: V, margin: f64 },
     /// btConeShape (Y axis).
-    Cone { radius: f64, height: f64, margin: f64 },
+    Cone {
+        radius: f64,
+        height: f64,
+        margin: f64,
+    },
     /// btConvexHullShape: scaled points.
     Hull { points: Vec<V>, margin: f64 },
     /// btTriangleShape.
@@ -185,12 +221,18 @@ impl Convex {
     pub fn support(&self, d: V) -> V {
         match self {
             Convex::Sphere { .. } => [0.0; 3],
-            Convex::Box { half, .. } => std::array::from_fn(|i| if d[i] >= 0.0 { half[i] } else { -half[i] }),
+            Convex::Box { half, .. } => {
+                std::array::from_fn(|i| if d[i] >= 0.0 { half[i] } else { -half[i] })
+            }
             Convex::Cylinder { half, .. } => {
                 // CylinderLocalSupportY.
                 let (radius, half_height) = (half[0], half[1]);
                 let s = (d[0] * d[0] + d[2] * d[2]).sqrt();
-                let y = if d[1] < 0.0 { -half_height } else { half_height };
+                let y = if d[1] < 0.0 {
+                    -half_height
+                } else {
+                    half_height
+                };
                 if s != 0.0 {
                     let k = radius / s;
                     [d[0] * k, y, d[2] * k]
@@ -250,7 +292,11 @@ impl Convex {
 
     /// localGetSupportVertexNonVirtual (with margin).
     fn support_margin(&self, d: V) -> V {
-        let n = normalize(if len2(d) < SIMD_EPSILON * SIMD_EPSILON { [-1.0; 3] } else { d });
+        let n = normalize(if len2(d) < SIMD_EPSILON * SIMD_EPSILON {
+            [-1.0; 3]
+        } else {
+            d
+        });
         add(self.support(n), mul(n, self.margin()))
     }
 
@@ -258,12 +304,20 @@ impl Convex {
     pub fn aabb(&self, t: &Transform) -> (V, V) {
         match self {
             Convex::Sphere { radius } => (sub(t.origin, [*radius; 3]), add(t.origin, [*radius; 3])),
-            Convex::Box { half, margin } | Convex::Cylinder { half, margin } => t.transform_aabb(neg(*half), *half, *margin),
+            Convex::Box { half, margin } | Convex::Cylinder { half, margin } => {
+                t.transform_aabb(neg(*half), *half, *margin)
+            }
             Convex::Hull { points, margin } => {
                 // recalcLocalAabb (supporting vertices without margin, plus the margin), then
                 // getNonvirtualAabb adds the margin again.
-                let lo = std::array::from_fn(|i| self.support(std::array::from_fn(|k| if k == i { -1.0 } else { 0.0 }))[i] - margin);
-                let hi = std::array::from_fn(|i| self.support(std::array::from_fn(|k| if k == i { 1.0 } else { 0.0 }))[i] + margin);
+                let lo = std::array::from_fn(|i| {
+                    self.support(std::array::from_fn(|k| if k == i { -1.0 } else { 0.0 }))[i]
+                        - margin
+                });
+                let hi = std::array::from_fn(|i| {
+                    self.support(std::array::from_fn(|k| if k == i { 1.0 } else { 0.0 }))[i]
+                        + margin
+                });
                 let _ = points;
                 t.transform_aabb(lo, hi, *margin)
             }
@@ -290,7 +344,12 @@ impl Convex {
 
 /// TestAabbAgainstAabb2.
 pub fn aabb_overlap(a: &(V, V), b: &(V, V)) -> bool {
-    !(a.0[0] > b.1[0] || a.1[0] < b.0[0] || a.0[2] > b.1[2] || a.1[2] < b.0[2] || a.0[1] > b.1[1] || a.1[1] < b.0[1])
+    !(a.0[0] > b.1[0]
+        || a.1[0] < b.0[0]
+        || a.0[2] > b.1[2]
+        || a.1[2] < b.0[2]
+        || a.0[1] > b.1[1]
+        || a.1[1] < b.0[1])
 }
 
 pub fn triangle_overlaps_aabb(t: &[V; 3], lo: V, hi: V) -> bool {
@@ -343,7 +402,19 @@ struct Voronoi {
 
 impl Voronoi {
     fn new() -> Voronoi {
-        Voronoi { n: 0, w: [[0.0; 3]; 5], p: [[0.0; 3]; 5], q: [[0.0; 3]; 5], cp1: [0.0; 3], cp2: [0.0; 3], cv: [0.0; 3], last_w: [BT_LARGE_FLOAT; 3], valid: false, bc: SubResult::default(), needs_update: true }
+        Voronoi {
+            n: 0,
+            w: [[0.0; 3]; 5],
+            p: [[0.0; 3]; 5],
+            q: [[0.0; 3]; 5],
+            cp1: [0.0; 3],
+            cp2: [0.0; 3],
+            cv: [0.0; 3],
+            last_w: [BT_LARGE_FLOAT; 3],
+            valid: false,
+            bc: SubResult::default(),
+            needs_update: true,
+        }
     }
 
     fn remove_vertex(&mut self, i: usize) {
@@ -418,14 +489,21 @@ impl Voronoi {
             3 => {
                 self.bc = closest_point_triangle([0.0; 3], self.w[0], self.w[1], self.w[2]);
                 let b = self.bc.bary;
-                self.cp1 = add(add(mul(self.p[0], b[0]), mul(self.p[1], b[1])), mul(self.p[2], b[2]));
-                self.cp2 = add(add(mul(self.q[0], b[0]), mul(self.q[1], b[1])), mul(self.q[2], b[2]));
+                self.cp1 = add(
+                    add(mul(self.p[0], b[0]), mul(self.p[1], b[1])),
+                    mul(self.p[2], b[2]),
+                );
+                self.cp2 = add(
+                    add(mul(self.q[0], b[0]), mul(self.q[1], b[1])),
+                    mul(self.q[2], b[2]),
+                );
                 self.cv = sub(self.cp1, self.cp2);
                 self.reduce(self.bc.used);
                 self.valid = self.bc.is_valid();
             }
             4 => {
-                let (separated, r) = closest_point_tetrahedron([0.0; 3], self.w[0], self.w[1], self.w[2], self.w[3]);
+                let (separated, r) =
+                    closest_point_tetrahedron([0.0; 3], self.w[0], self.w[1], self.w[2], self.w[3]);
                 self.bc = r;
 
                 if separated {
@@ -563,8 +641,17 @@ fn point_outside_of_plane(p: V, a: V, b: V, c: V, d: V) -> i32 {
 
 /// btVoronoiSimplexSolver.closestPtPointTetrahedron: (separated, result).
 pub fn closest_point_tetrahedron(p: V, a: V, b: V, c: V, d: V) -> (bool, SubResult) {
-    let mut fin = SubResult { closest: p, used: [true; 4], ..SubResult::default() };
-    let outside = [point_outside_of_plane(p, a, b, c, d), point_outside_of_plane(p, a, c, d, b), point_outside_of_plane(p, a, d, b, c), point_outside_of_plane(p, b, d, c, a)];
+    let mut fin = SubResult {
+        closest: p,
+        used: [true; 4],
+        ..SubResult::default()
+    };
+    let outside = [
+        point_outside_of_plane(p, a, b, c, d),
+        point_outside_of_plane(p, a, c, d, b),
+        point_outside_of_plane(p, a, d, b, c),
+        point_outside_of_plane(p, b, d, c, a),
+    ];
 
     if outside.iter().any(|&o| o < 0) {
         fin.degenerate = true;
@@ -577,7 +664,12 @@ pub fn closest_point_tetrahedron(p: V, a: V, b: V, c: V, d: V) -> (bool, SubResu
 
     let mut best = f32::MAX as f64;
     // (triangle, which tetrahedron vertex each triangle vertex is)
-    let faces = [([a, b, c], [0, 1, 2]), ([a, c, d], [0, 2, 3]), ([a, d, b], [0, 3, 1]), ([b, d, c], [1, 3, 2])];
+    let faces = [
+        ([a, b, c], [0, 1, 2]),
+        ([a, c, d], [0, 2, 3]),
+        ([a, d, b], [0, 3, 1]),
+        ([b, d, c], [1, 3, 2]),
+    ];
 
     for (k, (t, map)) in faces.iter().enumerate() {
         if outside[k] == 0 {
@@ -621,8 +713,14 @@ pub struct ClosestPoints {
 /// btGjkPairDetector.getClosestPointsNonVirtual (with btGjkEpaPenetrationDepthSolver).
 pub fn gjk_pair(a: Placed, b: Placed, max_distance2: f64) -> Option<ClosestPoints> {
     let offset = mul(add(a.t.origin, b.t.origin), 0.5);
-    let ta = Transform { origin: sub(a.t.origin, offset), ..a.t };
-    let tb = Transform { origin: sub(b.t.origin, offset), ..b.t };
+    let ta = Transform {
+        origin: sub(a.t.origin, offset),
+        ..a.t
+    };
+    let tb = Transform {
+        origin: sub(b.t.origin, offset),
+        ..b.t
+    };
     let (sa, sb) = (a.shape, b.shape);
     let margin_a = sa.margin();
     let margin_b = sb.margin();
@@ -779,7 +877,11 @@ pub fn gjk_pair(a: Placed, b: Placed, max_distance2: f64) -> Option<ClosestPoint
         normal_in_b = neg(normal_in_b);
     }
 
-    Some(ClosestPoints { normal: normal_in_b, point_on_b: add(point_on_b, offset), distance })
+    Some(ClosestPoints {
+        normal: normal_in_b,
+        point_on_b: add(point_on_b, offset),
+        distance,
+    })
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -821,7 +923,11 @@ fn ls(s: &Convex, d: V, margins: bool) -> V {
     let n = [f(g * j), f(h * j), f(e * j)];
     let sup = fv(s.support(n));
     let m = s.margin();
-    [f(m * n[0] + sup[0]), f(m * n[1] + sup[1]), f(m * n[2] + sup[2])]
+    [
+        f(m * n[0] + sup[0]),
+        f(m * n[1] + sup[1]),
+        f(m * n[2] + sup[2]),
+    ]
 }
 
 /// MinkowskiDiff: m_toshape1 (B^T A), m_toshape0 (A^-1 B) and the shapes, stored as floats.
@@ -835,13 +941,34 @@ struct Mink<'a> {
 }
 
 impl<'a> Mink<'a> {
-    fn new(s0: &'a Convex, t0: &Transform, s1: &'a Convex, t1: &Transform, margins: bool) -> Mink<'a> {
+    fn new(
+        s0: &'a Convex,
+        t0: &Transform,
+        s1: &'a Convex,
+        t1: &Transform,
+        margins: bool,
+    ) -> Mink<'a> {
         let (e, h) = (&t0.basis, &t1.basis);
-        let to1 = std::array::from_fn(|i| std::array::from_fn(|j| f(h[0][i] * e[0][j] + h[1][i] * e[1][j] + h[2][i] * e[2][j])));
-        let to0 = std::array::from_fn(|i| std::array::from_fn(|j| f(e[0][i] * h[0][j] + e[1][i] * h[1][j] + e[2][i] * h[2][j])));
-        let (n, m, q) = (t1.origin[0] - t0.origin[0], t1.origin[1] - t0.origin[1], t1.origin[2] - t0.origin[2]);
+        let to1 = std::array::from_fn(|i| {
+            std::array::from_fn(|j| f(h[0][i] * e[0][j] + h[1][i] * e[1][j] + h[2][i] * e[2][j]))
+        });
+        let to0 = std::array::from_fn(|i| {
+            std::array::from_fn(|j| f(e[0][i] * h[0][j] + e[1][i] * h[1][j] + e[2][i] * h[2][j]))
+        });
+        let (n, m, q) = (
+            t1.origin[0] - t0.origin[0],
+            t1.origin[1] - t0.origin[1],
+            t1.origin[2] - t0.origin[2],
+        );
         let to0_origin = std::array::from_fn(|j| f(n * e[0][j] + m * e[1][j] + q * e[2][j]));
-        Mink { s0, s1, to1, to0, to0_origin, margins }
+        Mink {
+            s0,
+            s1,
+            to1,
+            to0,
+            to0_origin,
+            margins,
+        }
     }
 
     /// Support0(d), d is a stored vector.
@@ -853,7 +980,9 @@ impl<'a> Mink<'a> {
     /// subtracted in the same expression.
     fn support1(&self, d: V) -> V {
         let t = &self.to1;
-        let dir = fv(std::array::from_fn(|i| t[i][0] * d[0] + t[i][1] * d[1] + t[i][2] * d[2]));
+        let dir = fv(std::array::from_fn(|i| {
+            t[i][0] * d[0] + t[i][1] * d[1] + t[i][2] * d[2]
+        }));
         let s = ls(self.s1, dir, self.margins);
         let (r, o) = (&self.to0, &self.to0_origin);
         std::array::from_fn(|i| s[0] * r[i][0] + s[1] * r[i][1] + s[2] * r[i][2] + o[i])
@@ -897,9 +1026,14 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
     let (mut j, mut l, mut m, mut k);
     let (q, r, t);
 
-    if G * (F * (I - x) - E * (y - z)) + I * (D * (y - z) - F * (G - H)) + (E * (G - H) - D * (I - x)) * y > 0.0 {
+    if G * (F * (I - x) - E * (y - z))
+        + I * (D * (y - z) - F * (G - H))
+        + (E * (G - H) - D * (I - x)) * y
+        > 0.0
+    {
         if (H - G) * (H - G) + (x - I) * (x - I) + (z - y) * (z - y) > 0.0 {
-            let i = -(G * (H - G) + I * (x - I) + y * (z - y)) / ((H - G) * (H - G) + (x - I) * (x - I) + (z - y) * (z - y));
+            let i = -(G * (H - G) + I * (x - I) + y * (z - y))
+                / ((H - G) * (H - G) + (x - I) * (x - I) + (z - y) * (z - y));
 
             if i >= 1.0 {
                 l = 2;
@@ -909,7 +1043,9 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
             } else if !(i <= 0.0) {
                 k = f(i);
                 l = 3;
-                j = (y + (z - y) * i) * (y + (z - y) * i) + ((G + (H - G) * i) * (G + (H - G) * i) + (I + (x - I) * i) * (I + (x - I) * i));
+                j = (y + (z - y) * i) * (y + (z - y) * i)
+                    + ((G + (H - G) * i) * (G + (H - G) * i)
+                        + (I + (x - I) * i) * (I + (x - I) * i));
                 m = f(1.0 - i);
             } else {
                 l = 1;
@@ -939,7 +1075,11 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
         t = z;
     }
 
-    if q * (F * (x - B) - E * (z - C)) + r * (D * (z - C) - F * (H - A)) + (E * (H - A) - D * (x - B)) * t > 0.0 {
+    if q * (F * (x - B) - E * (z - C))
+        + r * (D * (z - C) - F * (H - A))
+        + (E * (H - A) - D * (x - B)) * t
+        > 0.0
+    {
         let (u, v, ww) = (c[0], c[1], c[2]);
         let mut i = u - q;
         let o = v - r;
@@ -985,10 +1125,15 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
     let p = c[2];
     let mut ii;
 
-    if i * (F * (B - I) - E * (C - y)) + o * (D * (C - y) - F * (A - G)) + (E * (A - G) - D * (B - I)) * p > 0.0 {
+    if i * (F * (B - I) - E * (C - y))
+        + o * (D * (C - y) - F * (A - G))
+        + (E * (A - G) - D * (B - I)) * p
+        > 0.0
+    {
         let (q, r, t) = (a[0], a[1], a[2]);
         if (q - i) * (q - i) + (r - o) * (r - o) + (t - p) * (t - p) > 0.0 {
-            let n = -(i * (q - i) + o * (r - o) + p * (t - p)) / ((q - i) * (q - i) + (r - o) * (r - o) + (t - p) * (t - p));
+            let n = -(i * (q - i) + o * (r - o) + p * (t - p))
+                / ((q - i) * (q - i) + (r - o) * (r - o) + (t - p) * (t - p));
 
             if n >= 1.0 {
                 l = 2;
@@ -998,7 +1143,9 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
             } else if !(n <= 0.0) {
                 k = f(n);
                 l = 3;
-                ii = (p + (t - p) * n) * (p + (t - p) * n) + ((i + (q - i) * n) * (i + (q - i) * n) + (o + (r - o) * n) * (o + (r - o) * n));
+                ii = (p + (t - p) * n) * (p + (t - p) * n)
+                    + ((i + (q - i) * n) * (i + (q - i) * n)
+                        + (o + (r - o) * n) * (o + (r - o) * n));
                 m = f(1.0 - n);
             } else {
                 l = 1;
@@ -1032,15 +1179,27 @@ fn project3(a: V, b: V, c: V) -> (f64, [f64; 3], u32) {
     let t = b[0] - D * ww;
     let r = b[1] - E * ww;
     let u = b[2] - F * ww;
-    let h2 = (((H - A) * r - (x - B) * t) * ((H - A) * r - (x - B) * t) + (((x - B) * u - (z - C) * r) * ((x - B) * u - (z - C) * r) + ((z - C) * t - (H - A) * u) * ((z - C) * t - (H - A) * u))).sqrt() / v;
+    let h2 = (((H - A) * r - (x - B) * t) * ((H - A) * r - (x - B) * t)
+        + (((x - B) * u - (z - C) * r) * ((x - B) * u - (z - C) * r)
+            + ((z - C) * t - (H - A) * u) * ((z - C) * t - (H - A) * u)))
+        .sqrt()
+        / v;
     w[0] = f(h2);
     let x2 = c[0] - D * ww;
     let u2 = c[1] - E * ww;
     let z2 = c[2] - F * ww;
-    let i2 = (((A - G) * u2 - (B - I) * x2) * ((A - G) * u2 - (B - I) * x2) + (((B - I) * z2 - (C - y) * u2) * ((B - I) * z2 - (C - y) * u2) + ((C - y) * x2 - (A - G) * z2) * ((C - y) * x2 - (A - G) * z2))).sqrt() / v;
+    let i2 = (((A - G) * u2 - (B - I) * x2) * ((A - G) * u2 - (B - I) * x2)
+        + (((B - I) * z2 - (C - y) * u2) * ((B - I) * z2 - (C - y) * u2)
+            + ((C - y) * x2 - (A - G) * z2) * ((C - y) * x2 - (A - G) * z2)))
+        .sqrt()
+        / v;
     w[1] = f(i2);
     w[2] = f(1.0 - (h2 + i2));
-    (F * ww * (F * ww) + (D * ww * (D * ww) + E * ww * (E * ww)), w, mask)
+    (
+        F * ww * (F * ww) + (D * ww * (D * ww) + E * ww * (E * ww)),
+        w,
+        mask,
+    )
 }
 
 #[derive(Clone, Copy, Default)]
@@ -1130,7 +1289,10 @@ impl<'a> Gjk<'a> {
         let d = [f(l * v[0]), f(l * v[1]), f(l * v[2])];
         let s0 = self.m.support0(d);
         let s1 = self.m.support1(neg(d));
-        self.store[sv] = Sv { d, w: fv(sub(s0, s1)) };
+        self.store[sv] = Sv {
+            d,
+            w: fv(sub(s0, s1)),
+        };
     }
 
     fn remove_vertice(&mut self, s: usize) {
@@ -1163,7 +1325,14 @@ impl<'a> Gjk<'a> {
         self.simp[0].rank = 0;
         self.ray = guess;
         let sqrl = guess[0] * guess[0] + guess[1] * guess[1] + guess[2] * guess[2];
-        self.append_vertice(0, if sqrl > 0.0 { neg(guess) } else { [1.0, 0.0, 0.0] });
+        self.append_vertice(
+            0,
+            if sqrl > 0.0 {
+                neg(guess)
+            } else {
+                [1.0, 0.0, 0.0]
+            },
+        );
         self.simp[0].p[0] = 1.0;
         self.ray = self.w(0, 0);
         let mut lastw = [self.ray; 4];
@@ -1222,10 +1391,15 @@ impl<'a> Gjk<'a> {
                     let (p, o) = (self.w(C, 0), self.w(C, 1));
                     let (e0, g0, i0, k0, l0, m0) = (o[0], p[0], o[1], p[1], o[2], p[2]);
 
-                    if !((e0 - g0) * (e0 - g0) + (i0 - k0) * (i0 - k0) + (l0 - m0) * (l0 - m0) > 0.0) {
+                    if !((e0 - g0) * (e0 - g0) + (i0 - k0) * (i0 - k0) + (l0 - m0) * (l0 - m0)
+                        > 0.0)
+                    {
                         e = -1.0;
                     } else {
-                        let n = -(g0 * (e0 - g0) + k0 * (i0 - k0) + m0 * (l0 - m0)) / ((e0 - g0) * (e0 - g0) + (i0 - k0) * (i0 - k0) + (l0 - m0) * (l0 - m0));
+                        let n = -(g0 * (e0 - g0) + k0 * (i0 - k0) + m0 * (l0 - m0))
+                            / ((e0 - g0) * (e0 - g0)
+                                + (i0 - k0) * (i0 - k0)
+                                + (l0 - m0) * (l0 - m0));
 
                         if n >= 1.0 {
                             wts[0] = 0.0;
@@ -1236,7 +1410,9 @@ impl<'a> Gjk<'a> {
                             wts[1] = f(n);
                             wts[0] = f(1.0 - n);
                             mask = 3;
-                            e = (m0 + (l0 - m0) * n) * (m0 + (l0 - m0) * n) + ((g0 + (e0 - g0) * n) * (g0 + (e0 - g0) * n) + (k0 + (i0 - k0) * n) * (k0 + (i0 - k0) * n));
+                            e = (m0 + (l0 - m0) * n) * (m0 + (l0 - m0) * n)
+                                + ((g0 + (e0 - g0) * n) * (g0 + (e0 - g0) * n)
+                                    + (k0 + (i0 - k0) * n) * (k0 + (i0 - k0) * n));
                         } else {
                             wts[0] = 1.0;
                             wts[1] = 0.0;
@@ -1256,15 +1432,29 @@ impl<'a> Gjk<'a> {
                     let (r, t, u, v, w_, x) = (d[0], p[0], d[1], p[1], d[2], p[2]);
                     let (g, i, k) = (j[0], j[1], j[2]);
                     let (y, z, A) = (o[0], o[1], o[2]);
-                    let B = (r - t) * (i - v) * (A - x) + ((u - v) * (k - x) * (y - t) + (w_ - x) * (g - t) * (z - v) - (r - t) * (k - x) * (z - v) - (u - v) * (g - t) * (A - x)) - (w_ - x) * (i - v) * (y - t);
+                    let B = (r - t) * (i - v) * (A - x)
+                        + ((u - v) * (k - x) * (y - t) + (w_ - x) * (g - t) * (z - v)
+                            - (r - t) * (k - x) * (z - v)
+                            - (u - v) * (g - t) * (A - x))
+                        - (w_ - x) * (i - v) * (y - t);
 
-                    if !(B == B && B != 0.0 && B * (w_ * ((u - i) * (g - y) - (r - g) * (i - z)) + (r * ((w_ - k) * (i - z) - (u - i) * (k - A)) + u * ((r - g) * (k - A) - (w_ - k) * (g - y)))) <= 0.0) {
+                    if !(B == B
+                        && B != 0.0
+                        && B * (w_ * ((u - i) * (g - y) - (r - g) * (i - z))
+                            + (r * ((w_ - k) * (i - z) - (u - i) * (k - A))
+                                + u * ((r - g) * (k - A) - (w_ - k) * (g - y))))
+                            <= 0.0)
+                    {
                         e = -1.0;
                     } else {
                         let mut ee;
                         let (mut l1, mut m1, mut n1);
 
-                        if B * (((u - v) * (k - x) - (w_ - x) * (i - v)) * t + v * ((w_ - x) * (g - t) - (r - t) * (k - x)) + ((r - t) * (i - v) - (u - v) * (g - t)) * x) > 0.0 {
+                        if B * (((u - v) * (k - x) - (w_ - x) * (i - v)) * t
+                            + v * ((w_ - x) * (g - t) - (r - t) * (k - x))
+                            + ((r - t) * (i - v) - (u - v) * (g - t)) * x)
+                            > 0.0
+                        {
                             let (e1, sw, sm) = project3(d, j, p);
                             ee = e1;
                             mask = (sm & 2) | ((sm << 1) & 8) | (sm & 1);
@@ -1282,7 +1472,11 @@ impl<'a> Gjk<'a> {
                             n1 = x;
                         }
 
-                        if B * (((i - v) * (A - x) - (k - x) * (z - v)) * l1 + m1 * ((k - x) * (y - t) - (A - x) * (g - t)) + ((z - v) * (g - t) - (i - v) * (y - t)) * n1) > 0.0 {
+                        if B * (((i - v) * (A - x) - (k - x) * (z - v)) * l1
+                            + m1 * ((k - x) * (y - t) - (A - x) * (g - t))
+                            + ((z - v) * (g - t) - (i - v) * (y - t)) * n1)
+                            > 0.0
+                        {
                             let (gg, sw, sm) = project3(j, o, p);
 
                             if ee < 0.0 || gg < ee {
@@ -1295,7 +1489,11 @@ impl<'a> Gjk<'a> {
                             }
                         }
 
-                        if B * (((z - v) * (w_ - x) - (A - x) * (u - v)) * p[0] + p[1] * ((A - x) * (r - t) - (w_ - x) * (y - t)) + ((u - v) * (y - t) - (z - v) * (r - t)) * p[2]) > 0.0 {
+                        if B * (((z - v) * (w_ - x) - (A - x) * (u - v)) * p[0]
+                            + p[1] * ((A - x) * (r - t) - (w_ - x) * (y - t))
+                            + ((u - v) * (y - t) - (z - v) * (r - t)) * p[2])
+                            > 0.0
+                        {
                             let (hh, sw, sm) = project3(o, d, p);
 
                             if ee < 0.0 || hh < ee {
@@ -1319,13 +1517,41 @@ impl<'a> Gjk<'a> {
                             let n2 = o[0];
                             let x2 = p[2];
                             let v2 = j[1];
-                            wts[0] = f((r2 * A2 * z2 + m2 * y2 * t2 - t2 * (A2 * n2) - r2 * y2 * x2 + x2 * (n2 * v2) - z2 * (m2 * v2)) / B);
+                            wts[0] =
+                                f((r2 * A2 * z2 + m2 * y2 * t2 - t2 * (A2 * n2) - r2 * y2 * x2
+                                    + x2 * (n2 * v2)
+                                    - z2 * (m2 * v2))
+                                    / B);
                             let e2 = d[1];
                             let u2 = d[2];
                             let w2 = d[0];
-                            wts[1] = f((e2 * m2 * z2 + u2 * n2 * t2 - t2 * (m2 * w2) - e2 * n2 * x2 + x2 * (w2 * r2) - z2 * (u2 * r2)) / B);
-                            wts[2] = f((v2 * u2 * z2 + A2 * w2 * t2 - t2 * (u2 * y2) - v2 * w2 * x2 + x2 * (y2 * e2) - z2 * (A2 * e2)) / B);
-                            wts[3] = f(1.0 - ((r2 * A2 * z2 + m2 * y2 * t2 - t2 * (A2 * n2) - r2 * y2 * x2 + x2 * (n2 * v2) - z2 * (m2 * v2)) / B + (e2 * m2 * z2 + u2 * n2 * t2 - t2 * (m2 * w2) - e2 * n2 * x2 + x2 * (w2 * r2) - z2 * (u2 * r2)) / B + (v2 * u2 * z2 + A2 * w2 * t2 - t2 * (u2 * y2) - v2 * w2 * x2 + x2 * (y2 * e2) - z2 * (A2 * e2)) / B));
+                            wts[1] =
+                                f((e2 * m2 * z2 + u2 * n2 * t2 - t2 * (m2 * w2) - e2 * n2 * x2
+                                    + x2 * (w2 * r2)
+                                    - z2 * (u2 * r2))
+                                    / B);
+                            wts[2] =
+                                f((v2 * u2 * z2 + A2 * w2 * t2 - t2 * (u2 * y2) - v2 * w2 * x2
+                                    + x2 * (y2 * e2)
+                                    - z2 * (A2 * e2))
+                                    / B);
+                            wts[3] = f(1.0
+                                - ((r2 * A2 * z2 + m2 * y2 * t2 - t2 * (A2 * n2) - r2 * y2 * x2
+                                    + x2 * (n2 * v2)
+                                    - z2 * (m2 * v2))
+                                    / B
+                                    + (e2 * m2 * z2 + u2 * n2 * t2
+                                        - t2 * (m2 * w2)
+                                        - e2 * n2 * x2
+                                        + x2 * (w2 * r2)
+                                        - z2 * (u2 * r2))
+                                        / B
+                                    + (v2 * u2 * z2 + A2 * w2 * t2
+                                        - t2 * (u2 * y2)
+                                        - v2 * w2 * x2
+                                        + x2 * (y2 * e2)
+                                        - z2 * (A2 * e2))
+                                        / B));
                             ee = 0.0;
                         }
 
@@ -1354,7 +1580,11 @@ impl<'a> Gjk<'a> {
                     self.simp[b].p[r] = wts[q];
                     self.simp[b].rank += 1;
                     let sw = self.store[cs.c[q]].w;
-                    ray_locals = [sw[0] * wts[q] + self.ray[0], sw[1] * wts[q] + self.ray[1], sw[2] * wts[q] + self.ray[2]];
+                    ray_locals = [
+                        sw[0] * wts[q] + self.ray[0],
+                        sw[1] * wts[q] + self.ray[1],
+                        sw[2] * wts[q] + self.ray[2],
+                    ];
                     self.ray = ray_locals.map(f);
                 } else {
                     self.free[self.nfree] = cs.c[q];
@@ -1394,7 +1624,14 @@ impl<'a> Gjk<'a> {
 
         match self.simp[s].rank {
             1 => {
-                for v in [[1.0, 0.0, 0.0], [-1.0, -0.0, -0.0], [0.0, 1.0, 0.0], [-0.0, -1.0, -0.0], [0.0, 0.0, 1.0], [-0.0, -0.0, -1.0]] {
+                for v in [
+                    [1.0, 0.0, 0.0],
+                    [-1.0, -0.0, -0.0],
+                    [0.0, 1.0, 0.0],
+                    [-0.0, -1.0, -0.0],
+                    [0.0, 0.0, 1.0],
+                    [-0.0, -0.0, -1.0],
+                ] {
                     self.append_vertice(s, v);
 
                     if self.enclose_origin() {
@@ -1516,7 +1753,10 @@ impl<'a> Gjk<'a> {
     fn edge_dist(n: V, a: V, b: V) -> Option<f64> {
         let (aa, bb, c, d, e, g, h, i, j) = (n[0], n[1], n[2], a[0], a[1], a[2], b[0], b[1], b[2]);
 
-        if !(((h - d) * bb - (i - e) * aa) * g + (((i - e) * c - (j - g) * bb) * d + ((j - g) * aa - (h - d) * c) * e) < 0.0) {
+        if !(((h - d) * bb - (i - e) * aa) * g
+            + (((i - e) * c - (j - g) * bb) * d + ((j - g) * aa - (h - d) * c) * e)
+            < 0.0)
+        {
             return None;
         }
 
@@ -1526,7 +1766,9 @@ impl<'a> Gjk<'a> {
             if (h - d) * h + (i - e) * i + (j - g) * j < 0.0 {
                 x = h * h + i * i + j * j;
             } else {
-                let y = ((h * h + i * i + j * j) * (d * d + e * e + g * g) - (h * d + i * e + j * g) * (h * d + i * e + j * g)) / ((h - d) * (h - d) + (i - e) * (i - e) + (j - g) * (j - g));
+                let y = ((h * h + i * i + j * j) * (d * d + e * e + g * g)
+                    - (h * d + i * e + j * g) * (h * d + i * e + j * g))
+                    / ((h - d) * (h - d) + (i - e) * (i - e) + (j - g) * (j - g));
                 x = if y > 0.0 { y } else { 0.0 };
             }
         } else {
@@ -1627,11 +1869,23 @@ impl<'a> Gjk<'a> {
         let i2 = I2M3[e];
         self.faces[fc].pass = pass;
 
-        if !self.expand(pass, w, self.faces[fc].f[k], self.faces[fc].e[k] as usize, horizon) {
+        if !self.expand(
+            pass,
+            w,
+            self.faces[fc].f[k],
+            self.faces[fc].e[k] as usize,
+            horizon,
+        ) {
             return false;
         }
 
-        if !self.expand(pass, w, self.faces[fc].f[i2], self.faces[fc].e[i2] as usize, horizon) {
+        if !self.expand(
+            pass,
+            w,
+            self.faces[fc].f[i2],
+            self.faces[fc].e[i2] as usize,
+            horizon,
+        ) {
             return false;
         }
 
@@ -1774,13 +2028,21 @@ impl<'a> Gjk<'a> {
                 let (c1, c2, c0) = (wc(1), wc(2), wc(0));
                 let (K, F, I) = (c1[0] - J, c1[1] - H, c1[2] - N);
                 let (E, G, L) = (c2[0] - J, c2[1] - H, c2[2] - N);
-                let L2 = ((K * G - F * E) * (K * G - F * E) + ((F * L - I * G) * (F * L - I * G) + (I * E - K * L) * (I * E - K * L))).sqrt();
+                let L2 = ((K * G - F * E) * (K * G - F * E)
+                    + ((F * L - I * G) * (F * L - I * G) + (I * E - K * L) * (I * E - K * L)))
+                    .sqrt();
                 let (K2, G2, I2) = (c2[0] - J, c2[1] - H, c2[2] - N);
                 let (E2, F2, M2) = (c0[0] - J, c0[1] - H, c0[2] - N);
-                let M3 = ((K2 * F2 - G2 * E2) * (K2 * F2 - G2 * E2) + ((G2 * M2 - I2 * F2) * (G2 * M2 - I2 * F2) + (I2 * E2 - K2 * M2) * (I2 * E2 - K2 * M2))).sqrt();
+                let M3 = ((K2 * F2 - G2 * E2) * (K2 * F2 - G2 * E2)
+                    + ((G2 * M2 - I2 * F2) * (G2 * M2 - I2 * F2)
+                        + (I2 * E2 - K2 * M2) * (I2 * E2 - K2 * M2)))
+                    .sqrt();
                 let (K3, G3, I3) = (c0[0] - J, c0[1] - H, c0[2] - N);
                 let (J3, H3, N3) = (c1[0] - J, c1[1] - H, c1[2] - N);
-                let N4 = ((K3 * H3 - G3 * J3) * (K3 * H3 - G3 * J3) + ((G3 * N3 - I3 * H3) * (G3 * N3 - I3 * H3) + (I3 * J3 - K3 * N3) * (I3 * J3 - K3 * N3))).sqrt();
+                let N4 = ((K3 * H3 - G3 * J3) * (K3 * H3 - G3 * J3)
+                    + ((G3 * N3 - I3 * H3) * (G3 * N3 - I3 * H3)
+                        + (I3 * J3 - K3 * N3) * (I3 * J3 - K3 * N3)))
+                    .sqrt();
                 self.result.p[0] = f(L2 / (L2 + M3 + N4));
                 self.result.p[1] = f(M3 / (L2 + M3 + N4));
                 self.result.p[2] = f(N4 / (L2 + M3 + N4));
@@ -1791,7 +2053,11 @@ impl<'a> Gjk<'a> {
             self.estatus = EPA_FALL_BACK;
             let (n, q, m) = (guess[0], guess[1], guess[2]);
             let l = (n * n + q * q + m * m).sqrt();
-            self.normal = if l > 0.0 { [f(1.0 / l * n), f(1.0 / l * q), f(1.0 / l * m)] } else { [1.0, 0.0, 0.0] };
+            self.normal = if l > 0.0 {
+                [f(1.0 / l * n), f(1.0 / l * q), f(1.0 / l * m)]
+            } else {
+                [1.0, 0.0, 0.0]
+            };
             self.depth = 0.0;
             self.result.rank = 1;
             self.result.c[0] = self.simp[t].c[0];
@@ -1801,7 +2067,13 @@ impl<'a> Gjk<'a> {
 }
 
 /// zb: btGjkEpaSolver2::Penetration. (witness on A, witness on B, normal) in world space.
-fn epa_penetration(s0: &Convex, t0: &Transform, s1: &Convex, t1: &Transform, guess: V) -> Option<(V, V, V)> {
+fn epa_penetration(
+    s0: &Convex,
+    t0: &Transform,
+    s1: &Convex,
+    t1: &Transform,
+    guess: V,
+) -> Option<(V, V, V)> {
     let mut gjk = Gjk::new(Mink::new(s0, t0, s1, t1, true));
 
     if gjk.evaluate(neg(guess)) != 1 {
@@ -1833,7 +2105,13 @@ fn epa_penetration(s0: &Convex, t0: &Transform, s1: &Convex, t1: &Transform, gue
 
 #[allow(non_snake_case)]
 /// Ec: btGjkEpaSolver2::Distance. (witness on A, witness on B, normal) in world space.
-fn epa_distance(s0: &Convex, t0: &Transform, s1: &Convex, t1: &Transform, guess: V) -> Option<(V, V, V)> {
+fn epa_distance(
+    s0: &Convex,
+    t0: &Transform,
+    s1: &Convex,
+    t1: &Transform,
+    guess: V,
+) -> Option<(V, V, V)> {
     let mut gjk = Gjk::new(Mink::new(s0, t0, s1, t1, false));
 
     if gjk.evaluate(guess) != 0 {
@@ -1853,7 +2131,11 @@ fn epa_distance(s0: &Convex, t0: &Transform, s1: &Convex, t1: &Transform, guess:
         p += u * v0[2];
         let (q, r, t) = (-sv.d[0], -sv.d[1], -sv.d[2]);
         let tt = &gjk.m.to1;
-        let dir = fv([tt[0][0] * q + tt[0][1] * r + tt[0][2] * t, tt[1][0] * q + tt[1][1] * r + tt[1][2] * t, tt[2][0] * q + tt[2][1] * r + tt[2][2] * t]);
+        let dir = fv([
+            tt[0][0] * q + tt[0][1] * r + tt[0][2] * t,
+            tt[1][0] * q + tt[1][1] * r + tt[1][2] * t,
+            tt[2][0] * q + tt[2][1] * r + tt[2][2] * t,
+        ]);
         let g1 = fv(s1.support(dir));
         let (rr, oo) = (&gjk.m.to0, &gjk.m.to0_origin);
         i += u * (g1[0] * rr[0][0] + g1[1] * rr[0][1] + g1[2] * rr[0][2] + oo[0]);
@@ -1871,7 +2153,10 @@ fn epa_distance(s0: &Convex, t0: &Transform, s1: &Convex, t1: &Transform, guess:
 /// sg: btGjkEpaPenetrationDepthSolver.calcPenDepth: (penetration, v, witness on A, witness on B).
 pub fn calc_pen_depth(sa: &Convex, ta: &Transform, sb: &Convex, tb: &Transform) -> (bool, V, V, V) {
     // The transforms are btTransforms: floats.
-    let round = |t: &Transform| Transform { basis: t.basis.map(fv), origin: fv(t.origin) };
+    let round = |t: &Transform| Transform {
+        basis: t.basis.map(fv),
+        origin: fv(t.origin),
+    };
     let (ta, tb) = (round(ta), round(tb));
     let guess = fv(sub(tb.origin, ta.origin));
 
@@ -1983,7 +2268,10 @@ pub struct Manifold {
 
 impl Manifold {
     pub fn new(threshold: f64) -> Manifold {
-        Manifold { points: Vec::with_capacity(4), threshold: f(threshold) }
+        Manifold {
+            points: Vec::with_capacity(4),
+            threshold: f(threshold),
+        }
     }
 
     /// btManifoldResult.addContactPoint.
@@ -1993,7 +2281,12 @@ impl Manifold {
         }
 
         let point_a = add(point_b, mul(normal, depth));
-        let p = ManifoldPoint { a: fv(point_a), b: fv(point_b), normal: fv(normal), distance: f(depth) };
+        let p = ManifoldPoint {
+            a: fv(point_a),
+            b: fv(point_b),
+            normal: fv(normal),
+            distance: f(depth),
+        };
 
         // getCacheEntry.
         let mut shortest = self.threshold * self.threshold;
@@ -2032,10 +2325,26 @@ impl Manifold {
 
         let area = |a: V, b: V| len2(cross(a, b));
         let res = [
-            if deepest != Some(0) { area(sub(pt.a, c[1].a), sub(c[3].a, c[2].a)) } else { 0.0 },
-            if deepest != Some(1) { area(sub(pt.a, c[0].a), sub(c[3].a, c[2].a)) } else { 0.0 },
-            if deepest != Some(2) { area(sub(pt.a, c[0].a), sub(c[3].a, c[1].a)) } else { 0.0 },
-            if deepest != Some(3) { area(sub(pt.a, c[0].a), sub(c[2].a, c[1].a)) } else { 0.0 },
+            if deepest != Some(0) {
+                area(sub(pt.a, c[1].a), sub(c[3].a, c[2].a))
+            } else {
+                0.0
+            },
+            if deepest != Some(1) {
+                area(sub(pt.a, c[0].a), sub(c[3].a, c[2].a))
+            } else {
+                0.0
+            },
+            if deepest != Some(2) {
+                area(sub(pt.a, c[0].a), sub(c[3].a, c[1].a))
+            } else {
+                0.0
+            },
+            if deepest != Some(3) {
+                area(sub(pt.a, c[0].a), sub(c[2].a, c[1].a))
+            } else {
+                0.0
+            },
         ];
 
         // closestAxis4: the first largest absolute value.
@@ -2111,7 +2420,12 @@ impl BvhMesh {
             .map(|(i, t)| {
                 let lo = std::array::from_fn(|k| t[0][k].min(t[1][k]).min(t[2][k]));
                 let hi = std::array::from_fn(|k| t[0][k].max(t[1][k]).max(t[2][k]));
-                BvhNode { lo, hi, escape: -1, triangle: i }
+                BvhNode {
+                    lo,
+                    hi,
+                    escape: -1,
+                    triangle: i,
+                }
             })
             .collect();
         let mut nodes = Vec::with_capacity(2 * leaves.len());
@@ -2125,7 +2439,11 @@ impl BvhMesh {
         let all = triangles.iter().flatten();
         let lo = std::array::from_fn(|k| all.clone().map(|p| p[k]).fold(BT_LARGE_FLOAT, f64::min));
         let hi = std::array::from_fn(|k| all.clone().map(|p| p[k]).fold(-BT_LARGE_FLOAT, f64::max));
-        BvhMesh { triangles, nodes, local_aabb: (lo, hi) }
+        BvhMesh {
+            triangles,
+            nodes,
+            local_aabb: (lo, hi),
+        }
     }
 
     /// walkStacklessTree.
@@ -2205,7 +2523,12 @@ fn build_tree(leaves: &mut [BvhNode], nodes: &mut Vec<BvhNode>, start: usize, en
             hi[k] = hi[k].max(l.hi[k]);
         }
     }
-    nodes.push(BvhNode { lo, hi, escape: 0, triangle: 0 });
+    nodes.push(BvhNode {
+        lo,
+        hi,
+        escape: 0,
+        triangle: 0,
+    });
 
     build_tree(leaves, nodes, start, split);
     build_tree(leaves, nodes, split, end);
@@ -2226,17 +2549,28 @@ pub struct HeightField {
 
 impl HeightField {
     fn local_origin(&self) -> V {
-        [f((self.width - 1) as f64 * 0.5), f((self.min + self.max) * 0.5), f((self.length - 1) as f64 * 0.5)]
+        [
+            f((self.width - 1) as f64 * 0.5),
+            f((self.min + self.max) * 0.5),
+            f((self.length - 1) as f64 * 0.5),
+        ]
     }
 
     fn local_aabb(&self) -> (V, V) {
-        ([0.0, self.min, 0.0], [(self.width - 1) as f64, self.max, (self.length - 1) as f64])
+        (
+            [0.0, self.min, 0.0],
+            [(self.width - 1) as f64, self.max, (self.length - 1) as f64],
+        )
     }
 
     fn vertex(&self, x: usize, y: usize) -> V {
         let h = self.heights.get(y * self.width + x).copied().unwrap_or(0.0);
         let o = self.local_origin();
-        fv([(-((self.width - 1) as f64) / 2.0 + x as f64) * self.scaling[0], (h - o[1]) * self.scaling[1], (-((self.length - 1) as f64) / 2.0 + y as f64) * self.scaling[2]])
+        fv([
+            (-((self.width - 1) as f64) / 2.0 + x as f64) * self.scaling[0],
+            (h - o[1]) * self.scaling[1],
+            (-((self.length - 1) as f64) / 2.0 + y as f64) * self.scaling[2],
+        ])
     }
 
     /// processAllTriangles.
@@ -2249,7 +2583,11 @@ impl HeightField {
         let quantize = |p: V| -> [i64; 3] {
             std::array::from_fn(|i| {
                 let x = p[i].max(amin[i]).min(amax[i]);
-                if x < 0.0 { (x - 0.5) as i64 } else { (x + 0.5) as i64 }
+                if x < 0.0 {
+                    (x - 0.5) as i64
+                } else {
+                    (x + 0.5) as i64
+                }
             })
         };
         let qmin = quantize(local_lo).map(|v| v - 1);
@@ -2263,7 +2601,11 @@ impl HeightField {
             for x in start_x..end_x {
                 let (x, j) = (x as usize, j as usize);
                 // flipQuadEdges (2.82 order).
-                let mut v = [self.vertex(x, j), self.vertex(x + 1, j), self.vertex(x + 1, j + 1)];
+                let mut v = [
+                    self.vertex(x, j),
+                    self.vertex(x + 1, j),
+                    self.vertex(x + 1, j + 1),
+                ];
                 cb(&v);
                 v[1] = self.vertex(x + 1, j + 1);
                 v[2] = self.vertex(x, j + 1);
@@ -2303,7 +2645,9 @@ impl Body<'_> {
 /// manifold, then refreshContactPoints.
 fn convex_concave(convex: &Convex, tc: &Transform, concave: &Body, threshold: f64) -> Manifold {
     let mut manifold = Manifold::new(threshold);
-    let (Body::Mesh(_, tt) | Body::Height(_, tt)) = concave else { unreachable!() };
+    let (Body::Mesh(_, tt) | Body::Height(_, tt)) = concave else {
+        unreachable!()
+    };
     let (lo, hi) = convex.aabb(&tt.inverse_times(tc));
     let max_distance2 = (convex.margin() + manifold.threshold).powi(2);
 
@@ -2313,12 +2657,21 @@ fn convex_concave(convex: &Convex, tc: &Transform, concave: &Body, threshold: f6
         }
 
         if let Convex::Sphere { radius } = convex {
-            if let Some((point, normal, depth)) = sphere_triangle(tt.inv_xform(tc.origin), *radius, v, manifold.threshold) {
+            if let Some((point, normal, depth)) =
+                sphere_triangle(tt.inv_xform(tc.origin), *radius, v, manifold.threshold)
+            {
                 manifold.add_contact_point(tt.rotate(normal), tt.apply(point), depth);
             }
         } else {
             let t = Convex::Triangle { v: *v, margin: 0.0 };
-            if let Some(r) = gjk_pair(Placed { shape: convex, t: *tc }, Placed { shape: &t, t: *tt }, max_distance2) {
+            if let Some(r) = gjk_pair(
+                Placed {
+                    shape: convex,
+                    t: *tc,
+                },
+                Placed { shape: &t, t: *tt },
+                max_distance2,
+            ) {
                 manifold.add_contact_point(r.normal, r.point_on_b, r.distance);
             }
         }
@@ -2337,7 +2690,12 @@ fn convex_concave(convex: &Convex, tc: &Transform, concave: &Body, threshold: f6
 /// The leaf pair algorithm of btDefaultCollisionConfiguration for body0 `a` and body1 `b` with
 /// the manifold's contact breaking threshold, after the children's AABBs overlap. Box–box uses
 /// the caller's dBoxBox2 test (`box_box`).
-pub fn pair_manifold(a: &Body, b: &Body, threshold: f64, box_box: impl Fn(&Transform, V, &Transform, V) -> bool) -> Manifold {
+pub fn pair_manifold(
+    a: &Body,
+    b: &Body,
+    threshold: f64,
+    box_box: impl Fn(&Transform, V, &Transform, V) -> bool,
+) -> Manifold {
     match (a, b) {
         (Body::Convex(sa, ta), Body::Convex(sb, tb)) => {
             let mut m = Manifold::new(threshold);
@@ -2348,19 +2706,41 @@ pub fn pair_manifold(a: &Body, b: &Body, threshold: f64, box_box: impl Fn(&Trans
                     let diff = sub(ta.origin, tb.origin);
                     let l = len(diff);
                     if l <= r0 + r1 {
-                        let n = if l > SIMD_EPSILON { mul(diff, 1.0 / l) } else { [1.0, 0.0, 0.0] };
+                        let n = if l > SIMD_EPSILON {
+                            mul(diff, 1.0 / l)
+                        } else {
+                            [1.0, 0.0, 0.0]
+                        };
                         m.add_contact_point(n, add(tb.origin, mul(n, *r1)), l - (r0 + r1));
                     }
                 }
-                (Convex::Box { half: h0, margin: m0 }, Convex::Box { half: h1, margin: m1 }) => {
+                (
+                    Convex::Box {
+                        half: h0,
+                        margin: m0,
+                    },
+                    Convex::Box {
+                        half: h1,
+                        margin: m1,
+                    },
+                ) => {
                     if box_box(ta, add(*h0, [*m0; 3]), tb, add(*h1, [*m1; 3])) {
-                        m.points.push(ManifoldPoint { a: ta.origin, b: tb.origin, normal: [0.0; 3], distance: 0.0 });
+                        m.points.push(ManifoldPoint {
+                            a: ta.origin,
+                            b: tb.origin,
+                            normal: [0.0; 3],
+                            distance: 0.0,
+                        });
                         return m;
                     }
                 }
                 _ => {
                     let max_distance2 = (sa.margin() + sb.margin() + m.threshold).powi(2);
-                    if let Some(r) = gjk_pair(Placed { shape: sa, t: *ta }, Placed { shape: sb, t: *tb }, max_distance2) {
+                    if let Some(r) = gjk_pair(
+                        Placed { shape: sa, t: *ta },
+                        Placed { shape: sb, t: *tb },
+                        max_distance2,
+                    ) {
                         m.add_contact_point(r.normal, r.point_on_b, r.distance);
                     }
                 }
@@ -2369,8 +2749,9 @@ pub fn pair_manifold(a: &Body, b: &Body, threshold: f64, box_box: impl Fn(&Trans
             m.refresh();
             m
         }
-        (Body::Convex(s, t), concave) | (concave, Body::Convex(s, t)) => convex_concave(s, t, concave, threshold),
+        (Body::Convex(s, t), concave) | (concave, Body::Convex(s, t)) => {
+            convex_concave(s, t, concave, threshold)
+        }
         _ => Manifold::new(threshold),
     }
 }
-

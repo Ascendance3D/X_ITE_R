@@ -36,7 +36,9 @@ impl Fetcher for LocalFetcher {
         }
 
         // decodeURIComponent (pathname), then path.normalize (join (ROOT, …)).
-        let decoded = percent_encoding::percent_decode_str(url.path()).decode_utf8_lossy().into_owned();
+        let decoded = percent_encoding::percent_decode_str(url.path())
+            .decode_utf8_lossy()
+            .into_owned();
         let mut path = self.root.clone();
 
         for part in decoded.split('/') {
@@ -123,7 +125,11 @@ pub fn decode_uri(s: &str) -> Option<String> {
 fn truncate(s: &str) -> String {
     let units: Vec<u16> = s.encode_utf16().collect();
 
-    if units.len() > 120 { format!("{}…", String::from_utf16_lossy(&units[..120])) } else { s.to_string() }
+    if units.len() > 120 {
+        format!("{}…", String::from_utf16_lossy(&units[..120]))
+    } else {
+        s.to_string()
+    }
 }
 
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
@@ -137,9 +143,17 @@ pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
         return None;
     }
 
-    let decoded = percent_encoding::percent_decode_str(data).decode_utf8().map(|d| d.into_owned()).unwrap_or_else(|_| data.to_string());
+    let decoded = percent_encoding::percent_decode_str(data)
+        .decode_utf8()
+        .map(|d| d.into_owned())
+        .unwrap_or_else(|_| data.to_string());
 
-    Some(decoded.strip_prefix("\u{ef}\u{bb}\u{bf}").map(str::to_string).unwrap_or(decoded))
+    Some(
+        decoded
+            .strip_prefix("\u{ef}\u{bb}\u{bf}")
+            .map(str::to_string)
+            .unwrap_or(decoded),
+    )
 }
 
 /// What a FileLoader candidate produced.
@@ -188,9 +202,18 @@ pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Opt
         return None;
     }
 
-    let same = referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path();
+    let same = referer.scheme() == r.scheme()
+        && referer.host_str() == r.host_str()
+        && referer.port() == r.port()
+        && referer.path() == r.path();
 
-    same.then(|| percent_encoding::percent_decode_str(r.fragment().unwrap_or_default()).decode_utf8().map(|d| d.into_owned()).ok()).flatten()
+    same.then(|| {
+        percent_encoding::percent_decode_str(r.fragment().unwrap_or_default())
+            .decode_utf8()
+            .map(|d| d.into_owned())
+            .ok()
+    })
+    .flatten()
 }
 
 /// FileLoader.getTarget: the value of the first `target=value` parameter.
@@ -230,25 +253,48 @@ pub struct FileLoader {
 impl Runtime {
     /// X3DExecutionContext.getBaseURL of a node's context (the scene's world URL).
     pub fn base_url(&self, node: NodeId) -> String {
-        self.scene.world_url_of(self.scene.node(node).ctx).to_string()
+        self.scene
+            .world_url_of(self.scene.node(node).ctx)
+            .to_string()
     }
 
     /// FileLoader.loadDocument with its fallback loop. `accept` is the data callback: an `Err`
     /// is a rejection of loadDocumentAsync and moves on to the next URL, like X_ITE.
     /// Returns whether a candidate was accepted.
-    pub fn load_document(&mut self, loader: &FileLoader, urls: &[String], accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> bool {
-        !matches!(self.load_document_hooks(loader, urls, &LoadHooks::default(), accept), LoadResult::Failed)
+    pub fn load_document(
+        &mut self,
+        loader: &FileLoader,
+        urls: &[String],
+        accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+    ) -> bool {
+        !matches!(
+            self.load_document_hooks(loader, urls, &LoadHooks::default(), accept),
+            LoadResult::Failed
+        )
     }
 
     /// [`Runtime::load_document`] with the two callbacks X3DBrowser.loadURL and Anchor hand FileLoader.createX3DFromURL
     /// (`bindViewpoint` and `foreign`, see [`LoadHooks`]).
-    pub fn load_document_hooks(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> LoadResult {
+    pub fn load_document_hooks(
+        &mut self,
+        loader: &FileLoader,
+        urls: &[String],
+        hooks: &LoadHooks,
+        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+    ) -> LoadResult {
         self.load_document_from(loader, urls, hooks, 0, |rt, _, loaded| accept(rt, loaded))
     }
 
     /// [`Runtime::load_document_hooks`] from a later point of the fallback chain: `attempts` candidates before
     /// `urls` have already failed (and were reported). `accept` also gets the candidate's index in `urls`.
-    pub(crate) fn load_document_from(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, attempts: usize, mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), String>) -> LoadResult {
+    pub(crate) fn load_document_from(
+        &mut self,
+        loader: &FileLoader,
+        urls: &[String],
+        hooks: &LoadHooks,
+        attempts: usize,
+        mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), String>,
+    ) -> LoadResult {
         let mut attempts = attempts;
         let mut special: Option<LoadResult> = None;
 
@@ -276,7 +322,9 @@ impl Runtime {
                 }
 
                 let base = url::Url::parse(&loader.base).map_err(|e| format!("TypeError: {e}"))?;
-                let r = base.join(candidate).map_err(|_| format!("TypeError: Failed to construct 'URL': Invalid URL"))?;
+                let r = base
+                    .join(candidate)
+                    .map_err(|_| format!("TypeError: Failed to construct 'URL': Invalid URL"))?;
                 resolved = Some(r.clone());
 
                 // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
@@ -287,14 +335,23 @@ impl Runtime {
                 }
 
                 // Bind Viewpoint URLs: a URL that only adds a fragment to the referring document names a viewpoint.
-                if hooks.bind_viewpoint && r.scheme() != "data" && r.fragment().is_some_and(|f| !f.is_empty()) {
+                if hooks.bind_viewpoint
+                    && r.scheme() != "data"
+                    && r.fragment().is_some_and(|f| !f.is_empty())
+                {
                     let same = url::Url::parse(&loader.base).is_ok_and(|referer| {
-                        referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path()
+                        referer.scheme() == r.scheme()
+                            && referer.host_str() == r.host_str()
+                            && referer.port() == r.port()
+                            && referer.path() == r.path()
                     });
 
                     if same {
                         let fragment = r.fragment().unwrap_or_default();
-                        let name = percent_encoding::percent_decode_str(fragment).decode_utf8().map(|d| d.into_owned()).map_err(|_| "URIError: URI malformed".to_string())?;
+                        let name = percent_encoding::percent_decode_str(fragment)
+                            .decode_utf8()
+                            .map(|d| d.into_owned())
+                            .map_err(|_| "URIError: URI malformed".to_string())?;
                         special = Some(LoadResult::Fragment(name));
                         return Ok(());
                     }
@@ -309,7 +366,11 @@ impl Runtime {
                         return Ok(());
                     }
 
-                    if r.scheme() != "data" && ["html", "htm", "xhtml"].iter().any(|e| r.as_str().ends_with(&format!(".{e}"))) {
+                    if r.scheme() != "data"
+                        && ["html", "htm", "xhtml"]
+                            .iter()
+                            .any(|e| r.as_str().ends_with(&format!(".{e}")))
+                    {
                         special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
                         return Ok(());
                     }
@@ -321,7 +382,11 @@ impl Runtime {
                 }
 
                 // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
-                let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" { nodes::shaders::fetch_data_url(candidate)? } else { self.fetcher.fetch(&r)? };
+                let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
+                    nodes::shaders::fetch_data_url(candidate)?
+                } else {
+                    self.fetcher.fetch(&r)?
+                };
                 accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r))
             })();
 
@@ -329,7 +394,14 @@ impl Runtime {
                 Ok(()) => return special.take().unwrap_or(LoadResult::Loaded),
                 Err(error) => {
                     attempts += 1;
-                    self.print_load_error(loader, candidate, resolved.as_ref(), &error, attempts, remaining);
+                    self.print_load_error(
+                        loader,
+                        candidate,
+                        resolved.as_ref(),
+                        &error,
+                        attempts,
+                        remaining,
+                    );
                 }
             }
         }
@@ -339,10 +411,20 @@ impl Runtime {
 
     /// FileLoader.printError for the candidate that just failed: `attempts` counts it, `remaining`
     /// is the number of candidates after it.
-    pub(crate) fn print_load_error(&mut self, loader: &FileLoader, candidate: &str, resolved: Option<&url::Url>, error: &str, attempts: usize, remaining: usize) {
+    pub(crate) fn print_load_error(
+        &mut self,
+        loader: &FileLoader,
+        candidate: &str,
+        resolved: Option<&url::Url>,
+        error: &str,
+        attempts: usize,
+        remaining: usize,
+    ) {
         let data_url = resolved.is_some_and(|r| r.scheme() == "data");
         let resolved_text = match resolved {
-            Some(r) if !data_url => decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string()),
+            Some(r) if !data_url => {
+                decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string())
+            }
             _ => String::new(),
         };
         let subject = if candidate.is_empty() {
@@ -354,14 +436,24 @@ impl Runtime {
         } else {
             format!("URL '{}'", truncate(candidate))
         };
-        let prefix = if loader.type_name.is_empty() { String::new() } else { format!("{}: ", loader.type_name) };
+        let prefix = if loader.type_name.is_empty() {
+            String::new()
+        } else {
+            format!("{}: ", loader.type_name)
+        };
 
         if remaining > 0 {
-            self.log_warn(format!("{prefix}Couldn't load {subject}, trying URL {} of {}. {error}", attempts + 1, attempts + remaining));
+            self.log_warn(format!(
+                "{prefix}Couldn't load {subject}, trying URL {} of {}. {error}",
+                attempts + 1,
+                attempts + remaining
+            ));
         } else if attempts == 1 {
             self.log_error(format!("{prefix}Couldn't load {subject}. {error}"));
         } else {
-            self.log_error(format!("{prefix}Couldn't load any of the {attempts} URLs, tried in this order:"));
+            self.log_error(format!(
+                "{prefix}Couldn't load any of the {attempts} URLs, tried in this order:"
+            ));
         }
     }
 
@@ -405,14 +497,20 @@ impl Runtime {
             return self.shader_part_load(node);
         }
 
-        let loader = FileLoader { type_name: type_name.clone(), base: self.base_url(node), data_as_string: false };
+        let loader = FileLoader {
+            type_name: type_name.clone(),
+            base: self.base_url(node),
+            data_as_string: false,
+        };
         let urls = self.url_strings(node);
 
         let image_texture = type_name == "ImageTexture";
         let atlas = type_name == "ImageTextureAtlas";
         let image_3d = type_name == "ImageTexture3D";
         let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
+            Loaded::Script(_) => {
+                Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
+            }
             Loaded::Data(data, _) => {
                 // ImageTexture.setImage: setTextureData before COMPLETE_STATE.
                 if image_texture {
@@ -449,7 +547,14 @@ impl Runtime {
             self.image_texture_3d_clear(node);
         }
 
-        self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
+        self.set_load_state(
+            node,
+            if ok {
+                nodes::LoadState::Complete
+            } else {
+                nodes::LoadState::Failed
+            },
+        );
     }
 
     /// BufferAudioSource.loadData and AudioClip.loadData. `await this .setArrayBuffer (data)` (decodeAudioData)
@@ -468,17 +573,34 @@ impl Runtime {
     /// pending at the next prepareEvents (like an image decode, [`Runtime::apply_decoded_images`]), or, with
     /// `defer_audio_decodes`, at the start of the next frame ([`Runtime::flush_audio_decodes`]).
     fn buffer_load_from(&mut self, node: NodeId, urls: &[String], attempts: usize) {
-        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: false };
+        let loader = FileLoader {
+            type_name: self.type_name(node),
+            base: self.base_url(node),
+            data_as_string: false,
+        };
         let mut pending = None;
 
-        let result = self.load_document_from(&loader, urls, &LoadHooks::default(), attempts, |_, i, loaded| match loaded {
-            Loaded::Script(_) => Err("Error: No suitable file handler found.".into()),
-            Loaded::Data(bytes, resolved) => {
-                // Every candidate before `i` failed.
-                pending = Some(PendingAudioDecode { node, bytes, candidate: urls[i].clone(), resolved, rest: urls[i + 1..].to_vec(), attempts: attempts + i });
-                Ok(())
-            }
-        });
+        let result = self.load_document_from(
+            &loader,
+            urls,
+            &LoadHooks::default(),
+            attempts,
+            |_, i, loaded| match loaded {
+                Loaded::Script(_) => Err("Error: No suitable file handler found.".into()),
+                Loaded::Data(bytes, resolved) => {
+                    // Every candidate before `i` failed.
+                    pending = Some(PendingAudioDecode {
+                        node,
+                        bytes,
+                        candidate: urls[i].clone(),
+                        resolved,
+                        rest: urls[i + 1..].to_vec(),
+                        attempts: attempts + i,
+                    });
+                    Ok(())
+                }
+            },
+        );
 
         match (pending, result) {
             (Some(p), _) => self.pending_audio_decodes.push(p),
@@ -489,7 +611,11 @@ impl Runtime {
 
     /// `setArrayBuffer (data)` of the node; an error is the rejection of decodeAudioData.
     fn buffer_set_data(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
-        if self.builtin_name(node) == Some("AudioClip") { self.audio_clip_set_array_buffer(node, bytes) } else { self.buffer_set_array_buffer(node, bytes) }
+        if self.builtin_name(node) == Some("AudioClip") {
+            self.audio_clip_set_array_buffer(node, bytes)
+        } else {
+            self.buffer_set_array_buffer(node, bytes)
+        }
     }
 
     /// The FileLoader callback with `data === null`: every candidate failed.
@@ -522,8 +648,19 @@ impl Runtime {
             match self.buffer_set_data(p.node, p.bytes) {
                 Ok(()) => self.set_load_state(p.node, nodes::LoadState::Complete),
                 Err(error) => {
-                    let loader = FileLoader { type_name: self.type_name(p.node), base: self.base_url(p.node), data_as_string: false };
-                    self.print_load_error(&loader, &p.candidate, Some(&p.resolved), &error, p.attempts + 1, p.rest.len());
+                    let loader = FileLoader {
+                        type_name: self.type_name(p.node),
+                        base: self.base_url(p.node),
+                        data_as_string: false,
+                    };
+                    self.print_load_error(
+                        &loader,
+                        &p.candidate,
+                        Some(&p.resolved),
+                        &error,
+                        p.attempts + 1,
+                        p.rest.len(),
+                    );
 
                     if p.rest.is_empty() {
                         self.buffer_load_failed(p.node);
@@ -552,13 +689,21 @@ impl Runtime {
             let Ok(file_url) = base.join(&candidate) else {
                 return;
             };
-            let decoded = decode_uri(file_url.as_str()).unwrap_or_else(|| file_url.as_str().to_string());
+            let decoded =
+                decode_uri(file_url.as_str()).unwrap_or_else(|| file_url.as_str().to_string());
             let path = file_url.path().to_string();
             let href = file_url.as_str();
-            let image = path.ends_with(".gif") || path.ends_with(".png") || href.starts_with("data:image/gif") || href.starts_with("data:image/png");
+            let image = path.ends_with(".gif")
+                || path.ends_with(".png")
+                || href.starts_with("data:image/gif")
+                || href.starts_with("data:image/png");
 
             let error = if image {
-                let loader = FileLoader { type_name: "MovieTexture".into(), base: href.to_string(), data_as_string: false };
+                let loader = FileLoader {
+                    type_name: "MovieTexture".into(),
+                    base: href.to_string(),
+                    data_as_string: false,
+                };
                 let ok = self.load_document(&loader, &[href.to_string()], |_, _| Ok(()));
 
                 if ok {
@@ -567,7 +712,9 @@ impl Runtime {
 
                 "MovieTexture: No suitable file handler found.".to_string()
             } else {
-                let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"].iter().any(|e| path.to_ascii_lowercase().ends_with(e));
+                let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
+                    .iter()
+                    .any(|e| path.to_ascii_lowercase().ends_with(e));
 
                 if playable && self.fetcher.fetch(&file_url).is_ok() {
                     return;
@@ -596,7 +743,9 @@ impl Runtime {
     /// X3DFontStyleNode.set_justify__: the alignments are worked out from the fields as they are now and kept until `justify`
     /// changes again (a later change of `horizontal`, `leftToRight` or `topToBottom` does not call it).
     pub(crate) fn font_style_set_justify(&mut self, node: NodeId) {
-        let a = self.text_font_style_params_for_alignments(node).compute_alignments();
+        let a = self
+            .text_font_style_params_for_alignments(node)
+            .compute_alignments();
 
         self.font_style_alignments.insert(node, a);
     }
@@ -606,11 +755,14 @@ impl Runtime {
         let (family, style) = self.font_style_families(node);
 
         // browser.loadFont caches the default font file this load takes.
-        if let Some(key) = family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &style).map(|(name, _)| name.to_string())) {
+        if let Some(key) = family.iter().find_map(|f| {
+            x3d_text::fonts::default_font_file(f, &style).map(|(name, _)| name.to_string())
+        }) {
             self.loaded_font_files.insert(key);
         }
 
-        self.font_style_snapshot.insert(node, (family.clone(), style.clone()));
+        self.font_style_snapshot
+            .insert(node, (family.clone(), style.clone()));
         self.font_style_continue(node, family, 0, style);
     }
 
@@ -619,7 +771,13 @@ impl Runtime {
     /// node's execution context, where X_ITE waits for as long as a FontLibrary is still loading (the loop is
     /// parked in `pending_font_styles` and goes on when a FontLibrary load ends); a family that looks like a font
     /// file URL is fetched through browser.loadFont (cached per URL); anything else warns.
-    pub(crate) fn font_style_continue(&mut self, node: NodeId, family: Vec<String>, from: usize, style: String) {
+    pub(crate) fn font_style_continue(
+        &mut self,
+        node: NodeId,
+        family: Vec<String>,
+        from: usize,
+        style: String,
+    ) {
         let Ok(base) = url::Url::parse(&self.base_url(node)) else {
             return;
         };
@@ -636,7 +794,13 @@ impl Runtime {
             }
 
             if self.font_library_loading() {
-                self.pending_font_styles.push(crate::font_library::PendingFontStyle { node, family: family.clone(), index, style });
+                self.pending_font_styles
+                    .push(crate::font_library::PendingFontStyle {
+                        node,
+                        family: family.clone(),
+                        index,
+                        style,
+                    });
                 return;
             }
 
@@ -646,7 +810,9 @@ impl Runtime {
             };
 
             let path = file_url.path().to_ascii_lowercase();
-            let font_file = [".woff2", ".woff", ".otf", ".ttf"].iter().any(|e| path.ends_with(e));
+            let font_file = [".woff2", ".woff", ".otf", ".ttf"]
+                .iter()
+                .any(|e| path.ends_with(e));
 
             if file_url.scheme() == "data" || font_file {
                 if self.scene.spec_version_of(self.scene.world) >= "4.1" {
@@ -658,22 +824,36 @@ impl Runtime {
                 let ok = match self.font_cache.get(&href) {
                     Some(ok) => *ok,
                     None => {
-                        let loader = FileLoader { type_name: self.type_name(node), base: href.clone(), data_as_string: false };
+                        let loader = FileLoader {
+                            type_name: self.type_name(node),
+                            base: href.clone(),
+                            data_as_string: false,
+                        };
                         // browser.loadFont: `OpenType .parse (await decompressFont (data))`. A file that
                         // does not parse throws inside the loader's async callback, so the promise never
                         // resolves: the FontStyle stays without a font and no further family is tried.
-                        let mut parsed: Option<Result<std::rc::Rc<x3d_text::Font>, x3d_text::FontError>> = None;
-                        let ok = self.load_document(&loader, std::slice::from_ref(&href), |_, loaded| {
-                            if let Loaded::Data(data, _) = loaded {
-                                // `OpenType .parse` throws inside the loader's callback: loadDocumentError, next url.
-                                match crate::font_library::parse_font_file(&data) {
-                                    Ok(font) => parsed = Some(Ok(std::rc::Rc::new(font))),
-                                    Err(_) => return Err(crate::font_library::font_error_text(&data)),
+                        let mut parsed: Option<
+                            Result<std::rc::Rc<x3d_text::Font>, x3d_text::FontError>,
+                        > = None;
+                        let ok = self.load_document(
+                            &loader,
+                            std::slice::from_ref(&href),
+                            |_, loaded| {
+                                if let Loaded::Data(data, _) = loaded {
+                                    // `OpenType .parse` throws inside the loader's callback: loadDocumentError, next url.
+                                    match crate::font_library::parse_font_file(&data) {
+                                        Ok(font) => parsed = Some(Ok(std::rc::Rc::new(font))),
+                                        Err(_) => {
+                                            return Err(crate::font_library::font_error_text(
+                                                &data,
+                                            ));
+                                        }
+                                    }
                                 }
-                            }
 
-                            Ok(())
-                        });
+                                Ok(())
+                            },
+                        );
 
                         if let Some(result) = parsed {
                             x3d_text::fonts::register_url_font(&href, result.ok());
@@ -693,7 +873,9 @@ impl Runtime {
                     return self.font_style_chose(node, None);
                 }
             } else {
-                self.log_warn(format!("Couldn't find font family '{f}' with style '{style}'."));
+                self.log_warn(format!(
+                    "Couldn't find font family '{f}' with style '{style}'."
+                ));
             }
         }
 
@@ -703,13 +885,19 @@ impl Runtime {
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
-pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> Result<Scene, x3d_parse::LoadError> {
+pub fn parse_bytes_with_fetcher(
+    fetcher: &dyn Fetcher,
+    data: &[u8],
+    url: &str,
+) -> Result<Scene, x3d_parse::LoadError> {
     let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
         if uri.trim_start().starts_with("data:") {
             return x3d_parse::gltf_default_fetch(uri, base);
         }
 
-        let resolved = url::Url::parse(base).and_then(|b| b.join(uri.trim())).map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string())?;
+        let resolved = url::Url::parse(base)
+            .and_then(|b| b.join(uri.trim()))
+            .map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string())?;
 
         fetcher.fetch(&resolved)
     };

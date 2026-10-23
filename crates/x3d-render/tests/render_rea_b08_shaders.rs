@@ -9,17 +9,30 @@ use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
 /// Worlds drawn with the default shading in X_ITE: every shader invalid or absent.
-const NO_SHADER_DRAW: &[&str] = &["bad-", "select-all-invalid", "select-none", "created-runtime"];
+const NO_SHADER_DRAW: &[&str] = &[
+    "bad-",
+    "select-all-invalid",
+    "select-none",
+    "created-runtime",
+];
 
 #[test]
 fn rea_b08_shaders_renders_match_x_ite() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap();
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap();
     let only = std::env::var("REA_ONLY").unwrap_or_default();
     let mut failures = vec![];
     let mut checked = 0;
 
-    for (samples, baseline) in [(0u32, "render-rea-b08-shaders-baseline"), (4, "render-msaa4-rea-b08-shaders-baseline")] {
+    for (samples, baseline) in [
+        (0u32, "render-rea-b08-shaders-baseline"),
+        (4, "render-msaa4-rea-b08-shaders-baseline"),
+    ] {
         g.renderer.set_sample_count(samples);
         g.renderer.set_gl_sample_orientation(samples > 1);
 
@@ -30,16 +43,36 @@ fn rea_b08_shaders_renders_match_x_ite() {
 
         let mut names: Vec<String> = std::fs::read_dir(root.join(baseline))
             .unwrap()
-            .filter_map(|e| e.ok()?.file_name().into_string().ok()?.strip_suffix(".png").map(str::to_string))
+            .filter_map(|e| {
+                e.ok()?
+                    .file_name()
+                    .into_string()
+                    .ok()?
+                    .strip_suffix(".png")
+                    .map(str::to_string)
+            })
             .filter(|n| n.contains(&only))
             .collect();
         names.sort();
 
         for name in names {
-            let (w, h, want) = x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.png"))).unwrap();
+            let (w, h, want) =
+                x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.png")))
+                    .unwrap();
             let world = name.split('@').next().unwrap();
-            let shot = x3d_render::render_file(&mut g, &root, &root.join(format!("synthetic-rea-b08-shaders/{world}")), w, h).unwrap();
-            let rgba: Vec<u8> = shot.rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+            let shot = x3d_render::render_file(
+                &mut g,
+                &root,
+                &root.join(format!("synthetic-rea-b08-shaders/{world}")),
+                w,
+                h,
+            )
+            .unwrap();
+            let rgba: Vec<u8> = shot
+                .rgba
+                .chunks_exact(4)
+                .flat_map(|p| [p[0], p[1], p[2], 255])
+                .collect();
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
             // A world whose shaders are valid must draw with them: a fallback to the default shading can
             // look the same as a simple shader, so the draw count is checked too.
@@ -47,13 +80,22 @@ fn rea_b08_shaders_renders_match_x_ite() {
             let falls_back = NO_SHADER_DRAW.iter().any(|p| world.starts_with(p));
 
             if falls_back == (draws > 0) {
-                failures.push(format!("{name} MSAA {samples}: {draws} custom draws, expected {}", if falls_back { "none" } else { "some" }));
+                failures.push(format!(
+                    "{name} MSAA {samples}: {draws} custom draws, expected {}",
+                    if falls_back { "none" } else { "some" }
+                ));
             }
 
-            eprintln!("MSAA {samples} {name}: over {} ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta);
+            eprintln!(
+                "MSAA {samples} {name}: over {} ({:.3}%), max {}",
+                s.pixels_over, s.pct_over, s.max_delta
+            );
 
             if s.pixels_over * 1000 > (w * h) as usize * 5 {
-                failures.push(format!("{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+                failures.push(format!(
+                    "{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}",
+                    s.pixels_over, s.pct_over, s.max_delta
+                ));
             }
 
             checked += 1;

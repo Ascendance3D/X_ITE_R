@@ -110,7 +110,9 @@ pub struct PointingSample {
 
 pub const IDENTITY3: [f32; 9] = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
 
-pub const IDENTITY: [f32; 16] = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+pub const IDENTITY: [f32; 16] = [
+    1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+];
 
 /// MultiSampleFramebuffer / PointingBuffer: DEPTH_COMPONENT24.
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
@@ -138,7 +140,11 @@ impl PointingGpu {
     /// A headless Vulkan device of its own (the discrete GPU), like [`crate::gpu::Gpu::new`].
     pub fn new_headless() -> Result<PointingGpu, String> {
         let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
-        desc.backends = if std::env::var("X3D_POINTING_BACKEND").as_deref() == Ok("gl") { wgpu::Backends::GL } else { wgpu::Backends::VULKAN };
+        desc.backends = if std::env::var("X3D_POINTING_BACKEND").as_deref() == Ok("gl") {
+            wgpu::Backends::GL
+        } else {
+            wgpu::Backends::VULKAN
+        };
         let instance = wgpu::Instance::new(desc);
         let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
             power_preference: wgpu::PowerPreference::HighPerformance,
@@ -147,7 +153,11 @@ impl PointingGpu {
             ..Default::default()
         }))
         .map_err(|e| format!("no Vulkan adapter: {e}"))?;
-        let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { label: Some("x3d-pointing"), ..Default::default() })).map_err(|e| e.to_string())?;
+        let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+            label: Some("x3d-pointing"),
+            ..Default::default()
+        }))
+        .map_err(|e| e.to_string())?;
         Ok(PointingGpu::new(device, queue))
     }
 
@@ -160,32 +170,80 @@ impl PointingGpu {
     }
 
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> PointingGpu {
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("pointing"), source: wgpu::ShaderSource::Wgsl(POINTING_WGSL.into()) });
+        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("pointing"),
+            source: wgpu::ShaderSource::Wgsl(POINTING_WGSL.into()),
+        });
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("pointing"),
             entries: &[wgpu::BindGroupLayoutEntry {
                 binding: 0,
                 visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: true, min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64) },
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: true,
+                    min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64),
+                },
                 count: None,
             }],
         });
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { label: Some("pointing"), bind_group_layouts: &[Some(&layout)], immediate_size: 0 });
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("pointing"),
+            bind_group_layouts: &[Some(&layout)],
+            immediate_size: 0,
+        });
         let attributes = [
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x4, offset: 0, shader_location: 0 },
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x3, offset: 16, shader_location: 1 },
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x4, offset: 28, shader_location: 2 },
-            wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x2, offset: 44, shader_location: 3 },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x4,
+                offset: 0,
+                shader_location: 0,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x3,
+                offset: 16,
+                shader_location: 1,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x4,
+                offset: 28,
+                shader_location: 2,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x2,
+                offset: 44,
+                shader_location: 3,
+            },
         ];
-        let buffers = [Some(wgpu::VertexBufferLayout { array_stride: std::mem::size_of::<VertexData>() as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes: &attributes })];
-        let rgba32 = |_: ()| Some(wgpu::ColorTargetState { format: wgpu::TextureFormat::Rgba32Float, blend: None, write_mask: wgpu::ColorWrites::ALL });
-        let make = |topology: wgpu::PrimitiveTopology, entry: &'static str, targets: &[Option<wgpu::ColorTargetState>]| {
+        let buffers = [Some(wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<VertexData>() as u64,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &attributes,
+        })];
+        let rgba32 = |_: ()| {
+            Some(wgpu::ColorTargetState {
+                format: wgpu::TextureFormat::Rgba32Float,
+                blend: None,
+                write_mask: wgpu::ColorWrites::ALL,
+            })
+        };
+        let make = |topology: wgpu::PrimitiveTopology,
+                    entry: &'static str,
+                    targets: &[Option<wgpu::ColorTargetState>]| {
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: Some(entry),
                 layout: Some(&pipeline_layout),
-                vertex: wgpu::VertexState { module: &module, entry_point: Some("vs_main"), compilation_options: Default::default(), buffers: &buffers },
+                vertex: wgpu::VertexState {
+                    module: &module,
+                    entry_point: Some("vs_main"),
+                    compilation_options: Default::default(),
+                    buffers: &buffers,
+                },
                 // gl.disable (gl .CULL_FACE)
-                primitive: wgpu::PrimitiveState { topology, cull_mode: None, ..Default::default() },
+                primitive: wgpu::PrimitiveState {
+                    topology,
+                    cull_mode: None,
+                    ..Default::default()
+                },
                 // X3DRenderingContext: gl.depthFunc (gl .LEQUAL), depth writes on. X3DRenderObject.pointing also enables an
                 // appearance's DepthMode node; that is not ported here (a DepthMode shape is picked with these defaults).
                 depth_stencil: Some(wgpu::DepthStencilState {
@@ -196,21 +254,49 @@ impl PointingGpu {
                     bias: Default::default(),
                 }),
                 multisample: wgpu::MultisampleState::default(),
-                fragment: Some(wgpu::FragmentState { module: &module, entry_point: Some(entry), compilation_options: Default::default(), targets }),
+                fragment: Some(wgpu::FragmentState {
+                    module: &module,
+                    entry_point: Some(entry),
+                    compilation_options: Default::default(),
+                    targets,
+                }),
                 multiview_mask: None,
                 cache: None,
             })
         };
         // WebGPU allows 32 bytes of color attachments per sample, so gl_FragData 2 is drawn in a second, identical pass
         // (same primitives, same order, same depth test) into its own buffer.
-        let pipelines = [wgpu::PrimitiveTopology::TriangleList, wgpu::PrimitiveTopology::LineList].map(|t| [make(t, "fs_a", &[rgba32(()), rgba32(())]), make(t, "fs_b", &[rgba32(())])]);
-        let uniforms = device.create_buffer(&wgpu::BufferDescriptor { label: Some("pointing uniforms"), size: UNIFORM_STRIDE, usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+        let pipelines = [
+            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PrimitiveTopology::LineList,
+        ]
+        .map(|t| {
+            [
+                make(t, "fs_a", &[rgba32(()), rgba32(())]),
+                make(t, "fs_b", &[rgba32(())]),
+            ]
+        });
+        let uniforms = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("pointing uniforms"),
+            size: UNIFORM_STRIDE,
+            usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
         let group = Self::bind_group(&device, &layout, &uniforms);
-        let vertices = device.create_buffer(&wgpu::BufferDescriptor { label: Some("pointing vertices"), size: 6 * std::mem::size_of::<VertexData>() as u64, usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+        let vertices = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("pointing vertices"),
+            size: 6 * std::mem::size_of::<VertexData>() as u64,
+            usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
         let texture = |label: &str, format: wgpu::TextureFormat, usage: wgpu::TextureUsages| {
             device.create_texture(&wgpu::TextureDescriptor {
                 label: Some(label),
-                size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+                size: wgpu::Extent3d {
+                    width: 1,
+                    height: 1,
+                    depth_or_array_layers: 1,
+                },
                 mip_level_count: 1,
                 sample_count: 1,
                 dimension: wgpu::TextureDimension::D2,
@@ -220,21 +306,59 @@ impl PointingGpu {
             })
         };
         let color = wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC;
-        let targets = [0, 1, 2].map(|i| texture(&format!("pointing buffer {i}"), wgpu::TextureFormat::Rgba32Float, color));
-        let views = [0, 1, 2].map(|i| targets[i].create_view(&wgpu::TextureViewDescriptor::default()));
-        let depth = texture("pointing depth", DEPTH_FORMAT, wgpu::TextureUsages::RENDER_ATTACHMENT).create_view(&wgpu::TextureViewDescriptor::default());
-        let readback = device.create_buffer(&wgpu::BufferDescriptor { label: Some("pointing readback"), size: 3 * ROW, usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+        let targets = [0, 1, 2].map(|i| {
+            texture(
+                &format!("pointing buffer {i}"),
+                wgpu::TextureFormat::Rgba32Float,
+                color,
+            )
+        });
+        let views =
+            [0, 1, 2].map(|i| targets[i].create_view(&wgpu::TextureViewDescriptor::default()));
+        let depth = texture(
+            "pointing depth",
+            DEPTH_FORMAT,
+            wgpu::TextureUsages::RENDER_ATTACHMENT,
+        )
+        .create_view(&wgpu::TextureViewDescriptor::default());
+        let readback = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("pointing readback"),
+            size: 3 * ROW,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
 
-        PointingGpu { device, queue, pipelines, uniforms, layout, group, vertices, targets, views, depth, readback, samples: 0 }
+        PointingGpu {
+            device,
+            queue,
+            pipelines,
+            uniforms,
+            layout,
+            group,
+            vertices,
+            targets,
+            views,
+            depth,
+            readback,
+            samples: 0,
+        }
     }
 
-    fn bind_group(device: &wgpu::Device, layout: &wgpu::BindGroupLayout, uniforms: &wgpu::Buffer) -> wgpu::BindGroup {
+    fn bind_group(
+        device: &wgpu::Device,
+        layout: &wgpu::BindGroupLayout,
+        uniforms: &wgpu::Buffer,
+    ) -> wgpu::BindGroup {
         device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("pointing"),
             layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding { buffer: uniforms, offset: 0, size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64) }),
+                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                    buffer: uniforms,
+                    offset: 0,
+                    size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64),
+                }),
             }],
         })
     }
@@ -259,7 +383,12 @@ impl PointingGpu {
 
         for (k, tri) in draws.iter().enumerate() {
             let start = data.len() as u32;
-            data.extend((0..tri.vertices.len()).map(|i| VertexData { vertex: tri.vertices[i], normal: tri.normals[i], tex_coord: tri.tex_coords[i], offset: tri.offsets.get(i).copied().unwrap_or([0.0; 2]) }));
+            data.extend((0..tri.vertices.len()).map(|i| VertexData {
+                vertex: tri.vertices[i],
+                normal: tri.normals[i],
+                tex_coord: tri.tex_coords[i],
+                offset: tri.offsets.get(i).copied().unwrap_or([0.0; 2]),
+            }));
             ranges.push(start..data.len() as u32);
 
             let mode = match tri.primitive {
@@ -276,11 +405,34 @@ impl PointingGpu {
                 projection: tri.projection,
                 model_view: tri.model_view,
                 instance: tri.instance,
-                instance_normal: [[n[0], n[1], n[2], 0.0], [n[3], n[4], n[5], 0.0], [n[6], n[7], n[8], 0.0]],
-                id: [tri.id, mode, style.map_or(0.0, |_| 1.0), style.map_or(0.0, |s| s.texture as u8 as f32)],
+                instance_normal: [
+                    [n[0], n[1], n[2], 0.0],
+                    [n[3], n[4], n[5], 0.0],
+                    [n[6], n[7], n[8], 0.0],
+                ],
+                id: [
+                    tri.id,
+                    mode,
+                    style.map_or(0.0, |_| 1.0),
+                    style.map_or(0.0, |s| s.texture as u8 as f32),
+                ],
                 viewport: tri.viewport.map(|v| v as f32),
-                point: style.map_or([0.0; 4], |s| [s.scale_factor, s.min_value, s.max_value, s.any_texture as u8 as f32]),
-                attenuation: style.map_or([1.0, 0.0, 0.0, planes as f32], |s| [s.attenuation[0], s.attenuation[1], s.attenuation[2], planes as f32]),
+                point: style.map_or([0.0; 4], |s| {
+                    [
+                        s.scale_factor,
+                        s.min_value,
+                        s.max_value,
+                        s.any_texture as u8 as f32,
+                    ]
+                }),
+                attenuation: style.map_or([1.0, 0.0, 0.0, planes as f32], |s| {
+                    [
+                        s.attenuation[0],
+                        s.attenuation[1],
+                        s.attenuation[2],
+                        planes as f32,
+                    ]
+                }),
                 clip_planes,
                 flags: [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
             };
@@ -291,24 +443,52 @@ impl PointingGpu {
         let bytes = (data.len() * std::mem::size_of::<VertexData>()) as u64;
 
         if self.vertices.size() < bytes {
-            self.vertices = self.device.create_buffer(&wgpu::BufferDescriptor { label: Some("pointing vertices"), size: bytes.next_power_of_two(), usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+            self.vertices = self.device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("pointing vertices"),
+                size: bytes.next_power_of_two(),
+                usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            });
         }
 
         if self.uniforms.size() < uniforms.len() as u64 {
-            self.uniforms = self.device.create_buffer(&wgpu::BufferDescriptor { label: Some("pointing uniforms"), size: (uniforms.len() as u64).next_power_of_two(), usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+            self.uniforms = self.device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("pointing uniforms"),
+                size: (uniforms.len() as u64).next_power_of_two(),
+                usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            });
             self.group = Self::bind_group(&self.device, &self.layout, &self.uniforms);
         }
 
         if bytes > 0 {
-            self.queue.write_buffer(&self.vertices, 0, bytemuck::cast_slice(&data));
+            self.queue
+                .write_buffer(&self.vertices, 0, bytemuck::cast_slice(&data));
         }
 
         self.queue.write_buffer(&self.uniforms, 0, &uniforms);
 
-        let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("pointing") });
-        let clear = |view| Some(wgpu::RenderPassColorAttachment { view, depth_slice: None, resolve_target: None, ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT), store: wgpu::StoreOp::Store } });
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("pointing"),
+            });
+        let clear = |view| {
+            Some(wgpu::RenderPassColorAttachment {
+                view,
+                depth_slice: None,
+                resolve_target: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT),
+                    store: wgpu::StoreOp::Store,
+                },
+            })
+        };
 
-        for (pass_index, views) in [&self.views[0..2], &self.views[2..3]].into_iter().enumerate() {
+        for (pass_index, views) in [&self.views[0..2], &self.views[2..3]]
+            .into_iter()
+            .enumerate()
+        {
             let attachments: Vec<_> = views.iter().map(clear).collect();
             let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("pointing"),
@@ -316,7 +496,10 @@ impl PointingGpu {
                 // gl .clear (gl .DEPTH_BUFFER_BIT)
                 depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
                     view: &self.depth,
-                    depth_ops: Some(wgpu::Operations { load: wgpu::LoadOp::Clear(1.0), store: wgpu::StoreOp::Discard }),
+                    depth_ops: Some(wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(1.0),
+                        store: wgpu::StoreOp::Discard,
+                    }),
                     stencil_ops: None,
                 }),
                 ..Default::default()
@@ -342,9 +525,25 @@ impl PointingGpu {
 
         for (i, texture) in self.targets.iter().enumerate() {
             encoder.copy_texture_to_buffer(
-                wgpu::TexelCopyTextureInfo { texture, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
-                wgpu::TexelCopyBufferInfo { buffer: &self.readback, layout: wgpu::TexelCopyBufferLayout { offset: i as u64 * ROW, bytes_per_row: Some(ROW as u32), rows_per_image: Some(1) } },
-                wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+                wgpu::TexelCopyTextureInfo {
+                    texture,
+                    mip_level: 0,
+                    origin: wgpu::Origin3d::ZERO,
+                    aspect: wgpu::TextureAspect::All,
+                },
+                wgpu::TexelCopyBufferInfo {
+                    buffer: &self.readback,
+                    layout: wgpu::TexelCopyBufferLayout {
+                        offset: i as u64 * ROW,
+                        bytes_per_row: Some(ROW as u32),
+                        rows_per_image: Some(1),
+                    },
+                },
+                wgpu::Extent3d {
+                    width: 1,
+                    height: 1,
+                    depth_or_array_layers: 1,
+                },
             );
         }
 
@@ -353,11 +552,24 @@ impl PointingGpu {
         slice.map_async(wgpu::MapMode::Read, |_| {});
         let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
         let mapped = slice.get_mapped_range().expect("map pointing readback");
-        let f = |i: usize| -> [f32; 4] { std::array::from_fn(|k| f32::from_le_bytes(mapped[i * ROW as usize + k * 4..i * ROW as usize + k * 4 + 4].try_into().unwrap())) };
+        let f = |i: usize| -> [f32; 4] {
+            std::array::from_fn(|k| {
+                f32::from_le_bytes(
+                    mapped[i * ROW as usize + k * 4..i * ROW as usize + k * 4 + 4]
+                        .try_into()
+                        .unwrap(),
+                )
+            })
+        };
         let (a, b, c) = (f(0), f(1), f(2));
         drop(mapped);
         self.readback.unmap();
 
-        (a[3] != 0.0).then_some(PointingSample { id: a[3], point: [a[0], a[1], a[2]], normal: [b[0], b[1], b[2]], tex_coord: c })
+        (a[3] != 0.0).then_some(PointingSample {
+            id: a[3],
+            point: [a[0], a[1], a[2]],
+            normal: [b[0], b[1], b[2]],
+            tex_coord: c,
+        })
     }
 }

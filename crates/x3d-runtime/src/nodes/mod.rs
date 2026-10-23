@@ -4,24 +4,24 @@
 
 pub mod event_utils;
 pub mod followers;
+pub mod geo;
+pub mod hanim;
+pub mod image_texture_3d;
 pub mod interp;
 pub mod key_sensor;
 pub mod load_sensor;
+pub mod nurbs;
+pub mod particle_systems;
+pub mod pick_sensor;
+pub mod rigid_body_physics;
+pub mod shader_include;
+pub mod shaders;
+pub mod sound;
+pub mod text;
+pub mod texture_projector;
 pub mod time;
 pub mod transform_sensor;
-pub mod pick_sensor;
-pub mod geo;
-pub mod texture_projector;
-pub mod nurbs;
 pub mod viewpoint_group;
-pub mod hanim;
-pub mod particle_systems;
-pub mod rigid_body_physics;
-pub mod sound;
-pub mod image_texture_3d;
-pub mod shaders;
-pub mod shader_include;
-pub mod text;
 
 use crate::*;
 
@@ -30,29 +30,48 @@ pub enum State {
     #[default]
     None,
     Time(time::TimeState),
-    Sequencer { index: i64 },
-    ColorInterp { hsv: Vec<[f64; 3]> },
+    Sequencer {
+        index: i64,
+    },
+    ColorInterp {
+        hsv: Vec<[f64; 3]>,
+    },
     Script(script::ScriptState),
     UrlObject(UrlState),
     Follower(Box<dyn followers::Follower>),
     /// CatmullRomSplineInterpolator T0 / T1 (n components each).
-    Spline { t0: Vec<Vec<f64>>, t1: Vec<Vec<f64>> },
+    Spline {
+        t0: Vec<Vec<f64>>,
+        t1: Vec<Vec<f64>>,
+    },
     /// SquadInterpolator inner control points.
-    Squad { s: Vec<x3d_fields::math::Rotation4> },
+    Squad {
+        s: Vec<x3d_fields::math::Rotation4>,
+    },
     LoadSensor(load_sensor::LoadSensorState),
     /// ComposedCubeMapTexture.textureNodes: the face textures by slot (front, back, left, right,
     /// top, bottom at initialize; see [`Runtime::composed_cube_faces`]).
     ComposedCube([Option<NodeId>; 6]),
     /// X3DTextureProjectorNode.textureNode.
-    Projector { texture: Option<NodeId> },
+    Projector {
+        texture: Option<NodeId>,
+    },
     /// ComposedTexture3D.textureNodes.
     Composed3D(Vec<NodeId>),
     /// IsoSurfaceVolumeData and SegmentedVolumeData capture `voxels` during initialize ().
-    Volume { voxels: Option<NodeId> },
+    Volume {
+        voxels: Option<NodeId>,
+    },
     /// RenderedTexture: checkUpdate, lastUpdate (Date.now () ms), the time of the first
     /// renderTexture (`None` before), and the headlights depth map passes left in the
     /// DependentRenderer's global lights (`leaks`; `display_leaks`: those of this frame's pass).
-    Rendered { check_update: bool, last_update_ms: f64, first_ms: Option<f64>, leaks: u32, display_leaks: u32 },
+    Rendered {
+        check_update: bool,
+        last_update_ms: f64,
+        first_ms: Option<f64>,
+        leaks: u32,
+        display_leaks: u32,
+    },
     /// The RigidBodyPhysics nodes: Bullet objects, members of the node classes (rigid_body_physics.rs).
     Physics(rigid_body_physics::PhysState),
     /// ParticleSystem: the particle buffer and counters (the emitters and physics models it
@@ -112,14 +131,33 @@ pub fn is_interpolator(name: &str) -> bool {
 
 /// `set_x .addFieldInterest (x)` made by geometry nodes in initialize (Components/*/<Type>.js).
 const GEOMETRY_FIELD_INTERESTS: &[(&str, &[(&str, &str)])] = &[
-    ("Extrusion", &[("set_crossSection", "crossSection"), ("set_orientation", "orientation"), ("set_scale", "scale"), ("set_spine", "spine")]),
+    (
+        "Extrusion",
+        &[
+            ("set_crossSection", "crossSection"),
+            ("set_orientation", "orientation"),
+            ("set_scale", "scale"),
+            ("set_spine", "spine"),
+        ],
+    ),
     ("ElevationGrid", &[("set_height", "height")]),
     ("GeoElevationGrid", &[("set_height", "height")]),
     (
         "IndexedFaceSet",
-        &[("set_colorIndex", "colorIndex"), ("set_coordIndex", "coordIndex"), ("set_normalIndex", "normalIndex"), ("set_texCoordIndex", "texCoordIndex")],
+        &[
+            ("set_colorIndex", "colorIndex"),
+            ("set_coordIndex", "coordIndex"),
+            ("set_normalIndex", "normalIndex"),
+            ("set_texCoordIndex", "texCoordIndex"),
+        ],
     ),
-    ("IndexedLineSet", &[("set_colorIndex", "colorIndex"), ("set_coordIndex", "coordIndex")]),
+    (
+        "IndexedLineSet",
+        &[
+            ("set_colorIndex", "colorIndex"),
+            ("set_coordIndex", "coordIndex"),
+        ],
+    ),
     ("IndexedTriangleFanSet", &[("set_index", "index")]),
     ("IndexedTriangleSet", &[("set_index", "index")]),
     ("IndexedTriangleStripSet", &[("set_index", "index")]),
@@ -143,47 +181,127 @@ impl Runtime {
 
         match name {
             "TimeSensor" => {
-                self.add_private_field(node, "initialized", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
-                self.add_private_field(node, "evenLive", access::INPUT_OUTPUT, FieldValue::SFBool(false));
-                self.add_private_field(node, "range", access::INPUT_OUTPUT, FieldValue::MFFloat(vec![0.0, 0.0, 1.0]));
+                self.add_private_field(
+                    node,
+                    "initialized",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
+                self.add_private_field(
+                    node,
+                    "evenLive",
+                    access::INPUT_OUTPUT,
+                    FieldValue::SFBool(false),
+                );
+                self.add_private_field(
+                    node,
+                    "range",
+                    access::INPUT_OUTPUT,
+                    FieldValue::MFFloat(vec![0.0, 0.0, 1.0]),
+                );
                 self.nrt_mut(node).state = State::Time(time::TimeState::default());
             }
-            "IntegerSequencer" | "BooleanSequencer" => self.nrt_mut(node).state = State::Sequencer { index: -1 },
+            "IntegerSequencer" | "BooleanSequencer" => {
+                self.nrt_mut(node).state = State::Sequencer { index: -1 }
+            }
             "ColorInterpolator" => self.nrt_mut(node).state = State::ColorInterp { hsv: vec![] },
             "Script" => {
-                self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-                self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                self.add_private_field(
+                    node,
+                    "loadState",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFInt32(0),
+                );
+                self.add_private_field(
+                    node,
+                    "loadData",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
                 self.nrt_mut(node).state = State::Script(Default::default())
             }
             "LoadSensor" => self.nrt_mut(node).state = State::LoadSensor(Default::default()),
-            n if followers::make(n).is_some() => self.nrt_mut(node).state = State::Follower(followers::make(n).unwrap()),
+            n if followers::make(n).is_some() => {
+                self.nrt_mut(node).state = State::Follower(followers::make(n).unwrap())
+            }
             "Inline" | "InlineGeometry" => {
-                self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-                self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                self.add_private_field(
+                    node,
+                    "loadState",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFInt32(0),
+                );
+                self.add_private_field(
+                    node,
+                    "loadData",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
                 let now_ms = self.now * 1000.0;
-                self.nrt_mut(node).state = State::UrlObject(UrlState { start_ms: now_ms, complete_ms: now_ms, ..Default::default() });
+                self.nrt_mut(node).state = State::UrlObject(UrlState {
+                    start_ms: now_ms,
+                    complete_ms: now_ms,
+                    ..Default::default()
+                });
             }
             "ComposedCubeMapTexture" => self.nrt_mut(node).state = State::ComposedCube([None; 6]),
             "Text" => self.text_construct(node),
             "HAnimHumanoid" => self.hanim_humanoid_construct(node),
             n if sound::is_sound_node(n) => self.sound_construct(node, n),
-            "RenderedTexture" => self.nrt_mut(node).state = State::Rendered { check_update: false, last_update_ms: -1.0, first_ms: None, leaks: 0, display_leaks: 0 },
+            "RenderedTexture" => {
+                self.nrt_mut(node).state = State::Rendered {
+                    check_update: false,
+                    last_update_ms: -1.0,
+                    first_ms: None,
+                    leaks: 0,
+                    display_leaks: 0,
+                }
+            }
             n if rigid_body_physics::is_physics_node(n) => self.physics_construct(node, n),
-            "ParticleSystem" => self.nrt_mut(node).state = State::ParticleSystem(Default::default()),
+            "ParticleSystem" => {
+                self.nrt_mut(node).state = State::ParticleSystem(Default::default())
+            }
             "ComposedTexture3D" => {
-                self.add_private_field(node, "update", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                self.add_private_field(
+                    node,
+                    "update",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
                 self.nrt_mut(node).state = State::Composed3D(vec![]);
             }
             "FontLibrary" => {
-                self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-                self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                self.add_private_field(
+                    node,
+                    "loadState",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFInt32(0),
+                );
+                self.add_private_field(
+                    node,
+                    "loadData",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
                 self.nrt_mut(node).state = State::UrlObject(Default::default())
             }
             // The SpecularGlossinessMaterial constructor.
-            "SpecularGlossinessMaterial" => self.log_warn("SpecularGlossinessMaterial is deprecated, please use PhysicalMaterial instead."),
+            "SpecularGlossinessMaterial" => self.log_warn(
+                "SpecularGlossinessMaterial is deprecated, please use PhysicalMaterial instead.",
+            ),
             "ComposedShader" => self.composed_shader_construct(node),
-            "ImageTexture" | "MovieTexture" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" | "ShaderPart" => {
-                self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
+            "ImageTexture"
+            | "MovieTexture"
+            | "ImageCubeMapTexture"
+            | "ImageTextureAtlas"
+            | "ImageTexture3D"
+            | "ShaderPart" => {
+                self.add_private_field(
+                    node,
+                    "loadState",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFInt32(0),
+                );
                 self.nrt_mut(node).state = State::UrlObject(Default::default())
             }
             _ => {}
@@ -250,7 +368,9 @@ impl Runtime {
             n if is_interpolator(n) => self.interp_initialize(node, n),
             "BooleanFilter" => self.interest(node, "set_boolean", Cb::BooleanFilterSetBoolean),
             "BooleanToggle" => self.interest(node, "set_boolean", Cb::BooleanToggleSetBoolean),
-            "BooleanTrigger" => self.interest(node, "set_triggerTime", Cb::BooleanTriggerSetTriggerTime),
+            "BooleanTrigger" => {
+                self.interest(node, "set_triggerTime", Cb::BooleanTriggerSetTriggerTime)
+            }
             "IntegerTrigger" => self.interest(node, "set_boolean", Cb::IntegerTriggerSetBoolean),
             "TimeTrigger" => self.interest(node, "set_boolean", Cb::TimeTriggerSetBoolean),
             "IntegerSequencer" | "BooleanSequencer" => {
@@ -264,7 +384,9 @@ impl Runtime {
             "LoadSensor" => self.load_sensor_initialize(node),
             "KeySensor" | "StringSensor" => self.key_sensor_initialize(node),
             "TransformSensor" => self.transform_sensor_initialize(node),
-            "LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor" => self.pick_sensor_initialize(node),
+            "LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor" => {
+                self.pick_sensor_initialize(node)
+            }
             // X3DLayerNode: addChildren / removeChildren as X3DGroupingNode, and the objectType
             // forwarded to the layer's PickableGroup.
             "Layer" | "LayoutLayer" => {
@@ -285,7 +407,11 @@ impl Runtime {
                 self.set_texture_2d_size(node, 1, 1);
                 self.inline_initialize(node)
             }
-            "Inline" | "InlineGeometry" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" => self.inline_initialize(node),
+            "Inline"
+            | "InlineGeometry"
+            | "ImageCubeMapTexture"
+            | "ImageTextureAtlas"
+            | "ImageTexture3D" => self.inline_initialize(node),
             "FontLibrary" => self.font_library_initialize(node),
             "ShaderPart" => self.shader_part_initialize(node),
             "ComposedShader" => self.composed_shader_initialize(node),
@@ -295,13 +421,25 @@ impl Runtime {
                 self.interest(node, "image", Cb::PixelTextureSetImage);
                 self.pixel_texture_set_image(node);
             }
-            "TextureProjector" | "TextureProjectorParallel" => self.texture_projector_initialize(node),
+            "TextureProjector" | "TextureProjectorParallel" => {
+                self.texture_projector_initialize(node)
+            }
             "ComposedTexture3D" => self.composed_3d_initialize(node),
             "RenderedTexture" => self.rendered_texture_initialize(node),
             "ComposedCubeMapTexture" => {
                 // ComposedCubeMapTexture.initialize: the interests fill slots 0 1 2 3 5 4 (top and
                 // bottom swapped), the initial set_texture__ calls slots 0 … 5.
-                for (i, (field, slot)) in [("frontTexture", 0), ("backTexture", 1), ("leftTexture", 2), ("rightTexture", 3), ("topTexture", 5), ("bottomTexture", 4)].into_iter().enumerate() {
+                for (i, (field, slot)) in [
+                    ("frontTexture", 0),
+                    ("backTexture", 1),
+                    ("leftTexture", 2),
+                    ("rightTexture", 3),
+                    ("topTexture", 5),
+                    ("bottomTexture", 4),
+                ]
+                .into_iter()
+                .enumerate()
+                {
                     self.interest(node, field, Cb::ComposedCubeSetTexture(slot));
                     let face = self.pre_value(node, field).and_then(|v| match v {
                         FieldValue::SFNode(n) => *n,
@@ -326,11 +464,16 @@ impl Runtime {
                 }
             }
             // TextureBackground: X3DBindableNode only (its textures are plain child nodes).
-            "NavigationInfo" | "Fog" | "LocalFog" | "TextureBackground" => self.interest(node, "set_bind", Cb::BindableSetBind),
+            "NavigationInfo" | "Fog" | "LocalFog" | "TextureBackground" => {
+                self.interest(node, "set_bind", Cb::BindableSetBind)
+            }
             "Collision" => {
                 self.interest(node, "enabled", Cb::CollisionSetEnabled);
                 // X3DGroupingNode.initialize
-                if self.pre(node, "addChildren").is_some() && self.pre(node, "removeChildren").is_some() && self.pre(node, "children").is_some() {
+                if self.pre(node, "addChildren").is_some()
+                    && self.pre(node, "removeChildren").is_some()
+                    && self.pre(node, "children").is_some()
+                {
                     self.interest(node, "addChildren", Cb::GroupAddChildren);
                     self.interest(node, "removeChildren", Cb::GroupRemoveChildren);
                 }
@@ -347,10 +490,18 @@ impl Runtime {
             "HAnimMotion" => self.hanim_motion_initialize(node),
             "FontStyle" | "ScreenFontStyle" => self.font_style_initialize(node),
             "Text" => self.text_initialize(node),
-            "Contour2D" | "NurbsSet" | "NurbsTrimmedSurface" | "NurbsPositionInterpolator" | "NurbsOrientationInterpolator" | "NurbsSurfaceInterpolator" => self.nurbs_initialize(node, name),
+            "Contour2D"
+            | "NurbsSet"
+            | "NurbsTrimmedSurface"
+            | "NurbsPositionInterpolator"
+            | "NurbsOrientationInterpolator"
+            | "NurbsSurfaceInterpolator" => self.nurbs_initialize(node, name),
             _ if !GEOMETRY_FIELD_INTERESTS.iter().any(|(t, _)| *t == name) => {
                 // X3DGroupingNode.initialize
-                if self.pre(node, "addChildren").is_some() && self.pre(node, "removeChildren").is_some() && self.pre(node, "children").is_some() {
+                if self.pre(node, "addChildren").is_some()
+                    && self.pre(node, "removeChildren").is_some()
+                    && self.pre(node, "children").is_some()
+                {
                     self.interest(node, "addChildren", Cb::GroupAddChildren);
                     self.interest(node, "removeChildren", Cb::GroupRemoveChildren);
                 }
@@ -386,7 +537,14 @@ impl Runtime {
         };
         let ctx = self.scene.node(node).ctx;
 
-        for name in ["frontUrl", "backUrl", "leftUrl", "rightUrl", "topUrl", "bottomUrl"] {
+        for name in [
+            "frontUrl",
+            "backUrl",
+            "leftUrl",
+            "rightUrl",
+            "topUrl",
+            "bottomUrl",
+        ] {
             let Some(from) = self.pre(node, name) else {
                 continue;
             };
@@ -394,7 +552,10 @@ impl Runtime {
             let texture = self.scene.instantiate_builtin(ctx, index);
             self.nrt_mut(texture);
             self.construct_node(texture);
-            self.background_textures.entry(node).or_default().push((name, texture));
+            self.background_textures
+                .entry(node)
+                .or_default()
+                .push((name, texture));
 
             let Some(url) = self.pre(texture, "url") else {
                 continue;
@@ -465,7 +626,10 @@ impl Runtime {
         let children = self.mfnode(node, "children");
 
         if !children.is_empty() {
-            let filtered: Vec<Option<NodeId>> = children.into_iter().filter(|c| !remove.contains(c)).collect();
+            let filtered: Vec<Option<NodeId>> = children
+                .into_iter()
+                .filter(|c| !remove.contains(c))
+                .collect();
             self.set_value(children_key, FieldValue::MFNode(filtered));
         }
 
@@ -508,7 +672,9 @@ impl Runtime {
             | Cb::SequencerSetNext
             | Cb::SequencerSetKey
             | Cb::SequencerSetKeyValue => self.event_utils_call(node, i.cb),
-            Cb::UrlSetLoad | Cb::UrlSetUrl | Cb::UrlLoadData | Cb::UrlSetAutoRefresh => self.url_object_changed(node, i.cb),
+            Cb::UrlSetLoad | Cb::UrlSetUrl | Cb::UrlLoadData | Cb::UrlSetAutoRefresh => {
+                self.url_object_changed(node, i.cb)
+            }
             Cb::InlineGeometrySolid => self.inline_geometry_set_solid(node),
             Cb::InlineGeometrySmooth => self.inline_geometry_set_smooth(node),
             Cb::FontLibrarySetFamily => self.font_library_set_family(node),
@@ -522,8 +688,13 @@ impl Runtime {
             Cb::SceneLoadCount => self.scene_load_count(node),
             Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),
-            Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),
-            Cb::LoadSensorSetEnabled | Cb::LoadSensorSetTimeOut | Cb::LoadSensorSetChildren | Cb::LoadSensorLoadState => self.load_sensor_interest(node, i.cb, k),
+            Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => {
+                self.script_interest(node, i.cb, k)
+            }
+            Cb::LoadSensorSetEnabled
+            | Cb::LoadSensorSetTimeOut
+            | Cb::LoadSensorSetChildren
+            | Cb::LoadSensorLoadState => self.load_sensor_interest(node, i.cb, k),
             Cb::KeySensorSetEnabled => self.key_set_enabled(node),
             Cb::TransformSensorSetEnabled => self.transform_sensor_set_enabled(node),
             Cb::PickSensorSetLive => self.pick_sensor_set_live(node),
@@ -532,7 +703,10 @@ impl Runtime {
                 self.layer_object_types.insert(node, types);
             }
             Cb::GeoCenterToCenter => {
-                if let (Some(v), Some(k)) = (self.pre_value(node, "geoCenter").cloned(), self.pre(node, "center")) {
+                if let (Some(v), Some(k)) = (
+                    self.pre_value(node, "geoCenter").cloned(),
+                    self.pre(node, "center"),
+                ) {
                     self.set_value(k, v);
                 }
             }
@@ -567,12 +741,18 @@ impl Runtime {
             Cb::HAnimHumanoidSetSkinCoord => self.hanim_humanoid_set_skin_coord(node),
             Cb::HAnimHumanoidPoseFraction(pose) => self.hanim_humanoid_pose_fraction(node, pose),
             Cb::HAnimHumanoidPoseActive => self.hanim_humanoid_pose_active(node, k),
-            Cb::HAnimHumanoidConnectJoints(motion) => self.hanim_humanoid_connect_joints(node, motion),
+            Cb::HAnimHumanoidConnectJoints(motion) => {
+                self.hanim_humanoid_connect_joints(node, motion)
+            }
             Cb::HAnimHumanoidConnectAllJoints => self.hanim_humanoid_connect_all_joints(node),
             Cb::HAnimHumanoidJointName => self.hanim_humanoid_joint_name(node),
             Cb::HAnimHumanoidUnlock => self.hanim_humanoid_unlock(node),
             Cb::HAnimHumanoidDeprecated => {
-                let field = if self.pre(node, "segments") == Some(k) { "segments" } else { "sites" };
+                let field = if self.pre(node, "segments") == Some(k) {
+                    "segments"
+                } else {
+                    "sites"
+                };
                 self.hanim_humanoid_deprecated(node, field)
             }
             Cb::HAnimPoseResetAllJoints => self.hanim_pose_reset_all_joints(node),
@@ -583,7 +763,9 @@ impl Runtime {
             Cb::HAnimMotionEnabled => self.hanim_motion_set_enabled(node),
             Cb::HAnimMotionJoints => self.hanim_motion_set_joints(node),
             Cb::HAnimMotionInterpolators => self.hanim_motion_set_interpolators(node),
-            Cb::HAnimMotionNextOrPrevious(direction) => self.hanim_motion_next_or_previous(node, direction as i32, k),
+            Cb::HAnimMotionNextOrPrevious(direction) => {
+                self.hanim_motion_next_or_previous(node, direction as i32, k)
+            }
             Cb::HAnimMotionFrameIndex => self.hanim_motion_set_frame_index(node),
             Cb::HAnimMotionFrameDuration => self.hanim_motion_set_frame_duration(node),
             Cb::HAnimMotionFrameIncrement => self.hanim_motion_set_frame_increment(node),
@@ -593,7 +775,10 @@ impl Runtime {
             Cb::NurbsInterpSetFraction => self.nurbs_interp_set_fraction(node),
             Cb::GroupAddChildren => self.group_add_children(node),
             Cb::GroupRemoveChildren => self.group_remove_children(node),
-            Cb::FollowerSetValue | Cb::FollowerSetDestination | Cb::FollowerSetDuration | Cb::FollowerPrepare => self.follower_interest(node, i.cb),
+            Cb::FollowerSetValue
+            | Cb::FollowerSetDestination
+            | Cb::FollowerSetDuration
+            | Cb::FollowerPrepare => self.follower_interest(node, i.cb),
             Cb::TimeSensorSetPrepare => self.time_sensor_set_prepare(node),
             Cb::TimeSensorSetTime => self.time_sensor_set_time(node),
             Cb::BindableSetBind => {
@@ -631,7 +816,10 @@ impl Runtime {
                     }
                 }
 
-                if let (Some(nav), Some(bound)) = (self.viewpoint_navigation_info(node), self.pre(node, "isBound")) {
+                if let (Some(nav), Some(bound)) = (
+                    self.viewpoint_navigation_info(node),
+                    self.pre(node, "isBound"),
+                ) {
                     let value = self.value(bound).clone();
 
                     if let Some(k) = self.pre(nav, "set_bind") {

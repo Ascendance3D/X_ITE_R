@@ -4,13 +4,13 @@ use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
-use super::changes::Change;
 use super::change_measurement::change_end;
+use super::changes::Change;
 use super::doc::Doc;
-use super::selection::{new_sel, Range, Sel};
-use super::spans::{stretch_spans_over_change, NewSpans, SpanArr};
+use super::selection::{Range, Sel, new_sel};
+use super::spans::{NewSpans, SpanArr, stretch_spans_over_change};
 use crate::clock;
-use crate::pos::{cmp, Pos, PosRef};
+use crate::pos::{Pos, PosRef, cmp};
 use crate::text::Text;
 
 /// One change inside a history event (`{from, to, text, spans_<docid>}`).
@@ -150,7 +150,9 @@ fn last_change_event(hist: &mut History, force: bool) -> Option<usize> {
         return match hist.lst_done() {
             Some(HistEvent::Change(_)) => Some(hist.done.len() - 1),
             // The `"-1"` ghost is a selection: truthy, and `lst(cur.changes)` throws.
-            Some(HistEvent::Sel(_)) => panic!("JS TypeError: Cannot read properties of undefined (reading 'length')"),
+            Some(HistEvent::Sel(_)) => {
+                panic!("JS TypeError: Cannot read properties of undefined (reading 'length')")
+            }
             None => None,
         };
     }
@@ -166,7 +168,12 @@ fn last_change_event(hist: &mut History, force: bool) -> Option<usize> {
 }
 
 /// `addChangeToHistory(doc, change, selAfter, opId)`.
-pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, op_id: Option<u64>) {
+pub(crate) fn add_change_to_history(
+    doc: &Doc,
+    change: &Change,
+    sel_after: Sel,
+    op_id: Option<u64>,
+) {
     let hist_rc = doc.history_rc();
     let delay = doc.history_event_delay();
     let time = clock::now();
@@ -179,7 +186,11 @@ pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, 
                 && truthy(&change.origin)
                 && ((first_char(&change.origin) == Some('+') && hist.last_mod_time > time - delay)
                     || first_char(&change.origin) == Some('*'));
-        let cur = if mergeable { last_change_event(&mut hist, force) } else { None };
+        let cur = if mergeable {
+            last_change_event(&mut hist, force)
+        } else {
+            None
+        };
         (cur, force)
     };
     let _ = force;
@@ -188,7 +199,9 @@ pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, 
         // Merge this change into the last event.
         let simple = {
             let hist = hist_rc.borrow();
-            let HistEvent::Change(cur) = &hist.done[idx] else { unreachable!() };
+            let HistEvent::Change(cur) = &hist.done[idx] else {
+                unreachable!()
+            };
             let last = cur.changes.last().expect("event has changes");
             cmp(&change.from, &change.to).is_eq() && cmp(&change.from, &last.to).is_eq()
         };
@@ -197,12 +210,16 @@ pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, 
             // Optimized case for simple insertion: don't add a sub-event per char.
             let end = change_end(change);
             let mut hist = hist_rc.borrow_mut();
-            let HistEvent::Change(cur) = &mut hist.done[idx] else { unreachable!() };
+            let HistEvent::Change(cur) = &mut hist.done[idx] else {
+                unreachable!()
+            };
             cur.changes.last_mut().unwrap().to = end;
         } else {
             let hc = history_change_from_change(doc, change);
             let mut hist = hist_rc.borrow_mut();
-            let HistEvent::Change(cur) = &mut hist.done[idx] else { unreachable!() };
+            let HistEvent::Change(cur) = &mut hist.done[idx] else {
+                unreachable!()
+            };
             cur.changes.push(hc);
         }
     } else {
@@ -218,12 +235,20 @@ pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, 
         let hc = history_change_from_change(doc, change);
         let mut hist = hist_rc.borrow_mut();
         let generation = hist.generation;
-        hist.done.push(HistEvent::Change(ChangeEvent { changes: vec![hc], generation: Some(generation) }));
+        hist.done.push(HistEvent::Change(ChangeEvent {
+            changes: vec![hc],
+            generation: Some(generation),
+        }));
         while hist.done.len() as f64 > hist.undo_depth {
             hist.done.remove(0);
             // `hist.done[0].ranges` throws a TypeError in the JS when the array is now
             // empty (only possible with undoDepth 0).
-            if !hist.done.first().expect("JS TypeError: done[0] is undefined").is_sel() {
+            if !hist
+                .done
+                .first()
+                .expect("JS TypeError: done[0] is undefined")
+                .is_sel()
+            {
                 hist.done.remove(0);
             }
         }
@@ -241,7 +266,13 @@ pub(crate) fn add_change_to_history(doc: &Doc, change: &Change, sel_after: Sel, 
     let _ = merged; // `signal(doc, "historyAdded")` is not ported.
 }
 
-fn selection_event_can_be_merged(delay: f64, hist: &History, origin: &str, prev: Option<&HistEvent>, sel: &Sel) -> bool {
+fn selection_event_can_be_merged(
+    delay: f64,
+    hist: &History,
+    origin: &str,
+    prev: Option<&HistEvent>,
+    sel: &Sel,
+) -> bool {
     let ch = origin.chars().next();
     if ch == Some('*') {
         return true;
@@ -265,7 +296,12 @@ pub(crate) struct SelHistOpts<'a> {
 
 /// `addSelectionToHistory(doc, sel, opId, options)`; `options == None` is the JS
 /// `undefined` (which, notably, does *not* clear redo selection events).
-pub(crate) fn add_selection_to_history(doc: &Doc, sel: Sel, op_id: Option<u64>, options: Option<SelHistOpts>) {
+pub(crate) fn add_selection_to_history(
+    doc: &Doc,
+    sel: Sel,
+    op_id: Option<u64>,
+    options: Option<SelHistOpts>,
+) {
     let hist_rc = doc.history_rc();
     let delay = doc.history_event_delay();
     let mut hist = hist_rc.borrow_mut();
@@ -275,7 +311,13 @@ pub(crate) fn add_selection_to_history(doc: &Doc, sel: Sel, op_id: Option<u64>, 
         || origin_truthy
             && hist.last_sel_origin == origin
             && (hist.last_mod_time == hist.last_sel_time && hist.last_origin == origin
-                || selection_event_can_be_merged(delay, &hist, origin.as_deref().unwrap(), hist.lst_done(), &sel));
+                || selection_event_can_be_merged(
+                    delay,
+                    &hist,
+                    origin.as_deref().unwrap(),
+                    hist.lst_done(),
+                    &sel,
+                ));
     if replace {
         hist.set_last_done(HistEvent::Sel(sel));
     } else {
@@ -284,7 +326,10 @@ pub(crate) fn add_selection_to_history(doc: &Doc, sel: Sel, op_id: Option<u64>, 
     hist.last_sel_time = clock::now();
     hist.last_sel_origin = origin;
     hist.last_sel_op = op_id;
-    if options.as_ref().is_some_and(|o| o.clear_redo != Some(false)) {
+    if options
+        .as_ref()
+        .is_some_and(|o| o.clear_redo != Some(false))
+    {
         clear_selection_events(&mut hist.undone);
     }
 }
@@ -317,7 +362,11 @@ fn attach_local_spans(doc: &Doc, change: &mut HistChange, from: i64, to: i64) {
 fn remove_cleared_spans(spans: Option<&SpanArr>) -> Option<SpanArr> {
     let arr = spans?;
     let spans = arr.get();
-    let out: Vec<_> = spans.iter().filter(|s| !s.marker.data().explicitly_cleared).cloned().collect();
+    let out: Vec<_> = spans
+        .iter()
+        .filter(|s| !s.marker.data().explicitly_cleared)
+        .cloned()
+        .collect();
     if out.len() == spans.len() {
         Some(arr.clone())
     } else if out.is_empty() {
@@ -330,17 +379,27 @@ fn remove_cleared_spans(spans: Option<&SpanArr>) -> Option<SpanArr> {
 /// `getOldSpans(doc, change)`.
 fn get_old_spans(doc: &Doc, change: &HistChange) -> Option<NewSpans> {
     let found = change.spans.get(&doc.id())?;
-    Some((0..change.text.len()).map(|i| remove_cleared_spans(found.get(&i))).collect())
+    Some(
+        (0..change.text.len())
+            .map(|i| remove_cleared_spans(found.get(&i)))
+            .collect(),
+    )
 }
 
 /// `mergeOldSpans(doc, change)`: combine the spans recorded in history with the
 /// ones computed for the current document, so that undoing a deletion brings back
 /// the markers that were inside it.
-pub(crate) fn merge_old_spans(doc: &Doc, hchange: &HistChange, change: &Change) -> Option<NewSpans> {
+pub(crate) fn merge_old_spans(
+    doc: &Doc,
+    hchange: &HistChange,
+    change: &Change,
+) -> Option<NewSpans> {
     let old = get_old_spans(doc, hchange);
     let stretched = stretch_spans_over_change(doc, change);
     let Some(mut old) = old else { return stretched };
-    let Some(stretched) = stretched else { return Some(old) };
+    let Some(stretched) = stretched else {
+        return Some(old);
+    };
     for i in 0..old.len() {
         let stretch_cur = stretched.get(i).cloned().flatten();
         match (&mut old[i], stretch_cur) {
@@ -362,19 +421,37 @@ pub(crate) fn merge_old_spans(doc: &Doc, hchange: &HistChange, change: &Change) 
 
 /// `copyHistoryArray(events, newGroup, instantiateSel)`. With `new_group`, the span
 /// records of those document ids are *moved* from `events` into the copy.
-pub(crate) fn copy_history_array(events: &mut [HistEvent], new_group: Option<&[u32]>, instantiate_sel: bool) -> Vec<HistEvent> {
+pub(crate) fn copy_history_array(
+    events: &mut [HistEvent],
+    new_group: Option<&[u32]>,
+    instantiate_sel: bool,
+) -> Vec<HistEvent> {
     let mut copy = Vec::new();
     for event in events.iter_mut() {
         match event {
             HistEvent::Sel(sel) => {
-                copy.push(HistEvent::Sel(if instantiate_sel { Rc::new(sel.deep_copy()) } else { sel.clone() }));
+                copy.push(HistEvent::Sel(if instantiate_sel {
+                    Rc::new(sel.deep_copy())
+                } else {
+                    sel.clone()
+                }));
             }
             HistEvent::Change(ev) => {
                 let mut new_changes = Vec::new();
                 for change in ev.changes.iter_mut() {
-                    let mut nc = HistChange { from: change.from, to: change.to, text: change.text.clone(), spans: BTreeMap::new() };
+                    let mut nc = HistChange {
+                        from: change.from,
+                        to: change.to,
+                        text: change.text.clone(),
+                        spans: BTreeMap::new(),
+                    };
                     if let Some(group) = new_group {
-                        let ids: Vec<u32> = change.spans.keys().copied().filter(|id| group.contains(id)).collect();
+                        let ids: Vec<u32> = change
+                            .spans
+                            .keys()
+                            .copied()
+                            .filter(|id| group.contains(id))
+                            .collect();
                         for id in ids {
                             if let Some(s) = change.spans.remove(&id) {
                                 nc.spans.insert(id, s);
@@ -383,7 +460,10 @@ pub(crate) fn copy_history_array(events: &mut [HistEvent], new_group: Option<&[u
                     }
                     new_changes.push(nc);
                 }
-                copy.push(HistEvent::Change(ChangeEvent { changes: new_changes, generation: None }));
+                copy.push(HistEvent::Change(ChangeEvent {
+                    changes: new_changes,
+                    generation: None,
+                }));
             }
         }
     }
@@ -452,7 +532,12 @@ pub(crate) fn data_to_events(data: &[HistoryEventData]) -> Vec<HistEvent> {
             HistoryEventData::Selection(s) => HistEvent::Sel(new_sel(
                 s.ranges
                     .iter()
-                    .map(|r| Range::new(PosRef::lc(r.anchor.line, r.anchor.ch), PosRef::lc(r.head.line, r.head.ch)))
+                    .map(|r| {
+                        Range::new(
+                            PosRef::lc(r.anchor.line, r.anchor.ch),
+                            PosRef::lc(r.head.line, r.head.ch),
+                        )
+                    })
                     .collect(),
                 s.primary,
             )),

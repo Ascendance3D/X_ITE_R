@@ -9,7 +9,10 @@ use x3d_parse::optimizer::Optimizer;
 #[test]
 fn optimizer_matches_x_ite() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-optimizer");
-    let baseline: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(root.join("optimizer-baseline.json")).unwrap()).unwrap();
+    let baseline: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(root.join("optimizer-baseline.json")).unwrap(),
+    )
+    .unwrap();
     let mut failures = vec![];
     let mut checks = 0;
 
@@ -20,13 +23,27 @@ fn optimizer_matches_x_ite() {
         for (key, expected) in entry["options"].as_object().unwrap() {
             let optimizer = match key.as_str() {
                 "none" => Optimizer::default(),
-                "remove" => Optimizer { remove_empty_groups: true, ..Default::default() },
-                "combine" => Optimizer { combine_grouping_nodes: true, ..Default::default() },
-                "all" => Optimizer { remove_empty_groups: true, combine_grouping_nodes: true, optimize_interpolators: true },
+                "remove" => Optimizer {
+                    remove_empty_groups: true,
+                    ..Default::default()
+                },
+                "combine" => Optimizer {
+                    combine_grouping_nodes: true,
+                    ..Default::default()
+                },
+                "all" => Optimizer {
+                    remove_empty_groups: true,
+                    combine_grouping_nodes: true,
+                    optimize_interpolators: true,
+                },
                 _ => panic!("unknown option set {key}"),
             };
 
-            let mut scene = x3d_parse::parse_bytes(&data, &format!("http://oracle/synthetic-rea-optimizer/{file}")).unwrap();
+            let mut scene = x3d_parse::parse_bytes(
+                &data,
+                &format!("http://oracle/synthetic-rea-optimizer/{file}"),
+            )
+            .unwrap();
 
             optimizer.optimize_scene_graph(&mut scene, x3d_scene::ROOT);
             scene.clone_counts = Some(scene.parse_clone_counts());
@@ -37,19 +54,34 @@ fn optimizer_matches_x_ite() {
             checks += 1;
 
             if actual != expected {
-                let (e, a): (Vec<&str>, Vec<&str>) = (expected.lines().collect(), actual.lines().collect());
-                let i = (0..e.len().max(a.len())).find(|i| e.get(*i) != a.get(*i)).unwrap_or(0);
-                failures.push(format!("{file} [{key}] line {}:\n  X_ITE: {}\n  Rust:  {}", i + 1, e.get(i).unwrap_or(&"<EOF>"), a.get(i).unwrap_or(&"<EOF>")));
+                let (e, a): (Vec<&str>, Vec<&str>) =
+                    (expected.lines().collect(), actual.lines().collect());
+                let i = (0..e.len().max(a.len()))
+                    .find(|i| e.get(*i) != a.get(*i))
+                    .unwrap_or(0);
+                failures.push(format!(
+                    "{file} [{key}] line {}:\n  X_ITE: {}\n  Rust:  {}",
+                    i + 1,
+                    e.get(i).unwrap_or(&"<EOF>"),
+                    a.get(i).unwrap_or(&"<EOF>")
+                ));
 
                 if let Ok(dir) = std::env::var("OPT_OUT") {
                     std::fs::create_dir_all(&dir).unwrap();
-                    std::fs::write(Path::new(&dir).join(format!("{file}.{key}.rust")), &actual).unwrap();
-                    std::fs::write(Path::new(&dir).join(format!("{file}.{key}.xite")), expected).unwrap();
+                    std::fs::write(Path::new(&dir).join(format!("{file}.{key}.rust")), &actual)
+                        .unwrap();
+                    std::fs::write(Path::new(&dir).join(format!("{file}.{key}.xite")), expected)
+                        .unwrap();
                 }
             }
         }
     }
 
     println!("{checks} checks, {} failed", failures.len());
-    assert!(failures.is_empty(), "{} of {checks} checks failed:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} of {checks} checks failed:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

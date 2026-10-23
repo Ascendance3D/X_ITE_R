@@ -22,7 +22,12 @@ fn world(name: &str, text: &str) -> PathBuf {
 
 /// Run on a big stack (QuickJS), like the binaries do.
 fn big<F: FnOnce() + Send + 'static>(f: F) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 fn open(name: &str, text: &str) -> Viewer3d {
@@ -48,7 +53,15 @@ struct Win {
 
 impl Win {
     fn new(v: Viewer3d, p: Platform) -> Win {
-        Win { v, t: KeyTracker::default(), p, mods: ModifiersState::empty(), shortcuts: Vec::new(), dom: 0, now: T0 }
+        Win {
+            v,
+            t: KeyTracker::default(),
+            p,
+            mods: ModifiersState::empty(),
+            shortcuts: Vec::new(),
+            dom: 0,
+            now: T0,
+        }
     }
 
     fn apply(&mut self, a: KeyAction) {
@@ -78,7 +91,16 @@ impl Win {
             self.mods -= modifier;
         }
 
-        let a = self.t.event(self.p, down, repeat, false, &k, &k, &PhysicalKey::Code(c), self.mods);
+        let a = self.t.event(
+            self.p,
+            down,
+            repeat,
+            false,
+            &k,
+            &k,
+            &PhysicalKey::Code(c),
+            self.mods,
+        );
         self.apply(a);
     }
 
@@ -222,7 +244,14 @@ fn key_sensor_gets_native_keys() {
             w.press(named(k), c);
         }
         // Text keys with control characters; Escape is an X3D key.
-        for (k, c) in [(NamedKey::Enter, KeyCode::Enter), (NamedKey::Backspace, KeyCode::Backspace), (NamedKey::Tab, KeyCode::Tab), (NamedKey::Escape, KeyCode::Escape), (NamedKey::Delete, KeyCode::Delete), (NamedKey::Space, KeyCode::Space)] {
+        for (k, c) in [
+            (NamedKey::Enter, KeyCode::Enter),
+            (NamedKey::Backspace, KeyCode::Backspace),
+            (NamedKey::Tab, KeyCode::Tab),
+            (NamedKey::Escape, KeyCode::Escape),
+            (NamedKey::Delete, KeyCode::Delete),
+            (NamedKey::Space, KeyCode::Space),
+        ] {
             w.press(named(k), c);
         }
         // A letter of another layout (German ö on the US ; key) is text too.
@@ -278,7 +307,12 @@ fn key_sensor_repeat_and_shortcut() {
         w.raw(false, false, ch("r"), KeyCode::KeyR);
         w.raw(false, false, named(NamedKey::Control), KeyCode::ControlLeft);
         assert_eq!(w.shortcuts, vec![Shortcut::Reload]);
-        assert!(w.hist().ends_with("ka=false ka=true ct=true ct=false ka=false"), "{}", w.hist());
+        assert!(
+            w.hist()
+                .ends_with("ka=false ka=true ct=true ct=false ka=false"),
+            "{}",
+            w.hist()
+        );
     });
 }
 
@@ -291,10 +325,17 @@ fn key_sensor_released_on_focus_loss() {
         w.raw(true, false, named(NamedKey::Control), KeyCode::ControlLeft);
         w.raw(true, false, named(NamedKey::ArrowUp), KeyCode::ArrowUp);
         w.focus_lost();
-        assert_eq!(w.hist(), "ka=true sh=true ct=true ap=17 sh=false ka=false ct=false ar=17");
+        assert_eq!(
+            w.hist(),
+            "ka=true sh=true ct=true ap=17 sh=false ka=false ct=false ar=17"
+        );
         // Nothing stays down for the next key.
         w.press(ch("k"), KeyCode::KeyK);
-        assert!(w.hist().ends_with("ar=17 ka=true kp=k kr=k ka=false"), "{}", w.hist());
+        assert!(
+            w.hist().ends_with("ar=17 ka=true kp=k kr=k ka=false"),
+            "{}",
+            w.hist()
+        );
     });
 }
 
@@ -330,7 +371,11 @@ fn string_sensor_gets_native_text() {
         // Escape clears without finalText; the window stays open (no shortcut).
         w.press(ch("x"), KeyCode::KeyX);
         w.press(named(NamedKey::Escape), KeyCode::Escape);
-        assert!(w.hist().ends_with("sa=false sa=true et=x sa=false"), "{}", w.hist());
+        assert!(
+            w.hist().ends_with("sa=false sa=true et=x sa=false"),
+            "{}",
+            w.hist()
+        );
         assert!(w.shortcuts.is_empty());
     });
 }
@@ -386,8 +431,14 @@ fn macos_command_shortcuts_leave_ctrl_to_x3d() {
         w.press(ch("q"), KeyCode::KeyQ);
         w.press(ch("1"), KeyCode::Digit1);
         w.raw(false, false, named(NamedKey::Super), KeyCode::SuperLeft);
-        assert_eq!(w.shortcuts, vec![Shortcut::Quit, Shortcut::Viewer("EXAMINE")]);
+        assert_eq!(
+            w.shortcuts,
+            vec![Shortcut::Quit, Shortcut::Viewer("EXAMINE")]
+        );
         // The Command key itself is a KeySensor key without a field (X_ITE: keyCode 91, no text).
-        assert_eq!(w.hist(), "ka=true ct=true kp=q kr=q ka=false ct=false ka=true ka=false");
+        assert_eq!(
+            w.hist(),
+            "ka=true ct=true kp=q kr=q ka=false ct=false ka=true ka=false"
+        );
     });
 }

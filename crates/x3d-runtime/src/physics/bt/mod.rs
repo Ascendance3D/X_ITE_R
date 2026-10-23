@@ -11,8 +11,8 @@ pub mod dbvt;
 pub mod dispatch;
 pub mod fdlibm;
 pub mod gjk;
-pub mod math;
 pub mod island;
+pub mod math;
 pub mod shape;
 pub mod solver;
 pub mod world;
@@ -31,7 +31,21 @@ pub fn trace(line: impl FnOnce() -> String) {
 pub fn tj(t: &math::Tf) -> String {
     let t = math::rt(*t);
 
-    format!("{{\"T\":[[[{},{},{}],[{},{},{}],[{},{},{}]],[{},{},{}]]}}", t.b[0][0], t.b[0][1], t.b[0][2], t.b[1][0], t.b[1][1], t.b[1][2], t.b[2][0], t.b[2][1], t.b[2][2], t.o[0], t.o[1], t.o[2])
+    format!(
+        "{{\"T\":[[[{},{},{}],[{},{},{}],[{},{},{}]],[{},{},{}]]}}",
+        t.b[0][0],
+        t.b[0][1],
+        t.b[0][2],
+        t.b[1][0],
+        t.b[1][1],
+        t.b[1][2],
+        t.b[2][0],
+        t.b[2][1],
+        t.b[2][2],
+        t.o[0],
+        t.o[1],
+        t.o[2]
+    )
 }
 
 pub fn vj(v: &math::V3) -> String {

@@ -31,7 +31,7 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::rc::Rc;
 
-use cm_core::text::{from_u16, Text};
+use cm_core::text::{Text, from_u16};
 use cm_core::util::string_stream::{LineOracle, StringStream};
 
 pub mod css;
@@ -80,13 +80,19 @@ impl State {
     /// handed a foreign state would misbehave instead).
     pub fn get<T: 'static>(&self) -> &T {
         match self {
-            State::Value(b) => (**b).as_any().downcast_ref().expect("mode state of another type"),
+            State::Value(b) => (**b)
+                .as_any()
+                .downcast_ref()
+                .expect("mode state of another type"),
             State::True => panic!("mode state is `true`"),
         }
     }
     pub fn get_mut<T: 'static>(&mut self) -> &mut T {
         match self {
-            State::Value(b) => (**b).as_any_mut().downcast_mut().expect("mode state of another type"),
+            State::Value(b) => (**b)
+                .as_any_mut()
+                .downcast_mut()
+                .expect("mode state of another type"),
             State::True => panic!("mode state is `true`"),
         }
     }
@@ -117,7 +123,11 @@ pub struct ModeOptions {
 impl Default for ModeOptions {
     /// `runmode.node.js` sets `CodeMirror.defaults = { indentUnit: 2 }`.
     fn default() -> Self {
-        ModeOptions { indent_unit: 2, tab_size: 8, highlight_non_standard_property_keywords: None }
+        ModeOptions {
+            indent_unit: 2,
+            tab_size: 8,
+            highlight_non_standard_property_keywords: None,
+        }
     }
 }
 
@@ -182,13 +192,25 @@ impl ConfigValue {
         }
     }
     pub fn as_num(&self) -> Option<f64> {
-        if let ConfigValue::Num(n) = self { Some(*n) } else { None }
+        if let ConfigValue::Num(n) = self {
+            Some(*n)
+        } else {
+            None
+        }
     }
     pub fn as_str(&self) -> Option<&str> {
-        if let ConfigValue::Str(s) = self { Some(s) } else { None }
+        if let ConfigValue::Str(s) = self {
+            Some(s)
+        } else {
+            None
+        }
     }
     pub fn as_obj<T: 'static>(&self) -> Option<&T> {
-        if let ConfigValue::Obj(o) = self { o.downcast_ref() } else { None }
+        if let ConfigValue::Obj(o) = self {
+            o.downcast_ref()
+        } else {
+            None
+        }
     }
 }
 
@@ -211,7 +233,9 @@ impl PartialEq for ConfigValue {
             (ConfigValue::Bool(a), ConfigValue::Bool(b)) => a == b,
             (ConfigValue::Num(a), ConfigValue::Num(b)) => a == b,
             (ConfigValue::Str(a), ConfigValue::Str(b)) => a == b,
-            (ConfigValue::Obj(a), ConfigValue::Obj(b)) => std::ptr::addr_eq(Rc::as_ptr(a), Rc::as_ptr(b)),
+            (ConfigValue::Obj(a), ConfigValue::Obj(b)) => {
+                std::ptr::addr_eq(Rc::as_ptr(a), Rc::as_ptr(b))
+            }
             _ => false,
         }
     }
@@ -229,7 +253,10 @@ pub struct ModeSpec {
 
 impl ModeSpec {
     pub fn named(name: &str) -> ModeSpec {
-        ModeSpec { name: name.to_string(), ..Default::default() }
+        ModeSpec {
+            name: name.to_string(),
+            ..Default::default()
+        }
     }
     /// Builder: `{..., key: value}`.
     pub fn with(mut self, key: &str, v: ConfigValue) -> ModeSpec {
@@ -428,14 +455,22 @@ impl Mode for Named {
         self.inner.block_comment_end()
     }
     fn helper_type(&self) -> Option<&str> {
-        self.helper_type.as_deref().or_else(|| self.inner.helper_type())
+        self.helper_type
+            .as_deref()
+            .or_else(|| self.inner.helper_type())
     }
 }
 
 /// `/^[\w\-]+\/[\w\-]+\+(xml|json)$/` with the given suffix.
 fn is_plus_type(s: &str, suffix: &str) -> bool {
-    let Some(body) = s.strip_suffix(suffix) else { return false };
-    let word = |p: &str| !p.is_empty() && p.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-');
+    let Some(body) = s.strip_suffix(suffix) else {
+        return false;
+    };
+    let word = |p: &str| {
+        !p.is_empty()
+            && p.bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
+    };
     match body.split_once('/') {
         Some((a, b)) => word(a) && word(b),
         None => false,
@@ -446,8 +481,19 @@ impl Registry {
     /// A registry with what `runmode.node.js` (and `codemirror.js`) define up front:
     /// the `null` mode and `text/plain`.
     pub fn new() -> Registry {
-        let mut r = Registry { modes: HashMap::new(), mime_modes: HashMap::new(), mode_extensions: HashMap::new() };
-        r.define_mode("null", Rc::new(|_, _, spec| Rc::new(NullMode { name: spec.name.clone() }) as Rc<dyn Mode>));
+        let mut r = Registry {
+            modes: HashMap::new(),
+            mime_modes: HashMap::new(),
+            mode_extensions: HashMap::new(),
+        };
+        r.define_mode(
+            "null",
+            Rc::new(|_, _, spec| {
+                Rc::new(NullMode {
+                    name: spec.name.clone(),
+                }) as Rc<dyn Mode>
+            }),
+        );
         r.define_mime("text/plain", MimeTarget::Name("null".into()));
         r
     }
@@ -513,8 +559,12 @@ impl Registry {
                 out.name = found.name;
                 out
             }
-            Spec::Str(s) if is_plus_type(s, "+xml") => self.resolve_mode(&Spec::from("application/xml")),
-            Spec::Str(s) if is_plus_type(s, "+json") => self.resolve_mode(&Spec::from("application/json")),
+            Spec::Str(s) if is_plus_type(s, "+xml") => {
+                self.resolve_mode(&Spec::from("application/xml"))
+            }
+            Spec::Str(s) if is_plus_type(s, "+json") => {
+                self.resolve_mode(&Spec::from("application/json"))
+            }
             Spec::Str(s) => ModeSpec::named(s),
             Spec::Obj(o) => o.clone(),
             Spec::Null => ModeSpec::named("null"),
@@ -534,7 +584,11 @@ impl Registry {
             inner: mode,
             name: spec.name.clone(),
             helper_type: spec.helper_type.clone(),
-            extensions: self.mode_extensions.get(&spec.name).cloned().unwrap_or_default(),
+            extensions: self
+                .mode_extensions
+                .get(&spec.name)
+                .cloned()
+                .unwrap_or_default(),
             mode_props: spec.mode_props.clone().unwrap_or_default(),
         })
     }
@@ -584,7 +638,12 @@ impl std::fmt::Display for FailedToAdvance {
 
 /// `readToken(mode, stream, state, inner)` from `src/line/highlight.js`: up to ten
 /// tries for the mode to consume something.
-pub fn read_token(mode: &Rc<dyn Mode>, stream: &mut StringStream<'_>, state: &mut State, mut inner: Option<&mut Option<Rc<dyn Mode>>>) -> Result<Option<String>, FailedToAdvance> {
+pub fn read_token(
+    mode: &Rc<dyn Mode>,
+    stream: &mut StringStream<'_>,
+    state: &mut State,
+    mut inner: Option<&mut Option<Rc<dyn Mode>>>,
+) -> Result<Option<String>, FailedToAdvance> {
     for _ in 0..10 {
         if let Some(slot) = inner.as_deref_mut() {
             *slot = Some(inner_mode(mode.clone(), state.clone()).0);
@@ -645,7 +704,11 @@ impl LineOracle for LinesOracle<'_> {
     /// `lookAhead: n => lines[i + n]`.
     fn look_ahead(&self, n: i64) -> Option<Text> {
         let k = self.i as i64 + n;
-        if k < 0 { None } else { self.lines.get(k as usize).cloned() }
+        if k < 0 {
+            None
+        } else {
+            self.lines.get(k as usize).cloned()
+        }
     }
     /// `baseToken: function() {}`.
     fn base_token(&self, _pos: usize) -> Option<(Option<String>, i64)> {
@@ -659,19 +722,43 @@ impl LineOracle for LinesOracle<'_> {
 ///
 /// The JS passes `null` as the stream's tab size, so streams always use 8 —
 /// `options.tabSize` only affects the DOM output form, which is not ported.
-pub fn run_mode<F: FnMut(&RunToken)>(registry: &Registry, string: &str, spec: &Spec, callback: F, state: Option<State>) {
-    run_mode_utf16(registry, &cm_core::text::to_u16(string), spec, callback, state)
+pub fn run_mode<F: FnMut(&RunToken)>(
+    registry: &Registry,
+    string: &str,
+    spec: &Spec,
+    callback: F,
+    state: Option<State>,
+) {
+    run_mode_utf16(
+        registry,
+        &cm_core::text::to_u16(string),
+        spec,
+        callback,
+        state,
+    )
 }
 
-pub fn run_mode_utf16<F: FnMut(&RunToken)>(registry: &Registry, string: &[u16], spec: &Spec, mut callback: F, state: Option<State>) {
+pub fn run_mode_utf16<F: FnMut(&RunToken)>(
+    registry: &Registry,
+    string: &[u16],
+    spec: &Spec,
+    mut callback: F,
+    state: Option<State>,
+) {
     let options = ModeOptions::default();
     let mode = registry.get_mode(&options, spec);
     let lines = split_lines_runmode(string);
     // `(options && options.state) || CodeMirror.startState(mode)`
-    let mut state = state.unwrap_or_else(|| start_state(&*mode, JsArg::Undefined, JsArg::Undefined));
+    let mut state =
+        state.unwrap_or_else(|| start_state(&*mode, JsArg::Undefined, JsArg::Undefined));
     for i in 0..lines.len() {
         if i > 0 {
-            callback(&RunToken { text: vec![0x0a], style: None, line: None, start: None });
+            callback(&RunToken {
+                text: vec![0x0a],
+                style: None,
+                line: None,
+                start: None,
+            });
         }
         let oracle = LinesOracle { lines: &lines, i };
         let mut stream = StringStream::new(&lines[i], None, Some(&oracle));
@@ -680,7 +767,12 @@ pub fn run_mode_utf16<F: FnMut(&RunToken)>(registry: &Registry, string: &[u16], 
         }
         while !stream.eol() {
             let style = mode.token(&mut stream, &mut state);
-            callback(&RunToken { text: stream.current().to_vec(), style, line: Some(i), start: Some(stream.start) });
+            callback(&RunToken {
+                text: stream.current().to_vec(),
+                style,
+                line: Some(i),
+                start: Some(stream.start),
+            });
             stream.start = stream.pos;
         }
     }
@@ -690,21 +782,42 @@ pub fn run_mode_utf16<F: FnMut(&RunToken)>(registry: &Registry, string: &[u16], 
 /// and before the first token, where `test/mode_test.js` asks `mode.indent`), and
 /// each `runMode` callback.
 pub enum RunEvent<'a> {
-    LineStart { line: usize, text: &'a [u16], mode: &'a Rc<dyn Mode>, state: &'a State },
+    LineStart {
+        line: usize,
+        text: &'a [u16],
+        mode: &'a Rc<dyn Mode>,
+        state: &'a State,
+    },
     Token(&'a RunToken),
 }
 
 /// `runMode` (same loop as [`run_mode_utf16`]) with explicit editor options and a
 /// line-start hook, for the indentation oracle.
-pub fn run_mode_events<F: FnMut(RunEvent<'_>)>(registry: &Registry, options: &ModeOptions, string: &[u16], spec: &Spec, mut callback: F) {
+pub fn run_mode_events<F: FnMut(RunEvent<'_>)>(
+    registry: &Registry,
+    options: &ModeOptions,
+    string: &[u16],
+    spec: &Spec,
+    mut callback: F,
+) {
     let mode = registry.get_mode(options, spec);
     let lines = split_lines_runmode(string);
     let mut state = start_state(&*mode, JsArg::Undefined, JsArg::Undefined);
     for i in 0..lines.len() {
         if i > 0 {
-            callback(RunEvent::Token(&RunToken { text: vec![0x0a], style: None, line: None, start: None }));
+            callback(RunEvent::Token(&RunToken {
+                text: vec![0x0a],
+                style: None,
+                line: None,
+                start: None,
+            }));
         }
-        callback(RunEvent::LineStart { line: i, text: &lines[i], mode: &mode, state: &state });
+        callback(RunEvent::LineStart {
+            line: i,
+            text: &lines[i],
+            mode: &mode,
+            state: &state,
+        });
         let oracle = LinesOracle { lines: &lines, i };
         let mut stream = StringStream::new(&lines[i], None, Some(&oracle));
         if stream.string.is_empty() && mode.has_blank_line() {
@@ -712,7 +825,12 @@ pub fn run_mode_events<F: FnMut(RunEvent<'_>)>(registry: &Registry, options: &Mo
         }
         while !stream.eol() {
             let style = mode.token(&mut stream, &mut state);
-            callback(RunEvent::Token(&RunToken { text: stream.current().to_vec(), style, line: Some(i), start: Some(stream.start) }));
+            callback(RunEvent::Token(&RunToken {
+                text: stream.current().to_vec(),
+                style,
+                line: Some(i),
+                start: Some(stream.start),
+            }));
             stream.start = stream.pos;
         }
     }
@@ -720,9 +838,19 @@ pub fn run_mode_events<F: FnMut(RunEvent<'_>)>(registry: &Registry, options: &Mo
 
 /// Convenience: `runMode` collected into `(text, style)` pairs, line breaks
 /// included as `("\n", None)`.
-pub fn run_mode_collect(registry: &Registry, string: &str, spec: &Spec) -> Vec<(String, Option<String>)> {
+pub fn run_mode_collect(
+    registry: &Registry,
+    string: &str,
+    spec: &Spec,
+) -> Vec<(String, Option<String>)> {
     let mut out = Vec::new();
-    run_mode(registry, string, spec, |t| out.push((from_u16(&t.text), t.style.clone())), None);
+    run_mode(
+        registry,
+        string,
+        spec,
+        |t| out.push((from_u16(&t.text), t.style.clone())),
+        None,
+    );
     out
 }
 
@@ -743,7 +871,12 @@ mod tests {
         assert_eq!(j.name, "javascript");
         assert_eq!(j.options.get("json"), Some(&ConfigValue::Bool(true)));
         // A defined MIME wins over the +json rule.
-        assert_eq!(r.resolve_mode(&Spec::from("application/ld+json")).options.get("jsonld"), Some(&ConfigValue::Bool(true)));
+        assert_eq!(
+            r.resolve_mode(&Spec::from("application/ld+json"))
+                .options
+                .get("jsonld"),
+            Some(&ConfigValue::Bool(true))
+        );
         assert_eq!(r.resolve_mode(&Spec::from("text/html")).name, "htmlmixed");
         let mut o = ModeSpec::named("text/x-toml");
         o.options.insert("x".into(), ConfigValue::Bool(true));
@@ -751,8 +884,16 @@ mod tests {
         assert_eq!(res.name, "toml");
         assert_eq!(res.options.get("x"), Some(&ConfigValue::Bool(true)));
         // Unknown modes fall back to text/plain, whose mode is named "null".
-        assert_eq!(r.get_mode(&ModeOptions::default(), &Spec::from("nope")).name(), "null");
-        assert_eq!(r.get_mode(&ModeOptions::default(), &Spec::from("text/x-toml")).name(), "toml");
+        assert_eq!(
+            r.get_mode(&ModeOptions::default(), &Spec::from("nope"))
+                .name(),
+            "null"
+        );
+        assert_eq!(
+            r.get_mode(&ModeOptions::default(), &Spec::from("text/x-toml"))
+                .name(),
+            "toml"
+        );
     }
 
     /// `getMode` copies `modeExtensions[name]` and then `spec.modeProps` onto the mode
@@ -771,7 +912,10 @@ mod tests {
         let mut props = HashMap::new();
         props.insert("xxx".to_string(), ConfigValue::Str("b".into()));
         props.insert("enableC".to_string(), ConfigValue::Bool(true));
-        let spec = ModeSpec { mode_props: Some(props), ..ModeSpec::named("vrml") };
+        let spec = ModeSpec {
+            mode_props: Some(props),
+            ..ModeSpec::named("vrml")
+        };
         let m = r.get_mode(&ModeOptions::default(), &Spec::Obj(spec));
         assert_eq!(m.prop("xxx"), Some(ConfigValue::Str("b".into())));
         assert_eq!(m.prop("enableC"), Some(ConfigValue::Bool(true)));
@@ -803,6 +947,14 @@ mod tests {
     fn null_mode_run() {
         let r = Registry::new();
         let toks = run_mode_collect(&r, "ab\r\ncd\r\n", &Spec::from("text/plain"));
-        assert_eq!(toks, vec![("ab".into(), None), ("\n".into(), None), ("cd".into(), None), ("\n".into(), None)]);
+        assert_eq!(
+            toks,
+            vec![
+                ("ab".into(), None),
+                ("\n".into(), None),
+                ("cd".into(), None),
+                ("\n".into(), None)
+            ]
+        );
     }
 }

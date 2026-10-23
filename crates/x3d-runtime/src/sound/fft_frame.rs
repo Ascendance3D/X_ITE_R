@@ -32,7 +32,9 @@ impl FftFrame {
         let mut planner = FftPlanner::new();
         let forward = planner.plan_fft_forward(half_size);
         let inverse = planner.plan_fft_inverse(half_size);
-        let scratch_len = forward.get_inplace_scratch_len().max(inverse.get_inplace_scratch_len());
+        let scratch_len = forward
+            .get_inplace_scratch_len()
+            .max(inverse.get_inplace_scratch_len());
         let twiddles = (0..half_size)
             .map(|k| {
                 let angle = -2.0 * std::f64::consts::PI * (k as f64) / (size as f64);
@@ -207,7 +209,13 @@ impl SimpleFftConvolver {
         assert!(convolution_kernel.len() <= input_block_size);
         kernel.do_padded_fft(convolution_kernel);
 
-        SimpleFftConvolver { kernel, frame: FftFrame::new(2 * input_block_size), input: vec![0.0; 2 * input_block_size], output: vec![0.0; 2 * input_block_size], last_overlap: vec![0.0; input_block_size] }
+        SimpleFftConvolver {
+            kernel,
+            frame: FftFrame::new(2 * input_block_size),
+            input: vec![0.0; 2 * input_block_size],
+            output: vec![0.0; 2 * input_block_size],
+            last_overlap: vec![0.0; input_block_size],
+        }
     }
 
     pub fn process(&mut self, source: &[f32], dest: &mut [f32]) {
@@ -241,7 +249,13 @@ pub struct FftConvolver {
 
 impl FftConvolver {
     pub fn new(fft_size: usize) -> FftConvolver {
-        FftConvolver { frame: FftFrame::new(fft_size), input: vec![0.0; fft_size], output: vec![0.0; fft_size], last_overlap: vec![0.0; fft_size / 2], read_write_index: 0 }
+        FftConvolver {
+            frame: FftFrame::new(fft_size),
+            input: vec![0.0; fft_size],
+            output: vec![0.0; fft_size],
+            last_overlap: vec![0.0; fft_size / 2],
+            read_write_index: 0,
+        }
     }
 
     pub fn process(&mut self, kernel: &FftFrame, mut source: &[f32], mut dest: &mut [f32]) {

@@ -22,7 +22,15 @@ fn oracle_url(p: &Path) -> String {
 /// Parts, ComposedShaders, Appearances that list a shader, selection counts.
 fn shader_tables(v: &Viewer3d) -> [usize; 4] {
     let s = &v.rt.shaders;
-    [s.parts.len(), s.composed.len(), s.appearances.values().filter(|a| !a.nodes.is_empty()).count(), s.selected_count.len()]
+    [
+        s.parts.len(),
+        s.composed.len(),
+        s.appearances
+            .values()
+            .filter(|a| !a.nodes.is_empty())
+            .count(),
+        s.selected_count.len(),
+    ]
 }
 
 #[test]
@@ -36,7 +44,11 @@ fn shader_and_font_library_tables_are_released_with_their_nodes() {
             let dir = std::env::temp_dir().join(format!("rea-b08-release-{}", std::process::id()));
             std::fs::create_dir_all(&dir).unwrap();
             let main = dir.join("main.wrl");
-            std::fs::write(&main, "#VRML V2.0 utf8\nViewpoint { position 0 0 6 }\nDEF Inl Inline { load FALSE }\n").unwrap();
+            std::fs::write(
+                &main,
+                "#VRML V2.0 utf8\nViewpoint { position 0 0 6 }\nDEF Inl Inline { load FALSE }\n",
+            )
+            .unwrap();
 
             let mut v = Viewer3d::load(&main, Some(Path::new("/")), 100.0, 64, 64).expect("load");
             let mut t = 100.0;
@@ -60,12 +72,29 @@ fn shader_and_font_library_tables_are_released_with_their_nodes() {
                 if cycle % 2 == 0 {
                     // The shader world compiled and linked its parts and selected the shader.
                     let tables = shader_tables(&v);
-                    assert!(tables[0] >= 2 && tables[1] >= 1 && tables[2] >= 1, "cycle {cycle}: shader world not set up {tables:?}");
-                    assert_eq!(*first_shader.get_or_insert(tables), tables, "cycle {cycle}: shader tables grew");
-                    assert!(v.rt.font_libraries.is_empty(), "cycle {cycle}: fonts of a released context are still registered");
+                    assert!(
+                        tables[0] >= 2 && tables[1] >= 1 && tables[2] >= 1,
+                        "cycle {cycle}: shader world not set up {tables:?}"
+                    );
+                    assert_eq!(
+                        *first_shader.get_or_insert(tables),
+                        tables,
+                        "cycle {cycle}: shader tables grew"
+                    );
+                    assert!(
+                        v.rt.font_libraries.is_empty(),
+                        "cycle {cycle}: fonts of a released context are still registered"
+                    );
                 } else {
-                    assert!(!v.rt.font_libraries.is_empty(), "cycle {cycle}: font world registered no family");
-                    assert_eq!(shader_tables(&v), [0; 4], "cycle {cycle}: shader state of released nodes kept");
+                    assert!(
+                        !v.rt.font_libraries.is_empty(),
+                        "cycle {cycle}: font world registered no family"
+                    );
+                    assert_eq!(
+                        shader_tables(&v),
+                        [0; 4],
+                        "cycle {cycle}: shader state of released nodes kept"
+                    );
                 }
 
                 let k = v.rt.get_field(inl, "load").unwrap();
@@ -73,9 +102,19 @@ fn shader_and_font_library_tables_are_released_with_their_nodes() {
                 steps(&mut v, 30);
             }
 
-            assert_eq!(shader_tables(&v), [0; 4], "shader tables after the last unload");
-            assert!(v.rt.shaders.appearances.is_empty(), "Appearance entries after the last unload");
-            assert!(v.rt.font_libraries.is_empty(), "font tables after the last unload");
+            assert_eq!(
+                shader_tables(&v),
+                [0; 4],
+                "shader tables after the last unload"
+            );
+            assert!(
+                v.rt.shaders.appearances.is_empty(),
+                "Appearance entries after the last unload"
+            );
+            assert!(
+                v.rt.font_libraries.is_empty(),
+                "font tables after the last unload"
+            );
             let _ = std::fs::remove_dir_all(&dir);
         })
         .unwrap()

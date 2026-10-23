@@ -46,7 +46,10 @@ pub fn rm(m: M3) -> M3 {
 
 #[inline]
 pub fn rt(t: Tf) -> Tf {
-    Tf { b: rm(t.b), o: r3(t.o) }
+    Tf {
+        b: rm(t.b),
+        o: r3(t.o),
+    }
 }
 
 pub const ZERO: V3 = [0.0; 3];
@@ -94,7 +97,11 @@ pub fn dot(a: V3, b: V3) -> f64 {
 
 #[inline]
 pub fn cross(a: V3, b: V3) -> V3 {
-    [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+    [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    ]
 }
 
 #[inline]
@@ -199,12 +206,18 @@ pub fn m_mul(a: &M3, b: &M3) -> M3 {
 }
 
 pub fn transpose(m: &M3) -> M3 {
-    [[m[0][0], m[1][0], m[2][0]], [m[0][1], m[1][1], m[2][1]], [m[0][2], m[1][2], m[2][2]]]
+    [
+        [m[0][0], m[1][0], m[2][0]],
+        [m[0][1], m[1][1], m[2][1]],
+        [m[0][2], m[1][2], m[2][2]],
+    ]
 }
 
 /// btMatrix3x3::transposeTimes.
 pub fn transpose_times(a: &M3, m: &M3) -> M3 {
-    std::array::from_fn(|i| std::array::from_fn(|j| a[0][i] * m[0][j] + a[1][i] * m[1][j] + a[2][i] * m[2][j]))
+    std::array::from_fn(|i| {
+        std::array::from_fn(|j| a[0][i] * m[0][j] + a[1][i] * m[1][j] + a[2][i] * m[2][j])
+    })
 }
 
 /// btMatrix3x3::timesTranspose.
@@ -227,13 +240,29 @@ fn cofac(m: &M3, r1: usize, c1: usize, r2: usize, c2: usize) -> f64 {
 
 /// btMatrix3x3::inverse.
 pub fn inverse3(m: &M3) -> M3 {
-    let co = [cofac(m, 1, 1, 2, 2), cofac(m, 1, 2, 2, 0), cofac(m, 1, 0, 2, 1)];
+    let co = [
+        cofac(m, 1, 1, 2, 2),
+        cofac(m, 1, 2, 2, 0),
+        cofac(m, 1, 0, 2, 1),
+    ];
     let det = dot(m[0], co);
     let s = 1.0 / det;
     [
-        [co[0] * s, cofac(m, 0, 2, 2, 1) * s, cofac(m, 0, 1, 1, 2) * s],
-        [co[1] * s, cofac(m, 0, 0, 2, 2) * s, cofac(m, 0, 2, 1, 0) * s],
-        [co[2] * s, cofac(m, 0, 1, 2, 0) * s, cofac(m, 0, 0, 1, 1) * s],
+        [
+            co[0] * s,
+            cofac(m, 0, 2, 2, 1) * s,
+            cofac(m, 0, 1, 1, 2) * s,
+        ],
+        [
+            co[1] * s,
+            cofac(m, 0, 0, 2, 2) * s,
+            cofac(m, 0, 2, 1, 0) * s,
+        ],
+        [
+            co[2] * s,
+            cofac(m, 0, 1, 2, 0) * s,
+            cofac(m, 0, 0, 1, 1) * s,
+        ],
     ]
 }
 
@@ -245,7 +274,11 @@ pub fn m_from_quat(q: Q4) -> M3 {
     let (wx, wy, wz) = (q[3] * xs, q[3] * ys, q[3] * zs);
     let (xx, xy, xz) = (q[0] * xs, q[0] * ys, q[0] * zs);
     let (yy, yz, zz) = (q[1] * ys, q[1] * zs, q[2] * zs);
-    [[1.0 - (yy + zz), xy - wz, xz + wy], [xy + wz, 1.0 - (xx + zz), yz - wx], [xz - wy, yz + wx, 1.0 - (xx + yy)]]
+    [
+        [1.0 - (yy + zz), xy - wz, xz + wy],
+        [xy + wz, 1.0 - (xx + zz), yz - wx],
+        [xz - wy, yz + wx, 1.0 - (xx + yy)],
+    ]
 }
 
 /// btMatrix3x3::getRotation (scalar path).
@@ -334,7 +367,12 @@ pub fn acos_clamped(x: f64) -> f64 {
 pub fn quat_axis_angle(axis: V3, angle: f64) -> Q4 {
     let d = len(axis);
     let s = super::fdlibm::sin(angle * 0.5) / d;
-    [axis[0] * s, axis[1] * s, axis[2] * s, super::fdlibm::cos(angle * 0.5)]
+    [
+        axis[0] * s,
+        axis[1] * s,
+        axis[2] * s,
+        super::fdlibm::cos(angle * 0.5),
+    ]
 }
 
 // --- btTransform ---------------------------------------------------------------------------
@@ -347,7 +385,10 @@ pub struct Tf {
 }
 
 impl Tf {
-    pub const IDENTITY: Tf = Tf { b: IDENTITY3, o: ZERO };
+    pub const IDENTITY: Tf = Tf {
+        b: IDENTITY3,
+        o: ZERO,
+    };
 
     pub fn new(b: M3, o: V3) -> Tf {
         Tf { b, o }
@@ -366,18 +407,27 @@ impl Tf {
     /// btTransform::inverse.
     pub fn inverse(&self) -> Tf {
         let inv = transpose(&self.b);
-        Tf { b: inv, o: m_mul_v(&inv, neg(self.o)) }
+        Tf {
+            b: inv,
+            o: m_mul_v(&inv, neg(self.o)),
+        }
     }
 
     /// btTransform::operator*.
     pub fn mul(&self, t: &Tf) -> Tf {
-        Tf { b: m_mul(&self.b, &t.b), o: self.apply(t.o) }
+        Tf {
+            b: m_mul(&self.b, &t.b),
+            o: self.apply(t.o),
+        }
     }
 
     /// btTransform::inverseTimes.
     pub fn inverse_times(&self, t: &Tf) -> Tf {
         let v = sub(t.o, self.o);
-        Tf { b: transpose_times(&self.b, &t.b), o: v_mul_m(v, &self.b) }
+        Tf {
+            b: transpose_times(&self.b, &t.b),
+            o: v_mul_m(v, &self.b),
+        }
     }
 
     pub fn rotation(&self) -> Q4 {
@@ -402,14 +452,23 @@ pub fn integrate_transform(cur: &Tf, linvel: V3, angvel: V3, time_step: f64) -> 
 
     let axis = if angle < 0.001 {
         // use Taylor's expansions of sync function
-        scale(angvel, 0.5 * time_step - (time_step * time_step * time_step) * (0.020833333333_f32 as f64) * angle * angle)
+        scale(
+            angvel,
+            0.5 * time_step
+                - (time_step * time_step * time_step) * (0.020833333333_f32 as f64) * angle * angle,
+        )
     } else {
         // sync(fAngle) = sin(c*fAngle)/t
         scale(angvel, super::fdlibm::sin(0.5 * angle * time_step) / angle)
     };
 
     // dorn * orn0, normalize and setRotation with the association the asm uses
-    let (o_, n_, m_, q_) = (axis[0], axis[1], axis[2], super::fdlibm::cos(angle * time_step * 0.5));
+    let (o_, n_, m_, q_) = (
+        axis[0],
+        axis[1],
+        axis[2],
+        super::fdlibm::cos(angle * time_step * 0.5),
+    );
     let orn0 = rq(cur.rotation());
     let (b_, g_, i_, p_) = (orn0[0], orn0[1], orn0[2], orn0[3]);
     let x = q_ * b_ + o_ * p_ + n_ * i_ - m_ * g_;

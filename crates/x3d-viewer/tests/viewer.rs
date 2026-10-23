@@ -2,9 +2,9 @@
 //! sensors. Worlds are written to a temp directory; time is virtual (`Viewer3d::step`).
 
 use std::path::PathBuf;
+use x3d_fields::math::Vector3;
 use x3d_viewer::chaser::Chaser;
 use x3d_viewer::viewer::{Key, UiEvent, Viewer3d};
-use x3d_fields::math::Vector3;
 
 const T0: f64 = 946684800.0;
 const DT: f64 = 1.0 / 30.0;
@@ -19,7 +19,12 @@ fn world(name: &str, text: &str) -> PathBuf {
 
 /// Run on a big stack (QuickJS), like the binaries do.
 fn big<F: FnOnce() + Send + 'static>(f: F) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 fn open(name: &str, text: &str) -> Viewer3d {
@@ -34,7 +39,12 @@ fn open(name: &str, text: &str) -> Viewer3d {
 
 fn number_after(s: &str, key: &str) -> f64 {
     let i = s.find(key).unwrap_or_else(|| panic!("{key:?} not in\n{s}")) + key.len();
-    s[i..].split(|c: char| c.is_whitespace()).next().unwrap().parse().unwrap()
+    s[i..]
+        .split(|c: char| c.is_whitespace())
+        .next()
+        .unwrap()
+        .parse()
+        .unwrap()
 }
 
 fn run(v: &mut Viewer3d, from: u64, to: u64) {
@@ -75,7 +85,10 @@ fn live_time_sensor_drives_interpolator() {
         // Half a cycle after start (frame at t0 + 2 s = start 1 + 1 s): fraction 0.5.
         run(&mut v, 1, 60);
         let s = scene(&mut v);
-        assert!(s.contains("rotation 0 1 0 1.5"), "rotation at half cycle:\n{s}");
+        assert!(
+            s.contains("rotation 0 1 0 1.5"),
+            "rotation at half cycle:\n{s}"
+        );
     });
 }
 
@@ -95,7 +108,11 @@ fn script_events_processed_each_frame() {
         assert_eq!(n, number_after(&s, "SFInt32 n "), "{s}");
         run(&mut v, 61, 70);
         let s = scene(&mut v);
-        assert_eq!(number_after(&s, "translation "), n + 10.0, "one tick per frame");
+        assert_eq!(
+            number_after(&s, "translation "),
+            n + 10.0,
+            "one tick per frame"
+        );
     });
 }
 
@@ -107,12 +124,18 @@ fn viewpoint_stack_next_previous_first_last() {
         let mut v = open("vps.wrl", VPS);
         assert_eq!(v.user_viewpoints().len(), 2);
         let (p, _, _) = v.user_pose();
-        assert!((p.z - 10.0).abs() < 1e-9, "first viewpoint is bound at load");
+        assert!(
+            (p.z - 10.0).abs() < 1e-9,
+            "first viewpoint is bound at load"
+        );
 
         v.input(UiEvent::Key(Key::PageDown));
         run(&mut v, 1, 90);
         let (p, _, _) = v.user_pose();
-        assert!((p.x - 5.0).abs() < 1e-9 && p.z.abs() < 1e-9, "next viewpoint: {p:?}");
+        assert!(
+            (p.x - 5.0).abs() < 1e-9 && p.z.abs() < 1e-9,
+            "next viewpoint: {p:?}"
+        );
 
         v.input(UiEvent::Key(Key::Home));
         run(&mut v, 91, 180);
@@ -131,21 +154,47 @@ fn examine_drag_rotates_and_wheel_zooms() {
     big(|| {
         let mut v = open("examine.wrl", VPS);
         let (p0, _, _) = v.user_pose();
-        v.input(UiEvent::MouseDown { button: 0, x: 256.0, y: 256.0 });
+        v.input(UiEvent::MouseDown {
+            button: 0,
+            x: 256.0,
+            y: 256.0,
+        });
         for i in 1..=10 {
-            v.input(UiEvent::MouseMove { x: 256.0 + 10.0 * i as f64, y: 256.0 });
+            v.input(UiEvent::MouseMove {
+                x: 256.0 + 10.0 * i as f64,
+                y: 256.0,
+            });
             run(&mut v, i, i);
         }
-        v.input(UiEvent::MouseUp { button: 0, x: 356.0, y: 256.0 });
+        v.input(UiEvent::MouseUp {
+            button: 0,
+            x: 356.0,
+            y: 256.0,
+        });
         run(&mut v, 11, 120);
         let (p1, _, _) = v.user_pose();
-        assert!(p1.x.abs() > 1.0, "dragging right orbits the camera sideways: {p1:?}");
-        assert!((p1.norm() - p0.norm()).abs() < 1e-6, "orbit keeps the distance");
+        assert!(
+            p1.x.abs() > 1.0,
+            "dragging right orbits the camera sideways: {p1:?}"
+        );
+        assert!(
+            (p1.norm() - p0.norm()).abs() < 1e-6,
+            "orbit keeps the distance"
+        );
 
-        v.input(UiEvent::Wheel { delta_y: -100.0, x: 256.0, y: 256.0 });
+        v.input(UiEvent::Wheel {
+            delta_y: -100.0,
+            x: 256.0,
+            y: 256.0,
+        });
         run(&mut v, 121, 180);
         let (p2, _, _) = v.user_pose();
-        assert!(p2.norm() < p1.norm() - 0.1, "wheel zooms in: {} -> {}", p1.norm(), p2.norm());
+        assert!(
+            p2.norm() < p1.norm() - 0.1,
+            "wheel zooms in: {} -> {}",
+            p1.norm(),
+            p2.norm()
+        );
     });
 }
 
@@ -159,12 +208,23 @@ fn walk_forward_moves_and_gravity_holds_on_ground() {
         run(&mut v, 1, 30);
         let (p0, _, _) = v.user_pose();
         assert!((p0.y - 1.6).abs() < 0.2, "standing on the ground: {p0:?}");
-        v.input(UiEvent::MouseDown { button: 0, x: 256.0, y: 256.0 });
+        v.input(UiEvent::MouseDown {
+            button: 0,
+            x: 256.0,
+            y: 256.0,
+        });
         v.input(UiEvent::MouseMove { x: 256.0, y: 312.0 });
         run(&mut v, 31, 90);
-        v.input(UiEvent::MouseUp { button: 0, x: 256.0, y: 312.0 });
+        v.input(UiEvent::MouseUp {
+            button: 0,
+            x: 256.0,
+            y: 312.0,
+        });
         let (p1, _, _) = v.user_pose();
-        assert!(p1.z < p0.z - 0.5, "dragging up walks forward (-z): {p0:?} -> {p1:?}");
+        assert!(
+            p1.z < p0.z - 0.5,
+            "dragging up walks forward (-z): {p0:?} -> {p1:?}"
+        );
         assert!((p1.y - p0.y).abs() < 0.05, "stays at eye height: {p1:?}");
     });
 }
@@ -180,23 +240,48 @@ fn touch_and_plane_sensors_fire() {
         // 512 px, fov pi/4 => about 61 px per unit at z = 0.
         let (cx, cy) = (256.0 - 2.0 * 61.0, 256.0);
         v.input(UiEvent::MouseMove { x: cx, y: cy });
-        v.input(UiEvent::MouseDown { button: 0, x: cx, y: cy });
-        v.input(UiEvent::MouseUp { button: 0, x: cx, y: cy });
+        v.input(UiEvent::MouseDown {
+            button: 0,
+            x: cx,
+            y: cy,
+        });
+        v.input(UiEvent::MouseUp {
+            button: 0,
+            x: cx,
+            y: cy,
+        });
         run(&mut v, 4, 6);
         let s = scene(&mut v);
-        assert!(!s.contains("DEF TC TimeSensor {\n}") && s.contains("startTime"), "touchTime reached the TimeSensor:\n{s}");
+        assert!(
+            !s.contains("DEF TC TimeSensor {\n}") && s.contains("startTime"),
+            "touchTime reached the TimeSensor:\n{s}"
+        );
 
         let (px, py) = (256.0 + 2.0 * 61.0, 256.0);
         v.input(UiEvent::MouseMove { x: px, y: py });
-        v.input(UiEvent::MouseDown { button: 0, x: px, y: py });
+        v.input(UiEvent::MouseDown {
+            button: 0,
+            x: px,
+            y: py,
+        });
         run(&mut v, 7, 7);
-        v.input(UiEvent::MouseMove { x: px + 61.0, y: py });
+        v.input(UiEvent::MouseMove {
+            x: px + 61.0,
+            y: py,
+        });
         run(&mut v, 8, 8);
-        v.input(UiEvent::MouseUp { button: 0, x: px + 61.0, y: py });
+        v.input(UiEvent::MouseUp {
+            button: 0,
+            x: px + 61.0,
+            y: py,
+        });
         run(&mut v, 9, 10);
         let s = scene(&mut v);
         let x = number_after(&s, "DEF P Transform {\n  translation ");
-        assert!((0.7..=1.2).contains(&x), "plane sensor moved the box by about 1 unit (translation = offset + delta): {x}\n{s}");
+        assert!(
+            (0.7..=1.2).contains(&x),
+            "plane sensor moved the box by about 1 unit (translation = offset + delta): {x}\n{s}"
+        );
     });
 }
 
@@ -209,10 +294,22 @@ fn anchor_activation_is_reported_not_opened() {
         );
         run(&mut v, 1, 3);
         v.input(UiEvent::MouseMove { x: 256.0, y: 256.0 });
-        v.input(UiEvent::MouseDown { button: 0, x: 256.0, y: 256.0 });
-        v.input(UiEvent::MouseUp { button: 0, x: 256.0, y: 256.0 });
+        v.input(UiEvent::MouseDown {
+            button: 0,
+            x: 256.0,
+            y: 256.0,
+        });
+        v.input(UiEvent::MouseUp {
+            button: 0,
+            x: 256.0,
+            y: 256.0,
+        });
         run(&mut v, 4, 6);
-        assert!(v.status.contains("Anchor") && v.status.contains("example.invalid"), "status: {:?}", v.status);
+        assert!(
+            v.status.contains("Anchor") && v.status.contains("example.invalid"),
+            "status: {:?}",
+            v.status
+        );
     });
 }
 
@@ -228,14 +325,26 @@ fn render_cache_rebuilds_only_changed_geometry() {
         v.date_now = T0 + 2.0;
         v.step(T0 + 2.0);
         let f1 = v.build_frame();
-        assert_eq!(v.render_cache.built, 2, "first frame builds both geometries");
+        assert_eq!(
+            v.render_cache.built, 2,
+            "first frame builds both geometries"
+        );
         v.date_now = T0 + 3.0;
         v.step(T0 + 3.0);
         let f2 = v.build_frame();
         // The Box is reused, the animated IndexedFaceSet is rebuilt, and its vertices moved.
         assert_eq!((v.render_cache.built, v.render_cache.reused), (1, 1));
-        let verts = |f: &x3d_render::traverse::Frame| f.items.iter().find(|i| i.geometry.vertex_count() < 36).map(|i| i.geometry.vertices.clone());
-        assert_ne!(verts(&f1), verts(&f2), "coordinate animation reached the geometry");
+        let verts = |f: &x3d_render::traverse::Frame| {
+            f.items
+                .iter()
+                .find(|i| i.geometry.vertex_count() < 36)
+                .map(|i| i.geometry.vertices.clone())
+        };
+        assert_ne!(
+            verts(&f1),
+            verts(&f2),
+            "coordinate animation reached the geometry"
+        );
         // Nothing changes between two builds without a step: all reused.
         let _ = v.build_frame();
         assert_eq!((v.render_cache.built, v.render_cache.reused), (0, 2));
@@ -249,7 +358,11 @@ fn examine_pan_accumulates_moves_within_a_frame() {
     big(|| {
         let pan = |moves_per_frame: usize| {
             let mut v = open("pan.wrl", "#VRML V2.0 utf8\nShape { geometry Box {} }\n");
-            v.input(UiEvent::MouseDown { button: 1, x: 256.0, y: 256.0 });
+            v.input(UiEvent::MouseDown {
+                button: 1,
+                x: 256.0,
+                y: 256.0,
+            });
             let mut x = 256.0;
 
             for frame in 1..=20u64 {
@@ -268,7 +381,12 @@ fn examine_pan_accumulates_moves_within_a_frame() {
         };
 
         let (one, many) = (pan(1), pan(6));
-        assert!((one.x - many.x).abs() < 1e-9, "same total pan: {} vs {}", one.x, many.x);
+        assert!(
+            (one.x - many.x).abs() < 1e-9,
+            "same total pan: {} vs {}",
+            one.x,
+            many.x
+        );
         assert!(many.x.abs() > 0.1, "the camera panned: {}", many.x);
     });
 }
@@ -277,11 +395,22 @@ fn examine_pan_accumulates_moves_within_a_frame() {
 #[test]
 fn render_cache_keeps_background_textures() {
     big(|| {
-        let p = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-x8/b-all-front.wrl");
+        let p = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../oracle/synthetic-x8/b-all-front.wrl");
         let mut v = Viewer3d::load(&p, None, T0, 128, 128).expect("load");
         v.frame_rate = 1.0 / DT;
         run(&mut v, 1, 3);
-        let faces = |f: &x3d_render::traverse::Frame| f.background.as_ref().map(|b| b.faces.iter().map(|x| std::rc::Rc::as_ptr(&x.texture) as usize).collect::<Vec<_>>()).unwrap_or_default();
+        let faces = |f: &x3d_render::traverse::Frame| {
+            f.background
+                .as_ref()
+                .map(|b| {
+                    b.faces
+                        .iter()
+                        .map(|x| std::rc::Rc::as_ptr(&x.texture) as usize)
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default()
+        };
         let (a, b) = (faces(&v.build_frame()), faces(&v.build_frame()));
         assert!(!a.is_empty(), "the scene has textured background faces");
         assert_eq!(a, b, "the same decoded images in consecutive frames");

@@ -30,7 +30,11 @@ enum Op {
 /// destination; with `analyser` the sink is an AnalyserNode whose output goes nowhere until
 /// `Op::AnalyserOut` connects it to `tap` -> destination.
 fn render(loop_: bool, analyser: bool, connected: bool, events: &[(usize, Op)]) -> Vec<f32> {
-    let mut e = AudioEngine::new(AudioMode::Offline { channels: 1, sample_rate: SR as f32, length: LENGTH });
+    let mut e = AudioEngine::new(AudioMode::Offline {
+        channels: 1,
+        sample_rate: SR as f32,
+        length: LENGTH,
+    });
     let data: Vec<f32> = (0..SR).map(|i| (i + 1) as f32 / SCALE).collect();
     let buffer = e.create_buffer(1, SR, SR as f32, Some(&data));
     let source = e.buffer_source(Some(&buffer));
@@ -75,7 +79,9 @@ fn render(loop_: bool, analyser: bool, connected: bool, events: &[(usize, Op)]) 
 
 /// (first non-zero frame at or after `from`, buffer index there).
 fn probe(out: &[f32], from: usize) -> (usize, Option<usize>) {
-    let k = (from..out.len()).find(|&k| out[k] != 0.0).unwrap_or(out.len());
+    let k = (from..out.len())
+        .find(|&k| out[k] != 0.0)
+        .unwrap_or(out.len());
     (k, out.get(k).map(|v| (v * SCALE).round() as usize - 1))
 }
 
@@ -94,7 +100,12 @@ fn late_connected_source_starts_at_its_offset() {
 
 #[test]
 fn reconnected_source_goes_on_from_where_it_was_pulled() {
-    let out = render(false, false, true, &[(94, Op::Disconnect), (188, Op::Connect)]);
+    let out = render(
+        false,
+        false,
+        true,
+        &[(94, Op::Disconnect), (188, Op::Connect)],
+    );
     assert_eq!(probe(&out, 0), (0, Some(0)));
     assert_eq!(probe(&out, 12000), (12000, Some(12000)));
     assert_eq!(probe(&out, 24000), (24064, Some(12032)));
@@ -132,7 +143,11 @@ fn unconnected_analyser_pulls_its_input() {
 const N: usize = 512;
 
 fn render_oscillator(connected: bool, stop: Option<f64>, events: &[(usize, Op)]) -> Vec<f32> {
-    let mut e = AudioEngine::new(AudioMode::Offline { channels: 1, sample_rate: SR as f32, length: SR });
+    let mut e = AudioEngine::new(AudioMode::Offline {
+        channels: 1,
+        sample_rate: SR as f32,
+        length: SR,
+    });
     let osc = e.oscillator();
     let gain = e.gain(1.0);
     let sink = e.gain(1.0);
@@ -173,7 +188,9 @@ fn render_oscillator(connected: bool, stop: Option<f64>, events: &[(usize, Op)])
 }
 
 fn max_diff(a: &[f32], at: usize, b: &[f32], b_at: usize) -> f32 {
-    (0..N).map(|i| (a[at + i] - b[b_at + i]).abs()).fold(0.0, f32::max)
+    (0..N)
+        .map(|i| (a[at + i] - b[b_at + i]).abs())
+        .fold(0.0, f32::max)
 }
 
 #[test]
@@ -183,7 +200,11 @@ fn late_connected_oscillator_keeps_its_phase() {
 
     assert!(late[..12032].iter().all(|v| *v == 0.0));
     assert!(reference[1] != 0.0);
-    assert_eq!(max_diff(&late, 12032, &reference, 0), 1.2740493e-6, "plays on from the phase where it was last pulled");
+    assert_eq!(
+        max_diff(&late, 12032, &reference, 0),
+        1.2740493e-6,
+        "plays on from the phase where it was last pulled"
+    );
 }
 
 #[test]

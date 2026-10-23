@@ -23,11 +23,26 @@ const RELEASE_ZONE_1: f32 = 0.09;
 const RELEASE_ZONE_2: f32 = 0.16;
 const RELEASE_ZONE_3: f32 = 0.42;
 const RELEASE_ZONE_4: f32 = 0.98;
-const A_BASE: f32 = 0.9999999999999998 * RELEASE_ZONE_1 + 1.843_221_968_432_392_3e-16 * RELEASE_ZONE_2 - 1.937_339_435_167_642_3e-16 * RELEASE_ZONE_3 + 8.824_516_011_816_245e-18 * RELEASE_ZONE_4;
-const B_BASE: f32 = -1.578_832_035_284_588_8 * RELEASE_ZONE_1 + 2.330_583_703_207_428_6 * RELEASE_ZONE_2 - 0.914_119_420_484_042_9 * RELEASE_ZONE_3 + 0.162_367_752_561_203_2 * RELEASE_ZONE_4;
-const C_BASE: f32 = 0.533_414_286_910_642_4 * RELEASE_ZONE_1 - 1.272_736_789_213_631 * RELEASE_ZONE_2 + 0.925_885_604_220_751_2 * RELEASE_ZONE_3 - 0.186_563_101_917_762_26 * RELEASE_ZONE_4;
-const D_BASE: f32 = 0.087_834_631_382_072_34 * RELEASE_ZONE_1 - 0.169_416_296_792_562_2 * RELEASE_ZONE_2 + 0.085_880_579_515_952_72 * RELEASE_ZONE_3 - 0.004_298_914_105_462_83 * RELEASE_ZONE_4;
-const E_BASE: f32 = -0.042_416_883_008_123_074 * RELEASE_ZONE_1 + 0.111_569_382_798_760_2 * RELEASE_ZONE_2 - 0.097_646_763_252_658_72 * RELEASE_ZONE_3 + 0.028_494_263_462_021_576 * RELEASE_ZONE_4;
+const A_BASE: f32 = 0.9999999999999998 * RELEASE_ZONE_1
+    + 1.843_221_968_432_392_3e-16 * RELEASE_ZONE_2
+    - 1.937_339_435_167_642_3e-16 * RELEASE_ZONE_3
+    + 8.824_516_011_816_245e-18 * RELEASE_ZONE_4;
+const B_BASE: f32 = -1.578_832_035_284_588_8 * RELEASE_ZONE_1
+    + 2.330_583_703_207_428_6 * RELEASE_ZONE_2
+    - 0.914_119_420_484_042_9 * RELEASE_ZONE_3
+    + 0.162_367_752_561_203_2 * RELEASE_ZONE_4;
+const C_BASE: f32 = 0.533_414_286_910_642_4 * RELEASE_ZONE_1
+    - 1.272_736_789_213_631 * RELEASE_ZONE_2
+    + 0.925_885_604_220_751_2 * RELEASE_ZONE_3
+    - 0.186_563_101_917_762_26 * RELEASE_ZONE_4;
+const D_BASE: f32 = 0.087_834_631_382_072_34 * RELEASE_ZONE_1
+    - 0.169_416_296_792_562_2 * RELEASE_ZONE_2
+    + 0.085_880_579_515_952_72 * RELEASE_ZONE_3
+    - 0.004_298_914_105_462_83 * RELEASE_ZONE_4;
+const E_BASE: f32 = -0.042_416_883_008_123_074 * RELEASE_ZONE_1
+    + 0.111_569_382_798_760_2 * RELEASE_ZONE_2
+    - 0.097_646_763_252_658_72 * RELEASE_ZONE_3
+    + 0.028_494_263_462_021_576 * RELEASE_ZONE_4;
 const SAT_RELEASE_TIME: f32 = 0.0025;
 const MAX_PRE_DELAY_FRAMES: usize = 1024;
 const MAX_PRE_DELAY_FRAMES_MASK: usize = MAX_PRE_DELAY_FRAMES - 1;
@@ -152,7 +167,12 @@ impl Processor {
         k
     }
 
-    fn update_static_curve_parameters(&mut self, db_threshold: f32, db_knee: f32, ratio: f32) -> f32 {
+    fn update_static_curve_parameters(
+        &mut self,
+        db_threshold: f32,
+        db_knee: f32,
+        ratio: f32,
+    ) -> f32 {
         if db_threshold != self.db_threshold || db_knee != self.db_knee || ratio != self.ratio {
             self.db_threshold = db_threshold;
             self.linear_threshold = decibels_to_linear(db_threshold);
@@ -170,7 +190,8 @@ impl Processor {
     }
 
     fn set_pre_delay_time(&mut self, pre_delay_time: f32, sample_rate: f32) {
-        let pre_delay_frames = ((pre_delay_time * sample_rate) as usize).min(MAX_PRE_DELAY_FRAMES - 1);
+        let pre_delay_frames =
+            ((pre_delay_time * sample_rate) as usize).min(MAX_PRE_DELAY_FRAMES - 1);
 
         if self.last_pre_delay_frames != pre_delay_frames {
             self.last_pre_delay_frames = pre_delay_frames;
@@ -191,7 +212,10 @@ impl AudioWorkletProcessor for Processor {
     fn constructor(reduction: Arc<Reduction>) -> Self {
         Processor {
             reduction,
-            pre_delay_buffers: [vec![0.0; MAX_PRE_DELAY_FRAMES], vec![0.0; MAX_PRE_DELAY_FRAMES]],
+            pre_delay_buffers: [
+                vec![0.0; MAX_PRE_DELAY_FRAMES],
+                vec![0.0; MAX_PRE_DELAY_FRAMES],
+            ],
             pre_delay_read_index: 0,
             pre_delay_write_index: DEFAULT_PRE_DELAY_FRAMES,
             last_pre_delay_frames: DEFAULT_PRE_DELAY_FRAMES,
@@ -214,18 +238,38 @@ impl AudioWorkletProcessor for Processor {
     }
 
     fn parameter_descriptors() -> Vec<AudioParamDescriptor> {
-        let p = |name: &str, default_value, min_value, max_value| AudioParamDescriptor { name: name.into(), automation_rate: AutomationRate::K, default_value, min_value, max_value };
+        let p = |name: &str, default_value, min_value, max_value| AudioParamDescriptor {
+            name: name.into(),
+            automation_rate: AutomationRate::K,
+            default_value,
+            min_value,
+            max_value,
+        };
 
-        vec![p("threshold", -24.0, -100.0, 0.0), p("knee", 30.0, 0.0, 40.0), p("ratio", 12.0, 1.0, 20.0), p("attack", 0.003, 0.0, 1.0), p("release", 0.25, 0.0, 1.0)]
+        vec![
+            p("threshold", -24.0, -100.0, 0.0),
+            p("knee", 30.0, 0.0, 40.0),
+            p("ratio", 12.0, 1.0, 20.0),
+            p("attack", 0.003, 0.0, 1.0),
+            p("release", 0.25, 0.0, 1.0),
+        ]
     }
 
     fn onmessage(&mut self, _msg: &mut dyn Any) {}
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let sample_rate = scope.sample_rate;
 
         if self.metering_release_k == 0.0 {
-            self.metering_release_k = (1.0 - (-1.0 / (sample_rate as f64 * METERING_RELEASE_TIME_CONSTANT as f64)).exp()) as f32;
+            self.metering_release_k = (1.0
+                - (-1.0 / (sample_rate as f64 * METERING_RELEASE_TIME_CONSTANT as f64)).exp())
+                as f32;
         }
 
         let db_threshold = params.get("threshold")[0];
@@ -279,7 +323,9 @@ impl AudioWorkletProcessor for Processor {
             } else {
                 db_compression_diff = ensure_finite(db_compression_diff, 1.0);
 
-                if self.db_max_attack_compression_diff == -1.0 || self.db_max_attack_compression_diff < db_compression_diff {
+                if self.db_max_attack_compression_diff == -1.0
+                    || self.db_max_attack_compression_diff < db_compression_diff
+                {
                     self.db_max_attack_compression_diff = db_compression_diff;
                 }
 
@@ -298,10 +344,18 @@ impl AudioWorkletProcessor for Processor {
                 let mut compressor_input = 0f32;
 
                 for j in 0..2 {
-                    let channel = if source.len() > j { source[j] } else { source[0] };
+                    let channel = if source.len() > j {
+                        source[j]
+                    } else {
+                        source[0]
+                    };
                     let undelayed_source = channel[frame_index];
                     self.pre_delay_buffers[j][pre_delay_write_index] = undelayed_source;
-                    let abs_undelayed_source = if undelayed_source > 0.0 { undelayed_source } else { -undelayed_source };
+                    let abs_undelayed_source = if undelayed_source > 0.0 {
+                        undelayed_source
+                    } else {
+                        -undelayed_source
+                    };
 
                     if compressor_input < abs_undelayed_source {
                         compressor_input = abs_undelayed_source;
@@ -314,11 +368,19 @@ impl AudioWorkletProcessor for Processor {
 
                 let abs_input = compressor_input;
                 let shaped_input = self.saturate(abs_input, k);
-                let attenuation = if abs_input <= 0.0001 { 1.0 } else { shaped_input / abs_input };
+                let attenuation = if abs_input <= 0.0001 {
+                    1.0
+                } else {
+                    shaped_input / abs_input
+                };
                 let db_attenuation = 2f32.max(-linear_to_decibels(attenuation));
                 let db_per_frame = db_attenuation / sat_release_frames;
                 let sat_release_rate = decibels_to_linear(db_per_frame) - 1.0;
-                let rate = if attenuation > detector_average { sat_release_rate } else { 1.0 };
+                let rate = if attenuation > detector_average {
+                    sat_release_rate
+                } else {
+                    1.0
+                };
                 detector_average += (attenuation - detector_average) * rate;
                 detector_average = detector_average.min(1.0);
                 detector_average = ensure_finite(detector_average, 1.0);
@@ -330,18 +392,21 @@ impl AudioWorkletProcessor for Processor {
                     compressor_gain = compressor_gain.min(1.0);
                 }
 
-                let post_warp_compressor_gain = ((PI_OVER_TWO * compressor_gain) as f64).sin() as f32;
+                let post_warp_compressor_gain =
+                    ((PI_OVER_TWO * compressor_gain) as f64).sin() as f32;
                 let total_gain = linear_post_gain * post_warp_compressor_gain;
                 let db_real_gain = linear_to_decibels(post_warp_compressor_gain);
 
                 if db_real_gain < self.metering_gain {
                     self.metering_gain = db_real_gain;
                 } else {
-                    self.metering_gain += (db_real_gain - self.metering_gain) * self.metering_release_k;
+                    self.metering_gain +=
+                        (db_real_gain - self.metering_gain) * self.metering_release_k;
                 }
 
                 for j in 0..2 {
-                    output[j][frame_index] = self.pre_delay_buffers[j][pre_delay_read_index] * total_gain;
+                    output[j][frame_index] =
+                        self.pre_delay_buffers[j][pre_delay_read_index] * total_gain;
                 }
 
                 frame_index += 1;
@@ -358,7 +423,11 @@ impl AudioWorkletProcessor for Processor {
         self.reduction.set(self.metering_gain);
 
         // TailTime: 5 · 0.325 s after the input goes silent.
-        self.silent_frames = if silent { self.silent_frames + frames_to_process as f64 } else { 0.0 };
+        self.silent_frames = if silent {
+            self.silent_frames + frames_to_process as f64
+        } else {
+            0.0
+        };
         self.silent_frames < 5.0 * METERING_RELEASE_TIME_CONSTANT as f64 * sample_rate as f64
     }
 }

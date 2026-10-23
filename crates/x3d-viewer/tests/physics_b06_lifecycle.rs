@@ -15,7 +15,12 @@ const DT: f64 = 1.0 / 60.0;
 const HEADER: &str = "#X3D V3.3 utf8\nPROFILE Full\nCOMPONENT RigidBodyPhysics:2\n";
 
 fn big(f: impl FnOnce() + Send + 'static) {
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 /// A floor, a resting box R, a falling sphere A and box B, three joints (Ball, Slider, SingleAxisHinge) and a
@@ -36,7 +41,11 @@ fn physics(extra: bool) -> String {
     } else {
         ""
     };
-    let collidables = if extra { "USE F_C USE R_C USE A_C USE B_C USE C_C USE D_C" } else { "USE F_C USE R_C" };
+    let collidables = if extra {
+        "USE F_C USE R_C USE A_C USE B_C USE C_C USE D_C"
+    } else {
+        "USE F_C USE R_C"
+    };
 
     format!(
         "{HEADER}
@@ -71,7 +80,20 @@ struct World {
 impl World {
     fn load(d: &Path, main: &str) -> World {
         let p = write(d, "main.x3dv", main);
-        let mut w = World { v: Viewer3d::load_attributes(&p, Some(d), T0, 64, 64, Some(60.0), false, ORACLE_PAGE_ATTRIBUTES).expect("load"), t: T0 };
+        let mut w = World {
+            v: Viewer3d::load_attributes(
+                &p,
+                Some(d),
+                T0,
+                64,
+                64,
+                Some(60.0),
+                false,
+                ORACLE_PAGE_ATTRIBUTES,
+            )
+            .expect("load"),
+            t: T0,
+        };
 
         w.v.frame_rate = 60.0;
         w.steps(4);
@@ -87,7 +109,10 @@ impl World {
     }
 
     fn named(&self, ctx: CtxId, name: &str) -> NodeId {
-        self.v.rt.scene.contexts[ctx].named_nodes.get(name).unwrap_or_else(|| panic!("no {name}"))
+        self.v.rt.scene.contexts[ctx]
+            .named_nodes
+            .get(name)
+            .unwrap_or_else(|| panic!("no {name}"))
     }
 
     fn set(&mut self, node: NodeId, name: &str, value: FieldValue) {
@@ -130,7 +155,12 @@ struct Resources {
 fn resources(rt: &mut Runtime) -> Resources {
     let n = rt.physics_nursery_counts();
     let sensor = rt.private_field(rt.browser_node, "sensorEvents").unwrap();
-    let update_interests = rt.frt.get(&sensor).map_or(0, |f| f.interests.iter().filter(|i| matches!(i.cb, Cb::Physics(_))).count());
+    let update_interests = rt.frt.get(&sensor).map_or(0, |f| {
+        f.interests
+            .iter()
+            .filter(|i| matches!(i.cb, Cb::Physics(_)))
+            .count()
+    });
     let s = &rt.scene;
 
     Resources {
@@ -152,7 +182,13 @@ fn resources(rt: &mut Runtime) -> Resources {
 fn rss_kib() -> usize {
     std::fs::read_to_string("/proc/self/status")
         .ok()
-        .and_then(|s| s.lines().find_map(|l| l.strip_prefix("VmRSS:").and_then(|r| r.split_whitespace().next()).and_then(|n| n.parse().ok())))
+        .and_then(|s| {
+            s.lines().find_map(|l| {
+                l.strip_prefix("VmRSS:")
+                    .and_then(|r| r.split_whitespace().next())
+                    .and_then(|n| n.parse().ok())
+            })
+        })
         .unwrap_or(0)
 }
 
@@ -162,7 +198,12 @@ fn a_body_removed_from_bodies_leaves_the_bullet_world() {
         let d = dir("body-removed");
         let mut w = World::load(&d, &physics(true));
         let rbc = w.named(ROOT, "RBC");
-        let (a, b, c, dd) = (w.named(ROOT, "A"), w.named(ROOT, "B"), w.named(ROOT, "C"), w.named(ROOT, "D"));
+        let (a, b, c, dd) = (
+            w.named(ROOT, "A"),
+            w.named(ROOT, "B"),
+            w.named(ROOT, "C"),
+            w.named(ROOT, "D"),
+        );
         let all = w.nodes("bodies", rbc);
         let counts = w.v.rt.physics_world_counts(Some(rbc));
 
@@ -179,13 +220,22 @@ fn a_body_removed_from_bodies_leaves_the_bullet_world() {
 
         assert_eq!(counts.in_world, 5, "{counts:?}");
         w.steps(60);
-        assert_eq!(w.vec3(a, "position"), frozen, "a removed body is not simulated");
+        assert_eq!(
+            w.vec3(a, "position"),
+            frozen,
+            "a removed body is not simulated"
+        );
         // The Ammo object of A belongs to its node (not to the dynamics world) until the node goes.
         assert_eq!(w.v.rt.physics_world_counts(Some(rbc)).bodies, 6);
         assert!(w.v.rt.physics_stale_interests().is_empty());
 
         // B leaves: the two joints that name it (J1 and J3) are gone from the world, J2 stays.
-        let keep: Vec<Option<NodeId>> = w.nodes("bodies", rbc).into_iter().filter(|&n| n != b).map(Some).collect();
+        let keep: Vec<Option<NodeId>> = w
+            .nodes("bodies", rbc)
+            .into_iter()
+            .filter(|&n| n != b)
+            .map(Some)
+            .collect();
 
         w.set(rbc, "bodies", FieldValue::MFNode(keep));
         w.steps(2);
@@ -218,7 +268,20 @@ DEF RBC RigidBodyCollection {{ gravity 0 -9.8 0
         };
         let (d1, d2) = (dir("removed-1"), dir("removed-2"));
         let load = |d: &Path, text: &str| {
-            let mut w = World { v: Viewer3d::load_attributes(&write(d, "main.x3dv", text), Some(d), T0, 64, 64, Some(60.0), false, ORACLE_PAGE_ATTRIBUTES).unwrap(), t: T0 };
+            let mut w = World {
+                v: Viewer3d::load_attributes(
+                    &write(d, "main.x3dv", text),
+                    Some(d),
+                    T0,
+                    64,
+                    64,
+                    Some(60.0),
+                    false,
+                    ORACLE_PAGE_ATTRIBUTES,
+                )
+                .unwrap(),
+                t: T0,
+            };
 
             w.v.frame_rate = 60.0;
             w
@@ -228,7 +291,12 @@ DEF RBC RigidBodyCollection {{ gravity 0 -9.8 0
         let mut without = load(&d2, &scene(false));
         let a = with.named(ROOT, "A");
         let rbc = with.named(ROOT, "RBC");
-        let keep: Vec<Option<NodeId>> = with.nodes("bodies", rbc).into_iter().filter(|&n| n != a).map(Some).collect();
+        let keep: Vec<Option<NodeId>> = with
+            .nodes("bodies", rbc)
+            .into_iter()
+            .filter(|&n| n != a)
+            .map(Some)
+            .collect();
 
         with.set(rbc, "bodies", FieldValue::MFNode(keep));
 
@@ -240,7 +308,10 @@ DEF RBC RigidBodyCollection {{ gravity 0 -9.8 0
             let (bw, bo) = (with.named(ROOT, "B"), without.named(ROOT, "B"));
 
             assert_eq!(with.vec3(bw, "position"), without.vec3(bo, "position"));
-            assert_eq!(with.v.rt.get_bool(bw, "enabled"), without.v.rt.get_bool(bo, "enabled"));
+            assert_eq!(
+                with.v.rt.get_bool(bw, "enabled"),
+                without.v.rt.get_bool(bo, "enabled")
+            );
         }
 
         let _ = (std::fs::remove_dir_all(&d1), std::fs::remove_dir_all(&d2));
@@ -257,7 +328,12 @@ fn a_joint_removed_from_joints_leaves_the_bullet_world() {
 
         assert_eq!(w.v.rt.physics_world_counts(Some(rbc)).constraints, 3);
 
-        let keep: Vec<Option<NodeId>> = w.nodes("joints", rbc).into_iter().filter(|&n| n != j1).map(Some).collect();
+        let keep: Vec<Option<NodeId>> = w
+            .nodes("joints", rbc)
+            .into_iter()
+            .filter(|&n| n != j1)
+            .map(Some)
+            .collect();
 
         w.set(rbc, "joints", FieldValue::MFNode(keep));
         w.steps(2);
@@ -274,7 +350,10 @@ fn a_joint_removed_from_joints_leaves_the_bullet_world() {
         let _ = (j1, j2);
 
         // And they come back with `joints`.
-        let all: Vec<Option<NodeId>> = ["J1", "J2", "J3"].iter().map(|n| Some(w.named(ROOT, n))).collect();
+        let all: Vec<Option<NodeId>> = ["J1", "J2", "J3"]
+            .iter()
+            .map(|n| Some(w.named(ROOT, n)))
+            .collect();
 
         w.set(rbc, "joints", FieldValue::MFNode(all));
         w.steps(2);
@@ -294,7 +373,10 @@ fn repeated_body_and_joint_create_remove_stay_flat() {
         let bodies = w.nodes("bodies", rbc);
         let joints = w.nodes("joints", rbc);
         let few: Vec<Option<NodeId>> = bodies.iter().take(2).map(|&n| Some(n)).collect();
-        let (all_b, all_j): (Vec<Option<NodeId>>, Vec<Option<NodeId>>) = (bodies.iter().map(|&n| Some(n)).collect(), joints.iter().map(|&n| Some(n)).collect());
+        let (all_b, all_j): (Vec<Option<NodeId>>, Vec<Option<NodeId>>) = (
+            bodies.iter().map(|&n| Some(n)).collect(),
+            joints.iter().map(|&n| Some(n)).collect(),
+        );
         let mut first = None;
         let mut f_slots = 0;
 
@@ -305,7 +387,11 @@ fn repeated_body_and_joint_create_remove_stay_flat() {
 
             let counts = w.v.rt.physics_world_counts(Some(rbc));
 
-            assert_eq!((counts.in_world, counts.constraints), (2, 0), "cycle {c}: {counts:?}");
+            assert_eq!(
+                (counts.in_world, counts.constraints),
+                (2, 0),
+                "cycle {c}: {counts:?}"
+            );
 
             w.set(rbc, "bodies", FieldValue::MFNode(all_b.clone()));
             w.set(rbc, "joints", FieldValue::MFNode(all_j.clone()));
@@ -313,14 +399,29 @@ fn repeated_body_and_joint_create_remove_stay_flat() {
 
             let counts = w.v.rt.physics_world_counts(Some(rbc));
 
-            assert_eq!((counts.in_world, counts.constraints), (6, 3), "cycle {c}: {counts:?}");
+            assert_eq!(
+                (counts.in_world, counts.constraints),
+                (6, 3),
+                "cycle {c}: {counts:?}"
+            );
             assert!(w.v.rt.physics_stale_interests().is_empty());
 
             if [10, 100].contains(&c) {
-                println!("MEM\tphysics-joint-churn\t{c}\tconstraint_slots={}\tbody_slots={}\tshape_slots={}", counts.constraint_slots, counts.body_slots, counts.shape_slots);
+                println!(
+                    "MEM\tphysics-joint-churn\t{c}\tconstraint_slots={}\tbody_slots={}\tshape_slots={}",
+                    counts.constraint_slots, counts.body_slots, counts.shape_slots
+                );
             }
 
-            let r = (resources(&mut w.v.rt), counts.bodies, counts.shapes, counts.motion_states, counts.body_slots, counts.shape_slots, counts.motion_state_slots);
+            let r = (
+                resources(&mut w.v.rt),
+                counts.bodies,
+                counts.shapes,
+                counts.motion_states,
+                counts.body_slots,
+                counts.shape_slots,
+                counts.motion_state_slots,
+            );
 
             if c == 10 {
                 f_slots = counts.constraint_slots;
@@ -329,7 +430,11 @@ fn repeated_body_and_joint_create_remove_stay_flat() {
 
             if let Some(f) = &first {
                 assert_eq!(&r.0, &f.0, "cycle {c}: a runtime table grew");
-                assert_eq!((r.1, r.2, r.3, r.4, r.5, r.6, counts.constraint_slots), (f.1, f.2, f.3, f.4, f.5, f.6, f_slots), "cycle {c}: the Bullet arenas grew");
+                assert_eq!(
+                    (r.1, r.2, r.3, r.4, r.5, r.6, counts.constraint_slots),
+                    (f.1, f.2, f.3, f.4, f.5, f.6, f_slots),
+                    "cycle {c}: the Bullet arenas grew"
+                );
             }
         }
 
@@ -341,7 +446,10 @@ fn start(d: &Path) -> World {
     write(d, "a.x3dv", &physics(true));
     write(d, "b.x3dv", &physics(false));
 
-    World::load(d, &format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n"))
+    World::load(
+        d,
+        &format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n"),
+    )
 }
 
 fn inline_ctx(w: &World) -> CtxId {
@@ -359,7 +467,10 @@ fn physics_worlds_come_and_go_with_their_inline_100_cycles() {
 
         // Six bodies + three joints; the collection's and the sensor's update interests.
         assert_eq!(r.update_interests, 2, "{r:?}");
-        assert_eq!(r.physics_nodes, 20, "RBC, 6 bodies, 6 collidables, CollisionCollection, 3 joints, the sensor and its 2 Contacts: {r:?}");
+        assert_eq!(
+            r.physics_nodes, 20,
+            "RBC, 6 bodies, 6 collidables, CollisionCollection, 3 joints, the sensor and its 2 Contacts: {r:?}"
+        );
 
         for c in 1..=100 {
             let inl = w.named(ROOT, "Inl");
@@ -369,19 +480,39 @@ fn physics_worlds_come_and_go_with_their_inline_100_cycles() {
 
             let r = resources(&mut w.v.rt);
 
-            assert_eq!((r.physics_nodes, r.update_interests, r.nursery_bodies, r.nursery_shapes, r.nursery_motion_states), (0, 0, 0, 0, 0), "cycle {c}: an unloaded scene keeps physics state: {r:?}");
-            assert!(w.v.rt.physics_stale_interests().is_empty(), "cycle {c}: stale interests");
+            assert_eq!(
+                (
+                    r.physics_nodes,
+                    r.update_interests,
+                    r.nursery_bodies,
+                    r.nursery_shapes,
+                    r.nursery_motion_states
+                ),
+                (0, 0, 0, 0, 0),
+                "cycle {c}: an unloaded scene keeps physics state: {r:?}"
+            );
+            assert!(
+                w.v.rt.physics_stale_interests().is_empty(),
+                "cycle {c}: stale interests"
+            );
 
             if c == 10 {
                 unloaded = Some(r.clone());
             }
 
             if let Some(b) = &unloaded {
-                assert_eq!(&r, b, "cycle {c}: a table grew after the warm-up (unloaded)");
+                assert_eq!(
+                    &r, b,
+                    "cycle {c}: a table grew after the warm-up (unloaded)"
+                );
             }
 
             // The other scene (fewer nodes) on odd cycles, the big one on even cycles.
-            w.set(inl, "url", FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]));
+            w.set(
+                inl,
+                "url",
+                FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]),
+            );
             w.set(inl, "load", FieldValue::SFBool(true));
             w.steps(8);
 
@@ -391,18 +522,36 @@ fn physics_worlds_come_and_go_with_their_inline_100_cycles() {
             let counts = w.v.rt.physics_world_counts(Some(rbc));
 
             if c % 2 == 0 {
-                assert_eq!((counts.in_world, counts.constraints), (6, 3), "cycle {c}: {counts:?}");
+                assert_eq!(
+                    (counts.in_world, counts.constraints),
+                    (6, 3),
+                    "cycle {c}: {counts:?}"
+                );
                 // The sensor is live and the sphere A fell onto the floor: contacts exist.
                 let s = w.named(ctx, "S");
 
-                assert!(w.v.rt.get_bool(s, "isActive"), "cycle {c}: the sphere rests on the floor");
-                assert_eq!(w.nodes("contacts", s).len(), 2, "cycle {c}: the sphere and the box R rest on the floor");
+                assert!(
+                    w.v.rt.get_bool(s, "isActive"),
+                    "cycle {c}: the sphere rests on the floor"
+                );
+                assert_eq!(
+                    w.nodes("contacts", s).len(),
+                    2,
+                    "cycle {c}: the sphere and the box R rest on the floor"
+                );
             } else {
-                assert_eq!((counts.in_world, counts.constraints), (2, 0), "cycle {c}: {counts:?}");
+                assert_eq!(
+                    (counts.in_world, counts.constraints),
+                    (2, 0),
+                    "cycle {c}: {counts:?}"
+                );
             }
 
             assert_eq!(r.update_interests, 2, "cycle {c}: {r:?}");
-            assert!(w.v.rt.physics_stale_interests().is_empty(), "cycle {c}: stale interests");
+            assert!(
+                w.v.rt.physics_stale_interests().is_empty(),
+                "cycle {c}: stale interests"
+            );
 
             if [10, 50, 100].contains(&c) {
                 println!(
@@ -428,7 +577,23 @@ fn physics_worlds_come_and_go_with_their_inline_100_cycles() {
             if let Some((parity, b, bc)) = &loaded {
                 if c % 2 == *parity {
                     assert_eq!(&r, b, "cycle {c}: a table grew after the warm-up (loaded)");
-                    assert_eq!((counts.shapes, counts.bodies, counts.body_slots, counts.shape_slots, counts.constraint_slots), (bc.shapes, bc.bodies, bc.body_slots, bc.shape_slots, bc.constraint_slots), "cycle {c}: Bullet arenas grew");
+                    assert_eq!(
+                        (
+                            counts.shapes,
+                            counts.bodies,
+                            counts.body_slots,
+                            counts.shape_slots,
+                            counts.constraint_slots
+                        ),
+                        (
+                            bc.shapes,
+                            bc.bodies,
+                            bc.body_slots,
+                            bc.shape_slots,
+                            bc.constraint_slots
+                        ),
+                        "cycle {c}: Bullet arenas grew"
+                    );
                 }
             }
         }
@@ -445,14 +610,21 @@ fn reused_node_ids_inherit_nothing() {
         let mut w = start(&d);
         let inl = w.named(ROOT, "Inl");
         let ctx = inline_ctx(&w);
-        let old: Vec<NodeId> = ["RBC", "F", "A", "B", "J1", "J2", "J3", "S"].iter().map(|n| w.named(ctx, n)).collect();
+        let old: Vec<NodeId> = ["RBC", "F", "A", "B", "J1", "J2", "J3", "S"]
+            .iter()
+            .map(|n| w.named(ctx, n))
+            .collect();
 
         w.set(inl, "load", FieldValue::SFBool(false));
         w.steps(3);
 
         for &n in &old {
             assert!(w.v.rt.physics_stale_interests().is_empty());
-            assert_eq!(w.v.rt.physics_body_active(n), None, "node {n} still answers as a RigidBody");
+            assert_eq!(
+                w.v.rt.physics_body_active(n),
+                None,
+                "node {n} still answers as a RigidBody"
+            );
         }
 
         // Load the smaller scene: its nodes take the ids of the freed ones.
@@ -461,10 +633,16 @@ fn reused_node_ids_inherit_nothing() {
         w.steps(8);
 
         let ctx = inline_ctx(&w);
-        let new: Vec<NodeId> = ["RBC", "F", "R", "S"].iter().map(|n| w.named(ctx, n)).collect();
+        let new: Vec<NodeId> = ["RBC", "F", "R", "S"]
+            .iter()
+            .map(|n| w.named(ctx, n))
+            .collect();
         let reused: Vec<&NodeId> = new.iter().filter(|n| old.contains(n)).collect();
 
-        assert!(!reused.is_empty(), "the test needs ids that are reused: old {old:?} new {new:?}");
+        assert!(
+            !reused.is_empty(),
+            "the test needs ids that are reused: old {old:?} new {new:?}"
+        );
 
         let rbc = new[0];
 

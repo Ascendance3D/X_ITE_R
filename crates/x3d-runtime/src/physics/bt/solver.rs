@@ -80,7 +80,10 @@ impl SolverBody {
     /// getVelocityInLocalPointNoDelta.
     fn velocity_no_delta(&self, rel_pos: V3) -> V3 {
         if self.original.is_some() {
-            add(add(self.lin_vel, self.ext_force_impulse), cross(add(self.ang_vel, self.ext_torque_impulse), rel_pos))
+            add(
+                add(self.lin_vel, self.ext_force_impulse),
+                cross(add(self.ang_vel, self.ext_torque_impulse), rel_pos),
+            )
         } else {
             ZERO
         }
@@ -89,16 +92,28 @@ impl SolverBody {
     /// internalApplyImpulse.
     fn apply_impulse(&mut self, linear: V3, angular: V3, magnitude: f64) {
         if self.original.is_some() {
-            self.delta_lin = r3(add(self.delta_lin, mulv(scale(linear, magnitude), self.lin_factor)));
-            self.delta_ang = r3(add(self.delta_ang, mulv(angular, scale(self.ang_factor, magnitude))));
+            self.delta_lin = r3(add(
+                self.delta_lin,
+                mulv(scale(linear, magnitude), self.lin_factor),
+            ));
+            self.delta_ang = r3(add(
+                self.delta_ang,
+                mulv(angular, scale(self.ang_factor, magnitude)),
+            ));
         }
     }
 
     /// internalApplyPushImpulse.
     fn apply_push_impulse(&mut self, linear: V3, angular: V3, magnitude: f64) {
         if self.original.is_some() {
-            self.push = r3(add(self.push, mulv(scale(linear, magnitude), self.lin_factor)));
-            self.turn = r3(add(self.turn, mulv(angular, scale(self.ang_factor, magnitude))));
+            self.push = r3(add(
+                self.push,
+                mulv(scale(linear, magnitude), self.lin_factor),
+            ));
+            self.turn = r3(add(
+                self.turn,
+                mulv(angular, scale(self.ang_factor, magnitude)),
+            ));
         }
     }
 }
@@ -268,7 +283,10 @@ pub struct SolveCx<'a> {
 
 impl Solver {
     pub fn new() -> Solver {
-        Solver { fixed_body_id: -1, ..Default::default() }
+        Solver {
+            fixed_body_id: -1,
+            ..Default::default()
+        }
     }
 
     /// initSolverBody.
@@ -299,14 +317,22 @@ impl Solver {
             sb.ang_vel = rb.ang_vel;
             sb.ext_force_impulse = r3(scale(scale(rb.total_force, rb.inverse_mass), time_step));
             // getTotalTorque() * getInvInertiaTensorWorld() * timeStep: vector times matrix
-            sb.ext_torque_impulse = r3(scale(v_mul_m(rb.total_torque, &rb.inv_inertia_world), time_step));
+            sb.ext_torque_impulse = r3(scale(
+                v_mul_m(rb.total_torque, &rb.inv_inertia_world),
+                time_step,
+            ));
         }
 
         sb
     }
 
     /// getOrInitSolverBody.
-    fn get_or_init_solver_body(&mut self, rigid: &mut [RigidBody], body: BodyId, time_step: f64) -> usize {
+    fn get_or_init_solver_body(
+        &mut self,
+        rigid: &mut [RigidBody],
+        body: BodyId,
+        time_step: f64,
+    ) -> usize {
         if rigid[body].companion_id >= 0 {
             return rigid[body].companion_id as usize;
         }
@@ -315,13 +341,15 @@ impl Solver {
         // convert both active and kinematic objects (for their velocity)
         if rb.inverse_mass != 0.0 || rb.is_kinematic() {
             let id = self.bodies.len();
-            self.bodies.push(Self::init_solver_body(Some(rb), Some(body), time_step));
+            self.bodies
+                .push(Self::init_solver_body(Some(rb), Some(body), time_step));
             rigid[body].companion_id = id as i32;
             id
         } else {
             if self.fixed_body_id < 0 {
                 self.fixed_body_id = self.bodies.len() as i32;
-                self.bodies.push(Self::init_solver_body(None, None, time_step));
+                self.bodies
+                    .push(Self::init_solver_body(None, None, time_step));
             }
             self.fixed_body_id as usize
         }
@@ -329,7 +357,20 @@ impl Solver {
 
     /// setupFrictionConstraint.
     #[allow(clippy::too_many_arguments)]
-    fn setup_friction_constraint(&self, rigid: &[RigidBody], sc: &mut SolverConstraint, normal_axis: V3, ia: usize, ib: usize, combined_friction: f64, rel_pos1: V3, rel_pos2: V3, relaxation: f64, desired_velocity: f64, cfm_slip: f64) {
+    fn setup_friction_constraint(
+        &self,
+        rigid: &[RigidBody],
+        sc: &mut SolverConstraint,
+        normal_axis: V3,
+        ia: usize,
+        ib: usize,
+        combined_friction: f64,
+        rel_pos1: V3,
+        rel_pos2: V3,
+        relaxation: f64,
+        desired_velocity: f64,
+        cfm_slip: f64,
+    ) {
         let (sba, sbb) = (&self.bodies[ia], &self.bodies[ib]);
         let body0 = sba.original.map(|i| &rigid[i]);
         let body1 = sbb.original.map(|i| &rigid[i]);
@@ -385,8 +426,22 @@ impl Solver {
         let jac = relaxation / (denom0 + denom1);
         sc.jac_diag_ab_inv = f(jac);
 
-        let vel1_dotn = dot(sc.normal1, if body0.is_some() { add(sba.lin_vel, sba.ext_force_impulse) } else { ZERO }) + dot(cross1, if body0.is_some() { sba.ang_vel } else { ZERO });
-        let vel2_dotn = dot(sc.normal2, if body1.is_some() { add(sbb.lin_vel, sbb.ext_force_impulse) } else { ZERO }) + dot(cross2, if body1.is_some() { sbb.ang_vel } else { ZERO });
+        let vel1_dotn = dot(
+            sc.normal1,
+            if body0.is_some() {
+                add(sba.lin_vel, sba.ext_force_impulse)
+            } else {
+                ZERO
+            },
+        ) + dot(cross1, if body0.is_some() { sba.ang_vel } else { ZERO });
+        let vel2_dotn = dot(
+            sc.normal2,
+            if body1.is_some() {
+                add(sbb.lin_vel, sbb.ext_force_impulse)
+            } else {
+                ZERO
+            },
+        ) + dot(cross2, if body1.is_some() { sbb.ang_vel } else { ZERO });
         let rel_vel = vel1_dotn + vel2_dotn;
         let velocity_error = desired_velocity - rel_vel;
         let velocity_impulse = velocity_error * jac;
@@ -398,7 +453,17 @@ impl Solver {
 
     /// setupContactConstraint.
     #[allow(clippy::too_many_arguments)]
-    fn setup_contact_constraint(&mut self, rigid: &[RigidBody], sc: &mut SolverConstraint, ia: usize, ib: usize, cp: &super::contact::ManifoldPoint, info: &SolverInfo, rel_pos1: V3, rel_pos2: V3) -> f64 {
+    fn setup_contact_constraint(
+        &mut self,
+        rigid: &[RigidBody],
+        sc: &mut SolverConstraint,
+        ia: usize,
+        ib: usize,
+        cp: &super::contact::ManifoldPoint,
+        info: &SolverInfo,
+        rel_pos1: V3,
+        rel_pos2: V3,
+    ) -> f64 {
         let relaxation = 1.0;
         let rb0 = self.bodies[ia].original.map(|i| &rigid[i]);
         let rb1 = self.bodies[ib].original.map(|i| &rigid[i]);
@@ -411,7 +476,10 @@ impl Solver {
         sc.ang_comp_a = r3(ang_u0);
         let torque_axis1 = cross(rel_pos2, cp.normal_world_on_b);
         let ang_u1 = match rb1 {
-            Some(b) => mulv(m_mul_v(&b.inv_inertia_world, neg(torque_axis1)), b.ang_factor),
+            Some(b) => mulv(
+                m_mul_v(&b.inv_inertia_world, neg(torque_axis1)),
+                b.ang_factor,
+            ),
             None => ZERO,
         };
         sc.ang_comp_b = r3(ang_u1);
@@ -472,22 +540,38 @@ impl Solver {
         sc.applied = f(applied_u);
 
         if rb0.is_some() {
-            let lin = mulv(mulv(sc.normal1, self.bodies[ia].inv_mass), rb0.unwrap().lin_factor);
+            let lin = mulv(
+                mulv(sc.normal1, self.bodies[ia].inv_mass),
+                rb0.unwrap().lin_factor,
+            );
             self.bodies[ia].apply_impulse(lin, sc.ang_comp_a, applied_u);
         }
 
         if rb1.is_some() {
-            let lin = mulv(mulv(neg(sc.normal2), self.bodies[ib].inv_mass), rb1.unwrap().lin_factor);
+            let lin = mulv(
+                mulv(neg(sc.normal2), self.bodies[ib].inv_mass),
+                rb1.unwrap().lin_factor,
+            );
             self.bodies[ib].apply_impulse(lin, neg(sc.ang_comp_b), -sc.applied);
         }
 
         sc.applied_push = 0.0;
 
         let (sba, sbb) = (&self.bodies[ia], &self.bodies[ib]);
-        let (ef_a, et_a) = if sba.original.is_some() { (sba.ext_force_impulse, sba.ext_torque_impulse) } else { (ZERO, ZERO) };
-        let (ef_b, et_b) = if sbb.original.is_some() { (sbb.ext_force_impulse, sbb.ext_torque_impulse) } else { (ZERO, ZERO) };
-        let vel1_dotn = dot(sc.normal1, add(sba.lin_vel, ef_a)) + dot(sc.rel1_cross_n, add(sba.ang_vel, et_a));
-        let vel2_dotn = dot(sc.normal2, add(sbb.lin_vel, ef_b)) + dot(sc.rel2_cross_n, add(sbb.ang_vel, et_b));
+        let (ef_a, et_a) = if sba.original.is_some() {
+            (sba.ext_force_impulse, sba.ext_torque_impulse)
+        } else {
+            (ZERO, ZERO)
+        };
+        let (ef_b, et_b) = if sbb.original.is_some() {
+            (sbb.ext_force_impulse, sbb.ext_torque_impulse)
+        } else {
+            (ZERO, ZERO)
+        };
+        let vel1_dotn =
+            dot(sc.normal1, add(sba.lin_vel, ef_a)) + dot(sc.rel1_cross_n, add(sba.ang_vel, et_a));
+        let vel2_dotn =
+            dot(sc.normal2, add(sbb.lin_vel, ef_b)) + dot(sc.rel2_cross_n, add(sbb.ang_vel, et_b));
         let rel_vel = vel1_dotn + vel2_dotn;
 
         let positional_error;
@@ -561,7 +645,8 @@ impl Solver {
             let vel2 = self.bodies[ib].velocity_no_delta(rel_pos2);
             let vel = sub(vel1, vel2);
             let rel_vel = dot(cp.normal_world_on_b, vel);
-            let relaxation = self.setup_contact_constraint(cx.rigid, &mut sc, ia, ib, &cp, info, rel_pos1, rel_pos2);
+            let relaxation = self
+                .setup_contact_constraint(cx.rigid, &mut sc, ia, ib, &cp, info, rel_pos1, rel_pos2);
             sc.friction_index = self.frictions.len();
 
             let ang_vel_a = cx.rigid[b0].ang_vel;
@@ -578,27 +663,67 @@ impl Solver {
                         rav = r3(rav);
                         let mut r = SolverConstraint::zero();
                         r.friction_index = friction_index;
-                        self.setup_rolling_friction_constraint(cx.rigid, &mut r, rav, ia, ib, cp.combined_rolling_friction, rel_pos1, rel_pos2, relaxation);
+                        self.setup_rolling_friction_constraint(
+                            cx.rigid,
+                            &mut r,
+                            rav,
+                            ia,
+                            ib,
+                            cp.combined_rolling_friction,
+                            rel_pos1,
+                            rel_pos2,
+                            relaxation,
+                        );
                         self.rollings.push(r);
                     }
                 } else {
                     let mut r = SolverConstraint::zero();
                     r.friction_index = friction_index;
-                    self.setup_rolling_friction_constraint(cx.rigid, &mut r, cp.normal_world_on_b, ia, ib, cp.combined_rolling_friction, rel_pos1, rel_pos2, relaxation);
+                    self.setup_rolling_friction_constraint(
+                        cx.rigid,
+                        &mut r,
+                        cp.normal_world_on_b,
+                        ia,
+                        ib,
+                        cp.combined_rolling_friction,
+                        rel_pos1,
+                        rel_pos2,
+                        relaxation,
+                    );
                     self.rollings.push(r);
                     let (axis0, axis1) = plane_space1(cp.normal_world_on_b);
 
                     if len(axis0) > 0.001 {
                         let mut r = SolverConstraint::zero();
                         r.friction_index = friction_index;
-                        self.setup_rolling_friction_constraint(cx.rigid, &mut r, axis0, ia, ib, cp.combined_rolling_friction, rel_pos1, rel_pos2, relaxation);
+                        self.setup_rolling_friction_constraint(
+                            cx.rigid,
+                            &mut r,
+                            axis0,
+                            ia,
+                            ib,
+                            cp.combined_rolling_friction,
+                            rel_pos1,
+                            rel_pos2,
+                            relaxation,
+                        );
                         self.rollings.push(r);
                     }
 
                     if len(axis1) > 0.001 {
                         let mut r = SolverConstraint::zero();
                         r.friction_index = friction_index;
-                        self.setup_rolling_friction_constraint(cx.rigid, &mut r, axis1, ia, ib, cp.combined_rolling_friction, rel_pos1, rel_pos2, relaxation);
+                        self.setup_rolling_friction_constraint(
+                            cx.rigid,
+                            &mut r,
+                            axis1,
+                            ia,
+                            ib,
+                            cp.combined_rolling_friction,
+                            rel_pos1,
+                            rel_pos2,
+                            relaxation,
+                        );
                         self.rollings.push(r);
                     }
                 }
@@ -614,14 +739,38 @@ impl Solver {
                 dir1 = scale(dir1, 1.0 / lat_rel_vel.sqrt());
                 let dir1 = r3(dir1);
                 cx.pool.get_mut(manifold).points[j].lateral_friction_dir1 = dir1;
-                self.setup_friction_constraint(cx.rigid, &mut fr, dir1, ia, ib, cp.combined_friction, r3(rel_pos1), r3(rel_pos2), relaxation, 0.0, 0.0);
+                self.setup_friction_constraint(
+                    cx.rigid,
+                    &mut fr,
+                    dir1,
+                    ia,
+                    ib,
+                    cp.combined_friction,
+                    r3(rel_pos1),
+                    r3(rel_pos2),
+                    relaxation,
+                    0.0,
+                    0.0,
+                );
             } else {
                 let (d1, d2) = plane_space1(cp.normal_world_on_b);
                 let (d1, d2) = (r3(d1), r3(d2));
                 let pt = &mut cx.pool.get_mut(manifold).points[j];
                 pt.lateral_friction_dir1 = d1;
                 pt.lateral_friction_dir2 = d2;
-                self.setup_friction_constraint(cx.rigid, &mut fr, d1, ia, ib, cp.combined_friction, r3(rel_pos1), r3(rel_pos2), relaxation, 0.0, 0.0);
+                self.setup_friction_constraint(
+                    cx.rigid,
+                    &mut fr,
+                    d1,
+                    ia,
+                    ib,
+                    cp.combined_friction,
+                    r3(rel_pos1),
+                    r3(rel_pos2),
+                    relaxation,
+                    0.0,
+                    0.0,
+                );
             }
 
             self.frictions.push(fr);
@@ -636,12 +785,18 @@ impl Solver {
             fc.applied = f(applied_u);
 
             if let Some(o0) = b0o {
-                let lin = mulv(scale(fc.normal1, cx.rigid[o0].inverse_mass), cx.rigid[o0].lin_factor);
+                let lin = mulv(
+                    scale(fc.normal1, cx.rigid[o0].inverse_mass),
+                    cx.rigid[o0].lin_factor,
+                );
                 self.bodies[ia].apply_impulse(lin, fc.ang_comp_a, applied_u);
             }
 
             if let Some(o1) = b1o {
-                let lin = mulv(scale(neg(fc.normal2), cx.rigid[o1].inverse_mass), cx.rigid[o1].lin_factor);
+                let lin = mulv(
+                    scale(neg(fc.normal2), cx.rigid[o1].inverse_mass),
+                    cx.rigid[o1].lin_factor,
+                );
                 self.bodies[ib].apply_impulse(lin, neg(fc.ang_comp_b), -fc.applied);
             }
 
@@ -652,7 +807,18 @@ impl Solver {
 
     /// setupRollingFrictionConstraint.
     #[allow(clippy::too_many_arguments)]
-    fn setup_rolling_friction_constraint(&self, rigid: &[RigidBody], sc: &mut SolverConstraint, normal_axis1: V3, ia: usize, ib: usize, combined_rolling: f64, _rel_pos1: V3, _rel_pos2: V3, _relaxation: f64) {
+    fn setup_rolling_friction_constraint(
+        &self,
+        rigid: &[RigidBody],
+        sc: &mut SolverConstraint,
+        normal_axis1: V3,
+        ia: usize,
+        ib: usize,
+        combined_rolling: f64,
+        _rel_pos1: V3,
+        _rel_pos2: V3,
+        _relaxation: f64,
+    ) {
         let (sba, sbb) = (&self.bodies[ia], &self.bodies[ib]);
         let body0 = sba.original.map(|i| &rigid[i]);
         let body1 = sbb.original.map(|i| &rigid[i]);
@@ -668,13 +834,19 @@ impl Solver {
         let ftorque_axis1 = neg(normal_axis1);
         sc.rel1_cross_n = r3(ftorque_axis1);
         sc.ang_comp_a = match body0 {
-            Some(b) => r3(mulv(m_mul_v(&b.inv_inertia_world, ftorque_axis1), b.ang_factor)),
+            Some(b) => r3(mulv(
+                m_mul_v(&b.inv_inertia_world, ftorque_axis1),
+                b.ang_factor,
+            )),
             None => ZERO,
         };
         let ftorque_axis2 = normal_axis1;
         sc.rel2_cross_n = r3(ftorque_axis2);
         sc.ang_comp_b = match body1 {
-            Some(b) => r3(mulv(m_mul_v(&b.inv_inertia_world, ftorque_axis2), b.ang_factor)),
+            Some(b) => r3(mulv(
+                m_mul_v(&b.inv_inertia_world, ftorque_axis2),
+                b.ang_factor,
+            )),
             None => ZERO,
         };
 
@@ -692,8 +864,28 @@ impl Solver {
         let jac = 1.0 / sum;
         sc.jac_diag_ab_inv = f(jac);
 
-        let vel1_dotn = dot(sc.normal1, if body0.is_some() { add(sba.lin_vel, sba.ext_force_impulse) } else { ZERO }) + dot(sc.rel1_cross_n, if body0.is_some() { sba.ang_vel } else { ZERO });
-        let vel2_dotn = dot(sc.normal2, if body1.is_some() { add(sbb.lin_vel, sbb.ext_force_impulse) } else { ZERO }) + dot(sc.rel2_cross_n, if body1.is_some() { sbb.ang_vel } else { ZERO });
+        let vel1_dotn = dot(
+            sc.normal1,
+            if body0.is_some() {
+                add(sba.lin_vel, sba.ext_force_impulse)
+            } else {
+                ZERO
+            },
+        ) + dot(
+            sc.rel1_cross_n,
+            if body0.is_some() { sba.ang_vel } else { ZERO },
+        );
+        let vel2_dotn = dot(
+            sc.normal2,
+            if body1.is_some() {
+                add(sbb.lin_vel, sbb.ext_force_impulse)
+            } else {
+                ZERO
+            },
+        ) + dot(
+            sc.rel2_cross_n,
+            if body1.is_some() { sbb.ang_vel } else { ZERO },
+        );
         let rel_vel = vel1_dotn + vel2_dotn;
         let velocity_error = 0.0 - rel_vel;
         // (the compiled code multiplies with the quotient it has just stored: unrounded, as in setup_friction_constraint)
@@ -704,7 +896,14 @@ impl Solver {
     }
 
     /// solveGroupCacheFriendlySetup.
-    fn setup(&mut self, cx: &mut SolveCx, bodies: &[BodyId], manifolds: &[ManifoldId], constraints: &[usize], info: &SolverInfo) {
+    fn setup(
+        &mut self,
+        cx: &mut SolveCx,
+        bodies: &[BodyId],
+        manifolds: &[ManifoldId],
+        constraints: &[usize],
+        info: &SolverInfo,
+    ) {
         self.fixed_body_id = -1;
         self.max_override_iterations = 0;
 
@@ -751,7 +950,11 @@ impl Solver {
             let (rb_a, rb_b) = (cx.joints[j].body_a, cx.joints[j].body_b);
             let ia = self.get_or_init_solver_body(cx.rigid, rb_a, info.time_step);
             let ib = self.get_or_init_solver_body(cx.rigid, rb_b, info.time_step);
-            let override_iterations = if cx.joints[j].override_iterations > 0 { cx.joints[j].override_iterations } else { info.num_iterations };
+            let override_iterations = if cx.joints[j].override_iterations > 0 {
+                cx.joints[j].override_iterations
+            } else {
+                info.num_iterations
+            };
 
             if override_iterations > self.max_override_iterations {
                 self.max_override_iterations = override_iterations;
@@ -783,7 +986,13 @@ impl Solver {
             }
 
             let info2_damping = {
-                let mut info2 = Info2 { fps: f(1.0 / info.time_step), erp: info.erp, rows, num_iterations: info.num_iterations, damping: info.damping };
+                let mut info2 = Info2 {
+                    fps: f(1.0 / info.time_step),
+                    erp: info.erp,
+                    rows,
+                    num_iterations: info.num_iterations,
+                    damping: info.damping,
+                };
                 cx.joints[j].get_info2(&mut info2, cx.rigid);
                 info2.damping
             };
@@ -800,8 +1009,22 @@ impl Solver {
             let av_a = cx.rigid[rb_a].ang_vel;
             let lv_b = cx.rigid[rb_b].lin_vel;
             let av_b = cx.rigid[rb_b].ang_vel;
-            let (ef_a, et_a) = if self.bodies[ia].original.is_some() { (self.bodies[ia].ext_force_impulse, self.bodies[ia].ext_torque_impulse) } else { (ZERO, ZERO) };
-            let (ef_b, et_b) = if self.bodies[ib].original.is_some() { (self.bodies[ib].ext_force_impulse, self.bodies[ib].ext_torque_impulse) } else { (ZERO, ZERO) };
+            let (ef_a, et_a) = if self.bodies[ia].original.is_some() {
+                (
+                    self.bodies[ia].ext_force_impulse,
+                    self.bodies[ia].ext_torque_impulse,
+                )
+            } else {
+                (ZERO, ZERO)
+            };
+            let (ef_b, et_b) = if self.bodies[ib].original.is_some() {
+                (
+                    self.bodies[ib].ext_force_impulse,
+                    self.bodies[ib].ext_torque_impulse,
+                )
+            } else {
+                (ZERO, ZERO)
+            };
 
             for r in rows.iter_mut() {
                 if r.upper >= breaking {
@@ -829,8 +1052,10 @@ impl Solver {
                 let jac_u = if fsum > SIMD_EPSILON { 1.0 / sum } else { 0.0 };
                 r.jac_diag_ab_inv = f(jac_u);
 
-                let vel1_dotn = dot(r.normal1, add(lv_a, ef_a)) + dot(r.rel1_cross_n, add(av_a, et_a));
-                let vel2_dotn = dot(r.normal2, add(lv_b, ef_b)) + dot(r.rel2_cross_n, add(av_b, et_b));
+                let vel1_dotn =
+                    dot(r.normal1, add(lv_a, ef_a)) + dot(r.rel1_cross_n, add(av_a, et_a));
+                let vel2_dotn =
+                    dot(r.normal2, add(lv_b, ef_b)) + dot(r.rel2_cross_n, add(av_b, et_b));
                 let rel_vel = vel1_dotn + vel2_dotn;
                 let restitution = 0.0;
                 let positional_error = r.rhs;
@@ -853,7 +1078,14 @@ impl Solver {
 
     /// solveSingleIteration (SOLVER_SIMD branch without SOLVER_INTERLEAVE_CONTACT_AND_FRICTION).
     fn single_iteration(&mut self, iteration: i32, info: &SolverInfo) {
-        let Solver { bodies, contacts, frictions, rollings, non_contacts, .. } = self;
+        let Solver {
+            bodies,
+            contacts,
+            frictions,
+            rollings,
+            non_contacts,
+            ..
+        } = self;
 
         for c in non_contacts.iter_mut() {
             if iteration < c.override_iterations {
@@ -900,7 +1132,9 @@ impl Solver {
         // split impulse iterations
         if info.split_impulse {
             for _ in 0..info.num_iterations {
-                let Solver { bodies, contacts, .. } = self;
+                let Solver {
+                    bodies, contacts, ..
+                } = self;
                 for c in contacts.iter_mut() {
                     resolve_split_penetration(bodies, c);
                 }
@@ -946,7 +1180,12 @@ impl Solver {
 
             if info.split_impulse {
                 if sb.push != ZERO || sb.turn != ZERO {
-                    let nt = integrate_transform(&sb.world_tf, sb.push, r3(scale(sb.turn, info.split_impulse_turn_erp)), info.time_step);
+                    let nt = integrate_transform(
+                        &sb.world_tf,
+                        sb.push,
+                        r3(scale(sb.turn, info.split_impulse_turn_erp)),
+                        info.time_step,
+                    );
                     sb.world_tf = rt(nt);
                 }
             }
@@ -970,10 +1209,16 @@ impl Solver {
     }
 
     /// solveGroup.
-    pub fn solve_group(&mut self, cx: &mut SolveCx, bodies: &[BodyId], manifolds: &[ManifoldId], constraints: &[usize], info: &SolverInfo) {
+    pub fn solve_group(
+        &mut self,
+        cx: &mut SolveCx,
+        bodies: &[BodyId],
+        manifolds: &[ManifoldId],
+        constraints: &[usize],
+        info: &SolverInfo,
+    ) {
         self.setup(cx, bodies, manifolds, constraints, info);
         self.iterations(info);
         self.finish(cx, info);
     }
 }
-

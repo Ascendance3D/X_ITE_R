@@ -44,8 +44,12 @@ impl<'j, 's> P<'j, 's> {
     // --- environment lights -----------------------------------------------------------------------
 
     pub(super) fn env_light_object(&mut self, id: V<'j>) -> R<Option<NodeId>> {
-        let Some(list) = self.env_lights.arr() else { return Ok(None) };
-        let Some(i) = id.index(list.len()) else { return Ok(None) };
+        let Some(list) = self.env_lights.arr() else {
+            return Ok(None);
+        };
+        let Some(i) = id.index(list.len()) else {
+            return Ok(None);
+        };
         let light = self.env_lights.at(i);
 
         if !light.is_obj() {
@@ -63,10 +67,18 @@ impl<'j, 's> P<'j, 's> {
         self.exported(&name, node)?;
 
         self.set(node, "global", FieldValue::SFBool(false));
-        self.set(node, "intensity", FieldValue::SFFloat(light.get("intensity").number_or(1.0)));
+        self.set(
+            node,
+            "intensity",
+            FieldValue::SFFloat(light.get("intensity").number_or(1.0)),
+        );
 
         // `lightNode .rotation` is not a property of a node (fields are `_rotation`): never an Array.
-        self.set(node, "rotation", FieldValue::SFRotation(Rotation4::new(0.0, 0.0, 1.0, PI)));
+        self.set(
+            node,
+            "rotation",
+            FieldValue::SFRotation(Rotation4::new(0.0, 0.0, 1.0, PI)),
+        );
 
         if let Some(coefficients) = light.get("irradianceCoefficients").arr() {
             let mut values: Vec<f64> = vec![];
@@ -98,14 +110,21 @@ impl<'j, 's> P<'j, 's> {
 
                 for image in base {
                     let image = V::new(image);
-                    let Some(images) = &self.images else { return Err(undefined_read(&image.to_js_string())) };
+                    let Some(images) = &self.images else {
+                        return Err(undefined_read(&image.to_js_string()));
+                    };
 
-                    resolved.push(image.index(images.len()).and_then(|i| images[i].as_ref().map(|im| (im.name.clone(), im.uri.clone()))));
+                    resolved.push(image.index(images.len()).and_then(|i| {
+                        images[i]
+                            .as_ref()
+                            .map(|im| (im.name.clone(), im.uri.clone()))
+                    }));
                 }
 
                 for (i, image) in resolved.into_iter().enumerate() {
                     let texture = self.create("ImageTexture")?;
-                    let name = self.sanitize_str(image.as_ref().and_then(|im| im.0.as_deref()).unwrap_or(""));
+                    let name = self
+                        .sanitize_str(image.as_ref().and_then(|im| im.0.as_deref()).unwrap_or(""));
 
                     if !name.is_empty() {
                         self.named(&name, texture)?;
@@ -118,10 +137,14 @@ impl<'j, 's> P<'j, 's> {
                     };
 
                     self.set(texture, "description", FieldValue::SFString(description));
-                    self.set(texture, "url", FieldValue::MFString(match &image {
-                        Some(im) => vec![im.1.clone().unwrap_or_default()],
-                        None => vec![],
-                    }));
+                    self.set(
+                        texture,
+                        "url",
+                        FieldValue::MFString(match &image {
+                            Some(im) => vec![im.1.clone().unwrap_or_default()],
+                            None => vec![],
+                        }),
+                    );
                     self.setup(texture);
 
                     if let Some(face) = face {
@@ -144,8 +167,12 @@ impl<'j, 's> P<'j, 's> {
     // --- punctual lights ------------------------------------------------------------------------------
 
     pub(super) fn light_object(&mut self, id: V<'j>) -> R<Option<NodeId>> {
-        let Some(list) = self.lights.arr() else { return Ok(None) };
-        let Some(i) = id.index(list.len()) else { return Ok(None) };
+        let Some(list) = self.lights.arr() else {
+            return Ok(None);
+        };
+        let Some(i) = id.index(list.len()) else {
+            return Ok(None);
+        };
         let light = self.lights.at(i);
 
         if !light.is_obj() {
@@ -162,9 +189,25 @@ impl<'j, 's> P<'j, 's> {
                 let n = self.create("SpotLight")?;
                 let range = light.get("range").number_or(0.0);
 
-                self.set(n, "radius", FieldValue::SFFloat(if range != 0.0 && !range.is_nan() { range } else { -1.0 }));
-                self.set(n, "cutOffAngle", FieldValue::SFFloat(light.get("outerConeAngle").number_or(PI / 4.0)));
-                self.set(n, "beamWidth", FieldValue::SFFloat(light.get("innerConeAngle").number_or(0.0)));
+                self.set(
+                    n,
+                    "radius",
+                    FieldValue::SFFloat(if range != 0.0 && !range.is_nan() {
+                        range
+                    } else {
+                        -1.0
+                    }),
+                );
+                self.set(
+                    n,
+                    "cutOffAngle",
+                    FieldValue::SFFloat(light.get("outerConeAngle").number_or(PI / 4.0)),
+                );
+                self.set(
+                    n,
+                    "beamWidth",
+                    FieldValue::SFFloat(light.get("innerConeAngle").number_or(0.0)),
+                );
                 self.add_pointer_alias(n, "range", "radius");
                 self.add_pointer_alias(n, "outerConeAngle", "cutOffAngle");
                 self.add_pointer_alias(n, "innerConeAngle", "beamWidth");
@@ -174,7 +217,15 @@ impl<'j, 's> P<'j, 's> {
                 let n = self.create("PointLight")?;
                 let range = light.get("range").number_or(0.0);
 
-                self.set(n, "radius", FieldValue::SFFloat(if range != 0.0 && !range.is_nan() { range } else { -1.0 }));
+                self.set(
+                    n,
+                    "radius",
+                    FieldValue::SFFloat(if range != 0.0 && !range.is_nan() {
+                        range
+                    } else {
+                        -1.0
+                    }),
+                );
                 self.add_pointer_alias(n, "range", "radius");
                 n
             }
@@ -182,14 +233,22 @@ impl<'j, 's> P<'j, 's> {
         };
 
         let sanitized = self.sanitize(light.get("name"));
-        let name = if sanitized.is_empty() { format!("Light{}", id_plus_one(id)) } else { sanitized };
+        let name = if sanitized.is_empty() {
+            format!("Light{}", id_plus_one(id))
+        } else {
+            sanitized
+        };
 
         if let Some(c) = vector_value(light.get("color"), 3) {
             self.set(node, "color", col3(&c));
         }
 
         self.set(node, "global", FieldValue::SFBool(true));
-        self.set(node, "intensity", FieldValue::SFFloat(light.get("intensity").number_or(1.0)));
+        self.set(
+            node,
+            "intensity",
+            FieldValue::SFFloat(light.get("intensity").number_or(1.0)),
+        );
 
         self.named(&name, node)?;
         self.exported(&name, node)?;
@@ -209,8 +268,12 @@ impl<'j, 's> P<'j, 's> {
     }
 
     pub(super) fn camera_object(&mut self, id: V<'j>) -> R<Option<NodeId>> {
-        let Some(list) = self.cameras.arr() else { return Ok(None) };
-        let Some(i) = id.index(list.len()) else { return Ok(None) };
+        let Some(list) = self.cameras.arr() else {
+            return Ok(None);
+        };
+        let Some(i) = id.index(list.len()) else {
+            return Ok(None);
+        };
         let camera = self.cameras.at(i);
 
         if !camera.is_obj() {
@@ -239,9 +302,17 @@ impl<'j, 's> P<'j, 's> {
             self.exported(&name, viewpoint)?;
         }
 
-        let desc = if camera.get("name").truthy() { camera.get("name").to_js_string() } else { format!("Viewpoint {}", id_plus_one(id)) };
+        let desc = if camera.get("name").truthy() {
+            camera.get("name").to_js_string()
+        } else {
+            format!("Viewpoint {}", id_plus_one(id))
+        };
 
-        self.set(viewpoint, "description", FieldValue::SFString(description(Some(&desc))));
+        self.set(
+            viewpoint,
+            "description",
+            FieldValue::SFString(description(Some(&desc))),
+        );
         self.set(viewpoint, "position", vec3(Vector3::ZERO));
 
         self.camera_nodes.insert(i, Some(viewpoint));
@@ -258,7 +329,11 @@ impl<'j, 's> P<'j, 's> {
         let ymag = camera.get("ymag").num().unwrap_or(1.0);
 
         // viewpointNode ._fieldOfView [0..3] = ...: element assignments into the default array.
-        self.set(node, "fieldOfView", FieldValue::SFVec4f(Vector4::new(-xmag, -ymag, xmag, ymag)));
+        self.set(
+            node,
+            "fieldOfView",
+            FieldValue::SFVec4f(Vector4::new(-xmag, -ymag, xmag, ymag)),
+        );
 
         if let Some(n) = camera.get("znear").num() {
             self.set(node, "nearDistance", FieldValue::SFFloat(n));
@@ -272,7 +347,14 @@ impl<'j, 's> P<'j, 's> {
         self.add_pointer_alias(node, "zfar", "farDistance");
 
         self.setup(node);
-        self.pointers.insert(addr(camera), Ptr::Ortho { viewpoint: node, xmag, ymag });
+        self.pointers.insert(
+            addr(camera),
+            Ptr::Ortho {
+                viewpoint: node,
+                xmag,
+                ymag,
+            },
+        );
         Ok(Some(node))
     }
 
@@ -307,7 +389,9 @@ impl<'j, 's> P<'j, 's> {
     // --- nodes ----------------------------------------------------------------------------------------------
 
     pub(super) fn nodes_array(&mut self, nodes: V<'j>) -> R<()> {
-        let Some(list) = nodes.arr() else { return Ok(()) };
+        let Some(list) = nodes.arr() else {
+            return Ok(());
+        };
         let mut out = Vec::with_capacity(list.len());
 
         for (index, node) in list.iter().enumerate() {
@@ -331,14 +415,24 @@ impl<'j, 's> P<'j, 's> {
 
     fn node_object(&mut self, node: V<'j>, index: usize) -> R<NodeObj<'j>> {
         if !node.is_obj() {
-            return Ok(NodeObj { j: UNDEF, transform: None, child: None, humanoid: None });
+            return Ok(NodeObj {
+                j: UNDEF,
+                transform: None,
+                child: None,
+                humanoid: None,
+            });
         }
 
         let is_joint = self.joints.contains(&(index as f64).to_bits());
         let t = self.create(if is_joint { "HAnimJoint" } else { "Transform" })?;
 
         self.register_ptr(node, vec![t]);
-        Ok(NodeObj { j: node, transform: Some(t), child: Some(t), humanoid: None })
+        Ok(NodeObj {
+            j: node,
+            transform: Some(t),
+            child: Some(t),
+            humanoid: None,
+        })
     }
 
     fn skin_index(&self, skin: V) -> Option<usize> {
@@ -348,7 +442,9 @@ impl<'j, 's> P<'j, 's> {
     }
 
     fn node_skeleton(&mut self, ni: usize) {
-        let Some(si) = self.skin_index(self.nodes[ni].j.get("skin")) else { return };
+        let Some(si) = self.skin_index(self.nodes[ni].j.get("skin")) else {
+            return;
+        };
         let skin = self.skins[si].as_ref().unwrap();
         let (humanoid, child) = (skin.humanoid, skin.child);
         let skeletons: Vec<usize> = skin
@@ -373,12 +469,18 @@ impl<'j, 's> P<'j, 's> {
 
         // Name
         if !name.is_empty() && skin.is_none() {
-            let Some(t) = transform else { return Err("Error: Couldn't add named node: node must be of type X3DNode.".into()) };
+            let Some(t) = transform else {
+                return Err("Error: Couldn't add named node: node must be of type X3DNode.".into());
+            };
 
             self.named(&name, t)?;
 
             if self.type_name(t) == "HAnimJoint" {
-                self.set(t, "name", FieldValue::SFString(node.get("name").str().unwrap_or("").to_string()));
+                self.set(
+                    t,
+                    "name",
+                    FieldValue::SFString(node.get("name").str().unwrap_or("").to_string()),
+                );
             }
         }
 
@@ -390,7 +492,9 @@ impl<'j, 's> P<'j, 's> {
         let viewpoint = self.camera_object(node.get("camera"))?;
 
         if let Some(vp) = viewpoint {
-            let Some(t) = transform else { return Err(undefined_read("_children")) };
+            let Some(t) = transform else {
+                return Err(undefined_read("_children"));
+            };
 
             self.push_node(t, "children", Some(vp));
         }
@@ -401,7 +505,9 @@ impl<'j, 's> P<'j, 's> {
         // Add children.
         let mut children = self.node_children_array(node.get("children"));
 
-        let Some(t) = transform else { return Err(undefined_read("getType")) };
+        let Some(t) = transform else {
+            return Err(undefined_read("getType"));
+        };
         let is_joint = self.type_name(t) == "HAnimJoint";
 
         if is_joint {
@@ -436,13 +542,25 @@ impl<'j, 's> P<'j, 's> {
 
             let humanoid = skin.humanoid;
 
-            let Some(shapes) = shapes.filter(|s| !s.is_empty()) else { return Ok(()) };
+            let Some(shapes) = shapes.filter(|s| !s.is_empty()) else {
+                return Ok(());
+            };
 
             let geometry = self.get_node(shapes[0], "geometry");
-            let Some(geometry) = geometry else { return Err(undefined_read("normal")) };
+            let Some(geometry) = geometry else {
+                return Err(undefined_read("normal"));
+            };
 
-            let normal = if self.has_field(geometry, "normal") { self.get_node(geometry, "normal") } else { None };
-            let coord = if self.has_field(geometry, "coord") { self.get_node(geometry, "coord") } else { None };
+            let normal = if self.has_field(geometry, "normal") {
+                self.get_node(geometry, "normal")
+            } else {
+                None
+            };
+            let coord = if self.has_field(geometry, "coord") {
+                self.get_node(geometry, "coord")
+            } else {
+                None
+            };
 
             self.set_node(humanoid, "skinNormal", normal);
             self.set_node(humanoid, "skinCoord", coord);
@@ -454,9 +572,20 @@ impl<'j, 's> P<'j, 's> {
             // Set transformation matrix.
             if let Some(m) = vector_value(node.get("matrix"), 16) {
                 let matrix = Matrix4(m.try_into().unwrap());
-                let (mut translation, mut rotation, mut scale, mut so) = (Vector3::ZERO, Rotation4::identity(), Vector3::ONE, Rotation4::identity());
+                let (mut translation, mut rotation, mut scale, mut so) = (
+                    Vector3::ZERO,
+                    Rotation4::identity(),
+                    Vector3::ONE,
+                    Rotation4::identity(),
+                );
 
-                matrix.get_transform(Some(&mut translation), Some(&mut rotation), Some(&mut scale), Some(&mut so), None);
+                matrix.get_transform(
+                    Some(&mut translation),
+                    Some(&mut rotation),
+                    Some(&mut scale),
+                    Some(&mut so),
+                    None,
+                );
 
                 self.set(t, "translation", vec3(translation));
                 self.set(t, "rotation", FieldValue::SFRotation(rotation));
@@ -507,17 +636,30 @@ impl<'j, 's> P<'j, 's> {
 
             match key.as_str() {
                 "KHR_lights_punctual" => {
-                    let Some(light) = self.light_object(extension.get("light"))? else { continue };
-                    let Some(t) = self.nodes[ni].transform else { return Err(undefined_read("_children")) };
+                    let Some(light) = self.light_object(extension.get("light"))? else {
+                        continue;
+                    };
+                    let Some(t) = self.nodes[ni].transform else {
+                        return Err(undefined_read("_children"));
+                    };
 
                     self.push_node(t, "children", Some(light));
                 }
                 "KHR_node_visibility" => {
-                    let Some(child) = self.nodes[ni].child else { return Err("TypeError: Cannot set properties of undefined (setting '_visible')".into()) };
+                    let Some(child) = self.nodes[ni].child else {
+                        return Err(
+                            "TypeError: Cannot set properties of undefined (setting '_visible')"
+                                .into(),
+                        );
+                    };
 
                     self.register_ptr(extension, vec![child]);
 
-                    let visible = if extension.get("visible").nn() { extension.get("visible").truthy() } else { true };
+                    let visible = if extension.get("visible").nn() {
+                        extension.get("visible").truthy()
+                    } else {
+                        true
+                    };
 
                     self.set(child, "visible", FieldValue::SFBool(visible));
                 }
@@ -529,11 +671,15 @@ impl<'j, 's> P<'j, 's> {
     }
 
     fn node_children_array(&self, children: V<'j>) -> Vec<NodeId> {
-        let Some(list) = children.arr() else { return vec![] };
+        let Some(list) = children.arr() else {
+            return vec![];
+        };
         let mut out: Vec<NodeId> = vec![];
 
         for index in list {
-            let Some(i) = V::new(index).index(self.nodes.len()) else { continue };
+            let Some(i) = V::new(index).index(self.nodes.len()) else {
+                continue;
+            };
             let node = &self.nodes[i];
 
             // `node ?.skin === undefined`
@@ -554,7 +700,9 @@ impl<'j, 's> P<'j, 's> {
     // --- skins ----------------------------------------------------------------------------------------------
 
     pub(super) fn skins_array(&mut self, skins: V<'j>, nodes: V<'j>) -> R<()> {
-        let (Some(list), Some(node_list)) = (skins.arr(), nodes.arr()) else { return Ok(()) };
+        let (Some(list), Some(node_list)) = (skins.arr(), nodes.arr()) else {
+            return Ok(());
+        };
 
         self.skins_json = skins;
         self.skins = (0..list.len()).map(|_| None).collect();
@@ -608,7 +756,11 @@ impl<'j, 's> P<'j, 's> {
             }
         }
 
-        let skeleton_list: Vec<V<'j>> = if !skeleton.is_undef() { vec![skeleton] } else { self.skeleton(&joints) };
+        let skeleton_list: Vec<V<'j>> = if !skeleton.is_undef() {
+            vec![skeleton]
+        } else {
+            self.skeleton(&joints)
+        };
 
         let inverse_bind = {
             let acc = self.accessor(skin.get("inverseBindMatrices"));
@@ -618,7 +770,11 @@ impl<'j, 's> P<'j, 's> {
                 Some(a) => {
                     let array = self.accessor_array(a)?;
 
-                    array.v.chunks_exact(16).map(|c| Matrix4(c.try_into().unwrap())).collect()
+                    array
+                        .v
+                        .chunks_exact(16)
+                        .map(|c| Matrix4(c.try_into().unwrap()))
+                        .collect()
                 }
             }
         };
@@ -639,7 +795,11 @@ impl<'j, 's> P<'j, 's> {
         let commons = match self.skeletons.get(&key) {
             Some(c) => *c,
             None => {
-                let c = Commons { child: self.create("Transform")?, normal: self.create("Normal")?, coordinate: self.create("Coordinate")? };
+                let c = Commons {
+                    child: self.create("Transform")?,
+                    normal: self.create("Normal")?,
+                    coordinate: self.create("Coordinate")?,
+                };
 
                 self.skeletons.insert(key, c);
                 c
@@ -651,7 +811,11 @@ impl<'j, 's> P<'j, 's> {
         let multi_tex_coord = self.create("MultiTextureCoordinate")?;
 
         self.push_node(commons.child, "children", Some(humanoid));
-        self.set(tex_coord, "mapping", FieldValue::SFString("TEXCOORD_0".into()));
+        self.set(
+            tex_coord,
+            "mapping",
+            FieldValue::SFString("TEXCOORD_0".into()),
+        );
 
         if self.children_of(commons.child, "children").len() == 1 {
             self.setup(commons.child);
@@ -687,7 +851,11 @@ impl<'j, 's> P<'j, 's> {
             self.skeleton_children(*j, &mut children, 0);
         }
 
-        joints.iter().copied().filter(|j| !num_key(*j).is_some_and(|k| children.contains(&k))).collect()
+        joints
+            .iter()
+            .copied()
+            .filter(|j| !num_key(*j).is_some_and(|k| children.contains(&k)))
+            .collect()
     }
 
     fn skeleton_children(&self, index: V<'j>, set: &mut Vec<u64>, depth: usize) {
@@ -697,14 +865,18 @@ impl<'j, 's> P<'j, 's> {
 
         // Must use nodes from input here.
         let nodes = self.root.get("nodes");
-        let Some(i) = index.index(nodes.arr().map(|a| a.len()).unwrap_or(0)) else { return };
+        let Some(i) = index.index(nodes.arr().map(|a| a.len()).unwrap_or(0)) else {
+            return;
+        };
         let node = nodes.at(i);
 
         if !node.is_obj() {
             return;
         }
 
-        let Some(children) = node.get("children").arr() else { return };
+        let Some(children) = node.get("children").arr() else {
+            return;
+        };
 
         for c in children {
             let c = V::new(c);
@@ -742,11 +914,19 @@ impl<'j, 's> P<'j, 's> {
             self.named(&name, humanoid)?;
         }
 
-        self.set(humanoid, "name", FieldValue::SFString(skin_name.unwrap_or_default()));
+        self.set(
+            humanoid,
+            "name",
+            FieldValue::SFString(skin_name.unwrap_or_default()),
+        );
 
         let vrm = self.root.get("extensions").get("VRM").truthy();
 
-        self.set(humanoid, "skeletalConfiguration", FieldValue::SFString(if vrm { "VRM" } else { "GLTF" }.into()));
+        self.set(
+            humanoid,
+            "skeletalConfiguration",
+            FieldValue::SFString(if vrm { "VRM" } else { "GLTF" }.into()),
+        );
 
         for s in skeleton {
             if let Some(i) = s.index(self.nodes.len()) {
@@ -756,10 +936,13 @@ impl<'j, 's> P<'j, 's> {
             }
         }
 
-        let (mut positions, mut rotations, mut scales): (Vec<f64>, Vec<f64>, Vec<f64>) = (vec![], vec![], vec![]);
+        let (mut positions, mut rotations, mut scales): (Vec<f64>, Vec<f64>, Vec<f64>) =
+            (vec![], vec![], vec![]);
 
         for (i, joint) in joints.iter().enumerate() {
-            let joint_node = joint.index(self.nodes.len()).and_then(|k| self.nodes[k].transform);
+            let joint_node = joint
+                .index(self.nodes.len())
+                .and_then(|k| self.nodes[k].transform);
             let ibm = inverse.get(i).copied().unwrap_or(Matrix4::IDENTITY);
 
             let Some(jn) = joint_node else { continue };
@@ -798,7 +981,9 @@ impl<'j, 's> P<'j, 's> {
     // --- scenes ------------------------------------------------------------------------------------------------------
 
     pub(super) fn scenes_array(&mut self, scenes: V<'j>, scene_number: V<'j>) -> R<()> {
-        let Some(list) = scenes.arr() else { return Ok(()) };
+        let Some(list) = scenes.arr() else {
+            return Ok(());
+        };
         let mut children: Vec<NodeId> = vec![];
 
         for (index, scene) in list.iter().enumerate() {
@@ -808,7 +993,11 @@ impl<'j, 's> P<'j, 's> {
         }
 
         // `sceneNumber = 0` replaces `undefined`, not `null`.
-        let number = if scene_number.is_undef() { Some(0.0) } else { scene_number.num() };
+        let number = if scene_number.is_undef() {
+            Some(0.0)
+        } else {
+            scene_number.num()
+        };
 
         match children.len() {
             0 => Ok(()),
@@ -827,12 +1016,21 @@ impl<'j, 's> P<'j, 's> {
                     _ => scene_number.to_number(),
                 };
 
-                self.set(switch, "whichChoice", FieldValue::SFInt32(x3d_fields::jsmath::to_int32(which)));
-                self.set(switch, "children", FieldValue::MFNode(children.into_iter().map(Some).collect()));
+                self.set(
+                    switch,
+                    "whichChoice",
+                    FieldValue::SFInt32(x3d_fields::jsmath::to_int32(which)),
+                );
+                self.set(
+                    switch,
+                    "children",
+                    FieldValue::MFNode(children.into_iter().map(Some).collect()),
+                );
                 self.setup(switch);
                 self.add_pointer_alias(switch, "scene", "whichChoice");
 
-                self.pointers.insert(addr(self.root), Ptr::Nodes(vec![switch]));
+                self.pointers
+                    .insert(addr(self.root), Ptr::Nodes(vec![switch]));
                 self.root_push(switch);
                 Ok(())
             }
@@ -844,7 +1042,12 @@ impl<'j, 's> P<'j, 's> {
             return Ok(None);
         }
 
-        let light = self.env_light_object(scene.get("extensions").get("EXT_lights_image_based").get("light"))?;
+        let light = self.env_light_object(
+            scene
+                .get("extensions")
+                .get("EXT_lights_image_based")
+                .get("light"),
+        )?;
         let mut nodes = self.node_children_array(scene.get("nodes"));
 
         if let Some(l) = light {
@@ -868,7 +1071,11 @@ impl<'j, 's> P<'j, 's> {
                 let name = format!("Scene{index}");
 
                 self.named(&name, group)?;
-                self.set(group, "children", FieldValue::MFNode(nodes.into_iter().map(Some).collect()));
+                self.set(
+                    group,
+                    "children",
+                    FieldValue::MFNode(nodes.into_iter().map(Some).collect()),
+                );
                 self.setup(group);
                 Ok(Some(group))
             }

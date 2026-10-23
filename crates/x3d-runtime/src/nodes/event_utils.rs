@@ -7,7 +7,12 @@ use crate::*;
 impl Runtime {
     /// `executionContext .getSpecificationVersion () <= 3.3` (string compared to a number).
     fn spec_le_33(&self) -> bool {
-        self.scene.spec_version_of(self.scene.world).trim().parse::<f64>().map(|v| v <= 3.3).unwrap_or(false)
+        self.scene
+            .spec_version_of(self.scene.world)
+            .trim()
+            .parse::<f64>()
+            .map(|v| v <= 3.3)
+            .unwrap_or(false)
     }
 
     fn seq_index(&mut self, node: NodeId) -> &mut i64 {
@@ -18,13 +23,27 @@ impl Runtime {
     }
 
     fn seq_size(&self, node: NodeId) -> i64 {
-        self.pre_value(node, "keyValue").map(|v| v.len() as i64).unwrap_or(0)
+        self.pre_value(node, "keyValue")
+            .map(|v| v.len() as i64)
+            .unwrap_or(0)
     }
 
     fn seq_sequence(&mut self, node: NodeId, index: i64) {
         let value = match self.pre_value(node, "keyValue") {
-            Some(FieldValue::MFInt32(v)) => FieldValue::SFInt32(usize::try_from(index).ok().and_then(|i| v.get(i)).copied().unwrap_or(0)),
-            Some(FieldValue::MFBool(v)) => FieldValue::SFBool(usize::try_from(index).ok().and_then(|i| v.get(i)).copied().unwrap_or(false)),
+            Some(FieldValue::MFInt32(v)) => FieldValue::SFInt32(
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|i| v.get(i))
+                    .copied()
+                    .unwrap_or(0),
+            ),
+            Some(FieldValue::MFBool(v)) => FieldValue::SFBool(
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|i| v.get(i))
+                    .copied()
+                    .unwrap_or(false),
+            ),
             _ => return,
         };
 

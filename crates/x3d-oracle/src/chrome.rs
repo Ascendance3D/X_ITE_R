@@ -64,8 +64,14 @@ pub const PLAYWRIGHT_SWITCHES: &[&str] = &[
 ];
 
 /// The `args` every oracle/x_ite-*.mjs passes to `chromium.launch`.
-pub const ORACLE_ARGS: &[&str] =
-    &["--headless=new", "--no-sandbox", "--use-gl=angle", "--use-angle=gl", "--enable-gpu", "--ignore-gpu-blocklist"];
+pub const ORACLE_ARGS: &[&str] = &[
+    "--headless=new",
+    "--no-sandbox",
+    "--use-gl=angle",
+    "--use-angle=gl",
+    "--enable-gpu",
+    "--ignore-gpu-blocklist",
+];
 
 #[derive(Debug, Clone)]
 pub enum CdpError {
@@ -104,7 +110,13 @@ impl Conn {
         }
     }
 
-    fn write(&self, id: u64, session: Option<&str>, method: &str, params: Option<Value>) -> Result<(), CdpError> {
+    fn write(
+        &self,
+        id: u64,
+        session: Option<&str>,
+        method: &str,
+        params: Option<Value>,
+    ) -> Result<(), CdpError> {
         let mut msg = json!({ "id": id, "method": method });
         if let Some(p) = params {
             msg["params"] = p;
@@ -115,14 +127,24 @@ impl Conn {
         let text = msg.to_string();
         self.trace("SEND", &text);
         let mut w = self.writer.lock().unwrap();
-        let r = w.write_all(text.as_bytes()).and_then(|_| w.write_all(&[0])).and_then(|_| w.flush());
+        let r = w
+            .write_all(text.as_bytes())
+            .and_then(|_| w.write_all(&[0]))
+            .and_then(|_| w.flush());
         r.map_err(|_| CdpError::Closed("Target page, context or browser has been closed".into()))
     }
 
     /// Sends a command and returns a receiver for its reply.
-    pub fn send(&self, session: Option<&str>, method: &str, params: Option<Value>) -> Result<Receiver<Result<Value, CdpError>>, CdpError> {
+    pub fn send(
+        &self,
+        session: Option<&str>,
+        method: &str,
+        params: Option<Value>,
+    ) -> Result<Receiver<Result<Value, CdpError>>, CdpError> {
         if self.closed.load(Ordering::SeqCst) {
-            return Err(CdpError::Closed("Target page, context or browser has been closed".into()));
+            return Err(CdpError::Closed(
+                "Target page, context or browser has been closed".into(),
+            ));
         }
         let id = self.next_id.fetch_add(1, Ordering::SeqCst);
         let (tx, rx) = channel();
@@ -143,16 +165,30 @@ impl Conn {
         let _ = self.write(id, session, method, params);
     }
 
-    pub fn wait(rx: Receiver<Result<Value, CdpError>>, deadline: Instant, what: &str) -> Result<Value, CdpError> {
+    pub fn wait(
+        rx: Receiver<Result<Value, CdpError>>,
+        deadline: Instant,
+        what: &str,
+    ) -> Result<Value, CdpError> {
         let left = deadline.saturating_duration_since(Instant::now());
         match rx.recv_timeout(left) {
             Ok(r) => r,
-            Err(std::sync::mpsc::RecvTimeoutError::Timeout) => Err(CdpError::Timeout(format!("x3d-oracle: timeout waiting for {what}"))),
-            Err(_) => Err(CdpError::Closed("Target page, context or browser has been closed".into())),
+            Err(std::sync::mpsc::RecvTimeoutError::Timeout) => Err(CdpError::Timeout(format!(
+                "x3d-oracle: timeout waiting for {what}"
+            ))),
+            Err(_) => Err(CdpError::Closed(
+                "Target page, context or browser has been closed".into(),
+            )),
         }
     }
 
-    pub fn call(&self, session: Option<&str>, method: &str, params: Option<Value>, deadline: Instant) -> Result<Value, CdpError> {
+    pub fn call(
+        &self,
+        session: Option<&str>,
+        method: &str,
+        params: Option<Value>,
+        deadline: Instant,
+    ) -> Result<Value, CdpError> {
         let rx = self.send(session, method, params)?;
         Conn::wait(rx, deadline, method)
     }
@@ -196,11 +232,18 @@ fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
             let msg: Vec<u8> = buf.drain(..=end).collect();
             let text = String::from_utf8_lossy(&msg[..msg.len() - 1]);
             conn.trace("RECV", &text);
-            let Ok(v) = serde_json::from_str::<Value>(&text) else { continue };
+            let Ok(v) = serde_json::from_str::<Value>(&text) else {
+                continue;
+            };
             if let Some(id) = v.get("id").and_then(Value::as_u64) {
                 if let Some(tx) = conn.pending.lock().unwrap().remove(&id) {
                     let r = match v.get("error") {
-                        Some(e) => Err(CdpError::Protocol(e.get("message").and_then(Value::as_str).unwrap_or("protocol error").to_string())),
+                        Some(e) => Err(CdpError::Protocol(
+                            e.get("message")
+                                .and_then(Value::as_str)
+                                .unwrap_or("protocol error")
+                                .to_string(),
+                        )),
                         None => Ok(v.get("result").cloned().unwrap_or(Value::Null)),
                     };
                     let _ = tx.send(r);
@@ -217,14 +260,23 @@ fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
 
 impl Chrome {
     /// Launches `exe` with Playwright's switches followed by `args` (the Node tools' launch args).
-    pub fn launch(exe: &str, args: &[&str], trace: Option<PathBuf>, on_event: EventHandler) -> Result<Chrome, String> {
+    pub fn launch(
+        exe: &str,
+        args: &[&str],
+        trace: Option<PathBuf>,
+        on_event: EventHandler,
+    ) -> Result<Chrome, String> {
         remove_stale_profiles();
         let profile = std::env::temp_dir().join(format!(
             "x3d-oracle-profile-{}-{}",
             std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0)
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0)
         ));
-        std::fs::create_dir_all(&profile).map_err(|e| format!("x3d-oracle: cannot create {}: {e}", profile.display()))?;
+        std::fs::create_dir_all(&profile)
+            .map_err(|e| format!("x3d-oracle: cannot create {}: {e}", profile.display()))?;
         let mut cmd = Command::new(exe);
         cmd.args(PLAYWRIGHT_SWITCHES)
             .args(args)
@@ -256,7 +308,10 @@ impl Chrome {
                 .map_err(|e| e.to_string())?;
         }
         let trace = match trace {
-            Some(p) => Some(Arc::new(Mutex::new(std::fs::File::create(&p).map_err(|e| format!("x3d-oracle: {}: {e}", p.display()))?))),
+            Some(p) => Some(Arc::new(Mutex::new(
+                std::fs::File::create(&p)
+                    .map_err(|e| format!("x3d-oracle: {}: {e}", p.display()))?,
+            ))),
             None => None,
         };
         let conn = Conn {
@@ -267,8 +322,16 @@ impl Chrome {
             trace,
         };
         let c2 = conn.clone();
-        thread::Builder::new().name("cdp-reader".into()).spawn(move || reader_loop(reader, c2, on_event)).map_err(|e| e.to_string())?;
-        Ok(Chrome { child: Some(child), conn, profile, stderr_tail })
+        thread::Builder::new()
+            .name("cdp-reader".into())
+            .spawn(move || reader_loop(reader, c2, on_event))
+            .map_err(|e| e.to_string())?;
+        Ok(Chrome {
+            child: Some(child),
+            conn,
+            profile,
+            stderr_tail,
+        })
     }
 
     pub fn pid(&self) -> Option<u32> {
@@ -282,9 +345,10 @@ impl Chrome {
     /// `browser.close ()`: Browser.close, then wait for the process; the group is killed after a grace period.
     pub fn close(&mut self) {
         if !self.conn.is_closed()
-            && let Ok(rx) = self.conn.send(None, "Browser.close", None) {
-                let _ = Conn::wait(rx, Instant::now() + Duration::from_secs(5), "Browser.close");
-            }
+            && let Ok(rx) = self.conn.send(None, "Browser.close", None)
+        {
+            let _ = Conn::wait(rx, Instant::now() + Duration::from_secs(5), "Browser.close");
+        }
         if let Some(mut child) = self.child.take() {
             let until = Instant::now() + Duration::from_secs(5);
             loop {
@@ -324,10 +388,16 @@ impl Drop for Chrome {
 
 /// Profile directories left by a run that was killed (SIGKILL cannot run Drop): removed when their owner is gone.
 fn remove_stale_profiles() {
-    let Ok(dir) = std::fs::read_dir(std::env::temp_dir()) else { return };
+    let Ok(dir) = std::fs::read_dir(std::env::temp_dir()) else {
+        return;
+    };
     for e in dir.flatten() {
         let name = e.file_name().to_string_lossy().into_owned();
-        let Some(pid) = name.strip_prefix("x3d-oracle-profile-").and_then(|r| r.split('-').next()).and_then(|p| p.parse::<u32>().ok()) else {
+        let Some(pid) = name
+            .strip_prefix("x3d-oracle-profile-")
+            .and_then(|r| r.split('-').next())
+            .and_then(|p| p.parse::<u32>().ok())
+        else {
             continue;
         };
         if pid != std::process::id() && !process_alive(pid) {
@@ -339,7 +409,10 @@ fn remove_stale_profiles() {
 #[cfg(unix)]
 fn process_alive(pid: u32) -> bool {
     // SAFETY: signal 0 only checks existence.
-    unsafe { libc::kill(pid as libc::pid_t, 0) == 0 || std::io::Error::last_os_error().raw_os_error() == Some(libc::EPERM) }
+    unsafe {
+        libc::kill(pid as libc::pid_t, 0) == 0
+            || std::io::Error::last_os_error().raw_os_error() == Some(libc::EPERM)
+    }
 }
 
 #[cfg(not(unix))]

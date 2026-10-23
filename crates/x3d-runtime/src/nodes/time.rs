@@ -62,13 +62,20 @@ impl Runtime {
 
     /// The set_time interest on timeEvents.
     fn time_events_cb(&self, node: NodeId) -> Cb {
-        if self.is_time_sensor(node) { Cb::TimeSensorSetTime } else { Cb::Sound(super::sound::SoundCb::Time) }
+        if self.is_time_sensor(node) {
+            Cb::TimeSensorSetTime
+        } else {
+            Cb::Sound(super::sound::SoundCb::Time)
+        }
     }
 
     /// `this ._loop`: the loop field, or the private `loop` child object of the Sound nodes
     /// without one.
     pub(crate) fn time_loop(&self, node: NodeId) -> bool {
-        match self.pre(node, "loop").or_else(|| self.private_field(node, "loop")) {
+        match self
+            .pre(node, "loop")
+            .or_else(|| self.private_field(node, "loop"))
+        {
             Some(k) => matches!(self.value(k), FieldValue::SFBool(true)),
             None => false,
         }
@@ -83,7 +90,10 @@ impl Runtime {
 
         self.add_interest(initialized, node, Cb::TimeSetLoop);
         self.interest(node, "enabled", enabled_cb);
-        if let Some(k) = self.pre(node, "loop").or_else(|| self.private_field(node, "loop")) {
+        if let Some(k) = self
+            .pre(node, "loop")
+            .or_else(|| self.private_field(node, "loop"))
+        {
             self.add_interest(k, node, Cb::TimeSetLoop);
         }
         self.interest(node, "startTime", Cb::TimeSetStartTime);
@@ -417,12 +427,16 @@ impl Runtime {
     }
 
     fn time_sensor_add_prepare(&mut self, node: NodeId) {
-        let k = self.private_field(self.browser_node, "timePrepareEvents").unwrap();
+        let k = self
+            .private_field(self.browser_node, "timePrepareEvents")
+            .unwrap();
         self.add_interest(k, node, Cb::TimeSensorSetPrepare);
     }
 
     fn time_sensor_remove_prepare(&mut self, node: NodeId) {
-        let k = self.private_field(self.browser_node, "timePrepareEvents").unwrap();
+        let k = self
+            .private_field(self.browser_node, "timePrepareEvents")
+            .unwrap();
         self.remove_interest(k, node, Cb::TimeSensorSetPrepare);
     }
 
@@ -442,7 +456,8 @@ impl Runtime {
     }
 
     pub(crate) fn remove_timeout(&mut self, node: NodeId, name: &str) {
-        self.timeouts.retain(|t| !(t.node == node && t.name == name));
+        self.timeouts
+            .retain(|t| !(t.node == node && t.name == name));
     }
 
     /// Fire the timeouts due at `now` in time order (setTimeout order). processTimeout:
@@ -450,12 +465,23 @@ impl Runtime {
     pub fn fire_timeouts(&mut self, now: f64) {
         self.font_style_timers();
         loop {
-            let node_timeout = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i);
+            let node_timeout = self
+                .timeouts
+                .iter()
+                .enumerate()
+                .filter(|(_, t)| t.time <= now)
+                .min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap())
+                .map(|(i, _)| i);
 
             // The auto refresh timers of EXTERNPROTO declarations and Inlines (setTimeout) run in due order with these.
-            let extern_timer = self.extern_next_timer(now).map(|(due, e)| (due, Some(e), 0));
+            let extern_timer = self
+                .extern_next_timer(now)
+                .map(|(due, e)| (due, Some(e), 0));
             let inline_timer = self.inline_next_timer(now).map(|(due, n)| (due, None, n));
-            let url_timer = [extern_timer, inline_timer].into_iter().flatten().min_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+            let url_timer = [extern_timer, inline_timer]
+                .into_iter()
+                .flatten()
+                .min_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
             // The Scripts' setTimeout / setInterval timers run in due order with the others; the callback sees the browser time of the
             // previous frame (or the due time, if later) and the date of this frame (or the due time).
@@ -465,7 +491,8 @@ impl Runtime {
                 self.script_host = Some(host);
 
                 if let Some(due) = due {
-                    let earlier_than_nodes = node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0);
+                    let earlier_than_nodes =
+                        node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0);
                     let earlier_than_urls = url_timer.is_none_or(|(u, _, _)| due < u);
 
                     if earlier_than_nodes && earlier_than_urls {
@@ -546,7 +573,14 @@ impl Runtime {
     }
 
     /// TimeSensor.setRange.
-    fn time_sensor_set_range_values(&mut self, node: NodeId, fraction: f64, first: f64, last: f64, offset: bool) {
+    fn time_sensor_set_range_values(
+        &mut self,
+        node: NodeId,
+        fraction: f64,
+        first: f64,
+        last: f64,
+        offset: bool,
+    ) {
         let now = self.now;
         let start_time = self.get_f64(node, "startTime");
         let cycle_interval = self.get_f64(node, "cycleInterval");
@@ -556,7 +590,11 @@ impl Runtime {
         s.last = clamp(last, 0.0, 1.0);
         s.scale = s.last - s.first;
         s.interval = cycle_interval * s.scale;
-        s.offset = if offset && s.interval != 0.0 && !s.interval.is_nan() { (now - start_time) / s.interval } else { 0.0 };
+        s.offset = if offset && s.interval != 0.0 && !s.interval.is_nan() {
+            (now - start_time) / s.interval
+        } else {
+            0.0
+        };
         s.fraction = fract(fraction + s.offset);
         s.cycle = now - (s.fraction - s.first) * cycle_interval;
     }
@@ -564,7 +602,11 @@ impl Runtime {
     /// TimeSensor.getFraction.
     fn time_sensor_get_fraction(&mut self, node: NodeId, time: f64) -> f64 {
         let s = self.ts(node);
-        let f = if s.interval != 0.0 && !s.interval.is_nan() { fract((time - s.cycle) / s.interval) } else { 0.0 };
+        let f = if s.interval != 0.0 && !s.interval.is_nan() {
+            fract((time - s.cycle) / s.interval)
+        } else {
+            0.0
+        };
         s.first + f * s.scale
     }
 
@@ -643,7 +685,11 @@ impl Runtime {
             _ => 0,
         };
 
-        self.set_pre(node, "cycleCount", FieldValue::SFInt32(count.wrapping_add(1)));
+        self.set_pre(
+            node,
+            "cycleCount",
+            FieldValue::SFInt32(count.wrapping_add(1)),
+        );
         self.set_pre(node, "cycleComplete", FieldValue::SFBool(true));
         self.set_pre(node, "cycleCompleteTime", FieldValue::SFTime(time));
     }

@@ -41,7 +41,11 @@ fn dot(a: V3, b: V3) -> f32 {
 }
 
 fn cross(a: V3, b: V3) -> V3 {
-    [a[1] * b[2] - b[1] * a[2], a[2] * b[0] - b[2] * a[0], a[0] * b[1] - b[0] * a[1]]
+    [
+        a[1] * b[2] - b[1] * a[2],
+        a[2] * b[0] - b[2] * a[0],
+        a[0] * b[1] - b[0] * a[1],
+    ]
 }
 
 fn normalize(v: V3) -> V3 {
@@ -98,7 +102,12 @@ fn quaternion(from: V3, to: V3) -> [f32; 4] {
         let s = ((1.0 - cos_angle).abs() * 0.5).sqrt();
         let c = normalize(cross_vec);
 
-        [c[0] * s, c[1] * s, c[2] * s, ((1.0 + cos_angle).abs() * 0.5).sqrt()]
+        [
+            c[0] * s,
+            c[1] * s,
+            c[2] * s,
+            ((1.0 + cos_angle).abs() * 0.5).sqrt(),
+        ]
     }
 }
 
@@ -165,7 +174,9 @@ fn splitmix64(state: &mut u64) -> u64 {
 }
 
 fn fresh_random() -> SeedSource {
-    let nanos = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_nanos() as u64);
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |d| d.as_nanos() as u64);
     let local = 0u8;
     let mut state = nanos ^ ((&local as *const u8 as u64) << 17) ^ u64::from(std::process::id());
     let (s0, s1) = (splitmix64(&mut state), splitmix64(&mut state));
@@ -270,10 +281,12 @@ pub fn next_force_random() -> f64 {
         None => {}
     }
 
-    FORCE_RANDOM.with(|cell| match cell.borrow_mut().get_or_insert_with(fresh_random) {
-        SeedSource::Random { s0, s1 } => random_double(s0, s1),
-        SeedSource::List(_) => 0.0,
-    })
+    FORCE_RANDOM.with(
+        |cell| match cell.borrow_mut().get_or_insert_with(fresh_random) {
+            SeedSource::Random { s0, s1 } => random_double(s0, s1),
+            SeedSource::List(_) => 0.0,
+        },
+    )
 }
 
 /// WebGL `uniform1i` of a double: ToInt32, as the shader's `int randomSeed`.
@@ -319,7 +332,18 @@ pub struct EmitterParams {
 impl EmitterParams {
     /// The defaults of `PointEmitter`, which is X_ITE's default emitter (`getDefaultEmitter`).
     pub fn default_point() -> Self {
-        EmitterParams { kind: EmitterKind::Point, on: true, position: [0.0; 3], direction: [0.0, 1.0, 0.0], angle: 0.785398, speed: 0.0, variation: 0.25, mass: 0.0, surface_area: 0.0, solid: true }
+        EmitterParams {
+            kind: EmitterKind::Point,
+            on: true,
+            position: [0.0; 3],
+            direction: [0.0, 1.0, 0.0],
+            angle: 0.785398,
+            speed: 0.0,
+            variation: 0.25,
+            mass: 0.0,
+            surface_area: 0.0,
+            solid: true,
+        }
     }
 
     pub fn is_explosive(&self) -> bool {
@@ -361,10 +385,23 @@ impl GeometryTexture {
 
 /// `Triangle3 .area`: `|(b - a) x (c - a)| / 2` in doubles (`Math .hypot` for the norm).
 fn triangle_area(vertices: &[f32], i: usize) -> f64 {
-    let v = |k: usize| [vertices[i + k] as f64, vertices[i + k + 1] as f64, vertices[i + k + 2] as f64];
+    let v = |k: usize| {
+        [
+            vertices[i + k] as f64,
+            vertices[i + k + 1] as f64,
+            vertices[i + k + 2] as f64,
+        ]
+    };
     let (a, b, c) = (v(0), v(4), v(8));
-    let (b, c) = ([b[0] - a[0], b[1] - a[1], b[2] - a[2]], [c[0] - a[0], c[1] - a[1], c[2] - a[2]]);
-    let x = [b[1] * c[2] - b[2] * c[1], b[2] * c[0] - b[0] * c[2], b[0] * c[1] - b[1] * c[0]];
+    let (b, c) = (
+        [b[0] - a[0], b[1] - a[1], b[2] - a[2]],
+        [c[0] - a[0], c[1] - a[1], c[2] - a[2]],
+    );
+    let x = [
+        b[1] * c[2] - b[2] * c[1],
+        b[2] * c[0] - b[0] * c[2],
+        b[0] * c[1] - b[1] * c[0],
+    ];
 
     jsmath::hypot(&x) / 2.0
 }
@@ -408,8 +445,16 @@ pub fn surface_texture(vertices: &[f32], normals: &[f32]) -> GeometryTexture {
 
     GeometryTexture {
         array,
-        vertices_index: if num_vertices > 0 { vertices_index as i32 } else { -1 },
-        normals_index: if num_vertices > 0 { normals_index as i32 } else { -1 },
+        vertices_index: if num_vertices > 0 {
+            vertices_index as i32
+        } else {
+            -1
+        },
+        normals_index: if num_vertices > 0 {
+            normals_index as i32
+        } else {
+            -1
+        },
         hierarchy_index: -1,
         hierarchy_root: -1,
     }
@@ -433,7 +478,13 @@ pub fn volume_texture(vertices: &[f32], normals: &[f32]) -> GeometryTexture {
 
     array.extend(hierarchy);
 
-    GeometryTexture { array, vertices_index: vertices_index as i32, normals_index: normals_index as i32, hierarchy_index: hierarchy_index as i32, hierarchy_root }
+    GeometryTexture {
+        array,
+        vertices_index: vertices_index as i32,
+        normals_index: normals_index as i32,
+        hierarchy_index: hierarchy_index as i32,
+        hierarchy_root,
+    }
 }
 
 /// `PolylineEmitter.set_polylines__`: the `polylines` texture. Texel 0 is 0, texels 1 .. n the running length
@@ -457,7 +508,17 @@ pub fn polyline_texture(vertices: &[f64]) -> GeometryTexture {
         array[num_length_so_far + k] = [v[0] as f32, v[1] as f32, v[2] as f32, v[3] as f32];
     }
 
-    GeometryTexture { array, vertices_index: if num_vertices > 0 { num_length_so_far as i32 } else { -1 }, normals_index: -1, hierarchy_index: -1, hierarchy_root: -1 }
+    GeometryTexture {
+        array,
+        vertices_index: if num_vertices > 0 {
+            num_length_so_far as i32
+        } else {
+            -1
+        },
+        normals_index: -1,
+        hierarchy_index: -1,
+        hierarchy_root: -1,
+    }
 }
 
 /// `ParticleSystem.set_boundedPhysics__`: the triangle soup of the enabled bounded models (normals
@@ -476,14 +537,25 @@ pub fn bounded_texture(vertices: &[f32], normals: &[f32]) -> GeometryTexture {
 
     array.extend(hierarchy);
 
-    GeometryTexture { array, vertices_index: 0, normals_index: normals_index as i32, hierarchy_index: hierarchy_index as i32, hierarchy_root }
+    GeometryTexture {
+        array,
+        vertices_index: 0,
+        normals_index: normals_index as i32,
+        hierarchy_index: hierarchy_index as i32,
+        hierarchy_root,
+    }
 }
 
 // --- BVH.js ---------------------------------------------------------------------------------
 
 enum Bvh {
     Triangle(usize),
-    Node { min: [f64; 3], max: [f64; 3], left: Box<Bvh>, right: Box<Bvh> },
+    Node {
+        min: [f64; 3],
+        max: [f64; 3],
+        left: Box<Bvh>,
+        right: Box<Bvh>,
+    },
 }
 
 /// `SortComparator (vertices, axis)`. The comparator indexes the vertex array with the TRIANGLE
@@ -506,7 +578,13 @@ fn sort_key(vertices: &[f32], a: usize) -> f64 {
 /// too, `undefined` elements compare false).
 fn quicksort(array: &mut [usize], vertices: &[f32], lo: i64, hi: i64) {
     let (mut i, mut j) = (lo, hi);
-    let at = |array: &[usize], k: i64| if k >= 0 { array.get(k as usize).copied() } else { None };
+    let at = |array: &[usize], k: i64| {
+        if k >= 0 {
+            array.get(k as usize).copied()
+        } else {
+            None
+        }
+    };
     let less = |a: Option<usize>, b: Option<usize>| match (a, b) {
         (Some(a), Some(b)) => sort_key(vertices, a) < sort_key(vertices, b),
         _ => false,
@@ -546,7 +624,13 @@ fn quicksort(array: &mut [usize], vertices: &[f32], lo: i64, hi: i64) {
 }
 
 fn bvh_node(vertices: &[f32], triangles: &mut [usize], first: usize, size: usize) -> Bvh {
-    let vertex = |t: usize, k: usize| [vertices[t * 12 + k * 4] as f64, vertices[t * 12 + k * 4 + 1] as f64, vertices[t * 12 + k * 4 + 2] as f64];
+    let vertex = |t: usize, k: usize| {
+        [
+            vertices[t * 12 + k * 4] as f64,
+            vertices[t * 12 + k * 4 + 1] as f64,
+            vertices[t * 12 + k * 4 + 2] as f64,
+        ]
+    };
     let first_vertex = vertex(triangles[first], 0);
     let (mut min, mut max) = (first_vertex, first_vertex);
 
@@ -570,10 +654,23 @@ fn bvh_node(vertices: &[f32], triangles: &mut [usize], first: usize, size: usize
     };
 
     let right_size = size - left_size;
-    let left = if left_size > 1 { bvh_node(vertices, triangles, first, left_size) } else { Bvh::Triangle(triangles[first]) };
-    let right = if right_size > 1 { bvh_node(vertices, triangles, first + left_size, right_size) } else { Bvh::Triangle(triangles[first + left_size]) };
+    let left = if left_size > 1 {
+        bvh_node(vertices, triangles, first, left_size)
+    } else {
+        Bvh::Triangle(triangles[first])
+    };
+    let right = if right_size > 1 {
+        bvh_node(vertices, triangles, first + left_size, right_size)
+    } else {
+        Bvh::Triangle(triangles[first + left_size])
+    };
 
-    Bvh::Node { min, max, left: Box::new(left), right: Box::new(right) }
+    Bvh::Node {
+        min,
+        max,
+        left: Box::new(left),
+        right: Box::new(right),
+    }
 }
 
 fn bvh_to_array(node: &Bvh, out: &mut Vec<[f32; 4]>) -> usize {
@@ -584,7 +681,12 @@ fn bvh_to_array(node: &Bvh, out: &mut Vec<[f32; 4]>) -> usize {
             out.push([1.0, (t * 3) as f32, 0.0, 0.0]);
             index
         }
-        Bvh::Node { min, max, left, right } => {
+        Bvh::Node {
+            min,
+            max,
+            left,
+            right,
+        } => {
             let l = bvh_to_array(left, out);
             let r = bvh_to_array(right, out);
             let index = out.len();
@@ -696,7 +798,11 @@ fn intersects_box(min: V3, max: V3, line: Line) -> bool {
 
 /// `getIntersections`: the infinite `line` against every triangle, in BVH traversal order. With
 /// `want_normals` the interpolated normal of each hit is returned too.
-fn get_intersections(tex: &GeometryTexture, line: Line, want_normals: bool) -> (Vec<[f32; 4]>, Vec<V3>) {
+fn get_intersections(
+    tex: &GeometryTexture,
+    line: Line,
+    want_normals: bool,
+) -> (Vec<[f32; 4]>, Vec<V3>) {
     let hierarchy_index = tex.hierarchy_index as i64;
     let mut points = vec![];
     let mut normals = vec![];
@@ -730,9 +836,11 @@ fn get_intersections(tex: &GeometryTexture, line: Line, want_normals: bool) -> (
 
                         if want_normals {
                             let n = tex.normals_index as i64 + t;
-                            let (n0, n1, n2) = (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
+                            let (n0, n1, n2) =
+                                (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
 
-                            normals.push(add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1])));
+                            normals
+                                .push(add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1])));
                         }
                     }
                 }
@@ -751,7 +859,8 @@ fn get_intersections(tex: &GeometryTexture, line: Line, want_normals: bool) -> (
 
 /// `sort (points, count, plane3 (line .point, line .direction))`: the comb sort by plane distance.
 fn comb_sort(points: &mut [[f32; 4]], line: Line) {
-    let distance = |p: &[f32; 4]| dot([p[0], p[1], p[2]], line.direction) - dot(line.direction, line.point);
+    let distance =
+        |p: &[f32; 4]| dot([p[0], p[1], p[2]], line.direction) - dot(line.direction, line.point);
     let count = points.len() as i32;
     let shrink = 1.0f32 / 1.3f32;
     let mut gap = count;
@@ -915,8 +1024,16 @@ impl Shader<'_> {
 
         let index0 = index0 * 3;
         let ni = tex.normals_index as i64;
-        let (v0, v1, v2) = (tex.fetch(vi + index0), tex.fetch(vi + index0 + 1), tex.fetch(vi + index0 + 2));
-        let (n0, n1, n2) = (tex.fetch3(ni + index0), tex.fetch3(ni + index0 + 1), tex.fetch3(ni + index0 + 2));
+        let (v0, v1, v2) = (
+            tex.fetch(vi + index0),
+            tex.fetch(vi + index0 + 1),
+            tex.fetch(vi + index0 + 2),
+        );
+        let (n0, n1, n2) = (
+            tex.fetch3(ni + index0),
+            tex.fetch3(ni + index0 + 1),
+            tex.fetch3(ni + index0 + 2),
+        );
 
         // getRandomBarycentricCoord
         let mut u = self.rng.random();
@@ -970,7 +1087,11 @@ impl Shader<'_> {
             }
             EmitterKind::Explosion => (self.random_spherical_velocity(), pos4),
             EmitterKind::Polyline => {
-                let v = if e.direction == [0.0; 3] { self.random_spherical_velocity() } else { scale(e.direction, self.random_speed()) };
+                let v = if e.direction == [0.0; 3] {
+                    self.random_spherical_velocity()
+                } else {
+                    scale(e.direction, self.random_speed())
+                };
                 let position = match texture.filter(|t| t.vertices_index >= 0) {
                     Some(tex) => self.random_polyline_position(tex),
                     None => [f32::NAN; 4],
@@ -994,7 +1115,11 @@ impl Shader<'_> {
                 let Some(tex) = texture.filter(|t| t.hierarchy_root >= 0) else {
                     return ([0.0; 3], [f32::NAN; 4]);
                 };
-                let velocity = if e.direction == [0.0; 3] { self.random_spherical_velocity() } else { scale(e.direction, self.random_speed()) };
+                let velocity = if e.direction == [0.0; 3] {
+                    self.random_spherical_velocity()
+                } else {
+                    scale(e.direction, self.random_speed())
+                };
                 let position = self.random_volume_position(tex);
 
                 (velocity, position)
@@ -1023,7 +1148,10 @@ impl Shader<'_> {
     /// VolumeEmitter `getRandomPosition ()`.
     fn random_volume_position(&mut self, tex: &GeometryTexture) -> [f32; 4] {
         let (point, normal) = self.random_point_on_surface(tex);
-        let line = Line { point: [point[0], point[1], point[2]], direction: self.random_surface_normal(normal) };
+        let line = Line {
+            point: [point[0], point[1], point[2]],
+            direction: self.random_surface_normal(normal),
+        };
         let (mut points, _) = get_intersections(tex, line, false);
 
         // An even count is needed: the last point in traversal order is dropped when odd.
@@ -1052,7 +1180,10 @@ impl Shader<'_> {
 
 /// `bounce (deltaTime, fromPosition, toPosition, velocity)` of the BoundedPhysicsModel soup.
 fn bounce(tex: &GeometryTexture, from: [f32; 4], to: &mut [f32; 4], velocity: &mut V3) {
-    let line = Line { point: [from[0], from[1], from[2]], direction: normalize(*velocity) };
+    let line = Line {
+        point: [from[0], from[1], from[2]],
+        direction: normalize(*velocity),
+    };
     let (points, normals) = get_intersections(tex, line, true);
 
     if points.is_empty() {
@@ -1198,7 +1329,11 @@ impl Ramp {
             if index < count {
                 let (key0, key1) = (self.fetch(index - 1)[0], self.fetch(index)[0]);
 
-                (index - 1, index, ((fraction - key0) / (key1 - key0)).clamp(0.0, 1.0))
+                (
+                    index - 1,
+                    index,
+                    ((fraction - key0) / (key1 - key0)).clamp(0.0, 1.0),
+                )
             } else {
                 (0, 0, 0.0)
             }
@@ -1208,7 +1343,10 @@ impl Ramp {
     /// GLSL `mix (texelFetch (count + index0), texelFetch (count + index1), weight)`.
     fn mix(&self, fraction: f32) -> [f32; 4] {
         let (i0, i1, w) = self.weighted(fraction);
-        let (a, b) = (self.fetch(self.count as i64 + i0), self.fetch(self.count as i64 + i1));
+        let (a, b) = (
+            self.fetch(self.count as i64 + i0),
+            self.fetch(self.count as i64 + i1),
+        );
 
         std::array::from_fn(|c| a[c] * (1.0 - w) + b[c] * w)
     }
@@ -1252,7 +1390,17 @@ impl Ramps {
 /// GLSL `Matrix3 (quaternion)`: the three columns.
 fn quaternion_matrix(q: [f32; 4]) -> [V3; 3] {
     let [x, y, z, w] = q;
-    let (a, b, c, d, e, f, g, h, i) = (y * y, z * z, x * y, z * w, z * x, y * w, x * x, y * z, x * w);
+    let (a, b, c, d, e, f, g, h, i) = (
+        y * y,
+        z * z,
+        x * y,
+        z * w,
+        z * x,
+        y * w,
+        x * x,
+        y * z,
+        x * w,
+    );
 
     [
         [1.0 - 2.0 * (a + b), 2.0 * (c + d), 2.0 * (e - f)],
@@ -1263,10 +1411,19 @@ fn quaternion_matrix(q: [f32; 4]) -> [V3; 3] {
 
 /// The end of the emitter shader's `main ()`: `output3` … `output5`, the scale / rotation matrix of the
 /// geometry type, into `out[12..24]`. `velocity` is `output2 .xyz`.
-fn write_matrix(out: &mut Particle, geometry_type: GeometryType, particle_size: [f32; 2], ramps: &Ramps, fraction: f32, velocity: V3) {
+fn write_matrix(
+    out: &mut Particle,
+    geometry_type: GeometryType,
+    particle_size: [f32; 2],
+    ramps: &Ramps,
+    fraction: f32,
+    velocity: V3,
+) {
     let s = ramps.scale(fraction);
     let columns = match geometry_type {
-        GeometryType::Point | GeometryType::Sprite | GeometryType::Geometry => [[s[0], 0.0, 0.0], [0.0, s[1], 0.0], [0.0, 0.0, s[2]]],
+        GeometryType::Point | GeometryType::Sprite | GeometryType::Geometry => {
+            [[s[0], 0.0, 0.0], [0.0, s[1], 0.0], [0.0, 0.0, s[2]]]
+        }
         GeometryType::Line => {
             let mut m = quaternion_matrix(quaternion([0.0, 0.0, 1.0], velocity));
 
@@ -1320,11 +1477,20 @@ pub struct Pass<'a> {
 
 /// The vertex shader `main ()` for particles `0 .. num`.
 pub fn run_pass(particles: &mut [Particle], num: usize, pass: &Pass) {
-    let mut shader = Shader { rng: Rng::new(0), e: pass.emitter, particle_lifetime: pass.particle_lifetime, lifetime_variation: pass.lifetime_variation };
+    let mut shader = Shader {
+        rng: Rng::new(0),
+        e: pass.emitter,
+        particle_lifetime: pass.particle_lifetime,
+        lifetime_variation: pass.lifetime_variation,
+    };
 
     for (id, p) in particles.iter_mut().enumerate().take(num) {
         // srand ((gl_VertexID + randomSeed) * randomSeed), int arithmetic wraps.
-        shader.rng = Rng::new((id as u32).wrapping_add(pass.random_seed).wrapping_mul(pass.random_seed));
+        shader.rng = Rng::new(
+            (id as u32)
+                .wrapping_add(pass.random_seed)
+                .wrapping_mul(pass.random_seed),
+        );
 
         let life = p[0] as i32;
         let lifetime = p[1];
@@ -1386,7 +1552,14 @@ pub fn run_pass(particles: &mut [Particle], num: usize, pass: &Pass) {
         // vec3 scale = getScale (fraction); output3 … output5 by X3D_GEOMETRY_TYPE.
         let velocity = [out[8], out[9], out[10]];
 
-        write_matrix(&mut out, pass.geometry_type, pass.particle_size, pass.ramps, fraction, velocity);
+        write_matrix(
+            &mut out,
+            pass.geometry_type,
+            pass.particle_size,
+            pass.ramps,
+            fraction,
+            velocity,
+        );
 
         *p = out;
     }
@@ -1423,7 +1596,9 @@ impl Sim {
     pub fn resize(&mut self, max_particles: usize, last_num_particles: usize) {
         self.max_particles = max_particles;
 
-        let keep = max_particles.min(last_num_particles).min(self.particles.len());
+        let keep = max_particles
+            .min(last_num_particles)
+            .min(self.particles.len());
 
         self.particles.truncate(keep);
         self.particles.resize(max_particles, [0.0; STRIDE]);
@@ -1440,7 +1615,15 @@ impl Sim {
 
     /// The CPU part of `animateParticles`. Returns the `deltaTime` handed to the emitter (the moving
     /// average, `Infinity` on an ExplosionEmitter burst). `now_ms` is `Date .now ()`.
-    pub fn schedule(&mut self, frame_rate: f64, now_ms: f64, explosive: bool, particle_lifetime: f64, lifetime_variation: f64, create_field: bool) -> f64 {
+    pub fn schedule(
+        &mut self,
+        frame_rate: f64,
+        now_ms: f64,
+        explosive: bool,
+        particle_lifetime: f64,
+        lifetime_variation: f64,
+        create_field: bool,
+    ) -> f64 {
         const DELAY: f64 = 15.0;
 
         let dt = 1.0 / jsmath::js_max(frame_rate, 10.0);
@@ -1465,14 +1648,21 @@ impl Sim {
             self.create_particles = create_field;
 
             if self.num_particles < self.max_particles {
-                let new_particles = jsmath::js_max(0.0, ((now - self.creation_time) * self.max_particles as f64 / particle_lifetime).floor());
+                let new_particles = jsmath::js_max(
+                    0.0,
+                    ((now - self.creation_time) * self.max_particles as f64 / particle_lifetime)
+                        .floor(),
+                );
 
                 if new_particles != 0.0 && !new_particles.is_nan() {
                     self.creation_time = now;
                 }
 
                 // Math.min (maxParticles, numParticles + newParticles), with JS NaN and Infinity.
-                let n = jsmath::js_min(self.max_particles as f64, self.num_particles as f64 + new_particles);
+                let n = jsmath::js_min(
+                    self.max_particles as f64,
+                    self.num_particles as f64 + new_particles,
+                );
 
                 self.num_particles = if n.is_nan() { 0 } else { n as usize };
             }
@@ -1487,12 +1677,26 @@ mod ramp_tests {
     use super::*;
 
     fn ramp(keys: &[f32], values: &[[f32; 4]]) -> Ramp {
-        Ramp { count: keys.len(), texels: keys.iter().map(|k| [*k, 0.0, 0.0, 0.0]).chain(values.iter().copied()).collect() }
+        Ramp {
+            count: keys.len(),
+            texels: keys
+                .iter()
+                .map(|k| [*k, 0.0, 0.0, 0.0])
+                .chain(values.iter().copied())
+                .collect(),
+        }
     }
 
     #[test]
     fn weighted_interpolate_follows_the_glsl() {
-        let r = ramp(&[0.0, 0.5, 1.0], &[[1.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 1.0], [0.0, 0.0, 1.0, 0.0]]);
+        let r = ramp(
+            &[0.0, 0.5, 1.0],
+            &[
+                [1.0, 0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0, 1.0],
+                [0.0, 0.0, 1.0, 0.0],
+            ],
+        );
 
         assert_eq!(r.weighted(-1.0), (0, 0, 0.0));
         assert_eq!(r.weighted(0.0), (0, 0, 0.0));
@@ -1507,8 +1711,16 @@ mod ramp_tests {
     #[test]
     fn tex_coord_index_is_a_step_that_never_reaches_the_last_key() {
         // interpolate (sampler, count, fraction, index0): fraction >= the last key gives count - 2.
-        let two = Ramps { tex_coords: Some(ramp(&[0.0, 0.5], &[])), tex_coords_count: 4, ..Default::default() };
-        let three = Ramps { tex_coords: Some(ramp(&[0.0, 0.3, 0.6], &[])), tex_coords_count: 4, ..Default::default() };
+        let two = Ramps {
+            tex_coords: Some(ramp(&[0.0, 0.5], &[])),
+            tex_coords_count: 4,
+            ..Default::default()
+        };
+        let three = Ramps {
+            tex_coords: Some(ramp(&[0.0, 0.3, 0.6], &[])),
+            tex_coords_count: 4,
+            ..Default::default()
+        };
 
         for f in [0.0, 0.25, 0.5, 0.9] {
             assert_eq!(two.tex_coord_index0(f), 2.0);
@@ -1522,21 +1734,61 @@ mod ramp_tests {
 
     #[test]
     fn matrix_of_each_geometry_type() {
-        let ramps = Ramps { scales: Some(ramp(&[0.0], &[[2.0, 3.0, 4.0, 1.0]])), ..Default::default() };
+        let ramps = Ramps {
+            scales: Some(ramp(&[0.0], &[[2.0, 3.0, 4.0, 1.0]])),
+            ..Default::default()
+        };
         let mut out: Particle = [0.0; STRIDE];
 
-        write_matrix(&mut out, GeometryType::Quad, [0.1, 0.2], &ramps, 0.5, [0.0, 1.0, 0.0]);
-        assert_eq!(out[12..24], [0.2, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]);
+        write_matrix(
+            &mut out,
+            GeometryType::Quad,
+            [0.1, 0.2],
+            &ramps,
+            0.5,
+            [0.0, 1.0, 0.0],
+        );
+        assert_eq!(
+            out[12..24],
+            [0.2, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]
+        );
 
-        write_matrix(&mut out, GeometryType::Sprite, [0.1, 0.2], &ramps, 0.5, [0.0, 1.0, 0.0]);
-        assert_eq!(out[12..24], [2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]);
+        write_matrix(
+            &mut out,
+            GeometryType::Sprite,
+            [0.1, 0.2],
+            &ramps,
+            0.5,
+            [0.0, 1.0, 0.0],
+        );
+        assert_eq!(
+            out[12..24],
+            [2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]
+        );
 
         // LINE: the rotation from z to the velocity, its columns times the scale.
-        write_matrix(&mut out, GeometryType::Line, [0.1, 0.2], &Ramps::default(), 0.5, [0.0, 5.0, 0.0]);
+        write_matrix(
+            &mut out,
+            GeometryType::Line,
+            [0.1, 0.2],
+            &Ramps::default(),
+            0.5,
+            [0.0, 5.0, 0.0],
+        );
         let z = [out[20], out[21], out[22]];
-        assert!((z[0]).abs() < 1e-6 && (z[1] - 1.0).abs() < 1e-6 && z[2].abs() < 1e-6, "{z:?}");
+        assert!(
+            (z[0]).abs() < 1e-6 && (z[1] - 1.0).abs() < 1e-6 && z[2].abs() < 1e-6,
+            "{z:?}"
+        );
 
-        write_matrix(&mut out, GeometryType::Line, [0.1, 0.2], &ramps, 0.5, [0.0, 5.0, 0.0]);
+        write_matrix(
+            &mut out,
+            GeometryType::Line,
+            [0.1, 0.2],
+            &ramps,
+            0.5,
+            [0.0, 5.0, 0.0],
+        );
         assert!((out[21] - 4.0).abs() < 1e-6, "{:?}", &out[12..24]);
     }
 }

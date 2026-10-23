@@ -14,14 +14,25 @@ use x3d_viewer::viewer::{UiEvent, Viewer3d};
 fn stats(v: &mut [f64]) -> (f64, f64, f64) {
     v.sort_by(|a, b| a.partial_cmp(b).unwrap());
     let mean = v.iter().sum::<f64>() / v.len().max(1) as f64;
-    (mean, v[v.len() / 2], v[(v.len() * 95 / 100).min(v.len() - 1)])
+    (
+        mean,
+        v[v.len() / 2],
+        v[(v.len() * 95 / 100).min(v.len() - 1)],
+    )
 }
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
+    let opt = |f: &str| {
+        args.iter()
+            .position(|a| a == f)
+            .and_then(|i| args.get(i + 1))
+            .cloned()
+    };
     let Some(path) = args.get(1).filter(|a| !a.starts_with("--")).cloned() else {
-        eprintln!("usage: x3d-bench <file.wrl> [--oracle dir] [--size WxH] [--frames N] [--readback]");
+        eprintln!(
+            "usage: x3d-bench <file.wrl> [--oracle dir] [--size WxH] [--frames N] [--readback]"
+        );
         std::process::exit(2);
     };
     let (mut w, mut h) = (1024u32, 768u32);
@@ -34,7 +45,12 @@ fn main() {
     let readback = args.iter().any(|a| a == "--readback");
     let frames: usize = opt("--frames").and_then(|f| f.parse().ok()).unwrap_or(120);
     let oracle = opt("--oracle").map(PathBuf::from);
-    let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(PathBuf::from(path), oracle, w, h, frames, readback)).unwrap().join().unwrap();
+    let r = std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(move || run(PathBuf::from(path), oracle, w, h, frames, readback))
+        .unwrap()
+        .join()
+        .unwrap();
 
     if let Err(e) = r {
         eprintln!("x3d-bench: {e}");
@@ -42,7 +58,14 @@ fn main() {
     }
 }
 
-fn run(path: PathBuf, oracle: Option<PathBuf>, w: u32, h: u32, frames: usize, readback: bool) -> Result<(), String> {
+fn run(
+    path: PathBuf,
+    oracle: Option<PathBuf>,
+    w: u32,
+    h: u32,
+    frames: usize,
+    readback: bool,
+) -> Result<(), String> {
     let t0 = 946684800.0;
     let mut v = Viewer3d::load(&path, oracle.as_deref(), t0, w, h)?;
     v.frame_rate = 60.0;
@@ -54,7 +77,11 @@ fn run(path: PathBuf, oracle: Option<PathBuf>, w: u32, h: u32, frames: usize, re
     let mut gpu = x3d_render::gpu::Gpu::new()?;
     let target = gpu.device.create_texture(&wgpu::TextureDescriptor {
         label: Some("bench"),
-        size: wgpu::Extent3d { width: w, height: h, depth_or_array_layers: 1 },
+        size: wgpu::Extent3d {
+            width: w,
+            height: h,
+            depth_or_array_layers: 1,
+        },
         mip_level_count: 1,
         sample_count: 1,
         dimension: wgpu::TextureDimension::D2,
@@ -64,13 +91,21 @@ fn run(path: PathBuf, oracle: Option<PathBuf>, w: u32, h: u32, frames: usize, re
     });
     let view = target.create_view(&Default::default());
     let (cx, cy) = (w as f64 / 2.0, h as f64 / 2.0);
-    v.input(UiEvent::MouseDown { button: 0, x: cx, y: cy });
-    let (mut step, mut build, mut submit, mut idle, mut gpu_ms, mut total, mut rb) = (vec![], vec![], vec![], vec![], vec![], vec![], vec![]);
+    v.input(UiEvent::MouseDown {
+        button: 0,
+        x: cx,
+        y: cy,
+    });
+    let (mut step, mut build, mut submit, mut idle, mut gpu_ms, mut total, mut rb) =
+        (vec![], vec![], vec![], vec![], vec![], vec![], vec![]);
     let (mut uploads, mut draws) = (0usize, 0usize);
 
     for k in 1..=frames + 10 {
         let a = k as f64 * 0.11;
-        v.input(UiEvent::MouseMove { x: cx + 0.3 * cx * a.sin(), y: cy + 0.3 * cy * (a * 0.7).cos() });
+        v.input(UiEvent::MouseMove {
+            x: cx + 0.3 * cx * a.sin(),
+            y: cy + 0.3 * cy * (a * 0.7).cos(),
+        });
         let t = t0 + k as f64 / 60.0;
         v.date_now = t;
         let t_start = Instant::now();
@@ -78,7 +113,8 @@ fn run(path: PathBuf, oracle: Option<PathBuf>, w: u32, h: u32, frames: usize, re
         let t1 = Instant::now();
         let frame = v.build_frame();
         let t2 = Instant::now();
-        gpu.renderer.render(&frame, &view, wgpu::TextureFormat::Bgra8Unorm, w, h)?;
+        gpu.renderer
+            .render(&frame, &view, wgpu::TextureFormat::Bgra8Unorm, w, h)?;
         let t3 = Instant::now();
         let _ = gpu.device.poll(wgpu::PollType::wait_indefinitely());
         let t4 = Instant::now();
@@ -103,9 +139,23 @@ fn run(path: PathBuf, oracle: Option<PathBuf>, w: u32, h: u32, frames: usize, re
         }
     }
 
-    let name = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
-    let (s, b, u, i, t) = (stats(&mut step), stats(&mut build), stats(&mut submit), stats(&mut idle), stats(&mut total));
-    let gm = if gpu_ms.iter().any(|x| x.is_nan()) { "n/a".to_string() } else { let g = stats(&mut gpu_ms); format!("{:.2}/{:.2}", g.0, g.1) };
+    let name = path
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_default();
+    let (s, b, u, i, t) = (
+        stats(&mut step),
+        stats(&mut build),
+        stats(&mut submit),
+        stats(&mut idle),
+        stats(&mut total),
+    );
+    let gm = if gpu_ms.iter().any(|x| x.is_nan()) {
+        "n/a".to_string()
+    } else {
+        let g = stats(&mut gpu_ms);
+        format!("{:.2}/{:.2}", g.0, g.1)
+    };
     let mut line = format!(
         "{name:30} {w}x{h} step {:5.2}  build {:5.2}  submit {:5.2}  gpu-idle {:5.2}  GPU {gm:>10}  | total mean {:5.2} median {:5.2} p95 {:5.2} ms ({draws} draws, {uploads} geometry uploads over {frames} frames)",
         s.0, b.0, u.0, i.0, t.0, t.1, t.2

@@ -10,7 +10,7 @@ use super::changes::Change;
 use super::doc::Doc;
 use super::line::LineRef;
 use super::mark_text::{FindL, MarkerType, TextMarker};
-use crate::pos::{cmp, cmp_num, Pos};
+use crate::pos::{Pos, cmp, cmp_num};
 
 /// `MarkedSpan(marker, from, to)`; `None` stands for the JS `null` ("continues past
 /// this line").
@@ -55,8 +55,16 @@ impl SpanArr {
 }
 
 /// `getMarkedSpanFor(spans, marker)`.
-pub(crate) fn get_marked_span_for(spans: Option<&SpanArr>, marker: &TextMarker) -> Option<MarkedSpan> {
-    spans?.0.borrow().iter().find(|s| s.marker.ptr_eq(marker)).cloned()
+pub(crate) fn get_marked_span_for(
+    spans: Option<&SpanArr>,
+    marker: &TextMarker,
+) -> Option<MarkedSpan> {
+    spans?
+        .0
+        .borrow()
+        .iter()
+        .find(|s| s.marker.ptr_eq(marker))
+        .cloned()
 }
 
 fn find_in(spans: Option<&Spans>, marker: &TextMarker) -> Option<MarkedSpan> {
@@ -68,8 +76,17 @@ fn find_in(spans: Option<&Spans>, marker: &TextMarker) -> Option<MarkedSpan> {
 pub(crate) fn remove_marked_span(spans: &SpanArr, marker: &TextMarker) -> Option<SpanArr> {
     let spans = spans.get();
     let idx = spans.iter().position(|s| s.marker.ptr_eq(marker));
-    let r: Spans = spans.iter().enumerate().filter(|(i, _)| Some(*i) != idx).map(|(_, s)| s.clone()).collect();
-    if r.is_empty() { None } else { Some(SpanArr::new(r)) }
+    let r: Spans = spans
+        .iter()
+        .enumerate()
+        .filter(|(i, _)| Some(*i) != idx)
+        .map(|(_, s)| s.clone())
+        .collect();
+    if r.is_empty() {
+        None
+    } else {
+        Some(SpanArr::new(r))
+    }
 }
 
 /// `addMarkedSpan(line, span, op)`. Inside an editor operation, an array this
@@ -80,7 +97,9 @@ pub(crate) fn add_marked_span(doc: &Doc, line: &LineRef, span: MarkedSpan) {
     let in_op = doc.op_id().is_some();
     let existing = line.borrow().marked_spans.clone();
     let reuse = in_op
-        && existing.as_ref().is_some_and(|a| doc.inner().op_span_arrays.iter().any(|x| x.ptr_eq(a)));
+        && existing
+            .as_ref()
+            .is_some_and(|a| doc.inner().op_span_arrays.iter().any(|x| x.ptr_eq(a)));
     if reuse {
         existing.unwrap().push(span);
     } else {
@@ -101,14 +120,28 @@ fn marked_spans_before(old: Option<&Spans>, start_ch: i64, is_insert: bool) -> O
         let m = span.marker.data();
         let starts_before = match span.from {
             None => true,
-            Some(f) => if m.opts.inclusive_left { f <= start_ch } else { f < start_ch },
+            Some(f) => {
+                if m.opts.inclusive_left {
+                    f <= start_ch
+                } else {
+                    f < start_ch
+                }
+            }
         };
         if starts_before
-            || span.from == Some(start_ch) && m.kind == MarkerType::Bookmark && (!is_insert || !m.opts.insert_left)
+            || span.from == Some(start_ch)
+                && m.kind == MarkerType::Bookmark
+                && (!is_insert || !m.opts.insert_left)
         {
             let ends_after = match span.to {
                 None => true,
-                Some(t) => if m.opts.inclusive_right { t >= start_ch } else { t > start_ch },
+                Some(t) => {
+                    if m.opts.inclusive_right {
+                        t >= start_ch
+                    } else {
+                        t > start_ch
+                    }
+                }
             };
             nw.get_or_insert_with(Vec::new).push(MarkedSpan {
                 marker: span.marker.clone(),
@@ -126,16 +159,36 @@ fn marked_spans_after(old: Option<&Spans>, end_ch: i64, is_insert: bool) -> Opti
         let m = span.marker.data();
         let ends_after = match span.to {
             None => true,
-            Some(t) => if m.opts.inclusive_right { t >= end_ch } else { t > end_ch },
+            Some(t) => {
+                if m.opts.inclusive_right {
+                    t >= end_ch
+                } else {
+                    t > end_ch
+                }
+            }
         };
-        if ends_after || span.from == Some(end_ch) && m.kind == MarkerType::Bookmark && (!is_insert || m.opts.insert_left) {
+        if ends_after
+            || span.from == Some(end_ch)
+                && m.kind == MarkerType::Bookmark
+                && (!is_insert || m.opts.insert_left)
+        {
             let starts_before = match span.from {
                 None => true,
-                Some(f) => if m.opts.inclusive_left { f <= end_ch } else { f < end_ch },
+                Some(f) => {
+                    if m.opts.inclusive_left {
+                        f <= end_ch
+                    } else {
+                        f < end_ch
+                    }
+                }
             };
             nw.get_or_insert_with(Vec::new).push(MarkedSpan {
                 marker: span.marker.clone(),
-                from: if starts_before { None } else { span.from.map(|f| f - end_ch) },
+                from: if starts_before {
+                    None
+                } else {
+                    span.from.map(|f| f - end_ch)
+                },
                 to: span.to.map(|t| t - end_ch),
             });
         }
@@ -152,7 +205,15 @@ pub(crate) fn stretch_spans_over_change(doc: &Doc, change: &Change) -> Option<Ne
         return None;
     }
     let spans_of = |n: i64| -> Option<Spans> {
-        if doc.is_line(n) { doc.get_line_ref(n).borrow().marked_spans.as_ref().map(|a| a.get()) } else { None }
+        if doc.is_line(n) {
+            doc.get_line_ref(n)
+                .borrow()
+                .marked_spans
+                .as_ref()
+                .map(|a| a.get())
+        } else {
+            None
+        }
     };
     let old_first = spans_of(change.from.line);
     let old_last = spans_of(change.to.line);
@@ -169,7 +230,10 @@ pub(crate) fn stretch_spans_over_change(doc: &Doc, change: &Change) -> Option<Ne
     // Next, merge those two ends.
     let text = change.text.as_ref().expect("change with text");
     let same_line = text.len() == 1;
-    let offset = text.last().map(|t| t.len() as i64).expect("JS TypeError: lst(change.text) is undefined")
+    let offset = text
+        .last()
+        .map(|t| t.len() as i64)
+        .expect("JS TypeError: lst(change.text) is undefined")
         + if same_line { start_ch } else { 0 };
     if let Some(first) = first.as_mut() {
         // Fix up .to properties of first.
@@ -194,7 +258,9 @@ pub(crate) fn stretch_spans_over_change(doc: &Doc, change: &Change) -> Option<Ne
             }
             match span.from {
                 None => {
-                    let found = first.as_ref().is_some_and(|f| f.iter().any(|s| s.marker.ptr_eq(&span.marker)));
+                    let found = first
+                        .as_ref()
+                        .is_some_and(|f| f.iter().any(|s| s.marker.ptr_eq(&span.marker)));
                     if !found {
                         span.from = Some(offset);
                         if same_line {
@@ -226,7 +292,11 @@ pub(crate) fn stretch_spans_over_change(doc: &Doc, change: &Change) -> Option<Ne
             if let Some(first) = &first {
                 for s in first {
                     if s.to.is_none() {
-                        gap_markers.get_or_insert_with(Vec::new).push(MarkedSpan { marker: s.marker.clone(), from: None, to: None });
+                        gap_markers.get_or_insert_with(Vec::new).push(MarkedSpan {
+                            marker: s.marker.clone(),
+                            from: None,
+                            to: None,
+                        });
                     }
                 }
             }
@@ -243,7 +313,11 @@ pub(crate) fn stretch_spans_over_change(doc: &Doc, change: &Change) -> Option<Ne
 
 /// `clearEmptySpans(spans)`.
 fn clear_empty_spans(mut spans: Spans) -> Option<Spans> {
-    spans.retain(|s| !(s.from.is_some() && s.from == s.to && s.marker.data().opts.clear_when_empty != Some(false)));
+    spans.retain(|s| {
+        !(s.from.is_some()
+            && s.from == s.to
+            && s.marker.data().opts.clear_when_empty != Some(false))
+    });
     if spans.is_empty() { None } else { Some(spans) }
 }
 
@@ -272,7 +346,9 @@ pub(crate) fn remove_read_only_ranges(doc: &Doc, from: Pos, to: Pos) -> Option<V
             let d = mk.data();
             (d.opts.inclusive_left, d.opts.inclusive_right)
         };
-        let undefined = || -> ! { panic!("JS TypeError: Cannot read properties of undefined (reading 'line')") };
+        let undefined = || -> ! {
+            panic!("JS TypeError: Cannot read properties of undefined (reading 'line')")
+        };
         let mut j: i64 = 0;
         while (j as usize) < parts.len() {
             let p = parts[j as usize];
@@ -338,7 +414,9 @@ pub(crate) fn compare_collapsed_markers(a: &TextMarker, b: &TextMarker) -> i64 {
     if len_diff != 0 {
         return len_diff;
     }
-    let (Some((af, at)), Some((bf, bt))) = (a.find_range(), b.find_range()) else { return 0 };
+    let (Some((af, at)), Some((bf, bt))) = (a.find_range(), b.find_range()) else {
+        return 0;
+    };
     let mut from_cmp = cmp_num(&af, &bf);
     if from_cmp == 0 {
         from_cmp = extra_left(a) - extra_left(b);
@@ -360,10 +438,16 @@ fn collapsed_span_at_side(line: &LineRef, start: bool) -> Option<TextMarker> {
     let spans = line.borrow().marked_spans.as_ref()?.get();
     let mut found: Option<TextMarker> = None;
     for sp in &spans {
-        let side_null = if start { sp.from.is_none() } else { sp.to.is_none() };
+        let side_null = if start {
+            sp.from.is_none()
+        } else {
+            sp.to.is_none()
+        };
         if sp.marker.data().collapsed
             && side_null
-            && found.as_ref().is_none_or(|f| compare_collapsed_markers(f, &sp.marker) < 0)
+            && found
+                .as_ref()
+                .is_none_or(|f| compare_collapsed_markers(f, &sp.marker) < 0)
         {
             found = Some(sp.marker.clone());
         }
@@ -388,7 +472,9 @@ pub(crate) fn collapsed_span_around(line: &LineRef, ch: i64) -> Option<TextMarke
         if sp.marker.data().collapsed
             && sp.from.is_none_or(|f| f < ch)
             && sp.to.is_none_or(|t| t > ch)
-            && found.as_ref().is_none_or(|f| compare_collapsed_markers(f, &sp.marker) < 0)
+            && found
+                .as_ref()
+                .is_none_or(|f| compare_collapsed_markers(f, &sp.marker) < 0)
         {
             found = Some(sp.marker.clone());
         }
@@ -398,16 +484,27 @@ pub(crate) fn collapsed_span_around(line: &LineRef, ch: i64) -> Option<TextMarke
 
 /// `conflictingCollapsedRange(doc, lineNo, from, to, marker)`; `marker` here is only
 /// consulted for its inclusiveLeft/Right flags.
-pub(crate) fn conflicting_collapsed_range(doc: &Doc, line_no: i64, from: &Pos, to: &Pos, il: bool, ir: bool) -> bool {
+pub(crate) fn conflicting_collapsed_range(
+    doc: &Doc,
+    line_no: i64,
+    from: &Pos,
+    to: &Pos,
+    il: bool,
+    ir: bool,
+) -> bool {
     let line = doc.get_line_ref(line_no);
-    let Some(spans) = line.borrow().marked_spans.as_ref().map(|a| a.get()) else { return false };
+    let Some(spans) = line.borrow().marked_spans.as_ref().map(|a| a.get()) else {
+        return false;
+    };
     let m_el = if il { -1 } else { 0 };
     let m_er = if ir { 1 } else { 0 };
     for sp in &spans {
         if !sp.marker.data().collapsed {
             continue;
         }
-        let Some((ffrom, fto)) = sp.marker.find_range() else { continue };
+        let Some((ffrom, fto)) = sp.marker.find_range() else {
+            continue;
+        };
         let mut from_cmp = cmp_num(&ffrom, from);
         if from_cmp == 0 {
             from_cmp = extra_left(&sp.marker) - m_el;
@@ -420,8 +517,18 @@ pub(crate) fn conflicting_collapsed_range(doc: &Doc, line_no: i64, from: &Pos, t
             continue;
         }
         let sp_ir = sp.marker.data().opts.inclusive_right;
-        if from_cmp <= 0 && (if sp_ir && il { cmp_num(&fto, from) >= 0 } else { cmp_num(&fto, from) > 0 })
-            || from_cmp >= 0 && (if sp_ir && il { cmp_num(&ffrom, to) <= 0 } else { cmp_num(&ffrom, to) < 0 })
+        if from_cmp <= 0
+            && (if sp_ir && il {
+                cmp_num(&fto, from) >= 0
+            } else {
+                cmp_num(&fto, from) > 0
+            })
+            || from_cmp >= 0
+                && (if sp_ir && il {
+                    cmp_num(&ffrom, to) <= 0
+                } else {
+                    cmp_num(&ffrom, to) < 0
+                })
         {
             return true;
         }
@@ -508,7 +615,9 @@ pub(crate) fn visual_line_end_no(doc: &Doc, line_n: i64) -> i64 {
 /// `lineIsHidden(doc, line)`. No widget nodes exist without a view, so the
 /// `widgetNode` checks are always false.
 pub(crate) fn line_is_hidden(doc: &Doc, line: &LineRef) -> bool {
-    let Some(spans) = line.borrow().marked_spans.as_ref().map(|a| a.get()) else { return false };
+    let Some(spans) = line.borrow().marked_spans.as_ref().map(|a| a.get()) else {
+        return false;
+    };
     for sp in &spans {
         if !sp.marker.data().collapsed {
             continue;
@@ -516,7 +625,10 @@ pub(crate) fn line_is_hidden(doc: &Doc, line: &LineRef) -> bool {
         if sp.from.is_none() {
             return true;
         }
-        if sp.from == Some(0) && sp.marker.data().opts.inclusive_left && line_is_hidden_inner(doc, line, sp) {
+        if sp.from == Some(0)
+            && sp.marker.data().opts.inclusive_left
+            && line_is_hidden_inner(doc, line, sp)
+        {
             return true;
         }
     }
@@ -525,7 +637,9 @@ pub(crate) fn line_is_hidden(doc: &Doc, line: &LineRef) -> bool {
 
 fn line_is_hidden_inner(doc: &Doc, line: &LineRef, span: &MarkedSpan) -> bool {
     let Some(span_to) = span.to else {
-        let Some((end_line, _)) = find_line(&span.marker, 1) else { return false };
+        let Some((end_line, _)) = find_line(&span.marker, 1) else {
+            return false;
+        };
         let sp = get_marked_span_for(end_line.borrow().marked_spans.as_ref(), &span.marker);
         return match sp {
             Some(sp) => line_is_hidden_inner(doc, &end_line, &sp),
@@ -535,7 +649,12 @@ fn line_is_hidden_inner(doc: &Doc, line: &LineRef, span: &MarkedSpan) -> bool {
     if span.marker.data().opts.inclusive_right && span_to == line.borrow().text.len() as i64 {
         return true;
     }
-    let spans = line.borrow().marked_spans.as_ref().map(|a| a.get()).unwrap_or_default();
+    let spans = line
+        .borrow()
+        .marked_spans
+        .as_ref()
+        .map(|a| a.get())
+        .unwrap_or_default();
     for sp in &spans {
         let m = sp.marker.data();
         if m.collapsed
@@ -566,13 +685,17 @@ pub(crate) fn line_length(line: &LineRef) -> i64 {
     let mut len = line.borrow().text.len() as i64;
     let mut cur = line.clone();
     while let Some(merged) = collapsed_span_at_start(&cur) {
-        let FindL::Range(fl, fch, Some((_, tch))) = merged.find_lines(0) else { break };
+        let FindL::Range(fl, fch, Some((_, tch))) = merged.find_lines(0) else {
+            break;
+        };
         cur = fl;
         len += fch - tch;
     }
     cur = line.clone();
     while let Some(merged) = collapsed_span_at_end(&cur) {
-        let FindL::Range(_, fch, Some((tl, tch))) = merged.find_lines(0) else { break };
+        let FindL::Range(_, fch, Some((tl, tch))) = merged.find_lines(0) else {
+            break;
+        };
         len -= cur.borrow().text.len() as i64 - fch;
         cur = tl;
         len += cur.borrow().text.len() as i64 - tch;

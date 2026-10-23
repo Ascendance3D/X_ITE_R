@@ -5,13 +5,17 @@
 use std::path::Path;
 use x3d_fields::FieldValue;
 use x3d_viewer::embed::spawn_big_stack;
-use x3d_viewer::viewer::{Viewer3d, ORACLE_PAGE_ATTRIBUTES};
+use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, Viewer3d};
 
 const T0: f64 = 946684800.0;
 
 fn tone(path: &Path) {
     let rate = 48000u32;
-    let samples: Vec<i16> = (0..rate * 2).map(|i| (8000.0 * (2.0 * std::f64::consts::PI * 440.0 * i as f64 / rate as f64).sin()) as i16).collect();
+    let samples: Vec<i16> = (0..rate * 2)
+        .map(|i| {
+            (8000.0 * (2.0 * std::f64::consts::PI * 440.0 * i as f64 / rate as f64).sin()) as i16
+        })
+        .collect();
     let mut b = Vec::new();
     let data = samples.len() as u32 * 2;
     b.extend_from_slice(b"RIFF");
@@ -50,7 +54,17 @@ fn run(name: &str, viewer_z: f64, spatialize: bool) -> ([f32; 5], f64, bool) {
     )
     .unwrap();
 
-    let mut v = Viewer3d::load_attributes(&world, Some(&dir), T0, 64, 64, None, false, ORACLE_PAGE_ATTRIBUTES).unwrap();
+    let mut v = Viewer3d::load_attributes(
+        &world,
+        Some(&dir),
+        T0,
+        64,
+        64,
+        None,
+        false,
+        ORACLE_PAGE_ATTRIBUTES,
+    )
+    .unwrap();
     let mut now = T0;
 
     for _ in 0..10 {
@@ -65,13 +79,24 @@ fn run(name: &str, viewer_z: f64, spatialize: bool) -> ([f32; 5], f64, bool) {
     let st = rt.sound.get(&s).expect("Sound state");
     let n = st.vrml.as_ref().expect("Sound audio nodes");
     let e = rt.audio.as_ref().expect("audio context");
-    let gains = [n.stereo, n.front_left, n.front_right, n.back_left, n.back_right].map(|id| e.param_value(id, "gain"));
+    let gains = [
+        n.stereo,
+        n.front_left,
+        n.front_right,
+        n.back_left,
+        n.back_right,
+    ]
+    .map(|id| e.param_value(id, "gain"));
     let duration = match rt.pre_value(c, "duration_changed") {
         Some(FieldValue::SFTime(t)) => *t,
         other => panic!("duration_changed {other:?}"),
     };
     let active = matches!(rt.pre_value(c, "isActive"), Some(FieldValue::SFBool(true)));
-    assert_eq!(st.child_nodes, vec![c], "the AudioClip is not the Sound's source");
+    assert_eq!(
+        st.child_nodes,
+        vec![c],
+        "the AudioClip is not the Sound's source"
+    );
     let _ = std::fs::remove_dir_all(&dir);
     (gains, duration, active)
 }
@@ -84,11 +109,17 @@ fn vrml_sound_audio_clip_plays_and_pans() {
         assert!((duration - 2.0).abs() < 1e-9, "duration_changed {duration}");
         assert!(active, "the looping AudioClip is not active");
         assert_eq!(g[0], 1.0);
-        assert!(g[1].abs() < 1e-6 && (g[2] - 1.0).abs() < 1e-6 && g[3] == 0.0 && g[4] == 0.0, "pan gains {g:?}");
+        assert!(
+            g[1].abs() < 1e-6 && (g[2] - 1.0).abs() < 1e-6 && g[3] == 0.0 && g[4] == 0.0,
+            "pan gains {g:?}"
+        );
 
         // spatialize FALSE: pan 0.5 -> 0.75 on both front gains (the stereo gain carries the sound).
         let (g, ..) = run("flat", 0.0, false);
-        assert!((g[1] - 0.75).abs() < 1e-6 && (g[2] - 0.75).abs() < 1e-6, "unspatialized gains {g:?}");
+        assert!(
+            (g[1] - 0.75).abs() < 1e-6 && (g[2] - 0.75).abs() < 1e-6,
+            "unspatialized gains {g:?}"
+        );
 
         // Outside the max ellipsoid: silent.
         let (g, ..) = run("outside", 100.0, true);
