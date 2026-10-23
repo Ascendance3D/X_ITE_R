@@ -40,7 +40,13 @@ fn main() {
     x3d_runtime::sound::set_default_mode(x3d_runtime::sound::AudioMode::Realtime);
 
     // QuickJS wants a big stack (x3d-shot uses the same 256 MB).
+    #[cfg(not(target_os = "macos"))]
     let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(opts)).unwrap().join().unwrap();
+
+    // macOS: the event loop must run on the main thread, and its stack is at most 64 MB
+    // (RLIMIT_STACK hard limit). The main thread switches to a 256 MB stack instead.
+    #[cfg(target_os = "macos")]
+    let r = stacker::grow(256 << 20, move || run(opts));
 
     match r {
         Ok(n) => eprintln!("presented {n} frames"),
