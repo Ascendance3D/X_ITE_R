@@ -11,6 +11,8 @@
 //! upstream/codemirror5/mode/css/scss_test.js
 //! upstream/codemirror5/mode/css/less_test.js
 
+#![cfg_attr(rustfmt, rustfmt::skip)]
+
 mod common;
 
 #[allow(unused_imports)]
