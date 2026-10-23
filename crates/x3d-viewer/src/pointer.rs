@@ -242,6 +242,12 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             continue;
         }
 
+        // addPointingShape: a ParticleSystem whose bbox is outside the view volume is not drawn into the pointing buffer
+        // (a Shape's bbox holds its geometry, so the ray tests below decide the same for it).
+        if s.particle && !s.explicit_bbox.is_some_and(|b| x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)) {
+            continue;
+        }
+
         let Some(g) = geometry(s) else { continue };
         // The pointing shader skins the shapes of an HAnimHumanoid or HAnimSegment.
         let g = match &s.skin {
@@ -258,12 +264,14 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
             // normalMatrix * normal, then touch (): hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)
             let mut n = Vector3::new(g.normals[j * 3] as f64, g.normals[j * 3 + 1] as f64, g.normals[j * 3 + 2] as f64);
-            let mut nm = s.model_view.submatrix();
+            // A particle's instance matrix does not turn normals (no X3D_INSTANCE_NORMAL).
+            let normal_mv = if s.particle { s.shape_model_view } else { s.model_view };
+            let mut nm = normal_mv.submatrix();
             nm.inverse();
             nm.transpose();
             nm.mult_matrix_vec3(&mut n);
             n.normalize();
-            let mut inv3 = s.model_view.submatrix();
+            let mut inv3 = normal_mv.submatrix();
             inv3.inverse();
             inv3.mult_matrix_vec3(&mut n);
             n
@@ -347,8 +355,17 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
         let mut d = sray.direction;
         inv.mult_dir_matrix(&mut d);
 
-        // Quick reject with the object's bounding box.
-        if !ray_box(&g.min, &g.max, &o, &d) {
+        // Quick reject with the object's bounding box, widened by the candidates' slack (NEAR of its size): a ray that
+        // just misses the box in double can still be inside a triangle the GPU rasterizes in float32, and the
+        // pointing pass, not this test, decides.
+        let mut margin = g.max;
+        margin.subtract(&g.min);
+        margin.multiply(NEAR);
+        let (mut lo, mut hi) = (g.min, g.max);
+        lo.subtract(&margin);
+        hi.add(&margin);
+
+        if !ray_box(&lo, &hi, &o, &d) {
             continue;
         }
 
@@ -575,7 +592,8 @@ fn pointing_draw_base(s: &ShapeInst, cam: &PickCamera, x: f64, y: f64, id: f32) 
         projection: f32x16(&cam.projection),
         model_view: f32x16(&s.shape_model_view),
         instance: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
-        instance_normal: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
+        // Particles: X3D_INSTANCING without X3D_INSTANCE_NORMAL (ParticleSystem.getShapeKey 1 or 2).
+        instance_normal: s.instance.as_ref().filter(|_| !s.particle).map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
             let mut n = m.submatrix();
             n.transpose();
             n.inverse();

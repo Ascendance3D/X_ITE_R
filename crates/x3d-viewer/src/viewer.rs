@@ -212,6 +212,10 @@ pub struct Viewer3d {
 }
 
 fn geom_of(root: &Runtime, cache: &mut HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>, s: &ShapeInst) -> Option<Rc<Geometry>> {
+    if let Some(g) = &s.particle_geometry {
+        return Some(g.clone());
+    }
+
     let key = (s.shape.path.to_vec(), s.geometry);
 
     if let Some(g) = cache.get(&key) {
@@ -1913,6 +1917,12 @@ impl Viewer3d {
             Some(w) => w.closest_object(&vp, &base, &nav, &direction),
             None => crate::collision::Closest { shape: None, distance: 0.0, normal: Vector3::ZERO, hit: false },
         }
+    }
+
+    /// The pointer's walk again (the one each frame takes before its sensor events), for tools that change the scene
+    /// state between frames and then pick: x3d-particles-drive puts reference particle records in place.
+    pub fn refresh_pointer_scan(&mut self) {
+        self.refresh_display_scan();
     }
 
     /// `browser .touch (x, y)` for the oracle's `pickProbes`: the hit, without any sensor event.
