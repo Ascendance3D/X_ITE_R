@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+NavigationInfo { type "WALK" }
+Viewpoint { position 0 2.5 0 orientation 0 0 1 0 }
+Background { skyColor 0.1 0.1 0.2 }
+Transform { rotation 1 0 0 -1.5707963 children [
+DEF PS ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 1
+  particleLifetime 0.25
+  lifetimeVariation 0
+  particleSize 4 4
+  
+  emitter PointEmitter { position 0 0 0 direction 0 1 0 speed 0 variation 0 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}
+] }

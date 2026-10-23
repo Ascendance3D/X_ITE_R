@@ -1,0 +1,32 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+NavigationInfo { type "FLY" }
+Viewpoint { position 0 0 0 orientation 0 0 1 0 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF RUN Collision { }
+DEF COL Collision { children [
+DEF PS ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 3
+  particleLifetime 1.2
+  lifetimeVariation 0
+  particleSize 0.3 0.3
+  
+  emitter PointEmitter { position 0.013 0.011 -0.6 direction 0 0 1 speed 1.2 variation 0 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}
+] }
+DEF COL_OFF Collision { enabled FALSE children [
+DEF PS_OFF ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 1
+  particleLifetime 0.25
+  lifetimeVariation 0
+  particleSize 2 2
+  
+  emitter PointEmitter { position 0.2 0 0 direction 0 1 0 speed 0 variation 0 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}
+] }

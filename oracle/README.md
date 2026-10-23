@@ -516,6 +516,15 @@ the drawing buffer stays 1 x 1 and `touch` hits nothing. The ParticleSystem poin
 `synthetic-rea-b14-particle-pick/` (`tools/gen_rea_b14_particle_pick.py`), and
 `crates/x3d-viewer/tests/rea_b14_particle_pick.rs` compares against them.
 
+A second additive key, `"collisionProbes": { "frames": [...], "directions": [[x, y, z], ...], "translations": [[x, y,
+z], ...], "nodes": [DEF, ...] }`, records after each listed frame (after its pick probes) the DEF names of the frame's
+collision shapes, `getClosestObject` along every direction (id, shape, distance, normal), `constrainTranslation` of
+every translation, the user pose, the viewpoint's positionOffset and isActive / collideTime of the named Collision
+nodes. The ParticleSystem avatar collision baselines `rea-batch15-particle-collision-baseline/` come from
+`tools/rea_b15_collision.py record`. Their worlds are `synthetic-rea-b15-particle-collision/`
+(`tools/gen_rea_b15_particle_collision.py`), and `crates/x3d-viewer/tests/rea_b15_particle_collision.rs` compares
+against them.
+
 Fields that differ between two Node runs as well, so they differ between tools too:
 
 * `loadFrames`: the real frames the load took.
