@@ -799,10 +799,13 @@ fn intersects_box(min: V3, max: V3, line: Line) -> bool {
 /// `getIntersections`: the infinite `line` against every triangle, in BVH traversal order, and the number of
 /// hits. With `want_normals` the interpolated normal of each hit is returned too.
 ///
-/// The volume version (VolumeEmitter `getRandomPosition`) writes `points [count ++]` without checking ARRAY_SIZE;
-/// WebGL clamps the index, so every hit after the 31st lands in the last entry and the count keeps going (measured
-/// against X_ITE on the GPU: oracle/synthetic-rea-b17-emitter-hits). The bounded version keeps the first ARRAY_SIZE
-/// hits.
+/// Both GLSL versions write `points [count]` (and the bounded one `normals [count]`) without checking
+/// ARRAY_SIZE; WebGL clamps the index, so every hit after the 31st lands in the last entry, the last one in
+/// traversal order stays there, and the count keeps going. Measured against X_ITE on the GPU for the bounded
+/// version (BoundedPhysicsModel `bounce`: oracle/synthetic-rea-b16-bounded bp-hits-64-below, bp-hits-64-floor-last;
+/// `min_index` takes the first of equal distances, so the entries past ARRAY_SIZE it reads add nothing) and for
+/// the volume version (VolumeEmitter `getRandomPosition`: oracle/synthetic-rea-b17-emitter-hits, which sorts and
+/// picks among the whole count).
 fn get_intersections(
     tex: &GeometryTexture,
     line: Line,
@@ -836,22 +839,25 @@ fn get_intersections(
 
                 if let Some(r) = intersects_triangle(line, a, b, c) {
                     let p = add(add(scale(a, r[2]), scale(b, r[0])), scale(c, r[1]));
+                    let point = [p[0], p[1], p[2], 1.0];
+                    let normal = want_normals.then(|| {
+                        let n = tex.normals_index as i64 + t;
+                        let (n0, n1, n2) = (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
+
+                        add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1]))
+                    });
 
                     count += 1;
 
                     if points.len() < ARRAY_SIZE {
-                        points.push([p[0], p[1], p[2], 1.0]);
+                        points.push(point);
+                        normals.extend(normal);
+                    } else {
+                        points[ARRAY_SIZE - 1] = point;
 
-                        if want_normals {
-                            let n = tex.normals_index as i64 + t;
-                            let (n0, n1, n2) =
-                                (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
-
-                            normals
-                                .push(add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1])));
+                        if let Some(normal) = normal {
+                            normals[ARRAY_SIZE - 1] = normal;
                         }
-                    } else if !want_normals {
-                        points[ARRAY_SIZE - 1] = [p[0], p[1], p[2], 1.0];
                     }
                 }
 
