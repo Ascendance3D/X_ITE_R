@@ -4821,17 +4821,14 @@ impl Renderer {
             }
 
             let calls_before = calls.len();
-            let call = |key: PipelineKey, draw_index: usize| Call {
+            // `instance`: the instance of the draw (its position in front_draws or back_draws), whose scratch range
+            // it draws when the instances have their own.
+            let call = |key: PipelineKey, draw_index: usize, instance: usize| Call {
                 key,
                 blend_constant,
                 style_texture: style_tex,
                 source,
-                range: front_draws
-                    .iter()
-                    .position(|&d| d == draw_index)
-                    .or_else(|| back_draws.iter().position(|&d| d == draw_index))
-                    .and_then(|k| instance_ranges.get(k).copied())
-                    .unwrap_or(range),
+                range: instance_ranges.get(instance).copied().unwrap_or(range),
                 count,
                 draw_index,
                 textures: slot_key,
@@ -4839,8 +4836,8 @@ impl Renderer {
             };
 
             if topology != Topology::Triangles || sprites {
-                for &i in &front_draws {
-                    calls.push(call(base, i));
+                for (instance, &i) in front_draws.iter().enumerate() {
+                    calls.push(call(base, i, instance));
                 }
             } else if back_index.is_some() {
                 // displayGeometry (back shader, back only), then (front shader, front only); the
@@ -4851,7 +4848,7 @@ impl Renderer {
                     &projector_textures,
                 )
                 .0;
-                for &bi in &back_draws {
+                for (instance, &bi) in back_draws.iter().enumerate() {
                     calls.push(Call {
                         textures: back_slots,
                         ..call(
@@ -4860,43 +4857,47 @@ impl Renderer {
                                 ..base
                             },
                             bi,
+                            instance,
                         )
                     });
                 }
-                for &i in &front_draws {
+                for (instance, &i) in front_draws.iter().enumerate() {
                     calls.push(call(
                         PipelineKey {
                             cull: Cull::Back,
                             ..base
                         },
                         i,
+                        instance,
                     ));
                 }
             } else if is_transparent {
                 if !g.solid {
-                    for &i in &front_draws {
+                    for (instance, &i) in front_draws.iter().enumerate() {
                         calls.push(call(
                             PipelineKey {
                                 cull: Cull::Front,
                                 ..base
                             },
                             i,
+                            instance,
                         ));
                     }
                 }
-                for &i in &front_draws {
+                for (instance, &i) in front_draws.iter().enumerate() {
                     calls.push(call(
                         PipelineKey {
                             cull: Cull::Back,
                             ..base
                         },
                         i,
+                        instance,
                     ));
                 }
             } else {
                 let cull = if g.solid { Cull::Back } else { Cull::None };
-                for &i in &front_draws {
-                    calls.push(call(PipelineKey { cull, ..base }, i));
+                for (instance, &i) in front_draws.iter().enumerate() {
+                    calls.push(call(PipelineKey { cull, ..base }, i, instance));
                 }
             }
 
