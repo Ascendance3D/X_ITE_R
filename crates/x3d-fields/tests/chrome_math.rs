@@ -4,7 +4,9 @@
 
 use x3d_fields::jsmath::{self, MathFlavor};
 
-fn chrome() { jsmath::set_flavor(MathFlavor::Chrome); }
+fn chrome() {
+    jsmath::set_flavor(MathFlavor::Chrome);
+}
 
 const ACOS: &[(u64, u64)] = &[
     (0x3fef50df0409c3fc, 0x3fca83bed7f69649),
@@ -109,7 +111,14 @@ fn check(name: &str, table: &[(u64, u64)], f: fn(f64) -> f64) {
     chrome();
     for (x, want) in table {
         let got = f(f64::from_bits(*x));
-        assert_eq!(got.to_bits(), *want, "{name}({:e}) = {:e}, Chrome {:e}", f64::from_bits(*x), got, f64::from_bits(*want));
+        assert_eq!(
+            got.to_bits(),
+            *want,
+            "{name}({:e}) = {:e}, Chrome {:e}",
+            f64::from_bits(*x),
+            got,
+            f64::from_bits(*want)
+        );
     }
 }
 

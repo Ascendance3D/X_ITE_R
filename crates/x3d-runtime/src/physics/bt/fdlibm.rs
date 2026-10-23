@@ -50,7 +50,11 @@ fn kernel_cos(x: f64) -> f64 {
     if ix < 0x3FD3_3333 {
         1.0 - (0.5 * z - (z * r))
     } else {
-        let qx = if ix > 0x3FE9_0000 { 0.28125 } else { f64::from_bits(((ix - 0x0020_0000) as u64) << 32) };
+        let qx = if ix > 0x3FE9_0000 {
+            0.28125
+        } else {
+            f64::from_bits(((ix - 0x0020_0000) as u64) << 32)
+        };
         let iz = 0.5 * z - qx;
         let a = 1.0 - qx;
         a - (iz - (z * r))

@@ -35,7 +35,14 @@ impl Rotation4 {
     pub const IDENTITY_TUPLE: [f64; 4] = [0.0, 0.0, 1.0, 0.0];
 
     pub fn new(x: f64, y: f64, z: f64, angle: f64) -> Self {
-        let mut r = Self { x: 0.0, y: 0.0, z: 1.0, angle: 0.0, tainted: false, quaternion: Quaternion::IDENTITY };
+        let mut r = Self {
+            x: 0.0,
+            y: 0.0,
+            z: 1.0,
+            angle: 0.0,
+            tainted: false,
+            quaternion: Quaternion::IDENTITY,
+        };
         r.set(x, y, z, angle);
         r
     }
@@ -61,7 +68,12 @@ impl Rotation4 {
         let half_theta = jsmath::interval(angle / 2.0, 0.0, std::f64::consts::PI);
         let a_scale = jsmath::sin(half_theta) / scale;
 
-        self.quaternion.set(x * a_scale, y * a_scale, z * a_scale, jsmath::cos(half_theta));
+        self.quaternion.set(
+            x * a_scale,
+            y * a_scale,
+            z * a_scale,
+            jsmath::cos(half_theta),
+        );
         self
     }
 
@@ -169,13 +181,24 @@ impl Rotation4 {
     /// The whole state of the JS object (`[_x]`, `[_y]`, `[_z]`, `[_angle]`, `[_tainted]`, `[_quaternion]`), for a Script's
     /// Rotation4 that must hold exactly what the field holds.
     pub fn state(&self) -> ([f64; 4], bool, Quaternion) {
-        ([self.x, self.y, self.z, self.angle], self.tainted, self.quaternion)
+        (
+            [self.x, self.y, self.z, self.angle],
+            self.tainted,
+            self.quaternion,
+        )
     }
 
     /// A rotation with exactly this state (see [`Rotation4::state`]).
     pub fn from_state(axis_angle: [f64; 4], tainted: bool, quaternion: Quaternion) -> Self {
         let [x, y, z, angle] = axis_angle;
-        Self { x, y, z, angle, tainted, quaternion }
+        Self {
+            x,
+            y,
+            z,
+            angle,
+            tainted,
+            quaternion,
+        }
     }
 
     pub fn equals(&self, other: &Self) -> bool {
@@ -255,14 +278,22 @@ impl Rotation4 {
 
     /// Rotation4.squad (a, b, dest, t).
     pub fn squad(&mut self, a: &Rotation4, b: &Rotation4, dest: &Rotation4, t: f64) -> &mut Self {
-        self.quaternion.squad(&a.quaternion, &b.quaternion, &dest.quaternion, t);
+        self.quaternion
+            .squad(&a.quaternion, &b.quaternion, &dest.quaternion, t);
         self.tainted = true;
         self
     }
 
     /// Rotation4.spline (r0, r1, r2): a rotation made from Quaternion.spline, then normalized.
     pub fn spline(r0: &Rotation4, r1: &Rotation4, r2: &Rotation4) -> Rotation4 {
-        let mut r = Rotation4 { x: 0.0, y: 0.0, z: 1.0, angle: 0.0, tainted: true, quaternion: Quaternion::spline(&r0.quaternion, &r1.quaternion, &r2.quaternion) };
+        let mut r = Rotation4 {
+            x: 0.0,
+            y: 0.0,
+            z: 1.0,
+            angle: 0.0,
+            tainted: true,
+            quaternion: Quaternion::spline(&r0.quaternion, &r1.quaternion, &r2.quaternion),
+        };
         r.normalize();
         r
     }
@@ -296,7 +327,12 @@ impl Rotation4 {
             }
         } else {
             crossvec.multiply(jsmath::sqrt((1.0 - cos_angle).abs() / 2.0));
-            self.quaternion.set(crossvec.x, crossvec.y, crossvec.z, jsmath::sqrt((1.0 + cos_angle).abs() / 2.0));
+            self.quaternion.set(
+                crossvec.x,
+                crossvec.y,
+                crossvec.z,
+                jsmath::sqrt((1.0 + cos_angle).abs() / 2.0),
+            );
         }
 
         self.tainted = true;

@@ -25,22 +25,78 @@ fn bits16(a: &[f64; 16]) -> [u64; 16] {
 
 // Pinned X_ITE: new Matrix4 () .setTransform (new Vector3 (1, 2, 3), new Rotation4 (0, 1, 0, 0.5), new Vector3 (2, 3, 4)).
 const A: [u64; 16] = [
-    0x3ffc1528065b7d50, 0, 0xbfeeaee8744b05f0, 0, 0, 0x4008000000000000, 0, 0,
-    0x3ffeaee8744b05f0, 0, 0x400c1528065b7d50, 0, 0x3ff0000000000000, 0x4000000000000000, 0x4008000000000000, 0x3ff0000000000000,
+    0x3ffc1528065b7d50,
+    0,
+    0xbfeeaee8744b05f0,
+    0,
+    0,
+    0x4008000000000000,
+    0,
+    0,
+    0x3ffeaee8744b05f0,
+    0,
+    0x400c1528065b7d50,
+    0,
+    0x3ff0000000000000,
+    0x4000000000000000,
+    0x4008000000000000,
+    0x3ff0000000000000,
 ];
 // Pinned X_ITE: new Matrix4 () .setTransform (new Vector3 (-1, 0.5, 2), new Rotation4 (1, 0, 0, 0.25)).
 const B: [u64; 16] = [
-    0x3ff0000000000000, 0, 0, 0, 0, 0x3fef01549f7deea1, 0x3fcfaaeed4f31577, 0,
-    0, 0xbfcfaaeed4f31577, 0x3fef01549f7deea1, 0, 0xbff0000000000000, 0x3fe0000000000000, 0x4000000000000000, 0x3ff0000000000000,
+    0x3ff0000000000000,
+    0,
+    0,
+    0,
+    0,
+    0x3fef01549f7deea1,
+    0x3fcfaaeed4f31577,
+    0,
+    0,
+    0xbfcfaaeed4f31577,
+    0x3fef01549f7deea1,
+    0,
+    0xbff0000000000000,
+    0x3fe0000000000000,
+    0x4000000000000000,
+    0x3ff0000000000000,
 ];
 const DET_A: u64 = 0x4038000000000001;
 const INV_A: [u64; 16] = [
-    0x3fdc1528065b7d4e, 0, 0x3fbeaee8744b05ee, 0, 0, 0x3fd5555555555554, 0, 0,
-    0xbfceaee8744b05ee, 0, 0x3fcc1528065b7d4e, 0, 0x3fd1f134a8150b97, 0xbfe5555555555554, 0xbfe8e5bb134dfeb9, 0x3fefffffffffffff,
+    0x3fdc1528065b7d4e,
+    0,
+    0x3fbeaee8744b05ee,
+    0,
+    0,
+    0x3fd5555555555554,
+    0,
+    0,
+    0xbfceaee8744b05ee,
+    0,
+    0x3fcc1528065b7d4e,
+    0,
+    0x3fd1f134a8150b97,
+    0xbfe5555555555554,
+    0xbfe8e5bb134dfeb9,
+    0x3fefffffffffffff,
 ];
 const A_MULT_RIGHT_B: [u64; 16] = [
-    0x3ffc1528065b7d50, 0x3fce5d5764a3360b, 0xbfedbab7cbfc546b, 0, 0, 0x400740ff779e72f9, 0x3fe7c0331fb65019, 0,
-    0x3ffeaee8744b05f0, 0xbfebca80c3059360, 0x400b35a9b2e987e0, 0, 0, 0x3ffb213b0fa2c694, 0x40159b2ea91e6ad4, 0x3ff0000000000000,
+    0x3ffc1528065b7d50,
+    0x3fce5d5764a3360b,
+    0xbfedbab7cbfc546b,
+    0,
+    0,
+    0x400740ff779e72f9,
+    0x3fe7c0331fb65019,
+    0,
+    0x3ffeaee8744b05f0,
+    0xbfebca80c3059360,
+    0x400b35a9b2e987e0,
+    0,
+    0,
+    0x3ffb213b0fa2c694,
+    0x40159b2ea91e6ad4,
+    0x3ff0000000000000,
 ];
 
 fn engine_a() -> EMatrix4 {
@@ -57,7 +113,13 @@ fn engine_a() -> EMatrix4 {
 
 fn engine_b() -> EMatrix4 {
     let mut m = EMatrix4::IDENTITY;
-    m.set_transform(Some(&EVector3::new(-1.0, 0.5, 2.0)), Some(&ERotation4::new(1.0, 0.0, 0.0, 0.25)), None, None, None);
+    m.set_transform(
+        Some(&EVector3::new(-1.0, 0.5, 2.0)),
+        Some(&ERotation4::new(1.0, 0.0, 0.0, 0.25)),
+        None,
+        None,
+        None,
+    );
     m
 }
 
@@ -77,7 +139,13 @@ fn published_a() -> vrml97::fields::math::Matrix4 {
 fn published_b() -> vrml97::fields::math::Matrix4 {
     use vrml97::fields::math::{Matrix4, Rotation4, Vector3};
     let mut m = Matrix4::IDENTITY;
-    m.set_transform(Some(&Vector3::new(-1.0, 0.5, 2.0)), Some(&Rotation4::new(1.0, 0.0, 0.0, 0.25)), None, None, None);
+    m.set_transform(
+        Some(&Vector3::new(-1.0, 0.5, 2.0)),
+        Some(&Rotation4::new(1.0, 0.0, 0.0, 0.25)),
+        None,
+        None,
+        None,
+    );
     m
 }
 
@@ -130,22 +198,54 @@ fn matrix_identity_is_neutral() {
 #[test]
 fn matrix_factor_matches_xite_node() {
     // node v24.21.0 result; Chromium differs in the rotation y bit (js_math_chrome.rs).
-    let (mut t, mut r, mut s, mut so) = (EVector3::ZERO, ERotation4::identity(), EVector3::ZERO, ERotation4::identity());
+    let (mut t, mut r, mut s, mut so) = (
+        EVector3::ZERO,
+        ERotation4::identity(),
+        EVector3::ZERO,
+        ERotation4::identity(),
+    );
     engine_a().factor(Some(&mut t), Some(&mut r), Some(&mut s), Some(&mut so));
     assert_eq!([t.x, t.y, t.z], [1.0, 2.0, 3.0]);
     assert_eq!([s.x, s.y, s.z], [2.0, 3.0, 4.0]);
-    assert_eq!([r.x().to_bits(), r.y().to_bits(), r.z().to_bits(), r.angle().to_bits()], [0, 0x3ff000000000000d, 0, 0x3fdfffffffffffe7]);
+    assert_eq!(
+        [
+            r.x().to_bits(),
+            r.y().to_bits(),
+            r.z().to_bits(),
+            r.angle().to_bits()
+        ],
+        [0, 0x3ff000000000000d, 0, 0x3fdfffffffffffe7]
+    );
     assert_eq!([so.x(), so.y(), so.z(), so.angle()], [0.0, 0.0, 1.0, 0.0]);
 }
 
 #[test]
 fn matrix_get_transform_without_center_equals_factor() {
     // Matrix4.js getTransform: no center means this.factor (...).
-    let (mut t, mut r, mut s, mut so) = (EVector3::ZERO, ERotation4::identity(), EVector3::ZERO, ERotation4::identity());
-    engine_a().get_transform(Some(&mut t), Some(&mut r), Some(&mut s), Some(&mut so), None);
+    let (mut t, mut r, mut s, mut so) = (
+        EVector3::ZERO,
+        ERotation4::identity(),
+        EVector3::ZERO,
+        ERotation4::identity(),
+    );
+    engine_a().get_transform(
+        Some(&mut t),
+        Some(&mut r),
+        Some(&mut s),
+        Some(&mut so),
+        None,
+    );
     assert_eq!([t.x, t.y, t.z], [1.0, 2.0, 3.0]);
     assert_eq!([s.x, s.y, s.z], [2.0, 3.0, 4.0]);
-    assert_eq!([r.x().to_bits(), r.y().to_bits(), r.z().to_bits(), r.angle().to_bits()], [0, 0x3ff000000000000d, 0, 0x3fdfffffffffffe7]);
+    assert_eq!(
+        [
+            r.x().to_bits(),
+            r.y().to_bits(),
+            r.z().to_bits(),
+            r.angle().to_bits()
+        ],
+        [0, 0x3ff000000000000d, 0, 0x3fdfffffffffffe7]
+    );
 }
 
 #[test]
@@ -168,8 +268,14 @@ const ATAN2_1_1: u64 = 0x3fe921fb54442d18;
 
 #[test]
 fn node_flavor_is_the_default() {
-    assert_eq!(vrml97::fields::jsmath::flavor(), vrml97::fields::jsmath::MathFlavor::Node);
-    assert_eq!(x3d_fields::jsmath::flavor(), x3d_fields::jsmath::MathFlavor::Node);
+    assert_eq!(
+        vrml97::fields::jsmath::flavor(),
+        vrml97::fields::jsmath::MathFlavor::Node
+    );
+    assert_eq!(
+        x3d_fields::jsmath::flavor(),
+        x3d_fields::jsmath::MathFlavor::Node
+    );
 }
 
 #[test]
@@ -215,8 +321,16 @@ const GENERATOR_FORMAT: &[(u64, &str, &str)] = &[
 fn generator_format_engine_matches_xite() {
     for (b, double, float) in GENERATOR_FORMAT {
         let v = f64::from_bits(*b);
-        assert_eq!(x3d_fields::format::double_format(v), *double, "DoubleFormat({v:e})");
-        assert_eq!(x3d_fields::format::float_format(v), *float, "FloatFormat({v:e})");
+        assert_eq!(
+            x3d_fields::format::double_format(v),
+            *double,
+            "DoubleFormat({v:e})"
+        );
+        assert_eq!(
+            x3d_fields::format::float_format(v),
+            *float,
+            "FloatFormat({v:e})"
+        );
     }
 }
 
@@ -227,8 +341,16 @@ fn generator_format_engine_matches_xite() {
 fn generator_format_facade_matches_xite() {
     for (b, double, float) in GENERATOR_FORMAT {
         let v = f64::from_bits(*b);
-        assert_eq!(vrml97::fields::format::double_format(v), *double, "DoubleFormat({v:e})");
-        assert_eq!(vrml97::fields::format::float_format(v), *float, "FloatFormat({v:e})");
+        assert_eq!(
+            vrml97::fields::format::double_format(v),
+            *double,
+            "DoubleFormat({v:e})"
+        );
+        assert_eq!(
+            vrml97::fields::format::float_format(v),
+            *float,
+            "FloatFormat({v:e})"
+        );
     }
 }
 
@@ -263,7 +385,11 @@ const CHROME_INTL: &[(u64, usize, &str)] = &[
 fn intl_standard_engine_matches_chrome() {
     for (b, p, want) in CHROME_INTL {
         let v = f64::from_bits(*b);
-        assert_eq!(x3d_fields::format::intl_standard(v, *p), *want, "{v:e} at {p}");
+        assert_eq!(
+            x3d_fields::format::intl_standard(v, *p),
+            *want,
+            "{v:e} at {p}"
+        );
     }
 }
 
@@ -273,7 +399,11 @@ fn intl_standard_engine_matches_chrome() {
 fn intl_standard_facade_matches_chrome() {
     for (b, p, want) in CHROME_INTL {
         let v = f64::from_bits(*b);
-        assert_eq!(vrml97::fields::format::intl_standard(v, *p), *want, "{v:e} at {p}");
+        assert_eq!(
+            vrml97::fields::format::intl_standard(v, *p),
+            *want,
+            "{v:e} at {p}"
+        );
     }
 }
 
@@ -310,7 +440,11 @@ fn field_value_published_sfstring() {
 #[test]
 fn field_value_published_sfvec3f() {
     use vrml97::fields::{FieldType, FieldValue, math::Vector3};
-    let v = FieldValue::SFVec3f(Vector3 { x: 1.0, y: 2.0, z: 3.0 });
+    let v = FieldValue::SFVec3f(Vector3 {
+        x: 1.0,
+        y: 2.0,
+        z: 3.0,
+    });
     assert_eq!(v.field_type(), FieldType::SFVec3f);
     assert!(!v.is_default_value());
     // ORACLE.json group-children.wrl prints `translation 1 2 3`.

@@ -8,7 +8,11 @@ use std::rc::Rc;
 
 macro_rules! font {
     ($path:literal) => {
-        include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../oracle/x_ite-pin/src/assets/fonts/", $path))
+        include_bytes!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../oracle/x_ite-pin/src/assets/fonts/",
+            $path
+        ))
     };
 }
 
@@ -17,10 +21,22 @@ macro_rules! font {
 pub fn default_font_file(family: &str, style: &str) -> Option<(&'static str, &'static [u8])> {
     let table: [(&str, &[u8]); 4] = match family {
         "SERIF" => [
-            ("Droid/DroidSerif-Regular.woff2", font!("Droid/DroidSerif-Regular.woff2")),
-            ("Droid/DroidSerif-Italic.woff2", font!("Droid/DroidSerif-Italic.woff2")),
-            ("Droid/DroidSerif-Bold.woff2", font!("Droid/DroidSerif-Bold.woff2")),
-            ("Droid/DroidSerif-BoldItalic.woff2", font!("Droid/DroidSerif-BoldItalic.woff2")),
+            (
+                "Droid/DroidSerif-Regular.woff2",
+                font!("Droid/DroidSerif-Regular.woff2"),
+            ),
+            (
+                "Droid/DroidSerif-Italic.woff2",
+                font!("Droid/DroidSerif-Italic.woff2"),
+            ),
+            (
+                "Droid/DroidSerif-Bold.woff2",
+                font!("Droid/DroidSerif-Bold.woff2"),
+            ),
+            (
+                "Droid/DroidSerif-BoldItalic.woff2",
+                font!("Droid/DroidSerif-BoldItalic.woff2"),
+            ),
         ],
         "SANS" => [
             ("Ubuntu/Ubuntu-R.woff2", font!("Ubuntu/Ubuntu-R.woff2")),
@@ -29,10 +45,22 @@ pub fn default_font_file(family: &str, style: &str) -> Option<(&'static str, &'s
             ("Ubuntu/Ubuntu-BI.woff2", font!("Ubuntu/Ubuntu-BI.woff2")),
         ],
         "TYPEWRITER" => [
-            ("Ubuntu/UbuntuMono-R.woff2", font!("Ubuntu/UbuntuMono-R.woff2")),
-            ("Ubuntu/UbuntuMono-RI.woff2", font!("Ubuntu/UbuntuMono-RI.woff2")),
-            ("Ubuntu/UbuntuMono-B.woff2", font!("Ubuntu/UbuntuMono-B.woff2")),
-            ("Ubuntu/UbuntuMono-BI.woff2", font!("Ubuntu/UbuntuMono-BI.woff2")),
+            (
+                "Ubuntu/UbuntuMono-R.woff2",
+                font!("Ubuntu/UbuntuMono-R.woff2"),
+            ),
+            (
+                "Ubuntu/UbuntuMono-RI.woff2",
+                font!("Ubuntu/UbuntuMono-RI.woff2"),
+            ),
+            (
+                "Ubuntu/UbuntuMono-B.woff2",
+                font!("Ubuntu/UbuntuMono-B.woff2"),
+            ),
+            (
+                "Ubuntu/UbuntuMono-BI.woff2",
+                font!("Ubuntu/UbuntuMono-BI.woff2"),
+            ),
         ],
         _ => return None,
     };
@@ -56,14 +84,23 @@ thread_local! {
 pub fn load_default_font(family: &str, style: &str) -> Option<Rc<Font>> {
     let (name, data) = default_font_file(family, style)?;
 
-    CACHE.with(|c| c.borrow_mut().entry(name).or_insert_with(|| Font::parse(data).ok().map(Rc::new)).clone())
+    CACHE.with(|c| {
+        c.borrow_mut()
+            .entry(name)
+            .or_insert_with(|| Font::parse(data).ok().map(Rc::new))
+            .clone()
+    })
 }
 
 /// The default-font part of X3DFontStyleNode.loadData: every family name (plus the implicit
 /// "SERIF") is tried in order; the first X_ITE default family wins. Returns None when no
 /// family is a default one (FontLibrary lookups and font URLs are the caller's business).
 pub fn select_default_font(family: &[String], style: &str) -> Option<Rc<Font>> {
-    for f in family.iter().map(String::as_str).chain(std::iter::once("SERIF")) {
+    for f in family
+        .iter()
+        .map(String::as_str)
+        .chain(std::iter::once("SERIF"))
+    {
         if default_font_file(f, style).is_some() {
             return load_default_font(f, style);
         }

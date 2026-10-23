@@ -84,14 +84,29 @@ fn remote_object_preview(o: &Value) -> String {
         Some(string_of(v))
     } else if let Some(u) = o.get("unserializableValue").and_then(Value::as_str) {
         Some(u.to_string())
-    } else if o.get("description").and_then(Value::as_str) == Some("Object") && o.get("preview").is_some() {
-        let props = o["preview"]["properties"].as_array().cloned().unwrap_or_default();
+    } else if o.get("description").and_then(Value::as_str) == Some("Object")
+        && o.get("preview").is_some()
+    {
+        let props = o["preview"]["properties"]
+            .as_array()
+            .cloned()
+            .unwrap_or_default();
         let toks: Vec<String> = props
             .iter()
-            .map(|p| format!("{}: {}", s(&p["name"]).unwrap_or_default(), p.get("value").and_then(Value::as_str).unwrap_or("undefined")))
+            .map(|p| {
+                format!(
+                    "{}: {}",
+                    s(&p["name"]).unwrap_or_default(),
+                    p.get("value")
+                        .and_then(Value::as_str)
+                        .unwrap_or("undefined")
+                )
+            })
             .collect();
         Some(format!("{{{}}}", toks.join(", ")))
-    } else if o.get("subtype").and_then(Value::as_str) == Some("array") && o.get("preview").is_some() {
+    } else if o.get("subtype").and_then(Value::as_str) == Some("array")
+        && o.get("preview").is_some()
+    {
         let mut entries: Vec<(i64, String)> = o["preview"]["properties"]
             .as_array()
             .cloned()
@@ -99,7 +114,15 @@ fn remote_object_preview(o: &Value) -> String {
             .iter()
             .filter_map(|p| {
                 let idx: f64 = p["name"].as_str()?.parse().ok()?;
-                (idx >= 0.0 && idx.fract() == 0.0).then(|| (idx as i64, p.get("value").and_then(Value::as_str).unwrap_or("undefined").to_string()))
+                (idx >= 0.0 && idx.fract() == 0.0).then(|| {
+                    (
+                        idx as i64,
+                        p.get("value")
+                            .and_then(Value::as_str)
+                            .unwrap_or("undefined")
+                            .to_string(),
+                    )
+                })
             })
             .collect();
         entries.sort_by_key(|e| e.0);
@@ -117,11 +140,19 @@ fn remote_object_preview(o: &Value) -> String {
         }
         Some(format!("[{}]", toks.join(", ")))
     } else {
-        o.get("description").and_then(Value::as_str).map(str::to_string)
+        o.get("description")
+            .and_then(Value::as_str)
+            .map(str::to_string)
     };
     match preview {
         Some(p) if !p.is_empty() => p,
-        _ => format!("JSHandle@{}", o.get("subtype").and_then(Value::as_str).filter(|x| !x.is_empty()).unwrap_or(ty)),
+        _ => format!(
+            "JSHandle@{}",
+            o.get("subtype")
+                .and_then(Value::as_str)
+                .filter(|x| !x.is_empty())
+                .unwrap_or(ty)
+        ),
     }
 }
 
@@ -132,7 +163,10 @@ fn first_line(s: &str) -> &str {
 fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
     let method = v["method"].as_str().unwrap_or("");
     let params = &v["params"];
-    let session = v.get("sessionId").and_then(Value::as_str).map(str::to_string);
+    let session = v
+        .get("sessionId")
+        .and_then(Value::as_str)
+        .map(str::to_string);
     let (lock, cv) = &**st;
     let mut s = lock.lock().unwrap();
     match method {
@@ -141,7 +175,12 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
             let sid = params["sessionId"].as_str().unwrap_or("").to_string();
             let ty = info["type"].as_str().unwrap_or("");
             let ctx = info["browserContextId"].as_str();
-            if session.is_none() && ty == "page" && s.page_session.is_none() && ctx.is_some() && ctx == s.context_id.as_deref() {
+            if session.is_none()
+                && ty == "page"
+                && s.page_session.is_none()
+                && ctx.is_some()
+                && ctx == s.context_id.as_deref()
+            {
                 s.page_session = Some(sid);
                 s.page_target = info["targetId"].as_str().map(str::to_string);
                 cv.notify_all();
@@ -150,7 +189,11 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
                 let w = Some(sid.as_str());
                 conn.fire(w, "Runtime.enable", None);
                 conn.fire(w, "Network.enable", None);
-                conn.fire(w, "Network.setCacheDisabled", Some(json!({ "cacheDisabled": true })));
+                conn.fire(
+                    w,
+                    "Network.setCacheDisabled",
+                    Some(json!({ "cacheDisabled": true })),
+                );
                 conn.fire(w, "Fetch.enable", Some(json!({ "handleAuthRequests": true, "patterns": [{ "urlPattern": "*", "requestStage": "Request" }] })));
                 conn.fire(w, "Runtime.runIfWaitingForDebugger", None);
                 conn.fire(w, "Target.setAutoAttach", Some(json!({ "autoAttach": true, "waitForDebuggerOnStart": true, "flatten": true })));
@@ -159,7 +202,11 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
                 if params["waitingForDebugger"].as_bool() == Some(true) {
                     conn.fire(Some(&sid), "Runtime.runIfWaitingForDebugger", None);
                 }
-                conn.fire(session.as_deref(), "Target.detachFromTarget", Some(json!({ "sessionId": sid })));
+                conn.fire(
+                    session.as_deref(),
+                    "Target.detachFromTarget",
+                    Some(json!({ "sessionId": sid })),
+                );
             }
         }
         "Target.detachedFromTarget" => {
@@ -191,7 +238,11 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
             let id = params["requestId"].as_str().unwrap_or("").to_string();
             let url = params["request"]["url"].as_str().unwrap_or("");
             match params.get("networkId").and_then(Value::as_str) {
-                None => conn.fire(Some(&sid), "Fetch.continueRequest", Some(json!({ "requestId": id }))),
+                None => conn.fire(
+                    Some(&sid),
+                    "Fetch.continueRequest",
+                    Some(json!({ "requestId": id })),
+                ),
                 Some(_) if url.starts_with("data:") => {}
                 Some(nid) => {
                     let nid = nid.to_string();
@@ -205,7 +256,11 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
             if !url.starts_with("data:") && params.get("redirectResponse").is_none() {
                 let nid = params["requestId"].as_str().unwrap_or("").to_string();
                 let in_worker = session.as_deref().is_some_and(|x| s.workers.contains(x));
-                let has_frame = in_worker || params.get("frameId").and_then(Value::as_str).is_some_and(|f| !f.is_empty());
+                let has_frame = in_worker
+                    || params
+                        .get("frameId")
+                        .and_then(Value::as_str)
+                        .is_some_and(|f| !f.is_empty());
                 s.reqs.entry(nid.clone()).or_default().sent = Some((url, has_frame));
                 pair(&mut s, conn, &nid);
             }
@@ -213,25 +268,34 @@ fn on_event(st: &Arc<(Mutex<State>, Condvar)>, conn: &Conn, v: &Value) {
         "Network.loadingFinished" | "Network.loadingFailed" => {
             let nid = params["requestId"].as_str().unwrap_or("");
             if let Some(r) = s.reqs.remove(nid)
-                && r.counted {
-                    s.in_flight -= 1;
-                }
-        }
-        "Runtime.consoleAPICalled"
-            if params["executionContextId"].as_i64() != Some(0) => {
-                let text: Vec<String> = params["args"].as_array().map(|a| a.iter().map(remote_object_preview).collect()).unwrap_or_default();
-                let ty = params["type"].as_str().unwrap_or("").to_string();
-                s.console.push((ty, text.join(" ")));
+                && r.counted
+            {
+                s.in_flight -= 1;
             }
+        }
+        "Runtime.consoleAPICalled" if params["executionContextId"].as_i64() != Some(0) => {
+            let text: Vec<String> = params["args"]
+                .as_array()
+                .map(|a| a.iter().map(remote_object_preview).collect())
+                .unwrap_or_default();
+            let ty = params["type"].as_str().unwrap_or("").to_string();
+            s.console.push((ty, text.join(" ")));
+        }
         "Log.entryAdded" => {
             let e = &params["entry"];
             if e["source"].as_str() != Some("worker") {
-                s.console.push((e["level"].as_str().unwrap_or("").into(), e["text"].as_str().unwrap_or("").into()));
+                s.console.push((
+                    e["level"].as_str().unwrap_or("").into(),
+                    e["text"].as_str().unwrap_or("").into(),
+                ));
             }
         }
         "Runtime.exceptionThrown" => {
             let d = &params["exceptionDetails"];
-            let text = d["exception"]["description"].as_str().or(d["text"].as_str()).unwrap_or("exception");
+            let text = d["exception"]["description"]
+                .as_str()
+                .or(d["text"].as_str())
+                .unwrap_or("exception");
             s.page_errors.push(first_line(text).to_string());
         }
         _ => {}
@@ -245,14 +309,19 @@ fn pair(s: &mut State, conn: &Conn, nid: &str) {
     if r.sent.is_none() || r.paused.is_none() {
         return;
     }
-    let (Some((url, has_frame)), Some((id, sid))) = (r.sent.clone(), r.paused.take()) else { return };
+    let (Some((url, has_frame)), Some((id, sid))) = (r.sent.clone(), r.paused.take()) else {
+        return;
+    };
     let fire = |m: &str, p: Value| conn.fire(Some(&sid), m, Some(p));
     if !has_frame {
         fire("Fetch.continueRequest", json!({ "requestId": id }));
         return;
     }
     if url.ends_with("/favicon.ico") {
-        fire("Fetch.failRequest", json!({ "requestId": id, "errorReason": "Aborted" }));
+        fire(
+            "Fetch.failRequest",
+            json!({ "requestId": id, "errorReason": "Aborted" }),
+        );
         return;
     }
     r.counted = true;
@@ -260,7 +329,10 @@ fn pair(s: &mut State, conn: &Conn, nid: &str) {
     if url.starts_with(&base) {
         fire("Fetch.continueRequest", json!({ "requestId": id }));
     } else {
-        fire("Fetch.failRequest", json!({ "requestId": id, "errorReason": "Failed" }));
+        fire(
+            "Fetch.failRequest",
+            json!({ "requestId": id, "errorReason": "Failed" }),
+        );
     }
 }
 
@@ -274,46 +346,110 @@ fn api_error(api: &str, e: CdpError) -> String {
 impl Page {
     /// `chromium.launch`, `browser.newContext ({ viewport, deviceScaleFactor: 1 })`, `context.route (non-local => abort)`,
     /// `context.newPage ()`.
-    pub fn open(exe: &str, args: &[&str], width: u32, height: u32, base: &str, trace: Option<PathBuf>, deadline: Instant) -> Result<Page, String> {
-        let state = Arc::new((Mutex::new(State { base: base.into(), ..Default::default() }), Condvar::new()));
+    pub fn open(
+        exe: &str,
+        args: &[&str],
+        width: u32,
+        height: u32,
+        base: &str,
+        trace: Option<PathBuf>,
+        deadline: Instant,
+    ) -> Result<Page, String> {
+        let state = Arc::new((
+            Mutex::new(State {
+                base: base.into(),
+                ..Default::default()
+            }),
+            Condvar::new(),
+        ));
         let st = state.clone();
-        let chrome = Chrome::launch(exe, args, trace, Box::new(move |conn, v| on_event(&st, conn, v)))?;
+        let chrome = Chrome::launch(
+            exe,
+            args,
+            trace,
+            Box::new(move |conn, v| on_event(&st, conn, v)),
+        )?;
         let conn = chrome.conn.clone();
-        let call = |m: &str, p: Option<Value>| conn.call(None, m, p, deadline).map_err(|e| format!("browserType.launch: {e}"));
+        let call = |m: &str, p: Option<Value>| {
+            conn.call(None, m, p, deadline)
+                .map_err(|e| format!("browserType.launch: {e}"))
+        };
         call("Browser.getVersion", None)?;
-        call("Target.setAutoAttach", Some(json!({ "autoAttach": true, "waitForDebuggerOnStart": true, "flatten": true })))?;
-        let ctx = call("Target.createBrowserContext", Some(json!({ "disposeOnDetach": true })))?;
+        call(
+            "Target.setAutoAttach",
+            Some(json!({ "autoAttach": true, "waitForDebuggerOnStart": true, "flatten": true })),
+        )?;
+        let ctx = call(
+            "Target.createBrowserContext",
+            Some(json!({ "disposeOnDetach": true })),
+        )?;
         state.0.lock().unwrap().context_id = ctx["browserContextId"].as_str().map(str::to_string);
-        call("Target.createTarget", Some(json!({ "url": "about:blank", "browserContextId": ctx["browserContextId"] })))?;
+        call(
+            "Target.createTarget",
+            Some(json!({ "url": "about:blank", "browserContextId": ctx["browserContextId"] })),
+        )?;
         let (session, target) = {
             let (lock, cv) = &*state;
             let mut s = lock.lock().unwrap();
             while s.page_session.is_none() {
                 let left = deadline.saturating_duration_since(Instant::now());
                 if left.is_zero() || conn.is_closed() {
-                    return Err("browserContext.newPage: Target page, context or browser has been closed".into());
+                    return Err(
+                        "browserContext.newPage: Target page, context or browser has been closed"
+                            .into(),
+                    );
                 }
-                s = cv.wait_timeout(s, left.min(Duration::from_millis(100))).unwrap().0;
+                s = cv
+                    .wait_timeout(s, left.min(Duration::from_millis(100)))
+                    .unwrap()
+                    .0;
             }
-            (s.page_session.clone().unwrap(), s.page_target.clone().unwrap_or_default())
+            (
+                s.page_session.clone().unwrap(),
+                s.page_target.clone().unwrap_or_default(),
+            )
         };
         let sess = Some(session.as_str());
-        let window = conn.call(sess, "Browser.getWindowForTarget", None, deadline).ok();
+        let window = conn
+            .call(sess, "Browser.getWindowForTarget", None, deadline)
+            .ok();
         // FrameSession._initialize: sent together, awaited together.
         let mut cmds: Vec<(&str, Option<Value>)> = vec![
             ("Page.enable", None),
             ("Page.getFrameTree", None),
             ("Log.enable", Some(json!({}))),
-            ("Page.setLifecycleEventsEnabled", Some(json!({ "enabled": true }))),
+            (
+                "Page.setLifecycleEventsEnabled",
+                Some(json!({ "enabled": true })),
+            ),
             ("Runtime.enable", Some(json!({}))),
             ("Network.enable", None),
-            ("Network.setCacheDisabled", Some(json!({ "cacheDisabled": true }))),
-            ("Fetch.enable", Some(json!({ "handleAuthRequests": true, "patterns": [{ "urlPattern": "*", "requestStage": "Request" }] }))),
-            ("Target.setAutoAttach", Some(json!({ "autoAttach": true, "waitForDebuggerOnStart": true, "flatten": true }))),
-            ("Emulation.setFocusEmulationEnabled", Some(json!({ "enabled": true }))),
+            (
+                "Network.setCacheDisabled",
+                Some(json!({ "cacheDisabled": true })),
+            ),
+            (
+                "Fetch.enable",
+                Some(
+                    json!({ "handleAuthRequests": true, "patterns": [{ "urlPattern": "*", "requestStage": "Request" }] }),
+                ),
+            ),
+            (
+                "Target.setAutoAttach",
+                Some(
+                    json!({ "autoAttach": true, "waitForDebuggerOnStart": true, "flatten": true }),
+                ),
+            ),
+            (
+                "Emulation.setFocusEmulationEnabled",
+                Some(json!({ "enabled": true })),
+            ),
         ];
         if let Some(w) = window.as_ref().and_then(|w| w.get("windowId")) {
-            cmds.push(("Browser.setWindowBounds", Some(json!({ "windowId": w, "bounds": { "width": width, "height": height } }))));
+            cmds.push((
+                "Browser.setWindowBounds",
+                Some(json!({ "windowId": w, "bounds": { "width": width, "height": height } })),
+            ));
         }
         cmds.extend([
             (
@@ -336,7 +472,11 @@ impl Page {
         ]);
         let mut rxs = Vec::new();
         for (m, p) in cmds {
-            rxs.push((m, conn.send(sess, m, p).map_err(|e| format!("browserContext.newPage: {e}"))?));
+            rxs.push((
+                m,
+                conn.send(sess, m, p)
+                    .map_err(|e| format!("browserContext.newPage: {e}"))?,
+            ));
         }
         for (m, rx) in rxs {
             match Conn::wait(rx, deadline, m) {
@@ -346,7 +486,13 @@ impl Page {
                 Err(e) => return Err(format!("browserContext.newPage: {e}")),
             }
         }
-        Ok(Page { chrome, session, target, state, deadline })
+        Ok(Page {
+            chrome,
+            session,
+            target,
+            state,
+            deadline,
+        })
     }
 
     fn conn(&self) -> Conn {
@@ -368,7 +514,12 @@ impl Page {
     /// `page.addInitScript (fn, arg)`: source `(${fn})(${JSON.stringify (arg)})`.
     pub fn add_init_script(&self, source: &str) -> Result<(), String> {
         self.conn()
-            .call(Some(&self.session), "Page.addScriptToEvaluateOnNewDocument", Some(json!({ "source": source })), self.deadline)
+            .call(
+                Some(&self.session),
+                "Page.addScriptToEvaluateOnNewDocument",
+                Some(json!({ "source": source })),
+                self.deadline,
+            )
             .map(|_| ())
             .map_err(|e| api_error("page.addInitScript", e))
     }
@@ -378,7 +529,12 @@ impl Page {
         let conn = self.conn();
         let nav_deadline = (Instant::now() + Duration::from_secs(30)).min(self.deadline);
         let r = conn
-            .call(Some(&self.session), "Page.navigate", Some(json!({ "url": url, "frameId": self.target, "referrerPolicy": "unsafeUrl" })), nav_deadline)
+            .call(
+                Some(&self.session),
+                "Page.navigate",
+                Some(json!({ "url": url, "frameId": self.target, "referrerPolicy": "unsafeUrl" })),
+                nav_deadline,
+            )
             .map_err(|e| api_error("page.goto", e))?;
         if let Some(err) = r.get("errorText").and_then(Value::as_str) {
             return Err(format!("page.goto: {err} at {url}"));
@@ -387,7 +543,10 @@ impl Page {
         let (lock, cv) = &*self.state;
         let mut s = lock.lock().unwrap();
         loop {
-            if s.lifecycle.iter().any(|(f, l, n)| *f == self.target && *l == loader && n == "load") {
+            if s.lifecycle
+                .iter()
+                .any(|(f, l, n)| *f == self.target && *l == loader && n == "load")
+            {
                 return Ok(());
             }
             if let Some(c) = &s.closed {
@@ -395,9 +554,16 @@ impl Page {
             }
             let now = Instant::now();
             if now >= nav_deadline {
-                return Err(if nav_deadline < self.deadline { "page.goto: Timeout 30000ms exceeded.".into() } else { "x3d-oracle: timeout waiting for page.goto".into() });
+                return Err(if nav_deadline < self.deadline {
+                    "page.goto: Timeout 30000ms exceeded.".into()
+                } else {
+                    "x3d-oracle: timeout waiting for page.goto".into()
+                });
             }
-            s = cv.wait_timeout(s, (nav_deadline - now).min(Duration::from_millis(100))).unwrap().0;
+            s = cv
+                .wait_timeout(s, (nav_deadline - now).min(Duration::from_millis(100)))
+                .unwrap()
+                .0;
         }
     }
 
@@ -423,19 +589,30 @@ impl Page {
             let text = d["exception"]["description"]
                 .as_str()
                 .map(str::to_string)
-                .or_else(|| d["exception"].get("value").map(|v| v.as_str().map(str::to_string).unwrap_or_else(|| v.to_string())))
+                .or_else(|| {
+                    d["exception"].get("value").map(|v| {
+                        v.as_str()
+                            .map(str::to_string)
+                            .unwrap_or_else(|| v.to_string())
+                    })
+                })
                 .or_else(|| d["text"].as_str().map(str::to_string))
                 .unwrap_or_else(|| "evaluation failed".into());
             return Err(format!("page.evaluate: {}", first_line(&text)));
         }
-        Ok(r["result"].get("value").and_then(Value::as_str).map(str::to_string))
+        Ok(r["result"]
+            .get("value")
+            .and_then(Value::as_str)
+            .map(str::to_string))
     }
 
     /// `page.waitForFunction (expr, null, { timeout })`, polling.
     pub fn wait_for_function(&self, func: &str, timeout_ms: u64) -> Result<(), String> {
         let until = (Instant::now() + Duration::from_millis(timeout_ms)).min(self.deadline);
         loop {
-            let v = self.evaluate(func, None).map_err(|e| e.replacen("page.evaluate", "page.waitForFunction", 1))?;
+            let v = self
+                .evaluate(func, None)
+                .map_err(|e| e.replacen("page.evaluate", "page.waitForFunction", 1))?;
             if matches!(v.as_deref(), Some(t) if !matches!(t, "false" | "0" | "\"\"" | "null")) {
                 return Ok(());
             }
@@ -455,7 +632,10 @@ impl Page {
         let conn = self.conn();
         let mut rxs = Vec::new();
         for c in cmds {
-            rxs.push(conn.send(Some(&self.session), c.method, Some(c.params)).map_err(|e| api_error(api, e))?);
+            rxs.push(
+                conn.send(Some(&self.session), c.method, Some(c.params))
+                    .map_err(|e| api_error(api, e))?,
+            );
         }
         for rx in rxs {
             Conn::wait(rx, self.deadline, api).map_err(|e| api_error(api, e))?;
@@ -474,9 +654,18 @@ impl Page {
         if !conn.is_closed() {
             let ctx = self.state.0.lock().unwrap().context_id.clone();
             if let Some(ctx) = ctx
-                && let Ok(rx) = conn.send(None, "Target.disposeBrowserContext", Some(json!({ "browserContextId": ctx }))) {
-                    let _ = Conn::wait(rx, Instant::now() + Duration::from_secs(5), "Target.disposeBrowserContext");
-                }
+                && let Ok(rx) = conn.send(
+                    None,
+                    "Target.disposeBrowserContext",
+                    Some(json!({ "browserContextId": ctx })),
+                )
+            {
+                let _ = Conn::wait(
+                    rx,
+                    Instant::now() + Duration::from_secs(5),
+                    "Target.disposeBrowserContext",
+                );
+            }
         }
         self.chrome.close();
     }
@@ -492,23 +681,53 @@ mod tests {
 
     #[test]
     fn console_previews() {
-        assert_eq!(remote_object_preview(&json!({ "type": "string", "value": "a b" })), "a b");
-        assert_eq!(remote_object_preview(&json!({ "type": "number", "value": 1.5 })), "1.5");
-        assert_eq!(remote_object_preview(&json!({ "type": "number", "value": 3 })), "3");
-        assert_eq!(remote_object_preview(&json!({ "type": "number", "unserializableValue": "-0" })), "0");
-        assert_eq!(remote_object_preview(&json!({ "type": "undefined" })), "undefined");
-        assert_eq!(remote_object_preview(&json!({ "type": "object", "subtype": "null", "value": null })), "null");
         assert_eq!(
-            remote_object_preview(&json!({ "type": "object", "objectId": "1", "description": "Object",
-                "preview": { "properties": [ { "name": "a", "value": "1" }, { "name": "b", "value": "x" } ] } })),
+            remote_object_preview(&json!({ "type": "string", "value": "a b" })),
+            "a b"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "number", "value": 1.5 })),
+            "1.5"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "number", "value": 3 })),
+            "3"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "number", "unserializableValue": "-0" })),
+            "0"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "undefined" })),
+            "undefined"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "object", "subtype": "null", "value": null })),
+            "null"
+        );
+        assert_eq!(
+            remote_object_preview(
+                &json!({ "type": "object", "objectId": "1", "description": "Object",
+                "preview": { "properties": [ { "name": "a", "value": "1" }, { "name": "b", "value": "x" } ] } })
+            ),
             "{a: 1, b: x}"
         );
         assert_eq!(
-            remote_object_preview(&json!({ "type": "object", "subtype": "array", "objectId": "1", "description": "Array(4)",
-                "preview": { "properties": [ { "name": "0", "value": "1" }, { "name": "3", "value": "4" } ] } })),
+            remote_object_preview(
+                &json!({ "type": "object", "subtype": "array", "objectId": "1", "description": "Array(4)",
+                "preview": { "properties": [ { "name": "0", "value": "1" }, { "name": "3", "value": "4" } ] } })
+            ),
             "[1, empty x 2, 4]"
         );
-        assert_eq!(remote_object_preview(&json!({ "type": "object", "subtype": "error", "objectId": "1", "description": "Error: x\n    at y" })), "Error: x\n    at y");
-        assert_eq!(remote_object_preview(&json!({ "type": "function", "objectId": "1" })), "JSHandle@function");
+        assert_eq!(
+            remote_object_preview(
+                &json!({ "type": "object", "subtype": "error", "objectId": "1", "description": "Error: x\n    at y" })
+            ),
+            "Error: x\n    at y"
+        );
+        assert_eq!(
+            remote_object_preview(&json!({ "type": "function", "objectId": "1" })),
+            "JSHandle@function"
+        );
     }
 }

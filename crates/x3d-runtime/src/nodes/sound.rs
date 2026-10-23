@@ -13,13 +13,13 @@
 //! and its min/max ellipsoid attenuation (`Runtime::sound_traverse`).
 
 use super::State;
+use crate::sound::biquad::Type as BiquadType;
+use crate::sound::oscillator::Shape;
+use crate::sound::panner::DistanceModel;
+use crate::sound::wave_shaper::Oversample;
 use crate::sound::{AId, ANode, AudioEngine};
 use crate::*;
 use web_audio_api::AudioBuffer;
-use crate::sound::biquad::Type as BiquadType;
-use crate::sound::oscillator::Shape;
-use crate::sound::wave_shaper::Oversample;
-use crate::sound::panner::DistanceModel;
 
 /// Interest callbacks of the Sound nodes (`Cb::Sound`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -141,10 +141,27 @@ pub struct VrmlSound {
 
 impl SoundState {
     fn ids(&self) -> Vec<AId> {
-        let mut v: Vec<AId> = [self.audio_source, self.audio_destination, self.sound_destination, self.node, self.gain_node].into_iter().flatten().collect();
+        let mut v: Vec<AId> = [
+            self.audio_source,
+            self.audio_destination,
+            self.sound_destination,
+            self.node,
+            self.gain_node,
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
 
         if let Some(s) = &self.vrml {
-            v.extend([s.stereo, s.splitter, s.front_left, s.front_right, s.back_left, s.back_right, s.merger]);
+            v.extend([
+                s.stereo,
+                s.splitter,
+                s.front_left,
+                s.front_right,
+                s.back_left,
+                s.back_right,
+                s.merger,
+            ]);
         }
 
         if let Some(m) = &self.media {
@@ -158,14 +175,33 @@ impl SoundState {
 /// The DOMException of a rejected decodeAudioData in Chrome.
 const DECODE_ERROR: &str = "EncodingError: Unable to decode audio data";
 
-const SOURCES: &[&str] = &["AudioClip", "BufferAudioSource", "ListenerPointSource", "MicrophoneSource", "OscillatorSource", "StreamAudioSource"];
-const PROCESSING: &[&str] = &["Analyser", "BiquadFilter", "Convolver", "Delay", "DynamicsCompressor", "Gain", "WaveShaper"];
+const SOURCES: &[&str] = &[
+    "AudioClip",
+    "BufferAudioSource",
+    "ListenerPointSource",
+    "MicrophoneSource",
+    "OscillatorSource",
+    "StreamAudioSource",
+];
+const PROCESSING: &[&str] = &[
+    "Analyser",
+    "BiquadFilter",
+    "Convolver",
+    "Delay",
+    "DynamicsCompressor",
+    "Gain",
+    "WaveShaper",
+];
 const CHANNELS: &[&str] = &["ChannelMerger", "ChannelSelector", "ChannelSplitter"];
 const DESTINATIONS: &[&str] = &["AudioDestination", "StreamAudioDestination"];
 
 /// The Sound component nodes this module runs.
 pub fn is_sound_node(name: &str) -> bool {
-    SOURCES.contains(&name) || PROCESSING.contains(&name) || CHANNELS.contains(&name) || DESTINATIONS.contains(&name) || matches!(name, "Sound" | "SpatialSound" | "PeriodicWave")
+    SOURCES.contains(&name)
+        || PROCESSING.contains(&name)
+        || CHANNELS.contains(&name)
+        || DESTINATIONS.contains(&name)
+        || matches!(name, "Sound" | "SpatialSound" | "PeriodicWave")
 }
 
 /// X3DSoundSourceNode or X3DSoundProcessingNode: an X3DTimeDependentNode.
@@ -176,7 +212,9 @@ pub fn is_sound_time_node(name: &str) -> bool {
 /// The child types the X3DSound*Node `set_children__` methods keep: X3DSoundChannelNode,
 /// X3DSoundProcessingNode or X3DSoundSourceNode (ListenerPointSource is an X3DSoundNode only).
 fn is_audio_child(name: &str) -> bool {
-    (SOURCES.contains(&name) && name != "ListenerPointSource") || PROCESSING.contains(&name) || CHANNELS.contains(&name)
+    (SOURCES.contains(&name) && name != "ListenerPointSource")
+        || PROCESSING.contains(&name)
+        || CHANNELS.contains(&name)
 }
 
 fn clamp(v: f64, min: f64, max: f64) -> f64 {
@@ -257,7 +295,10 @@ impl Runtime {
 
     /// `this ._name = value` of an outputOnly / private field (always an event).
     fn sound_emit(&mut self, node: NodeId, name: &str, value: FieldValue) {
-        if let Some(k) = self.pre(node, name).or_else(|| self.private_field(node, name)) {
+        if let Some(k) = self
+            .pre(node, name)
+            .or_else(|| self.private_field(node, name))
+        {
             self.set_value(k, value);
         }
     }
@@ -278,13 +319,28 @@ impl Runtime {
     pub(crate) fn sound_construct(&mut self, node: NodeId, name: &str) {
         if is_sound_time_node(name) {
             // X3DTimeDependentNode constructor.
-            self.add_private_field(node, "initialized", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
-            self.add_private_field(node, "evenLive", access::INPUT_OUTPUT, FieldValue::SFBool(false));
+            self.add_private_field(
+                node,
+                "initialized",
+                access::OUTPUT_ONLY,
+                FieldValue::SFTime(0.0),
+            );
+            self.add_private_field(
+                node,
+                "evenLive",
+                access::INPUT_OUTPUT,
+                FieldValue::SFBool(false),
+            );
             self.nrt_mut(node).state = State::Time(super::time::TimeState::default());
 
             // `addChildObjects (inputOutput, "loop", new SFBool ())`: the classes without a loop field.
             if self.pre(node, "loop").is_none() {
-                self.add_private_field(node, "loop", access::INPUT_OUTPUT, FieldValue::SFBool(false));
+                self.add_private_field(
+                    node,
+                    "loop",
+                    access::INPUT_OUTPUT,
+                    FieldValue::SFBool(false),
+                );
             }
         }
 
@@ -296,13 +352,27 @@ impl Runtime {
 
         if name == "BufferAudioSource" || name == "AudioClip" {
             // X3DUrlObject constructor.
-            self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-            self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+            self.add_private_field(
+                node,
+                "loadState",
+                access::OUTPUT_ONLY,
+                FieldValue::SFInt32(0),
+            );
+            self.add_private_field(
+                node,
+                "loadData",
+                access::OUTPUT_ONLY,
+                FieldValue::SFTime(0.0),
+            );
             // The node's State is its X3DUrlObject state; the X3DTimeDependentNode state is kept
             // in `time_states`.
             let now_ms = self.now * 1000.0;
             self.time_states.insert(node, Default::default());
-            self.nrt_mut(node).state = State::UrlObject(super::UrlState { start_ms: now_ms, complete_ms: now_ms, ..Default::default() });
+            self.nrt_mut(node).state = State::UrlObject(super::UrlState {
+                start_ms: now_ms,
+                complete_ms: now_ms,
+                ..Default::default()
+            });
         }
 
         if PROCESSING.contains(&name) || CHANNELS.contains(&name) {
@@ -353,7 +423,12 @@ impl Runtime {
                 self.snd(node).node = Some(stream);
             }
             "SpatialSound" | "Sound" => {
-                self.add_private_field(node, "traversed", access::OUTPUT_ONLY, FieldValue::SFBool(false));
+                self.add_private_field(
+                    node,
+                    "traversed",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFBool(false),
+                );
                 self.snd(node).current_traversed = true;
             }
             "PeriodicWave" => {
@@ -370,7 +445,11 @@ impl Runtime {
     pub(crate) fn sound_initialize(&mut self, node: NodeId, name: &str) {
         if is_sound_time_node(name) {
             // X3DTimeDependentNode.initialize.
-            let enabled_cb = if PROCESSING.contains(&name) { Cb::Sound(SoundCb::Enabled) } else { Cb::TimeSetEnabled };
+            let enabled_cb = if PROCESSING.contains(&name) {
+                Cb::Sound(SoundCb::Enabled)
+            } else {
+                Cb::TimeSetEnabled
+            };
             self.time_dependent_initialize(node, enabled_cb);
         }
 
@@ -434,7 +513,9 @@ impl Runtime {
                 self.sound_interest(node, "pitch", SoundCb::Pitch);
                 self.request_immediate_load(node);
             }
-            "MicrophoneSource" => self.sound_interest(node, "mediaDeviceID", SoundCb::MediaDeviceId),
+            "MicrophoneSource" => {
+                self.sound_interest(node, "mediaDeviceID", SoundCb::MediaDeviceId)
+            }
             "Analyser" => {
                 self.sound_interest(node, "fftSize", SoundCb::FftSize);
                 self.sound_interest(node, "minDecibels", SoundCb::Decibels);
@@ -473,12 +554,24 @@ impl Runtime {
                 self.delay_set_max_delay_time(node);
             }
             "DynamicsCompressor" => {
-                for (f, cb) in [("attack", SoundCb::Attack), ("knee", SoundCb::Knee), ("ratio", SoundCb::Ratio), ("release", SoundCb::Release), ("threshold", SoundCb::Threshold)] {
+                for (f, cb) in [
+                    ("attack", SoundCb::Attack),
+                    ("knee", SoundCb::Knee),
+                    ("ratio", SoundCb::Ratio),
+                    ("release", SoundCb::Release),
+                    ("threshold", SoundCb::Threshold),
+                ] {
                     self.sound_interest(node, f, cb);
                 }
                 let n = self.snd(node).node;
                 self.set_sound_processor(node, n);
-                for cb in [SoundCb::Attack, SoundCb::Knee, SoundCb::Ratio, SoundCb::Release, SoundCb::Threshold] {
+                for cb in [
+                    SoundCb::Attack,
+                    SoundCb::Knee,
+                    SoundCb::Ratio,
+                    SoundCb::Release,
+                    SoundCb::Threshold,
+                ] {
                     self.sound_call(node, cb);
                 }
             }
@@ -534,7 +627,9 @@ impl Runtime {
 
     /// Dispatch of `Cb::Sound`.
     pub(crate) fn sound_interest_call(&mut self, node: NodeId, cb: SoundCb) {
-        let Some(name) = self.builtin_name(node) else { return };
+        let Some(name) = self.builtin_name(node) else {
+            return;
+        };
 
         match cb {
             SoundCb::Gain => {
@@ -666,7 +761,11 @@ impl Runtime {
                     self.audio().set_param(n, "delayTime", v);
                 }
             }
-            SoundCb::Attack | SoundCb::Knee | SoundCb::Ratio | SoundCb::Release | SoundCb::Threshold => {
+            SoundCb::Attack
+            | SoundCb::Knee
+            | SoundCb::Ratio
+            | SoundCb::Release
+            | SoundCb::Threshold => {
                 let (field, param, min, max) = match cb {
                     SoundCb::Attack => ("attack", "attack", 0.0, 1.0),
                     SoundCb::Knee => ("knee", "knee", 0.0, 40.0),
@@ -691,9 +790,13 @@ impl Runtime {
             SoundCb::Intensity if name == "Sound" => self.vrml_sound_set_intensity(node),
             SoundCb::Spatialize => self.spatial_set_spatialize(node),
             SoundCb::Intensity => self.spatial_set_intensity(node),
-            SoundCb::ConeOuterGain | SoundCb::ConeInnerAngle | SoundCb::ConeOuterAngle | SoundCb::DistanceModel | SoundCb::MaxDistance | SoundCb::ReferenceDistance | SoundCb::EnableHrtf => {
-                self.spatial_set_panner(node, cb)
-            }
+            SoundCb::ConeOuterGain
+            | SoundCb::ConeInnerAngle
+            | SoundCb::ConeOuterAngle
+            | SoundCb::DistanceModel
+            | SoundCb::MaxDistance
+            | SoundCb::ReferenceDistance
+            | SoundCb::EnableHrtf => self.spatial_set_panner(node, cb),
             SoundCb::TrackCurrentView => self.listener_set_track_current_view(node),
             SoundCb::Update => self.spatial_set_traversed(node, false),
         }
@@ -743,12 +846,18 @@ impl Runtime {
     }
 
     fn media_set(&mut self, node: NodeId, f: impl FnOnce(&mut AudioEngine, &mut AudioElement)) {
-        let Some(mut m) = self.sound.get_mut(&node).and_then(|s| s.media.take()) else { return };
+        let Some(mut m) = self.sound.get_mut(&node).and_then(|s| s.media.take()) else {
+            return;
+        };
         f(self.audio(), &mut m);
         self.snd(node).media = Some(m);
     }
 
-    fn media_get<T>(&mut self, node: NodeId, f: impl FnOnce(&AudioEngine, &AudioElement) -> T) -> Option<T> {
+    fn media_get<T>(
+        &mut self,
+        node: NodeId,
+        f: impl FnOnce(&AudioEngine, &AudioElement) -> T,
+    ) -> Option<T> {
         let m = self.sound.get_mut(&node)?.media.take()?;
         let r = f(self.audio(), &m);
         self.snd(node).media = Some(m);
@@ -763,7 +872,10 @@ impl Runtime {
 
     /// set_loop () of an X3DTimeDependentNode (after set_loop__).
     pub(crate) fn sound_set_loop(&mut self, node: NodeId) {
-        if self.builtin_name(node).is_some_and(|n| SOURCES.contains(&n)) {
+        if self
+            .builtin_name(node)
+            .is_some_and(|n| SOURCES.contains(&n))
+        {
             self.source_set_loop(node);
         }
     }
@@ -773,7 +885,9 @@ impl Runtime {
         match self.builtin_name(node) {
             Some("OscillatorSource") => self.osc_set_start(node),
             Some("MicrophoneSource") => self.mic_set_start(node),
-            Some(n) if PROCESSING.contains(&n) => self.sound_emit(node, "elapsedTime", FieldValue::SFTime(0.0)),
+            Some(n) if PROCESSING.contains(&n) => {
+                self.sound_emit(node, "elapsedTime", FieldValue::SFTime(0.0))
+            }
             _ => {
                 // X3DSoundSourceNode.set_start.
                 if self.snd_ref(node).is_none_or(|s| s.media.is_none()) {
@@ -853,7 +967,9 @@ impl Runtime {
                 }
                 let t = self.time_elapsed_time(node);
                 self.sound_emit(node, "elapsedTime", FieldValue::SFTime(t));
-                let ended = self.media_get(node, |e, m| !(m.current_time(e) < m.duration)).unwrap_or(false);
+                let ended = self
+                    .media_get(node, |e, m| !(m.current_time(e) < m.duration))
+                    .unwrap_or(false);
                 if !ended {
                     return;
                 }
@@ -875,7 +991,10 @@ impl Runtime {
             self.remove_interest_named(pw, "optionsImag", node, Cb::Sound(SoundCb::WaveOptions));
         }
 
-        let pw = self.get_sfnode(node, "periodicWave").and_then(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n) == Some("PeriodicWave"));
+        let pw = self
+            .get_sfnode(node, "periodicWave")
+            .and_then(|n| self.inner_node(n))
+            .filter(|&n| self.builtin_name(n) == Some("PeriodicWave"));
         self.snd(node).periodic_wave = pw;
 
         // The default PeriodicWave of the browser never changes; its interest does nothing.
@@ -899,7 +1018,9 @@ impl Runtime {
     }
 
     fn osc_set_type(&mut self, node: NodeId) {
-        let Some(osc) = self.snd(node).node else { return };
+        let Some(osc) = self.snd(node).node else {
+            return;
+        };
         let pw = self.snd(node).periodic_wave;
 
         if let Some(pw) = pw {
@@ -930,15 +1051,22 @@ impl Runtime {
 
     /// set_periodicWaveOptions__: oscillatorNode .setPeriodicWave (periodicWaveNode .createPeriodicWave ()).
     fn osc_set_periodic_wave_options(&mut self, node: NodeId) {
-        let Some(osc) = self.snd(node).node else { return };
-        let Some(pw) = self.snd(node).periodic_wave else { return };
+        let Some(osc) = self.snd(node).node else {
+            return;
+        };
+        let Some(pw) = self.snd(node).periodic_wave else {
+            return;
+        };
         let (real, imag) = self.periodic_wave_create(pw);
         self.audio().oscillator_set_periodic_wave(osc, &real, &imag);
     }
 
     /// PeriodicWave.createPeriodicWave: the Float32Arrays are made anew only when the length changes.
     fn periodic_wave_create(&mut self, pw: NodeId) -> (Vec<f32>, Vec<f32>) {
-        let (r, i) = (self.get_mffloat(pw, "optionsReal"), self.get_mffloat(pw, "optionsImag"));
+        let (r, i) = (
+            self.get_mffloat(pw, "optionsReal"),
+            self.get_mffloat(pw, "optionsImag"),
+        );
         let length = r.len().max(i.len()).max(2);
         let s = self.snd(pw);
 
@@ -1005,15 +1133,29 @@ impl Runtime {
         if length != 0 {
             let data = self.get_mffloat(node, "buffer");
             let fill = data.len() >= length * channels;
-            let buffer = self.audio().create_buffer(channels, length, sample_rate as f32, fill.then_some(&data[..]));
+            let buffer = self.audio().create_buffer(
+                channels,
+                length,
+                sample_rate as f32,
+                fill.then_some(&data[..]),
+            );
 
-            self.sound_emit(node, "bufferDuration", FieldValue::SFTime(length as f64 / sample_rate));
+            self.sound_emit(
+                node,
+                "bufferDuration",
+                FieldValue::SFTime(length as f64 / sample_rate),
+            );
 
             let audio_source = self.snd(node).audio_source.unwrap();
 
             let element = AudioElement::create(self.audio(), audio_source, Some(buffer));
             self.set_media_element(node, Some(element));
-            for cb in [SoundCb::Detune, SoundCb::PlaybackRate, SoundCb::LoopStart, SoundCb::LoopEnd] {
+            for cb in [
+                SoundCb::Detune,
+                SoundCb::PlaybackRate,
+                SoundCb::LoopStart,
+                SoundCb::LoopEnd,
+            ] {
                 self.sound_call(node, cb);
             }
         } else {
@@ -1034,7 +1176,11 @@ impl Runtime {
 
     /// BufferAudioSource.setArrayBuffer: decodeAudioData, the buffer outputs, an AudioElement over the buffer.
     /// A decode error rejects the FileLoader callback (the next URL is tried, see `buffer_load`).
-    pub(crate) fn buffer_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
+    pub(crate) fn buffer_set_array_buffer(
+        &mut self,
+        node: NodeId,
+        bytes: Vec<u8>,
+    ) -> Result<(), String> {
         let buffer = match self.audio().decode(bytes) {
             Ok(b) => b,
             // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
@@ -1049,17 +1195,34 @@ impl Runtime {
             data.extend_from_slice(buffer.get_channel_data(c));
         }
 
-        self.sound_emit(node, "numberOfChannels", FieldValue::SFInt32(channels as i32));
-        self.sound_emit(node, "sampleRate", FieldValue::SFFloat(buffer.sample_rate() as f64));
+        self.sound_emit(
+            node,
+            "numberOfChannels",
+            FieldValue::SFInt32(channels as i32),
+        );
+        self.sound_emit(
+            node,
+            "sampleRate",
+            FieldValue::SFFloat(buffer.sample_rate() as f64),
+        );
         self.sound_emit(node, "bufferLength", FieldValue::SFInt32(length as i32));
         self.sound_emit(node, "buffer", FieldValue::MFFloat(data));
-        self.sound_emit(node, "bufferDuration", FieldValue::SFTime(buffer.duration()));
+        self.sound_emit(
+            node,
+            "bufferDuration",
+            FieldValue::SFTime(buffer.duration()),
+        );
 
         let audio_source = self.snd(node).audio_source.unwrap();
 
         let element = AudioElement::create(self.audio(), audio_source, Some(buffer));
         self.set_media_element(node, Some(element));
-        for cb in [SoundCb::Detune, SoundCb::PlaybackRate, SoundCb::LoopStart, SoundCb::LoopEnd] {
+        for cb in [
+            SoundCb::Detune,
+            SoundCb::PlaybackRate,
+            SoundCb::LoopStart,
+            SoundCb::LoopEnd,
+        ] {
             self.sound_call(node, cb);
         }
         Ok(())
@@ -1087,7 +1250,11 @@ impl Runtime {
 
     /// AudioClip.setArrayBuffer: decodeAudioData, an AudioElement over the buffer, `duration_changed`,
     /// setMediaElement, set_pitch__. A decode error rejects the FileLoader callback (the next URL is tried).
-    pub(crate) fn audio_clip_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
+    pub(crate) fn audio_clip_set_array_buffer(
+        &mut self,
+        node: NodeId,
+        bytes: Vec<u8>,
+    ) -> Result<(), String> {
         let buffer = match self.audio().decode(bytes) {
             Ok(b) => b,
             // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
@@ -1097,7 +1264,11 @@ impl Runtime {
         let audio_source = self.snd(node).audio_source.unwrap();
         let element = AudioElement::create(self.audio(), audio_source, Some(buffer));
 
-        self.sound_emit(node, "duration_changed", FieldValue::SFTime(element.duration));
+        self.sound_emit(
+            node,
+            "duration_changed",
+            FieldValue::SFTime(element.duration),
+        );
         self.set_media_element(node, Some(element));
         self.sound_call(node, SoundCb::Pitch);
         Ok(())
@@ -1140,7 +1311,9 @@ impl Runtime {
     }
 
     fn mic_set_pause(&mut self, node: NodeId) {
-        let Some(source) = self.snd(node).node else { return };
+        let Some(source) = self.snd(node).node else {
+            return;
+        };
 
         if self.time_node_live(node) {
             // disconnect; tracks disabled.
@@ -1155,13 +1328,17 @@ impl Runtime {
             return self.mic_set_start(node);
         }
 
-        let Some(source) = self.snd(node).node else { return };
+        let Some(source) = self.snd(node).node else {
+            return;
+        };
         let target = self.snd(node).audio_source.unwrap();
         self.audio().connect(source, target);
     }
 
     fn mic_set_stop(&mut self, node: NodeId, restore: bool) {
-        let Some(source) = self.snd(node).node.take() else { return };
+        let Some(source) = self.snd(node).node.take() else {
+            return;
+        };
         self.audio().release(source);
         self.snd(node).restore = restore;
     }
@@ -1172,7 +1349,11 @@ impl Runtime {
         self.sound_interest(node, "gain", SoundCb::Gain);
         self.sound_interest(node, "channelCount", SoundCb::ChannelCount);
         self.sound_interest(node, "channelCountMode", SoundCb::ChannelCountMode);
-        self.sound_interest(node, "channelInterpretation", SoundCb::ChannelInterpretation);
+        self.sound_interest(
+            node,
+            "channelInterpretation",
+            SoundCb::ChannelInterpretation,
+        );
         self.sound_interest(node, "children", SoundCb::Children);
 
         self.processing_set_enabled(node);
@@ -1206,7 +1387,11 @@ impl Runtime {
     /// The Web Audio part of X3DSoundProcessingNode.set_enabled__ / X3DSoundChannelNode.set_enabled__.
     fn bus_set_enabled(&mut self, node: NodeId) {
         let s = self.snd(node);
-        let (destination, processor, source) = (s.audio_destination.unwrap(), s.sound_processor.unwrap(), s.audio_source.unwrap());
+        let (destination, processor, source) = (
+            s.audio_destination.unwrap(),
+            s.sound_processor.unwrap(),
+            s.audio_source.unwrap(),
+        );
 
         self.audio().disconnect(destination);
 
@@ -1258,13 +1443,22 @@ impl Runtime {
     }
 
     /// The sound children of `children` (X3DCast and the type test of set_children__).
-    fn audio_children(&self, node: NodeId, field: &str, keep: impl Fn(&str) -> bool) -> Vec<NodeId> {
+    fn audio_children(
+        &self,
+        node: NodeId,
+        field: &str,
+        keep: impl Fn(&str) -> bool,
+    ) -> Vec<NodeId> {
         let v = match self.pre_value(node, field) {
             Some(FieldValue::MFNode(v)) => v.clone(),
             _ => vec![],
         };
 
-        v.into_iter().flatten().filter_map(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n).is_some_and(&keep)).collect()
+        v.into_iter()
+            .flatten()
+            .filter_map(|n| self.inner_node(n))
+            .filter(|&n| self.builtin_name(n).is_some_and(&keep))
+            .collect()
     }
 
     /// X3DSoundProcessingNode.set_children__ / X3DSoundDestinationNode.set_children__.
@@ -1291,7 +1485,11 @@ impl Runtime {
     // --- Analyser, Convolver, Delay, WaveShaper -------------------------------------------------
 
     fn analyser_set_fft_size(&mut self, node: NodeId) {
-        let size = clamp(next_power_of_two(self.get_f64(node, "fftSize")), 32.0, 32768.0) as usize;
+        let size = clamp(
+            next_power_of_two(self.get_f64(node, "fftSize")),
+            32.0,
+            32768.0,
+        ) as usize;
         let n = self.snd(node).node.unwrap();
         let bins = match self.audio().get_mut(n) {
             ANode::Analyser(_, a) => {
@@ -1350,8 +1548,16 @@ impl Runtime {
         };
 
         self.snd(node).byte_bins = bytes_f.len();
-        self.sound_emit(node, "byteFrequencyData", FieldValue::MFInt32(bytes_f.into_iter().map(i32::from).collect()));
-        self.sound_emit(node, "byteTimeDomainData", FieldValue::MFInt32(bytes_t.into_iter().map(i32::from).collect()));
+        self.sound_emit(
+            node,
+            "byteFrequencyData",
+            FieldValue::MFInt32(bytes_f.into_iter().map(i32::from).collect()),
+        );
+        self.sound_emit(
+            node,
+            "byteTimeDomainData",
+            FieldValue::MFInt32(bytes_t.into_iter().map(i32::from).collect()),
+        );
         self.sound_emit(node, "floatFrequencyData", FieldValue::MFFloat(floats_f));
         self.sound_emit(node, "floatTimeDomainData", FieldValue::MFFloat(floats_t));
     }
@@ -1362,7 +1568,9 @@ impl Runtime {
         let rate = self.audio().sample_rate();
         let length = (data.len() / channels).max(1);
         let fill = data.len() >= length * channels;
-        let buffer = self.audio().create_buffer(channels, length, rate, fill.then_some(&data[..]));
+        let buffer = self
+            .audio()
+            .create_buffer(channels, length, rate, fill.then_some(&data[..]));
         let n = self.snd(node).node.unwrap();
 
         // ConvolverNode .buffer: NotSupportedError for more than 4 channels or 3 channels.
@@ -1423,7 +1631,11 @@ impl Runtime {
         self.sound_interest(node, "gain", SoundCb::Gain);
         self.sound_interest(node, "channelCount", SoundCb::ChannelCount);
         self.sound_interest(node, "channelCountMode", SoundCb::ChannelCountMode);
-        self.sound_interest(node, "channelInterpretation", SoundCb::ChannelInterpretation);
+        self.sound_interest(
+            node,
+            "channelInterpretation",
+            SoundCb::ChannelInterpretation,
+        );
         self.sound_interest(node, "children", SoundCb::Children);
 
         self.channel_set_enabled(node);
@@ -1454,8 +1666,13 @@ impl Runtime {
         let merger = self.builtin_name(node) == Some("ChannelMerger");
         let destination = self.snd(node).audio_destination.unwrap();
 
-        for (i, child) in std::mem::take(&mut self.snd(node).child_nodes).into_iter().enumerate() {
-            let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) else { continue };
+        for (i, child) in std::mem::take(&mut self.snd(node).child_nodes)
+            .into_iter()
+            .enumerate()
+        {
+            let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) else {
+                continue;
+            };
 
             match self.snd(node).node.filter(|_| merger) {
                 Some(m) => {
@@ -1482,7 +1699,9 @@ impl Runtime {
 
                 let current = self.snd(node).node;
 
-                if current.is_none_or(|m| self.audio.as_ref().unwrap().number_of_inputs(m) != inputs) {
+                if current
+                    .is_none_or(|m| self.audio.as_ref().unwrap().number_of_inputs(m) != inputs)
+                {
                     let m = self.audio().merger(inputs);
                     if let Some(old) = self.snd(node).node.replace(m) {
                         self.audio().release(old);
@@ -1497,7 +1716,9 @@ impl Runtime {
         }
 
         for (i, &child) in children.iter().enumerate() {
-            let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) else { continue };
+            let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) else {
+                continue;
+            };
 
             match self.snd(node).node.filter(|_| merger) {
                 Some(m) => {
@@ -1549,7 +1770,9 @@ impl Runtime {
             }
         }
 
-        let outputs = self.audio_children(node, "outputs", |t| CHANNELS.contains(&t) || PROCESSING.contains(&t));
+        let outputs = self.audio_children(node, "outputs", |t| {
+            CHANNELS.contains(&t) || PROCESSING.contains(&t)
+        });
         self.snd(node).output_nodes = outputs.clone();
 
         if let Some(s) = self.snd(node).node {
@@ -1600,7 +1823,11 @@ impl Runtime {
         self.sound_interest(node, "gain", SoundCb::Gain);
         self.sound_interest(node, "channelCount", SoundCb::ChannelCount);
         self.sound_interest(node, "channelCountMode", SoundCb::ChannelCountMode);
-        self.sound_interest(node, "channelInterpretation", SoundCb::ChannelInterpretation);
+        self.sound_interest(
+            node,
+            "channelInterpretation",
+            SoundCb::ChannelInterpretation,
+        );
         self.sound_interest(node, "children", SoundCb::Children);
 
         self.destination_set_enabled(node);
@@ -1619,7 +1846,8 @@ impl Runtime {
 
         let active = self.sound_live(node) && self.get_bool(node, "enabled");
         let s = self.snd(node);
-        let (destination, sound_destination) = (s.audio_destination.unwrap(), s.sound_destination.unwrap());
+        let (destination, sound_destination) =
+            (s.audio_destination.unwrap(), s.sound_destination.unwrap());
 
         if active {
             self.add_sound_destination(node);
@@ -1648,8 +1876,15 @@ impl Runtime {
     /// X3DSoundContext.addSoundDestination.
     fn add_sound_destination(&mut self, node: NodeId) {
         let mute = matches!(self.browser_options.get_option("Mute"), Some(v) if v.as_bool());
-        let intensity = self.browser_options.get_option("SoundIntensity").map_or(1.0, |v| v.as_f64());
-        let gain = if mute { 0.0 } else { clamp(intensity, 0.0, 1.0) };
+        let intensity = self
+            .browser_options
+            .get_option("SoundIntensity")
+            .map_or(1.0, |v| v.as_f64());
+        let gain = if mute {
+            0.0
+        } else {
+            clamp(intensity, 0.0, 1.0)
+        };
         let sd = self.snd(node).sound_destination.unwrap();
         self.audio().set_param(sd, "gain", gain);
 
@@ -1658,20 +1893,29 @@ impl Runtime {
         }
 
         let n = self.sound_destinations.len() as i32;
-        self.browser_options.set_rendering_value("SoundDestinations", browser_options::OptionValue::Int32(n));
+        self.browser_options
+            .set_rendering_value("SoundDestinations", browser_options::OptionValue::Int32(n));
     }
 
     fn remove_sound_destination(&mut self, node: NodeId) {
         self.sound_destinations.retain(|&n| n != node);
         let n = self.sound_destinations.len() as i32;
-        self.browser_options.set_rendering_value("SoundDestinations", browser_options::OptionValue::Int32(n));
+        self.browser_options
+            .set_rendering_value("SoundDestinations", browser_options::OptionValue::Int32(n));
     }
 
     /// BrowserOptions.set_SoundIntensity__ (Mute or SoundIntensity changed).
     pub(crate) fn sound_set_intensity(&mut self) {
         let mute = matches!(self.browser_options.get_option("Mute"), Some(v) if v.as_bool());
-        let intensity = self.browser_options.get_option("SoundIntensity").map_or(1.0, |v| v.as_f64());
-        let gain = if mute { 0.0 } else { clamp(intensity, 0.0, 1.0) };
+        let intensity = self
+            .browser_options
+            .get_option("SoundIntensity")
+            .map_or(1.0, |v| v.as_f64());
+        let gain = if mute {
+            0.0
+        } else {
+            clamp(intensity, 0.0, 1.0)
+        };
 
         for node in self.sound_destinations.clone() {
             if let Some(sd) = self.snd_ref(node).and_then(|s| s.sound_destination) {
@@ -1721,7 +1965,15 @@ impl Runtime {
         self.spatial_set_enabled(node);
         self.spatial_set_spatialize(node);
         self.spatial_set_intensity(node);
-        for cb in [SoundCb::ConeOuterGain, SoundCb::ConeInnerAngle, SoundCb::ConeOuterAngle, SoundCb::DistanceModel, SoundCb::MaxDistance, SoundCb::ReferenceDistance, SoundCb::EnableHrtf] {
+        for cb in [
+            SoundCb::ConeOuterGain,
+            SoundCb::ConeInnerAngle,
+            SoundCb::ConeOuterAngle,
+            SoundCb::DistanceModel,
+            SoundCb::MaxDistance,
+            SoundCb::ReferenceDistance,
+            SoundCb::EnableHrtf,
+        ] {
             self.spatial_set_panner(node, cb);
         }
         self.spatial_set_children(node);
@@ -1729,7 +1981,9 @@ impl Runtime {
 
     /// SpatialSound.setTraversed.
     fn spatial_set_traversed(&mut self, node: NodeId, value: bool) {
-        let traversed = self.private_field(node, "traversed").is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
+        let traversed = self
+            .private_field(node, "traversed")
+            .is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
         let current = self.snd(node).current_traversed;
 
         if value {
@@ -1744,7 +1998,9 @@ impl Runtime {
     }
 
     pub(crate) fn spatial_set_enabled(&mut self, node: NodeId) {
-        let traversed = self.private_field(node, "traversed").is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
+        let traversed = self
+            .private_field(node, "traversed")
+            .is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
         let active = self.sound_live(node) && traversed && self.get_bool(node, "enabled");
         let sd = self.snd(node).sound_destination.unwrap();
         let k = self.private_field(self.browser_node, "sensorEvents");
@@ -1812,7 +2068,11 @@ impl Runtime {
             SoundCb::ConeOuterAngle => e.panner_set(panner, |a| a.cone_outer_angle = cone_outer),
             SoundCb::DistanceModel => e.panner_set(panner, |a| {
                 a.distance_model = model;
-                a.rolloff_factor = if model == DistanceModel::Linear { rolloff.min(1.0) } else { rolloff };
+                a.rolloff_factor = if model == DistanceModel::Linear {
+                    rolloff.min(1.0)
+                } else {
+                    rolloff
+                };
             }),
             SoundCb::MaxDistance => {
                 if max_distance > 0.0 {
@@ -1912,7 +2172,11 @@ impl Runtime {
     /// Sound.set_spatialize__.
     fn vrml_sound_set_spatialize(&mut self, node: NodeId) {
         let s = self.snd(node);
-        let (gain, splitter, stereo) = (s.gain_node.unwrap(), s.vrml.as_ref().unwrap().splitter, s.vrml.as_ref().unwrap().stereo);
+        let (gain, splitter, stereo) = (
+            s.gain_node.unwrap(),
+            s.vrml.as_ref().unwrap().splitter,
+            s.vrml.as_ref().unwrap().stereo,
+        );
         let spatialize = self.get_bool(node, "spatialize");
         let e = self.audio();
         e.disconnect(gain);
@@ -1937,9 +2201,15 @@ impl Runtime {
         }
 
         // MovieTexture is an X3DSoundSourceNode too; its sound is not part of this port, so it only counts.
-        let is_source = |n: &str| (SOURCES.contains(&n) && n != "ListenerPointSource") || n == "MovieTexture";
+        let is_source =
+            |n: &str| (SOURCES.contains(&n) && n != "ListenerPointSource") || n == "MovieTexture";
         // X3DCast sees through a PROTO instance to its inner node, as for `children`.
-        let mut children: Vec<NodeId> = self.get_sfnode(node, "source").and_then(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n).is_some_and(is_source)).into_iter().collect();
+        let mut children: Vec<NodeId> = self
+            .get_sfnode(node, "source")
+            .and_then(|n| self.inner_node(n))
+            .filter(|&n| self.builtin_name(n).is_some_and(is_source))
+            .into_iter()
+            .collect();
         children.extend(self.audio_children(node, "children", is_audio_child));
 
         for &child in &children {
@@ -1958,17 +2228,39 @@ impl Runtime {
         let pan_right = 1.0 - (1.0 - pan).powi(2);
         let rotation_front = 1.0 - rotation;
         let rotation_back = rotation;
-        let Some(v) = self.snd_ref(node).and_then(|s| s.vrml.as_ref()).map(|v| (v.stereo, v.front_left, v.front_right, v.back_left, v.back_right)) else { return };
+        let Some(v) = self.snd_ref(node).and_then(|s| s.vrml.as_ref()).map(|v| {
+            (
+                v.stereo,
+                v.front_left,
+                v.front_right,
+                v.back_left,
+                v.back_right,
+            )
+        }) else {
+            return;
+        };
         let e = self.audio();
 
-        for (id, value) in [(v.0, gain), (v.1, gain * rotation_front * pan_left), (v.2, gain * rotation_front * pan_right), (v.3, gain * rotation_back * pan_left), (v.4, gain * rotation_back * pan_right)] {
+        for (id, value) in [
+            (v.0, gain),
+            (v.1, gain * rotation_front * pan_left),
+            (v.2, gain * rotation_front * pan_right),
+            (v.3, gain * rotation_back * pan_left),
+            (v.4, gain * rotation_back * pan_right),
+        ] {
             e.set_param(id, "gain", value);
         }
     }
 
     /// Sound.getEllipsoidParameter: the viewer's distance in the space where the ellipsoid is the unit sphere,
     /// and the point where the line from the viewer to the centre enters it, in view space.
-    fn vrml_sound_ellipsoid(&mut self, node: NodeId, model_view: &x3d_fields::math::Matrix4, back: f64, front: f64) -> (f64, x3d_fields::math::Vector3) {
+    fn vrml_sound_ellipsoid(
+        &mut self,
+        node: NodeId,
+        model_view: &x3d_fields::math::Matrix4,
+        back: f64,
+        front: f64,
+    ) -> (f64, x3d_fields::math::Vector3) {
         use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 
         let location = match self.pre_value(node, "location") {
@@ -1979,7 +2271,9 @@ impl Runtime {
             Some(FieldValue::SFVec3f(v)) => *v,
             _ => Vector3::new(0.0, 0.0, 1.0),
         };
-        let Some(state) = self.sound.get_mut(&node).and_then(|s| s.vrml.as_mut()) else { return (1.0, Vector3::ZERO) };
+        let Some(state) = self.sound.get_mut(&node).and_then(|s| s.vrml.as_mut()) else {
+            return (1.0, Vector3::ZERO);
+        };
 
         if back == 0.0 || front == 0.0 {
             let mut intersection = location;
@@ -1997,7 +2291,11 @@ impl Runtime {
         rotation.set_vectors(&Vector3::new(0.0, 0.0, 1.0), &direction);
 
         let mut sphere_matrix = *model_view;
-        sphere_matrix.translate(&location).rotate(&rotation).translate(&centre).scale(&scale);
+        sphere_matrix
+            .translate(&location)
+            .rotate(&rotation)
+            .translate(&centre)
+            .scale(&scale);
         state.sphere_matrix = sphere_matrix;
 
         let mut inv: Matrix4 = sphere_matrix;
@@ -2069,13 +2367,15 @@ impl Runtime {
 
         let max_back = self.get_f64(node, "maxBack").max(0.0);
         let max_front = self.get_f64(node, "maxFront").max(0.0);
-        let (max_distance, max_intersection) = self.vrml_sound_ellipsoid(node, model_view, max_back, max_front);
+        let (max_distance, max_intersection) =
+            self.vrml_sound_ellipsoid(node, model_view, max_back, max_front);
 
         // Radius of normalized sphere is 1.
         if max_distance < 1.0 {
             let min_back = self.get_f64(node, "minBack").max(0.0);
             let min_front = self.get_f64(node, "minFront").max(0.0);
-            let (min_distance, min_intersection) = self.vrml_sound_ellipsoid(node, model_view, min_back, min_front);
+            let (min_distance, min_intersection) =
+                self.vrml_sound_ellipsoid(node, model_view, min_back, min_front);
             let (pan, rotation) = self.vrml_sound_pan(node, model_view);
 
             if min_distance < 1.0 {
@@ -2095,7 +2395,8 @@ impl Runtime {
 
     /// SpatialSound is a visible object while it has sound children.
     pub fn spatial_sound_visible(&self, node: NodeId) -> bool {
-        self.snd_ref(node).is_some_and(|s| !s.child_nodes.is_empty())
+        self.snd_ref(node)
+            .is_some_and(|s| !s.child_nodes.is_empty())
     }
 
     /// SpatialSound.traverse and ListenerPointSource.traverse (DISPLAY), with the model-view
@@ -2132,7 +2433,14 @@ impl Runtime {
                 let panner = self.snd(node).node.unwrap();
                 let e = self.audio();
                 // A TypeError (non-finite value) ends the assignments.
-                for (name, v) in [("positionX", l.x), ("positionY", l.y), ("positionZ", l.z), ("orientationX", d.x), ("orientationY", d.y), ("orientationZ", d.z)] {
+                for (name, v) in [
+                    ("positionX", l.x),
+                    ("positionY", l.y),
+                    ("positionZ", l.z),
+                    ("orientationX", d.x),
+                    ("orientationY", d.y),
+                    ("orientationZ", d.z),
+                ] {
                     if !e.set_param(panner, name, v) {
                         break;
                     }
@@ -2162,7 +2470,11 @@ impl Runtime {
                 let mut up = Vector3::new(0.0, 1.0, 0.0);
                 o.mult_vec_rot(&mut up);
                 up.normalize();
-                self.set_listener([p.x, p.y, p.z], [forward.x, forward.y, forward.z], [up.x, up.y, up.z]);
+                self.set_listener(
+                    [p.x, p.y, p.z],
+                    [forward.x, forward.y, forward.z],
+                    [up.x, up.y, up.z],
+                );
             }
             _ => {}
         }
@@ -2174,7 +2486,10 @@ impl Runtime {
 
         // `.value = v` throws a TypeError for a non-finite value: the assignments after it in
         // the same function are not made.
-        for (i, v) in [p[0], p[1], p[2], f[0], f[1], f[2], u[0], u[1], u[2]].into_iter().enumerate() {
+        for (i, v) in [p[0], p[1], p[2], f[0], f[1], f[2], u[0], u[1], u[2]]
+            .into_iter()
+            .enumerate()
+        {
             if !(v as f32).is_finite() {
                 break;
             }
@@ -2206,7 +2521,12 @@ impl Runtime {
 
     /// Released nodes: their Web Audio nodes are dropped.
     pub(crate) fn sound_release(&mut self, dead: &std::collections::HashSet<NodeId>) {
-        let gone: Vec<NodeId> = self.sound.keys().filter(|n| dead.contains(n)).copied().collect();
+        let gone: Vec<NodeId> = self
+            .sound
+            .keys()
+            .filter(|n| dead.contains(n))
+            .copied()
+            .collect();
 
         for n in gone {
             if let Some(s) = self.sound.remove(&n) {
@@ -2260,11 +2580,28 @@ fn straighten(r: &mut x3d_fields::math::Rotation4) {
 
 impl AudioElement {
     /// AudioElement.create (audioContext, audioSource, audioBuffer).
-    pub fn create(e: &mut AudioEngine, audio_source: AId, buffer: Option<AudioBuffer>) -> AudioElement {
+    pub fn create(
+        e: &mut AudioEngine,
+        audio_source: AId,
+        buffer: Option<AudioBuffer>,
+    ) -> AudioElement {
         let source = e.buffer_source(None);
         let duration = buffer.as_ref().map_or(0.0, |b| b.duration());
 
-        AudioElement { source, audio_source, buffer, detune: 0.0, playback_rate: 1.0, loop_start: 0.0, loop_end: 0.0, loop_: false, start_time: 0.0, current_time: 0.0, active: false, duration }
+        AudioElement {
+            source,
+            audio_source,
+            buffer,
+            detune: 0.0,
+            playback_rate: 1.0,
+            loop_start: 0.0,
+            loop_end: 0.0,
+            loop_: false,
+            start_time: 0.0,
+            current_time: 0.0,
+            active: false,
+            duration,
+        }
     }
 
     pub fn set_detune(&mut self, e: &mut AudioEngine, v: f64) {

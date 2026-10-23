@@ -78,7 +78,12 @@ impl World {
     /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
     /// shape was hit, its normal in the frame of the translation (`closestObject .modelViewMatrix
     /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`).
-    fn depth_gpu(&self, gpu: &Rc<RefCell<DepthGpu>>, view: &Matrix4, ortho: &Matrix4) -> (f64, Option<(Vector3, usize)>) {
+    fn depth_gpu(
+        &self,
+        gpu: &Rc<RefCell<DepthGpu>>,
+        view: &Matrix4,
+        ortho: &Matrix4,
+    ) -> (f64, Option<(Vector3, usize)>) {
         let mut view_projection = *view;
         view_projection.mult_right(ortho);
 
@@ -93,14 +98,20 @@ impl World {
                     geometry: g,
                     empty: g.geometry_type < 2 || g.vertices.is_empty(),
                     model_view: f32x16(&s.base_model_view),
-                    instance: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
-                    instance_normal: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
-                        // `matrix .submatrix .transpose () .inverse ()`
-                        let mut n = m.submatrix();
-                        n.transpose();
-                        n.inverse();
-                        n.0.map(|v| v as f32)
-                    }),
+                    instance: s
+                        .instance
+                        .as_ref()
+                        .map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
+                    instance_normal: s.instance.as_ref().map_or(
+                        x3d_render::pointing_gpu::IDENTITY3,
+                        |m| {
+                            // `matrix .submatrix .transpose () .inverse ()`
+                            let mut n = m.submatrix();
+                            n.transpose();
+                            n.inverse();
+                            n.0.map(|v| v as f32)
+                        },
+                    ),
                     clip_planes: &s.clip_planes,
                 }
             })
@@ -124,7 +135,14 @@ impl World {
         inverse.inverse();
         let mut point = Vector3::ZERO;
         let size = DEPTH_BUFFER_SIZE as f64;
-        ViewVolume::unproject_point_matrix(win_x as f64, win_y as f64, win_z, &inverse, &Vector4::new(0.0, 0.0, size, size), &mut point);
+        ViewVolume::unproject_point_matrix(
+            win_x as f64,
+            win_y as f64,
+            win_z,
+            &inverse,
+            &Vector4::new(0.0, 0.0, size, size),
+            &mut point,
+        );
         let distance = -point.z;
         let id = pixels.data0[index][1];
 
@@ -145,7 +163,11 @@ impl World {
     }
 
     /// Closest depth under an orthographic view (l, r, b, t, near, far) of the collision camera.
-    fn depth(&self, view: &Matrix4, (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64)) -> Option<(f64, Vector3, Option<usize>)> {
+    fn depth(
+        &self,
+        view: &Matrix4,
+        (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64),
+    ) -> Option<(f64, Vector3, Option<usize>)> {
         if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
             let mut ortho = Matrix4::IDENTITY;
             Camera::ortho(l, r, b, t, near, far, &mut ortho);
@@ -167,12 +189,23 @@ impl World {
             m.mult_right(view);
 
             // The depth shader's clip planes, moved into the collision camera's space.
-            let planes: Vec<[f64; 4]> = shape.clip_planes.iter().map(|p| x3d_render::traverse::plane_mult_right(*p, view)).collect();
+            let planes: Vec<[f64; 4]> = shape
+                .clip_planes
+                .iter()
+                .map(|p| x3d_render::traverse::plane_mult_right(*p, view))
+                .collect();
 
             // Bounding box reject.
-            let (mut lo, mut hi) = (Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY), Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY));
+            let (mut lo, mut hi) = (
+                Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+                Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
+            );
             for i in 0..8 {
-                let mut p = Vector3::new(if i & 1 == 0 { g.min.x } else { g.max.x }, if i & 2 == 0 { g.min.y } else { g.max.y }, if i & 4 == 0 { g.min.z } else { g.max.z });
+                let mut p = Vector3::new(
+                    if i & 1 == 0 { g.min.x } else { g.max.x },
+                    if i & 2 == 0 { g.min.y } else { g.max.y },
+                    if i & 4 == 0 { g.min.z } else { g.max.z },
+                );
                 m.mult_vec_matrix3(&mut p);
                 lo.min(&p);
                 hi.max(&p);
@@ -207,7 +240,9 @@ impl World {
                             return;
                         }
 
-                        if !planes.is_empty() && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z)) {
+                        if !planes.is_empty()
+                            && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z))
+                        {
                             return;
                         }
 
@@ -216,7 +251,12 @@ impl World {
                         }
                     };
 
-                    let to_pixel = |p: &Vector3| ((p.x - l) / (r - l) * n as f64, (p.y - b) / (t - b) * n as f64);
+                    let to_pixel = |p: &Vector3| {
+                        (
+                            (p.x - l) / (r - l) * n as f64,
+                            (p.y - b) / (t - b) * n as f64,
+                        )
+                    };
 
                     {
                         // GL clips the polygon before it draws its edges, so a triangle cut by
@@ -225,7 +265,13 @@ impl World {
                         let mut polygon = vec![a, bb, c];
 
                         for (plane_z, keep_behind) in [(-near, true), (-far, false)] {
-                            let inside = |p: &Vector3| if keep_behind { p.z <= plane_z } else { p.z >= plane_z };
+                            let inside = |p: &Vector3| {
+                                if keep_behind {
+                                    p.z <= plane_z
+                                } else {
+                                    p.z >= plane_z
+                                }
+                            };
                             let mut out = Vec::with_capacity(polygon.len() + 1);
 
                             for i in 0..polygon.len() {
@@ -237,7 +283,11 @@ impl World {
 
                                 if inside(&p) != inside(&q) {
                                     let s = (plane_z - p.z) / (q.z - p.z);
-                                    out.push(Vector3::new(p.x + s * (q.x - p.x), p.y + s * (q.y - p.y), plane_z));
+                                    out.push(Vector3::new(
+                                        p.x + s * (q.x - p.x),
+                                        p.y + s * (q.y - p.y),
+                                        plane_z,
+                                    ));
                                 }
                             }
 
@@ -246,12 +296,18 @@ impl World {
 
                         // A 1 pixel line: along its major axis, the pixel row (column) of the
                         // line at each pixel center it passes.
-                        let edges: Vec<(Vector3, Vector3)> = (0..polygon.len()).map(|i| (polygon[i], polygon[(i + 1) % polygon.len()])).collect();
+                        let edges: Vec<(Vector3, Vector3)> = (0..polygon.len())
+                            .map(|i| (polygon[i], polygon[(i + 1) % polygon.len()]))
+                            .collect();
 
                         for (p, q) in edges {
                             let ((x0, y0), (x1, y1)) = (to_pixel(&p), to_pixel(&q));
                             let x_major = (x1 - x0).abs() >= (y1 - y0).abs();
-                            let (u0, u1, v0, v1) = if x_major { (x0, x1, y0, y1) } else { (y0, y1, x0, x1) };
+                            let (u0, u1, v0, v1) = if x_major {
+                                (x0, x1, y0, y1)
+                            } else {
+                                (y0, y1, x0, x1)
+                            };
 
                             if u0 == u1 {
                                 continue;
@@ -270,7 +326,11 @@ impl World {
                                     continue;
                                 }
 
-                                let (px, py) = if x_major { (center, v.floor() + 0.5) } else { (v.floor() + 0.5, center) };
+                                let (px, py) = if x_major {
+                                    (center, v.floor() + 0.5)
+                                } else {
+                                    (v.floor() + 0.5, center)
+                                };
                                 let z = p.z + s * (q.z - p.z);
                                 sample(l + px * (r - l) / n as f64, b + py * (t - b) / n as f64, z);
                             }
@@ -317,7 +377,9 @@ impl World {
                             continue;
                         }
 
-                        if !planes.is_empty() && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z)) {
+                        if !planes.is_empty()
+                            && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z))
+                        {
                             continue;
                         }
 
@@ -345,7 +407,13 @@ impl World {
 
     /// X3DRenderObject.getClosestObject: the distance to the closest object in `direction`,
     /// at most avatarHeight * 2.
-    pub fn closest_object(&self, vp: &Vp, base: &VpBase, nav: &NavInfo, direction: &Vector3) -> Closest {
+    pub fn closest_object(
+        &self,
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        direction: &Vector3,
+    ) -> Closest {
         let radius = nav.collision_radius();
         let bottom = nav.step_height() - nav.avatar_height();
         let near = vp.near_distance(base, nav);
@@ -360,21 +428,51 @@ impl World {
         let far = (radius * 2.0).max(avatar_height * 2.0);
         let view = camera_matrix(vp, base, &rotation);
         let mut proj = Matrix4::IDENTITY;
-        Camera::ortho(-radius, radius, bottom.min(-radius), radius, near, far, &mut proj);
+        Camera::ortho(
+            -radius,
+            radius,
+            bottom.min(-radius),
+            radius,
+            near,
+            far,
+            &mut proj,
+        );
 
-        match self.depth(&view, (-radius, radius, bottom.min(-radius), radius, near, far)) {
+        match self.depth(
+            &view,
+            (-radius, radius, bottom.min(-radius), radius, near, far),
+        ) {
             Some((d, n, shape)) => {
                 let mut normal = n;
                 rotation.mult_vec_rot(&mut normal);
                 normal.normalize();
-                Closest { shape, distance: d, normal, hit: true }
+                Closest {
+                    shape,
+                    distance: d,
+                    normal,
+                    hit: true,
+                }
             }
-            None => Closest { shape: None, distance: far, normal: Vector3::new(0.0, 0.0, 1.0), hit: false },
+            None => Closest {
+                shape: None,
+                distance: far,
+                normal: Vector3::new(0.0, 0.0, 1.0),
+                hit: false,
+            },
         }
     }
 
     /// X3DRenderObject.constrainTranslation.
-    pub fn constrain_translation(&self, vp: &Vp, base: &VpBase, nav: &NavInfo, translation: Vector3, step_back: bool, slide: bool, wall_friction: f64) -> Vector3 {
+    pub fn constrain_translation(
+        &self,
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        translation: Vector3,
+        step_back: bool,
+        slide: bool,
+        wall_friction: f64,
+    ) -> Vector3 {
         let closest = self.closest_object(vp, base, nav, &translation);
         let radius = nav.collision_radius();
         let distance = closest.distance - radius;
@@ -398,9 +496,20 @@ impl World {
                 let plane = Plane3::new(Vector3::ZERO, base.up_vector(vp, false));
                 let mut constrained = plane.get_closest_point_to_point(&closest_pt);
 
-                constrained.subtract(&point).normalize().multiply(length * (1.0 - friction));
+                constrained
+                    .subtract(&point)
+                    .normalize()
+                    .multiply(length * (1.0 - friction));
 
-                return self.constrain_translation(vp, base, nav, constrained, false, false, wall_friction);
+                return self.constrain_translation(
+                    vp,
+                    base,
+                    nav,
+                    constrained,
+                    false,
+                    false,
+                    wall_friction,
+                );
             }
 
             return translation;
@@ -416,7 +525,15 @@ impl World {
     }
 
     /// X3DRenderObject.gravitate: returns the new position offset delta and the new speed.
-    pub fn gravitate(&self, vp: &Vp, base: &VpBase, nav: &NavInfo, speed: &mut f64, frame_rate: f64, gravity: f64) -> Option<Vector3> {
+    pub fn gravitate(
+        &self,
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        speed: &mut f64,
+        frame_rate: f64,
+        gravity: f64,
+    ) -> Option<Vector3> {
         let radius = nav.collision_radius();
         let avatar_height = nav.avatar_height();
         let step_height = nav.step_height();
@@ -444,7 +561,11 @@ impl World {
 
         if distance > if gpu { 0.0 } else { 1e-6 } {
             // Gravitate and fall down to the floor.
-            let rate = if *speed != 0.0 { frame_rate } else { 1_000_000.0 };
+            let rate = if *speed != 0.0 {
+                frame_rate
+            } else {
+                1_000_000.0
+            };
             *speed -= gravity / rate;
 
             let mut dy = *speed / rate;

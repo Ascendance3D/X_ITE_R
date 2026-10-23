@@ -26,9 +26,18 @@ fn gate_chrome_math_matches_chrome() {
         (0xbfe016adbc016408, 0xbfe198cd3b51e153),
         (0xc0084b532498b29c, 0x3fbaee49c2144175),
     ];
-    for (table, f) in [(sin, m::sin as fn(f64) -> f64), (cos, m::cos), (tan, m::tan)] {
+    for (table, f) in [
+        (sin, m::sin as fn(f64) -> f64),
+        (cos, m::cos),
+        (tan, m::tan),
+    ] {
         for (x, want) in table {
-            assert_eq!(f(f64::from_bits(*x)).to_bits(), *want, "{:e}", f64::from_bits(*x));
+            assert_eq!(
+                f(f64::from_bits(*x)).to_bits(),
+                *want,
+                "{:e}",
+                f64::from_bits(*x)
+            );
         }
     }
 }

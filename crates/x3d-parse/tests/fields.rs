@@ -6,8 +6,12 @@ use x3d_fields::{FieldType, FieldValue, Generator};
 use x3d_parse::parser::Parser;
 
 fn oracle() -> serde_json::Value {
-    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../oracle/x_ite-fields.json");
-    serde_json::from_str(&std::fs::read_to_string(path).expect("run oracle/x_ite-fields.mjs first")).unwrap()
+    let path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../oracle/x_ite-fields.json"
+    );
+    serde_json::from_str(&std::fs::read_to_string(path).expect("run oracle/x_ite-fields.mjs first"))
+        .unwrap()
 }
 
 fn print(value: &FieldValue) -> String {
@@ -38,7 +42,10 @@ fn every_field_type_parses_and_prints_like_x_ite() {
             }
             Ok(value) => {
                 if !case["ok"].as_bool().unwrap() {
-                    failures.push(format!("{ty_name} {input:?}: x_ite error {}, rust parsed", case["error"]));
+                    failures.push(format!(
+                        "{ty_name} {input:?}: x_ite error {}, rust parsed",
+                        case["error"]
+                    ));
                     continue;
                 }
 
@@ -46,14 +53,19 @@ fn every_field_type_parses_and_prints_like_x_ite() {
                 let expected = case["vrml"].as_str().unwrap();
 
                 if vrml != expected {
-                    failures.push(format!("{ty_name} {input:?}: x_ite {expected:?} rust {vrml:?}"));
+                    failures.push(format!(
+                        "{ty_name} {input:?}: x_ite {expected:?} rust {vrml:?}"
+                    ));
                 }
 
                 if ty.is_multi() {
                     let n = case["raw"].as_array().unwrap().len();
 
                     if value.len() != n {
-                        failures.push(format!("{ty_name} {input:?}: x_ite {n} elements, rust {}", value.len()));
+                        failures.push(format!(
+                            "{ty_name} {input:?}: x_ite {n} elements, rust {}",
+                            value.len()
+                        ));
                     }
                 }
 
@@ -61,7 +73,9 @@ fn every_field_type_parses_and_prints_like_x_ite() {
                     failures.push(format!("{ty_name} {input:?}: isDefaultValue differs"));
                 }
 
-                if value.equals(&FieldValue::default_for(ty)) != case["equalsDefault"].as_bool().unwrap() {
+                if value.equals(&FieldValue::default_for(ty))
+                    != case["equalsDefault"].as_bool().unwrap()
+                {
                     failures.push(format!("{ty_name} {input:?}: equals (default) differs"));
                 }
             }
@@ -70,5 +84,11 @@ fn every_field_type_parses_and_prints_like_x_ite() {
 
     // All 42 non-node field types are covered (SFNode/MFNode are exercised by the corpus test).
     assert_eq!(types.len(), 42, "{types:?}");
-    assert!(failures.is_empty(), "{} of {} cases differ:\n{}", failures.len(), cases.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} of {} cases differ:\n{}",
+        failures.len(),
+        cases.len(),
+        failures.join("\n")
+    );
 }

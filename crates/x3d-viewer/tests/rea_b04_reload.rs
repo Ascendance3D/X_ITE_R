@@ -9,7 +9,7 @@
 
 use std::path::{Path, PathBuf};
 use x3d_viewer::embed::spawn_big_stack;
-use x3d_viewer::viewer::{UiEvent, Viewer3d, ORACLE_PAGE_ATTRIBUTES};
+use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, UiEvent, Viewer3d};
 
 const T0: f64 = 946684800.0;
 const DT: f64 = 1.0 / 30.0;
@@ -21,7 +21,17 @@ struct Driver {
 
 impl Driver {
     fn load(world: &Path, oracle: &Path) -> Driver {
-        let mut v = Viewer3d::load_attributes(world, Some(oracle), T0, 64, 64, None, false, ORACLE_PAGE_ATTRIBUTES).unwrap();
+        let mut v = Viewer3d::load_attributes(
+            world,
+            Some(oracle),
+            T0,
+            64,
+            64,
+            None,
+            false,
+            ORACLE_PAGE_ATTRIBUTES,
+        )
+        .unwrap();
         v.frame_rate = 1.0 / DT;
 
         for _ in 0..8 {
@@ -57,7 +67,14 @@ impl Driver {
     /// Entries of the batch 04 runtime maps.
     fn state(&self) -> [usize; 6] {
         let rt = &self.v.rt;
-        [rt.nurbs_scales.len(), rt.nurbs_set_members.len(), rt.viewpoint_groups.len(), rt.hanim_humanoids.len(), rt.hanim_poses.len(), rt.hanim_motions.len()]
+        [
+            rt.nurbs_scales.len(),
+            rt.nurbs_set_members.len(),
+            rt.viewpoint_groups.len(),
+            rt.hanim_humanoids.len(),
+            rt.hanim_poses.len(),
+            rt.hanim_motions.len(),
+        ]
     }
 
     /// Live scene nodes (the private TimeSensors, interpolators and ProximitySensor included).
@@ -76,7 +93,10 @@ fn rea_b04_runtime_state_is_released_on_reload() {
         d.frames(40);
 
         let first = d.state();
-        assert!(first.iter().all(|n| *n > 0), "a batch 04 node keeps no state: {first:?}");
+        assert!(
+            first.iter().all(|n| *n > 0),
+            "a batch 04 node keeps no state: {first:?}"
+        );
         assert!(d.rotations() > 0, "the HAnimMotion never turned the joint");
         let mut states = vec![];
         let mut live = vec![];
@@ -85,18 +105,27 @@ fn rea_b04_runtime_state_is_released_on_reload() {
             d.key("s");
             d.frames(5);
             let unloaded = d.state();
-            assert!(unloaded.iter().all(|n| *n == 0), "cycle {cycle}: state kept after the unload: {unloaded:?}");
+            assert!(
+                unloaded.iter().all(|n| *n == 0),
+                "cycle {cycle}: state kept after the unload: {unloaded:?}"
+            );
             d.key("r");
             d.frames(10);
             let before = d.rotations();
             d.frames(20);
-            assert!(d.rotations() > before, "cycle {cycle}: the motion stopped after the reload");
+            assert!(
+                d.rotations() > before,
+                "cycle {cycle}: the motion stopped after the reload"
+            );
             states.push(d.state());
             live.push(d.live_nodes());
         }
 
         // Every cycle loads the same content: the live node count settles and does not grow.
-        assert!(live[29] <= live[1], "live nodes grow with Inline reloads: {live:?}");
+        assert!(
+            live[29] <= live[1],
+            "live nodes grow with Inline reloads: {live:?}"
+        );
 
         for _ in 0..5 {
             d = Driver::load(&world, &oracle);
@@ -107,7 +136,10 @@ fn rea_b04_runtime_state_is_released_on_reload() {
         eprintln!("batch 04 state: first {first:?}, after reloads {states:?}, live nodes {live:?}");
 
         for s in &states {
-            assert!(s.iter().zip(first.iter()).all(|(a, b)| a <= b), "state grows with reloads: first {first:?}, then {states:?}");
+            assert!(
+                s.iter().zip(first.iter()).all(|(a, b)| a <= b),
+                "state grows with reloads: first {first:?}, then {states:?}"
+            );
         }
     });
 }

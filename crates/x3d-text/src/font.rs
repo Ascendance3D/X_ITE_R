@@ -79,7 +79,8 @@ impl Font {
     /// `OpenType.parse (await decompressFont (data))`.
     pub fn parse(bytes: &[u8]) -> Result<Font, FontError> {
         let data = if bytes.len() >= 4 && &bytes[0..4] == b"wOF2" {
-            woff2_patched::convert_woff2_to_ttf(&mut std::io::Cursor::new(bytes)).map_err(|e| FontError::Parse(format!("woff2: {e:?}")))?
+            woff2_patched::convert_woff2_to_ttf(&mut std::io::Cursor::new(bytes))
+                .map_err(|e| FontError::Parse(format!("woff2: {e:?}")))?
         } else {
             bytes.to_vec()
         };
@@ -87,7 +88,9 @@ impl Font {
         let face = Face::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let raw = RawFace::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let table = |tag: &[u8; 4]| raw.table(Tag::from_bytes(tag));
-        let glyf_tag = table(b"glyf").ok_or_else(|| FontError::Parse("no glyf table (only TrueType outlines are supported)".into()))?;
+        let glyf_tag = table(b"glyf").ok_or_else(|| {
+            FontError::Parse("no glyf table (only TrueType outlines are supported)".into())
+        })?;
         let loca_tag = table(b"loca").ok_or_else(|| FontError::Parse("no loca table".into()))?;
         let head = table(b"head").ok_or_else(|| FontError::Parse("no head table".into()))?;
         let long_loca = be16s(head, 50).unwrap_or(0) != 0;
@@ -98,7 +101,12 @@ impl Font {
         for i in 0..=num_glyphs as usize {
             let v = if long_loca {
                 let o = i * 4;
-                u32::from_be_bytes([*loca_tag.get(o).unwrap_or(&0), *loca_tag.get(o + 1).unwrap_or(&0), *loca_tag.get(o + 2).unwrap_or(&0), *loca_tag.get(o + 3).unwrap_or(&0)])
+                u32::from_be_bytes([
+                    *loca_tag.get(o).unwrap_or(&0),
+                    *loca_tag.get(o + 1).unwrap_or(&0),
+                    *loca_tag.get(o + 2).unwrap_or(&0),
+                    *loca_tag.get(o + 3).unwrap_or(&0),
+                ])
             } else {
                 be16(loca_tag, i * 2).unwrap_or(0) as u32 * 2
             };
@@ -121,8 +129,10 @@ impl Font {
             let mut chosen = None;
 
             for st in c.subtables {
-                let ok = (st.platform_id == ttf_parser::PlatformId::Windows && matches!(st.encoding_id, 0 | 1 | 10))
-                    || (st.platform_id == ttf_parser::PlatformId::Unicode && matches!(st.encoding_id, 0..=4 | 6))
+                let ok = (st.platform_id == ttf_parser::PlatformId::Windows
+                    && matches!(st.encoding_id, 0 | 1 | 10))
+                    || (st.platform_id == ttf_parser::PlatformId::Unicode
+                        && matches!(st.encoding_id, 0..=4 | 6))
                     || (st.platform_id == ttf_parser::PlatformId::Macintosh && st.encoding_id == 0);
 
                 if ok {
@@ -185,11 +195,15 @@ impl Font {
     }
 
     fn kerning_uncached(&self, left: u16, right: u16) -> i32 {
-        let Ok(face) = Face::parse(&self.data, 0) else { return 0 };
+        let Ok(face) = Face::parse(&self.data, 0) else {
+            return 0;
+        };
         let (l, r) = (ttf_parser::GlyphId(left), ttf_parser::GlyphId(right));
 
         if self.has_gpos {
-            let Some(gpos) = face.tables().gpos else { return 0 };
+            let Some(gpos) = face.tables().gpos else {
+                return 0;
+            };
             let default_script = if gpos.scripts.find(Tag::from_bytes(b"DFLT")).is_some() {
                 Tag::from_bytes(b"DFLT")
             } else if gpos.scripts.find(Tag::from_bytes(b"latn")).is_some() {
@@ -198,8 +212,12 @@ impl Font {
                 // getDefaultScriptName () is undefined: getScriptTable (undefined) → "DFLT".
                 Tag::from_bytes(b"DFLT")
             };
-            let Some(script) = gpos.scripts.find(default_script) else { return 0 };
-            let Some(lang) = script.default_language else { return 0 };
+            let Some(script) = gpos.scripts.find(default_script) else {
+                return 0;
+            };
+            let Some(lang) = script.default_language else {
+                return 0;
+            };
 
             // getFeatureTable: the first feature of the default language system tagged `kern`.
             let mut feature = None;
@@ -216,10 +234,17 @@ impl Font {
             let Some(feature) = feature else { return 0 };
 
             for li in feature.lookup_indices {
-                let Some(lookup) = gpos.lookups.get(li) else { continue };
+                let Some(lookup) = gpos.lookups.get(li) else {
+                    continue;
+                };
 
-                for subtable in lookup.subtables.into_iter::<ttf_parser::gpos::PositioningSubtable>() {
-                    let ttf_parser::gpos::PositioningSubtable::Pair(pair) = subtable else { continue };
+                for subtable in lookup
+                    .subtables
+                    .into_iter::<ttf_parser::gpos::PositioningSubtable>()
+                {
+                    let ttf_parser::gpos::PositioningSubtable::Pair(pair) = subtable else {
+                        continue;
+                    };
 
                     match pair {
                         ttf_parser::gpos::PairAdjustment::Format1 { coverage, sets } => {
@@ -230,7 +255,11 @@ impl Font {
                                 return v1.x_advance as i32;
                             }
                         }
-                        ttf_parser::gpos::PairAdjustment::Format2 { coverage, classes, matrix } => {
+                        ttf_parser::gpos::PairAdjustment::Format2 {
+                            coverage,
+                            classes,
+                            matrix,
+                        } => {
                             if coverage.get(l).is_none() {
                                 continue;
                             }
@@ -238,7 +267,10 @@ impl Font {
                             let c1 = classes.0.get(l);
                             let c2 = classes.1.get(r);
 
-                            return matrix.get((c1, c2)).map(|(v1, _)| v1.x_advance as i32).unwrap_or(0);
+                            return matrix
+                                .get((c1, c2))
+                                .map(|(v1, _)| v1.x_advance as i32)
+                                .unwrap_or(0);
                         }
                     }
                 }
@@ -269,7 +301,10 @@ impl Font {
 
         let (start, len) = self.glyf;
         let glyf = &self.data[start..start + len];
-        let (o, n) = (self.loca[glyph as usize] as usize, self.loca[glyph as usize + 1] as usize);
+        let (o, n) = (
+            self.loca[glyph as usize] as usize,
+            self.loca[glyph as usize + 1] as usize,
+        );
 
         if o == n || o + 10 > glyf.len() {
             return vec![];
@@ -315,7 +350,16 @@ impl Font {
 
             flags.truncate(count);
 
-            let mut points: Vec<Point> = flags.iter().enumerate().map(|(i, f)| Point { x: 0.0, y: 0.0, on_curve: f & 1 != 0, last: ends.contains(&i) }).collect();
+            let mut points: Vec<Point> = flags
+                .iter()
+                .enumerate()
+                .map(|(i, f)| Point {
+                    x: 0.0,
+                    y: 0.0,
+                    on_curve: f & 1 != 0,
+                    last: ends.contains(&i),
+                })
+                .collect();
             let mut prev = 0i32;
 
             for i in 0..count {
@@ -388,14 +432,26 @@ impl Font {
 
             pos += 4;
 
-            let mut c = Component { index, x_scale: 1.0, scale01: 0.0, scale10: 0.0, y_scale: 1.0, dx: 0.0, dy: 0.0, matched: None };
+            let mut c = Component {
+                index,
+                x_scale: 1.0,
+                scale01: 0.0,
+                scale10: 0.0,
+                y_scale: 1.0,
+                dx: 0.0,
+                dy: 0.0,
+                matched: None,
+            };
 
             if flags & 1 != 0 {
                 if flags & 2 != 0 {
                     c.dx = be16s(d, pos).unwrap_or(0) as f64;
                     c.dy = be16s(d, pos + 2).unwrap_or(0) as f64;
                 } else {
-                    c.matched = Some((be16(d, pos).unwrap_or(0) as usize, be16(d, pos + 2).unwrap_or(0) as usize));
+                    c.matched = Some((
+                        be16(d, pos).unwrap_or(0) as usize,
+                        be16(d, pos + 2).unwrap_or(0) as usize,
+                    ));
                 }
 
                 pos += 4;
@@ -404,7 +460,10 @@ impl Font {
                     c.dx = *d.get(pos).unwrap_or(&0) as i8 as f64;
                     c.dy = *d.get(pos + 1).unwrap_or(&0) as i8 as f64;
                 } else {
-                    c.matched = Some((*d.get(pos).unwrap_or(&0) as usize, *d.get(pos + 1).unwrap_or(&0) as usize));
+                    c.matched = Some((
+                        *d.get(pos).unwrap_or(&0) as usize,
+                        *d.get(pos + 1).unwrap_or(&0) as usize,
+                    ));
                 }
 
                 pos += 2;
@@ -462,7 +521,9 @@ impl Font {
             let transformed = match c.matched {
                 None => transform(&sub, c.dx, c.dy),
                 Some((a, b)) => {
-                    let (Some(first), Some(second)) = (points.get(a), sub.get(b)) else { continue };
+                    let (Some(first), Some(second)) = (points.get(a), sub.get(b)) else {
+                        continue;
+                    };
                     let sp = transform(&[*second], 0.0, 0.0)[0];
 
                     transform(&sub, first.x - sp.x, first.y - sp.y)
@@ -485,7 +546,10 @@ impl Font {
 
         let (start, len) = self.glyf;
         let glyf = &self.data[start..start + len];
-        let (o, n) = (self.loca[glyph as usize] as usize, self.loca[glyph as usize + 1] as usize);
+        let (o, n) = (
+            self.loca[glyph as usize] as usize,
+            self.loca[glyph as usize + 1] as usize,
+        );
 
         if o == n || o + 10 > glyf.len() {
             return [0.0; 4];
@@ -527,7 +591,12 @@ impl Font {
                 let (x, y) = s(&next);
                 out.push(Cmd::M(x, y));
             } else {
-                let (x, y) = s(&Point { x: (curr.x + next.x) * 0.5, y: (curr.y + next.y) * 0.5, on_curve: true, last: false });
+                let (x, y) = s(&Point {
+                    x: (curr.x + next.x) * 0.5,
+                    y: (curr.y + next.y) * 0.5,
+                    on_curve: true,
+                    last: false,
+                });
                 out.push(Cmd::M(x, y));
             }
 
@@ -539,7 +608,16 @@ impl Font {
                     let (x, y) = s(&curr);
                     out.push(Cmd::L(x, y));
                 } else {
-                    let next2 = if next.on_curve { next } else { Point { x: (curr.x + next.x) * 0.5, y: (curr.y + next.y) * 0.5, on_curve: true, last: false } };
+                    let next2 = if next.on_curve {
+                        next
+                    } else {
+                        Point {
+                            x: (curr.x + next.x) * 0.5,
+                            y: (curr.y + next.y) * 0.5,
+                            on_curve: true,
+                            last: false,
+                        }
+                    };
                     let (x1, y1) = s(&curr);
                     let (x, y) = s(&next2);
                     out.push(Cmd::Q(x1, y1, x, y));
@@ -552,21 +630,33 @@ impl Font {
 
     /// PolygonText.getGlyphGeometry: the triangles (three vertices each, x/y in em units) libtess
     /// produces for the glyph's contours, cached per glyph and quality.
-    pub fn glyph_geometry(&self, glyph: u16, quality: PrimitiveQuality) -> std::rc::Rc<Vec<[f64; 2]>> {
+    pub fn glyph_geometry(
+        &self,
+        glyph: u16,
+        quality: PrimitiveQuality,
+    ) -> std::rc::Rc<Vec<[f64; 2]>> {
         if let Some(g) = self.geometry_cache.borrow().get(&(glyph, quality)) {
             return g.clone();
         }
 
         let g = std::rc::Rc::new(create_glyph_geometry(&self.glyph_commands(glyph), quality));
 
-        self.geometry_cache.borrow_mut().insert((glyph, quality), g.clone());
+        self.geometry_cache
+            .borrow_mut()
+            .insert((glyph, quality), g.clone());
         g
     }
 }
 
 /// Bezier.quadric (standard/Math/Algorithms/Bezier.js), keeping the operation order of
 /// `Matrix3.multLeft` and `Matrix3.multVecMatrix`.
-fn bezier_quadric(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], steps: usize, points: &mut Vec<[f64; 2]>) {
+fn bezier_quadric(
+    p0: [f64; 2],
+    p1: [f64; 2],
+    p2: [f64; 2],
+    steps: usize,
+    points: &mut Vec<[f64; 2]>,
+) {
     // p = c · [p0; p1; p2] with c = (1 0 0 / -2 2 0 / 1 -2 1), per column (x, then y).
     let col = |a0: f64, a1: f64, a2: f64| -> (f64, f64, f64) {
         let r0 = a0 * 1.0 + a1 * 0.0 + a2 * 0.0;

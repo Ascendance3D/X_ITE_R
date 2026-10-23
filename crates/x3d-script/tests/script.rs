@@ -2,8 +2,8 @@
 //! same behavior against the pinned X_ITE in Chromium).
 
 use x3d_fields::FieldValue;
-use x3d_runtime::{Fetcher, Runtime};
 use x3d_fields::NodeId;
+use x3d_runtime::{Fetcher, Runtime};
 
 struct NoFetch;
 
@@ -35,8 +35,10 @@ fn field(rt: &Runtime, node: &str, field: &str) -> FieldValue {
 
 #[test]
 fn sfint32_truncates_and_sfbool_coerces() {
-    let rt = run(r#"DEF S Script { field SFInt32 i 0 field SFInt32 j 0 field SFBool b TRUE field SFString s ""
-        url "javascript: function initialize () { i = 2.9; j = -2.9; b = 0; s = 42; }" }"#);
+    let rt = run(
+        r#"DEF S Script { field SFInt32 i 0 field SFInt32 j 0 field SFBool b TRUE field SFString s ""
+        url "javascript: function initialize () { i = 2.9; j = -2.9; b = 0; s = 42; }" }"#,
+    );
 
     assert_fv(field(&rt, "S", "i"), FieldValue::SFInt32(2));
     assert_fv(field(&rt, "S", "j"), FieldValue::SFInt32(-2));
@@ -46,11 +48,16 @@ fn sfint32_truncates_and_sfbool_coerces() {
 
 #[test]
 fn mf_fields_grow_and_shrink_through_index_and_length() {
-    let rt = run(r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ 1 0 0 ]
-        url "javascript: function initialize () { a [5] = 9; a .length = 4; v [1] = new SFVec3f (0, 2, 0); v [0] .z = 7; }" }"#);
+    let rt = run(
+        r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ 1 0 0 ]
+        url "javascript: function initialize () { a [5] = 9; a .length = 4; v [1] = new SFVec3f (0, 2, 0); v [0] .z = 7; }" }"#,
+    );
 
     assert_fv(field(&rt, "S", "a"), FieldValue::MFInt32(vec![1, 2, 3, 0]));
-    assert_fv(field(&rt, "S", "v"), FieldValue::MFVec3f(vec![1.0, 0.0, 7.0, 0.0, 2.0, 0.0]));
+    assert_fv(
+        field(&rt, "S", "v"),
+        FieldValue::MFVec3f(vec![1.0, 0.0, 7.0, 0.0, 2.0, 0.0]),
+    );
 }
 
 /// A length or index near 2^32 must not allocate: it is a RangeError and the field keeps its value.
@@ -59,7 +66,8 @@ fn mf_fields_grow_and_shrink_through_index_and_length() {
 /// an error in X_ITE (X3DTypedArrayField.resize stores it); oracle case fldx-edge compares that with X_ITE.
 #[test]
 fn huge_mf_length_or_index_is_a_range_error_not_an_allocation() {
-    let rt = run(r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ ] field SFString r ""
+    let rt = run(
+        r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ ] field SFString r ""
         url "javascript:
           function initialize () {
             var o = [];
@@ -68,9 +76,13 @@ fn huge_mf_length_or_index_is_a_range_error_not_an_allocation() {
             try { a [4294967295] = 1; } catch (e) { o .push (e .name); }
             try { v [1e12] = new SFVec3f (1, 2, 3); } catch (e) { o .push (e .name); }
             r = o .join ();
-          }" }"#);
+          }" }"#,
+    );
 
-    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,RangeError,RangeError".into()));
+    assert_fv(
+        field(&rt, "S", "r"),
+        FieldValue::SFString("RangeError,RangeError,RangeError,RangeError".into()),
+    );
     assert_fv(field(&rt, "S", "a"), FieldValue::MFInt32(vec![1, 2, 3]));
     assert_fv(field(&rt, "S", "v"), FieldValue::MFVec3f(vec![]));
 }
@@ -90,15 +102,31 @@ fn node_fields_are_live_and_events_reach_routes() {
 
 #[test]
 fn script_errors_use_x_ite_wording() {
-    let rt = run(r#"DEF S Script { field SFNode n NULL url "javascript: function initialize () { n .translation; }" }"#);
+    let rt = run(
+        r#"DEF S Script { field SFNode n NULL url "javascript: function initialize () { n .translation; }" }"#,
+    );
 
-    assert!(rt.log.iter().any(|l| l == "error: JavaScript Error in Script 'S', in function 'initialize'"), "{:?}", rt.log);
-    assert!(rt.log.iter().any(|l| l == "error: TypeError: Cannot read properties of null (reading 'translation')"), "{:?}", rt.log);
+    assert!(
+        rt.log
+            .iter()
+            .any(|l| l == "error: JavaScript Error in Script 'S', in function 'initialize'"),
+        "{:?}",
+        rt.log
+    );
+    assert!(
+        rt.log.iter().any(
+            |l| l == "error: TypeError: Cannot read properties of null (reading 'translation')"
+        ),
+        "{:?}",
+        rt.log
+    );
 }
 
 #[test]
 fn browser_time_is_frozen() {
-    let rt = run(r#"DEF S Script { field SFTime t 0 url "javascript: function initialize () { t = Browser .getCurrentTime (); }" }"#);
+    let rt = run(
+        r#"DEF S Script { field SFTime t 0 url "javascript: function initialize () { t = Browser .getCurrentTime (); }" }"#,
+    );
 
     assert_fv(field(&rt, "S", "t"), FieldValue::SFTime(946684800.0));
 }
@@ -121,7 +149,8 @@ fn frames(rt: &mut Runtime, n: usize) {
 /// and the field keeps its prior value, in the runtime and in the Script's object of it. X_ITE allocates and runs out of memory.
 #[test]
 fn huge_length_on_a_node_field_keeps_its_prior_value() {
-    let rt = run(r#"DEF C Coordinate { point [ 1 2 3, 4 5 6 ] } DEF S Script { field SFNode c USE C field SFString r ""
+    let rt = run(
+        r#"DEF C Coordinate { point [ 1 2 3, 4 5 6 ] } DEF S Script { field SFNode c USE C field SFString r ""
         url "javascript:
           function initialize () {
             var o = [];
@@ -129,10 +158,17 @@ fn huge_length_on_a_node_field_keeps_its_prior_value() {
             try { c .point [4294967295] = new SFVec3f (); } catch (e) { o .push (e .name); }
             o .push (c .point .length, String (c .point [1]));
             r = o .join ();
-          }" }"#);
+          }" }"#,
+    );
 
-    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,2,4 5 6".into()));
-    assert_fv(field(&rt, "C", "point"), FieldValue::MFVec3f(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+    assert_fv(
+        field(&rt, "S", "r"),
+        FieldValue::SFString("RangeError,RangeError,2,4 5 6".into()),
+    );
+    assert_fv(
+        field(&rt, "C", "point"),
+        FieldValue::MFVec3f(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+    );
 }
 
 /// Owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of that event (in
@@ -141,7 +177,8 @@ fn huge_length_on_a_node_field_keeps_its_prior_value() {
 /// runs the callbacks again.
 #[test]
 fn a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on() {
-    let mut rt = run(r#"DEF T Transform { } DEF U Transform { } DEF V Transform { }
+    let mut rt = run(
+        r#"DEF T Transform { } DEF U Transform { } DEF V Transform { }
         DEF S Script { eventIn SFBool again directOutput TRUE
           url "javascript:
             function S (n) { return Browser .currentScene .getNamedNode (n); }
@@ -156,7 +193,8 @@ fn a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on() {
             }
             function again (v) { S ('T') .translation = new SFVec3f (4, 0, 0); }
           " }
-        ROUTE T.translation TO V.translation"#);
+        ROUTE T.translation TO V.translation"#,
+    );
 
     frames(&mut rt, 2);
 
@@ -168,9 +206,28 @@ fn a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on() {
 
     let errors: Vec<&String> = rt.log.iter().filter(|l| l.starts_with("error:")).collect();
 
-    assert_eq!(rt.prints, ["a 1 0 0", "b throws", "U 2 0 0", "a 4 0 0", "b throws"], "{:?}", rt.log);
-    assert_eq!(errors, ["error: Error: boom", "error: Error: boom"], "{:?}", rt.log);
-    assert_fv(field(&rt, "T", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)));
-    assert_fv(field(&rt, "V", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)));
-    assert_fv(field(&rt, "U", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(2.0, 0.0, 0.0)));
+    assert_eq!(
+        rt.prints,
+        ["a 1 0 0", "b throws", "U 2 0 0", "a 4 0 0", "b throws"],
+        "{:?}",
+        rt.log
+    );
+    assert_eq!(
+        errors,
+        ["error: Error: boom", "error: Error: boom"],
+        "{:?}",
+        rt.log
+    );
+    assert_fv(
+        field(&rt, "T", "translation"),
+        FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)),
+    );
+    assert_fv(
+        field(&rt, "V", "translation"),
+        FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)),
+    );
+    assert_fv(
+        field(&rt, "U", "translation"),
+        FieldValue::SFVec3f(x3d_fields::math::Vector3::new(2.0, 0.0, 0.0)),
+    );
 }

@@ -28,7 +28,11 @@ impl JsValue {
     /// `for (const key in value)`: the enumerable keys with their values.
     fn entries(&self) -> Vec<(String, &JsValue)> {
         match self {
-            JsValue::Array(a) => a.iter().enumerate().map(|(i, v)| (i.to_string(), v)).collect(),
+            JsValue::Array(a) => a
+                .iter()
+                .enumerate()
+                .map(|(i, v)| (i.to_string(), v))
+                .collect(),
             JsValue::Object(o) => o.iter().map(|(k, v)| (k.clone(), v)).collect(),
             _ => vec![],
         }
@@ -116,7 +120,8 @@ impl Json<'_> {
 
                 index.sort_by_key(|e| e.0);
 
-                let mut entries: Vec<(String, JsValue)> = index.into_iter().map(|(n, v)| (n.to_string(), v)).collect();
+                let mut entries: Vec<(String, JsValue)> =
+                    index.into_iter().map(|(n, v)| (n.to_string(), v)).collect();
                 entries.extend(named);
                 Ok(JsValue::Object(entries))
             }
@@ -200,7 +205,9 @@ impl Json<'_> {
         }
 
         let text = std::str::from_utf8(&s[start..self.i]).unwrap();
-        Ok(JsValue::Number(text.parse::<f64>().map_err(|e| e.to_string())?))
+        Ok(JsValue::Number(
+            text.parse::<f64>().map_err(|e| e.to_string())?,
+        ))
     }
 
     fn string(&mut self) -> Result<String, String> {
@@ -240,10 +247,14 @@ impl Json<'_> {
                         b'r' => 13,
                         b't' => 9,
                         b'u' => {
-                            let hex = self.s.get(self.i..self.i + 4).ok_or("Bad Unicode escape in JSON.")?;
+                            let hex = self
+                                .s
+                                .get(self.i..self.i + 4)
+                                .ok_or("Bad Unicode escape in JSON.")?;
                             let hex = std::str::from_utf8(hex).map_err(|e| e.to_string())?;
                             self.i += 4;
-                            u16::from_str_radix(hex, 16).map_err(|_| "Bad Unicode escape in JSON.")?
+                            u16::from_str_radix(hex, 16)
+                                .map_err(|_| "Bad Unicode escape in JSON.")?
                         }
                         _ => return Err("Bad escaped character in JSON.".into()),
                     };
@@ -270,7 +281,10 @@ impl Json<'_> {
 
 /// `JSON.parse (string)`.
 pub(crate) fn json_parse(text: &str) -> Result<JsValue, String> {
-    let mut p = Json { s: text.as_bytes(), i: 0 };
+    let mut p = Json {
+        s: text.as_bytes(),
+        i: 0,
+    };
     let v = p.value()?;
 
     p.ws();
@@ -309,7 +323,10 @@ fn not_int(key: &str) -> bool {
 
 /// `key .substring (1)`.
 fn substring1(key: &str) -> &str {
-    key.char_indices().nth(1).map(|(i, _)| &key[i..]).unwrap_or("")
+    key.char_indices()
+        .nth(1)
+        .map(|(i, _)| &key[i..])
+        .unwrap_or("")
 }
 
 fn js_string(v: &JsValue) -> String {
@@ -332,7 +349,9 @@ impl Converter {
             "SON schema" | "ncoding" => Ok(()),
             _ => {
                 if !valid_name(key) {
-                    return Err(format!("Failed to execute 'setAttribute' on 'Element': '{key}' is not a valid attribute name."));
+                    return Err(format!(
+                        "Failed to execute 'setAttribute' on 'Element': '{key}' is not a valid attribute name."
+                    ));
                 }
 
                 element.set_attr(key, value);
@@ -343,7 +362,9 @@ impl Converter {
 
     fn create_element(key: &str, container_field: Option<&str>) -> Result<Element, String> {
         if !valid_name(key) {
-            return Err(format!("Failed to execute 'createElementNS' on 'Document': The qualified name provided ('{key}') contains the invalid name-start character."));
+            return Err(format!(
+                "Failed to execute 'createElementNS' on 'Document': The qualified name provided ('{key}') contains the invalid name-start character."
+            ));
         }
 
         let mut child = Element::new(key);
@@ -374,7 +395,12 @@ impl Converter {
     }
 
     /// convertObject (key, object, element, containerField) with `object [key]` = `value`.
-    fn convert_object(key: &str, value: &JsValue, element: &mut Element, container_field: Option<&str>) -> R {
+    fn convert_object(
+        key: &str,
+        value: &JsValue,
+        element: &mut Element,
+        container_field: Option<&str>,
+    ) -> R {
         if !value.is_object() {
             return Ok(());
         }
@@ -385,7 +411,9 @@ impl Converter {
             Self::convert_children(key, value, element)
         } else if key == "#comment" {
             for (_, c) in value.entries() {
-                element.children.push(XNode::Comment(js_string(c).replace("\\\\", "\\")));
+                element
+                    .children
+                    .push(XNode::Comment(js_string(c).replace("\\\\", "\\")));
             }
             Ok(())
         } else if key == "#sourceCode" || key == "#sourceText" {
@@ -394,10 +422,23 @@ impl Converter {
                 return Err("object[key].join is not a function".into());
             };
 
-            let text = lines.iter().map(|l| if matches!(l, JsValue::Null) { String::new() } else { js_string(l) }).collect::<Vec<_>>().join("\n");
+            let text = lines
+                .iter()
+                .map(|l| {
+                    if matches!(l, JsValue::Null) {
+                        String::new()
+                    } else {
+                        js_string(l)
+                    }
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
             element.children.push(XNode::CData(text));
             Ok(())
-        } else if matches!(key, "connect" | "fieldValue" | "field" | "meta" | "component" | "unit") {
+        } else if matches!(
+            key,
+            "connect" | "fieldValue" | "field" | "meta" | "component" | "unit"
+        ) {
             for (child_key, child) in value.entries() {
                 if child.is_object() {
                     let mut c = Self::create_element(key, container_field)?;
@@ -414,7 +455,12 @@ impl Converter {
         }
     }
 
-    fn convert_to_dom(object: &JsValue, parent_key: &str, element: &mut Element, container_field: Option<&str>) -> R {
+    fn convert_to_dom(
+        object: &JsValue,
+        parent_key: &str,
+        element: &mut Element,
+        container_field: Option<&str>,
+    ) -> R {
         if matches!(object, JsValue::Null) {
             if !not_int(parent_key) {
                 let child = Self::create_element("NULL", container_field)?;
@@ -451,13 +497,21 @@ impl Converter {
                             Self::convert_object(&key, value, element, container_field)?;
                         }
                     }
-                    JsValue::Number(_) | JsValue::Bool(_) => Self::set_attribute(element, substring1(&key), js_string(value))?,
+                    JsValue::Number(_) | JsValue::Bool(_) => {
+                        Self::set_attribute(element, substring1(&key), js_string(value))?
+                    }
                     JsValue::String(s) => {
                         if key != "#comment" {
                             // JSONStringToXML
-                            Self::set_attribute(element, substring1(&key), s.replace('\\', "\\\\").replace('\n', "\\n"))?;
+                            Self::set_attribute(
+                                element,
+                                substring1(&key),
+                                s.replace('\\', "\\\\").replace('\n', "\\n"),
+                            )?;
                         } else {
-                            element.children.push(XNode::Comment(s.replace("\\\\", "\\")));
+                            element
+                                .children
+                                .push(XNode::Comment(s.replace("\\\\", "\\")));
                         }
                     }
                     _ => {}
@@ -470,7 +524,10 @@ impl Converter {
 
             if strings {
                 // SFStringToXML: backslashes and double quotes escaped.
-                let quoted: Vec<String> = local.iter().map(|s| s.replace('\\', "\\\\").replace('"', "\\\"")).collect();
+                let quoted: Vec<String> = local
+                    .iter()
+                    .map(|s| s.replace('\\', "\\\\").replace('"', "\\\""))
+                    .collect();
                 Self::set_attribute(element, name, format!("\"{}\"", quoted.join("\" \"")))?;
             } else {
                 Self::set_attribute(element, name, local.join(" "))?;

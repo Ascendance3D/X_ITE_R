@@ -6,4 +6,3 @@ pub(super) const TEXTURE_TRANSFORM: &str = "ecmascript:\n\nconst m = new SFMatri
 pub(super) const ORTHO: &str = "ecmascript:\n\nfunction eventsProcessed ()\n{\n   value_changed [0] = -xmag;\n   value_changed [1] = -ymag;\n   value_changed [2] =  xmag;\n   value_changed [3] =  ymag;\n}\n";
 
 pub(super) const COLOR_RGBA: &str = "ecmascript:\n\nfunction eventsProcessed ()\n{\n   value_changed [0] = color [0];\n   value_changed [1] = color [1];\n   value_changed [2] = color [2];\n   value_changed [3] = alpha;\n}\n   ";
-

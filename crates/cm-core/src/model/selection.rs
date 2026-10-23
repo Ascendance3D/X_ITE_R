@@ -9,7 +9,7 @@ use std::cell::Cell;
 use std::cmp::Ordering;
 use std::rc::Rc;
 
-use crate::pos::{equal_cursor_pos, max_pos, min_pos, rcmp, Pos, PosRef};
+use crate::pos::{Pos, PosRef, equal_cursor_pos, max_pos, min_pos, rcmp};
 
 #[derive(Clone, Debug)]
 pub(crate) struct Range {
@@ -22,7 +22,11 @@ pub(crate) struct Range {
 
 impl Range {
     pub fn new(anchor: PosRef, head: PosRef) -> Range {
-        Range { anchor, head, goal_column: Rc::new(Cell::new(None)) }
+        Range {
+            anchor,
+            head,
+            goal_column: Rc::new(Cell::new(None)),
+        }
     }
     pub fn from(&self) -> PosRef {
         min_pos(&self.anchor, &self.head)
@@ -47,7 +51,11 @@ pub(crate) struct SelectionData {
 pub(crate) type Sel = Rc<SelectionData>;
 
 pub(crate) fn new_sel(ranges: Vec<Range>, prim_index: usize) -> Sel {
-    Rc::new(SelectionData { ranges, prim_index, copied: Cell::new(false) })
+    Rc::new(SelectionData {
+        ranges,
+        prim_index,
+        copied: Cell::new(false),
+    })
 }
 
 impl SelectionData {
@@ -59,9 +67,18 @@ impl SelectionData {
         let ranges = self
             .ranges
             .iter()
-            .map(|r| Range::new(PosRef::lc(r.anchor.line(), r.anchor.ch()), PosRef::lc(r.head.line(), r.head.ch())))
+            .map(|r| {
+                Range::new(
+                    PosRef::lc(r.anchor.line(), r.anchor.ch()),
+                    PosRef::lc(r.head.line(), r.head.ch()),
+                )
+            })
             .collect();
-        SelectionData { ranges, prim_index: self.prim_index, copied: Cell::new(false) }
+        SelectionData {
+            ranges,
+            prim_index: self.prim_index,
+            copied: Cell::new(false),
+        }
     }
 
     pub fn something_selected(&self) -> bool {
@@ -74,7 +91,9 @@ impl SelectionData {
     pub fn contains(&self, pos: &Pos, end: Option<&Pos>) -> i64 {
         let end = end.unwrap_or(pos);
         for (i, r) in self.ranges.iter().enumerate() {
-            if crate::pos::cmp(end, &r.from().get()) != Ordering::Less && crate::pos::cmp(pos, &r.to().get()) != Ordering::Greater {
+            if crate::pos::cmp(end, &r.from().get()) != Ordering::Less
+                && crate::pos::cmp(pos, &r.to().get()) != Ordering::Greater
+            {
                 return i as i64;
             }
         }
@@ -83,7 +102,14 @@ impl SelectionData {
 
     pub fn snapshot(&self) -> Selection {
         Selection {
-            ranges: self.ranges.iter().map(|r| SelRange { anchor: r.anchor.get(), head: r.head.get() }).collect(),
+            ranges: self
+                .ranges
+                .iter()
+                .map(|r| SelRange {
+                    anchor: r.anchor.get(),
+                    head: r.head.get(),
+                })
+                .collect(),
             primary: self.prim_index,
         }
     }
@@ -98,7 +124,8 @@ pub(crate) fn sel_equals(a: &Sel, b: &Sel) -> bool {
         return false;
     }
     a.ranges.iter().zip(b.ranges.iter()).all(|(here, there)| {
-        equal_cursor_pos(&here.anchor.get(), &there.anchor.get()) && equal_cursor_pos(&here.head.get(), &there.head.get())
+        equal_cursor_pos(&here.anchor.get(), &there.anchor.get())
+            && equal_cursor_pos(&here.head.get(), &there.head.get())
     })
 }
 
@@ -106,26 +133,48 @@ pub(crate) fn sel_equals(a: &Sel, b: &Sel) -> bool {
 /// track of the primary one.
 pub(crate) fn normalize_selection(may_touch: bool, ranges: Vec<Range>, prim_index: usize) -> Sel {
     // Array.prototype.sort is stable (V8 TimSort), as is sort_by.
-    let mut tagged: Vec<(Range, usize)> = ranges.into_iter().enumerate().map(|(i, r)| (r, i)).collect();
+    let mut tagged: Vec<(Range, usize)> = ranges
+        .into_iter()
+        .enumerate()
+        .map(|(i, r)| (r, i))
+        .collect();
     tagged.sort_by(|a, b| rcmp(&a.0.from(), &b.0.from()));
-    let mut prim = tagged.iter().position(|(_, i)| *i == prim_index).map(|p| p as i64).unwrap_or(-1);
+    let mut prim = tagged
+        .iter()
+        .position(|(_, i)| *i == prim_index)
+        .map(|p| p as i64)
+        .unwrap_or(-1);
     let mut ranges: Vec<Range> = tagged.into_iter().map(|(r, _)| r).collect();
     let mut i = 1;
     while i < ranges.len() {
         let cur = ranges[i].clone();
         let prev = ranges[i - 1].clone();
         let diff = crate::pos::cmp_num(&prev.to().get(), &cur.from().get());
-        let merge = if may_touch && !cur.empty() { diff > 0 } else { diff >= 0 };
+        let merge = if may_touch && !cur.empty() {
+            diff > 0
+        } else {
+            diff >= 0
+        };
         if merge {
             let from = min_pos(&prev.from(), &cur.from());
             let to = max_pos(&prev.to(), &cur.to());
             // Identity comparisons in the JS (`cur.from() == cur.head`).
-            let inv = if prev.empty() { PosRef::same(&cur.from(), &cur.head) } else { PosRef::same(&prev.from(), &prev.head) };
+            let inv = if prev.empty() {
+                PosRef::same(&cur.from(), &cur.head)
+            } else {
+                PosRef::same(&prev.from(), &prev.head)
+            };
             if (i as i64) <= prim {
                 prim -= 1;
             }
             i -= 1;
-            ranges.splice(i..i + 2, [Range::new(if inv { to.clone() } else { from.clone() }, if inv { from } else { to })]);
+            ranges.splice(
+                i..i + 2,
+                [Range::new(
+                    if inv { to.clone() } else { from.clone() },
+                    if inv { from } else { to },
+                )],
+            );
         }
         i += 1;
     }
@@ -156,10 +205,18 @@ impl SelRange {
         SelRange { anchor: p, head: p }
     }
     pub fn from(&self) -> Pos {
-        if crate::pos::cmp(&self.anchor, &self.head) == Ordering::Less { self.anchor } else { self.head }
+        if crate::pos::cmp(&self.anchor, &self.head) == Ordering::Less {
+            self.anchor
+        } else {
+            self.head
+        }
     }
     pub fn to(&self) -> Pos {
-        if crate::pos::cmp(&self.anchor, &self.head) == Ordering::Less { self.head } else { self.anchor }
+        if crate::pos::cmp(&self.anchor, &self.head) == Ordering::Less {
+            self.head
+        } else {
+            self.anchor
+        }
     }
     pub fn empty(&self) -> bool {
         self.anchor.line == self.head.line && self.anchor.ch == self.head.ch

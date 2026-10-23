@@ -24,13 +24,16 @@ pub(crate) struct HtmlSupport {
 
 impl HtmlSupport {
     fn add_node_type_name(&mut self, type_name: &str) {
-        self.node_type_names.insert(type_name.to_string(), type_name.to_string());
-        self.node_type_names.insert(type_name.to_uppercase(), type_name.to_string());
+        self.node_type_names
+            .insert(type_name.to_string(), type_name.to_string());
+        self.node_type_names
+            .insert(type_name.to_uppercase(), type_name.to_string());
     }
 
     fn add_field_name(&mut self, name: &str) {
         self.field_names.insert(name.to_string(), name.to_string());
-        self.field_names.insert(name.to_lowercase(), name.to_string());
+        self.field_names
+            .insert(name.to_lowercase(), name.to_string());
     }
 
     /// `HTMLSupport .getNodeTypeName (typeName)`
@@ -45,7 +48,10 @@ impl HtmlSupport {
 }
 
 fn build() -> HtmlSupport {
-    let mut support = HtmlSupport { node_type_names: HashMap::new(), field_names: HashMap::new() };
+    let mut support = HtmlSupport {
+        node_type_names: HashMap::new(),
+        field_names: HashMap::new(),
+    };
 
     support.add_node_type_name("ProtoInstance");
 
@@ -69,7 +75,11 @@ fn build() -> HtmlSupport {
         aliases.sort();
 
         for (alias, target) in aliases {
-            if t.x3d.fields.iter().any(|f| &f.name == target && f.access & access::INITIALIZE_ONLY != 0) {
+            if t.x3d
+                .fields
+                .iter()
+                .any(|f| &f.name == target && f.access & access::INITIALIZE_ONLY != 0)
+            {
                 support.add_field_name(alias);
             }
         }

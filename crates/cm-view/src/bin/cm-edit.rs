@@ -22,7 +22,8 @@ fn main() {
             "--mode" => opts.mode = args.next(),
             "--script" => {
                 let p = args.next().unwrap_or_else(|| usage());
-                let src = std::fs::read_to_string(&p).unwrap_or_else(|e| fail(&format!("{p}: {e}")));
+                let src =
+                    std::fs::read_to_string(&p).unwrap_or_else(|e| fail(&format!("{p}: {e}")));
                 script = Some(cm_view::app::parse_script(&src).unwrap_or_else(|e| fail(&e)));
             }
             "-h" | "--help" => usage(),
@@ -37,7 +38,9 @@ fn main() {
 }
 
 fn usage() -> ! {
-    eprintln!("usage: cm-edit <file> [--read-only] [--wrap] [--no-line-numbers] [--mode MIME] [--script steps.txt]");
+    eprintln!(
+        "usage: cm-edit <file> [--read-only] [--wrap] [--no-line-numbers] [--mode MIME] [--script steps.txt]"
+    );
     std::process::exit(2)
 }
 

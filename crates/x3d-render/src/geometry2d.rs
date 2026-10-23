@@ -6,7 +6,7 @@
 //! The option nodes keep their arrays in Float32 storage (Coordinate points, X3DGeometryNode
 //! arrays); scaled copies are computed in doubles from those Float32 values, as in JS.
 
-use crate::geometry::{add_vector, finish, indexed_face_set, Colors, Coords, Geometry, IfsInput};
+use crate::geometry::{Colors, Coords, Geometry, IfsInput, add_vector, finish, indexed_face_set};
 use std::f64::consts::PI;
 use x3d_fields::jsmath;
 use x3d_fields::math::Vector3;
@@ -48,7 +48,12 @@ fn sweep_angle(start_angle: f64, end_angle: f64) -> f64 {
 }
 
 fn line_geometry() -> Geometry {
-    Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() }
+    Geometry {
+        geometry_type: 1,
+        solid: false,
+        ccw: true,
+        ..Default::default()
+    }
 }
 
 fn set_extents(g: &mut Geometry, min: Vector3, max: Vector3) {
@@ -69,17 +74,34 @@ pub fn arc2d(radius: f64, start_angle: f64, end_angle: f64) -> Geometry {
         let (x1, y1) = polar(radius, start_angle + (sweep * t1));
         let t2 = (n + 1) as f64 / steps as f64;
         let (x2, y2) = polar(radius, start_angle + (sweep * t2));
-        g.vertices.extend_from_slice(&[x1 as f32, y1 as f32, 0.0, 1.0, x2 as f32, y2 as f32, 0.0, 1.0]);
+        g.vertices.extend_from_slice(&[
+            x1 as f32, y1 as f32, 0.0, 1.0, x2 as f32, y2 as f32, 0.0, 1.0,
+        ]);
     }
 
     finish(&mut g, true);
-    set_extents(&mut g, Vector3::new(-radius, -radius, 0.0), Vector3::new(radius, radius, 0.0));
+    set_extents(
+        &mut g,
+        Vector3::new(-radius, -radius, 0.0),
+        Vector3::new(radius, radius, 0.0),
+    );
     g
 }
 
 /// ArcClose2D.build.
-pub fn arc_close2d(radius: f64, start_angle: f64, end_angle: f64, chord: bool, solid: bool) -> Geometry {
-    let mut g = Geometry { geometry_type: 2, solid, ccw: true, ..Default::default() };
+pub fn arc_close2d(
+    radius: f64,
+    start_angle: f64,
+    end_angle: f64,
+    chord: bool,
+    solid: bool,
+) -> Geometry {
+    let mut g = Geometry {
+        geometry_type: 2,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
     let radius = radius.abs();
     let sweep = sweep_angle(start_angle, end_angle);
     let steps = jsmath::js_max(4.0, (sweep * dimension_2d() as f64 / (PI * 2.0)).floor());
@@ -98,26 +120,40 @@ pub fn arc_close2d(radius: f64, start_angle: f64, end_angle: f64, chord: bool, s
 
     let push = |t: [(f64, f64); 3], p: [(f64, f64); 3], g: &mut Geometry| {
         for k in 0..3 {
-            g.tex_coords.extend_from_slice(&[t[k].0 as f32, t[k].1 as f32, 0.0, 1.0]);
+            g.tex_coords
+                .extend_from_slice(&[t[k].0 as f32, t[k].1 as f32, 0.0, 1.0]);
             g.normals.extend_from_slice(&[0.0, 0.0, 1.0]);
         }
         for k in 0..3 {
-            g.vertices.extend_from_slice(&[p[k].0 as f32, p[k].1 as f32, 0.0, 1.0]);
+            g.vertices
+                .extend_from_slice(&[p[k].0 as f32, p[k].1 as f32, 0.0, 1.0]);
         }
     };
 
     if chord {
         for i in 1..steps_1 {
-            push([tex[0], tex[i], tex[i + 1]], [points[0], points[i], points[i + 1]], &mut g);
+            push(
+                [tex[0], tex[i], tex[i + 1]],
+                [points[0], points[i], points[i + 1]],
+                &mut g,
+            );
         }
     } else {
         for i in 0..steps_1 {
-            push([(0.5, 0.5), tex[i], tex[i + 1]], [(0.0, 0.0), points[i], points[i + 1]], &mut g);
+            push(
+                [(0.5, 0.5), tex[i], tex[i + 1]],
+                [(0.0, 0.0), points[i], points[i + 1]],
+                &mut g,
+            );
         }
     }
 
     finish(&mut g, true);
-    set_extents(&mut g, Vector3::new(-radius, -radius, 0.0), Vector3::new(radius, radius, 0.0));
+    set_extents(
+        &mut g,
+        Vector3::new(-radius, -radius, 0.0),
+        Vector3::new(radius, radius, 0.0),
+    );
     g
 }
 
@@ -132,7 +168,16 @@ fn circle_vertices() -> Vec<f32> {
         .collect();
     let mut coord_index: Vec<i32> = (0..dimension_2d() as i32).collect();
     coord_index.extend_from_slice(&[0, -1]);
-    crate::geometry::indexed_line_set(Some(&points), &coord_index, None, &[], true, None, &Default::default()).vertices
+    crate::geometry::indexed_line_set(
+        Some(&points),
+        &coord_index,
+        None,
+        &[],
+        true,
+        None,
+        &Default::default(),
+    )
+    .vertices
 }
 
 fn scaled_circle(radius: f64) -> Vec<f32> {
@@ -142,7 +187,16 @@ fn scaled_circle(radius: f64) -> Vec<f32> {
         return v;
     }
 
-    v.chunks_exact(4).flat_map(|p| [(p[0] as f64 * radius) as f32, (p[1] as f64 * radius) as f32, 0.0, 1.0]).collect()
+    v.chunks_exact(4)
+        .flat_map(|p| {
+            [
+                (p[0] as f64 * radius) as f32,
+                (p[1] as f64 * radius) as f32,
+                0.0,
+                1.0,
+            ]
+        })
+        .collect()
 }
 
 /// Circle2D.build.
@@ -150,7 +204,11 @@ pub fn circle2d(radius: f64) -> Geometry {
     let mut g = line_geometry();
     g.vertices = scaled_circle(radius);
     finish(&mut g, true);
-    set_extents(&mut g, Vector3::new(-radius, -radius, 0.0), Vector3::new(radius, radius, 0.0));
+    set_extents(
+        &mut g,
+        Vector3::new(-radius, -radius, 0.0),
+        Vector3::new(radius, radius, 0.0),
+    );
     g
 }
 
@@ -167,9 +225,24 @@ fn disk_options() -> (Vec<f32>, Vec<f32>, Vec<f32>) {
         let (p1x, p1y) = polar(1.0, theta1);
         let (p2x, p2y) = polar(1.0, theta2);
 
-        t.extend_from_slice(&[0.5, 0.5, 0.0, 1.0, (t1x + 0.5) as f32, (t1y + 0.5) as f32, 0.0, 1.0, (t2x + 0.5) as f32, (t2y + 0.5) as f32, 0.0, 1.0]);
+        t.extend_from_slice(&[
+            0.5,
+            0.5,
+            0.0,
+            1.0,
+            (t1x + 0.5) as f32,
+            (t1y + 0.5) as f32,
+            0.0,
+            1.0,
+            (t2x + 0.5) as f32,
+            (t2y + 0.5) as f32,
+            0.0,
+            1.0,
+        ]);
         n.extend_from_slice(&[0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]);
-        v.extend_from_slice(&[0.0, 0.0, 0.0, 1.0, p1x as f32, p1y as f32, 0.0, 1.0, p2x as f32, p2y as f32, 0.0, 1.0]);
+        v.extend_from_slice(&[
+            0.0, 0.0, 0.0, 1.0, p1x as f32, p1y as f32, 0.0, 1.0, p2x as f32, p2y as f32, 0.0, 1.0,
+        ]);
     }
 
     (t, n, v)
@@ -182,7 +255,12 @@ pub fn disk2d(inner_radius: f64, outer_radius: f64, solid: bool) -> Geometry {
 
     if inner == outer {
         if outer == 0.0 {
-            let mut g = Geometry { geometry_type: 0, solid: false, ccw: true, ..Default::default() };
+            let mut g = Geometry {
+                geometry_type: 0,
+                solid: false,
+                ccw: true,
+                ..Default::default()
+            };
             g.vertices.extend_from_slice(&[0.0, 0.0, 0.0, 1.0]);
             finish(&mut g, true);
             set_extents(&mut g, Vector3::ZERO, Vector3::ZERO);
@@ -190,17 +268,39 @@ pub fn disk2d(inner_radius: f64, outer_radius: f64, solid: bool) -> Geometry {
         }
 
         let mut g = circle2d(outer);
-        set_extents(&mut g, Vector3::new(-outer, -outer, 0.0), Vector3::new(outer, outer, 0.0));
+        set_extents(
+            &mut g,
+            Vector3::new(-outer, -outer, 0.0),
+            Vector3::new(outer, outer, 0.0),
+        );
         return g;
     }
 
     let (dt, dn, dv) = disk_options();
-    let mut g = Geometry { geometry_type: 2, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 2,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     if inner == 0.0 {
         g.tex_coords = dt;
         g.normals = dn;
-        g.vertices = if outer == 1.0 { dv } else { dv.chunks_exact(4).flat_map(|p| [(p[0] as f64 * outer) as f32, (p[1] as f64 * outer) as f32, 0.0, 1.0]).collect() };
+        g.vertices = if outer == 1.0 {
+            dv
+        } else {
+            dv.chunks_exact(4)
+                .flat_map(|p| {
+                    [
+                        (p[0] as f64 * outer) as f32,
+                        (p[1] as f64 * outer) as f32,
+                        0.0,
+                        1.0,
+                    ]
+                })
+                .collect()
+        };
     } else {
         let scale = inner / outer;
         let offset = (1.0 - scale) / 2.0;
@@ -209,28 +309,71 @@ pub fn disk2d(inner_radius: f64, outer_radius: f64, solid: bool) -> Geometry {
         for i in (0..dv.len()).step_by(12) {
             let s = |k: usize| (f(dt[i + k]) * scale + offset) as f32;
             g.tex_coords.extend_from_slice(&[
-                s(4), s(5), 0.0, 1.0,
-                dt[i + 4], dt[i + 5], 0.0, 1.0,
-                dt[i + 8], dt[i + 9], 0.0, 1.0,
-                s(4), s(5), 0.0, 1.0,
-                dt[i + 8], dt[i + 9], 0.0, 1.0,
-                s(8), s(9), 0.0, 1.0,
+                s(4),
+                s(5),
+                0.0,
+                1.0,
+                dt[i + 4],
+                dt[i + 5],
+                0.0,
+                1.0,
+                dt[i + 8],
+                dt[i + 9],
+                0.0,
+                1.0,
+                s(4),
+                s(5),
+                0.0,
+                1.0,
+                dt[i + 8],
+                dt[i + 9],
+                0.0,
+                1.0,
+                s(8),
+                s(9),
+                0.0,
+                1.0,
             ]);
-            g.normals.extend_from_slice(&[0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]);
+            g.normals.extend_from_slice(&[
+                0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+                0.0, 1.0,
+            ]);
             let m = |k: usize, r: f64| (f(dv[i + k]) * r) as f32;
             g.vertices.extend_from_slice(&[
-                m(4, inner), m(5, inner), 0.0, 1.0,
-                m(4, outer), m(5, outer), 0.0, 1.0,
-                m(8, outer), m(9, outer), 0.0, 1.0,
-                m(4, inner), m(5, inner), 0.0, 1.0,
-                m(8, outer), m(9, outer), 0.0, 1.0,
-                m(8, inner), m(9, inner), 0.0, 1.0,
+                m(4, inner),
+                m(5, inner),
+                0.0,
+                1.0,
+                m(4, outer),
+                m(5, outer),
+                0.0,
+                1.0,
+                m(8, outer),
+                m(9, outer),
+                0.0,
+                1.0,
+                m(4, inner),
+                m(5, inner),
+                0.0,
+                1.0,
+                m(8, outer),
+                m(9, outer),
+                0.0,
+                1.0,
+                m(8, inner),
+                m(9, inner),
+                0.0,
+                1.0,
             ]);
         }
     }
 
     finish(&mut g, true);
-    set_extents(&mut g, Vector3::new(-outer, -outer, 0.0), Vector3::new(outer, outer, 0.0));
+    set_extents(
+        &mut g,
+        Vector3::new(-outer, -outer, 0.0),
+        Vector3::new(outer, outer, 0.0),
+    );
     g
 }
 
@@ -240,7 +383,16 @@ pub fn polyline2d(line_segments: &[f32]) -> Geometry {
     let n = line_segments.len() / 2;
 
     for i in (0..n.saturating_sub(1) * 2).step_by(2) {
-        g.vertices.extend_from_slice(&[line_segments[i], line_segments[i + 1], 0.0, 1.0, line_segments[i + 2], line_segments[i + 3], 0.0, 1.0]);
+        g.vertices.extend_from_slice(&[
+            line_segments[i],
+            line_segments[i + 1],
+            0.0,
+            1.0,
+            line_segments[i + 2],
+            line_segments[i + 3],
+            0.0,
+            1.0,
+        ]);
     }
 
     finish(&mut g, true);
@@ -249,7 +401,12 @@ pub fn polyline2d(line_segments: &[f32]) -> Geometry {
 
 /// Polypoint2D.build.
 pub fn polypoint2d(point: &[f32]) -> Geometry {
-    let mut g = Geometry { geometry_type: 0, solid: false, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 0,
+        solid: false,
+        ccw: true,
+        ..Default::default()
+    };
 
     for p in point.chunks_exact(2) {
         g.vertices.extend_from_slice(&[p[0], p[1], 0.0, 1.0]);
@@ -262,7 +419,9 @@ pub fn polypoint2d(point: &[f32]) -> Geometry {
 /// Rectangle2D.build over the Rectangle2DOptions IndexedFaceSet.
 pub fn rectangle2d(size: (f64, f64), solid: bool) -> Geometry {
     let tex = [1.0f32, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0];
-    let coord = [1.0f32, 1.0, 0.0, -1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
+    let coord = [
+        1.0f32, 1.0, 0.0, -1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0,
+    ];
     let base = indexed_face_set(&IfsInput {
         coord: Some(&coord),
         coord_index: &[0, 1, 2, 3, -1],
@@ -281,7 +440,15 @@ pub fn rectangle2d(size: (f64, f64), solid: bool) -> Geometry {
         extras: Default::default(),
     });
 
-    let mut g = Geometry { geometry_type: 2, solid, ccw: true, tex_coords: base.tex_coords.clone(), normals: base.normals.clone(), tangents: base.tangents.clone(), ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 2,
+        solid,
+        ccw: true,
+        tex_coords: base.tex_coords.clone(),
+        normals: base.normals.clone(),
+        tangents: base.tangents.clone(),
+        ..Default::default()
+    };
 
     if size == (2.0, 2.0) {
         g.vertices = base.vertices.clone();
@@ -290,7 +457,11 @@ pub fn rectangle2d(size: (f64, f64), solid: bool) -> Geometry {
     } else {
         let x = (size.0 / 2.0).abs();
         let y = (size.1 / 2.0).abs();
-        g.vertices = base.vertices.chunks_exact(4).flat_map(|p| [(x * p[0] as f64) as f32, (y * p[1] as f64) as f32, 0.0, 1.0]).collect();
+        g.vertices = base
+            .vertices
+            .chunks_exact(4)
+            .flat_map(|p| [(x * p[0] as f64) as f32, (y * p[1] as f64) as f32, 0.0, 1.0])
+            .collect();
         g.min = Vector3::new(-x, -y, 0.0);
         g.max = Vector3::new(x, y, 0.0);
     }
@@ -300,7 +471,12 @@ pub fn rectangle2d(size: (f64, f64), solid: bool) -> Geometry {
 
 /// TriangleSet2D.build with its own generateTexCoords (s from x, t from y).
 pub fn triangle_set2d(vertices: &[f32], solid: bool) -> Geometry {
-    let mut g = Geometry { geometry_type: 2, solid, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 2,
+        solid,
+        ccw: true,
+        ..Default::default()
+    };
 
     for p in vertices.chunks_exact(2) {
         g.normals.extend_from_slice(&[0.0, 0.0, 1.0]);
@@ -324,7 +500,12 @@ pub fn triangle_set2d(vertices: &[f32], solid: bool) -> Geometry {
     min.subtract(&half);
 
     for v in g.vertices.chunks_exact(4) {
-        g.tex_coords.extend_from_slice(&[((v[0] as f64 - min.x) / ssize) as f32, ((v[1] as f64 - min.y) / ssize) as f32, 0.0, 1.0]);
+        g.tex_coords.extend_from_slice(&[
+            ((v[0] as f64 - min.x) / ssize) as f32,
+            ((v[1] as f64 - min.y) / ssize) as f32,
+            0.0,
+            1.0,
+        ]);
     }
 
     // rebuild: generateTexCoords (above), then generateTangents.
@@ -333,7 +514,13 @@ pub fn triangle_set2d(vertices: &[f32], solid: bool) -> Geometry {
 }
 
 /// LineSet.build (color per vertex only; normals when a Normal node is given).
-pub fn line_set(vertex_count: &[i32], coord: Option<&[f32]>, color: Option<Colors>, normal: Option<&[f32]>, extras: &crate::extras::Extras) -> Geometry {
+pub fn line_set(
+    vertex_count: &[i32],
+    coord: Option<&[f32]>,
+    color: Option<Colors>,
+    normal: Option<&[f32]>,
+    extras: &crate::extras::Extras,
+) -> Geometry {
     let mut g = line_geometry();
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
@@ -342,7 +529,11 @@ pub fn line_set(vertex_count: &[i32], coord: Option<&[f32]>, color: Option<Color
         let mut index: i64 = 0;
 
         // X3DLineGeometryNode: no texture coordinates.
-        crate::extras::Extras { tex: None, ..*extras }.init(&mut g);
+        crate::extras::Extras {
+            tex: None,
+            ..*extras
+        }
+        .init(&mut g);
 
         for &count in vertex_count {
             let count = count as i64;

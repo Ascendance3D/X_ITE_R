@@ -17,12 +17,15 @@ fn quat(r: &[f64]) -> [f64; 4] {
 }
 
 fn nums(v: &Value) -> Vec<f64> {
-    v.as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default()
 }
 
 fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &mut Vec<String>) {
     let dir = root.join(format!("oracle/rea-batch09-sai-baseline/{name}"));
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!("rea-batch09-sai-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
@@ -57,12 +60,19 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
 
     if !bad.is_empty() {
         bad.sort_by_key(|k| k.parse::<u32>().unwrap_or(0));
-        fail(format!("scene text differs at {} dumped frames, first {}", bad.len(), bad[0]));
+        fail(format!(
+            "scene text differs at {} dumped frames, first {}",
+            bad.len(),
+            bad[0]
+        ));
     }
 
     // `"console": true` in the script: every console message, in order.
     if js.get("console") != rs.get("console") {
-        fail(format!("console differs: {} / {}", js["console"], rs["console"]));
+        fail(format!(
+            "console differs: {} / {}",
+            js["console"], rs["console"]
+        ));
     }
 
     if js.get("log") != rs.get("log") {
@@ -74,12 +84,33 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
             fail(format!("pose at frame {k} missing"));
             continue;
         };
-        let d = |key: &str| nums(&a[key]).iter().zip(nums(&b[key])).map(|(p, q)| (p - q).abs()).fold(0.0, f64::max);
-        let (qa, qb) = (quat(&nums(&a["orientation"])), quat(&nums(&b["orientation"])));
-        let angle = 2.0 * qa.iter().zip(qb).map(|(p, q)| p * q).sum::<f64>().abs().min(1.0).acos();
+        let d = |key: &str| {
+            nums(&a[key])
+                .iter()
+                .zip(nums(&b[key]))
+                .map(|(p, q)| (p - q).abs())
+                .fold(0.0, f64::max)
+        };
+        let (qa, qb) = (
+            quat(&nums(&a["orientation"])),
+            quat(&nums(&b["orientation"])),
+        );
+        let angle = 2.0
+            * qa.iter()
+                .zip(qb)
+                .map(|(p, q)| p * q)
+                .sum::<f64>()
+                .abs()
+                .min(1.0)
+                .acos();
         let viewpoint = a["viewpoint"] == b["viewpoint"] || b["viewpoint"] == "<default>";
 
-        if d("position") > 1e-4 || d("centerOfRotation") > 1e-4 || angle > 1e-4 || a["viewer"] != b["viewer"] || !viewpoint {
+        if d("position") > 1e-4
+            || d("centerOfRotation") > 1e-4
+            || angle > 1e-4
+            || a["viewer"] != b["viewer"]
+            || !viewpoint
+        {
             fail(format!("pose frame {k} differs"));
         }
     }
@@ -89,8 +120,12 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
 
 #[test]
 fn rea_batch09_sai_cases_match_x_ite() {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch09-sai-baseline/cases.txt")).unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let cases =
+        std::fs::read_to_string(root.join("oracle/rea-batch09-sai-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let mut failures = vec![];
     let mut checked = 0;
@@ -107,5 +142,10 @@ fn rea_batch09_sai_cases_match_x_ite() {
     }
 
     eprintln!("{checked} cases checked");
-    assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} failures:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

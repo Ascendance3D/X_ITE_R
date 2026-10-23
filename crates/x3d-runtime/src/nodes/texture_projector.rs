@@ -23,10 +23,19 @@ pub enum Decoded {
 /// The transparency is X_ITE's: each tile is read into the start of a buffer of all `depth` tiles
 /// that is otherwise 0, and isImageTransparent tests the whole buffer, so more than one slice is
 /// always transparent.
-pub fn atlas_tiles(rgba: &[u8], w: u32, h: u32, over_x: i32, over_y: i32, number_of_slices: i32) -> (u32, u32, u32, Vec<u8>, bool) {
+pub fn atlas_tiles(
+    rgba: &[u8],
+    w: u32,
+    h: u32,
+    over_x: i32,
+    over_y: i32,
+    number_of_slices: i32,
+) -> (u32, u32, u32, Vec<u8>, bool) {
     let width = if over_x > 0 { w / over_x as u32 } else { 0 };
     let height = if over_y > 0 { h / over_y as u32 } else { 0 };
-    let depth = number_of_slices.min(over_x.max(0).saturating_mul(over_y.max(0))).max(0) as u32;
+    let depth = number_of_slices
+        .min(over_x.max(0).saturating_mul(over_y.max(0)))
+        .max(0) as u32;
     let mut tiles = Vec::with_capacity((width * height * depth * 4) as usize);
 
     if width == 0 || height == 0 || depth == 0 {
@@ -38,7 +47,10 @@ pub fn atlas_tiles(rgba: &[u8], w: u32, h: u32, over_x: i32, over_y: i32, number
             if tiles.len() == (width * height * depth * 4) as usize {
                 break 'tiles;
             }
-            let (sx, sy) = ((x as u64 * w as u64 / over_x as u64) as u32, (y as u64 * h as u64 / over_y as u64) as u32);
+            let (sx, sy) = (
+                (x as u64 * w as u64 / over_x as u64) as u32,
+                (y as u64 * h as u64 / over_y as u64) as u32,
+            );
             for row in 0..height {
                 let start = (((sy + row) * w + sx) * 4) as usize;
                 tiles.extend_from_slice(&rgba[start..start + (width * 4) as usize]);
@@ -53,13 +65,18 @@ pub fn atlas_tiles(rgba: &[u8], w: u32, h: u32, over_x: i32, over_y: i32, number
 
 /// X3DCast (X3DConstants .X3DTexture2DNode, node): the concrete node types.
 pub fn is_texture_2d(name: &str) -> bool {
-    matches!(name, "ImageTexture" | "MovieTexture" | "PixelTexture" | "RenderedTexture")
+    matches!(
+        name,
+        "ImageTexture" | "MovieTexture" | "PixelTexture" | "RenderedTexture"
+    )
 }
 
 impl Runtime {
     /// X3DTexture2DNode.getWidth / getHeight: (1, 1) until texture data is set (clearTexture).
     pub fn texture_2d_size(&self, node: NodeId) -> (u32, u32) {
-        self.nrt(node).and_then(|n| n.texture_size).unwrap_or((1, 1))
+        self.nrt(node)
+            .and_then(|n| n.texture_size)
+            .unwrap_or((1, 1))
     }
 
     /// X3DTexture2DNode.setTextureData / setTexture with setWidth and setHeight: the new size,
@@ -72,7 +89,11 @@ impl Runtime {
     /// PixelTexture.set_image__: the image size, or clearTexture for an empty or invalid image.
     pub(crate) fn pixel_texture_set_image(&mut self, node: NodeId) {
         let (width, height) = match self.pre_value(node, "image") {
-            Some(FieldValue::SFImage(i)) if i.width > 0 && i.height > 0 && i.comp > 0 && i.comp <= 4 => (i.width as u32, i.height as u32),
+            Some(FieldValue::SFImage(i))
+                if i.width > 0 && i.height > 0 && i.comp > 0 && i.comp <= 4 =>
+            {
+                (i.width as u32, i.height as u32)
+            }
             _ => (1, 1),
         };
 
@@ -88,22 +109,48 @@ impl Runtime {
     pub(crate) fn image_texture_set_image(&mut self, node: NodeId, data: &[u8]) {
         let reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format();
 
-        if let Ok((width, height)) = reader.map_err(image::ImageError::IoError).and_then(|r| r.into_dimensions()) {
+        if let Ok((width, height)) = reader
+            .map_err(image::ImageError::IoError)
+            .and_then(|r| r.into_dimensions())
+        {
             self.decoded_images.retain(|(n, ..)| *n != node);
-            self.decoded_images.push((node, Decoded::Image(width, height)));
+            self.decoded_images
+                .push((node, Decoded::Image(width, height)));
         }
     }
 
     /// ImageTextureAtlas.loadData: an image that decodes is cut into its tiles (for the outputs
     /// and the transparency); data that does not decode fails the candidate (`loadImage` rejects).
-    pub(crate) fn image_texture_atlas_set_image(&mut self, node: NodeId, data: &[u8]) -> Result<(), String> {
-        let image = image::load_from_memory(data).map_err(|e| format!("Error: {e}"))?.to_rgba8();
+    pub(crate) fn image_texture_atlas_set_image(
+        &mut self,
+        node: NodeId,
+        data: &[u8],
+    ) -> Result<(), String> {
+        let image = image::load_from_memory(data)
+            .map_err(|e| format!("Error: {e}"))?
+            .to_rgba8();
         let (w, h) = image.dimensions();
-        let (over_x, over_y, slices) = (self.get_f64(node, "slicesOverX") as i32, self.get_f64(node, "slicesOverY") as i32, self.get_f64(node, "numberOfSlices") as i32);
-        let (width, height, depth, _, transparent) = atlas_tiles(image.as_raw(), w, h, over_x, over_y, slices);
+        let (over_x, over_y, slices) = (
+            self.get_f64(node, "slicesOverX") as i32,
+            self.get_f64(node, "slicesOverY") as i32,
+            self.get_f64(node, "numberOfSlices") as i32,
+        );
+        let (width, height, depth, _, transparent) =
+            atlas_tiles(image.as_raw(), w, h, over_x, over_y, slices);
 
         self.decoded_images.retain(|(n, ..)| *n != node);
-        self.decoded_images.push((node, Decoded::Atlas([over_x, over_y, slices], [width as i32, height as i32, depth as i32, if transparent { 4 } else { 3 }])));
+        self.decoded_images.push((
+            node,
+            Decoded::Atlas(
+                [over_x, over_y, slices],
+                [
+                    width as i32,
+                    height as i32,
+                    depth as i32,
+                    if transparent { 4 } else { 3 },
+                ],
+            ),
+        ));
         Ok(())
     }
 
@@ -121,7 +168,10 @@ impl Runtime {
 
     /// ImageTextureAtlas.updateOutputs.
     pub(crate) fn image_texture_atlas_outputs(&mut self, node: NodeId, outputs: [i32; 4]) {
-        for (name, value) in ["width", "height", "depth", "colorDepth"].into_iter().zip(outputs) {
+        for (name, value) in ["width", "height", "depth", "colorDepth"]
+            .into_iter()
+            .zip(outputs)
+        {
             if let Some(k) = self.pre(node, name) {
                 self.set_value(k, FieldValue::SFInt32(value));
             }
@@ -161,7 +211,9 @@ impl Runtime {
         }
 
         let texture = match self.pre_value(node, "texture") {
-            Some(FieldValue::SFNode(Some(t))) => self.inner_node(*t).filter(|&t| self.builtin_name(t).is_some_and(is_texture_2d)),
+            Some(FieldValue::SFNode(Some(t))) => self
+                .inner_node(*t)
+                .filter(|&t| self.builtin_name(t).is_some_and(is_texture_2d)),
             _ => None,
         };
 
@@ -196,12 +248,17 @@ impl Runtime {
     /// a RenderedTexture always.
     pub fn texture_2d_complete(&self, node: NodeId) -> bool {
         match self.builtin_name(node) {
-            Some("ImageTexture") => self.url_load_state(node) == nodes::LoadState::Complete && !self.decoded_images.iter().any(|(n, _)| *n == node),
+            Some("ImageTexture") => {
+                self.url_load_state(node) == nodes::LoadState::Complete
+                    && !self.decoded_images.iter().any(|(n, _)| *n == node)
+            }
             Some("MovieTexture") => self.url_load_state(node) == nodes::LoadState::Complete,
             Some("PixelTexture") => {
                 self.nrt(node).is_some_and(|n| n.initialized)
                     && match self.pre_value(node, "image") {
-                        Some(FieldValue::SFImage(i)) => i.width >= 0 && i.height >= 0 && (0..=4).contains(&i.comp),
+                        Some(FieldValue::SFImage(i)) => {
+                            i.width >= 0 && i.height >= 0 && (0..=4).contains(&i.comp)
+                        }
                         _ => true,
                     }
             }
@@ -237,7 +294,13 @@ impl Runtime {
         }
 
         let slices: Vec<NodeId> = match self.pre_value(node, "texture") {
-            Some(FieldValue::MFNode(v)) => v.clone().into_iter().flatten().filter_map(|t| self.inner_node(t)).filter(|&t| self.builtin_name(t).is_some_and(is_texture_2d)).collect(),
+            Some(FieldValue::MFNode(v)) => v
+                .clone()
+                .into_iter()
+                .flatten()
+                .filter_map(|t| self.inner_node(t))
+                .filter(|&t| self.builtin_name(t).is_some_and(is_texture_2d))
+                .collect(),
             _ => vec![],
         };
 
@@ -289,7 +352,10 @@ impl Runtime {
 
     /// set_dimensions__: a framebuffer of width × height (setTextureData) or none (clearTexture).
     pub(crate) fn rendered_texture_set_dimensions(&mut self, node: NodeId) {
-        let (width, height) = (self.get_f64(node, "width") as i32, self.get_f64(node, "height") as i32);
+        let (width, height) = (
+            self.get_f64(node, "width") as i32,
+            self.get_f64(node, "height") as i32,
+        );
 
         if width > 0 && height > 0 {
             self.set_texture_2d_size(node, width as u32, height as u32);
@@ -314,7 +380,14 @@ impl Runtime {
             return false;
         }
 
-        let nodes::State::Rendered { check_update, last_update_ms, first_ms, leaks, display_leaks } = &mut self.nrt_mut(node).state else {
+        let nodes::State::Rendered {
+            check_update,
+            last_update_ms,
+            first_ms,
+            leaks,
+            display_leaks,
+        } = &mut self.nrt_mut(node).state
+        else {
             return false;
         };
 
@@ -353,7 +426,20 @@ impl Runtime {
             .into_iter()
             .flatten()
             .filter_map(|c| self.inner_node(c))
-            .filter(|&c| !matches!(self.builtin_name(c), Some("Fog" | "NavigationInfo" | "Background" | "TextureBackground" | "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint")))
+            .filter(|&c| {
+                !matches!(
+                    self.builtin_name(c),
+                    Some(
+                        "Fog"
+                            | "NavigationInfo"
+                            | "Background"
+                            | "TextureBackground"
+                            | "Viewpoint"
+                            | "OrthoViewpoint"
+                            | "GeoViewpoint"
+                    )
+                )
+            })
             .count()
     }
 
@@ -380,11 +466,20 @@ impl Runtime {
         self.rendered_now.clear();
 
         for node in 0..self.scene.nodes.len() as NodeId {
-            if self.builtin_name(node) != Some("RenderedTexture") || self.get_f64(node, "width") <= 0.0 || self.get_f64(node, "height") <= 0.0 {
+            if self.builtin_name(node) != Some("RenderedTexture")
+                || self.get_f64(node, "width") <= 0.0
+                || self.get_f64(node, "height") <= 0.0
+            {
                 continue;
             }
 
-            if let Some(nodes::State::Rendered { check_update, last_update_ms, first_ms, .. }) = self.nrt.get_mut(node as usize).map(|n| &mut n.state) {
+            if let Some(nodes::State::Rendered {
+                check_update,
+                last_update_ms,
+                first_ms,
+                ..
+            }) = self.nrt.get_mut(node as usize).map(|n| &mut n.state)
+            {
                 *check_update = true;
                 *last_update_ms = now_ms;
                 *first_ms = Some(now_ms - 1.0);

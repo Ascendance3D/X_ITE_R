@@ -56,7 +56,12 @@ pub struct UnionFind {
 
 impl UnionFind {
     pub fn reset(&mut self, n: usize) {
-        self.elements = (0..n).map(|i| Element { id: i as i32, sz: 1 }).collect();
+        self.elements = (0..n)
+            .map(|i| Element {
+                id: i as i32,
+                sz: 1,
+            })
+            .collect();
     }
 
     pub fn find(&mut self, mut x: i32) -> i32 {

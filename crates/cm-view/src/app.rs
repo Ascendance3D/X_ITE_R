@@ -9,7 +9,7 @@ use std::rc::Rc;
 
 use cm_modes::Spec;
 
-use crate::editor::{mode_for_path, Editor, EditorOptions};
+use crate::editor::{Editor, EditorOptions, mode_for_path};
 use crate::fileio::{self, FileInfo};
 use crate::keymap::KeyEvent;
 use crate::measure::Metrics;
@@ -38,15 +38,37 @@ impl Clipboard for MemClipboard {
 #[derive(Clone, Debug, PartialEq)]
 pub enum Input {
     /// A key press; `text` is what the key types, if anything.
-    Key { key: KeyEvent, text: Option<String> },
+    Key {
+        key: KeyEvent,
+        text: Option<String>,
+    },
     /// Committed text without a key (IME).
     Text(String),
-    MouseDown { x: f64, y: f64, button: u8, mods: KeyEvent, time: f64 },
-    MouseMove { x: f64, y: f64, mods: KeyEvent },
-    MouseUp { x: f64, y: f64 },
+    MouseDown {
+        x: f64,
+        y: f64,
+        button: u8,
+        mods: KeyEvent,
+        time: f64,
+    },
+    MouseMove {
+        x: f64,
+        y: f64,
+        mods: KeyEvent,
+    },
+    MouseUp {
+        x: f64,
+        y: f64,
+    },
     /// Scroll by pixels.
-    Wheel { dx: f64, dy: f64 },
-    Resize { width: f64, height: f64 },
+    Wheel {
+        dx: f64,
+        dy: f64,
+    },
+    Resize {
+        width: f64,
+        height: f64,
+    },
     /// Run a named command.
     Command(String),
     Save,
@@ -73,7 +95,13 @@ pub struct App {
 
 impl App {
     /// An editor for `text` with the file info `file` (or a scratch buffer).
-    pub fn new(text: &str, file: Option<FileInfo>, metrics: Metrics, opts: &AppOptions, clipboard: Box<dyn Clipboard>) -> App {
+    pub fn new(
+        text: &str,
+        file: Option<FileInfo>,
+        metrics: Metrics,
+        opts: &AppOptions,
+        clipboard: Box<dyn Clipboard>,
+    ) -> App {
         let mode = match (&opts.mode, &file) {
             (Some(m), _) => Spec::from(m.as_str()),
             (None, Some(f)) => mode_for_path(&f.path.to_string_lossy()),
@@ -103,15 +131,35 @@ impl App {
             Some(f) if f.mixed_newlines => "mixed line endings: saving writes \\n".to_string(),
             _ => String::new(),
         };
-        App { editor, file, clipboard, status, save_requested }
+        App {
+            editor,
+            file,
+            clipboard,
+            status,
+            save_requested,
+        }
     }
 
     /// Open a file (a missing file opens empty and is created on save).
-    pub fn open(path: &Path, metrics: Metrics, opts: &AppOptions, clipboard: Box<dyn Clipboard>) -> std::io::Result<App> {
+    pub fn open(
+        path: &Path,
+        metrics: Metrics,
+        opts: &AppOptions,
+        clipboard: Box<dyn Clipboard>,
+    ) -> std::io::Result<App> {
         let (text, info) = if path.exists() {
             fileio::load(path)?
         } else {
-            (String::new(), FileInfo { path: path.to_path_buf(), gzip: false, encoding: fileio::Encoding::Utf8, line_separator: None, mixed_newlines: false })
+            (
+                String::new(),
+                FileInfo {
+                    path: path.to_path_buf(),
+                    gzip: false,
+                    encoding: fileio::Encoding::Utf8,
+                    line_separator: None,
+                    mixed_newlines: false,
+                },
+            )
         };
         Ok(App::new(&text, Some(info), metrics, opts, clipboard))
     }
@@ -122,15 +170,29 @@ impl App {
 
     /// Window title: file name, a dot when modified, `[read-only]`.
     pub fn title(&self) -> String {
-        let name = self.path().and_then(|p| p.file_name()).map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| "untitled".into());
-        let dirty = if self.editor.doc.is_clean(None) { "" } else { " \u{2022}" };
-        let ro = if self.editor.options.read_only { " [read-only]" } else { "" };
+        let name = self
+            .path()
+            .and_then(|p| p.file_name())
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_else(|| "untitled".into());
+        let dirty = if self.editor.doc.is_clean(None) {
+            ""
+        } else {
+            " \u{2022}"
+        };
+        let ro = if self.editor.options.read_only {
+            " [read-only]"
+        } else {
+            ""
+        };
         format!("{name}{dirty}{ro} \u{2014} cm-edit")
     }
 
     /// Save to the file the buffer came from.
     pub fn save(&mut self) -> std::io::Result<()> {
-        let Some(info) = self.file.clone() else { return Err(std::io::Error::other("no file name")) };
+        let Some(info) = self.file.clone() else {
+            return Err(std::io::Error::other("no file name"));
+        };
         if self.editor.options.read_only {
             return Err(std::io::Error::other("read-only"));
         }
@@ -151,7 +213,20 @@ impl App {
 
     fn mouse_event(&self, x: f64, y: f64, button: u8, mods: &KeyEvent, time: f64) -> MouseEvent {
         let (dx, dy) = self.editor.div_from_window(x, y);
-        MouseEvent { x: if x < self.editor.gutter_width { -1.0 } else { dx }, y: dy, button, shift: mods.shift, ctrl: mods.ctrl, alt: mods.alt, meta: mods.meta, time }
+        MouseEvent {
+            x: if x < self.editor.gutter_width {
+                -1.0
+            } else {
+                dx
+            },
+            y: dy,
+            button,
+            shift: mods.shift,
+            ctrl: mods.ctrl,
+            alt: mods.alt,
+            meta: mods.meta,
+            time,
+        }
     }
 
     /// Handle one input event. Returns whether the view needs a redraw.
@@ -160,7 +235,11 @@ impl App {
             Input::Key { key, text } => {
                 let handled = self.editor.key_down(&key);
                 if !handled {
-                    let primary = if self.editor.options.mac { key.meta } else { key.ctrl };
+                    let primary = if self.editor.options.mac {
+                        key.meta
+                    } else {
+                        key.ctrl
+                    };
                     let k = key.key.as_str();
                     if (primary && k == "C") || (key.ctrl && k == "Insert") {
                         if let Some(t) = self.editor.copy() {
@@ -187,7 +266,13 @@ impl App {
                 self.editor.type_text(&t);
                 true
             }
-            Input::MouseDown { x, y, button, mods, time } => {
+            Input::MouseDown {
+                x,
+                y,
+                button,
+                mods,
+                time,
+            } => {
                 let e = self.mouse_event(x, y, button, &mods, time);
                 if e.x < 0.0 {
                     return false;
@@ -204,20 +289,31 @@ impl App {
                 // Dragging past the top/bottom scrolls (`extend` in leftButtonSelect).
                 if y < 0.0 {
                     let st = self.editor.display.scroll_top;
-                    self.editor.scroll_to(None, Some(st - self.editor.metrics.text_height));
+                    self.editor
+                        .scroll_to(None, Some(st - self.editor.metrics.text_height));
                 } else if y > self.editor.display.height {
                     let st = self.editor.display.scroll_top;
-                    self.editor.scroll_to(None, Some(st + self.editor.metrics.text_height));
+                    self.editor
+                        .scroll_to(None, Some(st + self.editor.metrics.text_height));
                 }
                 true
             }
             Input::MouseUp { x, y } => {
-                let e = self.mouse_event(x.max(self.editor.gutter_width), y, 1, &KeyEvent::default(), 0.0);
+                let e = self.mouse_event(
+                    x.max(self.editor.gutter_width),
+                    y,
+                    1,
+                    &KeyEvent::default(),
+                    0.0,
+                );
                 self.editor.mouse_up(Some(&e));
                 true
             }
             Input::Wheel { dx, dy } => {
-                let (st, sl) = (self.editor.display.scroll_top, self.editor.display.scroll_left);
+                let (st, sl) = (
+                    self.editor.display.scroll_top,
+                    self.editor.display.scroll_left,
+                );
                 self.editor.scroll_to(Some(sl + dx), Some(st + dy));
                 true
             }
@@ -268,7 +364,10 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
         }
         let (cmd, rest) = line.split_once(' ').unwrap_or((line, ""));
         let nums = |k: usize| -> Result<Vec<f64>, String> {
-            let v: Vec<f64> = rest.split_whitespace().map(|s| s.parse::<f64>().map_err(|e| format!("line {}: {e}", n + 1))).collect::<Result<_, _>>()?;
+            let v: Vec<f64> = rest
+                .split_whitespace()
+                .map(|s| s.parse::<f64>().map_err(|e| format!("line {}: {e}", n + 1)))
+                .collect::<Result<_, _>>()?;
             if v.len() != k {
                 return Err(format!("line {}: expected {k} numbers", n + 1));
             }
@@ -281,7 +380,11 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
                 let k = KeyEvent::parse(rest.trim());
                 let text = if !k.ctrl && !k.alt && !k.meta && k.key.chars().count() == 1 {
                     let c = k.key.chars().next().unwrap();
-                    Some(if k.shift { c.to_string() } else { c.to_ascii_lowercase().to_string() })
+                    Some(if k.shift {
+                        c.to_string()
+                    } else {
+                        c.to_ascii_lowercase().to_string()
+                    })
                 } else if k.key == "Space" {
                     Some(" ".into())
                 } else {
@@ -292,18 +395,53 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
             "type" => {
                 // One key event per character, as typing does.
                 let unescaped = rest.replace("\\n", "\n").replace("\\t", "\t");
-                Step::Input(unescaped.chars().map(|c| match c {
-                    '\n' => Input::Key { key: KeyEvent::new("Enter"), text: Some("\r".into()) },
-                    '\t' => Input::Key { key: KeyEvent::new("Tab"), text: Some("\t".into()) },
-                    c => Input::Key { key: KeyEvent { key: String::new(), ..Default::default() }, text: Some(c.to_string()) },
-                }).collect())
+                Step::Input(
+                    unescaped
+                        .chars()
+                        .map(|c| match c {
+                            '\n' => Input::Key {
+                                key: KeyEvent::new("Enter"),
+                                text: Some("\r".into()),
+                            },
+                            '\t' => Input::Key {
+                                key: KeyEvent::new("Tab"),
+                                text: Some("\t".into()),
+                            },
+                            c => Input::Key {
+                                key: KeyEvent {
+                                    key: String::new(),
+                                    ..Default::default()
+                                },
+                                text: Some(c.to_string()),
+                            },
+                        })
+                        .collect(),
+                )
             }
             "click" | "shiftclick" | "dblclick" => {
                 let v = nums(2)?;
-                let mods = KeyEvent { shift: cmd == "shiftclick", ..Default::default() };
-                let mut evs = vec![Input::MouseDown { x: v[0], y: v[1], button: 1, mods: mods.clone(), time: t }, Input::MouseUp { x: v[0], y: v[1] }];
+                let mods = KeyEvent {
+                    shift: cmd == "shiftclick",
+                    ..Default::default()
+                };
+                let mut evs = vec![
+                    Input::MouseDown {
+                        x: v[0],
+                        y: v[1],
+                        button: 1,
+                        mods: mods.clone(),
+                        time: t,
+                    },
+                    Input::MouseUp { x: v[0], y: v[1] },
+                ];
                 if cmd == "dblclick" {
-                    evs.push(Input::MouseDown { x: v[0], y: v[1], button: 1, mods, time: t + 100.0 });
+                    evs.push(Input::MouseDown {
+                        x: v[0],
+                        y: v[1],
+                        button: 1,
+                        mods,
+                        time: t + 100.0,
+                    });
                     evs.push(Input::MouseUp { x: v[0], y: v[1] });
                 }
                 Step::Input(evs)
@@ -311,9 +449,23 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
             "drag" => {
                 let v = nums(4)?;
                 Step::Input(vec![
-                    Input::MouseDown { x: v[0], y: v[1], button: 1, mods: none.clone(), time: t },
-                    Input::MouseMove { x: (v[0] + v[2]) / 2.0, y: (v[1] + v[3]) / 2.0, mods: none.clone() },
-                    Input::MouseMove { x: v[2], y: v[3], mods: none },
+                    Input::MouseDown {
+                        x: v[0],
+                        y: v[1],
+                        button: 1,
+                        mods: none.clone(),
+                        time: t,
+                    },
+                    Input::MouseMove {
+                        x: (v[0] + v[2]) / 2.0,
+                        y: (v[1] + v[3]) / 2.0,
+                        mods: none.clone(),
+                    },
+                    Input::MouseMove {
+                        x: v[2],
+                        y: v[3],
+                        mods: none,
+                    },
                     Input::MouseUp { x: v[2], y: v[3] },
                 ])
             }
@@ -324,7 +476,11 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
                 Step::Input(vec![Input::Wheel { dx: 0.0, dy: v[0] }])
             }
             "screenshot" => Step::Screenshot(PathBuf::from(rest.trim())),
-            "pause" => Step::Pause(rest.trim().parse().map_err(|e| format!("line {}: {e}", n + 1))?),
+            "pause" => Step::Pause(
+                rest.trim()
+                    .parse()
+                    .map_err(|e| format!("line {}: {e}", n + 1))?,
+            ),
             "quit" => Step::Quit,
             _ => return Err(format!("line {}: unknown step {cmd:?}", n + 1)),
         };
@@ -332,4 +488,3 @@ pub fn parse_script(src: &str) -> Result<Vec<Step>, String> {
     }
     Ok(out)
 }
-

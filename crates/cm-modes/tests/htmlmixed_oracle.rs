@@ -6,7 +6,7 @@ mod common;
 
 use std::rc::Rc;
 
-use cm_modes::htmlmixed::{contains_ci, obj, HtmlTags, ScriptType, TagRule};
+use cm_modes::htmlmixed::{HtmlTags, ScriptType, TagRule, contains_ci, obj};
 use cm_modes::{ModeSpec, Spec};
 
 /// The `@id` specs of `oracle/cm5-modes-tokens.mjs` (`SPECIAL`), with their regexps
@@ -17,10 +17,21 @@ fn special(id: &str) -> Spec {
         //               {matches: /(text|application)\/(x-)?vb(a|script)/i, mode: "vbscript"}]
         "@htmlmixed-scripttypes" => {
             let st = vec![
-                ScriptType { matches: Rc::new(|s: &[u16]| contains_ci(s, "/x-handlebars-template") || contains_ci(s, "/x-mustache")), mode: Spec::Null },
                 ScriptType {
                     matches: Rc::new(|s: &[u16]| {
-                        ["text/", "application/"].iter().any(|a| ["", "x-"].iter().any(|x| ["vba", "vbscript"].iter().any(|v| contains_ci(s, &format!("{a}{x}{v}")))))
+                        contains_ci(s, "/x-handlebars-template") || contains_ci(s, "/x-mustache")
+                    }),
+                    mode: Spec::Null,
+                },
+                ScriptType {
+                    matches: Rc::new(|s: &[u16]| {
+                        ["text/", "application/"].iter().any(|a| {
+                            ["", "x-"].iter().any(|x| {
+                                ["vba", "vbscript"]
+                                    .iter()
+                                    .any(|v| contains_ci(s, &format!("{a}{x}{v}")))
+                            })
+                        })
                     }),
                     mode: Spec::from("vbscript"),
                 },
@@ -36,13 +47,27 @@ fn special(id: &str) -> Spec {
                     vec![
                         TagRule {
                             attr: Some("type".into()),
-                            matches: Some(Rc::new(|s: &[u16]| s == cm_core::text::to_u16("text/scss") || s == cm_core::text::to_u16("text/x-scss"))),
+                            matches: Some(Rc::new(|s: &[u16]| {
+                                s == cm_core::text::to_u16("text/scss")
+                                    || s == cm_core::text::to_u16("text/x-scss")
+                            })),
                             mode: Spec::from("text/x-scss"),
                         },
-                        TagRule { attr: None, matches: None, mode: Spec::from("css") },
+                        TagRule {
+                            attr: None,
+                            matches: None,
+                            mode: Spec::from("css"),
+                        },
                     ],
                 ),
-                ("custom".into(), vec![TagRule { attr: None, matches: None, mode: Spec::from("text/x-toml") }]),
+                (
+                    "custom".into(),
+                    vec![TagRule {
+                        attr: None,
+                        matches: None,
+                        mode: Spec::from("text/x-toml"),
+                    }],
+                ),
             ];
             Spec::Obj(ModeSpec::named("htmlmixed").with("tags", obj(tags)))
         }

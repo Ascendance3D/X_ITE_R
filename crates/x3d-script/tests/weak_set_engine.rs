@@ -63,5 +63,8 @@ fn the_ports_strong_set_frees_unreachable_members() {
         sizes.push(rt.memory_usage().malloc_size);
     }
 
-    assert!(sizes.windows(2).all(|w| w[0] == w[1]), "memory grows: {sizes:?}");
+    assert!(
+        sizes.windows(2).all(|w| w[0] == w[1]),
+        "memory grows: {sizes:?}"
+    );
 }

@@ -49,7 +49,9 @@
 //!   provider) and does not log again.
 
 use crate::nodes::State;
-use crate::particles::{self, EmitterKind, EmitterParams, GeometryTexture, GeometryType, Pass, Ramp, Ramps, Sim};
+use crate::particles::{
+    self, EmitterKind, EmitterParams, GeometryTexture, GeometryType, Pass, Ramp, Ramps, Sim,
+};
 use crate::*;
 use std::collections::HashSet;
 use std::sync::OnceLock;
@@ -74,7 +76,10 @@ pub enum GeometryRequest {
     Node(NodeId),
     /// The private IndexedFaceSet of a VolumeEmitter: `coord` and `coordIndex`, `creaseAngle` PI,
     /// `convex` FALSE, everything else default.
-    Volume { coord: Option<NodeId>, coord_index: Vec<i32> },
+    Volume {
+        coord: Option<NodeId>,
+        coord_index: Vec<i32>,
+    },
 }
 
 /// The triangulated geometry as X_ITE builds it.
@@ -134,7 +139,10 @@ pub struct PsState {
 
 impl std::fmt::Debug for PsState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("PsState").field("max", &self.sim.max_particles).field("num", &self.sim.num_particles).finish()
+        f.debug_struct("PsState")
+            .field("max", &self.sim.max_particles)
+            .field("num", &self.sim.num_particles)
+            .finish()
     }
 }
 
@@ -164,18 +172,31 @@ impl Runtime {
     }
 
     /// What of this ParticleSystem needs the geometry provider, if anything is set.
-    fn ps_needs_provider(&self, ps: NodeId, emitter: Option<NodeId>, kind: EmitterKind) -> Option<&'static str> {
-        let set = |n: NodeId, field: &str| matches!(self.pre_value(n, field), Some(FieldValue::SFNode(Some(_))));
+    fn ps_needs_provider(
+        &self,
+        ps: NodeId,
+        emitter: Option<NodeId>,
+        kind: EmitterKind,
+    ) -> Option<&'static str> {
+        let set = |n: NodeId, field: &str| {
+            matches!(self.pre_value(n, field), Some(FieldValue::SFNode(Some(_))))
+        };
 
         match (emitter, kind) {
-            (Some(e), EmitterKind::Surface) if set(e, "surface") => return Some("its SurfaceEmitter surface"),
+            (Some(e), EmitterKind::Surface) if set(e, "surface") => {
+                return Some("its SurfaceEmitter surface");
+            }
             (Some(e), EmitterKind::Volume) if set(e, "coord") => return Some("its VolumeEmitter"),
             _ => {}
         }
 
         self.ps_physics_nodes(ps)
             .into_iter()
-            .any(|m| self.builtin_name(m) == Some("BoundedPhysicsModel") && matches!(self.pre_value(m, "enabled"), Some(FieldValue::SFBool(true))) && set(m, "geometry"))
+            .any(|m| {
+                self.builtin_name(m) == Some("BoundedPhysicsModel")
+                    && matches!(self.pre_value(m, "enabled"), Some(FieldValue::SFBool(true)))
+                    && set(m, "geometry")
+            })
             .then_some("its BoundedPhysicsModel")
     }
 
@@ -203,7 +224,10 @@ impl Runtime {
 
     /// The particle records of a ParticleSystem, for tools that put a reference buffer in place (x3d-particles-drive
     /// `pickProbes`: X_ITE's records under the pointing pass, then the run's own back).
-    pub fn particle_records_mut(&mut self, node: NodeId) -> Option<&mut [crate::particles::Particle]> {
+    pub fn particle_records_mut(
+        &mut self,
+        node: NodeId,
+    ) -> Option<&mut [crate::particles::Particle]> {
         match &mut self.nrt_mut(node).state {
             State::ParticleSystem(s) => Some(&mut s.sim.particles[..]),
             _ => None,
@@ -231,12 +255,25 @@ impl Runtime {
         };
         let floats = |n: NodeId, name: &str| -> Vec<f32> {
             match self.pre_value(n, name) {
-                Some(FieldValue::MFColor(v) | FieldValue::MFColorRGBA(v) | FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)) => v.clone(),
+                Some(
+                    FieldValue::MFColor(v)
+                    | FieldValue::MFColorRGBA(v)
+                    | FieldValue::MFVec2f(v)
+                    | FieldValue::MFVec3f(v)
+                    | FieldValue::MFVec4f(v),
+                ) => v.clone(),
                 _ => vec![],
             }
         };
         // The key texels, then the values.
-        let ramp = |keys: &[f32], values: Vec<[f32; 4]>| Ramp { count: keys.len(), texels: keys.iter().map(|k| [*k, 0.0, 0.0, 0.0]).chain(values).collect() };
+        let ramp = |keys: &[f32], values: Vec<[f32; 4]>| Ramp {
+            count: keys.len(),
+            texels: keys
+                .iter()
+                .map(|k| [*k, 0.0, 0.0, 0.0])
+                .chain(values)
+                .collect(),
+        };
 
         // set_color__: X3DCast (X3DColorNode, color) .addColors ([ ], numKeys) (the colors repeat), or white.
         let color_keys = keys("colorKey");
@@ -248,14 +285,21 @@ impl Runtime {
                     let v = floats(c, "color");
                     let length = v.len() / width;
 
-                    (0..n).map(|i| match length {
-                        0 => [1.0; 4],
-                        _ => {
-                            let k = (i % length) * width;
+                    (0..n)
+                        .map(|i| match length {
+                            0 => [1.0; 4],
+                            _ => {
+                                let k = (i % length) * width;
 
-                            [v[k], v[k + 1], v[k + 2], if width == 3 { 1.0 } else { v[k + 3] }]
-                        }
-                    }).collect()
+                                [
+                                    v[k],
+                                    v[k + 1],
+                                    v[k + 2],
+                                    if width == 3 { 1.0 } else { v[k + 3] },
+                                ]
+                            }
+                        })
+                        .collect()
                 }
                 _ => vec![[1.0; 4]; n],
             };
@@ -270,7 +314,10 @@ impl Runtime {
         let tex_coord_keys = keys("texCoordKey");
         let tex_coords = node("texCoord").and_then(|t| {
             let points = self.tex_coord_points(t)?;
-            let values: Vec<[f32; 4]> = points.into_iter().take(tex_coord_keys.len() * tex_coords_count).collect();
+            let values: Vec<[f32; 4]> = points
+                .into_iter()
+                .take(tex_coord_keys.len() * tex_coords_count)
+                .collect();
 
             Some(ramp(&tex_coord_keys, values))
         });
@@ -280,10 +327,12 @@ impl Runtime {
         let scale_keys = keys("scaleKey");
         let scales = (!scale_keys.is_empty()).then(|| {
             let n = scale_keys.len();
-            let values = match node("scale").filter(|c| self.builtin_name(*c) == Some("Coordinate")) {
+            let values = match node("scale").filter(|c| self.builtin_name(*c) == Some("Coordinate"))
+            {
                 Some(c) => {
                     let v = floats(c, "point");
-                    let mut points: Vec<[f32; 4]> = v.chunks_exact(3).map(|p| [p[0], p[1], p[2], 1.0]).collect();
+                    let mut points: Vec<[f32; 4]> =
+                        v.chunks_exact(3).map(|p| [p[0], p[1], p[2], 1.0]).collect();
                     let last = points.last().copied().unwrap_or([0.0, 0.0, 0.0, 1.0]);
 
                     while points.len() < n {
@@ -299,29 +348,69 @@ impl Runtime {
             ramp(&scale_keys, values)
         });
 
-        Ramps { colors, tex_coords, tex_coords_count, scales }
+        Ramps {
+            colors,
+            tex_coords,
+            tex_coords_count,
+            scales,
+        }
     }
 
     /// `addPoints ([ ])` of an X3DTextureCoordinateNode (a MultiTextureCoordinate's first one); `None` when
     /// it is not one.
     fn tex_coord_points(&self, t: NodeId) -> Option<Vec<[f32; 4]>> {
         let floats = |name: &str| match self.pre_value(t, name) {
-            Some(FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)) => v.clone(),
+            Some(FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)) => {
+                v.clone()
+            }
             _ => vec![],
         };
 
         match self.builtin_name(t)? {
-            "TextureCoordinate" => Some(floats("point").chunks_exact(2).map(|p| [p[0], p[1], 0.0, 1.0]).collect()),
-            "TextureCoordinate3D" => Some(floats("point").chunks_exact(3).map(|p| [p[0], p[1], p[2], 1.0]).collect()),
-            "TextureCoordinate4D" => Some(floats("point").chunks_exact(4).map(|p| [p[0], p[1], p[2], p[3]]).collect()),
+            "TextureCoordinate" => Some(
+                floats("point")
+                    .chunks_exact(2)
+                    .map(|p| [p[0], p[1], 0.0, 1.0])
+                    .collect(),
+            ),
+            "TextureCoordinate3D" => Some(
+                floats("point")
+                    .chunks_exact(3)
+                    .map(|p| [p[0], p[1], p[2], 1.0])
+                    .collect(),
+            ),
+            "TextureCoordinate4D" => Some(
+                floats("point")
+                    .chunks_exact(4)
+                    .map(|p| [p[0], p[1], p[2], p[3]])
+                    .collect(),
+            ),
             "TextureCoordinateGenerator" => Some(vec![]),
             "MultiTextureCoordinate" => {
                 let first = match self.pre_value(t, "texCoord") {
-                    Some(FieldValue::MFNode(v)) => v.iter().flatten().filter_map(|n| self.inner_node(*n)).find(|n| matches!(self.builtin_name(*n), Some("TextureCoordinate" | "TextureCoordinate3D" | "TextureCoordinate4D" | "TextureCoordinateGenerator"))),
+                    Some(FieldValue::MFNode(v)) => v
+                        .iter()
+                        .flatten()
+                        .filter_map(|n| self.inner_node(*n))
+                        .find(|n| {
+                            matches!(
+                                self.builtin_name(*n),
+                                Some(
+                                    "TextureCoordinate"
+                                        | "TextureCoordinate3D"
+                                        | "TextureCoordinate4D"
+                                        | "TextureCoordinateGenerator"
+                                )
+                            )
+                        }),
                     _ => None,
                 };
 
-                Some(first.and_then(|n| self.tex_coord_points(n)).unwrap_or_default())
+                Some(
+                    first
+                        .and_then(|n| self.tex_coord_points(n))
+                        .unwrap_or_default(),
+                )
             }
             _ => None,
         }
@@ -339,7 +428,11 @@ impl Runtime {
     /// an `animateParticles`; `None` for other emitters.
     pub fn particle_polyline_texture(&self, node: NodeId) -> Option<&GeometryTexture> {
         match &self.nrt(node)?.state {
-            State::ParticleSystem(s) => s.emitter_cache.as_ref().filter(|c| c.is_polyline).and_then(|c| c.texture.as_ref()),
+            State::ParticleSystem(s) => s
+                .emitter_cache
+                .as_ref()
+                .filter(|c| c.is_polyline)
+                .and_then(|c| c.texture.as_ref()),
             _ => None,
         }
     }
@@ -349,8 +442,14 @@ impl Runtime {
     pub fn particle_cache_texels(&self, node: NodeId) -> usize {
         match self.nrt(node).map(|n| &n.state) {
             Some(State::ParticleSystem(s)) => {
-                s.emitter_cache.as_ref().and_then(|c| c.texture.as_ref()).map_or(0, |t| t.array.len())
-                    + s.bounded_cache.as_ref().and_then(|c| c.texture.as_ref()).map_or(0, |t| t.array.len())
+                s.emitter_cache
+                    .as_ref()
+                    .and_then(|c| c.texture.as_ref())
+                    .map_or(0, |t| t.array.len())
+                    + s.bounded_cache
+                        .as_ref()
+                        .and_then(|c| c.texture.as_ref())
+                        .map_or(0, |t| t.array.len())
             }
             _ => 0,
         }
@@ -360,7 +459,9 @@ impl Runtime {
     /// buffers, `creationTime` `t0` (0 for an ExplosionEmitter, whose first burst is the first
     /// animate). The oracle harness does the same after loading the world.
     pub fn particle_system_reset(&mut self, node: NodeId, t0: f64) {
-        let explosive = self.ps_emitter_params(self.ps_emitter_node(node)).is_explosive();
+        let explosive = self
+            .ps_emitter_params(self.ps_emitter_node(node))
+            .is_explosive();
 
         if let Some(mut st) = self.ps_take(node) {
             st.sim.reset(if explosive { 0.0 } else { t0 });
@@ -474,21 +575,40 @@ impl Runtime {
 
     /// The surface / volume texture of the emitter (`SurfaceEmitter.set_geometry__`,
     /// `VolumeEmitter.set_geometry__`), rebuilt when the emitter or what it samples changed.
-    fn ps_emitter_geometry(&self, cache: &mut Option<EmitterCache>, emitter: Option<NodeId>, kind: EmitterKind) {
-        let Some(e) = emitter.filter(|_| matches!(kind, EmitterKind::Surface | EmitterKind::Volume | EmitterKind::Polyline)) else {
+    fn ps_emitter_geometry(
+        &self,
+        cache: &mut Option<EmitterCache>,
+        emitter: Option<NodeId>,
+        kind: EmitterKind,
+    ) {
+        let Some(e) = emitter.filter(|_| {
+            matches!(
+                kind,
+                EmitterKind::Surface | EmitterKind::Volume | EmitterKind::Polyline
+            )
+        }) else {
             *cache = None;
             return;
         };
         let signature = self.closure_signature(&[e]);
 
-        if cache.as_ref().is_some_and(|c| c.node == e && c.signature == signature) {
+        if cache
+            .as_ref()
+            .is_some_and(|c| c.node == e && c.signature == signature)
+        {
             return;
         }
 
         if kind == EmitterKind::Polyline {
             let texture = particles::polyline_texture(&self.polyline_vertices(e));
 
-            *cache = Some(EmitterCache { node: e, is_polyline: true, signature, texture: Some(texture), solid: true });
+            *cache = Some(EmitterCache {
+                node: e,
+                is_polyline: true,
+                signature,
+                texture: Some(texture),
+                solid: true,
+            });
             return;
         }
 
@@ -498,9 +618,14 @@ impl Runtime {
                 Some(FieldValue::SFNode(Some(n))) => self.inner_node(*n),
                 _ => None,
             };
-            let soup = surface.and_then(|g| provider.and_then(|p| p(self, &GeometryRequest::Node(g))));
+            let soup =
+                surface.and_then(|g| provider.and_then(|p| p(self, &GeometryRequest::Node(g))));
 
-            (soup.as_ref().map(|s| particles::surface_texture(&s.vertices, &s.normals)), soup.map_or(true, |s| s.solid))
+            (
+                soup.as_ref()
+                    .map(|s| particles::surface_texture(&s.vertices, &s.normals)),
+                soup.map_or(true, |s| s.solid),
+            )
         } else {
             let coord = match self.pre_value(e, "coord") {
                 Some(FieldValue::SFNode(Some(n))) => self.inner_node(*n),
@@ -510,12 +635,23 @@ impl Runtime {
                 Some(FieldValue::MFInt32(v)) => v.clone(),
                 _ => vec![],
             };
-            let soup = provider.and_then(|p| p(self, &GeometryRequest::Volume { coord, coord_index })).unwrap_or_default();
+            let soup = provider
+                .and_then(|p| p(self, &GeometryRequest::Volume { coord, coord_index }))
+                .unwrap_or_default();
 
-            (Some(particles::volume_texture(&soup.vertices, &soup.normals)), true)
+            (
+                Some(particles::volume_texture(&soup.vertices, &soup.normals)),
+                true,
+            )
         };
 
-        *cache = Some(EmitterCache { node: e, is_polyline: false, signature, texture, solid });
+        *cache = Some(EmitterCache {
+            node: e,
+            is_polyline: false,
+            signature,
+            texture,
+            solid,
+        });
     }
 
     /// `IndexedLineSet .getVertices ()` of the private IndexedLineSet of a PolylineEmitter: x y z 1 per
@@ -527,14 +663,19 @@ impl Runtime {
             Some(FieldValue::SFNode(Some(n))) => self.inner_node(*n),
             _ => None,
         };
-        let points: Vec<f64> = match coord.and_then(|c| match (self.builtin_name(c), self.pre_value(c, "point")) {
-            (Some("Coordinate"), Some(FieldValue::MFVec3f(v))) => Some(v.iter().map(|&x| f64::from(x)).collect()),
-            (Some("CoordinateDouble"), Some(FieldValue::MFVec3d(v))) => Some(v.clone()),
-            _ => None,
-        }) {
-            Some(p) if !p.is_empty() => p,
-            _ => return vec![],
-        };
+        let points: Vec<f64> =
+            match coord.and_then(
+                |c| match (self.builtin_name(c), self.pre_value(c, "point")) {
+                    (Some("Coordinate"), Some(FieldValue::MFVec3f(v))) => {
+                        Some(v.iter().map(|&x| f64::from(x)).collect())
+                    }
+                    (Some("CoordinateDouble"), Some(FieldValue::MFVec3d(v))) => Some(v.clone()),
+                    _ => None,
+                },
+            ) {
+                Some(p) if !p.is_empty() => p,
+                _ => return vec![],
+            };
         let size = points.len() / 3;
         let coord_index = match self.pre_value(emitter, "coordIndex") {
             Some(FieldValue::MFInt32(v)) => v.as_slice(),
@@ -557,7 +698,12 @@ impl Runtime {
 
         let mut vertices = vec![];
         let mut add = |index: i32| match usize::try_from(index).ok().filter(|&i| i < size) {
-            Some(i) => vertices.extend_from_slice(&[points[i * 3], points[i * 3 + 1], points[i * 3 + 2], 1.0]),
+            Some(i) => vertices.extend_from_slice(&[
+                points[i * 3],
+                points[i * 3 + 1],
+                points[i * 3 + 2],
+                1.0,
+            ]),
             None => vertices.extend_from_slice(&[0.0, 0.0, 0.0, 1.0]),
         };
 
@@ -574,7 +720,11 @@ impl Runtime {
     /// The inner nodes of the `physics` field, in order.
     fn ps_physics_nodes(&self, ps: NodeId) -> Vec<NodeId> {
         match self.pre_value(ps, "physics") {
-            Some(FieldValue::MFNode(v)) => v.iter().flatten().filter_map(|n| self.inner_node(*n)).collect(),
+            Some(FieldValue::MFNode(v)) => v
+                .iter()
+                .flatten()
+                .filter_map(|n| self.inner_node(*n))
+                .collect(),
             _ => vec![],
         }
     }
@@ -591,7 +741,12 @@ impl Runtime {
         let (mut vertices, mut normals) = (vec![], vec![]);
 
         for &model in physics {
-            if self.builtin_name(model) != Some("BoundedPhysicsModel") || !matches!(self.pre_value(model, "enabled"), Some(FieldValue::SFBool(true))) {
+            if self.builtin_name(model) != Some("BoundedPhysicsModel")
+                || !matches!(
+                    self.pre_value(model, "enabled"),
+                    Some(FieldValue::SFBool(true))
+                )
+            {
                 continue;
             }
 
@@ -599,16 +754,23 @@ impl Runtime {
                 Some(FieldValue::SFNode(Some(n))) => self.inner_node(*n),
                 _ => None,
             };
-            let Some(soup) = geometry.and_then(|g| provider.and_then(|p| p(self, &GeometryRequest::Node(g)))) else {
+            let Some(soup) =
+                geometry.and_then(|g| provider.and_then(|p| p(self, &GeometryRequest::Node(g))))
+            else {
                 continue;
             };
             let damping = self.get_f64(model, "damping");
 
-            normals.extend(soup.normals.iter().map(|&v| (f64::from(v) * damping) as f32));
+            normals.extend(
+                soup.normals
+                    .iter()
+                    .map(|&v| (f64::from(v) * damping) as f32),
+            );
             vertices.extend_from_slice(&soup.vertices);
         }
 
-        let texture = (!vertices.is_empty()).then(|| particles::bounded_texture(&vertices, &normals));
+        let texture =
+            (!vertices.is_empty()).then(|| particles::bounded_texture(&vertices, &normals));
 
         *cache = Some(BoundedCache { signature, texture });
     }
@@ -625,7 +787,10 @@ impl Runtime {
 
     /// VolumeEmitter.initialize: `this ._set_coordIndex .addFieldInterest (this ._coordIndex)`.
     pub(crate) fn volume_emitter_initialize(&mut self, node: NodeId) {
-        if let (Some(from), Some(to)) = (self.pre(node, "set_coordIndex"), self.pre(node, "coordIndex")) {
+        if let (Some(from), Some(to)) = (
+            self.pre(node, "set_coordIndex"),
+            self.pre(node, "coordIndex"),
+        ) {
             self.add_field_interest(from, to);
         }
     }
@@ -643,7 +808,8 @@ impl Runtime {
     }
 
     fn ps_sensor_events(&self) -> FKey {
-        self.private_field(self.browser_node, "sensorEvents").expect("browser sensorEvents")
+        self.private_field(self.browser_node, "sensorEvents")
+            .expect("browser sensorEvents")
     }
 
     fn ps_max_field(&self, node: NodeId) -> i32 {
@@ -726,7 +892,10 @@ impl Runtime {
 
         st.sim.num_particles = last.min(max);
 
-        if !self.ps_emitter_params(self.ps_emitter_node(node)).is_explosive() {
+        if !self
+            .ps_emitter_params(self.ps_emitter_node(node))
+            .is_explosive()
+        {
             st.sim.creation_time = now;
         }
 
@@ -771,7 +940,12 @@ impl Runtime {
             *c *= s;
         }
 
-        [force[0] as f32, force[1] as f32, force[2] as f32, (std::f64::consts::PI * jsmath::clamp(field("turbulence", 0.0), 0.0, 1.0)) as f32]
+        [
+            force[0] as f32,
+            force[1] as f32,
+            force[2] as f32,
+            (std::f64::consts::PI * jsmath::clamp(field("turbulence", 0.0), 0.0, 1.0)) as f32,
+        ]
     }
 
     // --- animateParticles ---------------------------------------------------------------------
@@ -790,7 +964,12 @@ impl Runtime {
             }
         }
 
-        let PsState { sim, emitter_cache, bounded_cache, .. } = &mut *st;
+        let PsState {
+            sim,
+            emitter_cache,
+            bounded_cache,
+            ..
+        } = &mut *st;
 
         self.ps_emitter_geometry(emitter_cache, emitter_node, e.kind);
 
@@ -801,7 +980,14 @@ impl Runtime {
         let pl = jsmath::js_max(self.get_f64(node, "particleLifetime"), 0.0);
         let lv = jsmath::js_max(self.get_f64(node, "lifetimeVariation"), 0.0);
         let create_field = self.get_bool(node, "createParticles");
-        let delta_time = sim.schedule(self.frame_rate, self.now * 1000.0, e.is_explosive(), pl, lv, create_field);
+        let delta_time = sim.schedule(
+            self.frame_rate,
+            self.now * 1000.0,
+            e.is_explosive(),
+            pl,
+            lv,
+            create_field,
+        );
         let physics = self.ps_physics_nodes(node);
 
         // Forces (ParticleSystem.animateParticles): only with a mass, `addForce` of every force model in
@@ -812,7 +998,10 @@ impl Runtime {
             let time_by_mass = delta_time / e.mass;
 
             for &model in &physics {
-                if !matches!(self.pre_value(model, "enabled"), Some(FieldValue::SFBool(true))) {
+                if !matches!(
+                    self.pre_value(model, "enabled"),
+                    Some(FieldValue::SFBool(true))
+                ) {
                     continue;
                 }
 
@@ -821,9 +1010,16 @@ impl Runtime {
                         // ForcePhysicsModel.addForce: `force * timeByMass`, turbulence 0.
                         let f = self.ps_vec3(model, "force", [0.0, -9.8, 0.0]);
 
-                        forces.push([(f[0] * time_by_mass) as f32, (f[1] * time_by_mass) as f32, (f[2] * time_by_mass) as f32, 0.0]);
+                        forces.push([
+                            (f[0] * time_by_mass) as f32,
+                            (f[1] * time_by_mass) as f32,
+                            (f[2] * time_by_mass) as f32,
+                            0.0,
+                        ]);
                     }
-                    Some("WindPhysicsModel") => forces.push(self.wind_force(model, &e, time_by_mass)),
+                    Some("WindPhysicsModel") => {
+                        forces.push(self.wind_force(model, &e, time_by_mass))
+                    }
                     _ => {}
                 }
             }
@@ -841,7 +1037,12 @@ impl Runtime {
             _ => [0.02, 0.02],
         };
         let seed = particles::next_seed();
-        let PsState { sim, emitter_cache, bounded_cache, ramps } = &mut *st;
+        let PsState {
+            sim,
+            emitter_cache,
+            bounded_cache,
+            ramps,
+        } = &mut *st;
         let pass = Pass {
             emitter: &e,
             create: sim.create_particles && e.on,
@@ -851,7 +1052,10 @@ impl Runtime {
             delta_time: delta_time as f32,
             forces: &forces,
             texture: emitter_cache.as_ref().and_then(|c| c.texture.as_ref()),
-            bounded: bounded_cache.as_ref().and_then(|c| c.texture.as_ref()).filter(|t| t.hierarchy_root > -1),
+            bounded: bounded_cache
+                .as_ref()
+                .and_then(|c| c.texture.as_ref())
+                .filter(|t| t.hierarchy_root > -1),
             geometry_type: self.particle_geometry_type(node),
             particle_size,
             ramps,

@@ -29,11 +29,14 @@ pub const DXC_DLL: &str = "dxcompiler.dll";
 pub const DXC_MIN_VERSION: &str = "v1.8.2502";
 
 /// The backend names `WGPU_BACKEND` accepts (wgpu's `Backends::from_comma_list`).
-const BACKEND_NAMES: &str = "vulkan (vk), dx12 (d3d12), metal (mtl), gl (gles, opengl), webgpu, noop";
+const BACKEND_NAMES: &str =
+    "vulkan (vk), dx12 (d3d12), metal (mtl), gl (gles, opengl), webgpu, noop";
 
 /// Backends for Windows: DX12 without `WGPU_BACKEND`, otherwise exactly the listed ones.
 pub fn windows_backends(env: Option<&str>) -> Result<wgpu::Backends, String> {
-    let Some(list) = env else { return Ok(wgpu::Backends::DX12) };
+    let Some(list) = env else {
+        return Ok(wgpu::Backends::DX12);
+    };
     let mut backends = wgpu::Backends::empty();
 
     for name in list.split(',').map(|s| s.trim().to_lowercase()) {
@@ -44,7 +47,11 @@ pub fn windows_backends(env: Option<&str>) -> Result<wgpu::Backends, String> {
             "opengl" | "gles" | "gl" => wgpu::Backends::GL,
             "webgpu" => wgpu::Backends::BROWSER_WEBGPU,
             "noop" => wgpu::Backends::NOOP,
-            _ => return Err(format!("WGPU_BACKEND={list:?}: unknown backend {name:?}; expected a comma-separated list of {BACKEND_NAMES}")),
+            _ => {
+                return Err(format!(
+                    "WGPU_BACKEND={list:?}: unknown backend {name:?}; expected a comma-separated list of {BACKEND_NAMES}"
+                ));
+            }
         };
     }
 
@@ -53,7 +60,11 @@ pub fn windows_backends(env: Option<&str>) -> Result<wgpu::Backends, String> {
 
 /// The DX12 shader compiler for `WGPU_DX12_COMPILER` (`env`); DXC from beside the executable
 /// `exe` by default. `exists` checks the DLL path (a parameter for tests).
-pub fn windows_dx12_compiler(env: Option<&str>, exe: Option<&Path>, exists: impl Fn(&Path) -> bool) -> Result<wgpu::Dx12Compiler, String> {
+pub fn windows_dx12_compiler(
+    env: Option<&str>,
+    exe: Option<&Path>,
+    exists: impl Fn(&Path) -> bool,
+) -> Result<wgpu::Dx12Compiler, String> {
     match env.map(|s| s.trim().to_lowercase()).as_deref() {
         None | Some("dxc" | "dynamicdxc") => {}
         Some("fxc") => return Ok(wgpu::Dx12Compiler::Fxc),
@@ -62,7 +73,9 @@ pub fn windows_dx12_compiler(env: Option<&str>, exe: Option<&Path>, exists: impl
         Some(v) => return Err(format!("WGPU_DX12_COMPILER={v:?}: expected dxc (the default), fxc or auto")),
     }
 
-    let path = dxc_path(exe).ok_or("DX12: the executable's directory is unknown, so dxcompiler.dll cannot be found beside it")?;
+    let path = dxc_path(exe).ok_or(
+        "DX12: the executable's directory is unknown, so dxcompiler.dll cannot be found beside it",
+    )?;
 
     if !exists(&path) {
         return Err(format!(
@@ -71,7 +84,10 @@ pub fn windows_dx12_compiler(env: Option<&str>, exe: Option<&Path>, exists: impl
         ));
     }
 
-    let dxc_path = path.to_str().ok_or_else(|| format!("DX12: the DXC path {} is not valid Unicode", path.display()))?.to_string();
+    let dxc_path = path
+        .to_str()
+        .ok_or_else(|| format!("DX12: the DXC path {} is not valid Unicode", path.display()))?
+        .to_string();
     Ok(wgpu::Dx12Compiler::DynamicDxc { dxc_path })
 }
 
@@ -103,8 +119,13 @@ pub fn instance_descriptor() -> Result<wgpu::InstanceDescriptor, String> {
         desc.backends = windows_backends(env_var("WGPU_BACKEND")?.as_deref())?;
 
         if desc.backends.contains(wgpu::Backends::DX12) {
-            let exe = std::env::current_exe().map_err(|e| format!("DX12: the executable's path is unknown: {e}"))?;
-            desc.backend_options.dx12.shader_compiler = windows_dx12_compiler(env_var("WGPU_DX12_COMPILER")?.as_deref(), Some(&exe), Path::is_file)?;
+            let exe = std::env::current_exe()
+                .map_err(|e| format!("DX12: the executable's path is unknown: {e}"))?;
+            desc.backend_options.dx12.shader_compiler = windows_dx12_compiler(
+                env_var("WGPU_DX12_COMPILER")?.as_deref(),
+                Some(&exe),
+                Path::is_file,
+            )?;
         }
     }
 
@@ -128,7 +149,13 @@ pub fn adapter_error(backends: wgpu::Backends, e: &wgpu::RequestAdapterError) ->
 /// On DX12 the renderer starts compiling its main pipeline for `format` at once, on another
 /// thread ([`EmbeddedViewer::new_preparing`]): DXC and the driver need seconds for it, which
 /// would otherwise all fall into the first frame.
-pub fn create_viewer(device: &wgpu::Device, queue: &wgpu::Queue, size: (u32, u32), adapter: &wgpu::Adapter, format: wgpu::TextureFormat) -> Result<EmbeddedViewer, String> {
+pub fn create_viewer(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    size: (u32, u32),
+    adapter: &wgpu::Adapter,
+    format: wgpu::TextureFormat,
+) -> Result<EmbeddedViewer, String> {
     let validation = device.push_error_scope(wgpu::ErrorFilter::Validation);
     let internal = device.push_error_scope(wgpu::ErrorFilter::Internal);
     let mut viewer = if adapter.get_info().backend == wgpu::Backend::Dx12 {
@@ -141,7 +168,10 @@ pub fn create_viewer(device: &wgpu::Device, queue: &wgpu::Queue, size: (u32, u32
     let validation = pollster::block_on(validation.pop());
 
     match internal.or(validation) {
-        Some(e) => Err(format!("the {:?} backend cannot run this renderer: {e}", adapter.get_info().backend)),
+        Some(e) => Err(format!(
+            "the {:?} backend cannot run this renderer: {e}",
+            adapter.get_info().backend
+        )),
         None => Ok(viewer),
     }
 }
@@ -192,14 +222,20 @@ mod tests {
         assert_eq!(windows_backends(Some("dx12")), Ok(wgpu::Backends::DX12));
         assert_eq!(windows_backends(Some("d3d12")), Ok(wgpu::Backends::DX12));
         assert_eq!(windows_backends(Some("gl")), Ok(wgpu::Backends::GL));
-        assert_eq!(windows_backends(Some(" dx12 , vulkan ")), Ok(wgpu::Backends::DX12 | wgpu::Backends::VULKAN));
+        assert_eq!(
+            windows_backends(Some(" dx12 , vulkan ")),
+            Ok(wgpu::Backends::DX12 | wgpu::Backends::VULKAN)
+        );
     }
 
     #[test]
     fn invalid_backends_are_errors() {
         for v in ["", "  ", "directx", "dx12,foo", "vulkan,"] {
             let e = windows_backends(Some(v)).expect_err(v);
-            assert!(e.contains("WGPU_BACKEND") && e.contains("dx12 (d3d12)"), "{v:?}: {e}");
+            assert!(
+                e.contains("WGPU_BACKEND") && e.contains("dx12 (d3d12)"),
+                "{v:?}: {e}"
+            );
         }
     }
 
@@ -210,7 +246,9 @@ mod tests {
     const EXE: &str = "/opt/x3d/x3d-view";
 
     fn dxc_at(path: &str) -> wgpu::Dx12Compiler {
-        wgpu::Dx12Compiler::DynamicDxc { dxc_path: path.to_string() }
+        wgpu::Dx12Compiler::DynamicDxc {
+            dxc_path: path.to_string(),
+        }
     }
 
     fn compiler(env: Option<&str>, present: bool) -> Result<String, String> {
@@ -220,7 +258,10 @@ mod tests {
     #[test]
     fn dxc_is_loaded_from_beside_the_executable() {
         let expected = dxc_path(Some(Path::new(EXE))).unwrap();
-        assert_eq!(expected, Path::new(EXE).parent().unwrap().join("dxcompiler.dll"));
+        assert_eq!(
+            expected,
+            Path::new(EXE).parent().unwrap().join("dxcompiler.dll")
+        );
         let want = format!("{:?}", dxc_at(expected.to_str().unwrap()));
 
         for env in [None, Some("dxc"), Some("DynamicDxc"), Some(" DXC ")] {
@@ -230,7 +271,11 @@ mod tests {
                 true
             });
             assert_eq!(c.map(|c| format!("{c:?}")), Ok(want.clone()), "{env:?}");
-            assert_eq!(*seen.borrow(), vec![expected.clone()], "{env:?}: the checked path");
+            assert_eq!(
+                *seen.borrow(),
+                vec![expected.clone()],
+                "{env:?}: the checked path"
+            );
         }
     }
 
@@ -240,23 +285,51 @@ mod tests {
         assert_eq!(dxc_path(Some(Path::new("bin/x3d-view.exe"))), None);
         assert_eq!(dxc_path(None), None);
         assert!(dxc_path(Some(Path::new(EXE))).unwrap().is_absolute());
-        assert!(windows_dx12_compiler(None, Some(Path::new("x3d-view.exe")), |_| true).unwrap_err().contains("directory is unknown"));
+        assert!(
+            windows_dx12_compiler(None, Some(Path::new("x3d-view.exe")), |_| true)
+                .unwrap_err()
+                .contains("directory is unknown")
+        );
     }
 
     #[test]
     fn missing_dxc_is_a_clear_error() {
         let e = compiler(None, false).unwrap_err();
-        assert!(e.contains("dxcompiler.dll") && e.contains("does not exist"), "{e}");
-        assert!(e.contains("WGPU_DX12_COMPILER=fxc") && e.contains("WGPU_BACKEND=vulkan"), "{e}");
-        assert!(windows_dx12_compiler(None, None, |_| true).unwrap_err().contains("dxcompiler.dll"));
+        assert!(
+            e.contains("dxcompiler.dll") && e.contains("does not exist"),
+            "{e}"
+        );
+        assert!(
+            e.contains("WGPU_DX12_COMPILER=fxc") && e.contains("WGPU_BACKEND=vulkan"),
+            "{e}"
+        );
+        assert!(
+            windows_dx12_compiler(None, None, |_| true)
+                .unwrap_err()
+                .contains("dxcompiler.dll")
+        );
     }
 
     #[test]
     fn explicit_compilers_are_kept() {
-        assert_eq!(compiler(Some("fxc"), false), Ok(format!("{:?}", wgpu::Dx12Compiler::Fxc)));
-        assert_eq!(compiler(Some("Auto"), false), Ok(format!("{:?}", wgpu::Dx12Compiler::Auto)));
-        assert!(compiler(Some("staticdxc"), true).unwrap_err().contains("no statically linked DXC"));
-        assert!(compiler(Some("dcx"), true).unwrap_err().contains("expected dxc"));
+        assert_eq!(
+            compiler(Some("fxc"), false),
+            Ok(format!("{:?}", wgpu::Dx12Compiler::Fxc))
+        );
+        assert_eq!(
+            compiler(Some("Auto"), false),
+            Ok(format!("{:?}", wgpu::Dx12Compiler::Auto))
+        );
+        assert!(
+            compiler(Some("staticdxc"), true)
+                .unwrap_err()
+                .contains("no statically linked DXC")
+        );
+        assert!(
+            compiler(Some("dcx"), true)
+                .unwrap_err()
+                .contains("expected dxc")
+        );
     }
 
     #[test]

@@ -3,8 +3,8 @@
 
 use super::changes::Change;
 use super::doc::Doc;
-use super::line::{new_line, LineRef};
-use super::spans::{attach_marked_spans, detach_marked_spans, NewSpans, SpanArr};
+use super::line::{LineRef, new_line};
+use super::spans::{NewSpans, SpanArr, attach_marked_spans, detach_marked_spans};
 use crate::text::Text;
 
 /// `isWholeLineUpdate(doc, change)`: updates that start and end at line starts are
@@ -34,10 +34,16 @@ fn update_line(doc: &Doc, line: &LineRef, text: Text, spans: Option<SpanArr>) {
 
 /// `updateDoc(doc, change, markedSpans)`.
 pub(crate) fn update_doc(doc: &Doc, change: &Change, marked_spans: Option<NewSpans>) {
-    let spans_for = |n: usize| -> Option<SpanArr> { marked_spans.as_ref().and_then(|m| m.get(n).cloned().flatten()) };
+    let spans_for = |n: usize| -> Option<SpanArr> {
+        marked_spans
+            .as_ref()
+            .and_then(|m| m.get(n).cloned().flatten())
+    };
     let text = change.text();
     let lines_for = |start: i64, end: i64| -> Vec<LineRef> {
-        (start..end.max(start)).map(|i| new_line(text[i as usize].clone(), spans_for(i as usize))).collect()
+        (start..end.max(start))
+            .map(|i| new_line(text[i as usize].clone(), spans_for(i as usize)))
+            .collect()
     };
     // An empty `text` array (e.g. `linkedDoc` with `from >= to`) makes the JS
     // concatenate `undefined` into the line text. Kept for fidelity.
@@ -52,7 +58,9 @@ pub(crate) fn update_doc(doc: &Doc, change: &Change, marked_spans: Option<NewSpa
     let last_text = text.last().cloned().unwrap_or_else(|| undefined.clone());
     let last_spans = spans_for(text.len().wrapping_sub(1));
     let nlines = to.line - from.line;
-    let slice = |l: &LineRef, a: i64, b: Option<i64>| crate::text::js_slice(&l.borrow().text, a, b).to_vec();
+    let slice = |l: &LineRef, a: i64, b: Option<i64>| {
+        crate::text::js_slice(&l.borrow().text, a, b).to_vec()
+    };
     let concat = |parts: &[&[u16]]| -> Text { parts.concat() };
 
     // Adjust the line structure.
@@ -76,17 +84,28 @@ pub(crate) fn update_doc(doc: &Doc, change: &Change, marked_spans: Option<NewSpa
         }
     } else if std::rc::Rc::ptr_eq(&first_line, &last_line) {
         if text.len() == 1 {
-            let t = concat(&[&slice(&first_line, 0, Some(from.ch)), &last_text, &slice(&first_line, to.ch, None)]);
+            let t = concat(&[
+                &slice(&first_line, 0, Some(from.ch)),
+                &last_text,
+                &slice(&first_line, to.ch, None),
+            ]);
             update_line(doc, &first_line, t, last_spans);
         } else {
             let mut added = lines_for(1, tlen - 1);
-            added.push(new_line(concat(&[&last_text, &slice(&first_line, to.ch, None)]), last_spans));
+            added.push(new_line(
+                concat(&[&last_text, &slice(&first_line, to.ch, None)]),
+                last_spans,
+            ));
             let t = concat(&[&slice(&first_line, 0, Some(from.ch)), &text0]);
             update_line(doc, &first_line, t, spans_for(0));
             doc.insert_lines(from.line + 1, added);
         }
     } else if text.len() == 1 {
-        let t = concat(&[&slice(&first_line, 0, Some(from.ch)), &text0, &slice(&last_line, to.ch, None)]);
+        let t = concat(&[
+            &slice(&first_line, 0, Some(from.ch)),
+            &text0,
+            &slice(&last_line, to.ch, None),
+        ]);
         update_line(doc, &first_line, t, spans_for(0));
         doc.remove_lines(from.line + 1, nlines as usize);
     } else {

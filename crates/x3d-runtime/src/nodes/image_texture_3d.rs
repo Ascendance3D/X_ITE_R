@@ -48,7 +48,8 @@ fn units_to_string(u: &[u16]) -> String {
 
 /// `String.prototype.trim`.
 fn js_trim(s: &str) -> String {
-    s.trim_matches(|c: char| is_js_space(c as u32 as u16) && (c as u32) < 0x10000).to_string()
+    s.trim_matches(|c: char| is_js_space(c as u32 as u16) && (c as u32) < 0x10000)
+        .to_string()
 }
 
 /// `parseInt (string)`: NaN without digits; a 0x prefix reads hexadecimal.
@@ -63,7 +64,9 @@ pub fn js_parse_int(s: &str) -> f64 {
         [b'0', b'x' | b'X', ..] => (16, &t[2..]),
         _ => (10, t),
     };
-    let end = digits.find(|c: char| !c.is_digit(radix)).unwrap_or(digits.len());
+    let end = digits
+        .find(|c: char| !c.is_digit(radix))
+        .unwrap_or(digits.len());
 
     if end == 0 {
         return f64::NAN;
@@ -75,11 +78,7 @@ pub fn js_parse_int(s: &str) -> f64 {
         v = v * radix as f64 + c.to_digit(radix).unwrap() as f64;
     }
 
-    if negative {
-        -v
-    } else {
-        v
-    }
+    if negative { -v } else { v }
 }
 
 /// `parseFloat (string)`.
@@ -93,7 +92,11 @@ pub fn js_parse_float(s: &str) -> f64 {
     }
 
     if t[i..].starts_with("Infinity") {
-        return if b.first() == Some(&b'-') { f64::NEG_INFINITY } else { f64::INFINITY };
+        return if b.first() == Some(&b'-') {
+            f64::NEG_INFINITY
+        } else {
+            f64::INFINITY
+        };
     }
 
     let digits_start = i;
@@ -173,8 +176,12 @@ fn nrrd_type(value: &str) -> Result<(ByteType, f64), String> {
     Ok(match value {
         "signed char" | "int8" | "int8_t" => (SignedChar, 1.0),
         "uchar" | "unsigned char" | "uint8" | "uint8_t" => (UnsignedChar, 1.0),
-        "short" | "short int" | "signed short" | "signed short int" | "int16" | "int16_t" => (SignedShort, 2.0),
-        "ushort" | "unsigned short" | "unsigned short int" | "uint16" | "uint16_t" => (UnsignedShort, 2.0),
+        "short" | "short int" | "signed short" | "signed short int" | "int16" | "int16_t" => {
+            (SignedShort, 2.0)
+        }
+        "ushort" | "unsigned short" | "unsigned short int" | "uint16" | "uint16_t" => {
+            (UnsignedShort, 2.0)
+        }
         "int" | "signed int" | "int32" | "int32_t" => (SignedInt, 4.0),
         "uint" | "unsigned int" | "uint32" | "uint32_t" => (UnsignedInt, 4.0),
         "float" => (Float, 4.0),
@@ -204,7 +211,9 @@ fn nrrd_encoding(value: &str) -> Result<Encoding, String> {
 /// The `/(\d+)/` match of `getDimension`: the first run of ASCII digits.
 fn first_digits(value: &str) -> Option<&str> {
     let start = value.find(|c: char| c.is_ascii_digit())?;
-    let len = value[start..].find(|c: char| !c.is_ascii_digit()).unwrap_or(value.len() - start);
+    let len = value[start..]
+        .find(|c: char| !c.is_ascii_digit())
+        .unwrap_or(value.len() - start);
 
     Some(&value[start..start + len])
 }
@@ -321,7 +330,13 @@ pub fn parse_nrrd(input: &[u8]) -> Result<Option<Volume>, String> {
     let mut little_endian = true;
     let mut byte_type: Option<(ByteType, f64)> = None;
     let mut encoding: Option<Encoding> = None;
-    let mut nrrd = Nrrd { components: f64::NAN, width: f64::NAN, height: f64::NAN, depth: f64::NAN, data: None };
+    let mut nrrd = Nrrd {
+        components: f64::NAN,
+        width: f64::NAN,
+        height: f64::NAN,
+        depth: f64::NAN,
+        data: None,
+    };
 
     // getFields.
     while let Some(end) = match_comment(&text, last) {
@@ -339,26 +354,45 @@ pub fn parse_nrrd(input: &[u8]) -> Result<Option<Volume>, String> {
             "dimension" => match first_digits(&value).map(js_parse_int) {
                 Some(v) if (1.0..=4.0).contains(&v) => {}
                 other => {
-                    let shown = first_digits(&value).map_or("undefined".to_string(), str::to_string);
+                    let shown =
+                        first_digits(&value).map_or("undefined".to_string(), str::to_string);
                     let _ = other;
-                    return Err(format!("Error: Unsupported NRRD dimension '{shown}', must be 1, 2, 3, or 4."));
+                    return Err(format!(
+                        "Error: Unsupported NRRD dimension '{shown}', must be 1, 2, 3, or 4."
+                    ));
                 }
             },
             "sizes" => {
                 let sizes = sticky_numbers(&value);
 
                 match sizes.len() {
-                    1 => (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) = (1.0, sizes[0], 1.0, 1.0),
-                    2 => (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) = (1.0, sizes[0], sizes[1], 1.0),
-                    3 => (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) = (1.0, sizes[0], sizes[1], sizes[2]),
-                    4 => (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) = (sizes[0], sizes[1], sizes[2], sizes[3]),
+                    1 => {
+                        (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) =
+                            (1.0, sizes[0], 1.0, 1.0)
+                    }
+                    2 => {
+                        (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) =
+                            (1.0, sizes[0], sizes[1], 1.0)
+                    }
+                    3 => {
+                        (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) =
+                            (1.0, sizes[0], sizes[1], sizes[2])
+                    }
+                    4 => {
+                        (nrrd.components, nrrd.width, nrrd.height, nrrd.depth) =
+                            (sizes[0], sizes[1], sizes[2], sizes[3])
+                    }
                     _ => return Err("Error: Unsupported NRRD sizes.".into()),
                 }
             }
             "endian" => match value.as_str() {
                 "little" => little_endian = true,
                 "big" => little_endian = false,
-                _ => return Err("Error: Unsupported NRRD endian, must be either 'little' or 'big'.".into()),
+                _ => {
+                    return Err(
+                        "Error: Unsupported NRRD endian, must be either 'little' or 'big'.".into(),
+                    );
+                }
             },
             _ => {}
         }
@@ -395,7 +429,14 @@ pub fn parse_nrrd(input: &[u8]) -> Result<Option<Volume>, String> {
                 if !rest.is_empty() {
                     let trimmed = js_trim(&rest);
                     // `split (/\s+/)`.
-                    let numbers: Vec<&str> = if trimmed.is_empty() { vec![""] } else { trimmed.split(|c: char| (c as u32) < 0x10000 && is_js_space(c as u32 as u16)).filter(|t| !t.is_empty()).collect() };
+                    let numbers: Vec<&str> = if trimmed.is_empty() {
+                        vec![""]
+                    } else {
+                        trimmed
+                            .split(|c: char| (c as u32) < 0x10000 && is_js_space(c as u32 as u16))
+                            .filter(|t| !t.is_empty())
+                            .collect()
+                    };
 
                     for (i, token) in numbers.iter().enumerate() {
                         if i >= count {
@@ -403,9 +444,15 @@ pub fn parse_nrrd(input: &[u8]) -> Result<Option<Volume>, String> {
                         }
 
                         data[i] = match byte_type.map(|t| t.0) {
-                            Some(ByteType::SignedChar | ByteType::UnsignedChar) => to_uint8(js_parse_int(token)),
-                            Some(ByteType::SignedShort | ByteType::UnsignedShort) => to_uint8(js_parse_int(token) / 256.0),
-                            Some(ByteType::SignedInt | ByteType::UnsignedInt) => to_uint8(js_parse_int(token) / 16777216.0),
+                            Some(ByteType::SignedChar | ByteType::UnsignedChar) => {
+                                to_uint8(js_parse_int(token))
+                            }
+                            Some(ByteType::SignedShort | ByteType::UnsignedShort) => {
+                                to_uint8(js_parse_int(token) / 256.0)
+                            }
+                            Some(ByteType::SignedInt | ByteType::UnsignedInt) => {
+                                to_uint8(js_parse_int(token) / 16777216.0)
+                            }
                             Some(ByteType::Float) => to_uint8(js_parse_float(token) / 256.0),
                             Some(ByteType::Double) => to_uint8(js_parse_float(token) / 16777216.0),
                             None => 0,
@@ -452,18 +499,33 @@ pub fn parse_nrrd(input: &[u8]) -> Result<Option<Volume>, String> {
 
                 let inflated = x3d_parse::gunzip(input.get(last + 1..).unwrap_or(&[]));
 
-                read_raw(&inflated, count, data_length, byte_type, little_endian).map_err(|_| "Error: Invalid NRRD data.".to_string())?
+                read_raw(&inflated, count, data_length, byte_type, little_endian)
+                    .map_err(|_| "Error: Invalid NRRD data.".to_string())?
             }
         });
     }
 
-    Ok(Some(Volume { width: nrrd.width, height: nrrd.height, depth: nrrd.depth, components: nrrd.components, data: nrrd.data }))
+    Ok(Some(Volume {
+        width: nrrd.width,
+        height: nrrd.height,
+        depth: nrrd.depth,
+        components: nrrd.components,
+        data: nrrd.data,
+    }))
 }
 
 /// NRRDParser.raw: the last `dataLength × bytes` bytes of the buffer, read as `byteType`.
-fn read_raw(buffer: &[u8], count: usize, data_length: f64, byte_type: Option<(ByteType, f64)>, little_endian: bool) -> Result<Vec<u8>, String> {
+fn read_raw(
+    buffer: &[u8],
+    count: usize,
+    data_length: f64,
+    byte_type: Option<(ByteType, f64)>,
+    little_endian: bool,
+) -> Result<Vec<u8>, String> {
     let mut data = vec![0u8; count];
-    let Some((ty, bytes)) = byte_type else { return Ok(data) };
+    let Some((ty, bytes)) = byte_type else {
+        return Ok(data);
+    };
     let length = data_length * bytes;
 
     if length.is_nan() || count == 0 {
@@ -486,22 +548,40 @@ fn read_raw(buffer: &[u8], count: usize, data_length: f64, byte_type: Option<(By
         *out = match ty {
             ByteType::SignedChar | ByteType::UnsignedChar => raw[0],
             ByteType::SignedShort | ByteType::UnsignedShort => {
-                let v = if little_endian { u16::from_le_bytes([raw[0], raw[1]]) } else { u16::from_be_bytes([raw[0], raw[1]]) };
+                let v = if little_endian {
+                    u16::from_le_bytes([raw[0], raw[1]])
+                } else {
+                    u16::from_be_bytes([raw[0], raw[1]])
+                };
                 to_uint8(v as f64 / 256.0)
             }
             ByteType::SignedInt | ByteType::UnsignedInt => {
                 let a = [raw[0], raw[1], raw[2], raw[3]];
-                let v = if little_endian { u32::from_le_bytes(a) } else { u32::from_be_bytes(a) };
+                let v = if little_endian {
+                    u32::from_le_bytes(a)
+                } else {
+                    u32::from_be_bytes(a)
+                };
                 to_uint8(v as f64 / 16777216.0)
             }
             ByteType::Float => {
                 let a = [raw[0], raw[1], raw[2], raw[3]];
-                let v = if little_endian { f32::from_le_bytes(a) } else { f32::from_be_bytes(a) };
+                let v = if little_endian {
+                    f32::from_le_bytes(a)
+                } else {
+                    f32::from_be_bytes(a)
+                };
                 to_uint8(v as f64 / 256.0)
             }
             ByteType::Double => {
-                let a = [raw[0], raw[1], raw[2], raw[3], raw[4], raw[5], raw[6], raw[7]];
-                let v = if little_endian { f64::from_le_bytes(a) } else { f64::from_be_bytes(a) };
+                let a = [
+                    raw[0], raw[1], raw[2], raw[3], raw[4], raw[5], raw[6], raw[7],
+                ];
+                let v = if little_endian {
+                    f64::from_le_bytes(a)
+                } else {
+                    f64::from_be_bytes(a)
+                };
                 to_uint8(v / 16777216.0)
             }
         };
@@ -516,7 +596,11 @@ impl Runtime {
     /// ImageTexture3D.loadData, a candidate whose data was fetched: NRRD, then DICOM; the first
     /// that accepts the data sets the texture data, the outputs and (by the caller) COMPLETE_STATE.
     /// An error fails the candidate.
-    pub(crate) fn image_texture_3d_set_data(&mut self, node: NodeId, data: &[u8]) -> Result<(), String> {
+    pub(crate) fn image_texture_3d_set_data(
+        &mut self,
+        node: NodeId,
+        data: &[u8],
+    ) -> Result<(), String> {
         let volume = match parse_nrrd(data)? {
             Some(v) => v,
             None => match self.parse_dicom_logged(data)? {
@@ -526,8 +610,17 @@ impl Runtime {
         };
 
         // X3DTexture3DNode.setTextureData: the size limit.
-        if volume.width > MAX_3D_TEXTURE_SIZE || volume.height > MAX_3D_TEXTURE_SIZE || volume.depth > MAX_3D_TEXTURE_SIZE {
-            let n = |v: f64| if v.is_nan() { "undefined".to_string() } else { format!("{v}") };
+        if volume.width > MAX_3D_TEXTURE_SIZE
+            || volume.height > MAX_3D_TEXTURE_SIZE
+            || volume.depth > MAX_3D_TEXTURE_SIZE
+        {
+            let n = |v: f64| {
+                if v.is_nan() {
+                    "undefined".to_string()
+                } else {
+                    format!("{v}")
+                }
+            };
 
             return Err(format!(
                 "Error: At least one dimension ({} × {} × {}) is greater than the maximum texture size ({} px).",
@@ -539,7 +632,12 @@ impl Runtime {
         }
 
         let int = |v: f64| if v.is_nan() { 0 } else { v as i32 };
-        let outputs = [int(volume.width), int(volume.height), int(volume.depth), int(volume.components)];
+        let outputs = [
+            int(volume.width),
+            int(volume.height),
+            int(volume.depth),
+            int(volume.components),
+        ];
 
         self.nrt_mut(node).volume = Some(Rc::new(volume));
         self.add_node_event(node);

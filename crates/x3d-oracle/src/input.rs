@@ -17,7 +17,16 @@ pub struct KeyDescription {
 }
 
 // code, keyCode, keyCodeWithoutLocation (0 = keyCode), key, shiftKey, shiftKeyCode, text, location
-type Def = (&'static str, i64, i64, &'static str, &'static str, i64, &'static str, i64);
+type Def = (
+    &'static str,
+    i64,
+    i64,
+    &'static str,
+    &'static str,
+    i64,
+    &'static str,
+    i64,
+);
 
 #[rustfmt::skip]
 const US_LAYOUT: &[Def] = &[
@@ -77,8 +86,13 @@ const US_LAYOUT: &[Def] = &[
     ("NumpadEnter", 13, 0, "Enter", "", 0, "\r", 3),
 ];
 
-const ALIASES: &[(&str, &[&str])] =
-    &[("ShiftLeft", &["Shift"]), ("ControlLeft", &["Control"]), ("AltLeft", &["Alt"]), ("MetaLeft", &["Meta"]), ("Enter", &["\n", "\r"])];
+const ALIASES: &[(&str, &[&str])] = &[
+    ("ShiftLeft", &["Shift"]),
+    ("ControlLeft", &["Control"]),
+    ("AltLeft", &["Alt"]),
+    ("MetaLeft", &["Meta"]),
+    ("Enter", &["\n", "\r"]),
+];
 
 const KEYPAD_LOCATION: i64 = 3;
 const MODIFIERS: [&str; 4] = ["Alt", "Control", "Meta", "Shift"];
@@ -108,7 +122,13 @@ pub fn us_layout() -> HashMap<String, KeyDescription> {
             }
             s
         });
-        map.insert(code.to_string(), KeyDescription { shifted: shifted.clone().map(Box::new), ..description.clone() });
+        map.insert(
+            code.to_string(),
+            KeyDescription {
+                shifted: shifted.clone().map(Box::new),
+                ..description.clone()
+            },
+        );
         if let Some((_, aliases)) = ALIASES.iter().find(|(c, _)| *c == code) {
             for a in *aliases {
                 map.insert(a.to_string(), description.clone());
@@ -196,14 +216,22 @@ impl Default for Input {
 
 impl Input {
     fn describe(&self, key: &str) -> Result<KeyDescription, String> {
-        let d = self.layout.get(key).ok_or_else(|| format!("Unknown key: \"{key}\""))?;
+        let d = self
+            .layout
+            .get(key)
+            .ok_or_else(|| format!("Unknown key: \"{key}\""))?;
         let shift = self.pressed_modifiers.contains("Shift");
         let d = match (&d.shifted, shift) {
             (Some(s), true) => (**s).clone(),
             _ => d.clone(),
         };
-        if self.pressed_modifiers.len() > 1 || (!self.pressed_modifiers.contains("Shift") && self.pressed_modifiers.len() == 1) {
-            return Ok(KeyDescription { text: String::new(), ..d });
+        if self.pressed_modifiers.len() > 1
+            || (!self.pressed_modifiers.contains("Shift") && self.pressed_modifiers.len() == 1)
+        {
+            return Ok(KeyDescription {
+                text: String::new(),
+                ..d
+            });
         }
         Ok(d)
     }
@@ -408,7 +436,10 @@ mod tests {
         assert_eq!(c[0].params["modifiers"], 10);
         let c = i.key_press("PageDown").unwrap();
         assert_eq!(c[0].params["windowsVirtualKeyCode"], 34);
-        assert_eq!(i.key_down("Shift").unwrap()[0].params["windowsVirtualKeyCode"], 16);
+        assert_eq!(
+            i.key_down("Shift").unwrap()[0].params["windowsVirtualKeyCode"],
+            16
+        );
         assert!(i.key_press("Nope").is_err());
         assert_eq!(i.key_press("Enter").unwrap()[0].params["code"], "Enter");
     }

@@ -101,7 +101,12 @@ impl Plane {
             return;
         }
 
-        cx.requests.push(LookAtRequest { x, y, point: cx.env.alt, straighten: cx.env.straighten });
+        cx.requests.push(LookAtRequest {
+            x,
+            y,
+            point: cx.env.alt,
+            straighten: cx.env.straighten,
+        });
     }
 
     fn mousemove(&mut self, x: f64, y: f64, cx: &mut Cx) {
@@ -143,7 +148,8 @@ impl Plane {
 
         if delta_y < 0.0 {
             // Move backwards.
-            cx.vp.field_of_view_scale = x3d_fields::jsmath::js_max(0.00001, field_of_view_scale * (1.0 - zoom_factor));
+            cx.vp.field_of_view_scale =
+                x3d_fields::jsmath::js_max(0.00001, field_of_view_scale * (1.0 - zoom_factor));
         } else if delta_y > 0.0 {
             // Move forwards.
             cx.vp.field_of_view_scale = field_of_view_scale * (1.0 + zoom_factor);
@@ -161,7 +167,9 @@ impl Plane {
 
     /// PlaneViewer.constrainFieldOfViewScale: `Viewpoint` and `GeoViewpoint` only.
     fn constrain_field_of_view_scale(&self, cx: &mut Cx) {
-        if !cx.base.is_ortho && cx.base.field_of_view * cx.vp.field_of_view_scale >= std::f64::consts::PI {
+        if !cx.base.is_ortho
+            && cx.base.field_of_view * cx.vp.field_of_view_scale >= std::f64::consts::PI
+        {
             cx.vp.field_of_view_scale = (std::f64::consts::PI - 0.001) / cx.base.field_of_view;
         }
     }
@@ -232,7 +240,15 @@ impl Plane {
 
         let dot = touch1_change.dot(&touch2_change);
         let (move_, zoom) = (dot > MOVE_ANGLE, dot < ZOOM_ANGLE);
-        let mode = if self.touch_mode != 0 { self.touch_mode } else if move_ { 1 } else if zoom { 2 } else { 0 };
+        let mode = if self.touch_mode != 0 {
+            self.touch_mode
+        } else if move_ {
+            1
+        } else if zoom {
+            2
+        } else {
+            0
+        };
         let (x, y) = ((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0);
 
         match mode {

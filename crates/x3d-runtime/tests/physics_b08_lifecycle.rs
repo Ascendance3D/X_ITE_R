@@ -9,8 +9,8 @@
 //!   cargo test --release -p x3d-runtime --test physics_b08_lifecycle -- --nocapture
 
 use std::alloc::{GlobalAlloc, Layout, System};
-use std::sync::atomic::{AtomicIsize, Ordering};
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicIsize, Ordering};
 use x3d_runtime::nodes::rigid_body_physics::{PWorld, WorldCounts};
 use x3d_runtime::physics::bt::body::{BodyId, ConstructionInfo, MotionStateId};
 use x3d_runtime::physics::bt::constraint::Constraint;
@@ -51,11 +51,17 @@ fn live() -> isize {
 /// sit under the plateau (measured 64 B to 736 B in the four tests); from cycle 50 on the heap is flat to the byte.
 fn assert_flat_heap(at: &[isize]) {
     assert_eq!(at[1], at[2], "heap grew between cycle 50 and 100: {at:?}");
-    assert!((at[1] - at[0]).abs() <= 1024, "heap grew between cycle 10 and 50: {at:?}");
+    assert!(
+        (at[1] - at[0]).abs() <= 1024,
+        "heap grew between cycle 10 and 50: {at:?}"
+    );
 }
 
 fn tf(o: V3) -> Tf {
-    Tf { b: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]], o }
+    Tf {
+        b: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        o,
+    }
 }
 
 /// Everything one cycle creates, in the order X_ITE creates it.
@@ -71,7 +77,14 @@ struct Cluster {
 
 /// A RigidBody the way RigidBody.js makes it: an empty compound, a default motion state, a construction info with
 /// mass 0, a btRigidBody; the collidables (a compound with one collision shape each) go below the compound.
-fn make_body(pw: &mut PWorld, c: &mut Cluster, shapes: &[Box<dyn Fn(&mut x3d_runtime::physics::bt::shape::Shapes) -> ShapeId>], offsets: &[V3], pos: V3, mass: f64) -> BodyId {
+fn make_body(
+    pw: &mut PWorld,
+    c: &mut Cluster,
+    shapes: &[Box<dyn Fn(&mut x3d_runtime::physics::bt::shape::Shapes) -> ShapeId>],
+    offsets: &[V3],
+    pos: V3,
+    mass: f64,
+) -> BodyId {
     let compound = pw.new_compound();
     c.shapes.push(compound);
     let ms = pw.new_motion_state(Tf::IDENTITY);
@@ -87,10 +100,20 @@ fn make_body(pw: &mut PWorld, c: &mut Cluster, shapes: &[Box<dyn Fn(&mut x3d_run
         c.shapes.push(prim);
         pw.w.shapes.add_child_shape(cc, tf(*off), prim);
         pw.w.shapes.set_local_scaling(cc, [1.0; 3]);
-        pw.w.shapes.add_child_shape(compound, Tf { b: [[0.0; 3]; 3], o: [0.0; 3] }, cc);
+        pw.w.shapes.add_child_shape(
+            compound,
+            Tf {
+                b: [[0.0; 3]; 3],
+                o: [0.0; 3],
+            },
+            cc,
+        );
     }
 
-    let inv = Tf { b: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]], o: [-pos[0], -pos[1], -pos[2]] };
+    let inv = Tf {
+        b: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        o: [-pos[0], -pos[1], -pos[2]],
+    };
     for i in 0..pw.w.shapes.num_child_shapes(compound) {
         pw.w.shapes.update_child_transform(compound, i, inv, false);
     }
@@ -108,7 +131,12 @@ type Maker = Box<dyn Fn(&mut x3d_runtime::physics::bt::shape::Shapes) -> ShapeId
 fn terrain() -> (Vec<f64>, usize, usize) {
     let (xd, zd) = (5, 5);
     (
-        (0..xd * zd).map(|i| (0.3 * ((i % xd) as f64 * 0.8).sin() * ((i / xd) as f64 * 0.7).cos() + 0.15) as f32 as f64).collect(),
+        (0..xd * zd)
+            .map(|i| {
+                (0.3 * ((i % xd) as f64 * 0.8).sin() * ((i / xd) as f64 * 0.7).cos() + 0.15) as f32
+                    as f64
+            })
+            .collect(),
         xd,
         zd,
     )
@@ -128,21 +156,64 @@ fn build(pw: &mut PWorld) -> Cluster {
     let d = make_body(pw, &mut c, &cyl, &[[0.0; 3]], [3.0, 1.5, 0.0], 1.0);
     let cone: Vec<Maker> = vec![Box::new(|s| s.new_cone(0.4, 0.9))];
     let e = make_body(pw, &mut c, &cone, &[[0.0; 3]], [4.2, 1.5, 0.0], 1.0);
-    let hull: Vec<Maker> = vec![Box::new(|s| s.new_convex_hull(&[[-0.4, -0.4, -0.4], [0.4, -0.4, -0.4], [0.0, 0.4, -0.4], [0.0, 0.0, 0.5], [0.3, 0.2, 0.1]]))];
+    let hull: Vec<Maker> = vec![Box::new(|s| {
+        s.new_convex_hull(&[
+            [-0.4, -0.4, -0.4],
+            [0.4, -0.4, -0.4],
+            [0.0, 0.4, -0.4],
+            [0.0, 0.0, 0.5],
+            [0.3, 0.2, 0.1],
+        ])
+    })];
     let h = make_body(pw, &mut c, &hull, &[[0.0; 3]], [5.5, 1.5, 0.0], 1.0);
-    let two: Vec<Maker> = vec![Box::new(|s| s.new_box([0.3, 0.2, 0.3])), Box::new(|s| s.new_sphere(0.25))];
-    make_body(pw, &mut c, &two, &[[0.0; 3], [0.6, 0.2, 0.0]], [7.0, 1.5, 0.0], 2.0);
-    let tris: Vec<[V3; 3]> = (0..8).flat_map(|i| (0..8).map(move |j| (i, j))).flat_map(|(i, j)| {
-        let (x0, z0) = (i as f64 * 1.0 - 4.0, j as f64 * 1.0 - 4.0 + 10.0);
-        let p = |x: f64, z: f64| [x as f32 as f64, (0.1 * (x * 0.9).sin()) as f32 as f64, z as f32 as f64];
-        [[p(x0, z0), p(x0, z0 + 1.0), p(x0 + 1.0, z0)], [p(x0 + 1.0, z0), p(x0, z0 + 1.0), p(x0 + 1.0, z0 + 1.0)]]
-    }).collect();
+    let two: Vec<Maker> = vec![
+        Box::new(|s| s.new_box([0.3, 0.2, 0.3])),
+        Box::new(|s| s.new_sphere(0.25)),
+    ];
+    make_body(
+        pw,
+        &mut c,
+        &two,
+        &[[0.0; 3], [0.6, 0.2, 0.0]],
+        [7.0, 1.5, 0.0],
+        2.0,
+    );
+    let tris: Vec<[V3; 3]> = (0..8)
+        .flat_map(|i| (0..8).map(move |j| (i, j)))
+        .flat_map(|(i, j)| {
+            let (x0, z0) = (i as f64 * 1.0 - 4.0, j as f64 * 1.0 - 4.0 + 10.0);
+            let p = |x: f64, z: f64| {
+                [
+                    x as f32 as f64,
+                    (0.1 * (x * 0.9).sin()) as f32 as f64,
+                    z as f32 as f64,
+                ]
+            };
+            [
+                [p(x0, z0), p(x0, z0 + 1.0), p(x0 + 1.0, z0)],
+                [p(x0 + 1.0, z0), p(x0, z0 + 1.0), p(x0 + 1.0, z0 + 1.0)],
+            ]
+        })
+        .collect();
     let mesh: Vec<Maker> = vec![Box::new(move |s| s.new_bvh_triangle_mesh(&tris))];
     make_body(pw, &mut c, &mesh, &[[0.0; 3]], [0.0, 0.0, 0.0], 0.0);
     let (hs, xd, zd) = terrain();
-    let (min, max) = hs.iter().fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), h| (lo.min(*h), hi.max(*h)));
-    let height: Vec<Maker> = vec![Box::new(move |s| s.new_heightfield(xd, zd, &hs, min, max, [1.2, 1.0, 0.8]))];
-    make_body(pw, &mut c, &height, &[[2.4, (min + max) * 0.5, 1.6]], [10.0, 0.0, 10.0], 0.0);
+    let (min, max) = hs
+        .iter()
+        .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), h| {
+            (lo.min(*h), hi.max(*h))
+        });
+    let height: Vec<Maker> = vec![Box::new(move |s| {
+        s.new_heightfield(xd, zd, &hs, min, max, [1.2, 1.0, 0.8])
+    })];
+    make_body(
+        pw,
+        &mut c,
+        &height,
+        &[[2.4, (min + max) * 0.5, 1.6]],
+        [10.0, 0.0, 10.0],
+        0.0,
+    );
 
     for &rb in &c.bodies {
         pw.w.body_mut(rb).friction = 0.5f32 as f64;
@@ -153,9 +224,25 @@ fn build(pw: &mut PWorld) -> Cluster {
 
     let ball = Constraint::point2point(a, b, [0.75, 0.0, 0.0], [-0.75, 0.0, 0.0]);
     c.joints.push(pw.w.add_constraint(ball, true));
-    let hinge = Constraint::hinge(&pw.w.bodies, d, e, [0.6, 0.0, 0.0], [-0.6, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0], false);
+    let hinge = Constraint::hinge(
+        &pw.w.bodies,
+        d,
+        e,
+        [0.6, 0.0, 0.0],
+        [-0.6, 0.0, 0.0],
+        [0.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0],
+        false,
+    );
     c.joints.push(pw.w.add_constraint(hinge, true));
-    let slider = Constraint::slider(&pw.w.bodies, e, h, tf([4.8, 1.5, 0.0]), tf([4.8, 1.5, 0.0]), true);
+    let slider = Constraint::slider(
+        &pw.w.bodies,
+        e,
+        h,
+        tf([4.8, 1.5, 0.0]),
+        tf([4.8, 1.5, 0.0]),
+        true,
+    );
     c.joints.push(pw.w.add_constraint(slider, true));
     c
 }
@@ -187,7 +274,11 @@ fn run(w: &mut World, steps: usize) {
 /// The sizes that must not grow. `pairs` and `manifolds` follow the physical state of the bodies (which AABBs
 /// overlap, which shapes touch) and are checked where the state is known (zero after a teardown).
 fn structure(s: WorldStats) -> WorldStats {
-    WorldStats { pairs: 0, manifolds: 0, ..s }
+    WorldStats {
+        pairs: 0,
+        manifolds: 0,
+        ..s
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -197,7 +288,10 @@ struct Snapshot {
 }
 
 fn snapshot(pw: &PWorld) -> Snapshot {
-    Snapshot { stats: structure(pw.w.stats()), counts: pw.counts() }
+    Snapshot {
+        stats: structure(pw.w.stats()),
+        counts: pw.counts(),
+    }
 }
 
 /// Bodies, shapes and constraints come and go in one world 100 times, as X_ITE does when `bodies` or `joints`
@@ -213,14 +307,32 @@ fn in_world_churn_100_cycles() {
         let c = build(&mut pw);
         run(&mut pw.w, 20);
         let during = pw.w.stats();
-        assert!(during.manifolds > 0, "cycle {cycle}: the scene made no contact");
+        assert!(
+            during.manifolds > 0,
+            "cycle {cycle}: the scene made no contact"
+        );
         assert_eq!(during.collision_objects, 9);
         assert_eq!(during.constraints, 3);
         teardown(&mut pw, c);
 
         let after = pw.w.stats();
-        assert_eq!((after.collision_objects, after.non_static, after.constraints, after.proxies, after.pairs, after.manifolds), (0, 0, 0, 0, 0, 0), "cycle {cycle}: the world kept something: {after:?}");
-        assert_eq!(pw.counts().shapes + pw.counts().bodies + pw.counts().motion_states, 0, "cycle {cycle}: arena slots in use");
+        assert_eq!(
+            (
+                after.collision_objects,
+                after.non_static,
+                after.constraints,
+                after.proxies,
+                after.pairs,
+                after.manifolds
+            ),
+            (0, 0, 0, 0, 0, 0),
+            "cycle {cycle}: the world kept something: {after:?}"
+        );
+        assert_eq!(
+            pw.counts().shapes + pw.counts().bodies + pw.counts().motion_states,
+            0,
+            "cycle {cycle}: arena slots in use"
+        );
 
         if matches!(cycle, 10 | 50 | 100) {
             at.push((cycle, snapshot(&pw), live()));
@@ -228,7 +340,10 @@ fn in_world_churn_100_cycles() {
     }
 
     for (cycle, s, bytes) in &at {
-        println!("LIFECYCLE in_world cycle {cycle}: {:?} {:?} heap {bytes} B", s.stats, s.counts);
+        println!(
+            "LIFECYCLE in_world cycle {cycle}: {:?} {:?} heap {bytes} B",
+            s.stats, s.counts
+        );
     }
 
     assert_eq!(at[0].1, at[1].1, "tables grew between cycle 10 and 50");
@@ -279,7 +394,11 @@ fn body_removed_with_contacts_and_joint_100_cycles() {
             pw.w.remove_rigid_body(rb);
         }
         let mid = pw.w.stats();
-        assert_eq!((mid.proxies, mid.pairs, mid.manifolds), (0, 0, 0), "cycle {cycle}: {mid:?}");
+        assert_eq!(
+            (mid.proxies, mid.pairs, mid.manifolds),
+            (0, 0, 0),
+            "cycle {cycle}: {mid:?}"
+        );
         for &rb in &c.bodies {
             pw.w.add_rigid_body(rb);
         }
@@ -339,7 +458,14 @@ fn trace(w: &mut World, bodies: &[BodyId], steps: usize) -> Vec<u64> {
         w.step_simulation(1.0 / 60.0, 12, 1.0 / 600.0);
         for &b in bodies {
             let body = w.body(b);
-            out.extend(body.world_tf.o.iter().chain(body.lin_vel.iter()).chain(body.ang_vel.iter()).map(|v| v.to_bits()));
+            out.extend(
+                body.world_tf
+                    .o
+                    .iter()
+                    .chain(body.lin_vel.iter())
+                    .chain(body.ang_vel.iter())
+                    .map(|v| v.to_bits()),
+            );
         }
         out.push(w.num_manifolds() as u64);
     }

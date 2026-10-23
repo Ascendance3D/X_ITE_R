@@ -18,18 +18,30 @@ struct Oracle {
 }
 
 fn oracle() -> HashMap<String, Oracle> {
-    let json: serde_json::Value = serde_json::from_slice(&r0_2_c_tests::fixture("xite/ORACLE.json")).unwrap();
+    let json: serde_json::Value =
+        serde_json::from_slice(&r0_2_c_tests::fixture("xite/ORACLE.json")).unwrap();
     assert_eq!(json["pinned"], "34cdf9f97");
     let mut map = HashMap::new();
     for r in json["results"].as_array().unwrap() {
-        let log: Vec<String> = r["log"].as_array().unwrap().iter().map(|l| l.as_str().unwrap().to_string()).collect();
+        let log: Vec<String> = r["log"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|l| l.as_str().unwrap().to_string())
+            .collect();
         map.insert(
             r["file"].as_str().unwrap().to_string(),
             Oracle {
                 ok: r["ok"].as_bool().unwrap(),
                 vrml: r["vrml"].as_str().map(str::to_string),
-                warns: log.iter().filter_map(|l| l.strip_prefix("warn: ").map(str::to_string)).collect(),
-                errors: log.iter().filter_map(|l| l.strip_prefix("error: ").map(str::to_string)).collect(),
+                warns: log
+                    .iter()
+                    .filter_map(|l| l.strip_prefix("warn: ").map(str::to_string))
+                    .collect(),
+                errors: log
+                    .iter()
+                    .filter_map(|l| l.strip_prefix("error: ").map(str::to_string))
+                    .collect(),
             },
         );
     }
@@ -46,10 +58,12 @@ fn assert_matches_oracle(file: &str) {
     let o = &oracle()[file];
     assert!(o.ok, "{file}: oracle did not load");
     let want = o.vrml.as_deref().unwrap();
-    let p = vrml97::parse_bytes(&input(file), file).unwrap_or_else(|e| panic!("{file}: published: {e}"));
+    let p = vrml97::parse_bytes(&input(file), file)
+        .unwrap_or_else(|e| panic!("{file}: published: {e}"));
     assert_eq!(p.to_vrml_string(), want, "{file}: published text");
     assert_eq!(p.warnings, o.warns, "{file}: published warnings");
-    let e = x3d_parse::parse_bytes(&input(file), file).unwrap_or_else(|e| panic!("{file}: engine: {e}"));
+    let e = x3d_parse::parse_bytes(&input(file), file)
+        .unwrap_or_else(|e| panic!("{file}: engine: {e}"));
     assert_eq!(e.to_vrml_string(), want, "{file}: engine text");
     assert_eq!(e.warnings, o.warns, "{file}: engine warnings");
 }
@@ -58,10 +72,18 @@ fn assert_matches_oracle(file: &str) {
 fn assert_fails_like_oracle(file: &str, message: &str, oracle_error: &str) {
     let o = &oracle()[file];
     assert!(!o.ok, "{file}: oracle loaded");
-    assert!(o.errors.iter().any(|e| e == oracle_error), "{file}: oracle errors {:?}", o.errors);
-    let p = vrml97::parse_bytes(&input(file), file).err().unwrap_or_else(|| panic!("{file}: published parsed"));
+    assert!(
+        o.errors.iter().any(|e| e == oracle_error),
+        "{file}: oracle errors {:?}",
+        o.errors
+    );
+    let p = vrml97::parse_bytes(&input(file), file)
+        .err()
+        .unwrap_or_else(|| panic!("{file}: published parsed"));
     assert_eq!(p.to_string(), message, "{file}: published error");
-    let e = x3d_parse::parse_bytes(&input(file), file).err().unwrap_or_else(|| panic!("{file}: engine parsed"));
+    let e = x3d_parse::parse_bytes(&input(file), file)
+        .err()
+        .unwrap_or_else(|| panic!("{file}: engine parsed"));
     assert_eq!(e.to_string(), message, "{file}: engine error");
 }
 
@@ -131,7 +153,11 @@ fn parse_unknown_node_type_warns_and_prints_null() {
 
 #[test]
 fn parse_unterminated_bracket_fails() {
-    assert_fails_like_oracle("unterminated-bracket.wrl", "Parser error at line 3: Expected ']'.", "Error: Expected ']'.");
+    assert_fails_like_oracle(
+        "unterminated-bracket.wrl",
+        "Parser error at line 3: Expected ']'.",
+        "Error: Expected ']'.",
+    );
 }
 
 #[test]
@@ -155,8 +181,13 @@ fn parse_export_facade_matches_xite() {
     for file in ["export.x3dv.wrl", "export-vrml2.wrl"] {
         let o = &oracle()[file];
         assert!(o.ok, "X_ITE accepts EXPORT in {file}");
-        let p = vrml97::parse_bytes(&input(file), file).unwrap_or_else(|e| panic!("{file}: facade: {e}"));
-        assert_eq!(p.to_vrml_string(), o.vrml.as_deref().unwrap(), "{file}: facade text");
+        let p = vrml97::parse_bytes(&input(file), file)
+            .unwrap_or_else(|e| panic!("{file}: facade: {e}"));
+        assert_eq!(
+            p.to_vrml_string(),
+            o.vrml.as_deref().unwrap(),
+            "{file}: facade text"
+        );
         assert_eq!(p.warnings, o.warns, "{file}: facade warnings");
         assert_eq!(p.exported.len(), 1, "{file}: one EXPORT");
     }
@@ -169,7 +200,8 @@ fn parse_import_facade_matches_xite_without_inline_load() {
     // `global TRUE`: the Inline constructor's legacy default for X3D <= 3.3 (node table "legacy").
     let want = o.vrml.clone().unwrap();
     assert!(want.contains("  global TRUE\n"));
-    let p = vrml97::parse_bytes(&input("import.wrl"), "import.wrl").unwrap_or_else(|e| panic!("import.wrl: facade: {e}"));
+    let p = vrml97::parse_bytes(&input("import.wrl"), "import.wrl")
+        .unwrap_or_else(|e| panic!("import.wrl: facade: {e}"));
     assert_eq!(p.to_vrml_string(), want);
     assert_eq!(p.warnings, o.warns, "import.wrl: facade warnings");
     assert_eq!(p.imported.len(), 1, "import.wrl: one IMPORT");
@@ -179,7 +211,11 @@ fn parse_import_facade_matches_xite_without_inline_load() {
 fn engine_parse_export_matches_xite() {
     for file in ["export.x3dv.wrl", "export-vrml2.wrl"] {
         let e = x3d_parse::parse_bytes(&input(file), file).unwrap();
-        assert_eq!(e.to_vrml_string(), oracle()[file].vrml.as_deref().unwrap(), "{file}");
+        assert_eq!(
+            e.to_vrml_string(),
+            oracle()[file].vrml.as_deref().unwrap(),
+            "{file}"
+        );
     }
 }
 
@@ -203,10 +239,17 @@ fn orthoviewpoint_fieldofview_facade_prints_sfvec4f() {
     // The node the difference is about, in X3D 3.3 and 4.0 headers.
     for file in ["ortho-v33.wrl", "ortho-v40.wrl"] {
         let want = oracle()[file].vrml.clone().unwrap();
-        assert!(want.ends_with("OrthoViewpoint {\n  fieldOfView -2 -1 2 1\n}\n"), "{file}: oracle");
-        let p = vrml97::parse_bytes(&input(file), file).unwrap().to_vrml_string();
+        assert!(
+            want.ends_with("OrthoViewpoint {\n  fieldOfView -2 -1 2 1\n}\n"),
+            "{file}: oracle"
+        );
+        let p = vrml97::parse_bytes(&input(file), file)
+            .unwrap()
+            .to_vrml_string();
         assert_eq!(p, want, "{file}: facade");
-        let e = x3d_parse::parse_bytes(&input(file), file).unwrap().to_vrml_string();
+        let e = x3d_parse::parse_bytes(&input(file), file)
+            .unwrap()
+            .to_vrml_string();
         assert_eq!(e, want, "{file}: engine");
     }
 }
@@ -273,7 +316,10 @@ fn parse_gzip_input_decodes_to_the_plain_scene() {
     assert_eq!(vrml97::gunzip(&gz), input("minimal.wrl"));
     assert_eq!(x3d_parse::gunzip(&gz), input("minimal.wrl"));
     assert_matches_oracle("minimal-gzip.wrl");
-    assert_eq!(oracle()["minimal-gzip.wrl"].vrml, oracle()["minimal.wrl"].vrml);
+    assert_eq!(
+        oracle()["minimal-gzip.wrl"].vrml,
+        oracle()["minimal.wrl"].vrml
+    );
 }
 
 #[test]
@@ -287,8 +333,14 @@ fn parse_truncated_gzip_fails_like_xite() {
     assert!(!o.ok);
     assert!(o.errors[0].contains("Couldn't parse X3D. No suitable file handler found for '"));
     for msg in [
-        vrml97::parse_bytes(&raw, "t.wrl").err().unwrap().to_string(),
-        x3d_parse::parse_bytes(&raw, "t.wrl").err().unwrap().to_string(),
+        vrml97::parse_bytes(&raw, "t.wrl")
+            .err()
+            .unwrap()
+            .to_string(),
+        x3d_parse::parse_bytes(&raw, "t.wrl")
+            .err()
+            .unwrap()
+            .to_string(),
     ] {
         assert_eq!(msg, "Couldn't parse X3D. No suitable file handler found.");
     }

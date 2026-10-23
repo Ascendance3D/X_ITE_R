@@ -9,7 +9,10 @@ use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 /// `http://oracle/<path relative to the oracle dir>` for a file inside the oracle directory.
 pub fn oracle_url(oracle_root: &Path, file: &Path) -> String {
     let rel = file.strip_prefix(oracle_root).unwrap_or(file);
-    format!("{ORACLE_PREFIX}{}", encode_path(&rel.to_string_lossy().replace('\\', "/")))
+    format!(
+        "{ORACLE_PREFIX}{}",
+        encode_path(&rel.to_string_lossy().replace('\\', "/"))
+    )
 }
 
 pub fn load_world(oracle_root: &Path, file: &Path, scripts: bool) -> Result<Runtime, String> {
@@ -17,8 +20,12 @@ pub fn load_world(oracle_root: &Path, file: &Path, scripts: bool) -> Result<Runt
 
     let url = oracle_url(oracle_root, file);
     let data = std::fs::read(file).map_err(|e| format!("{}: {e}", file.display()))?;
-    let fetcher = Box::new(LocalFetcher { root: oracle_root.to_path_buf(), prefix: ORACLE_PREFIX.to_string() });
-    let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url).map_err(|e| format!("{e:?}"))?;
+    let fetcher = Box::new(LocalFetcher {
+        root: oracle_root.to_path_buf(),
+        prefix: ORACLE_PREFIX.to_string(),
+    });
+    let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url)
+        .map_err(|e| format!("{e:?}"))?;
     let mut rt = Runtime::new(scene, fetcher);
     crate::shader_gpu::install(&mut rt);
 

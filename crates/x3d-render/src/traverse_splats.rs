@@ -27,7 +27,10 @@ impl Builder<'_> {
             }
         }
 
-        let data = Rc::new(splats::build(&splats::fields_of(sg, n), previous.as_deref()));
+        let data = Rc::new(splats::build(
+            &splats::fields_of(sg, n),
+            previous.as_deref(),
+        ));
 
         if let Some(c) = self.cache.as_deref_mut() {
             let frame = c.frame;
@@ -43,11 +46,17 @@ impl Builder<'_> {
         let default = Vector3::new(-1.0, -1.0, -1.0);
 
         if !sg.vec3(n, "bboxSize", default).equals(&default) {
-            return Box3::new(&sg.vec3(n, "bboxSize", Vector3::ZERO), &sg.vec3(n, "bboxCenter", Vector3::ZERO));
+            return Box3::new(
+                &sg.vec3(n, "bboxSize", Vector3::ZERO),
+                &sg.vec3(n, "bboxCenter", Vector3::ZERO),
+            );
         }
 
         match data.bbox {
-            Some((size, center)) => Box3::new(&Vector3::new(size[0], size[1], size[2]), &Vector3::new(center[0], center[1], center[2])),
+            Some((size, center)) => Box3::new(
+                &Vector3::new(size[0], size[1], size[2]),
+                &Vector3::new(center[0], center[1], center[2]),
+            ),
             None => Box3::EMPTY,
         }
     }
@@ -87,14 +96,24 @@ impl Builder<'_> {
             back_material: None,
             blend: None,
             depth: None,
-            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            clip_planes: self
+                .clip_planes
+                .iter()
+                .take(MAX_CLIP_PLANES)
+                .copied()
+                .collect(),
             style: None,
             style_texture: None,
             distance: center.z,
             viewport: (self.viewports.len() > 1).then(|| self.viewport()),
             volume: None,
             instances: None,
-            splats: Some(Rc::new(SplatDraw { node: n, data, model_view: *mv, linear })),
+            splats: Some(Rc::new(SplatDraw {
+                node: n,
+                data,
+                model_view: *mv,
+                linear,
+            })),
             custom: None,
             fog: self.local_fogs.last().cloned(),
         });

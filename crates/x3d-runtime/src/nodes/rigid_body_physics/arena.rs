@@ -38,7 +38,11 @@ pub struct PWorld {
 
 impl std::fmt::Debug for PWorld {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("PWorld").field("shapes", &self.live_shapes).field("bodies", &self.live_bodies).field("motion_states", &self.live_motion_states).finish()
+        f.debug_struct("PWorld")
+            .field("shapes", &self.live_shapes)
+            .field("bodies", &self.live_bodies)
+            .field("motion_states", &self.live_motion_states)
+            .finish()
     }
 }
 
@@ -115,7 +119,10 @@ impl PWorld {
     }
 
     /// Create a primitive with the engine's constructor and put it into the arena.
-    pub fn new_shape(&mut self, make: impl FnOnce(&mut crate::physics::bt::shape::Shapes) -> ShapeId) -> ShapeId {
+    pub fn new_shape(
+        &mut self,
+        make: impl FnOnce(&mut crate::physics::bt::shape::Shapes) -> ShapeId,
+    ) -> ShapeId {
         let before = self.w.shapes.v.len();
         let id = make(&mut self.w.shapes);
 
@@ -198,7 +205,12 @@ impl PWorld {
 }
 
 /// Copy the shape tree below `id` from `src` into `dst`, remapping ids; `map` collects old to new.
-pub fn clone_shape_tree(src: &PWorld, dst: &mut PWorld, id: ShapeId, map: &mut HashMap<ShapeId, ShapeId>) -> ShapeId {
+pub fn clone_shape_tree(
+    src: &PWorld,
+    dst: &mut PWorld,
+    id: ShapeId,
+    map: &mut HashMap<ShapeId, ShapeId>,
+) -> ShapeId {
     if let Some(&n) = map.get(&id) {
         return n;
     }
@@ -219,9 +231,17 @@ pub fn clone_shape_tree(src: &PWorld, dst: &mut PWorld, id: ShapeId, map: &mut H
 
 /// Copy a rigid body (and its motion state) from `src` into `dst`. `shape` is the body's new shape.
 /// Returns the new body and motion state ids. The copy is not in any dynamics world.
-pub fn clone_body(src: &PWorld, dst: &mut PWorld, body: BodyId, shape: ShapeId) -> (BodyId, MotionStateId) {
+pub fn clone_body(
+    src: &PWorld,
+    dst: &mut PWorld,
+    body: BodyId,
+    shape: ShapeId,
+) -> (BodyId, MotionStateId) {
     let mut b = src.w.bodies[body].clone();
-    let ms_tf = b.motion_state.map(|m| src.w.motion_states[m].tf).unwrap_or(b.world_tf);
+    let ms_tf = b
+        .motion_state
+        .map(|m| src.w.motion_states[m].tf)
+        .unwrap_or(b.world_tf);
     let ms = dst.new_motion_state(ms_tf);
 
     b.shape = shape;

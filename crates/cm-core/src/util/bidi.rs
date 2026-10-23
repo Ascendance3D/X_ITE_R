@@ -31,7 +31,16 @@ pub fn iterate_bidi_sections<F: FnMut(usize, usize, Direction, Option<usize>)>(
     let mut found = false;
     for (i, part) in order.iter().enumerate() {
         if part.from < to && part.to > from || from == to && part.to == from {
-            f(part.from.max(from), part.to.min(to), if part.level == 1 { Direction::Rtl } else { Direction::Ltr }, Some(i));
+            f(
+                part.from.max(from),
+                part.to.min(to),
+                if part.level == 1 {
+                    Direction::Rtl
+                } else {
+                    Direction::Ltr
+                },
+                Some(i),
+            );
             found = true;
         }
     }
@@ -42,7 +51,11 @@ pub fn iterate_bidi_sections<F: FnMut(usize, usize, Direction, Option<usize>)>(
 
 /// `getBidiPartAt(order, ch, sticky)`. Returns `(result, bidiOther)`; the JS keeps the
 /// second value in the module-level `bidiOther` variable.
-pub fn get_bidi_part_at(order: &[BidiSpan], ch: usize, sticky_before: bool) -> (Option<usize>, Option<usize>) {
+pub fn get_bidi_part_at(
+    order: &[BidiSpan],
+    ch: usize,
+    sticky_before: bool,
+) -> (Option<usize>, Option<usize>) {
     let mut found = None;
     let mut bidi_other = None;
     for (i, cur) in order.iter().enumerate() {
@@ -107,8 +120,16 @@ fn counts_as_num(t: u8) -> bool {
 /// `bidiOrdering(str, direction)`: `None` (JS `false`) when the text is plain
 /// left-to-right, otherwise the spans in visual order.
 pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
-    let outer_type = if direction == Direction::Ltr { b'L' } else { b'R' };
-    let bidi_re = |c: u16| (0x0590..=0x05f4).contains(&c) || (0x0600..=0x06ff).contains(&c) || (0x0700..=0x08ac).contains(&c);
+    let outer_type = if direction == Direction::Ltr {
+        b'L'
+    } else {
+        b'R'
+    };
+    let bidi_re = |c: u16| {
+        (0x0590..=0x05f4).contains(&c)
+            || (0x0600..=0x06ff).contains(&c)
+            || (0x0700..=0x08ac).contains(&c)
+    };
     if s.is_empty() || direction == Direction::Ltr && !s.iter().any(|&c| bidi_re(c)) {
         return None;
     }
@@ -158,7 +179,11 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
             while end < len && types[end] == b'%' {
                 end += 1;
             }
-            let replace = if (i > 0 && types[i - 1] == b'!') || (end < len && types[end] == b'1') { b'1' } else { b'N' };
+            let replace = if (i > 0 && types[i - 1] == b'!') || (end < len && types[end] == b'1') {
+                b'1'
+            } else {
+                b'N'
+            };
             for t in &mut types[i..end] {
                 *t = replace;
             }
@@ -185,7 +210,11 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
             }
             let before = (if i > 0 { types[i - 1] } else { outer_type }) == b'L';
             let after = (if end < len { types[end] } else { outer_type }) == b'L';
-            let replace = if before == after { if before { b'L' } else { b'R' } } else { outer_type };
+            let replace = if before == after {
+                if before { b'L' } else { b'R' }
+            } else {
+                outer_type
+            };
             for t in &mut types[i..end] {
                 *t = replace;
             }
@@ -203,7 +232,11 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
             while i < len && counts_as_left(types[i]) {
                 i += 1;
             }
-            order.push(BidiSpan { level: 0, from: start, to: i });
+            order.push(BidiSpan {
+                level: 0,
+                from: start,
+                to: i,
+            });
         } else {
             let mut pos = i;
             let mut at = order.len();
@@ -216,7 +249,14 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
             while j < i {
                 if counts_as_num(types[j]) {
                     if pos < j {
-                        order.insert(at, BidiSpan { level: 1, from: pos, to: j });
+                        order.insert(
+                            at,
+                            BidiSpan {
+                                level: 1,
+                                from: pos,
+                                to: j,
+                            },
+                        );
                         at += is_rtl;
                     }
                     let nstart = j;
@@ -224,7 +264,14 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
                     while j < i && counts_as_num(types[j]) {
                         j += 1;
                     }
-                    order.insert(at, BidiSpan { level: 2, from: nstart, to: j });
+                    order.insert(
+                        at,
+                        BidiSpan {
+                            level: 2,
+                            from: nstart,
+                            to: j,
+                        },
+                    );
                     at += is_rtl;
                     pos = j;
                 } else {
@@ -232,7 +279,14 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
                 }
             }
             if pos < i {
-                order.insert(at, BidiSpan { level: 1, from: pos, to: i });
+                order.insert(
+                    at,
+                    BidiSpan {
+                        level: 1,
+                        from: pos,
+                        to: i,
+                    },
+                );
             }
         }
     }
@@ -240,13 +294,24 @@ pub fn bidi_ordering(s: &[u16], direction: Direction) -> Option<Vec<BidiSpan>> {
         let lead = s.iter().take_while(|&&c| is_js_space(c)).count();
         if order[0].level == 1 && lead > 0 {
             order[0].from = lead;
-            order.insert(0, BidiSpan { level: 0, from: 0, to: lead });
+            order.insert(
+                0,
+                BidiSpan {
+                    level: 0,
+                    from: 0,
+                    to: lead,
+                },
+            );
         }
         let trail = s.iter().rev().take_while(|&&c| is_js_space(c)).count();
         let last = order.len() - 1;
         if order[last].level == 1 && trail > 0 {
             order[last].to -= trail;
-            order.push(BidiSpan { level: 0, from: len - trail, to: len });
+            order.push(BidiSpan {
+                level: 0,
+                from: len - trail,
+                to: len,
+            });
         }
     }
     if direction == Direction::Rtl {

@@ -44,7 +44,17 @@ pub struct FontStyleParams {
 
 impl Default for FontStyleParams {
     fn default() -> Self {
-        FontStyleParams { size: 1.0, spacing: 1.0, horizontal: true, left_to_right: true, top_to_bottom: true, justify: vec!["BEGIN".into()], content_scale: 1.0, screen: false, cached_alignments: None }
+        FontStyleParams {
+            size: 1.0,
+            spacing: 1.0,
+            horizontal: true,
+            left_to_right: true,
+            top_to_bottom: true,
+            justify: vec!["BEGIN".into()],
+            content_scale: 1.0,
+            screen: false,
+            cached_alignments: None,
+        }
     }
 }
 
@@ -70,20 +80,45 @@ impl FontStyleParams {
             }
         }
 
-        if index != 0 { Alignment::First } else { Alignment::Begin }
+        if index != 0 {
+            Alignment::First
+        } else {
+            Alignment::Begin
+        }
     }
 
     /// X3DFontStyleNode.alignments: what `set_justify__` last computed (see `cached_alignments`).
     pub fn alignments(&self) -> (Alignment, Alignment) {
-        self.cached_alignments.unwrap_or_else(|| self.compute_alignments())
+        self.cached_alignments
+            .unwrap_or_else(|| self.compute_alignments())
     }
 
     /// X3DFontStyleNode.set_justify__: (major, minor).
     pub fn compute_alignments(&self) -> (Alignment, Alignment) {
-        let major_normal = if self.horizontal { self.left_to_right } else { self.top_to_bottom };
-        let major = if !self.justify.is_empty() { self.get_alignment(0, major_normal) } else if major_normal { Alignment::Begin } else { Alignment::End };
-        let minor_normal = if self.horizontal { self.top_to_bottom } else { self.left_to_right };
-        let minor = if self.justify.len() > 1 { self.get_alignment(1, minor_normal) } else if minor_normal { Alignment::First } else { Alignment::End };
+        let major_normal = if self.horizontal {
+            self.left_to_right
+        } else {
+            self.top_to_bottom
+        };
+        let major = if !self.justify.is_empty() {
+            self.get_alignment(0, major_normal)
+        } else if major_normal {
+            Alignment::Begin
+        } else {
+            Alignment::End
+        };
+        let minor_normal = if self.horizontal {
+            self.top_to_bottom
+        } else {
+            self.left_to_right
+        };
+        let minor = if self.justify.len() > 1 {
+            self.get_alignment(1, minor_normal)
+        } else if minor_normal {
+            Alignment::First
+        } else {
+            Alignment::End
+        };
 
         (major, minor)
     }
@@ -100,12 +135,20 @@ pub struct TextParams {
 
 impl TextParams {
     pub fn from_strings(strings: &[String], length: &[f64], max_extent: f64) -> Self {
-        TextParams { string: strings.iter().map(|s| s.encode_utf16().collect()).collect(), length: length.to_vec(), max_extent }
+        TextParams {
+            string: strings.iter().map(|s| s.encode_utf16().collect()).collect(),
+            length: length.to_vec(),
+            max_extent,
+        }
     }
 
     /// Text.getLength
     fn get_length(&self, index: usize) -> f64 {
-        if index < self.length.len() { self.length[index].max(0.0) } else { 0.0 }
+        if index < self.length.len() {
+            self.length[index].max(0.0)
+        } else {
+            0.0
+        }
     }
 }
 
@@ -141,13 +184,32 @@ impl Box2 {
     }
 
     fn with(size: [f64; 2], center: [f64; 2]) -> Box2 {
-        Box2 { m: [size[0] / 2.0, 0.0, 0.0, 0.0, size[1] / 2.0, 0.0, center[0], center[1], 1.0] }
+        Box2 {
+            m: [
+                size[0] / 2.0,
+                0.0,
+                0.0,
+                0.0,
+                size[1] / 2.0,
+                0.0,
+                center[0],
+                center[1],
+                1.0,
+            ],
+        }
     }
 
     fn set_extents(min: [f64; 2], max: [f64; 2]) -> Box2 {
-        let (sx, sy, cx, cy) = ((max[0] - min[0]) / 2.0, (max[1] - min[1]) / 2.0, (max[0] + min[0]) / 2.0, (max[1] + min[1]) / 2.0);
+        let (sx, sy, cx, cy) = (
+            (max[0] - min[0]) / 2.0,
+            (max[1] - min[1]) / 2.0,
+            (max[0] + min[0]) / 2.0,
+            (max[1] + min[1]) / 2.0,
+        );
 
-        Box2 { m: [sx, 0.0, 0.0, 0.0, sy, 0.0, cx, cy, 1.0] }
+        Box2 {
+            m: [sx, 0.0, 0.0, 0.0, sy, 0.0, cx, cy, 1.0],
+        }
     }
 
     fn is_empty(&self) -> bool {
@@ -169,7 +231,10 @@ impl Box2 {
 
         let c = [self.m[6], self.m[7]];
 
-        ([min[0] + c[0], min[1] + c[1]], [max[0] + c[0], max[1] + c[1]])
+        (
+            [min[0] + c[0], min[1] + c[1]],
+            [max[0] + c[0], max[1] + c[1]],
+        )
     }
 
     fn add(&mut self, other: &Box2) {
@@ -185,7 +250,10 @@ impl Box2 {
         let (lmin, lmax) = self.extents();
         let (rmin, rmax) = other.extents();
 
-        *self = Box2::set_extents([lmin[0].min(rmin[0]), lmin[1].min(rmin[1])], [lmax[0].max(rmax[0]), lmax[1].max(rmax[1])]);
+        *self = Box2::set_extents(
+            [lmin[0].min(rmin[0]), lmin[1].min(rmin[1])],
+            [lmax[0].max(rmax[0]), lmax[1].max(rmax[1])],
+        );
     }
 
     /// Matrix3.multRight
@@ -280,8 +348,18 @@ impl State<'_> {
     }
 
     /// X3DTextGeometry.getHorizontalLineExtents: (glyphs, min, max).
-    fn horizontal_line_extents(&mut self, fs: &FontStyleParams, major: Alignment, line: &[u16], line_number: usize) -> (Vec<u16>, [f64; 2], [f64; 2]) {
-        let normal = if fs.horizontal { fs.left_to_right } else { fs.top_to_bottom };
+    fn horizontal_line_extents(
+        &mut self,
+        fs: &FontStyleParams,
+        major: Alignment,
+        line: &[u16],
+        line_number: usize,
+    ) -> (Vec<u16>, [f64; 2], [f64; 2]) {
+        let normal = if fs.horizontal {
+            fs.left_to_right
+        } else {
+            fs.top_to_bottom
+        };
         let glyphs = self.string_to_glyphs(line, normal, line_number);
         let num_glyphs = glyphs.len();
         let (mut x_min, mut x_max) = (0.0f64, 0.0f64);
@@ -289,10 +367,18 @@ impl State<'_> {
 
         for g in 0..num_glyphs {
             let glyph = glyphs[g];
-            let kerning = if g + 1 < num_glyphs { self.font.kerning(glyph, glyphs[g + 1]) } else { 0.0 };
+            let kerning = if g + 1 < num_glyphs {
+                self.font.kerning(glyph, glyphs[g + 1])
+            } else {
+                0.0
+            };
             let (gmin, gmax) = self.extents(glyph);
 
-            x_max += if g + 1 < num_glyphs { self.font.advance_width(glyph) + kerning } else { gmax[0] * self.font.units_per_em };
+            x_max += if g + 1 < num_glyphs {
+                self.font.advance_width(glyph) + kerning
+            } else {
+                gmax[0] * self.font.units_per_em
+            };
             y_min = y_min.min(gmin[1]);
             y_max = y_max.max(gmax[1]);
         }
@@ -316,7 +402,13 @@ impl State<'_> {
         (glyphs, min, max)
     }
 
-    fn horizontal(&mut self, text: &TextParams, fs: &FontStyleParams, major: Alignment, minor: Alignment) {
+    fn horizontal(
+        &mut self,
+        text: &TextParams,
+        fs: &FontStyleParams,
+        major: Alignment,
+        minor: Alignment,
+    ) {
         let num_lines = text.string.len();
         let max_extent = text.max_extent.max(0.0);
         let top_to_bottom = fs.top_to_bottom;
@@ -331,7 +423,11 @@ impl State<'_> {
         self.scales = vec![0.0; num_lines];
         self.line_bounds = vec![[0.0; 2]; num_lines];
 
-        let (first, last, step): (isize, isize, isize) = if top_to_bottom { (0, num_lines as isize, 1) } else { (num_lines as isize - 1, -1, -1) };
+        let (first, last, step): (isize, isize, isize) = if top_to_bottom {
+            (0, num_lines as isize, 1)
+        } else {
+            (num_lines as isize - 1, -1, -1)
+        };
         let mut l = first;
         let mut ll = 0usize;
 
@@ -342,7 +438,14 @@ impl State<'_> {
             let length = text.get_length(l as usize) * content_scale;
             let w = size[0] * scale;
             let mut char_spacing = 0.0;
-            let mut line_bound = [w, if ll == 0 { max[1] - self.font.descender / self.font.units_per_em * scale } else { spacing }];
+            let mut line_bound = [
+                w,
+                if ll == 0 {
+                    max[1] - self.font.descender / self.font.units_per_em * scale
+                } else {
+                    spacing
+                },
+            ];
 
             if length != 0.0 {
                 if self.compression == TextCompression::CharSpacing && glyphs.len() > 1 {
@@ -354,7 +457,11 @@ impl State<'_> {
             }
 
             self.char_spacings[ll] = char_spacing;
-            self.scales[ll] = if self.compression == TextCompression::Scaling { line_bound[0] / w } else { 1.0 };
+            self.scales[ll] = if self.compression == TextCompression::Scaling {
+                line_bound[0] / w
+            } else {
+                1.0
+            };
             self.line_bounds[l as usize] = line_bound;
 
             let t = match major {
@@ -368,7 +475,10 @@ impl State<'_> {
             let mut center = [min[0] + size[0] / 2.0, min[1] + size[1] / 2.0];
 
             center = [center[0] * scale, center[1] * scale];
-            center = [center[0] + self.translations[ll][0], center[1] + self.translations[ll][1]];
+            center = [
+                center[0] + self.translations[ll][0],
+                center[1] + self.translations[ll][1],
+            ];
             size = [size[0] * scale, size[1] * scale];
             bbox.add(&Box2::with(size, center));
 
@@ -389,7 +499,9 @@ impl State<'_> {
                                 continue;
                             }
 
-                            self.char_spacings[i] -= (self.line_bounds[i][0] - self.line_bounds[i][0] * s) / (text.string[i].len() - 1) as f64;
+                            self.char_spacings[i] -= (self.line_bounds[i][0]
+                                - self.line_bounds[i][0] * s)
+                                / (text.string[i].len() - 1) as f64;
                         }
                     }
                     TextCompression::Scaling => {
@@ -428,7 +540,13 @@ impl State<'_> {
         self.finish(min, max);
     }
 
-    fn vertical(&mut self, text: &TextParams, fs: &FontStyleParams, major: Alignment, minor: Alignment) {
+    fn vertical(
+        &mut self,
+        text: &TextParams,
+        fs: &FontStyleParams,
+        major: Alignment,
+        minor: Alignment,
+    ) {
         let num_lines = text.string.len();
         let max_extent = text.max_extent.max(0.0);
         let (left_to_right, top_to_bottom) = (fs.left_to_right, fs.top_to_bottom);
@@ -444,7 +562,11 @@ impl State<'_> {
         self.scales = vec![0.0; num_lines];
         self.line_bounds = vec![[0.0; 2]; num_lines];
 
-        let (first_l, last_l, step_l): (isize, isize, isize) = if left_to_right { (0, num_lines as isize, 1) } else { (num_lines as isize - 1, -1, -1) };
+        let (first_l, last_l, step_l): (isize, isize, isize) = if left_to_right {
+            (0, num_lines as isize, 1)
+        } else {
+            (num_lines as isize - 1, -1, -1)
+        };
         let mut t = 0usize;
         let mut l = first_l;
 
@@ -455,21 +577,33 @@ impl State<'_> {
             let t0 = t;
             let num_chars_line = glyphs.len();
             let mut line_bbox = Box2::zero();
-            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom { (0, num_chars_line as isize, 1) } else { (num_chars_line as isize - 1, -1, -1) };
+            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom {
+                (0, num_chars_line as isize, 1)
+            } else {
+                (num_chars_line as isize - 1, -1, -1)
+            };
             let mut g = first_g;
 
             while g != last_g {
                 let glyph = glyphs[g as usize];
                 let (gmin, gmax) = self.extents(glyph);
                 let size = [gmax[0] - gmin[0], gmax[1] - gmin[1]];
-                let glyph_number = if top_to_bottom { g } else { num_chars_line as isize - g - 1 };
+                let glyph_number = if top_to_bottom {
+                    g
+                } else {
+                    num_chars_line as isize - g - 1
+                };
 
                 self.line_indices[t] = lu;
-                self.translations[t] = [(spacing - size[0] - gmin[0]) / 2.0, -(glyph_number as f64)];
+                self.translations[t] =
+                    [(spacing - size[0] - gmin[0]) / 2.0, -(glyph_number as f64)];
 
                 let mut center = [gmin[0] + size[0] / 2.0, gmin[1] + size[1] / 2.0];
 
-                center = [center[0] + self.translations[t][0], center[1] + self.translations[t][1]];
+                center = [
+                    center[0] + self.translations[t][0],
+                    center[1] + self.translations[t][1],
+                ];
                 line_bbox.add(&Box2::with(size, center));
 
                 g += step_g;
@@ -478,11 +612,18 @@ impl State<'_> {
 
             let (mut min, mut max) = line_bbox.extents();
             let mut size = [max[0] - min[0], max[1] - min[1]];
-            let line_number = if left_to_right { lu } else { num_lines - lu - 1 };
+            let line_number = if left_to_right {
+                lu
+            } else {
+                num_lines - lu - 1
+            };
             let padding = (spacing - size[0]) / 2.0;
             let length = text.get_length(lu) * content_scale;
             let mut char_spacing = 0.0;
-            let mut line_bound = [if lu == 0 { spacing - padding } else { spacing }, if num_chars_line != 0 { size[1] } else { 0.0 }];
+            let mut line_bound = [
+                if lu == 0 { spacing - padding } else { spacing },
+                if num_chars_line != 0 { size[1] } else { 0.0 },
+            ];
 
             line_bound = [line_bound[0] * scale, line_bound[1] * scale];
 
@@ -508,23 +649,36 @@ impl State<'_> {
             }
 
             self.char_spacings[lu] = char_spacing;
-            self.scales[lu] = if self.compression == TextCompression::Scaling { line_bound[1] / h } else { 1.0 };
+            self.scales[lu] = if self.compression == TextCompression::Scaling {
+                line_bound[1] / h
+            } else {
+                1.0
+            };
             self.line_bounds[lu] = line_bound;
 
             let ls = line_number as f64 * spacing;
             let (translation1, translation2) = match major {
                 Alignment::Begin | Alignment::First => ([ls, -max[1]], [ls, -max[1]]),
                 Alignment::Middle => ([ls, size[1] / 2.0 - max[1]], [ls, size[1] / 2.0 - max[1]]),
-                Alignment::End => ([ls, size[1] / self.scales[lu] - max[1]], [ls, size[1] - max[1]]),
+                Alignment::End => (
+                    [ls, size[1] / self.scales[lu] - max[1]],
+                    [ls, size[1] - max[1]],
+                ),
             };
 
             for tt in t0..t {
-                self.translations[tt] = [(self.translations[tt][0] + translation1[0]) * scale, (self.translations[tt][1] + translation1[1]) * scale];
+                self.translations[tt] = [
+                    (self.translations[tt][0] + translation1[0]) * scale,
+                    (self.translations[tt][1] + translation1[1]) * scale,
+                ];
             }
 
             let mut center = [min[0] + size[0] / 2.0, min[1] + size[1] / 2.0];
 
-            center = [(center[0] + translation2[0]) * scale, (center[1] + translation2[1]) * scale];
+            center = [
+                (center[0] + translation2[0]) * scale,
+                (center[1] + translation2[1]) * scale,
+            ];
             size = [size[0] * scale, size[1] * scale];
             bbox.add(&Box2::with(size, center));
 
@@ -544,7 +698,9 @@ impl State<'_> {
                                 continue;
                             }
 
-                            self.char_spacings[i] -= (self.line_bounds[i][1] - self.line_bounds[i][1] * s) / (text.string[i].len() - 1) as f64;
+                            self.char_spacings[i] -= (self.line_bounds[i][1]
+                                - self.line_bounds[i][1] * s)
+                                / (text.string[i].len() - 1) as f64;
                         }
 
                         match major {
@@ -552,14 +708,16 @@ impl State<'_> {
                                 for t in 0..self.translations.len() {
                                     let l = self.line_indices[t];
 
-                                    self.translations[t][1] -= (self.line_bounds[l][1] - self.line_bounds[l][1] * s) / 2.0;
+                                    self.translations[t][1] -=
+                                        (self.line_bounds[l][1] - self.line_bounds[l][1] * s) / 2.0;
                                 }
                             }
                             Alignment::End => {
                                 for t in 0..self.translations.len() {
                                     let l = self.line_indices[t];
 
-                                    self.translations[t][1] -= self.line_bounds[l][1] - self.line_bounds[l][1] * s;
+                                    self.translations[t][1] -=
+                                        self.line_bounds[l][1] - self.line_bounds[l][1] * s;
                                 }
                             }
                             _ => {}
@@ -597,11 +755,22 @@ impl State<'_> {
     /// The common tail of `horizontal` / `vertical`: translate by minorAlignment, set origin and
     /// the Box3 extents (`this .bbox .setExtents`, read back with getExtents).
     fn finish(&mut self, mut min: [f64; 2], mut max: [f64; 2]) {
-        min = [min[0] + self.minor_alignment[0], min[1] + self.minor_alignment[1]];
-        max = [max[0] + self.minor_alignment[0], max[1] + self.minor_alignment[1]];
+        min = [
+            min[0] + self.minor_alignment[0],
+            min[1] + self.minor_alignment[1],
+        ];
+        max = [
+            max[0] + self.minor_alignment[0],
+            max[1] + self.minor_alignment[1],
+        ];
         self.origin = [min[0], max[1], 0.0];
 
-        let (sx, sy, cx, cy) = ((max[0] - min[0]) / 2.0, (max[1] - min[1]) / 2.0, (max[0] + min[0]) / 2.0, (max[1] + min[1]) / 2.0);
+        let (sx, sy, cx, cy) = (
+            (max[0] - min[0]) / 2.0,
+            (max[1] - min[1]) / 2.0,
+            (max[0] + min[0]) / 2.0,
+            (max[1] + min[1]) / 2.0,
+        );
 
         self.bbox_min = [cx - sx, cy - sy, 0.0];
         self.bbox_max = [cx + sx, cy + sy, 0.0];
@@ -609,9 +778,18 @@ impl State<'_> {
 }
 
 /// X3DTextGeometry.update (configure + PolygonText.build) for one Text/FontStyle.
-pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, quality: PrimitiveQuality, compression: TextCompression) -> TextLayout {
+pub fn layout(
+    font: Option<&Font>,
+    text: &TextParams,
+    fs: &FontStyleParams,
+    quality: PrimitiveQuality,
+    compression: TextCompression,
+) -> TextLayout {
     let num_lines = text.string.len();
-    let mut out = TextLayout { line_bounds: vec![[0.0; 2]; num_lines], ..Default::default() };
+    let mut out = TextLayout {
+        line_bounds: vec![[0.0; 2]; num_lines],
+        ..Default::default()
+    };
 
     // X3DTextGeometry.configure with no lines or no font: origin and textBounds zero, an empty bbox. ScreenText.configure goes on.
     let Some(font) = font.filter(|_| num_lines != 0) else {
@@ -668,7 +846,12 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
     let origin = st.origin;
     let size_units_per_em = size / font.units_per_em;
     let push = |out: &mut TextLayout, x: f64, y: f64| {
-        out.tex_coords.extend_from_slice(&[(x - origin[0]) / spacing, (y - origin[1]) / spacing, 0.0, 1.0]);
+        out.tex_coords.extend_from_slice(&[
+            (x - origin[0]) / spacing,
+            (y - origin[1]) / spacing,
+            0.0,
+            1.0,
+        ]);
         out.normals.extend_from_slice(&[0.0, 0.0, 1.0]);
         out.vertices.extend_from_slice(&[x, y, 0.0, 1.0]);
     };
@@ -684,14 +867,25 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
             for g in 0..line.len() {
                 let glyph = line[g];
                 let geometry = font.glyph_geometry(glyph, quality);
-                let x_offset = st.minor_alignment[0] + translation[0] + advance_width * scale + g as f64 * char_spacing;
+                let x_offset = st.minor_alignment[0]
+                    + translation[0]
+                    + advance_width * scale
+                    + g as f64 * char_spacing;
                 let y_offset = st.minor_alignment[1] + translation[1];
 
                 for p in geometry.iter() {
-                    push(&mut out, p[0] * size * scale + x_offset, p[1] * size + y_offset);
+                    push(
+                        &mut out,
+                        p[0] * size * scale + x_offset,
+                        p[1] * size + y_offset,
+                    );
                 }
 
-                let kerning = if g + 1 < line.len() { font.kerning(glyph, line[g + 1]) } else { 0.0 };
+                let kerning = if g + 1 < line.len() {
+                    font.kerning(glyph, line[g + 1])
+                } else {
+                    0.0
+                };
 
                 advance_width += (font.advance_width(glyph) + kerning) * size_units_per_em;
             }
@@ -699,14 +893,22 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
     } else {
         let (left_to_right, top_to_bottom) = (fs.left_to_right, fs.top_to_bottom);
         let n = text.string.len() as isize;
-        let (first, last, step): (isize, isize, isize) = if left_to_right { (0, n, 1) } else { (n - 1, -1, -1) };
+        let (first, last, step): (isize, isize, isize) = if left_to_right {
+            (0, n, 1)
+        } else {
+            (n - 1, -1, -1)
+        };
         let mut l = first;
         let mut t = 0usize;
 
         while l != last {
             let line = st.glyphs[l as usize].clone();
             let num_chars = line.len() as isize;
-            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom { (0, num_chars, 1) } else { (num_chars - 1, -1, -1) };
+            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom {
+                (0, num_chars, 1)
+            } else {
+                (num_chars - 1, -1, -1)
+            };
             let char_spacing = st.char_spacings[l as usize];
             let scale = st.scales[l as usize];
             let mut g = first_g;
@@ -718,7 +920,8 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
 
                 for p in geometry.iter() {
                     let x = p[0] * size + st.minor_alignment[0] + translation[0];
-                    let y = p[1] * size * scale + st.minor_alignment[1] + translation[1] * scale - glyph_number as f64 * char_spacing;
+                    let y = p[1] * size * scale + st.minor_alignment[1] + translation[1] * scale
+                        - glyph_number as f64 * char_spacing;
 
                     push(&mut out, x, y);
                 }
@@ -736,11 +939,19 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
 
 /// ScreenText.configure: the box `min`..`max` and size `text_bounds` X3DTextGeometry.configure made, rounded to whole pixels with
 /// a 1 pixel border on the bottom and right: (min, max, the size in pixels).
-fn screen_box(min: [f64; 2], max: [f64; 2], text_bounds: [f64; 2], fs: &FontStyleParams) -> ([f64; 2], [f64; 2], [f64; 2]) {
+fn screen_box(
+    min: [f64; 2],
+    max: [f64; 2],
+    text_bounds: [f64; 2],
+    fs: &FontStyleParams,
+) -> ([f64; 2], [f64; 2], [f64; 2]) {
     let offset = 1.0;
 
     // text ._textBounds is an SFVec2f: its components are single precision.
-    let bounds = [(text_bounds[0] as f32).ceil() as f64 + offset, (text_bounds[1] as f32).ceil() as f64 + offset];
+    let bounds = [
+        (text_bounds[0] as f32).ceil() as f64 + offset,
+        (text_bounds[1] as f32).ceil() as f64 + offset,
+    ];
     let (mut min, mut max) = (min, max);
 
     min[0] -= offset;
@@ -790,7 +1001,12 @@ fn js_round(x: f64) -> f64 {
 /// pixels with a 1 pixel border on the bottom and right, and the glyph outlines filled into a canvas of that size.
 fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout {
     let content_scale = fs.content_scale;
-    let (min, max, bounds) = screen_box([st.bbox_min[0], st.bbox_min[1]], [st.bbox_max[0], st.bbox_max[1]], st.text_bounds, fs);
+    let (min, max, bounds) = screen_box(
+        [st.bbox_min[0], st.bbox_min[1]],
+        [st.bbox_max[0], st.bbox_max[1]],
+        st.text_bounds,
+        fs,
+    );
     let mut out = TextLayout::default();
 
     out.min = [min[0], min[1], 0.0];
@@ -801,13 +1017,23 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
     let canvas = [(bounds[0]).trunc() as usize, (bounds[1]).trunc() as usize];
 
     out.text_bounds = [bounds[0] / content_scale, bounds[1] / content_scale];
-    out.line_bounds = st.line_bounds.iter().map(|b| [b[0] / content_scale, b[1] / content_scale]).collect();
+    out.line_bounds = st
+        .line_bounds
+        .iter()
+        .map(|b| [b[0] / content_scale, b[1] / content_scale])
+        .collect();
 
     // ScreenText.build: the quad.
     let (x0, y0, x1, y1) = (min[0], min[1], max[0], max[1]);
 
-    out.vertices = vec![x0, y0, 0.0, 1.0, x1, y0, 0.0, 1.0, x1, y1, 0.0, 1.0, x0, y0, 0.0, 1.0, x1, y1, 0.0, 1.0, x0, y1, 0.0, 1.0];
-    out.tex_coords = vec![0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0];
+    out.vertices = vec![
+        x0, y0, 0.0, 1.0, x1, y0, 0.0, 1.0, x1, y1, 0.0, 1.0, x0, y0, 0.0, 1.0, x1, y1, 0.0, 1.0,
+        x0, y1, 0.0, 1.0,
+    ];
+    out.tex_coords = vec![
+        0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+        0.0, 1.0, 0.0, 1.0, 0.0, 1.0,
+    ];
     out.normals = [0.0, 0.0, 1.0].repeat(6);
 
     // The canvas has the size of the text box, so a pixel is a unit of the text space: pixel (i, k) covers x from min.x + i,
@@ -872,12 +1098,19 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
 
             for g in 0..line.len() {
                 let glyph = line[g];
-                let x = st.minor_alignment[0] + translation[0] + advance_width * scale + g as f64 * char_spacing;
+                let x = st.minor_alignment[0]
+                    + translation[0]
+                    + advance_width * scale
+                    + g as f64 * char_spacing;
                 let y = st.minor_alignment[1] + translation[1];
 
                 add(glyph, x, y, scale, 1.0);
 
-                let kerning = if g + 1 < line.len() { st.font.kerning(glyph, line[g + 1]) } else { 0.0 };
+                let kerning = if g + 1 < line.len() {
+                    st.font.kerning(glyph, line[g + 1])
+                } else {
+                    0.0
+                };
 
                 advance_width += (st.font.advance_width(glyph) + kerning) * size_units_per_em;
             }
@@ -885,14 +1118,22 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
     } else {
         let (left_to_right, top_to_bottom) = (fs.left_to_right, fs.top_to_bottom);
         let n = text.string.len() as isize;
-        let (first, last, step): (isize, isize, isize) = if left_to_right { (0, n, 1) } else { (n - 1, -1, -1) };
+        let (first, last, step): (isize, isize, isize) = if left_to_right {
+            (0, n, 1)
+        } else {
+            (n - 1, -1, -1)
+        };
         let mut l = first;
         let mut t = 0usize;
 
         while l != last {
             let line = &st.glyphs[l as usize];
             let num_chars = line.len() as isize;
-            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom { (0, num_chars, 1) } else { (num_chars - 1, -1, -1) };
+            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom {
+                (0, num_chars, 1)
+            } else {
+                (num_chars - 1, -1, -1)
+            };
             let char_spacing = st.char_spacings[l as usize];
             let scale = st.scales[l as usize];
             let mut g = first_g;
@@ -901,7 +1142,8 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
                 let translation = st.translations[t];
                 let glyph_number = if top_to_bottom { g } else { num_chars - g - 1 };
                 let x = st.minor_alignment[0] + translation[0];
-                let y = st.minor_alignment[1] + translation[1] * scale - glyph_number as f64 * char_spacing;
+                let y = st.minor_alignment[1] + translation[1] * scale
+                    - glyph_number as f64 * char_spacing;
 
                 add(line[g as usize], x, y, 1.0, scale);
 
@@ -936,7 +1178,8 @@ fn skia_quad(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) 
         let t = (a - b) / (a - 2.0 * b + c);
 
         if t > 0.0 && t < 1.0 {
-            let lerp = |p: [f64; 2], q: [f64; 2]| [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+            let lerp =
+                |p: [f64; 2], q: [f64; 2]| [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
             let (ab, bc) = (lerp(p0, p1), lerp(p1, p2));
             let mut mid = lerp(ab, bc);
             let y = mid[1];
@@ -962,7 +1205,11 @@ fn quad_edge(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) 
     let dx = (((x1 << 1) - x0 - x2) >> 2).abs();
     let dy = (((y1 << 1) - y0 - y2) >> 2).abs();
     // cheap_distance, then diff_to_shift
-    let dist = if dx > dy { dx + (dy >> 1) } else { dy + (dx >> 1) };
+    let dist = if dx > dy {
+        dx + (dy >> 1)
+    } else {
+        dy + (dx >> 1)
+    };
     let dist = (dist + (1 << 4)) >> (3 + 2);
     let mut shift = (32 - (dist as u32).leading_zeros()) >> 1;
 
@@ -979,6 +1226,9 @@ fn quad_edge(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) 
         let t = i as f64 / n as f64;
         let u = 1.0 - t;
 
-        out.push([u * u * p0[0] + 2.0 * u * t * p1[0] + t * t * p2[0], u * u * p0[1] + 2.0 * u * t * p1[1] + t * t * p2[1]]);
+        out.push([
+            u * u * p0[0] + 2.0 * u * t * p1[0] + t * t * p2[0],
+            u * u * p0[1] + 2.0 * u * t * p1[1] + t * t * p2[1],
+        ]);
     }
 }

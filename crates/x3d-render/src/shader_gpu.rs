@@ -26,10 +26,23 @@ pub struct NagaCompiler;
 
 impl ShaderCompiler for NagaCompiler {
     fn compile_part(&self, fragment: bool, source: &str, options: &[String]) -> Result<(), String> {
-        crate::glsl_compat::compile_part(if fragment { crate::glsl_compat::Stage::Fragment } else { crate::glsl_compat::Stage::Vertex }, source, options)
+        crate::glsl_compat::compile_part(
+            if fragment {
+                crate::glsl_compat::Stage::Fragment
+            } else {
+                crate::glsl_compat::Stage::Vertex
+            },
+            source,
+            options,
+        )
     }
 
-    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource], transform_feedback_varyings: &[String]) -> Result<Vec<String>, String> {
+    fn link(
+        &self,
+        vertex: &[ShaderSource],
+        fragment: &[ShaderSource],
+        transform_feedback_varyings: &[String],
+    ) -> Result<Vec<String>, String> {
         let program = link_sources(vertex, fragment)?;
         crate::glsl_compat::check_transform_feedback(&program, transform_feedback_varyings)?;
         Ok(program.warnings.clone())
@@ -41,9 +54,18 @@ pub fn install(rt: &mut x3d_runtime::Runtime) {
     rt.shaders.compiler = Some(Box::new(NagaCompiler));
 }
 
-pub fn link_sources(vertex: &[ShaderSource], fragment: &[ShaderSource]) -> Result<Rc<Program>, String> {
-    let v: Vec<(String, Vec<String>)> = vertex.iter().map(|s| (s.source.clone(), s.options.clone())).collect();
-    let f: Vec<(String, Vec<String>)> = fragment.iter().map(|s| (s.source.clone(), s.options.clone())).collect();
+pub fn link_sources(
+    vertex: &[ShaderSource],
+    fragment: &[ShaderSource],
+) -> Result<Rc<Program>, String> {
+    let v: Vec<(String, Vec<String>)> = vertex
+        .iter()
+        .map(|s| (s.source.clone(), s.options.clone()))
+        .collect();
+    let f: Vec<(String, Vec<String>)> = fragment
+        .iter()
+        .map(|s| (s.source.clone(), s.options.clone()))
+        .collect();
     crate::glsl_compat::link_cached(&v, &f)
 }
 
@@ -107,10 +129,30 @@ fn set3(p: &Program, buf: &mut [[f32; 4]], path: &str, v: [f64; 3]) {
 fn material_uniforms(p: &Program, buf: &mut [[f32; 4]], m: &MaterialParams) {
     // Unlit and the default material set only the emissive color and the transparency
     // (X3DOneSidedMaterialNode.setShaderUniforms); the others keep zero.
-    let legacy = |new: &str, old: &str| if p.has(new) { new.to_string() } else { old.to_string() };
+    let legacy = |new: &str, old: &str| {
+        if p.has(new) {
+            new.to_string()
+        } else {
+            old.to_string()
+        }
+    };
 
-    p.set(buf, &legacy("x3d_Material.emissiveColor", "x3d_FrontMaterial.emissiveColor"), &m.emissive.map(|v| v as f32));
-    p.set(buf, &legacy("x3d_Material.transparency", "x3d_FrontMaterial.transparency"), &[m.transparency as f32]);
+    p.set(
+        buf,
+        &legacy(
+            "x3d_Material.emissiveColor",
+            "x3d_FrontMaterial.emissiveColor",
+        ),
+        &m.emissive.map(|v| v as f32),
+    );
+    p.set(
+        buf,
+        &legacy(
+            "x3d_Material.transparency",
+            "x3d_FrontMaterial.transparency",
+        ),
+        &[m.transparency as f32],
+    );
 
     match m.pbr {
         1 => {
@@ -124,10 +166,35 @@ fn material_uniforms(p: &Program, buf: &mut [[f32; 4]], m: &MaterialParams) {
             p.set(buf, "x3d_Material.glossiness", &[m.metallic as f32]);
         }
         _ if m.shading != Shading::Unlit => {
-            p.set(buf, &legacy("x3d_Material.ambientIntensity", "x3d_FrontMaterial.ambientIntensity"), &[m.ambient_intensity as f32]);
-            p.set(buf, &legacy("x3d_Material.diffuseColor", "x3d_FrontMaterial.diffuseColor"), &m.diffuse.map(|v| v as f32));
-            p.set(buf, &legacy("x3d_Material.specularColor", "x3d_FrontMaterial.specularColor"), &m.specular.map(|v| v as f32));
-            p.set(buf, &legacy("x3d_Material.shininess", "x3d_FrontMaterial.shininess"), &[m.shininess as f32]);
+            p.set(
+                buf,
+                &legacy(
+                    "x3d_Material.ambientIntensity",
+                    "x3d_FrontMaterial.ambientIntensity",
+                ),
+                &[m.ambient_intensity as f32],
+            );
+            p.set(
+                buf,
+                &legacy(
+                    "x3d_Material.diffuseColor",
+                    "x3d_FrontMaterial.diffuseColor",
+                ),
+                &m.diffuse.map(|v| v as f32),
+            );
+            p.set(
+                buf,
+                &legacy(
+                    "x3d_Material.specularColor",
+                    "x3d_FrontMaterial.specularColor",
+                ),
+                &m.specular.map(|v| v as f32),
+            );
+            p.set(
+                buf,
+                &legacy("x3d_Material.shininess", "x3d_FrontMaterial.shininess"),
+                &[m.shininess as f32],
+            );
         }
         _ => {}
     }
@@ -147,7 +214,12 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     // Slot 0 (renderer): target height, reversed depth, y scale of clip space, y-flipped target.
-    buf[0] = [input.target.1 as f32, input.reversed as u32 as f32, if input.flip { -1.0 } else { 1.0 }, input.flip as u32 as f32];
+    buf[0] = [
+        input.target.1 as f32,
+        input.reversed as u32 as f32,
+        if input.flip { -1.0 } else { 1.0 },
+        input.flip as u32 as f32,
+    ];
 
     // Global.
     p.set(&mut buf, "x3d_ProjectionMatrix", &input.projection);
@@ -161,18 +233,45 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     let rect = item.viewport.unwrap_or(input.layer_rect);
-    p.set(&mut buf, "x3d_Viewport", &[rect[0] as f32, rect[1] as f32, rect[2] as f32, rect[3] as f32]);
+    p.set(
+        &mut buf,
+        "x3d_Viewport",
+        &[
+            rect[0] as f32,
+            rect[1] as f32,
+            rect[2] as f32,
+            rect[3] as f32,
+        ],
+    );
     p.set(&mut buf, "x3d_ModelViewMatrix", &f16(&item.model_view));
     p.set(&mut buf, "x3d_NormalMatrix", &input.normal_matrix);
     p.set(&mut buf, "x3d_Exposure", &[frame.exposure.max(0.0) as f32]);
 
     // Fog.
     if let Some(f) = &frame.fog {
-        let legacy = |new: &str, old: &str| if p.has(new) { new.to_string() } else { old.to_string() };
+        let legacy = |new: &str, old: &str| {
+            if p.has(new) {
+                new.to_string()
+            } else {
+                old.to_string()
+            }
+        };
         p.set(&mut buf, &legacy("x3d_Fog.color", "x3d_FogColor"), &f.color);
-        p.set(&mut buf, &legacy("x3d_Fog.visibilityStart", "x3d_FogVisibilityStart"), &[f.visibility_start]);
-        p.set(&mut buf, &legacy("x3d_Fog.visibilityRange", "x3d_FogVisibilityRange"), &[f.visibility_range]);
-        p.set(&mut buf, &legacy("x3d_Fog.matrix", "x3d_FogMatrix"), &f.matrix);
+        p.set(
+            &mut buf,
+            &legacy("x3d_Fog.visibilityStart", "x3d_FogVisibilityStart"),
+            &[f.visibility_start],
+        );
+        p.set(
+            &mut buf,
+            &legacy("x3d_Fog.visibilityRange", "x3d_FogVisibilityRange"),
+            &[f.visibility_range],
+        );
+        p.set(
+            &mut buf,
+            &legacy("x3d_Fog.matrix", "x3d_FogMatrix"),
+            &f.matrix,
+        );
     }
 
     // Lights: the shape's lights in order, at most maxLights (x3d_MaxLights).
@@ -183,7 +282,9 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     };
 
     for (i, &li) in item.lights.iter().take(8).enumerate() {
-        let Some(l) = frame.lights.get(li as usize) else { continue };
+        let Some(l) = frame.lights.get(li as usize) else {
+            continue;
+        };
         // The legacy names (x3d_LightType [i] ...) when the program has no x3d_LightSource.
         let at = |f: &str| {
             let new = format!("x3d_LightSource[{i}].{f}");
@@ -214,22 +315,54 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
         set_light(&mut buf, at("type"), &[l.kind as f32]);
         set_light(&mut buf, at("color"), &l.color.map(|v| v as f32));
         set_light(&mut buf, at("intensity"), &[l.intensity as f32]);
-        set_light(&mut buf, at("ambientIntensity"), &[l.ambient_intensity as f32]);
+        set_light(
+            &mut buf,
+            at("ambientIntensity"),
+            &[l.ambient_intensity as f32],
+        );
         set_light(&mut buf, at("shadowIntensity"), &[0.0]);
 
         match l.kind {
             1 => {
-                set_light(&mut buf, at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
+                set_light(
+                    &mut buf,
+                    at("direction"),
+                    &[
+                        l.direction.x as f32,
+                        l.direction.y as f32,
+                        l.direction.z as f32,
+                    ],
+                );
                 set_light(&mut buf, at("radius"), &[-1.0]);
             }
             _ => {
-                set_light(&mut buf, at("attenuation"), &l.attenuation.map(|v| v as f32));
-                set_light(&mut buf, at("location"), &[l.location.x as f32, l.location.y as f32, l.location.z as f32]);
+                set_light(
+                    &mut buf,
+                    at("attenuation"),
+                    &l.attenuation.map(|v| v as f32),
+                );
+                set_light(
+                    &mut buf,
+                    at("location"),
+                    &[
+                        l.location.x as f32,
+                        l.location.y as f32,
+                        l.location.z as f32,
+                    ],
+                );
                 set_light(&mut buf, at("radius"), &[l.radius as f32]);
                 set_light(&mut buf, at("matrix"), &l.matrix);
 
                 if l.kind == 3 {
-                    set_light(&mut buf, at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
+                    set_light(
+                        &mut buf,
+                        at("direction"),
+                        &[
+                            l.direction.x as f32,
+                            l.direction.y as f32,
+                            l.direction.z as f32,
+                        ],
+                    );
                     set_light(&mut buf, at("beamWidth"), &[l.beam_width as f32]);
                     set_light(&mut buf, at("cutOffAngle"), &[l.cut_off_angle as f32]);
                 }
@@ -241,7 +374,10 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     let lights = item.lights.iter().take(8).count();
 
     for (path, v) in resident.lights.iter() {
-        let index = path.split_once('[').and_then(|(_, r)| r.split_once(']')).and_then(|(n, _)| n.parse::<usize>().ok());
+        let index = path
+            .split_once('[')
+            .and_then(|(_, r)| r.split_once(']'))
+            .and_then(|(n, _)| n.parse::<usize>().ok());
 
         if index.is_some_and(|i| i >= lights) {
             p.set(&mut buf, path, v);
@@ -263,7 +399,11 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     // Material (front, or the back material of a back pass).
-    let material = if input.back { item.back_material.as_ref().unwrap_or(&item.material) } else { &item.material };
+    let material = if input.back {
+        item.back_material.as_ref().unwrap_or(&item.material)
+    } else {
+        &item.material
+    };
     material_uniforms(p, &mut buf, material);
 
     // Textures: matrices, coordinate generators, multi-texturing.
@@ -272,41 +412,109 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     for (i, c) in item.geometry.tex_channels.iter().take(4).enumerate() {
-        p.set(&mut buf, &format!("x3d_TextureCoordinateGenerator[{i}].mode"), &[c.mode as f32]);
-        p.set(&mut buf, &format!("x3d_TextureCoordinateGenerator[{i}].parameter"), &c.parameter);
+        p.set(
+            &mut buf,
+            &format!("x3d_TextureCoordinateGenerator[{i}].mode"),
+            &[c.mode as f32],
+        );
+        p.set(
+            &mut buf,
+            &format!("x3d_TextureCoordinateGenerator[{i}].parameter"),
+            &c.parameter,
+        );
 
         for (k, v) in c.parameter.iter().enumerate() {
-            p.set(&mut buf, &format!("x3d_TextureCoordinateGenerator[{i}].parameter[{k}]"), &[*v]);
+            p.set(
+                &mut buf,
+                &format!("x3d_TextureCoordinateGenerator[{i}].parameter[{k}]"),
+                &[*v],
+            );
         }
     }
 
     if let Some(mt) = &item.multi_texture {
-        p.set(&mut buf, "x3d_MultiTextureColor", &mt.color.map(|v| v as f32));
+        p.set(
+            &mut buf,
+            "x3d_MultiTextureColor",
+            &mt.color.map(|v| v as f32),
+        );
 
         for (i, u) in mt.units.iter().take(4).enumerate() {
-            p.set(&mut buf, &format!("x3d_MultiTexture[{i}].mode"), &[u[0] as f32]);
-            p.set(&mut buf, &format!("x3d_MultiTexture[{i}].alphaMode"), &[u[1] as f32]);
-            p.set(&mut buf, &format!("x3d_MultiTexture[{i}].source"), &[u[2] as f32]);
-            p.set(&mut buf, &format!("x3d_MultiTexture[{i}].function"), &[u[3] as f32]);
+            p.set(
+                &mut buf,
+                &format!("x3d_MultiTexture[{i}].mode"),
+                &[u[0] as f32],
+            );
+            p.set(
+                &mut buf,
+                &format!("x3d_MultiTexture[{i}].alphaMode"),
+                &[u[1] as f32],
+            );
+            p.set(
+                &mut buf,
+                &format!("x3d_MultiTexture[{i}].source"),
+                &[u[2] as f32],
+            );
+            p.set(
+                &mut buf,
+                &format!("x3d_MultiTexture[{i}].function"),
+                &[u[3] as f32],
+            );
         }
     }
 
     // Style properties.
     match item.style {
         Some(StyleParams::Point(s)) => {
-            p.set(&mut buf, "x3d_PointProperties.pointSizeScaleFactor", &[s.scale_factor as f32]);
-            p.set(&mut buf, "x3d_PointProperties.pointSizeMinValue", &[s.min_value as f32]);
-            p.set(&mut buf, "x3d_PointProperties.pointSizeMaxValue", &[s.max_value as f32]);
-            p.set(&mut buf, "x3d_PointProperties.attenuation", &s.attenuation.map(|v| v as f32));
+            p.set(
+                &mut buf,
+                "x3d_PointProperties.pointSizeScaleFactor",
+                &[s.scale_factor as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_PointProperties.pointSizeMinValue",
+                &[s.min_value as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_PointProperties.pointSizeMaxValue",
+                &[s.max_value as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_PointProperties.attenuation",
+                &s.attenuation.map(|v| v as f32),
+            );
         }
         Some(StyleParams::Line(s)) => {
-            p.set(&mut buf, "x3d_LineProperties.linetype", &[s.linetype as f32]);
-            p.set(&mut buf, "x3d_LineProperties.lineStippleScale", &[(1.0 / (960.0 / 720.0 * 32.0)) as f32]);
+            p.set(
+                &mut buf,
+                "x3d_LineProperties.linetype",
+                &[s.linetype as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_LineProperties.lineStippleScale",
+                &[(1.0 / (960.0 / 720.0 * 32.0)) as f32],
+            );
         }
         Some(StyleParams::Fill(s)) => {
-            p.set(&mut buf, "x3d_FillProperties.filled", &[s.filled as u32 as f32]);
-            p.set(&mut buf, "x3d_FillProperties.hatched", &[s.hatched as u32 as f32]);
-            p.set(&mut buf, "x3d_FillProperties.hatchColor", &s.hatch_color.map(|v| v as f32));
+            p.set(
+                &mut buf,
+                "x3d_FillProperties.filled",
+                &[s.filled as u32 as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_FillProperties.hatched",
+                &[s.hatched as u32 as f32],
+            );
+            p.set(
+                &mut buf,
+                "x3d_FillProperties.hatchColor",
+                &s.hatch_color.map(|v| v as f32),
+            );
         }
         None => {}
     }
@@ -341,7 +549,11 @@ fn texture_dim(t: &TextureImage) -> SamplerDim {
 /// `x3d_Texture2D[i]`, `x3d_Texture3D[i]`, `x3d_TextureCube[i]` for the built-in arrays (the
 /// `x3d_CubeMapTexture` alias is the same uniform), else `name` / `name[i]`.
 fn sampler_key(name: &str, index: Option<u32>) -> String {
-    let name = if name == "x3d_CubeMapTexture" { "x3d_TextureCube" } else { name };
+    let name = if name == "x3d_CubeMapTexture" {
+        "x3d_TextureCube"
+    } else {
+        name
+    };
 
     match index {
         Some(i) => format!("{name}[{i}]"),
@@ -383,8 +595,17 @@ impl Units {
         let mut pop = POOL;
 
         for key in gl.textures.clone() {
-            let Some((k, s)) = p.samplers.iter().enumerate().find(|(_, s)| sampler_key(&s.name, s.index) == key) else { continue };
-            let Some(t) = input.draw.user_textures.get(k).and_then(|t| t.as_ref()) else { continue };
+            let Some((k, s)) = p
+                .samplers
+                .iter()
+                .enumerate()
+                .find(|(_, s)| sampler_key(&s.name, s.index) == key)
+            else {
+                continue;
+            };
+            let Some(t) = input.draw.user_textures.get(k).and_then(|t| t.as_ref()) else {
+                continue;
+            };
 
             self.bind(pop, t);
             gl.units.insert(key, pop);
@@ -585,7 +806,13 @@ fn dimension(d: SamplerDim) -> wgpu::TextureViewDimension {
 impl ShaderGpu {
     /// GPU objects held: modules, pipelines, vertex buffers, bind groups, uniform buffer.
     pub fn resources(&self) -> [usize; 5] {
-        [self.modules.len(), self.pipelines.len(), self.vertices.len(), self.groups.len() + self.uniform_groups.len(), self.uniform.is_some() as usize]
+        [
+            self.modules.len(),
+            self.pipelines.len(),
+            self.vertices.len(),
+            self.groups.len() + self.uniform_groups.len(),
+            self.uniform.is_some() as usize,
+        ]
     }
 
     /// Custom draws recorded for the last frame.
@@ -599,15 +826,25 @@ impl ShaderGpu {
             return;
         }
 
-        let vs = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("custom vertex"), source: wgpu::ShaderSource::Wgsl(p.vs_wgsl.as_str().into()) });
-        let fs = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("custom fragment"), source: wgpu::ShaderSource::Wgsl(p.fs_wgsl.as_str().into()) });
+        let vs = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("custom vertex"),
+            source: wgpu::ShaderSource::Wgsl(p.vs_wgsl.as_str().into()),
+        });
+        let fs = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("custom fragment"),
+            source: wgpu::ShaderSource::Wgsl(p.fs_wgsl.as_str().into()),
+        });
         let bytes = p.slots.max(1) as u64 * 16;
         let layout0 = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("custom uniforms"),
             entries: &[wgpu::BindGroupLayoutEntry {
                 binding: 0,
                 visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: true, min_binding_size: wgpu::BufferSize::new(bytes) },
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: true,
+                    min_binding_size: wgpu::BufferSize::new(bytes),
+                },
                 count: None,
             }],
         });
@@ -617,15 +854,43 @@ impl ShaderGpu {
             entries.push(wgpu::BindGroupLayoutEntry {
                 binding: s.binding,
                 visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Texture { sample_type: wgpu::TextureSampleType::Float { filterable: true }, view_dimension: dimension(s.dim), multisampled: false },
+                ty: wgpu::BindingType::Texture {
+                    sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    view_dimension: dimension(s.dim),
+                    multisampled: false,
+                },
                 count: None,
             });
-            entries.push(wgpu::BindGroupLayoutEntry { binding: s.binding + 1, visibility: wgpu::ShaderStages::VERTEX_FRAGMENT, ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering), count: None });
+            entries.push(wgpu::BindGroupLayoutEntry {
+                binding: s.binding + 1,
+                visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                count: None,
+            });
         }
 
-        let layout1 = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some("custom textures"), entries: &entries });
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { label: Some("custom"), bind_group_layouts: &[Some(&layout0), Some(&layout1)], immediate_size: 0 });
-        self.modules.insert(p.key, Module { vs, fs, layout0, layout1, pipeline_layout, bytes, used: frame_no, _program: p.clone() });
+        let layout1 = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("custom textures"),
+            entries: &entries,
+        });
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("custom"),
+            bind_group_layouts: &[Some(&layout0), Some(&layout1)],
+            immediate_size: 0,
+        });
+        self.modules.insert(
+            p.key,
+            Module {
+                vs,
+                fs,
+                layout0,
+                layout1,
+                pipeline_layout,
+                bytes,
+                used: frame_no,
+                _program: p.clone(),
+            },
+        );
     }
 
     /// Record the custom draws of a frame. `texture` finds the uploaded view and sampler of a
@@ -669,7 +934,11 @@ impl ShaderGpu {
         }
 
         if self.black.is_none() {
-            self.black = Some([default_texture(device, queue, SamplerDim::D2), default_texture(device, queue, SamplerDim::D3), default_texture(device, queue, SamplerDim::Cube)]);
+            self.black = Some([
+                default_texture(device, queue, SamplerDim::D2),
+                default_texture(device, queue, SamplerDim::D3),
+                default_texture(device, queue, SamplerDim::Cube),
+            ]);
         }
 
         // Uniform slices.
@@ -693,7 +962,12 @@ impl ShaderGpu {
 
         if self.uniform.as_ref().is_none_or(|u| u.1 < total) {
             let capacity = total.next_power_of_two().max(4096);
-            let buffer = device.create_buffer(&wgpu::BufferDescriptor { label: Some("custom uniforms"), size: capacity, usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+            let buffer = device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("custom uniforms"),
+                size: capacity,
+                usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            });
             self.uniform = Some((buffer, capacity));
             self.uniform_groups.clear();
         }
@@ -710,7 +984,14 @@ impl ShaderGpu {
                 let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
                     label: Some("custom uniforms"),
                     layout: &m.layout0,
-                    entries: &[wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding { buffer: &u.0, offset: 0, size: wgpu::BufferSize::new(m.bytes) }) }],
+                    entries: &[wgpu::BindGroupEntry {
+                        binding: 0,
+                        resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                            buffer: &u.0,
+                            offset: 0,
+                            size: wgpu::BufferSize::new(m.bytes),
+                        }),
+                    }],
                 });
                 self.uniform_groups.insert(id, group);
             }
@@ -726,31 +1007,67 @@ impl ShaderGpu {
         // Per draw: pipeline, vertex buffer, bind groups.
         for (i, input) in inputs.iter().enumerate() {
             let p = input.draw.program.clone();
-            let key = PipelineKey { program: p.key, state: input.state, format, depth_format, samples, flip: input.flip, reversed: input.reversed };
+            let key = PipelineKey {
+                program: p.key,
+                state: input.state,
+                format,
+                depth_format,
+                samples,
+                flip: input.flip,
+                reversed: input.reversed,
+            };
 
             if !self.pipelines.contains_key(&key) {
                 let m = &self.modules[&p.key];
                 let slots = vertex_slots(&p.attributes);
-                let attributes: Vec<wgpu::VertexAttribute> = slots.iter().map(|(slot, a, col)| wgpu::VertexAttribute { format: wgpu::VertexFormat::Float32x4, offset: 16 * *slot as u64, shader_location: a.location + col }).collect();
-                let buffers = [Some(wgpu::VertexBufferLayout { array_stride: 16 * slots.len().max(1) as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes: &attributes })];
+                let attributes: Vec<wgpu::VertexAttribute> = slots
+                    .iter()
+                    .map(|(slot, a, col)| wgpu::VertexAttribute {
+                        format: wgpu::VertexFormat::Float32x4,
+                        offset: 16 * *slot as u64,
+                        shader_location: a.location + col,
+                    })
+                    .collect();
+                let buffers = [Some(wgpu::VertexBufferLayout {
+                    array_stride: 16 * slots.len().max(1) as u64,
+                    step_mode: wgpu::VertexStepMode::Vertex,
+                    attributes: &attributes,
+                })];
                 let s = input.state;
                 let blend = s.blend.then(|| {
                     s.blend_mode.unwrap_or(wgpu::BlendState {
-                        color: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::SrcAlpha, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
-                        alpha: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::One, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
+                        color: wgpu::BlendComponent {
+                            src_factor: wgpu::BlendFactor::SrcAlpha,
+                            dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                            operation: wgpu::BlendOperation::Add,
+                        },
+                        alpha: wgpu::BlendComponent {
+                            src_factor: wgpu::BlendFactor::One,
+                            dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                            operation: wgpu::BlendOperation::Add,
+                        },
                     })
                 });
                 let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                     label: Some("custom"),
                     layout: Some(&m.pipeline_layout),
-                    vertex: wgpu::VertexState { module: &m.vs, entry_point: Some("main"), compilation_options: Default::default(), buffers: if slots.is_empty() { &[] } else { &buffers } },
+                    vertex: wgpu::VertexState {
+                        module: &m.vs,
+                        entry_point: Some("main"),
+                        compilation_options: Default::default(),
+                        buffers: if slots.is_empty() { &[] } else { &buffers },
+                    },
                     primitive: wgpu::PrimitiveState {
                         topology: match s.topology {
                             0 => wgpu::PrimitiveTopology::TriangleList,
                             1 => wgpu::PrimitiveTopology::LineList,
                             _ => wgpu::PrimitiveTopology::PointList,
                         },
-                        front_face: if s.ccw != input.flip { wgpu::FrontFace::Ccw } else { wgpu::FrontFace::Cw },
+                        front_face: if s.ccw != input.flip {
+                            wgpu::FrontFace::Ccw
+                        } else {
+                            wgpu::FrontFace::Cw
+                        },
                         cull_mode: match (s.topology, s.cull) {
                             (0, 1) => Some(wgpu::Face::Front),
                             (0, 2) => Some(wgpu::Face::Back),
@@ -771,14 +1088,26 @@ impl ShaderGpu {
                             wgpu::CompareFunction::LessEqual
                         }),
                         stencil: Default::default(),
-                        bias: wgpu::DepthBiasState { constant: s.bias.0, slope_scale: f32::from_bits(s.bias.1), clamp: 0.0 },
+                        bias: wgpu::DepthBiasState {
+                            constant: s.bias.0,
+                            slope_scale: f32::from_bits(s.bias.1),
+                            clamp: 0.0,
+                        },
                     }),
-                    multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: false },
+                    multisample: wgpu::MultisampleState {
+                        count: samples,
+                        mask: !0,
+                        alpha_to_coverage_enabled: false,
+                    },
                     fragment: Some(wgpu::FragmentState {
                         module: &m.fs,
                         entry_point: Some("main"),
                         compilation_options: Default::default(),
-                        targets: &[Some(wgpu::ColorTargetState { format, blend, write_mask: wgpu::ColorWrites::ALL })],
+                        targets: &[Some(wgpu::ColorTargetState {
+                            format,
+                            blend,
+                            write_mask: wgpu::ColorWrites::ALL,
+                        })],
                     }),
                     multiview_mask: None,
                     cache: None,
@@ -798,20 +1127,36 @@ impl ShaderGpu {
                 Some(v) => v.used = frame_no,
                 None => {
                     let data = custom_vertices(g, &p.attributes);
-                    let buffer = device.create_buffer(&wgpu::BufferDescriptor { label: Some("custom vertices"), size: (data.len() * 4).max(16) as u64, usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+                    let buffer = device.create_buffer(&wgpu::BufferDescriptor {
+                        label: Some("custom vertices"),
+                        size: (data.len() * 4).max(16) as u64,
+                        usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+                        mapped_at_creation: false,
+                    });
 
                     if !data.is_empty() {
                         queue.write_buffer(&buffer, 0, bytemuck::cast_slice(&data));
                     }
 
-                    self.vertices.insert(vkey, VertexBuffer { buffer, count, used: frame_no, _geometry: g.clone() });
+                    self.vertices.insert(
+                        vkey,
+                        VertexBuffer {
+                            buffer,
+                            count,
+                            used: frame_no,
+                            _geometry: g.clone(),
+                        },
+                    );
                     self.buffers_created += 1;
                 }
             }
 
             // Texture bind group.
             let textures = resolved[i].clone();
-            let ptrs: Vec<usize> = textures.iter().map(|t| t.as_ref().map_or(0, |t| Rc::as_ptr(t) as usize)).collect();
+            let ptrs: Vec<usize> = textures
+                .iter()
+                .map(|t| t.as_ref().map_or(0, |t| Rc::as_ptr(t) as usize))
+                .collect();
             let gkey = (p.key, ptrs);
 
             match self.groups.get_mut(&gkey) {
@@ -830,35 +1175,58 @@ impl ShaderGpu {
                             .samplers
                             .iter()
                             .zip(&textures)
-                            .map(|(s, t): (&SamplerDecl, &Option<Rc<TextureImage>>)| match t.as_ref().and_then(|t| texture(Rc::as_ptr(t))) {
-                                Some(r) => r,
-                                // Measured against X_ITE: an unset user sampler2D reads white, a samplerCube
-                                // and a sampler3D read black.
-                                None if s.name.starts_with("x3d_") || s.dim == SamplerDim::D2 => whites[index(s.dim)],
-                                None => (&black[index(s.dim)].0, &black[index(s.dim)].1),
+                            .map(|(s, t): (&SamplerDecl, &Option<Rc<TextureImage>>)| {
+                                match t.as_ref().and_then(|t| texture(Rc::as_ptr(t))) {
+                                    Some(r) => r,
+                                    // Measured against X_ITE: an unset user sampler2D reads white, a samplerCube
+                                    // and a sampler3D read black.
+                                    None if s.name.starts_with("x3d_")
+                                        || s.dim == SamplerDim::D2 =>
+                                    {
+                                        whites[index(s.dim)]
+                                    }
+                                    None => (&black[index(s.dim)].0, &black[index(s.dim)].1),
+                                }
                             })
                             .collect();
 
                         for (s, (view, sampler)) in p.samplers.iter().zip(&resources) {
-                            entries.push(wgpu::BindGroupEntry { binding: s.binding, resource: wgpu::BindingResource::TextureView(view) });
-                            entries.push(wgpu::BindGroupEntry { binding: s.binding + 1, resource: wgpu::BindingResource::Sampler(sampler) });
+                            entries.push(wgpu::BindGroupEntry {
+                                binding: s.binding,
+                                resource: wgpu::BindingResource::TextureView(view),
+                            });
+                            entries.push(wgpu::BindGroupEntry {
+                                binding: s.binding + 1,
+                                resource: wgpu::BindingResource::Sampler(sampler),
+                            });
                         }
 
-                        device.create_bind_group(&wgpu::BindGroupDescriptor { label: Some("custom textures"), layout: &m.layout1, entries: &entries })
+                        device.create_bind_group(&wgpu::BindGroupDescriptor {
+                            label: Some("custom textures"),
+                            layout: &m.layout1,
+                            entries: &entries,
+                        })
                     };
                     self.groups.insert(gkey.clone(), (group, frame_no));
                 }
             }
 
-            self.prepared.push(Prepared { pipeline: key, vertices: vkey, count, offset: offsets[i] as u32, group1: gkey });
+            self.prepared.push(Prepared {
+                pipeline: key,
+                vertices: vkey,
+                count,
+                offset: offsets[i] as u32,
+                group1: gkey,
+            });
         }
-
     }
 
     /// Draw prepared call `i`.
     pub fn draw(&self, pass: &mut wgpu::RenderPass<'_>, i: usize) {
         let p = &self.prepared[i];
-        let Some(vb) = self.vertices.get(&p.vertices) else { return };
+        let Some(vb) = self.vertices.get(&p.vertices) else {
+            return;
+        };
 
         pass.set_pipeline(&self.pipelines[&p.pipeline].0);
         pass.set_bind_group(0, &self.uniform_groups[&p.pipeline.program], &[p.offset]);
@@ -871,7 +1239,8 @@ impl ShaderGpu {
     pub fn prune(&mut self, frame_no: u64) {
         self.pipelines.retain(|_, e| e.1 + KEEP_FRAMES >= frame_no);
         self.groups.retain(|_, e| e.1 + KEEP_FRAMES >= frame_no);
-        self.vertices.retain(|_, v| v.used + KEEP_FRAMES >= frame_no);
+        self.vertices
+            .retain(|_, v| v.used + KEEP_FRAMES >= frame_no);
         self.modules.retain(|_, m| m.used + KEEP_FRAMES >= frame_no);
         let modules = &self.modules;
         self.uniform_groups.retain(|k, _| modules.contains_key(k));
@@ -885,27 +1254,59 @@ impl ShaderGpu {
 }
 
 /// A 1x1 opaque black texture of a dimension with a nearest sampler.
-fn default_texture(device: &wgpu::Device, queue: &wgpu::Queue, dim: SamplerDim) -> (wgpu::TextureView, wgpu::Sampler) {
+fn default_texture(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    dim: SamplerDim,
+) -> (wgpu::TextureView, wgpu::Sampler) {
     let layers = if dim == SamplerDim::Cube { 6 } else { 1 };
     let texture = device.create_texture(&wgpu::TextureDescriptor {
         label: Some("custom default texture"),
-        size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: layers },
+        size: wgpu::Extent3d {
+            width: 1,
+            height: 1,
+            depth_or_array_layers: layers,
+        },
         mip_level_count: 1,
         sample_count: 1,
-        dimension: if dim == SamplerDim::D3 { wgpu::TextureDimension::D3 } else { wgpu::TextureDimension::D2 },
+        dimension: if dim == SamplerDim::D3 {
+            wgpu::TextureDimension::D3
+        } else {
+            wgpu::TextureDimension::D2
+        },
         format: wgpu::TextureFormat::Rgba8Unorm,
         usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
         view_formats: &[],
     });
     let data = [0u8, 0, 0, 255].repeat(layers as usize);
     queue.write_texture(
-        wgpu::TexelCopyTextureInfo { texture: &texture, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
+        wgpu::TexelCopyTextureInfo {
+            texture: &texture,
+            mip_level: 0,
+            origin: wgpu::Origin3d::ZERO,
+            aspect: wgpu::TextureAspect::All,
+        },
         &data,
-        wgpu::TexelCopyBufferLayout { offset: 0, bytes_per_row: Some(4), rows_per_image: Some(1) },
-        wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: layers },
+        wgpu::TexelCopyBufferLayout {
+            offset: 0,
+            bytes_per_row: Some(4),
+            rows_per_image: Some(1),
+        },
+        wgpu::Extent3d {
+            width: 1,
+            height: 1,
+            depth_or_array_layers: layers,
+        },
     );
-    let view = texture.create_view(&wgpu::TextureViewDescriptor { dimension: Some(dimension(dim)), ..Default::default() });
-    let sampler = device.create_sampler(&wgpu::SamplerDescriptor { mag_filter: wgpu::FilterMode::Nearest, min_filter: wgpu::FilterMode::Nearest, ..Default::default() });
+    let view = texture.create_view(&wgpu::TextureViewDescriptor {
+        dimension: Some(dimension(dim)),
+        ..Default::default()
+    });
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+        mag_filter: wgpu::FilterMode::Nearest,
+        min_filter: wgpu::FilterMode::Nearest,
+        ..Default::default()
+    });
     (view, sampler)
 }
 
@@ -929,7 +1330,10 @@ mod tests {
     #[test]
     fn a_binding_stays_until_another_texture_takes_the_unit() {
         let mut u = Units::default();
-        let (a, b) = (Rc::new(TextureImage::white()), Rc::new(TextureImage::white()));
+        let (a, b) = (
+            Rc::new(TextureImage::white()),
+            Rc::new(TextureImage::white()),
+        );
 
         u.builtin_draw(&[a.clone()]);
         assert!(Rc::ptr_eq(&u.get(POOL, SamplerDim::D2).unwrap(), &a));
@@ -959,7 +1363,10 @@ mod tests {
 
     #[test]
     fn sampler_keys_name_the_cube_alias_once() {
-        assert_eq!(sampler_key("x3d_CubeMapTexture", Some(1)), "x3d_TextureCube[1]");
+        assert_eq!(
+            sampler_key("x3d_CubeMapTexture", Some(1)),
+            "x3d_TextureCube[1]"
+        );
         assert_eq!(sampler_key("map", None), "map");
         assert_eq!(sampler_key("maps", Some(2)), "maps[2]");
     }

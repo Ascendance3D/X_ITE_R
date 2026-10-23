@@ -9,17 +9,32 @@
 
 use crate::geometry::{self, ExtrusionInput, Geometry, TexChannelInfo};
 use crate::sg::Sg;
-use x3d_fields::math::Vector3;
 use x3d_fields::NodeId;
+use x3d_fields::math::Vector3;
 use x3d_runtime::nurbs::{self as m, Spline};
 
 /// X3DCast (X3DCoordinateNode, controlPoint) → get1Point of every point (doubles; a Coordinate's
 /// values are its Float32 values).
 fn coord_points(sg: &Sg, c: NodeId) -> Option<Vec<[f64; 3]>> {
     match sg.type_name(c)? {
-        "Coordinate" => Some(sg.f32s(c, "point").chunks_exact(3).map(|p| [p[0] as f64, p[1] as f64, p[2] as f64]).collect()),
-        "CoordinateDouble" => Some(sg.f64s(c, "point").chunks_exact(3).map(|p| [p[0], p[1], p[2]]).collect()),
-        "GeoCoordinate" => Some(sg.geo_coord_points(c)?.iter().map(|p| [p.x, p.y, p.z]).collect()),
+        "Coordinate" => Some(
+            sg.f32s(c, "point")
+                .chunks_exact(3)
+                .map(|p| [p[0] as f64, p[1] as f64, p[2] as f64])
+                .collect(),
+        ),
+        "CoordinateDouble" => Some(
+            sg.f64s(c, "point")
+                .chunks_exact(3)
+                .map(|p| [p[0], p[1], p[2]])
+                .collect(),
+        ),
+        "GeoCoordinate" => Some(
+            sg.geo_coord_points(c)?
+                .iter()
+                .map(|p| [p.x, p.y, p.z])
+                .collect(),
+        ),
         _ => None,
     }
 }
@@ -29,7 +44,10 @@ fn control_point_node(sg: &Sg, n: NodeId) -> Option<Vec<[f64; 3]>> {
 }
 
 fn vec2s(sg: &Sg, n: NodeId, name: &str) -> Vec<[f64; 2]> {
-    sg.f64s(n, name).chunks_exact(2).map(|p| [p[0], p[1]]).collect()
+    sg.f64s(n, name)
+        .chunks_exact(2)
+        .map(|p| [p[0], p[1]])
+        .collect()
 }
 
 fn usize_of(v: i32) -> usize {
@@ -39,7 +57,12 @@ fn usize_of(v: i32) -> usize {
 /// X3DNurbsSurfaceGeometryNode build and NurbsTrimmedSurface.trimSurface. `scale` is the
 /// tessellationScale a NurbsSet gave the node (1 otherwise).
 pub fn surface(sg: &Sg, n: NodeId, scale: f64, trimmed: bool) -> Geometry {
-    let mut g = Geometry { geometry_type: 3, solid: true, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 3,
+        solid: true,
+        ccw: true,
+        ..Default::default()
+    };
     let mut a = Arrays::default();
 
     if let Some(state) = build_surface(sg, n, scale, &mut a) {
@@ -89,7 +112,12 @@ fn build_surface(sg: &Sg, n: NodeId, scale: f64, g: &mut Arrays) -> Option<Surfa
     }
 
     let points = control_point_node(sg, n)?;
-    let (uo, vo, ud, vd) = (u_order as usize, v_order as usize, u_dim as usize, v_dim as usize);
+    let (uo, vo, ud, vd) = (
+        u_order as usize,
+        v_order as usize,
+        u_dim as usize,
+        v_dim as usize,
+    );
 
     if points.len() < ud * vd {
         return None;
@@ -97,16 +125,34 @@ fn build_surface(sg: &Sg, n: NodeId, scale: f64, g: &mut Arrays) -> Option<Surfa
 
     let point = |i: usize| points[i];
     let weights = m::weights(ud * vd, &sg.f64s(n, "weight"));
-    let u_closed = sg.bool(n, "uClosed", false) && m::u_closed(uo, ud, vd, weights.as_deref(), point);
-    let v_closed = sg.bool(n, "vClosed", false) && m::v_closed(vo, ud, vd, weights.as_deref(), point);
-    let (control, size) = m::surface_control_points(u_closed, v_closed, uo, vo, ud, vd, weights.as_deref(), point);
+    let u_closed =
+        sg.bool(n, "uClosed", false) && m::u_closed(uo, ud, vd, weights.as_deref(), point);
+    let v_closed =
+        sg.bool(n, "vClosed", false) && m::v_closed(vo, ud, vd, weights.as_deref(), point);
+    let (control, size) = m::surface_control_points(
+        u_closed,
+        v_closed,
+        uo,
+        vo,
+        ud,
+        vd,
+        weights.as_deref(),
+        point,
+    );
     let u_knots = m::knots(u_closed, uo, ud, &sg.f64s(n, "uKnot"));
     let v_knots = m::knots(v_closed, vo, vd, &sg.f64s(n, "vKnot"));
     let components = 3 + weights.is_some() as usize;
-    let spline = Spline::surface([uo - 1, vo - 1], [u_knots.clone(), v_knots.clone()], size, components, control);
+    let spline = Spline::surface(
+        [uo - 1, vo - 1],
+        [u_knots.clone(), v_knots.clone()],
+        size,
+        components,
+        control,
+    );
 
     // getUTessellation: Math.floor (NURBS.getTessellation (...) * tessellationScale).
-    let resolution_of = |t: i32, d: i32| ((m::tessellation(t, d) as f64) * scale).floor().max(0.0) as usize;
+    let resolution_of =
+        |t: i32, d: i32| ((m::tessellation(t, d) as f64) * scale).floor().max(0.0) as usize;
     let nu = resolution_of(sg.i32(n, "uTessellation", 0), u_dim);
     let nv = resolution_of(sg.i32(n, "vTessellation", 0), v_dim);
     let mesh = m::sample_surface(&spline, nu, nv, u_closed, v_closed, weights.is_some());
@@ -116,16 +162,41 @@ fn build_surface(sg: &Sg, n: NodeId, scale: f64, g: &mut Arrays) -> Option<Surfa
         g.vertices.extend_from_slice(&[p[0], p[1], p[2], 1.0]);
     }
 
-    build_tex_coords(sg, n, g, (u_closed, v_closed), (uo, vo), (&u_knots, &v_knots), (ud, vd), (nu, nv));
+    build_tex_coords(
+        sg,
+        n,
+        g,
+        (u_closed, v_closed),
+        (uo, vo),
+        (&u_knots, &v_knots),
+        (ud, vd),
+        (nu, nv),
+    );
     generate_normals(g, &mesh);
 
-    Some(SurfaceState { u_knots, v_knots, resolution: (nu, nv) })
+    Some(SurfaceState {
+        u_knots,
+        v_knots,
+        resolution: (nu, nv),
+    })
 }
 
 /// X3DNurbsSurfaceGeometryNode.createNurbsTexCoords: a (u, v) surface of 4 components sampled
 /// like the geometry (never closed, never divided by the weight).
-fn nurbs_tex_coords(degree: [usize; 2], knots: [&[f64]; 2], size: [usize; 2], control: Vec<f64>, resolution: (usize, usize)) -> Vec<f64> {
-    let spline = Spline::surface(degree, [knots[0].to_vec(), knots[1].to_vec()], size, 4, control);
+fn nurbs_tex_coords(
+    degree: [usize; 2],
+    knots: [&[f64]; 2],
+    size: [usize; 2],
+    control: Vec<f64>,
+    resolution: (usize, usize),
+) -> Vec<f64> {
+    let spline = Spline::surface(
+        degree,
+        [knots[0].to_vec(), knots[1].to_vec()],
+        size,
+        4,
+        control,
+    );
     let mesh = m::sample_surface(&spline, resolution.0, resolution.1, false, false, false);
     let mut out = Vec::with_capacity(mesh.faces.len() * 4);
 
@@ -139,7 +210,9 @@ fn nurbs_tex_coords(degree: [usize; 2], knots: [&[f64]; 2], size: [usize; 2], co
 /// createDefaultNurbsTexCoords: degree 1, knots [0 0 5 5], the unit square.
 fn default_tex_points(resolution: (usize, usize)) -> Vec<f64> {
     let knots = [0.0, 0.0, 5.0, 5.0];
-    let control = vec![0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0];
+    let control = vec![
+        0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0,
+    ];
     let spline = Spline::surface([1, 1], [knots.to_vec(), knots.to_vec()], [2, 2], 4, control);
     let mesh = m::sample_surface(&spline, resolution.0, resolution.1, false, false, false);
     let mut out = Vec::with_capacity(mesh.faces.len() * 4);
@@ -175,19 +248,43 @@ fn tex_point(sg: &Sg, c: NodeId, index: usize) -> [f64; 4] {
 
 /// X3DNurbsSurfaceGeometryNode.buildNurbsTexCoords.
 #[allow(clippy::too_many_arguments)]
-fn build_tex_coords(sg: &Sg, n: NodeId, g: &mut Arrays, closed: (bool, bool), order: (usize, usize), knots: (&[f64], &[f64]), dim: (usize, usize), resolution: (usize, usize)) {
+fn build_tex_coords(
+    sg: &Sg,
+    n: NodeId,
+    g: &mut Arrays,
+    closed: (bool, bool),
+    order: (usize, usize),
+    knots: (&[f64], &[f64]),
+    dim: (usize, usize),
+    resolution: (usize, usize),
+) {
     let tex = sg.node(n, "texCoord");
     let ty = tex.and_then(|t| sg.type_name(t));
     let mut channels: Vec<Vec<f64>> = vec![];
     let mut infos: Vec<TexChannelInfo> = vec![];
 
     match ty {
-        Some("TextureCoordinate" | "TextureCoordinate3D" | "TextureCoordinate4D" | "MultiTextureCoordinate") => {
+        Some(
+            "TextureCoordinate"
+            | "TextureCoordinate3D"
+            | "TextureCoordinate4D"
+            | "MultiTextureCoordinate",
+        ) => {
             let t = tex.unwrap();
             let nodes: Vec<NodeId> = if ty == Some("MultiTextureCoordinate") {
                 sg.nodes(t, "texCoord")
                     .into_iter()
-                    .filter(|c| matches!(sg.type_name(*c), Some("TextureCoordinate" | "TextureCoordinate3D" | "TextureCoordinate4D" | "TextureCoordinateGenerator")))
+                    .filter(|c| {
+                        matches!(
+                            sg.type_name(*c),
+                            Some(
+                                "TextureCoordinate"
+                                    | "TextureCoordinate3D"
+                                    | "TextureCoordinate4D"
+                                    | "TextureCoordinateGenerator"
+                            )
+                        )
+                    })
                     .take(crate::extras::MAX_TEX_COORDS)
                     .collect()
             } else {
@@ -198,7 +295,13 @@ fn build_tex_coords(sg: &Sg, n: NodeId, g: &mut Arrays, closed: (bool, bool), or
                 // getTexControlPoints: [u][v], closed directions extended.
                 let column = |u: usize| -> Vec<f64> {
                     let mut out = vec![];
-                    let rows: Vec<usize> = (0..dim.1).chain(if closed.1 { 1..order.1.saturating_sub(1) } else { 0..0 }).collect();
+                    let rows: Vec<usize> = (0..dim.1)
+                        .chain(if closed.1 {
+                            1..order.1.saturating_sub(1)
+                        } else {
+                            0..0
+                        })
+                        .collect();
                     for v in rows {
                         out.extend_from_slice(&tex_point(sg, c, v * dim.0 + u));
                     }
@@ -210,15 +313,33 @@ fn build_tex_coords(sg: &Sg, n: NodeId, g: &mut Arrays, closed: (bool, bool), or
                         columns.push(columns[u].clone());
                     }
                 }
-                let size = [columns.len(), columns.first().map(|c| c.len() / 4).unwrap_or(0)];
-                channels.push(nurbs_tex_coords([order.0 - 1, order.1 - 1], [knots.0, knots.1], size, columns.concat(), resolution));
-                infos.push(TexChannelInfo { mapping: sg.string(c, "mapping", ""), ..Default::default() });
+                let size = [
+                    columns.len(),
+                    columns.first().map(|c| c.len() / 4).unwrap_or(0),
+                ];
+                channels.push(nurbs_tex_coords(
+                    [order.0 - 1, order.1 - 1],
+                    [knots.0, knots.1],
+                    size,
+                    columns.concat(),
+                    resolution,
+                ));
+                infos.push(TexChannelInfo {
+                    mapping: sg.string(c, "mapping", ""),
+                    ..Default::default()
+                });
             }
         }
         Some("NurbsTextureCoordinate") if nurbs_tex_valid(sg, tex.unwrap()) => {
             let t = tex.unwrap();
-            let (uo, vo) = (sg.i32(t, "uOrder", 3) as usize, sg.i32(t, "vOrder", 3) as usize);
-            let (ud, vd) = (sg.i32(t, "uDimension", 0) as usize, sg.i32(t, "vDimension", 0) as usize);
+            let (uo, vo) = (
+                sg.i32(t, "uOrder", 3) as usize,
+                sg.i32(t, "vOrder", 3) as usize,
+            );
+            let (ud, vd) = (
+                sg.i32(t, "uDimension", 0) as usize,
+                sg.i32(t, "vDimension", 0) as usize,
+            );
             let u_knots = m::knots(false, uo, ud, &sg.f64s(t, "uKnot"));
             let v_knots = m::knots(false, vo, vd, &sg.f64s(t, "vKnot"));
             let weights = m::weights(ud * vd, &sg.f64s(t, "weight"));
@@ -231,13 +352,24 @@ fn build_tex_coords(sg: &Sg, n: NodeId, g: &mut Arrays, closed: (bool, bool), or
                     let p = points[index];
                     match &weights {
                         // ISO: rational, homogeneous (u w, v w, 0, w).
-                        Some(w) => control.extend_from_slice(&[p[0] * w[index], p[1] * w[index], 0.0, w[index]]),
+                        Some(w) => control.extend_from_slice(&[
+                            p[0] * w[index],
+                            p[1] * w[index],
+                            0.0,
+                            w[index],
+                        ]),
                         None => control.extend_from_slice(&[p[0], p[1], 0.0, 1.0]),
                     }
                 }
             }
 
-            let mut c = nurbs_tex_coords([uo - 1, vo - 1], [&u_knots, &v_knots], [ud, vd], control, resolution);
+            let mut c = nurbs_tex_coords(
+                [uo - 1, vo - 1],
+                [&u_knots, &v_knots],
+                [ud, vd],
+                control,
+                resolution,
+            );
 
             if weights.is_some() {
                 // ISO: 2D texture coordinates of the rational surface.
@@ -264,12 +396,22 @@ fn nurbs_tex_valid(sg: &Sg, t: NodeId) -> bool {
     let (uo, vo) = (sg.i32(t, "uOrder", 3), sg.i32(t, "vOrder", 3));
     let (ud, vd) = (sg.i32(t, "uDimension", 0), sg.i32(t, "vDimension", 0));
 
-    uo >= 2 && vo >= 2 && ud >= uo && vd >= vo && sg.f64s(t, "controlPoint").len() / 2 >= (ud * vd) as usize
+    uo >= 2
+        && vo >= 2
+        && ud >= uo
+        && vd >= vo
+        && sg.f64s(t, "controlPoint").len() / 2 >= (ud * vd) as usize
 }
 
 /// generateNormals: face normals, refined per sampled point with 85°.
 fn generate_normals(g: &mut Arrays, mesh: &m::Mesh) {
-    let p = |i: usize| Vector3::new(mesh.points[i * 3], mesh.points[i * 3 + 1], mesh.points[i * 3 + 2]);
+    let p = |i: usize| {
+        Vector3::new(
+            mesh.points[i * 3],
+            mesh.points[i * 3 + 1],
+            mesh.points[i * 3 + 2],
+        )
+    };
     let mut normals = Vec::with_capacity(mesh.faces.len());
 
     for f in mesh.faces.chunks_exact(3) {
@@ -305,10 +447,19 @@ fn generate_normals(g: &mut Arrays, mesh: &m::Mesh) {
 
 /// Contour2D.addTrimmingContour of every Contour2D in trimmingContour: the tessellated children
 /// (NurbsCurve2D, ContourPolyline2D), mapped by (point − offset) / scale.
-fn trimming_contours(sg: &Sg, n: NodeId, offset: (f64, f64), scale: (f64, f64)) -> Vec<Vec<[f64; 2]>> {
+fn trimming_contours(
+    sg: &Sg,
+    n: NodeId,
+    offset: (f64, f64),
+    scale: (f64, f64),
+) -> Vec<Vec<[f64; 2]>> {
     let mut contours = vec![];
 
-    for c in sg.nodes(n, "trimmingContour").into_iter().filter(|c| sg.type_name(*c) == Some("Contour2D")) {
+    for c in sg
+        .nodes(n, "trimmingContour")
+        .into_iter()
+        .filter(|c| sg.type_name(*c) == Some("Contour2D"))
+    {
         let mut contour = vec![];
 
         for child in sg.nodes(c, "children") {
@@ -353,7 +504,9 @@ fn inside(p: [f64; 2], c: &[[f64; 2]]) -> bool {
     for i in 0..c.len() {
         let (a, b) = (c[i], c[j]);
 
-        if (a[1] > p[1]) != (b[1] > p[1]) && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0] {
+        if (a[1] > p[1]) != (b[1] > p[1])
+            && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0]
+        {
             odd = !odd;
         }
 
@@ -369,7 +522,10 @@ fn inside(p: [f64; 2], c: &[[f64; 2]]) -> bool {
 /// orientation when nested, so the winding is 0 or 1 and the odd rule equals the ISO rule.)
 fn iso_needs_domain(contours: &[Vec<[f64; 2]>]) -> bool {
     contours.iter().enumerate().any(|(i, c)| {
-        let outermost = !contours.iter().enumerate().any(|(j, o)| j != i && !c.is_empty() && inside(c[0], o));
+        let outermost = !contours
+            .iter()
+            .enumerate()
+            .any(|(j, o)| j != i && !c.is_empty() && inside(c[0], o));
         outermost && signed_area(c) < 0.0
     })
 }
@@ -385,7 +541,13 @@ fn barycentric(p: [f64; 2], a: [f64; 2], b: [f64; 2], c: [f64; 2]) -> (f64, f64,
     let v1 = [c[0] - a[0], c[1] - a[1]];
     let v2 = [p[0] - a[0], p[1] - a[1]];
     let dot = |x: [f64; 2], y: [f64; 2]| x[0] * y[0] + x[1] * y[1];
-    let (d00, d01, d11, d20, d21) = (dot(v0, v0), dot(v0, v1), dot(v1, v1), dot(v2, v0), dot(v2, v1));
+    let (d00, d01, d11, d20, d21) = (
+        dot(v0, v0),
+        dot(v0, v1),
+        dot(v1, v1),
+        dot(v2, v0),
+        dot(v2, v1),
+    );
     let denom = d00 * d11 - d01 * d01;
     let v = (d11 * d20 - d01 * d21) / denom;
     let t = (d00 * d21 - d01 * d20) / denom;
@@ -395,7 +557,15 @@ fn barycentric(p: [f64; 2], a: [f64; 2], b: [f64; 2], c: [f64; 2]) -> (f64, f64,
 
 /// NurbsTrimmedSurface.trimSurface.
 fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
-    let at = |k: &[f64], i: i64| if i < 0 { k.get(k.len().wrapping_sub(i.unsigned_abs() as usize)) } else { k.get(i as usize) }.copied().unwrap_or(f64::NAN);
+    let at = |k: &[f64], i: i64| {
+        if i < 0 {
+            k.get(k.len().wrapping_sub(i.unsigned_abs() as usize))
+        } else {
+            k.get(i as usize)
+        }
+        .copied()
+        .unwrap_or(f64::NAN)
+    };
     let (u_min, v_min) = (at(&s.u_knots, 0), at(&s.v_knots, 0));
     let (u_max, v_max) = (at(&s.u_knots, -1), at(&s.v_knots, -1));
     let unit_square = vec![[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0]];
@@ -407,10 +577,14 @@ fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
     }
 
     let default_points = default_tex_points(s.resolution);
-    let default_triangles: Vec<[f64; 2]> = default_points.chunks_exact(4).map(|t| [t[0], t[1]]).collect();
+    let default_triangles: Vec<[f64; 2]> = default_points
+        .chunks_exact(4)
+        .map(|t| [t[0], t[1]])
+        .collect();
     let num_default = default_triangles.len();
 
-    let mut pass1: Vec<Vec<([f64; 2], Option<usize>)>> = vec![unit_square.iter().map(|p| (*p, None)).collect()];
+    let mut pass1: Vec<Vec<([f64; 2], Option<usize>)>> =
+        vec![unit_square.iter().map(|p| (*p, None)).collect()];
 
     if iso_needs_domain(&loops) {
         pass1.push(unit_square.iter().map(|p| (*p, None)).collect());
@@ -423,7 +597,12 @@ fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
     let mut contours: Vec<Vec<([f64; 2], Option<usize>)>> = vec![];
 
     for (i, t) in default_triangles.chunks(3).enumerate() {
-        contours.push(t.iter().enumerate().map(|(k, p)| (*p, Some(i * 3 + k))).collect());
+        contours.push(
+            t.iter()
+                .enumerate()
+                .map(|(k, p)| (*p, Some(i * 3 + k)))
+                .collect(),
+        );
     }
 
     for t in trimming_triangles.chunks(3) {
@@ -480,9 +659,17 @@ fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
         }
 
         for d in (0..num_default.saturating_sub(2)).step_by(3) {
-            let (u, v, w) = barycentric(p, default_triangles[d], default_triangles[d + 1], default_triangles[d + 2]);
+            let (u, v, w) = barycentric(
+                p,
+                default_triangles[d],
+                default_triangles[d + 1],
+                default_triangles[d + 2],
+            );
 
-            if (u - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE || (v - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE || (w - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE {
+            if (u - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE
+                || (v - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE
+                || (w - 0.5).abs() > 0.5 + MIN_BARYCENTRIC_DISTANCE
+            {
                 continue;
             }
 
@@ -490,16 +677,25 @@ fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
 
             for (tc, ch) in channels.iter().enumerate() {
                 for k in 0..4 {
-                    out_tex[tc].push(u * fv(ch, d4 + k) + v * fv(ch, d4 + 4 + k) + w * fv(ch, d4 + 8 + k));
+                    out_tex[tc]
+                        .push(u * fv(ch, d4 + k) + v * fv(ch, d4 + 4 + k) + w * fv(ch, d4 + 8 + k));
                 }
             }
 
             for k in 0..3 {
-                out_normals.push(u * fv(&g.normals, d3 + k) + v * fv(&g.normals, d3 + 3 + k) + w * fv(&g.normals, d3 + 6 + k));
+                out_normals.push(
+                    u * fv(&g.normals, d3 + k)
+                        + v * fv(&g.normals, d3 + 3 + k)
+                        + w * fv(&g.normals, d3 + 6 + k),
+                );
             }
 
             for k in 0..3 {
-                out_vertices.push(u * fv(&g.vertices, d4 + k) + v * fv(&g.vertices, d4 + 4 + k) + w * fv(&g.vertices, d4 + 8 + k));
+                out_vertices.push(
+                    u * fv(&g.vertices, d4 + k)
+                        + v * fv(&g.vertices, d4 + 4 + k)
+                        + w * fv(&g.vertices, d4 + 8 + k),
+                );
             }
 
             out_vertices.push(1.0);
@@ -528,14 +724,29 @@ fn trim_surface(sg: &Sg, n: NodeId, s: &SurfaceState, g: &mut Arrays) {
 
 /// NurbsCurve.build: line segments between the sampled points. Returns the line geometry.
 pub fn curve(sg: &Sg, n: NodeId) -> Geometry {
-    let mut g = Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() };
+    let mut g = Geometry {
+        geometry_type: 1,
+        solid: false,
+        ccw: true,
+        ..Default::default()
+    };
 
     if let Some(points) = curve_points(sg, n) {
         let num = points.len().saturating_sub(3);
 
         for i in (0..num).step_by(3) {
-            g.vertices.extend_from_slice(&[points[i] as f32, points[i + 1] as f32, points[i + 2] as f32, 1.0]);
-            g.vertices.extend_from_slice(&[points[i + 3] as f32, points[i + 4] as f32, points[i + 5] as f32, 1.0]);
+            g.vertices.extend_from_slice(&[
+                points[i] as f32,
+                points[i + 1] as f32,
+                points[i + 2] as f32,
+                1.0,
+            ]);
+            g.vertices.extend_from_slice(&[
+                points[i + 3] as f32,
+                points[i + 4] as f32,
+                points[i + 5] as f32,
+                1.0,
+            ]);
         }
     }
 
@@ -563,7 +774,10 @@ pub fn curve_points(sg: &Sg, n: NodeId) -> Option<Vec<f64>> {
     let control = m::curve_control_points(closed, order, weights.as_deref(), &points);
     let knots = m::knots(closed, order, points.len(), &sg.f64s(n, "knot"));
     let spline = Spline::curve(order - 1, knots, 3 + weights.is_some() as usize, control);
-    let resolution = usize_of(m::tessellation(sg.i32(n, "tessellation", 0), points.len() as i32));
+    let resolution = usize_of(m::tessellation(
+        sg.i32(n, "tessellation", 0),
+        points.len() as i32,
+    ));
 
     Some(m::sample_curve(&spline, resolution, closed, weights.is_some()).points)
 }
@@ -596,13 +810,21 @@ pub fn curve2d_points(sg: &Sg, n: NodeId) -> Vec<[f64; 2]> {
 
     let order = order as usize;
     let weights = m::weights(points.len(), &sg.f64s(n, "weight"));
-    let closed = sg.bool(n, "closed", false) && m::curve2d_closed(order, weights.as_deref(), &points);
+    let closed =
+        sg.bool(n, "closed", false) && m::curve2d_closed(order, weights.as_deref(), &points);
     let control = m::curve_control_points(closed, order, weights.as_deref(), &points);
     let knots = m::knots(closed, order, points.len(), &sg.f64s(n, "knot"));
     let spline = Spline::curve(order - 1, knots, 2 + weights.is_some() as usize, control);
-    let resolution = usize_of(m::tessellation(sg.i32(n, "tessellation", 0), points.len() as i32));
+    let resolution = usize_of(m::tessellation(
+        sg.i32(n, "tessellation", 0),
+        points.len() as i32,
+    ));
 
-    m::sample_curve(&spline, resolution, closed, weights.is_some()).points.chunks_exact(2).map(|p| [p[0], p[1]]).collect()
+    m::sample_curve(&spline, resolution, closed, weights.is_some())
+        .points
+        .chunks_exact(2)
+        .map(|p| [p[0], p[1]])
+        .collect()
 }
 
 /// X3DNurbsControlCurveNode.tessellate (0): x y pairs.
@@ -617,25 +839,43 @@ fn control_curve_2d(sg: &Sg, n: NodeId) -> Option<Vec<[f64; 2]>> {
 /// NurbsSweptSurface.build / NurbsSwungSurface.build: an Extrusion (no caps, solid, ccw, convex,
 /// creaseAngle π) of the cross section along the trajectory, normals flipped when ccw is FALSE.
 pub fn swept(sg: &Sg, n: NodeId, swung: bool) -> Geometry {
-    let (cross_field, trajectory_field) = if swung { ("profileCurve", "trajectoryCurve") } else { ("crossSectionCurve", "trajectoryCurve") };
-    let cross = sg.node(n, cross_field).and_then(|c| control_curve_2d(sg, c));
+    let (cross_field, trajectory_field) = if swung {
+        ("profileCurve", "trajectoryCurve")
+    } else {
+        ("crossSectionCurve", "trajectoryCurve")
+    };
+    let cross = sg
+        .node(n, cross_field)
+        .and_then(|c| control_curve_2d(sg, c));
     let trajectory: Option<Vec<f32>> = sg.node(n, trajectory_field).and_then(|t| {
         if swung {
             // tessellate (1): x 0 y.
-            control_curve_2d(sg, t).map(|p| p.iter().flat_map(|p| [p[0] as f32, 0.0, p[1] as f32]).collect())
+            control_curve_2d(sg, t).map(|p| {
+                p.iter()
+                    .flat_map(|p| [p[0] as f32, 0.0, p[1] as f32])
+                    .collect()
+            })
         } else {
             (sg.type_name(t) == Some("NurbsCurve")).then(|| curve_tessellate(sg, t))
         }
     });
 
     let (Some(cross), Some(spine)) = (cross, trajectory) else {
-        let mut g = Geometry { geometry_type: 3, solid: true, ccw: true, ..Default::default() };
+        let mut g = Geometry {
+            geometry_type: 3,
+            solid: true,
+            ccw: true,
+            ..Default::default()
+        };
         geometry::finish(&mut g, false);
         return g;
     };
 
     // extrusion ._crossSection = array (MFVec2f: Float32).
-    let cross: Vec<f32> = cross.iter().flat_map(|p| [p[0] as f32, p[1] as f32]).collect();
+    let cross: Vec<f32> = cross
+        .iter()
+        .flat_map(|p| [p[0] as f32, p[1] as f32])
+        .collect();
     let mut g = geometry::extrusion(&ExtrusionInput {
         cross_section: &cross,
         orientation: &[0.0, 0.0, 1.0, 0.0],

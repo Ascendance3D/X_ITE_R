@@ -174,7 +174,11 @@ impl<T: Chase> Chaser<T> {
                     self.buffer[i] = T::interpolate(&self.destination, &self.buffer[s], alpha);
                 }
             } else {
-                self.previous = if s == n { self.buffer[0] } else { self.destination };
+                self.previous = if s == n {
+                    self.buffer[0]
+                } else {
+                    self.destination
+                };
 
                 for b in self.buffer.iter_mut() {
                     *b = self.destination;
@@ -192,7 +196,11 @@ impl<T: Chase> Chaser<T> {
         let n = NUM_BUFFERS;
         let fraction = self.update_buffer(now);
 
-        let mut output = T::interpolate(&self.previous, &self.buffer[n - 1], self.step_response((n as f64 - 1.0 + fraction) * self.step_time));
+        let mut output = T::interpolate(
+            &self.previous,
+            &self.buffer[n - 1],
+            self.step_response((n as f64 - 1.0 + fraction) * self.step_time),
+        );
 
         for i in (0..=n - 2).rev() {
             let r = self.step_response((i as f64 + fraction) * self.step_time);

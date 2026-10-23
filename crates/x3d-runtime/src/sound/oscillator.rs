@@ -23,8 +23,8 @@ use super::fft_frame::FftFrame;
 use super::param_timeline::Timeline;
 use std::any::Any;
 use std::sync::Arc;
-use web_audio_api::AutomationRate;
 use web_audio_api::AudioParamDescriptor;
+use web_audio_api::AutomationRate;
 use web_audio_api::worklet::{AudioParamValues, AudioWorkletGlobalScope, AudioWorkletProcessor};
 
 const NUMBER_OF_OCTAVE_BANDS: f32 = 3.0;
@@ -66,11 +66,22 @@ impl WaveTables {
         let size = periodic_wave_size(sample_rate);
         let ranges = (NUMBER_OF_OCTAVE_BANDS * (size as f32).log2()).round() as usize;
 
-        WaveTables { size, ranges, lowest_fundamental_frequency: sample_rate / size as f32, rate_scale: size as f32 / sample_rate, tables: vec![] }
+        WaveTables {
+            size,
+            ranges,
+            lowest_fundamental_frequency: sample_rate / size as f32,
+            rate_scale: size as f32 / sample_rate,
+            tables: vec![],
+        }
     }
 
     /// PeriodicWaveHandler::Create (createPeriodicWave (real, imag)).
-    pub fn new(sample_rate: f32, real: &[f32], imag: &[f32], disable_normalization: bool) -> WaveTables {
+    pub fn new(
+        sample_rate: f32,
+        real: &[f32],
+        imag: &[f32],
+        disable_normalization: bool,
+    ) -> WaveTables {
         let mut w = WaveTables::empty(sample_rate);
         w.create_band_limited_tables(real, imag, disable_normalization);
         w
@@ -103,7 +114,8 @@ impl WaveTables {
                 Shape::Sawtooth => pi_factor * if n & 1 == 1 { 1.0 } else { -1.0 },
                 Shape::Triangle => {
                     if n & 1 == 1 {
-                        2.0 * (pi_factor * pi_factor) * if ((n - 1) >> 1) & 1 == 1 { -1.0 } else { 1.0 }
+                        2.0 * (pi_factor * pi_factor)
+                            * if ((n - 1) >> 1) & 1 == 1 { -1.0 } else { 1.0 }
                     } else {
                         0.0
                     }
@@ -118,7 +130,12 @@ impl WaveTables {
     }
 
     /// PeriodicWaveHandler::CreateBandLimitedTables.
-    fn create_band_limited_tables(&mut self, real_data: &[f32], imag_data: &[f32], disable_normalization: bool) {
+    fn create_band_limited_tables(
+        &mut self,
+        real_data: &[f32],
+        imag_data: &[f32],
+        disable_normalization: bool,
+    ) {
         let fft_size = self.size;
         let half_size = fft_size / 2;
         let number_of_components = real_data.len().min(imag_data.len()).min(half_size);
@@ -167,9 +184,15 @@ impl WaveTables {
     /// PeriodicWaveHandler::WaveDataForFundamentalFrequency: (lower, higher, table factor).
     fn wave_data(&self, fundamental_frequency: f32) -> (usize, usize, f32) {
         let f = fundamental_frequency.abs();
-        let ratio = if f > 0.0 { f / self.lowest_fundamental_frequency } else { 0.5 };
+        let ratio = if f > 0.0 {
+            f / self.lowest_fundamental_frequency
+        } else {
+            0.5
+        };
         let cents = ratio.log2() * CENTS_PER_OCTAVE;
-        let pitch_range = (1.0 + cents / CENTS_PER_RANGE).max(0.0).min((self.ranges - 1) as f32);
+        let pitch_range = (1.0 + cents / CENTS_PER_RANGE)
+            .max(0.0)
+            .min((self.ranges - 1) as f32);
         let i1 = pitch_range as usize;
         let i2 = if i1 < self.ranges - 1 { i1 + 1 } else { i1 };
 
@@ -178,7 +201,14 @@ impl WaveTables {
 }
 
 /// DoInterpolation (oscillator_handler.cc).
-fn do_interpolation(virtual_read_index: f64, incr: f32, mask: usize, factor: f32, lower: &[f32], higher: &[f32]) -> f32 {
+fn do_interpolation(
+    virtual_read_index: f64,
+    incr: f32,
+    mask: usize,
+    factor: f32,
+    lower: &[f32],
+    higher: &[f32],
+) -> f32 {
     let mut sample_lower = 0f64;
     let mut sample_higher = 0f64;
     let mut r0 = virtual_read_index as u32 as usize;
@@ -291,13 +321,37 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = Arc<WaveTables>;
 
     fn constructor(wave: Arc<WaveTables>) -> Self {
-        Processor { wave: Some(wave), virtual_read_index: 0.0, state: State::Unscheduled, pulled: false, start_time: 0.0, end_time: None, phase_increments: vec![0.0; 128], detune_values: vec![0.0; 128], frequency_timeline: Timeline::default(), detune_timeline: Timeline::default(), param_events: vec![] }
+        Processor {
+            wave: Some(wave),
+            virtual_read_index: 0.0,
+            state: State::Unscheduled,
+            pulled: false,
+            start_time: 0.0,
+            end_time: None,
+            phase_increments: vec![0.0; 128],
+            detune_values: vec![0.0; 128],
+            frequency_timeline: Timeline::default(),
+            detune_timeline: Timeline::default(),
+            param_events: vec![],
+        }
     }
 
     fn parameter_descriptors() -> Vec<AudioParamDescriptor> {
         vec![
-            AudioParamDescriptor { name: "frequency".into(), automation_rate: AutomationRate::A, default_value: 440.0, min_value: f32::MIN, max_value: f32::MAX },
-            AudioParamDescriptor { name: "detune".into(), automation_rate: AutomationRate::A, default_value: 0.0, min_value: f32::MIN, max_value: f32::MAX },
+            AudioParamDescriptor {
+                name: "frequency".into(),
+                automation_rate: AutomationRate::A,
+                default_value: 440.0,
+                min_value: f32::MIN,
+                max_value: f32::MAX,
+            },
+            AudioParamDescriptor {
+                name: "detune".into(),
+                automation_rate: AutomationRate::A,
+                default_value: 0.0,
+                min_value: f32::MIN,
+                max_value: f32::MAX,
+            },
         ]
     }
 
@@ -312,20 +366,32 @@ impl AudioWorkletProcessor for Processor {
                     }
                 }
                 Some(Message::Stop(t)) => self.end_time = Some(t),
-                Some(Message::ParamEvent(frequency, time)) => self.param_events.push((frequency, time)),
+                Some(Message::ParamEvent(frequency, time)) => {
+                    self.param_events.push((frequency, time))
+                }
                 Some(Message::Pulled(v)) => self.pulled = v,
                 None => {}
             }
         }
     }
 
-    fn process<'a, 'b>(&mut self, _inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        _inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let out = &mut outputs[0][0];
         let frames = out.len();
         out.fill(0.0);
 
         for (frequency, time) in std::mem::take(&mut self.param_events) {
-            let tl = if frequency { &mut self.frequency_timeline } else { &mut self.detune_timeline };
+            let tl = if frequency {
+                &mut self.frequency_timeline
+            } else {
+                &mut self.detune_timeline
+            };
             tl.insert(time, scope.current_frame, scope.sample_rate as f64);
         }
 
@@ -335,14 +401,24 @@ impl AudioWorkletProcessor for Processor {
             return self.state != State::Finished;
         }
 
-        let Some(wave) = self.wave.clone() else { return self.state != State::Finished };
+        let Some(wave) = self.wave.clone() else {
+            return self.state != State::Finished;
+        };
 
         let sample_rate = scope.sample_rate as f64;
         let nyquist = scope.sample_rate / 2.0;
         // The param ranges of OscillatorNode: frequency ±nyquist, detune ±1200 log2 (FLT_MAX).
         let detune_max = 1200.0 * f32::MAX.log2();
-        let frequency_values: Vec<f32> = params.get("frequency").iter().map(|f| f.clamp(-nyquist, nyquist)).collect();
-        let detune_values: Vec<f32> = params.get("detune").iter().map(|d| d.clamp(-detune_max, detune_max)).collect();
+        let frequency_values: Vec<f32> = params
+            .get("frequency")
+            .iter()
+            .map(|f| f.clamp(-nyquist, nyquist))
+            .collect();
+        let detune_values: Vec<f32> = params
+            .get("detune")
+            .iter()
+            .map(|d| d.clamp(-detune_max, detune_max))
+            .collect();
 
         // UpdateSchedulingInfo.
         let quantum_start = scope.current_frame;
@@ -354,7 +430,8 @@ impl AudioWorkletProcessor for Processor {
             self.state = State::Finished;
         }
 
-        if matches!(self.state, State::Unscheduled | State::Finished) || start_frame >= quantum_end {
+        if matches!(self.state, State::Unscheduled | State::Finished) || start_frame >= quantum_end
+        {
             return self.state != State::Finished;
         }
 
@@ -393,12 +470,30 @@ impl AudioWorkletProcessor for Processor {
         // CalculateSampleAccuratePhaseIncrements.
         let rate_scale = wave.rate_scale;
         // HasSampleAccurateValues: an a-rate value, or a recent setValue event.
-        let frequency_sa = frequency_values.len() > 1 || self.frequency_timeline.has_sample_accurate_values(quantum_start, sample_rate, frames);
-        let detune_sa = detune_values.len() > 1 || self.detune_timeline.has_sample_accurate_values(quantum_start, sample_rate, frames);
-        let frequency_values = if frequency_sa && frequency_values.len() == 1 { vec![frequency_values[0]; frames] } else { frequency_values };
-        let detune_values = if detune_sa && detune_values.len() == 1 { vec![detune_values[0]; frames] } else { detune_values };
-        self.frequency_timeline.after_values(quantum_start, sample_rate, frames);
-        self.detune_timeline.after_values(quantum_start, sample_rate, frames);
+        let frequency_sa = frequency_values.len() > 1
+            || self.frequency_timeline.has_sample_accurate_values(
+                quantum_start,
+                sample_rate,
+                frames,
+            );
+        let detune_sa = detune_values.len() > 1
+            || self
+                .detune_timeline
+                .has_sample_accurate_values(quantum_start, sample_rate, frames);
+        let frequency_values = if frequency_sa && frequency_values.len() == 1 {
+            vec![frequency_values[0]; frames]
+        } else {
+            frequency_values
+        };
+        let detune_values = if detune_sa && detune_values.len() == 1 {
+            vec![detune_values[0]; frames]
+        } else {
+            detune_values
+        };
+        self.frequency_timeline
+            .after_values(quantum_start, sample_rate, frames);
+        self.detune_timeline
+            .after_values(quantum_start, sample_rate, frames);
         let has_sa = frequency_sa || detune_sa;
         let mut final_scale = rate_scale;
 
@@ -410,7 +505,11 @@ impl AudioWorkletProcessor for Processor {
 
         if detune_sa {
             let k = (1.0f64 / 1200.0) as f32;
-            let target: &mut Vec<f32> = if frequency_sa { &mut self.detune_values } else { &mut self.phase_increments };
+            let target: &mut Vec<f32> = if frequency_sa {
+                &mut self.detune_values
+            } else {
+                &mut self.phase_increments
+            };
 
             for i in 0..frames {
                 target[i] = (detune_values[i] * k).exp2();
@@ -427,7 +526,11 @@ impl AudioWorkletProcessor for Processor {
 
         if has_sa {
             for p in self.phase_increments[..frames].iter_mut() {
-                *p = if p.is_nan() { nyquist } else { p.clamp(-nyquist, nyquist) };
+                *p = if p.is_nan() {
+                    nyquist
+                } else {
+                    p.clamp(-nyquist, nyquist)
+                };
                 *p *= final_scale;
             }
         }
@@ -438,7 +541,11 @@ impl AudioWorkletProcessor for Processor {
 
         if !has_sa {
             frequency = frequency_values[0] * (detune_values[0] / 1200.0).exp2();
-            frequency = if frequency.is_nan() { nyquist } else { frequency.clamp(-nyquist, nyquist) };
+            frequency = if frequency.is_nan() {
+                nyquist
+            } else {
+                frequency.clamp(-nyquist, nyquist)
+            };
         }
 
         let mut dest = quantum_frame_offset;
@@ -472,7 +579,12 @@ impl AudioWorkletProcessor for Processor {
 }
 
 /// ProcessKRate (with the x86 ProcessKRateVector).
-fn process_k_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f64, frequency: f32) -> f64 {
+fn process_k_rate(
+    wave: &WaveTables,
+    dest: &mut [f32],
+    mut virtual_read_index: f64,
+    frequency: f32,
+) -> f64 {
     let n = dest.len();
     let size = wave.size;
     let mask = size - 1;
@@ -540,7 +652,12 @@ fn process_k_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f
 }
 
 /// ProcessARate: ProcessARateVector (x86 kernel in double precision) and ProcessARateScalar.
-fn process_a_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f64, increments: &[f32]) -> f64 {
+fn process_a_rate(
+    wave: &WaveTables,
+    dest: &mut [f32],
+    mut virtual_read_index: f64,
+    increments: &[f32],
+) -> f64 {
     let n = dest.len();
     let size = wave.size;
     let mask = size - 1;
@@ -565,7 +682,12 @@ fn process_a_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f
                 sum[m] = sum[m - 1] + increments[k + m] as f64;
             }
 
-            let idx = [virtual_read_index, virtual_read_index + sum[0], virtual_read_index + sum[1], virtual_read_index + sum[2]];
+            let idx = [
+                virtual_read_index,
+                virtual_read_index + sum[0],
+                virtual_read_index + sum[1],
+                virtual_read_index + sum[2],
+            ];
 
             for m in 0..4 {
                 let v = wrap_f64(idx[m], size as f64, 1.0 / size as f64);
@@ -573,7 +695,8 @@ fn process_a_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f
                 let f = v as f32 - r as f32;
                 let r0 = (r as u32 as usize) & mask;
                 let r1 = ((r + 1) as u32 as usize) & mask;
-                let (lower, higher, factor) = (&wave.tables[data[m].0], &wave.tables[data[m].1], data[m].2);
+                let (lower, higher, factor) =
+                    (&wave.tables[data[m].0], &wave.tables[data[m].1], data[m].2);
                 let sh = higher[r0] + f * (higher[r1] - higher[r0]);
                 let sl = lower[r0] + f * (lower[r1] - lower[r0]);
                 dest[k + m] = sh + factor * (sl - sh);
@@ -583,8 +706,16 @@ fn process_a_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f
             virtual_read_index = wrap(virtual_read_index, size);
         } else {
             for m in 0..4 {
-                let (lower, higher, factor) = (&wave.tables[data[m].0], &wave.tables[data[m].1], data[m].2);
-                dest[k + m] = do_interpolation(virtual_read_index, increments[k + m].abs(), mask, factor, lower, higher);
+                let (lower, higher, factor) =
+                    (&wave.tables[data[m].0], &wave.tables[data[m].1], data[m].2);
+                dest[k + m] = do_interpolation(
+                    virtual_read_index,
+                    increments[k + m].abs(),
+                    mask,
+                    factor,
+                    lower,
+                    higher,
+                );
                 virtual_read_index += increments[k + m] as f64;
                 virtual_read_index = wrap(virtual_read_index, size);
             }
@@ -596,7 +727,14 @@ fn process_a_rate(wave: &WaveTables, dest: &mut [f32], mut virtual_read_index: f
     for m in k..n {
         let incr = increments[m];
         let (lo, hi, factor) = wave.wave_data(inv_rate_scale * incr);
-        dest[m] = do_interpolation(virtual_read_index, incr.abs(), mask, factor, &wave.tables[lo], &wave.tables[hi]);
+        dest[m] = do_interpolation(
+            virtual_read_index,
+            incr.abs(),
+            mask,
+            factor,
+            &wave.tables[lo],
+            &wave.tables[hi],
+        );
         virtual_read_index += incr as f64;
         virtual_read_index = wrap(virtual_read_index, size);
     }

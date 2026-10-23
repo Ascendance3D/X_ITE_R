@@ -13,10 +13,13 @@ use super::changes::Change;
 use super::doc::{Doc, DocInner};
 use super::history::add_change_to_history;
 use super::line::LineRef;
-use super::spans::{add_marked_span, conflicting_collapsed_range, get_marked_span_for, line_is_hidden, remove_marked_span, MarkedSpan};
 use super::selection_updates::re_check_selection;
-use crate::pos::{cmp, Pos};
+use super::spans::{
+    MarkedSpan, add_marked_span, conflicting_collapsed_range, get_marked_span_for, line_is_hidden,
+    remove_marked_span,
+};
 use crate::CmError;
+use crate::pos::{Pos, cmp};
 
 /// `nextMarkerId` — module-global in the JS.
 static NEXT_MARKER_ID: AtomicU64 = AtomicU64::new(0);
@@ -96,7 +99,10 @@ pub(crate) enum SideFind {
 pub enum MarkerFind {
     /// `to` is `None` only for a marker whose end span got lost (the JS then
     /// returns `{from, to: undefined}`).
-    Range { from: Pos, to: Option<Pos> },
+    Range {
+        from: Pos,
+        to: Option<Pos>,
+    },
     Point(Pos),
 }
 
@@ -147,7 +153,13 @@ impl TextMarker {
     pub fn debug_line_numbers(&self) -> Vec<Option<i64>> {
         let lines: Vec<_> = self.data().lines.clone();
         let doc = self.doc();
-        lines.iter().map(|l| l.upgrade().and_then(|l| doc.as_ref().and_then(|d| d.line_no(&l)))).collect()
+        lines
+            .iter()
+            .map(|l| {
+                l.upgrade()
+                    .and_then(|l| doc.as_ref().and_then(|d| d.line_no(&l)))
+            })
+            .collect()
     }
 
     pub(crate) fn attach_line(&self, line: &LineRef) {
@@ -158,7 +170,10 @@ impl TextMarker {
     /// missing line removes the *last* entry.
     pub(crate) fn detach_line(&self, line: &LineRef) {
         let mut d = self.data_mut();
-        let idx = d.lines.iter().position(|l| l.upgrade().is_some_and(|l| Rc::ptr_eq(&l, line)));
+        let idx = d
+            .lines
+            .iter()
+            .position(|l| l.upgrade().is_some_and(|l| Rc::ptr_eq(&l, line)));
         match idx {
             Some(i) => {
                 d.lines.remove(i);
@@ -170,7 +185,11 @@ impl TextMarker {
     }
 
     fn live_lines(&self) -> Vec<LineRef> {
-        self.data().lines.iter().filter_map(|l| l.upgrade()).collect()
+        self.data()
+            .lines
+            .iter()
+            .filter_map(|l| l.upgrade())
+            .collect()
     }
 
     /// `find(side, true)` with line objects. `side`: 0 both, -1 left, 1 right.
@@ -218,17 +237,22 @@ impl TextMarker {
     /// `find(0)`: `{from, to}` with a possibly undefined `to`.
     pub(crate) fn find_range_raw(&self) -> Option<(Pos, Option<Pos>)> {
         match self.find_lines(0) {
-            FindL::Range(fl, fch, to) => {
-                Some((Pos::new(self.line_no(&fl), fch), to.map(|(tl, tch)| Pos::new(self.line_no(&tl), tch))))
-            }
+            FindL::Range(fl, fch, to) => Some((
+                Pos::new(self.line_no(&fl), fch),
+                to.map(|(tl, tch)| Pos::new(self.line_no(&tl), tch)),
+            )),
             _ => None,
         }
     }
 
     /// `find(0)` where the caller dereferences `to` (TypeError in the JS if missing).
     pub(crate) fn find_range(&self) -> Option<(Pos, Pos)> {
-        self.find_range_raw()
-            .map(|(f, t)| (f, t.expect("JS TypeError: Cannot read properties of undefined (reading 'line')")))
+        self.find_range_raw().map(|(f, t)| {
+            (
+                f,
+                t.expect("JS TypeError: Cannot read properties of undefined (reading 'line')"),
+            )
+        })
     }
 
     /// `marker.find()`: bookmarks report a single position, ranges `{from, to}`.
@@ -243,7 +267,8 @@ impl TextMarker {
                 FindL::None => None,
             }
         } else {
-            self.find_range_raw().map(|(from, to)| MarkerFind::Range { from, to })
+            self.find_range_raw()
+                .map(|(from, to)| MarkerFind::Range { from, to })
         }
     }
 
@@ -252,7 +277,11 @@ impl TextMarker {
         if self.data().explicitly_cleared {
             return;
         }
-        let found = if self.data().clear_handlers.is_empty() { None } else { self.find_range_raw() };
+        let found = if self.data().clear_handlers.is_empty() {
+            None
+        } else {
+            self.find_range_raw()
+        };
         for line in self.live_lines() {
             let spans = line.borrow().marked_spans.clone();
             if let Some(spans) = spans {
@@ -389,14 +418,28 @@ impl Marker {
 }
 
 /// `markText(doc, from, to, options, type)`; `from`/`to` are already clipped.
-pub(crate) fn mark_text(doc: &Doc, from: Pos, to: Pos, options: &MarkOptions, kind: MarkerType) -> Result<Marker, CmError> {
+pub(crate) fn mark_text(
+    doc: &Doc,
+    from: Pos,
+    to: Pos,
+    options: &MarkOptions,
+    kind: MarkerType,
+) -> Result<Marker, CmError> {
     if options.shared {
         return mark_text_shared(doc, from, to, options, kind).map(Marker::Shared);
     }
-    doc.in_op(|| mark_text_inner(doc, from, to, options.clone(), options.atomic, kind)).map(Marker::Text)
+    doc.in_op(|| mark_text_inner(doc, from, to, options.clone(), options.atomic, kind))
+        .map(Marker::Text)
 }
 
-pub(crate) fn mark_text_inner(doc: &Doc, from: Pos, to: Pos, opts: MarkOptions, atomic: bool, kind: MarkerType) -> Result<TextMarker, CmError> {
+pub(crate) fn mark_text_inner(
+    doc: &Doc,
+    from: Pos,
+    to: Pos,
+    opts: MarkOptions,
+    atomic: bool,
+    kind: MarkerType,
+) -> Result<TextMarker, CmError> {
     let marker = TextMarker(Rc::new(RefCell::new(MarkerData {
         id: next_marker_id(),
         kind,
@@ -420,13 +463,20 @@ pub(crate) fn mark_text_inner(doc: &Doc, from: Pos, to: Pos, opts: MarkOptions, 
     };
     if collapsed
         && (conflicting_collapsed_range(doc, from.line, &from, &to, il, ir)
-            || from.line != to.line && conflicting_collapsed_range(doc, to.line, &from, &to, il, ir))
+            || from.line != to.line
+                && conflicting_collapsed_range(doc, to.line, &from, &to, il, ir))
     {
         return Err(CmError::CollapsedOverlap);
     }
 
     if marker.data().opts.add_to_history {
-        let change = Change { from, to, text: None, origin: Some("markText".into()), full: false };
+        let change = Change {
+            from,
+            to,
+            text: None,
+            origin: Some("markText".into()),
+            full: false,
+        };
         let sel = doc.inner().sel.clone();
         add_change_to_history(doc, &change, sel, None);
     }
@@ -442,8 +492,16 @@ pub(crate) fn mark_text_inner(doc: &Doc, from: Pos, to: Pos, opts: MarkOptions, 
             line,
             MarkedSpan {
                 marker: marker.clone(),
-                from: if cur_line == from.line { Some(from.ch) } else { None },
-                to: if cur_line == to.line { Some(to.ch) } else { None },
+                from: if cur_line == from.line {
+                    Some(from.ch)
+                } else {
+                    None
+                },
+                to: if cur_line == to.line {
+                    Some(to.ch)
+                } else {
+                    None
+                },
             },
         );
         cur_line += 1;
@@ -479,10 +537,17 @@ pub(crate) fn mark_text_inner(doc: &Doc, from: Pos, to: Pos, opts: MarkOptions, 
 }
 
 /// `markTextShared(doc, from, to, options, type)`.
-fn mark_text_shared(doc: &Doc, from: Pos, to: Pos, options: &MarkOptions, kind: MarkerType) -> Result<SharedTextMarker, CmError> {
+fn mark_text_shared(
+    doc: &Doc,
+    from: Pos,
+    to: Pos,
+    options: &MarkOptions,
+    kind: MarkerType,
+) -> Result<SharedTextMarker, CmError> {
     let mut options = options.clone();
     options.shared = false;
-    let first = doc.in_op(|| mark_text_inner(doc, from, to, options.clone(), options.atomic, kind))?;
+    let first =
+        doc.in_op(|| mark_text_inner(doc, from, to, options.clone(), options.atomic, kind))?;
     let mut markers = vec![first.clone()];
     let mut primary = first;
     for (d, _) in doc.linked_docs(false) {
@@ -511,13 +576,17 @@ fn mark_text_shared(doc: &Doc, from: Pos, to: Pos, options: &MarkOptions, kind: 
 pub(crate) fn find_shared_markers(doc: &Doc) -> Vec<SharedTextMarker> {
     let last = doc.last_line();
     let end = doc.clip_pos(Pos::line_end(last));
-    doc.find_marks_filtered(Pos::new(doc.first_line(), 0), end, Some(&|m: &TextMarker| m.parent().is_some()))
-        .into_iter()
-        .filter_map(|m| match m {
-            Marker::Shared(s) => Some(s),
-            Marker::Text(_) => None,
-        })
-        .collect()
+    doc.find_marks_filtered(
+        Pos::new(doc.first_line(), 0),
+        end,
+        Some(&|m: &TextMarker| m.parent().is_some()),
+    )
+    .into_iter()
+    .filter_map(|m| match m {
+        Marker::Shared(s) => Some(s),
+        Marker::Text(_) => None,
+    })
+    .collect()
 }
 
 /// `copySharedMarkers(doc, markers)`. The JS passes the primary marker object itself
@@ -530,9 +599,15 @@ pub(crate) fn find_shared_markers(doc: &Doc) -> Vec<SharedTextMarker> {
 pub(crate) fn copy_shared_markers(doc: &Doc, markers: &[SharedTextMarker]) -> Result<(), CmError> {
     for marker in markers {
         let primary = marker.primary();
-        let found = if primary.kind() == MarkerType::Bookmark { None } else { primary.find_range_raw() };
+        let found = if primary.kind() == MarkerType::Bookmark {
+            None
+        } else {
+            primary.find_range_raw()
+        };
         let Some((pf, Some(pt))) = found else {
-            return Err(CmError::TypeError("Cannot read properties of undefined (reading 'line')".into()));
+            return Err(CmError::TypeError(
+                "Cannot read properties of undefined (reading 'line')".into(),
+            ));
         };
         let m_from = doc.clip_pos(pf);
         let m_to = doc.clip_pos(pt);
@@ -554,7 +629,9 @@ pub(crate) fn copy_shared_markers(doc: &Doc, markers: &[SharedTextMarker]) -> Re
 /// `detachSharedMarkers(markers)`.
 pub(crate) fn detach_shared_markers(markers: &[SharedTextMarker]) {
     for marker in markers {
-        let Some(pdoc) = marker.primary().doc() else { continue };
+        let Some(pdoc) = marker.primary().doc() else {
+            continue;
+        };
         let mut linked = vec![pdoc.clone()];
         for (d, _) in pdoc.linked_docs(false) {
             linked.push(d);
@@ -562,7 +639,9 @@ pub(crate) fn detach_shared_markers(markers: &[SharedTextMarker]) {
         let subs = marker.markers();
         let mut keep = Vec::new();
         for sub in subs {
-            let in_linked = sub.doc().is_some_and(|d| linked.iter().any(|l| l.ptr_eq(&d)));
+            let in_linked = sub
+                .doc()
+                .is_some_and(|d| linked.iter().any(|l| l.ptr_eq(&d)));
             if in_linked {
                 keep.push(sub);
             } else {

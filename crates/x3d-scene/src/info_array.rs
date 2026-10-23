@@ -11,7 +11,10 @@ pub struct InfoArray<T: Copy + PartialEq> {
 
 impl<T: Copy + PartialEq> Default for InfoArray<T> {
     fn default() -> Self {
-        Self { array: Vec::new(), index: HashMap::new() }
+        Self {
+            array: Vec::new(),
+            index: HashMap::new(),
+        }
     }
 }
 

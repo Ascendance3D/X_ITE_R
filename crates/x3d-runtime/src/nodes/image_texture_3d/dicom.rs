@@ -55,24 +55,43 @@ fn parser_name(little: bool) -> &'static str {
 impl Stream<'_> {
     fn u16(&mut self) -> Result<u16, String> {
         if self.pos + 2 > self.bytes.len() {
-            return Err(format!("{}.readUint16: attempt to read past end of buffer", parser_name(self.little)));
+            return Err(format!(
+                "{}.readUint16: attempt to read past end of buffer",
+                parser_name(self.little)
+            ));
         }
 
         let a = [self.bytes[self.pos], self.bytes[self.pos + 1]];
         self.pos += 2;
 
-        Ok(if self.little { u16::from_le_bytes(a) } else { u16::from_be_bytes(a) })
+        Ok(if self.little {
+            u16::from_le_bytes(a)
+        } else {
+            u16::from_be_bytes(a)
+        })
     }
 
     fn u32(&mut self) -> Result<u32, String> {
         if self.pos + 4 > self.bytes.len() {
-            return Err(format!("{}.readUint32: attempt to read past end of buffer", parser_name(self.little)));
+            return Err(format!(
+                "{}.readUint32: attempt to read past end of buffer",
+                parser_name(self.little)
+            ));
         }
 
-        let a = [self.bytes[self.pos], self.bytes[self.pos + 1], self.bytes[self.pos + 2], self.bytes[self.pos + 3]];
+        let a = [
+            self.bytes[self.pos],
+            self.bytes[self.pos + 1],
+            self.bytes[self.pos + 2],
+            self.bytes[self.pos + 3],
+        ];
         self.pos += 4;
 
-        Ok(if self.little { u32::from_le_bytes(a) } else { u32::from_be_bytes(a) })
+        Ok(if self.little {
+            u32::from_le_bytes(a)
+        } else {
+            u32::from_be_bytes(a)
+        })
     }
 
     fn tag(&mut self) -> Result<u32, String> {
@@ -96,7 +115,11 @@ fn read_fixed_string(bytes: &[u8], pos: usize, length: usize) -> Result<String, 
         return Err("dicomParser.readFixedString: attempt to read past end of buffer".into());
     }
 
-    Ok(bytes[pos..pos + length].iter().take_while(|&&b| b != 0).map(|&b| b as char).collect())
+    Ok(bytes[pos..pos + length]
+        .iter()
+        .take_while(|&&b| b != 0)
+        .map(|&b| b as char)
+        .collect())
 }
 
 fn length_size(vr: &[u8; 2]) -> usize {
@@ -116,7 +139,16 @@ fn read_explicit(s: &mut Stream) -> Result<Element, String> {
         vr[i] = b;
     }
 
-    let mut e = Element { tag, vr, length: 0, data_offset: 0, little: s.little, encapsulated: false, basic_offset_table: vec![], fragments: vec![] };
+    let mut e = Element {
+        tag,
+        vr,
+        length: 0,
+        data_offset: 0,
+        little: s.little,
+        encapsulated: false,
+        basic_offset_table: vec![],
+        fragments: vec![],
+    };
 
     if length_size(&vr) == 2 {
         e.length = s.u16()? as u32;
@@ -153,7 +185,16 @@ fn read_explicit(s: &mut Stream) -> Result<Element, String> {
 fn read_implicit(s: &mut Stream) -> Result<Element, String> {
     let tag = s.tag()?;
     let length = s.u32()?;
-    let mut e = Element { tag, vr: [0; 2], length, data_offset: s.pos, little: s.little, encapsulated: false, basic_offset_table: vec![], fragments: vec![] };
+    let mut e = Element {
+        tag,
+        vr: [0; 2],
+        length,
+        data_offset: s.pos,
+        little: s.little,
+        encapsulated: false,
+        basic_offset_table: vec![],
+        fragments: vec![],
+    };
     let private = (tag >> 16) & 1 == 1;
 
     // isSequence: the next tag is an item or a sequence delimiter.
@@ -212,7 +253,10 @@ fn skip_sequence(s: &mut Stream, e: &mut Element, explicit: bool) -> Result<(), 
         }
 
         if tag != 0xfffe_e000 {
-            return Err(format!("dicomParser.readSequenceItem: item tag (FFFE,E000) not found at offset {}", s.pos - 8));
+            return Err(format!(
+                "dicomParser.readSequenceItem: item tag (FFFE,E000) not found at offset {}",
+                s.pos - 8
+            ));
         }
 
         if length != UNDEFINED {
@@ -245,7 +289,11 @@ fn find_item_delimitation(s: &mut Stream, e: &mut Element) {
     while s.pos + 4 <= s.bytes.len() {
         let group = u16::from_le_bytes([s.bytes[s.pos], s.bytes[s.pos + 1]]);
         let element = u16::from_le_bytes([s.bytes[s.pos + 2], s.bytes[s.pos + 3]]);
-        let (group, element) = if s.little { (group, element) } else { (group.swap_bytes(), element.swap_bytes()) };
+        let (group, element) = if s.little {
+            (group, element)
+        } else {
+            (group.swap_bytes(), element.swap_bytes())
+        };
         s.pos += 4;
 
         if group == 0xfffe && element == 0xe00d {
@@ -264,7 +312,9 @@ fn find_end_of_encapsulated(s: &mut Stream, e: &mut Element) -> Result<(), Strin
     e.encapsulated = true;
 
     if s.tag()? != 0xfffe_e000 {
-        return Err("dicomParser.findEndOfEncapsulatedElement: basic offset table not found".into());
+        return Err(
+            "dicomParser.findEndOfEncapsulatedElement: basic offset table not found".into(),
+        );
     }
 
     let table_length = s.u32()?;
@@ -308,20 +358,35 @@ struct DataSet<'a> {
 impl DataSet<'_> {
     /// `dataSet .uint16 (tag)`: `None` for a missing or empty element.
     fn uint16(&self, tag: u32) -> Result<Option<u16>, String> {
-        let Some(e) = self.elements.get(&tag).filter(|e| e.length != 0) else { return Ok(None) };
+        let Some(e) = self.elements.get(&tag).filter(|e| e.length != 0) else {
+            return Ok(None);
+        };
 
         if e.data_offset + 2 > self.bytes.len() {
-            return Err(format!("{}.readUint16: attempt to read past end of buffer", parser_name(e.little)));
+            return Err(format!(
+                "{}.readUint16: attempt to read past end of buffer",
+                parser_name(e.little)
+            ));
         }
 
         let a = [self.bytes[e.data_offset], self.bytes[e.data_offset + 1]];
 
-        Ok(Some(if e.little { u16::from_le_bytes(a) } else { u16::from_be_bytes(a) }))
+        Ok(Some(if e.little {
+            u16::from_le_bytes(a)
+        } else {
+            u16::from_be_bytes(a)
+        }))
     }
 
     /// `dataSet .string (tag)`: trimmed, `None` for a missing or empty element.
     fn string(&self, tag: u32) -> Result<Option<String>, String> {
-        let Some(e) = self.elements.get(&tag).filter(|e| e.length > 0 && e.length != UNDEFINED) else { return Ok(None) };
+        let Some(e) = self
+            .elements
+            .get(&tag)
+            .filter(|e| e.length > 0 && e.length != UNDEFINED)
+        else {
+            return Ok(None);
+        };
         let s = read_fixed_string(self.bytes, e.data_offset, e.length as usize)?;
 
         Ok(Some(super::js_trim(&s)))
@@ -333,10 +398,16 @@ const BIG_ENDIAN: &str = "1.2.840.10008.1.2.2";
 /// `dicomParser .parseDicom (bytes)` and the getters of `DICOMParser.parse`.
 pub fn parse_dicom(input: &[u8]) -> Result<Volume, DicomError> {
     // readPart10Header.
-    let mut s = Stream { bytes: input, pos: 0, little: true };
+    let mut s = Stream {
+        bytes: input,
+        pos: 0,
+        little: true,
+    };
 
     if input.len() < 132 {
-        return Err(NotDicom("dicomParser.readFixedString: attempt to read past end of buffer".into()));
+        return Err(NotDicom(
+            "dicomParser.readFixedString: attempt to read past end of buffer".into(),
+        ));
     }
 
     if &input[128..132] != b"DICM" {
@@ -360,7 +431,10 @@ pub fn parse_dicom(input: &[u8]) -> Result<Volume, DicomError> {
 
     let transfer_syntax = {
         let Some(e) = meta.get(&0x0002_0010) else {
-            return Err(NotDicom("Error: dicomParser.parseDicom: missing required meta header attribute 0002,0010".into()));
+            return Err(NotDicom(
+                "Error: dicomParser.parseDicom: missing required meta header attribute 0002,0010"
+                    .into(),
+            ));
         };
 
         read_fixed_string(input, e.data_offset, e.length as usize).map_err(NotDicom)?
@@ -369,14 +443,21 @@ pub fn parse_dicom(input: &[u8]) -> Result<Volume, DicomError> {
     let explicit = transfer_syntax != "1.2.840.10008.1.2";
 
     if transfer_syntax == "1.2.840.10008.1.2.1.99" {
-        return Err(NotDicom("dicomParser.parseDicom: no inflater available to handle deflate transfer syntax".into()));
+        return Err(NotDicom(
+            "dicomParser.parseDicom: no inflater available to handle deflate transfer syntax"
+                .into(),
+        ));
     }
 
     if s.pos >= input.len() {
         return Err(NotDicom("dicomParser.ByteStream: parameter 'position' cannot be greater than or equal to 'byteArray' length".into()));
     }
 
-    let mut data = Stream { bytes: input, pos: s.pos, little: transfer_syntax != BIG_ENDIAN };
+    let mut data = Stream {
+        bytes: input,
+        pos: s.pos,
+        little: transfer_syntax != BIG_ENDIAN,
+    };
     let mut elements = std::collections::HashMap::new();
     let dataset_error = |_: String| NotDicom("[object Object]".into());
 
@@ -393,7 +474,10 @@ pub fn parse_dicom(input: &[u8]) -> Result<Volume, DicomError> {
         elements.insert(k, v);
     }
 
-    let ds = DataSet { bytes: input, elements };
+    let ds = DataSet {
+        bytes: input,
+        elements,
+    };
 
     build(&ds, &transfer_syntax).map_err(Throw)
 }
@@ -405,9 +489,24 @@ fn nan(v: Option<u16>) -> f64 {
 /// Typed array contents of a frame, as the numbers JavaScript reads.
 fn typed(frame: &[u8], bits_allocated: u32, signed: bool) -> Result<Vec<f64>, String> {
     Ok(match bits_allocated {
-        8 => frame.iter().map(|&b| if signed { b as i8 as f64 } else { b as f64 }).collect(),
-        16 => frame.chunks_exact(2).map(|c| if signed { i16::from_le_bytes([c[0], c[1]]) as f64 } else { u16::from_le_bytes([c[0], c[1]]) as f64 }).collect(),
-        32 => frame.chunks_exact(4).map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]) as f64).collect(),
+        8 => frame
+            .iter()
+            .map(|&b| if signed { b as i8 as f64 } else { b as f64 })
+            .collect(),
+        16 => frame
+            .chunks_exact(2)
+            .map(|c| {
+                if signed {
+                    i16::from_le_bytes([c[0], c[1]]) as f64
+                } else {
+                    u16::from_le_bytes([c[0], c[1]]) as f64
+                }
+            })
+            .collect(),
+        32 => frame
+            .chunks_exact(4)
+            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]) as f64)
+            .collect(),
         _ => return Err("Error: DICOM: unsupported pixel format.".into()),
     })
 }
@@ -440,23 +539,40 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
     let pixel_representation = ds.uint16(0x0028_0103).map_err(&e)?.unwrap_or(0);
     let planar = ds.uint16(0x0028_0006).map_err(&e)?.unwrap_or(0);
 
-    let pixel_element = ds.elements.get(&0x7fe0_0010).or_else(|| ds.elements.get(&0x7fe0_0008));
+    let pixel_element = ds
+        .elements
+        .get(&0x7fe0_0010)
+        .or_else(|| ds.elements.get(&0x7fe0_0008));
     let is_palette = photometric.as_deref() == Some("PALETTE COLOR");
     let components = if is_palette { 3.0 } else { components_tag };
     let image_length = width * height * components;
     let byte_length = image_length * depth;
-    let count = if byte_length.is_nan() { 0 } else if (0.0..=2147483648.0).contains(&byte_length) { byte_length as usize } else { return Err("RangeError: Array buffer allocation failed".into()) };
+    let count = if byte_length.is_nan() {
+        0
+    } else if (0.0..=2147483648.0).contains(&byte_length) {
+        byte_length as usize
+    } else {
+        return Err("RangeError: Array buffer allocation failed".into());
+    };
     let mut bytes = vec![0u8; count];
 
     // getFrames.
     let mut frames: Vec<Vec<u8>> = vec![];
-    let n_frames = if depth.is_nan() { 0 } else { depth.max(0.0) as usize };
+    let n_frames = if depth.is_nan() {
+        0
+    } else {
+        depth.max(0.0) as usize
+    };
 
     if let Some(p) = pixel_element.filter(|p| p.encapsulated) {
         if !p.basic_offset_table.is_empty() {
             for i in 0..n_frames {
                 let table = &p.basic_offset_table;
-                let start = p.fragments.iter().position(|f| f.0 == table[i.min(table.len() - 1)]).ok_or("dicomParser.readEncapsulatedImageFrame: could not find fragment")?;
+                let start = p
+                    .fragments
+                    .iter()
+                    .position(|f| f.0 == table[i.min(table.len() - 1)])
+                    .ok_or("dicomParser.readEncapsulatedImageFrame: could not find fragment")?;
                 let n = if i == table.len() - 1 {
                     p.fragments.len() - start
                 } else {
@@ -482,14 +598,23 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
 
         match bits_allocated as i64 {
             1 => {
-                let Some(p) = pixel_element else { return Err("TypeError: Cannot read properties of undefined (reading 'dataOffset')".into()) };
+                let Some(p) = pixel_element else {
+                    return Err(
+                        "TypeError: Cannot read properties of undefined (reading 'dataOffset')"
+                            .into(),
+                    );
+                };
 
                 for i in 0..n_frames {
                     let offset = p.data_offset as f64 + i as f64 * per_frame / 8.0;
                     let mut out = vec![0u8; per_frame as usize];
 
                     for (k, v) in out.iter_mut().enumerate() {
-                        let byte = ds.bytes.get((offset as usize) + k / 8).copied().unwrap_or(0);
+                        let byte = ds
+                            .bytes
+                            .get((offset as usize) + k / 8)
+                            .copied()
+                            .unwrap_or(0);
                         *v = (byte >> (k % 8)) & 1;
                     }
 
@@ -502,7 +627,12 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                 let bytes_allocated = bits_allocated / 8.0;
 
                 for i in 0..n_frames {
-                    let Some(p) = pixel_element else { return Err("TypeError: Cannot read properties of undefined (reading 'dataOffset')".into()) };
+                    let Some(p) = pixel_element else {
+                        return Err(
+                            "TypeError: Cannot read properties of undefined (reading 'dataOffset')"
+                                .into(),
+                        );
+                    };
                     let offset = p.data_offset as f64 + i as f64 * per_frame * bytes_allocated;
                     let len = per_frame * bytes_allocated;
 
@@ -512,7 +642,9 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                     }
 
                     if offset > ds.bytes.len() as f64 {
-                        return Err(format!("RangeError: Start offset {offset} is outside the bounds of the buffer"));
+                        return Err(format!(
+                            "RangeError: Start offset {offset} is outside the bounds of the buffer"
+                        ));
                     }
 
                     if offset + len > ds.bytes.len() as f64 {
@@ -547,16 +679,51 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                     frame
                 }
             }
-            "1.2.840.10008.1.2.5" => decode_rle(&frame, bits_allocated, planar_config, w_u, h_u, components_tag)?,
-            "1.2.840.10008.1.2.4.50" | "1.2.840.10008.1.2.4.51" | "1.2.840.10008.1.2.4.57" | "1.2.840.10008.1.2.4.70" | "1.2.840.10008.1.2.4.80" | "1.2.840.10008.1.2.4.81" | "1.2.840.10008.1.2.4.90" | "1.2.840.10008.1.2.4.91" => {
-                return Err(format!("Error: DICOM: the JPEG decoder of transfer syntax {transfer_syntax} is not ported."));
+            "1.2.840.10008.1.2.5" => decode_rle(
+                &frame,
+                bits_allocated,
+                planar_config,
+                w_u,
+                h_u,
+                components_tag,
+            )?,
+            "1.2.840.10008.1.2.4.50"
+            | "1.2.840.10008.1.2.4.51"
+            | "1.2.840.10008.1.2.4.57"
+            | "1.2.840.10008.1.2.4.70"
+            | "1.2.840.10008.1.2.4.80"
+            | "1.2.840.10008.1.2.4.81"
+            | "1.2.840.10008.1.2.4.90"
+            | "1.2.840.10008.1.2.4.91" => {
+                return Err(format!(
+                    "Error: DICOM: the JPEG decoder of transfer syntax {transfer_syntax} is not ported."
+                ));
             }
-            "1.2.840.10008.1.2.4.52" | "1.2.840.10008.1.2.4.53" | "1.2.840.10008.1.2.4.54" | "1.2.840.10008.1.2.4.55" | "1.2.840.10008.1.2.4.56" | "1.2.840.10008.1.2.4.58" | "1.2.840.10008.1.2.4.59"
-            | "1.2.840.10008.1.2.4.60" | "1.2.840.10008.1.2.4.61" | "1.2.840.10008.1.2.4.62" | "1.2.840.10008.1.2.4.63" | "1.2.840.10008.1.2.4.64" | "1.2.840.10008.1.2.4.65" | "1.2.840.10008.1.2.4.66"
-            | "1.2.840.10008.1.2.4.92" | "1.2.840.10008.1.2.4.93" => {
-                return Err(format!("Error: DICOM: this JPEG encoding ({transfer_syntax}) is not supported."));
+            "1.2.840.10008.1.2.4.52"
+            | "1.2.840.10008.1.2.4.53"
+            | "1.2.840.10008.1.2.4.54"
+            | "1.2.840.10008.1.2.4.55"
+            | "1.2.840.10008.1.2.4.56"
+            | "1.2.840.10008.1.2.4.58"
+            | "1.2.840.10008.1.2.4.59"
+            | "1.2.840.10008.1.2.4.60"
+            | "1.2.840.10008.1.2.4.61"
+            | "1.2.840.10008.1.2.4.62"
+            | "1.2.840.10008.1.2.4.63"
+            | "1.2.840.10008.1.2.4.64"
+            | "1.2.840.10008.1.2.4.65"
+            | "1.2.840.10008.1.2.4.66"
+            | "1.2.840.10008.1.2.4.92"
+            | "1.2.840.10008.1.2.4.93" => {
+                return Err(format!(
+                    "Error: DICOM: this JPEG encoding ({transfer_syntax}) is not supported."
+                ));
             }
-            other => return Err(format!("Error: DICOM: unsupported transfer syntax '{other}'.")),
+            other => {
+                return Err(format!(
+                    "Error: DICOM: unsupported transfer syntax '{other}'."
+                ));
+            }
         };
 
         let mut values = typed(&frame, bits_allocated as u32, pixel_representation == 1)?;
@@ -567,7 +734,11 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                 let mask = (1i32.wrapping_shl(bits as u32 & 31)).wrapping_sub(1);
 
                 for v in values.iter_mut() {
-                    let int = if v.is_finite() { (v.trunc() as i64) as i32 } else { 0 };
+                    let int = if v.is_finite() {
+                        (v.trunc() as i64) as i32
+                    } else {
+                        0
+                    };
                     let r = (int & mask) as f64;
 
                     *v = match bits_allocated as u32 {
@@ -601,8 +772,15 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                 }
             }
             Some("YBR_FULL") => return Err("Error: DICOM: YBR_FULL is not ported.".into()),
-            Some("PALETTE COLOR") => return Err("Error: DICOM: PALETTE COLOR is not ported.".into()),
-            other => return Err(format!("Error: DICOM: unsupported image type '{}'.", other.unwrap_or("undefined"))),
+            Some("PALETTE COLOR") => {
+                return Err("Error: DICOM: PALETTE COLOR is not ported.".into());
+            }
+            other => {
+                return Err(format!(
+                    "Error: DICOM: unsupported image type '{}'.",
+                    other.unwrap_or("undefined")
+                ));
+            }
         }
 
         // flipImage.
@@ -614,7 +792,9 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
                 let (input, output) = (row * (height as usize - 1 - y), row * y);
 
                 for x in 0..row {
-                    if let (Some(&v), Some(o)) = (values.get(input + x), flipped.get_mut(output + x)) {
+                    if let (Some(&v), Some(o)) =
+                        (values.get(input + x), flipped.get_mut(output + x))
+                    {
                         *o = v;
                     }
                 }
@@ -630,8 +810,16 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
         }
 
         let divergence = max - min;
-        let factor = if divergence != 0.0 && !divergence.is_nan() { 1.0 / divergence * 255.0 } else { 0.0 };
-        let base = if image_length.is_nan() { usize::MAX } else { f * image_length as usize };
+        let factor = if divergence != 0.0 && !divergence.is_nan() {
+            1.0 / divergence * 255.0
+        } else {
+            0.0
+        };
+        let base = if image_length.is_nan() {
+            usize::MAX
+        } else {
+            f * image_length as usize
+        };
 
         for (i, &v) in flipped.iter().enumerate() {
             if let Some(b) = base.checked_add(i).and_then(|b| bytes.get_mut(b)) {
@@ -646,15 +834,31 @@ fn build(ds: &DataSet, transfer_syntax: &str) -> Result<Volume, String> {
         }
     }
 
-    Ok(Volume { width, height, depth, components, data: Some(bytes) })
+    Ok(Volume {
+        width,
+        height,
+        depth,
+        components,
+        data: Some(bytes),
+    })
 }
 
 /// decodeRLE (8 bit, planar 8 bit, 16 bit); the result is the bytes of an Int8Array.
-fn decode_rle(frame: &[u8], bits_allocated: f64, planar: u16, width: f64, height: f64, components: f64) -> Result<Vec<u8>, String> {
+fn decode_rle(
+    frame: &[u8],
+    bits_allocated: f64,
+    planar: u16,
+    width: f64,
+    height: f64,
+    components: f64,
+) -> Result<Vec<u8>, String> {
     let frame_size = (width * height) as usize;
     let comps = components as usize;
     let i32_at = |at: usize| -> Result<i32, String> {
-        frame.get(at..at + 4).map(|b| i32::from_le_bytes([b[0], b[1], b[2], b[3]])).ok_or_else(|| "RangeError: Offset is outside the bounds of the DataView".to_string())
+        frame
+            .get(at..at + 4)
+            .map(|b| i32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+            .ok_or_else(|| "RangeError: Offset is outside the bounds of the DataView".to_string())
     };
     let segments = i32_at(0)?;
 

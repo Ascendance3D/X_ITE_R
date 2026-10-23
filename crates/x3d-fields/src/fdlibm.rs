@@ -44,7 +44,11 @@ fn kernel_sin(x: f64, y: f64, iy: i32) -> f64 {
     let v = z * x;
     let r = S2 + z * (S3 + z * (S4 + z * (S5 + z * S6)));
 
-    if iy == 0 { x + v * (S1 + z * r) } else { x - ((z * (0.5 * y - v * r) - y) - v * S1) }
+    if iy == 0 {
+        x + v * (S1 + z * r)
+    } else {
+        x - ((z * (0.5 * y - v * r) - y) - v * S1)
+    }
 }
 
 fn kernel_cos(x: f64, y: f64) -> f64 {
@@ -67,7 +71,11 @@ fn kernel_cos(x: f64, y: f64) -> f64 {
     if ix < 0x3FD33333 {
         1.0 - (0.5 * z - (z * r - x * y))
     } else {
-        let qx = if ix > 0x3fe90000 { 0.28125 } else { from_words((ix - 0x00200000) as u32, 0) };
+        let qx = if ix > 0x3fe90000 {
+            0.28125
+        } else {
+            from_words((ix - 0x00200000) as u32, 0)
+        };
         let hz = 0.5 * z - qx;
         let a = 1.0 - qx;
 
@@ -76,10 +84,10 @@ fn kernel_cos(x: f64, y: f64) -> f64 {
 }
 
 const NPIO2_HW: [i32; 32] = [
-    0x3FF921FB, 0x400921FB, 0x4012D97C, 0x401921FB, 0x401F6A7A, 0x4022D97C, 0x4025FDBB, 0x402921FB, 0x402C463A, 0x402F6A7A,
-    0x4031475C, 0x4032D97C, 0x40346B9C, 0x4035FDBB, 0x40378FDB, 0x403921FB, 0x403AB41B, 0x403C463A, 0x403DD85A, 0x403F6A7A,
-    0x40407E4C, 0x4041475C, 0x4042106C, 0x4042D97C, 0x4043A28C, 0x40446B9C, 0x404534AC, 0x4045FDBB, 0x4046C6CB, 0x40478FDB,
-    0x404858EB, 0x404921FB,
+    0x3FF921FB, 0x400921FB, 0x4012D97C, 0x401921FB, 0x401F6A7A, 0x4022D97C, 0x4025FDBB, 0x402921FB,
+    0x402C463A, 0x402F6A7A, 0x4031475C, 0x4032D97C, 0x40346B9C, 0x4035FDBB, 0x40378FDB, 0x403921FB,
+    0x403AB41B, 0x403C463A, 0x403DD85A, 0x403F6A7A, 0x40407E4C, 0x4041475C, 0x4042106C, 0x4042D97C,
+    0x4043A28C, 0x40446B9C, 0x404534AC, 0x4045FDBB, 0x4046C6CB, 0x40478FDB, 0x404858EB, 0x404921FB,
 ];
 
 /// __ieee754_rem_pio2 for |x| <= 2^19·π/2. Larger arguments return `None` (the

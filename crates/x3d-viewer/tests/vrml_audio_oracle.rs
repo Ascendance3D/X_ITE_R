@@ -66,22 +66,41 @@ const KNOWN: &[(&str, usize, &str)] = &[];
 fn audio(result: &Value, dir: &Path) -> Vec<Vec<f32>> {
     let a = &result["audio"];
     let file = PathBuf::from(a["file"].as_str().unwrap());
-    let file = if file.is_absolute() { file } else { dir.join(file) };
+    let file = if file.is_absolute() {
+        file
+    } else {
+        dir.join(file)
+    };
     let bytes = std::fs::read(file).unwrap();
     let n = a["length"].as_u64().unwrap() as usize;
-    let samples: Vec<f32> = bytes.chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect();
-    (0..a["channels"].as_u64().unwrap() as usize).map(|c| samples[c * n..(c + 1) * n].to_vec()).collect()
+    let samples: Vec<f32> = bytes
+        .chunks_exact(4)
+        .map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+        .collect();
+    (0..a["channels"].as_u64().unwrap() as usize)
+        .map(|c| samples[c * n..(c + 1) * n].to_vec())
+        .collect()
 }
 
 fn prints(result: &Value) -> Vec<String> {
-    result["console"].as_array().map(|c| c.iter().filter_map(Value::as_str).filter(|l| l.starts_with("log: ")).map(str::to_string).collect()).unwrap_or_default()
+    result["console"]
+        .as_array()
+        .map(|c| {
+            c.iter()
+                .filter_map(Value::as_str)
+                .filter(|l| l.starts_with("log: "))
+                .map(str::to_string)
+                .collect()
+        })
+        .unwrap_or_default()
 }
 
 /// Returns the differences of one case (empty: it matches), whether only the audio differs, and the first
 /// different audio sample.
 fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
     let base = root.join(format!("oracle/rea-batch05-baseline/{name}"));
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(base.join("js.json")).unwrap()).unwrap();
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(base.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!("vrml-audio-oracle-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
@@ -111,7 +130,11 @@ fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
         bad.push(format!("log: X_ITE {} Rust {}", js["log"], rs["log"]));
     }
     if prints(&js) != prints(&rs) {
-        bad.push(format!("prints: X_ITE {:?} Rust {:?}", prints(&js), prints(&rs)));
+        bad.push(format!(
+            "prints: X_ITE {:?} Rust {:?}",
+            prints(&js),
+            prints(&rs)
+        ));
     }
     if js["audioSuspend"] != rs["audioSuspend"] {
         bad.push("audio suspend frames".to_string());
@@ -129,8 +152,14 @@ fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
 
             if let Some(i) = first {
                 first_audio = Some(first_audio.map_or(i, |f| f.min(i)));
-                let max = x.iter().zip(y).map(|(p, q)| (p - q).abs()).fold(0.0f32, f32::max);
-                bad.push(format!("audio channel {c}: first different sample {i}, max difference {max:.3e}"));
+                let max = x
+                    .iter()
+                    .zip(y)
+                    .map(|(p, q)| (p - q).abs())
+                    .fold(0.0f32, f32::max);
+                bad.push(format!(
+                    "audio channel {c}: first different sample {i}, max difference {max:.3e}"
+                ));
             }
         }
     }
@@ -141,15 +170,35 @@ fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
 
 #[test]
 fn vrml_audio_matches_x_ite() {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
     let only = std::env::var("REA_ONLY").unwrap_or_default();
-    let names: Vec<&str> = CASES.iter().copied().filter(|n| n.contains(&only)).collect();
+    let names: Vec<&str> = CASES
+        .iter()
+        .copied()
+        .filter(|n| n.contains(&only))
+        .collect();
     let results: Vec<(&str, Vec<String>, bool, Option<usize>)> = std::thread::scope(|s| {
-        let handles: Vec<_> = names.chunks(names.len().div_ceil(8).max(1)).map(|chunk| s.spawn(|| chunk.iter().map(|&n| {
-            let (bad, others, first) = compare(&root, n);
-            (n, bad, others, first)
-        }).collect::<Vec<_>>())).collect();
-        handles.into_iter().flat_map(|h| h.join().unwrap()).collect()
+        let handles: Vec<_> = names
+            .chunks(names.len().div_ceil(8).max(1))
+            .map(|chunk| {
+                s.spawn(|| {
+                    chunk
+                        .iter()
+                        .map(|&n| {
+                            let (bad, others, first) = compare(&root, n);
+                            (n, bad, others, first)
+                        })
+                        .collect::<Vec<_>>()
+                })
+            })
+            .collect();
+        handles
+            .into_iter()
+            .flat_map(|h| h.join().unwrap())
+            .collect()
     });
     let mut failures = vec![];
 
@@ -165,5 +214,11 @@ fn vrml_audio_matches_x_ite() {
         }
     }
 
-    assert!(failures.is_empty(), "{} of {} cases differ from X_ITE:\n{}", failures.len(), names.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} of {} cases differ from X_ITE:\n{}",
+        failures.len(),
+        names.len(),
+        failures.join("\n")
+    );
 }

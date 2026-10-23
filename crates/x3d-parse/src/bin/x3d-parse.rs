@@ -17,7 +17,9 @@ fn main() -> ExitCode {
         Some("dump") if args.len() >= 3 => dump(&args[2], args.iter().any(|a| a == "--warnings")),
         Some("compare") if args.len() >= 4 => compare(&args[2], &args[3], &args[4..]),
         _ => {
-            eprintln!("usage: x3d-parse dump <file> [--warnings]\n       x3d-parse compare <baseline.json> <corpus-dir> [--known <file>] [--out <dir>]");
+            eprintln!(
+                "usage: x3d-parse dump <file> [--warnings]\n       x3d-parse compare <baseline.json> <corpus-dir> [--known <file>] [--out <dir>]"
+            );
             ExitCode::from(2)
         }
     }
@@ -54,10 +56,16 @@ fn compare(baseline: &str, corpus: &str, rest: &[String]) -> ExitCode {
         match rest[i].as_str() {
             "--known" if i + 1 < rest.len() => {
                 if let Ok(text) = std::fs::read_to_string(&rest[i + 1]) {
-                    for line in text.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()) {
+                    for line in text
+                        .lines()
+                        .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+                    {
                         let parts: Vec<&str> = line.splitn(3, '\t').collect();
                         if parts.len() == 3 {
-                            known.insert(parts[0].to_string(), (parts[1].to_string(), parts[2].to_string()));
+                            known.insert(
+                                parts[0].to_string(),
+                                (parts[1].to_string(), parts[2].to_string()),
+                            );
                         }
                     }
                 }
@@ -91,23 +99,37 @@ fn compare(baseline: &str, corpus: &str, rest: &[String]) -> ExitCode {
                 expected_failures += 1;
                 println!("XFAIL-OK   {}  ({e})", r.file);
             }
-            Outcome::Mismatch { line, expected, actual } => {
+            Outcome::Mismatch {
+                line,
+                expected,
+                actual,
+            } => {
                 mismatched += 1;
 
                 match known.get(&r.file) {
-                    Some((phase, cause)) => println!("MISMATCH   {}  [needs {phase}] {cause}", r.file),
+                    Some((phase, cause)) => {
+                        println!("MISMATCH   {}  [needs {phase}] {cause}", r.file)
+                    }
                     None => {
                         unexplained += 1;
                         println!("MISMATCH   {}  [unexplained]", r.file);
                     }
                 }
 
-                println!("           line {line}\n             x_ite: {expected}\n             rust:  {actual}");
+                println!(
+                    "           line {line}\n             x_ite: {expected}\n             rust:  {actual}"
+                );
 
                 if let Some(dir) = &out_dir {
                     let _ = std::fs::create_dir_all(dir);
-                    let _ = std::fs::write(Path::new(dir).join(format!("{}.rust", r.file.replace('/', "__"))), r.rust_output.as_deref().unwrap_or(""));
-                    let _ = std::fs::write(Path::new(dir).join(format!("{}.xite", r.file.replace('/', "__"))), r.expected_output.as_deref().unwrap_or(""));
+                    let _ = std::fs::write(
+                        Path::new(dir).join(format!("{}.rust", r.file.replace('/', "__"))),
+                        r.rust_output.as_deref().unwrap_or(""),
+                    );
+                    let _ = std::fs::write(
+                        Path::new(dir).join(format!("{}.xite", r.file.replace('/', "__"))),
+                        r.expected_output.as_deref().unwrap_or(""),
+                    );
                 }
             }
             Outcome::RustRejected(e) => {
@@ -128,5 +150,9 @@ fn compare(baseline: &str, corpus: &str, rest: &[String]) -> ExitCode {
         results.len()
     );
 
-    if unexplained == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
+    if unexplained == 0 {
+        ExitCode::SUCCESS
+    } else {
+        ExitCode::FAILURE
+    }
 }

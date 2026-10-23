@@ -33,7 +33,16 @@ pub enum ShapeType {
 
 impl ShapeType {
     pub fn is_convex(self) -> bool {
-        matches!(self, ShapeType::Box | ShapeType::Triangle | ShapeType::ConvexHull | ShapeType::Sphere | ShapeType::Capsule | ShapeType::Cone | ShapeType::Cylinder)
+        matches!(
+            self,
+            ShapeType::Box
+                | ShapeType::Triangle
+                | ShapeType::ConvexHull
+                | ShapeType::Sphere
+                | ShapeType::Capsule
+                | ShapeType::Cone
+                | ShapeType::Cylinder
+        )
     }
 
     pub fn is_concave(self) -> bool {
@@ -75,7 +84,15 @@ pub struct Conv {
 
 impl Conv {
     fn base(ty: ConvTy) -> Conv {
-        Conv { ty, scaling: [1.0; 3], margin: CONVEX_DISTANCE_MARGIN, implicit: [0.0; 3], cone: (0.0, 0.0, 0.0), points: vec![], laabb: ([1.0; 3], [-1.0; 3]) }
+        Conv {
+            ty,
+            scaling: [1.0; 3],
+            margin: CONVEX_DISTANCE_MARGIN,
+            implicit: [0.0; 3],
+            cone: (0.0, 0.0, 0.0),
+            points: vec![],
+            laabb: ([1.0; 3], [-1.0; 3]),
+        }
     }
 
     pub fn sphere(radius: f64) -> Conv {
@@ -142,12 +159,34 @@ impl Conv {
     /// The Convex of bullet.rs for GJK: scaled/implicit data as stored.
     pub fn core(&self) -> Convex {
         match self.ty {
-            ConvTy::Sphere => Convex::Sphere { radius: self.get_margin() },
-            ConvTy::Box => Convex::Box { half: self.implicit, margin: self.margin },
-            ConvTy::Cylinder => Convex::Cylinder { half: self.implicit, margin: self.margin },
-            ConvTy::Cone => Convex::Cone { radius: self.cone.0, height: self.cone.1, margin: self.margin },
-            ConvTy::Capsule => Convex::Capsule { half: self.implicit, margin: self.margin },
-            ConvTy::Hull => Convex::Hull { points: self.points.iter().map(|p| r3(mulv(*p, self.scaling))).collect(), margin: self.margin },
+            ConvTy::Sphere => Convex::Sphere {
+                radius: self.get_margin(),
+            },
+            ConvTy::Box => Convex::Box {
+                half: self.implicit,
+                margin: self.margin,
+            },
+            ConvTy::Cylinder => Convex::Cylinder {
+                half: self.implicit,
+                margin: self.margin,
+            },
+            ConvTy::Cone => Convex::Cone {
+                radius: self.cone.0,
+                height: self.cone.1,
+                margin: self.margin,
+            },
+            ConvTy::Capsule => Convex::Capsule {
+                half: self.implicit,
+                margin: self.margin,
+            },
+            ConvTy::Hull => Convex::Hull {
+                points: self
+                    .points
+                    .iter()
+                    .map(|p| r3(mulv(*p, self.scaling)))
+                    .collect(),
+                margin: self.margin,
+            },
         }
     }
 
@@ -192,7 +231,11 @@ impl Conv {
             ConvTy::Box | ConvTy::Cylinder | ConvTy::Capsule => {
                 let old = [self.get_margin(); 3];
                 let with_margin = add(self.implicit, old);
-                let unscaled = r3([with_margin[0] / self.scaling[0], with_margin[1] / self.scaling[1], with_margin[2] / self.scaling[2]]);
+                let unscaled = r3([
+                    with_margin[0] / self.scaling[0],
+                    with_margin[1] / self.scaling[1],
+                    with_margin[2] / self.scaling[2],
+                ]);
                 self.scaling = r3(abs3(s));
                 self.implicit = r3(sub(mulv(unscaled, self.scaling), old));
             }
@@ -253,13 +296,25 @@ impl Conv {
                 // localGetSupportingVertex: the margin along the normalized direction
                 if margin != 0.0 {
                     let l2 = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
-                    let n = if l2 < f32::EPSILON as f64 * f32::EPSILON as f64 { [-1.0; 3] } else { v };
+                    let n = if l2 < f32::EPSILON as f64 * f32::EPSILON as f64 {
+                        [-1.0; 3]
+                    } else {
+                        v
+                    };
                     let k = 1.0 / (n[2] * n[2] + (n[0] * n[0] + n[1] * n[1])).sqrt();
-                    sv = r3([sv[0] + margin * (n[0] * k), sv[1] + margin * (n[1] * k), sv[2] + margin * (n[2] * k)]);
+                    sv = r3([
+                        sv[0] + margin * (n[0] * k),
+                        sv[1] + margin * (n[1] * k),
+                        sv[2] + margin * (n[2] * k),
+                    ]);
                 }
 
                 let tmp = r3(tb.apply(sv));
-                out[i] = if sign > 0.0 { f(margin + tmp[i]) } else { f(tmp[i] - margin) };
+                out[i] = if sign > 0.0 {
+                    f(margin + tmp[i])
+                } else {
+                    f(tmp[i] - margin)
+                };
             }
         }
 
@@ -276,7 +331,11 @@ impl Conv {
             ConvTy::Box => {
                 let half = add(self.implicit, [self.margin; 3]);
                 let (lx, ly, lz) = (2.0 * half[0], 2.0 * half[1], 2.0 * half[2]);
-                r3([mass / 12.0 * (ly * ly + lz * lz), mass / 12.0 * (lx * lx + lz * lz), mass / 12.0 * (lx * lx + ly * ly)])
+                r3([
+                    mass / 12.0 * (ly * ly + lz * lz),
+                    mass / 12.0 * (lx * lx + lz * lz),
+                    mass / 12.0 * (lx * lx + ly * ly),
+                ])
             }
             ConvTy::Cylinder => {
                 let half = add(self.implicit, [self.margin; 3]);
@@ -294,7 +353,11 @@ impl Conv {
                 let mut half = [radius; 3];
                 half[1] += self.implicit[1];
                 let margin = CONVEX_DISTANCE_MARGIN;
-                let (lx, ly, lz) = (2.0 * (half[0] + margin), 2.0 * (half[1] + margin), 2.0 * (half[2] + margin));
+                let (lx, ly, lz) = (
+                    2.0 * (half[0] + margin),
+                    2.0 * (half[1] + margin),
+                    2.0 * (half[2] + margin),
+                );
                 let (x2, y2, z2) = (lx * lx, ly * ly, lz * lz);
                 let scaled = mass * (0.08333333_f32 as f64);
                 r3([scaled * (y2 + z2), scaled * (x2 + z2), scaled * (x2 + y2)])
@@ -304,7 +367,11 @@ impl Conv {
                 let margin = self.margin;
                 let (lo, hi) = self.aabb(&Tf::IDENTITY);
                 let half = scale(sub(hi, lo), 0.5);
-                let (lx, ly, lz) = (2.0 * (half[0] + margin), 2.0 * (half[1] + margin), 2.0 * (half[2] + margin));
+                let (lx, ly, lz) = (
+                    2.0 * (half[0] + margin),
+                    2.0 * (half[1] + margin),
+                    2.0 * (half[2] + margin),
+                );
                 let (x2, y2, z2) = (lx * lx, ly * ly, lz * lz);
                 let scaled = mass * (0.08333333_f32 as f64);
                 r3([scaled * (y2 + z2), scaled * (x2 + z2), scaled * (x2 + y2)])
@@ -342,11 +409,17 @@ pub fn transform_aabb_local(lmin: V3, lmax: V3, margin: f64, t: &Tf) -> (V3, V3)
 }
 
 pub fn to_bt(t: &Tf) -> Transform {
-    Transform { basis: t.b, origin: t.o }
+    Transform {
+        basis: t.b,
+        origin: t.o,
+    }
 }
 
 pub fn from_bt(t: &Transform) -> Tf {
-    Tf { b: t.basis, o: t.origin }
+    Tf {
+        b: t.basis,
+        o: t.origin,
+    }
 }
 
 /// btCompoundShapeChild.
@@ -425,18 +498,43 @@ impl Shapes {
     /// btBvhTriangleMeshShape (btTriangleMesh, false): the triangles as added with addTriangle.
     pub fn new_bvh_triangle_mesh(&mut self, triangles: &[[V3; 3]]) -> ShapeId {
         for t in triangles {
-            super::trace(|| format!("[\"btTriangleMesh\",\"addTriangle\",{},{},{}]", super::vj(&t[0]), super::vj(&t[1]), super::vj(&t[2])));
+            super::trace(|| {
+                format!(
+                    "[\"btTriangleMesh\",\"addTriangle\",{},{},{}]",
+                    super::vj(&t[0]),
+                    super::vj(&t[1]),
+                    super::vj(&t[2])
+                )
+            });
         }
 
-        let tris = triangles.iter().map(|t| [r3(t[0]), r3(t[1]), r3(t[2])]).collect();
+        let tris = triangles
+            .iter()
+            .map(|t| [r3(t[0]), r3(t[1]), r3(t[2])])
+            .collect();
         self.add(Shape::Bvh(BvhMesh::new(tris)))
     }
 
     /// btHeightfieldTerrainShape (width, length, heights, 1, min, max, 1, PHY_FLOAT, true) followed by
     /// setLocalScaling (sx, 1, sz).
-    pub fn new_heightfield(&mut self, width: usize, length: usize, heights: &[f64], min: f64, max: f64, scaling: V3) -> ShapeId {
+    pub fn new_heightfield(
+        &mut self,
+        width: usize,
+        length: usize,
+        heights: &[f64],
+        min: f64,
+        max: f64,
+        scaling: V3,
+    ) -> ShapeId {
         let heights: Vec<f64> = heights.iter().map(|h| f(*h)).collect();
-        self.add(Shape::Height(HeightField { width, length, heights, min: f(min), max: f(max), scaling: r3(scaling) }))
+        self.add(Shape::Height(HeightField {
+            width,
+            length,
+            heights,
+            min: f(min),
+            max: f(max),
+            scaling: r3(scaling),
+        }))
     }
 
     /// btCompoundShape (enableDynamicAabbTree = true).
@@ -494,7 +592,12 @@ impl Shapes {
     }
 
     pub fn set_local_scaling(&mut self, id: ShapeId, s: V3) {
-        super::trace(|| format!("[\"btCompoundShape\",\"setLocalScaling\",{}]", super::vj(&s)));
+        super::trace(|| {
+            format!(
+                "[\"btCompoundShape\",\"setLocalScaling\",{}]",
+                super::vj(&s)
+            )
+        });
         let s = r3(s);
 
         if matches!(self.v[id], Shape::Compound(_)) {
@@ -574,7 +677,11 @@ impl Shapes {
                 let (lo, hi) = self.aabb(id, &Tf::IDENTITY);
                 let half = scale(sub(hi, lo), 0.5);
                 let (lx, ly, lz) = (2.0 * half[0], 2.0 * half[1], 2.0 * half[2]);
-                r3([mass / 12.0 * (ly * ly + lz * lz), mass / 12.0 * (lx * lx + lz * lz), mass / 12.0 * (lx * lx + ly * ly)])
+                r3([
+                    mass / 12.0 * (ly * ly + lz * lz),
+                    mass / 12.0 * (lx * lx + lz * lz),
+                    mass / 12.0 * (lx * lx + ly * ly),
+                ])
             }
             Shape::Bvh(_) | Shape::Height(_) => ZERO,
         }
@@ -650,12 +757,23 @@ impl Shapes {
 
         let index = c.children.len();
         let node = c.tree.insert(Aabb::from_mm(lo, hi), index);
-        c.children.push(Child { tf, shape, node, ty, margin: f(margin) });
+        c.children.push(Child {
+            tf,
+            shape,
+            node,
+            ty,
+            margin: f(margin),
+        });
     }
 
     /// updateChildTransform (childIndex, newChildTransform, shouldRecalculateLocalAabb).
     pub fn update_child_transform(&mut self, id: ShapeId, i: usize, tf: Tf, recalc: bool) {
-        super::trace(|| format!("[\"btCompoundShape\",\"updateChildTransform\",{i},{},{recalc}]", super::tj(&tf)));
+        super::trace(|| {
+            format!(
+                "[\"btCompoundShape\",\"updateChildTransform\",{i},{},{recalc}]",
+                super::tj(&tf)
+            )
+        });
         let tf = rt(tf);
         let shape = self.comp(id).children[i].shape;
         let (lo, hi) = self.aabb(shape, &tf);
@@ -686,7 +804,12 @@ impl Shapes {
     /// recalculateLocalAabb.
     pub fn recalculate_local_aabb(&mut self, id: ShapeId) {
         super::trace(|| "[\"btCompoundShape\",\"recalculateLocalAabb\"]".to_string());
-        let boxes: Vec<(V3, V3)> = self.comp(id).children.iter().map(|ch| self.aabb(ch.shape, &ch.tf)).collect();
+        let boxes: Vec<(V3, V3)> = self
+            .comp(id)
+            .children
+            .iter()
+            .map(|ch| self.aabb(ch.shape, &ch.tf))
+            .collect();
         let c = self.comp_mut(id);
         c.lmin = [BT_LARGE_FLOAT; 3];
         c.lmax = [-BT_LARGE_FLOAT; 3];

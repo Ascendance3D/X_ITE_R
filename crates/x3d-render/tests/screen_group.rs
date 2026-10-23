@@ -7,7 +7,10 @@ use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
 fn oracle() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap()
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap()
 }
 
 /// The pixels of a 60 x 40 pixel quad in a ScreenGroup under `outer` (a Transform without its children and closing brace), drawn in a 200 x 160 picture with the viewpoint `vp`.
@@ -37,27 +40,50 @@ fn lit_pixels(g: &mut Gpu, name: &str, vp: &str, outer: &str) -> (usize, [usize;
 
 #[test]
 fn screen_group_children_are_in_pixels_at_any_depth_and_scale() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let vp = "Viewpoint { position 0 0 10 }";
 
     // The quad covers 60 x 40 pixels around the middle of the picture.
     let near = lit_pixels(&mut g, "near", vp, "Transform { translation 0 0 0");
     assert_eq!(near, (60 * 40, [70, 129, 60, 99]), "at the origin");
     // Twice as far from the viewpoint, three times larger around it: still 60 x 40 pixels.
-    let far = lit_pixels(&mut g, "far", vp, "Transform { translation 0 0 -10 scale 3 3 3");
+    let far = lit_pixels(
+        &mut g,
+        "far",
+        vp,
+        "Transform { translation 0 0 -10 scale 3 3 3",
+    );
     assert_eq!(far, near, "farther away and scaled up");
     // A rotation around the ScreenGroup does not turn it: its axes are the model-view axes, normalized.
-    let turned = lit_pixels(&mut g, "turned", vp, "Transform { translation 0 0 -5 rotation 0 0 1 1.5707963267948966");
+    let turned = lit_pixels(
+        &mut g,
+        "turned",
+        vp,
+        "Transform { translation 0 0 -5 rotation 0 0 1 1.5707963267948966",
+    );
     assert_eq!(turned.0, 60 * 40, "rotated by a quarter turn");
-    assert_eq!((turned.1[1] - turned.1[0] + 1, turned.1[3] - turned.1[2] + 1), (40, 60), "rotated by a quarter turn: 40 x 60 pixels");
+    assert_eq!(
+        (turned.1[1] - turned.1[0] + 1, turned.1[3] - turned.1[2] + 1),
+        (40, 60),
+        "rotated by a quarter turn: 40 x 60 pixels"
+    );
 }
 
 #[test]
 fn screen_group_in_an_ortho_viewpoint_is_in_pixels() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let vp = "OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -5 5 5 ] }";
     let a = lit_pixels(&mut g, "ortho-a", vp, "Transform { translation 0 0 0");
     assert_eq!(a, (60 * 40, [70, 129, 60, 99]));
-    let b = lit_pixels(&mut g, "ortho-b", vp, "Transform { translation 0 0 -4 scale 2 2 2");
+    let b = lit_pixels(
+        &mut g,
+        "ortho-b",
+        vp,
+        "Transform { translation 0 0 -4 scale 2 2 2",
+    );
     assert_eq!(b, a);
 }

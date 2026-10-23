@@ -41,7 +41,8 @@ pub struct SkinTables {
 
 /// X3DCast (Coordinate, node) ?? X3DCast (CoordinateDouble, node): the point count.
 fn coord_length(sg: &Sg, coord: Option<NodeId>) -> Option<usize> {
-    let c = coord.filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")))?;
+    let c =
+        coord.filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")))?;
     Some(sg.f32s(c, "point").len() / 3)
 }
 
@@ -57,10 +58,20 @@ pub fn humanoid_joints(sg: &Sg, humanoid: NodeId) -> (Vec<NodeId>, Vec<Matrix4>)
     let (mut nodes, mut bindings) = (vec![], vec![]);
 
     for (i, c) in sg.raw_nodes(humanoid, "joints").into_iter().enumerate() {
-        let Some(joint) = c.and_then(|c| sg.inner(c)).filter(|j| sg.type_name(*j) == Some("HAnimJoint")) else { continue };
-        let v3 = |a: &[f32]| a.get(i * 3..i * 3 + 3).map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64));
+        let Some(joint) = c
+            .and_then(|c| sg.inner(c))
+            .filter(|j| sg.type_name(*j) == Some("HAnimJoint"))
+        else {
+            continue;
+        };
+        let v3 = |a: &[f32]| {
+            a.get(i * 3..i * 3 + 3)
+                .map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64))
+        };
         let t = v3(positions);
-        let r = rotations.get(i * 4..i * 4 + 4).map(|r| Rotation4::new(r[0], r[1], r[2], r[3]));
+        let r = rotations
+            .get(i * 4..i * 4 + 4)
+            .map(|r| Rotation4::new(r[0], r[1], r[2], r[3]));
         let s = v3(scales);
         let mut m = Matrix4::IDENTITY;
         m.set_transform(t.as_ref(), r.as_ref(), s.as_ref(), None, None);
@@ -73,11 +84,20 @@ pub fn humanoid_joints(sg: &Sg, humanoid: NodeId) -> (Vec<NodeId>, Vec<Matrix4>)
 
 /// The HAnimDisplacer nodes of a `displacers` field (X3DCast).
 fn displacers(sg: &Sg, n: NodeId) -> Vec<NodeId> {
-    sg.nodes(n, "displacers").into_iter().filter(|d| sg.type_name(*d) == Some("HAnimDisplacer")).collect()
+    sg.nodes(n, "displacers")
+        .into_iter()
+        .filter(|d| sg.type_name(*d) == Some("HAnimDisplacer"))
+        .collect()
 }
 
 /// Adds the displacements of `displacers` (all of joint `joint`) to `per_point`.
-fn add_displacements(sg: &Sg, displacer_nodes: &[NodeId], joint: usize, per_point: &mut [Vec<f32>], weights: &mut Vec<f32>) {
+fn add_displacements(
+    sg: &Sg,
+    displacer_nodes: &[NodeId],
+    joint: usize,
+    per_point: &mut [Vec<f32>],
+    weights: &mut Vec<f32>,
+) {
     for &d in displacer_nodes {
         let coord_index = sg.i32s(d, "coordIndex");
 
@@ -92,7 +112,14 @@ fn add_displacements(sg: &Sg, displacer_nodes: &[NodeId], joint: usize, per_poin
 
         for (i, &index) in coord_index.iter().enumerate() {
             // `... _displacements [i]` of a missing value throws in X_ITE; such a point gets none.
-            let (Some(slot), Some(v)) = (usize::try_from(index).ok().and_then(|k| per_point.get_mut(k)), values.get(i * 3..i * 3 + 3)) else { continue };
+            let (Some(slot), Some(v)) = (
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|k| per_point.get_mut(k)),
+                values.get(i * 3..i * 3 + 3),
+            ) else {
+                continue;
+            };
             slot.extend_from_slice(&[v[0], v[1], v[2], joint as f32, displacer, 0.0, 0.0, 0.0]);
         }
     }
@@ -116,7 +143,9 @@ fn displacement_tables(per_point: &[Vec<f32>], tables: &mut SkinTables) {
 /// HAnimHumanoid set_jointTextures__, set_displacementsTexture__ and
 /// set_displacementWeightsTexture__.
 pub fn humanoid_tables(sg: &Sg, humanoid: NodeId, joint_nodes: &[NodeId]) -> SkinTables {
-    let length = coord_length(sg, sg.node(humanoid, "skinCoord")).filter(|l| *l > 0).unwrap_or(1);
+    let length = coord_length(sg, sg.node(humanoid, "skinCoord"))
+        .filter(|l| *l > 0)
+        .unwrap_or(1);
     let mut joints: Vec<Vec<f32>> = vec![vec![]; length];
     let mut weights: Vec<Vec<f32>> = vec![vec![]; length];
 
@@ -144,14 +173,26 @@ pub fn humanoid_tables(sg: &Sg, humanoid: NodeId, joint_nodes: &[NodeId]) -> Ski
     for i in 0..length {
         let base = i * num_joints * 2;
         packed[base..base + joints[i].len()].copy_from_slice(&joints[i]);
-        packed[base + num_joints..base + num_joints + weights[i].len()].copy_from_slice(&weights[i]);
+        packed[base + num_joints..base + num_joints + weights[i].len()]
+            .copy_from_slice(&weights[i]);
     }
 
-    let mut tables = SkinTables { length, num_joints, joints: packed, ..Default::default() };
+    let mut tables = SkinTables {
+        length,
+        num_joints,
+        joints: packed,
+        ..Default::default()
+    };
     let mut per_point: Vec<Vec<f32>> = vec![vec![]; length];
 
     for (j, &joint) in joint_nodes.iter().enumerate() {
-        add_displacements(sg, &displacers(sg, joint), j, &mut per_point, &mut tables.displacement_weights);
+        add_displacements(
+            sg,
+            &displacers(sg, joint),
+            j,
+            &mut per_point,
+            &mut tables.displacement_weights,
+        );
     }
 
     displacement_tables(&per_point, &mut tables);
@@ -162,17 +203,30 @@ pub fn humanoid_tables(sg: &Sg, humanoid: NodeId, joint_nodes: &[NodeId]) -> Ski
 /// segment does not skin (no Coordinate coord, or no displacement).
 pub fn segment_tables(sg: &Sg, segment: NodeId) -> Option<SkinTables> {
     let length = coord_length(sg, sg.node(segment, "coord"))?.max(1);
-    let mut tables = SkinTables { length, ..Default::default() };
+    let mut tables = SkinTables {
+        length,
+        ..Default::default()
+    };
     let mut per_point: Vec<Vec<f32>> = vec![vec![]; length];
 
-    add_displacements(sg, &displacers(sg, segment), 0, &mut per_point, &mut tables.displacement_weights);
+    add_displacements(
+        sg,
+        &displacers(sg, segment),
+        0,
+        &mut per_point,
+        &mut tables.displacement_weights,
+    );
     displacement_tables(&per_point, &mut tables);
     (tables.num_displacements > 0).then_some(tables)
 }
 
 /// HAnimHumanoid.skinning: per joint the joint matrix (16) and the joint normal matrix (9, in a
 /// 16 slot), as Float32 like the texture.
-pub fn joint_matrices(bindings: &[Matrix4], joint_model_views: &[Matrix4], inv_humanoid: &Matrix4) -> Vec<f32> {
+pub fn joint_matrices(
+    bindings: &[Matrix4],
+    joint_model_views: &[Matrix4],
+    inv_humanoid: &Matrix4,
+) -> Vec<f32> {
     let mut out = vec![0.0f32; bindings.len() * 32];
 
     for (i, (binding, mv)) in bindings.iter().zip(joint_model_views).enumerate() {
@@ -234,19 +288,46 @@ pub fn skin(g: &Geometry, tables: &SkinTables, matrices: &[f32]) -> Geometry {
         m
     };
     // GLSL `mat * v` with the column-major array: the row vector v × M.
-    let mul4 = |m: &[f64; 16], v: &[f64; 4]| -> [f64; 4] { std::array::from_fn(|i| (0..4).map(|c| m[c * 4 + i] * v[c]).sum()) };
-    let mul3 = |m: &[f64; 9], v: &[f64; 3]| -> [f64; 3] { std::array::from_fn(|i| (0..3).map(|c| m[c * 3 + i] * v[c]).sum()) };
+    let mul4 = |m: &[f64; 16], v: &[f64; 4]| -> [f64; 4] {
+        std::array::from_fn(|i| (0..4).map(|c| m[c * 4 + i] * v[c]).sum())
+    };
+    let mul3 = |m: &[f64; 9], v: &[f64; 3]| -> [f64; 3] {
+        std::array::from_fn(|i| (0..3).map(|c| m[c * 3 + i] * v[c]).sum())
+    };
     // getDisplacementJointMatrix: mat3 (a .xyz, b .xyz, c .xyz) of the joint matrix.
-    let mul_displacement = |m: &[f64; 16], v: &[f64; 3]| -> [f64; 3] { std::array::from_fn(|i| (0..3).map(|c| m[c * 4 + i] * v[c]).sum()) };
+    let mul_displacement = |m: &[f64; 16], v: &[f64; 3]| -> [f64; 3] {
+        std::array::from_fn(|i| (0..3).map(|c| m[c * 4 + i] * v[c]).sum())
+    };
     let sets = tables.num_joints / 4;
     let has_normals = !g.normals.is_empty();
     let has_tangents = !g.tangents.is_empty();
 
     for k in 0..g.vertex_count() {
         let coord_index = g.coord_indices.get(k).copied().unwrap_or(0) as usize;
-        let vertex = [g.vertices[k * 4] as f64, g.vertices[k * 4 + 1] as f64, g.vertices[k * 4 + 2] as f64, g.vertices[k * 4 + 3] as f64];
-        let normal = if has_normals { [g.normals[k * 3] as f64, g.normals[k * 3 + 1] as f64, g.normals[k * 3 + 2] as f64] } else { [0.0; 3] };
-        let tangent = if has_tangents { [g.tangents[k * 4] as f64, g.tangents[k * 4 + 1] as f64, g.tangents[k * 4 + 2] as f64] } else { [0.0; 3] };
+        let vertex = [
+            g.vertices[k * 4] as f64,
+            g.vertices[k * 4 + 1] as f64,
+            g.vertices[k * 4 + 2] as f64,
+            g.vertices[k * 4 + 3] as f64,
+        ];
+        let normal = if has_normals {
+            [
+                g.normals[k * 3] as f64,
+                g.normals[k * 3 + 1] as f64,
+                g.normals[k * 3 + 2] as f64,
+            ]
+        } else {
+            [0.0; 3]
+        };
+        let tangent = if has_tangents {
+            [
+                g.tangents[k * 4] as f64,
+                g.tangents[k * 4 + 1] as f64,
+                g.tangents[k * 4 + 2] as f64,
+            ]
+        } else {
+            [0.0; 3]
+        };
         let mut skin = vertex;
         let mut skin_normal = normal;
         let mut skin_tangent = tangent;
@@ -258,8 +339,19 @@ pub fn skin(g: &Geometry, tables: &SkinTables, matrices: &[f32]) -> Geometry {
                 let index = base + i * 2;
                 let displacement = texel(&tables.displacements, index);
                 let weight_index = texel(&tables.displacements, index + 1)[0] as usize;
-                let weight = tables.displacement_weights.get(weight_index).copied().unwrap_or(0.0) as f64;
-                let d = mul_displacement(&joint_matrix(displacement[3] as usize), &[displacement[0] * weight, displacement[1] * weight, displacement[2] * weight]);
+                let weight = tables
+                    .displacement_weights
+                    .get(weight_index)
+                    .copied()
+                    .unwrap_or(0.0) as f64;
+                let d = mul_displacement(
+                    &joint_matrix(displacement[3] as usize),
+                    &[
+                        displacement[0] * weight,
+                        displacement[1] * weight,
+                        displacement[2] * weight,
+                    ],
+                );
 
                 for c in 0..3 {
                     skin[c] += d[c];

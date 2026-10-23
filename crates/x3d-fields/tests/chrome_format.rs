@@ -66,7 +66,11 @@ const CASES: &[(u64, usize, &str)] = &[
 fn intl_standard_matches_chrome() {
     for (bits, precision, want) in CASES {
         let x = f64::from_bits(*bits);
-        assert_eq!(intl_standard(x, *precision), *want, "{x:e} with {precision} significant digits");
+        assert_eq!(
+            intl_standard(x, *precision),
+            *want,
+            "{x:e} with {precision} significant digits"
+        );
     }
 }
 

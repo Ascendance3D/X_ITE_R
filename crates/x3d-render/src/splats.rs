@@ -94,13 +94,21 @@ pub fn f32_to_half(x: f32) -> u16 {
         let half = m >> shift;
         let rest = m & ((1 << shift) - 1);
         let halfway = 1 << (shift - 1);
-        let rounded = if rest > halfway || (rest == halfway && half & 1 == 1) { half + 1 } else { half };
+        let rounded = if rest > halfway || (rest == halfway && half & 1 == 1) {
+            half + 1
+        } else {
+            half
+        };
         return sign | rounded as u16;
     }
 
     let half = ((e as u32) << 10) | (mant >> 13);
     let rest = mant & 0x1fff;
-    let rounded = if rest > 0x1000 || (rest == 0x1000 && half & 1 == 1) { half + 1 } else { half };
+    let rounded = if rest > 0x1000 || (rest == 0x1000 && half & 1 == 1) {
+        half + 1
+    } else {
+        half
+    };
     // A carry out of the mantissa raises the exponent, up to infinity.
     sign | rounded as u16
 }
@@ -194,7 +202,10 @@ pub fn build(f: &SplatFields, previous: Option<&SplatData>) -> SplatData {
 
     let mut orientations = vec![0.0f32; size * 4];
 
-    for (o, q) in orientations.iter_mut().zip(f.orientations.iter().take(count * 4)) {
+    for (o, q) in orientations
+        .iter_mut()
+        .zip(f.orientations.iter().take(count * 4))
+    {
         *o = half_round(*q as f32);
     }
 
@@ -244,7 +255,11 @@ pub fn build(f: &SplatFields, previous: Option<&SplatData>) -> SplatData {
             }
         }
 
-        data.sh = Rc::new(ShTexture { layers: dimensions, width, texels });
+        data.sh = Rc::new(ShTexture {
+            layers: dimensions,
+            width,
+            texels,
+        });
     }
 
     data
@@ -281,7 +296,13 @@ pub fn fields_of<'a>(sg: &'a crate::sg::Sg, n: x3d_fields::NodeId) -> SplatField
         _ => &[],
     };
 
-    SplatFields { positions: sg.f32s(n, "positions"), orientations, scales: sg.f32s(n, "scales"), opacities: sg.f32s(n, "opacities"), sh }
+    SplatFields {
+        positions: sg.f32s(n, "positions"),
+        orientations,
+        scales: sg.f32s(n, "scales"),
+        opacities: sg.f32s(n, "opacities"),
+        sh,
+    }
 }
 
 /// What a draw item carries: the data and where it is drawn.
@@ -304,7 +325,12 @@ pub struct SortScratch {
 /// mkkellogg-sort.worker.js `sort`: the splat indices ordered by `sortIndexes` of
 /// sorter_no_simd_non_shared.wasm (float, no precomputed distances, not dynamic) for the view
 /// matrix `model_view` (column-major float32), the z row negated as the worker does.
-pub fn sort_indices(positions: &[f32], count: usize, model_view: &[f32; 16], scratch: &mut SortScratch) -> Vec<u32> {
+pub fn sort_indices(
+    positions: &[f32],
+    count: usize,
+    model_view: &[f32; 16],
+    scratch: &mut SortScratch,
+) -> Vec<u32> {
     let m2 = -model_view[2];
     let m6 = -model_view[6];
     let m10 = -model_view[10];
@@ -319,7 +345,11 @@ pub fn sort_indices(positions: &[f32], count: usize, model_view: &[f32; 16], scr
         let (x, y, z) = (positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
         let depth: f32 = (m10 * z) + ((m2 * x) + (m6 * y));
         let scaled = depth as f64 * 4096.0;
-        let distance = if scaled.abs() < 2147483648.0 { scaled as i32 } else { i32::MIN };
+        let distance = if scaled.abs() < 2147483648.0 {
+            scaled as i32
+        } else {
+            i32::MIN
+        };
 
         *mapped = distance;
         min_distance = min_distance.min(distance);
@@ -336,12 +366,17 @@ pub fn sort_indices(positions: &[f32], count: usize, model_view: &[f32; 16], scr
     }
 
     // `(distanceMapRange - 1) / (max - min)` in float32.
-    let range_map = ((DIST_MAP_RANGE - 1) as u32 as f32) / ((max_distance as f32) - (min_distance as f32));
+    let range_map =
+        ((DIST_MAP_RANGE - 1) as u32 as f32) / ((max_distance as f32) - (min_distance as f32));
 
     for mapped in scratch.mapped.iter_mut() {
         let t = mapped.wrapping_sub(min_distance);
         let v = range_map * (t as f32);
-        let index = if v.abs() < 2147483648.0 { v as i32 } else { i32::MIN };
+        let index = if v.abs() < 2147483648.0 {
+            v as i32
+        } else {
+            i32::MIN
+        };
 
         *mapped = index;
         scratch.frequencies[bin(index)] += 1;

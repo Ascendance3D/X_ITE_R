@@ -41,22 +41,27 @@ pub fn watchdog(page: &page::Page, common: &Common) {
     let pid = page.chrome.pid();
     let at = common.deadline + Duration::from_secs(15);
     let timeout = common.timeout;
-    let _ = std::thread::Builder::new().name("watchdog".into()).spawn(move || {
-        while Instant::now() < at {
-            std::thread::sleep(Duration::from_millis(200));
-        }
-        eprintln!("x3d-oracle: watchdog: run exceeded {} s, killing the browser", timeout.as_secs());
-        #[cfg(unix)]
-        if let Some(pid) = pid {
-            // SAFETY: plain syscall on the browser's process group.
-            unsafe {
-                libc::kill(-(pid as libc::pid_t), libc::SIGKILL);
+    let _ = std::thread::Builder::new()
+        .name("watchdog".into())
+        .spawn(move || {
+            while Instant::now() < at {
+                std::thread::sleep(Duration::from_millis(200));
             }
-        }
-        #[cfg(not(unix))]
-        let _ = pid;
-        std::process::exit(1);
-    });
+            eprintln!(
+                "x3d-oracle: watchdog: run exceeded {} s, killing the browser",
+                timeout.as_secs()
+            );
+            #[cfg(unix)]
+            if let Some(pid) = pid {
+                // SAFETY: plain syscall on the browser's process group.
+                unsafe {
+                    libc::kill(-(pid as libc::pid_t), libc::SIGKILL);
+                }
+            }
+            #[cfg(not(unix))]
+            let _ = pid;
+            std::process::exit(1);
+        });
 }
 
 fn default_root() -> PathBuf {
@@ -64,7 +69,11 @@ fn default_root() -> PathBuf {
         return PathBuf::from(r);
     }
     let here = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
-    if here.is_dir() { here } else { PathBuf::from("oracle") }
+    if here.is_dir() {
+        here
+    } else {
+        PathBuf::from("oracle")
+    }
 }
 
 const USAGE: &str = "usage: x3d-oracle <anim|anim-msaa|anim-sized> <world inside oracle/> <script.json> [--out result.json] [--png-dir dir] [--aa] [--ms N]\n       x3d-oracle particles <world inside oracle/> <script.json> [--out particles.json] [--variant b07|events|06r] [--png-dir dir] [--aa] [--ms N] [--png-size WxH]\n       [--chrome PATH] [--root DIR] [--timeout SECONDS] [--trace-cdp FILE]";
@@ -77,8 +86,15 @@ fn main() {
     }
     let mode = args.remove(0);
     let argv = anim::Argv(args);
-    let timeout = Duration::from_secs(argv.opt("--timeout").and_then(|t| t.parse().ok()).unwrap_or(1800));
-    let root = argv.opt("--root").map(PathBuf::from).unwrap_or_else(default_root);
+    let timeout = Duration::from_secs(
+        argv.opt("--timeout")
+            .and_then(|t| t.parse().ok())
+            .unwrap_or(1800),
+    );
+    let root = argv
+        .opt("--root")
+        .map(PathBuf::from)
+        .unwrap_or_else(default_root);
     let root = match std::fs::canonicalize(&root) {
         Ok(r) => r,
         Err(e) => {
@@ -87,7 +103,10 @@ fn main() {
         }
     };
     let common = Common {
-        chrome: argv.opt("--chrome").or_else(|| std::env::var("X3D_ORACLE_CHROME").ok()).unwrap_or_else(|| "/usr/bin/google-chrome".into()),
+        chrome: argv
+            .opt("--chrome")
+            .or_else(|| std::env::var("X3D_ORACLE_CHROME").ok())
+            .unwrap_or_else(|| "/usr/bin/google-chrome".into()),
         root,
         deadline: Instant::now() + timeout,
         timeout,

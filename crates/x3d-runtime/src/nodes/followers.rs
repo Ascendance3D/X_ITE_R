@@ -48,7 +48,13 @@ pub struct Env {
 }
 
 pub trait Follower: std::fmt::Debug {
-    fn initialize(&mut self, e: &Env, initial_value: &FieldValue, initial_destination: &FieldValue, out: &mut Vec<Out>);
+    fn initialize(
+        &mut self,
+        e: &Env,
+        initial_value: &FieldValue,
+        initial_destination: &FieldValue,
+        out: &mut Vec<Out>,
+    );
     fn set_value(&mut self, e: &Env, value: &FieldValue, out: &mut Vec<Out>);
     fn set_destination(&mut self, e: &Env, destination: &FieldValue, out: &mut Vec<Out>);
     fn set_duration(&mut self, _e: &Env) {}
@@ -136,14 +142,21 @@ impl Elem for Vector3 {
 
     fn read_mf(v: &FieldValue) -> Vec<Self> {
         match v {
-            FieldValue::MFVec3f(a) => a.chunks_exact(3).map(|c| Vector3::new(c[0] as f64, c[1] as f64, c[2] as f64)).collect(),
+            FieldValue::MFVec3f(a) => a
+                .chunks_exact(3)
+                .map(|c| Vector3::new(c[0] as f64, c[1] as f64, c[2] as f64))
+                .collect(),
             _ => vec![],
         }
     }
 
     fn write_mf(v: &[Self]) -> FieldValue {
         // typed array element writes: Float32Array stores Math.fround of each component.
-        FieldValue::MFVec3f(v.iter().flat_map(|e| [e.x as f32, e.y as f32, e.z as f32]).collect())
+        FieldValue::MFVec3f(
+            v.iter()
+                .flat_map(|e| [e.x as f32, e.y as f32, e.z as f32])
+                .collect(),
+        )
     }
 }
 
@@ -185,7 +198,10 @@ impl Elem for Vector2 {
 
     fn read_mf(v: &FieldValue) -> Vec<Self> {
         match v {
-            FieldValue::MFVec2f(a) => a.chunks_exact(2).map(|c| Vector2::new(c[0] as f64, c[1] as f64)).collect(),
+            FieldValue::MFVec2f(a) => a
+                .chunks_exact(2)
+                .map(|c| Vector2::new(c[0] as f64, c[1] as f64))
+                .collect(),
             _ => vec![],
         }
     }
@@ -305,7 +321,11 @@ impl Kind for ColorK {
     }
 
     fn interpolate(source: &Vector3, destination: &Vector3, weight: f64) -> Vector3 {
-        hsv_vec(super::interp::hsv_lerp(source.to_array(), destination.to_array(), weight))
+        hsv_vec(super::interp::hsv_lerp(
+            source.to_array(),
+            destination.to_array(),
+            weight,
+        ))
     }
 
     fn step(output: &mut Vector3, value1: &Vector3, value2: &Vector3, t: f64) {
@@ -313,7 +333,11 @@ impl Kind for ColorK {
         let mut delta = *output;
         delta.add(value1);
         delta.subtract(value2);
-        *output = hsv_vec(super::interp::hsv_lerp(output.to_array(), delta.to_array(), t));
+        *output = hsv_vec(super::interp::hsv_lerp(
+            output.to_array(),
+            delta.to_array(),
+            t,
+        ));
     }
 }
 
@@ -453,7 +477,14 @@ pub struct Chaser<K: Kind> {
 
 impl<K: Kind> Chaser<K> {
     pub fn new() -> Self {
-        Chaser { active: false, buffer: vec![], destination: K::zero(), previous: K::zero(), buffer_end_time: 0.0, step_time: 0.0 }
+        Chaser {
+            active: false,
+            buffer: vec![],
+            destination: K::zero(),
+            previous: K::zero(),
+            buffer_end_time: 0.0,
+            step_time: 0.0,
+        }
     }
 
     fn tolerance() -> f64 {
@@ -506,7 +537,11 @@ impl<K: Kind> Chaser<K> {
                     self.buffer[i] = K::interpolate(&self.destination, &self.buffer[s], alpha);
                 }
             } else {
-                self.previous = if seconds == n as f64 { self.buffer[0].clone() } else { self.destination.clone() };
+                self.previous = if seconds == n as f64 {
+                    self.buffer[0].clone()
+                } else {
+                    self.destination.clone()
+                };
 
                 for b in self.buffer.iter_mut() {
                     *b = self.destination.clone();
@@ -521,7 +556,13 @@ impl<K: Kind> Chaser<K> {
 }
 
 impl<K: Kind> Follower for Chaser<K> {
-    fn initialize(&mut self, e: &Env, initial_value: &FieldValue, initial_destination: &FieldValue, out: &mut Vec<Out>) {
+    fn initialize(
+        &mut self,
+        e: &Env,
+        initial_value: &FieldValue,
+        initial_destination: &FieldValue,
+        out: &mut Vec<Out>,
+    ) {
         self.set_duration(e);
 
         let (iv, id) = (K::read(initial_value), K::read(initial_destination));
@@ -585,7 +626,11 @@ impl<K: Kind> Follower for Chaser<K> {
     fn prepare_events(&mut self, e: &Env, out: &mut Vec<Out>) {
         let n = self.buffer.len();
         let fraction = self.update_buffer(e.now);
-        let mut output = K::interpolate(&self.previous, &self.buffer[n - 1], Self::step_response((n as f64 - 1.0 + fraction) * self.step_time, e.duration));
+        let mut output = K::interpolate(
+            &self.previous,
+            &self.buffer[n - 1],
+            Self::step_response((n as f64 - 1.0 + fraction) * self.step_time, e.duration),
+        );
 
         for i in (0..n - 1).rev() {
             let t = Self::step_response((i as f64 + fraction) * self.step_time, e.duration);
@@ -613,7 +658,10 @@ pub struct Damper<K: Kind> {
 
 impl<K: Kind> Damper<K> {
     pub fn new() -> Self {
-        Damper { active: false, buffer: vec![] }
+        Damper {
+            active: false,
+            buffer: vec![],
+        }
     }
 
     /// X3DDamperNode.getOrder: Algorithm.clamp (order, 0, 5).
@@ -641,7 +689,13 @@ impl<K: Kind> Damper<K> {
 }
 
 impl<K: Kind> Follower for Damper<K> {
-    fn initialize(&mut self, e: &Env, initial_value: &FieldValue, initial_destination: &FieldValue, out: &mut Vec<Out>) {
+    fn initialize(
+        &mut self,
+        e: &Env,
+        initial_value: &FieldValue,
+        initial_destination: &FieldValue,
+        out: &mut Vec<Out>,
+    ) {
         let (iv, id) = (K::read(initial_value), K::read(initial_destination));
 
         self.buffer = vec![id.clone()];
@@ -755,7 +809,10 @@ impl Runtime {
             tau: num("tau"),
             tolerance: num("tolerance"),
             order: num("order") as i32,
-            current: self.pre_value(node, "value_changed").cloned().unwrap_or(FieldValue::SFBool(false)),
+            current: self
+                .pre_value(node, "value_changed")
+                .cloned()
+                .unwrap_or(FieldValue::SFBool(false)),
         }
     }
 
@@ -773,13 +830,25 @@ impl Runtime {
         // so nothing can send it an event, and set_order__ throws a ReferenceError (`length` is
         // block scoped in its for loop); no interest is needed.
 
-        let initial_value = self.pre_value(node, "initialValue").cloned().unwrap_or(FieldValue::SFBool(false));
-        let initial_destination = self.pre_value(node, "initialDestination").cloned().unwrap_or(FieldValue::SFBool(false));
+        let initial_value = self
+            .pre_value(node, "initialValue")
+            .cloned()
+            .unwrap_or(FieldValue::SFBool(false));
+        let initial_destination = self
+            .pre_value(node, "initialDestination")
+            .cloned()
+            .unwrap_or(FieldValue::SFBool(false));
 
-        self.follower_call(node, |f, e, out| f.initialize(e, &initial_value, &initial_destination, out));
+        self.follower_call(node, |f, e, out| {
+            f.initialize(e, &initial_value, &initial_destination, out)
+        });
     }
 
-    fn follower_call(&mut self, node: NodeId, call: impl FnOnce(&mut dyn Follower, &Env, &mut Vec<Out>)) {
+    fn follower_call(
+        &mut self,
+        node: NodeId,
+        call: impl FnOnce(&mut dyn Follower, &Env, &mut Vec<Out>),
+    ) {
         let State::Follower(mut follower) = std::mem::take(&mut self.nrt_mut(node).state) else {
             return;
         };
@@ -811,7 +880,9 @@ impl Runtime {
     /// X3DFollowerNode.set_live__: `getLive () .getValue () && isActive` puts the node into the
     /// browser's prepareEvents interests (a Map: re-adding keeps the position), else removes it.
     pub(crate) fn follower_set_live(&mut self, node: NodeId) {
-        let prepare = self.private_field(self.browser_node, "prepareEvents").unwrap();
+        let prepare = self
+            .private_field(self.browser_node, "prepareEvents")
+            .unwrap();
 
         if self.ctx_live(self.scene.node(node).ctx) && self.get_bool(node, "isActive") {
             self.add_interest(prepare, node, Cb::FollowerPrepare);
@@ -823,11 +894,17 @@ impl Runtime {
     pub(crate) fn follower_interest(&mut self, node: NodeId, cb: Cb) {
         match cb {
             Cb::FollowerSetValue => {
-                let v = self.pre_value(node, "set_value").cloned().unwrap_or(FieldValue::SFBool(false));
+                let v = self
+                    .pre_value(node, "set_value")
+                    .cloned()
+                    .unwrap_or(FieldValue::SFBool(false));
                 self.follower_call(node, |f, e, out| f.set_value(e, &v, out));
             }
             Cb::FollowerSetDestination => {
-                let v = self.pre_value(node, "set_destination").cloned().unwrap_or(FieldValue::SFBool(false));
+                let v = self
+                    .pre_value(node, "set_destination")
+                    .cloned()
+                    .unwrap_or(FieldValue::SFBool(false));
                 self.follower_call(node, |f, e, out| f.set_destination(e, &v, out));
             }
             Cb::FollowerSetDuration => self.follower_call(node, |f, e, _| f.set_duration(e)),

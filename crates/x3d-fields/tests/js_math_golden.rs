@@ -48,19 +48,31 @@ fn chrome_math_equals_core_math() {
         let h = hash(v.iter().map(|&x| f(x)));
 
         if h != expected(name) {
-            failures.push(format!("{name}: 0x{h:016x}, expected 0x{:016x}", expected(name)));
+            failures.push(format!(
+                "{name}: 0x{h:016x}, expected 0x{:016x}",
+                expected(name)
+            ));
         }
     }
 
     let h = hash(pairs().iter().map(|&(y, x)| jsmath::atan2(y, x)));
 
     if h != expected("atan2") {
-        failures.push(format!("atan2: 0x{h:016x}, expected 0x{:016x}", expected("atan2")));
+        failures.push(format!(
+            "atan2: 0x{h:016x}, expected 0x{:016x}",
+            expected("atan2")
+        ));
     }
 
     // The cases pxfm alone gets wrong: the result underflows to zero.
-    assert_eq!(jsmath::atan2(-5.9996406918275855e-270, 6.524587767809302e59).to_bits(), (-0.0f64).to_bits());
-    assert_eq!(jsmath::atan2(5.9996406918275855e-270, 6.524587767809302e59).to_bits(), 0.0f64.to_bits());
+    assert_eq!(
+        jsmath::atan2(-5.9996406918275855e-270, 6.524587767809302e59).to_bits(),
+        (-0.0f64).to_bits()
+    );
+    assert_eq!(
+        jsmath::atan2(5.9996406918275855e-270, 6.524587767809302e59).to_bits(),
+        0.0f64.to_bits()
+    );
     assert_eq!(jsmath::atan2(-0.0, 1.0).to_bits(), (-0.0f64).to_bits());
     assert_eq!(jsmath::atan2(-0.0, 0.0).to_bits(), (-0.0f64).to_bits());
     assert_eq!(jsmath::atan2(-0.0, -0.0), -std::f64::consts::PI);

@@ -39,14 +39,22 @@ pub const CH_END: i64 = i64::MAX;
 
 impl Pos {
     pub const fn new(line: i64, ch: i64) -> Pos {
-        Pos { line, ch, sticky: None }
+        Pos {
+            line,
+            ch,
+            sticky: None,
+        }
     }
     pub const fn with_sticky(line: i64, ch: i64, sticky: Option<Sticky>) -> Pos {
         Pos { line, ch, sticky }
     }
     /// `Pos(line)` — end of the line once clipped.
     pub const fn line_end(line: i64) -> Pos {
-        Pos { line, ch: CH_END, sticky: None }
+        Pos {
+            line,
+            ch: CH_END,
+            sticky: None,
+        }
     }
 }
 
@@ -78,13 +86,21 @@ pub(crate) struct PosRef(Rc<PosCell>);
 
 impl PosRef {
     pub fn new(p: Pos) -> PosRef {
-        PosRef(Rc::new(PosCell { line: Cell::new(p.line), ch: Cell::new(p.ch), sticky: Cell::new(p.sticky) }))
+        PosRef(Rc::new(PosCell {
+            line: Cell::new(p.line),
+            ch: Cell::new(p.ch),
+            sticky: Cell::new(p.sticky),
+        }))
     }
     pub fn lc(line: i64, ch: i64) -> PosRef {
         PosRef::new(Pos::new(line, ch))
     }
     pub fn get(&self) -> Pos {
-        Pos { line: self.0.line.get(), ch: self.0.ch.get(), sticky: self.0.sticky.get() }
+        Pos {
+            line: self.0.line.get(),
+            ch: self.0.ch.get(),
+            sticky: self.0.sticky.get(),
+        }
     }
     pub fn line(&self) -> i64 {
         self.0.line.get()
@@ -109,10 +125,18 @@ pub(crate) fn rcmp(a: &PosRef, b: &PosRef) -> Ordering {
 
 /// `minPos(a, b)`: `cmp(a, b) < 0 ? a : b` (returns one of the objects).
 pub(crate) fn min_pos(a: &PosRef, b: &PosRef) -> PosRef {
-    if rcmp(a, b) == Ordering::Less { a.clone() } else { b.clone() }
+    if rcmp(a, b) == Ordering::Less {
+        a.clone()
+    } else {
+        b.clone()
+    }
 }
 
 /// `maxPos(a, b)`: `cmp(a, b) < 0 ? b : a`.
 pub(crate) fn max_pos(a: &PosRef, b: &PosRef) -> PosRef {
-    if rcmp(a, b) == Ordering::Less { b.clone() } else { a.clone() }
+    if rcmp(a, b) == Ordering::Less {
+        b.clone()
+    } else {
+        a.clone()
+    }
 }

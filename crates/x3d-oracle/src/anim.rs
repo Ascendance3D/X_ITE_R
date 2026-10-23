@@ -45,7 +45,8 @@ impl Argv {
         let a = &self.0;
         (0..a.len())
             .filter(|&i| {
-                !a[i].starts_with("--") && !(i > 0 && a[i - 1].starts_with("--") && !(aa_is_flag && a[i - 1] == "--aa"))
+                !a[i].starts_with("--")
+                    && !(i > 0 && a[i - 1].starts_with("--") && !(aa_is_flag && a[i - 1] == "--aa"))
             })
             .map(|i| a[i].clone())
             .collect()
@@ -67,7 +68,11 @@ pub fn relative(from: &Path, to: &Path) -> String {
     let t: Vec<_> = to.components().collect();
     let common = f.iter().zip(&t).take_while(|(a, b)| a == b).count();
     let mut parts: Vec<String> = vec!["..".into(); f.len() - common];
-    parts.extend(t[common..].iter().map(|c| c.as_os_str().to_string_lossy().into_owned()));
+    parts.extend(
+        t[common..]
+            .iter()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned()),
+    );
     parts.join("/")
 }
 
@@ -83,7 +88,9 @@ fn num(v: Option<&Value>, def: f64) -> f64 {
 
 /// `new Set (script .capture ?? [ ])`: only numbers can equal the frame number k.
 fn num_set(v: Option<&Value>) -> Vec<f64> {
-    v.and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
+    v.and_then(Value::as_array)
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default()
 }
 
 /// The JavaScript text of a script value passed to the page.
@@ -129,7 +136,11 @@ impl Run<'_> {
             }
             self.eval(js::YIELD_TASK, None)?;
             self.eval(js::YIELD_TASK, None)?;
-            quiet = if self.page.in_flight() > 0 { 0 } else { quiet + 1 };
+            quiet = if self.page.in_flight() > 0 {
+                0
+            } else {
+                quiet + 1
+            };
         }
         Ok(())
     }
@@ -156,31 +167,58 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
         (Some(f), Some(s)) => (f.clone(), s.clone()),
         _ => return Err("usage: x3d-oracle anim|anim-msaa|anim-sized <world inside oracle/> <script.json> [--out result.json] [--png-dir dir]".into()),
     };
-    let script_text = std::fs::read_to_string(&script_arg).map_err(|e| format!("ENOENT: {script_arg}: {e}"))?;
-    let script: Value = serde_json::from_str(&script_text).map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
-    let script_raw = json::parse(&script_text).map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
+    let script_text =
+        std::fs::read_to_string(&script_arg).map_err(|e| format!("ENOENT: {script_arg}: {e}"))?;
+    let script: Value = serde_json::from_str(&script_text)
+        .map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
+    let script_raw =
+        json::parse(&script_text).map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
     let g = |k: &str| script.get(k).filter(|v| !v.is_null());
 
     let size = g("size").and_then(Value::as_array);
-    let w = size.and_then(|a| a.first()).map(|v| num(Some(v), 512.0)).unwrap_or(512.0);
-    let h = size.and_then(|a| a.get(1)).map(|v| num(Some(v), 512.0)).unwrap_or(512.0);
+    let w = size
+        .and_then(|a| a.first())
+        .map(|v| num(Some(v), 512.0))
+        .unwrap_or(512.0);
+    let h = size
+        .and_then(|a| a.get(1))
+        .map(|v| num(Some(v), 512.0))
+        .unwrap_or(512.0);
     let t0 = num(g("t0"), 946684800.0);
     let dt = num(g("dt"), 1.0 / 60.0);
     let frames = num(g("frames"), 1.0);
     let warmup = num(g("warmup"), 8.0);
-    let capture: BTreeSet<u64> = num_set(g("capture")).into_iter().map(f64::to_bits).collect();
+    let capture: BTreeSet<u64> = num_set(g("capture"))
+        .into_iter()
+        .map(f64::to_bits)
+        .collect();
     let dump: BTreeSet<u64> = num_set(g("dump")).into_iter().map(f64::to_bits).collect();
-    let events: Vec<Value> = g("events").and_then(Value::as_array).cloned().unwrap_or_default();
+    let events: Vec<Value> = g("events")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
     let png_dir = argv.opt("--png-dir").unwrap_or_default();
     let truthy = |k: &str| json::truthy(script.get(k));
 
-    let ms = if variant == Variant::Msaa { argv.opt("--ms").unwrap_or_default() } else { String::new() };
-    let aa = if argv.0.iter().any(|a| a == "--aa") || !ms.is_empty() { "1" } else { "0" };
+    let ms = if variant == Variant::Msaa {
+        argv.opt("--ms").unwrap_or_default()
+    } else {
+        String::new()
+    };
+    let aa = if argv.0.iter().any(|a| a == "--aa") || !ms.is_empty() {
+        "1"
+    } else {
+        "0"
+    };
 
     // Script key "audio" (anim only).
     let audio = (variant.full() && truthy("audio")).then(|| {
         let a = &script["audio"];
-        (num(a.get("sampleRate").filter(|v| !v.is_null()), 48000.0), num(a.get("channels").filter(|v| !v.is_null()), 2.0), num(a.get("tail").filter(|v| !v.is_null()), 4.0))
+        (
+            num(a.get("sampleRate").filter(|v| !v.is_null()), 48000.0),
+            num(a.get("channels").filter(|v| !v.is_null()), 2.0),
+            num(a.get("tail").filter(|v| !v.is_null()), 4.0),
+        )
     });
     let audio_quantum = |k: f64, sr: f64| (js_round(k * dt * sr) / 128.0).ceil();
 
@@ -192,18 +230,30 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
     result.set("log", J::Arr(vec![]));
     result.set("anchors", J::Arr(vec![]));
 
-    let server = crate::server::Server::start(common.root.clone()).map_err(|e| format!("x3d-oracle: http server: {e}"))?;
+    let server = crate::server::Server::start(common.root.clone())
+        .map_err(|e| format!("x3d-oracle: http server: {e}"))?;
     let base = format!("http://127.0.0.1:{}", server.port);
     let track = variant.settle() && truthy("settle");
     let console = variant.full() && truthy("console");
 
-    let mut page = Page::open(&common.chrome, crate::chrome::ORACLE_ARGS, w as u32, h as u32, &base, common.trace.clone(), common.deadline)?;
+    let mut page = Page::open(
+        &common.chrome,
+        crate::chrome::ORACLE_ARGS,
+        w as u32,
+        h as u32,
+        &base,
+        common.trace.clone(),
+        common.deadline,
+    )?;
     crate::watchdog(&page, common);
     page.set_console(console);
     let console_from = 0;
 
     let outcome = (|| -> Result<(), String> {
-        let r = Run { page: &page, variant };
+        let r = Run {
+            page: &page,
+            variant,
+        };
         if let Some((sr, ch, tail)) = audio {
             let length = (audio_quantum(frames, sr) + tail) * 128.0;
             let arg = format!(
@@ -221,9 +271,17 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                 "{base}/x_ite-pin/src/anim-msaa.html?w={}&h={}&aa={aa}{}",
                 js_number(w),
                 js_number(h),
-                if ms.is_empty() { String::new() } else { format!("&ms={ms}") }
+                if ms.is_empty() {
+                    String::new()
+                } else {
+                    format!("&ms={ms}")
+                }
             ),
-            Variant::Sized => format!("{base}/x_ite-pin/src/anim-sized.html?w={}&h={}", js_number(w), js_number(h)),
+            Variant::Sized => format!(
+                "{base}/x_ite-pin/src/anim-sized.html?w={}&h={}",
+                js_number(w),
+                js_number(h)
+            ),
         };
         page.goto(&url)?;
         page.wait_for_function(js::READY, 30000)?;
@@ -237,10 +295,25 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
 
         let abs = resolve(&file_arg);
         let rel = relative(&common.root, &abs);
-        let world = format!("{base}/{}", rel.split('/').map(json::encode_uri_component).collect::<Vec<_>>().join("/"));
-        let load_arg = format!("[{},{},{},{}]", json::escape(&world), js_number(t0), js_number(dt), js_number(warmup));
-        let loaded_text = r.eval(js::LOAD, Some(&load_arg))?.unwrap_or_else(|| "{}".into());
-        let loaded = json::parse(&loaded_text).map_err(|e| format!("x3d-oracle: bad page JSON: {e}"))?;
+        let world = format!(
+            "{base}/{}",
+            rel.split('/')
+                .map(json::encode_uri_component)
+                .collect::<Vec<_>>()
+                .join("/")
+        );
+        let load_arg = format!(
+            "[{},{},{},{}]",
+            json::escape(&world),
+            js_number(t0),
+            js_number(dt),
+            js_number(warmup)
+        );
+        let loaded_text = r
+            .eval(js::LOAD, Some(&load_arg))?
+            .unwrap_or_else(|| "{}".into());
+        let loaded =
+            json::parse(&loaded_text).map_err(|e| format!("x3d-oracle: bad page JSON: {e}"))?;
         let loaded_v: Value = serde_json::from_str(&loaded_text).unwrap_or(Value::Null);
 
         if variant == Variant::Msaa {
@@ -278,7 +351,9 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
 
         if let Some((sr, _, _)) = audio {
             let n = frames.max(0.0) as u64;
-            let times: Vec<String> = (1..=n).map(|k| js_number((audio_quantum(k as f64, sr) * 128.0 + 0.5) / sr)).collect();
+            let times: Vec<String> = (1..=n)
+                .map(|k| js_number((audio_quantum(k as f64, sr) * 128.0 + 0.5) / sr))
+                .collect();
             r.eval(js::AUDIO_ARM, Some(&format!("[{}]", times.join(","))))?;
             result.set("audioSuspend", J::Arr(vec![]));
         }
@@ -289,7 +364,9 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
             let prev = t0 + (k - 1.0) * dt;
 
             if let Some((sr, _, _)) = audio {
-                let t = r.eval(js::AUDIO_WAIT, Some(&js_number(k)))?.unwrap_or_default();
+                let t = r
+                    .eval(js::AUDIO_WAIT, Some(&js_number(k)))?
+                    .unwrap_or_default();
                 let v: f64 = t.parse().unwrap_or(f64::NAN);
                 if let Some(J::Arr(a)) = result.get_mut("audioSuspend") {
                     a.push(J::num(js_round(v * sr)));
@@ -297,7 +374,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                 r.eval(js::AUDIO_FLUSH, None)?;
             }
 
-            for e in events.iter().filter(|e| e.get("frame").and_then(Value::as_f64) == Some(k)) {
+            for e in events
+                .iter()
+                .filter(|e| e.get("frame").and_then(Value::as_f64) == Some(k))
+            {
                 let et = num(e.get("t").filter(|v| !v.is_null()), 0.0);
                 r.eval(js::SET_DATE, Some(&js_number((prev + et) * 1000.0)))?;
                 let x = num(e.get("x"), f64::NAN);
@@ -305,7 +385,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                 match e.get("type").and_then(Value::as_str).unwrap_or("") {
                     "mousedown" => {
                         page.input(input.mouse_move(x, y), "mouse.move")?;
-                        page.input(input.mouse_down(mouse_button(e.get("button")), 1), "mouse.down")?;
+                        page.input(
+                            input.mouse_down(mouse_button(e.get("button")), 1),
+                            "mouse.down",
+                        )?;
                     }
                     "mouseup" => {
                         page.input(input.mouse_move(x, y), "mouse.move")?;
@@ -314,31 +397,59 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                     "mousemove" => page.input(input.mouse_move(x, y), "mouse.move")?,
                     "wheel" => {
                         page.input(input.mouse_move(x, y), "mouse.move")?;
-                        page.input(input.mouse_wheel(0.0, num(e.get("deltaY"), f64::NAN)), "mouse.wheel")?;
+                        page.input(
+                            input.mouse_wheel(0.0, num(e.get("deltaY"), f64::NAN)),
+                            "mouse.wheel",
+                        )?;
                     }
                     "dblclick" => page.input(input.mouse_dblclick(x, y), "mouse.dblclick")?,
                     "viewer" => {
                         r.eval(js::SET_VIEWER, Some(&lit(e.get("name"))))?;
                     }
                     "resize" if variant.settle() => {
-                        r.eval(js::RESIZE, Some(&format!("[{},{}]", lit(e.get("width")), lit(e.get("height")))))?;
+                        r.eval(
+                            js::RESIZE,
+                            Some(&format!(
+                                "[{},{}]",
+                                lit(e.get("width")),
+                                lit(e.get("height"))
+                            )),
+                        )?;
                         r.eval(js::TWO_FRAMES, None)?;
                     }
                     "key" => {
                         let key = e.get("key").and_then(Value::as_str).unwrap_or("");
-                        page.input(input.key_press(key).map_err(|m| format!("keyboard.press: {m}"))?, "keyboard.press")?;
+                        page.input(
+                            input
+                                .key_press(key)
+                                .map_err(|m| format!("keyboard.press: {m}"))?,
+                            "keyboard.press",
+                        )?;
                     }
                     "keydown" if variant.full() => {
                         let key = e.get("key").and_then(Value::as_str).unwrap_or("");
-                        page.input(input.key_down(key).map_err(|m| format!("keyboard.down: {m}"))?, "keyboard.down")?;
+                        page.input(
+                            input
+                                .key_down(key)
+                                .map_err(|m| format!("keyboard.down: {m}"))?,
+                            "keyboard.down",
+                        )?;
                     }
                     "keyup" if variant.full() => {
                         let key = e.get("key").and_then(Value::as_str).unwrap_or("");
-                        page.input(input.key_up(key).map_err(|m| format!("keyboard.up: {m}"))?, "keyboard.up")?;
+                        page.input(
+                            input.key_up(key).map_err(|m| format!("keyboard.up: {m}"))?,
+                            "keyboard.up",
+                        )?;
                     }
                     "mods" => {
-                        for (prop, key) in [("shift", "Shift"), ("ctrl", "Control"), ("alt", "Alt")] {
-                            let cmds = if json::truthy(e.get(prop)) { input.key_down(key) } else { input.key_up(key) };
+                        for (prop, key) in [("shift", "Shift"), ("ctrl", "Control"), ("alt", "Alt")]
+                        {
+                            let cmds = if json::truthy(e.get(prop)) {
+                                input.key_down(key)
+                            } else {
+                                input.key_up(key)
+                            };
                             page.input(cmds?, "keyboard.down")?;
                         }
                     }
@@ -358,9 +469,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
             if physics {
                 let snap = r.eval_j(js::PHYS_SNAP, Some(&physics_nodes))?;
                 if let Some(J::Obj(_)) = result.get_mut("physics")
-                    && let Some(fr) = result.get_mut("physics").and_then(|p| p.get_mut("frames")) {
-                        fr.set(&key, snap);
-                    }
+                    && let Some(fr) = result.get_mut("physics").and_then(|p| p.get_mut("frames"))
+                {
+                    fr.set(&key, snap);
+                }
             }
             if audio.is_some() {
                 r.eval(js::AUDIO_RESUME, None)?;
@@ -385,9 +497,17 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
             }
             if capture.contains(&kb) && !png_dir.is_empty() {
                 let t = r.eval(js::PIXELS, None)?.unwrap_or_default();
-                let p: Value = serde_json::from_str(&t).map_err(|e| format!("x3d-oracle: pixels: {e}"))?;
-                let (pw, ph) = (p["width"].as_u64().unwrap_or(0) as u32, p["height"].as_u64().unwrap_or(0) as u32);
-                let png = crate::png::encode_bottom_up(pw, ph, &json::base64_decode(p["rgba"].as_str().unwrap_or("")))?;
+                let p: Value =
+                    serde_json::from_str(&t).map_err(|e| format!("x3d-oracle: pixels: {e}"))?;
+                let (pw, ph) = (
+                    p["width"].as_u64().unwrap_or(0) as u32,
+                    p["height"].as_u64().unwrap_or(0) as u32,
+                );
+                let png = crate::png::encode_bottom_up(
+                    pw,
+                    ph,
+                    &json::base64_decode(p["rgba"].as_str().unwrap_or("")),
+                )?;
                 std::fs::create_dir_all(&png_dir).map_err(|e| format!("EACCES: {png_dir}: {e}"))?;
                 let path = Path::new(&png_dir).join(format!("{key}.png"));
                 std::fs::write(&path, png).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -400,14 +520,29 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
             result.get_mut("physics").unwrap().set("dt", v);
         }
         if variant.settle() && truthy("pickProbes") {
-            result.set("pickProbes", r.eval_j(js::PICK_PROBES, Some(&lit(script.get("pickProbes"))))?);
+            result.set(
+                "pickProbes",
+                r.eval_j(js::PICK_PROBES, Some(&lit(script.get("pickProbes"))))?,
+            );
         }
         if variant.settle() && truthy("collisionProbes") {
-            result.set("collisionProbes", r.eval_j(js::COLLISION_PROBES, Some(&lit(script.get("collisionProbes"))))?);
+            result.set(
+                "collisionProbes",
+                r.eval_j(
+                    js::COLLISION_PROBES,
+                    Some(&lit(script.get("collisionProbes"))),
+                )?,
+            );
         }
 
-        let log = r.eval(js::GET_LOG, None)?.unwrap_or_else(|| "[]".into()).replace(&base, "http://oracle");
-        result.set("log", json::parse(&log).map_err(|e| format!("x3d-oracle: bad page JSON: {e}"))?);
+        let log = r
+            .eval(js::GET_LOG, None)?
+            .unwrap_or_else(|| "[]".into())
+            .replace(&base, "http://oracle");
+        result.set(
+            "log",
+            json::parse(&log).map_err(|e| format!("x3d-oracle: bad page JSON: {e}"))?,
+        );
 
         if console {
             let lines: Vec<J> = page
@@ -419,7 +554,11 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                     J::str(&if t == "log" {
                         format!("log: {text}")
                     } else {
-                        format!("{}: {}", if t == "warning" { "warn" } else { "error" }, text.split('\n').next().unwrap_or(""))
+                        format!(
+                            "{}: {}",
+                            if t == "warning" { "warn" } else { "error" },
+                            text.split('\n').next().unwrap_or("")
+                        )
                     })
                 })
                 .collect();
@@ -435,7 +574,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
             for c in &chans {
                 data.extend(json::base64_decode(c.as_str().unwrap_or("")));
             }
-            let file = format!("{}.audio.f32", argv.opt("--out").unwrap_or_else(|| "audio".into()));
+            let file = format!(
+                "{}.audio.f32",
+                argv.opt("--out").unwrap_or_else(|| "audio".into())
+            );
             let mut o = J::obj();
             o.set("sampleRate", a.member("sampleRate"));
             o.set("length", a.member("length"));
@@ -472,10 +614,18 @@ mod tests {
 
     #[test]
     fn argv_like_node() {
-        let a = Argv(["w.wrl", "--out", "o.json", "s.json", "--png-dir", "d"].map(String::from).to_vec());
+        let a = Argv(
+            ["w.wrl", "--out", "o.json", "s.json", "--png-dir", "d"]
+                .map(String::from)
+                .to_vec(),
+        );
         assert_eq!(a.positional(false), vec!["w.wrl", "s.json"]);
         assert_eq!(a.opt("--out").as_deref(), Some("o.json"));
-        let a = Argv(["--aa", "w.wrl", "s.json", "--ms", "4"].map(String::from).to_vec());
+        let a = Argv(
+            ["--aa", "w.wrl", "s.json", "--ms", "4"]
+                .map(String::from)
+                .to_vec(),
+        );
         assert_eq!(a.positional(true), vec!["w.wrl", "s.json"]);
         assert_eq!(a.positional(false), vec!["s.json"]);
     }
@@ -486,17 +636,61 @@ mod tests {
         let msaa = include_str!("../../../oracle/x_ite-anim-msaa.mjs");
         let sized = include_str!("../../../oracle/x_ite-anim-sized.mjs");
         for c in [
-            js::AUDIO_INIT, js::PIN_FRAME_RATE, js::PHYSICS_SETUP, js::READY, js::LOAD, js::SET_DT, js::GEOMETRY, js::FOCUS, js::PHYS_SNAP,
-            js::AUDIO_ARM, js::AUDIO_WAIT, js::AUDIO_FLUSH, js::SET_DATE, js::SET_VIEWER, js::RESIZE, js::TWO_FRAMES, js::PH_FRAME, js::STEP,
-            js::AUDIO_RESUME, js::VRML, js::PIXELS, js::PH_DT, js::GET_LOG, js::AUDIO_DONE, js::YIELD_TASK, js::POSE, js::INLINES,
-            js::PICK_PROBES, js::COLLISION_PROBES,
+            js::AUDIO_INIT,
+            js::PIN_FRAME_RATE,
+            js::PHYSICS_SETUP,
+            js::READY,
+            js::LOAD,
+            js::SET_DT,
+            js::GEOMETRY,
+            js::FOCUS,
+            js::PHYS_SNAP,
+            js::AUDIO_ARM,
+            js::AUDIO_WAIT,
+            js::AUDIO_FLUSH,
+            js::SET_DATE,
+            js::SET_VIEWER,
+            js::RESIZE,
+            js::TWO_FRAMES,
+            js::PH_FRAME,
+            js::STEP,
+            js::AUDIO_RESUME,
+            js::VRML,
+            js::PIXELS,
+            js::PH_DT,
+            js::GET_LOG,
+            js::AUDIO_DONE,
+            js::YIELD_TASK,
+            js::POSE,
+            js::INLINES,
+            js::PICK_PROBES,
+            js::COLLISION_PROBES,
         ] {
             assert!(anim.contains(c), "not in x_ite-anim.mjs: {c}");
         }
-        for c in [js::READY, js::LOAD, js::SET_DT, js::GEOMETRY, js::FOCUS, js::SET_DATE, js::STEP, js::POSE, js::VRML, js::PIXELS, js::GET_LOG] {
+        for c in [
+            js::READY,
+            js::LOAD,
+            js::SET_DT,
+            js::GEOMETRY,
+            js::FOCUS,
+            js::SET_DATE,
+            js::STEP,
+            js::POSE,
+            js::VRML,
+            js::PIXELS,
+            js::GET_LOG,
+        ] {
             assert!(msaa.contains(c) && sized.contains(c), "variant drift: {c}");
         }
-        for c in [js::INFO, js::RESIZE, js::TWO_FRAMES, js::YIELD_TASK, js::PICK_PROBES, js::COLLISION_PROBES] {
+        for c in [
+            js::INFO,
+            js::RESIZE,
+            js::TWO_FRAMES,
+            js::YIELD_TASK,
+            js::PICK_PROBES,
+            js::COLLISION_PROBES,
+        ] {
             assert!(msaa.contains(c), "not in x_ite-anim-msaa.mjs: {c}");
         }
         assert!(sized.contains(js::PIN_FRAME_RATE));
@@ -504,7 +698,13 @@ mod tests {
 
     #[test]
     fn relative_paths() {
-        assert_eq!(relative(Path::new("/a/oracle"), Path::new("/a/oracle/x/y z.wrl")), "x/y z.wrl");
-        assert_eq!(relative(Path::new("/a/oracle"), Path::new("/a/b.wrl")), "../b.wrl");
+        assert_eq!(
+            relative(Path::new("/a/oracle"), Path::new("/a/oracle/x/y z.wrl")),
+            "x/y z.wrl"
+        );
+        assert_eq!(
+            relative(Path::new("/a/oracle"), Path::new("/a/b.wrl")),
+            "../b.wrl"
+        );
     }
 }

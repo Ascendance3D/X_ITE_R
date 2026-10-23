@@ -13,7 +13,10 @@ use std::rc::Rc;
 use cm_core::util::string_stream::StringStream;
 
 use crate::js::{self, is_js_space};
-use crate::{copy_state, start_state, ConfigValue, JsArg, MimeTarget, Mode, ModeOptions, ModeSpec, Registry, Spec, State};
+use crate::{
+    ConfigValue, JsArg, MimeTarget, Mode, ModeOptions, ModeSpec, Registry, Spec, State, copy_state,
+    start_state,
+};
 
 /// A predicate standing in for a JS `RegExp.test`.
 pub type Matcher = Rc<dyn Fn(&[u16]) -> bool>;
@@ -38,7 +41,10 @@ pub struct ScriptType {
 
 /// `/^...$/i`-style whole-string ASCII case-insensitive test.
 fn eq_ci(s: &[u16], lit: &str) -> bool {
-    s.len() == lit.len() && s.iter().zip(lit.bytes()).all(|(&a, b)| a < 0x80 && (a as u8).eq_ignore_ascii_case(&b))
+    s.len() == lit.len()
+        && s.iter()
+            .zip(lit.bytes())
+            .all(|(&a, b)| a < 0x80 && (a as u8).eq_ignore_ascii_case(&b))
 }
 
 /// Case-insensitive search for an ASCII literal anywhere in `s`.
@@ -55,13 +61,20 @@ fn strip_prefix_ci<'a>(s: &'a [u16], lit: &str) -> Option<&'a [u16]> {
 fn default_tags() -> HtmlTags {
     let m = |f: fn(&[u16]) -> bool| -> Option<Matcher> { Some(Rc::new(f)) };
     // /./ : any unit but a line terminator.
-    let any = |s: &[u16]| s.iter().any(|&c| !matches!(c, 0x0a | 0x0d | 0x2028 | 0x2029));
+    let any = |s: &[u16]| {
+        s.iter()
+            .any(|&c| !matches!(c, 0x0a | 0x0d | 0x2028 | 0x2029))
+    };
     vec![
         (
             "script".into(),
             vec![
                 // ["lang", /(javascript|babel)/i, "javascript"]
-                TagRule { attr: Some("lang".into()), matches: m(|s| contains_ci(s, "javascript") || contains_ci(s, "babel")), mode: Spec::from("javascript") },
+                TagRule {
+                    attr: Some("lang".into()),
+                    matches: m(|s| contains_ci(s, "javascript") || contains_ci(s, "babel")),
+                    mode: Spec::from("javascript"),
+                },
                 // ["type", /^(?:text|application)\/(?:x-)?(?:java|ecma)script$|^module$|^$/i, "javascript"]
                 TagRule {
                     attr: Some("type".into()),
@@ -69,21 +82,37 @@ fn default_tags() -> HtmlTags {
                         if s.is_empty() || eq_ci(s, "module") {
                             return true;
                         }
-                        let Some(r) = strip_prefix_ci(s, "text/").or_else(|| strip_prefix_ci(s, "application/")) else { return false };
+                        let Some(r) = strip_prefix_ci(s, "text/")
+                            .or_else(|| strip_prefix_ci(s, "application/"))
+                        else {
+                            return false;
+                        };
                         let r = strip_prefix_ci(r, "x-").unwrap_or(r);
                         eq_ci(r, "javascript") || eq_ci(r, "ecmascript")
                     }),
                     mode: Spec::from("javascript"),
                 },
-                TagRule { attr: Some("type".into()), matches: m(any), mode: Spec::from("text/plain") },
-                TagRule { attr: None, matches: None, mode: Spec::from("javascript") },
+                TagRule {
+                    attr: Some("type".into()),
+                    matches: m(any),
+                    mode: Spec::from("text/plain"),
+                },
+                TagRule {
+                    attr: None,
+                    matches: None,
+                    mode: Spec::from("javascript"),
+                },
             ],
         ),
         (
             "style".into(),
             vec![
                 // ["lang", /^css$/i, "css"]
-                TagRule { attr: Some("lang".into()), matches: m(|s| eq_ci(s, "css")), mode: Spec::from("css") },
+                TagRule {
+                    attr: Some("lang".into()),
+                    matches: m(|s| eq_ci(s, "css")),
+                    mode: Spec::from("css"),
+                },
                 // ["type", /^(text\/)?(x-)?(stylesheet|css)$/i, "css"]
                 TagRule {
                     attr: Some("type".into()),
@@ -94,8 +123,16 @@ fn default_tags() -> HtmlTags {
                     }),
                     mode: Spec::from("css"),
                 },
-                TagRule { attr: Some("type".into()), matches: m(any), mode: Spec::from("text/plain") },
-                TagRule { attr: None, matches: None, mode: Spec::from("css") },
+                TagRule {
+                    attr: Some("type".into()),
+                    matches: m(any),
+                    mode: Spec::from("text/plain"),
+                },
+                TagRule {
+                    attr: None,
+                    matches: None,
+                    mode: Spec::from("css"),
+                },
             ],
         ),
     ]
@@ -197,7 +234,11 @@ fn end_tag_at(s: &[u16], name: &[u16]) -> Option<usize> {
         return None;
     }
     let mut p = 2 + s[2..].iter().take_while(|&&c| is_js_space(c)).count();
-    if s.len() < p + name.len() || !s[p..p + name.len()].iter().zip(name).all(|(&a, &b)| a == b || (a < 0x80 && b < 0x80 && (a as u8).eq_ignore_ascii_case(&(b as u8)))) {
+    if s.len() < p + name.len()
+        || !s[p..p + name.len()].iter().zip(name).all(|(&a, &b)| {
+            a == b || (a < 0x80 && b < 0x80 && (a as u8).eq_ignore_ascii_case(&(b as u8)))
+        })
+    {
         return None;
     }
     p += name.len();
@@ -214,7 +255,9 @@ fn search_end_tag(s: &[u16], name: &[u16]) -> Option<usize> {
 fn has_tag_word(style: &str) -> bool {
     let b = style.as_bytes();
     let w = |c: u8| c.is_ascii_alphanumeric() || c == b'_';
-    (0..b.len().saturating_sub(2)).any(|i| &b[i..i + 3] == b"tag" && (i == 0 || !w(b[i - 1])) && (i + 3 == b.len() || !w(b[i + 3])))
+    (0..b.len().saturating_sub(2)).any(|i| {
+        &b[i..i + 3] == b"tag" && (i == 0 || !w(b[i - 1])) && (i + 3 == b.len() || !w(b[i + 3]))
+    })
 }
 
 /// `state.token`: `html`, or the closure installed for a script/style body.
@@ -236,7 +279,11 @@ pub struct HtmlMixedState {
 
 impl std::fmt::Debug for HtmlMixedState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("HtmlMixedState").field("token", &self.token).field("in_tag", &self.in_tag).field("html_state", &self.html_state).finish()
+        f.debug_struct("HtmlMixedState")
+            .field("token", &self.token)
+            .field("in_tag", &self.in_tag)
+            .field("html_state", &self.html_state)
+            .finish()
     }
 }
 
@@ -250,7 +297,11 @@ pub struct HtmlMixedMode {
 impl HtmlMixedMode {
     pub fn new(registry: &Registry, options: &ModeOptions, spec: &ModeSpec) -> HtmlMixedMode {
         let mut xml = ModeSpec::named("xml").with("htmlMode", ConfigValue::Bool(true));
-        for k in ["multilineTagIndentFactor", "multilineTagIndentPastTag", "allowMissingTagName"] {
+        for k in [
+            "multilineTagIndentFactor",
+            "multilineTagIndentPastTag",
+            "allowMissingTagName",
+        ] {
             if let Some(v) = spec.get(k) {
                 xml = xml.with(k, v.clone());
             }
@@ -261,14 +312,29 @@ impl HtmlMixedMode {
         if let Some(t) = spec.get("tags").and_then(|v| v.as_obj::<HtmlTags>()) {
             add_tags(t, &mut tags);
         }
-        if let Some(st) = spec.get("scriptTypes").and_then(|v| v.as_obj::<Vec<ScriptType>>()) {
+        if let Some(st) = spec
+            .get("scriptTypes")
+            .and_then(|v| v.as_obj::<Vec<ScriptType>>())
+        {
             // `tags.script` always exists (defaults).
             let script = &mut tags.iter_mut().find(|(t, _)| t == "script").unwrap().1;
             for s in st.iter().rev() {
-                script.insert(0, TagRule { attr: Some("type".into()), matches: Some(s.matches.clone()), mode: s.mode.clone() });
+                script.insert(
+                    0,
+                    TagRule {
+                        attr: Some("type".into()),
+                        matches: Some(s.matches.clone()),
+                        mode: s.mode.clone(),
+                    },
+                );
             }
         }
-        HtmlMixedMode { html_mode, tags, registry: registry.clone(), options: options.clone() }
+        HtmlMixedMode {
+            html_mode,
+            tags,
+            registry: registry.clone(),
+            options: options.clone(),
+        }
     }
 
     fn tag_rules(&self, name: &[u16]) -> Option<&Vec<TagRule>> {
@@ -281,9 +347,22 @@ impl HtmlMixedMode {
         let style = self.html_mode.token(stream, &mut state.html_state);
         let tag = style.as_deref().is_some_and(has_tag_word);
         let cur = stream.current();
-        let tag_name = state.html_state.get::<crate::xml::XmlState>().tag_name.as_ref().filter(|t| !t.is_empty()).map(|t| js::to_lower(t));
-        let plain = !cur.iter().any(|&c| c == b'<' as u16 || c == b'>' as u16 || c == b'/' as u16 || is_js_space(c));
-        if tag && plain && tag_name.as_ref().is_some_and(|t| !t.is_empty() && self.tag_rules(t).is_some()) {
+        let tag_name = state
+            .html_state
+            .get::<crate::xml::XmlState>()
+            .tag_name
+            .as_ref()
+            .filter(|t| !t.is_empty())
+            .map(|t| js::to_lower(t));
+        let plain = !cur
+            .iter()
+            .any(|&c| c == b'<' as u16 || c == b'>' as u16 || c == b'/' as u16 || is_js_space(c));
+        if tag
+            && plain
+            && tag_name
+                .as_ref()
+                .is_some_and(|t| !t.is_empty() && self.tag_rules(t).is_some())
+        {
             let mut t = tag_name.unwrap();
             t.push(b' ' as u16);
             state.in_tag = Some(t);
@@ -291,12 +370,25 @@ impl HtmlMixedMode {
             // /^([\S]+) (.*)/.exec(state.inTag): the tag name, then the text up to the
             // first line terminator.
             let in_tag = state.in_tag.take().unwrap();
-            let sp = in_tag.iter().position(|&c| is_js_space(c)).expect("inTag has a space");
+            let sp = in_tag
+                .iter()
+                .position(|&c| is_js_space(c))
+                .expect("inTag has a space");
             let (name, rest) = (&in_tag[..sp], &in_tag[sp + 1..]);
-            let rest = &rest[..rest.iter().position(|&c| matches!(c, 0x0a | 0x0d | 0x2028 | 0x2029)).unwrap_or(rest.len())];
+            let rest = &rest[..rest
+                .iter()
+                .position(|&c| matches!(c, 0x0a | 0x0d | 0x2028 | 0x2029))
+                .unwrap_or(rest.len())];
             // `stream.current() == ">" && findMatchingMode(...)`: false / undefined -> "null".
-            let mode_spec = if js::eq(cur, ">") { self.tag_rules(name).and_then(|r| find_matching_mode(r, rest)) } else { None };
-            let mode = self.registry.get_mode(&self.options, &mode_spec.unwrap_or(Spec::Null));
+            let mode_spec = if js::eq(cur, ">") {
+                self.tag_rules(name)
+                    .and_then(|r| find_matching_mode(r, rest))
+            } else {
+                None
+            };
+            let mode = self
+                .registry
+                .get_mode(&self.options, &mode_spec.unwrap_or(Spec::Null));
             state.token = TokenFn::Local(name.to_vec());
             let base: JsArg = self.html_mode.indent(&state.html_state, &[], &[]).into();
             state.local_state = Some(Box::new(start_state(&*mode, base, JsArg::Undefined)));
@@ -311,7 +403,12 @@ impl HtmlMixedMode {
     }
 
     /// The closure htmlmixed installs as `state.token` for a script/style body.
-    fn local(&self, stream: &mut StringStream<'_>, state: &mut HtmlMixedState, name: &[u16]) -> Option<String> {
+    fn local(
+        &self,
+        stream: &mut StringStream<'_>,
+        state: &mut HtmlMixedState,
+        name: &[u16],
+    ) -> Option<String> {
         if end_tag_at(&stream.string[stream.pos..], name).is_some() {
             state.token = TokenFn::Html;
             state.local_state = None;
@@ -340,7 +437,13 @@ impl Mode for HtmlMixedMode {
     }
     fn start_state(&self, _a1: JsArg, _a2: JsArg) -> Option<State> {
         let html = start_state(&*self.html_mode, JsArg::Undefined, JsArg::Undefined);
-        Some(State::new(HtmlMixedState { token: TokenFn::Html, in_tag: None, local_mode: None, local_state: None, html_state: Box::new(html) }))
+        Some(State::new(HtmlMixedState {
+            token: TokenFn::Html,
+            in_tag: None,
+            local_mode: None,
+            local_state: None,
+            html_state: Box::new(html),
+        }))
     }
     fn copy_state(&self, state: &State) -> Option<State> {
         let s = state.get::<HtmlMixedState>();
@@ -372,7 +475,11 @@ impl Mode for HtmlMixedMode {
         match &s.local_mode {
             Some(lm) if !closing => {
                 if lm.has_indent() {
-                    lm.indent(s.local_state.as_ref().expect("localState"), text_after, line)
+                    lm.indent(
+                        s.local_state.as_ref().expect("localState"),
+                        text_after,
+                        line,
+                    )
                 } else {
                     None
                 }
@@ -397,7 +504,12 @@ impl Mode for HtmlMixedMode {
 /// `defineMode("htmlmixed", ..., "xml", "javascript", "css")` and
 /// `defineMIME("text/html", "htmlmixed")`.
 pub fn register(r: &mut Registry) {
-    r.define_mode("htmlmixed", Rc::new(|reg, options, spec| Rc::new(HtmlMixedMode::new(reg, options, spec)) as Rc<dyn Mode>));
+    r.define_mode(
+        "htmlmixed",
+        Rc::new(|reg, options, spec| {
+            Rc::new(HtmlMixedMode::new(reg, options, spec)) as Rc<dyn Mode>
+        }),
+    );
     r.define_mime("text/html", MimeTarget::Name("htmlmixed".into()));
 }
 
@@ -424,8 +536,19 @@ mod tests {
 
     #[test]
     fn end_tags() {
-        assert_eq!(end_tag_at(&to_u16("</ SCRIPT >x"), &to_u16("script")), Some(11));
-        assert_eq!(search_end_tag(&to_u16("a</style>"), &to_u16("style")), Some(1));
-        assert!(has_tag_word("tag bracket") && has_tag_word("x tag") && !has_tag_word("tagx") && !has_tag_word("attribute"));
+        assert_eq!(
+            end_tag_at(&to_u16("</ SCRIPT >x"), &to_u16("script")),
+            Some(11)
+        );
+        assert_eq!(
+            search_end_tag(&to_u16("a</style>"), &to_u16("style")),
+            Some(1)
+        );
+        assert!(
+            has_tag_word("tag bracket")
+                && has_tag_word("x tag")
+                && !has_tag_word("tagx")
+                && !has_tag_word("attribute")
+        );
     }
 }

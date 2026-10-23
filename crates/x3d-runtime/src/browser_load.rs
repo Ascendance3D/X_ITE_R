@@ -99,7 +99,14 @@ pub struct WorldState {
 
 /// `String (error)` of a rejection with the message `message`: an Error whose message has no class prefix of its own.
 fn error_string(message: String) -> String {
-    if ["TypeError: ", "RangeError: ", "Error: ", "URIError: "].iter().any(|p| message.starts_with(p)) { message } else { format!("Error: {message}") }
+    if ["TypeError: ", "RangeError: ", "Error: ", "URIError: "]
+        .iter()
+        .any(|p| message.starts_with(p))
+    {
+        message
+    } else {
+        format!("Error: {message}")
+    }
 }
 
 /// What a scene is parsed from: fetched bytes, or a JavaScript string.
@@ -112,10 +119,22 @@ impl Runtime {
     /// X3DBrowser.createX3DFromString: parse `text` in the Script's scene. The parse is a microtask
     /// (VRMLParser, XMLParser and JSONParser parse their statements after `browser .loadComponents (scene)`);
     /// a rejection settles from there too.
-    pub fn browser_create_from_string(&mut self, text: &str, parent: CtxId, script: Option<NodeId>) -> Result<u64, String> {
+    pub fn browser_create_from_string(
+        &mut self,
+        text: &str,
+        parent: CtxId,
+        script: Option<NodeId>,
+    ) -> Result<u64, String> {
         let id = self.next_browser_request();
 
-        self.browser_strings.insert(id, BrowserString { script, parent, text: text.to_string() });
+        self.browser_strings.insert(
+            id,
+            BrowserString {
+                script,
+                parent,
+                text: text.to_string(),
+            },
+        );
         self.tasks.push_back(Task::BrowserParse(id));
         Ok(id)
     }
@@ -128,13 +147,20 @@ impl Runtime {
 
         let world = self.scene.world_url_of(req.parent).to_string();
 
-        if let Err(e) = self.browser_scene(id, req.script, req.parent, Input::Text(&req.text), &world) {
+        if let Err(e) =
+            self.browser_scene(id, req.script, req.parent, Input::Text(&req.text), &world)
+        {
             self.browser_settle(id, Err(e));
         }
     }
 
     /// X3DBrowser.importJS: the JSON text is parsed by JSONParser straight into a new scene.
-    pub fn browser_import_json(&mut self, text: &str, parent: CtxId, script: Option<NodeId>) -> Result<u64, String> {
+    pub fn browser_import_json(
+        &mut self,
+        text: &str,
+        parent: CtxId,
+        script: Option<NodeId>,
+    ) -> Result<u64, String> {
         let id = self.next_browser_request();
         let world = self.scene.world_url_of(parent).to_string();
 
@@ -151,9 +177,18 @@ impl Runtime {
     }
 
     /// X3DBrowser.createScene: an empty scene (encoding SCRIPTED) with the profile and components, live at once.
-    pub fn browser_create_scene(&mut self, profile: Option<String>, components: Vec<(String, i32)>, parent: CtxId) -> CtxId {
+    pub fn browser_create_scene(
+        &mut self,
+        profile: Option<String>,
+        components: Vec<(String, i32)>,
+        parent: CtxId,
+    ) -> CtxId {
         // `this [_worldURL] = location .toString ()`: the page (an embedder without a page: the URL of the caller's world).
-        let url = if self.page_url.is_empty() { self.scene.world_url_of(parent).to_string() } else { self.page_url.clone() };
+        let url = if self.page_url.is_empty() {
+            self.scene.world_url_of(parent).to_string()
+        } else {
+            self.page_url.clone()
+        };
         let mut scene = Scene::new(&url);
 
         scene.profile = profile;
@@ -175,10 +210,24 @@ impl Runtime {
     }
 
     /// X3DBrowser.createX3DFromURL: the fetch is a macrotask.
-    pub fn browser_create_from_url(&mut self, urls: Vec<String>, parent: CtxId, script: Option<NodeId>) -> u64 {
+    pub fn browser_create_from_url(
+        &mut self,
+        urls: Vec<String>,
+        parent: CtxId,
+        script: Option<NodeId>,
+    ) -> u64 {
         let id = self.next_browser_request();
 
-        self.browser_loads.insert(id, BrowserLoad { script, parent, urls, world: None, anchor: None });
+        self.browser_loads.insert(
+            id,
+            BrowserLoad {
+                script,
+                parent,
+                urls,
+                world: None,
+                anchor: None,
+            },
+        );
         self.tasks.push_back(Task::BrowserLoad(id));
         id
     }
@@ -199,16 +248,28 @@ impl Runtime {
         }
 
         let type_name = req.script.map(|s| self.type_name(s)).unwrap_or_default();
-        let loader = FileLoader { type_name, base: self.scene.world_url_of(req.parent).to_string(), data_as_string: true };
+        let loader = FileLoader {
+            type_name,
+            base: self.scene.world_url_of(req.parent).to_string(),
+            data_as_string: true,
+        };
         let base = loader.base.clone();
 
         let ok = self.load_document(&loader, &req.urls, |rt, loaded| {
             let (data, url) = match loaded {
-                Loaded::Script(source) => (source.into_bytes(), format!("{}null", base.rsplit_once('/').map_or(String::new(), |(d, _)| format!("{d}/")))),
+                Loaded::Script(source) => (
+                    source.into_bytes(),
+                    format!(
+                        "{}null",
+                        base.rsplit_once('/')
+                            .map_or(String::new(), |(d, _)| format!("{d}/"))
+                    ),
+                ),
                 Loaded::Data(data, url) => (data, url.to_string()),
             };
 
-            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url).map_err(error_string)
+            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
+                .map_err(error_string)
         });
 
         // loadDocumentError: `callback (null)`.
@@ -218,17 +279,31 @@ impl Runtime {
     }
 
     /// FileLoader.createX3DFromString for the browser: parse into a new X3DScene, set up its nodes and wait for its loadCount.
-    fn browser_scene(&mut self, id: u64, script: Option<NodeId>, parent: CtxId, input: Input<'_>, url: &str) -> Result<(), String> {
+    fn browser_scene(
+        &mut self,
+        id: u64,
+        script: Option<NodeId>,
+        parent: CtxId,
+        input: Input<'_>,
+        url: &str,
+    ) -> Result<(), String> {
         self.sync_svg_quality();
 
         let parsed = match input {
-            Input::Bytes(data) => crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url),
+            Input::Bytes(data) => {
+                crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url)
+            }
             Input::Text(text) => x3d_parse::parse_string(text, url),
         };
 
         let mut scene = match parsed {
             Ok(scene) => scene,
-            Err(x3d_parse::LoadError::Parse(e)) if e.line == 0 && ["TypeError: ", "RangeError: ", "Error: "].iter().any(|p| e.message.starts_with(p)) => {
+            Err(x3d_parse::LoadError::Parse(e))
+                if e.line == 0
+                    && ["TypeError: ", "RangeError: ", "Error: "]
+                        .iter()
+                        .any(|p| e.message.starts_with(p)) =>
+            {
                 return Err(e.message);
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
@@ -238,10 +313,16 @@ impl Runtime {
 
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown with the line of the input.
                 self.log_error(format!("Error: {}", e.message));
-                return Err(x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")));
+                return Err(
+                    x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}"))
+                );
             }
             // GoldenGate.parseIntoScene.
-            Err(x3d_parse::LoadError::NoHandler) => return Err(format!("Couldn't parse X3D. No suitable file handler found for '{url}'.")),
+            Err(x3d_parse::LoadError::NoHandler) => {
+                return Err(format!(
+                    "Couldn't parse X3D. No suitable file handler found for '{url}'."
+                ));
+            }
             Err(e) => return Err(format!("Error: {e}")),
         };
 
@@ -262,7 +343,13 @@ impl Runtime {
 
         let world = self.world_state.loads.contains(&id);
 
-        self.pending_browser.push(PendingBrowserScene { id, script, ctx: m.root_ctx, scene_node, world });
+        self.pending_browser.push(PendingBrowserScene {
+            id,
+            script,
+            ctx: m.root_ctx,
+            scene_node,
+            world,
+        });
 
         // `new X3DScene (browser)`: setLive (false); the Browser makes it live once it is delivered.
         self.inline_live.insert(m.root_ctx, false);
@@ -275,7 +362,11 @@ impl Runtime {
 
     /// FileLoader.set_loadCount__ for a browser scene whose count reached 0: wait for the next frame.
     pub(crate) fn browser_scene_loaded(&mut self, scene_node: NodeId) -> bool {
-        let Some(i) = self.pending_browser.iter().position(|p| p.scene_node == scene_node) else {
+        let Some(i) = self
+            .pending_browser
+            .iter()
+            .position(|p| p.scene_node == scene_node)
+        else {
             return false;
         };
 
@@ -295,7 +386,12 @@ impl Runtime {
     /// The continuation of `await browser .nextFrame ()`: `scene .setLive (true)`, then the promise settles.
     pub(crate) fn browser_finish_frame(&mut self) {
         // A new world that still waited for loads when its loadCount event ran.
-        if self.world_state.init.is_some() && self.world_state.load_count.is_some_and(|(_, k)| !self.is_field_tainted(k)) {
+        if self.world_state.init.is_some()
+            && self
+                .world_state
+                .load_count
+                .is_some_and(|(_, k)| !self.is_field_tainted(k))
+        {
             self.world_check_load_count();
         }
 
@@ -359,7 +455,11 @@ impl Runtime {
 
     /// Is a browser scene still loading?
     pub(crate) fn browser_loads_pending(&self) -> bool {
-        !self.browser_loads.is_empty() || !self.browser_strings.is_empty() || !self.pending_browser.is_empty() || !self.browser_frame_waiters.is_empty() || !self.world_state.waiters.is_empty()
+        !self.browser_loads.is_empty()
+            || !self.browser_strings.is_empty()
+            || !self.pending_browser.is_empty()
+            || !self.browser_frame_waiters.is_empty()
+            || !self.world_state.waiters.is_empty()
     }
 }
 
@@ -368,7 +468,13 @@ impl Runtime {
 impl Runtime {
     /// X3DBrowser.loadURL (url, parameter): the request. `Err (None)`: a first URL that only names a viewpoint of the world,
     /// the promise resolves at once (after `changeViewpoint`). `Err (Some (message))`: it rejects at once.
-    pub fn browser_load_url(&mut self, urls: Vec<String>, parameters: Vec<String>, parent: CtxId, script: Option<NodeId>) -> Result<u64, Option<String>> {
+    pub fn browser_load_url(
+        &mut self,
+        urls: Vec<String>,
+        parameters: Vec<String>,
+        parent: CtxId,
+        script: Option<NodeId>,
+    ) -> Result<u64, Option<String>> {
         let base = self.scene.world_url_of(parent).to_string();
 
         // No URL: loadDocumentError () calls back inside createX3DFromURL, before `this [_fileLoader]` is this loader.
@@ -378,10 +484,14 @@ impl Runtime {
 
         // `bindViewpoint` runs inside loadDocumentAsync, before the first await: the call itself changes the viewpoint.
         if let Some(first) = urls.first() {
-            let hooks = LoadHooks { bind_viewpoint: true, ..LoadHooks::default() };
+            let hooks = LoadHooks {
+                bind_viewpoint: true,
+                ..LoadHooks::default()
+            };
 
             if let Some(name) = crate::loader::viewpoint_fragment(&base, first, &hooks) {
-                self.browser_requests.push(format!("changeViewpoint:{name}"));
+                self.browser_requests
+                    .push(format!("changeViewpoint:{name}"));
                 return Err(None);
             }
         }
@@ -392,7 +502,16 @@ impl Runtime {
         self.abort_world_load();
         self.world_state.load_current = Some(id);
         self.world_state.loads.insert(id);
-        self.browser_loads.insert(id, BrowserLoad { script, parent, urls, world: Some(parameters), anchor: None });
+        self.browser_loads.insert(
+            id,
+            BrowserLoad {
+                script,
+                parent,
+                urls,
+                world: Some(parameters),
+                anchor: None,
+            },
+        );
         self.tasks.push_back(Task::BrowserLoad(id));
         Ok(id)
     }
@@ -414,50 +533,91 @@ impl Runtime {
 
         self.world_state.loads.insert(id);
         self.world_state.anchor_loads.insert(id);
-        self.browser_loads.insert(id, BrowserLoad { script: None, parent, urls, world: Some(parameters), anchor: Some(anchor) });
+        self.browser_loads.insert(
+            id,
+            BrowserLoad {
+                script: None,
+                parent,
+                urls,
+                world: Some(parameters),
+                anchor: Some(anchor),
+            },
+        );
         self.tasks.push_back(Task::BrowserLoad(id));
     }
 
     /// `Task::BrowserLoad` of a loadURL: FileLoader.createX3DFromURL (url, parameter, callback, bindViewpoint, foreign).
     fn world_load(&mut self, id: u64, req: BrowserLoad, parameters: Vec<String>) {
         // A FileLoader of the world has no node type in its messages; a Script's or an Anchor's has.
-        let type_name = req.script.or(req.anchor).map(|s| self.type_name(s)).unwrap_or_default();
-        let loader = FileLoader { type_name, base: self.scene.world_url_of(req.parent).to_string(), data_as_string: true };
+        let type_name = req
+            .script
+            .or(req.anchor)
+            .map(|s| self.type_name(s))
+            .unwrap_or_default();
+        let loader = FileLoader {
+            type_name,
+            base: self.scene.world_url_of(req.parent).to_string(),
+            data_as_string: true,
+        };
         let base = loader.base.clone();
-        let hooks = LoadHooks { bind_viewpoint: true, foreign: true, parameters };
+        let hooks = LoadHooks {
+            bind_viewpoint: true,
+            foreign: true,
+            parameters,
+        };
 
         // The fetch of the first URL was aborted before it was made: `fetch` rejects with the AbortError, and as `abort ()`
         // emptied the list of URLs, that is the end.
         let first = req.urls.first().map(String::as_str).unwrap_or_default();
-        let fetched = !first.is_empty() && !["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s));
+        let fetched = !first.is_empty()
+            && !["ecmascript:", "javascript:", "vrmlscript:"]
+                .iter()
+                .any(|s| first.trim_start().starts_with(s));
 
         if self.world_state.aborted.remove(&id) && fetched {
             let resolved = url::Url::parse(&base).and_then(|b| b.join(first)).ok();
 
-            self.print_load_error(&loader, first, resolved.as_ref(), "AbortError: signal is aborted without reason", 1, 0);
+            self.print_load_error(
+                &loader,
+                first,
+                resolved.as_ref(),
+                "AbortError: signal is aborted without reason",
+                1,
+                0,
+            );
             return self.world_load_failed(id);
         }
 
         let result = self.load_document_hooks(&loader, &req.urls, &hooks, |rt, loaded| {
             let (data, url) = match loaded {
-                Loaded::Script(source) => (source.into_bytes(), format!("{}null", base.rsplit_once('/').map_or(String::new(), |(d, _)| format!("{d}/")))),
+                Loaded::Script(source) => (
+                    source.into_bytes(),
+                    format!(
+                        "{}null",
+                        base.rsplit_once('/')
+                            .map_or(String::new(), |(d, _)| format!("{d}/"))
+                    ),
+                ),
                 Loaded::Data(data, url) => (data, url.to_string()),
             };
 
-            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url).map_err(error_string)
+            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
+                .map_err(error_string)
         });
 
         match result {
             LoadResult::Loaded => {}
             // The callbacks of loadURL: `changeViewpoint (fragment)`, `window .open (url, target)` / `location = url`.
             LoadResult::Fragment(name) => {
-                self.browser_requests.push(format!("changeViewpoint:{name}"));
+                self.browser_requests
+                    .push(format!("changeViewpoint:{name}"));
                 self.world_state.anchor_loads.remove(&id);
                 self.world_state.load_done(id);
                 self.browser_settle_plain(id, Ok(()));
             }
             LoadResult::Foreign(href, target) => {
-                self.browser_requests.push(format!("foreign:{target}:{href}"));
+                self.browser_requests
+                    .push(format!("foreign:{target}:{href}"));
                 self.world_state.anchor_loads.remove(&id);
                 self.world_state.load_done(id);
                 self.browser_settle_plain(id, Ok(()));
@@ -509,7 +669,9 @@ impl Runtime {
                 self.world_state.waiters.retain(|w| w.id != previous);
 
                 // The rejection runs as a microtask of the Script's turn: it is delivered with the end of the frame.
-                self.world_state.settles.push((previous, Err("Replacing world aborted.".into())));
+                self.world_state
+                    .settles
+                    .push((previous, Err("Replacing world aborted.".into())));
             }
         }
 
@@ -563,7 +725,9 @@ impl Runtime {
         let old = self.scene.world;
 
         // The old world's scene lets go of its nodes while it is still the current scene: one `sceneGraph_changed`.
-        self.ctx_events.pending.push((old, ctx_events::CtxField::SceneGraph, 1));
+        self.ctx_events
+            .pending
+            .push((old, ctx_events::CtxField::SceneGraph, 1));
         self.deliver_ctx_events();
 
         // Kept difference (owner-approved): the Scripts of the old world get shutdown (), X_ITE has none.
@@ -638,7 +802,12 @@ impl Runtime {
             Some((_, k)) => k,
             None => {
                 let node = self.create_internal_node("X3DBrowser");
-                let k = self.add_private_field(node, "loadCount", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
+                let k = self.add_private_field(
+                    node,
+                    "loadCount",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFInt32(0),
+                );
 
                 self.nrt_mut(node).setup_started = true;
                 self.nrt_mut(node).initialized = true;

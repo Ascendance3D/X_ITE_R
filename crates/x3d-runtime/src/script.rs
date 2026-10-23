@@ -21,10 +21,17 @@ pub enum ScriptCall {
 pub trait ScriptHost {
     /// Script.createContext: evaluate the source in a fresh global object for `node` and
     /// return which of `callbacks` are functions.
-    fn create_context(&mut self, rt: &mut Runtime, node: NodeId, source: &str, callbacks: &[String]) -> Result<Vec<bool>, ScriptError>;
+    fn create_context(
+        &mut self,
+        rt: &mut Runtime,
+        node: NodeId,
+        source: &str,
+        callbacks: &[String],
+    ) -> Result<Vec<bool>, ScriptError>;
 
     /// Script.call__ / set_field__.
-    fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError>;
+    fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall)
+    -> Result<(), ScriptError>;
 
     /// A promise of X3DBrowser.createX3DFromString / createX3DFromURL settles: request `id` made the scene with this
     /// root context, or was rejected with the message.
@@ -54,7 +61,11 @@ pub trait ScriptHost {
 
     /// The raw components a print meets, in print order (see [`x3d_scene::RawPrint`]): for each request, `String (component)`
     /// or its ToNumber, taken now in the host's realm; None when the host does not hold the value.
-    fn raw_coerce(&mut self, _rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+    fn raw_coerce(
+        &mut self,
+        _rt: &mut Runtime,
+        requests: &[RawRequest],
+    ) -> Vec<Option<Vec<Option<RawComponent>>>> {
         vec![None; requests.len()]
     }
 
@@ -115,7 +126,10 @@ impl Runtime {
         }
 
         // requestImmediateLoad: no load without the LoadUrlObjects option.
-        if !self.browser_options.load_url_objects() || !self.get_bool(node, "load") || self.url_strings(node).is_empty() {
+        if !self.browser_options.load_url_objects()
+            || !self.get_bool(node, "load")
+            || self.url_strings(node).is_empty()
+        {
             return;
         }
 
@@ -132,7 +146,11 @@ impl Runtime {
     }
 
     fn script_loader(&self, node: NodeId) -> FileLoader {
-        FileLoader { type_name: "Script".into(), base: self.base_url(node), data_as_string: true }
+        FileLoader {
+            type_name: "Script".into(),
+            base: self.base_url(node),
+            data_as_string: true,
+        }
     }
 
     /// FileLoader.loadDocumentAsync of Script candidate `index` (Script.loadData's FileLoader), after printing the failure of the
@@ -145,7 +163,12 @@ impl Runtime {
     /// * a URL `fetch` rejects at once (a scheme it does not load, a data URL without a comma): `await fetch`, `.catch`: two
     ///   ticks;
     /// * anything else is fetched (a macrotask, [`Runtime::script_fetch`]).
-    pub(crate) fn script_candidate(&mut self, node: NodeId, index: usize, failed: Option<CandidateError>) {
+    pub(crate) fn script_candidate(
+        &mut self,
+        node: NodeId,
+        index: usize,
+        failed: Option<CandidateError>,
+    ) {
         let loader = self.script_loader(node);
         let urls = self.url_strings(node);
         let mut index = index;
@@ -153,7 +176,14 @@ impl Runtime {
 
         loop {
             if let Some(f) = failed.take() {
-                self.print_load_error(&loader, &f.candidate, f.resolved.as_ref(), &f.error, index, urls.len().saturating_sub(index));
+                self.print_load_error(
+                    &loader,
+                    &f.candidate,
+                    f.resolved.as_ref(),
+                    &f.error,
+                    index,
+                    urls.len().saturating_sub(index),
+                );
             }
 
             let Some(candidate) = urls.get(index).cloned() else {
@@ -165,7 +195,13 @@ impl Runtime {
                 return;
             };
 
-            let fail = |error: String, resolved: Option<url::Url>| Some(Box::new(CandidateError { candidate: candidate.clone(), resolved, error }));
+            let fail = |error: String, resolved: Option<url::Url>| {
+                Some(Box::new(CandidateError {
+                    candidate: candidate.clone(),
+                    resolved,
+                    error,
+                }))
+            };
 
             if candidate.is_empty() {
                 failed = fail("Error: Empty URL.".into(), None).map(|b| *b);
@@ -176,15 +212,22 @@ impl Runtime {
             // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
             let trimmed = candidate.trim_start();
 
-            if let Some(scheme) = ["ecmascript:", "javascript:", "vrmlscript:"].iter().find(|s| trimmed.starts_with(**s)) {
+            if let Some(scheme) = ["ecmascript:", "javascript:", "vrmlscript:"]
+                .iter()
+                .find(|s| trimmed.starts_with(**s))
+            {
                 let source = trimmed[scheme.len()..].to_string();
 
                 return self.script_accept(node, index, &candidate, &source, None);
             }
 
-            let Some(resolved) = url::Url::parse(&loader.base).ok().and_then(|b| b.join(&candidate).ok()) else {
+            let Some(resolved) = url::Url::parse(&loader.base)
+                .ok()
+                .and_then(|b| b.join(&candidate).ok())
+            else {
                 let error = "TypeError: Failed to construct 'URL': Invalid URL".to_string();
-                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 0, fail(error, None)));
+                self.tasks
+                    .push_back(Task::ScriptCandidate(node, index + 1, 0, fail(error, None)));
                 return;
             };
 
@@ -192,10 +235,16 @@ impl Runtime {
                 return self.script_accept(node, index, &candidate, &text, Some(resolved));
             }
 
-            let fetched = matches!(resolved.scheme(), "http" | "https" | "file" | "blob") || (resolved.scheme() == "data" && candidate.contains(','));
+            let fetched = matches!(resolved.scheme(), "http" | "https" | "file" | "blob")
+                || (resolved.scheme() == "data" && candidate.contains(','));
 
             if !fetched {
-                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 1, fail("TypeError: Failed to fetch".into(), Some(resolved))));
+                self.tasks.push_back(Task::ScriptCandidate(
+                    node,
+                    index + 1,
+                    1,
+                    fail("TypeError: Failed to fetch".into(), Some(resolved)),
+                ));
                 return;
             }
 
@@ -211,7 +260,10 @@ impl Runtime {
         let Some(candidate) = self.url_strings(node).get(index).cloned() else {
             return;
         };
-        let Some(resolved) = url::Url::parse(&loader.base).ok().and_then(|b| b.join(&candidate).ok()) else {
+        let Some(resolved) = url::Url::parse(&loader.base)
+            .ok()
+            .and_then(|b| b.join(&candidate).ok())
+        else {
             return;
         };
 
@@ -221,29 +273,64 @@ impl Runtime {
                 self.script_accept(node, index, &candidate, &source, Some(resolved));
             }
             Err(error) => {
-                let failed = CandidateError { candidate, resolved: Some(resolved), error };
-                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 1, Some(Box::new(failed))));
+                let failed = CandidateError {
+                    candidate,
+                    resolved: Some(resolved),
+                    error,
+                };
+                self.tasks.push_back(Task::ScriptCandidate(
+                    node,
+                    index + 1,
+                    1,
+                    Some(Box::new(failed)),
+                ));
             }
         }
     }
 
     /// Script.loadData's callback with a candidate's source: `await this .initialize__ (...)`, then COMPLETE; a throw rejects
     /// three ticks before the next candidate starts.
-    fn script_accept(&mut self, node: NodeId, index: usize, candidate: &str, source: &str, resolved: Option<url::Url>) {
+    fn script_accept(
+        &mut self,
+        node: NodeId,
+        index: usize,
+        candidate: &str,
+        source: &str,
+        resolved: Option<url::Url>,
+    ) {
         match self.script_initialize_source(node, source) {
             Ok(()) => self.set_load_state(node, nodes::LoadState::Complete),
             Err(error) => {
-                let failed = CandidateError { candidate: candidate.to_string(), resolved, error };
-                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 2, Some(Box::new(failed))));
+                let failed = CandidateError {
+                    candidate: candidate.to_string(),
+                    resolved,
+                    error,
+                };
+                self.tasks.push_back(Task::ScriptCandidate(
+                    node,
+                    index + 1,
+                    2,
+                    Some(Box::new(failed)),
+                ));
             }
         }
     }
 
     /// Script.initialize__ (sourceText).
     fn script_initialize_source(&mut self, node: NodeId, source: &str) -> Result<(), String> {
-        let mut callbacks: Vec<String> = ["initialize", "prepareEvents", "eventsProcessed", "shutdown"].iter().map(|s| s.to_string()).collect();
-        let user: Vec<(usize, String, u8)> =
-            self.scene.node(node).user_fields.iter().enumerate().map(|(i, f)| (i, f.name.clone(), f.access)).collect();
+        let mut callbacks: Vec<String> =
+            ["initialize", "prepareEvents", "eventsProcessed", "shutdown"]
+                .iter()
+                .map(|s| s.to_string())
+                .collect();
+        let user: Vec<(usize, String, u8)> = self
+            .scene
+            .node(node)
+            .user_fields
+            .iter()
+            .enumerate()
+            .map(|(i, f)| (i, f.name.clone(), f.access))
+            .collect();
 
         for (_, name, a) in &user {
             match *a {
@@ -261,13 +348,25 @@ impl Runtime {
         self.script_host = Some(host);
 
         let defined = result.map_err(|e| e.0)?;
-        let is_fn = |name: &str| callbacks.iter().position(|c| c == name).is_some_and(|i| defined[i]);
+        let is_fn = |name: &str| {
+            callbacks
+                .iter()
+                .position(|c| c == name)
+                .is_some_and(|i| defined[i])
+        };
 
         self.scripts.push(node);
-        self.script_state(node).functions = callbacks.iter().zip(&defined).filter(|(_, d)| **d).map(|(c, _)| c.clone()).collect();
+        self.script_state(node).functions = callbacks
+            .iter()
+            .zip(&defined)
+            .filter(|(_, d)| **d)
+            .map(|(c, _)| c.clone())
+            .collect();
 
         if is_fn("prepareEvents") {
-            let k = self.private_field(self.browser_node, "prepareEvents").unwrap();
+            let k = self
+                .private_field(self.browser_node, "prepareEvents")
+                .unwrap();
             self.add_interest(k, node, Cb::ScriptPrepareEvents);
         }
 
@@ -320,7 +419,11 @@ impl Runtime {
     pub(crate) fn script_unload_data(&mut self, node: NodeId) {
         // Only a Script that was initialized has anything to shut down.
         let initialized = self.scripts.contains(&node);
-        let has_shutdown = self.script_state(node).functions.iter().any(|f| f == "shutdown");
+        let has_shutdown = self
+            .script_state(node)
+            .functions
+            .iter()
+            .any(|f| f == "shutdown");
 
         // `this .shutdown = null`: a reentrant unload does not call it twice.
         self.script_state(node).functions.clear();
@@ -333,7 +436,9 @@ impl Runtime {
             self.remove_interest(k, node, Cb::ScriptPrepareEvents);
         }
 
-        self.nrt_mut(node).interests.retain(|i| !(i.node == node && i.cb == Cb::ScriptEventsProcessed));
+        self.nrt_mut(node)
+            .interests
+            .retain(|i| !(i.node == node && i.cb == Cb::ScriptEventsProcessed));
 
         for i in 0..self.scene.node(node).user_fields.len() {
             self.remove_interest((node, FieldLoc::User(i)), node, Cb::ScriptField(i));
@@ -352,7 +457,9 @@ impl Runtime {
     /// call__ / set_field__ with setError on a thrown value.
     fn script_call(&mut self, node: NodeId, call: ScriptCall, reason_name: &str) {
         // After `shutdown ()` no other method of the Script may run (4.12.3).
-        if self.script_state(node).closed && !matches!(&call, ScriptCall::Plain(n) if n == "shutdown") {
+        if self.script_state(node).closed
+            && !matches!(&call, ScriptCall::Plain(n) if n == "shutdown")
+        {
             return;
         }
 
@@ -374,8 +481,15 @@ impl Runtime {
     /// Script.setError: the header (script name, reason, world url) and the error itself.
     pub fn report_script_error(&mut self, node: NodeId, reason_name: &str, error: &str) {
         let name = self.scene.node(node).name.clone();
-        let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
-        let world = if world.starts_with("data:") { "data:".to_string() } else { world };
+        let world = self
+            .scene
+            .world_url_of(self.scene.node(node).ctx)
+            .to_string();
+        let world = if world.starts_with("data:") {
+            "data:".to_string()
+        } else {
+            world
+        };
 
         self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));
         self.log_error(error);
@@ -388,12 +502,24 @@ impl Runtime {
                     return;
                 };
                 let (name, access_type, value) = (f.name.clone(), f.access, f.value.clone());
-                let callback = if access_type == access::INPUT_OUTPUT { format!("set_{name}") } else { name.clone() };
+                let callback = if access_type == access::INPUT_OUTPUT {
+                    format!("set_{name}")
+                } else {
+                    name.clone()
+                };
 
                 self.script_call(node, ScriptCall::Field(callback, value), &name);
             }
-            Cb::ScriptEventsProcessed => self.script_call(node, ScriptCall::Plain("eventsProcessed".into()), "eventsProcessed"),
-            Cb::ScriptPrepareEvents => self.script_call(node, ScriptCall::Plain("prepareEvents".into()), "prepareEvents"),
+            Cb::ScriptEventsProcessed => self.script_call(
+                node,
+                ScriptCall::Plain("eventsProcessed".into()),
+                "eventsProcessed",
+            ),
+            Cb::ScriptPrepareEvents => self.script_call(
+                node,
+                ScriptCall::Plain("prepareEvents".into()),
+                "prepareEvents",
+            ),
             _ => {}
         }
     }

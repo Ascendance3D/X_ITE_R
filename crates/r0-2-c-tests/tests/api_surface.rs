@@ -34,11 +34,20 @@ module_path_test!(path_vrml97_fields_jsmath, vrml97::fields::jsmath);
 module_path_test!(path_vrml97_fields_math, vrml97::fields::math);
 module_path_test!(path_vrml97_fields_math_color, vrml97::fields::math::color);
 module_path_test!(path_vrml97_fields_math_matrix, vrml97::fields::math::matrix);
-module_path_test!(path_vrml97_fields_math_quaternion, vrml97::fields::math::quaternion);
-module_path_test!(path_vrml97_fields_math_rotation, vrml97::fields::math::rotation);
+module_path_test!(
+    path_vrml97_fields_math_quaternion,
+    vrml97::fields::math::quaternion
+);
+module_path_test!(
+    path_vrml97_fields_math_rotation,
+    vrml97::fields::math::rotation
+);
 module_path_test!(path_vrml97_fields_math_vector, vrml97::fields::math::vector);
 module_path_test!(path_vrml97_fields_types, vrml97::fields::types);
-module_path_test!(path_vrml97_fields_types_access, vrml97::fields::types::access);
+module_path_test!(
+    path_vrml97_fields_types_access,
+    vrml97::fields::types::access
+);
 module_path_test!(path_vrml97_fields_value, vrml97::fields::value);
 module_path_test!(path_vrml97_parse, vrml97::parse);
 module_path_test!(path_vrml97_parse_color, vrml97::parse::color);
@@ -53,10 +62,29 @@ module_path_test!(path_vrml97_scene_vrml, vrml97::scene::vrml);
 
 /// The 24 paths above, as text, in the same order.
 const MODULE_PATHS: [&str; 24] = [
-    "fields", "fields::fdlibm", "fields::format", "fields::generator", "fields::jsmath", "fields::math",
-    "fields::math::color", "fields::math::matrix", "fields::math::quaternion", "fields::math::rotation",
-    "fields::math::vector", "fields::types", "fields::types::access", "fields::value", "parse", "parse::color",
-    "parse::lexer", "parse::parser", "scene", "scene::info_array", "scene::nodes", "scene::scene", "scene::setup",
+    "fields",
+    "fields::fdlibm",
+    "fields::format",
+    "fields::generator",
+    "fields::jsmath",
+    "fields::math",
+    "fields::math::color",
+    "fields::math::matrix",
+    "fields::math::quaternion",
+    "fields::math::rotation",
+    "fields::math::vector",
+    "fields::types",
+    "fields::types::access",
+    "fields::value",
+    "parse",
+    "parse::color",
+    "parse::lexer",
+    "parse::parser",
+    "scene",
+    "scene::info_array",
+    "scene::nodes",
+    "scene::scene",
+    "scene::setup",
     "scene::vrml",
 ];
 
@@ -72,13 +100,23 @@ fn module_path_list_is_complete() {
     fn walk(file: &std::path::Path, prefix: &str, out: &mut Vec<String>) {
         let dir = file.parent().unwrap();
         for line in std::fs::read_to_string(file).unwrap().lines() {
-            let Some(rest) = line.trim_start().strip_prefix("pub mod ") else { continue };
+            let Some(rest) = line.trim_start().strip_prefix("pub mod ") else {
+                continue;
+            };
             let name = rest.trim_end_matches([';', '{', ' ']).trim();
             let path = format!("{prefix}::{name}");
             out.push(path.clone());
             if rest.trim_end().ends_with(';') {
                 let sub = dir.join(name).join("mod.rs");
-                walk(&if sub.exists() { sub } else { dir.join(format!("{name}.rs")) }, &path, out);
+                walk(
+                    &if sub.exists() {
+                        sub
+                    } else {
+                        dir.join(format!("{name}.rs"))
+                    },
+                    &path,
+                    out,
+                );
             }
         }
     }
@@ -88,18 +126,46 @@ fn module_path_list_is_complete() {
 
     let aliases: Vec<(&str, &str)> = lib
         .lines()
-        .filter_map(|l| l.trim().strip_prefix("pub use x3d_")?.strip_suffix(';')?.split_once(" as "))
+        .filter_map(|l| {
+            l.trim()
+                .strip_prefix("pub use x3d_")?
+                .strip_suffix(';')?
+                .split_once(" as ")
+        })
         .collect();
-    assert_eq!(aliases, [("fields", "fields"), ("scene", "scene")], "crate-wide module aliases");
+    assert_eq!(
+        aliases,
+        [("fields", "fields"), ("scene", "scene")],
+        "crate-wide module aliases"
+    );
     for (krate, name) in aliases {
         found.push(name.to_string());
-        walk(&crates.join(format!("x3d-{krate}/src/lib.rs")), name, &mut found);
+        walk(
+            &crates.join(format!("x3d-{krate}/src/lib.rs")),
+            name,
+            &mut found,
+        );
     }
 
-    assert!(lib.contains("\npub mod parse {\n"), "inline facade module parse");
+    assert!(
+        lib.contains("\npub mod parse {\n"),
+        "inline facade module parse"
+    );
     found.push("parse".to_string());
-    let block = lib.split("pub mod parse {").nth(1).unwrap().split('}').next().unwrap();
-    let listed: Vec<&str> = block.split("x3d_parse::{").nth(1).unwrap().split([',', ' ', '\n']).filter(|w| !w.is_empty()).collect();
+    let block = lib
+        .split("pub mod parse {")
+        .nth(1)
+        .unwrap()
+        .split('}')
+        .next()
+        .unwrap();
+    let listed: Vec<&str> = block
+        .split("x3d_parse::{")
+        .nth(1)
+        .unwrap()
+        .split([',', ' ', '\n'])
+        .filter(|w| !w.is_empty())
+        .collect();
     let engine = crates.join("x3d-parse/src/lib.rs");
     let mut engine_mods = Vec::new();
     walk(&engine, "parse", &mut engine_mods);
@@ -120,7 +186,12 @@ fn module_path_list_is_complete() {
 /// keeps it out of `vrml97::parse`.
 #[test]
 fn parse_compare_is_not_public() {
-    r0_2_c_tests::assert_probe_fails(env!("CARGO_TARGET_TMPDIR"), "parse_compare_not_public", "use vrml97::parse::compare as _;", &["E0432"]);
+    r0_2_c_tests::assert_probe_fails(
+        env!("CARGO_TARGET_TMPDIR"),
+        "parse_compare_not_public",
+        "use vrml97::parse::compare as _;",
+        &["E0432"],
+    );
 }
 
 // -------------------------------------------------------------------------
@@ -129,11 +200,26 @@ fn parse_compare_is_not_public() {
 
 #[test]
 fn root_vrml97_types_are_the_module_types() {
-    assert_eq!(TypeId::of::<vrml97::Scene>(), TypeId::of::<vrml97::scene::scene::Scene>());
-    assert_eq!(TypeId::of::<vrml97::Scene>(), TypeId::of::<vrml97::scene::Scene>());
-    assert_eq!(TypeId::of::<vrml97::ParseError>(), TypeId::of::<vrml97::parse::parser::ParseError>());
-    assert_eq!(TypeId::of::<vrml97::Parser>(), TypeId::of::<vrml97::parse::parser::Parser>());
-    assert_eq!(TypeId::of::<vrml97::LoadError>(), TypeId::of::<vrml97::parse::LoadError>());
+    assert_eq!(
+        TypeId::of::<vrml97::Scene>(),
+        TypeId::of::<vrml97::scene::scene::Scene>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::Scene>(),
+        TypeId::of::<vrml97::scene::Scene>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::ParseError>(),
+        TypeId::of::<vrml97::parse::parser::ParseError>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::Parser>(),
+        TypeId::of::<vrml97::parse::parser::Parser>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::LoadError>(),
+        TypeId::of::<vrml97::parse::LoadError>()
+    );
 }
 
 #[test]
@@ -142,7 +228,8 @@ fn root_vrml97_functions_have_the_released_signatures() {
     let _: fn(&[u8]) -> Vec<u8> = vrml97::gunzip;
     let _: fn(&str) -> bool = vrml97::is_valid_vrml;
     let _: fn(&std::path::Path) -> Result<vrml97::Scene, vrml97::LoadError> = vrml97::load_file;
-    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<vrml97::Scene, vrml97::LoadError> = vrml97::parse_bytes;
+    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<vrml97::Scene, vrml97::LoadError> =
+        vrml97::parse_bytes;
     // Same items through the module path.
     let _: fn(&[u8]) -> String = vrml97::parse::decode_text;
     let _: fn(&[u8]) -> Vec<u8> = vrml97::parse::gunzip;
@@ -159,16 +246,46 @@ fn root_vrml97_is_valid_vrml_matches_vrmlparser_isvalid() {
 
 #[test]
 fn fields_reexports_are_the_module_items() {
-    assert_eq!(TypeId::of::<vrml97::fields::FieldValue>(), TypeId::of::<vrml97::fields::value::FieldValue>());
-    assert_eq!(TypeId::of::<vrml97::fields::FieldType>(), TypeId::of::<vrml97::fields::types::FieldType>());
-    assert_eq!(TypeId::of::<vrml97::fields::Generator>(), TypeId::of::<vrml97::fields::generator::Generator>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Matrix4>(), TypeId::of::<vrml97::fields::math::matrix::Matrix4>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Matrix3>(), TypeId::of::<vrml97::fields::math::matrix::Matrix3>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Vector3>(), TypeId::of::<vrml97::fields::math::vector::Vector3>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Color3>(), TypeId::of::<vrml97::fields::math::color::Color3>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Quaternion>(), TypeId::of::<vrml97::fields::math::quaternion::Quaternion>());
-    assert_eq!(TypeId::of::<vrml97::fields::math::Rotation4>(), TypeId::of::<vrml97::fields::math::rotation::Rotation4>());
-    assert_eq!(vrml97::fields::access::INPUT_OUTPUT, vrml97::fields::types::access::INPUT_OUTPUT);
+    assert_eq!(
+        TypeId::of::<vrml97::fields::FieldValue>(),
+        TypeId::of::<vrml97::fields::value::FieldValue>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::FieldType>(),
+        TypeId::of::<vrml97::fields::types::FieldType>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::Generator>(),
+        TypeId::of::<vrml97::fields::generator::Generator>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Matrix4>(),
+        TypeId::of::<vrml97::fields::math::matrix::Matrix4>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Matrix3>(),
+        TypeId::of::<vrml97::fields::math::matrix::Matrix3>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Vector3>(),
+        TypeId::of::<vrml97::fields::math::vector::Vector3>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Color3>(),
+        TypeId::of::<vrml97::fields::math::color::Color3>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Quaternion>(),
+        TypeId::of::<vrml97::fields::math::quaternion::Quaternion>()
+    );
+    assert_eq!(
+        TypeId::of::<vrml97::fields::math::Rotation4>(),
+        TypeId::of::<vrml97::fields::math::rotation::Rotation4>()
+    );
+    assert_eq!(
+        vrml97::fields::access::INPUT_OUTPUT,
+        vrml97::fields::types::access::INPUT_OUTPUT
+    );
 }
 
 // -------------------------------------------------------------------------
@@ -178,9 +295,13 @@ fn fields_reexports_are_the_module_items() {
 #[test]
 fn root_vrml_reexports_are_vrml97_items() {
     assert_eq!(TypeId::of::<vrml::Scene>(), TypeId::of::<vrml97::Scene>());
-    assert_eq!(TypeId::of::<vrml::vrml97::Scene>(), TypeId::of::<vrml97::Scene>());
+    assert_eq!(
+        TypeId::of::<vrml::vrml97::Scene>(),
+        TypeId::of::<vrml97::Scene>()
+    );
     let _: fn(&std::path::Path) -> Result<vrml::Scene, vrml97::LoadError> = vrml::load_file;
-    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<vrml::Scene, vrml97::LoadError> = vrml::parse_bytes;
+    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<vrml::Scene, vrml97::LoadError> =
+        vrml::parse_bytes;
 }
 
 #[test]
@@ -188,9 +309,15 @@ fn root_vrml_detect() {
     let _: fn(&[u8]) -> vrml::Version = vrml::detect;
     assert_eq!(vrml::detect(b"#VRML V2.0 utf8\n"), vrml::Version::Vrml2);
     assert_eq!(vrml::detect(b"#VRML V1.0 ascii\n"), vrml::Version::Vrml1);
-    assert_eq!(vrml::detect(b"#X3D V3.3 utf8\n"), vrml::Version::X3d("3.3".into()));
+    assert_eq!(
+        vrml::detect(b"#X3D V3.3 utf8\n"),
+        vrml::Version::X3d("3.3".into())
+    );
     assert_eq!(vrml::detect(b"Group { }"), vrml::Version::Unknown);
-    assert_eq!(vrml::detect(&r0_2_c_tests::fixture("xite/minimal-gzip.wrl")), vrml::Version::Vrml2);
+    assert_eq!(
+        vrml::detect(&r0_2_c_tests::fixture("xite/minimal-gzip.wrl")),
+        vrml::Version::Vrml2
+    );
 }
 
 #[test]
@@ -207,9 +334,26 @@ fn root_vrml_summarize() {
     let s = vrml::parse_bytes(&r0_2_c_tests::fixture("xite/minimal.wrl"), "minimal.wrl").unwrap();
     let sum = vrml::summarize(&s);
     assert_eq!(sum.specification_version, "2.0");
-    assert_eq!((sum.root_nodes, sum.nodes, sum.protos, sum.externprotos, sum.routes, sum.warnings), (1, 4, 0, 0, 0, 0));
-    let types: Vec<(&str, usize)> = sum.node_types.iter().map(|(k, v)| (k.as_str(), *v)).collect();
-    assert_eq!(types, [("Appearance", 1), ("Box", 1), ("Material", 1), ("Shape", 1)]);
+    assert_eq!(
+        (
+            sum.root_nodes,
+            sum.nodes,
+            sum.protos,
+            sum.externprotos,
+            sum.routes,
+            sum.warnings
+        ),
+        (1, 4, 0, 0, 0, 0)
+    );
+    let types: Vec<(&str, usize)> = sum
+        .node_types
+        .iter()
+        .map(|(k, v)| (k.as_str(), *v))
+        .collect();
+    assert_eq!(
+        types,
+        [("Appearance", 1), ("Box", 1), ("Material", 1), ("Shape", 1)]
+    );
 }
 
 // -------------------------------------------------------------------------
@@ -220,18 +364,28 @@ fn root_vrml_summarize() {
 #[test]
 fn root_x3d_reexports_are_vrml97_items() {
     assert_eq!(TypeId::of::<x3d::Scene>(), TypeId::of::<vrml97::Scene>());
-    assert_eq!(TypeId::of::<x3d::vrml97::Scene>(), TypeId::of::<vrml97::Scene>());
+    assert_eq!(
+        TypeId::of::<x3d::vrml97::Scene>(),
+        TypeId::of::<vrml97::Scene>()
+    );
     let _: fn(&std::path::Path) -> Result<x3d::Scene, vrml97::LoadError> = x3d::load_file;
-    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<x3d::Scene, vrml97::LoadError> = x3d::parse_bytes;
+    let _: for<'a, 'b> fn(&'a [u8], &'b str) -> Result<x3d::Scene, vrml97::LoadError> =
+        x3d::parse_bytes;
 }
 
 #[test]
 fn root_x3d_node_and_field() {
     let _: fn(&str) -> Option<x3d::Node> = x3d::node;
     let t = x3d::node("Transform").unwrap();
-    assert_eq!((t.name(), t.component(), t.container_field()), ("Transform", "Grouping", "children"));
+    assert_eq!(
+        (t.name(), t.component(), t.container_field()),
+        ("Transform", "Grouping", "children")
+    );
     let f: x3d::Field = t.field("translation").unwrap();
-    assert_eq!((f.access(), f.type_name(), f.default_vrml().as_str()), ("inputOutput", "SFVec3f", "0 0 0"));
+    assert_eq!(
+        (f.access(), f.type_name(), f.default_vrml().as_str()),
+        ("inputOutput", "SFVec3f", "0 0 0")
+    );
     assert!(x3d::node("NotANode").is_none());
 }
 

@@ -59,8 +59,18 @@ fn clone_count(scene: &Scene, node: NodeId) -> usize {
         .map(|f| held(&f.value))
         .sum();
 
-    let in_protos: usize = scene.protos.iter().flat_map(|p| p.fields.iter()).chain(scene.externprotos.iter().flat_map(|p| p.fields.iter())).map(|f| held(&f.value)).sum();
-    let in_roots: usize = scene.contexts.iter().map(|c| c.root_nodes.iter().filter(|n| **n == Some(node)).count()).sum();
+    let in_protos: usize = scene
+        .protos
+        .iter()
+        .flat_map(|p| p.fields.iter())
+        .chain(scene.externprotos.iter().flat_map(|p| p.fields.iter()))
+        .map(|f| held(&f.value))
+        .sum();
+    let in_roots: usize = scene
+        .contexts
+        .iter()
+        .map(|c| c.root_nodes.iter().filter(|n| **n == Some(node)).count())
+        .sum();
 
     in_nodes + in_protos + in_roots
 }
@@ -116,7 +126,11 @@ fn set_vec3(scene: &mut Scene, node: NodeId, field: &str, v: Vector3) {
 impl Optimizer {
     /// X3DOptimizer.optimizeSceneGraph (rootNodes) of a context.
     pub fn optimize_scene_graph(&self, scene: &mut Scene, ctx: CtxId) {
-        let mut st = State { skeleton: vec![], removed: vec![], seen: HashSet::new() };
+        let mut st = State {
+            skeleton: vec![],
+            removed: vec![],
+            seen: HashSet::new(),
+        };
         let roots = scene.ctx(ctx).root_nodes.clone();
         let roots = self.optimize_nodes(scene, &roots, true, &mut st);
 
@@ -129,16 +143,33 @@ impl Optimizer {
         }
     }
 
-    fn optimize_nodes(&self, scene: &mut Scene, nodes: &[Option<NodeId>], combine: bool, st: &mut State) -> Vec<Option<NodeId>> {
-        nodes.iter().flat_map(|n| self.optimize_node(scene, *n, combine, st)).collect()
+    fn optimize_nodes(
+        &self,
+        scene: &mut Scene,
+        nodes: &[Option<NodeId>],
+        combine: bool,
+        st: &mut State,
+    ) -> Vec<Option<NodeId>> {
+        nodes
+            .iter()
+            .flat_map(|n| self.optimize_node(scene, *n, combine, st))
+            .collect()
     }
 
-    fn optimize_node(&self, scene: &mut Scene, node: Option<NodeId>, combine: bool, st: &mut State) -> Vec<Option<NodeId>> {
+    fn optimize_node(
+        &self,
+        scene: &mut Scene,
+        node: Option<NodeId>,
+        combine: bool,
+        st: &mut State,
+    ) -> Vec<Option<NodeId>> {
         let Some(node) = node else { return vec![] };
         let name = type_name(scene, node);
 
         if st.seen.contains(&node) {
-            if matches!(name.as_str(), "HAnimJoint" | "HAnimSegment" | "HAnimSite") && !st.skeleton.last().copied().unwrap_or(false) {
+            if matches!(name.as_str(), "HAnimJoint" | "HAnimSegment" | "HAnimSite")
+                && !st.skeleton.last().copied().unwrap_or(false)
+            {
                 return vec![];
             }
 
@@ -214,13 +245,22 @@ impl Optimizer {
 
         // `node .translation ?.getValue () .equals (…)`: a combined light or viewpoint has no
         // such field, so the test is `!undefined` and it is returned.
-        let identity = |f: &str, scene: &Scene| match has_field(scene, node, f).then(|| node_field(scene, node, f)) {
-            Some(FieldValue::SFVec3f(v) | FieldValue::SFVec3d(v)) => v.equals(if f == "scale" { &Vector3::ONE } else { &Vector3::ZERO }),
+        let identity = |f: &str, scene: &Scene| match has_field(scene, node, f)
+            .then(|| node_field(scene, node, f))
+        {
+            Some(FieldValue::SFVec3f(v) | FieldValue::SFVec3d(v)) => v.equals(if f == "scale" {
+                &Vector3::ONE
+            } else {
+                &Vector3::ZERO
+            }),
             Some(FieldValue::SFRotation(r)) => r.equals(&Rotation4::identity()),
             _ => false,
         };
 
-        if !identity("translation", scene) || !identity("rotation", scene) || !identity("scale", scene) {
+        if !identity("translation", scene)
+            || !identity("rotation", scene)
+            || !identity("scale", scene)
+        {
             return vec![Some(node)];
         }
 
@@ -241,13 +281,19 @@ impl Optimizer {
         children
     }
 
-    fn remove_if_no_children(&self, scene: &Scene, node: NodeId, st: &mut State) -> Vec<Option<NodeId>> {
+    fn remove_if_no_children(
+        &self,
+        scene: &Scene,
+        node: NodeId,
+        st: &mut State,
+    ) -> Vec<Option<NodeId>> {
         if !self.remove_empty_groups {
             return vec![Some(node)];
         }
 
         let has = if type_name(scene, node) == "HAnimHumanoid" {
-            !children_of(scene, node, "skeleton").is_empty() || !children_of(scene, node, "skin").is_empty()
+            !children_of(scene, node, "skeleton").is_empty()
+                || !children_of(scene, node, "skin").is_empty()
         } else {
             !children_of(scene, node, "children").is_empty()
         };
@@ -260,12 +306,27 @@ impl Optimizer {
         vec![]
     }
 
-    fn remove_interpolators_with_only_one_value(&self, scene: &mut Scene, node: NodeId, st: &mut State) {
+    fn remove_interpolators_with_only_one_value(
+        &self,
+        scene: &mut Scene,
+        node: NodeId,
+        st: &mut State,
+    ) {
         let ctx = scene.node(node).ctx;
-        let fields: Vec<FieldLoc> = (0..scene.node(node).fields.len()).map(FieldLoc::Pre).chain((0..scene.node(node).user_fields.len()).map(FieldLoc::User)).collect();
+        let fields: Vec<FieldLoc> = (0..scene.node(node).fields.len())
+            .map(FieldLoc::Pre)
+            .chain((0..scene.node(node).user_fields.len()).map(FieldLoc::User))
+            .collect();
 
         for loc in fields {
-            let routes: Vec<usize> = scene.ctx(ctx).routes.iter().enumerate().filter(|(_, r)| r.conn.is_some_and(|c| c.1 == (node, loc))).map(|(i, _)| i).collect();
+            let routes: Vec<usize> = scene
+                .ctx(ctx)
+                .routes
+                .iter()
+                .enumerate()
+                .filter(|(_, r)| r.conn.is_some_and(|c| c.1 == (node, loc)))
+                .map(|(i, _)| i)
+                .collect();
 
             if routes.len() != 1 {
                 continue;
@@ -284,7 +345,12 @@ impl Optimizer {
                 continue;
             }
 
-            let Some(first) = node_field(scene, source, "keyValue").elements().and_then(|e| e.into_iter().next()) else { continue };
+            let Some(first) = node_field(scene, source, "keyValue")
+                .elements()
+                .and_then(|e| e.into_iter().next())
+            else {
+                continue;
+            };
             let dest = scene.field(node, loc).name.clone();
 
             let f = scene.field_mut(node, loc);
@@ -305,7 +371,9 @@ impl Optimizer {
             return node;
         }
 
-        let Some(child) = children[0] else { return node };
+        let Some(child) = children[0] else {
+            return node;
+        };
 
         if clone_count(scene, child) > 1 || scene.has_routes(child) {
             return node;
@@ -319,20 +387,39 @@ impl Optimizer {
 
                 self.combine_transform(scene, node, child, st)
             }
-            "DirectionalLight" | "PointLight" | "SpotLight" => self.combine_light(scene, node, child, st),
+            "DirectionalLight" | "PointLight" | "SpotLight" => {
+                self.combine_light(scene, node, child, st)
+            }
             "Viewpoint" | "OrthoViewpoint" => self.combine_viewpoint(scene, node, child, st),
             _ => node,
         }
     }
 
-    fn combine_transform(&self, scene: &mut Scene, node: NodeId, child: NodeId, st: &mut State) -> NodeId {
+    fn combine_transform(
+        &self,
+        scene: &mut Scene,
+        node: NodeId,
+        child: NodeId,
+        st: &mut State,
+    ) -> NodeId {
         let mut node_matrix = transform_matrix(scene, node);
         let child_matrix = transform_matrix(scene, child);
         let center = vec3(scene, child, "center");
-        let (mut t, mut r, mut s, mut so) = (Vector3::ZERO, Rotation4::identity(), Vector3::ONE, Rotation4::identity());
+        let (mut t, mut r, mut s, mut so) = (
+            Vector3::ZERO,
+            Rotation4::identity(),
+            Vector3::ONE,
+            Rotation4::identity(),
+        );
 
         node_matrix.mult_left(&child_matrix);
-        node_matrix.get_transform(Some(&mut t), Some(&mut r), Some(&mut s), Some(&mut so), Some(&center));
+        node_matrix.get_transform(
+            Some(&mut t),
+            Some(&mut r),
+            Some(&mut s),
+            Some(&mut so),
+            Some(&center),
+        );
 
         set_vec3(scene, child, "translation", t);
         set(scene, child, "rotation", FieldValue::SFRotation(r));
@@ -346,7 +433,13 @@ impl Optimizer {
         child
     }
 
-    fn combine_light(&self, scene: &mut Scene, node: NodeId, child: NodeId, st: &mut State) -> NodeId {
+    fn combine_light(
+        &self,
+        scene: &mut Scene,
+        node: NodeId,
+        child: NodeId,
+        st: &mut State,
+    ) -> NodeId {
         let m = transform_matrix(scene, node);
 
         if has_field(scene, child, "location") {
@@ -367,12 +460,24 @@ impl Optimizer {
         child
     }
 
-    fn combine_viewpoint(&self, scene: &mut Scene, node: NodeId, child: NodeId, st: &mut State) -> NodeId {
+    fn combine_viewpoint(
+        &self,
+        scene: &mut Scene,
+        node: NodeId,
+        child: NodeId,
+        st: &mut State,
+    ) -> NodeId {
         let node_matrix = transform_matrix(scene, node);
         let mut viewpoint_matrix = Matrix4::IDENTITY;
         let (mut t, mut r) = (Vector3::ZERO, Rotation4::identity());
 
-        viewpoint_matrix.set_transform(Some(&vec3(scene, child, "position")), Some(&rot(scene, child, "orientation")), None, None, None);
+        viewpoint_matrix.set_transform(
+            Some(&vec3(scene, child, "position")),
+            Some(&rot(scene, child, "orientation")),
+            None,
+            None,
+            None,
+        );
         viewpoint_matrix.mult_right(&node_matrix);
         viewpoint_matrix.get_transform(Some(&mut t), Some(&mut r), None, None, None);
 
@@ -390,7 +495,8 @@ impl Optimizer {
 }
 
 fn is_interpolator(scene: &Scene, node: NodeId) -> bool {
-    type_name(scene, node).ends_with("Interpolator") || type_name(scene, node).ends_with("Interpolator2D")
+    type_name(scene, node).ends_with("Interpolator")
+        || type_name(scene, node).ends_with("Interpolator2D")
 }
 
 /// X3DOptimizer.removeChildren: every SFNode set to NULL, every MFNode emptied.
@@ -431,7 +537,14 @@ fn dispose(scene: &mut Scene, node: NodeId) {
     }
 
     if scene.is_scene_root(ctx) {
-        let exports: Vec<String> = scene.ctx(ctx).exported.values().iter().filter(|&&e| scene.exported[e].local == node).map(|&e| scene.exported[e].exported_name.clone()).collect();
+        let exports: Vec<String> = scene
+            .ctx(ctx)
+            .exported
+            .values()
+            .iter()
+            .filter(|&&e| scene.exported[e].local == node)
+            .map(|&e| scene.exported[e].exported_name.clone())
+            .collect();
 
         for e in exports {
             scene.ctx_mut(ctx).exported.remove(&e);

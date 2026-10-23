@@ -110,11 +110,19 @@ fn adjust_angle_to_limits(angle: f64, lo: f64, hi: f64) -> f64 {
     } else if angle < lo {
         let diff_lo = normalize_angle(lo - angle).abs();
         let diff_hi = normalize_angle(hi - angle).abs();
-        if diff_lo < diff_hi { angle } else { angle + SIMD_2_PI }
+        if diff_lo < diff_hi {
+            angle
+        } else {
+            angle + SIMD_2_PI
+        }
     } else if angle > hi {
         let diff_hi = normalize_angle(angle - hi).abs();
         let diff_lo = normalize_angle(angle - lo).abs();
-        if diff_lo < diff_hi { angle - SIMD_2_PI } else { angle }
+        if diff_lo < diff_hi {
+            angle - SIMD_2_PI
+        } else {
+            angle
+        }
     } else {
         angle
     }
@@ -122,12 +130,29 @@ fn adjust_angle_to_limits(angle: f64, lo: f64, hi: f64) -> f64 {
 
 impl Constraint {
     fn new(kind: Kind, body_a: BodyId, body_b: BodyId) -> Constraint {
-        Constraint { kind, body_a, body_b, enabled: true, breaking_impulse_threshold: SIMD_INFINITY, applied_impulse: 0.0, override_iterations: -1 }
+        Constraint {
+            kind,
+            body_a,
+            body_b,
+            enabled: true,
+            breaking_impulse_threshold: SIMD_INFINITY,
+            applied_impulse: 0.0,
+            override_iterations: -1,
+        }
     }
 
     /// `new Ammo.btPoint2PointConstraint(rbA, rbB, pivotA, pivotB)`.
     pub fn point2point(body_a: BodyId, body_b: BodyId, pivot_a: V3, pivot_b: V3) -> Constraint {
-        Constraint::new(Kind::Point2Point(Point2Point { pivot_a: r3(pivot_a), pivot_b: r3(pivot_b), damping: 1.0, impulse_clamp: 0.0 }), body_a, body_b)
+        Constraint::new(
+            Kind::Point2Point(Point2Point {
+                pivot_a: r3(pivot_a),
+                pivot_b: r3(pivot_b),
+                damping: 1.0,
+                impulse_clamp: 0.0,
+            }),
+            body_a,
+            body_b,
+        )
     }
 
     /// `setPivotA` of a point to point constraint.
@@ -146,7 +171,16 @@ impl Constraint {
 
     /// `new Ammo.btHingeConstraint(rbA, rbB, pivotInA, pivotInB, axisInA, axisInB, useReferenceFrameA)`.
     /// The frames use the center of mass transforms the bodies have right now.
-    pub fn hinge(rigid: &[RigidBody], body_a: BodyId, body_b: BodyId, pivot_a: V3, pivot_b: V3, axis_a: V3, axis_b: V3, _use_reference_frame_a: bool) -> Constraint {
+    pub fn hinge(
+        rigid: &[RigidBody],
+        body_a: BodyId,
+        body_b: BodyId,
+        pivot_a: V3,
+        pivot_b: V3,
+        axis_a: V3,
+        axis_b: V3,
+        _use_reference_frame_a: bool,
+    ) -> Constraint {
         let (pivot_a, pivot_b, axis_a, axis_b) = (r3(pivot_a), r3(pivot_b), r3(axis_a), r3(axis_b));
         let ta = &rigid[body_a].world_tf;
         let (m, n, o) = (ta.b[0][0], ta.b[1][0], ta.b[2][0]);
@@ -164,11 +198,22 @@ impl Constraint {
             a2 = col(&ta.b, 1);
         } else {
             let a2u = [o * q - n * t, m * t - o * p, n * p - m * q];
-            a1 = [t * a2u[1] - q * a2u[2], p * a2u[2] - t * a2u[0], q * a2u[0] - p * a2u[1]];
+            a1 = [
+                t * a2u[1] - q * a2u[2],
+                p * a2u[2] - t * a2u[0],
+                q * a2u[0] - p * a2u[1],
+            ];
             a2 = a2u;
         }
 
-        let frame_a = Tf { b: rm([[a1[0], a2[0], axis_a[0]], [a1[1], a2[1], axis_a[1]], [a1[2], a2[2], axis_a[2]]]), o: pivot_a };
+        let frame_a = Tf {
+            b: rm([
+                [a1[0], a2[0], axis_a[0]],
+                [a1[1], a2[1], axis_a[1]],
+                [a1[2], a2[2], axis_a[2]],
+            ]),
+            o: pivot_a,
+        };
 
         // shortestArcQuat (axisInA, axisInB)
         let (p0, p1, p2) = (axis_a[0], axis_a[1], axis_a[2]);
@@ -211,14 +256,36 @@ impl Constraint {
         let b1 = [bx, by, bz];
         let b2 = [w * bz - v * by, v * bx - x * bz, x * by - w * bx];
 
-        let frame_b = Tf { b: rm([[b1[0], b2[0], axis_b[0]], [b1[1], b2[1], axis_b[1]], [b1[2], b2[2], axis_b[2]]]), o: pivot_b };
+        let frame_b = Tf {
+            b: rm([
+                [b1[0], b2[0], axis_b[0]],
+                [b1[1], b2[1], axis_b[1]],
+                [b1[2], b2[2], axis_b[2]],
+            ]),
+            o: pivot_b,
+        };
 
-        Constraint::new(Kind::Hinge(Hinge { frame_a, frame_b, angular_only: false }), body_a, body_b)
+        Constraint::new(
+            Kind::Hinge(Hinge {
+                frame_a,
+                frame_b,
+                angular_only: false,
+            }),
+            body_a,
+            body_b,
+        )
     }
 
     /// `new Ammo.btSliderConstraint(rbA, rbB, frameInA, frameInB, useLinearReferenceFrameA)`; initParams
     /// runs calculateTransforms with the bodies' current transforms.
-    pub fn slider(rigid: &[RigidBody], body_a: BodyId, body_b: BodyId, frame_a: Tf, frame_b: Tf, use_linear_reference_frame_a: bool) -> Constraint {
+    pub fn slider(
+        rigid: &[RigidBody],
+        body_a: BodyId,
+        body_b: BodyId,
+        frame_a: Tf,
+        frame_b: Tf,
+        use_linear_reference_frame_a: bool,
+    ) -> Constraint {
         let s = Slider {
             frame_a: rt(frame_a),
             frame_b: rt(frame_b),
@@ -332,8 +399,16 @@ impl Point2Point {
         let (ta, tb) = (&rigid[a].world_tf, &rigid[b].world_tf);
 
         // a1 = trA.getBasis() * pivotInA, a2 = trB.getBasis() * pivotInB
-        let a1 = [dot(ta.b[0], self.pivot_a), dot(ta.b[1], self.pivot_a), dot(ta.b[2], self.pivot_a)];
-        let a2 = [dot(tb.b[0], self.pivot_b), dot(tb.b[1], self.pivot_b), dot(tb.b[2], self.pivot_b)];
+        let a1 = [
+            dot(ta.b[0], self.pivot_a),
+            dot(ta.b[1], self.pivot_a),
+            dot(ta.b[2], self.pivot_a),
+        ];
+        let a2 = [
+            dot(tb.b[0], self.pivot_b),
+            dot(tb.b[1], self.pivot_b),
+            dot(tb.b[2], self.pivot_b),
+        ];
         let (o, m, e) = (a1[0], a1[1], a1[2]);
         let (p, n, d) = (a2[0], a2[1], a2[2]);
 
@@ -518,7 +593,8 @@ impl Slider {
             let a0 = col(&self.calc_a.b, 1);
             let a1 = col(&self.calc_a.b, 2);
             let b0 = col(&self.calc_b.b, 1);
-            let rot = (a1[0] * b0[0] + a1[1] * b0[1] + a1[2] * b0[2]).atan2(a0[0] * b0[0] + a0[1] * b0[1] + a0[2] * b0[2]);
+            let rot = (a1[0] * b0[0] + a1[1] * b0[1] + a1[2] * b0[2])
+                .atan2(a0[0] * b0[0] + a0[1] * b0[1] + a0[2] * b0[2]);
             let rot = adjust_angle_to_limits(rot, lo, hi);
             self.ang_pos = f(rot);
 
@@ -537,7 +613,11 @@ impl Slider {
         let (tra, trb) = (&self.calc_a, &self.calc_b);
         let (body_a, body_b) = (&rigid[a], &rigid[b]);
         let (w, x) = (body_a.inverse_mass, body_b.inverse_mass);
-        let sign_fact = if self.use_linear_reference_frame_a { 1.0 } else { -1.0 };
+        let sign_fact = if self.use_linear_reference_frame_a {
+            1.0
+        } else {
+            -1.0
+        };
         let fps = info.fps;
         let erp = info.erp;
 
@@ -593,7 +673,8 @@ impl Slider {
         let dot_b = rel_b[0] * ax1[0] + rel_b[1] * ax1[1] + rel_b[2] * ax1[2];
         let dot_a = rel_a[0] * ax1[0] + rel_a[1] * ax1[1] + rel_a[2] * ax1[2];
         let slider_offs = self.lin_pos - self.depth[0];
-        let td: V3 = std::array::from_fn(|i| (dot_a * ax1[i] + slider_offs * ax1[i]) - dot_b * ax1[i]);
+        let td: V3 =
+            std::array::from_fn(|i| (dot_a * ax1[i] + slider_offs * ax1[i]) - dot_b * ax1[i]);
         let ortho_a: V3 = std::array::from_fn(|i| rel_a[i] - dot_a * ax1[i]);
         let ortho_b: V3 = std::array::from_fn(|i| rel_b[i] - dot_b * ax1[i]);
         let rel_a2: V3 = std::array::from_fn(|i| ortho_a[i] + fact_a * td[i]);

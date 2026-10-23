@@ -31,7 +31,10 @@ pub(crate) struct Element {
 
 impl Element {
     pub fn new(name: &str) -> Element {
-        Element { name: name.to_string(), ..Default::default() }
+        Element {
+            name: name.to_string(),
+            ..Default::default()
+        }
     }
 
     /// Element.getAttribute: `None` is `null`.
@@ -39,10 +42,17 @@ impl Element {
         if self.html {
             let lower = name.to_ascii_lowercase();
 
-            return self.attrs.iter().find(|(n, _)| *n == lower).map(|(_, v)| v.as_str());
+            return self
+                .attrs
+                .iter()
+                .find(|(n, _)| *n == lower)
+                .map(|(_, v)| v.as_str());
         }
 
-        self.attrs.iter().find(|(n, _)| n == name).map(|(_, v)| v.as_str())
+        self.attrs
+            .iter()
+            .find(|(n, _)| n == name)
+            .map(|(_, v)| v.as_str())
     }
 
     /// Element.setAttribute: an existing attribute keeps its position.
@@ -67,7 +77,10 @@ fn general_ref(name: &str) -> Result<char, String> {
             None => rest.parse::<u32>(),
         };
 
-        return code.ok().and_then(char::from_u32).ok_or_else(|| format!("Invalid character reference '&{name};'."));
+        return code
+            .ok()
+            .and_then(char::from_u32)
+            .ok_or_else(|| format!("Invalid character reference '&{name};'."));
     }
 
     match name {
@@ -113,7 +126,10 @@ pub(crate) fn parse_document(text: &str) -> Result<Element, String> {
             let key = String::from_utf8_lossy(a.key.as_ref()).into_owned();
 
             // Namespace declarations are attributes in the DOM too, but no field is named like one.
-            let value = a.normalized_value(quick_xml::XmlVersion::Implicit1_0).map_err(|e| e.to_string())?.into_owned();
+            let value = a
+                .normalized_value(quick_xml::XmlVersion::Implicit1_0)
+                .map_err(|e| e.to_string())?
+                .into_owned();
 
             if element.attr(&key).is_some() {
                 return Err(format!("Attribute '{key}' redefined."));
@@ -192,7 +208,9 @@ pub(crate) fn parse_document(text: &str) -> Result<Element, String> {
                 flush(&mut stack, &mut text_run);
 
                 if let Some(top) = stack.last_mut() {
-                    top.children.push(XNode::Comment(c.decode().map_err(|e| e.to_string())?.into_owned()));
+                    top.children.push(XNode::Comment(
+                        c.decode().map_err(|e| e.to_string())?.into_owned(),
+                    ));
                 }
             }
             Event::Decl(_) | Event::PI(_) | Event::DocType(_) => flush(&mut stack, &mut text_run),

@@ -29,7 +29,7 @@ use x3d_fields::{FieldValue, NodeId};
 use x3d_render::geometry::Geometry;
 use x3d_runtime::Runtime;
 
-use crate::bullet::{self, add, f, mul, sub, Body, BvhMesh, Convex, HeightField, Transform, V};
+use crate::bullet::{self, Body, BvhMesh, Convex, HeightField, Transform, V, add, f, mul, sub};
 
 /// CONVEX_DISTANCE_MARGIN.
 const MARGIN: f64 = 0.04;
@@ -37,18 +37,36 @@ const MARGIN: f64 = 0.04;
 /// The shape CollidableShape builds for a geometry node, before scaling.
 #[derive(Clone, Debug)]
 pub enum BaseShape {
-    Sphere { radius: f64 },
+    Sphere {
+        radius: f64,
+    },
     /// btBoxShape: implicit (core) half extents and the margin (setSafeMargin).
-    Box { implicit: V, margin: f64 },
+    Box {
+        implicit: V,
+        margin: f64,
+    },
     /// btCylinderShape (Y axis), like the box.
-    Cylinder { implicit: V, margin: f64 },
-    Cone { radius: f64, height: f64 },
-    Hull { points: Vec<V> },
+    Cylinder {
+        implicit: V,
+        margin: f64,
+    },
+    Cone {
+        radius: f64,
+        height: f64,
+    },
+    Hull {
+        points: Vec<V>,
+    },
     /// btBvhTriangleMeshShape of the triangles.
-    Mesh { triangles: Vec<[V; 3]> },
+    Mesh {
+        triangles: Vec<[V; 3]>,
+    },
     /// btHeightfieldTerrainShape (xDimension, zDimension, heights, 1, min, max, 1, PHY_FLOAT,
     /// flipQuadEdges) with local scaling (xSpacing, 1, zSpacing) and CollidableShape's offset.
-    HeightField { field: HeightField, offset: V },
+    HeightField {
+        field: HeightField,
+        offset: V,
+    },
 }
 
 /// btBoxShape / btCylinderShape constructor (2.82): setSafeMargin (halfExtents) sets the margin to
@@ -81,7 +99,13 @@ fn triangles(g: &Geometry) -> Vec<[V; 3]> {
     let vs = &g.vertices;
     (0..vs.len() / 12)
         .map(|t| {
-            let p = |k: usize| [vs[t * 12 + k * 4] as f64, vs[t * 12 + k * 4 + 1] as f64, vs[t * 12 + k * 4 + 2] as f64];
+            let p = |k: usize| {
+                [
+                    vs[t * 12 + k * 4] as f64,
+                    vs[t * 12 + k * 4 + 1] as f64,
+                    vs[t * 12 + k * 4 + 2] as f64,
+                ]
+            };
             [p(0), p(1), p(2)]
         })
         .collect()
@@ -102,17 +126,39 @@ impl BaseShape {
     }
 
     /// btHeightfieldTerrainShape for an ElevationGrid (both dimensions > 1). Missing heights are 0.
-    pub fn new_height_field(xd: i64, zd: i64, xs: f64, zs: f64, heights: &[f64]) -> Option<BaseShape> {
+    pub fn new_height_field(
+        xd: i64,
+        zd: i64,
+        xs: f64,
+        zs: f64,
+        heights: &[f64],
+    ) -> Option<BaseShape> {
         if xd <= 1 || zd <= 1 {
             return None;
         }
 
-        let (min, max) = heights.iter().fold((f64::INFINITY, f64::NEG_INFINITY), |(a, b), &h| (a.min(h), b.max(h)));
+        let (min, max) = heights
+            .iter()
+            .fold((f64::INFINITY, f64::NEG_INFINITY), |(a, b), &h| {
+                (a.min(h), b.max(h))
+            });
         let (min, max) = (f(min), f(max));
         let (xs, zs) = (f(xs), f(zs));
         let (w, l) = ((xd - 1) as f64, (zd - 1) as f64);
-        let field = HeightField { width: xd as usize, length: zd as usize, heights: (0..(xd * zd) as usize).map(|i| f(heights.get(i).copied().unwrap_or(0.0))).collect(), min, max, scaling: [xs, 1.0, zs] };
-        Some(BaseShape::HeightField { field, offset: [f(xs * w * 0.5), f((min + max) * 0.5), f(zs * l * 0.5)] })
+        let field = HeightField {
+            width: xd as usize,
+            length: zd as usize,
+            heights: (0..(xd * zd) as usize)
+                .map(|i| f(heights.get(i).copied().unwrap_or(0.0)))
+                .collect(),
+            min,
+            max,
+            scaling: [xs, 1.0, zs],
+        };
+        Some(BaseShape::HeightField {
+            field,
+            offset: [f(xs * w * 0.5), f((min + max) * 0.5), f(zs * l * 0.5)],
+        })
     }
 }
 
@@ -132,9 +178,21 @@ pub fn base_shape(rt: &Runtime, n: NodeId, geometry: Option<&Geometry>) -> Optio
             Some(FieldValue::SFVec3f(v)) => [v.x, v.y, v.z],
             _ => [2.0, 2.0, 2.0],
         })),
-        "Sphere" => Some(BaseShape::Sphere { radius: f(num(rt, n, "radius", 1.0)) }),
-        "Cone" if boolean(rt, n, "side") && boolean(rt, n, "bottom") => Some(BaseShape::Cone { radius: f(num(rt, n, "bottomRadius", 1.0)), height: f(num(rt, n, "height", 2.0)) }),
-        "Cylinder" if boolean(rt, n, "side") && boolean(rt, n, "top") && boolean(rt, n, "bottom") => Some(BaseShape::new_cylinder(num(rt, n, "radius", 1.0), num(rt, n, "height", 2.0))),
+        "Sphere" => Some(BaseShape::Sphere {
+            radius: f(num(rt, n, "radius", 1.0)),
+        }),
+        "Cone" if boolean(rt, n, "side") && boolean(rt, n, "bottom") => Some(BaseShape::Cone {
+            radius: f(num(rt, n, "bottomRadius", 1.0)),
+            height: f(num(rt, n, "height", 2.0)),
+        }),
+        "Cylinder"
+            if boolean(rt, n, "side") && boolean(rt, n, "top") && boolean(rt, n, "bottom") =>
+        {
+            Some(BaseShape::new_cylinder(
+                num(rt, n, "radius", 1.0),
+                num(rt, n, "height", 2.0),
+            ))
+        }
         "Cone" | "Cylinder" => {
             let t = triangles(g);
             (!t.is_empty()).then_some(BaseShape::Mesh { triangles: t })
@@ -144,11 +202,19 @@ pub fn base_shape(rt: &Runtime, n: NodeId, geometry: Option<&Geometry>) -> Optio
                 Some(FieldValue::MFFloat(v)) => v.iter().map(|&h| h as f64).collect(),
                 _ => vec![],
             };
-            BaseShape::new_height_field(num(rt, n, "xDimension", 0.0) as i64, num(rt, n, "zDimension", 0.0) as i64, num(rt, n, "xSpacing", 1.0), num(rt, n, "zSpacing", 1.0), &heights)
+            BaseShape::new_height_field(
+                num(rt, n, "xDimension", 0.0) as i64,
+                num(rt, n, "zDimension", 0.0) as i64,
+                num(rt, n, "xSpacing", 1.0),
+                num(rt, n, "zSpacing", 1.0),
+                &heights,
+            )
         }
         _ => {
             let vs = &g.vertices;
-            let points: Vec<V> = (0..vs.len() / 4).map(|i| [vs[i * 4] as f64, vs[i * 4 + 1] as f64, vs[i * 4 + 2] as f64]).collect();
+            let points: Vec<V> = (0..vs.len() / 4)
+                .map(|i| [vs[i * 4] as f64, vs[i * 4 + 1] as f64, vs[i * 4 + 2] as f64])
+                .collect();
             (!points.is_empty()).then_some(BaseShape::Hull { points })
         }
     }
@@ -176,7 +242,12 @@ struct MeshState {
 
 impl MeshState {
     fn new(base: &[[V; 3]]) -> MeshState {
-        MeshState { base: base.to_vec(), compound: [1.0; 3], child: [1.0; 3], mesh: Rc::new(BvhMesh::new(scaled(base, [1.0; 3]))) }
+        MeshState {
+            base: base.to_vec(),
+            compound: [1.0; 3],
+            child: [1.0; 3],
+            mesh: Rc::new(BvhMesh::new(scaled(base, [1.0; 3]))),
+        }
     }
 
     /// btCompoundShape.setLocalScaling: the child gets childScale * scaling / m_localScaling, and
@@ -195,7 +266,10 @@ impl MeshState {
 }
 
 fn scaled(triangles: &[[V; 3]], s: V) -> Vec<[V; 3]> {
-    triangles.iter().map(|t| t.map(|p| [f(p[0] * s[0]), f(p[1] * s[1]), f(p[2] * s[2])])).collect()
+    triangles
+        .iter()
+        .map(|t| t.map(|p| [f(p[0] * s[0]), f(p[1] * s[1]), f(p[2] * s[2])]))
+        .collect()
 }
 
 /// The two compounds of a sensor's VolumePicker: their local AABBs (never shrinking).
@@ -246,29 +320,81 @@ impl PickShapes {
         self.place_scaled(node, base, frame(&t, &r), [f(s.x), f(s.y), f(s.z)])
     }
 
-    fn place_scaled(&mut self, node: NodeId, base: &BaseShape, frame: Transform, scale: V) -> Placed {
+    fn place_scaled(
+        &mut self,
+        node: NodeId,
+        base: &BaseShape,
+        frame: Transform,
+        scale: V,
+    ) -> Placed {
         let a = [scale[0].abs(), scale[1].abs(), scale[2].abs()];
 
         let (kind, child) = match base {
-            BaseShape::Sphere { radius } => (Kind::Convex(Convex::Sphere { radius: f(radius * a[0]) }), Transform::IDENTITY),
-            BaseShape::Box { implicit, margin } => (Kind::Convex(Convex::Box { half: scaled_implicit(*implicit, *margin, a), margin: *margin }), Transform::IDENTITY),
-            BaseShape::Cylinder { implicit, margin } => (Kind::Convex(Convex::Cylinder { half: scaled_implicit(*implicit, *margin, a), margin: *margin }), Transform::IDENTITY),
+            BaseShape::Sphere { radius } => (
+                Kind::Convex(Convex::Sphere {
+                    radius: f(radius * a[0]),
+                }),
+                Transform::IDENTITY,
+            ),
+            BaseShape::Box { implicit, margin } => (
+                Kind::Convex(Convex::Box {
+                    half: scaled_implicit(*implicit, *margin, a),
+                    margin: *margin,
+                }),
+                Transform::IDENTITY,
+            ),
+            BaseShape::Cylinder { implicit, margin } => (
+                Kind::Convex(Convex::Cylinder {
+                    half: scaled_implicit(*implicit, *margin, a),
+                    margin: *margin,
+                }),
+                Transform::IDENTITY,
+            ),
             BaseShape::Cone { radius, height } => {
-                let st = self.cones.entry(node).or_insert(ConeState { base: (*radius, *height), radius: *radius, height: *height, scaling: [1.0; 3] });
+                let st = self.cones.entry(node).or_insert(ConeState {
+                    base: (*radius, *height),
+                    radius: *radius,
+                    height: *height,
+                    scaling: [1.0; 3],
+                });
 
                 if st.base != (*radius, *height) {
-                    *st = ConeState { base: (*radius, *height), radius: *radius, height: *height, scaling: [1.0; 3] };
+                    *st = ConeState {
+                        base: (*radius, *height),
+                        radius: *radius,
+                        height: *height,
+                        scaling: [1.0; 3],
+                    };
                 }
 
                 // btConeShape.setLocalScaling.
                 st.height = f(st.height * (a[1] / st.scaling[1]));
                 st.radius = f(st.radius * ((a[0] / st.scaling[0] + a[2] / st.scaling[2]) / 2.0));
                 st.scaling = a;
-                (Kind::Convex(Convex::Cone { radius: st.radius, height: st.height, margin: MARGIN }), Transform::IDENTITY)
+                (
+                    Kind::Convex(Convex::Cone {
+                        radius: st.radius,
+                        height: st.height,
+                        margin: MARGIN,
+                    }),
+                    Transform::IDENTITY,
+                )
             }
-            BaseShape::Hull { points } => (Kind::Convex(Convex::Hull { points: points.iter().map(|p| [f(p[0] * a[0]), f(p[1] * a[1]), f(p[2] * a[2])]).collect(), margin: MARGIN }), Transform::IDENTITY),
+            BaseShape::Hull { points } => (
+                Kind::Convex(Convex::Hull {
+                    points: points
+                        .iter()
+                        .map(|p| [f(p[0] * a[0]), f(p[1] * a[1]), f(p[2] * a[2])])
+                        .collect(),
+                    margin: MARGIN,
+                }),
+                Transform::IDENTITY,
+            ),
             BaseShape::Mesh { triangles } => {
-                let st = self.meshes.entry(node).or_insert_with(|| MeshState::new(triangles));
+                let st = self
+                    .meshes
+                    .entry(node)
+                    .or_insert_with(|| MeshState::new(triangles));
 
                 if st.base != *triangles {
                     // set_collidableGeometry__: a new shape at scaling 1, then the compound's
@@ -283,8 +409,19 @@ impl PickShapes {
             }
             BaseShape::HeightField { field, offset } => {
                 let mut field = field.clone();
-                field.scaling = [f(field.scaling[0] * scale[0]), f(field.scaling[1] * scale[1]), f(field.scaling[2] * scale[2])];
-                (Kind::Height(field), Transform::translation([f(offset[0] * scale[0]), f(offset[1] * scale[1]), f(offset[2] * scale[2])]))
+                field.scaling = [
+                    f(field.scaling[0] * scale[0]),
+                    f(field.scaling[1] * scale[1]),
+                    f(field.scaling[2] * scale[2]),
+                ];
+                (
+                    Kind::Height(field),
+                    Transform::translation([
+                        f(offset[0] * scale[0]),
+                        f(offset[1] * scale[1]),
+                        f(offset[2] * scale[2]),
+                    ]),
+                )
             }
         };
 
@@ -300,7 +437,11 @@ impl PickShapes {
         matrix.get_transform(Some(&mut t), Some(&mut r), Some(&mut s), None, None);
         let p = [f(point.x), f(point.y), f(point.z)];
         let center = [f(p[0] * f(s.x)), f(p[1] * f(s.y)), f(p[2] * f(s.z))];
-        Placed::new(Kind::Convex(Convex::Sphere { radius: 0.0 }), frame(&t, &r), Transform::translation(center))
+        Placed::new(
+            Kind::Convex(Convex::Sphere { radius: 0.0 }),
+            frame(&t, &r),
+            Transform::translation(center),
+        )
     }
 
     /// VolumePicker.setChildShape1 (`slot` 0) / setChildShape2 (`slot` 1) of `sensor`'s picker: the
@@ -310,7 +451,10 @@ impl PickShapes {
         let (lo, hi) = p.outer_aabb();
         let c = &mut self.pickers.entry(sensor).or_default().compounds[slot];
         *c = Some(match *c {
-            Some((l, h)) => (std::array::from_fn(|i| l[i].min(lo[i])), std::array::from_fn(|i| h[i].max(hi[i]))),
+            Some((l, h)) => (
+                std::array::from_fn(|i| l[i].min(lo[i])),
+                std::array::from_fn(|i| h[i].max(hi[i])),
+            ),
             None => (lo, hi),
         });
     }
@@ -336,7 +480,11 @@ impl PickShapes {
 
 /// btBoxShape / btCylinderShape.setLocalScaling from scaling 1: (implicit + margin) * s - margin.
 fn scaled_implicit(implicit: V, margin: f64, s: V) -> V {
-    [f((implicit[0] + margin) * s[0] - margin), f((implicit[1] + margin) * s[1] - margin), f((implicit[2] + margin) * s[2] - margin)]
+    [
+        f((implicit[0] + margin) * s[0] - margin),
+        f((implicit[1] + margin) * s[1] - margin),
+        f((implicit[2] + margin) * s[2] - margin),
+    ]
 }
 
 /// btTransform of VolumePicker.getTransform: the basis of `setTransform (translation, rotation)`.
@@ -344,7 +492,10 @@ fn frame(t: &Vector3, r: &Rotation4) -> Transform {
     let mut m = Matrix4::IDENTITY;
     m.set_transform(Some(t), Some(r), None, None, None);
     let m = m.0.map(f);
-    Transform { basis: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]], origin: [m[12], m[13], m[14]] }
+    Transform {
+        basis: [[m[0], m[4], m[8]], [m[1], m[5], m[9]], [m[2], m[6], m[10]]],
+        origin: [m[12], m[13], m[14]],
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -372,7 +523,12 @@ impl Placed {
             Kind::Height(h) => h.aabb(&child),
         };
         let inner = (bullet::fv(inner.0), bullet::fv(inner.1));
-        Placed { kind, frame, t: frame.mul(&child), inner }
+        Placed {
+            kind,
+            frame,
+            t: frame.mul(&child),
+            inner,
+        }
     }
 
     fn body(&self) -> Body<'_> {
@@ -396,7 +552,10 @@ impl Placed {
         }
 
         let xform = self.frame.inverse_times(&other.frame);
-        let xform = Transform { basis: xform.basis.map(bullet::fv), origin: bullet::fv(xform.origin) };
+        let xform = Transform {
+            basis: xform.basis.map(bullet::fv),
+            origin: bullet::fv(xform.origin),
+        };
         let (lo, hi) = xform.transform_aabb(other.inner.0, other.inner.1, 0.0);
         bullet::aabb_overlap(&self.inner, &(bullet::fv(lo), bullet::fv(hi)))
     }
@@ -448,20 +607,46 @@ fn box_box(f1: &Transform, a: V, f2: &Transform, b: V) -> bool {
     let edge = |e1: f64, e2: f64| e1.abs() - e2 > bullet::SIMD_EPSILON;
     // u1 x (v1, v2, v3), u2 x …, u3 x …
     let tests = [
-        (pp[2] * r[1][0] - pp[1] * r[2][0], a[1] * q[2][0] + a[2] * q[1][0] + b[1] * q[0][2] + b[2] * q[0][1]),
-        (pp[2] * r[1][1] - pp[1] * r[2][1], a[1] * q[2][1] + a[2] * q[1][1] + b[0] * q[0][2] + b[2] * q[0][0]),
-        (pp[2] * r[1][2] - pp[1] * r[2][2], a[1] * q[2][2] + a[2] * q[1][2] + b[0] * q[0][1] + b[1] * q[0][0]),
-        (pp[0] * r[2][0] - pp[2] * r[0][0], a[0] * q[2][0] + a[2] * q[0][0] + b[1] * q[1][2] + b[2] * q[1][1]),
-        (pp[0] * r[2][1] - pp[2] * r[0][1], a[0] * q[2][1] + a[2] * q[0][1] + b[0] * q[1][2] + b[2] * q[1][0]),
-        (pp[0] * r[2][2] - pp[2] * r[0][2], a[0] * q[2][2] + a[2] * q[0][2] + b[0] * q[1][1] + b[1] * q[1][0]),
-        (pp[1] * r[0][0] - pp[0] * r[1][0], a[0] * q[1][0] + a[1] * q[0][0] + b[1] * q[2][2] + b[2] * q[2][1]),
-        (pp[1] * r[0][1] - pp[0] * r[1][1], a[0] * q[1][1] + a[1] * q[0][1] + b[0] * q[2][2] + b[2] * q[2][0]),
-        (pp[1] * r[0][2] - pp[0] * r[1][2], a[0] * q[1][2] + a[1] * q[0][2] + b[0] * q[2][1] + b[1] * q[2][0]),
+        (
+            pp[2] * r[1][0] - pp[1] * r[2][0],
+            a[1] * q[2][0] + a[2] * q[1][0] + b[1] * q[0][2] + b[2] * q[0][1],
+        ),
+        (
+            pp[2] * r[1][1] - pp[1] * r[2][1],
+            a[1] * q[2][1] + a[2] * q[1][1] + b[0] * q[0][2] + b[2] * q[0][0],
+        ),
+        (
+            pp[2] * r[1][2] - pp[1] * r[2][2],
+            a[1] * q[2][2] + a[2] * q[1][2] + b[0] * q[0][1] + b[1] * q[0][0],
+        ),
+        (
+            pp[0] * r[2][0] - pp[2] * r[0][0],
+            a[0] * q[2][0] + a[2] * q[0][0] + b[1] * q[1][2] + b[2] * q[1][1],
+        ),
+        (
+            pp[0] * r[2][1] - pp[2] * r[0][1],
+            a[0] * q[2][1] + a[2] * q[0][1] + b[0] * q[1][2] + b[2] * q[1][0],
+        ),
+        (
+            pp[0] * r[2][2] - pp[2] * r[0][2],
+            a[0] * q[2][2] + a[2] * q[0][2] + b[0] * q[1][1] + b[1] * q[1][0],
+        ),
+        (
+            pp[1] * r[0][0] - pp[0] * r[1][0],
+            a[0] * q[1][0] + a[1] * q[0][0] + b[1] * q[2][2] + b[2] * q[2][1],
+        ),
+        (
+            pp[1] * r[0][1] - pp[0] * r[1][1],
+            a[0] * q[1][1] + a[1] * q[0][1] + b[0] * q[2][2] + b[2] * q[2][0],
+        ),
+        (
+            pp[1] * r[0][2] - pp[0] * r[1][2],
+            a[0] * q[1][2] + a[1] * q[0][2] + b[0] * q[2][1] + b[1] * q[2][0],
+        ),
     ];
 
     !tests.iter().any(|&(e1, e2)| edge(e1, e2))
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -470,7 +655,11 @@ mod tests {
     /// Away from the origin: a picker that only ever held a point at the origin has a contact
     /// breaking threshold of 0, and refreshContactPoints then drops every point.
     fn at(kind: Kind, t: V) -> Placed {
-        Placed::new(kind, Transform::translation(add(t, [5.0, 0.0, 0.0])), Transform::IDENTITY)
+        Placed::new(
+            kind,
+            Transform::translation(add(t, [5.0, 0.0, 0.0])),
+            Transform::IDENTITY,
+        )
     }
 
     fn point(p: V) -> Placed {
@@ -491,19 +680,47 @@ mod tests {
     #[test]
     fn point_against_margins() {
         let (implicit, margin) = safe([1.0, 1.0, 1.0]);
-        let bx = at(convex(Convex::Box { half: implicit, margin }), [0.0; 3]);
+        let bx = at(
+            convex(Convex::Box {
+                half: implicit,
+                margin,
+            }),
+            [0.0; 3],
+        );
         assert!(contact(&point([0.5, 0.5, 0.5]), &bx));
         assert!(contact(&point([0.999, 0.0, 0.0]), &bx));
         assert!(!contact(&point([1.01, 0.0, 0.0]), &bx));
         // Rounded corner: (1, 1, 1) is outside the core (0.96) plus 0.04.
         assert!(!contact(&point([0.995, 0.995, 0.995]), &bx));
 
-        let hull = at(convex(Convex::Hull { points: vec![[-1.0, -1.0, -1.0], [1.0, -1.0, -1.0], [-1.0, 1.0, -1.0], [1.0, 1.0, -1.0], [-1.0, -1.0, 1.0], [1.0, -1.0, 1.0], [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0]], margin: MARGIN }), [0.0; 3]);
+        let hull = at(
+            convex(Convex::Hull {
+                points: vec![
+                    [-1.0, -1.0, -1.0],
+                    [1.0, -1.0, -1.0],
+                    [-1.0, 1.0, -1.0],
+                    [1.0, 1.0, -1.0],
+                    [-1.0, -1.0, 1.0],
+                    [1.0, -1.0, 1.0],
+                    [-1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0],
+                ],
+                margin: MARGIN,
+            }),
+            [0.0; 3],
+        );
         assert!(contact(&point([1.03, 0.0, 0.0]), &hull));
         assert!(!contact(&point([1.05, 0.0, 0.0]), &hull));
         assert!(contact(&point([0.2, -0.3, 0.1]), &hull));
 
-        let cone = at(convex(Convex::Cone { radius: 1.0, height: 2.0, margin: MARGIN }), [0.0; 3]);
+        let cone = at(
+            convex(Convex::Cone {
+                radius: 1.0,
+                height: 2.0,
+                margin: MARGIN,
+            }),
+            [0.0; 3],
+        );
         assert!(contact(&point([0.0, 1.03, 0.0]), &cone));
         assert!(!contact(&point([0.0, 1.05, 0.0]), &cone));
         assert!(contact(&point([0.0, 0.0, 0.0]), &cone));
@@ -512,11 +729,25 @@ mod tests {
 
     #[test]
     fn point_against_triangles() {
-        let mesh = at(Kind::Mesh(Rc::new(BvhMesh::new(vec![[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]]))), [0.0; 3]);
+        let mesh = at(
+            Kind::Mesh(Rc::new(BvhMesh::new(vec![[
+                [0.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]]))),
+            [0.0; 3],
+        );
         assert!(contact(&point([0.2, 0.0, 0.2]), &mesh));
         // The flat mesh's AABB has no height: a point above it is not tested.
         assert!(!contact(&point([0.2, 0.0003, 0.2]), &mesh));
-        let tilted = at(Kind::Mesh(Rc::new(BvhMesh::new(vec![[[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 1.0]]]))), [0.0; 3]);
+        let tilted = at(
+            Kind::Mesh(Rc::new(BvhMesh::new(vec![[
+                [0.0, 0.0, 0.0],
+                [1.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]]))),
+            [0.0; 3],
+        );
         assert!(contact(&point([0.5, 0.5003, 0.2]), &tilted));
         assert!(!contact(&point([0.5, 0.501, 0.2]), &tilted));
         let sphere = at(convex(Convex::Sphere { radius: 0.5 }), [0.2, 0.4, 0.2]);
@@ -526,18 +757,54 @@ mod tests {
     #[test]
     fn boxes_and_gjk() {
         let (i1, m1) = safe([1.0, 1.0, 1.0]);
-        let a = at(convex(Convex::Box { half: i1, margin: m1 }), [0.0; 3]);
-        let b = at(convex(Convex::Box { half: i1, margin: m1 }), [1.99, 0.0, 0.0]);
-        let c = at(convex(Convex::Box { half: i1, margin: m1 }), [2.01, 0.0, 0.0]);
+        let a = at(
+            convex(Convex::Box {
+                half: i1,
+                margin: m1,
+            }),
+            [0.0; 3],
+        );
+        let b = at(
+            convex(Convex::Box {
+                half: i1,
+                margin: m1,
+            }),
+            [1.99, 0.0, 0.0],
+        );
+        let c = at(
+            convex(Convex::Box {
+                half: i1,
+                margin: m1,
+            }),
+            [2.01, 0.0, 0.0],
+        );
         assert!(contact(&a, &b));
         assert!(!contact(&a, &c));
-        let cyl = at(convex(Convex::Cylinder { half: i1, margin: m1 }), [2.05, 0.0, 0.0]);
+        let cyl = at(
+            convex(Convex::Cylinder {
+                half: i1,
+                margin: m1,
+            }),
+            [2.05, 0.0, 0.0],
+        );
         // Box core 0.96 + cylinder core 0.96 + margins 0.08 = 2.0 < 2.05.
         assert!(!contact(&a, &cyl));
-        let cyl = at(convex(Convex::Cylinder { half: i1, margin: m1 }), [1.95, 0.0, 0.0]);
+        let cyl = at(
+            convex(Convex::Cylinder {
+                half: i1,
+                margin: m1,
+            }),
+            [1.95, 0.0, 0.0],
+        );
         assert!(contact(&a, &cyl));
         // Deep penetration goes through EPA.
-        let cyl = at(convex(Convex::Cylinder { half: i1, margin: m1 }), [0.3, 0.1, 0.0]);
+        let cyl = at(
+            convex(Convex::Cylinder {
+                half: i1,
+                margin: m1,
+            }),
+            [0.3, 0.1, 0.0],
+        );
         assert!(contact(&a, &cyl));
     }
 
@@ -545,7 +812,11 @@ mod tests {
     fn manifold_keeps_four_points() {
         let mut m = bullet::Manifold::new(0.5);
         for i in 0..6 {
-            m.add_contact_point([0.0, 1.0, 0.0], [i as f64, 0.0, 0.0], 0.01 * i as f64 - 0.02);
+            m.add_contact_point(
+                [0.0, 1.0, 0.0],
+                [i as f64, 0.0, 0.0],
+                0.01 * i as f64 - 0.02,
+            );
         }
         assert_eq!(m.distances().len(), 4);
         // A point closer than the threshold to a cached one replaces it.

@@ -24,7 +24,9 @@ pub struct Box2 {
 impl Default for Box2 {
     /// `new Box2 ()`: `set ()` without arguments, the zero matrix (an empty box).
     fn default() -> Self {
-        Box2 { matrix: Matrix3([0.0; 9]) }
+        Box2 {
+            matrix: Matrix3([0.0; 9]),
+        }
     }
 }
 
@@ -52,7 +54,19 @@ impl Box2 {
     /// Box2.set: with size and center, or the zero matrix.
     pub fn set(&mut self, size_center: Option<(&Vector2, &Vector2)>) -> &mut Self {
         match size_center {
-            Some((size, center)) => self.matrix.0 = [size.x / 2.0, 0.0, 0.0, 0.0, size.y / 2.0, 0.0, center.x, center.y, 1.0],
+            Some((size, center)) => {
+                self.matrix.0 = [
+                    size.x / 2.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    size.y / 2.0,
+                    0.0,
+                    center.x,
+                    center.y,
+                    1.0,
+                ]
+            }
             None => self.matrix.0 = [0.0; 9],
         }
 
@@ -236,7 +250,11 @@ impl Triangle2 {
         let v = (d11 * d20 - d01 * d21) / denom;
         let t = (d00 * d21 - d01 * d20) / denom;
 
-        Barycentric { u: 1.0 - v - t, v, t }
+        Barycentric {
+            u: 1.0 - v - t,
+            v,
+            t,
+        }
     }
 }
 
@@ -249,7 +267,10 @@ pub struct Spheroid3 {
 
 impl Spheroid3 {
     pub fn new(semi_major_axis: f64, semi_minor_axis: f64, use_f_1: bool) -> Self {
-        let mut s = Spheroid3 { semi_major_axis: 1.0, semi_minor_axis: 1.0 };
+        let mut s = Spheroid3 {
+            semi_major_axis: 1.0,
+            semi_minor_axis: 1.0,
+        };
         s.set(semi_major_axis, semi_minor_axis, use_f_1);
         s
     }
@@ -284,7 +305,9 @@ fn axis(m: &Matrix4, i: usize) -> Vector3 {
 impl Default for Box3 {
     /// `new Box3 ()`: the zero matrix (an empty box).
     fn default() -> Self {
-        Box3 { matrix: Matrix4([0.0; 16]) }
+        Box3 {
+            matrix: Matrix4([0.0; 16]),
+        }
     }
 }
 
@@ -293,7 +316,24 @@ impl Box3 {
     pub fn set(&mut self, size_center: Option<(&Vector3, &Vector3)>) -> &mut Self {
         match size_center {
             Some((s, c)) => {
-                self.matrix.0 = [s.x / 2.0, 0.0, 0.0, 0.0, 0.0, s.y / 2.0, 0.0, 0.0, 0.0, 0.0, s.z / 2.0, 0.0, c.x, c.y, c.z, 1.0];
+                self.matrix.0 = [
+                    s.x / 2.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    s.y / 2.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    s.z / 2.0,
+                    0.0,
+                    c.x,
+                    c.y,
+                    c.z,
+                    1.0,
+                ];
             }
             None => self.matrix.0 = [0.0; 16],
         }
@@ -336,7 +376,8 @@ impl Box3 {
         }
 
         let (mut min_x, mut min_y, mut min_z) = (f64::INFINITY, f64::INFINITY, f64::INFINITY);
-        let (mut max_x, mut max_y, mut max_z) = (f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
+        let (mut max_x, mut max_y, mut max_z) =
+            (f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
         // array [i + n] beyond the end is undefined: every comparison with it is false.
         let at = |i: usize| array.get(i).copied().unwrap_or(f64::NAN);
         let mut i = 0;
@@ -367,7 +408,10 @@ impl Box3 {
             i += stride;
         }
 
-        self.set_extents(&Vector3::new(min_x, min_y, min_z), &Vector3::new(max_x, max_y, max_z))
+        self.set_extents(
+            &Vector3::new(min_x, min_y, min_z),
+            &Vector3::new(max_x, max_y, max_z),
+        )
     }
 
     pub fn from_points(points: &[Vector3]) -> Self {
@@ -416,7 +460,11 @@ impl Box3 {
     }
 
     pub fn axes(&self) -> [Vector3; 3] {
-        [axis(&self.matrix, 0), axis(&self.matrix, 1), axis(&self.matrix, 2)]
+        [
+            axis(&self.matrix, 0),
+            axis(&self.matrix, 1),
+            axis(&self.matrix, 2),
+        ]
     }
 
     /// Box3.getNormals: the face normals, also of a flat or degenerate box.
@@ -425,7 +473,11 @@ impl Box3 {
         let mut x = axis(m, 0);
         let mut y = axis(m, 1);
         let mut z = axis(m, 2);
-        let axes = [Vector3::new(1.0, 0.0, 0.0), Vector3::new(0.0, 1.0, 0.0), Vector3::new(0.0, 0.0, 1.0)];
+        let axes = [
+            Vector3::new(1.0, 0.0, 0.0),
+            Vector3::new(0.0, 1.0, 0.0),
+            Vector3::new(0.0, 0.0, 1.0),
+        ];
 
         if x.squared_norm() == 0.0 {
             x.assign(&y).cross(&z);
@@ -511,7 +563,11 @@ impl Box3 {
             }
         }
 
-        [*Vector3::default().assign(&y).cross(&z).normalize(), *Vector3::default().assign(&z).cross(&x).normalize(), *Vector3::default().assign(&x).cross(&y).normalize()]
+        [
+            *Vector3::default().assign(&y).cross(&z).normalize(),
+            *Vector3::default().assign(&z).cross(&x).normalize(),
+            *Vector3::default().assign(&x).cross(&y).normalize(),
+        ]
     }
 
     pub fn is_empty(&self) -> bool {
@@ -544,7 +600,12 @@ impl Box3 {
     pub fn contains_point(&self, point: &Vector3) -> bool {
         let (min, max) = self.extents();
 
-        min.x <= point.x && max.x >= point.x && min.y <= point.y && max.y >= point.y && min.z <= point.z && max.z >= point.z
+        min.x <= point.x
+            && max.x >= point.x
+            && min.y <= point.y
+            && max.y >= point.y
+            && min.z <= point.z
+            && max.z >= point.z
     }
 
     /// Box3.intersectsBox (SAT over the face normals of both boxes and the nine edge crosses).
@@ -634,7 +695,15 @@ impl Sat {
 
 impl Camera {
     /// Camera.js:frustum.
-    pub fn frustum(l: f64, r: f64, b: f64, t: f64, n: f64, f: f64, matrix: &mut Matrix4) -> &mut Matrix4 {
+    pub fn frustum(
+        l: f64,
+        r: f64,
+        b: f64,
+        t: f64,
+        n: f64,
+        f: f64,
+        matrix: &mut Matrix4,
+    ) -> &mut Matrix4 {
         let r_l = r - l;
         let t_b = t - b;
         let f_n = f - n;
@@ -647,12 +716,21 @@ impl Camera {
         let e = n_2 / r_l;
         let ff = n_2 / t_b;
 
-        matrix.0 = [e, 0.0, 0.0, 0.0, 0.0, ff, 0.0, 0.0, a, bb, c, -1.0, 0.0, 0.0, d, 0.0];
+        matrix.0 = [
+            e, 0.0, 0.0, 0.0, 0.0, ff, 0.0, 0.0, a, bb, c, -1.0, 0.0, 0.0, d, 0.0,
+        ];
         matrix
     }
 
     /// Camera.js:perspective.
-    pub fn perspective(field_of_view: f64, z_near: f64, z_far: f64, width: f64, height: f64, matrix: &mut Matrix4) -> &mut Matrix4 {
+    pub fn perspective(
+        field_of_view: f64,
+        z_near: f64,
+        z_far: f64,
+        width: f64,
+        height: f64,
+        matrix: &mut Matrix4,
+    ) -> &mut Matrix4 {
         let ratio = jsmath::tan(field_of_view / 2.0) * z_near;
 
         if width > height {
@@ -665,7 +743,12 @@ impl Camera {
     }
 
     /// Camera.js:perspective2.
-    pub fn perspective2(field_of_view: f64, z_near: f64, z_far: f64, matrix: &mut Matrix4) -> &mut Matrix4 {
+    pub fn perspective2(
+        field_of_view: f64,
+        z_near: f64,
+        z_far: f64,
+        matrix: &mut Matrix4,
+    ) -> &mut Matrix4 {
         let ratio = jsmath::tan(field_of_view / 2.0) * z_near;
 
         Self::frustum(-ratio, ratio, -ratio, ratio, z_near, z_far, matrix)
@@ -730,7 +813,16 @@ impl ViewVolumeObject {
         matrix.inverse();
 
         let p = &mut self.points;
-        let corners = [(x1, y1, 0.0), (x2, y1, 0.0), (x2, y2, 0.0), (x1, y2, 0.0), (x1, y1, 1.0), (x2, y1, 1.0), (x2, y2, 1.0), (x1, y2, 1.0)];
+        let corners = [
+            (x1, y1, 0.0),
+            (x2, y1, 0.0),
+            (x2, y2, 0.0),
+            (x1, y2, 0.0),
+            (x1, y1, 1.0),
+            (x2, y1, 1.0),
+            (x2, y2, 1.0),
+            (x1, y2, 1.0),
+        ];
 
         for (i, (x, y, z)) in corners.into_iter().enumerate() {
             ViewVolume::unproject_point_matrix(x, y, z, &matrix, viewport, &mut p[i]);
@@ -787,7 +879,10 @@ impl ViewVolumeObject {
 
     /// ViewVolume.intersectsSphere.
     pub fn intersects_sphere(&self, radius: f64, center: &Vector3) -> bool {
-        !self.planes.iter().any(|plane| plane.get_distance_to_point(center) > radius)
+        !self
+            .planes
+            .iter()
+            .any(|plane| plane.get_distance_to_point(center) > radius)
     }
 
     /// ViewVolume.intersectsBox. X_ITE writes the 24 edge crosses at `i1 * 3 + i2` (i2 < 8) into an array that keeps its
@@ -828,7 +923,19 @@ pub struct Bezier;
 impl Bezier {
     /// Bezier.quadric: `steps` points (t = i / (steps - 1)).
     #[allow(clippy::too_many_arguments)]
-    pub fn quadric(x0: f64, y0: f64, z0: f64, x1: f64, y1: f64, z1: f64, x2: f64, y2: f64, z2: f64, steps: i64, points: &mut Vec<Vector3>) {
+    pub fn quadric(
+        x0: f64,
+        y0: f64,
+        z0: f64,
+        x1: f64,
+        y1: f64,
+        z1: f64,
+        x2: f64,
+        y2: f64,
+        z2: f64,
+        steps: i64,
+        points: &mut Vec<Vector3>,
+    ) {
         let c = Matrix3([1.0, 0.0, 0.0, -2.0, 2.0, 0.0, 1.0, -2.0, 1.0]);
         let mut p = Matrix3([x0, y0, z0, x1, y1, z1, x2, y2, z2]);
 
@@ -865,8 +972,12 @@ impl Bezier {
         steps: i64,
         points: &mut Vec<Vector3>,
     ) {
-        let c = Matrix4([1.0, 0.0, 0.0, 0.0, -3.0, 3.0, 0.0, 0.0, 3.0, -6.0, 3.0, 0.0, -1.0, 3.0, -3.0, 1.0]);
-        let mut p = Matrix4([x0, y0, z0, 0.0, x1, y1, z1, 0.0, x2, y2, z2, 0.0, x3, y3, z3, 0.0]);
+        let c = Matrix4([
+            1.0, 0.0, 0.0, 0.0, -3.0, 3.0, 0.0, 0.0, 3.0, -6.0, 3.0, 0.0, -1.0, 3.0, -3.0, 1.0,
+        ]);
+        let mut p = Matrix4([
+            x0, y0, z0, 0.0, x1, y1, z1, 0.0, x2, y2, z2, 0.0, x3, y3, z3, 0.0,
+        ]);
 
         p.mult_left(&c);
 
@@ -885,7 +996,19 @@ impl Bezier {
 
     /// Bezier.arc (the SVG elliptical arc).
     #[allow(clippy::too_many_arguments)]
-    pub fn arc(ax: f64, ay: f64, rx: f64, ry: f64, x_axis_rotation: f64, large_arc_flag: bool, sweep_flag: bool, x: f64, y: f64, steps: f64, points: &mut Vec<Vector3>) {
+    pub fn arc(
+        ax: f64,
+        ay: f64,
+        rx: f64,
+        ry: f64,
+        x_axis_rotation: f64,
+        large_arc_flag: bool,
+        sweep_flag: bool,
+        x: f64,
+        y: f64,
+        steps: f64,
+        points: &mut Vec<Vector3>,
+    ) {
         use std::f64::consts::PI;
 
         if ax == x && ay == y {
@@ -913,7 +1036,10 @@ impl Bezier {
         let mut d = Vector2::new(ax - x, ay - y);
         d.divide(2.0);
 
-        let transformed_point = Vector2::new(cos_rotation * d.x + sin_rotation * d.y, -sin_rotation * d.x + cos_rotation * d.y);
+        let transformed_point = Vector2::new(
+            cos_rotation * d.x + sin_rotation * d.y,
+            -sin_rotation * d.x + cos_rotation * d.y,
+        );
         let mut transformed_point2 = transformed_point;
         transformed_point2.mult_vec(&transformed_point);
 
@@ -924,23 +1050,40 @@ impl Bezier {
             ry = jsmath::sqrt(radii_check) * ry;
         }
 
-        let c_square_numerator = rx2 * ry2 - rx2 * transformed_point2.y - ry2 * transformed_point2.x;
+        let c_square_numerator =
+            rx2 * ry2 - rx2 * transformed_point2.y - ry2 * transformed_point2.x;
         let c_square_root_denom = rx2 * transformed_point2.y + ry2 * transformed_point2.x;
         let mut c_radicand = c_square_numerator / c_square_root_denom;
 
         c_radicand = jsmath::js_max(0.0, c_radicand);
 
-        let c_coef = (if large_arc_flag != sweep_flag { 1.0 } else { -1.0 }) * jsmath::sqrt(c_radicand);
+        let c_coef = (if large_arc_flag != sweep_flag {
+            1.0
+        } else {
+            -1.0
+        }) * jsmath::sqrt(c_radicand);
 
-        let transformed_center = Vector2::new(c_coef * rx * transformed_point.y / ry, -c_coef * ry * transformed_point.x / rx);
-
-        let center = Vector2::new(
-            cos_rotation * transformed_center.x - sin_rotation * transformed_center.y + ((ax + x) / 2.0),
-            sin_rotation * transformed_center.x + cos_rotation * transformed_center.y + ((ay + y) / 2.0),
+        let transformed_center = Vector2::new(
+            c_coef * rx * transformed_point.y / ry,
+            -c_coef * ry * transformed_point.x / rx,
         );
 
-        let start_vector = Vector2::new((transformed_point.x - transformed_center.x) / rx, (transformed_point.y - transformed_center.y) / ry);
-        let end_vector = Vector2::new((-transformed_point.x - transformed_center.x) / rx, (-transformed_point.y - transformed_center.y) / ry);
+        let center = Vector2::new(
+            cos_rotation * transformed_center.x - sin_rotation * transformed_center.y
+                + ((ax + x) / 2.0),
+            sin_rotation * transformed_center.x
+                + cos_rotation * transformed_center.y
+                + ((ay + y) / 2.0),
+        );
+
+        let start_vector = Vector2::new(
+            (transformed_point.x - transformed_center.x) / rx,
+            (transformed_point.y - transformed_center.y) / ry,
+        );
+        let end_vector = Vector2::new(
+            (-transformed_point.x - transformed_center.x) / rx,
+            (-transformed_point.y - transformed_center.y) / ry,
+        );
 
         let get_angle = |x: f64| if x > 0.0 { x } else { 2.0 * PI + x };
         let start_angle = get_angle(jsmath::atan2(start_vector.y, start_vector.x));
@@ -975,7 +1118,11 @@ impl Bezier {
             let x = rx * jsmath::cos(angle);
             let y = ry * jsmath::sin(angle);
 
-            points.push(Vector3::new(cos_rotation * x - sin_rotation * y + center.x, sin_rotation * x + cos_rotation * y + center.y, 0.0));
+            points.push(Vector3::new(
+                cos_rotation * x - sin_rotation * y + center.x,
+                sin_rotation * x + cos_rotation * y + center.y,
+                0.0,
+            ));
             i += 1.0;
         }
 
@@ -1028,7 +1175,10 @@ pub fn eigen_decomposition(m: &[f64], order: usize) -> (Vec<f64>, Vec<Vec<f64>>)
             for q in p + 1..order {
                 let g = 100.0 * a[p][q].abs();
 
-                if i > 3 && (values[p].abs() + g == values[p].abs()) && (values[q].abs() + g == values[q].abs()) {
+                if i > 3
+                    && (values[p].abs() + g == values[p].abs())
+                    && (values[q].abs() + g == values[q].abs())
+                {
                     a[p][q] = 0.0;
                 } else if a[p][q].abs() > thresh {
                     let mut h = values[q] - values[p];
@@ -1101,8 +1251,19 @@ pub fn eigen_decomposition(m: &[f64], order: usize) -> (Vec<f64>, Vec<Vec<f64>>)
 // ---------------------------------------------------------------------------------------------
 
 /// Algorithms/MergeSort.js: `new MergeSort (array, compare) .sort (first, last)`.
-pub fn merge_sort<T: Clone>(array: &mut [T], first: usize, last: usize, compare: &dyn Fn(&T, &T) -> bool) {
-    fn merge_sort_r<T: Clone>(array: &mut [T], aux: &mut Vec<T>, lo: isize, hi: isize, compare: &dyn Fn(&T, &T) -> bool) {
+pub fn merge_sort<T: Clone>(
+    array: &mut [T],
+    first: usize,
+    last: usize,
+    compare: &dyn Fn(&T, &T) -> bool,
+) {
+    fn merge_sort_r<T: Clone>(
+        array: &mut [T],
+        aux: &mut Vec<T>,
+        lo: isize,
+        hi: isize,
+        compare: &dyn Fn(&T, &T) -> bool,
+    ) {
         if lo < hi {
             let m = ((lo + hi) as usize >> 1) as isize;
             merge_sort_r(array, aux, lo, m, compare);
@@ -1111,7 +1272,14 @@ pub fn merge_sort<T: Clone>(array: &mut [T], first: usize, last: usize, compare:
         }
     }
 
-    fn merge<T: Clone>(array: &mut [T], aux: &mut Vec<T>, lo: usize, m: usize, hi: usize, compare: &dyn Fn(&T, &T) -> bool) {
+    fn merge<T: Clone>(
+        array: &mut [T],
+        aux: &mut Vec<T>,
+        lo: usize,
+        m: usize,
+        hi: usize,
+        compare: &dyn Fn(&T, &T) -> bool,
+    ) {
         let mut i = 0;
         let mut j = lo;
 
@@ -1151,8 +1319,18 @@ pub fn merge_sort<T: Clone>(array: &mut [T], first: usize, last: usize, compare:
 }
 
 /// Algorithms/QuickSort.js: `new QuickSort (array, compare) .sort (first, last)`.
-pub fn quick_sort<T: Clone>(array: &mut [T], first: usize, last: usize, compare: &dyn Fn(&T, &T) -> bool) {
-    fn quicksort<T: Clone>(array: &mut [T], lo: isize, hi: isize, compare: &dyn Fn(&T, &T) -> bool) {
+pub fn quick_sort<T: Clone>(
+    array: &mut [T],
+    first: usize,
+    last: usize,
+    compare: &dyn Fn(&T, &T) -> bool,
+) {
+    fn quicksort<T: Clone>(
+        array: &mut [T],
+        lo: isize,
+        hi: isize,
+        compare: &dyn Fn(&T, &T) -> bool,
+    ) {
         let mut i = lo;
         let mut j = hi;
         let x = array[((lo + hi) as usize) >> 1].clone();

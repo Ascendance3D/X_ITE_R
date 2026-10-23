@@ -13,7 +13,10 @@ use x3d_scene::*;
 type R<T> = Result<T, LoadError>;
 
 fn error<T>(message: impl Into<String>) -> R<T> {
-    Err(LoadError::Parse(ParseError { message: message.into(), line: 0 }))
+    Err(LoadError::Parse(ParseError {
+        message: message.into(),
+        line: 0,
+    }))
 }
 
 // --- scene API ------------------------------------------------------------------------------
@@ -29,7 +32,9 @@ pub(crate) fn create(scene: &mut Scene, type_name: &str) -> R<NodeId> {
 
 /// `node [name] = value` for a predefined field.
 pub(crate) fn set(scene: &mut Scene, node: NodeId, name: &str, value: FieldValue) {
-    let i = scene.get_predefined_field(node, name).unwrap_or_else(|| panic!("{} has no field {name}", scene.type_name(node)));
+    let i = scene
+        .get_predefined_field(node, name)
+        .unwrap_or_else(|| panic!("{} has no field {name}", scene.type_name(node)));
     let f = &mut scene.node_mut(node).fields[i];
 
     f.value = value;
@@ -62,7 +67,9 @@ pub(crate) fn push_child(scene: &mut Scene, node: NodeId, name: &str, child: Nod
 }
 
 pub(crate) fn node_field(scene: &Scene, node: NodeId, name: &str) -> FieldValue {
-    scene.node(node).fields[scene.get_predefined_field(node, name).unwrap()].value.clone()
+    scene.node(node).fields[scene.get_predefined_field(node, name).unwrap()]
+        .value
+        .clone()
 }
 
 /// `scene .addNamedNode (scene .getUniqueName (name), node)` and the same for the exported name.
@@ -112,7 +119,23 @@ pub(crate) fn sanitize_name(name: &str) -> String {
     let name = name.trim_start_matches(non_id_first);
 
     // NonIdChars → "-"
-    let non_id = |c: char| matches!(c as u32, 0x00..=0x20 | 0x22 | 0x23 | 0x27 | 0x2c | 0x2e | 0x5b | 0x5c | 0x5d | 0x7b | 0x7d | 0x7f);
+    let non_id = |c: char| {
+        matches!(
+            c as u32,
+            0x00..=0x20
+                | 0x22
+                | 0x23
+                | 0x27
+                | 0x2c
+                | 0x2e
+                | 0x5b
+                | 0x5c
+                | 0x5d
+                | 0x7b
+                | 0x7d
+                | 0x7f
+        )
+    };
     let mut out = String::new();
     let mut in_run = false;
 
@@ -198,7 +221,12 @@ struct Cursor<'a> {
 
 impl<'a> Cursor<'a> {
     fn new(s: &'a str) -> Self {
-        Cursor { s: s.as_bytes(), i: 0, result: "", value: 0.0 }
+        Cursor {
+            s: s.as_bytes(),
+            i: 0,
+            result: "",
+            value: 0.0,
+        }
     }
 
     fn text(&self, a: usize, b: usize) -> &'a str {
@@ -262,7 +290,10 @@ impl<'a> Cursor<'a> {
     fn keyword(&mut self, word: &str) -> bool {
         let e = self.i + word.len();
 
-        self.s[self.i..].starts_with(word.as_bytes()) && self.boundary(self.i) && self.boundary(e) && self.take(e)
+        self.s[self.i..].starts_with(word.as_bytes())
+            && self.boundary(self.i)
+            && self.boundary(e)
+            && self.take(e)
     }
 
     /// `/word/y` (no boundaries)
@@ -407,7 +438,12 @@ fn stl_material(scene: &mut Scene) -> R<NodeId> {
     let material = create(scene, "Material")?;
     let appearance = create(scene, "Appearance")?;
 
-    set(scene, material, "diffuseColor", FieldValue::SFColor(x3d_fields::math::Color3::new(1.0, 1.0, 1.0)));
+    set(
+        scene,
+        material,
+        "diffuseColor",
+        FieldValue::SFColor(x3d_fields::math::Color3::new(1.0, 1.0, 1.0)),
+    );
     set_node(scene, appearance, "material", Some(material));
     Ok(appearance)
 }
@@ -457,7 +493,10 @@ impl Stla<'_> {
         let geometry = create(scene, "TriangleSet")?;
         let coordinate = create(scene, "Coordinate")?;
         // `this .normals` still holds the previous solid's normals here.
-        let has_normals = self.normals.as_ref().is_some_and(|n| n.iter().any(|v| *v != 0.0));
+        let has_normals = self
+            .normals
+            .as_ref()
+            .is_some_and(|n| n.iter().any(|v| *v != 0.0));
         let name = sanitize_name(if self.c.name() { self.c.result } else { "" });
 
         self.c.until_end_of_line();
@@ -472,7 +511,12 @@ impl Stla<'_> {
         set_node(scene, shape, "appearance", Some(appearance));
         set_node(scene, shape, "geometry", Some(geometry));
         set_numbers(scene, coordinate, "point", &vertices);
-        set(scene, geometry, "normalPerVertex", FieldValue::SFBool(false));
+        set(
+            scene,
+            geometry,
+            "normalPerVertex",
+            FieldValue::SFBool(false),
+        );
         set_node(scene, geometry, "coord", Some(coordinate));
 
         if has_normals {
@@ -557,7 +601,10 @@ impl Stla<'_> {
 pub(crate) fn parse_stl_ascii(input: &str, world_url: &str) -> R<Scene> {
     let mut scene = begin(world_url, "STL");
     let appearance = stl_material(&mut scene)?;
-    let mut p = Stla { c: Cursor::new(input), normals: None };
+    let mut p = Stla {
+        c: Cursor::new(input),
+        normals: None,
+    };
 
     while p.solid(&mut scene, appearance)? {}
 
@@ -566,7 +613,9 @@ pub(crate) fn parse_stl_ascii(input: &str, world_url: &str) -> R<Scene> {
 
 /// STLBParser.isValid: 84-byte header and count, 50 bytes per facet, nothing more or less.
 pub(crate) fn is_stl_binary(data: &[u8]) -> bool {
-    data.len() >= 84 && (u32::from_le_bytes(data[80..84].try_into().unwrap()) as u64) * 50 + 84 == data.len() as u64
+    data.len() >= 84
+        && (u32::from_le_bytes(data[80..84].try_into().unwrap()) as u64) * 50 + 84
+            == data.len() as u64
 }
 
 pub(crate) fn parse_stl_binary(data: &[u8], world_url: &str) -> R<Scene> {
@@ -575,13 +624,28 @@ pub(crate) fn parse_stl_binary(data: &[u8], world_url: &str) -> R<Scene> {
 
     // header: the text before the first NUL, trimmed.
     let header = crate::decode_text(&data[..80]);
-    let header = header.split('\0').next().unwrap_or("").trim_matches(is_js_space).to_string();
+    let header = header
+        .split('\0')
+        .next()
+        .unwrap_or("")
+        .trim_matches(is_js_space)
+        .to_string();
 
     if !header.is_empty() {
         let world_info = create(&mut scene, "WorldInfo")?;
 
-        set(&mut scene, world_info, "title", FieldValue::SFString(model_title(world_url, "STL Model")));
-        set(&mut scene, world_info, "info", FieldValue::MFString(vec![header]));
+        set(
+            &mut scene,
+            world_info,
+            "title",
+            FieldValue::SFString(model_title(world_url, "STL Model")),
+        );
+        set(
+            &mut scene,
+            world_info,
+            "info",
+            FieldValue::MFString(vec![header]),
+        );
         root_push(&mut scene, world_info);
     }
 
@@ -607,7 +671,12 @@ pub(crate) fn parse_stl_binary(data: &[u8], world_url: &str) -> R<Scene> {
     set_node(&mut scene, shape, "appearance", Some(appearance));
     set_node(&mut scene, shape, "geometry", Some(geometry));
     set_numbers(&mut scene, coordinate, "point", &points);
-    set(&mut scene, geometry, "normalPerVertex", FieldValue::SFBool(false));
+    set(
+        &mut scene,
+        geometry,
+        "normalPerVertex",
+        FieldValue::SFBool(false),
+    );
     set_node(&mut scene, geometry, "coord", Some(coordinate));
 
     if normals.iter().any(|v| *v != 0.0) {
@@ -802,8 +871,18 @@ impl<'a> Ply<'a> {
 
         let world_info = create(scene, "WorldInfo")?;
 
-        set(scene, world_info, "title", FieldValue::SFString(model_title(world_url, "PLY Model")));
-        set(scene, world_info, "info", FieldValue::MFString(self.comments.clone()));
+        set(
+            scene,
+            world_info,
+            "title",
+            FieldValue::SFString(model_title(world_url, "PLY Model")),
+        );
+        set(
+            scene,
+            world_info,
+            "info",
+            FieldValue::MFString(self.comments.clone()),
+        );
         root_push(scene, world_info);
 
         Ok(elements)
@@ -828,7 +907,11 @@ impl<'a> Ply<'a> {
             return false;
         }
 
-        let mut element = PlyElement { name, count: self.c.value, properties: vec![] };
+        let mut element = PlyElement {
+            name,
+            count: self.c.value,
+            properties: vec![],
+        };
 
         while let Some(p) = self.property() {
             element.properties.push(p);
@@ -868,7 +951,12 @@ impl<'a> Ply<'a> {
             self.c.whitespaces_no_line_terminator();
 
             if self.c.bounded_non_space() {
-                return Some(PlyProperty { count: None, value, type_name, name: self.c.result.to_string() });
+                return Some(PlyProperty {
+                    count: None,
+                    value,
+                    type_name,
+                    name: self.c.result.to_string(),
+                });
             }
         }
 
@@ -882,7 +970,12 @@ impl<'a> Ply<'a> {
                     self.c.whitespaces_no_line_terminator();
 
                     if self.c.bounded_non_space() {
-                        return Some(PlyProperty { count: Some(count), value, type_name, name: self.c.result.to_string() });
+                        return Some(PlyProperty {
+                            count: Some(count),
+                            value,
+                            type_name,
+                            name: self.c.result.to_string(),
+                        });
                     }
                 }
             }
@@ -910,7 +1003,11 @@ impl<'a> Ply<'a> {
     /// `value .call (this)` for a property type: ASCII int32 / double, or a DataView read.
     fn read(&mut self, t: PlyType) -> R<bool> {
         let Some((data, offset, little)) = self.binary else {
-            return Ok(if t.is_float() { self.ascii_double() } else { self.ascii_int32() });
+            return Ok(if t.is_float() {
+                self.ascii_double()
+            } else {
+                self.ascii_int32()
+            });
         };
 
         let n = t.bytes();
@@ -955,8 +1052,10 @@ impl<'a> Ply<'a> {
     }
 
     fn parse_vertices(&mut self, element: &PlyElement) -> R<()> {
-        let (mut colors, mut tex_coords, mut normals, mut points) = (vec![], vec![], vec![], vec![]);
-        let (mut scales, mut quaternions, mut opacities, mut sh0) = (vec![], vec![], vec![], vec![]);
+        let (mut colors, mut tex_coords, mut normals, mut points) =
+            (vec![], vec![], vec![], vec![]);
+        let (mut scales, mut quaternions, mut opacities, mut sh0) =
+            (vec![], vec![], vec![], vec![]);
         let mut rest: Vec<Vec<f64>> = vec![vec![]; 45];
         let mut i = 0.0;
 
@@ -971,7 +1070,9 @@ impl<'a> Ply<'a> {
                 let v = self.c.value;
 
                 match p.name.as_str() {
-                    "red" | "green" | "blue" | "alpha" | "r" | "g" | "b" | "a" => colors.push(convert_color(v, p.type_name)),
+                    "red" | "green" | "blue" | "alpha" | "r" | "g" | "b" | "a" => {
+                        colors.push(convert_color(v, p.type_name))
+                    }
                     "s" | "t" | "u" | "v" => tex_coords.push(v),
                     "nx" | "ny" | "nz" => normals.push(v),
                     "x" | "y" | "z" => points.push(v),
@@ -980,7 +1081,11 @@ impl<'a> Ply<'a> {
                     "opacity" => opacities.push(1.0 / (1.0 + jsmath::exp(-v))),
                     "f_dc_0" | "f_dc_1" | "f_dc_2" => sh0.push(v),
                     name => {
-                        if let Some(k) = name.strip_prefix("f_rest_").and_then(|k| k.parse::<usize>().ok()).filter(|k| *k < 45 && name == format!("f_rest_{k}")) {
+                        if let Some(k) = name
+                            .strip_prefix("f_rest_")
+                            .and_then(|k| k.parse::<usize>().ok())
+                            .filter(|k| *k < 45 && name == format!("f_rest_{k}"))
+                        {
                             rest[k].push(v);
                         }
                     }
@@ -990,7 +1095,10 @@ impl<'a> Ply<'a> {
             i += 1.0;
         }
 
-        self.alpha = element.properties.iter().any(|p| p.name == "alpha" || p.name == "a");
+        self.alpha = element
+            .properties
+            .iter()
+            .any(|p| p.name == "alpha" || p.name == "a");
         self.colors = colors;
         self.tex_coords = tex_coords;
         self.normals = normals;
@@ -1020,7 +1128,12 @@ impl<'a> Ply<'a> {
             }
 
             shs.insert(0, sh0);
-            self.splats = Some(Splats { quaternions, scales, opacities, sh: shs });
+            self.splats = Some(Splats {
+                quaternions,
+                scales,
+                opacities,
+                sh: shs,
+            });
         }
 
         Ok(())
@@ -1109,7 +1222,10 @@ impl<'a> Ply<'a> {
 
                         while k < length {
                             if !self.read(p.value)? {
-                                return error(format!("Couldn't parse value for property {}.", p.name));
+                                return error(format!(
+                                    "Couldn't parse value for property {}.",
+                                    p.name
+                                ));
                             }
                             tex_coord_index.push(self.c.value);
                             k += 1.0;
@@ -1161,7 +1277,11 @@ impl<'a> Ply<'a> {
                                 self.read(count)?;
                                 let length = self.c.value;
                                 let (data, offset, little) = self.binary.unwrap();
-                                self.binary = Some((data, (offset as f64 + length * p.value.bytes() as f64) as usize, little));
+                                self.binary = Some((
+                                    data,
+                                    (offset as f64 + length * p.value.bytes() as f64) as usize,
+                                    little,
+                                ));
                             }
                             None => {
                                 let (data, offset, little) = self.binary.unwrap();
@@ -1182,12 +1302,22 @@ impl<'a> Ply<'a> {
             return Ok(None);
         }
 
-        let alpha = self.alpha && self.colors.iter().enumerate().any(|(i, v)| i % 4 == 3 && *v < 1.0);
+        let alpha = self.alpha
+            && self
+                .colors
+                .iter()
+                .enumerate()
+                .any(|(i, v)| i % 4 == 3 && *v < 1.0);
         let color = create(scene, if alpha { "ColorRGBA" } else { "Color" })?;
         let values: Vec<f64> = if alpha || !self.alpha {
             self.colors.clone()
         } else {
-            self.colors.iter().enumerate().filter(|(i, _)| i % 4 != 3).map(|(_, v)| *v).collect()
+            self.colors
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| i % 4 != 3)
+                .map(|(_, v)| *v)
+                .collect()
         };
 
         set_numbers(scene, color, "color", &values);
@@ -1233,12 +1363,27 @@ impl<'a> Ply<'a> {
 
             for (degree, coefs) in [1, 3, 5, 7].into_iter().enumerate() {
                 for coef in 0..coefs {
-                    set_numbers(scene, gs, &format!("sphericalHarmonicsDegree{degree}Coef{coef}"), &splats.sh[i]);
+                    set_numbers(
+                        scene,
+                        gs,
+                        &format!("sphericalHarmonicsDegree{degree}Coef{coef}"),
+                        &splats.sh[i],
+                    );
                     i += 1;
                 }
             }
 
-            set(scene, transform, "rotation", FieldValue::SFRotation(x3d_fields::math::Rotation4::new(1.0, 0.0, 0.0, std::f64::consts::PI)));
+            set(
+                scene,
+                transform,
+                "rotation",
+                FieldValue::SFRotation(x3d_fields::math::Rotation4::new(
+                    1.0,
+                    0.0,
+                    0.0,
+                    std::f64::consts::PI,
+                )),
+            );
             push_child(scene, transform, "children", gs);
             root_push(scene, transform);
             name_and_export(scene, "GaussianSplats", gs);
@@ -1256,7 +1401,14 @@ impl<'a> Ply<'a> {
             let triangles = self.triangles && tex_index_len == 0;
             let material = create(scene, "Material")?;
 
-            geometry = create(scene, if triangles { "IndexedTriangleSet" } else { "IndexedFaceSet" })?;
+            geometry = create(
+                scene,
+                if triangles {
+                    "IndexedTriangleSet"
+                } else {
+                    "IndexedFaceSet"
+                },
+            )?;
 
             if triangles {
                 let index: Vec<f64> = coord_index.iter().copied().filter(|v| *v != -1.0).collect();
@@ -1271,9 +1423,24 @@ impl<'a> Ply<'a> {
             if !self.tex_coords.is_empty() {
                 let texture_transform = create(scene, "TextureTransform")?;
 
-                set(scene, texture_transform, "translation", FieldValue::SFVec2f(x3d_fields::math::Vector2::new(0.0, -1.0)));
-                set(scene, texture_transform, "scale", FieldValue::SFVec2f(x3d_fields::math::Vector2::new(1.0, -1.0)));
-                set_node(scene, appearance, "textureTransform", Some(texture_transform));
+                set(
+                    scene,
+                    texture_transform,
+                    "translation",
+                    FieldValue::SFVec2f(x3d_fields::math::Vector2::new(0.0, -1.0)),
+                );
+                set(
+                    scene,
+                    texture_transform,
+                    "scale",
+                    FieldValue::SFVec2f(x3d_fields::math::Vector2::new(1.0, -1.0)),
+                );
+                set_node(
+                    scene,
+                    appearance,
+                    "textureTransform",
+                    Some(texture_transform),
+                );
 
                 let tex_coord = create(scene, "TextureCoordinate")?;
 
@@ -1289,7 +1456,14 @@ impl<'a> Ply<'a> {
             self.finish_shape(scene, has_normals, geometry)?;
             set_node(scene, appearance, "material", Some(material));
         } else {
-            let material = create(scene, if has_normals { "Material" } else { "UnlitMaterial" })?;
+            let material = create(
+                scene,
+                if has_normals {
+                    "Material"
+                } else {
+                    "UnlitMaterial"
+                },
+            )?;
 
             geometry = create(scene, "PointSet")?;
 
@@ -1333,13 +1507,18 @@ impl<'a> Ply<'a> {
 
 /// PLYAParser.isValid: `/^ply\r?\nformat ascii 1.0/`.
 pub(crate) fn is_ply_ascii(input: &str) -> bool {
-    let rest = input.strip_prefix("ply").and_then(|r| r.strip_prefix("\r\n").or_else(|| r.strip_prefix('\n')));
+    let rest = input
+        .strip_prefix("ply")
+        .and_then(|r| r.strip_prefix("\r\n").or_else(|| r.strip_prefix('\n')));
 
     // `1.0`: the `.` is any character but a line terminator.
-    rest.and_then(|r| r.strip_prefix("format ascii 1")).is_some_and(|r| {
-        let mut c = r.chars();
-        c.next().is_some_and(|d| !matches!(d, '\n' | '\r' | '\u{2028}' | '\u{2029}')) && c.next() == Some('0')
-    })
+    rest.and_then(|r| r.strip_prefix("format ascii 1"))
+        .is_some_and(|r| {
+            let mut c = r.chars();
+            c.next()
+                .is_some_and(|d| !matches!(d, '\n' | '\r' | '\u{2028}' | '\u{2029}'))
+                && c.next() == Some('0')
+        })
 }
 
 fn new_ply<'a>(c: Cursor<'a>, binary: Option<(&'a [u8], usize, bool)>) -> Ply<'a> {
@@ -1376,7 +1555,9 @@ pub(crate) fn parse_ply_ascii(input: &str, world_url: &str) -> R<Scene> {
 fn ply_binary_magic(data: &[u8]) -> Option<(String, usize, bool)> {
     let text = crate::decode_text(&data[..data.len().min(4096)]);
     let rest = text.strip_prefix("ply")?;
-    let rest = rest.strip_prefix("\r\n").or_else(|| rest.strip_prefix('\n'))?;
+    let rest = rest
+        .strip_prefix("\r\n")
+        .or_else(|| rest.strip_prefix('\n'))?;
     let rest = rest.strip_prefix("format binary_")?;
 
     let little = if rest.starts_with("little_endian 1") {
@@ -1388,7 +1569,11 @@ fn ply_binary_magic(data: &[u8]) -> Option<(String, usize, bool)> {
     };
 
     // `1.0`: the `.` matches any character.
-    let after = &rest[if little { "little_endian 1".len() } else { "big_endian 1".len() }..];
+    let after = &rest[if little {
+        "little_endian 1".len()
+    } else {
+        "big_endian 1".len()
+    }..];
     let mut chars = after.chars();
     chars.next()?;
 
@@ -1468,10 +1653,17 @@ pub(crate) fn is_obj(input: &str) -> bool {
         break;
     }
 
-    ["mtllib", "usemtl", "o", "g", "s", "vt", "vn", "v", "f"].iter().any(|k| {
-        let mut t = Cursor { s: c.s, i: c.i, result: "", value: 0.0 };
-        t.keyword(k)
-    })
+    ["mtllib", "usemtl", "o", "g", "s", "vt", "vn", "v", "f"]
+        .iter()
+        .any(|k| {
+            let mut t = Cursor {
+                s: c.s,
+                i: c.i,
+                result: "",
+                value: 0.0,
+            };
+            t.keyword(k)
+        })
 }
 
 struct GeometryIndices {
@@ -1582,7 +1774,14 @@ impl Obj<'_> {
         self.c.whitespaces_no_line_terminator();
 
         if self.c.until_end_of_line() {
-            let paths: Vec<String> = self.c.result.trim_matches(is_js_space).split(is_js_space).filter(|p| !p.is_empty()).map(String::from).collect();
+            let paths: Vec<String> = self
+                .c
+                .result
+                .trim_matches(is_js_space)
+                .split(is_js_space)
+                .filter(|p| !p.is_empty())
+                .map(String::from)
+                .collect();
 
             for path in paths {
                 self.mtllib(scene, &path);
@@ -1593,7 +1792,9 @@ impl Obj<'_> {
     }
 
     fn mtllib(&mut self, scene: &mut Scene, path: &str) {
-        match resolve_local(&self.world_url, path).and_then(|p| std::fs::read(&p).map_err(|e| e.to_string())) {
+        match resolve_local(&self.world_url, path)
+            .and_then(|p| std::fs::read(&p).map_err(|e| e.to_string()))
+        {
             Ok(data) => {
                 let input = crate::decode_text(&crate::gunzip(&data));
 
@@ -1808,7 +2009,12 @@ impl Obj<'_> {
         self.comments();
 
         // Grammar .f .lookahead
-        let mut look = Cursor { s: self.c.s, i: self.c.i, result: "", value: 0.0 };
+        let mut look = Cursor {
+            s: self.c.s,
+            i: self.c.i,
+            result: "",
+            value: 0.0,
+        };
 
         if !look.keyword("f") {
             return Ok(false);
@@ -1825,22 +2031,49 @@ impl Obj<'_> {
                 let shape = create(scene, "Shape")?;
                 let geometry = create(scene, "IndexedFaceSet")?;
 
-                add_named(scene, &format!("Geometry-{}", self.num_geometries), geometry);
+                add_named(
+                    scene,
+                    &format!("Geometry-{}", self.num_geometries),
+                    geometry,
+                );
                 self.num_geometries += 1;
 
-                self.geometry_indices.push((geometry, GeometryIndices { tex_coord_index: vec![], normal_index: vec![], coord_index: vec![] }));
+                self.geometry_indices.push((
+                    geometry,
+                    GeometryIndices {
+                        tex_coord_index: vec![],
+                        normal_index: vec![],
+                        coord_index: vec![],
+                    },
+                ));
 
                 set_node(scene, appearance, "material", Some(self.material));
-                set(scene, geometry, "creaseAngle", FieldValue::SFFloat(if self.smoothing_group != 0.0 && !self.smoothing_group.is_nan() { std::f64::consts::PI } else { 0.0 }));
+                set(
+                    scene,
+                    geometry,
+                    "creaseAngle",
+                    FieldValue::SFFloat(
+                        if self.smoothing_group != 0.0 && !self.smoothing_group.is_nan() {
+                            std::f64::consts::PI
+                        } else {
+                            0.0
+                        },
+                    ),
+                );
                 set_node(scene, shape, "appearance", Some(appearance));
                 set_node(scene, shape, "geometry", Some(geometry));
                 push_child(scene, self.group, "children", shape);
-                self.smoothing_groups.insert(self.smoothing_group_id(), shape);
+                self.smoothing_groups
+                    .insert(self.smoothing_group_id(), shape);
                 geometry
             }
         };
 
-        let gi = self.geometry_indices.iter().position(|(g, _)| *g == geometry).unwrap();
+        let gi = self
+            .geometry_indices
+            .iter()
+            .position(|(g, _)| *g == geometry)
+            .unwrap();
 
         while self.f(gi)? {}
 
@@ -1869,15 +2102,26 @@ impl Obj<'_> {
             return Ok(false);
         }
 
-        let (num_tex_coords, num_normals, num_coords) = (self.tex_coords.len() as f64, self.normals.len() as f64, self.vertices.len() as f64);
-        let (nt, nn) = (self.geometry_indices[gi].1.tex_coord_index.len(), self.geometry_indices[gi].1.normal_index.len());
+        let (num_tex_coords, num_normals, num_coords) = (
+            self.tex_coords.len() as f64,
+            self.normals.len() as f64,
+            self.vertices.len() as f64,
+        );
+        let (nt, nn) = (
+            self.geometry_indices[gi].1.tex_coord_index.len(),
+            self.geometry_indices[gi].1.normal_index.len(),
+        );
 
         let index = |index: f64, length: f64| -> R<f64> {
             if index == 0.0 {
                 return error("Invalid index.");
             }
 
-            Ok(if index < 0.0 { length + index } else { index - 1.0 })
+            Ok(if index < 0.0 {
+                length + index
+            } else {
+                index - 1.0
+            })
         };
 
         while self.int32() {
@@ -1914,12 +2158,20 @@ impl Obj<'_> {
 
 /// `new URL (path, scene .getBaseURL ())` for a local world: the file path to read.
 fn resolve_local(world_url: &str, path: &str) -> Result<std::path::PathBuf, String> {
-    let base = world_url.strip_prefix("file://").ok_or_else(|| format!("cannot fetch relative to '{world_url}'"))?;
+    let base = world_url
+        .strip_prefix("file://")
+        .ok_or_else(|| format!("cannot fetch relative to '{world_url}'"))?;
     let base = percent_decode(base);
-    let dir = std::path::Path::new(&base).parent().unwrap_or(std::path::Path::new("/"));
+    let dir = std::path::Path::new(&base)
+        .parent()
+        .unwrap_or(std::path::Path::new("/"));
     let path = percent_decode(path);
 
-    Ok(if path.starts_with('/') { std::path::PathBuf::from(path) } else { dir.join(path) })
+    Ok(if path.starts_with('/') {
+        std::path::PathBuf::from(path)
+    } else {
+        dir.join(path)
+    })
 }
 
 /// MaterialParser: the materials of an MTL file by id.
@@ -1955,7 +2207,10 @@ fn parse_mtl(scene: &mut Scene, input: &str) -> Result<Vec<(String, NodeId)>, St
         true
     };
 
-    let set_material = |materials: &mut Vec<(String, NodeId)>, id: &str, m: NodeId| match materials.iter_mut().find(|(k, _)| k == id) {
+    let set_material = |materials: &mut Vec<(String, NodeId)>, id: &str, m: NodeId| match materials
+        .iter_mut()
+        .find(|(k, _)| k == id)
+    {
         Some(e) => e.1 = m,
         None => materials.push((id.to_string(), m)),
     };
@@ -1981,7 +2236,11 @@ fn parse_mtl(scene: &mut Scene, input: &str) -> Result<Vec<(String, NodeId)>, St
 
         let mut handled = false;
 
-        for (k, field) in [("Ka", "ambientIntensity"), ("Kd", "diffuseColor"), ("Ks", "specularColor")] {
+        for (k, field) in [
+            ("Ka", "ambientIntensity"),
+            ("Kd", "diffuseColor"),
+            ("Ks", "specularColor"),
+        ] {
             comments(&mut c);
 
             if c.keyword(k) {
@@ -1990,7 +2249,9 @@ fn parse_mtl(scene: &mut Scene, input: &str) -> Result<Vec<(String, NodeId)>, St
                         // Color3.getHSV: v = max (r, g, b)
                         FieldValue::SFFloat(color[0].max(color[1]).max(color[2]))
                     } else {
-                        FieldValue::SFColor(x3d_fields::math::Color3::new(color[0], color[1], color[2]))
+                        FieldValue::SFColor(x3d_fields::math::Color3::new(
+                            color[0], color[1], color[2],
+                        ))
                     };
                     set(scene, material, field, value);
                 } else {
@@ -2043,7 +2304,12 @@ fn parse_mtl(scene: &mut Scene, input: &str) -> Result<Vec<(String, NodeId)>, St
             continue;
         }
 
-        for (k, field) in [("map_Ka", "ambientTexture"), ("map_Kd", "diffuseTexture"), ("map_Ks", "specularTexture"), ("map_Ns", "shininessTexture")] {
+        for (k, field) in [
+            ("map_Ka", "ambientTexture"),
+            ("map_Kd", "diffuseTexture"),
+            ("map_Ks", "specularTexture"),
+            ("map_Ns", "shininessTexture"),
+        ] {
             comments(&mut c);
 
             if c.keyword(k) {
@@ -2138,7 +2404,12 @@ pub(crate) fn parse_obj(input: &str, world_url: &str) -> R<Scene> {
     while p.statement(&mut scene)? {}
 
     for (geometry, indices) in std::mem::take(&mut p.geometry_indices) {
-        set_numbers(&mut scene, geometry, "texCoordIndex", &indices.tex_coord_index);
+        set_numbers(
+            &mut scene,
+            geometry,
+            "texCoordIndex",
+            &indices.tex_coord_index,
+        );
         set_numbers(&mut scene, geometry, "normalIndex", &indices.normal_index);
         set_numbers(&mut scene, geometry, "coordIndex", &indices.coord_index);
     }
@@ -2148,6 +2419,10 @@ pub(crate) fn parse_obj(input: &str, world_url: &str) -> R<Scene> {
     set_numbers(&mut scene, normal, "vector", &p.normals);
     set_numbers(&mut scene, coord, "point", &p.vertices);
 
-    crate::optimizer::Optimizer { remove_empty_groups: true, ..Default::default() }.optimize_scene_graph(&mut scene, ROOT);
+    crate::optimizer::Optimizer {
+        remove_empty_groups: true,
+        ..Default::default()
+    }
+    .optimize_scene_graph(&mut scene, ROOT);
     Ok(scene)
 }

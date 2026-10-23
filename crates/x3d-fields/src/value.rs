@@ -31,11 +31,19 @@ impl Image {
         let mut array = array;
 
         array.resize((width as i64 * height as i64).max(0) as usize, 0);
-        Self { width, height, comp, array }
+        Self {
+            width,
+            height,
+            comp,
+            array,
+        }
     }
 
     pub fn equals(&self, o: &Self) -> bool {
-        self.width == o.width && self.height == o.height && self.comp == o.comp && self.array == o.array
+        self.width == o.width
+            && self.height == o.height
+            && self.comp == o.comp
+            && self.array == o.array
     }
 }
 
@@ -223,10 +231,23 @@ impl FieldValue {
 
         match self {
             V::MFBool(v) => v.len(),
-            V::MFColor(v) | V::MFColorRGBA(v) | V::MFFloat(v) | V::MFMatrix3f(v) | V::MFMatrix4f(v) | V::MFVec2f(v)
-            | V::MFVec3f(v) | V::MFVec4f(v) => v.len() / c,
-            V::MFDouble(v) | V::MFMatrix3d(v) | V::MFMatrix4d(v) | V::MFQuaternion(v) | V::MFRotation(v) | V::MFTime(v)
-            | V::MFVec2d(v) | V::MFVec3d(v) | V::MFVec4d(v) => v.len() / c,
+            V::MFColor(v)
+            | V::MFColorRGBA(v)
+            | V::MFFloat(v)
+            | V::MFMatrix3f(v)
+            | V::MFMatrix4f(v)
+            | V::MFVec2f(v)
+            | V::MFVec3f(v)
+            | V::MFVec4f(v) => v.len() / c,
+            V::MFDouble(v)
+            | V::MFMatrix3d(v)
+            | V::MFMatrix4d(v)
+            | V::MFQuaternion(v)
+            | V::MFRotation(v)
+            | V::MFTime(v)
+            | V::MFVec2d(v)
+            | V::MFVec3d(v)
+            | V::MFVec4d(v) => v.len() / c,
             V::MFImage(v) => v.len(),
             V::MFInt32(v) => v.len(),
             V::MFNode(v) => v.len(),
@@ -247,10 +268,23 @@ impl FieldValue {
 
         match self {
             V::MFBool(v) => *v = values.iter().map(|x| jsmath::to_uint8(*x) != 0).collect(),
-            V::MFColor(v) | V::MFColorRGBA(v) | V::MFFloat(v) | V::MFMatrix3f(v) | V::MFMatrix4f(v) | V::MFVec2f(v)
-            | V::MFVec3f(v) | V::MFVec4f(v) => *v = f32s(values, c),
-            V::MFDouble(v) | V::MFMatrix3d(v) | V::MFMatrix4d(v) | V::MFQuaternion(v) | V::MFRotation(v) | V::MFTime(v)
-            | V::MFVec2d(v) | V::MFVec3d(v) | V::MFVec4d(v) => *v = f64s(values, c),
+            V::MFColor(v)
+            | V::MFColorRGBA(v)
+            | V::MFFloat(v)
+            | V::MFMatrix3f(v)
+            | V::MFMatrix4f(v)
+            | V::MFVec2f(v)
+            | V::MFVec3f(v)
+            | V::MFVec4f(v) => *v = f32s(values, c),
+            V::MFDouble(v)
+            | V::MFMatrix3d(v)
+            | V::MFMatrix4d(v)
+            | V::MFQuaternion(v)
+            | V::MFRotation(v)
+            | V::MFTime(v)
+            | V::MFVec2d(v)
+            | V::MFVec3d(v)
+            | V::MFVec4d(v) => *v = f64s(values, c),
             V::MFInt32(v) => *v = values.iter().map(|x| to_int32(*x)).collect(),
             _ => panic!("set_flat_numbers on {:?}", self.field_type()),
         }
@@ -262,10 +296,23 @@ impl FieldValue {
 
         match self {
             V::MFBool(v) => v.push(jsmath::to_uint8(element[0]) != 0),
-            V::MFColor(v) | V::MFColorRGBA(v) | V::MFFloat(v) | V::MFMatrix3f(v) | V::MFMatrix4f(v) | V::MFVec2f(v)
-            | V::MFVec3f(v) | V::MFVec4f(v) => v.extend(element.iter().map(|x| *x as f32)),
-            V::MFDouble(v) | V::MFMatrix3d(v) | V::MFMatrix4d(v) | V::MFQuaternion(v) | V::MFRotation(v) | V::MFTime(v)
-            | V::MFVec2d(v) | V::MFVec3d(v) | V::MFVec4d(v) => v.extend_from_slice(element),
+            V::MFColor(v)
+            | V::MFColorRGBA(v)
+            | V::MFFloat(v)
+            | V::MFMatrix3f(v)
+            | V::MFMatrix4f(v)
+            | V::MFVec2f(v)
+            | V::MFVec3f(v)
+            | V::MFVec4f(v) => v.extend(element.iter().map(|x| *x as f32)),
+            V::MFDouble(v)
+            | V::MFMatrix3d(v)
+            | V::MFMatrix4d(v)
+            | V::MFQuaternion(v)
+            | V::MFRotation(v)
+            | V::MFTime(v)
+            | V::MFVec2d(v)
+            | V::MFVec3d(v)
+            | V::MFVec4d(v) => v.extend_from_slice(element),
             V::MFInt32(v) => v.push(to_int32(element[0])),
             _ => panic!("push_numbers on {:?}", self.field_type()),
         }
@@ -288,11 +335,17 @@ impl FieldValue {
             (V::SFBool(a), V::SFBool(b)) => a == b,
             (V::SFColor(a), V::SFColor(b)) => a.equals(b),
             (V::SFColorRGBA(a), V::SFColorRGBA(b)) => a.equals(b),
-            (V::SFDouble(a), V::SFDouble(b)) | (V::SFFloat(a), V::SFFloat(b)) | (V::SFTime(a), V::SFTime(b)) => a == b,
+            (V::SFDouble(a), V::SFDouble(b))
+            | (V::SFFloat(a), V::SFFloat(b))
+            | (V::SFTime(a), V::SFTime(b)) => a == b,
             (V::SFImage(a), V::SFImage(b)) => a.equals(b),
             (V::SFInt32(a), V::SFInt32(b)) => a == b,
-            (V::SFMatrix3d(a), V::SFMatrix3d(b)) | (V::SFMatrix3f(a), V::SFMatrix3f(b)) => a.equals(b),
-            (V::SFMatrix4d(a), V::SFMatrix4d(b)) | (V::SFMatrix4f(a), V::SFMatrix4f(b)) => a.equals(b),
+            (V::SFMatrix3d(a), V::SFMatrix3d(b)) | (V::SFMatrix3f(a), V::SFMatrix3f(b)) => {
+                a.equals(b)
+            }
+            (V::SFMatrix4d(a), V::SFMatrix4d(b)) | (V::SFMatrix4f(a), V::SFMatrix4f(b)) => {
+                a.equals(b)
+            }
             (V::SFNode(a), V::SFNode(b)) => a == b,
             (V::SFQuaternion(a), V::SFQuaternion(b)) => a.equals(b),
             (V::SFRotation(a), V::SFRotation(b)) => a.equals(b),
@@ -308,7 +361,9 @@ impl FieldValue {
             | (V::MFMatrix4f(a), V::MFMatrix4f(b))
             | (V::MFVec2f(a), V::MFVec2f(b))
             | (V::MFVec3f(a), V::MFVec3f(b))
-            | (V::MFVec4f(a), V::MFVec4f(b)) => a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x == y),
+            | (V::MFVec4f(a), V::MFVec4f(b)) => {
+                a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x == y)
+            }
             (V::MFDouble(a), V::MFDouble(b))
             | (V::MFMatrix3d(a), V::MFMatrix3d(b))
             | (V::MFMatrix4d(a), V::MFMatrix4d(b))
@@ -317,8 +372,12 @@ impl FieldValue {
             | (V::MFTime(a), V::MFTime(b))
             | (V::MFVec2d(a), V::MFVec2d(b))
             | (V::MFVec3d(a), V::MFVec3d(b))
-            | (V::MFVec4d(a), V::MFVec4d(b)) => a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x == y),
-            (V::MFImage(a), V::MFImage(b)) => a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x.equals(y)),
+            | (V::MFVec4d(a), V::MFVec4d(b)) => {
+                a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x == y)
+            }
+            (V::MFImage(a), V::MFImage(b)) => {
+                a.len() == b.len() && a.iter().zip(b).all(|(x, y)| x.equals(y))
+            }
             (V::MFInt32(a), V::MFInt32(b)) => a == b,
             (V::MFNode(a), V::MFNode(b)) => a == b,
             (V::MFString(a), V::MFString(b)) => a == b,
@@ -388,7 +447,12 @@ impl FieldValue {
 
         fn image(j: &J) -> Option<Image> {
             let v = nums(j)?;
-            Some(Image::new(v[0], v[1], v[2], v[3..].iter().map(|x| to_int32(*x)).collect()))
+            Some(Image::new(
+                v[0],
+                v[1],
+                v[2],
+                v[3..].iter().map(|x| to_int32(*x)).collect(),
+            ))
         }
 
         let mut value = FieldValue::default_for(ty);
@@ -411,12 +475,20 @@ impl FieldValue {
             T::SFMatrix3d | T::SFMatrix3f => {
                 let v = nums(json)?;
                 let m = Matrix3(v.try_into().ok()?);
-                if ty == T::SFMatrix3d { V::SFMatrix3d(m) } else { V::SFMatrix3f(m) }
+                if ty == T::SFMatrix3d {
+                    V::SFMatrix3d(m)
+                } else {
+                    V::SFMatrix3f(m)
+                }
             }
             T::SFMatrix4d | T::SFMatrix4f => {
                 let v = nums(json)?;
                 let m = Matrix4(v.try_into().ok()?);
-                if ty == T::SFMatrix4d { V::SFMatrix4d(m) } else { V::SFMatrix4f(m) }
+                if ty == T::SFMatrix4d {
+                    V::SFMatrix4d(m)
+                } else {
+                    V::SFMatrix4f(m)
+                }
             }
             T::SFNode => V::SFNode(None),
             T::SFQuaternion => {
@@ -430,19 +502,41 @@ impl FieldValue {
             T::SFString => V::SFString(json.as_str()?.to_string()),
             T::SFVec2d | T::SFVec2f => {
                 let v = Vector2::from_slice(&nums(json)?);
-                if ty == T::SFVec2d { V::SFVec2d(v) } else { V::SFVec2f(v) }
+                if ty == T::SFVec2d {
+                    V::SFVec2d(v)
+                } else {
+                    V::SFVec2f(v)
+                }
             }
             T::SFVec3d | T::SFVec3f => {
                 let v = Vector3::from_slice(&nums(json)?);
-                if ty == T::SFVec3d { V::SFVec3d(v) } else { V::SFVec3f(v) }
+                if ty == T::SFVec3d {
+                    V::SFVec3d(v)
+                } else {
+                    V::SFVec3f(v)
+                }
             }
             T::SFVec4d | T::SFVec4f => {
                 let v = Vector4::from_slice(&nums(json)?);
-                if ty == T::SFVec4d { V::SFVec4d(v) } else { V::SFVec4f(v) }
+                if ty == T::SFVec4d {
+                    V::SFVec4d(v)
+                } else {
+                    V::SFVec4f(v)
+                }
             }
             T::MFNode => V::MFNode(vec![]),
-            T::MFString => V::MFString(json.as_array()?.iter().map(|s| s.as_str().map(String::from)).collect::<Option<_>>()?),
-            T::MFBool => V::MFBool(json.as_array()?.iter().map(|b| b.as_bool()).collect::<Option<_>>()?),
+            T::MFString => V::MFString(
+                json.as_array()?
+                    .iter()
+                    .map(|s| s.as_str().map(String::from))
+                    .collect::<Option<_>>()?,
+            ),
+            T::MFBool => V::MFBool(
+                json.as_array()?
+                    .iter()
+                    .map(|b| b.as_bool())
+                    .collect::<Option<_>>()?,
+            ),
             T::MFImage => V::MFImage(json.as_array()?.iter().map(image).collect::<Option<_>>()?),
             _ => {
                 value.set_flat_numbers(&flat(json)?);
@@ -482,34 +576,64 @@ impl FieldValue {
                 print_sf(g, &V::SFRotation(r))
             }),
             V::MFQuaternion(v) => g.typed_list(v.len() / 4, |g, i| {
-                print_sf(g, &V::SFQuaternion(Quaternion::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3])))
+                print_sf(
+                    g,
+                    &V::SFQuaternion(Quaternion::new(
+                        v[i * 4],
+                        v[i * 4 + 1],
+                        v[i * 4 + 2],
+                        v[i * 4 + 3],
+                    )),
+                )
             }),
             V::MFVec2f(v) => g.typed_list(v.len() / 2, |g, i| {
-                print_sf(g, &V::SFVec2f(Vector2::new(v[i * 2] as f64, v[i * 2 + 1] as f64)))
+                print_sf(
+                    g,
+                    &V::SFVec2f(Vector2::new(v[i * 2] as f64, v[i * 2 + 1] as f64)),
+                )
             }),
             V::MFVec3f(v) => g.typed_list(v.len() / 3, |g, i| {
-                print_sf(g, &V::SFVec3f(Vector3::new(v[i * 3] as f64, v[i * 3 + 1] as f64, v[i * 3 + 2] as f64)))
+                print_sf(
+                    g,
+                    &V::SFVec3f(Vector3::new(
+                        v[i * 3] as f64,
+                        v[i * 3 + 1] as f64,
+                        v[i * 3 + 2] as f64,
+                    )),
+                )
             }),
             V::MFVec4f(v) => g.typed_list(v.len() / 4, |g, i| {
                 let e: Vec<f64> = v[i * 4..i * 4 + 4].iter().map(|x| *x as f64).collect();
                 print_sf(g, &V::SFVec4f(Vector4::from_slice(&e)))
             }),
-            V::MFVec2d(v) => g.typed_list(v.len() / 2, |g, i| print_sf(g, &V::SFVec2d(Vector2::from_slice(&v[i * 2..])))),
-            V::MFVec3d(v) => g.typed_list(v.len() / 3, |g, i| print_sf(g, &V::SFVec3d(Vector3::from_slice(&v[i * 3..])))),
-            V::MFVec4d(v) => g.typed_list(v.len() / 4, |g, i| print_sf(g, &V::SFVec4d(Vector4::from_slice(&v[i * 4..])))),
+            V::MFVec2d(v) => g.typed_list(v.len() / 2, |g, i| {
+                print_sf(g, &V::SFVec2d(Vector2::from_slice(&v[i * 2..])))
+            }),
+            V::MFVec3d(v) => g.typed_list(v.len() / 3, |g, i| {
+                print_sf(g, &V::SFVec3d(Vector3::from_slice(&v[i * 3..])))
+            }),
+            V::MFVec4d(v) => g.typed_list(v.len() / 4, |g, i| {
+                print_sf(g, &V::SFVec4d(Vector4::from_slice(&v[i * 4..])))
+            }),
             V::MFMatrix3f(v) => g.typed_list(v.len() / 9, |g, i| {
                 let e: Vec<f64> = v[i * 9..i * 9 + 9].iter().map(|x| *x as f64).collect();
                 print_sf(g, &V::SFMatrix3f(Matrix3(e.try_into().unwrap())))
             }),
             V::MFMatrix3d(v) => g.typed_list(v.len() / 9, |g, i| {
-                print_sf(g, &V::SFMatrix3d(Matrix3(v[i * 9..i * 9 + 9].try_into().unwrap())))
+                print_sf(
+                    g,
+                    &V::SFMatrix3d(Matrix3(v[i * 9..i * 9 + 9].try_into().unwrap())),
+                )
             }),
             V::MFMatrix4f(v) => g.typed_list(v.len() / 16, |g, i| {
                 let e: Vec<f64> = v[i * 16..i * 16 + 16].iter().map(|x| *x as f64).collect();
                 print_sf(g, &V::SFMatrix4f(Matrix4(e.try_into().unwrap())))
             }),
             V::MFMatrix4d(v) => g.typed_list(v.len() / 16, |g, i| {
-                print_sf(g, &V::SFMatrix4d(Matrix4(v[i * 16..i * 16 + 16].try_into().unwrap())))
+                print_sf(
+                    g,
+                    &V::SFMatrix4d(Matrix4(v[i * 16..i * 16 + 16].try_into().unwrap())),
+                )
             }),
             V::MFString(v) => g.typed_list(v.len(), |g, i| print_sf(g, &V::SFString(v[i].clone()))),
             V::MFImage(v) => g.typed_list(v.len(), |g, i| print_sf(g, &V::SFImage(v[i].clone()))),
@@ -573,7 +697,8 @@ fn print_sf(g: &mut Generator, value: &FieldValue) {
 
                 for x in 0..image.width as usize {
                     g.string.push_str("0x");
-                    g.string.push_str(&format!("{:x}", image.array[x + s] as u32));
+                    g.string
+                        .push_str(&format!("{:x}", image.array[x + s] as u32));
 
                     if x != image.width as usize - 1 {
                         g.space();
@@ -659,13 +784,37 @@ impl FieldValue {
                     V::SFColorRGBA(c)
                 })
                 .collect(),
-            V::MFRotation(v) => (0..v.len() / 4).map(|i| V::SFRotation(Rotation4::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3]))).collect(),
-            V::MFQuaternion(v) => (0..v.len() / 4)
-                .map(|i| V::SFQuaternion(Quaternion::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3])))
+            V::MFRotation(v) => (0..v.len() / 4)
+                .map(|i| {
+                    V::SFRotation(Rotation4::new(
+                        v[i * 4],
+                        v[i * 4 + 1],
+                        v[i * 4 + 2],
+                        v[i * 4 + 3],
+                    ))
+                })
                 .collect(),
-            V::MFVec2f(v) => (0..v.len() / 2).map(|i| V::SFVec2f(Vector2::new(v[i * 2] as f64, v[i * 2 + 1] as f64))).collect(),
+            V::MFQuaternion(v) => (0..v.len() / 4)
+                .map(|i| {
+                    V::SFQuaternion(Quaternion::new(
+                        v[i * 4],
+                        v[i * 4 + 1],
+                        v[i * 4 + 2],
+                        v[i * 4 + 3],
+                    ))
+                })
+                .collect(),
+            V::MFVec2f(v) => (0..v.len() / 2)
+                .map(|i| V::SFVec2f(Vector2::new(v[i * 2] as f64, v[i * 2 + 1] as f64)))
+                .collect(),
             V::MFVec3f(v) => (0..v.len() / 3)
-                .map(|i| V::SFVec3f(Vector3::new(v[i * 3] as f64, v[i * 3 + 1] as f64, v[i * 3 + 2] as f64)))
+                .map(|i| {
+                    V::SFVec3f(Vector3::new(
+                        v[i * 3] as f64,
+                        v[i * 3 + 1] as f64,
+                        v[i * 3 + 2] as f64,
+                    ))
+                })
                 .collect(),
             V::MFVec4f(v) => (0..v.len() / 4)
                 .map(|i| {
@@ -673,23 +822,33 @@ impl FieldValue {
                     V::SFVec4f(Vector4::from_slice(&e))
                 })
                 .collect(),
-            V::MFVec2d(v) => (0..v.len() / 2).map(|i| V::SFVec2d(Vector2::from_slice(&v[i * 2..i * 2 + 2]))).collect(),
-            V::MFVec3d(v) => (0..v.len() / 3).map(|i| V::SFVec3d(Vector3::from_slice(&v[i * 3..i * 3 + 3]))).collect(),
-            V::MFVec4d(v) => (0..v.len() / 4).map(|i| V::SFVec4d(Vector4::from_slice(&v[i * 4..i * 4 + 4]))).collect(),
+            V::MFVec2d(v) => (0..v.len() / 2)
+                .map(|i| V::SFVec2d(Vector2::from_slice(&v[i * 2..i * 2 + 2])))
+                .collect(),
+            V::MFVec3d(v) => (0..v.len() / 3)
+                .map(|i| V::SFVec3d(Vector3::from_slice(&v[i * 3..i * 3 + 3])))
+                .collect(),
+            V::MFVec4d(v) => (0..v.len() / 4)
+                .map(|i| V::SFVec4d(Vector4::from_slice(&v[i * 4..i * 4 + 4])))
+                .collect(),
             V::MFMatrix3f(v) => (0..v.len() / 9)
                 .map(|i| {
                     let e: Vec<f64> = v[i * 9..i * 9 + 9].iter().map(|x| *x as f64).collect();
                     V::SFMatrix3f(Matrix3(e.try_into().unwrap()))
                 })
                 .collect(),
-            V::MFMatrix3d(v) => (0..v.len() / 9).map(|i| V::SFMatrix3d(Matrix3(v[i * 9..i * 9 + 9].try_into().unwrap()))).collect(),
+            V::MFMatrix3d(v) => (0..v.len() / 9)
+                .map(|i| V::SFMatrix3d(Matrix3(v[i * 9..i * 9 + 9].try_into().unwrap())))
+                .collect(),
             V::MFMatrix4f(v) => (0..v.len() / 16)
                 .map(|i| {
                     let e: Vec<f64> = v[i * 16..i * 16 + 16].iter().map(|x| *x as f64).collect();
                     V::SFMatrix4f(Matrix4(e.try_into().unwrap()))
                 })
                 .collect(),
-            V::MFMatrix4d(v) => (0..v.len() / 16).map(|i| V::SFMatrix4d(Matrix4(v[i * 16..i * 16 + 16].try_into().unwrap()))).collect(),
+            V::MFMatrix4d(v) => (0..v.len() / 16)
+                .map(|i| V::SFMatrix4d(Matrix4(v[i * 16..i * 16 + 16].try_into().unwrap())))
+                .collect(),
             _ => return None,
         };
 

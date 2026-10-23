@@ -14,8 +14,8 @@
 //! `START` is a `static`, so it orders the threads of one process only. It does not order separate
 //! test binaries, or child processes such as `x3d-drive`.
 
-use std::sync::{Mutex, OnceLock};
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Mutex, OnceLock};
 use x3d_viewer::embed::EmbeddedViewer;
 
 static START: Mutex<()> = Mutex::new(());
@@ -50,8 +50,12 @@ fn adapter() -> Option<&'static wgpu::Adapter> {
     static ADAPTER: OnceLock<Option<(wgpu::Instance, wgpu::Adapter)>> = OnceLock::new();
     ADAPTER
         .get_or_init(|| {
-            let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-            let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
+            let instance =
+                wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
+            let adapter = pollster::block_on(
+                instance.request_adapter(&wgpu::RequestAdapterOptions::default()),
+            )
+            .ok()?;
             Some((instance, adapter))
         })
         .as_ref()
@@ -62,9 +66,15 @@ fn adapter() -> Option<&'static wgpu::Adapter> {
 pub fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
     let device = serialized(|| {
         let adapter = adapter()?;
-        pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(adapter), ..Default::default() })).ok()
+        pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+            required_features: EmbeddedViewer::wanted_features(adapter),
+            ..Default::default()
+        }))
+        .ok()
     })?;
-    KEPT.lock().unwrap_or_else(|e| e.into_inner()).push(device.clone());
+    KEPT.lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .push(device.clone());
     Some(device)
 }
 
@@ -72,7 +82,8 @@ pub fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
 /// the same reason as `KEPT`.
 pub fn renderer_available() -> bool {
     static AVAILABLE: OnceLock<bool> = OnceLock::new();
-    *AVAILABLE.get_or_init(|| serialized(|| x3d_render::gpu::Gpu::new().map(std::mem::forget).is_ok()))
+    *AVAILABLE
+        .get_or_init(|| serialized(|| x3d_render::gpu::Gpu::new().map(std::mem::forget).is_ok()))
 }
 
 /// The most starts that were inside `START` at one time.

@@ -16,20 +16,34 @@ fn oracle() -> PathBuf {
 fn build(header: &str, vrml: &str) -> Option<x3d_render::geometry::Geometry> {
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
     let source = format!("{header}DEF G {vrml}");
-    let scene = x3d_parse::Parser::new(&source, "http://oracle/geometry.x3dv").parse().expect("parse");
-    let mut rt = Runtime::new(scene, Box::new(LocalFetcher { root: oracle(), prefix: "http://oracle/".into() }));
+    let scene = x3d_parse::Parser::new(&source, "http://oracle/geometry.x3dv")
+        .parse()
+        .expect("parse");
+    let mut rt = Runtime::new(
+        scene,
+        Box::new(LocalFetcher {
+            root: oracle(),
+            prefix: "http://oracle/".into(),
+        }),
+    );
     rt.load_world();
     let root = rt.scene.ctx(x3d_scene::ROOT).root_nodes[0].expect("node");
     x3d_render::traverse::geometry_of(&rt, root)
 }
 
 fn floats(v: &serde_json::Value) -> Vec<f64> {
-    v.as_array().map(|a| a.iter().map(|x| x.as_f64().unwrap_or(f64::NAN)).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|a| a.iter().map(|x| x.as_f64().unwrap_or(f64::NAN)).collect())
+        .unwrap_or_default()
 }
 
 fn close(name: &str, what: &str, got: &[f32], want: &[f64]) -> Result<(), String> {
     if got.len() != want.len() {
-        return Err(format!("{name}: {what} length {} != {}", got.len(), want.len()));
+        return Err(format!(
+            "{name}: {what} length {} != {}",
+            got.len(),
+            want.len()
+        ));
     }
     for (i, (g, w)) in got.iter().zip(want).enumerate() {
         // Both sides are Float32 values: compare exactly (NaN equals NaN).
@@ -42,7 +56,10 @@ fn close(name: &str, what: &str, got: &[f32], want: &[f64]) -> Result<(), String
 
 #[test]
 fn rea_b04_nurbs_geometry_matches_x_ite() {
-    let json: serde_json::Value = serde_json::from_slice(&std::fs::read(oracle().join("synthetic-rea-b04/geometry-baseline.json")).unwrap()).unwrap();
+    let json: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(oracle().join("synthetic-rea-b04/geometry-baseline.json")).unwrap(),
+    )
+    .unwrap();
     let cases = json["cases"].as_object().unwrap();
     let mut errors = vec![];
 
@@ -54,10 +71,16 @@ fn rea_b04_nurbs_geometry_matches_x_ite() {
         let g = &g;
         let check = || -> Result<(), String> {
             if g.geometry_type as i64 != c["geometryType"].as_i64().unwrap() {
-                return Err(format!("{name}: geometryType {} != {}", g.geometry_type, c["geometryType"]));
+                return Err(format!(
+                    "{name}: geometryType {} != {}",
+                    g.geometry_type, c["geometryType"]
+                ));
             }
             if g.solid != c["solid"].as_bool().unwrap() || g.ccw != c["ccw"].as_bool().unwrap() {
-                return Err(format!("{name}: solid/ccw {} {} != {} {}", g.solid, g.ccw, c["solid"], c["ccw"]));
+                return Err(format!(
+                    "{name}: solid/ccw {} {} != {} {}",
+                    g.solid, g.ccw, c["solid"], c["ccw"]
+                ));
             }
             close(name, "vertices", &g.vertices, &floats(&c["vertices"]))?;
             close(name, "normals", &g.normals, &floats(&c["normals"]))?;
@@ -67,17 +90,34 @@ fn rea_b04_nurbs_geometry_matches_x_ite() {
             close(name, "multiTexCoords[0]", &g.tex_coords, &want0)?;
             let extra = channels.len().saturating_sub(1);
             if g.tex_coords_extra.len() != extra {
-                return Err(format!("{name}: {} extra texture coordinate channels != {extra}", g.tex_coords_extra.len()));
+                return Err(format!(
+                    "{name}: {} extra texture coordinate channels != {extra}",
+                    g.tex_coords_extra.len()
+                ));
             }
             for (k, ch) in channels.iter().skip(1).enumerate() {
-                close(name, &format!("multiTexCoords[{}]", k + 1), &g.tex_coords_extra[k], &floats(ch))?;
+                close(
+                    name,
+                    &format!("multiTexCoords[{}]", k + 1),
+                    &g.tex_coords_extra[k],
+                    &floats(ch),
+                )?;
             }
             let attribs = c["attribs"].as_array().cloned().unwrap_or_default();
             if g.attribs.len() != attribs.len() {
-                return Err(format!("{name}: {} attrib arrays != {}", g.attribs.len(), attribs.len()));
+                return Err(format!(
+                    "{name}: {} attrib arrays != {}",
+                    g.attribs.len(),
+                    attribs.len()
+                ));
             }
             for (k, a) in attribs.iter().enumerate() {
-                close(name, &format!("attribs[{k}]"), &g.attribs[k].values, &floats(a))?;
+                close(
+                    name,
+                    &format!("attribs[{k}]"),
+                    &g.attribs[k].values,
+                    &floats(a),
+                )?;
             }
             close(name, "fogDepths", &g.fog_depths, &floats(&c["fogDepths"]))?;
             close(name, "tangents", &g.tangents, &floats(&c["tangents"]))?;
@@ -89,12 +129,20 @@ fn rea_b04_nurbs_geometry_matches_x_ite() {
         let iso = name.starts_with("iso_");
         match (check(), iso) {
             (Err(e), false) => errors.push(e),
-            (Ok(()), true) => errors.push(format!("{name}: equals X_ITE, but ISO and X_ITE disagree here")),
+            (Ok(()), true) => errors.push(format!(
+                "{name}: equals X_ITE, but ISO and X_ITE disagree here"
+            )),
             (Err(e), true) => eprintln!("ISO difference (expected): {e}"),
             (Ok(()), false) => {}
         }
     }
 
     eprintln!("{} cases checked", cases.len());
-    assert!(errors.is_empty(), "{} of {} cases differ:\n{}", errors.len(), cases.len(), errors.join("\n"));
+    assert!(
+        errors.is_empty(),
+        "{} of {} cases differ:\n{}",
+        errors.len(),
+        cases.len(),
+        errors.join("\n")
+    );
 }

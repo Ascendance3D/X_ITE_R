@@ -9,30 +9,51 @@ use std::path::{Path, PathBuf};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_runtime::nodes::LoadState;
 use x3d_viewer::embed::spawn_big_stack;
-use x3d_viewer::viewer::{Viewer3d, ORACLE_PAGE_ATTRIBUTES};
+use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, Viewer3d};
 
 const T0: f64 = 946684800.0;
 const WAV_DURATION: f64 = 0.25;
 const MONO_DURATION: f64 = 0.27210416666666665;
-const FALLBACK_WARNING: &str = "/bad.mid', trying URL 2 of 2. EncodingError: Unable to decode audio data";
+const FALLBACK_WARNING: &str =
+    "/bad.mid', trying URL 2 of 2. EncodingError: Unable to decode audio data";
 
 /// A temporary folder with the oracle media (tone48k-stereo.wav, tone22k-mono.wav, bad.mid, bad2.mid) and `world`.
 fn world(name: &str, text: &str) -> (PathBuf, PathBuf) {
     let media = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b05/media");
-    let dir = std::env::temp_dir().join(format!("vrml-audio-loading-{}-{name}", std::process::id()));
+    let dir =
+        std::env::temp_dir().join(format!("vrml-audio-loading-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
 
-    for f in ["tone48k-stereo.wav", "tone22k-mono.wav", "bad.mid", "bad2.mid"] {
+    for f in [
+        "tone48k-stereo.wav",
+        "tone22k-mono.wav",
+        "bad.mid",
+        "bad2.mid",
+    ] {
         std::fs::copy(media.join(f), dir.join(f)).unwrap();
     }
 
     let path = dir.join("world.wrl");
-    std::fs::write(&path, format!("#VRML V2.0 utf8\nViewpoint {{ position 0 0 0 }}\n{text}")).unwrap();
+    std::fs::write(
+        &path,
+        format!("#VRML V2.0 utf8\nViewpoint {{ position 0 0 0 }}\n{text}"),
+    )
+    .unwrap();
     (dir, path)
 }
 
 fn load(dir: &Path, path: &Path) -> Viewer3d {
-    Viewer3d::load_attributes(path, Some(dir), T0, 64, 64, None, true, ORACLE_PAGE_ATTRIBUTES).unwrap()
+    Viewer3d::load_attributes(
+        path,
+        Some(dir),
+        T0,
+        64,
+        64,
+        None,
+        true,
+        ORACLE_PAGE_ATTRIBUTES,
+    )
+    .unwrap()
 }
 
 fn steps(v: &mut Viewer3d, n: usize) {
@@ -44,7 +65,9 @@ fn steps(v: &mut Viewer3d, n: usize) {
 }
 
 fn node(v: &Viewer3d, name: &str) -> NodeId {
-    v.rt.scene.get_named_node(0, name).unwrap_or_else(|| panic!("no node {name}"))
+    v.rt.scene
+        .get_named_node(0, name)
+        .unwrap_or_else(|| panic!("no node {name}"))
 }
 
 fn duration(v: &Viewer3d, clip: NodeId) -> f64 {
@@ -60,16 +83,26 @@ fn has_media(v: &Viewer3d, clip: NodeId) -> bool {
 
 fn set_url(v: &mut Viewer3d, clip: NodeId, urls: &[&str]) {
     let k = v.rt.pre(clip, "url").unwrap();
-    v.rt.set_value(k, FieldValue::MFString(urls.iter().map(|u| u.to_string()).collect()));
+    v.rt.set_value(
+        k,
+        FieldValue::MFString(urls.iter().map(|u| u.to_string()).collect()),
+    );
 }
 
 /// X_ITE's warning for a first candidate `bad.mid` that does not decode.
 fn fallback_warning(v: &Viewer3d) -> bool {
-    v.rt.log.iter().any(|l| l.starts_with("warn: AudioClip: Couldn't load URL '") && l.ends_with(FALLBACK_WARNING))
+    v.rt.log.iter().any(|l| {
+        l.starts_with("warn: AudioClip: Couldn't load URL '") && l.ends_with(FALLBACK_WARNING)
+    })
 }
 
 fn clip_world(name: &str, url: &str) -> (PathBuf, Viewer3d) {
-    let (dir, path) = world(name, &format!("DEF S Sound {{ minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF C AudioClip {{ url {url} loop TRUE }} }}\n"));
+    let (dir, path) = world(
+        name,
+        &format!(
+            "DEF S Sound {{ minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF C AudioClip {{ url {url} loop TRUE }} }}\n"
+        ),
+    );
     let v = load(&dir, &path);
     (dir, v)
 }
@@ -84,8 +117,16 @@ fn vrml_audio_clip_url_fallback_states() {
         assert_eq!(v.rt.url_load_state(c), LoadState::Complete);
         assert_eq!(duration(&v, c), WAV_DURATION);
         assert!(has_media(&v, c), "no media element after the fallback");
-        assert!(fallback_warning(&v), "no fallback warning in {:?}", v.rt.log);
-        assert!(!v.rt.log.iter().any(|l| l.starts_with("error:")), "an error was logged: {:?}", v.rt.log);
+        assert!(
+            fallback_warning(&v),
+            "no fallback warning in {:?}",
+            v.rt.log
+        );
+        assert!(
+            !v.rt.log.iter().any(|l| l.starts_with("error:")),
+            "an error was logged: {:?}",
+            v.rt.log
+        );
 
         // Every URL fails decoding: FAILED (not IN_PROGRESS), duration_changed -1, no media element.
         let (_, mut v) = clip_world("all-bad", r#"[ "bad.mid" "bad2.mid" ]"#);
@@ -94,7 +135,14 @@ fn vrml_audio_clip_url_fallback_states() {
         assert_eq!(v.rt.url_load_state(c), LoadState::Failed);
         assert_eq!(duration(&v, c), -1.0);
         assert!(!has_media(&v, c));
-        assert!(v.rt.log.iter().any(|l| l == "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:"), "{:?}", v.rt.log);
+        assert!(
+            v.rt.log
+                .iter()
+                .any(|l| l
+                    == "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:"),
+            "{:?}",
+            v.rt.log
+        );
 
         // One URL that fails decoding: FAILED, duration_changed -1.
         let (_, mut v) = clip_world("one-bad", r#""bad.mid""#);
@@ -116,7 +164,11 @@ fn vrml_audio_clip_url_fallback_states() {
         let c = node(&v, "C");
         assert_eq!(v.rt.url_load_state(c), LoadState::Complete);
         assert_eq!(duration(&v, c), WAV_DURATION);
-        assert!(!v.rt.log.iter().any(|l| l.contains("Couldn't load")), "{:?}", v.rt.log);
+        assert!(
+            !v.rt.log.iter().any(|l| l.contains("Couldn't load")),
+            "{:?}",
+            v.rt.log
+        );
 
         // An empty URL list: unloadData (duration_changed -1), no media element.
         let (_, mut v) = clip_world("empty", "[ ]");
@@ -141,7 +193,10 @@ fn vrml_audio_clip_repeated_loads_leave_no_stale_audio() {
         steps(&mut v, 4);
         assert_eq!(v.rt.url_load_state(c), LoadState::Failed);
         assert_eq!(duration(&v, c), -1.0);
-        assert!(!has_media(&v, c), "the old clip is still loaded after a failed load");
+        assert!(
+            !has_media(&v, c),
+            "the old clip is still loaded after a failed load"
+        );
 
         // Back to a valid file through a failing one: COMPLETE with the new file's duration.
         set_url(&mut v, c, &["bad2.mid", "tone22k-mono.wav"]);
@@ -171,7 +226,11 @@ fn vrml_audio_clip_url_change_falls_back() {
 
         assert_eq!(v.rt.url_load_state(c), LoadState::Complete);
         assert_eq!(duration(&v, c), MONO_DURATION);
-        assert!(fallback_warning(&v), "no fallback warning in {:?}", v.rt.log);
+        assert!(
+            fallback_warning(&v),
+            "no fallback warning in {:?}",
+            v.rt.log
+        );
 
         // Gated, every candidate failing: FAILED after the last decode.
         set_url(&mut v, c, &["bad.mid", "bad2.mid"]);
@@ -238,7 +297,10 @@ fn vrml_sound_source_resolves_proto_instances() {
         // The wrapped clip's audio source feeds the Sound's gain like a direct one.
         for s in ["DIRECT", "WRAPPED"] {
             let st = v.rt.sound.get(&node(&v, s)).unwrap();
-            assert!(st.gain_node.is_some() && st.vrml.is_some(), "{s} has no audio graph");
+            assert!(
+                st.gain_node.is_some() && st.vrml.is_some(),
+                "{s} has no audio graph"
+            );
         }
     });
 }
@@ -257,7 +319,10 @@ fn vrml_sound_source_change_and_removal() {
         steps(&mut v, 2);
         let snd = node(&v, "SND");
         assert_eq!(children(&v, "SND"), vec![node(&v, "A")]);
-        assert!(v.rt.sound_destinations.contains(&snd), "the Sound is not a sound destination");
+        assert!(
+            v.rt.sound_destinations.contains(&snd),
+            "the Sound is not a sound destination"
+        );
 
         // Source change to a PROTO instance while the world runs.
         let k = v.rt.pre(snd, "source").unwrap();
@@ -279,6 +344,9 @@ fn vrml_sound_source_change_and_removal() {
         let kc = v.rt.pre(g, "children").unwrap();
         v.rt.set_value(kc, FieldValue::MFNode(vec![]));
         steps(&mut v, 3);
-        assert!(!v.rt.sound_destinations.contains(&snd), "a removed Sound is still a sound destination");
+        assert!(
+            !v.rt.sound_destinations.contains(&snd),
+            "a removed Sound is still a sound destination"
+        );
     });
 }

@@ -9,7 +9,11 @@ fn crc32(data: &[u8]) -> u32 {
         for (n, e) in t.iter_mut().enumerate() {
             let mut c = n as u32;
             for _ in 0..8 {
-                c = if c & 1 != 0 { 0xedb8_8320 ^ (c >> 1) } else { c >> 1 };
+                c = if c & 1 != 0 {
+                    0xedb8_8320 ^ (c >> 1)
+                } else {
+                    c >> 1
+                };
             }
             *e = c;
         }
@@ -44,7 +48,8 @@ pub fn encode(w: u32, h: u32, rgba: &[u8]) -> Vec<u8> {
     let stride = w as usize * 4;
     let mut raw = vec![0u8; (stride + 1) * h as usize];
     for y in 0..h as usize {
-        raw[y * (stride + 1) + 1..(y + 1) * (stride + 1)].copy_from_slice(&rgba[y * stride..(y + 1) * stride]);
+        raw[y * (stride + 1) + 1..(y + 1) * (stride + 1)]
+            .copy_from_slice(&rgba[y * stride..(y + 1) * stride]);
     }
     let mut ihdr = [0u8; 13];
     ihdr[0..4].copy_from_slice(&w.to_be_bytes());
@@ -63,7 +68,10 @@ pub fn encode(w: u32, h: u32, rgba: &[u8]) -> Vec<u8> {
 /// not `w * h * 4` bytes (WebGL's drawing buffer is never empty, so the Node tools never wrote such a PNG).
 pub fn encode_bottom_up(w: u32, h: u32, bottom_up: &[u8]) -> Result<Vec<u8>, String> {
     if w == 0 || h == 0 || bottom_up.len() != w as usize * h as usize * 4 {
-        return Err(format!("x3d-oracle: pixels: {} bytes for {w} x {h}", bottom_up.len()));
+        return Err(format!(
+            "x3d-oracle: pixels: {} bytes for {w} x {h}",
+            bottom_up.len()
+        ));
     }
 
     Ok(encode(w, h, &flip_rows(bottom_up, w, h)))
@@ -90,13 +98,20 @@ mod tests {
         assert_eq!(crc32(b"IEND"), 0xae42_6082);
         let png = encode(2, 1, &[255, 0, 0, 255, 0, 255, 0, 128]);
         assert_eq!(&png[..8], &[137, 80, 78, 71, 13, 10, 26, 10]);
-        assert_eq!(&png[png.len() - 12..], &[0, 0, 0, 0, b'I', b'E', b'N', b'D', 0xae, 0x42, 0x60, 0x82]);
+        assert_eq!(
+            &png[png.len() - 12..],
+            &[0, 0, 0, 0, b'I', b'E', b'N', b'D', 0xae, 0x42, 0x60, 0x82]
+        );
     }
 
     #[test]
     fn zlib_level9_matches_reference_zlib() {
         // zlib 1.3 (Python's zlib.compress (b"abcabcabc" * 50 + bytes (range (256)), 9)).
-        let data: Vec<u8> = b"abcabcabc".repeat(50).into_iter().chain(0..=255u8).collect();
+        let data: Vec<u8> = b"abcabcabc"
+            .repeat(50)
+            .into_iter()
+            .chain(0..=255u8)
+            .collect();
         let z = zlib9(&data);
         let want = "78da4b4c4a4e1c45431931303231b3b0b2b173707271f3f0f2f10b080a098b888a894b484a49cbc8cac92b282a29aba8aaa96b686a69ebe8eae91b181a199b989a995b585a59dbd8dad93b383a39bbb8bab97b787a79fbf8faf9070406058784868547444645c7c4c6c52700ed48494d4bcfc8cccacec9cdcb2f282c2a2e292d2bafa8acaaaea9adab6f686c6a6e696d6befe8eceaeee9edeb9f3071d2e42953a74d9f3173d6ec3973e7cd5fb070d1e2254b972d5fb172d5ea356bd7addfb071d3e62d5bb76ddfb173d7ee3d7bf7ed3f70f0d0e123478f1d3f71f2d4e93367cf9dbf70f1d2e52b57af5dbf71f3d6ed3b77efdd7ff0f0d1e3274f9f3d7ff1f2d5eb376fdfbdfff0f1d3e72f5fbf7dfff1f3d7ef3f7ffffd0700c36e2bd4";
         let hex: String = z.iter().map(|b| format!("{b:02x}")).collect();
@@ -109,8 +124,14 @@ mod tests {
 
     #[test]
     fn flips() {
-        assert_eq!(flip_rows(&[1, 1, 1, 1, 2, 2, 2, 2], 1, 2), vec![2, 2, 2, 2, 1, 1, 1, 1]);
-        assert_eq!(encode_bottom_up(1, 2, &[1, 1, 1, 1, 2, 2, 2, 2]), Ok(encode(1, 2, &[2, 2, 2, 2, 1, 1, 1, 1])));
+        assert_eq!(
+            flip_rows(&[1, 1, 1, 1, 2, 2, 2, 2], 1, 2),
+            vec![2, 2, 2, 2, 1, 1, 1, 1]
+        );
+        assert_eq!(
+            encode_bottom_up(1, 2, &[1, 1, 1, 1, 2, 2, 2, 2]),
+            Ok(encode(1, 2, &[2, 2, 2, 2, 1, 1, 1, 1]))
+        );
         assert!(encode_bottom_up(1, 2, &[1, 1, 1, 1]).is_err());
         assert!(encode_bottom_up(0, 0, &[]).is_err());
     }
