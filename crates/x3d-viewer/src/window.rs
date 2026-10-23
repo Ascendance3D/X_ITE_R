@@ -69,6 +69,174 @@ struct Stats {
     gpu_frames: u64,
 }
 
+/// Consecutive frames a scripted run waits for a surface before it gives up.
+const MAX_SURFACE_MISSES: u32 = 120;
+
+/// The pause before a scripted run asks again for a surface that was not ready.
+const SURFACE_RETRY: std::time::Duration = std::time::Duration::from_millis(25);
+
+/// What a scripted frame needs from the window. Tests stand in for it without a GPU.
+trait ScriptedHost {
+    type Frame;
+    /// The texture for the next frame; why not, when the surface is not ready.
+    fn acquire(&mut self) -> Result<Self::Frame, String>;
+    /// Apply one scripted event at the browser time `date_now`.
+    fn event(&mut self, date_now: f64, e: &Value);
+    /// Step the world to `now`, draw it into `frame` and present it.
+    fn step_and_present(&mut self, frame: Self::Frame, now: f64) -> Result<(), String>;
+}
+
+/// The outcome of one scripted redraw.
+#[derive(Debug, PartialEq)]
+enum Tick {
+    /// A frame was stepped and presented; more follow.
+    Next,
+    /// The surface was not ready: nothing happened, try again.
+    Retry,
+    /// The last frame was stepped and presented.
+    Finished,
+    /// The run cannot complete.
+    Failed(String),
+}
+
+/// A deterministic scripted run (`--script`): events by frame index, a virtual clock.
+struct ScriptedRun {
+    t0: f64,
+    dt: f64,
+    frames: u64,
+    events: Vec<Value>,
+    /// Frames stepped and presented.
+    done: u64,
+    /// Consecutive redraws without a surface.
+    misses: u32,
+}
+
+impl ScriptedRun {
+    fn new(script: &Value) -> ScriptedRun {
+        ScriptedRun {
+            t0: script["t0"].as_f64().unwrap_or(946684800.0),
+            dt: script["dt"].as_f64().unwrap_or(1.0 / 60.0),
+            frames: script["frames"].as_u64().unwrap_or(1),
+            events: script["events"].as_array().cloned().unwrap_or_default(),
+            done: 0,
+            misses: 0,
+        }
+    }
+
+    /// Every requested frame was stepped and presented (at least one, as with `frames: 0`).
+    fn complete(&self) -> bool {
+        self.done >= self.frames.max(1)
+    }
+
+    /// One redraw. Frame `k` counts only once its world step is drawn and presented. The surface
+    /// is acquired first: when it is not ready nothing happens, and frame `k` (its events and
+    /// its step) is tried again on the next redraw.
+    fn tick<H: ScriptedHost>(&mut self, host: &mut H) -> Tick {
+        let k = self.done + 1;
+
+        let frame = match host.acquire() {
+            Ok(f) => f,
+            Err(why) => {
+                self.misses += 1;
+
+                if self.misses < MAX_SURFACE_MISSES {
+                    return Tick::Retry;
+                }
+
+                return Tick::Failed(format!("scripted run: no surface for frame {k} of {} after {} attempts ({why}); {} frames completed", self.frames, self.misses, self.done));
+            }
+        };
+
+        self.misses = 0;
+
+        // The frame's events, then the step that sees them.
+        for e in self.events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
+            host.event(self.t0 + (k - 1) as f64 * self.dt + e["t"].as_f64().unwrap_or(0.0), e);
+        }
+
+        if let Err(e) = host.step_and_present(frame, self.t0 + k as f64 * self.dt) {
+            return Tick::Failed(format!("scripted run: frame {k} of {}: render: {e}", self.frames));
+        }
+
+        self.done = k;
+
+        if self.complete() { Tick::Finished } else { Tick::Next }
+    }
+}
+
+/// The window as the host of a scripted run.
+struct WindowHost<'a> {
+    gfx: Option<&'a mut Gfx>,
+    stats: &'a mut Stats,
+    presented: &'a mut u64,
+}
+
+impl ScriptedHost for WindowHost<'_> {
+    type Frame = (wgpu::SurfaceTexture, f64);
+
+    fn acquire(&mut self) -> Result<Self::Frame, String> {
+        let g = self.gfx.as_deref_mut().ok_or("no window")?;
+        let t0 = Instant::now();
+        acquire(g).map(|f| (f, t0.elapsed().as_secs_f64()))
+    }
+
+    fn event(&mut self, date_now: f64, e: &Value) {
+        if let Some(v) = self.gfx.as_deref_mut().and_then(|g| g.viewer.core()) {
+            v.date_now = date_now;
+            apply(v, e);
+        }
+    }
+
+    fn step_and_present(&mut self, (frame, acquire): Self::Frame, now: f64) -> Result<(), String> {
+        let g = self.gfx.as_deref_mut().ok_or("no window")?;
+        render_present(g, self.stats, self.presented, frame, acquire, now).map(|_| ())
+    }
+}
+
+/// The surface texture for the next frame. When the surface is not ready, reconfigure it and say why.
+fn acquire(g: &mut Gfx) -> Result<wgpu::SurfaceTexture, String> {
+    let why = match g.surface.get_current_texture() {
+        wgpu::CurrentSurfaceTexture::Success(f) | wgpu::CurrentSurfaceTexture::Suboptimal(f) => return Ok(f),
+        wgpu::CurrentSurfaceTexture::Timeout => "timeout",
+        wgpu::CurrentSurfaceTexture::Occluded => "occluded",
+        wgpu::CurrentSurfaceTexture::Outdated => "outdated",
+        wgpu::CurrentSurfaceTexture::Lost => "lost",
+        wgpu::CurrentSurfaceTexture::Validation => "validation error",
+    };
+
+    g.surface.configure(&g.device, &g.config);
+    Err(format!("surface {why}"))
+}
+
+/// Step and draw the viewer into `frame`, present it. The frame is presented even when drawing
+/// fails; the error is returned after.
+fn render_present(g: &mut Gfx, s: &mut Stats, presented: &mut u64, frame: wgpu::SurfaceTexture, acquire: f64, now: f64) -> Result<FrameInfo, String> {
+    let view = frame.texture.create_view(&wgpu::TextureViewDescriptor { format: Some(g.view_format), ..Default::default() });
+    let (w, h) = (g.config.width, g.config.height);
+    let result = g.viewer.frame(now, &view, g.view_format, w, h);
+    let info = result.as_ref().copied().unwrap_or_default();
+
+    let t2 = Instant::now();
+    g.window.pre_present_notify();
+    g.queue.present(frame);
+    let t3 = Instant::now();
+
+    s.frames += 1;
+    s.acquire += acquire;
+    s.step += info.step_ms;
+    s.build += info.build_ms;
+    s.render += info.render_ms;
+    s.present += (t3 - t2).as_secs_f64();
+
+    if let Some(ms) = info.gpu_ms {
+        s.gpu += ms;
+        s.gpu_frames += 1;
+    }
+
+    *presented += 1;
+    result
+}
+
 pub struct ViewerWindow {
     opts: Options,
     gfx: Option<Gfx>,
@@ -77,7 +245,7 @@ pub struct ViewerWindow {
     cursor: (f64, f64),
     /// Time and position of the previous left button release (the browser's click count for "dblclick").
     last_left_up: Option<(std::time::Instant, f64, f64)>,
-    frame: u64,
+    scripted: Option<ScriptedRun>,
     shots: u32,
     last_title: String,
     last_prints: usize,
@@ -90,18 +258,18 @@ pub struct ViewerWindow {
 impl ViewerWindow {
     pub fn new(opts: Options) -> ViewerWindow {
         ViewerWindow {
-            opts,
             gfx: None,
             mods: ModifiersState::empty(),
             keys: KeyTracker::default(),
             cursor: (0.0, 0.0),
             last_left_up: None,
-            frame: 0,
+            scripted: opts.script.as_ref().map(ScriptedRun::new),
             shots: 0,
             last_title: String::new(),
             last_prints: 0,
             stats: Stats::default(),
             want_stats: std::env::var("X3D_VIEW_STATS").is_ok(),
+            opts,
             exit_error: None,
             presented: 0,
         }
@@ -235,47 +403,16 @@ impl ViewerWindow {
     fn draw(&mut self, now: f64) -> Option<FrameInfo> {
         let g = self.gfx.as_mut()?;
         let t0 = Instant::now();
-
-        let frame = match g.surface.get_current_texture() {
-            wgpu::CurrentSurfaceTexture::Success(f) | wgpu::CurrentSurfaceTexture::Suboptimal(f) => f,
-            _ => {
-                g.surface.configure(&g.device, &g.config);
-                return None;
-            }
-        };
-
+        let frame = acquire(g).ok()?;
         let t1 = Instant::now();
-        let view = frame.texture.create_view(&wgpu::TextureViewDescriptor { format: Some(g.view_format), ..Default::default() });
-        let (w, h) = (g.config.width, g.config.height);
 
-        let info = match g.viewer.frame(now, &view, g.view_format, w, h) {
-            Ok(i) => i,
+        match render_present(g, &mut self.stats, &mut self.presented, frame, (t1 - t0).as_secs_f64(), now) {
+            Ok(i) => Some(i),
             Err(e) => {
                 eprintln!("render: {e}");
-                FrameInfo::default()
+                Some(FrameInfo::default())
             }
-        };
-
-        let t2 = Instant::now();
-        g.window.pre_present_notify();
-        g.queue.present(frame);
-        let t3 = Instant::now();
-
-        let s = &mut self.stats;
-        s.frames += 1;
-        s.acquire += (t1 - t0).as_secs_f64();
-        s.step += info.step_ms;
-        s.build += info.build_ms;
-        s.render += info.render_ms;
-        s.present += (t3 - t2).as_secs_f64();
-
-        if let Some(ms) = info.gpu_ms {
-            s.gpu += ms;
-            s.gpu_frames += 1;
         }
-
-        self.presented += 1;
-        Some(info)
     }
 
     fn print_stats(&self) {
@@ -300,35 +437,29 @@ impl ViewerWindow {
     }
 
     fn redraw(&mut self, event_loop: &ActiveEventLoop) {
-        // Advance the world: real clock, or the script's virtual clock.
-        let scripted = self.opts.script.clone();
-        let mut now = realtime_now();
-
-        if let Some(script) = &scripted {
-            let t0 = script["t0"].as_f64().unwrap_or(946684800.0);
-            let dt = script["dt"].as_f64().unwrap_or(1.0 / 60.0);
-            self.frame += 1;
-            let k = self.frame;
-            now = t0 + k as f64 * dt;
-
-            if let Some(g) = &mut self.gfx {
-                if let Some(v) = g.viewer.core() {
-                    let events = script["events"].as_array().cloned().unwrap_or_default();
-
-                    for e in events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
-                        v.date_now = t0 + (k - 1) as f64 * dt + e["t"].as_f64().unwrap_or(0.0);
-                        apply(v, e);
-                    }
-                }
-            }
-
+        if self.scripted.is_some() {
+            return self.scripted_redraw(event_loop);
         }
 
-        self.draw(now);
+        self.draw(realtime_now());
         self.update_title();
 
-        if let Some(script) = &scripted {
-            if self.frame >= script["frames"].as_u64().unwrap_or(1) {
+        if let Some(g) = &self.gfx {
+            g.window.request_redraw();
+        }
+    }
+
+    /// One redraw of a scripted run, on the script's virtual clock.
+    fn scripted_redraw(&mut self, event_loop: &ActiveEventLoop) {
+        let Some(run) = self.scripted.as_mut() else { return };
+        let tick = run.tick(&mut WindowHost { gfx: self.gfx.as_mut(), stats: &mut self.stats, presented: &mut self.presented });
+        self.update_title();
+
+        match tick {
+            Tick::Next => {}
+            Tick::Retry => std::thread::sleep(SURFACE_RETRY),
+            Tick::Failed(e) => return self.fail(event_loop, e),
+            Tick::Finished => {
                 // The last frame of a scripted run: screenshot and final pose, then quit.
                 if let Some(p) = self.opts.png.clone() {
                     if let Err(e) = self.screenshot(&p) {
@@ -562,8 +693,144 @@ pub fn run(opts: Options) -> Result<u64, String> {
     event_loop.run_app(&mut app).map_err(|e| format!("run: {e}"))?;
     app.print_stats();
 
-    match app.exit_error {
-        Some(e) => Err(e),
-        None => Ok(app.presented),
+    match (app.exit_error, &app.scripted) {
+        (Some(e), _) => Err(e),
+        // Closed (window manager, Quit) before the last frame: the run did not happen.
+        (None, Some(s)) if !s.complete() => Err(format!("scripted run: the event loop ended after {} of {} frames", s.done, s.frames)),
+        (None, _) => Ok(app.presented),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    /// A window whose surface is not ready on the listed acquire attempts (1-based), or never.
+    #[derive(Default)]
+    struct FakeHost {
+        not_ready: Vec<u32>,
+        never_ready: bool,
+        render_error_at: Option<f64>,
+        attempts: u32,
+        /// Events and steps in the order the world saw them.
+        log: Vec<String>,
+        steps: Vec<f64>,
+    }
+
+    impl ScriptedHost for FakeHost {
+        type Frame = ();
+
+        fn acquire(&mut self) -> Result<(), String> {
+            self.attempts += 1;
+
+            if self.never_ready || self.not_ready.contains(&self.attempts) { Err("surface outdated".into()) } else { Ok(()) }
+        }
+
+        fn event(&mut self, date_now: f64, e: &Value) {
+            self.log.push(format!("event {} at {date_now}", e["id"]));
+        }
+
+        fn step_and_present(&mut self, (): (), now: f64) -> Result<(), String> {
+            self.log.push(format!("step {now}"));
+            self.steps.push(now);
+
+            if self.render_error_at == Some(now) { Err("x3d-render: empty target".into()) } else { Ok(()) }
+        }
+    }
+
+    fn script() -> Value {
+        json!({ "t0": 100.0, "dt": 0.5, "frames": 4, "events": [
+            { "frame": 2, "t": 0.25, "id": "a" },
+            { "frame": 2, "t": 0.5, "id": "b" },
+            { "frame": 4, "t": 0.0, "id": "c" },
+        ] })
+    }
+
+    /// Redraw until the run finishes or fails; bounded, whatever the run does.
+    fn drive(run: &mut ScriptedRun, host: &mut FakeHost) -> Vec<Tick> {
+        let mut ticks = Vec::new();
+
+        for _ in 0..10_000 {
+            let t = run.tick(host);
+            let end = matches!(t, Tick::Finished | Tick::Failed(_));
+            ticks.push(t);
+
+            if end {
+                return ticks;
+            }
+        }
+
+        panic!("the scripted run neither finished nor failed");
+    }
+
+    const EXPECTED: [&str; 7] = ["step 100.5", "event \"a\" at 100.75", "event \"b\" at 101", "step 101", "step 101.5", "event \"c\" at 101.5", "step 102"];
+
+    #[test]
+    fn every_frame_is_stepped_and_presented() {
+        let mut run = ScriptedRun::new(&script());
+        let mut host = FakeHost::default();
+        assert_eq!(drive(&mut run, &mut host).last(), Some(&Tick::Finished));
+        assert_eq!(host.log, EXPECTED);
+        assert!(run.complete());
+    }
+
+    #[test]
+    fn a_surface_that_is_not_ready_does_not_count_as_a_frame() {
+        // Not ready on the 2nd and 3rd attempts (frame 2, which has events) and the 6th (frame 4).
+        let mut run = ScriptedRun::new(&script());
+        let mut host = FakeHost { not_ready: vec![2, 3, 6], ..Default::default() };
+        let ticks = drive(&mut run, &mut host);
+
+        assert_eq!(ticks.last(), Some(&Tick::Finished));
+        assert_eq!(ticks.iter().filter(|t| **t == Tick::Retry).count(), 3);
+        // No fewer steps than frames, each event once, at its frame, before that frame's step.
+        assert_eq!(host.steps.len(), 4);
+        assert_eq!(host.log, EXPECTED);
+        assert_eq!(run.done, 4);
+    }
+
+    #[test]
+    fn a_surface_that_never_becomes_ready_fails_the_run() {
+        let mut run = ScriptedRun::new(&script());
+        let mut host = FakeHost { never_ready: true, ..Default::default() };
+        let ticks = drive(&mut run, &mut host);
+
+        let Some(Tick::Failed(e)) = ticks.last() else { panic!("the run did not fail: {:?}", ticks.last()) };
+        assert!(e.contains("frame 1 of 4") && e.contains("surface outdated"), "{e}");
+        assert_eq!(host.attempts, MAX_SURFACE_MISSES);
+        assert!(host.log.is_empty(), "the world moved without a surface: {:?}", host.log);
+        assert!(!run.complete());
+    }
+
+    #[test]
+    fn a_render_error_fails_the_run() {
+        let mut run = ScriptedRun::new(&script());
+        let mut host = FakeHost { render_error_at: Some(101.0), ..Default::default() };
+        let ticks = drive(&mut run, &mut host);
+
+        let Some(Tick::Failed(e)) = ticks.last() else { panic!("the run did not fail: {:?}", ticks.last()) };
+        assert!(e.contains("frame 2 of 4") && e.contains("empty target"), "{e}");
+        assert_eq!(run.done, 1);
+        assert!(!run.complete());
+    }
+
+    #[test]
+    fn misses_are_counted_consecutively() {
+        // MAX - 1 misses before every frame: slow, but never stuck.
+        let n = MAX_SURFACE_MISSES - 1;
+        let not_ready = (0..4).flat_map(|f| (1..=n).map(move |i| f * (n + 1) + i)).collect();
+        let mut run = ScriptedRun::new(&script());
+        let mut host = FakeHost { not_ready, ..Default::default() };
+        assert_eq!(drive(&mut run, &mut host).last(), Some(&Tick::Finished));
+        assert_eq!(host.log, EXPECTED);
+    }
+
+    #[test]
+    fn zero_frames_still_draws_one() {
+        let mut run = ScriptedRun::new(&json!({ "t0": 0.0, "dt": 1.0, "frames": 0 }));
+        let mut host = FakeHost { not_ready: vec![1], ..Default::default() };
+        assert_eq!(drive(&mut run, &mut host), [Tick::Retry, Tick::Finished]);
+        assert_eq!(host.steps, [1.0]);
     }
 }
