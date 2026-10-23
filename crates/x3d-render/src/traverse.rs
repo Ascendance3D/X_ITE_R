@@ -13,6 +13,7 @@ use std::collections::{BTreeSet, HashMap};
 use std::rc::Rc;
 use x3d_fields::{FieldValue, NodeId};
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
+use x3d_runtime::particles::GeometryType;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Shading {
@@ -488,6 +489,11 @@ pub struct DrawItem {
 pub struct InstanceData {
     pub matrices: Vec<Matrix4>,
     pub normals: Vec<[f32; 9]>,
+    /// A ParticleSystem with a color ramp: `x3d_Color` of every instance (empty: the geometry's colors).
+    pub colors: Vec<[f32; 4]>,
+    /// A ParticleSystem quad with a texCoord ramp (`X3D_TEX_COORD_RAMP`): the ramp texture coordinates of the
+    /// four quad corners of every instance (empty: the geometry's).
+    pub tex_coords: Vec<[[f32; 4]; 4]>,
 }
 
 /// InstancedShape.set_matrices__ of `n`: the last value of a shorter field repeats, an empty field
@@ -521,7 +527,7 @@ pub fn instance_data(sg: &Sg, n: NodeId) -> InstanceData {
         matrices.push(m);
     }
 
-    InstanceData { matrices, normals }
+    InstanceData { matrices, normals, colors: vec![], tex_coords: vec![] }
 }
 
 impl DrawItem {
@@ -624,6 +630,69 @@ fn instanced_bbox(sg: &Sg, n: NodeId, geometry: &Geometry, instances: &InstanceD
     }
 
     bbox
+}
+
+/// The box of an x y z w vertex soup.
+fn soup_box(vertices: &[f32]) -> Box3 {
+    if vertices.len() < 4 {
+        return Box3::EMPTY;
+    }
+
+    let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
+    let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
+
+    for v in vertices.chunks_exact(4) {
+        min = Vector3::new(min.x.min(v[0] as f64), min.y.min(v[1] as f64), min.z.min(v[2] as f64));
+        max = Vector3::new(max.x.max(v[0] as f64), max.y.max(v[1] as f64), max.z.max(v[2] as f64));
+    }
+
+    Box3::from_extents(&min, &max)
+}
+
+/// ViewVolume.set (projection, viewport) then intersectsSphere (radius, center): the six planes through the corners of
+/// the unprojected viewport (window z 0 and 1; the viewport rectangle itself cancels out), a sphere outside one of them
+/// is outside the volume.
+fn view_volume_intersects_sphere(projection: &Matrix4, radius: f64, center: &Vector3) -> bool {
+    let mut inv = *projection;
+    inv.inverse();
+
+    let unproject = |x: f64, y: f64, z: f64| {
+        let mut v = Vector4::new(x, y, z * 2.0 - 1.0, 1.0);
+        inv.mult_vec_matrix4(&mut v);
+        let d = 1.0 / v.w;
+        Vector3::new(v.x * d, v.y * d, v.z * d)
+    };
+    let p = [
+        unproject(-1.0, -1.0, 0.0),
+        unproject(1.0, -1.0, 0.0),
+        unproject(1.0, 1.0, 0.0),
+        unproject(-1.0, 1.0, 0.0),
+        unproject(-1.0, -1.0, 1.0),
+        unproject(1.0, -1.0, 1.0),
+        unproject(1.0, 1.0, 1.0),
+        unproject(-1.0, 1.0, 1.0),
+    ];
+    // Triangle3.normal (v1, v2, v3): normalize ((v3 - v2) x (v1 - v2)).
+    let normal = |a: &Vector3, b: &Vector3, c: &Vector3| {
+        let mut x1 = *c;
+        x1.subtract(b);
+        let mut x2 = *a;
+        x2.subtract(b);
+        x1.cross(&x2);
+        x1.normalize();
+        x1
+    };
+    let planes = [
+        (p[1], normal(&p[0], &p[1], &p[2])),
+        (p[4], normal(&p[7], &p[4], &p[0])),
+        (p[2], normal(&p[6], &p[2], &p[1])),
+        (p[6], normal(&p[2], &p[6], &p[7])),
+        (p[0], normal(&p[1], &p[0], &p[4])),
+        (p[7], normal(&p[4], &p[7], &p[6])),
+    ];
+
+    // Plane3.getDistanceToPoint: dot (point, normal) - distanceFromOrigin.
+    !planes.iter().any(|(point, normal)| center.dot(normal) - point.dot(normal) > radius)
 }
 
 /// One renderObject.render (TraverseType.SHADOW) of the light's group.
@@ -892,6 +961,9 @@ pub struct RenderCache {
     skinned: HashMap<(u64, NodeId, usize), SkinnedEntry>,
     /// GaussianSplats data (see [`crate::splats`]), by node; `used` is the frame it was last drawn.
     splats: HashMap<(u64, NodeId), (u64, Rc<crate::splats::SplatData>, u64)>,
+    /// The POINT, LINE, TRIANGLE, QUAD or SPRITE geometry of each ParticleSystem, the bits it was built from and the
+    /// frame it was last used, so the GPU keeps one buffer per system (X_ITE rebuilds it only when one of these changes).
+    particles: HashMap<(u64, NodeId), (Vec<u64>, Rc<Geometry>, u64)>,
     frame: u64,
     /// Counters for tests and tools: geometries (re)built / reused in the last frame.
     pub built: usize,
@@ -935,6 +1007,7 @@ impl RenderCache {
         self.faces.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.skinned.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.splats.retain(|_, e| e.2 + crate::splats_gpu::KEEP_FRAMES >= frame);
+        self.particles.retain(|_, e| e.2 + CACHE_KEEP_FRAMES >= frame);
     }
 }
 
@@ -1411,6 +1484,7 @@ impl<'a> Builder<'a> {
 
         match ty {
             "Shape" | "InstancedShape" => self.shape(sg, n, mv),
+            "ParticleSystem" => self.particle_system(sg, n, mv),
             "VolumeData" | "IsoSurfaceVolumeData" | "SegmentedVolumeData" => self.volume(sg, n, ty, mv),
             "GaussianSplats" => self.splats(sg, n, mv),
             "DirectionalLight" | "PointLight" | "SpotLight" => self.light(sg, n, ty, mv),
@@ -1543,7 +1617,7 @@ impl<'a> Builder<'a> {
         let Some(ty) = sg.type_name(c) else { return };
 
         // The DIS nodes and GaussianSplats draw their own box (bbox_display, splats).
-        let bounded = ty == "Shape" || ty == "InstancedShape" || ty == "Inline" || ty == "StaticGroup" || ty == "Viewport" || ty == "LayoutGroup" || GROUPS.contains(&ty);
+        let bounded = ty == "Shape" || ty == "InstancedShape" || ty == "ParticleSystem" || ty == "Inline" || ty == "StaticGroup" || ty == "Viewport" || ty == "LayoutGroup" || GROUPS.contains(&ty);
 
         if !bounded || !sg.bool(c, "bboxDisplay", false) {
             return;
@@ -2161,6 +2235,19 @@ impl<'a> Builder<'a> {
                     None => Box3::EMPTY,
                 }
             }
+            // X3DShapeNode.getBBox of a ParticleSystem (a bounded object only when enabled or with a bboxSize).
+            "ParticleSystem" => {
+                if shadows && !sg.bool(n, "castShadow", true) {
+                    return Box3::EMPTY;
+                }
+                if !default_size(sg) {
+                    return own(sg);
+                }
+                if !self.particle_system_enabled(sg, n) {
+                    return Box3::EMPTY;
+                }
+                self.particle_bbox(sg, n)
+            }
             "Inline" => {
                 if !default_size(sg) {
                     return own(sg);
@@ -2228,6 +2315,15 @@ impl<'a> Builder<'a> {
                 }
                 if let Some(geometry) = sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
                     out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: None });
+                }
+            }
+            // ParticleSystem.displaySimple: the particles drawn instanced into the shadow map.
+            "ParticleSystem" => {
+                if !sg.bool(n, "castShadow", true) {
+                    return;
+                }
+                if let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) {
+                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: Some(instances) });
                 }
             }
             // InstancedShape.displaySimple: the depth shader with X3D_INSTANCING.
@@ -2805,6 +2901,216 @@ impl<'a> Builder<'a> {
         }
     }
 
+    /// X3DShapeNode.isEnabled of a ParticleSystem: `numParticles`, and a geometry for GEOMETRY.
+    fn particle_system_enabled(&self, sg: &Sg, n: NodeId) -> bool {
+        let num = sg.rt.particle_sim(n).map_or(0, |s| s.num_particles);
+
+        num > 0 && (sg.rt.particle_geometry_type(n) != GeometryType::Geometry || sg.node(n, "geometry").is_some())
+    }
+
+    /// ParticleSystem.set_bbox__ with the default bboxSize: the union of the BoundedPhysicsModels' geometry boxes,
+    /// or else the emitter's getBBox (X_ITE's default emitter is a PointEmitter): a cube of
+    /// `particleLifetime * (1 + lifetimeVariation) * speed * (1 + variation) * 2` around the emitter's position
+    /// (Point, Cone, Explosion) or around the center of its geometry's box, joined with that box (Surface, Volume,
+    /// Polyline; a SurfaceEmitter without a surface has an empty box).
+    fn particle_bbox(&mut self, sg: &Sg, n: NodeId) -> Box3 {
+        let bounded: Vec<NodeId> = sg.nodes(n, "physics").into_iter().filter(|m| sg.type_name(*m) == Some("BoundedPhysicsModel")).collect();
+
+        if !bounded.is_empty() {
+            let mut bbox = Box3::EMPTY;
+
+            for m in bounded {
+                if let Some(g) = sg.node(m, "geometry").and_then(|g| self.geometry(sg, g)) {
+                    bbox.add(&Box3::from_extents(&g.min, &g.max));
+                }
+            }
+
+            return bbox;
+        }
+
+        const EMITTERS: [&str; 6] = ["PointEmitter", "ConeEmitter", "ExplosionEmitter", "SurfaceEmitter", "VolumeEmitter", "PolylineEmitter"];
+
+        let emitter = sg.node(n, "emitter").filter(|e| sg.type_name(*e).is_some_and(|t| EMITTERS.contains(&t)));
+        let lifetime = sg.f64(n, "particleLifetime", 5.0).max(0.0);
+        let variation = sg.f64(n, "lifetimeVariation", 0.25).max(0.0);
+        let (speed, speed_variation) = emitter.map_or((0.0, 0.25), |e| (sg.f64(e, "speed", 0.0), sg.f64(e, "variation", 0.25)));
+        let size = lifetime * (1.0 + variation) * speed * (1.0 + speed_variation) * 2.0;
+        let cube = |center: &Vector3| Box3::new(&Vector3::new(size, size, size), center);
+
+        let geometry_box = |builder: &mut Self, e: NodeId| -> Option<Box3> {
+            match sg.type_name(e)? {
+                "SurfaceEmitter" => sg.node(e, "surface").map(|s| builder.geometry(sg, s).map_or(Box3::EMPTY, |g| Box3::from_extents(&g.min, &g.max))),
+                "VolumeEmitter" => {
+                    let request = x3d_runtime::nodes::particle_systems::GeometryRequest::Volume { coord: sg.node(e, "coord"), coord_index: sg.i32s(e, "coordIndex").to_vec() };
+                    let soup = particle_geometry(sg.rt, &request)?;
+
+                    Some(soup_box(&soup.vertices))
+                }
+                "PolylineEmitter" => {
+                    // The private IndexedLineSet's box: its polylines' vertices.
+                    let points = sg.node(e, "coord").and_then(|c| sg.coord_points(c)).unwrap_or_default();
+                    let index = sg.i32s(e, "coordIndex");
+                    let mut vertices = vec![];
+
+                    for line in index.split(|i| *i < 0) {
+                        if line.len() >= 2 {
+                            for i in line {
+                                if let Some(p) = points.get(*i as usize * 3..*i as usize * 3 + 3) {
+                                    vertices.extend_from_slice(&[p[0], p[1], p[2], 1.0]);
+                                }
+                            }
+                        }
+                    }
+
+                    Some(soup_box(&vertices))
+                }
+                _ => None,
+            }
+        };
+
+        match emitter {
+            Some(e) if matches!(sg.type_name(e), Some("SurfaceEmitter" | "VolumeEmitter" | "PolylineEmitter")) => match geometry_box(self, e) {
+                Some(g) if !g.is_empty() => {
+                    let mut bbox = cube(&g.center());
+                    bbox.add(&g);
+                    bbox
+                }
+                Some(g) => {
+                    let mut bbox = cube(&Vector3::ZERO);
+                    bbox.add(&g);
+                    bbox
+                }
+                None if sg.type_name(e) == Some("SurfaceEmitter") => Box3::EMPTY,
+                None => cube(&Vector3::ZERO),
+            },
+            Some(e) => cube(&sg.vec3(e, "position", Vector3::ZERO)),
+            None => cube(&Vector3::ZERO),
+        }
+    }
+
+    /// The ParticleSystem's bbox as set_bbox__ leaves it: bboxSize / bboxCenter, or [`Self::particle_bbox`].
+    fn particle_system_bbox(&mut self, sg: &Sg, n: NodeId) -> Box3 {
+        let size = sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0));
+
+        if size.equals(&Vector3::new(-1.0, -1.0, -1.0)) {
+            self.particle_bbox(sg, n)
+        } else {
+            Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO))
+        }
+    }
+
+    /// renderObject.addDisplayShape: `viewVolume .intersectsSphere (radius, bboxCenter)` with the shape's bbox in view
+    /// space (`radius = bboxSize .norm () / 2`). The view volume's planes are those of the layer's projection.
+    fn bbox_in_view(&self, mv: &Matrix4, bbox: &Box3) -> bool {
+        let (min, max) = bbox.extents();
+        let mut size = max;
+        size.subtract(&min);
+        let mut center = bbox.center();
+
+        mv.mult_dir_matrix(&mut size);
+        mv.mult_vec_matrix3(&mut center);
+
+        view_volume_intersects_sphere(&self.projection, size.norm() / 2.0, &center)
+    }
+
+    /// The geometry, the instances and the color-ramp flag of a ParticleSystem's draw with `mv` (SPRITE turns its quad
+    /// to face the viewer of `mv`); `None` when it draws nothing.
+    fn particle_draw(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<(Rc<Geometry>, Rc<InstanceData>, bool)> {
+        if !self.particle_system_enabled(sg, n) {
+            return None;
+        }
+
+        let sim = sg.rt.particle_sim(n)?;
+        let num = sim.num_particles.min(sim.particles.len());
+        let gt = sg.rt.particle_geometry_type(n);
+        let ramps = sg.rt.particle_ramps(n).cloned().unwrap_or_default();
+        // set_color__: geometryContext .colorMaterial = numKeys && colorRampNode (GEOMETRY draws its own geometry context).
+        let color_material = gt != GeometryType::Geometry && ramps.colors.is_some() && sg.node(n, "color").is_some_and(|c| matches!(sg.type_name(c), Some("Color" | "ColorRGBA")));
+        let particles = crate::particles::instances(&sim.particles[..num], &ramps, gt, color_material);
+        let size = sg.vec2(n, "particleSize", Vector2::new(0.02, 0.02));
+
+        let geometry = match gt {
+            GeometryType::Geometry => self.geometry(sg, sg.node(n, "geometry")?)?,
+            _ => {
+                let rows = (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
+                let mut bits = vec![gt as u64, color_material as u64];
+
+                match (gt, &rows) {
+                    (GeometryType::Line, _) => bits.push(size.y.to_bits()),
+                    (GeometryType::Sprite, Some(r)) => bits.extend([size.x, size.y].into_iter().chain(r.iter().flat_map(|v| [v.x, v.y, v.z])).map(f64::to_bits)),
+                    _ => (),
+                }
+
+                let ckey = (sg.rt.uid, n);
+
+                match self.cache.as_deref_mut().and_then(|c| {
+                    let frame = c.frame;
+                    c.particles.get_mut(&ckey).filter(|e| e.0 == bits).map(|e| {
+                        e.2 = frame;
+                        e.1.clone()
+                    })
+                }) {
+                    Some(g) => g,
+                    None => {
+                        let g = Rc::new(match gt {
+                            GeometryType::Point => crate::particles::point_geometry(color_material),
+                            GeometryType::Line => crate::particles::line_geometry(size.y, color_material),
+                            GeometryType::Sprite => crate::particles::quad_geometry(rows.as_ref().map(|r| (r, [size.x, size.y])), color_material),
+                            _ => crate::particles::quad_geometry(None, color_material),
+                        });
+
+                        if let Some(c) = self.cache.as_deref_mut() {
+                            let frame = c.frame;
+                            c.particles.insert(ckey, (bits, g.clone(), frame));
+                        }
+
+                        g
+                    }
+                }
+            }
+        };
+
+        if particles.matrices.is_empty() {
+            return None;
+        }
+
+        let identity = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
+        let instances = InstanceData { normals: vec![identity; particles.matrices.len()], matrices: particles.matrices, colors: particles.colors, tex_coords: particles.tex_coords };
+
+        Some((geometry, Rc::new(instances), color_material))
+    }
+
+    /// ParticleSystem.traverse DISPLAY: X3DShapeNode.traverse → addDisplayShape (view volume test with the
+    /// ParticleSystem's bbox; the bbox center is the sort distance) → ParticleSystem.display, an instanced draw of
+    /// the particles with the appearance.
+    fn particle_system(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
+        let bbox = self.particle_system_bbox(sg, n);
+
+        if !self.particle_system_enabled(sg, n) || !self.bbox_in_view(mv, &bbox) {
+            return;
+        }
+
+        let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) else { return };
+        let mut center = bbox.center();
+
+        mv.mult_vec_matrix3(&mut center);
+
+        // GEOMETRY draws the geometry node's context, the other types the ParticleSystem's own (no texture
+        // coordinate mapping). set_transparent__: the appearance, a transparent color ramp (ColorRGBA), or a
+        // transparent geometry of GEOMETRY.
+        let ramp_transparent = sg.node(n, "color").is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
+
+        match sg.rt.particle_geometry_type(n) {
+            GeometryType::Geometry => {
+                let Some(gnode) = sg.node(n, "geometry") else { return };
+                let coords = coordinate_mappings(sg, gnode);
+
+                self.shape_item(sg, n, gnode, geometry, mv, Some(instances), center.z, coords, ramp_transparent);
+            }
+            _ => self.shape_item(sg, n, n, geometry, mv, Some(instances), center.z, vec![], false),
+        }
+    }
+
     fn shape(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
         let Some(gnode) = sg.node(n, "geometry") else { return };
         let Some(geometry) = self.geometry(sg, gnode) else { return };
@@ -2826,6 +3132,31 @@ impl<'a> Builder<'a> {
             return;
         }
 
+        // addDisplayShape: distance = bbox center z in view space (an InstancedShape's bbox is the
+        // union of the instances' boxes, or its bboxSize / bboxCenter).
+        let mut center = geometry.bbox_center();
+
+        if let Some(i) = &instances {
+            center = instanced_bbox(sg, n, &geometry, i).center();
+        }
+
+        mv.mult_vec_matrix3(&mut center);
+
+        if let Some(Some(s)) = self.hanim.last() {
+            self.skin_items.push((self.items.len(), gnode, *s));
+        }
+
+        let coords = coordinate_mappings(sg, gnode);
+
+        self.shape_item(sg, n, gnode, geometry, mv, instances, center.z, coords, false);
+    }
+
+    /// The display item of an X3DShapeNode: its appearance with `geometry` drawn by `gnode` (the geometry node,
+    /// or a ParticleSystem for its own geometry), `distance` the sort key, `coords` the geometry's texture
+    /// coordinate mappings; `extra_transparent` adds to the appearance's transparency (a ParticleSystem's
+    /// ColorRGBA ramp).
+    #[allow(clippy::too_many_arguments)]
+    fn shape_item(&mut self, sg: &Sg, n: NodeId, gnode: NodeId, geometry: Rc<Geometry>, mv: &Matrix4, instances: Option<Rc<InstanceData>>, distance: f64, coords: Vec<String>, extra_transparent: bool) {
         let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
         let material_node = appearance.and_then(|a| sg.node(a, "material"));
         let texture_node = appearance.and_then(|a| sg.node(a, "texture"));
@@ -2906,7 +3237,6 @@ impl<'a> Builder<'a> {
         // X3D_MATERIAL_TEXTURES of the physical materials, with the texture transform and
         // coordinate channels their mappings name.
         let transforms = transform_mappings(sg, transform_node);
-        let coords = coordinate_mappings(sg, gnode);
         let mut material = material;
         let mut front_transparent = front_transparent;
 
@@ -2999,21 +3329,7 @@ impl<'a> Builder<'a> {
         // is always transparent.
         let color_transparent = sg.node(gnode, "color").is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
 
-        let transparent = color_transparent || fill_transparent || front_transparent || back_transparent || texture_transparent || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent)) || blend.is_some();
-
-        // addDisplayShape: distance = bbox center z in view space (an InstancedShape's bbox is the
-        // union of the instances' boxes, or its bboxSize / bboxCenter).
-        let mut center = geometry.bbox_center();
-
-        if let Some(i) = &instances {
-            center = instanced_bbox(sg, n, &geometry, i).center();
-        }
-
-        mv.mult_vec_matrix3(&mut center);
-
-        if let Some(Some(s)) = self.hanim.last() {
-            self.skin_items.push((self.items.len(), gnode, *s));
-        }
+        let transparent = extra_transparent || color_transparent || fill_transparent || front_transparent || back_transparent || texture_transparent || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent)) || blend.is_some();
 
         let custom = self.custom_draw(sg, appearance);
 
@@ -3034,7 +3350,7 @@ impl<'a> Builder<'a> {
             clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
             style,
             style_texture,
-            distance: center.z,
+            distance,
             viewport: (self.viewports.len() > 1).then(|| self.viewport()),
             volume: None,
             instances,
