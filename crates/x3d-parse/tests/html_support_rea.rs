@@ -12,11 +12,17 @@
 use std::path::Path;
 
 fn first_difference(expected: &str, actual: &str) -> String {
-    let (e, a): (Vec<&str>, Vec<&str>) = (expected.split('\n').collect(), actual.split('\n').collect());
+    let (e, a): (Vec<&str>, Vec<&str>) =
+        (expected.split('\n').collect(), actual.split('\n').collect());
 
     for i in 0..e.len().max(a.len()) {
         if e.get(i) != a.get(i) {
-            return format!("line {}:\n  X_ITE: {:.300}\n  Rust:  {:.300}", i + 1, e.get(i).unwrap_or(&"<EOF>"), a.get(i).unwrap_or(&"<EOF>"));
+            return format!(
+                "line {}:\n  X_ITE: {:.300}\n  Rust:  {:.300}",
+                i + 1,
+                e.get(i).unwrap_or(&"<EOF>"),
+                a.get(i).unwrap_or(&"<EOF>")
+            );
         }
     }
 
@@ -24,8 +30,11 @@ fn first_difference(expected: &str, actual: &str) -> String {
 }
 
 fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle").join(dir);
-    let json: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(root.join(baseline)).unwrap()).unwrap();
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .join(dir);
+    let json: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(root.join(baseline)).unwrap()).unwrap();
     let mut failures = vec![];
     let mut checks = 0;
 
@@ -33,15 +42,29 @@ fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
         let file = entry["file"].as_str().unwrap();
         let data = std::fs::read(root.join(file)).unwrap();
         // X_ITE parses the DOM element with the page as the world URL.
-        let url = if html { "http://oracle/x_ite-pin/src/dump.html".to_string() } else { format!("http://oracle/{dir}/{file}") };
-        let parsed = if html { x3d_parse::parse_html_x3d(&String::from_utf8_lossy(&data), &url) } else { x3d_parse::parse_bytes(&data, &url) };
-        let log: Vec<String> = entry["log"].as_array().map(|l| l.iter().map(|s| s.as_str().unwrap().to_string()).collect()).unwrap_or_default();
+        let url = if html {
+            "http://oracle/x_ite-pin/src/dump.html".to_string()
+        } else {
+            format!("http://oracle/{dir}/{file}")
+        };
+        let parsed = if html {
+            x3d_parse::parse_html_x3d(&String::from_utf8_lossy(&data), &url)
+        } else {
+            x3d_parse::parse_bytes(&data, &url)
+        };
+        let log: Vec<String> = entry["log"]
+            .as_array()
+            .map(|l| l.iter().map(|s| s.as_str().unwrap().to_string()).collect())
+            .unwrap_or_default();
 
         checks += 1;
 
         if !entry["ok"].as_bool().unwrap() {
             if parsed.is_ok() {
-                failures.push(format!("{file}: X_ITE rejected it ({}), Rust parsed it", entry["error"]));
+                failures.push(format!(
+                    "{file}: X_ITE rejected it ({}), Rust parsed it",
+                    entry["error"]
+                ));
             }
 
             continue;
@@ -55,13 +78,22 @@ fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
             }
         };
 
-        for (key, actual) in [("vrml", scene.to_vrml_string()), ("xml", scene.to_xml_string()), ("json", scene.to_json_string())] {
-            let Some(expected) = entry[key].as_str() else { continue };
+        for (key, actual) in [
+            ("vrml", scene.to_vrml_string()),
+            ("xml", scene.to_xml_string()),
+            ("json", scene.to_json_string()),
+        ] {
+            let Some(expected) = entry[key].as_str() else {
+                continue;
+            };
 
             checks += 1;
 
             if expected != actual {
-                failures.push(format!("{file} [{key}]: {}", first_difference(expected, &actual)));
+                failures.push(format!(
+                    "{file} [{key}]: {}",
+                    first_difference(expected, &actual)
+                ));
             }
         }
 
@@ -76,7 +108,10 @@ fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
         // parse-xml-unknown. This corpus still has other DEVELOPMENT double logs and an `Invalid XML.` level gap.)
         let norm = |l: &str| -> String {
             let l = x3d_scene::console_level(l).1;
-            let l = l.strip_prefix("warn: ").or_else(|| l.strip_prefix("error: ")).unwrap_or(l);
+            let l = l
+                .strip_prefix("warn: ")
+                .or_else(|| l.strip_prefix("error: "))
+                .unwrap_or(l);
             let l = l.strip_prefix("Error: ").unwrap_or(l);
 
             l.strip_prefix("XML Parser: ").unwrap_or(l).to_string()
@@ -90,7 +125,10 @@ fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
         got.dedup();
 
         if want != got {
-            failures.push(format!("{file}: console log\n  X_ITE: {log:?}\n  Rust:  {:?}", scene.warnings));
+            failures.push(format!(
+                "{file}: console log\n  X_ITE: {log:?}\n  Rust:  {:?}",
+                scene.warnings
+            ));
         }
     }
 
@@ -102,7 +140,16 @@ fn html_support_matches_x_ite() {
     let (c1, mut f1) = run("synthetic-rea-html", "html-baseline.json", true);
     let (c2, f2) = run("synthetic-rea-html/xml", "../xml-baseline.json", false);
 
-    println!("{} checks ({c1} html, {c2} xml-twin), {} failed", c1 + c2, f1.len() + f2.len());
+    println!(
+        "{} checks ({c1} html, {c2} xml-twin), {} failed",
+        c1 + c2,
+        f1.len() + f2.len()
+    );
     f1.extend(f2);
-    assert!(f1.is_empty(), "{} checks failed:\n{}", f1.len(), f1.join("\n"));
+    assert!(
+        f1.is_empty(),
+        "{} checks failed:\n{}",
+        f1.len(),
+        f1.join("\n")
+    );
 }

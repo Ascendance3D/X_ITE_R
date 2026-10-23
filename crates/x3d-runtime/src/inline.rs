@@ -104,7 +104,14 @@ impl Runtime {
         self.set_load_state_node(node, state);
 
         // X3DUrlObject.setLoadState: every url object (a Script, a texture) is a loading object of its scene while it loads.
-        if !self.is_scene_loader(node) && self.nrt(node).is_some_and(|n| matches!(n.state, nodes::State::UrlObject(_) | nodes::State::Script(_))) {
+        if !self.is_scene_loader(node)
+            && self.nrt(node).is_some_and(|n| {
+                matches!(
+                    n.state,
+                    nodes::State::UrlObject(_) | nodes::State::Script(_)
+                )
+            })
+        {
             self.update_load_count(self.scene.scene_root(self.scene.node(node).ctx));
         }
     }
@@ -130,7 +137,10 @@ impl Runtime {
 
         // BufferAudioSource, AudioClip: X3DUrlObject.setLoadState restarts the auto refresh timer after
         // COMPLETE and after FAILED.
-        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
+        if matches!(
+            self.builtin_name(node),
+            Some("BufferAudioSource" | "AudioClip")
+        ) {
             if matches!(state, LoadState::Complete | LoadState::Failed) {
                 self.inline_auto_refresh_complete(node);
             }
@@ -167,8 +177,18 @@ impl Runtime {
             .iter()
             .find(|p| p.ctx == root)
             .map(|p| p.scene_node)
-            .or_else(|| self.pending_browser.iter().find(|p| p.ctx == root).map(|p| p.scene_node))
-            .or_else(|| self.pending_externs.iter().find(|p| p.ctx == root).map(|p| p.scene_node));
+            .or_else(|| {
+                self.pending_browser
+                    .iter()
+                    .find(|p| p.ctx == root)
+                    .map(|p| p.scene_node)
+            })
+            .or_else(|| {
+                self.pending_externs
+                    .iter()
+                    .find(|p| p.ctx == root)
+                    .map(|p| p.scene_node)
+            });
 
         let Some(scene_node) = scene_node else {
             return;
@@ -176,12 +196,23 @@ impl Runtime {
 
         let inlines = (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
-                self.nrt(n).is_some_and(|r| matches!(r.state, nodes::State::UrlObject(_) | nodes::State::Script(_)))
-                    && self.url_load_state(n) == LoadState::InProgress
+                self.nrt(n).is_some_and(|r| {
+                    matches!(
+                        r.state,
+                        nodes::State::UrlObject(_) | nodes::State::Script(_)
+                    )
+                }) && self.url_load_state(n) == LoadState::InProgress
                     && self.scene.scene_root(self.scene.node(n).ctx) == root
             })
             .count();
-        let externs = self.extern_states.iter().filter(|(e, s)| s.load_state == LoadState::InProgress && self.scene.scene_root(self.scene.externprotos[**e].ctx) == root).count();
+        let externs = self
+            .extern_states
+            .iter()
+            .filter(|(e, s)| {
+                s.load_state == LoadState::InProgress
+                    && self.scene.scene_root(self.scene.externprotos[**e].ctx) == root
+            })
+            .count();
 
         let k = self.private_field(scene_node, "loadCount").unwrap();
         self.set_value(k, FieldValue::SFInt32((inlines + externs) as i32));
@@ -229,7 +260,9 @@ impl Runtime {
         }
 
         // A Script of a disposed scene takes no more loads.
-        if script && matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::Script(s)) if s.closed) {
+        if script
+            && matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::Script(s)) if s.closed)
+        {
             return;
         }
 
@@ -257,7 +290,18 @@ impl Runtime {
 
         // `if (this .isInitialized ()) this ._loadData = time; else this .loadData ()`: the field
         // event is the buffer that makes several requests before it is processed one load.
-        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource" | "AudioClip")) && self.nrt(node).is_some_and(|n| n.initialized) {
+        if matches!(
+            self.builtin_name(node),
+            Some(
+                "Inline"
+                    | "InlineGeometry"
+                    | "FontLibrary"
+                    | "Script"
+                    | "BufferAudioSource"
+                    | "AudioClip"
+            )
+        ) && self.nrt(node).is_some_and(|n| n.initialized)
+        {
             if let Some(k) = self.private_field(node, "loadData") {
                 let t = self.now;
                 self.set_value(k, FieldValue::SFTime(t));
@@ -269,7 +313,10 @@ impl Runtime {
     }
 
     fn url_state_missing(&self, node: NodeId) -> bool {
-        !matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::UrlObject(_)))
+        !matches!(
+            self.nrt(node).map(|n| &n.state),
+            Some(nodes::State::UrlObject(_))
+        )
     }
 
     fn url_state_mut(&mut self, node: NodeId) -> Option<&mut nodes::UrlState> {
@@ -282,10 +329,17 @@ impl Runtime {
     /// Inline.loadData: `this .fileLoader ?.abort ()`, then a new FileLoader whose fetch is a macrotask.
     /// Only an Inline has a request identity; the other nodes that fetch keep generation 0.
     fn url_start_load(&mut self, node: NodeId) {
-        let generation = if self.is_scene_loader(node) { self.inline_abort(node) } else { 0 };
+        let generation = if self.is_scene_loader(node) {
+            self.inline_abort(node)
+        } else {
+            0
+        };
 
         // BufferAudioSource.loadData, AudioClip.loadData: `this .setMediaElement (null)`, then the FileLoader.
-        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
+        if matches!(
+            self.builtin_name(node),
+            Some("BufferAudioSource" | "AudioClip")
+        ) {
             self.buffer_load_start(node);
         }
 
@@ -301,12 +355,24 @@ impl Runtime {
             s.generation
         });
 
-        for p in self.pending_scenes.iter().filter(|p| p.node == node).cloned().collect::<Vec<_>>() {
+        for p in self
+            .pending_scenes
+            .iter()
+            .filter(|p| p.node == node)
+            .cloned()
+            .collect::<Vec<_>>()
+        {
             self.pending_scenes.retain(|q| q.ctx != p.ctx);
             self.dispose_scene(p.ctx);
         }
 
-        for w in self.frame_waiters.iter().filter(|w| w.node == node).cloned().collect::<Vec<_>>() {
+        for w in self
+            .frame_waiters
+            .iter()
+            .filter(|w| w.node == node)
+            .cloned()
+            .collect::<Vec<_>>()
+        {
             self.frame_waiters.retain(|q| q.ctx != w.ctx);
             self.dispose_scene(w.ctx);
         }
@@ -409,11 +475,17 @@ impl Runtime {
 
     /// Inline.loadData → FileLoader.createX3DFromURL (url, null, setInternalScene).
     pub(crate) fn inline_load(&mut self, node: NodeId, generation: u64) {
-        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: true };
+        let loader = FileLoader {
+            type_name: self.type_name(node),
+            base: self.base_url(node),
+            data_as_string: true,
+        };
         let urls = self.url_strings(node);
 
         let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
+            Loaded::Script(_) => {
+                Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
+            }
             Loaded::Data(data, url) => rt.inline_scene(node, generation, &data, &url),
         });
 
@@ -436,7 +508,13 @@ impl Runtime {
 
     /// FileLoader.createX3DFromString for an Inline: parse the scene into a new X3DScene, set up
     /// its nodes (Scripts initialize in the microtasks that follow) and wait for its loadCount.
-    fn inline_scene(&mut self, node: NodeId, generation: u64, data: &[u8], url: &url::Url) -> Result<(), String> {
+    fn inline_scene(
+        &mut self,
+        node: NodeId,
+        generation: u64,
+        data: &[u8],
+        url: &url::Url,
+    ) -> Result<(), String> {
         if self.inline_is_cyclic(node, url) {
             return Err("Error: Cyclic Inline: the scene is already being loaded by a scene that contains this Inline.".into());
         }
@@ -449,7 +527,12 @@ impl Runtime {
         let mut scene = match parsed {
             Ok(scene) => scene,
             // GLTF2Parser / GLB2Parser: the thrown JS error text, nothing logged before it.
-            Err(x3d_parse::LoadError::Parse(e)) if e.line == 0 && ["TypeError: ", "RangeError: ", "Error: "].iter().any(|p| e.message.starts_with(p)) => {
+            Err(x3d_parse::LoadError::Parse(e))
+                if e.line == 0
+                    && ["TypeError: ", "RangeError: ", "Error: "]
+                        .iter()
+                        .any(|p| e.message.starts_with(p)) =>
+            {
                 return Err(e.message);
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
@@ -462,8 +545,14 @@ impl Runtime {
                 return Err(format!("Error: \n{e}"));
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles; Inline keeps the shorter text.
-            Err(x3d_parse::LoadError::NoHandler) if self.builtin_name(node) == Some("InlineGeometry") || url.path().ends_with(".gltf") || url.path().ends_with(".glb") => {
-                return Err(format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'."));
+            Err(x3d_parse::LoadError::NoHandler)
+                if self.builtin_name(node) == Some("InlineGeometry")
+                    || url.path().ends_with(".gltf")
+                    || url.path().ends_with(".glb") =>
+            {
+                return Err(format!(
+                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
+                ));
             }
             Err(e) => return Err(format!("Error: {e}")),
         };
@@ -478,7 +567,12 @@ impl Runtime {
         let m = self.scene.merge_inline(scene, parent, node);
 
         let (scene_node, count) = self.new_load_count_scene();
-        self.pending_scenes.push(PendingScene { node, generation, ctx: m.root_ctx, scene_node });
+        self.pending_scenes.push(PendingScene {
+            node,
+            generation,
+            ctx: m.root_ctx,
+            scene_node,
+        });
 
         // `new X3DScene (browser)`: setLive (false).
         self.inline_live.insert(m.root_ctx, false);
@@ -550,7 +644,12 @@ impl Runtime {
     /// interest is FileLoader.set_loadCount__.
     pub(crate) fn new_load_count_scene(&mut self) -> (NodeId, FKey) {
         let scene_node = self.create_internal_node("X3DScene");
-        let count = self.add_private_field(scene_node, "loadCount", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
+        let count = self.add_private_field(
+            scene_node,
+            "loadCount",
+            access::OUTPUT_ONLY,
+            FieldValue::SFInt32(0),
+        );
 
         self.nrt_mut(scene_node).setup_started = true;
         self.nrt_mut(scene_node).initialized = true;
@@ -560,7 +659,12 @@ impl Runtime {
     }
 
     /// Construct, route and set up the nodes of a merged scene (the order of X3DParser.setupNodes).
-    pub(crate) fn attach_merged_scene(&mut self, m: MergeMap, ctx_count: usize, setup_order: Vec<NodeId>) {
+    pub(crate) fn attach_merged_scene(
+        &mut self,
+        m: MergeMap,
+        ctx_count: usize,
+        setup_order: Vec<NodeId>,
+    ) {
         for n in m.node_offset..m.node_end {
             self.nrt_mut(n);
 
@@ -592,8 +696,14 @@ impl Runtime {
             return;
         }
 
-        let inline = self.pending_scenes.iter().position(|p| p.scene_node == scene_node);
-        let ext = self.pending_externs.iter().position(|p| p.scene_node == scene_node);
+        let inline = self
+            .pending_scenes
+            .iter()
+            .position(|p| p.scene_node == scene_node);
+        let ext = self
+            .pending_externs
+            .iter()
+            .position(|p| p.scene_node == scene_node);
 
         if inline.is_none() && ext.is_none() {
             return;
@@ -613,7 +723,11 @@ impl Runtime {
                 let p = self.pending_scenes.remove(i);
 
                 if self.inline_request_is_current(p.node, p.generation) {
-                    self.frame_waiters.push(FrameWaiter { node: p.node, generation: p.generation, ctx: p.ctx });
+                    self.frame_waiters.push(FrameWaiter {
+                        node: p.node,
+                        generation: p.generation,
+                        ctx: p.ctx,
+                    });
                 } else {
                     self.dispose_scene(p.ctx);
                 }
@@ -665,7 +779,9 @@ impl Runtime {
                 self.inline_live.insert(ctx, true);
             }
 
-            let state = self.inline_geometry_state(node, scene).unwrap_or(LoadState::Failed);
+            let state = self
+                .inline_geometry_state(node, scene)
+                .unwrap_or(LoadState::Failed);
 
             // A scene without a geometry is not kept (X_ITE keeps it until the next one replaces it).
             if let (SceneArg::Scene(ctx), LoadState::Failed) = (scene, state) {
@@ -729,7 +845,9 @@ impl Runtime {
     /// `node .getLive () .getValue ()` of an X3DTimeDependentNode: its own flag, its context and
     /// `evenLive` (X3DTimeDependentNode.checkLiveState).
     pub fn time_node_live(&self, node: NodeId) -> bool {
-        let even = self.private_field(node, "evenLive").is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
+        let even = self
+            .private_field(node, "evenLive")
+            .is_some_and(|k| matches!(self.value(k), FieldValue::SFBool(true)));
         self.ctx_live(self.scene.node(node).ctx) || even
     }
 
@@ -764,9 +882,20 @@ impl Runtime {
                     self.key_set_live(node, now);
                 } else if self.builtin_name(node) == Some("TransformSensor") {
                     self.transform_sensor_set_enabled(node);
-                } else if matches!(self.builtin_name(node), Some("LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor")) {
+                } else if matches!(
+                    self.builtin_name(node),
+                    Some(
+                        "LinePickSensor"
+                            | "PointPickSensor"
+                            | "PrimitivePickSensor"
+                            | "VolumePickSensor"
+                    )
+                ) {
                     self.pick_sensor_set_live(node);
-                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound" | "Sound")) {
+                } else if matches!(
+                    self.builtin_name(node),
+                    Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound" | "Sound")
+                ) {
                     self.sound_set_live(node);
                 } else if self.builtin_name(node) == Some("ParticleSystem") {
                     self.particle_system_set_live(node);
@@ -778,7 +907,10 @@ impl Runtime {
                     self.time_set_live(node, now);
 
                     // BufferAudioSource.set_live__, AudioClip.set_live__: X3DUrlObject.set_live__ too.
-                    if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
+                    if matches!(
+                        self.builtin_name(node),
+                        Some("BufferAudioSource" | "AudioClip")
+                    ) {
                         self.buffer_url_set_live(node, now);
                     }
                 }
@@ -813,9 +945,13 @@ impl Runtime {
             return;
         }
 
-        let inside: Vec<CtxId> = (0..self.scene.contexts.len()).filter(|&c| self.ctx_within(c, root)).collect();
+        let inside: Vec<CtxId> = (0..self.scene.contexts.len())
+            .filter(|&c| self.ctx_within(c, root))
+            .collect();
         let inside_set: std::collections::HashSet<CtxId> = inside.iter().copied().collect();
-        let nodes: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| inside_set.contains(&self.scene.node(n).ctx)).collect();
+        let nodes: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId)
+            .filter(|&n| inside_set.contains(&self.scene.node(n).ctx))
+            .collect();
 
         // ISO/IEC 14772-1 4.12.3: `shutdown ()` runs while the scene is still connected. What it
         // sends is queued; the routes below are deleted before the queue is processed.
@@ -843,7 +979,12 @@ impl Runtime {
 
         // The EXTERNPROTO declarations of the disposed contexts stop loading too (R0.3-E): a scene that
         // a late fetch would merge under a disposed context is never disposed or released.
-        let externs: Vec<ExternId> = (0..self.scene.externprotos.len()).filter(|&e| !self.scene.extern_slots.is_free(e) && inside_set.contains(&self.scene.externprotos[e].ctx)).collect();
+        let externs: Vec<ExternId> = (0..self.scene.externprotos.len())
+            .filter(|&e| {
+                !self.scene.extern_slots.is_free(e)
+                    && inside_set.contains(&self.scene.externprotos[e].ctx)
+            })
+            .collect();
 
         for e in externs {
             self.extern_close(e);
@@ -961,7 +1102,10 @@ impl Runtime {
     /// X3DUrlObject.setAutoRefreshTimer.
     fn inline_set_auto_refresh_timer(&mut self, node: NodeId, interval: f64) {
         let now = self.url_now_ms();
-        let (auto_refresh, limit) = (self.get_f64(node, "autoRefresh"), self.get_f64(node, "autoRefreshTimeLimit"));
+        let (auto_refresh, limit) = (
+            self.get_f64(node, "autoRefresh"),
+            self.get_f64(node, "autoRefreshTimeLimit"),
+        );
 
         if let Some(s) = self.url_state_mut(node) {
             s.timer = url_object::refresh_timer_due(now, s.start_ms, auto_refresh, limit, interval);
@@ -986,14 +1130,24 @@ impl Runtime {
             _ => now,
         };
 
-        self.inline_set_auto_refresh_timer(node, url_object::refresh_interval(auto_refresh, (now - complete) / 1000.0));
+        self.inline_set_auto_refresh_timer(
+            node,
+            url_object::refresh_interval(auto_refresh, (now - complete) / 1000.0),
+        );
     }
 
     /// The due time (ms) and Inline of the earliest auto refresh timer due by `now` (seconds).
     pub(crate) fn inline_next_timer(&self, now: f64) -> Option<(f64, NodeId)> {
         (0..self.scene.nodes.len() as NodeId)
             .filter_map(|n| match self.nrt(n).map(|r| &r.state) {
-                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource" | "AudioClip")) => s.timer.map(|due| (due, n)),
+                Some(nodes::State::UrlObject(s))
+                    if matches!(
+                        self.builtin_name(n),
+                        Some("Inline" | "InlineGeometry" | "BufferAudioSource" | "AudioClip")
+                    ) =>
+                {
+                    s.timer.map(|due| (due, n))
+                }
                 _ => None,
             })
             .filter(|(due, _)| *due <= now * 1000.0)
@@ -1030,9 +1184,15 @@ pub struct InlineDiagnostics {
 
 impl Runtime {
     pub fn inline_diagnostics(&self) -> InlineDiagnostics {
-        let shown: std::collections::HashSet<CtxId> = self.inline_scenes.values().copied().collect();
+        let shown: std::collections::HashSet<CtxId> =
+            self.inline_scenes.values().copied().collect();
         // Only the scenes that an Inline loaded (an EXTERNPROTO's scene is live too, but no Inline shows it).
-        let live: Vec<CtxId> = self.inline_live.iter().filter(|(c, l)| **l && matches!(self.scene.ctx(**c).outer, Outer::Inline(Some(_)))).map(|(c, _)| *c).collect();
+        let live: Vec<CtxId> = self
+            .inline_live
+            .iter()
+            .filter(|(c, l)| **l && matches!(self.scene.ctx(**c).outer, Outer::Inline(Some(_))))
+            .map(|(c, _)| *c)
+            .collect();
 
         InlineDiagnostics {
             pending_scenes: self.pending_scenes.len(),
@@ -1076,7 +1236,10 @@ impl Runtime {
         let inlines = self.route_inlines(r);
 
         if inlines.is_empty() {
-            self.add_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
+            self.add_field_interest(
+                (r.source_node, r.source_loc),
+                (r.destination_node, r.destination_loc),
+            );
             return;
         }
 
@@ -1110,11 +1273,18 @@ impl Runtime {
         let target = match self.scene.node(node).kind {
             NodeKind::Imported(i) => {
                 let imp = &self.scene.imported[i];
-                let exported = self.inline_scenes.get(&imp.inline).and_then(|&c| self.scene.get_exported_node(c, &imp.exported_name));
+                let exported = self
+                    .inline_scenes
+                    .get(&imp.inline)
+                    .and_then(|&c| self.scene.get_exported_node(c, &imp.exported_name));
 
                 match exported {
                     Some(n) => n,
-                    None => return Err(format!("Unknown field '{name}' in node class X3DImportedNodeInstance.")),
+                    None => {
+                        return Err(format!(
+                            "Unknown field '{name}' in node class X3DImportedNodeInstance."
+                        ));
+                    }
                 }
             }
             _ => node,
@@ -1122,19 +1292,31 @@ impl Runtime {
 
         match self.scene.get_field(target, name) {
             Some(loc) => Ok((target, loc)),
-            None => Err(format!("Unknown field '{name}' in node class {}.", self.scene.type_name(target))),
+            None => Err(format!(
+                "Unknown field '{name}' in node class {}.",
+                self.scene.type_name(target)
+            )),
         }
     }
 
     /// X3DExecutionContext.getRoute / addRoute with an imported end: `$.try (() => node .getField (name))` resolves the field of
     /// the exported node when its Inline is loaded, then `X3DRoute.checkFields` runs on the ends that resolved.
-    pub fn check_imported_route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
+    pub fn check_imported_route_ends(
+        &self,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<(), String> {
         if !self.scene.is_imported(source) && !self.scene.is_imported(destination) {
             return Ok(());
         }
 
         let end = |n: NodeId, name: &str| self.route_end(n, name).ok();
-        let (src, dst) = (end(source, source_field), end(destination, destination_field));
+        let (src, dst) = (
+            end(source, source_field),
+            end(destination, destination_field),
+        );
 
         if let (Some(s), Some(d)) = (src, dst) {
             let (sf, df) = (self.scene.field(s.0, s.1), self.scene.field(d.0, d.1));
@@ -1151,7 +1333,10 @@ impl Runtime {
             let sf = self.scene.field(s.0, s.1);
 
             if !x3d_fields::access::is_output(sf.access) {
-                return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+                return Err(format!(
+                    "Bad ROUTE specification: source field \"{}\" must be an output.",
+                    sf.name
+                ));
             }
         }
 
@@ -1159,7 +1344,10 @@ impl Runtime {
             let df = self.scene.field(d.0, d.1);
 
             if !x3d_fields::access::is_input(df.access) {
-                return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+                return Err(format!(
+                    "Bad ROUTE specification: destination field \"{}\" must be an input.",
+                    df.name
+                ));
             }
         }
 
@@ -1202,9 +1390,15 @@ impl Runtime {
                         sf.name, df.name
                     ))
                 } else if !x3d_fields::access::is_output(sf.access) {
-                    Err(format!("Error: Bad ROUTE specification: source field \"{}\" must be an output.", sf.name))
+                    Err(format!(
+                        "Error: Bad ROUTE specification: source field \"{}\" must be an output.",
+                        sf.name
+                    ))
                 } else if !x3d_fields::access::is_input(df.access) {
-                    Err(format!("Error: Bad ROUTE specification: destination field \"{}\" must be an input.", df.name))
+                    Err(format!(
+                        "Error: Bad ROUTE specification: destination field \"{}\" must be an input.",
+                        df.name
+                    ))
                 } else {
                     Ok(())
                 }
@@ -1216,9 +1410,16 @@ impl Runtime {
             Ok(()) => {
                 let (s, d) = (src.unwrap(), dst.unwrap());
                 let (sf, df) = (self.scene.field(s.0, s.1), self.scene.field(d.0, d.1));
-                let source_name =
-                    if sf.access == x3d_fields::access::INPUT_OUTPUT { format!("{}_changed", sf.name) } else { sf.name.clone() };
-                let destination_name = if df.access == x3d_fields::access::INPUT_OUTPUT { format!("set_{}", df.name) } else { df.name.clone() };
+                let source_name = if sf.access == x3d_fields::access::INPUT_OUTPUT {
+                    format!("{}_changed", sf.name)
+                } else {
+                    sf.name.clone()
+                };
+                let destination_name = if df.access == x3d_fields::access::INPUT_OUTPUT {
+                    format!("set_{}", df.name)
+                } else {
+                    df.name.clone()
+                };
 
                 self.scene.field_mut(s.0, s.1).output_routes += 1;
                 self.scene.field_mut(d.0, d.1).input_routes += 1;
@@ -1230,7 +1431,10 @@ impl Runtime {
                 route.destination_field = destination_name;
             }
             Err(e) => {
-                let all_complete = self.route_inlines(&r).into_iter().all(|n| self.url_load_state(n) == LoadState::Complete);
+                let all_complete = self
+                    .route_inlines(&r)
+                    .into_iter()
+                    .all(|n| self.url_load_state(n) == LoadState::Complete);
 
                 if all_complete {
                     self.log_warn(e);

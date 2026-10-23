@@ -15,36 +15,55 @@ use x3d_render::gpu::{DepthMode, Gpu};
 static SERIAL: Mutex<()> = Mutex::new(());
 
 fn oracle() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap()
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap()
 }
 
 fn decode(p: &std::path::Path) -> Vec<u8> {
-    image::open(p).unwrap_or_else(|e| panic!("{}: {e}", p.display())).to_rgba8().into_raw()
+    image::open(p)
+        .unwrap_or_else(|e| panic!("{}: {e}", p.display()))
+        .to_rgba8()
+        .into_raw()
 }
 
 fn render(g: &mut Gpu, mode: DepthMode, dir: &str, name: &str) -> Vec<u8> {
     g.renderer.set_depth_mode(mode);
     let root = oracle();
-    let rgba = x3d_render::render_file(g, &root, &root.join(format!("{dir}/{name}.wrl")), 512, 512).unwrap().rgba;
+    let rgba = x3d_render::render_file(g, &root, &root.join(format!("{dir}/{name}.wrl")), 512, 512)
+        .unwrap()
+        .rgba;
     g.renderer.set_depth_mode(DepthMode::Standard);
     rgba
 }
 
 fn over(a: &[u8], b: &[u8]) -> usize {
-    a.chunks_exact(4).zip(b.chunks_exact(4)).filter(|(p, q)| (0..3).any(|c| p[c].abs_diff(q[c]) > 8)).count()
+    a.chunks_exact(4)
+        .zip(b.chunks_exact(4))
+        .filter(|(p, q)| (0..3).any(|c| p[c].abs_diff(q[c]) > 8))
+        .count()
 }
 
 #[test]
 fn standard_and_log_match_x_ite() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
 
-    for (mode, baseline) in [(DepthMode::Standard, "render-zfight-baseline"), (DepthMode::Logarithmic, "render-zfight-log-baseline")] {
+    for (mode, baseline) in [
+        (DepthMode::Standard, "render-zfight-baseline"),
+        (DepthMode::Logarithmic, "render-zfight-log-baseline"),
+    ] {
         for name in ["tilt-pair", "far-range"] {
             let want = decode(&oracle().join(format!("{baseline}/{name}.wrl.png")));
             let got = render(&mut g, mode, "synthetic-zfight", name);
             let n = over(&got, &want);
-            assert!(n * 1000 <= 512 * 512 * 5, "{mode:?} {name}: {n} pixels over 8");
+            assert!(
+                n * 1000 <= 512 * 512 * 5,
+                "{mode:?} {name}: {n} pixels over 8"
+            );
         }
     }
 }
@@ -52,10 +71,23 @@ fn standard_and_log_match_x_ite() {
 #[test]
 fn log_shows_what_standard_cannot() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
-    let px = |rgba: &[u8], x: usize, y: usize| [rgba[(y * 512 + x) * 4], rgba[(y * 512 + x) * 4 + 1], rgba[(y * 512 + x) * 4 + 2]];
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
+    let px = |rgba: &[u8], x: usize, y: usize| {
+        [
+            rgba[(y * 512 + x) * 4],
+            rgba[(y * 512 + x) * 4 + 1],
+            rgba[(y * 512 + x) * 4 + 2],
+        ]
+    };
     let std = render(&mut g, DepthMode::Standard, "synthetic-zfight", "far-range");
-    let log = render(&mut g, DepthMode::Logarithmic, "synthetic-zfight", "far-range");
+    let log = render(
+        &mut g,
+        DepthMode::Logarithmic,
+        "synthetic-zfight",
+        "far-range",
+    );
     // Center: red (nearer) over green (5 units behind at z = -1e4). Standard 24-bit depth ties them
     // and the later green wins; the log buffer resolves it. The corner shows the blue quad at
     // z = -2e5, beyond the standard far plane (1e5) but inside the log one (1e10).
@@ -83,18 +115,35 @@ fn wrong_side(rgba: &[u8]) -> usize {
 #[test]
 fn reversed_resolves_near_coplanar_surfaces() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
-    let std = wrong_side(&render(&mut g, DepthMode::Standard, "synthetic-zfight", "tilt-pair"));
-    let rev = wrong_side(&render(&mut g, DepthMode::Reversed, "synthetic-zfight", "tilt-pair"));
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
+    let std = wrong_side(&render(
+        &mut g,
+        DepthMode::Standard,
+        "synthetic-zfight",
+        "tilt-pair",
+    ));
+    let rev = wrong_side(&render(
+        &mut g,
+        DepthMode::Reversed,
+        "synthetic-zfight",
+        "tilt-pair",
+    ));
     eprintln!("wrong-side pixels: standard {std}, reversed {rev}");
-    assert!(std > 1000, "the standard buffer should misplace the crossing (got {std})");
+    assert!(
+        std > 1000,
+        "the standard buffer should misplace the crossing (got {std})"
+    );
     assert!(rev * 20 < std, "reversed {rev} vs standard {std}");
 }
 
 #[test]
 fn reversed_leaves_other_scenes_alone() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = Gpu::new() else {
+        return eprintln!("no adapter");
+    };
 
     for name in ["edge-quad", "edge-sliver", "edge-sphere", "edge-fine-lines"] {
         let a = render(&mut g, DepthMode::Standard, "synthetic-msaa", name);

@@ -9,11 +9,20 @@ use std::path::PathBuf;
 use std::process::Command;
 
 fn stamps(world: &str) -> Vec<String> {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch12-text-warmup-{}-{world}.json", std::process::id()));
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let out = std::env::temp_dir().join(format!(
+        "rea-batch12-text-warmup-{}-{world}.json",
+        std::process::id()
+    ));
     let status = Command::new(env!("CARGO_BIN_EXE_x3d-drive"))
         .current_dir(&root)
-        .args([format!("oracle/synthetic-rea-b11-text/{world}.wrl"), format!("oracle/synthetic-rea-b11-text/{world}.json")])
+        .args([
+            format!("oracle/synthetic-rea-b11-text/{world}.wrl"),
+            format!("oracle/synthetic-rea-b11-text/{world}.json"),
+        ])
         .args(["--oracle", "oracle", "--out"])
         .arg(&out)
         .status()
@@ -21,21 +30,36 @@ fn stamps(world: &str) -> Vec<String> {
 
     assert!(status.success(), "{world}: x3d-drive exited with {status}");
 
-    let json: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap()).unwrap();
+    let json: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&out).unwrap()).unwrap();
     let _ = std::fs::remove_file(&out);
     let vrml = json["vrml"].as_object().unwrap();
-    let last = vrml.keys().max_by_key(|k| k.parse::<u32>().unwrap()).unwrap();
+    let last = vrml
+        .keys()
+        .max_by_key(|k| k.parse::<u32>().unwrap())
+        .unwrap();
     let text = vrml[last].as_str().unwrap();
 
     // The `out` field: "fN name=value" strings.
-    text.split('"').filter(|s| s.starts_with('f') && s.contains('=') && !s.starts_with("f0 ")).map(str::to_string).collect()
+    text.split('"')
+        .filter(|s| s.starts_with('f') && s.contains('=') && !s.starts_with("f0 "))
+        .map(str::to_string)
+        .collect()
 }
 
 fn check(world: &str, real: [&str; 3]) {
     let s = stamps(world);
-    let empty = ["f1 lineBounds=[ 0 0, 0 0 ]", "f1 origin=0 0 0", "f1 textBounds=0 0"];
+    let empty = [
+        "f1 lineBounds=[ 0 0, 0 0 ]",
+        "f1 origin=0 0 0",
+        "f1 textBounds=0 0",
+    ];
 
-    assert_eq!(s.get(..3), Some(&empty.map(String::from)[..]), "{world}: the first build is not the empty one: {s:?}");
+    assert_eq!(
+        s.get(..3),
+        Some(&empty.map(String::from)[..]),
+        "{world}: the first build is not the empty one: {s:?}"
+    );
 
     // Nothing in frame 1 has the font yet.
     let f1: Vec<&String> = s.iter().filter(|e| e.starts_with("f1 ")).collect();
@@ -43,12 +67,31 @@ fn check(world: &str, real: [&str; 3]) {
 
     // The font's values come later, all three, with the values of X_ITE.
     for v in real {
-        assert!(s.iter().any(|e| e.split_once(' ').is_some_and(|(f, rest)| f != "f1" && rest == v)), "{world}: no {v} after frame 1: {s:?}");
+        assert!(
+            s.iter().any(|e| e
+                .split_once(' ')
+                .is_some_and(|(f, rest)| f != "f1" && rest == v)),
+            "{world}: no {v} after frame 1: {s:?}"
+        );
     }
 }
 
 #[test]
 fn rea_batch12_text_first_build_has_no_font() {
-    check("warm-stamp", ["lineBounds=[ 1.12207 1.052734, 0.453125 1 ]", "textBounds=1.12207 1.769531", "origin=0 0.7597656 0"]);
-    check("warm-stamp-fs", ["lineBounds=[ 1.06 0.965, 0.445 1 ]", "textBounds=1.06 1.788", "origin=0 0.776 0"]);
+    check(
+        "warm-stamp",
+        [
+            "lineBounds=[ 1.12207 1.052734, 0.453125 1 ]",
+            "textBounds=1.12207 1.769531",
+            "origin=0 0.7597656 0",
+        ],
+    );
+    check(
+        "warm-stamp-fs",
+        [
+            "lineBounds=[ 1.06 0.965, 0.445 1 ]",
+            "textBounds=1.06 1.788",
+            "origin=0 0.776 0",
+        ],
+    );
 }

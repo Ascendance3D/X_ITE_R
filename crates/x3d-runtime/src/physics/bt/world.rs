@@ -3,11 +3,13 @@
 //! calls X_ITE makes (snake_case).
 
 use super::body::*;
-use super::broadphase::{DbvtBroadphase, ALL_FILTER, DEFAULT_FILTER, STATIC_FILTER};
+use super::broadphase::{ALL_FILTER, DEFAULT_FILTER, DbvtBroadphase, STATIC_FILTER};
 use super::constraint::Constraint;
-use super::contact::{Manifold, ManifoldId, ManifoldPool, ManifoldResult, G_CONTACT_BREAKING_THRESHOLD};
-use super::dispatch::{find_algorithm, Algo, ConstraintLink, Cx, Wrap};
-use super::island::{quick_sort, UnionFind};
+use super::contact::{
+    G_CONTACT_BREAKING_THRESHOLD, Manifold, ManifoldId, ManifoldPool, ManifoldResult,
+};
+use super::dispatch::{Algo, ConstraintLink, Cx, Wrap, find_algorithm};
+use super::island::{UnionFind, quick_sort};
 use super::math::*;
 use super::shape::Shapes;
 use super::solver::{SolveCx, Solver, SolverInfo};
@@ -107,7 +109,12 @@ impl World {
 
     /// btMotionState::setWorldTransform.
     pub fn set_motion_state_world_transform(&mut self, id: MotionStateId, tf: Tf) {
-        super::trace(|| format!("[\"btDefaultMotionState\",\"setWorldTransform\",{}]", super::tj(&tf)));
+        super::trace(|| {
+            format!(
+                "[\"btDefaultMotionState\",\"setWorldTransform\",{}]",
+                super::tj(&tf)
+            )
+        });
         self.motion_states[id].tf = rt(tf);
     }
 
@@ -121,7 +128,9 @@ impl World {
     /// btRigidBody::setMotionState: the body takes the motion state's world transform (the
     /// inverse inertia tensor is not recomputed).
     pub fn set_motion_state(&mut self, id: BodyId, ms: MotionStateId) {
-        super::trace(|| "[\"btRigidBody\",\"setMotionState\",\"<btDefaultMotionState>\"]".to_string());
+        super::trace(|| {
+            "[\"btRigidBody\",\"setMotionState\",\"<btDefaultMotionState>\"]".to_string()
+        });
         self.bodies[id].motion_state = Some(ms);
         self.bodies[id].world_tf = self.motion_states[ms].tf;
     }
@@ -138,7 +147,12 @@ impl World {
 
     /// btDiscreteDynamicsWorld::setGravity.
     pub fn set_gravity(&mut self, gravity: V3) {
-        super::trace(|| format!("[\"btDiscreteDynamicsWorld\",\"setGravity\",{}]", super::vj(&gravity)));
+        super::trace(|| {
+            format!(
+                "[\"btDiscreteDynamicsWorld\",\"setGravity\",{}]",
+                super::vj(&gravity)
+            )
+        });
         let gravity = r3(gravity);
         self.gravity = gravity;
 
@@ -156,8 +170,12 @@ impl World {
 
     /// addRigidBody (body).
     pub fn add_rigid_body(&mut self, id: BodyId) {
-        super::trace(|| "[\"btDiscreteDynamicsWorld\",\"addRigidBody\",\"<btRigidBody>\"]".to_string());
-        if !self.bodies[id].is_static_or_kinematic() && self.bodies[id].flags & BT_DISABLE_WORLD_GRAVITY == 0 {
+        super::trace(|| {
+            "[\"btDiscreteDynamicsWorld\",\"addRigidBody\",\"<btRigidBody>\"]".to_string()
+        });
+        if !self.bodies[id].is_static_or_kinematic()
+            && self.bodies[id].flags & BT_DISABLE_WORLD_GRAVITY == 0
+        {
             let g = self.gravity;
             self.bodies[id].set_gravity(g);
         }
@@ -169,8 +187,16 @@ impl World {
         }
 
         let is_dynamic = !(self.bodies[id].is_static() || self.bodies[id].is_kinematic());
-        let group = if is_dynamic { DEFAULT_FILTER } else { STATIC_FILTER };
-        let mask = if is_dynamic { ALL_FILTER } else { ALL_FILTER ^ STATIC_FILTER };
+        let group = if is_dynamic {
+            DEFAULT_FILTER
+        } else {
+            STATIC_FILTER
+        };
+        let mask = if is_dynamic {
+            ALL_FILTER
+        } else {
+            ALL_FILTER ^ STATIC_FILTER
+        };
 
         // btCollisionWorld::addCollisionObject
         self.collision_objects.push(id);
@@ -182,7 +208,9 @@ impl World {
 
     /// removeRigidBody (body).
     pub fn remove_rigid_body(&mut self, id: BodyId) {
-        super::trace(|| "[\"btDiscreteDynamicsWorld\",\"removeRigidBody\",\"<btRigidBody>\"]".to_string());
+        super::trace(|| {
+            "[\"btDiscreteDynamicsWorld\",\"removeRigidBody\",\"<btRigidBody>\"]".to_string()
+        });
         if let Some(p) = self.non_static.iter().position(|&b| b == id) {
             let last = self.non_static.len() - 1;
             self.non_static.swap(p, last);
@@ -204,9 +232,17 @@ impl World {
     }
 
     /// addConstraint (constraint, disableCollisionsBetweenLinkedBodies); returns the constraint id.
-    pub fn add_constraint(&mut self, c: Constraint, disable_collisions_between_linked_bodies: bool) -> usize {
+    pub fn add_constraint(
+        &mut self,
+        c: Constraint,
+        disable_collisions_between_linked_bodies: bool,
+    ) -> usize {
         // (a removed constraint's slot is reused, so the table does not grow with joint churn)
-        let link = ConstraintLink { a: c.body_a, b: c.body_b, enabled: c.enabled };
+        let link = ConstraintLink {
+            a: c.body_a,
+            b: c.body_b,
+            enabled: c.enabled,
+        };
         let (a, b) = (c.body_a, c.body_b);
         let id = match self.free_joints.pop() {
             Some(id) => {
@@ -270,7 +306,12 @@ impl World {
             constraints: self.constraints.len(),
             constraint_slots: self.joints.len(),
             links: self.links.len(),
-            proxies: self.broadphase.proxies.iter().filter(|p| p.is_some()).count(),
+            proxies: self
+                .broadphase
+                .proxies
+                .iter()
+                .filter(|p| p.is_some())
+                .count(),
             proxy_slots: self.broadphase.proxies.len(),
             pairs: self.broadphase.pairs.len(),
             manifolds: self.pool.num_manifolds(),
@@ -297,7 +338,12 @@ impl World {
         if dropped.is_empty() {
             return;
         }
-        let mut cx = Cx { shapes: &self.shapes, bodies: &self.bodies, pool: &mut self.pool, links: &self.links };
+        let mut cx = Cx {
+            shapes: &self.shapes,
+            bodies: &self.bodies,
+            pool: &mut self.pool,
+            links: &self.links,
+        };
         for a in dropped {
             a.release(&mut cx);
         }
@@ -306,8 +352,17 @@ impl World {
     // --- simulation ---
 
     /// stepSimulation (timeStep, maxSubSteps, fixedTimeStep); returns the number of substeps.
-    pub fn step_simulation(&mut self, time_step: f64, max_sub_steps: i32, fixed_time_step: f64) -> i32 {
-        super::trace(|| format!("[\"btDiscreteDynamicsWorld\",\"stepSimulation\",{time_step},{max_sub_steps},{fixed_time_step}]"));
+    pub fn step_simulation(
+        &mut self,
+        time_step: f64,
+        max_sub_steps: i32,
+        fixed_time_step: f64,
+    ) -> i32 {
+        super::trace(|| {
+            format!(
+                "[\"btDiscreteDynamicsWorld\",\"stepSimulation\",{time_step},{max_sub_steps},{fixed_time_step}]"
+            )
+        });
         let _guard = super::StepGuard::new();
         let mut max_sub_steps = max_sub_steps;
         let mut fixed_time_step = fixed_time_step;
@@ -330,7 +385,11 @@ impl World {
         } else {
             // variable timestep
             fixed_time_step = time_step;
-            self.local_time = if self.latency_motion_state_interpolation { 0.0 } else { f(time_step) };
+            self.local_time = if self.latency_motion_state_interpolation {
+                0.0
+            } else {
+                f(time_step)
+            };
             self.fixed_time_step = 0.0;
 
             if time_step.abs() < SIMD_EPSILON {
@@ -400,7 +459,11 @@ impl World {
         let body = &self.bodies[b];
 
         if let (Some(ms), false) = (body.motion_state, body.is_static_or_kinematic()) {
-            let t = if self.latency_motion_state_interpolation && self.fixed_time_step != 0.0 { self.local_time - self.fixed_time_step } else { self.local_time * body.hit_fraction };
+            let t = if self.latency_motion_state_interpolation && self.fixed_time_step != 0.0 {
+                self.local_time - self.fixed_time_step
+            } else {
+                self.local_time * body.hit_fraction
+            };
             let tf = integrate_transform(&body.interp_tf, body.interp_lin, body.interp_ang, t);
             self.motion_states[ms].tf = rt(tf);
         }
@@ -540,9 +603,22 @@ impl World {
     /// btCollisionDispatcher::defaultNearCallback.
     fn near_callback(&mut self, pair: usize, b0: BodyId, b1: BodyId) {
         let mut algo = self.broadphase.pairs[pair].algo.take();
-        let w0 = Wrap { shape: self.bodies[b0].shape, tf: self.bodies[b0].world_tf, body: b0 };
-        let w1 = Wrap { shape: self.bodies[b1].shape, tf: self.bodies[b1].world_tf, body: b1 };
-        let mut cx = Cx { shapes: &self.shapes, bodies: &self.bodies, pool: &mut self.pool, links: &self.links };
+        let w0 = Wrap {
+            shape: self.bodies[b0].shape,
+            tf: self.bodies[b0].world_tf,
+            body: b0,
+        };
+        let w1 = Wrap {
+            shape: self.bodies[b1].shape,
+            tf: self.bodies[b1].world_tf,
+            body: b1,
+        };
+        let mut cx = Cx {
+            shapes: &self.shapes,
+            bodies: &self.bodies,
+            pool: &mut self.pool,
+            links: &self.links,
+        };
 
         if cx.needs_collision(b0, b1) {
             // dispatcher will keep algorithms persistent in the collision pair
@@ -581,8 +657,11 @@ impl World {
         for pair in &self.broadphase.pairs {
             let c0 = self.broadphase.proxy(pair.p0).client;
             let c1 = self.broadphase.proxy(pair.p1).client;
-            if self.bodies[c0].merges_simulation_islands() && self.bodies[c1].merges_simulation_islands() {
-                self.union_find.unite(self.bodies[c0].island_tag, self.bodies[c1].island_tag);
+            if self.bodies[c0].merges_simulation_islands()
+                && self.bodies[c1].merges_simulation_islands()
+            {
+                self.union_find
+                    .unite(self.bodies[c0].island_tag, self.bodies[c1].island_tag);
             }
         }
 
@@ -591,8 +670,11 @@ impl World {
             let j = &self.joints[c];
             if j.enabled {
                 let (a, b) = (j.body_a, j.body_b);
-                if !self.bodies[a].is_static_or_kinematic() && !self.bodies[b].is_static_or_kinematic() {
-                    self.union_find.unite(self.bodies[a].island_tag, self.bodies[b].island_tag);
+                if !self.bodies[a].is_static_or_kinematic()
+                    && !self.bodies[b].is_static_or_kinematic()
+                {
+                    self.union_find
+                        .unite(self.bodies[a].island_tag, self.bodies[b].island_tag);
                 }
             }
         }
@@ -618,13 +700,21 @@ impl World {
     fn constraint_island_id(&self, c: usize) -> i32 {
         let j = &self.joints[c];
         let t0 = self.bodies[j.body_a].island_tag;
-        if t0 >= 0 { t0 } else { self.bodies[j.body_b].island_tag }
+        if t0 >= 0 {
+            t0
+        } else {
+            self.bodies[j.body_b].island_tag
+        }
     }
 
     fn manifold_island_id(&self, m: ManifoldId) -> i32 {
         let mf = self.pool.get(m);
         let t0 = self.bodies[mf.body0].island_tag;
-        if t0 >= 0 { t0 } else { self.bodies[mf.body1].island_tag }
+        if t0 >= 0 {
+            t0
+        } else {
+            self.bodies[mf.body1].island_tag
+        }
     }
 
     /// solveConstraints.
@@ -632,7 +722,10 @@ impl World {
         // sort the constraints on their island
         let mut sorted: Vec<usize> = self.constraints.clone();
         {
-            let ids: Vec<(usize, i32)> = sorted.iter().map(|&c| (c, self.constraint_island_id(c))).collect();
+            let ids: Vec<(usize, i32)> = sorted
+                .iter()
+                .map(|&c| (c, self.constraint_island_id(c)))
+                .collect();
             let mut keyed = ids;
             quick_sort(&mut keyed, &|a: &(usize, i32), b: &(usize, i32)| a.1 < b.1);
             sorted = keyed.into_iter().map(|(c, _)| c).collect();
@@ -647,7 +740,9 @@ impl World {
         while start_island_index < num_elem {
             let island_id = self.union_find.elements[start_island_index].id;
             end_island_index = start_island_index + 1;
-            while end_island_index < num_elem && self.union_find.elements[end_island_index].id == island_id {
+            while end_island_index < num_elem
+                && self.union_find.elements[end_island_index].id == island_id
+            {
                 end_island_index += 1;
             }
 
@@ -695,18 +790,31 @@ impl World {
                 (mf.body0, mf.body1)
             };
 
-            if self.bodies[b0].activation_state != ISLAND_SLEEPING || self.bodies[b1].activation_state != ISLAND_SLEEPING {
+            if self.bodies[b0].activation_state != ISLAND_SLEEPING
+                || self.bodies[b1].activation_state != ISLAND_SLEEPING
+            {
                 // kinematic objects don't merge islands, but wake up all connected objects
-                if self.bodies[b0].is_kinematic() && self.bodies[b0].activation_state != ISLAND_SLEEPING && self.bodies[b0].has_contact_response() {
+                if self.bodies[b0].is_kinematic()
+                    && self.bodies[b0].activation_state != ISLAND_SLEEPING
+                    && self.bodies[b0].has_contact_response()
+                {
                     self.bodies[b1].activate(false);
                 }
 
-                if self.bodies[b1].is_kinematic() && self.bodies[b1].activation_state != ISLAND_SLEEPING && self.bodies[b1].has_contact_response() {
+                if self.bodies[b1].is_kinematic()
+                    && self.bodies[b1].activation_state != ISLAND_SLEEPING
+                    && self.bodies[b1].has_contact_response()
+                {
                     self.bodies[b0].activate(false);
                 }
 
                 // filtering for response
-                let cx = Cx { shapes: &self.shapes, bodies: &self.bodies, pool: &mut self.pool, links: &self.links };
+                let cx = Cx {
+                    shapes: &self.shapes,
+                    bodies: &self.bodies,
+                    pool: &mut self.pool,
+                    links: &self.links,
+                };
                 if cx.needs_response(b0, b1) {
                     island_manifold.push(m);
                 }
@@ -714,9 +822,15 @@ impl World {
         }
 
         {
-            let keyed: Vec<(ManifoldId, i32)> = island_manifold.iter().map(|&m| (m, self.manifold_island_id(m))).collect();
+            let keyed: Vec<(ManifoldId, i32)> = island_manifold
+                .iter()
+                .map(|&m| (m, self.manifold_island_id(m)))
+                .collect();
             let mut keyed = keyed;
-            quick_sort(&mut keyed, &|a: &(ManifoldId, i32), b: &(ManifoldId, i32)| a.1 < b.1);
+            quick_sort(
+                &mut keyed,
+                &|a: &(ManifoldId, i32), b: &(ManifoldId, i32)| a.1 < b.1,
+            );
             island_manifold = keyed.into_iter().map(|(m, _)| m).collect();
         }
 
@@ -735,7 +849,9 @@ impl World {
             let mut island_bodies: Vec<BodyId> = vec![];
             let mut end_island_index = start_island_index;
 
-            while end_island_index < num_elem && self.union_find.elements[end_island_index].id == island_id {
+            while end_island_index < num_elem
+                && self.union_find.elements[end_island_index].id == island_id
+            {
                 let i = self.union_find.elements[end_island_index].sz as usize;
                 let o = self.collision_objects[i];
                 island_bodies.push(o);
@@ -753,7 +869,9 @@ impl World {
 
                 if cur_island_id == island_id {
                     end_manifold_index = start_manifold_index + 1;
-                    while end_manifold_index < num_manifolds && island_id == self.manifold_island_id(island_manifold[end_manifold_index]) {
+                    while end_manifold_index < num_manifolds
+                        && island_id == self.manifold_island_id(island_manifold[end_manifold_index])
+                    {
                         end_manifold_index += 1;
                     }
                     island_manifolds = &island_manifold[start_manifold_index..end_manifold_index];
@@ -790,8 +908,14 @@ impl World {
                     batch_constraints.extend_from_slice(&sorted[s..s + num_cur]);
                 }
 
-                if batch_constraints.len() + batch_manifolds.len() > self.solver_info.minimum_solver_batch_size {
-                    self.process_constraints(&mut batch_bodies, &mut batch_manifolds, &mut batch_constraints);
+                if batch_constraints.len() + batch_manifolds.len()
+                    > self.solver_info.minimum_solver_batch_size
+                {
+                    self.process_constraints(
+                        &mut batch_bodies,
+                        &mut batch_manifolds,
+                        &mut batch_constraints,
+                    );
                 }
             }
 
@@ -802,14 +926,28 @@ impl World {
             start_island_index = end_island_index;
         }
 
-        self.process_constraints(&mut batch_bodies, &mut batch_manifolds, &mut batch_constraints);
+        self.process_constraints(
+            &mut batch_bodies,
+            &mut batch_manifolds,
+            &mut batch_constraints,
+        );
     }
 
     /// InplaceSolverIslandCallback::processConstraints.
-    fn process_constraints(&mut self, bodies: &mut Vec<BodyId>, manifolds: &mut Vec<ManifoldId>, constraints: &mut Vec<usize>) {
+    fn process_constraints(
+        &mut self,
+        bodies: &mut Vec<BodyId>,
+        manifolds: &mut Vec<ManifoldId>,
+        constraints: &mut Vec<usize>,
+    ) {
         let info = self.solver_info.clone();
-        let mut cx = SolveCx { rigid: &mut self.bodies, pool: &mut self.pool, joints: &mut self.joints };
-        self.solver.solve_group(&mut cx, bodies, manifolds, constraints, &info);
+        let mut cx = SolveCx {
+            rigid: &mut self.bodies,
+            pool: &mut self.pool,
+            joints: &mut self.joints,
+        };
+        self.solver
+            .solve_group(&mut cx, bodies, manifolds, constraints, &info);
         bodies.clear();
         manifolds.clear();
         constraints.clear();
@@ -832,7 +970,11 @@ fn calculate_velocity(t0: &Tf, t1: &Tf, time_step: f64) -> (V3, V3) {
     let n = qnormalize(q);
     let angle = qangle(n);
     let s = (1.0 - n[3] * n[3]).max(0.0).sqrt();
-    let axis = if s < 1e-4 { [1.0, 0.0, 0.0] } else { [n[0] / s, n[1] / s, n[2] / s] };
+    let axis = if s < 1e-4 {
+        [1.0, 0.0, 0.0]
+    } else {
+        [n[0] / s, n[1] / s, n[2] / s]
+    };
     (lin, scale(axis, angle / time_step))
 }
 

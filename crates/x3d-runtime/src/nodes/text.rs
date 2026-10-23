@@ -56,14 +56,24 @@ impl Runtime {
         let (family, style) = self.font_style_families(node);
 
         if reload {
-            if let Some(l) = self.font_style_loads.iter_mut().find(|l| l.node == node && l.reload && l.stage == LoadStage::Timer) {
+            if let Some(l) = self
+                .font_style_loads
+                .iter_mut()
+                .find(|l| l.node == node && l.reload && l.stage == LoadStage::Timer)
+            {
                 l.family = family;
                 l.style = style;
                 return;
             }
         }
 
-        self.font_style_loads.push(FontStyleLoad { node, family, style, reload, stage: LoadStage::Timer });
+        self.font_style_loads.push(FontStyleLoad {
+            node,
+            family,
+            style,
+            reload,
+            stage: LoadStage::Timer,
+        });
     }
 
     /// `this ._family .copy ()` with "SERIF" pushed, and `this ._style .getValue ()`.
@@ -83,7 +93,9 @@ impl Runtime {
 
     /// Is a FontStyle (or the default FontStyle) still loading its font? x_ite-shot.mjs waits for these during its settle time.
     pub fn fonts_loading(&self) -> bool {
-        !self.font_style_loads.is_empty() || !self.pending_font_styles.is_empty() || self.default_font == DefaultFont::Loading
+        !self.font_style_loads.is_empty()
+            || !self.pending_font_styles.is_empty()
+            || self.default_font == DefaultFont::Loading
     }
 
     /// A harness without frames (the corpus dump) waits for the font loads as the oracle page does: the `sleep (0)` timers fire,
@@ -100,7 +112,9 @@ impl Runtime {
                 }
             }
 
-            if self.default_font == DefaultFont::Loading && self.default_font_stage == LoadStage::Timer {
+            if self.default_font == DefaultFont::Loading
+                && self.default_font_stage == LoadStage::Timer
+            {
                 self.default_font_stage = LoadStage::Fired;
             }
 
@@ -120,7 +134,8 @@ impl Runtime {
             }
         }
 
-        if self.default_font == DefaultFont::Loading && self.default_font_stage == LoadStage::Timer {
+        if self.default_font == DefaultFont::Loading && self.default_font_stage == LoadStage::Timer
+        {
             self.default_font_stage = LoadStage::Fired;
         }
     }
@@ -135,7 +150,10 @@ impl Runtime {
             match l.stage {
                 LoadStage::Timer => keep.push(l),
                 LoadStage::Fired => {
-                    let file = l.family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &l.style).map(|(name, _)| name.to_string()));
+                    let file = l.family.iter().find_map(|f| {
+                        x3d_text::fonts::default_font_file(f, &l.style)
+                            .map(|(name, _)| name.to_string())
+                    });
 
                     match file {
                         Some(key) if !self.loaded_font_files.contains(&key) => {
@@ -172,13 +190,19 @@ impl Runtime {
             return;
         }
 
-        self.font_style_snapshot.insert(l.node, (l.family.clone(), l.style.clone()));
+        self.font_style_snapshot
+            .insert(l.node, (l.family.clone(), l.style.clone()));
         self.font_style_continue(l.node, l.family, 0, l.style);
     }
 
     /// Text constructor: X3DGeometryNode's `_rebuild` (outputOnly SFTime).
     pub(crate) fn text_construct(&mut self, node: NodeId) {
-        self.add_private_field(node, "rebuild", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+        self.add_private_field(
+            node,
+            "rebuild",
+            access::OUTPUT_ONLY,
+            FieldValue::SFTime(0.0),
+        );
     }
 
     /// X3DGeometryNode.initialize, then Text.initialize.
@@ -220,7 +244,9 @@ impl Runtime {
             return;
         }
 
-        let styles: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("ScreenFontStyle")).collect();
+        let styles: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId)
+            .filter(|&n| self.builtin_name(n) == Some("ScreenFontStyle"))
+            .collect();
 
         for n in styles {
             self.add_node_event(n);
@@ -297,7 +323,11 @@ impl Runtime {
             let file_url = base.as_ref().and_then(|b| b.join(f).ok())?;
             let path = file_url.path().to_ascii_lowercase();
 
-            if file_url.scheme() == "data" || [".woff2", ".woff", ".otf", ".ttf"].iter().any(|e| path.ends_with(e)) {
+            if file_url.scheme() == "data"
+                || [".woff2", ".woff", ".otf", ".ttf"]
+                    .iter()
+                    .any(|e| path.ends_with(e))
+            {
                 match x3d_text::fonts::url_font(file_url.as_str()) {
                     Some(Some(font)) => return Some(font),
                     Some(None) => return None,
@@ -313,7 +343,9 @@ impl Runtime {
     fn text_font(&self, node: NodeId) -> Option<Rc<Font>> {
         match self.text_font_styles.get(&node).copied().flatten() {
             Some(fs) => self.font_style_font.get(&fs).cloned().flatten(),
-            None => (self.default_font == DefaultFont::Loaded).then(|| x3d_text::fonts::load_default_font("SERIF", "PLAIN")).flatten(),
+            None => (self.default_font == DefaultFont::Loaded)
+                .then(|| x3d_text::fonts::load_default_font("SERIF", "PLAIN"))
+                .flatten(),
         }
     }
 
@@ -325,7 +357,9 @@ impl Runtime {
     }
 
     fn text_font_style_params(&self, fs: Option<NodeId>) -> FontStyleParams {
-        let Some(f) = fs else { return FontStyleParams::default() };
+        let Some(f) = fs else {
+            return FontStyleParams::default();
+        };
         let num = |name: &str, default: f64| match self.pre_value(f, name) {
             Some(FieldValue::SFFloat(v)) => *v as f64,
             _ => default,
@@ -338,11 +372,24 @@ impl Runtime {
 
         // ScreenFontStyle.getScale: pointSize × PixelsPerPoint × ContentScale (pixels); getContentScale: ContentScale.
         let screen = self.builtin_name(f) == Some("ScreenFontStyle");
-        let rendering = |name: &str| self.browser_options.rendering.get(name).map_or(1.0, |v| v.as_f64());
-        let content_scale = if screen { rendering("ContentScale") } else { 1.0 };
+        let rendering = |name: &str| {
+            self.browser_options
+                .rendering
+                .get(name)
+                .map_or(1.0, |v| v.as_f64())
+        };
+        let content_scale = if screen {
+            rendering("ContentScale")
+        } else {
+            1.0
+        };
 
         FontStyleParams {
-            size: if screen { num("pointSize", 12.0) * rendering("PixelsPerPoint") * content_scale } else { num("size", 1.0) },
+            size: if screen {
+                num("pointSize", 12.0) * rendering("PixelsPerPoint") * content_scale
+            } else {
+                num("size", 1.0)
+            },
             spacing: num("spacing", 1.0),
             horizontal: flag("horizontal"),
             left_to_right: flag("leftToRight"),
@@ -365,7 +412,11 @@ impl Runtime {
             _ => vec![],
         };
         let num_lines = strings.len();
-        let (Some(origin), Some(text_bounds), Some(line_bounds)) = (self.pre(node, "origin"), self.pre(node, "textBounds"), self.pre(node, "lineBounds")) else {
+        let (Some(origin), Some(text_bounds), Some(line_bounds)) = (
+            self.pre(node, "origin"),
+            self.pre(node, "textBounds"),
+            self.pre(node, "lineBounds"),
+        ) else {
             return;
         };
 
@@ -388,20 +439,35 @@ impl Runtime {
             // ScreenText.configure goes on after X3DTextGeometry.configure: the box rounded to whole pixels around the empty one, and
             // every line bound assigned (an event when there are lines).
             let (o, b) = if screen {
-                let layout = x3d_text::layout(None, &TextParams::default(), &self.text_font_style_params(fs), PrimitiveQuality::Medium, TextCompression::CharSpacing);
+                let layout = x3d_text::layout(
+                    None,
+                    &TextParams::default(),
+                    &self.text_font_style_params(fs),
+                    PrimitiveQuality::Medium,
+                    TextCompression::CharSpacing,
+                );
 
                 (layout.origin, layout.text_bounds)
             } else {
                 ([0.0; 3], [0.0; 2])
             };
 
-            self.set_value(origin, FieldValue::SFVec3f(x3d_fields::math::Vector3::new(o[0], o[1], o[2])));
-            self.set_value(text_bounds, FieldValue::SFVec2f(x3d_fields::math::Vector2::new(b[0], b[1])));
+            self.set_value(
+                origin,
+                FieldValue::SFVec3f(x3d_fields::math::Vector3::new(o[0], o[1], o[2])),
+            );
+            self.set_value(
+                text_bounds,
+                FieldValue::SFVec2f(x3d_fields::math::Vector2::new(b[0], b[1])),
+            );
 
             if screen && num_lines != 0 {
                 let content_scale = self.text_font_style_params(fs).content_scale;
                 let bounds = match self.value(line_bounds) {
-                    FieldValue::MFVec2f(v) => v.iter().map(|x| (*x as f64 / content_scale) as f32).collect(),
+                    FieldValue::MFVec2f(v) => v
+                        .iter()
+                        .map(|x| (*x as f64 / content_scale) as f32)
+                        .collect(),
                     _ => vec![],
                 };
 
@@ -419,21 +485,52 @@ impl Runtime {
             Some(FieldValue::SFFloat(v)) => *v as f64,
             _ => 0.0,
         };
-        let option = |name: &str| self.browser_options.get_option(name).map(|v| v.as_str().to_string());
+        let option = |name: &str| {
+            self.browser_options
+                .get_option(name)
+                .map(|v| v.as_str().to_string())
+        };
         let quality = match option("PrimitiveQuality").as_deref() {
             Some("LOW") => PrimitiveQuality::Low,
             Some("HIGH") => PrimitiveQuality::High,
             _ => PrimitiveQuality::Medium,
         };
-        let compression = if option("TextCompression").as_deref() == Some("SCALING") { TextCompression::Scaling } else { TextCompression::CharSpacing };
+        let compression = if option("TextCompression").as_deref() == Some("SCALING") {
+            TextCompression::Scaling
+        } else {
+            TextCompression::CharSpacing
+        };
         let text = TextParams::from_strings(&strings, &length, max_extent);
-        let layout = x3d_text::layout(font.as_deref(), &text, &self.text_font_style_params(fs), quality, compression);
+        let layout = x3d_text::layout(
+            font.as_deref(),
+            &text,
+            &self.text_font_style_params(fs),
+            quality,
+            compression,
+        );
 
         // horizontal / vertical: `text ._lineBounds [l] = lineBound`, then `text ._textBounds = size`, then `text ._origin .setValue`.
-        let bounds: Vec<f32> = layout.line_bounds.iter().flat_map(|b| [b[0] as f32, b[1] as f32]).collect();
+        let bounds: Vec<f32> = layout
+            .line_bounds
+            .iter()
+            .flat_map(|b| [b[0] as f32, b[1] as f32])
+            .collect();
 
         self.set_value(line_bounds, FieldValue::MFVec2f(bounds));
-        self.set_value(text_bounds, FieldValue::SFVec2f(x3d_fields::math::Vector2::new(layout.text_bounds[0], layout.text_bounds[1])));
-        self.set_value(origin, FieldValue::SFVec3f(x3d_fields::math::Vector3::new(layout.origin[0], layout.origin[1], layout.origin[2])));
+        self.set_value(
+            text_bounds,
+            FieldValue::SFVec2f(x3d_fields::math::Vector2::new(
+                layout.text_bounds[0],
+                layout.text_bounds[1],
+            )),
+        );
+        self.set_value(
+            origin,
+            FieldValue::SFVec3f(x3d_fields::math::Vector3::new(
+                layout.origin[0],
+                layout.origin[1],
+                layout.origin[2],
+            )),
+        );
     }
 }

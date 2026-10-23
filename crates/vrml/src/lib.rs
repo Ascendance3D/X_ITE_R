@@ -76,10 +76,15 @@ pub fn summarize(scene: &Scene) -> Summary {
 
     for (id, node) in scene.nodes.iter().enumerate() {
         // Unresolved forward USEs and runtime objects are not nodes of the file.
-        if matches!(node.kind, vrml97::scene::NodeKind::Placeholder | vrml97::scene::NodeKind::Internal(_)) {
+        if matches!(
+            node.kind,
+            vrml97::scene::NodeKind::Placeholder | vrml97::scene::NodeKind::Internal(_)
+        ) {
             continue;
         }
-        *node_types.entry(scene.type_name(id as vrml97::fields::NodeId)).or_insert(0) += 1;
+        *node_types
+            .entry(scene.type_name(id as vrml97::fields::NodeId))
+            .or_insert(0) += 1;
     }
 
     Summary {

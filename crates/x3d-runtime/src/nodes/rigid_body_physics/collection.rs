@@ -104,7 +104,11 @@ impl Runtime {
 
         self.pcb(node, "enabled", CollSetEnabled);
         self.pcb(node, "gravity", CollSetGravity);
-        self.pcb(node, "contactSurfaceThickness", CollSetContactSurfaceThickness);
+        self.pcb(
+            node,
+            "contactSurfaceThickness",
+            CollSetContactSurfaceThickness,
+        );
         self.pcb(node, "collider", CollSetCollider);
         self.pcb(node, "bodies", CollSetBodies);
         self.pcb(node, "joints", CollSetJoints);
@@ -163,7 +167,11 @@ impl Runtime {
 
     /// The (node, body id) pairs of `this .bodyNodes`.
     fn coll_body_ids(&self, node: NodeId) -> Vec<(NodeId, BodyId)> {
-        self.coll_rt(node).body_nodes.iter().map(|&b| (b, self.body_rt(b).body)).collect()
+        self.coll_rt(node)
+            .body_nodes
+            .iter()
+            .map(|&b| (b, self.body_rt(b).body))
+            .collect()
     }
 
     pub(super) fn coll_set_collider(&mut self, node: NodeId) {
@@ -385,7 +393,11 @@ impl Runtime {
             }
 
             self.with_world(Some(node), |pw| {
-                pw.w.step_simulation(delta_time, iterations + 2, delta_time / f64::from(iterations));
+                pw.w.step_simulation(
+                    delta_time,
+                    iterations + 2,
+                    delta_time / f64::from(iterations),
+                );
             });
         }
 

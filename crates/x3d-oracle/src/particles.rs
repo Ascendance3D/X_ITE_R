@@ -31,7 +31,8 @@ pub enum Variant {
 const STRIDE: f64 = 28.0;
 
 /// `--png-dir` only (not in the Node tools): size the drawing buffer to the canvas before the world loads.
-const PNG_RESHAPE: &str = r#"() => { const b = document .getElementById ("c") .browser; b .reshape (); }"#;
+const PNG_RESHAPE: &str =
+    r#"() => { const b = document .getElementById ("c") .browser; b .reshape (); }"#;
 
 /// `JSON.stringify (JSON.parse (token))` for a raw script value: numbers and strings in JavaScript's form.
 fn restringify(v: &J) -> J {
@@ -50,7 +51,16 @@ fn restringify(v: &J) -> J {
             }
         }
         J::Arr(a) => J::Arr(a.iter().map(restringify).collect()),
-        J::Obj(m) => J::Obj(m.iter().map(|(k, v)| (json::escape(&serde_json::from_str::<String>(k).unwrap_or_default()), restringify(v))).collect()),
+        J::Obj(m) => J::Obj(
+            m.iter()
+                .map(|(k, v)| {
+                    (
+                        json::escape(&serde_json::from_str::<String>(k).unwrap_or_default()),
+                        restringify(v),
+                    )
+                })
+                .collect(),
+        ),
     }
 }
 
@@ -92,12 +102,35 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
         Some(v) => return Err(format!("unknown --variant {v:?} (b07, events, 06r)")),
     };
     let (init_js, norm_js, step_js, dump_js, geom_js, info_js) = match variant {
-        Variant::R06 => (pj::INIT_R06, pj::NORMALIZE_R06, pj::STEP_R06, pj::DUMP_R06, pj::GEOMETRY_R06, pj::INFO_R06),
-        Variant::Events => (pj::INIT_EV, pj::NORMALIZE_EV, pj::STEP_EV, pj::DUMP_EV, pj::GEOMETRY_EV, pj::INFO_EV),
-        Variant::B07 => (pj::INIT_B07, pj::NORMALIZE_B07, pj::STEP_B07, pj::DUMP_B07, pj::GEOMETRY_B07, pj::INFO_B07),
+        Variant::R06 => (
+            pj::INIT_R06,
+            pj::NORMALIZE_R06,
+            pj::STEP_R06,
+            pj::DUMP_R06,
+            pj::GEOMETRY_R06,
+            pj::INFO_R06,
+        ),
+        Variant::Events => (
+            pj::INIT_EV,
+            pj::NORMALIZE_EV,
+            pj::STEP_EV,
+            pj::DUMP_EV,
+            pj::GEOMETRY_EV,
+            pj::INFO_EV,
+        ),
+        Variant::B07 => (
+            pj::INIT_B07,
+            pj::NORMALIZE_B07,
+            pj::STEP_B07,
+            pj::DUMP_B07,
+            pj::GEOMETRY_B07,
+            pj::INFO_B07,
+        ),
     };
-    let script_text = std::fs::read_to_string(&script_arg).map_err(|e| format!("ENOENT: {script_arg}: {e}"))?;
-    let script: Value = serde_json::from_str(&script_text).map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
+    let script_text =
+        std::fs::read_to_string(&script_arg).map_err(|e| format!("ENOENT: {script_arg}: {e}"))?;
+    let script: Value = serde_json::from_str(&script_text)
+        .map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
     let raw = json::parse(&script_text).map_err(|e| format!("SyntaxError: {script_arg}: {e}"))?;
     let out_path = resolve(&argv.opt("--out").unwrap_or_else(|| "particles.json".into()));
     let out_str = out_path.to_string_lossy().into_owned();
@@ -118,15 +151,25 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
             None => vec![frames],
         }
     };
-    let probe_frames: Vec<f64> = script.pointer("/pickProbes/frames").and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default();
-    let probe_points = script.pointer("/pickProbes/points").map(Value::to_string).unwrap_or_else(|| "[]".into());
+    let probe_frames: Vec<f64> = script
+        .pointer("/pickProbes/frames")
+        .and_then(Value::as_array)
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default();
+    let probe_points = script
+        .pointer("/pickProbes/points")
+        .map(Value::to_string)
+        .unwrap_or_else(|| "[]".into());
     let born = script.get("filter").and_then(Value::as_str) == Some("born");
     let png_dir = argv.opt("--png-dir").unwrap_or_default();
     let ms = argv.opt("--ms").unwrap_or_default();
     let msaa_page = argv.0.iter().any(|a| a == "--aa") || !ms.is_empty();
     let (cw, ch) = argv
         .opt("--png-size")
-        .and_then(|s| s.split_once('x').and_then(|(a, b)| Some((a.parse::<u32>().ok()?, b.parse::<u32>().ok()?))))
+        .and_then(|s| {
+            s.split_once('x')
+                .and_then(|(a, b)| Some((a.parse::<u32>().ok()?, b.parse::<u32>().ok()?)))
+        })
         .unwrap_or((512, 512));
 
     let mut result = J::obj();
@@ -144,9 +187,18 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
     let mut chunks: Vec<u8> = Vec::new();
     let mut floats: f64 = 0.0;
 
-    let server = crate::server::Server::start(common.root.clone()).map_err(|e| format!("x3d-oracle: http server: {e}"))?;
+    let server = crate::server::Server::start(common.root.clone())
+        .map_err(|e| format!("x3d-oracle: http server: {e}"))?;
     let base = format!("http://127.0.0.1:{}", server.port);
-    let mut page = Page::open(&common.chrome, crate::chrome::ORACLE_ARGS, 256, 256, &base, common.trace.clone(), common.deadline)?;
+    let mut page = Page::open(
+        &common.chrome,
+        crate::chrome::ORACLE_ARGS,
+        256,
+        256,
+        &base,
+        common.trace.clone(),
+        common.deadline,
+    )?;
     crate::watchdog(&page, common);
 
     let parse = |t: Option<String>| -> Result<J, String> {
@@ -162,9 +214,20 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
     };
 
     let outcome = (|| -> Result<(), String> {
-        page.add_init_script(&format!("({init_js})([{},{}])", seed_j.compact(), js_number(t0 * 1000.0)))?;
+        page.add_init_script(&format!(
+            "({init_js})([{},{}])",
+            seed_j.compact(),
+            js_number(t0 * 1000.0)
+        ))?;
         let url = if msaa_page {
-            format!("{base}/x_ite-pin/src/anim-msaa.html?w={cw}&h={ch}&aa=1{}", if ms.is_empty() { String::new() } else { format!("&ms={ms}") })
+            format!(
+                "{base}/x_ite-pin/src/anim-msaa.html?w={cw}&h={ch}&aa=1{}",
+                if ms.is_empty() {
+                    String::new()
+                } else {
+                    format!("&ms={ms}")
+                }
+            )
         } else {
             format!("{base}/x_ite-pin/src/anim.html")
         };
@@ -178,9 +241,23 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
         }
 
         let rel = relative(&common.root, &resolve(&file_arg));
-        let world = format!("{base}/{}", rel.split('/').map(json::encode_uri_component).collect::<Vec<_>>().join("/"));
-        let load_arg = format!("[{},{},{},{}]", json::escape(&world), t0_j.compact(), dt_j.compact(), warmup_j.compact());
-        let loaded_text = page.evaluate(page_js::LOAD, Some(&load_arg))?.unwrap_or_else(|| "{}".into());
+        let world = format!(
+            "{base}/{}",
+            rel.split('/')
+                .map(json::encode_uri_component)
+                .collect::<Vec<_>>()
+                .join("/")
+        );
+        let load_arg = format!(
+            "[{},{},{},{}]",
+            json::escape(&world),
+            t0_j.compact(),
+            dt_j.compact(),
+            warmup_j.compact()
+        );
+        let loaded_text = page
+            .evaluate(page_js::LOAD, Some(&load_arg))?
+            .unwrap_or_else(|| "{}".into());
         let loaded: Value = serde_json::from_str(&loaded_text).unwrap_or(Value::Null);
         if !json::truthy(loaded.get("ok")) {
             return Err(match loaded.get("error") {
@@ -194,7 +271,15 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
         if variant == Variant::B07 {
             result.set("vrmlLoad", parse(page.evaluate(page_js::VRML, None)?)?);
         }
-        let init = parse(page.evaluate(norm_js, Some(&format!("[{},{},{}]", node_j.compact(), seed_j.compact(), t0_j.compact())))?)?;
+        let init = parse(page.evaluate(
+            norm_js,
+            Some(&format!(
+                "[{},{},{}]",
+                node_j.compact(),
+                seed_j.compact(),
+                t0_j.compact()
+            )),
+        )?)?;
         result.set("init", init);
         let info = parse(page.evaluate(info_js, None)?)?;
         let stride = info.member("stride");
@@ -211,28 +296,62 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
                 format!("[{},{}]", js_number(t), node_j.compact())
             } else {
                 let evs: Vec<J> = match &events {
-                    J::Arr(a) => a.iter().filter(|e| tok_num(&e.member("frame")) == k && matches!(e.member("frame"), J::Tok(ref f) if !f.starts_with('"'))).cloned().collect(),
+                    J::Arr(a) => a
+                        .iter()
+                        .filter(|e| {
+                            tok_num(&e.member("frame")) == k
+                                && matches!(e.member("frame"), J::Tok(ref f) if !f.starts_with('"'))
+                        })
+                        .cloned()
+                        .collect(),
                     _ => vec![],
                 };
-                format!("[{},{},{}]", js_number(t), node_j.compact(), J::Arr(evs).compact())
+                format!(
+                    "[{},{},{}]",
+                    js_number(t),
+                    node_j.compact(),
+                    J::Arr(evs).compact()
+                )
             };
             let step = parse(page.evaluate(step_js, Some(&arg))?)?;
             let calls = step.member("calls");
             if tok_num(&calls) != 1.0 {
-                log_push(&mut result, format!("frame {}: {} emitter.animate calls", js_number(k), tok_text(&calls)));
+                log_push(
+                    &mut result,
+                    format!(
+                        "frame {}: {} emitter.animate calls",
+                        js_number(k),
+                        tok_text(&calls)
+                    ),
+                );
             }
             let seeds = match step.member("randomSeeds") {
                 J::Arr(a) => a,
                 _ => vec![],
             };
             if seeds.len() != 1 {
-                log_push(&mut result, format!("frame {}: {} randomSeed uniform writes", js_number(k), seeds.len()));
+                log_push(
+                    &mut result,
+                    format!(
+                        "frame {}: {} randomSeed uniform writes",
+                        js_number(k),
+                        seeds.len()
+                    ),
+                );
             }
             let mut s = J::obj();
             s.set("frame", J::num(k));
             s.set("time", J::num(t));
-            s.set("randomSeed", seeds.first().cloned().unwrap_or(J::Tok("null".into())));
-            for f in ["numParticles", "deltaTime", "creationTime", "createParticles"] {
+            s.set(
+                "randomSeed",
+                seeds.first().cloned().unwrap_or(J::Tok("null".into())),
+            );
+            for f in [
+                "numParticles",
+                "deltaTime",
+                "creationTime",
+                "createParticles",
+            ] {
                 s.set(f, step.member(f));
             }
             if variant != Variant::R06 {
@@ -244,16 +363,19 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
                 s.set("forces", step.member("forces"));
                 s.set("forceDraws", step.member("forceDraws"));
                 if let J::Arr(l) = step.member("eventLog")
-                    && !l.is_empty() {
-                        s.set("eventLog", J::Arr(l));
-                    }
+                    && !l.is_empty()
+                {
+                    s.set("eventLog", J::Arr(l));
+                }
             }
             if let Some(J::Arr(a)) = result.get_mut("steps") {
                 a.push(s);
             }
 
             if dump.contains(&k) {
-                let t = page.evaluate(dump_js, Some(if born { "true" } else { "false" }))?.unwrap_or_default();
+                let t = page
+                    .evaluate(dump_js, Some(if born { "true" } else { "false" }))?
+                    .unwrap_or_default();
                 let d = parse(Some(t.clone()))?;
                 let v: Value = serde_json::from_str(&t).unwrap_or(Value::Null);
                 let buf = json::base64_decode(v["b64"].as_str().unwrap_or(""));
@@ -267,9 +389,17 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
 
                 if !png_dir.is_empty() {
                     let t = page.evaluate(page_js::PIXELS, None)?.unwrap_or_default();
-                    let p: Value = serde_json::from_str(&t).map_err(|e| format!("x3d-oracle: pixels: {e}"))?;
-                    let (pw, ph) = (p["width"].as_u64().unwrap_or(0) as u32, p["height"].as_u64().unwrap_or(0) as u32);
-                    let png = crate::png::encode_bottom_up(pw, ph, &json::base64_decode(p["rgba"].as_str().unwrap_or("")))?;
+                    let p: Value =
+                        serde_json::from_str(&t).map_err(|e| format!("x3d-oracle: pixels: {e}"))?;
+                    let (pw, ph) = (
+                        p["width"].as_u64().unwrap_or(0) as u32,
+                        p["height"].as_u64().unwrap_or(0) as u32,
+                    );
+                    let png = crate::png::encode_bottom_up(
+                        pw,
+                        ph,
+                        &json::base64_decode(p["rgba"].as_str().unwrap_or("")),
+                    )?;
                     std::fs::create_dir_all(&png_dir).map_err(|e| format!("{png_dir}: {e}"))?;
                     let path = Path::new(&png_dir).join(format!("{}.png", js_number(k)));
                     std::fs::write(&path, png).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -280,7 +410,10 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
                 if !matches!(result.member("pickProbes"), J::Obj(_)) {
                     result.set("pickProbes", J::obj());
                 }
-                result.get_mut("pickProbes").unwrap().set(&js_number(k), probes);
+                result
+                    .get_mut("pickProbes")
+                    .unwrap()
+                    .set(&js_number(k), probes);
             }
             k += 1.0;
         }
@@ -293,7 +426,14 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
         let calls = parse(page.evaluate(pj::CALLS, None)?)?;
         result.set("animateCalls", calls.clone());
         if tok_num(&calls) != frames {
-            log_push(&mut result, format!("animate called {} times in {} steps", tok_text(&calls), tok_text(&frames_j)));
+            log_push(
+                &mut result,
+                format!(
+                    "animate called {} times in {} steps",
+                    tok_text(&calls),
+                    tok_text(&frames_j)
+                ),
+            );
         }
         result.set("ok", J::bool(true));
         Ok(())
@@ -304,9 +444,10 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
     }
     // finally: result .log .push (... getLog), then the browser closes.
     if let Ok(Some(t)) = page.evaluate(pj::GET_LOG_OPT, None)
-        && let (Ok(J::Arr(lines)), Some(J::Arr(a))) = (json::parse(&t), result.get_mut("log")) {
-            a.extend(lines);
-        }
+        && let (Ok(J::Arr(lines)), Some(J::Arr(a))) = (json::parse(&t), result.get_mut("log"))
+    {
+        a.extend(lines);
+    }
     for err in page.page_errors() {
         eprintln!("x3d-oracle: page error: {err}");
     }
@@ -322,7 +463,8 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
     std::fs::write(&f32_path, &chunks).map_err(|e| format!("{f32_path}: {e}"))?;
     result.set("fileF32", J::str(f32_path.rsplit('/').next().unwrap_or("")));
     let ok = outcome.is_ok();
-    std::fs::write(&out_path, result.pretty_indent(1).unwrap()).map_err(|e| format!("{out_str}: {e}"))?;
+    std::fs::write(&out_path, result.pretty_indent(1).unwrap())
+        .map_err(|e| format!("{out_str}: {e}"))?;
     let line = match &outcome {
         Ok(()) => format!("ok {out_str} ({} floats)", js_number(floats)),
         Err(e) => format!("FAILED: {e}"),
@@ -340,11 +482,50 @@ mod tests {
         let ev = include_str!("../../../oracle/tools/x_ite_particles_events.mjs");
         let b07 = include_str!("../../../oracle/tools/x_ite_particles_b07.mjs");
         for (src, consts) in [
-            (r06, [pj::INIT_R06, pj::NORMALIZE_R06, pj::STEP_R06, pj::DUMP_R06, pj::GEOMETRY_R06, pj::INFO_R06]),
-            (ev, [pj::INIT_EV, pj::NORMALIZE_EV, pj::STEP_EV, pj::DUMP_EV, pj::GEOMETRY_EV, pj::INFO_EV]),
-            (b07, [pj::INIT_B07, pj::NORMALIZE_B07, pj::STEP_B07, pj::DUMP_B07, pj::GEOMETRY_B07, pj::INFO_B07]),
+            (
+                r06,
+                [
+                    pj::INIT_R06,
+                    pj::NORMALIZE_R06,
+                    pj::STEP_R06,
+                    pj::DUMP_R06,
+                    pj::GEOMETRY_R06,
+                    pj::INFO_R06,
+                ],
+            ),
+            (
+                ev,
+                [
+                    pj::INIT_EV,
+                    pj::NORMALIZE_EV,
+                    pj::STEP_EV,
+                    pj::DUMP_EV,
+                    pj::GEOMETRY_EV,
+                    pj::INFO_EV,
+                ],
+            ),
+            (
+                b07,
+                [
+                    pj::INIT_B07,
+                    pj::NORMALIZE_B07,
+                    pj::STEP_B07,
+                    pj::DUMP_B07,
+                    pj::GEOMETRY_B07,
+                    pj::INFO_B07,
+                ],
+            ),
         ] {
-            for c in consts.iter().chain([pj::GET_LOG_OPT, pj::CALLS, page_js::READY, page_js::LOAD, page_js::SET_DT].iter()) {
+            for c in consts.iter().chain(
+                [
+                    pj::GET_LOG_OPT,
+                    pj::CALLS,
+                    page_js::READY,
+                    page_js::LOAD,
+                    page_js::SET_DT,
+                ]
+                .iter(),
+            ) {
                 assert!(src.contains(c), "drift: {}", &c[..c.len().min(60)]);
             }
         }
@@ -354,6 +535,9 @@ mod tests {
     #[test]
     fn restringify_matches_json_roundtrip() {
         let v = json::parse(r#"{"a":1.50,"b":"A","c":[1e2,true,null]}"#).unwrap();
-        assert_eq!(restringify(&v).compact(), r#"{"a":1.5,"b":"A","c":[100,true,null]}"#);
+        assert_eq!(
+            restringify(&v).compact(),
+            r#"{"a":1.5,"b":"A","c":[100,true,null]}"#
+        );
     }
 }

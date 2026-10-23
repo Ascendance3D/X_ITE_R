@@ -34,7 +34,11 @@ fn crc32(data: &[u8]) -> u32 {
         c ^= b as u32;
 
         for _ in 0..8 {
-            c = if c & 1 != 0 { 0xedb8_8320 ^ (c >> 1) } else { c >> 1 };
+            c = if c & 1 != 0 {
+                0xedb8_8320 ^ (c >> 1)
+            } else {
+                c >> 1
+            };
         }
     }
 
@@ -100,7 +104,11 @@ fn world_script(d: &std::path::Path, tag: &str, color: &str, step: f64) -> PathB
 /// are not the same table of nodes and script fields.
 fn world_script_pad(d: &std::path::Path, tag: &str, color: &str, step: f64, pad: usize) -> PathBuf {
     let padding: String = (0..pad).map(|i| format!("Group {{ children Script {{ field SFFloat a{i} {i} field MFFloat b{i} [1 2 3] eventOut SFString o{i} url \"ecmascript: var pad{i} = {i}; function initialize() {{ o{i} = 'x' + pad{i}; }}\" }} }}\n")).collect();
-    std::fs::write(d.join("tex.png"), png([[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0]])).unwrap();
+    std::fs::write(
+        d.join("tex.png"),
+        png([[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0]]),
+    )
+    .unwrap();
     std::fs::write(d.join("sub.x3dv"), format!("#X3D V3.3 utf8\nPROFILE Full\nTransform {{ translation 0 -1.2 0 children Shape {{ appearance Appearance {{ material Material {{ diffuseColor {color} }} }} geometry Sphere {{ radius 0.4 }} }} }}\n")).unwrap();
     let p = d.join("main.x3dv");
     std::fs::write(
@@ -140,7 +148,12 @@ fn world_physics(d: &std::path::Path, drop_height: f64) -> PathBuf {
 /// were recorded without them; particle images are compared in rea_b13_particles.rs); `mesh_floor` makes the floor of the
 /// rigid bodies a concave-capable IndexedFaceSet CollidableShape, which builds its collision shape through the
 /// process-global geometry provider.
-fn world_physics_opts(d: &std::path::Path, drop_height: f64, particles: bool, mesh_floor: bool) -> PathBuf {
+fn world_physics_opts(
+    d: &std::path::Path,
+    drop_height: f64,
+    particles: bool,
+    mesh_floor: bool,
+) -> PathBuf {
     let p = d.join("main.x3dv");
     let ps = if particles { PARTICLES } else { "" };
     let floor_shape = if mesh_floor {
@@ -180,7 +193,11 @@ impl Rig {
     fn new(device: wgpu::Device, queue: wgpu::Queue) -> Rig {
         let tex = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("multiview target"),
-            size: wgpu::Extent3d { width: W, height: H, depth_or_array_layers: 1 },
+            size: wgpu::Extent3d {
+                width: W,
+                height: H,
+                depth_or_array_layers: 1,
+            },
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
@@ -189,7 +206,12 @@ impl Rig {
             view_formats: &[],
         });
         let view = tex.create_view(&Default::default());
-        Rig { device, queue, tex, view }
+        Rig {
+            device,
+            queue,
+            tex,
+            view,
+        }
     }
 
     fn viewer(&self, samples: u32) -> EmbeddedViewer {
@@ -202,7 +224,8 @@ impl Rig {
 
     /// Step to `T0 + k * DT`, draw and read the pixels back.
     fn shot(&self, v: &mut EmbeddedViewer, k: u32) -> Vec<u8> {
-        v.frame(T0 + k as f64 * DT, &self.view, FORMAT, W, H).unwrap();
+        v.frame(T0 + k as f64 * DT, &self.view, FORMAT, W, H)
+            .unwrap();
         self.read()
     }
 
@@ -223,12 +246,28 @@ impl Rig {
 
     fn read(&self) -> Vec<u8> {
         let bpr = (W * 4).div_ceil(256) * 256;
-        let buf = self.device.create_buffer(&wgpu::BufferDescriptor { label: None, size: (bpr * H) as u64, usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ, mapped_at_creation: false });
+        let buf = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: None,
+            size: (bpr * H) as u64,
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
+            mapped_at_creation: false,
+        });
         let mut enc = self.device.create_command_encoder(&Default::default());
         enc.copy_texture_to_buffer(
             self.tex.as_image_copy(),
-            wgpu::TexelCopyBufferInfo { buffer: &buf, layout: wgpu::TexelCopyBufferLayout { offset: 0, bytes_per_row: Some(bpr), rows_per_image: Some(H) } },
-            wgpu::Extent3d { width: W, height: H, depth_or_array_layers: 1 },
+            wgpu::TexelCopyBufferInfo {
+                buffer: &buf,
+                layout: wgpu::TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(bpr),
+                    rows_per_image: Some(H),
+                },
+            },
+            wgpu::Extent3d {
+                width: W,
+                height: H,
+                depth_or_array_layers: 1,
+            },
         );
         self.queue.submit([enc.finish()]);
         buf.slice(..).map_async(wgpu::MapMode::Read, |_| {});
@@ -246,14 +285,24 @@ impl Rig {
 
 /// Load, and return what the world printed while it loaded (initialize).
 fn load(v: &mut EmbeddedViewer, p: &std::path::Path) -> Vec<String> {
-    v.load(p, LoadOptions { root: None, start_time: Some(T0) }).unwrap();
+    v.load(
+        p,
+        LoadOptions {
+            root: None,
+            start_time: Some(T0),
+        },
+    )
+    .unwrap();
     v.take_prints()
 }
 
 /// Pixels that differ by more than 8 levels in any channel.
 fn bad_pixels(a: &[u8], b: &[u8]) -> usize {
     assert_eq!(a.len(), b.len());
-    a.chunks_exact(4).zip(b.chunks_exact(4)).filter(|(p, q)| p.iter().zip(q.iter()).any(|(x, y)| x.abs_diff(*y) > 8)).count()
+    a.chunks_exact(4)
+        .zip(b.chunks_exact(4))
+        .filter(|(p, q)| p.iter().zip(q.iter()).any(|(x, y)| x.abs_diff(*y) > 8))
+        .count()
 }
 
 fn exact(a: &[u8], b: &[u8]) -> bool {
@@ -261,7 +310,9 @@ fn exact(a: &[u8], b: &[u8]) -> bool {
 }
 
 fn lit(img: &[u8]) -> usize {
-    img.chunks_exact(4).filter(|p| p[0] as u32 + p[1] as u32 + p[2] as u32 > 30).count()
+    img.chunks_exact(4)
+        .filter(|p| p[0] as u32 + p[1] as u32 + p[2] as u32 > 30)
+        .count()
 }
 
 /// A constant `randomSeed` and constant wind draws: the generators are shared on the thread (like
@@ -283,7 +334,9 @@ fn solo_frames(rig: &Rig, samples: u32, world: &std::path::Path) -> (Vec<Vec<u8>
     constant_draws();
     let mut v = rig.viewer(samples);
     let mut prints = load(&mut v, world);
-    let frames = (0..FRAMES).map(|k| rig.shotp(&mut v, k, &mut prints)).collect();
+    let frames = (0..FRAMES)
+        .map(|k| rig.shotp(&mut v, k, &mut prints))
+        .collect();
     prints.extend(v.take_prints());
     (frames, prints)
 }
@@ -302,23 +355,46 @@ fn setup() -> Option<Rig> {
 
 /// Two scripted worlds with global JavaScript state, interleaved frame by frame, equal each viewer alone.
 fn scripts_interleaved(samples: u32) {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
-        let (da, db) = (dir(&format!("s-a-{samples}")), dir(&format!("s-b-{samples}")));
-        let (a, b) = (world_script(&da, "A", "1 0.5 0", 0.31), world_script_pad(&db, "B", "0 0.5 1", 0.17, 4));
+        let (da, db) = (
+            dir(&format!("s-a-{samples}")),
+            dir(&format!("s-b-{samples}")),
+        );
+        let (a, b) = (
+            world_script(&da, "A", "1 0.5 0", 0.31),
+            world_script_pad(&db, "B", "0 0.5 1", 0.17, 4),
+        );
         let (sa, pa) = solo_frames(&rig, samples, &a);
         let (sb, pb) = solo_frames(&rig, samples, &b);
         assert!(!pa.is_empty() && !pb.is_empty(), "the scripts print");
-        assert!(lit(&sa[FRAMES as usize - 1]) > 200 && bad_pixels(&sa[FRAMES as usize - 1], &sb[FRAMES as usize - 1]) > 100, "the two worlds differ");
+        assert!(
+            lit(&sa[FRAMES as usize - 1]) > 200
+                && bad_pixels(&sa[FRAMES as usize - 1], &sb[FRAMES as usize - 1]) > 100,
+            "the two worlds differ"
+        );
 
         let (mut va, mut vb) = (rig.viewer(samples), rig.viewer(samples));
         let (mut qa, mut qb) = (load(&mut va, &a), load(&mut vb, &b));
 
         for k in 0..FRAMES {
-            let (fa, fb) = (rig.shotp(&mut va, k, &mut qa), rig.shotp(&mut vb, k, &mut qb));
-            assert!(exact(&fa, &sa[k as usize]), "A frame {k} equals A alone: {} pixels off", bad_pixels(&fa, &sa[k as usize]));
-            assert!(exact(&fb, &sb[k as usize]), "B frame {k} equals B alone: {} pixels off", bad_pixels(&fb, &sb[k as usize]));
+            let (fa, fb) = (
+                rig.shotp(&mut va, k, &mut qa),
+                rig.shotp(&mut vb, k, &mut qb),
+            );
+            assert!(
+                exact(&fa, &sa[k as usize]),
+                "A frame {k} equals A alone: {} pixels off",
+                bad_pixels(&fa, &sa[k as usize])
+            );
+            assert!(
+                exact(&fb, &sb[k as usize]),
+                "B frame {k} equals B alone: {} pixels off",
+                bad_pixels(&fb, &sb[k as usize])
+            );
         }
 
         assert_eq!(qa, pa, "A prints");
@@ -339,28 +415,61 @@ fn scripts_two_viewers_interleaved_msaa4() {
 /// Particles (Surface emitter, bounded model, wind) and rigid bodies in two viewers, plus a script world
 /// in a third one, interleaved. Draws are constant, see `constant_draws`.
 fn physics_interleaved(samples: u32) {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
-        let (da, db, dc) = (dir(&format!("p-a-{samples}")), dir(&format!("p-b-{samples}")), dir(&format!("p-c-{samples}")));
-        let (a, b, c) = (world_physics(&da, 3.0), world_physics_opts(&db, 0.5, true, true), world_script_pad(&dc, "C", "0.3 1 0.3", 0.23, 7));
+        let (da, db, dc) = (
+            dir(&format!("p-a-{samples}")),
+            dir(&format!("p-b-{samples}")),
+            dir(&format!("p-c-{samples}")),
+        );
+        let (a, b, c) = (
+            world_physics(&da, 3.0),
+            world_physics_opts(&db, 0.5, true, true),
+            world_script_pad(&dc, "C", "0.3 1 0.3", 0.23, 7),
+        );
         let (sa, _) = solo_frames(&rig, samples, &a);
         let (sb, _) = solo_frames(&rig, samples, &b);
         let (sc, pc) = solo_frames(&rig, samples, &c);
-        assert!(bad_pixels(&sa[FRAMES as usize - 1], &sb[FRAMES as usize - 1]) > 50, "the two physics worlds differ (different drop height)");
+        assert!(
+            bad_pixels(&sa[FRAMES as usize - 1], &sb[FRAMES as usize - 1]) > 50,
+            "the two physics worlds differ (different drop height)"
+        );
         assert!(sa[5] != sa[30], "world A moves");
 
         constant_draws();
-        let (mut va, mut vb, mut vc) = (rig.viewer(samples), rig.viewer(samples), rig.viewer(samples));
+        let (mut va, mut vb, mut vc) = (
+            rig.viewer(samples),
+            rig.viewer(samples),
+            rig.viewer(samples),
+        );
         load(&mut va, &a);
         load(&mut vb, &b);
         let mut qc = load(&mut vc, &c);
 
         for k in 0..FRAMES {
-            let (fa, fb, fc) = (rig.shot(&mut va, k), rig.shot(&mut vb, k), rig.shotp(&mut vc, k, &mut qc));
-            assert!(exact(&fa, &sa[k as usize]), "A frame {k}: {} pixels off", bad_pixels(&fa, &sa[k as usize]));
-            assert!(exact(&fb, &sb[k as usize]), "B frame {k}: {} pixels off", bad_pixels(&fb, &sb[k as usize]));
-            assert!(exact(&fc, &sc[k as usize]), "C frame {k}: {} pixels off", bad_pixels(&fc, &sc[k as usize]));
+            let (fa, fb, fc) = (
+                rig.shot(&mut va, k),
+                rig.shot(&mut vb, k),
+                rig.shotp(&mut vc, k, &mut qc),
+            );
+            assert!(
+                exact(&fa, &sa[k as usize]),
+                "A frame {k}: {} pixels off",
+                bad_pixels(&fa, &sa[k as usize])
+            );
+            assert!(
+                exact(&fb, &sb[k as usize]),
+                "B frame {k}: {} pixels off",
+                bad_pixels(&fb, &sb[k as usize])
+            );
+            assert!(
+                exact(&fc, &sc[k as usize]),
+                "C frame {k}: {} pixels off",
+                bad_pixels(&fc, &sc[k as usize])
+            );
         }
 
         assert_eq!(qc, pc);
@@ -381,11 +490,16 @@ fn particles_and_physics_three_viewers_msaa4() {
 /// restarts from its initial state, like alone.
 #[test]
 fn independent_reload() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db) = (dir("r-a"), dir("r-b"));
-        let (a, b) = (world_script(&da, "A", "1 0.5 0", 0.31), world_script_pad(&db, "B", "0 0.5 1", 0.17, 4));
+        let (a, b) = (
+            world_script(&da, "A", "1 0.5 0", 0.31),
+            world_script_pad(&db, "B", "0 0.5 1", 0.17, 4),
+        );
         let (sa, pa) = solo_frames(&rig, 4, &a);
         let (sb, _) = solo_frames(&rig, 4, &b);
         let (mut va, mut vb) = (rig.viewer(4), rig.viewer(4));
@@ -402,12 +516,20 @@ fn independent_reload() {
 
         for k in 20..FRAMES {
             let fa = rig.shotp(&mut va, k, &mut qa);
-            assert!(exact(&fa, &sa[k as usize]), "A frame {k} after B reloaded: {} pixels off", bad_pixels(&fa, &sa[k as usize]));
+            assert!(
+                exact(&fa, &sa[k as usize]),
+                "A frame {k} after B reloaded: {} pixels off",
+                bad_pixels(&fa, &sa[k as usize])
+            );
         }
 
         for k in 0..FRAMES {
             let fb = rig.shot(&mut vb, k);
-            assert!(exact(&fb, &sb[k as usize]), "reloaded B frame {k}: {} pixels off", bad_pixels(&fb, &sb[k as usize]));
+            assert!(
+                exact(&fb, &sb[k as usize]),
+                "reloaded B frame {k}: {} pixels off",
+                bad_pixels(&fb, &sb[k as usize])
+            );
         }
 
         assert_eq!(qa, pa);
@@ -418,11 +540,17 @@ fn independent_reload() {
 /// the other is the older one and when the dropped one was created last.
 #[test]
 fn independent_drop() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db, dc) = (dir("d-a"), dir("d-b"), dir("d-c"));
-        let (a, b, c) = (world_script(&da, "A", "1 0.5 0", 0.31), world_script_pad(&db, "B", "0 0.5 1", 0.17, 4), world_script_pad(&dc, "C", "0.5 0.5 0.5", 0.11, 9));
+        let (a, b, c) = (
+            world_script(&da, "A", "1 0.5 0", 0.31),
+            world_script_pad(&db, "B", "0 0.5 1", 0.17, 4),
+            world_script_pad(&dc, "C", "0.5 0.5 0.5", 0.11, 9),
+        );
         let (sa, pa) = solo_frames(&rig, 4, &a);
         let (sc, pc) = solo_frames(&rig, 4, &c);
         let (mut va, mut vb, mut vc) = (rig.viewer(4), rig.viewer(4), rig.viewer(4));
@@ -439,9 +567,17 @@ fn independent_drop() {
 
         for k in 15..FRAMES {
             let fa = rig.shotp(&mut va, k, &mut qa);
-            assert!(exact(&fa, &sa[k as usize]), "A frame {k} after B was dropped: {} pixels off", bad_pixels(&fa, &sa[k as usize]));
+            assert!(
+                exact(&fa, &sa[k as usize]),
+                "A frame {k} after B was dropped: {} pixels off",
+                bad_pixels(&fa, &sa[k as usize])
+            );
             let fc = rig.shotp(&mut vc, k, &mut qc);
-            assert!(exact(&fc, &sc[k as usize]), "C frame {k} after B was dropped: {} pixels off", bad_pixels(&fc, &sc[k as usize]));
+            assert!(
+                exact(&fc, &sc[k as usize]),
+                "C frame {k} after B was dropped: {} pixels off",
+                bad_pixels(&fc, &sc[k as usize])
+            );
         }
 
         drop(va);
@@ -455,7 +591,9 @@ fn independent_drop() {
 /// The unloaded viewer's prints and the survivor's do not mix.
 #[test]
 fn unload_prints_stay_per_viewer() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let dir_a = dir("u-a");
@@ -466,7 +604,10 @@ fn unload_prints_stay_per_viewer() {
             p
         };
         let (mut va, mut vb) = (rig.viewer(4), rig.viewer(4));
-        let (mut qa, mut qb) = (load(&mut va, &mk(&dir_a, "A")), load(&mut vb, &mk(&dir_b, "B")));
+        let (mut qa, mut qb) = (
+            load(&mut va, &mk(&dir_a, "A")),
+            load(&mut vb, &mk(&dir_b, "B")),
+        );
         rig.shotp(&mut va, 0, &mut qa);
         rig.shotp(&mut vb, 0, &mut qb);
         va.unload();
@@ -484,21 +625,35 @@ fn unload_prints_stay_per_viewer() {
 /// of one must not change the other's pictures.
 #[test]
 fn rendering_options_stay_per_viewer() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db) = (dir("o-a"), dir("o-b"));
-        let scene = |opt: &str| format!("#X3D V3.3 utf8\nPROFILE Full\nViewpoint {{ position 0 0 8 }}\nScript {{ url \"ecmascript: function initialize() {{ {opt} }}\" }}\nShape {{ appearance Appearance {{ material Material {{ diffuseColor 1 0 0 }} }} geometry Sphere {{ radius 1.5 }} }}\nTransform {{ translation 0 0 -2 children Shape {{ appearance Appearance {{ material Material {{ diffuseColor 0 0 1 }} }} geometry Cylinder {{ radius 1 height 4 }} }} }}\n");
+        let scene = |opt: &str| {
+            format!(
+                "#X3D V3.3 utf8\nPROFILE Full\nViewpoint {{ position 0 0 8 }}\nScript {{ url \"ecmascript: function initialize() {{ {opt} }}\" }}\nShape {{ appearance Appearance {{ material Material {{ diffuseColor 1 0 0 }} }} geometry Sphere {{ radius 1.5 }} }}\nTransform {{ translation 0 0 -2 children Shape {{ appearance Appearance {{ material Material {{ diffuseColor 0 0 1 }} }} geometry Cylinder {{ radius 1 height 4 }} }} }}\n"
+            )
+        };
         let write = |d: &std::path::Path, text: String| {
             let p = d.join("main.x3dv");
             std::fs::write(&p, text).unwrap();
             p
         };
-        let a = write(&da, scene("Browser.setBrowserOption('PrimitiveQuality', 'LOW'); Browser.setBrowserOption('LogarithmicDepthBuffer', true);"));
+        let a = write(
+            &da,
+            scene(
+                "Browser.setBrowserOption('PrimitiveQuality', 'LOW'); Browser.setBrowserOption('LogarithmicDepthBuffer', true);",
+            ),
+        );
         let b = write(&db, scene(""));
         let (sa, _) = solo_frames(&rig, 0, &a);
         let (sb, _) = solo_frames(&rig, 0, &b);
-        assert!(bad_pixels(&sa[10], &sb[10]) > 20, "LOW primitive quality draws a different sphere than MEDIUM");
+        assert!(
+            bad_pixels(&sa[10], &sb[10]) > 20,
+            "LOW primitive quality draws a different sphere than MEDIUM"
+        );
 
         let (mut va, mut vb) = (rig.viewer(0), rig.viewer(0));
         load(&mut va, &a);
@@ -506,8 +661,16 @@ fn rendering_options_stay_per_viewer() {
 
         for k in 0..12 {
             let (fa, fb) = (rig.shot(&mut va, k), rig.shot(&mut vb, k));
-            assert!(exact(&fa, &sa[k as usize]), "A (LOW, log depth) frame {k}: {} pixels off", bad_pixels(&fa, &sa[k as usize]));
-            assert!(exact(&fb, &sb[k as usize]), "B (defaults) frame {k}: {} pixels off", bad_pixels(&fb, &sb[k as usize]));
+            assert!(
+                exact(&fa, &sa[k as usize]),
+                "A (LOW, log depth) frame {k}: {} pixels off",
+                bad_pixels(&fa, &sa[k as usize])
+            );
+            assert!(
+                exact(&fb, &sb[k as usize]),
+                "B (defaults) frame {k}: {} pixels off",
+                bad_pixels(&fb, &sb[k as usize])
+            );
         }
 
         // A screenshot of B right after A stepped uses B's options.
@@ -523,7 +686,11 @@ fn rendering_options_stay_per_viewer() {
 
             v.screenshot_rgba(W, H).unwrap()
         };
-        assert!(exact(&shot_b, &shot_b_alone), "B screenshot after A stepped: {} pixels off", bad_pixels(&shot_b, &shot_b_alone));
+        assert!(
+            exact(&shot_b, &shot_b_alone),
+            "B screenshot after A stepped: {} pixels off",
+            bad_pixels(&shot_b, &shot_b_alone)
+        );
     });
 }
 
@@ -532,19 +699,31 @@ fn rendering_options_stay_per_viewer() {
 /// per host.
 #[test]
 fn resources_released_per_viewer() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db) = (dir("m-a"), dir("m-b"));
-        let (a, b) = (world_script(&da, "A", "1 0.5 0", 0.31), world_physics(&db, 3.0));
+        let (a, b) = (
+            world_script(&da, "A", "1 0.5 0", 0.31),
+            world_physics(&db, 3.0),
+        );
         let (mut va, mut vb) = (rig.viewer(4), rig.viewer(4));
         let base = va.renderer().resource_counts();
         assert_eq!(base, vb.renderer().resource_counts());
         load(&mut va, &a);
         rig.shot(&mut va, 0);
         let a_loaded = va.renderer().resource_counts();
-        assert!(a_loaded[0] > 0 && a_loaded[2] > 0, "A uploaded geometry and textures: {a_loaded:?}");
-        assert_eq!(vb.renderer().resource_counts(), base, "B has not drawn: nothing of A is in its renderer");
+        assert!(
+            a_loaded[0] > 0 && a_loaded[2] > 0,
+            "A uploaded geometry and textures: {a_loaded:?}"
+        );
+        assert_eq!(
+            vb.renderer().resource_counts(),
+            base,
+            "B has not drawn: nothing of A is in its renderer"
+        );
         load(&mut vb, &b);
 
         for k in 0..10 {
@@ -552,7 +731,10 @@ fn resources_released_per_viewer() {
             rig.shot(&mut va, k);
         }
 
-        let (a_run, b_run) = (va.renderer().resource_counts(), vb.renderer().resource_counts());
+        let (a_run, b_run) = (
+            va.renderer().resource_counts(),
+            vb.renderer().resource_counts(),
+        );
         let nodes_a = va.core().unwrap().rt.scene.nodes.len();
         let slots_a = x3d_script::engine::slot_stats();
         // Reload B several times: its renderer does not grow, A's resources stay.
@@ -567,14 +749,25 @@ fn resources_released_per_viewer() {
         // The renderer drops what a world stopped using after KEEP_FRAMES (120) unused frames, checked every
         // 30: right after a reload the old world's buffers are still cached (2 per reload alone, too).
         let after_reloads = vb.renderer().resource_counts();
-        assert!(after_reloads[0] > b_run[0], "old buffers are cached for a while: {after_reloads:?}");
+        assert!(
+            after_reloads[0] > b_run[0],
+            "old buffers are cached for a while: {after_reloads:?}"
+        );
 
         for k in 0..200 {
             rig.shot(&mut vb, k);
         }
 
-        assert_eq!(vb.renderer().resource_counts(), b_run, "B's GPU resources once the old ones aged out");
-        assert_eq!(va.renderer().resource_counts(), a_run, "A's GPU resources untouched by B's reloads");
+        assert_eq!(
+            vb.renderer().resource_counts(),
+            b_run,
+            "B's GPU resources once the old ones aged out"
+        );
+        assert_eq!(
+            va.renderer().resource_counts(),
+            a_run,
+            "A's GPU resources untouched by B's reloads"
+        );
         assert_eq!(va.core().unwrap().rt.scene.nodes.len(), nodes_a);
         let _ = slots_a;
 
@@ -584,8 +777,16 @@ fn resources_released_per_viewer() {
             rig.shot(&mut vb, k);
         }
 
-        assert_eq!(vb.renderer().resource_counts()[0..3], [0, 0, 0], "B unloaded: geometries, sprites, textures");
-        assert_eq!(va.renderer().resource_counts(), a_run, "A untouched by B's unload");
+        assert_eq!(
+            vb.renderer().resource_counts()[0..3],
+            [0, 0, 0],
+            "B unloaded: geometries, sprites, textures"
+        );
+        assert_eq!(
+            va.renderer().resource_counts(),
+            a_run,
+            "A untouched by B's unload"
+        );
     });
 }
 
@@ -593,11 +794,17 @@ fn resources_released_per_viewer() {
 /// releases its host, and the others keep running.
 #[test]
 fn script_hosts_released_per_viewer() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db, dc) = (dir("h-a"), dir("h-b"), dir("h-c"));
-        let (a, b, c) = (world_script(&da, "A", "1 0.5 0", 0.31), world_script_pad(&db, "B", "0 0.5 1", 0.17, 4), world_script_pad(&dc, "C", "0.5 0.5 0.5", 0.11, 9));
+        let (a, b, c) = (
+            world_script(&da, "A", "1 0.5 0", 0.31),
+            world_script_pad(&db, "B", "0 0.5 1", 0.17, 4),
+            world_script_pad(&dc, "C", "0.5 0.5 0.5", 0.11, 9),
+        );
         assert_eq!(x3d_script::engine::live_hosts(), 0);
         let (mut va, mut vb, mut vc) = (rig.viewer(0), rig.viewer(0), rig.viewer(0));
         load(&mut va, &a);
@@ -612,9 +819,17 @@ fn script_hosts_released_per_viewer() {
         }
 
         drop(vb);
-        assert_eq!(x3d_script::engine::live_hosts(), 2, "dropping a viewer releases its script host");
+        assert_eq!(
+            x3d_script::engine::live_hosts(),
+            2,
+            "dropping a viewer releases its script host"
+        );
         vc.unload();
-        assert_eq!(x3d_script::engine::live_hosts(), 1, "unloading releases the host");
+        assert_eq!(
+            x3d_script::engine::live_hosts(),
+            1,
+            "unloading releases the host"
+        );
         let table = x3d_script::engine::slot_stats();
         assert!(table.len > 0);
 
@@ -622,7 +837,11 @@ fn script_hosts_released_per_viewer() {
         for _ in 0..20 {
             va.reload().unwrap();
             rig.shot(&mut va, 0);
-            assert_eq!(x3d_script::engine::live_hosts(), 1, "a reload replaces the host");
+            assert_eq!(
+                x3d_script::engine::live_hosts(),
+                1,
+                "a reload replaces the host"
+            );
         }
 
         // Another world on the viewer that was unloaded.
@@ -638,7 +857,9 @@ fn script_hosts_released_per_viewer() {
 /// so viewer B's draws do depend on viewer A's. This documents the behavior with a seed list.
 #[test]
 fn random_stream_is_shared_on_the_thread() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db) = (dir("g-a"), dir("g-b"));
@@ -665,7 +886,10 @@ fn random_stream_is_shared_on_the_thread() {
 
         let both = particles::next_seed();
         eprintln!("next seed after 6 frames: B alone {b_alone}, A and B {both}");
-        assert_ne!(b_alone, both, "the seed stream is one per thread: A's passes consume values");
+        assert_ne!(
+            b_alone, both,
+            "the seed stream is one per thread: A's passes consume values"
+        );
         particles::use_random_seeds();
         particles::use_random_force_draws();
     });
@@ -696,23 +920,48 @@ type Maker = Box<dyn Fn(&std::path::Path)>;
 
 fn oracle_worlds() -> Vec<(&'static str, Maker)> {
     vec![
-        ("s-a", Box::new(|d| drop(world_script(d, "A", "1 0.5 0", 0.31)))),
-        ("s-b", Box::new(|d| drop(world_script_pad(d, "B", "0 0.5 1", 0.17, 4)))),
-        ("rb-a", Box::new(|d| drop(world_physics_opts(d, 3.0, false, false)))),
-        ("rb-b", Box::new(|d| drop(world_physics_opts(d, 0.5, false, true)))),
+        (
+            "s-a",
+            Box::new(|d| drop(world_script(d, "A", "1 0.5 0", 0.31))),
+        ),
+        (
+            "s-b",
+            Box::new(|d| drop(world_script_pad(d, "B", "0 0.5 1", 0.17, 4))),
+        ),
+        (
+            "rb-a",
+            Box::new(|d| drop(world_physics_opts(d, 3.0, false, false))),
+        ),
+        (
+            "rb-b",
+            Box::new(|d| drop(world_physics_opts(d, 0.5, false, true))),
+        ),
     ]
 }
 
 const ORACLE_FRAMES: [u32; 3] = [5, 20, 40];
 
 fn read_rgba(p: &std::path::Path) -> Vec<u8> {
-    std::fs::read(p).unwrap_or_else(|e| panic!("{}: {e} (run oracle/x_ite-multi-b08.mjs, see the report)", p.display()))
+    std::fs::read(p).unwrap_or_else(|e| {
+        panic!(
+            "{}: {e} (run oracle/x_ite-multi-b08.mjs, see the report)",
+            p.display()
+        )
+    })
 }
 
 /// Rust frames `ORACLE_FRAMES` of the given worlds, all on one thread, interleaved (or one viewer for one world).
 fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
     constant_draws();
-    let paths: Vec<PathBuf> = worlds.iter().map(|w| oracle_dir().join("multiview-b08/worlds").join(w).join("main.x3dv")).collect();
+    let paths: Vec<PathBuf> = worlds
+        .iter()
+        .map(|w| {
+            oracle_dir()
+                .join("multiview-b08/worlds")
+                .join(w)
+                .join("main.x3dv")
+        })
+        .collect();
     let mut viewers: Vec<EmbeddedViewer> = worlds.iter().map(|_| rig.viewer(samples)).collect();
 
     for (v, p) in viewers.iter_mut().zip(&paths) {
@@ -726,7 +975,11 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
         // a fraction of a frame ahead (frame 9 on: rb-a 0.58% at MSAA 4). x3d-drive pins it the same way.
         c.pinned_frame_rate = Some(1.0 / DT);
 
-        for _ in 0..std::env::var("MV_WARM").ok().and_then(|v| v.parse().ok()).unwrap_or(8) {
+        for _ in 0..std::env::var("MV_WARM")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(8)
+        {
             c.step(T0);
         }
     }
@@ -745,7 +998,11 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
 
             if ORACLE_FRAMES.contains(&k) || std::env::var_os("MV_ALL").is_some() {
                 if let Ok(d) = std::env::var("MV_DUMP") {
-                    std::fs::write(format!("{d}/rust-{}-msaa{samples}-f{k}.rgba", worlds[i]), &img).unwrap();
+                    std::fs::write(
+                        format!("{d}/rust-{}-msaa{samples}-f{k}.rgba", worlds[i]),
+                        &img,
+                    )
+                    .unwrap();
                 }
 
                 out[i].push(img);
@@ -759,14 +1016,20 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
 /// Share of the pixels more than 8 levels off in red, green or blue. The alpha of the two canvases differs where
 /// nothing is drawn (X_ITE reads back 255, the host's target here keeps 0), which the page shows as black.
 fn off(a: &[u8], b: &[u8]) -> f64 {
-    let n = a.chunks_exact(4).zip(b.chunks_exact(4)).filter(|(p, q)| (0..3).any(|i| p[i].abs_diff(q[i]) > 8)).count();
+    let n = a
+        .chunks_exact(4)
+        .zip(b.chunks_exact(4))
+        .filter(|(p, q)| (0..3).any(|i| p[i].abs_diff(q[i]) > 8))
+        .count();
     n as f64 / (a.len() / 4) as f64
 }
 
 /// Rust, one viewer per world on one thread, against the pinned X_ITE with one X3DCanvas per world on one page, and
 /// both against the same worlds alone. At most 0.5% of the pixels more than 8 levels off.
 fn oracle_pair(samples: u32, pair: [&'static str; 2]) {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let base = oracle_dir().join("multiview-b08-baseline");
@@ -778,10 +1041,20 @@ fn oracle_pair(samples: u32, pair: [&'static str; 2]) {
             let alone = rust_frames(&rig, samples, &[w]).remove(0);
 
             for (fi, k) in ORACLE_FRAMES.iter().enumerate() {
-                let x_pair = read_rgba(&base.join(format!("{}+{}-msaa{samples}/c{i}-f{k}.rgba", pair[0], pair[1])));
+                let x_pair = read_rgba(&base.join(format!(
+                    "{}+{}-msaa{samples}/c{i}-f{k}.rgba",
+                    pair[0], pair[1]
+                )));
                 let x_alone = read_rgba(&base.join(format!("{w}-msaa{samples}/c0-f{k}.rgba")));
-                let (a, b, c, e) = (off(&x_pair, &x_alone), off(&paired[i][fi], &x_pair), off(&alone[fi], &x_alone), off(&paired[i][fi], &alone[fi]));
-                eprintln!("MULTIVIEW msaa={samples} world={w} frame={k}: X_ITE pair vs X_ITE alone {a:.5}; Rust pair vs X_ITE pair {b:.5}; Rust alone vs X_ITE alone {c:.5}; Rust pair vs Rust alone {e:.5}");
+                let (a, b, c, e) = (
+                    off(&x_pair, &x_alone),
+                    off(&paired[i][fi], &x_pair),
+                    off(&alone[fi], &x_alone),
+                    off(&paired[i][fi], &alone[fi]),
+                );
+                eprintln!(
+                    "MULTIVIEW msaa={samples} world={w} frame={k}: X_ITE pair vs X_ITE alone {a:.5}; Rust pair vs X_ITE pair {b:.5}; Rust alone vs X_ITE alone {c:.5}; Rust pair vs Rust alone {e:.5}"
+                );
                 worst = worst.max(a).max(b).max(c).max(e);
 
                 // 0.5% everywhere (owner decision 2026-10-18: no wider limit). The rb-a MSAA 4 difference (0.579%) was the
@@ -829,7 +1102,10 @@ fn particle_state(v: &mut EmbeddedViewer) -> Vec<(usize, Vec<u32>)> {
 
     for node in 0..rt.nrt.len() as x3d_fields::NodeId {
         if let Some(sim) = rt.particle_sim(node) {
-            let bits = sim.particles[..sim.num_particles].iter().flat_map(|p| p.iter().map(|f| f.to_bits())).collect();
+            let bits = sim.particles[..sim.num_particles]
+                .iter()
+                .flat_map(|p| p.iter().map(|f| f.to_bits()))
+                .collect();
             out.push((sim.num_particles, bits));
         }
     }
@@ -843,7 +1119,9 @@ fn particle_state(v: &mut EmbeddedViewer) -> Vec<(usize, Vec<u32>)> {
 /// by frame, and the particles are really there (the test would otherwise compare empty buffers).
 #[test]
 fn particle_state_two_viewers_equal_alone() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         let (da, db) = (dir("ps-a"), dir("ps-b"));
@@ -869,8 +1147,15 @@ fn particle_state_two_viewers_equal_alone() {
         };
         let (sa, sb) = (solo(&a), solo(&b));
         let last = FRAMES as usize - 1;
-        assert!(sa[last].len() == 2 && sa[last].iter().all(|(n, _)| *n > 0), "A has live particles in both systems: {:?}", sa[last].iter().map(|s| s.0).collect::<Vec<_>>());
-        assert!(sb[last].len() == 1 && sb[last][0].0 > 0, "B has live particles");
+        assert!(
+            sa[last].len() == 2 && sa[last].iter().all(|(n, _)| *n > 0),
+            "A has live particles in both systems: {:?}",
+            sa[last].iter().map(|s| s.0).collect::<Vec<_>>()
+        );
+        assert!(
+            sb[last].len() == 1 && sb[last][0].0 > 0,
+            "B has live particles"
+        );
         assert_ne!(sa[last][0].1, sb[last][0].1);
 
         constant_draws();
@@ -881,8 +1166,14 @@ fn particle_state_two_viewers_equal_alone() {
         for k in 0..FRAMES {
             rig.shot(&mut va, k);
             rig.shot(&mut vb, k);
-            assert!(particle_state(&mut va) == sa[k as usize], "A particles at frame {k}");
-            assert!(particle_state(&mut vb) == sb[k as usize], "B particles at frame {k}");
+            assert!(
+                particle_state(&mut va) == sa[k as usize],
+                "A particles at frame {k}"
+            );
+            assert!(
+                particle_state(&mut vb) == sb[k as usize],
+                "B particles at frame {k}"
+            );
         }
     });
 }
@@ -891,18 +1182,27 @@ fn particle_state_two_viewers_equal_alone() {
 /// stateless (it reads the Runtime it is handed), so a second viewer changes nothing for the first.
 #[test]
 fn geometry_provider_is_one_stateless_function() {
-    let Some((d, q)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((d, q)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
         assert!(x3d_runtime::nodes::particle_systems::geometry_provider().is_none() || true);
         let (da, db) = (dir("gp-a"), dir("gp-b"));
         let mut va = rig.viewer(0);
         load(&mut va, &world_physics(&da, 3.0));
-        let first = x3d_runtime::nodes::particle_systems::geometry_provider().expect("installed by the first viewer");
+        let first = x3d_runtime::nodes::particle_systems::geometry_provider()
+            .expect("installed by the first viewer");
         let mut vb = rig.viewer(0);
         load(&mut vb, &world_physics_opts(&db, 0.5, true, true));
         let second = x3d_runtime::nodes::particle_systems::geometry_provider().unwrap();
-        assert_eq!(first as usize, second as usize, "the second viewer's install is ignored; both installed the same function");
-        assert_eq!(first as usize, x3d_render::traverse::particle_geometry as usize);
+        assert_eq!(
+            first as usize, second as usize,
+            "the second viewer's install is ignored; both installed the same function"
+        );
+        assert_eq!(
+            first as usize,
+            x3d_render::traverse::particle_geometry as usize
+        );
     });
 }

@@ -5,7 +5,7 @@
 //! [`StringStream::eat`], [`StringStream::eat_str`] and [`StringStream::eat_fn`].
 
 use super::misc::count_column;
-use crate::text::{index_of, is_js_space, Text};
+use crate::text::{Text, index_of, is_js_space};
 
 /// The `lineOracle` the stream consults for `lookAhead` / `baseToken`.
 pub trait LineOracle {
@@ -35,7 +35,11 @@ pub struct StringStream<'a> {
 
 impl<'a> StringStream<'a> {
     /// `new StringStream(string, tabSize, lineOracle)`; `tabSize` falls back to 8.
-    pub fn new(string: &'a [u16], tab_size: Option<i64>, line_oracle: Option<&'a dyn LineOracle>) -> Self {
+    pub fn new(
+        string: &'a [u16],
+        tab_size: Option<i64>,
+        line_oracle: Option<&'a dyn LineOracle>,
+    ) -> Self {
         StringStream {
             pos: 0,
             start: 0,
@@ -144,16 +148,29 @@ impl<'a> StringStream<'a> {
     }
     pub fn column(&mut self) -> i64 {
         if self.last_column_pos < self.start {
-            self.last_column_value =
-                count_column(self.string, Some(self.start), self.tab_size, self.last_column_pos, self.last_column_value);
+            self.last_column_value = count_column(
+                self.string,
+                Some(self.start),
+                self.tab_size,
+                self.last_column_pos,
+                self.last_column_value,
+            );
             self.last_column_pos = self.start;
         }
         self.last_column_value
-            - if self.line_start != 0 { count_column(self.string, Some(self.line_start), self.tab_size, 0, 0) } else { 0 }
+            - if self.line_start != 0 {
+                count_column(self.string, Some(self.line_start), self.tab_size, 0, 0)
+            } else {
+                0
+            }
     }
     pub fn indentation(&self) -> i64 {
         count_column(self.string, None, self.tab_size, 0, 0)
-            - if self.line_start != 0 { count_column(self.string, Some(self.line_start), self.tab_size, 0, 0) } else { 0 }
+            - if self.line_start != 0 {
+                count_column(self.string, Some(self.line_start), self.tab_size, 0, 0)
+            } else {
+                0
+            }
     }
     /// `match(string, consume, caseInsensitive)`.
     pub fn match_str(&mut self, pattern: &str, consume: bool, case_insensitive: bool) -> bool {
@@ -161,7 +178,8 @@ impl<'a> StringStream<'a> {
         let end = (self.pos + pat.len()).min(self.string.len());
         let substr = &self.string[self.pos.min(end)..end];
         let eq = if case_insensitive {
-            String::from_utf16_lossy(substr).to_lowercase() == String::from_utf16_lossy(&pat).to_lowercase()
+            String::from_utf16_lossy(substr).to_lowercase()
+                == String::from_utf16_lossy(&pat).to_lowercase()
         } else {
             substr == pat.as_slice()
         };
@@ -177,7 +195,11 @@ impl<'a> StringStream<'a> {
     /// `match(regexp, consume)`. `f` runs the "regexp" on the rest of the line and
     /// returns the match index and length. A match that does not start at the current
     /// position counts as no match (the JS returns null).
-    pub fn match_with<F: FnOnce(&[u16]) -> Option<RegexMatch>>(&mut self, f: F, consume: bool) -> Option<RegexMatch> {
+    pub fn match_with<F: FnOnce(&[u16]) -> Option<RegexMatch>>(
+        &mut self,
+        f: F,
+        consume: bool,
+    ) -> Option<RegexMatch> {
         let m = f(&self.string[self.pos.min(self.string.len())..])?;
         if m.index > 0 {
             return None;

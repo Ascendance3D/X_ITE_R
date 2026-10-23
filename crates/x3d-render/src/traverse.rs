@@ -11,8 +11,8 @@ use crate::text;
 use crate::texture::{self, TextureImage};
 use std::collections::{BTreeSet, HashMap};
 use std::rc::Rc;
-use x3d_fields::{FieldValue, NodeId};
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
+use x3d_fields::{FieldValue, NodeId};
 use x3d_runtime::particles::GeometryType;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -145,12 +145,21 @@ pub const EXTENSION_TEXTURES: [(&str, &str); 16] = [
     ("SheenMaterialExtension", "sheenColorTexture"),
     ("SheenMaterialExtension", "sheenRoughnessTexture"),
     ("IridescenceMaterialExtension", "iridescenceTexture"),
-    ("IridescenceMaterialExtension", "iridescenceThicknessTexture"),
+    (
+        "IridescenceMaterialExtension",
+        "iridescenceThicknessTexture",
+    ),
     ("AnisotropyMaterialExtension", "anisotropyTexture"),
     ("TransmissionMaterialExtension", "transmissionTexture"),
     ("VolumeMaterialExtension", "thicknessTexture"),
-    ("DiffuseTransmissionMaterialExtension", "diffuseTransmissionTexture"),
-    ("DiffuseTransmissionMaterialExtension", "diffuseTransmissionColorTexture"),
+    (
+        "DiffuseTransmissionMaterialExtension",
+        "diffuseTransmissionTexture",
+    ),
+    (
+        "DiffuseTransmissionMaterialExtension",
+        "diffuseTransmissionColorTexture",
+    ),
     ("RetroreflectionMaterialExtension", "retroreflectionTexture"),
     ("VolumeScatterMaterialExtension", "multiscatterColorTexture"),
 ];
@@ -178,7 +187,13 @@ fn extension_nodes(sg: &Sg, m: NodeId) -> Vec<NodeId> {
         return vec![];
     }
 
-    sg.nodes(m, "extensions").into_iter().filter(|e| sg.type_name(*e).is_some_and(|t| t.ends_with("MaterialExtension"))).collect()
+    sg.nodes(m, "extensions")
+        .into_iter()
+        .filter(|e| {
+            sg.type_name(*e)
+                .is_some_and(|t| t.ends_with("MaterialExtension"))
+        })
+        .collect()
 }
 
 /// The setShaderUniforms values of the extensions of `m`.
@@ -221,12 +236,19 @@ fn material_extensions(sg: &Sg, m: NodeId) -> Option<Rc<MaterialExtensions>> {
                 x.flags |= EXT_IRIDESCENCE;
                 x.iridescence = sg.f64(e, "iridescence", 0.0).clamp(0.0, 1.0);
                 x.iridescence_ior = sg.f64(e, "iridescenceIndexOfRefraction", 1.3).max(1.0);
-                x.iridescence_thickness = [sg.f64(e, "iridescenceThicknessMinimum", 100.0).max(0.0), sg.f64(e, "iridescenceThicknessMaximum", 400.0).max(0.0)];
+                x.iridescence_thickness = [
+                    sg.f64(e, "iridescenceThicknessMinimum", 100.0).max(0.0),
+                    sg.f64(e, "iridescenceThicknessMaximum", 400.0).max(0.0),
+                ];
             }
             "AnisotropyMaterialExtension" => {
                 x.flags |= EXT_ANISOTROPY;
                 let rotation = sg.f64(e, "anisotropyRotation", 0.0);
-                x.anisotropy = [rotation.cos(), rotation.sin(), sg.f64(e, "anisotropyStrength", 0.0).clamp(0.0, 1.0)];
+                x.anisotropy = [
+                    rotation.cos(),
+                    rotation.sin(),
+                    sg.f64(e, "anisotropyStrength", 0.0).clamp(0.0, 1.0),
+                ];
             }
             "TransmissionMaterialExtension" => {
                 x.flags |= EXT_TRANSMISSION;
@@ -504,22 +526,38 @@ pub fn instance_data(sg: &Sg, n: NodeId) -> InstanceData {
     let s = sg.f64s(n, "scales");
     let so = sg.f64s(n, "scaleOrientations");
     let c = sg.f64s(n, "centers");
-    let (nt, nr, ns, nso, nc) = (t.len() / 3, r.len() / 4, s.len() / 3, so.len() / 4, c.len() / 3);
+    let (nt, nr, ns, nso, nc) = (
+        t.len() / 3,
+        r.len() / 4,
+        s.len() / 3,
+        so.len() / 4,
+        c.len() / 3,
+    );
     let count = nt.max(nr).max(ns).max(nso).max(nc);
-    let vec3 = |v: &[f64], len: usize, i: usize| (len > 0).then(|| {
-        let k = i.min(len - 1) * 3;
-        Vector3::new(v[k], v[k + 1], v[k + 2])
-    });
-    let rot = |v: &[f64], len: usize, i: usize| (len > 0).then(|| {
-        let k = i.min(len - 1) * 4;
-        Rotation4::new(v[k], v[k + 1], v[k + 2], v[k + 3])
-    });
+    let vec3 = |v: &[f64], len: usize, i: usize| {
+        (len > 0).then(|| {
+            let k = i.min(len - 1) * 3;
+            Vector3::new(v[k], v[k + 1], v[k + 2])
+        })
+    };
+    let rot = |v: &[f64], len: usize, i: usize| {
+        (len > 0).then(|| {
+            let k = i.min(len - 1) * 4;
+            Rotation4::new(v[k], v[k + 1], v[k + 2], v[k + 3])
+        })
+    };
     let mut matrices = Vec::with_capacity(count);
     let mut normals = Vec::with_capacity(count);
 
     for i in 0..count {
         let mut m = Matrix4::IDENTITY;
-        m.set_transform(vec3(&t, nt, i).as_ref(), rot(&r, nr, i).as_ref(), vec3(&s, ns, i).as_ref(), rot(&so, nso, i).as_ref(), vec3(&c, nc, i).as_ref());
+        m.set_transform(
+            vec3(&t, nt, i).as_ref(),
+            rot(&r, nr, i).as_ref(),
+            vec3(&s, ns, i).as_ref(),
+            rot(&so, nso, i).as_ref(),
+            vec3(&c, nc, i).as_ref(),
+        );
         let mut normal = m.submatrix();
         normal.transpose();
         normal.inverse();
@@ -527,21 +565,34 @@ pub fn instance_data(sg: &Sg, n: NodeId) -> InstanceData {
         matrices.push(m);
     }
 
-    InstanceData { matrices, normals, colors: vec![], tex_coords: vec![] }
+    InstanceData {
+        matrices,
+        normals,
+        colors: vec![],
+        tex_coords: vec![],
+    }
 }
 
 impl DrawItem {
     /// Appearance.isVolumeScatter: the front or back material has a VolumeScatterMaterialExtension
     /// (X3DShapeNode.set_volumeScatter__: the only shapes of the volume scatter pass).
     pub fn volume_scatter(&self) -> bool {
-        let t = |m: &MaterialParams| m.extensions.as_ref().is_some_and(|x| x.flags & EXT_VOLUME_SCATTER != 0);
+        let t = |m: &MaterialParams| {
+            m.extensions
+                .as_ref()
+                .is_some_and(|x| x.flags & EXT_VOLUME_SCATTER != 0)
+        };
         t(&self.material) || self.back_material.as_ref().is_some_and(t)
     }
 
     /// Appearance.isTransmission: the front or back material has a TransmissionMaterialExtension
     /// (X3DShapeNode.set_transmission__: not drawn in the transmission pass).
     pub fn transmission(&self) -> bool {
-        let t = |m: &MaterialParams| m.extensions.as_ref().is_some_and(|x| x.flags & EXT_TRANSMISSION != 0);
+        let t = |m: &MaterialParams| {
+            m.extensions
+                .as_ref()
+                .is_some_and(|x| x.flags & EXT_TRANSMISSION != 0)
+        };
         t(&self.material) || self.back_material.as_ref().is_some_and(t)
     }
 }
@@ -615,8 +666,14 @@ pub struct ShadowMap {
 /// InstancedShape.set_bbox__: bboxSize and bboxCenter, or the union of the geometry's box under every
 /// instance matrix.
 fn instanced_bbox(sg: &Sg, n: NodeId, geometry: &Geometry, instances: &InstanceData) -> Box3 {
-    if !sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0)).equals(&Vector3::new(-1.0, -1.0, -1.0)) {
-        return Box3::new(&sg.vec3(n, "bboxSize", Vector3::ZERO), &sg.vec3(n, "bboxCenter", Vector3::ZERO));
+    if !sg
+        .vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0))
+        .equals(&Vector3::new(-1.0, -1.0, -1.0))
+    {
+        return Box3::new(
+            &sg.vec3(n, "bboxSize", Vector3::ZERO),
+            &sg.vec3(n, "bboxCenter", Vector3::ZERO),
+        );
     }
 
     let mut bbox = Box3::EMPTY;
@@ -642,8 +699,16 @@ fn soup_box(vertices: &[f32]) -> Box3 {
     let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
 
     for v in vertices.chunks_exact(4) {
-        min = Vector3::new(min.x.min(v[0] as f64), min.y.min(v[1] as f64), min.z.min(v[2] as f64));
-        max = Vector3::new(max.x.max(v[0] as f64), max.y.max(v[1] as f64), max.z.max(v[2] as f64));
+        min = Vector3::new(
+            min.x.min(v[0] as f64),
+            min.y.min(v[1] as f64),
+            min.z.min(v[2] as f64),
+        );
+        max = Vector3::new(
+            max.x.max(v[0] as f64),
+            max.y.max(v[1] as f64),
+            max.z.max(v[2] as f64),
+        );
     }
 
     Box3::from_extents(&min, &max)
@@ -692,7 +757,9 @@ fn view_volume_intersects_sphere(projection: &Matrix4, radius: f64, center: &Vec
     ];
 
     // Plane3.getDistanceToPoint: dot (point, normal) - distanceFromOrigin.
-    !planes.iter().any(|(point, normal)| center.dot(normal) - point.dot(normal) > radius)
+    !planes
+        .iter()
+        .any(|(point, normal)| center.dot(normal) - point.dot(normal) > radius)
 }
 
 /// One renderObject.render (TraverseType.SHADOW) of the light's group.
@@ -732,7 +799,24 @@ impl Box3 {
     const EMPTY: Box3 = Box3(Matrix4([0.0; 16]));
 
     fn new(size: &Vector3, center: &Vector3) -> Box3 {
-        Box3(Matrix4([size.x / 2.0, 0.0, 0.0, 0.0, 0.0, size.y / 2.0, 0.0, 0.0, 0.0, 0.0, size.z / 2.0, 0.0, center.x, center.y, center.z, 1.0]))
+        Box3(Matrix4([
+            size.x / 2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            size.y / 2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            size.z / 2.0,
+            0.0,
+            center.x,
+            center.y,
+            center.z,
+            1.0,
+        ]))
     }
 
     fn from_extents(min: &Vector3, max: &Vector3) -> Box3 {
@@ -744,12 +828,12 @@ impl Box3 {
     }
 
     fn is_empty(&self) -> bool {
-        self.0 .0[15] == 0.0
+        self.0.0[15] == 0.0
     }
 
     /// Box3.getExtents.
     fn extents(&self) -> (Vector3, Vector3) {
-        let m = &self.0 .0;
+        let m = &self.0.0;
         let x = Vector3::new(m[0], m[1], m[2]);
         let y = Vector3::new(m[4], m[5], m[6]);
         let z = Vector3::new(m[8], m[9], m[10]);
@@ -782,7 +866,7 @@ impl Box3 {
 
     /// Box3.center.
     fn center(&self) -> Vector3 {
-        Vector3::new(self.0 .0[12], self.0 .0[13], self.0 .0[14])
+        Vector3::new(self.0.0[12], self.0.0[13], self.0.0[14])
     }
 
     /// Box3.add.
@@ -807,11 +891,30 @@ impl Box3 {
 /// Camera.frustum.
 fn frustum(l: f64, r: f64, b: f64, t: f64, n: f64, f: f64) -> Matrix4 {
     let (r_l, t_b, f_n, n_2) = (r - l, t - b, f - n, 2.0 * n);
-    Matrix4([n_2 / r_l, 0.0, 0.0, 0.0, 0.0, n_2 / t_b, 0.0, 0.0, (r + l) / r_l, (t + b) / t_b, -(f + n) / f_n, -1.0, 0.0, 0.0, -(n_2 * f) / f_n, 0.0])
+    Matrix4([
+        n_2 / r_l,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        n_2 / t_b,
+        0.0,
+        0.0,
+        (r + l) / r_l,
+        (t + b) / t_b,
+        -(f + n) / f_n,
+        -1.0,
+        0.0,
+        0.0,
+        -(n_2 * f) / f_n,
+        0.0,
+    ])
 }
 
 /// X3DLightNode.getBiasMatrix.
-const SHADOW_BIAS_MATRIX: Matrix4 = Matrix4([0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0]);
+const SHADOW_BIAS_MATRIX: Matrix4 = Matrix4([
+    0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0,
+]);
 
 /// The largest shadowMapSize (getMaxTextureSize clamps it; wgpu's default texture limit).
 const MAX_SHADOW_MAP_SIZE: u32 = 8192;
@@ -880,7 +983,12 @@ pub const MAX_LIGHTS: usize = 8;
 fn shape_projectors(items: &mut [DrawItem], globals: &[u32]) {
     for item in items {
         let local = std::mem::take(&mut item.projectors);
-        item.projectors = globals.iter().chain(&local).copied().take(MAX_TEXTURES).collect();
+        item.projectors = globals
+            .iter()
+            .chain(&local)
+            .copied()
+            .take(MAX_TEXTURES)
+            .collect();
     }
 }
 
@@ -889,7 +997,12 @@ fn shape_projectors(items: &mut [DrawItem], globals: &[u32]) {
 fn shape_lights(items: &mut [DrawItem], globals: &[u32]) {
     for item in items {
         let local = std::mem::take(&mut item.lights);
-        item.lights = globals.iter().chain(&local).copied().take(MAX_LIGHTS).collect();
+        item.lights = globals
+            .iter()
+            .chain(&local)
+            .copied()
+            .take(MAX_LIGHTS)
+            .collect();
     }
 }
 
@@ -1002,12 +1115,18 @@ impl RenderCache {
     /// Drop entries that have not been used for a while; call once per frame after the build.
     fn end_frame(&mut self) {
         let frame = self.frame;
-        self.geometries.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
-        self.textures.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
-        self.faces.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
-        self.skinned.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
-        self.splats.retain(|_, e| e.2 + crate::splats_gpu::KEEP_FRAMES >= frame);
-        self.particles.retain(|_, e| e.2 + CACHE_KEEP_FRAMES >= frame);
+        self.geometries
+            .retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.textures
+            .retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.faces
+            .retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.skinned
+            .retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.splats
+            .retain(|_, e| e.2 + crate::splats_gpu::KEEP_FRAMES >= frame);
+        self.particles
+            .retain(|_, e| e.2 + CACHE_KEEP_FRAMES >= frame);
     }
 }
 
@@ -1050,7 +1169,15 @@ fn fingerprint(sg: &Sg, n: NodeId) -> u64 {
     if sg.type_name(n) == Some("Text") {
         mix(&mut h, sg.rt.font_epoch);
         // A ScreenFontStyle's size and glyph canvas are in pixels × ContentScale (ScreenFontStyle.getScale).
-        mix(&mut h, sg.rt.browser_options.rendering.get("ContentScale").map_or(1.0, |v| v.as_f64()).to_bits());
+        mix(
+            &mut h,
+            sg.rt
+                .browser_options
+                .rendering
+                .get("ContentScale")
+                .map_or(1.0, |v| v.as_f64())
+                .to_bits(),
+        );
     }
     walk(sg, n, 0, &mut h);
     h
@@ -1066,7 +1193,12 @@ pub struct ExtrasOwned<'s> {
 
 impl ExtrasOwned<'_> {
     pub fn view(&self) -> crate::extras::Extras<'_> {
-        crate::extras::Extras { tex: self.tex.as_deref(), tangent: self.tangent, fog: self.fog, attribs: &self.attribs }
+        crate::extras::Extras {
+            tex: self.tex.as_deref(),
+            tangent: self.tangent,
+            fog: self.fog,
+            attribs: &self.attribs,
+        }
     }
 }
 
@@ -1152,10 +1284,10 @@ pub struct Builder<'a> {
     joint_model_views: HashMap<NodeId, Matrix4>,
 }
 
-#[path = "traverse_splats.rs"]
-mod traverse_splats;
 #[path = "traverse_shaders.rs"]
 mod traverse_shaders;
+#[path = "traverse_splats.rs"]
+mod traverse_splats;
 
 /// One GeneratedCubeMapTexture.renderTexture: six frames drawn into the texture's faces before
 /// the frame that samples it (X3DRenderObject.draw: rendered textures first).
@@ -1194,7 +1326,13 @@ struct RenderedChildren {
 }
 
 fn rendered_children(sg: &Sg, n: NodeId) -> RenderedChildren {
-    let mut c = RenderedChildren { fog: None, navigation_info: None, background: None, viewpoint: None, group: vec![] };
+    let mut c = RenderedChildren {
+        fog: None,
+        navigation_info: None,
+        background: None,
+        viewpoint: None,
+        group: vec![],
+    };
 
     for child in sg.nodes(n, "children") {
         match sg.type_name(child) {
@@ -1239,10 +1377,20 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
                 r
             };
             let _ = kids;
-            if choice >= 0 && (choice as usize) < raw.len() { raw[choice as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] }
+            if choice >= 0 && (choice as usize) < raw.len() {
+                raw[choice as usize]
+                    .and_then(|c| sg.inner(c))
+                    .into_iter()
+                    .collect()
+            } else {
+                vec![]
+            }
         }
         "CADFace" => sg.cad_face_child(n).into_iter().collect(),
-        "HAnimHumanoid" | "HAnimJoint" | "HAnimSegment" | "HAnimSite" => sg.hanim_children(n, ty).map(|g| g.concat()).unwrap_or_default(),
+        "HAnimHumanoid" | "HAnimJoint" | "HAnimSegment" | "HAnimSite" => sg
+            .hanim_children(n, ty)
+            .map(|g| g.concat())
+            .unwrap_or_default(),
         "GeoLOD" => sg.geo_lod_kids(n, true),
         _ => {
             let mut kids = sg.nodes(n, "children");
@@ -1255,8 +1403,27 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
 }
 
 const GROUPS: &[&str] = &[
-    "Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "HAnimHumanoid",
-    "HAnimJoint", "HAnimSegment", "HAnimSite", "ScreenGroup",
+    "Group",
+    "Transform",
+    "Anchor",
+    "Collision",
+    "Billboard",
+    "Switch",
+    "LOD",
+    "GeoLocation",
+    "GeoTransform",
+    "GeoLOD",
+    "CADAssembly",
+    "CADLayer",
+    "CADPart",
+    "CADFace",
+    "PickableGroup",
+    "GroupAnnotation",
+    "HAnimHumanoid",
+    "HAnimJoint",
+    "HAnimSegment",
+    "HAnimSite",
+    "ScreenGroup",
 ];
 
 impl<'a> Builder<'a> {
@@ -1294,7 +1461,12 @@ impl<'a> Builder<'a> {
             layer_cameras: vec![],
             viewports: vec![],
             layouts: LayoutStack::default(),
-            layout_camera: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 },
+            layout_camera: LayoutCamera {
+                ortho: None,
+                fov: std::f64::consts::FRAC_PI_4,
+                near: 0.125,
+                content_scale: 1.0,
+            },
             projection: Matrix4::IDENTITY,
             screen_matrices: HashMap::new(),
             billboard_matrices: HashMap::new(),
@@ -1368,7 +1540,9 @@ impl<'a> Builder<'a> {
             y.cross(&x);
             x.normalize();
             y.normalize();
-            Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, 0.0, 0.0, 0.0, 1.0])
+            Matrix4([
+                x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, 0.0, 0.0, 0.0, 1.0,
+            ])
         } else {
             let mut n1 = axis;
             n1.cross(&to_viewer);
@@ -1378,7 +1552,10 @@ impl<'a> Builder<'a> {
             r.set_vectors(&n2, &n1);
             let m3 = r.get_matrix();
             let m = m3.0;
-            Matrix4([m[0], m[1], m[2], 0.0, m[3], m[4], m[5], 0.0, m[6], m[7], m[8], 0.0, 0.0, 0.0, 0.0, 1.0])
+            Matrix4([
+                m[0], m[1], m[2], 0.0, m[3], m[4], m[5], 0.0, m[6], m[7], m[8], 0.0, 0.0, 0.0, 0.0,
+                1.0,
+            ])
         }
     }
 
@@ -1393,10 +1570,19 @@ impl<'a> Builder<'a> {
             let raw = sg.raw_nodes(n, "children");
             let level = stored.min(raw.len() as i32 - 1);
 
-            return if level >= 0 { raw[level as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] };
+            return if level >= 0 {
+                raw[level as usize]
+                    .and_then(|c| sg.inner(c))
+                    .into_iter()
+                    .collect()
+            } else {
+                vec![]
+            };
         }
 
-        self.lod_level(sg, n, model_view, kids.len()).map(|l| vec![kids[l]]).unwrap_or_default()
+        self.lod_level(sg, n, model_view, kids.len())
+            .map(|l| vec![kids[l]])
+            .unwrap_or_default()
     }
 
     fn lod_level(&self, sg: &Sg, n: NodeId, model_view: &Matrix4, count: usize) -> Option<usize> {
@@ -1410,7 +1596,10 @@ impl<'a> Builder<'a> {
         let mut c = sg.vec3(n, "center", Vector3::ZERO);
         model_view.mult_vec_matrix3(&mut c);
         let distance = c.norm();
-        let level = range.iter().position(|r| distance < *r).unwrap_or(range.len());
+        let level = range
+            .iter()
+            .position(|r| distance < *r)
+            .unwrap_or(range.len());
         Some(level.min(count - 1))
     }
 
@@ -1430,9 +1619,17 @@ impl<'a> Builder<'a> {
         }
 
         match ty {
-            "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
-            "NavigationInfo" if bound.navigation_info.is_none() && !inline => bound.navigation_info = Some(n),
-            "Background" | "TextureBackground" if bound.background.is_none() && !inline => bound.background = Some((n, *m)),
+            "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint"
+                if bound.viewpoint.is_none() && !inline =>
+            {
+                bound.viewpoint = Some((n, *m))
+            }
+            "NavigationInfo" if bound.navigation_info.is_none() && !inline => {
+                bound.navigation_info = Some(n)
+            }
+            "Background" | "TextureBackground" if bound.background.is_none() && !inline => {
+                bound.background = Some((n, *m))
+            }
             "Fog" if !inline => {
                 bound.fog_matrices.insert(n, *m);
 
@@ -1448,7 +1645,11 @@ impl<'a> Builder<'a> {
                     mm.mult_left(&t);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_kids(sg, n, &mm, kids) } else { kids };
+                let kids = if ty == "LOD" {
+                    self.lod_kids(sg, n, &mm, kids)
+                } else {
+                    kids
+                };
                 for c in kids {
                     self.camera(sg, c, &mm, bound, depth + 1);
                 }
@@ -1485,7 +1686,9 @@ impl<'a> Builder<'a> {
         match ty {
             "Shape" | "InstancedShape" => self.shape(sg, n, mv),
             "ParticleSystem" => self.particle_system(sg, n, mv),
-            "VolumeData" | "IsoSurfaceVolumeData" | "SegmentedVolumeData" => self.volume(sg, n, ty, mv),
+            "VolumeData" | "IsoSurfaceVolumeData" | "SegmentedVolumeData" => {
+                self.volume(sg, n, ty, mv)
+            }
             "GaussianSplats" => self.splats(sg, n, mv),
             "DirectionalLight" | "PointLight" | "SpotLight" => self.light(sg, n, ty, mv),
             "TextureProjector" | "TextureProjectorParallel" => self.projector(sg, n, ty, mv),
@@ -1513,7 +1716,9 @@ impl<'a> Builder<'a> {
                 }
             }
             "HAnimHumanoid" => self.hanim_humanoid(sg, n, mv, depth),
-            "HAnimSegment" if crate::hanim::segment_tables(sg, n).is_some() => self.hanim_segment(sg, n, mv, depth),
+            "HAnimSegment" if crate::hanim::segment_tables(sg, n).is_some() => {
+                self.hanim_segment(sg, n, mv, depth)
+            }
             _ if GROUPS.contains(&ty) => {
                 let mut m = *mv;
                 if let Some(t) = sg.group_matrix(n, ty) {
@@ -1547,7 +1752,11 @@ impl<'a> Builder<'a> {
                     m.mult_left(&s);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
+                let kids = if ty == "LOD" {
+                    self.lod_kids(sg, n, &m, kids)
+                } else {
+                    kids
+                };
                 self.groups.push(ShadowGroup::Node(n));
                 self.group_children(sg, kids, &m, depth);
                 self.groups.pop();
@@ -1561,20 +1770,78 @@ impl<'a> Builder<'a> {
                 self.groups.pop();
                 self.viewports.pop();
             }
-            "LayoutGroup" => self.layout_group(sg, n, sg.node(n, "layout"), sg.node(n, "viewport"), children_of(sg, n, ty), mv, depth),
+            "LayoutGroup" => self.layout_group(
+                sg,
+                n,
+                sg.node(n, "layout"),
+                sg.node(n, "viewport"),
+                children_of(sg, n, ty),
+                mv,
+                depth,
+            ),
             // Nodes with no visual output.
-            "WorldInfo" | "ClipPlane" | "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "GeoTouchSensor" | "PlaneSensor" | "SphereSensor"
-            | "CylinderSensor" | "ProximitySensor" | "VisibilitySensor" | "Script" | "PositionInterpolator" | "OrientationInterpolator"
-            | "ColorInterpolator" | "ScalarInterpolator" | "CoordinateInterpolator" | "NormalInterpolator" | "Sound" | "AudioClip"
-            | "BooleanFilter" | "BooleanToggle" | "BooleanTrigger" | "BooleanSequencer" | "IntegerSequencer" | "IntegerTrigger"
-            | "TimeTrigger" | "AnnotationTarget" | "TextAnnotation" | "URLAnnotation" | "IconAnnotation" | "GeoMetadata" | "FontLibrary" | "DISEntityManager" | "DISEntityTypeMapping" | "NurbsSet" | "NurbsPositionInterpolator" | "NurbsOrientationInterpolator" | "NurbsSurfaceInterpolator" | "MetadataString" | "MetadataFloat" | "MetadataInteger" | "MetadataSet" | "MetadataDouble" | "MetadataBoolean" => {}
+            "WorldInfo"
+            | "ClipPlane"
+            | "Viewpoint"
+            | "OrthoViewpoint"
+            | "GeoViewpoint"
+            | "NavigationInfo"
+            | "Background"
+            | "TextureBackground"
+            | "Fog"
+            | "TimeSensor"
+            | "TouchSensor"
+            | "GeoTouchSensor"
+            | "PlaneSensor"
+            | "SphereSensor"
+            | "CylinderSensor"
+            | "ProximitySensor"
+            | "VisibilitySensor"
+            | "Script"
+            | "PositionInterpolator"
+            | "OrientationInterpolator"
+            | "ColorInterpolator"
+            | "ScalarInterpolator"
+            | "CoordinateInterpolator"
+            | "NormalInterpolator"
+            | "Sound"
+            | "AudioClip"
+            | "BooleanFilter"
+            | "BooleanToggle"
+            | "BooleanTrigger"
+            | "BooleanSequencer"
+            | "IntegerSequencer"
+            | "IntegerTrigger"
+            | "TimeTrigger"
+            | "AnnotationTarget"
+            | "TextAnnotation"
+            | "URLAnnotation"
+            | "IconAnnotation"
+            | "GeoMetadata"
+            | "FontLibrary"
+            | "DISEntityManager"
+            | "DISEntityTypeMapping"
+            | "NurbsSet"
+            | "NurbsPositionInterpolator"
+            | "NurbsOrientationInterpolator"
+            | "NurbsSurfaceInterpolator"
+            | "MetadataString"
+            | "MetadataFloat"
+            | "MetadataInteger"
+            | "MetadataSet"
+            | "MetadataDouble"
+            | "MetadataBoolean" => {}
             // LayerSet is drawn by the world (X3DWorld), not as a child of layer 0; Layer and
             // LayoutLayer are not X3DChildNodes.
             "LayerSet" | "Layer" | "LayoutLayer" | "AnnotationLayer" | "Layout" => {}
             // Not X3DChildNode: X3DGroupingNode.add ignores these in children.
-            "Appearance" | "Material" | "UnlitMaterial" | "TwoSidedMaterial" | "PointProperties" | "LineProperties" | "FillProperties" | "TextureProperties" | "BlendMode" | "DepthMode" | "ImageTexture" | "PixelTexture" | "MovieTexture" | "TextureTransform" | "Coordinate" | "Color"
-            | "Normal" | "TextureCoordinate" | "FontStyle" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet" | "IndexedLineSet"
-            | "PointSet" | "ElevationGrid" | "GeoElevationGrid" | "Extrusion" | "Text" => {}
+            "Appearance" | "Material" | "UnlitMaterial" | "TwoSidedMaterial"
+            | "PointProperties" | "LineProperties" | "FillProperties" | "TextureProperties"
+            | "BlendMode" | "DepthMode" | "ImageTexture" | "PixelTexture" | "MovieTexture"
+            | "TextureTransform" | "Coordinate" | "Color" | "Normal" | "TextureCoordinate"
+            | "FontStyle" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet"
+            | "IndexedLineSet" | "PointSet" | "ElevationGrid" | "GeoElevationGrid"
+            | "Extrusion" | "Text" => {}
             other => {
                 self.unsupported.insert(other.to_string());
             }
@@ -1590,13 +1857,21 @@ impl<'a> Builder<'a> {
         }
 
         let size = sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0));
-        let bbox = if size.equals(&Vector3::new(-1.0, -1.0, -1.0)) { Box3::EMPTY } else { Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO)) };
+        let bbox = if size.equals(&Vector3::new(-1.0, -1.0, -1.0)) {
+            Box3::EMPTY
+        } else {
+            Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO))
+        };
         self.bbox_shape(n, bbox, mv);
     }
 
     /// LineProperties.set_linewidthScaleFactor__ / setShaderUniforms: the line width is `max (1, linewidthScaleFactor) * ContentScale`,
     /// and `ContentScale` alone for a line geometry without applied LineProperties (gl.lineWidth). Rust's solid linetype is 1.
-    fn content_scale_lines(&self, style: Option<StyleParams>, geometry_type: u8) -> Option<StyleParams> {
+    fn content_scale_lines(
+        &self,
+        style: Option<StyleParams>,
+        geometry_type: u8,
+    ) -> Option<StyleParams> {
         let scale = self.layout_camera.content_scale;
 
         if geometry_type != 1 || scale == 1.0 {
@@ -1604,8 +1879,14 @@ impl<'a> Builder<'a> {
         }
 
         match style {
-            Some(StyleParams::Line(l)) => Some(StyleParams::Line(LineParams { width: l.width * scale, ..l })),
-            None => Some(StyleParams::Line(LineParams { linetype: 1, width: scale })),
+            Some(StyleParams::Line(l)) => Some(StyleParams::Line(LineParams {
+                width: l.width * scale,
+                ..l
+            })),
+            None => Some(StyleParams::Line(LineParams {
+                linetype: 1,
+                width: scale,
+            })),
             other => other,
         }
     }
@@ -1617,7 +1898,14 @@ impl<'a> Builder<'a> {
         let Some(ty) = sg.type_name(c) else { return };
 
         // The DIS nodes and GaussianSplats draw their own box (bbox_display, splats).
-        let bounded = ty == "Shape" || ty == "InstancedShape" || ty == "ParticleSystem" || ty == "Inline" || ty == "StaticGroup" || ty == "Viewport" || ty == "LayoutGroup" || GROUPS.contains(&ty);
+        let bounded = ty == "Shape"
+            || ty == "InstancedShape"
+            || ty == "ParticleSystem"
+            || ty == "Inline"
+            || ty == "StaticGroup"
+            || ty == "Viewport"
+            || ty == "LayoutGroup"
+            || GROUPS.contains(&ty);
 
         if !bounded || !sg.bool(c, "bboxDisplay", false) {
             return;
@@ -1649,7 +1937,10 @@ impl<'a> Builder<'a> {
         m.mult_left(&local);
 
         let geometry = match self.cache.as_deref_mut() {
-            Some(c) => c.bbox_box.get_or_insert_with(|| Rc::new(crate::bbox_display::unit_box_lines())).clone(),
+            Some(c) => c
+                .bbox_box
+                .get_or_insert_with(|| Rc::new(crate::bbox_display::unit_box_lines()))
+                .clone(),
             None => Rc::new(crate::bbox_display::unit_box_lines()),
         };
         let mut distance = Vector3::ZERO;
@@ -1671,7 +1962,12 @@ impl<'a> Builder<'a> {
             back_material: None,
             blend: None,
             depth: None,
-            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            clip_planes: self
+                .clip_planes
+                .iter()
+                .take(MAX_CLIP_PLANES)
+                .copied()
+                .collect(),
             style,
             style_texture,
             distance: distance.z,
@@ -1690,16 +1986,29 @@ impl<'a> Builder<'a> {
         let pushed = self.push_clip_planes(sg, &kids, m);
         // LocalFog.push: an enabled fog with a fogType, in the group's model-view space.
         let fogs = self.local_fogs.len();
-        for c in kids.iter().filter(|c| sg.type_name(**c) == Some("LocalFog") && sg.bool(**c, "enabled", true)) {
+        for c in kids
+            .iter()
+            .filter(|c| sg.type_name(**c) == Some("LocalFog") && sg.bool(**c, "enabled", true))
+        {
             if let Some(f) = fog_params(sg, *c, Some(m), &Matrix4::IDENTITY) {
                 self.local_fogs.push(f);
             }
         }
         let local = self.local_lights.len();
         let local_projectors = self.local_projectors.len();
-        let (lights, rest): (Vec<NodeId>, Vec<NodeId>) = kids
-            .into_iter()
-            .partition(|c| matches!(sg.type_name(*c), Some("DirectionalLight" | "PointLight" | "SpotLight" | "EnvironmentLight" | "TextureProjector" | "TextureProjectorParallel")));
+        let (lights, rest): (Vec<NodeId>, Vec<NodeId>) = kids.into_iter().partition(|c| {
+            matches!(
+                sg.type_name(*c),
+                Some(
+                    "DirectionalLight"
+                        | "PointLight"
+                        | "SpotLight"
+                        | "EnvironmentLight"
+                        | "TextureProjector"
+                        | "TextureProjectorParallel"
+                )
+            )
+        });
         for c in lights.into_iter().chain(rest) {
             self.display(sg, c, m, depth + 1);
             self.child_bbox_display(sg, c, m, depth);
@@ -1716,18 +2025,31 @@ impl<'a> Builder<'a> {
         self.billboard_matrices
             .get(&n)
             .copied()
-            .or_else(|| self.cache.as_deref().and_then(|c| c.billboard_matrices.get(&(sg.rt.uid, n)).copied()))
+            .or_else(|| {
+                self.cache
+                    .as_deref()
+                    .and_then(|c| c.billboard_matrices.get(&(sg.rt.uid, n)).copied())
+            })
             .unwrap_or(Matrix4::IDENTITY)
     }
 
     /// ScreenGroup.matrix: this build's DISPLAY value, else the last frame's (the cache), else the identity (none: the caller adds nothing).
     fn screen_matrix(&self, sg: &Sg, n: NodeId) -> Option<Matrix4> {
-        self.screen_matrices.get(&n).copied().or_else(|| self.cache.as_deref().and_then(|c| c.screen_matrices.get(&(sg.rt.uid, n)).copied()))
+        self.screen_matrices.get(&n).copied().or_else(|| {
+            self.cache
+                .as_deref()
+                .and_then(|c| c.screen_matrices.get(&(sg.rt.uid, n)).copied())
+        })
     }
 
     /// The screen matrices of the last DISPLAY traversals of the runtime `uid` (ScreenGroup.matrix), for the viewer's CAMERA walk.
     pub fn screen_matrices_of(cache: &RenderCache, uid: u64) -> HashMap<NodeId, Matrix4> {
-        cache.screen_matrices.iter().filter(|((u, _), _)| *u == uid).map(|((_, n), m)| (*n, *m)).collect()
+        cache
+            .screen_matrices
+            .iter()
+            .filter(|((u, _), _)| *u == uid)
+            .map(|((_, n), m)| (*n, *m))
+            .collect()
     }
 
     /// X3DLayoutContext.getScreenScaleMatrix (renderObject, matrix, contentScale, snap): the model-view matrix's axes scaled to
@@ -1741,12 +2063,20 @@ impl<'a> Builder<'a> {
         let scale = match self.layout_camera.ortho {
             // OrthoViewpoint.getScreenScale
             Some((size_x, size_y)) => {
-                if width / height > size_x / size_y { size_y / height } else { size_x / width }
+                if width / height > size_x / size_y {
+                    size_y / height
+                } else {
+                    size_x / width
+                }
             }
             // Viewpoint.getScreenScale (also GeoViewpoint): meter / pixel at the depth of the origin.
             None => {
                 let size = mv[14].abs() * (self.layout_camera.fov / 2.0).tan() * 2.0;
-                if width > height { size / height } else { size / width }
+                if width > height {
+                    size / height
+                } else {
+                    size / width
+                }
             }
         } * content_scale;
         let axis = |i: usize| {
@@ -1756,7 +2086,9 @@ impl<'a> Builder<'a> {
             v
         };
         let (x, y, z) = (axis(0), axis(4), axis(8));
-        let mut screen = Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, mv[12], mv[13], mv[14], 1.0]);
+        let mut screen = Matrix4([
+            x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, mv[12], mv[13], mv[14], 1.0,
+        ]);
 
         // Snap to whole pixel: ViewVolume.projectPoint, round, ViewVolume.unProjectPoint.
         if snap {
@@ -1764,14 +2096,23 @@ impl<'a> Builder<'a> {
             screen.mult_vec_matrix4(&mut p);
             self.projection.mult_vec_matrix4(&mut p);
             let d = 1.0 / (2.0 * p.w);
-            let win = [(p.x * d + 0.5) * viewport[2] + viewport[0], (p.y * d + 0.5) * viewport[3] + viewport[1], p.z * d + 0.5];
+            let win = [
+                (p.x * d + 0.5) * viewport[2] + viewport[0],
+                (p.y * d + 0.5) * viewport[3] + viewport[1],
+                p.z * d + 0.5,
+            ];
             let (win_x, win_y) = ((win[0] + 0.5).floor(), (win[1] + 0.5).floor());
 
             let mut inv = screen;
             inv.mult_right(&self.projection);
             inv.inverse();
 
-            let mut v = Vector4::new((win_x - viewport[0]) / viewport[2] * 2.0 - 1.0, (win_y - viewport[1]) / viewport[3] * 2.0 - 1.0, win[2] * 2.0 - 1.0, 1.0);
+            let mut v = Vector4::new(
+                (win_x - viewport[0]) / viewport[2] * 2.0 - 1.0,
+                (win_y - viewport[1]) / viewport[3] * 2.0 - 1.0,
+                win[2] * 2.0 - 1.0,
+                1.0,
+            );
             inv.mult_vec_matrix4(&mut v);
             let d = 1.0 / v.w;
 
@@ -1786,13 +2127,25 @@ impl<'a> Builder<'a> {
 
     /// The current viewport rectangle (renderObject .getViewVolumes () .at (-1) .getViewport ()).
     fn viewport(&self) -> [f64; 4] {
-        self.viewports.last().copied().unwrap_or([0.0, 0.0, 1.0, 1.0])
+        self.viewports
+            .last()
+            .copied()
+            .unwrap_or([0.0, 0.0, 1.0, 1.0])
     }
 
     /// LayoutGroup.traverse (also the group of a LayoutLayer): the Viewport pushed, then the
     /// Layout's matrix around the children.
     #[allow(clippy::too_many_arguments)]
-    fn layout_group(&mut self, sg: &Sg, n: NodeId, layout: Option<NodeId>, viewport: Option<NodeId>, kids: Vec<NodeId>, mv: &Matrix4, depth: usize) {
+    fn layout_group(
+        &mut self,
+        sg: &Sg,
+        n: NodeId,
+        layout: Option<NodeId>,
+        viewport: Option<NodeId>,
+        kids: Vec<NodeId>,
+        mv: &Matrix4,
+        depth: usize,
+    ) {
         let viewport = viewport.filter(|v| sg.type_name(*v) == Some("Viewport"));
         self.groups.push(ShadowGroup::Node(n));
 
@@ -1825,12 +2178,20 @@ impl<'a> Builder<'a> {
     /// binds its default white cube maps. A GeneratedCubeMapTexture specularTexture is rendered
     /// at the light's origin (EnvironmentLight.traverse).
     fn environment_light(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
-        let specular = sg.node(n, "specularTexture").filter(|t| matches!(sg.type_name(*t), Some("ComposedCubeMapTexture" | "ImageCubeMapTexture" | "GeneratedCubeMapTexture")));
+        let specular = sg.node(n, "specularTexture").filter(|t| {
+            matches!(
+                sg.type_name(*t),
+                Some("ComposedCubeMapTexture" | "ImageCubeMapTexture" | "GeneratedCubeMapTexture")
+            )
+        });
 
         // EnvironmentLight.traverse (a visible object while its specularTexture is a rendered
         // texture, whether the light is on or not).
         if let Some(t) = specular.filter(|t| sg.type_name(*t) == Some("GeneratedCubeMapTexture")) {
-            if !self.dependent && sg.string(t, "update", "NONE") != "NONE" && sg.i32(t, "size", 128) > 0 {
+            if !self.dependent
+                && sg.string(t, "update", "NONE") != "NONE"
+                && sg.i32(t, "size", 128) > 0
+            {
                 let mut model = *mv;
                 model.translate(&sg.vec3(n, "origin", Vector3::ZERO));
                 model.mult_right(&self.camera_space);
@@ -1848,7 +2209,9 @@ impl<'a> Builder<'a> {
             return;
         }
 
-        let texture = specular.and_then(|t| self.texture(sg, t)).unwrap_or_else(|| Rc::new(texture::white_cube()));
+        let texture = specular
+            .and_then(|t| self.texture(sg, t))
+            .unwrap_or_else(|| Rc::new(texture::white_cube()));
         let mut rotation = Rotation4::identity();
         mv.get_transform(None, Some(&mut rotation), None, None, None);
         rotation.mult_left(&sg.rotation(n, "rotation"));
@@ -1926,8 +2289,18 @@ impl<'a> Builder<'a> {
                     location,
                     attenuation: [a.x.max(0.0), a.y.max(0.0), a.z.max(0.0)],
                     radius: sg.f64(n, "radius", 100.0),
-                    cut_off_angle: if spot { sg.f64(n, "cutOffAngle", 0.785398).clamp(0.0, std::f64::consts::FRAC_PI_2) } else { 0.0 },
-                    beam_width: if spot { sg.f64(n, "beamWidth", 1.5708).clamp(0.0, std::f64::consts::FRAC_PI_2) } else { 0.0 },
+                    cut_off_angle: if spot {
+                        sg.f64(n, "cutOffAngle", 0.785398)
+                            .clamp(0.0, std::f64::consts::FRAC_PI_2)
+                    } else {
+                        0.0
+                    },
+                    beam_width: if spot {
+                        sg.f64(n, "beamWidth", 1.5708)
+                            .clamp(0.0, std::f64::consts::FRAC_PI_2)
+                    } else {
+                        0.0
+                    },
                     matrix,
                     shadow: None,
                 });
@@ -1946,14 +2319,23 @@ impl<'a> Builder<'a> {
     fn projector(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4) {
         // set_on__: on, intensity > 0 and an X3DTexture2DNode texture (setEnabled).
         let intensity = sg.f64(n, "intensity", 1.0).max(0.0);
-        let texture_node = sg.node(n, "texture").filter(|t| matches!(sg.type_name(*t), Some("ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture")));
+        let texture_node = sg.node(n, "texture").filter(|t| {
+            matches!(
+                sg.type_name(*t),
+                Some("ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture")
+            )
+        });
 
         if !sg.bool(n, "on", true) || intensity <= 0.0 {
             return;
         }
 
-        let Some(texture_node) = texture_node else { return };
-        let Some(texture) = self.texture(sg, texture_node) else { return };
+        let Some(texture_node) = texture_node else {
+            return;
+        };
+        let Some(texture) = self.texture(sg, texture_node) else {
+            return;
+        };
         let global = sg.bool(n, "global", true);
         let mut model = *mv;
         model.mult_right(&self.camera_space);
@@ -1963,7 +2345,10 @@ impl<'a> Builder<'a> {
         direction.negate();
         let mut rotation = Rotation4::identity();
         rotation.set_vectors(&Vector3::Z_AXIS, &direction);
-        let rotation = straighten(&rotation, &sg.vec3(n, "upVector", Vector3::new(0.0, 1.0, 0.0)));
+        let rotation = straighten(
+            &rotation,
+            &sg.vec3(n, "upVector", Vector3::new(0.0, 1.0, 0.0)),
+        );
         let location = sg.vec3(n, "location", Vector3::ZERO);
         inv.translate(&location);
         inv.rotate(&rotation);
@@ -1972,14 +2357,26 @@ impl<'a> Builder<'a> {
         // set_nearDistance__ / set_farDistance__.
         let near_field = sg.f64(n, "nearDistance", -1.0);
         let far_field = sg.f64(n, "farDistance", -1.0);
-        let (near, near_parameter) = if near_field < 0.0 { (0.125, 0.0) } else { (near_field, -1.0) };
-        let (far, far_parameter) = if far_field < 0.0 { (100_000.0, 1.0) } else { (far_field, 2.0) };
+        let (near, near_parameter) = if near_field < 0.0 {
+            (0.125, 0.0)
+        } else {
+            (near_field, -1.0)
+        };
+        let (far, far_parameter) = if far_field < 0.0 {
+            (100_000.0, 1.0)
+        } else {
+            (far_field, 2.0)
+        };
         let (width, height) = (texture.width.max(1) as f64, texture.height.max(1) as f64);
 
         let projection = if ty == "TextureProjector" {
             // getFieldOfView: in (0, π), else π/4; Camera.perspective with the texture's size.
             let fov = sg.f64(n, "fieldOfView", std::f64::consts::FRAC_PI_4);
-            let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+            let fov = if fov > 0.0 && fov < std::f64::consts::PI {
+                fov
+            } else {
+                std::f64::consts::FRAC_PI_4
+            };
             let ratio = (fov / 2.0).tan() * near;
             if width > height {
                 let aspect = width * ratio / height;
@@ -1989,7 +2386,11 @@ impl<'a> Builder<'a> {
                 frustum(-ratio, ratio, -aspect, aspect, near, far)
             }
         } else {
-            let f = sg.vec4(n, "fieldOfView", x3d_fields::math::Vector4::new(-1.0, -1.0, 1.0, 1.0));
+            let f = sg.vec4(
+                n,
+                "fieldOfView",
+                x3d_fields::math::Vector4::new(-1.0, -1.0, 1.0, 1.0),
+            );
             let (min_x, min_y, max_x, max_y) = (f.x, f.y, f.z, f.w);
             let (size_x, size_y) = (max_x - min_x, max_y - min_y);
             let ratio = width / height;
@@ -2011,16 +2412,32 @@ impl<'a> Builder<'a> {
         }
 
         // X3DSingleTextureNode.getMatrix: identity or the flipY matrix (ImageTexture, MovieTexture).
-        let texture_matrix = if texture.flip_y { Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0]) } else { Matrix4::IDENTITY };
-        inv.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX).mult_right(&texture_matrix);
+        let texture_matrix = if texture.flip_y {
+            Matrix4([
+                1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
+            ])
+        } else {
+            Matrix4::IDENTITY
+        };
+        inv.mult_right(&projection)
+            .mult_right(&SHADOW_BIAS_MATRIX)
+            .mult_right(&texture_matrix);
 
         // The location: computed once, in the pass that renders the container first (a texture
         // pass keeps the main pass's value).
         let mut view_location = location;
         mv.mult_vec_matrix3(&mut view_location);
-        let close = |a: &Matrix4, b: &Matrix4| a.0.iter().zip(b.0.iter()).all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()));
+        let close = |a: &Matrix4, b: &Matrix4| {
+            a.0.iter()
+                .zip(b.0.iter())
+                .all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()))
+        };
         if self.dependent {
-            if let Some((_, _, l)) = self.projector_sources.iter().find(|(node, m, _)| *node == n && close(m, &model)) {
+            if let Some((_, _, l)) = self
+                .projector_sources
+                .iter()
+                .find(|(node, m, _)| *node == n && close(m, &model))
+            {
                 view_location = *l;
             }
         } else {
@@ -2036,15 +2453,36 @@ impl<'a> Builder<'a> {
             self.local_projectors.push(index);
         }
 
-        self.projectors.push(ProjectorParams { texture, color: sg.color(n, "color", [1.0, 1.0, 1.0]), intensity, location: view_location, params: [near_parameter, far_parameter], matrix, linear: false });
+        self.projectors.push(ProjectorParams {
+            texture,
+            color: sg.color(n, "color", [1.0, 1.0, 1.0]),
+            intensity,
+            location: view_location,
+            params: [near_parameter, far_parameter],
+            matrix,
+            linear: false,
+        });
     }
 
     /// X3DLightNode.getShadowIntensity / getShadowMapSize and the container's renderShadowMap:
     /// the light's shadow map (the shadow-casting shapes of its group seen from the light) and
     /// the shadow uniforms. Not in a texture pass (a dependent renderer).
-    fn light_shadow(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4, global: bool) -> Option<ShadowParams> {
-        let intensity = if sg.bool(n, "shadows", false) { sg.f64(n, "shadowIntensity", 1.0).clamp(0.0, 1.0) } else { 0.0 };
-        let size = sg.i32(n, "shadowMapSize", 1024).clamp(0, MAX_SHADOW_MAP_SIZE as i32) as u32;
+    fn light_shadow(
+        &mut self,
+        sg: &Sg,
+        n: NodeId,
+        ty: &str,
+        mv: &Matrix4,
+        global: bool,
+    ) -> Option<ShadowParams> {
+        let intensity = if sg.bool(n, "shadows", false) {
+            sg.f64(n, "shadowIntensity", 1.0).clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
+        let size = sg
+            .i32(n, "shadowMapSize", 1024)
+            .clamp(0, MAX_SHADOW_MAP_SIZE as i32) as u32;
 
         if intensity <= 0.0 || size == 0 {
             return None;
@@ -2056,14 +2494,31 @@ impl<'a> Builder<'a> {
         // DependentRenderer.getLightContainer: the main pass's container, its map rendered once
         // (shadowMapRendered); setGlobalVariables with the texture pass's cameraSpaceMatrix.
         if self.dependent {
-            let close = |a: &Matrix4, b: &Matrix4| a.0.iter().zip(b.0.iter()).all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()));
-            let (_, _, map_matrix, params) = self.shadow_sources.iter().find(|(node, m, _, _)| *node == n && close(m, &model))?;
+            let close = |a: &Matrix4, b: &Matrix4| {
+                a.0.iter()
+                    .zip(b.0.iter())
+                    .all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()))
+            };
+            let (_, _, map_matrix, params) = self
+                .shadow_sources
+                .iter()
+                .find(|(node, m, _, _)| *node == n && close(m, &model))?;
             let mut matrix = self.camera_space;
             matrix.mult_right(map_matrix);
-            return Some(ShadowParams { matrix, ..params.clone() });
+            return Some(ShadowParams {
+                matrix,
+                ..params.clone()
+            });
         }
 
-        let group = if global { ShadowGroup::Roots(self.layer_roots.clone()) } else { self.groups.last().cloned().unwrap_or_else(|| ShadowGroup::Roots(self.layer_roots.clone())) };
+        let group = if global {
+            ShadowGroup::Roots(self.layer_roots.clone())
+        } else {
+            self.groups
+                .last()
+                .cloned()
+                .unwrap_or_else(|| ShadowGroup::Roots(self.layer_roots.clone()))
+        };
         let mut inv_light_space = if global { model } else { Matrix4::IDENTITY };
         let direction = sg.vec3(n, "direction", Vector3::new(0.0, 0.0, -1.0));
         let mut negated = direction;
@@ -2082,14 +2537,20 @@ impl<'a> Builder<'a> {
                 light_bbox.mult_right(&inv_light_space);
                 let (min, max) = light_bbox.extents();
                 let projection = ortho(min.x, max.x, min.y, max.y, -max.z, -min.z);
-                views.push(ShadowView { projection, viewport: [0, 0, size, size], items: self.shadow_items(sg, &group, &inv_light_space) });
+                views.push(ShadowView {
+                    projection,
+                    viewport: [0, 0, size, size],
+                    items: self.shadow_items(sg, &group, &inv_light_space),
+                });
                 map_matrix = inv_light_space;
                 if !global {
                     let mut inv = model;
                     inv.inverse();
                     map_matrix.mult_left(&inv);
                 }
-                map_matrix.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX);
+                map_matrix
+                    .mult_right(&projection)
+                    .mult_right(&SHADOW_BIAS_MATRIX);
             }
             "SpotLight" => {
                 inv_light_space.translate(&sg.vec3(n, "location", Vector3::ZERO));
@@ -2103,25 +2564,47 @@ impl<'a> Builder<'a> {
                 if !(far > 0.0) {
                     return None;
                 }
-                let cut_off_angle = sg.f64(n, "cutOffAngle", 0.785398).clamp(0.0, std::f64::consts::FRAC_PI_2);
+                let cut_off_angle = sg
+                    .f64(n, "cutOffAngle", 0.785398)
+                    .clamp(0.0, std::f64::consts::FRAC_PI_2);
                 // Camera.perspective (fieldOfView, 0.125, max (10000, far), size, size).
                 let ratio = (cut_off_angle).tan() * 0.125;
                 let projection = frustum(-ratio, ratio, -ratio, ratio, 0.125, far.max(10000.0));
-                views.push(ShadowView { projection, viewport: [0, 0, size, size], items: self.shadow_items(sg, &group, &inv_light_space) });
+                views.push(ShadowView {
+                    projection,
+                    viewport: [0, 0, size, size],
+                    items: self.shadow_items(sg, &group, &inv_light_space),
+                });
                 map_matrix = inv_light_space;
                 if !global {
                     let mut inv = model;
                     inv.inverse();
                     map_matrix.mult_left(&inv);
                 }
-                map_matrix.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX);
+                map_matrix
+                    .mult_right(&projection)
+                    .mult_right(&SHADOW_BIAS_MATRIX);
             }
             _ => {
                 // PointLightContainer: six 90° views (perspective2) into the compact layout.
                 inv_light_space.translate(&sg.vec3(n, "location", Vector3::ZERO));
                 inv_light_space.inverse();
-                const AXES: [(f64, f64, f64); 6] = [(1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (0.0, 0.0, -1.0), (0.0, 0.0, 1.0), (0.0, 1.0, 0.0), (0.0, -1.0, 0.0)];
-                const VIEWPORTS: [[f64; 4]; 6] = [[0.0, 0.5, 0.25, 0.5], [0.5, 0.5, 0.25, 0.5], [0.75, 0.5, 0.25, 0.5], [0.25, 0.5, 0.25, 0.5], [0.0, 0.0, 0.5, 0.5], [0.5, 0.0, 0.5, 0.5]];
+                const AXES: [(f64, f64, f64); 6] = [
+                    (1.0, 0.0, 0.0),
+                    (-1.0, 0.0, 0.0),
+                    (0.0, 0.0, -1.0),
+                    (0.0, 0.0, 1.0),
+                    (0.0, 1.0, 0.0),
+                    (0.0, -1.0, 0.0),
+                ];
+                const VIEWPORTS: [[f64; 4]; 6] = [
+                    [0.0, 0.5, 0.25, 0.5],
+                    [0.5, 0.5, 0.25, 0.5],
+                    [0.75, 0.5, 0.25, 0.5],
+                    [0.25, 0.5, 0.25, 0.5],
+                    [0.0, 0.0, 0.5, 0.5],
+                    [0.5, 0.0, 0.5, 0.5],
+                ];
                 let ratio = std::f64::consts::FRAC_PI_4.tan() * 0.125;
                 let projection = frustum(-ratio, ratio, -ratio, ratio, 0.125, 10_000.0);
 
@@ -2134,8 +2617,17 @@ impl<'a> Builder<'a> {
                     let mut m = orientation;
                     m.mult_left(&inv_light_space);
                     let s = size as f64;
-                    let viewport = [(v[0] * s) as u32, (v[1] * s) as u32, (v[2] * s) as u32, (v[3] * s) as u32];
-                    views.push(ShadowView { projection, viewport, items: self.shadow_items(sg, &group, &m) });
+                    let viewport = [
+                        (v[0] * s) as u32,
+                        (v[1] * s) as u32,
+                        (v[2] * s) as u32,
+                        (v[3] * s) as u32,
+                    ];
+                    views.push(ShadowView {
+                        projection,
+                        viewport,
+                        items: self.shadow_items(sg, &group, &m),
+                    });
                 }
 
                 map_matrix = inv_light_space;
@@ -2160,7 +2652,8 @@ impl<'a> Builder<'a> {
             matrix,
             map: self.shadow_maps.len() - 1,
         };
-        self.shadow_sources.push((n, model, map_matrix, params.clone()));
+        self.shadow_sources
+            .push((n, model, map_matrix, params.clone()));
         Some(params)
     }
 
@@ -2170,7 +2663,11 @@ impl<'a> Builder<'a> {
             ShadowGroup::Node(n) => {
                 let ty = sg.type_name(*n).unwrap_or("");
                 let kids = children_of(sg, *n, ty);
-                if ty == "LOD" { self.lod_kids(sg, *n, &Matrix4::IDENTITY, kids) } else { kids }
+                if ty == "LOD" {
+                    self.lod_kids(sg, *n, &Matrix4::IDENTITY, kids)
+                } else {
+                    kids
+                }
             }
             ShadowGroup::Roots(r) => r.clone(),
         };
@@ -2204,9 +2701,19 @@ impl<'a> Builder<'a> {
             return Box3::EMPTY;
         }
 
-        let Some(ty) = sg.type_name(n) else { return Box3::EMPTY };
-        let default_size = |sg: &Sg| sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0)).equals(&Vector3::new(-1.0, -1.0, -1.0));
-        let own = |sg: &Sg| Box3::new(&sg.vec3(n, "bboxSize", Vector3::ZERO), &sg.vec3(n, "bboxCenter", Vector3::ZERO));
+        let Some(ty) = sg.type_name(n) else {
+            return Box3::EMPTY;
+        };
+        let default_size = |sg: &Sg| {
+            sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0))
+                .equals(&Vector3::new(-1.0, -1.0, -1.0))
+        };
+        let own = |sg: &Sg| {
+            Box3::new(
+                &sg.vec3(n, "bboxSize", Vector3::ZERO),
+                &sg.vec3(n, "bboxCenter", Vector3::ZERO),
+            )
+        };
 
         match ty {
             "Shape" => {
@@ -2228,7 +2735,11 @@ impl<'a> Builder<'a> {
                 }
                 let instances = instance_data(sg, n);
                 if instances.matrices.is_empty() {
-                    return if default_size(sg) { Box3::EMPTY } else { own(sg) };
+                    return if default_size(sg) {
+                        Box3::EMPTY
+                    } else {
+                        own(sg)
+                    };
                 }
                 match sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
                     Some(g) => instanced_bbox(sg, n, &g, &instances),
@@ -2263,7 +2774,11 @@ impl<'a> Builder<'a> {
                     return own(sg);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_kids(sg, n, &Matrix4::IDENTITY, kids) } else { kids };
+                let kids = if ty == "LOD" {
+                    self.lod_kids(sg, n, &Matrix4::IDENTITY, kids)
+                } else {
+                    kids
+                };
                 let mut bbox = self.bbox_of(sg, &kids, depth, shadows);
                 if let Some(m) = sg.group_matrix(n, ty) {
                     bbox.mult_right(&m);
@@ -2281,7 +2796,12 @@ impl<'a> Builder<'a> {
 
     /// renderObject.render (TraverseType.SHADOW, groupNode.traverse): the shadow objects of the
     /// group with `model_view` (the light space); its clip planes, not the ones around it.
-    fn shadow_items(&mut self, sg: &Sg, group: &ShadowGroup, model_view: &Matrix4) -> Vec<DepthItem> {
+    fn shadow_items(
+        &mut self,
+        sg: &Sg,
+        group: &ShadowGroup,
+        model_view: &Matrix4,
+    ) -> Vec<DepthItem> {
         let saved = std::mem::take(&mut self.clip_planes);
         let mut items = vec![];
 
@@ -2301,7 +2821,14 @@ impl<'a> Builder<'a> {
     }
 
     /// X3DGroupingNode.traverse SHADOW: the visible shadow objects (a Shape with castShadow).
-    fn shadow_display(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4, depth: usize, out: &mut Vec<DepthItem>) {
+    fn shadow_display(
+        &mut self,
+        sg: &Sg,
+        n: NodeId,
+        mv: &Matrix4,
+        depth: usize,
+        out: &mut Vec<DepthItem>,
+    ) {
         if depth > 256 || !sg.bool(n, "visible", true) {
             return;
         }
@@ -2314,7 +2841,17 @@ impl<'a> Builder<'a> {
                     return;
                 }
                 if let Some(geometry) = sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
-                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: None });
+                    out.push(DepthItem {
+                        geometry,
+                        model_view: *mv,
+                        clip_planes: self
+                            .clip_planes
+                            .iter()
+                            .take(MAX_CLIP_PLANES)
+                            .copied()
+                            .collect(),
+                        instances: None,
+                    });
                 }
             }
             // ParticleSystem.displaySimple: the particles drawn instanced into the shadow map.
@@ -2323,7 +2860,17 @@ impl<'a> Builder<'a> {
                     return;
                 }
                 if let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) {
-                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: Some(instances) });
+                    out.push(DepthItem {
+                        geometry,
+                        model_view: *mv,
+                        clip_planes: self
+                            .clip_planes
+                            .iter()
+                            .take(MAX_CLIP_PLANES)
+                            .copied()
+                            .collect(),
+                        instances: Some(instances),
+                    });
                 }
             }
             // InstancedShape.displaySimple: the depth shader with X3D_INSTANCING.
@@ -2332,8 +2879,21 @@ impl<'a> Builder<'a> {
                     return;
                 }
                 let instances = instance_data(sg, n);
-                if let (Some(geometry), false) = (sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)), instances.matrices.is_empty()) {
-                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: Some(Rc::new(instances)) });
+                if let (Some(geometry), false) = (
+                    sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)),
+                    instances.matrices.is_empty(),
+                ) {
+                    out.push(DepthItem {
+                        geometry,
+                        model_view: *mv,
+                        clip_planes: self
+                            .clip_planes
+                            .iter()
+                            .take(MAX_CLIP_PLANES)
+                            .copied()
+                            .collect(),
+                        instances: Some(Rc::new(instances)),
+                    });
                 }
             }
             "StaticGroup" => {
@@ -2365,7 +2925,11 @@ impl<'a> Builder<'a> {
                     m.mult_left(&t);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
+                let kids = if ty == "LOD" {
+                    self.lod_kids(sg, n, &m, kids)
+                } else {
+                    kids
+                };
                 let pushed = self.push_clip_planes(sg, &kids, &m);
                 for c in kids {
                     self.shadow_display(sg, c, &m, depth + 1, out);
@@ -2378,7 +2942,10 @@ impl<'a> Builder<'a> {
 
     fn white_texture(&mut self) -> Rc<TextureImage> {
         match self.cache.as_deref_mut() {
-            Some(c) => c.white.get_or_insert_with(|| Rc::new(TextureImage::white())).clone(),
+            Some(c) => c
+                .white
+                .get_or_insert_with(|| Rc::new(TextureImage::white()))
+                .clone(),
             None => Rc::new(TextureImage::white()),
         }
     }
@@ -2392,12 +2959,27 @@ impl<'a> Builder<'a> {
         // renderTexture of an earlier frame (the one of this frame comes after the shapes are
         // sorted); part of the cache fingerprint.
         let rendered_transparent = sg.type_name(n) == Some("RenderedTexture") && {
-            let before = sg.rt.rendered_texture_first(n).is_some_and(|f| f < sg.rt.now * 1000.0);
-            before && rendered_children(sg, n).background.map_or(self.background_transparent, |b| background_transparent(sg, b))
+            let before = sg
+                .rt
+                .rendered_texture_first(n)
+                .is_some_and(|f| f < sg.rt.now * 1000.0);
+            before
+                && rendered_children(sg, n)
+                    .background
+                    .map_or(self.background_transparent, |b| {
+                        background_transparent(sg, b)
+                    })
         };
 
         let persistent = self.cache.is_some();
-        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n) ^ rendered_transparent as u64) } else { ((0, 0), 0) };
+        let (ckey, fp) = if persistent {
+            (
+                (sg.rt.uid, n),
+                fingerprint(sg, n) ^ rendered_transparent as u64,
+            )
+        } else {
+            ((0, 0), 0)
+        };
 
         if let Some(c) = self.cache.as_deref_mut() {
             let frame = c.frame;
@@ -2416,7 +2998,11 @@ impl<'a> Builder<'a> {
             "ImageTexture" => {
                 // X3DExecutionContext.getBaseURL: the world URL of the node's own scene (an
                 // Inline's scene has the Inline's resolved URL).
-                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
+                let base = sg
+                    .rt
+                    .scene
+                    .world_url_of(sg.rt.scene.node(n).ctx)
+                    .to_string();
                 texture::load_image_texture(sg, n, &base, self.root.fetcher.as_ref()).map(Rc::new)
             }
             "PixelTexture" => texture::pixel_texture(sg, n).map(Rc::new),
@@ -2427,26 +3013,45 @@ impl<'a> Builder<'a> {
                 let mut faces: HashMap<NodeId, Option<Rc<TextureImage>>> = HashMap::new();
                 for f in slots.into_iter().flatten() {
                     let complete = match sg.type_name(f) {
-                        Some("ImageTexture") => sg.rt.url_load_state(f) == x3d_runtime::nodes::LoadState::Complete,
+                        Some("ImageTexture") => {
+                            sg.rt.url_load_state(f) == x3d_runtime::nodes::LoadState::Complete
+                        }
                         Some("PixelTexture") => true,
                         _ => false,
                     };
                     let image = if complete { self.texture(sg, f) } else { None };
                     faces.insert(f, image);
                 }
-                Some(Rc::new(texture::composed_cube(sg, n, slots, |f| faces.get(&f).cloned().flatten())))
+                Some(Rc::new(texture::composed_cube(sg, n, slots, |f| {
+                    faces.get(&f).cloned().flatten()
+                })))
             }
             "GeneratedCubeMapTexture" => {
                 // set_size__: no framebuffer for size <= 0 (the cleared texture).
                 let size = sg.i32(n, "size", 128);
-                Some(Rc::new(if size > 0 { texture::generated_cube(sg, n, size as u32, self.background_transparent) } else { texture::white_cube() }))
+                Some(Rc::new(if size > 0 {
+                    texture::generated_cube(sg, n, size as u32, self.background_transparent)
+                } else {
+                    texture::white_cube()
+                }))
             }
             "ImageCubeMapTexture" => {
-                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
+                let base = sg
+                    .rt
+                    .scene
+                    .world_url_of(sg.rt.scene.node(n).ctx)
+                    .to_string();
                 // Until a url loads, the cleared texture (X3DEnvironmentTextureNode.initialize).
-                Some(Rc::new(texture::load_image_cube(sg, n, &base, self.root.fetcher.as_ref()).unwrap_or_else(texture::white_cube)))
+                Some(Rc::new(
+                    texture::load_image_cube(sg, n, &base, self.root.fetcher.as_ref())
+                        .unwrap_or_else(texture::white_cube),
+                ))
             }
-            "RenderedTexture" => Some(Rc::new(texture::rendered_texture(sg, n, rendered_transparent))),
+            "RenderedTexture" => Some(Rc::new(texture::rendered_texture(
+                sg,
+                n,
+                rendered_transparent,
+            ))),
             "PixelTexture3D" => Some(Rc::new(texture::pixel_texture_3d(sg, n))),
             // ImageTexture3D: the volume the runtime's NRRD / DICOM parser produced; until one loads, the cleared texture.
             "ImageTexture3D" => Some(Rc::new(match sg.rt.image_texture_3d_volume(n) {
@@ -2458,20 +3063,47 @@ impl<'a> Builder<'a> {
                 // (checkLoadState, see Runtime::texture_2d_complete).
                 let mut slices = vec![];
                 for c in sg.nodes(n, "texture") {
-                    let Some(c) = sg.inner(c).filter(|c| matches!(sg.type_name(*c), Some("ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture"))) else {
+                    let Some(c) = sg.inner(c).filter(|c| {
+                        matches!(
+                            sg.type_name(*c),
+                            Some(
+                                "ImageTexture"
+                                    | "PixelTexture"
+                                    | "MovieTexture"
+                                    | "RenderedTexture"
+                            )
+                        )
+                    }) else {
                         continue;
                     };
                     let complete = sg.rt.texture_2d_complete(c);
                     // An empty PixelTexture is complete with the cleared 1 × 1 texture.
-                    let image = if complete { self.texture(sg, c).or_else(|| Some(Rc::new(TextureImage::white()))) } else { None };
+                    let image = if complete {
+                        self.texture(sg, c)
+                            .or_else(|| Some(Rc::new(TextureImage::white())))
+                    } else {
+                        None
+                    };
                     slices.push((c, image));
                 }
                 // The size warning is console output of the event pass, not drawn.
-                Some(Rc::new(texture::composed_texture_3d(sg, n, &slices, &mut |_| {})))
+                Some(Rc::new(texture::composed_texture_3d(
+                    sg,
+                    n,
+                    &slices,
+                    &mut |_| {},
+                )))
             }
             "ImageTextureAtlas" => {
-                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
-                Some(Rc::new(texture::load_image_texture_atlas(sg, n, &base, self.root.fetcher.as_ref()).unwrap_or_else(texture::white_3d)))
+                let base = sg
+                    .rt
+                    .scene
+                    .world_url_of(sg.rt.scene.node(n).ctx)
+                    .to_string();
+                Some(Rc::new(
+                    texture::load_image_texture_atlas(sg, n, &base, self.root.fetcher.as_ref())
+                        .unwrap_or_else(texture::white_3d),
+                ))
             }
             other => {
                 self.unsupported.insert(other.to_string());
@@ -2482,7 +3114,14 @@ impl<'a> Builder<'a> {
 
         if let Some(c) = self.cache.as_deref_mut() {
             let frame = c.frame;
-            c.textures.insert(ckey, CacheEntry { fingerprint: fp, value: t.clone(), used: frame });
+            c.textures.insert(
+                ckey,
+                CacheEntry {
+                    fingerprint: fp,
+                    value: t.clone(),
+                    used: frame,
+                },
+            );
         }
 
         t
@@ -2493,7 +3132,11 @@ impl<'a> Builder<'a> {
             return g.clone();
         }
         let persistent = self.cache.is_some();
-        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n)) } else { ((0, 0), 0) };
+        let (ckey, fp) = if persistent {
+            ((sg.rt.uid, n), fingerprint(sg, n))
+        } else {
+            ((0, 0), 0)
+        };
 
         if let Some(c) = self.cache.as_deref_mut() {
             let frame = c.frame;
@@ -2509,7 +3152,10 @@ impl<'a> Builder<'a> {
             }
         }
 
-        let g = self.build_geometry(sg, n).filter(|g| g.vertex_count() > 0).map(Rc::new);
+        let g = self
+            .build_geometry(sg, n)
+            .filter(|g| g.vertex_count() > 0)
+            .map(Rc::new);
         self.geometries.insert(key(sg, n), g.clone());
 
         // A query reads the cache; only a frame's build fills it.
@@ -2518,7 +3164,14 @@ impl<'a> Builder<'a> {
         if let Some(c) = self.cache.as_deref_mut().filter(|_| !query) {
             let frame = c.frame;
             c.built += 1;
-            c.geometries.insert(ckey, CacheEntry { fingerprint: fp, value: g.clone(), used: frame });
+            c.geometries.insert(
+                ckey,
+                CacheEntry {
+                    fingerprint: fp,
+                    value: g.clone(),
+                    used: frame,
+                },
+            );
         }
 
         g
@@ -2535,7 +3188,7 @@ impl<'a> Builder<'a> {
 
     /// The texCoord, tangent, fogCoord and attrib children of a geometry node.
     fn extras<'s>(&self, sg: &'s Sg, n: NodeId) -> ExtrasOwned<'s> {
-        use crate::extras::{generator_mode, Attrib, TexChannel};
+        use crate::extras::{Attrib, TexChannel, generator_mode};
         let string = |c: NodeId, f: &str| -> &'s str {
             match sg.value(c, f) {
                 Some(FieldValue::SFString(s)) => s.as_str(),
@@ -2544,36 +3197,78 @@ impl<'a> Builder<'a> {
         };
         let single = |c: NodeId| -> Option<TexChannel<'s>> {
             match sg.type_name(c)? {
-                "TextureCoordinate" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 2, mapping: string(c, "mapping") }),
-                "TextureCoordinate3D" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 3, mapping: string(c, "mapping") }),
-                "TextureCoordinate4D" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 4, mapping: string(c, "mapping") }),
+                "TextureCoordinate" => Some(TexChannel::Point {
+                    values: sg.f32s(c, "point"),
+                    components: 2,
+                    mapping: string(c, "mapping"),
+                }),
+                "TextureCoordinate3D" => Some(TexChannel::Point {
+                    values: sg.f32s(c, "point"),
+                    components: 3,
+                    mapping: string(c, "mapping"),
+                }),
+                "TextureCoordinate4D" => Some(TexChannel::Point {
+                    values: sg.f32s(c, "point"),
+                    components: 4,
+                    mapping: string(c, "mapping"),
+                }),
                 "TextureCoordinateGenerator" => {
                     let mut parameter = [0.0f32; 6];
                     for (p, v) in parameter.iter_mut().zip(sg.f32s(c, "parameter")) {
                         *p = *v;
                     }
-                    Some(TexChannel::Generator { mode: generator_mode(string(c, "mode")), parameter, mapping: string(c, "mapping") })
+                    Some(TexChannel::Generator {
+                        mode: generator_mode(string(c, "mode")),
+                        parameter,
+                        mapping: string(c, "mapping"),
+                    })
                 }
                 _ => None,
             }
         };
         let tex = sg.node(n, "texCoord").and_then(|t| match sg.type_name(t)? {
-            "MultiTextureCoordinate" => Some(sg.nodes(t, "texCoord").into_iter().filter_map(single).collect()),
+            "MultiTextureCoordinate" => Some(
+                sg.nodes(t, "texCoord")
+                    .into_iter()
+                    .filter_map(single)
+                    .collect(),
+            ),
             _ => single(t).map(|c| vec![c]),
         });
-        let tangent = sg.node(n, "tangent").filter(|t| sg.type_name(*t) == Some("Tangent")).map(|t| sg.f32s(t, "vector"));
-        let fog = sg.node(n, "fogCoord").filter(|t| sg.type_name(*t) == Some("FogCoordinate")).map(|t| sg.f32s(t, "depth"));
+        let tangent = sg
+            .node(n, "tangent")
+            .filter(|t| sg.type_name(*t) == Some("Tangent"))
+            .map(|t| sg.f32s(t, "vector"));
+        let fog = sg
+            .node(n, "fogCoord")
+            .filter(|t| sg.type_name(*t) == Some("FogCoordinate"))
+            .map(|t| sg.f32s(t, "depth"));
         let attribs = sg
             .nodes(n, "attrib")
             .into_iter()
             .filter_map(|a| match sg.type_name(a)? {
-                "FloatVertexAttribute" => Some(Attrib::Float { name: string(a, "name"), components: sg.i32(a, "numComponents", 4).clamp(1, 4) as usize, values: sg.f32s(a, "value") }),
-                "Matrix3VertexAttribute" => Some(Attrib::Matrix3 { name: string(a, "name"), values: sg.f32s(a, "value") }),
-                "Matrix4VertexAttribute" => Some(Attrib::Matrix4 { name: string(a, "name"), values: sg.f32s(a, "value") }),
+                "FloatVertexAttribute" => Some(Attrib::Float {
+                    name: string(a, "name"),
+                    components: sg.i32(a, "numComponents", 4).clamp(1, 4) as usize,
+                    values: sg.f32s(a, "value"),
+                }),
+                "Matrix3VertexAttribute" => Some(Attrib::Matrix3 {
+                    name: string(a, "name"),
+                    values: sg.f32s(a, "value"),
+                }),
+                "Matrix4VertexAttribute" => Some(Attrib::Matrix4 {
+                    name: string(a, "name"),
+                    values: sg.f32s(a, "value"),
+                }),
                 _ => None,
             })
             .collect();
-        ExtrasOwned { tex, tangent, fog, attribs }
+        ExtrasOwned {
+            tex,
+            tangent,
+            fog,
+            attribs,
+        }
     }
 
     fn coord(&self, sg: &Sg, n: NodeId) -> Option<Vec<f32>> {
@@ -2588,8 +3283,14 @@ impl<'a> Builder<'a> {
                 let ex = self.extras(sg, n);
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
-                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let tex = sg
+                    .node(n, "texCoord")
+                    .filter(|t| sg.type_name(*t) == Some("TextureCoordinate"))
+                    .map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector").to_vec());
                 let input = IfsInput {
                     coord: coord.as_deref(),
                     coord_index: sg.i32s(n, "coordIndex"),
@@ -2597,7 +3298,10 @@ impl<'a> Builder<'a> {
                     tex_coord_index: sg.i32s(n, "texCoordIndex"),
                     normal: normal.as_deref(),
                     normal_index: sg.i32s(n, "normalIndex"),
-                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    color: colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
                     color_index: sg.i32s(n, "colorIndex"),
                     ccw: sg.bool(n, "ccw", true),
                     solid: sg.bool(n, "solid", true),
@@ -2616,40 +3320,83 @@ impl<'a> Builder<'a> {
                 geometry::indexed_line_set(
                     coord.as_deref(),
                     sg.i32s(n, "coordIndex"),
-                    colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
                     sg.i32s(n, "colorIndex"),
                     sg.bool(n, "colorPerVertex", true),
-                    sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector")),
+                    sg.node(n, "normal")
+                        .filter(|t| sg.type_name(*t) == Some("Normal"))
+                        .map(|t| sg.f32s(t, "vector")),
                     &ex.view(),
                 )
             }
             "PointSet" => {
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector"));
-                geometry::point_set(coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }), normal)
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector"));
+                geometry::point_set(
+                    coord.as_deref(),
+                    colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
+                    normal,
+                )
             }
-            "TriangleSet" | "TriangleFanSet" | "TriangleStripSet" | "QuadSet" | "IndexedTriangleSet" | "IndexedTriangleFanSet" | "IndexedTriangleStripSet" | "IndexedQuadSet" => {
-                use crate::composed::{composed_geometry, ComposedInput, Kind};
+            "TriangleSet"
+            | "TriangleFanSet"
+            | "TriangleStripSet"
+            | "QuadSet"
+            | "IndexedTriangleSet"
+            | "IndexedTriangleFanSet"
+            | "IndexedTriangleStripSet"
+            | "IndexedQuadSet" => {
+                use crate::composed::{ComposedInput, Kind, composed_geometry};
                 let ex = self.extras(sg, n);
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
-                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let tex = sg
+                    .node(n, "texCoord")
+                    .filter(|t| sg.type_name(*t) == Some("TextureCoordinate"))
+                    .map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector").to_vec());
                 let kind = match ty {
                     "TriangleSet" => Kind::TriangleSet,
                     "QuadSet" => Kind::QuadSet,
-                    "TriangleFanSet" => Kind::TriangleFanSet { fan_count: sg.i32s(n, "fanCount") },
-                    "TriangleStripSet" => Kind::TriangleStripSet { strip_count: sg.i32s(n, "stripCount") },
-                    "IndexedTriangleSet" => Kind::IndexedTriangleSet { index: sg.i32s(n, "index") },
-                    "IndexedTriangleFanSet" => Kind::IndexedTriangleFanSet { index: sg.i32s(n, "index") },
-                    "IndexedTriangleStripSet" => Kind::IndexedTriangleStripSet { index: sg.i32s(n, "index") },
-                    _ => Kind::IndexedQuadSet { index: sg.i32s(n, "index") },
+                    "TriangleFanSet" => Kind::TriangleFanSet {
+                        fan_count: sg.i32s(n, "fanCount"),
+                    },
+                    "TriangleStripSet" => Kind::TriangleStripSet {
+                        strip_count: sg.i32s(n, "stripCount"),
+                    },
+                    "IndexedTriangleSet" => Kind::IndexedTriangleSet {
+                        index: sg.i32s(n, "index"),
+                    },
+                    "IndexedTriangleFanSet" => Kind::IndexedTriangleFanSet {
+                        index: sg.i32s(n, "index"),
+                    },
+                    "IndexedTriangleStripSet" => Kind::IndexedTriangleStripSet {
+                        index: sg.i32s(n, "index"),
+                    },
+                    _ => Kind::IndexedQuadSet {
+                        index: sg.i32s(n, "index"),
+                    },
                 };
                 composed_geometry(&ComposedInput {
                     kind,
                     coord: coord.as_deref(),
-                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    color: colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
                     tex_coord: tex.as_deref(),
                     normal: normal.as_deref(),
                     solid: sg.bool(n, "solid", true),
@@ -2662,8 +3409,14 @@ impl<'a> Builder<'a> {
             "GeoElevationGrid" => {
                 let ex = self.extras(sg, n);
                 let colors = self.colors(sg, n);
-                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let tex = sg
+                    .node(n, "texCoord")
+                    .filter(|t| sg.type_name(*t) == Some("TextureCoordinate"))
+                    .map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector").to_vec());
                 let (xd, zd) = (sg.i32(n, "xDimension", 0), sg.i32(n, "zDimension", 0));
                 let geo_points = (xd >= 2 && zd >= 2).then(|| {
                     // GeoElevationGrid.createPoints.
@@ -2675,8 +3428,13 @@ impl<'a> Builder<'a> {
                     let mut points = vec![];
                     for z in 0..zd as usize {
                         for x in 0..xd as usize {
-                            let h = height.get(x + z * xd as usize).copied().unwrap_or(0.0) * y_scale;
-                            let mut p = if geo.standard_order { Vector3::new(zs * z as f64, xs * x as f64, h) } else { Vector3::new(xs * x as f64, zs * z as f64, h) };
+                            let h =
+                                height.get(x + z * xd as usize).copied().unwrap_or(0.0) * y_scale;
+                            let mut p = if geo.standard_order {
+                                Vector3::new(zs * z as f64, xs * x as f64, h)
+                            } else {
+                                Vector3::new(xs * x as f64, zs * z as f64, h)
+                            };
                             p.add(&origin);
                             points.push(geo.get_coord(&p));
                         }
@@ -2689,7 +3447,10 @@ impl<'a> Builder<'a> {
                     x_spacing: 1.0,
                     z_spacing: 1.0,
                     height: &[],
-                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    color: colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
                     tex_coord: tex.as_deref(),
                     normal: normal.as_deref(),
                     ccw: sg.bool(n, "ccw", true),
@@ -2701,7 +3462,11 @@ impl<'a> Builder<'a> {
                     geo_points,
                 })
             }
-            "Arc2D" => crate::geometry2d::arc2d(sg.f64(n, "radius", 1.0), sg.f64(n, "startAngle", 0.0), sg.f64(n, "endAngle", std::f64::consts::FRAC_PI_2)),
+            "Arc2D" => crate::geometry2d::arc2d(
+                sg.f64(n, "radius", 1.0),
+                sg.f64(n, "startAngle", 0.0),
+                sg.f64(n, "endAngle", std::f64::consts::FRAC_PI_2),
+            ),
             "ArcClose2D" => crate::geometry2d::arc_close2d(
                 sg.f64(n, "radius", 1.0),
                 sg.f64(n, "startAngle", 0.0),
@@ -2710,22 +3475,44 @@ impl<'a> Builder<'a> {
                 sg.bool(n, "solid", false),
             ),
             "Circle2D" => crate::geometry2d::circle2d(sg.f64(n, "radius", 1.0)),
-            "Disk2D" => crate::geometry2d::disk2d(sg.f64(n, "innerRadius", 0.0), sg.f64(n, "outerRadius", 1.0), sg.bool(n, "solid", false)),
+            "Disk2D" => crate::geometry2d::disk2d(
+                sg.f64(n, "innerRadius", 0.0),
+                sg.f64(n, "outerRadius", 1.0),
+                sg.bool(n, "solid", false),
+            ),
             "Polyline2D" => crate::geometry2d::polyline2d(sg.f32s(n, "lineSegments")),
             "Polypoint2D" => crate::geometry2d::polypoint2d(sg.f32s(n, "point")),
             "Rectangle2D" => {
                 let size = sg.vec2(n, "size", Vector2::new(2.0, 2.0));
                 crate::geometry2d::rectangle2d((size.x, size.y), sg.bool(n, "solid", false))
             }
-            "TriangleSet2D" => crate::geometry2d::triangle_set2d(sg.f32s(n, "vertices"), sg.bool(n, "solid", false)),
+            "TriangleSet2D" => crate::geometry2d::triangle_set2d(
+                sg.f32s(n, "vertices"),
+                sg.bool(n, "solid", false),
+            ),
             "LineSet" => {
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector").to_vec());
                 let ex = self.extras(sg, n);
-                crate::geometry2d::line_set(sg.i32s(n, "vertexCount"), coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }), normal.as_deref(), &ex.view())
+                crate::geometry2d::line_set(
+                    sg.i32s(n, "vertexCount"),
+                    coord.as_deref(),
+                    colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
+                    normal.as_deref(),
+                    &ex.view(),
+                )
             }
-            "Box" => geometry::make_box(sg.vec3(n, "size", Vector3::new(2.0, 2.0, 2.0)), sg.bool(n, "solid", true)),
+            "Box" => geometry::make_box(
+                sg.vec3(n, "size", Vector3::new(2.0, 2.0, 2.0)),
+                sg.bool(n, "solid", true),
+            ),
             "Sphere" => geometry::make_sphere(sg.f64(n, "radius", 1.0), sg.bool(n, "solid", true)),
             "Cone" => geometry::make_cone(
                 sg.f64(n, "height", 2.0),
@@ -2745,15 +3532,24 @@ impl<'a> Builder<'a> {
             "ElevationGrid" => {
                 let ex = self.extras(sg, n);
                 let colors = self.colors(sg, n);
-                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
-                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let tex = sg
+                    .node(n, "texCoord")
+                    .filter(|t| sg.type_name(*t) == Some("TextureCoordinate"))
+                    .map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg
+                    .node(n, "normal")
+                    .filter(|t| sg.type_name(*t) == Some("Normal"))
+                    .map(|t| sg.f32s(t, "vector").to_vec());
                 geometry::elevation_grid(&ElevationInput {
                     x_dimension: sg.i32(n, "xDimension", 0),
                     z_dimension: sg.i32(n, "zDimension", 0),
                     x_spacing: sg.f64(n, "xSpacing", 1.0),
                     z_spacing: sg.f64(n, "zSpacing", 1.0),
                     height: sg.f32s(n, "height"),
-                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    color: colors.as_ref().map(|(v, c)| Colors {
+                        values: v,
+                        components: *c,
+                    }),
                     tex_coord: tex.as_deref(),
                     normal: normal.as_deref(),
                     ccw: sg.bool(n, "ccw", true),
@@ -2766,8 +3562,12 @@ impl<'a> Builder<'a> {
                 })
             }
             "Text" => return text::text_geometry(sg, n, &mut self.unsupported),
-            "NurbsPatchSurface" => crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), false),
-            "NurbsTrimmedSurface" => crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), true),
+            "NurbsPatchSurface" => {
+                crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), false)
+            }
+            "NurbsTrimmedSurface" => {
+                crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), true)
+            }
             "NurbsCurve" => crate::nurbs::curve(sg, n),
             "NurbsSweptSurface" => crate::nurbs::swept(sg, n, false),
             "NurbsSwungSurface" => crate::nurbs::swept(sg, n, true),
@@ -2805,12 +3605,18 @@ impl<'a> Builder<'a> {
         let mut inv = m;
         inv.inverse();
 
-        let Some([skeleton, viewpoints, skin]) = sg.hanim_children(n, "HAnimHumanoid") else { return };
+        let Some([skeleton, viewpoints, skin]) = sg.hanim_children(n, "HAnimHumanoid") else {
+            return;
+        };
         let (joints, bindings) = crate::hanim::humanoid_joints(sg, n);
         let tables = Rc::new(crate::hanim::humanoid_tables(sg, n, &joints));
         let source = self.skins.len();
 
-        self.skins.push(SkinSource { node: n, tables, matrices: Rc::new(vec![]) });
+        self.skins.push(SkinSource {
+            node: n,
+            tables,
+            matrices: Rc::new(vec![]),
+        });
         self.inv_humanoid.push(inv);
         self.groups.push(ShadowGroup::Node(n));
         self.group_children(sg, skeleton, &m, depth);
@@ -2822,10 +3628,15 @@ impl<'a> Builder<'a> {
         self.inv_humanoid.pop();
 
         // skinning: Function.prototype without a Coordinate skinCoord; the matrices stay zero.
-        let skin_coord = sg.node(n, "skinCoord").filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")));
+        let skin_coord = sg
+            .node(n, "skinCoord")
+            .filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")));
         let unlocks = sg.rt.hanim_unlocks(n);
         let key = (sg.rt.uid, n);
-        let cached = self.cache.as_deref().and_then(|c| c.joint_matrices.get(&key).cloned());
+        let cached = self
+            .cache
+            .as_deref()
+            .and_then(|c| c.joint_matrices.get(&key).cloned());
 
         let matrices = match (skin_coord, cached) {
             (None, _) => Rc::new(vec![0.0; joints.len() * 32]),
@@ -2833,7 +3644,17 @@ impl<'a> Builder<'a> {
             (Some(_), _) => {
                 let model_views: Vec<Matrix4> = joints
                     .iter()
-                    .map(|j| self.joint_model_views.get(j).copied().or_else(|| self.cache.as_deref().and_then(|c| c.joint_model_views.get(&(sg.rt.uid, *j)).copied())).unwrap_or(Matrix4::IDENTITY))
+                    .map(|j| {
+                        self.joint_model_views
+                            .get(j)
+                            .copied()
+                            .or_else(|| {
+                                self.cache.as_deref().and_then(|c| {
+                                    c.joint_model_views.get(&(sg.rt.uid, *j)).copied()
+                                })
+                            })
+                            .unwrap_or(Matrix4::IDENTITY)
+                    })
                     .collect();
                 let m = Rc::new(crate::hanim::joint_matrices(&bindings, &model_views, &inv));
 
@@ -2852,11 +3673,20 @@ impl<'a> Builder<'a> {
     /// HAnimSegment.traverse with a coord and displacements: the segment is the hAnimNode of its
     /// children; skinning sets joint 0 to its model-view × the inverse humanoid model-view.
     fn hanim_segment(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4, depth: usize) {
-        let Some(tables) = crate::hanim::segment_tables(sg, n) else { return };
-        let matrices = Rc::new(crate::hanim::segment_matrices(mv, self.inv_humanoid.last().unwrap()));
+        let Some(tables) = crate::hanim::segment_tables(sg, n) else {
+            return;
+        };
+        let matrices = Rc::new(crate::hanim::segment_matrices(
+            mv,
+            self.inv_humanoid.last().unwrap(),
+        ));
         let source = self.skins.len();
 
-        self.skins.push(SkinSource { node: n, tables: Rc::new(tables), matrices });
+        self.skins.push(SkinSource {
+            node: n,
+            tables: Rc::new(tables),
+            matrices,
+        });
         self.hanim.push(Some(source));
         self.groups.push(ShadowGroup::Node(n));
         self.group_children(sg, children_of(sg, n, "HAnimSegment"), mv, depth);
@@ -2867,14 +3697,21 @@ impl<'a> Builder<'a> {
 
     /// Skin2.glsl for the draw items of `source`.
     fn apply_skins(&mut self, source: usize) {
-        let pending: Vec<(usize, NodeId)> = self.skin_items.iter().filter(|(_, _, s)| *s == source).map(|(i, g, _)| (*i, *g)).collect();
+        let pending: Vec<(usize, NodeId)> = self
+            .skin_items
+            .iter()
+            .filter(|(_, _, s)| *s == source)
+            .map(|(i, g, _)| (*i, *g))
+            .collect();
         self.skin_items.retain(|(_, _, s)| *s != source);
 
         let s = &self.skins[source];
         let (node, tables, matrices) = (s.node, s.tables.clone(), s.matrices.clone());
 
         for (i, gnode) in pending {
-            let Some(item) = self.items.get(i).filter(|item| item.geometry_node == gnode) else { continue };
+            let Some(item) = self.items.get(i).filter(|item| item.geometry_node == gnode) else {
+                continue;
+            };
             let src = item.geometry.clone();
             let key = (self.root.uid, node, Rc::as_ptr(&src) as usize);
 
@@ -2883,13 +3720,26 @@ impl<'a> Builder<'a> {
                     let frame = c.frame;
 
                     match c.skinned.get_mut(&key) {
-                        Some(e) if Rc::ptr_eq(&e.source, &src) && e.tables == tables && e.matrices == matrices => {
+                        Some(e)
+                            if Rc::ptr_eq(&e.source, &src)
+                                && e.tables == tables
+                                && e.matrices == matrices =>
+                        {
                             e.used = frame;
                             e.value.clone()
                         }
                         _ => {
                             let value = Rc::new(crate::hanim::skin(&src, &tables, &matrices));
-                            c.skinned.insert(key, SkinnedEntry { source: src, tables: tables.clone(), matrices: matrices.clone(), value: value.clone(), used: frame });
+                            c.skinned.insert(
+                                key,
+                                SkinnedEntry {
+                                    source: src,
+                                    tables: tables.clone(),
+                                    matrices: matrices.clone(),
+                                    value: value.clone(),
+                                    used: frame,
+                                },
+                            );
                             value
                         }
                     }
@@ -2905,7 +3755,9 @@ impl<'a> Builder<'a> {
     fn particle_system_enabled(&self, sg: &Sg, n: NodeId) -> bool {
         let num = sg.rt.particle_sim(n).map_or(0, |s| s.num_particles);
 
-        num > 0 && (sg.rt.particle_geometry_type(n) != GeometryType::Geometry || sg.node(n, "geometry").is_some())
+        num > 0
+            && (sg.rt.particle_geometry_type(n) != GeometryType::Geometry
+                || sg.node(n, "geometry").is_some())
     }
 
     /// ParticleSystem.set_bbox__ with the default bboxSize: the union of the BoundedPhysicsModels' geometry boxes,
@@ -2914,7 +3766,11 @@ impl<'a> Builder<'a> {
     /// (Point, Cone, Explosion) or around the center of its geometry's box, joined with that box (Surface, Volume,
     /// Polyline; a SurfaceEmitter without a surface has an empty box).
     fn particle_bbox(&mut self, sg: &Sg, n: NodeId) -> Box3 {
-        let bounded: Vec<NodeId> = sg.nodes(n, "physics").into_iter().filter(|m| sg.type_name(*m) == Some("BoundedPhysicsModel")).collect();
+        let bounded: Vec<NodeId> = sg
+            .nodes(n, "physics")
+            .into_iter()
+            .filter(|m| sg.type_name(*m) == Some("BoundedPhysicsModel"))
+            .collect();
 
         if !bounded.is_empty() {
             let mut bbox = Box3::EMPTY;
@@ -2928,27 +3784,48 @@ impl<'a> Builder<'a> {
             return bbox;
         }
 
-        const EMITTERS: [&str; 6] = ["PointEmitter", "ConeEmitter", "ExplosionEmitter", "SurfaceEmitter", "VolumeEmitter", "PolylineEmitter"];
+        const EMITTERS: [&str; 6] = [
+            "PointEmitter",
+            "ConeEmitter",
+            "ExplosionEmitter",
+            "SurfaceEmitter",
+            "VolumeEmitter",
+            "PolylineEmitter",
+        ];
 
-        let emitter = sg.node(n, "emitter").filter(|e| sg.type_name(*e).is_some_and(|t| EMITTERS.contains(&t)));
+        let emitter = sg
+            .node(n, "emitter")
+            .filter(|e| sg.type_name(*e).is_some_and(|t| EMITTERS.contains(&t)));
         let lifetime = sg.f64(n, "particleLifetime", 5.0).max(0.0);
         let variation = sg.f64(n, "lifetimeVariation", 0.25).max(0.0);
-        let (speed, speed_variation) = emitter.map_or((0.0, 0.25), |e| (sg.f64(e, "speed", 0.0), sg.f64(e, "variation", 0.25)));
+        let (speed, speed_variation) = emitter.map_or((0.0, 0.25), |e| {
+            (sg.f64(e, "speed", 0.0), sg.f64(e, "variation", 0.25))
+        });
         let size = lifetime * (1.0 + variation) * speed * (1.0 + speed_variation) * 2.0;
         let cube = |center: &Vector3| Box3::new(&Vector3::new(size, size, size), center);
 
         let geometry_box = |builder: &mut Self, e: NodeId| -> Option<Box3> {
             match sg.type_name(e)? {
-                "SurfaceEmitter" => sg.node(e, "surface").map(|s| builder.geometry(sg, s).map_or(Box3::EMPTY, |g| Box3::from_extents(&g.min, &g.max))),
+                "SurfaceEmitter" => sg.node(e, "surface").map(|s| {
+                    builder
+                        .geometry(sg, s)
+                        .map_or(Box3::EMPTY, |g| Box3::from_extents(&g.min, &g.max))
+                }),
                 "VolumeEmitter" => {
-                    let request = x3d_runtime::nodes::particle_systems::GeometryRequest::Volume { coord: sg.node(e, "coord"), coord_index: sg.i32s(e, "coordIndex").to_vec() };
+                    let request = x3d_runtime::nodes::particle_systems::GeometryRequest::Volume {
+                        coord: sg.node(e, "coord"),
+                        coord_index: sg.i32s(e, "coordIndex").to_vec(),
+                    };
                     let soup = particle_geometry(sg.rt, &request)?;
 
                     Some(soup_box(&soup.vertices))
                 }
                 "PolylineEmitter" => {
                     // The private IndexedLineSet's box: its polylines' vertices.
-                    let points = sg.node(e, "coord").and_then(|c| sg.coord_points(c)).unwrap_or_default();
+                    let points = sg
+                        .node(e, "coord")
+                        .and_then(|c| sg.coord_points(c))
+                        .unwrap_or_default();
                     let index = sg.i32s(e, "coordIndex");
                     let mut vertices = vec![];
 
@@ -2969,20 +3846,27 @@ impl<'a> Builder<'a> {
         };
 
         match emitter {
-            Some(e) if matches!(sg.type_name(e), Some("SurfaceEmitter" | "VolumeEmitter" | "PolylineEmitter")) => match geometry_box(self, e) {
-                Some(g) if !g.is_empty() => {
-                    let mut bbox = cube(&g.center());
-                    bbox.add(&g);
-                    bbox
+            Some(e)
+                if matches!(
+                    sg.type_name(e),
+                    Some("SurfaceEmitter" | "VolumeEmitter" | "PolylineEmitter")
+                ) =>
+            {
+                match geometry_box(self, e) {
+                    Some(g) if !g.is_empty() => {
+                        let mut bbox = cube(&g.center());
+                        bbox.add(&g);
+                        bbox
+                    }
+                    Some(g) => {
+                        let mut bbox = cube(&Vector3::ZERO);
+                        bbox.add(&g);
+                        bbox
+                    }
+                    None if sg.type_name(e) == Some("SurfaceEmitter") => Box3::EMPTY,
+                    None => cube(&Vector3::ZERO),
                 }
-                Some(g) => {
-                    let mut bbox = cube(&Vector3::ZERO);
-                    bbox.add(&g);
-                    bbox
-                }
-                None if sg.type_name(e) == Some("SurfaceEmitter") => Box3::EMPTY,
-                None => cube(&Vector3::ZERO),
-            },
+            }
             Some(e) => cube(&sg.vec3(e, "position", Vector3::ZERO)),
             None => cube(&Vector3::ZERO),
         }
@@ -3015,7 +3899,12 @@ impl<'a> Builder<'a> {
 
     /// The geometry, the instances and the color-ramp flag of a ParticleSystem's draw with `mv` (SPRITE turns its quad
     /// to face the viewer of `mv`); `None` when it draws nothing.
-    fn particle_draw(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<(Rc<Geometry>, Rc<InstanceData>, bool)> {
+    fn particle_draw(
+        &mut self,
+        sg: &Sg,
+        n: NodeId,
+        mv: &Matrix4,
+    ) -> Option<(Rc<Geometry>, Rc<InstanceData>, bool)> {
         if !self.particle_system_enabled(sg, n) {
             return None;
         }
@@ -3025,19 +3914,30 @@ impl<'a> Builder<'a> {
         let gt = sg.rt.particle_geometry_type(n);
         let ramps = sg.rt.particle_ramps(n).cloned().unwrap_or_default();
         // set_color__: geometryContext .colorMaterial = numKeys && colorRampNode (GEOMETRY draws its own geometry context).
-        let color_material = gt != GeometryType::Geometry && ramps.colors.is_some() && sg.node(n, "color").is_some_and(|c| matches!(sg.type_name(c), Some("Color" | "ColorRGBA")));
-        let particles = crate::particles::instances(&sim.particles[..num], &ramps, gt, color_material);
+        let color_material = gt != GeometryType::Geometry
+            && ramps.colors.is_some()
+            && sg
+                .node(n, "color")
+                .is_some_and(|c| matches!(sg.type_name(c), Some("Color" | "ColorRGBA")));
+        let particles =
+            crate::particles::instances(&sim.particles[..num], &ramps, gt, color_material);
         let size = sg.vec2(n, "particleSize", Vector2::new(0.02, 0.02));
 
         let geometry = match gt {
             GeometryType::Geometry => self.geometry(sg, sg.node(n, "geometry")?)?,
             _ => {
-                let rows = (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
+                let rows = (gt == GeometryType::Sprite)
+                    .then(|| crate::particles::screen_aligned_rotation(mv));
                 let mut bits = vec![gt as u64, color_material as u64];
 
                 match (gt, &rows) {
                     (GeometryType::Line, _) => bits.push(size.y.to_bits()),
-                    (GeometryType::Sprite, Some(r)) => bits.extend([size.x, size.y].into_iter().chain(r.iter().flat_map(|v| [v.x, v.y, v.z])).map(f64::to_bits)),
+                    (GeometryType::Sprite, Some(r)) => bits.extend(
+                        [size.x, size.y]
+                            .into_iter()
+                            .chain(r.iter().flat_map(|v| [v.x, v.y, v.z]))
+                            .map(f64::to_bits),
+                    ),
                     _ => (),
                 }
 
@@ -3054,8 +3954,13 @@ impl<'a> Builder<'a> {
                     None => {
                         let g = Rc::new(match gt {
                             GeometryType::Point => crate::particles::point_geometry(color_material),
-                            GeometryType::Line => crate::particles::line_geometry(size.y, color_material),
-                            GeometryType::Sprite => crate::particles::quad_geometry(rows.as_ref().map(|r| (r, [size.x, size.y])), color_material),
+                            GeometryType::Line => {
+                                crate::particles::line_geometry(size.y, color_material)
+                            }
+                            GeometryType::Sprite => crate::particles::quad_geometry(
+                                rows.as_ref().map(|r| (r, [size.x, size.y])),
+                                color_material,
+                            ),
                             _ => crate::particles::quad_geometry(None, color_material),
                         });
 
@@ -3075,7 +3980,12 @@ impl<'a> Builder<'a> {
         }
 
         let identity = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
-        let instances = InstanceData { normals: vec![identity; particles.matrices.len()], matrices: particles.matrices, colors: particles.colors, tex_coords: particles.tex_coords };
+        let instances = InstanceData {
+            normals: vec![identity; particles.matrices.len()],
+            matrices: particles.matrices,
+            colors: particles.colors,
+            tex_coords: particles.tex_coords,
+        };
 
         Some((geometry, Rc::new(instances), color_material))
     }
@@ -3090,7 +4000,9 @@ impl<'a> Builder<'a> {
             return;
         }
 
-        let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) else { return };
+        let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) else {
+            return;
+        };
         let mut center = bbox.center();
 
         mv.mult_vec_matrix3(&mut center);
@@ -3098,22 +4010,50 @@ impl<'a> Builder<'a> {
         // GEOMETRY draws the geometry node's context, the other types the ParticleSystem's own (no texture
         // coordinate mapping). set_transparent__: the appearance, a transparent color ramp (ColorRGBA), or a
         // transparent geometry of GEOMETRY.
-        let ramp_transparent = sg.node(n, "color").is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
+        let ramp_transparent = sg
+            .node(n, "color")
+            .is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
 
         match sg.rt.particle_geometry_type(n) {
             GeometryType::Geometry => {
-                let Some(gnode) = sg.node(n, "geometry") else { return };
+                let Some(gnode) = sg.node(n, "geometry") else {
+                    return;
+                };
                 let coords = coordinate_mappings(sg, gnode);
 
-                self.shape_item(sg, n, gnode, geometry, mv, Some(instances), center.z, coords, ramp_transparent);
+                self.shape_item(
+                    sg,
+                    n,
+                    gnode,
+                    geometry,
+                    mv,
+                    Some(instances),
+                    center.z,
+                    coords,
+                    ramp_transparent,
+                );
             }
-            _ => self.shape_item(sg, n, n, geometry, mv, Some(instances), center.z, vec![], false),
+            _ => self.shape_item(
+                sg,
+                n,
+                n,
+                geometry,
+                mv,
+                Some(instances),
+                center.z,
+                vec![],
+                false,
+            ),
         }
     }
 
     fn shape(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
-        let Some(gnode) = sg.node(n, "geometry") else { return };
-        let Some(geometry) = self.geometry(sg, gnode) else { return };
+        let Some(gnode) = sg.node(n, "geometry") else {
+            return;
+        };
+        let Some(geometry) = self.geometry(sg, gnode) else {
+            return;
+        };
 
         // ScreenText.traverseBefore: the model-view matrix with getScreenScaleMatrix (renderObject, matrix, 1, true) around the shape.
         let screen_text_mv = geometry.texture.as_ref().map(|_| {
@@ -3126,7 +4066,8 @@ impl<'a> Builder<'a> {
         let mv = screen_text_mv.as_ref().unwrap_or(mv);
 
         // InstancedShape: isEnabled () needs instances (numInstances) and a geometry.
-        let instances = (sg.type_name(n) == Some("InstancedShape")).then(|| Rc::new(instance_data(sg, n)));
+        let instances =
+            (sg.type_name(n) == Some("InstancedShape")).then(|| Rc::new(instance_data(sg, n)));
 
         if instances.as_ref().is_some_and(|i| i.matrices.is_empty()) {
             return;
@@ -3148,7 +4089,9 @@ impl<'a> Builder<'a> {
 
         let coords = coordinate_mappings(sg, gnode);
 
-        self.shape_item(sg, n, gnode, geometry, mv, instances, center.z, coords, false);
+        self.shape_item(
+            sg, n, gnode, geometry, mv, instances, center.z, coords, false,
+        );
     }
 
     /// The display item of an X3DShapeNode: its appearance with `geometry` drawn by `gnode` (the geometry node,
@@ -3156,8 +4099,21 @@ impl<'a> Builder<'a> {
     /// coordinate mappings; `extra_transparent` adds to the appearance's transparency (a ParticleSystem's
     /// ColorRGBA ramp).
     #[allow(clippy::too_many_arguments)]
-    fn shape_item(&mut self, sg: &Sg, n: NodeId, gnode: NodeId, geometry: Rc<Geometry>, mv: &Matrix4, instances: Option<Rc<InstanceData>>, distance: f64, coords: Vec<String>, extra_transparent: bool) {
-        let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
+    fn shape_item(
+        &mut self,
+        sg: &Sg,
+        n: NodeId,
+        gnode: NodeId,
+        geometry: Rc<Geometry>,
+        mv: &Matrix4,
+        instances: Option<Rc<InstanceData>>,
+        distance: f64,
+        coords: Vec<String>,
+        extra_transparent: bool,
+    ) {
+        let appearance = sg
+            .node(n, "appearance")
+            .filter(|a| sg.type_name(*a) == Some("Appearance"));
         let material_node = appearance.and_then(|a| sg.node(a, "material"));
         let texture_node = appearance.and_then(|a| sg.node(a, "texture"));
         let transform_node = appearance.and_then(|a| sg.node(a, "textureTransform"));
@@ -3189,7 +4145,10 @@ impl<'a> Builder<'a> {
             // Appearance.traverse → RenderedTexture.traverse: the first independent pass to
             // reach a texture that renders this frame draws it.
             for r in rendered_textures(sg, appearance) {
-                if sg.rt.rendered_now.contains(&r) && !self.rendered.contains(&r) && !self.rendered_done.contains(&r) {
+                if sg.rt.rendered_now.contains(&r)
+                    && !self.rendered.contains(&r)
+                    && !self.rendered_done.contains(&r)
+                {
                     self.rendered.push(r);
                 }
             }
@@ -3200,7 +4159,8 @@ impl<'a> Builder<'a> {
         let front = material_node.and_then(|m| {
             let params = material_params(sg, m, has_normals, true);
             if params.is_none() {
-                self.unsupported.insert(sg.type_name(m).unwrap_or("?").to_string());
+                self.unsupported
+                    .insert(sg.type_name(m).unwrap_or("?").to_string());
             }
             params.map(|p| (m, p))
         });
@@ -3209,9 +4169,24 @@ impl<'a> Builder<'a> {
         // deprecated TwoSidedMaterial handling `??= X3DCast (TwoSidedMaterial, materialNode)`.
         let back = appearance
             .and_then(|a| sg.node(a, "backMaterial"))
-            .filter(|m| matches!(sg.type_name(*m), Some("Material" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial")))
+            .filter(|m| {
+                matches!(
+                    sg.type_name(*m),
+                    Some(
+                        "Material"
+                            | "UnlitMaterial"
+                            | "PhysicalMaterial"
+                            | "SpecularGlossinessMaterial"
+                    )
+                )
+            })
             .and_then(|m| material_params(sg, m, has_normals, true).map(|p| (m, p)))
-            .or_else(|| front.as_ref().filter(|(m, _)| sg.type_name(*m) == Some("TwoSidedMaterial")).and_then(|(m, _)| material_params(sg, *m, has_normals, false).map(|p| (*m, p))));
+            .or_else(|| {
+                front
+                    .as_ref()
+                    .filter(|(m, _)| sg.type_name(*m) == Some("TwoSidedMaterial"))
+                    .and_then(|(m, _)| material_params(sg, *m, has_normals, false).map(|p| (*m, p)))
+            });
 
         // X3DMaterialExtensionNodes this renderer does not draw (VolumeScatter).
         for m in front.iter().map(|f| f.0).chain(back.iter().map(|b| b.0)) {
@@ -3224,13 +4199,27 @@ impl<'a> Builder<'a> {
         }
 
         let (material, front_transparent, emissive_texture) = match &front {
-            Some((m, p)) => (p.clone(), material_transparent(sg, *m, p), sg.node(*m, "emissiveTexture").filter(|_| sg.type_name(*m) == Some("UnlitMaterial"))),
+            Some((m, p)) => (
+                p.clone(),
+                material_transparent(sg, *m, p),
+                sg.node(*m, "emissiveTexture")
+                    .filter(|_| sg.type_name(*m) == Some("UnlitMaterial")),
+            ),
             None => (default_material(), false, None),
         };
 
         if let Some(b) = appearance.and_then(|a| sg.node(a, "backMaterial")) {
-            if !matches!(sg.type_name(b), Some("Material" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial")) {
-                self.unsupported.insert(sg.type_name(b).unwrap_or("?").to_string());
+            if !matches!(
+                sg.type_name(b),
+                Some(
+                    "Material"
+                        | "UnlitMaterial"
+                        | "PhysicalMaterial"
+                        | "SpecularGlossinessMaterial"
+                )
+            ) {
+                self.unsupported
+                    .insert(sg.type_name(b).unwrap_or("?").to_string());
             }
         }
 
@@ -3243,19 +4232,33 @@ impl<'a> Builder<'a> {
         if let Some((m, _)) = &front {
             material.textures = self.material_textures(sg, *m, &transforms, &coords);
             // X3DOneSidedMaterialNode.set_transparent__: transparency || baseTexture .isTransparent ().
-            front_transparent |= material.textures.iter().any(|t| t.kind == 0 && t.texture.transparent);
+            front_transparent |= material
+                .textures
+                .iter()
+                .any(|t| t.kind == 0 && t.texture.transparent);
         }
 
         let back = back.map(|(m, mut p)| {
             p.textures = self.material_textures(sg, m, &transforms, &coords);
             (m, p)
         });
-        let back_transparent = back.as_ref().is_some_and(|(m, p)| material_transparent(sg, *m, p) || p.textures.iter().any(|t| t.kind == 0 && t.texture.transparent));
+        let back_transparent = back.as_ref().is_some_and(|(m, p)| {
+            material_transparent(sg, *m, p)
+                || p.textures
+                    .iter()
+                    .any(|t| t.kind == 0 && t.texture.transparent)
+        });
         let back_material = back.map(|(_, p)| p);
 
         // BlendMode, DepthMode: Appearance.set_renderModes__.
-        let blend = appearance.and_then(|a| sg.node(a, "blendMode")).filter(|b| sg.type_name(*b) == Some("BlendMode")).map(|b| blend_params(sg, b));
-        let depth = appearance.and_then(|a| sg.node(a, "depthMode")).filter(|d| sg.type_name(*d) == Some("DepthMode")).map(|d| depth_params(sg, d));
+        let blend = appearance
+            .and_then(|a| sg.node(a, "blendMode"))
+            .filter(|b| sg.type_name(*b) == Some("BlendMode"))
+            .map(|b| blend_params(sg, b));
+        let depth = appearance
+            .and_then(|a| sg.node(a, "depthMode"))
+            .filter(|d| sg.type_name(*d) == Some("DepthMode"))
+            .map(|d| depth_params(sg, d));
 
         // Appearance.set_texture__: X3DCast (X3DTextureNode, texture). A MultiTexture's units are its
         // X3DSingleTextureNode textures (at most maxTextures); MultiTexture is never transparent.
@@ -3275,7 +4278,9 @@ impl<'a> Builder<'a> {
                 let texture = self.texture(sg, t);
                 // An X3DTextureNode that failed to load still binds X_ITE's 1×1 white default texture.
                 let texture = match texture {
-                    None if is_single_texture(sg, t) && can_load(sg, t) => Some(self.white_texture()),
+                    None if is_single_texture(sg, t) && can_load(sg, t) => {
+                        Some(self.white_texture())
+                    }
                     t => t,
                 };
                 // Appearance.set_transparent__: the appearance texture counts even when an
@@ -3288,9 +4293,13 @@ impl<'a> Builder<'a> {
 
         // Unlit2.glsl getEmissiveColor: X3D_EMISSIVE_TEXTURE wins over X3D_TEXTURE.
         let (textures, multi_texture) = match emissive_texture {
-            Some(t) if can_load(sg, t) => (vec![self.texture(sg, t).unwrap_or_else(|| self.white_texture())], None),
+            Some(t) if can_load(sg, t) => (
+                vec![self.texture(sg, t).unwrap_or_else(|| self.white_texture())],
+                None,
+            ),
             Some(t) => {
-                self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                self.unsupported
+                    .insert(sg.type_name(t).unwrap_or("?").to_string());
                 (textures, multi_texture)
             }
             None => (textures, multi_texture),
@@ -3308,17 +4317,31 @@ impl<'a> Builder<'a> {
         // maxTextureTransforms), the default one if there is none.
         let texture_matrices: Vec<[f32; 16]> = match transform_node {
             Some(t) if sg.type_name(t) == Some("MultiTextureTransform") => {
-                let matrices: Vec<[f32; 16]> = sg.nodes(t, "textureTransform").into_iter().filter_map(|u| single_texture_transform_matrix(sg, u)).take(MAX_TEXTURES).collect();
-                if matrices.is_empty() { vec![IDENTITY_F32] } else { matrices }
+                let matrices: Vec<[f32; 16]> = sg
+                    .nodes(t, "textureTransform")
+                    .into_iter()
+                    .filter_map(|u| single_texture_transform_matrix(sg, u))
+                    .take(MAX_TEXTURES)
+                    .collect();
+                if matrices.is_empty() {
+                    vec![IDENTITY_F32]
+                } else {
+                    matrices
+                }
             }
             Some(t) => vec![single_texture_transform_matrix(sg, t).unwrap_or(IDENTITY_F32)],
             None => vec![IDENTITY_F32],
         };
 
         // Appearance.set_pointProperties__ / set_lineProperties__ / set_fillProperties__.
-        let style = self.content_scale_lines(appearance.and_then(|a| style_params(sg, a, geometry.geometry_type)), geometry.geometry_type);
+        let style = self.content_scale_lines(
+            appearance.and_then(|a| style_params(sg, a, geometry.geometry_type)),
+            geometry.geometry_type,
+        );
         let style_texture = match style {
-            Some(StyleParams::Fill(f)) if f.hatched => Some(crate::style::hatch_texture(f.hatch_style)),
+            Some(StyleParams::Fill(f)) if f.hatched => {
+                Some(crate::style::hatch_texture(f.hatch_style))
+            }
             Some(StyleParams::Line(_)) => Some(crate::style::linetype_texture()),
             _ => None,
         };
@@ -3327,9 +4350,18 @@ impl<'a> Builder<'a> {
 
         // X3DGeometryNode.set_color__: setTransparent (colorNode .isTransparent ()), and ColorRGBA
         // is always transparent.
-        let color_transparent = sg.node(gnode, "color").is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
+        let color_transparent = sg
+            .node(gnode, "color")
+            .is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
 
-        let transparent = extra_transparent || color_transparent || fill_transparent || front_transparent || back_transparent || texture_transparent || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent)) || blend.is_some();
+        let transparent = extra_transparent
+            || color_transparent
+            || fill_transparent
+            || front_transparent
+            || back_transparent
+            || texture_transparent
+            || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent))
+            || blend.is_some();
 
         let custom = self.custom_draw(sg, appearance);
 
@@ -3347,7 +4379,12 @@ impl<'a> Builder<'a> {
             back_material,
             blend,
             depth,
-            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            clip_planes: self
+                .clip_planes
+                .iter()
+                .take(MAX_CLIP_PLANES)
+                .copied()
+                .collect(),
             style,
             style_texture,
             distance,
@@ -3364,11 +4401,21 @@ impl<'a> Builder<'a> {
     /// item sorted by the center of its planes). See [`crate::volume`].
     fn volume(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4) {
         let d = sg.vec3(n, "dimensions", Vector3::ONE);
-        let orientation = crate::volume::sensor_orientation(mv, [d.x, d.y, d.z]).unwrap_or_else(Rotation4::identity);
+        let orientation = crate::volume::sensor_orientation(mv, [d.x, d.y, d.z])
+            .unwrap_or_else(Rotation4::identity);
         let mut unsupported = vec![];
         let draw = {
             let mut tex = |t: NodeId| self.texture(sg, t);
-            crate::volume::build(sg, n, ty, mv, texture_quality(), orientation, &mut tex, &mut unsupported)
+            crate::volume::build(
+                sg,
+                n,
+                ty,
+                mv,
+                texture_quality(),
+                orientation,
+                &mut tex,
+                &mut unsupported,
+            )
         };
         self.unsupported.extend(unsupported);
         // addDisplayShape: distance = the planes' bbox center (the origin) in view space.
@@ -3388,7 +4435,12 @@ impl<'a> Builder<'a> {
             back_material: None,
             blend: None,
             depth: None,
-            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            clip_planes: self
+                .clip_planes
+                .iter()
+                .take(MAX_CLIP_PLANES)
+                .copied()
+                .collect(),
             style: None,
             style_texture: None,
             distance: center.z,
@@ -3403,30 +4455,64 @@ impl<'a> Builder<'a> {
 
     /// The named textures of a PhysicalMaterial or SpecularGlossinessMaterial (X3DCast
     /// (X3DSingleTextureNode, field)); one that has not loaded binds the default white texture.
-    fn material_textures(&mut self, sg: &Sg, m: NodeId, transforms: &[String], coords: &[String]) -> Vec<MaterialTexture> {
+    fn material_textures(
+        &mut self,
+        sg: &Sg,
+        m: NodeId,
+        transforms: &[String],
+        coords: &[String],
+    ) -> Vec<MaterialTexture> {
         // The kinds of Material (Phong): diffuse, emissive, specular, occlusion, normal in the slots of
         // the physical kinds, ambient and shininess after them (Material.getTextureIndices).
         let names: &[&str] = match sg.type_name(m) {
-            Some("PhysicalMaterial") => &["baseTexture", "emissiveTexture", "metallicRoughnessTexture", "occlusionTexture", "normalTexture"],
-            Some("SpecularGlossinessMaterial") => &["diffuseTexture", "emissiveTexture", "specularGlossinessTexture", "occlusionTexture", "normalTexture"],
-            Some("Material") => &["diffuseTexture", "emissiveTexture", "specularTexture", "occlusionTexture", "normalTexture", "ambientTexture", "shininessTexture"],
+            Some("PhysicalMaterial") => &[
+                "baseTexture",
+                "emissiveTexture",
+                "metallicRoughnessTexture",
+                "occlusionTexture",
+                "normalTexture",
+            ],
+            Some("SpecularGlossinessMaterial") => &[
+                "diffuseTexture",
+                "emissiveTexture",
+                "specularGlossinessTexture",
+                "occlusionTexture",
+                "normalTexture",
+            ],
+            Some("Material") => &[
+                "diffuseTexture",
+                "emissiveTexture",
+                "specularTexture",
+                "occlusionTexture",
+                "normalTexture",
+                "ambientTexture",
+                "shininessTexture",
+            ],
             _ => return vec![],
         };
         let mut out = vec![];
 
         for (kind, name) in names.iter().enumerate() {
-            let Some(t) = sg.node(m, name).filter(|t| is_single_texture(sg, *t)) else { continue };
+            let Some(t) = sg.node(m, name).filter(|t| is_single_texture(sg, *t)) else {
+                continue;
+            };
             let texture = match self.texture(sg, t) {
                 Some(t) => t,
                 None => {
                     if !can_load(sg, t) {
-                        self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                        self.unsupported
+                            .insert(sg.type_name(t).unwrap_or("?").to_string());
                     }
                     self.white_texture()
                 }
             };
             let mapping = sg.string(m, &format!("{name}Mapping"), "");
-            out.push(MaterialTexture { kind: kind as u32, texture, transform: mapping_channel(transforms, &mapping).min(3), coord: mapping_channel(coords, &mapping).min(3) });
+            out.push(MaterialTexture {
+                kind: kind as u32,
+                texture,
+                transform: mapping_channel(transforms, &mapping).min(3),
+                coord: mapping_channel(coords, &mapping).min(3),
+            });
         }
 
         // X3DMaterialExtensionNode.addTexture: the extension textures, kinds 5.. (a later node of
@@ -3439,12 +4525,15 @@ impl<'a> Builder<'a> {
                     continue;
                 }
 
-                let Some(t) = sg.node(e, name).filter(|t| is_single_texture(sg, *t)) else { continue };
+                let Some(t) = sg.node(e, name).filter(|t| is_single_texture(sg, *t)) else {
+                    continue;
+                };
                 let texture = match self.texture(sg, t) {
                     Some(t) => t,
                     None => {
                         if !can_load(sg, t) {
-                            self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                            self.unsupported
+                                .insert(sg.type_name(t).unwrap_or("?").to_string());
                         }
                         self.white_texture()
                     }
@@ -3452,7 +4541,12 @@ impl<'a> Builder<'a> {
                 let mapping = sg.string(e, &format!("{name}Mapping"), "");
                 let kind = 5 + i as u32;
                 out.retain(|o| o.kind != kind);
-                out.push(MaterialTexture { kind, texture, transform: mapping_channel(transforms, &mapping).min(3), coord: mapping_channel(coords, &mapping).min(3) });
+                out.push(MaterialTexture {
+                    kind,
+                    texture,
+                    transform: mapping_channel(transforms, &mapping).min(3),
+                    coord: mapping_channel(coords, &mapping).min(3),
+                });
             }
         }
 
@@ -3474,7 +4568,9 @@ impl<'a> Builder<'a> {
                         Some("ImageTexture") => self.texture(sg, t),
                         // X3DBackgroundNode.set_loadState__: a PixelTexture without an image is COMPLETE (texture bit set); its face
                         // shows X_ITE's 1 x 1 white default texture.
-                        Some("PixelTexture") => self.texture(sg, t).or_else(|| Some(self.white_texture())),
+                        Some("PixelTexture") => {
+                            self.texture(sg, t).or_else(|| Some(self.white_texture()))
+                        }
                         Some(other) => {
                             self.unsupported.insert(other.to_string());
                             None
@@ -3485,13 +4581,20 @@ impl<'a> Builder<'a> {
                 }
             } else {
                 let ckey = (sg.rt.uid, b, i);
-                let fp = if self.cache.is_some() { fingerprint(sg, b) } else { 0 };
+                let fp = if self.cache.is_some() {
+                    fingerprint(sg, b)
+                } else {
+                    0
+                };
                 let hit = self.cache.as_deref_mut().and_then(|c| {
                     let frame = c.frame;
-                    c.faces.get_mut(&ckey).filter(|e| e.fingerprint == fp).map(|e| {
-                        e.used = frame;
-                        e.value.clone()
-                    })
+                    c.faces
+                        .get_mut(&ckey)
+                        .filter(|e| e.fingerprint == fp)
+                        .map(|e| {
+                            e.used = frame;
+                            e.value.clone()
+                        })
                 });
 
                 match hit {
@@ -3500,13 +4603,31 @@ impl<'a> Builder<'a> {
                         // The url the face's private ImageTexture last requested (a change while
                         // LoadUrlObjects is FALSE does not load).
                         let field = format!("{name}Url");
-                        let private = sg.rt.background_textures.get(&b).and_then(|v| v.iter().find(|(f, _)| *f == field).map(|(_, t)| *t));
-                        let urls = private.and_then(|t| sg.rt.texture_url(t)).unwrap_or_else(|| sg.strings(b, &field));
-                        let t = texture::load_background_texture(&urls, sg.rt.scene.world_url_of(sg.rt.scene.node(b).ctx), self.root.fetcher.as_ref()).map(Rc::new);
+                        let private = sg
+                            .rt
+                            .background_textures
+                            .get(&b)
+                            .and_then(|v| v.iter().find(|(f, _)| *f == field).map(|(_, t)| *t));
+                        let urls = private
+                            .and_then(|t| sg.rt.texture_url(t))
+                            .unwrap_or_else(|| sg.strings(b, &field));
+                        let t = texture::load_background_texture(
+                            &urls,
+                            sg.rt.scene.world_url_of(sg.rt.scene.node(b).ctx),
+                            self.root.fetcher.as_ref(),
+                        )
+                        .map(Rc::new);
 
                         if let Some(c) = self.cache.as_deref_mut() {
                             let frame = c.frame;
-                            c.faces.insert(ckey, CacheEntry { fingerprint: fp, value: t.clone(), used: frame });
+                            c.faces.insert(
+                                ckey,
+                                CacheEntry {
+                                    fingerprint: fp,
+                                    value: t.clone(),
+                                    used: frame,
+                                },
+                            );
                         }
 
                         t
@@ -3515,7 +4636,10 @@ impl<'a> Builder<'a> {
             };
 
             if let Some(texture) = texture {
-                faces.push(BackgroundFace { vertices: FACE_VERTICES[i], texture });
+                faces.push(BackgroundFace {
+                    vertices: FACE_VERTICES[i],
+                    texture,
+                });
             }
         }
 
@@ -3527,10 +4651,37 @@ impl<'a> Builder<'a> {
     /// perspective with the viewpoint's near and far distance, the headlight placed by the main
     /// camera, the shapes that use the texture hidden.
     #[allow(clippy::too_many_arguments)]
-    fn cube_face(&mut self, sg: &Sg, roots: &[NodeId], node: NodeId, model: &Matrix4, i: usize, near: f64, far: f64, headlight: Option<&Matrix4>, bound: &Bound, background_far: f64, background_faces: &[BackgroundFace]) -> Frame {
+    fn cube_face(
+        &mut self,
+        sg: &Sg,
+        roots: &[NodeId],
+        node: NodeId,
+        model: &Matrix4,
+        i: usize,
+        near: f64,
+        far: f64,
+        headlight: Option<&Matrix4>,
+        bound: &Bound,
+        background_far: f64,
+        background_faces: &[BackgroundFace],
+    ) -> Frame {
         let z = Vector3::Z_AXIS;
-        let to = [Vector3::new(0.0, 0.0, -1.0), z, Vector3::X_AXIS, Vector3::new(-1.0, 0.0, 0.0), Vector3::new(0.0, -1.0, 0.0), Vector3::Y_AXIS];
-        let scales = [Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::ONE, Vector3::ONE];
+        let to = [
+            Vector3::new(0.0, 0.0, -1.0),
+            z,
+            Vector3::X_AXIS,
+            Vector3::new(-1.0, 0.0, 0.0),
+            Vector3::new(0.0, -1.0, 0.0),
+            Vector3::Y_AXIS,
+        ];
+        let scales = [
+            Vector3::new(-1.0, -1.0, 1.0),
+            Vector3::new(-1.0, -1.0, 1.0),
+            Vector3::new(-1.0, -1.0, 1.0),
+            Vector3::new(-1.0, -1.0, 1.0),
+            Vector3::ONE,
+            Vector3::ONE,
+        ];
 
         let mut rotation = Rotation4::identity();
         rotation.set_vectors(&z, &to[i]);
@@ -3541,9 +4692,25 @@ impl<'a> Builder<'a> {
         view.inverse();
 
         // A DependentRenderer pass of its own.
-        let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
-        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights), std::mem::take(&mut self.local_fogs));
-        let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
+        let saved = (
+            std::mem::take(&mut self.items),
+            std::mem::take(&mut self.lights),
+            std::mem::take(&mut self.clip_planes),
+            self.camera_space,
+            self.dependent,
+            self.hidden_texture,
+            self.environment.take(),
+        );
+        let saved_lights = (
+            std::mem::take(&mut self.global_lights),
+            std::mem::take(&mut self.local_lights),
+            std::mem::take(&mut self.local_fogs),
+        );
+        let saved_projectors = (
+            std::mem::take(&mut self.projectors),
+            std::mem::take(&mut self.global_projectors),
+            std::mem::take(&mut self.local_projectors),
+        );
         let size = sg.i32(node, "size", 128).max(1) as f64;
         let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, size, size]]);
         self.camera_space = camera_space;
@@ -3583,9 +4750,21 @@ impl<'a> Builder<'a> {
         shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
         let projectors = std::mem::take(&mut self.projectors);
         let environment = self.environment.take();
-        (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
+        (
+            self.items,
+            self.lights,
+            self.clip_planes,
+            self.camera_space,
+            self.dependent,
+            self.hidden_texture,
+            self.environment,
+        ) = saved;
         (self.global_lights, self.local_lights, self.local_fogs) = saved_lights;
-        (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
+        (
+            self.projectors,
+            self.global_projectors,
+            self.local_projectors,
+        ) = saved_projectors;
         self.viewports = saved_viewports;
 
         Frame {
@@ -3593,8 +4772,12 @@ impl<'a> Builder<'a> {
             view,
             items,
             lights,
-            background: bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, background_far, background_faces.to_vec())),
-            fog: bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
+            background: bound.background.and_then(|(b, m)| {
+                background_params(sg, b, &m, &view, background_far, background_faces.to_vec())
+            }),
+            fog: bound
+                .fog
+                .and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
             unsupported: BTreeSet::new(),
             viewpoint: None,
             cube_passes: vec![],
@@ -3602,7 +4785,12 @@ impl<'a> Builder<'a> {
             environment,
             tone_mapping: 0,
             color_space: color_space(&self.root.browser_options),
-            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            exposure: self
+                .root
+                .browser_options
+                .get_option("Exposure")
+                .map_or(1.0, |v| v.as_f64())
+                .max(0.0),
             viewport: None,
             layers: vec![],
             // The main pass's maps (the texture pass draws none of its own).
@@ -3618,8 +4806,19 @@ impl<'a> Builder<'a> {
     /// (NavigationInfo child or the layer's, not for a depth map) uses the container matrix
     /// `view (layer) × cameraSpace (texture viewpoint)`: pushed as a light of its own for the
     /// children, the layer's NavigationInfo pushes it (if on) for the layer.
-    fn rendered_pass(&mut self, sg: &Sg, node: NodeId, roots: &[NodeId], bound: &Bound, layer: &PassCamera, background_far: f64) -> RenderedPass {
-        let (width, height) = (sg.i32(node, "width", 128).max(1) as u32, sg.i32(node, "height", 128).max(1) as u32);
+    fn rendered_pass(
+        &mut self,
+        sg: &Sg,
+        node: NodeId,
+        roots: &[NodeId],
+        bound: &Bound,
+        layer: &PassCamera,
+        background_far: f64,
+    ) -> RenderedPass {
+        let (width, height) = (
+            sg.i32(node, "width", 128).max(1) as u32,
+            sg.i32(node, "height", 128).max(1) as u32,
+        );
         let depth_map = sg.bool(node, "depthMap", false);
         let children = rendered_children(sg, node);
 
@@ -3629,22 +4828,46 @@ impl<'a> Builder<'a> {
                 let ty = sg.type_name(v).unwrap_or("Viewpoint");
                 let is_ortho = ty == "OrthoViewpoint";
                 let mut camera_space = Matrix4::IDENTITY;
-                camera_space.set_transform(Some(&sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0))), Some(&sg.rotation(v, "orientation")), Some(&Vector3::ONE), Some(&Rotation4::identity()), None);
+                camera_space.set_transform(
+                    Some(&sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0))),
+                    Some(&sg.rotation(v, "orientation")),
+                    Some(&Vector3::ONE),
+                    Some(&Rotation4::identity()),
+                    None,
+                );
                 let far_max_val = if is_ortho { 1e4 } else { far_max() };
                 let (near, far) = match bound.navigation_info {
                     Some(ni) => {
-                        let radius = sg.f64s(ni, "avatarSize").first().copied().unwrap_or(0.25).max(0.0);
+                        let radius = sg
+                            .f64s(ni, "avatarSize")
+                            .first()
+                            .copied()
+                            .unwrap_or(0.25)
+                            .max(0.0);
                         let limit = sg.f64(ni, "visibilityLimit", 0.0).max(0.0);
-                        (if radius == 0.0 { 0.125 } else { radius / 2.0 }, if limit != 0.0 { limit } else { far_max_val })
+                        (
+                            if radius == 0.0 { 0.125 } else { radius / 2.0 },
+                            if limit != 0.0 { limit } else { far_max_val },
+                        )
                     }
                     None => (0.125, far_max_val),
                 };
                 let ortho = is_ortho.then(|| sg.ortho_field_of_view(v));
                 let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
-                let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+                let fov = if fov > 0.0 && fov < std::f64::consts::PI {
+                    fov
+                } else {
+                    std::f64::consts::FRAC_PI_4
+                };
                 (camera_space, fov, near, far, ortho)
             }
-            None => (layer.camera_space, layer.fov, layer.near, layer.far, layer.ortho),
+            None => (
+                layer.camera_space,
+                layer.fov,
+                layer.near,
+                layer.far,
+                layer.ortho,
+            ),
         };
         let projection = match ortho {
             Some(f) => ortho_projection(f, near, far, width as f64, height as f64),
@@ -3654,29 +4877,67 @@ impl<'a> Builder<'a> {
         view.inverse();
 
         // A DependentRenderer pass of its own.
-        let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
-        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights), std::mem::take(&mut self.local_fogs));
-        let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
-        let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, width as f64, height as f64]]);
+        let saved = (
+            std::mem::take(&mut self.items),
+            std::mem::take(&mut self.lights),
+            std::mem::take(&mut self.clip_planes),
+            self.camera_space,
+            self.dependent,
+            self.hidden_texture,
+            self.environment.take(),
+        );
+        let saved_lights = (
+            std::mem::take(&mut self.global_lights),
+            std::mem::take(&mut self.local_lights),
+            std::mem::take(&mut self.local_fogs),
+        );
+        let saved_projectors = (
+            std::mem::take(&mut self.projectors),
+            std::mem::take(&mut self.global_projectors),
+            std::mem::take(&mut self.local_projectors),
+        );
+        let saved_viewports = std::mem::replace(
+            &mut self.viewports,
+            vec![[0.0, 0.0, width as f64, height as f64]],
+        );
         self.camera_space = camera_space;
         self.dependent = true;
         self.hidden_texture = None;
 
         let navigation_info = children.navigation_info.or(bound.navigation_info);
-        let headlight = !depth_map && navigation_info.is_none_or(|ni| sg.bool(ni, "headlight", true));
+        let headlight =
+            !depth_map && navigation_info.is_none_or(|ni| sg.bool(ni, "headlight", true));
         let mut container = layer.view;
         container.mult_left(&camera_space);
         let headlight_matrix = if children.group.is_empty() {
-            (layer.headlight && !depth_map).then(|| if headlight { container } else { Matrix4::IDENTITY })
+            (layer.headlight && !depth_map).then(|| {
+                if headlight {
+                    container
+                } else {
+                    Matrix4::IDENTITY
+                }
+            })
         } else {
             headlight.then_some(container)
         };
 
         // Headlights left by earlier depth map passes of the layer (the same container, drawn with
         // the matrix it has now).
-        let leaked = if depth_map || !layer.headlight { 0 } else { sg.rt.rendered_texture_leaked_headlights(node) };
+        let leaked = if depth_map || !layer.headlight {
+            0
+        } else {
+            sg.rt.rendered_texture_leaked_headlights(node)
+        };
         let headlights = headlight_matrix.map_or(0, |_| 1) + leaked;
-        let headlight_matrix = headlight_matrix.or_else(|| (leaked > 0).then(|| if headlight { container } else { Matrix4::IDENTITY }));
+        let headlight_matrix = headlight_matrix.or_else(|| {
+            (leaked > 0).then(|| {
+                if headlight {
+                    container
+                } else {
+                    Matrix4::IDENTITY
+                }
+            })
+        });
 
         for m in headlight_matrix.iter().cycle().take(headlights as usize) {
             self.global_lights.push(self.lights.len() as u32);
@@ -3699,7 +4960,11 @@ impl<'a> Builder<'a> {
             });
         }
 
-        let pass_roots = if children.group.is_empty() { roots.to_vec() } else { children.group.clone() };
+        let pass_roots = if children.group.is_empty() {
+            roots.to_vec()
+        } else {
+            children.group.clone()
+        };
         self.group_children(sg, pass_roots, &view, 0);
 
         let mut items = std::mem::take(&mut self.items);
@@ -3708,9 +4973,21 @@ impl<'a> Builder<'a> {
         shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
         let projectors = std::mem::take(&mut self.projectors);
         let environment = self.environment.take();
-        (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
+        (
+            self.items,
+            self.lights,
+            self.clip_planes,
+            self.camera_space,
+            self.dependent,
+            self.hidden_texture,
+            self.environment,
+        ) = saved;
         (self.global_lights, self.local_lights, self.local_fogs) = saved_lights;
-        (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
+        (
+            self.projectors,
+            self.global_projectors,
+            self.local_projectors,
+        ) = saved_projectors;
         self.viewports = saved_viewports;
 
         // The texture's Background child (not bound: identity model matrix) or the layer's; a
@@ -3731,7 +5008,9 @@ impl<'a> Builder<'a> {
         };
         let fog = match children.fog {
             Some(f) => fog_params(sg, f, None, &view),
-            None => bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
+            None => bound
+                .fog
+                .and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
         };
 
         let frame = Frame {
@@ -3748,29 +5027,54 @@ impl<'a> Builder<'a> {
             environment,
             tone_mapping: 0,
             color_space: color_space(&self.root.browser_options),
-            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            exposure: self
+                .root
+                .browser_options
+                .get_option("Exposure")
+                .map_or(1.0, |v| v.as_f64())
+                .max(0.0),
             viewport: None,
             layers: vec![],
             shadow_maps: self.shadow_maps.clone(),
             projectors,
         };
 
-        RenderedPass { key: (sg.rt.uid, node), width, height, depth_map, frame }
+        RenderedPass {
+            key: (sg.rt.uid, node),
+            width,
+            height,
+            depth_map,
+            frame,
+        }
     }
 
     pub fn build(mut self, width: u32, height: u32) -> Frame {
         let root_sg = Sg::new(self.root);
         let sg = &root_sg;
         let browser = [0.0, 0.0, width as f64, height as f64];
-        self.layout_camera.content_scale = self.root.browser_options.rendering.get("ContentScale").map_or(1.0, |v| v.as_f64());
+        self.layout_camera.content_scale = self
+            .root
+            .browser_options
+            .rendering
+            .get("ContentScale")
+            .map_or(1.0, |v| v.as_f64());
 
         // X3DWorld.traverse: the LayerSet's layers in order, or layer 0 alone.
         let mut frame = if layer::layer_set(sg).is_none() {
             self.build_layer(sg, None, browser, false)
         } else {
-            let mut layers: Vec<Frame> = layer::drawn_layers(sg).into_iter().map(|key| self.build_layer(sg, key, browser, true)).collect();
-            let cube_passes = layers.iter_mut().flat_map(|l| std::mem::take(&mut l.cube_passes)).collect();
-            let rendered_passes = layers.iter_mut().flat_map(|l| std::mem::take(&mut l.rendered_passes)).collect();
+            let mut layers: Vec<Frame> = layer::drawn_layers(sg)
+                .into_iter()
+                .map(|key| self.build_layer(sg, key, browser, true))
+                .collect();
+            let cube_passes = layers
+                .iter_mut()
+                .flat_map(|l| std::mem::take(&mut l.cube_passes))
+                .collect();
+            let rendered_passes = layers
+                .iter_mut()
+                .flat_map(|l| std::mem::take(&mut l.rendered_passes))
+                .collect();
 
             Frame {
                 projection: Matrix4::IDENTITY,
@@ -3786,7 +5090,12 @@ impl<'a> Builder<'a> {
                 environment: None,
                 tone_mapping: tone_mapping(&self.root.browser_options),
                 color_space: color_space(&self.root.browser_options),
-                exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+                exposure: self
+                    .root
+                    .browser_options
+                    .get_option("Exposure")
+                    .map_or(1.0, |v| v.as_f64())
+                    .max(0.0),
                 viewport: None,
                 layers,
                 shadow_maps: vec![],
@@ -3811,10 +5120,23 @@ impl<'a> Builder<'a> {
         let layout_layer = layer::is_layout_layer(sg, key);
         let viewport = layer::layer_viewport(sg, key, browser);
         let (width, height) = (viewport[2], viewport[3]);
-        let camera = if key.is_none() { self.camera.clone() } else { self.layer_cameras.iter().find(|(k, _)| *k == key).map(|(_, c)| c.clone()) };
+        let camera = if key.is_none() {
+            self.camera.clone()
+        } else {
+            self.layer_cameras
+                .iter()
+                .find(|(k, _)| *k == key)
+                .map(|(_, c)| c.clone())
+        };
 
         // CAMERA pass.
-        let mut bound = Bound { viewpoint: None, navigation_info: None, background: None, fog: None, fog_matrices: HashMap::new() };
+        let mut bound = Bound {
+            viewpoint: None,
+            navigation_info: None,
+            background: None,
+            fog: None,
+            fog_matrices: HashMap::new(),
+        };
         for r in &roots {
             self.camera(sg, *r, &Matrix4::IDENTITY, &mut bound, 0);
         }
@@ -3840,10 +5162,21 @@ impl<'a> Builder<'a> {
                 let ty = sg.type_name(v).unwrap_or("Viewpoint");
                 if ty == "OrthoViewpoint" {
                     let fov = sg.ortho_field_of_view(v);
-                    (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), std::f64::consts::FRAC_PI_4, m, true, fov)
+                    (
+                        sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)),
+                        sg.rotation(v, "orientation"),
+                        std::f64::consts::FRAC_PI_4,
+                        m,
+                        true,
+                        fov,
+                    )
                 } else {
                     let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
-                    let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+                    let fov = if fov > 0.0 && fov < std::f64::consts::PI {
+                        fov
+                    } else {
+                        std::f64::consts::FRAC_PI_4
+                    };
                     let mut position = sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0));
                     let mut orientation = sg.rotation(v, "orientation");
 
@@ -3857,37 +5190,70 @@ impl<'a> Builder<'a> {
                         position = geo.get_coord(&position);
 
                         // GeoViewpoint.getUpVector (true), no position offset yet.
-                        up_vector = if position.norm() < 6.5e6 { geo.get_geo_up_vector(&position) } else { Vector3::Z_AXIS };
+                        up_vector = if position.norm() < 6.5e6 {
+                            geo.get_geo_up_vector(&position)
+                        } else {
+                            Vector3::Z_AXIS
+                        };
                     }
 
                     (position, orientation, fov, m, false, [-1.0, -1.0, 1.0, 1.0])
                 }
             }
-            None => (Vector3::new(0.0, 0.0, 10.0), Rotation4::identity(), std::f64::consts::FRAC_PI_4, Matrix4::IDENTITY, layout_layer, [-1.0, -1.0, 1.0, 1.0]),
+            None => (
+                Vector3::new(0.0, 0.0, 10.0),
+                Rotation4::identity(),
+                std::f64::consts::FRAC_PI_4,
+                Matrix4::IDENTITY,
+                layout_layer,
+                [-1.0, -1.0, 1.0, 1.0],
+            ),
         };
 
         // ExamineViewer.set_activeViewpoint__: with StraightenHorizon (default TRUE) the EXAMINE
         // viewer sets an orientation offset that straightens the bound viewpoint's horizon.
-        let orientation = if viewer == "EXAMINE" { straighten(&orientation, &up_vector) } else { orientation };
+        let orientation = if viewer == "EXAMINE" {
+            straighten(&orientation, &up_vector)
+        } else {
+            orientation
+        };
 
         // X3DViewpointNode.update: cameraSpaceMatrix = T(position) R(orientation) × modelMatrix.
         let mut camera_space = Matrix4::IDENTITY;
-        camera_space.set_transform(Some(&position), Some(&orientation), Some(&Vector3::ONE), Some(&Rotation4::identity()), None);
+        camera_space.set_transform(
+            Some(&position),
+            Some(&orientation),
+            Some(&Vector3::ONE),
+            Some(&Rotation4::identity()),
+            None,
+        );
         camera_space.mult_right(&vp_model);
         let mut view = camera_space;
         view.inverse();
 
         // NavigationInfo: near = avatarSize [0] / 2 (0.125 if 0), far = visibilityLimit or 1e5 (1e4 for OrthoViewpoint).
         // GeoViewpoint.getMaxFarValue: 1e9.
-        let is_geo = bound.viewpoint.is_some_and(|(v, _)| sg.type_name(v) == Some("GeoViewpoint"));
-        let far_max_val = if is_ortho { 1e4 } else if is_geo { 1e9 } else { far_max() };
+        let is_geo = bound
+            .viewpoint
+            .is_some_and(|(v, _)| sg.type_name(v) == Some("GeoViewpoint"));
+        let far_max_val = if is_ortho {
+            1e4
+        } else if is_geo {
+            1e9
+        } else {
+            far_max()
+        };
         let (headlight, near, far) = match bound.navigation_info {
             Some(ni) => {
                 let avatar = sg.f64s(ni, "avatarSize");
                 let radius = avatar.first().copied().unwrap_or(0.25).max(0.0);
                 let near = if radius == 0.0 { 0.125 } else { radius / 2.0 };
                 let limit = sg.f64(ni, "visibilityLimit", 0.0).max(0.0);
-                (sg.bool(ni, "headlight", true), near, if limit != 0.0 { limit } else { far_max_val })
+                (
+                    sg.bool(ni, "headlight", true),
+                    near,
+                    if limit != 0.0 { limit } else { far_max_val },
+                )
             }
             None => (true, 0.125, far_max_val),
         };
@@ -3898,7 +5264,8 @@ impl<'a> Builder<'a> {
             perspective(fov, near, far, width, height)
         };
 
-        self.layout_camera.ortho = is_ortho.then(|| (ortho_fov[2] - ortho_fov[0], ortho_fov[3] - ortho_fov[1]));
+        self.layout_camera.ortho =
+            is_ortho.then(|| (ortho_fov[2] - ortho_fov[0], ortho_fov[3] - ortho_fov[1]));
         self.layout_camera.fov = fov;
         self.layout_camera.near = near;
 
@@ -3909,7 +5276,14 @@ impl<'a> Builder<'a> {
                 self.layout_camera.ortho = o.ortho_size;
                 self.layout_camera.fov = o.fov;
                 self.layout_camera.near = o.near;
-                (view, o.projection.unwrap_or_else(|| perspective(o.fov, o.near, o.far, width, height)), o.headlight, o.near, o.far)
+                (
+                    view,
+                    o.projection
+                        .unwrap_or_else(|| perspective(o.fov, o.near, o.far, width, height)),
+                    o.headlight,
+                    o.near,
+                    o.far,
+                )
             }
             None => (view, projection, headlight, near, far),
         };
@@ -3918,7 +5292,9 @@ impl<'a> Builder<'a> {
         let mut camera_space = view;
         camera_space.inverse();
         self.camera_space = camera_space;
-        self.background_transparent = bound.background.is_some_and(|(b, _)| background_transparent(sg, b));
+        self.background_transparent = bound
+            .background
+            .is_some_and(|(b, _)| background_transparent(sg, b));
         self.viewports = vec![viewport];
         self.layouts = LayoutStack::default();
 
@@ -3950,7 +5326,15 @@ impl<'a> Builder<'a> {
         self.groups = vec![ShadowGroup::Roots(roots.clone())];
 
         if layout_layer {
-            self.layout_group(sg, key.unwrap(), sg.node(key.unwrap(), "layout"), None, roots.clone(), &view, 0);
+            self.layout_group(
+                sg,
+                key.unwrap(),
+                sg.node(key.unwrap(), "layout"),
+                None,
+                roots.clone(),
+                &view,
+                0,
+            );
         } else {
             self.group_children(sg, roots.clone(), &view, 0);
         }
@@ -3958,15 +5342,32 @@ impl<'a> Builder<'a> {
         self.clip_planes.clear();
 
         // X3DRenderObject.setGlobalFog: modelViewMatrix = fog modelMatrix × viewMatrix, inverted 3×3.
-        let fog = bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view));
+        let fog = bound
+            .fog
+            .and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view));
 
-        let faces = bound.background.map(|(b, _)| self.background_faces(sg, b)).unwrap_or_default();
-        let background_far = camera.as_ref().map_or(if is_geo { 1e9 } else { far_max() }, |c| c.max_far);
+        let faces = bound
+            .background
+            .map(|(b, _)| self.background_faces(sg, b))
+            .unwrap_or_default();
+        let background_far = camera
+            .as_ref()
+            .map_or(if is_geo { 1e9 } else { far_max() }, |c| c.max_far);
         let background = match bound.background {
             Some((b, m)) => background_params(sg, b, &m, &view, background_far, faces.clone()),
             // X3DLayerNode.setLayer0: only layer 0 shows its default Background (black; with a
             // single layer the cleared target already is).
-            None if layered && key.is_none() => background_build(&[[0.0, 0.0, 0.0]], &[], &[], &[], 0.0, vec![], &Matrix4::IDENTITY, &view, background_far),
+            None if layered && key.is_none() => background_build(
+                &[[0.0, 0.0, 0.0]],
+                &[],
+                &[],
+                &[],
+                0.0,
+                vec![],
+                &Matrix4::IDENTITY,
+                &view,
+                background_far,
+            ),
             None => None,
         };
 
@@ -3978,19 +5379,51 @@ impl<'a> Builder<'a> {
             let mut frames = vec![];
 
             for i in 0..6 {
-                frames.push(self.cube_face(sg, &roots, node, &model, i, near, far, headlight.then_some(&camera_space), &bound, background_far, &faces));
+                frames.push(self.cube_face(
+                    sg,
+                    &roots,
+                    node,
+                    &model,
+                    i,
+                    near,
+                    far,
+                    headlight.then_some(&camera_space),
+                    &bound,
+                    background_far,
+                    &faces,
+                ));
             }
 
-            cube_passes.push(CubePass { key: (sg.rt.uid, node), size, faces: frames, next_frame_only: sg.string(node, "update", "NONE") == "NEXT_FRAME_ONLY" });
+            cube_passes.push(CubePass {
+                key: (sg.rt.uid, node),
+                size,
+                faces: frames,
+                next_frame_only: sg.string(node, "update", "NONE") == "NEXT_FRAME_ONLY",
+            });
         }
 
         // RenderedTexture.renderTexture for each texture collected.
-        let pass_camera = PassCamera { camera_space, view, fov: self.layout_camera.fov, near, far, ortho: is_ortho.then_some(ortho_fov), headlight };
+        let pass_camera = PassCamera {
+            camera_space,
+            view,
+            fov: self.layout_camera.fov,
+            near,
+            far,
+            ortho: is_ortho.then_some(ortho_fov),
+            headlight,
+        };
         let mut rendered_passes = vec![];
 
         for node in std::mem::take(&mut self.rendered) {
             self.rendered_done.push(node);
-            rendered_passes.push(self.rendered_pass(sg, node, &roots, &bound, &pass_camera, background_far));
+            rendered_passes.push(self.rendered_pass(
+                sg,
+                node,
+                &roots,
+                &bound,
+                &pass_camera,
+                background_far,
+            ));
         }
 
         let mut items = std::mem::take(&mut self.items);
@@ -4014,7 +5447,12 @@ impl<'a> Builder<'a> {
             environment: self.environment.take(),
             tone_mapping: tone_mapping(&self.root.browser_options),
             color_space: color_space(&self.root.browser_options),
-            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            exposure: self
+                .root
+                .browser_options
+                .get_option("Exposure")
+                .map_or(1.0, |v| v.as_f64())
+                .max(0.0),
             viewport: layered.then_some(viewport),
             layers: vec![],
             shadow_maps: std::mem::take(&mut self.shadow_maps),
@@ -4050,15 +5488,20 @@ pub fn particle_pointing(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePoi
     let sim = sg.rt.particle_sim(n)?;
     let num = sim.num_particles.min(sim.particles.len());
     let gt = sg.rt.particle_geometry_type(n);
-    let matrices = crate::particles::instances(&sim.particles[..num], &Default::default(), gt, false).matrices;
+    let matrices =
+        crate::particles::instances(&sim.particles[..num], &Default::default(), gt, false).matrices;
     let size = sg.vec2(n, "particleSize", Vector2::new(0.02, 0.02));
     let geometry = match gt {
         GeometryType::Geometry => None,
         GeometryType::Point => Some(crate::particles::point_geometry(false)),
         GeometryType::Line => Some(crate::particles::line_geometry(size.y, false)),
         _ => {
-            let rows = (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
-            let mut g = crate::particles::quad_geometry(rows.as_ref().map(|r| (r, [size.x, size.y])), false);
+            let rows =
+                (gt == GeometryType::Sprite).then(|| crate::particles::screen_aligned_rotation(mv));
+            let mut g = crate::particles::quad_geometry(
+                rows.as_ref().map(|r| (r, [size.x, size.y])),
+                false,
+            );
 
             g.normals = vec![0.0; g.normals.len()];
             g.tex_coords = [0.0, 0.0, 0.0, 1.0].repeat(g.vertex_count());
@@ -4066,7 +5509,11 @@ pub fn particle_pointing(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePoi
         }
     };
 
-    Some(ParticlePointing { geometry: geometry.map(Rc::new), matrices, bbox: builder.particle_system_bbox(sg, n).extents() })
+    Some(ParticlePointing {
+        geometry: geometry.map(Rc::new),
+        matrices,
+        bbox: builder.particle_system_bbox(sg, n).extents(),
+    })
 }
 
 /// addPointingShape: `viewVolume .intersectsSphere (radius, bboxCenter)` of a shape's `bbox` (min, max) under `mv`.
@@ -4092,14 +5539,21 @@ pub fn geometry_of(rt: &x3d_runtime::Runtime, n: NodeId) -> Option<Geometry> {
 /// The geometry arrays the ParticleSystems emitters and bounded physics models sample
 /// (`getVertices ()` and `getNormals ()`): a geometry node as X_ITE builds it, or the private
 /// IndexedFaceSet of a VolumeEmitter (`creaseAngle` PI, `convex` FALSE).
-pub fn particle_geometry(rt: &x3d_runtime::Runtime, request: &x3d_runtime::nodes::particle_systems::GeometryRequest) -> Option<x3d_runtime::nodes::particle_systems::GeometrySoup> {
+pub fn particle_geometry(
+    rt: &x3d_runtime::Runtime,
+    request: &x3d_runtime::nodes::particle_systems::GeometryRequest,
+) -> Option<x3d_runtime::nodes::particle_systems::GeometrySoup> {
     use x3d_runtime::nodes::particle_systems::{GeometryRequest, GeometrySoup};
 
     match request {
         GeometryRequest::Node(n) => {
             let g = geometry_of(rt, *n)?;
 
-            Some(GeometrySoup { vertices: g.vertices, normals: g.normals, solid: g.solid })
+            Some(GeometrySoup {
+                vertices: g.vertices,
+                normals: g.normals,
+                solid: g.solid,
+            })
         }
         GeometryRequest::Volume { coord, coord_index } => {
             let sg = Sg::new(rt);
@@ -4112,7 +5566,11 @@ pub fn particle_geometry(rt: &x3d_runtime::Runtime, request: &x3d_runtime::nodes
 
             let g = geometry::indexed_face_set(&input);
 
-            Some(GeometrySoup { vertices: g.vertices, normals: g.normals, solid: g.solid })
+            Some(GeometrySoup {
+                vertices: g.vertices,
+                normals: g.normals,
+                solid: g.solid,
+            })
         }
     }
 }
@@ -4166,7 +5624,8 @@ pub fn straighten(r: &Rotation4, up: &Vector3) -> Rotation4 {
     r
 }
 
-static LOGARITHMIC_DEPTH_BUFFER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+static LOGARITHMIC_DEPTH_BUFFER: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
 
 thread_local! {
     /// BrowserOptions PrimitiveQuality, TextureQuality and TextCompression (browser-wide in
@@ -4193,7 +5652,6 @@ impl Quality {
             _ => Quality::Medium,
         }
     }
-
 }
 
 /// set_PrimitiveQuality__, set_TextureQuality__ and the TextCompression option
@@ -4246,13 +5704,19 @@ pub struct BrowserGlobals {
 impl Default for BrowserGlobals {
     /// A browser that has not seen any option: Medium qualities, no logarithmic depth buffer.
     fn default() -> Self {
-        BrowserGlobals { qualities: (Quality::Medium, Quality::Medium, false, 0), log_depth: false }
+        BrowserGlobals {
+            qualities: (Quality::Medium, Quality::Medium, false, 0),
+            log_depth: false,
+        }
     }
 }
 
 /// The current values of this thread.
 pub fn browser_globals() -> BrowserGlobals {
-    BrowserGlobals { qualities: BROWSER_QUALITIES.with(|q| q.get()), log_depth: logarithmic_depth_buffer() }
+    BrowserGlobals {
+        qualities: BROWSER_QUALITIES.with(|q| q.get()),
+        log_depth: logarithmic_depth_buffer(),
+    }
 }
 
 /// Make `g` the values of this thread.
@@ -4263,7 +5727,11 @@ pub fn set_browser_globals(g: BrowserGlobals) {
 
 /// X3DViewpointNode.getMaxFarValue: 1e10 with the LogarithmicDepthBuffer rendering property, else 1e5.
 pub fn far_max() -> f64 {
-    if logarithmic_depth_buffer() { 1e10 } else { 1e5 }
+    if logarithmic_depth_buffer() {
+        1e10
+    } else {
+        1e5
+    }
 }
 
 /// Camera.perspective → Camera.frustum (column-major array, X_ITE layout).
@@ -4286,7 +5754,9 @@ pub fn perspective(fov: f64, near: f64, far: f64, width: f64, height: f64) -> Ma
     let e = n_2 / r_l;
     let f = n_2 / t_b;
 
-    Matrix4([e, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, a, bb, c, -1.0, 0.0, 0.0, d, 0.0])
+    Matrix4([
+        e, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, a, bb, c, -1.0, 0.0, 0.0, d, 0.0,
+    ])
 }
 
 /// Camera.ortho (column-major array, X_ITE layout).
@@ -4302,7 +5772,9 @@ pub fn ortho(l: f64, r: f64, b: f64, t: f64, near: f64, far: f64) -> Matrix4 {
     let e = -(t + b) / t_b;
     let f = -(far + near) / f_n;
 
-    Matrix4([a, 0.0, 0.0, 0.0, 0.0, bb, 0.0, 0.0, 0.0, 0.0, c, 0.0, d, e, f, 1.0])
+    Matrix4([
+        a, 0.0, 0.0, 0.0, 0.0, bb, 0.0, 0.0, 0.0, 0.0, c, 0.0, d, e, f, 1.0,
+    ])
 }
 
 /// OrthoViewpoint.getProjectionMatrixWithLimits (X_ITE layout).
@@ -4360,14 +5832,25 @@ pub fn texture_transform_matrix(sg: &Sg, n: NodeId) -> [f32; 16] {
     m4.map(|v| v as f32)
 }
 
-const IDENTITY_F32: [f32; 16] = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+const IDENTITY_F32: [f32; 16] = [
+    1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+];
 
 /// X3DTexturingContext maxTextures (and maxTextureTransforms, maxTexCoords).
 pub const MAX_TEXTURES: usize = 4;
 
 /// The texture node types this renderer loads (`Builder::texture`).
 fn can_load(sg: &Sg, n: NodeId) -> bool {
-    matches!(sg.type_name(n), Some("ImageTexture" | "PixelTexture" | "ComposedCubeMapTexture" | "ImageCubeMapTexture" | "GeneratedCubeMapTexture"))
+    matches!(
+        sg.type_name(n),
+        Some(
+            "ImageTexture"
+                | "PixelTexture"
+                | "ComposedCubeMapTexture"
+                | "ImageCubeMapTexture"
+                | "GeneratedCubeMapTexture"
+        )
+    )
 }
 
 /// The GeneratedCubeMapTexture nodes an appearance texture uses (Appearance.set_renderedTextures__:
@@ -4387,7 +5870,11 @@ pub fn rendered_textures(sg: &Sg, appearance: Option<NodeId>) -> Vec<NodeId> {
     if let Some(t) = sg.node(a, "texture") {
         match sg.type_name(t) {
             Some("MultiTexture") => sg.nodes(t, "texture").into_iter().for_each(&mut add),
-            Some("ComposedTexture3D") => sg.nodes(t, "texture").into_iter().filter_map(|c| sg.inner(c)).for_each(&mut add),
+            Some("ComposedTexture3D") => sg
+                .nodes(t, "texture")
+                .into_iter()
+                .filter_map(|c| sg.inner(c))
+                .for_each(&mut add),
             _ => add(t),
         }
     }
@@ -4411,14 +5898,22 @@ fn generated_textures(sg: &Sg, texture: Option<NodeId>) -> Vec<NodeId> {
 
     match sg.type_name(t) {
         Some("GeneratedCubeMapTexture") => vec![t],
-        Some("MultiTexture") => sg.nodes(t, "texture").into_iter().filter(|u| sg.type_name(*u) == Some("GeneratedCubeMapTexture")).collect(),
+        Some("MultiTexture") => sg
+            .nodes(t, "texture")
+            .into_iter()
+            .filter(|u| sg.type_name(*u) == Some("GeneratedCubeMapTexture"))
+            .collect(),
         _ => vec![],
     }
 }
 
 /// BrowserOptions ToneMapping as the shader number (X3DMaterialNode.addRenderOptions).
 fn tone_mapping(o: &x3d_runtime::browser_options::BrowserOptions) -> u32 {
-    match o.get_option("ToneMapping").map(|v| v.as_str().to_string()).as_deref() {
+    match o
+        .get_option("ToneMapping")
+        .map(|v| v.as_str().to_string())
+        .as_deref()
+    {
         Some("ACES_NARKOWICZ") => 1,
         Some("ACES_HILL") => 2,
         Some("ACES_HILL_EXPOSURE_BOOST") => 3,
@@ -4430,7 +5925,11 @@ fn tone_mapping(o: &x3d_runtime::browser_options::BrowserOptions) -> u32 {
 /// BrowserOptions ColorSpace (X3DMaterialNode.getShaderOptions; anything else is
 /// LINEAR_WHEN_PHYSICAL_MATERIAL).
 fn color_space(o: &x3d_runtime::browser_options::BrowserOptions) -> u32 {
-    match o.get_option("ColorSpace").map(|v| v.as_str().to_string()).as_deref() {
+    match o
+        .get_option("ColorSpace")
+        .map(|v| v.as_str().to_string())
+        .as_deref()
+    {
         Some("SRGB") => 0,
         Some("LINEAR") => 1,
         _ => 2,
@@ -4451,7 +5950,11 @@ fn mapping_channel(names: &[String], mapping: &str) -> u32 {
 /// The mapping names of the appearance's texture transforms, by channel.
 fn transform_mappings(sg: &Sg, t: Option<NodeId>) -> Vec<String> {
     match t {
-        Some(t) if sg.type_name(t) == Some("MultiTextureTransform") => sg.nodes(t, "textureTransform").into_iter().map(|u| sg.string(u, "mapping", "")).collect(),
+        Some(t) if sg.type_name(t) == Some("MultiTextureTransform") => sg
+            .nodes(t, "textureTransform")
+            .into_iter()
+            .map(|u| sg.string(u, "mapping", ""))
+            .collect(),
         Some(t) => vec![sg.string(t, "mapping", "")],
         None => vec![],
     }
@@ -4460,7 +5963,11 @@ fn transform_mappings(sg: &Sg, t: Option<NodeId>) -> Vec<String> {
 /// The mapping names of the geometry's texture coordinates, by channel.
 fn coordinate_mappings(sg: &Sg, geometry: NodeId) -> Vec<String> {
     match sg.node(geometry, "texCoord") {
-        Some(t) if sg.type_name(t) == Some("MultiTextureCoordinate") => sg.nodes(t, "texCoord").into_iter().map(|u| sg.string(u, "mapping", "")).collect(),
+        Some(t) if sg.type_name(t) == Some("MultiTextureCoordinate") => sg
+            .nodes(t, "texCoord")
+            .into_iter()
+            .map(|u| sg.string(u, "mapping", ""))
+            .collect(),
         Some(t) => vec![sg.string(t, "mapping", "")],
         None => vec![],
     }
@@ -4597,10 +6104,17 @@ fn multi_texture_params(sg: &Sg, n: NodeId, count: usize) -> MultiTextureParams 
 
     MultiTextureParams {
         color: [color[0], color[1], color[2], sg.f64(n, "alpha", 1.0)],
-        units: (0..count).map(|i| {
-            let (mode, alpha_mode) = modes.get(i).copied().unwrap_or((1, 1));
-            [mode, alpha_mode, sources.get(i).copied().unwrap_or(0), functions.get(i).copied().unwrap_or(0)]
-        }).collect(),
+        units: (0..count)
+            .map(|i| {
+                let (mode, alpha_mode) = modes.get(i).copied().unwrap_or((1, 1));
+                [
+                    mode,
+                    alpha_mode,
+                    sources.get(i).copied().unwrap_or(0),
+                    functions.get(i).copied().unwrap_or(0),
+                ]
+            })
+            .collect(),
     }
 }
 
@@ -4610,17 +6124,52 @@ fn upper_bound(array: &[f64], value: f64) -> usize {
 }
 
 /// X3DBackgroundNode.build + display matrices.
-fn background_params(sg: &Sg, n: NodeId, model: &Matrix4, view: &Matrix4, far: f64, faces: Vec<BackgroundFace>) -> Option<BackgroundParams> {
+fn background_params(
+    sg: &Sg,
+    n: NodeId,
+    model: &Matrix4,
+    view: &Matrix4,
+    far: f64,
+    faces: Vec<BackgroundFace>,
+) -> Option<BackgroundParams> {
     let transparency = sg.f64(n, "transparency", 0.0).clamp(0.0, 1.0);
-    let sky_color = sg.f32s(n, "skyColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
-    let ground_color = sg.f32s(n, "groundColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
+    let sky_color = sg
+        .f32s(n, "skyColor")
+        .chunks_exact(3)
+        .map(|c| [c[0], c[1], c[2]])
+        .collect::<Vec<_>>();
+    let ground_color = sg
+        .f32s(n, "groundColor")
+        .chunks_exact(3)
+        .map(|c| [c[0], c[1], c[2]])
+        .collect::<Vec<_>>();
 
-    background_build(&sky_color, &ground_color, &sg.f64s(n, "skyAngle"), &sg.f64s(n, "groundAngle"), transparency, faces, model, view, far)
+    background_build(
+        &sky_color,
+        &ground_color,
+        &sg.f64s(n, "skyAngle"),
+        &sg.f64s(n, "groundAngle"),
+        transparency,
+        faces,
+        model,
+        view,
+        far,
+    )
 }
 
 /// X3DBackgroundNode.build and display from the field values.
 #[allow(clippy::too_many_arguments)]
-fn background_build(sky_color: &[[f32; 3]], ground_color: &[[f32; 3]], sky_angle: &[f64], ground_angle: &[f64], transparency: f64, faces: Vec<BackgroundFace>, model: &Matrix4, view: &Matrix4, far: f64) -> Option<BackgroundParams> {
+fn background_build(
+    sky_color: &[[f32; 3]],
+    ground_color: &[[f32; 3]],
+    sky_angle: &[f64],
+    ground_angle: &[f64],
+    transparency: f64,
+    faces: Vec<BackgroundFace>,
+    model: &Matrix4,
+    view: &Matrix4,
+    far: f64,
+) -> Option<BackgroundParams> {
     // drawSphere returns early for transparency 1; drawCube still draws the loaded textures.
     if transparency >= 1.0 && faces.is_empty() {
         return None;
@@ -4666,14 +6215,25 @@ fn background_build(sky_color: &[[f32; 3]], ground_color: &[[f32; 3]], sky_angle
                     theta1 = pi - theta1;
                     theta2 = pi - theta2;
                 }
-                let z1 = (x3d_fields::jsmath::cos(theta1), x3d_fields::jsmath::sin(theta1));
-                let z2 = (x3d_fields::jsmath::cos(theta2), x3d_fields::jsmath::sin(theta2));
+                let z1 = (
+                    x3d_fields::jsmath::cos(theta1),
+                    x3d_fields::jsmath::sin(theta1),
+                );
+                let z2 = (
+                    x3d_fields::jsmath::cos(theta2),
+                    x3d_fields::jsmath::sin(theta2),
+                );
                 let c1 = get_color(v_angle[v]);
                 let c2 = get_color(v_angle[v + 1]);
 
                 for u in 0..U_DIMENSION {
                     let u1 = if u < U_DIMENSION - 1 { u + 1 } else { 0 };
-                    let polar = |m: f64, a: f64| (m * x3d_fields::jsmath::cos(a), m * x3d_fields::jsmath::sin(a));
+                    let polar = |m: f64, a: f64| {
+                        (
+                            m * x3d_fields::jsmath::cos(a),
+                            m * x3d_fields::jsmath::sin(a),
+                        )
+                    };
                     let phi = 2.0 * pi * (u as f64 / U_DIMENSION as f64);
                     let y1 = polar(-z1.1, phi);
                     let y2 = polar(-z2.1, phi);
@@ -4684,8 +6244,20 @@ fn background_build(sky_color: &[[f32; 3]], ground_color: &[[f32; 3]], sky_angle
                     for c in [c1, c2, c2, c1, c1, c2] {
                         colors.extend_from_slice(&[c[0], c[1], c[2], 1.0]);
                     }
-                    for p in [(y1, z1.0), (y3, z2.0), (y2, z2.0), (y1, z1.0), (y4, z1.0), (y3, z2.0)] {
-                        sphere.extend_from_slice(&[(p.0).1 as f32, p.1 as f32, (p.0).0 as f32, 1.0]);
+                    for p in [
+                        (y1, z1.0),
+                        (y3, z2.0),
+                        (y2, z2.0),
+                        (y1, z1.0),
+                        (y4, z1.0),
+                        (y3, z2.0),
+                    ] {
+                        sphere.extend_from_slice(&[
+                            (p.0).1 as f32,
+                            p.1 as f32,
+                            (p.0).0 as f32,
+                            1.0,
+                        ]);
                     }
                 }
             }
@@ -4731,7 +6303,13 @@ fn background_build(sky_color: &[[f32; 3]], ground_color: &[[f32; 3]], sky_angle
         sphere.clear();
     }
 
-    Some(BackgroundParams { colors, sphere, transparency, model_view: mv, faces })
+    Some(BackgroundParams {
+        colors,
+        sphere,
+        transparency,
+        model_view: mv,
+        faces,
+    })
 }
 
 /// X3DBackgroundNode.transferRectangle: the six face quads (front, back, left, right, top, bottom).
@@ -4746,7 +6324,9 @@ const FACE_VERTICES: [[f32; 24]; 6] = [
 ];
 
 /// X3DBackgroundNode.drawCube texture coordinates for every face.
-pub const FACE_TEX_COORDS: [f32; 24] = [1., 1., 0., 1., 0., 1., 0., 1., 0., 0., 0., 1., 1., 1., 0., 1., 0., 0., 0., 1., 1., 0., 0., 1.];
+pub const FACE_TEX_COORDS: [f32; 24] = [
+    1., 1., 0., 1., 0., 1., 0., 1., 0., 0., 0., 1., 1., 1., 0., 1., 0., 0., 0., 1., 1., 0., 0., 1.,
+];
 
 /// FogContainer.set / X3DFogObject: None when the fog does not draw (fogType 0).
 fn fog_params(sg: &Sg, f: NodeId, model: Option<&Matrix4>, view: &Matrix4) -> Option<FogParams> {
@@ -4754,7 +6334,12 @@ fn fog_params(sg: &Sg, f: NodeId, model: Option<&Matrix4>, view: &Matrix4) -> Op
         Some(x3d_fields::FieldValue::SFString(s)) => s.clone(),
         _ => "LINEAR".to_string(),
     };
-    let (fog_type, start, range) = fog::fog_type(&type_field, sg.f64(f, "visibilityStart", 0.0), sg.f64(f, "visibilityRange", 0.0), false);
+    let (fog_type, start, range) = fog::fog_type(
+        &type_field,
+        sg.f64(f, "visibilityStart", 0.0),
+        sg.f64(f, "visibilityRange", 0.0),
+        false,
+    );
 
     if fog_type == 0 {
         return None;
@@ -4768,7 +6353,13 @@ fn fog_params(sg: &Sg, f: NodeId, model: Option<&Matrix4>, view: &Matrix4) -> Op
 
     let c = sg.color(f, "color", [1.0, 1.0, 1.0]);
 
-    Some(FogParams { fog_type, color: [c[0] as f32, c[1] as f32, c[2] as f32], visibility_start: start as f32, visibility_range: range as f32, matrix: inv.0.map(|v| v as f32) })
+    Some(FogParams {
+        fog_type,
+        color: [c[0] as f32, c[1] as f32, c[2] as f32],
+        visibility_start: start as f32,
+        visibility_range: range as f32,
+        matrix: inv.0.map(|v| v as f32),
+    })
 }
 
 /// Matrix4.getTransform (null, rotation): the rotation part of a matrix (polar decomposition via X_ITE's Matrix3 factor).
@@ -4786,7 +6377,11 @@ pub const MAX_CLIP_PLANES: usize = 6;
 /// Plane3.multRight (matrix) of a plane given as (normal, distanceFromOrigin).
 pub fn plane_mult_right(plane: [f64; 4], matrix: &Matrix4) -> [f64; 4] {
     // The point on the plane along the normal from the origin.
-    let mut point = Vector3::new(plane[0] * plane[3], plane[1] * plane[3], plane[2] * plane[3]);
+    let mut point = Vector3::new(
+        plane[0] * plane[3],
+        plane[1] * plane[3],
+        plane[2] * plane[3],
+    );
     // n' = ~m * n with the inverse of the upper 3x3.
     let mut normal = Vector3::new(plane[0], plane[1], plane[2]);
     let mut inv = matrix.submatrix();
@@ -4802,20 +6397,32 @@ pub fn plane_mult_right(plane: [f64; 4], matrix: &Matrix4) -> [f64; 4] {
 /// ClipPlane.push: the plane of an enabled ClipPlane in the space of `model_view`
 /// (ClipPlaneContainer.set): normal = plane.xyz, distanceFromOrigin = -plane.w, multRight.
 pub fn clip_plane(sg: &Sg, n: NodeId, model_view: &Matrix4) -> Option<[f64; 4]> {
-    let plane = sg.vec4(n, "plane", x3d_fields::math::Vector4::new(0.0, 1.0, 0.0, 0.0));
+    let plane = sg.vec4(
+        n,
+        "plane",
+        x3d_fields::math::Vector4::new(0.0, 1.0, 0.0, 0.0),
+    );
 
     // set_enabled__: enabled && plane != 0 0 0 0.
-    if !sg.bool(n, "enabled", true) || (plane.x == 0.0 && plane.y == 0.0 && plane.z == 0.0 && plane.w == 0.0) {
+    if !sg.bool(n, "enabled", true)
+        || (plane.x == 0.0 && plane.y == 0.0 && plane.z == 0.0 && plane.w == 0.0)
+    {
         return None;
     }
 
-    Some(plane_mult_right([plane.x, plane.y, plane.z, -plane.w], model_view))
+    Some(plane_mult_right(
+        [plane.x, plane.y, plane.z, -plane.w],
+        model_view,
+    ))
 }
 
 /// ClipPlanes2.glsl clip (): a point (in the planes' space) is discarded when
 /// `dot (vertex, normal) < distance` for any plane.
 pub fn is_clipped(planes: &[[f64; 4]], point: &Vector3) -> bool {
-    planes.iter().take(MAX_CLIP_PLANES).any(|p| point.x * p[0] + point.y * p[1] + point.z * p[2] < p[3])
+    planes
+        .iter()
+        .take(MAX_CLIP_PLANES)
+        .any(|p| point.x * p[0] + point.y * p[1] + point.z * p[2] < p[3])
 }
 
 /// The browser default material: UnlitMaterial, emissiveColor 1 1 1.
@@ -4845,11 +6452,21 @@ fn material_params(sg: &Sg, m: NodeId, has_normals: bool, front: bool) -> Option
     // constructor replaces getMaterialKey (2, Phong) with the Shading dependent one for a
     // specification version <= 3.3; TwoSidedMaterial uses Material .prototype .getMaterialKey.
     let lit = |s: Shading| if has_normals { s } else { Shading::Unlit };
-    let legacy = sg.rt.scene.spec_version_of(sg.rt.scene.node(m).ctx).trim().parse::<f64>().is_ok_and(|v| v <= 3.3);
+    let legacy = sg
+        .rt
+        .scene
+        .spec_version_of(sg.rt.scene.node(m).ctx)
+        .trim()
+        .parse::<f64>()
+        .is_ok_and(|v| v <= 3.3);
 
     match sg.type_name(m)? {
         "Material" => Some(MaterialParams {
-            shading: lit(if legacy { Shading::Gouraud } else { Shading::Phong }),
+            shading: lit(if legacy {
+                Shading::Gouraud
+            } else {
+                Shading::Phong
+            }),
             diffuse: sg.color(m, "diffuseColor", [0.8, 0.8, 0.8]),
             ambient_intensity: sg.f64(m, "ambientIntensity", 0.2).clamp(0.0, 1.0),
             specular: sg.color(m, "specularColor", [0.0, 0.0, 0.0]),
@@ -4898,7 +6515,13 @@ fn material_params(sg: &Sg, m: NodeId, has_normals: bool, front: bool) -> Option
         }),
         "TwoSidedMaterial" => {
             let back = !front && sg.bool(m, "separateBackColor", false);
-            let f = |name: &str| if back { format!("back{}{}", name[..1].to_uppercase(), &name[1..]) } else { name.to_string() };
+            let f = |name: &str| {
+                if back {
+                    format!("back{}{}", name[..1].to_uppercase(), &name[1..])
+                } else {
+                    name.to_string()
+                }
+            };
 
             // set_ambientIntensity__: Math .max (value, 0), no upper clamp.
             Some(MaterialParams {
@@ -4920,7 +6543,11 @@ fn material_params(sg: &Sg, m: NodeId, has_normals: bool, front: bool) -> Option
 fn material_transparent(sg: &Sg, m: NodeId, params: &MaterialParams) -> bool {
     match sg.type_name(m) {
         // TwoSidedMaterial.set_transparent__: the field values, not the clamped ones.
-        Some("TwoSidedMaterial") => sg.f64(m, "transparency", 0.0) != 0.0 || (sg.bool(m, "separateBackColor", false) && sg.f64(m, "backTransparency", 0.0) != 0.0),
+        Some("TwoSidedMaterial") => {
+            sg.f64(m, "transparency", 0.0) != 0.0
+                || (sg.bool(m, "separateBackColor", false)
+                    && sg.f64(m, "backTransparency", 0.0) != 0.0)
+        }
         // UnlitMaterial.set_transparent__: transparency || emissiveTexture .isTransparent (); the
         // texture's part is decided where the texture is loaded (`shape`).
         _ => params.transparency > 0.0,
@@ -4929,8 +6556,12 @@ fn material_transparent(sg: &Sg, m: NodeId, params: &MaterialParams) -> bool {
 
 /// BlendMode.set_*__: unknown names fall back to the field defaults.
 fn blend_params(sg: &Sg, b: NodeId) -> BlendParams {
-    let factor = |name: &str, default: BlendFactor| BlendFactor::from_name(&sg.string(b, name, "")).unwrap_or(default);
-    let equation = |name: &str| BlendEquation::from_name(&sg.string(b, name, "")).unwrap_or(BlendEquation::Add);
+    let factor = |name: &str, default: BlendFactor| {
+        BlendFactor::from_name(&sg.string(b, name, "")).unwrap_or(default)
+    };
+    let equation = |name: &str| {
+        BlendEquation::from_name(&sg.string(b, name, "")).unwrap_or(BlendEquation::Add)
+    };
 
     BlendParams {
         color: sg.color4(b, "blendColor", [0.0; 4]),
@@ -4972,18 +6603,26 @@ fn depth_params(sg: &Sg, d: NodeId) -> DepthParams {
 pub fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<StyleParams> {
     match geometry_type {
         0 => {
-            let p = sg.node(appearance, "pointProperties").filter(|p| sg.type_name(*p) == Some("PointProperties"))?;
+            let p = sg
+                .node(appearance, "pointProperties")
+                .filter(|p| sg.type_name(*p) == Some("PointProperties"))?;
             let a = sg.vec3(p, "attenuation", Vector3::new(1.0, 0.0, 0.0));
 
             Some(StyleParams::Point(PointParams {
                 scale_factor: sg.f64(p, "pointSizeScaleFactor", 1.0).max(0.0),
-                min_value: sg.f64(p, "pointSizeMinValue", 1.0).clamp(0.0, MAX_POINT_SIZE),
-                max_value: sg.f64(p, "pointSizeMaxValue", 1.0).clamp(0.0, MAX_POINT_SIZE),
+                min_value: sg
+                    .f64(p, "pointSizeMinValue", 1.0)
+                    .clamp(0.0, MAX_POINT_SIZE),
+                max_value: sg
+                    .f64(p, "pointSizeMaxValue", 1.0)
+                    .clamp(0.0, MAX_POINT_SIZE),
                 attenuation: [a.x.max(0.0), a.y.max(0.0), a.z.max(0.0)],
             }))
         }
         1 => {
-            let l = sg.node(appearance, "lineProperties").filter(|l| sg.type_name(*l) == Some("LineProperties"))?;
+            let l = sg
+                .node(appearance, "lineProperties")
+                .filter(|l| sg.type_name(*l) == Some("LineProperties"))?;
 
             if !sg.bool(l, "applied", true) {
                 return None;
@@ -4992,12 +6631,18 @@ pub fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<St
             let linetype = sg.i32(l, "linetype", 1);
 
             Some(StyleParams::Line(LineParams {
-                linetype: if (1..=16).contains(&linetype) { linetype } else { 1 },
+                linetype: if (1..=16).contains(&linetype) {
+                    linetype
+                } else {
+                    1
+                },
                 width: sg.f64(l, "linewidthScaleFactor", 0.0).max(1.0),
             }))
         }
         _ => {
-            let f = sg.node(appearance, "fillProperties").filter(|f| sg.type_name(*f) == Some("FillProperties"))?;
+            let f = sg
+                .node(appearance, "fillProperties")
+                .filter(|f| sg.type_name(*f) == Some("FillProperties"))?;
             let style = sg.i32(f, "hatchStyle", 1);
 
             Some(StyleParams::Fill(FillParams {
@@ -5016,7 +6661,18 @@ mod background_rotation_tests {
 
     fn sphere_matrix(view: &Matrix4) -> [f64; 16] {
         let sky = [[0.1f32, 0.2, 0.3]];
-        let p = background_build(&sky, &[], &[], &[], 0.0, vec![], &Matrix4::IDENTITY, view, 100.0).unwrap();
+        let p = background_build(
+            &sky,
+            &[],
+            &[],
+            &[],
+            0.0,
+            vec![],
+            &Matrix4::IDENTITY,
+            view,
+            100.0,
+        )
+        .unwrap();
         p.model_view.0
     }
 
@@ -5041,7 +6697,10 @@ mod background_rotation_tests {
         let b = sphere_matrix(&scaled);
 
         for i in 0..16 {
-            assert!(a[i].is_finite() && (a[i] - b[i]).abs() < 1e-9, "{i}: {a:?} {b:?}");
+            assert!(
+                a[i].is_finite() && (a[i] - b[i]).abs() < 1e-9,
+                "{i}: {a:?} {b:?}"
+            );
         }
 
         assert!((a[0] - 100.0 * 0.7f64.cos()).abs() < 1e-9, "{a:?}");

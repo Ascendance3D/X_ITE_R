@@ -26,7 +26,9 @@ pub struct Stats {
 }
 
 pub fn load_png(path: &Path) -> Result<(u32, u32, Vec<u8>), String> {
-    let img = image::open(path).map_err(|e| format!("{}: {e}", path.display()))?.to_rgba8();
+    let img = image::open(path)
+        .map_err(|e| format!("{}: {e}", path.display()))?
+        .to_rgba8();
     let (w, h) = img.dimensions();
     Ok((w, h, img.into_raw()))
 }
@@ -37,7 +39,12 @@ fn luma(p: &[u8]) -> f64 {
 
 pub fn compare(w: u32, h: u32, a: &[u8], b: &[u8], threshold: u8) -> Stats {
     let n = (w * h) as usize;
-    let mut s = Stats { width: w, height: h, threshold, ..Default::default() };
+    let mut s = Stats {
+        width: w,
+        height: h,
+        threshold,
+        ..Default::default()
+    };
     let mut sq = 0.0f64;
     let mut abs = 0.0f64;
 
@@ -59,7 +66,11 @@ pub fn compare(w: u32, h: u32, a: &[u8], b: &[u8], threshold: u8) -> Stats {
     let mse = sq / (3 * n) as f64;
     s.mean_abs = abs / (3 * n) as f64;
     s.pct_over = 100.0 * s.pixels_over as f64 / n as f64;
-    s.psnr = if mse == 0.0 { f64::INFINITY } else { 10.0 * (255.0f64 * 255.0 / mse).log10() };
+    s.psnr = if mse == 0.0 {
+        f64::INFINITY
+    } else {
+        10.0 * (255.0f64 * 255.0 / mse).log10()
+    };
     s.ssim = ssim(w, h, a, b);
     s
 }
@@ -98,14 +109,19 @@ fn ssim(w: u32, h: u32, a: &[u8], b: &[u8]) -> f64 {
             va /= k - 1.0;
             vb /= k - 1.0;
             cov /= k - 1.0;
-            total += ((2.0 * ma * mb + c1) * (2.0 * cov + c2)) / ((ma * ma + mb * mb + c1) * (va + vb + c2));
+            total += ((2.0 * ma * mb + c1) * (2.0 * cov + c2))
+                / ((ma * ma + mb * mb + c1) * (va + vb + c2));
             count += 1;
             x += 4;
         }
         y += 4;
     }
 
-    if count == 0 { 1.0 } else { total / count as f64 }
+    if count == 0 {
+        1.0
+    } else {
+        total / count as f64
+    }
 }
 
 /// Side by side: oracle | rust | difference (×8, red where over threshold).
@@ -121,10 +137,16 @@ pub fn diff_image(w: u32, h: u32, a: &[u8], b: &[u8], threshold: u8) -> Vec<u8> 
                 out[(row + x as usize) * 4 + c] = if c == 3 { 255 } else { a[i + c] };
                 out[(row + (w + x) as usize) * 4 + c] = if c == 3 { 255 } else { b[i + c] };
             }
-            let d: Vec<i32> = (0..3).map(|c| (a[i + c] as i32 - b[i + c] as i32).abs()).collect();
+            let d: Vec<i32> = (0..3)
+                .map(|c| (a[i + c] as i32 - b[i + c] as i32).abs())
+                .collect();
             let m = *d.iter().max().unwrap();
             let g = (m * 8).min(255) as u8;
-            let px: [u8; 4] = if m > threshold as i32 { [255, (m * 4).min(255) as u8, 0, 255] } else { [g, g, g, 255] };
+            let px: [u8; 4] = if m > threshold as i32 {
+                [255, (m * 4).min(255) as u8, 0, 255]
+            } else {
+                [g, g, g, 255]
+            };
             let o = (row + (2 * w + x) as usize) * 4;
             out[o..o + 4].copy_from_slice(&px);
         }

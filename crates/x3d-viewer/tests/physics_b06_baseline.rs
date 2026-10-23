@@ -17,10 +17,20 @@ fn root() -> PathBuf {
 /// Runs x3d-drive on NAME and returns (baseline physics, our physics).
 fn run(name: &str) -> (Value, Value) {
     let oracle = root().join("oracle");
-    let world = oracle.join("synthetic-rea-b06").join(format!("{name}.x3dv"));
-    let script = oracle.join("synthetic-rea-b06/scripts").join(format!("{name}.json"));
-    let js_path = oracle.join("rea-batch06-baseline").join(name).join("js.json");
-    let out = std::env::temp_dir().join(format!("x3d-physics-b06-{}-{name}.json", std::process::id()));
+    let world = oracle
+        .join("synthetic-rea-b06")
+        .join(format!("{name}.x3dv"));
+    let script = oracle
+        .join("synthetic-rea-b06/scripts")
+        .join(format!("{name}.json"));
+    let js_path = oracle
+        .join("rea-batch06-baseline")
+        .join(name)
+        .join("js.json");
+    let out = std::env::temp_dir().join(format!(
+        "x3d-physics-b06-{}-{name}.json",
+        std::process::id()
+    ));
     let r = Command::new(env!("CARGO_BIN_EXE_x3d-drive"))
         .args([world.as_os_str(), script.as_os_str()])
         .arg("--oracle")
@@ -32,7 +42,11 @@ fn run(name: &str) -> (Value, Value) {
         .output()
         .expect("x3d-drive");
 
-    assert!(r.status.success(), "{name}: x3d-drive failed: {}", String::from_utf8_lossy(&r.stderr));
+    assert!(
+        r.status.success(),
+        "{name}: x3d-drive failed: {}",
+        String::from_utf8_lossy(&r.stderr)
+    );
 
     let rs: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap()).unwrap();
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
@@ -58,9 +72,14 @@ fn first_difference(path: &str, a: &Value, b: &Value) -> Option<String> {
             if x.len() != y.len() {
                 return Some(format!("{path}: {} items vs {}", x.len(), y.len()));
             }
-            x.iter().zip(y).enumerate().find_map(|(i, (v, w))| first_difference(&format!("{path}[{i}]"), v, w))
+            x.iter()
+                .zip(y)
+                .enumerate()
+                .find_map(|(i, (v, w))| first_difference(&format!("{path}[{i}]"), v, w))
         }
-        (Value::Number(x), Value::Number(y)) => (x.as_f64() != y.as_f64()).then(|| format!("{path}: {x} vs {y}")),
+        (Value::Number(x), Value::Number(y)) => {
+            (x.as_f64() != y.as_f64()).then(|| format!("{path}: {x} vs {y}"))
+        }
         _ => (a != b).then(|| format!("{path}: {a} vs {b}")),
     }
 }
@@ -68,9 +87,19 @@ fn first_difference(path: &str, a: &Value, b: &Value) -> Option<String> {
 fn exact(name: &str) {
     let (js, rs) = run(name);
 
-    assert!(js["frames"].as_object().is_some_and(|f| f.len() > 1), "{name}: the baseline has no frames");
-    assert!(js["dt"].is_array(), "{name}: the baseline has no time step log");
-    assert_eq!(first_difference("", &js, &rs), None, "{name}: x3d-drive differs from X_ITE");
+    assert!(
+        js["frames"].as_object().is_some_and(|f| f.len() > 1),
+        "{name}: the baseline has no frames"
+    );
+    assert!(
+        js["dt"].is_array(),
+        "{name}: the baseline has no time step log"
+    );
+    assert_eq!(
+        first_difference("", &js, &rs),
+        None,
+        "{name}: x3d-drive differs from X_ITE"
+    );
 }
 
 macro_rules! exact_cases {
@@ -136,14 +165,32 @@ fn quirks_of_x_ite_are_in_the_baselines_and_in_ours() {
 
         assert_eq!(first_difference("", &js, &rs), None);
 
-        let last = js["frames"].as_object().unwrap().keys().max_by_key(|k| k.parse::<u64>().unwrap()).unwrap().clone();
+        let last = js["frames"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .max_by_key(|k| k.parse::<u64>().unwrap())
+            .unwrap()
+            .clone();
 
         for (path, node) in rs["frames"][&last].as_object().unwrap() {
             if node["type"] == "UniversalJoint" || node["type"] == "MotorJoint" {
-                for (field, v) in node.as_object().unwrap().iter().filter(|(f, _)| *f != "type") {
-                    let zero = |v: &Value| v.as_f64() == Some(0.0) || v.as_array().is_some_and(|a| a.iter().all(|x| x.as_f64() == Some(0.0)));
+                for (field, v) in node
+                    .as_object()
+                    .unwrap()
+                    .iter()
+                    .filter(|(f, _)| *f != "type")
+                {
+                    let zero = |v: &Value| {
+                        v.as_f64() == Some(0.0)
+                            || v.as_array()
+                                .is_some_and(|a| a.iter().all(|x| x.as_f64() == Some(0.0)))
+                    };
 
-                    assert!(zero(v), "{name}: {path}.{field} = {v}: an unsupported joint reports nothing");
+                    assert!(
+                        zero(v),
+                        "{name}: {path}.{field} = {v}: an unsupported joint reports nothing"
+                    );
                 }
             }
         }

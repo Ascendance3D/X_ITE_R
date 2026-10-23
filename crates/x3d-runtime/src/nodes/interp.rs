@@ -65,7 +65,9 @@ impl Runtime {
             // CoordinateInterpolator(2D) do not watch keyValue.
             "CoordinateInterpolator" | "CoordinateInterpolator2D" => {}
             "EaseInEaseOut" => self.interest(node, "easeInEaseOut", Cb::InterpSetKeyValue),
-            "SplinePositionInterpolator" | "SplinePositionInterpolator2D" | "SplineScalarInterpolator" => {
+            "SplinePositionInterpolator"
+            | "SplinePositionInterpolator2D"
+            | "SplineScalarInterpolator" => {
                 self.interest(node, "keyValue", Cb::InterpSetKeyValue);
                 self.interest(node, "keyVelocity", Cb::SplineSetKeyVelocity);
                 self.interest(node, "normalizeVelocity", Cb::SplineSetNormalizeVelocity);
@@ -136,14 +138,26 @@ impl Runtime {
         let fill: Vec<f64> = match &v {
             FieldValue::MFFloat(a) => vec![a.last().copied().unwrap_or(0.0) as f64],
             FieldValue::MFVec3f(a) | FieldValue::MFColor(a) | FieldValue::MFVec2f(a) => {
-                if len > 0 { a[a.len() - comps..].iter().map(|x| *x as f64).collect() } else { vec![0.0; comps] }
+                if len > 0 {
+                    a[a.len() - comps..].iter().map(|x| *x as f64).collect()
+                } else {
+                    vec![0.0; comps]
+                }
             }
             FieldValue::MFVec3d(a) => {
-                if len > 0 { a[a.len() - comps..].to_vec() } else { vec![0.0; comps] }
+                if len > 0 {
+                    a[a.len() - comps..].to_vec()
+                } else {
+                    vec![0.0; comps]
+                }
             }
             // new SFRotation () is 0 0 1 0.
             FieldValue::MFRotation(a) => {
-                if len > 0 { a[a.len() - 4..].to_vec() } else { vec![0.0, 0.0, 1.0, 0.0] }
+                if len > 0 {
+                    a[a.len() - 4..].to_vec()
+                } else {
+                    vec![0.0, 0.0, 1.0, 0.0]
+                }
             }
             _ => return,
         };
@@ -164,7 +178,9 @@ impl Runtime {
                 self.resize_to_key(node, "easeInEaseOut");
                 return self.refresh_fraction(node);
             }
-            "SplinePositionInterpolator" | "SplinePositionInterpolator2D" | "SplineScalarInterpolator" => {
+            "SplinePositionInterpolator"
+            | "SplinePositionInterpolator2D"
+            | "SplineScalarInterpolator" => {
                 self.resize_key_value(node);
                 return self.spline_set_key_velocity(node);
             }
@@ -177,17 +193,21 @@ impl Runtime {
         }
 
         match name {
-            "PositionInterpolator" | "OrientationInterpolator" | "ScalarInterpolator" | "PositionInterpolator2D" | "ColorInterpolator" | "GeoPositionInterpolator" => {
-                self.resize_key_value(node)
-            }
+            "PositionInterpolator"
+            | "OrientationInterpolator"
+            | "ScalarInterpolator"
+            | "PositionInterpolator2D"
+            | "ColorInterpolator"
+            | "GeoPositionInterpolator" => self.resize_key_value(node),
             _ => {}
         }
 
         if name == "ColorInterpolator" {
             let hsv: Vec<[f64; 3]> = match self.pre_value(node, "keyValue") {
-                Some(FieldValue::MFColor(a)) => {
-                    a.chunks(3).map(|c| Color3::new(c[0] as f64, c[1] as f64, c[2] as f64).get_hsv()).collect()
-                }
+                Some(FieldValue::MFColor(a)) => a
+                    .chunks(3)
+                    .map(|c| Color3::new(c[0] as f64, c[1] as f64, c[2] as f64).get_hsv())
+                    .collect(),
                 _ => vec![],
             };
 
@@ -196,14 +216,20 @@ impl Runtime {
 
         // "If there was already an set_fraction event in this frame": the modification time is
         // wall-clock time, always >= the frozen browser time once set.
-        if self.pre(node, "set_fraction").is_some_and(|k| self.field(k).modified) {
+        if self
+            .pre(node, "set_fraction")
+            .is_some_and(|k| self.field(k).modified)
+        {
             self.interp_set_fraction(node);
         }
     }
 
     /// "If there was already an set_fraction event in this frame, send a new value_changed".
     fn refresh_fraction(&mut self, node: NodeId) {
-        if self.pre(node, "set_fraction").is_some_and(|k| self.field(k).modified) {
+        if self
+            .pre(node, "set_fraction")
+            .is_some_and(|k| self.field(k).modified)
+        {
             self.interp_set_fraction(node);
         }
     }
@@ -216,12 +242,20 @@ impl Runtime {
             Some(FieldValue::MFVec3f(a)) => (3, a),
             _ => return (1, vec![]),
         };
-        (n, a.chunks(n).map(|c| c.iter().map(|x| *x as f64).collect()).collect())
+        (
+            n,
+            a.chunks(n)
+                .map(|c| c.iter().map(|x| *x as f64).collect())
+                .collect(),
+        )
     }
 
     /// set_keyVelocity__ of the spline interpolators.
     pub(crate) fn spline_set_key_velocity(&mut self, node: NodeId) {
-        let len = self.pre_value(node, "keyVelocity").map(|v| v.len()).unwrap_or(0);
+        let len = self
+            .pre_value(node, "keyVelocity")
+            .map(|v| v.len())
+            .unwrap_or(0);
 
         if len > 0 && len < self.key(node).len() {
             // keyVelocity .resize (key .length, new SFVec3f ()): zero elements.
@@ -256,20 +290,31 @@ impl Runtime {
         let closed = self.get_bool(node, "closed");
         let key_len = self.key(node).len();
         let kv: Vec<Rotation4> = match self.pre_value(node, "keyValue") {
-            Some(FieldValue::MFRotation(a)) => a.chunks(4).map(|c| Rotation4::new(c[0], c[1], c[2], c[3])).collect(),
+            Some(FieldValue::MFRotation(a)) => a
+                .chunks(4)
+                .map(|c| Rotation4::new(c[0], c[1], c[2], c[3]))
+                .collect(),
             _ => vec![],
         };
         let at = |i: usize| kv.get(i).copied().unwrap_or_default();
         let mut s = vec![];
 
         if key_len > 1 {
-            s.push(if closed { Rotation4::spline(&at(key_len - 2), &at(0), &at(1)) } else { at(0) });
+            s.push(if closed {
+                Rotation4::spline(&at(key_len - 2), &at(0), &at(1))
+            } else {
+                at(0)
+            });
 
             for i in 1..key_len - 1 {
                 s.push(Rotation4::spline(&at(i - 1), &at(i), &at(i + 1)));
             }
 
-            s.push(if closed { Rotation4::spline(&at(key_len - 2), &at(key_len - 1), &at(1)) } else { at(key_len - 1) });
+            s.push(if closed {
+                Rotation4::spline(&at(key_len - 2), &at(key_len - 1), &at(1))
+            } else {
+                at(key_len - 1)
+            });
         } else if key_len > 0 {
             s.push(at(0));
         }
@@ -281,23 +326,38 @@ impl Runtime {
         let name = self.builtin_name(node).unwrap_or("");
 
         match name {
-            "GeoPositionInterpolator" => return self.geo_position_interpolate(node, index0, index1, weight),
+            "GeoPositionInterpolator" => {
+                return self.geo_position_interpolate(node, index0, index1, weight);
+            }
             "EaseInEaseOut" => {
                 let (_, e) = self.elements(node, "easeInEaseOut");
-                let (Some(e0), Some(e1), Some(out)) = (e.get(index0), e.get(index1), self.pre(node, "modifiedFraction_changed")) else {
+                let (Some(e0), Some(e1), Some(out)) = (
+                    e.get(index0),
+                    e.get(index1),
+                    self.pre(node, "modifiedFraction_changed"),
+                ) else {
                     return;
                 };
                 let value = ease_in_ease_out(e0[1], e1[0], weight);
                 return self.set_value(out, FieldValue::SFFloat(value));
             }
-            "SplinePositionInterpolator" | "SplinePositionInterpolator2D" | "SplineScalarInterpolator" => {
+            "SplinePositionInterpolator"
+            | "SplinePositionInterpolator2D"
+            | "SplineScalarInterpolator" => {
                 let (n, kv) = self.elements(node, "keyValue");
                 let Some(State::Spline { t0, t1 }) = self.nrt(node).map(|n| &n.state) else {
                     return;
                 };
                 let nan = vec![f64::NAN; n];
-                let pick = |v: &Vec<Vec<f64>>, i: usize| v.get(i).cloned().unwrap_or_else(|| nan.clone());
-                let v = catmull_rom_interpolate(weight, &pick(&kv, index0), &pick(&kv, index1), &pick(t0, index0), &pick(t1, index1));
+                let pick =
+                    |v: &Vec<Vec<f64>>, i: usize| v.get(i).cloned().unwrap_or_else(|| nan.clone());
+                let v = catmull_rom_interpolate(
+                    weight,
+                    &pick(&kv, index0),
+                    &pick(&kv, index1),
+                    &pick(t0, index0),
+                    &pick(t1, index1),
+                );
                 let Some(out) = self.pre(node, "value_changed") else {
                     return;
                 };
@@ -310,13 +370,18 @@ impl Runtime {
             }
             "SquadOrientationInterpolator" => {
                 let kv: Vec<Rotation4> = match self.pre_value(node, "keyValue") {
-                    Some(FieldValue::MFRotation(a)) => a.chunks(4).map(|c| Rotation4::new(c[0], c[1], c[2], c[3])).collect(),
+                    Some(FieldValue::MFRotation(a)) => a
+                        .chunks(4)
+                        .map(|c| Rotation4::new(c[0], c[1], c[2], c[3]))
+                        .collect(),
                     _ => return,
                 };
                 let Some(State::Squad { s }) = self.nrt(node).map(|n| &n.state) else {
                     return;
                 };
-                let (Some(a), Some(b), Some(r0), Some(r1)) = (s.get(index0), s.get(index1), kv.get(index0), kv.get(index1)) else {
+                let (Some(a), Some(b), Some(r0), Some(r1)) =
+                    (s.get(index0), s.get(index1), kv.get(index0), kv.get(index1))
+                else {
                     return;
                 };
                 let mut r = *r0;
@@ -338,7 +403,9 @@ impl Runtime {
 
         match (name, &kv) {
             ("PositionInterpolator", FieldValue::MFVec3f(a)) => {
-                let get = |i: usize| Vector3::new(a[i * 3] as f64, a[i * 3 + 1] as f64, a[i * 3 + 2] as f64);
+                let get = |i: usize| {
+                    Vector3::new(a[i * 3] as f64, a[i * 3 + 1] as f64, a[i * 3 + 2] as f64)
+                };
                 let mut v = get(index0);
                 v.lerp(&get(index1), weight);
                 self.set_value(out, FieldValue::SFVec3f(v));
@@ -350,7 +417,8 @@ impl Runtime {
                 self.set_value(out, FieldValue::SFVec2f(v));
             }
             ("OrientationInterpolator", FieldValue::MFRotation(a)) => {
-                let get = |i: usize| Rotation4::new(a[i * 4], a[i * 4 + 1], a[i * 4 + 2], a[i * 4 + 3]);
+                let get =
+                    |i: usize| Rotation4::new(a[i * 4], a[i * 4 + 1], a[i * 4 + 2], a[i * 4 + 3]);
                 let mut r = get(index0);
                 r.slerp(&get(index1), weight);
                 self.set_value(out, FieldValue::SFRotation(r));
@@ -377,26 +445,46 @@ impl Runtime {
                 c.set_hsv(h, s, v);
                 self.set_value(out, FieldValue::SFColor(c));
             }
-            ("CoordinateInterpolator", FieldValue::MFVec3f(a)) | ("CoordinateInterpolator2D", FieldValue::MFVec2f(a)) => {
-                let comps = if name == "CoordinateInterpolator" { 3 } else { 2 };
+            ("CoordinateInterpolator", FieldValue::MFVec3f(a))
+            | ("CoordinateInterpolator2D", FieldValue::MFVec2f(a)) => {
+                let comps = if name == "CoordinateInterpolator" {
+                    3
+                } else {
+                    2
+                };
                 let key_len = self.key(node).len();
-                let size = if key_len > 0 { (a.len() / comps) / key_len } else { 0 };
+                let size = if key_len > 0 {
+                    (a.len() / comps) / key_len
+                } else {
+                    0
+                };
                 let i0 = index0 * size;
                 let i1 = i0 + if key_len > 1 { size } else { 0 };
                 let mut out_v = vec![0f32; size * comps];
 
                 for (j, o) in out_v.iter_mut().enumerate() {
-                    let (x0, x1) = (a.get(i0 * comps + j).copied().unwrap_or(0.0) as f64, a.get(i1 * comps + j).copied().unwrap_or(0.0) as f64);
+                    let (x0, x1) = (
+                        a.get(i0 * comps + j).copied().unwrap_or(0.0) as f64,
+                        a.get(i1 * comps + j).copied().unwrap_or(0.0) as f64,
+                    );
                     *o = (x0 + weight * (x1 - x0)) as f32;
                 }
 
-                let v = if comps == 3 { FieldValue::MFVec3f(out_v) } else { FieldValue::MFVec2f(out_v) };
+                let v = if comps == 3 {
+                    FieldValue::MFVec3f(out_v)
+                } else {
+                    FieldValue::MFVec2f(out_v)
+                };
                 self.set_value(out, v);
             }
             ("NormalInterpolator", FieldValue::MFVec3f(a)) => {
                 // NormalInterpolator.interpolate: Algorithm.simpleSlerp per normal.
                 let key_len = self.key(node).len();
-                let size = if key_len > 0 { (a.len() / 3) / key_len } else { 0 };
+                let size = if key_len > 0 {
+                    (a.len() / 3) / key_len
+                } else {
+                    0
+                };
                 let i0 = index0 * size * 3;
                 let i1 = (index0 * size + if key_len > 1 { size } else { 0 }) * 3;
                 let mut out_v = vec![0f32; size * 3];
@@ -422,7 +510,8 @@ impl Runtime {
 /// Algorithm.slerp (source, destination, t, short = false) on Vector3 (the `w` it also
 /// writes is an ignored expando on a Vector3).
 pub fn simple_slerp3(source: [f64; 3], destination: [f64; 3], t: f64) -> [f64; 3] {
-    let cosom = source[0] * destination[0] + source[1] * destination[1] + source[2] * destination[2];
+    let cosom =
+        source[0] * destination[0] + source[1] * destination[1] + source[2] * destination[2];
 
     if cosom >= 1.0 {
         return source;
@@ -476,11 +565,22 @@ fn scale(a: &[f64], f: f64) -> Vec<f64> {
 
 /// `magnitude`: Math.abs for scalars, Vector.norm (Math.hypot) otherwise.
 fn magnitude(a: &[f64]) -> f64 {
-    if a.len() == 1 { a[0].abs() } else { jsmath::hypot(a) }
+    if a.len() == 1 {
+        a[0].abs()
+    } else {
+        jsmath::hypot(a)
+    }
 }
 
 /// CatmullRomSplineInterpolator.generate (T0, T1) for elements of `n` components.
-pub fn catmull_rom_generate(n: usize, closed: bool, key: &[f64], key_value: &[Vec<f64>], key_velocity: &[Vec<f64>], normalize: bool) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
+pub fn catmull_rom_generate(
+    n: usize,
+    closed: bool,
+    key: &[f64],
+    key_value: &[Vec<f64>],
+    key_velocity: &[Vec<f64>],
+    normalize: bool,
+) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
     let zero = vec![0.0; n];
     let nan = vec![f64::NAN; n];
     let kv = |i: usize| key_value.get(i).cloned().unwrap_or_else(|| nan.clone());
@@ -493,10 +593,22 @@ pub fn catmull_rom_generate(n: usize, closed: bool, key: &[f64], key_value: &[Ve
 
     if key_velocity.is_empty() {
         let len = key_value.len();
-        t.push(if closed { sub(&kv(1), &kv(len.wrapping_sub(2))).iter().map(|x| x / 2.0).collect() } else { zero.clone() });
+        t.push(if closed {
+            sub(&kv(1), &kv(len.wrapping_sub(2)))
+                .iter()
+                .map(|x| x / 2.0)
+                .collect()
+        } else {
+            zero.clone()
+        });
 
         for i in 1..len.saturating_sub(1) {
-            t.push(sub(&kv(i + 1), &kv(i - 1)).iter().map(|x| x / 2.0).collect());
+            t.push(
+                sub(&kv(i + 1), &kv(i - 1))
+                    .iter()
+                    .map(|x| x / 2.0)
+                    .collect(),
+            );
         }
 
         let first = t[0].clone();
@@ -542,15 +654,36 @@ pub fn catmull_rom_generate(n: usize, closed: bool, key: &[f64], key_value: &[Ve
     fm.push(fm[0]);
     fp.push(fp[0]);
 
-    let t0 = t.iter().enumerate().map(|(i, v)| scale(v, fp.get(i).copied().unwrap_or(f64::NAN))).collect();
-    let t1 = t.iter().enumerate().map(|(i, v)| scale(v, fm.get(i).copied().unwrap_or(f64::NAN))).collect();
+    let t0 = t
+        .iter()
+        .enumerate()
+        .map(|(i, v)| scale(v, fp.get(i).copied().unwrap_or(f64::NAN)))
+        .collect();
+    let t1 = t
+        .iter()
+        .enumerate()
+        .map(|(i, v)| scale(v, fm.get(i).copied().unwrap_or(f64::NAN)))
+        .collect();
     (t0, t1)
 }
 
 /// CatmullRomSplineInterpolator.interpolate: SH = H · (w³, w², w, 1), then the dot product.
-pub fn catmull_rom_interpolate(weight: f64, c0: &[f64], c1: &[f64], c2: &[f64], c3: &[f64]) -> Vec<f64> {
-    const H: [f64; 16] = [2.0, -2.0, 1.0, 1.0, -3.0, 3.0, -2.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0];
-    let (x, y, z, w) = (jsmath::pow(weight, 3.0), jsmath::pow(weight, 2.0), weight, 1.0);
+pub fn catmull_rom_interpolate(
+    weight: f64,
+    c0: &[f64],
+    c1: &[f64],
+    c2: &[f64],
+    c3: &[f64],
+) -> Vec<f64> {
+    const H: [f64; 16] = [
+        2.0, -2.0, 1.0, 1.0, -3.0, 3.0, -2.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+    ];
+    let (x, y, z, w) = (
+        jsmath::pow(weight, 3.0),
+        jsmath::pow(weight, 2.0),
+        weight,
+        1.0,
+    );
     let sh = [
         x * H[0] + y * H[4] + z * H[8] + w * H[12],
         x * H[1] + y * H[5] + z * H[9] + w * H[13],
@@ -558,5 +691,7 @@ pub fn catmull_rom_interpolate(weight: f64, c0: &[f64], c1: &[f64], c2: &[f64], 
         x * H[3] + y * H[7] + z * H[11] + w * H[15],
     ];
 
-    (0..c0.len()).map(|i| c0[i] * sh[0] + c1[i] * sh[1] + c2[i] * sh[2] + c3[i] * sh[3]).collect()
+    (0..c0.len())
+        .map(|i| c0[i] * sh[0] + c1[i] * sh[1] + c2[i] * sh[2] + c3[i] * sh[3])
+        .collect()
 }

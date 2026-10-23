@@ -21,15 +21,29 @@ fn run_events(name: &str) {
 
     big(move || {
         let o = oracle();
-        let script = json(&o.join("synthetic-rea-b06/events").join(format!("particles-events-{name}.json")));
+        let script = json(
+            &o.join("synthetic-rea-b06/events")
+                .join(format!("particles-events-{name}.json")),
+        );
         let base = Baseline::load(&format!("particles-events-{name}"));
-        let run = replay(&o.join("synthetic-rea-b06/events").join(format!("particles-events-{name}.x3dv")), &script, base.seeds());
+        let run = replay(
+            &o.join("synthetic-rea-b06/events")
+                .join(format!("particles-events-{name}.x3dv")),
+            &script,
+            base.seeds(),
+        );
 
         compare_steps(&name, &base, &run);
 
         let max = compare_dumps(&name, &base.dumps(), &run.dumps);
 
-        println!("MAXERR\tevents-{name}\t{}", max.iter().map(|(g, m)| format!("{g}={m:.2e}")).collect::<Vec<_>>().join("\t"));
+        println!(
+            "MAXERR\tevents-{name}\t{}",
+            max.iter()
+                .map(|(g, m)| format!("{g}={m:.2e}"))
+                .collect::<Vec<_>>()
+                .join("\t")
+        );
         assert_eq!(run.dumps.len(), script["frames"].as_u64().unwrap() as usize);
     });
 }
@@ -57,19 +71,49 @@ fn max_particles_scenario_numbers() {
         let o = oracle();
         let script = json(&o.join("synthetic-rea-b06/events/particles-events-maxparticles.json"));
         let base = Baseline::load("particles-events-maxparticles");
-        let run = replay(&o.join("synthetic-rea-b06/events/particles-events-maxparticles.x3dv"), &script, base.seeds());
+        let run = replay(
+            &o.join("synthetic-rea-b06/events/particles-events-maxparticles.x3dv"),
+            &script,
+            base.seeds(),
+        );
         let at = |f: usize| &run.steps[f - 1];
 
         // (frame, numParticles, maxParticles, isActive) as read from X_ITE.
-        for (frame, num, max, active) in [(24, 8, 12, true), (25, 8, 20, true), (49, 20, 20, true), (50, 6, 6, true), (59, 6, 6, true), (60, 0, 6, false), (69, 0, 6, false), (70, 0, 6, true), (85, 0, 0, false), (90, 0, 10, true)] {
+        for (frame, num, max, active) in [
+            (24, 8, 12, true),
+            (25, 8, 20, true),
+            (49, 20, 20, true),
+            (50, 6, 6, true),
+            (59, 6, 6, true),
+            (60, 0, 6, false),
+            (69, 0, 6, false),
+            (70, 0, 6, true),
+            (85, 0, 0, false),
+            (90, 0, 10, true),
+        ] {
             let s = at(frame);
 
-            assert_eq!((s.num_particles, s.max_particles, s.is_active), (num, max, active), "frame {frame}");
+            assert_eq!(
+                (s.num_particles, s.max_particles, s.is_active),
+                (num, max, active),
+                "frame {frame}"
+            );
         }
 
         // The oracle's creationTime is reset to `Date.now ()` by every set_maxParticles__: after frames 25, 50, 60, 70, 85, 90.
-        for (frame, creation) in [(25, 0.8333333731), (50, 1.6666666269), (60, 2.0), (70, 2.3333333731), (85, 2.8333333731), (90, 3.0)] {
-            assert!((at(frame).creation_time - 946684800.0 - creation).abs() < 1e-9, "frame {frame}: creationTime {}", at(frame).creation_time - 946684800.0);
+        for (frame, creation) in [
+            (25, 0.8333333731),
+            (50, 1.6666666269),
+            (60, 2.0),
+            (70, 2.3333333731),
+            (85, 2.8333333731),
+            (90, 3.0),
+        ] {
+            assert!(
+                (at(frame).creation_time - 946684800.0 - creation).abs() < 1e-9,
+                "frame {frame}: creationTime {}",
+                at(frame).creation_time - 946684800.0
+            );
         }
     });
 }

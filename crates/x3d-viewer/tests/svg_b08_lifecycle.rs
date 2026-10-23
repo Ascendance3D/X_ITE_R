@@ -55,7 +55,12 @@ const SMALL: &str = r##"<svg xmlns="http://www.w3.org/2000/svg" width="40" heigh
 fn big(f: impl FnOnce() + Send + 'static) {
     let _guard = ONE_AT_A_TIME.lock().unwrap_or_else(|e| e.into_inner());
 
-    std::thread::Builder::new().stack_size(256 << 20).spawn(f).unwrap().join().unwrap();
+    std::thread::Builder::new()
+        .stack_size(256 << 20)
+        .spawn(f)
+        .unwrap()
+        .join()
+        .unwrap();
 }
 
 fn dir(tag: &str) -> PathBuf {
@@ -73,7 +78,13 @@ fn write(d: &Path, name: &str, text: &str) -> PathBuf {
 fn rss_kib() -> usize {
     std::fs::read_to_string("/proc/self/status")
         .ok()
-        .and_then(|s| s.lines().find_map(|l| l.strip_prefix("VmRSS:").and_then(|r| r.split_whitespace().next()).and_then(|n| n.parse().ok())))
+        .and_then(|s| {
+            s.lines().find_map(|l| {
+                l.strip_prefix("VmRSS:")
+                    .and_then(|r| r.split_whitespace().next())
+                    .and_then(|n| n.parse().ok())
+            })
+        })
         .unwrap_or(0)
 }
 
@@ -92,7 +103,10 @@ impl World {
     }
 
     fn named(&self, ctx: CtxId, name: &str) -> NodeId {
-        self.v.rt.scene.contexts[ctx].named_nodes.get(name).unwrap_or_else(|| panic!("no {name}"))
+        self.v.rt.scene.contexts[ctx]
+            .named_nodes
+            .get(name)
+            .unwrap_or_else(|| panic!("no {name}"))
     }
 
     fn set(&mut self, node: NodeId, name: &str, value: FieldValue) {
@@ -115,7 +129,15 @@ struct Resources {
 fn resources(rt: &Runtime) -> Resources {
     let s = &rt.scene;
 
-    Resources { live_nodes: s.nodes.len() - s.free_nodes.len(), arena: s.nodes.len(), arena_cap: s.nodes.capacity(), nrt: rt.nrt.len(), frt: rt.frt.len(), contexts: s.contexts.len(), live_watchers: rt.live_watchers.len() }
+    Resources {
+        live_nodes: s.nodes.len() - s.free_nodes.len(),
+        arena: s.nodes.len(),
+        arena_cap: s.nodes.capacity(),
+        nrt: rt.nrt.len(),
+        frt: rt.frt.len(),
+        contexts: s.contexts.len(),
+        live_watchers: rt.live_watchers.len(),
+    }
 }
 
 #[test]
@@ -126,8 +148,25 @@ fn an_svg_inline_comes_and_goes_100_cycles() {
         write(&d, "a.svg", BIG);
         write(&d, "b.svg", SMALL);
 
-        let main = write(&d, "main.x3dv", "#X3D V3.3 utf8\nPROFILE Full\nDEF Inl Inline { url \"a.svg\" }\n");
-        let mut w = World { v: Viewer3d::load_attributes(&main, Some(&d), T0, 64, 64, Some(60.0), false, ORACLE_PAGE_ATTRIBUTES).expect("load"), t: T0 };
+        let main = write(
+            &d,
+            "main.x3dv",
+            "#X3D V3.3 utf8\nPROFILE Full\nDEF Inl Inline { url \"a.svg\" }\n",
+        );
+        let mut w = World {
+            v: Viewer3d::load_attributes(
+                &main,
+                Some(&d),
+                T0,
+                64,
+                64,
+                Some(60.0),
+                false,
+                ORACLE_PAGE_ATTRIBUTES,
+            )
+            .expect("load"),
+            t: T0,
+        };
 
         w.v.frame_rate = 60.0;
         w.steps(6);
@@ -135,10 +174,20 @@ fn an_svg_inline_comes_and_goes_100_cycles() {
         let ctx = w.v.rt.inline_scenes[&w.named(ROOT, "Inl")];
         let first = resources(&w.v.rt);
 
-        assert!(w.v.rt.scene.contexts[ctx].named_nodes.get("ViewBox").is_some(), "the SVG scene is the Inline's: {first:?}");
+        assert!(
+            w.v.rt.scene.contexts[ctx]
+                .named_nodes
+                .get("ViewBox")
+                .is_some(),
+            "the SVG scene is the Inline's: {first:?}"
+        );
         assert!(first.live_nodes > 30, "{first:?}");
 
-        let (mut unloaded, mut loaded_big, mut loaded_small): (Option<Resources>, Option<Resources>, Option<Resources>) = (None, None, None);
+        let (mut unloaded, mut loaded_big, mut loaded_small): (
+            Option<Resources>,
+            Option<Resources>,
+            Option<Resources>,
+        ) = (None, None, None);
         let mut heap = vec![];
 
         for c in 1..=100 {
@@ -154,12 +203,19 @@ fn an_svg_inline_comes_and_goes_100_cycles() {
             }
 
             if let Some(b) = &unloaded {
-                assert_eq!(&r, b, "cycle {c}: a table grew after the warm-up (unloaded)");
+                assert_eq!(
+                    &r, b,
+                    "cycle {c}: a table grew after the warm-up (unloaded)"
+                );
             }
 
             let big_doc = c % 2 == 0;
 
-            w.set(inl, "url", FieldValue::MFString(vec![if big_doc { "a.svg" } else { "b.svg" }.into()]));
+            w.set(
+                inl,
+                "url",
+                FieldValue::MFString(vec![if big_doc { "a.svg" } else { "b.svg" }.into()]),
+            );
             w.set(inl, "load", FieldValue::SFBool(true));
             w.steps(8);
 
@@ -167,33 +223,65 @@ fn an_svg_inline_comes_and_goes_100_cycles() {
 
             // Background, OrthoViewpoint and the (possibly optimized) ViewBox Transform; the big document
             // keeps its ViewBox name, the small one is combined into its Transform like X_ITE's.
-            assert_eq!(w.v.rt.scene.contexts[ctx].root_nodes.len(), 3, "cycle {c}: the SVG scene loaded");
-            assert_eq!(w.v.rt.scene.contexts[ctx].named_nodes.get("ViewBox").is_some(), big_doc, "cycle {c}: ViewBox name");
+            assert_eq!(
+                w.v.rt.scene.contexts[ctx].root_nodes.len(),
+                3,
+                "cycle {c}: the SVG scene loaded"
+            );
+            assert_eq!(
+                w.v.rt.scene.contexts[ctx]
+                    .named_nodes
+                    .get("ViewBox")
+                    .is_some(),
+                big_doc,
+                "cycle {c}: ViewBox name"
+            );
 
             let r = resources(&w.v.rt);
-            let slot = if big_doc { &mut loaded_big } else { &mut loaded_small };
+            let slot = if big_doc {
+                &mut loaded_big
+            } else {
+                &mut loaded_small
+            };
 
             if c == 10 || c == 11 {
                 *slot = Some(r.clone());
             }
 
             if let Some(b) = slot {
-                assert_eq!(&*&r, &*b, "cycle {c}: a table grew after the warm-up (loaded, big {big_doc})");
+                assert_eq!(
+                    &*&r, &*b,
+                    "cycle {c}: a table grew after the warm-up (loaded, big {big_doc})"
+                );
             }
 
             if [10, 50, 100].contains(&c) {
                 let live = LIVE.load(Ordering::Relaxed);
 
                 heap.push(live);
-                println!("MEM\tsvg-inline-cycle\t{c}\tlive_nodes={}\tarena={}\tnrt={}\tfrt={}\tcontexts={}\theap_bytes={live}\trss_kib={}", r.live_nodes, r.arena, r.nrt, r.frt, r.contexts, rss_kib());
+                println!(
+                    "MEM\tsvg-inline-cycle\t{c}\tlive_nodes={}\tarena={}\tnrt={}\tfrt={}\tcontexts={}\theap_bytes={live}\trss_kib={}",
+                    r.live_nodes,
+                    r.arena,
+                    r.nrt,
+                    r.frt,
+                    r.contexts,
+                    rss_kib()
+                );
             }
         }
 
         // Even cycles end with the big document loaded, so cycles 10, 50 and 100 are comparable.
         // Exactly flat when run alone (--nocapture --test-threads=1: 3174409 B at cycles 50 and 100); under the
         // harness, the captured MEM lines and the other test thread add a few hundred bytes.
-        assert!((heap[2] - heap[1]).abs() <= 2048, "heap grew between cycle 50 and 100: {heap:?}");
-        assert!((heap[1] - heap[0]).abs() <= 64 * 1024, "heap grew between cycle 10 and 50: {heap:?}");
+        assert!(
+            (heap[2] - heap[1]).abs() <= 2048,
+            "heap grew between cycle 50 and 100: {heap:?}"
+        );
+        assert!(
+            (heap[1] - heap[0]).abs() <= 64 * 1024,
+            "heap grew between cycle 10 and 50: {heap:?}"
+        );
 
         let _ = std::fs::remove_dir_all(&d);
     });
@@ -215,13 +303,22 @@ fn parsing_svg_100_times_keeps_nothing() {
                 let live = LIVE.load(Ordering::Relaxed);
 
                 heap.push(live);
-                println!("MEM\tsvg-parse-cycle\t{c}\theap_bytes={live}\trss_kib={}", rss_kib());
+                println!(
+                    "MEM\tsvg-parse-cycle\t{c}\theap_bytes={live}\trss_kib={}",
+                    rss_kib()
+                );
             }
         }
 
         // Exactly flat when run alone (--nocapture --test-threads=1: 3174409 B at cycles 50 and 100); under the
         // harness, the captured MEM lines and the other test thread add a few hundred bytes.
-        assert!((heap[2] - heap[1]).abs() <= 2048, "heap grew between cycle 50 and 100: {heap:?}");
-        assert!((heap[1] - heap[0]).abs() <= 4096, "heap grew between cycle 10 and 50: {heap:?}");
+        assert!(
+            (heap[2] - heap[1]).abs() <= 2048,
+            "heap grew between cycle 50 and 100: {heap:?}"
+        );
+        assert!(
+            (heap[1] - heap[0]).abs() <= 4096,
+            "heap grew between cycle 10 and 50: {heap:?}"
+        );
     });
 }

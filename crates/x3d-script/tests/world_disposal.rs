@@ -21,10 +21,30 @@ fn count(run: &Run, line: &str) -> usize {
 fn replaced_scene_shuts_its_scripts_down_once() {
     big_stack(|| {
         let (run, _) = trace("main-shutdown.wrl", 8, &[url(3, "Inl", &["content-c.wrl"])]);
-        let order: Vec<&str> = run.rt.console.iter().filter(|l| l.starts_with("log: ") && l.contains("shutdown")).map(String::as_str).collect();
+        let order: Vec<&str> = run
+            .rt
+            .console
+            .iter()
+            .filter(|l| l.starts_with("log: ") && l.contains("shutdown"))
+            .map(String::as_str)
+            .collect();
 
-        assert_eq!(order, ["log: S shutdown", "log: T shutdown", "log: Bad shutdown", "log: L shutdown"], "{:?}", run.rt.console);
-        assert_eq!(count(&run, "log: Outer shutdown"), 0, "the world itself is still there");
+        assert_eq!(
+            order,
+            [
+                "log: S shutdown",
+                "log: T shutdown",
+                "log: Bad shutdown",
+                "log: L shutdown"
+            ],
+            "{:?}",
+            run.rt.console
+        );
+        assert_eq!(
+            count(&run, "log: Outer shutdown"),
+            0,
+            "the world itself is still there"
+        );
     });
 }
 
@@ -36,11 +56,23 @@ fn nothing_runs_after_shutdown_and_events_to_deleted_nodes_are_dropped() {
     big_stack(|| {
         let (run, _) = trace("main-shutdown.wrl", 8, &[url(3, "Inl", &["content-c.wrl"])]);
         let console = &run.rt.console;
-        let at = console.iter().position(|l| l == "log: S shutdown").expect("S shutdown");
+        let at = console
+            .iter()
+            .position(|l| l == "log: S shutdown")
+            .expect("S shutdown");
 
-        assert!(console[at..].iter().any(|l| l == "log: S ping 8"), "shutdown () may call the Script's own methods: {console:?}");
-        assert!(!console.iter().any(|l| l.starts_with("log: T got")), "no event reaches a deleted Script: {console:?}");
-        assert!(!console[at..].iter().any(|l| l == "log: S processed"), "eventsProcessed after shutdown: {console:?}");
+        assert!(
+            console[at..].iter().any(|l| l == "log: S ping 8"),
+            "shutdown () may call the Script's own methods: {console:?}"
+        );
+        assert!(
+            !console.iter().any(|l| l.starts_with("log: T got")),
+            "no event reaches a deleted Script: {console:?}"
+        );
+        assert!(
+            !console[at..].iter().any(|l| l == "log: S processed"),
+            "eventsProcessed after shutdown: {console:?}"
+        );
     });
 }
 
@@ -51,7 +83,10 @@ fn a_throwing_shutdown_is_reported_and_does_not_stop_the_rest() {
         let (run, _) = trace("main-shutdown.wrl", 8, &[url(3, "Inl", &["content-c.wrl"])]);
         let console = &run.rt.console;
 
-        assert!(console.iter().any(|l| l.contains("in function 'shutdown'")), "{console:?}");
+        assert!(
+            console.iter().any(|l| l.contains("in function 'shutdown'")),
+            "{console:?}"
+        );
         assert_eq!(count(&run, "log: L shutdown"), 1);
     });
 }
@@ -68,7 +103,13 @@ fn unloading_the_world_shuts_everything_down_once() {
         run.rt.unload_world();
         run.rt.settle();
 
-        for l in ["log: Outer shutdown", "log: S shutdown", "log: T shutdown", "log: Bad shutdown", "log: L shutdown"] {
+        for l in [
+            "log: Outer shutdown",
+            "log: S shutdown",
+            "log: T shutdown",
+            "log: Bad shutdown",
+            "log: L shutdown",
+        ] {
             assert_eq!(count(&run, l), 1, "{l}: {:?}", run.rt.console);
         }
     });
@@ -79,7 +120,11 @@ fn unloading_the_world_shuts_everything_down_once() {
 #[test]
 fn unloading_an_inline_shuts_its_scene_down() {
     big_stack(|| {
-        let (run, _) = trace("main-shutdown.wrl", 6, &[action(3, "load", "Inl", json!({ "value": false }))]);
+        let (run, _) = trace(
+            "main-shutdown.wrl",
+            6,
+            &[action(3, "load", "Inl", json!({ "value": false }))],
+        );
 
         assert_eq!(count(&run, "log: S shutdown"), 1, "{:?}", run.rt.console);
         assert_eq!(count(&run, "log: L shutdown"), 1);
@@ -98,12 +143,21 @@ fn arena_live(run: &Run) -> usize {
 fn repeated_reloads_keep_the_arena_bounded() {
     big_stack(|| {
         let mut run = Run::start("main-one.wrl", 946684800.0, 0.1).unwrap();
-        let pick = ["content-b.wrl", "content-a.wrl", "gone.wrl", "content-c.wrl"];
+        let pick = [
+            "content-b.wrl",
+            "content-a.wrl",
+            "gone.wrl",
+            "content-c.wrl",
+        ];
         let mut arena = vec![];
         let mut live = vec![];
 
         for k in 1..=160u64 {
-            let todo = if k % 4 == 1 { vec![url(k, "Inl", &[pick[((k / 4) % 4) as usize]])] } else { vec![] };
+            let todo = if k % 4 == 1 {
+                vec![url(k, "Inl", &[pick[((k / 4) % 4) as usize]])]
+            } else {
+                vec![]
+            };
 
             run.step(k, &todo).unwrap();
 
@@ -113,12 +167,26 @@ fn repeated_reloads_keep_the_arena_bounded() {
             }
         }
 
-        println!("arena {arena:?} live {live:?} released {}", run.rt.released_total);
+        println!(
+            "arena {arena:?} live {live:?} released {}",
+            run.rt.released_total
+        );
 
         // The first rounds fill the arena; from then on it does not grow by a single node.
-        assert!(arena[3..].windows(2).all(|w| w[0] == w[1]), "the arena keeps growing: {arena:?}");
-        assert!(run.rt.released_total > 100, "nothing was released: {}", run.rt.released_total);
-        assert!(run.rt.release_pending() < 64, "candidates pile up: {}", run.rt.release_pending());
+        assert!(
+            arena[3..].windows(2).all(|w| w[0] == w[1]),
+            "the arena keeps growing: {arena:?}"
+        );
+        assert!(
+            run.rt.released_total > 100,
+            "nothing was released: {}",
+            run.rt.released_total
+        );
+        assert!(
+            run.rt.release_pending() < 64,
+            "candidates pile up: {}",
+            run.rt.release_pending()
+        );
     });
 }
 
@@ -132,7 +200,11 @@ fn reloaded_content_is_correct_after_slots_are_reused() {
         let mut arena = vec![];
 
         for k in 1..=120u64 {
-            let todo = if k % 6 == 1 { vec![url(k, "Mid", &[pick[((k / 6) % 3) as usize]])] } else { vec![] };
+            let todo = if k % 6 == 1 {
+                vec![url(k, "Mid", &[pick[((k / 6) % 3) as usize]])]
+            } else {
+                vec![]
+            };
 
             run.step(k, &todo).unwrap();
 
@@ -141,14 +213,24 @@ fn reloaded_content_is_correct_after_slots_are_reused() {
             }
         }
 
-        assert!(arena[1..].windows(2).all(|w| w[0] == w[1]), "the arena keeps growing: {arena:?}");
+        assert!(
+            arena[1..].windows(2).all(|w| w[0] == w[1]),
+            "the arena keeps growing: {arena:?}"
+        );
 
         // The last request (k = 115) shows the scene `pick[(115 / 6) % 3]`; it ticks.
         let last = pick[(115 / 6) % 3];
-        let name = last.trim_start_matches("content-").trim_end_matches(".wrl").to_uppercase();
+        let name = last
+            .trim_start_matches("content-")
+            .trim_end_matches(".wrl")
+            .to_uppercase();
         let tail: Vec<&String> = run.rt.console.iter().rev().take(40).collect();
 
-        assert!(tail.iter().any(|l| l.starts_with(&format!("log: {name} fraction"))), "{name} is not running: {tail:?}");
+        assert!(
+            tail.iter()
+                .any(|l| l.starts_with(&format!("log: {name} fraction"))),
+            "{name} is not running: {tail:?}"
+        );
     });
 }
 
@@ -158,13 +240,31 @@ fn reloaded_content_is_correct_after_slots_are_reused() {
 fn a_node_that_a_live_field_holds_stays() {
     big_stack(|| {
         let mut run = Run::start("main-hold.wrl", 946684800.0, 0.1).unwrap();
-        let scene = *run.rt.inline_scenes.values().next().expect("the Inline's scene");
-        let mover = run.rt.scene.get_named_node(scene, "MoverA").expect("MoverA");
-        let clock = run.rt.scene.get_named_node(scene, "ClockA").expect("ClockA");
-        let keeper = run.rt.scene.get_named_node(x3d_scene::ROOT, "Keeper").expect("Keeper");
+        let scene = *run
+            .rt
+            .inline_scenes
+            .values()
+            .next()
+            .expect("the Inline's scene");
+        let mover = run
+            .rt
+            .scene
+            .get_named_node(scene, "MoverA")
+            .expect("MoverA");
+        let clock = run
+            .rt
+            .scene
+            .get_named_node(scene, "ClockA")
+            .expect("ClockA");
+        let keeper = run
+            .rt
+            .scene
+            .get_named_node(x3d_scene::ROOT, "Keeper")
+            .expect("Keeper");
         let held = run.rt.get_field(keeper, "held").unwrap();
 
-        run.rt.set_value(held, x3d_fields::FieldValue::SFNode(Some(mover)));
+        run.rt
+            .set_value(held, x3d_fields::FieldValue::SFNode(Some(mover)));
         run.rt.settle();
 
         // Replace the Inline's scene.
@@ -174,14 +274,20 @@ fn a_node_that_a_live_field_holds_stays() {
 
         assert!(run.rt.scene.is_live(mover), "the held node was released");
         assert_eq!(run.rt.type_name(mover), "Transform");
-        assert!(!run.rt.scene.is_live(clock), "a node nothing refers to stays");
+        assert!(
+            !run.rt.scene.is_live(clock),
+            "a node nothing refers to stays"
+        );
 
         // Let go of it.
         run.rt.set_value(held, x3d_fields::FieldValue::SFNode(None));
         run.step(4, &[]).unwrap();
         run.step(5, &[]).unwrap();
 
-        assert!(!run.rt.scene.is_live(mover), "the node is still there after nothing holds it");
+        assert!(
+            !run.rt.scene.is_live(mover),
+            "the node is still there after nothing holds it"
+        );
     });
 }
 
@@ -190,9 +296,22 @@ fn a_node_that_a_live_field_holds_stays() {
 fn a_stale_wrapper_does_not_alias_a_reused_slot() {
     big_stack(|| {
         let mut run = Run::start("main-hold.wrl", 946684800.0, 0.1).unwrap();
-        let scene = *run.rt.inline_scenes.values().next().expect("the Inline's scene");
-        let mover = run.rt.scene.get_named_node(scene, "MoverA").expect("MoverA");
-        let keeper = run.rt.scene.get_named_node(x3d_scene::ROOT, "Keeper").expect("Keeper");
+        let scene = *run
+            .rt
+            .inline_scenes
+            .values()
+            .next()
+            .expect("the Inline's scene");
+        let mover = run
+            .rt
+            .scene
+            .get_named_node(scene, "MoverA")
+            .expect("MoverA");
+        let keeper = run
+            .rt
+            .scene
+            .get_named_node(x3d_scene::ROOT, "Keeper")
+            .expect("Keeper");
         let held = run.rt.get_field(keeper, "held").unwrap();
         let poke = |run: &mut Run, name: &str| {
             let k = run.rt.get_field(keeper, name).unwrap();
@@ -203,7 +322,8 @@ fn a_stale_wrapper_does_not_alias_a_reused_slot() {
             run.rt.settle();
         };
 
-        run.rt.set_value(held, x3d_fields::FieldValue::SFNode(Some(mover)));
+        run.rt
+            .set_value(held, x3d_fields::FieldValue::SFNode(Some(mover)));
         poke(&mut run, "save");
         run.rt.set_value(held, x3d_fields::FieldValue::SFNode(None));
 
@@ -211,7 +331,15 @@ fn a_stale_wrapper_does_not_alias_a_reused_slot() {
         run.step(1, &[url(1, "Inl", &["content-b.wrl"])]).unwrap();
 
         for k in 2..=14 {
-            let todo = if k % 4 == 0 { vec![url(k, "Inl", &[["content-c.wrl", "content-b.wrl"][(k / 4 % 2) as usize]])] } else { vec![] };
+            let todo = if k % 4 == 0 {
+                vec![url(
+                    k,
+                    "Inl",
+                    &[["content-c.wrl", "content-b.wrl"][(k / 4 % 2) as usize]],
+                )]
+            } else {
+                vec![]
+            };
 
             run.step(k, &todo).unwrap();
         }
@@ -220,8 +348,23 @@ fn a_stale_wrapper_does_not_alias_a_reused_slot() {
         assert!(!run.rt.scene.is_live(mover) || run.rt.scene.node(mover).name != "MoverA");
         poke(&mut run, "report");
 
-        let report = run.rt.console.iter().rev().find(|l| l.starts_with("log: saved is")).unwrap_or_else(|| panic!("no report: {:?}", run.rt.console.iter().rev().take(8).collect::<Vec<_>>())).clone();
+        let report = run
+            .rt
+            .console
+            .iter()
+            .rev()
+            .find(|l| l.starts_with("log: saved is"))
+            .unwrap_or_else(|| {
+                panic!(
+                    "no report: {:?}",
+                    run.rt.console.iter().rev().take(8).collect::<Vec<_>>()
+                )
+            })
+            .clone();
 
-        assert!(report.contains("X3DReleased"), "the wrapper reaches another node: {report}");
+        assert!(
+            report.contains("X3DReleased"),
+            "the wrapper reaches another node: {report}"
+        );
     });
 }

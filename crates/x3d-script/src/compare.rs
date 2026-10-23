@@ -26,21 +26,34 @@ pub fn run_world(oracle_root: &Path, file: &Path, scripts: bool) -> RunResult {
 }
 
 /// [`run_world`], serialized as `format`.
-pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: DumpFormat) -> RunResult {
+pub fn run_world_as(
+    oracle_root: &Path,
+    file: &Path,
+    scripts: bool,
+    format: DumpFormat,
+) -> RunResult {
     // The dump oracle runs in headless Chromium.
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
     let rel = file.strip_prefix(oracle_root).unwrap_or(file);
     let rel = rel.to_string_lossy().replace('\\', "/");
     let url = format!("{ORACLE_PREFIX}{}", encode_path(&rel));
-    let fetcher = Box::new(LocalFetcher { root: oracle_root.to_path_buf(), prefix: ORACLE_PREFIX.to_string() });
+    let fetcher = Box::new(LocalFetcher {
+        root: oracle_root.to_path_buf(),
+        prefix: ORACLE_PREFIX.to_string(),
+    });
     let mut log = vec![];
 
     let data = match std::fs::read(file) {
         Ok(d) => d,
         Err(_) => {
-            log.push(format!("error: Couldn't load URL '{url}'. Error: Not Found"));
-            return RunResult { vrml: Err("Couldn't load X3D file.".into()), log };
+            log.push(format!(
+                "error: Couldn't load URL '{url}'. Error: Not Found"
+            ));
+            return RunResult {
+                vrml: Err("Couldn't load X3D file.".into()),
+                log,
+            };
         }
     };
 
@@ -57,7 +70,10 @@ pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: Dump
             }
 
             log.sort();
-            return RunResult { vrml: Err("Couldn't load X3D file.".into()), log };
+            return RunResult {
+                vrml: Err("Couldn't load X3D file.".into()),
+                log,
+            };
         }
     };
 
@@ -78,7 +94,10 @@ pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: Dump
     let mut log = rt.log;
     log.sort();
 
-    RunResult { vrml: Ok(vrml), log }
+    RunResult {
+        vrml: Ok(vrml),
+        log,
+    }
 }
 
 /// `new URL (path, base)` percent-encodes spaces and a few other characters in paths.
@@ -112,7 +131,11 @@ pub fn encode_path(p: &str) -> String {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Outcome {
     Match,
-    Mismatch { line: usize, expected: String, actual: String },
+    Mismatch {
+        line: usize,
+        expected: String,
+        actual: String,
+    },
     RustRejected(String),
     ExpectedFailure(String),
     UnexpectedSuccess,
@@ -138,17 +161,30 @@ fn first_difference(expected: &str, actual: &str) -> (usize, String, String) {
         let (x, y) = (e.get(i).copied(), a.get(i).copied());
 
         if x != y {
-            return (i + 1, x.unwrap_or("<EOF>").to_string(), y.unwrap_or("<EOF>").to_string());
+            return (
+                i + 1,
+                x.unwrap_or("<EOF>").to_string(),
+                y.unwrap_or("<EOF>").to_string(),
+            );
         }
     }
 
     (0, String::new(), String::new())
 }
 
-pub fn compare_corpus(baseline: &Path, corpus: &Path, scripts: bool, threads: usize) -> Result<Vec<FileResult>, String> {
+pub fn compare_corpus(
+    baseline: &Path,
+    corpus: &Path,
+    scripts: bool,
+    threads: usize,
+) -> Result<Vec<FileResult>, String> {
     let json: serde_json::Value =
-        serde_json::from_str(&std::fs::read_to_string(baseline).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
-    let entries: Vec<serde_json::Value> = json["results"].as_array().ok_or("baseline has no results")?.clone();
+        serde_json::from_str(&std::fs::read_to_string(baseline).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    let entries: Vec<serde_json::Value> = json["results"]
+        .as_array()
+        .ok_or("baseline has no results")?
+        .clone();
     let corpus = std::fs::canonicalize(corpus).map_err(|e| e.to_string())?;
     let oracle_root: PathBuf = corpus.parent().ok_or("corpus has no parent")?.to_path_buf();
     let next = std::sync::atomic::AtomicUsize::new(0);
@@ -176,19 +212,34 @@ pub fn compare_corpus(baseline: &Path, corpus: &Path, scripts: bool, threads: us
             })
             .collect();
 
-        handles.into_iter().flat_map(|h| h.join().unwrap()).collect()
+        handles
+            .into_iter()
+            .flat_map(|h| h.join().unwrap())
+            .collect()
     });
 
     results.sort_by(|a, b| a.file.cmp(&b.file));
     Ok(results)
 }
 
-fn compare_one(entry: &serde_json::Value, corpus: &Path, oracle_root: &Path, scripts: bool) -> FileResult {
+fn compare_one(
+    entry: &serde_json::Value,
+    corpus: &Path,
+    oracle_root: &Path,
+    scripts: bool,
+) -> FileResult {
     let file = entry["file"].as_str().unwrap_or("").to_string();
     let ok = entry["ok"].as_bool().unwrap_or(false);
     let error = entry["error"].as_str().unwrap_or("");
     let expected = entry["vrml"].as_str().map(String::from);
-    let mut expected_log: Vec<String> = entry["log"].as_array().map(|a| a.iter().filter_map(|v| v.as_str().map(String::from)).collect()).unwrap_or_default();
+    let mut expected_log: Vec<String> = entry["log"]
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        })
+        .unwrap_or_default();
 
     // dump.html returns `log .sort ()`, but a message logged between the sort and the
     // serialization of the result can leave the array unsorted (x1 331-couch.wrl). The order
@@ -209,7 +260,11 @@ fn compare_one(entry: &serde_json::Value, corpus: &Path, oracle_root: &Path, scr
                     Outcome::Match
                 } else {
                     let (line, expected, actual) = first_difference(&exp, out);
-                    Outcome::Mismatch { line, expected, actual }
+                    Outcome::Mismatch {
+                        line,
+                        expected,
+                        actual,
+                    }
                 }
             }
             (true, Err(e)) => Outcome::RustRejected(e.clone()),
@@ -218,5 +273,13 @@ fn compare_one(entry: &serde_json::Value, corpus: &Path, oracle_root: &Path, scr
         }
     };
 
-    FileResult { file, outcome, rust: r.vrml.ok(), expected, log_match, rust_log: r.log, expected_log }
+    FileResult {
+        file,
+        outcome,
+        rust: r.vrml.ok(),
+        expected,
+        log_match,
+        rust_log: r.log,
+        expected_log,
+    }
 }

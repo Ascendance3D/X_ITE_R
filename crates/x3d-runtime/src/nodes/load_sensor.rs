@@ -126,9 +126,18 @@ impl Runtime {
             return;
         }
 
-        let states: Vec<_> = url_objects.iter().map(|&n| self.url_load_state(n)).collect();
-        let complete = states.iter().filter(|s| **s == nodes::LoadState::Complete).count();
-        let failed = states.iter().filter(|s| **s == nodes::LoadState::Failed).count();
+        let states: Vec<_> = url_objects
+            .iter()
+            .map(|&n| self.url_load_state(n))
+            .collect();
+        let complete = states
+            .iter()
+            .filter(|s| **s == nodes::LoadState::Complete)
+            .count();
+        let failed = states
+            .iter()
+            .filter(|s| **s == nodes::LoadState::Failed)
+            .count();
         let loaded = complete == url_objects.len();
         // SFFloat stores Math.fround of the double quotient.
         let progress = jsmath::fround(complete as f64 / url_objects.len() as f64);
@@ -179,10 +188,18 @@ impl Runtime {
             Some(FieldValue::MFNode(list)) => list.iter().flatten().copied().collect(),
             _ => vec![],
         };
-        let url_objects: Vec<NodeId> = children.into_iter().filter_map(|n| self.cast_url_object(n)).collect();
+        let url_objects: Vec<NodeId> = children
+            .into_iter()
+            .filter_map(|n| self.cast_url_object(n))
+            .collect();
 
         for &u in &url_objects {
-            let k = self.add_private_field(u, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(url_state_value(self.url_load_state(u))));
+            let k = self.add_private_field(
+                u,
+                "loadState",
+                access::OUTPUT_ONLY,
+                FieldValue::SFInt32(url_state_value(self.url_load_state(u))),
+            );
             self.add_interest(k, node, Cb::LoadSensorLoadState);
         }
 
@@ -197,7 +214,10 @@ impl Runtime {
     fn load_sensor_remove(&mut self, node: NodeId) {
         self.load_sensor_clear_timeout(node);
 
-        let url_objects = self.load_sensor_state(node).map(|s| std::mem::take(&mut s.url_objects)).unwrap_or_default();
+        let url_objects = self
+            .load_sensor_state(node)
+            .map(|s| std::mem::take(&mut s.url_objects))
+            .unwrap_or_default();
 
         for u in url_objects {
             if let Some(k) = self.private_field(u, "loadState") {
@@ -213,7 +233,13 @@ impl Runtime {
 
         for _ in 0..256 {
             if let NodeKind::Instance(_) = self.scene.node(n).kind {
-                n = self.scene.ctx(self.instance_body(n)?).root_nodes.first().copied().flatten()?;
+                n = self
+                    .scene
+                    .ctx(self.instance_body(n)?)
+                    .root_nodes
+                    .first()
+                    .copied()
+                    .flatten()?;
                 continue;
             }
 

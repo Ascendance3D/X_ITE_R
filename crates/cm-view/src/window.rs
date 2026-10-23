@@ -68,7 +68,9 @@ pub fn cm_key_name(key: &Key) -> Option<String> {
             match ch {
                 'a'..='z' => ch.to_ascii_uppercase().to_string(),
                 'A'..='Z' | '0'..='9' => ch.to_string(),
-                ';' | '=' | ',' | '-' | '.' | '/' | '`' | '[' | '\\' | ']' | '\'' | '*' => ch.to_string(),
+                ';' | '=' | ',' | '-' | '.' | '/' | '`' | '[' | '\\' | ']' | '\'' | '*' => {
+                    ch.to_string()
+                }
                 ' ' => "Space".into(),
                 _ => return None,
             }
@@ -81,7 +83,14 @@ pub fn cm_key_name(key: &Key) -> Option<String> {
 /// A CM5 key event from a winit key and the modifier state.
 pub fn key_event(key_without_mods: &Key, mods: ModifiersState) -> Option<KeyEvent> {
     let name = cm_key_name(key_without_mods)?;
-    Some(KeyEvent { key: name, shift: mods.shift_key(), ctrl: mods.control_key(), alt: mods.alt_key(), meta: mods.super_key(), alt_graph: false })
+    Some(KeyEvent {
+        key: name,
+        shift: mods.shift_key(),
+        ctrl: mods.control_key(),
+        alt: mods.alt_key(),
+        meta: mods.super_key(),
+        alt_graph: false,
+    })
 }
 
 struct SystemClipboard(Option<arboard::Clipboard>, MemClipboard);
@@ -145,7 +154,9 @@ impl EditorWindow {
     }
 
     fn redraw(&mut self) {
-        let (Some(st), Some(app)) = (&mut self.state, &mut self.app) else { return };
+        let (Some(st), Some(app)) = (&mut self.state, &mut self.app) else {
+            return;
+        };
         let frame = match st.surface.get_current_texture() {
             wgpu::CurrentSurfaceTexture::Success(f) => f,
             wgpu::CurrentSurfaceTexture::Suboptimal(f) => f,
@@ -159,10 +170,22 @@ impl EditorWindow {
                 return;
             }
         };
-        let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
         let elapsed = self.blink_start.elapsed().as_millis();
         let cursor_visible = !self.focused || (elapsed / 530) % 2 == 0;
-        st.renderer.render(&st.gpu, &mut app.editor, &view, st.config.width, st.config.height, FrameState { focused: self.focused, cursor_visible: cursor_visible && self.focused });
+        st.renderer.render(
+            &st.gpu,
+            &mut app.editor,
+            &view,
+            st.config.width,
+            st.config.height,
+            FrameState {
+                focused: self.focused,
+                cursor_visible: cursor_visible && self.focused,
+            },
+        );
         st.window.pre_present_notify();
         st.gpu.queue.present(frame);
         st.window.set_title(&app.title());
@@ -180,7 +203,9 @@ impl EditorWindow {
     }
 
     fn run_script_step(&mut self, event_loop: &ActiveEventLoop) {
-        let Some(script) = &mut self.script else { return };
+        let Some(script) = &mut self.script else {
+            return;
+        };
         let Some(step) = script.pop_front() else {
             event_loop.exit();
             return;
@@ -195,8 +220,20 @@ impl EditorWindow {
             Step::Screenshot(path) => {
                 if let (Some(st), Some(app)) = (&mut self.state, &mut self.app) {
                     let (w, h) = (st.config.width, st.config.height);
-                    let mut r = Renderer::new(&st.gpu, wgpu::TextureFormat::Rgba8UnormSrgb, st.renderer.font_size, st.renderer.line_height);
-                    let px = crate::render::render_offscreen(&st.gpu, &mut r, &mut app.editor, w, h, FrameState::default());
+                    let mut r = Renderer::new(
+                        &st.gpu,
+                        wgpu::TextureFormat::Rgba8UnormSrgb,
+                        st.renderer.font_size,
+                        st.renderer.line_height,
+                    );
+                    let px = crate::render::render_offscreen(
+                        &st.gpu,
+                        &mut r,
+                        &mut app.editor,
+                        w,
+                        h,
+                        FrameState::default(),
+                    );
                     if let Err(e) = crate::render::write_png(&path, w, h, &px) {
                         self.exit_error = Some(format!("screenshot: {e}"));
                     }
@@ -219,7 +256,9 @@ impl ApplicationHandler for EditorWindow {
         if self.state.is_some() {
             return;
         }
-        let attrs = Window::default_attributes().with_inner_size(LogicalSize::new(1000.0, 720.0)).with_title("cm-edit");
+        let attrs = Window::default_attributes()
+            .with_inner_size(LogicalSize::new(1000.0, 720.0))
+            .with_title("cm-edit");
         let window = match event_loop.create_window(attrs) {
             Ok(w) => Arc::new(w),
             Err(e) => {
@@ -229,7 +268,10 @@ impl ApplicationHandler for EditorWindow {
             }
         };
         window.set_ime_allowed(true);
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_with_display_handle_from_env(Box::new(event_loop.owned_display_handle())));
+        let instance =
+            wgpu::Instance::new(wgpu::InstanceDescriptor::new_with_display_handle_from_env(
+                Box::new(event_loop.owned_display_handle()),
+            ));
         let surface = match instance.create_surface(window.clone()) {
             Ok(s) => s,
             Err(e) => {
@@ -248,7 +290,12 @@ impl ApplicationHandler for EditorWindow {
         };
         let size = window.inner_size();
         let caps = surface.get_capabilities(&gpu.adapter);
-        let format = caps.formats.iter().copied().find(|f| f.is_srgb()).unwrap_or(caps.formats[0]);
+        let format = caps
+            .formats
+            .iter()
+            .copied()
+            .find(|f| f.is_srgb())
+            .unwrap_or(caps.formats[0]);
         let config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format,
@@ -266,10 +313,18 @@ impl ApplicationHandler for EditorWindow {
         let line_height = (font_size * 1.35).round();
         let mut renderer = Renderer::new(&gpu, format, font_size, line_height);
         let metrics = renderer.metrics();
-        let clipboard: Box<dyn Clipboard> = Box::new(SystemClipboard(if self.script.is_some() { None } else { arboard::Clipboard::new().ok() }, MemClipboard::default()));
+        let clipboard: Box<dyn Clipboard> = Box::new(SystemClipboard(
+            if self.script.is_some() {
+                None
+            } else {
+                arboard::Clipboard::new().ok()
+            },
+            MemClipboard::default(),
+        ));
         match App::open(&self.path, metrics, &self.opts, clipboard) {
             Ok(mut app) => {
-                app.editor.set_size(config.width as f64, config.height as f64);
+                app.editor
+                    .set_size(config.width as f64, config.height as f64);
                 window.set_title(&app.title());
                 self.app = Some(app);
             }
@@ -279,7 +334,13 @@ impl ApplicationHandler for EditorWindow {
                 return;
             }
         }
-        self.state = Some(WinState { window: window.clone(), surface, config, gpu, renderer });
+        self.state = Some(WinState {
+            window: window.clone(),
+            surface,
+            config,
+            gpu,
+            renderer,
+        });
         window.request_redraw();
     }
 
@@ -292,7 +353,10 @@ impl ApplicationHandler for EditorWindow {
                     st.config.height = size.height.max(1);
                     st.surface.configure(&st.gpu.device, &st.config);
                 }
-                self.input(Input::Resize { width: size.width.max(1) as f64, height: size.height.max(1) as f64 });
+                self.input(Input::Resize {
+                    width: size.width.max(1) as f64,
+                    height: size.height.max(1) as f64,
+                });
             }
             WindowEvent::Focused(f) => {
                 self.focused = f;
@@ -302,7 +366,11 @@ impl ApplicationHandler for EditorWindow {
             }
             WindowEvent::RedrawRequested => self.redraw(),
             WindowEvent::ModifiersChanged(m) => self.mods = m.state(),
-            WindowEvent::KeyboardInput { event, is_synthetic: false, .. } => {
+            WindowEvent::KeyboardInput {
+                event,
+                is_synthetic: false,
+                ..
+            } => {
                 if event.state != ElementState::Pressed {
                     return;
                 }
@@ -315,8 +383,18 @@ impl ApplicationHandler for EditorWindow {
             WindowEvent::CursorMoved { position, .. } => {
                 self.cursor = (position.x, position.y);
                 if self.mouse_down {
-                    let mods = KeyEvent { shift: self.mods.shift_key(), ctrl: self.mods.control_key(), alt: self.mods.alt_key(), meta: self.mods.super_key(), ..Default::default() };
-                    self.input(Input::MouseMove { x: position.x, y: position.y, mods });
+                    let mods = KeyEvent {
+                        shift: self.mods.shift_key(),
+                        ctrl: self.mods.control_key(),
+                        alt: self.mods.alt_key(),
+                        meta: self.mods.super_key(),
+                        ..Default::default()
+                    };
+                    self.input(Input::MouseMove {
+                        x: position.x,
+                        y: position.y,
+                        mods,
+                    });
                 }
             }
             WindowEvent::MouseInput { state, button, .. } => {
@@ -328,19 +406,37 @@ impl ApplicationHandler for EditorWindow {
                 };
                 let (x, y) = self.cursor;
                 if state == ElementState::Pressed {
-                    let mods = KeyEvent { shift: self.mods.shift_key(), ctrl: self.mods.control_key(), alt: self.mods.alt_key(), meta: self.mods.super_key(), ..Default::default() };
+                    let mods = KeyEvent {
+                        shift: self.mods.shift_key(),
+                        ctrl: self.mods.control_key(),
+                        alt: self.mods.alt_key(),
+                        meta: self.mods.super_key(),
+                        ..Default::default()
+                    };
                     self.mouse_down = b == 1;
                     let time = self.start.elapsed().as_secs_f64() * 1000.0;
-                    self.input(Input::MouseDown { x, y, button: b, mods, time });
+                    self.input(Input::MouseDown {
+                        x,
+                        y,
+                        button: b,
+                        mods,
+                        time,
+                    });
                 } else if b == 1 {
                     self.mouse_down = false;
                     self.input(Input::MouseUp { x, y });
                 }
             }
             WindowEvent::MouseWheel { delta, .. } => {
-                let lh = self.app.as_ref().map(|a| a.editor.metrics.text_height).unwrap_or(20.0);
+                let lh = self
+                    .app
+                    .as_ref()
+                    .map(|a| a.editor.metrics.text_height)
+                    .unwrap_or(20.0);
                 let (dx, dy) = match delta {
-                    MouseScrollDelta::LineDelta(x, y) => (-x as f64 * lh * 3.0, -y as f64 * lh * 3.0),
+                    MouseScrollDelta::LineDelta(x, y) => {
+                        (-x as f64 * lh * 3.0, -y as f64 * lh * 3.0)
+                    }
                     MouseScrollDelta::PixelDelta(p) => (-p.x, -p.y),
                 };
                 self.input(Input::Wheel { dx, dy });
@@ -365,7 +461,10 @@ impl ApplicationHandler for EditorWindow {
                 event_loop.set_control_flow(ControlFlow::Poll);
             } else {
                 // Cursor blink (`cursorBlinkRate` 530ms).
-                let next = Instant::now() + Duration::from_millis(530 - (self.blink_start.elapsed().as_millis() % 530) as u64);
+                let next = Instant::now()
+                    + Duration::from_millis(
+                        530 - (self.blink_start.elapsed().as_millis() % 530) as u64,
+                    );
                 st.window.request_redraw();
                 event_loop.set_control_flow(ControlFlow::WaitUntil(next));
             }
@@ -377,7 +476,9 @@ impl ApplicationHandler for EditorWindow {
 pub fn run(path: PathBuf, opts: AppOptions, script: Option<Vec<Step>>) -> Result<(), String> {
     let event_loop = EventLoop::new().map_err(|e| format!("event loop: {e}"))?;
     let mut w = EditorWindow::new(path, opts, script);
-    event_loop.run_app(&mut w).map_err(|e| format!("run: {e}"))?;
+    event_loop
+        .run_app(&mut w)
+        .map_err(|e| format!("run: {e}"))?;
     match w.exit_error {
         Some(e) => Err(e),
         None => Ok(()),

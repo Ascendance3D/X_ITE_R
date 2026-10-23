@@ -19,11 +19,23 @@ pub struct Color4 {
 }
 
 impl Color3 {
-    pub const BLACK: Color3 = Color3 { r: 0.0, g: 0.0, b: 0.0 };
-    pub const WHITE: Color3 = Color3 { r: 1.0, g: 1.0, b: 1.0 };
+    pub const BLACK: Color3 = Color3 {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0,
+    };
+    pub const WHITE: Color3 = Color3 {
+        r: 1.0,
+        g: 1.0,
+        b: 1.0,
+    };
 
     pub fn new(r: f64, g: f64, b: f64) -> Self {
-        Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0) }
+        Self {
+            r: clamp(r, 0.0, 1.0),
+            g: clamp(g, 0.0, 1.0),
+            b: clamp(b, 0.0, 1.0),
+        }
     }
 
     /// Exactly these components (Color3.assign: a Script's color object holds what it holds, unclamped).
@@ -82,12 +94,20 @@ impl Color3 {
 
     /// Color3.linearToSRGB: `Math .pow (c, 1 / 2.2)`, assigned without clamping.
     pub fn linear_to_srgb(&self) -> Self {
-        Self { r: jsmath::pow(self.r, 1.0 / 2.2), g: jsmath::pow(self.g, 1.0 / 2.2), b: jsmath::pow(self.b, 1.0 / 2.2) }
+        Self {
+            r: jsmath::pow(self.r, 1.0 / 2.2),
+            g: jsmath::pow(self.g, 1.0 / 2.2),
+            b: jsmath::pow(self.b, 1.0 / 2.2),
+        }
     }
 
     /// Color3.sRGBToLinear: `Math .pow (c, 2.2)`.
     pub fn srgb_to_linear(&self) -> Self {
-        Self { r: jsmath::pow(self.r, 2.2), g: jsmath::pow(self.g, 2.2), b: jsmath::pow(self.b, 2.2) }
+        Self {
+            r: jsmath::pow(self.r, 2.2),
+            g: jsmath::pow(self.g, 2.2),
+            b: jsmath::pow(self.b, 2.2),
+        }
     }
 
     /// Note: setHSV assigns the private components directly, without clamping.
@@ -102,7 +122,12 @@ impl Color3 {
 
 impl Color4 {
     pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
-        Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0), a: clamp(a, 0.0, 1.0) }
+        Self {
+            r: clamp(r, 0.0, 1.0),
+            g: clamp(g, 0.0, 1.0),
+            b: clamp(b, 0.0, 1.0),
+            a: clamp(a, 0.0, 1.0),
+        }
     }
 
     /// Exactly these components (Color4.assign).
@@ -134,11 +159,21 @@ impl Color4 {
     }
 
     pub fn linear_to_srgb(&self) -> Self {
-        Self { r: jsmath::pow(self.r, 1.0 / 2.2), g: jsmath::pow(self.g, 1.0 / 2.2), b: jsmath::pow(self.b, 1.0 / 2.2), a: self.a }
+        Self {
+            r: jsmath::pow(self.r, 1.0 / 2.2),
+            g: jsmath::pow(self.g, 1.0 / 2.2),
+            b: jsmath::pow(self.b, 1.0 / 2.2),
+            a: self.a,
+        }
     }
 
     pub fn srgb_to_linear(&self) -> Self {
-        Self { r: jsmath::pow(self.r, 2.2), g: jsmath::pow(self.g, 2.2), b: jsmath::pow(self.b, 2.2), a: self.a }
+        Self {
+            r: jsmath::pow(self.r, 2.2),
+            g: jsmath::pow(self.g, 2.2),
+            b: jsmath::pow(self.b, 2.2),
+            a: self.a,
+        }
     }
 
     pub fn get_hsva(&self) -> [f64; 4] {

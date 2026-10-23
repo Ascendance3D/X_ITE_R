@@ -29,16 +29,16 @@
 //! `createX3DFromURL` and its promise resolving: parse, setup, script loading, url object
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
-pub mod browser_options;
 pub mod browser_load;
+pub mod browser_options;
 pub mod bullet;
 pub mod ctx_events;
-pub mod geo;
 pub mod events;
 pub mod extern_proto;
+pub mod font_library;
+pub mod geo;
 pub mod inline;
 pub mod inline_geometry;
-pub mod font_library;
 pub mod loader;
 pub mod nodes;
 pub mod nurbs;
@@ -322,7 +322,12 @@ pub struct BrowserActive {
 
 impl Default for BrowserActive {
     fn default() -> Self {
-        BrowserActive { layer: None, navigation_info: None, viewpoint: None, viewer: "EXAMINE".into() }
+        BrowserActive {
+            layer: None,
+            navigation_info: None,
+            viewpoint: None,
+            viewer: "EXAMINE".into(),
+        }
     }
 }
 
@@ -391,7 +396,8 @@ pub struct Runtime {
     /// The family and style the running loadData of a FontStyle took when it began.
     pub font_style_snapshot: HashMap<NodeId, (Vec<String>, String)>,
     /// X3DFontStyleNode.alignments (major, minor): set by `set_justify__` at setup and when `justify` changes.
-    pub font_style_alignments: HashMap<NodeId, (x3d_text::layout::Alignment, x3d_text::layout::Alignment)>,
+    pub font_style_alignments:
+        HashMap<NodeId, (x3d_text::layout::Alignment, x3d_text::layout::Alignment)>,
     /// A frame has run (timers run at the start of each): loadData waits for its timer from then on.
     pub frames_started: bool,
     /// Script nodes in the order their contexts became active, for diagnostics.
@@ -637,7 +643,10 @@ impl Runtime {
             browser_frame_waiters: vec![],
             browser_request_id: 0,
             page_url: String::new(),
-            world_state: browser_load::WorldState { initialized_time: -1.0, ..Default::default() },
+            world_state: browser_load::WorldState {
+                initialized_time: -1.0,
+                ..Default::default()
+            },
             pending_externs: vec![],
             extern_frame_waiters: vec![],
             extern_states: HashMap::new(),
@@ -713,8 +722,22 @@ impl Runtime {
 
         rt.browser_node = rt.create_internal_node("X3DBrowser");
 
-        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "displayFinishEvents", "finishEvents"] {
-            rt.add_private_field(rt.browser_node, name, access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+        for name in [
+            "prepareEvents",
+            "timePrepareEvents",
+            "timeEvents",
+            "cameraEvents",
+            "sensorEvents",
+            "displayEvents",
+            "displayFinishEvents",
+            "finishEvents",
+        ] {
+            rt.add_private_field(
+                rt.browser_node,
+                name,
+                access::OUTPUT_ONLY,
+                FieldValue::SFTime(0.0),
+            );
         }
 
         rt.nrt_mut(rt.browser_node).setup_started = true;
@@ -724,7 +747,10 @@ impl Runtime {
     }
 
     pub fn log_error(&mut self, message: impl AsRef<str>) {
-        let line = format!("error: {}", message.as_ref().split('\n').next().unwrap_or(""));
+        let line = format!(
+            "error: {}",
+            message.as_ref().split('\n').next().unwrap_or("")
+        );
 
         if self.record_console {
             self.console.push(line.clone());
@@ -739,7 +765,10 @@ impl Runtime {
             return self.log_error(m);
         }
 
-        let line = format!("warn: {}", message.as_ref().split('\n').next().unwrap_or(""));
+        let line = format!(
+            "warn: {}",
+            message.as_ref().split('\n').next().unwrap_or("")
+        );
 
         if self.record_console {
             self.console.push(line.clone());
@@ -779,7 +808,8 @@ impl Runtime {
         let i = id as usize;
 
         if self.nrt.len() <= i {
-            self.nrt.resize_with(self.scene.nodes.len().max(i + 1), NodeRt::default);
+            self.nrt
+                .resize_with(self.scene.nodes.len().max(i + 1), NodeRt::default);
         }
 
         &mut self.nrt[i]
@@ -825,7 +855,13 @@ impl Runtime {
     }
 
     /// Add a private child object (X3DBaseNode.addChildObject); returns its key.
-    pub fn add_private_field(&mut self, node: NodeId, name: &str, access_type: u8, value: FieldValue) -> FKey {
+    pub fn add_private_field(
+        &mut self,
+        node: NodeId,
+        name: &str,
+        access_type: u8,
+        value: FieldValue,
+    ) -> FKey {
         let n = self.scene.node_mut(node);
 
         if let Some(i) = n.private_fields.iter().position(|f| f.name == name) {
@@ -837,7 +873,12 @@ impl Runtime {
     }
 
     pub fn private_field(&self, node: NodeId, name: &str) -> Option<FKey> {
-        self.scene.node(node).private_fields.iter().position(|f| f.name == name).map(|i| (node, FieldLoc::Priv(i)))
+        self.scene
+            .node(node)
+            .private_fields
+            .iter()
+            .position(|f| f.name == name)
+            .map(|i| (node, FieldLoc::Priv(i)))
     }
 
     /// X3DBaseNode.getField (name) → key.
@@ -847,7 +888,12 @@ impl Runtime {
 
     /// Predefined field by exact name (this ._name).
     pub fn pre(&self, node: NodeId, name: &str) -> Option<FKey> {
-        self.scene.node(node).fields.iter().position(|f| f.name == name).map(|i| (node, FieldLoc::Pre(i)))
+        self.scene
+            .node(node)
+            .fields
+            .iter()
+            .position(|f| f.name == name)
+            .map(|i| (node, FieldLoc::Pre(i)))
     }
 
     pub fn pre_value(&self, node: NodeId, name: &str) -> Option<&FieldValue> {
@@ -976,7 +1022,6 @@ impl Runtime {
         for (n, h) in adds {
             self.add_parent(n, h);
         }
-
     }
 
     /// X3DNode.getCloneCount: one per non-private holder; a field of a private node (`setPrivate (true)`,
@@ -1034,7 +1079,12 @@ impl Runtime {
 
         // X3DBaseNode.parentsChanged: `executionContext ._sceneGraph_changed = time` for every node that gained or lost a parent.
         if self.ctx_events.observed {
-            let moved: Vec<NodeId> = old.iter().filter(|n| !new.contains(n)).chain(new.iter().filter(|n| !old.contains(n))).copied().collect();
+            let moved: Vec<NodeId> = old
+                .iter()
+                .filter(|n| !new.contains(n))
+                .chain(new.iter().filter(|n| !old.contains(n)))
+                .copied()
+                .collect();
 
             for n in moved {
                 self.ctx_parents_changed(n);
@@ -1112,7 +1162,10 @@ impl Runtime {
 
     /// Store the scene-wide clone counts for the generator (X3DGenerator.NeedsName).
     pub fn publish_clone_counts(&mut self) {
-        let counts = (0..self.scene.nodes.len() as NodeId).map(|n| (n, self.clone_count(n))).filter(|(_, c)| *c > 1).collect();
+        let counts = (0..self.scene.nodes.len() as NodeId)
+            .map(|n| (n, self.clone_count(n)))
+            .filter(|(_, c)| *c > 1)
+            .collect();
         self.scene.clone_counts = Some(counts);
     }
 }
@@ -1149,7 +1202,12 @@ impl Runtime {
                     Task::ScriptLoad(node) => self.script_candidate(node, 0, None),
                     Task::ScriptCandidate(node, index, hops, failed) => {
                         if hops > 0 {
-                            self.tasks.push_back(Task::ScriptCandidate(node, index, hops - 1, failed));
+                            self.tasks.push_back(Task::ScriptCandidate(
+                                node,
+                                index,
+                                hops - 1,
+                                failed,
+                            ));
                         } else {
                             self.script_candidate(node, index, failed.map(|f| *f));
                         }
@@ -1170,7 +1228,10 @@ impl Runtime {
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node, index) => self.script_fetch(node, index),
                 Task::BrowserLoad(id) => self.browser_load(id),
-                Task::ScriptLoad(..) | Task::ScriptCandidate(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
+                Task::ScriptLoad(..)
+                | Task::ScriptCandidate(..)
+                | Task::ScriptLoaded(..)
+                | Task::BrowserParse(..) => {}
             }
         }
     }
@@ -1187,9 +1248,13 @@ impl Runtime {
             || !self.frame_waiters.is_empty()
             || !self.pending_externs.is_empty()
             || !self.extern_frame_waiters.is_empty()
-            || self.extern_states.values().any(|s| s.load_state == nodes::LoadState::InProgress)
+            || self
+                .extern_states
+                .values()
+                .any(|s| s.load_state == nodes::LoadState::InProgress)
             || (0..self.scene.nodes.len() as NodeId).any(|n| {
-                matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry")) && self.url_load_state(n) == nodes::LoadState::InProgress
+                matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry"))
+                    && self.url_load_state(n) == nodes::LoadState::InProgress
             })
     }
 
@@ -1285,7 +1350,12 @@ impl Runtime {
 impl Runtime {
     /// Merge a scene created at runtime (an X3DScene with its own root context), connect its
     /// routes and set up its nodes like X3DParser.setupNodes. Returns the merge map.
-    pub fn import_scene(&mut self, mut scene: Scene, parent: CtxId, outer: Option<NodeId>) -> MergeMap {
+    pub fn import_scene(
+        &mut self,
+        mut scene: Scene,
+        parent: CtxId,
+        outer: Option<NodeId>,
+    ) -> MergeMap {
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
         }
@@ -1320,7 +1390,11 @@ impl Runtime {
 
     /// X3DBrowser.createVrmlFromString: parse `#VRML V2.0 utf8` + text with the current
     /// scene's world URL; the new scene's root nodes.
-    pub fn create_vrml_from_string(&mut self, text: &str, parent: CtxId) -> Result<Vec<Option<NodeId>>, String> {
+    pub fn create_vrml_from_string(
+        &mut self,
+        text: &str,
+        parent: CtxId,
+    ) -> Result<Vec<Option<NodeId>>, String> {
         let source = format!("#VRML V2.0 utf8\n\n{text}");
         let world_url = self.scene.world_url_of(parent).to_string();
         let scene = match x3d_parse::Parser::new(&source, &world_url).parse() {
@@ -1332,7 +1406,9 @@ impl Runtime {
                 }
 
                 self.log_error(format!("Error: {}", e.message));
-                return Err(x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")));
+                return Err(
+                    x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}"))
+                );
             }
         };
         let simple = scene.contexts.len() == 1
@@ -1414,15 +1490,29 @@ impl Runtime {
     /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty`: with a scene (`ctx`), the nodes of the
     /// value are made in it and set up, and `unit` converts the values; without one, a value that needs nodes cannot be made
     /// (X_ITE: the parser has no execution context, a TypeError, `Err(None)`). `Ok(None)`: nothing could be read.
-    pub fn field_from_string(&mut self, ty: x3d_fields::FieldType, text: &str, ctx: Option<CtxId>, xml: bool, unit: Option<String>, name: &str) -> Result<Option<FieldValue>, Option<String>> {
+    pub fn field_from_string(
+        &mut self,
+        ty: x3d_fields::FieldType,
+        text: &str,
+        ctx: Option<CtxId>,
+        xml: bool,
+        unit: Option<String>,
+        name: &str,
+    ) -> Result<Option<FieldValue>, Option<String>> {
         let Some(ctx) = ctx else {
-            let (scene, result) = x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+            let (scene, result) =
+                x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
 
             // Without an execution context, the parser of a node value fails on the first node statement it reads (NULL and
             // [ ] read none): only a value that needed no node and no warning stands.
-            let node_type = matches!(ty, x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode) && !xml;
+            let node_type = matches!(
+                ty,
+                x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
+            ) && !xml;
 
-            if !scene.nodes.is_empty() || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_))))) {
+            if !scene.nodes.is_empty()
+                || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_)))))
+            {
                 return Err(None);
             }
 
@@ -1440,7 +1530,8 @@ impl Runtime {
         // The nodes it creates are found as the range `first_new..`: none goes into a released slot.
         scene.append_only = true;
 
-        let (mut scene, result) = x3d_parse::Parser::parse_field_into(scene, ctx, ty, text, xml, unit, name);
+        let (mut scene, result) =
+            x3d_parse::Parser::parse_field_into(scene, ctx, ty, text, xml, unit, name);
 
         scene.append_only = false;
         self.scene = scene;
@@ -1491,11 +1582,24 @@ impl Runtime {
     }
 
     /// X3DExecutionContext.deleteRoute: also removes the field interest.
-    pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) {
+    pub fn delete_route(
+        &mut self,
+        ctx: CtxId,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) {
         self.dynamic_dirty = true;
 
-        if let Some(r) = self.scene.delete_route(ctx, source, source_field, destination, destination_field) {
-            self.remove_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
+        if let Some(r) =
+            self.scene
+                .delete_route(ctx, source, source_field, destination, destination_field)
+        {
+            self.remove_field_interest(
+                (r.source_node, r.source_loc),
+                (r.destination_node, r.destination_loc),
+            );
         }
     }
 
@@ -1509,7 +1613,12 @@ impl Runtime {
         self.create_node_tracked(ctx, type_name, true)
     }
 
-    fn create_node_tracked(&mut self, ctx: CtxId, type_name: &str, script_created: bool) -> Option<NodeId> {
+    fn create_node_tracked(
+        &mut self,
+        ctx: CtxId,
+        type_name: &str,
+        script_created: bool,
+    ) -> Option<NodeId> {
         self.scene.alloc_log = Some(vec![]);
 
         let created = self.scene.create_node(ctx, type_name);
@@ -1563,7 +1672,14 @@ impl Runtime {
         self.nrt_mut(n);
         self.construct_node(n);
 
-        let values: Vec<(usize, FieldValue)> = self.scene.node(n).fields.iter().map(|f| f.value.clone()).enumerate().collect();
+        let values: Vec<(usize, FieldValue)> = self
+            .scene
+            .node(n)
+            .fields
+            .iter()
+            .map(|f| f.value.clone())
+            .enumerate()
+            .collect();
         for (i, v) in values {
             for m in Self::node_values_pub(&v) {
                 self.add_parent_pub(m, Holder::Field((n, FieldLoc::Pre(i))));

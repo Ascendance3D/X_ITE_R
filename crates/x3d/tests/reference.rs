@@ -11,7 +11,14 @@ fn table_is_complete() {
 fn known_fields() {
     let ifs = x3d::node("IndexedFaceSet").unwrap();
     let crease = ifs.field("creaseAngle").unwrap();
-    assert_eq!((crease.access(), crease.type_name(), crease.default_vrml().as_str()), ("initializeOnly", "SFFloat", "0"));
+    assert_eq!(
+        (
+            crease.access(),
+            crease.type_name(),
+            crease.default_vrml().as_str()
+        ),
+        ("initializeOnly", "SFFloat", "0")
+    );
     let solid = ifs.field("solid").unwrap();
     assert_eq!(solid.default_vrml(), "TRUE");
     let set = ifs.field("set_coordIndex").unwrap();
@@ -20,14 +27,32 @@ fn known_fields() {
     let vp = x3d::node("Viewpoint").unwrap();
     assert_eq!(vp.field("position").unwrap().default_vrml(), "0 0 10");
     assert_eq!(vp.field("orientation").unwrap().default_vrml(), "0 0 1 0");
-    assert_eq!(x3d::node("Shape").unwrap().field("geometry").unwrap().default_vrml(), "NULL");
-    assert_eq!(x3d::node("Group").unwrap().field("children").unwrap().default_vrml(), "[ ]");
+    assert_eq!(
+        x3d::node("Shape")
+            .unwrap()
+            .field("geometry")
+            .unwrap()
+            .default_vrml(),
+        "NULL"
+    );
+    assert_eq!(
+        x3d::node("Group")
+            .unwrap()
+            .field("children")
+            .unwrap()
+            .default_vrml(),
+        "[ ]"
+    );
     assert_eq!(x3d::node("Box").unwrap().container_field(), "geometry");
     assert!(x3d::node("NoSuchNode").is_none());
 }
 
 #[test]
 fn reads_classic_encoding() {
-    let s = x3d::parse_bytes(b"#X3D V4.0 utf8\nPROFILE Interchange\nTransform { translation 1 2 3 }\n", "memory:").unwrap();
+    let s = x3d::parse_bytes(
+        b"#X3D V4.0 utf8\nPROFILE Interchange\nTransform { translation 1 2 3 }\n",
+        "memory:",
+    )
+    .unwrap();
     assert!(s.to_vrml_string().contains("translation 1 2 3"));
 }

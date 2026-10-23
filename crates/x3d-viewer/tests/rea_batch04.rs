@@ -83,27 +83,63 @@ fn text_equal(a: &str, b: &str, tol: f64) -> bool {
 
     let ((ta, na), (tb, nb)) = (split(a), split(b));
 
-    ta == tb && na.iter().zip(&nb).all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
+    ta == tb
+        && na
+            .iter()
+            .zip(&nb)
+            .all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
 }
 
 fn nums(v: &Value) -> Vec<f64> {
-    v.as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default()
 }
 
 #[allow(clippy::too_many_arguments)]
-fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, text_tol: f64, gpu: bool, failures: &mut Vec<String>) {
+fn compare_case(
+    root: &Path,
+    name: &str,
+    world: &str,
+    script: &str,
+    msaa: u32,
+    text_tol: f64,
+    gpu: bool,
+    failures: &mut Vec<String>,
+) {
     let dir = root.join(format!("oracle/rea-batch04-baseline/{name}-msaa{msaa}"));
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch04-{}-{name}-msaa{msaa}", std::process::id()));
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let out = std::env::temp_dir().join(format!(
+        "rea-batch04-{}-{name}-msaa{msaa}",
+        std::process::id()
+    ));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
-    let standins: Value = serde_json::from_str(&std::fs::read_to_string(root.join("oracle/rea-batch04-baseline/standins.json")).unwrap()).unwrap();
+    let standins: Value = serde_json::from_str(
+        &std::fs::read_to_string(root.join("oracle/rea-batch04-baseline/standins.json")).unwrap(),
+    )
+    .unwrap();
     let standin = &standins[name];
     let world = standin["rs_world"].as_str().unwrap_or(world);
-    let subs: Vec<(String, String)> = standin["subs"].as_array().map_or(vec![], |a| a.iter().map(|p| (p[0].as_str().unwrap().to_string(), p[1].as_str().unwrap().to_string())).collect());
+    let subs: Vec<(String, String)> = standin["subs"].as_array().map_or(vec![], |a| {
+        a.iter()
+            .map(|p| {
+                (
+                    p[0].as_str().unwrap().to_string(),
+                    p[1].as_str().unwrap().to_string(),
+                )
+            })
+            .collect()
+    });
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-drive"));
-    cmd.current_dir(root).args([world, script, "--oracle", "oracle"]).arg("--out").arg(&rs_json).arg("--warmup-from").arg(dir.join("js.json"));
+    cmd.current_dir(root)
+        .args([world, script, "--oracle", "oracle"])
+        .arg("--out")
+        .arg(&rs_json)
+        .arg("--warmup-from")
+        .arg(dir.join("js.json"));
 
     let images = gpu && dir.join("js").is_dir();
 
@@ -130,7 +166,11 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 
     for (k, a) in js["vrml"].as_object().unwrap() {
         let equal = match (a.as_str(), rs["vrml"].get(k).and_then(Value::as_str)) {
-            (Some(a), Some(b)) => text_equal(a, &subs.iter().fold(b.to_string(), |t, (o, n)| t.replace(o, n)), text_tol),
+            (Some(a), Some(b)) => text_equal(
+                a,
+                &subs.iter().fold(b.to_string(), |t, (o, n)| t.replace(o, n)),
+                text_tol,
+            ),
             _ => rs["vrml"].get(k) == Some(a),
         };
 
@@ -148,15 +188,38 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
             fail(format!("pose at frame {k} missing"));
             continue;
         };
-        let d = |key: &str| nums(&a[key]).iter().zip(nums(&b[key])).map(|(p, q)| (p - q).abs()).fold(0.0, f64::max);
-        let (qa, qb) = (quat(&nums(&a["orientation"])), quat(&nums(&b["orientation"])));
+        let d = |key: &str| {
+            nums(&a[key])
+                .iter()
+                .zip(nums(&b[key]))
+                .map(|(p, q)| (p - q).abs())
+                .fold(0.0, f64::max)
+        };
+        let (qa, qb) = (
+            quat(&nums(&a["orientation"])),
+            quat(&nums(&b["orientation"])),
+        );
         let dot = qa.iter().zip(qb).map(|(p, q)| p * q).sum::<f64>().abs();
         let angle = 2.0 * dot.min(1.0).acos();
-        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0) - b["fieldOfViewScale"].as_f64().unwrap_or(1.0)).abs();
+        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0)
+            - b["fieldOfViewScale"].as_f64().unwrap_or(1.0))
+        .abs();
         let viewpoint = a["viewpoint"] == b["viewpoint"] || b["viewpoint"] == "<default>";
 
-        if d("position") > 1e-4 || d("centerOfRotation") > 1e-4 || angle > 1e-4 || fov > 1e-4 || a["viewer"] != b["viewer"] || !viewpoint {
-            fail(format!("pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}", d("position"), d("centerOfRotation"), a["viewer"], b["viewer"]));
+        if d("position") > 1e-4
+            || d("centerOfRotation") > 1e-4
+            || angle > 1e-4
+            || fov > 1e-4
+            || a["viewer"] != b["viewer"]
+            || !viewpoint
+        {
+            fail(format!(
+                "pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}",
+                d("position"),
+                d("centerOfRotation"),
+                a["viewer"],
+                b["viewer"]
+            ));
         }
     }
 
@@ -171,7 +234,10 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
                     if s.pixels_over * 1000 > (w * h) as usize * 5 {
-                        fail(format!("{file}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+                        fail(format!(
+                            "{file}: {} pixels over 8 ({:.3}%), max {}",
+                            s.pixels_over, s.pct_over, s.max_delta
+                        ));
                     }
                 }
                 Ok((rw, rh, _)) => fail(format!("{file}: size {rw}x{rh}, X_ITE {w}x{h}")),
@@ -185,8 +251,12 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 
 #[test]
 fn rea_batch04_cases_match_x_ite() {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch04-baseline/cases.txt")).unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let cases =
+        std::fs::read_to_string(root.join("oracle/rea-batch04-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
@@ -202,10 +272,24 @@ fn rea_batch04_cases_match_x_ite() {
             continue;
         }
 
-        compare_case(&root, name, world, script, msaa, text_tol, gpu, &mut failures);
+        compare_case(
+            &root,
+            name,
+            world,
+            script,
+            msaa,
+            text_tol,
+            gpu,
+            &mut failures,
+        );
         checked += 1;
     }
 
     eprintln!("{checked} cases checked (images: {gpu})");
-    assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} failures:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

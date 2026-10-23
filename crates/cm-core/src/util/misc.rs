@@ -9,7 +9,13 @@ use crate::text::{index_of, is_js_space, is_js_word};
 ///
 /// `end == None` means "up to the first non-whitespace character"
 /// (`string.search(/[^\s ]/)`).
-pub fn count_column(s: &[u16], end: Option<usize>, tab_size: i64, start_index: usize, start_value: i64) -> i64 {
+pub fn count_column(
+    s: &[u16],
+    end: Option<usize>,
+    tab_size: i64,
+    start_index: usize,
+    start_value: i64,
+) -> i64 {
     let end = match end {
         Some(e) => e as i64,
         None => s.iter().position(|&c| !is_js_space(c)).unwrap_or(s.len()) as i64,
@@ -22,7 +28,15 @@ pub fn count_column(s: &[u16], end: Option<usize>, tab_size: i64, start_index: u
     // (C4: javascript `pushlex` on single-line JSON files).
     let limit = (end.max(0) as usize).min(s.len());
     loop {
-        let next_tab = if i < limit { s[i..limit].iter().position(|&c| c == 0x09).map(|p| (p + i) as i64).unwrap_or(-1) } else { -1 };
+        let next_tab = if i < limit {
+            s[i..limit]
+                .iter()
+                .position(|&c| c == 0x09)
+                .map(|p| (p + i) as i64)
+                .unwrap_or(-1)
+        } else {
+            -1
+        };
         if next_tab < 0 || next_tab >= end {
             return n + (end - i as i64);
         }
@@ -37,7 +51,9 @@ pub fn find_column(s: &[u16], goal: i64, tab_size: i64) -> i64 {
     let mut pos: i64 = 0;
     let mut col: i64 = 0;
     loop {
-        let next_tab = index_of(s, &[0x09], pos as usize).map(|x| x as i64).unwrap_or(s.len() as i64);
+        let next_tab = index_of(s, &[0x09], pos as usize)
+            .map(|x| x as i64)
+            .unwrap_or(s.len() as i64);
         let skipped = next_tab - pos;
         if next_tab == s.len() as i64 || col + skipped >= goal {
             return pos + skipped.min(goal - col);
@@ -118,16 +134,36 @@ pub fn is_word_char(ch: &[u16], helper: Option<&WordCharHelper>) -> bool {
 ///
 /// `isExtendingChar(ch)` for a single UTF-16 unit.
 pub fn is_extending_char(c: u16) -> bool {
-    c >= 768 && EXTENDING_CHARS.binary_search_by(|&(lo, hi)| {
-        if hi < c { std::cmp::Ordering::Less } else if lo > c { std::cmp::Ordering::Greater } else { std::cmp::Ordering::Equal }
-    }).is_ok()
+    c >= 768
+        && EXTENDING_CHARS
+            .binary_search_by(|&(lo, hi)| {
+                if hi < c {
+                    std::cmp::Ordering::Less
+                } else if lo > c {
+                    std::cmp::Ordering::Greater
+                } else {
+                    std::cmp::Ordering::Equal
+                }
+            })
+            .is_ok()
 }
 
 /// `skipExtendingChars(str, pos, dir)`.
 pub fn skip_extending_chars(s: &[u16], mut pos: i64, dir: i64) -> i64 {
     // `str.charAt(pos)` is "" outside the string, and "" is not extending.
-    let at = |p: i64| if p >= 0 && (p as usize) < s.len() { is_extending_char(s[p as usize]) } else { false };
-    while (if dir < 0 { pos > 0 } else { pos < s.len() as i64 }) && at(pos) {
+    let at = |p: i64| {
+        if p >= 0 && (p as usize) < s.len() {
+            is_extending_char(s[p as usize])
+        } else {
+            false
+        }
+    };
+    while (if dir < 0 {
+        pos > 0
+    } else {
+        pos < s.len() as i64
+    }) && at(pos)
+    {
         pos += dir;
     }
     pos

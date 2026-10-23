@@ -13,5 +13,5 @@ pub mod types;
 pub mod value;
 
 pub use generator::{Generator, Style};
-pub use types::{access, FieldType};
+pub use types::{FieldType, access};
 pub use value::{FieldValue, Image, NodeId};

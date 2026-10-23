@@ -16,7 +16,7 @@
 
 mod particles_b06_common;
 
-use particles_b06_common::{big, f32s, json, oracle, GROUPS, STRIDE};
+use particles_b06_common::{GROUPS, STRIDE, big, f32s, json, oracle};
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -41,9 +41,21 @@ fn dumps(js: &Value, data: &[f32]) -> Vec<(u64, Vec<[f32; STRIDE]>)> {
         .unwrap()
         .iter()
         .map(|(k, d)| {
-            let (n, off) = (d["numParticles"].as_u64().unwrap() as usize, d["offset"].as_u64().unwrap() as usize);
+            let (n, off) = (
+                d["numParticles"].as_u64().unwrap() as usize,
+                d["offset"].as_u64().unwrap() as usize,
+            );
 
-            (k.parse().unwrap(), (0..n).map(|i| data[off + i * STRIDE..off + (i + 1) * STRIDE].try_into().unwrap()).collect())
+            (
+                k.parse().unwrap(),
+                (0..n)
+                    .map(|i| {
+                        data[off + i * STRIDE..off + (i + 1) * STRIDE]
+                            .try_into()
+                            .unwrap()
+                    })
+                    .collect(),
+            )
         })
         .collect();
 
@@ -65,7 +77,9 @@ struct Outcome {
 fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
     let o = oracle();
     let base_dir = o.join("rea-batch07-ps-baseline").join(name);
-    let script_path = o.join("synthetic-rea-b07-ps/scripts").join(format!("{name}.json"));
+    let script_path = o
+        .join("synthetic-rea-b07-ps/scripts")
+        .join(format!("{name}.json"));
     let script = json(&script_path);
     let out = tmp.join(format!("{name}.json"));
     let mut fails = vec![];
@@ -81,13 +95,26 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
         .expect("driver");
 
     if !run.status.success() || !out.exists() {
-        return Outcome { name: name.into(), fails: vec![format!("driver failed: {}", String::from_utf8_lossy(&run.stderr))], max };
+        return Outcome {
+            name: name.into(),
+            fails: vec![format!(
+                "driver failed: {}",
+                String::from_utf8_lossy(&run.stderr)
+            )],
+            max,
+        };
     }
 
     let (base, rs) = (json(&base_dir.join("js.json")), json(&out));
-    let (bd, rd) = (dumps(&base, &f32s(&base_dir.join("js.f32"))), dumps(&rs, &f32s(&out.with_extension("f32"))));
+    let (bd, rd) = (
+        dumps(&base, &f32s(&base_dir.join("js.f32"))),
+        dumps(&rs, &f32s(&out.with_extension("f32"))),
+    );
     let strong = script["tol"].as_str() == Some("strong");
-    let (bs, rsteps) = (base["steps"].as_array().unwrap(), rs["steps"].as_array().unwrap());
+    let (bs, rsteps) = (
+        base["steps"].as_array().unwrap(),
+        rs["steps"].as_array().unwrap(),
+    );
 
     if bs.len() != rsteps.len() {
         fails.push(format!("steps: {} vs {}", bs.len(), rsteps.len()));
@@ -98,7 +125,10 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
 
         for key in ["numParticles", "isActive", "maxParticles", "numForces"] {
             if b.get(key).is_some() && b[key] != r[key] {
-                fails.push(format!("frame {f}: {key} X_ITE {}, port {}", b[key], r[key]));
+                fails.push(format!(
+                    "frame {f}: {key} X_ITE {}, port {}",
+                    b[key], r[key]
+                ));
             }
         }
 
@@ -108,23 +138,50 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
 
         let drawn = b["forceDraws"].as_array().map_or(0, Vec::len);
 
-        if r["forceDrawsUsed"].as_u64().map(|u| u as usize).unwrap_or(0) != drawn {
-            fails.push(format!("frame {f}: force draws used {} vs {drawn}", r["forceDrawsUsed"]));
+        if r["forceDrawsUsed"]
+            .as_u64()
+            .map(|u| u as usize)
+            .unwrap_or(0)
+            != drawn
+        {
+            fails.push(format!(
+                "frame {f}: force draws used {} vs {drawn}",
+                r["forceDrawsUsed"]
+            ));
         }
 
-        let (bf, rf): (Vec<_>, Vec<_>) = (b["forces"].as_array().unwrap().iter().map(force_value).collect(), r["forces"].as_array().unwrap().iter().map(force_value).collect());
+        let (bf, rf): (Vec<_>, Vec<_>) = (
+            b["forces"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(force_value)
+                .collect(),
+            r["forces"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(force_value)
+                .collect(),
+        );
 
         if bf != rf {
-            fails.push(format!("frame {f}: force texture X_ITE {bf:?}, port {rf:?}"));
+            fails.push(format!(
+                "frame {f}: force texture X_ITE {bf:?}, port {rf:?}"
+            ));
         }
 
-        let (dt, rt) = (b["deltaTime"].as_f64().unwrap(), r["deltaTime"].as_f64().unwrap());
+        let (dt, rt) = (
+            b["deltaTime"].as_f64().unwrap(),
+            r["deltaTime"].as_f64().unwrap(),
+        );
 
         if (dt - rt).abs() > 1e-12 * dt.abs() {
             fails.push(format!("frame {f}: deltaTime {dt} vs {rt}"));
         }
 
-        if (b["creationTime"].as_f64().unwrap() - r["creationTime"].as_f64().unwrap()).abs() > 1e-9 {
+        if (b["creationTime"].as_f64().unwrap() - r["creationTime"].as_f64().unwrap()).abs() > 1e-9
+        {
             fails.push(format!("frame {f}: creationTime"));
         }
     }
@@ -136,19 +193,28 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
         };
 
         if rows.len() != got.len() {
-            fails.push(format!("frame {frame}: {} records, X_ITE {}", got.len(), rows.len()));
+            fails.push(format!(
+                "frame {frame}: {} records, X_ITE {}",
+                got.len(),
+                rows.len()
+            ));
             continue;
         }
 
         for (i, (a, b)) in rows.iter().zip(got).enumerate() {
             for (gi, (g, cols, abs, rel)) in GROUPS.iter().enumerate() {
-                let (abs, rel) = STRONG.iter().find(|s| strong && s.0 == *g).map_or((*abs, *rel), |s| (s.1, s.2));
+                let (abs, rel) = STRONG
+                    .iter()
+                    .find(|s| strong && s.0 == *g)
+                    .map_or((*abs, *rel), |s| (s.1, s.2));
 
                 for &c in *cols {
                     let (x, y) = (f64::from(a[c]), f64::from(b[c]));
 
                     if x.is_nan() != y.is_nan() {
-                        fails.push(format!("frame {frame} particle {i} {g}[{c}]: X_ITE {x}, port {y}"));
+                        fails.push(format!(
+                            "frame {frame} particle {i} {g}[{c}]: X_ITE {x}, port {y}"
+                        ));
                     } else if !x.is_nan() {
                         let d = (x - y).abs();
 
@@ -168,18 +234,27 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
     }
 
     // The polylines texture: the length texels hold only .x for the shader (X_ITE reuses its array without clearing it).
-    match (base["geometry"].get("polyline"), rs["geometry"].get("polyline")) {
+    match (
+        base["geometry"].get("polyline"),
+        rs["geometry"].get("polyline"),
+    ) {
         (None, None) => {}
         (Some(b), Some(r)) => {
             let vi = b["verticesIndex"].as_i64().unwrap();
 
             if vi != r["verticesIndex"].as_i64().unwrap() {
-                fails.push(format!("polylines verticesIndex {vi} vs {}", r["verticesIndex"]));
+                fails.push(format!(
+                    "polylines verticesIndex {vi} vs {}",
+                    r["verticesIndex"]
+                ));
             }
 
             for (i, x) in b["array"].as_array().unwrap().iter().enumerate() {
                 if (i / 4) as i64 >= vi && vi >= 0 || i % 4 == 0 {
-                    let (x, y) = (x.as_f64().unwrap() as f32, r["array"][i].as_f64().unwrap() as f32);
+                    let (x, y) = (
+                        x.as_f64().unwrap() as f32,
+                        r["array"][i].as_f64().unwrap() as f32,
+                    );
 
                     if x != y {
                         fails.push(format!("polylines texture float {i}: X_ITE {x}, port {y}"));
@@ -187,7 +262,11 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
                 }
             }
         }
-        (b, r) => fails.push(format!("polylines texture: X_ITE {}, port {}", b.is_some(), r.is_some())),
+        (b, r) => fails.push(format!(
+            "polylines texture: X_ITE {}, port {}",
+            b.is_some(),
+            r.is_some()
+        )),
     }
 
     for key in ["vrmlLoad", "vrmlEnd"] {
@@ -197,18 +276,33 @@ fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
     }
 
     let sorted = |v: &Value| {
-        let mut l: Vec<String> = v.as_array().map(|a| a.iter().map(|x| x.as_str().unwrap_or("").to_string()).collect()).unwrap_or_default();
+        let mut l: Vec<String> = v
+            .as_array()
+            .map(|a| {
+                a.iter()
+                    .map(|x| x.as_str().unwrap_or("").to_string())
+                    .collect()
+            })
+            .unwrap_or_default();
 
         l.sort();
         l
     };
 
     if sorted(&base["console"]) != sorted(&rs["console"]) {
-        fails.push(format!("console: X_ITE {:?}, port {:?}", sorted(&base["console"]), sorted(&rs["console"])));
+        fails.push(format!(
+            "console: X_ITE {:?}, port {:?}",
+            sorted(&base["console"]),
+            sorted(&rs["console"])
+        ));
     }
 
     fails.truncate(8);
-    Outcome { name: name.into(), fails, max }
+    Outcome {
+        name: name.into(),
+        fails,
+        max,
+    }
 }
 
 #[test]
@@ -217,7 +311,13 @@ fn oracle_cases_match_x_ite() {
     let o = oracle();
     let mut names: Vec<String> = std::fs::read_dir(o.join("synthetic-rea-b07-ps/scripts"))
         .expect("scripts")
-        .filter_map(|e| e.ok()?.file_name().to_str()?.strip_suffix(".json").map(String::from))
+        .filter_map(|e| {
+            e.ok()?
+                .file_name()
+                .to_str()?
+                .strip_suffix(".json")
+                .map(String::from)
+        })
         .filter(|n| n.starts_with("ps-"))
         .collect();
 
@@ -234,19 +334,21 @@ fn oracle_cases_match_x_ite() {
 
     std::thread::scope(|s| {
         for _ in 0..8 {
-            s.spawn(|| loop {
-                let i = {
-                    let mut n = next.lock().unwrap();
-                    let i = *n;
+            s.spawn(|| {
+                loop {
+                    let i = {
+                        let mut n = next.lock().unwrap();
+                        let i = *n;
 
-                    *n += 1;
-                    i
-                };
+                        *n += 1;
+                        i
+                    };
 
-                let Some(name) = names.get(i) else { break };
-                let r = run_case(&driver, &tmp, name);
+                    let Some(name) = names.get(i) else { break };
+                    let r = run_case(&driver, &tmp, name);
 
-                results.lock().unwrap().push(r);
+                    results.lock().unwrap().push(r);
+                }
             });
         }
     });
@@ -268,9 +370,24 @@ fn oracle_cases_match_x_ite() {
         }
     }
 
-    println!("MAXERR\tps-oracle\t{} cases\t{}", results.len(), GROUPS.iter().zip(&max).map(|(g, m)| format!("{}={m:.2e}", g.0)).collect::<Vec<_>>().join("\t"));
+    println!(
+        "MAXERR\tps-oracle\t{} cases\t{}",
+        results.len(),
+        GROUPS
+            .iter()
+            .zip(&max)
+            .map(|(g, m)| format!("{}={m:.2e}", g.0))
+            .collect::<Vec<_>>()
+            .join("\t")
+    );
     let _ = std::fs::remove_dir_all(&tmp);
-    assert!(bad.is_empty(), "{} of {} cases differ from X_ITE:\n{}", bad.len(), results.len(), bad.join("\n"));
+    assert!(
+        bad.is_empty(),
+        "{} of {} cases differ from X_ITE:\n{}",
+        bad.len(),
+        results.len(),
+        bad.join("\n")
+    );
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -283,7 +400,13 @@ const HEADER: &str = "#X3D V4.0 utf8\nPROFILE Full\nCOMPONENT ParticleSystems:2\
 fn rss_kib() -> usize {
     std::fs::read_to_string("/proc/self/status")
         .ok()
-        .and_then(|s| s.lines().find_map(|l| l.strip_prefix("VmRSS:").and_then(|r| r.split_whitespace().next()).and_then(|n| n.parse().ok())))
+        .and_then(|s| {
+            s.lines().find_map(|l| {
+                l.strip_prefix("VmRSS:")
+                    .and_then(|r| r.split_whitespace().next())
+                    .and_then(|n| n.parse().ok())
+            })
+        })
         .unwrap_or(0)
 }
 
@@ -320,7 +443,12 @@ fn resources(rt: &Runtime) -> Resources {
         systems,
         buffer_floats: floats,
         cache_texels: texels,
-        animate_interests: rt.frt.get(&sensor).map_or(0, |f| f.interests.iter().filter(|i| matches!(i.cb, Cb::Particle(_))).count()),
+        animate_interests: rt.frt.get(&sensor).map_or(0, |f| {
+            f.interests
+                .iter()
+                .filter(|i| matches!(i.cb, Cb::Particle(_)))
+                .count()
+        }),
         live_watchers: rt.live_watchers.len(),
         live_nodes: s.nodes.len() - s.free_nodes.len(),
         arena: s.nodes.len(),
@@ -332,14 +460,25 @@ fn resources(rt: &Runtime) -> Resources {
 
 fn assert_no_stale_ids(rt: &Runtime, when: &str) {
     for (k, f) in &rt.frt {
-        for i in f.interests.iter().filter(|i| matches!(i.cb, Cb::Particle(_))) {
-            assert!(rt.particle_sim(i.node).is_some(), "{when}: an interest of field {k:?} names node {} which holds no ParticleSystem state", i.node);
+        for i in f
+            .interests
+            .iter()
+            .filter(|i| matches!(i.cb, Cb::Particle(_)))
+        {
+            assert!(
+                rt.particle_sim(i.node).is_some(),
+                "{when}: an interest of field {k:?} names node {} which holds no ParticleSystem state",
+                i.node
+            );
         }
     }
 
     for (i, n) in rt.nrt.iter().enumerate() {
         if let State::ParticleSystem(_) = n.state {
-            assert!(rt.builtin_name(i as NodeId) == Some("ParticleSystem"), "{when}: particle state on node {i} of another type");
+            assert!(
+                rt.builtin_name(i as NodeId) == Some("ParticleSystem"),
+                "{when}: particle state on node {i} of another type"
+            );
         }
     }
 }
@@ -360,7 +499,17 @@ impl World {
             std::fs::write(dir.join(n), text).unwrap();
         }
 
-        let mut v = Viewer3d::load_attributes(&dir.join(files[0].0), Some(&dir), T0, 64, 64, Some(1.0 / DT), false, ORACLE_PAGE_ATTRIBUTES).expect("load");
+        let mut v = Viewer3d::load_attributes(
+            &dir.join(files[0].0),
+            Some(&dir),
+            T0,
+            64,
+            64,
+            Some(1.0 / DT),
+            false,
+            ORACLE_PAGE_ATTRIBUTES,
+        )
+        .expect("load");
 
         v.frame_rate = 1.0 / DT;
 
@@ -379,11 +528,18 @@ impl World {
     }
 
     fn named(&self, ctx: CtxId, name: &str) -> NodeId {
-        self.v.rt.scene.contexts[ctx].named_nodes.get(name).unwrap_or_else(|| panic!("no {name}"))
+        self.v.rt.scene.contexts[ctx]
+            .named_nodes
+            .get(name)
+            .unwrap_or_else(|| panic!("no {name}"))
     }
 
     fn set(&mut self, node: NodeId, field: &str, value: FieldValue) {
-        let k = self.v.rt.get_field(node, field).unwrap_or_else(|| panic!("no field {field}"));
+        let k = self
+            .v
+            .rt
+            .get_field(node, field)
+            .unwrap_or_else(|| panic!("no field {field}"));
 
         self.v.rt.set_value(k, value);
     }
@@ -411,7 +567,10 @@ fn polyline_scene(variant: u32) -> String {
     let (index, points) = if variant == 0 {
         ("0 1 2 3 -1", "0 0 0, 1 0 0, 1 2 0, 3 2 1")
     } else {
-        ("0 1 -1 2 3 -1 4 5 -1 6 7 8 9 10 -1", "0 0 0, 1 0 0, 0 1 0, 3 1 0, 0 2 0, 6 2 0, 0 3 0, 1 3 1, 2 3 3, 3 4 3, 5 5 5")
+        (
+            "0 1 -1 2 3 -1 4 5 -1 6 7 8 9 10 -1",
+            "0 0 0, 1 0 0, 0 1 0, 3 1 0, 0 2 0, 6 2 0, 0 3 0, 1 3 1, 2 3 3, 3 4 3, 5 5 5",
+        )
     };
 
     format!(
@@ -429,7 +588,14 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
     locked(|| {
         let mut w = World::new(
             "inline",
-            &[("main.x3dv", format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n")), ("a.x3dv", polyline_scene(0)), ("b.x3dv", polyline_scene(1))],
+            &[
+                (
+                    "main.x3dv",
+                    format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n"),
+                ),
+                ("a.x3dv", polyline_scene(0)),
+                ("b.x3dv", polyline_scene(1)),
+            ],
         );
         let inl = w.named(ROOT, "Inl");
         let mut unloaded = None;
@@ -437,7 +603,10 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
         let mut texels = [0usize; 2];
 
         assert_eq!(w.res().systems, 2);
-        assert!(w.res().cache_texels > 0, "the polylines (and the bounded box) are cached while the system runs");
+        assert!(
+            w.res().cache_texels > 0,
+            "the polylines (and the bounded box) are cached while the system runs"
+        );
         assert_no_stale_ids(&w.v.rt, "loaded");
 
         for c in 1..=100 {
@@ -446,7 +615,16 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
 
             let r = w.res();
 
-            assert_eq!((r.systems, r.buffer_floats, r.cache_texels, r.animate_interests), (0, 0, 0, 0), "cycle {c}: an unloaded scene keeps particle state or texels: {r:?}");
+            assert_eq!(
+                (
+                    r.systems,
+                    r.buffer_floats,
+                    r.cache_texels,
+                    r.animate_interests
+                ),
+                (0, 0, 0, 0),
+                "cycle {c}: an unloaded scene keeps particle state or texels: {r:?}"
+            );
             assert_no_stale_ids(&w.v.rt, "unloaded");
 
             if c == 10 {
@@ -454,17 +632,27 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
             }
 
             if let Some(b) = &unloaded {
-                assert_eq!(&r, b, "cycle {c}: a table grew after the warm-up (unloaded)");
+                assert_eq!(
+                    &r, b,
+                    "cycle {c}: a table grew after the warm-up (unloaded)"
+                );
             }
 
-            w.set(inl, "url", FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]));
+            w.set(
+                inl,
+                "url",
+                FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]),
+            );
             w.set(inl, "load", FieldValue::SFBool(true));
             w.steps(8);
 
             let r = w.res();
 
             assert_eq!((r.systems, r.animate_interests), (2, 2), "cycle {c}: {r:?}");
-            assert!(r.cache_texels > 0, "cycle {c}: the polylines are cached again");
+            assert!(
+                r.cache_texels > 0,
+                "cycle {c}: the polylines are cached again"
+            );
             assert_no_stale_ids(&w.v.rt, "reloaded");
 
             texels[(c % 2) as usize] = r.cache_texels;
@@ -473,13 +661,30 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
             let p1 = w.named(ctx, "P1");
             let sim = w.v.rt.particle_sim(p1).unwrap();
 
-            assert!(sim.num_particles > 0 && sim.num_forces == 2, "cycle {c}: wind and force rows: {}", sim.num_forces);
-            assert!(w.v.rt.particle_polyline_texture(p1).is_some_and(|t| t.vertices_index > 0));
+            assert!(
+                sim.num_particles > 0 && sim.num_forces == 2,
+                "cycle {c}: wind and force rows: {}",
+                sim.num_forces
+            );
+            assert!(
+                w.v.rt
+                    .particle_polyline_texture(p1)
+                    .is_some_and(|t| t.vertices_index > 0)
+            );
 
             if [10, 50, 100].contains(&c) {
                 println!(
                     "MEM\tps-b07-inline-cycle\t{c}\tsystems={}\tbuffer_floats={}\tcache_texels={}\tanimate_interests={}\tlive_watchers={}\tlive_nodes={}\tarena={}\tnrt={}\tfrt={}\trss_kib={}",
-                    r.systems, r.buffer_floats, r.cache_texels, r.animate_interests, r.live_watchers, r.live_nodes, r.arena, r.nrt, r.frt, rss_kib()
+                    r.systems,
+                    r.buffer_floats,
+                    r.cache_texels,
+                    r.animate_interests,
+                    r.live_watchers,
+                    r.live_nodes,
+                    r.arena,
+                    r.nrt,
+                    r.frt,
+                    rss_kib()
                 );
             }
 
@@ -494,7 +699,10 @@ fn polyline_cache_follows_the_scene_over_100_inline_reloads() {
             }
         }
 
-        assert_ne!(texels[0], texels[1], "the two scenes have different polylines");
+        assert_ne!(
+            texels[0], texels[1],
+            "the two scenes have different polylines"
+        );
     });
 }
 
@@ -510,7 +718,13 @@ Shape {{ geometry IndexedLineSet {{ coordIndex [ 0 1 -1 ] coord DEF C2 Coordinat
 DEF P2 ParticleSystem {{ maxParticles 5 emitter DEF PE PointEmitter {{ }} }}\n"
         );
         let mut w = World::new("coords", &[("w.x3dv", text)]);
-        let (p1, em, c, c2, pe) = (w.named(ROOT, "P1"), w.named(ROOT, "EM"), w.named(ROOT, "C"), w.named(ROOT, "C2"), w.named(ROOT, "PE"));
+        let (p1, em, c, c2, pe) = (
+            w.named(ROOT, "P1"),
+            w.named(ROOT, "EM"),
+            w.named(ROOT, "C"),
+            w.named(ROOT, "C2"),
+            w.named(ROOT, "PE"),
+        );
         let size = |vertices: usize| {
             let n = vertices / 2 + 1 + vertices;
 
@@ -524,13 +738,19 @@ DEF P2 ParticleSystem {{ maxParticles 5 emitter DEF PE PointEmitter {{ }} }}\n"
         // Grow and shrink the point list (index 0..N-1) many times: always exactly the current polyline.
         for round in 0..200usize {
             let n = 2 + (round * 7) % 40;
-            let points: Vec<f32> = (0..n).flat_map(|i| [i as f32, (i % 3) as f32, 0.0]).collect();
+            let points: Vec<f32> = (0..n)
+                .flat_map(|i| [i as f32, (i % 3) as f32, 0.0])
+                .collect();
             let index: Vec<i32> = (0..n as i32).chain([-1]).collect();
 
             w.set(c, "point", FieldValue::MFVec3f(points));
             w.set(em, "set_coordIndex", FieldValue::MFInt32(index));
             w.steps(1);
-            assert_eq!(texels(&w), Some(size((n - 1) * 2)), "round {round}: {n} points");
+            assert_eq!(
+                texels(&w),
+                Some(size((n - 1) * 2)),
+                "round {round}: {n} points"
+            );
         }
 
         // Another coord node, then none: no vertices, a one texel texture.
@@ -547,7 +767,11 @@ DEF P2 ParticleSystem {{ maxParticles 5 emitter DEF PE PointEmitter {{ }} }}\n"
         w.set(p1, "emitter", FieldValue::SFNode(Some(pe)));
         w.steps(1);
         assert_eq!(texels(&w), None);
-        assert_eq!(w.v.rt.particle_cache_texels(p1), 0, "the polylines were dropped with the emitter");
+        assert_eq!(
+            w.v.rt.particle_cache_texels(p1),
+            0,
+            "the polylines were dropped with the emitter"
+        );
 
         // And back.
         w.set(p1, "emitter", FieldValue::SFNode(Some(em)));
@@ -615,15 +839,33 @@ fn script_created_polyline_systems_are_released_100_cycles() {
             let live = w.res();
             let ps = system_in(&w);
 
-            assert_eq!(live.systems, base.systems + 1, "cycle {c}: the system in the Group runs");
-            assert!(live.cache_texels > base.cache_texels && live.buffer_floats > base.buffer_floats, "cycle {c}: polylines and particles exist while it runs");
-            assert_eq!(w.v.rt.particle_sim(ps).unwrap().num_forces, 2, "cycle {c}: wind and force");
+            assert_eq!(
+                live.systems,
+                base.systems + 1,
+                "cycle {c}: the system in the Group runs"
+            );
+            assert!(
+                live.cache_texels > base.cache_texels && live.buffer_floats > base.buffer_floats,
+                "cycle {c}: polylines and particles exist while it runs"
+            );
+            assert_eq!(
+                w.v.rt.particle_sim(ps).unwrap().num_forces,
+                2,
+                "cycle {c}: wind and force"
+            );
             assert!(w.v.rt.particle_sim(ps).unwrap().num_particles > 0);
 
             call(&mut w, "clear");
 
-            assert!(!w.v.rt.scene.is_live(ps) && w.v.rt.particle_sim(ps).is_none(), "cycle {c}: the removed system {ps} still lives");
-            assert_eq!(w.v.rt.particle_cache_texels(ps), 0, "cycle {c}: the polylines of the removed system are gone");
+            assert!(
+                !w.v.rt.scene.is_live(ps) && w.v.rt.particle_sim(ps).is_none(),
+                "cycle {c}: the removed system {ps} still lives"
+            );
+            assert_eq!(
+                w.v.rt.particle_cache_texels(ps),
+                0,
+                "cycle {c}: the polylines of the removed system are gone"
+            );
             assert_no_stale_ids(&w.v.rt, "cleared");
 
             if c == 10 {
@@ -636,7 +878,16 @@ fn script_created_polyline_systems_are_released_100_cycles() {
 
                 println!(
                     "MEM\tps-b07-script-cycle\t{c}\tsystems={}\tbuffer_floats={}\tcache_texels={}\tanimate_interests={}\tlive_watchers={}\tlive_nodes={}\tarena={}\tnrt={}\tfrt={}\trss_kib={}",
-                    r.systems, r.buffer_floats, r.cache_texels, r.animate_interests, r.live_watchers, r.live_nodes, r.arena, r.nrt, r.frt, rss_kib()
+                    r.systems,
+                    r.buffer_floats,
+                    r.cache_texels,
+                    r.animate_interests,
+                    r.live_watchers,
+                    r.live_nodes,
+                    r.arena,
+                    r.nrt,
+                    r.frt,
+                    rss_kib()
                 );
             }
 
@@ -647,12 +898,33 @@ fn script_created_polyline_systems_are_released_100_cycles() {
 
         let b = at10.unwrap();
 
-        assert_eq!((b.systems, b.buffer_floats, b.cache_texels, b.animate_interests, b.live_watchers), (base.systems, base.buffer_floats, base.cache_texels, base.animate_interests, base.live_watchers));
-        assert_eq!(b.live_nodes, base.live_nodes, "every node of every cycle is gone (system, emitter, coord, 2 models, shape)");
+        assert_eq!(
+            (
+                b.systems,
+                b.buffer_floats,
+                b.cache_texels,
+                b.animate_interests,
+                b.live_watchers
+            ),
+            (
+                base.systems,
+                base.buffer_floats,
+                base.cache_texels,
+                base.animate_interests,
+                base.live_watchers
+            )
+        );
+        assert_eq!(
+            b.live_nodes, base.live_nodes,
+            "every node of every cycle is gone (system, emitter, coord, 2 models, shape)"
+        );
 
         let grown = rss_kib().saturating_sub(rss10);
 
-        assert!(grown <= 1024, "RSS grew by {grown} KiB over the last 90 cycles");
+        assert!(
+            grown <= 1024,
+            "RSS grew by {grown} KiB over the last 90 cycles"
+        );
     });
 }
 
@@ -682,15 +954,42 @@ DEF GRP Group {{ children [ DEF P1 ParticleSystem {{ maxParticles 30 particleLif
         for round in 0..50 {
             w.set(grp, "children", FieldValue::MFNode(vec![]));
             w.steps(3);
-            assert_eq!(w.res().systems, 1, "round {round}: the named system is kept");
+            assert_eq!(
+                w.res().systems,
+                1,
+                "round {round}: the named system is kept"
+            );
             w.set(grp, "children", FieldValue::MFNode(vec![Some(p1)]));
             w.steps(3);
         }
 
         let after = w.res();
 
-        assert_eq!((after.systems, after.buffer_floats, after.cache_texels, after.animate_interests, after.live_nodes, after.nrt, after.frt), (before.systems, before.buffer_floats, before.cache_texels, before.animate_interests, before.live_nodes, before.nrt, before.frt));
-        assert_ne!(w.v.rt.particle_sim(p1).unwrap().particles, born, "it ran all the time");
+        assert_eq!(
+            (
+                after.systems,
+                after.buffer_floats,
+                after.cache_texels,
+                after.animate_interests,
+                after.live_nodes,
+                after.nrt,
+                after.frt
+            ),
+            (
+                before.systems,
+                before.buffer_floats,
+                before.cache_texels,
+                before.animate_interests,
+                before.live_nodes,
+                before.nrt,
+                before.frt
+            )
+        );
+        assert_ne!(
+            w.v.rt.particle_sim(p1).unwrap().particles,
+            born,
+            "it ran all the time"
+        );
         assert_no_stale_ids(&w.v.rt, "removed and added");
     });
 }

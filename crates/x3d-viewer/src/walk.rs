@@ -93,7 +93,16 @@ pub struct LayerWalk {
 impl LayerWalk {
     /// Layer 0 over the whole `width` × `height` canvas with the default viewpoint.
     pub fn root(width: f64, height: f64) -> LayerWalk {
-        LayerWalk { key: None, viewport: [0.0, 0.0, width, height], layout: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 } }
+        LayerWalk {
+            key: None,
+            viewport: [0.0, 0.0, width, height],
+            layout: LayoutCamera {
+                ortho: None,
+                fov: std::f64::consts::FRAC_PI_4,
+                near: 0.125,
+                content_scale: 1.0,
+            },
+        }
     }
 }
 
@@ -132,21 +141,86 @@ pub struct Scan {
     pub sounds: Vec<EnvInst>,
 }
 
-const GROUPS: &[&str] =
-    &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "ScreenGroup", "HAnimHumanoid", "HAnimJoint", "HAnimSegment", "HAnimSite"];
+const GROUPS: &[&str] = &[
+    "Group",
+    "Transform",
+    "Anchor",
+    "Collision",
+    "Billboard",
+    "Switch",
+    "LOD",
+    "GeoLocation",
+    "GeoTransform",
+    "GeoLOD",
+    "CADAssembly",
+    "CADLayer",
+    "CADPart",
+    "CADFace",
+    "PickableGroup",
+    "GroupAnnotation",
+    "ScreenGroup",
+    "HAnimHumanoid",
+    "HAnimJoint",
+    "HAnimSegment",
+    "HAnimSite",
+];
 /// X3DCast (X3DChildNode, node) for the node types that can be a Collision's `proxy`: everything but the
 /// geometry, appearance, material, texture and property nodes.
 fn is_child_node(sg: &Sg, n: NodeId) -> bool {
-    let Some(ty) = sg.type_name(n) else { return false };
+    let Some(ty) = sg.type_name(n) else {
+        return false;
+    };
     !(matches!(
         ty,
-        "Appearance" | "Material" | "TwoSidedMaterial" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial" | "Coordinate" | "Normal" | "Color" | "ColorRGBA" | "TextureCoordinate" | "ImageTexture" | "PixelTexture"
-            | "MovieTexture" | "TextureTransform" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet" | "IndexedLineSet" | "PointSet" | "LineSet" | "ElevationGrid" | "Extrusion" | "Text" | "FontStyle" | "Rectangle2D"
-            | "Circle2D" | "Arc2D" | "Disk2D" | "Polyline2D" | "Polypoint2D" | "TriangleSet2D" | "TriangleSet" | "IndexedTriangleSet" | "FillProperties" | "LineProperties" | "PointProperties"
+        "Appearance"
+            | "Material"
+            | "TwoSidedMaterial"
+            | "UnlitMaterial"
+            | "PhysicalMaterial"
+            | "SpecularGlossinessMaterial"
+            | "Coordinate"
+            | "Normal"
+            | "Color"
+            | "ColorRGBA"
+            | "TextureCoordinate"
+            | "ImageTexture"
+            | "PixelTexture"
+            | "MovieTexture"
+            | "TextureTransform"
+            | "Box"
+            | "Sphere"
+            | "Cone"
+            | "Cylinder"
+            | "IndexedFaceSet"
+            | "IndexedLineSet"
+            | "PointSet"
+            | "LineSet"
+            | "ElevationGrid"
+            | "Extrusion"
+            | "Text"
+            | "FontStyle"
+            | "Rectangle2D"
+            | "Circle2D"
+            | "Arc2D"
+            | "Disk2D"
+            | "Polyline2D"
+            | "Polypoint2D"
+            | "TriangleSet2D"
+            | "TriangleSet"
+            | "IndexedTriangleSet"
+            | "FillProperties"
+            | "LineProperties"
+            | "PointProperties"
     ))
 }
 
-const SENSORS: &[&str] = &["TouchSensor", "GeoTouchSensor", "PlaneSensor", "SphereSensor", "CylinderSensor"];
+const SENSORS: &[&str] = &[
+    "TouchSensor",
+    "GeoTouchSensor",
+    "PlaneSensor",
+    "SphereSensor",
+    "CylinderSensor",
+];
 
 /// Resolve a runtime path from the root runtime (all nodes live in the root runtime).
 pub fn rt_at<'a>(root: &'a Runtime, path: &[NodeId]) -> Option<&'a Runtime> {
@@ -193,7 +267,9 @@ pub fn billboard_matrix(sg: &Sg, n: NodeId, model_view: &Matrix4) -> Matrix4 {
         y.cross(&x);
         x.normalize();
         y.normalize();
-        Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, 0.0, 0.0, 0.0, 1.0])
+        Matrix4([
+            x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, 0.0, 0.0, 0.0, 1.0,
+        ])
     } else {
         let mut n1 = axis;
         n1.cross(&to_viewer);
@@ -202,7 +278,9 @@ pub fn billboard_matrix(sg: &Sg, n: NodeId, model_view: &Matrix4) -> Matrix4 {
         let mut r = Rotation4::identity();
         r.set_vectors(&n2, &n1);
         let m = r.get_matrix().0;
-        Matrix4([m[0], m[1], m[2], 0.0, m[3], m[4], m[5], 0.0, m[6], m[7], m[8], 0.0, 0.0, 0.0, 0.0, 1.0])
+        Matrix4([
+            m[0], m[1], m[2], 0.0, m[3], m[4], m[5], 0.0, m[6], m[7], m[8], 0.0, 0.0, 0.0, 0.0, 1.0,
+        ])
     }
 }
 
@@ -237,7 +315,13 @@ pub struct LodPass {
 }
 
 /// LOD.getLevel.
-fn lod_get_level(sg: &Sg, n: NodeId, model_view: &Matrix4, frame_rate: &mut f64, current_frame_rate: f64) -> i32 {
+fn lod_get_level(
+    sg: &Sg,
+    n: NodeId,
+    model_view: &Matrix4,
+    frame_rate: &mut f64,
+    current_frame_rate: f64,
+) -> i32 {
     const FRAMES: f64 = 180.0;
     const FRAME_RATE_MIN: f64 = 20.0;
     const FRAME_RATE_MAX: f64 = 55.0;
@@ -254,7 +338,12 @@ fn lod_get_level(sg: &Sg, n: NodeId, model_view: &Matrix4, frame_rate: &mut f64,
             1 => 0,
             2 => (*frame_rate > FRAME_RATE_MAX) as i32,
             _ => {
-                let fraction = 1.0 - x3d_fields::jsmath::clamp((*frame_rate - FRAME_RATE_MIN) / (FRAME_RATE_MAX - FRAME_RATE_MIN), 0.0, 1.0);
+                let fraction = 1.0
+                    - x3d_fields::jsmath::clamp(
+                        (*frame_rate - FRAME_RATE_MIN) / (FRAME_RATE_MAX - FRAME_RATE_MIN),
+                        0.0,
+                        1.0,
+                    );
                 ((fraction * size as f64).floor() as i32).min(size - 1)
             }
         };
@@ -265,7 +354,10 @@ fn lod_get_level(sg: &Sg, n: NodeId, model_view: &Matrix4, frame_rate: &mut f64,
     model_view.mult_vec_matrix3(&mut c);
     let distance = c.norm();
 
-    range.iter().position(|r| distance < *r).unwrap_or(range.len()) as i32
+    range
+        .iter()
+        .position(|r| distance < *r)
+        .unwrap_or(range.len()) as i32
 }
 
 /// LOD.set_children__: the one child, `children [min (level_changed, length - 1)]`.
@@ -273,7 +365,14 @@ fn lod_child(sg: &Sg, n: NodeId, level: i32) -> Vec<NodeId> {
     let raw = sg.raw_nodes(n, "children");
     let level = level.min(raw.len() as i32 - 1);
 
-    if level >= 0 { raw[level as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] }
+    if level >= 0 {
+        raw[level as usize]
+            .and_then(|c| sg.inner(c))
+            .into_iter()
+            .collect()
+    } else {
+        vec![]
+    }
 }
 
 fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
@@ -284,11 +383,21 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
             if raw.is_empty() {
                 raw = sg.raw_nodes(n, "choice");
             }
-            if choice >= 0 && (choice as usize) < raw.len() { raw[choice as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] }
+            if choice >= 0 && (choice as usize) < raw.len() {
+                raw[choice as usize]
+                    .and_then(|c| sg.inner(c))
+                    .into_iter()
+                    .collect()
+            } else {
+                vec![]
+            }
         }
         "CADFace" => sg.cad_face_child(n).into_iter().collect(),
         "GeoLOD" => sg.geo_lod_kids(n, false),
-        "HAnimHumanoid" | "HAnimJoint" | "HAnimSegment" | "HAnimSite" => sg.hanim_children(n, ty).map(|g| g.concat()).unwrap_or_default(),
+        "HAnimHumanoid" | "HAnimJoint" | "HAnimSegment" | "HAnimSite" => sg
+            .hanim_children(n, ty)
+            .map(|g| g.concat())
+            .unwrap_or_default(),
         _ => {
             let mut kids = sg.nodes(n, "children");
             if kids.is_empty() && ty == "LOD" {
@@ -303,18 +412,34 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
 /// children instead of the enclosing ones (renderObject.getSensors () is a stack, and
 /// addPointingShape takes its top: the sensors of the innermost group that has any). A disabled
 /// sensor pushes nothing (`push = Function .prototype`).
-fn group_sensors(sg: &Sg, path: &RtPath, kids: &[NodeId], m: &Matrix4, sensors: &[SensorRef]) -> Vec<SensorRef> {
+fn group_sensors(
+    sg: &Sg,
+    path: &RtPath,
+    kids: &[NodeId],
+    m: &Matrix4,
+    sensors: &[SensorRef],
+) -> Vec<SensorRef> {
     let mut local: Vec<SensorRef> = vec![];
 
     for c in kids {
         if let Some(t) = sg.type_name(*c) {
             if SENSORS.contains(&t) && sg.bool(*c, "enabled", true) {
-                local.push(SensorRef { node: NodeRef { path: path.clone(), node: *c }, model_view: *m });
+                local.push(SensorRef {
+                    node: NodeRef {
+                        path: path.clone(),
+                        node: *c,
+                    },
+                    model_view: *m,
+                });
             }
         }
     }
 
-    if local.is_empty() { sensors.to_vec() } else { local }
+    if local.is_empty() {
+        sensors.to_vec()
+    } else {
+        local
+    }
 }
 
 /// X3DPickingContext state of a PICKING traversal: getPickable (), getPickSensors () (indices into
@@ -368,7 +493,12 @@ impl PickWalk<'_> {
 
 /// X3DChildNode.isVisibleObject (): the children a grouping node traverses in PICKING inside a
 /// PickableGroup (`visibleObjects`).
-fn visible_object(sg: &Sg, n: NodeId, memo: &mut std::collections::HashMap<NodeId, bool>, depth: usize) -> bool {
+fn visible_object(
+    sg: &Sg,
+    n: NodeId,
+    memo: &mut std::collections::HashMap<NodeId, bool>,
+    depth: usize,
+) -> bool {
     if depth > 256 || !sg.bool(n, "visible", true) {
         return false;
     }
@@ -377,22 +507,44 @@ fn visible_object(sg: &Sg, n: NodeId, memo: &mut std::collections::HashMap<NodeI
         return v;
     }
 
-    let Some(ty) = sg.type_name(n) else { return false };
-    let any = |kids: Vec<NodeId>, memo: &mut std::collections::HashMap<NodeId, bool>| kids.into_iter().any(|c| visible_object(sg, c, memo, depth + 1));
+    let Some(ty) = sg.type_name(n) else {
+        return false;
+    };
+    let any = |kids: Vec<NodeId>, memo: &mut std::collections::HashMap<NodeId, bool>| {
+        kids.into_iter()
+            .any(|c| visible_object(sg, c, memo, depth + 1))
+    };
 
     let v = match ty {
         // X3DShapeNode.isEnabled ().
         "Shape" => sg.node(n, "geometry").is_some(),
         // InstancedShape.isEnabled (): instances and a geometry.
-        "InstancedShape" => sg.node(n, "geometry").is_some() && !x3d_render::traverse::instance_data(sg, n).matrices.is_empty(),
-        "LOD" | "GeoLOD" | "HAnimJoint" | "Background" | "TextureBackground" | "ListenerPointSource" => true,
+        "InstancedShape" => {
+            sg.node(n, "geometry").is_some()
+                && !x3d_render::traverse::instance_data(sg, n)
+                    .matrices
+                    .is_empty()
+        }
+        "LOD"
+        | "GeoLOD"
+        | "HAnimJoint"
+        | "Background"
+        | "TextureBackground"
+        | "ListenerPointSource" => true,
         "DirectionalLight" | "PointLight" | "SpotLight" => sg.bool(n, "global", false),
         "ProximitySensor" | "VisibilitySensor" => sg.bool(n, "enabled", true),
         // SpatialSound, Sound: setVisibleObject (this .childNodes .length).
         "SpatialSound" | "Sound" => sg.rt.spatial_sound_visible(n),
-        "Inline" => sg.bool(n, "load", true) && sg.inline_scene(n).is_some_and(|ctx| any(sg.roots_of(ctx), memo)),
+        "Inline" => {
+            sg.bool(n, "load", true)
+                && sg
+                    .inline_scene(n)
+                    .is_some_and(|ctx| any(sg.roots_of(ctx), memo))
+        }
         "StaticGroup" => any(sg.nodes(n, "children"), memo),
-        _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => any(children_of(sg, n, ty), memo),
+        _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
+            any(children_of(sg, n, ty), memo)
+        }
         _ => false,
     };
 
@@ -404,22 +556,40 @@ fn visible_object(sg: &Sg, n: NodeId, memo: &mut std::collections::HashMap<NodeI
 fn node_geometry_type(sg: &Sg, g: NodeId) -> u8 {
     match sg.type_name(g) {
         Some("PointSet") => 0,
-        Some("IndexedLineSet" | "LineSet" | "Polyline2D" | "Arc2D" | "Circle2D" | "ArcClose2D") => 1,
+        Some("IndexedLineSet" | "LineSet" | "Polyline2D" | "Arc2D" | "Circle2D" | "ArcClose2D") => {
+            1
+        }
         _ => 2,
     }
 }
 
 /// The pointing shader's appearance inputs of the shape `n`: Appearance.getStyleProperties (geometryType) and
 /// X3D_TEXTURE / X3D_MATERIAL_TEXTURES (the appearance's and the material's texture nodes).
-fn pointing_appearance(sg: &Sg, n: NodeId, geometry_type: u8) -> (Option<x3d_render::traverse::StyleParams>, (bool, bool)) {
-    let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
+fn pointing_appearance(
+    sg: &Sg,
+    n: NodeId,
+    geometry_type: u8,
+) -> (Option<x3d_render::traverse::StyleParams>, (bool, bool)) {
+    let appearance = sg
+        .node(n, "appearance")
+        .filter(|a| sg.type_name(*a) == Some("Appearance"));
     let style = appearance.and_then(|a| x3d_render::traverse::style_params(sg, a, geometry_type));
     let textures = appearance.map_or((false, false), |a| {
         let material = sg.node(a, "material");
         let material_texture = material.is_some_and(|m| {
-            ["ambientTexture", "diffuseTexture", "specularTexture", "emissiveTexture", "shininessTexture", "occlusionTexture", "normalTexture", "baseTexture", "metallicRoughnessTexture"]
-                .iter()
-                .any(|field| sg.node(m, field).is_some())
+            [
+                "ambientTexture",
+                "diffuseTexture",
+                "specularTexture",
+                "emissiveTexture",
+                "shininessTexture",
+                "occlusionTexture",
+                "normalTexture",
+                "baseTexture",
+                "metallicRoughnessTexture",
+            ]
+            .iter()
+            .any(|field| sg.node(m, field).is_some())
         });
         (sg.node(a, "texture").is_some(), material_texture)
     });
@@ -427,7 +597,12 @@ fn pointing_appearance(sg: &Sg, n: NodeId, geometry_type: u8) -> (Option<x3d_ren
     (style, textures)
 }
 
-const PICK_SENSORS: &[&str] = &["LinePickSensor", "PointPickSensor", "PrimitivePickSensor", "VolumePickSensor"];
+const PICK_SENSORS: &[&str] = &[
+    "LinePickSensor",
+    "PointPickSensor",
+    "PrimitivePickSensor",
+    "VolumePickSensor",
+];
 
 struct Walker<'a> {
     scan: &'a mut Scan,
@@ -466,7 +641,13 @@ pub fn scan(root: &Runtime, layer: &LayerWalk, start: &Matrix4, camera: bool) ->
 }
 
 /// [`scan`] with the ScreenGroup.matrix values of the last DISPLAY traversal (identity for a ScreenGroup that has none).
-pub fn scan_screens(root: &Runtime, layer: &LayerWalk, start: &Matrix4, camera: bool, screens: &std::collections::HashMap<NodeId, Matrix4>) -> Scan {
+pub fn scan_screens(
+    root: &Runtime,
+    layer: &LayerWalk,
+    start: &Matrix4,
+    camera: bool,
+    screens: &std::collections::HashMap<NodeId, Matrix4>,
+) -> Scan {
     let mut scan = Scan::default();
     let mut w = Walker::new(&mut scan, None, None, camera, layer);
     w.screens = screens.clone();
@@ -482,7 +663,14 @@ pub fn scan_screens(root: &Runtime, layer: &LayerWalk, start: &Matrix4, camera: 
 /// (X3DLayerNode constructor), with objectType "ALL" until the layer's objectType changes
 /// (`layer_object_type`): then everything visible in the layer is pickable. Otherwise only
 /// PickableGroup nodes make their children pickable.
-pub fn scan_picking(root: &Runtime, layer: &LayerWalk, targets: &std::collections::HashSet<NodeId>, pick: &crate::picking::PickInput, pickable_layer: bool, layer_object_type: Option<&[String]>) -> Scan {
+pub fn scan_picking(
+    root: &Runtime,
+    layer: &LayerWalk,
+    targets: &std::collections::HashSet<NodeId>,
+    pick: &crate::picking::PickInput,
+    pickable_layer: bool,
+    layer_object_type: Option<&[String]>,
+) -> Scan {
     let mut scan = Scan::default();
 
     if pickable_layer && layer_object_type.is_some_and(|t| t.iter().any(|t| t == "NONE")) {
@@ -490,7 +678,13 @@ pub fn scan_picking(root: &Runtime, layer: &LayerWalk, targets: &std::collection
     }
 
     let mut w = Walker::new(&mut scan, None, Some(targets), true, layer);
-    let mut walk = PickWalk { input: pick, pickable: vec![false], sensors: vec![(0..pick.sensors.len()).collect()], hierarchy: vec![], visible: Default::default() };
+    let mut walk = PickWalk {
+        input: pick,
+        pickable: vec![false],
+        sensors: vec![(0..pick.sensors.len()).collect()],
+        hierarchy: vec![],
+        visible: Default::default(),
+    };
 
     if pickable_layer {
         if let Some(filtered) = layer_object_type.and_then(|t| walk.filter_sensors(t)) {
@@ -501,7 +695,15 @@ pub fn scan_picking(root: &Runtime, layer: &LayerWalk, targets: &std::collection
     }
 
     w.pick = Some(walk);
-    w.runtime(root, &Rc::new(vec![]), &Matrix4::IDENTITY, &[], &[], true, 0);
+    w.runtime(
+        root,
+        &Rc::new(vec![]),
+        &Matrix4::IDENTITY,
+        &[],
+        &[],
+        true,
+        0,
+    );
     scan
 }
 
@@ -514,8 +716,30 @@ pub fn scan_display(root: &Runtime, layer: &LayerWalk, start: &Matrix4, lod: &mu
 }
 
 impl<'a> Walker<'a> {
-    fn new(scan: &'a mut Scan, lod: Option<&'a mut LodPass>, picking: Option<&'a std::collections::HashSet<NodeId>>, camera: bool, layer: &LayerWalk) -> Walker<'a> {
-        Walker { scan, lod, picking, pick: None, camera, clip_planes: vec![], layer: *layer, viewports: vec![layer.viewport], layouts: LayoutStack::default(), viewpoint_groups: vec![], inv_humanoid: vec![Matrix4::IDENTITY], hanim: vec![None], joint_model_views: Default::default(), screens: Default::default(), collision_stack: vec![] }
+    fn new(
+        scan: &'a mut Scan,
+        lod: Option<&'a mut LodPass>,
+        picking: Option<&'a std::collections::HashSet<NodeId>>,
+        camera: bool,
+        layer: &LayerWalk,
+    ) -> Walker<'a> {
+        Walker {
+            scan,
+            lod,
+            picking,
+            pick: None,
+            camera,
+            clip_planes: vec![],
+            layer: *layer,
+            viewports: vec![layer.viewport],
+            layouts: LayoutStack::default(),
+            viewpoint_groups: vec![],
+            inv_humanoid: vec![Matrix4::IDENTITY],
+            hanim: vec![None],
+            joint_model_views: Default::default(),
+            screens: Default::default(),
+            collision_stack: vec![],
+        }
     }
 
     fn viewport(&self) -> [f64; 4] {
@@ -524,20 +748,41 @@ impl<'a> Walker<'a> {
 
     /// GeoLOD.traverse in the DISPLAY walk: changeLevel with getLevel (the viewer applies it).
     fn geo_lod_level(&mut self, sg: &Sg, path: &RtPath, n: NodeId, mv: &Matrix4) {
-        let Some(lod) = self.lod.as_deref_mut() else { return };
+        let Some(lod) = self.lod.as_deref_mut() else {
+            return;
+        };
 
-        lod.geo_visited.push(NodeRef { path: path.clone(), node: n });
+        lod.geo_visited.push(NodeRef {
+            path: path.clone(),
+            node: n,
+        });
         let key = (path.to_vec(), n);
-        let current = lod.levels.get(&key).copied().unwrap_or_else(|| sg.rt.geo_lod_level(n));
+        let current = lod
+            .levels
+            .get(&key)
+            .copied()
+            .unwrap_or_else(|| sg.rt.geo_lod_level(n));
 
         // GeoLOD.getLevel: modelViewMatrix .translate (getCoord (center)) .origin .norm ().
-        let mut c = sg.geo_object(n).get_coord(&sg.vec3(n, "center", Vector3::ZERO));
+        let mut c = sg
+            .geo_object(n)
+            .get_coord(&sg.vec3(n, "center", Vector3::ZERO));
         mv.mult_vec_matrix3(&mut c);
-        let level = if c.norm() < sg.f64(n, "range", 10.0) { 1 } else { 0 };
+        let level = if c.norm() < sg.f64(n, "range", 10.0) {
+            1
+        } else {
+            0
+        };
 
         if level != current {
             lod.levels.insert(key, level);
-            lod.geo_changes.push((NodeRef { path: path.clone(), node: n }, level));
+            lod.geo_changes.push((
+                NodeRef {
+                    path: path.clone(),
+                    node: n,
+                },
+                level,
+            ));
         }
     }
 
@@ -564,14 +809,29 @@ impl<'a> Walker<'a> {
 
         if level != current {
             lod.levels.insert(key, level);
-            lod.changes.push((NodeRef { path: path.clone(), node: n }, level));
+            lod.changes.push((
+                NodeRef {
+                    path: path.clone(),
+                    node: n,
+                },
+                level,
+            ));
         }
 
         level
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn runtime(&mut self, rt: &Runtime, path: &RtPath, mv: &Matrix4, sensors: &[SensorRef], anchors: &[NodeRef], collidable: bool, depth: usize) {
+    fn runtime(
+        &mut self,
+        rt: &Runtime,
+        path: &RtPath,
+        mv: &Matrix4,
+        sensors: &[SensorRef],
+        anchors: &[NodeRef],
+        collidable: bool,
+        depth: usize,
+    ) {
         let sg = Sg::new(rt);
         let key = self.layer.key;
         let roots = layer::layer_children(&sg, key);
@@ -580,9 +840,31 @@ impl<'a> Walker<'a> {
         // LayoutGroup with the layer's layout), whose pointing device sensors apply to all of them.
         if layer::is_layout_layer(&sg, key) {
             let n = key.unwrap();
-            self.layout_group(&sg, path, sg.node(n, "layout"), None, roots, mv, sensors, anchors, collidable, depth);
+            self.layout_group(
+                &sg,
+                path,
+                sg.node(n, "layout"),
+                None,
+                roots,
+                mv,
+                sensors,
+                anchors,
+                collidable,
+                depth,
+            );
         } else {
-            self.group(&sg, path, "Group", NodeId::MAX, roots, mv, sensors, anchors, collidable, depth);
+            self.group(
+                &sg,
+                path,
+                "Group",
+                NodeId::MAX,
+                roots,
+                mv,
+                sensors,
+                anchors,
+                collidable,
+                depth,
+            );
         }
     }
 
@@ -590,13 +872,35 @@ impl<'a> Walker<'a> {
     /// children (pointingDeviceSensorNodes → sensors, then renderObject.getSensors ()), the
     /// ClipPlanes push before the children and pop after.
     #[allow(clippy::too_many_arguments)]
-    fn group(&mut self, sg: &Sg, path: &RtPath, ty: &str, n: NodeId, kids: Vec<NodeId>, m: &Matrix4, sensors: &[SensorRef], anchors: &[NodeRef], collidable: bool, depth: usize) {
+    fn group(
+        &mut self,
+        sg: &Sg,
+        path: &RtPath,
+        ty: &str,
+        n: NodeId,
+        kids: Vec<NodeId>,
+        m: &Matrix4,
+        sensors: &[SensorRef],
+        anchors: &[NodeRef],
+        collidable: bool,
+        depth: usize,
+    ) {
         let mut local_anchors = anchors.to_vec();
-        let me = || NodeRef { path: path.clone(), node: n };
+        let me = || NodeRef {
+            path: path.clone(),
+            node: n,
+        };
 
         // Anchor.traverse: its own TouchSensor (enabled = load) is pushed first, then the group's.
         let anchor = ty == "Anchor" && sg.bool(n, "load", true);
-        let inherited = if anchor { vec![SensorRef { node: me(), model_view: *m }] } else { sensors.to_vec() };
+        let inherited = if anchor {
+            vec![SensorRef {
+                node: me(),
+                model_view: *m,
+            }]
+        } else {
+            sensors.to_vec()
+        };
         let local = group_sensors(sg, path, &kids, m, &inherited);
 
         if anchor {
@@ -623,7 +927,16 @@ impl<'a> Walker<'a> {
         let pushed = self.push_clip_planes(sg, &kids, m);
 
         for c in kids {
-            self.node(sg, path, c, m, &local, &local_anchors, collidable, depth + 1);
+            self.node(
+                sg,
+                path,
+                c,
+                m,
+                &local,
+                &local_anchors,
+                collidable,
+                depth + 1,
+            );
         }
 
         if let Some(p) = proxy {
@@ -644,7 +957,19 @@ impl<'a> Walker<'a> {
     /// LayoutGroup.traverse (also the group of a LayoutLayer): the Viewport pushed, then the
     /// Layout's matrix around the children.
     #[allow(clippy::too_many_arguments)]
-    fn layout_group(&mut self, sg: &Sg, path: &RtPath, layout: Option<NodeId>, viewport: Option<NodeId>, kids: Vec<NodeId>, mv: &Matrix4, sensors: &[SensorRef], anchors: &[NodeRef], collidable: bool, depth: usize) {
+    fn layout_group(
+        &mut self,
+        sg: &Sg,
+        path: &RtPath,
+        layout: Option<NodeId>,
+        viewport: Option<NodeId>,
+        kids: Vec<NodeId>,
+        mv: &Matrix4,
+        sensors: &[SensorRef],
+        anchors: &[NodeRef],
+        collidable: bool,
+        depth: usize,
+    ) {
         let viewport = viewport.filter(|v| sg.type_name(*v) == Some("Viewport"));
 
         if let Some(v) = viewport {
@@ -657,10 +982,32 @@ impl<'a> Walker<'a> {
                 let node = LayoutNode::read(sg, l);
                 let current = self.viewport();
                 let m = self.layouts.push(&node, &self.layer.layout, &current, mv);
-                self.group(sg, path, "LayoutGroup", NodeId::MAX, kids, &m, sensors, anchors, collidable, depth);
+                self.group(
+                    sg,
+                    path,
+                    "LayoutGroup",
+                    NodeId::MAX,
+                    kids,
+                    &m,
+                    sensors,
+                    anchors,
+                    collidable,
+                    depth,
+                );
                 self.layouts.pop();
             }
-            None => self.group(sg, path, "LayoutGroup", NodeId::MAX, kids, mv, sensors, anchors, collidable, depth),
+            None => self.group(
+                sg,
+                path,
+                "LayoutGroup",
+                NodeId::MAX,
+                kids,
+                mv,
+                sensors,
+                anchors,
+                collidable,
+                depth,
+            ),
         }
 
         if viewport.is_some() {
@@ -684,13 +1031,26 @@ impl<'a> Walker<'a> {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn node(&mut self, sg: &Sg, path: &RtPath, n: NodeId, mv: &Matrix4, sensors: &[SensorRef], anchors: &[NodeRef], collidable: bool, depth: usize) {
+    fn node(
+        &mut self,
+        sg: &Sg,
+        path: &RtPath,
+        n: NodeId,
+        mv: &Matrix4,
+        sensors: &[SensorRef],
+        anchors: &[NodeRef],
+        collidable: bool,
+        depth: usize,
+    ) {
         if depth > 256 {
             return;
         }
 
         let Some(ty) = sg.type_name(n) else { return };
-        let me = || NodeRef { path: path.clone(), node: n };
+        let me = || NodeRef {
+            path: path.clone(),
+            node: n,
+        };
 
         // X3DGroupingNode: a child whose `visible` is FALSE (X3DBoundedObject._display) is in none
         // of the group's object sets (pointing, camera, pickable, collision, visible).
@@ -701,13 +1061,19 @@ impl<'a> Walker<'a> {
         // X3DGroupingNode PICKING: the pick and transform sensors are traversed (pickableSensorNodes);
         // inside a PickableGroup the other children only if they are visible objects.
         if let Some(p) = self.pick.as_mut() {
-            if p.top() && !PICK_SENSORS.contains(&ty) && ty != "TransformSensor" && !visible_object(sg, n, &mut p.visible, depth) {
+            if p.top()
+                && !PICK_SENSORS.contains(&ty)
+                && ty != "TransformSensor"
+                && !visible_object(sg, n, &mut p.visible, depth)
+            {
                 return;
             }
         }
 
         // getPickingHierarchy (): the grouping nodes, Inline nodes and the shape around a shape.
-        let hierarchy = self.pick.is_some() && (GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup" | "Inline" | "StaticGroup"));
+        let hierarchy = self.pick.is_some()
+            && (GROUPS.contains(&ty)
+                || matches!(ty, "Viewport" | "LayoutGroup" | "Inline" | "StaticGroup"));
 
         if hierarchy {
             self.pick.as_mut().unwrap().hierarchy.push(n);
@@ -725,8 +1091,18 @@ impl<'a> Walker<'a> {
                     let mut descriptions = vec![];
                     let own = sg.string(n, "description", "");
 
-                    if !own.is_empty() && self.viewpoint_groups.iter().all(|g| sg.rt.viewpoint_group_state(*g).1) {
-                        descriptions.extend(self.viewpoint_groups.iter().map(|g| sg.string(*g, "description", "")).filter(|d| !d.is_empty()));
+                    if !own.is_empty()
+                        && self
+                            .viewpoint_groups
+                            .iter()
+                            .all(|g| sg.rt.viewpoint_group_state(*g).1)
+                    {
+                        descriptions.extend(
+                            self.viewpoint_groups
+                                .iter()
+                                .map(|g| sg.string(*g, "description", ""))
+                                .filter(|d| !d.is_empty()),
+                        );
                         descriptions.push(own);
                     }
 
@@ -735,18 +1111,39 @@ impl<'a> Walker<'a> {
 
                 // GeoViewpoint traverse up to 3.2: `this .geoNavigationInfoNode .traverse (...)`.
                 if let Some(nav) = sg.rt.geo_navigation_info(n) {
-                    self.scan.navigation_infos.push(NodeRef { path: path.clone(), node: nav });
+                    self.scan.navigation_infos.push(NodeRef {
+                        path: path.clone(),
+                        node: nav,
+                    });
                 }
             }
             "NavigationInfo" => self.scan.navigation_infos.push(me()),
             "Background" | "TextureBackground" => self.scan.backgrounds.push((me(), *mv)),
             "Fog" => self.scan.fogs.push(me()),
-            "ProximitySensor" | "GeoProximitySensor" => self.scan.proximity.push(EnvInst { node: me(), model_view: *mv }),
-            "VisibilitySensor" => self.scan.visibility.push(EnvInst { node: me(), model_view: *mv }),
-            "SpatialSound" | "Sound" | "ListenerPointSource" => self.scan.sounds.push(EnvInst { node: me(), model_view: *mv }),
-            "TransformSensor" if self.picking.is_some() => self.scan.transform_sensors.push(EnvInst { node: me(), model_view: *mv }),
+            "ProximitySensor" | "GeoProximitySensor" => self.scan.proximity.push(EnvInst {
+                node: me(),
+                model_view: *mv,
+            }),
+            "VisibilitySensor" => self.scan.visibility.push(EnvInst {
+                node: me(),
+                model_view: *mv,
+            }),
+            "SpatialSound" | "Sound" | "ListenerPointSource" => self.scan.sounds.push(EnvInst {
+                node: me(),
+                model_view: *mv,
+            }),
+            "TransformSensor" if self.picking.is_some() => {
+                self.scan.transform_sensors.push(EnvInst {
+                    node: me(),
+                    model_view: *mv,
+                })
+            }
             _ if PICK_SENSORS.contains(&ty) => {
-                if self.pick.as_ref().is_some_and(|p| p.input.sensors.iter().any(|s| s.node == n)) {
+                if self
+                    .pick
+                    .as_ref()
+                    .is_some_and(|p| p.input.sensors.iter().any(|s| s.node == n))
+                {
                     self.scan.pick_sensor_matrices.push((n, *mv));
                 }
             }
@@ -754,9 +1151,18 @@ impl<'a> Walker<'a> {
             // NEXT_FRAME_ONLY becomes NONE) like a shape's.
             "EnvironmentLight" => {
                 if let Some(lod) = self.lod.as_deref_mut() {
-                    if let Some(g) = sg.node(n, "specularTexture").filter(|t| sg.type_name(*t) == Some("GeneratedCubeMapTexture")) {
-                        if sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY" && sg.i32(g, "size", 128) > 0 && !lod.generated_once.iter().any(|r| r.node == g) {
-                            lod.generated_once.push(NodeRef { path: path.clone(), node: g });
+                    if let Some(g) = sg
+                        .node(n, "specularTexture")
+                        .filter(|t| sg.type_name(*t) == Some("GeneratedCubeMapTexture"))
+                    {
+                        if sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY"
+                            && sg.i32(g, "size", 128) > 0
+                            && !lod.generated_once.iter().any(|r| r.node == g)
+                        {
+                            lod.generated_once.push(NodeRef {
+                                path: path.clone(),
+                                node: g,
+                            });
                         }
                     }
                 }
@@ -787,21 +1193,39 @@ impl<'a> Walker<'a> {
                 // Appearance.traverse (DISPLAY): the rendered textures of an independent renderer.
                 if let Some(lod) = self.lod.as_deref_mut() {
                     let texture = sg.node(n, "appearance").and_then(|a| sg.node(a, "texture"));
-                    let generated: Vec<NodeId> = match texture.and_then(|t| sg.type_name(t).map(|ty| (t, ty))) {
-                        Some((t, "GeneratedCubeMapTexture")) => vec![t],
-                        Some((t, "MultiTexture")) => sg.nodes(t, "texture").into_iter().filter(|u| sg.type_name(*u) == Some("GeneratedCubeMapTexture")).collect(),
-                        _ => vec![],
-                    };
+                    let generated: Vec<NodeId> =
+                        match texture.and_then(|t| sg.type_name(t).map(|ty| (t, ty))) {
+                            Some((t, "GeneratedCubeMapTexture")) => vec![t],
+                            Some((t, "MultiTexture")) => sg
+                                .nodes(t, "texture")
+                                .into_iter()
+                                .filter(|u| sg.type_name(*u) == Some("GeneratedCubeMapTexture"))
+                                .collect(),
+                            _ => vec![],
+                        };
 
                     for g in generated {
-                        if sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY" && sg.i32(g, "size", 128) > 0 && !lod.generated_once.iter().any(|r| r.node == g) {
-                            lod.generated_once.push(NodeRef { path: path.clone(), node: g });
+                        if sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY"
+                            && sg.i32(g, "size", 128) > 0
+                            && !lod.generated_once.iter().any(|r| r.node == g)
+                        {
+                            lod.generated_once.push(NodeRef {
+                                path: path.clone(),
+                                node: g,
+                            });
                         }
                     }
 
                     for r in x3d_render::traverse::rendered_textures(sg, sg.node(n, "appearance")) {
-                        if !lod.rendered_reached.iter().any(|x| x.node == r && x.path == *path) {
-                            lod.rendered_reached.push(NodeRef { path: path.clone(), node: r });
+                        if !lod
+                            .rendered_reached
+                            .iter()
+                            .any(|x| x.node == r && x.path == *path)
+                        {
+                            lod.rendered_reached.push(NodeRef {
+                                path: path.clone(),
+                                node: r,
+                            });
                         }
                     }
                 }
@@ -815,16 +1239,24 @@ impl<'a> Walker<'a> {
                     // isDefaultBBoxSize: every component -1.
                     (!(size.x == -1.0 && size.y == -1.0 && size.z == -1.0)).then(|| {
                         let half = Vector3::new(size.x / 2.0, size.y / 2.0, size.z / 2.0);
-                        (Vector3::new(center.x - half.x, center.y - half.y, center.z - half.z), Vector3::new(center.x + half.x, center.y + half.y, center.z + half.z))
+                        (
+                            Vector3::new(center.x - half.x, center.y - half.y, center.z - half.z),
+                            Vector3::new(center.x + half.x, center.y + half.y, center.z + half.z),
+                        )
                     })
                 };
-                let all_instances: Option<Rc<Vec<Matrix4>>> = (ty == "InstancedShape").then(|| Rc::new(x3d_render::traverse::instance_data(sg, n).matrices.to_vec()));
+                let all_instances: Option<Rc<Vec<Matrix4>>> = (ty == "InstancedShape")
+                    .then(|| Rc::new(x3d_render::traverse::instance_data(sg, n).matrices.to_vec()));
                 let instance_matrices: Vec<(Matrix4, Option<Matrix4>)> = if ty == "InstancedShape" {
-                    x3d_render::traverse::instance_data(sg, n).matrices.iter().map(|m| {
-                        let mut c = *m;
-                        c.mult_right(mv);
-                        (c, Some(*m))
-                    }).collect()
+                    x3d_render::traverse::instance_data(sg, n)
+                        .matrices
+                        .iter()
+                        .map(|m| {
+                            let mut c = *m;
+                            c.mult_right(mv);
+                            (c, Some(*m))
+                        })
+                        .collect()
                 } else {
                     vec![(*mv, None)]
                 };
@@ -834,7 +1266,10 @@ impl<'a> Walker<'a> {
                     None => (None, pointing_appearance(sg, n, 2).1),
                 };
 
-                for (model_view, instance) in instance_matrices.iter().filter(|_| sg.node(n, "geometry").is_some()) {
+                for (model_view, instance) in instance_matrices
+                    .iter()
+                    .filter(|_| sg.node(n, "geometry").is_some())
+                {
                     let g = sg.node(n, "geometry").unwrap();
                     self.scan.shapes.push(ShapeInst {
                         shape: me(),
@@ -863,11 +1298,15 @@ impl<'a> Walker<'a> {
             // instance matrix. The pointer and display walks (not the CAMERA one) collect it; it is no collision shape (particle
             // collision is not ported) and the PICKING walk keeps X3DShapeNode.picking's own rules.
             "ParticleSystem" if !self.camera && self.pick.is_none() && self.picking.is_none() => {
-                let Some(p) = x3d_render::traverse::particle_pointing(sg, n, mv) else { return };
+                let Some(p) = x3d_render::traverse::particle_pointing(sg, n, mv) else {
+                    return;
+                };
                 let (geometry, geometry_type) = match &p.geometry {
                     Some(g) => (n, g.geometry_type),
                     None => {
-                        let Some(g) = sg.node(n, "geometry") else { return };
+                        let Some(g) = sg.node(n, "geometry") else {
+                            return;
+                        };
                         (g, node_geometry_type(sg, g))
                     }
                 };
@@ -925,7 +1364,13 @@ impl<'a> Walker<'a> {
                 }
 
                 if let Some(s) = sg.rt.viewpoint_group_sensor(n) {
-                    self.scan.proximity.push(EnvInst { node: NodeRef { path: path.clone(), node: s }, model_view: *mv });
+                    self.scan.proximity.push(EnvInst {
+                        node: NodeRef {
+                            path: path.clone(),
+                            node: s,
+                        },
+                        model_view: *mv,
+                    });
                 }
 
                 if self.camera {
@@ -955,7 +1400,12 @@ impl<'a> Walker<'a> {
                 }
             }
             // StaticGroup: the plain Group in the frame that starts the optimization.
-            "StaticGroup" if self.lod.as_ref().is_some_and(|l| !l.static_done.contains(&(path.to_vec(), n))) => {
+            "StaticGroup"
+                if self
+                    .lod
+                    .as_ref()
+                    .is_some_and(|l| !l.static_done.contains(&(path.to_vec(), n))) =>
+            {
                 if let Some(l) = self.lod.as_mut() {
                     l.static_reached.push((path.to_vec(), n));
                 }
@@ -981,18 +1431,34 @@ impl<'a> Walker<'a> {
                 m.mult_left(&sg.group_matrix(n, ty).unwrap());
                 let mut inv = m;
                 inv.inverse();
-                let Some([skeleton, viewpoints, skin]) = sg.hanim_children(n, ty) else { return };
+                let Some([skeleton, viewpoints, skin]) = sg.hanim_children(n, ty) else {
+                    return;
+                };
 
                 self.inv_humanoid.push(inv);
-                self.group(sg, path, ty, n, skeleton, &m, sensors, anchors, collidable, depth);
-                self.group(sg, path, ty, n, viewpoints, &m, sensors, anchors, collidable, depth);
+                self.group(
+                    sg, path, ty, n, skeleton, &m, sensors, anchors, collidable, depth,
+                );
+                self.group(
+                    sg, path, ty, n, viewpoints, &m, sensors, anchors, collidable, depth,
+                );
 
                 let source = (!self.camera).then(|| {
                     let (joints, bindings) = x3d_render::hanim::humanoid_joints(sg, n);
                     let tables = x3d_render::hanim::humanoid_tables(sg, n, &joints);
-                    let skin_coord = sg.node(n, "skinCoord").is_some_and(|c| matches!(sg.type_name(c), Some("Coordinate" | "CoordinateDouble")));
+                    let skin_coord = sg.node(n, "skinCoord").is_some_and(|c| {
+                        matches!(sg.type_name(c), Some("Coordinate" | "CoordinateDouble"))
+                    });
                     let matrices = if skin_coord {
-                        let model_views: Vec<Matrix4> = joints.iter().map(|j| self.joint_model_views.get(j).copied().unwrap_or(Matrix4::IDENTITY)).collect();
+                        let model_views: Vec<Matrix4> = joints
+                            .iter()
+                            .map(|j| {
+                                self.joint_model_views
+                                    .get(j)
+                                    .copied()
+                                    .unwrap_or(Matrix4::IDENTITY)
+                            })
+                            .collect();
                         x3d_render::hanim::joint_matrices(&bindings, &model_views, &inv)
                     } else {
                         vec![0.0; joints.len() * 32]
@@ -1001,7 +1467,9 @@ impl<'a> Walker<'a> {
                 });
 
                 self.hanim.push(source);
-                self.group(sg, path, ty, n, skin, &m, sensors, anchors, collidable, depth);
+                self.group(
+                    sg, path, ty, n, skin, &m, sensors, anchors, collidable, depth,
+                );
                 self.hanim.pop();
                 self.inv_humanoid.pop();
             }
@@ -1009,7 +1477,8 @@ impl<'a> Walker<'a> {
                 let mut m = *mv;
 
                 match ty {
-                    "Transform" | "CADPart" | "GeoLocation" | "GeoTransform" | "HAnimHumanoid" | "HAnimJoint" | "HAnimSite" => {
+                    "Transform" | "CADPart" | "GeoLocation" | "GeoTransform" | "HAnimHumanoid"
+                    | "HAnimJoint" | "HAnimSite" => {
                         m.mult_left(&sg.group_matrix(n, ty).unwrap());
 
                         if ty == "HAnimJoint" {
@@ -1036,13 +1505,20 @@ impl<'a> Walker<'a> {
                     } else if sg.rt.pick_sensor_object_type(n).iter().any(|t| t == "NONE") {
                         Some(Some(None))
                     } else {
-                        Some(Some(Some(self.pick.as_ref().unwrap().filter_sensors(&sg.rt.pick_sensor_object_type(n)))))
+                        Some(Some(Some(
+                            self.pick
+                                .as_ref()
+                                .unwrap()
+                                .filter_sensors(&sg.rt.pick_sensor_object_type(n)),
+                        )))
                     }
                 } else {
                     None
                 };
 
-                if self.picking.is_some_and(|t| t.contains(&n)) && !matches!(pick_group, Some(Some(None))) {
+                if self.picking.is_some_and(|t| t.contains(&n))
+                    && !matches!(pick_group, Some(Some(None)))
+                {
                     self.scan.pick_targets.push((n, m));
                 }
 
@@ -1060,7 +1536,18 @@ impl<'a> Walker<'a> {
                             p.sensors.push(f);
                         }
 
-                        self.group(sg, path, ty, n, children_of(sg, n, ty), &m, sensors, anchors, collidable, depth);
+                        self.group(
+                            sg,
+                            path,
+                            ty,
+                            n,
+                            children_of(sg, n, ty),
+                            &m,
+                            sensors,
+                            anchors,
+                            collidable,
+                            depth,
+                        );
                         let p = self.pick.as_mut().unwrap();
                         p.pickable.pop();
 
@@ -1070,19 +1557,33 @@ impl<'a> Walker<'a> {
                     }
                     Some(_) => {}
                     None => {
-                        let kids = if ty == "LOD" { lod_child(sg, n, self.lod_level(sg, path, n, &m)) } else { children_of(sg, n, ty) };
+                        let kids = if ty == "LOD" {
+                            lod_child(sg, n, self.lod_level(sg, path, n, &m))
+                        } else {
+                            children_of(sg, n, ty)
+                        };
                         // HAnimSegment with a coord and displacements: the hAnimNode of its children.
                         let segment = (ty == "HAnimSegment" && !self.camera)
                             .then(|| x3d_render::hanim::segment_tables(sg, n))
                             .flatten()
-                            .map(|tables| Rc::new((tables, x3d_render::hanim::segment_matrices(&m, self.inv_humanoid.last().unwrap()))));
+                            .map(|tables| {
+                                Rc::new((
+                                    tables,
+                                    x3d_render::hanim::segment_matrices(
+                                        &m,
+                                        self.inv_humanoid.last().unwrap(),
+                                    ),
+                                ))
+                            });
                         let pushed = segment.is_some();
 
                         if pushed {
                             self.hanim.push(segment);
                         }
 
-                        self.group(sg, path, ty, n, kids, &m, sensors, anchors, collidable, depth);
+                        self.group(
+                            sg, path, ty, n, kids, &m, sensors, anchors, collidable, depth,
+                        );
 
                         if pushed {
                             self.hanim.pop();
@@ -1094,10 +1595,32 @@ impl<'a> Walker<'a> {
             "Viewport" => {
                 let rectangle = layer::viewport_rectangle(sg, n, self.viewport());
                 self.viewports.push(rectangle);
-                self.group(sg, path, ty, n, children_of(sg, n, ty), mv, sensors, anchors, collidable, depth);
+                self.group(
+                    sg,
+                    path,
+                    ty,
+                    n,
+                    children_of(sg, n, ty),
+                    mv,
+                    sensors,
+                    anchors,
+                    collidable,
+                    depth,
+                );
                 self.viewports.pop();
             }
-            "LayoutGroup" => self.layout_group(sg, path, sg.node(n, "layout"), sg.node(n, "viewport"), children_of(sg, n, ty), mv, sensors, anchors, collidable, depth),
+            "LayoutGroup" => self.layout_group(
+                sg,
+                path,
+                sg.node(n, "layout"),
+                sg.node(n, "viewport"),
+                children_of(sg, n, ty),
+                mv,
+                sensors,
+                anchors,
+                collidable,
+                depth,
+            ),
             _ => {}
         }
 

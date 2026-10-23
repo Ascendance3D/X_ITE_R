@@ -3,10 +3,35 @@
 
 /// Edge values every function sees, besides the generated ones.
 pub const EDGES: &[f64] = &[
-    0.0, -0.0, 1.0, -1.0, 0.5, -0.5, 2.0, 10.0, 0.1, 1e-300, -1e-300, 5e-324, -5e-324, 2.2250738585072014e-308,
-    f64::MAX, f64::MIN, f64::INFINITY, f64::NEG_INFINITY, f64::NAN, f64::EPSILON,
-    std::f64::consts::PI, std::f64::consts::FRAC_PI_2, std::f64::consts::FRAC_PI_4, std::f64::consts::E,
-    1e22, 1e300, 709.782712893384, -745.1332191019411, 1.7976931348623157e308,
+    0.0,
+    -0.0,
+    1.0,
+    -1.0,
+    0.5,
+    -0.5,
+    2.0,
+    10.0,
+    0.1,
+    1e-300,
+    -1e-300,
+    5e-324,
+    -5e-324,
+    2.2250738585072014e-308,
+    f64::MAX,
+    f64::MIN,
+    f64::INFINITY,
+    f64::NEG_INFINITY,
+    f64::NAN,
+    f64::EPSILON,
+    std::f64::consts::PI,
+    std::f64::consts::FRAC_PI_2,
+    std::f64::consts::FRAC_PI_4,
+    std::f64::consts::E,
+    1e22,
+    1e300,
+    709.782712893384,
+    -745.1332191019411,
+    1.7976931348623157e308,
 ];
 
 fn next(s: &mut u64) -> u64 {
@@ -39,7 +64,11 @@ pub fn hash(values: impl Iterator<Item = f64>) -> u64 {
     let mut h = 0xcbf29ce484222325u64;
 
     for x in values {
-        let bits = if x.is_nan() { 0x7ff8000000000000 } else { x.to_bits() };
+        let bits = if x.is_nan() {
+            0x7ff8000000000000
+        } else {
+            x.to_bits()
+        };
 
         for b in bits.to_le_bytes() {
             h ^= b as u64;

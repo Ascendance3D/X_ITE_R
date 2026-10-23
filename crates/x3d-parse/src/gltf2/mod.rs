@@ -22,8 +22,8 @@ mod scenegraph;
 mod scripts;
 mod util;
 
-pub(crate) use glb::{is_valid_glb, parse_glb, parse_gltf};
 pub use glb::{default_fetch, with_fetcher};
+pub(crate) use glb::{is_valid_glb, parse_glb, parse_gltf};
 
 use crate::json::JsValue as J;
 use std::collections::{HashMap, HashSet};
@@ -75,7 +75,11 @@ pub(crate) fn is_valid_gltf(input: &J) -> bool {
         Some(J::Number(n)) => *n >= 2.0,
         Some(J::String(s)) => {
             let t = s.trim();
-            let n = if t.is_empty() { 0.0 } else { t.parse::<f64>().unwrap_or(f64::NAN) };
+            let n = if t.is_empty() {
+                0.0
+            } else {
+                t.parse::<f64>().unwrap_or(f64::NAN)
+            };
             n >= 2.0
         }
         Some(J::Bool(b)) => (*b as u8 as f64) >= 2.0,
@@ -162,9 +166,18 @@ pub(super) enum Ptr {
     /// getter returns that object, which `getAnimationPointer` cannot map).
     Existing,
     /// KHR_texture_transform: a Script combining offset, rotation and scale, made on first use.
-    TextureTransform { node: NodeId, translation: [f64; 2], rotation: f64, scale: [f64; 2] },
+    TextureTransform {
+        node: NodeId,
+        translation: [f64; 2],
+        rotation: f64,
+        scale: [f64; 2],
+    },
     /// Orthographic camera: a Script combining xmag and ymag, made on first use.
-    Ortho { viewpoint: NodeId, xmag: f64, ymag: f64 },
+    Ortho {
+        viewpoint: NodeId,
+        xmag: f64,
+        ymag: f64,
+    },
 }
 
 pub(super) struct P<'j, 's> {
@@ -233,7 +246,13 @@ pub(super) fn addr(v: V) -> usize {
 
 /// `Number (x)` as a Set / Map key.
 pub(super) fn num_key(v: V) -> Option<u64> {
-    v.num().map(|n| if n == 0.0 { 0.0f64.to_bits() } else { n.to_bits() })
+    v.num().map(|n| {
+        if n == 0.0 {
+            0.0f64.to_bits()
+        } else {
+            n.to_bits()
+        }
+    })
 }
 
 impl<'j, 's> P<'j, 's> {
@@ -299,7 +318,9 @@ impl<'j, 's> P<'j, 's> {
     pub fn create_ext(&mut self, type_name: &str, first_field: &str) -> R<NodeId> {
         match self.scene.create_node(ROOT, type_name) {
             Some(n) => Ok(n),
-            None => Err(format!("TypeError: Cannot set properties of null (setting '_{first_field}')")),
+            None => Err(format!(
+                "TypeError: Cannot set properties of null (setting '_{first_field}')"
+            )),
         }
     }
 
@@ -373,7 +394,10 @@ impl<'j, 's> P<'j, 's> {
         }
 
         if !self.scene.node(node).name.is_empty() {
-            return Err(format!("Error: Couldn't add named node: node named '{}' already has a name.", self.scene.node(node).name));
+            return Err(format!(
+                "Error: Couldn't add named node: node named '{}' already has a name.",
+                self.scene.node(node).name
+            ));
         }
 
         self.scene.update_named_node(ROOT, &unique, node);
@@ -384,7 +408,9 @@ impl<'j, 's> P<'j, 's> {
     pub fn exported(&mut self, name: &str, node: NodeId) -> R<()> {
         let unique = self.scene.get_unique_export_name(name);
 
-        self.scene.update_exported_node(ROOT, &unique, node, "").map_err(|e| format!("Error: {e}"))
+        self.scene
+            .update_exported_node(ROOT, &unique, node, "")
+            .map_err(|e| format!("Error: {e}"))
     }
 
     pub fn root_push(&mut self, node: NodeId) {
@@ -392,7 +418,10 @@ impl<'j, 's> P<'j, 's> {
     }
 
     pub fn route(&mut self, src: NodeId, sf: &str, dst: NodeId, df: &str) -> R<()> {
-        self.scene.add_route(ROOT, src, sf, dst, df).map(|_| ()).map_err(|e| format!("Error: {e}"))
+        self.scene
+            .add_route(ROOT, src, sf, dst, df)
+            .map(|_| ())
+            .map_err(|e| format!("Error: {e}"))
     }
 
     /// `X3DParser.sanitizeName`; `undefined` is the empty string.
@@ -436,7 +465,11 @@ impl<'j, 's> P<'j, 's> {
         self.samplers_array(gltf.get("samplers"));
 
         self.images_array(gltf.get("images"))?;
-        self.videos_array(gltf.get("extensions").get("EXT_texture_video").get("videos"))?;
+        self.videos_array(
+            gltf.get("extensions")
+                .get("EXT_texture_video")
+                .get("videos"),
+        )?;
 
         self.textures_array(gltf.get("textures"));
         self.materials_array(gltf.get("materials"));
@@ -451,7 +484,12 @@ impl<'j, 's> P<'j, 's> {
 
         self.scene.setup_nodes();
         self.viewpoints_center_of_rotation();
-        crate::optimizer::Optimizer { remove_empty_groups: true, combine_grouping_nodes: true, optimize_interpolators: true }.optimize_scene_graph(self.scene, ROOT);
+        crate::optimizer::Optimizer {
+            remove_empty_groups: true,
+            combine_grouping_nodes: true,
+            optimize_interpolators: true,
+        }
+        .optimize_scene_graph(self.scene, ROOT);
 
         self.export_group_lights("EnvironmentLights", true)?;
         self.export_group_lights("Lights", false)?;
@@ -465,7 +503,9 @@ impl<'j, 's> P<'j, 's> {
     }
 
     pub fn update_component(&mut self, name: &str, level: Option<i32>) {
-        let level = level.or_else(|| self.scene.supported_component_level(name)).unwrap_or(1);
+        let level = level
+            .or_else(|| self.scene.supported_component_level(name))
+            .unwrap_or(1);
 
         self.scene.update_component(name, level);
     }
@@ -527,7 +567,10 @@ impl<'j, 's> P<'j, 's> {
         let packets = ext.get("packets");
 
         let Some(packets_arr) = packets.arr() else {
-            return Err(format!("TypeError: Cannot read properties of undefined (reading '{}')", index.to_js_string()));
+            return Err(format!(
+                "TypeError: Cannot read properties of undefined (reading '{}')",
+                index.to_js_string()
+            ));
         };
 
         let packet = match index.index(packets_arr.len()) {
@@ -544,7 +587,11 @@ impl<'j, 's> P<'j, 's> {
                 let array = if set.nn() { set } else { value.get("@list") };
 
                 if let Some(a) = array.arr() {
-                    let v = a.iter().map(|v| V::new(v).to_js_string()).collect::<Vec<_>>().join(", ");
+                    let v = a
+                        .iter()
+                        .map(|v| V::new(v).to_js_string())
+                        .collect::<Vec<_>>()
+                        .join(", ");
 
                     self.add_meta(&k, &v)?;
                     continue;
@@ -661,40 +708,60 @@ impl<'j, 's> P<'j, 's> {
         self.exported(name, group)?;
 
         self.set(group, "visible", FieldValue::SFBool(false));
-        self.set(group, "children", FieldValue::MFNode(nodes.into_iter().map(Some).collect()));
+        self.set(
+            group,
+            "children",
+            FieldValue::MFNode(nodes.into_iter().map(Some).collect()),
+        );
         self.setup(group);
         self.root_push(group);
         Ok(())
     }
 
     fn export_group_lights(&mut self, name: &str, env: bool) -> R<()> {
-        let (array, cache) = if env { (self.env_lights, &self.env_light_nodes) } else { (self.lights, &self.light_nodes) };
-        let Some(list) = array.arr() else { return Ok(()) };
-        let nodes: Vec<NodeId> = (0..list.len()).filter_map(|i| cache.get(&i).copied()).collect();
+        let (array, cache) = if env {
+            (self.env_lights, &self.env_light_nodes)
+        } else {
+            (self.lights, &self.light_nodes)
+        };
+        let Some(list) = array.arr() else {
+            return Ok(());
+        };
+        let nodes: Vec<NodeId> = (0..list.len())
+            .filter_map(|i| cache.get(&i).copied())
+            .collect();
 
         self.export_group(name, nodes)
     }
 
     fn export_group_cameras(&mut self) -> R<()> {
-        let Some(list) = self.cameras.arr() else { return Ok(()) };
+        let Some(list) = self.cameras.arr() else {
+            return Ok(());
+        };
 
         if list.iter().any(|c| matches!(c, J::Null)) {
             return Err("TypeError: Cannot read properties of null (reading 'node')".into());
         }
 
-        let nodes: Vec<NodeId> = (0..list.len()).filter_map(|i| self.camera_nodes.get(&i).copied().flatten()).collect();
+        let nodes: Vec<NodeId> = (0..list.len())
+            .filter_map(|i| self.camera_nodes.get(&i).copied().flatten())
+            .collect();
 
         self.export_group("Viewpoints", nodes)
     }
 
     fn export_group_animations(&mut self, animations: V<'j>) -> R<()> {
-        let Some(list) = animations.arr() else { return Ok(()) };
+        let Some(list) = animations.arr() else {
+            return Ok(());
+        };
 
         if list.iter().any(|a| matches!(a, J::Null)) {
             return Err("TypeError: Cannot read properties of null (reading 'node')".into());
         }
 
-        let nodes: Vec<NodeId> = (0..list.len()).filter_map(|i| self.animation_nodes.get(&i).copied()).collect();
+        let nodes: Vec<NodeId> = (0..list.len())
+            .filter_map(|i| self.animation_nodes.get(&i).copied())
+            .collect();
 
         self.export_group("Animations", nodes)
     }
@@ -705,7 +772,11 @@ impl<'j, 's> P<'j, 's> {
         }
 
         let switch = self.create("Switch")?;
-        let names: Vec<V> = self.material_variants.arr().map(|a| a.iter().map(V::new).collect()).unwrap_or_default();
+        let names: Vec<V> = self
+            .material_variants
+            .arr()
+            .map(|a| a.iter().map(V::new).collect())
+            .unwrap_or_default();
 
         self.named("MaterialVariants", switch)?;
         self.exported("MaterialVariants", switch)?;
@@ -715,7 +786,15 @@ impl<'j, 's> P<'j, 's> {
         self.setup(switch);
 
         // switchNode .setMetaData ("MaterialVariants/names", new Fields .MFString (... names))
-        let names: Vec<String> = names.iter().map(|v| v.get("name").str().map(str::to_string).unwrap_or_else(|| "undefined".into())).collect();
+        let names: Vec<String> = names
+            .iter()
+            .map(|v| {
+                v.get("name")
+                    .str()
+                    .map(str::to_string)
+                    .unwrap_or_else(|| "undefined".into())
+            })
+            .collect();
 
         self.set_meta_data_strings(switch, "MaterialVariants", "names", &names)?;
 
@@ -730,7 +809,13 @@ impl<'j, 's> P<'j, 's> {
     }
 
     /// X3DNode.setMetaData ("<set>/<name>", MFString): a MetadataSet holding a MetadataString.
-    fn set_meta_data_strings(&mut self, node: NodeId, set_name: &str, name: &str, values: &[String]) -> R<()> {
+    fn set_meta_data_strings(
+        &mut self,
+        node: NodeId,
+        set_name: &str,
+        name: &str,
+        values: &[String],
+    ) -> R<()> {
         let set = self.create("MetadataSet")?;
 
         // `createNode (type)` with setup.
@@ -808,7 +893,10 @@ impl<'j, 's> P<'j, 's> {
                 let n = self.scene.node(script);
                 let all: Vec<&Field> = n.fields.iter().chain(n.user_fields.iter()).collect();
 
-                (all.iter().all(|f| f.input_routes == 0), all.iter().all(|f| f.output_routes == 0))
+                (
+                    all.iter().all(|f| f.input_routes == 0),
+                    all.iter().all(|f| f.output_routes == 0),
+                )
             };
 
             if no_input || no_output {
@@ -824,7 +912,10 @@ fn xmp_key(key: &str) -> Option<String> {
 
     for (i, c) in b.iter().enumerate() {
         if *c == ':' && i > 0 && (b[i - 1].is_ascii_alphanumeric() || b[i - 1] == '_') {
-            let rest: String = b[i + 1..].iter().take_while(|c| !matches!(**c, '\n' | '\r' | '\u{2028}' | '\u{2029}')).collect();
+            let rest: String = b[i + 1..]
+                .iter()
+                .take_while(|c| !matches!(**c, '\n' | '\r' | '\u{2028}' | '\u{2029}'))
+                .collect();
 
             return Some(rest);
         }

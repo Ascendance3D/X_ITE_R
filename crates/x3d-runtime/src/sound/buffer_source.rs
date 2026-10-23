@@ -33,7 +33,11 @@ impl Buffer {
 pub enum Message {
     /// `start (when, offset)` with `when` already max (when, currentTime), and whether
     /// playbackRate is 1 and detune 0 (ClampGrainParameters reads their values).
-    Start { when: f64, offset: f64, unit_rate: bool },
+    Start {
+        when: f64,
+        offset: f64,
+        unit_rate: bool,
+    },
     Stop(f64),
     Loop(bool),
     LoopStart(f64),
@@ -53,7 +57,11 @@ enum State {
 /// audio_utilities::TimeToSampleFrame.
 fn time_to_sample_frame(time: f64, sample_rate: f64, round_up: bool) -> f64 {
     let frame = (time * sample_rate * 1024.0).round() / 1024.0;
-    if round_up { frame.ceil() } else { frame.round() }
+    if round_up {
+        frame.ceil()
+    } else {
+        frame.round()
+    }
 }
 
 fn time_to_floating_sample_frame(time: f64, sample_rate: f64) -> f64 {
@@ -61,7 +69,11 @@ fn time_to_floating_sample_frame(time: f64, sample_rate: f64) -> f64 {
     let round_frame = frame.round();
     let tolerance = round_frame.max(1.0) * (10.0 * f64::EPSILON);
 
-    if (frame - round_frame).abs() <= tolerance { round_frame } else { frame }
+    if (frame - round_frame).abs() <= tolerance {
+        round_frame
+    } else {
+        frame
+    }
 }
 
 pub struct Processor {
@@ -94,8 +106,16 @@ impl Processor {
         let Some(b) = &self.buffer else { return };
         let duration = b.duration();
         self.grain_offset = self.grain_offset.clamp(0.0, duration);
-        self.grain_duration = if self.is_duration_given { self.grain_duration.max(0.0) } else { f64::INFINITY };
-        self.virtual_read_index = if unit_rate { time_to_sample_frame(self.grain_offset, b.sample_rate as f64, false) } else { self.grain_offset * b.sample_rate as f64 };
+        self.grain_duration = if self.is_duration_given {
+            self.grain_duration.max(0.0)
+        } else {
+            f64::INFINITY
+        };
+        self.virtual_read_index = if unit_rate {
+            time_to_sample_frame(self.grain_offset, b.sample_rate as f64, false)
+        } else {
+            self.grain_offset * b.sample_rate as f64
+        };
     }
 
     fn update_effective_loop_points(&mut self) {
@@ -116,7 +136,11 @@ impl Processor {
         }
 
         let start = self.loop_start.clamp(0.0, duration);
-        let end = if self.loop_end == 0.0 { duration } else { self.loop_end.clamp(0.0, duration) };
+        let end = if self.loop_end == 0.0 {
+            duration
+        } else {
+            self.loop_end.clamp(0.0, duration)
+        };
 
         if start < end {
             if start > 0.0 {
@@ -134,7 +158,10 @@ impl Processor {
     }
 
     fn compute_playback_rate(&mut self, playback_rate: f64, detune: f64, context_rate: f64) -> f64 {
-        let sample_rate_factor = self.buffer.as_ref().map_or(1.0, |b| b.sample_rate as f64 / context_rate);
+        let sample_rate_factor = self
+            .buffer
+            .as_ref()
+            .map_or(1.0, |b| b.sample_rate as f64 / context_rate);
         let mut rate = sample_rate_factor * playback_rate;
         rate *= 2f64.powf(detune / 1200.0);
         let rate = rate.clamp(-MAX_RATE, MAX_RATE);
@@ -147,17 +174,27 @@ impl Processor {
     }
 
     /// UpdateSchedulingInfo: (quantum frame offset, frames to process, start frame offset).
-    fn update_scheduling_info(&mut self, frames: usize, current_frame: u64, sample_rate: f64, dest: &mut [&mut [f32]]) -> (usize, usize, f64) {
+    fn update_scheduling_info(
+        &mut self,
+        frames: usize,
+        current_frame: u64,
+        sample_rate: f64,
+        dest: &mut [&mut [f32]],
+    ) -> (usize, usize, f64) {
         let quantum_start_frame = current_frame as f64;
         let quantum_end_frame = quantum_start_frame + frames as f64;
         let start_frame = time_to_sample_frame(self.start_time, sample_rate, true);
-        let end_frame = self.end_time.map(|t| time_to_sample_frame(t, sample_rate, true));
+        let end_frame = self
+            .end_time
+            .map(|t| time_to_sample_frame(t, sample_rate, true));
 
         if end_frame.is_some_and(|e| e <= quantum_start_frame) {
             self.finish();
         }
 
-        if matches!(self.state, State::Unscheduled | State::Finished) || start_frame >= quantum_end_frame {
+        if matches!(self.state, State::Unscheduled | State::Finished)
+            || start_frame >= quantum_end_frame
+        {
             return (0, 0, 0.0);
         }
 
@@ -168,14 +205,20 @@ impl Processor {
             0.0
         };
 
-        let quantum_frame_offset = if start_frame > quantum_start_frame { ((start_frame - quantum_start_frame) as usize).min(frames) } else { 0 };
+        let quantum_frame_offset = if start_frame > quantum_start_frame {
+            ((start_frame - quantum_start_frame) as usize).min(frames)
+        } else {
+            0
+        };
         let mut non_silent = frames - quantum_frame_offset;
 
         if non_silent == 0 {
             return (quantum_frame_offset, 0, start_frame_offset);
         }
 
-        if let Some(end) = end_frame.filter(|e| *e >= quantum_start_frame && *e <= quantum_end_frame) {
+        if let Some(end) =
+            end_frame.filter(|e| *e >= quantum_start_frame && *e <= quantum_end_frame)
+        {
             if end < quantum_end_frame {
                 let zero_start = (end - quantum_start_frame) as usize;
                 let frames_to_zero = frames - zero_start;
@@ -201,7 +244,16 @@ impl Processor {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn process_fast_path(&mut self, b: &Buffer, dest: &mut [&mut [f32]], virtual_delta_frames: f64, virtual_end_frame: f64, mut frames_to_process: i64, mut write_index: usize, virtual_read_index: f64) -> (usize, f64) {
+    fn process_fast_path(
+        &mut self,
+        b: &Buffer,
+        dest: &mut [&mut [f32]],
+        virtual_delta_frames: f64,
+        virtual_end_frame: f64,
+        mut frames_to_process: i64,
+        mut write_index: usize,
+        virtual_read_index: f64,
+    ) -> (usize, f64) {
         let buffer_length = b.length() as u64;
         let mut read_index = virtual_read_index as u64;
         let delta_frames = virtual_delta_frames as u64;
@@ -213,7 +265,9 @@ impl Processor {
 
             for (c, d) in dest.iter_mut().enumerate() {
                 let s = &b.channels[c];
-                d[write_index..write_index + frames_this_time].copy_from_slice(&s[read_index as usize..read_index as usize + frames_this_time]);
+                d[write_index..write_index + frames_this_time].copy_from_slice(
+                    &s[read_index as usize..read_index as usize + frames_this_time],
+                );
             }
 
             write_index += frames_this_time;
@@ -234,7 +288,8 @@ impl Processor {
                 }
 
                 let overflow = temp_read_index - end_frame as f64;
-                temp_read_index = end_frame as f64 - delta_frames as f64 + overflow % delta_frames as f64;
+                temp_read_index =
+                    end_frame as f64 - delta_frames as f64 + overflow % delta_frames as f64;
             }
 
             read_index = temp_read_index as u64;
@@ -244,7 +299,18 @@ impl Processor {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn process_interpolated_path(&mut self, b: &Buffer, dest: &mut [&mut [f32]], virtual_start_frame: f64, virtual_delta_frames: f64, virtual_end_frame: f64, computed_playback_rate: f64, frames_to_process: i64, mut write_index: usize, mut virtual_read_index: f64) -> (usize, f64) {
+    fn process_interpolated_path(
+        &mut self,
+        b: &Buffer,
+        dest: &mut [&mut [f32]],
+        virtual_start_frame: f64,
+        virtual_delta_frames: f64,
+        virtual_end_frame: f64,
+        computed_playback_rate: f64,
+        frames_to_process: i64,
+        mut write_index: usize,
+        mut virtual_read_index: f64,
+    ) -> (usize, f64) {
         let buffer_length = b.length() as u64;
         let max_index = buffer_length.saturating_sub(1);
 
@@ -254,15 +320,23 @@ impl Processor {
             let interpolation_factor = virtual_read_index - read_index as f64;
             let mut read_index2 = read_index + 1;
 
-            if self.is_looping && (read_index as f64) < virtual_end_frame && read_index2 as f64 >= virtual_end_frame {
+            if self.is_looping
+                && (read_index as f64) < virtual_end_frame
+                && read_index2 as f64 >= virtual_end_frame
+            {
                 let wrapped_index = if virtual_delta_frames >= 1.0 {
                     virtual_read_index + 1.0 - virtual_delta_frames
                 } else if virtual_delta_frames > 0.0 {
-                    virtual_start_frame + (virtual_read_index + 1.0 - virtual_start_frame) % virtual_delta_frames
+                    virtual_start_frame
+                        + (virtual_read_index + 1.0 - virtual_start_frame) % virtual_delta_frames
                 } else {
                     virtual_start_frame
                 };
-                read_index2 = if wrapped_index >= 0.0 { wrapped_index as u64 } else { 0 };
+                read_index2 = if wrapped_index >= 0.0 {
+                    wrapped_index as u64
+                } else {
+                    0
+                };
             } else if read_index2 >= buffer_length {
                 read_index2 = read_index;
             }
@@ -301,7 +375,8 @@ impl Processor {
                 }
 
                 let overflow = virtual_read_index - virtual_end_frame;
-                virtual_read_index = virtual_end_frame - virtual_delta_frames + overflow % virtual_delta_frames;
+                virtual_read_index =
+                    virtual_end_frame - virtual_delta_frames + overflow % virtual_delta_frames;
             } else if computed_playback_rate < 0.0 && virtual_read_index < virtual_start_frame {
                 if !self.is_looping {
                     self.render_silence_and_finish(dest, write_index, frames_remaining);
@@ -310,7 +385,8 @@ impl Processor {
                 }
 
                 let overflow = virtual_start_frame - virtual_read_index;
-                virtual_read_index = virtual_start_frame + virtual_delta_frames - overflow % virtual_delta_frames;
+                virtual_read_index =
+                    virtual_start_frame + virtual_delta_frames - overflow % virtual_delta_frames;
             }
         }
 
@@ -318,7 +394,15 @@ impl Processor {
     }
 
     /// RenderFromBuffer: false zeroes the output.
-    fn render_from_buffer(&mut self, b: &Buffer, dest: &mut [&mut [f32]], destination_frame_offset: usize, number_of_frames: usize, start_time_offset: f64, computed_playback_rate: f64) -> bool {
+    fn render_from_buffer(
+        &mut self,
+        b: &Buffer,
+        dest: &mut [&mut [f32]],
+        destination_frame_offset: usize,
+        number_of_frames: usize,
+        start_time_offset: f64,
+        computed_playback_rate: f64,
+    ) -> bool {
         for d in dest.iter_mut() {
             d[..destination_frame_offset].fill(0.0);
         }
@@ -389,16 +473,41 @@ impl Processor {
             }
         }
 
-        if !self.is_looping && ((computed_playback_rate >= 0.0 && virtual_read_index >= buffer_length) || (computed_playback_rate < 0.0 && virtual_read_index < 0.0)) {
+        if !self.is_looping
+            && ((computed_playback_rate >= 0.0 && virtual_read_index >= buffer_length)
+                || (computed_playback_rate < 0.0 && virtual_read_index < 0.0))
+        {
             virtual_read_index = virtual_read_index.clamp(0.0, buffer_length);
             frames_to_process = 0;
             is_stopping_this_quantum = true;
         }
 
-        let (w, r) = if computed_playback_rate == 1.0 && virtual_read_index == virtual_read_index.floor() && virtual_delta_frames == virtual_delta_frames.floor() && virtual_end_frame == virtual_end_frame.floor() {
-            self.process_fast_path(b, dest, virtual_delta_frames, virtual_end_frame, frames_to_process, write_index, virtual_read_index)
+        let (w, r) = if computed_playback_rate == 1.0
+            && virtual_read_index == virtual_read_index.floor()
+            && virtual_delta_frames == virtual_delta_frames.floor()
+            && virtual_end_frame == virtual_end_frame.floor()
+        {
+            self.process_fast_path(
+                b,
+                dest,
+                virtual_delta_frames,
+                virtual_end_frame,
+                frames_to_process,
+                write_index,
+                virtual_read_index,
+            )
         } else {
-            self.process_interpolated_path(b, dest, virtual_start_frame, virtual_delta_frames, virtual_end_frame, computed_playback_rate, frames_to_process, write_index, virtual_read_index)
+            self.process_interpolated_path(
+                b,
+                dest,
+                virtual_start_frame,
+                virtual_delta_frames,
+                virtual_end_frame,
+                computed_playback_rate,
+                frames_to_process,
+                write_index,
+                virtual_read_index,
+            )
         };
         write_index = w;
         virtual_read_index = r;
@@ -430,9 +539,19 @@ impl Processor {
         let is_finite = !self.did_set_looping || self.is_duration_given;
         let playing_or_scheduled = matches!(self.state, State::Scheduled | State::Playing);
 
-        if let (true, Some(b), true, true) = (is_finite, &self.buffer, playing_or_scheduled, self.min_playback_rate > 0.0) {
-            let source_duration = if self.is_duration_given { self.grain_duration } else { b.duration() };
-            let stop_time = self.start_time + source_duration / self.min_playback_rate + 256.0 / sample_rate;
+        if let (true, Some(b), true, true) = (
+            is_finite,
+            &self.buffer,
+            playing_or_scheduled,
+            self.min_playback_rate > 0.0,
+        ) {
+            let source_duration = if self.is_duration_given {
+                self.grain_duration
+            } else {
+                b.duration()
+            };
+            let stop_time =
+                self.start_time + source_duration / self.min_playback_rate + 256.0 / sample_rate;
 
             if current_time > stop_time {
                 self.finish();
@@ -472,11 +591,17 @@ impl AudioWorkletProcessor for Processor {
     }
 
     fn onmessage(&mut self, msg: &mut dyn Any) {
-        let Some(m) = msg.downcast_mut::<Option<Message>>() else { return };
+        let Some(m) = msg.downcast_mut::<Option<Message>>() else {
+            return;
+        };
 
         match m.take() {
             // AudioBufferSourceHandler::StartSource (start (when, offset): no duration given).
-            Some(Message::Start { when, offset, unit_rate }) => {
+            Some(Message::Start {
+                when,
+                offset,
+                unit_rate,
+            }) => {
                 if self.state != State::Unscheduled {
                     return;
                 }
@@ -516,12 +641,30 @@ impl AudioWorkletProcessor for Processor {
         use web_audio_api::{AudioParamDescriptor, AutomationRate};
 
         vec![
-            AudioParamDescriptor { name: "playbackRate".into(), min_value: f32::MIN, max_value: f32::MAX, default_value: 1.0, automation_rate: AutomationRate::K },
-            AudioParamDescriptor { name: "detune".into(), min_value: f32::MIN, max_value: f32::MAX, default_value: 0.0, automation_rate: AutomationRate::K },
+            AudioParamDescriptor {
+                name: "playbackRate".into(),
+                min_value: f32::MIN,
+                max_value: f32::MAX,
+                default_value: 1.0,
+                automation_rate: AutomationRate::K,
+            },
+            AudioParamDescriptor {
+                name: "detune".into(),
+                min_value: f32::MIN,
+                max_value: f32::MAX,
+                default_value: 0.0,
+                automation_rate: AutomationRate::K,
+            },
         ]
     }
 
-    fn process<'a, 'b>(&mut self, _inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        _inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let dest = &mut outputs[0];
         let frames = dest.first().map_or(128, |d| d.len());
         let sample_rate = scope.sample_rate as f64;
@@ -538,12 +681,17 @@ impl AudioWorkletProcessor for Processor {
             }
             Some(b) if b.channels.len() != dest.len() => false,
             Some(b) => {
-                let (offset, count, start_time_offset) = self.update_scheduling_info(frames, scope.current_frame, sample_rate, dest);
+                let (offset, count, start_time_offset) =
+                    self.update_scheduling_info(frames, scope.current_frame, sample_rate, dest);
 
                 if count == 0 {
                     false
                 } else {
-                    let rate = self.compute_playback_rate(params.get("playbackRate")[0] as f64, params.get("detune")[0] as f64, sample_rate);
+                    let rate = self.compute_playback_rate(
+                        params.get("playbackRate")[0] as f64,
+                        params.get("detune")[0] as f64,
+                        sample_rate,
+                    );
                     self.render_from_buffer(&b, dest, offset, count, start_time_offset, rate)
                 }
             }
@@ -553,7 +701,10 @@ impl AudioWorkletProcessor for Processor {
             dest.iter_mut().for_each(|d| d.fill(0.0));
         }
 
-        self.handle_stoppable_source_node((scope.current_frame + frames as u64) as f64 / sample_rate, sample_rate);
+        self.handle_stoppable_source_node(
+            (scope.current_frame + frames as u64) as f64 / sample_rate,
+            sample_rate,
+        );
 
         // PropagatesSilence once finished; the node can then be freed.
         self.state != State::Finished

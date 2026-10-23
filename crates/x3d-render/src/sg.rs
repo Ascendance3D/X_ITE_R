@@ -34,7 +34,9 @@ impl<'a> Sg<'a> {
         for _ in 0..64 {
             match self.rt.scene.node(n).kind {
                 // InlineGeometry.getInnerNode: the geometry of the scene it loaded (none while it has none).
-                NodeKind::Builtin(_) if self.rt.builtin_name(n) == Some("InlineGeometry") => return self.rt.inline_geometry_inner(n),
+                NodeKind::Builtin(_) if self.rt.builtin_name(n) == Some("InlineGeometry") => {
+                    return self.rt.inline_geometry_inner(n);
+                }
                 NodeKind::Builtin(_) => return Some(n),
                 NodeKind::Instance(_) => {
                     let body = *self.bodies.get(&n)?;
@@ -55,7 +57,14 @@ impl<'a> Sg<'a> {
     /// Root nodes of the scene whose root context is `ctx` (the world's, or the one an Inline
     /// loaded: Inline.getInternalScene () .rootNodes).
     pub fn roots_of(&self, ctx: CtxId) -> Vec<NodeId> {
-        self.rt.scene.ctx(ctx).root_nodes.iter().flatten().filter_map(|n| self.inner(*n)).collect()
+        self.rt
+            .scene
+            .ctx(ctx)
+            .root_nodes
+            .iter()
+            .flatten()
+            .filter_map(|n| self.inner(*n))
+            .collect()
     }
 
     /// Inline.getInternalScene: the root context of the scene an Inline attached.
@@ -129,7 +138,9 @@ impl<'a> Sg<'a> {
     pub fn ortho_field_of_view(&self, n: NodeId) -> [f64; 4] {
         match self.value(n, "fieldOfView") {
             Some(FieldValue::SFVec4f(v) | FieldValue::SFVec4d(v)) => [v.x, v.y, v.z, v.w],
-            Some(FieldValue::MFFloat(v)) if v.len() == 4 => [v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64],
+            Some(FieldValue::MFFloat(v)) if v.len() == 4 => {
+                [v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64]
+            }
             _ => [-1.0, -1.0, 1.0, 1.0],
         }
     }
@@ -157,7 +168,9 @@ impl<'a> Sg<'a> {
 
     pub fn nodes(&self, n: NodeId, name: &str) -> Vec<NodeId> {
         match self.value(n, name) {
-            Some(FieldValue::MFNode(v)) => v.iter().flatten().filter_map(|c| self.inner(*c)).collect(),
+            Some(FieldValue::MFNode(v)) => {
+                v.iter().flatten().filter_map(|c| self.inner(*c)).collect()
+            }
             _ => vec![],
         }
     }
@@ -189,8 +202,15 @@ impl<'a> Sg<'a> {
 
     pub fn f64s(&self, n: NodeId, name: &str) -> Vec<f64> {
         match self.value(n, name) {
-            Some(FieldValue::MFRotation(v) | FieldValue::MFDouble(v) | FieldValue::MFVec3d(v) | FieldValue::MFVec2d(v)) => v.clone(),
-            Some(FieldValue::MFFloat(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec2f(v)) => v.iter().map(|x| *x as f64).collect(),
+            Some(
+                FieldValue::MFRotation(v)
+                | FieldValue::MFDouble(v)
+                | FieldValue::MFVec3d(v)
+                | FieldValue::MFVec2d(v),
+            ) => v.clone(),
+            Some(FieldValue::MFFloat(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec2f(v)) => {
+                v.iter().map(|x| *x as f64).collect()
+            }
             _ => vec![],
         }
     }
@@ -239,20 +259,30 @@ impl<'a> Sg<'a> {
     /// (X3DCast (X3DChildNode), then the type switch of setChild); anything else is ignored.
     pub fn cad_face_child(&self, n: NodeId) -> Option<NodeId> {
         let c = self.node(n, "shape")?;
-        matches!(self.type_name(c)?, "LOD" | "Transform" | "Shape" | "ParticleSystem").then_some(c)
+        matches!(
+            self.type_name(c)?,
+            "LOD" | "Transform" | "Shape" | "ParticleSystem"
+        )
+        .then_some(c)
     }
 
     /// GeoLOD.traverse: with `childrenLoaded ? level_changed : 0` at 0 the `rootNode` nodes (its
     /// private Group's children) or else the root Inline, at 1 the four child Inlines. `display`:
     /// the mode of the last DISPLAY traversal (what that frame drew).
     pub fn geo_lod_kids(&self, n: NodeId, display: bool) -> Vec<NodeId> {
-        let Some((root, children)) = self.rt.geo_lod_inlines(n) else { return vec![] };
+        let Some((root, children)) = self.rt.geo_lod_inlines(n) else {
+            return vec![];
+        };
 
         match self.rt.geo_lod_mode(n, display) {
             0 => {
                 let root_node = self.nodes(n, "rootNode");
 
-                if self.raw_nodes(n, "rootNode").is_empty() { vec![root] } else { root_node }
+                if self.raw_nodes(n, "rootNode").is_empty() {
+                    vec![root]
+                } else {
+                    root_node
+                }
             }
             1 => children.to_vec(),
             _ => vec![],
@@ -263,10 +293,14 @@ impl<'a> Sg<'a> {
     pub fn geo_object(&self, n: NodeId) -> x3d_runtime::geo::GeospatialObject {
         use x3d_runtime::geo::{GeoOriginInfo, GeospatialObject, geo_system};
 
-        let origin = self.node(n, "geoOrigin").filter(|o| self.type_name(*o) == Some("GeoOrigin")).map(|o| GeoOriginInfo {
-            origin: geo_system::reference_frame(&self.strings(o, "geoSystem"), false).convert(&self.vec3(o, "geoCoords", Vector3::ZERO)),
-            rotate_y_up: self.bool(o, "rotateYUp", false),
-        });
+        let origin = self
+            .node(n, "geoOrigin")
+            .filter(|o| self.type_name(*o) == Some("GeoOrigin"))
+            .map(|o| GeoOriginInfo {
+                origin: geo_system::reference_frame(&self.strings(o, "geoSystem"), false)
+                    .convert(&self.vec3(o, "geoCoords", Vector3::ZERO)),
+                rotate_y_up: self.bool(o, "rotateYUp", false),
+            });
 
         GeospatialObject::new(&self.strings(n, "geoSystem"), origin, false)
     }
@@ -290,9 +324,17 @@ impl<'a> Sg<'a> {
                 );
                 Some(m)
             }
-            "GeoLocation" => Some(self.geo_object(n).get_location_matrix(&self.vec3(n, "geoCoords", Vector3::ZERO))),
+            "GeoLocation" => Some(self.geo_object(n).get_location_matrix(&self.vec3(
+                n,
+                "geoCoords",
+                Vector3::ZERO,
+            ))),
             "GeoTransform" => {
-                let mut location = self.geo_object(n).get_location_matrix(&self.vec3(n, "geoCenter", Vector3::ZERO));
+                let mut location = self.geo_object(n).get_location_matrix(&self.vec3(
+                    n,
+                    "geoCenter",
+                    Vector3::ZERO,
+                ));
                 let mut m = Matrix4::IDENTITY;
                 m.set_transform(
                     Some(&self.vec3(n, "translation", Vector3::ZERO)),
@@ -314,7 +356,10 @@ impl<'a> Sg<'a> {
     pub fn geo_coord_points(&self, c: NodeId) -> Option<Vec<Vector3>> {
         (self.type_name(c)? == "GeoCoordinate").then(|| {
             let geo = self.geo_object(c);
-            self.f64s(c, "point").chunks_exact(3).map(|v| geo.get_coord(&Vector3::new(v[0], v[1], v[2]))).collect()
+            self.f64s(c, "point")
+                .chunks_exact(3)
+                .map(|v| geo.get_coord(&Vector3::new(v[0], v[1], v[2])))
+                .collect()
         })
     }
 
@@ -324,13 +369,31 @@ impl<'a> Sg<'a> {
     /// (HAnimSite), skin; HAnimJoint its HAnimJoint and HAnimSegment children (and HAnimSite up to
     /// specification version 3.3); HAnimSegment and HAnimSite all children.
     pub fn hanim_children(&self, n: NodeId, ty: &str) -> Option<[Vec<NodeId>; 3]> {
-        let only = |field: &str, types: &[&str]| -> Vec<NodeId> { self.nodes(n, field).into_iter().filter(|c| self.type_name(*c).is_some_and(|t| types.contains(&t))).collect() };
+        let only = |field: &str, types: &[&str]| -> Vec<NodeId> {
+            self.nodes(n, field)
+                .into_iter()
+                .filter(|c| self.type_name(*c).is_some_and(|t| types.contains(&t)))
+                .collect()
+        };
 
         match ty {
-            "HAnimHumanoid" => Some([only("skeleton", &["HAnimJoint", "HAnimSite"]), only("viewpoints", &["HAnimSite"]), self.nodes(n, "skin")]),
+            "HAnimHumanoid" => Some([
+                only("skeleton", &["HAnimJoint", "HAnimSite"]),
+                only("viewpoints", &["HAnimSite"]),
+                self.nodes(n, "skin"),
+            ]),
             "HAnimJoint" => {
-                let legacy = self.rt.scene.spec_version_of(self.rt.scene.node(n).ctx).parse::<f64>().is_ok_and(|v| v <= 3.3);
-                let types: &[&str] = if legacy { &["HAnimJoint", "HAnimSegment", "HAnimSite"] } else { &["HAnimJoint", "HAnimSegment"] };
+                let legacy = self
+                    .rt
+                    .scene
+                    .spec_version_of(self.rt.scene.node(n).ctx)
+                    .parse::<f64>()
+                    .is_ok_and(|v| v <= 3.3);
+                let types: &[&str] = if legacy {
+                    &["HAnimJoint", "HAnimSegment", "HAnimSite"]
+                } else {
+                    &["HAnimJoint", "HAnimSegment"]
+                };
                 Some([only("children", types), vec![], vec![]])
             }
             "HAnimSegment" | "HAnimSite" => Some([self.nodes(n, "children"), vec![], vec![]]),
@@ -342,7 +405,12 @@ impl<'a> Sg<'a> {
         match self.type_name(c)? {
             "Coordinate" => Some(self.f32s(c, "point").to_vec()),
             "CoordinateDouble" => Some(self.f64s(c, "point").iter().map(|v| *v as f32).collect()),
-            "GeoCoordinate" => Some(self.geo_coord_points(c)?.iter().flat_map(|g| [g.x as f32, g.y as f32, g.z as f32]).collect()),
+            "GeoCoordinate" => Some(
+                self.geo_coord_points(c)?
+                    .iter()
+                    .flat_map(|g| [g.x as f32, g.y as f32, g.z as f32])
+                    .collect(),
+            ),
             _ => None,
         }
     }
@@ -351,7 +419,13 @@ impl<'a> Sg<'a> {
     /// children with their model matrices. X3DGroupingNode.getShapes visits its visibleObjects
     /// (Switch: the chosen child; LOD: the child of the current level_changed), transform nodes
     /// apply their matrix, Inline uses its scene; Billboard rotation, sensors and lights are lost.
-    pub fn static_shapes(&self, n: NodeId, matrix: &x3d_fields::math::Matrix4, out: &mut Vec<(NodeId, x3d_fields::math::Matrix4)>, depth: usize) {
+    pub fn static_shapes(
+        &self,
+        n: NodeId,
+        matrix: &x3d_fields::math::Matrix4,
+        out: &mut Vec<(NodeId, x3d_fields::math::Matrix4)>,
+        depth: usize,
+    ) {
         if depth > 256 {
             return;
         }
@@ -407,7 +481,9 @@ impl<'a> Sg<'a> {
                     self.static_shapes(c, matrix, out, depth + 1);
                 }
             }
-            "Group" | "Transform" | "Anchor" | "Collision" | "Billboard" | "StaticGroup" | "GeoLocation" | "GeoTransform" | "CADAssembly" | "CADLayer" | "CADPart" | "PickableGroup" | "GroupAnnotation" => {
+            "Group" | "Transform" | "Anchor" | "Collision" | "Billboard" | "StaticGroup"
+            | "GeoLocation" | "GeoTransform" | "CADAssembly" | "CADLayer" | "CADPart"
+            | "PickableGroup" | "GroupAnnotation" => {
                 let mut m = *matrix;
                 if let Some(t) = self.group_matrix(n, ty) {
                     m.mult_left(&t);

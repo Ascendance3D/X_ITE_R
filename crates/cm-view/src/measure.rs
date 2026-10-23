@@ -43,13 +43,27 @@ pub struct Metrics {
 impl Metrics {
     /// A grid where wide and astral characters take two cells.
     pub fn monospace(char_width: f64, text_height: f64) -> Metrics {
-        Metrics { char_width, text_height, padding_h: 4.0, padding_top: 4.0, wide_width: 2.0 * char_width, astral_width: 2.0 * char_width }
+        Metrics {
+            char_width,
+            text_height,
+            padding_h: 4.0,
+            padding_top: 4.0,
+            wide_width: 2.0 * char_width,
+            astral_width: 2.0 * char_width,
+        }
     }
     /// The metrics of the headless oracle editor (`oracle/cm5-cmd-ops.mjs`): DejaVu
     /// Sans Mono 32px, `line-height: 38px`; emoji 40px and CJK 32px wide from the
     /// fallback fonts (measured in headless Chromium, 2026-10-11).
     pub fn oracle() -> Metrics {
-        Metrics { char_width: 19.265625, text_height: 38.0, padding_h: 4.0, padding_top: 4.0, wide_width: 32.0, astral_width: 40.0 }
+        Metrics {
+            char_width: 19.265625,
+            text_height: 38.0,
+            padding_h: 4.0,
+            padding_top: 4.0,
+            wide_width: 32.0,
+            astral_width: 40.0,
+        }
     }
     /// A simple 10x20 grid for unit tests.
     pub fn test_grid() -> Metrics {
@@ -144,7 +158,10 @@ pub fn classify(text: &[u16], tab_size: i64) -> Vec<Glyph> {
         } else if is_special_char(c) {
             out.push(Glyph::Special);
             col += 1;
-        } else if (0xd800..0xdc00).contains(&c) && i + 1 < text.len() && (0xdc00..0xe000).contains(&text[i + 1]) {
+        } else if (0xd800..0xdc00).contains(&c)
+            && i + 1 < text.len()
+            && (0xdc00..0xe000).contains(&text[i + 1])
+        {
             out.push(Glyph::Astral);
             out.push(Glyph::Extend);
             col += 2;
@@ -201,11 +218,25 @@ impl LineLayout {
                 let mut x = m.padding_h;
                 for &g in &glyphs {
                     let w = glyph_width(m, g);
-                    boxes.push(Rect { left: x, right: x + w, top: 0.0, bottom: th });
+                    boxes.push(Rect {
+                        left: x,
+                        right: x + w,
+                        top: 0.0,
+                        bottom: th,
+                    });
                     rows.push(0);
                     x += w;
                 }
-                LineLayout { node_start: node_starts(&glyphs), boxes, glyphs, heights: vec![th], rows, width: x + m.padding_h, len: n, padding_h: m.padding_h }
+                LineLayout {
+                    node_start: node_starts(&glyphs),
+                    boxes,
+                    glyphs,
+                    heights: vec![th],
+                    rows,
+                    width: x + m.padding_h,
+                    len: n,
+                    padding_h: m.padding_h,
+                }
             }
             Some(avail) => {
                 // Greedy pre-wrap: break opportunities after runs of spaces/tabs (which
@@ -216,7 +247,15 @@ impl LineLayout {
                 let mut maxw = 0.0f64;
                 let mut i = 0;
                 let widths: Vec<f64> = glyphs.iter().map(|&g| glyph_width(m, g)).collect();
-                boxes.resize(n, Rect { left: 0.0, right: 0.0, top: 0.0, bottom: 0.0 });
+                boxes.resize(
+                    n,
+                    Rect {
+                        left: 0.0,
+                        right: 0.0,
+                        top: 0.0,
+                        bottom: 0.0,
+                    },
+                );
                 rows.resize(n, 0);
                 while i < n {
                     // A word: non-space units, then the spaces after it.
@@ -235,7 +274,12 @@ impl LineLayout {
                             row += 1;
                             x = 0.0;
                         }
-                        boxes[k] = Rect { left: m.padding_h + x, right: m.padding_h + x + w, top: 0.0, bottom: 0.0 };
+                        boxes[k] = Rect {
+                            left: m.padding_h + x,
+                            right: m.padding_h + x + w,
+                            top: 0.0,
+                            bottom: 0.0,
+                        };
                         rows[k] = row;
                         x += w;
                         maxw = maxw.max(x);
@@ -243,7 +287,12 @@ impl LineLayout {
                     let mut k = j;
                     while k < n && is_break_space(text[k]) {
                         let w = widths[k];
-                        boxes[k] = Rect { left: m.padding_h + x, right: m.padding_h + x + w, top: 0.0, bottom: 0.0 };
+                        boxes[k] = Rect {
+                            left: m.padding_h + x,
+                            right: m.padding_h + x + w,
+                            top: 0.0,
+                            bottom: 0.0,
+                        };
                         rows[k] = row;
                         x += w;
                         k += 1;
@@ -257,7 +306,16 @@ impl LineLayout {
                     boxes[k].top = r * th;
                     boxes[k].bottom = (r + 1.0) * th;
                 }
-                LineLayout { node_start: node_starts(&glyphs), boxes, glyphs, heights, rows, width: maxw + 2.0 * m.padding_h, len: n, padding_h: m.padding_h }
+                LineLayout {
+                    node_start: node_starts(&glyphs),
+                    boxes,
+                    glyphs,
+                    heights,
+                    rows,
+                    width: maxw + 2.0 * m.padding_h,
+                    len: n,
+                    padding_h: m.padding_h,
+                }
             }
         }
     }
@@ -309,18 +367,31 @@ impl LineLayout {
     pub fn measure_char(&self, text: &[u16], ch: i64) -> Rect {
         if self.len == 0 {
             // `zeroWidthElement`: a widget node at the line start.
-            return Rect { left: self.padding_h, right: self.padding_h, top: 0.0, bottom: self.heights[0] };
+            return Rect {
+                left: self.padding_h,
+                right: self.padding_h,
+                top: 0.0,
+                bottom: self.heights[0],
+            };
         }
         if ch < 0 {
             // `ch < mStart`: start = 0, end = 1, collapse "left".
             let r = self.cluster_rect(text, 0);
-            return Rect { left: r.left, right: r.left, ..r };
+            return Rect {
+                left: r.left,
+                right: r.left,
+                ..r
+            };
         }
         let ch = ch as usize;
         if ch >= self.len {
             // Last node, `ch >= mEnd`: end = len, start = end - 1, collapse "right".
             let r = self.cluster_rect(text, self.len - 1);
-            return Rect { left: r.right, right: r.right, ..r };
+            return Rect {
+                left: r.right,
+                right: r.right,
+                ..r
+            };
         }
         self.cluster_rect(text, ch)
     }
@@ -339,7 +410,12 @@ impl LineLayout {
         let right = sticky == Some(Sticky::Before);
         let m = self.measure_char(text, if right { ch - 1 } else { ch });
         let x = if right { m.right } else { m.left };
-        Rect { left: x, right: x, top: m.top, bottom: m.bottom }
+        Rect {
+            left: x,
+            right: x,
+            top: m.top,
+            bottom: m.bottom,
+        }
     }
 
     /// `wrappedLineExtent(cm, lineObj, preparedMeasure, y)`.
@@ -388,7 +464,13 @@ impl PosInfo {
 
 /// `coordsCharInner(cm, lineObj, lineNo, x, y)` for a left-to-right line, with `y`
 /// already line-local.
-pub fn coords_char_inner(layout: &LineLayout, text: &[u16], line_no: i64, x: f64, y: f64) -> PosInfo {
+pub fn coords_char_inner(
+    layout: &LineLayout,
+    text: &[u16],
+    line_no: i64,
+    x: f64,
+    y: f64,
+) -> PosInfo {
     let begin = 0i64;
     let end = layout.len as i64;
     let ltr = true;
@@ -416,24 +498,45 @@ pub fn coords_char_inner(layout: &LineLayout, text: &[u16], line_no: i64, x: f64
         let at_left = x - ba.left < ba.right - x;
         let at_start = at_left == ltr;
         ch = ca + if at_start { 0 } else { 1 };
-        sticky = if at_start { Sticky::After } else { Sticky::Before };
+        sticky = if at_start {
+            Sticky::After
+        } else {
+            Sticky::Before
+        };
         base_x = if at_left { ba.left } else { ba.right };
     } else {
         sticky = if ch == 0 {
             Sticky::After
         } else if ch == layout.len as i64 {
             Sticky::Before
-        } else if (layout.measure_char(text, ch - if ltr { 1 } else { 0 }).bottom <= y) == ltr {
+        } else if (layout
+            .measure_char(text, ch - if ltr { 1 } else { 0 })
+            .bottom
+            <= y)
+            == ltr
+        {
             Sticky::After
         } else {
             Sticky::Before
         };
         let coords = layout.cursor_coords(text, ch, Some(sticky));
         base_x = coords.left;
-        outside = if y < coords.top { -1 } else if y >= coords.bottom { 1 } else { 0 };
+        outside = if y < coords.top {
+            -1
+        } else if y >= coords.bottom {
+            1
+        } else {
+            0
+        };
     }
     let ch = skip_extending_chars(text, ch, 1);
-    PosInfo { line: line_no, ch, sticky: Some(sticky), outside, x_rel: x - base_x }
+    PosInfo {
+        line: line_no,
+        ch,
+        sticky: Some(sticky),
+        outside,
+        x_rel: x - base_x,
+    }
 }
 
 #[cfg(test)]
@@ -448,8 +551,13 @@ mod tests {
         let m = Metrics::oracle();
         let t = to_u16("\tab\té\u{301}z😀q中w");
         let l = LineLayout::new(&m, &t, 4, None);
-        let got: Vec<f64> = (0..=13).map(|i| l.cursor_coords(&t, i, None).left).collect();
-        let want = [4.0, 81.0625, 100.328125, 119.59375, 158.125, 158.125, 177.390625, 196.65625, 196.65625, 236.65625, 255.921875, 287.921875, 307.1875, 307.1875];
+        let got: Vec<f64> = (0..=13)
+            .map(|i| l.cursor_coords(&t, i, None).left)
+            .collect();
+        let want = [
+            4.0, 81.0625, 100.328125, 119.59375, 158.125, 158.125, 177.390625, 196.65625,
+            196.65625, 236.65625, 255.921875, 287.921875, 307.1875, 307.1875,
+        ];
         assert_eq!(got, want);
     }
 }

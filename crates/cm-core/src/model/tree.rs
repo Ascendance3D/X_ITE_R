@@ -9,13 +9,22 @@
 
 use std::rc::Rc;
 
-use super::line::{clean_up_line, LineRef};
+use super::line::{LineRef, clean_up_line};
 
 pub(crate) type NodeId = usize;
 
 pub(crate) enum Node {
-    Leaf { lines: Vec<LineRef>, height: f64, parent: Option<NodeId> },
-    Branch { children: Vec<NodeId>, size: usize, height: f64, parent: Option<NodeId> },
+    Leaf {
+        lines: Vec<LineRef>,
+        height: f64,
+        parent: Option<NodeId>,
+    },
+    Branch {
+        children: Vec<NodeId>,
+        size: usize,
+        height: f64,
+        parent: Option<NodeId>,
+    },
     Free,
 }
 
@@ -29,12 +38,20 @@ pub(crate) const ROOT: NodeId = 0;
 impl Tree {
     /// A root branch holding one leaf with the given lines.
     pub fn new(lines: Vec<LineRef>) -> Tree {
-        let mut t = Tree { nodes: Vec::new(), free: Vec::new() };
+        let mut t = Tree {
+            nodes: Vec::new(),
+            free: Vec::new(),
+        };
         // Reserve the root slot first so it gets id 0.
         t.nodes.push(Node::Free);
         let leaf = t.new_leaf(lines);
         let (size, height) = (t.chunk_size(leaf), t.height(leaf));
-        t.nodes[ROOT] = Node::Branch { children: vec![leaf], size, height, parent: None };
+        t.nodes[ROOT] = Node::Branch {
+            children: vec![leaf],
+            size,
+            height,
+            parent: None,
+        };
         t.set_parent(leaf, Some(ROOT));
         t
     }
@@ -62,7 +79,11 @@ impl Tree {
     /// `new LeafChunk(lines)`.
     fn new_leaf(&mut self, lines: Vec<LineRef>) -> NodeId {
         let height = lines.iter().map(|l| l.borrow().height).sum();
-        let id = self.alloc(Node::Leaf { lines: Vec::new(), height, parent: None });
+        let id = self.alloc(Node::Leaf {
+            lines: Vec::new(),
+            height,
+            parent: None,
+        });
         for l in &lines {
             l.borrow_mut().parent = Some(id);
         }
@@ -76,7 +97,12 @@ impl Tree {
     fn new_branch(&mut self, children: Vec<NodeId>) -> NodeId {
         let size = children.iter().map(|&c| self.chunk_size(c)).sum();
         let height = children.iter().map(|&c| self.height(c)).sum();
-        let id = self.alloc(Node::Branch { children: children.clone(), size, height, parent: None });
+        let id = self.alloc(Node::Branch {
+            children: children.clone(),
+            size,
+            height,
+            parent: None,
+        });
         for c in children {
             self.set_parent(c, Some(id));
         }
@@ -152,7 +178,9 @@ impl Tree {
             let removed: Vec<LineRef> = match &mut self.nodes[id] {
                 Node::Leaf { lines, height, .. } => {
                     if at < 0 || at as usize + n > lines.len() {
-                        panic!("JS TypeError: Cannot read properties of undefined (reading 'height')");
+                        panic!(
+                            "JS TypeError: Cannot read properties of undefined (reading 'height')"
+                        );
                     }
                     let at = at as usize;
                     for l in &lines[at..at + n] {
@@ -206,7 +234,9 @@ impl Tree {
         // If the result is smaller than 25 lines, ensure that it is a single leaf node.
         let size = self.chunk_size(id);
         let children = self.children(id).clone();
-        if size - n < 25 && (children.len() > 1 || children.first().is_none_or(|&c| !self.is_leaf(c))) {
+        if size - n < 25
+            && (children.len() > 1 || children.first().is_none_or(|&c| !self.is_leaf(c)))
+        {
             let mut lines = Vec::new();
             self.collapse(id, &mut lines);
             for c in children {
@@ -239,10 +269,17 @@ impl Tree {
             for l in &new_lines {
                 l.borrow_mut().parent = Some(id);
             }
-            if let Node::Leaf { lines, height: h, .. } = &mut self.nodes[id] {
+            if let Node::Leaf {
+                lines, height: h, ..
+            } = &mut self.nodes[id]
+            {
                 *h += height;
                 let len = lines.len() as i64;
-                let at = if at < 0 { (len + at).max(0) } else { at.min(len) } as usize;
+                let at = if at < 0 {
+                    (len + at).max(0)
+                } else {
+                    at.min(len)
+                } as usize;
                 let tail = lines.split_off(at);
                 lines.extend(new_lines);
                 lines.extend(tail);
@@ -250,7 +287,10 @@ impl Tree {
             return;
         }
         let count = new_lines.len();
-        if let Node::Branch { size, height: h, .. } = &mut self.nodes[id] {
+        if let Node::Branch {
+            size, height: h, ..
+        } = &mut self.nodes[id]
+        {
             *size += count;
             *h += height;
         }
@@ -320,7 +360,11 @@ impl Tree {
                         *size -= ss;
                         *height -= sh;
                     }
-                    let idx = self.children(p).iter().position(|&c| c == me).expect("child in parent");
+                    let idx = self
+                        .children(p)
+                        .iter()
+                        .position(|&c| c == me)
+                        .expect("child in parent");
                     self.children_mut(p).insert(idx + 1, sibling);
                 }
             }
@@ -343,7 +387,9 @@ impl Tree {
 
     fn collect_range(&self, id: NodeId, mut at: usize, mut n: usize, out: &mut Vec<LineRef>) {
         match &self.nodes[id] {
-            Node::Leaf { lines, .. } => out.extend(lines[at..(at + n).min(lines.len())].iter().cloned()),
+            Node::Leaf { lines, .. } => {
+                out.extend(lines[at..(at + n).min(lines.len())].iter().cloned())
+            }
             Node::Branch { children, .. } => {
                 for &c in children {
                     let sz = self.chunk_size(c);
@@ -428,7 +474,9 @@ impl Tree {
     /// Height above a line (`heightAtLine`, minus the `visualLine` step).
     pub fn height_above(&self, line: &LineRef) -> f64 {
         let mut h = 0.0;
-        let Some(leaf) = line.borrow().parent else { return 0.0 };
+        let Some(leaf) = line.borrow().parent else {
+            return 0.0;
+        };
         if let Node::Leaf { lines, .. } = &self.nodes[leaf] {
             for l in lines {
                 if Rc::ptr_eq(l, line) {
@@ -515,7 +563,12 @@ impl Tree {
                 }
                 Ok((lines.len(), h))
             }
-            Node::Branch { children, size, height, .. } => {
+            Node::Branch {
+                children,
+                size,
+                height,
+                ..
+            } => {
                 let (mut s, mut h) = (0, 0.0);
                 for &c in children {
                     let (cs, chh) = self.check(c, Some(id))?;
@@ -536,7 +589,9 @@ impl Tree {
     pub fn depth(&self) -> usize {
         fn d(t: &Tree, id: NodeId) -> usize {
             match &t.nodes[id] {
-                Node::Branch { children, .. } => 1 + children.iter().map(|&c| d(t, c)).max().unwrap_or(0),
+                Node::Branch { children, .. } => {
+                    1 + children.iter().map(|&c| d(t, c)).max().unwrap_or(0)
+                }
                 _ => 1,
             }
         }

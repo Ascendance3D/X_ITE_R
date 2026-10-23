@@ -116,7 +116,11 @@ impl<'a> Parser<'a> {
     /// existing scene (Script.js `new SFNode (vrmlSyntax)`). Returns the scene back, and
     /// `Ok(Some(value))` for a parsed value (`SFNode(None)` for NULL), `Ok(None)` when
     /// nothing could be read (X_ITE: "Couldn't read value for field ''.").
-    pub fn parse_sfnode_into(scene: Scene, ctx: CtxId, text: &str) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+    pub fn parse_sfnode_into(
+        scene: Scene,
+        ctx: CtxId,
+        text: &str,
+    ) -> (Scene, Result<Option<FieldValue>, ParseError>) {
         let mut parser = Parser::new(text, "");
 
         parser.scene = scene;
@@ -136,7 +140,15 @@ impl<'a> Parser<'a> {
     /// parsed into `ctx` of `scene`. With a scene the field's `unit` converts the values (`parser .setUnits (!!scene)`).
     /// Returns the scene back, and `Ok(Some(value))` for a parsed value, `Ok(None)` when nothing could be read (X_ITE:
     /// "Couldn't read value for field '<name>'."). The XML grammar's MFString warning names the field: `name`.
-    pub fn parse_field_into(scene: Scene, ctx: CtxId, ty: FieldType, text: &str, xml: bool, unit: Option<String>, name: &str) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+    pub fn parse_field_into(
+        scene: Scene,
+        ctx: CtxId,
+        ty: FieldType,
+        text: &str,
+        xml: bool,
+        unit: Option<String>,
+        name: &str,
+    ) -> (Scene, Result<Option<FieldValue>, ParseError>) {
         let mut parser = Parser::new(text, "");
 
         parser.scene = scene;
@@ -149,7 +161,9 @@ impl<'a> Parser<'a> {
             match ty {
                 FieldType::SFNode => Ok(Some(FieldValue::SFNode(None))),
                 FieldType::MFNode => Ok(Some(FieldValue::MFNode(vec![]))),
-                FieldType::SFString => Ok(Some(FieldValue::SFString(x3d_fields::value::unescape(text)))),
+                FieldType::SFString => Ok(Some(FieldValue::SFString(x3d_fields::value::unescape(
+                    text,
+                )))),
                 FieldType::MFString => {
                     let v = parser.string_values();
 
@@ -177,7 +191,10 @@ impl<'a> Parser<'a> {
     // --- helpers ---------------------------------------------------------------------------
 
     fn err<T>(&self, message: impl Into<String>) -> R<T> {
-        Err(ParseError { message: message.into(), line: self.line_number })
+        Err(ParseError {
+            message: message.into(),
+            line: self.line_number,
+        })
     }
 
     pub(crate) fn warn(&mut self, message: String) {
@@ -197,14 +214,17 @@ impl<'a> Parser<'a> {
     }
 
     pub(crate) fn outer_name(&self) -> String {
-        self.outer_proto().map(|p| self.scene.protos[p].name.clone()).unwrap_or_default()
+        self.outer_proto()
+            .map(|p| self.scene.protos[p].name.clone())
+            .unwrap_or_default()
     }
 
     /// Apply a terminal matcher at the current position (`Grammar.X.parse (this)`).
     fn accept(&mut self, m: impl Fn(&[u8], usize) -> Option<usize>) -> bool {
         match m(self.input, self.last_index) {
             Some(end) => {
-                self.result = String::from_utf8_lossy(&self.input[self.last_index..end]).into_owned();
+                self.result =
+                    String::from_utf8_lossy(&self.input[self.last_index..end]).into_owned();
                 self.last_index = end;
                 true
             }
@@ -270,8 +290,15 @@ impl<'a> Parser<'a> {
         let text = String::from_utf8_lossy(self.input);
         let input: Vec<u16> = text.encode_utf16().collect();
         let len = input.len() as isize;
-        let mut last_index = String::from_utf8_lossy(&self.input[..self.last_index.min(self.input.len())]).encode_utf16().count() as isize;
-        let unexpected = if last_index == len { "Unexpected end of file. " } else { "" };
+        let mut last_index =
+            String::from_utf8_lossy(&self.input[..self.last_index.min(self.input.len())])
+                .encode_utf16()
+                .count() as isize;
+        let unexpected = if last_index == len {
+            "Unexpected end of file. "
+        } else {
+            ""
+        };
         let at = |i: isize| input[i as usize];
         let newline = |c: u16| c == 10 || c == 13;
 
@@ -331,7 +358,13 @@ impl<'a> Parser<'a> {
     }
 
     fn x3d_scene(&mut self) -> R<()> {
-        const VRML: [&str; 5] = ["EnvironmentalSensor", "PointingDeviceSensor", "Scripting", "Sound", "Text"];
+        const VRML: [&str; 5] = [
+            "EnvironmentalSensor",
+            "PointingDeviceSensor",
+            "Scripting",
+            "Sound",
+            "Text",
+        ];
 
         self.header_statement();
         self.profile_statement()?;
@@ -451,7 +484,9 @@ impl<'a> Parser<'a> {
                     if self.int32() {
                         let Some(max) = self.scene.table.component(&name).map(|c| c.level) else {
                             let at = jsmath::to_int32(self.value_f64);
-                            return self.err(format!("Component '{name}' at level '{at}' is not supported."));
+                            return self.err(format!(
+                                "Component '{name}' at level '{at}' is not supported."
+                            ));
                         };
 
                         // X3DBrowser.getComponent: Algorithm .clamp (level || component .level, 1, component .level).
@@ -574,10 +609,15 @@ impl<'a> Parser<'a> {
                 // An existing export of that name moves to a unique name.
                 if let Some(existing) = self.scene.get_exported_node(scene_ctx, &exported_name) {
                     let unique = self.scene.get_unique_export_name(&exported_name);
-                    let _ = self.scene.update_exported_node(scene_ctx, &unique, existing, "");
+                    let _ = self
+                        .scene
+                        .update_exported_node(scene_ctx, &unique, existing, "");
                 }
 
-                if let Err(e) = self.scene.update_exported_node(scene_ctx, &exported_name, node, &description) {
+                if let Err(e) =
+                    self.scene
+                        .update_exported_node(scene_ctx, &exported_name, node, &description)
+                {
                     return self.err(e);
                 }
 
@@ -632,7 +672,13 @@ impl<'a> Parser<'a> {
                         // Rename existing node, then add the new imported node.
                         self.scene.rename_existing_node(ctx, &imported_name);
 
-                        if let Err(e) = self.scene.add_imported_node(ctx, inline, &exported_name, &imported_name, &description) {
+                        if let Err(e) = self.scene.add_imported_node(
+                            ctx,
+                            inline,
+                            &exported_name,
+                            &imported_name,
+                            &description,
+                        ) {
                             return self.err(e);
                         }
 
@@ -770,7 +816,11 @@ impl<'a> Parser<'a> {
                             {
                                 let p = &mut self.scene.protos[proto];
                                 for field in interface {
-                                    Scene::add_interface_field(&mut p.fields, &mut p.has_metadata, field);
+                                    Scene::add_interface_field(
+                                        &mut p.fields,
+                                        &mut p.has_metadata,
+                                        field,
+                                    );
                                 }
                             }
 
@@ -789,14 +839,18 @@ impl<'a> Parser<'a> {
                             self.comments();
 
                             if self.keyword("}") {
-                                if let Some(existing) = self.scene.ctx(ctx).protos.get(&node_type_id) {
+                                if let Some(existing) =
+                                    self.scene.ctx(ctx).protos.get(&node_type_id)
+                                {
                                     self.warn(format!("A proto named '{node_type_id}' is already defined and will be overridden."));
 
-                                    let unique = self.scene.get_unique_proto_name(ctx, &node_type_id);
+                                    let unique =
+                                        self.scene.get_unique_proto_name(ctx, &node_type_id);
                                     self.scene.update_proto_declaration(ctx, &unique, existing);
                                 }
 
-                                self.scene.update_proto_declaration(ctx, &node_type_id, proto);
+                                self.scene
+                                    .update_proto_declaration(ctx, &node_type_id, proto);
                                 return Ok(true);
                             }
 
@@ -879,7 +933,10 @@ impl<'a> Parser<'a> {
                 if with_value {
                     match self.field_value(ty, &value)? {
                         Some(v) => value = v,
-                        None => return self.err(format!("Couldn't read value for field '{field_id}'.")),
+                        None => {
+                            return self
+                                .err(format!("Couldn't read value for field '{field_id}'."));
+                        }
                     }
                 }
 
@@ -948,28 +1005,39 @@ impl<'a> Parser<'a> {
                             {
                                 let p = &mut self.scene.externprotos[e];
                                 for field in interface {
-                                    Scene::add_interface_field(&mut p.fields, &mut p.has_metadata, field);
+                                    Scene::add_interface_field(
+                                        &mut p.fields,
+                                        &mut p.has_metadata,
+                                        field,
+                                    );
                                 }
                             }
 
-                            if let Some(existing) = self.scene.ctx(ctx).externprotos.get(&node_type_id) {
+                            if let Some(existing) =
+                                self.scene.ctx(ctx).externprotos.get(&node_type_id)
+                            {
                                 self.warn(format!("A extern proto named '{node_type_id}' is already defined and will be overridden."));
 
-                                let unique = self.scene.get_unique_extern_proto_name(ctx, &node_type_id);
-                                self.scene.update_extern_proto_declaration(ctx, &unique, existing);
+                                let unique =
+                                    self.scene.get_unique_extern_proto_name(ctx, &node_type_id);
+                                self.scene
+                                    .update_extern_proto_declaration(ctx, &unique, existing);
                             }
 
-                            self.scene.update_extern_proto_declaration(ctx, &node_type_id, e);
+                            self.scene
+                                .update_extern_proto_declaration(ctx, &node_type_id, e);
                             return Ok(true);
                         }
 
                         return self.err(format!("Expected a URL list after EXTERNPROTO interface declaration '{node_type_id}'."));
                     }
 
-                    return self.err("Expected a ']' at the end of EXTERNPROTO interface declaration.");
+                    return self
+                        .err("Expected a ']' at the end of EXTERNPROTO interface declaration.");
                 }
 
-                return self.err("Expected a '[' at the beginning of EXTERNPROTO interface declaration.");
+                return self
+                    .err("Expected a '[' at the beginning of EXTERNPROTO interface declaration.");
             }
 
             return self.err("Invalid EXTERNPROTO definition name.");
@@ -1042,24 +1110,39 @@ impl<'a> Parser<'a> {
                                         let to = self.scene.get_local_node(ctx, &to_node_id);
 
                                         let result = match (from, to) {
-                                            (None, _) => Err(format!("Unknown named or imported node '{from_node_id}'.")),
-                                            (_, None) => Err(format!("Unknown named or imported node '{to_node_id}'.")),
-                                            (Some(f), Some(t)) => self.scene.add_route(ctx, f, &event_out_id, t, &event_in_id),
+                                            (None, _) => Err(format!(
+                                                "Unknown named or imported node '{from_node_id}'."
+                                            )),
+                                            (_, None) => Err(format!(
+                                                "Unknown named or imported node '{to_node_id}'."
+                                            )),
+                                            (Some(f), Some(t)) => self.scene.add_route(
+                                                ctx,
+                                                f,
+                                                &event_out_id,
+                                                t,
+                                                &event_in_id,
+                                            ),
                                         };
 
                                         // console .warn (`Parser error at line ${n}.`, error): the
                                         // dump prints the Error argument as String (error).
                                         if let Err(e) = result {
-                                            self.warn(format!("Parser error at line {line}. Error: {e}"));
+                                            self.warn(format!(
+                                                "Parser error at line {line}. Error: {e}"
+                                            ));
                                         }
 
                                         return Ok(true);
                                     }
 
-                                    return self.err("Bad ROUTE specification: Expected a field name.");
+                                    return self
+                                        .err("Bad ROUTE specification: Expected a field name.");
                                 }
 
-                                return self.err("Bad ROUTE specification: Expected a '.' after node name.");
+                                return self.err(
+                                    "Bad ROUTE specification: Expected a '.' after node name.",
+                                );
                             }
 
                             return self.err("Bad ROUTE specification: Expected a node name.");
@@ -1124,7 +1207,11 @@ impl<'a> Parser<'a> {
         };
 
         if !node_name_id.is_empty() {
-            self.named_nodes.entry(ctx).or_default().entry(node_name_id.to_string()).or_insert(base_node);
+            self.named_nodes
+                .entry(ctx)
+                .or_default()
+                .entry(node_name_id.to_string())
+                .or_insert(base_node);
             self.scene.rename_existing_node(ctx, node_name_id);
             self.scene.update_named_node(ctx, node_name_id, base_node);
         }
@@ -1235,7 +1322,10 @@ impl<'a> Parser<'a> {
 
                             let index = match self.scene.get_user_defined_field(node, &field_id) {
                                 Some(i) => i,
-                                None => self.scene.add_user_defined_field(node, Field::new(&field_id, access_type, FieldValue::default_for(ty))),
+                                None => self.scene.add_user_defined_field(
+                                    node,
+                                    Field::new(&field_id, access_type, FieldValue::default_for(ty)),
+                                ),
                             };
 
                             let field = &mut self.scene.node_mut(node).user_fields[index];
@@ -1246,7 +1336,10 @@ impl<'a> Parser<'a> {
 
                                     // X3DField.addReference: initializeOnly / inputOutput relations
                                     // process an event from the reference (copy its value).
-                                    if matches!(field.access & reference.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT) {
+                                    if matches!(
+                                        field.access & reference.access,
+                                        access::INITIALIZE_ONLY | access::INPUT_OUTPUT
+                                    ) {
                                         field.value = reference.value.clone();
                                     }
                                 }
@@ -1338,7 +1431,9 @@ impl<'a> Parser<'a> {
             self.line_number = line_number;
 
             let type_name = self.scene.type_name(node);
-            return self.err(format!("Unknown field '{field_id}' in class '{type_name}'."));
+            return self.err(format!(
+                "Unknown field '{field_id}' in class '{type_name}'."
+            ));
         };
 
         self.comments();
@@ -1372,7 +1467,10 @@ impl<'a> Parser<'a> {
                         f.add_reference(FieldRef { proto, index: r });
 
                         // X3DField.addReference: processEvent (Events .from (reference)).
-                        if matches!(f.access & reference.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT) {
+                        if matches!(
+                            f.access & reference.access,
+                            access::INITIALIZE_ONLY | access::INPUT_OUTPUT
+                        ) {
                             f.value = reference.value.clone();
                         }
                     }
@@ -1381,11 +1479,17 @@ impl<'a> Parser<'a> {
                 }
 
                 let outer = self.outer_name();
-                return self.err(format!("Field '{}' and '{}' in PROTO {outer} are incompatible as an IS mapping.", field.name, reference.name));
+                return self.err(format!(
+                    "Field '{}' and '{}' in PROTO {outer} are incompatible as an IS mapping.",
+                    field.name, reference.name
+                ));
             }
 
             let outer = self.outer_name();
-            return self.err(format!("Field '{}' and '{}' in PROTO {outer} have different types.", field.name, reference.name));
+            return self.err(format!(
+                "Field '{}' and '{}' in PROTO {outer} have different types.",
+                field.name, reference.name
+            ));
         }
 
         let field = &self.scene.node(node).fields[index];
@@ -1417,7 +1521,10 @@ impl<'a> Parser<'a> {
         }
 
         let line = self.line_number;
-        self.warn(format!("Parser error at line {line}: Couldn't assign value to {} field '{field_id}'.", access::name(access_type)));
+        self.warn(format!(
+            "Parser error at line {line}: Couldn't assign value to {} field '{field_id}'.",
+            access::name(access_type)
+        ));
 
         Ok(true)
     }
@@ -1428,7 +1535,12 @@ impl<'a> Parser<'a> {
             NodeKind::Builtin(t) => {
                 let table = self.scene.table;
                 let spec = &self.scene.specification_version;
-                table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.clone())
+                table.types[t]
+                    .variant(spec)
+                    .fields
+                    .iter()
+                    .find(|d| d.name == field_name)
+                    .and_then(|d| d.unit.clone())
             }
             _ => None,
         }
@@ -1573,33 +1685,59 @@ impl<'a> Parser<'a> {
         }
     }
 
-    pub(crate) fn field_value(&mut self, ty: FieldType, current: &FieldValue) -> R<Option<FieldValue>> {
+    pub(crate) fn field_value(
+        &mut self,
+        ty: FieldType,
+        current: &FieldValue,
+    ) -> R<Option<FieldValue>> {
         use FieldType as T;
         use FieldValue as V;
 
         Ok(match ty {
             T::SFBool => self.bool_().map(V::SFBool),
-            T::SFColor => self.sfcolor_value()?.map(|c| V::SFColor(Color3::new(c[0], c[1], c[2]))),
-            T::SFColorRGBA => self.sfcolorrgba_value()?.map(|c| V::SFColorRGBA(Color4::new(c[0], c[1], c[2], c[3]))),
-            T::SFDouble => self.double().then(|| V::SFDouble(self.field_unit_value(self.value_f64))),
-            T::SFFloat => self.double().then(|| V::SFFloat(self.field_unit_value(self.value_f64))),
-            T::SFTime => self.double().then(|| V::SFTime(self.field_unit_value(self.value_f64))),
+            T::SFColor => self
+                .sfcolor_value()?
+                .map(|c| V::SFColor(Color3::new(c[0], c[1], c[2]))),
+            T::SFColorRGBA => self
+                .sfcolorrgba_value()?
+                .map(|c| V::SFColorRGBA(Color4::new(c[0], c[1], c[2], c[3]))),
+            T::SFDouble => self
+                .double()
+                .then(|| V::SFDouble(self.field_unit_value(self.value_f64))),
+            T::SFFloat => self
+                .double()
+                .then(|| V::SFFloat(self.field_unit_value(self.value_f64))),
+            T::SFTime => self
+                .double()
+                .then(|| V::SFTime(self.field_unit_value(self.value_f64))),
             T::SFImage => self.sfimage_value().map(V::SFImage),
-            T::SFInt32 => self.int32().then(|| V::SFInt32(jsmath::to_int32(self.value_f64))),
+            T::SFInt32 => self
+                .int32()
+                .then(|| V::SFInt32(jsmath::to_int32(self.value_f64))),
             T::SFMatrix3d | T::SFMatrix3f => self.doubles_exact(9).map(|v| {
                 let m = Matrix3(v.try_into().unwrap());
-                if ty == T::SFMatrix3d { V::SFMatrix3d(m) } else { V::SFMatrix3f(m) }
+                if ty == T::SFMatrix3d {
+                    V::SFMatrix3d(m)
+                } else {
+                    V::SFMatrix3f(m)
+                }
             }),
             T::SFMatrix4d | T::SFMatrix4f => self.doubles_exact(16).map(|v| {
                 let m = Matrix4(v.try_into().unwrap());
-                if ty == T::SFMatrix4d { V::SFMatrix4d(m) } else { V::SFMatrix4f(m) }
+                if ty == T::SFMatrix4d {
+                    V::SFMatrix4d(m)
+                } else {
+                    V::SFMatrix4f(m)
+                }
             }),
             T::SFNode => match self.node_statement()? {
                 Stmt::Node(n) => Some(V::SFNode(Some(n))),
                 Stmt::Null => Some(V::SFNode(None)),
                 Stmt::No => None,
             },
-            T::SFQuaternion => self.doubles_exact(4).map(|v| V::SFQuaternion(Quaternion::new(v[0], v[1], v[2], v[3]))),
+            T::SFQuaternion => self
+                .doubles_exact(4)
+                .map(|v| V::SFQuaternion(Quaternion::new(v[0], v[1], v[2], v[3]))),
             T::SFRotation => self.doubles_exact(4).map(|v| {
                 // Each component setter calls Rotation4.set with the raw values.
                 let mut r = match current {
@@ -1612,29 +1750,59 @@ impl<'a> Parser<'a> {
                 r.set_angle(self.from_unit("angle", v[3]));
                 V::SFRotation(r)
             }),
-            T::SFString => self.string().then(|| V::SFString(self.value_string.clone())),
+            T::SFString => self
+                .string()
+                .then(|| V::SFString(self.value_string.clone())),
             T::SFVec2d | T::SFVec2f => self.doubles_exact(2).map(|v| {
                 let v = Vector2::from_slice(&self.field_units(v));
-                if ty == T::SFVec2d { V::SFVec2d(v) } else { V::SFVec2f(v) }
+                if ty == T::SFVec2d {
+                    V::SFVec2d(v)
+                } else {
+                    V::SFVec2f(v)
+                }
             }),
             T::SFVec3d | T::SFVec3f => self.doubles_exact(3).map(|v| {
                 let v = Vector3::from_slice(&self.field_units(v));
-                if ty == T::SFVec3d { V::SFVec3d(v) } else { V::SFVec3f(v) }
+                if ty == T::SFVec3d {
+                    V::SFVec3d(v)
+                } else {
+                    V::SFVec3f(v)
+                }
             }),
             T::SFVec4d | T::SFVec4f => self.doubles_exact(4).map(|v| {
                 let v = Vector4::from_slice(&self.field_units(v));
-                if ty == T::SFVec4d { V::SFVec4d(v) } else { V::SFVec4f(v) }
+                if ty == T::SFVec4d {
+                    V::SFVec4d(v)
+                } else {
+                    V::SFVec4f(v)
+                }
             }),
             T::MFNode => self.mfnode_value()?,
             T::MFString => self.mfstring_value()?,
             T::MFBool => self.mfbool_value()?,
             T::MFImage => self.mfimage_value()?,
-            T::MFColor => self.mf_typed(ty, 3, |p| p.sfcolor_value().map(|c| c.map(|c| c[..3].to_vec())), true)?,
-            T::MFColorRGBA => self.mf_typed(ty, 4, |p| p.sfcolorrgba_value().map(|c| c.map(|c| c.to_vec())), true)?,
+            T::MFColor => self.mf_typed(
+                ty,
+                3,
+                |p| p.sfcolor_value().map(|c| c.map(|c| c[..3].to_vec())),
+                true,
+            )?,
+            T::MFColorRGBA => self.mf_typed(
+                ty,
+                4,
+                |p| p.sfcolorrgba_value().map(|c| c.map(|c| c.to_vec())),
+                true,
+            )?,
             T::MFInt32 => self.mf_int32()?,
-            T::MFDouble | T::MFFloat | T::MFTime => self.mf_typed(ty, 1, |p| Ok(p.double().then(|| vec![p.value_f64])), false)?,
-            T::MFMatrix3d | T::MFMatrix3f => self.mf_typed(ty, 9, |p| Ok(p.doubles_exact(9)), false)?,
-            T::MFMatrix4d | T::MFMatrix4f => self.mf_typed(ty, 16, |p| Ok(p.doubles_exact(16)), false)?,
+            T::MFDouble | T::MFFloat | T::MFTime => {
+                self.mf_typed(ty, 1, |p| Ok(p.double().then(|| vec![p.value_f64])), false)?
+            }
+            T::MFMatrix3d | T::MFMatrix3f => {
+                self.mf_typed(ty, 9, |p| Ok(p.doubles_exact(9)), false)?
+            }
+            T::MFMatrix4d | T::MFMatrix4f => {
+                self.mf_typed(ty, 16, |p| Ok(p.doubles_exact(16)), false)?
+            }
             T::MFQuaternion => self.mf_typed(ty, 4, |p| Ok(p.doubles_exact(4)), false)?,
             T::MFRotation => self.mf_typed(ty, 4, |p| Ok(p.doubles_exact(4)), false)?,
             T::MFVec2d | T::MFVec2f => self.mf_typed(ty, 2, |p| Ok(p.doubles_exact(2)), false)?,
@@ -1687,11 +1855,19 @@ impl<'a> Parser<'a> {
 
         if self.accept(lexer::html_color) {
             let text = self.result.clone();
-            let css = if text.len() >= 2 && (text.starts_with("0x") || text.starts_with("0X")) { format!("#{}", &text[2..]) } else { text.clone() };
+            let css = if text.len() >= 2 && (text.starts_with("0x") || text.starts_with("0X")) {
+                format!("#{}", &text[2..])
+            } else {
+                text.clone()
+            };
             let color = convert_color(&css);
 
             // X3DParser.checkColorName
-            if color[..3].iter().all(|v| *v == 1.0) && color[3] == 1.0 && !text.eq_ignore_ascii_case("white") && text.bytes().all(|b| b.is_ascii_alphabetic()) {
+            if color[..3].iter().all(|v| *v == 1.0)
+                && color[3] == 1.0
+                && !text.eq_ignore_ascii_case("white")
+                && text.bytes().all(|b| b.is_ascii_alphabetic())
+            {
                 return self.err("Invalid color name.");
             }
 
@@ -1743,7 +1919,11 @@ impl<'a> Parser<'a> {
     ) -> R<Option<FieldValue>> {
         if let Some(v) = single(self)? {
             let mut value = FieldValue::default_for(ty);
-            let v = if colors { v.iter().map(|x| jsmath::clamp(*x, 0.0, 1.0)).collect() } else { v };
+            let v = if colors {
+                v.iter().map(|x| jsmath::clamp(*x, 0.0, 1.0)).collect()
+            } else {
+                v
+            };
             let v = self.mf_units(ty, colors, v);
             value.push_numbers(&v[..components]);
             return Ok(Some(value));
@@ -1790,7 +1970,11 @@ impl<'a> Parser<'a> {
                     continue;
                 }
 
-                let color = if components == 3 { self.sfcolor_value()? } else { self.sfcolorrgba_value()? };
+                let color = if components == 3 {
+                    self.sfcolor_value()?
+                } else {
+                    self.sfcolorrgba_value()?
+                };
 
                 match color {
                     Some(c) => {
@@ -1816,8 +2000,12 @@ impl<'a> Parser<'a> {
 
         // `field .setValue (array)` (sfcolorValues, sfvecValues, sfmatrixValues): X3DTypedArrayField.set warns and drops an
         // incomplete last element.
-        if array.len() % components != 0 && !matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion) {
-            self.warn(format!("Array length must be multiple of components size, which is {components}."));
+        if array.len() % components != 0
+            && !matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion)
+        {
+            self.warn(format!(
+                "Array length must be multiple of components size, which is {components}."
+            ));
         }
 
         let array = self.mf_units(ty, colors, array);
@@ -1892,7 +2080,9 @@ impl<'a> Parser<'a> {
 
     fn mf_int32(&mut self) -> R<Option<FieldValue>> {
         if self.int32() {
-            return Ok(Some(FieldValue::MFInt32(vec![jsmath::to_int32(self.value_f64)])));
+            return Ok(Some(FieldValue::MFInt32(vec![jsmath::to_int32(
+                self.value_f64,
+            )])));
         }
 
         if self.keyword("[") {
@@ -2054,12 +2244,25 @@ impl<'a> Parser<'a> {
         };
 
         for (name, placeholder) in list {
-            let target = self.named_nodes.get(&ctx).and_then(|m| m.get(&name)).copied().or_else(|| self.imported_names.get(&ctx).and_then(|m| m.get(&name)).copied());
+            let target = self
+                .named_nodes
+                .get(&ctx)
+                .and_then(|m| m.get(&name))
+                .copied()
+                .or_else(|| {
+                    self.imported_names
+                        .get(&ctx)
+                        .and_then(|m| m.get(&name))
+                        .copied()
+                });
 
             match target {
                 Some(node) => self.replace_node_references(placeholder, node),
                 None => {
-                    self.warn(format!("{}: Named or imported node '{name}' not found.", self.name));
+                    self.warn(format!(
+                        "{}: Named or imported node '{name}' not found.",
+                        self.name
+                    ));
                     self.dispose_placeholder(placeholder);
                 }
             }

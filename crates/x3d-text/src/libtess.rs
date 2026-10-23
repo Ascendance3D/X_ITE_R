@@ -292,13 +292,27 @@ impl PqHeap {
     fn new() -> Self {
         let mut heap = vec![0usize; 33];
         heap[1] = 1;
-        PqHeap { heap, verts: vec![NIL, NIL], handles: vec![0, 0], size: 0, max: 32, free_list: 0, initialized: false }
+        PqHeap {
+            heap,
+            verts: vec![NIL, NIL],
+            handles: vec![0, 0],
+            size: 0,
+            max: 32,
+            free_list: 0,
+            initialized: false,
+        }
     }
 }
 
 impl Pq {
     fn new() -> Self {
-        Pq { verts: vec![], order: vec![], size: 0, initialized: false, heap: PqHeap::new() }
+        Pq {
+            verts: vec![],
+            order: vec![],
+            size: 0,
+            initialized: false,
+            heap: PqHeap::new(),
+        }
     }
 }
 
@@ -332,8 +346,23 @@ impl Tess {
             e.active_region = NIL;
         }
 
-        t.verts.push(Vertex { next: 0, prev: 0, an_edge: NIL, data: [0.0; 2], index: NIL, coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
-        t.faces.push(Face { next: 0, prev: 0, an_edge: NIL, inside: false });
+        t.verts.push(Vertex {
+            next: 0,
+            prev: 0,
+            an_edge: NIL,
+            data: [0.0; 2],
+            index: NIL,
+            coords: [0.0; 3],
+            s: 0.0,
+            t: 0.0,
+            pq_handle: 0,
+        });
+        t.faces.push(Face {
+            next: 0,
+            prev: 0,
+            an_edge: NIL,
+            inside: false,
+        });
         t
     }
 
@@ -358,7 +387,10 @@ impl Tess {
     }
 
     fn st(&self, v: usize) -> St {
-        St { s: self.verts[v].s, t: self.verts[v].t }
+        St {
+            s: self.verts[v].s,
+            t: self.verts[v].t,
+        }
     }
     fn org(&self, e: usize) -> usize {
         self.edges[e].org
@@ -377,8 +409,24 @@ impl Tess {
         let e = self.edges.len();
         let e_sym = e + 1;
 
-        self.edges.push(HalfEdge { next: e, o_next: NIL, l_next: NIL, org: NIL, l_face: NIL, active_region: NIL, winding: 0 });
-        self.edges.push(HalfEdge { next: e_sym, o_next: NIL, l_next: NIL, org: NIL, l_face: NIL, active_region: NIL, winding: 0 });
+        self.edges.push(HalfEdge {
+            next: e,
+            o_next: NIL,
+            l_next: NIL,
+            org: NIL,
+            l_face: NIL,
+            active_region: NIL,
+            winding: 0,
+        });
+        self.edges.push(HalfEdge {
+            next: e_sym,
+            o_next: NIL,
+            l_next: NIL,
+            org: NIL,
+            l_face: NIL,
+            active_region: NIL,
+            winding: 0,
+        });
 
         let e_prev = self.edges[e_next ^ 1].next;
 
@@ -407,7 +455,17 @@ impl Tess {
         let v_prev = self.verts[v_next].prev;
         let v_new = self.verts.len();
 
-        self.verts.push(Vertex { next: v_next, prev: v_prev, an_edge: e_orig, data: [0.0; 2], index: NIL, coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
+        self.verts.push(Vertex {
+            next: v_next,
+            prev: v_prev,
+            an_edge: e_orig,
+            data: [0.0; 2],
+            index: NIL,
+            coords: [0.0; 3],
+            s: 0.0,
+            t: 0.0,
+            pq_handle: 0,
+        });
         self.verts[v_prev].next = v_new;
         self.verts[v_next].prev = v_new;
 
@@ -428,7 +486,12 @@ impl Tess {
         let f_new = self.faces.len();
         let inside = self.faces[f_next].inside;
 
-        self.faces.push(Face { next: f_next, prev: f_prev, an_edge: e_orig, inside });
+        self.faces.push(Face {
+            next: f_next,
+            prev: f_prev,
+            an_edge: e_orig,
+            inside,
+        });
         self.faces[f_prev].next = f_new;
         self.faces[f_next].prev = f_new;
 
@@ -692,7 +755,12 @@ impl Tess {
 
             let child_handle = self.pq.heap.heap[child_index];
 
-            if child_index > self.pq.heap.size || vert_leq(self.st(self.pq.heap.verts[curr_handle]), self.st(self.pq.heap.verts[child_handle])) {
+            if child_index > self.pq.heap.size
+                || vert_leq(
+                    self.st(self.pq.heap.verts[curr_handle]),
+                    self.st(self.pq.heap.verts[child_handle]),
+                )
+            {
                 self.pq.heap.heap[curr_index] = curr_handle;
                 self.pq.heap.handles[curr_handle] = curr_index;
                 return;
@@ -712,7 +780,12 @@ impl Tess {
             let parent_index = curr_index >> 1;
             let parent_handle = self.pq.heap.heap[parent_index];
 
-            if parent_index == 0 || vert_leq(self.st(self.pq.heap.verts[parent_handle]), self.st(self.pq.heap.verts[curr_handle])) {
+            if parent_index == 0
+                || vert_leq(
+                    self.st(self.pq.heap.verts[parent_handle]),
+                    self.st(self.pq.heap.verts[curr_handle]),
+                )
+            {
                 self.pq.heap.heap[curr_index] = curr_handle;
                 self.pq.heap.handles[curr_handle] = curr_index;
                 return;
@@ -866,9 +939,21 @@ impl Tess {
         let size = self.pq.size;
         let mut order: Vec<usize> = (0..size).collect();
         let verts = self.pq.verts.clone();
-        let sts: Vec<St> = verts.iter().map(|v| if *v == NIL { St { s: 0.0, t: 0.0 } } else { self.st(*v) }).collect();
+        let sts: Vec<St> = verts
+            .iter()
+            .map(|v| {
+                if *v == NIL {
+                    St { s: 0.0, t: 0.0 }
+                } else {
+                    self.st(*v)
+                }
+            })
+            .collect();
 
-        timsort::sort(&mut order, |a, b| if vert_leq(sts[*a], sts[*b]) { 1 } else { -1 });
+        timsort::sort(
+            &mut order,
+            |a, b| if vert_leq(sts[*a], sts[*b]) { 1 } else { -1 },
+        );
 
         self.pq.order = order;
         self.pq.initialized = true;
@@ -988,7 +1073,11 @@ impl Tess {
         let new_node = self.dict.len();
         let next = self.dict[node].next;
 
-        self.dict.push(DictNode { key, next, prev: node });
+        self.dict.push(DictNode {
+            key,
+            next,
+            prev: node,
+        });
         self.dict[next].prev = new_node;
         self.dict[node].next = new_node;
         new_node
@@ -1018,7 +1107,15 @@ impl Tess {
     // --- sweep ----------------------------------------------------------------------------------
 
     fn new_region(&mut self) -> usize {
-        self.regions.push(Region { e_up: NIL, node_up: NIL, winding_number: 0, inside: false, sentinel: false, dirty: false, fix_upper_edge: false });
+        self.regions.push(Region {
+            e_up: NIL,
+            node_up: NIL,
+            winding_number: 0,
+            inside: false,
+            sentinel: false,
+            dirty: false,
+            fix_upper_edge: false,
+        });
         self.regions.len() - 1
     }
 
@@ -1056,7 +1153,10 @@ impl Tess {
 
         if self.regions[reg].fix_upper_edge {
             let below = self.region_below(reg);
-            let e = self.connect(self.regions[below].e_up ^ 1, self.edges[self.regions[reg].e_up].l_next);
+            let e = self.connect(
+                self.regions[below].e_up ^ 1,
+                self.edges[self.regions[reg].e_up].l_next,
+            );
 
             self.fix_upper_edge(reg, e);
             reg = self.region_above(reg);
@@ -1103,7 +1203,8 @@ impl Tess {
     fn compute_winding(&mut self, reg: usize) {
         let above = self.region_above(reg);
 
-        self.regions[reg].winding_number = self.regions[above].winding_number + self.edges[self.regions[reg].e_up].winding;
+        self.regions[reg].winding_number =
+            self.regions[above].winding_number + self.edges[self.regions[reg].e_up].winding;
         self.regions[reg].inside = self.is_winding_inside(self.regions[reg].winding_number);
     }
 
@@ -1149,7 +1250,14 @@ impl Tess {
         e_prev
     }
 
-    fn add_right_edges(&mut self, reg_up: usize, e_first: usize, e_last: usize, e_top_left: usize, clean_up: bool) {
+    fn add_right_edges(
+        &mut self,
+        reg_up: usize,
+        e_first: usize,
+        e_last: usize,
+        e_top_left: usize,
+        clean_up: bool,
+    ) {
         let mut first_time = true;
         let mut e = e_first;
 
@@ -1186,7 +1294,8 @@ impl Tess {
                 self.mesh_splice(self.o_prev(e_prev), e);
             }
 
-            self.regions[reg].winding_number = self.regions[reg_prev].winding_number - self.edges[e].winding;
+            self.regions[reg].winding_number =
+                self.regions[reg_prev].winding_number - self.edges[e].winding;
             self.regions[reg].inside = self.is_winding_inside(self.regions[reg].winding_number);
             self.regions[reg_prev].dirty = true;
 
@@ -1238,7 +1347,14 @@ impl Tess {
         self.mesh_splice(e1, e2);
     }
 
-    fn vertex_weights(&mut self, isect: usize, org: usize, dst: usize, weights: &mut [f64; 4], weight_index: usize) {
+    fn vertex_weights(
+        &mut self,
+        isect: usize,
+        org: usize,
+        dst: usize,
+        weights: &mut [f64; 4],
+        weight_index: usize,
+    ) {
         let t1 = vert_l1_dist(self.st(org), self.st(isect));
         let t2 = vert_l1_dist(self.st(dst), self.st(isect));
         let (i0, i1) = (weight_index, weight_index + 1);
@@ -1254,7 +1370,14 @@ impl Tess {
         ic[2] += weights[i0] * oc[2] + weights[i1] * dc[2];
     }
 
-    fn get_intersect_data(&mut self, isect: usize, org_up: usize, dst_up: usize, org_lo: usize, dst_lo: usize) {
+    fn get_intersect_data(
+        &mut self,
+        isect: usize,
+        org_up: usize,
+        dst_up: usize,
+        org_lo: usize,
+        dst_lo: usize,
+    ) {
         let mut weights = [0.0; 4];
 
         self.verts[isect].coords = [0.0; 3];
@@ -1272,7 +1395,12 @@ impl Tess {
         let st = |s: &Self, v: usize| s.st(v);
 
         if vert_leq(st(self, self.org(e_up)), st(self, self.org(e_lo))) {
-            if edge_sign(st(self, self.dst(e_lo)), st(self, self.org(e_up)), st(self, self.org(e_lo))) > 0.0 {
+            if edge_sign(
+                st(self, self.dst(e_lo)),
+                st(self, self.org(e_up)),
+                st(self, self.org(e_lo)),
+            ) > 0.0
+            {
                 return false;
             }
 
@@ -1288,7 +1416,12 @@ impl Tess {
                 self.splice_merge_vertices(self.o_prev(e_lo), e_up);
             }
         } else {
-            if edge_sign(st(self, self.dst(e_up)), st(self, self.org(e_lo)), st(self, self.org(e_up))) < 0.0 {
+            if edge_sign(
+                st(self, self.dst(e_up)),
+                st(self, self.org(e_lo)),
+                st(self, self.org(e_up)),
+            ) < 0.0
+            {
                 return false;
             }
 
@@ -1310,7 +1443,12 @@ impl Tess {
         let st = |s: &Self, v: usize| s.st(v);
 
         if vert_leq(st(self, self.dst(e_up)), st(self, self.dst(e_lo))) {
-            if edge_sign(st(self, self.dst(e_up)), st(self, self.dst(e_lo)), st(self, self.org(e_up))) < 0.0 {
+            if edge_sign(
+                st(self, self.dst(e_up)),
+                st(self, self.dst(e_lo)),
+                st(self, self.org(e_up)),
+            ) < 0.0
+            {
                 return false;
             }
 
@@ -1326,7 +1464,12 @@ impl Tess {
             let lf = self.edges[e].l_face;
             self.faces[lf].inside = self.regions[reg_up].inside;
         } else {
-            if edge_sign(st(self, self.dst(e_lo)), st(self, self.dst(e_up)), st(self, self.org(e_lo))) > 0.0 {
+            if edge_sign(
+                st(self, self.dst(e_lo)),
+                st(self, self.dst(e_up)),
+                st(self, self.org(e_lo)),
+            ) > 0.0
+            {
                 return false;
             }
 
@@ -1375,7 +1518,12 @@ impl Tess {
             return false;
         }
 
-        let mut isect = edge_intersect(st(self, dst_up), st(self, org_up), st(self, dst_lo), st(self, org_lo));
+        let mut isect = edge_intersect(
+            st(self, dst_up),
+            st(self, org_up),
+            st(self, dst_lo),
+            st(self, org_lo),
+        );
         let event = self.event;
 
         if vert_leq(isect, st(self, event)) {
@@ -1383,7 +1531,11 @@ impl Tess {
             isect.t = self.verts[event].t;
         }
 
-        let org_min = if vert_leq(st(self, org_up), st(self, org_lo)) { org_up } else { org_lo };
+        let org_min = if vert_leq(st(self, org_up), st(self, org_lo)) {
+            org_up
+        } else {
+            org_lo
+        };
 
         if vert_leq(st(self, org_min), isect) {
             isect.s = self.verts[org_min].s;
@@ -1395,8 +1547,10 @@ impl Tess {
             return false;
         }
 
-        if (!vert_eq(st(self, dst_up), st(self, event)) && edge_sign(st(self, dst_up), st(self, event), isect) >= 0.0)
-            || (!vert_eq(st(self, dst_lo), st(self, event)) && edge_sign(st(self, dst_lo), st(self, event), isect) <= 0.0)
+        if (!vert_eq(st(self, dst_up), st(self, event))
+            && edge_sign(st(self, dst_up), st(self, event), isect) >= 0.0)
+            || (!vert_eq(st(self, dst_lo), st(self, event))
+                && edge_sign(st(self, dst_lo), st(self, event), isect) <= 0.0)
         {
             if dst_lo == event {
                 self.split_edge(e_up ^ 1);
@@ -1560,14 +1714,30 @@ impl Tess {
         }
 
         if degenerate {
-            self.add_right_edges(reg_up, self.edges[e_bottom_left].o_next, e_top_left, e_top_left, true);
+            self.add_right_edges(
+                reg_up,
+                self.edges[e_bottom_left].o_next,
+                e_top_left,
+                e_top_left,
+                true,
+            );
             return;
         }
 
-        let e_new_arg = if vert_leq(self.st(self.org(e_lo)), self.st(self.org(e_up))) { self.o_prev(e_lo) } else { e_up };
+        let e_new_arg = if vert_leq(self.st(self.org(e_lo)), self.st(self.org(e_up))) {
+            self.o_prev(e_lo)
+        } else {
+            e_up
+        };
         let e_new = self.connect(self.l_prev(e_bottom_left), e_new_arg);
 
-        self.add_right_edges(reg_up, e_new, self.edges[e_new].o_next, self.edges[e_new].o_next, false);
+        self.add_right_edges(
+            reg_up,
+            e_new,
+            self.edges[e_new].o_next,
+            self.edges[e_new].o_next,
+            false,
+        );
 
         let ar = self.edges[e_new ^ 1].active_region;
 
@@ -1610,12 +1780,21 @@ impl Tess {
         let e_up = self.regions[reg_up].e_up;
         let e_lo = self.regions[reg_lo].e_up;
 
-        if edge_sign(self.st(self.dst(e_up)), self.st(v_event), self.st(self.org(e_up))) == 0.0 {
+        if edge_sign(
+            self.st(self.dst(e_up)),
+            self.st(v_event),
+            self.st(self.org(e_up)),
+        ) == 0.0
+        {
             self.connect_left_degenerate(reg_up, v_event);
             return;
         }
 
-        let reg = if vert_leq(self.st(self.dst(e_lo)), self.st(self.dst(e_up))) { reg_up } else { reg_lo };
+        let reg = if vert_leq(self.st(self.dst(e_lo)), self.st(self.dst(e_up))) {
+            reg_up
+        } else {
+            reg_lo
+        };
 
         if self.regions[reg_up].inside || self.regions[reg].fix_upper_edge {
             let e_new;
@@ -1667,7 +1846,13 @@ impl Tess {
         if self.edges[e_bottom_left].o_next == e_top_left {
             self.connect_right_vertex(reg_up, e_bottom_left);
         } else {
-            self.add_right_edges(reg_up, self.edges[e_bottom_left].o_next, e_top_left, e_top_left, true);
+            self.add_right_edges(
+                reg_up,
+                self.edges[e_bottom_left].o_next,
+                e_top_left,
+                e_top_left,
+                true,
+            );
         }
     }
 
@@ -1697,7 +1882,11 @@ impl Tess {
     }
 
     fn init_edge_dict(&mut self) {
-        self.dict = vec![DictNode { key: NIL, next: 0, prev: 0 }];
+        self.dict = vec![DictNode {
+            key: NIL,
+            next: 0,
+            prev: 0,
+        }];
         self.add_sentinel(-SENTINEL_COORD);
         self.add_sentinel(SENTINEL_COORD);
     }
@@ -1721,7 +1910,9 @@ impl Tess {
             let mut e_next = self.edges[e].next;
             let mut e_l_next = self.edges[e].l_next;
 
-            if vert_eq(self.st(self.org(e)), self.st(self.dst(e))) && self.edges[self.edges[e].l_next].l_next != e {
+            if vert_eq(self.st(self.org(e)), self.st(self.dst(e)))
+                && self.edges[self.edges[e].l_next].l_next != e
+            {
                 self.splice_merge_vertices(e_l_next, e);
                 self.delete_edge(e);
                 e = e_l_next;
@@ -1832,7 +2023,11 @@ impl Tess {
             if vert_leq(self.st(self.dst(up)), self.st(self.org(lo))) {
                 while self.edges[lo].l_next != up
                     && (self.edge_goes_left(self.edges[lo].l_next)
-                        || edge_sign(self.st(self.org(lo)), self.st(self.dst(lo)), self.st(self.dst(self.edges[lo].l_next))) <= 0.0)
+                        || edge_sign(
+                            self.st(self.org(lo)),
+                            self.st(self.dst(lo)),
+                            self.st(self.dst(self.edges[lo].l_next)),
+                        ) <= 0.0)
                 {
                     let temp = self.connect(self.edges[lo].l_next, lo);
 
@@ -1843,7 +2038,11 @@ impl Tess {
             } else {
                 while self.edges[lo].l_next != up
                     && (self.edge_goes_right(self.l_prev(up))
-                        || edge_sign(self.st(self.dst(up)), self.st(self.org(up)), self.st(self.org(self.l_prev(up)))) >= 0.0)
+                        || edge_sign(
+                            self.st(self.dst(up)),
+                            self.st(self.org(up)),
+                            self.st(self.org(self.l_prev(up))),
+                        ) >= 0.0)
                 {
                     let temp = self.connect(up, self.l_prev(up));
 
@@ -1950,14 +2149,21 @@ impl Tess {
 
         let mut norm = [0.0; 3];
         let mut max_len2 = 0.0;
-        let (c1, c2) = (self.verts[min_vert[index]].coords, self.verts[max_vert[index]].coords);
+        let (c1, c2) = (
+            self.verts[min_vert[index]].coords,
+            self.verts[max_vert[index]].coords,
+        );
         let d1 = [c1[0] - c2[0], c1[1] - c2[1], c1[2] - c2[2]];
         let mut v = self.verts[V_HEAD].next;
 
         while v != V_HEAD {
             let c = self.verts[v].coords;
             let d2 = [c[0] - c2[0], c[1] - c2[1], c[2] - c2[2]];
-            let t = [d1[1] * d2[2] - d1[2] * d2[1], d1[2] * d2[0] - d1[0] * d2[2], d1[0] * d2[1] - d1[1] * d2[0]];
+            let t = [
+                d1[1] * d2[2] - d1[2] * d2[1],
+                d1[2] * d2[0] - d1[0] * d2[2],
+                d1[0] * d2[1] - d1[1] * d2[0],
+            ];
             let t_len2 = t[0] * t[0] + t[1] * t[1] + t[2] * t[2];
             if t_len2 > max_len2 {
                 max_len2 = t_len2;
@@ -1985,7 +2191,8 @@ impl Tess {
             if self.edges[e].winding > 0 {
                 loop {
                     let (o, d) = (self.org(e), self.dst(e));
-                    area += (self.verts[o].s - self.verts[d].s) * (self.verts[o].t + self.verts[d].t);
+                    area +=
+                        (self.verts[o].s - self.verts[d].s) * (self.verts[o].t + self.verts[d].t);
                     e = self.edges[e].l_next;
                     if e == start {
                         break;
@@ -2155,7 +2362,9 @@ pub fn triangulate(contours: &[Vec<[f64; 2]>]) -> Vec<[f64; 2]> {
 /// contour per entry. The vertex data are the points themselves (`gluTessVertex (point, point)`)
 /// with an optional `index` property; see [`Tess::nurbs`] for the combine callbacks. Returns the
 /// output triangle vertices in libtess order.
-pub fn triangulate_points(contours: &[Vec<([f64; 2], Option<usize>)>]) -> Vec<([f64; 2], Option<usize>)> {
+pub fn triangulate_points(
+    contours: &[Vec<([f64; 2], Option<usize>)>],
+) -> Vec<([f64; 2], Option<usize>)> {
     let mut tess = Tess::new();
     tess.winding_odd = true;
     tess.nurbs = true;
@@ -2184,7 +2393,11 @@ pub fn triangulate_points(contours: &[Vec<([f64; 2], Option<usize>)>]) -> Vec<([
 /// per entry with the vertex data being the point's index; the combine callback appends a vertex
 /// (returned in the second list) and hands out the next index, starting at `next_index`. Returns
 /// the indices of the output triangles in libtess order.
-pub fn triangulate_svg(contours: &[Vec<([f64; 2], usize)>], winding_odd: bool, next_index: usize) -> (Vec<usize>, Vec<[f64; 3]>) {
+pub fn triangulate_svg(
+    contours: &[Vec<([f64; 2], usize)>],
+    winding_odd: bool,
+    next_index: usize,
+) -> (Vec<usize>, Vec<[f64; 3]>) {
     let mut tess = Tess::new();
 
     tess.winding_odd = winding_odd;
@@ -2218,7 +2431,13 @@ mod tests {
     use super::*;
 
     fn area(t: &[[f64; 2]]) -> f64 {
-        t.chunks(3).map(|c| ((c[1][0] - c[0][0]) * (c[2][1] - c[0][1]) - (c[2][0] - c[0][0]) * (c[1][1] - c[0][1])) / 2.0).sum()
+        t.chunks(3)
+            .map(|c| {
+                ((c[1][0] - c[0][0]) * (c[2][1] - c[0][1])
+                    - (c[2][0] - c[0][0]) * (c[1][1] - c[0][1]))
+                    / 2.0
+            })
+            .sum()
     }
 
     #[test]

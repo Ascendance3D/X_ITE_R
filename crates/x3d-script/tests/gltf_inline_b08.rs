@@ -12,17 +12,26 @@ use serde_json::Value;
 
 #[test]
 fn gltf_inline_scenarios_match_x_ite() {
-    let text = std::fs::read_to_string(oracle_root().join("rea-batch08-gltf-baseline/inline-baseline.json")).expect("baseline");
+    let text = std::fs::read_to_string(
+        oracle_root().join("rea-batch08-gltf-baseline/inline-baseline.json"),
+    )
+    .expect("baseline");
     let json: Value = serde_json::from_str(&text).unwrap();
     let base: Vec<&Value> = json["results"].as_array().unwrap().iter().collect();
     let mut failures = vec![];
     let mut compared = 0;
 
     for name in case_names() {
-        let expected = base.iter().find(|r| r["case"] == name.as_str()).unwrap_or_else(|| panic!("{name}: no baseline"));
+        let expected = base
+            .iter()
+            .find(|r| r["case"] == name.as_str())
+            .unwrap_or_else(|| panic!("{name}: no baseline"));
         let n = name.clone();
         let actual = big_stack(move || run_scenario(&n)).unwrap_or_else(|e| panic!("{name}: {e}"));
-        let (es, as_) = (expected["steps"].as_array().unwrap(), actual["steps"].as_array().unwrap());
+        let (es, as_) = (
+            expected["steps"].as_array().unwrap(),
+            actual["steps"].as_array().unwrap(),
+        );
 
         assert_eq!(es.len(), as_.len(), "{name}: step count");
         compared += 1;
@@ -43,10 +52,14 @@ fn gltf_inline_scenarios_match_x_ite() {
             for field in ["loadCount", "console", "inlines"] {
                 // Known: X_ITE's buffer FileLoader logs its own error and the Inline logs none; Rust logs the
                 // Inline's error with the same text (REPORT.md, known limits).
-                let known = field == "console" && (name == "r-bad-base64" || name == "r-missing-bin");
+                let known =
+                    field == "console" && (name == "r-bad-base64" || name == "r-missing-bin");
 
                 if e[field] != a[field] && !known {
-                    failures.push(format!("{name} step {k} {field}:\n  x_ite {}\n  rust  {}", e[field], a[field]));
+                    failures.push(format!(
+                        "{name} step {k} {field}:\n  x_ite {}\n  rust  {}",
+                        e[field], a[field]
+                    ));
                 }
             }
 
@@ -57,5 +70,15 @@ fn gltf_inline_scenarios_match_x_ite() {
     }
 
     println!("{compared} scenarios compared");
-    assert!(failures.is_empty(), "{} differences:\n{}", failures.len(), failures.iter().take(12).cloned().collect::<Vec<_>>().join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} differences:\n{}",
+        failures.len(),
+        failures
+            .iter()
+            .take(12)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
 }

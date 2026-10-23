@@ -67,19 +67,34 @@ impl NodeType {
 
         // A version above 4.0: the newest dumped scene not above it.
         if v > 4.0 {
-            return self.newer.iter().filter(|(k, _)| *k <= v).last().map(|(_, x)| x).unwrap_or(&self.x3d);
+            return self
+                .newer
+                .iter()
+                .filter(|(k, _)| *k <= v)
+                .last()
+                .map(|(_, x)| x)
+                .unwrap_or(&self.x3d);
         }
 
         // The dumped 3.x scene whose `<=` tests decide like this version's: the first one >= it.
         match LEGACY_VERSIONS.iter().find(|&&k| v <= k) {
-            Some(&k) => self.legacy.iter().find(|(l, _)| *l == k).map(|(_, x)| x).unwrap_or(&self.x3d),
+            Some(&k) => self
+                .legacy
+                .iter()
+                .find(|(l, _)| *l == k)
+                .map(|(_, x)| x)
+                .unwrap_or(&self.x3d),
             None => &self.x3d,
         }
     }
 }
 
 /// (alias, name) of Configuration/SupportedComponents.js and SupportedProfiles.js.
-pub const COMPONENT_ALIASES: &[(&str, &str)] = &[("H-Anim", "HAnim"), ("TextureProjector", "TextureProjection"), ("ProjectiveTextureMapping", "TextureProjection")];
+pub const COMPONENT_ALIASES: &[(&str, &str)] = &[
+    ("H-Anim", "HAnim"),
+    ("TextureProjector", "TextureProjection"),
+    ("ProjectiveTextureMapping", "TextureProjection"),
+];
 pub const PROFILE_ALIASES: &[(&str, &str)] = &[("MPEG-4", "MPEG4Interactive")];
 
 #[derive(Clone, Debug)]
@@ -118,13 +133,19 @@ impl NodeTable {
 
     /// SupportedComponents.js `alias` and SupportedProfiles.js `alias`: another name of a supported component or profile.
     pub fn component(&self, name: &str) -> Option<&ComponentDef> {
-        let name = COMPONENT_ALIASES.iter().find(|a| a.0 == name).map_or(name, |a| a.1);
+        let name = COMPONENT_ALIASES
+            .iter()
+            .find(|a| a.0 == name)
+            .map_or(name, |a| a.1);
 
         self.components.iter().find(|c| c.name == name)
     }
 
     pub fn profile(&self, name: &str) -> Option<&ProfileDef> {
-        let name = PROFILE_ALIASES.iter().find(|a| a.0 == name).map_or(name, |a| a.1);
+        let name = PROFILE_ALIASES
+            .iter()
+            .find(|a| a.0 == name)
+            .map_or(name, |a| a.1);
 
         self.profiles.iter().find(|p| p.name == name)
     }
@@ -142,32 +163,56 @@ fn variant(json: &Value) -> NodeVariant {
             let access = f[0].as_u64().expect("access") as u8;
             let name = f[1].as_str().expect("name").to_string();
             let ty = FieldType::from_name(f[2].as_str().expect("type")).expect("field type");
-            let default = FieldValue::from_json(ty, &f[3]).unwrap_or_else(|| panic!("default of {name}"));
+            let default =
+                FieldValue::from_json(ty, &f[3]).unwrap_or_else(|| panic!("default of {name}"));
             let initial = match initial.get(&name) {
-                Some(v) => FieldValue::from_json(ty, v).unwrap_or_else(|| panic!("initial of {name}")),
+                Some(v) => {
+                    FieldValue::from_json(ty, v).unwrap_or_else(|| panic!("initial of {name}"))
+                }
                 None => default.clone(),
             };
 
-            let unit = units.get(&name).and_then(|u| u.as_str()).map(str::to_string);
+            let unit = units
+                .get(&name)
+                .and_then(|u| u.as_str())
+                .map(str::to_string);
 
-            FieldDef { access, name, ty, default, initial, unit }
+            FieldDef {
+                access,
+                name,
+                ty,
+                default,
+                initial,
+                unit,
+            }
         })
         .collect();
 
     let aliases = json["aliases"]
         .as_object()
-        .map(|m| m.iter().map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string())).collect())
+        .map(|m| {
+            m.iter()
+                .map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string()))
+                .collect()
+        })
         .unwrap_or_default();
 
-    NodeVariant { can_user_defined_fields: json["udf"].as_bool().unwrap_or(false), fields, aliases }
+    NodeVariant {
+        can_user_defined_fields: json["udf"].as_bool().unwrap_or(false),
+        fields,
+        aliases,
+    }
 }
 
 fn load() -> NodeTable {
-    let json: Value = serde_json::from_str(include_str!("../data/x_ite-nodes.json")).expect("node table JSON");
+    let json: Value =
+        serde_json::from_str(include_str!("../data/x_ite-nodes.json")).expect("node table JSON");
 
     // REA batch 04 (owner decision 2026-10-17): the Annotation component, which X_ITE 16.5.0 ships
     // but does not register. Dumped from those classes by oracle/x_ite-nodes-annotation.mjs.
-    let annotation: Value = serde_json::from_str(include_str!("../data/x_ite-nodes-annotation.json")).expect("annotation node table JSON");
+    let annotation: Value =
+        serde_json::from_str(include_str!("../data/x_ite-nodes-annotation.json"))
+            .expect("annotation node table JSON");
 
     let types: Vec<NodeType> = json["nodes"]
         .as_array()
@@ -184,11 +229,19 @@ fn load() -> NodeTable {
             x3d: variant(&n["x3d"]),
             legacy: n["legacy"]
                 .as_object()
-                .map(|m| m.iter().map(|(k, v)| (k.parse::<f64>().expect("legacy version"), variant(v))).collect())
+                .map(|m| {
+                    m.iter()
+                        .map(|(k, v)| (k.parse::<f64>().expect("legacy version"), variant(v)))
+                        .collect()
+                })
                 .unwrap_or_default(),
             newer: n["newer"]
                 .as_object()
-                .map(|m| m.iter().map(|(k, v)| (k.parse::<f64>().expect("newer version"), variant(v))).collect())
+                .map(|m| {
+                    m.iter()
+                        .map(|(k, v)| (k.parse::<f64>().expect("newer version"), variant(v)))
+                        .collect()
+                })
                 .unwrap_or_default(),
         })
         .collect();
@@ -196,7 +249,11 @@ fn load() -> NodeTable {
     let mut types = types;
     iso_overrides(&mut types);
 
-    let by_name = types.iter().enumerate().map(|(i, t)| (t.name.clone(), i)).collect();
+    let by_name = types
+        .iter()
+        .enumerate()
+        .map(|(i, t)| (t.name.clone(), i))
+        .collect();
 
     let components = json["components"]
         .as_array()
@@ -208,7 +265,12 @@ fn load() -> NodeTable {
             title: c["title"].as_str().unwrap().to_string(),
             level: c["level"].as_i64().unwrap() as i32,
             external: c["external"].as_bool().unwrap(),
-            dependencies: c["dependencies"].as_array().unwrap().iter().map(|d| d.as_str().unwrap().to_string()).collect(),
+            dependencies: c["dependencies"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|d| d.as_str().unwrap().to_string())
+                .collect(),
         })
         .collect();
 
@@ -223,7 +285,12 @@ fn load() -> NodeTable {
                 .as_array()
                 .unwrap()
                 .iter()
-                .map(|c| (c["name"].as_str().unwrap().to_string(), c["level"].as_i64().unwrap() as i32))
+                .map(|c| {
+                    (
+                        c["name"].as_str().unwrap().to_string(),
+                        c["level"].as_i64().unwrap() as i32,
+                    )
+                })
                 .collect(),
         })
         .collect();
@@ -236,7 +303,12 @@ fn load() -> NodeTable {
         by_name,
         components,
         profiles,
-        vrml2_available: json["vrml2Available"].as_array().unwrap().iter().map(|s| s.as_str().unwrap().to_string()).collect(),
+        vrml2_available: json["vrml2Available"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|s| s.as_str().unwrap().to_string())
+            .collect(),
     }
 }
 
@@ -247,7 +319,10 @@ fn iso_overrides(types: &mut [NodeType]) {
 
     for (type_name, field, value) in OVERRIDES {
         for t in types.iter_mut().filter(|t| t.name == *type_name) {
-            let variants = std::iter::once(&mut t.vrml2).chain(std::iter::once(&mut t.x3d)).chain(t.legacy.iter_mut().map(|(_, v)| v)).chain(t.newer.iter_mut().map(|(_, v)| v));
+            let variants = std::iter::once(&mut t.vrml2)
+                .chain(std::iter::once(&mut t.x3d))
+                .chain(t.legacy.iter_mut().map(|(_, v)| v))
+                .chain(t.newer.iter_mut().map(|(_, v)| v));
 
             for v in variants {
                 for f in v.fields.iter_mut().filter(|f| f.name == *field) {

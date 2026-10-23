@@ -70,12 +70,18 @@ fn intersect_rect_quad2(h: [f64; 2], p: [f64; 8]) -> Vec<f64> {
                     }
                 }
 
-                let nextq = if i > 1 { [cur[idx + 2], cur[idx + 3]] } else { [cur[0], cur[1]] };
+                let nextq = if i > 1 {
+                    [cur[idx + 2], cur[idx + 3]]
+                } else {
+                    [cur[0], cur[1]]
+                };
 
                 if (sign * pq[dir] < h[dir]) ^ (sign * nextq[dir] < h[dir]) {
                     // this line crosses the chopping line
                     let mut np = [0.0; 2];
-                    np[1 - dir] = f(pq[1 - dir] + (nextq[1 - dir] - pq[1 - dir]) / (nextq[dir] - pq[dir]) * (sign * h[dir] - pq[dir]));
+                    np[1 - dir] = f(pq[1 - dir]
+                        + (nextq[1 - dir] - pq[1 - dir]) / (nextq[dir] - pq[dir])
+                            * (sign * h[dir] - pq[dir]));
                     np[dir] = f(sign * h[dir]);
                     out.push(np[0]);
                     out.push(np[1]);
@@ -230,14 +236,44 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
     }
 
     // separating axis = u1,u2,u3
-    tst1!(pp[0], au[0] + bu[0] * q11 + bu[1] * q12 + bu[2] * q13, (1, 0), 1);
-    tst1!(pp[1], au[1] + bu[0] * q21 + bu[1] * q22 + bu[2] * q23, (1, 1), 2);
-    tst1!(pp[2], au[2] + bu[0] * q31 + bu[1] * q32 + bu[2] * q33, (1, 2), 3);
+    tst1!(
+        pp[0],
+        au[0] + bu[0] * q11 + bu[1] * q12 + bu[2] * q13,
+        (1, 0),
+        1
+    );
+    tst1!(
+        pp[1],
+        au[1] + bu[0] * q21 + bu[1] * q22 + bu[2] * q23,
+        (1, 1),
+        2
+    );
+    tst1!(
+        pp[2],
+        au[2] + bu[0] * q31 + bu[1] * q32 + bu[2] * q33,
+        (1, 2),
+        3
+    );
 
     // separating axis = v1,v2,v3 (the association is the one the compiled code uses)
-    tst1!(dot41(r2, 0, p), bu[0] + (au[2] * q31 + (au[0] * q11 + au[1] * q21)), (2, 0), 4);
-    tst1!(dot41(r2, 1, p), bu[1] + (au[2] * q32 + (au[0] * q12 + au[1] * q22)), (2, 1), 5);
-    tst1!(dot41(r2, 2, p), bu[2] + (au[2] * q33 + (au[0] * q13 + au[1] * q23)), (2, 2), 6);
+    tst1!(
+        dot41(r2, 0, p),
+        bu[0] + (au[2] * q31 + (au[0] * q11 + au[1] * q21)),
+        (2, 0),
+        4
+    );
+    tst1!(
+        dot41(r2, 1, p),
+        bu[1] + (au[2] * q32 + (au[0] * q12 + au[1] * q22)),
+        (2, 1),
+        5
+    );
+    tst1!(
+        dot41(r2, 2, p),
+        bu[2] + (au[2] * q33 + (au[0] * q13 + au[1] * q23)),
+        (2, 2),
+        6
+    );
 
     // note: cross product axes need to be scaled when s is computed.
     macro_rules! tst2 {
@@ -274,19 +310,82 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
     q33 += fudge2;
 
     // separating axis = u1 x (v1,v2,v3)
-    tst2!(pp[2] * r21 - pp[1] * r31, bu[2] * q12 + ((au[1] * q31 + au[2] * q21) + bu[1] * q13), 0.0, -r31, r21, 7);
-    tst2!(pp[2] * r22 - pp[1] * r32, bu[2] * q11 + ((au[1] * q32 + au[2] * q22) + bu[0] * q13), 0.0, -r32, r22, 8);
-    tst2!(pp[2] * r23 - pp[1] * r33, bu[1] * q11 + (bu[0] * q12 + (au[1] * q33 + au[2] * q23)), 0.0, -r33, r23, 9);
+    tst2!(
+        pp[2] * r21 - pp[1] * r31,
+        bu[2] * q12 + ((au[1] * q31 + au[2] * q21) + bu[1] * q13),
+        0.0,
+        -r31,
+        r21,
+        7
+    );
+    tst2!(
+        pp[2] * r22 - pp[1] * r32,
+        bu[2] * q11 + ((au[1] * q32 + au[2] * q22) + bu[0] * q13),
+        0.0,
+        -r32,
+        r22,
+        8
+    );
+    tst2!(
+        pp[2] * r23 - pp[1] * r33,
+        bu[1] * q11 + (bu[0] * q12 + (au[1] * q33 + au[2] * q23)),
+        0.0,
+        -r33,
+        r23,
+        9
+    );
 
     // separating axis = u2 x (v1,v2,v3)
-    tst2!(pp[0] * r31 - pp[2] * r11, bu[2] * q22 + ((au[0] * q31 + au[2] * q11) + bu[1] * q23), r31, 0.0, -r11, 10);
-    tst2!(pp[0] * r32 - pp[2] * r12, bu[2] * q21 + ((au[0] * q32 + au[2] * q12) + bu[0] * q23), r32, 0.0, -r12, 11);
-    tst2!(pp[0] * r33 - pp[2] * r13, bu[1] * q21 + (bu[0] * q22 + (au[0] * q33 + au[2] * q13)), r33, 0.0, -r13, 12);
+    tst2!(
+        pp[0] * r31 - pp[2] * r11,
+        bu[2] * q22 + ((au[0] * q31 + au[2] * q11) + bu[1] * q23),
+        r31,
+        0.0,
+        -r11,
+        10
+    );
+    tst2!(
+        pp[0] * r32 - pp[2] * r12,
+        bu[2] * q21 + ((au[0] * q32 + au[2] * q12) + bu[0] * q23),
+        r32,
+        0.0,
+        -r12,
+        11
+    );
+    tst2!(
+        pp[0] * r33 - pp[2] * r13,
+        bu[1] * q21 + (bu[0] * q22 + (au[0] * q33 + au[2] * q13)),
+        r33,
+        0.0,
+        -r13,
+        12
+    );
 
     // separating axis = u3 x (v1,v2,v3)
-    tst2!(pp[1] * r11 - pp[0] * r21, bu[2] * q32 + ((au[0] * q21 + au[1] * q11) + bu[1] * q33), -r21, r11, 0.0, 13);
-    tst2!(pp[1] * r12 - pp[0] * r22, bu[2] * q31 + ((au[0] * q22 + au[1] * q12) + bu[0] * q33), -r22, r12, 0.0, 14);
-    tst2!(pp[1] * r13 - pp[0] * r23, bu[1] * q31 + (bu[0] * q32 + (au[0] * q23 + au[1] * q13)), -r23, r13, 0.0, 15);
+    tst2!(
+        pp[1] * r11 - pp[0] * r21,
+        bu[2] * q32 + ((au[0] * q21 + au[1] * q11) + bu[1] * q33),
+        -r21,
+        r11,
+        0.0,
+        13
+    );
+    tst2!(
+        pp[1] * r12 - pp[0] * r22,
+        bu[2] * q31 + ((au[0] * q22 + au[1] * q12) + bu[0] * q33),
+        -r22,
+        r12,
+        0.0,
+        14
+    );
+    tst2!(
+        pp[1] * r13 - pp[0] * r23,
+        bu[1] * q31 + (bu[0] * q32 + (au[0] * q23 + au[1] * q13)),
+        -r23,
+        r13,
+        0.0,
+        15
+    );
 
     if code == 0 {
         return out;
@@ -298,7 +397,11 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
             let rr = if bx == 1 { r1 } else { r2 };
             [rr[0][c], rr[1][c], rr[2][c]]
         }
-        None => [d_dot(r1[0], normal_c), d_dot(r1[1], normal_c), d_dot(r1[2], normal_c)],
+        None => [
+            d_dot(r1[0], normal_c),
+            d_dot(r1[1], normal_c),
+            d_dot(r1[2], normal_c),
+        ],
     };
 
     if invert_normal {
@@ -310,11 +413,23 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
     if code > 6 {
         // an edge from box 1 touches an edge from box 2. find a point pa on the intersecting edge of box 1
         let col = |r: &R, j: usize| [r[0][j], r[1][j], r[2][j]];
-        let sg1 = |j: usize| if dot14(normal, r1, j) > 0.0 { 1.0 } else { -1.0 };
+        let sg1 = |j: usize| {
+            if dot14(normal, r1, j) > 0.0 {
+                1.0
+            } else {
+                -1.0
+            }
+        };
         let (s0, s1, s2) = (sg1(0) * au[0], sg1(1) * au[1], sg1(2) * au[2]);
         let pa: V3 = std::array::from_fn(|i| p1[i] + s0 * r1[i][0] + s1 * r1[i][1] + s2 * r1[i][2]);
         // the incident box: the third half extent is read back from the float array B
-        let sg2 = |j: usize| if dot14(normal, r2, j) > 0.0 { -1.0 } else { 1.0 };
+        let sg2 = |j: usize| {
+            if dot14(normal, r2, j) > 0.0 {
+                -1.0
+            } else {
+                1.0
+            }
+        };
         let (t0, t1, t2) = (sg2(0) * bu[0], sg2(1) * bu[1], sg2(2) * b[2]);
         let pb: V3 = std::array::from_fn(|i| p2[i] + t0 * r2[i][0] + t1 * r2[i][1] + t2 * r2[i][2]);
         let ua = col(r1, (code - 7) / 3);
@@ -325,12 +440,18 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
         let o = 1.0 - uaub * uaub;
         let beta = if !(o <= 0.0001_f32 as f64) {
             let d = [pb[0] - pa[0], pb[1] - pa[1], pb[2] - pa[2]];
-            ((d[0] * ua[0] + d[1] * ua[1] + d[2] * ua[2]) * uaub - (d[0] * ub[0] + d[1] * ub[1] + d[2] * ub[2])) * (1.0 / o)
+            ((d[0] * ua[0] + d[1] * ua[1] + d[2] * ua[2]) * uaub
+                - (d[0] * ub[0] + d[1] * ub[1] + d[2] * ub[2]))
+                * (1.0 / o)
         } else {
             0.0
         };
 
-        let pbv = [pb[0] + beta * ub[0], pb[1] + beta * ub[1], pb[2] + beta * ub[2]];
+        let pbv = [
+            pb[0] + beta * ub[0],
+            pb[1] + beta * ub[1],
+            pb[2] + beta * ub[2],
+        ];
         // the depth is passed on as the unrounded local
         out.push((r3([-normal[0], -normal[1], -normal[2]]), r3(pbv), s));
         return out;
@@ -338,12 +459,24 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
 
     // okay, we have a face-something intersection (because the separating axis is perpendicular
     // to a face). define face 'a' to be the reference face and face 'b' the incident face.
-    let (ra, rb, pa, pb, sa, sb) = if code <= 3 { (r1, r2, p1, p2, a, b) } else { (r2, r1, p2, p1, b, a) };
+    let (ra, rb, pa, pb, sa, sb) = if code <= 3 {
+        (r1, r2, p1, p2, a, b)
+    } else {
+        (r2, r1, p2, p1, b, a)
+    };
 
     // nr = normal vector of reference face dotted with axes of incident box.
-    let normal2: V3 = if code <= 3 { normal } else { [-normal[0], -normal[1], -normal[2]] };
+    let normal2: V3 = if code <= 3 {
+        normal
+    } else {
+        [-normal[0], -normal[1], -normal[2]]
+    };
     // nr is stored as floats, but the largest component is chosen on the unrounded values
-    let nru = [dot41(rb, 0, normal2), dot41(rb, 1, normal2), dot41(rb, 2, normal2)];
+    let nru = [
+        dot41(rb, 0, normal2),
+        dot41(rb, 1, normal2),
+        dot41(rb, 2, normal2),
+    ];
     let nr = r3(nru);
     let anr = [nru[0].abs(), nru[1].abs(), nru[2].abs()];
 
@@ -374,7 +507,11 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
     let mut center = ZERO;
 
     for i in 0..3 {
-        center[i] = if nr[lanr] < 0.0 { pb[i] - pa[i] + sb[lanr] * rb[i][lanr] } else { pb[i] - pa[i] - sb[lanr] * rb[i][lanr] };
+        center[i] = if nr[lanr] < 0.0 {
+            pb[i] - pa[i] + sb[lanr] * rb[i][lanr]
+        } else {
+            pb[i] - pa[i] - sb[lanr] * rb[i][lanr]
+        };
     }
 
     // find the normal and non-normal axis numbers of the reference box
@@ -397,7 +534,16 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
     let k2 = m21 * sb[a1];
     let k3 = m12 * sb[a2];
     let k4 = m22 * sb[a2];
-    let quad = [c1 - k1 - k3, c2 - k2 - k4, c1 - k1 + k3, c2 - k2 + k4, c1 + k1 + k3, c2 + k2 + k4, c1 + k1 - k3, c2 + k2 - k4];
+    let quad = [
+        c1 - k1 - k3,
+        c2 - k2 - k4,
+        c1 - k1 + k3,
+        c2 - k2 + k4,
+        c1 + k1 + k3,
+        c2 + k2 + k4,
+        c1 + k1 - k3,
+        c2 + k2 - k4,
+    ];
 
     // find the size of the reference face
     let rect = [f(sa[code1]), f(sa[code2])];
@@ -460,7 +606,11 @@ pub fn box_box(p1: V3, r1: &R, side1: V3, p2: V3, r2: &R, side2: V3) -> Vec<Cont
             let mut pw = ZERO;
 
             for i in 0..3 {
-                pw[i] = if code < 4 { point[j][i] + pa[i] } else { point[j][i] + pa[i] - normal[i] * dep[j] };
+                pw[i] = if code < 4 {
+                    point[j][i] + pa[i]
+                } else {
+                    point[j][i] + pa[i] - normal[i] * dep[j]
+                };
             }
 
             out.push((neg_normal, r3(pw), f(-dep[j])));

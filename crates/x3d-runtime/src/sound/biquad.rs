@@ -45,7 +45,13 @@ struct Coefficients {
 
 fn normalized(b0: f64, b1: f64, b2: f64, a0: f64, a1: f64, a2: f64) -> Coefficients {
     let a0_inverse = 1.0 / a0;
-    Coefficients { b0: b0 * a0_inverse, b1: b1 * a0_inverse, b2: b2 * a0_inverse, a1: a1 * a0_inverse, a2: a2 * a0_inverse }
+    Coefficients {
+        b0: b0 * a0_inverse,
+        b1: b1 * a0_inverse,
+        b2: b2 * a0_inverse,
+        a1: a1 * a0_inverse,
+        a2: a2 * a0_inverse,
+    }
 }
 
 /// biquad.cc pow10: `fdlibm::expf (x * ln10)`, the double exp of a float, rounded to float.
@@ -61,13 +67,21 @@ fn coefficients(t: Type, frequency: f64, q: f64, db_gain: f64) -> Coefficients {
             let low = t == Type::Lowpass;
 
             if cutoff == 1.0 {
-                if low { normalized(1.0, 0.0, 0.0, 1.0, 0.0, 0.0) } else { normalized(0.0, 0.0, 0.0, 1.0, 0.0, 0.0) }
+                if low {
+                    normalized(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+                } else {
+                    normalized(0.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+                }
             } else if cutoff > 0.0 {
                 let resonance = pow10(q / 20.0);
                 let theta = PI * cutoff;
                 let alpha = theta.sin() / (2.0 * resonance);
                 let cosw = theta.cos();
-                let beta = if low { (1.0 - cosw) / 2.0 } else { (1.0 + cosw) / 2.0 };
+                let beta = if low {
+                    (1.0 - cosw) / 2.0
+                } else {
+                    (1.0 + cosw) / 2.0
+                };
                 let b1 = if low { 2.0 * beta } else { -2.0 * beta };
                 normalized(beta, b1, beta, 1.0 + alpha, -2.0 * cosw, 1.0 - alpha)
             } else if low {
@@ -82,7 +96,11 @@ fn coefficients(t: Type, frequency: f64, q: f64, db_gain: f64) -> Coefficients {
             let low = t == Type::Lowshelf;
 
             if frequency == 1.0 {
-                if low { normalized(a * a, 0.0, 0.0, 1.0, 0.0, 0.0) } else { normalized(1.0, 0.0, 0.0, 1.0, 0.0, 0.0) }
+                if low {
+                    normalized(a * a, 0.0, 0.0, 1.0, 0.0, 0.0)
+                } else {
+                    normalized(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+                }
             } else if frequency > 0.0 {
                 let w0 = PI * frequency;
                 let s = 1.0;
@@ -127,7 +145,14 @@ fn coefficients(t: Type, frequency: f64, q: f64, db_gain: f64) -> Coefficients {
                     let w0 = PI * frequency;
                     let alpha = w0.sin() / (2.0 * q);
                     let k = w0.cos();
-                    normalized(1.0 + alpha * a, -2.0 * k, 1.0 - alpha * a, 1.0 + alpha / a, -2.0 * k, 1.0 - alpha / a)
+                    normalized(
+                        1.0 + alpha * a,
+                        -2.0 * k,
+                        1.0 - alpha * a,
+                        1.0 + alpha / a,
+                        -2.0 * k,
+                        1.0 - alpha / a,
+                    )
                 } else {
                     normalized(a * a, 0.0, 0.0, 1.0, 0.0, 0.0)
                 }
@@ -146,7 +171,14 @@ fn coefficients(t: Type, frequency: f64, q: f64, db_gain: f64) -> Coefficients {
                     let k = w0.cos();
 
                     if t == Type::Allpass {
-                        normalized(1.0 - alpha, -2.0 * k, 1.0 + alpha, 1.0 + alpha, -2.0 * k, 1.0 - alpha)
+                        normalized(
+                            1.0 - alpha,
+                            -2.0 * k,
+                            1.0 + alpha,
+                            1.0 + alpha,
+                            -2.0 * k,
+                            1.0 - alpha,
+                        )
                     } else {
                         normalized(1.0, -2.0 * k, 1.0, 1.0 + alpha, -2.0 * k, 1.0 - alpha)
                     }
@@ -185,11 +217,19 @@ fn normalize_frequency(frequency: f32, nyquist: f64, detune: f32) -> f64 {
     let normalized_frequency = frequency as f64 / nyquist;
 
     // `exp2 (detune / 1200)` with a float detune is the float exp2f.
-    if detune != 0.0 { normalized_frequency * (detune / 1200.0).exp2() as f64 } else { normalized_frequency }
+    if detune != 0.0 {
+        normalized_frequency * (detune / 1200.0).exp2() as f64
+    } else {
+        normalized_frequency
+    }
 }
 
 fn flush_denormal(x: f64) -> f64 {
-    if (x as f32).abs() < f32::MIN_POSITIVE { 0.0 } else { x }
+    if (x as f32).abs() < f32::MIN_POSITIVE {
+        0.0
+    } else {
+        x
+    }
 }
 
 #[derive(Clone, Copy, Default)]
@@ -217,13 +257,34 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = ();
 
     fn constructor(_: ()) -> Self {
-        Processor { filter_type: Type::Lowpass, states: vec![], coefficients: vec![Coefficients::default(); 128], sample_accurate: false, has_just_reset: true, previous: [f32::NAN; 4], silent_frames: 0.0, timelines: Default::default(), param_events: vec![] }
+        Processor {
+            filter_type: Type::Lowpass,
+            states: vec![],
+            coefficients: vec![Coefficients::default(); 128],
+            sample_accurate: false,
+            has_just_reset: true,
+            previous: [f32::NAN; 4],
+            silent_frames: 0.0,
+            timelines: Default::default(),
+            param_events: vec![],
+        }
     }
 
     fn parameter_descriptors() -> Vec<AudioParamDescriptor> {
-        let p = |name: &str, default_value| AudioParamDescriptor { name: name.into(), automation_rate: AutomationRate::A, default_value, min_value: f32::MIN, max_value: f32::MAX };
+        let p = |name: &str, default_value| AudioParamDescriptor {
+            name: name.into(),
+            automation_rate: AutomationRate::A,
+            default_value,
+            min_value: f32::MIN,
+            max_value: f32::MAX,
+        };
 
-        vec![p("frequency", 350.0), p("detune", 0.0), p("Q", 1.0), p("gain", 0.0)]
+        vec![
+            p("frequency", 350.0),
+            p("detune", 0.0),
+            p("Q", 1.0),
+            p("gain", 0.0),
+        ]
     }
 
     fn onmessage(&mut self, msg: &mut dyn Any) {
@@ -241,7 +302,13 @@ impl AudioWorkletProcessor for Processor {
         }
     }
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let nyquist = 0.5 * scope.sample_rate as f64;
 
         for (index, time) in std::mem::take(&mut self.param_events) {
@@ -263,13 +330,27 @@ impl AudioWorkletProcessor for Processor {
         let ny = nyquist as f32;
         let detune_max = 1200.0 * f32::MAX.log2();
         let gain_max = 40.0 * f32::MAX.log10();
-        let frequency: Vec<f32> = params.get("frequency").iter().map(|v| v.clamp(0.0, ny)).collect();
-        let detune: Vec<f32> = params.get("detune").iter().map(|v| v.clamp(-detune_max, detune_max)).collect();
+        let frequency: Vec<f32> = params
+            .get("frequency")
+            .iter()
+            .map(|v| v.clamp(0.0, ny))
+            .collect();
+        let detune: Vec<f32> = params
+            .get("detune")
+            .iter()
+            .map(|v| v.clamp(-detune_max, detune_max))
+            .collect();
         let q: Vec<f32> = params.get("Q").to_vec();
         let gain: Vec<f32> = params.get("gain").iter().map(|v| v.min(gain_max)).collect();
         // HasSampleAccurateValues of the four params: an a-rate value or a recent setValue event.
         let (frame, rate) = (scope.current_frame, scope.sample_rate as f64);
-        let sample_accurate = [frequency.len(), q.len(), gain.len(), detune.len()].iter().any(|n| *n > 1) || self.timelines.iter().any(|t| t.has_sample_accurate_values(frame, rate, frames));
+        let sample_accurate = [frequency.len(), q.len(), gain.len(), detune.len()]
+            .iter()
+            .any(|n| *n > 1)
+            || self
+                .timelines
+                .iter()
+                .any(|t| t.has_sample_accurate_values(frame, rate, frames));
 
         for t in self.timelines.iter_mut() {
             t.after_values(frame, rate, frames);
@@ -278,12 +359,19 @@ impl AudioWorkletProcessor for Processor {
         let value = |v: &[f32], k: usize| if v.len() > 1 { v[k] } else { v[0] };
 
         if sample_accurate {
-            let constant = [&frequency, &detune, &q, &gain].iter().all(|v| v.iter().all(|x| *x == v[0]));
+            let constant = [&frequency, &detune, &q, &gain]
+                .iter()
+                .all(|v| v.iter().all(|x| *x == v[0]));
             let needed = if constant { 1 } else { frames };
 
             for k in 0..needed {
                 let f = normalize_frequency(value(&frequency, k), nyquist, value(&detune, k));
-                self.coefficients[k] = coefficients(self.filter_type, f, value(&q, k) as f64, value(&gain, k) as f64);
+                self.coefficients[k] = coefficients(
+                    self.filter_type,
+                    f,
+                    value(&q, k) as f64,
+                    value(&gain, k) as f64,
+                );
             }
 
             self.sample_accurate = needed > 1;
@@ -302,7 +390,8 @@ impl AudioWorkletProcessor for Processor {
 
             if dirty {
                 let f = normalize_frequency(frequency[0], nyquist, detune[0]);
-                self.coefficients[0] = coefficients(self.filter_type, f, q[0] as f64, gain[0] as f64);
+                self.coefficients[0] =
+                    coefficients(self.filter_type, f, q[0] as f64, gain[0] as f64);
                 self.sample_accurate = false;
             }
         }
@@ -311,12 +400,18 @@ impl AudioWorkletProcessor for Processor {
 
         for (c, d) in dest.iter_mut().enumerate() {
             let s = source.get(c).copied().filter(|s| s.len() == frames);
-            let State { mut x1, mut x2, mut y1, mut y2 } = self.states[c];
+            let State {
+                mut x1,
+                mut x2,
+                mut y1,
+                mut y2,
+            } = self.states[c];
 
             for k in 0..frames {
                 let x = s.map_or(0.0, |s| s[k]);
                 let co = self.coefficients[if self.sample_accurate { k } else { 0 }];
-                let y = (co.b0 * x as f64 + co.b1 * x1 + co.b2 * x2 - co.a1 * y1 - co.a2 * y2) as f32;
+                let y =
+                    (co.b0 * x as f64 + co.b1 * x1 + co.b2 * x2 - co.a1 * y1 - co.a2 * y2) as f32;
                 d[k] = y;
                 x2 = x1;
                 x1 = x as f64;
@@ -328,11 +423,20 @@ impl AudioWorkletProcessor for Processor {
                 }
             }
 
-            self.states[c] = State { x1: flush_denormal(x1), x2: flush_denormal(x2), y1: flush_denormal(y1), y2: flush_denormal(y2) };
+            self.states[c] = State {
+                x1: flush_denormal(x1),
+                x2: flush_denormal(x2),
+                y1: flush_denormal(y1),
+                y2: flush_denormal(y2),
+            };
         }
 
         // TailTime: at most kMaxTailTime (30 s); the filter is kept while it has signal.
-        self.silent_frames = if silent { self.silent_frames + frames as f64 } else { 0.0 };
+        self.silent_frames = if silent {
+            self.silent_frames + frames as f64
+        } else {
+            0.0
+        };
         self.silent_frames < 128.0 || scope.current_frame == 0
     }
 }

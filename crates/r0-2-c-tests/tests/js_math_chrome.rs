@@ -59,10 +59,13 @@ const ATAN2: &[(u64, u64, u64)] = &[
 ];
 
 fn unary(table: &[(u64, u64)], f: fn(f64) -> f64) -> Vec<(u64, u64)> {
-    table.iter().filter_map(|(x, want)| {
-        let got = f(f64::from_bits(*x)).to_bits();
-        (got != *want).then_some((*x, got))
-    }).collect()
+    table
+        .iter()
+        .filter_map(|(x, want)| {
+            let got = f(f64::from_bits(*x)).to_bits();
+            (got != *want).then_some((*x, got))
+        })
+        .collect()
 }
 
 #[test]
@@ -72,7 +75,10 @@ fn chrome_math_engine_matches_chrome() {
     assert_eq!(unary(COS, ej::cos), vec![]);
     assert_eq!(unary(TAN, ej::tan), vec![]);
     for (y, x, want) in ATAN2 {
-        assert_eq!(ej::atan2(f64::from_bits(*y), f64::from_bits(*x)).to_bits(), *want);
+        assert_eq!(
+            ej::atan2(f64::from_bits(*y), f64::from_bits(*x)).to_bits(),
+            *want
+        );
     }
     // Chromium 151, fixtures/js-oracle.json.
     assert_eq!(ej::sin(0.5).to_bits(), 0x3fdeaee8744b05f0);
@@ -92,7 +98,10 @@ fn chrome_math_facade_matches_chrome() {
     assert_eq!(unary(COS, pj::cos), vec![]);
     assert_eq!(unary(TAN, pj::tan), vec![]);
     for (y, x, want) in ATAN2 {
-        assert_eq!(pj::atan2(f64::from_bits(*y), f64::from_bits(*x)).to_bits(), *want);
+        assert_eq!(
+            pj::atan2(f64::from_bits(*y), f64::from_bits(*x)).to_bits(),
+            *want
+        );
     }
 }
 
@@ -108,11 +117,24 @@ fn chrome_matrix_factor_matches_xite_chromium() {
         None,
         None,
     );
-    let (mut t, mut r, mut s, mut so) = (Vector3::ZERO, Rotation4::identity(), Vector3::ZERO, Rotation4::identity());
+    let (mut t, mut r, mut s, mut so) = (
+        Vector3::ZERO,
+        Rotation4::identity(),
+        Vector3::ZERO,
+        Rotation4::identity(),
+    );
     a.factor(Some(&mut t), Some(&mut r), Some(&mut s), Some(&mut so));
     assert_eq!([t.x, t.y, t.z], [1.0, 2.0, 3.0]);
     assert_eq!([s.x, s.y, s.z], [2.0, 3.0, 4.0]);
     // fixtures/matrix-oracle.json, chrome.factor.r.
-    assert_eq!([r.x().to_bits(), r.y().to_bits(), r.z().to_bits(), r.angle().to_bits()], [0, 0x3ff000000000000c, 0, 0x3fdfffffffffffe7]);
+    assert_eq!(
+        [
+            r.x().to_bits(),
+            r.y().to_bits(),
+            r.z().to_bits(),
+            r.angle().to_bits()
+        ],
+        [0, 0x3ff000000000000c, 0, 0x3fdfffffffffffe7]
+    );
     assert_eq!([so.x(), so.y(), so.z(), so.angle()], [0.0, 0.0, 1.0, 0.0]);
 }

@@ -17,7 +17,12 @@ impl Runtime {
 
     /// set_live__ (also after set_objectType__): live, enabled and objectType without "NONE".
     pub(crate) fn pick_sensor_set_live(&mut self, node: NodeId) {
-        let on = self.time_node_live(node) && self.get_bool(node, "enabled") && !self.pick_sensor_object_type(node).iter().any(|t| t == "NONE");
+        let on = self.time_node_live(node)
+            && self.get_bool(node, "enabled")
+            && !self
+                .pick_sensor_object_type(node)
+                .iter()
+                .any(|t| t == "NONE");
 
         if on {
             if !self.pick_sensors.contains(&node) {
@@ -50,7 +55,18 @@ impl Runtime {
             return HashSet::new();
         };
 
-        v.into_iter().flatten().filter_map(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n).is_some_and(|t| t == "Inline" || t == "Shape" || (t != "ParticleSystem" && crate::nodes::transform_sensor::is_grouping_or_shape(t)))).collect()
+        v.into_iter()
+            .flatten()
+            .filter_map(|n| self.inner_node(n))
+            .filter(|&n| {
+                self.builtin_name(n).is_some_and(|t| {
+                    t == "Inline"
+                        || t == "Shape"
+                        || (t != "ParticleSystem"
+                            && crate::nodes::transform_sensor::is_grouping_or_shape(t))
+                })
+            })
+            .collect()
     }
 
     /// `getInnerNode ()`: through PROTO instances to the first root node of the body.
@@ -59,7 +75,13 @@ impl Runtime {
 
         for _ in 0..256 {
             if let NodeKind::Instance(_) = self.scene.node(n).kind {
-                n = self.scene.ctx(self.instance_body(n)?).root_nodes.first().copied().flatten()?;
+                n = self
+                    .scene
+                    .ctx(self.instance_body(n)?)
+                    .root_nodes
+                    .first()
+                    .copied()
+                    .flatten()?;
                 continue;
             }
 

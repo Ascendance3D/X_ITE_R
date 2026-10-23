@@ -58,7 +58,11 @@ pub struct Fields {
 
 impl Fields {
     fn index(&self, name: &str) -> Option<usize> {
-        let name = if name == "AntiAliased" { "Antialiased" } else { name };
+        let name = if name == "AntiAliased" {
+            "Antialiased"
+        } else {
+            name
+        };
 
         self.fields.iter().position(|(n, _)| *n == name)
     }
@@ -291,22 +295,46 @@ enum Attribute {
 const ATTRIBUTES: &[(&str, &str, Attribute)] = &[
     ("antialiased", "Antialiased", Attribute::Bool(true)),
     ("cache", "Cache", Attribute::Bool(true)),
-    ("colorspace", "ColorSpace", Attribute::String("LINEAR_WHEN_PHYSICAL_MATERIAL")),
+    (
+        "colorspace",
+        "ColorSpace",
+        Attribute::String("LINEAR_WHEN_PHYSICAL_MATERIAL"),
+    ),
     ("contentscale", "ContentScale", Attribute::Number),
     ("contextmenu", "ContextMenu", Attribute::Bool(true)),
     ("debug", "Debug", Attribute::Bool(false)),
-    ("displaycolorspace", "DisplayColorSpace", Attribute::String("SRGB")),
+    (
+        "displaycolorspace",
+        "DisplayColorSpace",
+        Attribute::String("SRGB"),
+    ),
     ("exposure", "Exposure", Attribute::Number),
-    ("logarithmicdepthbuffer", "LogarithmicDepthBuffer", Attribute::Bool(false)),
+    (
+        "logarithmicdepthbuffer",
+        "LogarithmicDepthBuffer",
+        Attribute::Bool(false),
+    ),
     ("maximumframerate", "MaximumFrameRate", Attribute::Number),
     ("multisampling", "Multisampling", Attribute::Number),
     ("notifications", "Notifications", Attribute::Bool(true)),
-    ("orderindependenttransparency", "OrderIndependentTransparency", Attribute::Bool(false)),
+    (
+        "orderindependenttransparency",
+        "OrderIndependentTransparency",
+        Attribute::Bool(false),
+    ),
     ("splashscreen", "SplashScreen", Attribute::Bool(true)),
-    ("textcompression", "TextCompression", Attribute::String("CHAR_SPACING")),
+    (
+        "textcompression",
+        "TextCompression",
+        Attribute::String("CHAR_SPACING"),
+    ),
     ("timings", "Timings", Attribute::Bool(false)),
     ("tonemapping", "ToneMapping", Attribute::String("NONE")),
-    ("xrsessionmode", "XRSessionMode", Attribute::String("IMMERSIVE_VR")),
+    (
+        "xrsessionmode",
+        "XRSessionMode",
+        Attribute::String("IMMERSIVE_VR"),
+    ),
 ];
 
 /// ECMAScript `Number (string)` for decimal strings: white space is trimmed, "" is 0.
@@ -317,7 +345,9 @@ fn js_number(s: &str) -> f64 {
         "" => 0.0,
         "Infinity" | "+Infinity" => f64::INFINITY,
         "-Infinity" => f64::NEG_INFINITY,
-        _ if t.chars().all(|c| c.is_ascii_digit() || "+-.eE".contains(c)) => t.parse().unwrap_or(f64::NAN),
+        _ if t.chars().all(|c| c.is_ascii_digit() || "+-.eE".contains(c)) => {
+            t.parse().unwrap_or(f64::NAN)
+        }
         _ => f64::NAN,
     }
 }
@@ -343,7 +373,12 @@ impl BrowserOptions {
         b.set_limits(RenderingLimits::default());
 
         // BrowserOptions.initialize: the interests run once with the default values.
-        for name in ["Shading", "ContentScale", "LogarithmicDepthBuffer", "Multisampling"] {
+        for name in [
+            "Shading",
+            "ContentScale",
+            "LogarithmicDepthBuffer",
+            "Multisampling",
+        ] {
             b.interest(name);
         }
 
@@ -374,7 +409,9 @@ impl BrowserOptions {
     pub fn apply_attributes(&mut self, attributes: &[(&str, &str)]) {
         for (attribute, value) in attributes {
             let lower = attribute.to_lowercase();
-            let Some((_, name, kind)) = ATTRIBUTES.iter().find(|(a, _, _)| *a == lower) else { continue };
+            let Some((_, name, kind)) = ATTRIBUTES.iter().find(|(a, _, _)| *a == lower) else {
+                continue;
+            };
 
             let v = match kind {
                 Attribute::Bool(default) => OptionValue::Bool(match *value {
@@ -382,9 +419,17 @@ impl BrowserOptions {
                     "false" => false,
                     _ => *default,
                 }),
-                Attribute::String(default) => OptionValue::String(if value.is_empty() { default.to_string() } else { value.to_string() }),
+                Attribute::String(default) => OptionValue::String(if value.is_empty() {
+                    default.to_string()
+                } else {
+                    value.to_string()
+                }),
                 Attribute::Number => {
-                    let n = if *name == "ContentScale" && *value == "auto" { -1.0 } else { js_number(value) };
+                    let n = if *name == "ContentScale" && *value == "auto" {
+                        -1.0
+                    } else {
+                        js_number(value)
+                    };
 
                     match self.option(name) {
                         OptionValue::Int32(_) => OptionValue::Int32(js_int32(n)),
@@ -413,7 +458,9 @@ impl BrowserOptions {
     /// ([`OptionValue::type_name`] of [`BrowserOptions::get_option`]). The interest is deferred to
     /// [`BrowserOptions::process_events`].
     pub fn set_option(&mut self, name: &str, value: OptionValue) -> bool {
-        let Some(i) = self.options.index(name) else { return false };
+        let Some(i) = self.options.index(name) else {
+            return false;
+        };
         let (field, _) = self.options.fields[i];
 
         self.options.fields[i].1 = value;
@@ -465,7 +512,10 @@ impl BrowserOptions {
             "Shading" => {
                 // set_Shading__
                 self.shading = ShadingMode::from_option(self.option("Shading").as_str());
-                self.rendering.set("Shading", OptionValue::String(self.shading.name().to_string()));
+                self.rendering.set(
+                    "Shading",
+                    OptionValue::String(self.shading.name().to_string()),
+                );
             }
             "ContentScale" => {
                 // set_ContentScale__: -1 follows devicePixelRatio (updateContentScale).
@@ -473,18 +523,24 @@ impl BrowserOptions {
 
                 if content_scale != -1.0 {
                     let v = content_scale.max(0.0);
-                    self.rendering.set("ContentScale", OptionValue::Double(if v == 0.0 || v.is_nan() { 1.0 } else { v }));
+                    self.rendering.set(
+                        "ContentScale",
+                        OptionValue::Double(if v == 0.0 || v.is_nan() { 1.0 } else { v }),
+                    );
                 }
 
                 self.reshape();
             }
             "LogarithmicDepthBuffer" => {
                 let v = self.option("LogarithmicDepthBuffer").as_bool();
-                self.rendering.set("LogarithmicDepthBuffer", OptionValue::Bool(v));
+                self.rendering
+                    .set("LogarithmicDepthBuffer", OptionValue::Bool(v));
             }
             "OrderIndependentTransparency" => self.reshape(),
             "Mute" | "SoundIntensity" => self.sound_intensity_changed = true,
-            "StraightenHorizon" => self.straighten_set = Some(self.option("StraightenHorizon").as_bool()),
+            "StraightenHorizon" => {
+                self.straighten_set = Some(self.option("StraightenHorizon").as_bool())
+            }
             _ => {}
         }
     }
@@ -493,11 +549,20 @@ impl BrowserOptions {
     fn set_multisampling(&mut self) {
         let max_samples = self.limits.max_samples;
         let multisampling = self.option("Multisampling").as_f64();
-        let samples = (if multisampling.is_nan() { 4 } else { multisampling as i32 }).clamp(0, max_samples);
+        let samples = (if multisampling.is_nan() {
+            4
+        } else {
+            multisampling as i32
+        })
+        .clamp(0, max_samples);
         let antialiased = self.option("Antialiased").as_bool();
 
-        self.rendering.set("Multisampling", OptionValue::Int32(if antialiased { samples } else { 0 }));
-        self.rendering.set("Antialiased", OptionValue::Bool(samples > 0));
+        self.rendering.set(
+            "Multisampling",
+            OptionValue::Int32(if antialiased { samples } else { 0 }),
+        );
+        self.rendering
+            .set("Antialiased", OptionValue::Bool(samples > 0));
         self.reshape();
     }
 
@@ -526,19 +591,28 @@ impl BrowserOptions {
         let width = js_int32(width).max(1);
         let height = js_int32(height).max(1);
 
-        let scale = if css_width != 0.0 { width as f64 / css_width } else { content_scale };
+        let scale = if css_width != 0.0 {
+            width as f64 / css_width
+        } else {
+            content_scale
+        };
 
-        self.rendering.set("ContentScale", OptionValue::Double(scale));
+        self.rendering
+            .set("ContentScale", OptionValue::Double(scale));
         self.framebuffer = (width as u32, height as u32);
     }
 
     /// RenderingProperties Multisampling: the sample count the frame buffer uses.
     pub fn multisampling(&self) -> u32 {
-        self.rendering.get("Multisampling").map_or(0, |v| v.as_f64() as u32)
+        self.rendering
+            .get("Multisampling")
+            .map_or(0, |v| v.as_f64() as u32)
     }
 
     pub fn logarithmic_depth_buffer(&self) -> bool {
-        self.rendering.get("LogarithmicDepthBuffer").is_some_and(OptionValue::as_bool)
+        self.rendering
+            .get("LogarithmicDepthBuffer")
+            .is_some_and(OptionValue::as_bool)
     }
 
     /// `getBrowserOptions () ._Gravity .getValue ()` (X3DRenderObject gravitate).
@@ -578,14 +652,23 @@ mod tests {
     #[test]
     fn defaults_and_page_attributes() {
         let mut b = BrowserOptions::new(512, 512);
-        assert_eq!(b.rendering.get("Shading"), Some(&OptionValue::String("GOURAUD".into())));
+        assert_eq!(
+            b.rendering.get("Shading"),
+            Some(&OptionValue::String("GOURAUD".into()))
+        );
         assert_eq!(b.multisampling(), 4);
 
         b.apply_attributes(&[("antialiased", "false"), ("splashScreen", "false")]);
         assert_eq!(b.multisampling(), 0);
         // samples > 0: Antialiased stays true.
-        assert_eq!(b.rendering.get("AntiAliased"), Some(&OptionValue::Bool(true)));
-        assert_eq!(b.get_option("SplashScreen"), Some(&OptionValue::Bool(false)));
+        assert_eq!(
+            b.rendering.get("AntiAliased"),
+            Some(&OptionValue::Bool(true))
+        );
+        assert_eq!(
+            b.get_option("SplashScreen"),
+            Some(&OptionValue::Bool(false))
+        );
         assert!(b.get_option("gravity").is_none());
     }
 
@@ -594,11 +677,20 @@ mod tests {
         let mut b = BrowserOptions::new(512, 512);
         b.set_option("Shading", OptionValue::String("POINTSET".into()));
         b.set_option("ContentScale", OptionValue::Double(0.0));
-        assert_eq!(b.rendering.get("Shading"), Some(&OptionValue::String("GOURAUD".into())));
+        assert_eq!(
+            b.rendering.get("Shading"),
+            Some(&OptionValue::String("GOURAUD".into()))
+        );
         b.process_events();
-        assert_eq!(b.rendering.get("Shading"), Some(&OptionValue::String("POINT".into())));
+        assert_eq!(
+            b.rendering.get("Shading"),
+            Some(&OptionValue::String("POINT".into()))
+        );
         // reshape (): max (0 | 0, 1) / 512.
-        assert_eq!(b.rendering.get("ContentScale"), Some(&OptionValue::Double(1.0 / 512.0)));
+        assert_eq!(
+            b.rendering.get("ContentScale"),
+            Some(&OptionValue::Double(1.0 / 512.0))
+        );
         assert_eq!(b.framebuffer, (1, 1));
         assert_eq!(js_int32(-3.7), -3);
         assert_eq!(js_int32(4294967297.0), 1);

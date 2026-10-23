@@ -19,13 +19,15 @@ pub mod pos;
 pub mod text;
 pub mod util;
 
+pub use model::changes::{BeforeChange, BeforeSelectionChange};
 pub use model::doc::{ChangeInfo, Doc, DocOptions, EditorSemantics, LinkedDocOptions};
-pub use model::history::{HistoryData, HistoryEventData, HistoryChangeData, HistorySize};
-pub use model::mark_text::{MarkOptions, Marker, MarkerFind, MarkerType, SharedTextMarker, TextMarker};
+pub use model::history::{HistoryChangeData, HistoryData, HistoryEventData, HistorySize};
+pub use model::line::LineHandle;
+pub use model::mark_text::{
+    MarkOptions, Marker, MarkerFind, MarkerType, SharedTextMarker, TextMarker,
+};
 pub use model::selection::{SelRange, Selection};
 pub use model::selection_updates::SelOptions;
-pub use model::changes::{BeforeChange, BeforeSelectionChange};
-pub use model::line::LineHandle;
 pub use pos::{Pos, Sticky};
 pub use util::string_stream::StringStream;
 
@@ -45,7 +47,10 @@ impl std::fmt::Display for CmError {
         match self {
             CmError::NoSuchLine(n) => write!(f, "There is no line {n} in the document."),
             CmError::CollapsedOverlap => {
-                write!(f, "Inserting collapsed marker partially overlapping an existing one")
+                write!(
+                    f,
+                    "Inserting collapsed marker partially overlapping an existing one"
+                )
             }
             CmError::TypeError(m) => write!(f, "{m}"),
         }

@@ -14,10 +14,26 @@ struct Expect {
 
 fn run(corpus: &str, expect: Expect) {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
-    let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(8).max(8);
-    let results = compare_corpus(&root.join(format!("{corpus}-baseline.json")), &root.join(corpus_dir(corpus)), true, threads).unwrap();
-    let known = std::fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/{corpus}-known.tsv"))).unwrap();
-    let known: Vec<&str> = known.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()).map(|l| l.split('\t').next().unwrap()).collect();
+    let threads = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(8)
+        .max(8);
+    let results = compare_corpus(
+        &root.join(format!("{corpus}-baseline.json")),
+        &root.join(corpus_dir(corpus)),
+        true,
+        threads,
+    )
+    .unwrap();
+    let known = std::fs::read_to_string(
+        Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/{corpus}-known.tsv")),
+    )
+    .unwrap();
+    let known: Vec<&str> = known
+        .lines()
+        .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+        .map(|l| l.split('\t').next().unwrap())
+        .collect();
 
     let (mut exact, mut xfail, mut timeouts, mut logs) = (0, 0, 0, 0);
     let mut unexplained = vec![];
@@ -30,7 +46,14 @@ fn run(corpus: &str, expect: Expect) {
             Outcome::ExpectedFailure(_) => xfail += 1,
             Outcome::OracleTimeout => timeouts += 1,
             Outcome::Mismatch { .. } if is_known => {}
-            Outcome::Mismatch { line, expected, actual } => unexplained.push(format!("{} line {line}: x_ite {expected:?} rust {actual:?}", r.file)),
+            Outcome::Mismatch {
+                line,
+                expected,
+                actual,
+            } => unexplained.push(format!(
+                "{} line {line}: x_ite {expected:?} rust {actual:?}",
+                r.file
+            )),
             other => unexplained.push(format!("{}: {other:?}", r.file)),
         }
 
@@ -41,7 +64,10 @@ fn run(corpus: &str, expect: Expect) {
         if r.log_match == Some(true) {
             logs += 1;
         } else if !is_known {
-            unexplained.push(format!("{}: console log differs\n  x_ite {:?}\n  rust  {:?}", r.file, r.expected_log, r.rust_log));
+            unexplained.push(format!(
+                "{}: console log differs\n  x_ite {:?}\n  rust  {:?}",
+                r.file, r.expected_log, r.rust_log
+            ));
         }
     }
 
@@ -54,29 +80,69 @@ fn run(corpus: &str, expect: Expect) {
 }
 
 fn corpus_dir(corpus: &str) -> String {
-    if corpus.starts_with("synthetic") { corpus.to_string() } else { format!("corpus-{corpus}") }
+    if corpus.starts_with("synthetic") {
+        corpus.to_string()
+    } else {
+        format!("corpus-{corpus}")
+    }
 }
 
 #[test]
 fn x0_runtime_matches_x_ite() {
-    run("x0", Expect { files: 50, exact: 47, expected_failures: 3, oracle_timeouts: 0, logs_identical: 50 });
+    run(
+        "x0",
+        Expect {
+            files: 50,
+            exact: 47,
+            expected_failures: 3,
+            oracle_timeouts: 0,
+            logs_identical: 50,
+        },
+    );
 }
 
 #[test]
 fn x1_runtime_matches_x_ite() {
-    run("x1", Expect { files: 500, exact: 470, expected_failures: 25, oracle_timeouts: 2, logs_identical: 497 });
+    run(
+        "x1",
+        Expect {
+            files: 500,
+            exact: 470,
+            expected_failures: 25,
+            oracle_timeouts: 2,
+            logs_identical: 497,
+        },
+    );
 }
 
 #[test]
 fn items_runtime_matches_x_ite() {
-    run("items", Expect { files: 606, exact: 606, expected_failures: 0, oracle_timeouts: 0, logs_identical: 606 });
+    run(
+        "items",
+        Expect {
+            files: 606,
+            exact: 606,
+            expected_failures: 0,
+            oracle_timeouts: 0,
+            logs_identical: 606,
+        },
+    );
 }
 
 /// Clean-room scenes for router order, TimeSensor/interpolator initialize, Script field
 /// marshalling, the Browser object, error reporting, PROTO Scripts and external .js.
 #[test]
 fn synthetic_x6_matches_x_ite() {
-    run("synthetic-x6", Expect { files: 8, exact: 8, expected_failures: 0, oracle_timeouts: 0, logs_identical: 7 });
+    run(
+        "synthetic-x6",
+        Expect {
+            files: 8,
+            exact: 8,
+            expected_failures: 0,
+            oracle_timeouts: 0,
+            logs_identical: 7,
+        },
+    );
 }
 
 /// Clean-room EXTERNPROTO worlds (oracle/synthetic-externproto/, hand-authored): the interface a
@@ -84,7 +150,16 @@ fn synthetic_x6_matches_x_ite() {
 /// URL fallback, a missing PROTO and a missing file, a Script and a nested EXTERNPROTO in a body.
 #[test]
 fn synthetic_externproto_matches_x_ite() {
-    run("synthetic-externproto", Expect { files: 12, exact: 12, expected_failures: 0, oracle_timeouts: 0, logs_identical: 12 });
+    run(
+        "synthetic-externproto",
+        Expect {
+            files: 12,
+            exact: 12,
+            expected_failures: 0,
+            oracle_timeouts: 0,
+            logs_identical: 12,
+        },
+    );
 }
 
 /// Clean-room Followers worlds (oracle/synthetic-followers/, generated by oracle/tools/gen_followers.py):
@@ -93,5 +168,14 @@ fn synthetic_externproto_matches_x_ite() {
 /// behavior is compared with oracle/tools/run_followers_suite.py.
 #[test]
 fn synthetic_followers_matches_x_ite() {
-    run("synthetic-followers", Expect { files: 10, exact: 10, expected_failures: 0, oracle_timeouts: 0, logs_identical: 10 });
+    run(
+        "synthetic-followers",
+        Expect {
+            files: 10,
+            exact: 10,
+            expected_failures: 0,
+            oracle_timeouts: 0,
+            logs_identical: 10,
+        },
+    );
 }

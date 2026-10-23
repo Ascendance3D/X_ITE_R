@@ -125,7 +125,13 @@ pub fn record_time_steps(on: bool) {
 
 impl Default for PhysicsRt {
     fn default() -> Self {
-        PhysicsRt { nursery: None, record_dt: RECORD_DT.load(std::sync::atomic::Ordering::Relaxed), dt_log: vec![], geometry_watch: HashSet::new(), geometry_rebuilt: HashSet::new() }
+        PhysicsRt {
+            nursery: None,
+            record_dt: RECORD_DT.load(std::sync::atomic::Ordering::Relaxed),
+            dt_log: vec![],
+            geometry_watch: HashSet::new(),
+            geometry_rebuilt: HashSet::new(),
+        }
     }
 }
 
@@ -170,7 +176,15 @@ pub(crate) fn is_collidable(name: &str) -> bool {
 }
 
 pub(crate) fn is_joint(name: &str) -> bool {
-    matches!(name, "BallJoint" | "SingleAxisHingeJoint" | "DoubleAxisHingeJoint" | "UniversalJoint" | "SliderJoint" | "MotorJoint")
+    matches!(
+        name,
+        "BallJoint"
+            | "SingleAxisHingeJoint"
+            | "DoubleAxisHingeJoint"
+            | "UniversalJoint"
+            | "SliderJoint"
+            | "MotorJoint"
+    )
 }
 
 pub(crate) fn is_space(name: &str) -> bool {
@@ -214,7 +228,12 @@ impl Runtime {
     }
 
     /// `X3DCast (type, this ._field)`.
-    pub(crate) fn phys_cast_field(&self, node: NodeId, field: &str, test: fn(&str) -> bool) -> Option<NodeId> {
+    pub(crate) fn phys_cast_field(
+        &self,
+        node: NodeId,
+        field: &str,
+        test: fn(&str) -> bool,
+    ) -> Option<NodeId> {
         let value = match self.pre_value(node, field) {
             Some(FieldValue::SFNode(n)) => *n,
             _ => None,
@@ -223,8 +242,16 @@ impl Runtime {
         self.phys_cast(value, test)
     }
 
-    pub(crate) fn phys_cast_list(&self, node: NodeId, field: &str, test: fn(&str) -> bool) -> Vec<NodeId> {
-        self.mfnode(node, field).into_iter().filter_map(|n| self.phys_cast(n, test)).collect()
+    pub(crate) fn phys_cast_list(
+        &self,
+        node: NodeId,
+        field: &str,
+        test: fn(&str) -> bool,
+    ) -> Vec<NodeId> {
+        self.mfnode(node, field)
+            .into_iter()
+            .filter_map(|n| self.phys_cast(n, test))
+            .collect()
     }
 
     pub(crate) fn pv3(&self, node: NodeId, name: &str) -> Vector3 {
@@ -250,8 +277,14 @@ impl Runtime {
 
     pub(crate) fn pmf_vec3(&self, node: NodeId, name: &str) -> Vec<Vector3> {
         match self.pre_value(node, name) {
-            Some(FieldValue::MFVec3f(v)) => v.chunks_exact(3).map(|c| Vector3::new(f64::from(c[0]), f64::from(c[1]), f64::from(c[2]))).collect(),
-            Some(FieldValue::MFVec3d(v)) => v.chunks_exact(3).map(|c| Vector3::new(c[0], c[1], c[2])).collect(),
+            Some(FieldValue::MFVec3f(v)) => v
+                .chunks_exact(3)
+                .map(|c| Vector3::new(f64::from(c[0]), f64::from(c[1]), f64::from(c[2])))
+                .collect(),
+            Some(FieldValue::MFVec3d(v)) => v
+                .chunks_exact(3)
+                .map(|c| Vector3::new(c[0], c[1], c[2]))
+                .collect(),
             _ => vec![],
         }
     }
@@ -278,7 +311,8 @@ impl Runtime {
     }
 
     pub(crate) fn phys_private(&self, node: NodeId, name: &str) -> FKey {
-        self.private_field(node, name).unwrap_or_else(|| panic!("private field {name} of node {node}"))
+        self.private_field(node, name)
+            .unwrap_or_else(|| panic!("private field {name} of node {node}"))
     }
 
     pub(crate) fn pcb(&mut self, node: NodeId, field: &str, cb: PhysicsCb) {
@@ -289,7 +323,8 @@ impl Runtime {
 
     /// The browser's `sensorEvents` event field.
     pub(crate) fn sensor_events_field(&self) -> FKey {
-        self.private_field(self.browser_node, "sensorEvents").expect("browser sensorEvents")
+        self.private_field(self.browser_node, "sensorEvents")
+            .expect("browser sensorEvents")
     }
 
     /// `getLive () .getValue ()` of the node.
@@ -304,7 +339,11 @@ impl Runtime {
     pub(crate) fn with_world<R>(&mut self, home: Home, f: impl FnOnce(&mut PWorld) -> R) -> R {
         match home {
             None => {
-                let mut w = self.physics.nursery.take().unwrap_or_else(|| Box::new(PWorld::new()));
+                let mut w = self
+                    .physics
+                    .nursery
+                    .take()
+                    .unwrap_or_else(|| Box::new(PWorld::new()));
                 let r = f(&mut w);
 
                 self.physics.nursery = Some(w);
@@ -312,7 +351,9 @@ impl Runtime {
             }
             Some(c) => {
                 let mut w = match self.phys_mut(c) {
-                    Some(PhysState::Collection(rt)) => rt.world.take().expect("the dynamics world is in use"),
+                    Some(PhysState::Collection(rt)) => {
+                        rt.world.take().expect("the dynamics world is in use")
+                    }
                     _ => panic!("node {c} is not a RigidBodyCollection"),
                 };
                 let r = f(&mut w);
@@ -335,23 +376,61 @@ impl Runtime {
         match name {
             "RigidBodyCollection" => self.collection_construct(node),
             "RigidBody" => {
-                self.add_private_field(node, "collection", access::INPUT_OUTPUT, FieldValue::SFNode(None));
-                self.add_private_field(node, "transform", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
-                self.add_private_field(node, "otherGeometry", access::OUTPUT_ONLY, FieldValue::MFNode(vec![]));
+                self.add_private_field(
+                    node,
+                    "collection",
+                    access::INPUT_OUTPUT,
+                    FieldValue::SFNode(None),
+                );
+                self.add_private_field(
+                    node,
+                    "transform",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
+                self.add_private_field(
+                    node,
+                    "otherGeometry",
+                    access::OUTPUT_ONLY,
+                    FieldValue::MFNode(vec![]),
+                );
                 self.body_construct(node);
             }
             "CollidableShape" | "CollidableOffset" => {
                 self.add_private_field(node, "body", access::OUTPUT_ONLY, FieldValue::SFNode(None));
-                self.add_private_field(node, "compoundShape", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
-                self.add_private_field(node, "rebuild", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                self.add_private_field(
+                    node,
+                    "compoundShape",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
+                self.add_private_field(
+                    node,
+                    "rebuild",
+                    access::OUTPUT_ONLY,
+                    FieldValue::SFTime(0.0),
+                );
                 self.collidable_construct(node);
             }
-            "CollisionCollection" => self.nrt_mut(node).state = State::Physics(PhysState::CollisionCollection(Default::default())),
-            "CollisionSpace" => self.nrt_mut(node).state = State::Physics(PhysState::CollisionSpace(Default::default())),
-            "CollisionSensor" => self.nrt_mut(node).state = State::Physics(PhysState::Sensor(Default::default())),
+            "CollisionCollection" => {
+                self.nrt_mut(node).state =
+                    State::Physics(PhysState::CollisionCollection(Default::default()))
+            }
+            "CollisionSpace" => {
+                self.nrt_mut(node).state =
+                    State::Physics(PhysState::CollisionSpace(Default::default()))
+            }
+            "CollisionSensor" => {
+                self.nrt_mut(node).state = State::Physics(PhysState::Sensor(Default::default()))
+            }
             "Contact" => self.nrt_mut(node).state = State::Physics(PhysState::Contact),
             n if is_joint(n) => {
-                self.add_private_field(node, "collection", access::INPUT_OUTPUT, FieldValue::SFNode(None));
+                self.add_private_field(
+                    node,
+                    "collection",
+                    access::INPUT_OUTPUT,
+                    FieldValue::SFNode(None),
+                );
                 self.joint_construct(node, n);
             }
             _ => {}
@@ -444,7 +523,10 @@ impl Runtime {
     }
 
     pub(crate) fn physics_watches_live(&self, node: NodeId) -> bool {
-        matches!(self.builtin_name(node), Some("RigidBodyCollection" | "CollisionSensor")) || self.physics.geometry_watch.contains(&node)
+        matches!(
+            self.builtin_name(node),
+            Some("RigidBodyCollection" | "CollisionSensor")
+        ) || self.physics.geometry_watch.contains(&node)
     }
 
     // --- release ------------------------------------------------------------------------------
@@ -456,7 +538,11 @@ impl Runtime {
         self.physics.geometry_watch.retain(|n| !dead.contains(n));
         self.physics.geometry_rebuilt.retain(|n| !dead.contains(n));
 
-        let mut nodes: Vec<NodeId> = dead.iter().copied().filter(|&n| self.phys(n).is_some()).collect();
+        let mut nodes: Vec<NodeId> = dead
+            .iter()
+            .copied()
+            .filter(|&n| self.phys(n).is_some())
+            .collect();
 
         if nodes.is_empty() {
             return;
@@ -515,7 +601,10 @@ impl Runtime {
 
     /// Number of nodes that hold RigidBodyPhysics state.
     pub fn physics_state_nodes(&self) -> usize {
-        self.nrt.iter().filter(|n| matches!(n.state, State::Physics(_))).count()
+        self.nrt
+            .iter()
+            .filter(|n| matches!(n.state, State::Physics(_)))
+            .count()
     }
 
     /// `btRigidBody .isActive ()` of a RigidBody node.
@@ -530,7 +619,11 @@ impl Runtime {
 
     /// The RigidBody nodes whose Ammo body lives in the world of `collection`.
     pub fn physics_bodies_of(&self, collection: NodeId) -> Vec<NodeId> {
-        (0..self.nrt.len() as NodeId).filter(|&n| matches!(self.phys(n), Some(PhysState::Body(b)) if b.home == Some(collection))).collect()
+        (0..self.nrt.len() as NodeId)
+            .filter(
+                |&n| matches!(self.phys(n), Some(PhysState::Body(b)) if b.home == Some(collection)),
+            )
+            .collect()
     }
 
     /// The `getTimeStep ()` results recorded since the last call.
@@ -543,11 +636,21 @@ impl Runtime {
         let mut out = vec![];
 
         for f in self.frt.values() {
-            out.extend(f.interests.iter().filter(|i| matches!(i.cb, Cb::Physics(_)) && self.phys(i.node).is_none()).map(|i| i.node));
+            out.extend(
+                f.interests
+                    .iter()
+                    .filter(|i| matches!(i.cb, Cb::Physics(_)) && self.phys(i.node).is_none())
+                    .map(|i| i.node),
+            );
         }
 
         for n in self.nrt.iter() {
-            out.extend(n.interests.iter().filter(|i| matches!(i.cb, Cb::Physics(_)) && self.phys(i.node).is_none()).map(|i| i.node));
+            out.extend(
+                n.interests
+                    .iter()
+                    .filter(|i| matches!(i.cb, Cb::Physics(_)) && self.phys(i.node).is_none())
+                    .map(|i| i.node),
+            );
         }
 
         out

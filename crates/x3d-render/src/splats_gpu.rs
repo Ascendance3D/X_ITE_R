@@ -4,7 +4,7 @@
 //! used it for [`KEEP_FRAMES`] frames, so after an unload every counter of
 //! [`SplatGpu::resources`] returns to 0.
 
-use crate::splats::{sort_indices, SortScratch, SplatDraw};
+use crate::splats::{SortScratch, SplatDraw, sort_indices};
 use std::collections::HashMap;
 use std::rc::Rc;
 use x3d_fields::math::Matrix4;
@@ -75,8 +75,12 @@ pub struct SplatGpu {
 }
 
 fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
-    let a = source.find(from).unwrap_or_else(|| panic!("x3d.wgsl: marker {from:?} not found (splats.wgsl copies from it)"));
-    let b = a + source[a..].find(to).unwrap_or_else(|| panic!("x3d.wgsl: marker {to:?} not found (splats.wgsl copies from it)"));
+    let a = source.find(from).unwrap_or_else(|| {
+        panic!("x3d.wgsl: marker {from:?} not found (splats.wgsl copies from it)")
+    });
+    let b = a + source[a..].find(to).unwrap_or_else(|| {
+        panic!("x3d.wgsl: marker {to:?} not found (splats.wgsl copies from it)")
+    });
     &source[a..b]
 }
 
@@ -85,9 +89,15 @@ pub fn assemble() -> String {
     let x3d = include_str!("x3d.wgsl");
     let structs = between(x3d, "struct Light {", "struct DrawUniforms {");
     let tone = between(x3d, "// ToneMapping2.glsl linearToSRGB", "fn f_schlick(");
-    let fog = between(x3d, "// Fog2.glsl getFogInterpolant", "@fragment\nfn fs_main(");
+    let fog = between(
+        x3d,
+        "// Fog2.glsl getFogInterpolant",
+        "@fragment\nfn fs_main(",
+    );
 
-    SPLATS_WGSL.replace("//@FRAME_STRUCTS@", structs).replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"))
+    SPLATS_WGSL
+        .replace("//@FRAME_STRUCTS@", structs)
+        .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"))
 }
 
 fn matrix_f32(m: &Matrix4) -> [f32; 16] {
@@ -102,9 +112,17 @@ pub(crate) fn inverse_f32(m: &[f32; 16]) -> [f32; 16] {
 
 fn storage(device: &wgpu::Device, label: &str, bytes: &[u8]) -> wgpu::Buffer {
     let size = (bytes.len() as u64).max(16).next_multiple_of(4);
-    let buffer = device.create_buffer(&wgpu::BufferDescriptor { label: Some(label), size, usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST, mapped_at_creation: true });
+    let buffer = device.create_buffer(&wgpu::BufferDescriptor {
+        label: Some(label),
+        size,
+        usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+        mapped_at_creation: true,
+    });
     {
-        let mut view = buffer.slice(..).get_mapped_range_mut().expect("mapped at creation");
+        let mut view = buffer
+            .slice(..)
+            .get_mapped_range_mut()
+            .expect("mapped at creation");
         let mut padded = bytes.to_vec();
         padded.resize(size as usize, 0);
         view.copy_from_slice(&padded);
@@ -129,7 +147,12 @@ impl SplatGpu {
     /// GPU objects held: data sets (five buffers each), sorted index buffers, pipelines, bind
     /// groups; 0 each after an unload.
     pub fn resources(&self) -> [usize; 4] {
-        [self.data.len(), self.indices.len(), self.pipelines.len(), self.groups.len()]
+        [
+            self.data.len(),
+            self.indices.len(),
+            self.pipelines.len(),
+            self.groups.len(),
+        ]
     }
 
     fn ensure_module(&mut self, device: &wgpu::Device) {
@@ -137,17 +160,28 @@ impl SplatGpu {
             return;
         }
 
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("splats"), source: wgpu::ShaderSource::Wgsl(assemble().into()) });
+        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("splats"),
+            source: wgpu::ShaderSource::Wgsl(assemble().into()),
+        });
         let storage_entry = |binding: u32| wgpu::BindGroupLayoutEntry {
             binding,
             visibility: wgpu::ShaderStages::VERTEX,
-            ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Storage { read_only: true }, has_dynamic_offset: false, min_binding_size: None },
+            ty: wgpu::BindingType::Buffer {
+                ty: wgpu::BufferBindingType::Storage { read_only: true },
+                has_dynamic_offset: false,
+                min_binding_size: None,
+            },
             count: None,
         };
         let mut entries = vec![wgpu::BindGroupLayoutEntry {
             binding: 0,
             visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-            ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: true, min_binding_size: wgpu::BufferSize::new(UNIFORM_BYTES as u64) },
+            ty: wgpu::BindingType::Buffer {
+                ty: wgpu::BufferBindingType::Uniform,
+                has_dynamic_offset: true,
+                min_binding_size: wgpu::BufferSize::new(UNIFORM_BYTES as u64),
+            },
             count: None,
         }];
 
@@ -155,7 +189,10 @@ impl SplatGpu {
             entries.push(storage_entry(b));
         }
 
-        let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some("splats"), entries: &entries });
+        let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("splats"),
+            entries: &entries,
+        });
         self.module = Some((module, layout));
     }
 
@@ -201,11 +238,31 @@ impl SplatGpu {
             // The data set.
             if !self.data.contains_key(&data_key) {
                 let g = DataGpu {
-                    positions: storage(device, "splat positions", bytemuck::cast_slice(&pad4(&data.positions, 3))),
-                    orientations: storage(device, "splat orientations", bytemuck::cast_slice(&data.orientations)),
-                    scales: storage(device, "splat scales", bytemuck::cast_slice(&pad4(&data.scales, 3))),
-                    opacities: storage(device, "splat opacities", bytemuck::cast_slice(&data.opacities)),
-                    sh: storage(device, "splat spherical harmonics", bytemuck::cast_slice(&data.sh.texels)),
+                    positions: storage(
+                        device,
+                        "splat positions",
+                        bytemuck::cast_slice(&pad4(&data.positions, 3)),
+                    ),
+                    orientations: storage(
+                        device,
+                        "splat orientations",
+                        bytemuck::cast_slice(&data.orientations),
+                    ),
+                    scales: storage(
+                        device,
+                        "splat scales",
+                        bytemuck::cast_slice(&pad4(&data.scales, 3)),
+                    ),
+                    opacities: storage(
+                        device,
+                        "splat opacities",
+                        bytemuck::cast_slice(&data.opacities),
+                    ),
+                    sh: storage(
+                        device,
+                        "splat spherical harmonics",
+                        bytemuck::cast_slice(&data.sh.texels),
+                    ),
                     used: frame_no,
                     _data: d.data.clone(),
                 };
@@ -218,7 +275,10 @@ impl SplatGpu {
             let mv = matrix_f32(&d.model_view);
             let index_key = (data_key, ordinal);
             let count = data.count;
-            let fresh = !self.indices.get(&index_key).is_some_and(|e| e.count == count);
+            let fresh = !self
+                .indices
+                .get(&index_key)
+                .is_some_and(|e| e.count == count);
 
             if fresh {
                 let buffer = device.create_buffer(&wgpu::BufferDescriptor {
@@ -227,7 +287,15 @@ impl SplatGpu {
                     usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
                     mapped_at_creation: false,
                 });
-                self.indices.insert(index_key, IndexGpu { buffer, sorted_for: None, count, used: frame_no });
+                self.indices.insert(
+                    index_key,
+                    IndexGpu {
+                        buffer,
+                        sorted_for: None,
+                        count,
+                        used: frame_no,
+                    },
+                );
                 self.groups.remove(&index_key);
             }
 
@@ -245,16 +313,43 @@ impl SplatGpu {
             let model_view_inverse = inverse_f32(&mv);
             let (viewport_w, viewport_h) = (input.viewport[2] as f32, input.viewport[3] as f32);
             let mut bytes: Vec<u8> = Vec::with_capacity(stride as usize);
-            let f = |v: &[f32], bytes: &mut Vec<u8>| bytes.extend_from_slice(bytemuck::cast_slice(v));
+            let f =
+                |v: &[f32], bytes: &mut Vec<u8>| bytes.extend_from_slice(bytemuck::cast_slice(v));
 
             f(&mv, &mut bytes);
             f(&inv_projection, &mut bytes);
-            f(&[model_view_inverse[12], model_view_inverse[13], model_view_inverse[14], 0.0], &mut bytes);
+            f(
+                &[
+                    model_view_inverse[12],
+                    model_view_inverse[13],
+                    model_view_inverse[14],
+                    0.0,
+                ],
+                &mut bytes,
+            );
             // The projection matrix stores the focal length in the first and second element of the diagonal.
-            f(&[projection[0] * viewport_w * 0.5, projection[5] * viewport_h * 0.5, viewport_w, viewport_h], &mut bytes);
+            f(
+                &[
+                    projection[0] * viewport_w * 0.5,
+                    projection[5] * viewport_h * 0.5,
+                    viewport_w,
+                    viewport_h,
+                ],
+                &mut bytes,
+            );
             let viewpoint_type = projection[15] as i32 as u32;
-            bytes.extend_from_slice(bytemuck::cast_slice(&[viewpoint_type, (data.degrees + 1) as u32, d.linear as u32, reversed as u32]));
-            bytes.extend_from_slice(bytemuck::cast_slice(&[input.clip_planes.len().min(6) as u32, data.width as u32, data.sh.width as u32, data.sh.layers as u32]));
+            bytes.extend_from_slice(bytemuck::cast_slice(&[
+                viewpoint_type,
+                (data.degrees + 1) as u32,
+                d.linear as u32,
+                reversed as u32,
+            ]));
+            bytes.extend_from_slice(bytemuck::cast_slice(&[
+                input.clip_planes.len().min(6) as u32,
+                data.width as u32,
+                data.sh.width as u32,
+                data.sh.layers as u32,
+            ]));
             let mut planes = [[0.0f32; 4]; 6];
 
             for (i, p) in input.clip_planes.iter().take(6).enumerate() {
@@ -265,11 +360,31 @@ impl SplatGpu {
 
             match input.fog {
                 Some(fog) => {
-                    f(&[fog.color[0], fog.color[1], fog.color[2], fog.fog_type as f32], &mut bytes);
-                    f(&[fog.visibility_start, fog.visibility_range, 0.0, 0.0], &mut bytes);
-                    f(&[fog.matrix[0], fog.matrix[1], fog.matrix[2], 0.0], &mut bytes);
-                    f(&[fog.matrix[3], fog.matrix[4], fog.matrix[5], 0.0], &mut bytes);
-                    f(&[fog.matrix[6], fog.matrix[7], fog.matrix[8], 0.0], &mut bytes);
+                    f(
+                        &[
+                            fog.color[0],
+                            fog.color[1],
+                            fog.color[2],
+                            fog.fog_type as f32,
+                        ],
+                        &mut bytes,
+                    );
+                    f(
+                        &[fog.visibility_start, fog.visibility_range, 0.0, 0.0],
+                        &mut bytes,
+                    );
+                    f(
+                        &[fog.matrix[0], fog.matrix[1], fog.matrix[2], 0.0],
+                        &mut bytes,
+                    );
+                    f(
+                        &[fog.matrix[3], fog.matrix[4], fog.matrix[5], 0.0],
+                        &mut bytes,
+                    );
+                    f(
+                        &[fog.matrix[6], fog.matrix[7], fog.matrix[8], 0.0],
+                        &mut bytes,
+                    );
                 }
                 None => bytes.extend_from_slice(&[0u8; 5 * 16]),
             }
@@ -284,42 +399,88 @@ impl SplatGpu {
 
         if self.buffer.as_ref().is_none_or(|b| b.1 < total) {
             let capacity = total.next_power_of_two().max(4096);
-            self.buffer = Some((device.create_buffer(&wgpu::BufferDescriptor { label: Some("splat uniforms"), size: capacity, usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false }), capacity));
+            self.buffer = Some((
+                device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("splat uniforms"),
+                    size: capacity,
+                    usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                    mapped_at_creation: false,
+                }),
+                capacity,
+            ));
             self.groups.clear();
         }
 
         queue.write_buffer(&self.buffer.as_ref().unwrap().0, 0, &blobs.concat());
 
         let (module, layout) = self.module.as_ref().unwrap();
-        let pipeline_key = PipelineKey { format, samples, reversed };
+        let pipeline_key = PipelineKey {
+            format,
+            samples,
+            reversed,
+        };
 
         if !self.pipelines.contains_key(&pipeline_key) {
             let blend = wgpu::BlendState {
                 // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
-                color: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::SrcAlpha, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
-                alpha: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::One, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
+                color: wgpu::BlendComponent {
+                    src_factor: wgpu::BlendFactor::SrcAlpha,
+                    dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                    operation: wgpu::BlendOperation::Add,
+                },
+                alpha: wgpu::BlendComponent {
+                    src_factor: wgpu::BlendFactor::One,
+                    dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                    operation: wgpu::BlendOperation::Add,
+                },
             };
-            let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { label: Some("splats"), bind_group_layouts: &[Some(frame_layout), Some(layout)], immediate_size: 0 });
+            let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                label: Some("splats"),
+                bind_group_layouts: &[Some(frame_layout), Some(layout)],
+                immediate_size: 0,
+            });
             let p = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: Some("splats"),
                 layout: Some(&pipeline_layout),
-                vertex: wgpu::VertexState { module, entry_point: Some("vs_main"), compilation_options: Default::default(), buffers: &[] },
+                vertex: wgpu::VertexState {
+                    module,
+                    entry_point: Some("vs_main"),
+                    compilation_options: Default::default(),
+                    buffers: &[],
+                },
                 // The quad is counter clockwise in normalized device coordinates, whatever the projection.
-                primitive: wgpu::PrimitiveState { topology: wgpu::PrimitiveTopology::TriangleList, front_face: wgpu::FrontFace::Ccw, cull_mode: None, ..Default::default() },
+                primitive: wgpu::PrimitiveState {
+                    topology: wgpu::PrimitiveTopology::TriangleList,
+                    front_face: wgpu::FrontFace::Ccw,
+                    cull_mode: None,
+                    ..Default::default()
+                },
                 depth_stencil: Some(wgpu::DepthStencilState {
                     format: depth_format,
                     // drawShapes: gl.depthMask (false) for the transparent shapes.
                     depth_write_enabled: Some(false),
-                    depth_compare: Some(if reversed { wgpu::CompareFunction::GreaterEqual } else { wgpu::CompareFunction::LessEqual }),
+                    depth_compare: Some(if reversed {
+                        wgpu::CompareFunction::GreaterEqual
+                    } else {
+                        wgpu::CompareFunction::LessEqual
+                    }),
                     stencil: Default::default(),
                     bias: Default::default(),
                 }),
-                multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: false },
+                multisample: wgpu::MultisampleState {
+                    count: samples,
+                    mask: !0,
+                    alpha_to_coverage_enabled: false,
+                },
                 fragment: Some(wgpu::FragmentState {
                     module,
                     entry_point: Some("fs_main"),
                     compilation_options: Default::default(),
-                    targets: &[Some(wgpu::ColorTargetState { format, blend: Some(blend), write_mask: wgpu::ColorWrites::ALL })],
+                    targets: &[Some(wgpu::ColorTargetState {
+                        format,
+                        blend: Some(blend),
+                        write_mask: wgpu::ColorWrites::ALL,
+                    })],
                 }),
                 multiview_mask: None,
                 cache: None,
@@ -347,20 +508,54 @@ impl SplatGpu {
                     let index = &self.indices[&group_key];
                     let buffer = &self.buffer.as_ref().unwrap().0;
                     let entries = [
-                        wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding { buffer, offset: 0, size: wgpu::BufferSize::new(UNIFORM_BYTES as u64) }) },
-                        wgpu::BindGroupEntry { binding: 1, resource: data.positions.as_entire_binding() },
-                        wgpu::BindGroupEntry { binding: 2, resource: data.orientations.as_entire_binding() },
-                        wgpu::BindGroupEntry { binding: 3, resource: data.scales.as_entire_binding() },
-                        wgpu::BindGroupEntry { binding: 4, resource: data.opacities.as_entire_binding() },
-                        wgpu::BindGroupEntry { binding: 5, resource: data.sh.as_entire_binding() },
-                        wgpu::BindGroupEntry { binding: 6, resource: index.buffer.as_entire_binding() },
+                        wgpu::BindGroupEntry {
+                            binding: 0,
+                            resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                                buffer,
+                                offset: 0,
+                                size: wgpu::BufferSize::new(UNIFORM_BYTES as u64),
+                            }),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 1,
+                            resource: data.positions.as_entire_binding(),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 2,
+                            resource: data.orientations.as_entire_binding(),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 3,
+                            resource: data.scales.as_entire_binding(),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 4,
+                            resource: data.opacities.as_entire_binding(),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 5,
+                            resource: data.sh.as_entire_binding(),
+                        },
+                        wgpu::BindGroupEntry {
+                            binding: 6,
+                            resource: index.buffer.as_entire_binding(),
+                        },
                     ];
-                    let group = device.create_bind_group(&wgpu::BindGroupDescriptor { label: Some("splats"), layout, entries: &entries });
+                    let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+                        label: Some("splats"),
+                        layout,
+                        entries: &entries,
+                    });
                     self.groups.insert(group_key, (group, frame_no));
                 }
             }
 
-            self.prepared.push(Prepared { pipeline: pipeline_key, group: group_key, offset: (stride * i as u64) as u32, instances: input.draw.data.count as u32 });
+            self.prepared.push(Prepared {
+                pipeline: pipeline_key,
+                group: group_key,
+                offset: (stride * i as u64) as u32,
+                instances: input.draw.data.count as u32,
+            });
         }
     }
 
@@ -386,7 +581,8 @@ impl SplatGpu {
 
         // A bind group refers to its buffers.
         let (data, indices) = (&self.data, &self.indices);
-        self.groups.retain(|k, _| data.contains_key(&k.0) && indices.contains_key(k));
+        self.groups
+            .retain(|k, _| data.contains_key(&k.0) && indices.contains_key(k));
 
         if self.data.is_empty() && self.indices.is_empty() && self.pipelines.is_empty() {
             self.buffer = None;

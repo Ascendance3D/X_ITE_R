@@ -22,9 +22,12 @@ pub use x3d_scene as scene;
 /// The classic-encoding parser. `x3d_parse::compare` (an oracle test helper) stays private.
 pub mod parse {
     pub use x3d_parse::{
-        LoadError, ParseError, Parser, color, decode_text, gunzip, is_valid_vrml, lexer, load_file, parse_bytes, parser,
+        LoadError, ParseError, Parser, color, decode_text, gunzip, is_valid_vrml, lexer, load_file,
+        parse_bytes, parser,
     };
 }
 
-pub use parse::{LoadError, ParseError, Parser, decode_text, gunzip, is_valid_vrml, load_file, parse_bytes};
+pub use parse::{
+    LoadError, ParseError, Parser, decode_text, gunzip, is_valid_vrml, load_file, parse_bytes,
+};
 pub use scene::Scene;

@@ -10,6 +10,8 @@
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
 #     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
 #
+# The rustfmt check runs first and needs no system libraries; an unformatted PR fails before the build.
+#
 # Tests that find no wgpu adapter skip their GPU part on their own (they print a message).
 # The audio tests need no GPU and no audio device: they render with an OfflineAudioContext.
 
@@ -50,12 +52,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          components: rustfmt
+
+      - name: Formatting (cargo fmt)
+        run: cargo fmt --all -- --check
+
       - name: System libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang
-
-      - uses: dtolnay/rust-toolchain@1.95.0
 
       - uses: Swatinem/rust-cache@v2
         with:

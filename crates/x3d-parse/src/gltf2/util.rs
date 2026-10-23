@@ -12,11 +12,16 @@ pub(crate) struct V<'a>(pub Option<&'a J>);
 pub(crate) const UNDEF: V<'static> = V(None);
 
 fn array_index(key: &str) -> Option<usize> {
-    if key.is_empty() || !key.bytes().all(|b| b.is_ascii_digit()) || (key.len() > 1 && key.starts_with('0')) {
+    if key.is_empty()
+        || !key.bytes().all(|b| b.is_ascii_digit())
+        || (key.len() > 1 && key.starts_with('0'))
+    {
         return None;
     }
 
-    key.parse::<usize>().ok().filter(|n| (*n as u64) < u32::MAX as u64)
+    key.parse::<usize>()
+        .ok()
+        .filter(|n| (*n as u64) < u32::MAX as u64)
 }
 
 impl<'a> V<'a> {
@@ -60,7 +65,11 @@ impl<'a> V<'a> {
     pub fn entries(self) -> Vec<(String, V<'a>)> {
         match self.0 {
             Some(J::Object(o)) => o.iter().map(|(k, v)| (k.clone(), V(Some(v)))).collect(),
-            Some(J::Array(a)) => a.iter().enumerate().map(|(i, v)| (i.to_string(), V(Some(v)))).collect(),
+            Some(J::Array(a)) => a
+                .iter()
+                .enumerate()
+                .map(|(i, v)| (i.to_string(), V(Some(v))))
+                .collect(),
             _ => vec![],
         }
     }
@@ -119,7 +128,11 @@ impl<'a> V<'a> {
             Some(J::Null) => 0.0,
             Some(J::String(s)) => {
                 let t = s.trim();
-                if t.is_empty() { 0.0 } else { t.parse::<f64>().unwrap_or(f64::NAN) }
+                if t.is_empty() {
+                    0.0
+                } else {
+                    t.parse::<f64>().unwrap_or(f64::NAN)
+                }
             }
             None => f64::NAN,
             Some(_) => f64::NAN,
@@ -145,7 +158,11 @@ impl<'a> V<'a> {
             Some(J::Bool(b)) => b.to_string(),
             Some(J::Number(n)) => number_to_string(*n),
             Some(J::String(s)) => s.clone(),
-            Some(J::Array(a)) => a.iter().map(|v| V(Some(v)).to_js_string_arr()).collect::<Vec<_>>().join(","),
+            Some(J::Array(a)) => a
+                .iter()
+                .map(|v| V(Some(v)).to_js_string_arr())
+                .collect::<Vec<_>>()
+                .join(","),
             Some(J::Object(_)) => "[object Object]".into(),
         }
     }
@@ -205,7 +222,8 @@ pub(crate) fn description(s: Option<&str>) -> String {
         }
     }
 
-    out.trim_matches(|c: char| c.is_whitespace() || c == '\u{feff}').to_string()
+    out.trim_matches(|c: char| c.is_whitespace() || c == '\u{feff}')
+        .to_string()
 }
 
 // --- typed arrays -----------------------------------------------------------------------------
@@ -318,7 +336,10 @@ pub(crate) fn to_index(v: f64) -> Result<usize, String> {
     let t = v.trunc();
 
     if t < 0.0 || t > 9007199254740991.0 {
-        return Err(format!("RangeError: Invalid typed array length: {}", number_to_string(v)));
+        return Err(format!(
+            "RangeError: Invalid typed array length: {}",
+            number_to_string(v)
+        ));
     }
 
     Ok(t as usize)
@@ -326,16 +347,30 @@ pub(crate) fn to_index(v: f64) -> Result<usize, String> {
 
 /// `new TypedArray (buffer, byteOffset, length)` over an ArrayBuffer (`None` is `undefined`,
 /// which makes an empty array).
-pub(crate) fn typed_array(ct: Ct, buffer: Option<&[u8]>, byte_offset: f64, length: Option<f64>) -> Result<TArr, String> {
+pub(crate) fn typed_array(
+    ct: Ct,
+    buffer: Option<&[u8]>,
+    byte_offset: f64,
+    length: Option<f64>,
+) -> Result<TArr, String> {
     let Some(buffer) = buffer else {
         return Ok(TArr { ct, v: vec![] });
     };
 
     let size = ct.size();
-    let offset = to_index(byte_offset).map_err(|_| format!("RangeError: Start offset {} is outside the bounds of the buffer", number_to_string(byte_offset)))?;
+    let offset = to_index(byte_offset).map_err(|_| {
+        format!(
+            "RangeError: Start offset {} is outside the bounds of the buffer",
+            number_to_string(byte_offset)
+        )
+    })?;
 
     if offset % size != 0 {
-        return Err(format!("RangeError: start offset of {} should be a multiple of {}", ct.name(), size));
+        return Err(format!(
+            "RangeError: start offset of {} should be a multiple of {}",
+            ct.name(),
+            size
+        ));
     }
 
     let n = match length {
@@ -343,7 +378,10 @@ pub(crate) fn typed_array(ct: Ct, buffer: Option<&[u8]>, byte_offset: f64, lengt
             let n = to_index(l)?;
 
             if offset > buffer.len() {
-                return Err(format!("RangeError: Start offset {} is outside the bounds of the buffer", offset));
+                return Err(format!(
+                    "RangeError: Start offset {} is outside the bounds of the buffer",
+                    offset
+                ));
             }
 
             if offset as u128 + n as u128 * size as u128 > buffer.len() as u128 {
@@ -354,11 +392,18 @@ pub(crate) fn typed_array(ct: Ct, buffer: Option<&[u8]>, byte_offset: f64, lengt
         }
         None => {
             if offset > buffer.len() {
-                return Err(format!("RangeError: Start offset {} is outside the bounds of the buffer", offset));
+                return Err(format!(
+                    "RangeError: Start offset {} is outside the bounds of the buffer",
+                    offset
+                ));
             }
 
             if (buffer.len() - offset) % size != 0 {
-                return Err(format!("RangeError: byte length of {} should be a multiple of {}", ct.name(), size));
+                return Err(format!(
+                    "RangeError: byte length of {} should be a multiple of {}",
+                    ct.name(),
+                    size
+                ));
             }
 
             (buffer.len() - offset) / size
@@ -380,7 +425,11 @@ pub(crate) fn js_slice(len: usize, start: f64, end: f64) -> (usize, usize) {
         let v = if v.is_nan() { 0.0 } else { v.trunc() };
         let len = len as f64;
 
-        if v < 0.0 { (len + v).max(0.0) as usize } else { v.min(len) as usize }
+        if v < 0.0 {
+            (len + v).max(0.0) as usize
+        } else {
+            v.min(len) as usize
+        }
     };
 
     let (s, e) = (rel(start), rel(end));
@@ -471,13 +520,25 @@ pub(crate) fn base64_encode(data: &[u8]) -> String {
     let mut out = String::with_capacity(data.len().div_ceil(3) * 4);
 
     for chunk in data.chunks(3) {
-        let b = [chunk[0], *chunk.get(1).unwrap_or(&0), *chunk.get(2).unwrap_or(&0)];
+        let b = [
+            chunk[0],
+            *chunk.get(1).unwrap_or(&0),
+            *chunk.get(2).unwrap_or(&0),
+        ];
         let n = ((b[0] as u32) << 16) | ((b[1] as u32) << 8) | b[2] as u32;
 
         out.push(B64[(n >> 18) as usize & 63] as char);
         out.push(B64[(n >> 12) as usize & 63] as char);
-        out.push(if chunk.len() > 1 { B64[(n >> 6) as usize & 63] as char } else { '=' });
-        out.push(if chunk.len() > 2 { B64[n as usize & 63] as char } else { '=' });
+        out.push(if chunk.len() > 1 {
+            B64[(n >> 6) as usize & 63] as char
+        } else {
+            '='
+        });
+        out.push(if chunk.len() > 2 {
+            B64[n as usize & 63] as char
+        } else {
+            '='
+        });
     }
 
     out
@@ -544,6 +605,10 @@ pub(crate) fn percent_decode_string(s: &str) -> String {
 impl V<'_> {
     /// An omitted constructor argument is 0; any other value goes through ToNumber.
     pub fn to_number_or_zero(self) -> f64 {
-        if self.is_undef() { 0.0 } else { self.to_number() }
+        if self.is_undef() {
+            0.0
+        } else {
+            self.to_number()
+        }
     }
 }

@@ -176,11 +176,17 @@ fn scroll_snap() {
     cm.run_op(|cm| cm.doc.set_cursor(p(100, 180), None));
     assert!(cm.display.scroll_left > 0.0 && cm.display.scroll_top > 0.0);
     cm.run_op(|cm| cm.doc.set_cursor(p(0, 0), None));
-    assert!(cm.display.scroll_left == 0.0 && cm.display.scroll_top == 0.0, "scrolled clean to top");
+    assert!(
+        cm.display.scroll_left == 0.0 && cm.display.scroll_top == 0.0,
+        "scrolled clean to top"
+    );
     cm.run_op(|cm| cm.doc.set_cursor(p(100, 180), None));
     cm.run_op(|cm| cm.doc.set_cursor(p(199, 0), None));
     let (max_top, _) = cm.max_scroll();
-    assert!(cm.display.scroll_left == 0.0 && cm.display.scroll_top + 2.0 > max_top, "scrolled clean to bottom");
+    assert!(
+        cm.display.scroll_left == 0.0 && cm.display.scroll_top + 2.0 > max_top,
+        "scrolled clean to bottom"
+    );
 }
 
 /// test.js "scrollIntoView"
@@ -249,7 +255,10 @@ fn move_v_stuck() {
     cm.run_op(|cm| cm.doc.set_cursor(p(0, len - 1), None));
     cm.move_v(-1, cm_view::movement::UnitV::Line);
     eq_cursor_pos(cur(&cm), pb(0, 27));
-    assert!(cm.cursor_coords(cur(&cm), CoordSys::Local).top < h0, "cursor is in first visual line");
+    assert!(
+        cm.cursor_coords(cur(&cm), CoordSys::Local).top < h0,
+        "cursor is in first visual line"
+    );
 }
 
 /// test.js "collapseOnMove"
@@ -281,8 +290,14 @@ fn click_tab() {
         o.tab_size = 8;
     });
     let p0 = cm.char_coords(p(0, 0), CoordSys::Local);
-    eq_char_pos(cm.coords_char_local(p0.left + 5.0, p0.top + 5.0).pos(), p(0, 0));
-    eq_char_pos(cm.coords_char_local(p0.right - 5.0, p0.top + 5.0).pos(), p(0, 1));
+    eq_char_pos(
+        cm.coords_char_local(p0.left + 5.0, p0.top + 5.0).pos(),
+        p(0, 0),
+    );
+    eq_char_pos(
+        cm.coords_char_local(p0.right - 5.0, p0.top + 5.0).pos(),
+        p(0, 1),
+    );
 }
 
 /// test.js "verticalScroll": `scrollWidth` follows the widest line.
@@ -298,7 +313,8 @@ fn vertical_scroll() {
     cm.doc.replace_range("foo", p(0, 0), Some(pl(0)), None);
     assert_eq!(cm.max_scroll().1, base, "scrollbar gone");
     cm.doc.replace_range(&long_a, p(0, 0), Some(pl(0)), None);
-    cm.doc.replace_range(&format!("{}h", "b".repeat(81)), p(1, 0), Some(pl(1)), None);
+    cm.doc
+        .replace_range(&format!("{}h", "b".repeat(81)), p(1, 0), Some(pl(1)), None);
     assert!(cm.max_scroll().1 > base, "present again");
     let cur_w = cm.max_scroll().1;
     cm.doc.replace_range("foo", p(0, 0), Some(pl(0)), None);
@@ -324,8 +340,10 @@ fn extra_keys() {
     m.bind("Shift-X", Binding::Fn(set("sx"))).unwrap();
     m.bind("X", Binding::Fn(set("x"))).unwrap();
     m.bind("Ctrl-Alt-U", Binding::Fn(set("cau"))).unwrap();
-    m.bind("End", Binding::Command("testCommand".into())).unwrap();
-    m.bind("Home", Binding::Command("goTestCommand".into())).unwrap();
+    m.bind("End", Binding::Command("testCommand".into()))
+        .unwrap();
+    m.bind("Home", Binding::Command("goTestCommand".into()))
+        .unwrap();
     m.bind("Tab", Binding::Nothing).unwrap();
     cm.extra_keys = Some(KeyMapRef::Map(Rc::new(m)));
     let fake = |cm: &mut Editor, expected: Option<&str>, key: &str| {
@@ -420,7 +438,16 @@ fn group_movement_commands() {
 #[test]
 fn groups_and_whitespace() {
     let mut cm = cm("  foo +++  \n  bar");
-    let positions = [p(0, 0), p(0, 2), p(0, 5), p(0, 9), p(0, 11), p(1, 0), p(1, 2), p(1, 5)];
+    let positions = [
+        p(0, 0),
+        p(0, 2),
+        p(0, 5),
+        p(0, 9),
+        p(0, 11),
+        p(1, 0),
+        p(1, 2),
+        p(1, 5),
+    ];
     for pos in &positions[1..] {
         exec(&mut cm, "goGroupRight");
         eq_char_pos(cur(&cm), *pos);
@@ -491,7 +518,11 @@ fn vertical_movement_commands() {
 /// test.js "verticalMovementCommandsWrapping" (`lineWrapping: true`, width 120px).
 #[test]
 fn vertical_movement_commands_wrapping() {
-    let mut cm = cm_opts("a very long line that wraps around somehow so that we can test cursor movement\nshortone\nk", None, |o| o.line_wrapping = true);
+    let mut cm = cm_opts(
+        "a very long line that wraps around somehow so that we can test cursor movement\nshortone\nk",
+        None,
+        |o| o.line_wrapping = true,
+    );
     let h = cm.display.height;
     cm.set_size(120.0, h);
     cm.run_op(|cm| cm.doc.set_cursor(p(0, 5), None));
@@ -582,8 +613,18 @@ fn moveby_text_unit() {
 #[test]
 fn jump_the_gap() {
     cm_core::clock::manual(1_000_000.0);
-    let o = EditorOptions { line_wrapping: true, rtl_move_visually: true, mac: false, ..Default::default() };
-    let mut cm = Editor::new("abc\ndef\nghi\njkl\n", Spec::from("css"), o, Metrics::monospace(10.0, 40.0));
+    let o = EditorOptions {
+        line_wrapping: true,
+        rtl_move_visually: true,
+        mac: false,
+        ..Default::default()
+    };
+    let mut cm = Editor::new(
+        "abc\ndef\nghi\njkl\n",
+        Spec::from("css"),
+        o,
+        Metrics::monospace(10.0, 40.0),
+    );
     cm.set_size(600.0, 300.0);
     let mut long = "abcdef ghiklmnop qrstuvw xyz ".to_string();
     for _ in 0..3 {
@@ -617,9 +658,22 @@ fn set_cursor(cm: &mut Editor, pos: Pos) {
 fn atomic_marker() {
     let mut cm = cm("");
     add_doc(&mut cm, 10, 10);
-    let atom = |cm: &Editor, ll, cl, lr, cr, li: bool, ri: bool, ls: Option<bool>, rs: Option<bool>| {
-        mark(cm, p(ll, cl), p(lr, cr), MarkOptions { atomic: true, inclusive_left: li, inclusive_right: ri, select_left: ls, select_right: rs, ..Default::default() })
-    };
+    let atom =
+        |cm: &Editor, ll, cl, lr, cr, li: bool, ri: bool, ls: Option<bool>, rs: Option<bool>| {
+            mark(
+                cm,
+                p(ll, cl),
+                p(lr, cr),
+                MarkOptions {
+                    atomic: true,
+                    inclusive_left: li,
+                    inclusive_right: ri,
+                    select_left: ls,
+                    select_right: rs,
+                    ..Default::default()
+                },
+            )
+        };
     // Can cursor to the left and right of a normal marker by jumping across it.
     let m = atom(&cm, 0, 1, 0, 5, false, false, None, None);
     set_cursor(&mut cm, p(0, 1));
@@ -709,8 +763,26 @@ fn atomic_marker() {
 #[test]
 fn selection_home_end() {
     let mut cm = cm("ab\ncdef\ngh");
-    mark(&cm, p(1, 0), p(1, 1), MarkOptions { atomic: true, inclusive_left: true, ..Default::default() });
-    mark(&cm, p(1, 3), p(1, 4), MarkOptions { atomic: true, inclusive_right: true, ..Default::default() });
+    mark(
+        &cm,
+        p(1, 0),
+        p(1, 1),
+        MarkOptions {
+            atomic: true,
+            inclusive_left: true,
+            ..Default::default()
+        },
+    );
+    mark(
+        &cm,
+        p(1, 3),
+        p(1, 4),
+        MarkOptions {
+            atomic: true,
+            inclusive_right: true,
+            ..Default::default()
+        },
+    );
     set_cursor(&mut cm, p(1, 2));
     exec(&mut cm, "goLineStart");
     eq_cursor_pos(cur(&cm), p(1, 1));
@@ -722,7 +794,18 @@ fn selection_home_end() {
 #[test]
 fn read_only_marker() {
     let mut cm = cm("abcde\nfghij\nklmno\n");
-    let mk = |cm: &Editor, ll, cl, lr, cr, at: bool| mark(cm, p(ll, cl), p(lr, cr), MarkOptions { read_only: true, atomic: at, ..Default::default() });
+    let mk = |cm: &Editor, ll, cl, lr, cr, at: bool| {
+        mark(
+            cm,
+            p(ll, cl),
+            p(lr, cr),
+            MarkOptions {
+                read_only: true,
+                atomic: at,
+                ..Default::default()
+            },
+        )
+    };
     let m = mk(&cm, 0, 1, 0, 4, false);
     set_cursor(&mut cm, p(0, 2));
     cm.run_op(|cm| cm.doc.replace_selection("hi", Some("end"), None));
@@ -765,7 +848,18 @@ fn hidden_lines_auto_unfold() {
     let mut cm = cm("abc\ndef\nghi\njkl");
     let cleared = Rc::new(Cell::new(0));
     let fold = |cm: &Editor| {
-        let m = mark(cm, p(1, 0), pl(2), MarkOptions { inclusive_left: true, inclusive_right: true, collapsed: true, clear_on_enter: true, ..Default::default() });
+        let m = mark(
+            cm,
+            p(1, 0),
+            pl(2),
+            MarkOptions {
+                inclusive_left: true,
+                inclusive_right: true,
+                collapsed: true,
+                clear_on_enter: true,
+                ..Default::default()
+            },
+        );
         let c = cleared.clone();
         match &m {
             Marker::Text(t) => t.on_clear(move |_| c.set(c.get() + 1)),
@@ -795,10 +889,13 @@ fn add_key_map() {
     let test = Rc::new(Cell::new(0));
     let mk = |f: Rc<dyn Fn()>| {
         let mut m = KeyMap::default();
-        m.bind("Right", Binding::Fn(Rc::new(move |_| {
-            f();
-            true
-        })))
+        m.bind(
+            "Right",
+            Binding::Fn(Rc::new(move |_| {
+                f();
+                true
+            })),
+        )
         .unwrap();
         Rc::new(m)
     };
@@ -821,11 +918,17 @@ fn add_key_map() {
     assert_eq!(test.get(), 12);
     eq_cursor_pos(cur(&cm), pb(0, 2));
     let t3 = test.clone();
-    let mut m3 = KeyMap { name: Some("mymap".into()), ..Default::default() };
-    m3.bind("Right", Binding::Fn(Rc::new(move |_| {
-        t3.set(55);
-        true
-    })))
+    let mut m3 = KeyMap {
+        name: Some("mymap".into()),
+        ..Default::default()
+    };
+    m3.bind(
+        "Right",
+        Binding::Fn(Rc::new(move |_| {
+            t3.set(55);
+            true
+        })),
+    )
     .unwrap();
     cm.add_key_map(m3, false);
     cm.key_down(&right);
@@ -875,10 +978,14 @@ fn before_selection_change() {
         }
         pos
     }
-    cm.doc.on_before_selection_change(|doc: &Doc, obj: &mut BeforeSelectionChange| {
-        let r = obj.ranges[0];
-        obj.update(vec![SelRange::new(not_at_end(doc, r.anchor), not_at_end(doc, r.head))]);
-    });
+    cm.doc
+        .on_before_selection_change(|doc: &Doc, obj: &mut BeforeSelectionChange| {
+            let r = obj.ranges[0];
+            obj.update(vec![SelRange::new(
+                not_at_end(doc, r.anchor),
+                not_at_end(doc, r.head),
+            )]);
+        });
     add_doc(&mut cm, 10, 10);
     exec(&mut cm, "goLineEnd");
     eq_cursor_pos(cur(&cm), p(0, 9));
@@ -900,12 +1007,29 @@ impl Mode for FnMode {
         (self.token)(stream)
     }
 }
-fn editor_with_mode(value: &str, name: &'static str, token: fn(&mut StringStream<'_>) -> Option<String>) -> Editor {
+fn editor_with_mode(
+    value: &str,
+    name: &'static str,
+    token: fn(&mut StringStream<'_>) -> Option<String>,
+) -> Editor {
     cm_core::clock::manual(1_000_000.0);
     let mut reg = Registry::with_all_modes();
-    reg.define_mode(name, Rc::new(move |_, _, _| Rc::new(FnMode { name, token }) as Rc<dyn Mode>));
-    let o = EditorOptions { rtl_move_visually: true, mac: false, ..Default::default() };
-    Editor::with_registry(value, Spec::from(name), o, Metrics::test_grid(), Rc::new(reg))
+    reg.define_mode(
+        name,
+        Rc::new(move |_, _, _| Rc::new(FnMode { name, token }) as Rc<dyn Mode>),
+    );
+    let o = EditorOptions {
+        rtl_move_visually: true,
+        mac: false,
+        ..Default::default()
+    };
+    Editor::with_registry(
+        value,
+        Spec::from(name),
+        o,
+        Metrics::test_grid(),
+        Rc::new(reg),
+    )
 }
 
 /// Match `open [^close]* close` at the stream position.
@@ -916,7 +1040,13 @@ fn match_delim(stream: &mut StringStream<'_>, open: u16, close: u16) -> bool {
                 if s.first() != Some(&open) {
                     return None;
                 }
-                s.iter().skip(1).position(|&c| c == close).map(|i| RegexMatch { index: 0, len: i + 2 })
+                s.iter()
+                    .skip(1)
+                    .position(|&c| c == close)
+                    .map(|i| RegexMatch {
+                        index: 0,
+                        len: i + 2,
+                    })
             },
             true,
         )
@@ -942,14 +1072,23 @@ fn line_style_from_mode() {
         stream.eat_while(|c| cm_core::text::is_js_space(c) == ws);
         None
     }
-    let cm = editor_with_mode("line1: [br] [br]\nline2: (par) (par)\nline3: <tag> <tag>", "test_mode", token);
+    let cm = editor_with_mode(
+        "line1: [br] [br]\nline2: (par) (par)\nline3: <tag> <tag>",
+        "test_mode",
+        token,
+    );
     let s0 = cm.line_styles(0);
     assert_eq!(s0.classes, Some((None, Some("brackets".into()))));
     let s1 = cm.line_styles(1);
     assert_eq!(s1.classes, Some((Some("parens".into()), None)));
     let s2 = cm.line_styles(2);
     assert_eq!(s2.classes, Some((Some("bg".into()), Some("line".into()))));
-    let spans: Vec<&str> = s2.spans.iter().filter_map(|(_, s)| s.as_deref()).filter(|s| s.contains("span")).collect();
+    let spans: Vec<&str> = s2
+        .spans
+        .iter()
+        .filter_map(|(_, s)| s.as_deref())
+        .filter(|s| s.contains("span"))
+        .collect();
     assert_eq!(spans.len(), 2);
     assert!(spans.iter().all(|s| s.trim() == "span"));
 }
@@ -1022,7 +1161,10 @@ fn get_token_at() {
     assert_eq!(tok.string, "+");
     let toks = cm.get_line_tokens(0, false);
     assert_eq!(toks.len(), 3);
-    for (t, (ty, s)) in toks.iter().zip([("number", "1"), ("operator", "+"), ("number", "2")]) {
+    for (t, (ty, s)) in toks
+        .iter()
+        .zip([("number", "1"), ("operator", "+"), ("number", "2")])
+    {
         assert_eq!(t.ty.as_deref(), Some(ty));
         assert_eq!(t.string, s);
     }
@@ -1063,7 +1205,11 @@ fn mode_lookahead() {
         stream.skip_to_end();
         // /x/.test(stream.lookAhead(2)): undefined stringifies to "undefined".
         let la = stream.look_ahead(2);
-        if la.is_some_and(|l| l.contains(&(b'x' as u16))) { Some("atom".into()) } else { None }
+        if la.is_some_and(|l| l.contains(&(b'x' as u16))) {
+            Some("atom".into())
+        } else {
+            None
+        }
     }
     let mut cm = editor_with_mode("foo\na\nx\nx\n", "lookahead_mode", token);
     assert_eq!(cm.get_token_at(p(0, 1), false).ty.as_deref(), Some("atom"));

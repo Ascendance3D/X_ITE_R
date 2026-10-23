@@ -7,11 +7,14 @@
 //!
 //! Baseline: `oracle/cm5-doc-ops-baseline.json` (override with `CM_FUZZ_BASELINE`).
 
-use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::PathBuf;
 
 use cm_core::clock;
-use cm_core::{Doc, DocOptions, EditorSemantics, HistoryEventData, LinkedDocOptions, MarkOptions, Marker, MarkerFind, Pos, SelOptions, Sticky};
+use cm_core::{
+    Doc, DocOptions, EditorSemantics, HistoryEventData, LinkedDocOptions, MarkOptions, Marker,
+    MarkerFind, Pos, SelOptions, Sticky,
+};
 use serde_json::Value;
 
 // ---------------------------------------------------------------------------------
@@ -108,15 +111,27 @@ impl St {
 }
 
 fn p(p: Pos) -> J {
-    J::Arr(vec![J::Num(p.line), J::Num(p.ch), match p.sticky {
-        None => J::Null,
-        Some(s) => s16(s.as_str()),
-    }])
+    J::Arr(vec![
+        J::Num(p.line),
+        J::Num(p.ch),
+        match p.sticky {
+            None => J::Null,
+            Some(s) => s16(s.as_str()),
+        },
+    ])
 }
 
 fn sel(d: &Doc) -> J {
     let s = d.selection();
-    J::Arr(vec![J::Arr(s.ranges.iter().map(|r| J::Arr(vec![p(r.anchor), p(r.head)])).collect()), J::Num(s.primary as i64)])
+    J::Arr(vec![
+        J::Arr(
+            s.ranges
+                .iter()
+                .map(|r| J::Arr(vec![p(r.anchor), p(r.head)]))
+                .collect(),
+        ),
+        J::Num(s.primary as i64),
+    ])
 }
 
 fn find(m: &Marker) -> J {
@@ -132,7 +147,12 @@ fn hist(d: &Doc) -> J {
     let ev = |e: &HistoryEventData| match e {
         HistoryEventData::Selection(s) => J::Arr(vec![
             s16("s"),
-            J::Arr(s.ranges.iter().map(|r| J::Arr(vec![p(r.anchor), p(r.head)])).collect()),
+            J::Arr(
+                s.ranges
+                    .iter()
+                    .map(|r| J::Arr(vec![p(r.anchor), p(r.head)]))
+                    .collect(),
+            ),
             J::Num(s.primary as i64),
         ]),
         HistoryEventData::Changes(cs) => J::Arr(vec![
@@ -153,12 +173,20 @@ fn hist(d: &Doc) -> J {
             ),
         ]),
     };
-    J::Arr(vec![J::Arr(h.done.iter().map(ev).collect()), J::Arr(h.undone.iter().map(ev).collect())])
+    J::Arr(vec![
+        J::Arr(h.done.iter().map(ev).collect()),
+        J::Arr(h.undone.iter().map(ev).collect()),
+    ])
 }
 
 fn snap(d: &Doc) -> J {
     let hs = d.history_size();
-    J::Arr(vec![J::Str(d.get_value_utf16(None)), sel(d), J::Num(hs.undo as i64), J::Num(hs.redo as i64)])
+    J::Arr(vec![
+        J::Str(d.get_value_utf16(None)),
+        sel(d),
+        J::Num(hs.undo as i64),
+        J::Num(hs.redo as i64),
+    ])
 }
 
 fn mk(v: &Value) -> Option<Pos> {
@@ -216,18 +244,35 @@ fn err_j(msg: String) -> J {
 fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
     let op = o["op"].as_str().unwrap();
     let di = o["d"].as_u64().unwrap_or(0) as usize;
-    let d = st.docs.get(di).cloned().unwrap_or_else(|| st.docs[0].clone());
+    let d = st
+        .docs
+        .get(di)
+        .cloned()
+        .unwrap_or_else(|| st.docs[0].clone());
     match op {
         "replaceRange" => {
-            d.replace_range(o["text"].as_str().unwrap(), mk(&o["from"]).unwrap(), mk(&o["to"]), opt_str(&o["origin"]));
+            d.replace_range(
+                o["text"].as_str().unwrap(),
+                mk(&o["from"]).unwrap(),
+                mk(&o["to"]),
+                opt_str(&o["origin"]),
+            );
             snap(&d)
         }
         "replaceSelection" => {
-            d.replace_selection(o["text"].as_str().unwrap(), opt_str(&o["collapse"]), opt_str(&o["origin"]));
+            d.replace_selection(
+                o["text"].as_str().unwrap(),
+                opt_str(&o["collapse"]),
+                opt_str(&o["origin"]),
+            );
             snap(&d)
         }
         "setSelection" => {
-            d.set_selection(mk(&o["anchor"]).unwrap(), mk(&o["head"]), sel_opts(&o["opts"]));
+            d.set_selection(
+                mk(&o["anchor"]).unwrap(),
+                mk(&o["head"]),
+                sel_opts(&o["opts"]),
+            );
             snap(&d)
         }
         "setCursor" => {
@@ -235,21 +280,42 @@ fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
             snap(&d)
         }
         "setSelections" => {
-            let ranges: Vec<(Pos, Option<Pos>)> =
-                o["ranges"].as_array().unwrap().iter().map(|r| (mk(&r[0]).unwrap(), mk(&r[1]))).collect();
-            d.set_selections(&ranges, o["primary"].as_u64().map(|x| x as usize), sel_opts(&o["opts"]));
+            let ranges: Vec<(Pos, Option<Pos>)> = o["ranges"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| (mk(&r[0]).unwrap(), mk(&r[1])))
+                .collect();
+            d.set_selections(
+                &ranges,
+                o["primary"].as_u64().map(|x| x as usize),
+                sel_opts(&o["opts"]),
+            );
             snap(&d)
         }
         "addSelection" => {
-            d.add_selection(mk(&o["anchor"]).unwrap(), mk(&o["head"]), sel_opts(&o["opts"]));
+            d.add_selection(
+                mk(&o["anchor"]).unwrap(),
+                mk(&o["head"]),
+                sel_opts(&o["opts"]),
+            );
             snap(&d)
         }
         "extendSelection" => {
-            d.extend_selection(mk(&o["head"]).unwrap(), mk(&o["other"]), sel_opts(&o["opts"]));
+            d.extend_selection(
+                mk(&o["head"]).unwrap(),
+                mk(&o["other"]),
+                sel_opts(&o["opts"]),
+            );
             snap(&d)
         }
         "extendSelections" => {
-            let heads: Vec<Pos> = o["heads"].as_array().unwrap().iter().map(|h| mk(h).unwrap()).collect();
+            let heads: Vec<Pos> = o["heads"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|h| mk(h).unwrap())
+                .collect();
             d.extend_selections(&heads, None);
             snap(&d)
         }
@@ -277,7 +343,11 @@ fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
             d.select_all();
             snap(&d)
         }
-        "markText" => match d.mark_text(mk(&o["from"]).unwrap(), mk(&o["to"]).unwrap(), mark_opts(&o["opts"])) {
+        "markText" => match d.mark_text(
+            mk(&o["from"]).unwrap(),
+            mk(&o["to"]).unwrap(),
+            mark_opts(&o["opts"]),
+        ) {
             Ok(m) => {
                 st.marks.push(m.clone());
                 let l = st.label(&m);
@@ -285,7 +355,11 @@ fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
             }
             Err(e) => err_j(e.to_string()),
         },
-        "setBookmark" => match d.set_bookmark(mk(&o["pos"]).unwrap(), o["insertLeft"].as_bool().unwrap(), o["shared"].as_bool().unwrap()) {
+        "setBookmark" => match d.set_bookmark(
+            mk(&o["pos"]).unwrap(),
+            o["insertLeft"].as_bool().unwrap(),
+            o["shared"].as_bool().unwrap(),
+        ) {
             Ok(m) => {
                 st.marks.push(m.clone());
                 let l = st.label(&m);
@@ -353,7 +427,11 @@ fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
             d.set_extending(o["val"].as_bool().unwrap());
             J::Bool(d.get_extending())
         }
-        "getRange" => J::Str(d.get_range_utf16(mk(&o["from"]).unwrap(), mk(&o["to"]).unwrap(), opt_str(&o["sep"]))),
+        "getRange" => J::Str(d.get_range_utf16(
+            mk(&o["from"]).unwrap(),
+            mk(&o["to"]).unwrap(),
+            opt_str(&o["sep"]),
+        )),
         "posFromIndex" => p(d.pos_from_index(o["index"].as_i64().unwrap())),
         "indexFromPos" => J::Num(d.index_from_pos(mk(&o["pos"]).unwrap())),
         "findMarksAt" => {
@@ -366,7 +444,12 @@ fn apply(st: &mut St, o: &Value, now: &std::rc::Rc<std::cell::Cell<f64>>) -> J {
         }
         "getCursor" => p(d.get_cursor(opt_str(&o["which"]))),
         "getSelections" => J::Arr(vec![
-            J::Arr(d.get_selections_utf16(None).into_iter().map(J::Str).collect()),
+            J::Arr(
+                d.get_selections_utf16(None)
+                    .into_iter()
+                    .map(J::Str)
+                    .collect(),
+            ),
             J::Str(d.get_selection_utf16(None)),
             J::Bool(d.something_selected()),
         ]),
@@ -410,7 +493,11 @@ fn panic_msg(e: Box<dyn std::any::Any + Send>) -> String {
     if std::env::var("CM_FUZZ_RAW_ERRORS").is_ok() {
         return s;
     }
-    if s.contains("TypeError") { "TypeError".into() } else { s }
+    if s.contains("TypeError") {
+        "TypeError".into()
+    } else {
+        s
+    }
 }
 
 /// Replays one sequence; returns the serialized results and the per-op strings
@@ -430,9 +517,16 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
     if let Some(depth) = init["undoDepth"].as_f64() {
         doc.set_undo_depth(depth);
     }
-    let mut st = St { docs: vec![doc], marks: Vec::new(), labels: Vec::new() };
+    let mut st = St {
+        docs: vec![doc],
+        marks: Vec::new(),
+        labels: Vec::new(),
+    };
     let mut outs: Vec<J> = Vec::new();
-    let debug = std::env::var("CM_FUZZ_DEBUG_SEED").ok().and_then(|s| s.parse::<i64>().ok()) == seq["seed"].as_i64();
+    let debug = std::env::var("CM_FUZZ_DEBUG_SEED")
+        .ok()
+        .and_then(|s| s.parse::<i64>().ok())
+        == seq["seed"].as_i64();
     for (k, o) in seq["ops"].as_array().unwrap().iter().enumerate() {
         let r = catch_unwind(AssertUnwindSafe(|| apply(&mut st, o, &now)));
         outs.push(match r {
@@ -442,7 +536,11 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
                 if debug {
                     eprintln!("ERR {k} {m}");
                 }
-                err_j(if m.contains("TypeError") { "TypeError".into() } else { m })
+                err_j(if m.contains("TypeError") {
+                    "TypeError".into()
+                } else {
+                    m
+                })
             }
         });
         if debug {
@@ -454,7 +552,11 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
                     let mut sp = Vec::new();
                     for (m, f, t) in l {
                         let lab = st.label(&Marker::Text(m));
-                        sp.push(J::Arr(vec![lab, f.map(J::Num).unwrap_or(J::Null), t.map(J::Num).unwrap_or(J::Null)]));
+                        sp.push(J::Arr(vec![
+                            lab,
+                            f.map(J::Num).unwrap_or(J::Null),
+                            t.map(J::Num).unwrap_or(J::Null),
+                        ]));
                     }
                     lines.push(J::Arr(sp));
                 }
@@ -463,10 +565,27 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
             let mut ml = Vec::new();
             for (i, m) in st.labels.iter().enumerate() {
                 if let Marker::Text(t) = m {
-                    ml.push(J::Arr(vec![J::Num(i as i64), J::Arr(t.debug_line_numbers().into_iter().map(|x| x.map(J::Num).unwrap_or(J::Null)).collect())]));
+                    ml.push(J::Arr(vec![
+                        J::Num(i as i64),
+                        J::Arr(
+                            t.debug_line_numbers()
+                                .into_iter()
+                                .map(|x| x.map(J::Num).unwrap_or(J::Null))
+                                .collect(),
+                        ),
+                    ]));
                 }
             }
-            let sz: Vec<J> = docs.iter().map(|d| J::Arr(vec![J::Num(d.first_line()), J::Num(d.line_count() as i64), J::Num(d.debug_actual_line_count() as i64)])).collect();
+            let sz: Vec<J> = docs
+                .iter()
+                .map(|d| {
+                    J::Arr(vec![
+                        J::Num(d.first_line()),
+                        J::Num(d.line_count() as i64),
+                        J::Num(d.debug_actual_line_count() as i64),
+                    ])
+                })
+                .collect();
             let mut s = String::new();
             let hi: Vec<J> = docs
                 .iter()
@@ -483,7 +602,10 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
                     ])
                 })
                 .collect();
-            write(&mut s, &J::Arr(vec![J::Arr(dd), J::Arr(ml), J::Arr(sz), J::Arr(hi)]));
+            write(
+                &mut s,
+                &J::Arr(vec![J::Arr(dd), J::Arr(ml), J::Arr(sz), J::Arr(hi)]),
+            );
             eprintln!("DBG {k} {s}");
         }
     }
@@ -538,13 +660,19 @@ fn replay(seq: &Value) -> (String, Vec<String>) {
 
 #[test]
 fn cm5_doc_ops_differential() {
-    let path = std::env::var("CM_FUZZ_BASELINE").map(PathBuf::from).unwrap_or_else(|_| {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/cm5-doc-ops-baseline.json")
-    });
+    let path = std::env::var("CM_FUZZ_BASELINE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/cm5-doc-ops-baseline.json")
+        });
     std::panic::set_hook(Box::new(|_| {}));
-    let data: Value = serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline file")).unwrap();
+    let data: Value =
+        serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline file")).unwrap();
     let seqs = data["sequences"].as_array().unwrap();
-    let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(8).clamp(8, 16);
+    let threads = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(8)
+        .clamp(8, 16);
     let chunks: Vec<&[Value]> = seqs.chunks(seqs.len().div_ceil(threads)).collect();
     let results: Vec<Vec<(i64, Option<String>)>> = std::thread::scope(|s| {
         let hs: Vec<_> = chunks
@@ -565,14 +693,20 @@ fn cm5_doc_ops_differential() {
                                     for (i, g) in per_op.iter().enumerate() {
                                         let e = exp.get(i).copied().unwrap_or("");
                                         if e != g {
-                                            let op = seq["ops"].get(i).map(|o| o.to_string()).unwrap_or_else(|| "<final dump>".into());
-                                            detail = format!("op #{i} {op}\n    {}", first_diff(e, g));
+                                            let op = seq["ops"]
+                                                .get(i)
+                                                .map(|o| o.to_string())
+                                                .unwrap_or_else(|| "<final dump>".into());
+                                            detail =
+                                                format!("op #{i} {op}\n    {}", first_diff(e, g));
                                             break;
                                         }
                                     }
                                     (seed, Some(detail))
                                 }
-                                Err(e) => (seed, Some(format!("replay panicked: {}", panic_msg(e)))),
+                                Err(e) => {
+                                    (seed, Some(format!("replay panicked: {}", panic_msg(e))))
+                                }
                             }
                         })
                         .collect()
@@ -583,11 +717,20 @@ fn cm5_doc_ops_differential() {
     });
     let all: Vec<(i64, Option<String>)> = results.into_iter().flatten().collect();
     let bad: Vec<&(i64, Option<String>)> = all.iter().filter(|(_, d)| d.is_some()).collect();
-    println!("fuzz oracle: {} sequences compared, {} mismatches", all.len(), bad.len());
+    println!(
+        "fuzz oracle: {} sequences compared, {} mismatches",
+        all.len(),
+        bad.len()
+    );
     for (seed, d) in bad.iter().take(15) {
         println!("seed {seed}: {}", d.as_ref().unwrap());
     }
-    assert!(bad.is_empty(), "{} of {} sequences differ from CodeMirror 5", bad.len(), all.len());
+    assert!(
+        bad.is_empty(),
+        "{} of {} sequences differ from CodeMirror 5",
+        bad.len(),
+        all.len()
+    );
 }
 
 /// Split a JSON array text into its top-level element texts.
@@ -629,7 +772,11 @@ fn split_top_level(s: &str) -> Vec<&str> {
 }
 
 fn first_diff(js: &str, rust: &str) -> String {
-    let n = js.bytes().zip(rust.bytes()).take_while(|(a, b)| a == b).count();
+    let n = js
+        .bytes()
+        .zip(rust.bytes())
+        .take_while(|(a, b)| a == b)
+        .count();
     let mut a = n.saturating_sub(160);
     while !js.is_char_boundary(a) {
         a -= 1;
@@ -645,5 +792,9 @@ fn first_diff(js: &str, rust: &str) -> String {
         }
         t[b..e].to_string()
     };
-    format!("(first difference at byte {n})\n    js:   …{}\n    rust: …{}", cut(js), cut(rust))
+    format!(
+        "(first difference at byte {n})\n    js:   …{}\n    rust: …{}",
+        cut(js),
+        cut(rust)
+    )
 }

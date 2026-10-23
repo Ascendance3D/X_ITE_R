@@ -31,15 +31,28 @@ fn diff_step(expected: &Value, actual: &Value, exp_vrml: &str, act_vrml: &str) -
 
     for field in ["loadCount", "console", "externs", "instances"] {
         if expected[field] != actual[field] {
-            out.push((field, expected[field].to_string(), actual[field].to_string()));
+            out.push((
+                field,
+                expected[field].to_string(),
+                actual[field].to_string(),
+            ));
         }
     }
 
     if exp_vrml != act_vrml {
-        let (e, a): (Vec<&str>, Vec<&str>) = (exp_vrml.split('\n').collect(), act_vrml.split('\n').collect());
-        let i = (0..e.len().max(a.len())).find(|&i| e.get(i) != a.get(i)).unwrap_or(0);
+        let (e, a): (Vec<&str>, Vec<&str>) = (
+            exp_vrml.split('\n').collect(),
+            act_vrml.split('\n').collect(),
+        );
+        let i = (0..e.len().max(a.len()))
+            .find(|&i| e.get(i) != a.get(i))
+            .unwrap_or(0);
 
-        out.push(("vrml", format!("line {}: {:?}", i + 1, e.get(i)), format!("{:?}", a.get(i))));
+        out.push((
+            "vrml",
+            format!("line {}: {:?}", i + 1, e.get(i)),
+            format!("{:?}", a.get(i)),
+        ));
     }
 
     out
@@ -47,22 +60,38 @@ fn diff_step(expected: &Value, actual: &Value, exp_vrml: &str, act_vrml: &str) -
 
 /// `case<TAB>first<TAB>last<TAB>fields<TAB>reason`: differences in these fields in these steps are expected.
 fn known() -> Vec<(String, u64, u64, Vec<String>, String)> {
-    let text = std::fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/synthetic-externproto-reload-known.tsv")).unwrap_or_default();
+    let text = std::fs::read_to_string(
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/synthetic-externproto-reload-known.tsv"),
+    )
+    .unwrap_or_default();
 
     text.lines()
         .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
         .map(|l| {
             let p: Vec<&str> = l.split('\t').collect();
-            (p[0].to_string(), p[1].parse().unwrap(), p[2].parse().unwrap(), p[3].split(',').map(String::from).collect(), p.get(4).unwrap_or(&"").to_string())
+            (
+                p[0].to_string(),
+                p[1].parse().unwrap(),
+                p[2].parse().unwrap(),
+                p[3].split(',').map(String::from).collect(),
+                p.get(4).unwrap_or(&"").to_string(),
+            )
         })
         .collect()
 }
 
 fn baseline() -> HashMap<String, Value> {
-    let text = std::fs::read_to_string(oracle_root().join("synthetic-externproto-reload-baseline.json")).expect("baseline");
+    let text =
+        std::fs::read_to_string(oracle_root().join("synthetic-externproto-reload-baseline.json"))
+            .expect("baseline");
     let json: Value = serde_json::from_str(&text).unwrap();
 
-    json["results"].as_array().unwrap().iter().map(|r| (r["case"].as_str().unwrap().to_string(), r.clone())).collect()
+    json["results"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|r| (r["case"].as_str().unwrap().to_string(), r.clone()))
+        .collect()
 }
 
 /// Compare one case; returns the differences as `(step, field, x_ite, rust)`.
@@ -72,7 +101,10 @@ fn compare_case(name: &str, expected: &Value) -> Vec<(u64, &'static str, String,
         big_stack(move || run_scenario(&n)).unwrap_or_else(|e| panic!("{name}: {e}"))
     };
 
-    let (es, as_) = (expected["steps"].as_array().unwrap(), actual["steps"].as_array().unwrap());
+    let (es, as_) = (
+        expected["steps"].as_array().unwrap(),
+        actual["steps"].as_array().unwrap(),
+    );
     let mut diffs = vec![];
 
     assert_eq!(es.len(), as_.len(), "{name}: step count");
@@ -106,28 +138,59 @@ fn synthetic_externproto_reload_matches_x_ite() {
     let mut exact = 0;
 
     for name in case_names() {
-        let diffs = compare_case(&name, base.get(&name).unwrap_or_else(|| panic!("{name}: no baseline (run oracle/x_ite-extern.mjs)")));
+        let diffs = compare_case(
+            &name,
+            base.get(&name)
+                .unwrap_or_else(|| panic!("{name}: no baseline (run oracle/x_ite-extern.mjs)")),
+        );
 
         if diffs.is_empty() {
             exact += 1;
         }
 
         for (k, field, x, r) in diffs {
-            match known.iter().position(|(c, first, last, fields, _)| *c == name && k >= *first && k <= *last && fields.iter().any(|f| f == field)) {
+            match known.iter().position(|(c, first, last, fields, _)| {
+                *c == name && k >= *first && k <= *last && fields.iter().any(|f| f == field)
+            }) {
                 Some(i) => used[i] = true,
-                None => unexplained.push(format!("{name} step {k} {field}:\n  x_ite {x}\n  rust  {r}")),
+                None => unexplained.push(format!(
+                    "{name} step {k} {field}:\n  x_ite {x}\n  rust  {r}"
+                )),
             }
         }
     }
 
-    let stale: Vec<String> = known.iter().zip(&used).filter(|(_, u)| !**u).map(|(k, _)| format!("{} steps {}-{}", k.0, k.1, k.2)).collect();
+    let stale: Vec<String> = known
+        .iter()
+        .zip(&used)
+        .filter(|(_, u)| !**u)
+        .map(|(k, _)| format!("{} steps {}-{}", k.0, k.1, k.2))
+        .collect();
 
     if std::env::var("X3D_SUMMARY").is_ok() {
         for u in &unexplained {
-            println!("DIFF {}", if std::env::var("X3D_SUMMARY").is_ok_and(|v| v == "full") { u.as_str() } else { u.lines().next().unwrap_or("") });
+            println!(
+                "DIFF {}",
+                if std::env::var("X3D_SUMMARY").is_ok_and(|v| v == "full") {
+                    u.as_str()
+                } else {
+                    u.lines().next().unwrap_or("")
+                }
+            );
         }
     }
 
-    assert!(unexplained.len() + stale.len() == 0, "unexplained differences ({}):\n{}\nstale known entries: {:?}", unexplained.len(), unexplained.iter().take(12).cloned().collect::<Vec<_>>().join("\n"), stale);
+    assert!(
+        unexplained.len() + stale.len() == 0,
+        "unexplained differences ({}):\n{}\nstale known entries: {:?}",
+        unexplained.len(),
+        unexplained
+            .iter()
+            .take(12)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join("\n"),
+        stale
+    );
     println!("{exact} of {} cases match exactly", base.len());
 }

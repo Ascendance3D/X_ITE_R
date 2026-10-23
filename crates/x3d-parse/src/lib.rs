@@ -16,9 +16,9 @@ mod json;
 pub mod lexer;
 pub mod optimizer;
 pub mod parser;
-pub mod woff1;
 mod svg;
 mod svg_canvas;
+pub mod woff1;
 mod xml;
 
 pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
@@ -98,14 +98,29 @@ pub fn is_valid_vrml(input: &str) -> bool {
         return true;
     }
 
-    for k in ["PROFILE", "COMPONENT", "META", "UNIT", "EXTERNPROTO", "PROTO", "DEF", "NULL", "IMPORT", "EXPORT", "ROUTE"] {
+    for k in [
+        "PROFILE",
+        "COMPONENT",
+        "META",
+        "UNIT",
+        "EXTERNPROTO",
+        "PROTO",
+        "DEF",
+        "NULL",
+        "IMPORT",
+        "EXPORT",
+        "ROUTE",
+    ] {
         if rest.starts_with(k) {
             return true;
         }
     }
 
     // \w+ (whitespace | comments)* \{
-    let word = rest.bytes().take_while(|b| b.is_ascii_alphanumeric() || *b == b'_').count();
+    let word = rest
+        .bytes()
+        .take_while(|b| b.is_ascii_alphanumeric() || *b == b'_')
+        .count();
 
     if word == 0 {
         return false;
@@ -127,7 +142,9 @@ impl std::fmt::Display for LoadError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             LoadError::Io(e) => write!(f, "{e}"),
-            LoadError::NoHandler => write!(f, "Couldn't parse X3D. No suitable file handler found."),
+            LoadError::NoHandler => {
+                write!(f, "Couldn't parse X3D. No suitable file handler found.")
+            }
             LoadError::Parse(e) => write!(f, "{e}"),
         }
     }
@@ -161,7 +178,6 @@ fn golden_gate(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
 }
 
 fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Scene, LoadError> {
-
     let mut svg_root = None;
 
     // createInput ("STRING"): undefined when bytes decode to nothing.
@@ -192,8 +208,10 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
 
         if let Ok(value) = json::json_parse(s) {
             if json::is_valid(&value) {
-                let root = json::to_x3d_element(&value).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
-                let mut scene = xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
+                let root = json::to_x3d_element(&value)
+                    .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+                let mut scene =
+                    xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
 
                 scene.encoding = "JSON".into();
                 return Ok(scene);
@@ -201,14 +219,16 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
 
             // GLTF2Parser (same JSON.parse result).
             if gltf2::is_valid_gltf(&value) {
-                return gltf2::parse_gltf(&value, world_url).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
+                return gltf2::parse_gltf(&value, world_url)
+                    .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
             }
         }
     }
 
     // GLB2Parser
     if gltf2::is_valid_glb(&data) {
-        return gltf2::parse_glb(&data, world_url).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
+        return gltf2::parse_glb(&data, world_url)
+            .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
     }
 
     if let Some(s) = string {
@@ -247,8 +267,10 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
 
 /// X3DBrowser.importJS: `new JSONParser (scene)` with the JSON text as its input, parsed into a new scene (no GoldenGate checks).
 pub fn parse_json_x3d(text: &str, world_url: &str) -> Result<Scene, LoadError> {
-    let value = json::json_parse(text).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
-    let root = json::to_x3d_element(&value).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+    let value = json::json_parse(text)
+        .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+    let root = json::to_x3d_element(&value)
+        .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
     let mut scene = xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
 
     scene.encoding = "JSON".into();

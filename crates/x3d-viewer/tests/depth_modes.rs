@@ -18,10 +18,19 @@ fn world(name: &str, text: &str) -> PathBuf {
     p
 }
 
-fn target(device: &wgpu::Device, format: wgpu::TextureFormat, w: u32, h: u32) -> (wgpu::Texture, wgpu::TextureView) {
+fn target(
+    device: &wgpu::Device,
+    format: wgpu::TextureFormat,
+    w: u32,
+    h: u32,
+) -> (wgpu::Texture, wgpu::TextureView) {
     let t = device.create_texture(&wgpu::TextureDescriptor {
         label: Some("test target"),
-        size: wgpu::Extent3d { width: w, height: h, depth_or_array_layers: 1 },
+        size: wgpu::Extent3d {
+            width: w,
+            height: h,
+            depth_or_array_layers: 1,
+        },
         mip_level_count: 1,
         sample_count: 1,
         dimension: wgpu::TextureDimension::D2,
@@ -33,14 +42,36 @@ fn target(device: &wgpu::Device, format: wgpu::TextureFormat, w: u32, h: u32) ->
     (t, v)
 }
 
-fn read(device: &wgpu::Device, queue: &wgpu::Queue, texture: &wgpu::Texture, w: u32, h: u32) -> Vec<u8> {
+fn read(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    texture: &wgpu::Texture,
+    w: u32,
+    h: u32,
+) -> Vec<u8> {
     let bpr = (w * 4).div_ceil(256) * 256;
-    let buf = device.create_buffer(&wgpu::BufferDescriptor { label: None, size: (bpr * h) as u64, usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ, mapped_at_creation: false });
+    let buf = device.create_buffer(&wgpu::BufferDescriptor {
+        label: None,
+        size: (bpr * h) as u64,
+        usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
+        mapped_at_creation: false,
+    });
     let mut enc = device.create_command_encoder(&Default::default());
     enc.copy_texture_to_buffer(
         texture.as_image_copy(),
-        wgpu::TexelCopyBufferInfo { buffer: &buf, layout: wgpu::TexelCopyBufferLayout { offset: 0, bytes_per_row: Some(bpr), rows_per_image: Some(h) } },
-        wgpu::Extent3d { width: w, height: h, depth_or_array_layers: 1 },
+        wgpu::TexelCopyBufferInfo {
+            buffer: &buf,
+            layout: wgpu::TexelCopyBufferLayout {
+                offset: 0,
+                bytes_per_row: Some(bpr),
+                rows_per_image: Some(h),
+            },
+        },
+        wgpu::Extent3d {
+            width: w,
+            height: h,
+            depth_or_array_layers: 1,
+        },
     );
     queue.submit([enc.finish()]);
     buf.slice(..).map_async(wgpu::MapMode::Read, |_| {});
@@ -59,18 +90,31 @@ const BOX: &str = "#VRML V2.0 utf8\nViewpoint { position 0 0 8 }\nShape { appear
 
 #[test]
 fn depth_modes_cycle_and_agree_on_plain_scenes() {
-    let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+    let Some((device, queue)) = device() else {
+        return eprintln!("no adapter, skipped");
+    };
     spawn_big_stack(move || {
         let (w, h) = (160, 120);
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (w, h));
         assert_eq!(v.depth_mode(), DepthMode::Standard);
         v.set_multisampling(1);
         let p = world("depth-box.wrl", BOX);
-        v.load(&p, LoadOptions { root: None, start_time: Some(T0) }).unwrap();
+        v.load(
+            &p,
+            LoadOptions {
+                root: None,
+                start_time: Some(T0),
+            },
+        )
+        .unwrap();
         let format = wgpu::TextureFormat::Rgba8Unorm;
         let mut images = vec![];
 
-        for expected in [DepthMode::Reversed, DepthMode::Logarithmic, DepthMode::Standard] {
+        for expected in [
+            DepthMode::Reversed,
+            DepthMode::Logarithmic,
+            DepthMode::Standard,
+        ] {
             let (tex, view) = target(&device, format, w, h);
             v.frame(T0 + 1.0, &view, format, w, h).unwrap();
             images.push(read(&device, &queue, &tex, w, h));
@@ -80,8 +124,16 @@ fn depth_modes_cycle_and_agree_on_plain_scenes() {
         // The Box is the same in all three (silhouette pixels can differ by one level of
         // rounding at most; the Box here is axis aligned).
         for pair in images.windows(2) {
-            let worst = pair[0].iter().zip(&pair[1]).map(|(a, b)| a.abs_diff(*b)).max().unwrap();
-            assert!(worst <= 8, "depth modes disagree on a plain scene (worst {worst})");
+            let worst = pair[0]
+                .iter()
+                .zip(&pair[1])
+                .map(|(a, b)| a.abs_diff(*b))
+                .max()
+                .unwrap();
+            assert!(
+                worst <= 8,
+                "depth modes disagree on a plain scene (worst {worst})"
+            );
         }
     });
 }

@@ -8,7 +8,10 @@ use x3d_render::gpu::Gpu;
 use x3d_render::traverse::{ortho, ortho_projection};
 
 fn oracle() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap()
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap()
 }
 
 #[test]
@@ -26,7 +29,9 @@ fn ortho_projection_matches_camera_bounds() {
 
 #[test]
 fn ortho_viewpoint_renders_without_unsupported_warning() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let root = oracle();
     let file = root.join("x10-scripts/plane-ortho.wrl");
     let shot = x3d_render::render_file(&mut g, &root, &file, 512, 512).unwrap();
@@ -38,25 +43,38 @@ fn ortho_viewpoint_renders_without_unsupported_warning() {
 /// Both give the same extents: the picture is the same, and not the one of the default extents.
 #[test]
 fn ortho_field_of_view_reads_sfvec4f_and_mffloat() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let root = oracle();
     let dir = std::env::temp_dir().join(format!("x3d-render-ortho-fov-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
 
     let render = |g: &mut Gpu, version: &str, fov: &str| {
-        let file = dir.join(format!("v{version}-{}.wrl", fov.replace([' ', '-', '.'], "_")));
+        let file = dir.join(format!(
+            "v{version}-{}.wrl",
+            fov.replace([' ', '-', '.'], "_")
+        ));
         let text = format!(
             "#X3D V{version} utf8\nPROFILE Interchange\nCOMPONENT Navigation:3\n\
              OrthoViewpoint {{ position 0 0 10 {fov} }}\n\
              Shape {{ appearance Appearance {{ material Material {{ diffuseColor 1 0.4 0.2 }} }} geometry Box {{ size 3 1 1 }} }}\n"
         );
         std::fs::write(&file, text).unwrap();
-        x3d_render::render_file(g, &root, &file, 128, 128).unwrap().rgba
+        x3d_render::render_file(g, &root, &file, 128, 128)
+            .unwrap()
+            .rgba
     };
 
     let v41 = render(&mut g, "4.1", "fieldOfView -4 -4 4 4");
     let v40 = render(&mut g, "4.0", "fieldOfView [ -4 -4 4 4 ]");
     let dflt = render(&mut g, "4.1", "");
-    assert_eq!(v41, v40, "SFVec4f (4.1) and MFFloat (4.0) extents must draw the same picture");
-    assert_ne!(v41, dflt, "extents -4 -4 4 4 must not draw the default -1 -1 1 1 picture");
+    assert_eq!(
+        v41, v40,
+        "SFVec4f (4.1) and MFFloat (4.0) extents must draw the same picture"
+    );
+    assert_ne!(
+        v41, dflt,
+        "extents -4 -4 4 4 must not draw the default -1 -1 1 1 picture"
+    );
 }

@@ -21,7 +21,9 @@ fn decode(p: &std::path::Path) -> Option<Vec<u8>> {
 
 #[test]
 fn sample_count_clamps_like_max_samples() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let r = &mut g.renderer;
     let supported = r.supported_samples().to_vec();
     assert_eq!(supported[0], 1);
@@ -29,9 +31,15 @@ fn sample_count_clamps_like_max_samples() {
     for request in [0u32, 1, 2, 3, 4, 5, 8, 16, 100] {
         r.set_sample_count(request);
         let n = r.sample_count();
-        assert!(supported.contains(&n), "{request} -> {n} not in {supported:?}");
+        assert!(
+            supported.contains(&n),
+            "{request} -> {n} not in {supported:?}"
+        );
         assert!(n <= request.max(1));
-        assert!(supported.iter().all(|&s| s > request.max(1) || s <= n), "{request} -> {n} is not the highest supported {supported:?}");
+        assert!(
+            supported.iter().all(|&s| s > request.max(1) || s <= n),
+            "{request} -> {n} is not the highest supported {supported:?}"
+        );
     }
 
     // The cycle visits every supported count and wraps.
@@ -46,7 +54,9 @@ fn sample_count_clamps_like_max_samples() {
 
 #[test]
 fn edge_scenes_match_the_x_ite_resolve() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let root = oracle().canonicalize().unwrap();
     let mut checked = 0;
 
@@ -60,12 +70,37 @@ fn edge_scenes_match_the_x_ite_resolve() {
         }
 
         for name in ["edge-quad", "edge-sliver", "edge-sphere", "edge-fine-lines"] {
-            let Some(want) = decode(&root.join(format!("render-msaa{samples}-synth-baseline/{name}.wrl.png"))) else { return eprintln!("baseline missing") };
-            let shot = x3d_render::render_file(&mut g, &root, &root.join(format!("synthetic-msaa/{name}.wrl")), 512, 512).unwrap();
-            let worst = shot.rgba.chunks_exact(4).zip(want.chunks_exact(4)).map(|(a, b)| (0..3).map(|c| a[c].abs_diff(b[c])).max().unwrap()).max().unwrap();
-            let over = shot.rgba.chunks_exact(4).zip(want.chunks_exact(4)).filter(|(a, b)| (0..3).any(|c| a[c].abs_diff(b[c]) > 8)).count();
+            let Some(want) = decode(&root.join(format!(
+                "render-msaa{samples}-synth-baseline/{name}.wrl.png"
+            ))) else {
+                return eprintln!("baseline missing");
+            };
+            let shot = x3d_render::render_file(
+                &mut g,
+                &root,
+                &root.join(format!("synthetic-msaa/{name}.wrl")),
+                512,
+                512,
+            )
+            .unwrap();
+            let worst = shot
+                .rgba
+                .chunks_exact(4)
+                .zip(want.chunks_exact(4))
+                .map(|(a, b)| (0..3).map(|c| a[c].abs_diff(b[c])).max().unwrap())
+                .max()
+                .unwrap();
+            let over = shot
+                .rgba
+                .chunks_exact(4)
+                .zip(want.chunks_exact(4))
+                .filter(|(a, b)| (0..3).any(|c| a[c].abs_diff(b[c]) > 8))
+                .count();
             // On the reference machine (RTX 3060 Ti, ANGLE/GL vs Vulkan): exactly 0.
-            assert!(over * 1000 <= 512 * 512 * 5, "{name} {samples}x: {over} pixels over 8 (worst {worst})");
+            assert!(
+                over * 1000 <= 512 * 512 * 5,
+                "{name} {samples}x: {over} pixels over 8 (worst {worst})"
+            );
             checked += 1;
         }
     }
@@ -75,13 +110,19 @@ fn edge_scenes_match_the_x_ite_resolve() {
 
 #[test]
 fn multisampling_changes_edges_only() {
-    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
     let root = oracle().canonicalize().unwrap();
     let file = root.join("synthetic-msaa/edge-quad.wrl");
     g.renderer.set_sample_count(1);
-    let a = x3d_render::render_file(&mut g, &root, &file, 512, 512).unwrap().rgba;
+    let a = x3d_render::render_file(&mut g, &root, &file, 512, 512)
+        .unwrap()
+        .rgba;
     g.renderer.set_sample_count(4);
-    let b = x3d_render::render_file(&mut g, &root, &file, 512, 512).unwrap().rgba;
+    let b = x3d_render::render_file(&mut g, &root, &file, 512, 512)
+        .unwrap()
+        .rgba;
 
     if g.renderer.sample_count() < 2 {
         return;
@@ -93,5 +134,8 @@ fn multisampling_changes_edges_only() {
     for (p, q) in a.chunks_exact(4).zip(b.chunks_exact(4)) {
         if p == q { same += 1 } else { edge += 1 }
     }
-    assert!(edge > 0 && edge * 20 < same, "{edge} changed vs {same} same");
+    assert!(
+        edge > 0 && edge * 20 < same,
+        "{edge} changed vs {same} same"
+    );
 }

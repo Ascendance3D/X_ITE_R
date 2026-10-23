@@ -59,7 +59,15 @@ pub struct Field {
 
 impl Field {
     pub fn new(name: &str, access: u8, value: FieldValue) -> Self {
-        Field { name: name.to_string(), access, value, references: vec![], modified: false, input_routes: 0, output_routes: 0 }
+        Field {
+            name: name.to_string(),
+            access,
+            value,
+            references: vec![],
+            modified: false,
+            input_routes: 0,
+            output_routes: 0,
+        }
     }
 
     pub fn ty(&self) -> FieldType {
@@ -260,17 +268,32 @@ pub struct UnitInfo {
 
 /// X3DScene's initial UnitInfoArray: radian, newton, metre, kilogram, all 1.
 pub fn default_units() -> Vec<UnitInfo> {
-    [("angle", "radian"), ("force", "newton"), ("length", "metre"), ("mass", "kilogram")]
-        .iter()
-        .map(|(c, n)| UnitInfo { category: c.to_string(), name: n.to_string(), conversion_factor: 1.0 })
-        .collect()
+    [
+        ("angle", "radian"),
+        ("force", "newton"),
+        ("length", "metre"),
+        ("mass", "kilogram"),
+    ]
+    .iter()
+    .map(|(c, n)| UnitInfo {
+        category: c.to_string(),
+        name: n.to_string(),
+        conversion_factor: 1.0,
+    })
+    .collect()
 }
 
 /// The factor X3DScene.fromUnit multiplies with (toUnit divides): base categories use their own
 /// unit, derived ones the length or angle unit. X_ITE spells the acceleration case
 /// "acceleration:", so acceleration fields are never converted.
 pub fn unit_factor(units: &[UnitInfo], category: &str) -> f64 {
-    let get = |c: &str| units.iter().find(|u| u.category == c).map(|u| u.conversion_factor).unwrap_or(1.0);
+    let get = |c: &str| {
+        units
+            .iter()
+            .find(|u| u.category == c)
+            .map(|u| u.conversion_factor)
+            .unwrap_or(1.0)
+    };
 
     match category {
         "angle" | "force" | "length" | "mass" => get(category),
@@ -570,7 +593,10 @@ impl Scene {
             None => &self.component_level_texts,
         };
 
-        texts.get(name).cloned().unwrap_or_else(|| level.to_string())
+        texts
+            .get(name)
+            .cloned()
+            .unwrap_or_else(|| level.to_string())
     }
 
     pub fn units_of(&self, ctx: CtxId) -> &[UnitInfo] {
@@ -587,12 +613,20 @@ impl Scene {
         let unit = node.and_then(|n| match self.node(n).kind {
             NodeKind::Builtin(t) => {
                 let spec = self.spec_version_of(ctx);
-                self.table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.clone())
+                self.table.types[t]
+                    .variant(spec)
+                    .fields
+                    .iter()
+                    .find(|d| d.name == field_name)
+                    .and_then(|d| d.unit.clone())
             }
             _ => None,
         });
 
-        (unit.map(|u| unit_factor(units, &u)).unwrap_or(1.0), unit_factor(units, "angle"))
+        (
+            unit.map(|u| unit_factor(units, &u)).unwrap_or(1.0),
+            unit_factor(units, "angle"),
+        )
     }
 
     /// Has predefined field `field_name` of `node` a unit category X3DScene.toUnit converts (the categories of
@@ -601,8 +635,25 @@ impl Scene {
         match self.node(node).kind {
             NodeKind::Builtin(t) => {
                 let spec = self.spec_version_of(self.node(node).ctx);
-                self.table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.as_deref())
-                    .is_some_and(|u| matches!(u, "angle" | "force" | "length" | "mass" | "angularRate" | "area" | "speed" | "volume"))
+                self.table.types[t]
+                    .variant(spec)
+                    .fields
+                    .iter()
+                    .find(|d| d.name == field_name)
+                    .and_then(|d| d.unit.as_deref())
+                    .is_some_and(|u| {
+                        matches!(
+                            u,
+                            "angle"
+                                | "force"
+                                | "length"
+                                | "mass"
+                                | "angularRate"
+                                | "area"
+                                | "speed"
+                                | "volume"
+                        )
+                    })
             }
             _ => false,
         }
@@ -641,7 +692,11 @@ impl Scene {
 
     pub fn update_component(&mut self, name: &str, level: i32) {
         // getComponent (name, level) names the component by its own name, not by an alias.
-        let name = self.table.component(name).map_or(name, |c| c.name.as_str()).to_string();
+        let name = self
+            .table
+            .component(name)
+            .map_or(name, |c| c.name.as_str())
+            .to_string();
         let name = name.as_str();
 
         match self.components.iter_mut().find(|c| c.0 == name) {
@@ -677,7 +732,9 @@ impl Scene {
     /// statements (and their dependencies). X3DBrowser.loadComponents.
     /// `browser .getConcreteNodes () .has (name)`: node types of the components loaded so far.
     pub fn is_concrete_node(&self, name: &str) -> bool {
-        self.table.get(name).is_some_and(|t| self.component_loaded(&t.component))
+        self.table
+            .get(name)
+            .is_some_and(|t| self.component_loaded(&t.component))
     }
 
     pub fn component_loaded(&self, name: &str) -> bool {
@@ -719,7 +776,11 @@ impl Scene {
 
     /// A new context, in a released slot if there is one.
     pub fn new_context(&mut self, parent: CtxId, outer: Outer) -> CtxId {
-        let ctx = ExecutionContext { parent: Some(parent), outer, ..empty_context() };
+        let ctx = ExecutionContext {
+            parent: Some(parent),
+            outer,
+            ..empty_context()
+        };
 
         match self.ctx_slots.take() {
             Some(c) => {
@@ -735,12 +796,18 @@ impl Scene {
 
     /// The context with the generation of its slot now.
     pub fn ctx_handle(&self, id: CtxId) -> CtxHandle {
-        CtxHandle { id, generation: self.ctx_slots.generation(id) }
+        CtxHandle {
+            id,
+            generation: self.ctx_slots.generation(id),
+        }
     }
 
     /// The context a handle names, if its slot was not released since the handle was taken.
     pub fn resolve_ctx(&self, h: CtxHandle) -> Option<CtxId> {
-        (h.id < self.contexts.len() && !self.ctx_slots.is_free(h.id) && self.ctx_slots.generation(h.id) == h.generation).then_some(h.id)
+        (h.id < self.contexts.len()
+            && !self.ctx_slots.is_free(h.id)
+            && self.ctx_slots.generation(h.id) == h.generation)
+            .then_some(h.id)
     }
 
     // --- released table slots (R0.3-E) --------------------------------------------------------
@@ -759,26 +826,51 @@ impl Scene {
 
     pub fn release_proto(&mut self, id: ProtoId) {
         if self.proto_slots.release(id) {
-            self.protos[id] = ProtoDecl { name: String::new(), ctx: ROOT, body: ROOT, fields: vec![], has_metadata: false };
+            self.protos[id] = ProtoDecl {
+                name: String::new(),
+                ctx: ROOT,
+                body: ROOT,
+                fields: vec![],
+                has_metadata: false,
+            };
         }
     }
 
     pub fn release_extern(&mut self, id: ExternId) {
         if self.extern_slots.release(id) {
-            self.externprotos[id] = ExternProtoDecl { name: String::new(), ctx: ROOT, fields: vec![], has_metadata: false, url: vec![], complete: false };
+            self.externprotos[id] = ExternProtoDecl {
+                name: String::new(),
+                ctx: ROOT,
+                fields: vec![],
+                has_metadata: false,
+                url: vec![],
+                complete: false,
+            };
         }
     }
 
     /// A released IMPORT record names no node: whoever walks the table skips released slots.
     pub fn release_imported(&mut self, id: ImportedId) {
         if self.imported_slots.release(id) {
-            self.imported[id] = ImportedNode { ctx: ROOT, inline: 0, exported_name: String::new(), imported_name: String::new(), description: String::new(), instance: 0 };
+            self.imported[id] = ImportedNode {
+                ctx: ROOT,
+                inline: 0,
+                exported_name: String::new(),
+                imported_name: String::new(),
+                description: String::new(),
+                instance: 0,
+            };
         }
     }
 
     pub fn release_exported(&mut self, id: ExportedId) {
         if self.exported_slots.release(id) {
-            self.exported[id] = ExportedNode { ctx: ROOT, exported_name: String::new(), local: 0, description: String::new() };
+            self.exported[id] = ExportedNode {
+                ctx: ROOT,
+                exported_name: String::new(),
+                local: 0,
+                description: String::new(),
+            };
         }
     }
 
@@ -802,7 +894,11 @@ impl Scene {
 
     /// Put `node` into a released slot if there is one, else at the end of the arena.
     fn push_node(&mut self, node: Node) -> NodeId {
-        let reuse = if self.append_only { None } else { self.free_nodes.pop_first() };
+        let reuse = if self.append_only {
+            None
+        } else {
+            self.free_nodes.pop_first()
+        };
         let id = match reuse {
             Some(id) => {
                 self.nodes[id as usize] = node;
@@ -902,7 +998,9 @@ impl Scene {
 
         if !self.has_component_in(ctx, &ty.component) {
             let url = self.world_url_of(ctx).to_string();
-            self.warn(format!("Node type '{type_name}' does not match component/profile statements in '{url}'."));
+            self.warn(format!(
+                "Node type '{type_name}' does not match component/profile statements in '{url}'."
+            ));
         }
 
         Some(self.instantiate_builtin(ctx, index))
@@ -911,17 +1009,34 @@ impl Scene {
     pub fn instantiate_builtin(&mut self, ctx: CtxId, index: usize) -> NodeId {
         // TwoSidedMaterial constructor: X3D 4.0 deprecated the node.
         if self.table.types[index].name == "TwoSidedMaterial" {
-            self.warn("TwoSidedMaterial is deprecated, please use Appearance backMaterial field instead.".into());
+            self.warn(
+                "TwoSidedMaterial is deprecated, please use Appearance backMaterial field instead."
+                    .into(),
+            );
         }
 
         let ty = &self.table.types[index];
         let variant = ty.variant(self.spec_version_of(ctx));
-        let mut fields: Vec<Field> = variant.fields.iter().map(|d| Field::new(&d.name, d.access, d.initial.clone())).collect();
+        let mut fields: Vec<Field> = variant
+            .fields
+            .iter()
+            .map(|d| Field::new(&d.name, d.access, d.initial.clone()))
+            .collect();
 
         // TextureProperties constructor, legacy (specification version <= 3.3): FASTEST filters
         // and compression, assigned like field values.
-        if ty.name == "TextureProperties" && self.spec_version_of(ctx).parse::<f64>().is_ok_and(|v| v <= 3.3) {
-            for f in fields.iter_mut().filter(|f| matches!(f.name.as_str(), "minificationFilter" | "magnificationFilter" | "textureCompression")) {
+        if ty.name == "TextureProperties"
+            && self
+                .spec_version_of(ctx)
+                .parse::<f64>()
+                .is_ok_and(|v| v <= 3.3)
+        {
+            for f in fields.iter_mut().filter(|f| {
+                matches!(
+                    f.name.as_str(),
+                    "minificationFilter" | "magnificationFilter" | "textureCompression"
+                )
+            }) {
                 f.value = FieldValue::SFString("FASTEST".into());
                 f.modified = true;
             }
@@ -929,7 +1044,12 @@ impl Scene {
 
         // WindPhysicsModel constructor, legacy (specification version <= 3.3): `direction` starts at
         // the zero vector (random directions), assigned like a field value.
-        if ty.name == "WindPhysicsModel" && self.spec_version_of(ctx).parse::<f64>().is_ok_and(|v| v <= 3.3) {
+        if ty.name == "WindPhysicsModel"
+            && self
+                .spec_version_of(ctx)
+                .parse::<f64>()
+                .is_ok_and(|v| v <= 3.3)
+        {
             if let Some(f) = fields.iter_mut().find(|f| f.name == "direction") {
                 f.value = FieldValue::SFVec3f(Default::default());
                 f.modified = true;
@@ -940,7 +1060,11 @@ impl Scene {
         // for specification versions up to 3.2 (see [`Scene::child_alias`]).
         let private_fields = if ty.name == "GeoViewpoint" {
             vec![
-                Field::new("navType", access::INPUT_OUTPUT, FieldValue::MFString(vec!["EXAMINE".into(), "ANY".into()])),
+                Field::new(
+                    "navType",
+                    access::INPUT_OUTPUT,
+                    FieldValue::MFString(vec!["EXAMINE".into(), "ANY".into()]),
+                ),
                 Field::new("headlight", access::INPUT_OUTPUT, FieldValue::SFBool(true)),
             ]
         } else {
@@ -962,7 +1086,11 @@ impl Scene {
     /// adds the aliases navType and headlight (and traverses its own NavigationInfo).
     pub fn is_legacy_geo_viewpoint(&self, id: NodeId) -> bool {
         matches!(self.node(id).kind, NodeKind::Builtin(i) if self.table.types[i].name == "GeoViewpoint")
-            && self.spec_version_of(self.node(id).ctx).trim().parse::<f64>().is_ok_and(|v| v <= 3.2)
+            && self
+                .spec_version_of(self.node(id).ctx)
+                .trim()
+                .parse::<f64>()
+                .is_ok_and(|v| v <= 3.2)
     }
 
     /// X3DBaseNode.addAlias of a private child object (FieldDefinitionArray.alias), looked up
@@ -973,7 +1101,11 @@ impl Scene {
         }
 
         let private = &self.node(id).private_fields;
-        let find = |n: &str| matches!(n, "navType" | "headlight").then(|| private.iter().position(|f| f.name == n)).flatten();
+        let find = |n: &str| {
+            matches!(n, "navType" | "headlight")
+                .then(|| private.iter().position(|f| f.name == n))
+                .flatten()
+        };
 
         find(name)
             .or_else(|| name.strip_prefix("set_").and_then(find))
@@ -999,7 +1131,10 @@ impl Scene {
         loop {
             let found = match self.contexts[c].protos.get(name) {
                 Some(p) => Some(ProtoRef::Proto(p)),
-                None => self.contexts[c].externprotos.get(name).map(ProtoRef::Extern),
+                None => self.contexts[c]
+                    .externprotos
+                    .get(name)
+                    .map(ProtoRef::Extern),
             };
 
             if let Some(proto) = found {
@@ -1022,13 +1157,20 @@ impl Scene {
     pub fn instantiate_proto(&mut self, ctx: CtxId, proto: ProtoRef) -> NodeId {
         let (has_metadata, interface) = match proto {
             ProtoRef::Proto(p) => (self.protos[p].has_metadata, &self.protos[p].fields),
-            ProtoRef::Extern(e) => (self.externprotos[e].has_metadata, &self.externprotos[e].fields),
+            ProtoRef::Extern(e) => (
+                self.externprotos[e].has_metadata,
+                &self.externprotos[e].fields,
+            ),
         };
 
         let mut fields = vec![];
 
         if has_metadata {
-            fields.push(Field::new("metadata", access::INPUT_OUTPUT, FieldValue::SFNode(None)));
+            fields.push(Field::new(
+                "metadata",
+                access::INPUT_OUTPUT,
+                FieldValue::SFNode(None),
+            ));
         }
 
         for f in interface {
@@ -1060,7 +1202,11 @@ impl Scene {
 
     // --- fields ---------------------------------------------------------------------------
 
-    fn find_in(fields: &[Field], aliases: Option<&std::collections::HashMap<String, String>>, name: &str) -> Option<usize> {
+    fn find_in(
+        fields: &[Field],
+        aliases: Option<&std::collections::HashMap<String, String>>,
+        name: &str,
+    ) -> Option<usize> {
         let direct = |n: &str| -> Option<usize> {
             if let Some(i) = fields.iter().position(|f| f.name == n) {
                 return Some(i);
@@ -1090,7 +1236,11 @@ impl Scene {
 
     fn aliases(&self, id: NodeId) -> Option<&std::collections::HashMap<String, String>> {
         match &self.node(id).kind {
-            NodeKind::Builtin(i) => Some(&self.table.types[*i].variant(self.spec_version_of(self.node(id).ctx)).aliases),
+            NodeKind::Builtin(i) => Some(
+                &self.table.types[*i]
+                    .variant(self.spec_version_of(self.node(id).ctx))
+                    .aliases,
+            ),
             _ => None,
         }
     }
@@ -1111,7 +1261,9 @@ impl Scene {
             return Some(FieldLoc::User(i));
         }
 
-        self.get_predefined_field(id, name).map(FieldLoc::Pre).or_else(|| self.child_alias(id, name).map(FieldLoc::Priv))
+        self.get_predefined_field(id, name)
+            .map(FieldLoc::Pre)
+            .or_else(|| self.child_alias(id, name).map(FieldLoc::Priv))
     }
 
     pub fn field(&self, id: NodeId, loc: FieldLoc) -> &Field {
@@ -1153,7 +1305,11 @@ impl Scene {
 
         match (&node.kind, loc) {
             (NodeKind::Builtin(t), FieldLoc::Pre(_)) => {
-                let def = self.table.types[*t].variant(self.spec_version_of(node.ctx)).fields.iter().find(|d| d.name == field.name);
+                let def = self.table.types[*t]
+                    .variant(self.spec_version_of(node.ctx))
+                    .fields
+                    .iter()
+                    .find(|d| d.name == field.name);
 
                 match def {
                     Some(d) => d.default.equals(&field.value),
@@ -1163,17 +1319,27 @@ impl Scene {
             (NodeKind::Instance(ProtoRef::Proto(p)), FieldLoc::Pre(_)) => {
                 match self.protos[*p].fields.iter().find(|f| f.name == field.name) {
                     Some(f) => f.value.equals(&field.value),
-                    None if field.name == "metadata" => field.value.equals(&FieldValue::SFNode(None)),
+                    None if field.name == "metadata" => {
+                        field.value.equals(&FieldValue::SFNode(None))
+                    }
                     None => !field.modified,
                 }
             }
             // X3DPrototypeInstance.isDefaultValue: an extern proto that is not loaded only knows
             // whether a field was set; a loaded one compares with the PROTO's defaults, which the
             // declaration took over (X3DBaseNode.isDefaultValue).
-            (NodeKind::Instance(ProtoRef::Extern(e)), FieldLoc::Pre(_)) if self.externprotos[*e].complete => {
-                match self.externprotos[*e].fields.iter().find(|f| f.name == field.name) {
+            (NodeKind::Instance(ProtoRef::Extern(e)), FieldLoc::Pre(_))
+                if self.externprotos[*e].complete =>
+            {
+                match self.externprotos[*e]
+                    .fields
+                    .iter()
+                    .find(|f| f.name == field.name)
+                {
                     Some(f) => f.value.equals(&field.value),
-                    None if field.name == "metadata" => field.value.equals(&FieldValue::SFNode(None)),
+                    None if field.name == "metadata" => {
+                        field.value.equals(&FieldValue::SFNode(None))
+                    }
                     None => !field.modified,
                 }
             }
@@ -1233,12 +1399,25 @@ impl Scene {
         let id = self.protos.len();
         let body = self.new_context(ctx, Outer::Proto(id));
 
-        self.protos.push(ProtoDecl { name: String::new(), ctx, body, fields: vec![], has_metadata: true });
+        self.protos.push(ProtoDecl {
+            name: String::new(),
+            ctx,
+            body,
+            fields: vec![],
+            has_metadata: true,
+        });
         id
     }
 
     pub fn new_extern_proto(&mut self, ctx: CtxId, url: Vec<String>) -> ExternId {
-        self.externprotos.push(ExternProtoDecl { name: String::new(), ctx, fields: vec![], has_metadata: true, url, complete: false });
+        self.externprotos.push(ExternProtoDecl {
+            name: String::new(),
+            ctx,
+            fields: vec![],
+            has_metadata: true,
+            url,
+            complete: false,
+        });
         self.externprotos.len() - 1
     }
 
@@ -1258,7 +1437,9 @@ impl Scene {
     /// X3DExecutionContext.updateProtoDeclaration (with its console warnings).
     pub fn update_proto_declaration(&mut self, ctx: CtxId, name: &str, proto: ProtoId) {
         if self.contexts[ctx].externprotos.get(name).is_some() {
-            self.warnings.push(format!("Added proto '{name}' will override extern proto with same name."));
+            self.warnings.push(format!(
+                "Added proto '{name}' will override extern proto with same name."
+            ));
         }
 
         if self.is_concrete_node(name) {
@@ -1274,7 +1455,9 @@ impl Scene {
     /// X3DExecutionContext.updateExternProtoDeclaration (with its console warnings).
     pub fn update_extern_proto_declaration(&mut self, ctx: CtxId, name: &str, proto: ExternId) {
         if self.contexts[ctx].protos.get(name).is_some() {
-            self.warnings.push(format!("Added extern proto '{name}' will be overridden by proto with same name."));
+            self.warnings.push(format!(
+                "Added extern proto '{name}' will be overridden by proto with same name."
+            ));
         }
 
         if self.is_concrete_node(name) {
@@ -1283,7 +1466,9 @@ impl Scene {
 
         let old_name = self.externprotos[proto].name.clone();
 
-        self.contexts[ctx].externprotos.update(&old_name, name, proto);
+        self.contexts[ctx]
+            .externprotos
+            .update(&old_name, name, proto);
         self.externprotos[proto].name = name.to_string();
     }
 
@@ -1314,18 +1499,37 @@ impl Scene {
 
     /// X3DExecutionContext.getRoute up to the search: the fields of ordinary nodes must exist (`Unknown field`) and
     /// X3DRoute.checkFields must accept them. An imported node has no fields to check.
-    pub fn route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(Option<FieldLoc>, Option<FieldLoc>), String> {
+    pub fn route_ends(
+        &self,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<(Option<FieldLoc>, Option<FieldLoc>), String> {
         let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
 
         let src = if src_imp {
             None
         } else {
-            Some(self.get_field(source, source_field).ok_or_else(|| format!("Unknown field '{source_field}' in node class {}.", self.type_name(source)))?)
+            Some(self.get_field(source, source_field).ok_or_else(|| {
+                format!(
+                    "Unknown field '{source_field}' in node class {}.",
+                    self.type_name(source)
+                )
+            })?)
         };
         let dst = if dst_imp {
             None
         } else {
-            Some(self.get_field(destination, destination_field).ok_or_else(|| format!("Unknown field '{destination_field}' in node class {}.", self.type_name(destination)))?)
+            Some(
+                self.get_field(destination, destination_field)
+                    .ok_or_else(|| {
+                        format!(
+                            "Unknown field '{destination_field}' in node class {}.",
+                            self.type_name(destination)
+                        )
+                    })?,
+            )
         };
 
         // X3DRoute.checkFields.
@@ -1344,7 +1548,10 @@ impl Scene {
             let sf = self.field(source, src);
 
             if !access::is_output(sf.access) {
-                return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+                return Err(format!(
+                    "Bad ROUTE specification: source field \"{}\" must be an output.",
+                    sf.name
+                ));
             }
         }
 
@@ -1352,7 +1559,10 @@ impl Scene {
             let df = self.field(destination, dst);
 
             if !access::is_input(df.access) {
-                return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+                return Err(format!(
+                    "Bad ROUTE specification: destination field \"{}\" must be an input.",
+                    df.name
+                ));
             }
         }
 
@@ -1360,10 +1570,25 @@ impl Scene {
     }
 
     /// The route of `ctx` with these ends (X3DExecutionContext.getRoute's search), by index.
-    pub fn find_route_index(&self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<usize> {
+    pub fn find_route_index(
+        &self,
+        ctx: CtxId,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Option<usize> {
         let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
-        let src = if src_imp { None } else { self.get_field(source, source_field) };
-        let dst = if dst_imp { None } else { self.get_field(destination, destination_field) };
+        let src = if src_imp {
+            None
+        } else {
+            self.get_field(source, source_field)
+        };
+        let dst = if dst_imp {
+            None
+        } else {
+            self.get_field(destination, destination_field)
+        };
 
         self.contexts[ctx].routes.iter().position(|r| {
             r.source_node == source
@@ -1390,10 +1615,20 @@ impl Scene {
     /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
     /// the cases where X_ITE throws. A route that ends at an imported node is created
     /// unconnected; the runtime connects it once the Inline provides the exported node.
-    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
+    pub fn add_route(
+        &mut self,
+        ctx: CtxId,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<Option<usize>, String> {
         let (src, dst) = self.route_ends(source, source_field, destination, destination_field)?;
 
-        if self.find_route_index(ctx, source, source_field, destination, destination_field).is_some() {
+        if self
+            .find_route_index(ctx, source, source_field, destination, destination_field)
+            .is_some()
+        {
             return Ok(None);
         }
 
@@ -1402,8 +1637,16 @@ impl Scene {
             (Some(s), Some(d)) => {
                 let (sf, df) = (self.field(source, s), self.field(destination, d));
                 (
-                    if sf.access == access::INPUT_OUTPUT { format!("{}_changed", sf.name) } else { sf.name.clone() },
-                    if df.access == access::INPUT_OUTPUT { format!("set_{}", df.name) } else { df.name.clone() },
+                    if sf.access == access::INPUT_OUTPUT {
+                        format!("{}_changed", sf.name)
+                    } else {
+                        sf.name.clone()
+                    },
+                    if df.access == access::INPUT_OUTPUT {
+                        format!("set_{}", df.name)
+                    } else {
+                        df.name.clone()
+                    },
                 )
             }
             _ => (source_field.to_string(), destination_field.to_string()),
@@ -1456,7 +1699,10 @@ impl Scene {
             return Some(n);
         }
 
-        self.contexts[ctx].imported.get(name).map(|i| self.imported[i].instance)
+        self.contexts[ctx]
+            .imported
+            .get(name)
+            .map(|i| self.imported[i].instance)
     }
 
     pub fn get_unique_import_name(&self, ctx: CtxId, name: &str) -> String {
@@ -1465,12 +1711,23 @@ impl Scene {
     }
 
     /// X3DExecutionContext.addImportedNode.
-    pub fn add_imported_node(&mut self, ctx: CtxId, inline: NodeId, exported_name: &str, imported_name: &str, description: &str) -> Result<ImportedId, String> {
+    pub fn add_imported_node(
+        &mut self,
+        ctx: CtxId,
+        inline: NodeId,
+        exported_name: &str,
+        imported_name: &str,
+        description: &str,
+    ) -> Result<ImportedId, String> {
         if self.contexts[ctx].imported.has(imported_name) {
-            return Err(format!("Couldn't add imported node: imported name '{imported_name}' already in use."));
+            return Err(format!(
+                "Couldn't add imported node: imported name '{imported_name}' already in use."
+            ));
         }
 
-        if self.type_name(inline) != "Inline" || !matches!(self.node(inline).kind, NodeKind::Builtin(_)) {
+        if self.type_name(inline) != "Inline"
+            || !matches!(self.node(inline).kind, NodeKind::Builtin(_))
+        {
             return Err("Node must be of type Inline node.".to_string());
         }
 
@@ -1507,18 +1764,25 @@ impl Scene {
         };
 
         place(&mut self.imported, id, vec![record]);
-        self.contexts[ctx].imported.add(imported_name, id).map_err(|e| e.to_string())?;
+        self.contexts[ctx]
+            .imported
+            .add(imported_name, id)
+            .map_err(|e| e.to_string())?;
         Ok(id)
     }
 
     /// X3DExecutionContext.renameImportedNode.
     pub fn rename_imported_node(&mut self, ctx: CtxId, old: &str, new: &str) -> Result<(), String> {
         let Some(id) = self.contexts[ctx].imported.get(old) else {
-            return Err("Couldn't rename imported node: imported node does not exists.".to_string());
+            return Err(
+                "Couldn't rename imported node: imported node does not exists.".to_string(),
+            );
         };
 
         if self.contexts[ctx].imported.has(new) {
-            return Err("Couldn't rename imported node: new imported name does already exists.".to_string());
+            return Err(
+                "Couldn't rename imported node: new imported name does already exists.".to_string(),
+            );
         }
 
         let instance = self.imported[id].instance;
@@ -1541,13 +1805,25 @@ impl Scene {
     }
 
     /// X3DScene.addExportedNode / updateExportedNode.
-    pub fn update_exported_node(&mut self, ctx: CtxId, exported_name: &str, local: NodeId, description: &str) -> Result<(), String> {
+    pub fn update_exported_node(
+        &mut self,
+        ctx: CtxId,
+        exported_name: &str,
+        local: NodeId,
+        description: &str,
+    ) -> Result<(), String> {
         if self.is_imported(local) {
-            return Err("Couldn't update exported node: node cannot be of type X3DImportedNodeInstance.".to_string());
+            return Err(
+                "Couldn't update exported node: node cannot be of type X3DImportedNodeInstance."
+                    .to_string(),
+            );
         }
 
         if self.node(local).ctx != ctx {
-            return Err("Couldn't update exported node: node does not belong to this execution context.".to_string());
+            return Err(
+                "Couldn't update exported node: node does not belong to this execution context."
+                    .to_string(),
+            );
         }
 
         if exported_name.is_empty() {
@@ -1556,14 +1832,28 @@ impl Scene {
 
         let id = self.exported_slots.take().unwrap_or(self.exported.len());
 
-        place(&mut self.exported, id, vec![ExportedNode { ctx, exported_name: exported_name.to_string(), local, description: description.to_string() }]);
-        self.contexts[ctx].exported.update(exported_name, exported_name, id);
+        place(
+            &mut self.exported,
+            id,
+            vec![ExportedNode {
+                ctx,
+                exported_name: exported_name.to_string(),
+                local,
+                description: description.to_string(),
+            }],
+        );
+        self.contexts[ctx]
+            .exported
+            .update(exported_name, exported_name, id);
         Ok(())
     }
 
     /// X3DScene.getExportedNode (name) → the local node.
     pub fn get_exported_node(&self, ctx: CtxId, exported_name: &str) -> Option<NodeId> {
-        self.contexts[ctx].exported.get(exported_name).map(|e| self.exported[e].local)
+        self.contexts[ctx]
+            .exported
+            .get(exported_name)
+            .map(|e| self.exported[e].local)
     }
 
     /// X3DNode.hasRoutes.
@@ -1592,7 +1882,12 @@ impl Scene {
             }
         }
 
-        for f in self.protos.iter().flat_map(|p| p.fields.iter()).chain(self.externprotos.iter().flat_map(|p| p.fields.iter())) {
+        for f in self
+            .protos
+            .iter()
+            .flat_map(|p| p.fields.iter())
+            .chain(self.externprotos.iter().flat_map(|p| p.fields.iter()))
+        {
             add(&f.value);
         }
 
@@ -1606,7 +1901,9 @@ impl Scene {
         // PROTO body, and each body field with an IS reference that copies values
         // (initializeOnly / inputOutput) holds the instance field's nodes once more.
         for node in self.nodes.iter() {
-            let NodeKind::Instance(ProtoRef::Proto(p)) = node.kind else { continue };
+            let NodeKind::Instance(ProtoRef::Proto(p)) = node.kind else {
+                continue;
+            };
 
             if self.outer_proto(node.ctx).is_some() {
                 continue;
@@ -1620,14 +1917,22 @@ impl Scene {
                     .iter()
                     .filter(|n| n.ctx == proto.body)
                     .flat_map(|n| n.fields.iter().chain(n.user_fields.iter()))
-                    .filter(|f| f.references.contains(&FieldRef { proto: p, index }) && matches!(f.access & pf.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT))
+                    .filter(|f| {
+                        f.references.contains(&FieldRef { proto: p, index })
+                            && matches!(
+                                f.access & pf.access,
+                                access::INITIALIZE_ONLY | access::INPUT_OUTPUT
+                            )
+                    })
                     .count();
 
                 if refs == 0 {
                     continue;
                 }
 
-                let Some(f) = node.fields.iter().find(|f| f.name == pf.name) else { continue };
+                let Some(f) = node.fields.iter().find(|f| f.name == pf.name) else {
+                    continue;
+                };
 
                 let held: Vec<NodeId> = match &f.value {
                     FieldValue::SFNode(Some(n)) => vec![*n],
@@ -1648,11 +1953,19 @@ impl Scene {
     pub fn has_routes(&self, id: NodeId) -> bool {
         let node = self.node(id);
 
-        if node.fields.iter().chain(node.user_fields.iter()).any(|f| f.input_routes > 0 || f.output_routes > 0) {
+        if node
+            .fields
+            .iter()
+            .chain(node.user_fields.iter())
+            .any(|f| f.input_routes > 0 || f.output_routes > 0)
+        {
             return true;
         }
 
-        self.contexts[node.ctx].routes.iter().any(|r| r.source_node == id || r.destination_node == id)
+        self.contexts[node.ctx]
+            .routes
+            .iter()
+            .any(|r| r.source_node == id || r.destination_node == id)
     }
 }
 
@@ -1715,18 +2028,33 @@ impl Scene {
         let node_offset = self.alloc_run(count).unwrap_or(self.nodes.len() as NodeId);
         // Each table takes a released run of the merged scene's size, or goes to the end (R0.3-E):
         // the ids of the merged scene stay one offset away from the ones it had.
-        let ctx_offset = self.ctx_slots.take_run(other.contexts.len()).unwrap_or(self.contexts.len());
+        let ctx_offset = self
+            .ctx_slots
+            .take_run(other.contexts.len())
+            .unwrap_or(self.contexts.len());
         let m = MergeMap {
             node_offset,
             node_end: node_offset + count as NodeId,
             ctx_offset,
-            proto_offset: self.proto_slots.take_run(other.protos.len()).unwrap_or(self.protos.len()),
-            extern_offset: self.extern_slots.take_run(other.externprotos.len()).unwrap_or(self.externprotos.len()),
+            proto_offset: self
+                .proto_slots
+                .take_run(other.protos.len())
+                .unwrap_or(self.protos.len()),
+            extern_offset: self
+                .extern_slots
+                .take_run(other.externprotos.len())
+                .unwrap_or(self.externprotos.len()),
             root_ctx: ctx_offset,
         };
 
-        let imported_offset = self.imported_slots.take_run(other.imported.len()).unwrap_or(self.imported.len());
-        let exported_offset = self.exported_slots.take_run(other.exported.len()).unwrap_or(self.exported.len());
+        let imported_offset = self
+            .imported_slots
+            .take_run(other.imported.len())
+            .unwrap_or(self.imported.len());
+        let exported_offset = self
+            .exported_slots
+            .take_run(other.exported.len())
+            .unwrap_or(self.exported.len());
         let route_offset = self.route_counter;
 
         let remap_value = |v: &mut FieldValue| match v {
@@ -1761,13 +2089,22 @@ impl Scene {
                 };
             }
 
-            for f in node.fields.iter_mut().chain(node.user_fields.iter_mut()).chain(node.private_fields.iter_mut()) {
+            for f in node
+                .fields
+                .iter_mut()
+                .chain(node.user_fields.iter_mut())
+                .chain(node.private_fields.iter_mut())
+            {
                 remap_field(f);
             }
         }
 
         for (i, c) in other.contexts.iter_mut().enumerate() {
-            c.parent = if i == 0 { Some(parent) } else { c.parent.map(|p| p + m.ctx_offset) };
+            c.parent = if i == 0 {
+                Some(parent)
+            } else {
+                c.parent.map(|p| p + m.ctx_offset)
+            };
             c.outer = match c.outer {
                 Outer::Scene => Outer::Inline(outer),
                 Outer::Proto(p) => Outer::Proto(p + m.proto_offset),
@@ -1790,7 +2127,9 @@ impl Scene {
                 r.source_node += m.node_offset;
                 r.destination_node += m.node_offset;
                 r.id += route_offset;
-                r.conn = r.conn.map(|(a, b)| ((a.0 + m.node_offset, a.1), (b.0 + m.node_offset, b.1)));
+                r.conn = r
+                    .conn
+                    .map(|(a, b)| ((a.0 + m.node_offset, a.1), (b.0 + m.node_offset, b.1)));
             }
         }
 
@@ -1806,8 +2145,16 @@ impl Scene {
         }
 
         self.route_counter += other.route_counter;
-        place(&mut self.imported, imported_offset, std::mem::take(&mut other.imported));
-        place(&mut self.exported, exported_offset, std::mem::take(&mut other.exported));
+        place(
+            &mut self.imported,
+            imported_offset,
+            std::mem::take(&mut other.imported),
+        );
+        place(
+            &mut self.exported,
+            exported_offset,
+            std::mem::take(&mut other.exported),
+        );
 
         for p in &mut other.protos {
             p.ctx += m.ctx_offset;
@@ -1835,9 +2182,21 @@ impl Scene {
             self.nodes.append(&mut other.nodes);
         }
 
-        place(&mut self.contexts, m.ctx_offset, std::mem::take(&mut other.contexts));
-        place(&mut self.protos, m.proto_offset, std::mem::take(&mut other.protos));
-        place(&mut self.externprotos, m.extern_offset, std::mem::take(&mut other.externprotos));
+        place(
+            &mut self.contexts,
+            m.ctx_offset,
+            std::mem::take(&mut other.contexts),
+        );
+        place(
+            &mut self.protos,
+            m.proto_offset,
+            std::mem::take(&mut other.protos),
+        );
+        place(
+            &mut self.externprotos,
+            m.extern_offset,
+            std::mem::take(&mut other.externprotos),
+        );
 
         m
     }
@@ -1865,12 +2224,20 @@ mod slot_tests {
         let old = s.ctx_handle(2);
 
         s.release_ctx(2);
-        assert_eq!(s.resolve_ctx(old), None, "a released slot resolves to nothing");
+        assert_eq!(
+            s.resolve_ctx(old),
+            None,
+            "a released slot resolves to nothing"
+        );
 
         let c = s.new_context(ROOT, Outer::Inline(None));
 
         assert_eq!(c, 2, "the released slot is taken again");
-        assert_eq!(s.resolve_ctx(old), None, "the old handle does not reach the new context");
+        assert_eq!(
+            s.resolve_ctx(old),
+            None,
+            "the old handle does not reach the new context"
+        );
         assert_eq!(s.resolve_ctx(s.ctx_handle(2)), Some(2));
         assert_eq!(s.contexts.len(), 5, "no slot was added");
     }
@@ -1901,7 +2268,11 @@ mod slot_tests {
         let m = s.merge(three, ROOT, None);
 
         assert_eq!(m.ctx_offset, 1, "the run 1..4 is taken");
-        assert_eq!(s.contexts[2].parent, Some(1), "ids inside the scene keep their offset");
+        assert_eq!(
+            s.contexts[2].parent,
+            Some(1),
+            "ids inside the scene keep their offset"
+        );
         assert!(s.ctx_slots.free.is_empty());
     }
 

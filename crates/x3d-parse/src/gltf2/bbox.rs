@@ -12,18 +12,51 @@ pub(super) struct Box3 {
 
 impl Box3 {
     pub fn empty() -> Self {
-        Box3 { m: Matrix4([0.0; 16]) }
+        Box3 {
+            m: Matrix4([0.0; 16]),
+        }
     }
 
     pub fn from_size_center(size: &Vector3, center: &Vector3) -> Self {
-        Box3 { m: Matrix4([size.x / 2.0, 0.0, 0.0, 0.0, 0.0, size.y / 2.0, 0.0, 0.0, 0.0, 0.0, size.z / 2.0, 0.0, center.x, center.y, center.z, 1.0]) }
+        Box3 {
+            m: Matrix4([
+                size.x / 2.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                size.y / 2.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                size.z / 2.0,
+                0.0,
+                center.x,
+                center.y,
+                center.z,
+                1.0,
+            ]),
+        }
     }
 
     pub fn from_extents(min: &Vector3, max: &Vector3) -> Self {
-        let (sx, sy, sz) = ((max.x - min.x) / 2.0, (max.y - min.y) / 2.0, (max.z - min.z) / 2.0);
-        let (cx, cy, cz) = ((max.x + min.x) / 2.0, (max.y + min.y) / 2.0, (max.z + min.z) / 2.0);
+        let (sx, sy, sz) = (
+            (max.x - min.x) / 2.0,
+            (max.y - min.y) / 2.0,
+            (max.z - min.z) / 2.0,
+        );
+        let (cx, cy, cz) = (
+            (max.x + min.x) / 2.0,
+            (max.y + min.y) / 2.0,
+            (max.z + min.z) / 2.0,
+        );
 
-        Box3 { m: Matrix4([sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, cx, cy, cz, 1.0]) }
+        Box3 {
+            m: Matrix4([
+                sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, cx, cy, cz, 1.0,
+            ]),
+        }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -137,7 +170,8 @@ impl<'j, 's> P<'j, 's> {
     }
 
     fn default_bbox_size(&self, node: NodeId) -> bool {
-        self.has_field(node, "bboxSize") && vec3_of(self.get(node, "bboxSize")).equals(&Vector3::new(-1.0, -1.0, -1.0))
+        self.has_field(node, "bboxSize")
+            && vec3_of(self.get(node, "bboxSize")).equals(&Vector3::new(-1.0, -1.0, -1.0))
     }
 
     fn points_of(&self, coord: Option<NodeId>) -> Vec<f32> {
@@ -157,7 +191,11 @@ impl<'j, 's> P<'j, 's> {
     /// X3DGeometryNode.updateBBox: the box of the vertices the geometry builds.
     fn geometry_bbox(&self, geometry: NodeId) -> Box3 {
         let ty = self.type_name(geometry);
-        let coord = if self.has_field(geometry, "coord") { self.get_node(geometry, "coord") } else { None };
+        let coord = if self.has_field(geometry, "coord") {
+            self.get_node(geometry, "coord")
+        } else {
+            None
+        };
         let points = self.points_of(coord);
         let count = points.len() / 3;
         let mut used: Vec<usize> = vec![];
@@ -204,11 +242,20 @@ impl<'j, 's> P<'j, 's> {
             "IndexedTriangleSet" => {
                 let index = self.ints_of(geometry, "index");
 
-                used.extend(index[..index.len() - index.len() % 3].iter().filter(|i| **i >= 0).map(|i| *i as usize));
+                used.extend(
+                    index[..index.len() - index.len() % 3]
+                        .iter()
+                        .filter(|i| **i >= 0)
+                        .map(|i| *i as usize),
+                );
             }
             "TriangleSet" => used.extend(0..count - count % 3),
             "TriangleStripSet" | "TriangleFanSet" => {
-                let field = if ty == "TriangleStripSet" { "stripCount" } else { "fanCount" };
+                let field = if ty == "TriangleStripSet" {
+                    "stripCount"
+                } else {
+                    "fanCount"
+                };
                 let mut start = 0;
 
                 for c in self.ints_of(geometry, field) {
@@ -240,7 +287,11 @@ impl<'j, 's> P<'j, 's> {
         let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
 
         for i in used {
-            let p = Vector3::new(points[i * 3] as f64, points[i * 3 + 1] as f64, points[i * 3 + 2] as f64);
+            let p = Vector3::new(
+                points[i * 3] as f64,
+                points[i * 3 + 1] as f64,
+                points[i * 3 + 2] as f64,
+            );
 
             min.min(&p);
             max.max(&p);
@@ -260,7 +311,10 @@ impl<'j, 's> P<'j, 's> {
         match ty.as_str() {
             "Group" | "Transform" | "HAnimJoint" | "HAnimSegment" | "Switch" => {
                 if !self.default_bbox_size(node) {
-                    return Some(Box3::from_size_center(&vec3_of(self.get(node, "bboxSize")), &vec3_of(self.get(node, "bboxCenter"))));
+                    return Some(Box3::from_size_center(
+                        &vec3_of(self.get(node, "bboxSize")),
+                        &vec3_of(self.get(node, "bboxCenter")),
+                    ));
                 }
 
                 let mut bbox = Box3::empty();
@@ -268,7 +322,9 @@ impl<'j, 's> P<'j, 's> {
 
                 let chosen: Vec<NodeId> = if ty == "Switch" {
                     match self.get(node, "whichChoice") {
-                        FieldValue::SFInt32(i) if i >= 0 => children.get(i as usize).copied().into_iter().collect(),
+                        FieldValue::SFInt32(i) if i >= 0 => {
+                            children.get(i as usize).copied().into_iter().collect()
+                        }
                         _ => vec![],
                     }
                 } else {
@@ -289,7 +345,10 @@ impl<'j, 's> P<'j, 's> {
             }
             "HAnimHumanoid" => {
                 if !self.default_bbox_size(node) {
-                    return Some(Box3::from_size_center(&vec3_of(self.get(node, "bboxSize")), &vec3_of(self.get(node, "bboxCenter"))));
+                    return Some(Box3::from_size_center(
+                        &vec3_of(self.get(node, "bboxSize")),
+                        &vec3_of(self.get(node, "bboxCenter")),
+                    ));
                 }
 
                 // Verified against X_ITE: while the parser runs, the humanoid's internal groups
@@ -299,7 +358,10 @@ impl<'j, 's> P<'j, 's> {
             }
             "Shape" => {
                 if !self.default_bbox_size(node) {
-                    return Some(Box3::from_size_center(&vec3_of(self.get(node, "bboxSize")), &vec3_of(self.get(node, "bboxCenter"))));
+                    return Some(Box3::from_size_center(
+                        &vec3_of(self.get(node, "bboxSize")),
+                        &vec3_of(self.get(node, "bboxCenter")),
+                    ));
                 }
 
                 match self.get_node(node, "geometry") {
@@ -309,10 +371,15 @@ impl<'j, 's> P<'j, 's> {
             }
             "InstancedShape" => {
                 if !self.default_bbox_size(node) {
-                    return Some(Box3::from_size_center(&vec3_of(self.get(node, "bboxSize")), &vec3_of(self.get(node, "bboxCenter"))));
+                    return Some(Box3::from_size_center(
+                        &vec3_of(self.get(node, "bboxSize")),
+                        &vec3_of(self.get(node, "bboxCenter")),
+                    ));
                 }
 
-                let Some(g) = self.get_node(node, "geometry") else { return Some(Box3::empty()) };
+                let Some(g) = self.get_node(node, "geometry") else {
+                    return Some(Box3::empty());
+                };
                 let geometry = self.geometry_bbox(g);
                 let mut bbox = Box3::empty();
 
@@ -327,7 +394,10 @@ impl<'j, 's> P<'j, 's> {
             }
             "GaussianSplats" => {
                 if !self.default_bbox_size(node) {
-                    return Some(Box3::from_size_center(&vec3_of(self.get(node, "bboxSize")), &vec3_of(self.get(node, "bboxCenter"))));
+                    return Some(Box3::from_size_center(
+                        &vec3_of(self.get(node, "bboxSize")),
+                        &vec3_of(self.get(node, "bboxCenter")),
+                    ));
                 }
 
                 let points = match self.get(node, "positions") {
@@ -359,7 +429,10 @@ impl<'j, 's> P<'j, 's> {
     fn instance_matrices(&self, node: NodeId) -> Vec<Matrix4> {
         let f32s = |name: &str, c: usize| -> Vec<Vec<f64>> {
             match self.get(node, name) {
-                FieldValue::MFVec3f(v) | FieldValue::MFVec2f(v) => v.chunks_exact(c).map(|x| x.iter().map(|y| *y as f64).collect()).collect(),
+                FieldValue::MFVec3f(v) | FieldValue::MFVec2f(v) => v
+                    .chunks_exact(c)
+                    .map(|x| x.iter().map(|y| *y as f64).collect())
+                    .collect(),
                 FieldValue::MFRotation(v) => v.chunks_exact(c).map(|x| x.to_vec()).collect(),
                 _ => vec![],
             }
@@ -370,12 +443,25 @@ impl<'j, 's> P<'j, 's> {
         let scales = f32s("scales", 3);
         let scale_orientations = f32s("scaleOrientations", 4);
         let centers = f32s("centers", 3);
-        let n = translations.len().max(rotations.len()).max(scales.len()).max(scale_orientations.len()).max(centers.len());
+        let n = translations
+            .len()
+            .max(rotations.len())
+            .max(scales.len())
+            .max(scale_orientations.len())
+            .max(centers.len());
         let mut out = vec![];
 
         for i in 0..n {
-            let get3 = |a: &Vec<Vec<f64>>, d: Vector3| a.get(i).map(|v| Vector3::new(v[0], v[1], v[2])).unwrap_or(d);
-            let get_r = |a: &Vec<Vec<f64>>| a.get(i).map(|v| Rotation4::new(v[0], v[1], v[2], v[3])).unwrap_or_else(Rotation4::identity);
+            let get3 = |a: &Vec<Vec<f64>>, d: Vector3| {
+                a.get(i)
+                    .map(|v| Vector3::new(v[0], v[1], v[2]))
+                    .unwrap_or(d)
+            };
+            let get_r = |a: &Vec<Vec<f64>>| {
+                a.get(i)
+                    .map(|v| Rotation4::new(v[0], v[1], v[2], v[3]))
+                    .unwrap_or_else(Rotation4::identity)
+            };
             let mut m = Matrix4::IDENTITY;
 
             m.set_transform(
@@ -416,7 +502,13 @@ impl<'j, 's> P<'j, 's> {
         }
     }
 
-    fn vcor_node(&mut self, node: NodeId, center: &Vector3, model: Matrix4, seen: &mut HashSet<NodeId>) {
+    fn vcor_node(
+        &mut self,
+        node: NodeId,
+        center: &Vector3,
+        model: Matrix4,
+        seen: &mut HashSet<NodeId>,
+    ) {
         if !seen.insert(node) {
             return;
         }
@@ -475,7 +567,13 @@ impl<'j, 's> P<'j, 's> {
     }
 
     /// Joint model view matrices of a traversal from the humanoid: parent chain times own matrix.
-    fn joint_matrices(&self, node: NodeId, mv: Matrix4, out: &mut HashMap<NodeId, Matrix4>, depth: usize) {
+    fn joint_matrices(
+        &self,
+        node: NodeId,
+        mv: Matrix4,
+        out: &mut HashMap<NodeId, Matrix4>,
+        depth: usize,
+    ) {
         if depth > 1000 {
             return;
         }
@@ -514,7 +612,9 @@ impl<'j, 's> P<'j, 's> {
     fn skin_bbox(&mut self, humanoid: NodeId) -> R<()> {
         let skin_coord = self.get_node(humanoid, "skinCoord");
 
-        let Some(skin_coord) = skin_coord else { return Ok(()) };
+        let Some(skin_coord) = skin_coord else {
+            return Ok(());
+        };
 
         // humanoidNode .traverse (DISPLAY, layerNode)
         let mut matrices: HashMap<NodeId, Matrix4> = HashMap::new();
@@ -541,8 +641,13 @@ impl<'j, 's> P<'j, 's> {
             _ => vec![],
         };
 
-        let points: Vec<Vector3> = self.points_of(Some(skin_coord)).chunks_exact(3).map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64)).collect();
-        let mut skin_points: std::collections::BTreeMap<usize, Vector3> = std::collections::BTreeMap::new();
+        let points: Vec<Vector3> = self
+            .points_of(Some(skin_coord))
+            .chunks_exact(3)
+            .map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64))
+            .collect();
+        let mut skin_points: std::collections::BTreeMap<usize, Vector3> =
+            std::collections::BTreeMap::new();
 
         for (j, joint) in self.children_of(humanoid, "joints").into_iter().enumerate() {
             let weights = match self.get(joint, "skinCoordWeight") {
@@ -550,9 +655,15 @@ impl<'j, 's> P<'j, 's> {
                 _ => vec![],
             };
             let indices = self.ints_of(joint, "skinCoordIndex");
-            let t = positions.get(j * 3..j * 3 + 3).map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64));
-            let r = rotations.get(j * 4..j * 4 + 4).map(|p| Rotation4::new(p[0], p[1], p[2], p[3]));
-            let s = scales.get(j * 3..j * 3 + 3).map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64));
+            let t = positions
+                .get(j * 3..j * 3 + 3)
+                .map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64));
+            let r = rotations
+                .get(j * 4..j * 4 + 4)
+                .map(|p| Rotation4::new(p[0], p[1], p[2], p[3]));
+            let s = scales
+                .get(j * 3..j * 3 + 3)
+                .map(|p| Vector3::new(p[0] as f64, p[1] as f64, p[2] as f64));
 
             let mut joint_matrix = Matrix4::IDENTITY;
 
@@ -560,8 +671,11 @@ impl<'j, 's> P<'j, 's> {
             joint_matrix.mult_right(matrices.get(&joint).unwrap_or(&Matrix4::IDENTITY));
 
             for (c, index) in indices.iter().enumerate() {
-                let Some(point) = (*index >= 0).then(|| points.get(*index as usize)).flatten() else {
-                    return Err("TypeError: Cannot read properties of undefined (reading 'copy')".into());
+                let Some(point) = (*index >= 0).then(|| points.get(*index as usize)).flatten()
+                else {
+                    return Err(
+                        "TypeError: Cannot read properties of undefined (reading 'copy')".into(),
+                    );
                 };
 
                 let entry = skin_points.entry(*index as usize).or_insert(*point);

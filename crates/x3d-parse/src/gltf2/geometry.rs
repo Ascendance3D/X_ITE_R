@@ -24,7 +24,10 @@ pub(super) struct PrimData<'j> {
 
 impl PrimData<'_> {
     fn attr(&self, name: &str) -> Option<usize> {
-        self.attributes.iter().find(|(k, _)| k == name).and_then(|(_, v)| *v)
+        self.attributes
+            .iter()
+            .find(|(k, _)| k == name)
+            .and_then(|(_, v)| *v)
     }
 }
 
@@ -52,9 +55,18 @@ impl<'j, 's> P<'j, 's> {
     }
 
     /// `meshObject (mesh, skin, EXT_mesh_gpu_instancing)`; `None` is `undefined`.
-    pub(super) fn mesh_object(&mut self, mesh_index: V<'j>, skin: Option<usize>, instancing: V<'j>) -> R<Option<Vec<NodeId>>> {
-        let Some(list) = self.meshes.arr() else { return Ok(None) };
-        let Some(mi) = mesh_index.index(list.len()) else { return Ok(None) };
+    pub(super) fn mesh_object(
+        &mut self,
+        mesh_index: V<'j>,
+        skin: Option<usize>,
+        instancing: V<'j>,
+    ) -> R<Option<Vec<NodeId>>> {
+        let Some(list) = self.meshes.arr() else {
+            return Ok(None);
+        };
+        let Some(mi) = mesh_index.index(list.len()) else {
+            return Ok(None);
+        };
         let mesh = self.meshes.at(mi);
 
         if !mesh.is_obj() {
@@ -66,11 +78,16 @@ impl<'j, 's> P<'j, 's> {
                 let shapes = shapes.clone();
                 let primitives = mesh.get("primitives");
 
-                let Some(prims) = primitives.arr() else { return Ok(Some(shapes)) };
+                let Some(prims) = primitives.arr() else {
+                    return Ok(Some(shapes));
+                };
 
                 for (pi, _) in prims.iter().enumerate() {
                     let p = self.prims.get(&(mi, pi));
-                    let (joints, weights) = (p.map(|p| p.joints.clone()).unwrap_or_default(), p.map(|p| p.weights.clone()).unwrap_or_default());
+                    let (joints, weights) = (
+                        p.map(|p| p.joints.clone()).unwrap_or_default(),
+                        p.map(|p| p.weights.clone()).unwrap_or_default(),
+                    );
 
                     self.attributes_joints_array(skin, &joints, &weights)?;
                 }
@@ -107,26 +124,53 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(shapes))
     }
 
-    fn primitives_array(&mut self, mi: usize, mesh: V<'j>, skin: Option<usize>, instancing: V<'j>) -> R<Vec<NodeId>> {
-        let Some(prims) = mesh.get("primitives").arr() else { return Ok(vec![]) };
+    fn primitives_array(
+        &mut self,
+        mi: usize,
+        mesh: V<'j>,
+        skin: Option<usize>,
+        instancing: V<'j>,
+    ) -> R<Vec<NodeId>> {
+        let Some(prims) = mesh.get("primitives").arr() else {
+            return Ok(vec![]);
+        };
         let weights = mesh.get("weights");
         let mut shapes = vec![];
 
         for (pi, primitive) in prims.iter().enumerate() {
-            self.primitive_object((mi, pi), V::new(primitive), weights, skin, instancing, &mut shapes)?;
+            self.primitive_object(
+                (mi, pi),
+                V::new(primitive),
+                weights,
+                skin,
+                instancing,
+                &mut shapes,
+            )?;
         }
 
         Ok(shapes)
     }
 
-    fn primitive_object(&mut self, key: (usize, usize), primitive: V<'j>, weights: V<'j>, skin: Option<usize>, instancing: V<'j>, shapes: &mut Vec<NodeId>) -> R<()> {
+    fn primitive_object(
+        &mut self,
+        key: (usize, usize),
+        primitive: V<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+        instancing: V<'j>,
+        shapes: &mut Vec<NodeId>,
+    ) -> R<()> {
         if !primitive.is_obj() {
             return Ok(());
         }
 
         self.attributes_object(key, primitive.get("attributes"));
 
-        if primitive.get("extensions").get("KHR_gaussian_splatting").truthy() {
+        if primitive
+            .get("extensions")
+            .get("KHR_gaussian_splatting")
+            .truthy()
+        {
             return self.khr_gaussian_splatting(key, primitive, shapes);
         }
 
@@ -138,7 +182,10 @@ impl<'j, 's> P<'j, 's> {
             (None, None)
         } else {
             let indices = self.accessor(primitive.get("indices"));
-            let material = self.materials.arr().and_then(|a| primitive.get("material").index(a.len()));
+            let material = self
+                .materials
+                .arr()
+                .and_then(|a| primitive.get("material").index(a.len()));
 
             (indices, material)
         };
@@ -155,7 +202,10 @@ impl<'j, 's> P<'j, 's> {
 
         let data = self.prim_data(key, primitive);
         let shape = self.create_shape(key, &data, weights, skin, instancing)?;
-        let variants = self.khr_materials_variants_extension(primitive.get("extensions").get("KHR_materials_variants"), shape)?;
+        let variants = self.khr_materials_variants_extension(
+            primitive.get("extensions").get("KHR_materials_variants"),
+            shape,
+        )?;
         let result = variants.unwrap_or(shape);
 
         self.prims.entry(key).or_default().shape = Some(result);
@@ -163,12 +213,21 @@ impl<'j, 's> P<'j, 's> {
         Ok(())
     }
 
-    fn khr_gaussian_splatting(&mut self, key: (usize, usize), primitive: V<'j>, shapes: &mut Vec<NodeId>) -> R<()> {
+    fn khr_gaussian_splatting(
+        &mut self,
+        key: (usize, usize),
+        primitive: V<'j>,
+        shapes: &mut Vec<NodeId>,
+    ) -> R<()> {
         let node = self.create("GaussianSplats")?;
         let ext = primitive.get("extensions").get("KHR_gaussian_splatting");
         let data = self.prim_data(key, primitive);
 
-        let cs = if ext.get("colorSpace").nn() { ext.get("colorSpace").to_js_string() } else { "SRGB_REC709_DISPLAY".to_string() };
+        let cs = if ext.get("colorSpace").nn() {
+            ext.get("colorSpace").to_js_string()
+        } else {
+            "SRGB_REC709_DISPLAY".to_string()
+        };
 
         self.set(node, "colorSpace", FieldValue::SFString(cs.to_uppercase()));
 
@@ -184,20 +243,34 @@ impl<'j, 's> P<'j, 's> {
         let position = data.attr("POSITION");
         let v = take(self, "positions", position)?;
         self.set_nums(node, "positions", &v);
-        let v = take(self, "orientations", data.attr("KHR_gaussian_splatting:ROTATION"))?;
+        let v = take(
+            self,
+            "orientations",
+            data.attr("KHR_gaussian_splatting:ROTATION"),
+        )?;
         self.set_nums(node, "orientations", &v);
         let v = take(self, "scales", data.attr("KHR_gaussian_splatting:SCALE"))?;
         self.set_nums(node, "scales", &v);
-        let v = take(self, "opacities", data.attr("KHR_gaussian_splatting:OPACITY"))?;
+        let v = take(
+            self,
+            "opacities",
+            data.attr("KHR_gaussian_splatting:OPACITY"),
+        )?;
         self.set_nums(node, "opacities", &v);
 
         // Degrees 0,1,2,3
         for (degree, coefs) in [1usize, 3, 5, 7].iter().enumerate() {
             for coef in 0..*coefs {
-                let attr = data.attr(&format!("KHR_gaussian_splatting:SH_DEGREE_{degree}_COEF_{coef}"));
+                let attr = data.attr(&format!(
+                    "KHR_gaussian_splatting:SH_DEGREE_{degree}_COEF_{coef}"
+                ));
                 let v = take(self, "sh", attr)?;
 
-                self.set_nums(node, &format!("sphericalHarmonicsDegree{degree}Coef{coef}"), &v);
+                self.set_nums(
+                    node,
+                    &format!("sphericalHarmonicsDegree{degree}Coef{coef}"),
+                    &v,
+                );
             }
         }
 
@@ -208,8 +281,24 @@ impl<'j, 's> P<'j, 's> {
             let max = vector_value(acc.get("max"), 3);
 
             if let (Some(min), Some(max)) = (min, max) {
-                self.set(node, "bboxSize", FieldValue::SFVec3f(Vector3::new(max[0] - min[0], max[1] - min[1], max[2] - min[2])));
-                self.set(node, "bboxCenter", FieldValue::SFVec3f(Vector3::new((min[0] + max[0]) / 2.0, (min[1] + max[1]) / 2.0, (min[2] + max[2]) / 2.0)));
+                self.set(
+                    node,
+                    "bboxSize",
+                    FieldValue::SFVec3f(Vector3::new(
+                        max[0] - min[0],
+                        max[1] - min[1],
+                        max[2] - min[2],
+                    )),
+                );
+                self.set(
+                    node,
+                    "bboxCenter",
+                    FieldValue::SFVec3f(Vector3::new(
+                        (min[0] + max[0]) / 2.0,
+                        (min[1] + max[1]) / 2.0,
+                        (min[2] + max[2]) / 2.0,
+                    )),
+                );
             }
         }
 
@@ -232,7 +321,11 @@ impl<'j, 's> P<'j, 's> {
         let mut named: Vec<(String, Option<usize>)> = vec![];
 
         if resolved {
-            named = self.prims[&key].attributes.iter().map(|(k, _)| (k.clone(), None)).collect();
+            named = self.prims[&key]
+                .attributes
+                .iter()
+                .map(|(k, _)| (k.clone(), None))
+                .collect();
 
             for k in ["TEXCOORD", "COLOR", "JOINTS", "WEIGHTS"] {
                 if !named.iter().any(|(n, _)| n == k) {
@@ -251,7 +344,12 @@ impl<'j, 's> P<'j, 's> {
             let mut out = vec![];
 
             for i in 0.. {
-                match p.attributes.iter().find(|(k, _)| *k == format!("{name}_{i}")).and_then(|(_, v)| *v) {
+                match p
+                    .attributes
+                    .iter()
+                    .find(|(k, _)| *k == format!("{name}_{i}"))
+                    .and_then(|(_, v)| *v)
+                {
                     Some(a) => out.push(Some(a)),
                     None => break,
                 }
@@ -260,7 +358,12 @@ impl<'j, 's> P<'j, 's> {
             out
         };
 
-        let (tex_coord, color, joints, weights) = (list("TEXCOORD"), list("COLOR"), list("JOINTS"), list("WEIGHTS"));
+        let (tex_coord, color, joints, weights) = (
+            list("TEXCOORD"),
+            list("COLOR"),
+            list("JOINTS"),
+            list("WEIGHTS"),
+        );
 
         let existing = self.prims.remove(&key);
 
@@ -284,7 +387,14 @@ impl<'j, 's> P<'j, 's> {
 
     // --- shapes -------------------------------------------------------------------------------------
 
-    fn create_shape(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>, instancing: V<'j>) -> R<NodeId> {
+    fn create_shape(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+        instancing: V<'j>,
+    ) -> R<NodeId> {
         let shape = match self.mesh_instancing(instancing)? {
             Some(s) => s,
             None => self.create("Shape")?,
@@ -325,14 +435,24 @@ impl<'j, 's> P<'j, 's> {
         let translation = self.accessor(attributes.get("TRANSLATION"));
         let rotation = self.accessor(attributes.get("ROTATION"));
         let scale = self.accessor(attributes.get("SCALE"));
-        let count_of = |me: &Self, a: Option<usize>| a.map(|a| me.acc_json(a).get("count")).filter(|c| c.nn()).map(|c| c.to_number()).unwrap_or(0.0);
-        let count = x3d_fields::jsmath::js_max(x3d_fields::jsmath::js_max(count_of(self, translation), count_of(self, rotation)), count_of(self, scale));
+        let count_of = |me: &Self, a: Option<usize>| {
+            a.map(|a| me.acc_json(a).get("count"))
+                .filter(|c| c.nn())
+                .map(|c| c.to_number())
+                .unwrap_or(0.0)
+        };
+        let count = x3d_fields::jsmath::js_max(
+            x3d_fields::jsmath::js_max(count_of(self, translation), count_of(self, rotation)),
+            count_of(self, scale),
+        );
 
         if count == 0.0 || count.is_nan() {
             return Ok(None);
         }
 
-        let kind = |me: &Self, a: Option<usize>, t: &str| a.filter(|a| me.acc_json(*a).get("type").str() == Some(t));
+        let kind = |me: &Self, a: Option<usize>, t: &str| {
+            a.filter(|a| me.acc_json(*a).get("type").str() == Some(t))
+        };
         let translation = kind(self, translation, "VEC3");
         let rotation = kind(self, rotation, "VEC4");
         let scale = kind(self, scale, "VEC3");
@@ -380,7 +500,9 @@ impl<'j, 's> P<'j, 's> {
         }
 
         let mappings = ext.get("mappings");
-        let Some(list) = mappings.arr() else { return Ok(None) };
+        let Some(list) = mappings.arr() else {
+            return Ok(None);
+        };
 
         if list.is_empty() {
             return Ok(None);
@@ -395,7 +517,11 @@ impl<'j, 's> P<'j, 's> {
 
         let n_variants = self.material_variants.arr().map(|a| a.len()).unwrap_or(0);
 
-        self.set(variants, "whichChoice", FieldValue::SFInt32(n_variants as i32));
+        self.set(
+            variants,
+            "whichChoice",
+            FieldValue::SFInt32(n_variants as i32),
+        );
 
         if children.is_empty() {
             return Ok(None);
@@ -421,12 +547,20 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(variants))
     }
 
-    fn khr_materials_variants_mapping(&mut self, mapping: V<'j>, shape: NodeId, children: &mut Vec<Option<NodeId>>) -> R<()> {
+    fn khr_materials_variants_mapping(
+        &mut self,
+        mapping: V<'j>,
+        shape: NodeId,
+        children: &mut Vec<Option<NodeId>>,
+    ) -> R<()> {
         if !mapping.is_obj() {
             return Ok(());
         }
 
-        let material = self.materials.arr().and_then(|a| mapping.get("material").index(a.len()));
+        let material = self
+            .materials
+            .arr()
+            .and_then(|a| mapping.get("material").index(a.len()));
 
         let Some(mi) = material else { return Ok(()) };
 
@@ -437,9 +571,16 @@ impl<'j, 's> P<'j, 's> {
         let variant_node = self.create("Shape")?;
         let appearance = self.material_object(Some(mi))?;
         let first = mapping.get("variants").at(0);
-        let variant = if first.nn() { first } else { V::new(&J::Number(0.0)) };
+        let variant = if first.nn() {
+            first
+        } else {
+            V::new(&J::Number(0.0))
+        };
         let vname = {
-            let entry = self.material_variants.arr().and_then(|a| variant.index(a.len()).map(|i| V::new(&a[i])));
+            let entry = self
+                .material_variants
+                .arr()
+                .and_then(|a| variant.index(a.len()).map(|i| V::new(&a[i])));
             let n = entry.map(|e| e.get("name")).filter(|n| n.nn());
 
             match n {
@@ -477,25 +618,47 @@ impl<'j, 's> P<'j, 's> {
 
     // --- geometry -------------------------------------------------------------------------------------
 
-    fn create_geometry(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>) -> R<Option<NodeId>> {
+    fn create_geometry(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+    ) -> R<Option<NodeId>> {
         let mode = data.mode.num();
         let indexed = data.indices.is_some();
 
         let node = match mode {
             Some(m) if m == 0.0 => self.create_point_set(key, data, weights, skin)?,
             Some(m) if m == 1.0 => {
-                if indexed { self.create_indexed_line_set(key, data, weights, skin, 1)? } else { self.create_line_set(key, data, weights, skin)? }
+                if indexed {
+                    self.create_indexed_line_set(key, data, weights, skin, 1)?
+                } else {
+                    self.create_line_set(key, data, weights, skin)?
+                }
             }
             Some(m) if m == 2.0 => self.create_indexed_line_set(key, data, weights, skin, 2)?,
             Some(m) if m == 3.0 => self.create_indexed_line_set(key, data, weights, skin, 3)?,
             Some(m) if m == 5.0 => {
-                if indexed { self.create_triangles(key, data, weights, skin, "IndexedTriangleStripSet")? } else { self.create_triangles(key, data, weights, skin, "TriangleStripSet")? }
+                if indexed {
+                    self.create_triangles(key, data, weights, skin, "IndexedTriangleStripSet")?
+                } else {
+                    self.create_triangles(key, data, weights, skin, "TriangleStripSet")?
+                }
             }
             Some(m) if m == 6.0 => {
-                if indexed { self.create_triangles(key, data, weights, skin, "IndexedTriangleFanSet")? } else { self.create_triangles(key, data, weights, skin, "TriangleFanSet")? }
+                if indexed {
+                    self.create_triangles(key, data, weights, skin, "IndexedTriangleFanSet")?
+                } else {
+                    self.create_triangles(key, data, weights, skin, "TriangleFanSet")?
+                }
             }
             _ => {
-                if indexed { self.create_triangles(key, data, weights, skin, "IndexedTriangleSet")? } else { self.create_triangles(key, data, weights, skin, "TriangleSet")? }
+                if indexed {
+                    self.create_triangles(key, data, weights, skin, "IndexedTriangleSet")?
+                } else {
+                    self.create_triangles(key, data, weights, skin, "TriangleSet")?
+                }
             }
         };
 
@@ -509,7 +672,13 @@ impl<'j, 's> P<'j, 's> {
         }
     }
 
-    fn create_point_set(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>) -> R<NodeId> {
+    fn create_point_set(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+    ) -> R<NodeId> {
         let node = self.create("PointSet")?;
 
         self.common_attributes(node, key, data, weights, false)?;
@@ -520,7 +689,13 @@ impl<'j, 's> P<'j, 's> {
         Ok(node)
     }
 
-    fn create_line_set(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>) -> R<NodeId> {
+    fn create_line_set(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+    ) -> R<NodeId> {
         let node = self.create("LineSet")?;
 
         self.common_attributes(node, key, data, weights, false)?;
@@ -532,7 +707,14 @@ impl<'j, 's> P<'j, 's> {
     }
 
     /// color, normal, tangent and coord in the order the JS code assigns them.
-    fn common_attributes(&mut self, node: NodeId, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, triangles: bool) -> R<()> {
+    fn common_attributes(
+        &mut self,
+        node: NodeId,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        triangles: bool,
+    ) -> R<()> {
         let material = data.material;
         let color = data.color.first().copied().flatten();
         let c = self.create_color(color, material)?;
@@ -559,7 +741,14 @@ impl<'j, 's> P<'j, 's> {
         Ok(())
     }
 
-    fn create_indexed_line_set(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>, mode: u8) -> R<NodeId> {
+    fn create_indexed_line_set(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+        mode: u8,
+    ) -> R<NodeId> {
         let node = self.create("IndexedLineSet")?;
 
         self.common_attributes(node, key, data, weights, false)?;
@@ -620,11 +809,22 @@ impl<'j, 's> P<'j, 's> {
         Ok(node)
     }
 
-    fn create_triangles(&mut self, key: (usize, usize), data: &PrimData<'j>, weights: V<'j>, skin: Option<usize>, type_name: &str) -> R<NodeId> {
+    fn create_triangles(
+        &mut self,
+        key: (usize, usize),
+        data: &PrimData<'j>,
+        weights: V<'j>,
+        skin: Option<usize>,
+        type_name: &str,
+    ) -> R<NodeId> {
         let node = self.create(type_name)?;
         let material = self.material_json(data.material);
 
-        self.set(node, "solid", FieldValue::SFBool(!material.get("doubleSided").truthy()));
+        self.set(
+            node,
+            "solid",
+            FieldValue::SFBool(!material.get("doubleSided").truthy()),
+        );
 
         if type_name.starts_with("Indexed") {
             let indices = match data.indices {
@@ -647,7 +847,15 @@ impl<'j, 's> P<'j, 's> {
                     let n = self.get(coord, "point").len();
 
                     if n > 0 {
-                        self.set_nums(node, if type_name == "TriangleStripSet" { "stripCount" } else { "fanCount" }, &[n as f64]);
+                        self.set_nums(
+                            node,
+                            if type_name == "TriangleStripSet" {
+                                "stripCount"
+                            } else {
+                                "fanCount"
+                            },
+                            &[n as f64],
+                        );
                     }
                 }
             }
@@ -678,12 +886,19 @@ impl<'j, 's> P<'j, 's> {
         }
 
         let appearance = self.material_object(material)?;
-        let opaque = matches!(self.get(appearance, "alphaMode"), FieldValue::SFString(s) if s == "OPAQUE");
+        let opaque =
+            matches!(self.get(appearance, "alphaMode"), FieldValue::SFString(s) if s == "OPAQUE");
         let node = self.create(if opaque { "Color" } else { type_name })?;
         let array = self.accessor_array(c)?;
 
         let values: Vec<f64> = if opaque && type_name != "Color" {
-            array.v.iter().enumerate().filter(|(i, _)| (i + 1) % 4 != 0).map(|(_, v)| *v).collect()
+            array
+                .v
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| (i + 1) % 4 != 0)
+                .map(|(_, v)| *v)
+                .collect()
         } else {
             array.v.clone()
         };
@@ -694,7 +909,12 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(node))
     }
 
-    fn create_multi_texture_coordinate(&mut self, key: (usize, usize), list: &[Option<usize>], material: Option<usize>) -> R<Option<NodeId>> {
+    fn create_multi_texture_coordinate(
+        &mut self,
+        key: (usize, usize),
+        list: &[Option<usize>],
+        material: Option<usize>,
+    ) -> R<Option<NodeId>> {
         let appearance = self.material_object(material)?;
         let material_node = self.get_node(appearance, "material");
 
@@ -713,7 +933,13 @@ impl<'j, 's> P<'j, 's> {
 
         let count = if list.len() == 1 { 1 } else { mappings.len() };
 
-        let tex = |_me: &mut Self, i: f64| -> Option<usize> { if i >= 0.0 && i.fract() == 0.0 { list.get(i as usize).copied().flatten() } else { None } };
+        let tex = |_me: &mut Self, i: f64| -> Option<usize> {
+            if i >= 0.0 && i.fract() == 0.0 {
+                list.get(i as usize).copied().flatten()
+            } else {
+                None
+            }
+        };
 
         match count {
             0 => Ok(None),
@@ -762,7 +988,11 @@ impl<'j, 's> P<'j, 's> {
         }
     }
 
-    fn create_texture_coordinate(&mut self, tex_coord: Option<usize>, mapping: &str) -> R<Option<NodeId>> {
+    fn create_texture_coordinate(
+        &mut self,
+        tex_coord: Option<usize>,
+        mapping: &str,
+    ) -> R<Option<NodeId>> {
         let Some(t) = tex_coord else { return Ok(None) };
 
         if self.acc_json(t).get("type").str() != Some("VEC2") {
@@ -778,12 +1008,19 @@ impl<'j, 's> P<'j, 's> {
 
         self.set(node, "mapping", FieldValue::SFString(mapping.into()));
         self.set_nums(node, "point", &array.v);
-        self.acc[t].tex_coord_nodes.insert(mapping.to_string(), Some(node));
+        self.acc[t]
+            .tex_coord_nodes
+            .insert(mapping.to_string(), Some(node));
         self.setup(node);
         Ok(Some(node))
     }
 
-    fn create_normal(&mut self, normal: Option<usize>, targets: V<'j>, weights: V<'j>) -> R<Option<NodeId>> {
+    fn create_normal(
+        &mut self,
+        normal: Option<usize>,
+        targets: V<'j>,
+        weights: V<'j>,
+    ) -> R<Option<NodeId>> {
         let Some(n) = normal else { return Ok(None) };
 
         if self.acc_json(n).get("type").str() != Some("VEC3") {
@@ -817,7 +1054,11 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(node))
     }
 
-    fn create_tangent(&mut self, tangent: Option<usize>, normal: Option<usize>) -> R<Option<NodeId>> {
+    fn create_tangent(
+        &mut self,
+        tangent: Option<usize>,
+        normal: Option<usize>,
+    ) -> R<Option<NodeId>> {
         // When the base mesh primitive does not specify normals, client implementations MUST
         // calculate flat normals for each morph target; the provided tangents and their
         // displacements (if present) MUST be ignored.
@@ -846,7 +1087,12 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(node))
     }
 
-    fn create_coordinate(&mut self, position: Option<usize>, targets: V<'j>, weights: V<'j>) -> R<Option<NodeId>> {
+    fn create_coordinate(
+        &mut self,
+        position: Option<usize>,
+        targets: V<'j>,
+        weights: V<'j>,
+    ) -> R<Option<NodeId>> {
         let Some(p) = position else { return Ok(None) };
 
         if self.acc_json(p).get("type").str() != Some("VEC3") {
@@ -882,9 +1128,20 @@ impl<'j, 's> P<'j, 's> {
 
     /// `applyMorphTargets (array, targets, key, weights)`: the base vectors plus each target's
     /// displacement times its weight, flat.
-    pub(super) fn apply_morph_targets(&mut self, base: &[f32], targets: V<'j>, key: &str, weights: &[f64]) -> R<Vec<f64>> {
-        let mut vectors: Vec<[f64; 3]> = base.chunks_exact(3).map(|c| [c[0] as f64, c[1] as f64, c[2] as f64]).collect();
-        let Some(list) = targets.arr() else { return Ok(vectors.concat()) };
+    pub(super) fn apply_morph_targets(
+        &mut self,
+        base: &[f32],
+        targets: V<'j>,
+        key: &str,
+        weights: &[f64],
+    ) -> R<Vec<f64>> {
+        let mut vectors: Vec<[f64; 3]> = base
+            .chunks_exact(3)
+            .map(|c| [c[0] as f64, c[1] as f64, c[2] as f64])
+            .collect();
+        let Some(list) = targets.arr() else {
+            return Ok(vectors.concat());
+        };
 
         for (i, target) in list.iter().enumerate() {
             let weight = weights.get(i).copied().unwrap_or(f64::NAN);
@@ -894,7 +1151,9 @@ impl<'j, 's> P<'j, 's> {
             }
 
             let target = V::new(target);
-            let Some(acc) = self.accessor(target.get(key)) else { continue };
+            let Some(acc) = self.accessor(target.get(key)) else {
+                continue;
+            };
 
             if self.acc_json(acc).get("type").str() != Some("VEC3") {
                 continue;
@@ -905,7 +1164,9 @@ impl<'j, 's> P<'j, 's> {
             let mut p = 0;
 
             while a < array.v.len() {
-                let Some(v) = vectors.get_mut(p) else { return Err(undefined_read("add")) };
+                let Some(v) = vectors.get_mut(p) else {
+                    return Err(undefined_read("add"));
+                };
                 let get = |k: usize| array.v.get(k).copied().unwrap_or(f64::NAN);
 
                 v[0] += get(a) * weight;
@@ -921,7 +1182,12 @@ impl<'j, 's> P<'j, 's> {
 
     // --- skinning ------------------------------------------------------------------------------------------
 
-    pub(super) fn attributes_joints_array(&mut self, skin: Option<usize>, joints: &[Option<usize>], weights: &[Option<usize>]) -> R<()> {
+    pub(super) fn attributes_joints_array(
+        &mut self,
+        skin: Option<usize>,
+        joints: &[Option<usize>],
+        weights: &[Option<usize>],
+    ) -> R<()> {
         let Some(skin) = skin else { return Ok(()) };
 
         for (i, j) in joints.iter().enumerate() {
@@ -931,10 +1197,19 @@ impl<'j, 's> P<'j, 's> {
         Ok(())
     }
 
-    fn attributes_joints_object(&mut self, skin: usize, joints: Option<usize>, weights: Option<usize>) -> R<()> {
-        let (Some(j), Some(w)) = (joints, weights) else { return Ok(()) };
+    fn attributes_joints_object(
+        &mut self,
+        skin: usize,
+        joints: Option<usize>,
+        weights: Option<usize>,
+    ) -> R<()> {
+        let (Some(j), Some(w)) = (joints, weights) else {
+            return Ok(());
+        };
 
-        if self.acc_json(j).get("type").str() != Some("VEC4") || self.acc_json(w).get("type").str() != Some("VEC4") {
+        if self.acc_json(j).get("type").str() != Some("VEC4")
+            || self.acc_json(w).get("type").str() != Some("VEC4")
+        {
             return Ok(());
         }
 
@@ -956,10 +1231,16 @@ impl<'j, 's> P<'j, 's> {
                 let index = {
                     let skin_obj = self.skins[skin].as_ref().unwrap();
 
-                    if joint_index >= 0.0 && joint_index.fract() == 0.0 { skin_obj.joints.get(joint_index as usize).copied() } else { None }
+                    if joint_index >= 0.0 && joint_index.fract() == 0.0 {
+                        skin_obj.joints.get(joint_index as usize).copied()
+                    } else {
+                        None
+                    }
                 };
 
-                let node = index.and_then(|ix| ix.index(self.nodes.len())).and_then(|n| self.nodes[n].transform);
+                let node = index
+                    .and_then(|ix| ix.index(self.nodes.len()))
+                    .and_then(|n| self.nodes[n].transform);
 
                 let Some(node) = node else { continue };
 
@@ -978,17 +1259,39 @@ impl<'j, 's> P<'j, 's> {
     fn skin_geometry(&mut self, skin: Option<usize>, geometry: NodeId) -> R<()> {
         let Some(si) = skin else { return Ok(()) };
         let s = self.skins[si].as_ref().unwrap();
-        let (skin_coord, skin_normal, skin_tex, skin_multi) = (s.coordinate, s.normal, s.tex_coord, s.multi_tex_coord);
+        let (skin_coord, skin_normal, skin_tex, skin_multi) =
+            (s.coordinate, s.normal, s.tex_coord, s.multi_tex_coord);
         let start = self.get(skin_coord, "point").len();
 
-        let tex_node = if self.has_field(geometry, "texCoord") { self.get_node(geometry, "texCoord") } else { None };
-        let normal_node = if self.has_field(geometry, "normal") { self.get_node(geometry, "normal") } else { None };
-        let coord_node = if self.has_field(geometry, "coord") { self.get_node(geometry, "coord") } else { None };
+        let tex_node = if self.has_field(geometry, "texCoord") {
+            self.get_node(geometry, "texCoord")
+        } else {
+            None
+        };
+        let normal_node = if self.has_field(geometry, "normal") {
+            self.get_node(geometry, "normal")
+        } else {
+            None
+        };
+        let coord_node = if self.has_field(geometry, "coord") {
+            self.get_node(geometry, "coord")
+        } else {
+            None
+        };
 
         for field in ["coordIndex", "index"] {
             if self.has_field(geometry, field) {
                 if let FieldValue::MFInt32(v) = self.get(geometry, field) {
-                    let mapped: Vec<f64> = v.iter().map(|i| if *i < 0 { -1.0 } else { (*i as f64) + start as f64 }).collect();
+                    let mapped: Vec<f64> = v
+                        .iter()
+                        .map(|i| {
+                            if *i < 0 {
+                                -1.0
+                            } else {
+                                (*i as f64) + start as f64
+                            }
+                        })
+                        .collect();
 
                     self.set_nums(geometry, field, &mapped);
                 }
@@ -1003,7 +1306,14 @@ impl<'j, 's> P<'j, 's> {
                         _ => vec![],
                     };
 
-                    set_vec_at(self.scene, skin_tex, "point", start, 2, &points.iter().map(|x| *x as f64).collect::<Vec<_>>());
+                    set_vec_at(
+                        self.scene,
+                        skin_tex,
+                        "point",
+                        start,
+                        2,
+                        &points.iter().map(|x| *x as f64).collect::<Vec<_>>(),
+                    );
                     self.set_node(geometry, "texCoord", Some(skin_tex));
                 }
                 "MultiTextureCoordinate" => {
@@ -1046,7 +1356,14 @@ impl<'j, 's> P<'j, 's> {
                             _ => vec![],
                         };
 
-                        set_vec_at(self.scene, target, "point", start, 2, &points.iter().map(|x| *x as f64).collect::<Vec<_>>());
+                        set_vec_at(
+                            self.scene,
+                            target,
+                            "point",
+                            start,
+                            2,
+                            &points.iter().map(|x| *x as f64).collect::<Vec<_>>(),
+                        );
                     }
 
                     self.set_node(geometry, "texCoord", Some(skin_multi));
@@ -1061,7 +1378,14 @@ impl<'j, 's> P<'j, 's> {
                 _ => vec![],
             };
 
-            set_vec_at(self.scene, skin_normal, "vector", start, 3, &vectors.iter().map(|x| *x as f64).collect::<Vec<_>>());
+            set_vec_at(
+                self.scene,
+                skin_normal,
+                "vector",
+                start,
+                3,
+                &vectors.iter().map(|x| *x as f64).collect::<Vec<_>>(),
+            );
             self.set_node(geometry, "normal", Some(skin_normal));
         }
 
@@ -1071,7 +1395,14 @@ impl<'j, 's> P<'j, 's> {
                 _ => vec![],
             };
 
-            set_vec_at(self.scene, skin_coord, "point", start, 3, &points.iter().map(|x| *x as f64).collect::<Vec<_>>());
+            set_vec_at(
+                self.scene,
+                skin_coord,
+                "point",
+                start,
+                3,
+                &points.iter().map(|x| *x as f64).collect::<Vec<_>>(),
+            );
             self.set_node(geometry, "coord", Some(skin_coord));
         }
 
@@ -1081,10 +1412,17 @@ impl<'j, 's> P<'j, 's> {
 
 /// `weights [i]` of a JSON array as numbers (non-numbers are NaN, which `!weight` skips).
 fn json_weights(weights: V) -> Vec<f64> {
-    weights.arr().map(|a| a.iter().map(|v| match V::new(v).0 {
-        Some(J::Number(n)) => *n,
-        _ => f64::NAN,
-    }).collect()).unwrap_or_default()
+    weights
+        .arr()
+        .map(|a| {
+            a.iter()
+                .map(|v| match V::new(v).0 {
+                    Some(J::Number(n)) => *n,
+                    _ => f64::NAN,
+                })
+                .collect()
+        })
+        .unwrap_or_default()
 }
 
 /// `field .push (value)` on a typed MF field.
@@ -1098,11 +1436,20 @@ pub(super) fn push_value(scene: &mut Scene, node: NodeId, name: &str, value: f64
 
 /// `field [index + k] = element` for a typed MF field of `components` per element: writes the
 /// elements of `values` from element `start` on, growing the field with zeros.
-pub(super) fn set_vec_at(scene: &mut Scene, node: NodeId, name: &str, start: usize, components: usize, values: &[f64]) {
+pub(super) fn set_vec_at(
+    scene: &mut Scene,
+    node: NodeId,
+    name: &str,
+    start: usize,
+    components: usize,
+    values: &[f64],
+) {
     let i = scene.get_predefined_field(node, name).unwrap();
     let f = &mut scene.node_mut(node).fields[i];
     let mut current: Vec<f64> = match &f.value {
-        FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFFloat(v) => v.iter().map(|x| *x as f64).collect(),
+        FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFFloat(v) => {
+            v.iter().map(|x| *x as f64).collect()
+        }
         _ => vec![],
     };
 

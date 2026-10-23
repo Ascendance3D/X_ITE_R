@@ -20,9 +20,16 @@ fn run_stat(name: &str) {
 
     big(move || {
         let o = oracle();
-        let script = json(&o.join("synthetic-rea-b06/scripts").join(format!("{name}.json")));
+        let script = json(
+            &o.join("synthetic-rea-b06/scripts")
+                .join(format!("{name}.json")),
+        );
         let base = Baseline::load(&name);
-        let run = replay(&o.join("synthetic-rea-b06").join(format!("{name}.x3dv")), &script, base.seeds());
+        let run = replay(
+            &o.join("synthetic-rea-b06").join(format!("{name}.x3dv")),
+            &script,
+            base.seeds(),
+        );
 
         compare_steps(&name, &base, &run);
 
@@ -30,14 +37,24 @@ fn run_stat(name: &str) {
         let stats = json(&base.dir.join("stats.json"));
 
         for (frame, n) in stats["per_frame_births"].as_object().unwrap() {
-            let got = run.dumps.get(&frame.parse().unwrap()).map_or(0, |d| d.len());
+            let got = run
+                .dumps
+                .get(&frame.parse().unwrap())
+                .map_or(0, |d| d.len());
 
-            assert_eq!(got as u64, n.as_u64().unwrap(), "{name}: frame {frame}: births");
+            assert_eq!(
+                got as u64,
+                n.as_u64().unwrap(),
+                "{name}: frame {frame}: births"
+            );
         }
 
         // The samples, row by row.
         let ours = compact(&run.dumps, 20000);
-        let theirs: Vec<[f32; 13]> = f32s(&base.dir.join("samples.f32")).chunks_exact(13).map(|c| c.try_into().unwrap()).collect();
+        let theirs: Vec<[f32; 13]> = f32s(&base.dir.join("samples.f32"))
+            .chunks_exact(13)
+            .map(|c| c.try_into().unwrap())
+            .collect();
 
         assert_eq!(ours.len(), theirs.len(), "{name}: samples");
 
@@ -48,7 +65,11 @@ fn run_stat(name: &str) {
             for c in 0..13 {
                 let (x, y) = (f64::from(a[c]), f64::from(b[c]));
 
-                assert_eq!(x.is_nan(), y.is_nan(), "{name}: row {r} column {c}: port {x}, X_ITE {y}");
+                assert_eq!(
+                    x.is_nan(),
+                    y.is_nan(),
+                    "{name}: row {r} column {c}: port {x}, X_ITE {y}"
+                );
 
                 if !x.is_nan() {
                     worst[c] = worst[c].max((x - y).abs());
@@ -60,17 +81,41 @@ fn run_stat(name: &str) {
             }
         }
 
-        eprintln!("WORST\t{name}\t{:?}\t{:?}\tinexact {inexact} of {}", &worst[6..9], &worst[9..13], ours.len());
+        eprintln!(
+            "WORST\t{name}\t{:?}\t{:?}\tinexact {inexact} of {}",
+            &worst[6..9],
+            &worst[9..13],
+            ours.len()
+        );
 
         // frame, lifetime, rgba: exact; velocity, position: the measured bounds.
-        assert!(worst[..6].iter().all(|&d| d == 0.0), "{name}: frame / lifetime / color differ: {:?}", &worst[..6]);
-        assert!(worst[6..9].iter().all(|&d| d <= VELOCITY_BOUND), "{name}: velocity {:?}", &worst[6..9]);
-        assert!(worst[9..13].iter().all(|&d| d <= POSITION_BOUND), "{name}: position {:?}", &worst[9..13]);
+        assert!(
+            worst[..6].iter().all(|&d| d == 0.0),
+            "{name}: frame / lifetime / color differ: {:?}",
+            &worst[..6]
+        );
+        assert!(
+            worst[6..9].iter().all(|&d| d <= VELOCITY_BOUND),
+            "{name}: velocity {:?}",
+            &worst[6..9]
+        );
+        assert!(
+            worst[9..13].iter().all(|&d| d <= POSITION_BOUND),
+            "{name}: position {:?}",
+            &worst[9..13]
+        );
 
         // The Kolmogorov-Smirnov test on the features, as the check script does.
-        let visible = |rows: &[[f32; 13]]| rows.iter().filter(|r| !r[9].is_nan()).copied().collect::<Vec<_>>();
+        let visible = |rows: &[[f32; 13]]| {
+            rows.iter()
+                .filter(|r| !r[9].is_nan())
+                .copied()
+                .collect::<Vec<_>>()
+        };
         let (va, vb) = (visible(&ours), visible(&theirs));
-        let speed = |r: &[f32; 13]| (f64::from(r[6]).powi(2) + f64::from(r[7]).powi(2) + f64::from(r[8]).powi(2)).sqrt();
+        let speed = |r: &[f32; 13]| {
+            (f64::from(r[6]).powi(2) + f64::from(r[7]).powi(2) + f64::from(r[8]).powi(2)).sqrt()
+        };
         let features: [(&str, Box<dyn Fn(&[f32; 13]) -> f64>); 8] = [
             ("lifetime", Box::new(|r| f64::from(r[1]))),
             ("speed", Box::new(speed)),
@@ -88,13 +133,20 @@ fn run_stat(name: &str) {
         assert_eq!(va.len(), vb.len(), "{name}: visible samples");
 
         for (label, f) in &features {
-            let d = ks2(&va.iter().map(f).collect::<Vec<_>>(), &vb.iter().map(f).collect::<Vec<_>>());
+            let d = ks2(
+                &va.iter().map(f).collect::<Vec<_>>(),
+                &vb.iter().map(f).collect::<Vec<_>>(),
+            );
 
             line += &format!("\t{label}={d:.5}");
             assert!(d <= crit, "{name}: KS {label}: D {d} > {crit}");
         }
 
-        println!("{line}\tvelocity_max={:.2e}\tposition_max={:.2e}", worst[6..9].iter().fold(0.0f64, |a, &b| a.max(b)), worst[9..13].iter().fold(0.0f64, |a, &b| a.max(b)));
+        println!(
+            "{line}\tvelocity_max={:.2e}\tposition_max={:.2e}",
+            worst[6..9].iter().fold(0.0f64, |a, &b| a.max(b)),
+            worst[9..13].iter().fold(0.0f64, |a, &b| a.max(b))
+        );
     });
 }
 

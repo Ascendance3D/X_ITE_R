@@ -55,7 +55,13 @@ fn write(d: &Path, name: &str, text: &str) -> PathBuf {
 fn rss_kib() -> usize {
     std::fs::read_to_string("/proc/self/status")
         .ok()
-        .and_then(|s| s.lines().find_map(|l| l.strip_prefix("VmRSS:").and_then(|r| r.split_whitespace().next()).and_then(|n| n.parse().ok())))
+        .and_then(|s| {
+            s.lines().find_map(|l| {
+                l.strip_prefix("VmRSS:")
+                    .and_then(|r| r.split_whitespace().next())
+                    .and_then(|n| n.parse().ok())
+            })
+        })
         .unwrap_or(0)
 }
 
@@ -94,7 +100,12 @@ fn resources(rt: &Runtime) -> Resources {
     }
 
     let sensor = rt.private_field(rt.browser_node, "sensorEvents").unwrap();
-    let animate_interests = rt.frt.get(&sensor).map_or(0, |f| f.interests.iter().filter(|i| matches!(i.cb, Cb::Particle(_))).count());
+    let animate_interests = rt.frt.get(&sensor).map_or(0, |f| {
+        f.interests
+            .iter()
+            .filter(|i| matches!(i.cb, Cb::Particle(_)))
+            .count()
+    });
     let s = &rt.scene;
 
     Resources {
@@ -114,9 +125,21 @@ fn resources(rt: &Runtime) -> Resources {
 /// No interest of a ParticleSystem names a node that is not a ParticleSystem with state.
 fn assert_no_stale_ids(rt: &Runtime, when: &str) {
     for (k, f) in &rt.frt {
-        for i in f.interests.iter().filter(|i| matches!(i.cb, Cb::Particle(_))) {
-            assert!(rt.particle_sim(i.node).is_some(), "{when}: an interest of field {k:?} names node {} which holds no ParticleSystem state", i.node);
-            assert_eq!(rt.builtin_name(i.node), Some("ParticleSystem"), "{when}: the interest names a node of another type");
+        for i in f
+            .interests
+            .iter()
+            .filter(|i| matches!(i.cb, Cb::Particle(_)))
+        {
+            assert!(
+                rt.particle_sim(i.node).is_some(),
+                "{when}: an interest of field {k:?} names node {} which holds no ParticleSystem state",
+                i.node
+            );
+            assert_eq!(
+                rt.builtin_name(i.node),
+                Some("ParticleSystem"),
+                "{when}: the interest names a node of another type"
+            );
         }
     }
 }
@@ -136,7 +159,10 @@ impl World {
     }
 
     fn named(&self, ctx: CtxId, name: &str) -> NodeId {
-        self.v.rt.scene.contexts[ctx].named_nodes.get(name).unwrap_or_else(|| panic!("no {name}"))
+        self.v.rt.scene.contexts[ctx]
+            .named_nodes
+            .get(name)
+            .unwrap_or_else(|| panic!("no {name}"))
     }
 
     fn inline_ctx(&self) -> CtxId {
@@ -153,8 +179,25 @@ fn start(d: &Path) -> World {
     write(d, "a.x3dv", &scene(0));
     write(d, "b.x3dv", &scene(1));
 
-    let p = write(d, "main.x3dv", &format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n"));
-    let mut w = World { v: Viewer3d::load_attributes(&p, Some(d), T0, 64, 64, Some(60.0), false, ORACLE_PAGE_ATTRIBUTES).expect("load"), t: T0 };
+    let p = write(
+        d,
+        "main.x3dv",
+        &format!("{HEADER}\nDEF Inl Inline {{ url \"a.x3dv\" }}\n"),
+    );
+    let mut w = World {
+        v: Viewer3d::load_attributes(
+            &p,
+            Some(d),
+            T0,
+            64,
+            64,
+            Some(60.0),
+            false,
+            ORACLE_PAGE_ATTRIBUTES,
+        )
+        .expect("load"),
+        t: T0,
+    };
 
     w.v.frame_rate = 60.0;
     w.steps(6);
@@ -184,7 +227,11 @@ fn particle_systems_come_and_go_with_their_inline_100_cycles() {
 
             let r = resources(&w.v.rt);
 
-            assert_eq!((r.systems, r.buffer_floats, r.animate_interests), (0, 0, 0), "cycle {c}: an unloaded scene keeps particle state: {r:?}");
+            assert_eq!(
+                (r.systems, r.buffer_floats, r.animate_interests),
+                (0, 0, 0),
+                "cycle {c}: an unloaded scene keeps particle state: {r:?}"
+            );
             assert_no_stale_ids(&w.v.rt, "unloaded");
 
             if c == 10 {
@@ -192,16 +239,26 @@ fn particle_systems_come_and_go_with_their_inline_100_cycles() {
             }
 
             if let Some(b) = &unloaded {
-                assert_eq!(&r, b, "cycle {c}: a table grew after the warm-up (unloaded)");
+                assert_eq!(
+                    &r, b,
+                    "cycle {c}: a table grew after the warm-up (unloaded)"
+                );
             }
 
             // Load the other scene.
-            w.field(inl, "url", FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]));
+            w.field(
+                inl,
+                "url",
+                FieldValue::MFString(vec![if c % 2 == 0 { "a.x3dv" } else { "b.x3dv" }.into()]),
+            );
             w.field(inl, "load", FieldValue::SFBool(true));
             w.steps(8);
 
             let ctx = w.inline_ctx();
-            let systems: Vec<NodeId> = ["P1", "P2", "P3", "P4"].iter().map(|n| w.named(ctx, n)).collect();
+            let systems: Vec<NodeId> = ["P1", "P2", "P3", "P4"]
+                .iter()
+                .map(|n| w.named(ctx, n))
+                .collect();
             let r = resources(&w.v.rt);
 
             assert_eq!((r.systems, r.animate_interests), (4, 4), "cycle {c}: {r:?}");
@@ -211,11 +268,21 @@ fn particle_systems_come_and_go_with_their_inline_100_cycles() {
             for (i, &p) in systems.iter().enumerate() {
                 let sim = w.v.rt.particle_sim(p).unwrap();
 
-                assert!(sim.num_particles > 0, "cycle {c}: system {i} has no particles after 8 frames");
-                assert!(w.v.rt.get_bool(p, "isActive"), "cycle {c}: system {i} is not active");
+                assert!(
+                    sim.num_particles > 0,
+                    "cycle {c}: system {i} has no particles after 8 frames"
+                );
+                assert!(
+                    w.v.rt.get_bool(p, "isActive"),
+                    "cycle {c}: system {i} is not active"
+                );
             }
 
-            assert_eq!(w.v.rt.particle_sim(systems[2]).unwrap().num_particles, 20, "cycle {c}: the ExplosionEmitter burst");
+            assert_eq!(
+                w.v.rt.particle_sim(systems[2]).unwrap().num_particles,
+                20,
+                "cycle {c}: the ExplosionEmitter burst"
+            );
             assert_eq!(w.v.rt.particle_sim(systems[0]).unwrap().max_particles, 60);
 
             if [10, 50, 100].contains(&c) {
@@ -257,22 +324,48 @@ fn a_released_system_has_no_state_and_no_interest() {
         let d = dir("released");
         let mut w = start(&d);
         let ctx = w.inline_ctx();
-        let old: Vec<NodeId> = ["P1", "P2", "P3", "P4"].iter().map(|n| w.named(ctx, n)).collect();
+        let old: Vec<NodeId> = ["P1", "P2", "P3", "P4"]
+            .iter()
+            .map(|n| w.named(ctx, n))
+            .collect();
         let inl = w.named(ROOT, "Inl");
 
-        assert!(old.iter().all(|&p| w.v.rt.particle_sim(p).is_some_and(|s| s.num_particles > 0)));
+        assert!(
+            old.iter()
+                .all(|&p| w.v.rt.particle_sim(p).is_some_and(|s| s.num_particles > 0))
+        );
 
         w.field(inl, "load", FieldValue::SFBool(false));
         w.steps(3);
 
         for &p in &old {
-            assert!(w.v.rt.particle_sim(p).is_none(), "node {p} still holds particle state after its scene was unloaded");
+            assert!(
+                w.v.rt.particle_sim(p).is_none(),
+                "node {p} still holds particle state after its scene was unloaded"
+            );
         }
 
-        let sensor = w.v.rt.private_field(w.v.rt.browser_node, "sensorEvents").unwrap();
-        let named: Vec<NodeId> = w.v.rt.frt.get(&sensor).map(|f| f.interests.iter().filter(|i| matches!(i.cb, Cb::Particle(_))).map(|i| i.node).collect()).unwrap_or_default();
+        let sensor =
+            w.v.rt
+                .private_field(w.v.rt.browser_node, "sensorEvents")
+                .unwrap();
+        let named: Vec<NodeId> =
+            w.v.rt
+                .frt
+                .get(&sensor)
+                .map(|f| {
+                    f.interests
+                        .iter()
+                        .filter(|i| matches!(i.cb, Cb::Particle(_)))
+                        .map(|i| i.node)
+                        .collect()
+                })
+                .unwrap_or_default();
 
-        assert!(named.is_empty(), "animate interests of released nodes: {named:?}");
+        assert!(
+            named.is_empty(),
+            "animate interests of released nodes: {named:?}"
+        );
 
         // Many frames without the scene, then the scene again: new systems start from nothing.
         w.steps(30);
@@ -283,7 +376,15 @@ fn a_released_system_has_no_state_and_no_interest() {
         let p3 = w.named(ctx, "P3");
 
         assert_eq!(w.v.rt.particle_sim(p3).unwrap().num_particles, 20);
-        assert!(w.v.rt.particle_sim(p3).unwrap().particles.iter().all(|p| p[0] >= 1.0 || p[0] == 0.0), "life counts births");
+        assert!(
+            w.v.rt
+                .particle_sim(p3)
+                .unwrap()
+                .particles
+                .iter()
+                .all(|p| p[0] >= 1.0 || p[0] == 0.0),
+            "life counts births"
+        );
         assert_no_stale_ids(&w.v.rt, "reloaded");
         let _ = std::fs::remove_dir_all(&d);
     });

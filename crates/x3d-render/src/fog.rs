@@ -15,7 +15,12 @@ pub struct FogParams {
 
 /// X3DFogObject.set_visibilityRange__ + set_fogType__: (fogType, visibilityStart, visibilityRange).
 /// `hidden` is the default fog of a layer; a bound Fog node is never hidden.
-pub fn fog_type(fog_type_field: &str, visibility_start: f64, visibility_range: f64, hidden: bool) -> (u32, f64, f64) {
+pub fn fog_type(
+    fog_type_field: &str,
+    visibility_start: f64,
+    visibility_range: f64,
+    hidden: bool,
+) -> (u32, f64, f64) {
     let start = visibility_start.max(0.0);
     let range = visibility_range.max(0.0);
     let start = start.min(range);
@@ -36,7 +41,12 @@ pub fn fog_type(fog_type_field: &str, visibility_start: f64, visibility_range: f
 /// Fog2.glsl.js `getFogInterpolant` for a vertex at `distance` from the fog's origin (the length
 /// of `x3d_Fog .matrix * vertex`): 0 is the fog color, 1 the material color. Single precision
 /// like the GLSL.
-pub fn fog_interpolant(fog_type: u32, visibility_start: f32, visibility_range: f32, distance: f32) -> f32 {
+pub fn fog_interpolant(
+    fog_type: u32,
+    visibility_start: f32,
+    visibility_range: f32,
+    distance: f32,
+) -> f32 {
     let visibility_start_v = visibility_start;
     let visibility_range_v = visibility_range - visibility_start_v;
     let d_v = (distance - visibility_start_v).max(0.0);

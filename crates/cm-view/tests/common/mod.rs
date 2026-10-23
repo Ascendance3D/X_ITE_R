@@ -2,8 +2,8 @@
 //! helpers in `test/multi_test.js`.
 #![allow(dead_code)]
 
-use cm_core::pos::Sticky;
 use cm_core::Pos;
+use cm_core::pos::Sticky;
 use cm_modes::Spec;
 use cm_view::{Editor, EditorOptions, Metrics};
 
@@ -31,7 +31,11 @@ pub fn pl(line: i64) -> Pos {
 /// within milliseconds, so every timed history merge is taken).
 pub fn cm_opts(value: &str, mode: Option<&str>, f: impl FnOnce(&mut EditorOptions)) -> Editor {
     cm_core::clock::manual(1_000_000.0);
-    let mut o = EditorOptions { rtl_move_visually: true, mac: false, ..Default::default() };
+    let mut o = EditorOptions {
+        rtl_move_visually: true,
+        mac: false,
+        ..Default::default()
+    };
     f(&mut o);
     let spec = Spec::from(mode.unwrap_or("css"));
     let mut ed = Editor::new(value, spec, o, Metrics::test_grid());
@@ -88,10 +92,24 @@ pub fn select(cm: &mut Editor, sels: &[S]) {
 #[track_caller]
 pub fn has_selections(cm: &Editor, s: &[(i64, i64, i64, i64)]) {
     let sels = cm.doc.list_selections();
-    assert_eq!(sels.len(), s.len(), "expected {} selections, found {}: {sels:?}", s.len(), sels.len());
+    assert_eq!(
+        sels.len(),
+        s.len(),
+        "expected {} selections, found {}: {sels:?}",
+        s.len(),
+        sels.len()
+    );
     for (i, (r, e)) in sels.iter().zip(s).enumerate() {
-        assert_eq!((r.anchor.line, r.anchor.ch), (e.0, e.1), "anchor of selection {i}");
-        assert_eq!((r.head.line, r.head.ch), (e.2, e.3), "head of selection {i}");
+        assert_eq!(
+            (r.anchor.line, r.anchor.ch),
+            (e.0, e.1),
+            "anchor of selection {i}"
+        );
+        assert_eq!(
+            (r.head.line, r.head.ch),
+            (e.2, e.3),
+            "head of selection {i}"
+        );
     }
 }
 
@@ -99,7 +117,13 @@ pub fn has_selections(cm: &Editor, s: &[(i64, i64, i64, i64)]) {
 #[track_caller]
 pub fn has_cursors(cm: &Editor, s: &[(i64, i64)]) {
     let sels = cm.doc.list_selections();
-    assert_eq!(sels.len(), s.len(), "expected {} selections, found {}: {sels:?}", s.len(), sels.len());
+    assert_eq!(
+        sels.len(),
+        s.len(),
+        "expected {} selections, found {}: {sels:?}",
+        s.len(),
+        sels.len()
+    );
     for (i, (r, e)) in sels.iter().zip(s).enumerate() {
         eq_cursor_pos(r.anchor, r.head);
         assert_eq!((r.head.line, r.head.ch), (e.0, e.1), "selection {i}");

@@ -111,14 +111,20 @@ fn node_refs(value: &FieldValue) -> Vec<NodeId> {
 }
 
 fn all_fields(node: &Node) -> impl Iterator<Item = &Field> {
-    node.fields.iter().chain(node.user_fields.iter()).chain(node.private_fields.iter())
+    node.fields
+        .iter()
+        .chain(node.user_fields.iter())
+        .chain(node.private_fields.iter())
 }
 
 impl Runtime {
     /// A scene (or a PROTO body) was disposed: its nodes and contexts are released at the next sweep.
     pub(crate) fn queue_release(&mut self, ctxs: &[CtxId], nodes: &[NodeId]) {
         self.release_ctxs.extend_from_slice(ctxs);
-        self.release_queue.extend(nodes.iter().copied().filter(|&n| self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))));
+        self.release_queue
+            .extend(nodes.iter().copied().filter(|&n| {
+                self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))
+            }));
     }
 
     /// The nodes released since the last call, for the host's own tables (bindable stacks, caches):
@@ -143,9 +149,23 @@ impl Runtime {
 
         // The `X3DScene` objects of loads that are over carry nothing: they are candidates as soon as
         // no pending load needs them.
-        let needed: HashSet<NodeId> = self.pending_scenes.iter().map(|p| p.scene_node).chain(self.pending_externs.iter().map(|p| p.scene_node)).chain(self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).map(|p| p.scene_node)).collect();
+        let needed: HashSet<NodeId> = self
+            .pending_scenes
+            .iter()
+            .map(|p| p.scene_node)
+            .chain(self.pending_externs.iter().map(|p| p.scene_node))
+            .chain(
+                self.pending_browser
+                    .iter()
+                    .chain(self.browser_frame_waiters.iter())
+                    .map(|p| p.scene_node),
+            )
+            .collect();
         let loose: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId)
-            .filter(|n| matches!(self.scene.node(*n).kind, NodeKind::Internal("X3DScene")) && !needed.contains(n))
+            .filter(|n| {
+                matches!(self.scene.node(*n).kind, NodeKind::Internal("X3DScene"))
+                    && !needed.contains(n)
+            })
             .collect();
 
         self.release_queue.extend(loose);
@@ -160,12 +180,23 @@ impl Runtime {
             return stats;
         }
 
-        let queued: HashSet<NodeId> = std::mem::take(&mut self.release_queue).into_iter().filter(|&n| self.scene.is_live(n)).collect();
-        let mut candidates: HashSet<NodeId> = queued.iter().copied().chain(dynamic.iter().copied()).collect();
+        let queued: HashSet<NodeId> = std::mem::take(&mut self.release_queue)
+            .into_iter()
+            .filter(|&n| self.scene.is_live(n))
+            .collect();
+        let mut candidates: HashSet<NodeId> = queued
+            .iter()
+            .copied()
+            .chain(dynamic.iter().copied())
+            .collect();
 
         // Contexts of `createVrmlFromString` scenes whose nodes are all candidates: they are not roots.
         let ctx_map = self.dynamic_ctx_map();
-        let transient: Vec<CtxId> = ctx_map.iter().filter(|(_, nodes)| !nodes.is_empty() && nodes.iter().all(|n| dynamic.contains(n))).map(|(c, _)| *c).collect();
+        let transient: Vec<CtxId> = ctx_map
+            .iter()
+            .filter(|(_, nodes)| !nodes.is_empty() && nodes.iter().all(|n| dynamic.contains(n)))
+            .map(|(c, _)| *c)
+            .collect();
         let transient_set: HashSet<CtxId> = transient.iter().copied().collect();
         let dead_ctxs: HashSet<CtxId> = self.release_ctxs.iter().copied().collect();
 
@@ -214,7 +245,12 @@ impl Runtime {
                 continue;
             }
 
-            for n in ctx.root_nodes.iter().flatten().chain(ctx.named_nodes.values().iter()) {
+            for n in ctx
+                .root_nodes
+                .iter()
+                .flatten()
+                .chain(ctx.named_nodes.values().iter())
+            {
                 note(&mut keep, *n);
             }
 
@@ -249,12 +285,24 @@ impl Runtime {
             }
         }
 
-        for (_, i) in self.scene.imported.iter().enumerate().filter(|(k, i)| !slots.0.is_free(*k) && !gone(i.ctx)) {
+        for (_, i) in self
+            .scene
+            .imported
+            .iter()
+            .enumerate()
+            .filter(|(k, i)| !slots.0.is_free(*k) && !gone(i.ctx))
+        {
             note(&mut keep, i.inline);
             note(&mut keep, i.instance);
         }
 
-        for (_, e) in self.scene.exported.iter().enumerate().filter(|(k, e)| !slots.1.is_free(*k) && !gone(e.ctx)) {
+        for (_, e) in self
+            .scene
+            .exported
+            .iter()
+            .enumerate()
+            .filter(|(k, e)| !slots.1.is_free(*k) && !gone(e.ctx))
+        {
             note(&mut keep, e.local);
         }
 
@@ -271,14 +319,21 @@ impl Runtime {
 
         // A node keeps its scene, and a route keeps both of its ends: for the scenes that
         // `createVrmlFromString` made (their own roots and routes are not roots) until nothing changes.
-        let transient_nodes: Vec<(CtxId, Vec<NodeId>)> = transient.iter().map(|&c| (c, ctx_map[&c].clone())).collect();
+        let transient_nodes: Vec<(CtxId, Vec<NodeId>)> = transient
+            .iter()
+            .map(|&c| (c, ctx_map[&c].clone()))
+            .collect();
 
         self.close_transient(&candidates, &by_ctx, &transient_nodes, &mut keep, &mut work);
 
         // A runtime-created node that would go stays while a Script holds it (X_ITE: until the garbage collector frees it). The
         // host is asked only now, so that it looks only at what nothing else keeps.
         let ask: Vec<NodeId> = {
-            let mut ask: Vec<NodeId> = dynamic.iter().copied().filter(|n| !keep.contains(n)).collect();
+            let mut ask: Vec<NodeId> = dynamic
+                .iter()
+                .copied()
+                .filter(|n| !keep.contains(n))
+                .collect();
             ask.sort_unstable();
             ask
         };
@@ -296,7 +351,11 @@ impl Runtime {
 
         // --- the release --------------------------------------------------------------------------
 
-        let release: HashSet<NodeId> = candidates.iter().copied().filter(|n| !keep.contains(n)).collect();
+        let release: HashSet<NodeId> = candidates
+            .iter()
+            .copied()
+            .filter(|n| !keep.contains(n))
+            .collect();
 
         stats.retained = keep.len();
         candidates.retain(|n| keep.contains(n) && queued.contains(n));
@@ -304,8 +363,16 @@ impl Runtime {
         self.release_queue.sort_unstable();
 
         // A disposed context is emptied once none of its nodes stays.
-        let kept_ctxs: HashSet<CtxId> = self.release_queue.iter().map(|&n| self.scene.node(n).ctx).collect();
-        let mut empty: Vec<CtxId> = dead_ctxs.iter().copied().filter(|c| !kept_ctxs.contains(c)).collect();
+        let kept_ctxs: HashSet<CtxId> = self
+            .release_queue
+            .iter()
+            .map(|&n| self.scene.node(n).ctx)
+            .collect();
+        let mut empty: Vec<CtxId> = dead_ctxs
+            .iter()
+            .copied()
+            .filter(|c| !kept_ctxs.contains(c))
+            .collect();
 
         // A `createVrmlFromString` scene goes with its last node.
         for (c, nodes) in &transient_nodes {
@@ -374,7 +441,8 @@ impl Runtime {
             n.interests.retain(|i| !dead.contains(&i.node));
         }
 
-        self.tainted_fields.retain(|(k, e)| !dead.contains(&k.0) && !dead.contains(&e.origin.0));
+        self.tainted_fields
+            .retain(|(k, e)| !dead.contains(&k.0) && !dead.contains(&e.origin.0));
         self.tainted_nodes.retain(|n| !dead.contains(n));
         self.scene.raw_tokens.retain(|k, _| !dead.contains(&k.0));
         self.font_style_font.retain(|n, _| !dead.contains(n));
@@ -386,7 +454,11 @@ impl Runtime {
         self.rendered_now.retain(|n| !dead.contains(n));
 
         let alive = |t: &Task| match t {
-            Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n, _) | Task::ScriptCandidate(n, ..) => !dead.contains(n),
+            Task::ScriptLoad(n)
+            | Task::ScriptLoaded(n, _)
+            | Task::UrlLoad(n, _)
+            | Task::ScriptFetch(n, _)
+            | Task::ScriptCandidate(n, ..) => !dead.contains(n),
             Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
         };
 
@@ -438,7 +510,8 @@ impl Runtime {
         self.field_observed.retain(|k| !dead.contains(&k.0));
         self.js_mirror.retain(|k, _| !dead.contains(&k.0));
         self.pending_field_events.retain(|k| !dead.contains(&k.0));
-        self.pending_scenes.retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
+        self.pending_scenes
+            .retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
         self.frame_waiters.retain(|w| !dead.contains(&w.node));
         self.scene.setup_order.retain(|n| !dead.contains(n));
 
@@ -508,13 +581,28 @@ impl Runtime {
         !(name.ends_with("Viewpoint")
             || matches!(
                 name,
-                "Script" | "Inline" | "InlineGeometry" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "LocalFog" | "ViewpointGroup" | "Layer" | "LayerSet" | "Viewport" | "LayoutLayer" | "ScreenGroup" | "Anchor"
+                "Script"
+                    | "Inline"
+                    | "InlineGeometry"
+                    | "NavigationInfo"
+                    | "Background"
+                    | "TextureBackground"
+                    | "Fog"
+                    | "LocalFog"
+                    | "ViewpointGroup"
+                    | "Layer"
+                    | "LayerSet"
+                    | "Viewport"
+                    | "LayoutLayer"
+                    | "ScreenGroup"
+                    | "Anchor"
             ))
     }
 
     /// The runtime-created nodes of each `createVrmlFromString` scene that is still tracked.
     fn dynamic_ctx_map(&self) -> HashMap<CtxId, Vec<NodeId>> {
-        let mut map: HashMap<CtxId, Vec<NodeId>> = self.dynamic_ctxs.iter().map(|&c| (c, vec![])).collect();
+        let mut map: HashMap<CtxId, Vec<NodeId>> =
+            self.dynamic_ctxs.iter().map(|&c| (c, vec![])).collect();
 
         for &n in &self.dynamic_nodes {
             if let Some(list) = map.get_mut(&self.scene.node(n).ctx) {
@@ -527,7 +615,14 @@ impl Runtime {
 
     /// The runtime-created nodes that are due for a look.
     fn dynamic_candidates(&mut self) -> HashSet<NodeId> {
-        let live: Vec<NodeId> = self.dynamic_nodes.iter().copied().filter(|&n| self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))).collect();
+        let live: Vec<NodeId> = self
+            .dynamic_nodes
+            .iter()
+            .copied()
+            .filter(|&n| {
+                self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))
+            })
+            .collect();
 
         self.dynamic_nodes = live.iter().copied().collect();
 
@@ -583,7 +678,14 @@ impl Runtime {
 
     /// A node keeps its scene, and a route keeps both of its ends: for the scenes that `createVrmlFromString` made (their own
     /// roots and routes are not roots) until nothing changes.
-    fn close_transient(&self, candidates: &HashSet<NodeId>, by_ctx: &HashMap<CtxId, Vec<NodeId>>, transient_nodes: &[(CtxId, Vec<NodeId>)], keep: &mut HashSet<NodeId>, work: &mut Vec<NodeId>) {
+    fn close_transient(
+        &self,
+        candidates: &HashSet<NodeId>,
+        by_ctx: &HashMap<CtxId, Vec<NodeId>>,
+        transient_nodes: &[(CtxId, Vec<NodeId>)],
+        keep: &mut HashSet<NodeId>,
+        work: &mut Vec<NodeId>,
+    ) {
         loop {
             let mut grew = false;
 
@@ -623,9 +725,17 @@ impl Runtime {
     }
 
     /// Everything a node that stays refers to stays too: its children, the body of an instance.
-    fn close_keep(&self, candidates: &HashSet<NodeId>, by_ctx: &HashMap<CtxId, Vec<NodeId>>, keep: &mut HashSet<NodeId>, work: &mut Vec<NodeId>) {
+    fn close_keep(
+        &self,
+        candidates: &HashSet<NodeId>,
+        by_ctx: &HashMap<CtxId, Vec<NodeId>>,
+        keep: &mut HashSet<NodeId>,
+        work: &mut Vec<NodeId>,
+    ) {
         while let Some(n) = work.pop() {
-            let mut next: Vec<NodeId> = all_fields(self.scene.node(n)).flat_map(|f| node_refs(&f.value)).collect();
+            let mut next: Vec<NodeId> = all_fields(self.scene.node(n))
+                .flat_map(|f| node_refs(&f.value))
+                .collect();
 
             if let Some(body) = self.instance_bodies.get(&n) {
                 for (c, list) in by_ctx {
@@ -715,11 +825,27 @@ impl Runtime {
         h.ctxs.extend(self.release_ctxs.iter().copied());
         h.ctxs.extend(self.pending_scenes.iter().map(|p| p.ctx));
         h.ctxs.extend(self.frame_waiters.iter().map(|w| w.ctx));
-        h.ctxs.extend(self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).map(|p| p.ctx));
+        h.ctxs.extend(
+            self.pending_browser
+                .iter()
+                .chain(self.browser_frame_waiters.iter())
+                .map(|p| p.ctx),
+        );
         h.ctxs.insert(self.scene.world);
-        h.ctxs.extend(self.world_state.waiters.iter().filter_map(|w| if let crate::browser_load::WorldScene::Ctx(c) = w.scene { Some(c) } else { None }));
+        h.ctxs
+            .extend(self.world_state.waiters.iter().filter_map(|w| {
+                if let crate::browser_load::WorldScene::Ctx(c) = w.scene {
+                    Some(c)
+                } else {
+                    None
+                }
+            }));
 
-        for p in self.pending_externs.iter().chain(self.extern_frame_waiters.iter()) {
+        for p in self
+            .pending_externs
+            .iter()
+            .chain(self.extern_frame_waiters.iter())
+        {
             h.ctxs.insert(p.ctx);
             h.externs.insert(p.ext);
         }
@@ -799,12 +925,35 @@ impl Runtime {
         let s = &self.scene;
         let owned = |c: CtxId| self.emptied_ctxs.contains(&c);
 
-        let protos: Vec<ProtoId> = (0..s.protos.len()).filter(|&p| !s.proto_slots.is_free(p) && owned(s.protos[p].ctx) && !h.protos.contains(&p)).collect();
-        let externs: Vec<ExternId> = (0..s.externprotos.len()).filter(|&e| !s.extern_slots.is_free(e) && owned(s.externprotos[e].ctx) && !h.externs.contains(&e)).collect();
-        let imported: Vec<ImportedId> = (0..s.imported.len()).filter(|&i| !s.imported_slots.is_free(i) && owned(s.imported[i].ctx) && !h.imported.contains(&i)).collect();
-        let exported: Vec<ExportedId> = (0..s.exported.len()).filter(|&x| !s.exported_slots.is_free(x) && owned(s.exported[x].ctx) && !h.exported.contains(&x)).collect();
+        let protos: Vec<ProtoId> = (0..s.protos.len())
+            .filter(|&p| {
+                !s.proto_slots.is_free(p) && owned(s.protos[p].ctx) && !h.protos.contains(&p)
+            })
+            .collect();
+        let externs: Vec<ExternId> = (0..s.externprotos.len())
+            .filter(|&e| {
+                !s.extern_slots.is_free(e)
+                    && owned(s.externprotos[e].ctx)
+                    && !h.externs.contains(&e)
+            })
+            .collect();
+        let imported: Vec<ImportedId> = (0..s.imported.len())
+            .filter(|&i| {
+                !s.imported_slots.is_free(i) && owned(s.imported[i].ctx) && !h.imported.contains(&i)
+            })
+            .collect();
+        let exported: Vec<ExportedId> = (0..s.exported.len())
+            .filter(|&x| {
+                !s.exported_slots.is_free(x) && owned(s.exported[x].ctx) && !h.exported.contains(&x)
+            })
+            .collect();
 
-        let mut ctxs: Vec<CtxId> = self.emptied_ctxs.iter().copied().filter(|c| *c != ROOT && !h.ctxs.contains(c)).collect();
+        let mut ctxs: Vec<CtxId> = self
+            .emptied_ctxs
+            .iter()
+            .copied()
+            .filter(|c| *c != ROOT && !h.ctxs.contains(c))
+            .collect();
 
         ctxs.sort_unstable();
 

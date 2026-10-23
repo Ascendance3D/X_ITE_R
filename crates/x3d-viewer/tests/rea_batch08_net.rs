@@ -33,26 +33,43 @@ struct Udp {
 impl Udp {
     fn start() -> Udp {
         use std::net::UdpSocket;
-        use std::sync::atomic::{AtomicBool, Ordering};
         use std::sync::Arc;
+        use std::sync::atomic::{AtomicBool, Ordering};
 
         // Positive control first: a bound socket receives what the sender sends.
         let control = {
             let b = UdpSocket::bind(("127.0.0.1", SENDER_PORTS[0])).unwrap();
-            b.set_read_timeout(Some(std::time::Duration::from_secs(2))).unwrap();
+            b.set_read_timeout(Some(std::time::Duration::from_secs(2)))
+                .unwrap();
             let c = UdpSocket::bind(("127.0.0.1", 0)).unwrap();
-            c.send_to(&[7u8; 144], ("127.0.0.1", SENDER_PORTS[0])).unwrap();
+            c.send_to(&[7u8; 144], ("127.0.0.1", SENDER_PORTS[0]))
+                .unwrap();
             let mut buf = [0u8; 2048];
             matches!(b.recv_from(&mut buf), Ok((144, _)))
         };
         let listener = UdpSocket::bind(("127.0.0.1", LISTEN_PORT)).unwrap();
-        listener.set_read_timeout(Some(std::time::Duration::from_millis(20))).unwrap();
+        listener
+            .set_read_timeout(Some(std::time::Duration::from_millis(20)))
+            .unwrap();
         let stop = Arc::new(AtomicBool::new(false));
         let flag = stop.clone();
         let handle = std::thread::spawn(move || {
             // DIS-PDU shaped datagrams: version 6, exercise 1, type, family, timestamp, length.
             let pdu = |kind: u8, size: usize| {
-                let mut d = vec![6u8, 1, kind, 1, 0, 0, 0, 0, (size >> 8) as u8, size as u8, 0, 0];
+                let mut d = vec![
+                    6u8,
+                    1,
+                    kind,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    (size >> 8) as u8,
+                    size as u8,
+                    0,
+                    0,
+                ];
                 d.extend((0..size - 12).map(|i| i as u8));
                 d
             };
@@ -77,7 +94,9 @@ impl Udp {
                     // An ICMP port unreachable of an earlier datagram shows as ConnectionRefused on a later send.
                     match s.send(&pdu(kind, 144 + (round as usize % 4) * 16)) {
                         Ok(_) => sent[i] += 1,
-                        Err(e) if e.kind() == std::io::ErrorKind::ConnectionRefused => refused[i] += 1,
+                        Err(e) if e.kind() == std::io::ErrorKind::ConnectionRefused => {
+                            refused[i] += 1
+                        }
                         Err(_) => {}
                     }
                 }
@@ -90,7 +109,15 @@ impl Udp {
                 std::thread::sleep(std::time::Duration::from_millis(1));
             }
 
-            UdpVerdict { control, received, ports: SENDER_PORTS.iter().enumerate().map(|(i, p)| (*p, sent[i], refused[i])).collect() }
+            UdpVerdict {
+                control,
+                received,
+                ports: SENDER_PORTS
+                    .iter()
+                    .enumerate()
+                    .map(|(i, p)| (*p, sent[i], refused[i]))
+                    .collect(),
+            }
         });
 
         Udp { stop, handle }
@@ -166,23 +193,48 @@ fn text_equal(a: &str, b: &str, tol: f64) -> bool {
 
     let ((ta, na), (tb, nb)) = (split(a), split(b));
 
-    ta == tb && na.iter().zip(&nb).all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
+    ta == tb
+        && na
+            .iter()
+            .zip(&nb)
+            .all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
 }
 
 fn nums(v: &Value) -> Vec<f64> {
-    v.as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
+    v.as_array()
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default()
 }
 
 #[allow(clippy::too_many_arguments)]
-fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, text_tol: f64, udp_on: bool, gpu: bool, failures: &mut Vec<String>) {
+fn compare_case(
+    root: &Path,
+    name: &str,
+    world: &str,
+    script: &str,
+    msaa: u32,
+    text_tol: f64,
+    udp_on: bool,
+    gpu: bool,
+    failures: &mut Vec<String>,
+) {
     let dir = root.join(format!("oracle/rea-batch08-net-baseline/{name}-msaa{msaa}"));
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch08-net-{}-{name}-msaa{msaa}", std::process::id()));
+    let js: Value =
+        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let out = std::env::temp_dir().join(format!(
+        "rea-batch08-net-{}-{name}-msaa{msaa}",
+        std::process::id()
+    ));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-drive"));
-    cmd.current_dir(root).args([world, script, "--oracle", "oracle"]).arg("--out").arg(&rs_json).arg("--warmup-from").arg(dir.join("js.json"));
+    cmd.current_dir(root)
+        .args([world, script, "--oracle", "oracle"])
+        .arg("--out")
+        .arg(&rs_json)
+        .arg("--warmup-from")
+        .arg(dir.join("js.json"));
 
     let images = gpu && dir.join("js").is_dir();
 
@@ -209,13 +261,18 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
         }
 
         if v.received != 0 {
-            fail(format!("udp: a node sent {} datagrams to the listener", v.received));
+            fail(format!(
+                "udp: a node sent {} datagrams to the listener",
+                v.received
+            ));
         }
 
         for (port, sent, refused) in &v.ports {
             // Half of the datagrams sent while the drive ran must have met a closed port: a bound socket refuses none.
             if *sent < 5 || *refused < 5 || *refused * 2 < *sent {
-                fail(format!("udp: port {port} sent {sent} refused {refused}: something may be listening"));
+                fail(format!(
+                    "udp: port {port} sent {sent} refused {refused}: something may be listening"
+                ));
             }
         }
     }
@@ -250,15 +307,38 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
             fail(format!("pose at frame {k} missing"));
             continue;
         };
-        let d = |key: &str| nums(&a[key]).iter().zip(nums(&b[key])).map(|(p, q)| (p - q).abs()).fold(0.0, f64::max);
-        let (qa, qb) = (quat(&nums(&a["orientation"])), quat(&nums(&b["orientation"])));
+        let d = |key: &str| {
+            nums(&a[key])
+                .iter()
+                .zip(nums(&b[key]))
+                .map(|(p, q)| (p - q).abs())
+                .fold(0.0, f64::max)
+        };
+        let (qa, qb) = (
+            quat(&nums(&a["orientation"])),
+            quat(&nums(&b["orientation"])),
+        );
         let dot = qa.iter().zip(qb).map(|(p, q)| p * q).sum::<f64>().abs();
         let angle = 2.0 * dot.min(1.0).acos();
-        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0) - b["fieldOfViewScale"].as_f64().unwrap_or(1.0)).abs();
+        let fov = (a["fieldOfViewScale"].as_f64().unwrap_or(1.0)
+            - b["fieldOfViewScale"].as_f64().unwrap_or(1.0))
+        .abs();
         let viewpoint = a["viewpoint"] == b["viewpoint"] || b["viewpoint"] == "<default>";
 
-        if d("position") > 1e-4 || d("centerOfRotation") > 1e-4 || angle > 1e-4 || fov > 1e-4 || a["viewer"] != b["viewer"] || !viewpoint {
-            fail(format!("pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}", d("position"), d("centerOfRotation"), a["viewer"], b["viewer"]));
+        if d("position") > 1e-4
+            || d("centerOfRotation") > 1e-4
+            || angle > 1e-4
+            || fov > 1e-4
+            || a["viewer"] != b["viewer"]
+            || !viewpoint
+        {
+            fail(format!(
+                "pose frame {k}: dpos {:.2e} dcenter {:.2e} dangle {angle:.2e} dfov {fov:.2e} viewer {}/{}",
+                d("position"),
+                d("centerOfRotation"),
+                a["viewer"],
+                b["viewer"]
+            ));
         }
     }
 
@@ -273,7 +353,10 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
                     if s.pixels_over * 1000 > (w * h) as usize * 5 {
-                        fail(format!("{file}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+                        fail(format!(
+                            "{file}: {} pixels over 8 ({:.3}%), max {}",
+                            s.pixels_over, s.pct_over, s.max_delta
+                        ));
                     }
                 }
                 Ok((rw, rh, _)) => fail(format!("{file}: size {rw}x{rh}, X_ITE {w}x{h}")),
@@ -287,8 +370,12 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 
 #[test]
 fn rea_batch08_net_cases_match_x_ite() {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch08-net-baseline/cases.txt")).unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let cases =
+        std::fs::read_to_string(root.join("oracle/rea-batch08-net-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
@@ -299,16 +386,34 @@ fn rea_batch08_net_cases_match_x_ite() {
         let f: Vec<&str> = line.split_whitespace().collect();
         let (name, world, script, msaa) = (f[0], f[1], f[2], f[3].parse::<u32>().unwrap());
         let udp_on = f.contains(&"--udp");
-        let text_tol = f.get(4).filter(|t| !t.starts_with("--")).map_or(0.0, |t| t.parse::<f64>().unwrap());
+        let text_tol = f
+            .get(4)
+            .filter(|t| !t.starts_with("--"))
+            .map_or(0.0, |t| t.parse::<f64>().unwrap());
 
         if only.as_deref().is_some_and(|o| !name.contains(o)) {
             continue;
         }
 
-        compare_case(&root, name, world, script, msaa, text_tol, udp_on, gpu, &mut failures);
+        compare_case(
+            &root,
+            name,
+            world,
+            script,
+            msaa,
+            text_tol,
+            udp_on,
+            gpu,
+            &mut failures,
+        );
         checked += 1;
     }
 
     eprintln!("{checked} cases checked (images: {gpu})");
-    assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "{} failures:\n{}",
+        failures.len(),
+        failures.join("\n")
+    );
 }

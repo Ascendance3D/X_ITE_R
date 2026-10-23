@@ -32,7 +32,13 @@ struct Ring {
 
 impl Default for Shared {
     fn default() -> Shared {
-        Shared { ring: Mutex::new(Ring { buffer: vec![0.0; INPUT_BUFFER_SIZE], write_index: 0 }), discrete: AtomicBool::new(false) }
+        Shared {
+            ring: Mutex::new(Ring {
+                buffer: vec![0.0; INPUT_BUFFER_SIZE],
+                write_index: 0,
+            }),
+            discrete: AtomicBool::new(false),
+        }
     }
 }
 
@@ -52,7 +58,11 @@ fn down_mix(source: &[&[f32]], discrete: bool, frames: usize, dest: &mut [f32]) 
         }
     };
 
-    let channels: Vec<&[f32]> = source.iter().copied().filter(|c| c.len() >= frames).collect();
+    let channels: Vec<&[f32]> = source
+        .iter()
+        .copied()
+        .filter(|c| c.len() >= frames)
+        .collect();
 
     match (channels.len(), discrete) {
         (0, _) => {}
@@ -94,12 +104,22 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = Arc<Shared>;
 
     fn constructor(shared: Arc<Shared>) -> Self {
-        Processor { shared, down_mix: vec![0.0; 128], last_non_silent_time: 0.0 }
+        Processor {
+            shared,
+            down_mix: vec![0.0; 128],
+            last_non_silent_time: 0.0,
+        }
     }
 
     fn onmessage(&mut self, _msg: &mut dyn Any) {}
 
-    fn process<'a, 'b>(&mut self, inputs: &'b [&'a [&'a [f32]]], outputs: &'b mut [&'a mut [&'a mut [f32]]], _params: AudioParamValues<'b>, scope: &'b AudioWorkletGlobalScope) -> bool {
+    fn process<'a, 'b>(
+        &mut self,
+        inputs: &'b [&'a [&'a [f32]]],
+        outputs: &'b mut [&'a mut [&'a mut [f32]]],
+        _params: AudioParamValues<'b>,
+        scope: &'b AudioWorkletGlobalScope,
+    ) -> bool {
         let source = inputs[0];
         let dest = &mut outputs[0];
         let frames = dest.first().map_or(128, |d| d.len());
@@ -122,7 +142,12 @@ impl AudioWorkletProcessor for Processor {
                 self.down_mix.resize(frames, 0.0);
             }
 
-            down_mix(source, self.shared.discrete.load(Ordering::Relaxed), frames, &mut self.down_mix);
+            down_mix(
+                source,
+                self.shared.discrete.load(Ordering::Relaxed),
+                frames,
+                &mut self.down_mix,
+            );
 
             let mut ring = self.shared.ring();
             let write_index = ring.write_index;
@@ -289,7 +314,8 @@ impl Analyser {
             let write_index = ring.write_index;
 
             for (i, t) in temp.iter_mut().enumerate() {
-                *t = ring.buffer[(i + write_index + INPUT_BUFFER_SIZE - fft_size) % INPUT_BUFFER_SIZE];
+                *t = ring.buffer
+                    [(i + write_index + INPUT_BUFFER_SIZE - fft_size) % INPUT_BUFFER_SIZE];
             }
         }
 
@@ -301,7 +327,8 @@ impl Analyser {
         let k = self.smoothing_time_constant.clamp(0.0, 1.0);
 
         for (i, d) in self.magnitude.iter_mut().enumerate() {
-            let scalar_magnitude = (self.frame.real[i] as f64).hypot(self.frame.imag[i] as f64) * magnitude_scale;
+            let scalar_magnitude =
+                (self.frame.real[i] as f64).hypot(self.frame.imag[i] as f64) * magnitude_scale;
             let v = (k * *d as f64 + (1.0 - k) * scalar_magnitude) as f32;
             *d = if v.is_finite() { v } else { 0.0 };
         }
@@ -318,7 +345,11 @@ impl Analyser {
     pub fn get_byte_frequency_data(&mut self, destination: &mut [u8], current_time: f64) {
         self.analyse_if_new(current_time);
 
-        let range_scale_factor = if self.max_decibels == self.min_decibels { 1.0 } else { 1.0 / (self.max_decibels - self.min_decibels) };
+        let range_scale_factor = if self.max_decibels == self.min_decibels {
+            1.0
+        } else {
+            1.0 / (self.max_decibels - self.min_decibels)
+        };
 
         for (d, m) in destination.iter_mut().zip(&self.magnitude) {
             let db_mag = linear_to_decibels(*m) as f64;
@@ -342,7 +373,8 @@ impl Analyser {
         let write_index = ring.write_index;
 
         for (i, d) in destination.iter_mut().take(fft_size).enumerate() {
-            let value = ring.buffer[(i + write_index + INPUT_BUFFER_SIZE - fft_size) % INPUT_BUFFER_SIZE];
+            let value =
+                ring.buffer[(i + write_index + INPUT_BUFFER_SIZE - fft_size) % INPUT_BUFFER_SIZE];
             // `128 * (value + 1)` is float arithmetic.
             *d = to_byte((128.0 * (value + 1.0)) as f64);
         }
