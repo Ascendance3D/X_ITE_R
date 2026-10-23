@@ -354,6 +354,7 @@ The current workflow runs on a GitHub-hosted Ubuntu 24.04 runner.
 
 | Check | Description |
 |---|---|
+| Formatting | Runs `cargo fmt --all -- --check` before the build |
 | Rust regression suite | Runs the X_ITE-only Rust workspace tests |
 | Audio reference comparison | Compares Rust audio behavior with recorded X_ITE baselines |
 | Test summary | Records passed, failed, ignored, and filtered test counts |
@@ -380,6 +381,32 @@ cargo test --workspace --release \
 Run this command in an environment with the required resources and graphics support.
 
 For a standard runner without a GPU, use the exclusions documented in `.github/workflows/rust-tests.yml`.
+
+### Formatting
+
+The Rust code uses standard rustfmt formatting from the stable toolchain, with no `rustfmt.toml`.
+
+Format the workspace before committing:
+
+```bash
+cargo fmt --all
+```
+
+Check it the way CI does:
+
+```bash
+cargo fmt --all -- --check
+```
+
+Every Rust pull request must pass the CI formatting check. No nightly toolchain or Git hook is required.
+
+The generated CodeMirror files `crates/cm-modes/src/css_tables.rs` and `crates/cm-modes/tests/upstream_mode_tests.rs` are marked `rustfmt::skip` and stay as their generators write them.
+
+The commit that first formatted the workspace is listed in `.git-blame-ignore-revs`. To skip it in local blame:
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
 
 ### Audio reference checks
 
@@ -549,11 +576,10 @@ The build process should not publish a release merely because a pull request pas
 
 The project will use automated checks to help verify the Rust code and its dependencies.
 
-The current CI workflow runs the Rust regression suite and the audio reference tests.
+The current CI workflow runs the formatting check, the Rust regression suite, and the audio reference tests.
 
 Future work may add:
 
-- Rust formatting checks with `cargo fmt`.
 - Static analysis with `cargo clippy`.
 - Dependency vulnerability checks with `cargo audit`.
 - Dependency license checks.
@@ -619,6 +645,8 @@ The repository is currently private.
 Public contribution instructions will be added before the project opens to outside contributors.
 
 Future contributions should include clear test evidence and preserve the compatibility requirements.
+
+Rust changes must be formatted with `cargo fmt --all` and pass `cargo fmt --all -- --check`. See [Formatting](#formatting).
 
 Changes that affect X_ITE behavior should include reference comparisons when practical.
 
