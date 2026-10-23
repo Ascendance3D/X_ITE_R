@@ -1,0 +1,1 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 45, "warmup": 8, "node": "PS", "dump": [15, 25, 45], "seed": 21000009, "events": [{"frame": 20, "node": "PS", "field": "particleSize", "value": [0.3, 0.05]}]}
