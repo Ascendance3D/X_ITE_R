@@ -16,9 +16,10 @@
 //! (without a `direction`) its direction with `Math.random` on the CPU, in `addForce` order, before the
 //! emitter pass draws `randomSeed` ([`particles::next_force_random`]).
 //!
-//! Not ported: the renderer (geometry types, colors, texCoords, scales), the bounding boxes
-//! (`PolylineEmitter.getBBox`, only the renderer reads them), `GeoCoordinate` as the coord of a
-//! PolylineEmitter, and the color / texCoord / scale ramps of the ParticleSystem.
+//! The color, texCoord and scale ramps (`set_color__`, `set_texCoord__`, `set_scale__`) and the
+//! geometry type's scale / rotation matrix are part of the emitter pass ([`particles::Ramps`]); x3d-render
+//! draws the buffer (`crates/x3d-render/src/particles.rs`) and computes the bounding boxes. Not ported:
+//! `GeoCoordinate` as the coord of a PolylineEmitter.
 //!
 //! # The geometry provider (a requirement of this crate)
 //!
@@ -48,7 +49,7 @@
 //!   provider) and does not log again.
 
 use crate::nodes::State;
-use crate::particles::{self, EmitterKind, EmitterParams, GeometryTexture, Pass, Sim};
+use crate::particles::{self, EmitterKind, EmitterParams, GeometryTexture, GeometryType, Pass, Ramp, Ramps, Sim};
 use crate::*;
 use std::collections::HashSet;
 use std::sync::OnceLock;
@@ -124,6 +125,9 @@ struct BoundedCache {
 #[derive(Default)]
 pub struct PsState {
     pub sim: Sim,
+    /// The ramps of the last `animateParticles` (the renderer reads the texCoord ramp and whether the color
+    /// ramp is used).
+    pub ramps: Ramps,
     emitter_cache: Option<EmitterCache>,
     bounded_cache: Option<BoundedCache>,
 }
@@ -194,6 +198,131 @@ impl Runtime {
         match &self.nrt(node)?.state {
             State::ParticleSystem(s) => Some(&s.sim),
             _ => None,
+        }
+    }
+
+    /// The ramps of a ParticleSystem as its last `animateParticles` used them.
+    pub fn particle_ramps(&self, node: NodeId) -> Option<&Ramps> {
+        match &self.nrt(node)?.state {
+            State::ParticleSystem(s) => Some(&s.ramps),
+            _ => None,
+        }
+    }
+
+    /// `set_color__`, `set_texCoord__` and `set_scale__` of a ParticleSystem: its ramp textures. The texCoord
+    /// ramp holds `texCoordCount` (4 for the quad types, 0 otherwise) values per key.
+    pub fn particle_system_ramps(&self, ps: NodeId) -> Ramps {
+        let keys = |name: &str| match self.pre_value(ps, name) {
+            Some(FieldValue::MFFloat(v)) => v.clone(),
+            _ => vec![],
+        };
+        let node = |name: &str| match self.pre_value(ps, name) {
+            Some(FieldValue::SFNode(Some(n))) => self.inner_node(*n),
+            _ => None,
+        };
+        let floats = |n: NodeId, name: &str| -> Vec<f32> {
+            match self.pre_value(n, name) {
+                Some(FieldValue::MFColor(v) | FieldValue::MFColorRGBA(v) | FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)) => v.clone(),
+                _ => vec![],
+            }
+        };
+        // The key texels, then the values.
+        let ramp = |keys: &[f32], values: Vec<[f32; 4]>| Ramp { count: keys.len(), texels: keys.iter().map(|k| [*k, 0.0, 0.0, 0.0]).chain(values).collect() };
+
+        // set_color__: X3DCast (X3DColorNode, color) .addColors ([ ], numKeys) (the colors repeat), or white.
+        let color_keys = keys("colorKey");
+        let colors = (!color_keys.is_empty()).then(|| {
+            let n = color_keys.len();
+            let values = match node("color").map(|c| (self.builtin_name(c), c)) {
+                Some((Some(ty @ ("Color" | "ColorRGBA")), c)) => {
+                    let width = if ty == "Color" { 3 } else { 4 };
+                    let v = floats(c, "color");
+                    let length = v.len() / width;
+
+                    (0..n).map(|i| match length {
+                        0 => [1.0; 4],
+                        _ => {
+                            let k = (i % length) * width;
+
+                            [v[k], v[k + 1], v[k + 2], if width == 3 { 1.0 } else { v[k + 3] }]
+                        }
+                    }).collect()
+                }
+                _ => vec![[1.0; 4]; n],
+            };
+
+            ramp(&color_keys, values)
+        });
+
+        // set_texCoord__: X3DCast (X3DTextureCoordinateNode, texCoord) .addPoints ([ ]), numKeys * texCoordCount of them;
+        // without the node X3D_NUM_TEX_COORDS is 0.
+        let geometry_type = self.particle_geometry_type(ps);
+        let tex_coords_count = geometry_type.tex_coord_count();
+        let tex_coord_keys = keys("texCoordKey");
+        let tex_coords = node("texCoord").and_then(|t| {
+            let points = self.tex_coord_points(t)?;
+            let values: Vec<[f32; 4]> = points.into_iter().take(tex_coord_keys.len() * tex_coords_count).collect();
+
+            Some(ramp(&tex_coord_keys, values))
+        });
+        let tex_coords = tex_coords.filter(|r| r.count > 0);
+
+        // set_scale__: X3DCast (Coordinate, scale) .addPoints ([ ], numKeys) (the last point repeats, none is 0 0 0), or 1.
+        let scale_keys = keys("scaleKey");
+        let scales = (!scale_keys.is_empty()).then(|| {
+            let n = scale_keys.len();
+            let values = match node("scale").filter(|c| self.builtin_name(*c) == Some("Coordinate")) {
+                Some(c) => {
+                    let v = floats(c, "point");
+                    let mut points: Vec<[f32; 4]> = v.chunks_exact(3).map(|p| [p[0], p[1], p[2], 1.0]).collect();
+                    let last = points.last().copied().unwrap_or([0.0, 0.0, 0.0, 1.0]);
+
+                    while points.len() < n {
+                        points.push(last);
+                    }
+
+                    points.truncate(n);
+                    points
+                }
+                None => vec![[1.0; 4]; n],
+            };
+
+            ramp(&scale_keys, values)
+        });
+
+        Ramps { colors, tex_coords, tex_coords_count, scales }
+    }
+
+    /// `addPoints ([ ])` of an X3DTextureCoordinateNode (a MultiTextureCoordinate's first one); `None` when
+    /// it is not one.
+    fn tex_coord_points(&self, t: NodeId) -> Option<Vec<[f32; 4]>> {
+        let floats = |name: &str| match self.pre_value(t, name) {
+            Some(FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v) | FieldValue::MFVec4f(v)) => v.clone(),
+            _ => vec![],
+        };
+
+        match self.builtin_name(t)? {
+            "TextureCoordinate" => Some(floats("point").chunks_exact(2).map(|p| [p[0], p[1], 0.0, 1.0]).collect()),
+            "TextureCoordinate3D" => Some(floats("point").chunks_exact(3).map(|p| [p[0], p[1], p[2], 1.0]).collect()),
+            "TextureCoordinate4D" => Some(floats("point").chunks_exact(4).map(|p| [p[0], p[1], p[2], p[3]]).collect()),
+            "TextureCoordinateGenerator" => Some(vec![]),
+            "MultiTextureCoordinate" => {
+                let first = match self.pre_value(t, "texCoord") {
+                    Some(FieldValue::MFNode(v)) => v.iter().flatten().filter_map(|n| self.inner_node(*n)).find(|n| matches!(self.builtin_name(*n), Some("TextureCoordinate" | "TextureCoordinate3D" | "TextureCoordinate4D" | "TextureCoordinateGenerator"))),
+                    _ => None,
+                };
+
+                Some(first.and_then(|n| self.tex_coord_points(n)).unwrap_or_default())
+            }
+            _ => None,
+        }
+    }
+
+    /// `set_geometryType__`: the ParticleSystem's geometry type.
+    pub fn particle_geometry_type(&self, ps: NodeId) -> GeometryType {
+        match self.pre_value(ps, "geometryType") {
+            Some(FieldValue::SFString(s)) => GeometryType::from_name(s),
+            _ => GeometryType::Quad,
         }
     }
 
@@ -696,7 +825,14 @@ impl Runtime {
 
         self.ps_bounded_geometry(bounded_cache, &physics);
 
+        st.ramps = self.particle_system_ramps(node);
+
+        let particle_size = match self.pre_value(node, "particleSize") {
+            Some(FieldValue::SFVec2f(v)) => [v.x as f32, v.y as f32],
+            _ => [0.02, 0.02],
+        };
         let seed = particles::next_seed();
+        let PsState { sim, emitter_cache, bounded_cache, ramps } = &mut *st;
         let pass = Pass {
             emitter: &e,
             create: sim.create_particles && e.on,
@@ -707,6 +843,9 @@ impl Runtime {
             forces: &forces,
             texture: emitter_cache.as_ref().and_then(|c| c.texture.as_ref()),
             bounded: bounded_cache.as_ref().and_then(|c| c.texture.as_ref()).filter(|t| t.hierarchy_root > -1),
+            geometry_type: self.particle_geometry_type(node),
+            particle_size,
+            ramps,
         };
 
         particles::run_pass(&mut sim.particles, sim.num_particles, &pass);
