@@ -136,8 +136,8 @@ fn world_physics(d: &std::path::Path, drop_height: f64) -> PathBuf {
     world_physics_opts(d, drop_height, true, false)
 }
 
-/// [`world_physics`]; `particles` false leaves the ParticleSystems out (the port simulates them but has no particle
-/// renderer, so a picture comparison with X_ITE needs a world without them); `mesh_floor` makes the floor of the
+/// [`world_physics`]; `particles` false leaves the ParticleSystems out (the X_ITE pictures of oracle/multiview-b08-baseline
+/// were recorded without them; particle images are compared in rea_b13_particles.rs); `mesh_floor` makes the floor of the
 /// rigid bodies a concave-capable IndexedFaceSet CollidableShape, which builds its collision shape through the
 /// process-global geometry provider.
 fn world_physics_opts(d: &std::path::Path, drop_height: f64, particles: bool, mesh_floor: bool) -> PathBuf {
@@ -821,8 +821,8 @@ fn x_ite_two_canvases_rigid_bodies_msaa4() {
 
 // --- particle simulation state ---------------------------------------------------------------------------------
 
-/// The simulation state of every ParticleSystem of a viewer: the slots in use and their float bits. (The port has no
-/// particle renderer, so the state is what a viewer's particles are.)
+/// The simulation state of every ParticleSystem of a viewer: the slots in use and their float bits. (The renderer draws
+/// the particles from this state, so comparing it per frame compares what each viewer's particles are.)
 fn particle_state(v: &mut EmbeddedViewer) -> Vec<(usize, Vec<u32>)> {
     let rt = &v.core().unwrap().rt;
     let mut out = vec![];
