@@ -444,6 +444,9 @@ struct DrawU {
     fog_m2: [f32; 4],
     /// x: X3D_FOG_COORDS.
     fog_flags: [u32; 4],
+    /// A ParticleSystem instance (inst_flags y, z): x3d_Color and the texCoord ramp's quad corners.
+    inst_color: [f32; 4],
+    inst_tex: [[f32; 4]; 4],
 }
 
 /// The material texture kinds: five of the materials, sixteen of the extensions.
@@ -3093,6 +3096,16 @@ impl Renderer {
                     di.inst_n0 = [n[0], n[1], n[2], 0.0];
                     di.inst_n1 = [n[3], n[4], n[5], 0.0];
                     di.inst_n2 = [n[6], n[7], n[8], 0.0];
+
+                    if let Some(c) = i.colors.get(inst) {
+                        di.inst_flags[1] = 1;
+                        di.inst_color = *c;
+                    }
+
+                    if let Some(t) = i.tex_coords.get(inst) {
+                        di.inst_flags[2] = 1;
+                        di.inst_tex = *t;
+                    }
                 }
 
                 if let Some(b) = item.back_material.as_ref().filter(|_| two_sided) {

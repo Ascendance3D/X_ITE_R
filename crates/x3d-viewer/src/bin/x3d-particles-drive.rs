@@ -22,10 +22,14 @@
 //! * script `events` (the 06R format, values: bool, number, string, number arrays for vector / MF fields,
 //!   `{"def": NAME | null}` for SFNode and `{"nodes": [...]}` for MFNode) are applied before the frame's step.
 //! * steps carry `isActive`, `maxParticles`, `numForces`; `geometry.polyline` is the `polylines` texture.
+//!
+//! `--png-dir <dir>` renders the frame after each dump frame's step into `<dir>/<frame>.png` (`x3d-oracle particles
+//! --png-dir`: anim.html's 512 x 512 canvas, `antialiased="false"`; `--png-size WxH` for another size); `--msaa N`
+//! renders it like the MSAA page (`antialiased="true" multisampling="N"`). The simulation is the same with or without them.
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
-use x3d_fields::math::Vector3;
+use x3d_fields::math::{Vector2, Vector3};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_runtime::particles::{self, STRIDE};
 use x3d_scene::ROOT;
@@ -43,14 +47,19 @@ fn main() {
     let world = PathBuf::from(&args[1]);
     let script: Value = serde_json::from_str(&std::fs::read_to_string(&args[2]).expect("script")).expect("script json");
     let base: Option<Value> = opt("--seeds-from").map(|p| serde_json::from_str(&std::fs::read_to_string(p).expect("baseline")).expect("baseline json"));
-    let seeds = base.as_ref().map(|base| base["steps"].as_array().expect("baseline steps").iter().map(|s| s["randomSeed"].as_f64().expect("randomSeed")).collect::<Vec<f64>>());
+    // A step without a seed ran no emitter pass (the system was disabled or had stopped emitting): nothing to replay.
+    let seeds = base.as_ref().map(|base| base["steps"].as_array().expect("baseline steps").iter().filter_map(|s| s["randomSeed"].as_f64()).collect::<Vec<f64>>());
     let force_draws: Option<Vec<Vec<f64>>> = base.as_ref().and_then(|base| {
         let steps = base["steps"].as_array()?;
 
         steps.iter().any(|s| s.get("forceDraws").is_some()).then(|| steps.iter().map(|s| s["forceDraws"].as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()).collect())
     });
     let out = PathBuf::from(opt("--out").unwrap());
-    let result = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(&world, &script, seeds, force_draws, &out)).unwrap().join().unwrap();
+    let size = opt("--png-size").map(|s| s.split_once('x').and_then(|(w, h)| Some((w.parse().ok()?, h.parse().ok()?))).expect("--png-size WxH"));
+    let png_dir = opt("--png-dir").map(PathBuf::from);
+    let size = size.unwrap_or(if png_dir.is_some() { (512, 512) } else { (256, 256) });
+    let capture = Capture { png_dir, msaa: opt("--msaa"), size };
+    let result = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(&world, &script, seeds, force_draws, &out, &capture)).unwrap().join().unwrap();
 
     match result {
         Ok((json, f32s, out)) => {
@@ -70,7 +79,14 @@ fn main() {
 
 type Output = (Value, Vec<f32>, PathBuf);
 
-fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Option<Vec<Vec<f64>>>, out: &Path) -> Result<Output, (String, PathBuf)> {
+/// `--png-dir` and `--msaa`.
+struct Capture {
+    png_dir: Option<PathBuf>,
+    msaa: Option<String>,
+    size: (u32, u32),
+}
+
+fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Option<Vec<Vec<f64>>>, out: &Path, capture: &Capture) -> Result<Output, (String, PathBuf)> {
     let fail = |e: String| (e, out.to_path_buf());
     let t0 = script["t0"].as_f64().unwrap_or(946684800.0);
     let dt = script["dt"].as_f64().unwrap_or(1.0 / 60.0);
@@ -87,7 +103,23 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
     // The load frames and the warm-up animate with random seeds nobody reads.
     particles::use_random_seeds();
 
-    let mut v = Viewer3d::load_attributes(world, None, t0, 256, 256, Some(1.0 / dt), false, ORACLE_PAGE_ATTRIBUTES).map_err(fail)?;
+    let mut attributes = ORACLE_PAGE_ATTRIBUTES.to_vec();
+
+    if let Some(n) = capture.msaa.as_deref() {
+        attributes.retain(|(a, _)| *a != "antialiased");
+        attributes.extend([("antialiased", "true"), ("multisampling", n)]);
+    }
+
+    let mut v = Viewer3d::load_attributes(world, None, t0, capture.size.0, capture.size.1, Some(1.0 / dt), false, &attributes).map_err(fail)?;
+    let mut gpu = match &capture.png_dir {
+        Some(_) => {
+            let mut g = x3d_render::gpu::Gpu::new().map_err(|e| fail(format!("no GPU for --png-dir: {e}")))?;
+
+            v.rendering_properties().apply(&mut g.renderer);
+            Some(g)
+        }
+        None => None,
+    };
 
     v.frame_rate = 1.0 / dt;
 
@@ -171,6 +203,16 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
             }
 
             dumps.insert(k.to_string(), json!({ "numParticles": count, "total": sim.num_particles, "offset": offset }));
+
+            if let (Some(g), Some(dir)) = (gpu.as_mut(), &capture.png_dir) {
+                let frame = v.build_frame();
+                let (fw, fh) = v.framebuffer_size();
+                let rgba = g.render(&frame, fw, fh);
+                let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+
+                std::fs::create_dir_all(dir).map_err(|e| fail(format!("{}: {e}", dir.display())))?;
+                x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba).map_err(|e| fail(format!("png: {e}")))?;
+            }
         }
     }
 
@@ -225,6 +267,15 @@ fn apply_event(v: &mut Viewer3d, e: &Value) -> Result<(), String> {
             }
 
             FieldValue::SFVec3f(Vector3::new(a[0], a[1], a[2]))
+        }
+        FieldValue::SFVec2f(_) => {
+            let a = nums(val);
+
+            if a.len() != 2 {
+                return Err("event: two numbers expected".into());
+            }
+
+            FieldValue::SFVec2f(Vector2::new(a[0], a[1]))
         }
         FieldValue::MFVec3f(_) => FieldValue::MFVec3f(nums(val).iter().map(|&x| x as f32).collect()),
         FieldValue::MFVec3d(_) => FieldValue::MFVec3d(nums(val)),

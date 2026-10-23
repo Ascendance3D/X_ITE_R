@@ -144,6 +144,10 @@ struct DrawUniforms {
     fog_m1: vec4<f32>,
     fog_m2: vec4<f32>,
     fog_flags: vec4<u32>,
+    // A ParticleSystem instance (inst_flags y, z): its x3d_Color (color ramp) and the texCoord ramp's texture
+    // coordinates of the four quad corners (X3D_TEX_COORD_RAMP).
+    inst_color: vec4<f32>,
+    inst_tex: array<vec4<f32>, 4>,
 };
 
 @group(0) @binding(0) var<uniform> frame: FrameUniforms;
@@ -286,6 +290,18 @@ fn vertex_common(in: VIn) -> VOut {
     out.vertex = t_vertex.xyz;
     out.color = in.color;
     out.tex_coord = in.tex_coord;
+
+    // ParticleSystem: x3d_Color from the particle record; Instancing2.glsl getInstanceTexCoord:
+    // texelFetch (x3d_TexCoordRamp, index0 + map [gl_VertexID]), map = (0, 1, 2, 0, 2, 3), the quad corner
+    // that the vertex's own texture coordinate (0 0, 1 0, 1 1, 0 1) names.
+    if (draw.inst_flags.y == 1u) {
+        out.color = draw.inst_color;
+    }
+    if (draw.inst_flags.z == 1u) {
+        let c = in.tex_coord.xy;
+        let corner = select(select(0u, 3u, c.y > 0.5), select(1u, 2u, c.y > 0.5), c.x > 0.5);
+        out.tex_coord = draw.inst_tex[corner];
+    }
     out.tex_coord1 = in.tex_coord1;
     out.tex_coord2 = in.tex_coord2;
     out.tex_coord3 = in.tex_coord3;

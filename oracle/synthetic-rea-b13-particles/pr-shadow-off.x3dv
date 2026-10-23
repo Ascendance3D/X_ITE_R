@@ -1,0 +1,17 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DirectionalLight { direction 0.3 -1 -0.2 shadowIntensity 0.8 shadowMapSize 1024 }
+NavigationInfo { headlight FALSE }
+Transform { translation 0 -0.2 0 children Shape { appearance Appearance { material Material { } } geometry Box { size 4 0.05 4 } } }
+DEF PS ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 150
+  particleLifetime 3
+  particleSize 0.25 0.25
+  colorKey [0 0.5 1] color Color { color [1 0 0, 1 1 0, 0 0.4 1] } castShadow FALSE
+  emitter ConeEmitter { direction 0 1 0 angle 0.5 speed 1.2 variation 0.2 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}

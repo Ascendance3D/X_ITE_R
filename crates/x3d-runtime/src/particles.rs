@@ -1095,6 +1095,204 @@ fn bounce(tex: &GeometryTexture, from: [f32; 4], to: &mut [f32; 4], velocity: &m
 }
 
 // ---------------------------------------------------------------------------------------------
+// The ParticleSystem's geometry type and ramps
+
+/// `Browser/Shape/GeometryType.js`: the `X3D_GEOMETRY_TYPE` of the emitter shader and the
+/// ParticleSystem's `geometryType` field (an unknown name is QUAD).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum GeometryType {
+    Point,
+    Line,
+    Triangle,
+    #[default]
+    Quad,
+    Sprite,
+    Geometry,
+}
+
+impl GeometryType {
+    /// `GeometryType .get (this ._geometryType .getValue ()) ?? GeometryType .QUAD`.
+    pub fn from_name(name: &str) -> GeometryType {
+        match name {
+            "POINT" => GeometryType::Point,
+            "LINE" => GeometryType::Line,
+            "TRIANGLE" => GeometryType::Triangle,
+            "SPRITE" => GeometryType::Sprite,
+            "GEOMETRY" => GeometryType::Geometry,
+            _ => GeometryType::Quad,
+        }
+    }
+
+    /// `texCoordCount` of `set_geometryType__`: 4 for the quad types, 0 otherwise.
+    pub fn tex_coord_count(self) -> usize {
+        match self {
+            GeometryType::Triangle | GeometryType::Quad | GeometryType::Sprite => 4,
+            _ => 0,
+        }
+    }
+}
+
+/// One RGBA32F ramp texture of a ParticleSystem (`set_color__`, `set_texCoord__`, `set_scale__`): the
+/// `count` keys in the x of texels `0 .. count`, the values from texel `count` on.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Ramp {
+    pub count: usize,
+    pub texels: Vec<[f32; 4]>,
+}
+
+impl Ramp {
+    /// `texelFetch`; texels outside the data read as zero.
+    pub fn fetch(&self, index: i64) -> [f32; 4] {
+        if index < 0 {
+            return [0.0; 4];
+        }
+
+        self.texels.get(index as usize).copied().unwrap_or([0.0; 4])
+    }
+
+    /// GLSL `upperBound (sampler, count, value)`.
+    fn upper_bound(&self, mut count: i64, value: f32) -> i64 {
+        let mut first = 0i64;
+
+        while count > 0 {
+            let step = count >> 1;
+            let index = first + step;
+
+            if value < self.fetch(index)[0] {
+                count = step;
+            } else {
+                first = index + 1;
+                count -= step + 1;
+            }
+        }
+
+        first
+    }
+
+    /// GLSL `interpolate (sampler, count, fraction, index0)` (the texCoord ramp: no weight).
+    fn index0(&self, fraction: f32) -> i64 {
+        let count = self.count as i64;
+
+        if count == 1 || fraction <= self.fetch(0)[0] {
+            0
+        } else if fraction >= self.fetch(count - 1)[0] {
+            count - 2
+        } else {
+            let index = self.upper_bound(count, fraction);
+
+            if index < count { index - 1 } else { 0 }
+        }
+    }
+
+    /// GLSL `interpolate (sampler, count, fraction, index0, index1, weight)`.
+    fn weighted(&self, fraction: f32) -> (i64, i64, f32) {
+        let count = self.count as i64;
+
+        if count == 1 || fraction <= self.fetch(0)[0] {
+            (0, 0, 0.0)
+        } else if fraction >= self.fetch(count - 1)[0] {
+            (count - 2, count - 1, 1.0)
+        } else {
+            let index = self.upper_bound(count, fraction);
+
+            if index < count {
+                let (key0, key1) = (self.fetch(index - 1)[0], self.fetch(index)[0]);
+
+                (index - 1, index, ((fraction - key0) / (key1 - key0)).clamp(0.0, 1.0))
+            } else {
+                (0, 0, 0.0)
+            }
+        }
+    }
+
+    /// GLSL `mix (texelFetch (count + index0), texelFetch (count + index1), weight)`.
+    fn mix(&self, fraction: f32) -> [f32; 4] {
+        let (i0, i1, w) = self.weighted(fraction);
+        let (a, b) = (self.fetch(self.count as i64 + i0), self.fetch(self.count as i64 + i1));
+
+        std::array::from_fn(|c| a[c] * (1.0 - w) + b[c] * w)
+    }
+}
+
+/// The ramps of a ParticleSystem as its emitter shader reads them: `X3D_NUM_COLORS`,
+/// `X3D_NUM_TEX_COORDS` (with `X3D_TEX_COORDS_COUNT`) and `X3D_NUM_SCALES` are the `count`s; a
+/// missing ramp is a count of 0.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Ramps {
+    pub colors: Option<Ramp>,
+    pub tex_coords: Option<Ramp>,
+    pub tex_coords_count: usize,
+    pub scales: Option<Ramp>,
+}
+
+impl Ramps {
+    /// `getTexCoordIndex0 (fraction)`: `X3D_NUM_TEX_COORDS + index0 * X3D_TEX_COORDS_COUNT`, -1 without a ramp.
+    fn tex_coord_index0(&self, fraction: f32) -> f32 {
+        match &self.tex_coords {
+            Some(r) => (r.count as i64 + r.index0(fraction) * self.tex_coords_count as i64) as f32,
+            None => -1.0,
+        }
+    }
+
+    /// `getColor (fraction)`: `vec4 (1.0)` without a ramp.
+    fn color(&self, fraction: f32) -> [f32; 4] {
+        self.colors.as_ref().map_or([1.0; 4], |r| r.mix(fraction))
+    }
+
+    /// `getScale (fraction)`: `vec3 (1.0)` without a ramp.
+    fn scale(&self, fraction: f32) -> V3 {
+        self.scales.as_ref().map_or([1.0; 3], |r| {
+            let s = r.mix(fraction);
+
+            [s[0], s[1], s[2]]
+        })
+    }
+}
+
+/// GLSL `Matrix3 (quaternion)`: the three columns.
+fn quaternion_matrix(q: [f32; 4]) -> [V3; 3] {
+    let [x, y, z, w] = q;
+    let (a, b, c, d, e, f, g, h, i) = (y * y, z * z, x * y, z * w, z * x, y * w, x * x, y * z, x * w);
+
+    [
+        [1.0 - 2.0 * (a + b), 2.0 * (c + d), 2.0 * (e - f)],
+        [2.0 * (c - d), 1.0 - 2.0 * (b + g), 2.0 * (h + i)],
+        [2.0 * (e + f), 2.0 * (h - i), 1.0 - 2.0 * (a + g)],
+    ]
+}
+
+/// The end of the emitter shader's `main ()`: `output3` … `output5`, the scale / rotation matrix of the
+/// geometry type, into `out[12..24]`. `velocity` is `output2 .xyz`.
+fn write_matrix(out: &mut Particle, geometry_type: GeometryType, particle_size: [f32; 2], ramps: &Ramps, fraction: f32, velocity: V3) {
+    let s = ramps.scale(fraction);
+    let columns = match geometry_type {
+        GeometryType::Point | GeometryType::Sprite | GeometryType::Geometry => [[s[0], 0.0, 0.0], [0.0, s[1], 0.0], [0.0, 0.0, s[2]]],
+        GeometryType::Line => {
+            let mut m = quaternion_matrix(quaternion([0.0, 0.0, 1.0], velocity));
+
+            if ramps.scales.is_some() {
+                // m *= mat3 (scale .x, …): column j times scale [j].
+                for (column, s) in m.iter_mut().zip(s) {
+                    *column = scale(*column, s);
+                }
+            }
+
+            m
+        }
+        GeometryType::Triangle | GeometryType::Quad => {
+            let size = [particle_size[0] * s[0], particle_size[1] * s[1]];
+
+            [[size[0], 0.0, 0.0], [0.0, size[1], 0.0], [0.0, 0.0, s[2]]]
+        }
+    };
+
+    for (k, column) in columns.iter().enumerate() {
+        out[12 + k * 4..15 + k * 4].copy_from_slice(column);
+        out[15 + k * 4] = 0.0;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------
 // One emitter pass (the vertex shader over all particles)
 
 /// The uniforms and samplers of one `emitterNode .animate (particleSystem, deltaTime)`.
@@ -1112,6 +1310,12 @@ pub struct Pass<'a> {
     pub texture: Option<&'a GeometryTexture>,
     /// ParticleSystem bounded physics (only when its hierarchy root is > -1).
     pub bounded: Option<&'a GeometryTexture>,
+    /// `X3D_GEOMETRY_TYPE`.
+    pub geometry_type: GeometryType,
+    /// The `particleSize` uniform.
+    pub particle_size: [f32; 2],
+    /// The color, texCoord and scale ramps.
+    pub ramps: &'a Ramps,
 }
 
 /// The vertex shader `main ()` for particles `0 .. num`.
@@ -1125,19 +1329,22 @@ pub fn run_pass(particles: &mut [Particle], num: usize, pass: &Pass) {
         let life = p[0] as i32;
         let lifetime = p[1];
         let elapsed = p[2] + pass.delta_time;
+        let mut fraction = elapsed / lifetime;
         let mut out: Particle = [0.0; STRIDE];
 
         if elapsed > lifetime {
             // Create a new particle or hide the particle.
             let lifetime = shader.random_lifetime();
 
+            fraction = 0.0;
+
             out[0] = life.wrapping_add(1).max(1) as f32;
             out[1] = lifetime;
             out[2] = 0.0;
-            out[3] = -1.0;
+            out[3] = pass.ramps.tex_coord_index0(0.0);
 
             if pass.create {
-                out[4..8].copy_from_slice(&[1.0; 4]);
+                out[4..8].copy_from_slice(&pass.ramps.color(0.0));
 
                 let (velocity, position) = shader.velocity_and_position(pass.texture);
 
@@ -1170,17 +1377,16 @@ pub fn run_pass(particles: &mut [Particle], num: usize, pass: &Pass) {
             out[0] = life as f32;
             out[1] = lifetime;
             out[2] = elapsed;
-            out[3] = -1.0;
-            out[4..8].copy_from_slice(&[1.0; 4]);
+            out[3] = pass.ramps.tex_coord_index0(fraction);
+            out[4..8].copy_from_slice(&pass.ramps.color(fraction));
             out[8..11].copy_from_slice(&velocity);
             out[24..28].copy_from_slice(&position);
         }
 
-        // getScale (fraction) is vec3 (1.0) without a scale ramp: the POINT, SPRITE and GEOMETRY
-        // layout (a diagonal scale matrix).
-        out[12] = 1.0;
-        out[17] = 1.0;
-        out[22] = 1.0;
+        // vec3 scale = getScale (fraction); output3 … output5 by X3D_GEOMETRY_TYPE.
+        let velocity = [out[8], out[9], out[10]];
+
+        write_matrix(&mut out, pass.geometry_type, pass.particle_size, pass.ramps, fraction, velocity);
 
         *p = out;
     }
@@ -1273,5 +1479,64 @@ impl Sim {
         }
 
         delta_time
+    }
+}
+
+#[cfg(test)]
+mod ramp_tests {
+    use super::*;
+
+    fn ramp(keys: &[f32], values: &[[f32; 4]]) -> Ramp {
+        Ramp { count: keys.len(), texels: keys.iter().map(|k| [*k, 0.0, 0.0, 0.0]).chain(values.iter().copied()).collect() }
+    }
+
+    #[test]
+    fn weighted_interpolate_follows_the_glsl() {
+        let r = ramp(&[0.0, 0.5, 1.0], &[[1.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 1.0], [0.0, 0.0, 1.0, 0.0]]);
+
+        assert_eq!(r.weighted(-1.0), (0, 0, 0.0));
+        assert_eq!(r.weighted(0.0), (0, 0, 0.0));
+        assert_eq!(r.weighted(0.25), (0, 1, 0.5));
+        assert_eq!(r.weighted(0.75), (1, 2, 0.5));
+        assert_eq!(r.weighted(1.0), (1, 2, 1.0));
+        assert_eq!(r.weighted(7.0), (1, 2, 1.0));
+        assert_eq!(r.mix(0.25), [0.5, 0.5, 0.0, 1.0]);
+        assert_eq!(r.mix(0.75), [0.0, 0.5, 0.5, 0.5]);
+    }
+
+    #[test]
+    fn tex_coord_index_is_a_step_that_never_reaches_the_last_key() {
+        // interpolate (sampler, count, fraction, index0): fraction >= the last key gives count - 2.
+        let two = Ramps { tex_coords: Some(ramp(&[0.0, 0.5], &[])), tex_coords_count: 4, ..Default::default() };
+        let three = Ramps { tex_coords: Some(ramp(&[0.0, 0.3, 0.6], &[])), tex_coords_count: 4, ..Default::default() };
+
+        for f in [0.0, 0.25, 0.5, 0.9] {
+            assert_eq!(two.tex_coord_index0(f), 2.0);
+        }
+
+        assert_eq!(three.tex_coord_index0(0.1), 3.0);
+        assert_eq!(three.tex_coord_index0(0.4), 7.0);
+        assert_eq!(three.tex_coord_index0(0.9), 7.0);
+        assert_eq!(Ramps::default().tex_coord_index0(0.5), -1.0);
+    }
+
+    #[test]
+    fn matrix_of_each_geometry_type() {
+        let ramps = Ramps { scales: Some(ramp(&[0.0], &[[2.0, 3.0, 4.0, 1.0]])), ..Default::default() };
+        let mut out: Particle = [0.0; STRIDE];
+
+        write_matrix(&mut out, GeometryType::Quad, [0.1, 0.2], &ramps, 0.5, [0.0, 1.0, 0.0]);
+        assert_eq!(out[12..24], [0.2, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]);
+
+        write_matrix(&mut out, GeometryType::Sprite, [0.1, 0.2], &ramps, 0.5, [0.0, 1.0, 0.0]);
+        assert_eq!(out[12..24], [2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0]);
+
+        // LINE: the rotation from z to the velocity, its columns times the scale.
+        write_matrix(&mut out, GeometryType::Line, [0.1, 0.2], &Ramps::default(), 0.5, [0.0, 5.0, 0.0]);
+        let z = [out[20], out[21], out[22]];
+        assert!((z[0]).abs() < 1e-6 && (z[1] - 1.0).abs() < 1e-6 && z[2].abs() < 1e-6, "{z:?}");
+
+        write_matrix(&mut out, GeometryType::Line, [0.1, 0.2], &ramps, 0.5, [0.0, 5.0, 0.0]);
+        assert!((out[21] - 4.0).abs() < 1e-6, "{:?}", &out[12..24]);
     }
 }
