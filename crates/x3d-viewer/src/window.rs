@@ -704,8 +704,9 @@ pub fn run(opts: Options) -> Result<u64, String> {
     let mut app = ViewerWindow::new(opts);
     event_loop.run_app(&mut app).map_err(|e| format!("run: {e}"))?;
     app.print_stats();
+    let pending = app.gfx.as_ref().and_then(|g| g.gpu_errors.take());
 
-    match (app.exit_error, &app.scripted) {
+    match (first_error(app.exit_error, pending), &app.scripted) {
         (Some(e), _) => Err(e),
         // Closed (window manager, Quit) before the last frame: the run did not happen.
         (None, Some(s)) if !s.complete() => Err(format!("scripted run: the event loop ended after {} of {} frames", s.done, s.frames)),
@@ -713,10 +714,23 @@ pub fn run(opts: Options) -> Result<u64, String> {
     }
 }
 
+/// The error that ends the run: the one it stopped for, else a GPU error raised after the last
+/// checked frame (the final screenshot, or just before the window closed).
+fn first_error(exit_error: Option<String>, pending_gpu_error: Option<String>) -> Option<String> {
+    exit_error.or_else(|| pending_gpu_error.map(|e| format!("GPU error: {e}")))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn a_gpu_error_after_the_last_frame_fails_the_run() {
+        assert_eq!(first_error(None, None), None);
+        assert_eq!(first_error(None, Some("lost".into())).as_deref(), Some("GPU error: lost"));
+        assert_eq!(first_error(Some("screenshot: x".into()), Some("lost".into())).as_deref(), Some("screenshot: x"));
+    }
 
     /// A window whose surface is not ready on the listed acquire attempts (1-based), or never.
     #[derive(Default)]
