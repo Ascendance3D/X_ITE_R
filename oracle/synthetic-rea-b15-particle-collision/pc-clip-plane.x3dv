@@ -1,0 +1,20 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+NavigationInfo { type "FLY" }
+Viewpoint { position 0 0 0 orientation 0 0 1 0 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF RUN Collision { }
+Group { children [ ClipPlane { plane 1 0 0 -0.1 }
+DEF PS ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 1
+  particleLifetime 0.25
+  lifetimeVariation 0
+  particleSize 2 2
+  
+  emitter PointEmitter { position 0 0 -0.3 direction 0 1 0 speed 0 variation 0 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}
+] }
