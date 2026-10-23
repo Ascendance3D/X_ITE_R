@@ -533,6 +533,12 @@ Fields that differ between two Node runs as well, so they differ between tools t
 
 Everything else matched byte for byte.
 
+The VolumeEmitter intersection-limit baselines `rea-batch17-emitter-hits-baseline/` (every frame's transform feedback
+buffer) come from `tools/rea_b17_emitter_hits.py record` (three identical runs). Their worlds are
+`synthetic-rea-b17-emitter-hits/` (`tools/gen_rea_b17_emitter_hits.py`: emission lines through 31 to 128 quads), and
+`crates/x3d-viewer/tests/rea_b17_emitter_hits.rs` replays them through particles_b06_common with the batch 06R
+tolerances.
+
 When Chrome is needed: only to make or refresh an X_ITE reference (a baseline, an
 x10_compare run, a particle reference). The Rust tests compare against committed baselines.
 `cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view`
