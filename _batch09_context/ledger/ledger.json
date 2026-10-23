@@ -3328,16 +3328,22 @@
     "crates/x3d-runtime/src/inline.rs",
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/pick_sensor.rs",
-    "crates/x3d-runtime/src/nodes/transform_sensor.rs"
+    "crates/x3d-runtime/src/nodes/transform_sensor.rs",
+    "crates/x3d-runtime/src/particles.rs",
+    "crates/x3d-runtime/src/nodes/particle_systems.rs",
+    "crates/x3d-render/src/particles.rs",
+    "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "COMPLETE",
+   "status": "PARTIAL",
    "behavior": "the X3D ParticleSystems ParticleSystem node (X_ITE 16.5.0 ParticleSystem.js, ISO/IEC 19775-1 clause 40) with its emitter and physics-model children",
    "tests": [
-    "oracle/tools/rea_b06_particles.py check 37/37 and nullcheck 8/8; crates/x3d-viewer/tests/particles_b06_unreachable.rs (11), particles_b06_retention.rs; crates/x3d-runtime/tests/geometry_provider_bare.rs (3), geometry_provider_installed.rs (1); crates/x3d-viewer/tests/geometry_provider_viewer.rs (1)"
+    "oracle/tools/rea_b06_particles.py check 37/37 and nullcheck 8/8; crates/x3d-viewer/tests/particles_b06_unreachable.rs (11), particles_b06_retention.rs; crates/x3d-runtime/tests/geometry_provider_bare.rs (3), geometry_provider_installed.rs (1); crates/x3d-viewer/tests/geometry_provider_viewer.rs (1)",
+    "crates/x3d-viewer/tests/rea_b13_particles.rs::rea_b13_particle_cases_match_x_ite (oracle/synthetic-rea-b13-particles, 35 cases, frames 15 / 25 / 45: particle records and 512 x 512 images at MSAA 0 and 4; KNOWN_GAPS pr-line msaa4)",
+    "crates/x3d-viewer/tests/particles_b07.rs, particles_b06_exact.rs, particles_b06_stat.rs, particles_b06_events.rs (simulation unchanged by the renderer)"
    ],
-   "missing": "",
-   "oracle": "pinned X_ITE 16.5.0 per-particle state read from the transform-feedback buffer (headless, seeded Math.random injected), plus statistical tests; runtime geometry-change and Group-removal cases",
-   "notes": "Batch 06R final repair: runtime (Script) created nodes are released by reachability (release.rs; ScriptHost::held_nodes; WeakRef prelude caches). Verified: particle oracle 37/37 + nullcheck 8/8; runtime geometry-change parity 83/88 (4 baseline tolerance gaps, 1 X_ITE crash case); removal-parity 7/7; 100-cycle create/remove counters flat, RSS +40 KiB/90 cycles; 11 particles_b06_unreachable tests. Limits: Script/Inline/Anchor/PROTO/bindable nodes and createVrmlFromString scenes with PROTO/IMPORT/EXPORT are never released; cycles-new compared on Rust counters only."
+   "missing": "particle picking (the pointing pass and walk.rs do not see particles); particle collision; shadow-pass culling of the particle bbox (the shadow pass draws every particle, including off-screen systems); thick LINE particles (LineProperties linewidthScaleFactor > 1); particle systems in Inline and Script-created render cases (the seed recorder handles one system per world); GEOMETRY with a texCoord ramp has no oracle case; one draw call per particle (instance data through per-draw uniforms); pr-line MSAA 4 frame 45 differs by 0.581% of the pixels (line-edge antialiasing, KNOWN_GAP)",
+   "oracle": "pinned X_ITE 16.5.0 per-particle state read from the transform-feedback buffer (headless, seeded Math.random injected), plus statistical tests; runtime geometry-change and Group-removal cases + pinned X_ITE 16.5.0 particle records and 512 x 512 images (anim.html, anim-msaa.html multisampling 4) captured with x3d-oracle particles (oracle/rea-batch13-particles-baseline)",
+   "notes": "Batch 06R final repair: runtime (Script) created nodes are released by reachability (release.rs; ScriptHost::held_nodes; WeakRef prelude caches). Verified: particle oracle 37/37 + nullcheck 8/8; runtime geometry-change parity 83/88 (4 baseline tolerance gaps, 1 X_ITE crash case); removal-parity 7/7; 100-cycle create/remove counters flat, RSS +40 KiB/90 cycles; 11 particles_b06_unreachable tests. Limits: Script/Inline/Anchor/PROTO/bindable nodes and createVrmlFromString scenes with PROTO/IMPORT/EXPORT are never released; cycles-new compared on Rust counters only. Batch 13 2026-10-23: PARTIAL: rendering added by PR #21 (lane XITE_R_PARTICLE_RENDER_01, merge fb929a8). The earlier COMPLETE rated the simulation only; the port drew nothing. Rendered and compared with X_ITE (rea_b13_particles, 35 cases): POINT, LINE, TRIANGLE, QUAD, SPRITE and GEOMETRY geometry types; particleSize and the scale ramp; RGB and RGBA color ramps (and no color node); texCoord ramps; Appearance, textures, the default appearance and unlit particles; run-time field changes (enabled, maxParticles, particleSize, visible); bboxSize, bounded-physics and emitter bounding boxes and view-volume culling; bboxDisplay; castShadow on and off. Every particle record matches; 209 of 210 image comparisons pass. Known gap: pr-line MSAA 4 frame 45, 0.581% (the same 45 segments as a static IndexedLineSet differ alike: 1524 px vs 1523, so it is line-edge antialiasing, not particle code). The simulation is unchanged (rs.f32 identical with and without image capture; B06 and B07 pass)."
   },
   {
    "id": "node:PointEmitter",
