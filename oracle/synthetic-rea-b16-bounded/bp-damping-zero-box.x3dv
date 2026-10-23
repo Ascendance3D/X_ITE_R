@@ -1,0 +1,12 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 8
+  particleLifetime 3
+  lifetimeVariation 0
+  emitter PointEmitter { position 0 0 0 direction 0 0 0 speed 3 variation 0 }
+  physics [ DEF BM BoundedPhysicsModel { damping 0 geometry Box { size 4 4 4 } } ]
+}
