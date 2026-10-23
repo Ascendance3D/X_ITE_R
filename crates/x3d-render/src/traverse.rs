@@ -5479,9 +5479,28 @@ pub struct ParticlePointing {
 /// disabled x3d_Normal and x3d_TexCoord0 as the generic attribute value 0 0 0 1: their hits have normal 0 0 0 and
 /// texCoord 0 0 0 1 in X_ITE. There is no X3D_INSTANCE_NORMAL, and no color or texCoord ramp in this pass.
 pub fn particle_pointing(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePointing> {
+    if !sg.bool(n, "pointerEvents", true) {
+        return None;
+    }
+
+    particle_simple(sg, n, mv)
+}
+
+/// The particles a ParticleSystem draws into the collision depth buffer (X3DShapeNode.traverse COLLISION →
+/// addCollisionShape, then X3DRenderObject.depth → ParticleSystem.displaySimple), `None` unless it is a collision object
+/// (set_collisionObject__: isEnabled (), whatever pointerEvents says). displaySimple is the pointing pass's draw, so the
+/// geometry, instances and bbox are [`particle_pointing`]'s: TRIANGLE, QUAD and SPRITE read the disabled x3d_Normal as
+/// 0 0 0 (their depth normal is 0 0 0), POINT and LINE have no normals (Depth2.fs: 0 0 1), and SPRITE turns to the
+/// viewer of `mv`, the model-view of the COLLISION traversal (the bound viewpoint's view, not the collision camera).
+pub fn particle_collision(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePointing> {
+    particle_simple(sg, n, mv)
+}
+
+/// ParticleSystem.displaySimple of the ParticleSystem `n` with model-view `mv`, `None` unless isEnabled ().
+fn particle_simple(sg: &Sg, n: NodeId, mv: &Matrix4) -> Option<ParticlePointing> {
     let mut builder = Builder::new(sg.rt);
 
-    if !sg.bool(n, "pointerEvents", true) || !builder.particle_system_enabled(sg, n) {
+    if !builder.particle_system_enabled(sg, n) {
         return None;
     }
 

@@ -34,6 +34,13 @@
 //! each listed frame with the baseline's particle records of that frame (its `.f32` dump) in place of the run's own,
 //! as `pickProbesReference`, then puts the run's records back: the pointing pass apart from the simulation's float32
 //! differences (REA batch 06R: within 1e-5 + 1e-5 * |reference|).
+//!
+//! Script key `collisionProbes` (`{ "frames", "directions", "translations", "nodes" }`, see `x3d-oracle particles`):
+//! after each listed frame's pick probes, `collisionProbes ["k"]`: the DEF names of the collision shapes (once per
+//! shape), getClosestObject along each direction through the GPU collision depth buffer (id: the index into the run's
+//! collision shapes, one per drawn particle, so only its sign compares with X_ITE's; shape, distance, normal),
+//! constrainTranslation of each translation, the user pose, the viewpoint's positionOffset and the named Collision
+//! nodes' isActive and collideTime. Without a GPU the CPU depth stand-in answers and `depthGpu` is false.
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
@@ -221,10 +228,28 @@ fn run(
     let mut reference_probes = serde_json::Map::new();
     let reference = opt_records_from(script).map_err(fail)?;
 
+    let collision_frames: Vec<u64> = script
+        .pointer("/collisionProbes/frames")
+        .and_then(Value::as_array)
+        .map(|a| a.iter().filter_map(Value::as_u64).collect())
+        .unwrap_or_default();
+    let mut collision_probes = serde_json::Map::new();
+
     // `--cpu-pointing`: the ray cast's double values, like x3d-drive (the interactive viewer picks this way).
-    if !probe_frames.is_empty() && !std::env::args().any(|a| a == "--cpu-pointing") {
+    if (!probe_frames.is_empty() || !collision_frames.is_empty())
+        && !std::env::args().any(|a| a == "--cpu-pointing")
+    {
         match x3d_render::pointing_gpu::PointingGpu::new_headless() {
-            Ok(g) => v.pointing_gpu = Some(g),
+            Ok(g) => {
+                // The collision depth buffer shares the device.
+                if !collision_frames.is_empty() {
+                    v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(
+                        x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()),
+                    )));
+                }
+
+                v.pointing_gpu = Some(g)
+            }
             Err(e) => {
                 eprintln!("x3d-particles-drive: no pointing GPU ({e}); picks use the ray cast")
             }
@@ -393,6 +418,13 @@ fn run(
                 v.refresh_pointer_scan();
             }
         }
+
+        if collision_frames.contains(&k) {
+            collision_probes.insert(
+                k.to_string(),
+                collision_probe(&mut v, &script["collisionProbes"]),
+            );
+        }
     }
 
     if particles::seed_list_exhausted() {
@@ -438,7 +470,74 @@ fn run(
         }
     }
 
+    if !collision_frames.is_empty() {
+        result["collisionProbes"] = Value::Object(collision_probes);
+        // false: the CPU stand-in sampled the depth (no GPU).
+        result["depthGpu"] = Value::Bool(v.depth_gpu.is_some());
+    }
+
     Ok((result, data, out.to_path_buf()))
+}
+
+/// One `collisionProbes` entry, as `x3d-oracle particles` records it after the frame.
+fn collision_probe(v: &mut Viewer3d, probes: &Value) -> Value {
+    let vec3 = |a: &Value| {
+        Vector3::new(
+            a[0].as_f64().unwrap_or(0.0),
+            a[1].as_f64().unwrap_or(0.0),
+            a[2].as_f64().unwrap_or(0.0),
+        )
+    };
+    let list = |key: &str| probes[key].as_array().cloned().unwrap_or_default();
+    let name = |v: &Viewer3d, n: &x3d_viewer::walk::NodeRef| {
+        x3d_viewer::walk::rt_at(&v.rt, &n.path)
+            .and_then(|rt| rt.scene.nodes.get(n.node as usize))
+            .map(|n| n.name.clone())
+            .unwrap_or_default()
+    };
+    let (shapes, all) = v.probe_collision_shapes();
+    let shapes: Vec<String> = shapes.iter().map(|n| name(v, n)).collect();
+    let closest: Vec<Value> = list("directions")
+        .iter()
+        .map(|d| {
+            let c = v.probe_closest(vec3(d));
+            let id = c.shape.filter(|_| c.hit);
+
+            json!({ "id": id.map_or(-1, |i| i as i64), "shape": id.and_then(|i| all.get(i)).map(|n| name(v, n)), "distance": c.distance, "normal": [c.normal.x, c.normal.y, c.normal.z] })
+        })
+        .collect();
+    let constrained: Vec<Value> = list("translations")
+        .iter()
+        .map(|t| {
+            let c = v.probe_constrain(vec3(t));
+
+            json!([c.x, c.y, c.z])
+        })
+        .collect();
+    let (p, o, c) = v.user_pose();
+    let mut o = o;
+    let offset = v.position_offset();
+    let mut collisions = serde_json::Map::new();
+
+    for n in list("nodes") {
+        let n = n.as_str().unwrap_or("");
+
+        if let Some(node) = v.rt.scene.contexts[ROOT].named_nodes.get(n) {
+            let time = match v.rt.pre_value(node, "collideTime") {
+                Some(FieldValue::SFTime(t)) => *t,
+                _ => 0.0,
+            };
+
+            collisions.insert(
+                n.into(),
+                json!({ "isActive": v.rt.get_bool(node, "isActive"), "collideTime": time }),
+            );
+        }
+    }
+
+    json!({ "shapes": shapes, "closest": closest, "constrained": constrained,
+            "pose": { "position": [p.x, p.y, p.z], "orientation": o.components(), "centerOfRotation": [c.x, c.y, c.z] },
+            "positionOffset": [offset.x, offset.y, offset.z], "collisions": collisions })
 }
 
 /// `--records-from <js.json>`: the baseline result and its `.f32` records (`fileF32` beside it). The dumps must hold
