@@ -1,6 +1,7 @@
 //! Backend startup on a real device (`x3d_viewer::backend`): a backend that cannot run the
 //! renderer is an error, not a panic; on Windows, the default DX12 + DXC start draws frames
-//! offscreen. Skipped without the adapter they need.
+//! offscreen, the first with the main pipeline prepared while the renderer started. Skipped
+//! without the adapter they need.
 
 mod common;
 
@@ -82,6 +83,9 @@ fn windows_default_dx12_draws_offscreen_frames() {
         let world = dir.join("box.wrl");
         std::fs::write(&world, "#VRML V2.0 utf8\nShape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Box {} }\n").unwrap();
         v.load(&world, LoadOptions { root: None, start_time: Some(T0) }).expect("load");
+        let t = Instant::now();
+        v.renderer().finish_prepared();
+        eprintln!("prepared pipeline: {:.3} s after load", t.elapsed().as_secs_f64());
 
         let target = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("offscreen target"),
@@ -102,6 +106,7 @@ fn windows_default_dx12_draws_offscreen_frames() {
             device.poll(wgpu::PollType::wait_indefinitely()).expect("poll");
             times.push(t.elapsed().as_secs_f64());
             assert_eq!(f.draw_calls, 1, "frame {k}");
+            assert_eq!(v.renderer().stats.pipelines_created, 0, "frame {k}: the box draws with the prepared pipeline");
             assert_eq!(errors.take(), None, "GPU error in frame {k}");
         }
 
