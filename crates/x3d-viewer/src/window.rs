@@ -13,7 +13,8 @@
 //!
 //! Environment: `X3D_VIEW_PRESENT=fifo|fiforelaxed|mailbox|immediate` picks the present mode
 //! (default `fifo`: strict vertical sync, never tears); `X3D_VIEW_NOVSYNC=1` is `immediate`;
-//! `X3D_VIEW_STATS=1` prints frame statistics on exit and when the window closes. Backend and
+//! `X3D_VIEW_STATS=1` prints frame statistics on exit and when the window closes;
+//! `X3D_VIEW_STARTUP=1` prints the startup phases up to the first presented frame. Backend and
 //! DX12 shader compiler selection (`WGPU_BACKEND`, `WGPU_DX12_COMPILER`): see [`crate::backend`].
 
 use crate::backend::{self, GpuErrors};
@@ -23,8 +24,8 @@ use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
 use crate::viewer::UiEvent;
 use serde_json::Value;
 use std::path::PathBuf;
-use std::sync::Arc;
-use std::time::Instant;
+use std::sync::{Arc, OnceLock};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::{ElementState, MouseButton, MouseScrollDelta, WindowEvent};
@@ -166,6 +167,15 @@ impl ScriptedRun {
 
         if self.complete() { Tick::Finished } else { Tick::Next }
     }
+}
+
+/// `X3D_VIEW_STARTUP=1`: a startup phase on stderr, in milliseconds since [`run`] began and since
+/// the Unix epoch (to compare with the clock of whatever launched the viewer).
+fn startup_mark(what: &str) {
+    static T0: OnceLock<Option<Instant>> = OnceLock::new();
+    let Some(t0) = T0.get_or_init(|| std::env::var("X3D_VIEW_STARTUP").is_ok().then(Instant::now)) else { return };
+    let epoch = SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_millis());
+    eprintln!("startup {what}: {:.1} ms (epoch {epoch} ms)", t0.elapsed().as_secs_f64() * 1e3);
 }
 
 /// The window as the host of a scripted run.
@@ -442,6 +452,22 @@ impl ViewerWindow {
     }
 
     fn redraw(&mut self, event_loop: &ActiveEventLoop) {
+        if self.presented == 0 {
+            startup_mark("redraw");
+            self.redraw_frame(event_loop);
+
+            if self.presented > 0 {
+                let pipelines = self.gfx.as_mut().map_or(0, |g| g.viewer.renderer().stats.pipelines_created);
+                startup_mark(&format!("first frame presented ({pipelines} pipelines)"));
+            }
+
+            return;
+        }
+
+        self.redraw_frame(event_loop);
+    }
+
+    fn redraw_frame(&mut self, event_loop: &ActiveEventLoop) {
         if self.scripted.is_some() {
             return self.scripted_redraw(event_loop);
         }
@@ -501,7 +527,12 @@ impl ViewerWindow {
 fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, String> {
     let (w, h) = opts.size;
     let attrs = Window::default_attributes().with_inner_size(LogicalSize::new(w as f64, h as f64)).with_resizable(opts.script.is_none()).with_title("x3d-view");
+    // Windows: the window shows once its first frame can be drawn (see `resumed`). Until then
+    // the event loop is not running, and a visible window would be marked as not responding
+    // after a few seconds.
+    let attrs = attrs.with_visible(!cfg!(windows));
     let window = Arc::new(event_loop.create_window(attrs).map_err(|e| format!("create_window: {e}"))?);
+    startup_mark("window");
 
     let desc = backend::instance_descriptor()?;
     let backends = desc.backends;
@@ -514,6 +545,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         ..Default::default()
     }))
     .map_err(|e| backend::adapter_error(backends, &e))?;
+    startup_mark("adapter");
     let adapter_info = adapter.get_info();
     let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
         label: Some("x3d-view"),
@@ -521,6 +553,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         ..Default::default()
     }))
     .map_err(|e| format!("request_device: {e}"))?;
+    startup_mark("device");
     let gpu_errors = GpuErrors::install(&device);
 
     let caps = surface.get_capabilities(&adapter);
@@ -565,7 +598,9 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         eprintln!("adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?} of {:?}; alpha {:?} of {:?}", adapter_info.name, adapter_info.backend, adapter_info.device_type, surface_format, view_format, present_mode, caps.present_modes, alpha_mode, caps.alpha_modes);
     }
 
+    startup_mark("surface");
     let mut viewer = backend::create_viewer(&device, &queue, (config.width, config.height), &adapter, view_format)?;
+    startup_mark("renderer");
     viewer.renderer().clear_color = [0.0, 0.0, 0.0, 1.0];
 
     if let Some(n) = opts.msaa {
@@ -600,6 +635,8 @@ impl ApplicationHandler for ViewerWindow {
             return self.fail(event_loop, format!("load {}: {e}", self.opts.path.display()));
         }
 
+        startup_mark("load");
+
         // The script's warm-up frames (frames the browser draws while loading), on its clock.
         if let (Some(s), Some(t0)) = (&self.opts.script, t0) {
             if let Some(v) = gfx.viewer.core() {
@@ -611,9 +648,22 @@ impl ApplicationHandler for ViewerWindow {
             }
         }
 
+        startup_mark("warmup");
         let window = gfx.window.clone();
         self.gfx = Some(gfx);
         self.update_title();
+
+        // Windows: show the window when the first frame can be drawn without waiting for the
+        // main pipeline (DX12 compiles it while the renderer is set up and the world loads).
+        if cfg!(windows) {
+            if let Some(g) = &mut self.gfx {
+                g.viewer.renderer().finish_prepared();
+            }
+
+            startup_mark("prepared");
+            window.set_visible(true);
+        }
+
         window.request_redraw();
     }
 
@@ -685,6 +735,7 @@ impl ApplicationHandler for ViewerWindow {
 
 /// Run the window on the calling thread (a large-stack thread: QuickJS needs it).
 pub fn run(opts: Options) -> Result<u64, String> {
+    startup_mark("run");
     let mut builder = EventLoop::builder();
 
     #[cfg(all(unix, not(target_os = "macos")))]
@@ -701,6 +752,7 @@ pub fn run(opts: Options) -> Result<u64, String> {
 
     let event_loop = builder.build().map_err(|e| format!("event loop: {e}"))?;
     event_loop.set_control_flow(ControlFlow::Poll);
+    startup_mark("event loop");
     let mut app = ViewerWindow::new(opts);
     event_loop.run_app(&mut app).map_err(|e| format!("run: {e}"))?;
     app.print_stats();

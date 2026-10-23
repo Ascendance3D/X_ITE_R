@@ -100,7 +100,16 @@ impl Drop for EmbeddedViewer {
 impl EmbeddedViewer {
     /// A viewer drawing on the host's device. `size` is the initial canvas size in pixels.
     pub fn new(device: wgpu::Device, queue: wgpu::Queue, size: (u32, u32)) -> Self {
-        let mut renderer = Renderer::new(device, queue);
+        Self::with_renderer(Renderer::new(device, queue), size)
+    }
+
+    /// [`EmbeddedViewer::new`] for a host that draws into targets of `format`: the renderer starts
+    /// creating its most common pipeline for them right away (see [`Renderer::new_preparing`]).
+    pub fn new_preparing(device: wgpu::Device, queue: wgpu::Queue, size: (u32, u32), format: wgpu::TextureFormat) -> Self {
+        Self::with_renderer(Renderer::new_preparing(device, queue, format, DEFAULT_MULTISAMPLING), size)
+    }
+
+    fn with_renderer(mut renderer: Renderer, size: (u32, u32)) -> Self {
         // BrowserOptions / RenderingProperties: Multisampling defaults to 4 (clamped to the
         // device maximum, which is 4 here until `configure_samples` has seen the adapter).
         renderer.set_sample_count(DEFAULT_MULTISAMPLING);
