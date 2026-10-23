@@ -128,19 +128,37 @@ impl ScriptedRun {
         self.done >= self.frames.max(1)
     }
 
+    /// One redraw. Frame `k` counts only once its world step is drawn and presented. The surface
+    /// is acquired first: when it is not ready nothing happens, and frame `k` (its events and
+    /// its step) is tried again on the next redraw.
     fn tick<H: ScriptedHost>(&mut self, host: &mut H) -> Tick {
-        self.done += 1;
-        let k = self.done;
+        let k = self.done + 1;
 
+        let frame = match host.acquire() {
+            Ok(f) => f,
+            Err(why) => {
+                self.misses += 1;
+
+                if self.misses < MAX_SURFACE_MISSES {
+                    return Tick::Retry;
+                }
+
+                return Tick::Failed(format!("scripted run: no surface for frame {k} of {} after {} attempts ({why}); {} frames completed", self.frames, self.misses, self.done));
+            }
+        };
+
+        self.misses = 0;
+
+        // The frame's events, then the step that sees them.
         for e in self.events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
             host.event(self.t0 + (k - 1) as f64 * self.dt + e["t"].as_f64().unwrap_or(0.0), e);
         }
 
-        if let Ok(frame) = host.acquire() {
-            if let Err(e) = host.step_and_present(frame, self.t0 + k as f64 * self.dt) {
-                eprintln!("render: {e}");
-            }
+        if let Err(e) = host.step_and_present(frame, self.t0 + k as f64 * self.dt) {
+            return Tick::Failed(format!("scripted run: frame {k} of {}: render: {e}", self.frames));
         }
+
+        self.done = k;
 
         if self.complete() { Tick::Finished } else { Tick::Next }
     }
