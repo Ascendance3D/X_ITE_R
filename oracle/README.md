@@ -489,3 +489,58 @@ ordered console and each DEF-named Inline's `toVRMLString ()`; `x10_compare.py` 
 JS facts reproduced: a scene's Scripts initialize at parse time, before the scene is attached; unloading disposes the
 scene's routes but not its nodes (no `shutdown ()`, and a zombie Script keeps its `prepareEvents` interest); a TimeSensor in
 an Inline ticks only once the world is live; the world is live after `replaceWorld`'s extra frame.
+
+## Running the X_ITE reference without Node.js: x3d-oracle (2026-10-23)
+
+`crates/x3d-oracle` drives the pinned page in headless Chrome over the DevTools protocol, from Rust.
+No Node, npm or Playwright is involved. Details are in its README.
+
+| mode | replaces | equivalence (both tools, same pinned X_ITE, same Chrome 156, same flags) |
+| --- | --- | --- |
+| `anim` / `anim-msaa` / `anim-sized` | `x_ite-anim.mjs`, `x_ite-anim-msaa.mjs`, `x_ite-anim-sized.mjs` | 805 cases from every `cases.txt` plus REA b05 audio and b06 physics. js.json, `.audio.f32` and exit status are byte-identical, and PNGs pixel-identical, except outputs that depend on wall-clock time in the Node tool as well (below). |
+| `particles --variant 06r / events / b07` | `tools/x_ite_particles.mjs`, `_events.mjs`, `_b07.mjs` | 143 / 143 cases (b06 particles, b06 events, b07-ps): result JSON, `.f32`, stdout line and exit status are byte-identical. |
+
+```
+cargo build --release -p x3d-oracle
+target/release/x3d-oracle anim WORLD SCRIPT --out js.json --png-dir js          # = node oracle/x_ite-anim.mjs …
+target/release/x3d-oracle anim-msaa WORLD SCRIPT --ms 4 --out js.json --png-dir js
+target/release/x3d-oracle particles WORLD SCRIPT --out js.json [--png-dir png [--ms 4]]
+```
+
+Fields that differ between two Node runs as well, so they differ between tools too:
+
+* `loadFrames`: the real frames the load took.
+* The frame in which a run-time URL change resolves when the script has no `settle`
+  (anchor-load-*, b05 `clip-url-change`, which `rea_b05.py` already lists as BLOCKED).
+
+Everything else matched byte for byte.
+
+When Chrome is needed: only to make or refresh an X_ITE reference (a baseline, an
+x10_compare run, a particle reference). The Rust tests compare against committed baselines.
+`cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view`
+runs no Node.js, npm or Python: it passed with `node`, `npm`, `npx`, `python`, `python3`
+and `perl` replaced on `PATH` by failing shims.
+
+### Migration plan for the remaining Node tools
+
+Keep every `.mjs` until its Rust equivalent passes the same old-against-new comparison.
+
+1. Done: `x_ite-anim*.mjs` and `tools/x_ite_particles*.mjs`. The next step is to switch the
+   Python wrappers (`tools/x10_compare.py`, `rea_b0*.py`, `rea_b1*.py`) from
+   `node oracle/x_ite-anim*.mjs` to `x3d-oracle anim*`, keeping the same arguments.
+2. The same page (anim.html) plus `page.evaluate`: `tools/x_ite_probe.mjs`,
+   `x_ite-anim-ammotrace.mjs`, `tools/rea_b08_transform_feedback.mjs`, `x_ite-multi-b08.mjs`.
+3. The still-image pages (shot.html, shot-msaa.html, shot-log.html, zfight.html):
+   `x_ite-shot*.mjs`, `x_ite-svg-shot*.mjs`, `x_ite-zfight.mjs`, `x_ite-text.mjs`,
+   `x_ite-fog.mjs`, `x_ite-geometry*.mjs`.
+4. The dump / table pages (dump.html, nodes.html, inline.html, extern.html):
+   `x_ite-dump.mjs`, `x_ite-formats/gltf/svg/html/xmljson/optimizer.mjs`,
+   `x_ite-nodes*.mjs`, `x_ite-node-types.mjs`, `x_ite-component-constants.mjs`,
+   `x_ite-inline.mjs`, `x_ite-extern.mjs`, `x_ite-css-colors.mjs`,
+   `x_ite-gl-identity.mjs`, `tools/webaudio_pull*_probe.mjs`.
+5. Tools that run JavaScript under plain Node (no browser): `cm5-modes-tokens.mjs`,
+   `cm5-toml-tokens.mjs`, `cm5-util-dump.mjs`, `x_ite-fields.mjs`, `tools/ammo_*.mjs`,
+   `tools/geom_xite.mjs`, `tools/gen_*.mjs`. These can run in the same Chrome page through
+   `x3d-oracle`, or be regenerated once and kept as data.
+6. The CodeMirror browser suites `cm5-run.mjs`, `cm5-doc-ops.mjs` and `cm5-cmd-ops.mjs`
+   drive cm5-build's test pages with the same Playwright calls.
