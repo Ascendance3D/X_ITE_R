@@ -803,6 +803,10 @@ pub struct Layer {
     pub bound_changed: bool,
     /// Viewport size in pixels (getLookAtDistance).
     pub viewport: (f64, f64),
+    /// The ParticleSystems among the collision shapes of the last COLLISION traversal (renderObject
+    /// .collisionShapes); `None` before the first. getClosestObject and constrainTranslation between traversals draw
+    /// those systems' particles as they are now.
+    pub collision_particle_systems: Option<Vec<crate::walk::NodeRef>>,
 }
 
 impl Layer {
@@ -837,6 +841,7 @@ impl Layer {
             vp_descriptions: HashMap::new(),
             bound_changed: false,
             viewport: (512.0, 512.0),
+            collision_particle_systems: None,
         }
     }
 

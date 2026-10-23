@@ -5,6 +5,12 @@
 //! closest depth back. Here the same orthographic camera samples the 16x16 pixel centers on the
 //! CPU against the triangles (both faces, like `gl .disable (gl .CULL_FACE)`), which gives the
 //! same depth up to rasterization coverage.
+//!
+//! An active ParticleSystem is a collision shape too (X3DShapeNode.traverse COLLISION): each drawn particle is one
+//! [`CShape`] under its instance matrix. With the GPU its POINT particles are drawn as 1 px points like Depth2.vs does,
+//! and its LINE particles are rasterized here by GL's diamond-exit rule (a WebGPU line list covers other pixels) and
+//! merged into the read-back buffer. The CPU stand-in samples triangles only, so it misses POINT and LINE particles (and
+//! the points and lines of PointSet and LineSet shapes, which neither path draws).
 
 use crate::geom::{Camera, Plane3, ViewVolume};
 use crate::layer::{NavInfo, Vp, VpBase};
@@ -15,9 +21,15 @@ use x3d_render::depth_gpu::{DepthGpu, DepthShape};
 use x3d_render::geometry::Geometry;
 
 const DEPTH_BUFFER_SIZE: usize = 16;
+/// Sub-pixel positions per pixel of the rasterizer's vertex snapping (subPixelPrecisionBits 8).
+const SUB_PIXELS: f64 = 256.0;
 
 pub struct CShape {
+    /// The Shape, or the ParticleSystem of a particle (`hit .shapeNode`).
+    pub node: crate::walk::NodeRef,
     pub geometry: Rc<Geometry>,
+    /// One particle of a ParticleSystem: its points and lines are drawn (ParticleSystem.displaySimple).
+    pub particle: bool,
     /// Shape model-view matrix (view space of the active viewpoint); for an InstancedShape
     /// instance, the instance matrix folded in.
     pub model_view: Matrix4,
@@ -26,10 +38,10 @@ pub struct CShape {
     pub base_model_view: Matrix4,
     pub instance: Option<Matrix4>,
     /// The ClipPlanes in scope, in the same view space (renderContext .clipPlanes).
-    pub clip_planes: Vec<[f64; 4]>,
+    pub clip_planes: Rc<[[f64; 4]]>,
     /// The Collision nodes the COLLISION traversal was inside of when it reached the shape
     /// (renderContext .collisions), outermost first.
-    pub collisions: Vec<x3d_fields::NodeId>,
+    pub collisions: Rc<[x3d_fields::NodeId]>,
 }
 
 pub struct Closest {
@@ -61,6 +73,111 @@ pub struct World {
     pub gpu: Option<Rc<RefCell<DepthGpu>>>,
 }
 
+/// The fragments a 1 px gl.LINES segment from `a` to `b` (camera space of the collision camera, which looks along -z)
+/// covers in the 16x16 buffer of the orthographic view (l, r, b, t, near, far): (column, row, window z, camera space
+/// point). The segment is clipped to the near and far planes and its window x and y snapped to the sub-pixel grid, then
+/// GL's diamond-exit rule decides: a pixel is produced when the segment meets its diamond |x - xc| + |y - yc| < 1/2 and
+/// does not end inside it. z and the point are interpolated at the projection of the pixel center onto the segment.
+fn line_fragments(
+    a: Vector3,
+    b: Vector3,
+    (l, r, bottom, t, near, far): (f64, f64, f64, f64, f64, f64),
+) -> Vec<(usize, usize, f64, Vector3)> {
+    let lerp = |p: &Vector3, q: &Vector3, s: f64| {
+        Vector3::new(
+            p.x + s * (q.x - p.x),
+            p.y + s * (q.y - p.y),
+            p.z + s * (q.z - p.z),
+        )
+    };
+    let (mut a, mut b) = (a, b);
+
+    // GL clips the segment to the near and far planes before it snaps the ends: (axis, bound, keep the side below).
+    // x and y are not clipped (the guard band): the pixels outside the buffer are not produced.
+    for (axis, bound, below) in [(2, -near, true), (2, -far, false)] {
+        let at = |p: &Vector3| [p.x, p.y, p.z][axis];
+        let inside = |p: &Vector3| {
+            if below {
+                at(p) <= bound
+            } else {
+                at(p) >= bound
+            }
+        };
+
+        match (inside(&a), inside(&b)) {
+            (true, true) => {}
+            (false, false) => return vec![],
+            (true, false) => b = lerp(&a, &b, (bound - at(&a)) / (at(&b) - at(&a))),
+            (false, true) => a = lerp(&a, &b, (bound - at(&a)) / (at(&b) - at(&a))),
+        }
+    }
+
+    let n = DEPTH_BUFFER_SIZE as f64;
+    let window = |p: &Vector3| {
+        (
+            (p.x - l) / (r - l) * n,
+            (p.y - bottom) / (t - bottom) * n,
+            (-p.z - near) / (far - near),
+        )
+    };
+    // The rasterizer snaps window x and y to its sub-pixel grid (8 bits).
+    let snap = |v: f64| (v * SUB_PIXELS).round() / SUB_PIXELS;
+    let (ax, ay, az) = window(&a);
+    let (bx, by, bz) = window(&b);
+    let (ax, ay, bx, by) = (snap(ax), snap(ay), snap(bx), snap(by));
+    let (dx, dy) = (bx - ax, by - ay);
+    let range = |u: f64, v: f64| {
+        let lo = (u.min(v).floor() - 1.0).max(0.0);
+        let hi = (u.max(v).floor() + 1.0).min(n - 1.0);
+        (lo as i64)..=(hi as i64)
+    };
+    let mut fragments = vec![];
+
+    for row in range(ay, by) {
+        for column in range(ax, bx) {
+            let (cx, cy) = (column as f64 + 0.5, row as f64 + 0.5);
+            let l1 = |s: f64| (ax + s * dx - cx).abs() + (ay + s * dy - cy).abs();
+
+            // The segment ends inside the diamond: it does not exit it.
+            if l1(1.0) < 0.5 {
+                continue;
+            }
+
+            // |x| + |y| along the segment is convex and piecewise linear: its least value is at an end or where x
+            // or y is 0.
+            let mut least = l1(0.0).min(l1(1.0));
+
+            if dx != 0.0 {
+                least = least.min(l1(((cx - ax) / dx).clamp(0.0, 1.0)));
+            }
+
+            if dy != 0.0 {
+                least = least.min(l1(((cy - ay) / dy).clamp(0.0, 1.0)));
+            }
+
+            if least >= 0.5 {
+                continue;
+            }
+
+            let length2 = dx * dx + dy * dy;
+            let s = if length2 > 0.0 {
+                (((cx - ax) * dx + (cy - ay) * dy) / length2).clamp(0.0, 1.0)
+            } else {
+                0.0
+            };
+
+            fragments.push((
+                column as usize,
+                row as usize,
+                az + s * (bz - az),
+                lerp(&a, &b, s),
+            ));
+        }
+    }
+
+    fragments
+}
+
 /// The collision camera: `viewpoint model · translate (userPosition) · rotate (rotation)`,
 /// inverted and multiplied on the left by the viewpoint's camera space matrix.
 fn camera_matrix(vp: &Vp, base: &VpBase, rotation: &Rotation4) -> Matrix4 {
@@ -83,6 +200,7 @@ impl World {
         gpu: &Rc<RefCell<DepthGpu>>,
         view: &Matrix4,
         ortho: &Matrix4,
+        bounds: (f64, f64, f64, f64, f64, f64),
     ) -> (f64, Option<(Vector3, usize)>) {
         let mut view_projection = *view;
         view_projection.mult_right(ortho);
@@ -96,13 +214,16 @@ impl World {
 
                 DepthShape {
                     geometry: g,
-                    empty: g.geometry_type < 2 || g.vertices.is_empty(),
+                    empty: (g.geometry_type < 2 && !s.particle)
+                        || g.geometry_type == 1
+                        || g.vertices.is_empty(),
                     model_view: f32x16(&s.base_model_view),
                     instance: s
                         .instance
                         .as_ref()
                         .map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
-                    instance_normal: s.instance.as_ref().map_or(
+                    // A ParticleSystem's depth shader has X3D_INSTANCING without X3D_INSTANCE_NORMAL.
+                    instance_normal: s.instance.as_ref().filter(|_| !s.particle).map_or(
                         x3d_render::pointing_gpu::IDENTITY3,
                         |m| {
                             // `matrix .submatrix .transpose () .inverse ()`
@@ -116,7 +237,46 @@ impl World {
                 }
             })
             .collect();
-        let pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes);
+        let mut pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes);
+
+        // The LINE particles, in draw order after the GPU's shapes (a depth tie keeps the GPU's pixel).
+        for (id, s) in self.shapes.iter().enumerate() {
+            let g = &s.geometry;
+
+            if !s.particle || g.geometry_type != 1 || g.vertices.len() < 8 {
+                continue;
+            }
+
+            let mut m = s.model_view;
+            m.mult_right(view);
+
+            let point = |k: usize| {
+                let v = &g.vertices[k * 4..k * 4 + 3];
+                let mut p = Vector3::new(v[0] as f64, v[1] as f64, v[2] as f64);
+                m.mult_vec_matrix3(&mut p);
+                p
+            };
+            let planes: Vec<[f64; 4]> = s
+                .clip_planes
+                .iter()
+                .map(|p| x3d_render::traverse::plane_mult_right(*p, view))
+                .collect();
+
+            for (wx, wy, wz, at) in line_fragments(point(0), point(1), bounds) {
+                if !planes.is_empty() && x3d_render::traverse::is_clipped(&planes, &at) {
+                    continue;
+                }
+
+                let i = wy * DEPTH_BUFFER_SIZE + wx;
+                let wz = wz as f32;
+
+                if wz < pixels.data0[i][0] {
+                    pixels.data0[i] = [wz, id as f32, id as f32, id as f32];
+                    // Depth2.fs without X3D_NORMALS: normal 0 0 1, gl_FrontFacing TRUE.
+                    pixels.data1[i] = [0.0, 0.0, 1.0, 1.0];
+                }
+            }
+        }
 
         // TextureBuffer.readDepth
         let (mut win_x, mut win_y, mut win_z, mut index) = (0usize, 0usize, f64::INFINITY, 0usize);
@@ -171,7 +331,7 @@ impl World {
         if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
             let mut ortho = Matrix4::IDENTITY;
             Camera::ortho(l, r, b, t, near, far, &mut ortho);
-            let (distance, normal) = self.depth_gpu(gpu, view, &ortho);
+            let (distance, normal) = self.depth_gpu(gpu, view, &ortho, (l, r, b, t, near, far));
             return normal.map(|(n, id)| (distance, n, Some(id)));
         }
 

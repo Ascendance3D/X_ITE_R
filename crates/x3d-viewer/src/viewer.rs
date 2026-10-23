@@ -202,6 +202,9 @@ pub struct Viewer3d {
     /// X3DRenderObject.activeCollisions: the Collision nodes whose isActive the last COLLISION traversal set.
     active_collisions: Vec<x3d_fields::NodeId>,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
+    /// The geometry each ParticleSystem last drew into the collision depth buffer, kept between frames while it does not
+    /// change, so that the depth buffer keeps its vertex buffer (a SPRITE's changes when the view turns).
+    particle_depth_geometry: HashMap<(Vec<NodeId>, NodeId), Rc<Geometry>>,
     /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
     /// ray cast's double values.
     pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
@@ -424,6 +427,7 @@ impl Viewer3d {
             gravity_speed: 0.0,
             active_collisions: vec![],
             geom_cache: HashMap::new(),
+            particle_depth_geometry: HashMap::new(),
             pointing_gpu: None,
             depth_gpu: None,
             pick_shapes: Default::default(),
@@ -493,6 +497,7 @@ impl Viewer3d {
         self.pointing_layer = None;
         self.pointer = Pointer::new();
         self.geom_cache.clear();
+        self.particle_depth_geometry.clear();
         self.render_cache = Default::default();
         self.pick_shapes = Default::default();
         self.scan_cam = Scan::default();
@@ -1045,6 +1050,17 @@ impl Viewer3d {
         self.vis.retain(|k, _| !dead(k));
         self.lod_pass.static_done.retain(|k| !dead(k));
         self.geom_cache.retain(|k, _| !dead(k));
+        self.particle_depth_geometry.retain(|k, _| !dead(k));
+
+        for layer in
+            std::iter::once(&mut self.layer).chain(self.others.iter_mut().map(|s| &mut s.layer))
+        {
+            if let Some(systems) = layer.collision_particle_systems.as_mut() {
+                systems.retain(|n| {
+                    !released.contains(&n.node) && !n.path.iter().any(|p| released.contains(p))
+                });
+            }
+        }
         self.pick_shapes.retain(|n| !released.contains(&n));
         self.pointer.forget(&released);
     }
@@ -1362,12 +1378,14 @@ impl Viewer3d {
 
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
                 shapes.push(CShape {
+                    node: s.shape.clone(),
                     geometry: g,
+                    particle: false,
                     model_view: s.model_view,
                     base_model_view: s.shape_model_view,
                     instance: s.instance,
-                    clip_planes: s.clip_planes.clone(),
-                    collisions: s.collisions.clone(),
+                    clip_planes: s.clip_planes.as_slice().into(),
+                    collisions: s.collisions.as_slice().into(),
                 });
             }
         }
@@ -1376,15 +1394,92 @@ impl Viewer3d {
         for s in &self.scan_display.proxy_shapes {
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
                 shapes.push(CShape {
+                    node: s.shape.clone(),
                     geometry: g,
+                    particle: false,
                     model_view: s.model_view,
                     base_model_view: s.shape_model_view,
                     instance: s.instance,
-                    clip_planes: s.clip_planes.clone(),
-                    collisions: s.collisions.clone(),
+                    clip_planes: s.clip_planes.as_slice().into(),
+                    collisions: s.collisions.as_slice().into(),
                 });
             }
         }
+
+        // The drawn particles (ParticleSystem.displaySimple) of the systems the last COLLISION traversal collected.
+        // A system's entries are pushed together, one per particle, with one geometry, clip-plane and Collision
+        // stack: a run of them is resolved once and shares those, while every particle keeps its own entry (its
+        // instance matrix) in traversal order. A system reached twice (USE) gives two runs.
+        let mut seen: Vec<(Vec<NodeId>, NodeId)> = vec![];
+        let members = self.layer.collision_particle_systems.clone();
+        let entries = self.collision_particles();
+        let mut i = 0;
+
+        while i < entries.len() {
+            let first = &self.scan_display.particle_collisions[entries[i]];
+            let run = entries[i..]
+                .iter()
+                .take_while(|&&k| {
+                    let s = &self.scan_display.particle_collisions[k];
+
+                    s.shape == first.shape
+                        && s.shape_model_view == first.shape_model_view
+                        && s.clip_planes == first.clip_planes
+                        && s.collisions == first.collisions
+                })
+                .count();
+            let run_entries = &entries[i..i + run];
+            i += run;
+
+            if members.as_ref().is_some_and(|m| !m.contains(&first.shape)) {
+                continue;
+            }
+
+            let Some(g) = geom_of(&self.rt, &mut self.geom_cache, first) else {
+                continue;
+            };
+            // All particles of a system draw the same geometry: it is compared once per world.
+            let key = (first.shape.path.to_vec(), first.shape.node);
+            let g = match self.particle_depth_geometry.get(&key) {
+                Some(kept)
+                    if seen.contains(&key)
+                        || Rc::ptr_eq(kept, &g)
+                        || (kept.geometry_type == g.geometry_type
+                            && kept.vertices == g.vertices
+                            && kept.normals == g.normals) =>
+                {
+                    kept.clone()
+                }
+                _ => {
+                    self.particle_depth_geometry.insert(key.clone(), g.clone());
+                    g
+                }
+            };
+
+            if !seen.contains(&key) {
+                seen.push(key);
+            }
+
+            let clip_planes: Rc<[[f64; 4]]> = first.clip_planes.as_slice().into();
+            let collisions: Rc<[NodeId]> = first.collisions.as_slice().into();
+
+            for &k in run_entries {
+                let s = &self.scan_display.particle_collisions[k];
+
+                shapes.push(CShape {
+                    node: s.shape.clone(),
+                    geometry: g.clone(),
+                    particle: true,
+                    model_view: s.model_view,
+                    base_model_view: s.shape_model_view,
+                    instance: s.instance,
+                    clip_planes: clip_planes.clone(),
+                    collisions: collisions.clone(),
+                });
+            }
+        }
+
+        self.particle_depth_geometry.retain(|k, _| seen.contains(k));
 
         // Shading WIREFRAME is global GL state (the polygon mode) for X_ITE's depth renders too.
         let fill = match self
@@ -1403,6 +1498,27 @@ impl Viewer3d {
             fill,
             gpu: self.depth_gpu.clone(),
         })
+    }
+
+    /// The entries of [`Scan::particle_collisions`] that X3DRenderObject.addCollisionShape keeps: it rejects a
+    /// ParticleSystem whose bbox sphere is outside the COLLISION traversal's view volume, X3DLayerNode.collision's
+    /// `ortho (-size, size, -size, size, -size, size)` with `size = max (collisionRadius * 2, avatarHeight * 2)` around
+    /// the viewer.
+    fn collision_particles(&self) -> Vec<usize> {
+        let nav = self.nav_info();
+        let size = (nav.collision_radius() * 2.0).max(nav.avatar_height() * 2.0);
+        let mut volume = Matrix4::IDENTITY;
+        crate::geom::Camera::ortho(-size, size, -size, size, -size, size, &mut volume);
+
+        (0..self.scan_display.particle_collisions.len())
+            .filter(|&i| {
+                let s = &self.scan_display.particle_collisions[i];
+
+                s.explicit_bbox.is_some_and(|b| {
+                    x3d_render::traverse::bbox_in_view_volume(&volume, &s.shape_model_view, &b)
+                })
+            })
+            .collect()
     }
 
     /// X3DRenderObject.collide: the closest object along each of the six axes within the collision radius
@@ -1482,6 +1598,29 @@ impl Viewer3d {
     }
 
     fn collision_pass(&mut self) {
+        // The COLLISION traversal (X3DBrowserContext: `getCollisionCount () || getViewer () .isCollidable ()`, not
+        // during a transition) collects the collision shapes.
+        if (self.scan_display.collisions > 0 || self.nav.is_collidable())
+            && !self
+                .layer
+                .transition_active
+                .get(&self.layer.navigation_info())
+                .copied()
+                .unwrap_or(false)
+        {
+            let mut systems: Vec<NodeRef> = vec![];
+
+            for i in self.collision_particles() {
+                let s = &self.scan_display.particle_collisions[i].shape;
+
+                if !systems.contains(s) {
+                    systems.push(s.clone());
+                }
+            }
+
+            self.layer.collision_particle_systems = Some(systems);
+        }
+
         self.collide();
 
         if self.nav.kind() != "WALK" {
@@ -2348,6 +2487,50 @@ impl Viewer3d {
                 hit: false,
             },
         }
+    }
+
+    /// `layerNode .constrainTranslation (translation)` for the oracle's `collisionProbes`: the move the collision shapes
+    /// of the last traversal let the avatar make.
+    pub fn probe_constrain(&mut self, translation: Vector3) -> Vector3 {
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp = self.layer.vp(self.layer.viewpoint()).clone();
+        let wall_friction = self.rt.browser_options.wall_friction();
+
+        match self.collision_world_unconditional() {
+            Some(w) => {
+                w.constrain_translation(&vp, &base, &nav, translation, true, true, wall_friction)
+            }
+            None => translation,
+        }
+    }
+
+    /// `renderObject .collisionShapes` for the oracle's `collisionProbes`: the Shape or ParticleSystem of every collision
+    /// shape the depth pass draws, once per shape (the particles of a system are one X_ITE collision shape), and the
+    /// node of each [`crate::collision::Closest::shape`] index.
+    pub fn probe_collision_shapes(
+        &mut self,
+    ) -> (Vec<crate::walk::NodeRef>, Vec<crate::walk::NodeRef>) {
+        let shapes: Vec<crate::walk::NodeRef> = self
+            .collision_world_unconditional()
+            .map(|w| w.shapes.into_iter().map(|s| s.node).collect())
+            .unwrap_or_default();
+        let mut once: Vec<crate::walk::NodeRef> = vec![];
+
+        for s in &shapes {
+            if once.last() != Some(s) {
+                once.push(s.clone());
+            }
+        }
+
+        (once, shapes)
+    }
+
+    /// The bound viewpoint's positionOffset (WALK gravity moves it).
+    pub fn position_offset(&mut self) -> Vector3 {
+        let vp_node = self.layer.viewpoint();
+
+        self.layer.vp(vp_node).position_offset
     }
 
     /// The pointer's walk again (the one each frame takes before its sensor events), for tools that change the scene
