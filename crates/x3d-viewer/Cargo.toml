@@ -27,6 +27,10 @@ wgpu = { version = "30", optional = true }
 pollster = { version = "1", optional = true }
 bytemuck = { version = "1", optional = true, features = ["derive"] }
 
+[target.'cfg(target_os = "macos")'.dependencies]
+# x3d-view: a big stack on the main thread, where macOS needs the event loop.
+stacker = "0.1"
+
 [[bin]]
 name = "x3d-view"
 required-features = ["gpu"]
