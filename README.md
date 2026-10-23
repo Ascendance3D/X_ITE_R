@@ -416,6 +416,22 @@ The next platform goal is a native macOS 15+ viewer.
 
 Windows and mobile development are not part of the approved roadmap.
 
+### Windows graphics backend (test builds)
+
+On Windows, `x3d-view` uses DX12 by default and compiles shaders with Microsoft's DXC
+compiler, loaded from `dxcompiler.dll` beside `x3d-view.exe`. `tools/fetch-dxc.sh <dir>`
+downloads the pinned official release (v1.8.2505.1) and checks its SHA-256 values.
+
+- `WGPU_BACKEND` replaces the default (`dx12`, `vulkan`, `gl`, comma-separated). An unknown
+  name is an error.
+- `WGPU_DX12_COMPILER=fxc` selects the built-in FXC compiler. It works, but the first frame
+  can take minutes on a small CPU.
+- A missing `dxcompiler.dll` stops startup with an error. There is no automatic fallback.
+- GL cannot run this renderer (the scatter-depth pass reads a depth texture). It reports an
+  error instead of crashing.
+
+Builds come from Linux with `cargo xwin build --release --target x86_64-pc-windows-msvc`.
+
 ## Known Limitations
 
 eXciteR is an active port. Some behavior still differs from the original engine.
