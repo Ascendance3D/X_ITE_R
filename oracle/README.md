@@ -507,6 +507,15 @@ target/release/x3d-oracle anim-msaa WORLD SCRIPT --ms 4 --out js.json --png-dir 
 target/release/x3d-oracle particles WORLD SCRIPT --out js.json [--png-dir png [--ms 4]]
 ```
 
+`x3d-oracle particles` also reads an additive script key that the Node tools do not have:
+`"pickProbes": { "frames": [...], "points": [[x, y], ...] }`. After each listed frame it records `browser .touch`
+at every point (id, the DEF name of the hit shape, point, normal, texCoord). Scripts without the key give
+byte-identical output, checked on pr-quad of `rea-batch13-particles-baseline`. Pass `--png-dir` with it: without that
+the drawing buffer stays 1 x 1 and `touch` hits nothing. The ParticleSystem pointing baselines
+`rea-batch14-particle-pick-baseline/` come from `tools/rea_b14_pick.py record`. Their worlds are
+`synthetic-rea-b14-particle-pick/` (`tools/gen_rea_b14_particle_pick.py`), and
+`crates/x3d-viewer/tests/rea_b14_particle_pick.rs` compares against them.
+
 Fields that differ between two Node runs as well, so they differ between tools too:
 
 * `loadFrames`: the real frames the load took.
