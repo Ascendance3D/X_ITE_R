@@ -387,10 +387,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
                 let t = r.eval(js::PIXELS, None)?.unwrap_or_default();
                 let p: Value = serde_json::from_str(&t).map_err(|e| format!("x3d-oracle: pixels: {e}"))?;
                 let (pw, ph) = (p["width"].as_u64().unwrap_or(0) as u32, p["height"].as_u64().unwrap_or(0) as u32);
-                let rgba = crate::png::flip_rows(&json::base64_decode(p["rgba"].as_str().unwrap_or("")), pw, ph);
+                let png = crate::png::encode_bottom_up(pw, ph, &json::base64_decode(p["rgba"].as_str().unwrap_or("")))?;
                 std::fs::create_dir_all(&png_dir).map_err(|e| format!("EACCES: {png_dir}: {e}"))?;
                 let path = Path::new(&png_dir).join(format!("{key}.png"));
-                std::fs::write(&path, crate::png::encode(pw, ph, &rgba)).map_err(|e| format!("{}: {e}", path.display()))?;
+                std::fs::write(&path, png).map_err(|e| format!("{}: {e}", path.display()))?;
             }
             k += 1.0;
         }

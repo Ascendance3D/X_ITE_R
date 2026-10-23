@@ -59,6 +59,16 @@ pub fn encode(w: u32, h: u32, rgba: &[u8]) -> Vec<u8> {
 }
 
 /// The canvas read back with `gl.readPixels` is bottom-up; the PNG is top-down.
+/// The PNG of a page's `PIXELS` reply (`gl.readPixels`, bottom-up RGBA): an error when the size is 0 or the buffer is
+/// not `w * h * 4` bytes (WebGL's drawing buffer is never empty, so the Node tools never wrote such a PNG).
+pub fn encode_bottom_up(w: u32, h: u32, bottom_up: &[u8]) -> Result<Vec<u8>, String> {
+    if w == 0 || h == 0 || bottom_up.len() != w as usize * h as usize * 4 {
+        return Err(format!("x3d-oracle: pixels: {} bytes for {w} x {h}", bottom_up.len()));
+    }
+
+    Ok(encode(w, h, &flip_rows(bottom_up, w, h)))
+}
+
 pub fn flip_rows(bottom_up: &[u8], w: u32, h: u32) -> Vec<u8> {
     let stride = w as usize * 4;
     let mut out = vec![0u8; bottom_up.len()];
@@ -100,5 +110,8 @@ mod tests {
     #[test]
     fn flips() {
         assert_eq!(flip_rows(&[1, 1, 1, 1, 2, 2, 2, 2], 1, 2), vec![2, 2, 2, 2, 1, 1, 1, 1]);
+        assert_eq!(encode_bottom_up(1, 2, &[1, 1, 1, 1, 2, 2, 2, 2]), Ok(encode(1, 2, &[2, 2, 2, 2, 1, 1, 1, 1])));
+        assert!(encode_bottom_up(1, 2, &[1, 1, 1, 1]).is_err());
+        assert!(encode_bottom_up(0, 0, &[]).is_err());
     }
 }

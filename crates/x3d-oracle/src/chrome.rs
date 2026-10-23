@@ -181,6 +181,8 @@ pub struct Chrome {
 
 fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
     let mut buf = Vec::new();
+    // buf [..scanned] holds no NUL: a large reply (AUDIO_DONE, PIXELS) arriving in many reads is scanned once.
+    let mut scanned = 0;
     let mut chunk = vec![0u8; 1 << 16];
     loop {
         let n = match input.read(&mut chunk) {
@@ -188,7 +190,9 @@ fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
             Ok(n) => n,
         };
         buf.extend_from_slice(&chunk[..n]);
-        while let Some(end) = buf.iter().position(|&b| b == 0) {
+        while let Some(rel) = buf[scanned..].iter().position(|&b| b == 0) {
+            let end = scanned + rel;
+            scanned = 0;
             let msg: Vec<u8> = buf.drain(..=end).collect();
             let text = String::from_utf8_lossy(&msg[..msg.len() - 1]);
             conn.trace("RECV", &text);
@@ -205,6 +209,7 @@ fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
                 on_event(&conn, &v);
             }
         }
+        scanned = buf.len();
     }
     conn.closed.store(true, Ordering::SeqCst);
     conn.fail_all("Target page, context or browser has been closed");
