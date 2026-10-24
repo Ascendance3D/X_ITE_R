@@ -104,8 +104,12 @@ pub struct DepthGpu {
     instance_sources: Vec<Rc<Vec<Matrix4>>>,
     buffers: HashMap<usize, Buffer>,
     queries: u64,
-    /// A readback failed (the device was lost): no more passes are drawn.
+    /// The device was lost under a readback: no more passes are drawn.
     lost: bool,
+    /// Readbacks that did not arrive, lost device or not ([`DepthGpu::readback_failures`]).
+    readback_failures: usize,
+    /// Mappings that failed in a row under a clean poll; a readback that arrives clears it.
+    map_failures: usize,
     /// Passes drawn (for tests).
     pub passes: usize,
 }
@@ -271,6 +275,8 @@ impl DepthGpu {
             buffers: HashMap::new(),
             queries: 0,
             lost: false,
+            readback_failures: 0,
+            map_failures: 0,
             passes: 0,
         }
     }
@@ -293,9 +299,29 @@ impl DepthGpu {
         &self.device
     }
 
-    /// A readback failed, so the device is lost: `draw` returns `None` from now on, and the caller uses the CPU.
+    /// The device was lost under a readback: `draw` returns `None` from now on, and the caller uses the CPU.
     pub fn lost(&self) -> bool {
         self.lost
+    }
+
+    /// How many readbacks did not arrive. A mapping that fails under a clean poll counts here and leaves
+    /// [`DepthGpu::lost`] false: that pass falls back to the CPU stand-in and the next one is drawn on the GPU again.
+    pub fn readback_failures(&self) -> usize {
+        self.readback_failures
+    }
+
+    /// Record a readback that did not arrive, like [`crate::pointing_gpu::PointingGpu`]: a lost device at once, a
+    /// failed mapping only once [`crate::pointing_gpu::MAX_MAP_FAILURES`] of them in a row say it is not coming back.
+    fn fail_readback(&mut self, e: crate::pointing_gpu::ReadbackFailure) {
+        self.readback_failures += 1;
+
+        match e {
+            crate::pointing_gpu::ReadbackFailure::DeviceLost => self.lost = true,
+            crate::pointing_gpu::ReadbackFailure::Mapping => {
+                self.map_failures += 1;
+                self.lost |= self.map_failures >= crate::pointing_gpu::MAX_MAP_FAILURES;
+            }
+        }
     }
 
     pub fn release(&mut self) {
@@ -304,8 +330,8 @@ impl DepthGpu {
     }
 
     /// X3DRenderObject.depth (shapes, numShapes, true) into the cleared buffer, then the readback.
-    /// `projection` is the view-projection matrix of the pass (Float32Array of the double matrix). `None` once the device
-    /// is lost.
+    /// `projection` is the view-projection matrix of the pass (Float32Array of the double matrix). `None` when the
+    /// readback does not arrive: once the device is lost, or for the one pass whose mapping failed.
     pub fn draw(&mut self, projection: &[f32; 16], shapes: &[DepthShape]) -> Option<DepthPixels> {
         if self.lost {
             return None;
@@ -591,10 +617,12 @@ impl DepthGpu {
         let slice = self.readback.slice(..);
         crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
 
-        if !crate::pointing_gpu::map_read(&self.device, &slice) {
-            self.lost = true;
+        if let Err(e) = crate::pointing_gpu::map_read(&self.device, &slice) {
+            self.fail_readback(e);
             return None;
         }
+
+        self.map_failures = 0;
 
         let mapped = slice.get_mapped_range().expect("map depth readback");
         let read = |t: usize| -> Vec<[f32; 4]> {

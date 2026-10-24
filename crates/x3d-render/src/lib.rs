@@ -10,6 +10,10 @@
 //! between frames for an interactive viewer.
 //! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
 
+/// The wgpu whose devices, queues and buffers this crate's types hold, so that a crate that is handed them without
+/// depending on wgpu itself (x3d-viewer, where it is optional) can still name them.
+pub use wgpu;
+
 pub mod bbox_display;
 pub mod compare;
 pub mod composed;

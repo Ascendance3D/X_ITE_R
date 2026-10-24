@@ -167,6 +167,9 @@ impl EmbeddedViewer {
         }
     }
 
+    /// What [`EmbeddedViewer::set_gpu_picking`] was asked for, not what the viewer is doing: this stays `true` after a
+    /// lost device or buffers that could not be made, while the picks and collisions have fallen back to the CPU. The
+    /// buffers answer that — [`Viewer3d::pointing_gpu`] and [`Viewer3d::depth_gpu`] of [`EmbeddedViewer::core`].
     pub fn gpu_picking(&self) -> bool {
         self.gpu_picking
     }
@@ -201,9 +204,8 @@ impl EmbeddedViewer {
             self.gpu_lost = true;
             return;
         };
-        debug_assert!(pointing.device() == device && depth.borrow().device() == device);
-        core.set_gpu(Some(pointing), Some(depth))
-            .expect("one device");
+        core.set_gpu(device, Some(pointing), Some(depth))
+            .expect("the renderer's device");
         self.gpu_lent = true;
     }
 
@@ -214,7 +216,7 @@ impl EmbeddedViewer {
             return;
         }
 
-        match (core.pointing_gpu.take(), core.depth_gpu.take()) {
+        match core.take_gpu() {
             (Some(pointing), Some(depth)) if !pointing.lost() && !depth.borrow().lost() => {
                 if self.gpu_picking {
                     depth.borrow_mut().release();
