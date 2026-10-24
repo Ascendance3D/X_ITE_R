@@ -180,6 +180,9 @@ pub struct Viewer3d {
     /// Date.now () / 1000, settable between frames (input events use it).
     pub date_now: f64,
     pub frame_rate: f64,
+    /// Seconds spent in the scene walks of [`Self::refresh_display_scan`] and [`Self::display_scan`] since the last
+    /// [`Self::take_step_seconds`].
+    traversal_seconds: f64,
     last_time: Option<f64>,
     pub shift: bool,
     pub ctrl: bool,
@@ -426,6 +429,7 @@ impl Viewer3d {
             time: t0,
             date_now: t0,
             frame_rate: 60.0,
+            traversal_seconds: 0.0,
             last_time: None,
             shift: false,
             ctrl: false,
@@ -900,6 +904,16 @@ impl Viewer3d {
     // --- the frame -------------------------------------------------------------------------
 
     /// All runtimes (world and Inline scenes), parents first.
+    /// For benchmarks: the seconds of the scene walks (POINTER / COLLISION and DISPLAY, the old scan dropped included)
+    /// and of the particle simulation (`run_pass` of every runtime) since the last call, and zero them.
+    pub fn take_step_seconds(&mut self) -> (f64, f64) {
+        let mut sim = 0.0;
+
+        self.for_each_rt(&mut |rt| sim += std::mem::take(&mut rt.particle_sim_seconds));
+
+        (std::mem::take(&mut self.traversal_seconds), sim)
+    }
+
     fn for_each_rt(&mut self, f: &mut dyn FnMut(&mut Runtime)) {
         for p in crate::walk::all_paths(&self.rt) {
             if let Some(rt) = rt_at_mut(&mut self.rt, &p) {
@@ -1755,8 +1769,10 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
+            let start = std::time::Instant::now();
             self.scan_display =
                 crate::walk::scan_display(&self.rt, &self.layer_walk(), &view, &mut lod);
+            self.traversal_seconds += start.elapsed().as_secs_f64();
             self.display_thick_lines();
         }
 
@@ -1852,6 +1868,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
+            let start = std::time::Instant::now();
             self.scan_display = scan_screens(
                 &self.rt,
                 &self.layer_walk(),
@@ -1859,6 +1876,7 @@ impl Viewer3d {
                 false,
                 &self.screen_matrices(),
             );
+            self.traversal_seconds += start.elapsed().as_secs_f64();
         }
 
         self.clear_undrawn_scans();

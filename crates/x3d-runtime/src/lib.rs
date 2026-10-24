@@ -506,6 +506,8 @@ pub struct Runtime {
     pub stamp_counter: u64,
     /// `getBrowser () .currentFrameRate` (X3DDamperNode.prepareEvents). 60 until a frame loop sets it.
     pub frame_rate: f64,
+    /// Seconds spent in [`particles::run_pass`] since a benchmark last zeroed it.
+    pub particle_sim_seconds: f64,
     /// The scene has gone live after loading (X3DBrowser.replaceWorld: `scene .setLive (true)`
     /// runs after the nodes were set up and their first events were processed). Followers
     /// register their prepareEvents interest only while this is set.
@@ -680,6 +682,7 @@ impl Runtime {
             stamps: vec![],
             stamp_counter: 0,
             frame_rate: 60.0,
+            particle_sim_seconds: 0.0,
             scene_live: false,
             followers: vec![],
             key_sensors: vec![],

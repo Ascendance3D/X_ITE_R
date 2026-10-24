@@ -355,6 +355,7 @@ impl World {
                         },
                     ),
                     clip_planes: &s.clip_planes,
+                    particle: s.particle,
                 }
             })
             .collect();
