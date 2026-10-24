@@ -1316,6 +1316,8 @@ pub struct Builder<'a> {
     environment: Option<EnvironmentParams>,
     /// Interactive cameras of the other layers of a LayerSet (`camera` is layer 0's).
     pub layer_cameras: Vec<(LayerKey, CameraOverride)>,
+    /// The layer [`Builder::build_layer`] builds.
+    layer: LayerKey,
     /// renderObject.getViewVolumes (): the viewport rectangles, the layer's first.
     viewports: Vec<[f64; 4]>,
     /// renderObject.getLayouts () and getLayoutRectangles ().
@@ -1514,6 +1516,7 @@ impl<'a> Builder<'a> {
             background_transparent: false,
             environment: None,
             layer_cameras: vec![],
+            layer: None,
             viewports: vec![],
             layouts: LayoutStack::default(),
             layout_camera: LayoutCamera {
@@ -2912,7 +2915,7 @@ impl<'a> Builder<'a> {
             }
             // ParticleSystem.displaySimple: the particles drawn instanced into the shadow map. LINE particles with
             // LineProperties (setShaderUniforms): gl.lineWidth, or above ALIASED_LINE_WIDTH_RANGE [1]
-            // displaySimpleInstancedThick, the triangles of the DISPLAY pass before this frame's (X3DRenderObject.draw
+            // displaySimpleInstancedThick, the triangles of the last color pass before this layer's (X3DRenderObject.draw
             // renders the shadow maps first) while their line count is the current one, and nothing otherwise.
             "ParticleSystem" => {
                 if !sg.bool(n, "castShadow", true) {
@@ -2937,7 +2940,7 @@ impl<'a> Builder<'a> {
                     .collect();
 
                 if line_width > crate::gpu::MAX_LINE_WIDTH {
-                    if let Some(geometry) = self.particle_thick_lines_before_display(sg, n) {
+                    if let Some(geometry) = self.particle_thick_lines_before_layer(sg, n) {
                         out.push(DepthItem {
                             geometry,
                             model_view: *mv,
@@ -3837,18 +3840,21 @@ impl<'a> Builder<'a> {
         }
     }
 
-    /// The transformed LINE triangles of the ParticleSystem `n` as its shadow map draw sees them: those the DISPLAY pass
-    /// before this frame's made ([`x3d_runtime::particles::Sim::thick_lines_before_display`]) under their instance
-    /// matrices, in the system's space; `None` while their line count (one segment per particle) is not the current one.
-    fn particle_thick_lines_before_display(&self, sg: &Sg, n: NodeId) -> Option<Rc<Geometry>> {
+    /// The transformed LINE triangles of the ParticleSystem `n` as the shadow map draw of the layer being built sees
+    /// them: those of the last color pass before this layer's
+    /// ([`x3d_runtime::particles::Sim::thick_lines_before_layer`]) under their instance matrices, in the system's space;
+    /// `None` while their line count (one segment per particle) is not the current one.
+    fn particle_thick_lines_before_layer(&self, sg: &Sg, n: NodeId) -> Option<Rc<Geometry>> {
         if !self.particle_system_enabled(sg, n) {
             return None;
         }
 
         let sim = sg.rt.particle_sim(n)?;
         let lines = sim
-            .thick_lines_before_display
-            .as_ref()
+            .thick_lines_before_layer
+            .iter()
+            .find(|(key, _)| *key == self.layer)
+            .and_then(|(_, lines)| lines.as_ref())
             .filter(|t| t.num_lines == sim.num_particles && !t.instances.is_empty())?;
         let per = lines.positions.len() / lines.instances.len();
         let positions: Vec<[f32; 4]> = lines
@@ -5228,6 +5234,7 @@ impl<'a> Builder<'a> {
     /// DISPLAY pass into a frame. `layered`: the world has a LayerSet (the frame gets its
     /// viewport, and layer 0 its default Background).
     fn build_layer(&mut self, sg: &Sg, key: LayerKey, browser: [f64; 4], layered: bool) -> Frame {
+        self.layer = key;
         let roots = layer::layer_children(sg, key);
         let layout_layer = layer::is_layout_layer(sg, key);
         let viewport = layer::layer_viewport(sg, key, browser);
