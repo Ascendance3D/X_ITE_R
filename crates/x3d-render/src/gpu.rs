@@ -5752,6 +5752,149 @@ pub fn transformed_line_positions(
         .collect()
 }
 
+/// gl.lineWidth lines (a width up to ALIASED_LINE_WIDTH_RANGE [1]) of an instanced draw in a pass with its own
+/// projection and viewport: the shadow pass (X3DRenderObject.depth) sets gl.lineWidth through
+/// LineProperties.setShaderUniforms (measured, the collision depth buffer does not widen them). The aliased
+/// rasterization's parallelograms (see line_style_vertices) as positions in the geometry's own space, six per segment,
+/// for a draw that applies `instance` and `model_view` again.
+pub fn aliased_line_positions(
+    g: &crate::geometry::Geometry,
+    model_view: &Matrix4,
+    projection: &Matrix4,
+    viewport: [f64; 4],
+    width: f64,
+    instance: Option<&Matrix4>,
+) -> Vec<[f32; 4]> {
+    let l = LineParams { linetype: 1, width };
+    let (verts, _) = line_style_vertices(g, model_view, projection, viewport, &l, 1, instance);
+
+    verts
+        .chunks_exact(STIPPLE_FLOATS_PER_VERTEX)
+        .map(|v| [v[0], v[1], v[2], 1.0])
+        .collect()
+}
+
+/// GLSL `m * v` of a column-major float32 matrix.
+pub(crate) fn mat_vec_f32(m: &[f32; 16], v: [f32; 4]) -> [f32; 4] {
+    std::array::from_fn(|r| m[r] * v[0] + m[4 + r] * v[1] + m[8 + r] * v[2] + m[12 + r] * v[3])
+}
+
+/// GLSL `a * b` of column-major float32 matrices.
+fn mat_mul_f32(a: &[f32; 16], b: &[f32; 16]) -> [f32; 16] {
+    std::array::from_fn(|i| {
+        let (c, r) = (i / 4, i % 4);
+        a[r] * b[c * 4]
+            + a[4 + r] * b[c * 4 + 1]
+            + a[8 + r] * b[c * 4 + 2]
+            + a[12 + r] * b[c * 4 + 3]
+    })
+}
+
+/// GLSL `inverse (mat4)` in float32: the adjugate over the determinant (the 2 × 2 sub-factor form).
+fn inverse_f32(m: &[f32; 16]) -> [f32; 16] {
+    let a = |c: usize, r: usize| m[c * 4 + r];
+    let s0 = a(0, 0) * a(1, 1) - a(1, 0) * a(0, 1);
+    let s1 = a(0, 0) * a(1, 2) - a(1, 0) * a(0, 2);
+    let s2 = a(0, 0) * a(1, 3) - a(1, 0) * a(0, 3);
+    let s3 = a(0, 1) * a(1, 2) - a(1, 1) * a(0, 2);
+    let s4 = a(0, 1) * a(1, 3) - a(1, 1) * a(0, 3);
+    let s5 = a(0, 2) * a(1, 3) - a(1, 2) * a(0, 3);
+    let c5 = a(2, 2) * a(3, 3) - a(3, 2) * a(2, 3);
+    let c4 = a(2, 1) * a(3, 3) - a(3, 1) * a(2, 3);
+    let c3 = a(2, 1) * a(3, 2) - a(3, 1) * a(2, 2);
+    let c2 = a(2, 0) * a(3, 3) - a(3, 0) * a(2, 3);
+    let c1 = a(2, 0) * a(3, 2) - a(3, 0) * a(2, 2);
+    let c0 = a(2, 0) * a(3, 1) - a(3, 0) * a(2, 1);
+    let det = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
+    let inv = 1.0 / det;
+    let mut out = [0.0f32; 16];
+    let mut set = |c: usize, r: usize, v: f32| out[c * 4 + r] = v * inv;
+
+    set(0, 0, a(1, 1) * c5 - a(1, 2) * c4 + a(1, 3) * c3);
+    set(0, 1, -a(0, 1) * c5 + a(0, 2) * c4 - a(0, 3) * c3);
+    set(0, 2, a(3, 1) * s5 - a(3, 2) * s4 + a(3, 3) * s3);
+    set(0, 3, -a(2, 1) * s5 + a(2, 2) * s4 - a(2, 3) * s3);
+    set(1, 0, -a(1, 0) * c5 + a(1, 2) * c2 - a(1, 3) * c1);
+    set(1, 1, a(0, 0) * c5 - a(0, 2) * c2 + a(0, 3) * c1);
+    set(1, 2, -a(3, 0) * s5 + a(3, 2) * s2 - a(3, 3) * s1);
+    set(1, 3, a(2, 0) * s5 - a(2, 2) * s2 + a(2, 3) * s1);
+    set(2, 0, a(1, 0) * c4 - a(1, 1) * c2 + a(1, 3) * c0);
+    set(2, 1, -a(0, 0) * c4 + a(0, 1) * c2 - a(0, 3) * c0);
+    set(2, 2, a(3, 0) * s4 - a(3, 1) * s2 + a(3, 3) * s0);
+    set(2, 3, -a(2, 0) * s4 + a(2, 1) * s2 - a(2, 3) * s0);
+    set(3, 0, -a(1, 0) * c3 + a(1, 1) * c1 - a(1, 2) * c0);
+    set(3, 1, a(0, 0) * c3 - a(0, 1) * c1 + a(0, 2) * c0);
+    set(3, 2, -a(3, 0) * s3 + a(3, 1) * s1 - a(3, 2) * s0);
+    set(3, 3, a(2, 0) * s3 - a(2, 1) * s1 + a(2, 2) * s0);
+    out
+}
+
+/// X3DLineGeometryNode.displayInstancedThick of one instance: LineTransform2.vs pass 0 with X3D_INSTANCING, in
+/// float32 as the DISPLAY pass's transform feedback computes it. `model_view` is renderContext .modelViewMatrix (a
+/// Float32Array), the matrices are `Float32Array (modelViewMatrix × projection)` and its inverse taken in doubles,
+/// `instance` is x3d_InstanceMatrix. Six positions per segment in the instance's own space (the draw applies
+/// `instance` again): triangle 1 (p0 + o, p0 - o, p1 - o) with the sign of end 1, triangle 2 (p0 + o, p1 - o,
+/// p1 + o) with that of end 0, where an end behind the near plane flips the offset.
+pub fn instanced_thick_line_positions(
+    g: &crate::geometry::Geometry,
+    model_view: &Matrix4,
+    projection: &Matrix4,
+    viewport: [f64; 4],
+    width: f64,
+    instance: &[f32; 16],
+) -> Vec<[f32; 4]> {
+    let mut mvp = Matrix4(model_view.0.map(|v| v as f32 as f64));
+    mvp.mult_right(projection);
+    let mvp32 = mvp.0.map(|v| v as f32);
+    let mut inv = mvp;
+    inv.inverse();
+    let unproject_matrix = mat_mul_f32(&inverse_f32(instance), &inv.0.map(|v| v as f32));
+    let vp = viewport.map(|v| v as f32);
+    let half = (width / 2.0) as f32;
+
+    let project = |p: [f32; 4]| {
+        let v = mat_vec_f32(&mvp32, p);
+        let w2 = 2.0 * v[3];
+        let (x, y, z) = (v[0] / w2 + 0.5, v[1] / w2 + 0.5, v[2] / w2 + 0.5);
+        [x * vp[2] + vp[0], y * vp[3] + vp[1], z]
+    };
+    let unproject = |x: f32, y: f32, z: f32| {
+        let v = [
+            (x - vp[0]) / vp[2] * 2.0 - 1.0,
+            (y - vp[1]) / vp[3] * 2.0 - 1.0,
+            z * 2.0 - 1.0,
+            1.0,
+        ];
+        let v = mat_vec_f32(&unproject_matrix, v);
+        [v[0] / v[3], v[1] / v[3], v[2] / v[3], 1.0]
+    };
+
+    let mut out = Vec::with_capacity(g.vertex_count() * 3);
+
+    for k in 0..g.vertex_count() / 2 {
+        let vertex = |i: usize| {
+            let v = &g.vertices[i * 4..i * 4 + 4];
+            mat_vec_f32(instance, [v[0], v[1], v[2], v[3]])
+        };
+        let (p0, p1) = (project(vertex(2 * k)), project(vertex(2 * k + 1)));
+        let neg0: f32 = if p0[2] > 1.0 { -1.0 } else { 1.0 };
+        let neg1: f32 = if p1[2] > 1.0 { -1.0 } else { 1.0 };
+        // normalize (): v * inversesqrt (dot (v, v)).
+        let (dx, dy) = (p1[0] - p0[0], p1[1] - p0[1]);
+        let r = 1.0 / (dx * dx + dy * dy).sqrt();
+        let (ox, oy) = (-(dy * r) * half, dx * r * half);
+
+        out.push(unproject(p0[0] + ox * neg1, p0[1] + oy * neg1, p0[2]));
+        out.push(unproject(p0[0] - ox * neg1, p0[1] - oy * neg1, p0[2]));
+        out.push(unproject(p1[0] - ox * neg1, p1[1] - oy * neg1, p1[2]));
+        out.push(unproject(p0[0] + ox * neg0, p0[1] + oy * neg0, p0[2]));
+        out.push(unproject(p1[0] - ox * neg0, p1[1] - oy * neg0, p1[2]));
+        out.push(unproject(p1[0] + ox * neg0, p1[1] + oy * neg0, p1[2]));
+    }
+
+    out
+}
+
 trait IntoCorners {
     fn into_corners(self, p1: [f64; 3], ox: f64, oy: f64) -> [([f64; 2], [f64; 2]); 2];
 }

@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+Viewpoint { position 0 0 3 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF PS ParticleSystem {
+  geometryType "LINE"
+  maxParticles 4
+  particleLifetime 0.4
+  lifetimeVariation 0
+  particleSize 0.1 0.15
+  emitter PointEmitter { position -0.8 0 0 direction 1 0 0 speed 0.8 variation 0 }
+  appearance Appearance { material Material { emissiveColor 1 1 1 } lineProperties LineProperties { linewidthScaleFactor 24 } }
+}

@@ -143,6 +143,27 @@ pub struct Scan {
     pub pick_collected: Vec<(NodeId, NodeId, Matrix4)>,
     /// DISPLAY: SpatialSound and ListenerPointSource with their model-view matrix (their traverse).
     pub sounds: Vec<EnvInst>,
+    /// DISPLAY: the active LINE ParticleSystems whose LineProperties transform their lines, each time the walk
+    /// reaches one (X3DLineGeometryNode.displayInstancedThick makes their triangles if the system is drawn).
+    pub thick_lines: Vec<ThickLineDisplay>,
+}
+
+/// A LINE ParticleSystem with a line width above ALIASED_LINE_WIDTH_RANGE [1] as the DISPLAY walk reached it.
+#[derive(Clone, Debug)]
+pub struct ThickLineDisplay {
+    pub system: NodeRef,
+    /// renderContext .modelViewMatrix of the system.
+    pub model_view: Matrix4,
+    /// The particle's line (two vertices).
+    pub geometry: Rc<x3d_render::geometry::Geometry>,
+    /// The instance matrix of every particle, in buffer order.
+    pub instances: Vec<Matrix4>,
+    /// linewidthScaleFactor.
+    pub width: f64,
+    /// The viewport rectangle the system is drawn in.
+    pub viewport: [f64; 4],
+    /// The system's bbox (min, max): addDisplayShape's view volume test.
+    pub bbox: (Vector3, Vector3),
 }
 
 const GROUPS: &[&str] = &[
@@ -1323,6 +1344,29 @@ impl<'a> Walker<'a> {
                 };
                 let (style, textures) = pointing_appearance(sg, n, geometry_type);
                 let pointing = sg.bool(n, "pointerEvents", true);
+
+                // DISPLAY: displayInstancedThick of a LINE system with transformed lines.
+                if let (Some(x3d_render::traverse::StyleParams::Line(l)), Some(g)) =
+                    (style, &p.geometry)
+                {
+                    if self.lod.is_some()
+                        && geometry_type == 1
+                        && l.width > x3d_render::gpu::MAX_LINE_WIDTH
+                        && sg.bool(n, "visible", true)
+                    {
+                        let viewport = self.viewport();
+
+                        self.scan.thick_lines.push(ThickLineDisplay {
+                            system: me(),
+                            model_view: *mv,
+                            geometry: g.clone(),
+                            instances: p.matrices.clone(),
+                            width: l.width,
+                            viewport,
+                            bbox: p.bbox,
+                        });
+                    }
+                }
 
                 for m in &p.matrices {
                     let mut model_view = *m;

@@ -1608,6 +1608,26 @@ pub struct Sim {
     pub forces: Vec<[f32; 4]>,
     /// The transform feedback buffer: `max_particles` records.
     pub particles: Vec<Particle>,
+    /// The LINE triangles the last DISPLAY pass made (X3DLineGeometryNode.displayInstancedThick), if it made any.
+    pub thick_lines: Option<std::rc::Rc<ThickLines>>,
+    /// `thick_lines` as it was when the last DISPLAY pass began: what the shadow maps of that frame drew
+    /// (X3DRenderObject.draw renders them before the shapes).
+    pub thick_lines_before_display: Option<std::rc::Rc<ThickLines>>,
+}
+
+/// LineProperties.getTransformLines (a width above ALIASED_LINE_WIDTH_RANGE [1]) of a LINE ParticleSystem: the
+/// triangles X3DLineGeometryNode.displayInstancedThick writes into `shapeNode [_lineTrianglesBuffer0]` (positions) and
+/// `[_lineTrianglesBuffer1]` (instance matrices), and `shapeNode [_numLines0]`. The node keeps them until the next
+/// DISPLAY pass draws the system; displaySimpleInstancedThick (pointing, collision and shadow passes) draws them while
+/// `num_lines` is the current line count, and nothing otherwise. Reset does not touch them (they are GL buffers).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct ThickLines {
+    /// `numLines`: line segments × particles when the triangles were made.
+    pub num_lines: usize,
+    /// Six positions (x y z 1, the particle's own space) per segment and particle, in particle order.
+    pub positions: Vec<[f32; 4]>,
+    /// The instance matrix of each particle (column-major, as transform feedback wrote it).
+    pub instances: Vec<[f32; 16]>,
 }
 
 impl Sim {
