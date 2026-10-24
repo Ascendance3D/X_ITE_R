@@ -1731,17 +1731,27 @@ impl Viewer3d {
         lod.current_frame_rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
         let home = self.current;
 
-        // X3DRenderObject.draw renders the shadow maps before the shapes: they draw the transformed LINE triangles
-        // the systems had when this pass began.
         for (path, node) in &self.thick_line_systems {
             if let Some(sim) =
                 rt_at_mut(&mut self.rt, path).and_then(|rt| rt.particle_sim_mut(*node))
             {
-                sim.thick_lines_before_display = sim.thick_lines.clone();
+                sim.thick_lines_before_layer.clear();
             }
         }
 
         for key in self.drawn.clone() {
+            // X3DRenderObject.draw of this layer renders its shadow maps before its shapes: they draw the transformed
+            // LINE triangles of the last color pass before them (the previous frame's last layer, or a layer drawn
+            // before this one).
+            for (path, node) in &self.thick_line_systems {
+                if let Some(sim) =
+                    rt_at_mut(&mut self.rt, path).and_then(|rt| rt.particle_sim_mut(*node))
+                {
+                    let lines = sim.thick_lines.clone();
+                    sim.thick_lines_before_layer.push((key, lines));
+                }
+            }
+
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
