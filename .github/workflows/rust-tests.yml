@@ -33,8 +33,14 @@ concurrency:
 env:
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
-  # Two jobs keep the release link step inside the runner's memory.
-  CARGO_BUILD_JOBS: "2"
+  # The suite links about 170 release test binaries. lld links them in a fraction of the time and memory of the
+  # default ld.bfd, which is what had limited the build to two jobs; the runner has four cores.
+  CARGO_BUILD_JOBS: "4"
+  CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: clang
+  CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=lld"
+  # x3d-drive and x3d-particles-drive print a "no pointing GPU" notice per run; the GPU-less runner runs them
+  # hundreds of times.
+  X3D_QUIET_NO_GPU: "1"
   GPU_TESTS: >-
     --skip x1_runtime_matches_x_ite
     --skip items_runtime_matches_x_ite
@@ -65,7 +71,7 @@ jobs:
       - name: System libraries
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang
+          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
       - uses: Swatinem/rust-cache@v2
         with:
