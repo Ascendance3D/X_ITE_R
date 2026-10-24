@@ -14,8 +14,9 @@
 //! KNOWN_GAPS lists image passes the renderer cannot match yet (the particle records of those cases are still compared);
 //! the test requires them to keep failing.
 //!
-//! Without a GPU adapter the image part is skipped. Every world needs its baseline: a missing `js.json`, `png/` or
-//! `msaa4/` directory, or a missing image of a dump frame, is a failure, not a skipped comparison. `REA_ONLY=<substring>`
+//! Without a GPU adapter the image comparison is skipped, not the baseline check: every world needs its `js.json`,
+//! `js.f32` and a `png/` and `msaa4/` image of every dump frame, with or without a GPU. A missing file is a failure,
+//! not a skipped comparison. `REA_ONLY=<substring>`
 //! restricts the cases.
 
 mod common;
@@ -196,6 +197,43 @@ fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> b
         return false;
     }
 
+    // Baseline completeness does not depend on the GPU: js.f32 and both image passes with an image of every dump
+    // frame. A pass with missing images is reported here and not compared.
+    let mut incomplete = vec![];
+
+    match json(&base.join("js.json")) {
+        Ok(meta) => {
+            let f32_file = base.join(meta["fileF32"].as_str().unwrap_or("js.f32"));
+
+            if !f32_file.exists() {
+                failures.push(format!(
+                    "{name}: baseline {} is missing",
+                    f32_file.display()
+                ));
+            }
+
+            for pass in ["png", "msaa4"] {
+                let missing: Vec<String> = meta["dumps"]
+                    .as_object()
+                    .into_iter()
+                    .flat_map(|m| m.keys())
+                    .map(|frame| base.join(pass).join(format!("{frame}.png")))
+                    .filter(|p| !p.exists())
+                    .map(|p| p.display().to_string())
+                    .collect();
+
+                if !missing.is_empty() {
+                    failures.push(format!(
+                        "{name}: baseline images missing: {}",
+                        missing.join(", ")
+                    ));
+                    incomplete.push(pass);
+                }
+            }
+        }
+        Err(e) => failures.push(format!("{name}: {e}")),
+    }
+
     let out = std::env::temp_dir().join(format!("rea-b18-{}-{name}", std::process::id()));
     let _ = std::fs::remove_dir_all(&out);
 
@@ -204,11 +242,7 @@ fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> b
             continue;
         }
 
-        if gpu && !base.join(pass).is_dir() {
-            failures.push(format!(
-                "{name}: baseline directory {} is missing",
-                base.join(pass).display()
-            ));
+        if gpu && incomplete.contains(&pass) {
             continue;
         }
 
