@@ -3,14 +3,6 @@ name: AI Code Review with MiniMax
 on:
   pull_request:
     types: [opened, synchronize]
-  # Review an open PR on demand: Actions -> AI Code Review with MiniMax -> Run workflow, or
-  # `gh workflow run code-review.yml -f pr=<number>`.
-  workflow_dispatch:
-    inputs:
-      pr:
-        description: "Pull request number to review"
-        required: true
-        type: number
 
 permissions:
   pull-requests: write
@@ -18,7 +10,6 @@ permissions:
 jobs:
   review:
     name: Review
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Code Review
@@ -28,45 +19,3 @@ jobs:
           MINIMAX_MODEL: ${{ vars.MINIMAX_MODEL }}
           MINIMAX_SYSTEM_PROMPT: ${{ vars.MINIMAX_SYSTEM_PROMPT }}
           MINIMAX_REVIEWER_NAME: ${{ vars.MINIMAX_REVIEWER_NAME }}
-
-  # The action only accepts pull_request events (it reads context.eventName and
-  # context.payload.pull_request.number). A manual run executes the same pinned action with node
-  # against a pull_request event payload built from the PR. GITHUB_* variables cannot be overridden
-  # through `env:`, so they are set on the node command line.
-  review-dispatch:
-    name: Review (manual)
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the action
-        uses: actions/checkout@v4
-        with:
-          repository: tarmojussila/minimax-code-review
-          ref: v0.4.1
-          path: minimax-code-review
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Code Review
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR: ${{ inputs.pr }}
-          INPUT_MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-          # action.yml defaults, which the runner applies only to `uses:` steps.
-          INPUT_MINIMAX_MODEL: ${{ vars.MINIMAX_MODEL || 'MiniMax-M2.5' }}
-          INPUT_MINIMAX_SYSTEM_PROMPT: ${{ vars.MINIMAX_SYSTEM_PROMPT || 'You are an expert code reviewer. Review the provided code changes and give clear, actionable feedback.' }}
-          INPUT_MINIMAX_REVIEWER_NAME: ${{ vars.MINIMAX_REVIEWER_NAME || 'MiniMax Code Review' }}
-          INPUT_EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml"
-          INPUT_MAX_DIFF_CHARS: "0"
-          INPUT_GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          state=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json state --jq .state)
-          if [ "$state" != "OPEN" ]; then
-            echo "::error::PR #$PR is $state, not OPEN"
-            exit 1
-          fi
-          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq '{pull_request: .}' > "$RUNNER_TEMP/event.json"
-          GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$RUNNER_TEMP/event.json" \
-            node minimax-code-review/dist/index.js
