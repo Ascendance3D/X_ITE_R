@@ -129,13 +129,12 @@ struct DrawUniforms {
     // 7 anisotropy (cos, sin, strength); 8 dispersion, retroreflection.
     // 9 multiscatterColor, x3d_ScatterMaterialIdEXT.
     ext: array<vec4<f32>, 10>,
-    // InstancedShape (X3D_INSTANCING, Instancing2.glsl): x 1 for an instance of it; x3d_InstanceMatrix and
-    // the columns of x3d_InstanceNormalMatrix.
+    // X3D_INSTANCING (Instancing2.glsl, InstancedShape and ParticleSystem): x 1 for an instanced draw, y its
+    // instances have x3d_Color, z texCoord ramp corners, w the first of them in `instances`.
     inst_flags: vec4<u32>,
-    inst_matrix: mat4x4<f32>,
-    inst_n0: vec4<f32>,
-    inst_n1: vec4<f32>,
-    inst_n2: vec4<f32>,
+    // x: vertices per instance when every instance has its own vertices (LineProperties lines, one draw of all of
+    // them: the instance is gl_VertexID / x), 0 when the draw is instanced (the instance is gl_InstanceID).
+    inst_params: vec4<u32>,
     // X3DFogObject / FogContainer of the draw (the bound Fog or the innermost LocalFog): color and type,
     // visibilityStart / visibilityRange, the fog matrix columns; x of fog_flags: X3D_FOG_COORDS.
     fog_color_type: vec4<f32>,
@@ -144,10 +143,18 @@ struct DrawUniforms {
     fog_m1: vec4<f32>,
     fog_m2: vec4<f32>,
     fog_flags: vec4<u32>,
-    // A ParticleSystem instance (inst_flags y, z): its x3d_Color (color ramp) and the texCoord ramp's texture
-    // coordinates of the four quad corners (X3D_TEX_COORD_RAMP).
-    inst_color: vec4<f32>,
-    inst_tex: array<vec4<f32>, 4>,
+};
+
+// One instance of an instanced draw: x3d_InstanceMatrix, the columns of x3d_InstanceNormalMatrix, and of a
+// ParticleSystem its x3d_Color (color ramp) and the texCoord ramp's texture coordinates of the four quad corners
+// (X3D_TEX_COORD_RAMP).
+struct Instance {
+    matrix: mat4x4<f32>,
+    n0: vec4<f32>,
+    n1: vec4<f32>,
+    n2: vec4<f32>,
+    color: vec4<f32>,
+    tex: array<vec4<f32>, 4>,
 };
 
 @group(0) @binding(0) var<uniform> frame: FrameUniforms;
@@ -165,6 +172,7 @@ struct DrawUniforms {
 @group(0) @binding(8) var<storage, read> scatter_color: array<vec4<f32>>;
 @group(0) @binding(9) var<storage, read> scatter_depth: array<f32>;
 @group(1) @binding(0) var<uniform> draw: DrawUniforms;
+@group(1) @binding(1) var<storage, read> instances: array<Instance>;
 // The texture slots of a draw: 8 two-dimensional and 4 cube textures, each with its own sampler.
 @group(2) @binding(0) var t2d0: texture_2d<f32>;
 @group(2) @binding(1) var s2d0: sampler;
@@ -245,8 +253,8 @@ struct VInStipple {
 };
 
 @vertex
-fn vs_stipple(in: VInStipple) -> VOut {
-    var out = vertex_common(VIn(in.position, in.normal, in.tex_coord, in.color, in.tex_coord1, in.tex_coord2, in.tex_coord3, in.tangent, in.fog_depth));
+fn vs_stipple(in: VInStipple, @builtin(vertex_index) vertex: u32, @builtin(instance_index) instance: u32) -> VOut {
+    var out = vertex_common(VIn(in.position, in.normal, in.tex_coord, in.color, in.tex_coord1, in.tex_coord2, in.tex_coord3, in.tangent, in.fog_depth), vertex, instance);
     out.point = vec3<f32>(in.tex_coord.xy, 0.0);
     out.stipple = in.stipple.xyz;
     return out;
@@ -267,11 +275,11 @@ fn get_point_size(vertex: vec3<f32>) -> f32 {
 }
 
 @vertex
-fn vs_main(in: VIn) -> VOut {
-    return vertex_common(in);
+fn vs_main(in: VIn, @builtin(vertex_index) vertex: u32, @builtin(instance_index) instance: u32) -> VOut {
+    return vertex_common(in, vertex, instance);
 }
 
-fn vertex_common(in: VIn) -> VOut {
+fn vertex_common(in: VIn, vertex: u32, instance: u32) -> VOut {
     var out: VOut;
     // Vertex2.glsl: tVertex = getInstanceVertex (x3d_Vertex), tNormal = getInstanceNormal (x3d_Normal),
     // tTangent = getInstanceNormal (x3d_Tangent .xyz); localVertex and localNormal are the instanced ones.
@@ -279,9 +287,12 @@ fn vertex_common(in: VIn) -> VOut {
     var local_normal = in.normal;
     var local_tangent = in.tangent.xyz;
 
+    var inst: Instance;
+
     if (draw.inst_flags.x == 1u) {
-        let instance_normal = mat3x3<f32>(draw.inst_n0.xyz, draw.inst_n1.xyz, draw.inst_n2.xyz);
-        local_pos = draw.inst_matrix * local_pos;
+        inst = instances[draw.inst_flags.w + select(instance, vertex / max(draw.inst_params.x, 1u), draw.inst_params.x != 0u)];
+        let instance_normal = mat3x3<f32>(inst.n0.xyz, inst.n1.xyz, inst.n2.xyz);
+        local_pos = inst.matrix * local_pos;
         local_normal = instance_normal * local_normal;
         local_tangent = instance_normal * local_tangent;
     }
@@ -295,12 +306,12 @@ fn vertex_common(in: VIn) -> VOut {
     // texelFetch (x3d_TexCoordRamp, index0 + map [gl_VertexID]), map = (0, 1, 2, 0, 2, 3), the quad corner
     // that the vertex's own texture coordinate (0 0, 1 0, 1 1, 0 1) names.
     if (draw.inst_flags.y == 1u) {
-        out.color = draw.inst_color;
+        out.color = inst.color;
     }
     if (draw.inst_flags.z == 1u) {
         let c = in.tex_coord.xy;
         let corner = select(select(0u, 3u, c.y > 0.5), select(1u, 2u, c.y > 0.5), c.x > 0.5);
-        out.tex_coord = draw.inst_tex[corner];
+        out.tex_coord = inst.tex[corner];
     }
     out.tex_coord1 = in.tex_coord1;
     out.tex_coord2 = in.tex_coord2;
@@ -322,7 +333,7 @@ fn vertex_common(in: VIn) -> VOut {
         // A point sprite corner: gl_PointSize pixels around the point, clamped to
         // ALIASED_POINT_SIZE_RANGE; gl_PointCoord has its origin at the upper left.
         // getInstancePointSize: pointSize * x3d_InstanceMatrix [0] .x.
-        let point_size = get_point_size(t_vertex.xyz) * select(1.0, draw.inst_matrix[0].x, draw.inst_flags.x == 1u);
+        let point_size = get_point_size(t_vertex.xyz) * select(1.0, inst.matrix[0].x, draw.inst_flags.x == 1u);
         let size = clamp(point_size, 1.0, 2047.0);
         let corner = in.tex_coord.xy;
         p = vec4<f32>(p.xy + corner * size / frame.layer.xy * p.w, p.zw);

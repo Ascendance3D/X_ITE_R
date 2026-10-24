@@ -556,12 +556,11 @@ struct DrawU {
     ext_flags: [u32; 4],
     /// The extension uniforms (x3d.wgsl DrawUniforms.ext).
     ext: [[f32; 4]; 10],
-    /// InstancedShape (X3D_INSTANCING): x 1 for an instance; its matrix and normal matrix.
+    /// X3D_INSTANCING: x 1 for an instanced draw, y its instances have colors, z texCoord ramp corners, w the first
+    /// of them in the instance buffer.
     inst_flags: [u32; 4],
-    inst_matrix: [f32; 16],
-    inst_n0: [f32; 4],
-    inst_n1: [f32; 4],
-    inst_n2: [f32; 4],
+    /// x: vertices per instance when every instance has its own vertices (one draw of all of them), else 0.
+    inst_params: [u32; 4],
     /// x3d_Fog of the draw: color rgb + type, visibilityStart / visibilityRange, matrix columns.
     fog_color_type: [f32; 4],
     fog_range: [f32; 4],
@@ -570,9 +569,19 @@ struct DrawU {
     fog_m2: [f32; 4],
     /// x: X3D_FOG_COORDS.
     fog_flags: [u32; 4],
-    /// A ParticleSystem instance (inst_flags y, z): x3d_Color and the texCoord ramp's quad corners.
-    inst_color: [f32; 4],
-    inst_tex: [[f32; 4]; 4],
+}
+
+/// One instance of an instanced draw (x3d.wgsl Instance): its matrix, normal matrix columns, and of a
+/// ParticleSystem its x3d_Color and the texCoord ramp's quad corners.
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+struct InstanceU {
+    matrix: [f32; 16],
+    n0: [f32; 4],
+    n1: [f32; 4],
+    n2: [f32; 4],
+    color: [f32; 4],
+    tex: [[f32; 4]; 4],
 }
 
 /// The material texture kinds: five of the materials, sixteen of the extensions.
@@ -652,15 +661,35 @@ fn vertex_buffer(
     } else {
         bytemuck::cast_slice(verts)
     };
-    let size = contents.len() as u64;
+    let buffer = pooled_buffer(
+        device,
+        free,
+        stats,
+        contents.len() as u64,
+        wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+    );
+
+    queue.write_buffer(&buffer, 0, contents);
+    buffer
+}
+
+/// A buffer of at least `size` bytes with `usage`: the smallest free one that is at most twice that size, or a new one
+/// with up to 1/8 room to spare.
+fn pooled_buffer(
+    device: &wgpu::Device,
+    free: &mut Vec<FreeBuffer>,
+    stats: &mut RenderStats,
+    size: u64,
+    usage: wgpu::BufferUsages,
+) -> wgpu::Buffer {
     let fit = free
         .iter()
         .enumerate()
-        .filter(|(_, f)| (size..=2 * size).contains(&f.buffer.size()))
+        .filter(|(_, f)| f.buffer.usage() == usage && (size..=2 * size).contains(&f.buffer.size()))
         .min_by_key(|(_, f)| f.buffer.size())
         .map(|(i, _)| i);
 
-    let buffer = match fit {
+    match fit {
         Some(i) => free.swap_remove(i).buffer,
         None => {
             let step = (size.next_power_of_two() / 8).max(wgpu::COPY_BUFFER_ALIGNMENT);
@@ -668,15 +697,41 @@ fn vertex_buffer(
             device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some("vertices"),
                 size: size.div_ceil(step) * step,
-                usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+                usage,
                 mapped_at_creation: false,
             })
         }
-    };
-
-    queue.write_buffer(&buffer, 0, contents);
-    buffer
+    }
 }
+
+/// The triangles thick_lines.wgsl made of a [`x3d_runtime::particles::ThickLines`] (system space, 16 byte vertices).
+struct ThickGpu {
+    /// Keeps the address used as the key alive; once the entry holds the only reference, the buffers are free.
+    lines: Rc<x3d_runtime::particles::ThickLines>,
+    input: wgpu::Buffer,
+    triangles: wgpu::Buffer,
+    count: u32,
+}
+
+/// thick_lines.wgsl Input: the parameters, the line's vertices, the instance matrices.
+fn thick_input(lines: &x3d_runtime::particles::ThickLines, stippled: bool) -> Vec<f32> {
+    let (segments, instances) = (lines.vertices.len() / 8, lines.instances.len());
+    let mut input: Vec<f32> = Vec::with_capacity(40 + lines.vertices.len() + 16 * instances);
+    input.extend_from_slice(&lines.mvp);
+    input.extend_from_slice(&lines.inverse);
+    input.extend_from_slice(&lines.viewport);
+    input.push(lines.half_width);
+    input.extend([segments as u32, instances as u32, stippled as u32].map(f32::from_bits));
+    input.extend_from_slice(&lines.vertices);
+    input.extend(lines.instances.iter().flatten());
+    input
+}
+
+/// The usage of thick_lines.wgsl's input and output buffers (COPY_SRC: read back by the tests).
+const THICK_USAGE: wgpu::BufferUsages = wgpu::BufferUsages::STORAGE
+    .union(wgpu::BufferUsages::VERTEX)
+    .union(wgpu::BufferUsages::COPY_DST)
+    .union(wgpu::BufferUsages::COPY_SRC);
 
 struct TexGpu {
     _image: Rc<TextureImage>,
@@ -907,6 +962,8 @@ enum Source {
     Splats(usize),
     /// A shape drawn with a ComposedShader's program (crate::shader_gpu::ShaderGpu): the input, and whether it is the back pass.
     Custom(usize, bool),
+    /// Vertices a compute pass of the frame made (`Renderer::frame_buffers`).
+    Buffer(usize),
 }
 
 struct Call {
@@ -919,6 +976,8 @@ struct Call {
     /// Byte range inside the scratch buffer (Source::Scratch only).
     range: (u64, u64),
     count: u32,
+    /// gl.drawArraysInstanced: the instances of the draw.
+    instances: u32,
     draw_index: usize,
     textures: SlotKey,
     /// A Viewport node's rectangle (DrawItem.viewport), `None` for the layer's.
@@ -1042,6 +1101,9 @@ pub struct Renderer {
     filter_layout: wgpu::BindGroupLayout,
     filter_buffer: wgpu::Buffer,
     draw_buffer: wgpu::Buffer,
+    /// The instances of the frame's instanced draws (draw group binding 1), grown when a frame needs more.
+    instance_capacity: usize,
+    instance_buffer: wgpu::Buffer,
     draw_capacity: usize,
     draw_group: wgpu::BindGroup,
     scratch: wgpu::Buffer,
@@ -1052,6 +1114,16 @@ pub struct Renderer {
     /// Point sprite quads per geometry (6 vertices per point).
     sprites: HashMap<*const crate::geometry::Geometry, GeoGpu>,
     free_vertices: Vec<FreeBuffer>,
+    /// thick_lines.wgsl and the shadow and depth map pipelines that draw its triangles.
+    thick_layout: wgpu::BindGroupLayout,
+    thick_compute: wgpu::ComputePipeline,
+    thick_pipeline: wgpu::RenderPipeline,
+    thick: HashMap<*const x3d_runtime::particles::ThickLines, ThickGpu>,
+    /// thick_lines.wgsl `display`.
+    thick_display_layout: wgpu::BindGroupLayout,
+    thick_display: wgpu::ComputePipeline,
+    /// The buffers of this frame's compute passes ([`Source::Buffer`] and their inputs), free at the next frame.
+    frame_buffers: Vec<wgpu::Buffer>,
     /// Uploaded textures (views and samplers), kept while used.
     textures: HashMap<*const TextureImage, TexGpu>,
     /// Bind groups of the slot combinations, kept while used.
@@ -1457,7 +1529,20 @@ impl Renderer {
         });
         let draw_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("draw"),
-            entries: &[uniform_entry(true, std::mem::size_of::<DrawU>() as u64)],
+            entries: &[
+                uniform_entry(true, std::mem::size_of::<DrawU>() as u64),
+                // 1: the instances of the frame's instanced draws (x3d.wgsl Instance).
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: true },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
+            ],
         });
         let slot_entries = |volume: bool| {
             let mut slot_entries = vec![];
@@ -1752,6 +1837,89 @@ impl Renderer {
                 cache: None,
             })
         });
+        // The LINE particle triangles of thick_lines.wgsl, drawn like the shadow shapes (16 byte vertices).
+        let thick_vertex = [Some(wgpu::VertexBufferLayout {
+            array_stride: 16,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &wgpu::vertex_attr_array![0 => Float32x3],
+        })];
+        let thick_pipeline = {
+            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: Some("thick line shadow"),
+                layout: Some(&shadow_pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &shadow_shader,
+                    entry_point: Some("vs_shadow"),
+                    compilation_options: Default::default(),
+                    buffers: &thick_vertex,
+                },
+                primitive: wgpu::PrimitiveState {
+                    topology: wgpu::PrimitiveTopology::TriangleList,
+                    cull_mode: None,
+                    ..Default::default()
+                },
+                depth_stencil: Some(wgpu::DepthStencilState {
+                    format: SHADOW_FORMAT,
+                    depth_write_enabled: Some(true),
+                    depth_compare: Some(wgpu::CompareFunction::LessEqual),
+                    stencil: Default::default(),
+                    bias: Default::default(),
+                }),
+                multisample: Default::default(),
+                fragment: Some(wgpu::FragmentState {
+                    module: &shadow_shader,
+                    entry_point: Some("fs_shadow"),
+                    compilation_options: Default::default(),
+                    targets: &[],
+                }),
+                multiview_mask: None,
+                cache: None,
+            })
+        };
+        let storage_entry = |binding: u32, read_only: bool| wgpu::BindGroupLayoutEntry {
+            binding,
+            visibility: wgpu::ShaderStages::COMPUTE,
+            ty: wgpu::BindingType::Buffer {
+                ty: wgpu::BufferBindingType::Storage { read_only },
+                has_dynamic_offset: false,
+                min_binding_size: None,
+            },
+            count: None,
+        };
+        let thick_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("thick lines"),
+            entries: &[storage_entry(0, true), storage_entry(1, false)],
+        });
+        let thick_display_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                label: Some("thick line display"),
+                entries: &[
+                    storage_entry(0, true),
+                    storage_entry(2, false),
+                    storage_entry(3, true),
+                ],
+            });
+        let thick_module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("thick_lines.wgsl"),
+            source: wgpu::ShaderSource::Wgsl(include_str!("thick_lines.wgsl").into()),
+        });
+        let [thick_compute, thick_display] =
+            [("main", &thick_layout), ("display", &thick_display_layout)].map(|(entry, layout)| {
+                device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+                    label: Some("thick lines"),
+                    layout: Some(
+                        &device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                            label: Some("thick lines"),
+                            bind_group_layouts: &[Some(layout)],
+                            ..Default::default()
+                        }),
+                    ),
+                    module: &thick_module,
+                    entry_point: Some(entry),
+                    compilation_options: Default::default(),
+                    cache: None,
+                })
+            });
         let (shadow_buffer, shadow_group) = Self::make_shadow_buffer(&device, &shadow_layout, 64);
 
         // The environment filter (filter.wgsl): RGBA8 targets, no depth, no blending.
@@ -1806,8 +1974,10 @@ impl Renderer {
         });
 
         let draw_capacity = 64;
+        let instance_capacity = 64;
+        let instance_buffer = Self::make_instance_buffer(&device, instance_capacity);
         let (draw_buffer, draw_group) =
-            Self::make_draw_buffer(&device, &draw_layout, draw_capacity);
+            Self::make_draw_buffer(&device, &draw_layout, draw_capacity, &instance_buffer);
         let scratch_capacity = 64 * 1024;
         let scratch = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("scratch"),
@@ -1874,6 +2044,8 @@ impl Renderer {
             filter_layout,
             filter_buffer,
             draw_buffer,
+            instance_capacity,
+            instance_buffer,
             draw_capacity,
             draw_group,
             scratch,
@@ -1882,6 +2054,13 @@ impl Renderer {
             geometries: HashMap::new(),
             sprites: HashMap::new(),
             free_vertices: vec![],
+            thick_layout,
+            thick_compute,
+            thick_pipeline,
+            thick: HashMap::new(),
+            thick_display_layout,
+            thick_display,
+            frame_buffers: vec![],
             textures: HashMap::new(),
             depth: None,
             face_depth: None,
@@ -1953,10 +2132,20 @@ impl Renderer {
         timer.last_ms
     }
 
+    fn make_instance_buffer(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("instances"),
+            size: (capacity * std::mem::size_of::<InstanceU>()) as u64,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        })
+    }
+
     fn make_draw_buffer(
         device: &wgpu::Device,
         layout: &wgpu::BindGroupLayout,
         capacity: usize,
+        instances: &wgpu::Buffer,
     ) -> (wgpu::Buffer, wgpu::BindGroup) {
         let buffer = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("draws"),
@@ -1967,14 +2156,20 @@ impl Renderer {
         let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("draw"),
             layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                    buffer: &buffer,
-                    offset: 0,
-                    size: wgpu::BufferSize::new(std::mem::size_of::<DrawU>() as u64),
-                }),
-            }],
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                        buffer: &buffer,
+                        offset: 0,
+                        size: wgpu::BufferSize::new(std::mem::size_of::<DrawU>() as u64),
+                    }),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: instances.as_entire_binding(),
+                },
+            ],
         });
         (buffer, group)
     }
@@ -2087,6 +2282,160 @@ impl Renderer {
     /// shadow-casting shapes of each view (X3DRenderObject.depth, no culling) in its viewport.
     /// Submitted on its own; returns the buffer the frame reads and each map's (first value, row
     /// stride) in it.
+    /// thick_lines.wgsl: the triangles of every [`crate::traverse::DepthItem::thick_lines`] of `items` this frame has not
+    /// made yet, submitted before the passes that draw them.
+    fn make_thick_lines<'a>(
+        &mut self,
+        items: impl Iterator<Item = &'a crate::traverse::DepthItem>,
+    ) {
+        let mut encoder: Option<wgpu::CommandEncoder> = None;
+
+        for lines in items.filter_map(|i| i.thick_lines.as_ref()) {
+            let key = Rc::as_ptr(lines);
+
+            if self.thick.contains_key(&key) {
+                continue;
+            }
+
+            let (segments, instances) = (lines.vertices.len() / 8, lines.instances.len());
+            let count = segments * instances * 6;
+            let input = thick_input(lines, false);
+            let bytes: &[u8] = bytemuck::cast_slice(&input);
+            let input_buffer = pooled_buffer(
+                &self.device,
+                &mut self.free_vertices,
+                &mut self.stats,
+                bytes.len() as u64,
+                THICK_USAGE,
+            );
+            let triangles = pooled_buffer(
+                &self.device,
+                &mut self.free_vertices,
+                &mut self.stats,
+                (count as u64 * 16).max(16),
+                THICK_USAGE,
+            );
+            self.queue.write_buffer(&input_buffer, 0, bytes);
+
+            let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
+                label: Some("thick lines"),
+                layout: &self.thick_layout,
+                entries: &[
+                    wgpu::BindGroupEntry {
+                        binding: 0,
+                        resource: input_buffer.as_entire_binding(),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 1,
+                        resource: triangles.as_entire_binding(),
+                    },
+                ],
+            });
+            let encoder = encoder.get_or_insert_with(|| {
+                self.device
+                    .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                        label: Some("thick lines"),
+                    })
+            });
+            let mut pass = encoder.begin_compute_pass(&Default::default());
+            let groups = (segments * instances).div_ceil(64) as u32;
+            pass.set_pipeline(&self.thick_compute);
+            pass.set_bind_group(0, &group, &[]);
+            pass.dispatch_workgroups(groups.min(65535), groups.div_ceil(65535), 1);
+            drop(pass);
+
+            self.thick.insert(
+                key,
+                ThickGpu {
+                    lines: lines.clone(),
+                    input: input_buffer,
+                    triangles,
+                    count: count as u32,
+                },
+            );
+        }
+
+        if let Some(encoder) = encoder {
+            self.queue.submit([encoder.finish()]);
+        }
+    }
+
+    /// displayInstancedThick on the GPU (thick_lines.wgsl `display`, recorded into `encoder`): the vertices of every
+    /// instance of `g`, one after the other, in a buffer of [`Self::frame_buffers`]. Returns its index and the vertices
+    /// per instance.
+    #[allow(clippy::too_many_arguments)]
+    fn thick_display_vertices(
+        &mut self,
+        encoder: &mut wgpu::CommandEncoder,
+        g: &crate::geometry::Geometry,
+        model_view: &Matrix4,
+        projection: &Matrix4,
+        viewport: [f64; 4],
+        l: &LineParams,
+        matrices: &[Matrix4],
+    ) -> (usize, u32) {
+        let lines = thick_lines(
+            g,
+            model_view,
+            projection,
+            viewport,
+            l.width,
+            matrices.iter().map(f32x16).collect(),
+        );
+        let segments = g.vertex_count() / 2;
+        let input = thick_input(&lines, l.linetype != 1);
+        let mut line = geometry_vertices(g);
+        line.truncate(segments * 2 * FLOATS_PER_VERTEX);
+        line.resize(line.len().max(4), 0.0);
+
+        let mut buffer = |size: u64| {
+            pooled_buffer(
+                &self.device,
+                &mut self.free_vertices,
+                &mut self.stats,
+                size.max(16),
+                THICK_USAGE,
+            )
+        };
+        let input_buffer = buffer(input.len() as u64 * 4);
+        let line_buffer = buffer(line.len() as u64 * 4);
+        let vertices =
+            buffer((segments * 6 * matrices.len() * STIPPLE_FLOATS_PER_VERTEX) as u64 * 4);
+        self.queue
+            .write_buffer(&input_buffer, 0, bytemuck::cast_slice(&input));
+        self.queue
+            .write_buffer(&line_buffer, 0, bytemuck::cast_slice(&line));
+
+        let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
+            label: Some("thick line display"),
+            layout: &self.thick_display_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: input_buffer.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 2,
+                    resource: vertices.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 3,
+                    resource: line_buffer.as_entire_binding(),
+                },
+            ],
+        });
+        let mut pass = encoder.begin_compute_pass(&Default::default());
+        let groups = (segments * matrices.len()).div_ceil(64) as u32;
+        pass.set_pipeline(&self.thick_display);
+        pass.set_bind_group(0, &group, &[]);
+        pass.dispatch_workgroups(groups.min(65535), groups.div_ceil(65535), 1);
+        drop(pass);
+
+        self.frame_buffers.extend([input_buffer, line_buffer]);
+        self.frame_buffers.push(vertices);
+        (self.frame_buffers.len() - 1, (segments * 6) as u32)
+    }
+
     fn render_shadow_maps(&mut self, frame: &Frame) -> (wgpu::Buffer, Vec<(u32, u32)>) {
         let frame_no = self.frame_no;
         // Each map's rows in the buffer (copy_texture_to_buffer: rows 256 byte aligned).
@@ -2180,10 +2529,18 @@ impl Renderer {
         }
         self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
 
+        self.make_thick_lines(
+            frame
+                .shadow_maps
+                .iter()
+                .flat_map(|map| &map.views)
+                .flat_map(|view| &view.items),
+        );
+
         // Vertex buffers (the shared geometry cache).
         for map in &frame.shadow_maps {
             for view in &map.views {
-                for item in &view.items {
+                for item in view.items.iter().filter(|i| i.thick_lines.is_none()) {
                     let g = &item.geometry;
                     let gp = Rc::as_ptr(g);
                     match self.geometries.get_mut(&gp) {
@@ -2256,6 +2613,19 @@ impl Renderer {
                 pass.set_scissor_rect(x, top, w, h);
 
                 for item in &view.items {
+                    if let Some(lines) = &item.thick_lines {
+                        let e = &self.thick[&Rc::as_ptr(lines)];
+                        pass.set_pipeline(&self.thick_pipeline);
+                        pass.set_bind_group(
+                            0,
+                            &self.shadow_group,
+                            &[(k as u64 * SHADOW_STRIDE) as u32],
+                        );
+                        pass.set_vertex_buffer(0, e.triangles.slice(..));
+                        pass.draw(0..e.count, 0..1);
+                        k += 1;
+                        continue;
+                    }
                     let g = &item.geometry;
                     let e = &self.geometries[&Rc::as_ptr(g)];
                     let pipeline = match g.geometry_type {
@@ -3340,6 +3710,24 @@ impl Renderer {
             });
             false
         });
+        for buffer in self.frame_buffers.drain(..) {
+            free.push(FreeBuffer {
+                buffer,
+                freed: frame_no,
+            });
+        }
+        self.thick.retain(|_, e| {
+            if Rc::strong_count(&e.lines) > 1 {
+                return true;
+            }
+            for buffer in [&e.input, &e.triangles] {
+                free.push(FreeBuffer {
+                    buffer: buffer.clone(),
+                    freed: frame_no,
+                });
+            }
+            false
+        });
 
         // X3DRenderObject.draw: the rendered textures first, each pass submitted on its own so
         // its uniform writes land before the next one.
@@ -4101,6 +4489,7 @@ impl Renderer {
         let mut scratch_data: Vec<f32> = std::mem::take(&mut self.scratch_data);
         scratch_data.clear();
         let mut draws: Vec<DrawU> = Vec::with_capacity(frame.items.len() + 8);
+        let mut instance_data: Vec<InstanceU> = vec![];
         let mut calls = std::mem::take(&mut self.calls);
         calls.clear();
         self.debug_draws.clear();
@@ -4151,6 +4540,7 @@ impl Renderer {
                     source: Source::Scratch,
                     range: (start, end),
                     count: count as u32,
+                    instances: 1,
                     draw_index: draws.len() - 1,
                     textures: ([None; SLOTS], false),
                     viewport: None,
@@ -4205,6 +4595,7 @@ impl Renderer {
                     source: Source::Scratch,
                     range: (start, end),
                     count: 6,
+                    instances: 1,
                     draw_index: draws.len() - 1,
                     textures: {
                         let mut k = [None; SLOTS];
@@ -4277,6 +4668,7 @@ impl Renderer {
                     source: Source::Splats(splat_inputs.len() - 1),
                     range: (0, 0),
                     count: 0,
+                    instances: 1,
                     draw_index: 0,
                     textures: ([None; SLOTS], false),
                     viewport: item.viewport,
@@ -4311,6 +4703,7 @@ impl Renderer {
                     source: Source::Volume(volume_inputs.len() - 1),
                     range: (0, 0),
                     count: 0,
+                    instances: 1,
                     draw_index: 0,
                     textures: ([None; SLOTS], false),
                     viewport: item.viewport,
@@ -4697,38 +5090,53 @@ impl Renderer {
             // gl.drawArraysInstanced does.
             let mut back_draws: Vec<usize> = vec![];
             let mut front_draws: Vec<usize> = vec![];
+            // X3D_INSTANCING: one draw of every instance (gl.drawArraysInstanced), their matrices, normal matrices,
+            // colors and ramp corners in the instance buffer. A ComposedShader still draws once per instance.
+            let num_instances = item.instances.as_ref().map_or(1, |i| i.matrices.len());
+            let mut call_instances = if item.custom.is_some() {
+                1
+            } else {
+                num_instances as u32
+            };
+            let mut di = d;
 
-            for inst in 0..item.instances.as_ref().map_or(1, |i| i.matrices.len()) {
-                let mut di = d;
+            if let Some(i) = &item.instances {
+                di.inst_flags = [
+                    1,
+                    !i.colors.is_empty() as u32,
+                    !i.tex_coords.is_empty() as u32,
+                    instance_data.len() as u32,
+                ];
 
-                if let Some(i) = &item.instances {
-                    let n = i.normals[inst];
-                    di.inst_flags = [1, 0, 0, 0];
-                    di.inst_matrix = f32x16(&i.matrices[inst]);
-                    di.inst_n0 = [n[0], n[1], n[2], 0.0];
-                    di.inst_n1 = [n[3], n[4], n[5], 0.0];
-                    di.inst_n2 = [n[6], n[7], n[8], 0.0];
-
-                    if let Some(c) = i.colors.get(inst) {
-                        di.inst_flags[1] = 1;
-                        di.inst_color = *c;
-                    }
-
-                    if let Some(t) = i.tex_coords.get(inst) {
-                        di.inst_flags[2] = 1;
-                        di.inst_tex = *t;
-                    }
+                for (k, m) in i.matrices.iter().enumerate() {
+                    let n = i.normals[k];
+                    instance_data.push(InstanceU {
+                        matrix: f32x16(m),
+                        n0: [n[0], n[1], n[2], 0.0],
+                        n1: [n[3], n[4], n[5], 0.0],
+                        n2: [n[6], n[7], n[8], 0.0],
+                        color: i.colors.get(k).copied().unwrap_or_default(),
+                        tex: i.tex_coords.get(k).copied().unwrap_or_default(),
+                    });
                 }
-
-                if let Some(b) = item.back_material.as_ref().filter(|_| two_sided) {
-                    let mut bd = di;
-                    set_material(&mut bd, b);
-                    back_draws.push(push_draw(bd, &mut draws, &mut self.debug_draws));
-                }
-
-                set_material(&mut di, &item.material);
-                front_draws.push(push_draw(di, &mut draws, &mut self.debug_draws));
             }
+
+            let repeat = if item.custom.is_some() {
+                num_instances
+            } else {
+                1
+            };
+
+            if let Some(b) = item.back_material.as_ref().filter(|_| two_sided) {
+                let mut bd = di;
+                set_material(&mut bd, b);
+                let index = push_draw(bd, &mut draws, &mut self.debug_draws);
+                back_draws.extend(std::iter::repeat_n(index, repeat));
+            }
+
+            set_material(&mut di, &item.material);
+            let index = push_draw(di, &mut draws, &mut self.debug_draws);
+            front_draws.extend(std::iter::repeat_n(index, repeat));
 
             let back_index = back_draws.first().copied();
 
@@ -4836,8 +5244,35 @@ impl Renderer {
                             triangles,
                         )
                     };
-                    // X3DLineGeometryNode.displayInstanced: every instance has its own segments in window space.
+                    // X3DLineGeometryNode.displayInstanced: every instance has its own segments in window space, one
+                    // after the other in the scratch buffer: one draw of all of them, the instance of a vertex is
+                    // gl_VertexID / the vertices of one (inst_params.x).
+                    let mut computed = None;
                     let triangles = match &item.instances {
+                        // displayInstancedThick of the transformed lines: their vertices from a compute pass.
+                        Some(i)
+                            if !i.matrices.is_empty()
+                                && l.width > MAX_LINE_WIDTH
+                                && !points
+                                && item.custom.is_none() =>
+                        {
+                            let (buffer, per) = self.thick_display_vertices(
+                                encoder,
+                                g,
+                                &item.model_view,
+                                &frame.projection,
+                                r,
+                                &l,
+                                &i.matrices,
+                            );
+                            for &d in front_draws.iter().chain(&back_draws) {
+                                draws[d].inst_params[0] = per;
+                            }
+                            computed = Some(Source::Buffer(buffer));
+                            count = per * i.matrices.len() as u32;
+                            call_instances = 1;
+                            true
+                        }
                         Some(i) if !i.matrices.is_empty() => {
                             let mut triangles = false;
                             for m in &i.matrices {
@@ -4846,6 +5281,16 @@ impl Renderer {
                                 (count, triangles) = (c, t);
                             }
                             range = instance_ranges[0];
+
+                            if item.custom.is_none() {
+                                for &d in front_draws.iter().chain(&back_draws) {
+                                    draws[d].inst_params[0] = count;
+                                }
+                                range = (range.0, instance_ranges.last().unwrap().1);
+                                count *= i.matrices.len() as u32;
+                                call_instances = 1;
+                                instance_ranges.clear();
+                            }
                             triangles
                         }
                         _ => {
@@ -4854,7 +5299,7 @@ impl Renderer {
                             t
                         }
                     };
-                    source = Source::Scratch;
+                    source = computed.unwrap_or(Source::Scratch);
                     base.stipple = true;
                     base.topology = if points {
                         Topology::Points
@@ -4888,6 +5333,7 @@ impl Renderer {
                 source,
                 range: instance_ranges.get(instance).copied().unwrap_or(range),
                 count,
+                instances: call_instances,
                 draw_index,
                 textures: slot_key,
                 viewport: item.viewport,
@@ -5139,13 +5585,29 @@ impl Renderer {
             }
         }
 
-        // Draw uniforms: one buffer, grown when a frame needs more.
-        if draws.len() > self.draw_capacity {
-            self.draw_capacity = draws.len().next_power_of_two();
-            let (b, g) =
-                Self::make_draw_buffer(&self.device, &self.draw_layout, self.draw_capacity);
+        // Draw uniforms and instances: one buffer each, grown when a frame needs more.
+        let more_instances = instance_data.len() > self.instance_capacity;
+        if more_instances {
+            self.instance_capacity = instance_data.len().next_power_of_two();
+            self.instance_buffer = Self::make_instance_buffer(&self.device, self.instance_capacity);
+        }
+        if draws.len() > self.draw_capacity || more_instances {
+            self.draw_capacity = self.draw_capacity.max(draws.len().next_power_of_two());
+            let (b, g) = Self::make_draw_buffer(
+                &self.device,
+                &self.draw_layout,
+                self.draw_capacity,
+                &self.instance_buffer,
+            );
             self.draw_buffer = b;
             self.draw_group = g;
+        }
+        if !instance_data.is_empty() {
+            self.queue.write_buffer(
+                &self.instance_buffer,
+                0,
+                bytemuck::cast_slice(&instance_data),
+            );
         }
 
         self.draw_bytes.clear();
@@ -5457,12 +5919,13 @@ impl Renderer {
                     Source::Sprites(p) => {
                         pass.set_vertex_buffer(0, self.sprites[&p].buffer.slice(..))
                     }
+                    Source::Buffer(i) => pass.set_vertex_buffer(0, self.frame_buffers[i].slice(..)),
                     Source::Volume(_) | Source::Splats(_) | Source::Custom(..) => {
                         unreachable!("volumes, splats and custom shaders are drawn above")
                     }
                 }
 
-                pass.draw(0..c.count, 0..1);
+                pass.draw(0..c.count, 0..c.instances);
             }
         }
 
@@ -5903,17 +6366,104 @@ pub fn instanced_thick_line_positions(
     width: f64,
     instance: &[f32; 16],
 ) -> Vec<[f32; 4]> {
+    let lines = thick_lines(g, model_view, projection, viewport, width, vec![]);
+    let mut out = Vec::with_capacity(g.vertex_count() * 3);
+
+    thick_line_instance(&ThickView::of(&lines), instance, &mut out);
+    out
+}
+
+/// The inputs of [`instanced_thick_line_positions`] for every instance of a DISPLAY pass, without the triangles
+/// ([`thick_line_positions`] or thick_lines.wgsl make them).
+pub fn thick_lines(
+    g: &crate::geometry::Geometry,
+    model_view: &Matrix4,
+    projection: &Matrix4,
+    viewport: [f64; 4],
+    width: f64,
+    instances: Vec<[f32; 16]>,
+) -> x3d_runtime::particles::ThickLines {
     let mut mvp = Matrix4(model_view.0.map(|v| v as f32 as f64));
     mvp.mult_right(projection);
-    let mvp32 = mvp.0.map(|v| v as f32);
     let mut inv = mvp;
     inv.inverse();
-    let unproject_matrix = mat_mul_f32(&inverse_f32(instance), &inv.0.map(|v| v as f32));
-    let vp = viewport.map(|v| v as f32);
-    let half = (width / 2.0) as f32;
+
+    x3d_runtime::particles::ThickLines {
+        num_lines: g.vertex_count() / 2 * instances.len(),
+        vertices: g.vertices[..g.vertex_count() / 2 * 8].to_vec(),
+        mvp: mvp.0.map(|v| v as f32),
+        inverse: inv.0.map(|v| v as f32),
+        viewport: viewport.map(|v| v as f32),
+        half_width: (width / 2.0) as f32,
+        instances,
+        positions: Default::default(),
+    }
+}
+
+/// The triangles of `lines` (six positions per segment and instance, in instance order), made on the CPU on first
+/// use, on half the cores for many instances.
+pub fn thick_line_positions(lines: &x3d_runtime::particles::ThickLines) -> &[[f32; 4]] {
+    lines.positions.get_or_init(|| {
+        let view = &ThickView::of(lines);
+        let per = lines.vertices.len() / 8 * 6;
+        let threads = std::thread::available_parallelism()
+            .map_or(1, |n| n.get() / 2)
+            .clamp(1, lines.instances.len().div_ceil(256).max(1));
+        let chunk = lines.instances.len().div_ceil(threads).max(1);
+        let mut out = Vec::with_capacity(per * lines.instances.len());
+
+        std::thread::scope(|scope| {
+            let parts: Vec<_> = lines
+                .instances
+                .chunks(chunk)
+                .map(|instances| {
+                    scope.spawn(move || {
+                        let mut out = Vec::with_capacity(per * instances.len());
+
+                        for m in instances {
+                            thick_line_instance(view, m, &mut out);
+                        }
+                        out
+                    })
+                })
+                .collect();
+
+            for part in parts {
+                out.extend(part.join().unwrap());
+            }
+        });
+        out
+    })
+}
+
+/// The inputs of the triangles of a [`x3d_runtime::particles::ThickLines`] (which is not `Sync`).
+struct ThickView<'a> {
+    vertices: &'a [f32],
+    mvp: [f32; 16],
+    inverse: [f32; 16],
+    viewport: [f32; 4],
+    half_width: f32,
+}
+
+impl ThickView<'_> {
+    fn of(lines: &x3d_runtime::particles::ThickLines) -> ThickView<'_> {
+        ThickView {
+            vertices: &lines.vertices,
+            mvp: lines.mvp,
+            inverse: lines.inverse,
+            viewport: lines.viewport,
+            half_width: lines.half_width,
+        }
+    }
+}
+
+/// [`instanced_thick_line_positions`] of one instance (thick_lines.wgsl `main` does the same on the GPU).
+fn thick_line_instance(lines: &ThickView, instance: &[f32; 16], out: &mut Vec<[f32; 4]>) {
+    let unproject_matrix = mat_mul_f32(&inverse_f32(instance), &lines.inverse);
+    let (vp, half, mvp32) = (lines.viewport, lines.half_width, &lines.mvp);
 
     let project = |p: [f32; 4]| {
-        let v = mat_vec_f32(&mvp32, p);
+        let v = mat_vec_f32(mvp32, p);
         let w2 = 2.0 * v[3];
         let (x, y, z) = (v[0] / w2 + 0.5, v[1] / w2 + 0.5, v[2] / w2 + 0.5);
         [x * vp[2] + vp[0], y * vp[3] + vp[1], z]
@@ -5929,11 +6479,9 @@ pub fn instanced_thick_line_positions(
         [v[0] / v[3], v[1] / v[3], v[2] / v[3], 1.0]
     };
 
-    let mut out = Vec::with_capacity(g.vertex_count() * 3);
-
-    for k in 0..g.vertex_count() / 2 {
+    for k in 0..lines.vertices.len() / 8 {
         let vertex = |i: usize| {
-            let v = &g.vertices[i * 4..i * 4 + 4];
+            let v = &lines.vertices[i * 4..i * 4 + 4];
             mat_vec_f32(instance, [v[0], v[1], v[2], v[3]])
         };
         let (p0, p1) = (project(vertex(2 * k)), project(vertex(2 * k + 1)));
@@ -5951,8 +6499,6 @@ pub fn instanced_thick_line_positions(
         out.push(unproject(p1[0] - ox * neg0, p1[1] - oy * neg0, p1[2]));
         out.push(unproject(p1[0] + ox * neg0, p1[1] + oy * neg0, p1[2]));
     }
-
-    out
 }
 
 trait IntoCorners {
@@ -6302,6 +6848,82 @@ mod line_instance_tests {
                         (a[c] - b[c]).abs() < 1e-2,
                         "width {width} vertex {k} float {c}"
                     );
+                }
+            }
+        }
+    }
+
+    /// thick_lines.wgsl `display` makes the vertices line_style_vertices makes on the CPU for every instance:
+    /// positions, attributes, end points and length so far.
+    #[test]
+    fn gpu_thick_display_vertices_match_the_cpu() {
+        let Ok(mut gpu) = Gpu::new() else {
+            return eprintln!("skipped: no GPU");
+        };
+        let (mv, projection) = (model_view(), projection());
+        let mut g = segments(&LINE);
+        g.normals = (0..12).map(|i| i as f32 * 0.1).collect();
+        g.colors = (0..16).map(|i| i as f32 / 16.0).collect();
+        let mut second = instance();
+        second.0[12] = -0.4;
+        second.0[5] = 1.2;
+        let matrices = [instance(), Matrix4::IDENTITY, second];
+
+        for linetype in [1, 3] {
+            let l = LineParams {
+                linetype,
+                width: 24.0,
+            };
+            let mut encoder = gpu.device.create_command_encoder(&Default::default());
+            let (index, per) = gpu.renderer.thick_display_vertices(
+                &mut encoder,
+                &g,
+                &mv,
+                &projection,
+                VIEWPORT,
+                &l,
+                &matrices,
+            );
+            let size = (per as usize * matrices.len() * STIPPLE_FLOATS_PER_VERTEX * 4) as u64;
+            let read = gpu.device.create_buffer(&wgpu::BufferDescriptor {
+                label: None,
+                size,
+                usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            });
+            encoder.copy_buffer_to_buffer(&gpu.renderer.frame_buffers[index], 0, &read, 0, size);
+            gpu.queue.submit([encoder.finish()]);
+            read.slice(..).map_async(wgpu::MapMode::Read, |_| {});
+            let _ = gpu.device.poll(wgpu::PollType::wait_indefinitely());
+            let data = read.slice(..).get_mapped_range().expect("map");
+            let out: &[f32] = bytemuck::cast_slice(&data);
+
+            assert_eq!(per, 12);
+
+            for (i, m) in matrices.iter().enumerate() {
+                let (cpu, triangles) =
+                    line_style_vertices(&g, &mv, &projection, VIEWPORT, &l, 1, Some(m));
+                let n = per as usize * STIPPLE_FLOATS_PER_VERTEX;
+                let gpu_out = &out[i * n..(i + 1) * n];
+
+                assert!(triangles);
+                assert_eq!(cpu.len(), n);
+
+                for (k, (a, b)) in vertices(gpu_out)
+                    .into_iter()
+                    .zip(vertices(&cpu))
+                    .enumerate()
+                {
+                    for c in 0..STIPPLE_FLOATS_PER_VERTEX {
+                        // Positions and window coordinates in f32 on the GPU, f64 on the CPU.
+                        let tol = if c < 3 { 1e-4 } else { 2e-3 };
+                        assert!(
+                            (a[c] - b[c]).abs() <= tol * (1.0 + b[c].abs()),
+                            "linetype {linetype} instance {i} vertex {k} float {c}: {} vs {}",
+                            a[c],
+                            b[c]
+                        );
+                    }
                 }
             }
         }

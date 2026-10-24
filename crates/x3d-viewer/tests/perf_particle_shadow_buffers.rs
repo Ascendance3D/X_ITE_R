@@ -2,9 +2,10 @@
 //!
 //! Not a regression test: `cargo test --release -p x3d-viewer --test perf_particle_shadow_buffers -- --ignored
 //! --nocapture` prints, for 100, 1,000 and 10,000 LINE particles (gl.lineWidth 24) in one and two layers lit by a
-//! shadow-casting DirectionalLight, per measured frame: the geometry uploads, the vertex buffers created for them, the wgpu
-//! allocator's allocated bytes and the frame time (step, build_frame, render with readback), with the least and most
-//! particles alive in a measured frame.
+//! shadow-casting DirectionalLight, per measured frame: the draw calls, geometry uploads and vertex buffers created, the
+//! frame time (step, build_frame, render with readback) and its parts, the GPU time of the main render pass (timestamp
+//! queries), the CPU cores busy (process CPU time / wall time), the wgpu allocator's allocated bytes, and the least and
+//! most particles alive in a measured frame.
 //!
 //! [`wide_line_particle_shadows_reuse_vertex_buffers`] is the regression test: it runs without `--ignored` (and is
 //! skipped without an adapter).
@@ -79,12 +80,38 @@ fn load(path: &std::path::Path, gpu: &mut x3d_render::gpu::Gpu) -> Viewer3d {
     v
 }
 
-/// Frame `k`: step, build, render (with readback).
-fn render(v: &mut Viewer3d, gpu: &mut x3d_render::gpu::Gpu, k: usize) {
+/// Frame `k`: step, build, render (with readback). Returns their milliseconds.
+fn render(v: &mut Viewer3d, gpu: &mut x3d_render::gpu::Gpu, k: usize) -> [f64; 3] {
+    let t = Instant::now();
     v.step(T0 + (k + 1) as f64 * DT);
+    let a = t.elapsed().as_secs_f64();
     let frame = v.build_frame();
+    let b = t.elapsed().as_secs_f64();
     let (w, h) = v.framebuffer_size();
     gpu.render(&frame, w, h);
+    let c = t.elapsed().as_secs_f64();
+
+    [a * 1e3, (b - a) * 1e3, (c - b) * 1e3]
+}
+
+/// The CPU seconds of this process so far (utime + stime of /proc/self/stat).
+fn cpu_seconds() -> f64 {
+    let stat = std::fs::read_to_string("/proc/self/stat").unwrap_or_default();
+    let fields: Vec<&str> = stat
+        .rsplit_once(')')
+        .map_or(vec![], |(_, rest)| rest.split_whitespace().collect());
+    let ticks = |i: usize| {
+        fields
+            .get(i)
+            .and_then(|f| f.parse::<f64>().ok())
+            .unwrap_or(0.0)
+    };
+
+    (ticks(11) + ticks(12)) / 100.0
+}
+
+fn mean(v: &[f64]) -> f64 {
+    v.iter().sum::<f64>() / v.len().max(1) as f64
 }
 
 fn percentile(v: &[f64], p: usize) -> f64 {
@@ -103,7 +130,7 @@ fn wide_line_particle_shadow_buffers() {
     std::fs::create_dir_all(&dir).unwrap();
 
     println!(
-        "particles layers | alive (min, max) | uploads/frame | buffers created/frame | allocated MiB (end, peak) | frame ms (mean, p50, p95)"
+        "particles layers | alive min max | draws | uploads created | frame ms mean p95 | step build render | GPU ms | CPU cores | MiB end peak"
     );
 
     for particles in [100usize, 1_000, 10_000] {
@@ -119,19 +146,25 @@ fn wide_line_particle_shadow_buffers() {
                 .named_nodes
                 .get("PS")
                 .expect("PS");
-            let (mut uploads, mut created, mut times, mut peak, mut end) =
-                (vec![], vec![], vec![], 0u64, 0u64);
-            let mut alive = (usize::MAX, 0);
+            let (mut uploads, mut created, mut draws, mut times, mut gpu_ms) =
+                (vec![], vec![], vec![], vec![], vec![]);
+            let (mut phases, mut alive, mut peak, mut end) =
+                ([0.0; 3], (usize::MAX, 0), 0u64, 0u64);
+            let (mut wall, mut cpu) = (0.0, 0.0);
 
             for k in 0..WARMUP + FRAMES {
-                let start = Instant::now();
-                render(&mut v, &mut gpu, k);
-                let ms = start.elapsed().as_secs_f64() * 1e3;
+                let (start, cpu_start) = (Instant::now(), cpu_seconds());
+                let p = render(&mut v, &mut gpu, k);
 
                 if k >= WARMUP {
-                    times.push(ms);
+                    wall += start.elapsed().as_secs_f64();
+                    cpu += cpu_seconds() - cpu_start;
+                    times.push(p.iter().sum::<f64>());
+                    (0..3).for_each(|i| phases[i] += p[i] / FRAMES as f64);
+                    gpu_ms.extend(gpu.renderer.gpu_time_ms(true));
                     uploads.push(gpu.renderer.stats.geometry_uploads as f64);
                     created.push(gpu.renderer.stats.vertex_buffers_created as f64);
+                    draws.push(gpu.renderer.stats.draw_calls as f64);
                     let n = v.rt.particle_sim(ps).map_or(0, |s| s.num_particles);
                     alive = (alive.0.min(n), alive.1.max(n));
 
@@ -143,18 +176,22 @@ fn wide_line_particle_shadow_buffers() {
                 }
             }
 
-            let mean = times.iter().sum::<f64>() / times.len() as f64;
-
             println!(
-                "{particles:>9} {layers:>6} | {:>5} {:>5} | {:>13.2} | {:>21.2} | {:>8.1} {:>8.1} | {mean:>6.2} {:>6.2} {:>6.2}",
+                "{particles:>9} {layers:>6} | {:>5} {:>5} | {:>5.0} | {:>7.2} {:>7.2} | {:>6.2} {:>6.2} | {:>5.2} {:>5.2} {:>6.2} | {:>6.2} | {:>9.2} | {:>5.1} {:>5.1}",
                 alive.0,
                 alive.1,
-                uploads.iter().sum::<f64>() / uploads.len() as f64,
-                created.iter().sum::<f64>() / created.len() as f64,
+                mean(&draws),
+                mean(&uploads),
+                mean(&created),
+                mean(&times),
+                percentile(&times, 95),
+                phases[0],
+                phases[1],
+                phases[2],
+                mean(&gpu_ms),
+                cpu / wall,
                 end as f64 / 1048576.0,
                 peak as f64 / 1048576.0,
-                percentile(&times, 50),
-                percentile(&times, 95),
             );
         }
     }
