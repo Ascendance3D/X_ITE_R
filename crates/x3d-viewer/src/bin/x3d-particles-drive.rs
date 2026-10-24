@@ -251,7 +251,10 @@ fn run(
                 v.pointing_gpu = Some(g)
             }
             Err(e) => {
-                eprintln!("x3d-particles-drive: no pointing GPU ({e}); picks use the ray cast")
+                // X3D_QUIET_NO_GPU: GPU-less CI runs this hundreds of times.
+                if std::env::var_os("X3D_QUIET_NO_GPU").is_none() {
+                    eprintln!("x3d-particles-drive: no pointing GPU ({e}); picks use the ray cast")
+                }
             }
         }
     }
