@@ -1436,20 +1436,21 @@ impl Viewer3d {
         }
 
         // The drawn particles (ParticleSystem.displaySimple) of the systems the last COLLISION traversal collected.
-        // A system's entries are pushed together, one per particle, with one geometry, clip-plane and Collision
-        // stack: a run of them is resolved once and shares those, while every particle keeps its own entry (its
-        // instance matrix) in traversal order. A system reached twice (USE) gives two runs.
+        // A system's particles come together, with one geometry, clip-plane and Collision stack: a run of them is
+        // resolved once and shares those, while every particle keeps its own entry (its instance matrix) in traversal
+        // order. A system reached twice (USE) gives two runs; adjacent kept runs of the same system, matrix, clip planes
+        // and Collision stack are one.
         let mut seen: Vec<(Vec<NodeId>, NodeId)> = vec![];
         let members = self.layer.collision_particle_systems.clone();
-        let entries = self.collision_particles();
+        let kept = self.collision_particles();
         let mut i = 0;
 
-        while i < entries.len() {
-            let first = &self.scan_display.particle_collisions[entries[i]];
-            let run = entries[i..]
+        while i < kept.len() {
+            let first = &self.scan_display.particle_collisions[kept[i]].template;
+            let run = kept[i..]
                 .iter()
                 .take_while(|&&k| {
-                    let s = &self.scan_display.particle_collisions[k];
+                    let s = &self.scan_display.particle_collisions[k].template;
 
                     s.shape == first.shape
                         && s.shape_model_view == first.shape_model_view
@@ -1457,7 +1458,7 @@ impl Viewer3d {
                         && s.collisions == first.collisions
                 })
                 .count();
-            let run_entries = &entries[i..i + run];
+            let runs = &kept[i..i + run];
             i += run;
 
             if members.as_ref().is_some_and(|m| !m.contains(&first.shape)) {
@@ -1549,19 +1550,24 @@ impl Viewer3d {
                 continue;
             }
 
-            for &k in run_entries {
-                let s = &self.scan_display.particle_collisions[k];
+            for &k in runs {
+                let r = &self.scan_display.particle_collisions[k];
 
-                shapes.push(CShape {
-                    node: s.shape.clone(),
-                    geometry: g.clone(),
-                    particle: true,
-                    model_view: s.model_view,
-                    base_model_view: s.shape_model_view,
-                    instance: s.instance,
-                    clip_planes: clip_planes.clone(),
-                    collisions: collisions.clone(),
-                });
+                for m in r.matrices.iter() {
+                    let mut model_view = *m;
+                    model_view.mult_right(&r.template.shape_model_view);
+
+                    shapes.push(CShape {
+                        node: r.template.shape.clone(),
+                        geometry: g.clone(),
+                        particle: true,
+                        model_view,
+                        base_model_view: r.template.shape_model_view,
+                        instance: Some(*m),
+                        clip_planes: clip_planes.clone(),
+                        collisions: collisions.clone(),
+                    });
+                }
             }
         }
 
@@ -1587,7 +1593,7 @@ impl Viewer3d {
         })
     }
 
-    /// The entries of [`Scan::particle_collisions`] that X3DRenderObject.addCollisionShape keeps: it rejects a
+    /// The runs of [`Scan::particle_collisions`] with particles that X3DRenderObject.addCollisionShape keeps: it rejects a
     /// ParticleSystem whose bbox sphere is outside the COLLISION traversal's view volume, X3DLayerNode.collision's
     /// `ortho (-size, size, -size, size, -size, size)` with `size = max (collisionRadius * 2, avatarHeight * 2)` around
     /// the viewer.
@@ -1599,11 +1605,14 @@ impl Viewer3d {
 
         (0..self.scan_display.particle_collisions.len())
             .filter(|&i| {
-                let s = &self.scan_display.particle_collisions[i];
+                let r = &self.scan_display.particle_collisions[i];
+                let s = &r.template;
 
-                s.explicit_bbox.is_some_and(|b| {
-                    x3d_render::traverse::bbox_in_view_volume(&volume, &s.shape_model_view, &b)
-                })
+                // A system with no particle drawn has no entry.
+                r.len() > 0
+                    && s.explicit_bbox.is_some_and(|b| {
+                        x3d_render::traverse::bbox_in_view_volume(&volume, &s.shape_model_view, &b)
+                    })
             })
             .collect()
     }
@@ -1698,7 +1707,7 @@ impl Viewer3d {
             let mut systems: Vec<NodeRef> = vec![];
 
             for i in self.collision_particles() {
-                let s = &self.scan_display.particle_collisions[i].shape;
+                let s = &self.scan_display.particle_collisions[i].template.shape;
 
                 if !systems.contains(s) {
                     systems.push(s.clone());
@@ -2612,9 +2621,7 @@ impl Viewer3d {
     }
 
     fn has_sensors(&self) -> bool {
-        let any = |s: &Scan| s.shapes.iter().any(|s| !s.sensors.is_empty());
-
-        any(&self.scan_display) || self.others.iter().any(|l| any(&l.scan_display))
+        self.scan_display.has_sensors() || self.others.iter().any(|l| l.scan_display.has_sensors())
     }
 
     /// X3DPointingDeviceSensorContext.touch: the POINTER traversal of every layer drawn, in
@@ -2712,7 +2719,8 @@ impl Viewer3d {
 
             self.swap_to(key);
             let cam = self.pick_camera();
-            let shapes = std::mem::take(&mut self.scan_display.shapes);
+            let scan = std::mem::take(&mut self.scan_display);
+            let shapes = scan.pointing_shapes();
             let mut cache = std::mem::take(&mut self.geom_cache);
             let rt = &self.rt;
             let mut h = pick(
@@ -2725,7 +2733,8 @@ impl Viewer3d {
                 self.pointing_gpu.as_mut(),
             );
             self.geom_cache = cache;
-            self.scan_display.shapes = shapes;
+            drop(shapes);
+            self.scan_display = scan;
             h.layer = key;
 
             // No hit: the ray of the pointing layer (hit .pointingLayerNode .getHitRay ()).
