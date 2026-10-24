@@ -318,6 +318,7 @@ impl VolumeGpu {
         }
 
         queue.write_buffer(&self.buffer.as_ref().unwrap().0, 0, &all);
+        crate::transfer::upload(crate::transfer::Kind::Other, all.len());
 
         for (i, input) in inputs.iter().enumerate() {
             let d = input.draw;

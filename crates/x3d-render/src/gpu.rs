@@ -655,6 +655,7 @@ fn vertex_buffer(
     free: &mut Vec<FreeBuffer>,
     stats: &mut RenderStats,
     verts: &[f32],
+    kind: crate::transfer::Kind,
 ) -> wgpu::Buffer {
     let contents: &[u8] = if verts.is_empty() {
         &[0u8; 64]
@@ -670,7 +671,17 @@ fn vertex_buffer(
     );
 
     queue.write_buffer(&buffer, 0, contents);
+    crate::transfer::upload(kind, contents.len());
     buffer
+}
+
+/// The transfer kind of a geometry upload: the geometry of a ParticleSystem's instances, or the wide LINE triangles
+/// made for one frame (particles::line_triangle_geometry).
+fn particle_kind(
+    instances: Option<&crate::traverse::InstanceData>,
+    g: &crate::geometry::Geometry,
+) -> crate::transfer::Kind {
+    crate::transfer::kind(instances.is_some_and(|i| i.particle) || g.per_frame)
 }
 
 /// A buffer of at least `size` bytes with `usage`: the smallest free one that is at most twice that size, or a new one
@@ -1031,10 +1042,8 @@ struct ShadowDrawU {
     projection: [f32; 16],
     model_view: [f32; 16],
     clip_planes: [[f32; 4]; MAX_CLIP_PLANES],
-    /// x: the number of clip planes, y: 1 for an instance of an InstancedShape.
+    /// x: the number of clip planes, y: 1 for an instanced draw, z: its first matrix in the shadow instances.
     counts: [u32; 4],
-    /// The instance matrix.
-    inst_matrix: [f32; 16],
 }
 
 const SHADOW_STRIDE: u64 = 512;
@@ -1091,6 +1100,10 @@ pub struct Renderer {
     rendered: HashMap<(u64, NodeId), RenGpu>,
     shadow_buffer: wgpu::Buffer,
     shadow_capacity: usize,
+    /// The instance matrices of the shadow and depth color passes' instanced draws (shadow.wgsl `instances`), grown
+    /// when a pass needs more.
+    shadow_instances: wgpu::Buffer,
+    shadow_instance_capacity: usize,
     shadow_group: wgpu::BindGroup,
     env: Option<EnvGpu>,
     /// The main frame's EnvironmentLight source was drawn by a texture pass this frame.
@@ -1193,7 +1206,12 @@ pub struct Renderer {
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RenderStats {
+    /// The draw calls of the color passes.
     pub draw_calls: usize,
+    /// The draw calls of the shadow map passes (every light, view and instance).
+    pub shadow_draw_calls: usize,
+    /// The draw calls of the depth color pass ([`Renderer::encode_depth_color`]).
+    pub depth_draw_calls: usize,
     pub geometry_uploads: usize,
     /// Vertex buffers created (the other geometry uploads rewrote a free one).
     pub vertex_buffers_created: usize,
@@ -1738,10 +1756,20 @@ impl Renderer {
         });
         let shadow_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("shadow draw"),
-            entries: &[uniform_entry(
-                true,
-                std::mem::size_of::<ShadowDrawU>() as u64,
-            )],
+            entries: &[
+                uniform_entry(true, std::mem::size_of::<ShadowDrawU>() as u64),
+                // 1: the instance matrices (shadow.wgsl `instances`).
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: true },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
+            ],
         });
         let shadow_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -1920,7 +1948,9 @@ impl Renderer {
                     cache: None,
                 })
             });
-        let (shadow_buffer, shadow_group) = Self::make_shadow_buffer(&device, &shadow_layout, 64);
+        let shadow_instances = Self::make_shadow_instances(&device, 64);
+        let (shadow_buffer, shadow_group) =
+            Self::make_shadow_buffer(&device, &shadow_layout, 64, &shadow_instances);
 
         // The environment filter (filter.wgsl): RGBA8 targets, no depth, no blending.
         let filter_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
@@ -2036,6 +2066,8 @@ impl Renderer {
             rendered: HashMap::new(),
             shadow_buffer,
             shadow_capacity: 64,
+            shadow_instances,
+            shadow_instance_capacity: 64,
             shadow_group,
             env: None,
             env_rendered: false,
@@ -2252,10 +2284,20 @@ impl Renderer {
         (size, texture, view)
     }
 
+    fn make_shadow_instances(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("shadow instances"),
+            size: (capacity * 64) as u64,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        })
+    }
+
     fn make_shadow_buffer(
         device: &wgpu::Device,
         layout: &wgpu::BindGroupLayout,
         capacity: usize,
+        instances: &wgpu::Buffer,
     ) -> (wgpu::Buffer, wgpu::BindGroup) {
         let buffer = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("shadow draws"),
@@ -2266,16 +2308,67 @@ impl Renderer {
         let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("shadow draws"),
             layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                    buffer: &buffer,
-                    offset: 0,
-                    size: wgpu::BufferSize::new(std::mem::size_of::<ShadowDrawU>() as u64),
-                }),
-            }],
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                        buffer: &buffer,
+                        offset: 0,
+                        size: wgpu::BufferSize::new(std::mem::size_of::<ShadowDrawU>() as u64),
+                    }),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: instances.as_entire_binding(),
+                },
+            ],
         });
         (buffer, group)
+    }
+
+    /// The uniforms of a shadow or depth color pass, one per draw, and the instance matrices of its instanced draws
+    /// into their buffers, grown when the pass needs more. `particle_draws` and `particle_instances` of them are
+    /// ParticleSystem data (crate::transfer).
+    fn upload_shadow_draws(
+        &mut self,
+        draws: &[ShadowDrawU],
+        instances: &[[f32; 16]],
+        particle_draws: usize,
+        particle_instances: usize,
+    ) {
+        let more_instances = instances.len() > self.shadow_instance_capacity;
+
+        if more_instances {
+            self.shadow_instance_capacity = instances.len().next_power_of_two();
+            self.shadow_instances =
+                Self::make_shadow_instances(&self.device, self.shadow_instance_capacity);
+        }
+
+        if draws.len() > self.shadow_capacity || more_instances {
+            self.shadow_capacity = self.shadow_capacity.max(draws.len().next_power_of_two());
+            (self.shadow_buffer, self.shadow_group) = Self::make_shadow_buffer(
+                &self.device,
+                &self.shadow_layout,
+                self.shadow_capacity,
+                &self.shadow_instances,
+            );
+        }
+
+        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
+        for (i, d) in draws.iter().enumerate() {
+            let b = bytemuck::bytes_of(d);
+            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
+                .copy_from_slice(b);
+        }
+        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
+
+        if !instances.is_empty() {
+            let bytes: &[u8] = bytemuck::cast_slice(instances);
+
+            self.queue.write_buffer(&self.shadow_instances, 0, bytes);
+            crate::transfer::split_upload(bytes.len(), particle_instances * 64);
+        }
     }
 
     /// The light containers' renderShadowMap: each shadow map cleared to depth 1, then the
@@ -2316,6 +2409,7 @@ impl Renderer {
                 THICK_USAGE,
             );
             self.queue.write_buffer(&input_buffer, 0, bytes);
+            crate::transfer::upload(crate::transfer::Kind::Particle, bytes.len());
 
             let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("thick lines"),
@@ -2405,6 +2499,10 @@ impl Renderer {
             .write_buffer(&input_buffer, 0, bytemuck::cast_slice(&input));
         self.queue
             .write_buffer(&line_buffer, 0, bytemuck::cast_slice(&line));
+        crate::transfer::upload(
+            crate::transfer::Kind::Particle,
+            (input.len() + line.len()) * 4,
+        );
 
         let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("thick line display"),
@@ -2485,8 +2583,10 @@ impl Renderer {
             }
         }
 
-        // Uniforms, one per depth draw.
+        // Uniforms, one per depth draw; an instanced draw's matrices in the shadow instances.
         let mut draws: Vec<ShadowDrawU> = vec![];
+        let mut instances: Vec<[f32; 16]> = vec![];
+        let (mut particle_draws, mut particle_instances) = (0usize, 0usize);
 
         for map in &frame.shadow_maps {
             for view in &map.views {
@@ -2499,35 +2599,26 @@ impl Renderer {
                     }
                     d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
-                    // InstancedShape: one draw per instance (Depth2.vs.js getInstanceVertex).
-                    match &item.instances {
-                        Some(i) => {
-                            for m in &i.matrices {
-                                let mut di = d;
-                                di.counts[1] = 1;
-                                di.inst_matrix = f32x16(m);
-                                draws.push(di);
-                            }
-                        }
-                        None => draws.push(d),
+                    // InstancedShape, ParticleSystem: one instanced draw (Depth2.vs.js getInstanceVertex).
+                    let particle = item
+                        .instances
+                        .as_ref()
+                        .map_or(item.thick_lines.is_some(), |i| i.particle);
+                    particle_draws += particle as usize;
+
+                    if let Some(i) = &item.instances {
+                        d.counts[1] = 1;
+                        d.counts[2] = instances.len() as u32;
+                        instances.extend(i.matrices.iter().map(f32x16));
+                        particle_instances += if particle { i.matrices.len() } else { 0 };
                     }
+
+                    draws.push(d);
                 }
             }
         }
 
-        if draws.len() > self.shadow_capacity {
-            self.shadow_capacity = draws.len().next_power_of_two();
-            (self.shadow_buffer, self.shadow_group) =
-                Self::make_shadow_buffer(&self.device, &self.shadow_layout, self.shadow_capacity);
-        }
-
-        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
-        for (i, d) in draws.iter().enumerate() {
-            let b = bytemuck::bytes_of(d);
-            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
-                .copy_from_slice(b);
-        }
-        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        self.upload_shadow_draws(&draws, &instances, particle_draws, particle_instances);
 
         self.make_thick_lines(
             frame
@@ -2554,6 +2645,7 @@ impl Renderer {
                                 &mut self.free_vertices,
                                 &mut self.stats,
                                 &verts,
+                                particle_kind(item.instances.as_deref(), g),
                             );
                             self.geometries.insert(
                                 gp,
@@ -2602,11 +2694,7 @@ impl Renderer {
                 let [x, y, w, h] = view.viewport;
                 let top = map.size.saturating_sub(y + h);
                 if w == 0 || h == 0 {
-                    k += view
-                        .items
-                        .iter()
-                        .map(|i| i.instances.as_ref().map_or(1, |n| n.matrices.len()))
-                        .sum::<usize>();
+                    k += view.items.len();
                     continue;
                 }
                 pass.set_viewport(x as f32, top as f32, w as f32, h as f32, 0.0, 1.0);
@@ -2623,6 +2711,7 @@ impl Renderer {
                         );
                         pass.set_vertex_buffer(0, e.triangles.slice(..));
                         pass.draw(0..e.count, 0..1);
+                        self.stats.shadow_draw_calls += 1;
                         k += 1;
                         continue;
                     }
@@ -2633,19 +2722,20 @@ impl Renderer {
                         1 => &self.shadow_pipelines[1],
                         _ => &self.shadow_pipelines[2],
                     };
-                    for _ in 0..item.instances.as_ref().map_or(1, |n| n.matrices.len()) {
-                        if e.count > 0 {
-                            pass.set_pipeline(pipeline);
-                            pass.set_bind_group(
-                                0,
-                                &self.shadow_group,
-                                &[(k as u64 * SHADOW_STRIDE) as u32],
-                            );
-                            pass.set_vertex_buffer(0, e.buffer.slice(..));
-                            pass.draw(0..e.count, 0..1);
-                        }
-                        k += 1;
+                    let instances = item.instances.as_ref().map_or(1, |n| n.matrices.len()) as u32;
+
+                    if e.count > 0 && instances > 0 {
+                        pass.set_pipeline(pipeline);
+                        pass.set_bind_group(
+                            0,
+                            &self.shadow_group,
+                            &[(k as u64 * SHADOW_STRIDE) as u32],
+                        );
+                        pass.set_vertex_buffer(0, e.buffer.slice(..));
+                        pass.draw(0..e.count, 0..instances);
+                        self.stats.shadow_draw_calls += 1;
                     }
+                    k += 1;
                 }
             }
         }
@@ -3286,6 +3376,7 @@ impl Renderer {
                 };
                 self.queue
                     .write_buffer(&self.filter_buffer, 0, bytemuck::bytes_of(&u));
+                crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&u));
                 let view = target.create_view(&wgpu::TextureViewDescriptor {
                     dimension: Some(wgpu::TextureViewDimension::D2),
                     base_mip_level: level as u32,
@@ -3413,6 +3504,7 @@ impl Renderer {
 
         for (layer, levels) in faces.iter().enumerate() {
             for (level, (w, h, data)) in levels.iter().enumerate() {
+                crate::transfer::upload(crate::transfer::Kind::Other, data.len());
                 queue.write_texture(
                     wgpu::TexelCopyTextureInfo {
                         texture: &texture,
@@ -3474,6 +3566,7 @@ impl Renderer {
         });
 
         for (level, (w, h, d, data)) in levels.iter().enumerate() {
+            crate::transfer::upload(crate::transfer::Kind::Other, data.len());
             queue.write_texture(
                 wgpu::TexelCopyTextureInfo {
                     texture: &texture,
@@ -3613,6 +3706,7 @@ impl Renderer {
         let readback = &self.readback.as_ref().unwrap().0;
         let slice = readback.slice(..);
         slice.map_async(wgpu::MapMode::Read, |_| {});
+        crate::transfer::readback(crate::transfer::Kind::Other, readback.size());
         let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
         let data = slice.get_mapped_range().expect("map readback");
         let mut out = Vec::with_capacity((width * height * 4) as usize);
@@ -3663,6 +3757,7 @@ impl Renderer {
                 t.recorded = false;
                 let flag = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
                 let f2 = flag.clone();
+                crate::transfer::readback(crate::transfer::Kind::Other, t.read.size());
                 t.read.slice(..).map_async(wgpu::MapMode::Read, move |r| {
                     if r.is_ok() {
                         f2.store(true, std::sync::atomic::Ordering::Release);
@@ -4095,6 +4190,8 @@ impl Renderer {
         }
 
         let mut draws: Vec<ShadowDrawU> = vec![];
+        let mut instances: Vec<[f32; 16]> = vec![];
+        let (mut particle_draws, mut particle_instances) = (0usize, 0usize);
         for item in &frame.items {
             let mut d: ShadowDrawU = bytemuck::Zeroable::zeroed();
             d.projection = f32x16(&projection);
@@ -4104,18 +4201,19 @@ impl Renderer {
             }
             d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
-            // InstancedShape: one draw per instance.
-            match &item.instances {
-                Some(i) => {
-                    for m in &i.matrices {
-                        let mut di = d;
-                        di.counts[1] = 1;
-                        di.inst_matrix = f32x16(m);
-                        draws.push(di);
-                    }
+            // InstancedShape, ParticleSystem: one instanced draw.
+            if let Some(i) = &item.instances {
+                d.counts[1] = 1;
+                d.counts[2] = instances.len() as u32;
+                instances.extend(i.matrices.iter().map(f32x16));
+
+                if i.particle {
+                    particle_draws += 1;
+                    particle_instances += i.matrices.len();
                 }
-                None => draws.push(d),
             }
+
+            draws.push(d);
 
             let gp = Rc::as_ptr(&item.geometry);
             match self.geometries.get_mut(&gp) {
@@ -4129,6 +4227,7 @@ impl Renderer {
                         &mut self.free_vertices,
                         &mut self.stats,
                         &verts,
+                        particle_kind(item.instances.as_deref(), &item.geometry),
                     );
                     self.geometries.insert(
                         gp,
@@ -4144,19 +4243,7 @@ impl Renderer {
             }
         }
 
-        if draws.len() > self.shadow_capacity {
-            self.shadow_capacity = draws.len().next_power_of_two();
-            (self.shadow_buffer, self.shadow_group) =
-                Self::make_shadow_buffer(&self.device, &self.shadow_layout, self.shadow_capacity);
-        }
-
-        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
-        for (i, d) in draws.iter().enumerate() {
-            let b = bytemuck::bytes_of(d);
-            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
-                .copy_from_slice(b);
-        }
-        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        self.upload_shadow_draws(&draws, &instances, particle_draws, particle_instances);
 
         let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("rendered texture depth map"),
@@ -4195,19 +4282,16 @@ impl Renderer {
                 1 => &self.depth_color_pipelines[1],
                 _ => &self.depth_color_pipelines[2],
             };
-            for _ in 0..item.instances.as_ref().map_or(1, |n| n.matrices.len()) {
-                if e.count > 0 {
-                    pass.set_pipeline(pipeline);
-                    pass.set_bind_group(
-                        0,
-                        &self.shadow_group,
-                        &[(k as u64 * SHADOW_STRIDE) as u32],
-                    );
-                    pass.set_vertex_buffer(0, e.buffer.slice(..));
-                    pass.draw(0..e.count, 0..1);
-                }
-                k += 1;
+            let instances = item.instances.as_ref().map_or(1, |n| n.matrices.len()) as u32;
+
+            if e.count > 0 && instances > 0 {
+                pass.set_pipeline(pipeline);
+                pass.set_bind_group(0, &self.shadow_group, &[(k as u64 * SHADOW_STRIDE) as u32]);
+                pass.set_vertex_buffer(0, e.buffer.slice(..));
+                pass.draw(0..e.count, 0..instances);
+                self.stats.depth_draw_calls += 1;
             }
+            k += 1;
         }
     }
 
@@ -4484,11 +4568,15 @@ impl Renderer {
 
         self.queue
             .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
+        crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
 
         // --- draw list in X3DRenderObject.drawShapes order
         let mut scratch_data: Vec<f32> = std::mem::take(&mut self.scratch_data);
         scratch_data.clear();
         let mut draws: Vec<DrawU> = Vec::with_capacity(frame.items.len() + 8);
+        // The draws, instances and scratch floats of ParticleSystems among them (crate::transfer).
+        let (mut particle_draws, mut particle_instances, mut particle_scratch) =
+            (0usize, 0usize, 0usize);
         let mut instance_data: Vec<InstanceU> = vec![];
         let mut calls = std::mem::take(&mut self.calls);
         calls.clear();
@@ -4740,6 +4828,7 @@ impl Renderer {
                         &mut self.free_vertices,
                         &mut self.stats,
                         &verts,
+                        particle_kind(item.instances.as_deref(), g),
                     );
                     cache.insert(
                         gp,
@@ -5099,8 +5188,13 @@ impl Renderer {
                 num_instances as u32
             };
             let mut di = d;
+            let particle = item.instances.as_ref().is_some_and(|i| i.particle);
 
             if let Some(i) = &item.instances {
+                if i.particle {
+                    particle_instances += i.matrices.len();
+                }
+
                 di.inst_flags = [
                     1,
                     !i.colors.is_empty() as u32,
@@ -5132,11 +5226,13 @@ impl Renderer {
                 set_material(&mut bd, b);
                 let index = push_draw(bd, &mut draws, &mut self.debug_draws);
                 back_draws.extend(std::iter::repeat_n(index, repeat));
+                particle_draws += particle as usize;
             }
 
             set_material(&mut di, &item.material);
             let index = push_draw(di, &mut draws, &mut self.debug_draws);
             front_draws.extend(std::iter::repeat_n(index, repeat));
+            particle_draws += particle as usize;
 
             let back_index = back_draws.first().copied();
 
@@ -5238,6 +5334,9 @@ impl Renderer {
                         );
                         let start = scratch_data.len() as u64 * 4;
                         scratch_data.extend_from_slice(&verts);
+                        if particle {
+                            particle_scratch += verts.len();
+                        }
                         (
                             (start, scratch_data.len() as u64 * 4),
                             (verts.len() / STIPPLE_FLOATS_PER_VERTEX) as u32,
@@ -5608,6 +5707,10 @@ impl Renderer {
                 0,
                 bytemuck::cast_slice(&instance_data),
             );
+            crate::transfer::split_upload(
+                instance_data.len() * std::mem::size_of::<InstanceU>(),
+                particle_instances * std::mem::size_of::<InstanceU>(),
+            );
         }
 
         self.draw_bytes.clear();
@@ -5620,6 +5723,7 @@ impl Renderer {
         }
         self.queue
             .write_buffer(&self.draw_buffer, 0, &self.draw_bytes);
+        crate::transfer::split_upload(self.draw_bytes.len(), particle_draws * DRAW_STRIDE as usize);
 
         // Scratch vertices (background): re-uploaded only when they changed.
         let scratch_bytes = scratch_data.len() as u64 * 4;
@@ -5638,6 +5742,7 @@ impl Renderer {
         if scratch_bytes > 0 && scratch_data != self.scratch_data {
             self.queue
                 .write_buffer(&self.scratch, 0, bytemuck::cast_slice(&scratch_data));
+            crate::transfer::split_upload(scratch_data.len() * 4, particle_scratch * 4);
         }
 
         self.scratch_data = scratch_data;

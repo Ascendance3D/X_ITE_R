@@ -97,6 +97,8 @@ pub struct PointingTriangle {
     pub constant_tex_coord: bool,
     /// x3d_Id.
     pub id: f32,
+    /// A particle of a ParticleSystem (crate::transfer).
+    pub particle: bool,
 }
 
 /// What the pointing buffer holds after the draw: gl_FragData 0 to 2.
@@ -380,6 +382,7 @@ impl PointingGpu {
         let mut data: Vec<VertexData> = vec![];
         let mut ranges = vec![];
         let mut uniforms: Vec<u8> = vec![];
+        let (mut particle_vertices, mut particle_draws) = (0usize, 0usize);
 
         for (k, tri) in draws.iter().enumerate() {
             let start = data.len() as u32;
@@ -390,6 +393,11 @@ impl PointingGpu {
                 offset: tri.offsets.get(i).copied().unwrap_or([0.0; 2]),
             }));
             ranges.push(start..data.len() as u32);
+
+            if tri.particle {
+                particle_vertices += tri.vertices.len();
+                particle_draws += 1;
+            }
 
             let mode = match tri.primitive {
                 PointingPrimitive::Triangles | PointingPrimitive::Lines => 0.0,
@@ -464,9 +472,14 @@ impl PointingGpu {
         if bytes > 0 {
             self.queue
                 .write_buffer(&self.vertices, 0, bytemuck::cast_slice(&data));
+            crate::transfer::split_upload(
+                bytes as usize,
+                particle_vertices * std::mem::size_of::<VertexData>(),
+            );
         }
 
         self.queue.write_buffer(&self.uniforms, 0, &uniforms);
+        crate::transfer::split_upload(uniforms.len(), particle_draws * UNIFORM_STRIDE as usize);
 
         let mut encoder = self
             .device
@@ -550,6 +563,7 @@ impl PointingGpu {
         self.queue.submit([encoder.finish()]);
         let slice = self.readback.slice(..);
         slice.map_async(wgpu::MapMode::Read, |_| {});
+        crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
         let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
         let mapped = slice.get_mapped_range().expect("map pointing readback");
         let f = |i: usize| -> [f32; 4] {

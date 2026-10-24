@@ -128,6 +128,7 @@ fn storage(device: &wgpu::Device, label: &str, bytes: &[u8]) -> wgpu::Buffer {
         view.copy_from_slice(&padded);
     }
     buffer.unmap();
+    crate::transfer::upload(crate::transfer::Kind::Other, size as usize);
     buffer
 }
 
@@ -305,6 +306,10 @@ impl SplatGpu {
             if entry.sorted_for != Some(mv) {
                 let sorted = sort_indices(&data.positions, count, &mv, &mut self.scratch);
                 queue.write_buffer(&entry.buffer, 0, bytemuck::cast_slice(&sorted));
+                crate::transfer::upload(
+                    crate::transfer::Kind::Other,
+                    std::mem::size_of_val(sorted.as_slice()),
+                );
                 entry.sorted_for = Some(mv);
                 self.sorts += 1;
             }
@@ -411,7 +416,9 @@ impl SplatGpu {
             self.groups.clear();
         }
 
-        queue.write_buffer(&self.buffer.as_ref().unwrap().0, 0, &blobs.concat());
+        let all = blobs.concat();
+        queue.write_buffer(&self.buffer.as_ref().unwrap().0, 0, &all);
+        crate::transfer::upload(crate::transfer::Kind::Other, all.len());
 
         let (module, layout) = self.module.as_ref().unwrap();
         let pipeline_key = PipelineKey {
