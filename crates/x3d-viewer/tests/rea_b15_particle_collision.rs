@@ -18,9 +18,10 @@
 //! * isActive exactly and collideTime within 1e-9 of every named Collision node.
 //!
 //! KNOWN_GAPS lists (case, frame) pairs whose distances, normals and translations may differ; the hit states must still
-//! match there, and the test requires the gap to keep differing.
+//! match there, and the test requires the gap to keep differing. The same cases also run through the CPU stand-in
+//! (`--cpu-pointing`, no adapter needed) against CPU_KNOWN_GAPS.
 //!
-//! The collision depth buffer needs a GPU: without an adapter the test is skipped. `REA_ONLY=<substring>` restricts the
+//! The GPU test needs an adapter and is skipped without one. `REA_ONLY=<substring>` restricts the
 //! cases.
 
 use serde_json::Value;
@@ -42,6 +43,35 @@ const KNOWN_GAPS: &[(&str, &str, &str)] = &[(
      line fragment of the case matches); the closest object along (-0.6 0 -0.8) and the two translations it decides move \
      with it",
 )];
+
+/// The CPU stand-in samples triangles at the pixel centers instead of rasterizing them with vertex snapping and
+/// returns their geometric normal instead of the one Depth2.fs writes.
+const CPU_TRIANGLES: &str = "triangles: the CPU stand-in samples them at the pixel centers (no GL rasterization, \
+                             distances about 1e-5 off) and returns their geometric normal, not Depth2.fs's";
+
+/// (case, frame or `"*"` for every frame, why the CPU stand-in differs) of the `--cpu-pointing` runs. The POINT and
+/// LINE particles are drawn like on the GPU, so pc-point matches X_ITE and pc-line keeps the GPU's one gap; the hit
+/// states, shapes, poses and Collision nodes must match everywhere.
+const CPU_KNOWN_GAPS: &[(&str, &str, &str)] = &[
+    ("pc-clip-plane", "*", CPU_TRIANGLES),
+    ("pc-collision-node", "*", CPU_TRIANGLES),
+    ("pc-constrain", "*", CPU_TRIANGLES),
+    ("pc-disabled", "*", CPU_TRIANGLES),
+    ("pc-geometry", "*", CPU_TRIANGLES),
+    ("pc-hidden", "*", CPU_TRIANGLES),
+    (
+        "pc-line",
+        "45",
+        "LINE particles: the same diamond-exit rasterization as the GPU run, with its gap at the right edge",
+    ),
+    ("pc-max-particles", "*", CPU_TRIANGLES),
+    ("pc-quad-wall", "*", CPU_TRIANGLES),
+    ("pc-sprite", "*", CPU_TRIANGLES),
+    ("pc-transform", "*", CPU_TRIANGLES),
+    ("pc-walk-gravity", "*", CPU_TRIANGLES),
+];
+
+type Gaps = &'static [(&'static str, &'static str, &'static str)];
 
 fn json(path: &Path) -> Value {
     serde_json::from_str(
@@ -171,7 +201,7 @@ fn compare_frame(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
     (hits, values)
 }
 
-fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
+fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<String>) {
     let base = root
         .join("oracle/rea-batch15-particle-collision-baseline")
         .join(name);
@@ -183,7 +213,11 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         .join(format!("{name}.json"));
     let script = json(&script_path);
     let js = json(&base.join("js.json"));
-    let out = std::env::temp_dir().join(format!("rea-b15-collision-{}-{name}", std::process::id()));
+    let out = std::env::temp_dir().join(format!(
+        "rea-b15-collision-{}-{name}{}",
+        std::process::id(),
+        if cpu { "-cpu" } else { "" }
+    ));
     std::fs::create_dir_all(&out).unwrap();
 
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-particles-drive"));
@@ -194,6 +228,10 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 
     if script["seedFree"] != Value::Bool(true) {
         cmd.arg("--seeds-from").arg(base.join("js.json"));
+    }
+
+    if cpu {
+        cmd.arg("--cpu-pointing");
     }
 
     let status = cmd.status().unwrap();
@@ -210,7 +248,7 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 
     if js["ok"] != Value::Bool(true)
         || rs["ok"] != Value::Bool(true)
-        || rs["depthGpu"] != Value::Bool(true)
+        || rs["depthGpu"] != Value::Bool(!cpu)
     {
         return fail(format!(
             "ok js {} rs {}, depth GPU {}",
@@ -255,9 +293,9 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
             .count();
 
         let (hits, values) = compare_frame(w, g);
-        let gap = KNOWN_GAPS
+        let gap = gaps
             .iter()
-            .find(|(case, f, _)| *case == name && f == frame);
+            .find(|(case, f, _)| *case == name && (*f == "*" || f == frame));
 
         for h in hits {
             fail(format!("frame {frame}: {h}"));
@@ -278,7 +316,7 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         want.len()
     );
 
-    for (_, frame, why) in KNOWN_GAPS.iter().filter(|(case, _, _)| *case == name) {
+    for (_, frame, why) in gaps.iter().filter(|(case, _, _)| *case == name) {
         if gap_values == 0 {
             fail(format!(
                 "frame {frame} matches X_ITE now; remove it from KNOWN_GAPS ({why})"
@@ -291,12 +329,9 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
     let _ = std::fs::remove_dir_all(&out);
 }
 
-#[test]
-fn rea_b15_particle_collision_matches_x_ite() {
-    if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
-        return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
-    }
-
+/// Every baseline case (or those `REA_ONLY` names) with the depth buffer on the GPU or the CPU stand-in, `threads`
+/// drives at a time.
+fn check_all(cpu: bool, gaps: Gaps, threads: usize) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
@@ -315,26 +350,25 @@ fn rea_b15_particle_collision_matches_x_ite() {
         "baselines missing: {names:?}"
     );
 
-    for (gap, _, _) in KNOWN_GAPS {
+    for (gap, _, _) in gaps {
         assert!(
             only.is_some() || names.iter().any(|n| n == gap),
             "KNOWN_GAPS names {gap}, which has no baseline"
         );
     }
 
-    // Four drives at a time, like rea_b14_particle_pick (each holds a GPU device).
     let failures = std::sync::Mutex::new(vec![]);
     let next = std::sync::atomic::AtomicUsize::new(0);
 
     std::thread::scope(|scope| {
-        for _ in 0..4 {
+        for _ in 0..threads {
             scope.spawn(|| {
                 loop {
                     let i = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
                     let Some(name) = names.get(i) else { break };
                     let mut own = vec![];
 
-                    run_case(&root, name, &mut own);
+                    run_case(&root, name, cpu, gaps, &mut own);
                     failures.lock().unwrap().extend(own);
                 }
             });
@@ -349,4 +383,21 @@ fn rea_b15_particle_collision_matches_x_ite() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+#[test]
+fn rea_b15_particle_collision_matches_x_ite() {
+    if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
+        return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+    }
+
+    // Four drives at a time, like rea_b14_particle_pick (each holds a GPU device).
+    check_all(false, KNOWN_GAPS, 4);
+}
+
+/// The same probes through the CPU stand-in (`--cpu-pointing` leaves the depth buffer off the GPU): runs without an
+/// adapter.
+#[test]
+fn rea_b15_particle_collision_cpu_matches_x_ite() {
+    check_all(true, CPU_KNOWN_GAPS, 8);
 }
