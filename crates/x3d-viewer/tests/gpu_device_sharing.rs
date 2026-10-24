@@ -80,11 +80,11 @@ fn names(v: &mut EmbeddedViewer) -> Vec<String> {
 }
 
 fn pointing(v: &mut EmbeddedViewer) -> Option<&PointingGpu> {
-    v.core().unwrap().pointing_gpu.as_ref()
+    v.core().unwrap().pointing_gpu()
 }
 
 fn depth(v: &mut EmbeddedViewer) -> Option<Rc<RefCell<DepthGpu>>> {
-    v.core().unwrap().depth_gpu.clone()
+    v.core().unwrap().depth_gpu().cloned()
 }
 
 #[test]
@@ -226,16 +226,41 @@ fn buffers_of_two_devices_are_refused() {
         let mut v = EmbeddedViewer::new(d1.clone(), q1.clone(), (W, H));
         load(&mut v, &p);
         let core = v.core().unwrap();
+
+        // One buffer on the frame's device, one on another.
         let e = core
             .set_gpu(
-                Some(PointingGpu::new(d1, q1)),
+                &d1,
+                Some(PointingGpu::new(d1.clone(), q1.clone())),
+                Some(Rc::new(RefCell::new(DepthGpu::new(d2.clone(), q2.clone())))),
+            )
+            .unwrap_err();
+        assert!(e.contains("collision depth buffer"), "{e}");
+
+        // Both on one device, but not the one that draws the frame: agreeing with each other is not enough.
+        let e = core
+            .set_gpu(
+                &d1,
+                Some(PointingGpu::new(d2.clone(), q2.clone())),
+                Some(Rc::new(RefCell::new(DepthGpu::new(d2.clone(), q2.clone())))),
+            )
+            .unwrap_err();
+        assert!(e.contains("pointing buffer"), "{e}");
+
+        // The depth buffer alone, on the other device.
+        let e = core
+            .set_gpu(
+                &d1,
+                None,
                 Some(Rc::new(RefCell::new(DepthGpu::new(d2, q2)))),
             )
             .unwrap_err();
-        assert!(e.contains("different devices"), "{e}");
+        assert!(e.contains("collision depth buffer"), "{e}");
 
-        // The viewer's own buffers stay.
-        assert!(core.pointing_gpu.is_some() && core.depth_gpu.is_some());
+        // The viewer's own buffers stay, and they are the renderer's.
+        assert!(core.pointing_gpu().is_some() && core.depth_gpu().is_some());
+        assert!(core.pointing_gpu().unwrap().device() == &d1);
+        assert!(core.depth_gpu().unwrap().borrow().device() == &d1);
     });
 }
 
@@ -254,17 +279,24 @@ fn a_lost_device_falls_back_to_the_cpu() {
 
         // The ray cast's and the depth stand-in's answers in this state: without the GPU buffers for a moment.
         let core = v.core().unwrap();
-        let (lent, depth_buffer) = (core.pointing_gpu.take(), core.depth_gpu.take());
+        let (lent, depth_buffer) = core.take_gpu();
         let want: Vec<(String, Vector3)> = PROBES.iter().map(|&(x, y)| hit(&mut v, x, y)).collect();
         let down = Vector3::new(0.0, -1.0, 0.0);
         let want_closest = v.core().unwrap().probe_closest(down);
-        v.core().unwrap().set_gpu(lent, depth_buffer).unwrap();
+        v.core().unwrap().set_gpu(&d, lent, depth_buffer).unwrap();
 
         // The errors of the destroyed device go to the host (like the window's GpuErrors), not to wgpu's panic.
         d.on_uncaptured_error(std::sync::Arc::new(|_| {}));
         d.destroy();
 
-        // The next pick finds the device lost, answers with the ray cast and drops the pointing buffer.
+        // A destroyed device still polls clean, so the first failed readback reads as the mapping's own: that pick
+        // answers with the ray cast, and the buffer is kept rather than written off on one failure.
+        let first = hit(&mut v, PROBES[0].0, PROBES[0].1);
+        assert_eq!(first, want[0]);
+        let p = pointing(&mut v).expect("one failed mapping does not give the device up");
+        assert_eq!((p.lost(), p.readback_failures()), (false, 1));
+
+        // Every pick keeps answering with the ray cast, and a run of failed mappings does give it up.
         let got: Vec<(String, Vector3)> = PROBES.iter().map(|&(x, y)| hit(&mut v, x, y)).collect();
         assert_eq!(got, want);
         assert!(pointing(&mut v).is_none());

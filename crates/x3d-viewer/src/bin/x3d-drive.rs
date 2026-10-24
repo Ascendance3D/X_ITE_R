@@ -222,7 +222,9 @@ fn run(
             Ok(g) => {
                 let depth =
                     x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone());
+                let device = g.device().clone();
                 v.set_gpu(
+                    &device,
                     Some(g),
                     Some(std::rc::Rc::new(std::cell::RefCell::new(depth))),
                 )

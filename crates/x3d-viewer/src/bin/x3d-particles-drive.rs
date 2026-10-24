@@ -257,7 +257,8 @@ fn run(
                     ))
                 });
 
-                v.set_gpu(Some(g), depth).expect("one device");
+                let device = g.device().clone();
+                v.set_gpu(&device, Some(g), depth).expect("one device");
             }
             Err(e) => {
                 // X3D_QUIET_NO_GPU: GPU-less CI runs this hundreds of times.
@@ -475,7 +476,7 @@ fn run(
     if !probe_frames.is_empty() {
         result["pickProbes"] = Value::Object(probes);
         // false: the ray cast picked (no pointing GPU), whose double values are not X_ITE's.
-        result["pointingGpu"] = Value::Bool(v.pointing_gpu.is_some());
+        result["pointingGpu"] = Value::Bool(v.pointing_gpu().is_some());
 
         if reference.is_some() {
             result["pickProbesReference"] = Value::Object(reference_probes);
@@ -485,7 +486,7 @@ fn run(
     if !collision_frames.is_empty() {
         result["collisionProbes"] = Value::Object(collision_probes);
         // false: the CPU stand-in sampled the depth (no GPU).
-        result["depthGpu"] = Value::Bool(v.depth_gpu.is_some());
+        result["depthGpu"] = Value::Bool(v.depth_gpu().is_some());
     }
 
     Ok((result, data, out.to_path_buf()))
