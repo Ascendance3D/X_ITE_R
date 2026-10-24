@@ -56,7 +56,8 @@ C = {
    " + " + PIN + " BoundedPhysicsModel particle records (oracle/rea-batch16-bounded-baseline, 26 cases, every frame's "
    "transform feedback buffer; three runs byte-identical)",
    NOTE + "stays PARTIAL. B16, PR #27 (lane XITE_R_BOUNDED_PHYSICS_REPLAY_01, head c65657a, merge dad5100), compared with "
-   + PIN + ": 25 of 26 cases matched the port as it was; X_ITE's bounded getIntersections writes points [count] / "
+   + PIN + ": 24 of 26 cases matched the port as it was (rea_b16_bounded_physics.rs run against the pre-fix particles.rs of "
+   "d2666bd fails exactly the two below; PR #27's description says 25); X_ITE's bounded getIntersections writes points [count] / "
    "normals [count] past ARRAY_SIZE 32, and the port dropped every hit after the 32nd, so bp-hits-64-below and "
    "bp-hits-64-floor-last bounced on the floor instead of at y = -0.55 / -0.60. Hits past the 31st now overwrite the last "
    "entry (the last hit in BVH order stays) and all 26 match. Recorded X_ITE behavior that the port now matches: zero damping "
