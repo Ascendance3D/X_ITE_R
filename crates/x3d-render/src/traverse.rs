@@ -783,6 +783,9 @@ pub struct DepthItem {
     /// The gl.lineWidth of LINE particles (LineProperties.setShaderUniforms in X3DRenderObject.depth with a width up to
     /// ALIASED_LINE_WIDTH_RANGE [1]; 1 otherwise): [`shadow_view`] draws the wide lines as GL rasterizes them.
     pub line_width: f64,
+    /// displaySimpleInstancedThick: the transformed LINE triangles of a ParticleSystem, made on the GPU
+    /// (thick_lines.wgsl) under their instance matrices, in the system's space. `geometry` is empty then.
+    pub thick_lines: Option<Rc<x3d_runtime::particles::ThickLines>>,
 }
 
 /// One renderObject.render (TraverseType.SHADOW) view of `items`. LINE particles with a gl.lineWidth above 1 px are the
@@ -2910,6 +2913,7 @@ impl<'a> Builder<'a> {
                             .collect(),
                         instances: None,
                         line_width: 1.0,
+                        thick_lines: None,
                     });
                 }
             }
@@ -2940,13 +2944,17 @@ impl<'a> Builder<'a> {
                     .collect();
 
                 if line_width > crate::gpu::MAX_LINE_WIDTH {
-                    if let Some(geometry) = self.particle_thick_lines_before_layer(sg, n) {
+                    if let Some(lines) = self.particle_thick_lines_before_layer(sg, n) {
                         out.push(DepthItem {
-                            geometry,
+                            geometry: Rc::new(Geometry {
+                                geometry_type: 2,
+                                ..Default::default()
+                            }),
                             model_view: *mv,
                             clip_planes,
                             instances: None,
                             line_width: 1.0,
+                            thick_lines: Some(lines),
                         });
                     }
                     return;
@@ -2958,6 +2966,7 @@ impl<'a> Builder<'a> {
                         clip_planes,
                         instances: Some(instances),
                         line_width,
+                        thick_lines: None,
                     });
                 }
             }
@@ -2982,6 +2991,7 @@ impl<'a> Builder<'a> {
                             .collect(),
                         instances: Some(Rc::new(instances)),
                         line_width: 1.0,
+                        thick_lines: None,
                     });
                 }
             }
@@ -3842,9 +3852,13 @@ impl<'a> Builder<'a> {
 
     /// The transformed LINE triangles of the ParticleSystem `n` as the shadow map draw of the layer being built sees
     /// them: those of the last color pass before this layer's
-    /// ([`x3d_runtime::particles::Sim::thick_lines_before_layer`]) under their instance matrices, in the system's space;
-    /// `None` while their line count (one segment per particle) is not the current one.
-    fn particle_thick_lines_before_layer(&self, sg: &Sg, n: NodeId) -> Option<Rc<Geometry>> {
+    /// ([`x3d_runtime::particles::Sim::thick_lines_before_layer`]), drawn under their instance matrices in the system's
+    /// space; `None` while their line count (one segment per particle) is not the current one.
+    fn particle_thick_lines_before_layer(
+        &self,
+        sg: &Sg,
+        n: NodeId,
+    ) -> Option<Rc<x3d_runtime::particles::ThickLines>> {
         if !self.particle_system_enabled(sg, n) {
             return None;
         }
@@ -3856,17 +3870,8 @@ impl<'a> Builder<'a> {
             .find(|(key, _)| *key == self.layer)
             .and_then(|(_, lines)| lines.as_ref())
             .filter(|t| t.num_lines == sim.num_particles && !t.instances.is_empty())?;
-        let per = lines.positions.len() / lines.instances.len();
-        let positions: Vec<[f32; 4]> = lines
-            .positions
-            .chunks_exact(per)
-            .zip(&lines.instances)
-            .flat_map(|(p, m)| p.iter().map(|p| crate::gpu::mat_vec_f32(m, *p)))
-            .collect();
 
-        Some(Rc::new(crate::particles::line_triangle_geometry(
-            &positions,
-        )))
+        Some(lines.clone())
     }
 
     /// X3DShapeNode.isEnabled of a ParticleSystem: `numParticles`, and a geometry for GEOMETRY.
