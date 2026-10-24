@@ -57,6 +57,19 @@ fn bounds(g: &mut Geometry) {
     g.max = max;
 }
 
+/// LINE particle triangles (LineProperties.getTransformLines or a gl.lineWidth line as GL rasterizes it) as a geometry of
+/// their own: positions x y z 1, two triangles per segment, no normals (Depth2.fs without X3D_NORMALS writes 0 0 1).
+pub fn line_triangle_geometry(positions: &[[f32; 4]]) -> Geometry {
+    let mut g = Geometry {
+        geometry_type: 2,
+        vertices: positions.iter().flatten().copied().collect(),
+        ..Default::default()
+    };
+
+    bounds(&mut g);
+    g
+}
+
 /// POINT: `PointGeometry`, one point at the origin (`geometryContext .geometryType` 0, no normals).
 pub fn point_geometry(color_material: bool) -> Geometry {
     let mut g = Geometry {
