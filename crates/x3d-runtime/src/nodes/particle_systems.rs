@@ -1070,7 +1070,9 @@ impl Runtime {
             ramps,
         };
 
+        let start = std::time::Instant::now();
         particles::run_pass(&mut sim.particles, sim.num_particles, &pass);
+        self.particle_sim_seconds += start.elapsed().as_secs_f64();
         self.ps_put(node, st);
     }
 }

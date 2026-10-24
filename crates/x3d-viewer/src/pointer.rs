@@ -898,6 +898,7 @@ fn pointing_draw_base(
             v[3] as i32,
         ],
         clip_planes: s.clip_planes.iter().map(|p| p.map(|c| c as f32)).collect(),
+        particle: s.particle,
         point_style: None,
         constant_tex_coord: false,
         id,

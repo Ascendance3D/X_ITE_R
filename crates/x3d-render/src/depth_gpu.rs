@@ -57,6 +57,8 @@ pub struct DepthShape<'a> {
     pub instance_normal: [f32; 9],
     /// renderContext .clipPlanes (view space of the model-view matrix).
     pub clip_planes: &'a [[f64; 4]],
+    /// A particle of a ParticleSystem (crate::transfer).
+    pub particle: bool,
 }
 
 /// gl_FragData 0 and 1 for every pixel, row 0 first (GL's bottom row).
@@ -287,6 +289,10 @@ impl DepthGpu {
                     });
                     self.queue
                         .write_buffer(&buffer, 0, bytemuck::cast_slice(&data));
+                    crate::transfer::upload(
+                        crate::transfer::kind(s.particle),
+                        std::mem::size_of_val(data.as_slice()),
+                    );
                     self.buffers.insert(
                         key,
                         Buffer {
@@ -362,6 +368,10 @@ impl DepthGpu {
 
         if !blob.is_empty() {
             self.queue.write_buffer(uniforms, 0, &blob);
+            crate::transfer::split_upload(
+                blob.len(),
+                shapes.iter().filter(|s| s.particle).count() * STRIDE as usize,
+            );
         }
 
         let mut encoder = self
@@ -454,6 +464,7 @@ impl DepthGpu {
         self.queue.submit([encoder.finish()]);
         let slice = self.readback.slice(..);
         slice.map_async(wgpu::MapMode::Read, |_| {});
+        crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
         let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
         let mapped = slice.get_mapped_range().expect("map depth readback");
         let read = |t: usize| -> Vec<[f32; 4]> {

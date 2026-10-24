@@ -187,6 +187,7 @@ impl ScatterGpu {
             0,
             bytemuck::cast_slice(&[self.width, self.height, self.stride, 0u32]),
         );
+        crate::transfer::upload(crate::transfer::Kind::Other, 16);
         let view = depth.create_view(&wgpu::TextureViewDescriptor {
             aspect: wgpu::TextureAspect::DepthOnly,
             ..Default::default()

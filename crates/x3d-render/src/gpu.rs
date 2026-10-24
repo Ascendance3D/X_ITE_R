@@ -655,6 +655,7 @@ fn vertex_buffer(
     free: &mut Vec<FreeBuffer>,
     stats: &mut RenderStats,
     verts: &[f32],
+    kind: crate::transfer::Kind,
 ) -> wgpu::Buffer {
     let contents: &[u8] = if verts.is_empty() {
         &[0u8; 64]
@@ -670,7 +671,17 @@ fn vertex_buffer(
     );
 
     queue.write_buffer(&buffer, 0, contents);
+    crate::transfer::upload(kind, contents.len());
     buffer
+}
+
+/// The transfer kind of a geometry upload: the geometry of a ParticleSystem's instances, or the wide LINE triangles
+/// made for one frame (particles::line_triangle_geometry).
+fn particle_kind(
+    instances: Option<&crate::traverse::InstanceData>,
+    g: &crate::geometry::Geometry,
+) -> crate::transfer::Kind {
+    crate::transfer::kind(instances.is_some_and(|i| i.particle) || g.per_frame)
 }
 
 /// A buffer of at least `size` bytes with `usage`: the smallest free one that is at most twice that size, or a new one
@@ -1193,7 +1204,12 @@ pub struct Renderer {
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RenderStats {
+    /// The draw calls of the color passes.
     pub draw_calls: usize,
+    /// The draw calls of the shadow map passes (every light, view and instance).
+    pub shadow_draw_calls: usize,
+    /// The draw calls of the depth color pass ([`Renderer::encode_depth_color`]).
+    pub depth_draw_calls: usize,
     pub geometry_uploads: usize,
     /// Vertex buffers created (the other geometry uploads rewrote a free one).
     pub vertex_buffers_created: usize,
@@ -2316,6 +2332,7 @@ impl Renderer {
                 THICK_USAGE,
             );
             self.queue.write_buffer(&input_buffer, 0, bytes);
+            crate::transfer::upload(crate::transfer::Kind::Particle, bytes.len());
 
             let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("thick lines"),
@@ -2405,6 +2422,10 @@ impl Renderer {
             .write_buffer(&input_buffer, 0, bytemuck::cast_slice(&input));
         self.queue
             .write_buffer(&line_buffer, 0, bytemuck::cast_slice(&line));
+        crate::transfer::upload(
+            crate::transfer::Kind::Particle,
+            (input.len() + line.len()) * 4,
+        );
 
         let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("thick line display"),
@@ -2487,6 +2508,7 @@ impl Renderer {
 
         // Uniforms, one per depth draw.
         let mut draws: Vec<ShadowDrawU> = vec![];
+        let mut particle_draws = 0usize;
 
         for map in &frame.shadow_maps {
             for view in &map.views {
@@ -2500,6 +2522,11 @@ impl Renderer {
                     d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
                     // InstancedShape: one draw per instance (Depth2.vs.js getInstanceVertex).
+                    particle_draws += match &item.instances {
+                        Some(i) if i.particle => i.matrices.len(),
+                        _ => item.thick_lines.is_some() as usize,
+                    };
+
                     match &item.instances {
                         Some(i) => {
                             for m in &i.matrices {
@@ -2528,6 +2555,7 @@ impl Renderer {
                 .copy_from_slice(b);
         }
         self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
 
         self.make_thick_lines(
             frame
@@ -2554,6 +2582,7 @@ impl Renderer {
                                 &mut self.free_vertices,
                                 &mut self.stats,
                                 &verts,
+                                particle_kind(item.instances.as_deref(), g),
                             );
                             self.geometries.insert(
                                 gp,
@@ -2623,6 +2652,7 @@ impl Renderer {
                         );
                         pass.set_vertex_buffer(0, e.triangles.slice(..));
                         pass.draw(0..e.count, 0..1);
+                        self.stats.shadow_draw_calls += 1;
                         k += 1;
                         continue;
                     }
@@ -2643,6 +2673,7 @@ impl Renderer {
                             );
                             pass.set_vertex_buffer(0, e.buffer.slice(..));
                             pass.draw(0..e.count, 0..1);
+                            self.stats.shadow_draw_calls += 1;
                         }
                         k += 1;
                     }
@@ -3286,6 +3317,7 @@ impl Renderer {
                 };
                 self.queue
                     .write_buffer(&self.filter_buffer, 0, bytemuck::bytes_of(&u));
+                crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&u));
                 let view = target.create_view(&wgpu::TextureViewDescriptor {
                     dimension: Some(wgpu::TextureViewDimension::D2),
                     base_mip_level: level as u32,
@@ -3413,6 +3445,7 @@ impl Renderer {
 
         for (layer, levels) in faces.iter().enumerate() {
             for (level, (w, h, data)) in levels.iter().enumerate() {
+                crate::transfer::upload(crate::transfer::Kind::Other, data.len());
                 queue.write_texture(
                     wgpu::TexelCopyTextureInfo {
                         texture: &texture,
@@ -3474,6 +3507,7 @@ impl Renderer {
         });
 
         for (level, (w, h, d, data)) in levels.iter().enumerate() {
+            crate::transfer::upload(crate::transfer::Kind::Other, data.len());
             queue.write_texture(
                 wgpu::TexelCopyTextureInfo {
                     texture: &texture,
@@ -3613,6 +3647,7 @@ impl Renderer {
         let readback = &self.readback.as_ref().unwrap().0;
         let slice = readback.slice(..);
         slice.map_async(wgpu::MapMode::Read, |_| {});
+        crate::transfer::readback(crate::transfer::Kind::Other, readback.size());
         let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
         let data = slice.get_mapped_range().expect("map readback");
         let mut out = Vec::with_capacity((width * height * 4) as usize);
@@ -3663,6 +3698,7 @@ impl Renderer {
                 t.recorded = false;
                 let flag = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
                 let f2 = flag.clone();
+                crate::transfer::readback(crate::transfer::Kind::Other, t.read.size());
                 t.read.slice(..).map_async(wgpu::MapMode::Read, move |r| {
                     if r.is_ok() {
                         f2.store(true, std::sync::atomic::Ordering::Release);
@@ -4095,6 +4131,7 @@ impl Renderer {
         }
 
         let mut draws: Vec<ShadowDrawU> = vec![];
+        let mut particle_draws = 0usize;
         for item in &frame.items {
             let mut d: ShadowDrawU = bytemuck::Zeroable::zeroed();
             d.projection = f32x16(&projection);
@@ -4105,6 +4142,10 @@ impl Renderer {
             d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
             // InstancedShape: one draw per instance.
+            if let Some(i) = item.instances.as_ref().filter(|i| i.particle) {
+                particle_draws += i.matrices.len();
+            }
+
             match &item.instances {
                 Some(i) => {
                     for m in &i.matrices {
@@ -4129,6 +4170,7 @@ impl Renderer {
                         &mut self.free_vertices,
                         &mut self.stats,
                         &verts,
+                        particle_kind(item.instances.as_deref(), &item.geometry),
                     );
                     self.geometries.insert(
                         gp,
@@ -4157,6 +4199,7 @@ impl Renderer {
                 .copy_from_slice(b);
         }
         self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
 
         let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("rendered texture depth map"),
@@ -4205,6 +4248,7 @@ impl Renderer {
                     );
                     pass.set_vertex_buffer(0, e.buffer.slice(..));
                     pass.draw(0..e.count, 0..1);
+                    self.stats.depth_draw_calls += 1;
                 }
                 k += 1;
             }
@@ -4484,11 +4528,15 @@ impl Renderer {
 
         self.queue
             .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
+        crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
 
         // --- draw list in X3DRenderObject.drawShapes order
         let mut scratch_data: Vec<f32> = std::mem::take(&mut self.scratch_data);
         scratch_data.clear();
         let mut draws: Vec<DrawU> = Vec::with_capacity(frame.items.len() + 8);
+        // The draws, instances and scratch floats of ParticleSystems among them (crate::transfer).
+        let (mut particle_draws, mut particle_instances, mut particle_scratch) =
+            (0usize, 0usize, 0usize);
         let mut instance_data: Vec<InstanceU> = vec![];
         let mut calls = std::mem::take(&mut self.calls);
         calls.clear();
@@ -4740,6 +4788,7 @@ impl Renderer {
                         &mut self.free_vertices,
                         &mut self.stats,
                         &verts,
+                        particle_kind(item.instances.as_deref(), g),
                     );
                     cache.insert(
                         gp,
@@ -5099,8 +5148,13 @@ impl Renderer {
                 num_instances as u32
             };
             let mut di = d;
+            let particle = item.instances.as_ref().is_some_and(|i| i.particle);
 
             if let Some(i) = &item.instances {
+                if i.particle {
+                    particle_instances += i.matrices.len();
+                }
+
                 di.inst_flags = [
                     1,
                     !i.colors.is_empty() as u32,
@@ -5132,11 +5186,13 @@ impl Renderer {
                 set_material(&mut bd, b);
                 let index = push_draw(bd, &mut draws, &mut self.debug_draws);
                 back_draws.extend(std::iter::repeat_n(index, repeat));
+                particle_draws += particle as usize;
             }
 
             set_material(&mut di, &item.material);
             let index = push_draw(di, &mut draws, &mut self.debug_draws);
             front_draws.extend(std::iter::repeat_n(index, repeat));
+            particle_draws += particle as usize;
 
             let back_index = back_draws.first().copied();
 
@@ -5238,6 +5294,9 @@ impl Renderer {
                         );
                         let start = scratch_data.len() as u64 * 4;
                         scratch_data.extend_from_slice(&verts);
+                        if particle {
+                            particle_scratch += verts.len();
+                        }
                         (
                             (start, scratch_data.len() as u64 * 4),
                             (verts.len() / STIPPLE_FLOATS_PER_VERTEX) as u32,
@@ -5608,6 +5667,10 @@ impl Renderer {
                 0,
                 bytemuck::cast_slice(&instance_data),
             );
+            crate::transfer::split_upload(
+                instance_data.len() * std::mem::size_of::<InstanceU>(),
+                particle_instances * std::mem::size_of::<InstanceU>(),
+            );
         }
 
         self.draw_bytes.clear();
@@ -5620,6 +5683,7 @@ impl Renderer {
         }
         self.queue
             .write_buffer(&self.draw_buffer, 0, &self.draw_bytes);
+        crate::transfer::split_upload(self.draw_bytes.len(), particle_draws * DRAW_STRIDE as usize);
 
         // Scratch vertices (background): re-uploaded only when they changed.
         let scratch_bytes = scratch_data.len() as u64 * 4;
@@ -5638,6 +5702,7 @@ impl Renderer {
         if scratch_bytes > 0 && scratch_data != self.scratch_data {
             self.queue
                 .write_buffer(&self.scratch, 0, bytemuck::cast_slice(&scratch_data));
+            crate::transfer::split_upload(scratch_data.len() * 4, particle_scratch * 4);
         }
 
         self.scratch_data = scratch_data;

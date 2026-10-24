@@ -35,6 +35,7 @@ pub mod style;
 pub mod tess;
 pub mod text;
 pub mod texture;
+pub mod transfer;
 pub mod traverse;
 pub mod volume;
 pub mod volume_gpu;
