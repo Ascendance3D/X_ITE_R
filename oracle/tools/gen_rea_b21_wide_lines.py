@@ -23,7 +23,8 @@ pw-pick-*: pickProbes (the batch 14 grid) over a row or a slanted run of LINE pa
 pw-col-*: collisionProbes (batch 15) every frame, LINE particles crossing the -Z collision camera, widths 1, 6, 11, 24,
 and a steady count.
 pw-shadow-*: images at the dump frames of a DirectionalLight shadow of LINE particles on a floor, widths 1, 6, 11, 24,
-a steady count, and a system outside the view whose shadow falls inside it.
+a steady count, a system outside the view whose shadow falls past the floor (hidden, widths 24 and 6), and one
+behind the viewpoint whose shadow falls on the visible floor (behind, widths 24, 6 and 1).
 Every emitter is deterministic (no speed, lifetime or angle variation). Newly authored; no historical content.
 """
 import json, os
@@ -75,6 +76,9 @@ SHADOW_VIEW = ("NavigationInfo { headlight FALSE }\nViewpoint { position 0 1.6 3
 SHADOW_ROW = "PointEmitter { position -1 0.6 0.2 direction 1 0 -0.2 speed 0.8 variation 0 }"
 # above the viewpoint, outside its view volume; the light throws the shadow forward onto the visible floor
 SHADOW_HIDDEN = "PointEmitter { position -1 3.4 3.6 direction 1 0 0 speed 0.8 variation 0 }"
+# The hidden cases' shadow falls past the floor's far edge (z = 2.6 > 2), so they show no shadow whatever the culling.
+# Behind the viewpoint and high enough that the shadow lands on the floor (about x 0 to 1.5, z 1.6).
+SHADOW_BEHIND = "PointEmitter { position -1 6 3.4 direction 1 0 0 speed 0.8 variation 0 }"
 
 STEADY = {"lifetime": 0.4, "max_particles": 4}
 
@@ -101,6 +105,10 @@ SHADOW = {
     "pw-shadow-w24": ps(SHADOW_ROW, 24, size="0.1 0.4", color="1 0.5 0.2"),
     "pw-shadow-w24-steady": ps(SHADOW_ROW, 24, size="0.1 0.4", color="1 0.5 0.2", **STEADY),
     "pw-shadow-w24-hidden": ps(SHADOW_HIDDEN, 24, size="0.1 0.4", color="1 0.5 0.2"),
+    "pw-shadow-w6-hidden": ps(SHADOW_HIDDEN, 6, size="0.1 0.4", color="1 0.5 0.2"),
+    "pw-shadow-w24-behind": ps(SHADOW_BEHIND, 24, size="0.1 0.4", color="1 0.5 0.2"),
+    "pw-shadow-w6-behind": ps(SHADOW_BEHIND, 6, size="0.1 0.4", color="1 0.5 0.2"),
+    "pw-shadow-w1-behind": ps(SHADOW_BEHIND, 1, size="0.1 0.4", color="1 0.5 0.2"),
 }
 
 
