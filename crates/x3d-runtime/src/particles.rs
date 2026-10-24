@@ -1622,14 +1622,28 @@ pub struct Sim {
 /// `[_lineTrianglesBuffer1]` (instance matrices), and `shapeNode [_numLines0]`. The node keeps them until the next
 /// DISPLAY pass draws the system; displaySimpleInstancedThick (pointing, collision and shadow passes) draws them while
 /// `num_lines` is the current line count, and nothing otherwise. Reset does not touch them (they are GL buffers).
+///
+/// The triangles are kept as the inputs of LineTransform2.vs: the shadow passes make them on the GPU
+/// (x3d_render thick_lines.wgsl), the CPU only when the pointing or collision pass reads `positions`.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct ThickLines {
     /// `numLines`: line segments × particles when the triangles were made.
     pub num_lines: usize,
-    /// Six positions (x y z 1, the particle's own space) per segment and particle, in particle order.
-    pub positions: Vec<[f32; 4]>,
+    /// The particle's line: x y z w per vertex, two vertices per segment.
+    pub vertices: Vec<f32>,
+    /// Float32Array (modelViewMatrix × projection) of the DISPLAY pass (column-major).
+    pub mvp: [f32; 16],
+    /// Its inverse, taken in doubles.
+    pub inverse: [f32; 16],
+    /// The viewport rectangle (x, y, width, height).
+    pub viewport: [f32; 4],
+    /// linewidthScaleFactor / 2.
+    pub half_width: f32,
     /// The instance matrix of each particle (column-major, as transform feedback wrote it).
     pub instances: Vec<[f32; 16]>,
+    /// Six positions (x y z 1, the particle's own space) per segment and particle, in particle order: made on first
+    /// use (x3d_render::gpu::thick_line_positions).
+    pub positions: std::cell::OnceCell<Vec<[f32; 4]>>,
 }
 
 impl Sim {
