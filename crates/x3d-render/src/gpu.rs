@@ -1042,10 +1042,8 @@ struct ShadowDrawU {
     projection: [f32; 16],
     model_view: [f32; 16],
     clip_planes: [[f32; 4]; MAX_CLIP_PLANES],
-    /// x: the number of clip planes, y: 1 for an instance of an InstancedShape.
+    /// x: the number of clip planes, y: 1 for an instanced draw, z: its first matrix in the shadow instances.
     counts: [u32; 4],
-    /// The instance matrix.
-    inst_matrix: [f32; 16],
 }
 
 const SHADOW_STRIDE: u64 = 512;
@@ -1102,6 +1100,10 @@ pub struct Renderer {
     rendered: HashMap<(u64, NodeId), RenGpu>,
     shadow_buffer: wgpu::Buffer,
     shadow_capacity: usize,
+    /// The instance matrices of the shadow and depth color passes' instanced draws (shadow.wgsl `instances`), grown
+    /// when a pass needs more.
+    shadow_instances: wgpu::Buffer,
+    shadow_instance_capacity: usize,
     shadow_group: wgpu::BindGroup,
     env: Option<EnvGpu>,
     /// The main frame's EnvironmentLight source was drawn by a texture pass this frame.
@@ -1754,10 +1756,20 @@ impl Renderer {
         });
         let shadow_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("shadow draw"),
-            entries: &[uniform_entry(
-                true,
-                std::mem::size_of::<ShadowDrawU>() as u64,
-            )],
+            entries: &[
+                uniform_entry(true, std::mem::size_of::<ShadowDrawU>() as u64),
+                // 1: the instance matrices (shadow.wgsl `instances`).
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: true },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
+            ],
         });
         let shadow_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -1936,7 +1948,9 @@ impl Renderer {
                     cache: None,
                 })
             });
-        let (shadow_buffer, shadow_group) = Self::make_shadow_buffer(&device, &shadow_layout, 64);
+        let shadow_instances = Self::make_shadow_instances(&device, 64);
+        let (shadow_buffer, shadow_group) =
+            Self::make_shadow_buffer(&device, &shadow_layout, 64, &shadow_instances);
 
         // The environment filter (filter.wgsl): RGBA8 targets, no depth, no blending.
         let filter_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
@@ -2052,6 +2066,8 @@ impl Renderer {
             rendered: HashMap::new(),
             shadow_buffer,
             shadow_capacity: 64,
+            shadow_instances,
+            shadow_instance_capacity: 64,
             shadow_group,
             env: None,
             env_rendered: false,
@@ -2268,10 +2284,20 @@ impl Renderer {
         (size, texture, view)
     }
 
+    fn make_shadow_instances(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("shadow instances"),
+            size: (capacity * 64) as u64,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        })
+    }
+
     fn make_shadow_buffer(
         device: &wgpu::Device,
         layout: &wgpu::BindGroupLayout,
         capacity: usize,
+        instances: &wgpu::Buffer,
     ) -> (wgpu::Buffer, wgpu::BindGroup) {
         let buffer = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("shadow draws"),
@@ -2282,16 +2308,67 @@ impl Renderer {
         let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("shadow draws"),
             layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                    buffer: &buffer,
-                    offset: 0,
-                    size: wgpu::BufferSize::new(std::mem::size_of::<ShadowDrawU>() as u64),
-                }),
-            }],
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                        buffer: &buffer,
+                        offset: 0,
+                        size: wgpu::BufferSize::new(std::mem::size_of::<ShadowDrawU>() as u64),
+                    }),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: instances.as_entire_binding(),
+                },
+            ],
         });
         (buffer, group)
+    }
+
+    /// The uniforms of a shadow or depth color pass, one per draw, and the instance matrices of its instanced draws
+    /// into their buffers, grown when the pass needs more. `particle_draws` and `particle_instances` of them are
+    /// ParticleSystem data (crate::transfer).
+    fn upload_shadow_draws(
+        &mut self,
+        draws: &[ShadowDrawU],
+        instances: &[[f32; 16]],
+        particle_draws: usize,
+        particle_instances: usize,
+    ) {
+        let more_instances = instances.len() > self.shadow_instance_capacity;
+
+        if more_instances {
+            self.shadow_instance_capacity = instances.len().next_power_of_two();
+            self.shadow_instances =
+                Self::make_shadow_instances(&self.device, self.shadow_instance_capacity);
+        }
+
+        if draws.len() > self.shadow_capacity || more_instances {
+            self.shadow_capacity = self.shadow_capacity.max(draws.len().next_power_of_two());
+            (self.shadow_buffer, self.shadow_group) = Self::make_shadow_buffer(
+                &self.device,
+                &self.shadow_layout,
+                self.shadow_capacity,
+                &self.shadow_instances,
+            );
+        }
+
+        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
+        for (i, d) in draws.iter().enumerate() {
+            let b = bytemuck::bytes_of(d);
+            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
+                .copy_from_slice(b);
+        }
+        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
+        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
+
+        if !instances.is_empty() {
+            let bytes: &[u8] = bytemuck::cast_slice(instances);
+
+            self.queue.write_buffer(&self.shadow_instances, 0, bytes);
+            crate::transfer::split_upload(bytes.len(), particle_instances * 64);
+        }
     }
 
     /// The light containers' renderShadowMap: each shadow map cleared to depth 1, then the
@@ -2506,9 +2583,10 @@ impl Renderer {
             }
         }
 
-        // Uniforms, one per depth draw.
+        // Uniforms, one per depth draw; an instanced draw's matrices in the shadow instances.
         let mut draws: Vec<ShadowDrawU> = vec![];
-        let mut particle_draws = 0usize;
+        let mut instances: Vec<[f32; 16]> = vec![];
+        let (mut particle_draws, mut particle_instances) = (0usize, 0usize);
 
         for map in &frame.shadow_maps {
             for view in &map.views {
@@ -2521,41 +2599,26 @@ impl Renderer {
                     }
                     d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
-                    // InstancedShape: one draw per instance (Depth2.vs.js getInstanceVertex).
-                    particle_draws += match &item.instances {
-                        Some(i) if i.particle => i.matrices.len(),
-                        _ => item.thick_lines.is_some() as usize,
-                    };
+                    // InstancedShape, ParticleSystem: one instanced draw (Depth2.vs.js getInstanceVertex).
+                    let particle = item
+                        .instances
+                        .as_ref()
+                        .map_or(item.thick_lines.is_some(), |i| i.particle);
+                    particle_draws += particle as usize;
 
-                    match &item.instances {
-                        Some(i) => {
-                            for m in &i.matrices {
-                                let mut di = d;
-                                di.counts[1] = 1;
-                                di.inst_matrix = f32x16(m);
-                                draws.push(di);
-                            }
-                        }
-                        None => draws.push(d),
+                    if let Some(i) = &item.instances {
+                        d.counts[1] = 1;
+                        d.counts[2] = instances.len() as u32;
+                        instances.extend(i.matrices.iter().map(f32x16));
+                        particle_instances += if particle { i.matrices.len() } else { 0 };
                     }
+
+                    draws.push(d);
                 }
             }
         }
 
-        if draws.len() > self.shadow_capacity {
-            self.shadow_capacity = draws.len().next_power_of_two();
-            (self.shadow_buffer, self.shadow_group) =
-                Self::make_shadow_buffer(&self.device, &self.shadow_layout, self.shadow_capacity);
-        }
-
-        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
-        for (i, d) in draws.iter().enumerate() {
-            let b = bytemuck::bytes_of(d);
-            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
-                .copy_from_slice(b);
-        }
-        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
-        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
+        self.upload_shadow_draws(&draws, &instances, particle_draws, particle_instances);
 
         self.make_thick_lines(
             frame
@@ -2631,11 +2694,7 @@ impl Renderer {
                 let [x, y, w, h] = view.viewport;
                 let top = map.size.saturating_sub(y + h);
                 if w == 0 || h == 0 {
-                    k += view
-                        .items
-                        .iter()
-                        .map(|i| i.instances.as_ref().map_or(1, |n| n.matrices.len()))
-                        .sum::<usize>();
+                    k += view.items.len();
                     continue;
                 }
                 pass.set_viewport(x as f32, top as f32, w as f32, h as f32, 0.0, 1.0);
@@ -2663,20 +2722,20 @@ impl Renderer {
                         1 => &self.shadow_pipelines[1],
                         _ => &self.shadow_pipelines[2],
                     };
-                    for _ in 0..item.instances.as_ref().map_or(1, |n| n.matrices.len()) {
-                        if e.count > 0 {
-                            pass.set_pipeline(pipeline);
-                            pass.set_bind_group(
-                                0,
-                                &self.shadow_group,
-                                &[(k as u64 * SHADOW_STRIDE) as u32],
-                            );
-                            pass.set_vertex_buffer(0, e.buffer.slice(..));
-                            pass.draw(0..e.count, 0..1);
-                            self.stats.shadow_draw_calls += 1;
-                        }
-                        k += 1;
+                    let instances = item.instances.as_ref().map_or(1, |n| n.matrices.len()) as u32;
+
+                    if e.count > 0 && instances > 0 {
+                        pass.set_pipeline(pipeline);
+                        pass.set_bind_group(
+                            0,
+                            &self.shadow_group,
+                            &[(k as u64 * SHADOW_STRIDE) as u32],
+                        );
+                        pass.set_vertex_buffer(0, e.buffer.slice(..));
+                        pass.draw(0..e.count, 0..instances);
+                        self.stats.shadow_draw_calls += 1;
                     }
+                    k += 1;
                 }
             }
         }
@@ -4131,7 +4190,8 @@ impl Renderer {
         }
 
         let mut draws: Vec<ShadowDrawU> = vec![];
-        let mut particle_draws = 0usize;
+        let mut instances: Vec<[f32; 16]> = vec![];
+        let (mut particle_draws, mut particle_instances) = (0usize, 0usize);
         for item in &frame.items {
             let mut d: ShadowDrawU = bytemuck::Zeroable::zeroed();
             d.projection = f32x16(&projection);
@@ -4141,22 +4201,19 @@ impl Renderer {
             }
             d.counts[0] = item.clip_planes.len().min(MAX_CLIP_PLANES) as u32;
 
-            // InstancedShape: one draw per instance.
-            if let Some(i) = item.instances.as_ref().filter(|i| i.particle) {
-                particle_draws += i.matrices.len();
+            // InstancedShape, ParticleSystem: one instanced draw.
+            if let Some(i) = &item.instances {
+                d.counts[1] = 1;
+                d.counts[2] = instances.len() as u32;
+                instances.extend(i.matrices.iter().map(f32x16));
+
+                if i.particle {
+                    particle_draws += 1;
+                    particle_instances += i.matrices.len();
+                }
             }
 
-            match &item.instances {
-                Some(i) => {
-                    for m in &i.matrices {
-                        let mut di = d;
-                        di.counts[1] = 1;
-                        di.inst_matrix = f32x16(m);
-                        draws.push(di);
-                    }
-                }
-                None => draws.push(d),
-            }
+            draws.push(d);
 
             let gp = Rc::as_ptr(&item.geometry);
             match self.geometries.get_mut(&gp) {
@@ -4186,20 +4243,7 @@ impl Renderer {
             }
         }
 
-        if draws.len() > self.shadow_capacity {
-            self.shadow_capacity = draws.len().next_power_of_two();
-            (self.shadow_buffer, self.shadow_group) =
-                Self::make_shadow_buffer(&self.device, &self.shadow_layout, self.shadow_capacity);
-        }
-
-        let mut bytes = vec![0u8; draws.len().max(1) * SHADOW_STRIDE as usize];
-        for (i, d) in draws.iter().enumerate() {
-            let b = bytemuck::bytes_of(d);
-            bytes[i * SHADOW_STRIDE as usize..i * SHADOW_STRIDE as usize + b.len()]
-                .copy_from_slice(b);
-        }
-        self.queue.write_buffer(&self.shadow_buffer, 0, &bytes);
-        crate::transfer::split_upload(bytes.len(), particle_draws * SHADOW_STRIDE as usize);
+        self.upload_shadow_draws(&draws, &instances, particle_draws, particle_instances);
 
         let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("rendered texture depth map"),
@@ -4238,20 +4282,16 @@ impl Renderer {
                 1 => &self.depth_color_pipelines[1],
                 _ => &self.depth_color_pipelines[2],
             };
-            for _ in 0..item.instances.as_ref().map_or(1, |n| n.matrices.len()) {
-                if e.count > 0 {
-                    pass.set_pipeline(pipeline);
-                    pass.set_bind_group(
-                        0,
-                        &self.shadow_group,
-                        &[(k as u64 * SHADOW_STRIDE) as u32],
-                    );
-                    pass.set_vertex_buffer(0, e.buffer.slice(..));
-                    pass.draw(0..e.count, 0..1);
-                    self.stats.depth_draw_calls += 1;
-                }
-                k += 1;
+            let instances = item.instances.as_ref().map_or(1, |n| n.matrices.len()) as u32;
+
+            if e.count > 0 && instances > 0 {
+                pass.set_pipeline(pipeline);
+                pass.set_bind_group(0, &self.shadow_group, &[(k as u64 * SHADOW_STRIDE) as u32]);
+                pass.set_vertex_buffer(0, e.buffer.slice(..));
+                pass.draw(0..e.count, 0..instances);
+                self.stats.depth_draw_calls += 1;
             }
+            k += 1;
         }
     }
 
