@@ -569,7 +569,8 @@ pub fn pick(
     // The winner: the pointing buffer's id, or the nearest CPU hit (the last on a tie, like the LEQUAL depth test).
     let mut winner: Option<(usize, Vector3, Vector3, Vector4)> = None;
 
-    if let Some(gpu) = gpu.as_deref_mut() {
+    // `None` without a GPU or once its device is lost: the CPU ray cast decides.
+    let sampled = gpu.as_deref_mut().and_then(|gpu| {
         let draws: Vec<PointingTriangle> = candidates
             .iter()
             .enumerate()
@@ -585,8 +586,13 @@ pub fn pick(
                 )
             })
             .collect();
+        let sample = gpu.sample_all(&draws);
 
-        if let Some(sample) = gpu.sample_all(&draws) {
+        (!gpu.lost()).then_some(sample)
+    });
+
+    if let Some(sample) = sampled {
+        if let Some(sample) = sample {
             let c = &candidates[sample.id as usize - 1];
             let s = &shapes[c.shape];
             let p = Vector3::new(

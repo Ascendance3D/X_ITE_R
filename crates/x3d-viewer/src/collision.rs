@@ -418,14 +418,14 @@ impl World {
     /// buffer with `view · ortho` as projection, then TextureBuffer.readDepth: the pixel with the
     /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
     /// shape was hit, its normal in the frame of the translation (`closestObject .modelViewMatrix
-    /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`).
+    /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`). `None` when the device is lost.
     fn depth_gpu(
         &self,
         gpu: &Rc<RefCell<DepthGpu>>,
         view: &Matrix4,
         ortho: &Matrix4,
         bounds: (f64, f64, f64, f64, f64, f64),
-    ) -> (f64, Option<(Vector3, usize)>) {
+    ) -> Option<(f64, Option<(Vector3, usize)>)> {
         let mut view_projection = *view;
         view_projection.mult_right(ortho);
 
@@ -471,7 +471,7 @@ impl World {
                 }
             })
             .collect();
-        let mut pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes);
+        let mut pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes)?;
 
         // The LINE particles, in draw order after the GPU's shapes (a depth tie keeps the GPU's pixel).
         let lines = self
@@ -520,15 +520,15 @@ impl World {
         let id = pixels.data0[index][1];
 
         let Some((shape, _)) = (id >= 0.0).then(|| self.shape_of(id as usize)).flatten() else {
-            return (distance, None);
+            return Some((distance, None));
         };
 
         let n = pixels.data1[index];
         let normal = Vector3::new(n[0] as f64, n[1] as f64, n[2] as f64);
-        (
+        Some((
             distance,
             Some((hit_normal(shape, view, normal), id as usize)),
-        )
+        ))
     }
 
     /// Closest depth under an orthographic view (l, r, b, t, near, far) of the collision camera.
@@ -540,8 +540,13 @@ impl World {
         if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
             let mut ortho = Matrix4::IDENTITY;
             Camera::ortho(l, r, b, t, near, far, &mut ortho);
-            let (distance, normal) = self.depth_gpu(gpu, view, &ortho, (l, r, b, t, near, far));
-            return normal.map(|(n, id)| (distance, n, Some(id)));
+
+            // A lost device: the CPU stand-in below.
+            if let Some((distance, normal)) =
+                self.depth_gpu(gpu, view, &ortho, (l, r, b, t, near, far))
+            {
+                return normal.map(|(n, id)| (distance, n, Some(id)));
+            }
         }
 
         let bounds = (l, r, b, t, near, far);

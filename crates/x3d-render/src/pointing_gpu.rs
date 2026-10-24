@@ -132,6 +132,8 @@ pub struct PointingGpu {
     views: [wgpu::TextureView; 3],
     depth: wgpu::TextureView,
     readback: wgpu::Buffer,
+    /// A readback failed (the device was lost): the buffer gives no more samples.
+    lost: bool,
     /// Samples taken (for tests).
     pub samples: usize,
 }
@@ -169,6 +171,11 @@ impl PointingGpu {
 
     pub fn queue(&self) -> &wgpu::Queue {
         &self.queue
+    }
+
+    /// A readback failed, so the device is lost: every later sample is `None`, and the caller picks on the CPU.
+    pub fn lost(&self) -> bool {
+        self.lost
     }
 
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> PointingGpu {
@@ -342,6 +349,7 @@ impl PointingGpu {
             views,
             depth,
             readback,
+            lost: false,
             samples: 0,
         }
     }
@@ -375,7 +383,7 @@ impl PointingGpu {
     pub fn sample_all(&mut self, draws: &[PointingTriangle]) -> Option<PointingSample> {
         self.samples += 1;
 
-        if draws.is_empty() {
+        if draws.is_empty() || self.lost {
             return None;
         }
 
@@ -562,9 +570,13 @@ impl PointingGpu {
 
         self.queue.submit([encoder.finish()]);
         let slice = self.readback.slice(..);
-        slice.map_async(wgpu::MapMode::Read, |_| {});
         crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
-        let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
+
+        if !map_read(&self.device, &slice) {
+            self.lost = true;
+            return None;
+        }
+
         let mapped = slice.get_mapped_range().expect("map pointing readback");
         let f = |i: usize| -> [f32; 4] {
             std::array::from_fn(|k| {
@@ -586,4 +598,16 @@ impl PointingGpu {
             tex_coord: c,
         })
     }
+}
+
+/// Map `slice` for reading and wait for it. `false` when the device is lost (the poll or the mapping failed).
+pub(crate) fn map_read(device: &wgpu::Device, slice: &wgpu::BufferSlice) -> bool {
+    let mapped = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let done = mapped.clone();
+    slice.map_async(wgpu::MapMode::Read, move |r| {
+        done.store(r.is_ok(), std::sync::atomic::Ordering::Release)
+    });
+
+    device.poll(wgpu::PollType::wait_indefinitely()).is_ok()
+        && mapped.load(std::sync::atomic::Ordering::Acquire)
 }

@@ -235,20 +235,29 @@ fn run(
         .unwrap_or_default();
     let mut collision_probes = serde_json::Map::new();
 
-    // `--cpu-pointing`: the ray cast's double values, like x3d-drive (the interactive viewer picks this way).
+    // `--cpu-pointing`: the ray cast's double values, like x3d-drive and x3d-view.
     if (!probe_frames.is_empty() || !collision_frames.is_empty())
         && !std::env::args().any(|a| a == "--cpu-pointing")
     {
-        match x3d_render::pointing_gpu::PointingGpu::new_headless() {
+        // On the device that draws the frames, or without frames a headless one.
+        let pointing = match &gpu {
+            Some(g) => Ok(x3d_render::pointing_gpu::PointingGpu::new(
+                g.device.clone(),
+                g.queue.clone(),
+            )),
+            None => x3d_render::pointing_gpu::PointingGpu::new_headless(),
+        };
+
+        match pointing {
             Ok(g) => {
                 // The collision depth buffer shares the device.
-                if !collision_frames.is_empty() {
-                    v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(
+                let depth = (!collision_frames.is_empty()).then(|| {
+                    std::rc::Rc::new(std::cell::RefCell::new(
                         x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()),
-                    )));
-                }
+                    ))
+                });
 
-                v.pointing_gpu = Some(g)
+                v.set_gpu(Some(g), depth).expect("one device");
             }
             Err(e) => {
                 // X3D_QUIET_NO_GPU: GPU-less CI runs this hundreds of times.

@@ -201,31 +201,41 @@ fn run(
     // loaded world was current), so frame-count dependent behavior (WALK gravity) lines up.
     let warmup = warmup_override.or(script["warmup"].as_u64()).unwrap_or(8);
 
-    // The pointing buffer on the GPU, like X_ITE's (`--cpu-pointing`: the ray cast's double values).
+    let mut gpu = if png_dir.is_some() {
+        x3d_render::gpu::Gpu::new().ok()
+    } else {
+        None
+    };
+
+    // The pointing buffer on the GPU, like X_ITE's (`--cpu-pointing`: the ray cast's double values), with the collision
+    // depth buffer on the same device: the one that draws the frames, or without frames a headless one.
     if !std::env::args().any(|a| a == "--cpu-pointing") {
-        v.pointing_gpu = match x3d_render::pointing_gpu::PointingGpu::new_headless() {
+        let pointing = match &gpu {
+            Some(g) => Ok(x3d_render::pointing_gpu::PointingGpu::new(
+                g.device.clone(),
+                g.queue.clone(),
+            )),
+            None => x3d_render::pointing_gpu::PointingGpu::new_headless(),
+        };
+
+        match pointing {
             Ok(g) => {
-                // The collision depth buffer shares the device.
-                v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(
-                    x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()),
-                )));
-                Some(g)
+                let depth =
+                    x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone());
+                v.set_gpu(
+                    Some(g),
+                    Some(std::rc::Rc::new(std::cell::RefCell::new(depth))),
+                )
+                .expect("one device");
             }
             Err(e) => {
                 // X3D_QUIET_NO_GPU: GPU-less CI runs this hundreds of times.
                 if std::env::var_os("X3D_QUIET_NO_GPU").is_none() {
                     eprintln!("x3d-drive: no pointing GPU ({e}); picks use the ray cast");
                 }
-                None
             }
-        };
+        }
     }
-
-    let mut gpu = if png_dir.is_some() {
-        x3d_render::gpu::Gpu::new().ok()
-    } else {
-        None
-    };
     // The RenderingProperties of the page (Multisampling 0 for anim.html, N for `--msaa N`).
     if let Some(g) = gpu.as_mut() {
         v.rendering_properties().apply(&mut g.renderer);
