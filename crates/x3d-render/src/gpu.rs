@@ -4744,6 +4744,8 @@ impl Renderer {
             };
             let mut count = count;
             let mut range = (0, 0);
+            // Instanced draws: the scratch range of each instance (front_draws and back_draws order).
+            let mut instance_ranges: Vec<(u64, u64)> = vec![];
 
             // LineProperties: stippled or wide lines with the per-frame x3d_LineStipple attribute
             // (X3DLineGeometryNode.updateLengthSoFar, gl.lineWidth, displayThick).
@@ -4758,12 +4760,42 @@ impl Renderer {
                     };
                     // Window coordinates of the shape's gl.viewport (gl_FragCoord of the stipple).
                     let r = item.viewport.unwrap_or(layer_rect);
-                    let (verts, triangles) =
-                        line_style_vertices(g, &item.model_view, &frame.projection, r, &l, samples);
-                    let start = scratch_data.len() as u64 * 4;
-                    scratch_data.extend_from_slice(&verts);
-                    range = (start, scratch_data.len() as u64 * 4);
-                    count = (verts.len() / STIPPLE_FLOATS_PER_VERTEX) as u32;
+                    let mut style_vertices = |instance: Option<&Matrix4>| {
+                        let (verts, triangles) = line_style_vertices(
+                            g,
+                            &item.model_view,
+                            &frame.projection,
+                            r,
+                            &l,
+                            samples,
+                            instance,
+                        );
+                        let start = scratch_data.len() as u64 * 4;
+                        scratch_data.extend_from_slice(&verts);
+                        (
+                            (start, scratch_data.len() as u64 * 4),
+                            (verts.len() / STIPPLE_FLOATS_PER_VERTEX) as u32,
+                            triangles,
+                        )
+                    };
+                    // X3DLineGeometryNode.displayInstanced: every instance has its own segments in window space.
+                    let triangles = match &item.instances {
+                        Some(i) if !i.matrices.is_empty() => {
+                            let mut triangles = false;
+                            for m in &i.matrices {
+                                let (r, c, t) = style_vertices(Some(m));
+                                instance_ranges.push(r);
+                                (count, triangles) = (c, t);
+                            }
+                            range = instance_ranges[0];
+                            triangles
+                        }
+                        _ => {
+                            let (r, c, t) = style_vertices(None);
+                            (range, count) = (r, c);
+                            t
+                        }
+                    };
                     source = Source::Scratch;
                     base.stipple = true;
                     base.topology = if points {
@@ -4789,12 +4821,14 @@ impl Renderer {
             }
 
             let calls_before = calls.len();
-            let call = |key: PipelineKey, draw_index: usize| Call {
+            // `instance`: the instance of the draw (its position in front_draws or back_draws), whose scratch range
+            // it draws when the instances have their own.
+            let call = |key: PipelineKey, draw_index: usize, instance: usize| Call {
                 key,
                 blend_constant,
                 style_texture: style_tex,
                 source,
-                range,
+                range: instance_ranges.get(instance).copied().unwrap_or(range),
                 count,
                 draw_index,
                 textures: slot_key,
@@ -4802,8 +4836,8 @@ impl Renderer {
             };
 
             if topology != Topology::Triangles || sprites {
-                for &i in &front_draws {
-                    calls.push(call(base, i));
+                for (instance, &i) in front_draws.iter().enumerate() {
+                    calls.push(call(base, i, instance));
                 }
             } else if back_index.is_some() {
                 // displayGeometry (back shader, back only), then (front shader, front only); the
@@ -4814,7 +4848,7 @@ impl Renderer {
                     &projector_textures,
                 )
                 .0;
-                for &bi in &back_draws {
+                for (instance, &bi) in back_draws.iter().enumerate() {
                     calls.push(Call {
                         textures: back_slots,
                         ..call(
@@ -4823,43 +4857,47 @@ impl Renderer {
                                 ..base
                             },
                             bi,
+                            instance,
                         )
                     });
                 }
-                for &i in &front_draws {
+                for (instance, &i) in front_draws.iter().enumerate() {
                     calls.push(call(
                         PipelineKey {
                             cull: Cull::Back,
                             ..base
                         },
                         i,
+                        instance,
                     ));
                 }
             } else if is_transparent {
                 if !g.solid {
-                    for &i in &front_draws {
+                    for (instance, &i) in front_draws.iter().enumerate() {
                         calls.push(call(
                             PipelineKey {
                                 cull: Cull::Front,
                                 ..base
                             },
                             i,
+                            instance,
                         ));
                     }
                 }
-                for &i in &front_draws {
+                for (instance, &i) in front_draws.iter().enumerate() {
                     calls.push(call(
                         PipelineKey {
                             cull: Cull::Back,
                             ..base
                         },
                         i,
+                        instance,
                     ));
                 }
             } else {
                 let cull = if g.solid { Cull::Back } else { Cull::None };
-                for &i in &front_draws {
-                    calls.push(call(PipelineKey { cull, ..base }, i));
+                for (instance, &i) in front_draws.iter().enumerate() {
+                    calls.push(call(PipelineKey { cull, ..base }, i, instance));
                 }
             }
 
@@ -5510,6 +5548,13 @@ pub const MAX_LINE_WIDTH: f64 = 10.0;
 ///   values are always the projected end points.
 ///
 /// Like X_ITE, the triangle corners are unprojected back into the geometry's own space.
+///
+/// `instance` is the instance matrix of one instance of an instanced draw (X3DLineGeometryNode.displayInstanced):
+/// the segment is projected as `x3d_InstanceMatrix * vertex` and the corners are unprojected with
+/// `inverse (x3d_InstanceMatrix) * invModelViewProjectionMatrix` (LineTransform2.vs), so they are in the geometry's
+/// own space again and the draw applies the instance matrix once. updateLengthSoFar ignores the instance matrix: the
+/// length so far of the transformed lines comes from the geometry under the model view matrix alone, shared by every
+/// instance. Instanced gl.LINES (width up to ALIASED_LINE_WIDTH_RANGE [1]) have no x3d_LineStipple attribute.
 fn line_style_vertices(
     g: &crate::geometry::Geometry,
     model_view: &Matrix4,
@@ -5517,18 +5562,24 @@ fn line_style_vertices(
     viewport: [f64; 4],
     l: &LineParams,
     samples: u32,
+    instance: Option<&Matrix4>,
 ) -> (Vec<f32>, bool) {
     let [x0, y0, width, height] = viewport;
     let mut mvp = *model_view;
     mvp.mult_right(projection);
-    let mut inv = mvp;
+    let instance_mvp = instance.map(|m| {
+        let mut m = *m;
+        m.mult_right(&mvp);
+        m
+    });
+    let mut inv = instance_mvp.unwrap_or(mvp);
     inv.inverse();
 
     let base = geometry_vertices(g);
     let vertex = |i: usize| &base[i * FLOATS_PER_VERTEX..(i + 1) * FLOATS_PER_VERTEX];
 
     // ViewVolume.projectPointMatrix
-    let project = |v: &[f32]| {
+    let project_with = |mvp: &Matrix4, v: &[f32]| {
         let mut p = Vector4::new(v[0] as f64, v[1] as f64, v[2] as f64, 1.0);
         mvp.mult_vec_matrix4(&mut p);
         let d = 1.0 / (2.0 * p.w);
@@ -5569,21 +5620,30 @@ fn line_style_vertices(
 
     for k in 0..base.len() / FLOATS_PER_VERTEX / 2 {
         let (v0, v1) = (vertex(2 * k), vertex(2 * k + 1));
-        let (p0, p1) = (project(v0), project(v1));
+        // The segment as drawn (with the instance matrix) and as updateLengthSoFar sees it (without).
+        let (s0, s1) = (project_with(&mvp, v0), project_with(&mvp, v1));
+        let (p0, p1) = match &instance_mvp {
+            Some(m) => (project_with(m, v0), project_with(m, v1)),
+            None => (s0, s1),
+        };
+        // gl.LINES read x3d_LineStipple as updateLengthSoFar wrote it, the transformed lines get the end points of
+        // LineTransform2.vs and its x3d_LengthSoFar.
+        let (e0, e1) = if thick { (p0, p1) } else { (s0, s1) };
 
-        // updateLengthSoFar (not called for linetype 1, so the attribute stays zero).
-        let (mid0, mid1, stipple) = if stippled || thick {
+        // updateLengthSoFar (not called for linetype 1, so the attribute stays zero). The gl.LINES of
+        // displayInstanced do not enable x3d_LineStipple at all: it reads zero, and the stipple pattern is solid.
+        let (mid0, mid1, stipple) = if thick || (stippled && instance.is_none()) {
             (
-                [p1[0], p1[1]],
-                [p0[0], p0[1]],
-                [p0[0], p0[1], if stippled { length_so_far } else { 0.0 }],
+                [e1[0], e1[1]],
+                [e0[0], e0[1]],
+                [e0[0], e0[1], if stippled { length_so_far } else { 0.0 }],
             )
         } else {
             ([0.0; 2], [0.0; 2], [0.0; 3])
         };
 
         if stippled {
-            length_so_far += ((p1[0] - p0[0]).powi(2) + (p1[1] - p0[1]).powi(2)).sqrt();
+            length_so_far += ((s1[0] - s0[0]).powi(2) + (s1[1] - s0[1]).powi(2)).sqrt();
         }
 
         if !triangles {
@@ -5684,7 +5744,7 @@ pub fn transformed_line_positions(
     viewport: [f64; 4],
     l: &LineParams,
 ) -> Vec<[f32; 4]> {
-    let (verts, _) = line_style_vertices(g, model_view, projection, viewport, l, 1);
+    let (verts, _) = line_style_vertices(g, model_view, projection, viewport, l, 1, None);
 
     verts
         .chunks_exact(STIPPLE_FLOATS_PER_VERTEX)
@@ -5901,4 +5961,207 @@ fn normal_matrix(mv: &[f32; 16]) -> [f32; 9] {
     n.0[8] = a[10];
     n.inverse();
     n.0.map(|v| v as f32)
+}
+
+#[cfg(test)]
+mod line_instance_tests {
+    use super::*;
+
+    const VIEWPORT: [f64; 4] = [0.0, 0.0, 512.0, 512.0];
+
+    fn segments(vertices: &[[f64; 3]]) -> crate::geometry::Geometry {
+        crate::geometry::Geometry {
+            geometry_type: 1,
+            vertices: vertices
+                .iter()
+                .flat_map(|v| [v[0] as f32, v[1] as f32, v[2] as f32, 1.0])
+                .collect(),
+            ..Default::default()
+        }
+    }
+
+    const LINE: [[f64; 3]; 4] = [
+        [-0.3, 0.1, 0.0],
+        [0.4, -0.2, 0.1],
+        [0.4, -0.2, 0.1],
+        [0.1, 0.5, -0.2],
+    ];
+
+    fn model_view() -> Matrix4 {
+        let mut m = Matrix4::IDENTITY;
+        m.0[14] = -3.0;
+        m
+    }
+
+    /// glFrustum (-0.1, 0.1, -0.1, 0.1, 0.1, 100).
+    fn projection() -> Matrix4 {
+        let (n, f) = (0.1, 100.0);
+        Matrix4([
+            n / 0.1,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            n / 0.1,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -(f + n) / (f - n),
+            -1.0,
+            0.0,
+            0.0,
+            -2.0 * f * n / (f - n),
+            0.0,
+        ])
+    }
+
+    /// A particle-like instance matrix: rotation, non-uniform scale and translation.
+    fn instance() -> Matrix4 {
+        let (s, c) = 0.7f64.sin_cos();
+        Matrix4([
+            1.5 * c,
+            1.5 * s,
+            0.0,
+            0.0,
+            -0.5 * s,
+            0.5 * c,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2.0,
+            0.0,
+            0.2,
+            0.1,
+            0.3,
+            1.0,
+        ])
+    }
+
+    fn transform(m: &Matrix4, v: [f64; 3]) -> [f64; 3] {
+        let mut p = Vector4::new(v[0], v[1], v[2], 1.0);
+        m.mult_vec_matrix4(&mut p);
+        [p.x / p.w, p.y / p.w, p.z / p.w]
+    }
+
+    fn vertices(out: &[f32]) -> Vec<&[f32]> {
+        out.chunks_exact(STIPPLE_FLOATS_PER_VERTEX).collect()
+    }
+
+    /// An instanced draw of a wide line is the draw of the instance-transformed line: the corners are computed from
+    /// `instance * vertex` in window space and come back in the geometry's own space, so that the instance matrix the
+    /// draw applies afterwards (x3d.wgsl) is applied exactly once.
+    #[test]
+    fn instanced_wide_lines_apply_the_instance_matrix_before_the_width() {
+        let (mv, projection, m) = (model_view(), projection(), instance());
+        let moved: Vec<[f64; 3]> = LINE.iter().map(|&v| transform(&m, v)).collect();
+
+        for (width, samples) in [(6.0, 1), (6.0, 4), (24.0, 1), (24.0, 4)] {
+            let l = LineParams { linetype: 1, width };
+            let (a, ta) = line_style_vertices(
+                &segments(&LINE),
+                &mv,
+                &projection,
+                VIEWPORT,
+                &l,
+                samples,
+                Some(&m),
+            );
+            let (b, tb) = line_style_vertices(
+                &segments(&moved),
+                &mv,
+                &projection,
+                VIEWPORT,
+                &l,
+                samples,
+                None,
+            );
+
+            assert!(ta && tb);
+            assert_eq!(a.len(), b.len());
+
+            for (k, (a, b)) in vertices(&a).into_iter().zip(vertices(&b)).enumerate() {
+                let p = transform(&m, [a[0] as f64, a[1] as f64, a[2] as f64]);
+
+                for c in 0..3 {
+                    assert!(
+                        (p[c] - b[c] as f64).abs() < 1e-4,
+                        "width {width} samples {samples} vertex {k}: {p:?} vs {:?}",
+                        &b[..3]
+                    );
+                }
+
+                // The transformed lines' end points (x3d_LineStipple of LineTransform2.vs) are those of the
+                // instance-transformed segment.
+                for c in [6, 7, FLOATS_PER_VERTEX, FLOATS_PER_VERTEX + 1] {
+                    assert!(
+                        (a[c] - b[c]).abs() < 1e-2,
+                        "width {width} vertex {k} float {c}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// The window-space width of a transformed line does not depend on the instance's scale.
+    #[test]
+    fn instanced_transformed_lines_keep_the_window_space_width() {
+        let (mv, projection, m) = (model_view(), projection(), instance());
+        let l = LineParams {
+            linetype: 1,
+            width: 24.0,
+        };
+        let (out, _) = line_style_vertices(
+            &segments(&LINE[..2]),
+            &mv,
+            &projection,
+            VIEWPORT,
+            &l,
+            1,
+            Some(&m),
+        );
+        let mut mvp = m;
+        mvp.mult_right(&mv).mult_right(&projection);
+        let window = |v: &[f32]| {
+            let p = transform(&mvp, [v[0] as f64, v[1] as f64, v[2] as f64]);
+            [(p[0] / 2.0 + 0.5) * 512.0, (p[1] / 2.0 + 0.5) * 512.0]
+        };
+        let v = vertices(&out);
+        // Triangle 1: p0 + o, p0 - o, p1 - o.
+        let (a, b) = (window(v[0]), window(v[1]));
+        let width = ((a[0] - b[0]).powi(2) + (a[1] - b[1]).powi(2)).sqrt();
+
+        assert!((width - 24.0).abs() < 1e-2, "{width}");
+    }
+
+    /// updateLengthSoFar ignores the instance matrix; instanced gl.LINES have no x3d_LineStipple attribute.
+    #[test]
+    fn instanced_stipple_values_follow_x_ite() {
+        let (mv, projection, m) = (model_view(), projection(), instance());
+        let g = segments(&LINE);
+
+        for width in [1.0, 6.0] {
+            let l = LineParams { linetype: 2, width };
+            let (a, _) = line_style_vertices(&g, &mv, &projection, VIEWPORT, &l, 1, Some(&m));
+            let (b, _) = line_style_vertices(&g, &mv, &projection, VIEWPORT, &l, 1, None);
+
+            assert!(vertices(&a).iter().all(|v| v[6] == 0.0
+                && v[7] == 0.0
+                && v[FLOATS_PER_VERTEX..FLOATS_PER_VERTEX + 3] == [0.0; 3]));
+            assert!(vertices(&b).iter().any(|v| v[FLOATS_PER_VERTEX] != 0.0));
+        }
+
+        // Transformed lines: the length so far of the segment without the instance matrix.
+        let l = LineParams {
+            linetype: 2,
+            width: 24.0,
+        };
+        let (a, _) = line_style_vertices(&g, &mv, &projection, VIEWPORT, &l, 1, Some(&m));
+        let (b, _) = line_style_vertices(&g, &mv, &projection, VIEWPORT, &l, 1, None);
+        let length = |out: &[f32]| vertices(out).last().unwrap()[FLOATS_PER_VERTEX + 2];
+
+        assert!(length(&b) > 0.0);
+        assert_eq!(length(&a), length(&b));
+    }
 }
