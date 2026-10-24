@@ -14,14 +14,18 @@ second. They draw nothing while the stored line count is not the current one.
 
 Every world is a LayerSet of two layers side by side (Viewport clipBoundary, left and right half of the canvas), each with
 the batch 21 floor and shadow-casting DirectionalLight, and LINE particles whose count changes while particles are
-emitted (emissionRate 8, maxParticles 20):
+emitted. The worlds carry an `emissionRate` field, which ParticleSystem does not have: X_ITE ignores it with "Unknown
+field 'emissionRate' in class 'ParticleSystem'." (in every baseline's log), and so does the port (the particle counts
+match). The particles are emitted at X_ITE's rate of maxParticles / particleLifetime per second (10 in every case), so
+the count rises by one every three or four frames. The field stays so that the worlds remain those of the recorded
+baselines.
 
 tl-shared-w24: one 24 px system in both layers (DEF in the first, USE in the second), the same viewpoint.
 tl-shared-w24-near: the same with the second layer's viewpoint nearer (its triangles are built with another camera).
 tl-first-w24, tl-second-w24: the system in one layer only (controls).
 tl-shared-w6: a shared 6 px system (gl.lineWidth, no stored triangles; control).
-tl-shared-w24-steady: a shared 24 px system of short-lived particles (maxParticles 4, particleLifetime 0.4,
-  emissionRate 100); the count still falls and rises again as particles die.
+tl-shared-w24-steady: a shared 24 px system of short-lived particles (maxParticles 4, particleLifetime 0.4): the count
+  rises to 4 by frame 14 and then stays 4 while dead particles are replaced (it changes in frames 3, 6, 10 and 14).
 """
 import json, os
 
