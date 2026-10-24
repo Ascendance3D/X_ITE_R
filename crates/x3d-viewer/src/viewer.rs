@@ -205,6 +205,12 @@ pub struct Viewer3d {
     /// The geometry each ParticleSystem last drew into the collision depth buffer, kept between frames while it does not
     /// change, so that the depth buffer keeps its vertex buffer (a SPRITE's changes when the view turns).
     particle_depth_geometry: HashMap<(Vec<NodeId>, NodeId), Rc<Geometry>>,
+    /// The ParticleSystems whose transformed LINE triangles a DISPLAY pass made (they keep them,
+    /// [`x3d_runtime::particles::Sim::thick_lines`]).
+    thick_line_systems: Vec<(Vec<NodeId>, NodeId)>,
+    /// The collision geometry (one per particle) of each system's transformed LINE triangles, kept while they are the
+    /// same so that the depth buffer keeps their vertex buffers.
+    thick_line_depth: HashMap<(Vec<NodeId>, NodeId), ThickLineDepth>,
     /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
     /// ray cast's double values.
     pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
@@ -254,6 +260,9 @@ pub struct Viewer3d {
     /// button is down.
     pointing_layer: Option<LayerKey>,
 }
+
+/// A system's transformed LINE triangles and their collision geometry, one per particle.
+type ThickLineDepth = (Rc<x3d_runtime::particles::ThickLines>, Rc<[Rc<Geometry>]>);
 
 fn geom_of(
     root: &Runtime,
@@ -428,6 +437,8 @@ impl Viewer3d {
             active_collisions: vec![],
             geom_cache: HashMap::new(),
             particle_depth_geometry: HashMap::new(),
+            thick_line_systems: vec![],
+            thick_line_depth: HashMap::new(),
             pointing_gpu: None,
             depth_gpu: None,
             pick_shapes: Default::default(),
@@ -498,6 +509,8 @@ impl Viewer3d {
         self.pointer = Pointer::new();
         self.geom_cache.clear();
         self.particle_depth_geometry.clear();
+        self.thick_line_systems.clear();
+        self.thick_line_depth.clear();
         self.render_cache = Default::default();
         self.pick_shapes = Default::default();
         self.scan_cam = Scan::default();
@@ -1051,6 +1064,8 @@ impl Viewer3d {
         self.lod_pass.static_done.retain(|k| !dead(k));
         self.geom_cache.retain(|k, _| !dead(k));
         self.particle_depth_geometry.retain(|k, _| !dead(k));
+        self.thick_line_systems.retain(|k| !dead(k));
+        self.thick_line_depth.retain(|k, _| !dead(k));
 
         for layer in
             std::iter::once(&mut self.layer).chain(self.others.iter_mut().map(|s| &mut s.layer))
@@ -1457,11 +1472,68 @@ impl Viewer3d {
             };
 
             if !seen.contains(&key) {
-                seen.push(key);
+                seen.push(key.clone());
             }
 
             let clip_planes: Rc<[[f64; 4]]> = first.clip_planes.as_slice().into();
             let collisions: Rc<[NodeId]> = first.collisions.as_slice().into();
+            let line_width = match first.style {
+                Some(x3d_render::traverse::StyleParams::Line(l)) if g.geometry_type == 1 => l.width,
+                _ => 1.0,
+            };
+
+            // displaySimpleInstancedThick: the triangles the last DISPLAY pass made, while the line count is the
+            // current one, under the instance matrices of that pass; nothing otherwise. Narrower lines are 1 px here:
+            // measured, the collision depth buffer does not widen gl.lineWidth lines (rea_b21_wide_lines pw-col-w6
+            // gives X_ITE's pw-col-w1 probes in every frame, while a 6 px line would reach pixels they miss).
+            if line_width > x3d_render::gpu::MAX_LINE_WIDTH {
+                let sim = rt_at(&self.rt, &first.shape.path)
+                    .and_then(|rt| rt.particle_sim(first.shape.node));
+                let lines = sim
+                    .and_then(|sim| {
+                        let num_lines = g.vertex_count() / 2 * sim.num_particles;
+
+                        sim.thick_lines.clone().filter(|t| t.num_lines == num_lines)
+                    })
+                    .filter(|t| t.num_lines > 0);
+                let Some(lines) = lines else {
+                    continue;
+                };
+                let geometries = match self.thick_line_depth.get(&key) {
+                    Some((kept, geometries)) if Rc::ptr_eq(kept, &lines) => geometries.clone(),
+                    _ => {
+                        let per = lines.positions.len() / lines.instances.len();
+                        let geometries: Rc<[Rc<Geometry>]> = lines
+                            .positions
+                            .chunks_exact(per)
+                            .map(|p| Rc::new(x3d_render::particles::line_triangle_geometry(p)))
+                            .collect();
+
+                        self.thick_line_depth
+                            .insert(key.clone(), (lines.clone(), geometries.clone()));
+                        geometries
+                    }
+                };
+
+                for (geometry, m) in geometries.iter().zip(&lines.instances) {
+                    let instance = Matrix4(m.map(f64::from));
+                    let mut model_view = instance;
+                    model_view.mult_right(&first.shape_model_view);
+
+                    shapes.push(CShape {
+                        node: first.shape.clone(),
+                        geometry: geometry.clone(),
+                        particle: true,
+                        model_view,
+                        base_model_view: first.shape_model_view,
+                        instance: Some(instance),
+                        clip_planes: clip_planes.clone(),
+                        collisions: collisions.clone(),
+                    });
+                }
+
+                continue;
+            }
 
             for &k in run_entries {
                 let s = &self.scan_display.particle_collisions[k];
@@ -1480,6 +1552,7 @@ impl Viewer3d {
         }
 
         self.particle_depth_geometry.retain(|k, _| seen.contains(k));
+        self.thick_line_depth.retain(|k, _| seen.contains(k));
 
         // Shading WIREFRAME is global GL state (the polygon mode) for X_ITE's depth renders too.
         let fill = match self
@@ -1658,12 +1731,23 @@ impl Viewer3d {
         lod.current_frame_rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
         let home = self.current;
 
+        // X3DRenderObject.draw renders the shadow maps before the shapes: they draw the transformed LINE triangles
+        // the systems had when this pass began.
+        for (path, node) in &self.thick_line_systems {
+            if let Some(sim) =
+                rt_at_mut(&mut self.rt, path).and_then(|rt| rt.particle_sim_mut(*node))
+            {
+                sim.thick_lines_before_display = sim.thick_lines.clone();
+            }
+        }
+
         for key in self.drawn.clone() {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
             self.scan_display =
                 crate::walk::scan_display(&self.rt, &self.layer_walk(), &view, &mut lod);
+            self.display_thick_lines();
         }
 
         self.clear_undrawn_scans();
@@ -1711,6 +1795,55 @@ impl Viewer3d {
         }
 
         self.lod_pass = lod;
+    }
+
+    /// X3DLineGeometryNode.displayInstancedThick in the DISPLAY pass of the current layer: every LINE system with
+    /// transformed lines that addDisplayShape keeps (its bbox in the view volume) gets the triangles of this view, which
+    /// the pointing, collision and shadow passes draw until the next DISPLAY pass draws it.
+    fn display_thick_lines(&mut self) {
+        if self.scan_display.thick_lines.is_empty() {
+            return;
+        }
+
+        let cam = self.pick_camera();
+
+        for d in std::mem::take(&mut self.scan_display.thick_lines) {
+            if !x3d_render::traverse::bbox_in_view_volume(&cam.projection, &d.model_view, &d.bbox) {
+                continue;
+            }
+
+            let instances: Vec<[f32; 16]> =
+                d.instances.iter().map(|m| m.0.map(|v| v as f32)).collect();
+            let positions = instances
+                .iter()
+                .flat_map(|m| {
+                    x3d_render::gpu::instanced_thick_line_positions(
+                        &d.geometry,
+                        &d.model_view,
+                        &cam.projection,
+                        d.viewport,
+                        d.width,
+                        m,
+                    )
+                })
+                .collect();
+            let lines = x3d_runtime::particles::ThickLines {
+                num_lines: d.geometry.vertex_count() / 2 * instances.len(),
+                positions,
+                instances,
+            };
+            let key = (d.system.path.to_vec(), d.system.node);
+
+            if let Some(sim) = rt_at_mut(&mut self.rt, &d.system.path)
+                .and_then(|rt| rt.particle_sim_mut(d.system.node))
+            {
+                sim.thick_lines = Some(Rc::new(lines));
+
+                if !self.thick_line_systems.contains(&key) {
+                    self.thick_line_systems.push(key);
+                }
+            }
+        }
     }
 
     fn refresh_display_scan(&mut self) {

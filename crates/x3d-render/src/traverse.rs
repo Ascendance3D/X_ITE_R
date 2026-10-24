@@ -780,6 +780,61 @@ pub struct DepthItem {
     pub clip_planes: Vec<[f64; 4]>,
     /// An InstancedShape's instances.
     pub instances: Option<Rc<InstanceData>>,
+    /// The gl.lineWidth of LINE particles (LineProperties.setShaderUniforms in X3DRenderObject.depth with a width up to
+    /// ALIASED_LINE_WIDTH_RANGE [1]; 1 otherwise): [`shadow_view`] draws the wide lines as GL rasterizes them.
+    pub line_width: f64,
+}
+
+/// One renderObject.render (TraverseType.SHADOW) view of `items`. LINE particles with a gl.lineWidth above 1 px are the
+/// aliased wide lines GL rasterizes in this view's viewport (crate::gpu::aliased_line_positions), two triangles per
+/// segment under their instance matrices, in the system's space.
+fn shadow_view(projection: Matrix4, viewport: [u32; 4], items: Vec<DepthItem>) -> ShadowView {
+    let window = viewport.map(|v| v as f64);
+    let items = items
+        .into_iter()
+        .map(|item| {
+            let Some(instances) = item
+                .instances
+                .as_ref()
+                .filter(|_| item.line_width > 1.0 && item.geometry.geometry_type == 1)
+            else {
+                return item;
+            };
+            let positions: Vec<[f32; 4]> = instances
+                .matrices
+                .iter()
+                .flat_map(|m| {
+                    crate::gpu::aliased_line_positions(
+                        &item.geometry,
+                        &item.model_view,
+                        &projection,
+                        window,
+                        item.line_width,
+                        Some(m),
+                    )
+                    .into_iter()
+                    .map(|p| {
+                        let mut v = Vector4::new(p[0] as f64, p[1] as f64, p[2] as f64, 1.0);
+                        m.mult_vec_matrix4(&mut v);
+                        [v.x as f32, v.y as f32, v.z as f32, 1.0]
+                    })
+                })
+                .collect();
+
+            DepthItem {
+                geometry: Rc::new(crate::particles::line_triangle_geometry(&positions)),
+                instances: None,
+                line_width: 1.0,
+                ..item
+            }
+        })
+        .collect();
+
+    ShadowView {
+        projection,
+        viewport,
+        items,
+    }
 }
 
 /// The groupNode of a light container: a grouping node (its own traverse, so a Transform applies
@@ -2537,11 +2592,11 @@ impl<'a> Builder<'a> {
                 light_bbox.mult_right(&inv_light_space);
                 let (min, max) = light_bbox.extents();
                 let projection = ortho(min.x, max.x, min.y, max.y, -max.z, -min.z);
-                views.push(ShadowView {
+                views.push(shadow_view(
                     projection,
-                    viewport: [0, 0, size, size],
-                    items: self.shadow_items(sg, &group, &inv_light_space),
-                });
+                    [0, 0, size, size],
+                    self.shadow_items(sg, &group, &inv_light_space),
+                ));
                 map_matrix = inv_light_space;
                 if !global {
                     let mut inv = model;
@@ -2570,11 +2625,11 @@ impl<'a> Builder<'a> {
                 // Camera.perspective (fieldOfView, 0.125, max (10000, far), size, size).
                 let ratio = (cut_off_angle).tan() * 0.125;
                 let projection = frustum(-ratio, ratio, -ratio, ratio, 0.125, far.max(10000.0));
-                views.push(ShadowView {
+                views.push(shadow_view(
                     projection,
-                    viewport: [0, 0, size, size],
-                    items: self.shadow_items(sg, &group, &inv_light_space),
-                });
+                    [0, 0, size, size],
+                    self.shadow_items(sg, &group, &inv_light_space),
+                ));
                 map_matrix = inv_light_space;
                 if !global {
                     let mut inv = model;
@@ -2623,11 +2678,11 @@ impl<'a> Builder<'a> {
                         (v[2] * s) as u32,
                         (v[3] * s) as u32,
                     ];
-                    views.push(ShadowView {
+                    views.push(shadow_view(
                         projection,
                         viewport,
-                        items: self.shadow_items(sg, &group, &m),
-                    });
+                        self.shadow_items(sg, &group, &m),
+                    ));
                 }
 
                 map_matrix = inv_light_space;
@@ -2851,25 +2906,55 @@ impl<'a> Builder<'a> {
                             .copied()
                             .collect(),
                         instances: None,
+                        line_width: 1.0,
                     });
                 }
             }
-            // ParticleSystem.displaySimple: the particles drawn instanced into the shadow map.
+            // ParticleSystem.displaySimple: the particles drawn instanced into the shadow map. LINE particles with
+            // LineProperties (setShaderUniforms): gl.lineWidth, or above ALIASED_LINE_WIDTH_RANGE [1]
+            // displaySimpleInstancedThick, the triangles of the DISPLAY pass before this frame's (X3DRenderObject.draw
+            // renders the shadow maps first) while their line count is the current one, and nothing otherwise.
             "ParticleSystem" => {
                 if !sg.bool(n, "castShadow", true) {
+                    return;
+                }
+                let line_width = match sg
+                    .node(n, "appearance")
+                    .and_then(|a| style_params(sg, a, 1))
+                {
+                    Some(StyleParams::Line(l))
+                        if sg.rt.particle_geometry_type(n) == GeometryType::Line =>
+                    {
+                        l.width
+                    }
+                    _ => 1.0,
+                };
+                let clip_planes: Vec<[f64; 4]> = self
+                    .clip_planes
+                    .iter()
+                    .take(MAX_CLIP_PLANES)
+                    .copied()
+                    .collect();
+
+                if line_width > crate::gpu::MAX_LINE_WIDTH {
+                    if let Some(geometry) = self.particle_thick_lines_before_display(sg, n) {
+                        out.push(DepthItem {
+                            geometry,
+                            model_view: *mv,
+                            clip_planes,
+                            instances: None,
+                            line_width: 1.0,
+                        });
+                    }
                     return;
                 }
                 if let Some((geometry, instances, _)) = self.particle_draw(sg, n, mv) {
                     out.push(DepthItem {
                         geometry,
                         model_view: *mv,
-                        clip_planes: self
-                            .clip_planes
-                            .iter()
-                            .take(MAX_CLIP_PLANES)
-                            .copied()
-                            .collect(),
+                        clip_planes,
                         instances: Some(instances),
+                        line_width,
                     });
                 }
             }
@@ -2893,6 +2978,7 @@ impl<'a> Builder<'a> {
                             .copied()
                             .collect(),
                         instances: Some(Rc::new(instances)),
+                        line_width: 1.0,
                     });
                 }
             }
@@ -3749,6 +3835,32 @@ impl<'a> Builder<'a> {
 
             self.items[i].geometry = value;
         }
+    }
+
+    /// The transformed LINE triangles of the ParticleSystem `n` as its shadow map draw sees them: those the DISPLAY pass
+    /// before this frame's made ([`x3d_runtime::particles::Sim::thick_lines_before_display`]) under their instance
+    /// matrices, in the system's space; `None` while their line count (one segment per particle) is not the current one.
+    fn particle_thick_lines_before_display(&self, sg: &Sg, n: NodeId) -> Option<Rc<Geometry>> {
+        if !self.particle_system_enabled(sg, n) {
+            return None;
+        }
+
+        let sim = sg.rt.particle_sim(n)?;
+        let lines = sim
+            .thick_lines_before_display
+            .as_ref()
+            .filter(|t| t.num_lines == sim.num_particles && !t.instances.is_empty())?;
+        let per = lines.positions.len() / lines.instances.len();
+        let positions: Vec<[f32; 4]> = lines
+            .positions
+            .chunks_exact(per)
+            .zip(&lines.instances)
+            .flat_map(|(p, m)| p.iter().map(|p| crate::gpu::mat_vec_f32(m, *p)))
+            .collect();
+
+        Some(Rc::new(crate::particles::line_triangle_geometry(
+            &positions,
+        )))
     }
 
     /// X3DShapeNode.isEnabled of a ParticleSystem: `numParticles`, and a geometry for GEOMETRY.

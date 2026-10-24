@@ -6,8 +6,9 @@
 # cases (vw-*, bbb-*) are in rea_batch12_view_billboard_cases_match_x_ite and run here. For the same reason
 # rea_b14_particle_pick_matches_x_ite (ParticleSystem pickProbes against the GPU pointing buffer) is skipped, and
 # rea_b15_particle_collision_matches_x_ite (ParticleSystem avatar collision against the GPU depth buffer), which
-# would otherwise return early without an adapter and report a pass. The eleven skipped tests all stay in the local
-# process, run on the RTX machine:
+# would otherwise return early without an adapter and report a pass, and rea_b21_wide_lines_match_x_ite (wide LINE
+# particles in the pointing, collision and shadow passes; its CPU collision half runs here). The twelve skipped tests
+# all stay in the local process, run on the RTX machine:
 #
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
 #     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
@@ -47,6 +48,7 @@ env:
     --skip rea_batch12_pick_cases_match_x_ite
     --skip rea_b14_particle_pick_matches_x_ite
     --skip rea_b15_particle_collision_matches_x_ite
+    --skip rea_b21_wide_lines_match_x_ite
 
 jobs:
   test:

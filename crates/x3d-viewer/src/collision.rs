@@ -11,7 +11,9 @@
 //! and its LINE particles are rasterized here by GL's diamond-exit rule (a WebGPU line list covers other pixels) and
 //! merged into the read-back buffer. The CPU stand-in samples the triangles at the pixel centers, covers the pixel of
 //! each POINT particle like a 1 px gl.POINTS and draws the LINE particles with the same diamond-exit rasterization after
-//! them; neither path draws the points and lines of PointSet and LineSet shapes.
+//! them; neither path draws the points and lines of PointSet and LineSet shapes. LINE particles wider than
+//! ALIASED_LINE_WIDTH_RANGE [1] are the triangles of the last DISPLAY pass instead (displaySimpleInstancedThick,
+//! `Viewer3d::collision_world`), drawn like other triangles; narrower gl.lineWidth lines stay 1 px (measured).
 
 use crate::geom::{Camera, Plane3, ViewVolume};
 use crate::layer::{NavInfo, Vp, VpBase};
@@ -653,6 +655,11 @@ impl World {
                         }
 
                         buffer.draw(j * n + i, (depth - near) / (far - near), id, || {
+                            // The transformed triangles of LINE particles have no normals.
+                            if shape.particle && g.normals.is_empty() {
+                                return flat(shape);
+                            }
+
                             let mut e1 = bb;
                             e1.subtract(&a);
                             let mut e2 = c;
