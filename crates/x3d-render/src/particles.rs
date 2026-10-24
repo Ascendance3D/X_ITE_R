@@ -63,6 +63,7 @@ pub fn line_triangle_geometry(positions: &[[f32; 4]]) -> Geometry {
     let mut g = Geometry {
         geometry_type: 2,
         vertices: positions.iter().flatten().copied().collect(),
+        per_frame: true,
         ..Default::default()
     };
 
