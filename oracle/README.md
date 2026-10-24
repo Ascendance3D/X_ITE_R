@@ -531,6 +531,13 @@ come from `tools/rea_b16_bounded.py record` (three identical runs). Their worlds
 particles_b06_common with the batch 06R tolerances. A Script there is run by a field event on its input: one started
 by a TimeSensor (startTime between two frames) did not run under this protocol, in X_ITE or in Rust.
 
+The wide and stippled instanced line baselines `rea-batch18-particle-lines-baseline/` (ParticleSystem LINE particles
+and InstancedShape IndexedLineSets with LineProperties) come from `tools/rea_b18_particle_lines.py record`: three runs
+per image pass (`png`, `msaa4`) with identical records and identical decoded pixels. Their worlds are
+`synthetic-rea-b18-particle-lines/` (`tools/gen_rea_b18_particle_lines.py`; the InstancedShape worlds hold a disabled
+ParticleSystem PS so the particle tools can step them), and `crates/x3d-viewer/tests/rea_b18_particle_lines.rs`
+compares them with the rules of rea_b13_particles.rs.
+
 Fields that differ between two Node runs as well, so they differ between tools too:
 
 * `loadFrames`: the real frames the load took.
