@@ -1502,9 +1502,9 @@ impl Viewer3d {
                 let geometries = match self.thick_line_depth.get(&key) {
                     Some((kept, geometries)) if Rc::ptr_eq(kept, &lines) => geometries.clone(),
                     _ => {
-                        let per = lines.positions.len() / lines.instances.len();
-                        let geometries: Rc<[Rc<Geometry>]> = lines
-                            .positions
+                        let positions = x3d_render::gpu::thick_line_positions(&lines);
+                        let per = positions.len() / lines.instances.len();
+                        let geometries: Rc<[Rc<Geometry>]> = positions
                             .chunks_exact(per)
                             .map(|p| Rc::new(x3d_render::particles::line_triangle_geometry(p)))
                             .collect();
@@ -1822,26 +1822,15 @@ impl Viewer3d {
                 continue;
             }
 
-            let instances: Vec<[f32; 16]> =
-                d.instances.iter().map(|m| m.0.map(|v| v as f32)).collect();
-            let positions = instances
-                .iter()
-                .flat_map(|m| {
-                    x3d_render::gpu::instanced_thick_line_positions(
-                        &d.geometry,
-                        &d.model_view,
-                        &cam.projection,
-                        d.viewport,
-                        d.width,
-                        m,
-                    )
-                })
-                .collect();
-            let lines = x3d_runtime::particles::ThickLines {
-                num_lines: d.geometry.vertex_count() / 2 * instances.len(),
-                positions,
-                instances,
-            };
+            // The inputs only: the shadow passes make the triangles on the GPU, pointing and collision on demand.
+            let lines = x3d_render::gpu::thick_lines(
+                &d.geometry,
+                &d.model_view,
+                &cam.projection,
+                d.viewport,
+                d.width,
+                d.instances.iter().map(|m| m.0.map(|v| v as f32)).collect(),
+            );
             let key = (d.system.path.to_vec(), d.system.node);
 
             if let Some(sim) = rt_at_mut(&mut self.rt, &d.system.path)
