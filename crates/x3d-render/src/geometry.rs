@@ -45,6 +45,9 @@ pub struct Geometry {
     pub max: Vector3,
     /// Text.display's `renderContext .textureNode`: a ScreenText's canvas, drawn instead of the appearance's texture.
     pub texture: Option<std::rc::Rc<crate::texture::TextureImage>>,
+    /// Built anew for (about) every frame, like the LINE particle triangles: once no frame holds it, the renderer
+    /// rewrites its vertex buffer for the next geometry instead of keeping it for KEEP_FRAMES.
+    pub per_frame: bool,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]

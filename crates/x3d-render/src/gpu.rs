@@ -619,11 +619,63 @@ pub fn target_format_ok(format: wgpu::TextureFormat) -> bool {
 }
 
 struct GeoGpu {
-    /// Keeps the allocation (and so the address used as the key) alive while cached.
-    _geometry: Rc<crate::geometry::Geometry>,
+    /// Keeps the allocation (and so the address used as the key) alive while cached. Once the cache holds the only
+    /// reference to a `per_frame` geometry, its buffer goes to [`Renderer::free_vertices`].
+    geometry: Rc<crate::geometry::Geometry>,
     buffer: wgpu::Buffer,
     count: u32,
     used: u64,
+}
+
+/// A vertex buffer of a geometry no frame can hand out again, rewritten for the next geometry that fits (the wide
+/// LINE particle lines of every frame are new geometries of about the same size).
+struct FreeBuffer {
+    buffer: wgpu::Buffer,
+    /// The frame it was freed in.
+    freed: u64,
+}
+
+/// Free vertex buffers not reused within this many frames are dropped.
+const FREE_KEEP_FRAMES: u64 = 30;
+
+/// A vertex buffer holding `verts`: the smallest free buffer that holds them and is at most twice their size,
+/// rewritten, or a new one with up to 1/8 room to spare.
+fn vertex_buffer(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    free: &mut Vec<FreeBuffer>,
+    stats: &mut RenderStats,
+    verts: &[f32],
+) -> wgpu::Buffer {
+    let contents: &[u8] = if verts.is_empty() {
+        &[0u8; 64]
+    } else {
+        bytemuck::cast_slice(verts)
+    };
+    let size = contents.len() as u64;
+    let fit = free
+        .iter()
+        .enumerate()
+        .filter(|(_, f)| (size..=2 * size).contains(&f.buffer.size()))
+        .min_by_key(|(_, f)| f.buffer.size())
+        .map(|(i, _)| i);
+
+    let buffer = match fit {
+        Some(i) => free.swap_remove(i).buffer,
+        None => {
+            let step = (size.next_power_of_two() / 8).max(wgpu::COPY_BUFFER_ALIGNMENT);
+            stats.vertex_buffers_created += 1;
+            device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("vertices"),
+                size: size.div_ceil(step) * step,
+                usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+                mapped_at_creation: false,
+            })
+        }
+    };
+
+    queue.write_buffer(&buffer, 0, contents);
+    buffer
 }
 
 struct TexGpu {
@@ -999,6 +1051,7 @@ pub struct Renderer {
     geometries: HashMap<*const crate::geometry::Geometry, GeoGpu>,
     /// Point sprite quads per geometry (6 vertices per point).
     sprites: HashMap<*const crate::geometry::Geometry, GeoGpu>,
+    free_vertices: Vec<FreeBuffer>,
     /// Uploaded textures (views and samplers), kept while used.
     textures: HashMap<*const TextureImage, TexGpu>,
     /// Bind groups of the slot combinations, kept while used.
@@ -1070,6 +1123,8 @@ pub struct Renderer {
 pub struct RenderStats {
     pub draw_calls: usize,
     pub geometry_uploads: usize,
+    /// Vertex buffers created (the other geometry uploads rewrote a free one).
+    pub vertex_buffers_created: usize,
     pub texture_uploads: usize,
     pub pipelines_created: usize,
 }
@@ -1826,6 +1881,7 @@ impl Renderer {
             scratch_data: vec![],
             geometries: HashMap::new(),
             sprites: HashMap::new(),
+            free_vertices: vec![],
             textures: HashMap::new(),
             depth: None,
             face_depth: None,
@@ -2135,21 +2191,17 @@ impl Renderer {
                         None => {
                             let verts = geometry_vertices(g);
                             let count = (verts.len() / FLOATS_PER_VERTEX) as u32;
-                            let buffer =
-                                self.device
-                                    .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                                        label: Some("vertices"),
-                                        contents: if verts.is_empty() {
-                                            &[0u8; 64]
-                                        } else {
-                                            bytemuck::cast_slice(&verts)
-                                        },
-                                        usage: wgpu::BufferUsages::VERTEX,
-                                    });
+                            let buffer = vertex_buffer(
+                                &self.device,
+                                &self.queue,
+                                &mut self.free_vertices,
+                                &mut self.stats,
+                                &verts,
+                            );
                             self.geometries.insert(
                                 gp,
                                 GeoGpu {
-                                    _geometry: g.clone(),
+                                    geometry: g.clone(),
                                     buffer,
                                     count,
                                     used: frame_no,
@@ -3275,6 +3327,20 @@ impl Renderer {
         self.frame_no += 1;
         self.stats = RenderStats::default();
 
+        // A per-frame geometry only its cache entry still holds is never handed out again: its buffer is free for
+        // reuse. Other geometries age out after KEEP_FRAMES as before.
+        let (frame_no, free) = (self.frame_no, &mut self.free_vertices);
+        self.geometries.retain(|_, e| {
+            if !e.geometry.per_frame || Rc::strong_count(&e.geometry) > 1 {
+                return true;
+            }
+            free.push(FreeBuffer {
+                buffer: e.buffer.clone(),
+                freed: frame_no,
+            });
+            false
+        });
+
         // X3DRenderObject.draw: the rendered textures first, each pass submitted on its own so
         // its uniform writes land before the next one.
         for pass in &frame.cube_passes {
@@ -3669,21 +3735,17 @@ impl Renderer {
                 None => {
                     let verts = geometry_vertices(&item.geometry);
                     let count = (verts.len() / FLOATS_PER_VERTEX) as u32;
-                    let buffer =
-                        self.device
-                            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                                label: Some("vertices"),
-                                contents: if verts.is_empty() {
-                                    &[0u8; 64]
-                                } else {
-                                    bytemuck::cast_slice(&verts)
-                                },
-                                usage: wgpu::BufferUsages::VERTEX,
-                            });
+                    let buffer = vertex_buffer(
+                        &self.device,
+                        &self.queue,
+                        &mut self.free_vertices,
+                        &mut self.stats,
+                        &verts,
+                    );
                     self.geometries.insert(
                         gp,
                         GeoGpu {
-                            _geometry: item.geometry.clone(),
+                            geometry: item.geometry.clone(),
                             buffer,
                             count,
                             used: frame_no,
@@ -4279,21 +4341,17 @@ impl Renderer {
                         geometry_vertices(g)
                     };
                     let count = (verts.len() / FLOATS_PER_VERTEX) as u32;
-                    let buffer =
-                        self.device
-                            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                                label: Some("vertices"),
-                                contents: if verts.is_empty() {
-                                    &[0u8; 64]
-                                } else {
-                                    bytemuck::cast_slice(&verts)
-                                },
-                                usage: wgpu::BufferUsages::VERTEX,
-                            });
+                    let buffer = vertex_buffer(
+                        &self.device,
+                        &self.queue,
+                        &mut self.free_vertices,
+                        &mut self.stats,
+                        &verts,
+                    );
                     cache.insert(
                         gp,
                         GeoGpu {
-                            _geometry: g.clone(),
+                            geometry: g.clone(),
                             buffer,
                             count,
                             used: frame_no,
@@ -5425,6 +5483,8 @@ impl Renderer {
             self.geometries
                 .retain(|_, e| e.used + KEEP_FRAMES >= frame_no);
             self.sprites.retain(|_, e| e.used + KEEP_FRAMES >= frame_no);
+            self.free_vertices
+                .retain(|f| f.freed + FREE_KEEP_FRAMES >= frame_no);
             self.textures
                 .retain(|_, e| e.used + KEEP_FRAMES >= frame_no);
             self.style_groups
