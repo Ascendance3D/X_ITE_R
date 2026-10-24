@@ -234,6 +234,15 @@ impl Runtime {
         }
     }
 
+    /// The simulation state of a ParticleSystem for the DISPLAY pass, which keeps its transformed LINE triangles there
+    /// ([`crate::particles::Sim::thick_lines`]).
+    pub fn particle_sim_mut(&mut self, node: NodeId) -> Option<&mut Sim> {
+        match &mut self.nrt_mut(node).state {
+            State::ParticleSystem(s) => Some(&mut s.sim),
+            _ => None,
+        }
+    }
+
     /// The ramps of a ParticleSystem as its last `animateParticles` used them.
     pub fn particle_ramps(&self, node: NodeId) -> Option<&Ramps> {
         match &self.nrt(node)?.state {

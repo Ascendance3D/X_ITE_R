@@ -769,13 +769,25 @@ fn pointing_draw(
                 let Some(x3d_render::traverse::StyleParams::Line(l)) = s.style else {
                     unreachable!()
                 };
-                let positions = x3d_render::gpu::transformed_line_positions(
-                    g,
-                    &s.model_view,
-                    &cam.projection,
-                    s.viewport,
-                    &l,
-                );
+                // A particle's are the float32 triangles displayInstancedThick made with this view after the frame's
+                // DISPLAY pass (x3d_runtime::particles::Sim::thick_lines), under its instance matrix.
+                let positions = match (s.particle, &s.instance) {
+                    (true, Some(m)) => x3d_render::gpu::instanced_thick_line_positions(
+                        g,
+                        &s.shape_model_view,
+                        &cam.projection,
+                        s.viewport,
+                        l.width,
+                        &m.0.map(|v| v as f32),
+                    ),
+                    _ => x3d_render::gpu::transformed_line_positions(
+                        g,
+                        &s.model_view,
+                        &cam.projection,
+                        s.viewport,
+                        &l,
+                    ),
+                };
                 let ends = [0, 0, 1, 0, 1, 1];
                 let corners: Vec<usize> = segments
                     .iter()
