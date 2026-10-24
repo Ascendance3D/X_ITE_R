@@ -557,6 +557,12 @@ the shadow images of 1 to 24 px lines) come from `tools/rea_b21_wide_lines.py re
 worlds are `synthetic-rea-b21-wide-lines/` (`tools/gen_rea_b21_wide_lines.py`), and
 `crates/x3d-viewer/tests/rea_b21_wide_lines.rs` compares them with the B13, B14, B15 and B18 rules.
 
+The two-layer wide LINE particle shadow baselines `rea-batch22-two-layer-shadows-baseline/` (images of two layers side
+by side) come from `tools/rea_b22_two_layer_shadows.py record` (three identical runs). Their worlds are
+`synthetic-rea-b22-two-layer-shadows/` (`tools/gen_rea_b22_two_layer_shadows.py`), and
+`crates/x3d-viewer/tests/rea_b22_two_layer_shadows.rs` compares the records, the whole images (B18 rule) and each layer's
+half of them.
+
 When Chrome is needed: only to make or refresh an X_ITE reference (a baseline, an
 x10_compare run, a particle reference). The Rust tests compare against committed baselines.
 `cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view`

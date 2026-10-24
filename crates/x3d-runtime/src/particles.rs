@@ -1610,9 +1610,11 @@ pub struct Sim {
     pub particles: Vec<Particle>,
     /// The LINE triangles the last DISPLAY pass made (X3DLineGeometryNode.displayInstancedThick), if it made any.
     pub thick_lines: Option<std::rc::Rc<ThickLines>>,
-    /// `thick_lines` as it was when the last DISPLAY pass began: what the shadow maps of that frame drew
-    /// (X3DRenderObject.draw renders them before the shapes).
-    pub thick_lines_before_display: Option<std::rc::Rc<ThickLines>>,
+    /// `thick_lines` as it was when each layer of the last DISPLAY pass began its draw, by layer (the key of
+    /// x3d_render's LayerKey: `None` for layer 0): what the shadow maps of that layer drew (X3DRenderObject.draw renders
+    /// them before the shapes, and the layers draw in order, so a layer sees the triangles of the layers before it).
+    pub thick_lines_before_layer:
+        Vec<(Option<x3d_fields::NodeId>, Option<std::rc::Rc<ThickLines>>)>,
 }
 
 /// LineProperties.getTransformLines (a width above ALIASED_LINE_WIDTH_RANGE [1]) of a LINE ParticleSystem: the
