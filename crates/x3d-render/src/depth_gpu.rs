@@ -104,6 +104,8 @@ pub struct DepthGpu {
     instance_sources: Vec<Rc<Vec<Matrix4>>>,
     buffers: HashMap<usize, Buffer>,
     queries: u64,
+    /// A readback failed (the device was lost): no more passes are drawn.
+    lost: bool,
     /// Passes drawn (for tests).
     pub passes: usize,
 }
@@ -268,6 +270,7 @@ impl DepthGpu {
             instance_sources: vec![],
             buffers: HashMap::new(),
             queries: 0,
+            lost: false,
             passes: 0,
         }
     }
@@ -286,14 +289,28 @@ impl DepthGpu {
         self.buffers.len()
     }
 
+    pub fn device(&self) -> &wgpu::Device {
+        &self.device
+    }
+
+    /// A readback failed, so the device is lost: `draw` returns `None` from now on, and the caller uses the CPU.
+    pub fn lost(&self) -> bool {
+        self.lost
+    }
+
     pub fn release(&mut self) {
         self.buffers.clear();
         self.instance_sources.clear();
     }
 
     /// X3DRenderObject.depth (shapes, numShapes, true) into the cleared buffer, then the readback.
-    /// `projection` is the view-projection matrix of the pass (Float32Array of the double matrix).
-    pub fn draw(&mut self, projection: &[f32; 16], shapes: &[DepthShape]) -> DepthPixels {
+    /// `projection` is the view-projection matrix of the pass (Float32Array of the double matrix). `None` once the device
+    /// is lost.
+    pub fn draw(&mut self, projection: &[f32; 16], shapes: &[DepthShape]) -> Option<DepthPixels> {
+        if self.lost {
+            return None;
+        }
+
         self.passes += 1;
         self.queries += 1;
         let stamp = self.queries;
@@ -572,9 +589,13 @@ impl DepthGpu {
 
         self.queue.submit([encoder.finish()]);
         let slice = self.readback.slice(..);
-        slice.map_async(wgpu::MapMode::Read, |_| {});
         crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
-        let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
+
+        if !crate::pointing_gpu::map_read(&self.device, &slice) {
+            self.lost = true;
+            return None;
+        }
+
         let mapped = slice.get_mapped_range().expect("map depth readback");
         let read = |t: usize| -> Vec<[f32; 4]> {
             (0..(SIZE * SIZE) as usize)
@@ -592,6 +613,6 @@ impl DepthGpu {
         };
         drop(mapped);
         self.readback.unmap();
-        pixels
+        Some(pixels)
     }
 }

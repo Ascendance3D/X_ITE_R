@@ -215,7 +215,7 @@ pub struct Viewer3d {
     /// same so that the depth buffer keeps their vertex buffers.
     thick_line_depth: HashMap<(Vec<NodeId>, NodeId), ThickLineDepth>,
     /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
-    /// ray cast's double values.
+    /// ray cast's double values. Put it in place with [`Viewer3d::set_gpu`], on the device that draws the frame.
     pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
     /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer).
     pub depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
@@ -1602,6 +1602,11 @@ impl Viewer3d {
             _ => crate::collision::Fill::Triangles,
         };
 
+        // A lost device: the CPU stand-in from now on.
+        if self.depth_gpu.as_ref().is_some_and(|g| g.borrow().lost()) {
+            self.depth_gpu = None;
+        }
+
         Some(World {
             shapes,
             fill,
@@ -2714,12 +2719,37 @@ impl Viewer3d {
         self.refresh_display_scan();
     }
 
+    /// The pointing buffer and the collision depth buffer on the GPU (`None`: the CPU ray cast and depth stand-in). Both
+    /// have to be on one device, the one that draws the frame, so that no resource of one device meets another device.
+    pub fn set_gpu(
+        &mut self,
+        pointing: Option<x3d_render::pointing_gpu::PointingGpu>,
+        depth: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
+    ) -> Result<(), String> {
+        if let (Some(p), Some(d)) = (&pointing, &depth) {
+            if p.device() != d.borrow().device() {
+                return Err(
+                    "the pointing and the collision depth buffer are on different devices".into(),
+                );
+            }
+        }
+
+        self.pointing_gpu = pointing;
+        self.depth_gpu = depth;
+        Ok(())
+    }
+
     /// `browser .touch (x, y)` for the oracle's `pickProbes`: the hit, without any sensor event.
     pub fn probe_pick(&mut self, x: f64, y: f64) -> Hit {
         self.do_pick(x, y)
     }
 
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
+        // A lost device: the ray cast from now on.
+        if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
+            self.pointing_gpu = None;
+        }
+
         let home = self.current;
         let mut hit: Option<Hit> = None;
 

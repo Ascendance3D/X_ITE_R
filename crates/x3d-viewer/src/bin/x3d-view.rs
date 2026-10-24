@@ -1,5 +1,5 @@
 //! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16] [--depth standard|log|reversed]
-//!       [--script script.json --png out.png]
+//!       [--cpu-pointing] [--script script.json --png out.png]
 //!
 //! Opens a VRML/X3D world in a native window and runs it live: TimeSensors, interpolators,
 //! Scripts, routes, navigation (EXAMINE / WALK / FLY / NONE) and the pointing device sensors.
@@ -10,6 +10,9 @@
 //! (macOS): `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, `l` list viewpoints, `m` cycle multisampling
 //! (default 4, like X_ITE), `z` cycle the depth buffer (standard = X_ITE, reversed, log), `s` save
 //! /tmp/x3d-view-N.png, `q` quit. Escape is a world key; close the window to quit.
+//!
+//! Picks and avatar collision run on the window's GPU device, like X_ITE's pointing and depth buffers;
+//! `--cpu-pointing` uses the CPU ray cast and depth stand-in instead.
 
 use std::path::PathBuf;
 use x3d_viewer::window::{Options, run};
@@ -25,7 +28,7 @@ fn main() {
 
     let Some(path) = args.get(1).filter(|a| !a.starts_with("--")) else {
         eprintln!(
-            "usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--msaa N] [--depth standard|log|reversed] [--script script.json --png out.png]"
+            "usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--msaa N] [--depth standard|log|reversed] [--cpu-pointing] [--script script.json --png out.png]"
         );
         std::process::exit(2);
     };
@@ -62,6 +65,7 @@ fn main() {
                 std::process::exit(2)
             })
         }),
+        cpu_pointing: args.iter().any(|a| a == "--cpu-pointing"),
     };
 
     // The Sound component plays on the default output device.
