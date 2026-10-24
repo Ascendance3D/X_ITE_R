@@ -1003,6 +1003,7 @@ impl ShaderGpu {
         }
 
         queue.write_buffer(&self.uniform.as_ref().unwrap().0, 0, &all);
+        crate::transfer::upload(crate::transfer::Kind::Other, all.len());
 
         // Per draw: pipeline, vertex buffer, bind groups.
         for (i, input) in inputs.iter().enumerate() {
@@ -1136,6 +1137,10 @@ impl ShaderGpu {
 
                     if !data.is_empty() {
                         queue.write_buffer(&buffer, 0, bytemuck::cast_slice(&data));
+                        crate::transfer::upload(
+                            crate::transfer::Kind::Other,
+                            std::mem::size_of_val(data.as_slice()),
+                        );
                     }
 
                     self.vertices.insert(
@@ -1279,6 +1284,7 @@ fn default_texture(
         view_formats: &[],
     });
     let data = [0u8, 0, 0, 255].repeat(layers as usize);
+    crate::transfer::upload(crate::transfer::Kind::Other, data.len());
     queue.write_texture(
         wgpu::TexelCopyTextureInfo {
             texture: &texture,

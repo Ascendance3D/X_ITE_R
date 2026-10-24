@@ -6,13 +6,14 @@ struct ShadowDraw {
     projection: mat4x4<f32>,
     model_view: mat4x4<f32>,
     clip_planes: array<vec4<f32>, 6>,
-    // x: number of clip planes, y: 1 for an instance of an InstancedShape.
+    // x: number of clip planes, y: 1 for an instanced draw (InstancedShape, ParticleSystem), z: its first instance
+    // matrix in `instances`.
     counts: vec4<u32>,
-    // The instance matrix (x3d_InstanceMatrix).
-    inst_matrix: mat4x4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> draw: ShadowDraw;
+// The instance matrices (x3d_InstanceMatrix) of the pass's instanced draws, each draw's after the other.
+@group(0) @binding(1) var<storage, read> instances: array<mat4x4<f32>>;
 
 struct VOut {
     @builtin(position) position: vec4<f32>,
@@ -20,13 +21,13 @@ struct VOut {
 };
 
 @vertex
-fn vs_shadow(@location(0) position: vec3<f32>) -> VOut {
+fn vs_shadow(@location(0) position: vec3<f32>, @builtin(instance_index) instance: u32) -> VOut {
     var out: VOut;
     var local = vec4<f32>(position, 1.0);
 
     if (draw.counts.y == 1u) {
         // Instancing2.glsl getInstanceVertex.
-        local = draw.inst_matrix * local;
+        local = instances[draw.counts.z + instance] * local;
     }
 
     let t_vertex = draw.model_view * local;

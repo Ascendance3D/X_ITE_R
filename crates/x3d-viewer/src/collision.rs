@@ -7,7 +7,8 @@
 //! same depth up to rasterization coverage.
 //!
 //! An active ParticleSystem is a collision shape too (X3DShapeNode.traverse COLLISION): each drawn particle is one
-//! [`CShape`] under its instance matrix. With the GPU its POINT particles are drawn as 1 px points like Depth2.vs does,
+//! collision shape under its instance matrix, the particles of a system one [`CShape`] with [`CShape::instances`]
+//! (consecutive shape indices) that the GPU draws at once. With the GPU its POINT particles are drawn as 1 px points like Depth2.vs does,
 //! and its LINE particles are rasterized here by GL's diamond-exit rule (a WebGPU line list covers other pixels) and
 //! merged into the read-back buffer. The CPU stand-in samples the triangles at the pixel centers, covers the pixel of
 //! each POINT particle like a 1 px gl.POINTS and draws the LINE particles with the same diamond-exit rasterization after
@@ -27,6 +28,7 @@ const DEPTH_BUFFER_SIZE: usize = 16;
 /// Sub-pixel positions per pixel of the rasterizer's vertex snapping (subPixelPrecisionBits 8).
 const SUB_PIXELS: f64 = 256.0;
 
+#[derive(Clone)]
 pub struct CShape {
     /// The Shape, or the ParticleSystem of a particle (`hit .shapeNode`).
     pub node: crate::walk::NodeRef,
@@ -45,6 +47,60 @@ pub struct CShape {
     /// The Collision nodes the COLLISION traversal was inside of when it reached the shape
     /// (renderContext .collisions), outermost first.
     pub collisions: Rc<[x3d_fields::NodeId]>,
+    /// The particles of a ParticleSystem as consecutive collision shapes (`model_view` and `instance` are then the
+    /// system's and unused): particle k is the shape under `matrices [k]`.
+    pub instances: Option<CInstances>,
+}
+
+#[derive(Clone)]
+pub struct CInstances {
+    /// The instance matrices, in the system's space.
+    pub matrices: Rc<Vec<Matrix4>>,
+    /// 0: every particle draws `geometry`; n: particle k draws its vertices k·n .. (k+1)·n (the transformed LINE
+    /// triangles of each).
+    pub per_vertices: usize,
+}
+
+impl CShape {
+    /// The collision shapes it stands for.
+    pub fn count(&self) -> usize {
+        self.instances.as_ref().map_or(1, |i| i.matrices.len())
+    }
+
+    /// The `model_view` of shape `k`.
+    fn model_view_of(&self, k: usize) -> Matrix4 {
+        match &self.instances {
+            Some(i) => {
+                let mut m = i.matrices[k];
+                m.mult_right(&self.base_model_view);
+                m
+            }
+            None => self.model_view,
+        }
+    }
+
+    /// Shape `k` on its own.
+    fn entry(&self, k: usize) -> CShape {
+        let Some(i) = &self.instances else {
+            return self.clone();
+        };
+        let geometry = match i.per_vertices {
+            0 => self.geometry.clone(),
+            n => Rc::new(Geometry {
+                vertices: self.geometry.vertices[k * n * 4..(k + 1) * n * 4].to_vec(),
+                normals: vec![],
+                ..(*self.geometry).clone()
+            }),
+        };
+
+        CShape {
+            geometry,
+            model_view: self.model_view_of(k),
+            instance: Some(i.matrices[k]),
+            instances: None,
+            ..self.clone()
+        }
+    }
 }
 
 pub struct Closest {
@@ -290,6 +346,7 @@ fn camera_point(s: &CShape, m: &Matrix4, k: usize) -> Vector3 {
 /// shapes.
 fn particle_line_fragments(
     s: &CShape,
+    model_view: &Matrix4,
     view: &Matrix4,
     bounds: (f64, f64, f64, f64, f64, f64),
 ) -> Vec<(usize, f64)> {
@@ -299,7 +356,7 @@ fn particle_line_fragments(
         return vec![];
     }
 
-    let mut m = s.model_view;
+    let mut m = *model_view;
     m.mult_right(view);
     let planes = camera_planes(s, view);
 
@@ -311,6 +368,52 @@ fn particle_line_fragments(
 }
 
 impl World {
+    /// The collision shapes (X3DRenderObject.collisionShapes), the particles of a system each.
+    pub fn len(&self) -> usize {
+        self.shapes.iter().map(CShape::count).sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Collision shape `id`: the entry that holds it and its particle there.
+    pub fn shape_of(&self, id: usize) -> Option<(&CShape, usize)> {
+        let mut first = 0;
+
+        for s in &self.shapes {
+            if id < first + s.count() {
+                return Some((s, id - first));
+            }
+
+            first += s.count();
+        }
+
+        None
+    }
+
+    /// The node of every collision shape, in order.
+    pub fn nodes(&self) -> Vec<crate::walk::NodeRef> {
+        self.shapes
+            .iter()
+            .flat_map(|s| std::iter::repeat_n(s.node.clone(), s.count()))
+            .collect()
+    }
+
+    /// Every collision shape on its own (the CPU stand-in draws them one by one).
+    fn expanded(&self) -> std::borrow::Cow<'_, [CShape]> {
+        if self.shapes.iter().all(|s| s.instances.is_none()) {
+            return std::borrow::Cow::Borrowed(&self.shapes);
+        }
+
+        std::borrow::Cow::Owned(
+            self.shapes
+                .iter()
+                .flat_map(|s| (0..s.count()).map(move |k| s.entry(k)))
+                .collect(),
+        )
+    }
+
     /// X3DRenderObject.getCollisionShape on the GPU: the collision shapes drawn into the 16x16
     /// buffer with `view · ortho` as projection, then TextureBuffer.readDepth: the pixel with the
     /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
@@ -327,11 +430,14 @@ impl World {
         view_projection.mult_right(ortho);
 
         let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+        let mut first = 0usize;
         let shapes: Vec<DepthShape> = self
             .shapes
             .iter()
             .map(|s| {
                 let g = &s.geometry;
+                let id = first;
+                first += s.count();
 
                 DepthShape {
                     geometry: g,
@@ -355,14 +461,26 @@ impl World {
                         },
                     ),
                     clip_planes: &s.clip_planes,
+                    particle: s.particle,
+                    instances: s.instances.as_ref().map(|i| &i.matrices),
+                    per_instance_vertices: s
+                        .instances
+                        .as_ref()
+                        .map_or(0, |i| i.per_vertices as u32),
+                    id: id as f32,
                 }
             })
             .collect();
         let mut pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes);
 
         // The LINE particles, in draw order after the GPU's shapes (a depth tie keeps the GPU's pixel).
-        for (id, s) in self.shapes.iter().enumerate() {
-            for (i, wz) in particle_line_fragments(s, view, bounds) {
+        let lines = self
+            .shapes
+            .iter()
+            .flat_map(|s| (0..s.count()).map(move |k| (s, s.model_view_of(k))));
+
+        for (id, (s, model_view)) in lines.enumerate() {
+            for (i, wz) in particle_line_fragments(s, &model_view, view, bounds) {
                 let wz = wz as f32;
 
                 if wz < pixels.data0[i][0] {
@@ -401,18 +519,15 @@ impl World {
         let distance = -point.z;
         let id = pixels.data0[index][1];
 
-        if id < 0.0 || id as usize >= self.shapes.len() {
+        let Some((shape, _)) = (id >= 0.0).then(|| self.shape_of(id as usize)).flatten() else {
             return (distance, None);
-        }
+        };
 
         let n = pixels.data1[index];
         let normal = Vector3::new(n[0] as f64, n[1] as f64, n[2] as f64);
         (
             distance,
-            Some((
-                hit_normal(&self.shapes[id as usize], view, normal),
-                id as usize,
-            )),
+            Some((hit_normal(shape, view, normal), id as usize)),
         )
     }
 
@@ -434,8 +549,9 @@ impl World {
         let n = DEPTH_BUFFER_SIZE;
         // Depth2.fs without X3D_NORMALS (POINT and LINE particles): normal 0 0 1.
         let flat = |s: &CShape| hit_normal(s, view, Vector3::new(0.0, 0.0, 1.0));
+        let shapes = self.expanded();
 
-        for (id, shape) in self.shapes.iter().enumerate() {
+        for (id, shape) in shapes.iter().enumerate() {
             let g = &shape.geometry;
 
             if g.vertices.is_empty() {
@@ -674,8 +790,8 @@ impl World {
         }
 
         // The LINE particles, after every other shape like on the GPU.
-        for (id, s) in self.shapes.iter().enumerate() {
-            for (pixel, z) in particle_line_fragments(s, view, bounds) {
+        for (id, s) in shapes.iter().enumerate() {
+            for (pixel, z) in particle_line_fragments(s, &s.model_view, view, bounds) {
                 buffer.merge(pixel, z, id, || flat(s));
             }
         }
@@ -903,7 +1019,91 @@ mod tests {
             instance: Some(instance),
             clip_planes: Rc::new([]),
             collisions: Rc::new([]),
+            instances: None,
         }
+    }
+
+    /// A run of particles (one entry, consecutive shape indices) finds what its particles as entries of their own find,
+    /// on both paths: the same shape index, distance and normal, after a shape that is not a particle. Also with every
+    /// particle its own vertices (the transformed LINE triangles).
+    #[test]
+    fn particle_runs_are_their_particles() {
+        let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
+        // Particle 1 is the closest; particle 2 is behind particle 0 at the same pixels.
+        let matrices = Rc::new(vec![
+            translation(at(4.0, 4.0, 1.2)),
+            translation(at(8.0, 8.0, 0.6)),
+            translation(at(4.0, 4.0, 1.5)),
+        ]);
+        let wall = CShape {
+            particle: false,
+            instance: None,
+            ..particle(&quad, at(8.0, 8.0, 1.9))
+        };
+        let run = CShape {
+            model_view: Matrix4::IDENTITY,
+            instance: None,
+            instances: Some(CInstances {
+                matrices: matrices.clone(),
+                per_vertices: 0,
+            }),
+            ..particle(&quad, Vector3::ZERO)
+        };
+        let alone: Vec<CShape> = matrices
+            .iter()
+            .map(|m| particle(&quad, Vector3::ZERO))
+            .zip(matrices.iter())
+            .map(|(p, m)| CShape {
+                model_view: *m,
+                instance: Some(*m),
+                ..p
+            })
+            .collect();
+        let world = |shapes: Vec<CShape>| World {
+            shapes,
+            ..Default::default()
+        };
+
+        assert_eq!(world(vec![wall.clone(), run.clone()]).len(), 4);
+
+        let (cpu_run, gpu_run) = depths(vec![wall.clone(), run], &Matrix4::IDENTITY);
+        let (cpu, gpu) = depths(
+            std::iter::once(wall.clone()).chain(alone.clone()).collect(),
+            &Matrix4::IDENTITY,
+        );
+
+        assert_eq!(cpu_run.map(|h| h.2), Some(Some(2)));
+        assert_eq!(format!("{cpu_run:?}"), format!("{cpu:?}"));
+        assert_eq!(format!("{gpu_run:?}"), format!("{gpu:?}"));
+        same("run", &cpu_run, &gpu_run);
+
+        // Every particle its own six vertices: the quads of `alone` one after the other.
+        let vertices: Vec<f32> = matrices
+            .iter()
+            .flat_map(|_| quad.vertices.clone())
+            .collect();
+        let own = CShape {
+            geometry: Rc::new(Geometry {
+                vertices,
+                normals: vec![],
+                ..(*quad).clone()
+            }),
+            model_view: Matrix4::IDENTITY,
+            instance: None,
+            instances: Some(CInstances {
+                matrices: matrices.clone(),
+                per_vertices: quad.vertex_count(),
+            }),
+            ..particle(&quad, Vector3::ZERO)
+        };
+        let (cpu_own, gpu_own) = depths(vec![wall, own], &Matrix4::IDENTITY);
+
+        assert_eq!(cpu_own.map(|h| h.2), Some(Some(2)));
+        same("own vertices", &cpu_own, &gpu_own);
+        assert_eq!(
+            gpu_own.map(|h| h.map(|h| (h.0, h.2))),
+            gpu.map(|h| h.map(|h| (h.0, h.2)))
+        );
     }
 
     /// The depth buffer on the GPU, one per test thread; `None` without an adapter.

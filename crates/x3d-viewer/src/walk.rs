@@ -121,13 +121,19 @@ pub struct Scan {
     pub fogs: Vec<NodeRef>,
     /// CAMERA: X3DViewpointNode.traverse computes the descriptions of each viewpoint reached.
     pub viewpoint_descriptions: Vec<(NodeId, Vec<String>)>,
+    /// The pointing objects in traversal order, without the particles of ParticleSystems: [`Self::particle_pointing`]
+    /// holds those, and [`Self::pointing_shapes`] puts them in their places.
     pub shapes: Vec<ShapeInst>,
+    /// The drawn particles of the ParticleSystems with pointerEvents (X3DShapeNode.traverse POINTER → addPointingShape),
+    /// one run per system reached, each with the index in [`Self::shapes`] where its particles come.
+    pub particle_pointing: Vec<ParticleRun>,
     /// The shapes of enabled Collision nodes' `proxy` nodes: collision objects only (Collision.set_collisionObjects__),
     /// never drawn, picked or measured.
     pub proxy_shapes: Vec<ShapeInst>,
     /// The drawn particles of the active ParticleSystems outside disabled Collision nodes (X3DShapeNode.traverse
-    /// COLLISION: set_collisionObject__ is isEnabled (), pointerEvents does not matter), collision objects only.
-    pub particle_collisions: Vec<ShapeInst>,
+    /// COLLISION: set_collisionObject__ is isEnabled (), pointerEvents does not matter), collision objects only, one
+    /// run per system reached.
+    pub particle_collisions: Vec<ParticleRun>,
     pub proximity: Vec<EnvInst>,
     pub visibility: Vec<EnvInst>,
     /// Enabled Collision nodes seen (browser.getCollisionCount).
@@ -148,6 +154,78 @@ pub struct Scan {
     pub thick_lines: Vec<ThickLineDisplay>,
 }
 
+/// The drawn particles of a ParticleSystem as a walk reached it, one entry per particle in buffer order without
+/// building them: `template` is what every particle's entry shares (`instance` None, `model_view` the system's), and
+/// `matrices` the particles' instance matrices, in the system's own space.
+#[derive(Clone, Debug)]
+pub struct ParticleRun {
+    /// [`Scan::particle_pointing`]: the index in [`Scan::shapes`] where the particles' entries come.
+    pub at: usize,
+    pub template: ShapeInst,
+    pub matrices: Rc<Vec<Matrix4>>,
+}
+
+impl ParticleRun {
+    pub fn len(&self) -> usize {
+        self.matrices.len()
+    }
+
+    /// The entry of particle `k`: x3d_InstanceMatrix `instance`, `model_view` the instance times the system's.
+    pub fn entry(&self, k: usize) -> ShapeInst {
+        let m = self.matrices[k];
+        let mut model_view = m;
+        model_view.mult_right(&self.template.shape_model_view);
+
+        ShapeInst {
+            model_view,
+            instance: Some(m),
+            ..self.template.clone()
+        }
+    }
+
+    /// The entries of every particle.
+    pub fn entries(&self) -> impl Iterator<Item = ShapeInst> + '_ {
+        (0..self.len()).map(|k| self.entry(k))
+    }
+}
+
+impl Scan {
+    /// The pointing objects in traversal order, the particles of [`Self::particle_pointing`] in their places
+    /// (X3DRenderObject.pointingShapes, the ids of the pointing buffer).
+    pub fn pointing_shapes(&self) -> std::borrow::Cow<'_, [ShapeInst]> {
+        if self.particle_pointing.iter().all(|r| r.len() == 0) {
+            return std::borrow::Cow::Borrowed(&self.shapes);
+        }
+
+        let len = self.shapes.len()
+            + self
+                .particle_pointing
+                .iter()
+                .map(ParticleRun::len)
+                .sum::<usize>();
+        let mut out = Vec::with_capacity(len);
+        let mut next = 0;
+
+        for r in &self.particle_pointing {
+            out.extend_from_slice(&self.shapes[next..r.at]);
+            out.extend(r.entries());
+            next = r.at;
+        }
+
+        out.extend_from_slice(&self.shapes[next..]);
+        std::borrow::Cow::Owned(out)
+    }
+
+    /// Some pointing object has pointing device sensors.
+    pub fn has_sensors(&self) -> bool {
+        self.shapes.iter().any(|s| !s.sensors.is_empty())
+            || self
+                .particle_pointing
+                .iter()
+                .any(|r| r.len() > 0 && !r.template.sensors.is_empty())
+    }
+}
+
 /// A LINE ParticleSystem with a line width above ALIASED_LINE_WIDTH_RANGE [1] as the DISPLAY walk reached it.
 #[derive(Clone, Debug)]
 pub struct ThickLineDisplay {
@@ -157,7 +235,7 @@ pub struct ThickLineDisplay {
     /// The particle's line (two vertices).
     pub geometry: Rc<x3d_render::geometry::Geometry>,
     /// The instance matrix of every particle, in buffer order.
-    pub instances: Vec<Matrix4>,
+    pub instances: Rc<Vec<Matrix4>>,
     /// linewidthScaleFactor.
     pub width: f64,
     /// The viewport rectangle the system is drawn in.
@@ -970,9 +1048,7 @@ impl<'a> Walker<'a> {
             self.node(sg, path, p, m, &[], &[], true, depth + 1);
             let walked = std::mem::replace(&mut *self.scan, saved);
             // A ParticleSystem in the proxy is a collision shape through its collision entries.
-            self.scan
-                .proxy_shapes
-                .extend(walked.shapes.into_iter().filter(|s| !s.particle));
+            self.scan.proxy_shapes.extend(walked.shapes);
             self.scan
                 .particle_collisions
                 .extend(walked.particle_collisions);
@@ -1344,6 +1420,7 @@ impl<'a> Walker<'a> {
                 };
                 let (style, textures) = pointing_appearance(sg, n, geometry_type);
                 let pointing = sg.bool(n, "pointerEvents", true);
+                let matrices = Rc::new(p.matrices);
 
                 // DISPLAY: displayInstancedThick of a LINE system with transformed lines.
                 if let (Some(x3d_render::traverse::StyleParams::Line(l)), Some(g)) =
@@ -1360,7 +1437,7 @@ impl<'a> Walker<'a> {
                             system: me(),
                             model_view: *mv,
                             geometry: g.clone(),
-                            instances: p.matrices.clone(),
+                            instances: matrices.clone(),
                             width: l.width,
                             viewport,
                             bbox: p.bbox,
@@ -1368,42 +1445,46 @@ impl<'a> Walker<'a> {
                     }
                 }
 
-                for m in &p.matrices {
-                    let mut model_view = *m;
-                    model_view.mult_right(mv);
+                // One run per system, its particles' entries made only by a pick or a collision query.
+                let template = ShapeInst {
+                    shape: me(),
+                    geometry,
+                    model_view: *mv,
+                    shape_model_view: *mv,
+                    instance: None,
+                    all_instances: None,
+                    explicit_bbox: Some(p.bbox),
+                    sensors: sensors.to_vec(),
+                    collidable: false,
+                    collisions: vec![],
+                    anchors: anchors.to_vec(),
+                    clip_planes: self.clip_planes.clone(),
+                    viewport: self.viewport(),
+                    skin: self.hanim.last().cloned().flatten(),
+                    style,
+                    textures,
+                    particle: true,
+                    particle_geometry: p.geometry.clone(),
+                };
 
-                    let inst = ShapeInst {
-                        shape: me(),
-                        geometry,
-                        model_view,
-                        shape_model_view: *mv,
-                        instance: Some(*m),
-                        all_instances: None,
-                        explicit_bbox: Some(p.bbox),
-                        sensors: sensors.to_vec(),
-                        collidable: false,
-                        collisions: vec![],
-                        anchors: anchors.to_vec(),
-                        clip_planes: self.clip_planes.clone(),
-                        viewport: self.viewport(),
-                        skin: self.hanim.last().cloned().flatten(),
-                        style,
-                        textures,
-                        particle: true,
-                        particle_geometry: p.geometry.clone(),
-                    };
-
-                    if collidable {
-                        self.scan.particle_collisions.push(ShapeInst {
+                if collidable {
+                    self.scan.particle_collisions.push(ParticleRun {
+                        at: 0,
+                        template: ShapeInst {
                             collidable: true,
                             collisions: self.collision_stack.clone(),
-                            ..inst.clone()
-                        });
-                    }
+                            ..template.clone()
+                        },
+                        matrices: matrices.clone(),
+                    });
+                }
 
-                    if pointing {
-                        self.scan.shapes.push(inst);
-                    }
+                if pointing {
+                    self.scan.particle_pointing.push(ParticleRun {
+                        at: self.scan.shapes.len(),
+                        template,
+                        matrices,
+                    });
                 }
             }
             // ViewpointGroup.traverse: its private ProximitySensor in every pass; CAMERA the
@@ -1695,5 +1776,83 @@ impl<'a> Walker<'a> {
         if hierarchy {
             self.pick.as_mut().unwrap().hierarchy.pop();
         }
+    }
+}
+
+#[cfg(test)]
+mod particle_run_tests {
+    use super::*;
+
+    fn translation(x: f64) -> Matrix4 {
+        let mut m = Matrix4::IDENTITY;
+        m.0[12] = x;
+        m
+    }
+
+    fn shape(node: NodeId, model_view: Matrix4) -> ShapeInst {
+        ShapeInst {
+            shape: NodeRef {
+                path: Rc::new(vec![]),
+                node,
+            },
+            geometry: node,
+            model_view,
+            shape_model_view: model_view,
+            instance: None,
+            all_instances: None,
+            explicit_bbox: None,
+            sensors: vec![],
+            collidable: false,
+            collisions: vec![],
+            anchors: vec![],
+            clip_planes: vec![],
+            viewport: [0.0, 0.0, 1.0, 1.0],
+            skin: None,
+            style: None,
+            textures: (false, false),
+            particle: false,
+            particle_geometry: None,
+        }
+    }
+
+    /// The particles of a run take the ids from its index on, in buffer order, under the instance times the system's
+    /// model-view; an empty run takes none, and without runs the shapes are not copied.
+    #[test]
+    fn pointing_shapes_put_the_particles_in_their_places() {
+        let system_view = translation(10.0);
+        let mut scan = Scan {
+            shapes: vec![shape(1, Matrix4::IDENTITY), shape(2, Matrix4::IDENTITY)],
+            ..Default::default()
+        };
+
+        assert!(matches!(
+            scan.pointing_shapes(),
+            std::borrow::Cow::Borrowed(_)
+        ));
+
+        scan.particle_pointing = vec![
+            ParticleRun {
+                at: 1,
+                template: ShapeInst {
+                    particle: true,
+                    ..shape(7, system_view)
+                },
+                matrices: Rc::new(vec![translation(1.0), translation(2.0)]),
+            },
+            ParticleRun {
+                at: 2,
+                template: shape(8, system_view),
+                matrices: Rc::new(vec![]),
+            },
+        ];
+
+        let all = scan.pointing_shapes();
+        let nodes: Vec<NodeId> = all.iter().map(|s| s.shape.node).collect();
+
+        assert_eq!(nodes, vec![1, 7, 7, 2]);
+        assert_eq!(all[1].instance, Some(translation(1.0)));
+        assert_eq!(all[2].model_view.0[12], 12.0);
+        assert_eq!(all[2].shape_model_view, system_view);
+        assert!(all[1].particle && !all[3].particle);
     }
 }

@@ -180,6 +180,9 @@ pub struct Viewer3d {
     /// Date.now () / 1000, settable between frames (input events use it).
     pub date_now: f64,
     pub frame_rate: f64,
+    /// Seconds spent in the scene walks of [`Self::refresh_display_scan`] and [`Self::display_scan`] since the last
+    /// [`Self::take_step_seconds`].
+    traversal_seconds: f64,
     last_time: Option<f64>,
     pub shift: bool,
     pub ctrl: bool,
@@ -261,8 +264,14 @@ pub struct Viewer3d {
     pointing_layer: Option<LayerKey>,
 }
 
-/// A system's transformed LINE triangles and their collision geometry, one per particle.
-type ThickLineDepth = (Rc<x3d_runtime::particles::ThickLines>, Rc<[Rc<Geometry>]>);
+/// A system's transformed LINE triangles and their collision shapes: every particle's triangles one after the other,
+/// the instance matrices, the vertices of one particle.
+type ThickLineDepth = (
+    Rc<x3d_runtime::particles::ThickLines>,
+    Rc<Geometry>,
+    Rc<Vec<Matrix4>>,
+    usize,
+);
 
 fn geom_of(
     root: &Runtime,
@@ -426,6 +435,7 @@ impl Viewer3d {
             time: t0,
             date_now: t0,
             frame_rate: 60.0,
+            traversal_seconds: 0.0,
             last_time: None,
             shift: false,
             ctrl: false,
@@ -900,6 +910,16 @@ impl Viewer3d {
     // --- the frame -------------------------------------------------------------------------
 
     /// All runtimes (world and Inline scenes), parents first.
+    /// For benchmarks: the seconds of the scene walks (POINTER / COLLISION and DISPLAY, the old scan dropped included)
+    /// and of the particle simulation (`run_pass` of every runtime) since the last call, and zero them.
+    pub fn take_step_seconds(&mut self) -> (f64, f64) {
+        let mut sim = 0.0;
+
+        self.for_each_rt(&mut |rt| sim += std::mem::take(&mut rt.particle_sim_seconds));
+
+        (std::mem::take(&mut self.traversal_seconds), sim)
+    }
+
     fn for_each_rt(&mut self, f: &mut dyn FnMut(&mut Runtime)) {
         for p in crate::walk::all_paths(&self.rt) {
             if let Some(rt) = rt_at_mut(&mut self.rt, &p) {
@@ -1401,6 +1421,7 @@ impl Viewer3d {
                     instance: s.instance,
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
+                    instances: None,
                 });
             }
         }
@@ -1417,25 +1438,27 @@ impl Viewer3d {
                     instance: s.instance,
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
+                    instances: None,
                 });
             }
         }
 
         // The drawn particles (ParticleSystem.displaySimple) of the systems the last COLLISION traversal collected.
-        // A system's entries are pushed together, one per particle, with one geometry, clip-plane and Collision
-        // stack: a run of them is resolved once and shares those, while every particle keeps its own entry (its
-        // instance matrix) in traversal order. A system reached twice (USE) gives two runs.
+        // A system's particles come together, with one geometry, clip-plane and Collision stack: a run of them is
+        // resolved once and shares those, while every particle keeps its own entry (its instance matrix) in traversal
+        // order. A system reached twice (USE) gives two runs; adjacent kept runs of the same system, matrix, clip planes
+        // and Collision stack are one.
         let mut seen: Vec<(Vec<NodeId>, NodeId)> = vec![];
         let members = self.layer.collision_particle_systems.clone();
-        let entries = self.collision_particles();
+        let kept = self.collision_particles();
         let mut i = 0;
 
-        while i < entries.len() {
-            let first = &self.scan_display.particle_collisions[entries[i]];
-            let run = entries[i..]
+        while i < kept.len() {
+            let first = &self.scan_display.particle_collisions[kept[i]].template;
+            let run = kept[i..]
                 .iter()
                 .take_while(|&&k| {
-                    let s = &self.scan_display.particle_collisions[k];
+                    let s = &self.scan_display.particle_collisions[k].template;
 
                     s.shape == first.shape
                         && s.shape_model_view == first.shape_model_view
@@ -1443,7 +1466,7 @@ impl Viewer3d {
                         && s.collisions == first.collisions
                 })
                 .count();
-            let run_entries = &entries[i..i + run];
+            let runs = &kept[i..i + run];
             i += run;
 
             if members.as_ref().is_some_and(|m| !m.contains(&first.shape)) {
@@ -1499,54 +1522,67 @@ impl Viewer3d {
                 let Some(lines) = lines else {
                     continue;
                 };
-                let geometries = match self.thick_line_depth.get(&key) {
-                    Some((kept, geometries)) if Rc::ptr_eq(kept, &lines) => geometries.clone(),
+                let (geometry, matrices, per) = match self.thick_line_depth.get(&key) {
+                    Some((kept, geometry, matrices, per)) if Rc::ptr_eq(kept, &lines) => {
+                        (geometry.clone(), matrices.clone(), *per)
+                    }
                     _ => {
                         let positions = x3d_render::gpu::thick_line_positions(&lines);
                         let per = positions.len() / lines.instances.len();
-                        let geometries: Rc<[Rc<Geometry>]> = positions
-                            .chunks_exact(per)
-                            .map(|p| Rc::new(x3d_render::particles::line_triangle_geometry(p)))
-                            .collect();
+                        let geometry =
+                            Rc::new(x3d_render::particles::line_triangle_geometry(&positions));
+                        let matrices: Rc<Vec<Matrix4>> = Rc::new(
+                            lines
+                                .instances
+                                .iter()
+                                .map(|m| Matrix4(m.map(f64::from)))
+                                .collect(),
+                        );
 
-                        self.thick_line_depth
-                            .insert(key.clone(), (lines.clone(), geometries.clone()));
-                        geometries
+                        self.thick_line_depth.insert(
+                            key.clone(),
+                            (lines.clone(), geometry.clone(), matrices.clone(), per),
+                        );
+                        (geometry, matrices, per)
                     }
                 };
 
-                for (geometry, m) in geometries.iter().zip(&lines.instances) {
-                    let instance = Matrix4(m.map(f64::from));
-                    let mut model_view = instance;
-                    model_view.mult_right(&first.shape_model_view);
-
-                    shapes.push(CShape {
-                        node: first.shape.clone(),
-                        geometry: geometry.clone(),
-                        particle: true,
-                        model_view,
-                        base_model_view: first.shape_model_view,
-                        instance: Some(instance),
-                        clip_planes: clip_planes.clone(),
-                        collisions: collisions.clone(),
-                    });
-                }
+                // Every particle's triangles in one draw, particle k its own vertices under its instance matrix.
+                shapes.push(CShape {
+                    node: first.shape.clone(),
+                    geometry,
+                    particle: true,
+                    model_view: first.shape_model_view,
+                    base_model_view: first.shape_model_view,
+                    instance: None,
+                    clip_planes: clip_planes.clone(),
+                    collisions: collisions.clone(),
+                    instances: Some(crate::collision::CInstances {
+                        matrices,
+                        per_vertices: per,
+                    }),
+                });
 
                 continue;
             }
 
-            for &k in run_entries {
-                let s = &self.scan_display.particle_collisions[k];
+            // Each run's particles in one draw (ParticleSystem.displaySimple, gl.drawArraysInstanced).
+            for &k in runs {
+                let r = &self.scan_display.particle_collisions[k];
 
                 shapes.push(CShape {
-                    node: s.shape.clone(),
+                    node: r.template.shape.clone(),
                     geometry: g.clone(),
                     particle: true,
-                    model_view: s.model_view,
-                    base_model_view: s.shape_model_view,
-                    instance: s.instance,
+                    model_view: r.template.shape_model_view,
+                    base_model_view: r.template.shape_model_view,
+                    instance: None,
                     clip_planes: clip_planes.clone(),
                     collisions: collisions.clone(),
+                    instances: Some(crate::collision::CInstances {
+                        matrices: r.matrices.clone(),
+                        per_vertices: 0,
+                    }),
                 });
             }
         }
@@ -1573,7 +1609,7 @@ impl Viewer3d {
         })
     }
 
-    /// The entries of [`Scan::particle_collisions`] that X3DRenderObject.addCollisionShape keeps: it rejects a
+    /// The runs of [`Scan::particle_collisions`] with particles that X3DRenderObject.addCollisionShape keeps: it rejects a
     /// ParticleSystem whose bbox sphere is outside the COLLISION traversal's view volume, X3DLayerNode.collision's
     /// `ortho (-size, size, -size, size, -size, size)` with `size = max (collisionRadius * 2, avatarHeight * 2)` around
     /// the viewer.
@@ -1585,11 +1621,14 @@ impl Viewer3d {
 
         (0..self.scan_display.particle_collisions.len())
             .filter(|&i| {
-                let s = &self.scan_display.particle_collisions[i];
+                let r = &self.scan_display.particle_collisions[i];
+                let s = &r.template;
 
-                s.explicit_bbox.is_some_and(|b| {
-                    x3d_render::traverse::bbox_in_view_volume(&volume, &s.shape_model_view, &b)
-                })
+                // A system with no particle drawn has no entry.
+                r.len() > 0
+                    && s.explicit_bbox.is_some_and(|b| {
+                        x3d_render::traverse::bbox_in_view_volume(&volume, &s.shape_model_view, &b)
+                    })
             })
             .collect()
     }
@@ -1633,7 +1672,9 @@ impl Viewer3d {
             }
 
             for id in closest_shapes {
-                active.extend(world.shapes[id].collisions.iter().copied());
+                if let Some((shape, _)) = world.shape_of(id) {
+                    active.extend(shape.collisions.iter().copied());
+                }
             }
         }
 
@@ -1684,7 +1725,7 @@ impl Viewer3d {
             let mut systems: Vec<NodeRef> = vec![];
 
             for i in self.collision_particles() {
-                let s = &self.scan_display.particle_collisions[i].shape;
+                let s = &self.scan_display.particle_collisions[i].template.shape;
 
                 if !systems.contains(s) {
                     systems.push(s.clone());
@@ -1755,8 +1796,10 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
+            let start = std::time::Instant::now();
             self.scan_display =
                 crate::walk::scan_display(&self.rt, &self.layer_walk(), &view, &mut lod);
+            self.traversal_seconds += start.elapsed().as_secs_f64();
             self.display_thick_lines();
         }
 
@@ -1852,6 +1895,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
+            let start = std::time::Instant::now();
             self.scan_display = scan_screens(
                 &self.rt,
                 &self.layer_walk(),
@@ -1859,6 +1903,7 @@ impl Viewer3d {
                 false,
                 &self.screen_matrices(),
             );
+            self.traversal_seconds += start.elapsed().as_secs_f64();
         }
 
         self.clear_undrawn_scans();
@@ -2594,9 +2639,7 @@ impl Viewer3d {
     }
 
     fn has_sensors(&self) -> bool {
-        let any = |s: &Scan| s.shapes.iter().any(|s| !s.sensors.is_empty());
-
-        any(&self.scan_display) || self.others.iter().any(|l| any(&l.scan_display))
+        self.scan_display.has_sensors() || self.others.iter().any(|l| l.scan_display.has_sensors())
     }
 
     /// X3DPointingDeviceSensorContext.touch: the POINTER traversal of every layer drawn, in
@@ -2645,7 +2688,7 @@ impl Viewer3d {
     ) -> (Vec<crate::walk::NodeRef>, Vec<crate::walk::NodeRef>) {
         let shapes: Vec<crate::walk::NodeRef> = self
             .collision_world_unconditional()
-            .map(|w| w.shapes.into_iter().map(|s| s.node).collect())
+            .map(|w| w.nodes())
             .unwrap_or_default();
         let mut once: Vec<crate::walk::NodeRef> = vec![];
 
@@ -2694,7 +2737,8 @@ impl Viewer3d {
 
             self.swap_to(key);
             let cam = self.pick_camera();
-            let shapes = std::mem::take(&mut self.scan_display.shapes);
+            let scan = std::mem::take(&mut self.scan_display);
+            let shapes = scan.pointing_shapes();
             let mut cache = std::mem::take(&mut self.geom_cache);
             let rt = &self.rt;
             let mut h = pick(
@@ -2707,7 +2751,8 @@ impl Viewer3d {
                 self.pointing_gpu.as_mut(),
             );
             self.geom_cache = cache;
-            self.scan_display.shapes = shapes;
+            drop(shapes);
+            self.scan_display = scan;
             h.layer = key;
 
             // No hit: the ray of the pointing layer (hit .pointingLayerNode .getHitRay ()).
