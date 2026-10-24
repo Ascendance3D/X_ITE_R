@@ -264,8 +264,14 @@ pub struct Viewer3d {
     pointing_layer: Option<LayerKey>,
 }
 
-/// A system's transformed LINE triangles and their collision geometry, one per particle.
-type ThickLineDepth = (Rc<x3d_runtime::particles::ThickLines>, Rc<[Rc<Geometry>]>);
+/// A system's transformed LINE triangles and their collision shapes: every particle's triangles one after the other,
+/// the instance matrices, the vertices of one particle.
+type ThickLineDepth = (
+    Rc<x3d_runtime::particles::ThickLines>,
+    Rc<Geometry>,
+    Rc<Vec<Matrix4>>,
+    usize,
+);
 
 fn geom_of(
     root: &Runtime,
@@ -1415,6 +1421,7 @@ impl Viewer3d {
                     instance: s.instance,
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
+                    instances: None,
                 });
             }
         }
@@ -1431,6 +1438,7 @@ impl Viewer3d {
                     instance: s.instance,
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
+                    instances: None,
                 });
             }
         }
@@ -1514,60 +1522,68 @@ impl Viewer3d {
                 let Some(lines) = lines else {
                     continue;
                 };
-                let geometries = match self.thick_line_depth.get(&key) {
-                    Some((kept, geometries)) if Rc::ptr_eq(kept, &lines) => geometries.clone(),
+                let (geometry, matrices, per) = match self.thick_line_depth.get(&key) {
+                    Some((kept, geometry, matrices, per)) if Rc::ptr_eq(kept, &lines) => {
+                        (geometry.clone(), matrices.clone(), *per)
+                    }
                     _ => {
                         let positions = x3d_render::gpu::thick_line_positions(&lines);
                         let per = positions.len() / lines.instances.len();
-                        let geometries: Rc<[Rc<Geometry>]> = positions
-                            .chunks_exact(per)
-                            .map(|p| Rc::new(x3d_render::particles::line_triangle_geometry(p)))
-                            .collect();
+                        let geometry =
+                            Rc::new(x3d_render::particles::line_triangle_geometry(&positions));
+                        let matrices: Rc<Vec<Matrix4>> = Rc::new(
+                            lines
+                                .instances
+                                .iter()
+                                .map(|m| Matrix4(m.map(f64::from)))
+                                .collect(),
+                        );
 
-                        self.thick_line_depth
-                            .insert(key.clone(), (lines.clone(), geometries.clone()));
-                        geometries
+                        self.thick_line_depth.insert(
+                            key.clone(),
+                            (lines.clone(), geometry.clone(), matrices.clone(), per),
+                        );
+                        (geometry, matrices, per)
                     }
                 };
 
-                for (geometry, m) in geometries.iter().zip(&lines.instances) {
-                    let instance = Matrix4(m.map(f64::from));
-                    let mut model_view = instance;
-                    model_view.mult_right(&first.shape_model_view);
-
-                    shapes.push(CShape {
-                        node: first.shape.clone(),
-                        geometry: geometry.clone(),
-                        particle: true,
-                        model_view,
-                        base_model_view: first.shape_model_view,
-                        instance: Some(instance),
-                        clip_planes: clip_planes.clone(),
-                        collisions: collisions.clone(),
-                    });
-                }
+                // Every particle's triangles in one draw, particle k its own vertices under its instance matrix.
+                shapes.push(CShape {
+                    node: first.shape.clone(),
+                    geometry,
+                    particle: true,
+                    model_view: first.shape_model_view,
+                    base_model_view: first.shape_model_view,
+                    instance: None,
+                    clip_planes: clip_planes.clone(),
+                    collisions: collisions.clone(),
+                    instances: Some(crate::collision::CInstances {
+                        matrices,
+                        per_vertices: per,
+                    }),
+                });
 
                 continue;
             }
 
+            // Each run's particles in one draw (ParticleSystem.displaySimple, gl.drawArraysInstanced).
             for &k in runs {
                 let r = &self.scan_display.particle_collisions[k];
 
-                for m in r.matrices.iter() {
-                    let mut model_view = *m;
-                    model_view.mult_right(&r.template.shape_model_view);
-
-                    shapes.push(CShape {
-                        node: r.template.shape.clone(),
-                        geometry: g.clone(),
-                        particle: true,
-                        model_view,
-                        base_model_view: r.template.shape_model_view,
-                        instance: Some(*m),
-                        clip_planes: clip_planes.clone(),
-                        collisions: collisions.clone(),
-                    });
-                }
+                shapes.push(CShape {
+                    node: r.template.shape.clone(),
+                    geometry: g.clone(),
+                    particle: true,
+                    model_view: r.template.shape_model_view,
+                    base_model_view: r.template.shape_model_view,
+                    instance: None,
+                    clip_planes: clip_planes.clone(),
+                    collisions: collisions.clone(),
+                    instances: Some(crate::collision::CInstances {
+                        matrices: r.matrices.clone(),
+                        per_vertices: 0,
+                    }),
+                });
             }
         }
 
@@ -1656,7 +1672,9 @@ impl Viewer3d {
             }
 
             for id in closest_shapes {
-                active.extend(world.shapes[id].collisions.iter().copied());
+                if let Some((shape, _)) = world.shape_of(id) {
+                    active.extend(shape.collisions.iter().copied());
+                }
             }
         }
 
@@ -2670,7 +2688,7 @@ impl Viewer3d {
     ) -> (Vec<crate::walk::NodeRef>, Vec<crate::walk::NodeRef>) {
         let shapes: Vec<crate::walk::NodeRef> = self
             .collision_world_unconditional()
-            .map(|w| w.shapes.into_iter().map(|s| s.node).collect())
+            .map(|w| w.nodes())
             .unwrap_or_default();
         let mut once: Vec<crate::walk::NodeRef> = vec![];
 

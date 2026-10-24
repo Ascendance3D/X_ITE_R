@@ -10,6 +10,7 @@ use crate::geometry::Geometry;
 use bytemuck::{Pod, Zeroable};
 use std::collections::HashMap;
 use std::rc::Rc;
+use x3d_fields::math::Matrix4;
 
 pub const DEPTH_WGSL: &str = include_str!("depth.wgsl");
 
@@ -33,6 +34,9 @@ struct Draw {
     instance_normal: [[f32; 4]; 3],
     clip_planes: [[f32; 4]; MAX_CLIP_PLANES],
     params: [f32; 4],
+    /// x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one
+    /// instance per gl_InstanceID).
+    instancing: [u32; 4],
 }
 
 #[repr(C)]
@@ -59,6 +63,13 @@ pub struct DepthShape<'a> {
     pub clip_planes: &'a [[f64; 4]],
     /// A particle of a ParticleSystem (crate::transfer).
     pub particle: bool,
+    /// The particles of a ParticleSystem drawn at once (ParticleSystem.displaySimple, gl.drawArraysInstanced): their
+    /// x3d_InstanceMatrix (`instance` is not used then), particle k with x3d_Id `id + k`. Each draws `geometry`, or with
+    /// `per_instance_vertices` n its own vertices k·n .. (k+1)·n of it (the transformed LINE triangles).
+    pub instances: Option<&'a Rc<Vec<Matrix4>>>,
+    pub per_instance_vertices: u32,
+    /// x3d_Id: the shape's index among the collision shapes (of its first particle).
+    pub id: f32,
 }
 
 /// gl_FragData 0 and 1 for every pixel, row 0 first (GL's bottom row).
@@ -84,7 +95,13 @@ pub struct DepthGpu {
     views: [wgpu::TextureView; 2],
     depth_view: wgpu::TextureView,
     readback: wgpu::Buffer,
+    /// The uniform blocks, the instance matrices (`instances` of the pass's shapes, capacity in matrices) and their bind
+    /// group.
     uniforms: Option<(wgpu::Buffer, wgpu::BindGroup, u64)>,
+    instance_buffer: wgpu::Buffer,
+    instance_capacity: usize,
+    /// The instance matrices the instance buffer holds, in order (kept alive so the addresses identify them).
+    instance_sources: Vec<Rc<Vec<Matrix4>>>,
     buffers: HashMap<usize, Buffer>,
     queries: u64,
     /// Passes drawn (for tests).
@@ -99,16 +116,29 @@ impl DepthGpu {
         });
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("depth"),
-            entries: &[wgpu::BindGroupLayoutEntry {
-                binding: 0,
-                visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Buffer {
-                    ty: wgpu::BufferBindingType::Uniform,
-                    has_dynamic_offset: true,
-                    min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
+            entries: &[
+                wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: true,
+                        min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
+                    },
+                    count: None,
                 },
-                count: None,
-            }],
+                // 1: the instance matrices (depth.wgsl `instances`).
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: true },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
+            ],
         });
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("depth"),
@@ -221,6 +251,8 @@ impl DepthGpu {
             mapped_at_creation: false,
         });
 
+        let instance_buffer = Self::make_instances(&device, 64);
+
         DepthGpu {
             device,
             queue,
@@ -231,10 +263,22 @@ impl DepthGpu {
             depth_view,
             readback,
             uniforms: None,
+            instance_buffer,
+            instance_capacity: 64,
+            instance_sources: vec![],
             buffers: HashMap::new(),
             queries: 0,
             passes: 0,
         }
+    }
+
+    fn make_instances(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("depth instances"),
+            size: (capacity * 64) as u64,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        })
     }
 
     /// Vertex buffers held (0 after `release`).
@@ -244,6 +288,7 @@ impl DepthGpu {
 
     pub fn release(&mut self) {
         self.buffers.clear();
+        self.instance_sources.clear();
     }
 
     /// X3DRenderObject.depth (shapes, numShapes, true) into the cleared buffer, then the readback.
@@ -308,11 +353,49 @@ impl DepthGpu {
 
         self.buffers.retain(|_, b| stamp - b.used < KEEP);
 
+        // The instance matrices of the particle shapes, one after the other: written when they are not those of the
+        // last pass (the passes of one collision query share them).
+        let sources: Vec<&Rc<Vec<Matrix4>>> = shapes.iter().filter_map(|s| s.instances).collect();
+        let total: usize = sources.iter().map(|m| m.len()).sum();
+        let same = sources.len() == self.instance_sources.len()
+            && sources
+                .iter()
+                .zip(&self.instance_sources)
+                .all(|(a, b)| Rc::ptr_eq(a, b));
+        let mut regroup = false;
+
+        if total > self.instance_capacity {
+            self.instance_capacity = total.next_power_of_two();
+            self.instance_buffer = Self::make_instances(&self.device, self.instance_capacity);
+            self.instance_sources.clear();
+            regroup = true;
+        }
+
+        if !same || regroup {
+            let data: Vec<[f32; 16]> = sources
+                .iter()
+                .flat_map(|m| m.iter().map(|m| m.0.map(|v| v as f32)))
+                .collect();
+
+            if !data.is_empty() {
+                let bytes: &[u8] = bytemuck::cast_slice(&data);
+
+                self.queue.write_buffer(&self.instance_buffer, 0, bytes);
+                crate::transfer::upload(crate::transfer::Kind::Particle, bytes.len());
+            }
+
+            self.instance_sources = sources.into_iter().cloned().collect();
+        }
+
         // One uniform block per shape.
         let needed = (shapes.len().max(1) as u64) * STRIDE;
 
-        if self.uniforms.as_ref().is_none_or(|u| u.2 < needed) {
-            let size = needed.next_power_of_two();
+        if regroup || self.uniforms.as_ref().is_none_or(|u| u.2 < needed) {
+            let size = self
+                .uniforms
+                .as_ref()
+                .map_or(0, |u| u.2)
+                .max(needed.next_power_of_two());
             let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some("depth uniforms"),
                 size,
@@ -322,23 +405,37 @@ impl DepthGpu {
             let group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("depth"),
                 layout: &self.layout,
-                entries: &[wgpu::BindGroupEntry {
-                    binding: 0,
-                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                        buffer: &buffer,
-                        offset: 0,
-                        size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
-                    }),
-                }],
+                entries: &[
+                    wgpu::BindGroupEntry {
+                        binding: 0,
+                        resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                            buffer: &buffer,
+                            offset: 0,
+                            size: wgpu::BufferSize::new(std::mem::size_of::<Draw>() as u64),
+                        }),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 1,
+                        resource: self.instance_buffer.as_entire_binding(),
+                    },
+                ],
             });
             self.uniforms = Some((buffer, group, size));
         }
 
         let (uniforms, group, _) = self.uniforms.as_ref().unwrap();
         let mut blob = vec![0u8; shapes.len() * STRIDE as usize];
+        let mut first = 0u32;
 
         for (i, s) in shapes.iter().enumerate() {
             let mut planes = [[0.0f32; 4]; MAX_CLIP_PLANES];
+            let instancing = match s.instances {
+                Some(m) => {
+                    first += m.len() as u32;
+                    [1, first - m.len() as u32, s.per_instance_vertices, 0]
+                }
+                None => [0; 4],
+            };
 
             for (k, p) in s.clip_planes.iter().take(MAX_CLIP_PLANES).enumerate() {
                 planes[k] = p.map(|v| v as f32);
@@ -356,11 +453,12 @@ impl DepthGpu {
                 ],
                 clip_planes: planes,
                 params: [
-                    i as f32,
+                    s.id,
                     s.clip_planes.len().min(MAX_CLIP_PLANES) as f32,
                     0.0,
                     0.0,
                 ],
+                instancing,
             };
             blob[i * STRIDE as usize..i * STRIDE as usize + std::mem::size_of::<Draw>()]
                 .copy_from_slice(bytemuck::bytes_of(&draw));
@@ -431,9 +529,20 @@ impl DepthGpu {
                     bound = pipeline;
                 }
 
+                // One draw of every particle: gl_InstanceID, or the vertices of each in turn.
+                let instances = match s.instances {
+                    Some(m) if s.per_instance_vertices == 0 => m.len() as u32,
+                    Some(m) if m.is_empty() => 0,
+                    _ => 1,
+                };
+
+                if instances == 0 {
+                    continue;
+                }
+
                 pass.set_bind_group(0, group, &[(i as u64 * STRIDE) as u32]);
                 pass.set_vertex_buffer(0, b.buffer.slice(..));
-                pass.draw(0..b.count, 0..1);
+                pass.draw(0..b.count, 0..instances);
             }
         }
 
