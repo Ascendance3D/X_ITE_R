@@ -16,6 +16,13 @@ use super::body::{BodyId, RigidBody};
 use super::math::*;
 use super::solver::Info2;
 
+/// Bullet's `SIMD_2_PI` as `btScalar` (float in the ammo.js build) widened back to double.
+/// Kept as the source's literal rounded through `f32`, not `f32::consts::TAU`, so the hinge
+/// angle wrapping lands on the same float.
+#[allow(
+    clippy::approx_constant,
+    reason = "Bullet's own SIMD_2_PI literal, rounded through f32"
+)]
 const SIMD_2_PI: f64 = 6.283_185_307_179_586_f32 as f64;
 
 /// btPoint2PointConstraint.

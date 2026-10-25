@@ -1438,6 +1438,12 @@ impl<'a> Gjk<'a> {
                             - (u - v) * (g - t) * (A - x))
                         - (w_ - x) * (i - v) * (y - t);
 
+                    // `B == B` is btVoronoiSimplexSolver's own "is not NaN" test, kept as
+                    // the C++ writes it: the determinant is built from the simplex in the same
+                    // association order, so when it degenerates the self-comparison is what
+                    // Bullet branches on. `!B.is_nan()` is the same predicate, but it is our
+                    // spelling, not the source's.
+                    #[allow(clippy::eq_op, reason = "Bullet's NaN test, ported verbatim")]
                     if !(B == B
                         && B != 0.0
                         && B * (w_ * ((u - i) * (g - y) - (r - g) * (i - z))
@@ -1694,6 +1700,8 @@ impl<'a> Gjk<'a> {
                 let (i, m, e) = (w2[0] - w3[0], w2[1] - w3[1], w2[2] - w3[2]);
                 let x = o * h * e + (b * n * i + g * d * m - o * n * m - b * d * e) - g * h * i;
 
+                // Bullet's NaN test again, same reason as the determinant above.
+                #[allow(clippy::eq_op, reason = "Bullet's NaN test, ported verbatim")]
                 if x == x && x != 0.0 {
                     return true;
                 }
