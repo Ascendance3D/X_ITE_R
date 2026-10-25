@@ -303,3 +303,211 @@ fn an_empty_run_draws_nothing() {
     assert!(g.sample_all(&run(&none, vec![])).unwrap().is_none());
     assert!(g.sample_all(&own_vertices(&none)).unwrap().is_none());
 }
+
+/// `per_instance_vertices` picks the particle from the vertex index, which a draw that follows another one in the
+/// pass's vertex buffer does not start at zero: `@builtin(vertex_index)` is `first_vertex + i` (WebGPU, draw()), so
+/// the particle has to be found from the draw's own base.
+///
+/// A far quad goes first, so the transformed-thick-line form starts at vertex 6, and the nearer of two particles must
+/// still win with its own x3d_Id. Reading the index as though the draw began at zero gives every particle the next
+/// one's matrix.
+#[test]
+fn own_vertices_after_another_draw_keep_their_particles() {
+    let Some(mut g) = gpu() else { return };
+    let matrices = Rc::new(vec![translation(-1.5), translation(-2.5)]);
+
+    // Alone, so the draw starts at vertex 0: the baseline the pass has to keep.
+    let first = g.sample_all(&own_vertices(&matrices)).unwrap();
+
+    assert_eq!(first.as_ref().map(|s| s.id), Some(1.0));
+
+    // Behind a draw of its own six vertices, which the quad at z = -5 covers but never wins.
+    let mut draws = vec![PointingTriangle {
+        instance: {
+            let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+            f32x16(&translation(-5.0))
+        },
+        ..draw(quad(), 100.0)
+    }];
+
+    draws.extend(own_vertices(&matrices));
+
+    let after = g.sample_all(&draws).unwrap();
+
+    assert_eq!(
+        bits(&after),
+        bits(&first),
+        "the particles moved when their draw did not start at vertex 0"
+    );
+}
+
+/// A matrix that turns `angle` about Z, scales the axes by `s` and then moves to `z`, in the column order of
+/// `Matrix4` (`m .0 [12 ..= 14]` is the translation).
+fn turned(angle: f64, s: [f64; 3], z: f64) -> Matrix4 {
+    let (sin, cos) = angle.sin_cos();
+    let mut m = Matrix4::IDENTITY;
+
+    m.0[0] = s[0] * cos;
+    m.0[1] = s[0] * sin;
+    m.0[4] = -s[1] * sin;
+    m.0[5] = s[1] * cos;
+    m.0[10] = s[2];
+    m.0[14] = z;
+    m
+}
+
+/// A turned and non-uniformly scaled instance matrix moves the hit point but not the normal: a ParticleSystem's
+/// pointing shader is built with X3D_INSTANCING and *without* X3D_INSTANCE_NORMAL
+/// (X3DPointingDeviceSensorContext, ParticleSystem.getShapeKey is 1 or 2), so `getInstanceNormal` is the identity
+/// macro and the normal that reaches the buffer is the geometry's own.
+///
+/// This holds the instanced draw to that, against the per-particle draws the B14 captures of X_ITE 16.5.0 cover.
+#[test]
+fn turned_and_scaled_particles_keep_the_geometry_normal() {
+    let Some(mut g) = gpu() else { return };
+
+    for (name, ms) in [
+        (
+            "a quarter turn",
+            vec![turned(std::f64::consts::FRAC_PI_2, [1.0, 1.0, 1.0], -2.0)],
+        ),
+        (
+            "non-uniform scale",
+            vec![turned(0.0, [2.0, 0.5, 1.0], -2.0)],
+        ),
+        (
+            "turned and scaled",
+            vec![turned(0.6, [1.7, 0.4, 2.5], -2.0)],
+        ),
+        // A negative scale turns the quad's face away; the normal still has to be the geometry's.
+        ("mirrored", vec![turned(0.3, [-1.3, 0.9, 1.0], -2.0)]),
+        (
+            "several, at mixed depths",
+            vec![
+                turned(0.4, [1.5, 0.7, 1.0], -2.2),
+                turned(-1.1, [0.8, 2.0, 1.0], -1.6),
+                turned(2.0, [1.2, 1.2, 1.0], -2.8),
+            ],
+        ),
+    ] {
+        let matrices = Rc::new(ms);
+        let instanced = g.sample_all(&run(&matrices, vec![])).unwrap();
+        let separate = g.sample_all(&alone(&matrices, vec![])).unwrap();
+        let per_vertex = g.sample_all(&own_vertices(&matrices)).unwrap();
+
+        assert_eq!(
+            bits(&instanced),
+            bits(&separate),
+            "{name}: the instanced draw differs from the particles drawn one by one"
+        );
+        assert_eq!(
+            bits(&per_vertex),
+            bits(&separate),
+            "{name}: each particle's own vertices differ from the particles drawn one by one"
+        );
+        assert_eq!(
+            instanced.as_ref().map(|s| s.normal),
+            Some([0.0, 0.0, 1.0]),
+            "{name}: the instance matrix was applied to the normal"
+        );
+    }
+}
+
+/// Several systems in one pass: each particle keeps its own system's matrices and x3d_Id, whatever the counts are and
+/// whichever of them draws nothing. This is the `first` offset of the shared instance buffer.
+#[test]
+fn systems_of_different_sizes_keep_their_own_particles() {
+    let Some(mut g) = gpu() else { return };
+    // The nearest particle of all is the second of the last system, so a wrong offset cannot land on it by luck.
+    let a = Rc::new(vec![translation(-2.6), translation(-2.4)]);
+    let empty: Rc<Vec<Matrix4>> = Rc::new(vec![]);
+    let b = Rc::new(vec![
+        translation(-2.2),
+        translation(-1.5),
+        translation(-2.0),
+    ]);
+
+    let system = |m: &Rc<Vec<Matrix4>>, id: f32| PointingTriangle {
+        instances: Some(m.clone()),
+        ..draw(quad(), id)
+    };
+    let separate = |m: &Rc<Vec<Matrix4>>, id: f32| {
+        let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+
+        m.iter()
+            .enumerate()
+            .map(|(k, m)| PointingTriangle {
+                instance: f32x16(m),
+                ..draw(quad(), id + k as f32)
+            })
+            .collect::<Vec<_>>()
+    };
+
+    for (name, order) in [
+        (
+            "empty in the middle",
+            vec![(&a, 1.0), (&empty, 50.0), (&b, 10.0)],
+        ),
+        ("empty first", vec![(&empty, 50.0), (&a, 1.0), (&b, 10.0)]),
+        ("empty last", vec![(&a, 1.0), (&b, 10.0), (&empty, 50.0)]),
+        ("the big system first", vec![(&b, 10.0), (&a, 1.0)]),
+    ] {
+        let instanced: Vec<PointingTriangle> = order.iter().map(|(m, id)| system(m, *id)).collect();
+        let one_by_one: Vec<PointingTriangle> =
+            order.iter().flat_map(|(m, id)| separate(m, *id)).collect();
+
+        let got = g.sample_all(&instanced).unwrap();
+        // Before the next sample, which replaces the count.
+        let draws = g.draws;
+        let want = g.sample_all(&one_by_one).unwrap();
+
+        assert_eq!(
+            bits(&got),
+            bits(&want),
+            "{name}: the systems' instanced draws differ from their particles drawn one by one"
+        );
+        // The nearest is b's second particle: id 10 + 1.
+        assert_eq!(got.as_ref().map(|s| s.id), Some(11.0), "{name}");
+        assert_eq!(draws, order.len(), "{name}: one draw per system");
+    }
+}
+
+/// A `per_instance_vertices` draw of more than one segment per particle: every segment of a particle selects that
+/// particle, and the next particle's segments start at its own block.
+#[test]
+fn own_vertices_of_several_segments_keep_their_particles() {
+    let Some(mut g) = gpu() else { return };
+    let matrices = Rc::new(vec![translation(-1.5), translation(-2.5)]);
+    // Three quads per particle: one over the pointer, two beside it, so only the first can win.
+    let beside = |dx: f32| {
+        quad()
+            .into_iter()
+            .map(|mut v| {
+                v[0] += dx;
+                v
+            })
+            .collect::<Vec<[f32; 4]>>()
+    };
+    let block: Vec<[f32; 4]> = [0.0, 4.0, -4.0].iter().flat_map(|&dx| beside(dx)).collect();
+    let per = block.len();
+    let vertices: Vec<[f32; 4]> = matrices.iter().flat_map(|_| block.clone()).collect();
+    let n = vertices.len();
+
+    let draws = vec![PointingTriangle {
+        normals: vec![[0.0, 0.0, 1.0]; n],
+        tex_coords: vec![[0.0, 0.0, 0.0, 1.0]; n],
+        instances: Some(matrices.clone()),
+        per_instance_vertices: per as u32,
+        ..draw(vertices, 1.0)
+    }];
+
+    let got = g.sample_all(&draws).unwrap();
+    let want = g.sample_all(&own_vertices(&matrices)).unwrap();
+
+    assert_eq!(
+        bits(&got),
+        bits(&want),
+        "the extra segments moved the particles"
+    );
+    assert_eq!(got.as_ref().map(|s| s.id), Some(1.0));
+}
