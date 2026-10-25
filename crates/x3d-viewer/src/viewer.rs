@@ -1650,46 +1650,25 @@ impl Viewer3d {
 
     /// X3DRenderObject.collide: the closest object along each of the six axes within the collision radius
     /// (times sqrt 2) makes the Collision nodes around it active (isActive, collideTime). It runs for every
-    /// viewer while an enabled Collision exists.
-    fn collide(&mut self) {
-        if self.scan_display.collisions == 0 {
-            return;
+    /// viewer while an enabled Collision exists. `closest` holds the six closest objects, empty without collision
+    /// shapes.
+    fn collide(&mut self, world: &World, closest: &[crate::collision::Closest]) {
+        let nav = self.nav_info();
+        let mut active: Vec<x3d_fields::NodeId> = vec![];
+        let radius = nav.collision_radius() * std::f64::consts::SQRT_2;
+        let mut closest_shapes: Vec<usize> = vec![];
+
+        for c in closest {
+            if let Some(id) = c.shape.filter(|_| c.distance <= radius)
+                && !closest_shapes.contains(&id)
+            {
+                closest_shapes.push(id);
+            }
         }
 
-        let Some(world) = self.collision_world() else {
-            return;
-        };
-        let base = self.base();
-        let nav = self.nav_info();
-        let vp_node = self.layer.viewpoint();
-        let vp = self.layer.vp(vp_node).clone();
-        let mut active: Vec<x3d_fields::NodeId> = vec![];
-
-        if !world.shapes.is_empty() {
-            let radius = nav.collision_radius() * std::f64::consts::SQRT_2;
-            let mut closest_shapes: Vec<usize> = vec![];
-
-            for axis in [
-                Vector3::new(1.0, 0.0, 0.0),
-                Vector3::new(0.0, 1.0, 0.0),
-                Vector3::new(0.0, 0.0, 1.0),
-                Vector3::new(-1.0, 0.0, 0.0),
-                Vector3::new(0.0, -1.0, 0.0),
-                Vector3::new(0.0, 0.0, -1.0),
-            ] {
-                let closest = world.closest_object(&vp, &base, &nav, &axis);
-
-                if let Some(id) = closest.shape.filter(|_| closest.distance <= radius) {
-                    if !closest_shapes.contains(&id) {
-                        closest_shapes.push(id);
-                    }
-                }
-            }
-
-            for id in closest_shapes {
-                if let Some((shape, _)) = world.shape_of(id) {
-                    active.extend(shape.collisions.iter().copied());
-                }
+        for id in closest_shapes {
+            if let Some((shape, _)) = world.shape_of(id) {
+                active.extend(shape.collisions.iter().copied());
             }
         }
 
@@ -1750,9 +1729,12 @@ impl Viewer3d {
             self.layer.collision_particle_systems = Some(systems);
         }
 
-        self.collide();
+        // collide runs while an enabled Collision exists, gravitate in WALK. Both read the same collision shapes from
+        // the same viewpoint (collide's isActive events wait for the event loop), so their depth passes are one batch.
+        let collide = self.scan_display.collisions > 0;
+        let walk = self.nav.kind() == "WALK";
 
-        if self.nav.kind() != "WALK" {
+        if !collide && !walk {
             return;
         }
 
@@ -1762,14 +1744,37 @@ impl Viewer3d {
         let base = self.base();
         let nav = self.nav_info();
         let vp_node = self.layer.viewpoint();
+        let vp = self.layer.vp(vp_node).clone();
+        let axes: &[Vector3] = if collide && !world.shapes.is_empty() {
+            &[
+                Vector3::new(1.0, 0.0, 0.0),
+                Vector3::new(0.0, 1.0, 0.0),
+                Vector3::new(0.0, 0.0, 1.0),
+                Vector3::new(-1.0, 0.0, 0.0),
+                Vector3::new(0.0, -1.0, 0.0),
+                Vector3::new(0.0, 0.0, -1.0),
+            ]
+        } else {
+            &[]
+        };
+        let (closest, ground) = world.collision_queries(&vp, &base, &nav, axes, walk);
+
+        if collide {
+            self.collide(&world, &closest);
+        }
+
+        let Some(ground) = ground else {
+            return;
+        };
         let mut speed = self.gravity_speed;
         let frame_rate = self.frame_rate;
-        let vp = self.layer.vp(vp_node).clone();
 
         // X3DRenderObject.gravitate: `getBrowserOptions () ._Gravity .getValue ()`.
         let gravity = self.rt.browser_options.gravity();
 
-        if let Some(d) = world.gravitate(&vp, &base, &nav, &mut speed, frame_rate, gravity) {
+        if let Some(d) =
+            world.gravitate_on(&ground, &vp, &base, &nav, &mut speed, frame_rate, gravity)
+        {
             let v = self.layer.vp(vp_node);
             v.position_offset.add(&d);
         }

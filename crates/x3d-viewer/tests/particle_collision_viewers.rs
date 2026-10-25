@@ -195,6 +195,52 @@ fn independent_viewers() {
     });
 }
 
+/// X3DRenderObject.collide's six closest objects and gravitate's depth read the same shapes from the same viewpoint:
+/// one batch, one submission and one readback a frame. The avatar still falls to the floor and stands there.
+#[test]
+fn collide_and_gravitate_are_one_batch() {
+    big(|| {
+        let Some(depth) = depth_gpu() else {
+            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+        };
+        let d = dir("batch");
+        let floor = write(
+            &d,
+            "floor.x3dv",
+            &format!("{HEAD}{FLOOR}DEF RUN Collision {{ }}\n"),
+        );
+        let mut r = Run::new(&floor, depth);
+
+        // While the avatar is high above the floor, the floor particle is outside the COLLISION traversal's volume:
+        // gravitate alone, with nothing to draw, needs no submission. Once it is in, the frame is one batch.
+        let mut batches = 0;
+
+        for _ in 0..40 {
+            r.gpu().borrow_mut().take_stats();
+            r.step();
+            let stats = r.gpu().borrow_mut().take_stats();
+            let got = (
+                stats.queries,
+                stats.submissions,
+                stats.polls,
+                stats.readbacks,
+            );
+            let want = if batches > 0 || stats.queries > 1 {
+                batches += 1;
+                (7, 1, 1, 1)
+            } else {
+                (1, 0, 0, 0)
+            };
+
+            assert_eq!(got, want, "frame {}", r.frame);
+        }
+
+        assert!(batches >= 30, "{batches} frames with the floor");
+        let height = r.height();
+        assert!((height - 1.6).abs() < 1e-6, "floor {height}");
+    });
+}
+
 /// An Inline loads the wall, unloads it and loads it again: the wall blocks only while it is loaded. The depth buffer
 /// keeps one vertex buffer for the particle quad while it runs (no new buffer per collision test or frame); unloaded,
 /// nothing is drawn and nothing is added; the reloaded system's quad is a new geometry, and the old one's buffer goes
