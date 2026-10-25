@@ -24,7 +24,7 @@ LEDGER = os.path.join(HERE, "..", "ledger")
 AUTH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(LEDGER, "ledger.json")
 ALLOWED = {"COMPLETE", "PARTIAL", "DIFFERENT", "NOT_TESTED", "MISSING"}
 BASELINE_B09 = {"COMPLETE": 245, "PARTIAL": 74, "DIFFERENT": 25, "NOT_TESTED": 0, "MISSING": 2}
-PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3d|x3dv|html|mjs|js|json|py|sh|md|png))")
+PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3dv|x3d|html|mjs|json|js|py|sh|md|png)\b)")
 
 # (snapshot the step starts from, tool, its change set as {id: status or None}); a step ends at the next one's snapshot, the last
 # at the authoritative ledger.
@@ -39,6 +39,7 @@ HISTORY = [
     ("before-b13", "ledger_b13.py C", lambda: _first("ledger_b13", "C")),
     ("before-b19", "ledger_b19.py C", lambda: _first("ledger_b19", "C")),
     ("before-b20", "ledger_b20.py C", lambda: _first("ledger_b20", "C")),
+    ("before-recovery1", "ledger_recovery1.py C", lambda: _first("ledger_recovery1", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]
