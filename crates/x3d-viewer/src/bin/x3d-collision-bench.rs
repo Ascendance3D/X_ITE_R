@@ -10,6 +10,9 @@
 //! the mapped bytes out, the GPU time of the passes (timestamp queries, when the device has them), the CPU time of the
 //! collision work (its wall time less the waits), the upload and readback bytes, and the whole frame (step, frame
 //! build, render and the GPU idle wait). It prints the median and p95 of each. `--cpu` runs the CPU stand-in instead.
+//!
+//! Without timestamp queries (no `Features::TIMESTAMP_QUERY`, or `--cpu`) the GPU time is not measured: the table says
+//! `n/a` and the JSON has `"timestamps": false` and `"gpuMs": null`, never a zero.
 
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -78,8 +81,19 @@ fn percentile(v: &mut [f64], p: usize) -> f64 {
     v[(v.len() * p / 100).min(v.len() - 1)]
 }
 
+/// The scenes' directory, removed however the run ends.
+struct TempDir(PathBuf);
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
 #[derive(Default)]
 struct Samples {
+    /// Whether `gpu` holds timestamp measurements.
+    timestamps: bool,
     submissions: Vec<f64>,
     polls: Vec<f64>,
     readbacks: Vec<f64>,
@@ -126,8 +140,9 @@ fn run(
     cpu: bool,
     json: Option<PathBuf>,
 ) -> Result<(), String> {
-    let dir = std::env::temp_dir().join(format!("x3d-collision-bench-{}", std::process::id()));
-    std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let dir =
+        TempDir(std::env::temp_dir().join(format!("x3d-collision-bench-{}", std::process::id())));
+    std::fs::create_dir_all(&dir.0).map_err(|e| e.to_string())?;
     let mut gpu = x3d_render::gpu::Gpu::new()?;
     let mut report = serde_json::Map::new();
 
@@ -153,15 +168,20 @@ fn run(
             continue;
         }
 
-        let path = dir.join(format!("{}.x3dv", scene.name.replace('/', "-")));
+        let path = dir.0.join(format!("{}.x3dv", scene.name.replace('/', "-")));
         std::fs::write(&path, &scene.text).map_err(|e| e.to_string())?;
         let mut s = bench(&mut gpu, &path, frames, cpu)?;
         let med = |v: &mut Vec<f64>| percentile(v, 50);
         let p95 = |v: &mut Vec<f64>| percentile(v, 95);
         let mean = |v: &[f64]| v.iter().sum::<f64>() / v.len().max(1) as f64;
+        let gpu_ms = if s.timestamps {
+            format!("{:5.3}/{:5.3}", med(&mut s.gpu), p95(&mut s.gpu))
+        } else {
+            "n/a".into()
+        };
 
         println!(
-            "{:16} {:5.1} | {:9.2} {:9.2} {:9.2} | {:5.3}/{:5.3} {:5.3}/{:5.3} {:5.3}/{:5.3} {:5.3}/{:5.3} {:5.3}/{:5.3} {:5.2}/{:5.2} | {:9.0} {:9.0}",
+            "{:16} {:5.1} | {:9.2} {:9.2} {:9.2} | {:5.3}/{:5.3} {:5.3}/{:5.3} {:>11} {:5.3}/{:5.3} {:5.3}/{:5.3} {:5.2}/{:5.2} | {:9.0} {:9.0}",
             scene.name,
             mean(&s.queries),
             mean(&s.submissions),
@@ -171,8 +191,7 @@ fn run(
             p95(&mut s.wait),
             med(&mut s.transfer),
             p95(&mut s.transfer),
-            med(&mut s.gpu),
-            p95(&mut s.gpu),
+            gpu_ms,
             med(&mut s.cpu),
             p95(&mut s.cpu),
             med(&mut s.collision),
@@ -184,6 +203,8 @@ fn run(
         );
 
         let mut entry = serde_json::Map::new();
+        let timestamps = s.timestamps;
+        entry.insert("timestamps".into(), timestamps.into());
         let fields: [(&str, &mut Vec<f64>); 13] = [
             ("queries", &mut s.queries),
             ("submissions", &mut s.submissions),
@@ -201,6 +222,11 @@ fn run(
         ];
 
         for (k, v) in fields {
+            if k == "gpuMs" && !timestamps {
+                entry.insert(k.into(), serde_json::Value::Null);
+                continue;
+            }
+
             entry.insert(
                 k.into(),
                 serde_json::json!({ "mean": mean(v), "median": med(v), "p95": p95(v) }),
@@ -218,7 +244,6 @@ fn run(
         .map_err(|e| e.to_string())?;
     }
 
-    let _ = std::fs::remove_dir_all(&dir);
     Ok(())
 }
 
@@ -235,12 +260,13 @@ fn bench(
     v.frame_rate = 60.0;
 
     let depth = (!cpu).then(|| {
-        let d = std::rc::Rc::new(std::cell::RefCell::new(
+        std::rc::Rc::new(std::cell::RefCell::new(
             x3d_render::depth_gpu::DepthGpu::new(gpu.device.clone(), gpu.queue.clone()),
-        ));
-        d.borrow_mut().set_timestamps(true);
-        d
+        ))
     });
+    let timestamps = depth
+        .as_ref()
+        .is_some_and(|d| d.borrow_mut().set_timestamps(true));
     let pointing =
         x3d_render::pointing_gpu::PointingGpu::new(gpu.device.clone(), gpu.queue.clone());
     v.set_gpu(&gpu.device.clone(), Some(pointing), depth.clone())
@@ -261,7 +287,10 @@ fn bench(
         view_formats: &[],
     });
     let view = target.create_view(&Default::default());
-    let mut s = Samples::default();
+    let mut s = Samples {
+        timestamps,
+        ..Default::default()
+    };
     // Two seconds: the particle systems reach their maxParticles before the measured frames.
     let warmup = 120;
     let (cx, cy) = (w as f64 / 2.0, h as f64 / 2.0);

@@ -248,6 +248,81 @@ fn collide_and_gravitate_are_one_batch() {
     });
 }
 
+/// The CPU fallback of a failed batch takes the whole frame: collide's six axes and gravitate fail together (one failed
+/// readback) and the CPU answers both in that frame, so the avatar falls and stands like the run without failures.
+/// The frame after a failure is drawn on the GPU again; three failed frames in a row give the device up, and the CPU
+/// answers from then on.
+#[test]
+fn failed_frames_fall_back_whole() {
+    big(|| {
+        let Some(depth) = depth_gpu() else {
+            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+        };
+        let d = dir("fallback");
+        let floor = write(
+            &d,
+            "floor.x3dv",
+            &format!("{HEAD}{FLOOR}DEF RUN Collision {{ }}\n"),
+        );
+        let frames = 40;
+        let mut reference = Run::new(&floor, depth);
+        let mut heights = vec![];
+        let mut first = None;
+
+        for k in 0..frames {
+            reference.gpu().borrow_mut().take_stats();
+            reference.step();
+            heights.push(reference.height());
+            if first.is_none() && reference.gpu().borrow_mut().take_stats().queries == 7 {
+                first = Some(k);
+            }
+        }
+
+        let first = first.expect("a frame with the floor in the collision shapes");
+        let max = x3d_render::pointing_gpu::MAX_MAP_FAILURES;
+        // One failed frame, a good one, then `max` failed frames in a row.
+        let fails = |k: usize| k == first || (first + 5..first + 5 + max).contains(&k);
+        let mut r = Run::new(&floor, depth_gpu().unwrap());
+
+        for (k, height) in heights.iter().enumerate() {
+            let gpu = r.gpu().clone();
+            let (before, lost) = (gpu.borrow().readback_failures(), gpu.borrow().lost());
+            gpu.borrow_mut().take_stats();
+            gpu.borrow_mut().fail_mappings(fails(k) as usize);
+            r.step();
+            let stats = gpu.borrow_mut().take_stats();
+            let failures = gpu.borrow().readback_failures() - before;
+
+            assert!(
+                (r.height() - height).abs() < 1e-6,
+                "frame {k}: {} / {height}",
+                r.height()
+            );
+
+            if lost {
+                // Given up: the GPU is not asked.
+                assert_eq!(
+                    (stats.queries, stats.submissions, failures),
+                    (0, 0, 0),
+                    "frame {k}"
+                );
+            } else if k >= first {
+                // The frame's one batch, failed or not: one submission, at most one failed readback.
+                assert_eq!(
+                    (stats.queries, stats.submissions, stats.readbacks, failures),
+                    (7, 1, 1, fails(k) as usize),
+                    "frame {k}"
+                );
+            }
+
+            assert_eq!(gpu.borrow().lost(), k + 1 >= first + 5 + max, "frame {k}");
+        }
+
+        let height = r.height();
+        assert!((height - 1.6).abs() < 1e-6, "floor {height}");
+    });
+}
+
 /// An Inline loads the wall, unloads it and loads it again: the wall blocks only while it is loaded. The depth buffer
 /// keeps one vertex buffer for the particle quad while it runs (no new buffer per collision test or frame); unloaded,
 /// nothing is drawn and nothing is added; the reloaded system's quad is a new geometry, and the old one's buffer goes

@@ -1730,6 +1730,54 @@ mod tests {
         assert_eq!(format!("{back:?}"), format!("{alone:?}"));
     }
 
+    /// One triangle, three vertices (twelve floats): the smallest geometry the pass draws. It is not left out as
+    /// nothing to draw; the GPU draws it, one submission, and finds what the CPU stand-in finds.
+    #[test]
+    fn three_vertex_triangle_is_drawn() {
+        let triangle = Rc::new(Geometry {
+            geometry_type: 3,
+            vertices: vec![
+                -0.5, -0.5, -0.8, 1.0, 0.5, -0.5, -0.8, 1.0, 0.0, 0.5, -0.8, 1.0,
+            ],
+            normals: vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0],
+            solid: false,
+            ccw: true,
+            min: Vector3::new(-0.5, -0.5, -0.8),
+            max: Vector3::new(0.5, 0.5, -0.8),
+            ..Default::default()
+        });
+        assert_eq!(triangle.vertices.len(), 12);
+        let shape = || CShape {
+            particle: false,
+            model_view: Matrix4::IDENTITY,
+            instance: None,
+            ..particle(&triangle, Vector3::ZERO)
+        };
+        let (cpu, gpu_hit) = depths(vec![shape()], &Matrix4::IDENTITY);
+
+        assert!(
+            cpu.is_some_and(|h| (h.0 - 0.8).abs() < 1e-6 && h.2 == Some(0)),
+            "{cpu:?}"
+        );
+        same("triangle", &cpu, &gpu_hit);
+
+        let Some(g) = gpu() else { return };
+        let world = World {
+            shapes: vec![shape()],
+            gpu: Some(g.clone()),
+            ..Default::default()
+        };
+        g.borrow_mut().take_stats();
+        let hit = world.depth(&Matrix4::IDENTITY, BOUNDS);
+        let stats = g.borrow_mut().take_stats();
+
+        assert!(hit.is_some());
+        assert_eq!(
+            (stats.queries, stats.submissions, stats.readbacks),
+            (1, 1, 1)
+        );
+    }
+
     /// Without anything to draw (no shapes, or only shapes the pass leaves out) every pass reads the cleared buffer:
     /// no hit, no submission, like the CPU stand-in.
     #[test]
@@ -1764,6 +1812,8 @@ mod tests {
                 (stats.queries, stats.submissions, stats.readbacks),
                 (7, 0, 0)
             );
+            // Not even an upload: the frame touches nothing on the GPU.
+            assert_eq!(stats.upload_bytes, 0);
         }
     }
 
@@ -1799,5 +1849,58 @@ mod tests {
             g.borrow().readback_failures(),
             x3d_render::pointing_gpu::MAX_MAP_FAILURES
         );
+    }
+
+    /// A mapping that fails once on a live device: that batch answers on the CPU, the next one on the GPU again, and
+    /// the run of failures starts over. Failures with successes between them never give the device up; three in a row
+    /// do, and the CPU answers from then on.
+    #[test]
+    fn temporary_mapping_failures() {
+        let Ok(p) = x3d_render::pointing_gpu::PointingGpu::new_headless() else {
+            return;
+        };
+        let g = Rc::new(RefCell::new(DepthGpu::new(
+            p.device().clone(),
+            p.queue().clone(),
+        )));
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        let cpu = format!("{:?}", world.depths(&queries));
+        world.gpu = Some(g.clone());
+        let ok = format!("{:?}", world.depths(&queries));
+        let max = x3d_render::pointing_gpu::MAX_MAP_FAILURES;
+
+        // One failure, then a success, many times over: never lost.
+        for k in 1..=2 * max {
+            g.borrow_mut().fail_mappings(1);
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu, "failure {k}");
+            assert_eq!(g.borrow().readback_failures(), k);
+            assert_eq!(
+                format!("{:?}", world.depths(&queries)),
+                ok,
+                "after failure {k}"
+            );
+            assert!(!g.borrow().lost());
+        }
+
+        // A run of failures one short of the limit, then a success: still not lost.
+        g.borrow_mut().fail_mappings(max - 1);
+        for _ in 1..max {
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        }
+        assert_eq!(format!("{:?}", world.depths(&queries)), ok);
+        assert!(!g.borrow().lost());
+
+        // The limit in a row: lost. The GPU is not asked again.
+        g.borrow_mut().fail_mappings(max);
+        for _ in 0..max {
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        }
+        assert!(g.borrow().lost());
+        let failures = g.borrow().readback_failures();
+        g.borrow_mut().take_stats();
+        assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        assert_eq!(g.borrow().readback_failures(), failures);
+        assert_eq!(g.borrow_mut().take_stats().submissions, 0);
     }
 }
