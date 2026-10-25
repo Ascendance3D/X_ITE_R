@@ -1,0 +1,10 @@
+[package]
+name = "x3d-evidence"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Finds and verifies the gitignored X_ITE answer keys listed in oracle/answer-keys.tsv, for workspace tests."
+
+[dependencies]
+sha2 = "0.10"

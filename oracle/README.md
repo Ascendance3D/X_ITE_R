@@ -3,6 +3,20 @@
 The original JavaScript is the answer key. Rust output must match it.
 Everything here is headless and local. Nothing here goes to any remote.
 
+## Where the gitignored answer keys are
+
+Twelve answer keys are too large for Git: 4 JSON files and 8 render directories. `answer-keys.tsv` lists each
+one with its kind, file count, byte count and sha256 (for a directory, the sha256 of its sorted `sha256sum` list).
+
+The keys stay in the main checkout. `tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust
+tests) find a key in this order: `$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this
+worktree's `oracle/`, then the main worktree's `oracle/`. A key is used only when it equals its row.
+
+```
+python3 -I -B tools/answer_keys.py verify                       # every key
+python3 -I -B tools/answer_keys.py resolve render-items2-baseline
+```
+
 ## C0 — CodeMirror 5 test suite
 
 - `cm5-build/` — copy of `upstream/codemirror5` (5.65.21 @ 4ca3d05), built with
@@ -383,9 +397,9 @@ rgba hashes identical for 296/296 at both 0 and 4 samples (4x was not +-1 here).
 node oracle/x_ite-dump.mjs oracle/corpus-items2 oracle/items2-baseline.json
 node oracle/x_ite-shot.mjs oracle/render-items2 oracle/render-items2-baseline --jobs 4
 node oracle/x_ite-shot-msaa.mjs oracle/render-items2 oracle/render-msaa4-items2-baseline --jobs 4
-x3d-run compare oracle/items2-baseline.json oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
-x3d-shot batch oracle/render-items2 out && x3d-shot compare oracle/render-items2-baseline out
-x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare oracle/render-msaa4-items2-baseline out4
+x3d-run compare $(python3 -I -B tools/answer_keys.py resolve items2-baseline.json) oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
+x3d-shot batch oracle/render-items2 out && x3d-shot compare $(python3 -I -B tools/answer_keys.py resolve render-items2-baseline) out
+x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare $(python3 -I -B tools/answer_keys.py resolve render-msaa4-items2-baseline) out4
 ```
 
 Rust results: scene text 296/296 exact and 296/296 logs; pictures 294/296 at 0x and at 4x

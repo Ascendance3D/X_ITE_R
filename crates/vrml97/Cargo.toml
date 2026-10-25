@@ -18,4 +18,5 @@ x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 
 [dev-dependencies]
+x3d-evidence = { path = "../x3d-evidence" }
 serde_json = "1"
