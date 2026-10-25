@@ -30,9 +30,15 @@ struct Uniforms {
     clip_planes: array<vec4<f32>, 6>,
     // X3D_GEOMETRY_0D or X3D_GEOMETRY_1D
     flags: vec4<f32>,
+    // x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
+    // per instance_index), w: the draw's first vertex.
+    instancing: vec4<u32>,
 }
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
+// The instance matrices of a ParticleSystem's particles (Instancing2.glsl x3d_InstanceMatrix): one draw per system,
+// particle k under `instances [first + k]` with x3d_Id `id .x + k`.
+@group(0) @binding(1) var<storage, read> instances: array<mat4x4<f32>>;
 
 struct VertexIn {
     @location(0) vertex: vec4<f32>,
@@ -51,6 +57,8 @@ struct VertexOut {
     @location(4) @interpolate(flat) raster: f32,
     // gl_PointCoord: the corners' 0 and 1 interpolated linearly in screen space across the square, origin upper left.
     @location(5) @interpolate(linear) point_coord: vec2<f32>,
+    // x3d_Id of the shape, its particle's with instances.
+    @location(6) @interpolate(flat) id: f32,
 }
 
 // PointSize2.glsl getPointSize
@@ -68,9 +76,29 @@ fn get_point_size(vertex: vec3<f32>) -> f32 {
 }
 
 @vertex
-fn vs_main(in: VertexIn) -> VertexOut {
+fn vs_main(
+    in: VertexIn,
+    @builtin(vertex_index) vertex_index: u32,
+    @builtin(instance_index) instance_index: u32,
+) -> VertexOut {
     var out: VertexOut;
-    var t_vertex = u.instance * in.vertex;
+    var instance = u.instance;
+    out.id = u.id.x;
+
+    if u.instancing.x == 1u {
+        var k = instance_index;
+
+        if u.instancing.z > 0u {
+            // vertex_index is first_vertex + i (WebGPU draw()), and the draw's vertices follow the earlier draws' in
+            // the pass's one buffer, so the particle is counted from this draw's own first vertex.
+            k = (vertex_index - u.instancing.w) / u.instancing.z;
+        }
+
+        instance = instances[u.instancing.y + k];
+        out.id = u.id.x + f32(k);
+    }
+
+    var t_vertex = instance * in.vertex;
     t_vertex = u.model_view * t_vertex;
     out.vertex = t_vertex.xyz;
     out.normal = u.instance_normal * in.normal;
@@ -157,7 +185,7 @@ struct FragA {
 fn fs_a(in: VertexOut) -> FragA {
     var out: FragA;
     _ = fragment(in);
-    out.data0 = vec4<f32>(in.vertex, u.id.x);
+    out.data0 = vec4<f32>(in.vertex, in.id);
     out.data1 = vec4<f32>(in.normal, 0.0);
     return out;
 }
