@@ -482,10 +482,10 @@ impl Runtime {
         };
         let urls = self.url_strings(node);
 
-        let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => {
-                Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
-            }
+        let ok = self.load_document_opt(&loader, &urls, |rt, loaded| match loaded {
+            Loaded::Script(_) => Err(Some(
+                "Error: Couldn't parse X3D. No suitable file handler found.".into(),
+            )),
             Loaded::Data(data, url) => rt.inline_scene(node, generation, &data, &url),
         });
 
@@ -514,9 +514,9 @@ impl Runtime {
         generation: u64,
         data: &[u8],
         url: &url::Url,
-    ) -> Result<(), String> {
+    ) -> Result<(), Option<String>> {
         if self.inline_is_cyclic(node, url) {
-            return Err("Error: Cyclic Inline: the scene is already being loaded by a scene that contains this Inline.".into());
+            return Err(Some("Error: Cyclic Inline: the scene is already being loaded by a scene that contains this Inline.".into()));
         }
 
         self.sync_svg_quality();
@@ -524,7 +524,7 @@ impl Runtime {
         // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
         let parsed = crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url.as_str());
 
-        let mut scene = match parsed {
+        let mut scene = match parsed.scene {
             Ok(scene) => scene,
             // GLTF2Parser / GLB2Parser: the thrown JS error text, nothing logged before it.
             Err(x3d_parse::LoadError::Parse(e))
@@ -533,7 +533,28 @@ impl Runtime {
                         .iter()
                         .any(|p| e.message.starts_with(p)) =>
             {
-                return Err(e.message);
+                if let Some(buf_err) = parsed.buffer_error {
+                    if e.message == buf_err.error {
+                        let loader = crate::loader::FileLoader {
+                            type_name: String::new(),
+                            base: self.base_url(node),
+                            data_as_string: false,
+                        };
+
+                        self.print_load_error(
+                            &loader,
+                            &buf_err.candidate,
+                            buf_err.resolved.as_ref(),
+                            &buf_err.error,
+                            1,
+                            0,
+                        );
+
+                        // FileLoader.js:382 - if (!error) return;
+                        return Err(None);
+                    }
+                }
+                return Err(Some(e.message));
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
                 for w in x3d_parse::take_error_warnings() {
@@ -542,7 +563,7 @@ impl Runtime {
 
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
                 self.log_error(format!("Error: {}", e.message));
-                return Err(format!("Error: \n{e}"));
+                return Err(Some(format!("Error: \n{e}")));
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles; Inline keeps the shorter text.
             Err(x3d_parse::LoadError::NoHandler)
@@ -550,11 +571,11 @@ impl Runtime {
                     || url.path().ends_with(".gltf")
                     || url.path().ends_with(".glb") =>
             {
-                return Err(format!(
+                return Err(Some(format!(
                     "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
-                ));
+                )));
             }
-            Err(e) => return Err(format!("Error: {e}")),
+            Err(e) => return Err(Some(format!("Error: {e}"))),
         };
 
         for w in std::mem::take(&mut scene.warnings) {
@@ -594,7 +615,7 @@ impl Runtime {
             if let Err(e) = self.inline_geometry_find(root, url) {
                 self.pending_scenes.retain(|p| p.ctx != root);
                 self.dispose_scene(root);
-                return Err(e);
+                return Err(Some(e));
             }
         }
 

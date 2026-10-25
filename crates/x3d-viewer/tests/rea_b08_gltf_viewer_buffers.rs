@@ -24,6 +24,7 @@ fn top_level_gltf_with_external_buffer_loads_in_the_viewer() {
         prefix: ORACLE_PREFIX.to_string(),
     };
     let want = x3d_runtime::parse_bytes_with_fetcher(&fetcher, &data, &url)
+        .scene
         .expect("parse with fetcher")
         .to_vrml_string();
     assert!(
