@@ -251,15 +251,27 @@ fn a_run_hits_like_its_particles_on_their_own() {
             for (depths, zs) in cases() {
                 for (clipped, clip) in [("", vec![]), (" clipped", near_cut.clone())] {
                     let off = depths == "far off the pointer";
+                    // `line_geometry` runs along Z, so a LINE particle straight ahead projects onto the pointer as a
+                    // point of no length and covers nothing: with a plain translation every LINE case below would be
+                    // a miss on both sides and would prove nothing. A quarter turn about Y lays the line along X so
+                    // it crosses the pointer's pixel, which is also how a real LINE particle is oriented (by its
+                    // velocity, through the instance matrix).
+                    let line = geometry.geometry_type == 1;
+                    let place = |x: f64, z: f64| {
+                        let mut m = translation(x, 0.0, z);
+
+                        if line {
+                            m.0[0] = 0.0;
+                            m.0[2] = -1.0;
+                            m.0[8] = 1.0;
+                            m.0[10] = 0.0;
+                        }
+
+                        m
+                    };
                     let matrices = Rc::new(
                         zs.iter()
-                            .map(|&z| {
-                                if off {
-                                    translation(20.0, 0.0, z)
-                                } else {
-                                    translation(0.0, 0.0, z)
-                                }
-                            })
+                            .map(|&z| if off { place(20.0, z) } else { place(0.0, z) })
                             .collect::<Vec<_>>(),
                     );
                     let run = ParticleRun {
@@ -282,6 +294,17 @@ fn a_run_hits_like_its_particles_on_their_own() {
                         assert!(
                             !grouped.id,
                             "{name}{skinned}, {depths}{clipped}: a hit off the pointer"
+                        );
+                    } else if clip.is_empty() && skin.is_none() {
+                        // Without this the equivalence above is satisfied by both forms *missing*, which proves
+                        // nothing — and it was: before the LINE orientation above, every LINE case here was a
+                        // double miss, because `line_geometry` runs along Z and projects to zero length straight
+                        // ahead. Each geometry has to actually cover the pointer in the plain case. The skinned
+                        // and clipped variants are deliberately exempt: the one-joint skin shifts every point off
+                        // the pointer (POINT has nothing left to cover it) and a clip plane is there to discard.
+                        assert!(
+                            grouped.id,
+                            "{name}, {depths}: no particle covered the pointer, so the case is vacuous"
                         );
                     }
                 }
