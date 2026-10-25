@@ -995,6 +995,13 @@ impl World {
 }
 
 #[cfg(test)]
+// The fixtures below write a quarter turn as `1.5707963`, the decimal the matching X_ITE
+// cases use, so a failure's numbers can be read against them directly. The value is test
+// input, not a computed constant, and `FRAC_PI_2` would change it.
+#[allow(
+    clippy::approx_constant,
+    reason = "fixture angles written as the decimals the X_ITE cases use"
+)]
 mod tests {
     use super::*;
     use crate::walk::NodeRef;
