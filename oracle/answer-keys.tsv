@@ -1,0 +1,16 @@
+# Gitignored X_ITE 16.5.0 answer keys (issue #65). Read by tools/answer_keys.py and crates/x3d-evidence.
+# kind file: sha256 of the file. kind dir: sha256 of the sha256sum lines of every file (relative paths, bytewise sort).
+# Values measured 2026-10-25 in the main checkout; they equal the Phase 2/3 recovery manifests and oracle/README.md.
+# name	kind	files	bytes	sha256
+items-baseline.json	file	1	227758426	8f4bb11593e98f8538ddc3d2700c22ea91ae093cf3d4afaa3f5cf793ea37faac
+items2-baseline.json	file	1	122257613	496328054437baaa73068f109d7c604e5b9005dd5d2b9d9aa4a956cafbb25735
+x1-baseline.json	file	1	86101194	fbe54fa2a0e89f3ab2da46a2f0f123e668457e0a82b24106f3913043a74d39c4
+x_ite-text.json	file	1	15676688	fa34ba46d8e8fb9897e4f558340e8f59d2383d22a9eac61d4761a60975fdb4d1
+render-items-baseline	dir	607	14406103	7d04f966cf69648c328aabcac8a1eb98d95e2608fba91b561e097bc68ebae8fa
+render-items2-baseline	dir	297	4828136	bb17b0d1f33525f33742ea00135c54fd41d654f2030f808f52853fa969f19210
+render-msaa4-items-baseline	dir	607	15972362	91eb39f554f65ba4326d824856bf33c68b5c2b8a84b46e21e9f79c7ee095d0c0
+render-msaa4-items2-baseline	dir	297	5455627	a0866dafb829f2fdf72625c3b35b4e94d127346d81aa63fb397e9f16bfbaf21f
+render-msaa4-x8-baseline	dir	126	2274346	9d0d7fdfaf58343dd47c58957a425ae19f8ec68978a008effa6d09230cbb3045
+render-msaa8-items-baseline	dir	607	16480020	38c2429ec5c07bba5593121710fd1a7fb464ab3afae22305d1ee32be7f27df11
+render-msaa8-x8-baseline	dir	126	2337883	6e9fbf27849f2da2a17f1f02817afd905ba03ffb6ddf8de6029fb2390eb877bc
+render-synthetic-x8-baseline	dir	126	2117031	5dfabd2d219f078d5356e87f227bc89880c589c65aa8b8b4f9829369adac9887
