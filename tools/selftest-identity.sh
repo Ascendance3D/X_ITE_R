@@ -75,6 +75,7 @@ expect 0 'gated-command-ran'          "--expect HEAD -- <command> runs the comma
 echo
 echo "usage"
 expect 2 'full 40-character'          "--expect with a branch name is a usage error" g --expect master
+expect 2 "not ''"                     "an empty --expect= is a usage error" g --expect=
 expect 2 'needs --expect'             "a gated command without --expect is a usage error" g -- true
 expect 2 'needs --expect'             "--allow-dirty without --expect is a usage error" g --allow-dirty
 expect 2 'needs --expect'             "--expect-worktree without --expect is a usage error" g --expect-worktree "$C"

@@ -48,6 +48,7 @@ refuse () { echo "verify-candidate: REFUSED: $*" >&2; exit 3; }
 # Arguments are parsed BEFORE the lock is sourced, because --lock chooses which
 # lock file to read.
 EXPECT_COMMIT=""
+EXPECT_GIVEN=0
 EXPECT_WORKTREE=""
 ALLOW_DIRTY=0
 RUN=()
@@ -55,8 +56,8 @@ HAVE_RUN=0
 
 while [ $# -gt 0 ]; do
    case "$1" in
-      --expect) [ $# -ge 2 ] || die_usage "--expect needs a commit"; EXPECT_COMMIT="$2"; shift 2 ;;
-      --expect=*) EXPECT_COMMIT="${1#--expect=}"; shift ;;
+      --expect) [ $# -ge 2 ] || die_usage "--expect needs a commit"; EXPECT_COMMIT="$2"; EXPECT_GIVEN=1; shift 2 ;;
+      --expect=*) EXPECT_COMMIT="${1#--expect=}"; EXPECT_GIVEN=1; shift ;;
       --expect-worktree) [ $# -ge 2 ] || die_usage "--expect-worktree needs a directory"; EXPECT_WORKTREE="$2"; shift 2 ;;
       --root) [ $# -ge 2 ] || die_usage "--root needs a directory"; ROOT="$(cd -- "$2" && pwd -P)" || die_usage "no such directory: $2"; shift 2 ;;
       --allow-dirty) ALLOW_DIRTY=1; shift ;;
@@ -67,7 +68,8 @@ while [ $# -gt 0 ]; do
    esac
 done
 
-if [ -n "$EXPECT_COMMIT" ] && ! [[ "$EXPECT_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+# An empty --expect= is an error, not a silent reference-only run.
+if [ "$EXPECT_GIVEN" -eq 1 ] && ! [[ "$EXPECT_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
    die_usage "--expect needs a full 40-character commit SHA, not '$EXPECT_COMMIT'"
 fi
 if [ -z "$EXPECT_COMMIT" ]; then
@@ -188,7 +190,7 @@ git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1 || die_usage "$ROOT is not a 
 git -C "$ROOT" cat-file -e "$EXPECT_COMMIT^{commit}" 2>/dev/null || \
    refuse "expected $EXPECT_COMMIT is not a commit in this repository"
 
-HEAD_SHA=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null)
+HEAD_SHA=$(git -C "$ROOT" rev-parse --verify HEAD 2>/dev/null) || refuse "cannot read HEAD in $ROOT"
 BRANCH=$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null)
 WORKTREE=$(cd -- "$ROOT" && pwd -P)
 # Tracked modifications only. Untracked build output and gitignored baselines are artifacts.
@@ -209,15 +211,25 @@ if [ "$HEAD_SHA" != "$EXPECT_COMMIT" ]; then
    # -z keeps a path with spaces or newlines as one name.
    OFFENDERS=()
    DELTA_COUNT=0
+   # A failed diff must refuse, never read as an empty (accepted) delta.
+   DELTA_FILE=$(mktemp) || refuse "cannot create a temporary file"
+   if ! git -C "$ROOT" diff -z --name-only "$EXPECT_COMMIT" "$HEAD_SHA" > "$DELTA_FILE"; then
+      rm -f "$DELTA_FILE"
+      refuse "git diff $EXPECT_COMMIT $HEAD_SHA failed"
+   fi
    while IFS= read -r -d '' f; do
       DELTA_COUNT=$((DELTA_COUNT + 1))
       case " $ALLOWED_INFRA_FILES " in
          *" $f "*) ;;
          *) OFFENDERS+=("$f") ;;
       esac
-   done < <(git -C "$ROOT" diff -z --name-only "$EXPECT_COMMIT" "$HEAD_SHA")
+   done < "$DELTA_FILE"
+   rm -f "$DELTA_FILE"
    if [ "$DELTA_COUNT" -eq 0 ]; then
       # Same tree, different commit (for example an empty commit): the content is identical.
+      # Prove it from the tree IDs, not only from the empty diff.
+      [ "$(git -C "$ROOT" rev-parse "$HEAD_SHA^{tree}")" = "$(git -C "$ROOT" rev-parse "$EXPECT_COMMIT^{tree}")" ] || \
+         refuse "empty diff, but HEAD and $EXPECT_COMMIT have different trees"
       echo "  note               HEAD has the same tree as $EXPECT_COMMIT"
    elif [ "${#OFFENDERS[@]}" -gt 0 ]; then
       echo "  non-infrastructure ${#OFFENDERS[@]} of $DELTA_COUNT changed file(s):"
