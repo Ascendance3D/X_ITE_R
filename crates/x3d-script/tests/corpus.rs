@@ -18,13 +18,17 @@ fn run(corpus: &str, expect: Expect) {
         .map(|n| n.get())
         .unwrap_or(8)
         .max(8);
-    let results = compare_corpus(
-        &root.join(format!("{corpus}-baseline.json")),
-        &root.join(corpus_dir(corpus)),
-        true,
-        threads,
-    )
-    .unwrap();
+    let baseline = format!("{corpus}-baseline.json");
+    // A gitignored key (oracle/answer-keys.tsv) is found and verified by x3d-evidence; a tracked one is
+    // read in place. An absent key keeps the old path, so compare_corpus fails on it as before.
+    let baseline = match x3d_evidence::resolve(&baseline) {
+        Ok(p) => p,
+        Err(x3d_evidence::KeyError::NotInManifest(_) | x3d_evidence::KeyError::Absent { .. }) => {
+            root.join(&baseline)
+        }
+        Err(e) => panic!("{e}"),
+    };
+    let results = compare_corpus(&baseline, &root.join(corpus_dir(corpus)), true, threads).unwrap();
     let known = std::fs::read_to_string(
         Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/{corpus}-known.tsv")),
     )

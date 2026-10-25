@@ -6,7 +6,17 @@ use std::path::Path;
 
 fn run(baseline: &str, corpus: &str) -> Option<(usize, usize, usize, usize, Vec<String>)> {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
-    let text = std::fs::read_to_string(root.join(baseline)).ok()?;
+    // A gitignored key (oracle/answer-keys.tsv) is found and verified by x3d-evidence; a tracked one is read in place.
+    let path = match x3d_evidence::resolve(baseline) {
+        Ok(p) => p,
+        Err(x3d_evidence::KeyError::NotInManifest(_)) => root.join(baseline),
+        Err(e @ x3d_evidence::KeyError::Absent { .. }) => {
+            eprintln!("{e}");
+            return None;
+        }
+        Err(e) => panic!("{e}"),
+    };
+    let text = std::fs::read_to_string(path).ok()?;
     let json: serde_json::Value = serde_json::from_str(&text).unwrap();
     let (mut exact, mut differ, mut rejected_both, mut wrong_ok) = (0, 0, 0, 0);
     let mut differing = vec![];
