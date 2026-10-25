@@ -150,7 +150,16 @@ fn walk(dir: &Path, rel: &Path, out: &mut Vec<PathBuf>) -> std::io::Result<()> {
         let e = e?;
         let r = rel.join(e.file_name());
 
-        if std::fs::metadata(e.path())?.is_dir() {
+        let ty = e.file_type()?;
+
+        if ty.is_symlink() {
+            return Err(std::io::Error::other(format!(
+                "{}: a symlink inside a key directory is refused",
+                e.path().display()
+            )));
+        }
+
+        if ty.is_dir() {
             walk(&e.path(), &r, out)?;
         } else {
             out.push(r);
@@ -255,7 +264,15 @@ pub fn resolve_in(root: &Path, name: &str, explicit: Option<&Path>) -> Result<Pa
             continue;
         }
 
-        let found = measure(p).map_err(|e| KeyError::Io(format!("{}: {e}", p.display())))?;
+        let found = match measure(p) {
+            Ok(m) => m,
+            Err(e) => {
+                return Err(KeyError::Io(format!(
+                    "{name}: mismatch at {}: {e}",
+                    p.display()
+                )));
+            }
+        };
 
         if &found != want {
             return Err(KeyError::Mismatch {
@@ -266,7 +283,7 @@ pub fn resolve_in(root: &Path, name: &str, explicit: Option<&Path>) -> Result<Pa
             });
         }
 
-        return Ok(p.clone());
+        return Ok(std::path::absolute(p).unwrap_or_else(|_| p.clone()));
     }
 
     Err(KeyError::Absent {
@@ -425,6 +442,22 @@ mod tests {
             resolve_in(&root, "d", Some(&keys)),
             Err(KeyError::Mismatch { .. })
         ));
+    }
+
+    #[test]
+    fn symlink_inside_a_dir_key_is_refused() {
+        let root = checkout("inner-link");
+        let keys = scratch("inner-link-keys");
+
+        put_keys(&keys);
+        std::os::unix::fs::symlink("..", keys.join("d/b/loop")).unwrap();
+
+        let e = resolve_in(&root, "d", Some(&keys)).unwrap_err();
+
+        assert!(
+            e.to_string().contains("symlink inside a key directory"),
+            "{e}"
+        );
     }
 
     #[test]

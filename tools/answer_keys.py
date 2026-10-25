@@ -52,7 +52,10 @@ def measure(path):
     if os.path.isfile(path):
         return "file", 1, os.path.getsize(path), _sha256(path)
     rels = []
-    for d, _, names in os.walk(path):
+    for d, dirs, names in os.walk(path):
+        for n in dirs + names:
+            if os.path.islink(os.path.join(d, n)):
+                raise OSError(f"{os.path.join(d, n)}: a symlink inside a key directory is refused")
         for n in names:
             rels.append(os.path.relpath(os.path.join(d, n), path))
     rels.sort(key=os.fsencode)
@@ -93,12 +96,15 @@ def resolve(name, root=ROOT, rows=None):
         # Step 2 skips a symlink in this worktree; an explicit location or the main worktree may be a link.
         if not os.path.exists(p) or (i == 0 and not os.environ.get("X3D_ORACLE_KEYS") and os.path.islink(p)):
             continue
-        got = measure(p)
+        try:
+            got = measure(p)
+        except OSError as e:
+            raise KeyError_(3, f"{name}: mismatch at {p}: {e}")
         if got != rows[name]:
             raise KeyError_(3, f"{name}: mismatch at {p}: found {got[0]}, {got[1]} files, {got[2]} bytes, sha256 {got[3]}; "
                                f"manifest wants {rows[name][0]}, {rows[name][1]} files, {rows[name][2]} bytes, "
                                f"sha256 {rows[name][3]}")
-        return p
+        return os.path.abspath(p)
     raise KeyError_(2, f"{name}: absent; searched " + ", ".join(searched)
                        + "; restore it as oracle/README.md describes, or set X3D_ORACLE_KEYS")
 
@@ -111,7 +117,9 @@ def link(dest, names, root=ROOT):
             continue  # dest is the store itself
         if os.path.exists(at) and not os.path.islink(at):
             raise KeyError_(1, f"{at}: a real file or directory is present; not replaced")
-        tmp = at + ".answer-keys-tmp"
+        tmp = f"{at}.answer-keys-tmp-{os.getpid()}"
+        if os.path.lexists(tmp) and not os.path.islink(tmp):
+            raise KeyError_(1, f"{tmp}: a real file is present; not replaced")
         if os.path.lexists(tmp):
             os.remove(tmp)
         os.symlink(src, tmp)

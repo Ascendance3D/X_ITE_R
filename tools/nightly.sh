@@ -64,10 +64,12 @@ git -C "$W" checkout --detach --force main >> "$LOGS/worktree.log" 2>&1
 git -C "$W" clean -fdq >> "$LOGS/worktree.log" 2>&1
 ln -sfn "$LANE/x_ite-tests" "$BASE/x_ite-tests"
 # Answer keys (oracle/answer-keys.tsv): found and verified by the resolver, then linked. An absent or
-# mismatched key is logged and not linked; the steps that need it then fail and say so.
+# mismatched key is logged, and a stale link is removed; the steps that need it then fail and say so.
 for key in items-baseline.json items2-baseline.json x1-baseline.json render-items-baseline render-items2-baseline \
    render-msaa4-items2-baseline render-synthetic-x8-baseline x_ite-text.json; do
-   python3 -I -B "$W/tools/answer_keys.py" link "$W" "$key" >> "$LOGS/worktree.log" 2>&1
+   if ! python3 -I -B "$W/tools/answer_keys.py" link "$W" "$key" >> "$LOGS/worktree.log" 2>&1; then
+      if [ -L "$W/oracle/$key" ]; then rm -f -- "$W/oracle/$key"; fi
+   fi
 done
 while read -r rel; do
    rel=${rel%/}
