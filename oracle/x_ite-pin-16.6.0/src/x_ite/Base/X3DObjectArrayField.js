@@ -1,0 +1,516 @@
+import X3DField      from "./X3DField.js";
+import X3DArrayField from "./X3DArrayField.js";
+
+const
+   _target = Symbol (),
+   _proxy  = Symbol (),
+   _insert = Symbol (),
+   _erase  = Symbol ();
+
+const handler =
+{
+   get (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            const array = target .getValue ();
+
+            if (index >= array .length)
+               return undefined;
+
+            return array [index] .valueOf ();
+         }
+      }
+
+      return Reflect .get (target, key);
+   },
+   set (target, key, value)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            const array = target .getValue ();
+
+            if (index >= array .length)
+               target .resize (index + 1);
+
+            array [index] .setValue (value);
+
+            return true;
+         }
+      }
+
+      return Reflect .set (target, key, value);
+   },
+   has (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return index < target .getValue () .length;
+      }
+
+      return Reflect .has (target, key);
+   },
+   ownKeys (target)
+   {
+      return Object .keys (target .getValue ()) .concat (Reflect .ownKeys (target));
+   },
+   getOwnPropertyDescriptor (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            if (index < target .getValue () .length)
+               return Reflect .getOwnPropertyDescriptor (target .getValue (), key);
+         }
+      }
+
+      return Reflect .getOwnPropertyDescriptor (target, key);
+   },
+};
+
+const properties = {
+   length: {
+      get () { return this [_target] .getValue () .length; },
+      set (value) { this [_target] .resize (value); },
+   },
+};
+
+function X3DObjectArrayField (values)
+{
+   const proxy = new Proxy (this, handler);
+
+   X3DArrayField .call (this, [ ]);
+
+   Object .defineProperties (this, properties);
+
+   this [_target] = this;
+   this [_proxy]  = proxy;
+
+   for (const value of values)
+      this .push (value);
+
+   return proxy;
+}
+
+Object .assign (Object .setPrototypeOf (X3DObjectArrayField .prototype, X3DArrayField .prototype),
+{
+   [_target]: null,
+   [_proxy]: null,
+   *[Symbol .iterator] ()
+   {
+      const
+         target = this [_target],
+         array  = target .getValue ();
+
+      for (const value of array)
+         yield value .valueOf ();
+   },
+   getTarget ()
+   {
+      return this [_target];
+   },
+   copy ()
+   {
+      const
+         target = this [_target],
+         copy   = target .create ();
+
+      copy .assign (target);
+
+      return copy;
+   },
+   equals (array)
+   {
+      const
+         target = this [_target],
+         a      = target .getValue (),
+         b      = array .getValue (),
+         length = a .length;
+
+      if (a === b)
+         return true;
+
+      if (length !== b .length)
+         return false;
+
+      for (let i = 0; i < length; ++ i)
+      {
+         if (!a [i] .equals (b [i]))
+            return false;
+      }
+
+      return true;
+   },
+   isDefaultValue ()
+   {
+      return this .length === 0;
+   },
+   set (value)
+   {
+      const
+         target    = this [_target],
+         array     = target .getValue (),
+         newLength = value .length;
+
+      target .resize (newLength, undefined, true);
+
+      for (let i = 0; i < newLength; ++ i)
+         array [i] .set (value [i] instanceof X3DField ? value [i] .getValue () : value [i]);
+   },
+   setValue (value)
+   {
+      const target = this [_target];
+
+      target .set (value instanceof X3DObjectArrayField ? value .getValue () : value);
+      target .addEvent ();
+   },
+   unshift (... args)
+   {
+      const
+         target = this [_target],
+         array  = target .getValue ();
+
+      for (let i = args .length - 1; i >= 0; -- i)
+      {
+         const field = new (target .getSingleType ()) ();
+
+         field .setValue (args [i]);
+         target .addChildObject (field);
+         array .unshift (field);
+      }
+
+      target .addEvent ();
+
+      return array .length;
+   },
+   shift ()
+   {
+      const
+         target = this [_target],
+         array  = target .getValue ();
+
+      if (array .length)
+      {
+         const
+            field  = array .shift (),
+            result = field .valueOf ();
+
+         target .removeChildObject (field);
+         target .addEvent ();
+
+         return result;
+      }
+   },
+   push (... args)
+   {
+      const
+         target = this [_target],
+         array  = target .getValue ();
+
+      for (const argument of args)
+      {
+         const field = new (target .getSingleType ()) ();
+
+         field .setValue (argument);
+         target .addChildObject (field);
+         array .push (field);
+      }
+
+      target .addEvent ();
+
+      return array .length;
+   },
+   pop ()
+   {
+      const
+         target = this [_target],
+         array  = target .getValue ();
+
+      if (array .length)
+      {
+         const
+            field  = array .pop (),
+            result = field .valueOf ();
+
+         target .removeChildObject (field);
+         target .addEvent ();
+
+         return result;
+      }
+   },
+   splice (index, deleteCount, ... insertValues)
+   {
+      const
+         target = this [_target],
+         array  = target .getValue (),
+         length = array .length;
+
+      if (arguments .length === 0)
+         return new (target .constructor) ();
+
+      if (arguments .length < 2)
+         deleteCount = length;
+
+      const result = target [_erase] (index, deleteCount);
+
+      if (insertValues .length)
+         target [_insert] (index, insertValues);
+
+      return result;
+   },
+   [_insert] (index, array)
+   {
+      const
+         target = this [_target],
+         args   = [ ];
+
+      for (const value of array)
+      {
+         const field = new (target .getSingleType ()) ();
+
+         field .setValue (value);
+         target .addChildObject (field);
+         args .push (field);
+      }
+
+      target .getValue () .splice (index, 0, ... args);
+      target .addEvent ();
+   },
+   [_erase] (index, deleteCount)
+   {
+      const
+         target = this [_target],
+         values = target .getValue () .splice (index, deleteCount),
+         result = new (target .constructor) ();
+
+      for (const value of values)
+      {
+         result .push (value);
+         target .removeChildObject (value);
+      }
+
+      target .addEvent ();
+
+      return result;
+   },
+   resize (newLength, value, silently)
+   {
+      const
+         target = this [_target],
+         array  = target .getValue (),
+         length = array .length;
+
+      if (newLength < 0)
+         throw new RangeError ("Invalid array length");
+
+      if (newLength < length)
+      {
+         for (let i = newLength; i < length; ++ i)
+            target .removeChildObject (array [i]);
+
+         array .length = newLength;
+
+         if (!silently)
+            target .addEvent ();
+      }
+      else if (newLength > length)
+      {
+         for (let i = length; i < newLength; ++ i)
+         {
+            const field = new (target .getSingleType ()) ();
+
+            if (value !== undefined)
+               field .setValue (value);
+
+            target .addChildObject (field);
+            array .push (field);
+         }
+
+         if (!silently)
+            target .addEvent ();
+      }
+   },
+   addChildObject (value)
+   {
+      value .addParent (this [_proxy]);
+   },
+   removeChildObject (value)
+   {
+      value .dispose ();
+   },
+   shrinkToFit ()
+   {
+      return this .getValue ();
+   },
+   concat (... args)
+   {
+      const
+         result = this .copy (),
+         target = result [_target];
+
+      for (const arg of args)
+      {
+         for (const value of arg)
+            target .push (value);
+      }
+
+      return result;
+   },
+   reverse ()
+   {
+      const target = this [_target];
+
+      target .getValue () .reverse ();
+      target .addEvent ();
+
+      return target [_proxy];
+   },
+   sort (compareFn)
+   {
+      const target = this [_target];
+
+      Array .prototype .sort .call (this, compareFn);
+      target .addEvent ();
+
+      return target [_proxy];
+   },
+   valueOf ()
+   {
+      return this [_proxy];
+   },
+   toStream (generator)
+   {
+      const
+         target = this [_target],
+         array  = target .getValue (),
+         length = array .length;
+
+      switch (length)
+      {
+         case 0:
+         {
+            generator .string += "[";
+            generator .TidySpace ();
+            generator .string += "]";
+            break;
+         }
+         case 1:
+         {
+            array [0] .toStream (generator);
+            break;
+         }
+         default:
+         {
+            const last = length - 1;
+
+            generator .string += "[";
+            generator .ListStart ();
+            generator .IncIndent ();
+
+            for (let i = 0; i < last; ++ i)
+            {
+               generator .ListIndent ();
+               array [i] .toStream (generator);
+               generator .Comma ();
+               generator .ListBreak ();
+            }
+
+            generator .ListIndent ();
+            array .at (-1) .toStream (generator);
+
+            generator .ListEnd ();
+            generator .DecIndent ();
+            generator .ListIndent ();
+            generator .string += "]";
+            break;
+         }
+      }
+   },
+   toVRMLStream (generator)
+   {
+      this .toStream (generator);
+   },
+   toXMLStream (generator)
+   {
+      const
+         target = this [_target],
+         length = target .length;
+
+      if (length)
+      {
+         const
+            array = target .getValue (),
+            last  = length - 1;
+
+         for (let i = 0; i < last; ++ i)
+         {
+            array [i] .toXMLStream (generator);
+            generator .Comma ();
+            generator .TidySpace ();
+         }
+
+         array .at (-1) .toXMLStream (generator);
+      }
+   },
+   toJSONStream (generator)
+   {
+      const
+         target = this [_target],
+         length = target .length;
+
+      if (length)
+      {
+         const
+            array = target .getValue (),
+            last  = length - 1;
+
+         generator .string += '[';
+         generator .ListBreak ();
+         generator .IncIndent ();
+
+         for (let i = 0; i < last; ++ i)
+         {
+            generator .ListIndent ();
+
+            array [i] .toJSONStreamValue (generator);
+
+            generator .string += ',';
+            generator .ListBreak ();
+         }
+
+         generator .ListIndent ();
+
+         array .at (-1) .toJSONStreamValue (generator);
+
+         generator .ListBreak ();
+         generator .DecIndent ();
+         generator .ListIndent ();
+         generator .string += ']';
+      }
+      else
+      {
+         generator .string += '[';
+         generator .TidySpace ();
+         generator .string += ']';
+      }
+   },
+});
+
+for (const key of Object .keys (X3DObjectArrayField .prototype))
+   Object .defineProperty (X3DObjectArrayField .prototype, key, { enumerable: false });
+
+export default X3DObjectArrayField;

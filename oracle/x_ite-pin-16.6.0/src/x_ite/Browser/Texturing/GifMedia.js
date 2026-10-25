@@ -1,0 +1,82 @@
+function GifMedia (gif, movieTexture)
+{
+   let
+      playbackRate = 1,
+      cycle        = 0,
+      loop         = false;
+
+   Object .defineProperties (gif,
+   {
+      currentTime:
+      {
+         get ()
+         {
+            if (!loop && cycle < this .cycle)
+               return this .duration;
+
+            return (movieTexture ._elapsedTime .getValue () * playbackRate) % this .duration;
+         },
+         set: Function .prototype,
+      },
+      duration:
+      {
+         get ()
+         {
+            return this .get_duration_ms () / 1000;
+         },
+      },
+      loop:
+      {
+         get ()
+         {
+            return loop;
+         },
+         set (value)
+         {
+            cycle = this .cycle;
+            loop  = value;
+         },
+      },
+      cycle:
+      {
+         get ()
+         {
+            return Math .floor (movieTexture ._elapsedTime .getValue () / this .duration);
+         },
+      },
+      currentFrame:
+      {
+         get ()
+         {
+            const
+               length = this .get_length (),
+               frame  = Math .max (Math .ceil (this .currentTime / this .duration * length) - 1, 0);
+
+            return this .get_frames () [frame] .data;
+         },
+      },
+      play:
+      {
+         value ()
+         {
+            cycle = this .cycle;
+            return Promise .resolve ();
+         },
+      },
+      playbackRate:
+      {
+         get ()
+         {
+            return playbackRate;
+         },
+         set (value)
+         {
+            playbackRate = value;
+         },
+      },
+   });
+
+   gif .pause ();
+}
+
+export default GifMedia;

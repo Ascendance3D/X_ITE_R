@@ -15,8 +15,17 @@ X_ITE_VERSION=16.5.0
 X_ITE_REF_DIR=oracle/x_ite-pin/src
 X_ITE_PIN_FILE=oracle/x_ite-pin/PINNED_COMMIT
 X_ITE_VERSION_FILE=oracle/x_ite-pin/package.json
-X_ITE_REF_DIGEST=88c5d8da0abc1463afd38c33898836cfff978e48a1af104936dea7fb33f5df2c
-X_ITE_REF_FILES=854
+# Re-blessed 2026-10-24 after proving the reference source is unchanged.
+# X_ITE_REF_DIR holds upstream's 846 src/ files AND 11 QA harness HTML pages that are ours,
+# so this digest moves whenever a harness page is edited. Nine of them changed after the
+# lock was first written (extern/inline/nodes.html added, anim/anim-msaa/anim-sized/dump/
+# shot/shot-msaa.html modified: 533 insertions, 0 deletions), taking 854 -> 857.
+# `diff -r` against `git archive 34cdf9f97 src/` reports zero content differences across all
+# 846 upstream files, so no reference byte drifted. The scope is the real defect: covering
+# our own mutable pages guarantees this drifts again. Narrowing it to upstream's 846 needs
+# owner approval and is not done here.
+X_ITE_REF_DIGEST=83fb7cae30ef3a9a5040acbe463024f72683ecde29d70c0d68a06165eab8506f
+X_ITE_REF_FILES=857
 
 # --- Reference source: CodeMirror 5 ------------------------------------------
 # The CodeMirror 5 source the cm-* crates are ported from.

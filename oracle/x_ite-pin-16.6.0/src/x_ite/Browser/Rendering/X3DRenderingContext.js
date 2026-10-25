@@ -1,0 +1,495 @@
+import Fields                 from "../../Fields.js";
+import X3DConstants           from "../../Base/X3DConstants.js";
+import MultiSampleFramebuffer from "../../Rendering/MultiSampleFramebuffer.js";
+import { maxClipPlanes }      from "./RenderingConfiguration.js";
+import Lock                   from "../../../standard/Utility/Lock.js";
+import $                      from "../../../lib/helper.js";
+
+const
+   _session             = Symbol (),
+   _framebuffers        = Symbol (),
+   _defaultFramebuffer  = Symbol (),
+   _textureBuffers      = Symbol (),
+   _resizer             = Symbol (),
+   _traverse            = Symbol .for ("X_ITE.X3DBrowserContext.traverse"),
+   _localObjects        = Symbol (),
+   _fullscreenArray     = Symbol (),
+   _fullscreenBuffer    = Symbol (),
+   _composeShader       = Symbol (),
+   _depthShaders        = Symbol (),
+   _shapeId             = Symbol (),
+   _buttonLock          = Symbol ();
+
+function X3DRenderingContext ()
+{
+   this .addChildObjects (X3DConstants .outputOnly, "viewport", new Fields .SFVec4f (0, 0, 300, 150));
+
+   this [_framebuffers]   = [ ];
+   this [_textureBuffers] = [ ];
+   this [_depthShaders]   = new Map ();
+   this [_localObjects]   = new Set (); // local objects dumpster
+
+   // WebXR support
+
+   this [_session]            = window;
+   this [_defaultFramebuffer] = null;
+   this [_buttonLock]         = Symbol ();
+}
+
+Object .assign (X3DRenderingContext .prototype,
+{
+   initialize ()
+   {
+      // Configure context.
+
+      const gl = this .getContext ();
+
+      gl .enable (gl .SCISSOR_TEST);
+      gl .enable (gl .DEPTH_TEST);
+      gl .depthFunc (gl .LEQUAL);
+      gl .clearDepth (1);
+
+      gl .blendFuncSeparate (gl .SRC_ALPHA, gl .ONE_MINUS_SRC_ALPHA, gl .ONE, gl .ONE_MINUS_SRC_ALPHA);
+      gl .blendEquationSeparate (gl .FUNC_ADD, gl .FUNC_ADD);
+
+      // Observe resize and parent changes of <canvas> and configure viewport.
+
+      $.on (this, window, "orientationchange", () => this .reshape ());
+
+      this [_resizer] = new ResizeObserver (() => this .reshape ());
+
+      this [_resizer] .observe (this .getSurface ());
+
+      this .reshape ();
+
+      // Observe fullscreen changes of <x3d-canvas>.
+
+      const fullscreenchange = [
+         "fullscreenchange",
+         "webkitfullscreenchange",
+         "mozfullscreenchange",
+         "MSFullscreenChange",
+      ];
+
+      for (const event of fullscreenchange)
+         $.on (this, document, event, () => this .onfullscreen ());
+
+      // Check for WebXR support.
+
+      $.on (this, navigator .xr, "devicechange", () => this .xrUpdateButton ());
+
+      this .xrUpdateButton ();
+   },
+   getRenderer ()
+   {
+      const gl = this .getContext ();
+
+      if (!navigator .userAgent .match (/Firefox/))
+      {
+         const dbgRenderInfo = gl .getExtension ("WEBGL_debug_renderer_info");
+
+         if (dbgRenderInfo)
+            return gl .getParameter (dbgRenderInfo .UNMASKED_RENDERER_WEBGL);
+      }
+
+      return gl .getParameter (gl .RENDERER);
+   },
+   getVendor ()
+   {
+      const gl = this .getContext ();
+
+      if (!navigator .userAgent .match (/Firefox/))
+      {
+         const dbgRenderInfo = gl .getExtension ("WEBGL_debug_renderer_info");
+
+         if (dbgRenderInfo)
+            return gl .getParameter (dbgRenderInfo .UNMASKED_VENDOR_WEBGL);
+      }
+
+      return gl .getParameter (gl .VENDOR);
+   },
+   getWebGLVersion ()
+   {
+      const gl = this .getContext ();
+
+      return gl .getParameter (gl .VERSION);
+   },
+   getMaxSamples ()
+   {
+      const gl = this .getContext ();
+
+      return gl .getParameter (gl .MAX_SAMPLES);
+   },
+   getMaxClipPlanes ()
+   {
+      return maxClipPlanes;
+   },
+   getDepthSize ()
+   {
+      const gl = this .getContext ();
+
+      return gl .getParameter (gl .DEPTH_BITS);
+   },
+   getColorDepth ()
+   {
+      const gl = this .getContext ();
+
+      return (gl .getParameter (gl .RED_BITS) +
+              gl .getParameter (gl .BLUE_BITS) +
+              gl .getParameter (gl .GREEN_BITS) +
+              gl .getParameter (gl .ALPHA_BITS));
+   },
+   getViewport ()
+   {
+      return this ._viewport;
+   },
+   getLocalObjects ()
+   {
+      return this [_localObjects];
+   },
+   getFramebuffers ()
+   {
+      return this [_framebuffers];
+   },
+   getDefaultFramebuffer ()
+   {
+      return this [_defaultFramebuffer];
+   },
+   setDefaultFramebuffer (defaultFramebuffer)
+   {
+      this [_defaultFramebuffer] = defaultFramebuffer;
+
+      for (const frameBuffer of this [_framebuffers])
+         frameBuffer .dispose ();
+
+      this [_framebuffers] = [ ];
+
+      this .reshape ();
+   },
+   addTextureBuffer (key)
+   {
+      this [_textureBuffers] .push (key);
+   },
+   getFullscreenVertexArrayObject ()
+   {
+      // Quad for fullscreen rendering.
+
+      return this [_fullscreenArray] ??= (() =>
+      {
+         const
+            gl               = this .getContext (),
+            fullscreenArray  = gl .createVertexArray (),
+            fullscreenBuffer = gl .createBuffer ();
+
+         this [_fullscreenBuffer] = fullscreenBuffer;
+
+         gl .bindVertexArray (fullscreenArray);
+         gl .bindBuffer (gl .ARRAY_BUFFER, fullscreenBuffer);
+         gl .bufferData (gl .ARRAY_BUFFER, new Float32Array ([-1, 1, -1, -1, 1, -1, -1, 1, 1, -1, 1, 1]), gl .STATIC_DRAW);
+         gl .enableVertexAttribArray (0);
+         gl .vertexAttribPointer (0, 2, gl .FLOAT, false, 0, 0);
+
+         return fullscreenArray;
+      })();
+   },
+   getOITComposeShader ()
+   {
+      return this [_composeShader] ??= this .createShader ({
+         name: "OITCompose",
+         vertexShader: "FullScreen",
+         fragmentShader: "OITCompose",
+      });
+   },
+   getDepthShader (normal, numClipPlanes, shapeNode, hAnimNode)
+   {
+      const geometryContext = shapeNode .getGeometryContext ();
+
+      let key = "";
+
+      key += normal ? 1 : 0;
+      key += numClipPlanes; // Could be more than 9.
+      key += hAnimNode ?.getHAnimKey () ?? "[]";
+      key += shapeNode .getShapeKey ();
+      key += geometryContext .geometryType;
+
+      if (geometryContext .geometryType >= 2)
+      {
+         key += "0.0.0";
+      }
+      else
+      {
+         const appearanceNode  = shapeNode .getAppearance ();
+
+         key += appearanceNode .getStyleProperties (geometryContext .geometryType) ? 1 : 0;
+         key += ".";
+         key += appearanceNode .getTextureBits () .toString (16); // Textures for point and line.
+         key += ".";
+         key += appearanceNode .getMaterial () .getTextureBits () .toString (16); // Textures for point and line.
+      }
+
+      return this [_depthShaders] .get (key)
+         ?? this .createDepthShader (key, normal, numClipPlanes, shapeNode, hAnimNode);
+   },
+   createDepthShader (key, normal, numClipPlanes, shapeNode, hAnimNode)
+   {
+      const
+         appearanceNode  = shapeNode .getAppearance (),
+         geometryContext = shapeNode .getGeometryContext (),
+         options         = [ ];
+
+      options .push ("X3D_DEPTH_PASS");
+
+      if (normal)
+      {
+         options .push ("X3D_NORMAL_BUFFER");
+
+         if (geometryContext .hasNormals)
+            options .push ("X3D_NORMALS");
+      }
+
+      if (numClipPlanes)
+      {
+         options .push ("X3D_CLIP_PLANES");
+         options .push ("X3D_NUM_CLIP_PLANES " + numClipPlanes);
+      }
+
+      switch (shapeNode .getShapeKey ())
+      {
+         case 1:
+         case 2:
+            options .push ("X3D_INSTANCING");
+            break;
+         case 3:
+            options .push ("X3D_INSTANCING", "X3D_INSTANCE_NORMAL");
+            break;
+      }
+
+      options .push (`X3D_GEOMETRY_${geometryContext .geometryType}D`);
+
+      if (appearanceNode .getStyleProperties (geometryContext .geometryType))
+         options .push ("X3D_STYLE_PROPERTIES");
+
+      hAnimNode ?.getShaderOptions (options);
+
+      const shaderNode = shapeNode .createDepthShader ?.(options) ?? this .createShader ({
+         name: "Depth",
+         vertexShader: "Depth",
+         fragmentShader: "Depth",
+         options,
+      });
+
+      this [_depthShaders] .set (key, shaderNode);
+
+      return shaderNode;
+   },
+   resize (width, height)
+   {
+      return new Promise (resolve =>
+      {
+         const
+            [vWidth, vHeight] = this .limitFramebufferSize (width, height),
+            key               = Symbol ();
+
+         const test = () =>
+         {
+            if (this ._viewport [2] !== vWidth)
+               return;
+
+            if (this ._viewport [3] !== vHeight)
+               return;
+
+            this ._viewport .removeFieldCallback (key);
+
+            resolve ();
+         };
+
+         Object .assign (this .getElement () .style,
+         {
+            width: `${width}px`,
+            height: `${height}px`,
+         });
+
+         this ._viewport .addFieldCallback (key, test);
+
+         test ();
+      });
+   },
+   reshape ()
+   {
+      if (this .getSession () !== window)
+         return;
+
+      const
+         canvas = this .getCanvas (),
+         parent = canvas .parentElement,
+         [width, height, contentScale] = this .limitFramebufferSize (parent ?.offsetWidth, parent ?.offsetHeight);
+
+      this .getRenderingProperties () ._ContentScale = parent ?.offsetWidth ? width / parent ?.offsetWidth : contentScale;
+
+      // this .println (this .getRenderingProperty ("ContentScale"), devicePixelRatio)
+
+      canvas .width  = width;
+      canvas .height = height;
+
+      this .reshapeFramebuffer (0, 0, 0, width, height);
+
+      if (this .getWorld ())
+         this [_traverse] (-1);
+
+      this .addBrowserEvent ();
+   },
+   limitFramebufferSize (width, height)
+   {
+      const
+         gl              = this .getContext (),
+         maxViewportDims = gl .getParameter (gl .MAX_VIEWPORT_DIMS);
+
+      let contentScale = this .getBrowserOption ("ContentScale");
+
+      if (contentScale === -1)
+         contentScale = devicePixelRatio;
+
+      width  *= contentScale,
+      height *= contentScale;
+
+      if (width > maxViewportDims [0] || height > maxViewportDims [1])
+      {
+         if (width > height)
+         {
+            height = maxViewportDims [1] * height / width;
+            width  = maxViewportDims [0];
+         }
+         else
+         {
+            width  = maxViewportDims [0] * width / height;
+            height = maxViewportDims [1];
+         }
+      }
+
+      width  = Math .max (width|0,  1);
+      height = Math .max (height|0, 1);
+
+      return [width, height, contentScale];
+   },
+   reshapeFramebuffer (i, x, y, width, height)
+   {
+      const
+         samples     = this .getRenderingProperty ("Multisampling"),
+         oit         = this .getBrowserOption ("OrderIndependentTransparency"),
+         frameBuffer = this [_framebuffers] [i];
+
+      if (frameBuffer &&
+          x       === frameBuffer .getX () &&
+          y       === frameBuffer .getY () &&
+          width   === frameBuffer .getWidth () &&
+          height  === frameBuffer .getHeight () &&
+          samples === frameBuffer .getSamples () &&
+          oit     === frameBuffer .getOIT ())
+      {
+         return;
+      }
+
+      this ._viewport [2] = width;
+      this ._viewport [3] = height;
+
+      frameBuffer ?.dispose ();
+
+      this [_framebuffers] [i] = new MultiSampleFramebuffer ({ browser: this, x, y, width, height, samples, oit });
+
+      for (const key of this [_textureBuffers])
+         this .reshapeTextureBuffer (key, width, height);
+   },
+   reshapeTextureBuffer (key, width, height)
+   {
+      const textureBuffer = this [key];
+
+      if (!textureBuffer)
+         return;
+
+      if (width === textureBuffer .getWidth () && height === textureBuffer .getHeight ())
+         return;
+
+      textureBuffer .dispose ();
+
+      this [key] = undefined;
+   },
+   resetShapeId ()
+   {
+      this [_shapeId] = 0;
+   },
+   getShapeId ()
+   {
+      return ++ this [_shapeId];
+   },
+   onfullscreen ()
+   {
+      const element = this .getElement ();
+
+      if (document .fullscreenElement === element)
+         element .classList .add ("x_ite-fullscreen");
+      else
+         element .classList .remove ("x_ite-fullscreen");
+   },
+   async xrCheckSupport ()
+   {
+      if (!("xr" in navigator))
+         return false;
+
+      const mode = this .getBrowserOption ("XRSessionMode") .toLowerCase () .replaceAll ("_", "-");
+
+      try
+      {
+         return await navigator .xr .isSessionSupported (mode);
+      }
+      catch
+      {
+         return false;
+      }
+   },
+   xrUpdateButton ()
+   {
+      return Lock .acquire (this [_buttonLock], async () =>
+      {
+
+         if (!await this .xrCheckSupport ())
+         {
+            const button = this .getSurface () .querySelector (".x_ite-private-xr-button");
+
+            if (button)
+               button .classList .add ("x_ite-private-hidden");
+
+            return;
+         }
+
+         await this .loadComponents (this .getComponent ("WebXR"), this .getComponent ("Geometry2D"));
+
+         this .xrAddButton ();
+      });
+   },
+   xrFrame ()
+   { },
+   getSession ()
+   {
+      return this [_session];
+   },
+   setSession (session)
+   {
+      this [_session] = session;
+   },
+   getPose ()
+   {
+      return null;
+   },
+   dispose ()
+   {
+      this [_session] = window;
+
+      this [_resizer] .disconnect ();
+
+      $.off (this, window);
+      $.off (this, document);
+      $.off (this, navigator .xr);
+   },
+});
+
+export default X3DRenderingContext;

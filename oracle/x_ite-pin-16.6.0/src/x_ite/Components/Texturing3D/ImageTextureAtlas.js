@@ -1,0 +1,181 @@
+import Fields               from "../../Fields.js";
+import X3DFieldDefinition   from "../../Base/X3DFieldDefinition.js";
+import FieldDefinitionArray from "../../Base/FieldDefinitionArray.js";
+import X3DNode              from "../Core/X3DNode.js";
+import X3DTexture3DNode     from "./X3DTexture3DNode.js";
+import X3DUrlObject         from "../Networking/X3DUrlObject.js";
+import FileLoader           from "../../InputOutput/FileLoader.js";
+import X3DConstants         from "../../Base/X3DConstants.js";
+import DEVELOPMENT          from "../../DEVELOPMENT.js";
+
+/**
+ * THIS NODE IS STILL EXPERIMENTAL.
+ */
+
+function ImageTextureAtlas (executionContext)
+{
+   X3DTexture3DNode .call (this, executionContext);
+   X3DUrlObject     .call (this, executionContext);
+
+   this .addType (X3DConstants .ImageTextureAtlas);
+}
+
+Object .assign (Object .setPrototypeOf (ImageTextureAtlas .prototype, X3DTexture3DNode .prototype),
+   X3DUrlObject .prototype,
+{
+   initialize ()
+   {
+      X3DTexture3DNode .prototype .initialize .call (this);
+      X3DUrlObject     .prototype .initialize .call (this);
+
+      this .requestImmediateLoad () .catch (Function .prototype);
+   },
+   unloadData ()
+   {
+      this .clearTexture ();
+      this .updateOutputs (0, 0, 0, 0);
+   },
+   loadData ()
+   {
+      new FileLoader (this, { dataAsString: false }) .loadDocument (this ._url, async (data, fileURL) =>
+      {
+         if (data === null)
+         {
+            this .clearTexture ();
+            this .updateOutputs (0, 0, 0, 0);
+            this .setLoadState (X3DConstants .FAILED_STATE);
+         }
+         else if (data instanceof ArrayBuffer)
+         {
+            fileURL = new URL (fileURL);
+
+            this .setLinear (false);
+            this .setMipMaps (true);
+
+            const objectURL = URL .createObjectURL (new Blob ([data]));
+
+            try
+            {
+               this .setImage (await this .loadImage (objectURL), fileURL);
+            }
+            finally
+            {
+               URL .revokeObjectURL (objectURL);
+            }
+         }
+         else
+         {
+            throw new Error (`${this .getTypeName ()}: No suitable file handler found.`);
+         }
+      });
+   },
+   setImage (image, fileURL)
+   {
+      if (DEVELOPMENT)
+      {
+         if (fileURL .protocol !== "data:")
+            console .info (`Done loading ${this .getTypeName ()} '${decodeURI (fileURL)}'.`);
+      }
+
+      const
+         gl          = this .getBrowser () .getContext (),
+         w           = image .width,
+         h           = image .height,
+         texture     = gl .createTexture (),
+         frameBuffer = gl .createFramebuffer ();
+
+      // Slice me nice.
+
+      const
+         slicesOverX    = this ._slicesOverX .getValue (),
+         slicesOverY    = this ._slicesOverY .getValue (),
+         maxSlices      = slicesOverX * slicesOverY,
+         width          = Math .floor (w / slicesOverX),
+         height         = Math .floor (h / slicesOverY),
+         depth          = Math .min (this ._numberOfSlices .getValue (), maxSlices),
+         defaultData    = new Uint8Array (w * h * 4),
+         data           = defaultData .subarray (0, width * height * depth * 4);
+
+      gl .bindTexture (gl .TEXTURE_3D, this .getTexture ());
+      gl .texImage3D (gl .TEXTURE_3D, 0, gl .RGBA, width, height, depth, 0, gl .RGBA, gl .UNSIGNED_BYTE, defaultData);
+
+      gl .bindFramebuffer (gl .FRAMEBUFFER, frameBuffer);
+      gl .bindTexture (gl .TEXTURE_2D, texture);
+      gl .texImage2D  (gl .TEXTURE_2D, 0, gl .RGBA, w, h, 0, gl .RGBA, gl .UNSIGNED_BYTE, image);
+      gl .framebufferTexture2D (gl .FRAMEBUFFER, gl .COLOR_ATTACHMENT0, gl .TEXTURE_2D, texture, 0);
+
+      let transparent = false;
+
+      for (let y = 0, i = 0; y < slicesOverY && i < depth; ++ y)
+      {
+         for (let x = 0; x < slicesOverX && i < depth; ++ x, ++ i)
+         {
+            const
+               sx = Math .floor (x * w / slicesOverX),
+               sy = Math .floor (y * h / slicesOverY);
+
+            // gl .copyTexSubImage3D (gl .TEXTURE_3D, 0, 0, 0, i, sx, sy, width, height);
+
+            gl .readPixels (sx, sy, width, height, gl .RGBA, gl .UNSIGNED_BYTE, data);
+            gl .texSubImage3D (gl .TEXTURE_3D, 0, 0, 0, i, width, height, 1, gl .RGBA, gl .UNSIGNED_BYTE, data);
+
+            transparent ||= this .isImageTransparent (data);
+         }
+      }
+
+      gl .deleteFramebuffer (frameBuffer);
+      gl .deleteTexture (texture);
+
+      // Determine image alpha.
+
+      this .setTransparent (transparent);
+      this .setWidth (width);
+      this .setHeight (height);
+      this .setDepth (depth);
+      this .updateTextureParameters ();
+      this .updateOutputs (width, height, depth, transparent ? 4 : 3);
+      this .setLoadState (X3DConstants .COMPLETE_STATE);
+   },
+   updateOutputs (width, height, depth, colorDepth)
+   {
+      this ._width      = width;
+      this ._height     = height;
+      this ._depth      = depth;
+      this ._colorDepth = colorDepth;
+   },
+   dispose ()
+   {
+      X3DUrlObject     .prototype .dispose .call (this);
+      X3DTexture3DNode .prototype .dispose .call (this);
+   },
+});
+
+Object .defineProperties (ImageTextureAtlas,
+{
+   ... X3DNode .getStaticProperties ("ImageTextureAtlas", "Texturing3D", 1, "texture", "4.0"),
+   fieldDefinitions:
+   {
+      value: new FieldDefinitionArray ([
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "metadata",             new Fields .SFNode ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "description",          new Fields .SFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "load",                 new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "url",                  new Fields .MFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "autoRefresh",          new Fields .SFTime (0)),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "autoRefreshTimeLimit", new Fields .SFTime (3600)),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "slicesOverX",          new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "slicesOverY",          new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "numberOfSlices",       new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "width",                new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "height",               new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "depth",                new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "colorDepth",           new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "repeatS",              new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "repeatT",              new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "repeatR",              new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "textureProperties",    new Fields .SFNode ()),
+      ]),
+      enumerable: true,
+   },
+});
+
+export default ImageTextureAtlas;
