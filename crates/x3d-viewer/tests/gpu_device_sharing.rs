@@ -324,3 +324,45 @@ fn a_lost_device_falls_back_to_the_cpu() {
         drop(v);
     });
 }
+
+/// Turning GPU picking off and on again is not a lost device (MiniMax P1 on #41): enable, load, disable, reload,
+/// enable, reload — and the buffers are back on the renderer's device.
+#[test]
+fn gpu_picking_comes_back_after_a_disabled_reload() {
+    spawn_big_stack(|| {
+        let Some((d, q)) = device() else {
+            eprintln!("skipped: no GPU adapter");
+            return;
+        };
+        let p = world("off-on");
+        let mut v = EmbeddedViewer::new(d.clone(), q, (W, H));
+        assert!(v.gpu_picking(), "on by default");
+        load(&mut v, &p);
+        steps(&mut v, 1, 20);
+        assert!(pointing(&mut v).is_some() && depth(&mut v).is_some());
+        assert_eq!(names(&mut v), ["WALL", "PS", "FLOOR", ""]);
+
+        // Off, then a reload while off: the world gives the buffers back and the viewer drops them.
+        v.set_gpu_picking(false);
+        v.reload().unwrap();
+        steps(&mut v, 1, 20);
+        assert!(pointing(&mut v).is_none() && depth(&mut v).is_none());
+        assert_eq!(
+            names(&mut v),
+            ["WALL", "PS", "FLOOR", ""],
+            "the ray cast answers while the GPU is off"
+        );
+
+        // On again, and a reload: nothing was lost, so the viewer makes them again on its renderer's device.
+        v.set_gpu_picking(true);
+        v.reload().unwrap();
+        steps(&mut v, 1, 20);
+        let back = {
+            let g = pointing(&mut v).expect("GPU picking comes back after a disabled reload");
+            (g.device() == &d, g.lost())
+        };
+        assert_eq!(back, (true, false));
+        assert!(depth(&mut v).is_some());
+        assert_eq!(names(&mut v), ["WALL", "PS", "FLOOR", ""]);
+    });
+}
