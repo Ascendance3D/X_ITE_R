@@ -63,7 +63,7 @@ Only a move of the keys out of every tracked path removes the hazard. That migra
 | 6 | check the tracked paths from step 2 against `$T`: `git --literal-pathspecs diff --quiet $T -- <paths>` (bytes, mode and symlink targets). Check every other listed path against the step 3 manifests | a tracked path differs from `$T`; a manifest entry differs |
 | 7 | repeat step 0 | a key fails, a check fails, or a key path is a symlink. Stop and report; do not try a repair with Git |
 
-Before step 5, `git diff --name-only HEAD $T` must not list a key path (`oracle/render-*-baseline`, `upstream`). A fast-forward that changes a key symlink is out of scope for this procedure.
+Before step 5, the step 2 list of tracked paths (`git diff -z --no-renames --name-only HEAD $T`) must not contain a key path (`oracle/render-*-baseline`, `upstream`). Use that same list; a diff with rename detection lists only the new path of a renamed symlink. A fast-forward that changes, renames or deletes a key symlink is out of scope for this procedure.
 
 ### Restore one modified tracked file before a fast-forward
 
