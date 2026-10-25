@@ -3720,6 +3720,7 @@ name = "vrml97"
 version = "0.1.0"
 dependencies = [
  "serde_json",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
  "x3d-scene",
@@ -4568,6 +4569,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "x3d-evidence"
+version = "0.1.0"
+dependencies = [
+ "sha2",
+]
+
+[[package]]
 name = "x3d-fields"
 version = "0.1.0"
 dependencies = [
@@ -4649,6 +4657,7 @@ dependencies = [
  "rquickjs",
  "serde_json",
  "url",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
  "x3d-runtime",
@@ -4662,6 +4671,7 @@ dependencies = [
  "serde_json",
  "ttf-parser",
  "woff2-patched",
+ "x3d-evidence",
 ]
 
 [[package]]

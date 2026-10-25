@@ -2,15 +2,23 @@
 //! oracle/x_ite-text.mjs): font metrics, kerning, libtess glyph triangles and Text layouts.
 
 use serde_json::Value;
-use std::path::PathBuf;
 use x3d_text::fonts::{default_font_file, select_default_font};
 use x3d_text::{Font, FontStyleParams, PrimitiveQuality, TextCompression, TextParams, layout};
 
+/// The verified answer key (oracle/answer-keys.tsv); None when it is absent. A key that differs
+/// from the manifest fails the test.
 fn oracle() -> Option<Value> {
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/x_ite-text.json");
-    let data = std::fs::read(path).ok()?;
+    let path = match x3d_evidence::resolve("x_ite-text.json") {
+        Ok(p) => p,
+        Err(e @ x3d_evidence::KeyError::Absent { .. }) => {
+            eprintln!("{e}");
+            return None;
+        }
+        Err(e) => panic!("{e}"),
+    };
+    let data = std::fs::read(path).unwrap();
 
-    serde_json::from_slice(&data).ok()
+    Some(serde_json::from_slice(&data).unwrap())
 }
 
 fn nums(v: &Value) -> Vec<f64> {
