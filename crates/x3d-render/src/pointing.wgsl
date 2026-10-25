@@ -31,7 +31,7 @@ struct Uniforms {
     // X3D_GEOMETRY_0D or X3D_GEOMETRY_1D
     flags: vec4<f32>,
     // x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
-    // per instance_index).
+    // per instance_index), w: the draw's first vertex.
     instancing: vec4<u32>,
 }
 
@@ -89,7 +89,9 @@ fn vs_main(
         var k = instance_index;
 
         if u.instancing.z > 0u {
-            k = vertex_index / u.instancing.z;
+            // vertex_index is first_vertex + i (WebGPU draw()), and the draw's vertices follow the earlier draws' in
+            // the pass's one buffer, so the particle is counted from this draw's own first vertex.
+            k = (vertex_index - u.instancing.w) / u.instancing.z;
         }
 
         instance = instances[u.instancing.y + k];

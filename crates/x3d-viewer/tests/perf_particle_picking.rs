@@ -211,10 +211,14 @@ fn particle_pick_latency() {
     let _ = std::fs::remove_dir_all(&dir);
 }
 
-/// The normal GPU path does not scale its work with the particle count: a ParticleSystem is one draw of the pointing
-/// pass at 100 particles and at 10,000, and of what the pass transfers only the instance matrices grow — by the 64
-/// bytes of one matrix per particle. The draw and the uniform block of every particle, which the pass used to carry,
-/// are gone.
+/// A QUAD ParticleSystem is one draw of the pointing pass at 100 particles and at 10,000, and of what the pass
+/// transfers only the instance matrices grow — by the 64 bytes of one matrix per particle. The draw and the uniform
+/// block of every particle, which the pass used to carry, are gone.
+///
+/// **This holds for POINT, QUAD, SPRITE and GEOMETRY particles, which share one vertex range. It does not hold for
+/// LINE**, where every particle still brings its own six corners, so the CPU vertex work and the vertex upload grow
+/// with the particle count; [`line_picking_is_one_draw_but_its_vertices_still_grow`] states that instead. Read no
+/// claim about LINE upload into this test.
 ///
 /// The counts are exact, so this is a proof and not a measurement. `particle_pick_instanced.rs`
 /// (`the_gpu_path_does_not_touch_the_particles_one_by_one`) is the other half: it counts the shape records the pick
@@ -296,6 +300,84 @@ fn gpu_picking_does_not_scale_with_the_particle_count() {
         small.3.readback(),
         big.3.readback(),
         "the readback grew with the particles"
+    );
+
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// LINE particles: the pass is still one draw per system, but its vertex data is *not* constant in the particle
+/// count. A line is widened along its projected minor axis, which the instance matrix turns, so each particle brings
+/// its own six corners (`PointingTriangle::per_instance_vertices`) and the pointer builds them on the CPU every pick.
+///
+/// This test records that gap rather than hiding it: it requires the one draw, and it requires the upload to grow
+/// *at least* per particle, so a later lane that makes LINE uploads constant has to come here and say so. Making
+/// LINE independent of the particle count is deliberately left to a separate lane (PR #43, known gap 1).
+#[test]
+fn line_picking_is_one_draw_but_its_vertices_still_grow() {
+    let Ok(gpu) = x3d_render::gpu::Gpu::new() else {
+        return eprintln!("skipped: no GPU");
+    };
+    let dir = std::env::temp_dir().join(format!("scale-line-pick-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let mut seen = vec![];
+
+    for particles in [100usize, 10_000] {
+        let path = dir.join(format!("l{particles}.x3dv"));
+        std::fs::write(&path, world("LINE", particles)).unwrap();
+
+        let mut v = load(&path);
+
+        for k in 0..WARMUP {
+            v.step(T0 + (k + 1) as f64 * DT);
+        }
+
+        with_gpu(&mut v, &gpu.device, &gpu.queue);
+
+        // The first pass of a new buffer sizes it; the second is the steady state.
+        one_pick(&mut v);
+
+        let transfers = one_pick(&mut v);
+        let draws = v.pointing_gpu().map_or(0, |g| g.draws);
+        let alive = v.rt.scene.contexts[x3d_scene::ROOT]
+            .named_nodes
+            .get("PS")
+            .and_then(|ps| v.rt.particle_sim(ps))
+            .map_or(0, |s| s.num_particles);
+
+        assert!(
+            alive > particles / 2,
+            "{particles}: only {alive} particles alive"
+        );
+        assert!(draws > 0, "{particles}: the pass drew nothing");
+        seen.push((particles, alive, draws, transfers));
+    }
+
+    let (small, big) = (&seen[0], &seen[1]);
+
+    // Still one draw per system: that part of B25-2 does hold for LINE.
+    assert_eq!(
+        small.2, big.2,
+        "the pointing pass grew from {} to {} draws with the LINE particles",
+        small.2, big.2
+    );
+
+    // And the upload is not constant: at least one matrix per particle, and in practice the six corners too.
+    let grew = big
+        .3
+        .particle_upload
+        .saturating_sub(small.3.particle_upload);
+    let matrices = 64 * (big.1 - small.1) as u64;
+
+    assert!(
+        grew >= matrices,
+        "the LINE upload grew by only {grew} bytes for {} more particles ({matrices} as matrices alone): if LINE \
+         uploads are now constant, this test and the lane's known gap 1 have to be rewritten",
+        big.1 - small.1
+    );
+
+    eprintln!(
+        "LINE upload: {} B at {} particles, {} B at {} (matrices alone would be {matrices} B more)",
+        small.3.particle_upload, small.1, big.3.particle_upload, big.1
     );
 
     let _ = std::fs::remove_dir_all(&dir);

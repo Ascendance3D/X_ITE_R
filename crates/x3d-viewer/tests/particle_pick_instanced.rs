@@ -484,3 +484,119 @@ fn a_run_keeps_its_place_among_the_shapes() {
         Some(1)
     );
 }
+
+/// A LINE ParticleSystem drawn after another shape still hits its own particles.
+///
+/// LINE particles are the one kind that brings each particle's own vertices
+/// ([`x3d_render::pointing_gpu::PointingTriangle::per_instance_vertices`]), because a line is widened along its
+/// *projected* minor axis. The pass holds every draw's vertices in one buffer, and `@builtin(vertex_index)` counts
+/// from the draw's `first_vertex`, so a run that follows a shape with vertices of its own does not begin at zero.
+///
+/// Reading the index as though the draw began at zero shifts every particle by the vertices before it. The shift
+/// moves the x3d_Id with the matrix, so it stays hidden while the particles look alike and the nearest is not the
+/// first: the depth orders below put each of them in front in turn, and `nearest first` is the one that shows it.
+///
+/// The run has to give the same hit as its particles drawn one by one, which is the form
+/// `rea_b14_particle_pick.rs` holds against pinned X_ITE 16.5.0.
+#[test]
+fn a_line_run_after_another_shape_keeps_its_particles() {
+    let Some(mut g) = gpu() else {
+        return eprintln!("no adapter");
+    };
+    let cam = camera();
+    let line = Rc::new(x3d_render::particles::line_geometry(0.3, false));
+    let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
+    // `line_geometry` runs along Z, which a particle straight ahead projects onto the pointer as a point of no
+    // length. A quarter turn about Y lays it along X, so the segment crosses the pointer's pixel.
+    let along_x = |z: f64| {
+        let mut m = Matrix4::IDENTITY;
+
+        m.0[0] = 0.0;
+        m.0[2] = -1.0;
+        m.0[8] = 1.0;
+        m.0[10] = 0.0;
+        m.0[14] = z;
+        m
+    };
+    // A shape of its own with vertices, so the run's draw starts past them.
+    let wall = |z: f64, n: NodeId| ShapeInst {
+        shape: node(n),
+        geometry: n,
+        model_view: translation(0.0, 0.0, z),
+        shape_model_view: translation(0.0, 0.0, z),
+        explicit_bbox: None,
+        sensors: vec![],
+        anchors: vec![],
+        particle: false,
+        particle_geometry: Some(quad.clone()),
+        ..template(quad.clone(), None, vec![])
+    };
+
+    for (kind, width) in [
+        ("aliased", 3.0),
+        ("thick", x3d_render::gpu::MAX_LINE_WIDTH + 4.0),
+    ] {
+        let style = Some(StyleParams::Line(LineParams { linetype: 1, width }));
+
+        for (depths, zs) in [
+            ("nearest first", [-2.0, -2.3, -2.6]),
+            ("nearest in the middle", [-2.6, -2.0, -2.3]),
+            ("nearest last", [-2.6, -2.3, -2.0]),
+        ] {
+            let run = ParticleRun {
+                at: 1,
+                template: template(line.clone(), style, vec![]),
+                matrices: Rc::new(zs.iter().map(|&z| along_x(z)).collect::<Vec<_>>()),
+            };
+            let entries: Vec<ShapeInst> = run.entries().collect();
+
+            // A wall in front of the particles and one behind them: both put the run's draw past the wall's vertices.
+            for (where_, z) in [("in front", -1.0), ("behind", -4.0)] {
+                let shapes = [wall(z, 1)];
+                let grouped = pick(
+                    PointingShapes {
+                        shapes: &shapes,
+                        particles: std::slice::from_ref(&run),
+                    },
+                    &mut |s: &ShapeInst| s.particle_geometry.clone(),
+                    &cam,
+                    PX,
+                    PY,
+                    false,
+                    Some(&mut g),
+                );
+                // The same shapes, with the particles as shapes of their own in the run's place.
+                let mut one_by_one = vec![shapes[0].clone()];
+
+                one_by_one.extend(entries.iter().cloned());
+
+                let separate = pick(
+                    PointingShapes {
+                        shapes: &one_by_one,
+                        particles: &[],
+                    },
+                    &mut |s: &ShapeInst| s.particle_geometry.clone(),
+                    &cam,
+                    PX,
+                    PY,
+                    false,
+                    Some(&mut g),
+                );
+
+                assert_eq!(
+                    facts(&grouped),
+                    facts(&separate),
+                    "LINE {kind}, {depths}, a wall {where_}: the run differs from its particles drawn one by one"
+                );
+                // The wall behind cannot win, so a particle has to: a miss would make the comparison above vacuous.
+                if where_ == "behind" {
+                    assert_eq!(
+                        grouped.shape.as_ref().map(|s| s.node),
+                        Some(SYSTEM),
+                        "LINE {kind}, {depths}: no particle covered the pointer"
+                    );
+                }
+            }
+        }
+    }
+}

@@ -32,7 +32,7 @@ struct Uniforms {
     clip_planes: [[f32; 4]; MAX_POINTING_CLIP_PLANES],
     flags: [f32; 4],
     /// x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
-    /// per instance_index).
+    /// per instance_index), w: the draw's first vertex, which `vertex_index` counts from.
     instancing: [u32; 4],
 }
 
@@ -110,10 +110,13 @@ pub struct PointingTriangle {
     /// x3d_InstanceMatrix (`instance` is not used then). Each draws every vertex of the draw, or with
     /// `per_instance_vertices` n its own vertices k·n .. (k+1)·n of them (the transformed thick LINE triangles).
     ///
-    /// The matrices are read through the `Rc`'s address: the buffer keeps the last pass's sources alive, so an address
-    /// that compares equal is the same allocation, and `Rc<Vec<Matrix4>>` hands out no interior mutability, so its
-    /// contents cannot have changed under it. A caller that ever mutated a `Vec` in place behind a live `Rc` would have
-    /// to clear the cache ([`PointingGpu::forget_instances`]).
+    /// The cache reads the matrices by the `Rc`'s address, which identifies them only because of two further facts,
+    /// not because pointer equality is a validity proof on its own: the buffer *keeps a clone* of every source it
+    /// uploaded, so the allocation cannot be freed and reused under the address, and that clone also makes the `Rc`
+    /// non-unique, so `Rc::get_mut` is `None` and `Rc::make_mut` has to copy to a new address — which the identity
+    /// test then sees as a different source. `Rc<Vec<Matrix4>>` hands out no interior mutability, so there is no third
+    /// way to a `&mut Vec<Matrix4>`. A caller that ever did mutate one in place behind a live `Rc` would have to clear
+    /// the cache ([`PointingGpu::forget_instances`]).
     pub instances: Option<Rc<Vec<Matrix4>>>,
     /// 0: every particle draws the whole vertex range; n: particle k draws vertices k·n .. (k+1)·n of it.
     pub per_instance_vertices: u32,
@@ -589,7 +592,7 @@ impl PointingGpu {
                 instancing: match &tri.instances {
                     Some(m) => {
                         first += m.len() as u32;
-                        [1, first - m.len() as u32, tri.per_instance_vertices, 0]
+                        [1, first - m.len() as u32, tri.per_instance_vertices, start]
                     }
                     None => [0; 4],
                 },
