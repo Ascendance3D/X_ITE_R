@@ -67,7 +67,7 @@ Before step 5, the step 2 list of tracked paths (`git diff -z --no-renames --nam
 
 ### Restore one modified tracked file before a fast-forward
 
-Use this when the working tree holds the target version of `<path>`, HEAD holds an older version, and the index is clean (`git diff --cached --quiet`). `$T` is the target SHA from step 1. `<path>` is a regular file, never a directory, `.` or a key path. Run steps 0 and 7 of the procedure around these steps.
+Use this when the working tree holds the target version of `<path>`, HEAD holds an older version, and the index is clean (`git diff --cached --quiet`). `$T` is the target SHA from step 1. `<path>` is a regular file, never a directory, `.` or a key path. Run steps 0 and 7 of the procedure around these steps. Before step f, apply the key-path check of the procedure: `git diff -z --no-renames --name-only HEAD $T` must not contain a key path; otherwise stop.
 
 | step | command | stop when |
 | --- | --- | --- |
