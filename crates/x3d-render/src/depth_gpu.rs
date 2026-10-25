@@ -397,7 +397,8 @@ impl DepthGpu {
     }
 
     /// Measure the GPU time of the passes with timestamp queries ([`DepthStats::gpu`]). Returns whether the device
-    /// can (`Features::TIMESTAMP_QUERY`); off by default.
+    /// can: `Features::TIMESTAMP_QUERY` must be requested when the `wgpu::Device` is created, this does not enable it.
+    /// Off by default.
     pub fn set_timestamps(&mut self, on: bool) -> bool {
         let can = self
             .device

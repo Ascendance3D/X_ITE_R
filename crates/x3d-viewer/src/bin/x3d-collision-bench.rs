@@ -140,6 +140,10 @@ fn run(
     cpu: bool,
     json: Option<PathBuf>,
 ) -> Result<(), String> {
+    if frames == 0 {
+        return Err("--frames must be greater than zero".into());
+    }
+
     let dir =
         TempDir(std::env::temp_dir().join(format!("x3d-collision-bench-{}", std::process::id())));
     std::fs::create_dir_all(&dir.0).map_err(|e| e.to_string())?;

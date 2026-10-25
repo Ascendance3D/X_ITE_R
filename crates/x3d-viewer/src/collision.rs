@@ -1778,6 +1778,29 @@ mod tests {
         );
     }
 
+    /// With timestamp queries (when the device has them) a batch measures its GPU time; without them the time stays
+    /// zero and [`DepthGpu::timestamps`] says it is not measured. The answers are the same either way.
+    #[test]
+    fn timestamps_measure_only_when_available() {
+        let Some(g) = gpu() else { return };
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        world.gpu = Some(g.clone());
+        let plain = format!("{:?}", world.depths(&queries));
+
+        let on = g.borrow_mut().set_timestamps(true);
+        assert_eq!(g.borrow().timestamps(), on);
+        g.borrow_mut().take_stats();
+        assert_eq!(format!("{:?}", world.depths(&queries)), plain);
+        let stats = g.borrow_mut().take_stats();
+        g.borrow_mut().set_timestamps(false);
+
+        assert_eq!((stats.queries, stats.submissions), (7, 1));
+        assert_eq!(stats.gpu.is_zero(), !on, "timestamps {on}: {stats:?}");
+        assert!(stats.gpu < std::time::Duration::from_secs(1), "{stats:?}");
+        assert!(!g.borrow().timestamps());
+    }
+
     /// Without anything to draw (no shapes, or only shapes the pass leaves out) every pass reads the cleared buffer:
     /// no hit, no submission, like the CPU stand-in.
     #[test]
