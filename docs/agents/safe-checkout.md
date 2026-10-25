@@ -10,7 +10,7 @@ The main checkout holds the gitignored answer keys (`oracle/answer-keys.tsv`), s
 3. Name the source revision of every restore: `git restore --worktree --source=<rev> -- <path>`. Do not use `git checkout -- <path>`, which writes the index version and does not name it.
 4. Keep every holding directory. Delete nothing.
 5. In the main checkout, do not use `git pull`, `git reset`, `git stash`, `git clean` or `git checkout .`.
-6. In the main checkout, the only permitted history operation is `merge --ff-only` with the procedure below. The answer-key hazard section lists the operations that delete keys.
+6. In the main checkout, the only permitted history operation is `merge --no-autostash --ff-only` with the procedure below. The answer-key hazard section lists the operations that delete keys.
 
 ## Answer-key hazard (issue #65)
 
@@ -31,10 +31,11 @@ Each operation below deleted every file of a real ignored key directory in a syn
 | `git reset --hard`, also `git reset --hard HEAD` | exit 0, directory replaced |
 | `git restore --source=<rev>` or `git checkout -- <pathspec>` where the pathspec is `.`, `oracle`, `upstream` or a key path | exit 0, directory replaced |
 | `git stash`, `git stash -u` | exit 0, directory replaced |
+| `git merge --ff-only` when `merge.autoStash=true` is set (Git creates an autostash) | exit 0, directory replaced. Always pass `--no-autostash` |
 
 `git clean -X` and `git clean -x` delete the 4 untracked JSON keys (`items-baseline.json`, `items2-baseline.json`, `x1-baseline.json`, `x_ite-text.json`). Rule 5 forbids `git clean`.
 
-These operations kept the keys in the same tests: `merge --ff-only`, and `checkout` or `switch` of a commit whose key symlinks equal the index. Use only `merge --ff-only`, with the procedure below.
+These operations kept the keys in the same tests: `merge --no-autostash --ff-only`, and `checkout` or `switch` of a commit whose key symlinks equal the index. Use only `merge --no-autostash --ff-only`, with the procedure below.
 
 ### The inventory does not see the keys
 
@@ -58,8 +59,8 @@ Only a move of the keys out of every tracked path removes the hazard. That migra
 | 1 | `git rev-parse HEAD` and `git status --porcelain`; record both. Resolve the target once: `T=$(git rev-parse --verify <target>^{commit})`, and use `$T` (not a branch name) in every later step. `git diff --cached --quiet` must pass | HEAD or status differs from what you expect; `$T` is not the expected SHA; the index has staged changes |
 | 2 | list the tracked paths the command can write: `git diff -z --no-renames --name-only HEAD $T` for a merge (a rename lists the deleted old path and the new path); the path list for a restore. List the untracked and ignored paths: `git ls-files -z --others --exclude-standard` and `git ls-files -z --others --ignored --exclude-standard --directory` | a listed untracked or ignored path is also a path that `$T` adds, or holds a path that `$T` adds (`--directory` lists an ignored directory once) |
 | 3 | make a new, empty, dated holding directory under `~/Projects/cybertown/.backups/X_ITE_R/` (`mkdir` without `-p`; it must not exist before). Write three manifests of every listed path: `sha256sum` of each regular file, `readlink` of each symlink, and the type and mode of every entry (`find <path> -printf '%y %m %P\n'`, relative paths, so the source and copy manifests compare directly). Record a listed path that does not exist as absent. Ownership, timestamps, ACLs and xattrs are not compared. Stop on any other file type | a listed path is not a regular file, a directory of regular files, or a symlink |
-| 4 | copy each path with unique content (working-tree bytes that `$T` does not hold, including paths that `$T` deletes) into the holding directory with its relative path. First check `test ! -e <holding>/<path> && test ! -L <holding>/<path>` (`-e` alone misses a dangling symlink), then copy with `cp -R -P -p --parents -- <path> <holding>/` (`-R` copies a directory, `-P` keeps a symlink as a symlink). Do not use `cp -n`: it skips an existing file and exits 0. Check the copies against all three manifests | `<holding>/<path>` already exists; `cp` exits non-zero; a copy differs |
-| 5 | run the command with hooks off: `git -c core.hooksPath=/dev/null merge --ff-only $T` | it does something other than the expected effect (for a merge: HEAD is not `$T`) |
+| 4 | copy each existing path with unique content (working-tree bytes that `$T` does not hold, including paths that `$T` deletes) into the holding directory with its relative path. First check `test ! -e <holding>/<path> && test ! -L <holding>/<path>` (`-e` alone misses a dangling symlink), then copy with `cp -R -P -p --parents -- <path> <holding>/` (`-R` copies a directory, `-P` keeps a symlink as a symlink). Do not use `cp -n`: it skips an existing file and exits 0. A path recorded as absent in step 3 has nothing to copy. Check the copies against all three manifests | `<holding>/<path>` already exists; `cp` exits non-zero; a copy differs |
+| 5 | run the command with hooks and autostash off: `git -c core.hooksPath=/dev/null merge --no-autostash --ff-only $T`; record its exit status before any other command | `git merge` exits non-zero, or it does something other than the expected effect (for a merge: HEAD is not `$T`). After a non-zero exit, run only step 7 to record the key state, keep the holding directory and report; do not try a repair with Git |
 | 6 | check the tracked paths from step 2 against `$T`: `git --literal-pathspecs diff --quiet $T -- <paths>` (bytes, mode and symlink targets). Check every other listed path against the step 3 manifests | a tracked path differs from `$T`; a manifest entry differs |
 | 7 | repeat step 0 | a key fails, a check fails, or a key path is a symlink. Stop and report; do not try a repair with Git |
 
@@ -76,7 +77,7 @@ Use this when the working tree holds the target version of `<path>`, HEAD holds 
 | c | `test ! -e <holding>/<path> && test ! -L <holding>/<path>`, then `cp -P -p --parents -- <path> <holding>/`, then `sha256sum` and `stat -c %a` of the copy and of `<path>` | `<holding>/<path>` already exists; the copy differs from `W` or its mode differs |
 | d | `git restore --worktree --source=$H -- <path>` | — |
 | e | `git hash-object <path>` | it differs from `git rev-parse $H:<path>` |
-| f | `git -c core.hooksPath=/dev/null merge --ff-only $T`, then `git rev-parse HEAD` | HEAD is not `$T` |
+| f | `git -c core.hooksPath=/dev/null merge --no-autostash --ff-only $T`; record its exit status; then `git rev-parse HEAD` | `git merge` exits non-zero (handle it as in step 5); HEAD is not `$T` |
 | g | `sha256sum <path>` | it differs from `W` |
 
 Step d changes the working-tree bytes for a short time. Step g proves that the final bytes equal the bytes before the procedure.
