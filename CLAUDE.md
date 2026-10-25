@@ -11,8 +11,12 @@ read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
   `cm-*` the CodeMirror 5 port, and `x3d-viewer` holds the `x3d-view` and `x3d-drive` binaries.
 - `oracle/`: X_ITE reference baselines and the scripts that generate and check them
   (`oracle/tools/`). `oracle/x_ite-pin/` is the active X_ITE reference source (16.5.0, `34cdf9f97`).
-- `tools/candidate.lock` + `tools/verify-candidate.sh`: the fail-closed identity gate
-  that pins the X_ITE reference digest. Change the pin only with owner review.
+- `tools/candidate.lock` + `tools/verify-candidate.sh`: the fail-closed gate that pins the
+  X_ITE 16.5.0 and CodeMirror 5.65.21 reference digests. Change a pin only with owner review.
+  With no argument it checks the references only (CI runs this). The commit identity check
+  needs an explicit `--expect <sha>`. No commit, master included, is an approved candidate
+  unless the owner names it. Run `tools/selftest-identity.sh` to test the gate; it works in a
+  disposable clone.
 
 ## Checks
 
