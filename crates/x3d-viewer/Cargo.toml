@@ -42,6 +42,10 @@ name = "x3d-drive"
 name = "x3d-bench"
 required-features = ["gpu"]
 
+[[bin]]
+name = "x3d-collision-bench"
+required-features = ["gpu"]
+
 [[example]]
 name = "embed_minimal"
 required-features = ["embed"]
