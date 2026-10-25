@@ -50,7 +50,7 @@ fn parallel_gpu_starts_run_one_at_a_time_with_own_devices() {
     let devices: Vec<_> = devices.into_iter().flatten().collect();
 
     if devices.is_empty() {
-        return eprintln!("no adapter, device checks skipped");
+        return x3d_evidence::no_gpu("no adapter, device checks skipped");
     }
 
     assert_eq!(

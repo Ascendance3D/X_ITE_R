@@ -245,7 +245,7 @@ fn two_triangles() -> Geometry {
 #[test]
 fn a_run_hits_like_its_particles_on_their_own() {
     let Some(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     // ClipPlanes2.glsl: a fragment with dot (vertex, normal) < distance is discarded, so this keeps z <= -1.8.
     let near_cut = vec![[0.0, 0.0, -1.0, 1.8]];
@@ -355,7 +355,7 @@ fn one_joint_skin() -> Rc<(x3d_render::hanim::SkinTables, Vec<f32>)> {
 #[test]
 fn the_gpu_path_does_not_touch_the_particles_one_by_one() {
     let Some(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
     let run = ParticleRun {
@@ -410,7 +410,7 @@ fn the_gpu_path_does_not_touch_the_particles_one_by_one() {
 #[test]
 fn an_empty_or_culled_run_is_a_miss() {
     let Some(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
     let hit = |run: &ParticleRun, g: &mut PointingGpu| both(g, run).0.id;
@@ -446,7 +446,7 @@ fn an_empty_or_culled_run_is_a_miss() {
 #[test]
 fn a_run_keeps_its_place_among_the_shapes() {
     let Some(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
     let wall = |z: f64, n: NodeId| ShapeInst {
@@ -528,7 +528,7 @@ fn a_run_keeps_its_place_among_the_shapes() {
 #[test]
 fn a_line_run_after_another_shape_keeps_its_particles() {
     let Some(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let cam = camera();
     let line = Rc::new(x3d_render::particles::line_geometry(0.3, false));

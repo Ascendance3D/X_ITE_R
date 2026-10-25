@@ -91,7 +91,7 @@ const TWO_VIEWPOINTS: &str = "#VRML V2.0 utf8\nViewpoint { description \"front\"
 #[test]
 fn renders_into_a_host_texture_and_reloads() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let (w, h) = (200, 150);
@@ -248,7 +248,7 @@ fn assert_shut_down_once(prints: &[String], tag: &str) {
 #[test]
 fn unload_shuts_the_world_down_once() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device, queue, (64, 64));
@@ -276,7 +276,7 @@ fn unload_shuts_the_world_down_once() {
 #[test]
 fn reload_and_replacement_shut_the_old_world_down_first() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device, queue, (64, 64));
@@ -330,7 +330,7 @@ fn reload_and_replacement_shut_the_old_world_down_first() {
 #[test]
 fn a_failed_replacement_leaves_no_world_and_does_not_revive_the_old_one() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device, queue, (64, 64));
@@ -363,7 +363,7 @@ fn a_failed_replacement_leaves_no_world_and_does_not_revive_the_old_one() {
 #[test]
 fn dropping_the_viewer_unloads_its_world() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let a = world("fix1-drop.wrl", &scripted("A"));

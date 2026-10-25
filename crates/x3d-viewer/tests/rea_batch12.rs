@@ -311,6 +311,9 @@ fn check_cases(prefixes: &[&str]) {
         std::fs::read_to_string(root.join("oracle/rea-batch12-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
+    if !gpu {
+        x3d_evidence::no_gpu("image comparisons skipped");
+    }
     let mut failures = vec![];
     let mut checked = 0;
 

@@ -468,6 +468,7 @@ dependencies = [
  "serde_json",
  "wgpu",
  "winit",
+ "x3d-evidence",
 ]
 
 [[package]]
@@ -4618,6 +4619,7 @@ dependencies = [
  "sha2",
  "url",
  "wgpu",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
  "x3d-runtime",
@@ -4684,6 +4686,7 @@ dependencies = [
  "stacker",
  "wgpu",
  "winit",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
  "x3d-render",

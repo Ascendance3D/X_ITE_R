@@ -91,7 +91,7 @@ const BOX: &str = "#VRML V2.0 utf8\nViewpoint { position 0 0 8 }\nShape { appear
 #[test]
 fn depth_modes_cycle_and_agree_on_plain_scenes() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let (w, h) = (160, 120);

@@ -55,7 +55,9 @@ fn gl_backend_cannot_run_the_renderer_and_says_so() {
     desc.backends = wgpu::Backends::GL;
     let (adapter, device, queue) = match start(desc, false) {
         Ok(s) => s,
-        Err(e) => return eprintln!("no GL device ({e}), skipped"),
+        Err(e) => {
+            return x3d_evidence::skip("backend-absent", None, format_args!("no GL device ({e})"));
+        }
     };
 
     match create_viewer(&device, &queue, (64, 64), &adapter, FORMAT) {
