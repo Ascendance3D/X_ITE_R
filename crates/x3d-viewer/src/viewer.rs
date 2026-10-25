@@ -221,6 +221,9 @@ pub struct Viewer3d {
     /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer). Private for the same reason;
     /// read it with [`Viewer3d::depth_gpu`].
     depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
+    /// Wall time of the collision work of [`Viewer3d::step`] (the viewer's constrained moves, collide and gravitate),
+    /// added up for benchmarks; the caller resets it.
+    pub collision_time: std::time::Duration,
     /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
     pub pick_shapes: crate::pick_shapes::PickShapes,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
@@ -453,6 +456,7 @@ impl Viewer3d {
             thick_line_depth: HashMap::new(),
             pointing_gpu: None,
             depth_gpu: None,
+            collision_time: std::time::Duration::ZERO,
             pick_shapes: Default::default(),
             render_cache: Default::default(),
             scan_cam: Scan::default(),
@@ -1168,7 +1172,9 @@ impl Viewer3d {
         // Prepare and time events.
         self.sync_active_layer();
         self.phase("prepareEvents");
+        let collision = std::time::Instant::now();
         self.prepare_viewer();
+        self.collision_time += collision.elapsed();
         self.phase("timePrepareEvents");
         self.phase("timeEvents");
         self.layer.tick(&mut self.rt);
@@ -1211,7 +1217,9 @@ impl Viewer3d {
 
         // Collision (gravity): the COLLISION traversal starts from the view of this frame.
         self.refresh_display_scan();
+        let collision = std::time::Instant::now();
         self.collision_pass();
+        self.collision_time += collision.elapsed();
 
         // Sensor events.
         self.sensor_pass();
