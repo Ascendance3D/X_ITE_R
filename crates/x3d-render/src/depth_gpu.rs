@@ -80,11 +80,18 @@ pub struct DepthShape<'a> {
 }
 
 impl DepthShape<'_> {
-    /// Whether the pass draws anything of it.
+    /// The vertices of its vertex buffer: `Geometry::vertices` holds four floats a vertex (x3d_Vertex).
+    fn count(&self) -> u32 {
+        if self.empty {
+            0
+        } else {
+            (self.geometry.vertices.len() / 4) as u32
+        }
+    }
+
+    /// Whether the pass draws anything of it: one vertex or more (a triangle is three), and particles if it has them.
     fn draws(&self) -> bool {
-        !self.empty
-            && self.geometry.vertices.len() >= 4
-            && !self.instances.is_some_and(|m| m.is_empty())
+        self.count() > 0 && !self.instances.is_some_and(|m| m.is_empty())
     }
 }
 
@@ -123,7 +130,8 @@ pub struct DepthStats {
     pub wait: Duration,
     /// Time reading the mapped bytes out and unmapping.
     pub transfer: Duration,
-    /// GPU time of the passes from timestamp queries (zero without [`DepthGpu::set_timestamps`]).
+    /// GPU time of the passes from timestamp queries. Zero, and no measurement, when [`DepthGpu::set_timestamps`] is
+    /// off or returned false (no `Features::TIMESTAMP_QUERY`): check [`DepthGpu::timestamps`] before reading it.
     pub gpu: Duration,
 }
 
@@ -165,6 +173,8 @@ pub struct DepthGpu {
     timestamps: bool,
     /// The timestamp queries (two per pass), their resolve buffer and their capacity in passes.
     query_set: Option<(wgpu::QuerySet, wgpu::Buffer, usize)>,
+    /// Mappings still to fail ([`DepthGpu::fail_mappings`]).
+    fail_mappings: usize,
 }
 
 impl DepthGpu {
@@ -334,6 +344,7 @@ impl DepthGpu {
             stats: DepthStats::default(),
             timestamps: false,
             query_set: None,
+            fail_mappings: 0,
         }
     }
 
@@ -397,6 +408,18 @@ impl DepthGpu {
         self.timestamps
     }
 
+    /// Whether [`DepthStats::gpu`] is measured.
+    pub fn timestamps(&self) -> bool {
+        self.timestamps
+    }
+
+    /// Fail the mappings of the next `n` batches that reach the GPU, like a mapping that fails under a clean poll
+    /// (for tests of the CPU fallback: the batch is drawn and submitted, then its readback is dropped).
+    #[doc(hidden)]
+    pub fn fail_mappings(&mut self, n: usize) {
+        self.fail_mappings = n;
+    }
+
     /// The counters since the last call, cleared.
     pub fn take_stats(&mut self) -> DepthStats {
         std::mem::take(&mut self.stats)
@@ -429,6 +452,7 @@ impl DepthGpu {
 
         let encode = Instant::now();
         let passes = projections.len();
+        let draws = shapes.iter().any(DepthShape::draws);
         self.passes += passes;
         self.stats.queries += passes;
 
@@ -438,14 +462,12 @@ impl DepthGpu {
 
         for s in shapes {
             let key = Rc::as_ptr(s.geometry) as usize;
-            let count = if s.empty {
-                0
-            } else {
-                (s.geometry.vertices.len() / 4) as u32
-            };
+            let count = s.count();
 
             match self.buffers.get_mut(&key) {
                 Some(b) if b.count == count => b.used = stamp,
+                // Nothing to draw: the buffers it holds age with the others, and no new one is uploaded.
+                _ if !draws => {}
                 _ => {
                     let g = &s.geometry;
                     let data: Vec<Vertex> = (0..count as usize)
@@ -491,7 +513,7 @@ impl DepthGpu {
         self.buffers.retain(|_, b| stamp - b.used < KEEP);
 
         // Nothing to draw: every pass reads the cleared buffer, which needs no GPU.
-        if !shapes.iter().any(DepthShape::draws) {
+        if !draws {
             self.stats.encode += encode.elapsed();
             return Some((0..passes).map(|_| DepthPixels::cleared()).collect());
         }
@@ -785,8 +807,14 @@ impl DepthGpu {
         self.stats.readbacks += 1;
         self.stats.polls += 1;
         let wait = Instant::now();
-        let mapped = crate::pointing_gpu::map_read(&self.device, &slice);
+        let mut mapped = crate::pointing_gpu::map_read(&self.device, &slice);
         self.stats.wait += wait.elapsed();
+
+        if mapped.is_ok() && self.fail_mappings > 0 {
+            self.fail_mappings -= 1;
+            self.readback.unmap();
+            mapped = Err(crate::pointing_gpu::ReadbackFailure::Mapping);
+        }
 
         if let Err(e) = mapped {
             self.fail_readback(e);
