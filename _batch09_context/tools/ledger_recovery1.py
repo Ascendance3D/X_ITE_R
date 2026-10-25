@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recovery ledger update (PROPOSAL, not applied): python3 -I ledger_recovery1.py check|apply
+"""Recovery ledger update (applied in PR #99, merge 785769b): python3 -I ledger_recovery1.py check|apply
 
 Starts from ledger/before-recovery1/ledger.json (the authoritative ledger at origin/master cdfbffc, sha256 d6d7fd30...6953:
 249 COMPLETE, 70 PARTIAL, 25 DIFFERENT, 2 MISSING). Ten entries change. One changes status: sub:browser.keyboard-ui MISSING ->
@@ -12,12 +12,14 @@ Revision of the 2026-10-25 recovery proposal (LEDGER_PROPOSAL.diff), after the P
   - node:ParticleSystem: only the two fixed clauses leave `missing`; the rest stays verbatim
   - sub:io.file-loader: the Script case uses text data: URLs, not base64
 
-Install (owner approval required): copy to _batch09_context/tools/, copy the authoritative ledger to
-_batch09_context/ledger/before-recovery1/ledger.json, add the HISTORY step (verify_ledger.patch), then run apply and the verifier."""
-import json, os, sys, collections
+The snapshot, this tool and the verify_ledger.py HISTORY step are installed, and ledger.json holds the result (sha256
+41cd5e2d...66ef). Both commands refuse a snapshot whose sha256 is not SNAP_SHA256. apply refuses to write over a ledger that
+is neither the snapshot nor the result of this change set, so it cannot discard a later ledger change."""
+import json, os, sys, collections, hashlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTH = os.path.join(HERE, "..", "ledger", "ledger.json")
 SNAP = os.path.join(HERE, "..", "ledger", "before-recovery1", "ledger.json")
+SNAP_SHA256 = "d6d7fd3083820f7e49aa7b2f4634b449f9f1321598b6f8de7ba0e25dee806953"  # ledger.json at origin/master cdfbffc
 NOTE = "Recovery audit 2026-10-25 (origin/master cdfbffc): "
 PS_FIXED = ["wide LINE particles are 1 px in the shadow, depth (collision) and pointing passes (PR #29 changed the color pass "
             "only); ",
@@ -101,7 +103,18 @@ def check(d):
         if k in C and a != want[k]: bad.append(f"{k}: differs from what apply writes")
     c = collections.Counter(i["status"] for i in d["items"]); print(dict(sorted(c.items())))
     print("\n".join(bad) or "OK"); return not bad
+def sha256(p):
+    with open(p, "rb") as f: return hashlib.sha256(f.read()).hexdigest()
+def snap_ok():
+    got = sha256(SNAP)
+    if got != SNAP_SHA256: print(f"snapshot sha256 {got} is not the expected {SNAP_SHA256}: refused"); return False
+    return True
 if __name__ == "__main__":
+    if sys.argv[1:] not in (["check"], ["apply"]): raise SystemExit("usage: ledger_recovery1.py check|apply")
+    if not snap_ok(): sys.exit(1)
     if sys.argv[1:] == ["apply"]:
-        d = build(); json.dump(d, open(AUTH, "w"), indent=1); sys.exit(0 if check(load(AUTH)) else 1)
+        d = build()
+        if sha256(AUTH) != SNAP_SHA256 and load(AUTH) != d:
+            print("ledger.json is neither the snapshot nor the result of this change set: refused"); sys.exit(1)
+        json.dump(d, open(AUTH, "w"), indent=1); sys.exit(0 if check(load(AUTH)) else 1)
     sys.exit(0 if check(load(AUTH)) else 1)
