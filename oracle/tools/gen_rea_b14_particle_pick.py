@@ -87,6 +87,17 @@ CASES = {
     "pp-pointer-events": (ps("QUAD"), {"events": [{"frame": 20, "node": "PS", "field": "pointerEvents", "value": False}]}),
     "pp-bbox-culled": (ps("QUAD", extra="bboxCenter 0 0 10 bboxSize 0.1 0.1 0.1"), {}),
     "pp-max-particles": (ps("QUAD"), {"events": [{"frame": 20, "node": "PS", "field": "maxParticles", "value": 5}]}),
+    # Overlapping particles at exactly equal depth: a still emitter puts every particle at the same place, so their
+    # instance matrices are identical and every covered pixel is a depth tie. The LEQUAL depth test of the pointing
+    # pass keeps the one drawn last, so the hit is the highest particle index of the buffer, which is what the
+    # instanced draw has to reproduce. (Appended, so the seeds of the cases above do not move.)
+    "pp-stack-equal-depth": (ps("QUAD", STILL, size="0.6 0.6", lifetime=2, max_particles=6, variation=0), {}),
+    # Overlapping particles at equal depth whose winner is visible: GEOMETRY particles of one flat Rectangle2D, emitted
+    # along x at z = 0, so they are coplanar and overlap by two thirds. Every pixel of an overlap is a depth tie, and
+    # the hit texCoord says which rectangle the LEQUAL depth test kept — the later one — because the pixel sits at a
+    # different place inside each. pp-stack-equal-depth has the ties; this case has the ties and the answer.
+    "pp-overlap-equal-depth": (ps("GEOMETRY", ROW, lifetime=2, max_particles=8, variation=0,
+                                  extra="geometry Rectangle2D { size 0.6 0.6 }"), {}),
 }
 
 
