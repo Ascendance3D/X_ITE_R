@@ -1,0 +1,251 @@
+import Algorithm from "../Algorithm.js";
+
+function Vector3 (x = 0, y = x, z = y)
+{
+   this .x = x;
+   this .y = y;
+   this .z = z;
+}
+
+Object .assign (Vector3 .prototype,
+{
+   *[Symbol .iterator] ()
+   {
+      yield this .x;
+      yield this .y;
+      yield this .z;
+   },
+   copy ()
+   {
+      const copy = Object .create (Vector3 .prototype);
+      copy .x = this .x;
+      copy .y = this .y;
+      copy .z = this .z;
+      return copy;
+   },
+   assign ({ x, y, z })
+   {
+      this .x = x;
+      this .y = y;
+      this .z = z;
+      return this;
+   },
+   set (x = 0, y = x, z = y)
+   {
+      this .x = x;
+      this .y = y;
+      this .z = z;
+      return this;
+   },
+   equals ({ x, y, z })
+   {
+      return this .x === x &&
+             this .y === y &&
+             this .z === z;
+   },
+   abs ()
+   {
+      const { x, y, z } = this;
+
+      this .x = Math .abs (x);
+      this .y = Math .abs (y);
+      this .z = Math .abs (z);
+      return this;
+   },
+   add ({ x, y, z })
+   {
+      this .x += x;
+      this .y += y;
+      this .z += z;
+      return this;
+   },
+   clamp ({ x: minX, y: minY, z: minZ }, { x: maxX, y: maxY, z: maxZ })
+   {
+      this .x = Algorithm .clamp (this .x, minX, maxX);
+      this .y = Algorithm .clamp (this .y, minY, maxY);
+      this .z = Algorithm .clamp (this .z, minZ, maxZ);
+      return this;
+   },
+   cross ({ x: bx, y: by, z: bz })
+   {
+      const { x: ax, y: ay, z: az } = this;
+
+      this .x = ay * bz - az * by;
+      this .y = az * bx - ax * bz;
+      this .z = ax * by - ay * bx;
+
+      return this;
+   },
+   distance ({ x, y, z })
+   {
+      return Math .hypot (this .x - x,
+                          this .y - y,
+                          this .z - z);
+   },
+   divide (value)
+   {
+      this .x /= value;
+      this .y /= value;
+      this .z /= value;
+      return this;
+   },
+   divVec ({ x, y, z })
+   {
+      this .x /= x;
+      this .y /= y;
+      this .z /= z;
+      return this;
+   },
+   dot ({ x, y, z })
+   {
+      return this .x * x +
+             this .y * y +
+             this .z * z;
+   },
+   inverse ()
+   {
+      this .x = 1 / this .x;
+      this .y = 1 / this .y;
+      this .z = 1 / this .z;
+      return this;
+   },
+   lerp ({ x, y, z }, t)
+   {
+      this .x += t * (x - this .x);
+      this .y += t * (y - this .y);
+      this .z += t * (z - this .z);
+      return this;
+   },
+   max ({ x, y, z })
+   {
+      this .x = Math .max (this .x, x);
+      this .y = Math .max (this .y, y);
+      this .z = Math .max (this .z, z);
+      return this;
+   },
+   min ({ x, y, z })
+   {
+      this .x = Math .min (this .x, x);
+      this .y = Math .min (this .y, y);
+      this .z = Math .min (this .z, z);
+      return this;
+   },
+   multiply (value)
+   {
+      this .x *= value;
+      this .y *= value;
+      this .z *= value;
+      return this;
+   },
+   multVec ({ x, y, z })
+   {
+      this .x *= x;
+      this .y *= y;
+      this .z *= z;
+      return this;
+   },
+   negate ()
+   {
+      this .x = -this .x;
+      this .y = -this .y;
+      this .z = -this .z;
+      return this;
+   },
+   norm ()
+   {
+      return Math .hypot (this .x, this .y, this .z);
+   },
+   normalize ()
+   {
+      const length = Math .hypot (this .x, this .y, this .z);
+
+      if (length)
+      {
+         this .x /= length;
+         this .y /= length;
+         this .z /= length;
+      }
+
+      return this;
+   },
+   reflect (normal)
+   {
+      const d = 2 * normal .dot (this);
+
+      this .x -= normal .x * d;
+      this .y -= normal .y * d;
+      this .z -= normal .z * d;
+
+      return this;
+   },
+   slerp: (() =>
+   {
+      const tmp = new Vector3 ();
+
+      return function (destination, t)
+      {
+         return Algorithm .simpleSlerp (this, tmp .assign (destination), t);
+      };
+   })(),
+   squaredNorm ()
+   {
+      const { x, y, z } = this;
+
+      return x * x +
+             y * y +
+             z * z;
+   },
+   subtract ({ x, y, z })
+   {
+      this .x -= x;
+      this .y -= y;
+      this .z -= z;
+      return this;
+   },
+   toString ()
+   {
+      return this .x + " " +
+             this .y + " " +
+             this .z;
+   }
+});
+
+for (const key of Object .keys (Vector3 .prototype))
+   Object .defineProperty (Vector3 .prototype, key, { enumerable: false });
+
+Object .defineProperties (Vector3 .prototype,
+{
+   length: { value: 3 },
+   0:
+   {
+      get () { return this .x; },
+      set (value) { this .x = value; },
+   },
+   1:
+   {
+      get () { return this .y; },
+      set (value) { this .y = value; },
+   },
+   2:
+   {
+      get () { return this .z; },
+      set (value) { this .z = value; },
+   },
+});
+
+Object .assign (Vector3,
+{
+   ZERO: Object .freeze (new Vector3 ()),
+   // Positive values
+   ONE: Object .freeze (new Vector3 (1)),
+   X_AXIS: Object .freeze (new Vector3 (1, 0, 0)),
+   Y_AXIS: Object .freeze (new Vector3 (0, 1, 0)),
+   Z_AXIS: Object .freeze (new Vector3 (0, 0, 1)),
+   // Negative values
+   NEGATIVE_ONE: Object .freeze (new Vector3 (-1)),
+   NEGATIVE_X_AXIS: Object .freeze (new Vector3 (-1, 0, 0)),
+   NEGATIVE_Y_AXIS: Object .freeze (new Vector3 (0, -1, 0)),
+   NEGATIVE_Z_AXIS: Object .freeze (new Vector3 (0, 0, -1)),
+});
+
+export default Vector3;

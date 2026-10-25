@@ -1,0 +1,483 @@
+export default () => /* glsl */ `
+
+// Original source code from:
+// https://github.com/KhronosGroup/glTF-Sample-Renderer/blob/main/source/Renderer/shaders/pbr.frag
+
+#include <Fragment>
+#include <Shadow>
+
+#if defined (X3D_TRANSMISSION_MATERIAL_EXT) || defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+   uniform ivec4 x3d_Viewport;
+#endif
+
+#if defined (X3D_TRANSMISSION_MATERIAL_EXT) || defined (X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT) || defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+   uniform mat4 x3d_ProjectionMatrix;
+   uniform mat4 x3d_ModelViewMatrix;
+#endif
+
+#if defined (X3D_XR_SESSION)
+uniform mat4 x3d_EyeMatrix;
+
+mat4
+eye (const in mat4 modelViewMatrix)
+{
+   return x3d_EyeMatrix * modelViewMatrix;
+}
+#else
+   #define eye(x) (x)
+#endif
+
+#if defined (X3D_LIGHTING)
+   uniform x3d_LightSourceParameters x3d_LightSource [X3D_NUM_LIGHTS];
+#endif
+
+uniform x3d_PhysicalMaterialParameters x3d_Material;
+
+#include <BRDF>
+#include <MaterialInfo>
+#include <Punctual>
+#include <IBL>
+#include <Iridescence>
+
+#if defined (X3D_VOLUME_SCATTER_PASS)
+#include <Scatter>
+#else
+vec4
+getMaterialColor (const in vec4 fragCoord)
+{
+   #if defined (X3D_TRANSMISSION_MATERIAL_EXT)
+      mat4 modelViewMatrix = eye (x3d_ModelViewMatrix);
+   #endif
+
+   vec4 baseColor = getBaseColor ();
+
+   #if defined (X3D_TEXTURE_PROJECTION)
+      baseColor .rgb *= getTextureProjectorColor ();
+   #endif
+
+   vec3 color = vec3 (0.0);
+
+   vec3 v = normalize (-vertex);
+
+   #if defined (X3D_USE_IBL) || defined (X3D_LIGHTING)
+      NormalInfo normalInfo = getNormalInfo (x3d_Material .normalScale);
+
+      vec3  n     = normalInfo .n;
+      float NdotV = clamp (dot (n, v), 0.0, 1.0);
+
+      #if defined (X3D_RETROREFLECTION_MATERIAL_EXT)
+         vec3 v_retro = normalize (reflect (-v, n));
+      #endif
+   #endif
+
+   MaterialInfo materialInfo;
+
+   // The default index of refraction of 1.5 yields a dielectric normal incidence reflectance of 0.04.
+   materialInfo .baseColor      = baseColor .rgb;
+   materialInfo .ior            = 1.5;
+   materialInfo .f0_dielectric  = vec3 (0.04);
+   materialInfo .specularWeight = 1.0;
+
+   // Anything less than 2% is physically impossible and is instead considered to be shadowing. Compare to "Real-Time-Rendering" 4th edition on page 325.
+   materialInfo .f90            = vec3 (1.0);
+   materialInfo .f90_dielectric = materialInfo .f90;
+
+   #if defined (X3D_IOR_MATERIAL_EXT)
+      materialInfo = getIorInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_MATERIAL_METALLIC_ROUGHNESS)
+      materialInfo = getMetallicRoughnessInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_SHEEN_MATERIAL_EXT)
+      materialInfo = getSheenInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_CLEARCOAT_MATERIAL_EXT)
+      materialInfo = getClearCoatInfo (materialInfo, normalInfo);
+   #endif
+
+   #if defined (X3D_SPECULAR_MATERIAL_EXT)
+      materialInfo = getSpecularInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_TRANSMISSION_MATERIAL_EXT)
+      materialInfo = getTransmissionInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_VOLUME_MATERIAL_EXT)
+      materialInfo = getVolumeInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+      materialInfo = getIridescenceInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_RETROREFLECTION_MATERIAL_EXT)
+      materialInfo = getRetroreflectionInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT)
+      materialInfo = getDiffuseTransmissionInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+      materialInfo = getVolumeScatterInfo (materialInfo);
+   #endif
+
+   #if defined (X3D_ANISOTROPY_MATERIAL_EXT)
+      materialInfo = getAnisotropyInfo (materialInfo, normalInfo);
+   #endif
+
+   materialInfo .perceptualRoughness = clamp (materialInfo .perceptualRoughness, 0.0, 1.0);
+   materialInfo .metallic            = clamp (materialInfo .metallic,            0.0, 1.0);
+
+   // Roughness is authored as perceptual roughness; as is convention,
+   // convert to material roughness by squaring the perceptual roughness.
+   materialInfo .alphaRoughness = materialInfo .perceptualRoughness * materialInfo .perceptualRoughness;
+
+   // LIGHTING
+   vec3 f_specular_dielectric   = vec3 (0.0);
+   vec3 f_specular_metal        = vec3 (0.0);
+   vec3 f_diffuse               = vec3 (0.0);
+   vec3 f_dielectric_brdf_ibl   = vec3 (0.0);
+   vec3 f_metal_brdf_ibl        = vec3 (0.0);
+   vec3 f_emissive              = vec3 (0.0);
+   vec3 clearcoat_brdf          = vec3 (0.0);
+   vec3 f_sheen                 = vec3 (0.0);
+   vec3 f_specular_transmission = vec3 (0.0);
+   vec3 f_diffuse_transmission  = vec3 (0.0);
+
+   float clearcoatFactor  = 0.0;
+   vec3  clearcoatFresnel = vec3 (0.0);
+
+   float albedoSheenScaling           = 1.0;
+   float diffuseTransmissionThickness = 1.0;
+   vec3  diffuseTransmissionIBL       = vec3 (0.0);
+
+   #if defined (X3D_USE_IBL) || defined (X3D_LIGHTING)
+      // Holger: Values are only used if X3D_USE_IBL or X3D_LIGHTING is defined.
+      #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+         vec3 iridescenceFresnel_dielectric = evalIridescence (1.0, materialInfo .iridescenceIor, NdotV, materialInfo .iridescenceThickness, materialInfo .f0_dielectric);
+         vec3 iridescenceFresnel_metallic   = evalIridescence (1.0, materialInfo .iridescenceIor, NdotV, materialInfo .iridescenceThickness, baseColor .rgb);
+
+         if (materialInfo .iridescenceThickness == 0.0)
+            materialInfo .iridescenceFactor = 0.0;
+      #endif
+   #endif
+
+   #if defined (X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT)
+   #if defined (X3D_VOLUME_MATERIAL_EXT)
+      diffuseTransmissionThickness = materialInfo .thickness * (length (x3d_ModelViewMatrix [0] .xyz) + length (x3d_ModelViewMatrix [1] .xyz) + length (x3d_ModelViewMatrix [2] .xyz)) / 3.0;
+   #endif
+   #endif
+
+   #if defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+      // Used for weighting absorption and scattering.
+      vec3 singleScatter = multiToSingleScatter (materialInfo .multiscatterColor);
+   #endif
+
+   #if defined (X3D_CLEARCOAT_MATERIAL_EXT)
+      clearcoatFactor  = materialInfo .clearcoatFactor;
+      clearcoatFresnel = F_Schlick (materialInfo .clearcoatF0, materialInfo .clearcoatF90, clamp (dot (materialInfo .clearcoatNormal, v), 0.0, 1.0));
+   #endif
+
+   // Calculate lighting contribution from image based lighting source (IBL)
+   // Holger: no (|| X3D_TRANSMISSION_MATERIAL_EXT)
+   #if defined (X3D_USE_IBL)
+      f_diffuse = getDiffuseLight (n) * baseColor .rgb;
+
+      #if defined (X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT)
+         diffuseTransmissionIBL = getDiffuseLight (-n) * materialInfo .diffuseTransmissionColorFactor;
+
+         #if defined (X3D_VOLUME_MATERIAL_EXT)
+            diffuseTransmissionIBL = applyVolumeAttenuation (diffuseTransmissionIBL, diffuseTransmissionThickness, materialInfo .attenuationColor, materialInfo .attenuationDistance);
+         #endif
+
+         #if defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+            diffuseTransmissionIBL *= (1.0 - singleScatter);
+         #endif
+
+         f_diffuse = mix (f_diffuse, diffuseTransmissionIBL, materialInfo .diffuseTransmissionFactor);
+      #endif
+
+      #if defined (X3D_TRANSMISSION_MATERIAL_EXT)
+         f_specular_transmission += getIBLVolumeRefraction (
+            n,
+            v,
+            materialInfo .perceptualRoughness,
+            baseColor .rgb,
+            vertex,
+            modelViewMatrix,
+            x3d_ProjectionMatrix,
+            materialInfo .ior,
+            materialInfo .thickness,
+            materialInfo .attenuationColor,
+            materialInfo .attenuationDistance,
+            materialInfo .dispersion);
+
+         f_diffuse = mix (f_diffuse, f_specular_transmission, materialInfo .transmissionFactor);
+      #endif
+
+      #if defined (X3D_ANISOTROPY_MATERIAL_EXT)
+         f_specular_metal      = getIBLRadianceAnisotropy (n, v, materialInfo .perceptualRoughness, materialInfo .anisotropyStrength, materialInfo .anisotropicB);
+         f_specular_dielectric = f_specular_metal;
+      #else
+         f_specular_metal      = getIBLRadianceGGX (n, v, materialInfo .perceptualRoughness);
+         f_specular_dielectric = f_specular_metal;
+      #endif
+
+      // Calculate fresnel mix for IBL
+
+      vec3 f_metal_fresnel_ibl = getIBLGGXFresnel (n, v, materialInfo .perceptualRoughness, baseColor .rgb, 1.0);
+
+      f_metal_brdf_ibl = f_metal_fresnel_ibl * f_specular_metal;
+
+      vec3 f_dielectric_fresnel_ibl = getIBLGGXFresnel (n, v, materialInfo .perceptualRoughness, materialInfo .f0_dielectric, materialInfo .specularWeight);
+
+      f_dielectric_brdf_ibl = mix (f_diffuse, f_specular_dielectric, f_dielectric_fresnel_ibl);
+
+      #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+         f_metal_brdf_ibl      = mix (f_metal_brdf_ibl, f_specular_metal * iridescenceFresnel_metallic, materialInfo .iridescenceFactor);
+         f_dielectric_brdf_ibl = mix (f_dielectric_brdf_ibl, rgb_mix (f_diffuse, f_specular_dielectric, iridescenceFresnel_dielectric), materialInfo .iridescenceFactor);
+      #endif
+
+      #if defined (X3D_RETROREFLECTION_MATERIAL_EXT)
+         // Retroreflective variant of the metallic and dielectric BRDFs (MRM model): the specular
+         // lobe's view direction is substituted with v_retro. The Fresnel mix weight is unchanged
+         // because NdotV is invariant under the v -> v_retro substitution. Anisotropy's bent-normal
+         // reflection and iridescence's Fresnel tint are re-applied with v_retro so they compose
+         // correctly with retroreflection instead of being silently dropped from the retro lobe.
+
+         #if defined (X3D_ANISOTROPY_MATERIAL_EXT)
+            vec3 f_specular_retro = getIBLRadianceAnisotropy (n, v_retro, materialInfo .perceptualRoughness, materialInfo .anisotropyStrength, materialInfo .anisotropicB);
+         #else
+            vec3 f_specular_retro = getIBLRadianceGGX (n, v_retro, materialInfo .perceptualRoughness);
+         #endif
+
+         vec3 f_metal_brdf_retro      = f_metal_fresnel_ibl * f_specular_retro;
+         vec3 f_dielectric_brdf_retro = mix (f_diffuse, f_specular_retro, f_dielectric_fresnel_ibl);
+
+         #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+            f_metal_brdf_retro      = mix (f_metal_brdf_retro, f_specular_retro * iridescenceFresnel_metallic, materialInfo .iridescenceFactor);
+            f_dielectric_brdf_retro = mix (f_dielectric_brdf_retro, rgb_mix (f_diffuse, f_specular_retro, iridescenceFresnel_dielectric), materialInfo .iridescenceFactor);
+         #endif
+
+         f_metal_brdf_ibl      = mix (f_metal_brdf_ibl, f_metal_brdf_retro, materialInfo .retroreflectionFactor);
+         f_dielectric_brdf_ibl = mix (f_dielectric_brdf_ibl, f_dielectric_brdf_retro, materialInfo .retroreflectionFactor);
+      #endif
+
+      #if defined (X3D_CLEARCOAT_MATERIAL_EXT)
+         clearcoat_brdf = getIBLRadianceGGX (materialInfo .clearcoatNormal, v, materialInfo .clearcoatRoughness);
+      #endif
+
+      #if defined (X3D_SHEEN_MATERIAL_EXT)
+         f_sheen            = getIBLRadianceCharlie (n, v, materialInfo .sheenRoughnessFactor, materialInfo .sheenColorFactor);
+         albedoSheenScaling = 1.0 - max3 (materialInfo .sheenColorFactor) * albedoSheenScalingLUT (NdotV, materialInfo .sheenRoughnessFactor);
+      #endif
+
+      color = mix (f_dielectric_brdf_ibl, f_metal_brdf_ibl, materialInfo .metallic);
+      color = f_sheen + color * albedoSheenScaling;
+      color = mix (color, clearcoat_brdf, clearcoatFactor * clearcoatFresnel);
+
+      #if defined (X3D_OCCLUSION_TEXTURE)
+         float ao = getOcclusionFactor ();
+
+         color *= 1.0 + x3d_Material .occlusionStrength * (ao - 1.0);
+      #endif
+   #endif
+
+   f_diffuse             = vec3 (0.0);
+   f_specular_dielectric = vec3 (0.0);
+   f_specular_metal      = vec3 (0.0);
+
+   vec3 f_dielectric_brdf = vec3 (0.0);
+   vec3 f_metal_brdf      = vec3 (0.0);
+
+   #if defined (X3D_LIGHTING)
+   for (int i = 0; i < X3D_NUM_LIGHTS; ++ i)
+   {
+      x3d_LightSourceParameters light = x3d_LightSource [i];
+
+      vec3  pointToLight;
+      float distanceToLight;
+
+      if (light .type != x3d_DirectionalLight)
+      {
+         pointToLight    = light .location - vertex;
+         distanceToLight = length (light .matrix * pointToLight);
+      }
+      else
+      {
+         pointToLight    = -light .direction;
+         distanceToLight = -1.0;
+      }
+
+      if (distanceToLight <= light .radius || light .radius < 0.0)
+      {
+         // BSTF
+         vec3 l = normalize (pointToLight);   // Direction from surface point to light
+         vec3 h = normalize (l + v);          // Direction of the vector between l and v, called halfway vector
+
+         float NdotL = clamp (dot (n, l), 0.0, 1.0);
+         float NdotH = clamp (dot (n, h), 0.0, 1.0);
+         float VdotH = clamp (dot (v, h), 0.0, 1.0);
+
+         vec3 dielectric_fresnel = F_Schlick (materialInfo .f0_dielectric * materialInfo .specularWeight, materialInfo .f90_dielectric, abs (VdotH));
+         vec3 metal_fresnel      = F_Schlick (baseColor .rgb, vec3 (1.0), abs (VdotH));
+
+         // Calculation of analytical light
+         // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#acknowledgments AppendixB
+         vec3 lightIntensity = getLightIntensity (light, l, distanceToLight);
+
+         vec3  l_diffuse             = lightIntensity * NdotL * BRDF_lambertian (baseColor .rgb);
+         vec3  l_specular_dielectric = vec3 (0.0);
+         vec3  l_specular_metal      = vec3 (0.0);
+         vec3  l_dielectric_brdf     = vec3 (0.0);
+         vec3  l_metal_brdf          = vec3 (0.0);
+         vec3  l_clearcoat_brdf      = vec3 (0.0);
+         vec3  l_sheen               = vec3 (0.0);
+         float l_albedoSheenScaling  = 1.0;
+         vec3  l_diffuse_btdf        = vec3 (0.0);
+
+         #if defined (X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT)
+            l_diffuse *= 1.0 - materialInfo .diffuseTransmissionFactor;
+
+            if (dot (n, l) < 0.0)
+            {
+               float diffuseNdotL = clamp (dot (-n, l), 0.0, 1.0);
+
+               l_diffuse_btdf = lightIntensity * diffuseNdotL * BRDF_lambertian (materialInfo .diffuseTransmissionColorFactor);
+
+               vec3  l_mirror     = normalize (reflect (l, n)); // Mirror light reflection vector on surface
+               float diffuseVdotH = clamp (dot (v, normalize (l_mirror + v)), 0.0, 1.0);
+
+               dielectric_fresnel = F_Schlick (materialInfo .f0_dielectric * materialInfo .specularWeight, materialInfo .f90_dielectric, abs (diffuseVdotH));
+
+               #if defined (X3D_VOLUME_MATERIAL_EXT)
+                  l_diffuse_btdf = applyVolumeAttenuation (l_diffuse_btdf, diffuseTransmissionThickness, materialInfo .attenuationColor, materialInfo .attenuationDistance);
+               #endif
+
+               #if defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+                  l_diffuse_btdf *= (1.0 - singleScatter);
+               #endif
+
+               l_diffuse += l_diffuse_btdf * materialInfo .diffuseTransmissionFactor;
+            }
+         #endif // X3D_DIFFUSE_TRANSMISSION_MATERIAL_EXT
+
+         // BTDF (Bidirectional Transmittance Distribution Function)
+         #if defined (X3D_TRANSMISSION_MATERIAL_EXT)
+            // If the light ray travels through the geometry, use the point it exits the geometry again.
+            // That will change the angle to the light source, if the material refracts the light ray.
+            vec3 transmissionRay = getVolumeTransmissionRay (n, v, materialInfo .thickness, materialInfo .ior, modelViewMatrix);
+
+            pointToLight -= transmissionRay;
+            l             = normalize (pointToLight);
+
+            vec3 transmittedLight = lightIntensity * getPunctualRadianceTransmission (n, v, l, materialInfo .alphaRoughness, baseColor .rgb, materialInfo .ior);
+
+            #if defined (X3D_VOLUME_MATERIAL_EXT)
+               transmittedLight = applyVolumeAttenuation (transmittedLight, length (transmissionRay), materialInfo .attenuationColor, materialInfo .attenuationDistance);
+            #endif
+
+            l_diffuse = mix (l_diffuse, transmittedLight, materialInfo .transmissionFactor);
+         #endif
+
+         // Calculation of analytical light
+         // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#acknowledgments AppendixB
+         vec3 intensity = getLightIntensity (light, l, length (light .matrix * pointToLight));
+
+         #if defined (X3D_ANISOTROPY_MATERIAL_EXT)
+            l_specular_metal      = intensity * NdotL * BRDF_specularGGXAnisotropy (materialInfo .alphaRoughness, materialInfo .anisotropyStrength, n, v, l, h, materialInfo .anisotropicT, materialInfo .anisotropicB);
+            l_specular_dielectric = l_specular_metal;
+         #else
+            l_specular_metal      = intensity * NdotL * BRDF_specularGGX (materialInfo .alphaRoughness, NdotL, NdotV, NdotH);
+            l_specular_dielectric = l_specular_metal;
+         #endif
+
+         l_metal_brdf      = metal_fresnel * l_specular_metal;
+         l_dielectric_brdf = mix (l_diffuse, l_specular_dielectric, dielectric_fresnel); // Do we need to handle vec3 fresnel here?
+
+         #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+            l_metal_brdf      = mix (l_metal_brdf, l_specular_metal * iridescenceFresnel_metallic, materialInfo .iridescenceFactor);
+            l_dielectric_brdf = mix (l_dielectric_brdf, rgb_mix (l_diffuse, l_specular_dielectric, iridescenceFresnel_dielectric), materialInfo .iridescenceFactor);
+         #endif
+
+         #if defined (X3D_RETROREFLECTION_MATERIAL_EXT)
+            // NdotV_retro == NdotV, so only the half vector (and thus NdotH/VdotH) needs
+            // recomputing for the retroreflective specular lobe. Anisotropy and iridescence are
+            // re-applied with v_retro/h_retro so they compose correctly with retroreflection
+            // instead of being silently dropped from the retro lobe.
+
+            vec3  h_retro     = normalize (l + v_retro);
+            float NdotH_retro = clamp (dot (n, h_retro), 0.0, 1.0);
+            float VdotH_retro = clamp (dot (v_retro, h_retro), 0.0, 1.0);
+
+            vec3 dielectric_fresnel_retro = F_Schlick (materialInfo .f0_dielectric * materialInfo .specularWeight, materialInfo .f90_dielectric, abs (VdotH_retro));
+            vec3 metal_fresnel_retro      = F_Schlick (baseColor .rgb, vec3 (1.0), abs (VdotH_retro));
+
+            #if defined (X3D_ANISOTROPY_MATERIAL_EXT)
+               vec3 l_specular_retro = intensity * NdotL * BRDF_specularGGXAnisotropy (materialInfo .alphaRoughness, materialInfo .anisotropyStrength, n, v_retro, l, h_retro, materialInfo .anisotropicT, materialInfo .anisotropicB);
+            #else
+               vec3 l_specular_retro = intensity * NdotL * BRDF_specularGGX (materialInfo .alphaRoughness, NdotL, NdotV, NdotH_retro);
+            #endif
+
+            vec3 l_metal_brdf_retro      = metal_fresnel_retro * l_specular_retro;
+            vec3 l_dielectric_brdf_retro = mix (l_diffuse, l_specular_retro, dielectric_fresnel_retro);
+
+            #if defined (X3D_IRIDESCENCE_MATERIAL_EXT)
+               l_metal_brdf_retro      = mix (l_metal_brdf_retro, l_specular_retro * iridescenceFresnel_metallic, materialInfo .iridescenceFactor);
+               l_dielectric_brdf_retro = mix (l_dielectric_brdf_retro, rgb_mix (l_diffuse, l_specular_retro, iridescenceFresnel_dielectric), materialInfo .iridescenceFactor);
+            #endif
+
+            l_metal_brdf      = mix (l_metal_brdf, l_metal_brdf_retro, materialInfo .retroreflectionFactor);
+            l_dielectric_brdf = mix (l_dielectric_brdf, l_dielectric_brdf_retro, materialInfo .retroreflectionFactor);
+         #endif
+
+         #if defined (X3D_CLEARCOAT_MATERIAL_EXT)
+            l_clearcoat_brdf = intensity * getPunctualRadianceClearCoat (materialInfo .clearcoatNormal, v, l, h, VdotH, materialInfo .clearcoatF0, materialInfo .clearcoatF90, materialInfo .clearcoatRoughness);
+         #endif
+
+         #if defined (X3D_SHEEN_MATERIAL_EXT)
+            l_sheen              = intensity * getPunctualRadianceSheen (materialInfo .sheenColorFactor, materialInfo .sheenRoughnessFactor, NdotL, NdotV, NdotH);
+            l_albedoSheenScaling = min (1.0 - max3 (materialInfo .sheenColorFactor) * albedoSheenScalingLUT (NdotV, materialInfo .sheenRoughnessFactor), 1.0 - max3 (materialInfo .sheenColorFactor) * albedoSheenScalingLUT (NdotL, materialInfo .sheenRoughnessFactor));
+         #endif
+
+         vec3 l_color = mix (l_dielectric_brdf, l_metal_brdf, materialInfo .metallic);
+
+         l_color = l_sheen + l_color * l_albedoSheenScaling;
+         l_color = mix (l_color, l_clearcoat_brdf, clearcoatFactor * clearcoatFresnel);
+
+         #if defined (X3D_SHADOWS)
+            l_color = mix (l_color, light .shadowColor, getShadowIntensity (i, light));
+         #endif
+
+         color += l_color;
+      }
+   }
+   #endif
+
+   #if defined (X3D_VOLUME_SCATTER_MATERIAL_EXT)
+      // Subsurface scattering is calculated based on fresnel weighted diffuse terms.
+      vec3 l_color = getSubsurfaceScattering (vertex, x3d_ProjectionMatrix, materialInfo .attenuationDistance, materialInfo .diffuseTransmissionColorFactor, materialInfo .multiscatterColor, fragCoord);
+
+      color += l_color * (1.0 - materialInfo .metallic) * (1.0 - clearcoatFactor * clearcoatFresnel) * (1.0 - materialInfo .iridescenceFactor) * (1.0 - materialInfo .transmissionFactor);
+   #endif
+
+   f_emissive = getEmissiveColor ();
+
+   #if defined (X3D_UNLIT_MATERIAL_EXT)
+      color = baseColor .rgb;
+   #elif (defined (X3D_GEOMETRY_0D) || defined (X3D_GEOMETRY_1D)) && !defined (X3D_NORMALS)
+      // Points or Lines with no NORMAL attribute SHOULD be rendered without lighting and instead use the sum of the base color value and the emissive value.
+      color = f_emissive + baseColor .rgb;
+   #else
+      color = f_emissive * (1.0 - clearcoatFactor * clearcoatFresnel) + color;
+   #endif
+
+   return vec4 (color, baseColor .a);
+}
+#endif
+`;
