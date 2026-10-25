@@ -222,7 +222,8 @@ pub struct Viewer3d {
     /// read it with [`Viewer3d::depth_gpu`].
     depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
     /// Wall time of the collision work of [`Viewer3d::step`] (the viewer's constrained moves, collide and gravitate),
-    /// added up for benchmarks; the caller resets it.
+    /// added up for benchmarks; the caller resets it. The constrained moves are timed with the whole navigation prepare
+    /// around them (the collision world's traversal and the navigation's own small step).
     pub collision_time: std::time::Duration,
     /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
     pub pick_shapes: crate::pick_shapes::PickShapes,
