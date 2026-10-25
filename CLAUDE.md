@@ -21,6 +21,7 @@ read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
 ## Checks
 
 - Run `cargo fmt --all` before every commit. CI fails an unformatted PR before it builds.
+- Before a Git command that can write a tracked path in the main checkout, follow `docs/agents/safe-checkout.md`.
 - The full local suite (including the GPU tests CI skips) is the command in the header
   comment of `.github/workflows/rust-tests.yml`.
 
