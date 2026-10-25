@@ -5,7 +5,7 @@ The main checkout holds the gitignored answer keys (`oracle/answer-keys.tsv`), s
 
 ## Rules
 
-1. Before a command that can write a tracked path, record the sha256 of each path. After the command, check each path again.
+1. Before a command that can write a tracked path, record the sha256 of each path. After the command, check each path again. For a tracked symlink, record its target (`readlink`), not the bytes it points to.
 2. Never call a command byte-preserving unless a hash before and after shows it.
 3. Name the source revision of every restore: `git restore --worktree --source=<rev> -- <path>`. Do not use `git checkout -- <path>`, which writes the index version and does not name it.
 4. Keep every holding directory. Delete nothing.
@@ -16,9 +16,9 @@ The main checkout holds the gitignored answer keys (`oracle/answer-keys.tsv`), s
 | step | action | stop when |
 | --- | --- | --- |
 | 1 | `git rev-parse HEAD` and `git status --porcelain`; record both. Resolve the target once: `T=$(git rev-parse --verify <target>^{commit})`, and use `$T` (not a branch name) in every later step | HEAD or status differs from what you expect; `$T` is not the expected SHA |
-| 2 | list every path the command can write: `git diff --name-only HEAD $T` for a merge; the path list for a restore | — |
+| 2 | list every path the command can write: `git diff --no-renames --name-only HEAD $T` for a merge (a rename then lists the deleted old path and the new path); the path list for a restore | — |
 | 3 | make a dated holding directory under `~/Projects/cybertown/.backups/X_ITE_R/`; write a `sha256sum` manifest of the listed paths and of every untracked or ignored path near them | — |
-| 4 | copy each path with unique content (working-tree bytes that `$T` does not hold) into the holding directory with its relative path (`cp -p --parents`); run `sha256sum -c` on the copies | a destination file already exists; a copy differs |
+| 4 | copy each path with unique content (working-tree bytes that `$T` does not hold, including paths that `$T` deletes) into the holding directory with its relative path (`cp -P -p --parents`, which keeps a symlink as a symlink); run `sha256sum -c` on the copies | a destination file already exists; a copy differs |
 | 5 | run the command | it does something other than the expected effect (for a merge: not a fast-forward to the expected SHA) |
 | 6 | run `sha256sum -c` of the manifest again | a change occurs that step 2 did not predict in writing |
 
@@ -30,7 +30,7 @@ Use this when the working tree holds the target version of `<path>`, and HEAD ho
 | --- | --- | --- |
 | a | `sha256sum <path>`; record the value as `W` | — |
 | b | `git rev-parse $T:<path>` and `git hash-object <path>` | the two blob IDs differ (the working tree holds content that `$T` does not) |
-| c | `cp -p --parents <path> <holding>/`, then `sha256sum` of the copy | `<holding>/<path>` already exists; the copy differs from `W` |
+| c | `cp -P -p --parents <path> <holding>/`, then `sha256sum` of the copy | `<holding>/<path>` already exists; the copy differs from `W` |
 | d | `git restore --worktree --source=HEAD -- <path>` | — |
 | e | `git hash-object <path>` | it differs from `git rev-parse HEAD:<path>` |
 | f | `git merge --ff-only $T`, then `git rev-parse HEAD` | HEAD is not `$T` |
