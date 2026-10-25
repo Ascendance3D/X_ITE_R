@@ -147,7 +147,9 @@ fn depth_gpu() -> Option<Rc<RefCell<DepthGpu>>> {
 fn independent_viewers() {
     big(|| {
         let Some(depth) = depth_gpu() else {
-            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+            return x3d_evidence::no_gpu(
+                "no adapter: the collision depth buffer needs a GPU, skipped",
+            );
         };
         let d = dir("viewers");
         let wall = write(&d, "wall.x3dv", &format!("{HEAD}{FLY}{WALL}"));
@@ -201,7 +203,9 @@ fn independent_viewers() {
 fn collide_and_gravitate_are_one_batch() {
     big(|| {
         let Some(depth) = depth_gpu() else {
-            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+            return x3d_evidence::no_gpu(
+                "no adapter: the collision depth buffer needs a GPU, skipped",
+            );
         };
         let d = dir("batch");
         let floor = write(
@@ -256,7 +260,9 @@ fn collide_and_gravitate_are_one_batch() {
 fn failed_frames_fall_back_whole() {
     big(|| {
         let Some(depth) = depth_gpu() else {
-            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+            return x3d_evidence::no_gpu(
+                "no adapter: the collision depth buffer needs a GPU, skipped",
+            );
         };
         let d = dir("fallback");
         let floor = write(
@@ -331,7 +337,9 @@ fn failed_frames_fall_back_whole() {
 fn inline_reload_and_resources() {
     big(|| {
         let Some(depth) = depth_gpu() else {
-            return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+            return x3d_evidence::no_gpu(
+                "no adapter: the collision depth buffer needs a GPU, skipped",
+            );
         };
         let d = dir("inline");
         write(&d, "wall.x3dv", &format!("{HEAD}{WALL}"));
@@ -439,7 +447,7 @@ fn cpu_viewers_points_and_lines() {
         assert_eq!(cpu[1], lines);
 
         let Some(depth) = depth_gpu() else {
-            return eprintln!("no adapter: CPU and GPU not compared");
+            return x3d_evidence::no_gpu("no adapter: CPU and GPU not compared");
         };
 
         for (k, world) in worlds.iter().enumerate() {

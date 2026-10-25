@@ -264,8 +264,7 @@ fn winit_event_loop_under_xvfb() {
         .map(|o| !o.status.success())
         .unwrap_or(true)
     {
-        eprintln!("xvfb-run not found; skipping");
-        return;
+        return x3d_evidence::tool_absent("xvfb-run not found");
     }
     let path = tmp_copy("xvfb");
     let shot = path.with_file_name("after.png");

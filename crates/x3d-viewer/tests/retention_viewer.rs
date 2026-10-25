@@ -223,7 +223,7 @@ mod embedded {
     #[test]
     fn w7_embedded_viewer_load_and_unload() {
         let Some((device, queue)) = device() else {
-            return eprintln!("no adapter, skipped");
+            return x3d_evidence::no_gpu("no adapter, skipped");
         };
         spawn_big_stack(move || {
             let d = dir("embedded");

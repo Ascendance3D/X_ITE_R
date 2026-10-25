@@ -138,7 +138,7 @@ fn key(v: &mut EmbeddedViewer, k: &str) {
 #[test]
 fn rea_b07_volume_survives_reload_and_is_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
@@ -330,7 +330,7 @@ fn idle(
 #[test]
 fn rea_b07_iso_and_segmented_removal_release_resources() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));

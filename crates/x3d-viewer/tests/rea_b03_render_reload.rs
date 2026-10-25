@@ -102,7 +102,7 @@ fn shot(v: &mut EmbeddedViewer, device: &wgpu::Device, queue: &wgpu::Queue, now:
 #[test]
 fn rea_b03_render_features_survive_reload_and_are_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));

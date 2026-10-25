@@ -22,7 +22,7 @@ fn decode(p: &std::path::Path) -> Option<Vec<u8>> {
 #[test]
 fn sample_count_clamps_like_max_samples() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let r = &mut g.renderer;
     let supported = r.supported_samples().to_vec();
@@ -55,7 +55,7 @@ fn sample_count_clamps_like_max_samples() {
 #[test]
 fn edge_scenes_match_the_x_ite_resolve() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let root = oracle().canonicalize().unwrap();
     let mut checked = 0;
@@ -111,7 +111,7 @@ fn edge_scenes_match_the_x_ite_resolve() {
 #[test]
 fn multisampling_changes_edges_only() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let root = oracle().canonicalize().unwrap();
     let file = root.join("synthetic-msaa/edge-quad.wrl");

@@ -240,6 +240,9 @@ fn rea_batch09_inputs_cases_match_x_ite() {
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
+    if !gpu {
+        x3d_evidence::no_gpu("image comparisons skipped");
+    }
     let mut failures = vec![];
     let mut checked = 0;
 

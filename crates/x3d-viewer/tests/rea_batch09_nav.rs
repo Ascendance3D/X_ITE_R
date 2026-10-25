@@ -320,6 +320,9 @@ fn run_shard(shard: usize) {
         std::fs::read_to_string(root.join("oracle/rea-batch09-nav-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = renderer_available();
+    if !gpu {
+        x3d_evidence::no_gpu("image comparisons skipped");
+    }
     assert!(
         gpu,
         "the pointing and collision passes need a Vulkan adapter"

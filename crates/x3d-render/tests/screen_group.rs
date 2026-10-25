@@ -41,7 +41,7 @@ fn lit_pixels(g: &mut Gpu, name: &str, vp: &str, outer: &str) -> (usize, [usize;
 #[test]
 fn screen_group_children_are_in_pixels_at_any_depth_and_scale() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let vp = "Viewpoint { position 0 0 10 }";
 
@@ -74,7 +74,7 @@ fn screen_group_children_are_in_pixels_at_any_depth_and_scale() {
 #[test]
 fn screen_group_in_an_ortho_viewpoint_is_in_pixels() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let vp = "OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -5 5 5 ] }";
     let a = lit_pixels(&mut g, "ortho-a", vp, "Transform { translation 0 0 0");
