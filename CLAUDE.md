@@ -25,11 +25,32 @@ read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
 - The full local suite (including the GPU tests CI skips) is the command in the header
   comment of `.github/workflows/rust-tests.yml`.
 
+## Lane reports
+
+When closing a lane or submitting a final PR for a batch, agents must write a lane report to a durable directory outside the repository (never `/tmp`).
+The directory structure is: `~/Projects/cybertown/.reports/<topic>/<YYYY-MM-DD>-<lane>/REPORT.md`
+
+The `<topic>` name (e.g., `xite-rust-project-recovery`) is PROPOSED and PENDING OWNER APPROVAL.
+
+**Structure Rules:**
+* One dated directory per lane with `REPORT.md` and a `SHA256SUMS` file covering every file in that directory.
+* Evidence files stay inside the dated directory.
+* Never delete or overwrite an older dated directory.
+* Update `<topic>/LATEST.md` only after the new report is complete and its `SHA256SUMS` verifies.
+
+**Required Fields:**
+1. Date
+2. Starting Master SHA
+3. Branch / PR
+4. Scope
+5. Tests Run (pass/fail/ignore/skip counts)
+6. Ledger Effect (entries and proposed status change, or 'None' with a reason)
+7. Protected-Evidence Check Result (from `crates/x3d-evidence` and `X3D_EVIDENCE_LOG`)
+8. Remaining Risks
+
+See `docs/agents/lane-reports.md` for full details.
+
 ## Agent skills
-
-### Lane reports
-
-Lane reports (with ledger effects and test counts) must be written to a durable location outside the repository, never `/tmp`. See `docs/agents/lane-reports.md`.
 
 ### Issue tracker
 
