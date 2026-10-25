@@ -41,6 +41,10 @@ fn quad() -> Vec<[f32; 4]> {
 
 /// A draw of `vertices` with `id`, the viewport shifted so the 1x1 buffer covers the pointer's pixel
 /// (X3DRenderObject.pointing), like `crate::pointer::pointing_draw_base`.
+#[allow(
+    clippy::approx_constant,
+    reason = "X3D's declared Viewpoint.fieldOfView default, the value the matching X_ITE case uses"
+)]
 fn draw(vertices: Vec<[f32; 4]>, id: f32) -> PointingTriangle {
     let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
     let n = vertices.len();

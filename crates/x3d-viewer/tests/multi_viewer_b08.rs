@@ -1187,7 +1187,10 @@ fn geometry_provider_is_one_stateless_function() {
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
-        assert!(x3d_runtime::nodes::particle_systems::geometry_provider().is_none() || true);
+        // No assertion on the provider before the first load: it is process-global, so whether
+        // it is already installed depends on which other test in this binary ran first. What
+        // this test owns is that the first load installs one and the second load does not
+        // replace it, which the two assertions below carry.
         let (da, db) = (dir("gp-a"), dir("gp-b"));
         let mut va = rig.viewer(0);
         load(&mut va, &world_physics(&da, 3.0));

@@ -133,17 +133,23 @@ fn factor_reports_translation_exactly() {
 /// 24 against `x_ite/src/standard/Math/Numbers/`. Factor outputs are only
 /// unique up to eigenvector sign and axis order, so each case also rebuilds
 /// the matrix and checks the rebuild against the oracle element list.
+/// One oracle row: the `set_transform` inputs, then the `get_transform` output X_ITE
+/// recorded for them.
+///
+/// `(translation, euler, scale, scale-euler, center, (translation, rotation, scale,
+/// scale-orientation, the 16 rebuilt elements))`.
+type Case = (
+    [f64; 3],
+    [f64; 3],
+    [f64; 3],
+    [f64; 3],
+    Option<[f64; 3]>,
+    ([f64; 3], [f64; 4], [f64; 3], [f64; 4], [f64; 16]),
+);
+
 #[test]
 fn factor_matches_x_ite_oracle() {
-    // (translation, euler, scale, scale-euler, center, oracle factor output)
-    let cases: [(
-        [f64; 3],
-        [f64; 3],
-        [f64; 3],
-        [f64; 3],
-        Option<[f64; 3]>,
-        ([f64; 3], [f64; 4], [f64; 3], [f64; 4], [f64; 16]),
-    ); 3] = [
+    let cases: [Case; 3] = [
         (
             [4.0, -2.0, 1.0],
             [-0.6, 0.0, 0.8],
@@ -282,13 +288,8 @@ fn factor_matches_x_ite_oracle() {
 
         let mut m = Matrix4::IDENTITY;
         m.set_transform(Some(&t), Some(&r), Some(&s), Some(&sor), center.as_ref());
-        for i in 0..16 {
-            assert!(
-                (m.0[i] - em[i]).abs() <= 1e-12,
-                "set {i}: {} != {}",
-                m.0[i],
-                em[i]
-            );
+        for (i, (got, want)) in m.0.iter().zip(em.iter()).enumerate() {
+            assert!((got - want).abs() <= 1e-12, "set {i}: {got} != {want}");
         }
 
         let (mut ot, mut orr, mut os, mut oso) = (

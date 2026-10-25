@@ -5,6 +5,38 @@
 //! Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
 //! Developed at SunSoft, a Sun Microsystems, Inc. business. Permission to use, copy, modify,
 //! and distribute this software is freely granted, provided that this notice is preserved.
+//!
+//! # Why this module opts out of three Clippy lints
+//!
+//! The whole point of the file is that it is *not* idiomatic Rust: it is fdlibm 5.3's own
+//! arithmetic, kept expression for expression so that `Math.sin` and friends agree with V8 in
+//! the last bit. Every one of the 72 findings below is Clippy correctly describing what the
+//! original says, and taking any of its suggestions would change a result:
+//!
+//! * `excessive_precision` (60) — fdlibm writes its polynomial coefficients and the two-part
+//!   `pi/2` split with more decimal digits than an `f64` can hold, e.g.
+//!   `-1.66666666666666324348e-01`. Rounding them to the shortest round-tripping form is
+//!   value-preserving *here*, but it destroys the correspondence with `ieee754.cc`, which is
+//!   the only way to re-audit a kernel against the source it came from. The two-word splits
+//!   (`pio2_1`, `pio2_1t`, …) are also only correct as a *pair*; re-typing one of them by hand
+//!   is exactly the edit this lint invites.
+//! * `eq_op` (7) — `x - x` is fdlibm's idiom for "NaN, propagating the sign and the invalid
+//!   flag from an infinite or NaN input", and `(x - x) / (x - x)` is its `0/0`. `f64::NAN` is
+//!   not the same expression: it is one fixed bit pattern, chosen by us rather than produced by
+//!   the arithmetic the original performs.
+//! * `approx_constant` (5) — `PI`, `FRAC_PI_2`, `FRAC_2_PI`, `LOG2_E` and `LOG10_E` appear as
+//!   fdlibm's own literals. `invpio2 = 6.36619772367581382433e-01` is the *head* of a
+//!   multi-word approximation of `2/pi` and is used together with the tail words; swapping in
+//!   `f64::consts::FRAC_2_PI` silently changes which value the argument reduction starts from.
+//!
+//! Narrow by design: the three are allowed for this module only, not for the crate, so an
+//! ordinary `x - x` or over-long literal anywhere else in `x3d-fields` is still an error.
+#![allow(
+    clippy::approx_constant,
+    clippy::eq_op,
+    clippy::excessive_precision,
+    reason = "a bit-faithful port of fdlibm 5.3 as V8 ships it; see the module comment"
+)]
 
 fn high(x: f64) -> i32 {
     (x.to_bits() >> 32) as i32

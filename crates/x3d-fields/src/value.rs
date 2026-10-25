@@ -736,14 +736,13 @@ pub fn unescape(s: &str) -> String {
     let mut chars = s.chars().peekable();
 
     while let Some(c) = chars.next() {
-        if c == '\\' {
-            if let Some(&n) = chars.peek() {
-                if n == '\\' || n == '"' {
-                    out.push(n);
-                    chars.next();
-                    continue;
-                }
-            }
+        if c == '\\'
+            && let Some(&n) = chars.peek()
+            && (n == '\\' || n == '"')
+        {
+            out.push(n);
+            chars.next();
+            continue;
         }
         out.push(c);
     }

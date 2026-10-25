@@ -39,6 +39,15 @@ pub struct NavInfo {
     pub transition_time: f64,
 }
 
+/// Viewpoint's declared `fieldOfView` default, as X3D writes it and X_ITE ships it
+/// (`new Fields .SFFloat (0.785398)`): a truncated decimal, not `FRAC_PI_4`. A scene that
+/// omits the field has to project exactly as X_ITE projects it.
+#[allow(
+    clippy::approx_constant,
+    reason = "X3D's declared Viewpoint.fieldOfView default, truncated as the spec writes it"
+)]
+const VP_FIELD_OF_VIEW_DEFAULT: f64 = 0.785398;
+
 impl NavInfo {
     pub fn read(rt: &Runtime, n: NodeId) -> NavInfo {
         if n == DEFAULT {
@@ -211,7 +220,7 @@ impl VpBase {
                 position: Vector3::new(0.0, 0.0, 10.0),
                 orientation: Rotation4::identity(),
                 center_of_rotation: Vector3::ZERO,
-                field_of_view: 0.785398,
+                field_of_view: VP_FIELD_OF_VIEW_DEFAULT,
                 jump: true,
                 retain_user_offsets: false,
                 view_all: false,
@@ -261,7 +270,7 @@ impl VpBase {
             position,
             orientation,
             center_of_rotation,
-            field_of_view: sg.f64(n, "fieldOfView", 0.785398),
+            field_of_view: sg.f64(n, "fieldOfView", VP_FIELD_OF_VIEW_DEFAULT),
             jump: sg.bool(n, "jump", true),
             retain_user_offsets: sg.bool(n, "retainUserOffsets", false),
             view_all: sg.bool(n, "viewAll", false),

@@ -113,6 +113,16 @@ impl Quantity {
             return q;
         }
 
+        // V8's `DoubleToAscii` divides by its own long literal for log2(10) (`conversions.cc`),
+        // not by `f64::consts::LOG2_10`, and this port reproduces the literal so that
+        // `frac_length` lands on the same integer V8 computes. The two differ beyond an f64's
+        // precision, but `as i32` truncates, so a value one ULP away can fall on the other side
+        // of an integer boundary and shift the decimal digits this function then emits.
+        #[allow(
+            clippy::approx_constant,
+            clippy::excessive_precision,
+            reason = "V8's own log2(10) literal, kept verbatim so the truncation matches"
+        )]
         let frac_length =
             ((52 - exponent) as f64 / 3.32192809488736234787031942948939017586) as i32;
 

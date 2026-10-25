@@ -51,6 +51,22 @@ pub struct MaterialParams {
 }
 
 /// The shader options of the X3DMaterialExtensionNodes (X3D_<NAME>_MATERIAL_EXT).
+/// SpotLight's declared defaults, as X3D writes them and X_ITE ships them
+/// (`new Fields .SFFloat (0.785398)`, `(1.5708)`). They are *truncated* decimals, not
+/// `FRAC_PI_4` and `FRAC_PI_2`: a scene that omits the field has to light exactly as X_ITE
+/// lights it, and the cone falloff is sensitive to the last bits. The clamps alongside them
+/// do use `std::f64::consts::FRAC_PI_2`, which is the real bound and not a default.
+#[allow(
+    clippy::approx_constant,
+    reason = "X3D's declared SpotLight defaults, truncated as the spec writes them"
+)]
+const SPOT_CUT_OFF_ANGLE_DEFAULT: f64 = 0.785398;
+#[allow(
+    clippy::approx_constant,
+    reason = "X3D's declared SpotLight defaults, truncated as the spec writes them"
+)]
+const SPOT_BEAM_WIDTH_DEFAULT: f64 = 1.5708;
+
 pub const EXT_EMISSIVE_STRENGTH: u32 = 1;
 pub const EXT_IOR: u32 = 2;
 pub const EXT_SPECULAR: u32 = 4;
@@ -2354,13 +2370,13 @@ impl<'a> Builder<'a> {
                     attenuation: [a.x.max(0.0), a.y.max(0.0), a.z.max(0.0)],
                     radius: sg.f64(n, "radius", 100.0),
                     cut_off_angle: if spot {
-                        sg.f64(n, "cutOffAngle", 0.785398)
+                        sg.f64(n, "cutOffAngle", SPOT_CUT_OFF_ANGLE_DEFAULT)
                             .clamp(0.0, std::f64::consts::FRAC_PI_2)
                     } else {
                         0.0
                     },
                     beam_width: if spot {
-                        sg.f64(n, "beamWidth", 1.5708)
+                        sg.f64(n, "beamWidth", SPOT_BEAM_WIDTH_DEFAULT)
                             .clamp(0.0, std::f64::consts::FRAC_PI_2)
                     } else {
                         0.0
@@ -2629,7 +2645,7 @@ impl<'a> Builder<'a> {
                     return None;
                 }
                 let cut_off_angle = sg
-                    .f64(n, "cutOffAngle", 0.785398)
+                    .f64(n, "cutOffAngle", SPOT_CUT_OFF_ANGLE_DEFAULT)
                     .clamp(0.0, std::f64::consts::FRAC_PI_2);
                 // Camera.perspective (fieldOfView, 0.125, max (10000, far), size, size).
                 let ratio = (cut_off_angle).tan() * 0.125;
