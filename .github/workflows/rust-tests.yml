@@ -11,8 +11,12 @@
 # rea_b22_two_layer_shadows_match_x_ite (wide LINE particle shadows in two layers, a GPU shadow pass). The thirteen
 # skipped tests all stay in the local process, run on the RTX machine:
 #
+#   __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json \
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
 #     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
+#
+# It runs strict (X3D_EVIDENCE unset), so a missing key or adapter fails. The Mesa EGL vendor lets
+# gl_backend_cannot_run_the_renderer_and_says_so start a GL device; the NVIDIA one does not (backend-absent).
 #
 # The rustfmt check runs first and needs no system libraries; an unformatted PR fails before the build.
 #
