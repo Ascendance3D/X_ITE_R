@@ -215,10 +215,12 @@ pub struct Viewer3d {
     /// same so that the depth buffer keeps their vertex buffers.
     thick_line_depth: HashMap<(Vec<NodeId>, NodeId), ThickLineDepth>,
     /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
-    /// ray cast's double values.
-    pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
-    /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer).
-    pub depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
+    /// ray cast's double values. Private so that the only way in is [`Viewer3d::set_gpu`], which holds both buffers to
+    /// the device that draws the frame; read it with [`Viewer3d::pointing_gpu`].
+    pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
+    /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer). Private for the same reason;
+    /// read it with [`Viewer3d::depth_gpu`].
+    depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
     /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
     pub pick_shapes: crate::pick_shapes::PickShapes,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
@@ -1602,6 +1604,11 @@ impl Viewer3d {
             _ => crate::collision::Fill::Triangles,
         };
 
+        // A lost device: the CPU stand-in from now on.
+        if self.depth_gpu.as_ref().is_some_and(|g| g.borrow().lost()) {
+            self.depth_gpu = None;
+        }
+
         Some(World {
             shapes,
             fill,
@@ -2714,12 +2721,67 @@ impl Viewer3d {
         self.refresh_display_scan();
     }
 
+    /// The pointing buffer and the collision depth buffer on the GPU (`None`: the CPU ray cast and depth stand-in).
+    /// Both have to be on `device`, the one that draws the frame, so that no resource of one device meets another
+    /// device. A caller that draws no frames of its own (the headless drivers) passes the device it made them on.
+    pub fn set_gpu(
+        &mut self,
+        device: &x3d_render::wgpu::Device,
+        pointing: Option<x3d_render::pointing_gpu::PointingGpu>,
+        depth: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
+    ) -> Result<(), String> {
+        // Each against the frame's device, not only against each other: two buffers that agree on a device the frame
+        // does not draw on are the very case this has to refuse.
+        if pointing.as_ref().is_some_and(|p| p.device() != device) {
+            return Err("the pointing buffer is on another device than the frame".into());
+        }
+
+        if depth
+            .as_ref()
+            .is_some_and(|d| d.borrow().device() != device)
+        {
+            return Err("the collision depth buffer is on another device than the frame".into());
+        }
+
+        self.pointing_gpu = pointing;
+        self.depth_gpu = depth;
+        Ok(())
+    }
+
+    /// The pointing buffer this viewer picks with, while it is on the GPU.
+    pub fn pointing_gpu(&self) -> Option<&x3d_render::pointing_gpu::PointingGpu> {
+        self.pointing_gpu.as_ref()
+    }
+
+    /// The collision depth buffer this viewer collides with, while it is on the GPU.
+    pub fn depth_gpu(
+        &self,
+    ) -> Option<&std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>> {
+        self.depth_gpu.as_ref()
+    }
+
+    /// Take both buffers back, for an owner that keeps them across the worlds it loads: picks and collisions are on the
+    /// CPU until the next [`Viewer3d::set_gpu`].
+    pub fn take_gpu(
+        &mut self,
+    ) -> (
+        Option<x3d_render::pointing_gpu::PointingGpu>,
+        Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
+    ) {
+        (self.pointing_gpu.take(), self.depth_gpu.take())
+    }
+
     /// `browser .touch (x, y)` for the oracle's `pickProbes`: the hit, without any sensor event.
     pub fn probe_pick(&mut self, x: f64, y: f64) -> Hit {
         self.do_pick(x, y)
     }
 
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
+        // A lost device: the ray cast from now on.
+        if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
+            self.pointing_gpu = None;
+        }
+
         let home = self.current;
         let mut hit: Option<Hit> = None;
 

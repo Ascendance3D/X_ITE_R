@@ -132,6 +132,12 @@ pub struct PointingGpu {
     views: [wgpu::TextureView; 3],
     depth: wgpu::TextureView,
     readback: wgpu::Buffer,
+    /// The device was lost under a readback: the buffer gives no more samples.
+    lost: bool,
+    /// Readbacks that did not arrive, lost device or not ([`PointingGpu::readback_failures`]).
+    readback_failures: usize,
+    /// Mappings that failed in a row under a clean poll; a readback that arrives clears it.
+    map_failures: usize,
     /// Samples taken (for tests).
     pub samples: usize,
 }
@@ -169,6 +175,17 @@ impl PointingGpu {
 
     pub fn queue(&self) -> &wgpu::Queue {
         &self.queue
+    }
+
+    /// The device was lost under a readback: every later sample is `None`, and the caller picks on the CPU.
+    pub fn lost(&self) -> bool {
+        self.lost
+    }
+
+    /// How many readbacks did not arrive. A mapping that fails under a clean poll counts here and leaves
+    /// [`PointingGpu::lost`] false: that sample falls back to the CPU and the next one is taken on the GPU again.
+    pub fn readback_failures(&self) -> usize {
+        self.readback_failures
     }
 
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> PointingGpu {
@@ -342,6 +359,9 @@ impl PointingGpu {
             views,
             depth,
             readback,
+            lost: false,
+            readback_failures: 0,
+            map_failures: 0,
             samples: 0,
         }
     }
@@ -365,18 +385,29 @@ impl PointingGpu {
         })
     }
 
-    /// Draw `tri` into the cleared 1x1 buffer and read it back. `None` when no fragment was written.
-    pub fn sample(&mut self, tri: &PointingTriangle) -> Option<PointingSample> {
+    /// Draw `tri` into the cleared 1x1 buffer and read it back. `Ok(None)` when no fragment was written.
+    pub fn sample(
+        &mut self,
+        tri: &PointingTriangle,
+    ) -> Result<Option<PointingSample>, ReadbackFailure> {
         self.sample_all(std::slice::from_ref(tri))
     }
 
-    /// X3DRenderObject.pointing: clear, draw every shape in order with its x3d_Id (depth test LEQUAL), read the buffer back
-    /// (PointingBuffer.getHit). `None` when no fragment was written.
-    pub fn sample_all(&mut self, draws: &[PointingTriangle]) -> Option<PointingSample> {
+    /// X3DRenderObject.pointing: clear, draw every shape in order with its x3d_Id (depth test LEQUAL), read the buffer
+    /// back (PointingBuffer.getHit). `Ok(None)` when no fragment was written; `Err` when no answer came back at all,
+    /// which is not the same as a miss and sends the caller to the CPU ray cast for this pick.
+    pub fn sample_all(
+        &mut self,
+        draws: &[PointingTriangle],
+    ) -> Result<Option<PointingSample>, ReadbackFailure> {
         self.samples += 1;
 
+        if self.lost {
+            return Err(ReadbackFailure::DeviceLost);
+        }
+
         if draws.is_empty() {
-            return None;
+            return Ok(None);
         }
 
         let mut data: Vec<VertexData> = vec![];
@@ -562,9 +593,15 @@ impl PointingGpu {
 
         self.queue.submit([encoder.finish()]);
         let slice = self.readback.slice(..);
-        slice.map_async(wgpu::MapMode::Read, |_| {});
         crate::transfer::readback(crate::transfer::Kind::Other, self.readback.size());
-        let _ = self.device.poll(wgpu::PollType::wait_indefinitely());
+
+        if let Err(e) = map_read(&self.device, &slice) {
+            self.fail_readback(e);
+            return Err(e);
+        }
+
+        self.map_failures = 0;
+
         let mapped = slice.get_mapped_range().expect("map pointing readback");
         let f = |i: usize| -> [f32; 4] {
             std::array::from_fn(|k| {
@@ -579,11 +616,65 @@ impl PointingGpu {
         drop(mapped);
         self.readback.unmap();
 
-        (a[3] != 0.0).then_some(PointingSample {
+        Ok((a[3] != 0.0).then_some(PointingSample {
             id: a[3],
             point: [a[0], a[1], a[2]],
             normal: [b[0], b[1], b[2]],
             tex_coord: c,
-        })
+        }))
     }
+
+    /// Record a readback that did not arrive. A lost device is lost at once; a mapping that failed under a clean poll
+    /// may be the one blip, so the buffer keeps working and only gives up once [`MAX_MAP_FAILURES`] in a row say the
+    /// device is not coming back (`wgpu::Device::destroy` is this case: the poll stays clean, every mapping fails).
+    fn fail_readback(&mut self, e: ReadbackFailure) {
+        self.readback_failures += 1;
+
+        match e {
+            ReadbackFailure::DeviceLost => self.lost = true,
+            ReadbackFailure::Mapping => {
+                self.map_failures += 1;
+                self.lost |= self.map_failures >= MAX_MAP_FAILURES;
+            }
+        }
+    }
+}
+
+/// Mappings that may fail in a row under a clean poll before the buffer gives the device up. One is a blip and costs
+/// that pick the CPU ray cast; a run of them is a device that answers polls and nothing else.
+pub const MAX_MAP_FAILURES: usize = 3;
+
+/// Why a readback did not arrive. The two are not the same failure: a lost device never works again, a mapping that
+/// failed on a live device says nothing about the next one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ReadbackFailure {
+    /// The poll failed: the device is gone, and every buffer on it with it.
+    DeviceLost,
+    /// `map_async` reported an error (or never ran) while the device polled cleanly. This readback is lost; the device
+    /// is still there, so the caller falls back to the CPU for this one and may use the GPU again.
+    Mapping,
+}
+
+/// Map `slice` for reading and wait for it.
+pub(crate) fn map_read(
+    device: &wgpu::Device,
+    slice: &wgpu::BufferSlice,
+) -> Result<(), ReadbackFailure> {
+    let mapped = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let done = mapped.clone();
+    slice.map_async(wgpu::MapMode::Read, move |r| {
+        done.store(r.is_ok(), std::sync::atomic::Ordering::Release)
+    });
+
+    // Only the poll tells the device apart from the mapping: `BufferAsyncError` carries no cause, so a mapping error
+    // after a clean poll is read as the mapping's own, not as the device's.
+    if device.poll(wgpu::PollType::wait_indefinitely()).is_err() {
+        return Err(ReadbackFailure::DeviceLost);
+    }
+
+    if !mapped.load(std::sync::atomic::Ordering::Acquire) {
+        return Err(ReadbackFailure::Mapping);
+    }
+
+    Ok(())
 }

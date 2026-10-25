@@ -3,7 +3,7 @@
 //! leave no stale particle candidate, a TouchSensor around a ParticleSystem sees the pointer over a particle, and picking
 //! creates no renderer resource.
 //!
-//! The embedded viewer picks with the CPU ray cast (it has no pointing GPU), so these are the interactive viewer's hits.
+//! The embedded viewer picks with the pointing buffer on its renderer's device, so these are the interactive viewer's hits.
 //! The worlds' particles stand still (PointEmitter speed 0, no variation): the emitters' random draws, which are shared
 //! on the thread, do not move them.
 

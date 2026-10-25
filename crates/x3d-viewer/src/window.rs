@@ -45,6 +45,9 @@ pub struct Options {
     pub msaa: Option<u32>,
     /// `--depth standard|log|reversed`; X_ITE's standard depth buffer when `None`.
     pub depth: Option<crate::embed::DepthMode>,
+    /// `--cpu-pointing`: picks and avatar collision through the CPU ray cast and depth stand-in instead of the
+    /// window's device.
+    pub cpu_pointing: bool,
 }
 
 /// Everything that exists once the window does.
@@ -752,6 +755,8 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
     if let Some(m) = opts.depth {
         viewer.set_depth_mode(m);
     }
+
+    viewer.set_gpu_picking(!opts.cpu_pointing);
 
     if std::env::var("X3D_VIEW_STATS").is_ok() {
         eprintln!(
