@@ -122,13 +122,15 @@ vec3 getIBLVolumeRefraction (const in vec3 n, const in vec3 v, const in float pe
       vec3  iors       = vec3 (ior - halfSpread, ior, ior + halfSpread);
 
       vec3  transmittedLight;
-      float transmissionRayLength;
+      float transmissionRayLength = 0.0;
 
       for (int i = 0; i < 3; i++)
       {
          vec3 transmissionRay = getVolumeTransmissionRay (n, v, thickness, iors [i], modelMatrix);
-         // TODO: taking length of blue ray, ideally we would take the length of the green ray. For now overwriting seems ok
-         transmissionRayLength = length (transmissionRay);
+         if (i == 1)
+         {
+            transmissionRayLength = length (transmissionRay);
+         }
          vec3 refractedRayExit = position + transmissionRay;
 
          // Project refracted vector on the framebuffer, while mapping to normalized device coordinates.
