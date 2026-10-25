@@ -50,12 +50,7 @@ fn gltf_inline_scenarios_match_x_ite() {
             let k = e["k"].as_u64().unwrap();
 
             for field in ["loadCount", "console", "inlines"] {
-                // Known: X_ITE's buffer FileLoader logs its own error and the Inline logs none; Rust logs the
-                // Inline's error with the same text (REPORT.md, known limits).
-                let known =
-                    field == "console" && (name == "r-bad-base64" || name == "r-missing-bin");
-
-                if e[field] != a[field] && !known {
+                if e[field] != a[field] {
                     failures.push(format!(
                         "{name} step {k} {field}:\n  x_ite {}\n  rust  {}",
                         e[field], a[field]

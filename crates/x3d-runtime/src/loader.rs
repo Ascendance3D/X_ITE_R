@@ -265,10 +265,21 @@ impl Runtime {
         &mut self,
         loader: &FileLoader,
         urls: &[String],
-        accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+    ) -> bool {
+        self.load_document_opt(loader, urls, |rt, loaded| accept(rt, loaded).map_err(Some))
+    }
+
+    pub(crate) fn load_document_opt(
+        &mut self,
+        loader: &FileLoader,
+        urls: &[String],
+        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), Option<String>>,
     ) -> bool {
         !matches!(
-            self.load_document_hooks(loader, urls, &LoadHooks::default(), accept),
+            self.load_document_from_opt(loader, urls, &LoadHooks::default(), 0, |rt, _, loaded| {
+                accept(rt, loaded)
+            }),
             LoadResult::Failed
         )
     }
@@ -282,7 +293,9 @@ impl Runtime {
         hooks: &LoadHooks,
         mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
     ) -> LoadResult {
-        self.load_document_from(loader, urls, hooks, 0, |rt, _, loaded| accept(rt, loaded))
+        self.load_document_from_opt(loader, urls, hooks, 0, |rt, _, loaded| {
+            accept(rt, loaded).map_err(Some)
+        })
     }
 
     /// [`Runtime::load_document_hooks`] from a later point of the fallback chain: `attempts` candidates before
@@ -294,6 +307,19 @@ impl Runtime {
         hooks: &LoadHooks,
         attempts: usize,
         mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), String>,
+    ) -> LoadResult {
+        self.load_document_from_opt(loader, urls, hooks, attempts, |rt, idx, loaded| {
+            accept(rt, idx, loaded).map_err(Some)
+        })
+    }
+
+    pub(crate) fn load_document_from_opt(
+        &mut self,
+        loader: &FileLoader,
+        urls: &[String],
+        hooks: &LoadHooks,
+        attempts: usize,
+        mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), Option<String>>,
     ) -> LoadResult {
         let mut attempts = attempts;
         let mut special: Option<LoadResult> = None;
@@ -307,9 +333,9 @@ impl Runtime {
             let remaining = urls.len() - i - 1;
             let mut resolved: Option<url::Url> = None;
 
-            let result: Result<(), String> = (|| {
+            let result: Result<(), Option<String>> = (|| {
                 if candidate.is_empty() {
-                    return Err("Error: Empty URL.".to_string());
+                    return Err(Some("Error: Empty URL.".to_string()));
                 }
 
                 // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
@@ -321,10 +347,11 @@ impl Runtime {
                     }
                 }
 
-                let base = url::Url::parse(&loader.base).map_err(|e| format!("TypeError: {e}"))?;
-                let r = base
-                    .join(candidate)
-                    .map_err(|_| format!("TypeError: Failed to construct 'URL': Invalid URL"))?;
+                let base =
+                    url::Url::parse(&loader.base).map_err(|e| Some(format!("TypeError: {e}")))?;
+                let r = base.join(candidate).map_err(|_| {
+                    Some(format!("TypeError: Failed to construct 'URL': Invalid URL"))
+                })?;
                 resolved = Some(r.clone());
 
                 // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
@@ -351,7 +378,7 @@ impl Runtime {
                         let name = percent_encoding::percent_decode_str(fragment)
                             .decode_utf8()
                             .map(|d| d.into_owned())
-                            .map_err(|_| "URIError: URI malformed".to_string())?;
+                            .map_err(|_| Some("URIError: URI malformed".to_string()))?;
                         special = Some(LoadResult::Fragment(name));
                         return Ok(());
                     }
@@ -378,14 +405,14 @@ impl Runtime {
 
                 // A base64 data URL is fetched like any other (the browser decodes it); one without a comma is no URL fetch can read.
                 if loader.data_as_string && r.scheme() == "data" && !candidate.contains(',') {
-                    return Err("TypeError: Failed to fetch".to_string());
+                    return Err(Some("TypeError: Failed to fetch".to_string()));
                 }
 
                 // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
-                    nodes::shaders::fetch_data_url(candidate)?
+                    nodes::shaders::fetch_data_url(candidate).map_err(Some)?
                 } else {
-                    self.fetcher.fetch(&r)?
+                    self.fetcher.fetch(&r).map_err(Some)?
                 };
                 accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r))
             })();
@@ -393,20 +420,42 @@ impl Runtime {
             match result {
                 Ok(()) => return special.take().unwrap_or(LoadResult::Loaded),
                 Err(error) => {
-                    attempts += 1;
-                    self.print_load_error(
-                        loader,
-                        candidate,
-                        resolved.as_ref(),
-                        &error,
-                        attempts,
-                        remaining,
-                    );
+                    if let Some(err) = error {
+                        attempts += 1;
+                        self.print_load_error(
+                            loader,
+                            candidate,
+                            resolved.as_ref(),
+                            &err,
+                            attempts,
+                            remaining,
+                        );
+                    }
                 }
             }
         }
 
         LoadResult::Failed
+    }
+
+    pub(crate) fn format_load_subject(candidate: &str, resolved: Option<&url::Url>) -> String {
+        let data_url =
+            resolved.is_some_and(|r| r.scheme() == "data") || candidate.starts_with("data:");
+        let resolved_text = match resolved {
+            Some(r) if !data_url => {
+                decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string())
+            }
+            _ => String::new(),
+        };
+        if candidate.is_empty() {
+            "empty URL".to_string()
+        } else if data_url {
+            "data URL".to_string()
+        } else if !resolved_text.is_empty() {
+            format!("URL '{resolved_text}'")
+        } else {
+            format!("URL '{}'", truncate(candidate))
+        }
     }
 
     /// FileLoader.printError for the candidate that just failed: `attempts` counts it, `remaining`
@@ -420,22 +469,7 @@ impl Runtime {
         attempts: usize,
         remaining: usize,
     ) {
-        let data_url = resolved.is_some_and(|r| r.scheme() == "data");
-        let resolved_text = match resolved {
-            Some(r) if !data_url => {
-                decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string())
-            }
-            _ => String::new(),
-        };
-        let subject = if candidate.is_empty() {
-            "empty URL".to_string()
-        } else if data_url {
-            "data URL".to_string()
-        } else if !resolved_text.is_empty() {
-            format!("URL '{resolved_text}'")
-        } else {
-            format!("URL '{}'", truncate(candidate))
-        };
+        let subject = Self::format_load_subject(candidate, resolved);
         let prefix = if loader.type_name.is_empty() {
             String::new()
         } else {
@@ -883,24 +917,56 @@ impl Runtime {
     }
 }
 
+pub struct BufferFetchError {
+    pub candidate: String,
+    pub resolved: Option<url::Url>,
+    pub error: String,
+}
+
+pub struct ParseBytesResult {
+    pub scene: Result<Scene, x3d_parse::LoadError>,
+    pub buffer_error: Option<BufferFetchError>,
+}
+
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
-pub fn parse_bytes_with_fetcher(
-    fetcher: &dyn Fetcher,
-    data: &[u8],
-    url: &str,
-) -> Result<Scene, x3d_parse::LoadError> {
+pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> ParseBytesResult {
+    let buffer_error = std::cell::RefCell::new(None);
+
     let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
         if uri.trim_start().starts_with("data:") {
-            return x3d_parse::gltf_default_fetch(uri, base);
+            let res = x3d_parse::gltf_default_fetch(uri, base);
+            if let Err(e) = &res {
+                *buffer_error.borrow_mut() = Some(BufferFetchError {
+                    candidate: uri.to_string(),
+                    resolved: None,
+                    error: e.clone(),
+                });
+            }
+            return res;
         }
 
         let resolved = url::Url::parse(base)
             .and_then(|b| b.join(uri.trim()))
             .map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string())?;
 
-        fetcher.fetch(&resolved)
+        match fetcher.fetch(&resolved) {
+            Ok(d) => Ok(d),
+            Err(e) => {
+                *buffer_error.borrow_mut() = Some(BufferFetchError {
+                    candidate: uri.to_string(),
+                    resolved: Some(resolved.clone()),
+                    error: e.clone(),
+                });
+                Err(e)
+            }
+        }
     };
 
-    x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url))
+    let scene = x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url));
+
+    ParseBytesResult {
+        scene,
+        buffer_error: buffer_error.into_inner(),
+    }
 }

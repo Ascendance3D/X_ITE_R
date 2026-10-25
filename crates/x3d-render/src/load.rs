@@ -25,6 +25,7 @@ pub fn load_world(oracle_root: &Path, file: &Path, scripts: bool) -> Result<Runt
         prefix: ORACLE_PREFIX.to_string(),
     });
     let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url)
+        .scene
         .map_err(|e| format!("{e:?}"))?;
     let mut rt = Runtime::new(scene, fetcher);
     crate::shader_gpu::install(&mut rt);
