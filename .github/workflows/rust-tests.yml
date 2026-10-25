@@ -77,6 +77,15 @@ jobs:
           python3 -I -B tools/verify-reference-pin.py
           python3 -I -B tools/verify-reference-pin.py --self-test
 
+      # The ACTIVE references: X_ITE 16.5.0 (oracle/x_ite-pin) and CodeMirror 5.65.21
+      # (oracle/cm5-build), checked by version and content digest against tools/candidate.lock.
+      # This is the reference half of the gate only; no commit identity is checked or approved.
+      # The self-test runs in a disposable sparse clone and proves each refusal names its reason.
+      - name: Active reference pins (X_ITE 16.5.0, CodeMirror 5.65.21)
+        run: |
+          tools/verify-candidate.sh
+          tools/selftest-identity.sh
+
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
           components: rustfmt, clippy

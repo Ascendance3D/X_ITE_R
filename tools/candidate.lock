@@ -1,11 +1,17 @@
-# Pinned baseline identity for the X_ITE -> Rust port.
-# Read by tools/verify-candidate.sh. Fail-closed: a test run must match every value here.
+# Reference pins for the X_ITE -> Rust port.
+# Read by tools/verify-candidate.sh. Fail-closed: the reference checks must match every
+# X_ITE_* and CM5_* value here. CI runs the reference checks on every pull request.
 #
-# The approved research candidate for R0.1. This is a worktree of the private
-# rust-port repository at /home/ryan/Projects/cybertown/X_ITE/scratch/rust-port.
-CANDIDATE_COMMIT=a553381b9f4d950d71032096fb2a27d30cd68b93
-CANDIDATE_BRANCH=research/r0-1-baseline-authority
-CANDIDATE_WORKTREE=/home/ryan/Projects/cybertown/.worktrees/r0-1-baseline-authority
+# --- Historical evidence: the R0.1 research candidate --------------------------
+# R0.1 approved one research snapshot, a553381 (2026-10-14, "math: port Matrix4.factor and
+# get_transform"), then in the private rust-port repository. That repository is now
+# X_ITE_R (X_ITE/scratch/rust-port is a symlink to it); the branch and worktree below no
+# longer exist. The approval does not apply to any later commit. The gate does not read
+# these values: an identity check needs an explicit --expect <sha>, and no commit (master
+# included) is an approved release candidate unless the owner names it.
+HISTORICAL_R01_CANDIDATE_COMMIT=a553381b9f4d950d71032096fb2a27d30cd68b93
+HISTORICAL_R01_CANDIDATE_BRANCH=research/r0-1-baseline-authority
+HISTORICAL_R01_CANDIDATE_WORKTREE=/home/ryan/Projects/cybertown/.worktrees/r0-1-baseline-authority
 
 # --- Reference source: X_ITE ------------------------------------------------
 # The X_ITE source this port is translated from. Do not change without owner review.
@@ -37,11 +43,13 @@ CM5_VERSION_FILE=oracle/cm5-build/package.json
 CM5_REF_DIGEST=d2daa3a3a863163603b645e453e2ffc6c1a4277d228108a4d437c7627f0f911c
 CM5_REF_FILES=440
 # The live CodeMirror checkout, when it is present. Checked for its commit.
+# It is present only on the owner's machine: the path resolves through the
+# X_ITE/scratch/rust-port symlink into the ignored upstream/ directory of the main checkout.
 CM5_LIVE_DIR=/home/ryan/Projects/cybertown/X_ITE/scratch/rust-port/upstream/codemirror5
 
-# Infrastructure that R0.1 is allowed to add on top of the candidate.
-# A commit whose entire diff against CANDIDATE_COMMIT touches only these paths
-# still counts as the approved candidate. Any other difference refuses.
+# Infrastructure that may change on top of an expected commit (--expect <sha>).
+# A commit whose entire diff against the expected commit touches only these paths
+# still counts as that commit. Any other difference refuses.
 # This keeps the gate fail-closed for the renderer and runtime, which is the
 # thing the gate exists to protect.
 ALLOWED_INFRA_FILES="tools/verify-candidate.sh tools/candidate.lock tools/reference-digest.py tools/selftest-identity.sh"
