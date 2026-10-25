@@ -18,6 +18,12 @@
 //! requires them to keep differing. pp-two-systems has two systems; only PS is dumped, so its second system stands still,
 //! which makes its records exact without a reference.
 //!
+//! The two equal-depth cases are the depth ties of the instanced pointing draw (lane
+//! XITE_R_B25_2_GPU_INSTANCED_PICKING): pp-stack-equal-depth stacks coincident QUAD particles, and
+//! pp-overlap-equal-depth overlaps coplanar GEOMETRY rectangles, all at z = -3, where the hit texCoord says which of
+//! them the LEQUAL depth test kept. A system goes through the pass as one instanced draw, so these cases decide
+//! whether that draw resolves a tie the way X_ITE's draw per particle does.
+//!
 //! The pointing pass needs a GPU: without an adapter the test is skipped. `REA_ONLY=<substring>` restricts the cases.
 
 use serde_json::Value;

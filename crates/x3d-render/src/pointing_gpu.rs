@@ -4,9 +4,13 @@
 //! with its own x3d_Id, so the nearest fragment wins and a depth tie goes to the primitive drawn last. The hit point, normal and texCoord are the
 //! interpolated varyings: the GPU's own float32 results, which the CPU ray cast of the viewer cannot reproduce. The viewer
 //! sends only the primitives that can cover the pixel (the ray cast's candidate triangles, the points and line segments
-//! near it), in the shapes' drawing order.
+//! near it), in the shapes' drawing order. A ParticleSystem is one instanced draw instead
+//! ([`PointingTriangle::instances`], ParticleSystem.displaySimple): the pointer does not test its particles one by one,
+//! and particle k of a draw with x3d_Id `id` carries `id + k`.
 
 use bytemuck::{Pod, Zeroable};
+use std::rc::Rc;
+use x3d_fields::math::Matrix4;
 
 /// The pointing WGSL.
 pub const POINTING_WGSL: &str = include_str!("pointing.wgsl");
@@ -27,6 +31,9 @@ struct Uniforms {
     attenuation: [f32; 4],
     clip_planes: [[f32; 4]; MAX_POINTING_CLIP_PLANES],
     flags: [f32; 4],
+    /// x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
+    /// per instance_index).
+    instancing: [u32; 4],
 }
 
 /// One draw's uniforms sit at a multiple of this (minUniformBufferOffsetAlignment).
@@ -95,10 +102,21 @@ pub struct PointingTriangle {
     pub point_style: Option<PointingPointStyle>,
     /// X3D_GEOMETRY_0D or X3D_GEOMETRY_1D: texCoord0 is the shader's constant (0, 0, 0, 1).
     pub constant_tex_coord: bool,
-    /// x3d_Id.
+    /// x3d_Id; with `instances`, particle k carries `id + k`.
     pub id: f32,
     /// A particle of a ParticleSystem (crate::transfer).
     pub particle: bool,
+    /// The particles of a ParticleSystem drawn at once (ParticleSystem.displaySimple, gl.drawArraysInstanced): their
+    /// x3d_InstanceMatrix (`instance` is not used then). Each draws every vertex of the draw, or with
+    /// `per_instance_vertices` n its own vertices k·n .. (k+1)·n of them (the transformed thick LINE triangles).
+    ///
+    /// The matrices are read through the `Rc`'s address: the buffer keeps the last pass's sources alive, so an address
+    /// that compares equal is the same allocation, and `Rc<Vec<Matrix4>>` hands out no interior mutability, so its
+    /// contents cannot have changed under it. A caller that ever mutated a `Vec` in place behind a live `Rc` would have
+    /// to clear the cache ([`PointingGpu::forget_instances`]).
+    pub instances: Option<Rc<Vec<Matrix4>>>,
+    /// 0: every particle draws the whole vertex range; n: particle k draws vertices k·n .. (k+1)·n of it.
+    pub per_instance_vertices: u32,
 }
 
 /// What the pointing buffer holds after the draw: gl_FragData 0 to 2.
@@ -128,6 +146,11 @@ pub struct PointingGpu {
     layout: wgpu::BindGroupLayout,
     group: wgpu::BindGroup,
     vertices: wgpu::Buffer,
+    /// The instance matrices of the pass's instanced draws, one draw's after the other (capacity in matrices).
+    instance_buffer: wgpu::Buffer,
+    instance_capacity: usize,
+    /// The instance matrices the instance buffer holds, in order (kept alive so the addresses identify them).
+    instance_sources: Vec<Rc<Vec<Matrix4>>>,
     targets: [wgpu::Texture; 3],
     views: [wgpu::TextureView; 3],
     depth: wgpu::TextureView,
@@ -140,6 +163,9 @@ pub struct PointingGpu {
     map_failures: usize,
     /// Samples taken (for tests).
     pub samples: usize,
+    /// Draws the last sample submitted per pass (for tests): a ParticleSystem counts once, however many particles it
+    /// has.
+    pub draws: usize,
 }
 
 const ROW: u64 = 256;
@@ -195,16 +221,31 @@ impl PointingGpu {
         });
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("pointing"),
-            entries: &[wgpu::BindGroupLayoutEntry {
-                binding: 0,
-                visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                ty: wgpu::BindingType::Buffer {
-                    ty: wgpu::BufferBindingType::Uniform,
-                    has_dynamic_offset: true,
-                    min_binding_size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64),
+            entries: &[
+                wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: true,
+                        min_binding_size: wgpu::BufferSize::new(
+                            std::mem::size_of::<Uniforms>() as u64
+                        ),
+                    },
+                    count: None,
                 },
-                count: None,
-            }],
+                // 1: the instance matrices (pointing.wgsl `instances`).
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Storage { read_only: true },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
+            ],
         });
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("pointing"),
@@ -301,7 +342,10 @@ impl PointingGpu {
             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        let group = Self::bind_group(&device, &layout, &uniforms);
+        // One matrix to start with: a storage binding of zero bytes is not allowed.
+        let instance_capacity = 1;
+        let instance_buffer = Self::make_instances(&device, instance_capacity);
+        let group = Self::bind_group(&device, &layout, &uniforms, &instance_buffer);
         let vertices = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("pointing vertices"),
             size: 6 * std::mem::size_of::<VertexData>() as u64,
@@ -355,6 +399,9 @@ impl PointingGpu {
             layout,
             group,
             vertices,
+            instance_buffer,
+            instance_capacity,
+            instance_sources: vec![],
             targets,
             views,
             depth,
@@ -363,6 +410,7 @@ impl PointingGpu {
             readback_failures: 0,
             map_failures: 0,
             samples: 0,
+            draws: 0,
         }
     }
 
@@ -370,19 +418,46 @@ impl PointingGpu {
         device: &wgpu::Device,
         layout: &wgpu::BindGroupLayout,
         uniforms: &wgpu::Buffer,
+        instances: &wgpu::Buffer,
     ) -> wgpu::BindGroup {
         device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("pointing"),
             layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                    buffer: uniforms,
-                    offset: 0,
-                    size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64),
-                }),
-            }],
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                        buffer: uniforms,
+                        offset: 0,
+                        size: wgpu::BufferSize::new(std::mem::size_of::<Uniforms>() as u64),
+                    }),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: instances.as_entire_binding(),
+                },
+            ],
         })
+    }
+
+    fn make_instances(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("pointing instances"),
+            size: (capacity * std::mem::size_of::<[f32; 16]>()) as u64,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        })
+    }
+
+    /// Drop the instance-matrix cache, so the next pass uploads its sources again. Only a caller that mutates a
+    /// `Vec<Matrix4>` in place behind a live `Rc` needs this; the viewer builds a fresh `Rc` per walk.
+    pub fn forget_instances(&mut self) {
+        self.instance_sources.clear();
+    }
+
+    /// The instance matrices held (for tests).
+    pub fn instance_sources(&self) -> usize {
+        self.instance_sources.len()
     }
 
     /// Draw `tri` into the cleared 1x1 buffer and read it back. `Ok(None)` when no fragment was written.
@@ -401,6 +476,7 @@ impl PointingGpu {
         draws: &[PointingTriangle],
     ) -> Result<Option<PointingSample>, ReadbackFailure> {
         self.samples += 1;
+        self.draws = draws.len();
 
         if self.lost {
             return Err(ReadbackFailure::DeviceLost);
@@ -410,10 +486,46 @@ impl PointingGpu {
             return Ok(None);
         }
 
+        // The instance matrices of the instanced draws, one draw's after the other: written only when they are not
+        // those of the last pass (a pick that repeats on the same walk draws the same systems).
+        let sources: Vec<&Rc<Vec<Matrix4>>> =
+            draws.iter().filter_map(|d| d.instances.as_ref()).collect();
+        let total: usize = sources.iter().map(|m| m.len()).sum();
+        let same = sources.len() == self.instance_sources.len()
+            && sources
+                .iter()
+                .zip(&self.instance_sources)
+                .all(|(a, b)| Rc::ptr_eq(a, b));
+        let mut regroup = false;
+
+        if total > self.instance_capacity {
+            self.instance_capacity = total.next_power_of_two();
+            self.instance_buffer = Self::make_instances(&self.device, self.instance_capacity);
+            self.instance_sources.clear();
+            regroup = true;
+        }
+
+        if !same || regroup {
+            let data: Vec<[f32; 16]> = sources
+                .iter()
+                .flat_map(|m| m.iter().map(|m| m.0.map(|v| v as f32)))
+                .collect();
+
+            if !data.is_empty() {
+                let bytes: &[u8] = bytemuck::cast_slice(&data);
+
+                self.queue.write_buffer(&self.instance_buffer, 0, bytes);
+                crate::transfer::upload(crate::transfer::Kind::Particle, bytes.len());
+            }
+
+            self.instance_sources = sources.into_iter().cloned().collect();
+        }
+
         let mut data: Vec<VertexData> = vec![];
         let mut ranges = vec![];
         let mut uniforms: Vec<u8> = vec![];
         let (mut particle_vertices, mut particle_draws) = (0usize, 0usize);
+        let mut first = 0u32;
 
         for (k, tri) in draws.iter().enumerate() {
             let start = data.len() as u32;
@@ -474,6 +586,13 @@ impl PointingGpu {
                 }),
                 clip_planes,
                 flags: [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
+                instancing: match &tri.instances {
+                    Some(m) => {
+                        first += m.len() as u32;
+                        [1, first - m.len() as u32, tri.per_instance_vertices, 0]
+                    }
+                    None => [0; 4],
+                },
             };
             uniforms.resize(k * UNIFORM_STRIDE as usize, 0);
             uniforms.extend_from_slice(bytemuck::bytes_of(&u));
@@ -497,7 +616,17 @@ impl PointingGpu {
                 usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
                 mapped_at_creation: false,
             });
-            self.group = Self::bind_group(&self.device, &self.layout, &self.uniforms);
+            regroup = true;
+        }
+
+        // A new uniform or instance buffer needs the bind group again.
+        if regroup {
+            self.group = Self::bind_group(
+                &self.device,
+                &self.layout,
+                &self.uniforms,
+                &self.instance_buffer,
+            );
         }
 
         if bytes > 0 {
@@ -558,12 +687,23 @@ impl PointingGpu {
                     continue;
                 }
 
+                // One draw of every particle: instance_index, or the vertices of each in turn.
+                let instances = match &tri.instances {
+                    Some(m) if tri.per_instance_vertices == 0 => m.len() as u32,
+                    Some(m) if m.is_empty() => 0,
+                    _ => 1,
+                };
+
+                if instances == 0 {
+                    continue;
+                }
+
                 let lines = (tri.primitive == PointingPrimitive::Lines) as usize;
                 let [x, y, w, h] = tri.viewport.map(|v| v as f32);
                 pass.set_pipeline(&self.pipelines[lines][pass_index]);
                 pass.set_bind_group(0, &self.group, &[(k as u64 * UNIFORM_STRIDE) as u32]);
                 pass.set_viewport(x, y, w, h, 0.0, 1.0);
-                pass.draw(range.clone(), 0..1);
+                pass.draw(range.clone(), 0..instances);
             }
         }
 
