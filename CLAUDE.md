@@ -27,6 +27,10 @@ read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
 
 ## Agent skills
 
+### Lane reports
+
+Lane reports (with ledger effects and test counts) must be written to a durable location outside the repository, never `/tmp`. See `docs/agents/lane-reports.md`.
+
 ### Issue tracker
 
 Issues live in GitHub Issues for `Ascendance3D/X_ITE_R`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
