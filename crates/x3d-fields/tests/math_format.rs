@@ -3,18 +3,26 @@ use x3d_fields::math::*;
 
 #[test]
 fn test_vector2_format() {
-    assert_eq!(Vector2::new(1.0, 2.0).to_string(), "1 2");
-    assert_eq!(Vector2::new(-0.0, 0.5).to_string(), "0 0.5");
-    assert_eq!(Vector2::new(1e21, 1e-7).to_string(), "1e+21 1e-7");
+    assert_eq!(Vector2::new(1.0, 2.0).to_string(), "1 2"); // integers without .0
+    assert_eq!(Vector2::new(-0.0, 0.5).to_string(), "0 0.5"); // -0 -> "0", fraction
+    assert_eq!(
+        Vector2::new(-3.25, 0.1 + 0.2).to_string(),
+        "-3.25 0.30000000000000004"
+    ); // negative, 0.1+0.2
+    assert_eq!(Vector2::new(1e21, 1e-7).to_string(), "1e+21 1e-7"); // large/small exponents
     assert_eq!(
         Vector2::new(f64::NAN, f64::INFINITY).to_string(),
         "NaN Infinity"
+    );
+    assert_eq!(
+        Vector2::new(f64::NEG_INFINITY, 0.0).to_string(),
+        "-Infinity 0"
     );
 }
 
 #[test]
 fn test_vector3_format() {
-    assert_eq!(Vector3::new(1.0, 2.0, -3.14).to_string(), "1 2 -3.14");
+    assert_eq!(Vector3::new(1.0, 2.0, -3.5).to_string(), "1 2 -3.5");
     assert_eq!(Vector3::new(-0.0, 0.5, 1e25).to_string(), "0 0.5 1e+25");
 }
 
@@ -47,14 +55,19 @@ fn test_quaternion_format() {
 
 #[test]
 fn test_rotation4_format() {
-    let r = Rotation4::new(0.0, 1.0, 0.0, 3.14);
-    assert_eq!(r.to_string(), "0 1 0 3.14");
+    let r = Rotation4::new(0.0, 1.0, 0.0, 3.5);
+    assert_eq!(r.to_string(), "0 1 0 3.5");
 
     // test tainted
     let mut rt = Rotation4::new(0.0, 2.0, 0.0, std::f64::consts::PI);
     rt.set_quaternion(&Quaternion::new(0.0, 1.0, 0.0, 0.0));
-    // untainted should print the quaternion's axis/angle
+
+    // store original for comparison
+    let r_clone = rt;
+
+    // untainted should print the quaternion's axis/angle without modifying the state
     assert_eq!(rt.to_string(), "0 1 0 3.141592653589793");
+    assert_eq!(rt, r_clone); // ensure to_string on a tainted rotation doesn't modify the struct
 }
 
 #[test]
