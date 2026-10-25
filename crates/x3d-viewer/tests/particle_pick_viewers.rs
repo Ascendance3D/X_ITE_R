@@ -122,7 +122,7 @@ const CENTER: (f64, f64) = (W as f64 / 2.0 + 0.5, H as f64 / 2.0 + 0.5);
 #[test]
 fn particle_hits_stay_per_viewer() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let (a, b) = (world(&dir("a"), 0.0, false), world(&dir("b"), 1.0, true));
@@ -175,7 +175,7 @@ fn particle_hits_stay_per_viewer() {
 #[test]
 fn particle_hits_follow_state_reload_and_unload() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let (a, b) = (
@@ -242,7 +242,7 @@ fn particle_hits_follow_state_reload_and_unload() {
 #[test]
 fn touch_sensor_over_particles() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let a = world(&dir("t"), 0.0, false);

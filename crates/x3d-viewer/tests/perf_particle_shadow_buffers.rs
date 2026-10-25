@@ -124,7 +124,7 @@ fn percentile(v: &[f64], p: usize) -> f64 {
 #[ignore]
 fn wide_line_particle_shadow_buffers() {
     if let Err(e) = x3d_render::gpu::Gpu::new() {
-        return eprintln!("skipped: no GPU ({e})");
+        return x3d_evidence::no_gpu(format_args!("skipped: no GPU ({e})"));
     }
     let dir = std::env::temp_dir().join(format!("perf-particle-shadow-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
@@ -206,7 +206,7 @@ fn wide_line_particle_shadow_buffers() {
 fn wide_line_particle_shadows_reuse_vertex_buffers() {
     let mut gpu = match x3d_render::gpu::Gpu::new() {
         Ok(g) => g,
-        Err(e) => return eprintln!("skipped: no GPU ({e})"),
+        Err(e) => return x3d_evidence::no_gpu(format_args!("skipped: no GPU ({e})")),
     };
     let dir = std::env::temp_dir().join(format!("reuse-particle-shadow-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();

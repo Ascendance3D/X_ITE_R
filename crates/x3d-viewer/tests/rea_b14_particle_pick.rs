@@ -228,7 +228,7 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 #[test]
 fn rea_b14_particle_pick_matches_x_ite() {
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
-        return eprintln!("no adapter: the pointing pass needs a GPU, skipped");
+        return x3d_evidence::no_gpu("no adapter: the pointing pass needs a GPU, skipped");
     }
 
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

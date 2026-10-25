@@ -350,6 +350,9 @@ fn rea_b18_particle_line_cases_match_x_ite() {
         .unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = common::gpu::renderer_available();
+    if !gpu {
+        x3d_evidence::no_gpu("image comparisons skipped");
+    }
     let mut names: Vec<String> =
         std::fs::read_dir(root.join("oracle/synthetic-rea-b18-particle-lines"))
             .unwrap()

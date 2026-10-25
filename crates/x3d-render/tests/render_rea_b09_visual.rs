@@ -20,7 +20,7 @@ const KNOWN_GAPS: &[(&str, &str)] = &[];
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {
     let Ok(mut g) = Gpu::new() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../oracle")

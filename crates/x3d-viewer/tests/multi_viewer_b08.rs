@@ -345,7 +345,7 @@ fn setup() -> Option<Rig> {
     match device() {
         Some((d, q)) => Some(Rig::new(d, q)),
         None => {
-            eprintln!("no adapter, skipped");
+            x3d_evidence::no_gpu("no adapter, skipped");
             None
         }
     }
@@ -356,7 +356,7 @@ fn setup() -> Option<Rig> {
 /// Two scripted worlds with global JavaScript state, interleaved frame by frame, equal each viewer alone.
 fn scripts_interleaved(samples: u32) {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -416,7 +416,7 @@ fn scripts_two_viewers_interleaved_msaa4() {
 /// in a third one, interleaved. Draws are constant, see `constant_draws`.
 fn physics_interleaved(samples: u32) {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -491,7 +491,7 @@ fn particles_and_physics_three_viewers_msaa4() {
 #[test]
 fn independent_reload() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -541,7 +541,7 @@ fn independent_reload() {
 #[test]
 fn independent_drop() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -592,7 +592,7 @@ fn independent_drop() {
 #[test]
 fn unload_prints_stay_per_viewer() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -626,7 +626,7 @@ fn unload_prints_stay_per_viewer() {
 #[test]
 fn rendering_options_stay_per_viewer() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -700,7 +700,7 @@ fn rendering_options_stay_per_viewer() {
 #[test]
 fn resources_released_per_viewer() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -795,7 +795,7 @@ fn resources_released_per_viewer() {
 #[test]
 fn script_hosts_released_per_viewer() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -858,7 +858,7 @@ fn script_hosts_released_per_viewer() {
 #[test]
 fn random_stream_is_shared_on_the_thread() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -1028,7 +1028,7 @@ fn off(a: &[u8], b: &[u8]) -> f64 {
 /// both against the same worlds alone. At most 0.5% of the pixels more than 8 levels off.
 fn oracle_pair(samples: u32, pair: [&'static str; 2]) {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -1120,7 +1120,7 @@ fn particle_state(v: &mut EmbeddedViewer) -> Vec<(usize, Vec<u32>)> {
 #[test]
 fn particle_state_two_viewers_equal_alone() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);
@@ -1183,7 +1183,7 @@ fn particle_state_two_viewers_equal_alone() {
 #[test]
 fn geometry_provider_is_one_stateless_function() {
     let Some((d, q)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let rig = Rig::new(d, q);

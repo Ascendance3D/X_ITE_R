@@ -126,7 +126,7 @@ fn gpu() -> Option<PointingGpu> {
     match PointingGpu::new_headless() {
         Ok(g) => Some(g),
         Err(e) => {
-            eprintln!("no pointing GPU ({e})");
+            x3d_evidence::no_gpu(format_args!("no pointing GPU ({e})"));
             None
         }
     }

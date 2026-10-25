@@ -650,8 +650,8 @@ fn check_all(cpu: bool, gaps: Gaps, threads: usize, select: fn(&str) -> bool) {
 #[test]
 fn rea_b21_wide_lines_match_x_ite() {
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
-        return eprintln!(
-            "no adapter: the pointing, collision and shadow passes need a GPU, skipped"
+        return x3d_evidence::no_gpu(
+            "no adapter: the pointing, collision and shadow passes need a GPU, skipped",
         );
     }
 

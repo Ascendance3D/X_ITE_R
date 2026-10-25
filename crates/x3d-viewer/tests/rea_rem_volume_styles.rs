@@ -128,7 +128,7 @@ const STYLES: [&str; 8] = [
 #[test]
 fn rea_rem_volume_styles_assign_update_clear_and_release() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));

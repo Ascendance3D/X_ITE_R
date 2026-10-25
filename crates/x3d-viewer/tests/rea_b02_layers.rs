@@ -91,7 +91,7 @@ fn worlds() -> Vec<(PathBuf, usize)> {
 #[test]
 fn rea_b02_layers_survive_reload_and_are_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));

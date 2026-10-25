@@ -42,7 +42,7 @@ fn renderer(g: &Gpu, prepared: Option<u32>, samples: u32) -> Renderer {
 #[test]
 fn a_prepared_pipeline_draws_the_same_picture() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let (dir, file) = world("same");
 
@@ -78,7 +78,7 @@ fn a_prepared_pipeline_draws_the_same_picture() {
 #[test]
 fn a_prepared_pipeline_that_no_longer_fits_is_not_used() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let (dir, file) = world("unfit");
 

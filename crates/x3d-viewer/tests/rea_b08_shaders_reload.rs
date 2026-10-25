@@ -97,7 +97,7 @@ fn shot(v: &mut EmbeddedViewer, device: &wgpu::Device, queue: &wgpu::Queue, now:
 #[test]
 fn rea_b08_shaders_survive_reload_and_are_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
@@ -216,7 +216,7 @@ fn settle(
 #[test]
 fn rea_b08_shader_removal_from_live_group_releases_program() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
@@ -290,7 +290,7 @@ fn rea_b08_shader_removal_from_live_group_releases_program() {
 #[test]
 fn rea_b08_script_created_shader_draws_and_is_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
