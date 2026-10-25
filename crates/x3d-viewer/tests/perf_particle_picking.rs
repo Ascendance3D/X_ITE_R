@@ -154,7 +154,7 @@ fn cases() -> Vec<(String, &'static str, usize)> {
 #[ignore]
 fn particle_pick_latency() {
     let Ok(gpu) = x3d_render::gpu::Gpu::new() else {
-        return eprintln!("skipped: no GPU");
+        return x3d_evidence::no_gpu("skipped: no GPU");
     };
     let dir = std::env::temp_dir().join(format!("perf-particle-pick-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
@@ -227,7 +227,7 @@ fn particle_pick_latency() {
 #[test]
 fn gpu_picking_does_not_scale_with_the_particle_count() {
     let Ok(gpu) = x3d_render::gpu::Gpu::new() else {
-        return eprintln!("skipped: no GPU");
+        return x3d_evidence::no_gpu("skipped: no GPU");
     };
     let dir = std::env::temp_dir().join(format!("scale-particle-pick-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
@@ -322,7 +322,7 @@ fn gpu_picking_does_not_scale_with_the_particle_count() {
 #[test]
 fn line_picking_is_one_draw_but_its_vertices_still_grow() {
     let Ok(gpu) = x3d_render::gpu::Gpu::new() else {
-        return eprintln!("skipped: no GPU");
+        return x3d_evidence::no_gpu("skipped: no GPU");
     };
     let dir = std::env::temp_dir().join(format!("scale-line-pick-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();

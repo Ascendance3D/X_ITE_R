@@ -5,17 +5,11 @@ use serde_json::Value;
 use x3d_text::fonts::{default_font_file, select_default_font};
 use x3d_text::{Font, FontStyleParams, PrimitiveQuality, TextCompression, TextParams, layout};
 
-/// The verified answer key (oracle/answer-keys.tsv); None when it is absent. A key that differs
-/// from the manifest fails the test.
+/// The verified answer key (oracle/answer-keys.tsv), or None after a permitted named skip
+/// (x3d_evidence::require_key). An absent key fails in strict mode; a differing key always fails.
+#[track_caller]
 fn oracle() -> Option<Value> {
-    let path = match x3d_evidence::resolve("x_ite-text.json") {
-        Ok(p) => p,
-        Err(e @ x3d_evidence::KeyError::Absent { .. }) => {
-            eprintln!("{e}");
-            return None;
-        }
-        Err(e) => panic!("{e}"),
-    };
+    let path = x3d_evidence::require_key("x_ite-text.json")?;
     let data = std::fs::read(path).unwrap();
 
     Some(serde_json::from_slice(&data).unwrap())
@@ -167,7 +161,6 @@ fn load_font(name: &str) -> Font {
 #[test]
 fn font_metrics_kerning_and_glyphs() {
     let Some(o) = oracle() else {
-        eprintln!("oracle/x_ite-text.json missing; run node oracle/x_ite-text.mjs");
         return;
     };
     let fonts = o["fonts"].as_object().unwrap();
@@ -286,7 +279,6 @@ fn font_metrics_kerning_and_glyphs() {
 #[test]
 fn text_layouts() {
     let Some(o) = oracle() else {
-        eprintln!("oracle/x_ite-text.json missing; run node oracle/x_ite-text.mjs");
         return;
     };
     let mut checked = 0;

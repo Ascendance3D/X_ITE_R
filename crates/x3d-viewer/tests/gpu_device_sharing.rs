@@ -91,7 +91,7 @@ fn depth(v: &mut EmbeddedViewer) -> Option<Rc<RefCell<DepthGpu>>> {
 fn picks_and_collision_use_the_renderer_device() {
     spawn_big_stack(|| {
         let Some((d, q)) = device() else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("device");
@@ -142,7 +142,7 @@ fn picks_and_collision_use_the_renderer_device() {
 fn reload_and_unload_hand_the_buffers_back() {
     spawn_big_stack(|| {
         let Some((d, q)) = device() else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("reload");
@@ -182,7 +182,7 @@ fn reload_and_unload_hand_the_buffers_back() {
 fn viewers_on_one_device_keep_their_own_buffers() {
     spawn_big_stack(|| {
         let Some((d, q)) = device() else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("viewers");
@@ -219,7 +219,7 @@ fn viewers_on_one_device_keep_their_own_buffers() {
 fn buffers_of_two_devices_are_refused() {
     spawn_big_stack(|| {
         let (Some((d1, q1)), Some((d2, q2))) = (device(), device()) else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("two-devices");
@@ -268,7 +268,7 @@ fn buffers_of_two_devices_are_refused() {
 fn a_lost_device_falls_back_to_the_cpu() {
     spawn_big_stack(|| {
         let Some((d, q)) = device() else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("lost");
@@ -331,7 +331,7 @@ fn a_lost_device_falls_back_to_the_cpu() {
 fn gpu_picking_comes_back_after_a_disabled_reload() {
     spawn_big_stack(|| {
         let Some((d, q)) = device() else {
-            eprintln!("skipped: no GPU adapter");
+            x3d_evidence::no_gpu("skipped: no GPU adapter");
             return;
         };
         let p = world("off-on");

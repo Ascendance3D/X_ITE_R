@@ -9,6 +9,18 @@
 //! A key is accepted only when its kind, file count, byte count and sha256 equal the manifest row.
 //! For a directory the sha256 is the tree digest: sha256 of the `sha256sum` lines of every file,
 //! relative paths, sorted bytewise. The resolver only reads; it never writes a key.
+//!
+//! # Evidence policy (issue #66)
+//!
+//! A test that cannot find its evidence must fail or skip by name; it never passes in silence.
+//! [`require_key`], [`key_or_tracked`], [`no_gpu`] and [`tool_absent`] own that decision:
+//!
+//! - `X3D_EVIDENCE=strict` (the default): every skip fails the test.
+//! - `X3D_EVIDENCE=ci`: a skip passes only when `X3D_EVIDENCE_ALLOW` (comma list) names its reason
+//!   (`no-gpu-adapter`, `msaa-unsupported`, `tool-absent`) or, for an absent key, the key name.
+//!   Each permitted skip appends one line to `X3D_EVIDENCE_LOG` (default `target/evidence-skips.tsv`):
+//!   test, reason, key, caller, detail. Cargo hides the stderr of a passing test, so the log is the record.
+//! - A key that differs from its manifest row and an absent tracked fixture always fail.
 
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
@@ -312,6 +324,148 @@ pub fn resolve(name: &str) -> Result<PathBuf, KeyError> {
     Ok(p)
 }
 
+/// How a run treats missing evidence.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Mode {
+    Strict,
+    Ci,
+}
+
+/// The policy from `X3D_EVIDENCE` and `X3D_EVIDENCE_ALLOW`.
+#[derive(Clone, Debug)]
+pub struct Policy {
+    pub mode: Mode,
+    pub allow: Vec<String>,
+    pub log: PathBuf,
+}
+
+impl Policy {
+    pub fn from_env() -> Policy {
+        let mode = match std::env::var("X3D_EVIDENCE").as_deref() {
+            Err(_) | Ok("") | Ok("strict") => Mode::Strict,
+            Ok("ci") => Mode::Ci,
+            Ok(v) => panic!("X3D_EVIDENCE={v:?}: use strict or ci"),
+        };
+        let allow = std::env::var("X3D_EVIDENCE_ALLOW")
+            .unwrap_or_default()
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect();
+        let log = std::env::var_os("X3D_EVIDENCE_LOG")
+            .filter(|v| !v.is_empty())
+            .map(PathBuf::from)
+            .unwrap_or_else(|| workspace_root().join("target/evidence-skips.tsv"));
+
+        Policy { mode, allow, log }
+    }
+
+    /// Whether a ci run may skip for `reason` (and `key`, for `key-absent`). A mismatch never may.
+    pub fn allows(&self, reason: &str, key: Option<&str>) -> bool {
+        let named = |s: &str| self.allow.iter().any(|a| a == s);
+
+        self.mode == Mode::Ci
+            && match (reason, key) {
+                ("key-mismatch", _) => false,
+                ("key-absent", Some(k)) => named(k),
+                ("key-absent", None) => false,
+                (r, _) => named(r),
+            }
+    }
+}
+
+fn clean(s: &str) -> String {
+    s.replace(['\t', '\n', '\r'], " ")
+}
+
+/// Fails the test, or (ci mode, allowed) records a named skip and returns. The caller then returns.
+#[track_caller]
+pub fn skip(reason: &str, key: Option<&str>, detail: impl fmt::Display) {
+    let policy = Policy::from_env();
+    let at = std::panic::Location::caller();
+    let thread = std::thread::current();
+    let test = thread.name().unwrap_or("-");
+    let what = match key {
+        Some(k) => format!("{reason} ({k})"),
+        None => reason.to_string(),
+    };
+
+    if !policy.allows(reason, key) {
+        let how = match policy.mode {
+            Mode::Strict => "X3D_EVIDENCE is strict".to_string(),
+            Mode::Ci => format!("not in X3D_EVIDENCE_ALLOW={:?}", policy.allow.join(",")),
+        };
+
+        panic!("evidence {what}: {detail} [{how}]");
+    }
+
+    let line = format!(
+        "{}\t{reason}\t{}\t{}:{}\t{}\n",
+        clean(test),
+        key.unwrap_or("-"),
+        at.file(),
+        at.line(),
+        clean(&detail.to_string())
+    );
+
+    if let Some(dir) = policy.log.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+
+    let written = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&policy.log)
+        .and_then(|mut f| std::io::Write::write_all(&mut f, line.as_bytes()));
+
+    if let Err(e) = written {
+        panic!(
+            "evidence {what}: cannot write {}: {e}",
+            policy.log.display()
+        );
+    }
+
+    eprintln!("evidence skip {what}: {detail}");
+}
+
+/// The verified path of a gitignored key, or `None` after a permitted skip. An absent key fails in
+/// strict mode; a mismatched key always fails.
+#[track_caller]
+pub fn require_key(name: &str) -> Option<PathBuf> {
+    match resolve(name) {
+        Ok(p) => Some(p),
+        Err(e @ KeyError::Absent { .. }) => {
+            skip("key-absent", Some(name), e);
+            None
+        }
+        Err(e) => panic!("evidence: {e}"),
+    }
+}
+
+/// [`require_key`] for a name in `oracle/answer-keys.tsv`; otherwise the tracked file `tracked`,
+/// which must exist (an absent tracked fixture is a broken checkout).
+#[track_caller]
+pub fn key_or_tracked(name: &str, tracked: &Path) -> Option<PathBuf> {
+    match manifest(&workspace_root()) {
+        Ok(rows) if rows.contains_key(name) => require_key(name),
+        Ok(_) if tracked.exists() => Some(tracked.to_path_buf()),
+        Ok(_) => panic!("evidence: tracked fixture {} is absent", tracked.display()),
+        Err(e) => panic!("evidence: {e}"),
+    }
+}
+
+/// No wgpu adapter: fails in strict mode, or records a `no-gpu-adapter` skip.
+#[track_caller]
+pub fn no_gpu(detail: impl fmt::Display) {
+    skip("no-gpu-adapter", None, detail)
+}
+
+/// A required program is absent: fails in strict mode, or records a `tool-absent` skip.
+#[track_caller]
+pub fn tool_absent(detail: impl fmt::Display) {
+    skip("tool-absent", None, detail)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -350,6 +504,73 @@ mod tests {
         std::fs::write(dir.join("k.json"), "abc").unwrap();
         std::fs::write(dir.join("d/a"), "1").unwrap();
         std::fs::write(dir.join("d/b/c"), "2").unwrap();
+    }
+
+    fn policy(mode: Mode, allow: &str) -> Policy {
+        Policy {
+            mode,
+            allow: allow.split(',').map(str::to_string).collect(),
+            log: PathBuf::from("/dev/null"),
+        }
+    }
+
+    #[test]
+    fn strict_allows_no_skip() {
+        let p = policy(Mode::Strict, "no-gpu-adapter,x_ite-text.json");
+
+        assert!(!p.allows("no-gpu-adapter", None));
+        assert!(!p.allows("key-absent", Some("x_ite-text.json")));
+    }
+
+    #[test]
+    fn ci_allows_only_named_skips() {
+        let p = policy(Mode::Ci, "no-gpu-adapter,x_ite-text.json,key-absent");
+
+        assert!(p.allows("no-gpu-adapter", None));
+        assert!(!p.allows("tool-absent", None));
+        assert!(p.allows("key-absent", Some("x_ite-text.json")));
+        // A bare "key-absent" entry does not allow every key; each key is named.
+        assert!(!p.allows("key-absent", Some("items-baseline.json")));
+        assert!(!p.allows("key-mismatch", Some("x_ite-text.json")));
+    }
+
+    /// The old silent forms (`eprintln!` and return) must not come back in a workspace test.
+    #[test]
+    fn no_silent_skip_remains_in_workspace_tests() {
+        let crates = workspace_root().join("crates");
+        let pattern = [
+            "eprintln!(\"no adapter",
+            "eprintln!(\"skipped: no GPU",
+            "eprintln!(\"no pointing GPU",
+            "eprintln!(\"xvfb-run not found",
+            "eprintln!(\"no GL device",
+            "x_ite-text.json missing",
+        ];
+        let mut found = vec![];
+        let mut files = vec![];
+
+        for c in std::fs::read_dir(&crates).unwrap() {
+            let tests = c.unwrap().path().join("tests");
+
+            if tests.is_dir() {
+                walk(&tests, Path::new(""), &mut files).unwrap();
+                files.iter_mut().for_each(|f| *f = tests.join(&*f));
+                for f in files
+                    .drain(..)
+                    .filter(|f| f.extension().is_some_and(|e| e == "rs"))
+                {
+                    let text = std::fs::read_to_string(&f).unwrap();
+
+                    for (n, line) in text.lines().enumerate() {
+                        if pattern.iter().any(|p| line.contains(p)) {
+                            found.push(format!("{}:{}", f.display(), n + 1));
+                        }
+                    }
+                }
+            }
+        }
+
+        assert!(found.is_empty(), "silent skips: {found:#?}");
     }
 
     #[test]

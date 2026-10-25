@@ -97,7 +97,7 @@ fn differ(a: &[u8], b: &[u8]) -> usize {
 #[test]
 fn rea_b08_vs_survive_reload_and_are_released() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
@@ -194,7 +194,7 @@ fn settle(
 #[test]
 fn rea_b08_vs_extension_cleared_and_shape_removed_release_the_buffer() {
     let Some((device, queue)) = device() else {
-        return eprintln!("no adapter, skipped");
+        return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
         let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));

@@ -388,7 +388,7 @@ fn check_all(cpu: bool, gaps: Gaps, threads: usize) {
 #[test]
 fn rea_b15_particle_collision_matches_x_ite() {
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
-        return eprintln!("no adapter: the collision depth buffer needs a GPU, skipped");
+        return x3d_evidence::no_gpu("no adapter: the collision depth buffer needs a GPU, skipped");
     }
 
     // Four drives at a time, like rea_b14_particle_pick (each holds a GPU device).

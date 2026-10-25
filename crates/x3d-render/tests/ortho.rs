@@ -30,7 +30,7 @@ fn ortho_projection_matches_camera_bounds() {
 #[test]
 fn ortho_viewpoint_renders_without_unsupported_warning() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let root = oracle();
     let file = root.join("x10-scripts/plane-ortho.wrl");
@@ -44,7 +44,7 @@ fn ortho_viewpoint_renders_without_unsupported_warning() {
 #[test]
 fn ortho_field_of_view_reads_sfvec4f_and_mffloat() {
     let Ok(mut g) = gpu() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let root = oracle();
     let dir = std::env::temp_dir().join(format!("x3d-render-ortho-fov-{}", std::process::id()));

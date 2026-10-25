@@ -49,7 +49,7 @@ fn over(a: &[u8], b: &[u8]) -> usize {
 fn standard_and_log_match_x_ite() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
     let Ok(mut g) = Gpu::new() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
 
     for (mode, baseline) in [
@@ -72,7 +72,7 @@ fn standard_and_log_match_x_ite() {
 fn log_shows_what_standard_cannot() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
     let Ok(mut g) = Gpu::new() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let px = |rgba: &[u8], x: usize, y: usize| {
         [
@@ -116,7 +116,7 @@ fn wrong_side(rgba: &[u8]) -> usize {
 fn reversed_resolves_near_coplanar_surfaces() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
     let Ok(mut g) = Gpu::new() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
     let std = wrong_side(&render(
         &mut g,
@@ -142,7 +142,7 @@ fn reversed_resolves_near_coplanar_surfaces() {
 fn reversed_leaves_other_scenes_alone() {
     let _serial = SERIAL.lock().unwrap_or_else(|e| e.into_inner());
     let Ok(mut g) = Gpu::new() else {
-        return eprintln!("no adapter");
+        return x3d_evidence::no_gpu("no adapter");
     };
 
     for name in ["edge-quad", "edge-sliver", "edge-sphere", "edge-fine-lines"] {

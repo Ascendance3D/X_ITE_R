@@ -51,6 +51,7 @@ name = "embed_minimal"
 required-features = ["embed"]
 
 [dev-dependencies]
+x3d-evidence = { path = "../x3d-evidence" }
 wgpu = "30"
 pollster = "1"
 

@@ -19,12 +19,10 @@ fn run(corpus: &str, expect: Expect) {
         .unwrap_or(8)
         .max(8);
     let baseline = format!("{corpus}-baseline.json");
-    // A gitignored key (oracle/answer-keys.tsv) is found and verified by x3d-evidence; a tracked one is
-    // read in place. An absent key fails, as before, and never falls back to an unverified file.
-    let baseline = match x3d_evidence::resolve(&baseline) {
-        Ok(p) => p,
-        Err(x3d_evidence::KeyError::NotInManifest(_)) => root.join(&baseline),
-        Err(e) => panic!("{e}"),
+    // A gitignored key (oracle/answer-keys.tsv) is found and verified by x3d-evidence, or skipped by
+    // name; a tracked one must exist.
+    let Some(baseline) = x3d_evidence::key_or_tracked(&baseline, &root.join(&baseline)) else {
+        return;
     };
     let results = compare_corpus(&baseline, &root.join(corpus_dir(corpus)), true, threads).unwrap();
     let known = std::fs::read_to_string(
