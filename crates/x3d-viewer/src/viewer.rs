@@ -2800,11 +2800,16 @@ impl Viewer3d {
             self.swap_to(key);
             let cam = self.pick_camera();
             let scan = std::mem::take(&mut self.scan_display);
-            let shapes = scan.pointing_shapes();
+            // The ParticleSystems go in as runs: the pointing pass draws each at once, and only the CPU ray cast
+            // expands them into a shape per particle (crate::pointer::PointingShapes).
+            let shapes = crate::pointer::PointingShapes {
+                shapes: &scan.shapes,
+                particles: &scan.particle_pointing,
+            };
             let mut cache = std::mem::take(&mut self.geom_cache);
             let rt = &self.rt;
             let mut h = pick(
-                &shapes,
+                shapes,
                 &mut |s| geom_of(rt, &mut cache, s),
                 &cam,
                 x,
@@ -2813,7 +2818,6 @@ impl Viewer3d {
                 self.pointing_gpu.as_mut(),
             );
             self.geom_cache = cache;
-            drop(shapes);
             self.scan_display = scan;
             h.layer = key;
 

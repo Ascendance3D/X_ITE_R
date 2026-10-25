@@ -8,7 +8,7 @@
 //! visible shapes instead; the hit values are the same (up to float precision).
 
 use crate::geom::{Cylinder3, Line2, Line3, Plane3, Sphere3, Triangle3, ViewVolume, interval};
-use crate::walk::{NodeRef, SensorRef, ShapeInst, rt_at_mut};
+use crate::walk::{NodeRef, ParticleRun, SensorRef, ShapeInst, rt_at_mut};
 use std::rc::Rc;
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
 use x3d_fields::{FieldValue, NodeId};
@@ -184,12 +184,167 @@ enum Prims {
     Lines(Vec<usize>),
 }
 
+/// A shape the CPU ray cast found primitives near the pointer in; the GPU path keeps no such record.
 struct Candidate {
     shape: usize,
     geometry: Rc<Geometry>,
-    prims: Prims,
-    /// The CPU's own hit (without a GPU): view-space distance, point, normal, texCoord.
+    /// The CPU's own hit: view-space distance, point, normal, texCoord.
     cpu: Option<(f64, Vector3, Vector3, Vector4)>,
+}
+
+/// The pointing objects of a layer (X3DRenderObject.pointingShapes): the shapes in traversal order and the
+/// ParticleSystems among them, each as one run with its particles' instance matrices.
+///
+/// Nothing here holds a record per particle. The pointing pass draws a system at once
+/// ([`PointingTriangle::instances`]), so the normal GPU path never builds one; the CPU ray cast needs a shape of its
+/// own per particle and expands the runs itself ([`PointingShapes::expanded`]) when it runs.
+#[derive(Clone, Copy)]
+pub struct PointingShapes<'a> {
+    pub shapes: &'a [ShapeInst],
+    pub particles: &'a [ParticleRun],
+}
+
+/// One pointing object of the pass: a shape, or a ParticleSystem with every drawn particle of one run.
+struct Group<'a> {
+    /// The shape, or the system's template (`instance` None, `model_view` the system's).
+    shape: &'a ShapeInst,
+    run: Option<&'a ParticleRun>,
+}
+
+impl<'a> PointingShapes<'a> {
+    /// The pointing objects in traversal order, a ParticleSystem as one group: the order of
+    /// [`crate::walk::Scan::pointing_shapes`] with each system's particles collapsed into their run.
+    fn groups(&self) -> Vec<Group<'a>> {
+        let mut out = Vec::with_capacity(self.shapes.len() + self.particles.len());
+        let mut next = 0;
+
+        for r in self.particles {
+            out.extend(self.shapes[next..r.at].iter().map(|s| Group {
+                shape: s,
+                run: None,
+            }));
+            out.push(Group {
+                shape: &r.template,
+                run: Some(r),
+            });
+            next = r.at;
+        }
+
+        out.extend(self.shapes[next..].iter().map(|s| Group {
+            shape: s,
+            run: None,
+        }));
+        out
+    }
+
+    /// The pointing objects with a shape record per particle (X3DRenderObject.pointingShapes as the ray cast needs
+    /// it): the expansion the GPU path avoids.
+    fn expanded(&self) -> std::borrow::Cow<'a, [ShapeInst]> {
+        if self.particles.iter().all(|r| r.len() == 0) {
+            return std::borrow::Cow::Borrowed(self.shapes);
+        }
+
+        let len = self.shapes.len() + self.particles.iter().map(ParticleRun::len).sum::<usize>();
+        let mut out = Vec::with_capacity(len);
+        let mut next = 0;
+
+        for r in self.particles {
+            out.extend_from_slice(&self.shapes[next..r.at]);
+            out.extend(r.entries());
+            next = r.at;
+        }
+
+        out.extend_from_slice(&self.shapes[next..]);
+        std::borrow::Cow::Owned(out)
+    }
+}
+
+/// A run of x3d_Ids one draw of the pointing pass owns: `count` is 1 for a shape and the particle count for a
+/// ParticleSystem, whose particle k carries `base + k`.
+struct Block<'a> {
+    group: Group<'a>,
+    geometry: Rc<Geometry>,
+    base: f32,
+    count: usize,
+}
+
+/// The pick the pointing buffer decides: the winning shape (a particle's record built here and only here), its
+/// geometry and the sample. `Ok(None)` is a miss; `Err(())` means no answer came back, and the caller falls back to
+/// the CPU ray cast.
+#[allow(clippy::too_many_arguments)]
+fn gpu_pick(
+    gpu: &mut PointingGpu,
+    shapes: PointingShapes,
+    geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    px: f64,
+    py: f64,
+    pointing: bool,
+) -> Result<
+    Option<(
+        ShapeInst,
+        Rc<Geometry>,
+        x3d_render::pointing_gpu::PointingSample,
+    )>,
+    (),
+> {
+    let groups = shapes.groups();
+    let sray = hit_ray(cam, px, py);
+    let mut draws: Vec<PointingTriangle> = vec![];
+    let mut blocks: Vec<Block> = vec![];
+    // x3d_Id 0 is "no hit" in the cleared buffer (PointingBuffer.getHit), so the ids start at 1.
+    let mut next = 1.0f32;
+
+    for group in groups {
+        let s = group.shape;
+        let Some(g) = pointing_geometry(s, geometry, cam, x, y, pointing) else {
+            continue;
+        };
+
+        let (draw, count) = match group.run {
+            // One instanced draw of the system: no ray cast, no record per particle.
+            Some(run) => match particle_draw(s, &g, run, cam, x, y, next) {
+                Some(draw) => (draw, run.len()),
+                None => continue,
+            },
+            // A shape sends only the primitives that can cover the pixel; its CPU hit is not computed.
+            None => match shape_candidate(s, &g, cam, px, py, &sray, false) {
+                Some((prims, _)) => (pointing_draw(s, &g, &prims, cam, x, y, next), 1),
+                None => continue,
+            },
+        };
+
+        next += count as f32;
+        draws.push(draw);
+        blocks.push(Block {
+            group,
+            geometry: g,
+            base: next - count as f32,
+            count,
+        });
+    }
+
+    let Some(sample) = gpu.sample_all(&draws).map_err(|_| ())? else {
+        return Ok(None);
+    };
+    // The id names the draw and, inside a ParticleSystem's block, the particle.
+    let Some(block) = blocks
+        .iter()
+        .find(|b| sample.id >= b.base && sample.id < b.base + b.count as f32)
+    else {
+        // An id outside every block cannot happen: treat it as a miss rather than guess a shape.
+        debug_assert!(false, "pointing id {} is in no block", sample.id);
+        return Ok(None);
+    };
+    let k = (sample.id - block.base) as usize;
+    let shape = match block.group.run {
+        Some(run) => run.entry(k),
+        None => block.group.shape.clone(),
+    };
+
+    Ok(Some((shape, block.geometry.clone(), sample)))
 }
 
 /// gl_PointSize of the pointing shader in pixels: 2, or max (getPointSize (vertex), 2) with PointProperties (PointSize2.glsl).
@@ -258,7 +413,7 @@ fn window(
 /// the shape and gives the point, normal and texCoord. Without one, the CPU ray cast picks the nearest triangle, point
 /// (inside its gl_PointSize square) or line (within half a pixel) and its double values are kept.
 pub fn pick(
-    shapes: &[ShapeInst],
+    shapes: PointingShapes,
     geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>,
     cam: &PickCamera,
     x: f64,
@@ -272,7 +427,6 @@ pub fn pick(
     // (X3DRenderObject.pointing), i.e. they are sampled at that pixel's center. The hit ray
     // itself (setHitRay) uses the exact pointer.
     let (px, py) = (x.floor() + 0.5, y.floor() + 0.5);
-    let sray = hit_ray(cam, px, py);
     let mut hit = Hit {
         pointer: Vector2::new(x, y),
         ray: ray.copy(),
@@ -280,6 +434,128 @@ pub fn pick(
         ..Default::default()
     };
 
+    // The pointing buffer decides the pick when there is one. A ParticleSystem goes through it as a single instanced
+    // draw, so no particle gets a shape record or a ray cast, and no CPU hit is computed at all: the buffer's own
+    // float32 values are the hit.
+    if let Some(gpu) = gpu.as_deref_mut() {
+        match gpu_pick(gpu, shapes, geometry, cam, x, y, px, py, pointing) {
+            // A miss: the pass wrote no fragment, so nothing is under the pointer.
+            Ok(None) => return hit,
+            Ok(Some((shape, g, sample))) => {
+                let (p, normal, tc) = gpu_hit(&shape, &g, &sample);
+
+                fill_hit(&mut hit, &shape, &g, p, normal, tc);
+                return hit;
+            }
+            // No answer came back (the device is lost, or that one readback failed). Not a miss: the ray cast below
+            // decides this pick.
+            Err(()) => {}
+        }
+    }
+
+    // The CPU ray cast: it needs a shape record per particle, so the runs are expanded here and only here.
+    let shapes = shapes.expanded();
+    let candidates = cpu_candidates(&shapes, geometry, cam, x, y, px, py, pointing);
+    let winner = candidates
+        .iter()
+        .enumerate()
+        .filter_map(|(k, c)| c.cpu.map(|(dist, p, n, tc)| (k, dist, p, n, tc)))
+        .fold(
+            None,
+            |best: Option<(usize, f64, Vector3, Vector3, Vector4)>, h| {
+                if best.as_ref().is_none_or(|b| h.1 <= b.1) {
+                    Some(h)
+                } else {
+                    best
+                }
+            },
+        );
+    let Some((k, _, p, normal, tc)) = winner else {
+        return hit;
+    };
+    let c = &candidates[k];
+    fill_hit(&mut hit, &shapes[c.shape], &c.geometry, p, normal, tc);
+    hit
+}
+
+/// The candidates of every shape, with the CPU ray cast's own hit for each: the fallback path, where a
+/// ParticleSystem's particles are shapes of their own.
+fn cpu_candidates(
+    shapes: &[ShapeInst],
+    geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    px: f64,
+    py: f64,
+    pointing: bool,
+) -> Vec<Candidate> {
+    let sray = hit_ray(cam, px, py);
+    let mut candidates: Vec<Candidate> = vec![];
+
+    for (i, s) in shapes.iter().enumerate() {
+        let Some(g) = pointing_geometry(s, geometry, cam, x, y, pointing) else {
+            continue;
+        };
+        let Some((_, cpu)) = shape_candidate(s, &g, cam, px, py, &sray, true) else {
+            continue;
+        };
+
+        candidates.push(Candidate {
+            shape: i,
+            geometry: g,
+            cpu,
+        });
+    }
+
+    candidates
+}
+
+/// The geometry the pointing pass draws for `s`, skinned like the pointing shader does, or `None` when the shape is
+/// not drawn into the buffer at all.
+fn pointing_geometry(
+    s: &ShapeInst,
+    geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    pointing: bool,
+) -> Option<Rc<Geometry>> {
+    if !pointing && !x3d_render::layer::pointer_in_rectangle(&s.viewport, x, y) {
+        return None;
+    }
+
+    // addPointingShape: a ParticleSystem whose bbox is outside the view volume is not drawn into the pointing buffer
+    // (a Shape's bbox holds its geometry, so the ray tests below decide the same for it).
+    if s.particle
+        && !s.explicit_bbox.is_some_and(|b| {
+            x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)
+        })
+    {
+        return None;
+    }
+
+    let g = geometry(s)?;
+
+    // The pointing shader skins the shapes of an HAnimHumanoid or HAnimSegment.
+    Some(match &s.skin {
+        Some(skin) => Rc::new(x3d_render::hanim::skin(&g, &skin.0, &skin.1)),
+        None => g,
+    })
+}
+
+/// The primitives of `s` that can cover the pointer's pixel, and with `want_cpu` the CPU ray cast's own hit among
+/// them (view-space distance, point, normal, texCoord). `None` when none of them can. `sray` is the ray through the
+/// pixel's center in the layer's own viewport.
+fn shape_candidate(
+    s: &ShapeInst,
+    g: &Geometry,
+    cam: &PickCamera,
+    px: f64,
+    py: f64,
+    sray: &Line3,
+    want_cpu: bool,
+) -> Option<(Prims, Option<(f64, Vector3, Vector3, Vector4)>)> {
     let shape_ray = |s: &ShapeInst| {
         if s.viewport
             == [
@@ -303,30 +579,7 @@ pub fn pick(
         }
     };
 
-    let mut candidates: Vec<Candidate> = vec![];
-
-    for (i, s) in shapes.iter().enumerate() {
-        if !pointing && !x3d_render::layer::pointer_in_rectangle(&s.viewport, x, y) {
-            continue;
-        }
-
-        // addPointingShape: a ParticleSystem whose bbox is outside the view volume is not drawn into the pointing buffer
-        // (a Shape's bbox holds its geometry, so the ray tests below decide the same for it).
-        if s.particle
-            && !s.explicit_bbox.is_some_and(|b| {
-                x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)
-            })
-        {
-            continue;
-        }
-
-        let Some(g) = geometry(s) else { continue };
-        // The pointing shader skins the shapes of an HAnimHumanoid or HAnimSegment.
-        let g = match &s.skin {
-            Some(skin) => Rc::new(x3d_render::hanim::skin(&g, &skin.0, &skin.1)),
-            None => g,
-        };
-
+    {
         // ClipPlanes2.glsl clip () in the pointing shader: view-space points.
         let clipped = |p: &Vector3| x3d_render::traverse::is_clipped(&s.clip_planes, p);
         let normal_at = |j: usize| -> Vector3 {
@@ -383,7 +636,8 @@ pub fn pick(
 
                 points.push(j);
 
-                if (wx - px).abs() < half
+                if want_cpu
+                    && (wx - px).abs() < half
                     && (wy - py).abs() < half
                     && !clipped(&eye)
                     && cpu.as_ref().is_none_or(|c| -eye.z < c.0)
@@ -392,16 +646,7 @@ pub fn pick(
                 }
             }
 
-            if !points.is_empty() {
-                candidates.push(Candidate {
-                    shape: i,
-                    geometry: g,
-                    prims: Prims::Points(points),
-                    cpu,
-                });
-            }
-
-            continue;
+            return (!points.is_empty()).then_some((Prims::Points(points), cpu));
         }
 
         if g.geometry_type == 1 {
@@ -451,7 +696,8 @@ pub fn pick(
                     e0.z + (e1.z - e0.z) * t,
                 );
 
-                if distance <= width.max(1.0) / 2.0
+                if want_cpu
+                    && distance <= width.max(1.0) / 2.0
                     && !clipped(&eye)
                     && -eye.z >= cam.near
                     && -eye.z <= cam.far
@@ -466,16 +712,7 @@ pub fn pick(
                 }
             }
 
-            if !segments.is_empty() {
-                candidates.push(Candidate {
-                    shape: i,
-                    geometry: g,
-                    prims: Prims::Lines(segments),
-                    cpu,
-                });
-            }
-
-            continue;
+            return (!segments.is_empty()).then_some((Prims::Lines(segments), cpu));
         }
 
         let sray = shape_ray(s);
@@ -497,7 +734,7 @@ pub fn pick(
         hi.add(&margin);
 
         if !ray_box(&lo, &hi, &o, &d) {
-            continue;
+            return None;
         }
 
         let at = |t: f64| {
@@ -511,7 +748,11 @@ pub fn pick(
         let hits = ray_triangles(&g, &o, &d, &|t| !clipped(&at(t)));
 
         if hits.is_empty() {
-            continue;
+            return None;
+        }
+
+        if !want_cpu {
+            return Some((Prims::Triangles(hits), None));
         }
 
         // The nearest strict hit is the CPU's own (a view-space depth between the near and the far plane).
@@ -558,98 +799,50 @@ pub fn pick(
                 Some((-p.z, p, normal, tc))
             });
 
-        candidates.push(Candidate {
-            shape: i,
-            geometry: g,
-            prims: Prims::Triangles(hits),
-            cpu,
-        });
+        Some((Prims::Triangles(hits), cpu))
+    }
+}
+
+/// The hit values of a pointing-buffer sample: the point, the normal turned back into the shape's frame (touch ():
+/// `hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)` when the geometry has normals, else the
+/// Z axis) and the texCoord.
+fn gpu_hit(
+    s: &ShapeInst,
+    g: &Geometry,
+    sample: &x3d_render::pointing_gpu::PointingSample,
+) -> (Vector3, Vector3, Vector4) {
+    let p = Vector3::new(
+        sample.point[0] as f64,
+        sample.point[1] as f64,
+        sample.point[2] as f64,
+    );
+    let tc = Vector4::new(
+        sample.tex_coord[0] as f64,
+        sample.tex_coord[1] as f64,
+        sample.tex_coord[2] as f64,
+        sample.tex_coord[3] as f64,
+    );
+    let mut normal = Vector3::Z_AXIS;
+
+    if !g.normals.is_empty() {
+        let mut n = Vector3::new(
+            sample.normal[0] as f64,
+            sample.normal[1] as f64,
+            sample.normal[2] as f64,
+        );
+        let mut mv = s.shape_model_view;
+        mv.0 = mv.0.map(|v| v as f32 as f64);
+        let mut inv3 = mv.submatrix();
+        inv3.inverse();
+        inv3.mult_matrix_vec3(&mut n);
+        normal = n;
     }
 
-    // The winner: the pointing buffer's id, or the nearest CPU hit (the last on a tie, like the LEQUAL depth test).
-    let mut winner: Option<(usize, Vector3, Vector3, Vector4)> = None;
+    (p, normal, tc)
+}
 
-    // `None` without a GPU, once its device is lost, or when a readback does not arrive: the CPU ray cast decides.
-    let sampled = gpu.as_deref_mut().and_then(|gpu| {
-        let draws: Vec<PointingTriangle> = candidates
-            .iter()
-            .enumerate()
-            .map(|(k, c)| {
-                pointing_draw(
-                    &shapes[c.shape],
-                    &c.geometry,
-                    &c.prims,
-                    cam,
-                    x,
-                    y,
-                    k as f32 + 1.0,
-                )
-            })
-            .collect();
-        // `Err`: no answer came back (the device is lost, or that one readback failed). Not a miss — the CPU ray cast
-        // below decides this pick.
-        gpu.sample_all(&draws).ok()
-    });
-
-    if let Some(sample) = sampled {
-        if let Some(sample) = sample {
-            let c = &candidates[sample.id as usize - 1];
-            let s = &shapes[c.shape];
-            let p = Vector3::new(
-                sample.point[0] as f64,
-                sample.point[1] as f64,
-                sample.point[2] as f64,
-            );
-            let tc = Vector4::new(
-                sample.tex_coord[0] as f64,
-                sample.tex_coord[1] as f64,
-                sample.tex_coord[2] as f64,
-                sample.tex_coord[3] as f64,
-            );
-
-            // touch (): hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)
-            // when the geometry has normals, else the Z axis.
-            let mut normal = Vector3::Z_AXIS;
-
-            if !c.geometry.normals.is_empty() {
-                let mut n = Vector3::new(
-                    sample.normal[0] as f64,
-                    sample.normal[1] as f64,
-                    sample.normal[2] as f64,
-                );
-                let mut mv = s.shape_model_view;
-                mv.0 = mv.0.map(|v| v as f32 as f64);
-                let mut inv3 = mv.submatrix();
-                inv3.inverse();
-                inv3.mult_matrix_vec3(&mut n);
-                normal = n;
-            }
-
-            winner = Some((sample.id as usize - 1, p, normal, tc));
-        }
-    } else {
-        winner = candidates
-            .iter()
-            .enumerate()
-            .filter_map(|(k, c)| c.cpu.map(|(dist, p, n, tc)| (k, dist, p, n, tc)))
-            .fold(
-                None,
-                |best: Option<(usize, f64, Vector3, Vector3, Vector4)>, h| {
-                    if best.as_ref().is_none_or(|b| h.1 <= b.1) {
-                        Some(h)
-                    } else {
-                        best
-                    }
-                },
-            )
-            .map(|(k, _, p, n, tc)| (k, p, n, tc));
-    }
-
-    let Some((k, p, normal, tc)) = winner else {
-        return hit;
-    };
-    let (s, g) = (&shapes[candidates[k].shape], &candidates[k].geometry);
-
+/// The hit of the shape the pick found, with its sensors, Anchors and bounding box.
+fn fill_hit(hit: &mut Hit, s: &ShapeInst, g: &Geometry, p: Vector3, normal: Vector3, tc: Vector4) {
     hit.id = true;
     hit.point = p;
     hit.normal = normal;
@@ -681,8 +874,94 @@ pub fn pick(
         (None, None) => (g.min, g.max),
     });
     hit.anchors = s.anchors.clone();
+}
 
-    hit
+/// A ParticleSystem's draw in the pointing pass: every drawn particle at once under its own x3d_InstanceMatrix
+/// (ParticleSystem.displaySimple, an instanced draw), particle k with x3d_Id `id + k`. The whole geometry goes
+/// through — the rasterizer and the depth test decide which particle covers the pixel, so no particle is tested on
+/// the CPU. `None` when the system draws nothing.
+///
+/// POINT, QUAD, SPRITE and GEOMETRY particles share the one vertex range. LINE particles do not: a line is widened
+/// along its *projected* minor axis, which the instance matrix turns, so each particle brings its own six vertices
+/// ([`PointingTriangle::per_instance_vertices`]) — still one draw, but the vertex data grows with the particle count.
+fn particle_draw(
+    s: &ShapeInst,
+    g: &Geometry,
+    run: &ParticleRun,
+    cam: &PickCamera,
+    x: f64,
+    y: f64,
+    id: f32,
+) -> Option<PointingTriangle> {
+    if run.len() == 0 || g.vertex_count() == 0 {
+        return None;
+    }
+
+    let base = PointingTriangle {
+        instances: Some(run.matrices.clone()),
+        ..pointing_draw_base(s, cam, x, y, id)
+    };
+
+    // The lines of every particle in turn: their offsets (and, above MAX_LINE_WIDTH, their vertices) are the
+    // particle's own.
+    if g.geometry_type == 1 {
+        let segments = g.vertex_count() / 2;
+        let per = 6 * segments;
+        let mut draw = PointingTriangle {
+            vertices: Vec::with_capacity(per * run.len()),
+            normals: Vec::with_capacity(per * run.len()),
+            tex_coords: vec![[0.0, 0.0, 0.0, 1.0]; per * run.len()],
+            offsets: Vec::with_capacity(per * run.len()),
+            constant_tex_coord: true,
+            per_instance_vertices: per as u32,
+            ..base
+        };
+        let prims = Prims::Lines((0..segments).collect());
+        // One record, moved from particle to particle: the draw of a line reads only the two matrices, and a
+        // ShapeInst holds Vecs of sensors, clip planes and Anchors that there is no reason to clone per particle.
+        let mut one = run.entry(0);
+
+        for k in 0..run.len() {
+            let m = run.matrices[k];
+            let mut model_view = m;
+
+            model_view.mult_right(&run.template.shape_model_view);
+            one.instance = Some(m);
+            one.model_view = model_view;
+
+            let d = pointing_draw(&one, g, &prims, cam, x, y, id);
+
+            draw.primitive = d.primitive;
+            draw.vertices.extend(d.vertices);
+            draw.normals.extend(d.normals);
+            draw.offsets.extend(d.offsets);
+        }
+
+        // Above MAX_LINE_WIDTH the vertices are the transformed triangles of displayInstancedThick, which the
+        // instance matrix still turns, exactly as it does for a particle drawn on its own.
+        return Some(draw);
+    }
+
+    let prims = match g.geometry_type {
+        0 => Prims::Points((0..g.vertex_count()).collect()),
+        _ => Prims::Triangles(
+            (0..g.vertex_count() / 3)
+                .map(|tri| TriHit {
+                    strict: false,
+                    t: 0.0,
+                    u: 0.0,
+                    v: 0.0,
+                    tri,
+                })
+                .collect(),
+        ),
+    };
+
+    Some(PointingTriangle {
+        instances: base.instances.clone(),
+        per_instance_vertices: 0,
+        ..pointing_draw(s, g, &prims, cam, x, y, id)
+    })
 }
 
 /// One shape's draw in the pointing pass: its candidate primitives as the pointing shader receives them.
@@ -908,6 +1187,9 @@ fn pointing_draw_base(
         point_style: None,
         constant_tex_coord: false,
         id,
+        // A ParticleSystem's draw puts its particles' matrices here ([`particle_draw`]).
+        instances: None,
+        per_instance_vertices: 0,
     }
 }
 
