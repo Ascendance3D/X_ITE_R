@@ -21,7 +21,7 @@ use crate::layer::{NavInfo, Vp, VpBase};
 use std::cell::RefCell;
 use std::rc::Rc;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3, Vector4};
-use x3d_render::depth_gpu::{DepthGpu, DepthShape};
+use x3d_render::depth_gpu::{DepthGpu, DepthPixels, DepthShape};
 use x3d_render::geometry::Geometry;
 
 const DEPTH_BUFFER_SIZE: usize = 16;
@@ -101,6 +101,19 @@ impl CShape {
             ..self.clone()
         }
     }
+}
+
+/// One depth pass of a collision query: the collision camera's view and its orthographic view volume (l, r, b, t,
+/// near, far).
+#[derive(Clone, Copy)]
+struct DepthQuery {
+    view: Matrix4,
+    bounds: (f64, f64, f64, f64, f64, f64),
+}
+
+/// The depth gravitate falls by: the distance to the closest object below the avatar, its far distance without one.
+pub struct Ground {
+    pub distance: f64,
 }
 
 pub struct Closest {
@@ -414,25 +427,12 @@ impl World {
         )
     }
 
-    /// X3DRenderObject.getCollisionShape on the GPU: the collision shapes drawn into the 16x16
-    /// buffer with `view · ortho` as projection, then TextureBuffer.readDepth: the pixel with the
-    /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
-    /// shape was hit, its normal in the frame of the translation (`closestObject .modelViewMatrix
-    /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`). `None` when the device is lost.
-    fn depth_gpu(
-        &self,
-        gpu: &Rc<RefCell<DepthGpu>>,
-        view: &Matrix4,
-        ortho: &Matrix4,
-        bounds: (f64, f64, f64, f64, f64, f64),
-    ) -> Option<(f64, Option<(Vector3, usize)>)> {
-        let mut view_projection = *view;
-        view_projection.mult_right(ortho);
-
+    /// The collision shapes as the GPU draws them (X3DRenderObject.getCollisionShape), the same for every pass.
+    fn depth_shapes(&self) -> Vec<DepthShape<'_>> {
         let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
         let mut first = 0usize;
-        let shapes: Vec<DepthShape> = self
-            .shapes
+
+        self.shapes
             .iter()
             .map(|s| {
                 let g = &s.geometry;
@@ -470,9 +470,21 @@ impl World {
                     id: id as f32,
                 }
             })
-            .collect();
-        let mut pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes)?;
+            .collect()
+    }
 
+    /// The rest of X3DRenderObject.getCollisionShape on the GPU, for the `pixels` the collision shapes were drawn into
+    /// with `view · ortho` as projection: the LINE particles merged in, then TextureBuffer.readDepth: the pixel with the
+    /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a shape was hit, its
+    /// normal in the frame of the translation (`closestObject .modelViewMatrix .multRight (viewMatrix) .submatrix
+    /// .inverse () .multMatrixVec (normal)`).
+    fn read_depth(
+        &self,
+        mut pixels: DepthPixels,
+        view: &Matrix4,
+        ortho: &Matrix4,
+        bounds: (f64, f64, f64, f64, f64, f64),
+    ) -> (f64, Option<(Vector3, usize)>) {
         // The LINE particles, in draw order after the GPU's shapes (a depth tie keeps the GPU's pixel).
         let lines = self
             .shapes
@@ -520,35 +532,84 @@ impl World {
         let id = pixels.data0[index][1];
 
         let Some((shape, _)) = (id >= 0.0).then(|| self.shape_of(id as usize)).flatten() else {
-            return Some((distance, None));
+            return (distance, None);
         };
 
         let n = pixels.data1[index];
         let normal = Vector3::new(n[0] as f64, n[1] as f64, n[2] as f64);
-        Some((
+        (
             distance,
             Some((hit_normal(shape, view, normal), id as usize)),
-        ))
+        )
     }
 
     /// Closest depth under an orthographic view (l, r, b, t, near, far) of the collision camera.
+    #[cfg(test)]
     fn depth(
+        &self,
+        view: &Matrix4,
+        bounds: (f64, f64, f64, f64, f64, f64),
+    ) -> Option<(f64, Vector3, Option<usize>)> {
+        self.depths(&[DepthQuery {
+            view: *view,
+            bounds,
+        }])
+        .pop()
+        .expect("one query")
+    }
+
+    /// [`World::depth`] of independent queries on the same shapes, answered in order. The GPU draws them as one batch:
+    /// one submission and one readback, each query in its own passes and pixels, so each answer is the one it has
+    /// alone. When the batch's readback does not arrive (a lost device, a failed mapping), the CPU stand-in answers
+    /// every query of it.
+    fn depths(&self, queries: &[DepthQuery]) -> Vec<Option<(f64, Vector3, Option<usize>)>> {
+        if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
+            let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+            let orthos: Vec<Matrix4> = queries
+                .iter()
+                .map(|q| {
+                    let (l, r, b, t, near, far) = q.bounds;
+                    let mut ortho = Matrix4::IDENTITY;
+                    Camera::ortho(l, r, b, t, near, far, &mut ortho);
+                    ortho
+                })
+                .collect();
+            let projections: Vec<[f32; 16]> = queries
+                .iter()
+                .zip(&orthos)
+                .map(|(q, ortho)| {
+                    let mut view_projection = q.view;
+                    view_projection.mult_right(ortho);
+                    f32x16(&view_projection)
+                })
+                .collect();
+            let shapes = self.depth_shapes();
+            let pixels = gpu.borrow_mut().draw_batch(&projections, &shapes);
+
+            if let Some(pixels) = pixels {
+                return pixels
+                    .into_iter()
+                    .zip(queries.iter().zip(&orthos))
+                    .map(|(pixels, (q, ortho))| {
+                        let (distance, normal) = self.read_depth(pixels, &q.view, ortho, q.bounds);
+                        normal.map(|(n, id)| (distance, n, Some(id)))
+                    })
+                    .collect();
+            }
+        }
+
+        queries
+            .iter()
+            .map(|q| self.depth_cpu(&q.view, q.bounds))
+            .collect()
+    }
+
+    /// [`World::depth`] on the CPU: the stand-in of the GPU's rasterization.
+    fn depth_cpu(
         &self,
         view: &Matrix4,
         (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64),
     ) -> Option<(f64, Vector3, Option<usize>)> {
-        if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
-            let mut ortho = Matrix4::IDENTITY;
-            Camera::ortho(l, r, b, t, near, far, &mut ortho);
-
-            // A lost device: the CPU stand-in below.
-            if let Some((distance, normal)) =
-                self.depth_gpu(gpu, view, &ortho, (l, r, b, t, near, far))
-            {
-                return normal.map(|(n, id)| (distance, n, Some(id)));
-            }
-        }
-
         let bounds = (l, r, b, t, near, far);
         let mut buffer = DepthBuffer::new();
         let n = DEPTH_BUFFER_SIZE;
@@ -815,6 +876,71 @@ impl World {
         nav: &NavInfo,
         direction: &Vector3,
     ) -> Closest {
+        self.collision_queries(vp, base, nav, std::slice::from_ref(direction), false)
+            .0
+            .pop()
+            .expect("one direction")
+    }
+
+    /// [`World::closest_object`] in each of `directions` and, with `ground`, the depth [`World::gravitate`] falls by:
+    /// X3DRenderObject.collide and gravitate, which X_ITE reads in one COLLISION pass from the same shapes and
+    /// viewpoint. The queries do not depend on each other, so the GPU draws them in one batch.
+    pub fn collision_queries(
+        &self,
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        directions: &[Vector3],
+        ground: bool,
+    ) -> (Vec<Closest>, Option<Ground>) {
+        let closest: Vec<(DepthQuery, Rotation4, f64)> = directions
+            .iter()
+            .map(|d| Self::closest_query(vp, base, nav, d))
+            .collect();
+        let ground = ground.then(|| Self::ground_query(vp, base, nav));
+        let queries: Vec<DepthQuery> = closest
+            .iter()
+            .map(|c| c.0)
+            .chain(ground.iter().map(|g| g.0))
+            .collect();
+        let mut depths = self.depths(&queries);
+        let ground = ground.map(|(_, far)| Ground {
+            distance: depths.pop().expect("the ground query").map_or(far, |d| d.0),
+        });
+        let closest = closest
+            .into_iter()
+            .zip(depths)
+            .map(|((_, rotation, far), depth)| match depth {
+                Some((d, n, shape)) => {
+                    let mut normal = n;
+                    rotation.mult_vec_rot(&mut normal);
+                    normal.normalize();
+                    Closest {
+                        shape,
+                        distance: d,
+                        normal,
+                        hit: true,
+                    }
+                }
+                None => Closest {
+                    shape: None,
+                    distance: far,
+                    normal: Vector3::new(0.0, 0.0, 1.0),
+                    hit: false,
+                },
+            })
+            .collect();
+
+        (closest, ground)
+    }
+
+    /// The depth pass of getClosestObject in `direction`, the collision camera's rotation and its far distance.
+    fn closest_query(
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        direction: &Vector3,
+    ) -> (DepthQuery, Rotation4, f64) {
         let radius = nav.collision_radius();
         let bottom = nav.step_height() - nav.avatar_height();
         let near = vp.near_distance(base, nav);
@@ -828,39 +954,12 @@ impl World {
 
         let far = (radius * 2.0).max(avatar_height * 2.0);
         let view = camera_matrix(vp, base, &rotation);
-        let mut proj = Matrix4::IDENTITY;
-        Camera::ortho(
-            -radius,
-            radius,
-            bottom.min(-radius),
-            radius,
-            near,
-            far,
-            &mut proj,
-        );
+        let query = DepthQuery {
+            view,
+            bounds: (-radius, radius, bottom.min(-radius), radius, near, far),
+        };
 
-        match self.depth(
-            &view,
-            (-radius, radius, bottom.min(-radius), radius, near, far),
-        ) {
-            Some((d, n, shape)) => {
-                let mut normal = n;
-                rotation.mult_vec_rot(&mut normal);
-                normal.normalize();
-                Closest {
-                    shape,
-                    distance: d,
-                    normal,
-                    hit: true,
-                }
-            }
-            None => Closest {
-                shape: None,
-                distance: far,
-                normal: Vector3::new(0.0, 0.0, 1.0),
-                hit: false,
-            },
-        }
+        (query, rotation, far)
     }
 
     /// X3DRenderObject.constrainTranslation.
@@ -925,6 +1024,26 @@ impl World {
         Vector3::ZERO
     }
 
+    /// The depth pass of gravitate (the collision camera looking down) and its far distance.
+    fn ground_query(vp: &Vp, base: &VpBase, nav: &NavInfo) -> (DepthQuery, f64) {
+        let radius = nav.collision_radius();
+        let avatar_height = nav.avatar_height();
+        let near = vp.near_distance(base, nav);
+        let far = radius.max(avatar_height) * 2.0;
+
+        let up = base.up_vector(vp, false);
+        let mut down = Rotation4::identity();
+        down.set_vectors(&Vector3::Z_AXIS, &up);
+
+        let view = camera_matrix(vp, base, &down);
+        let query = DepthQuery {
+            view,
+            bounds: (-radius, radius, -radius, radius, near, far),
+        };
+
+        (query, far)
+    }
+
     /// X3DRenderObject.gravitate: returns the new position offset delta and the new speed.
     pub fn gravitate(
         &self,
@@ -935,19 +1054,33 @@ impl World {
         frame_rate: f64,
         gravity: f64,
     ) -> Option<Vector3> {
-        let radius = nav.collision_radius();
+        let ground = self
+            .collision_queries(vp, base, nav, &[], true)
+            .1
+            .expect("the ground query");
+
+        self.gravitate_on(&ground, vp, base, nav, speed, frame_rate, gravity)
+    }
+
+    /// The rest of [`World::gravitate`] once its depth pass has answered.
+    #[allow(
+        clippy::too_many_arguments,
+        reason = "gravitate's own arguments and its depth pass's answer"
+    )]
+    pub fn gravitate_on(
+        &self,
+        ground: &Ground,
+        vp: &Vp,
+        base: &VpBase,
+        nav: &NavInfo,
+        speed: &mut f64,
+        frame_rate: f64,
+        gravity: f64,
+    ) -> Option<Vector3> {
         let avatar_height = nav.avatar_height();
         let step_height = nav.step_height();
-        let near = vp.near_distance(base, nav);
-        let far = radius.max(avatar_height) * 2.0;
-
         let up = base.up_vector(vp, false);
-        let mut down = Rotation4::identity();
-        down.set_vectors(&Vector3::Z_AXIS, &up);
-
-        let view = camera_matrix(vp, base, &down);
-        let depth = self.depth(&view, (-radius, radius, -radius, radius, near, far));
-        let mut distance = depth.map(|d| d.0).unwrap_or(far);
+        let mut distance = ground.distance;
 
         distance -= avatar_height;
 
@@ -1488,5 +1621,309 @@ mod tests {
             assert!(cpu.is_none());
             same("set", &cpu, &gpu);
         }
+    }
+
+    /// A world of every kind the GPU draws or merges: a triangle shape, a run of QUAD particles, POINT particles of
+    /// which two tie at one pixel and one depth, and a LINE particle.
+    fn mixed_world() -> World {
+        let quad = Rc::new(x3d_render::particles::quad_geometry(None, false));
+        let wall = CShape {
+            particle: false,
+            instance: None,
+            ..particle(&quad, at(8.0, 8.0, 1.9))
+        };
+        let run = CShape {
+            model_view: Matrix4::IDENTITY,
+            instance: None,
+            instances: Some(CInstances {
+                matrices: Rc::new(vec![
+                    translation(at(4.0, 4.0, 1.2)),
+                    translation(at(12.0, 8.0, 0.6)),
+                    translation(at(4.0, 4.0, 1.5)),
+                ]),
+                per_vertices: 0,
+            }),
+            ..particle(&quad, Vector3::ZERO)
+        };
+        let p = at(8.5, 8.5, 0.5);
+        let mut instance = translation(p);
+        instance.rotate(&Rotation4::new(0.0, 1.0, 0.0, 1.5707963));
+        let line = CShape {
+            model_view: instance,
+            instance: Some(instance),
+            ..particle(&line(), p)
+        };
+
+        World {
+            shapes: vec![
+                wall,
+                run,
+                particle(&point(), at(3.0, 4.5, 1.0)),
+                particle(&point(), at(2.5, 4.5, 1.0)),
+                particle(&point(), at(10.5, 3.5, 0.7)),
+                line,
+            ],
+            ..Default::default()
+        }
+    }
+
+    /// Seven collision cameras like collide's six axes and gravitate's look down: turned and moved views of the
+    /// world, some of which see nothing.
+    fn seven_queries() -> Vec<DepthQuery> {
+        (0..7)
+            .map(|k| {
+                let mut view = Matrix4::IDENTITY;
+                view.rotate(&Rotation4::new(0.0, 1.0, 0.0, k as f64 * 1.0471976));
+                view.translate(&Vector3::new(0.05 * k as f64, -0.03 * k as f64, 0.0));
+                DepthQuery {
+                    view,
+                    bounds: BOUNDS,
+                }
+            })
+            .collect()
+    }
+
+    /// Independent queries in one batch answer bit for bit what each answers alone, in their order, from one
+    /// submission and one readback; on the CPU the batch is the queries one by one.
+    #[test]
+    fn batched_queries_answer_like_single_ones() {
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        let cpu_alone: Vec<_> = queries
+            .iter()
+            .map(|q| world.depth(&q.view, q.bounds))
+            .collect();
+
+        assert_eq!(
+            format!("{:?}", world.depths(&queries)),
+            format!("{cpu_alone:?}")
+        );
+        assert!(cpu_alone.iter().any(Option::is_some) && cpu_alone.iter().any(Option::is_none));
+
+        let Some(g) = gpu() else { return };
+        world.gpu = Some(g.clone());
+        let alone: Vec<_> = queries
+            .iter()
+            .map(|q| world.depth(&q.view, q.bounds))
+            .collect();
+        g.borrow_mut().take_stats();
+        let batch = world.depths(&queries);
+        let stats = g.borrow_mut().take_stats();
+
+        assert_eq!(format!("{batch:?}"), format!("{alone:?}"));
+        assert_eq!(
+            (
+                stats.queries,
+                stats.submissions,
+                stats.polls,
+                stats.readbacks
+            ),
+            (7, 1, 1, 1)
+        );
+
+        // The depth ties keep their draw order inside a batch too: the identity view sees the two tied points, the
+        // later one wins.
+        let mut reversed = queries.clone();
+        reversed.reverse();
+        let mut back = world.depths(&reversed);
+        back.reverse();
+        assert_eq!(format!("{back:?}"), format!("{alone:?}"));
+    }
+
+    /// One triangle, three vertices (twelve floats): the smallest geometry the pass draws. It is not left out as
+    /// nothing to draw; the GPU draws it, one submission, and finds what the CPU stand-in finds.
+    #[test]
+    fn three_vertex_triangle_is_drawn() {
+        let triangle = Rc::new(Geometry {
+            geometry_type: 3,
+            vertices: vec![
+                -0.5, -0.5, -0.8, 1.0, 0.5, -0.5, -0.8, 1.0, 0.0, 0.5, -0.8, 1.0,
+            ],
+            normals: vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0],
+            solid: false,
+            ccw: true,
+            min: Vector3::new(-0.5, -0.5, -0.8),
+            max: Vector3::new(0.5, 0.5, -0.8),
+            ..Default::default()
+        });
+        assert_eq!(triangle.vertices.len(), 12);
+        let shape = || CShape {
+            particle: false,
+            model_view: Matrix4::IDENTITY,
+            instance: None,
+            ..particle(&triangle, Vector3::ZERO)
+        };
+        let (cpu, gpu_hit) = depths(vec![shape()], &Matrix4::IDENTITY);
+
+        assert!(
+            cpu.is_some_and(|h| (h.0 - 0.8).abs() < 1e-6 && h.2 == Some(0)),
+            "{cpu:?}"
+        );
+        same("triangle", &cpu, &gpu_hit);
+
+        let Some(g) = gpu() else { return };
+        let world = World {
+            shapes: vec![shape()],
+            gpu: Some(g.clone()),
+            ..Default::default()
+        };
+        g.borrow_mut().take_stats();
+        let hit = world.depth(&Matrix4::IDENTITY, BOUNDS);
+        let stats = g.borrow_mut().take_stats();
+
+        assert!(hit.is_some());
+        assert_eq!(
+            (stats.queries, stats.submissions, stats.readbacks),
+            (1, 1, 1)
+        );
+    }
+
+    /// With timestamp queries (when the device has them) a batch measures its GPU time; without them the time stays
+    /// zero and [`DepthGpu::timestamps`] says it is not measured. The answers are the same either way.
+    #[test]
+    fn timestamps_measure_only_when_available() {
+        let Some(g) = gpu() else { return };
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        world.gpu = Some(g.clone());
+        let plain = format!("{:?}", world.depths(&queries));
+
+        let on = g.borrow_mut().set_timestamps(true);
+        assert_eq!(g.borrow().timestamps(), on);
+        g.borrow_mut().take_stats();
+        assert_eq!(format!("{:?}", world.depths(&queries)), plain);
+        let stats = g.borrow_mut().take_stats();
+        g.borrow_mut().set_timestamps(false);
+
+        assert_eq!((stats.queries, stats.submissions), (7, 1));
+        assert_eq!(stats.gpu.is_zero(), !on, "timestamps {on}: {stats:?}");
+        assert!(stats.gpu < std::time::Duration::from_secs(1), "{stats:?}");
+        assert!(!g.borrow().timestamps());
+    }
+
+    /// Without anything to draw (no shapes, or only shapes the pass leaves out) every pass reads the cleared buffer:
+    /// no hit, no submission, like the CPU stand-in.
+    #[test]
+    fn nothing_to_draw_needs_no_gpu() {
+        let Some(g) = gpu() else { return };
+        let point_set = CShape {
+            particle: false,
+            ..particle(&point(), at(8.5, 8.5, 1.0))
+        };
+        let no_particles = CShape {
+            instances: Some(CInstances {
+                matrices: Rc::new(vec![]),
+                per_vertices: 0,
+            }),
+            ..particle(&point(), Vector3::ZERO)
+        };
+
+        for shapes in [vec![], vec![point_set], vec![no_particles]] {
+            let mut world = World {
+                shapes,
+                ..Default::default()
+            };
+            let cpu = world.depths(&seven_queries());
+            world.gpu = Some(g.clone());
+            g.borrow_mut().take_stats();
+            let got = world.depths(&seven_queries());
+            let stats = g.borrow_mut().take_stats();
+
+            assert!(got.iter().all(Option::is_none), "{got:?}");
+            assert_eq!(format!("{got:?}"), format!("{cpu:?}"));
+            assert_eq!(
+                (stats.queries, stats.submissions, stats.readbacks),
+                (7, 0, 0)
+            );
+            // Not even an upload: the frame touches nothing on the GPU.
+            assert_eq!(stats.upload_bytes, 0);
+        }
+    }
+
+    /// A batch whose readback does not arrive (a destroyed device: the mapping fails under a clean poll) is answered
+    /// query by query by the CPU stand-in, and counts as one failed readback; a run of them gives the device up, and
+    /// the CPU answers from then on.
+    #[test]
+    fn failed_batch_answers_on_the_cpu() {
+        let Ok(p) = x3d_render::pointing_gpu::PointingGpu::new_headless() else {
+            return;
+        };
+        let device = p.device().clone();
+        let g = Rc::new(RefCell::new(DepthGpu::new(
+            device.clone(),
+            p.queue().clone(),
+        )));
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        let cpu = world.depths(&queries);
+        world.gpu = Some(g.clone());
+
+        device.on_uncaptured_error(std::sync::Arc::new(|_| {}));
+        device.destroy();
+
+        for k in 1..=x3d_render::pointing_gpu::MAX_MAP_FAILURES {
+            assert_eq!(format!("{:?}", world.depths(&queries)), format!("{cpu:?}"));
+            assert_eq!(g.borrow().readback_failures(), k);
+        }
+
+        assert!(g.borrow().lost());
+        assert_eq!(format!("{:?}", world.depths(&queries)), format!("{cpu:?}"));
+        assert_eq!(
+            g.borrow().readback_failures(),
+            x3d_render::pointing_gpu::MAX_MAP_FAILURES
+        );
+    }
+
+    /// A mapping that fails once on a live device: that batch answers on the CPU, the next one on the GPU again, and
+    /// the run of failures starts over. Failures with successes between them never give the device up; three in a row
+    /// do, and the CPU answers from then on.
+    #[test]
+    fn temporary_mapping_failures() {
+        let Ok(p) = x3d_render::pointing_gpu::PointingGpu::new_headless() else {
+            return;
+        };
+        let g = Rc::new(RefCell::new(DepthGpu::new(
+            p.device().clone(),
+            p.queue().clone(),
+        )));
+        let mut world = mixed_world();
+        let queries = seven_queries();
+        let cpu = format!("{:?}", world.depths(&queries));
+        world.gpu = Some(g.clone());
+        let ok = format!("{:?}", world.depths(&queries));
+        let max = x3d_render::pointing_gpu::MAX_MAP_FAILURES;
+
+        // One failure, then a success, many times over: never lost.
+        for k in 1..=2 * max {
+            g.borrow_mut().fail_mappings(1);
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu, "failure {k}");
+            assert_eq!(g.borrow().readback_failures(), k);
+            assert_eq!(
+                format!("{:?}", world.depths(&queries)),
+                ok,
+                "after failure {k}"
+            );
+            assert!(!g.borrow().lost());
+        }
+
+        // A run of failures one short of the limit, then a success: still not lost.
+        g.borrow_mut().fail_mappings(max - 1);
+        for _ in 1..max {
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        }
+        assert_eq!(format!("{:?}", world.depths(&queries)), ok);
+        assert!(!g.borrow().lost());
+
+        // The limit in a row: lost. The GPU is not asked again.
+        g.borrow_mut().fail_mappings(max);
+        for _ in 0..max {
+            assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        }
+        assert!(g.borrow().lost());
+        let failures = g.borrow().readback_failures();
+        g.borrow_mut().take_stats();
+        assert_eq!(format!("{:?}", world.depths(&queries)), cpu);
+        assert_eq!(g.borrow().readback_failures(), failures);
+        assert_eq!(g.borrow_mut().take_stats().submissions, 0);
     }
 }
