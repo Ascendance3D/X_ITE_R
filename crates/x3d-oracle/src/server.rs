@@ -87,7 +87,7 @@ fn respond(stream: &mut TcpStream, root: &Path, method: &str, target: &str) -> s
         None => ("400 Bad Request", None, Vec::new()),
         Some(p) => {
             let path = join_normalize(root, &p);
-            if !path.to_string_lossy().starts_with(&*root.to_string_lossy()) {
+            if !path.starts_with(root) {
                 ("403 Forbidden", None, Vec::new())
             } else {
                 match std::fs::read(&path) {
@@ -237,5 +237,49 @@ mod tests {
         assert_eq!(b, b"#VRML V2.0 utf8\n");
         assert!(get("/missing.wrl").0.starts_with("HTTP/1.1 404"));
         std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn rejects_path_traversal_to_sibling_dir() {
+        let base_dir = std::env::temp_dir();
+        let id = std::process::id();
+        let dir = base_dir.join(format!("x3d-oracle-srv-{}", id));
+        let sibling_dir = base_dir.join(format!("x3d-oracle-srv-{}_secret", id));
+
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::create_dir_all(&sibling_dir).unwrap();
+        std::fs::write(sibling_dir.join("secret.txt"), b"top secret\n").unwrap();
+
+        let s = Server::start(dir.clone()).unwrap();
+
+        let get = |path: &str| {
+            let mut c = TcpStream::connect(("127.0.0.1", s.port)).unwrap();
+            write!(
+                c,
+                "GET {path} HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n"
+            )
+            .unwrap();
+            let mut r = BufReader::new(c);
+            let mut head = String::new();
+            loop {
+                let mut l = String::new();
+                if r.read_line(&mut l).unwrap_or(0) == 0 || l == "\r\n" {
+                    break;
+                }
+                head.push_str(&l);
+            }
+            head
+        };
+
+        // Try to access the sibling directory, which starts with the same string prefix.
+        // Before the fix, to_string_lossy().starts_with() would allow this.
+        // We use %2e%2e%2f so it passes url_pathname without being stripped,
+        // gets decoded to ../ by decode_uri_component, and then processed by join_normalize.
+        let path = format!("/%2e%2e%2fx3d-oracle-srv-{}_secret/secret.txt", id);
+        let h = get(&path);
+        assert!(h.starts_with("HTTP/1.1 403"), "{h}");
+
+        std::fs::remove_dir_all(dir).ok();
+        std::fs::remove_dir_all(sibling_dir).ok();
     }
 }
