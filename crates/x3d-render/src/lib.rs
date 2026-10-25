@@ -9,6 +9,12 @@
 //! device, RGBA8 target, CPU readback). [`traverse::RenderCache`] keeps geometry and textures
 //! between frames for an interactive viewer.
 //! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
+//!
+//! # API stability
+//!
+//! This crate is `publish = false` and is built only for the other crates in this workspace, so `pub` here means
+//! "reachable from x3d-viewer and x3d-runtime", not a published surface under semantic versioning. Signatures change
+//! with their callers in the same commit, and no compatibility shims are kept for versions that were never released.
 
 /// The wgpu whose devices, queues and buffers this crate's types hold, so that a crate that is handed them without
 /// depending on wgpu itself (x3d-viewer, where it is optional) can still name them.
