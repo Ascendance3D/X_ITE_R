@@ -268,6 +268,13 @@ fn gpu_picking_does_not_scale_with_the_particle_count() {
             "{particles}: only {alive} particles alive"
         );
         assert!(draws > 0, "{particles}: the pass drew nothing");
+        // `draws` and `alive` can both hold with no ParticleSystem draw in the pass at all — another shape
+        // draws, the simulation runs, and the constant-upload bound below is then satisfied by zero. A live
+        // QUAD system contributes at least its own uniform slice, so require the upload to exist.
+        assert!(
+            transfers.particle_upload > 0,
+            "{particles}: the pass uploaded no particle data, so the bound below proves nothing"
+        );
         seen.push((particles, alive, draws, transfers));
     }
 
