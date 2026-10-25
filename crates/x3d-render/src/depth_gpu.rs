@@ -25,6 +25,10 @@ const STRIDE: u64 = 512;
 const ROW: u64 = 256;
 /// Bytes of one pass's readback region: its two color targets.
 const REGION: u64 = 2 * ROW * SIZE as u64;
+/// Bytes of one pass's two timestamps.
+const TIMESTAMPS: u64 = 16;
+/// depthClearColor: (1, -1, -1, -1), '1' for infinity, '-1' for no hit.
+const CLEAR: [f32; 4] = [1.0, -1.0, -1.0, -1.0];
 /// Frames (queries) an unused vertex buffer stays.
 const KEEP: u64 = 600;
 
@@ -91,9 +95,9 @@ pub struct DepthPixels {
 }
 
 impl DepthPixels {
-    /// The buffer as the pass clears it: depthClearColor (1, -1, -1, -1) in both targets.
+    /// The buffer as the pass clears it: [`CLEAR`] in both targets.
     fn cleared() -> DepthPixels {
-        let clear = vec![[1.0, -1.0, -1.0, -1.0]; (SIZE * SIZE) as usize];
+        let clear = vec![CLEAR; (SIZE * SIZE) as usize];
 
         DepthPixels {
             data0: clear.clone(),
@@ -155,7 +159,7 @@ pub struct DepthGpu {
     readback_failures: usize,
     /// Mappings that failed in a row under a clean poll; a readback that arrives clears it.
     map_failures: usize,
-    /// Passes drawn (for tests).
+    /// Passes answered, the ones with nothing to draw included (for tests).
     pub passes: usize,
     stats: DepthStats,
     timestamps: bool,
@@ -428,11 +432,6 @@ impl DepthGpu {
         self.passes += passes;
         self.stats.queries += passes;
 
-        // Nothing to draw: every pass reads the cleared buffer, which needs no GPU.
-        if !shapes.iter().any(DepthShape::draws) {
-            return Some((0..passes).map(|_| DepthPixels::cleared()).collect());
-        }
-
         // A batch ages the vertex buffers by its passes, like the passes one by one.
         self.queries += passes as u64;
         let stamp = self.queries;
@@ -490,6 +489,12 @@ impl DepthGpu {
         }
 
         self.buffers.retain(|_, b| stamp - b.used < KEEP);
+
+        // Nothing to draw: every pass reads the cleared buffer, which needs no GPU.
+        if !shapes.iter().any(DepthShape::draws) {
+            self.stats.encode += encode.elapsed();
+            return Some((0..passes).map(|_| DepthPixels::cleared()).collect());
+        }
 
         // The instance matrices of the particle shapes, one after the other: written when they are not those of the
         // last pass (the passes of one collision query share them).
@@ -567,7 +572,7 @@ impl DepthGpu {
         let timestamps = self.timestamps.then_some(passes as u64 * REGION);
         let used = passes as u64 * REGION
             + if self.timestamps {
-                passes as u64 * 16
+                passes as u64 * TIMESTAMPS
             } else {
                 0
             };
@@ -590,7 +595,7 @@ impl DepthGpu {
             });
             let resolve = self.device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some("depth timestamps"),
-                size: 16 * capacity as u64,
+                size: TIMESTAMPS * capacity as u64,
                 usage: wgpu::BufferUsages::QUERY_RESOLVE | wgpu::BufferUsages::COPY_SRC,
                 mapped_at_creation: false,
             });
@@ -658,7 +663,6 @@ impl DepthGpu {
 
         for q in 0..passes {
             {
-                // depthClearColor: (1, -1, -1, -1), '1' for infinity, '-1' for no hit.
                 let clear = |view| {
                     Some(wgpu::RenderPassColorAttachment {
                         view,
@@ -666,10 +670,10 @@ impl DepthGpu {
                         resolve_target: None,
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(wgpu::Color {
-                                r: 1.0,
-                                g: -1.0,
-                                b: -1.0,
-                                a: -1.0,
+                                r: CLEAR[0] as f64,
+                                g: CLEAR[1] as f64,
+                                b: CLEAR[2] as f64,
+                                a: CLEAR[3] as f64,
                             }),
                             store: wgpu::StoreOp::Store,
                         },
@@ -762,7 +766,13 @@ impl DepthGpu {
 
         if let (Some(offset), Some((set, resolve, _))) = (timestamps, &self.query_set) {
             encoder.resolve_query_set(set, 0..2 * passes as u32, resolve, 0);
-            encoder.copy_buffer_to_buffer(resolve, 0, &self.readback, offset, passes as u64 * 16);
+            encoder.copy_buffer_to_buffer(
+                resolve,
+                0,
+                &self.readback,
+                offset,
+                passes as u64 * TIMESTAMPS,
+            );
         }
 
         self.queue.submit([encoder.finish()]);

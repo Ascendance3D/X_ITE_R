@@ -219,20 +219,27 @@ fn collide_and_gravitate_are_one_batch() {
             r.gpu().borrow_mut().take_stats();
             r.step();
             let stats = r.gpu().borrow_mut().take_stats();
-            let got = (
-                stats.queries,
-                stats.submissions,
-                stats.polls,
-                stats.readbacks,
+            // gravitate alone, or collide's six axes with it.
+            assert!(
+                matches!(stats.queries, 1 | 7),
+                "frame {}: {stats:?}",
+                r.frame
             );
-            let want = if batches > 0 || stats.queries > 1 {
-                batches += 1;
-                (7, 1, 1, 1)
-            } else {
-                (1, 0, 0, 0)
-            };
+            let batch = stats.queries == 7;
+            assert!(
+                batch || batches == 0,
+                "frame {}: the floor left the collision shapes",
+                r.frame
+            );
+            batches += batch as usize;
+            let want = if batch { (1, 1, 1) } else { (0, 0, 0) };
 
-            assert_eq!(got, want, "frame {}", r.frame);
+            assert_eq!(
+                (stats.submissions, stats.polls, stats.readbacks),
+                want,
+                "frame {}",
+                r.frame
+            );
         }
 
         assert!(batches >= 30, "{batches} frames with the floor");
