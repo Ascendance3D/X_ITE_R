@@ -1,0 +1,136 @@
+import X3DParser from "./X3DParser.js";
+import Color3    from "../../standard/Math/Numbers/Color3.js";
+import $         from "../../lib/helper.js";
+
+// http://paulbourke.net/dataformats/stl/
+// https://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
+
+/*
+ * Parser
+ */
+
+function STLBParser (scene)
+{
+   X3DParser .call (this, scene);
+}
+
+Object .assign (Object .setPrototypeOf (STLBParser .prototype, X3DParser .prototype),
+{
+   getEncoding ()
+   {
+      return "ARRAY_BUFFER";
+   },
+   setInput (input)
+   {
+      this .arrayBuffer = input;
+      this .dataView    = new DataView (input);
+   },
+   isValid ()
+   {
+      if (!(this .arrayBuffer instanceof ArrayBuffer))
+         return false;
+
+      if (this .dataView .byteLength < 84)
+         return false;
+
+      const
+         numFaces   = this .dataView .getUint32 (80, true),
+         byteLength = numFaces * 50 + 84;
+
+      return byteLength === this .dataView .byteLength;
+   },
+   parseIntoScene (resolve, reject)
+   {
+      this .stl ()
+         .then (resolve)
+         .catch (reject);
+   },
+   async stl ()
+   {
+      // Set profile and components.
+
+      const
+         browser = this .getBrowser (),
+         scene   = this .getScene ();
+
+      scene .setEncoding ("STL");
+      scene .setProfile (browser .getProfile ("Interchange"));
+
+      await browser .loadComponents (scene);
+
+      // Create nodes.
+
+      this .material   = scene .createNode ("Material");
+      this .appearance = scene .createNode ("Appearance");
+
+      this .material .diffuseColor = Color3 .WHITE;
+      this .appearance .material   = this .material;
+
+      // Parse scene.
+
+      this .header ();
+      this .shape ();
+
+      return this .getScene ();
+   },
+   header ()
+   {
+      const header = $.decodeText (this .arrayBuffer .slice (0, 80)) .replace (/\u0000.*$/, "") .trim ();
+
+      if (!header)
+         return;
+
+      const
+         scene     = this .getScene (),
+         worldInfo = scene .createNode ("WorldInfo"),
+         url       = new URL (scene .worldURL);
+
+      worldInfo .title = url .protocol === "data:" ? "STL Model" : decodeURIComponent (url .pathname .split ('/') .at (-1));
+      worldInfo .info  = [header];
+
+      scene .rootNodes .push (worldInfo);
+   },
+   shape ()
+   {
+      const
+         scene      = this .getExecutionContext (),
+         shape      = scene .createNode ("Shape"),
+         geometry   = scene .createNode ("TriangleSet"),
+         coordinate = scene .createNode ("Coordinate"),
+         dataView   = this .dataView,
+         byteLength = this .dataView .byteLength,
+         normals    = [ ],
+         points     = [ ];
+
+      for (let i = 84; i < byteLength; i += 50)
+      {
+         for (let f = 0; f < 3; ++ f)
+            normals .push (dataView .getFloat32 (i + f * 4, true));
+
+         for (let f = 3; f < 12; ++ f)
+            points .push (dataView .getFloat32 (i + f * 4, true));
+      }
+
+      this .rotateAxes90 (points);
+
+      shape .appearance         = this .appearance;
+      shape .geometry           = geometry;
+      coordinate .point         = points;
+      geometry .normalPerVertex = false;
+      geometry .coord           = coordinate;
+
+      if (normals .some (v => v !== 0))
+      {
+         const normal = scene .createNode ("Normal");
+
+         this .rotateAxes90 (normals);
+
+         normal .vector   = normals;
+         geometry .normal = normal;
+      }
+
+      scene .getRootNodes () .push (shape);
+   },
+});
+
+export default STLBParser;

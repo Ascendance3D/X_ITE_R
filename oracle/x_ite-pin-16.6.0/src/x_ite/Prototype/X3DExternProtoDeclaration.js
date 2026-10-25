@@ -1,0 +1,350 @@
+import Fields                  from "../Fields.js";
+import X3DFieldDefinition      from "../Base/X3DFieldDefinition.js";
+import FieldDefinitionArray    from "../Base/FieldDefinitionArray.js";
+import X3DUrlObject            from "../Components/Networking/X3DUrlObject.js";
+import X3DProtoDeclarationNode from "./X3DProtoDeclarationNode.js";
+import X3DConstants            from "../Base/X3DConstants.js";
+import FileLoader              from "../InputOutput/FileLoader.js";
+
+const
+   _proto      = Symbol (),
+   _scene      = Symbol (),
+   _fileLoader = Symbol (),
+   _cache      = Symbol .for ("X_ITE.cache");
+
+function X3DExternProtoDeclaration (executionContext, url)
+{
+   X3DProtoDeclarationNode .call (this, executionContext);
+   X3DUrlObject            .call (this, executionContext);
+
+   this .addType (X3DConstants .X3DExternProtoDeclaration);
+
+   this .addChildObjects (X3DConstants .inputOutput, "load",                 new Fields .SFBool (true),
+                          X3DConstants .inputOutput, "url",                  url .copy (), // Must be of type MFString.
+                          X3DConstants .inputOutput, "autoRefresh",          new Fields .SFTime (0),
+                          X3DConstants .inputOutput, "autoRefreshTimeLimit", new Fields .SFTime (3600));
+}
+
+Object .assign (Object .setPrototypeOf (X3DExternProtoDeclaration .prototype, X3DProtoDeclarationNode .prototype),
+   X3DUrlObject .prototype,
+{
+   initialize ()
+   {
+      X3DProtoDeclarationNode .prototype .initialize .call (this);
+      X3DUrlObject            .prototype .initialize .call (this);
+
+      this .getLive () .addInterest ("set_live__", this);
+   },
+   set_live__ ()
+   {
+      this [_scene] ?.setLive (this .isLive ());
+   },
+   getAppInfo ()
+   {
+      return this [_proto] ?.getAppInfo ()
+         || X3DProtoDeclarationNode .prototype .getAppInfo .call (this);
+   },
+   setAppInfo (value)
+   {
+      if (this [_proto])
+         this [_proto] .setAppInfo (value);
+      else
+         X3DProtoDeclarationNode .prototype .setAppInfo .call (this, value);
+   },
+   getDocumentation ()
+   {
+      return this [_proto] ?.getDocumentation ()
+         || X3DProtoDeclarationNode .prototype .getDocumentation .call (this);
+   },
+   setDocumentation (value)
+   {
+      if (this [_proto])
+         this [_proto] .setDocumentation (value);
+      else
+         X3DProtoDeclarationNode .prototype .setDocumentation .call (this, value);
+   },
+   getProtoDeclaration ()
+   {
+      return this [_proto];
+   },
+   setProtoDeclaration (proto)
+   {
+      this [_proto] = proto;
+
+      if (proto)
+      {
+         this .getFieldDefinitions ()  .assign (proto .getFieldDefinitions ());
+         this .getUserDefinedFields () .assign (proto .getUserDefinedFields ());
+      }
+
+      this .updateInstances ();
+   },
+   async loadData ()
+   {
+      const cache = this .getBrowser () .getBrowserOption ("Cache");
+
+      this [_fileLoader] ?.abort ();
+
+      this [_fileLoader] = new FileLoader (this, { cacheScene: cache })
+         .createX3DFromURL (this ._url, null, this .setInternalScene .bind (this));
+   },
+   getInternalScene ()
+   {
+      ///  Returns the internal X3DScene of this extern proto, that is loaded from the url given.
+
+      return this [_scene];
+   },
+   setInternalScene (scene)
+   {
+      // Remove old scene.
+
+      if (!this [_scene] ?.[_cache])
+         this [_scene] ?.dispose ();
+
+      // Set new scene.
+
+      this [_scene] = scene;
+
+      if (scene)
+      {
+         const
+            browser = this .getBrowser (),
+            fileURL = new URL (scene .getWorldURL ()),
+            hash    = fileURL .protocol !== "data:" ? fileURL .hash .substring (1) : "",
+            proto   = hash ? scene .protos .get (hash) : scene .protos [0];
+
+         if (!proto)
+            throw new Error ("PROTO not found.");
+
+         scene .setExecutionContext (scene [_cache] ? browser .getDefaultScene () : this .getExecutionContext ());
+         scene .setLive (true);
+
+         this .setLoadState (X3DConstants .COMPLETE_STATE);
+         this .setProtoDeclaration (proto);
+      }
+      else
+      {
+         this .setLoadState (X3DConstants .FAILED_STATE);
+         this .setProtoDeclaration (null);
+      }
+   },
+   toVRMLStream (generator)
+   {
+      generator .Indent ();
+      generator .string += "EXTERNPROTO";
+      generator .Space ();
+      generator .string += this .getName ();
+      generator .TidySpace ();
+      generator .string += "[";
+
+      const userDefinedFields = this .getUserDefinedFields ();
+
+      if (userDefinedFields .length === 0)
+      {
+         generator .TidySpace ();
+      }
+      else
+      {
+         let
+            fieldTypeLength   = 0,
+            accessTypeLength  = 0;
+
+         for (const field of userDefinedFields)
+         {
+            fieldTypeLength  = Math .max (fieldTypeLength, field .getTypeName () .length);
+            accessTypeLength = Math .max (accessTypeLength, generator .AccessType (field .getAccessType ()) .length);
+         }
+
+         generator .TidyBreak ();
+
+         generator .IncIndent ();
+
+         const last = userDefinedFields .at (-1);
+
+         for (const field of userDefinedFields)
+         {
+            this .toVRMLStreamUserDefinedField (generator, field, fieldTypeLength, accessTypeLength);
+
+            if (field === last)
+               generator .TidyBreak ();
+            else
+               generator .Break ();
+         }
+
+         generator .DecIndent ();
+
+         generator .Indent ();
+      }
+
+      generator .string += "]";
+      generator .TidyBreak ();
+      generator .Indent ();
+
+      this ._url .toVRMLStream (generator);
+   },
+   toVRMLStreamUserDefinedField (generator, field, fieldTypeLength, accessTypeLength)
+   {
+      generator .Indent ();
+      generator .string += generator .AccessType (field .getAccessType ()) .padEnd (accessTypeLength, generator .TidySpace ());
+      generator .Space ();
+      generator .string += field .getTypeName () .padEnd (fieldTypeLength, generator .TidySpace ());
+      generator .Space ();
+      generator .string += field .getName ();
+   },
+   toXMLStream (generator)
+   {
+      generator .openTag ("ExternProtoDeclare");
+      generator .attribute ("name", this .getName ());
+
+      generator .Space ();
+      generator .string += "url='";
+
+      this ._url .toXMLStream (generator);
+
+      generator .string += "'";
+
+      if (this .getAppInfo ())
+         generator .attribute ("appinfo", this .getAppInfo ());
+
+      if (this .getDocumentation ())
+         generator .attribute ("documentation", this .getDocumentation ());
+
+      const userDefinedFields = this .getUserDefinedFields ();
+
+      if (userDefinedFields .length)
+      {
+         generator .endTag ();
+         generator .IncIndent ();
+
+         for (const field of userDefinedFields)
+         {
+            generator .openTag ("field");
+            generator .attribute ("accessType", generator .AccessType (field .getAccessType ()));
+            generator .attribute ("type",       field .getTypeName ());
+            generator .attribute ("name",       field .getName ());
+
+            if (field .getAppInfo ())
+               generator .attribute ("appinfo", field .getAppInfo ());
+
+            if (field .getDocumentation ())
+               generator .attribute ("documentation", field .getDocumentation ());
+
+            generator .closeTag ("field");
+            generator .TidyBreak ();
+         }
+
+         generator .DecIndent ();
+         generator .closingTag ("ExternProtoDeclare");
+      }
+      else
+      {
+         generator .closeTag ("ExternProtoDeclare");
+      }
+   },
+   toJSONStream (generator)
+   {
+      generator .TidyBreak ();
+      generator .Indent ();
+
+      generator .beginObject ("ExternProtoDeclare", false, true);
+      generator .stringProperty ("@name", this .getName (), false);
+
+      if (this .getAppInfo ())
+         generator .stringProperty ("@appinfo", this .getAppInfo ());
+
+      if (this .getDocumentation ())
+         generator .stringProperty ("@documentation", this .getDocumentation ());
+
+      // Fields
+
+      const userDefinedFields = this .getUserDefinedFields ();
+
+      if (userDefinedFields .length)
+      {
+         generator .beginArray ("field");
+
+         for (const field of userDefinedFields)
+         {
+            generator .beginObject ("", field !== userDefinedFields [0]);
+            generator .stringProperty ("@accessType", generator .AccessType (field .getAccessType ()), false);
+            generator .stringProperty ("@type",       field .getTypeName ());
+            generator .stringProperty ("@name",       field .getName ());
+
+            if (field .getAppInfo ())
+               generator .stringProperty ("@appinfo", field .getAppInfo ());
+
+            if (field .getDocumentation ())
+               generator .stringProperty ("@documentation", field .getDocumentation ());
+
+            generator .endObject ();
+         }
+
+         generator .endArray ();
+      }
+
+      // URL
+
+      generator .string += ',';
+      generator .TidyBreak ();
+      generator .Indent ();
+      generator .string += '"';
+      generator .string += "@url";
+      generator .string += '"';
+      generator .string += ':';
+      generator .TidySpace ();
+
+      this ._url .toJSONStream (generator);
+
+      // End
+
+      generator .endObject ();
+      generator .endObject ();
+   },
+   dispose ()
+   {
+      X3DUrlObject            .prototype .dispose .call (this);
+      X3DProtoDeclarationNode .prototype .dispose .call (this);
+   }
+});
+
+for (const key of Object .keys (X3DExternProtoDeclaration .prototype))
+   Object .defineProperty (X3DExternProtoDeclaration .prototype, key, { enumerable: false });
+
+Object .defineProperties (X3DExternProtoDeclaration .prototype,
+{
+   isExternProto:
+   {
+      value: true,
+      enumerable: true,
+   },
+   urls:
+   {
+      get () { return this ._url; },
+      enumerable: true,
+   },
+   loadState:
+   {
+      get: X3DExternProtoDeclaration .prototype .checkLoadState,
+      enumerable: true,
+   },
+});
+
+Object .defineProperties (X3DExternProtoDeclaration,
+{
+   typeName:
+   {
+      value: "X3DExternProtoDeclaration",
+      enumerable: true,
+   },
+   fieldDefinitions:
+   {
+      value: new FieldDefinitionArray ([
+         new X3DFieldDefinition (X3DConstants .inputOutput, "metadata", new Fields .SFNode ()),
+      ]),
+      enumerable: true,
+   },
+});
+
+X3DConstants .addConstant (X3DExternProtoDeclaration .typeName);
+
+export default X3DExternProtoDeclaration;

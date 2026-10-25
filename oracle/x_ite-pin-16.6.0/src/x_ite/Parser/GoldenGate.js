@@ -1,0 +1,160 @@
+import X3DParser   from "./X3DParser.js";
+import JSONParser  from "./JSONParser.js";
+import VRMLParser  from "./VRMLParser.js";
+import XMLParser   from "./XMLParser.js";
+import GLTF2Parser from "./GLTF2Parser.js";
+import GLB2Parser  from "./GLB2Parser.js";
+import OBJParser   from "./OBJParser.js";
+import STLAParser  from "./STLAParser.js";
+import STLBParser  from "./STLBParser.js";
+import PLYAParser  from "./PLYAParser.js";
+import PLYBParser  from "./PLYBParser.js";
+import SVGParser   from "./SVGParser.js";
+import $           from "../../lib/helper.js";
+
+class GoldenGate extends X3DParser
+{
+   #inputs = new Map ();
+
+   static #parsers = [
+      XMLParser,
+      VRMLParser,
+      JSONParser,
+      GLTF2Parser,
+      GLB2Parser,
+      OBJParser,
+      STLAParser,
+      STLBParser,
+      PLYAParser,
+      PLYBParser,
+      SVGParser,
+   ];
+
+   static addParsers (... args)
+   {
+      this .#parsers .push (... args);
+   }
+
+   static removeParsers (... args)
+   {
+      this .#parsers = this .#parsers .filter (parser => !args .includes (parser));
+   }
+
+   static getParsers ()
+   {
+      return this .#parsers .slice ();
+   }
+
+   parseIntoScene (x3dSyntax, resolve, reject)
+   {
+      for (const Parser of GoldenGate .#parsers)
+      {
+         try
+         {
+            const
+               parser = new Parser (this .getScene ()),
+               input  = this .getInput (parser .getEncoding (), x3dSyntax);
+
+            if (Array .isArray (input) ? input .some (i => i === undefined) : input === undefined)
+               continue;
+
+            parser .setInput (input);
+
+            if (!parser .isValid ())
+               continue;
+
+            parser .pushExecutionContext (this .getExecutionContext ());
+            parser .parseIntoScene (resolve, reject);
+            return;
+         }
+         catch (error)
+         {
+            if (reject)
+               reject (error);
+            else
+               throw error;
+
+            return;
+         }
+      }
+
+      if (this .getScene () .worldURL .startsWith ("data:"))
+         throw new Error ("Couldn't parse X3D. No suitable file handler found for 'data:' URL.");
+      else
+         throw new Error (`Couldn't parse X3D. No suitable file handler found for '${this .getScene () .worldURL}'.`);
+   }
+
+   getInput (encoding, x3dSyntax)
+   {
+      if (Array .isArray (encoding))
+      {
+         return encoding .map (encoding => this .getInput (encoding));
+      }
+      else
+      {
+         return this .#inputs .getOrInsertComputed (encoding, () => this .createInput (encoding, x3dSyntax));
+      }
+   }
+
+   createInput (encoding, x3dSyntax)
+   {
+      try
+      {
+         switch (encoding)
+         {
+            case "STRING":
+            {
+               const string = $.decodeText (x3dSyntax);
+
+               if (x3dSyntax instanceof ArrayBuffer)
+               {
+                  if (x3dSyntax .byteLength && !string .length)
+                     return;
+               }
+
+               return string;
+            }
+            case "XML":
+            {
+               const string = this .getInput ("STRING", x3dSyntax);
+
+               if (string === undefined)
+                  return;
+
+               // An empty string should result in an empty XML (encoding) scene.
+               if (string .match (/^\s*$/))
+                  return "";
+
+               // XML must start with markup. Do not try DOMParser on other input, because
+               // some browsers (Firefox) log a parsing error to the console when it fails.
+               if (!string .match (/^\s*</))
+                  return;
+
+               return $.parseXML (string);
+            }
+            case "JSON":
+            {
+               const string = this .getInput ("STRING", x3dSyntax);
+
+               if (string === undefined)
+                  return;
+
+               return JSON .parse (string);
+            }
+            case "ARRAY_BUFFER":
+            {
+               if (x3dSyntax instanceof ArrayBuffer)
+                  return x3dSyntax;
+
+               return;
+            }
+         }
+      }
+      catch
+      {
+         return;
+      }
+   }
+}
+
+export default GoldenGate;

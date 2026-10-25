@@ -1,0 +1,452 @@
+import Fields               from "../../Fields.js";
+import X3DFieldDefinition   from "../../Base/X3DFieldDefinition.js";
+import FieldDefinitionArray from "../../Base/FieldDefinitionArray.js";
+import X3DBaseNode          from "../../Base/X3DBaseNode.js";
+import X3DConstants         from "../../Base/X3DConstants.js";
+import PrimitiveQuality     from "./PrimitiveQuality.js";
+import Shading              from "./Shading.js";
+import TextureQuality       from "./TextureQuality.js";
+import TextCompression      from "./TextCompression.js";
+import Algorithm            from "../../../standard/Math/Algorithm.js";
+import $                    from "../../../lib/helper.js";
+
+// https://www.web3d.org/documents/specifications/19775-1/V4.0/Part01/components/networking.html#BrowserProperties
+// String values are considered to be case insensitive.
+
+function BrowserOptions (executionContext)
+{
+   X3DBaseNode .call (this, executionContext);
+
+   this .addAlias ("AntiAliased", this ._Antialiased);
+
+   const browser = this .getBrowser ();
+
+   this .localStorage     = browser .getLocalStorage () .addNameSpace ("BrowserOptions.");
+   this .textureQuality   = TextureQuality .MEDIUM;
+   this .primitiveQuality = PrimitiveQuality .MEDIUM;
+   this .shading          = Shading .GOURAUD;
+}
+
+Object .assign (Object .setPrototypeOf (BrowserOptions .prototype, X3DBaseNode .prototype),
+{
+   initialize ()
+   {
+      X3DBaseNode .prototype .initialize .call (this);
+
+      this .localStorage .setDefaultValues ({
+         Rubberband:        this ._Rubberband        .getValue (),
+         PrimitiveQuality:  this ._PrimitiveQuality  .getValue (),
+         TextureQuality:    this ._TextureQuality    .getValue (),
+         StraightenHorizon: this ._StraightenHorizon .getValue (),
+         Timings:           this ._Timings           .getValue (),
+      });
+
+      this ._Rubberband                   .addInterest ("set_Rubberband__",                   this);
+      this ._Antialiased                  .addInterest ("set_Antialiased__",                  this);
+      this ._PrimitiveQuality             .addInterest ("set_PrimitiveQuality__",             this);
+      this ._TextureQuality               .addInterest ("set_TextureQuality__",               this);
+      this ._Shading                      .addInterest ("set_Shading__",                      this);
+      this ._StraightenHorizon            .addInterest ("set_StraightenHorizon__",            this);
+      this ._AutoUpdate                   .addInterest ("set_AutoUpdate__",                   this);
+      this ._ContentScale                 .addInterest ("set_ContentScale__",                 this);
+      this ._DisplayColorSpace            .addInterest ("set_DisplayColorSpace",              this);
+      this ._Exposure                     .addInterest ("set_Exposure__",                     this);
+      this ._LogarithmicDepthBuffer       .addInterest ("set_LogarithmicDepthBuffer__",       this);
+      this ._Multisampling                .addInterest ("set_Multisampling__",                this);
+      this ._Mute                         .addInterest ("set_SoundIntensity__",               this);
+      this ._OrderIndependentTransparency .addInterest ("set_OrderIndependentTransparency__", this);
+      this ._SoundIntensity               .addInterest ("set_SoundIntensity__",               this);
+      this ._Timings                      .addInterest ("set_Timings__",                      this);
+      this ._XRSessionMode                .addInterest ("set_XRSessionMode__",                this);
+
+      this .set_Antialiased__                  (this ._Antialiased);
+      this .set_Shading__                      (this ._Shading);
+      this .set_SoundIntensity__               ();
+      this .set_AutoUpdate__                   (this ._AutoUpdate);
+      this .set_ContentScale__                 (this ._ContentScale);
+      this .set_DisplayColorSpace              (this ._DisplayColorSpace);
+      this .set_Exposure__                     (this ._Exposure);
+      this .set_LogarithmicDepthBuffer__       (this ._LogarithmicDepthBuffer);
+      this .set_Multisampling__                (this ._Multisampling);
+      this .set_OrderIndependentTransparency__ (this ._OrderIndependentTransparency);
+      this .set_XRSessionMode__                (this ._XRSessionMode);
+
+      this .reset ();
+   },
+   reset: (() =>
+   {
+      const attributes = new Set ([
+         "Antialiased",
+         "AutoUpdate",
+         "Cache",
+         "ColorSpace",
+         "ContentScale",
+         "ContextMenu",
+         "Debug",
+         "DisplayColorSpace",
+         "Exposure",
+         "LogarithmicDepthBuffer",
+         "MaximumFrameRate",
+         "Multisampling",
+         "Notifications",
+         "OrderIndependentTransparency",
+         "SplashScreen",
+         "TextCompression",
+         "ToneMapping",
+         "XRSessionMode",
+      ]);
+
+      const mappings = new Map ([
+         ["AutoUpdate",    "update"],
+         ["XRSessionMode", "xrSessionMode"],
+      ]);
+
+      const restorable = new Set ([
+         "PrimitiveQuality",
+         "Rubberband",
+         "StraightenHorizon",
+         "TextureQuality",
+         "Timings",
+      ]);
+
+      return function ()
+      {
+         const
+            browser      = this .getBrowser (),
+            localStorage = this .localStorage;
+
+         for (const fieldDefinition of this .getFieldDefinitions ())
+         {
+            const
+               name  = fieldDefinition .getName (),
+               value = fieldDefinition .getValue ();
+
+            if (attributes .has (name))
+            {
+               const
+                  attribute = mappings .get (name) ?? $.toLowerCaseFirst (name),
+                  value     = browser .getElement () .getAttribute (attribute);
+
+               if (value !== null)
+               {
+                  browser .attributeChangedCallback (attribute, null, value);
+                  continue;
+               }
+            }
+
+            if (restorable .has (name))
+            {
+               const
+                  value = localStorage [name],
+                  field = this .getField (name);
+
+               if (value !== field .getValue ())
+                  field .setValue (value);
+
+               continue;
+            }
+
+            const field = this .getField (name);
+
+            if (field .equals (value))
+               continue;
+
+            field .assign (value);
+         }
+      };
+   })(),
+   getPrimitiveQuality ()
+   {
+      return this .primitiveQuality;
+   },
+   getQualityWhenMoving ()
+   {
+      const qualityWhenMoving = this ._QualityWhenMoving .getValue ();
+
+      return PrimitiveQuality .get (qualityWhenMoving);
+   },
+   getTextureQuality ()
+   {
+      return this .textureQuality;
+   },
+   getShading ()
+   {
+      return this .shading;
+   },
+   getTextCompression ()
+   {
+      switch (this ._TextCompression .getValue ())
+      {
+         default: // CHAR_SPACING
+            return TextCompression .CHAR_SPACING;
+         case "SCALING":
+            return TextCompression .SCALING;
+      }
+   },
+   set_Rubberband__ (rubberband)
+   {
+      this .localStorage .Rubberband = rubberband .getValue ();
+   },
+   set_Antialiased__ ()
+   {
+      this .set_Multisampling__ (this ._Multisampling);
+   },
+   set_PrimitiveQuality__ (value)
+   {
+      const
+         browser          = this .getBrowser (),
+         primitiveQuality = value .getValue ();
+
+      this .localStorage .PrimitiveQuality = primitiveQuality;
+      this .primitiveQuality               = PrimitiveQuality .get (primitiveQuality) ?? PrimitiveQuality .MEDIUM;
+
+      browser .setPrimitiveQuality2D ?.(this .primitiveQuality);
+      browser .setPrimitiveQuality3D ?.(this .primitiveQuality);
+   },
+   set_TextureQuality__ (value)
+   {
+      const
+         browser        = this .getBrowser (),
+         textureQuality = value .getValue ();
+
+      this .localStorage .TextureQuality = textureQuality;
+      this .textureQuality               = TextureQuality .get (textureQuality) ?? TextureQuality .MEDIUM;
+
+      browser .setTextureQuality ?.(this .textureQuality);
+   },
+   set_Shading__: (() =>
+   {
+      const strings = new Map (Object .entries (Shading) .map (entry => entry .reverse ()));
+
+      return function (value)
+      {
+         const
+            browser = this .getBrowser (),
+            shading = value .getValue () .replace ("POINTSET", "POINT");
+
+         this .shading = Shading .get (shading) ?? Shading .GOURAUD;
+
+         browser .getRenderingProperties () ._Shading = strings .get (this .shading);
+         browser .setShading (this .shading);
+      };
+   })(),
+   set_AutoUpdate__ (autoUpdate)
+   {
+      document .removeEventListener ("visibilitychange", this .checkUpdateListener);
+
+      this .intersectionObserver ?.disconnect ();
+
+      if (!autoUpdate .getValue ())
+      {
+         this .wasLive = undefined;
+         return;
+      }
+
+      const
+         browser = this .getBrowser (),
+         element = browser .getElement ();
+
+      this .wasLive ??= browser .isLive ();
+
+      this .checkUpdateListener = () => this .checkUpdate ();
+
+      document .addEventListener ("visibilitychange", this .checkUpdateListener);
+
+      this .intersectionObserver = new IntersectionObserver (entries =>
+      {
+         this .isIntersecting = entries .some (entry => entry .isIntersecting);
+
+         this .checkUpdate ();
+      });
+
+      this .intersectionObserver .observe (element);
+   },
+   checkUpdate ()
+   {
+      if (!this ._AutoUpdate .getValue ())
+         return;
+
+      if (this .isIntersecting === undefined)
+         return;
+
+      const
+         browser = this .getBrowser (),
+         hidden  = document .webkitHidden ?? document .hidden;
+
+      // 👆 Only webkitHidden is reliable in Electron.
+      // https://github.com/electron/electron/issues/28677
+
+      if ((!hidden && this .isIntersecting) || browser .getPose ())
+      {
+         if (this .wasLive)
+            browser .beginUpdate ();
+
+         this .wasLive = undefined;
+      }
+      else
+      {
+         // If this branch is processed a second time, ignore browser is live state,
+         // because isLive is now false.
+         this .wasLive ??= browser .isLive ();
+
+         browser .endUpdate ();
+      }
+   },
+   set_ContentScale__ (contentScale)
+   {
+      const browser = this .getBrowser ();
+
+      this .removeUpdateContentScale ?.();
+
+      if (contentScale .getValue () === -1)
+         this .updateContentScale ();
+      else
+         browser .getRenderingProperties () ._ContentScale = Math .max (contentScale .getValue (), 0) || 1;
+
+      browser .reshape ();
+   },
+   updateContentScale ()
+   {
+      const
+         browser = this .getBrowser (),
+         media   = window .matchMedia (`(resolution: ${window .devicePixelRatio}dppx)`),
+         update  = this .updateContentScale .bind (this);
+
+      this .removeUpdateContentScale ?.();
+
+      this .removeUpdateContentScale = () =>
+      {
+         visualViewport .removeEventListener ("resize", update);
+         media          .removeEventListener ("change", update);
+      };
+
+      visualViewport .addEventListener ("resize", update);
+      media          .addEventListener ("change", update);
+
+      browser .reshape ();
+   },
+   set_DisplayColorSpace (displayColorSpace)
+   {
+      const
+         browser  = this .getBrowser (),
+         gl       = browser .getContext (),
+         value    = displayColorSpace .getValue () .toLowerCase () .replace (/_/g, "-");
+
+      gl .drawingBufferColorSpace = value;
+      gl .unpackColorSpace        = value;
+   },
+   set_Exposure__ ()
+   {
+      const
+         browser  = this .getBrowser (),
+         gl       = browser .getContext (),
+         exposure = Math .max (this ._Exposure .getValue (), 0);
+
+      for (const shaderNode of browser .getShaders () .values ())
+      {
+         gl .useProgram (shaderNode .getProgram ());
+         gl .uniform1f (shaderNode .x3d_Exposure, exposure);
+      }
+   },
+   set_LogarithmicDepthBuffer__ (logarithmicDepthBuffer)
+   {
+      const browser = this .getBrowser ();
+
+      browser .getRenderingProperties () ._LogarithmicDepthBuffer = logarithmicDepthBuffer .getValue ();
+   },
+   set_Multisampling__ (multisampling)
+   {
+      const
+         browser    = this .getBrowser (),
+         maxSamples = browser .getMaxSamples (),
+         samples    = Algorithm .clamp (isNaN (multisampling .getValue ()) ? 4 : multisampling .getValue (), 0, maxSamples);
+
+      browser .getRenderingProperties () ._Multisampling = this ._Antialiased .getValue () ? samples : 0;
+      browser .getRenderingProperties () ._Antialiased   = samples > 0;
+
+      browser .reshape ();
+   },
+   set_OrderIndependentTransparency__ ()
+   {
+      this .getBrowser () .reshape ();
+   },
+   set_SoundIntensity__ ()
+   {
+      const
+         unmute = !this ._Mute .getValue (),
+         gain   = unmute * Algorithm .clamp (this ._SoundIntensity .getValue (), 0, 1);
+
+      for (const soundNode of this .getBrowser () .getSoundDestinations ())
+         soundNode .getSoundDestination () .gain .value = gain;
+   },
+   set_StraightenHorizon__ (straightenHorizon)
+   {
+      this .localStorage .StraightenHorizon = straightenHorizon .getValue ();
+
+      if (straightenHorizon .getValue ())
+         this .getBrowser () .getActiveLayer () ?.straightenView ();
+   },
+   set_Timings__ (timings)
+   {
+      this .localStorage .Timings = timings .getValue ();
+   },
+   set_XRSessionMode__ ()
+   {
+      this .getBrowser () .xrUpdateButton ();
+   },
+});
+
+Object .defineProperties (BrowserOptions,
+{
+   typeName:
+   {
+      value: "BrowserOptions",
+      enumerable: true,
+   },
+   fieldDefinitions:
+   {
+      value: new FieldDefinitionArray ([
+         new X3DFieldDefinition (X3DConstants .inputOutput, "SplashScreen",                 new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Dashboard",                    new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Rubberband",                   new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "EnableInlineViewpoints",       new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Antialiased",                  new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "TextureQuality",               new Fields .SFString ("MEDIUM")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "PrimitiveQuality",             new Fields .SFString ("MEDIUM")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "QualityWhenMoving",            new Fields .SFString ("SAME")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Shading",                      new Fields .SFString ("GOURAUD")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "MotionBlur",                   new Fields .SFBool ()),
+         // Additional options:
+         // Always update geometries, even if browser is not live.
+         new X3DFieldDefinition (X3DConstants .inputOutput, "AlwaysUpdateGeometries",       new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "AutoUpdate",                   new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Cache",                        new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "ColorSpace",                   new Fields .SFString ("LINEAR_WHEN_PHYSICAL_MATERIAL")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "ContentScale",                 new Fields .SFDouble (1)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "ContextMenu",                  new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Debug",                        new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Exposure",                     new Fields .SFDouble (1)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "DisplayColorSpace",            new Fields .SFString ("SRGB")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Gravity",                      new Fields .SFDouble (9.80665)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "LoadUrlObjects",               new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "LogarithmicDepthBuffer",       new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "MaximumFrameRate",             new Fields .SFDouble (80)),
+         // A string, which is set to the *reference* field of metadata nodes, when they are created.
+         new X3DFieldDefinition (X3DConstants .inputOutput, "MetadataReference",            new Fields .SFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Multisampling",                new Fields .SFInt32 (4)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Mute",                         new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Notifications",                new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "OrderIndependentTransparency", new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "SoundIntensity",               new Fields .SFFloat (1)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "StraightenHorizon",            new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "TextCompression",              new Fields .SFString ("CHAR_SPACING")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "Timings",                      new Fields .SFBool ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "ToneMapping",                  new Fields .SFString ("NONE")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "WallFriction",                 new Fields .SFDouble ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "XRSessionMode",                new Fields .SFString ("IMMERSIVE_VR")),
+      ]),
+      enumerable: true,
+   },
+});
+
+export default BrowserOptions;

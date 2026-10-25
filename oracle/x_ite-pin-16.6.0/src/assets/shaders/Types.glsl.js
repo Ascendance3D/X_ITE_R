@@ -1,0 +1,282 @@
+import MaterialTextures                   from "./MaterialTextures.js";
+import MultiTextureModeType               from "../../x_ite/Browser/Texturing/ModeType.js";
+import MultiTextureSourceType             from "../../x_ite/Browser/Texturing/SourceType.js";
+import MultiTextureFunctionType           from "../../x_ite/Browser/Texturing/FunctionType.js";
+import TextureCoordinateGeneratorModeType from "../../x_ite/Browser/Texturing/TextureCoordinateGeneratorModeType.js";
+import { maxClipPlanes }                  from "../../x_ite/Browser/Rendering/RenderingConfiguration.js";
+import { maxTextures }                    from "../../x_ite/Browser/Texturing/TexturingConfiguration.js";
+
+export default () => /* glsl */ `
+
+///
+/// Defines
+///
+
+#define X_ITE
+
+#define x3d_None 0
+
+#define x3d_Points      0
+#define x3d_Lines       1
+#define x3d_Geometry2D  2
+#define x3d_Geometry3D  3
+
+#define x3d_MaxClipPlanes  ${maxClipPlanes}
+
+#define x3d_LinearFog        1
+#define x3d_ExponentialFog   2
+#define x3d_Exponential2Fog  3
+
+#define x3d_DirectionalLight  1
+#define x3d_PointLight        2
+#define x3d_SpotLight         3
+
+#define x3d_MaxTextures      ${maxTextures}
+#define x3d_TextureType2D    2
+#define x3d_TextureType3D    3
+#define x3d_TextureTypeCube  4
+
+#define x3d_Replace                   ${MultiTextureModeType .REPLACE}
+#define x3d_Modulate                  ${MultiTextureModeType .MODULATE}
+#define x3d_Modulate2X                ${MultiTextureModeType .MODULATE_2X}
+#define x3d_Modulate4X                ${MultiTextureModeType .MODULATE_4X}
+#define x3d_Add                       ${MultiTextureModeType .ADD}
+#define x3d_AddSigned                 ${MultiTextureModeType .ADD_SIGNED}
+#define x3d_AddSigned2X               ${MultiTextureModeType .ADD_SIGNED_2X}
+#define x3d_AddSmooth                 ${MultiTextureModeType .ADD_SMOOTH}
+#define x3d_Subtract                  ${MultiTextureModeType .SUBTRACT}
+#define x3d_BlendDiffuseAlpha         ${MultiTextureModeType .BLEND_DIFFUSE_ALPHA}
+#define x3d_BlendTextureAlpha         ${MultiTextureModeType .BLEND_TEXTURE_ALPHA}
+#define x3d_BlendFactorAlpha          ${MultiTextureModeType .BLEND_FACTOR_ALPHA}
+#define x3d_BlendCurrentAlpha         ${MultiTextureModeType .BLEND_CURRENT_ALPHA}
+#define x3d_ModulateAlphaAddColor     ${MultiTextureModeType .MODULATE_ALPHA_ADD_COLOR}
+#define x3d_ModulateInvAlphaAddColor  ${MultiTextureModeType .MODULATE_INV_ALPHA_ADD_COLOR}
+#define x3d_ModulateInvColorAddAlpha  ${MultiTextureModeType .MODULATE_INV_COLOR_ADD_ALPHA}
+#define x3d_DotProduct3               ${MultiTextureModeType .DOT_PRODUCT_3}
+#define x3d_SelectArg1                ${MultiTextureModeType .SELECT_ARG1}
+#define x3d_SelectArg2                ${MultiTextureModeType .SELECT_ARG2}
+#define x3d_Off                       ${MultiTextureModeType .OFF}
+
+#define x3d_Diffuse  ${MultiTextureSourceType .DIFFUSE}
+#define x3d_Specular ${MultiTextureSourceType .SPECULAR}
+#define x3d_Factor   ${MultiTextureSourceType .FACTOR}
+
+#define x3d_Complement     ${MultiTextureFunctionType .COMPLEMENT}
+#define x3d_AlphaReplicate ${MultiTextureFunctionType .ALPHA_REPLICATE}
+
+#define x3d_Sphere                      ${TextureCoordinateGeneratorModeType .SPHERE}
+#define x3d_CameraSpaceNormal           ${TextureCoordinateGeneratorModeType .CAMERA_SPACE_NORMAL}
+#define x3d_CameraSpacePosition         ${TextureCoordinateGeneratorModeType .CAMERA_SPACE_POSITION}
+#define x3d_CameraSpaceReflectionVector ${TextureCoordinateGeneratorModeType .CAMERA_SPACE_REFLECTION_VECTOR}
+#define x3d_SphereLocal                 ${TextureCoordinateGeneratorModeType .SPHERE_LOCAL}
+#define x3d_Coord                       ${TextureCoordinateGeneratorModeType .COORD}
+#define x3d_CoordEye                    ${TextureCoordinateGeneratorModeType .COORD_EYE}
+#define x3d_Noise                       ${TextureCoordinateGeneratorModeType .NOISE}
+#define x3d_NoiseEye                    ${TextureCoordinateGeneratorModeType .NOISE_EYE}
+#define x3d_SphereReflect               ${TextureCoordinateGeneratorModeType .SPHERE_REFLECT}
+#define x3d_SphereReflectLocal          ${TextureCoordinateGeneratorModeType .SPHERE_REFLECT_LOCAL}
+
+// Legacy
+#define x3d_GeometryPoints  0
+#define x3d_GeometryLines   1
+#define x3d_NoneClipPlane   vec4 (88.0, 51.0, 68.0, 33.0)
+#define x3d_NoneFog         0
+#define x3d_NoneLight       0
+#define x3d_NoneTexture     0
+
+///
+/// Types
+///
+
+#if defined (X3D_FOG)
+struct x3d_FogParameters {
+   mediump int   type;
+   mediump vec3  color;
+   mediump float visibilityStart;
+   mediump float visibilityRange;
+   mediump mat3  matrix;
+};
+#endif
+
+//uniform x3d_FogParameters x3d_Fog;
+
+#if defined (X3D_LIGHTING)
+struct x3d_LightSourceParameters {
+   mediump int   type;
+   mediump vec3  color;
+   mediump float intensity;
+   mediump float ambientIntensity;
+   mediump vec3  attenuation;
+   mediump vec3  location;
+   mediump vec3  direction;
+   mediump float radius;
+   mediump float beamWidth;
+   mediump float cutOffAngle;
+   mediump mat3  matrix;
+
+   #if defined (X3D_SHADOWS)
+      mediump vec3  shadowColor;
+      mediump float shadowIntensity;
+      mediump float shadowBias;
+      mediump mat4  shadowMatrix;
+      mediump int   shadowMapSize;
+   #endif
+};
+#endif
+
+//uniform x3d_LightSourceParameters x3d_LightSource [X3D_NUM_LIGHTS];
+
+#if defined (X3D_USE_IBL)
+struct x3d_EnvironmentLightSourceParameters {
+   mediump vec3        color;
+   mediump float       intensity;
+   mediump float       ambientIntensity;
+   mediump mat3        rotation;
+   mediump samplerCube diffuseTexture;
+   bool                diffuseTextureLinear;
+   mediump int         diffuseTextureLevels;
+   mediump samplerCube specularTexture;
+   bool                specularTextureLinear;
+   mediump int         specularTextureLevels;
+   mediump sampler2D   ggxLUTTexture;
+
+   #if defined (X3D_SHEEN_MATERIAL_EXT)
+      mediump samplerCube sheenTexture;
+      bool                sheenTextureLinear;
+      mediump int         sheenTextureLevels;
+      mediump sampler2D   charlieLUTTexture;
+   #endif
+};
+#endif
+
+//uniform x3d_EnvironmentLightSourceParameters x3d_EnvironmentLightSource;
+
+#if defined (X3D_GEOMETRY_0D) && defined (X3D_STYLE_PROPERTIES)
+struct x3d_PointPropertiesParameters
+{
+   mediump float pointSizeScaleFactor;
+   mediump float pointSizeMinValue;
+   mediump float pointSizeMaxValue;
+   mediump vec3  attenuation;
+};
+#endif
+
+//uniform x3d_PointPropertiesParameters x3d_PointProperties;
+
+#if defined (X3D_GEOMETRY_1D) && defined (X3D_STYLE_PROPERTIES)
+struct x3d_LinePropertiesParameters
+{
+   mediump int   linetype;
+   mediump float lineStippleScale;
+   #if defined (X3D_STYLE_PROPERTIES_TEXTURE)
+   sampler2D     texture;
+   #endif
+};
+#endif
+
+//uniform x3d_LinePropertiesParameters x3d_LineProperties;
+
+#if (defined (X3D_GEOMETRY_2D) || defined (X3D_GEOMETRY_3D)) && defined (X3D_STYLE_PROPERTIES)
+struct x3d_FillPropertiesParameters
+{
+   bool          filled;
+   bool          hatched;
+   mediump vec3  hatchColor;
+   mediump float scale;
+
+   #if defined (X3D_STYLE_PROPERTIES_TEXTURE)
+      sampler2D texture;
+   #endif
+};
+#endif
+
+//uniform x3d_FillPropertiesParameters x3d_FillProperties;
+
+#if defined (X3D_UNLIT_MATERIAL)
+struct x3d_UnlitMaterialParameters
+{
+   mediump vec3  emissiveColor;
+   mediump float normalScale;
+   mediump float transparency;
+};
+#endif
+
+//uniform x3d_UnlitMaterialParameters x3d_Material;
+
+#if defined (X3D_GOURAUD_MATERIAL) || defined (X3D_PHONG_MATERIAL)
+struct x3d_MaterialParameters
+{
+   mediump float ambientIntensity;
+   mediump vec3  diffuseColor;
+   mediump vec3  specularColor;
+   mediump vec3  emissiveColor;
+   mediump float shininess;
+   mediump float occlusionStrength;
+   mediump float normalScale;
+   mediump float transparency;
+};
+#endif
+
+//uniform x3d_MaterialParameters x3d_Material;
+
+#if defined (X3D_PHYSICAL_MATERIAL)
+struct x3d_PhysicalMaterialParameters
+{
+   #if defined (X3D_MATERIAL_SPECULAR_GLOSSINESS)
+      mediump vec3 diffuseColor;
+      mediump vec3 specularColor;
+      mediump float glossiness;
+   #elif defined (X3D_MATERIAL_METALLIC_ROUGHNESS)
+      mediump vec3  baseColor;
+      mediump float metallic;
+      mediump float roughness;
+   #endif
+
+   mediump vec3  emissiveColor;
+   mediump float occlusionStrength;
+   mediump float normalScale;
+   mediump float transparency;
+};
+#endif
+
+//uniform x3d_PhysicalMaterialParameters x3d_Material;
+
+${MaterialTextures .structs ()}
+
+//uniform x3d_SpecularColorTextureParametersEXT x3d_SpecularColorTextureEXT;
+
+#if defined (X3D_MULTI_TEXTURING)
+struct x3d_MultiTextureParameters
+{
+   mediump int mode;
+   mediump int alphaMode;
+   mediump int source;
+   mediump int function;
+};
+#endif
+
+//uniform x3d_MultiTextureParameters x3d_MultiTexture [X3D_NUM_TEXTURES];
+
+#if defined (X3D_TEXTURE) || defined (X3D_MATERIAL_TEXTURES)
+struct x3d_TextureCoordinateGeneratorParameters
+{
+   mediump int   mode;
+   mediump float parameter [6];
+};
+#endif
+
+//uniform x3d_TextureCoordinateGeneratorParameters x3d_TextureCoordinateGenerator [X3D_NUM_TEXTURE_COORDINATES];
+
+#if defined (X3D_TEXTURE_PROJECTION)
+struct x3d_TextureProjectorParameters
+{
+   mediump vec3  color;
+   mediump float intensity;
+   mediump vec3  location;
+   mediump vec2  params; // near, far
+   mediump mat4  matrix;
+};
+#endif
+
+//uniform x3d_TextureProjectorParameters x3d_TextureProjector [X3D_NUM_TEXTURE_PROJECTORS];
+`;
