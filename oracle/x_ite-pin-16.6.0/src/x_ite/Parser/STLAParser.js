@@ -1,0 +1,334 @@
+import X3DParser   from "./X3DParser.js";
+import Expressions from "./Expressions.js";
+import Color3      from "../../standard/Math/Numbers/Color3.js";
+
+// http://paulbourke.net/dataformats/stl/
+// https://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
+
+/*
+ *  Grammar
+ */
+
+// Lexical elements
+const Grammar = Expressions ({
+   // General
+   whitespaces: /[\x20\n\t\r,]+/y,
+   whitespacesNoLineTerminator: /[\x20\t]+/y,
+   comment: /;[^\r\n]*(?=[\r\n]|$)/y,
+   untilEndOfLine: /[^\r\n]+/y,
+
+   // Keywords
+   solid: /\bsolid\b/y,
+   facet: /\bfacet\b/y,
+   normal: /\bnormal\b/y,
+   outer: /\bouter\b/y,
+   loop: /\bloop\b/y,
+   vertex: /\bvertex\b/y,
+   endloop: /\bendloop\b/y,
+   endfacet: /\bendfacet\b/y,
+   endsolid: /\bendsolid\b/y,
+
+   // Values
+   name: /\w+/y,
+   double: /[+-]?(?:(?:(?:\d*\.\d+)|(?:\d+(?:\.)?))(?:[eE][+-]?\d+)?)/y,
+   constants: /([+-])((?:NAN|INF|INFINITY))/iy,
+});
+
+/*
+ * Parser
+ */
+
+function STLAParser (scene)
+{
+   X3DParser .call (this, scene);
+}
+
+Object .assign (Object .setPrototypeOf (STLAParser .prototype, X3DParser .prototype),
+{
+   CONSTANTS: new Map ([
+      ["NAN", NaN],
+      ["INF", Infinity],
+      ["INFINITY", Infinity],
+   ]),
+   getEncoding ()
+   {
+      return "STRING";
+   },
+   setInput (string)
+   {
+      this .input = string;
+   },
+   isValid ()
+   {
+      if (typeof this .input !== "string")
+         return false;
+
+      return !! this .input .match (/^(?:[\x20\n\t\r]|;[^\r\n]*[\r\n])*\bsolid\b.*?\bendsolid\b/s);
+   },
+   parseIntoScene (resolve, reject)
+   {
+      this .stl ()
+         .then (resolve)
+         .catch (reject);
+   },
+   async stl ()
+   {
+      // Set profile and components.
+
+      const
+         browser = this .getBrowser (),
+         scene   = this .getScene ();
+
+      scene .setEncoding ("STL");
+      scene .setProfile (browser .getProfile ("Interchange"));
+
+      await browser .loadComponents (scene);
+
+      // Create nodes.
+
+      this .material   = scene .createNode ("Material");
+      this .appearance = scene .createNode ("Appearance");
+
+      this .material .diffuseColor = Color3 .WHITE;
+      this .appearance .material   = this .material;
+
+      // Parse scene.
+
+      this .statements ();
+
+      return this .getScene ();
+   },
+   comments ()
+   {
+      while (this .comment ())
+         ;
+   },
+   comment ()
+   {
+      this .whitespaces ();
+
+      if (Grammar .comment .parse (this))
+         return true;
+
+      return false;
+   },
+   whitespaces ()
+   {
+      Grammar .whitespaces .parse (this);
+   },
+   whitespacesNoLineTerminator ()
+   {
+      Grammar .whitespacesNoLineTerminator .parse (this);
+   },
+   statements ()
+   {
+      while (this .solid ())
+         ;
+   },
+   solid ()
+   {
+      this .comments ();
+
+      if (!Grammar .solid .parse (this))
+         return false;
+
+      this .whitespacesNoLineTerminator ();
+
+      const
+         scene      = this .getExecutionContext (),
+         shape      = scene .createNode ("Shape"),
+         geometry   = scene .createNode ("TriangleSet"),
+         coordinate = scene .createNode ("Coordinate"),
+         hasNormals = this .normals ?.some (v => v !== 0),
+         name       = this .sanitizeName (Grammar .name .parse (this) ? this .result [0] : "");
+
+      Grammar .untilEndOfLine .parse (this);
+
+      this .facets ();
+      this .rotateAxes90 (this .vertices);
+
+      shape .appearance         = this .appearance;
+      shape .geometry           = geometry;
+      coordinate .point         = this .vertices;
+      geometry .normalPerVertex = false;
+      geometry .coord           = coordinate;
+
+      if (hasNormals)
+      {
+         const normal = scene .createNode ("Normal");
+
+         this .rotateAxes90 (this .normals);
+
+         normal .vector   = this .normals;
+         geometry .normal = normal;
+      }
+
+      if (name)
+      {
+         scene .addNamedNode (scene .getUniqueName (name), shape);
+         scene .addExportedNode (scene .getUniqueExportName (name), shape);
+      }
+
+      scene .getRootNodes () .push (shape);
+
+      this .comments ();
+
+      if (Grammar .endsolid .parse (this))
+         return true;
+
+      throw new Error ("Expected 'endsolid' statement.");
+   },
+   facets ()
+   {
+      this .normals  = [ ];
+      this .vertices = [ ];
+
+      while (this .facet (this .normals, this .vertices))
+         ;
+   },
+   facet (normals, vertices)
+   {
+      this .comments ();
+
+      if (Grammar .facet .parse (this))
+      {
+         if (this .normal (normals))
+         {
+            if (this .loop (vertices))
+            {
+               this .comments ();
+
+               if (Grammar .endfacet .parse (this))
+                  return true;
+
+               throw new Error ("Expected 'endfacet' statement.");
+            }
+         }
+      }
+
+      return false;
+   },
+   normal (normals)
+   {
+      this .whitespacesNoLineTerminator ();
+
+      if (Grammar .normal .parse (this))
+      {
+         if (this .double ())
+         {
+            const x = this .value;
+
+            if (this .double ())
+            {
+               const y = this .value;
+
+               if (this .double ())
+               {
+                  const z = this .value;
+
+                  normals .push (x, y, z);
+                  return true;
+               }
+
+               throw new Error ("Expected a double.");
+            }
+
+            throw new Error ("Expected a double.");
+         }
+
+         throw new Error ("Expected a double.");
+      }
+
+      throw new Error ("Expected 'normal' statement.");
+   },
+   loop (vertices)
+   {
+      this .comments ();
+
+      if (Grammar .outer .parse (this))
+      {
+         this .whitespacesNoLineTerminator ();
+
+         if (Grammar .loop .parse (this))
+         {
+            if (this .vertex (vertices))
+            {
+               if (this .vertex (vertices))
+               {
+                  if (this .vertex (vertices))
+                  {
+                     this .comments ();
+
+                     if (Grammar .endloop .parse (this))
+                        return true;
+
+                     throw new Error ("Expected 'endloop' statement.");
+                  }
+               }
+            }
+         }
+
+         throw new Error ("Expected 'loop' statement.");
+      }
+
+      throw new Error ("Expected 'outer' statement.");
+   },
+   vertex (vertices)
+   {
+      this .comments ();
+
+      if (Grammar .vertex .parse (this))
+      {
+         if (this .double ())
+         {
+            const x = this .value;
+
+            if (this .double ())
+            {
+               const y = this .value;
+
+               if (this .double ())
+               {
+                  const z = this .value;
+
+                  vertices .push (x, y, z);
+                  return true;
+               }
+
+               throw new Error ("Expected a double.");
+            }
+
+            throw new Error ("Expected a double.");
+         }
+
+         throw new Error ("Expected a double.");
+      }
+
+      throw new Error ("Expected 'vertex' statement.");
+   },
+   double ()
+   {
+      this .whitespacesNoLineTerminator ();
+
+      if (Grammar .double .parse (this))
+      {
+         this .value = parseFloat (this .result [0]);
+
+         return true;
+      }
+
+      if (Grammar .constants .parse (this))
+      {
+         this .value = this .CONSTANTS .get (this .result [2] .toUpperCase ());
+
+         if (this .result [1] === "-")
+            this .value = - this .value;
+
+         return true;
+      }
+
+      return false;
+   },
+});
+
+export default STLAParser;

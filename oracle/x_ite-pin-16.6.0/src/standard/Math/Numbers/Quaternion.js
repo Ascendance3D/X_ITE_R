@@ -1,0 +1,566 @@
+import Vector4   from "./Vector4.js";
+import Matrix3   from "./Matrix3.js";
+import Algorithm from "../Algorithm.js";
+
+const {
+   assign,
+   equals,
+   add,
+   divide,
+   dot,
+   multiply,
+   negate,
+   norm,
+   normalize,
+   squaredNorm,
+   subtract,
+   toString
+} = Vector4 .prototype;
+
+function Quaternion (x = 0, y = 0, z = 0, w = 1)
+{
+   this .x = x;
+   this .y = y;
+   this .z = z;
+   this .w = w;
+}
+
+Object .assign (Quaternion .prototype,
+{
+   [Symbol .iterator]: Vector4 .prototype [Symbol .iterator],
+   add,
+   assign,
+   conjugate ()
+   {
+      this .x = -this .x;
+      this .y = -this .y;
+      this .z = -this .z;
+      return this;
+   },
+   copy ()
+   {
+      const copy = Object .create (Quaternion .prototype);
+      copy .x = this .x;
+      copy .y = this .y;
+      copy .z = this .z;
+      copy .w = this .w;
+      return copy;
+   },   equals,
+   divide,
+   dot,
+   exp ()
+   {
+      const { x, y, z, w } = this;
+
+      const
+         r  = Math .hypot (x, y, z),
+         et = Math .exp (w),
+         s  = r > 0 ? (et * Math .sin (r)) / r : 0;
+
+      this .x = x * s;
+      this .y = y * s;
+      this .z = z * s;
+      this .w = et * Math .cos (r);
+
+      return this;
+   },
+   /**
+    * Gets the Euler components.
+    * @param {number[]} euler - Array to be returned.
+    * @param {string} order - A string representing the order that the rotations are applied.
+    * @returns {number[]} The angles of the Euler rotations in radians.
+    */
+   getEuler (euler = [ ], order = "XYZ")
+   {
+      // https://github.com/mrdoob/three.js/blob/7a4f6b6637fbf10f1f36c9bb1f34b32452e516c6/src/math/Euler.js#L189
+
+      const { 0: m0, 1: m1, 2: m2, 3: m3, 4: m4, 5: m5, 6: m6, 7: m7, 8: m8 } = this .getMatrix (m);
+
+      switch (order)
+      {
+         case "XYZ":
+         {
+            euler [1] = Math .asin (Algorithm .clamp (m6, -1, 1));
+
+            if (Math .abs (m6) < 0.9999999)
+            {
+               euler [0] = Math .atan2 (-m7, m8);
+               euler [2] = Math .atan2 (-m3, m0);
+            }
+            else
+            {
+               euler [0] = Math .atan2 (m5, m4);
+               euler [2] = 0;
+            }
+
+            break;
+         }
+         case "ZYX":
+         {
+            euler [1] = Math .asin (-Algorithm .clamp (m2, -1, 1));
+
+            if (Math .abs (m2) < 0.9999999)
+            {
+               euler [0] = Math .atan2 (m5, m8);
+               euler [2] = Math .atan2 (m1, m0);
+            }
+            else
+            {
+               euler [0] = 0;
+               euler [2] = Math .atan2 (-m3, m4);
+            }
+
+            break;
+         }
+         case "YXZ":
+         {
+            euler [0] = Math .asin (-Algorithm .clamp (m7, -1, 1));
+
+            if (Math .abs (m7) < 0.9999999)
+            {
+               euler [1] = Math .atan2 (m6, m8);
+               euler [2] = Math .atan2 (m1, m4);
+
+            }
+            else
+            {
+               euler [1] = Math .atan2 (-m2, m0);
+               euler [2] = 0;
+            }
+
+            break;
+         }
+         case "ZXY":
+         {
+            euler [0] = Math .asin (Algorithm .clamp (m5, -1, 1));
+
+            if (Math .abs (m5) < 0.9999999)
+            {
+               euler [1] = Math .atan2 (-m2, m8);
+               euler [2] = Math .atan2 (-m3, m4);
+            }
+            else
+            {
+               euler [1] = 0;
+               euler [2] = Math .atan2 (m1, m0);
+            }
+
+            break;
+         }
+         case "YZX":
+         {
+            euler [2] = Math .asin (Algorithm .clamp (m1, -1, 1));
+
+            if (Math .abs (m1) < 0.9999999)
+            {
+               euler [0] = Math .atan2 (-m7, m4);
+               euler [1] = Math .atan2 (-m2, m0);
+            }
+            else
+            {
+               euler [0] = 0;
+               euler [1] = Math .atan2 (m6, m8);
+            }
+
+            break;
+         }
+         case "XZY":
+         {
+            euler [2] = Math .asin (-Algorithm .clamp (m3, -1, 1));
+
+            if (Math .abs (m3) < 0.9999999)
+            {
+               euler [0] = Math .atan2 (m5, m4);
+               euler [1] = Math .atan2 (m6, m0);
+
+            }
+            else
+            {
+               euler [0] = Math .atan2 (-m7, m8);
+               euler [1] = 0;
+            }
+
+            break;
+         }
+      }
+
+      return euler;
+   },
+   getMatrix (matrix = new Matrix3 ())
+   {
+      const { x, y, z, w } = this;
+
+      const
+         xx = x * x,
+         xy = x * y,
+         xw = x * w,
+         xz = x * z,
+         yy = y * y,
+         yw = y * w,
+         yz = y * z,
+         zz = z * z,
+         zw = z * w;
+
+      const
+         e0 = 1 - 2 * (yy + zz),
+         e1 =     2 * (xy + zw),
+         e2 =     2 * (xz - yw),
+         e3 =     2 * (xy - zw),
+         e4 = 1 - 2 * (xx + zz),
+         e5 =     2 * (xw + yz),
+         e6 =     2 * (xz + yw),
+         e7 =     2 * (yz - xw),
+         e8 = 1 - 2 * (xx + yy);
+
+      if (matrix .length === 9)
+      {
+         matrix [0] = e0;
+         matrix [1] = e1;
+         matrix [2] = e2;
+
+         matrix [3] = e3;
+         matrix [4] = e4;
+         matrix [5] = e5;
+
+         matrix [6] = e6;
+         matrix [7] = e7;
+         matrix [8] = e8;
+      }
+      else // matrix .length === 16
+      {
+         matrix [0]  = e0;
+         matrix [1]  = e1;
+         matrix [2]  = e2;
+         matrix [3]  = 0;
+         matrix [4]  = e3;
+         matrix [5]  = e4;
+         matrix [6]  = e5;
+         matrix [7]  = 0;
+         matrix [8]  = e6;
+         matrix [9]  = e7;
+         matrix [10] = e8;
+         matrix [11] = 0;
+         matrix [12] = 0;
+         matrix [13] = 0;
+         matrix [14] = 0;
+         matrix [15] = 1;
+      }
+
+      return matrix;
+   },
+   inverse ()
+   {
+      this .x = -this .x;
+      this .y = -this .y;
+      this .z = -this .z;
+
+      const squaredNorm = this .squaredNorm ();
+
+      if (squaredNorm)
+      {
+         this .x /= squaredNorm;
+         this .y /= squaredNorm;
+         this .z /= squaredNorm;
+         this .w /= squaredNorm;
+      }
+
+      return this;
+   },
+   log ()
+   {
+      const { x, y, z, w } = this;
+
+      const
+         r = Math .hypot (x, y, z),
+         t = r > 0 ? Math .atan2 (r, w) / r : 0;
+
+      this .x = x * t;
+      this .y = y * t;
+      this .z = z * t;
+      this .w = 0.5 * Math .log (x * x + y * y + z * z + w * w);
+
+      return this;
+   },
+   multiply,
+   multLeft (quat)
+   {
+      const
+         { x: ax, y: ay, z: az, w: aw } = this,
+         { x: bx, y: by, z: bz, w: bw } = quat;
+
+      this .x = aw * bx + ax * bw + ay * bz - az * by;
+      this .y = aw * by + ay * bw + az * bx - ax * bz;
+      this .z = aw * bz + az * bw + ax * by - ay * bx;
+      this .w = aw * bw - ax * bx - ay * by - az * bz;
+
+      return this;
+   },
+   multQuatVec (vector)
+   {
+      // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Vector_rotation
+
+      const
+         { x: qx, y: qy, z: qz, w: qw } = this,
+         { x: vx, y: vy, z: vz } = vector,
+         tx = 2 * (qz * vy - qy * vz),
+         ty = 2 * (qx * vz - qz * vx),
+         tz = 2 * (qy * vx - qx * vy);
+
+      vector .x += qw * tx - qy * tz + qz * ty;
+      vector .y += qw * ty - qz * tx + qx * tz;
+      vector .z += qw * tz - qx * ty + qy * tx;
+
+      return vector;
+   },
+   multRight (quat)
+   {
+      const
+         { x: ax, y: ay, z: az, w: aw } = this,
+         { x: bx, y: by, z: bz, w: bw } = quat;
+
+      this .x = bw * ax + bx * aw + by * az - bz * ay;
+      this .y = bw * ay + by * aw + bz * ax - bx * az;
+      this .z = bw * az + bz * aw + bx * ay - by * ax;
+      this .w = bw * aw - bx * ax - by * ay - bz * az;
+
+      return this;
+   },
+   multVecQuat (vector)
+   {
+      // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Vector_rotation
+
+      const
+         { x: qx, y: qy, z: qz, w: qw } = this,
+         { x: vx, y: vy, z: vz } = vector,
+         tx = 2 * (qy * vz - qz * vy),
+         ty = 2 * (qz * vx - qx * vz),
+         tz = 2 * (qx * vy - qy * vx);
+
+      vector .x += qw * tx + qy * tz - qz * ty;
+      vector .y += qw * ty + qz * tx - qx * tz;
+      vector .z += qw * tz + qx * ty - qy * tx;
+
+      return vector;
+   },
+   negate,
+   norm,
+   normalize,
+   pow (exponent)
+   {
+      if (typeof exponent === "number")
+         return this .log () .multiply (exponent) .exp ();
+
+      return this .log () .multLeft (exponent) .exp ();
+   },
+   set (x = 0, y = 0, z = 0, w = 1)
+   {
+      this .x = x;
+      this .y = y;
+      this .z = z;
+      this .w = w;
+      return this;
+   },
+   /**
+    * Sets the Euler components.
+    * @param {number} x - The angle of the x axis in radians.
+    * @param {number} y - The angle of the y axis in radians.
+    * @param {number} z - The angle of the z axis in radians.
+    * @param {string} order - A string representing the order that the rotations are applied.
+    * @returns {Quaternion} A reference to this quaternion.
+    */
+   setEuler (x, y, z, order = "XYZ")
+   {
+      // https://github.com/toji/gl-matrix/blob/accefb6ddf1897a0dc443bbc7664c90e67af6455/src/quat.js#L460
+
+      x /= 2;
+      y /= 2;
+      z /= 2;
+
+      const
+         sx = Math .sin (x),
+         sy = Math .sin (y),
+         sz = Math .sin (z),
+         cx = Math .cos (x),
+         cy = Math .cos (y),
+         cz = Math .cos (z);
+
+      switch (order)
+      {
+         case "XYZ":
+            this .x = sx * cy * cz + cx * sy * sz;
+            this .y = cx * sy * cz - sx * cy * sz;
+            this .z = cx * cy * sz + sx * sy * cz;
+            this .w = cx * cy * cz - sx * sy * sz;
+            break;
+
+         case "ZYX":
+            this .x = sx * cy * cz - cx * sy * sz;
+            this .y = cx * sy * cz + sx * cy * sz;
+            this .z = cx * cy * sz - sx * sy * cz;
+            this .w = cx * cy * cz + sx * sy * sz;
+            break;
+
+         case "YXZ":
+            this .x = sx * cy * cz + cx * sy * sz;
+            this .y = cx * sy * cz - sx * cy * sz;
+            this .z = cx * cy * sz - sx * sy * cz;
+            this .w = cx * cy * cz + sx * sy * sz;
+            break;
+
+         case "ZXY":
+            this .x = sx * cy * cz - cx * sy * sz;
+            this .y = cx * sy * cz + sx * cy * sz;
+            this .z = cx * cy * sz + sx * sy * cz;
+            this .w = cx * cy * cz - sx * sy * sz;
+            break;
+
+         case "YZX":
+            this .x = sx * cy * cz + cx * sy * sz;
+            this .y = cx * sy * cz + sx * cy * sz;
+            this .z = cx * cy * sz - sx * sy * cz;
+            this .w = cx * cy * cz - sx * sy * sz;
+            break;
+
+         case "XZY":
+            this .x = sx * cy * cz - cx * sy * sz;
+            this .y = cx * sy * cz - sx * cy * sz;
+            this .z = cx * cy * sz + sx * sy * cz;
+            this .w = cx * cy * cz + sx * sy * sz;
+            break;
+      }
+
+      return this;
+   },
+   setMatrix (matrix)
+   {
+      // First, find largest diagonal in matrix:
+
+      const i = matrix [0] > matrix [4]
+         ? matrix [0] > matrix [8] ? 0 : 2
+         : matrix [4] > matrix [8] ? 1 : 2;
+
+      const scaleRow = matrix [0] + matrix [4] + matrix [8];
+
+      if (scaleRow > matrix [i * 3 + i])
+      {
+         // Compute w first:
+         this [3] = Math .sqrt (scaleRow + 1) / 2;
+
+         // And compute other values:
+         const d = 4 * this [3];
+         this [0] = (matrix [5] - matrix [7]) / d;
+         this [1] = (matrix [6] - matrix [2]) / d;
+         this [2] = (matrix [1] - matrix [3]) / d;
+      }
+      else
+      {
+         // Compute x, y, or z first:
+         const
+            j = (i + 1) % 3,
+            k = (i + 2) % 3;
+
+         // Compute first value:
+         this [i] = Math .sqrt (matrix [i * 3 + i] - matrix [j * 3 + j] - matrix [k * 3 + k] + 1) / 2;
+
+         // And the others:
+         const d = 4 * this [i];
+         this [j] = (matrix [i * 3 + j] + matrix [j * 3 + i]) / d;
+         this [k] = (matrix [i * 3 + k] + matrix [k * 3 + i]) / d;
+         this [3] = (matrix [j * 3 + k] - matrix [k * 3 + j]) / d;
+      }
+
+      return this;
+   },
+   slerp (destination, t)
+   {
+      return Algorithm .slerp (this, t1 .assign (destination), t);
+   },
+   squad (a, b, destination, t)
+   {
+      // Ken Shoemake defines Squad as:
+      // We must use shortest path slerp to prevent flipping. See also spline below.
+      // a = spline (si-1, si, si+1) and b = spline (di-1, di, di+1), where si = source and di = destination
+
+      return Algorithm .slerp (Algorithm .slerp (this, t1 .assign (destination), t),
+                               Algorithm .slerp (t2 .assign (a), t3 .assign (b), t),
+                               2 * t * (1 - t));
+   },
+   squaredNorm,
+   subtract,
+   toString,
+});
+
+for (const key of Object .keys (Quaternion .prototype))
+   Object .defineProperty (Quaternion .prototype, key, { enumerable: false });
+
+Object .defineProperties (Quaternion .prototype,
+{
+   length: { value: 4 },
+   0:
+   {
+      get () { return this .x; },
+      set (value) { this .x = value; },
+   },
+   1:
+   {
+      get () { return this .y; },
+      set (value) { this .y = value; },
+   },
+   2:
+   {
+      get () { return this .z; },
+      set (value) { this .z = value; },
+   },
+   3:
+   {
+      get () { return this .w; },
+      set (value) { this .w = value; },
+   },
+});
+
+Object .assign (Quaternion,
+{
+   ZERO: Object .freeze (new Quaternion (0, 0, 0, 0)),
+   IDENTITY: Object .freeze (new Quaternion ()),
+   spline: (() =>
+   {
+      const
+         q0   = new Quaternion (),
+         q1   = new Quaternion (),
+         q2   = new Quaternion (),
+         q1_i = new Quaternion ();
+
+      return function (Q0, Q1, Q2)
+      {
+         q0 .assign (Q0);
+         q1 .assign (Q1);
+         q2 .assign (Q2);
+
+         // If the dot product is smaller than 0 we must negate the quaternion to prevent flipping. If we negate all
+         // the terms we get a different quaternion but it represents the same rotation.
+
+         if (q0 .dot (q1) < 0)
+            q0 .negate ();
+
+         if (q2 .dot (q1) < 0)
+            q2 .negate ();
+
+         q1_i .assign (q1) .inverse ();
+
+         // The result must be normalized as it will be used in slerp and we can only slerp normalized vectors.
+
+         return q1 .multRight (
+            t1 .assign (q1_i) .multRight (q0) .log () .add (t2 .assign (q1_i) .multRight (q2) .log ()) .divide (-4) .exp ()
+         )
+         .normalize () .copy ();
+      };
+   })(),
+});
+
+const
+   t1 = new Quaternion (),
+   t2 = new Quaternion (),
+   t3 = new Quaternion (),
+   m  = new Matrix3 ();
+
+export default Quaternion;

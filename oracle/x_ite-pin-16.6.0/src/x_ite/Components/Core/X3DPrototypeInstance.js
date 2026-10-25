@@ -1,0 +1,745 @@
+import X3DChildObject      from "../../Base/X3DChildObject.js";
+import X3DNode             from "./X3DNode.js";
+import X3DExecutionContext from "../../Execution/X3DExecutionContext.js";
+import X3DConstants        from "../../Base/X3DConstants.js";
+
+const
+   _fieldDefinitions = Symbol .for ("X_ITE.X3DBaseNode.fieldDefinitions"),
+   _protoNode        = Symbol (),
+   _protoFields      = Symbol (),
+   _body             = Symbol ();
+
+function X3DPrototypeInstance (executionContext, protoNode)
+{
+   this [_protoNode]        = protoNode;
+   this [_fieldDefinitions] = protoNode .getFieldDefinitions ();
+   this [_body]             = null;
+
+   X3DNode .call (this, executionContext);
+
+   this .addType (X3DConstants .X3DPrototypeInstance);
+
+   this .setProtoNode (protoNode, true);
+}
+
+Object .assign (Object .setPrototypeOf (X3DPrototypeInstance .prototype, X3DNode .prototype),
+{
+   create (executionContext)
+   {
+      return new X3DPrototypeInstance (executionContext, this [_protoNode]);
+   },
+   getTypeName ()
+   {
+      return this [_protoNode] .getName ();
+   },
+   getAppInfo ()
+   {
+      return this [_protoNode] .getAppInfo ();
+   },
+   getDocumentation ()
+   {
+      return this [_protoNode] .getDocumentation ();
+   },
+   initialize ()
+   {
+      X3DNode .prototype .initialize .call (this);
+
+      this .getLive () .addInterest ("set_live__", this);
+
+      this .realize ();
+   },
+   realize ()
+   {
+      const
+         protoNode = this [_protoNode],
+         proto     = protoNode .getProtoDeclaration ();
+
+      if (protoNode .isExternProto && protoNode .checkLoadState () !== X3DConstants .COMPLETE_STATE)
+         return;
+
+      // Create execution context.
+
+      this [_body] = new X3DExecutionContext (proto .getExecutionContext (), this);
+
+      // Copy proto.
+
+      this .set_live__ ();
+
+      const protoBody = proto .getBody ();
+
+      this .addExternProtos   (protoBody .externprotos);
+      this .addProtos         (protoBody .protos);
+      this .copyNamedNodes    (protoBody .namedNodes);
+      this .copyImportedNodes (protoBody .importedNodes);
+      this .copyRootNodes     (protoBody .rootNodes);
+      this .copyRoutes        (protoBody .routes);
+
+      // Propagate events.
+
+      this [_body] .rootNodes .addInterest ("set_rootNodes__", this);
+
+      this [_body] .setup ();
+
+      X3DChildObject .prototype .addEvent .call (this);
+   },
+   set_live__ ()
+   {
+      this [_body] ?.setLive (this .isLive ());
+   },
+   set_rootNodes__ ()
+   {
+      X3DChildObject .prototype .addEvent .call (this);
+   },
+   construct ()
+   {
+      const
+         protoNode = this [_protoNode],
+         proto     = protoNode .getProtoDeclaration ();
+
+      // Dispose body and assign field definitions.
+
+      this [_body] ?.dispose ();
+
+      // If there is a proto, the externproto is completely loaded.
+
+      if (protoNode .isExternProto)
+      {
+         if (protoNode .checkLoadState () !== X3DConstants .COMPLETE_STATE)
+         {
+            this [_body] = null;
+
+            if (this .isInitialized ())
+               X3DChildObject .prototype .addEvent .call (this);
+
+            protoNode ._updateInstances .addInterest ("construct", this);
+            protoNode .requestImmediateLoad () .catch (Function .prototype);
+
+            return;
+         }
+
+         for (const protoField of proto .getUserDefinedFields ())
+         {
+            try
+            {
+               const field = this .getField (protoField .getName ());
+
+               // Continue if different.
+               if (field .getAccessType () !== protoField .getAccessType ())
+                  continue;
+
+               // Continue if different.
+               if (field .getType () !== protoField .getType ())
+                  continue;
+
+               // Continue if field is eventIn or eventOut.
+               if (!field .isInitializable ())
+                  continue;
+
+               // Is set during parse, or already changed by an route event.
+               if (field .getModificationTime () >= 0)
+                  continue;
+
+               // Has IS references.
+               if (field .getReferences () .size)
+                  continue;
+
+               // Default value of protoField is different from field.
+               if (field .equals (protoField))
+                  continue;
+
+               // Update default value of field.
+               field .assign (protoField);
+            }
+            catch
+            {
+               // Definition exists in proto but does not exist in extern proto.
+               this .addPredefinedField (proto .getFieldDefinitions () .get (protoField .getName ()));
+            }
+         }
+      }
+
+      if (this .isInitialized ())
+         this .realize ();
+
+      protoNode ._updateInstances .removeInterest ("construct", this);
+      protoNode ._updateInstances .addInterest ("update", this);
+   },
+   update ()
+   {
+      // Remove old fields.
+
+      const
+         oldProtoFields = this [_protoFields],
+         oldFields      = Array .from (this .getPredefinedFields ());
+
+      for (const field of oldFields)
+         this .removePredefinedField (field .getName ());
+
+      // Add new fields.
+
+      this [_protoFields] = Array .from (this [_protoNode] .getUserDefinedFields ());
+
+      for (const fieldDefinition of this [_protoNode] .getFieldDefinitions ())
+         this .addPredefinedField (fieldDefinition);
+
+      // Reuse old fields, and therefore routes.
+
+      for (const protoField of this [_protoFields])
+      {
+         const oldFieldName = oldProtoFields .find (field => field === protoField) ?.getName ()
+            ?? protoField .getName ();
+
+         if (!oldFieldName)
+            continue;
+
+         const
+            newField = this .getPredefinedFields () .get (protoField .getName ()),
+            oldField = oldFields .find (field => field .getName () === oldFieldName);
+
+         if (!oldField)
+            continue;
+
+         if (oldField .getType () !== newField .getType ())
+            continue;
+
+         // Assign default value.
+         if (oldField .isInitializable ())
+         {
+            if (oldField .getModificationTime () < 0)
+            {
+               oldField .assign (newField);
+               oldField .setModificationTime (-1);
+            }
+         }
+
+         oldField .addParent (this);
+         oldField .setAccessType (newField .getAccessType ());
+         oldField .setName (newField .getName ());
+
+         // Replace field, i.e. reuse old field.
+         this .getPredefinedFields () .update (newField .getName (), newField .getName (), oldField);
+
+         const references = Array .from (oldField .getReferences ());
+
+         // Remove references and routes.
+         for (const field of oldField .getFieldInterests ())
+            oldField .removeFieldInterest (field);
+
+         // Readd references.
+         for (const field of references)
+         {
+            oldField .removeReference (field);
+            oldField .addReference (field);
+         }
+
+         // Reconnect input routes.
+         for (const route of Array .from (oldField .getInputRoutes ()))
+         {
+            try
+            {
+               const { sourceNode, sourceField } = route;
+
+               route .getExecutionContext () .deleteRoute (route);
+               route .getExecutionContext () .addRoute (sourceNode, sourceField, this, oldField .getName ());
+            }
+            catch
+            { }
+         }
+
+         // Reconnect output routes.
+         for (const route of Array .from (oldField .getOutputRoutes ()))
+         {
+            try
+            {
+               const { destinationNode, destinationField } = route;
+
+               route .getExecutionContext () .deleteRoute (route);
+               route .getExecutionContext () .addRoute (this, oldField .getName (), destinationNode, destinationField );
+            }
+            catch
+            { }
+         }
+
+         // Remove from old fields and dispose new field.
+         oldFields .splice (oldFields .indexOf (oldField), 1);
+         newField .dispose ();
+      }
+
+      // Dispose unused old fields.
+
+      for (const oldField of oldFields)
+         oldField .dispose ();
+
+      // Construct now.
+
+      this .construct ();
+   },
+   getExtendedEventHandling ()
+   {
+      return false;
+   },
+   getProtoNode ()
+   {
+      return this [_protoNode];
+   },
+   setProtoNode (protoNode, construct = false)
+   {
+      // Disconnect old proto node.
+
+      const oldProtoNode = this [_protoNode];
+
+      oldProtoNode .name_changed .removeFieldInterest (this .typeName_changed);
+      oldProtoNode ._updateInstances .removeInterest ("construct", this);
+      oldProtoNode ._updateInstances .removeInterest ("update",    this);
+
+      // Get fields from new proto node.
+
+      this [_protoNode]        = protoNode;
+      this [_fieldDefinitions] = protoNode .getFieldDefinitions ();
+      this [_protoFields]      = Array .from (protoNode .getUserDefinedFields ());
+
+      protoNode .name_changed .addFieldInterest (this .typeName_changed);
+
+      construct ? this .construct () : this .update ();
+   },
+   getBody ()
+   {
+      return this [_body];
+   },
+   getInnerNode ()
+   {
+      if (this [_body])
+      {
+         const rootNodes = this [_body] .getRootNodes ();
+
+         if (rootNodes .length)
+         {
+            const rootNode = rootNodes [0];
+
+            if (rootNode)
+               return rootNode .getValue () .getInnerNode ();
+         }
+      }
+
+      throw new Error ("Root node not available.");
+   },
+   isDefaultValue (field)
+   {
+      const protoNode = this [_protoNode];
+
+      if (protoNode .isExternProto && protoNode .checkLoadState () !== X3DConstants .COMPLETE_STATE)
+         return field .getModificationTime () < 0;
+
+      return X3DNode .prototype .isDefaultValue .call (this, field);
+   },
+   addExternProtos (externprotos1)
+   {
+      const externprotos2 = this [_body] .externprotos;
+
+      for (const externproto of externprotos1)
+         externprotos2 .add (externproto .getName (), externproto);
+   },
+   addProtos (protos1)
+   {
+      const protos2 = this [_body] .protos;
+
+      for (const proto of protos1)
+         protos2 .add (proto .getName (), proto);
+   },
+   copyNamedNodes (namedNodes)
+   {
+      for (const node of namedNodes)
+         node .copy (this);
+   },
+   copyRootNodes (rootNodes1)
+   {
+      const rootNodes2 = this [_body] .getRootNodes ();
+
+      for (const node of rootNodes1 .getValue ())
+         rootNodes2 .push (node .copy (this));
+   },
+   copyImportedNodes (importedNodes)
+   {
+      const body = this [_body];
+
+      for (const importedNode of importedNodes)
+      {
+         try
+         {
+            const inlineNode = body .getNamedNode (importedNode .getInlineNode () .getName ());
+
+            body .addImportedNode (inlineNode, importedNode .getExportedName (), importedNode .getImportedName ());
+         }
+         catch (error)
+         {
+            console .error (error);
+         }
+      }
+   },
+   copyRoutes (routes)
+   {
+      const body = this [_body];
+
+      for (const route of routes)
+      {
+         try
+         {
+            const
+               sourceNode      = body .getLocalNode (route .getSourceNode () .getName ()),
+               destinationNode = body .getLocalNode (route .getDestinationNode () .getName ());
+
+            body .addRoute (sourceNode, route .sourceField, destinationNode, route .destinationField);
+         }
+         catch (error)
+         {
+            console .error (error);
+         }
+      }
+   },
+   toXMLStream (generator)
+   {
+      const sharedNode = generator .IsSharedNode (this);
+
+      const name = generator .Name (this);
+
+      if (name .length)
+      {
+         if (generator .ExistsNode (this))
+         {
+            generator .openTag ("ProtoInstance");
+            generator .attribute ("name", this .getTypeName ());
+            generator .attribute ("USE",  name);
+            generator .containerField (this .getContainerField ());
+            generator .closeTag ("ProtoInstance");
+            return;
+         }
+      }
+
+      generator .openTag ("ProtoInstance");
+      generator .attribute ("name", this .getTypeName ());
+
+      if (name .length)
+      {
+         generator .AddNode (this);
+         generator .attribute ("DEF", name);
+      }
+
+      generator .containerField (this .getContainerField ());
+
+      const fields = this .getChangedFields ();
+
+      if (fields .length === 0)
+      {
+         generator .closeTag ("ProtoInstance");
+      }
+      else
+      {
+         generator .endTag ();
+         generator .IncIndent ();
+
+         const references = [ ];
+
+         for (const field of fields)
+         {
+            // If the field is a inputOutput and we have as reference only inputOnly or outputOnly we must output the value
+            // for this field.
+
+            let mustOutputValue = false;
+
+            if (generator .ExecutionContext ())
+            {
+               if (field .getAccessType () === X3DConstants .inputOutput && field .getReferences () .size !== 0)
+               {
+                  if (![... field .getReferences ()] .some (reference => reference .isInitializable ()))
+                     mustOutputValue = !this .isDefaultValue (field);
+               }
+            }
+
+            // If we have no execution context we are not in a proto and must not generate IS references the same is true
+            // if the node is a shared node as the node does not belong to the execution context.
+
+            if (field .getReferences () .size === 0 || !generator .ExecutionContext () || sharedNode || mustOutputValue)
+            {
+               if (mustOutputValue)
+                  references .push (field);
+
+               switch (field .getType ())
+               {
+                  case X3DConstants .MFNode:
+                  {
+                     generator .openTag ("fieldValue");
+                     generator .attribute ("name", field .getName ());
+
+                     if (field .length === 0)
+                     {
+                        generator .closeTag ("fieldValue");
+                        generator .TidyBreak ();
+                     }
+                     else
+                     {
+                        generator .endTag ();
+                        generator .IncIndent ();
+                        generator .PushContainerField (null);
+
+                        field .toXMLStream (generator);
+
+                        generator .TidyBreak ();
+                        generator .DecIndent ();
+                        generator .closingTag ("fieldValue");
+                        generator .TidyBreak ();
+                        generator .PopContainerField ();
+                     }
+
+                     break;
+                  }
+                  case X3DConstants .SFNode:
+                  {
+                     generator .openTag ("fieldValue");
+                     generator .attribute ("name", field .getName ());
+
+                     if (field .getValue () === null)
+                     {
+                        generator .attribute ("value", "null");
+                        generator .closeTag ("fieldValue");
+                        generator .TidyBreak ();
+                     }
+                     else
+                     {
+                        generator .endTag ();
+                        generator .IncIndent ();
+                        generator .PushContainerField (null);
+
+                        field .toXMLStream (generator);
+
+                        generator .TidyBreak ();
+                        generator .DecIndent ();
+                        generator .closingTag ("fieldValue");
+                        generator .TidyBreak ();
+                     }
+
+                     generator .PopContainerField ();
+                     break;
+                  }
+                  default:
+                  {
+                     generator .openTag ("fieldValue");
+                     generator .attribute ("name", field .getName ());
+
+                     generator .Space ();
+                     generator .string += "value='";
+
+                     field .toXMLStream (generator);
+
+                     generator .string += "'";
+                     generator .closeTag ("fieldValue");
+                     generator .TidyBreak ();
+                     break;
+                  }
+               }
+            }
+            else
+            {
+               references .push (field);
+            }
+         }
+
+         if (references .length && !sharedNode)
+         {
+            generator .openingTag ("IS");
+            generator .TidyBreak ();
+            generator .IncIndent ();
+
+            for (const field of references)
+            {
+               const protoFields = field .getReferences ();
+
+               for (const protoField of protoFields)
+               {
+                  generator .openTag ("connect");
+                  generator .attribute ("nodeField",  field .getName ());
+                  generator .attribute ("protoField", protoField .getName ());
+                  generator .closeTag ("connect");
+                  generator .TidyBreak ();
+               }
+            }
+
+            generator .DecIndent ();
+            generator .closingTag ("IS");
+            generator .TidyBreak ();
+         }
+
+         generator .DecIndent ();
+         generator .closingTag ("ProtoInstance");
+      }
+   },
+   toJSONStream (generator)
+   {
+      const sharedNode = generator .IsSharedNode (this);
+
+      // Type name
+
+      generator .beginObject ("ProtoInstance", false, true);
+
+      const name = generator .Name (this);
+
+      if (name .length)
+      {
+         if (generator .ExistsNode (this))
+         {
+            generator .stringProperty ("@name", this .getTypeName (), false);
+            generator .stringProperty ("@USE", name);
+            generator .endObject ();
+            generator .endObject ();
+            return;
+         }
+      }
+
+      // DEF name
+
+      if (name .length)
+      {
+         generator .AddNode (this);
+         generator .stringProperty ("@DEF", name, false);
+      }
+
+      // Type name
+
+      generator .stringProperty ("@name", this .getTypeName (), name .length);
+
+      // Fields
+
+      const
+         fields     = this .getChangedFields (),
+         references = [ ];
+
+      if (fields .length)
+      {
+         generator .beginArray ("fieldValue");
+
+         const outputFields = [ ];
+
+         for (const field of fields)
+         {
+            // If the field is a inputOutput and we have as reference only inputOnly or outputOnly we must output the value
+            // for this field.
+
+            let mustOutputValue = false;
+
+            if (generator .ExecutionContext ())
+            {
+               if (field .getAccessType () === X3DConstants .inputOutput && field .getReferences () .size !== 0)
+               {
+                  if (![... field .getReferences ()] .some (reference => reference .isInitializable ()))
+                     mustOutputValue = !this .isDefaultValue (field);
+               }
+            }
+
+            // If we have no execution context we are not in a proto and must not generate IS references the same is true
+            // if the node is a shared node as the node does not belong to the execution context.
+
+            if (field .getReferences () .size === 0 || !generator .ExecutionContext () || sharedNode || mustOutputValue)
+            {
+               if (mustOutputValue)
+                  references .push (field);
+
+               outputFields .push (field);
+            }
+            else
+            {
+               references .push (field);
+            }
+         }
+
+         for (const field of outputFields)
+         {
+            switch (field .getType ())
+            {
+               case X3DConstants .SFNode:
+               {
+                  generator .beginObject ("", field !== outputFields [0]);
+                  generator .stringProperty ("@name", field .getName (), false);
+                  generator .beginArray ("-children");
+
+                  generator .TidyBreak ();
+                  generator .Indent ();
+
+                  field .toJSONStream (generator);
+
+                  generator .endArray ();
+                  generator .endObject ();
+                  break;
+               }
+               case X3DConstants .MFNode:
+               {
+                  generator .beginObject ("", field !== outputFields [0]);
+                  generator .stringProperty ("@name", field .getName (), false);
+                  generator .beginValue ("-children");
+
+                  field .toJSONStream (generator);
+
+                  generator .endObject ();
+                  break;
+               }
+               default:
+               {
+                  generator .beginObject ("", field !== outputFields [0]);
+                  generator .stringProperty ("@name", field .getName (), false);
+                  generator .beginValue ("@value");
+
+                  field .toJSONStream (generator);
+
+                  generator .endObject ();
+                  break;
+               }
+            }
+         }
+
+         generator .endArray ();
+
+         // IS references
+
+         if (references .length && !sharedNode)
+         {
+            generator .beginObject ("IS");
+            generator .beginArray ("connect", false);
+
+            for (const field of references)
+            {
+               const protoFields = Array .from (field .getReferences ());
+
+               for (const protoField of protoFields)
+               {
+                  generator .beginObject ("", field !== references [0] || protoField !== protoFields [0]);
+                  generator .stringProperty ("@nodeField",  field .getName (), false);
+                  generator .stringProperty ("@protoField", protoField .getName ());
+                  generator .endObject ();
+               }
+            }
+
+            generator .endArray ();
+            generator .endObject ();
+         }
+      }
+
+      // End
+
+      generator .endObject ();
+      generator .endObject ();
+   },
+   dispose ()
+   {
+      const protoNode = this [_protoNode];
+
+      protoNode .name_changed .removeFieldInterest (this .typeName_changed);
+      protoNode ._updateInstances .removeInterest ("construct", this);
+      protoNode ._updateInstances .removeInterest ("update",    this);
+
+      this [_body] ?.dispose ();
+
+      X3DNode .prototype .dispose .call (this);
+   },
+});
+
+Object .defineProperties (X3DPrototypeInstance, X3DNode .getStaticProperties ("X3DPrototypeInstance", "Core", 2, "children", "2.0"));
+
+export default X3DPrototypeInstance;

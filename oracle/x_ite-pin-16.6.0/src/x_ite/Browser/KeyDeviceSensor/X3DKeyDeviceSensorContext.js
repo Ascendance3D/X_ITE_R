@@ -1,0 +1,63 @@
+const
+   _keyDeviceSensorNodes = Symbol (),
+   _keydown              = Symbol (),
+   _keyup                = Symbol (),
+   _processEvents        = Symbol .for ("X_ITE.X3DRoutingContext.processEvents");
+
+function X3DKeyDeviceSensorContext ()
+{
+   this [_keyDeviceSensorNodes] = new Set ();
+}
+
+Object .assign (X3DKeyDeviceSensorContext .prototype,
+{
+   initialize ()
+   {
+      const element = this .getElement ();
+
+      element .addEventListener ("keydown", this [_keydown] .bind (this));
+      element .addEventListener ("keyup",   this [_keyup]   .bind (this));
+   },
+   addKeyDeviceSensorNode (keyDeviceSensorNode)
+   {
+      this [_keyDeviceSensorNodes] .add (keyDeviceSensorNode);
+   },
+   removeKeyDeviceSensorNode (keyDeviceSensorNode)
+   {
+      this [_keyDeviceSensorNodes] .delete (keyDeviceSensorNode);
+   },
+   getKeyDeviceSensorNodes ()
+   {
+      return this [_keyDeviceSensorNodes];
+   },
+   [_keydown] (event)
+   {
+      // Must advance time, because event are later processed pressed simultaneously.
+      this .advanceOnlyTime ();
+
+      //console .log (event .keyCode);
+
+      for (const keyDeviceSensorNode of this [_keyDeviceSensorNodes])
+         keyDeviceSensorNode .keydown (event);
+
+      // Immediately process events to handle event from two or more keys.
+      this [_processEvents] ();
+   },
+   [_keyup] (event)
+   {
+      // Must advance time, because event are later processed.
+      this .advanceOnlyTime ();
+
+      //console .log (event .which);
+
+      for (const keyDeviceSensorNode of this [_keyDeviceSensorNodes])
+         keyDeviceSensorNode .keyup (event);
+
+      // Immediately process events to handle event from two or more keys pressed simultaneously.
+      this [_processEvents] ();
+   },
+   dispose ()
+   { },
+});
+
+export default X3DKeyDeviceSensorContext;
