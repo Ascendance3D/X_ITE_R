@@ -1,6 +1,7 @@
 import json
 import math
 import struct
+import sys
 
 def parse_rgba(s):
     if s.startswith("rgb("): s = s[4:-1]
@@ -43,7 +44,8 @@ def calc_color(h, s, l, algo):
             return round_half_up(f32(f32(v) * f32(255.0)))
         return [int(f(hue + 2.0)), int(f(hue)), int(f(hue - 2.0))]
 
-    elif algo == "legacy_f32":
+    elif algo == "hypothesis_f32_legacy":
+        # All-f32 evaluation using sixths domain and round-half-away-from-zero
         hue = f32(f32(h % 360.0) / f32(60.0))
         t2 = f32(f32(l) * f32(s + 1.0)) if l <= 0.5 else f32(f32(l + s) - f32(l * s))
         t1 = f32(f32(2.0 * l) - t2)
@@ -57,7 +59,8 @@ def calc_color(h, s, l, algo):
             return round_half_away(f32(v * 255.0))
         return [f(f32(hue + 2.0)), f(hue), f(f32(hue - 2.0))]
 
-    elif algo == "gfx_f32":
+    elif algo == "hypothesis_f32_gfx":
+        # All-f32 evaluation using unit domain and round-half-up
         hue = f32(f32(h % 360.0) / f32(360.0))
         t2 = f32(f32(l) * f32(s + 1.0)) if l <= 0.5 else f32(f32(l + s) - f32(l * s))
         t1 = f32(f32(2.0 * l) - t2)
@@ -71,7 +74,8 @@ def calc_color(h, s, l, algo):
             return round_half_up(f32(v * 255.0))
         return [f(f32(hue + 1.0/3.0)), f(hue), f(f32(hue - 1.0/3.0))]
 
-    elif algo == "legacy_f64":
+    elif algo == "hypothesis_f64_legacy":
+        # All-f64 evaluation using sixths domain and round-half-away-from-zero
         hue = (h % 360.0) / 60.0
         t2 = l * (s + 1.0) if l <= 0.5 else l + s - l * s
         t1 = l * 2.0 - t2
@@ -85,7 +89,8 @@ def calc_color(h, s, l, algo):
             return round_half_away(v * 255.0)
         return [f(hue + 2.0), f(hue), f(hue - 2.0)]
 
-    elif algo == "gfx_f64":
+    elif algo == "hypothesis_f64_gfx":
+        # All-f64 evaluation using unit domain and round-half-up
         hue = (h % 360.0) / 360.0
         t2 = l * (s + 1.0) if l <= 0.5 else l + s - l * s
         t1 = l * 2.0 - t2
@@ -100,8 +105,16 @@ def calc_color(h, s, l, algo):
         return [f(hue + 1.0/3.0), f(hue), f(hue - 1.0/3.0)]
 
 def main():
-    with open('oracle/synthetic-rea-svg/css-colors-baseline.json') as f: data = json.load(f)
-    algos = ["rust_current", "legacy_f32", "gfx_f32", "legacy_f64", "gfx_f64"]
+    if len(sys.argv) < 2:
+        print("Usage: python3 hsl_count.py <path_to_json>")
+        sys.exit(1)
+
+    json_path = sys.argv[1]
+
+    with open(json_path) as f:
+        data = json.load(f)
+
+    algos = ["rust_current", "hypothesis_f32_legacy", "hypothesis_f32_gfx", "hypothesis_f64_legacy", "hypothesis_f64_gfx"]
     mismatches = {algo: 0 for algo in algos}
 
     cases_43 = []
@@ -120,9 +133,28 @@ def main():
                 if algo == "rust_current":
                     cases_43.append((value, a_rgb, e_rgb, hsl))
 
-    for algo in algos: print(f"{algo}: {mismatches[algo]} mismatches")
+    for algo in algos:
+        print(f"{algo}: {mismatches[algo]} mismatches")
 
-    print("\n--- 43 Verified Cases ---")
+    # Assertions per constraints
+    if mismatches["rust_current"] != 43:
+        print(f"Error: Expected 43 mismatches for rust_current, got {mismatches['rust_current']}")
+        sys.exit(1)
+    if mismatches["hypothesis_f32_legacy"] != 114:
+        print(f"Error: Expected 114, got {mismatches['hypothesis_f32_legacy']}")
+        sys.exit(1)
+    if mismatches["hypothesis_f32_gfx"] != 204:
+        print(f"Error: Expected 204, got {mismatches['hypothesis_f32_gfx']}")
+        sys.exit(1)
+    if mismatches["hypothesis_f64_legacy"] != 508:
+        print(f"Error: Expected 508, got {mismatches['hypothesis_f64_legacy']}")
+        sys.exit(1)
+    if mismatches["hypothesis_f64_gfx"] != 562:
+        print(f"Error: Expected 562, got {mismatches['hypothesis_f64_gfx']}")
+        sys.exit(1)
+
+    print("\n| Input | Channel | Exact Scaled Value | Chrome (Oracle) Value | Rust Value |")
+    print("|---|---|---|---|---|")
     for value, a_rgb, e_rgb, hsl in cases_43:
         h, s, l = hsl
         hue = (h % 360.0) / 60.0
@@ -138,6 +170,8 @@ def main():
 
         c_idx = next(i for i in range(3) if a_rgb[i] != e_rgb[i])
         exact_val = exact_f(hue + 2.0 if c_idx == 0 else hue if c_idx == 1 else hue - 2.0) * 255.0
-        print(f"Input: {value}, Differs: {['R','G','B'][c_idx]}, exact={exact_val:.1f}, Chrome: {e_rgb[c_idx]}, Rust: {a_rgb[c_idx]}")
+
+        channel_name = ['R', 'G', 'B'][c_idx]
+        print(f"| `{value}` | {channel_name} | {exact_val:.1f} | {e_rgb[c_idx]} | {a_rgb[c_idx]} |")
 
 if __name__ == "__main__": main()
