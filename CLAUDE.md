@@ -40,6 +40,17 @@ X_ITE/
     └── logs/              scanner logs
 ```
 
+**Archived 2026-10-21 (Ryan's request).** `recon/` and every non-Rust item of
+`scratch/` (including `scratch/qa/` and `scratch/phase1a-reviewed.patch`) now live in
+`~/Projects/cybertown/.backups/X_ITE/2026-10-21-lane-cleanup/{recon,scratch}`, a
+verified `rsync -aHAX` tree. Paths elsewhere in this guide still use the old
+lane-root-relative names. The QA harness serves the lane root and depends on
+relative symlinks, so to use it or `recon/*.py`, `rsync -aHAX` the item back into
+this directory first. Do not run it from inside `.backups`. `X_ITE_R/` is the
+X_ITE → Rust port repo (`Ascendance3D/X_ITE_R`). `scratch/rust-port` is now only a
+symlink to `../X_ITE_R`, kept because X_ITE_R branches commit links through that path.
+Do not delete it. The old Rust repos are in the same archive under `rust-old/`.
+
 `recon/` is **outside** the Git clone on purpose. It is not a submodule, not a
 worktree, and must never become one. The same goes for `scratch/`.
 
