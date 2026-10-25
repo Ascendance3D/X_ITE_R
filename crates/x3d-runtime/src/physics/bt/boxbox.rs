@@ -10,6 +10,13 @@ use super::math::*;
 /// fudge_factor as a float constant.
 const FUDGE_FACTOR: f64 = 1.05_f32 as f64;
 const FLT_MAX: f64 = f32::MAX as f64;
+/// ODE's `M_PI` as `dReal` (float) widened back to double, which is what the asm.js build
+/// computes with. `f32::consts::PI` is the correctly rounded float pi; this literal is ODE's
+/// eight-digit one, and the two differ in the last bits of the box-box fudge comparisons.
+#[allow(
+    clippy::approx_constant,
+    reason = "ODE's own M_PI literal, rounded through f32"
+)]
 const M_PI32: f64 = 3.14159265_f32 as f64;
 
 type R = [[f64; 3]; 3];

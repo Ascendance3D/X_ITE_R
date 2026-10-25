@@ -47,6 +47,10 @@ fn translation(x: f64, y: f64, z: f64) -> Matrix4 {
     m
 }
 
+#[allow(
+    clippy::approx_constant,
+    reason = "X3D's declared Viewpoint.fieldOfView default, the value the matching X_ITE case uses"
+)]
 fn camera() -> PickCamera {
     PickCamera {
         projection: x3d_render::traverse::perspective(0.785_398, 0.1, 100.0, SIZE, SIZE),

@@ -79,7 +79,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
-          components: rustfmt
+          components: rustfmt, clippy
 
       - name: Formatting (cargo fmt)
         run: cargo fmt --all -- --check
@@ -111,6 +111,22 @@ jobs:
           python3 -I -B oracle/tools/rea_b05.py check --target target/release --jobs 2 | tee rea_b05.log
           test "${PIPESTATUS[0]}" -eq 0
           tail -1 rea_b05.log >> "$GITHUB_STEP_SUMMARY"
+
+      # Clippy's deny-by-default lints only — `correctness` and the parts of `suspicious` that
+      # fire here. It is run *without* `-D warnings`: the workspace still carries 887
+      # warn-level findings across 63 lint kinds (169 collapsible_if, 94 excessive_precision,
+      # 70 needless_range_loop, 56 neg_cmp_op_on_partial_ord, ...), and a list of 63 `-A` flags
+      # would be the broad suppression this gate exists to avoid. What this does hold is the
+      # class that made `cargo clippy` unusable: until this change, x3d-fields failed to
+      # compile under clippy, which stopped every crate behind it from being checked at all.
+      # Clearing the whole warn-level backlog is its own lane.
+      #
+      # `--release` so the dependency graph is the one the suite above already built, instead of
+      # a second debug graph. Runs after the suite, and on its failure, so a clippy regression
+      # does not hide the test results.
+      - name: Clippy (deny-by-default lints)
+        if: success() || failure()
+        run: cargo clippy --release --workspace --all-targets --exclude cm-core --exclude cm-modes --exclude cm-view
 
       # The account's artifact storage can be full; the logs are then only in the job log.
       - uses: actions/upload-artifact@v4

@@ -533,6 +533,10 @@ impl Runtime {
         if kind == EmitterKind::Cone {
             p.angle = match self.pre_value(e, "angle") {
                 Some(FieldValue::SFFloat(a)) => *a as f32,
+                // X3D's declared default for ConeEmitter.angle, and X_ITE's literal
+                // (`new Fields .SFFloat (0.785398)`): six decimals, not pi/4. Substituting
+                // `FRAC_PI_4` changes the default's bits and so the emitted velocities.
+                #[allow(clippy::approx_constant, reason = "X3D's declared ConeEmitter default")]
                 _ => 0.785398,
             };
         }

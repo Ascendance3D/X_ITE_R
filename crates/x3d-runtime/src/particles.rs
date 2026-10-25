@@ -337,6 +337,9 @@ impl EmitterParams {
             on: true,
             position: [0.0; 3],
             direction: [0.0, 1.0, 0.0],
+            // X3D's declared ConeEmitter.angle default, as X_ITE spells it. Not pi/4; see
+            // `nodes::particle_systems`.
+            #[allow(clippy::approx_constant, reason = "X3D's declared ConeEmitter default")]
             angle: 0.785398,
             speed: 0.0,
             variation: 0.25,

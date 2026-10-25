@@ -536,10 +536,10 @@ impl Matrix4 {
     ) -> &mut Self {
         *self = Self::IDENTITY;
 
-        if let Some(t) = translation {
-            if !t.equals(&Vector3::ZERO) {
-                self.translate(t);
-            }
+        if let Some(t) = translation
+            && !t.equals(&Vector3::ZERO)
+        {
+            self.translate(t);
         }
 
         let has_center = center.is_some_and(|c| !c.equals(&Vector3::ZERO));
@@ -548,25 +548,25 @@ impl Matrix4 {
             self.translate(center.unwrap());
         }
 
-        if let Some(r) = rotation {
-            if !r.equals(&Rotation4::identity()) {
-                self.rotate(r);
-            }
+        if let Some(r) = rotation
+            && !r.equals(&Rotation4::identity())
+        {
+            self.rotate(r);
         }
 
-        if let Some(s) = scale {
-            if !s.equals(&Vector3::ONE) {
-                match scale_orientation {
-                    Some(so) if !so.equals(&Rotation4::identity()) => {
-                        self.rotate(so);
-                        self.scale(s);
-                        let mut inv = *so;
-                        inv.inverse();
-                        self.rotate(&inv);
-                    }
-                    _ => {
-                        self.scale(s);
-                    }
+        if let Some(s) = scale
+            && !s.equals(&Vector3::ONE)
+        {
+            match scale_orientation {
+                Some(so) if !so.equals(&Rotation4::identity()) => {
+                    self.rotate(so);
+                    self.scale(s);
+                    let mut inv = *so;
+                    inv.inverse();
+                    self.rotate(&inv);
+                }
+                _ => {
+                    self.scale(s);
                 }
             }
         }
