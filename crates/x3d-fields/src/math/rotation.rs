@@ -339,3 +339,22 @@ impl Rotation4 {
         self
     }
 }
+
+impl std::fmt::Display for Rotation4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let (x, y, z, angle) = if self.tainted {
+            let r = self.get_from_quaternion();
+            (r.x, r.y, r.z, r.w)
+        } else {
+            (self.x, self.y, self.z, self.angle)
+        };
+        write!(
+            f,
+            "{} {} {} {}",
+            jsmath::number_to_string(x),
+            jsmath::number_to_string(y),
+            jsmath::number_to_string(z),
+            jsmath::number_to_string(angle)
+        )
+    }
+}
