@@ -72,7 +72,10 @@ impl Run {
     fn with(world: &Path, depth: Option<Rc<RefCell<DepthGpu>>>) -> Run {
         let mut v = Viewer3d::load(world, None, T0, 256, 256).unwrap();
         v.frame_rate = 1.0 / DT;
-        v.depth_gpu = depth.clone();
+        if let Some(d) = depth.clone() {
+            let device = d.borrow().device().clone();
+            v.set_gpu(&device, None, Some(d)).unwrap();
+        }
         Run { v, depth, frame: 0 }
     }
 

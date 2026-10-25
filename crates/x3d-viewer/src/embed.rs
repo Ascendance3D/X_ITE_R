@@ -22,11 +22,15 @@
 //! stack ([`spawn_big_stack`]).
 
 use crate::viewer::{UiEvent, Viewer3d};
+use std::cell::RefCell;
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use x3d_fields::NodeId;
+use x3d_render::depth_gpu::DepthGpu;
 pub use x3d_render::gpu::DepthMode;
 use x3d_render::gpu::Renderer;
+use x3d_render::pointing_gpu::PointingGpu;
 use x3d_render::traverse::{BrowserGlobals, browser_globals, set_browser_globals};
 
 /// X_ITE's default `Multisampling` rendering property (RenderingProperties.js).
@@ -96,6 +100,15 @@ pub struct EmbeddedViewer {
     /// The thread-wide browser options (qualities, logarithmic depth) of this viewer's world: saved when a
     /// call returns and restored when the next one starts, so viewers on one thread do not see each other's.
     globals: BrowserGlobals,
+    /// Picks and collision on the renderer's device ([`EmbeddedViewer::set_gpu_picking`]).
+    gpu_picking: bool,
+    /// The pointing and collision depth buffers on the renderer's device while no world has them: made once, lent
+    /// to each world the viewer loads and taken back when it is unloaded. Every viewer has its own.
+    gpu: Option<(PointingGpu, Rc<RefCell<DepthGpu>>)>,
+    /// The loaded world has the GPU buffers.
+    gpu_lent: bool,
+    /// A world lost its GPU buffers to a lost device: later worlds pick and collide on the CPU.
+    gpu_lost: bool,
 }
 
 /// The host drops the viewer: its world is unloaded like by [`EmbeddedViewer::unload`].
@@ -136,6 +149,81 @@ impl EmbeddedViewer {
             size: (size.0.max(1), size.1.max(1)),
             closed_prints: vec![],
             globals: BrowserGlobals::default(),
+            gpu_picking: true,
+            gpu: None,
+            gpu_lent: false,
+            gpu_lost: false,
+        }
+    }
+
+    /// Picks (the pointing buffer) and avatar collision (the 16x16 depth buffer) on the renderer's device, like
+    /// X_ITE's; the default. `false`: the CPU ray cast and depth stand-in. Takes effect with the next load. A lost
+    /// device switches to the CPU on its own.
+    pub fn set_gpu_picking(&mut self, on: bool) {
+        self.gpu_picking = on;
+
+        if !on {
+            self.gpu = None;
+        }
+    }
+
+    /// What [`EmbeddedViewer::set_gpu_picking`] was asked for, not what the viewer is doing: this stays `true` after a
+    /// lost device or buffers that could not be made, while the picks and collisions have fallen back to the CPU. The
+    /// buffers answer that — [`Viewer3d::pointing_gpu`] and [`Viewer3d::depth_gpu`] of [`EmbeddedViewer::core`].
+    pub fn gpu_picking(&self) -> bool {
+        self.gpu_picking
+    }
+
+    /// Lend the GPU buffers to the loaded world.
+    fn attach_gpu(&mut self) {
+        let Some(core) = self.core.as_mut() else {
+            return;
+        };
+
+        if !self.gpu_picking || self.gpu_lost {
+            return;
+        }
+
+        let (device, queue) = (self.renderer.device(), self.renderer.queue());
+        let made = match self.gpu.take() {
+            Some(g) => Some(g),
+            // A device that cannot make their pipelines (float32 targets): the CPU paths.
+            None => {
+                let validation = device.push_error_scope(wgpu::ErrorFilter::Validation);
+                let internal = device.push_error_scope(wgpu::ErrorFilter::Internal);
+                let g = (
+                    PointingGpu::new(device.clone(), queue.clone()),
+                    Rc::new(RefCell::new(DepthGpu::new(device.clone(), queue.clone()))),
+                );
+                let internal = ready(internal.pop());
+                let validation = ready(validation.pop());
+                internal.or(validation).is_none().then_some(g)
+            }
+        };
+        let Some((pointing, depth)) = made else {
+            self.gpu_lost = true;
+            return;
+        };
+        core.set_gpu(device, Some(pointing), Some(depth))
+            .expect("the renderer's device");
+        self.gpu_lent = true;
+    }
+
+    /// Take the GPU buffers back from the world that is unloaded; the depth buffer frees the world's vertex buffers. A
+    /// world that dropped them (or holds them lost) found the device lost: the viewer makes no new ones.
+    fn detach_gpu(&mut self, core: &mut Viewer3d) {
+        if !std::mem::take(&mut self.gpu_lent) {
+            return;
+        }
+
+        match core.take_gpu() {
+            (Some(pointing), Some(depth)) if !pointing.lost() && !depth.borrow().lost() => {
+                if self.gpu_picking {
+                    depth.borrow_mut().release();
+                    self.gpu = Some((pointing, depth));
+                }
+            }
+            _ => self.gpu_lost = true,
         }
     }
 
@@ -233,6 +321,7 @@ impl EmbeddedViewer {
         );
         self.leave();
         self.core = Some(v?);
+        self.attach_gpu();
         Ok(())
     }
 
@@ -246,6 +335,7 @@ impl EmbeddedViewer {
             c.rt.unload_world();
             self.leave();
             self.closed_prints.append(&mut c.rt.prints);
+            self.detach_gpu(&mut c);
         }
     }
 
@@ -523,5 +613,19 @@ fn empty_frame() -> x3d_render::traverse::Frame {
         layers: vec![],
         shadow_maps: vec![],
         projectors: vec![],
+    }
+}
+
+/// The output of `f`, which native wgpu has ready (an error scope's `pop`).
+fn ready<F: std::future::Future>(f: F) -> F::Output {
+    let mut f = std::pin::pin!(f);
+    let mut cx = std::task::Context::from_waker(std::task::Waker::noop());
+
+    loop {
+        if let std::task::Poll::Ready(v) = f.as_mut().poll(&mut cx) {
+            return v;
+        }
+
+        std::thread::yield_now();
     }
 }
