@@ -14,7 +14,7 @@ The main checkout holds the gitignored answer keys (`oracle/answer-keys.tsv`), s
 
 ## Answer-key hazard (issue #65)
 
-The main checkout keeps 8 render keys and `upstream/` as real ignored directories at 9 paths that Git tracks as symlinks. `git status` shows them as ` D`.
+The main checkout keeps 8 render keys and `upstream/` as real ignored directories at 9 paths that Git tracks as symlinks. `git status --short` shows each of them with `D` in the worktree column and an unchanged index.
 Git treats ignored files as expendable. A command that writes the tracked symlink at one of these paths deletes the real directory under it, and it often exits 0 and prints nothing.
 
 A failed merge also deletes keys. A non-fast-forward `git merge` or `git pull` of a branch that changes or deletes one of these symlinks stops with "Aborting" and exit 2. The merge then restores the symlink over the real directory.
@@ -67,7 +67,7 @@ Before step 5, the step 2 list of tracked paths (`git diff -z --no-renames --nam
 
 ### Restore one modified tracked file before a fast-forward
 
-Use this when the working tree holds the target version of `<path>`, HEAD holds an older version, and the index is clean (`git diff --cached --quiet`). `$T` is the target SHA from step 1. `<path>` is a regular file, never a directory, `.` or a key path. Run steps 0 and 7 of the procedure around these steps. Before step f, apply the key-path check of the procedure: `git diff -z --no-renames --name-only HEAD $T` must not contain a key path; otherwise stop.
+Use this when the working tree holds the target version of `<path>`, HEAD holds an older version, and the index is clean (`git diff --cached --quiet`). `$T` is the target SHA from step 1. `<path>` is a regular file, never a directory, `.` or a key path. This variant replaces only step 5 of the procedure. Run steps 0–4 first: they resolve `$T`, list the paths that the fast-forward can write, refuse an overlap with an untracked or ignored path, and make the holding copies. The step 2 list must not contain a key path (the key-path check before step 5). Then run steps a–g in place of step 5, and run steps 6 and 7 after step g.
 
 | step | command | stop when |
 | --- | --- | --- |
