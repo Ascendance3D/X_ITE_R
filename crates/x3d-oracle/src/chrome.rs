@@ -50,7 +50,6 @@ pub const PLAYWRIGHT_SWITCHES: &[&str] = &[
     "--no-service-autorun",
     "--export-tagged-pdf",
     "--disable-search-engine-choice-screen",
-    "--unsafely-disable-devtools-self-xss-warnings",
     "--edge-skip-compat-layer-relaunch",
     "--disable-infobars",
     "--disable-search-engine-choice-screen",
