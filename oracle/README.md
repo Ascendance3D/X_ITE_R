@@ -397,9 +397,9 @@ rgba hashes identical for 296/296 at both 0 and 4 samples (4x was not +-1 here).
 node oracle/x_ite-dump.mjs oracle/corpus-items2 oracle/items2-baseline.json
 node oracle/x_ite-shot.mjs oracle/render-items2 oracle/render-items2-baseline --jobs 4
 node oracle/x_ite-shot-msaa.mjs oracle/render-items2 oracle/render-msaa4-items2-baseline --jobs 4
-x3d-run compare $(python3 -I -B tools/answer_keys.py resolve items2-baseline.json) oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
-x3d-shot batch oracle/render-items2 out && x3d-shot compare $(python3 -I -B tools/answer_keys.py resolve render-items2-baseline) out
-x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare $(python3 -I -B tools/answer_keys.py resolve render-msaa4-items2-baseline) out4
+x3d-run compare "$(python3 -I -B tools/answer_keys.py resolve items2-baseline.json)" oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
+x3d-shot batch oracle/render-items2 out && x3d-shot compare "$(python3 -I -B tools/answer_keys.py resolve render-items2-baseline)" out
+x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare "$(python3 -I -B tools/answer_keys.py resolve render-msaa4-items2-baseline)" out4
 ```
 
 Rust results: scene text 296/296 exact and 296/296 logs; pictures 294/296 at 0x and at 4x
