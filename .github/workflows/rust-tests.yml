@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The 16.6.0 reference pin is inert: nothing in the build reads it, so nothing in the
       # build notices a changed byte. This is that notice, and it needs no toolchain, so it
@@ -129,7 +129,7 @@ jobs:
         run: cargo clippy --release --workspace --all-targets --exclude cm-core --exclude cm-modes --exclude cm-view
 
       # The account's artifact storage can be full; the logs are then only in the job log.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         continue-on-error: true
         with:
