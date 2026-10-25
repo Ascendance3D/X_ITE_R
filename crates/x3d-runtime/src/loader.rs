@@ -439,8 +439,7 @@ impl Runtime {
     }
 
     pub(crate) fn format_load_subject(candidate: &str, resolved: Option<&url::Url>) -> String {
-        let data_url =
-            resolved.is_some_and(|r| r.scheme() == "data") || candidate.starts_with("data:");
+        let data_url = resolved.is_some_and(|r| r.scheme() == "data");
         let resolved_text = match resolved {
             Some(r) if !data_url => {
                 decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string())
@@ -934,30 +933,39 @@ pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -
     let buffer_error = std::cell::RefCell::new(None);
 
     let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
+        let resolved_res = url::Url::parse(base)
+            .and_then(|b| b.join(uri.trim()))
+            .map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string());
+
         if uri.trim_start().starts_with("data:") {
             let res = x3d_parse::gltf_default_fetch(uri, base);
             if let Err(e) = &res {
-                *buffer_error.borrow_mut() = Some(BufferFetchError {
-                    candidate: uri.to_string(),
-                    resolved: None,
-                    error: e.clone(),
-                });
+                if buffer_error.borrow().is_none() {
+                    *buffer_error.borrow_mut() = Some(BufferFetchError {
+                        candidate: uri.to_string(),
+                        resolved: resolved_res.ok(),
+                        error: e.clone(),
+                    });
+                }
             }
             return res;
         }
 
-        let resolved = url::Url::parse(base)
-            .and_then(|b| b.join(uri.trim()))
-            .map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string())?;
+        let resolved = match resolved_res {
+            Ok(r) => r,
+            Err(e) => return Err(e),
+        };
 
         match fetcher.fetch(&resolved) {
             Ok(d) => Ok(d),
             Err(e) => {
-                *buffer_error.borrow_mut() = Some(BufferFetchError {
-                    candidate: uri.to_string(),
-                    resolved: Some(resolved.clone()),
-                    error: e.clone(),
-                });
+                if buffer_error.borrow().is_none() {
+                    *buffer_error.borrow_mut() = Some(BufferFetchError {
+                        candidate: uri.to_string(),
+                        resolved: Some(resolved.clone()),
+                        error: e.clone(),
+                    });
+                }
                 Err(e)
             }
         }
