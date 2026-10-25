@@ -14,7 +14,8 @@ Revision of the 2026-10-25 recovery proposal (LEDGER_PROPOSAL.diff), after the P
 
 The snapshot, this tool and the verify_ledger.py HISTORY step are installed, and ledger.json holds the result (sha256
 41cd5e2d...66ef). Both commands refuse a snapshot whose sha256 is not SNAP_SHA256. apply refuses to write over a ledger that
-is neither the snapshot nor the result of this change set, so it cannot discard a later ledger change."""
+is neither the snapshot nor the result of this change set, so it cannot discard a later ledger change. apply writes a
+temporary file and then replaces ledger.json."""
 import json, os, sys, collections, hashlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTH = os.path.join(HERE, "..", "ledger", "ledger.json")
@@ -114,7 +115,13 @@ if __name__ == "__main__":
     if not snap_ok(): sys.exit(1)
     if sys.argv[1:] == ["apply"]:
         d = build()
-        if sha256(AUTH) != SNAP_SHA256 and load(AUTH) != d:
+        try: same = sha256(AUTH) == SNAP_SHA256 or load(AUTH) == d
+        except ValueError: same = False
+        if not same:
             print("ledger.json is neither the snapshot nor the result of this change set: refused"); sys.exit(1)
-        json.dump(d, open(AUTH, "w"), indent=1); sys.exit(0 if check(load(AUTH)) else 1)
+        # Write a temporary file in the same directory, then replace: an interrupted write leaves ledger.json whole.
+        tmp = AUTH + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(d, f, indent=1); f.flush(); os.fsync(f.fileno())
+        os.replace(tmp, AUTH); sys.exit(0 if check(load(AUTH)) else 1)
     sys.exit(0 if check(load(AUTH)) else 1)
