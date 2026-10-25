@@ -75,10 +75,31 @@ pub struct DepthShape<'a> {
     pub id: f32,
 }
 
+impl DepthShape<'_> {
+    /// Whether the pass draws anything of it.
+    fn draws(&self) -> bool {
+        !self.empty
+            && self.geometry.vertices.len() >= 4
+            && !self.instances.is_some_and(|m| m.is_empty())
+    }
+}
+
 /// gl_FragData 0 and 1 for every pixel, row 0 first (GL's bottom row).
 pub struct DepthPixels {
     pub data0: Vec<[f32; 4]>,
     pub data1: Vec<[f32; 4]>,
+}
+
+impl DepthPixels {
+    /// The buffer as the pass clears it: depthClearColor (1, -1, -1, -1) in both targets.
+    fn cleared() -> DepthPixels {
+        let clear = vec![[1.0, -1.0, -1.0, -1.0]; (SIZE * SIZE) as usize];
+
+        DepthPixels {
+            data0: clear.clone(),
+            data1: clear,
+        }
+    }
 }
 
 /// What the passes cost since the last [`DepthGpu::take_stats`] (for benchmarks).
@@ -406,7 +427,14 @@ impl DepthGpu {
         let passes = projections.len();
         self.passes += passes;
         self.stats.queries += passes;
-        self.queries += 1;
+
+        // Nothing to draw: every pass reads the cleared buffer, which needs no GPU.
+        if !shapes.iter().any(DepthShape::draws) {
+            return Some((0..passes).map(|_| DepthPixels::cleared()).collect());
+        }
+
+        // A batch ages the vertex buffers by its passes, like the passes one by one.
+        self.queries += passes as u64;
         let stamp = self.queries;
 
         for s in shapes {
