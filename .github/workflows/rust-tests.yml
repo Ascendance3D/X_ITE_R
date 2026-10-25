@@ -23,6 +23,10 @@ name: Rust tests
 
 on:
   pull_request:
+    # Docs-only PRs skip the Rust build. Nothing requires this check, so a skipped run blocks no merge.
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   workflow_dispatch:
 
 permissions:
