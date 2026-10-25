@@ -65,6 +65,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The 16.6.0 reference pin is inert: nothing in the build reads it, so nothing in the
+      # build notices a changed byte. This is that notice, and it needs no toolchain, so it
+      # runs before the build. --self-test proves the checker still refuses a tampered pin.
+      - name: X_ITE 16.6.0 reference pin
+        run: |
+          python3 -I -B tools/verify-reference-pin.py
+          python3 -I -B tools/verify-reference-pin.py --self-test
+
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
           components: rustfmt

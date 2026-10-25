@@ -1,7 +1,9 @@
 # X_ITE_R — 16.6.0 Upstream Pin and Delta Audit
 
 **Audit only. No Rust behavior was changed, no oracle capture was re-recorded, the active
-oracle version is untouched, nothing was committed, pushed, or merged.**
+oracle version is untouched, and nothing is merged.** The audit itself, the inert 16.6.0
+reference pin, its checker and the re-blessed 16.5.0 digest *are* committed and pushed, as
+PR #44 for owner review; §7 lists exactly what the PR carries.
 
 | | |
 | --- | --- |
@@ -50,7 +52,7 @@ The extra 8 commits are listed in §3.8. One of them is a genuine behavior chang
 | item | state |
 | --- | --- |
 | `oracle/x_ite-pin/` (16.5.0) | **not modified** — read only, verified below |
-| `tools/candidate.lock` | **not modified** — still `X_ITE_PIN=34cdf9f97…`, `X_ITE_VERSION=16.5.0` |
+| `tools/candidate.lock` | **reference target not modified** — still `X_ITE_PIN=34cdf9f97…`, `X_ITE_VERSION=16.5.0`, still `X_ITE_REF_DIR=oracle/x_ite-pin/src`. Its two *stale measurements* are re-blessed by this PR: `X_ITE_REF_FILES` 854 → 857 and `X_ITE_REF_DIGEST` `88c5d8da…` → `83fb7cae…`, with the cause recorded in the file. See §2.3 |
 | `crates/x3d-scene/data/x_ite-nodes.json` | **not modified** — still `"pinned":"34cdf9f97","browserVersion":"16.5.0"` |
 | every 16.5.0 oracle capture under `oracle/*-baseline*` | **not modified** |
 | new | `oracle/x_ite-pin-16.6.0/` — inert identity record, read by nothing |
@@ -101,9 +103,12 @@ again. Recommended durable fix, for owner approval: exclude the 11 harness pages
 digest (or move them out of `src/`) so the gate covers only the X_ITE reference source.
 That changes the gate's scope, so it is **not** done here.
 
-**What this repair does.** `X_ITE_REF_FILES` / `X_ITE_REF_DIGEST` are updated to the proven
-measured values (857 / `83fb7cae…`), with the cause recorded in the lock. No oracle source
-byte was touched.
+**What this repair does, and where it is.** `X_ITE_REF_FILES` / `X_ITE_REF_DIGEST` are
+updated to the proven measured values (857 / `83fb7cae…`), with the cause recorded in the
+lock. No oracle source byte was touched. The edit is **in this PR**, in commit
+`b7896dc` — `tools/candidate.lock` is the only pre-existing tracked file the PR changes.
+Re-measure it with `python3 tools/reference-digest.py oracle/x_ite-pin/src`, which prints
+`857 83fb7cae…`; the value was not copied from this report.
 
 **This does not make the gate pass**, and that is a second, independent staleness: the lock
 still names `CANDIDATE_COMMIT=a553381b9f4d950d71032096fb2a27d30cd68b93` from R0.1, while
@@ -255,7 +260,7 @@ Every entry below was read in the current tree at `f7a67cd`; none is implemented
 | H3, H4 | `crates/x3d-render/src/sg.rs:399` (`"HAnimSegment" \| "HAnimSite" => all children`), `crates/x3d-render/src/traverse.rs:1782-1796` | `HAnimSite` is treated as a plain transform; there is **no** site displacer path. | give `HAnimSite` the segment's traverse/skin path; add the four new fields to the node table. |
 | H4, H5, H10 | `crates/x3d-scene/data/x_ite-nodes.json` | pinned `34cdf9f97` / `16.5.0`. `HAnimSite` has 15 fields, no `purpose`/`meshVertexIndex`/`displacers`/`coord`. `HAnimHumanoid` has no `displacers`. `HAnimJoint`'s `units` map has `minAngle`/`maxAngle` but **not** `llimit`/`ulimit`. | regenerate from the 16.6.0 pin. Field-order changes shift indices, so SAI field-definition evidence must be re-baselined. |
 | H6 | `crates/x3d-render/src/hanim.rs:51` `humanoid_joints`, `crates/x3d-runtime/src/nodes/hanim.rs:349` `hanim_humanoid_set_joints`, `:765` `hanim_motion_connect`, `:502` `hanim_pose_add_joints` | joint list is exactly `_joints`; no skeleton node is prepended. | prepend a synthetic skeleton joint carrying `HAnimHumanoid.displacers` with an identity binding; confirm `HAnimPose`/`HAnimMotion` remain name-keyed (upstream's `getJointsIndex` is, so a nameless joint 0 should be inert — must be proven, not assumed). |
-| H7 | `crates/x3d-render/src/hanim.rs:155-157` | deliberately reproduces the 16.5.0 defect: *"An index past `skinCoordWeight` reads undefined: not 0, so NaN in the Float32Array."* | change the guard to skip non-finite and zero weights, and delete that comment. This is the clearest single-line item in the whole migration. |
+| H7 | `crates/x3d-render/src/hanim.rs:155-157` | deliberately reproduces the 16.5.0 defect: *"An index past `skinCoordWeight` reads undefined: not 0, so NaN in the Float32Array."* | match upstream's `!weight` **exactly** — skip a weight that is absent, `0.0`, `-0.0` or `NaN`, and **keep** `±∞` — then delete that comment. See the value table below: `!weight` is *not* "skip non-finite", because `!Infinity` is `false`. One line, but an `is_finite()` guard would be a new deviation rather than parity. |
 | H8, H9 | `crates/x3d-render/src/sg.rs:371-402` `hanim_children` | exactly 16.5.0: joint children filtered to `HAnimJoint`/`HAnimSegment` (+`HAnimSite` for spec ≤ 3.3); segment/site children unfiltered. | add `X3DGroupingNode`/`Shape` to the joint filter; add the spec-gated `{HAnimSite, X3DGroupingNode}` (+`X3DChildNode` ≤ 4.0) filter to the segment. Needs an `is_a`-style type-hierarchy test, not a flat name list. |
 | H11 | `crates/x3d-render/src/traverse.rs:3777-3796` `hanim_segment` | builds matrices eagerly per traversal. | add the dirty-flag/deferred-upload equivalent. Low priority: values identical. |
 | R1–R5 | `crates/x3d-render/src/traverse.rs:1342` (`hanim: Vec<Option<usize>>`), `:1538`, `:3726`, `:3792`, `:4213` | the `hanim` stack is the 16.5.0 design, verbatim. | replace the stack lookup with a per-shape "does this geometry's coord node have a live HAnim registration" lookup. **Primitives and particle/background/screen shapes must stop being skinned.** |
@@ -267,8 +272,32 @@ Every entry below was read in the current tree at `f7a67cd`; none is implemented
 | S2 | `crates/x3d-render/src/traverse.rs` (`global_lights`, `local_lights`) | **there is no `globalLightsKeys` analogue at all** — Rust tracks light indices and has no string shader-cache key. | probably **no Rust change**; the fix removes a JS-only cache-key leak. Must still be proven not to change rendered output in an Inline-with-local-lights oracle case. |
 | P1 | `crates/x3d-parse/src/gltf2/scenegraph.rs:519` `self.create("HAnimSegment")` | exactly 16.5.0. | change to `HAnimSite`. One-line change, but it alters every imported-skeleton scene's text, so it is gated on new glTF oracle text. |
 | P2 | — | Rust rejects/loads Draco differently already (`sub:parse.gltf2` records `KHR_draco_mesh_compression skipped`). | classify after comparing decoder output; may be a no-op for X_ITE_R. |
-| X1 | `crates/x3d-viewer/src/viewer.rs`, runtime frame loop | not inspected for the reshape case in this audit. | **open item** — the reshape-advances-time change must be checked against the Rust frame loop. |
-| X2 | `crates/x3d-runtime/src/loader.rs` / data-URL parsing | not inspected. | **open item** — check whether Rust's `data:` header parse accepts a newline. |
+| X1 | `crates/x3d-viewer/src/viewer.rs:1110` `frame_due`, `:1124` `step`, `crates/x3d-viewer/src/embed.rs:515` `step`, `:548` `frame` | **located (§8.1).** There is no `now < 0` reshape sentinel in the port: `Embed::frame` resizes and then takes a normal gated step, so a resize inside the frame-rate window advances no time. Matches 16.5.0, diverges from 16.6.0 in exactly that window. | let the step after a `resize` bypass `frame_due`. Gated on the `reshape-advance-time` capture (§5.2). |
+| X2 | `crates/x3d-runtime/src/loader.rs:138` `data_url_text` | **located (§8.2).** `split_once (',')` is newline-blind, so a multiline `data:` header is still accepted: matches 16.5.0, diverges from 16.6.0. Sole `data:` parse site in the tree. | reject a header that spans a line break. Gated on a capture that fixes the break set (JS `.` excludes `\n`, `\r`, `\u2028`, `\u2029`, unlike Rust `lines()`). |
+
+**H7 in full, because `!weight` is easy to approximate wrongly.** `_skinCoordWeight` is an
+`MFFloat`, which `ArrayFields.js` builds from `TypedArrayTemplate (… Float32Array, 1)`, so
+`jointNode ._skinCoordWeight .getValue () [i]` is either an `f32` or `undefined` past the
+end. Over exactly that domain, JavaScript's `!weight` is:
+
+| `skinCoordWeight [i]` | `!weight` | 16.6.0 | 16.5.0 (`weight === 0`) |
+| --- | --- | --- | --- |
+| `0` | `true` | **skipped** | skipped |
+| `-0` | `true` | **skipped** | skipped (`-0 === 0`) |
+| `NaN` | `true` | **skipped** | contributed → `NaN` in the texture |
+| `undefined` (index past `skinCoordWeight`) | `true` | **skipped** | contributed → `NaN` in the texture |
+| `Infinity`, `-Infinity` | `false` | **contributed** | contributed |
+| any other non-zero finite value | `false` | contributed | contributed |
+
+So the 16.6.0 fix adds `NaN` and absent to the skip set and nothing else. An infinite weight
+still reaches the joint texture in both versions. The Rust guard that reproduces this is
+`weight == 0.0 || weight.is_nan()` plus the absent case (the index-past-the-end read, which
+in Rust is a `get (i)` that returns `None`, not a `NaN`) — **not** `!weight.is_finite()`,
+which would additionally drop `±∞` and make X_ITE_R diverge from both versions. The
+`hanim-weight-nan` oracle case (§5.2) should therefore capture an infinite weight as well as
+a missing one, so the distinction is held by evidence and not only by this table.
+
+**Not implemented here.** H7 belongs to lane L3 (§6.1); this PR changes no Rust line.
 
 ### 4.1 REA ledger comparison
 
@@ -315,11 +344,18 @@ Ledger gaps with no entry at all, which 16.6.0 makes material:
    see §2.3.
 2. ~~Materialize `oracle/x_ite-pin-16.6.0/src`~~ — **done** (2026-10-24). 846 files,
    `sha256sum -c MANIFEST.sha256` → 846 OK / 0 failed. See §2.4.
-3. Copy the 11 harness pages into the 16.6.0 tree and re-verify each against 16.6.0's
+3. ~~Give the 16.6.0 pin an automated integrity check~~ — **done** (2026-10-24).
+   `tools/verify-reference-pin.py` verifies all 846 `src/` files against
+   `MANIFEST.sha256`, refuses an unlisted extra file, re-computes the recorded tree
+   digest, and checks `SOURCE_SHA`, `PINNED_COMMIT`, `package.json` and both
+   `BROWSER_VERSION.js` copies against the identity it expects. It runs in CI before the
+   toolchain step, together with `--self-test`, which proves on a throwaway copy that all
+   eight tamper cases still refuse. Pure `hashlib`: no GNU `sha256sum` dependency.
+4. Copy the 11 harness pages into the 16.6.0 tree and re-verify each against 16.6.0's
    `src/x_ite.*` entry points. They are ours, so they are not in `MANIFEST.sha256`.
    **Still open** — this is what makes the 16.6.0 tree *runnable* rather than merely
    verified, and it is the first task of the Phase 4 oracle lane.
-4. Keep both trees live simultaneously. Every case below must be recorded from **both**
+5. Keep both trees live simultaneously. Every case below must be recorded from **both**
    16.5.0 and 16.6.0, three identical recordings each, before any Rust line changes.
 
 ### 5.2 New cases, by behavior
@@ -424,11 +460,9 @@ a humanoid, so the expected impact is zero — but R3 is a real semantic change 
 
 ### 6.3 What this audit did not establish
 
-* **P2** — the Draco decoder update is classified **unknown**. Its 30 changed lines were not
-  analyzed and no decoded-mesh comparison was run.
-* **X1** and **X2** — the two real behavior changes in the omitted 8 commits were identified
-  on the X_ITE side but their Rust counterparts were **not located**. Both are open items in
-  §4.
+* **P2**, **X1** and **X2** were open when §4 was written and are **closed in §8**, which
+  was added later in the same audit. §4's rows now carry the located Rust counterparts.
+  None of the three is implemented; each still needs the capture §8 names.
 * No Rust code was built, run, or tested during this audit. No oracle capture was taken, so
   every "16.6.0 differs here" claim in §3 is from reading upstream source, not from a
   recorded comparison. §5 exists to convert them into evidence.
@@ -437,22 +471,28 @@ a humanoid, so the expected impact is zero — but R3 is a real semantic change 
 
 ## 7. Artifacts
 
+Everything below is **tracked and committed on `ref/x-ite-16-6-0-pin-and-audit`** (PR #44),
+not a local artifact.
+
 | path | state |
 | --- | --- |
-| `oracle/x_ite-pin-16.6.0/` | **new**, untracked, inert; read by nothing |
-| `XITE_R_16_6_0_UPSTREAM_PIN_AND_DELTA_AUDIT.md` | **new**, this file |
-| `oracle/x_ite-pin/`, `tools/candidate.lock`, `crates/x3d-scene/data/x_ite-nodes.json`, all `oracle/*-baseline*` | **unchanged** |
+| `oracle/x_ite-pin-16.6.0/` | **added**, 852 files; inert at run time — no crate and no oracle tool reads it |
+| `XITE_R_16_6_0_UPSTREAM_PIN_AND_DELTA_AUDIT.md` | **added**, this file |
+| `tools/verify-reference-pin.py` | **added** — the pin's integrity check, with `--self-test` (§5.1) |
+| `.github/workflows/rust-tests.yml` | **modified** — one step, before the toolchain, running the two commands above |
+| `tools/candidate.lock` | **modified** — the stale 16.5.0 measurements only (854 → 857, `88c5d8da…` → `83fb7cae…`); the pinned commit, version and `X_ITE_REF_DIR` are untouched. §2.1, §2.3 |
+| `oracle/x_ite-pin/`, `crates/x3d-scene/data/x_ite-nodes.json`, all `oracle/*-baseline*` | **unchanged** — the active 16.5.0 oracle is exactly as it was |
 | `~/Projects/cybertown/X_ITE/x_ite` | `git fetch upstream --tags` only; HEAD still on `fix/firefox-vrml-xml-parser` at `34cdf9f97`, working tree clean, nothing pushed |
 
 
 ---
 
-## 7. Closed gaps (2026-10-24)
+## 8. Closed gaps (2026-10-24)
 
 The B25-2/16.6.0 handoff asked for three specific investigations to be finished. All three
 are now closed; none of them changes a Rust line, and none is implemented here.
 
-### 7.1 X1 — frame-time advance during reshape: Rust counterpart located
+### 8.1 X1 — frame-time advance during reshape: Rust counterpart located
 
 **Upstream change.** `advanceTime` gained a `checkFrameRate` argument and
 `X3DBrowserContext` calls `advanceTime (now >= 0)`. A reshape passes `now < 0`, so in
@@ -488,7 +528,7 @@ the step that follows a `resize`, which is the Rust-shaped equivalent of
 §5.2 — because the observable is `elapsedTime` across a resize and only a capture settles
 it. **The REA ledger gap noted in §4 stands: no entry covers `advanceTime`/frame pacing.**
 
-### 7.2 X2 — multiline `data:` URL header: Rust counterpart located
+### 8.2 X2 — multiline `data:` URL header: Rust counterpart located
 
 **Upstream change.** The `s` (dotAll) flag was dropped from
 `/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/`, so in 16.6.0 a `data:` URL whose
@@ -516,7 +556,7 @@ on `header`, in that one function. It is the only `data:` parse site in the tree
 case is needed to fix which characters count as the line break (the JS `.` excludes
 `\n`, `\r`, `\u2028`, `\u2029`, which is *not* the same set as Rust's `lines()`).
 
-### 7.3 P2 — Draco decoder: investigation complete, classified **no-op for X_ITE_R**
+### 8.3 P2 — Draco decoder: investigation complete, classified **no-op for X_ITE_R**
 
 The 30-changed-line figure came from a textual diff, which is misleading: the file is a
 single minified emscripten bundle, so line counts track the build's formatting, not its
