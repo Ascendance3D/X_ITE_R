@@ -412,4 +412,30 @@ describe ("x3d-canvas", () =>
       assert .deepEqual (r, { attribute: `"no-such-world.wrl", "${base}/${WORLD}"`, url: [ "no-such-world.wrl", `${base}/${WORLD}` ], world: true });
       await page .context () .close ();
    });
+
+   test ("15. a load handler can start the next loadURL", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async world =>
+      {
+         const X3D     = window .X3D_NS;
+         const canvas  = document .querySelector ("x3d-canvas");
+         const browser = canvas .browser;
+         const next    = URL .createObjectURL (new Blob ([ "#VRML V2.0 utf8\nDEF Next Group { }\n" ]));
+         let chained;
+
+         canvas .addEventListener ("load", () =>
+         {
+            chained = browser .loadURL (new X3D .MFString (next)) .then (() => "resolved", e => e .message);
+         }, { once: true });
+
+         const first = await browser .loadURL (new X3D .MFString (world)) .then (() => "resolved", e => e .message);
+
+         return { first, chained: await chained, world: browser .currentScene .worldURL === next,
+            node: browser .currentScene .getNamedNode ("Next") .getNodeTypeName () };
+      }, `${base}/${WORLD}`);
+
+      assert .deepEqual (r, { first: "resolved", chained: "resolved", world: true, node: "Group" });
+      await page .context () .close ();
+   });
 });
