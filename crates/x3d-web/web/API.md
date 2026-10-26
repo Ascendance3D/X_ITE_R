@@ -93,7 +93,7 @@ Tested: requests that end after a newer `loadURL`, after `dispose ()` or after t
 
 ## Known differences inside the supported part
 
-Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.test.mjs` or `tests/browser/runtime02.test.mjs` when a compared case shows it.
+Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.test.mjs` or `tests/browser/runtime02_harness.mjs` when a compared case shows it.
 
 - A vector value is a copy: `node.diffuseColor.r = 1` does not change the node. Assign the whole value: `node.diffuseColor = new X3D.SFColor (1, 0, 0)`. In X_ITE the value object is live.
 - Removing the element from the document stops the frame loop and releases the buttons and touches that are down; adding it again restarts the loop. X_ITE keeps drawing, and its document `mouseup` listener releases later.
@@ -147,4 +147,4 @@ The WebGPU column is the vendors' published state as known in mid-2026; this lan
 | Samsung Internet, other Chromium browsers | follows its Chromium version and the device's GPU | **not tested** |
 | devices with only OpenGL ES 3.1 class GPUs | needs WebGPU compatibility mode | not supported (see Graphics) |
 
-Tested in desktop Chrome emulation only (`tests/browser/runtime02.test.mjs`): a phone (390 × 844, DPR 3) and a tablet (820 × 1180, DPR 2, rotated to landscape), with touch input. These tests check input, coordinates, framebuffer size, rotation and cleanup. They are no proof of a mobile browser or a mobile GPU.
+Tested in desktop Chrome emulation only (`tests/browser/runtime02_phone.test.mjs`, `tests/browser/runtime02_tablet.test.mjs`): a phone (390 × 844, DPR 3) and a tablet (820 × 1180, DPR 2, rotated to landscape), with touch input. These tests check input, coordinates, framebuffer size, rotation and cleanup. They are no proof of a mobile browser or a mobile GPU.

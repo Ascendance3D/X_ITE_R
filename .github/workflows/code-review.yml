@@ -7,6 +7,12 @@ on:
 permissions:
   pull-requests: write
 
+# Each review reads the whole PR diff (pulls.listFiles), so a new push cancels the review of the commit it replaces:
+# the next review covers that commit's changes too. Each PR has its own group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
     name: Review

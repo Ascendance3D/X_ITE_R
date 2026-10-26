@@ -1,5 +1,5 @@
 // The browser runtime 02 cases: input, resource loading and the scene API. oracle/x_ite-web-runtime-02.mjs runs
-// them against pinned X_ITE 16.5.0 and records the values; runtime02.test.mjs runs them against X_ITE_R and
+// them against pinned X_ITE 16.5.0 and records the values; runtime02_harness.mjs runs them against X_ITE_R and
 // compares. Each case is a Node function of a Playwright page and an environment:
 //
 //   env .base       the server origin of the page; env .foreign another origin of the same server
