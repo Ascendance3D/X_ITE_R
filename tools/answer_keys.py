@@ -210,10 +210,12 @@ def guard(root, revs=("HEAD",)):
             _git(root, "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}")
         except (OSError, subprocess.CalledProcessError):
             raise KeyError_(UNSAFE, f"guard: {rev} is not a commit in {root}")
+        # A commit before the manifest has none, and this manifest's names still apply. Any Git failure is unsafe.
         try:
-            names |= set(parse(_git(root, "show", f"{rev}:oracle/answer-keys.tsv").decode().splitlines()))
-        except (OSError, subprocess.CalledProcessError):
-            pass  # a commit before the manifest; this manifest's names still apply
+            if _git(root, "ls-tree", "--full-tree", rev, "--", "oracle/answer-keys.tsv"):
+                names |= set(parse(_git(root, "show", f"{rev}:oracle/answer-keys.tsv").decode().splitlines()))
+        except (OSError, subprocess.CalledProcessError) as e:
+            raise KeyError_(UNSAFE, f"guard: cannot read the manifest of {rev} in {root}: {e}")
     held = [p for p in sorted("oracle/" + n for n in names) + list(GUARDED) if _real_data(root, p)]
     parents = sorted({"/".join(p.split("/")[:i]) for p in held for i in range(1, p.count("/") + 1)})
     if held:
