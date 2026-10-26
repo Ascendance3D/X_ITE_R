@@ -56,7 +56,7 @@ def parse(lines):
         cols = line.rstrip("\n").split("\t")
         # A name is one plain path component, so <store>/<name> cannot step out of the store.
         if (len(cols) != 5 or cols[0] in ("", ".", "..") or any(c in cols[0] for c in "/\\\0")
-                or cols[1] not in ("file", "dir") or not (cols[2].isdigit() and cols[3].isdigit())):
+                or cols[1] not in ("file", "dir") or not all(c.isascii() and c.isdigit() for c in cols[2] + cols[3]) or not (cols[2] and cols[3])):
             raise KeyError_(1, f"answer-keys.tsv: bad row {line!r}")
         name, kind, files, size, digest = cols
         rows[name] = (kind, int(files), int(size), digest)
@@ -214,20 +214,20 @@ def guard(root, revs=("HEAD",)):
         try:
             if _git(root, "ls-tree", "--full-tree", rev, "--", "oracle/answer-keys.tsv"):
                 names |= set(parse(_git(root, "show", f"{rev}:oracle/answer-keys.tsv").decode().splitlines()))
-        except (OSError, subprocess.CalledProcessError) as e:
+        except (OSError, subprocess.CalledProcessError, UnicodeDecodeError) as e:
             raise KeyError_(UNSAFE, f"guard: cannot read the manifest of {rev} in {root}: {e}")
     held = [p for p in sorted("oracle/" + n for n in names) + list(GUARDED) if _real_data(root, p)]
     parents = sorted({"/".join(p.split("/")[:i]) for p in held for i in range(1, p.count("/") + 1)})
     if held:
         # `git clean -fd` deletes untracked data that the ignore rules do not cover.
         try:
-            r = subprocess.run(["git", "-C", root, "check-ignore", "--no-index", "--", *held],
-                               capture_output=True)
+            r = subprocess.run(["git", "-C", root, "check-ignore", "--no-index", "--stdin", "-z"],
+                               input=b"".join(os.fsencode(p) + b"\0" for p in held), capture_output=True)
         except OSError as e:
             raise KeyError_(UNSAFE, f"guard: cannot read the ignore rules in {root}: {e}")
         if r.returncode not in (0, 1):
             raise KeyError_(UNSAFE, f"guard: cannot read the ignore rules in {root}: {r.stderr.decode().strip()}")
-        ignored = set(os.fsdecode(r.stdout).splitlines())  # names cannot hold a newline (line-based manifest)
+        ignored = {os.fsdecode(p) for p in r.stdout.split(b"\0") if p}  # -z: no pathname quoting
         problems += [f"{p}: real data that the ignore rules do not cover; git clean -fd would delete it"
                      for p in held if p not in ignored]
     for rev in revs:

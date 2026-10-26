@@ -134,7 +134,7 @@ class Store(Case):
             self.assertIn("bad row", str(c.exception))
 
     def test_short_or_malformed_manifest_row(self):
-        for row in ("k.json", "k.json\tfile\t1", "k.json\tfile\tone\t3\tx"):
+        for row in ("k.json", "k.json\tfile\t1", "k.json\tfile\tone\t3\tx", "k.json\tfile\t\u00b2\t3\tx"):
             with self.assertRaises(ak.KeyError_) as c:
                 ak.parse([row + "\n"])
             self.assertEqual(c.exception.code, 1)
@@ -226,6 +226,18 @@ class Guard(Case):
         with self.assertRaises(ak.KeyError_) as c:
             ak.guard(root, ["bad"])
         self.assertIn("bad row", str(c.exception))
+
+    def test_ignored_name_that_git_would_quote(self):
+        root = self.checkout()
+        name = 'k "\u00e9".json'
+        tsv = os.path.join(root, "oracle", "answer-keys.tsv")
+        with open(tsv, "a") as f:
+            f.write(f"{name}\tfile\t1\t3\t{sha(b'abc')}\n")
+        with open(os.path.join(root, ".gitignore"), "a") as f:
+            f.write(f"/oracle/{name}\n")
+        with open(os.path.join(root, "oracle", name), "w") as f:
+            f.write("abc")
+        ak.guard(root, ["HEAD"])
 
     def test_real_data_that_is_not_ignored(self):
         root = self.checkout()

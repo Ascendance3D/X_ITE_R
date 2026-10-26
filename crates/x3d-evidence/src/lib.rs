@@ -461,7 +461,9 @@ pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), 
         if !listed.is_empty() {
             let text = git(root, &["show", &format!("{rev}:oracle/answer-keys.tsv")])
                 .ok_or_else(unreadable)?;
-            let theirs = parse_manifest(&String::from_utf8_lossy(&text), Path::new(rev))?;
+            // Strict: a lossy decode could change a name and so miss the real path.
+            let text = String::from_utf8(text).map_err(|_| unreadable())?;
+            let theirs = parse_manifest(&text, Path::new(rev))?;
 
             names.extend(theirs.keys().map(|n| format!("oracle/{n}")));
         }
@@ -486,12 +488,20 @@ pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), 
 
     if !held.is_empty() {
         // `git clean -fd` deletes untracked data that the ignore rules do not cover.
+        // -z: no pathname quoting, so each reported path equals the one asked about.
+        let input: String = held.iter().map(|p| format!("{p}\0")).collect();
         let out = Command::new("git")
             .arg("-C")
             .arg(root)
-            .args(["check-ignore", "--no-index", "--"])
-            .args(held.iter().map(|p| p.as_str()))
-            .output()
+            .args(["check-ignore", "--no-index", "--stdin", "-z"])
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .and_then(|mut child| {
+                std::io::Write::write_all(&mut child.stdin.take().unwrap(), input.as_bytes())?;
+                child.wait_with_output()
+            })
             .ok()
             .filter(|o| matches!(o.status.code(), Some(0 | 1)))
             .ok_or_else(|| {
@@ -500,10 +510,10 @@ pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), 
                     root.display()
                 ))
             })?;
-        // A manifest name cannot hold a newline (the manifest is line-based).
-        let ignored: Vec<String> = String::from_utf8_lossy(&out.stdout)
-            .lines()
-            .map(str::to_string)
+        let ignored: Vec<String> = out
+            .stdout
+            .split(|&b| b == 0)
+            .map(|p| String::from_utf8_lossy(p).into_owned())
             .collect();
 
         for p in held.iter().filter(|p| !ignored.contains(p)) {
@@ -1216,6 +1226,24 @@ mod tests {
             guard(&root, &["bad"], None),
             Err(KeyError::Io(e)) if e.contains("bad row")
         ));
+    }
+
+    /// Git quotes such a name in plain output; with -z the reported path equals the asked one.
+    #[test]
+    fn guard_matches_an_ignored_name_that_git_would_quote() {
+        let root = checkout("guard-quote");
+        let name = "k \"\u{e9}\".json";
+        let tsv = root.join("oracle/answer-keys.tsv");
+        let text = std::fs::read_to_string(&tsv).unwrap();
+
+        std::fs::write(&tsv, format!("{text}{name}\tfile\t1\t3\t{}\n", sha(b"abc"))).unwrap();
+        std::fs::write(
+            root.join(".gitignore"),
+            format!("/oracle/k.json\n/oracle/d/\n/oracle/{name}\n"),
+        )
+        .unwrap();
+        std::fs::write(root.join("oracle").join(name), "abc").unwrap();
+        guard(&root, &["HEAD"], None).unwrap();
     }
 
     #[test]
