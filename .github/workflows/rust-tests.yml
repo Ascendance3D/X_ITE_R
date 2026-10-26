@@ -90,6 +90,11 @@ jobs:
           python3 -I -B tools/verify-reference-pin.py
           python3 -I -B tools/verify-reference-pin.py --self-test
 
+      # The answer-key resolver checks and guard (issue #65), on synthetic Git repositories in a temporary
+      # directory. The Rust half is the x3d-evidence unit tests in the test step.
+      - name: Answer-key resolver and guard
+        run: python3 -I -B tools/test_answer_keys.py
+
       # The ACTIVE references: X_ITE 16.5.0 (oracle/x_ite-pin) and CodeMirror 5.65.21
       # (oracle/cm5-build), checked by version and content digest against tools/candidate.lock.
       # This is the reference half of the gate only; no commit identity is checked or approved.
