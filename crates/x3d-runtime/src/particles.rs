@@ -174,11 +174,16 @@ fn splitmix64(state: &mut u64) -> u64 {
 }
 
 fn fresh_random() -> SeedSource {
-    let nanos = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
+    let nanos = web_time::SystemTime::now()
+        .duration_since(web_time::UNIX_EPOCH)
         .map_or(0, |d| d.as_nanos() as u64);
     let local = 0u8;
-    let mut state = nanos ^ ((&local as *const u8 as u64) << 17) ^ u64::from(std::process::id());
+    // wasm32-unknown-unknown has no process ids (std::process::id panics).
+    #[cfg(not(target_arch = "wasm32"))]
+    let pid = u64::from(std::process::id());
+    #[cfg(target_arch = "wasm32")]
+    let pid = 0;
+    let mut state = nanos ^ ((&local as *const u8 as u64) << 17) ^ pid;
     let (s0, s1) = (splitmix64(&mut state), splitmix64(&mut state));
 
     SeedSource::Random { s0, s1 }

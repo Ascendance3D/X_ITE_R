@@ -11,7 +11,7 @@ x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-runtime = { path = "../x3d-runtime" }
-x3d-script = { path = "../x3d-script" }
+x3d-script = { path = "../x3d-script", optional = true }
 x3d-text = { path = "../x3d-text" }
 url = "2"
 wgpu = "30"
@@ -24,6 +24,22 @@ sha2 = "0.10"
 mikktspace = "=0.3.0"
 # Batch 08 shaders lane: GLSL (rewritten to #version 450) -> naga -> WGSL for ComposedShader.
 naga = { version = "=30.0.1", default-features = false, features = ["glsl-in", "wgsl-in", "wgsl-out"] }
+# Instant on wasm32-unknown-unknown too (std::time::Instant panics there).
+web-time = "1"
+
+[features]
+default = ["script"]
+# Script nodes in QuickJS, and the oracle loader that runs them (`load`, `render_file`). QuickJS is C
+# code that does not build for wasm32-unknown-unknown, so the browser build (x3d-web) turns it off.
+script = ["dep:x3d-script"]
+
+[[bin]]
+name = "x3d-shot"
+required-features = ["script"]
+
+[[example]]
+name = "node_census"
+required-features = ["script"]
 
 [dev-dependencies]
 x3d-evidence = { path = "../x3d-evidence" }

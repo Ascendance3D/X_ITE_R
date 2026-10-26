@@ -1,0 +1,81 @@
+# Browser tests of X_ITE_R's <x3d-canvas> (crates/x3d-web), in headless Chromium with WebGPU.
+#
+# The runner has no GPU: Chromium's WebGPU runs on Mesa's lavapipe (a CPU Vulkan driver). The browser module is
+# built for wasm32-unknown-unknown with tools/build-web.sh, and the API case is compared with the pinned X_ITE 16.5.0
+# recording in oracle/web-browser-01-baseline. The native tests of the crate run in rust-tests.yml.
+# Locally: tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test); see crates/x3d-web/README.md.
+
+name: Web tests
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: web
+          cache-on-failure: true
+
+      # wasm-bindgen's CLI must be the exact version of the wasm-bindgen crate in Cargo.lock.
+      - name: wasm-bindgen CLI
+        run: |
+          version=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
+          wasm-bindgen --version 2>/dev/null | grep -qx "wasm-bindgen $version" || cargo install wasm-bindgen-cli --version "$version" --locked
+
+      - name: Build the browser module
+        run: tools/build-web.sh
+
+      - name: Chromium and Mesa Vulkan (lavapipe)
+        working-directory: crates/x3d-web
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        working-directory: crates/x3d-web
+        env:
+          XR_WEB_EVIDENCE: ${{ github.workspace }}/web-evidence
+        run: |
+          npm test 2>&1 | tee ../../web-tests.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Test counts
+        if: always()
+        run: grep -E '^ℹ (tests|pass|fail|skipped)' web-tests.log | tee -a "$GITHUB_STEP_SUMMARY" || true
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        continue-on-error: true
+        with:
+          name: web-test-evidence
+          path: |
+            web-tests.log
+            web-evidence/
+          if-no-files-found: ignore

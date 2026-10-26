@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>X_ITE_R: a Rust-backed &lt;x3d-canvas&gt;</title>
+<style>
+  body { font-family: sans-serif; margin: 2em; }
+  x3d-canvas { width: 512px; height: 384px; border: 1px solid #888; }
+  #status { margin-top: 1em; font-family: monospace; }
+</style>
+<!-- No X_ITE JavaScript: x_ite_r.mjs defines <x3d-canvas> over the Rust engine (WebAssembly + WebGPU). -->
+<script type="module" src="../x_ite_r.mjs"></script>
+
+<x3d-canvas src="box.wrl"></x3d-canvas>
+<p>
+  <button id="red">diffuseColor = red</button>
+  <button id="blue">diffuseColor = blue</button>
+</p>
+<div id="status">loading…</div>
+
+<script type="module">
+  import X3D from "../x_ite_r.mjs";
+
+  const canvas = document .querySelector ("x3d-canvas");
+  const browser = canvas .browser;
+  const status = document .getElementById ("status");
+
+  // "load" also fires for the empty world the browser starts with; that world has no BoxMaterial.
+  canvas .addEventListener ("load", () =>
+  {
+    if (!browser .currentScene .worldURL .endsWith ("box.wrl"))
+      return;
+
+    const material = browser .currentScene .getNamedNode ("BoxMaterial");
+
+    status .textContent = `${browser .name} ${browser .version}: ${browser .currentScene .worldURL}\n` +
+      `BoxMaterial.diffuseColor = ${material .diffuseColor}`;
+
+    document .getElementById ("red")  .onclick = () => { material .diffuseColor = new X3D .SFColor (1, 0, 0); status .textContent = `diffuseColor = ${material .diffuseColor}`; };
+    document .getElementById ("blue") .onclick = () => { material .diffuseColor = new X3D .SFColor (0.2, 0.4, 0.9); status .textContent = `diffuseColor = ${material .diffuseColor}`; };
+  });
+
+  canvas .addEventListener ("error", () => status .textContent = "the world did not load");
+  browser .ready () .catch (error => status .textContent = `X_ITE_R could not start: ${error}`);
+</script>
