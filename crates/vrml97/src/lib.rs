@@ -31,3 +31,5 @@ pub use parse::{
     LoadError, ParseError, Parser, decode_text, gunzip, is_valid_vrml, load_file, parse_bytes,
 };
 pub use scene::Scene;
+
+const  _CI_ACCEPTANCE:u8=0;
