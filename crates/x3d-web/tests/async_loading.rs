@@ -300,3 +300,28 @@ fn foreign_anchor_targets_are_opened_not_fetched() {
         ]
     );
 }
+
+#[test]
+fn a_failure_does_not_end_the_wait_for_another_resource() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url \"parts/missing.wrl\" }\nInline { url \"parts/inner.wrl\" }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(
+        "http://example.test/worlds/parts/missing.wrl",
+        Err("Error: Not Found"),
+    );
+    assert!(!poll(&mut s), "loaded while the second Inline waits");
+    assert!(!s.is_loaded());
+
+    net.respond("http://example.test/worlds/parts/inner.wrl", Ok(INNER));
+    assert!(poll(&mut s), "loaded after the second response");
+    assert!(s.go_live(NOW));
+
+    let log = s.take_log().join("\n");
+
+    assert_eq!(log.matches("Couldn't load URL").count(), 1, "{log}");
+}
