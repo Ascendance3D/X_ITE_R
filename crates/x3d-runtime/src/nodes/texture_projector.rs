@@ -507,9 +507,29 @@ impl Runtime {
     }
 }
 
-/// An SVG document: `<svg` near the start, after an optional XML declaration, comments or a doctype.
+/// An SVG document: markup from the start (after a byte order mark and white space), with `<svg` near the start,
+/// after an optional XML declaration, comments or a doctype.
 fn looks_like_svg(data: &[u8]) -> bool {
+    let data = data
+        .strip_prefix(b"\xEF\xBB\xBF")
+        .unwrap_or(data)
+        .trim_ascii_start();
     let head = &data[..data.len().min(4096)];
 
-    head.windows(4).any(|w| w.eq_ignore_ascii_case(b"<svg"))
+    head.starts_with(b"<") && head.windows(4).any(|w| w.eq_ignore_ascii_case(b"<svg"))
+}
+
+#[cfg(test)]
+mod svg_tests {
+    use super::looks_like_svg;
+
+    #[test]
+    fn svg_needs_markup_from_the_start() {
+        assert!(looks_like_svg(
+            b"<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"/>"
+        ));
+        assert!(looks_like_svg(b"\xEF\xBB\xBF  <SVG/>"));
+        assert!(!looks_like_svg(b"\x00\x01 garbage <svg> in binary"));
+        assert!(!looks_like_svg(b"<html><body>no image</body></html>"));
+    }
 }

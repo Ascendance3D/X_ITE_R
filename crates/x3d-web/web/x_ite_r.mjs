@@ -314,6 +314,7 @@ class X3DBrowser
    #frames = 0;
    #fileLoader = null;
    #reject = null;
+   #replacing = null;
    #disposed = false;
    #listeners = new AbortController ();
    #buttons = 0;
@@ -471,7 +472,7 @@ class X3DBrowser
             }
 
             this .#fileLoader = null;
-            this .#replaceWorld (id) .then (resolve, reject);
+            this .#replaceWorld (id, true) .then (resolve, reject);
          },
          error =>
          {
@@ -575,7 +576,8 @@ class X3DBrowser
 
       try
       {
-         let id = this .#sceneId (scene);
+         let id    = this .#sceneId (scene);
+         let owned = false;
 
          if (id === null)
          {
@@ -585,6 +587,7 @@ class X3DBrowser
             // An empty scene has nothing to load.
             id = this .#engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, Date .now () / 1000);
             this .#engine .loaded (id, Date .now () / 1000);
+            owned = true;
          }
 
          if (id === this .#engine .current)
@@ -594,7 +597,7 @@ class X3DBrowser
          if (this .#fileLoader)
             this .#fileLoader .abort = true;
 
-         return this .#replaceWorld (id);
+         return this .#replaceWorld (id, owned);
       }
       catch (error)
       {
@@ -604,16 +607,24 @@ class X3DBrowser
 
    // X3DBrowser.replaceWorld of a loaded engine scene: the old world is still current while its shutdown runs, one
    // frame after the call; "initialized load" follows in the next frame (checkLoadCount). A newer replaceWorld
-   // rejects this one with "Replacing world aborted.".
-   #replaceWorld (id)
+   // rejects this one with "Replacing world aborted.". `owned`: the adapter made the scene (loadURL, the empty
+   // world), so a call that a newer one replaced releases it, unless the newer call uses the same scene. A scene of
+   // the page (createX3DFromString) stays: its X3DScene releases it.
+   #replaceWorld (id, owned)
    {
       return new Promise ((resolve, reject) =>
       {
          this .#reject ?.(new Error ("Replacing world aborted."));
-         this .#reject = reject;
+         this .#reject    = reject;
+         this .#replacing = id;
 
-         const current = () => this .#reject === reject && this .#engine;
+         const current   = () => this .#reject === reject && this .#engine;
          const nextFrame = () => new Promise (requestAnimationFrame);
+         const release   = () =>
+         {
+            if (owned && this .#replacing !== id && this .#engine ?.current !== id)
+               this .#engine ?.discard (id);
+         };
 
          (async () =>
          {
@@ -622,14 +633,14 @@ class X3DBrowser
                await nextFrame ();
 
                if (!current ())
-                  return this .#engine ?.discard (id);
+                  return release ();
 
                this .#call (X3DConstants .SHUTDOWN_EVENT);
                this .#dispatch ("shutdown");
 
                // There could be a replaceWorld from a shutdown event handler.
                if (!current ())
-                  return this .#engine ?.discard (id);
+                  return release ();
             }
 
             if (!this .#engine .exists (id))
@@ -645,7 +656,8 @@ class X3DBrowser
             if (!current ())
                return;
 
-            this .#reject = null;
+            this .#reject    = null;
+            this .#replacing = null;
             this .#call (X3DConstants .INITIALIZED_EVENT);
             this .#dispatch ("initialized load");
             resolve ();
@@ -653,7 +665,10 @@ class X3DBrowser
          () .catch (error =>
          {
             if (this .#reject === reject)
-               this .#reject = null;
+            {
+               this .#reject    = null;
+               this .#replacing = null;
+            }
 
             reject (error);
          });
@@ -824,11 +839,30 @@ class X3DBrowser
 
       for (let i = 0; i < foreign .length; i += 2)
       {
-         // The loadURL callback of a foreign URL: `window .open (url, target)`, or `location = url`.
+         // The loadURL callback of a foreign URL: `window .open (url, target)`, or `location = url`. A script URL in
+         // any case (X_ITE matches only lower case) never runs: the engine has no script engine, and the page must not
+         // run code from a world. A new window gets no opener.
+         let url;
+
+         try
+         {
+            url = new URL (foreign [i + 1], this .baseURL);
+         }
+         catch
+         {
+            continue;
+         }
+
+         if ([ "javascript:", "vbscript:", "ecmascript:", "vrmlscript:", "data:" ] .includes (url .protocol))
+         {
+            console .warn (`X_ITE_R: Anchor URL '${foreign [i + 1]}' was not opened.`);
+            continue;
+         }
+
          if (foreign [i])
-            window .open (foreign [i + 1], foreign [i]);
+            window .open (url .href, foreign [i], "noopener");
          else
-            location = foreign [i + 1];
+            location = url .href;
       }
    }
 

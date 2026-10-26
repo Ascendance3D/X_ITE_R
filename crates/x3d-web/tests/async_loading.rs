@@ -255,3 +255,48 @@ fn a_world_without_resources_is_loaded_at_once() {
     assert!(s.go_live(NOW));
     assert!(s.is_live());
 }
+
+#[test]
+fn foreign_anchor_targets_are_opened_not_fetched() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nDEF Out Anchor { url \"http://other.test/world.wrl\" parameter \"target=_blank\" }\nDEF Page Anchor { url \"page.html\" }\n",
+        &net,
+    );
+
+    assert!(poll(&mut s));
+    assert!(s.go_live(NOW));
+
+    for (name, urls, parameters) in [
+        (
+            "Out",
+            "http://other.test/world.wrl",
+            vec!["target=_blank".to_string()],
+        ),
+        ("Page", "page.html", vec![]),
+    ] {
+        let anchor = s.named_node(name).expect("DEF Anchor");
+        let v = s.viewer().expect("live");
+
+        v.rt.anchor_load(anchor, vec![urls.to_string()], parameters);
+
+        for i in 1..4 {
+            s.step(NOW + f64::from(i) * 0.016);
+        }
+    }
+
+    assert!(net.requested().is_empty(), "fetched: {:?}", net.requested());
+    assert_eq!(
+        s.take_foreign(),
+        [
+            (
+                "_blank".to_string(),
+                "http://other.test/world.wrl".to_string()
+            ),
+            (
+                String::new(),
+                "http://example.test/worlds/page.html".to_string()
+            ),
+        ]
+    );
+}
