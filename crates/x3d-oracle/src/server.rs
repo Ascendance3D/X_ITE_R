@@ -1,9 +1,10 @@
 //! The static file server of the Node tools: serves ROOT (oracle/) on 127.0.0.1 with `Cache-Control: no-store`,
-//! a thread per connection (ES module fan-out opens many parallel connections), 403 outside ROOT, 404 for
-//! anything unreadable, and the same Content-Type table (`model/vrml` for everything else).
+//! a thread per connection (ES module fan-out opens many parallel connections), 403 when the request path is
+//! outside ROOT, 404 for anything unreadable, and the same Content-Type table (`model/vrml` for everything else).
 //!
-//! The ROOT check compares path components after lexical normalization, before any file access. Links
-//! below ROOT are followed, as Node follows them (the X_ITE pin reaches node_modules through one).
+//! The ROOT check is lexical: it compares path components after normalization, before any file access.
+//! Link targets are not confined. A link below ROOT is followed, also to a target outside ROOT, as Node
+//! follows it (the X_ITE pin reaches node_modules through one). Only the owner of ROOT can place a link.
 
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::{TcpListener, TcpStream};
@@ -242,6 +243,7 @@ mod tests {
         std::fs::remove_dir_all(dir).ok();
     }
 
+    #[cfg(unix)]
     /// A status line for each target, from a server on its own canonical root (as `main` passes it).
     fn statuses(root: &Path, targets: &[&str]) -> Vec<String> {
         let s = Server::start(root.to_path_buf()).unwrap();
@@ -261,6 +263,7 @@ mod tests {
             .collect()
     }
 
+    #[cfg(unix)]
     #[test]
     fn stays_inside_root() {
         // Own directories: serves_files_with_no_store runs in parallel and removes x3d-oracle-srv-<pid>.
@@ -312,6 +315,7 @@ mod tests {
         std::fs::remove_dir_all(&base).ok();
     }
 
+    #[cfg(unix)]
     #[test]
     fn follows_symlinks_below_root_like_node() {
         // A link placed below the root is served, as Node's fs.readFile serves it: the X_ITE pin
