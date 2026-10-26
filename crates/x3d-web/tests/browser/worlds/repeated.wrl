@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+# X_ITE_R browser runtime 02 test world (synthetic, written for the tests).
+# Two ImageTextures with the same URL, and two Inlines with the same URL.
+
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { texture ImageTexture { url "tex/red.png" } } geometry Box { } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { texture ImageTexture { url "tex/red.png" } } geometry Box { } } }
+Transform { translation 0 2 0 children Inline { url "parts/inner.wrl" } }
+Transform { translation 0 -2 0 children Inline { url "parts/inner.wrl" } }

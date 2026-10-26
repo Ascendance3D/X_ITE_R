@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- The X_ITE_R page of the runtime 02 cases: the same canvas and text field as oracle/x_ite-web-runtime-02.mjs's
+     X_ITE page. -->
+<style>html, body { margin: 0; padding: 0; background: #fff; }</style>
+<x3d-canvas style="display:block;width:400px;height:300px"></x3d-canvas>
+<input id="outside" style="display:block;width:100px">
+<script type="module">
+import X3D from "../../web/x_ite_r.mjs";
+
+window .X3D_NS = X3D;
+
+X3D .getBrowser () .ready ()
+   .then (() => window .ready = true)
+   .catch (error => window .startError = String (error));
+</script>

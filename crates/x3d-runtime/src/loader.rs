@@ -676,10 +676,10 @@ impl Runtime {
             Loaded::Script(_) => {
                 Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
             }
-            Loaded::Data(data, _) => {
+            Loaded::Data(data, url) => {
                 // ImageTexture.setImage: setTextureData before COMPLETE_STATE.
                 if image_texture {
-                    rt.image_texture_set_image(node, &data);
+                    rt.image_texture_set_image(node, &data, &url)?;
                 }
                 if atlas {
                     return rt.image_texture_atlas_set_image(node, &data);
