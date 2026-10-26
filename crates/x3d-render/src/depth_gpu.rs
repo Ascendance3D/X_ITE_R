@@ -10,7 +10,7 @@ use crate::geometry::Geometry;
 use bytemuck::{Pod, Zeroable};
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::time::{Duration, Instant};
+use web_time::{Duration, Instant};
 use x3d_fields::math::Matrix4;
 
 pub const DEPTH_WGSL: &str = include_str!("depth.wgsl");

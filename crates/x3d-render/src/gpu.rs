@@ -326,6 +326,22 @@ struct PreparedPipeline {
     job: std::thread::JoinHandle<wgpu::RenderPipeline>,
 }
 
+/// wasm32 has no threads, and its wgpu objects are not `Send`: the first frame creates the pipeline.
+#[cfg(target_arch = "wasm32")]
+impl PreparedPipeline {
+    fn start(
+        _source: PipelineSource,
+        _key: (PipelineKey, wgpu::TextureFormat, u32, bool),
+    ) -> Option<PreparedPipeline> {
+        None
+    }
+
+    fn finish(self) -> Option<wgpu::RenderPipeline> {
+        self.job.join().ok()
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
 impl PreparedPipeline {
     /// Start creating it; `None` when no thread can be started (the frame creates it instead).
     fn start(

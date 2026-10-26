@@ -10,6 +10,7 @@ use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
 use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
 use std::collections::HashMap;
+#[cfg(feature = "script")]
 use std::path::Path;
 use std::rc::Rc;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3, Vector4};
@@ -17,7 +18,10 @@ use x3d_fields::{FieldValue, NodeId};
 use x3d_render::geometry::Geometry;
 use x3d_render::layer::{self as layers, LayerKey, LayoutCamera};
 use x3d_render::traverse::{Builder, CameraOverride, Frame};
-use x3d_runtime::{LocalFetcher, Runtime};
+#[cfg(feature = "script")]
+use x3d_runtime::LocalFetcher;
+use x3d_runtime::Runtime;
+#[cfg(feature = "script")]
 use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
 /// RenderingProperties changes for the renderer ([`Viewer3d::take_rendering_changes`]).
@@ -305,6 +309,7 @@ fn geom_of(
 impl Viewer3d {
     /// Load a world like the oracle's FileLoader (parse, setup, loads) but live, then bind the
     /// first bindables (X3DBrowser.replaceWorld → X3DWorld.bindBindables).
+    #[cfg(feature = "script")]
     pub fn load(
         file: &Path,
         oracle_root: Option<&Path>,
@@ -317,6 +322,7 @@ impl Viewer3d {
 
     /// [`Viewer3d::load`] with `currentFrameRate` pinned (see [`Viewer3d::pinned_frame_rate`]) from
     /// the first frame on, including the frame that finishes loading.
+    #[cfg(feature = "script")]
     pub fn load_pinned(
         file: &Path,
         oracle_root: Option<&Path>,
@@ -338,6 +344,7 @@ impl Viewer3d {
 
     /// [`Viewer3d::load_pinned`] that can also record the console output in order
     /// ([`Runtime::console`]) from the first message on.
+    #[cfg(feature = "script")]
     pub fn load_opts(
         file: &Path,
         oracle_root: Option<&Path>,
@@ -361,6 +368,7 @@ impl Viewer3d {
 
     /// [`Viewer3d::load_opts`] with the `<x3d-canvas>` attributes of the page (BrowserOptions.reset
     /// applies them before the world loads), like [`ORACLE_PAGE_ATTRIBUTES`].
+    #[cfg(feature = "script")]
     #[allow(clippy::too_many_arguments)]
     pub fn load_attributes(
         file: &Path,
@@ -1174,7 +1182,7 @@ impl Viewer3d {
         // Prepare and time events.
         self.sync_active_layer();
         self.phase("prepareEvents");
-        let collision = std::time::Instant::now();
+        let collision = web_time::Instant::now();
         self.prepare_viewer();
         self.collision_time += collision.elapsed();
         self.phase("timePrepareEvents");
@@ -1219,7 +1227,7 @@ impl Viewer3d {
 
         // Collision (gravity): the COLLISION traversal starts from the view of this frame.
         self.refresh_display_scan();
-        let collision = std::time::Instant::now();
+        let collision = web_time::Instant::now();
         self.collision_pass();
         self.collision_time += collision.elapsed();
 
@@ -1818,7 +1826,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
-            let start = std::time::Instant::now();
+            let start = web_time::Instant::now();
             self.scan_display =
                 crate::walk::scan_display(&self.rt, &self.layer_walk(), &view, &mut lod);
             self.traversal_seconds += start.elapsed().as_secs_f64();
@@ -1917,7 +1925,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
-            let start = std::time::Instant::now();
+            let start = web_time::Instant::now();
             self.scan_display = scan_screens(
                 &self.rt,
                 &self.layer_walk(),

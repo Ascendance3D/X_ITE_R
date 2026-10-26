@@ -7,9 +7,13 @@ publish.workspace = true
 description = "Interactive X3D/VRML viewer: live frame loop, navigation, pointer sensors; ported from X_ITE (MIT)."
 
 [features]
-default = ["gpu"]
+default = ["gpu", "script"]
+# Script nodes in QuickJS and the file loaders (`Viewer3d::load*`). QuickJS is C code that does not
+# build for wasm32-unknown-unknown: the browser build (x3d-web) turns this off and loads through
+# `Viewer3d::from_runtime`.
+script = ["dep:x3d-script", "x3d-render/script"]
 # The embedding API (`embed::EmbeddedViewer`): the viewer on a host-provided wgpu device.
-embed = ["dep:wgpu"]
+embed = ["dep:wgpu", "script"]
 # The native window (winit + wgpu) and the `x3d-view` binary. The viewer core (frame stepping,
 # navigation, sensors, scripted input) builds and tests without it.
 gpu = ["embed", "dep:winit", "dep:pollster", "dep:bytemuck"]
@@ -19,8 +23,10 @@ x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-runtime = { path = "../x3d-runtime" }
-x3d-script = { path = "../x3d-script" }
-x3d-render = { path = "../x3d-render" }
+x3d-script = { path = "../x3d-script", optional = true }
+x3d-render = { path = "../x3d-render", default-features = false }
+# Instant on wasm32-unknown-unknown too (std::time::Instant panics there).
+web-time = "1"
 serde_json = "1"
 winit = { version = "0.30", optional = true }
 wgpu = { version = "30", optional = true }
@@ -37,6 +43,11 @@ required-features = ["gpu"]
 
 [[bin]]
 name = "x3d-drive"
+required-features = ["script"]
+
+[[bin]]
+name = "x3d-particles-drive"
+required-features = ["script"]
 
 [[bin]]
 name = "x3d-bench"
@@ -58,3 +69,4 @@ pollster = "1"
 # Debug tool: finds depth-fighting pixels (see its header).
 [[bin]]
 name = "x3d-zfight"
+required-features = ["script"]

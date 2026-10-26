@@ -1,0 +1,28 @@
+[package]
+name = "x3d-web"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "X_ITE_R in a web page: the Rust engine as WebAssembly behind an <x3d-canvas> element (MIT)."
+
+[lib]
+# cdylib: the wasm32 module (web/pkg, made by tools/build-web.sh); rlib: the native tests of `session`.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+x3d-runtime = { path = "../x3d-runtime" }
+# No QuickJS (`script`): it is C code that does not build for wasm32-unknown-unknown.
+x3d-render = { path = "../x3d-render", default-features = false }
+x3d-viewer = { path = "../x3d-viewer", default-features = false }
+url = "2"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wgpu = "30"
+wasm-bindgen = "=0.2.129"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = ["HtmlCanvasElement", "XmlHttpRequest", "console"] }
