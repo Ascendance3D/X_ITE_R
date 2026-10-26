@@ -544,24 +544,25 @@ impl Runtime {
     /// Is the fetch task ready to run with an asynchronous [`Fetcher`]? FileLoader tries the candidates in turn, so
     /// the responses up to the first that arrived must be there; the candidates after it are not requested.
     pub(crate) fn fetch_task_ready(&self, task: &Task) -> bool {
-        let (base, urls, bind_viewpoint) = match *task {
+        // `world`: the parameters of a loadURL or Anchor load, whose foreign targets are never fetched.
+        let (base, urls, world) = match *task {
             Task::UrlLoad(node, _) => {
                 if node as usize >= self.scene.nodes.len() || self.scene.free_nodes.contains(&node)
                 {
                     return true;
                 }
 
-                (self.base_url(node), self.url_strings(node), false)
+                (self.base_url(node), self.url_strings(node), None)
             }
             Task::ExternLoad(e, request) => match self.extern_pending_candidates(e, request) {
-                Some((base, urls)) => (base, urls, false),
+                Some((base, urls)) => (base, urls, None),
                 None => return true,
             },
             Task::BrowserLoad(id) => match self.browser_loads.get(&id) {
                 Some(req) if !self.world_state.aborted.contains(&id) => (
                     self.scene.world_url_of(req.parent).to_string(),
                     req.urls.clone(),
-                    req.world.is_some(),
+                    req.world.clone(),
                 ),
                 _ => return true,
             },
@@ -570,6 +571,15 @@ impl Runtime {
         let Ok(base) = url::Url::parse(&base) else {
             return true;
         };
+
+        // load_document_from_opt's foreign rule: a `target` other than `_self` goes to another window unfetched.
+        if let Some(parameters) = &world {
+            let target = loader_target(parameters);
+
+            if !target.is_empty() && target != "_self" {
+                return true;
+            }
+        }
 
         for candidate in &urls {
             if candidate.is_empty() || is_script_url(candidate) {
@@ -585,10 +595,19 @@ impl Runtime {
             }
 
             // A loadURL of a fragment of the referring document binds a viewpoint: no fetch.
-            if bind_viewpoint
+            if world.is_some()
                 && r.fragment().is_some_and(|f| !f.is_empty())
                 && (r.scheme(), r.host_str(), r.port(), r.path())
                     == (base.scheme(), base.host_str(), base.port(), base.path())
+            {
+                return true;
+            }
+
+            // A page (foreign content) is opened, not fetched.
+            if world.is_some()
+                && ["html", "htm", "xhtml"]
+                    .iter()
+                    .any(|e| r.as_str().ends_with(&format!(".{e}")))
             {
                 return true;
             }

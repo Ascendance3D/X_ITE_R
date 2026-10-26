@@ -56,6 +56,10 @@ const KNOWN_DIFFERENCES = {
    ],
 };
 
+// A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
+// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
+const CASE_TIMEOUT = 180_000;
+
 let server, browser;
 
 before (async () =>
@@ -167,7 +171,7 @@ for (const [ groupName, group ] of Object .entries (CASE_GROUPS))
       {
          const key = `${groupName}.${name}`;
 
-         test (key, { skip: ONLY && ONLY !== key }, async () =>
+         test (key, { skip: ONLY && ONLY !== key, timeout: CASE_TIMEOUT }, async () =>
          {
             const page = await openPage (group .context);
 
@@ -235,7 +239,7 @@ const mobileViewport = page => page .evaluate (async () =>
 // A tablet-sized emulation, portrait first.
 const TABLET = { viewport: { width: 820, height: 1180 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 
-describe ("runtime 02 lifecycle", { skip: Boolean (ONLY) }, () =>
+describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
 {
    test ("repeated loads keep one frame loop and end on the last world", async () =>
    {
@@ -436,7 +440,98 @@ describe ("runtime 02 lifecycle", { skip: Boolean (ONLY) }, () =>
    });
 });
 
-describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY) }, () =>
+describe ("runtime 02 review cases", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
+{
+   test ("replaceWorld twice with one scene, and a replaced page scene stays usable", async () =>
+   {
+      const page = await openPage (DESKTOP);
+
+      try
+      {
+         const out = await page .evaluate (async () =>
+         {
+            const browser = document .querySelector ("x3d-canvas") .browser;
+            const a       = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF A Transform { }");
+            const b       = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF B Transform { }");
+            const first   = browser .replaceWorld (a) .then (() => "resolved", e => e .message);
+            const second  = browser .replaceWorld (a) .then (() => "resolved", e => e .message);
+            const same    = { first: await first, second: await second, current: browser .currentScene === a };
+
+            // A newer replaceWorld (c) replaces the call for b, which was never the world: b is still usable.
+            const c      = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF C Transform { }");
+            const third  = browser .replaceWorld (b) .then (() => "resolved", e => e .message);
+            const fourth = browser .replaceWorld (c) .then (() => "resolved", e => e .message);
+
+            await third;
+            await fourth;
+
+            const later = await browser .replaceWorld (b) .then (() => "resolved", e => e .message);
+
+            return { same, bNode: b .getNamedNode ("B") .getNodeTypeName (), later, current: browser .currentScene === b };
+         });
+
+         assert .deepEqual (out, {
+            same: { first: "Replacing world aborted.", second: "resolved", current: true },
+            bNode: "Transform",
+            later: "resolved",
+            current: true,
+         });
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("an Anchor to a script URL in any case is not opened; a new window has no opener", async () =>
+   {
+      const page = await openPage (DESKTOP);
+
+      try
+      {
+         await page .evaluate (() =>
+         {
+            window .opened = [ ];
+            window .open   = (... args) => { window .opened .push (args); return null; };
+         });
+
+         const click = async (url, parameter) =>
+         {
+            await page .evaluate (async ([ url, parameter ]) =>
+            {
+               const browser = document .querySelector ("x3d-canvas") .browser;
+
+               await browser .replaceWorld (await browser .createX3DFromString (`#VRML V2.0 utf8
+                  Viewpoint { position 0 0 4 }
+                  Anchor { url "${url}" parameter "${parameter}" children Shape { geometry Box { size 3 3 0.1 } } }`));
+            },
+            [ url, parameter ]);
+
+            await page .mouse .click (200, 150);
+            await page .waitForTimeout (300);
+         };
+
+         await click ("JaVaScRiPt:window.hacked=1", "target=_blank");
+         await click ("JAVASCRIPT:window.hacked=2", "");
+         await click ("http://other.test/world.wrl", "target=_blank");
+
+         const out = await page .evaluate (() => ({ hacked: window .hacked ?? null, opened: window .opened, url: location .pathname }));
+
+         assert .deepEqual (out, { hacked: null, opened: [ [ "http://other.test/world.wrl", "_blank", "noopener" ] ], url: "/tests/browser/runtime02.html" });
+
+         // With a target the URL is foreign and the adapter does not open it. Without one it is a world URL: fetch
+         // refuses the scheme and the load fails, like X_ITE's for a script URL that is not lower case.
+         assert .equal (page .log .filter (line => /Anchor URL 'javascript:window.hacked=1' was not opened/ .test (line)) .length, 1, page .log .join ("\n"));
+         assert .equal (page .log .filter (line => /Anchor: Couldn't load URL 'javascript:window.hacked=2'/ .test (line)) .length, 1, page .log .join ("\n"));
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+});
+
+describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
 {
    test ("framebuffer follows CSS size, contentScale and the device limit", async () =>
    {
@@ -535,7 +630,7 @@ describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY) }, () =>
    });
 });
 
-describe ("runtime 02 phone and tablet emulation (no proof of mobile GPU support)", { skip: Boolean (ONLY) }, () =>
+describe ("runtime 02 phone and tablet emulation (no proof of mobile GPU support)", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
 {
    test ("tap, one-finger rotation and pinch zoom at DPR 3 with contentScale auto", async () =>
    {

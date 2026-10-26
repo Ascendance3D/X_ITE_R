@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <case>]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>]
  *
  * Writes <out_dir>/runtime02-baseline.json (the values of the first run, the Chrome version and the WebGL renderer)
  * and one PNG per picture. Every run must give identical values; the run fails otherwise. The pictures of each run
@@ -120,14 +120,18 @@ async function runOnce ()
    {
       for (const [ name, run ] of Object .entries (group .cases))
       {
-         if (ONLY && ONLY !== name)
-            continue;
-
          const key = `${groupName}.${name}`;
+
+         // The key of the tests (XR_CASE): `group.case`.
+         if (ONLY && ONLY !== key)
+            continue;
 
          values [key] = splitPictures (await runCase (group, name, run), key, pictures);
       }
    }
+
+   if (!Object .keys (values) .length)
+      throw new Error (`no case is named ${ONLY}`);
 
    return { values, pictures };
 }

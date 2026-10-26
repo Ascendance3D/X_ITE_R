@@ -31,7 +31,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | double click | forwarded to the viewer (X_ITE's `dblclick`) |
 | keyboard (`keydown`, `keyup` on the element) | supported, compared: KeySensor while the canvas has the focus, nothing from other elements. The canvas is focusable (`tabIndex` 0) and takes the focus on a press |
 | cursor | supported, compared: `pointer` over a sensor or Anchor, `grabbing` while a drag sensor is active, `move` while the viewer navigates, `default` otherwise |
-| Anchor | supported, compared: a `#viewpoint` URL binds the viewpoint; a world URL replaces the world (with the browser events); another URL or a `target` parameter opens it with `window .open` or `location` |
+| Anchor | supported, compared: a `#viewpoint` URL binds the viewpoint; a world URL replaces the world (with the browser events); a page URL (`.html`, `.htm`, `.xhtml`) or a `target` parameter opens it with `window .open` or `location`, without a fetch |
 | EXAMINE navigation | supported, compared: rotation (mouse, one finger), zoom (wheel, two-finger pinch). The other viewers of the engine also get the events |
 | touch (Pointer Events with `pointerType` touch) | supported, compared: tap on a TouchSensor or Anchor, one-finger rotation, two-finger pinch. Touch moves go to the engine once per frame with all touches, as X_ITE's TouchEvent handlers get them |
 | coordinates | compared: X_ITE's `getPointerFromEvent` (framebuffer pixels, origin at the bottom left) at any canvas size, offset and contentScale; there is no DPR 1 assumption |
@@ -103,6 +103,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - A URL is requested once per world, also when several nodes use it. X_ITE sends one request per node (the HTTP cache may answer).
 - An image that does not decode fails with `Couldn't load image '<file URL>': error.`. X_ITE names the blob URL of the data.
 - `loadURL` rejects with `Loading of X3D file aborted.` after `dispose ()`. X_ITE's never settles.
+- An Anchor or `loadURL` never opens a `javascript:`, `vbscript:`, `ecmascript:`, `vrmlscript:` or `data:` URL in a window or as the page location, in any letter case; it logs `X_ITE_R: Anchor URL '...' was not opened.`. X_ITE checks for script URLs in lower case only and opens the others. A new window opens with `noopener`.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
 - A node handle belongs to one world. After the world is replaced, using an old handle throws `X_ITE_R: the node belongs to a world that was replaced.` In X_ITE the old node object stays usable but is no longer in the scene.
 - `ready ()` is not an X_ITE name. X_ITE starts synchronously and needs no such call.
