@@ -12,9 +12,18 @@ The keys stay in the main checkout. `tools/answer_keys.py` (Python and shell) an
 tests) find a key in this order: `$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this
 worktree's `oracle/`, then the main worktree's `oracle/`. A key is used only when it equals its row.
 
+`$X3D_ORACLE_KEYS` must be an absolute path to an existing directory outside every worktree of this repository,
+and it must hold all 12 keys. Otherwise the resolver stops with exit 4 (Rust: `KeyError::Unsafe`) and searches
+no other location. There is no default store.
+
+`guard` refuses (exit 4) when real data sits at a key path or `upstream/` that a commit tracks. A checkout,
+reset, restore, stash or merge to that commit could delete it. Run it before such an operation; today it
+refuses the main checkout, whose render keys and `upstream/` are real directories at tracked symlink paths.
+
 ```
 python3 -I -B tools/answer_keys.py verify                       # every key
 python3 -I -B tools/answer_keys.py resolve render-items2-baseline
+python3 -I -B tools/answer_keys.py guard . HEAD origin/master   # before a Git operation to origin/master
 ```
 
 ## C0 — CodeMirror 5 test suite

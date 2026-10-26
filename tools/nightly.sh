@@ -60,6 +60,12 @@ if [ ! -e "$W/.git" ]; then
    mkdir -p "$BASE/scratch"
    git -C "$MAIN" worktree add --detach "$W" main > "$LOGS/worktree.log" 2>&1
 fi
+# The forced checkout deletes real data at a path that the old or the new commit tracks (issue #65): refuse first.
+# A worktree whose tools/answer_keys.py has no guard is refused too; remove it, and the next run adds a new one.
+if ! python3 -I -B "$W/tools/answer_keys.py" guard "$W" HEAD main > "$LOGS/guard.log" 2>&1; then
+   note "FAIL  guard  -> logs/guard.log"
+   exit 1
+fi
 git -C "$W" checkout --detach --force main >> "$LOGS/worktree.log" 2>&1
 git -C "$W" clean -fdq >> "$LOGS/worktree.log" 2>&1
 ln -sfn "$LANE/x_ite-tests" "$BASE/x_ite-tests"
