@@ -17,7 +17,8 @@ and it must hold all 12 keys. Otherwise the resolver stops with exit 4 (Rust: `K
 no other location. There is no default store.
 
 `guard` refuses (exit 4) when real data sits at a key path or `upstream/` that a commit tracks. A checkout,
-reset, restore, stash or merge to that commit could delete it. Run it before such an operation; today it
+reset, restore, stash or merge to that commit could delete it. It also refuses such data that `.gitignore`
+does not cover, because `git clean -fd` deletes it. Run it before such an operation; today it
 refuses the main checkout, whose render keys and `upstream/` are real directories at tracked symlink paths.
 
 ```

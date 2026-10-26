@@ -44,9 +44,11 @@ class Case(unittest.TestCase):
         with open(os.path.join(root, "oracle", "answer-keys.tsv"), "w") as f:
             f.write(f"# name\tkind\tfiles\tbytes\tsha256\nk.json\tfile\t1\t3\t{sha(b'abc')}\n"
                     f"d\tdir\t2\t2\t{sha(listing)}\n")
+        with open(os.path.join(root, ".gitignore"), "w") as f:
+            f.write("/oracle/k.json\n/oracle/d/\n/upstream/\n")  # like the real repository's rules
         if init:
             git(root, "init", "-q")
-            git(root, "add", "oracle/answer-keys.tsv")
+            git(root, "add", "oracle/answer-keys.tsv", ".gitignore")
             git(root, "commit", "-qm", "m")
         return root
 
@@ -200,6 +202,14 @@ class Guard(Case):
             f.write("abc")
         ak.guard(root, ["HEAD"])
 
+    def test_real_data_that_is_not_ignored(self):
+        root = self.checkout()
+        put_keys(os.path.join(root, "oracle"))
+        ak.guard(root, ["HEAD"])
+        with open(os.path.join(root, ".gitignore"), "w") as f:
+            f.write("/oracle/k.json\n")
+        self.unsafe(lambda: ak.guard(root, ["HEAD"]), "oracle/d: real data that the ignore rules do not cover")
+
     def test_tracked_symlink_path_occupied_by_real_files(self):
         root = self.linked()
         os.remove(os.path.join(root, "oracle", "d"))
@@ -221,7 +231,7 @@ class Guard(Case):
         os.makedirs(os.path.join(other, "oracle", "d"))
         with open(os.path.join(other, "oracle", "d", "a"), "w") as f:
             f.write("1")
-        git(other, "add", "oracle/d/a")
+        git(other, "add", "-f", "oracle/d/a")
         git(other, "commit", "-qm", "a file below d")
         put_keys(os.path.join(root, "oracle"))
         ak.guard(root, ["HEAD"])

@@ -23,7 +23,9 @@
 //! [`guard`] refuses when real data (not a symlink, below no symlink) sits at a key path or
 //! `upstream`, and a commit tracks that path, a path below it, or a parent of it as anything but a
 //! directory. A checkout, reset, restore, stash or merge to that commit could delete the data,
-//! because Git treats ignored files as expendable. `tools/answer_keys.py guard` is the same check.
+//! because Git treats ignored files as expendable. It also refuses such data that the worktree's
+//! ignore rules do not cover (`git clean -fd` deletes it); run it again after a checkout that
+//! changes those rules. `tools/answer_keys.py guard` is the same check.
 //!
 //! # Evidence policy (issue #66)
 //!
@@ -460,6 +462,35 @@ pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), 
     parents.sort();
     parents.dedup();
 
+    if !held.is_empty() {
+        // `git clean -fd` deletes untracked data that the ignore rules do not cover.
+        let out = Command::new("git")
+            .arg("-C")
+            .arg(root)
+            .args(["check-ignore", "--no-index", "--"])
+            .args(held.iter().map(|p| p.as_str()))
+            .output()
+            .ok()
+            .filter(|o| matches!(o.status.code(), Some(0 | 1)))
+            .ok_or_else(|| {
+                KeyError::Unsafe(format!(
+                    "guard: cannot read the ignore rules in {}",
+                    root.display()
+                ))
+            })?;
+        // A manifest name cannot hold a newline (the manifest is line-based).
+        let ignored: Vec<String> = String::from_utf8_lossy(&out.stdout)
+            .lines()
+            .map(str::to_string)
+            .collect();
+
+        for p in held.iter().filter(|p| !ignored.contains(p)) {
+            problems.push(format!(
+                "{p}: real data that the ignore rules do not cover; git clean -fd would delete it"
+            ));
+        }
+    }
+
     for rev in revs.iter().filter(|_| !held.is_empty()) {
         let mut args = vec!["ls-tree", "-z", "--full-tree", rev, "--"];
 
@@ -794,8 +825,14 @@ mod tests {
     fn checkout(tag: &str) -> PathBuf {
         let root = manifest_only(tag);
 
+        // Ignore rules like the real repository's: the keys and upstream/ as ignored paths.
+        std::fs::write(
+            root.join(".gitignore"),
+            "/oracle/k.json\n/oracle/d/\n/upstream/\n",
+        )
+        .unwrap();
         git(&root, &["init", "-q"]);
-        git(&root, &["add", "oracle/answer-keys.tsv"]);
+        git(&root, &["add", "oracle/answer-keys.tsv", ".gitignore"]);
         git(&root, &["commit", "-qm", "m"]);
         root
     }
@@ -1129,6 +1166,19 @@ mod tests {
     }
 
     #[test]
+    fn guard_refuses_real_data_that_is_not_ignored() {
+        let root = checkout("guard-clean");
+
+        put_keys(&root.join("oracle"));
+        guard(&root, &["HEAD"], None).unwrap();
+        std::fs::write(root.join(".gitignore"), "/oracle/k.json\n").unwrap();
+        unsafe_with(
+            guard(&root, &["HEAD"], None),
+            "oracle/d: real data that the ignore rules do not cover",
+        );
+    }
+
+    #[test]
     fn guard_refuses_real_files_at_a_tracked_symlink() {
         let root = linked_checkout("guard-link");
 
@@ -1172,7 +1222,7 @@ mod tests {
         git(&other, &["checkout", "-q", "-b", "child", "HEAD~1"]);
         std::fs::create_dir_all(other.join("oracle/d")).unwrap();
         std::fs::write(other.join("oracle/d/a"), "1").unwrap();
-        git(&other, &["add", "oracle/d/a"]);
+        git(&other, &["add", "-f", "oracle/d/a"]);
         git(&other, &["commit", "-qm", "a file below d"]);
 
         put_keys(&root.join("oracle"));
