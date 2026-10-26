@@ -1,0 +1,79 @@
+#VRML V2.0 utf8
+# X_ITE_R browser runtime 02 test world (synthetic, written for the tests).
+# The input case: a TouchSensor box, two overlapping boxes with their own TouchSensors, an Anchor to a viewpoint,
+# an Anchor to another world, a PlaneSensor and a ProximitySensor that reports the camera.
+
+NavigationInfo { type [ "EXAMINE" "ANY" ] }
+DEF Front Viewpoint { position 0 0 10 description "Front" }
+DEF Second Viewpoint { position 0 0 20 description "Second" }
+DEF Camera ProximitySensor { size 1000 1000 1000 }
+
+Transform {
+  translation -3 0 0
+  children [
+    DEF LeftTouch TouchSensor { description "Left box" }
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } }
+      geometry Box { size 2 2 2 }
+    }
+  ]
+}
+
+Transform {
+  children [
+    DEF BackTouch TouchSensor { }
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.3 0.3 0.9 } }
+      geometry Box { size 2 2 0.5 }
+    }
+  ]
+}
+
+Transform {
+  translation 0.5 0.5 1.5
+  children [
+    DEF FrontTouch TouchSensor { }
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.9 0.9 0.2 } }
+      geometry Box { size 1 1 0.5 }
+    }
+  ]
+}
+
+Transform {
+  translation 3 0 0
+  children DEF ViewAnchor Anchor {
+    url "#Second"
+    description "To the second viewpoint"
+    children Shape {
+      appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } }
+      geometry Sphere { radius 1 }
+    }
+  }
+}
+
+Transform {
+  translation 0 -3 0
+  children DEF WorldAnchor Anchor {
+    url "anchor-target.wrl"
+    children Shape {
+      appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 } }
+      geometry Box { size 4 0.6 0.6 }
+    }
+  }
+}
+
+Transform {
+  translation 0 3 0
+  children [
+    DEF Drag PlaneSensor { }
+    DEF DragBox Transform {
+      children Shape {
+        appearance Appearance { material Material { diffuseColor 0.8 0.4 0.8 } }
+        geometry Box { size 1 1 1 }
+      }
+    }
+  ]
+}
+
+ROUTE Drag.translation_changed TO DragBox.set_translation

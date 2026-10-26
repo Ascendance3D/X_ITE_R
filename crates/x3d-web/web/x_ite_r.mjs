@@ -431,10 +431,14 @@ class X3DBrowser
             throw new Error ("aborted");
          }
 
-         if (this .#engine .loaded (id, Date .now () / 1000))
-            return;
+         // The messages of a load go out when the response comes, as X_ITE's do.
+         const loaded = this .#engine .loaded (id, Date .now () / 1000);
 
          this .#flushLog (id);
+
+         if (loaded)
+            return;
+
          await this .#engine .progress (id);
       }
    }
@@ -554,33 +558,48 @@ class X3DBrowser
    }
 
    // X3DBrowser.replaceWorld (scene): a Promise that resolves after "initialized load" of the new world. `null`
-   // or `undefined` replaces the world with an empty scene.
-   async replaceWorld (scene)
+   // or `undefined` replaces the world with an empty scene. When the engine is ready, the world's shutdown is
+   // scheduled at once (X_ITE: `await nextFrame ()` in the call), before frames the page asks for after the call.
+   replaceWorld (scene)
    {
-      await this .#ready;
-
       if (!this .#engine)
-         throw new Error ("Browser disposed.");
-
-      let id = this .#sceneId (scene);
-
-      if (id === null)
       {
-         if (scene !== null && scene !== undefined)
-            throw new Error ("X_ITE_R: Browser.replaceWorld: scene must be an X3DScene of this browser, null or undefined.");
+         return this .#ready .then (() =>
+         {
+            if (!this .#engine)
+               throw new Error ("Browser disposed.");
 
-         id = this .#engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, Date .now () / 1000);
-         await this .#loaded (id, () => this .#disposed);
+            return this .replaceWorld (scene);
+         });
       }
 
-      if (id === this .#engine .current)
-         throw new Error ("X_ITE_R: the scene is already the world.");
+      try
+      {
+         let id = this .#sceneId (scene);
 
-      // `this [_fileLoader] ?.abort ()`: a loadURL that is still fetching fails.
-      if (this .#fileLoader)
-         this .#fileLoader .abort = true;
+         if (id === null)
+         {
+            if (scene !== null && scene !== undefined)
+               throw new Error ("X_ITE_R: Browser.replaceWorld: scene must be an X3DScene of this browser, null or undefined.");
 
-      return this .#replaceWorld (id);
+            // An empty scene has nothing to load.
+            id = this .#engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, Date .now () / 1000);
+            this .#engine .loaded (id, Date .now () / 1000);
+         }
+
+         if (id === this .#engine .current)
+            throw new Error ("X_ITE_R: the scene is already the world.");
+
+         // `this [_fileLoader] ?.abort ()`: a loadURL that is still fetching fails.
+         if (this .#fileLoader)
+            this .#fileLoader .abort = true;
+
+         return this .#replaceWorld (id);
+      }
+      catch (error)
+      {
+         return Promise .reject (error);
+      }
    }
 
    // X3DBrowser.replaceWorld of a loaded engine scene: the old world is still current while its shutdown runs, one
@@ -683,9 +702,8 @@ class X3DBrowser
       this .#engine ?.viewAll (+transitionTime);
    }
 
-   // X3DBrowserContext.getActiveViewpoint (): the bound viewpoint of the active layer; null for its default
-   // viewpoint (X_ITE: the default X3DViewpointNode, which is not in the scene).
-   getActiveViewpoint ()
+   // X3DBrowser.activeViewpoint: the bound viewpoint of the active layer; null for its default viewpoint.
+   get activeViewpoint ()
    {
       const id = this .#engine ?.activeViewpoint ();
 
@@ -757,8 +775,13 @@ class X3DBrowser
       if (id === undefined)
          return;
 
+      // The engine's lines start with the console function X_ITE calls: "error: ", "warn: ", "info: " or "log: ".
       for (const line of this .#engine ?.takeLog (id) ?? [ ])
-         console .warn (line);
+      {
+         const [ , level, text ] = line .match (/^(error|warn|info|log): ([^]*)$/) ?? [ , "warn", line ];
+
+         console [level] (text);
+      }
    }
 
    // What the engine has for the page after an event or a frame: the cursor, the browser events of an Anchor that

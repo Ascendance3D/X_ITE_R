@@ -1,0 +1,500 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {
+  "loading.success.picture.png": [
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295"
+  ],
+  "loading.failures.loading-missing.picture.png": [
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c"
+  ],
+  "loading.failures.loading-invalid.picture.png": [
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c",
+   "c0562ff637d504e41ff838dd91965d5121c7472ec8f199a045347aa54dd4699c"
+  ],
+  "loading.fallback.picture.png": [
+   "0693732ef34f6be092dc95441cb88d0b43747d71bbe80003bdf792d4e33ba1ec",
+   "0693732ef34f6be092dc95441cb88d0b43747d71bbe80003bdf792d4e33ba1ec",
+   "0693732ef34f6be092dc95441cb88d0b43747d71bbe80003bdf792d4e33ba1ec",
+   "0693732ef34f6be092dc95441cb88d0b43747d71bbe80003bdf792d4e33ba1ec",
+   "0693732ef34f6be092dc95441cb88d0b43747d71bbe80003bdf792d4e33ba1ec"
+  ],
+  "loading.delayed.picture.png": [
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295",
+   "c437324fcbfa3408cff1551fb7a2bdc51803b720a7a8034e0dcfc2085245e295"
+  ],
+  "loading.externProto.picture.png": [
+   "cc4c14a473a6c18ca87982e9b5c5c85c2c0c33908b1ec588d8947ab3eacd936c",
+   "cc4c14a473a6c18ca87982e9b5c5c85c2c0c33908b1ec588d8947ab3eacd936c",
+   "cc4c14a473a6c18ca87982e9b5c5c85c2c0c33908b1ec588d8947ab3eacd936c",
+   "cc4c14a473a6c18ca87982e9b5c5c85c2c0c33908b1ec588d8947ab3eacd936c",
+   "cc4c14a473a6c18ca87982e9b5c5c85c2c0c33908b1ec588d8947ab3eacd936c"
+  ]
+ },
+ "values": {
+  "input.touchSensor": {
+   "before": {
+    "LeftTouch.isOver": false,
+    "LeftTouch.isActive": false,
+    "LeftTouch.hitPoint_changed": "0 0 0",
+    "BackTouch.isOver": false
+   },
+   "cursorBefore": "default",
+   "over": {
+    "LeftTouch.isOver": true,
+    "LeftTouch.isActive": false,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1",
+    "BackTouch.isOver": false
+   },
+   "cursorOver": "pointer",
+   "pressed": {
+    "LeftTouch.isOver": true,
+    "LeftTouch.isActive": true,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1",
+    "BackTouch.isOver": false
+   },
+   "released": {
+    "LeftTouch.isOver": true,
+    "LeftTouch.isActive": false,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1",
+    "BackTouch.isOver": false
+   },
+   "touchTime": true,
+   "left": {
+    "LeftTouch.isOver": false,
+    "LeftTouch.isActive": false,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1",
+    "BackTouch.isOver": false
+   },
+   "cursorLeft": "default"
+  },
+  "input.overlap": {
+   "front": {
+    "FrontTouch.isActive": true,
+    "BackTouch.isActive": false,
+    "FrontTouch.isOver": true,
+    "BackTouch.isOver": false
+   },
+   "back": {
+    "FrontTouch.isActive": false,
+    "BackTouch.isActive": true,
+    "FrontTouch.isOver": false,
+    "BackTouch.isOver": true
+   }
+  },
+  "input.dragSensor": {
+   "cursorDragging": "grabbing",
+   "dragging": {
+    "Drag.isActive": true,
+    "Drag.translation_changed": "1.049 -0.262 0"
+   },
+   "released": {
+    "Drag.isActive": false,
+    "Drag.translation_changed": "1.049 -0.262 0",
+    "DragBox.translation": "1.049 -0.262 0"
+   }
+  },
+  "input.examine": {
+   "start": {
+    "Camera.position_changed": "0 0 10",
+    "Camera.orientation_changed": "0 0 1 0"
+   },
+   "cursorRotating": "move",
+   "rotated": {
+    "Camera.position_changed": "-3.0226 -2.0791 9.3027",
+    "Camera.orientation_changed": "0.5508 -0.8301 0.0872 0.3771"
+   },
+   "cursorAfter": "default",
+   "zoomed": {
+    "Camera.position_changed": "-2.5915 -1.7826 7.9759",
+    "Camera.orientation_changed": "0.5508 -0.8301 0.0872 0.3771"
+   }
+  },
+  "input.anchorViewpoint": {
+   "cursorOver": "pointer",
+   "over": {
+    "ViewAnchor.description": "To the second viewpoint"
+   },
+   "bound": {
+    "Front.isBound": false,
+    "Second.isBound": true
+   }
+  },
+  "input.anchorWorld": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "world": "anchor-target.wrl",
+   "target": {
+    "Target.isBound": true,
+    "TargetBox.geometry": "Box { }"
+   }
+  },
+  "input.keyboard": {
+   "down": {
+    "Keys.keyPress": "a",
+    "Keys.keyRelease": "",
+    "Keys.isActive": true,
+    "Keys.shiftKey": false
+   },
+   "shift": {
+    "Keys.keyPress": "a",
+    "Keys.keyRelease": "a",
+    "Keys.isActive": true,
+    "Keys.shiftKey": true
+   },
+   "outside": {
+    "Keys.keyPress": "a",
+    "Keys.keyRelease": "a",
+    "Keys.isActive": false,
+    "Keys.shiftKey": false
+   },
+   "outsideValue": "b"
+  },
+  "input.interrupted": {
+   "touchPressed": {
+    "LeftTouch.isActive": true
+   },
+   "touchCancelled": {
+    "LeftTouch.isActive": true
+   },
+   "mousePressed": {
+    "LeftTouch.isActive": true
+   },
+   "removed": "true",
+   "removedReleased": "false",
+   "restored": {
+    "LeftTouch.isActive": false,
+    "LeftTouch.isOver": false
+   }
+  },
+  "touch.tap": {
+   "pressed": {
+    "LeftTouch.isActive": true,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1"
+   },
+   "released": {
+    "LeftTouch.isActive": false,
+    "LeftTouch.hitPoint_changed": "0.303 0.012 1"
+   },
+   "touchTime": true,
+   "anchor": {
+    "Front.isBound": false,
+    "Second.isBound": true
+   }
+  },
+  "touch.navigate": {
+   "start": {
+    "Camera.position_changed": "0 0 10",
+    "Camera.orientation_changed": "0 0 1 0"
+   },
+   "rotated": {
+    "Camera.position_changed": "-3.0226 -2.0791 9.3027",
+    "Camera.orientation_changed": "0.5508 -0.8301 0.0872 0.3771"
+   },
+   "pinched": {
+    "Camera.position_changed": "-2.6301 -1.8091 8.0947",
+    "Camera.orientation_changed": "0.5508 -0.8301 0.0872 0.3771"
+   }
+  },
+  "scale.coordinates": {
+   "1": {
+    "framebuffer": [
+     333,
+     211
+    ],
+    "pressed": {
+     "LeftTouch.isActive": true,
+     "LeftTouch.hitPoint_changed": "0.03 0 1"
+    }
+   },
+   "auto": {
+    "framebuffer": [
+     666,
+     422
+    ],
+    "pressed": {
+     "LeftTouch.isActive": true,
+     "LeftTouch.hitPoint_changed": "0.02 -0.01 1"
+    }
+   }
+  },
+  "loading.success": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/loading.wrl",
+    "/tests/browser/worlds/parts/inner.wrl",
+    "/tests/browser/worlds/tex/red.png"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "loading.success.picture.png"
+   }
+  },
+  "loading.failures": {
+   "loading-missing": {
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "served": [
+     "/tests/browser/worlds/loading-missing.wrl",
+     "/tests/browser/worlds/parts/no-such-inner.wrl",
+     "/tests/browser/worlds/tex/no-such-texture.png"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "error: ImageTexture: Couldn't load URL 'http://test/tests/browser/worlds/tex/no-such-texture.png'. Error: Not Found",
+     "error: Inline: Couldn't load URL 'http://test/tests/browser/worlds/parts/no-such-inner.wrl'. Error: Not Found"
+    ],
+    "picture": {
+     "picture": "loading.failures.loading-missing.picture.png"
+    }
+   },
+   "loading-invalid": {
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "served": [
+     "/tests/browser/worlds/loading-invalid.wrl",
+     "/garbage/inner.wrl",
+     "/garbage/texture.png"
+    ],
+    "console": [
+     "error: ImageTexture: Couldn't load URL 'http://test/garbage/texture.png'. Error: Couldn't load image 'blob:http://test/ID': error.",
+     "error: Inline: Couldn't load URL 'http://test/garbage/inner.wrl'. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/inner.wrl'."
+    ],
+    "picture": {
+     "picture": "loading.failures.loading-invalid.picture.png"
+    }
+   }
+  },
+  "loading.fallback": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/loading-fallback.wrl",
+    "/status/500/inner.wrl",
+    "/tests/browser/worlds/tex/no-such-texture.png",
+    "/tests/browser/worlds/parts/inner.wrl",
+    "/tests/browser/worlds/tex/green.png"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: ImageTexture: Couldn't load URL 'http://test/tests/browser/worlds/tex/no-such-texture.png', trying URL 2 of 2. Error: Not Found",
+    "warning: Inline: Couldn't load URL 'http://test/status/500/inner.wrl', trying URL 2 of 2. Error: Internal Server Error"
+   ],
+   "picture": {
+    "picture": "loading.fallback.picture.png"
+   }
+  },
+  "loading.delayed": {
+   "responsive": {
+    "timerLateUnder100ms": true,
+    "messageLatencyUnder50ms": true
+   },
+   "held": {
+    "events": [],
+    "world": "sensors.wrl"
+   },
+   "inlineReleased": {
+    "events": [],
+    "world": "sensors.wrl"
+   },
+   "result": "resolved",
+   "done": {
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "world": "loading-held.wrl"
+   },
+   "picture": {
+    "picture": "loading.delayed.picture.png"
+   }
+  },
+  "loading.replacedDuringLoad": {
+   "second": "resolved",
+   "firstAfterSecond": "pending",
+   "world": "box.wrl",
+   "material": {
+    "BoxMaterial.diffuseColor": "0.2 0.4 0.9"
+   },
+   "errors": []
+  },
+  "loading.removedDuringLoad": {
+   "result": "resolved",
+   "world": "loading-held.wrl"
+  },
+  "loading.createdScene": {
+   "pageRelative": true,
+   "roots": [
+    "Inline",
+    "Inline",
+    "Viewpoint"
+   ],
+   "served": [
+    "PAGE/worlds/parts/inner.wrl",
+    "foreign:PAGE/worlds/parts/inner.wrl"
+   ],
+   "console": [
+    "error: Inline: Couldn't load URL 'http://foreign/tests/browser/worlds/parts/inner.wrl'. TypeError: Failed to fetch"
+   ]
+  },
+  "loading.repeated": {
+   "texture": 2,
+   "inline": 2
+  },
+  "loading.externProto": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "instance": {
+    "Instance.color": "0.2 0.9 0.3"
+   },
+   "typeName": "ColorBox",
+   "served": [
+    "/tests/browser/worlds/extern.wrl",
+    "/tests/browser/worlds/no-such-protos.wrl",
+    "/tests/browser/worlds/protos.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: X3DExternProtoDeclaration: Couldn't load URL 'http://test/tests/browser/worlds/no-such-protos.wrl#ColorBox', trying URL 2 of 2. Error: Not Found"
+   ],
+   "picture": {
+    "picture": "loading.externProto.picture.png"
+   },
+   "heldWorld": "extern.wrl",
+   "heldResult": "resolved",
+   "heldInstance": {
+    "Instance.color": "0.2 0.9 0.3"
+   }
+  },
+  "loading.disposedDuringLoad": {
+   "result": "pending",
+   "errors": []
+  },
+  "api.createScene": {
+   "isPromise": true,
+   "pageWorldURL": true,
+   "roots": [
+    "Transform",
+    "Viewpoint"
+   ],
+   "root": "Transform",
+   "notCurrent": true,
+   "currentWorld": "box.wrl"
+  },
+  "api.replaceOrder": {
+   "isPromise": true,
+   "logAtCall": [],
+   "logAfterFrame": [
+    "SHUTDOWN_EVENT",
+    "shutdown"
+   ],
+   "result": "resolved undefined",
+   "log": [
+    "SHUTDOWN_EVENT",
+    "shutdown",
+    "INITIALIZED_EVENT",
+    "initialized",
+    "load"
+   ],
+   "current": true,
+   "view": "0 0 7"
+  },
+  "api.invalid": {
+   "syntax": {
+    "name": "Error",
+    "firstLine": "********************************************************************************"
+   },
+   "worldKept": "box.wrl",
+   "nullReplace": "resolved",
+   "emptyRoots": 0
+  },
+  "api.abortedReplace": {
+   "first": "Replacing world aborted.",
+   "second": "resolved",
+   "current": true
+  },
+  "api.sceneAccess": {
+   "roots": [
+    "Viewpoint One",
+    "Viewpoint Two",
+    "Viewpoint Hidden",
+    "Viewpoint Three",
+    "ProximitySensor Camera",
+    "Shape "
+   ],
+   "missing": "error: Named node 'NoSuchNode' not found.",
+   "description": "Two",
+   "position": "0 0 14",
+   "fieldType": "SFVec3f",
+   "changed": "Changed"
+  },
+  "api.viewpointCycle": [
+   "start One",
+   "nextViewpoint(): One -> Two",
+   "nextViewpoint(): Two -> Three",
+   "nextViewpoint(): Three -> One",
+   "previousViewpoint(): One -> Three",
+   "lastViewpoint(): Three -> Three",
+   "firstViewpoint(): Three -> One"
+  ],
+  "api.changeViewpoint": [
+   "start One",
+   "changeViewpoint(Hidden): One -> Hidden",
+   "nextViewpoint(): Hidden -> One",
+   "changeViewpoint(NoSuchViewpoint): One -> One",
+   "changeViewpoint(Three): One -> Three"
+  ],
+  "api.viewAll": {
+   "active": "One",
+   "viewAll": {
+    "Camera.position_changed": "0 0 4.483",
+    "Camera.orientation_changed": "0 0 1 0"
+   },
+   "activeAfter": "One",
+   "emptyWorld": null
+  },
+  "api.staleHandles": {
+   "sameScene": false,
+   "newNode": "0.2 0.4 0.9"
+  }
+ }
+}

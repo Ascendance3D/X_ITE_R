@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+# X_ITE_R browser runtime 02 test world (synthetic, written for the tests).
+# MFString fallbacks: the first candidates fail (HTTP 500, 404), the last ones load.
+
+DEF Camera Viewpoint { position 0 0 8 description "Camera" }
+
+Transform {
+  translation -1.5 0 0
+  children DEF InnerInline Inline { url [ "/status/500/inner.wrl" "parts/inner.wrl" ] }
+}
+
+Transform {
+  translation 1.5 0 0
+  children Shape {
+    appearance Appearance {
+      material Material { }
+      texture DEF Texture ImageTexture { url [ "tex/no-such-texture.png" "tex/green.png" ] }
+    }
+    geometry Box { size 2 2 2 }
+  }
+}

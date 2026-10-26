@@ -498,14 +498,13 @@ impl Session {
             .map(std::mem::take)
             .unwrap_or_default();
 
-        if self.own_initialized {
-            if let Some(i) = events
+        if self.own_initialized
+            && let Some(i) = events
                 .iter()
                 .position(|&e| e == x3d_runtime::browser_load::INITIALIZED_EVENT)
-            {
-                events.remove(i);
-                self.own_initialized = false;
-            }
+        {
+            events.remove(i);
+            self.own_initialized = false;
         }
 
         events

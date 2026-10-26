@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# X_ITE_R browser runtime 02 test world (synthetic, written for the tests).
+# Three viewpoints with descriptions and one without (getUserViewpoints lists only the described ones).
+
+DEF One Viewpoint { position 0 0 10 description "One" }
+DEF Two Viewpoint { position 0 0 14 description "Two" }
+DEF Hidden Viewpoint { position 0 5 10 }
+DEF Three Viewpoint { position 0 0 18 description "Three" }
+DEF Camera ProximitySensor { size 1000 1000 1000 }
+Shape { appearance Appearance { material Material { } } geometry Box { size 4 2 1 } }
