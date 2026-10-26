@@ -1,89 +1,117 @@
 # Findings Report: HSL and Radial Gradient Pixel Mismatches (XR-C04)
 
+Refs #55. This report records measurements and open questions. It does not change renderer code, oracle baselines or tolerances.
+
 ## Observed (reproduced by the script or read from cited files)
 
-### Pinned References
-- **X_ITE**: The reference codebase (`oracle/x_ite-pin`, commit `34cdf9f97`) does not parse `hsl()` internally through canvas fillStyle. It sets a CSS property on an element and reads back the computed `rgb()`.
-  - `oracle/x_ite-pin/src/x_ite/Parser/X3DParser.js`:82-86: The styles are set at lines 82-83 and read using `window .getComputedStyle (this .div) .color` at line 86.
-  - `oracle/x_ite-pin/src/x_ite/Parser/SVGParser.js`:2461: SVG elements convert colors using `this.convertColor()`.
-  - `oracle/x_ite-pin/src/x_ite/Parser/SVGParser.js`:1007: `this .context .createRadialGradient(...)` builds the radial gradient from SVG values.
-- **Rust Port**:
-  - `crates/x3d-parse/src/color.rs`:235-263: The port implements HSL conversion using `f64` arithmetic and scales to `f32` inside a custom rounding step.
-  - `crates/x3d-parse/src/svg_canvas.rs`:414-463: The radial gradient evaluation uses a quadratic intersection root via `two_point_conical`.
+### Pinned references
 
-### Reproducible Counts
-A reproduction script is provided at `docs/findings-xr-c04/hsl_count.py` (which takes the oracle JSON path `oracle/synthetic-rea-svg/css-colors-baseline.json` as an argument). It asserts the following counts out of 16,200 grid values compared to the Oracle:
-- `rust_current`: 43 mismatches.
-- `hypothesis_f32_legacy`: 114 mismatches.
-- `hypothesis_f32_gfx`: 204 mismatches.
-- `hypothesis_f64_legacy`: 508 mismatches.
-- `hypothesis_f64_gfx`: 562 mismatches.
+- **X_ITE** (`oracle/x_ite-pin`, commit `34cdf9f97`, 16.5.0) does not convert `hsl()` itself. It sets the CSS `color` property on an element and reads back the computed `rgb()` value.
+  - `oracle/x_ite-pin/src/x_ite/Parser/X3DParser.js:82-86`: lines 82-83 set the styles; line 86 reads `window .getComputedStyle (this .div) .color`.
+  - `oracle/x_ite-pin/src/x_ite/Parser/SVGParser.js:2461`: SVG elements convert colors with `this.convertColor()`.
+  - `oracle/x_ite-pin/src/x_ite/Parser/SVGParser.js:1007`: `this .context .createRadialGradient(...)` builds the radial gradient from the SVG values.
+- **Rust port**:
+  - `crates/x3d-parse/src/color.rs:235-263`: the port computes each channel in `f64`, casts it to `f32`, multiplies by `255.0f32`, then rounds half up with `floor(x + 0.5)` in `f64` (line 263).
+  - `crates/x3d-parse/src/svg_canvas.rs:414-463`: the radial gradient uses a quadratic root in `two_point_conical`.
 
-### The 43 Verified Half-Channel Cases
-The reproduction script verified that every one of the 43 mismatches in the current Rust port is an interpolated channel whose exact real value is `x.5`, and Chrome (oracle) rounded it DOWN.
+### Reproducible counts
 
-The full list outputted by the script:
-| Input | Channel | Exact Scaled Value | Chrome (Oracle) Value | Rust Value |
+Run:
+
+```
+python3 docs/findings-xr-c04/hsl_count.py oracle/synthetic-rea-svg/css-colors-baseline.json
+```
+
+The script compares 16,202 `hsl()` values with the oracle (16,200 unitless hues, one `deg` hue and one `turn` hue). It exits 1 if any count below changes; it compares exact integers and exact rationals only, not rounded display values.
+
+| Formula | Mismatched values |
+|---|---|
+| `rust_current` | 43 |
+| `hypothesis_f32_legacy` | 114 |
+| `hypothesis_f32_gfx` | 204 |
+| `hypothesis_f64_legacy` | 508 |
+| `hypothesis_f64_gfx` | 562 |
+
+The four `hypothesis_*` formulas are experiments written for this report. They are not copies of Chromium or Skia code, and their names do not claim that Chromium uses them:
+
+- `hypothesis_f32_legacy`: hue in sixths (`h / 60`), every step rounded to `f32`, final value rounded half away from zero.
+- `hypothesis_f32_gfx`: hue in turns (`h / 360`) with the thresholds `6h < 1`, `2h < 1`, `3h < 2`, every step rounded to `f32`, final value rounded half up.
+- `hypothesis_f64_legacy`: the `f32_legacy` steps in `f64`.
+- `hypothesis_f64_gfx`: the `f32_gfx` steps in `f64`.
+
+No formula gives 0 mismatches. The cause of the 43 differences is not found.
+
+### Exact half-channel values
+
+The script also computes every channel in exact rational arithmetic (CSS Color 4 `hsl()` to `rgb()`, scaled by 255). 5,946 channels have an exact value of `x.5`; Chrome rounds 5,903 of them up and 43 of them down.
+
+The 43 rounded-down channels are exactly the 43 Rust mismatches. In each, Chrome has `x` and Rust has `x + 1`. Thus a fixed "round x.5 down" rule does not explain Chrome's output.
+
+| Input | Channel | Exact scaled value | Chrome (oracle) | Rust |
 |---|---|---|---|---|
-| `hsl(10,80%,50%)` | G | 59.5 | 59 | 60 |
-| `hsl(10,100%,50%)` | G | 42.5 | 42 | 43 |
-| `hsl(14,50%,50%)` | G | 93.5 | 93 | 94 |
-| `hsl(14,100%,50%)` | G | 59.5 | 59 | 60 |
-| `hsl(25,80%,50%)` | G | 110.5 | 110 | 111 |
-| `hsl(42,100%,50%)` | G | 178.5 | 178 | 179 |
-| `hsl(46,100%,50%)` | G | 195.5 | 195 | 196 |
-| `hsl(125,50%,40%)` | B | 59.5 | 59 | 60 |
-| `hsl(125,50%,60%)` | B | 110.5 | 110 | 111 |
-| `hsl(125,80%,50%)` | B | 42.5 | 42 | 43 |
-| `hsl(140,80%,50%)` | B | 93.5 | 93 | 94 |
-| `hsl(140,100%,25%)` | B | 42.5 | 42 | 43 |
-| `hsl(155,50%,40%)` | B | 110.5 | 110 | 111 |
-| `hsl(155,80%,50%)` | B | 144.5 | 144 | 145 |
-| `hsl(162,100%,50%)` | B | 178.5 | 178 | 179 |
-| `hsl(166,100%,50%)` | B | 195.5 | 195 | 196 |
-| `hsl(170,80%,50%)` | B | 195.5 | 195 | 196 |
-| `hsl(170,100%,50%)` | B | 212.5 | 212 | 213 |
-| `hsl(190,80%,50%)` | G | 195.5 | 195 | 196 |
-| `hsl(190,100%,50%)` | G | 212.5 | 212 | 213 |
-| `hsl(194,100%,50%)` | G | 195.5 | 195 | 196 |
-| `hsl(198,100%,50%)` | G | 178.5 | 178 | 179 |
-| `hsl(205,50%,40%)` | G | 110.5 | 110 | 111 |
-| `hsl(205,80%,50%)` | G | 144.5 | 144 | 145 |
-| `hsl(220,80%,50%)` | G | 93.5 | 93 | 94 |
-| `hsl(220,100%,25%)` | G | 42.5 | 42 | 43 |
-| `hsl(235,50%,40%)` | G | 59.5 | 59 | 60 |
-| `hsl(235,50%,60%)` | G | 110.5 | 110 | 111 |
-| `hsl(235,80%,50%)` | G | 42.5 | 42 | 43 |
-| `hsl(250,80%,50%)` | R | 59.5 | 59 | 60 |
-| `hsl(250,100%,50%)` | R | 42.5 | 42 | 43 |
-| `hsl(254,50%,50%)` | R | 93.5 | 93 | 94 |
-| `hsl(254,100%,50%)` | R | 59.5 | 59 | 60 |
-| `hsl(265,80%,50%)` | R | 110.5 | 110 | 111 |
-| `hsl(282,100%,50%)` | R | 178.5 | 178 | 179 |
-| `hsl(284,100%,25%)` | R | 93.5 | 93 | 94 |
-| `hsl(316,100%,25%)` | B | 93.5 | 93 | 94 |
-| `hsl(318,100%,50%)` | B | 178.5 | 178 | 179 |
-| `hsl(335,80%,50%)` | B | 110.5 | 110 | 111 |
-| `hsl(346,50%,50%)` | B | 93.5 | 93 | 94 |
-| `hsl(346,100%,50%)` | B | 59.5 | 59 | 60 |
-| `hsl(350,80%,50%)` | B | 59.5 | 59 | 60 |
-| `hsl(350,100%,50%)` | B | 42.5 | 42 | 43 |
+| `hsl(10,80%,50%)` | G | 119/2 | 59 | 60 |
+| `hsl(10,100%,50%)` | G | 85/2 | 42 | 43 |
+| `hsl(14,50%,50%)` | G | 187/2 | 93 | 94 |
+| `hsl(14,100%,50%)` | G | 119/2 | 59 | 60 |
+| `hsl(25,80%,50%)` | G | 221/2 | 110 | 111 |
+| `hsl(42,100%,50%)` | G | 357/2 | 178 | 179 |
+| `hsl(46,100%,50%)` | G | 391/2 | 195 | 196 |
+| `hsl(125,50%,40%)` | B | 119/2 | 59 | 60 |
+| `hsl(125,50%,60%)` | B | 221/2 | 110 | 111 |
+| `hsl(125,80%,50%)` | B | 85/2 | 42 | 43 |
+| `hsl(140,80%,50%)` | B | 187/2 | 93 | 94 |
+| `hsl(140,100%,25%)` | B | 85/2 | 42 | 43 |
+| `hsl(155,50%,40%)` | B | 221/2 | 110 | 111 |
+| `hsl(155,80%,50%)` | B | 289/2 | 144 | 145 |
+| `hsl(162,100%,50%)` | B | 357/2 | 178 | 179 |
+| `hsl(166,100%,50%)` | B | 391/2 | 195 | 196 |
+| `hsl(170,80%,50%)` | B | 391/2 | 195 | 196 |
+| `hsl(170,100%,50%)` | B | 425/2 | 212 | 213 |
+| `hsl(190,80%,50%)` | G | 391/2 | 195 | 196 |
+| `hsl(190,100%,50%)` | G | 425/2 | 212 | 213 |
+| `hsl(194,100%,50%)` | G | 391/2 | 195 | 196 |
+| `hsl(198,100%,50%)` | G | 357/2 | 178 | 179 |
+| `hsl(205,50%,40%)` | G | 221/2 | 110 | 111 |
+| `hsl(205,80%,50%)` | G | 289/2 | 144 | 145 |
+| `hsl(220,80%,50%)` | G | 187/2 | 93 | 94 |
+| `hsl(220,100%,25%)` | G | 85/2 | 42 | 43 |
+| `hsl(235,50%,40%)` | G | 119/2 | 59 | 60 |
+| `hsl(235,50%,60%)` | G | 221/2 | 110 | 111 |
+| `hsl(235,80%,50%)` | G | 85/2 | 42 | 43 |
+| `hsl(250,80%,50%)` | R | 119/2 | 59 | 60 |
+| `hsl(250,100%,50%)` | R | 85/2 | 42 | 43 |
+| `hsl(254,50%,50%)` | R | 187/2 | 93 | 94 |
+| `hsl(254,100%,50%)` | R | 119/2 | 59 | 60 |
+| `hsl(265,80%,50%)` | R | 221/2 | 110 | 111 |
+| `hsl(282,100%,50%)` | R | 357/2 | 178 | 179 |
+| `hsl(284,100%,25%)` | R | 187/2 | 93 | 94 |
+| `hsl(316,100%,25%)` | B | 187/2 | 93 | 94 |
+| `hsl(318,100%,50%)` | B | 357/2 | 178 | 179 |
+| `hsl(335,80%,50%)` | B | 221/2 | 110 | 111 |
+| `hsl(346,50%,50%)` | B | 187/2 | 93 | 94 |
+| `hsl(346,100%,50%)` | B | 119/2 | 59 | 60 |
+| `hsl(350,80%,50%)` | B | 119/2 | 59 | 60 |
+| `hsl(350,100%,50%)` | B | 85/2 | 42 | 43 |
 
-### Radial Gradient Pixel
-For `grad-radial-focal.svg` at pixel coordinates (40, 72):
-- Oracle (X_ITE) RGBA: `[52, 52, 154, 255]`
-- Rust RGBA: `[53, 53, 154, 255]`
-- Mismatch Count: The REA Batch 08 SVG report limits table lists "7 of 65,536 pixels" for this file. Issue #55 explicitly cites "one radial-focal gradient pixel".
+### Radial gradient pixel
+
+- `grad-radial-focal.svg`, pixel (40, 72): X_ITE `52, 52, 154`, Rust `53, 53, 154` (`_batch08_context/reports/svg/REPORT.md:75`).
+- The same Batch 08 report gives "max channel difference 1, worst file 7 of 65,536 pixels (`grad-radial-focal.svg`)" (`_batch08_context/reports/svg/REPORT.md:53`). Its owner question calls this "the one-pixel radial-focal difference" and gives "7 of 65,536 pixels" (`:137`).
+- Issue #55 says "one radial-focal gradient pixel is one level off".
+
+This lane did not measure the pixel again.
 
 ## Hypotheses (UNVERIFIED)
 
-Because the exact upstream source code mapping to the Oracle environment cannot be verified in this repository, these represent purely structural mathematical hypotheses intended to align Chrome's output to standard C++ implementations:
-- It is hypothesized that Chromium evaluates CSS `hsl()` via CSS parsing (`css_color_value.cc`) and color conversions (`Color::FromHSLA`, `CalcHue`).
-- It is hypothesized that Chromium's HSL-to-RGB conversion could utilize `gfx::HSLToSRGB` (`ui/gfx/color_conversions.cc`) or a legacy path using float domains.
-- It is hypothesized that the 8-bit channel serialization likely executes via `std::round` combined with `Sk4f_toL32` (or `SkColor4f::toSkColor`).
-- It is hypothesized that Chromium's float precision execution path dynamically rounds channels exactly evaluated at `x.5` *down* to `x` instead of tracking away from zero.
-- It is hypothesized that the Skia pixel gradient logic heavily relies on `SkTwoPointConicalGradient` (utilizing `FocalData` and `appendGradientStages`) and specific hardware optimization tracks scaling over stages like `xy_to_2pt_conical_focal_on_circle`.
+Chromium and Skia source code is not in this repository. The names below are not verified, and no measurement here proves that Chromium uses them.
+
+- Chromium can parse CSS `hsl()` in `css_color_value.cc` and convert it with `Color::FromHSLA` or `CalcHue`.
+- Chromium can use `gfx::HSLToSRGB` (`ui/gfx/color_conversions.cc`) or an older float path.
+- The 8-bit result can come from `std::round` with `Sk4f_toL32` or `SkColor4f::toSkColor`.
+- The 43 rounded-down channels can come from a float value just below `x.5` before rounding. This is not tested.
+- The radial gradient can use Skia's `SkTwoPointConicalGradient` (`FocalData`, `appendGradientStages`, `xy_to_2pt_conical_focal_on_circle`).
 
 ## Unresolved
-1. **Mathematical discrepancies in exact replication limits:** The python script reproduces varying counts depending on arithmetic mapping (producing 114, 204, 508, 562 for different strict float evaluation permutations). The owner reported alternate numbers originally for differing variations (`legacy_f32`: 117, `gfx_f32`: 473, `legacy_f64`: 915, `gfx_f64`: 1263). The true single mathematical root matching Chromium across the board remains unresolved.
-2. **Gradient Pixel Count limit reporting:** Issue #55 cites "one radial-focal gradient pixel" differing, while the formal Batch 08 Report limits table recorded "7 of 65,536 pixels" differing for `grad-radial-focal.svg`. This discrepancy in reporting numbers remains unresolved.
+
+1. **HSL formula:** no tested formula matches all 16,202 oracle values. The arithmetic that gives Chrome's 43 rounded-down channels is unknown.
+2. **Radial pixel count:** the Batch 08 report gives both "one-pixel" (`:137`, `:75`) and "7 of 65,536 pixels" (`:53`, `:137`) for `grad-radial-focal.svg`. The source evidence does not explain the difference.
