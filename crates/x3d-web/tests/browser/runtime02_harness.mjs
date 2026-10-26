@@ -1,0 +1,270 @@
+// The shared part of the browser runtime 02 tests of X_ITE_R's <x3d-canvas> (runtime02*.test.mjs): the test server
+// and Chromium, a page with the test canvas, and the reference cases compared with the pinned X_ITE 16.5.0 recording in
+// oracle/web-browser-02-baseline (oracle/x_ite-web-runtime-02.mjs). The tests are in several files so that CI can run
+// them in parallel shards (shards.mjs); each file runs in its own process with its own server and browser.
+//
+//   tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test)
+//
+// XR_CASE=<group.case> runs one reference case. XR_WEB_EVIDENCE=<dir> writes this run's values and pictures there.
+
+import { after, before, describe, test } from "node:test";
+import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright";
+import { compareImages } from "./api_case.mjs";
+import { CASE_GROUPS, splitPictures } from "./runtime02_case.mjs";
+import { startServer } from "./server.mjs";
+
+const CRATE    = normalize (join (fileURLToPath (import.meta.url), "../../.."));
+const REPO     = join (CRATE, "../..");
+const BASELINE = process .env .XR_BASELINE ?? join (REPO, "oracle/web-browser-02-baseline");
+const EVIDENCE = process .env .XR_WEB_EVIDENCE;
+export const ONLY     = process .env .XR_CASE;
+
+const reference = JSON .parse (await readFile (join (BASELINE, "runtime02-baseline.json"), "utf8"));
+
+// The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
+// The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
+// listed in web/API.md.
+const KNOWN_DIFFERENCES = {
+   "input.interrupted": [
+      // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
+      [ [ "touchCancelled", "LeftTouch.isActive" ], true, false ],
+      // X_ITE's mouseup listener is on the document and still gets the release after the canvas is removed;
+      // X_ITE_R releases the buttons that are down when the canvas leaves the document.
+      [ [ "removed" ], "true", "false" ],
+      // X_ITE's release after the removal checks the pointer against the detached canvas (an empty rectangle, so a
+      // NaN pointer and no hit) and ends isOver. X_ITE_R's pointer has not moved: it is still over the box.
+      [ [ "restored", "LeftTouch.isOver" ], false, true ],
+   ],
+   "loading.failures": [
+      // X_ITE names the blob URL of the image data that does not decode; the Rust engine has none and names the file.
+      [ [ "loading-invalid", "console", 0 ],
+         "error: ImageTexture: Couldn't load URL 'http://test/garbage/texture.png'. Error: Couldn't load image 'blob:http://test/ID': error.",
+         "error: ImageTexture: Couldn't load URL 'http://test/garbage/texture.png'. Error: Couldn't load image 'http://test/garbage/texture.png': error." ],
+   ],
+   "loading.repeated": [
+      // X_ITE fetches once per node (the HTTP cache may answer); X_ITE_R fetches a URL once per world.
+      [ [ "texture" ], 2, 1 ],
+      [ [ "inline" ], 2, 1 ],
+   ],
+   "loading.disposedDuringLoad": [
+      // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
+      [ [ "result" ], "pending", "Loading of X3D file aborted." ],
+   ],
+};
+
+// A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
+// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
+export const CASE_TIMEOUT = 180_000;
+
+// The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984): on CI's lavapipe they took up to
+// 163 s. Their cap is 2.5 times that.
+export const MOBILE_TIMEOUT = 420_000;
+
+// Each test file that imports this module gets one server and one browser, for all of its tests.
+export let server;
+let browser;
+
+before (async () =>
+{
+   server  = await startServer (CRATE);
+   browser = await chromium .launch ({
+      headless: true,
+      args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
+         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
+   });
+});
+
+after (async () =>
+{
+   await browser ?.close ();
+   await server ?.close ();
+});
+
+// A new page with the test canvas in a new context, ready (engine and WebGPU device made).
+export async function openPage (contextOptions, { init } = { })
+{
+   const context = await browser .newContext (contextOptions);
+   const allowed = [ server .base, server .foreign ];
+
+   await context .route (url => !allowed .some (origin => url .href .startsWith (origin)), route => route .abort ());
+
+   if (init)
+      await context .addInitScript (init);
+
+   const page = await context .newPage ();
+
+   page .log = [ ];
+   page .on ("console", m => page .log .push (`${m .type ()}: ${m .text () .split ("\n") [0]}`));
+   page .on ("pageerror", e => page .log .push (`pageerror: ${e .message}`));
+
+   await page .goto (`${server .base}/tests/browser/runtime02.html`);
+   await page .waitForFunction (() => window .ready || window .startError, null, { timeout: 30000 });
+
+   if (!init)
+   {
+      const startError = await page .evaluate (() => window .startError);
+
+      assert .equal (startError, undefined, `X_ITE_R did not start: ${startError}\n${page .log .join ("\n")}`);
+   }
+
+   return page;
+}
+
+// The picture the Rust renderer made, read back from the GPU (WebBrowser.readPixels) as a PNG. Headless Chromium does
+// not always composite a WebGPU canvas (no display compositor, e.g. on lavapipe), so a page screenshot could be empty.
+export async function picture (page)
+{
+   const base64 = await page .evaluate (async () =>
+   {
+      const canvas = document .querySelector ("x3d-canvas");
+      const engine = canvas .browser [Symbol .for ("X_ITE_R.engine")];
+      const pixels = await engine .readPixels ();
+      const { width, height } = canvas .browser .getCanvas ();
+      const image  = new OffscreenCanvas (width, height);
+
+      image .getContext ("2d") .putImageData (new ImageData (new Uint8ClampedArray (pixels .buffer), width, height), 0, 0);
+
+      const bytes = new Uint8Array (await (await image .convertToBlob ({ type: "image/png" })) .arrayBuffer ());
+
+      return btoa (Array .from (bytes, b => String .fromCharCode (b)) .join (""));
+   });
+
+   return Buffer .from (base64, "base64");
+}
+
+const env = () => ({
+   base: server .base,
+   foreign: server .foreign,
+   worlds: `${server .base}/tests/browser/worlds/`,
+   server,
+   picture,
+});
+
+export const frameLoop = page => page .evaluate (() => document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.frameLoop")]);
+export const loadURL   = (page, url) => page .evaluate (url => document .querySelector ("x3d-canvas") .browser .loadURL (new window .X3D_NS .MFString (url)), url);
+
+async function evidence (name, data)
+{
+   if (!EVIDENCE)
+      return;
+
+   await mkdir (EVIDENCE, { recursive: true });
+   await writeFile (join (EVIDENCE, name), data);
+}
+
+// The value at `path`, and a copy of `value` with `replacement` there.
+const at = (value, path) => path .reduce ((v, k) => v ?.[k], value);
+
+function withValue (value, path, replacement)
+{
+   const copy = structuredClone (value);
+
+   path .slice (0, -1) .reduce ((v, k) => v [k], copy) [path .at (-1)] = replacement;
+   return copy;
+}
+
+// --- reference cases ----------------------------------------------------------------------------------------------
+
+// The reference case groups of each test file. A group in no file, or a file here that does not exist, fails every
+// file that imports this module, so no group is left out in silence. Each file named here calls referenceCases.
+const GROUP_FILES = {
+   input:   "runtime02_input.test.mjs",
+   touch:   "runtime02_input.test.mjs",
+   scale:   "runtime02_input.test.mjs",
+   loading: "runtime02.test.mjs",
+   api:     "runtime02.test.mjs",
+};
+
+assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
+
+for (const file of new Set (Object .values (GROUP_FILES)))
+   assert .ok (existsSync (join (dirname (fileURLToPath (import.meta.url)), file)), `GROUP_FILES: ${file} does not exist`);
+
+// The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
+export function referenceCases (file)
+{
+   const groups = Object .entries (CASE_GROUPS) .filter (([ groupName ]) => GROUP_FILES [groupName] === file);
+
+   assert .ok (groups .length, `GROUP_FILES gives no case group to ${file}`);
+
+   for (const [ groupName, group ] of groups)
+   {
+      describe (`runtime 02 ${groupName} cases, compared with pinned X_ITE`, () =>
+      {
+         for (const [ name, run ] of Object .entries (group .cases))
+         {
+            const key = `${groupName}.${name}`;
+
+            test (key, { skip: ONLY && ONLY !== key, timeout: CASE_TIMEOUT }, async () =>
+            {
+               const page = await openPage (group .context);
+
+               try
+               {
+                  const pictures = { };
+                  const ours     = splitPictures (await run (page, env ()), key, pictures);
+                  let   theirs   = reference .values [key];
+
+                  assert .ok (theirs, `no X_ITE recording of ${key}`);
+
+                  await evidence (`${key}.json`, JSON .stringify (ours, null, 1) + "\n");
+
+                  for (const [ path, xite, xiteR ] of KNOWN_DIFFERENCES [key] ?? [ ])
+                  {
+                     assert .deepEqual (at (theirs, path), xite, `${key}: the recording no longer has the known difference at ${path .join (".")}`);
+                     theirs = withValue (theirs, path, xiteR);
+                  }
+
+                  assert .deepEqual (ours, theirs, `${key}\n${page .log .join ("\n")}`);
+
+                  // The pictures: the same background, silhouette and colors as X_ITE's (the thresholds of runtime 01).
+                  for (const [ file, data ] of Object .entries (pictures))
+                  {
+                     const recorded = await readFile (join (BASELINE, file));
+                     const m        = await page .evaluate (compareImages, [ recorded .toString ("base64"), data .toString ("base64") ]);
+
+                     await evidence (file, data);
+                     await evidence (`${file}.metrics.json`, JSON .stringify (m, null, 1) + "\n");
+
+                     assert .deepEqual (m .backgroundB, m .backgroundA, `${file}: background`);
+                     assert .ok (m .silhouetteIoU >= 0.97, `${file}: silhouette IoU ${m .silhouetteIoU}`);
+                     assert .ok (m .meanAbsDiff <= 8, `${file}: mean color difference ${m .meanAbsDiff}`);
+                  }
+
+                  assert .deepEqual (page .log .filter (line => line .startsWith ("pageerror")), [ ], "page errors");
+               }
+               finally
+               {
+                  await page .context () .close ();
+               }
+            });
+         }
+      });
+   }
+}
+
+// --- lifecycle and mobile emulation -------------------------------------------------------------------------------
+
+export const DESKTOP = { viewport: { width: 400, height: 340 }, deviceScaleFactor: 1 };
+
+// A phone-sized emulation: no proof of a mobile browser or a mobile GPU (see web/API.md, "Mobile support").
+export const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+
+// A mobile page's viewport: without `<meta name="viewport">` a mobile browser lays the page out 980 px wide.
+export const mobileViewport = page => page .evaluate (async () =>
+{
+   const meta = Object .assign (document .createElement ("meta"), { name: "viewport", content: "width=device-width, initial-scale=1" });
+
+   document .head .append (meta);
+
+   for (let i = 0; i < 3; ++ i)
+      await new Promise (requestAnimationFrame);
+});
+
+// A tablet-sized emulation, portrait first.
+export const TABLET = { viewport: { width: 820, height: 1180 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
