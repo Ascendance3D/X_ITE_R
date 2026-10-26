@@ -105,7 +105,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - `loadURL` rejects with `Loading of X3D file aborted.` after `dispose ()`. X_ITE's never settles.
 - An Anchor or `loadURL` never opens a `javascript:`, `vbscript:`, `ecmascript:`, `vrmlscript:` or `data:` URL in a window or as the page location, in any letter case; it logs `X_ITE_R: Anchor URL '...' was not opened.`. X_ITE checks for script URLs in lower case only and opens the others. A new window opens with `noopener`.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
-- A node handle belongs to one world. After the world is replaced, using an old handle throws `X_ITE_R: the node belongs to a world that was replaced.` In X_ITE the old node object stays usable but is no longer in the scene.
+- A node handle belongs to one world, and so does an `X3DScene` object. After the world is replaced (also by an Anchor), using an old node or scene throws `X_ITE_R: the node belongs to a world that was replaced.`; `currentScene` gives the new scene. In X_ITE the old objects stay usable but are no longer the world.
 - `ready ()` is not an X_ITE name. X_ITE starts synchronously and needs no such call.
 - The `layerNode` argument of the viewpoint functions is not supported: they act on the active layer, and a layer node throws.
 - Only the `src`, `url` and `contentScale` attributes are read. The other X_ITE attributes (`antialiased`, `splashScreen`, `update`, ...) have no effect.
