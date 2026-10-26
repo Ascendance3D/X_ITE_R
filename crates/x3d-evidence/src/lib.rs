@@ -145,9 +145,13 @@ fn parse_manifest(text: &str, path: &Path) -> Result<HashMap<String, Measure>, K
         let bad = || KeyError::Io(format!("{}: bad row {line:?}", path.display()));
 
         // A name is one plain path component, so `<store>/<name>` cannot step out of the store.
+        if c.len() != 5 {
+            return Err(bad());
+        }
+
         let plain = !matches!(c[0], "" | "." | "..") && !c[0].contains(['/', '\\', '\0']);
 
-        if c.len() != 5 || !plain || !(c[1] == "file" || c[1] == "dir") {
+        if !plain || !(c[1] == "file" || c[1] == "dir") {
             return Err(bad());
         }
 
@@ -397,8 +401,17 @@ fn tracked_kind(mode: &str) -> &'static str {
 /// paths are the names in the manifest at `root` and in each rev's manifest, and [`GUARDED`].
 pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), KeyError> {
     // A worktree at a commit before the manifest has none; this workspace's manifest applies then.
+    // A manifest that is present but unreadable or malformed is an error.
     let ours = manifest(&workspace_root())?;
-    let rows = manifest(root).unwrap_or_else(|_| ours.clone());
+    let rows = if root
+        .join("oracle/answer-keys.tsv")
+        .symlink_metadata()
+        .is_ok()
+    {
+        manifest(root)?
+    } else {
+        ours.clone()
+    };
     let mut names: Vec<String> = rows
         .keys()
         .chain(ours.keys())
@@ -1035,6 +1048,19 @@ mod tests {
                 matches!(manifest(&root), Err(KeyError::Io(e)) if e.contains("bad row")),
                 "{name}"
             );
+        }
+    }
+
+    #[test]
+    fn short_or_malformed_manifest_row_is_an_error() {
+        let root = checkout("short-row");
+        let tsv = root.join("oracle/answer-keys.tsv");
+
+        for row in ["k.json", "k.json\tfile\t1", "k.json\tfile\tone\t3\tx"] {
+            std::fs::write(&tsv, format!("{row}\n")).unwrap();
+            assert!(matches!(manifest(&root), Err(KeyError::Io(e)) if e.contains("bad row")));
+            // The guard does not fall back to another manifest when this one is malformed.
+            assert!(guard(&root, &["HEAD"], None).is_err(), "{row}");
         }
     }
 

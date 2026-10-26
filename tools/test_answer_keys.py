@@ -131,6 +131,17 @@ class Store(Case):
                 ak.parse([f"{name}\tfile\t1\t3\t{sha(b'abc')}\n"])
             self.assertIn("bad row", str(c.exception))
 
+    def test_short_or_malformed_manifest_row(self):
+        for row in ("k.json", "k.json\tfile\t1", "k.json\tfile\tone\t3\tx"):
+            with self.assertRaises(ak.KeyError_) as c:
+                ak.parse([row + "\n"])
+            self.assertEqual(c.exception.code, 1)
+        root = self.checkout()
+        with open(os.path.join(root, "oracle", "answer-keys.tsv"), "w") as f:
+            f.write("k.json\n")
+        with self.assertRaises(ak.KeyError_):
+            ak.guard(root, ["HEAD"])
+
     def test_entry_linking_outside_the_store_is_measured(self):
         root, backup = self.checkout(), self.keys("backup")
         keys = os.path.join(self.tmp, "keys")

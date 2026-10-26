@@ -52,10 +52,12 @@ def parse(lines):
     for line in lines:
         if line.startswith("#") or not line.strip():
             continue
-        name, kind, files, size, digest = line.rstrip("\n").split("\t")
+        cols = line.rstrip("\n").split("\t")
         # A name is one plain path component, so <store>/<name> cannot step out of the store.
-        if name in ("", ".", "..") or any(c in name for c in "/\\\0") or kind not in ("file", "dir"):
+        if (len(cols) != 5 or cols[0] in ("", ".", "..") or any(c in cols[0] for c in "/\\\0")
+                or cols[1] not in ("file", "dir") or not (cols[2].isdigit() and cols[3].isdigit())):
             raise KeyError_(1, f"answer-keys.tsv: bad row {line!r}")
+        name, kind, files, size, digest = cols
         rows[name] = (kind, int(files), int(size), digest)
     return rows
 
@@ -200,7 +202,7 @@ def _real_data(root, rel):
 def guard(root, revs=("HEAD",)):
     """Refuses (UNSAFE) when a Git operation on the worktree at root to any of revs could delete real key data."""
     own = os.path.join(root, "oracle", "answer-keys.tsv")
-    rows = manifest(own) if os.path.isfile(own) else manifest()
+    rows = manifest(own) if os.path.lexists(own) else manifest()  # present but malformed: an error
     problems, names = [], set(rows) | set(manifest())
     for rev in revs:
         try:
@@ -209,7 +211,7 @@ def guard(root, revs=("HEAD",)):
             raise KeyError_(UNSAFE, f"guard: {rev} is not a commit in {root}")
         try:
             names |= set(parse(_git(root, "show", f"{rev}:oracle/answer-keys.tsv").decode().splitlines()))
-        except subprocess.CalledProcessError:
+        except (OSError, subprocess.CalledProcessError):
             pass  # a commit before the manifest; this manifest's names still apply
     held = [p for p in sorted("oracle/" + n for n in names) + list(GUARDED) if _real_data(root, p)]
     parents = sorted({"/".join(p.split("/")[:i]) for p in held for i in range(1, p.count("/") + 1)})
