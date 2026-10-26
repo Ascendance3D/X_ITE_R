@@ -24,10 +24,53 @@ pub struct Session {
     log_seen: usize,
 }
 
+/// A world that parsed and waits for [`Session::start`]: X3DBrowser.loadURL has its scene, and the current world has
+/// not been replaced yet.
+pub struct ParsedWorld {
+    scene: x3d_scene::Scene,
+    fetcher: Box<dyn Fetcher>,
+    url: String,
+}
+
 impl Session {
-    /// Parse and set up the world `data` from `url`, then run replaceWorld up to the first live frame at `now` (seconds
-    /// since the Unix epoch, X3DBrowser.getCurrentTime). `fetcher` serves the world's Inline, EXTERNPROTO and texture
-    /// URLs. A world that does not parse is an error and no session is made.
+    /// Parse the world `data` from `url` (FileLoader). `fetcher` serves the world's Inline, EXTERNPROTO and texture
+    /// URLs. A world that does not parse is an error.
+    pub fn parse(data: &[u8], url: &str, fetcher: Box<dyn Fetcher>) -> Result<ParsedWorld, String> {
+        x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
+        x3d_render::traverse::install_particle_geometry();
+
+        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url)
+            .scene
+            .map_err(|e| format!("{e:?}"))?;
+
+        Ok(ParsedWorld {
+            scene,
+            fetcher,
+            url: url.to_string(),
+        })
+    }
+
+    /// Set up the parsed world and run replaceWorld up to its first live frame at `now` (seconds since the Unix
+    /// epoch, X3DBrowser.getCurrentTime). Drop the session of the old world first: its shutdown comes before.
+    pub fn start(world: ParsedWorld, now: f64, width: u32, height: u32) -> Session {
+        let mut rt = Runtime::new(world.scene, world.fetcher);
+
+        rt.page_url = world.url.clone();
+        x3d_render::shader_gpu::install(&mut rt);
+        rt.live = true;
+        rt.now = now;
+        rt.browser_options = x3d_runtime::browser_options::BrowserOptions::new(width, height);
+        rt.load_scene();
+        rt.replace_world();
+
+        Session {
+            viewer: Viewer3d::from_runtime(rt, now, width, height),
+            world_url: world.url,
+            log_seen: 0,
+        }
+    }
+
+    /// [`Session::parse`], then [`Session::start`].
     pub fn load(
         data: &[u8],
         url: &str,
@@ -36,27 +79,12 @@ impl Session {
         width: u32,
         height: u32,
     ) -> Result<Session, String> {
-        x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
-        x3d_render::traverse::install_particle_geometry();
-
-        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url)
-            .scene
-            .map_err(|e| format!("{e:?}"))?;
-        let mut rt = Runtime::new(scene, fetcher);
-
-        rt.page_url = url.to_string();
-        x3d_render::shader_gpu::install(&mut rt);
-        rt.live = true;
-        rt.now = now;
-        rt.browser_options = x3d_runtime::browser_options::BrowserOptions::new(width, height);
-        rt.load_scene();
-        rt.replace_world();
-
-        Ok(Session {
-            viewer: Viewer3d::from_runtime(rt, now, width, height),
-            world_url: url.to_string(),
-            log_seen: 0,
-        })
+        Ok(Self::start(
+            Self::parse(data, url, fetcher)?,
+            now,
+            width,
+            height,
+        ))
     }
 
     /// X3DScene.worldURL.

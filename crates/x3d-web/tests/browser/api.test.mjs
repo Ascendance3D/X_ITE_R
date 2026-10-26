@@ -305,4 +305,111 @@ describe ("x3d-canvas", () =>
       assert .deepEqual (r, { events: [ "error" ], error: "Couldn't load X3D file.", hasWorld: false });
       await page .context () .close ();
    });
+
+   test ("10. an older loadURL that finishes last does not replace a newer world", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async world =>
+      {
+         const X3D     = window .X3D_NS;
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const slow    = URL .createObjectURL (new Blob ([ "#VRML V2.0 utf8\nDEF Slow Group { }\n" ]));
+         const first   = browser .loadURL (new X3D .MFString (slow)) .then (() => "resolved", e => e .message);
+         const second  = browser .loadURL (new X3D .MFString (world)) .then (() => "resolved", e => e .message);
+
+         return { first: await first, second: await second, world: browser .currentScene .worldURL === world,
+            material: browser .currentScene .getNamedNode ("BoxMaterial") .getNodeTypeName () };
+      }, `${base}/${WORLD}`);
+
+      assert .deepEqual (r, { first: "Loading of X3D file aborted.", second: "resolved", world: true, material: "Material" });
+      await page .context () .close ();
+   });
+
+   test ("11. shutdown sees the old world; old node handles refuse after a replacement", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async world =>
+      {
+         const X3D     = window .X3D_NS;
+         const canvas  = document .querySelector ("x3d-canvas");
+         const browser = canvas .browser;
+
+         await browser .loadURL (new X3D .MFString (world));
+
+         const old = browser .currentScene .getNamedNode ("BoxMaterial");
+         let atShutdown;
+
+         canvas .addEventListener ("shutdown", () => atShutdown = browser .currentScene .getNamedNode ("BoxMaterial") .diffuseColor .toString (), { once: true });
+         await browser .loadURL (new X3D .MFString (world));
+
+         let stale;
+
+         try { stale = String (old .diffuseColor); } catch (error) { stale = error .message; }
+
+         return { atShutdown, stale, fresh: String (browser .currentScene .getNamedNode ("BoxMaterial") .diffuseColor) };
+      }, `${base}/${WORLD}`);
+
+      assert .deepEqual (r, { atShutdown: "0.2 0.4 0.9", stale: "X_ITE_R: the node belongs to a world that was replaced.", fresh: "0.2 0.4 0.9" });
+      await page .context () .close ();
+   });
+
+   test ("12. SFString values keep quotes, backslashes and newlines", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async world =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+
+         await browser .loadURL (new window .X3D_NS .MFString (world));
+
+         const camera = browser .currentScene .getNamedNode ("Camera");
+         const value  = 'a "quoted" \\ back\nslash';
+
+         camera .description = value;
+         return { same: camera .description === value, text: String (camera .getField ("description")) };
+      }, `${base}/${WORLD}`);
+
+      assert .deepEqual (r, { same: true, text: '"a \\"quoted\\" \\\\ back\nslash"' });
+      await page .context () .close ();
+   });
+
+   test ("13. without WebGPU, ready () rejects and the element shows its own content", async () =>
+   {
+      const context = await browser .newContext ();
+
+      await context .addInitScript (() => { delete Navigator .prototype .gpu; });
+
+      const page = await context .newPage ();
+
+      await page .goto (`${base}/tests/browser/page.html`);
+      await page .waitForFunction (() => window .ready || window .startError, null, { timeout: 30000 });
+
+      const r = await page .evaluate (() =>
+      {
+         const root = document .querySelector ("x3d-canvas") .shadowRoot;
+
+         return { error: Boolean (window .startError), slot: Boolean (root .querySelector ("slot")), canvas: Boolean (root .querySelector ("canvas")) };
+      });
+
+      assert .deepEqual (r, { error: true, slot: true, canvas: false });
+      await context .close ();
+   });
+
+   test ("14. the url property and attribute", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async world =>
+      {
+         const canvas = document .querySelector ("x3d-canvas");
+         const loaded = new Promise (resolve => canvas .addEventListener ("load", resolve, { once: true }));
+
+         canvas .url = new window .X3D_NS .MFString ("no-such-world.wrl", world);
+         await loaded;
+
+         return { attribute: canvas .getAttribute ("url"), url: Array .from (canvas .url), world: canvas .browser .currentScene .worldURL === world };
+      }, `${base}/${WORLD}`);
+
+      assert .deepEqual (r, { attribute: `"no-such-world.wrl", "${base}/${WORLD}"`, url: [ "no-such-world.wrl", `${base}/${WORLD}` ], world: true });
+      await page .context () .close ();
+   });
 });

@@ -57,6 +57,13 @@ const SFRotation  = numericField ("SFRotation",  [ "x", "y", "z", "angle" ]);
 
 const NUMERIC = { SFColor, SFColorRGBA, SFVec2f, SFVec3f, SFVec4f, SFVec2d, SFVec3d, SFVec4d, SFRotation };
 
+// The VRML encoding of a string: quotes, with `"` and `\` escaped (X3DGenerator.EscapeString). Other characters,
+// newlines included, stand as they are.
+const vrmlString = string => `"${String (string) .replace (/["\\]/g, c => `\\${c}`)}"`;
+
+// The string of a VRML-encoded SFString.
+const parseVrmlString = text => text .trim () .slice (1, -1) .replace (/\\(.)/gs, "$1");
+
 class MFString extends Array
 {
    constructor (... values)
@@ -66,7 +73,7 @@ class MFString extends Array
    }
 
    getTypeName () { return "MFString"; }
-   toString () { return `[${this .map (s => JSON .stringify (s)) .join (", ")}]`; }
+   toString () { return `[${Array .from (this, vrmlString) .join (", ")}]`; }
 }
 
 // The VRML text of a value assigned from JavaScript, for a field of `typeName`.
@@ -77,14 +84,14 @@ function vrmlOf (typeName, value)
       case "SFBool":
          return value ? "TRUE" : "FALSE";
       case "SFString":
-         return JSON .stringify (String (value));
+         return vrmlString (value);
       case "SFFloat":
       case "SFDouble":
       case "SFTime":
       case "SFInt32":
          return String (Number (value));
       case "MFString":
-         return `[${Array .from (value, s => JSON .stringify (String (s))) .join (", ")}]`;
+         return `[${Array .from (value, vrmlString) .join (", ")}]`;
    }
 
    if (typeName in NUMERIC && value instanceof NUMERIC [typeName])
@@ -97,13 +104,25 @@ function vrmlOf (typeName, value)
 
 // The wasm object of a browser (read-only, for tests and diagnostics).
 const _engine = Symbol .for ("X_ITE_R.engine");
-const _id     = Symbol ("X_ITE_R.node");
+
+// A node of one world: its browser, its id in the engine, and the world it belongs to. After loadURL replaces the
+// world, the id may name a node of the new world, so every use checks the world first.
+function engineOf (node)
+{
+   const engine = node .browser [_engine];
+
+   if (!engine || engine .generation !== node .generation)
+      throw new Error ("X_ITE_R: the node belongs to a world that was replaced.");
+
+   return engine;
+}
 
 // X3DField.valueOf of a field read through a node: numbers, booleans and strings as JavaScript values, the vector
-// types as value objects; anything else as its `toString ()` text.
-function fieldValue (browser, id, name)
+// types as value objects, SFNode and MFNode as nodes; anything else as an X3DField (its `toString ()` text).
+function fieldValue (node, name)
 {
-   const [ typeName, , text ] = browser [_engine] .field (id, name);
+   const engine = engineOf (node);
+   const [ typeName, , text ] = engine .field (node .id, name);
 
    switch (typeName)
    {
@@ -115,7 +134,7 @@ function fieldValue (browser, id, name)
       case "SFInt32":
          return Number (text);
       case "SFString":
-         return JSON .parse (text);
+         return parseVrmlString (text);
    }
 
    if (typeName in NUMERIC)
@@ -124,51 +143,53 @@ function fieldValue (browser, id, name)
    // SFNode: the node or null; MFNode: an Array of them (X_ITE: an MFNode).
    if (typeName === "SFNode" || typeName === "MFNode")
    {
-      const nodes = Array .from (browser [_engine] .nodeValue (id, name), n => n < 0 ? null : SFNode (browser, Number (n)));
+      const nodes = Array .from (engine .nodeValue (node .id, name), n => n < 0 ? null : SFNode (node .browser, Number (n)));
 
       return typeName === "SFNode" ? nodes [0] : nodes;
    }
 
-   return new X3DField (browser, id, name);
+   return new X3DField (node, name);
 }
 
 // X3DNode.getField (name): one field of one node.
 class X3DField
 {
-   #browser; #id; #name;
+   #node; #name;
 
-   constructor (browser, id, name)
+   constructor (node, name)
    {
-      this .#browser = browser;
-      this .#id      = id;
-      this .#name    = name;
+      this .#node = node;
+      this .#name = name;
    }
 
-   #info () { return this .#browser [_engine] .field (this .#id, this .#name); }
+   #info () { return engineOf (this .#node) .field (this .#node .id, this .#name); }
 
    getName ()       { return this .#name; }
    getTypeName ()   { return this .#info () [0]; }
    getAccessType () { return ACCESS [this .#info () [1]]; }
-   getValue ()      { return fieldValue (this .#browser, this .#id, this .#name); }
-   setValue (value) { this .#browser [_engine] .setField (this .#id, this .#name, vrmlOf (this .getTypeName (), value)); }
+   getValue ()      { return fieldValue (this .#node, this .#name); }
+   setValue (value) { engineOf (this .#node) .setField (this .#node .id, this .#name, vrmlOf (this .getTypeName (), value)); }
    toString ()      { return this .#info () [2]; }
 }
 
-// SFNode: a node of the world. Field names read and assign like X_ITE's SFNode proxy.
+// SFNode: a node of the current world. Field names read and assign like X_ITE's SFNode proxy.
 function SFNode (browser, id)
 {
+   const node   = { browser, id, generation: browser [_engine] .generation };
    const target = {
-      [_id]: id,
-      getNodeTypeName: () => browser [_engine] .typeName (id),
-      getNodeName:     () => browser [_engine] .nodeName (id) ?? "",
-      getField:        name => { browser [_engine] .field (id, name); return new X3DField (browser, id, name); },
+      getNodeTypeName: () => engineOf (node) .typeName (id),
+      getNodeName:     () => engineOf (node) .nodeName (id) ?? "",
+      getField:        name => { engineOf (node) .field (id, name); return new X3DField (node, name); },
       getTypeName:     () => "SFNode",
-      toString:        () => `${browser [_engine] .typeName (id)} { }`,
+      toString:        () => `${engineOf (node) .typeName (id)} { }`,
    };
 
+   // The field's [typeName, accessType, value], or null when the node has no such field.
    const field = key =>
    {
-      try { return browser [_engine] .field (id, key); } catch { return null; }
+      const engine = engineOf (node);
+
+      try { return engine .field (id, key); } catch { return null; }
    };
 
    return new Proxy (target, {
@@ -180,7 +201,7 @@ function SFNode (browser, id)
 
             // X_ITE allows reading initializeOnly fields too; an inputOnly field reads as undefined.
             if (info)
-               return info [1] === "inputOnly" ? undefined : fieldValue (browser, id, key);
+               return info [1] === "inputOnly" ? undefined : fieldValue (node, key);
          }
 
          return Reflect .get (target, key);
@@ -196,7 +217,7 @@ function SFNode (browser, id)
                if (info [1] === "outputOnly")
                   return false;
 
-               browser [_engine] .setField (id, key, vrmlOf (info [0], value));
+               engineOf (node) .setField (id, key, vrmlOf (info [0], value));
                return true;
             }
          }
@@ -280,7 +301,17 @@ class X3DBrowser
          return this;
       });
 
-      this .#ready .catch (error => console .error (error));
+      // Like X3DCanvasElement when X_ITE cannot start: the element shows its own content (a <slot>) instead.
+      this .#ready .catch (error =>
+      {
+         console .error (error);
+
+         if (this .#disposed)
+            return;
+
+         this .#canvas .remove ();
+         element .shadowRoot .append (document .createElement ("slot"));
+      });
    }
 
    get [_engine] () { return this .#engine; }
@@ -315,18 +346,16 @@ class X3DBrowser
             throw new Error ("Browser.loadURL: parameter must be of type MFString.");
 
          const loading = this .#loading = { };
+         const aborted = () => this .#loading !== loading;
 
-         this .#load (url) .then (() =>
+         this .#load (url, aborted) .then (() =>
          {
-            if (this .#loading !== loading)
-               return reject (new Error ("Loading of X3D file aborted."));
-
             this .#loading = null;
             resolve ();
          },
          error =>
          {
-            if (this .#loading !== loading)
+            if (aborted ())
                return reject (new Error ("Loading of X3D file aborted."));
 
             this .#loading = null;
@@ -338,7 +367,9 @@ class X3DBrowser
       });
    }
 
-   async #load (urls)
+   // FileLoader: the first url that fetches and parses, then replaceWorld. A newer loadURL or dispose aborts this
+   // one at every step, so an older load never replaces the world of a newer one.
+   async #load (urls, aborted)
    {
       await this .#ready;
 
@@ -346,6 +377,9 @@ class X3DBrowser
 
       for (const u of urls)
       {
+         if (aborted ())
+            throw new Error ("aborted");
+
          try
          {
             const response = await fetch (new URL (u, this .baseURL));
@@ -355,22 +389,30 @@ class X3DBrowser
 
             const bytes = new Uint8Array (await response .arrayBuffer ());
 
-            if (this .#disposed)
-               throw new Error ("Browser disposed.");
+            if (aborted ())
+               throw new Error ("aborted");
 
-            this .#engine .load (bytes, response .url, Date .now () / 1000);
-            this .#call (X3DConstants .SHUTDOWN_EVENT);
-            this .#dispatch ("shutdown");
-
-            this .#flushLog ();
-            this .#call (X3DConstants .INITIALIZED_EVENT);
-            this .#dispatch ("initialized load");
-            return;
+            this .#engine .prepare (bytes, response .url);
          }
          catch (error)
          {
             lastError = error;
+            continue;
          }
+
+         // X3DBrowser.replaceWorld: the old world is still current while its shutdown runs.
+         this .#call (X3DConstants .SHUTDOWN_EVENT);
+         this .#dispatch ("shutdown");
+
+         // A shutdown handler can start another load.
+         if (aborted ())
+            throw new Error ("aborted");
+
+         this .#engine .replace (Date .now () / 1000);
+         this .#flushLog ();
+         this .#call (X3DConstants .INITIALIZED_EVENT);
+         this .#dispatch ("initialized load");
+         return;
       }
 
       throw lastError;
@@ -502,9 +544,7 @@ class X3DBrowser
          {
             if (newValue)
             {
-               const urls = [ ... newValue .matchAll (/"((?:[^"\\]|\\.)*)"/g) ] .map (m => JSON .parse (`"${m [1]}"`));
-
-               this .loadURL (new MFString (... urls)) .catch (error => console .error (error));
+               this .loadURL (this .#element .url) .catch (error => console .error (error));
             }
 
             break;
@@ -532,19 +572,21 @@ class X3DBrowser
 
 class X3DCanvasElement extends HTMLElement
 {
-   browser;
-
    constructor ()
    {
       super ();
 
       this .attachShadow ({ mode: "open", delegatesFocus: true });
       this .shadowRoot .innerHTML = "<style>:host { display: inline-block; width: 300px; height: 150px; }</style>";
-      this .browser = new X3DBrowser (this);
+
+      Object .defineProperty (this, "browser", { value: new X3DBrowser (this), enumerable: true });
    }
 
    get src ()      { return this .getAttribute ("src"); }
    set src (value) { this .setAttribute ("src", value); }
+
+   get url ()      { return new MFString (... [ ... (this .getAttribute ("url") ?? "") .matchAll (/"(?:[^"\\]|\\.)*"/gs) ] .map (m => parseVrmlString (m [0]))); }
+   set url (value) { this .setAttribute ("url", Array .from (value, vrmlString) .join (", ")); }
 
    connectedCallback ()    { this .browser .connectedCallback (); }
    disconnectedCallback () { this .browser .disconnectedCallback (); }
@@ -569,11 +611,16 @@ const X3D = Object .freeze ({
    X3DConstants,
    SFColor, SFColorRGBA, SFRotation, SFVec2d, SFVec2f, SFVec3d, SFVec3f, SFVec4d, SFVec4f, MFString,
 
-   getBrowser (element = "x3d-canvas")
+   getBrowser (element)
    {
-      const canvas = typeof element === "string" ? document .querySelector (element) : element;
+      if (!element)
+         return document .querySelector ("x3d-canvas, X3DCanvas") ?.browser;
 
-      return canvas ?.browser ?? null;
+      if (element instanceof X3DCanvasElement)
+         return element .browser;
+
+      return Array .from (document .querySelectorAll (String (element)))
+         .find (element => element .nodeName .match (/^(?:x3d-canvas|X3DCanvas)$/i)) ?.browser;
    },
 });
 
