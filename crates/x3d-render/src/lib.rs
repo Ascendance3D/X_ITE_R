@@ -32,6 +32,7 @@ pub mod glsl_compat;
 pub mod gpu;
 pub mod hanim;
 pub mod layer;
+#[cfg(feature = "script")]
 pub mod load;
 pub mod nurbs;
 pub mod particles;
@@ -61,6 +62,7 @@ pub struct Shot {
     pub log: Vec<String>,
 }
 
+#[cfg(feature = "script")]
 /// Load a world from the oracle directory and render it like oracle/x_ite-pin/src/shot.html.
 pub fn render_file(
     gpu: &mut gpu::Gpu,

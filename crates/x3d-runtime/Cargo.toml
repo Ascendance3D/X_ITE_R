@@ -20,6 +20,9 @@ image = { version = "0.25", default-features = false, features = ["png", "jpeg",
 web-audio-api = "1.7.0"
 # FFTFrame (sound/fft_frame.rs): the FFT of Chromium's FFTFrame, also in web-audio-api's tree.
 rustfft = "6.4.1"
+# Instant and SystemTime that also work on wasm32-unknown-unknown (std panics there); std's own types on
+# other targets.
+web-time = "1"
 
 [dev-dependencies]
 url = "2"
