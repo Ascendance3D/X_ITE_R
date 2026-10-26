@@ -12,12 +12,28 @@ use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
 pub const CASE_DIR: &str = "synthetic-rea-b08-gltf-inline";
 
+/// The scenario directory under `oracle/`: [`CASE_DIR`] unless a test binary sets another one
+/// with [`set_case_dir`] before its first scenario.
+static CASE_DIR_OVERRIDE: std::sync::OnceLock<&'static str> = std::sync::OnceLock::new();
+
+pub fn set_case_dir(dir: &'static str) {
+    assert_eq!(
+        *CASE_DIR_OVERRIDE.get_or_init(|| dir),
+        dir,
+        "case directory already set"
+    );
+}
+
+pub fn case_dir_name() -> &'static str {
+    CASE_DIR_OVERRIDE.get().copied().unwrap_or(CASE_DIR)
+}
+
 pub fn oracle_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle")
 }
 
 pub fn case_dir() -> PathBuf {
-    oracle_root().join(CASE_DIR)
+    oracle_root().join(case_dir_name())
 }
 
 /// The scenarios, by name.
@@ -85,7 +101,7 @@ impl Run {
         let root = oracle_root();
         let url = format!(
             "{ORACLE_PREFIX}{}",
-            encode_path(&format!("{CASE_DIR}/{world}"))
+            encode_path(&format!("{}/{world}", case_dir_name()))
         );
         let data = std::fs::read(case_dir().join(world)).map_err(|e| format!("{world}: {e}"))?;
         let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
@@ -233,7 +249,7 @@ fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
         overlay
             .0
             .borrow_mut()
-            .insert(format!("/{CASE_DIR}/{path}"), data);
+            .insert(format!("/{}/{path}", case_dir_name()), data);
         return Ok(());
     }
 
