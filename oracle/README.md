@@ -652,3 +652,22 @@ Keep every `.mjs` until its Rust equivalent passes the same old-against-new comp
 ```
 node oracle/x_ite-web-api.mjs oracle/web-browser-01-baseline --runs 5
 ```
+
+## Web browser lane 02 (2026-10-26): input, loading and scene API cases
+
+- `x_ite-web-runtime-02.mjs` runs the 30 cases of `crates/x3d-web/tests/browser/runtime02_case.mjs` (input, touch,
+  coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and records
+  `web-browser-02-baseline/runtime02-baseline.json` and one PNG per picture.
+- The server is the one of the tests (`crates/x3d-web/tests/browser/server.mjs`: held, delayed, failing and garbage
+  responses, and a second origin for cross-origin requests). The pinned source is mounted at `/x_ite/`, and the page is
+  served from memory, so the pinned source and its digest do not change. Prepare the worktree as in "Recording from a
+  worktree" above.
+- Five runs must give identical values; the picture hashes of each run are recorded, not compared.
+- The first recording had different end positions after the wheel and pinch zoom (4th decimal). Each zoom step is a
+  fraction of the *current* distance to the center of rotation, and a step during the PositionChaser's motion (MOVE_TIME
+  0.2 s) started from a position that depends on frame timing. The cases now wait 0.4 s after each step; then 18 runs
+  gave identical values. No value is rounded beyond the 4 decimals of the other camera values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-02-baseline --runs 5
+```

@@ -1,8 +1,9 @@
 # Browser tests of X_ITE_R's <x3d-canvas> (crates/x3d-web), in headless Chromium with WebGPU.
 #
 # The runner has no GPU: Chromium's WebGPU runs on Mesa's lavapipe (a CPU Vulkan driver). The browser module is
-# built for wasm32-unknown-unknown with tools/build-web.sh, and the API case is compared with the pinned X_ITE 16.5.0
-# recording in oracle/web-browser-01-baseline. The native tests of the crate run in rust-tests.yml.
+# built for wasm32-unknown-unknown with tools/build-web.sh. The API case and the runtime 02 cases are compared with the
+# pinned X_ITE 16.5.0 recordings in oracle/web-browser-01-baseline and oracle/web-browser-02-baseline. The native
+# tests of the crate run in rust-tests.yml.
 # Locally: tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test); see crates/x3d-web/README.md.
 
 name: Web tests
