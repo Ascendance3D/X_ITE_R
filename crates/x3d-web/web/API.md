@@ -11,9 +11,9 @@ This is a small subset. It is not full X_ITE API compatibility.
 
 | member | state |
 | --- | --- |
-| `browser` | supported, compared |
+| `browser` | supported, compared; read-only like X_ITE's |
 | `src` property and attribute | supported, compared |
-| `url` attribute (`"a.wrl" "b.wrl"`) | supported: the first URL that loads; not yet compared |
+| `url` property (MFString) and attribute (`"a.wrl", "b.wrl"`) | supported, tested: the first URL that loads |
 | events `initialized`, `load`, `error`, `shutdown` | supported, order compared (`shutdown initialized load` for a world, `error` for a failure) |
 | `oninitialized`, `onshutdown` properties | supported (called before the event, like X_ITE); not yet compared. The attribute forms are not read |
 | `toDataURL`, `toBlob` | present; a WebGPU canvas can read back empty where the browser does not composite it |
@@ -23,7 +23,7 @@ This is a small subset. It is not full X_ITE API compatibility.
 
 | member | state |
 | --- | --- |
-| `getBrowser ([selector or element])` | supported, compared |
+| `getBrowser ([selector or element])` | supported, compared; the same lookup as X_ITE (`undefined` when nothing matches) |
 | `X3DConstants` | access types and the five browser events only |
 | `SFColor`, `SFColorRGBA`, `SFRotation`, `SFVec2d/2f/3d/3f/4d/4f` | constructor, components (`r g b a`, `x y z w`, `angle`), `getTypeName`, `toString` |
 | `MFString` | constructor, `getTypeName`, `toString` (an `Array`) |
@@ -65,7 +65,9 @@ This is a small subset. It is not full X_ITE API compatibility.
 - A vector value is a copy: `node.diffuseColor.r = 1` does not change the node. Assign the whole value: `node.diffuseColor = new X3D.SFColor (1, 0, 0)`. In X_ITE the value object is live.
 - Removing the element from the document stops the frame loop; adding it again restarts it. X_ITE keeps drawing unless `update` says otherwise.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
-- The page needs WebGPU. There is no WebGL fallback.
+- The page needs WebGPU. There is no WebGL fallback. Without WebGPU, `ready ()` rejects and the element shows its own child content through a `<slot>`, like X_ITE's element when its browser cannot start.
+- A node handle belongs to one world. After `loadURL` replaces the world, using an old handle throws `X_ITE_R: the node belongs to a world that was replaced.` In X_ITE the old node object stays usable but is no longer in the scene.
+- `ready ()` is not an X_ITE name. X_ITE starts synchronously and needs no such call.
 - Only `src` and `url` attributes are read. The other X_ITE attributes (`antialiased`, `contentScale`, `splashScreen`, `update`, ...) have no effect.
 
 ## Not implemented
@@ -76,6 +78,7 @@ This is a small subset. It is not full X_ITE API compatibility.
 - Viewpoint functions (`firstViewpoint`, `nextViewpoint`, `changeViewpoint`, `viewAll`, ...), `addRoute`, `deleteRoute`, `beginUpdate`, `endUpdate`.
 - Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println`, `toVRMLString` and the other stream functions.
 - `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`, all other field classes, live MF arrays, `addFieldCallback`, `getFieldDefinitions`.
+- `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
 - Sound: the engine's Web Audio port is built in but was not tested in a page.
 - Inline, EXTERNPROTO and textures load with a synchronous XMLHttpRequest, which blocks the page while it runs; not yet tested in a page.

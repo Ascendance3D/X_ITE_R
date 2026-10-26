@@ -22,6 +22,7 @@ url = "2"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wgpu = "30"
+# Exact: the wasm-bindgen CLI of tools/build-web.sh must be the same version (cargo install wasm-bindgen-cli).
 wasm-bindgen = "=0.2.129"
 wasm-bindgen-futures = "0.4"
 js-sys = "0.3"

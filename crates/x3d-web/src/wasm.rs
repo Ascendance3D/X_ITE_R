@@ -47,6 +47,9 @@ pub struct WebBrowser {
     renderer: Renderer,
     adapter_info: String,
     session: Option<Session>,
+    /// A parsed world waiting for [`WebBrowser::replace`].
+    pending: Option<crate::session::ParsedWorld>,
+    generation: u32,
 }
 
 #[wasm_bindgen]
@@ -135,6 +138,8 @@ impl WebBrowser {
             renderer,
             adapter_info: format!("{} ({:?}, {:?})", info.name, info.backend, info.device_type),
             session: None,
+            pending: None,
+            generation: 0,
         })
     }
 
@@ -144,33 +149,45 @@ impl WebBrowser {
         self.adapter_info.clone()
     }
 
-    /// Replace the world with `data` from `url` at the browser time `now`. When the new world does not parse, the
-    /// error is returned and the current world stays (X3DBrowser.loadURL: no replaceWorld without a scene).
-    pub fn load(&mut self, data: &[u8], url: &str, now: f64) -> Result<(), JsError> {
-        let next = Session::load(
-            data,
-            url,
-            Box::new(XhrFetcher),
-            now,
-            self.config.width,
-            self.config.height,
-        )
-        .map_err(|e| JsError::new(&e))?;
-
-        // The old world goes first (its shutdown), then the new one is drawn with its own rendering properties.
-        self.session = None;
-        self.session = Some(next);
-
-        if let Some(s) = self.session.as_mut() {
-            s.viewer().rendering_properties().apply(&mut self.renderer);
-        }
-
+    /// Parse the world `data` from `url` (FileLoader). It waits for [`WebBrowser::replace`]; the current world stays.
+    /// A world that does not parse is an error, and nothing waits.
+    pub fn prepare(&mut self, data: &[u8], url: &str) -> Result<(), JsError> {
+        self.pending = None;
+        self.pending =
+            Some(Session::parse(data, url, Box::new(XhrFetcher)).map_err(|e| JsError::new(&e))?);
         Ok(())
     }
 
-    /// Unload the world, if any.
-    pub fn unload(&mut self) {
+    /// X3DBrowser.replaceWorld with the prepared world at the browser time `now`: the current world goes (its
+    /// shutdown), then the new one is set up and drawn with its own rendering properties. The page fires `shutdown`
+    /// between [`WebBrowser::prepare`] and this call, while the old world is still current.
+    pub fn replace(&mut self, now: f64) -> Result<(), JsError> {
+        let world = self
+            .pending
+            .take()
+            .ok_or_else(|| JsError::new("no prepared world"))?;
+
         self.session = None;
+        self.generation += 1;
+
+        let session = self.session.insert(Session::start(
+            world,
+            now,
+            self.config.width,
+            self.config.height,
+        ));
+
+        session
+            .viewer()
+            .rendering_properties()
+            .apply(&mut self.renderer);
+        Ok(())
+    }
+
+    /// Counts the worlds this browser has had: the page's node handles belong to one of them.
+    #[wasm_bindgen(getter)]
+    pub fn generation(&self) -> u32 {
+        self.generation
     }
 
     #[wasm_bindgen(getter, js_name = hasWorld)]
@@ -414,10 +431,5 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = takeLog)]
     pub fn take_log(&mut self) -> Vec<String> {
         self.session.as_mut().map_or(vec![], |s| s.take_log())
-    }
-
-    /// Unload the world and release the canvas configuration. The object is unusable afterwards.
-    pub fn dispose(&mut self) {
-        self.session = None;
     }
 }

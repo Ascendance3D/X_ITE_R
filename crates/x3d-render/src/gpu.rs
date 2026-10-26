@@ -323,6 +323,7 @@ impl PipelineSource {
 /// A main pipeline created on another thread, for the key (pipeline key, format, samples, flip).
 struct PreparedPipeline {
     key: (PipelineKey, wgpu::TextureFormat, u32, bool),
+    #[cfg(not(target_arch = "wasm32"))]
     job: std::thread::JoinHandle<wgpu::RenderPipeline>,
 }
 
@@ -337,7 +338,7 @@ impl PreparedPipeline {
     }
 
     fn finish(self) -> Option<wgpu::RenderPipeline> {
-        self.job.join().ok()
+        unreachable!("no pipeline is prepared on wasm32")
     }
 }
 

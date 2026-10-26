@@ -118,7 +118,7 @@ export async function phaseUpdate ()
    out .transparency = material .transparency;
    material .transparency = 0;
 
-   // Module code is strict: the proxy's `return false` throws a TypeError.
+   // page.evaluate runs this function as sloppy code, so the proxy's `return false` throws nothing.
    try
    {
       camera .isBound = false;
