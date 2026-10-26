@@ -26,7 +26,8 @@ searched.
 The guard refuses when real data (not a symlink, below no symlink) sits at a key path or `upstream`, and a
 REV tracks that path, a path below it, or a parent of it as anything but a directory. A checkout, reset,
 restore, stash or merge to REV could then delete the data, because Git treats ignored files as expendable. It
-also refuses an invalid $X3D_ORACLE_KEYS. The key paths are the names in this manifest and in each REV's one.
+also refuses such data that the worktree's ignore rules do not cover (`git clean -fd` deletes it), and an
+invalid $X3D_ORACLE_KEYS. Run it again after a checkout that changes the ignore rules. The key paths are the names in this manifest and in each REV's one.
 
 The resolver never writes, moves or renames a key. `link` writes only symlinks under DEST/oracle and refuses to
 replace a real file or directory. Exit codes: 0 found (or guard passed), 2 absent, 3 mismatch, 4 unsafe (invalid
@@ -215,6 +216,18 @@ def guard(root, revs=("HEAD",)):
             pass  # a commit before the manifest; this manifest's names still apply
     held = [p for p in sorted("oracle/" + n for n in names) + list(GUARDED) if _real_data(root, p)]
     parents = sorted({"/".join(p.split("/")[:i]) for p in held for i in range(1, p.count("/") + 1)})
+    if held:
+        # `git clean -fd` deletes untracked data that the ignore rules do not cover.
+        try:
+            r = subprocess.run(["git", "-C", root, "check-ignore", "--no-index", "--", *held],
+                               capture_output=True)
+        except OSError as e:
+            raise KeyError_(UNSAFE, f"guard: cannot read the ignore rules in {root}: {e}")
+        if r.returncode not in (0, 1):
+            raise KeyError_(UNSAFE, f"guard: cannot read the ignore rules in {root}: {r.stderr.decode().strip()}")
+        ignored = set(os.fsdecode(r.stdout).splitlines())  # names cannot hold a newline (line-based manifest)
+        problems += [f"{p}: real data that the ignore rules do not cover; git clean -fd would delete it"
+                     for p in held if p not in ignored]
     for rev in revs:
         try:
             out = _git(root, "ls-tree", "-z", "--full-tree", rev, "--", *held, *parents) if held else b""
