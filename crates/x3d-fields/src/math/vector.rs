@@ -163,3 +163,39 @@ impl Vector4 {
         w: 0.0,
     };
 }
+
+impl std::fmt::Display for Vector2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {}",
+            jsmath::number_to_string(self.x),
+            jsmath::number_to_string(self.y)
+        )
+    }
+}
+
+impl std::fmt::Display for Vector3 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {}",
+            jsmath::number_to_string(self.x),
+            jsmath::number_to_string(self.y),
+            jsmath::number_to_string(self.z)
+        )
+    }
+}
+
+impl std::fmt::Display for Vector4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {} {}",
+            jsmath::number_to_string(self.x),
+            jsmath::number_to_string(self.y),
+            jsmath::number_to_string(self.z),
+            jsmath::number_to_string(self.w)
+        )
+    }
+}

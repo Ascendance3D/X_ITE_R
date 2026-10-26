@@ -254,3 +254,28 @@ fn rgb_from_hsv(h: f64, s: f64, v: f64) -> [f64; 3] {
         _ => [v, p, q],
     }
 }
+
+impl std::fmt::Display for Color3 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {}",
+            jsmath::number_to_string(self.r),
+            jsmath::number_to_string(self.g),
+            jsmath::number_to_string(self.b)
+        )
+    }
+}
+
+impl std::fmt::Display for Color4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {} {}",
+            jsmath::number_to_string(self.r),
+            jsmath::number_to_string(self.g),
+            jsmath::number_to_string(self.b),
+            jsmath::number_to_string(self.a)
+        )
+    }
+}
