@@ -55,7 +55,7 @@ use x3d_fields::{FieldValue, NodeId, access};
 use x3d_scene::*;
 
 pub use extern_proto::{CacheEntry, ExternState, PendingExtern};
-pub use loader::{Fetcher, LocalFetcher, parse_bytes_with_fetcher};
+pub use loader::{FetchPoll, Fetcher, LocalFetcher, parse_bytes_with_fetcher};
 pub use script::{ScriptCall, ScriptError, ScriptHost};
 
 /// A field identity: node + location (X_ITE field object identity).
@@ -464,6 +464,13 @@ pub struct Runtime {
     pub disposed_scenes: std::collections::HashSet<CtxId>,
     /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
     pub fetches: std::collections::VecDeque<Task>,
+    /// Fetches that wait for an asynchronous [`Fetcher`] (see [`Runtime::resume_fetches`]), in request order.
+    pub parked_fetches: Vec<Task>,
+    /// The frames [`Runtime::continue_load_scene`] has run.
+    pub load_frames: usize,
+    /// When `Some`, the browser events (X3DBrowser.callBrowserCallbacks) for a host without a Script engine: a web page
+    /// fires `shutdown` and `initialized load` when an Anchor replaces the world.
+    pub browser_events: Option<Vec<u32>>,
     /// Own live flag (X3DBaseNode [_live]) of the scenes that Inlines loaded, by root context.
     pub inline_live: HashMap<CtxId, bool>,
     /// Nodes that react to their live state (X3DTimeDependentNode.set_live__, X3DFollowerNode
@@ -666,6 +673,9 @@ impl Runtime {
             dead_ctxs: Default::default(),
             disposed_scenes: Default::default(),
             fetches: Default::default(),
+            parked_fetches: vec![],
+            load_frames: 0,
+            browser_events: None,
             inline_live: HashMap::new(),
             live_watchers: vec![],
             record_console: false,
@@ -1231,6 +1241,12 @@ impl Runtime {
                 break;
             };
 
+            // An asynchronous fetcher (a web page): the load waits until the responses it needs first have arrived.
+            if self.fetcher.is_async() && !self.fetch_task_ready(&task) {
+                self.parked_fetches.push(task);
+                continue;
+            }
+
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
@@ -1312,6 +1328,12 @@ impl Runtime {
 
     /// The loading part of [`Runtime::load_world`], without `go_live`.
     pub fn load_scene(&mut self) {
+        self.begin_load_scene();
+        self.continue_load_scene();
+    }
+
+    /// The first part of [`Runtime::load_scene`]: the scene is set up and its loads are requested.
+    pub fn begin_load_scene(&mut self) {
         for w in std::mem::take(&mut self.scene.warnings) {
             self.log_warn(w);
         }
@@ -1319,13 +1341,24 @@ impl Runtime {
         self.start();
         self.run_tasks();
         self.ctx_world_started(false);
+        self.load_frames = 0;
+    }
 
+    /// The rest of [`Runtime::load_scene`]. Returns `false` while a load waits for an asynchronous [`Fetcher`]: call
+    /// [`Runtime::resume_fetches`] when a response arrives, then this again. A synchronous fetcher never waits.
+    pub fn continue_load_scene(&mut self) -> bool {
         // FileLoader.set_loadCount__ awaits `browser .nextFrame ()` once the scene's loadCount is
         // 0, and every Inline in it holds the count until its own scene is attached: one frame,
         // plus one for every level of nested Inlines.
-        for _ in 0..MAX_LOAD_FRAMES {
+        while self.load_frames < MAX_LOAD_FRAMES {
+            // X3DUrlObject.setLoadState: every url object in progress holds the scene's loadCount.
+            if self.has_parked_fetches() {
+                return false;
+            }
+
             let waiting = self.has_unfinished_loads();
 
+            self.load_frames += 1;
             self.frame();
             self.run_tasks();
 
@@ -1335,6 +1368,7 @@ impl Runtime {
         }
 
         self.publish_clone_counts();
+        true
     }
 
     /// `scene .setLive (true)`: every node's `set_live__` runs, in the order the nodes asked for

@@ -1,41 +1,199 @@
 //! The wasm32 module behind `web/x_ite_r.mjs`: a [`WebBrowser`] owns the WebGPU device of one `<x3d-canvas>`, the
-//! renderer, and the loaded world ([`Session`]). The page's adapter fetches the world, runs the
-//! `requestAnimationFrame` loop and calls [`WebBrowser::frame`]; everything X3D happens here.
+//! renderer, and its worlds ([`Session`]). The page's adapter fetches the world, runs the `requestAnimationFrame`
+//! loop, forwards the input events and calls [`WebBrowser::frame`]; everything X3D happens here.
+//!
+//! A world is a session with an id. The current world is drawn; the others are scenes that load
+//! (`createX3DFromString`, a `loadURL` in progress) and wait for [`WebBrowser::replace`]. Each world has its own
+//! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
-use crate::session::Session;
+use crate::session::{Pointer, Session, Touch};
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::rc::{Rc, Weak};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use x3d_render::gpu::Renderer;
+use x3d_runtime::FetchPoll;
 
-/// Serves the world's Inline, EXTERNPROTO and texture URLs with a synchronous XMLHttpRequest: the runtime's
-/// [`x3d_runtime::Fetcher`] is synchronous. The bytes come through `x-user-defined`, the one binary-safe text
-/// decoding a synchronous request may use in a window.
-struct XhrFetcher;
+/// The responses of one world's fetches, by URL without its fragment.
+struct FetchCache {
+    entries: HashMap<String, Entry>,
+    /// Aborts the requests in flight when the world goes (FileLoader.abort).
+    controller: Option<web_sys::AbortController>,
+    /// A response arrived since [`WebBrowser::loaded`] last looked.
+    settled: bool,
+    /// The resolve functions of [`WebBrowser::progress`] promises.
+    waiters: Vec<js_sys::Function>,
+}
 
-impl x3d_runtime::Fetcher for XhrFetcher {
-    fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
-        let error = |e: JsValue| format!("{e:?}");
-        let xhr = web_sys::XmlHttpRequest::new().map_err(error)?;
+enum Entry {
+    Pending,
+    Loaded(Rc<[u8]>),
+    Failed(String),
+}
 
-        xhr.open_with_async("GET", url.as_str(), false)
-            .map_err(error)?;
-        xhr.override_mime_type("text/plain; charset=x-user-defined")
-            .map_err(error)?;
-        xhr.send().map_err(error)?;
+impl FetchCache {
+    fn new() -> Rc<RefCell<FetchCache>> {
+        Rc::new(RefCell::new(FetchCache {
+            entries: HashMap::new(),
+            controller: web_sys::AbortController::new().ok(),
+            settled: false,
+            waiters: vec![],
+        }))
+    }
 
-        let status = xhr.status().map_err(error)?;
+    fn wake(&mut self) {
+        for resolve in std::mem::take(&mut self.waiters) {
+            let _ = resolve.call0(&JsValue::NULL);
+        }
+    }
+}
 
-        if !(200..300).contains(&status) && status != 0 {
-            return Err(format!(
-                "{status} {}",
-                xhr.status_text().unwrap_or_default()
-            ));
+/// The world is gone: its requests are aborted and a page that waits for one continues (and sees the world gone).
+impl Drop for FetchCache {
+    fn drop(&mut self) {
+        if let Some(c) = &self.controller {
+            c.abort();
         }
 
-        let text = xhr.response_text().map_err(error)?.unwrap_or_default();
-
-        // x-user-defined maps byte 0x80 + n to U+F780 + n.
-        Ok(text.chars().map(|c| c as u32 as u8).collect())
+        self.wake();
     }
+}
+
+fn cache_key(url: &url::Url) -> String {
+    let mut url = url.clone();
+
+    url.set_fragment(None);
+    url.into()
+}
+
+/// `String (error)` of a rejection.
+fn error_text(error: &JsValue) -> String {
+    error
+        .as_string()
+        .unwrap_or_else(|| String::from(error.unchecked_ref::<js_sys::Object>().to_string()))
+}
+
+/// FileLoader's `fetch (url, { cache: "default", signal })` + `checkResponse`: the body, or `String (error)`.
+async fn fetch_bytes(url: String, signal: Option<web_sys::AbortSignal>) -> Result<Vec<u8>, String> {
+    let window = web_sys::window().ok_or("TypeError: Failed to fetch")?;
+    let init = web_sys::RequestInit::new();
+
+    init.set_cache(web_sys::RequestCache::Default);
+    init.set_signal(signal.as_ref());
+
+    let response =
+        wasm_bindgen_futures::JsFuture::from(window.fetch_with_str_and_init(&url, &init))
+            .await
+            .map_err(|e| error_text(&e))?;
+    let response: web_sys::Response = response.unchecked_into();
+
+    if !response.ok() {
+        // `new Error (response .statusText || response .status)`.
+        let text = response.status_text();
+
+        return Err(if text.is_empty() {
+            format!("Error: {}", response.status())
+        } else {
+            format!("Error: {text}")
+        });
+    }
+
+    let buffer =
+        wasm_bindgen_futures::JsFuture::from(response.array_buffer().map_err(|e| error_text(&e))?)
+            .await
+            .map_err(|e| error_text(&e))?;
+
+    Ok(js_sys::Uint8Array::new(&buffer).to_vec())
+}
+
+/// Serves a world's Inline, EXTERNPROTO, texture and Anchor URLs with the page's asynchronous `fetch`. The runtime
+/// asks [`x3d_runtime::Fetcher::poll`] before a load runs and waits until the response is there; then
+/// [`x3d_runtime::Fetcher::fetch`] answers from the cache. Repeated requests of a URL share one response.
+struct WebFetcher {
+    cache: Rc<RefCell<FetchCache>>,
+}
+
+impl WebFetcher {
+    fn start(&self, key: String) {
+        let weak: Weak<RefCell<FetchCache>> = Rc::downgrade(&self.cache);
+        let signal = {
+            let mut cache = self.cache.borrow_mut();
+
+            cache.entries.insert(key.clone(), Entry::Pending);
+            cache.controller.as_ref().map(|c| c.signal())
+        };
+
+        wasm_bindgen_futures::spawn_local(async move {
+            let result = fetch_bytes(key.clone(), signal).await;
+
+            // A response after the world went attaches to nothing.
+            let Some(cache) = weak.upgrade() else {
+                return;
+            };
+            let mut cache = cache.borrow_mut();
+
+            cache.entries.insert(
+                key,
+                match result {
+                    Ok(bytes) => Entry::Loaded(bytes.into()),
+                    Err(error) => Entry::Failed(error),
+                },
+            );
+            cache.settled = true;
+            cache.wake();
+        });
+    }
+}
+
+impl x3d_runtime::Fetcher for WebFetcher {
+    fn is_async(&self) -> bool {
+        true
+    }
+
+    fn poll(&self, url: &url::Url) -> FetchPoll {
+        let key = cache_key(url);
+        let state = match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Pending) => Some(FetchPoll::Pending),
+            Some(Entry::Loaded(_)) => Some(FetchPoll::Loaded),
+            Some(Entry::Failed(_)) => Some(FetchPoll::Failed),
+            None => None,
+        };
+
+        state.unwrap_or_else(|| {
+            self.start(key);
+            FetchPoll::Pending
+        })
+    }
+
+    fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        let key = cache_key(url);
+
+        match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Loaded(bytes)) => return Ok(bytes.to_vec()),
+            Some(Entry::Failed(error)) => return Err(error.clone()),
+            _ => {}
+        }
+
+        // A URL the runtime did not ask for first (a glTF buffer, the next candidate after one that did not parse):
+        // the page never blocks on a request, so this fetch fails now; the response serves later requests.
+        if !self.cache.borrow().entries.contains_key(&key) {
+            self.start(key);
+        }
+
+        web_sys::console::warn_1(
+            &format!("X_ITE_R: {url} was requested before it was loaded.").into(),
+        );
+        Err("TypeError: Failed to fetch".to_string())
+    }
+}
+
+/// One world: the session and its fetches.
+struct World {
+    session: Session,
+    cache: Rc<RefCell<FetchCache>>,
 }
 
 #[wasm_bindgen]
@@ -46,15 +204,22 @@ pub struct WebBrowser {
     view_format: wgpu::TextureFormat,
     renderer: Renderer,
     adapter_info: String,
-    session: Option<Session>,
-    /// A parsed world waiting for [`WebBrowser::replace`].
-    pending: Option<crate::session::ParsedWorld>,
-    generation: u32,
+    max_texture_dimension: u32,
+    lost: Arc<AtomicBool>,
+    worlds: HashMap<u32, World>,
+    current: Option<u32>,
+    next_id: u32,
+}
+
+/// `Err` when no world `id` exists.
+fn no_world() -> JsError {
+    JsError::new("X_ITE_R: the scene is gone.")
 }
 
 #[wasm_bindgen]
 impl WebBrowser {
-    /// The device and surface of `canvas` (WebGPU). Fails when the page has no WebGPU adapter.
+    /// The device and surface of `canvas` (WebGPU). Fails when the page has no WebGPU adapter, or the adapter lacks
+    /// what the renderer needs (the WebGPU default limits, a usable canvas format).
     pub async fn create(canvas: web_sys::HtmlCanvasElement) -> Result<WebBrowser, JsError> {
         let (width, height) = (canvas.width().max(1), canvas.height().max(1));
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -73,11 +238,26 @@ impl WebBrowser {
             })
             .await
             .map_err(|e| JsError::new(&format!("no WebGPU adapter: {e}")))?;
+        let limits = adapter.limits();
+        let mut missing = vec![];
+
+        // The renderer is written for the WebGPU default limits: an adapter below them cannot run it.
+        wgpu::Limits::default().check_limits_with_fail_fn(&limits, false, |name, want, have| {
+            missing.push(format!("{name} {have} < {want}"))
+        });
+
+        if !missing.is_empty() {
+            return Err(JsError::new(&format!(
+                "the WebGPU adapter is below the limits X_ITE_R needs: {}",
+                missing.join(", ")
+            )));
+        }
+
         let (device, queue) = adapter
             .request_device(&wgpu::DeviceDescriptor {
                 label: Some("x3d-web"),
                 required_features: Renderer::wanted_features(&adapter),
-                required_limits: adapter.limits(),
+                required_limits: limits.clone(),
                 ..Default::default()
             })
             .await
@@ -86,6 +266,16 @@ impl WebBrowser {
         device.on_uncaptured_error(std::sync::Arc::new(|e| {
             web_sys::console::error_1(&format!("WebGPU: {e}").into());
         }));
+
+        let lost = Arc::new(AtomicBool::new(false));
+        let flag = lost.clone();
+
+        device.set_device_lost_callback(move |reason, message| {
+            flag.store(true, Ordering::SeqCst);
+            web_sys::console::error_1(
+                &format!("WebGPU device lost ({reason:?}): {message}").into(),
+            );
+        });
 
         // The shaders write display-encoded values: draw through a non-sRGB view (see x3d-view's window code).
         let caps = surface.get_capabilities(&adapter);
@@ -137,9 +327,11 @@ impl WebBrowser {
             view_format,
             renderer,
             adapter_info: format!("{} ({:?}, {:?})", info.name, info.backend, info.device_type),
-            session: None,
-            pending: None,
-            generation: 0,
+            max_texture_dimension: limits.max_texture_dimension_2d,
+            lost,
+            worlds: HashMap::new(),
+            current: None,
+            next_id: 1,
         })
     }
 
@@ -149,68 +341,193 @@ impl WebBrowser {
         self.adapter_info.clone()
     }
 
-    /// Parse the world `data` from `url` (FileLoader). It waits for [`WebBrowser::replace`]; the current world stays.
-    /// A world that does not parse is an error, and nothing waits.
-    pub fn prepare(&mut self, data: &[u8], url: &str) -> Result<(), JsError> {
-        self.pending = None;
-        self.pending =
-            Some(Session::parse(data, url, Box::new(XhrFetcher)).map_err(|e| JsError::new(&e))?);
-        Ok(())
+    /// The largest canvas side the device draws (X3DRenderingContext.limitFramebufferSize).
+    #[wasm_bindgen(getter, js_name = maxTextureDimension)]
+    pub fn max_texture_dimension(&self) -> u32 {
+        self.max_texture_dimension
     }
 
-    /// X3DBrowser.replaceWorld with the prepared world at the browser time `now`: the current world goes (its
-    /// shutdown), then the new one is set up and drawn with its own rendering properties. The page fires `shutdown`
-    /// between [`WebBrowser::prepare`] and this call, while the old world is still current.
-    pub fn replace(&mut self, now: f64) -> Result<(), JsError> {
-        let world = self
-            .pending
-            .take()
-            .ok_or_else(|| JsError::new("no prepared world"))?;
-
-        self.session = None;
-        self.generation += 1;
-
-        let session = self.session.insert(Session::start(
-            world,
-            now,
-            self.config.width,
-            self.config.height,
-        ));
-
-        session
-            .viewer()
-            .rendering_properties()
-            .apply(&mut self.renderer);
-        Ok(())
-    }
-
-    /// Counts the worlds this browser has had: the page's node handles belong to one of them.
+    /// Is the WebGPU device lost? The browser then draws nothing more.
     #[wasm_bindgen(getter)]
-    pub fn generation(&self) -> u32 {
-        self.generation
+    pub fn lost(&self) -> bool {
+        self.lost.load(Ordering::SeqCst)
+    }
+
+    /// For tests: destroy the device, as a lost GPU does.
+    #[wasm_bindgen(js_name = loseDevice)]
+    pub fn lose_device(&self) {
+        self.device.destroy();
+    }
+
+    fn add(
+        &mut self,
+        world: crate::session::ParsedWorld,
+        cache: Rc<RefCell<FetchCache>>,
+        now: f64,
+    ) -> u32 {
+        let id = self.next_id;
+
+        self.next_id += 1;
+        self.worlds.insert(
+            id,
+            World {
+                session: Session::begin(world, now, self.config.width, self.config.height),
+                cache,
+            },
+        );
+        id
+    }
+
+    /// Parse the world `data` from `url` (FileLoader) and start its loads: the id of the new scene. The current world
+    /// stays. A world that does not parse is an error.
+    pub fn prepare(&mut self, data: &[u8], url: &str, now: f64) -> Result<u32, JsError> {
+        let cache = FetchCache::new();
+        let fetcher = Box::new(WebFetcher {
+            cache: cache.clone(),
+        });
+        let world = Session::parse(data, url, fetcher).map_err(|e| JsError::new(&e))?;
+
+        Ok(self.add(world, cache, now))
+    }
+
+    /// X3DBrowser.createX3DFromString of the page: parse `text` with the world URL `url` and start its loads. The
+    /// error is the message of X3DBrowser's rejection.
+    #[wasm_bindgen(js_name = prepareString)]
+    pub fn prepare_string(&mut self, text: &str, url: &str, now: f64) -> Result<u32, JsError> {
+        let cache = FetchCache::new();
+        let fetcher = Box::new(WebFetcher {
+            cache: cache.clone(),
+        });
+        let world = Session::parse_string(text, url, fetcher).map_err(|e| JsError::new(&e))?;
+
+        Ok(self.add(world, cache, now))
+    }
+
+    /// Continue the loads of scene `id` with the responses that arrived: whether it is loaded. `false` for a scene
+    /// that is gone.
+    pub fn loaded(&mut self, id: u32, now: f64) -> bool {
+        let Some(w) = self.worlds.get_mut(&id) else {
+            return false;
+        };
+
+        w.cache.borrow_mut().settled = false;
+        w.session.poll_load(now)
+    }
+
+    /// A Promise that resolves when a response of scene `id` arrives (at once when one arrived since
+    /// [`WebBrowser::loaded`], or the scene is gone).
+    pub fn progress(&self, id: u32) -> js_sys::Promise {
+        let cache = self.worlds.get(&id).map(|w| w.cache.clone());
+
+        js_sys::Promise::new(&mut |resolve, _| match &cache {
+            Some(c) if !c.borrow().settled => c.borrow_mut().waiters.push(resolve),
+            _ => {
+                let _ = resolve.call0(&JsValue::NULL);
+            }
+        })
+    }
+
+    /// X3DBrowser.replaceWorld with the loaded scene `id` at the browser time `now`: the current world goes (its
+    /// shutdown, its requests), then the new one goes live and is drawn with its own rendering properties. The page
+    /// fires `shutdown` before this call, while the old world is still current.
+    pub fn replace(&mut self, id: u32, now: f64) -> Result<(), JsError> {
+        let w = self.worlds.get(&id).ok_or_else(no_world)?;
+
+        if w.session.is_live() || !w.session.is_loaded() {
+            return Err(JsError::new(if w.session.is_live() {
+                "X_ITE_R: the scene is already a world."
+            } else {
+                "X_ITE_R: the scene is still loading."
+            }));
+        }
+
+        if let Some(old) = self.current.take() {
+            self.worlds.remove(&old);
+        }
+
+        let w = self.worlds.get_mut(&id).ok_or_else(no_world)?;
+
+        w.session.resize(self.config.width, self.config.height);
+        w.session.go_live(now);
+
+        if let Some(v) = w.session.viewer() {
+            v.rendering_properties().apply(&mut self.renderer);
+        }
+
+        self.current = Some(id);
+        Ok(())
+    }
+
+    /// Release scene `id` (not the current world): its loads end.
+    pub fn discard(&mut self, id: u32) {
+        if self.current != Some(id) {
+            self.worlds.remove(&id);
+        }
+    }
+
+    /// The id of the current world.
+    #[wasm_bindgen(getter)]
+    pub fn current(&self) -> Option<u32> {
+        self.current
     }
 
     #[wasm_bindgen(getter, js_name = hasWorld)]
     pub fn has_world(&self) -> bool {
-        self.session.is_some()
+        self.current.is_some()
     }
 
-    #[wasm_bindgen(getter, js_name = worldURL)]
-    pub fn world_url(&self) -> Option<String> {
-        self.session.as_ref().map(|s| s.world_url().to_string())
+    /// Does scene `id` exist?
+    pub fn exists(&self, id: u32) -> bool {
+        self.worlds.contains_key(&id)
     }
 
-    /// The node id of the world's DEF name, or `undefined`.
+    fn session(&self, id: u32) -> Result<&Session, JsError> {
+        self.worlds
+            .get(&id)
+            .map(|w| &w.session)
+            .ok_or_else(no_world)
+    }
+
+    fn session_mut(&mut self, id: u32) -> Result<&mut Session, JsError> {
+        self.worlds
+            .get_mut(&id)
+            .map(|w| &mut w.session)
+            .ok_or_else(no_world)
+    }
+
+    fn current_mut(&mut self) -> Option<&mut Session> {
+        let id = self.current?;
+
+        self.worlds.get_mut(&id).map(|w| &mut w.session)
+    }
+
+    /// The world URL of scene `id`.
+    #[wasm_bindgen(js_name = worldURL)]
+    pub fn world_url(&self, id: u32) -> Option<String> {
+        self.worlds.get(&id).map(|w| w.session.world_url())
+    }
+
+    /// The world generation of scene `id`: it changes when an Anchor replaces the world inside the scene, and node
+    /// handles of the old world must not reach the new one.
+    #[wasm_bindgen(js_name = worldGeneration)]
+    pub fn world_generation(&self, id: u32) -> Option<f64> {
+        self.worlds
+            .get(&id)
+            .map(|w| w.session.world_generation() as f64)
+    }
+
+    /// The node id of a DEF name of scene `id`, or `undefined`.
     #[wasm_bindgen(js_name = namedNode)]
-    pub fn named_node(&self, name: &str) -> Option<u32> {
-        self.session.as_ref()?.named_node(name)
+    pub fn named_node(&self, id: u32, name: &str) -> Option<u32> {
+        self.worlds.get(&id)?.session.named_node(name)
     }
 
-    /// The world's root nodes as node ids; -1 is NULL.
+    /// The root nodes of scene `id` as node ids; -1 is NULL.
     #[wasm_bindgen(js_name = rootNodes)]
-    pub fn root_nodes(&self) -> Vec<i64> {
-        self.session.as_ref().map_or(vec![], |s| {
-            s.root_nodes()
+    pub fn root_nodes(&self, id: u32) -> Vec<i64> {
+        self.worlds.get(&id).map_or(vec![], |w| {
+            w.session
+                .root_nodes()
                 .into_iter()
                 .map(|n| n.map_or(-1, i64::from))
                 .collect()
@@ -218,58 +535,164 @@ impl WebBrowser {
     }
 
     #[wasm_bindgen(js_name = typeName)]
-    pub fn type_name(&self, node: u32) -> Option<String> {
-        self.session.as_ref()?.type_name(node)
+    pub fn type_name(&self, id: u32, node: u32) -> Option<String> {
+        self.worlds.get(&id)?.session.type_name(node)
     }
 
     #[wasm_bindgen(js_name = nodeName)]
-    pub fn node_name(&self, node: u32) -> Option<String> {
-        self.session.as_ref()?.node_name(node)
+    pub fn node_name(&self, id: u32, node: u32) -> Option<String> {
+        self.worlds.get(&id)?.session.node_name(node)
     }
 
     #[wasm_bindgen(js_name = fieldNames)]
-    pub fn field_names(&self, node: u32) -> Vec<String> {
-        self.session
-            .as_ref()
-            .map_or(vec![], |s| s.field_names(node))
+    pub fn field_names(&self, id: u32, node: u32) -> Vec<String> {
+        self.worlds
+            .get(&id)
+            .map_or(vec![], |w| w.session.field_names(node))
     }
 
     /// The node ids of an SFNode or MFNode field; -1 is NULL.
     #[wasm_bindgen(js_name = nodeValue)]
-    pub fn node_value(&self, node: u32, name: &str) -> Result<Vec<i64>, JsError> {
-        let s = self
-            .session
-            .as_ref()
-            .ok_or_else(|| JsError::new("no world"))?;
-        let nodes = s.node_value(node, name).map_err(|e| JsError::new(&e))?;
+    pub fn node_value(&self, id: u32, node: u32, name: &str) -> Result<Vec<i64>, JsError> {
+        let nodes = self
+            .session(id)?
+            .node_value(node, name)
+            .map_err(|e| JsError::new(&e))?;
 
         Ok(nodes.into_iter().map(|n| n.map_or(-1, i64::from)).collect())
     }
 
     /// `[typeName, accessType, toString ()]` of the field.
-    pub fn field(&self, node: u32, name: &str) -> Result<Vec<String>, JsError> {
-        let s = self
-            .session
-            .as_ref()
-            .ok_or_else(|| JsError::new("no world"))?;
-        let f = s.field(node, name).map_err(|e| JsError::new(&e))?;
+    pub fn field(&self, id: u32, node: u32, name: &str) -> Result<Vec<String>, JsError> {
+        let f = self
+            .session(id)?
+            .field(node, name)
+            .map_err(|e| JsError::new(&e))?;
 
         Ok(vec![f.type_name.to_string(), f.access.to_string(), f.value])
     }
 
     /// Set the field from its VRML encoding (see [`Session::set_field`]).
     #[wasm_bindgen(js_name = setField)]
-    pub fn set_field(&mut self, node: u32, name: &str, vrml: &str) -> Result<(), JsError> {
-        let s = self
-            .session
-            .as_mut()
-            .ok_or_else(|| JsError::new("no world"))?;
-
-        s.set_field(node, name, vrml).map_err(|e| JsError::new(&e))
+    pub fn set_field(&mut self, id: u32, node: u32, name: &str, vrml: &str) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_field(node, name, vrml)
+            .map_err(|e| JsError::new(&e))
     }
 
-    /// Step the world to `now` and draw it into the canvas, sized `width` x `height` device pixels.
+    // --- input of the current world ------------------------------------------------------------------------------
+
+    /// A pointer event at pointer coordinates: `kind` 0 down, 1 up, 2 move, 3 dblclick; `button` is
+    /// MouseEvent.button.
+    pub fn pointer(&mut self, kind: u8, button: u8, x: f64, y: f64) {
+        let event = match kind {
+            0 => Pointer::Down { button, x, y },
+            1 => Pointer::Up { button, x, y },
+            3 => Pointer::DblClick { x, y },
+            _ => Pointer::Move { x, y },
+        };
+
+        if let Some(s) = self.current_mut() {
+            s.pointer(event);
+        }
+    }
+
+    /// A wheel event: whether the viewer takes it (the page then calls `preventDefault ()`).
+    pub fn wheel(&mut self, delta_y: f64, x: f64, y: f64) -> bool {
+        self.current_mut().is_some_and(|s| s.wheel(delta_y, x, y))
+    }
+
+    /// A touch event: `kind` 0 start, 1 move, 2 end; `points` the touches still down as x, y pairs at pointer
+    /// coordinates; `zoom_width` is `window .innerWidth` at pointer scale.
+    pub fn touch(&mut self, kind: u8, points: &[f64], zoom_width: f64) {
+        let event = match kind {
+            0 => Touch::Start,
+            1 => Touch::Move,
+            _ => Touch::End,
+        };
+        let touches: Vec<(f64, f64)> = points.chunks_exact(2).map(|p| (p[0], p[1])).collect();
+
+        if let Some(s) = self.current_mut() {
+            s.touch(event, &touches, zoom_width);
+        }
+    }
+
+    /// A keydown (`down`) or keyup of the element: `event .key` and `event .keyCode`.
+    pub fn key(&mut self, down: bool, key: &str, code: u32) {
+        if let Some(s) = self.current_mut() {
+            s.key(down, key, code);
+        }
+    }
+
+    /// The CSS cursor of the canvas.
+    #[wasm_bindgen(getter)]
+    pub fn cursor(&self) -> String {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or("default", |w| w.session.cursor())
+            .to_string()
+    }
+
+    /// The viewer of the current world: "EXAMINE", "WALK", "FLY", "PLANE", "LOOKAT" or "NONE".
+    #[wasm_bindgen(getter, js_name = navigationType)]
+    pub fn navigation_type(&self) -> String {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or("NONE", |w| w.session.navigation_type())
+            .to_string()
+    }
+
+    /// The browser events of the current world since the last call (an Anchor replaced the world).
+    #[wasm_bindgen(js_name = takeEvents)]
+    pub fn take_events(&mut self) -> Vec<u32> {
+        self.current_mut()
+            .map_or(vec![], |s| s.take_browser_events())
+    }
+
+    /// The requests of another window or page since the last call: target, url, target, url, ...
+    #[wasm_bindgen(js_name = takeForeign)]
+    pub fn take_foreign(&mut self) -> Vec<String> {
+        self.current_mut().map_or(vec![], |s| {
+            s.take_foreign()
+                .into_iter()
+                .flat_map(|(t, u)| [t, u])
+                .collect()
+        })
+    }
+
+    // --- viewpoints of the current world -------------------------------------------------------------------------
+
+    /// X3DBrowser.firstViewpoint, previousViewpoint, nextViewpoint, lastViewpoint, or `changeViewpoint:<name>`.
+    #[wasm_bindgen(js_name = viewpointRequest)]
+    pub fn viewpoint_request(&mut self, request: &str) {
+        if let Some(s) = self.current_mut() {
+            s.viewpoint_request(request);
+        }
+    }
+
+    /// X3DBrowser.viewAll (transitionTime).
+    #[wasm_bindgen(js_name = viewAll)]
+    pub fn view_all(&mut self, transition_time: f64) {
+        if let Some(s) = self.current_mut() {
+            s.view_all(transition_time);
+        }
+    }
+
+    /// X3DBrowserContext.getActiveViewpoint of the current world: the node id, or `undefined` for the default one.
+    #[wasm_bindgen(js_name = activeViewpoint)]
+    pub fn active_viewpoint(&self) -> Option<u32> {
+        self.worlds.get(&self.current?)?.session.active_viewpoint()
+    }
+
+    // --- frames --------------------------------------------------------------------------------------------------
+
+    /// Step the current world to `now` and draw it into the canvas, sized `width` x `height` device pixels. A lost
+    /// device draws nothing.
     pub fn frame(&mut self, now: f64, width: u32, height: u32) -> Result<(), JsError> {
+        if self.lost() {
+            return Err(JsError::new("the WebGPU device is lost"));
+        }
+
         let (width, height) = (width.max(1), height.max(1));
 
         if (width, height) != (self.config.width, self.config.height) {
@@ -277,8 +700,8 @@ impl WebBrowser {
             self.config.height = height;
             self.surface.configure(&self.device, &self.config);
 
-            if let Some(s) = self.session.as_mut() {
-                s.resize(width, height);
+            for w in self.worlds.values_mut() {
+                w.session.resize(width, height);
             }
         }
 
@@ -291,45 +714,40 @@ impl WebBrowser {
             format: Some(self.view_format),
             ..Default::default()
         });
-
-        match self.session.as_mut() {
+        let current = self.current.and_then(|id| self.worlds.get_mut(&id));
+        let frame = match current.map(|w| &mut w.session) {
             Some(s) => {
                 s.step(now);
 
-                let changes = s.viewer().take_rendering_changes();
-
-                changes.apply(&mut self.renderer);
-
+                let changes = s.viewer().map(|v| v.take_rendering_changes());
                 let frame = s.build_frame();
 
-                self.renderer
-                    .render(&frame, &view, self.view_format, width, height)
-                    .map_err(|e| JsError::new(&e))?;
-            }
-            None => self
-                .renderer
-                .render(
-                    &crate::empty_frame(),
-                    &view,
-                    self.view_format,
-                    width,
-                    height,
-                )
-                .map_err(|e| JsError::new(&e))?,
-        }
+                if let Some(c) = changes {
+                    c.apply(&mut self.renderer);
+                }
 
+                frame
+            }
+            None => crate::empty_frame(),
+        };
+
+        self.renderer
+            .render(&frame, &view, self.view_format, width, height)
+            .map_err(|e| JsError::new(&e))?;
         self.renderer.queue().present(texture);
         Ok(())
     }
 
     /// Draw the current state (no stepping) once more into an RGBA8 texture of the canvas size and read it back: a
-    /// Promise of the pixels as the canvas shows them, top row first. For tests and diagnostics: a page that cannot read the WebGPU canvas
-    /// (headless Chromium without a display compositor) still gets the picture the renderer made.
+    /// Promise of the pixels as the canvas shows them, top row first. For tests and diagnostics: a page that cannot
+    /// read the WebGPU canvas (headless Chromium without a display compositor) still gets the picture the renderer
+    /// made.
     #[wasm_bindgen(js_name = readPixels)]
     pub fn read_pixels(&mut self) -> Result<js_sys::Promise, JsError> {
         let (width, height) = (self.config.width, self.config.height);
         let format = wgpu::TextureFormat::Rgba8Unorm;
-        let frame = match self.session.as_mut() {
+        let current = self.current.and_then(|id| self.worlds.get_mut(&id));
+        let frame = match current.map(|w| &mut w.session) {
             Some(s) => s.build_frame(),
             None => crate::empty_frame(),
         };
@@ -427,9 +845,11 @@ impl WebBrowser {
         }))
     }
 
-    /// The runtime's log and Browser.print output since the last call.
+    /// The runtime's log and Browser.print output of scene `id` since the last call.
     #[wasm_bindgen(js_name = takeLog)]
-    pub fn take_log(&mut self) -> Vec<String> {
-        self.session.as_mut().map_or(vec![], |s| s.take_log())
+    pub fn take_log(&mut self, id: u32) -> Vec<String> {
+        self.worlds
+            .get_mut(&id)
+            .map_or(vec![], |w| w.session.take_log())
     }
 }

@@ -1,0 +1,59 @@
+#VRML V2.0 utf8
+# The interactive example of X_ITE_R's <x3d-canvas>: EXAMINE navigation, a TouchSensor, a PlaneSensor, an Anchor
+# to a viewpoint, an Inline and an ImageTexture. All are run by the Rust engine.
+
+NavigationInfo { type [ "EXAMINE" "ANY" ] headlight TRUE }
+DEF Front Viewpoint { position 0 0 12 description "Front" }
+DEF Above Viewpoint { position 0 10 6 orientation 1 0 0 -1.0 description "Above" }
+
+# Press the red box: the light turns on while it is pressed.
+DEF Lamp PointLight { location 0 0 4 color 1 1 0.6 on FALSE }
+Transform {
+  translation -3 0 0
+  children [
+    DEF Press TouchSensor { description "Press to turn on the light" }
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } }
+      geometry Box { size 2 2 2 }
+    }
+  ]
+}
+ROUTE Press.isActive TO Lamp.set_on
+
+# Drag the purple box in its plane.
+Transform {
+  translation 0 3 0
+  children [
+    DEF Drag PlaneSensor { }
+    DEF DragBox Transform {
+      children Shape {
+        appearance Appearance { material Material { diffuseColor 0.7 0.3 0.8 } }
+        geometry Box { size 1 1 1 }
+      }
+    }
+  ]
+}
+ROUTE Drag.translation_changed TO DragBox.set_translation
+
+# Click the green sphere: the "Above" viewpoint binds.
+Transform {
+  translation 3 0 0
+  children Anchor {
+    url "#Above"
+    description "To the viewpoint Above"
+    children Shape {
+      appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } }
+      geometry Sphere { radius 1 }
+    }
+  }
+}
+
+# An Inline (box.wrl) and a textured box, loaded without blocking the page.
+Transform { translation 0 -3 0 scale 0.5 0.5 0.5 children Inline { url "box.wrl" } }
+Transform {
+  translation 0 0 0
+  children Shape {
+    appearance Appearance { texture ImageTexture { url "checker.png" } }
+    geometry Box { size 1.5 1.5 1.5 }
+  }
+}

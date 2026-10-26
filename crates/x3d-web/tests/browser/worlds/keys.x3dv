@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+# X_ITE_R browser runtime 02 test world (synthetic, written for the tests).
+# The keyboard case: a KeySensor (an X3D node; VRML97 has none) and a box to click on for the focus.
+
+PROFILE Interactive
+
+DEF Keys KeySensor { }
+Viewpoint { position 0 0 10 }
+Shape { geometry Box { size 1 1 1 } }

@@ -475,6 +475,26 @@ impl Runtime {
         }
     }
 
+    /// The base URL and the candidates a declaration's fetch has not tried yet (`None` when request `request` is over).
+    pub(crate) fn extern_pending_candidates(
+        &self,
+        e: ExternId,
+        request: u64,
+    ) -> Option<(String, Vec<String>)> {
+        if !self.extern_fetch_is(e, request) {
+            return None;
+        }
+
+        let fetch = self.extern_states.get(&e)?.fetch.as_ref()?;
+
+        Some((
+            self.scene
+                .world_url_of(self.scene.externprotos[e].ctx)
+                .to_string(),
+            fetch.urls[fetch.next.min(fetch.urls.len())..].to_vec(),
+        ))
+    }
+
     fn extern_fetch_is(&self, e: ExternId, request: u64) -> bool {
         self.extern_states.get(&e).is_some_and(|s| {
             s.generation == request && s.fetch.as_ref().is_some_and(|f| f.request == request)

@@ -106,8 +106,24 @@ impl Runtime {
     /// The image decode (`await this .loadImage (objectURL)`) ends after the events that were
     /// pending when the fetch ended, so the size waits for [`Runtime::apply_decoded_images`].
     /// The load state is still set when the fetch ends, before the size (X_ITE sets the size first).
-    pub(crate) fn image_texture_set_image(&mut self, node: NodeId, data: &[u8]) {
+    ///
+    /// Data in no image format fails the candidate, like the `<img>` of `loadImage` (`onerror`). X_ITE names the
+    /// blob URL of the data; the engine has none and names the file URL. SVG is no format of the image crate but
+    /// the browser's `<img>` decodes it, so it does not fail.
+    pub(crate) fn image_texture_set_image(
+        &mut self,
+        node: NodeId,
+        data: &[u8],
+        url: &url::Url,
+    ) -> Result<(), String> {
         let reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format();
+
+        if let Ok(r) = &reader
+            && r.format().is_none()
+            && !looks_like_svg(data)
+        {
+            return Err(format!("Error: Couldn't load image '{url}': error."));
+        }
 
         if let Ok((width, height)) = reader
             .map_err(image::ImageError::IoError)
@@ -117,6 +133,8 @@ impl Runtime {
             self.decoded_images
                 .push((node, Decoded::Image(width, height)));
         }
+
+        Ok(())
     }
 
     /// ImageTextureAtlas.loadData: an image that decodes is cut into its tiles (for the outputs
@@ -486,5 +504,32 @@ impl Runtime {
                 self.rendered_now.push(node);
             }
         }
+    }
+}
+
+/// An SVG document: markup from the start (after a byte order mark and white space), with `<svg` near the start,
+/// after an optional XML declaration, comments or a doctype.
+fn looks_like_svg(data: &[u8]) -> bool {
+    let data = data
+        .strip_prefix(b"\xEF\xBB\xBF")
+        .unwrap_or(data)
+        .trim_ascii_start();
+    let head = &data[..data.len().min(4096)];
+
+    head.starts_with(b"<") && head.windows(4).any(|w| w.eq_ignore_ascii_case(b"<svg"))
+}
+
+#[cfg(test)]
+mod svg_tests {
+    use super::looks_like_svg;
+
+    #[test]
+    fn svg_needs_markup_from_the_start() {
+        assert!(looks_like_svg(
+            b"<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"/>"
+        ));
+        assert!(looks_like_svg(b"\xEF\xBB\xBF  <SVG/>"));
+        assert!(!looks_like_svg(b"\x00\x01 garbage <svg> in binary"));
+        assert!(!looks_like_svg(b"<html><body>no image</body></html>"));
     }
 }

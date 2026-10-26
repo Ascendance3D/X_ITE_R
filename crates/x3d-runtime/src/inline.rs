@@ -574,12 +574,8 @@ impl Runtime {
                 self.log_error(format!("Error: {}", e.message));
                 return Err(Some(format!("Error: \n{e}")));
             }
-            // GoldenGate.parseIntoScene names the url of a file that no parser handles; Inline keeps the shorter text.
-            Err(x3d_parse::LoadError::NoHandler)
-                if self.builtin_name(node) == Some("InlineGeometry")
-                    || url.path().ends_with(".gltf")
-                    || url.path().ends_with(".glb") =>
-            {
+            // GoldenGate.parseIntoScene names the url of a file that no parser handles.
+            Err(x3d_parse::LoadError::NoHandler) => {
                 return Err(Some(format!(
                     "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
                 )));
