@@ -22,6 +22,10 @@
 # tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only or browser-only
 # PR leaves the suite out. The "Rust tests result" job always reports: it fails when a needed job did not pass.
 #
+# A push to master runs "Fast checks" and "Warm cache" only. A PR can read its own caches and master's, not another
+# PR's; "Warm cache" builds the suite once for each new Cargo.lock on master, so the first run of every PR finds
+# its dependencies built.
+#
 # Missing evidence never passes in silence (issue #66, crates/x3d-evidence). X3D_EVIDENCE=ci lets a test skip
 # only for a reason or answer key in X3D_EVIDENCE_ALLOW; any other skip, and every answer-key mismatch, fails
 # the test. Each permitted skip is one line in X3D_EVIDENCE_LOG; the "Evidence skips" step lists them and the
@@ -32,6 +36,8 @@ name: Rust tests
 
 on:
   pull_request:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -140,7 +146,7 @@ jobs:
 
   test:
     needs: checks
-    if: needs.checks.outputs.rust == 'true'
+    if: github.event_name != 'push' && needs.checks.outputs.rust == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
@@ -155,8 +161,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
+      # The shared key gives "Warm cache" the same cache; it is also the name the job-based key had.
       - uses: Swatinem/rust-cache@v2
         with:
+          shared-key: test
           cache-on-failure: true
 
       - name: Rust suite (GPU tests skipped)
@@ -215,12 +223,41 @@ jobs:
             evidence-skips.tsv
           if-no-files-found: ignore
 
+  # On a push to master: the dependencies of the suite, built into master's cache with the key of the "test" job.
+  # When master already has that cache, the job ends after the lookup.
+  warm-cache:
+    name: Warm cache
+    needs: checks
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: Swatinem/rust-cache@v2
+        id: cache
+        with:
+          shared-key: test
+          lookup-only: true
+
+      - name: System libraries
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
+
+      - name: Build the suite (no run)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-run
+
   # The one check that always reports: success only when "Fast checks" passed and the suite passed or was not needed.
   # A cancelled or failed job fails it, so it never passes for a run that did not finish.
   result:
     name: Rust tests result
     needs: [checks, test]
-    if: always()
+    if: always() && github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

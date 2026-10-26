@@ -10,11 +10,16 @@
 # crates/x3d-web/tests/browser/shards.mjs lists them. That list must name every test file once, or the "Changed
 # paths" job fails. tools/ci_changes.py leaves the build and the shards out when no changed path reaches the browser
 # module or its tests. The "Web tests result" job always reports: it fails when a needed job did not pass.
+#
+# A push to master runs "Browser module" only, to build master's cache once for each new Cargo.lock: a PR can read
+# its own caches and master's, not another PR's.
 
 name: Web tests
 
 on:
   pull_request:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -73,23 +78,30 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
 
+      # The shared key is the name the cache had when the job was "browser". On a push to master the job only looks the
+      # cache up, and builds when master does not have it yet.
       - uses: Swatinem/rust-cache@v2
+        id: cache
         with:
-          key: web
+          shared-key: web-browser
           cache-on-failure: true
+          lookup-only: ${{ github.event_name == 'push' }}
 
       # wasm-bindgen's CLI must be the exact version of the wasm-bindgen crate in Cargo.lock.
       - name: wasm-bindgen CLI
+        if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: |
           version=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
           wasm-bindgen --version 2>/dev/null | grep -qx "wasm-bindgen $version" || cargo install wasm-bindgen-cli --version "$version" --locked
 
       - name: Build the browser module
+        if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: tools/build-web.sh
 
       # The shards of this run take the module from here. The key holds the run ID, so no other run reads it, and a
       # re-run of a shard alone finds it.
       - uses: actions/cache/save@v6
+        if: github.event_name != 'push'
         with:
           path: crates/x3d-web/web/pkg
           key: web-pkg-${{ github.run_id }}
@@ -97,6 +109,7 @@ jobs:
   browser:
     name: browser (${{ matrix.shard }})
     needs: [changes, build]
+    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -118,13 +131,31 @@ jobs:
           key: web-pkg-${{ github.run_id }}
           fail-on-cache-miss: true
 
+      # The .deb files of Mesa and of Chromium's libraries, kept between runs: on one runner the Ubuntu mirror sent
+      # 45 kB/s and this step took 17 minutes. apt checks each file against the package index and fetches it again
+      # when it differs.
+      - name: Runner image
+        id: image
+        run: printf "os=%s\nimage=%s-%s\n" "$ImageOS" "$ImageOS" "$ImageVersion" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/apt-archives/*.deb
+          key: apt-${{ steps.image.outputs.image }}-${{ hashFiles('crates/x3d-web/package-lock.json') }}
+          restore-keys: apt-${{ steps.image.outputs.os }}-
+
       - name: Chromium and Mesa Vulkan (lavapipe)
         working-directory: crates/x3d-web
         run: |
+          # The runner's CPU: lavapipe renders on it, so the test durations depend on it.
+          echo "$(nproc) CPUs: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2-)" | tee -a "$GITHUB_STEP_SUMMARY"
+          mkdir -p ~/apt-archives/partial
+          printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
+          sudo chmod -R a+r ~/apt-archives
 
       - name: Browser tests
         working-directory: crates/x3d-web
@@ -155,7 +186,7 @@ jobs:
   result:
     name: Web tests result
     needs: [changes, build, browser]
-    if: always()
+    if: always() && github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
