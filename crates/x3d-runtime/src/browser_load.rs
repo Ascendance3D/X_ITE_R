@@ -291,7 +291,7 @@ impl Runtime {
 
         let parsed = match input {
             Input::Bytes(data) => {
-                crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url)
+                crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url).scene
             }
             Input::Text(text) => x3d_parse::parse_string(text, url),
         };

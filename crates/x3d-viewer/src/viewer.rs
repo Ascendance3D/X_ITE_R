@@ -400,6 +400,7 @@ impl Viewer3d {
         });
         // glTF buffers and images of a top-level world come through the runtime fetcher, as in x3d-render's load.rs.
         let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url)
+            .scene
             .map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
         // The oracle page (oracle/x_ite-pin/src/anim.html) is the document the browser lives in.

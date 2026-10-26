@@ -33,6 +33,26 @@ node oracle/cm5-run.mjs [name-prefix] [--json out.json]
 
 - `x_ite-pin/` — `git archive` of `X_ITE/x_ite` at `34cdf9f97` (`src/`, `package.json`).
   `node_modules` is a symlink to the fork's. The fork itself is never touched.
+
+### Recording from a worktree
+
+`x_ite-pin/node_modules` is ignored (`.gitignore`), so a new worktree does not have it. Without it the
+pages under `x_ite-pin/src/` cannot load their scripts (`inline.html` lines 27-29), and every recorder case
+times out. Prepare a worktree under `~/Projects/cybertown/.worktrees/X_ITE_R/<lane>` like this, never in the
+main checkout:
+
+```
+ln -s ~/Projects/cybertown/X_ITE/x_ite/node_modules oracle/x_ite-pin/node_modules
+git check-ignore -v oracle/x_ite-pin/node_modules    # must name .gitignore; never commit the link
+cat oracle/x_ite-pin/PINNED_COMMIT                   # must print 34cdf9f97
+export XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests   # Playwright for the recorders
+```
+
+Then prove the recorder: re-record two existing cases into `/tmp` and compare them with the stored baseline,
+for example `node oracle/x_ite-inline.mjs oracle/synthetic-rea-b08-gltf-inline /tmp/sanity.json r-missing-bin
+r-bad-base64` against `rea-batch08-gltf-baseline/inline-baseline.json`. Record new cases into a new case
+directory and a new baseline file, at least five times; use whole-list console equality only when all
+recordings are byte-identical.
 - `x_ite-pin/src/dump.html` — loads one file with `createX3DFromURL`, returns
   `scene.toVRMLString()` plus sorted console errors/warnings. Two things make it
   deterministic:
