@@ -11,7 +11,8 @@ that is not a merge commit, or a git failure runs both suites.
 
 - Documentation: `docs/**`, and `*.md` outside `oracle/`, `upstream/`, `tools/` and `.github/` (pinned references
   and the PR template hold Markdown). No test reads these files. Neither suite runs.
-- Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web, the page adapter
+- Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web (not the worlds in
+  `tests/browser/worlds/`, which a native test includes), the page adapter
   `crates/x3d-web/web/*.mjs` (not `web/example/`, which a native test includes), the browser baselines
   `oracle/web-browser-*` and their X_ITE recorders `oracle/x_ite-web-*`, web-tests.yml and its browser-deps action.
 - Native only (the browser suite is left out): a workspace crate that crates/x3d-web does not build with (its
@@ -33,6 +34,8 @@ WEB_ONLY = (
     "oracle/x_ite-web-",
     ".github/actions/browser-deps/",
 )
+# Browser test files that a native test also reads (crates/x3d-web/tests/async_loading.rs includes a texture).
+WEB_NATIVE_FIXTURES = ("crates/x3d-web/tests/browser/worlds/",)
 WEB_ONLY_FILES = {
     "crates/x3d-web/package.json",
     "crates/x3d-web/package-lock.json",
@@ -93,6 +96,8 @@ def is_docs(p):
 
 
 def is_web_only(p):
+    if p.startswith(WEB_NATIVE_FIXTURES):
+        return False
     return p in WEB_ONLY_FILES or p.startswith(WEB_ONLY) or (
         p.startswith("crates/x3d-web/web/") and p.count("/") == 3 and p.endswith(".mjs"))
 
@@ -183,6 +188,8 @@ def self_test():
         (["crates/x3d-web/web/example/box.wrl"], True, True),
         (["crates/x3d-web/tests/session.rs"], True, True),
         (["crates/x3d-web/tests/browser/runtime02_phone.test.mjs"], False, True),
+        (["crates/x3d-web/tests/browser/worlds/tex/red.png"], True, True),
+        (["crates/x3d-web/tests/browser/worlds/sensors.wrl"], True, True),
         (["crates/x3d-web/web/x_ite_r.mjs"], False, True),
         (["crates/x3d-web/package-lock.json"], False, True),
         (["oracle/web-browser-02-baseline/runtime02-baseline.json"], False, True),
