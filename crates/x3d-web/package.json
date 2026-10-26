@@ -4,7 +4,7 @@
   "description": "Browser integration tests of X_ITE_R's <x3d-canvas> (tests/browser). Build the module first: tools/build-web.sh.",
   "type": "module",
   "scripts": {
-    "test": "node --test --test-concurrency=1 tests/browser/api.test.mjs tests/browser/runtime02.test.mjs"
+    "test": "node --test --test-concurrency=1 'tests/browser/*.test.mjs'"
   },
   "devDependencies": {
     "playwright": "1.62.1"

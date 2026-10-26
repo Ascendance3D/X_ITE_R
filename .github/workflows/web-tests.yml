@@ -5,31 +5,67 @@
 # pinned X_ITE 16.5.0 recordings in oracle/web-browser-01-baseline and oracle/web-browser-02-baseline. The native
 # tests of the crate run in rust-tests.yml.
 # Locally: tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test); see crates/x3d-web/README.md.
+#
+# One job builds the module; the test files then run in parallel shards, one runner each, as
+# crates/x3d-web/tests/browser/shards.mjs lists them. That list must name every test file once, or the "Changed
+# paths" job fails. tools/ci_changes.py leaves the build and the shards out when no changed path reaches the browser
+# module or its tests. The "Web tests result" job always reports: it fails when a needed job did not pass.
 
 name: Web tests
 
 on:
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# One run per pull request: a new push cancels the run of the commit it replaces. Each PR has its own group, and a
+# workflow_dispatch run is never cancelled.
 concurrency:
-  group: web-tests-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
 
 jobs:
-  browser:
+  changes:
+    name: Changed paths
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 10
+    outputs:
+      web: ${{ steps.changes.outputs.web }}
+      shards: ${{ steps.shards.outputs.shards }}
+    steps:
+      # Depth 2: the PR merge commit and its first parent, for the changed paths.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      - name: Changed paths
+        id: changes
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          python3 -I -B tools/ci_changes.py --self-test
+          if [ "$EVENT" = pull_request ]; then
+            python3 -I -B tools/ci_changes.py
+          else
+            python3 -I -B tools/ci_changes.py --all
+          fi
+
+      - name: Test shards
+        id: shards
+        run: echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Browser module
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
 
@@ -51,6 +87,37 @@ jobs:
       - name: Build the browser module
         run: tools/build-web.sh
 
+      # The shards of this run take the module from here. The key holds the run ID, so no other run reads it, and a
+      # re-run of a shard alone finds it.
+      - uses: actions/cache/save@v6
+        with:
+          path: crates/x3d-web/web/pkg
+          key: web-pkg-${{ github.run_id }}
+
+  browser:
+    name: browser (${{ matrix.shard }})
+    needs: [changes, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.changes.outputs.shards) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: crates/x3d-web/package-lock.json
+
+      - uses: actions/cache/restore@v6
+        with:
+          path: crates/x3d-web/web/pkg
+          key: web-pkg-${{ github.run_id }}
+          fail-on-cache-miss: true
+
       - name: Chromium and Mesa Vulkan (lavapipe)
         working-directory: crates/x3d-web
         run: |
@@ -62,9 +129,11 @@ jobs:
       - name: Browser tests
         working-directory: crates/x3d-web
         env:
+          SHARD: ${{ matrix.shard }}
           XR_WEB_EVIDENCE: ${{ github.workspace }}/web-evidence
         run: |
-          npm test 2>&1 | tee ../../web-tests.log
+          mapfile -t files < <(node tests/browser/shards.mjs files "$SHARD")
+          node --test --test-concurrency=1 "${files[@]}" 2>&1 | tee ../../web-tests.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Test counts
@@ -75,8 +144,32 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          name: web-test-evidence
+          name: web-test-evidence-${{ matrix.shard }}
           path: |
             web-tests.log
             web-evidence/
           if-no-files-found: ignore
+
+  # The one check that always reports: success only when "Changed paths" passed, and the build and every shard
+  # passed or were not needed. A cancelled or failed job fails it, so it never passes for a run that did not finish.
+  result:
+    name: Web tests result
+    needs: [changes, build, browser]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Needed jobs passed
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          NEEDED: ${{ needs.changes.outputs.web }}
+          BUILD: ${{ needs.build.result }}
+          BROWSER: ${{ needs.browser.result }}
+        run: |
+          echo "Changed paths: $CHANGES; browser suite needed: ${NEEDED:-unknown}; build: $BUILD; shards: $BROWSER" | tee -a "$GITHUB_STEP_SUMMARY"
+          test "$CHANGES" = success
+          if [ "$NEEDED" = true ]; then
+            test "$BUILD" = success && test "$BROWSER" = success
+          else
+            test "$NEEDED" = false && test "$BUILD" = skipped && test "$BROWSER" = skipped
+          fi
