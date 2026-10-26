@@ -202,6 +202,31 @@ class Guard(Case):
             f.write("abc")
         ak.guard(root, ["HEAD"])
 
+    def test_each_commit_manifest_is_read(self):
+        root = self.checkout()
+        tsv = os.path.join(root, "oracle", "answer-keys.tsv")
+        good = open(tsv).read()
+        with open(tsv, "a") as f:
+            f.write("e\tdir\t0\t0\tx\n")
+        git(root, "commit", "-qam", "a key e")
+        git(root, "tag", "with-e")
+        with open(tsv, "w") as f:
+            f.write(good)
+        git(root, "commit", "-qam", "no e")
+        os.makedirs(os.path.join(root, "oracle", "e"))
+        open(os.path.join(root, "oracle", "e", "f"), "w").close()
+        ak.guard(root, ["HEAD"])
+        self.unsafe(lambda: ak.guard(root, ["with-e"]), "oracle/e: real data that the ignore rules do not cover")
+        with open(tsv, "w") as f:
+            f.write("k.json\n")
+        git(root, "commit", "-qam", "malformed")
+        git(root, "tag", "bad")
+        with open(tsv, "w") as f:
+            f.write(good)
+        with self.assertRaises(ak.KeyError_) as c:
+            ak.guard(root, ["bad"])
+        self.assertIn("bad row", str(c.exception))
+
     def test_real_data_that_is_not_ignored(self):
         root = self.checkout()
         put_keys(os.path.join(root, "oracle"))

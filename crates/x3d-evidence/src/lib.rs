@@ -438,7 +438,29 @@ pub fn guard(root: &Path, revs: &[&str], explicit: Option<&Path>) -> Result<(), 
             ))
         })?;
 
-        if let Some(text) = git(root, &["show", &format!("{rev}:oracle/answer-keys.tsv")]) {
+        // A commit before the manifest has none, and the names above still apply. Any Git failure
+        // is unsafe.
+        let unreadable = || {
+            KeyError::Unsafe(format!(
+                "guard: cannot read the manifest of {rev} in {}",
+                root.display()
+            ))
+        };
+        let listed = git(
+            root,
+            &[
+                "ls-tree",
+                "--full-tree",
+                rev,
+                "--",
+                "oracle/answer-keys.tsv",
+            ],
+        )
+        .ok_or_else(unreadable)?;
+
+        if !listed.is_empty() {
+            let text = git(root, &["show", &format!("{rev}:oracle/answer-keys.tsv")])
+                .ok_or_else(unreadable)?;
             let theirs = parse_manifest(&String::from_utf8_lossy(&text), Path::new(rev))?;
 
             names.extend(theirs.keys().map(|n| format!("oracle/{n}")));
@@ -1163,6 +1185,37 @@ mod tests {
         // k.json is real but untracked; d and upstream are the tracked symlinks.
         std::fs::write(root.join("oracle/k.json"), "abc").unwrap();
         guard(&root, &["HEAD"], None).unwrap();
+    }
+
+    /// A commit's own manifest adds its key names; a malformed one is an error, never skipped.
+    #[test]
+    fn guard_reads_each_commit_manifest() {
+        let root = checkout("guard-rev-manifest");
+        let tsv = root.join("oracle/answer-keys.tsv");
+        let good = std::fs::read_to_string(&tsv).unwrap();
+
+        std::fs::write(&tsv, format!("{good}e\tdir\t0\t0\tx\n")).unwrap();
+        git(&root, &["commit", "-qam", "a key e"]);
+        git(&root, &["tag", "with-e"]);
+        std::fs::write(&tsv, &good).unwrap();
+        git(&root, &["commit", "-qam", "no e"]);
+        std::fs::create_dir(root.join("oracle/e")).unwrap();
+        std::fs::write(root.join("oracle/e/f"), "").unwrap();
+        // HEAD's manifest has no e, so oracle/e is not a key path there.
+        guard(&root, &["HEAD"], None).unwrap();
+        unsafe_with(
+            guard(&root, &["with-e"], None),
+            "oracle/e: real data that the ignore rules do not cover",
+        );
+
+        std::fs::write(&tsv, "k.json\n").unwrap();
+        git(&root, &["commit", "-qam", "malformed"]);
+        git(&root, &["tag", "bad"]);
+        std::fs::write(&tsv, &good).unwrap();
+        assert!(matches!(
+            guard(&root, &["bad"], None),
+            Err(KeyError::Io(e)) if e.contains("bad row")
+        ));
     }
 
     #[test]
