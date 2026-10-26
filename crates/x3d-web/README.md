@@ -68,7 +68,7 @@ A scene is loaded when nothing is parked; then it can replace the world. Droppin
 | test | where | needs |
 | --- | --- | --- |
 | session (native) | `tests/session.rs`, `tests/async_loading.rs` | `cargo test -p x3d-web` (also part of the workspace suite) |
-| browser integration | `tests/browser/api.test.mjs`, `tests/browser/runtime02.test.mjs` | the built module, Node, Playwright 1.62.1 Chromium, a Vulkan driver |
+| browser integration | `tests/browser/*.test.mjs` | the built module, Node, Playwright 1.62.1 Chromium, a Vulkan driver |
 
 ```sh
 tools/build-web.sh
@@ -79,9 +79,10 @@ cd crates/x3d-web && npm ci && npm test
 The browser test runs `tests/browser/api_case.mjs` in the page and compares every value with the recording of pinned X_ITE 16.5.0 in `oracle/web-browser-01-baseline` (`oracle/x_ite-web-api.mjs`).
 It also compares the pictures before and after the field update with X_ITE's. The rules are: the same background, a silhouette IoU of at least 0.97, and a mean color difference of at most 8 of 255.
 
-`runtime02.test.mjs` runs the 30 cases of `tests/browser/runtime02_case.mjs` (input, touch, coordinates, resource loading, scene API) on a controlled local server (`tests/browser/server.mjs`: held, delayed, failing and garbage responses, and a second origin). It compares them with `oracle/web-browser-02-baseline` (`oracle/x_ite-web-runtime-02.mjs`, five identical X_ITE runs). Then it checks the lifecycle (one frame loop, a hidden page, removal, `dispose ()`, device loss, no WebGPU) and phone and tablet emulation.
+The `runtime02*.test.mjs` files run the 30 cases of `tests/browser/runtime02_case.mjs` (input, touch, coordinates, resource loading, scene API) on a controlled local server (`tests/browser/server.mjs`: held, delayed, failing and garbage responses, and a second origin). It compares them with `oracle/web-browser-02-baseline` (`oracle/x_ite-web-runtime-02.mjs`, five identical X_ITE runs). Then it checks the lifecycle (one frame loop, a hidden page, removal, `dispose ()`, device loss, no WebGPU) and phone and tablet emulation.
 The zoom cases wait 0.4 s (twice ExamineViewer's MOVE_TIME) after each wheel or pinch step. A zoom step is a fraction of the current distance to the center, so a step during the chaser's motion would depend on frame timing.
 
 Headless Chromium does not always composite a WebGPU canvas, so the test reads the picture from the GPU (`WebBrowser.readPixels`).
 `XR_WEB_EVIDENCE=<dir>` writes the values, the pictures and the image metrics of a run.
-CI runs the browser tests in `.github/workflows/web-tests.yml` on lavapipe.
+CI runs the browser tests in `.github/workflows/web-tests.yml` on lavapipe, in parallel shards of whole test files (`tests/browser/shards.mjs`).
+Every `*.test.mjs` file must be in exactly one shard; CI fails when one is not. `npm test` runs every file.

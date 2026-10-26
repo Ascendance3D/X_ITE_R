@@ -1,4 +1,4 @@
-// The controlled local server of the browser tests (api.test.mjs, runtime02.test.mjs) and of the pinned X_ITE
+// The controlled local server of the browser tests (api.test.mjs, runtime02*.test.mjs) and of the pinned X_ITE
 // recorder (oracle/x_ite-web-runtime-02.mjs): one implementation, so both engines see the same responses.
 //
 // Files come from `root` (the crate directory), with `Cache-Control: no-store`. Path prefixes change a response:

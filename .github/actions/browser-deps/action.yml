@@ -1,0 +1,41 @@
+name: Browser test dependencies
+description: >-
+  Node 24, the npm packages of crates/x3d-web, Playwright's Chromium and Mesa's Vulkan drivers (lavapipe), for the
+  browser tests in web-tests.yml.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+        cache: npm
+        cache-dependency-path: crates/x3d-web/package-lock.json
+
+    # The .deb files of Mesa and of Chromium's libraries, kept between runs: on 3 of 8 runners of PR #117 the Ubuntu
+    # mirror sent 45 kB/s and this install took 15 to 17 minutes. apt checks each file against the package index and
+    # fetches it again when it differs.
+    - name: Runner image
+      id: image
+      shell: bash
+      run: printf "os=%s\nimage=%s-%s\n" "$ImageOS" "$ImageOS" "$ImageVersion" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/cache@v6
+      with:
+        path: ~/apt-archives/*.deb
+        key: apt-${{ steps.image.outputs.image }}-${{ hashFiles('crates/x3d-web/package-lock.json') }}
+        restore-keys: apt-${{ steps.image.outputs.os }}-
+
+    - name: Chromium and Mesa Vulkan (lavapipe)
+      shell: bash
+      working-directory: crates/x3d-web
+      run: |
+        # The runner's CPU: lavapipe renders on it, so the test durations depend on it.
+        echo "$(nproc) CPUs: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2-)" | tee -a "$GITHUB_STEP_SUMMARY"
+        mkdir -p ~/apt-archives/partial
+        printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
+        npm ci --no-audit --no-fund
+        npx playwright install --with-deps chromium
+        sudo chmod -R a+r ~/apt-archives

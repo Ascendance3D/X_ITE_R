@@ -18,7 +18,13 @@
 # It runs strict (X3D_EVIDENCE unset), so a missing key or adapter fails. The Mesa EGL vendor lets
 # gl_backend_cannot_run_the_renderer_and_says_so start a GL device; the NVIDIA one does not (backend-absent).
 #
-# The rustfmt check runs first and needs no system libraries; an unformatted PR fails before the build.
+# The "Fast checks" job runs first, on every PR: the reference pins, the answer-key guard, rustfmt, actionlint and
+# tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only or browser-only
+# PR leaves the suite out. The "Rust tests result" job always reports: it fails when a needed job did not pass.
+#
+# A push to master runs "Fast checks" and "Warm cache" only. A PR can read its own caches and master's, not another
+# PR's; "Warm cache" builds the suite once for each new Cargo.lock on master, so the first run of every PR finds
+# its dependencies built.
 #
 # Missing evidence never passes in silence (issue #66, crates/x3d-evidence). X3D_EVIDENCE=ci lets a test skip
 # only for a reason or answer key in X3D_EVIDENCE_ALLOW; any other skip, and every answer-key mismatch, fails
@@ -30,18 +36,18 @@ name: Rust tests
 
 on:
   pull_request:
-    # Docs-only PRs skip the Rust build. Nothing requires this check, so a skipped run blocks no merge.
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
+  push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# One run per pull request: a new push cancels the run of the commit it replaces. Each PR has its own group, and a
+# workflow_dispatch run is never cancelled.
 concurrency:
-  group: rust-tests-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   CARGO_TERM_COLOR: never
@@ -76,11 +82,30 @@ env:
     --skip rea_b22_two_layer_shadows_match_x_ite
 
 jobs:
-  test:
+  checks:
+    name: Fast checks
     runs-on: ubuntu-24.04
-    timeout-minutes: 150
+    timeout-minutes: 15
+    outputs:
+      rust: ${{ steps.changes.outputs.rust }}
     steps:
+      # Depth 2: the PR merge commit and its first parent, for the changed paths.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Changed paths
+        id: changes
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          python3 -I -B tools/ci_changes.py --self-test
+          if [ "$EVENT" = pull_request ]; then
+            python3 -I -B tools/ci_changes.py
+          else
+            python3 -I -B tools/ci_changes.py --all
+          fi
 
       # The 16.6.0 reference pin is inert: nothing in the build reads it, so nothing in the
       # build notices a changed byte. This is that notice, and it needs no toolchain, so it
@@ -106,23 +131,50 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
-          components: rustfmt, clippy
+          components: rustfmt
 
       - name: Formatting (cargo fmt)
         run: cargo fmt --all -- --check
+
+      # Workflow validation: actionlint, pinned by version and digest.
+      - name: Workflows (actionlint)
+        run: |
+          curl -fsSL -o /tmp/actionlint.tar.gz \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  /tmp/actionlint.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/actionlint.tar.gz -C /tmp actionlint
+          /tmp/actionlint -no-color
+
+  test:
+    needs: checks
+    if: github.event_name != 'push' && needs.checks.outputs.rust == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          components: clippy
 
       - name: System libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
+      # The shared key gives "Warm cache" the same cache; it is also the name the job-based key had.
       - uses: Swatinem/rust-cache@v2
         with:
+          shared-key: test
           cache-on-failure: true
 
       - name: Rust suite (GPU tests skipped)
         run: |
           rm -f "$X3D_EVIDENCE_LOG"
+          # GPU_TESTS is a list of arguments: it is split on purpose.
+          # shellcheck disable=SC2086
           cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-fail-fast -- $GPU_TESTS 2>&1 | tee suite.log
           test "${PIPESTATUS[0]}" -eq 0
 
@@ -173,3 +225,53 @@ jobs:
             rea_b05.log
             evidence-skips.tsv
           if-no-files-found: ignore
+
+  # On a push to master: the dependencies of the suite, built into master's cache with the key of the "test" job.
+  # When master already has that cache, the job ends after the lookup.
+  warm-cache:
+    name: Warm cache
+    needs: checks
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: Swatinem/rust-cache@v2
+        id: cache
+        with:
+          shared-key: test
+          lookup-only: true
+
+      - name: System libraries
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
+
+      - name: Build the suite (no run)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-run
+
+  # The one check that always reports: success only when "Fast checks" passed and the suite passed or was not needed.
+  # A cancelled or failed job fails it, so it never passes for a run that did not finish.
+  result:
+    name: Rust tests result
+    needs: [checks, test]
+    if: always() && github.event_name != 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Needed jobs passed
+        env:
+          CHECKS: ${{ needs.checks.result }}
+          NEEDED: ${{ needs.checks.outputs.rust }}
+          TEST: ${{ needs.test.result }}
+        run: |
+          echo "Fast checks: $CHECKS; suite needed: ${NEEDED:-unknown}; suite: $TEST" | tee -a "$GITHUB_STEP_SUMMARY"
+          test "$CHECKS" = success
+          if [ "$NEEDED" = true ]; then test "$TEST" = success; else test "$NEEDED" = false && test "$TEST" = skipped; fi
