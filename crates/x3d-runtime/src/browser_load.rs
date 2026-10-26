@@ -434,6 +434,10 @@ impl Runtime {
 
     /// X3DBrowser.callBrowserCallbacks (event): the functions Scripts gave `addBrowserCallback`.
     pub(crate) fn browser_callbacks(&mut self, event: u32) {
+        if let Some(events) = self.browser_events.as_mut() {
+            events.push(event);
+        }
+
         let Some(mut host) = self.script_host.take() else {
             return;
         };

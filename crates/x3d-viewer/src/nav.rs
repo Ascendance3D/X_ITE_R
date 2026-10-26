@@ -69,11 +69,14 @@ pub enum Input {
     TouchEnd,
 }
 
-/// `event .touches` of a touch event (only the first two touches matter to the viewers).
+/// `event .touches` of a touch event (only the first two touches matter to the viewers), at pointer coordinates
+/// (`getPointerFromEvent`).
 #[derive(Clone, Copy, Debug)]
 pub struct Touches {
     pub n: usize,
     pub p: [(f64, f64); 2],
+    /// `window .innerWidth` at pointer scale: ExamineViewer's pinch zoom factor is the distance change over it.
+    pub zoom_width: f64,
 }
 
 /// X3DViewer.lookAtPoint / lookAtBBox, requested by a viewer's dblclick handler. The viewer
@@ -494,7 +497,7 @@ impl Examine {
                 self.zoom(SCROLL_FACTOR, delta_y, cx);
             }
             Input::DblClick { x, y } => self.dblclick(x, y, cx),
-            // The harness sends no touch events: these handlers have no oracle.
+            // The stepped harness sends no touch events; the web browser does (crates/x3d-web).
             Input::TouchStart(t) => self.touchstart(t, cx),
             Input::TouchMove(t) => self.touchmove(t, cx),
             Input::TouchEnd => self.touchend(true, cx),
@@ -616,8 +619,14 @@ impl Examine {
                         self.touch2 = Vector2::new(t.p[1].0, t.p[1].1);
                         let delta = distance1 - self.touch1.distance(&self.touch2);
 
-                        // `window .innerWidth`: the canvas width here.
-                        self.wheel(delta.abs() / cx.env.viewport[2], delta, x, y, cx);
+                        // `window .innerWidth` (the canvas width when the host does not know it).
+                        let width = if t.zoom_width > 0.0 {
+                            t.zoom_width
+                        } else {
+                            cx.env.viewport[2]
+                        };
+
+                        self.wheel(delta.abs() / width, delta, x, y, cx);
                     }
                     _ => {}
                 }

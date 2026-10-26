@@ -184,13 +184,14 @@ describe ("x3d-canvas", () =>
       const owned = await page .evaluate (() =>
       {
          const engine = document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.engine")];
-         const id     = engine .namedNode ("BoxMaterial");
+         const world  = engine .current;
+         const id     = engine .namedNode (world, "BoxMaterial");
 
          return {
             engine:    engine .constructor .name,
-            typeName:  engine .typeName (id),
-            field:     engine .field (id, "diffuseColor"),
-            rootNodes: Array .from (engine .rootNodes (), n => engine .typeName (Number (n))),
+            typeName:  engine .typeName (world, id),
+            field:     engine .field (world, id, "diffuseColor"),
+            rootNodes: Array .from (engine .rootNodes (world), n => engine .typeName (world, Number (n))),
             xite:      Symbol .for ("X_ITE.X3D") in window,
          };
       });

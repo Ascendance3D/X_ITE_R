@@ -1439,6 +1439,16 @@ impl Pointer {
         !self.hit.sensors.is_empty()
     }
 
+    /// PointingDevice.mousedown: `grabbing`, a sensor of the hit is an X3DDragSensorNode.
+    pub fn hit_has_drag_sensor(&self, root: &Runtime) -> bool {
+        self.hit.sensors.iter().any(|s| {
+            matches!(
+                Self::ty(root, s),
+                Some("PlaneSensor" | "CylinderSensor" | "SphereSensor")
+            )
+        })
+    }
+
     /// buttonReleaseEvent.
     pub fn button_release(&mut self, root: &mut Runtime, cam: &PickCamera, now: f64) {
         let active = std::mem::take(&mut self.active);
