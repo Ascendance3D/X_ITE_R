@@ -130,3 +130,4 @@ export async function startServer (root, { mounts = { }, pages = { } } = { })
       close: () => Promise .all (servers .map (server => new Promise (resolve => server .close (resolve)))),
    };
 }
+// CI acceptance test of lane XITE_R_CI_FAST_FEEDBACK_01; this PR is not for merge.
