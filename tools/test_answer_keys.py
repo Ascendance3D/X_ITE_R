@@ -125,6 +125,25 @@ class Store(Case):
         shutil.rmtree(os.path.join(keys, "d"))
         self.unsafe(lambda: self.resolve(root, "k.json", keys), "d is absent")
 
+    def test_manifest_name_with_a_path(self):
+        for name in ("../k.json", "a/k.json", "..", "/k.json"):
+            with self.assertRaises(ak.KeyError_) as c:
+                ak.parse([f"{name}\tfile\t1\t3\t{sha(b'abc')}\n"])
+            self.assertIn("bad row", str(c.exception))
+
+    def test_entry_linking_outside_the_store_is_measured(self):
+        root, backup = self.checkout(), self.keys("backup")
+        keys = os.path.join(self.tmp, "keys")
+        os.mkdir(keys)
+        for k in ("k.json", "d"):
+            os.symlink(os.path.join(backup, k), os.path.join(keys, k))
+        self.assertEqual(self.resolve(root, "d", keys), os.path.join(keys, "d"))
+        with open(os.path.join(backup, "d", "a"), "w") as f:
+            f.write("changed")
+        with self.assertRaises(ak.KeyError_) as c:
+            self.resolve(root, "d", keys)
+        self.assertEqual(c.exception.code, 3)
+
     def test_wrong_kind(self):
         root, keys = self.checkout(), self.keys()
         os.remove(os.path.join(keys, "k.json"))

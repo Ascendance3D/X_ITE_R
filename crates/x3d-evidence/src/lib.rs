@@ -14,7 +14,9 @@
 //!
 //! [`store`] checks `$X3D_ORACLE_KEYS` before any search: an absolute path to an existing directory
 //! whose real path does not overlap any worktree of this repository (inside it or holding it), with
-//! every manifest name below it, of the right kind, and with a real path outside every worktree.
+//! every manifest name as an entry in it, of the right kind, whose real path is outside every
+//! worktree. An entry may be a symlink to a place outside the store (for example a read-only
+//! backup); its content is still measured. A manifest name is one plain path component.
 //! Containment compares whole components of canonical paths. An invalid store is
 //! [`KeyError::Unsafe`]: nothing else is searched, and no test may skip for it.
 //!
@@ -142,7 +144,10 @@ fn parse_manifest(text: &str, path: &Path) -> Result<HashMap<String, Measure>, K
         let c: Vec<&str> = line.split('\t').collect();
         let bad = || KeyError::Io(format!("{}: bad row {line:?}", path.display()));
 
-        if c.len() != 5 || !(c[1] == "file" || c[1] == "dir") {
+        // A name is one plain path component, so `<store>/<name>` cannot step out of the store.
+        let plain = !matches!(c[0], "" | "." | "..") && !c[0].contains(['/', '\\', '\0']);
+
+        if c.len() != 5 || !plain || !(c[1] == "file" || c[1] == "dir") {
             return Err(bad());
         }
 
@@ -1015,6 +1020,41 @@ mod tests {
             resolve_in(&root, "d", Some(&keys.join("../main/oracle"))),
             "overlaps the worktree",
         );
+    }
+
+    /// A manifest name cannot step out of the store: one plain path component only.
+    #[test]
+    fn manifest_name_with_a_path_is_refused() {
+        let root = checkout("bad-name");
+        let tsv = root.join("oracle/answer-keys.tsv");
+        let text = std::fs::read_to_string(&tsv).unwrap();
+
+        for name in ["../k.json", "a/k.json", "..", "/k.json"] {
+            std::fs::write(&tsv, text.replace("k.json\t", &format!("{name}\t"))).unwrap();
+            assert!(
+                matches!(manifest(&root), Err(KeyError::Io(e)) if e.contains("bad row")),
+                "{name}"
+            );
+        }
+    }
+
+    /// An entry may link out of the store (a read-only backup), but never into a worktree.
+    #[test]
+    fn store_entry_linking_outside_the_store_is_measured() {
+        let root = checkout("store-backup");
+        let backup = scratch("store-backup-copy");
+        let keys = scratch("store-backup-keys");
+
+        put_keys(&backup);
+        std::os::unix::fs::symlink(backup.join("d"), keys.join("d")).unwrap();
+        std::os::unix::fs::symlink(backup.join("k.json"), keys.join("k.json")).unwrap();
+        assert_eq!(resolve_in(&root, "d", Some(&keys)).unwrap(), keys.join("d"));
+
+        std::fs::write(backup.join("d/a"), "changed").unwrap();
+        assert!(matches!(
+            resolve_in(&root, "d", Some(&keys)),
+            Err(KeyError::Mismatch { .. })
+        ));
     }
 
     #[test]

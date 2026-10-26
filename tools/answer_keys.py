@@ -17,9 +17,11 @@ the sha256 is the tree digest: sha256 of the `sha256sum` lines of every file, re
 A found key that does not match is a mismatch, and the resolver does not try the next location.
 
 An explicit store ($X3D_ORACLE_KEYS) must be an absolute path to an existing directory. Its real path must not
-overlap any worktree of this repository (inside it or holding it), and every manifest name must be present
-below it, of the right kind, with a real path outside every worktree. Containment compares whole components of
-real paths. An invalid store is an error: nothing else is searched.
+overlap any worktree of this repository (inside it or holding it), and every manifest name must be an entry in
+it, of the right kind, whose real path is outside every worktree. An entry may be a symlink to a place outside
+the store (for example a read-only backup); its content is still measured. A manifest name is one plain path
+component. Containment compares whole components of real paths. An invalid store is an error: nothing else is
+searched.
 
 The guard refuses when real data (not a symlink, below no symlink) sits at a key path or `upstream`, and a
 REV tracks that path, a path below it, or a parent of it as anything but a directory. A checkout, reset,
@@ -51,6 +53,9 @@ def parse(lines):
         if line.startswith("#") or not line.strip():
             continue
         name, kind, files, size, digest = line.rstrip("\n").split("\t")
+        # A name is one plain path component, so <store>/<name> cannot step out of the store.
+        if name in ("", ".", "..") or any(c in name for c in "/\\\0") or kind not in ("file", "dir"):
+            raise KeyError_(1, f"answer-keys.tsv: bad row {line!r}")
         rows[name] = (kind, int(files), int(size), digest)
     return rows
 
