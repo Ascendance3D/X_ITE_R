@@ -60,6 +60,10 @@ const KNOWN_DIFFERENCES = {
 // with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
 const CASE_TIMEOUT = 180_000;
 
+// The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984): on CI's lavapipe they took up to
+// 163 s. Their cap is 2.5 times that.
+const MOBILE_TIMEOUT = 420_000;
+
 let server, browser;
 
 before (async () =>
@@ -507,8 +511,31 @@ describe ("runtime 02 review cases", { skip: Boolean (ONLY), timeout: CASE_TIMEO
             },
             [ url, parameter ]);
 
+            // Picking needs a drawn frame of the new world; a CPU renderer (lavapipe) draws its first frames slowly.
+            await page .evaluate (async () =>
+            {
+               const browser = document .querySelector ("x3d-canvas") .browser;
+               const key     = Symbol .for ("X_ITE_R.frameLoop");
+               const start   = browser [key] .frames;
+
+               while (browser [key] .frames < start + 3)
+                  await new Promise (requestAnimationFrame);
+            });
+
+            const before = page .log .length;
+
             await page .mouse .click (200, 150);
-            await page .waitForTimeout (300);
+
+            // The click is done when the Anchor's URL was handled: opened, refused or failed.
+            for (let i = 0; i < 100; ++ i)
+            {
+               const opened = await page .evaluate (() => window .opened .length);
+
+               if (opened || page .log .slice (before) .some (line => /was not opened|Couldn't load URL/ .test (line)))
+                  break;
+
+               await page .waitForTimeout (100);
+            }
          };
 
          await click ("JaVaScRiPt:window.hacked=1", "target=_blank");
@@ -630,7 +657,7 @@ describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY), timeout: 
    });
 });
 
-describe ("runtime 02 phone and tablet emulation (no proof of mobile GPU support)", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
+describe ("runtime 02 phone and tablet emulation (no proof of mobile GPU support)", { skip: Boolean (ONLY), timeout: MOBILE_TIMEOUT }, () =>
 {
    test ("tap, one-finger rotation and pinch zoom at DPR 3 with contentScale auto", async () =>
    {
