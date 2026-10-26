@@ -17,7 +17,9 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
-/// playwright-core 1.62 `chromiumSwitches ()` + `_innerDefaultArgs` for headless launches.
+/// playwright-core 1.62 `chromiumSwitches ()` + `_innerDefaultArgs` for headless launches, without
+/// `--unsafely-disable-devtools-self-xss-warnings`. That switch acts only in the DevTools front end, which a
+/// pipe-driven headless browser does not open; recordings with and without it are byte-identical.
 pub const PLAYWRIGHT_SWITCHES: &[&str] = &[
     "--disable-field-trial-config",
     "--disable-background-networking",
