@@ -533,27 +533,36 @@ impl Runtime {
                         .iter()
                         .any(|p| e.message.starts_with(p)) =>
             {
-                if let Some(buf_err) = parsed.buffer_error {
-                    if e.message == buf_err.error {
-                        let loader = crate::loader::FileLoader {
-                            type_name: String::new(),
-                            base: self.base_url(node),
-                            data_as_string: false,
-                        };
+                let failures = parsed.buffer_errors;
 
-                        self.print_load_error(
-                            &loader,
-                            &buf_err.candidate,
-                            buf_err.resolved.as_ref(),
-                            &buf_err.error,
-                            1,
-                            0,
-                        );
+                if failures.iter().any(|f| f.error == e.message) {
+                    use crate::loader::BufferFailure;
 
-                        // FileLoader.js:382 - if (!error) return;
-                        return Err(None);
-                    }
+                    // GLTF2Parser.js:600, `Promise .all`: an invalid buffer URL rejects it at once
+                    // with that error, which this Inline logs. Otherwise the first buffer
+                    // FileLoader to fail rejects it with no error (FileLoader.js:26), and this
+                    // Inline logs nothing (FileLoader.js:382-383).
+                    let thrown = failures
+                        .iter()
+                        .find(|f| f.kind == BufferFailure::InvalidUrl)
+                        .map(|f| f.error.clone());
+
+                    // Each buffer FileLoader logs its own failure when its fetch fails. A data URL is
+                    // decoded without a request, so it fails before any requested file (recorded
+                    // order in inline-buffer-errors-baseline.json); otherwise in buffer order.
+                    let mut logged: Vec<_> = failures
+                        .into_iter()
+                        .filter(|f| f.kind == BufferFailure::Fetch)
+                        .collect();
+
+                    logged.sort_by_key(|f| {
+                        !f.resolved.as_ref().is_some_and(|r| r.scheme() == "data")
+                    });
+                    self.deferred_buffer_errors.extend(logged);
+
+                    return Err(thrown);
                 }
+
                 return Err(Some(e.message));
             }
             Err(x3d_parse::LoadError::Parse(e)) => {

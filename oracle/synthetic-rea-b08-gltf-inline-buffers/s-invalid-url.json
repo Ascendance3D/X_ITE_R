@@ -1,0 +1,1 @@
+{"world": "main.wrl", "authority": "XITE_COMPATIBILITY", "covers": ["invalid input"], "dt": 0.1, "frames": 12, "actions": [{"frame": 4, "type": "url", "name": "Inl", "url": ["../synthetic-rea-b08-gltf/invalid/buffer-uri-garbage.gltf"]}, {"frame": 8, "type": "url", "name": "Inl", "url": ["../synthetic-rea-b08-gltf/render/tex-nearest.gltf"]}]}

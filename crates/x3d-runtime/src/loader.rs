@@ -431,6 +431,25 @@ impl Runtime {
                             remaining,
                         );
                     }
+
+                    // The buffer FileLoaders of a glTF that failed log when their own fetch fails,
+                    // after this FileLoader's result.
+                    let world = FileLoader {
+                        type_name: String::new(),
+                        base: loader.base.clone(),
+                        data_as_string: false,
+                    };
+
+                    for b in std::mem::take(&mut self.deferred_buffer_errors) {
+                        self.print_load_error(
+                            &world,
+                            &b.candidate,
+                            b.resolved.as_ref(),
+                            &b.error,
+                            1,
+                            0,
+                        );
+                    }
                 }
             }
         }
@@ -916,21 +935,41 @@ impl Runtime {
     }
 }
 
+/// How a glTF buffer failed to load (GLTF2Parser.bufferObject, GLTF2Parser.js:602-619).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BufferFailure {
+    /// `new URL (buffer .uri, base)` threw (:613): no FileLoader logs it, and `Promise .all`
+    /// rejects with this error before any fetch has finished.
+    InvalidUrl,
+    /// The buffer's own FileLoader for the World (:614) failed; it logs the error itself.
+    Fetch,
+}
+
 pub struct BufferFetchError {
     pub candidate: String,
     pub resolved: Option<url::Url>,
     pub error: String,
+    pub kind: BufferFailure,
 }
 
 pub struct ParseBytesResult {
     pub scene: Result<Scene, x3d_parse::LoadError>,
-    pub buffer_error: Option<BufferFetchError>,
+    /// Every buffer that failed, in buffer order.
+    pub buffer_errors: Vec<BufferFetchError>,
 }
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
 pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> ParseBytesResult {
-    let buffer_error = std::cell::RefCell::new(None);
+    let buffer_errors = std::cell::RefCell::new(Vec::new());
+    let failed = |uri: &str, resolved: Option<url::Url>, error: &str, kind: BufferFailure| {
+        buffer_errors.borrow_mut().push(BufferFetchError {
+            candidate: uri.to_string(),
+            resolved,
+            error: error.to_string(),
+            kind,
+        });
+    };
 
     let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
         let resolved_res = url::Url::parse(base)
@@ -940,41 +979,28 @@ pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -
         if uri.trim_start().starts_with("data:") {
             let res = x3d_parse::gltf_default_fetch(uri, base);
             if let Err(e) = &res {
-                if buffer_error.borrow().is_none() {
-                    *buffer_error.borrow_mut() = Some(BufferFetchError {
-                        candidate: uri.to_string(),
-                        resolved: resolved_res.ok(),
-                        error: e.clone(),
-                    });
-                }
+                failed(uri, resolved_res.ok(), e, BufferFailure::Fetch);
             }
             return res;
         }
 
         let resolved = match resolved_res {
             Ok(r) => r,
-            Err(e) => return Err(e),
+            Err(e) => {
+                failed(uri, None, &e, BufferFailure::InvalidUrl);
+                return Err(e);
+            }
         };
 
-        match fetcher.fetch(&resolved) {
-            Ok(d) => Ok(d),
-            Err(e) => {
-                if buffer_error.borrow().is_none() {
-                    *buffer_error.borrow_mut() = Some(BufferFetchError {
-                        candidate: uri.to_string(),
-                        resolved: Some(resolved.clone()),
-                        error: e.clone(),
-                    });
-                }
-                Err(e)
-            }
-        }
+        fetcher.fetch(&resolved).inspect_err(|e| {
+            failed(uri, Some(resolved.clone()), e, BufferFailure::Fetch);
+        })
     };
 
     let scene = x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url));
 
     ParseBytesResult {
         scene,
-        buffer_error: buffer_error.into_inner(),
+        buffer_errors: buffer_errors.into_inner(),
     }
 }

@@ -1,13 +1,16 @@
 //! REA batch 08 (glTF lane), issue #56: an Inline's glTF whose buffers fail to load, step by step
 //! against the pinned X_ITE. `oracle/synthetic-rea-b08-gltf-inline-buffers/` holds the scenarios;
-//! `oracle/x_ite-inline.mjs` recorded the pinned X_ITE (five identical recordings) in
+//! `oracle/x_ite-inline.mjs` recorded the pinned X_ITE (five byte-identical recordings) in
 //! `oracle/rea-batch08-gltf-baseline/inline-buffer-errors-baseline.json`.
 //!
 //! `s-*`: one failed buffer whose authored URI and resolved URL differ (`DATA:`, a leading space,
-//! percent-encoding, dot segments). The console subject comes from the resolved URL
-//! (FileLoader.js:221, :390-394). `m-*`: two buffers, one or both failing. GLTF2Parser.js:600 loads
-//! every buffer at once, each through its own FileLoader (:613-614), so each failed buffer logs its
-//! own error, and the Inline logs none (FileLoader.js:382-383).
+//! percent-encoding, dot segments), or whose URI is no URL (`s-invalid-url`). The console subject
+//! comes from the resolved URL (FileLoader.js:221, :390-394). `m-*`: two buffers, one or both
+//! failing. GLTF2Parser.js:600 loads every buffer at once, each through its own FileLoader
+//! (:613-614), so each failed buffer logs its own error when its fetch fails (a data URL before a
+//! requested file: `m-missing-then-data`), and the Inline logs none (FileLoader.js:382-383). An
+//! invalid buffer URL fails the Inline at once with its own error, before the other buffer's error
+//! (`m-invalid-then-missing`, `m-missing-then-invalid`).
 //!
 //! For every step the console messages, the load count, the state and root nodes of the Inline and
 //! the scene text must be equal.
@@ -93,7 +96,8 @@ fn gltf_inline_buffer_subject_matches_x_ite() {
     scenarios_match_x_ite("s-");
 }
 
-/// Two buffers: every failed buffer logs its own error, in buffer order; the Inline logs none.
+/// Two buffers: every failed buffer logs its own error, in the order the fetches fail; the Inline
+/// logs none, or its own error first for an invalid buffer URL.
 #[test]
 fn gltf_inline_multi_buffer_errors_match_x_ite() {
     scenarios_match_x_ite("m-");

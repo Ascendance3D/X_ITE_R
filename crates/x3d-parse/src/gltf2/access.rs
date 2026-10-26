@@ -19,11 +19,24 @@ impl<'j, 's> P<'j, 's> {
         };
         let previous = std::mem::take(&mut self.buffers);
         let mut out = Vec::with_capacity(list.len());
+        let mut first_error = None;
 
+        // `Promise .all (buffers .map (...))` (GLTF2Parser.js:600): every buffer is loaded, also
+        // after one has failed, and the array fails with an error.
         for (i, buffer) in list.iter().enumerate() {
             let buffer = V::new(buffer);
 
-            out.push(self.buffer_object(buffer, i, &previous)?);
+            match self.buffer_object(buffer, i, &previous) {
+                Ok(data) => out.push(data),
+                Err(e) => {
+                    first_error.get_or_insert(e);
+                    out.push(None);
+                }
+            }
+        }
+
+        if let Some(e) = first_error {
+            return Err(e);
         }
 
         self.buffers = out;
