@@ -13,7 +13,7 @@ that is not a merge commit, or a git failure runs both suites.
   and the PR template hold Markdown). No test reads these files. Neither suite runs.
 - Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web, the page adapter
   `crates/x3d-web/web/*.mjs` (not `web/example/`, which a native test includes), the browser baselines
-  `oracle/web-browser-*` and their X_ITE recorders `oracle/x_ite-web-*`, and web-tests.yml.
+  `oracle/web-browser-*` and their X_ITE recorders `oracle/x_ite-web-*`, web-tests.yml and its browser-deps action.
 - Native only (the browser suite is left out): a workspace crate that crates/x3d-web does not build with (its
   normal, build and target dependencies, followed through path dependencies), the other `oracle/` and `tools/`
   files except tools/build-web.sh, the REA ledger trees `_batch*_context/`, and the other workflows. The browser
@@ -31,6 +31,7 @@ WEB_ONLY = (
     "crates/x3d-web/tests/browser/",
     "oracle/web-browser-",
     "oracle/x_ite-web-",
+    ".github/actions/browser-deps/",
 )
 WEB_ONLY_FILES = {
     "crates/x3d-web/package.json",
@@ -187,6 +188,8 @@ def self_test():
         (["oracle/web-browser-02-baseline/runtime02-baseline.json"], False, True),
         (["oracle/x_ite-web-runtime-02.mjs"], False, True),
         ([".github/workflows/web-tests.yml"], False, True),
+        ([".github/actions/browser-deps/action.yml"], False, True),
+        ([".github/actions/other/action.yml"], True, True),
         ([".github/workflows/rust-tests.yml"], True, False),
         (["Cargo.lock"], True, True),
         (["Cargo.toml"], True, True),
