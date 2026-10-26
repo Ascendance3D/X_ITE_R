@@ -61,9 +61,10 @@ const KNOWN_DIFFERENCES = {
 // with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
 export const CASE_TIMEOUT = 180_000;
 
-// The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984): on CI's lavapipe they took up to
-// 163 s. Their cap is 2.5 times that.
-export const MOBILE_TIMEOUT = 420_000;
+// The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984) on the CPU: on CI's lavapipe, with
+// the 2 CPUs of a private-repository runner, the phone test took from 163 s to 404 s (PR #117). Their cap is 2.5 times
+// the slowest run.
+export const MOBILE_TIMEOUT = 1_010_000;
 
 // Each test file that imports this module gets one server and one browser, for all of its tests.
 export let server;
