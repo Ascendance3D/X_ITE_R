@@ -350,7 +350,10 @@ class X3DBrowser
 
          this .#load (url, aborted) .then (() =>
          {
-            this .#loading = null;
+            // A load handler can already have started the next loadURL; its token stays.
+            if (!aborted ())
+               this .#loading = null;
+
             resolve ();
          },
          error =>
