@@ -6,7 +6,7 @@
 use crate::collision::{CShape, World};
 use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
-use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
+use crate::nav::{Cx, Env, Input, LookAtRequest, Touches, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
 use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
 use std::collections::HashMap;
@@ -137,6 +137,11 @@ pub enum UiEvent {
         key: String,
         code: u32,
     },
+    /// touchstart, touchmove and touchend of the canvas with `event .touches` (the touches still down), at
+    /// pointer coordinates: PointingDevice's and the viewers' touch handlers.
+    TouchStart(Touches),
+    TouchMove(Touches),
+    TouchEnd(Touches),
 }
 
 #[derive(Default)]
@@ -257,6 +262,16 @@ pub struct Viewer3d {
     held_pose: Option<HeldPose>,
     /// A Script called Browser.dispose (): the browser stops (EmbeddedViewer unloads the world).
     pub disposed: bool,
+    /// X3DPointingDeviceSensorContext.setCursor: "DEFAULT", "POINTER", "GRABBING" or "MOVE".
+    pub cursor: &'static str,
+    /// PointingDevice.over: the last motion was over a pointing device sensor.
+    over: bool,
+    /// PointingDevice.grabbing: the pressed sensors include a drag sensor.
+    grabbing: bool,
+    /// The last pointer position of a touch (TouchEvent has no position of its own on touchend).
+    touch_pointer: (f64, f64),
+    /// loadURL or an Anchor with another window or a page as target: (target, url). The host opens it.
+    pub foreign: Vec<(String, String)>,
     /// A Script called Browser.resize (width, height): applied here; a host that owns the canvas size takes it
     /// (`EmbeddedViewer::take_resize_request`).
     pub resize_request: Option<(u32, u32)>,
@@ -484,6 +499,11 @@ impl Viewer3d {
             status_description: String::new(),
             held_pose: None,
             disposed: false,
+            cursor: "DEFAULT",
+            over: false,
+            grabbing: false,
+            touch_pointer: (0.0, 0.0),
+            foreign: vec![],
             resize_request: None,
             current: None,
             others: vec![],
@@ -1039,7 +1059,13 @@ impl Viewer3d {
                     }
                 }
                 "dispose" => self.disposed = true,
-                // loadURL with a foreign target (window.open) or a page URL: another window or document, outside the native scope.
+                // loadURL with a foreign target (window.open) or a page URL: another window or document. The native
+                // viewer opens nothing; a web page does.
+                r if r.starts_with("foreign:") => {
+                    if let Some((target, href)) = r["foreign:".len()..].split_once(':') {
+                        self.foreign.push((target.to_string(), href.to_string()));
+                    }
+                }
                 _ => {}
             }
         }
@@ -1255,7 +1281,7 @@ impl Viewer3d {
         }
 
         if let Some((x, y)) = self.verify_motion.take() {
-            self.pointer_motion(x, y);
+            self.pointer_motion(x, y, false);
         }
 
         for d in std::mem::take(&mut self.rt.prints) {
@@ -2502,6 +2528,13 @@ impl Viewer3d {
         self.swap_to(home);
     }
 
+    /// X3DBrowserContext.getActiveViewpoint: the bound viewpoint of the active layer, `None` for its default one.
+    pub fn active_viewpoint(&self) -> Option<NodeId> {
+        let n = self.layer.viewpoint();
+
+        (!is_default(n)).then_some(n)
+    }
+
     pub fn first_viewpoint(&mut self) {
         if let Some(n) = self.user_viewpoints().first().copied() {
             self.bind_viewpoint(n);
@@ -2567,10 +2600,59 @@ impl Viewer3d {
             UiEvent::MouseMove { x, y } => self.mouse_move(x, y),
             UiEvent::Wheel { delta_y, x, y } => self.viewer_input(Input::Wheel { delta_y, x, y }),
             UiEvent::DblClick { x, y } => self.viewer_input(Input::DblClick { x, y }),
+            UiEvent::TouchStart(t) => self.touch_start(t),
+            UiEvent::TouchMove(t) => self.touch_move(t),
+            UiEvent::TouchEnd(_) => self.touch_end(),
         }
     }
 
+    /// PointingDevice.touchstart (one touch: mousedown with button 0; two: touchend), then the viewer's, which a
+    /// pressed sensor stops (`stopImmediatePropagation`).
+    fn touch_start(&mut self, t: Touches) {
+        match t.n {
+            1 => {
+                let (x, y) = t.p[0];
+
+                self.touch_pointer = (x, y);
+
+                if self.pointing_down(x, y) {
+                    return;
+                }
+            }
+            2 => {
+                let (x, y) = self.touch_pointer;
+
+                self.pointing_up(x, y);
+            }
+            _ => {}
+        }
+
+        self.viewer_input(Input::TouchStart(t));
+    }
+
+    /// PointingDevice.touchmove (one touch: mousemove), then the viewer's.
+    fn touch_move(&mut self, t: Touches) {
+        if t.n == 1 {
+            let (x, y) = t.p[0];
+
+            self.touch_pointer = (x, y);
+            self.pointer_motion(x, y, true);
+        }
+
+        self.viewer_input(Input::TouchMove(t));
+    }
+
+    /// PointingDevice.touchend (mouseup with button 0), then the viewer's.
+    fn touch_end(&mut self) {
+        let (x, y) = self.touch_pointer;
+
+        self.pointing_up(x, y);
+        self.viewer_input(Input::TouchEnd);
+    }
+
     fn viewer_input(&mut self, ev: Input) {
+        let was_active = self.nav.is_active();
+
         // No displayed active layer: nothing to navigate.
         if self.active.is_none() {
             return;
@@ -2606,6 +2688,13 @@ impl Viewer3d {
         };
         self.nav.input(&ev, &mut cx);
         let requests = cx.requests;
+
+        // The viewers' setCursor: "MOVE" while they move the viewpoint, "DEFAULT" when the button is released.
+        match (was_active, self.nav.is_active()) {
+            (false, true) => self.cursor = "MOVE",
+            (true, false) => self.cursor = "DEFAULT",
+            _ => {}
+        }
 
         for r in requests {
             self.look_at_request(r);
@@ -2937,42 +3026,67 @@ impl Viewer3d {
     }
 
     fn mouse_down(&mut self, button: u8, x: f64, y: f64) {
-        if button == 0 && self.has_sensors() {
-            if self.advance_only_time {
-                self.rt.now = self.date_now;
-            }
-
-            let hit = self.do_pick(x, y);
-            let cam = self.pick_camera_of(hit.layer);
-            let now = if self.advance_only_time {
-                self.date_now
-            } else {
-                self.time
-            };
-            let id = hit.id;
-            let layer = hit.layer;
-            let pressed = self.pointer.button_press(&mut self.rt, hit, &cam, now);
-
-            // hit .pointingLayerNode = hit .layerNode.
-            if id {
-                self.pointing_layer = Some(layer);
-            }
-
-            self.collect_pointer_output();
-            self.browser_requests();
-
-            if pressed {
-                // PointingDevice.mousedown → onverifymotion: motion after the next frame.
-                self.verify_motion = Some((x, y));
-                return;
-            }
+        if button == 0 && self.pointing_down(x, y) {
+            return;
         }
 
         self.viewer_input(Input::MouseDown { button, x, y });
     }
 
+    /// PointingDevice.mousedown with button 0: buttonPressEvent. Returns whether a sensor took the press (the
+    /// event stops there).
+    fn pointing_down(&mut self, x: f64, y: f64) -> bool {
+        if !self.has_sensors() {
+            return false;
+        }
+
+        if self.advance_only_time {
+            self.rt.now = self.date_now;
+        }
+
+        let hit = self.do_pick(x, y);
+        let cam = self.pick_camera_of(hit.layer);
+        let now = if self.advance_only_time {
+            self.date_now
+        } else {
+            self.time
+        };
+        let id = hit.id;
+        let layer = hit.layer;
+        let pressed = self.pointer.button_press(&mut self.rt, hit, &cam, now);
+
+        // hit .pointingLayerNode = hit .layerNode.
+        if id {
+            self.pointing_layer = Some(layer);
+        }
+
+        self.collect_pointer_output();
+        self.browser_requests();
+
+        if pressed {
+            self.grabbing = self.pointer.hit_has_drag_sensor(&self.rt);
+            self.cursor = "POINTER";
+            // PointingDevice.mousedown → onverifymotion: motion after the next frame.
+            self.verify_motion = Some((x, y));
+        }
+
+        pressed
+    }
+
     fn mouse_up(&mut self, button: u8, x: f64, y: f64) {
-        if button == 0 && self.pointer.is_active() {
+        if button == 0 {
+            self.pointing_up(x, y);
+        }
+
+        self.viewer_input(Input::MouseUp { button, x, y });
+    }
+
+    /// PointingDevice.mouseup with button 0: buttonReleaseEvent, and the cursor.
+    fn pointing_up(&mut self, x: f64, y: f64) {
+        self.grabbing = false;
+        self.cursor = if self.over { "POINTER" } else { "DEFAULT" };
+
+        if self.pointer.is_active() {
             let cam = self.pick_camera_of(self.pointing_layer.unwrap_or(self.pointer.hit.layer));
             let now = if self.advance_only_time {
                 self.date_now
@@ -2986,18 +3100,33 @@ impl Viewer3d {
             // PointingDevice.onverifymotion: motion after the next frame.
             self.verify_motion = Some((x, y));
         }
-
-        self.viewer_input(Input::MouseUp { button, x, y });
     }
 
     fn mouse_move(&mut self, x: f64, y: f64) {
-        self.pointer_motion(x, y);
+        self.pointer_motion(x, y, true);
         self.viewer_input(Input::MouseMove { x, y });
     }
 
-    fn pointer_motion(&mut self, x: f64, y: f64) {
-        if !self.has_sensors() && !self.pointer.is_active() {
+    /// PointingDevice.motion: motionNotifyEvent, then the cursor unless the viewer is active. `moved` is false for
+    /// the motion that verifies the isOver state after a press or a release.
+    fn pointer_motion(&mut self, x: f64, y: f64, moved: bool) {
+        self.over = self.motion_notify(x, y);
+
+        if self.nav.is_active() {
             return;
+        }
+
+        self.cursor = match (self.grabbing && moved, self.over) {
+            (true, _) => "GRABBING",
+            (false, true) => "POINTER",
+            (false, false) => "DEFAULT",
+        };
+    }
+
+    /// X3DPointingDeviceSensorContext.motionNotifyEvent: is the pointer over a sensor?
+    fn motion_notify(&mut self, x: f64, y: f64) -> bool {
+        if !self.has_sensors() && !self.pointer.is_active() {
+            return false;
         }
 
         let hit = if self.nav.is_active() {
@@ -3011,9 +3140,10 @@ impl Viewer3d {
         } else {
             self.time
         };
-        self.pointer.motion(&mut self.rt, hit, &cam, now);
+        let over = self.pointer.motion(&mut self.rt, hit, &cam, now);
         self.collect_pointer_output();
         self.browser_requests();
+        over
     }
 
     // --- rendering ---------------------------------------------------------------------------

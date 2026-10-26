@@ -13,6 +13,38 @@ use std::path::PathBuf;
 pub trait Fetcher {
     /// `fetch (url)` + `checkResponse`: the body bytes, or `String (error)` of the rejection.
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String>;
+
+    /// An asynchronous fetcher (a web page's `fetch`) answers [`Fetcher::fetch`] only for a URL whose response has
+    /// arrived. The runtime then asks [`Fetcher::poll`] before a load runs, and holds the load until
+    /// [`Runtime::resume_fetches`]. A synchronous fetcher (the default) is always ready.
+    fn is_async(&self) -> bool {
+        false
+    }
+
+    /// Has the response of `url` arrived? `Pending` starts its request when there is none yet.
+    fn poll(&self, _url: &url::Url) -> FetchPoll {
+        FetchPoll::Loaded
+    }
+}
+
+/// The state of a URL at an asynchronous [`Fetcher`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FetchPoll {
+    /// The request is in flight.
+    Pending,
+    /// The response arrived: [`Fetcher::fetch`] gives the bytes.
+    Loaded,
+    /// The request failed: [`Fetcher::fetch`] gives the error.
+    Failed,
+}
+
+/// Script URLs (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`): no fetch.
+fn is_script_url(candidate: &str) -> bool {
+    let trimmed = candidate.trim_start();
+
+    ["ecmascript:", "javascript:", "vrmlscript:"]
+        .iter()
+        .any(|s| trimmed.starts_with(s))
 }
 
 /// Serves `<prefix><path>` from `root/<path>` like oracle/x_ite-dump.mjs's server.
@@ -507,6 +539,87 @@ impl Runtime {
                 "{prefix}Couldn't load any of the {attempts} URLs, tried in this order:"
             ));
         }
+    }
+
+    /// Is the fetch task ready to run with an asynchronous [`Fetcher`]? FileLoader tries the candidates in turn, so
+    /// the responses up to the first that arrived must be there; the candidates after it are not requested.
+    pub(crate) fn fetch_task_ready(&self, task: &Task) -> bool {
+        let (base, urls, bind_viewpoint) = match *task {
+            Task::UrlLoad(node, _) => {
+                if node as usize >= self.scene.nodes.len() || self.scene.free_nodes.contains(&node)
+                {
+                    return true;
+                }
+
+                (self.base_url(node), self.url_strings(node), false)
+            }
+            Task::ExternLoad(e, request) => match self.extern_pending_candidates(e, request) {
+                Some((base, urls)) => (base, urls, false),
+                None => return true,
+            },
+            Task::BrowserLoad(id) => match self.browser_loads.get(&id) {
+                Some(req) if !self.world_state.aborted.contains(&id) => (
+                    self.scene.world_url_of(req.parent).to_string(),
+                    req.urls.clone(),
+                    req.world.is_some(),
+                ),
+                _ => return true,
+            },
+            _ => return true,
+        };
+        let Ok(base) = url::Url::parse(&base) else {
+            return true;
+        };
+
+        for candidate in &urls {
+            if candidate.is_empty() || is_script_url(candidate) {
+                continue;
+            }
+
+            let Ok(r) = base.join(candidate) else {
+                continue;
+            };
+
+            if r.scheme() == "data" {
+                continue;
+            }
+
+            // A loadURL of a fragment of the referring document binds a viewpoint: no fetch.
+            if bind_viewpoint
+                && r.fragment().is_some_and(|f| !f.is_empty())
+                && (r.scheme(), r.host_str(), r.port(), r.path())
+                    == (base.scheme(), base.host_str(), base.port(), base.path())
+            {
+                return true;
+            }
+
+            match self.fetcher.poll(&r) {
+                FetchPoll::Loaded => return true,
+                FetchPoll::Failed => continue,
+                FetchPoll::Pending => return false,
+            }
+        }
+
+        true
+    }
+
+    /// The fetches that waited for an asynchronous [`Fetcher`] go back to the front of the queue, in request order,
+    /// and the tasks run. A load whose responses have still not arrived waits again.
+    pub fn resume_fetches(&mut self) {
+        if self.parked_fetches.is_empty() {
+            return;
+        }
+
+        for task in std::mem::take(&mut self.parked_fetches).into_iter().rev() {
+            self.fetches.push_front(task);
+        }
+
+        self.run_tasks();
+    }
+
+    /// Does a load wait for an asynchronous [`Fetcher`]?
+    pub fn has_parked_fetches(&self) -> bool {
+        !self.parked_fetches.is_empty()
     }
 
     pub(crate) fn url_strings(&self, node: NodeId) -> Vec<String> {
