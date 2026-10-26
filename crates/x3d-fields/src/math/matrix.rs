@@ -690,3 +690,29 @@ impl Matrix4 {
         }
     }
 }
+
+impl std::fmt::Display for Matrix3 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut s = String::new();
+        for (i, val) in self.0.iter().enumerate() {
+            if i > 0 {
+                s.push(' ');
+            }
+            s.push_str(&jsmath::number_to_string(*val));
+        }
+        write!(f, "{}", s)
+    }
+}
+
+impl std::fmt::Display for Matrix4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut s = String::new();
+        for (i, val) in self.0.iter().enumerate() {
+            if i > 0 {
+                s.push(' ');
+            }
+            s.push_str(&jsmath::number_to_string(*val));
+        }
+        write!(f, "{}", s)
+    }
+}

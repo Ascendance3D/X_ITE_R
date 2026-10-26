@@ -412,3 +412,16 @@ pub(crate) fn slerp(source: &mut Quaternion, mut destination: Quaternion, t: f64
     source.z = source.z * scale0 + destination.z * scale1;
     source.w = source.w * scale0 + destination.w * scale1;
 }
+
+impl std::fmt::Display for Quaternion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {} {}",
+            jsmath::number_to_string(self.x),
+            jsmath::number_to_string(self.y),
+            jsmath::number_to_string(self.z),
+            jsmath::number_to_string(self.w)
+        )
+    }
+}
