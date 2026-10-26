@@ -1,0 +1,12 @@
+{
+  "name": "x3d-web-tests",
+  "private": true,
+  "description": "Browser integration tests of X_ITE_R's <x3d-canvas> (tests/browser). Build the module first: tools/build-web.sh.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 tests/browser/api.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

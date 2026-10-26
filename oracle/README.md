@@ -636,3 +636,19 @@ Keep every `.mjs` until its Rust equivalent passes the same old-against-new comp
    `x3d-oracle`, or be regenerated once and kept as data.
 6. The CodeMirror browser suites `cm5-run.mjs`, `cm5-doc-ops.mjs` and `cm5-cmd-ops.mjs`
    drive cm5-build's test pages with the same Playwright calls.
+
+## Web browser lane 01 (2026-10-26): the `<x3d-canvas>` API case
+
+- `x_ite-web-api.mjs` runs `crates/x3d-web/tests/browser/api_case.mjs` against the pinned X_ITE in headless Chrome
+  and records `web-browser-01-baseline/api-baseline.json` (values, world sha256, Chrome and WebGL renderer) and the
+  canvas screenshots `before.png` and `after.png` (before and after the field update).
+- The page is served from memory at a path inside `x_ite-pin/src/`, so the pinned source and its digest in
+  `tools/candidate.lock` do not change. Prepare the worktree as in "Recording from a worktree" above.
+- Five runs must give byte-identical values; the run fails otherwise. The baseline was recorded 5 times with
+  identical values and identical screenshots (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+- `crates/x3d-web/tests/browser/api.test.mjs` runs the same case against X_ITE_R and compares
+  (`crates/x3d-web/README.md`).
+
+```
+node oracle/x_ite-web-api.mjs oracle/web-browser-01-baseline --runs 5
+```

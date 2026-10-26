@@ -1,0 +1,106 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "crates/x3d-web/web/example/box.wrl",
+ "worldSha256": "eb10d3ccebb8c32973042eb477d726437397c2654e151a5d4c0e44100d316079",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "screenshots": [
+  {
+   "before": "8b86734d3a2d50d3402849ba929d2c777a8e463004bf3630165ca1be16219cf9",
+   "after": "7e2e342831df2a0ef4d3e3d5420fc8ba48df87b0d5de6ff533b74a6ed6991d2f"
+  },
+  {
+   "before": "8b86734d3a2d50d3402849ba929d2c777a8e463004bf3630165ca1be16219cf9",
+   "after": "7e2e342831df2a0ef4d3e3d5420fc8ba48df87b0d5de6ff533b74a6ed6991d2f"
+  },
+  {
+   "before": "8b86734d3a2d50d3402849ba929d2c777a8e463004bf3630165ca1be16219cf9",
+   "after": "7e2e342831df2a0ef4d3e3d5420fc8ba48df87b0d5de6ff533b74a6ed6991d2f"
+  },
+  {
+   "before": "8b86734d3a2d50d3402849ba929d2c777a8e463004bf3630165ca1be16219cf9",
+   "after": "7e2e342831df2a0ef4d3e3d5420fc8ba48df87b0d5de6ff533b74a6ed6991d2f"
+  },
+  {
+   "before": "8b86734d3a2d50d3402849ba929d2c777a8e463004bf3630165ca1be16219cf9",
+   "after": "7e2e342831df2a0ef4d3e3d5420fc8ba48df87b0d5de6ff533b74a6ed6991d2f"
+  }
+ ],
+ "console": [
+  "info: Initializing UnlitShader.",
+  "info: Done loading external component 'Scripting'.",
+  "info: Done loading external component 'Text'.",
+  "info: Done loading scene 'http://oracle/crates/x3d-web/web/example/box.wrl'.",
+  "info: Initializing GouraudShader.",
+  "warning: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error",
+  "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "error: Couldn't load URL 'http://oracle/crates/x3d-web/web/example/no-such-world.wrl'. Error: Not Found"
+ ],
+ "values": {
+  "load": {
+   "browserIsObject": true,
+   "getBrowserCanvas": true,
+   "canvasTag": "[object X3DCanvasElement]",
+   "srcProperty": true,
+   "srcAttribute": true,
+   "worldURLMatches": true,
+   "rootNodes": [
+    "Viewpoint",
+    "Transform"
+   ],
+   "material": {
+    "typeName": "Material",
+    "nodeName": "BoxMaterial",
+    "diffuseColor": "0.2 0.4 0.9",
+    "rgb": [
+     0.2,
+     0.4,
+     0.9
+    ],
+    "transparency": 0,
+    "fieldType": "SFColor",
+    "fieldAccess": 7,
+    "fieldString": "0.2 0.4 0.9"
+   },
+   "camera": {
+    "typeName": "Viewpoint",
+    "position": "0 0 6",
+    "description": "Front",
+    "isBound": true
+   },
+   "navigation": {
+    "children": 1,
+    "rotation": "1 1 0 0.6",
+    "shape": "Shape",
+    "material": "BoxMaterial",
+    "geometry": "Box",
+    "size": "2 2 2",
+    "solid": true
+   },
+   "missingNode": "Named node 'NoSuchNode' not found.",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ]
+  },
+  "update": {
+   "afterSet": "1 0 0",
+   "afterFrames": "1 0 0",
+   "transparency": 0.25,
+   "outputOnlyAssign": "no error",
+   "isBoundAfter": true
+  },
+  "failure": {
+   "typeCheck": "Browser.loadURL: url must be of type MFString.",
+   "missingWorld": "Couldn't load X3D file.",
+   "events": [
+    "error"
+   ],
+   "worldKept": true,
+   "materialAfter": "1 0 0"
+  }
+ }
+}

@@ -116,6 +116,12 @@ The test process also covers sound placement, distance attenuation, and stereo o
 
 Some differences remain. These include the recorded HRTF limitation and timing-sensitive cases.
 
+## Web Browser (first batch)
+
+X_ITE_R also runs in a web page. [`crates/x3d-web`](crates/x3d-web/README.md) builds the Rust engine as WebAssembly, draws with WebGPU, and defines an `<x3d-canvas>` element with a small X_ITE-named JavaScript API.
+
+No X_ITE JavaScript runs in the page. The first batch loads and draws a world, and it reads and sets fields; [`crates/x3d-web/web/API.md`](crates/x3d-web/web/API.md) lists what is supported and what is not.
+
 ## Desktop Viewer
 
 The current standalone application is named `x3d-view`.

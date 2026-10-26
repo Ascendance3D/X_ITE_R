@@ -4618,6 +4618,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "url",
+ "web-time",
  "wgpu",
  "x3d-evidence",
  "x3d-fields",
@@ -4637,6 +4638,7 @@ dependencies = [
  "rustfft",
  "url",
  "web-audio-api",
+ "web-time",
  "x3d-fields",
  "x3d-parse",
  "x3d-scene",
@@ -4684,6 +4686,7 @@ dependencies = [
  "pollster 1.0.1",
  "serde_json",
  "stacker",
+ "web-time",
  "wgpu",
  "winit",
  "x3d-evidence",
@@ -4693,6 +4696,24 @@ dependencies = [
  "x3d-runtime",
  "x3d-scene",
  "x3d-script",
+]
+
+[[package]]
+name = "x3d-web"
+version = "0.1.0"
+dependencies = [
+ "js-sys",
+ "url",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "wgpu",
+ "x3d-fields",
+ "x3d-parse",
+ "x3d-render",
+ "x3d-runtime",
+ "x3d-scene",
+ "x3d-viewer",
 ]
 
 [[package]]
