@@ -523,9 +523,9 @@ impl Runtime {
                 };
 
                 self.buffers_pending = false;
-                self.accept_waits = wait.is_some();
+                let outer = std::mem::replace(&mut self.accept_waits, wait.is_some());
                 let accepted = accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r));
-                self.accept_waits = false;
+                self.accept_waits = outer;
                 accepted
             })();
 
