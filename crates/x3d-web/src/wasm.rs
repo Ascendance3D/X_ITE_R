@@ -177,8 +177,10 @@ impl x3d_runtime::Fetcher for WebFetcher {
             _ => {}
         }
 
-        // A URL the runtime did not ask for first (a glTF buffer, the next candidate after one that did not parse):
-        // the page never blocks on a request, so this fetch fails now; the response serves later requests.
+        // A URL the runtime did not ask for first. The fallback chains of Inline, the textures, EXTERNPROTO, Anchor
+        // and glTF buffers wait for their responses (FetchPoll), so this is a load that does not wait (a font, a
+        // MovieTexture, an audio file after one that did not decode): the page never blocks on a request, so this
+        // fetch fails now; the response serves later requests.
         if !self.cache.borrow().entries.contains_key(&key) {
             self.start(key);
         }

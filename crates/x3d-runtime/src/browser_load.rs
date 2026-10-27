@@ -14,7 +14,7 @@
 //!
 //! The promise itself lives in JavaScript; [`ScriptHost::settle`] hands the outcome back.
 
-use crate::loader::{FileLoader, LoadHooks, LoadResult, Loaded};
+use crate::loader::{FetchKey, FileLoader, LoadHooks, LoadResult, Loaded};
 use crate::*;
 
 /// X3DConstants.INITIALIZED_EVENT, SHUTDOWN_EVENT and INITIALIZED_ERROR (the browser callbacks of `addBrowserCallback`).
@@ -255,25 +255,34 @@ impl Runtime {
         };
         let base = loader.base.clone();
 
-        let ok = self.load_document(&loader, &req.urls, |rt, loaded| {
-            let (data, url) = match loaded {
-                Loaded::Script(source) => (
-                    source.into_bytes(),
-                    format!(
-                        "{}null",
-                        base.rsplit_once('/')
-                            .map_or(String::new(), |(d, _)| format!("{d}/"))
-                    ),
-                ),
-                Loaded::Data(data, url) => (data, url.to_string()),
-            };
+        self.allow_fetch_wait();
 
-            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
-                .map_err(error_string)
-        });
+        let result =
+            self.load_document_hooks(&loader, &req.urls, &LoadHooks::default(), |rt, loaded| {
+                let (data, url) = match loaded {
+                    Loaded::Script(source) => (
+                        source.into_bytes(),
+                        format!(
+                            "{}null",
+                            base.rsplit_once('/')
+                                .map_or(String::new(), |(d, _)| format!("{d}/"))
+                        ),
+                    ),
+                    Loaded::Data(data, url) => (data, url.to_string()),
+                };
+
+                rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
+                    .map_err(error_string)
+            });
+
+        // The request goes on when the response of the next candidate is in.
+        if result == LoadResult::Suspended {
+            self.browser_loads.insert(id, req);
+            return;
+        }
 
         // loadDocumentError: `callback (null)`.
-        if !ok {
+        if result == LoadResult::Failed {
             self.browser_settle(id, Err("Couldn't load X3D file.".into()));
         }
     }
@@ -291,7 +300,20 @@ impl Runtime {
 
         let parsed = match input {
             Input::Bytes(data) => {
-                crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url).scene
+                let parsed = crate::loader::parse_bytes_waiting(
+                    &*self.fetcher,
+                    data,
+                    url,
+                    self.accept_waits,
+                );
+
+                // `await buffersArray`: the scene is built when the buffers are in.
+                if parsed.buffers_pending {
+                    self.buffers_pending = true;
+                    return Err(String::new());
+                }
+
+                parsed.scene
             }
             Input::Text(text) => x3d_parse::parse_string(text, url),
         };
@@ -572,7 +594,11 @@ impl Runtime {
 
         // The fetch of the first URL was aborted before it was made: `fetch` rejects with the AbortError, and as `abort ()`
         // emptied the list of URLs, that is the end.
-        let first = req.urls.first().map(String::as_str).unwrap_or_default();
+        // A chain that waited for a later candidate: that fetch is the one the abort ends.
+        let (first, attempts) = match self.fetch_resume_of(&FetchKey::Browser(id), &req.urls) {
+            Some(r) => (req.urls[r.index].as_str(), r.attempts + 1),
+            None => (req.urls.first().map(String::as_str).unwrap_or_default(), 1),
+        };
         let fetched = !first.is_empty()
             && !["ecmascript:", "javascript:", "vrmlscript:"]
                 .iter()
@@ -586,11 +612,13 @@ impl Runtime {
                 first,
                 resolved.as_ref(),
                 "AbortError: signal is aborted without reason",
-                1,
+                attempts,
                 0,
             );
             return self.world_load_failed(id);
         }
+
+        self.allow_fetch_wait();
 
         let result = self.load_document_hooks(&loader, &req.urls, &hooks, |rt, loaded| {
             let (data, url) = match loaded {
@@ -627,6 +655,10 @@ impl Runtime {
                 self.browser_settle_plain(id, Ok(()));
             }
             LoadResult::Failed => self.world_load_failed(id),
+            // The request goes on when the response of the next candidate is in.
+            LoadResult::Suspended => {
+                self.browser_loads.insert(id, req);
+            }
         }
     }
 

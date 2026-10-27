@@ -1,0 +1,26 @@
+#VRML V2.0 utf8
+# X_ITE_R web resource fallback 01 test world (synthetic, written for the tests).
+# Fallbacks after a response that does not load. Relative candidates resolve against this file's directory.
+
+DEF Camera Viewpoint { position 0 0 9 description "Camera" }
+
+# A candidate that downloads but does not parse, then one that loads.
+Transform { translation -3 1.2 0 children Inline { url [ "/garbage/a-first.wrl" "parts/a.wrl" ] } }
+# A server error, a candidate that does not parse, a missing file, then one that loads.
+Transform { translation -1 1.2 0 children Inline { url [ "/status/500/b-first.wrl" "/garbage/b-second.wrl" "parts/b-missing.wrl" "parts/b.wrl" ] } }
+# An image is no scene (no suitable file handler), then a scene.
+Transform { translation 1 1.2 0 children Inline { url [ "../tex/red.png" "parts/c.wrl" ] } }
+# The first candidate loads: the second is never requested.
+Transform { translation 3 1.2 0 children Inline { url [ "parts/d.wrl" "parts/d-never.wrl" ] } }
+
+# A texture that does not decode, then one that does.
+Transform {
+  translation -1.5 -1.5 0
+  children Shape {
+    appearance Appearance { material Material { } texture ImageTexture { url [ "/garbage/t-first.png" "../tex/green.png" ] } }
+    geometry Box { size 1.5 1.5 1.5 }
+  }
+}
+
+# Every candidate fails: the Inline stays empty.
+Transform { translation 1.5 -1.5 0 children Inline { url [ "/garbage/e-first.wrl" "/status/404/e-second.wrl" ] } }

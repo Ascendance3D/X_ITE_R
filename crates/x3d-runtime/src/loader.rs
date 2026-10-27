@@ -218,6 +218,46 @@ pub enum LoadResult {
     Foreign(String, String),
     /// Every candidate failed (or there was none).
     Failed,
+    /// An asynchronous [`Fetcher`] has not answered the next candidate yet: the load task waits and goes on
+    /// from that candidate ([`Runtime::allow_fetch_wait`]). Nothing is settled.
+    Suspended,
+}
+
+/// A load task whose fallback chain can wait for an asynchronous [`Fetcher`].
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub enum FetchKey {
+    /// `Task::UrlLoad` (node, generation).
+    Url(NodeId, u64),
+    /// `Task::BrowserLoad` (request).
+    Browser(u64),
+}
+
+impl FetchKey {
+    pub fn of(task: &Task) -> Option<FetchKey> {
+        match *task {
+            Task::UrlLoad(node, generation) => Some(FetchKey::Url(node, generation)),
+            Task::BrowserLoad(id) => Some(FetchKey::Browser(id)),
+            _ => None,
+        }
+    }
+
+    pub fn task(&self) -> Task {
+        match *self {
+            FetchKey::Url(node, generation) => Task::UrlLoad(node, generation),
+            FetchKey::Browser(id) => Task::BrowserLoad(id),
+        }
+    }
+}
+
+/// FileLoader.loadDocumentError → loadDocumentAsync (this .url .shift ()): a candidate failed after its response
+/// came, and the next one is fetched now. With an asynchronous [`Fetcher`] its response comes later, so the chain
+/// stops there and goes on from `index` (of `urls`) with `attempts` failed candidates when it is in.
+#[derive(Clone, Debug)]
+pub struct FetchResume {
+    pub index: usize,
+    pub attempts: usize,
+    /// The candidates of the chain; a chain of other candidates (the url changed) starts again.
+    pub urls: Vec<String>,
 }
 
 /// The decoded fragment of `candidate` if FileLoader's `bindViewpoint` branch takes it: a URL that, resolved against
@@ -283,6 +323,22 @@ pub struct FileLoader {
 }
 
 impl Runtime {
+    /// The next fallback chain of the running load task may wait for an asynchronous [`Fetcher`]
+    /// ([`LoadResult::Suspended`]). The caller then settles nothing for that result: the task runs again.
+    pub(crate) fn allow_fetch_wait(&mut self) {
+        self.fetch_wait = self
+            .running_fetch
+            .clone()
+            .filter(|_| self.fetcher.is_async());
+    }
+
+    /// The candidate of `urls` where the chain of the running load task goes on, if it waited.
+    pub(crate) fn fetch_resume_of(&self, key: &FetchKey, urls: &[String]) -> Option<&FetchResume> {
+        self.fetch_resume
+            .get(key)
+            .filter(|r| r.urls == urls && r.index < urls.len())
+    }
+
     /// X3DExecutionContext.getBaseURL of a node's context (the scene's world URL).
     pub fn base_url(&self, node: NodeId) -> String {
         self.scene
@@ -355,15 +411,24 @@ impl Runtime {
     ) -> LoadResult {
         let mut attempts = attempts;
         let mut special: Option<LoadResult> = None;
+        // Only the chain the caller allowed can wait; a load it starts meanwhile cannot.
+        let wait = self.fetch_wait.take();
+        let mut start = 0;
 
         if urls.is_empty() {
             // loadDocumentError () without an error prints nothing.
             return LoadResult::Failed;
         }
 
-        for (i, candidate) in urls.iter().enumerate() {
+        if let Some(r) = wait.as_ref().and_then(|k| self.fetch_resume_of(k, urls)) {
+            start = r.index;
+            attempts = r.attempts;
+        }
+
+        for (i, candidate) in urls.iter().enumerate().skip(start) {
             let remaining = urls.len() - i - 1;
             let mut resolved: Option<url::Url> = None;
+            let mut not_in = false;
 
             let result: Result<(), Option<String>> = (|| {
                 if candidate.is_empty() {
@@ -440,14 +505,48 @@ impl Runtime {
                     return Err(Some("TypeError: Failed to fetch".to_string()));
                 }
 
+                // `await fetch (...)`: the response of this candidate is not in yet. A data URL is not waited for,
+                // like in fetch_task_ready.
+                if wait.is_some()
+                    && r.scheme() != "data"
+                    && self.fetcher.poll(&r) == FetchPoll::Pending
+                {
+                    not_in = true;
+                    return Err(None);
+                }
+
                 // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
                     nodes::shaders::fetch_data_url(candidate).map_err(Some)?
                 } else {
                     self.fetcher.fetch(&r).map_err(Some)?
                 };
-                accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r))
+
+                self.buffers_pending = false;
+                self.accept_waits = wait.is_some();
+                let accepted = accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r));
+                self.accept_waits = false;
+                accepted
             })();
+
+            // The candidate waits for its response, or for the buffers of its glTF (GLTF2Parser `await`s them
+            // before it builds the scene): the chain goes on with this candidate when they are in.
+            if let Some(key) = wait.as_ref()
+                && (not_in || (result.is_err() && std::mem::take(&mut self.buffers_pending)))
+            {
+                self.fetch_resume.insert(
+                    key.clone(),
+                    FetchResume {
+                        index: i,
+                        attempts,
+                        urls: urls.to_vec(),
+                    },
+                );
+                self.fetch_suspended = true;
+                return LoadResult::Suspended;
+            }
+
+            self.buffers_pending = false;
 
             match result {
                 Ok(()) => return special.take().unwrap_or(LoadResult::Loaded),
@@ -545,7 +644,7 @@ impl Runtime {
     /// the responses up to the first that arrived must be there; the candidates after it are not requested.
     pub(crate) fn fetch_task_ready(&self, task: &Task) -> bool {
         // `world`: the parameters of a loadURL or Anchor load, whose foreign targets are never fetched.
-        let (base, urls, world) = match *task {
+        let (base, mut urls, world) = match *task {
             Task::UrlLoad(node, _) => {
                 if node as usize >= self.scene.nodes.len() || self.scene.free_nodes.contains(&node)
                 {
@@ -571,6 +670,11 @@ impl Runtime {
         let Ok(base) = url::Url::parse(&base) else {
             return true;
         };
+
+        // A chain that waited goes on from the candidate it waits for: the candidates before it failed.
+        if let Some(r) = FetchKey::of(task).and_then(|k| self.fetch_resume_of(&k, &urls)) {
+            urls.drain(..r.index);
+        }
 
         // load_document_from_opt's foreign rule: a `target` other than `_self` goes to another window unfetched.
         if let Some(parameters) = &world {
@@ -691,24 +795,37 @@ impl Runtime {
         let image_texture = type_name == "ImageTexture";
         let atlas = type_name == "ImageTextureAtlas";
         let image_3d = type_name == "ImageTexture3D";
-        let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => {
-                Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
-            }
-            Loaded::Data(data, url) => {
-                // ImageTexture.setImage: setTextureData before COMPLETE_STATE.
-                if image_texture {
-                    rt.image_texture_set_image(node, &data, &url)?;
+
+        self.allow_fetch_wait();
+
+        let result =
+            self.load_document_from(&loader, &urls, &LoadHooks::default(), 0, |rt, _, loaded| {
+                match loaded {
+                    Loaded::Script(_) => {
+                        Err("Error: Couldn't parse X3D. No suitable file handler found.".into())
+                    }
+                    Loaded::Data(data, url) => {
+                        // ImageTexture.setImage: setTextureData before COMPLETE_STATE.
+                        if image_texture {
+                            rt.image_texture_set_image(node, &data, &url)?;
+                        }
+                        if atlas {
+                            return rt.image_texture_atlas_set_image(node, &data);
+                        }
+                        if image_3d {
+                            return rt.image_texture_3d_set_data(node, &data);
+                        }
+                        Ok(())
+                    }
                 }
-                if atlas {
-                    return rt.image_texture_atlas_set_image(node, &data);
-                }
-                if image_3d {
-                    return rt.image_texture_3d_set_data(node, &data);
-                }
-                Ok(())
-            }
-        });
+            });
+
+        // The load goes on when the response of the next candidate is in (IN_PROGRESS_STATE meanwhile).
+        if result == LoadResult::Suspended {
+            return;
+        }
+
+        let ok = result != LoadResult::Failed;
 
         // ImageTexture.loadData with `data === null`: clearTexture, then FAILED_STATE.
         if !ok && image_texture {
@@ -1088,11 +1205,27 @@ pub struct ParseBytesResult {
     pub scene: Result<Scene, x3d_parse::LoadError>,
     /// Every buffer that failed, in buffer order.
     pub buffer_errors: Vec<BufferFetchError>,
+    /// A buffer's response is not in yet ([`parse_bytes_waiting`]): `scene` is no result, parse again later.
+    pub buffers_pending: bool,
 }
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
 pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> ParseBytesResult {
+    parse_bytes_waiting(fetcher, data, url, false)
+}
+
+/// [`parse_bytes_with_fetcher`]; with `wait`, a buffer whose response an asynchronous `fetcher` has not given yet
+/// is requested and the result has `buffers_pending`. Every buffer is asked for (`Promise .all`), so their
+/// requests go out together.
+pub(crate) fn parse_bytes_waiting(
+    fetcher: &dyn Fetcher,
+    data: &[u8],
+    url: &str,
+    wait: bool,
+) -> ParseBytesResult {
+    let wait = wait && fetcher.is_async();
+    let pending = std::cell::Cell::new(false);
     let buffer_errors = std::cell::RefCell::new(Vec::new());
     let failed = |uri: &str, resolved: Option<url::Url>, error: &str, kind: BufferFailure| {
         buffer_errors.borrow_mut().push(BufferFetchError {
@@ -1124,6 +1257,11 @@ pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -
             }
         };
 
+        if wait && fetcher.poll(&resolved) == FetchPoll::Pending {
+            pending.set(true);
+            return Err("TypeError: Failed to fetch".to_string());
+        }
+
         fetcher.fetch(&resolved).inspect_err(|e| {
             failed(uri, Some(resolved.clone()), e, BufferFailure::Fetch);
         })
@@ -1131,8 +1269,15 @@ pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -
 
     let scene = x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url));
 
+    if pending.get() {
+        // The messages of this parse are not the result: the next parse gives them.
+        x3d_parse::take_error_warnings();
+        x3d_parse::take_error_detail();
+    }
+
     ParseBytesResult {
         scene,
         buffer_errors: buffer_errors.into_inner(),
+        buffers_pending: pending.get(),
     }
 }

@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# X_ITE_R web resource fallback 01 test world (synthetic, written for the tests).
+# An Inline whose first candidate does not parse; its second candidate is held by the server (hold key "fb").
+
+Inline { url [ "/garbage/h-first.wrl" "/hold/fb/tests/browser/worlds/fallback/parts/h.wrl" ] }

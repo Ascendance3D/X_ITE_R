@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+# X_ITE_R web resource fallback 01 test world (synthetic, written for the tests).
+# The scene of the Inlines of two scenes.
+
+Shape {
+  appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 } }
+  geometry Box { size 1 1 1 }
+}
