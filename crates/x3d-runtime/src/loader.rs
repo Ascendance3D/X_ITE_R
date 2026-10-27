@@ -60,7 +60,7 @@ impl Fetcher for LocalFetcher {
 
         // `fetch (dataURL)` needs no server: the browser decodes the URL itself.
         if url.scheme() == "data" {
-            return x3d_parse::gltf_default_fetch(href, "");
+            return x3d_parse::decode_data_url(href);
         }
 
         if !href.starts_with(&self.prefix) {
@@ -98,7 +98,15 @@ impl Fetcher for LocalFetcher {
 
 /// `decodeURI`: decode escapes except reserved characters; `None` on a malformed sequence.
 pub fn decode_uri(s: &str) -> Option<String> {
-    const RESERVED: &[u8] = b";/?:@&=+$,#";
+    decode_escapes(s, b";/?:@&=+$,#")
+}
+
+/// `decodeURIComponent`: decode every escape; `None` on a malformed sequence (where JavaScript throws URIError).
+pub fn decode_uri_component(s: &str) -> Option<String> {
+    decode_escapes(s, b"")
+}
+
+fn decode_escapes(s: &str, reserved: &[u8]) -> Option<String> {
     let bytes = s.as_bytes();
     let mut out: Vec<u8> = vec![];
     let mut i = 0;
@@ -112,13 +120,18 @@ pub fn decode_uri(s: &str) -> Option<String> {
 
         let hex = |j: usize| -> Option<u8> {
             let h = bytes.get(j..j + 2)?;
+
+            if !h.iter().all(u8::is_ascii_hexdigit) {
+                return None;
+            }
+
             u8::from_str_radix(std::str::from_utf8(h).ok()?, 16).ok()
         };
 
         let b0 = hex(i + 1)?;
 
         if b0 < 0x80 {
-            if RESERVED.contains(&b0) {
+            if reserved.contains(&b0) {
                 out.extend_from_slice(&bytes[i..i + 3]);
             } else {
                 out.push(b0);
@@ -165,8 +178,9 @@ fn truncate(s: &str) -> String {
 }
 
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
-/// unless the header ends with `;base64`, the text after the first comma is `decodeURIComponent`ed (kept as it is when
-/// that fails) and a leading `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
+/// unless the header ends with `;base64` (case-sensitive: `;BASE64` is text), the text after the first comma is
+/// `decodeURIComponent`ed (kept as it is when that throws: one malformed escape keeps every escape) and a leading
+/// `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
 pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
     let rest = candidate.trim_start().strip_prefix("data:")?;
     let (header, data) = rest.split_once(',')?;
@@ -175,10 +189,7 @@ pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
         return None;
     }
 
-    let decoded = percent_encoding::percent_decode_str(data)
-        .decode_utf8()
-        .map(|d| d.into_owned())
-        .unwrap_or_else(|_| data.to_string());
+    let decoded = decode_uri_component(data).unwrap_or_else(|| data.to_string());
 
     Some(
         decoded
@@ -774,7 +785,13 @@ impl Runtime {
                 continue;
             };
 
+            // `fetch (dataURL)` needs no request: a data URL that decodes is ready, and no later candidate is
+            // requested; one that does not decode fails at once, like a failed response.
             if r.scheme() == "data" {
+                if x3d_parse::decode_data_url(r.as_str()).is_ok() {
+                    return true;
+                }
+
                 continue;
             }
 

@@ -52,6 +52,11 @@ fn without_fragment(url: &url::Url) -> String {
 
 impl Fetcher for TestFetcher {
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        // A data URL needs no request: the page's fetcher (WebFetcher) decodes it itself.
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str());
+        }
+
         let mut net = self.0.borrow_mut();
         let key = without_fragment(url);
 
@@ -68,6 +73,13 @@ impl Fetcher for TestFetcher {
     }
 
     fn poll(&self, url: &url::Url) -> FetchPoll {
+        if url.scheme() == "data" {
+            return match x3d_parse::decode_data_url(url.as_str()) {
+                Ok(_) => FetchPoll::Loaded,
+                Err(_) => FetchPoll::Failed,
+            };
+        }
+
         let mut net = self.0.borrow_mut();
         let key = without_fragment(url);
 
@@ -1215,4 +1227,282 @@ fn a_world_dropped_while_its_audio_waits_takes_no_late_response() {
     drop(s);
     net.respond(&w("held.wav"), Ok(TONE));
     assert_eq!(net.read(), [w("a5.wav")]);
+}
+
+// --- data: URLs (MiniMax P1 of PR #123) ----------------------------------------------------------------------------
+
+fn base64(data: &[u8]) -> String {
+    const B64: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::new();
+
+    for chunk in data.chunks(3) {
+        let n = chunk.iter().fold(0u32, |n, &b| n << 8 | b as u32) << (8 * (3 - chunk.len()));
+
+        for k in 0..=chunk.len() {
+            out.push(B64[(n >> (18 - 6 * k)) as usize & 63] as char);
+        }
+
+        out.push_str(&"=".repeat(3 - chunk.len()));
+    }
+
+    out
+}
+
+fn percent(data: &[u8]) -> String {
+    data.iter().map(|b| format!("%{b:02x}")).collect()
+}
+
+/// A font, an image, a movie and a sound as `;BASE64` data URLs (oracle/web-browser-loadurl-01-baseline, dataURL.*):
+/// each decodes, and no later candidate is requested.
+#[test]
+fn upper_case_base64_data_urls_decode_for_every_resource_type() {
+    let net = TestFetcher::default();
+    let text = format!(
+        "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Text:1\nCOMPONENT Texturing:3\nCOMPONENT Sound:2\n\
+         Shape {{ appearance Appearance {{ texture ImageTexture {{ url [ \"data:image/gif;BASE64,{gif}\" \"i1.gif\" ] }} }} geometry Box {{ }} }}\n\
+         Shape {{ appearance Appearance {{ texture MovieTexture {{ url [ \"data:image/gif;BASE64,{gif}\" \"m9.gif\" ] }} }} geometry Box {{ }} }}\n\
+         Shape {{ geometry DEF T Text {{ string \"Hg\" fontStyle FontStyle {{ family [ \"data:font/ttf;BASE64,{font}\" \"f9.ttf\" ] }} }} }}\n\
+         Sound {{ source DEF A AudioClip {{ url [ \"data:audio/wav;BASE64,{tone}\" \"a9.wav\" ] }} }}\n",
+        gif = base64(GIF),
+        font = base64(PT_SANS),
+        tone = base64(TONE),
+    );
+    let mut s = live(&text, &net, &[]);
+
+    steps(&mut s, 1, 20);
+    assert_eq!(net.requested(), Vec::<String>::new());
+
+    let clip = s.named_node("A").expect("DEF A");
+    let duration: f64 = s
+        .field(clip, "duration_changed")
+        .expect("duration")
+        .value
+        .parse()
+        .expect("a number");
+
+    assert_eq!(format!("{duration:.3}"), "0.272");
+
+    let text = s.named_node("T").expect("DEF T");
+
+    let bounds: Vec<f64> = s
+        .field(text, "textBounds")
+        .expect("textBounds")
+        .value
+        .split_whitespace()
+        .map(|v| v.parse().expect("a number"))
+        .collect();
+
+    // dataURL.font: "1.13 0.91" (PT Sans; the default font is narrower).
+    assert_eq!(format!("{:.2} {:.2}", bounds[0], bounds[1]), "1.13 0.91");
+
+    let log = s.take_log().join("\n");
+
+    assert!(!log.contains("Couldn't load"), "{log}");
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.font_fetch_waits.is_empty());
+    assert!(rt.fetch_resume.is_empty());
+    assert!(!rt.has_parked_fetches());
+}
+
+/// Binary bytes percent-encoded (dataURL.image, percent): the image decodes without a request.
+#[test]
+fn percent_encoded_binary_data_url_decodes() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        &format!(
+            "#VRML V2.0 utf8\nShape {{ appearance Appearance {{ texture ImageTexture {{ url [ \"data:image/gif,{}\" \"i2.gif\" ] }} }} geometry Box {{ }} }}\n",
+            percent(GIF)
+        ),
+        &net,
+    );
+
+    assert!(poll(&mut s));
+    assert_eq!(net.requested(), Vec::<String>::new());
+    assert!(!s.take_log().join("\n").contains("Couldn't load"));
+}
+
+/// Base64 that does not decode fails at once like a failed response, and the next candidate is fetched
+/// (dataURL.imageBadBase64).
+#[test]
+fn a_data_url_that_does_not_decode_moves_on_to_the_next_candidate() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nShape { appearance Appearance { texture ImageTexture { url [ \"data:image/gif;base64,R0lG@@@@\" \"tex/green.gif\" ] } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/green.gif")]);
+
+    net.respond(&w("tex/green.gif"), Ok(GIF));
+    assert!(poll(&mut s));
+    assert_eq!(
+        s.take_log()
+            .into_iter()
+            .filter(|l| l.contains("Couldn't load"))
+            .collect::<Vec<_>>(),
+        [
+            "warn: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+        ]
+    );
+}
+
+/// The world's loadURL of data URLs (FileLoader's dataAsString branch; dataURL.world*): the results of pinned X_ITE.
+#[test]
+fn page_load_url_data_urls_like_x_ite() {
+    let doc = "#VRML V2.0 utf8\nDEF Data Shape { geometry Box { } }\n";
+    let encoded: String = doc
+        .bytes()
+        .map(|b| {
+            if b.is_ascii_alphanumeric() {
+                (b as char).to_string()
+            } else {
+                format!("%{b:02X}")
+            }
+        })
+        .collect();
+    let cases = [
+        // worldPercent, worldBase64: the world loads.
+        (format!("data:model/vrml,{encoded}"), None),
+        (
+            format!("data:model/vrml;base64,{}", base64(doc.as_bytes())),
+            None,
+        ),
+        // worldBase64Upper: `;(base64)` is case-sensitive, so the base64 text is the document.
+        (
+            format!("data:model/vrml;BASE64,{}", base64(doc.as_bytes())),
+            Some("Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."),
+        ),
+        // worldBadBase64: fetch rejects.
+        (
+            "data:model/vrml;base64,QQ=@".to_string(),
+            Some("TypeError: Failed to fetch"),
+        ),
+        // worldBadPercent: decodeURIComponent throws, the text stays encoded.
+        (
+            format!("data:model/vrml,{encoded}%zz"),
+            Some("Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."),
+        ),
+    ];
+
+    for (url, error) in cases {
+        let net = TestFetcher::default();
+        let mut rt = page_loader(&net);
+        let urls = vec![url.clone(), w("w.wrl")];
+        let (result, parsed) = page_step(&mut rt, &urls);
+
+        match error {
+            None => {
+                assert_eq!((result, parsed), (LoadResult::Loaded, true), "{url}");
+                assert_eq!(net.requested(), Vec::<String>::new(), "{url}");
+                assert_eq!(page_log(&mut rt), Vec::<String>::new(), "{url}");
+            }
+            Some(error) => {
+                assert_eq!(result, LoadResult::Suspended, "{url}");
+                assert_eq!(net.requested(), [w("w.wrl")], "{url}");
+                assert_eq!(
+                    page_log(&mut rt),
+                    [format!(
+                        "warn: Couldn't load data URL, trying URL 2 of 2. {error}"
+                    )],
+                    "{url}"
+                );
+            }
+        }
+    }
+}
+
+// --- FontStyle loads that overlap (MiniMax P2 of PR #123) -----------------------------------------------------------
+
+/// X3DFontStyleNode.loadData: a newer load of the same family and style while the older one waits for the font file.
+/// X_ITE's loads share browser.loadFont's promise (one request); each applies its font unless a newer one already
+/// did (`count < this .loadCount`), so both end with the same font. X_ITE_R keeps both waits and both apply it.
+#[test]
+fn two_font_loads_of_the_same_family_and_style_end_with_one_font() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nShape { geometry DEF T Text { string \"Hg\" fontStyle DEF F FontStyle { family \"fonts/PTSans-Regular.ttf\" style \"PLAIN\" } } }\n",
+        &net,
+        &[],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.requested(), [w("fonts/PTSans-Regular.ttf")]);
+
+    let style = s.named_node("F").expect("DEF F");
+
+    // The same family and style again: a second loadData.
+    s.set_field(style, "family", "\"fonts/PTSans-Regular.ttf\"")
+        .expect("family");
+    steps(&mut s, 11, 10);
+
+    let waits = s.viewer().expect("live").rt.font_fetch_waits.len();
+
+    net.respond(&w("fonts/PTSans-Regular.ttf"), Ok(PT_SANS));
+    steps(&mut s, 21, 10);
+
+    // One request, read once the response is in.
+    assert_eq!(net.requested(), [w("fonts/PTSans-Regular.ttf")]);
+    // Both loads wait for the one response.
+    assert_eq!(waits, 2);
+
+    let text = s.named_node("T").expect("DEF T");
+    let bounds = s.field(text, "textBounds").expect("textBounds").value;
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.font_fetch_waits.is_empty());
+    assert!(!rt.fonts_loading());
+
+    // The same bounds as the font.fallback recording, where PT Sans loads once: "1.13 0.91".
+    let bounds: Vec<f64> = bounds
+        .split_whitespace()
+        .map(|v| v.parse().expect("a number"))
+        .collect();
+
+    assert_eq!(format!("{:.2} {:.2}", bounds[0], bounds[1]), "1.13 0.91");
+    assert!(!s.take_log().join("\n").contains("Couldn't load"));
+}
+
+// --- FileLoader.abort () (MiniMax P2 of PR #123) --------------------------------------------------------------------
+
+/// An abort while a candidate is pending: the AbortError is reported once, no later candidate is fetched, the resume
+/// entry is gone after it, and no task waits. A second abort changes nothing.
+#[test]
+fn page_load_url_abort_reports_once_and_leaves_no_state() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let mut urls = vec![w("held.wrl"), w("next.wrl"), w("last.wrl")];
+
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+
+    let left = rt.abort_page_document().expect("the chain waits");
+
+    assert_eq!(left, 1);
+    // Twice: the chain still ends at the candidate in flight.
+    assert_eq!(rt.abort_page_document(), Some(1));
+    urls.truncate(left);
+
+    // Steps before the abort's rejection arrives: no message, no new request.
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    assert!(page_log(&mut rt).is_empty());
+
+    net.respond(
+        &w("held.wrl"),
+        Err("AbortError: signal is aborted without reason"),
+    );
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. AbortError: signal is aborted without reason",
+            w("held.wrl")
+        )]
+    );
+    assert_eq!(net.requested(), [w("held.wrl")]);
+    assert!(rt.fetch_resume.is_empty());
+    assert!(!rt.has_parked_fetches());
+    // After the abort completed there is no chain to abort.
+    assert_eq!(rt.abort_page_document(), None);
 }

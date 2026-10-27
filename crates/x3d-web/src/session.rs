@@ -72,6 +72,15 @@ fn parse_setup() {
     x3d_render::traverse::install_particle_geometry();
 }
 
+/// GoldenGate.parseIntoScene's rejection when no parser handles a file: a data URL is not named.
+fn no_handler(url: &str) -> String {
+    if url.starts_with("data:") {
+        "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.".to_string()
+    } else {
+        format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'.")
+    }
+}
+
 impl Session {
     /// Parse the world `data` from `url` (FileLoader). `fetcher` serves the world's Inline, EXTERNPROTO and texture
     /// URLs. A world that does not parse is an error.
@@ -102,9 +111,7 @@ impl Session {
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles.
             Err(x3d_parse::LoadError::NoHandler) => {
-                return Err(format!(
-                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
-                ));
+                return Err(no_handler(url));
             }
             Err(e) => return Err(format!("Error: {e}")),
         };
@@ -143,9 +150,7 @@ impl Session {
                 );
             }
             Err(x3d_parse::LoadError::NoHandler) => {
-                return Err(format!(
-                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
-                ));
+                return Err(no_handler(url));
             }
             Err(e) => return Err(format!("Error: {e}")),
         };

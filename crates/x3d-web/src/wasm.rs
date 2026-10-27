@@ -154,9 +154,13 @@ impl x3d_runtime::Fetcher for WebFetcher {
     }
 
     fn poll(&self, url: &url::Url) -> FetchPoll {
-        // `fetch (dataURL)` needs no request: the browser decodes the URL itself (see `fetch`).
+        // `fetch (dataURL)` needs no request: the browser decodes the URL itself (see `fetch`). One that does not
+        // decode rejects at once.
         if url.scheme() == "data" {
-            return FetchPoll::Loaded;
+            return match x3d_parse::decode_data_url(url.as_str()) {
+                Ok(_) => FetchPoll::Loaded,
+                Err(_) => FetchPoll::Failed,
+            };
         }
 
         let key = cache_key(url);
@@ -175,7 +179,7 @@ impl x3d_runtime::Fetcher for WebFetcher {
 
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
         if url.scheme() == "data" {
-            return x3d_parse::gltf_default_fetch(url.as_str(), "");
+            return x3d_parse::decode_data_url(url.as_str());
         }
 
         let key = cache_key(url);
@@ -585,6 +589,18 @@ impl WebBrowser {
         }
 
         self.loads.remove(&id);
+    }
+
+    /// For tests: how many loadURL records ([`WebBrowser::load_url`]) are not discarded yet.
+    #[wasm_bindgen(getter, js_name = loadRecords)]
+    pub fn load_records(&self) -> u32 {
+        self.loads.len() as u32
+    }
+
+    /// For tests: how many scenes (the world and those not discarded yet) the engine holds.
+    #[wasm_bindgen(getter, js_name = sceneRecords)]
+    pub fn scene_records(&self) -> u32 {
+        self.worlds.len() as u32
     }
 
     /// The id of the current world.

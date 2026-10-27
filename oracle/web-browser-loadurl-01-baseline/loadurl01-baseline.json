@@ -304,6 +304,128 @@
     "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:"
    ],
    "duration": "-1"
+  },
+  "dataURL.worldPercent": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": []
+  },
+  "dataURL.worldBase64": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": []
+  },
+  "dataURL.worldBase64Upper": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+   ]
+  },
+  "dataURL.worldBadBase64": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+   ]
+  },
+  "dataURL.worldBadPercent": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+   ]
+  },
+  "dataURL.worldEmpty": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined"
+   ]
+  },
+  "dataURL.image": {
+   "upper": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   },
+   "percent": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "dataURL.imageBadBase64": {
+   "loaded": "loaded",
+   "served": [
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+   ]
+  },
+  "dataURL.font": {
+   "loaded": "loaded",
+   "served": [],
+   "console": [],
+   "textBounds": "1.13 0.91"
+  },
+  "dataURL.audio": {
+   "loaded": "loaded",
+   "served": [],
+   "console": [],
+   "duration": "0.272"
+  },
+  "dataURL.movie": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
   }
  }
 }

@@ -544,58 +544,11 @@ pub(crate) fn base64_encode(data: &[u8]) -> String {
     out
 }
 
-/// `fetch ("data:...;base64,...")` body: forgiving base64 (whitespace skipped, padding optional).
-pub(crate) fn base64_decode(text: &str) -> Option<Vec<u8>> {
-    let mut out = Vec::with_capacity(text.len() * 3 / 4);
-    let mut acc = 0u32;
-    let mut bits = 0;
-
-    for c in text.bytes() {
-        let v = match c {
-            b'A'..=b'Z' => c - b'A',
-            b'a'..=b'z' => c - b'a' + 26,
-            b'0'..=b'9' => c - b'0' + 52,
-            b'+' | b'-' => 62,
-            b'/' | b'_' => 63,
-            b'=' => break,
-            b' ' | b'\n' | b'\r' | b'\t' => continue,
-            _ => return None,
-        };
-
-        acc = (acc << 6) | v as u32;
-        bits += 6;
-
-        if bits >= 8 {
-            bits -= 8;
-            out.push((acc >> bits) as u8);
-            acc &= (1 << bits) - 1;
-        }
-    }
-
-    Some(out)
-}
-
 // --- percent decoding --------------------------------------------------------------------------------
 
+/// The URL standard's percent-decode (`%` that two hex digits do not follow stays).
 pub(crate) fn percent_decode_bytes(s: &str) -> Vec<u8> {
-    let b = s.as_bytes();
-    let mut out = Vec::with_capacity(b.len());
-    let mut i = 0;
-
-    while i < b.len() {
-        if b[i] == b'%' && i + 2 < b.len() + 0 && i + 2 <= b.len() - 1 + 0 {
-            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
-                out.push(v);
-                i += 3;
-                continue;
-            }
-        }
-
-        out.push(b[i]);
-        i += 1;
-    }
-
-    out
+    crate::data_url::percent_decode(s.as_bytes())
 }
 
 pub(crate) fn percent_decode_string(s: &str) -> String {
