@@ -90,6 +90,7 @@ Inline, ImageTexture and EXTERNPROTO files load with the page's `fetch` (`cache:
 A world waits for its loads before it replaces the current world, like X_ITE's scene `loadCount`; the current world runs meanwhile.
 Compared: relative URLs, HTTP errors (`Error: Not Found`), data that is no X3D or image, MFString fallbacks in order, cross-origin requests without CORS (`TypeError: Failed to fetch`), EXTERNPROTO fallbacks and waiting, and the console messages and their levels.
 Tested: requests that end after a newer `loadURL`, after `dispose ()` or after the element left the document never reach another world.
+Compared (`tests/browser/fallback01.test.mjs`): after a candidate that downloads but does not load (no parser takes it, it does not parse, an image does not decode, a glTF buffer fails), the next candidate is fetched then, in order, with X_ITE's messages; a candidate after the one that loads is never fetched. The external buffers of a glTF file are requested together and resolve against the glTF file. A load waits for its responses and never blocks the page.
 
 ## Known differences inside the supported part
 
@@ -102,6 +103,10 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - A hidden page (`visibilityState` hidden) cancels the frame loop, and showing the page starts it again. X_ITE keeps its loop scheduled and relies on the browser to pause `requestAnimationFrame`.
 - A URL is requested once per world, also when several nodes use it. X_ITE sends one request per node (the HTTP cache may answer).
 - An image that does not decode fails with `Couldn't load image '<file URL>': error.`. X_ITE names the blob URL of the data.
+- A world with an Inline whose glTF file has a buffer that fails finishes loading. In X_ITE the world never does, also when the Inline loads its next candidate: GLTF2Parser does not remove the failed buffer from the scene's loading objects, so `loadURL` never settles.
+- A newer `loadURL` ends the loads of the older world. X_ITE's Inline FileLoaders of the older world go on: a candidate that responds after the replacement and does not parse is reported, and the next candidate is fetched.
+- `loadURL` does not report its own candidates that fail; it tries them in order like X_ITE. X_ITE logs `Couldn't load URL '...', trying URL 2 of 2. ...` for each.
+- After `dispose ()` X_ITE draws a frame and throws `Couldn't create frame buffer.`; X_ITE_R's frame loop has stopped.
 - `loadURL` rejects with `Loading of X3D file aborted.` after `dispose ()`. X_ITE's never settles.
 - An Anchor or `loadURL` never opens a `javascript:`, `vbscript:`, `ecmascript:`, `vrmlscript:` or `data:` URL in a window or as the page location, in any letter case; it logs `X_ITE_R: Anchor URL '...' was not opened.`. X_ITE checks for script URLs in lower case only and opens the others. A new window opens with `noopener`.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
@@ -120,8 +125,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
 - Sound: the engine's Web Audio port is built in but was not tested in a page.
-- After a candidate that downloads but does not parse, the next MFString candidate is not fetched ahead: it fails with `TypeError: Failed to fetch`. The candidates before it are fetched in order.
-- The buffers and images of a glTF file are not fetched ahead; they fail like a request without a response.
+- A FontStyle or FontLibrary font, a MovieTexture, and an AudioClip or BufferAudioSource candidate after one that did not decode are not waited for: such a URL fails with `TypeError: Failed to fetch` the first time, and `X_ITE_R: <url> was requested before it was loaded.` is logged.
 - A `replaceWorld` while a `loadURL` waits for its Inline and texture responses does not stop that load: like X_ITE, the older world then replaces the newer one.
 
 ## Graphics

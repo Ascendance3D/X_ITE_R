@@ -527,6 +527,13 @@ impl Runtime {
                     if !self.extern_fail_candidate(e, request, error, resolved) {
                         return;
                     }
+
+                    // An asynchronous fetcher: the next candidate runs when its response is in
+                    // (fetch_task_ready), at once if it is.
+                    if self.fetcher.is_async() {
+                        self.fetches.push_front(Task::ExternLoad(e, request));
+                        return;
+                    }
                 }
             }
         }

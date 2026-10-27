@@ -466,6 +466,19 @@ pub struct Runtime {
     pub fetches: std::collections::VecDeque<Task>,
     /// Fetches that wait for an asynchronous [`Fetcher`] (see [`Runtime::resume_fetches`]), in request order.
     pub parked_fetches: Vec<Task>,
+    /// Where the fallback chain of a waiting load goes on (an asynchronous [`Fetcher`]): the candidate whose
+    /// response it waits for. See [`loader::FetchResume`].
+    pub fetch_resume: HashMap<loader::FetchKey, loader::FetchResume>,
+    /// The load task that runs now, if its fallback chain can wait for a response ([`Runtime::run_tasks`]).
+    pub running_fetch: Option<loader::FetchKey>,
+    /// The load that runs now waits for a response: [`Runtime::run_tasks`] parks its task.
+    pub fetch_suspended: bool,
+    /// The fallback chain of this load can wait (set by [`Runtime::allow_fetch_wait`], taken by the chain).
+    pub(crate) fetch_wait: Option<loader::FetchKey>,
+    /// The candidate that is accepted now is a glTF whose buffers are still in flight.
+    pub(crate) buffers_pending: bool,
+    /// The candidate that is accepted now may wait for its glTF buffers ([`Runtime::allow_fetch_wait`]).
+    pub(crate) accept_waits: bool,
     /// The frames [`Runtime::continue_load_scene`] has run.
     pub load_frames: usize,
     /// When `Some`, the browser events (X3DBrowser.callBrowserCallbacks) for a host without a Script engine: a web page
@@ -674,6 +687,12 @@ impl Runtime {
             disposed_scenes: Default::default(),
             fetches: Default::default(),
             parked_fetches: vec![],
+            fetch_resume: HashMap::new(),
+            running_fetch: None,
+            fetch_suspended: false,
+            fetch_wait: None,
+            buffers_pending: false,
+            accept_waits: false,
             load_frames: 0,
             browser_events: None,
             inline_live: HashMap::new(),
@@ -1247,6 +1266,14 @@ impl Runtime {
                 continue;
             }
 
+            let key = loader::FetchKey::of(&task);
+            // A task can run the tasks again (a frame); the state of the task around it stays.
+            let outer = (
+                std::mem::replace(&mut self.running_fetch, key.clone()),
+                std::mem::take(&mut self.fetch_suspended),
+                self.fetch_wait.take(),
+            );
+
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
@@ -1257,7 +1284,28 @@ impl Runtime {
                 | Task::ScriptLoaded(..)
                 | Task::BrowserParse(..) => {}
             }
+
+            // The fallback chain waits for the response of its next candidate: the task runs again from there.
+            if let Some(key) = key {
+                if std::mem::take(&mut self.fetch_suspended) {
+                    self.parked_fetches.push(key.task());
+                } else {
+                    self.fetch_resume.remove(&key);
+                }
+            }
+
+            (self.running_fetch, self.fetch_suspended, self.fetch_wait) = outer;
         }
+
+        // Only a parked task goes on from where it waited. A request that was replaced, cancelled or disposed
+        // meanwhile (its task ran and did nothing) leaves no state.
+        let parked = &self.parked_fetches;
+
+        self.fetch_resume.retain(|k, _| {
+            parked
+                .iter()
+                .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
+        });
     }
 
     /// Everything that settles between two frames: microtasks and the fetches they wait for.

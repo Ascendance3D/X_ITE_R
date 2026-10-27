@@ -3,7 +3,10 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01]
+ *
+ * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
+ * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
  *
  * Writes <out_dir>/runtime02-baseline.json (the values of the first run, the Chrome version and the WebGL renderer)
  * and one PNG per picture. Every run must give identical values; the run fails otherwise. The pictures of each run
@@ -22,7 +25,7 @@ import { createRequire } from "node:module";
 import { join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { startServer } from "../crates/x3d-web/tests/browser/server.mjs";
-import { CASE_GROUPS, splitPictures } from "../crates/x3d-web/tests/browser/runtime02_case.mjs";
+import { splitPictures } from "../crates/x3d-web/tests/browser/runtime02_case.mjs";
 
 const ROOT  = normalize (join (fileURLToPath (import.meta.url), "../.."));
 const CRATE = join (ROOT, "crates/x3d-web");
@@ -34,6 +37,12 @@ const opt    = (name, def) => { const i = argv .indexOf (name); return i >= 0 ? 
 const outDir = resolve (argv .find ((a, i) => !a .startsWith ("--") && !argv [i - 1] ?.startsWith ("--")));
 const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
+const SUITE  = opt ("--suite", "runtime02");
+
+if (![ "runtime02", "fallback01" ] .includes (SUITE))
+   throw new Error (`unknown suite ${SUITE}`);
+
+const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
 
 const PAGE = "/x_ite/src/__x_ite_r_web_runtime_02__.html";
 
@@ -172,7 +181,7 @@ await mkdir (outDir, { recursive: true });
 for (const [ file, data ] of Object .entries (runs [0] .pictures))
    await writeFile (join (outDir, file), data);
 
-await writeFile (join (outDir, "runtime02-baseline.json"), JSON .stringify ({
+await writeFile (join (outDir, `${SUITE}-baseline.json`), JSON .stringify ({
    pinned: (await readFile (join (ROOT, "oracle/x_ite-pin/PINNED_COMMIT"), "utf8")) .trim (),
    chrome,
    gl,
