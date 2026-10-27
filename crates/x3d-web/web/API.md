@@ -86,7 +86,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 
 ### Resource loading
 
-The world of `loadURL`, Inline, ImageTexture, EXTERNPROTO, FontStyle and FontLibrary font files, MovieTexture, AudioClip and BufferAudioSource files load with the page's `fetch` (`cache: "default"`, an `AbortSignal`), without blocking the page. A `data:` URL is decoded by the engine, with no request.
+The world of `loadURL`, Inline, ImageTexture, EXTERNPROTO, FontStyle and FontLibrary font files, MovieTexture, AudioClip and BufferAudioSource files load with the page's `fetch` (`cache: "default"`, an `AbortSignal`), without blocking the page. A `data:` URL is decoded by the engine, with no request, as the browser's `fetch` decodes it for every kind of file: `;base64` in any letter case, percent escapes, and a fetch error (`TypeError: Failed to fetch`) for base64 that does not decode. A world or Inline document that is not base64 is read as X_ITE's FileLoader reads it: only a lower-case `;base64` is base64, and one malformed escape keeps the text undecoded.
 The engine runs every fallback chain, also the world's; the JavaScript adapter only prints the engine's messages.
 A world waits for its loads before it replaces the current world, like X_ITE's scene `loadCount`; the current world runs meanwhile.
 Compared: relative URLs, HTTP errors (`Error: Not Found`), data that is no X3D or image, MFString fallbacks in order, cross-origin requests without CORS (`TypeError: Failed to fetch`), EXTERNPROTO fallbacks and waiting, and the console messages and their levels.
@@ -104,6 +104,8 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - After the element is removed and added again while the pointer did not move, a TouchSensor stays `isOver`. X_ITE ends `isOver`, because its release checks the pointer against the detached canvas (an empty rectangle).
 - A hidden page (`visibilityState` hidden) cancels the frame loop, and showing the page starts it again. X_ITE keeps its loop scheduled and relies on the browser to pause `requestAnimationFrame`.
 - A URL is requested once per world, also when several nodes use it. X_ITE sends one request per node (the HTTP cache may answer).
+- A `data:` URL whose base64 does not decode gives the same message as in X_ITE, without Chromium's own `Failed to load resource: net::ERR_INVALID_URL` line before it: X_ITE_R makes no request for it.
+- An empty document (`data:model/vrml,`, or an empty file) is an empty world. X_ITE rejects it; in the recording page it fails with `ReferenceError: CharLS is not defined` (DICOMParser).
 - An image that does not decode fails with `Couldn't load image '<file URL>': error.`. X_ITE names the blob URL of the data.
 - A world with an Inline whose glTF file has a buffer that fails finishes loading. In X_ITE the world never does, also when the Inline loads its next candidate: GLTF2Parser does not remove the failed buffer from the scene's loading objects, so `loadURL` never settles.
 - A newer `loadURL` ends the loads of the older world. X_ITE's Inline FileLoaders of the older world go on: a candidate that responds after the replacement and does not parse is reported, and the next candidate is fetched.

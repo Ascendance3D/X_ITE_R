@@ -113,6 +113,26 @@ const KNOWN_DIFFERENCES = {
       // the decode (the AudioClip itself waits for the next response).
       [ [ "before", "loaded" ], "pending", "loaded" ],
    ],
+   "dataURL.worldBadBase64": [
+      // X_ITE's fetch of a data URL that does not decode logs Chromium's own network error first; X_ITE_R decodes
+      // the URL itself (no request) and gives the same rejection, without that line.
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURL.imageBadBase64": [
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURL.worldEmpty": [
+      // An empty document: GoldenGate of the recording page tries DICOMParser, which needs CharLS (the page does not
+      // load it), so X_ITE rejects and loads the next candidate. X_ITE_R's parser takes empty text as an empty world
+      // (existing parser behavior, not changed here).
+      [ [ "world" ], "fallback/parts/w.wrl", "data" ],
+      [ [ "served" ], [ "/tests/browser/worlds/fallback/parts/w.wrl" ], [ ] ],
+      [ [ "console" ], [ "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined" ], [ ] ],
+   ],
    "fallback.disposedDuringFallback": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
       [ [ "result" ], "pending", "Loading of X3D file aborted." ],
@@ -284,6 +304,7 @@ const GROUP_FILES = {
    font:    "loadurl01.test.mjs",
    movie:   "loadurl01.test.mjs",
    audio:   "loadurl01.test.mjs",
+   dataURL: "loadurl01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

@@ -4,6 +4,7 @@
 // that did not decode. oracle/x_ite-web-runtime-02.mjs (--suite loadurl01) runs them against pinned X_ITE 16.5.0 and
 // records the values; loadurl01.test.mjs runs them against X_ITE_R and compares (runtime02_harness.mjs).
 
+import { readFileSync } from "node:fs";
 import { DESKTOP, settle } from "./runtime02_case.mjs";
 
 // The paths the server served since `from`, without the engines' own files.
@@ -63,7 +64,7 @@ const worldName = page => page .evaluate (() =>
    return url .includes ("/worlds/") ? url .replace (/^.*\/worlds\//, "") : "page";
 });
 
-// A world-level loadURL of `urls` (page-relative to the worlds); the result, the world, the browser events, the
+// A world-level loadURL of `urls` (page-relative to the worlds, or data URLs); the result, the world, the browser events, the
 // requests and the messages.
 async function worldCase (page, env, urls)
 {
@@ -71,7 +72,7 @@ async function worldCase (page, env, urls)
 
    const from = env .server .requests .length;
 
-   await page .evaluate (pageLoadURL, urls .map (url => url .startsWith ("/") ? `${env .base}${url}` : url && `${env .worlds}${url}`));
+   await page .evaluate (pageLoadURL, urls .map (url => url .startsWith ("/") ? `${env .base}${url}` : url .startsWith ("data:") ? url : url && `${env .worlds}${url}`));
 
    const result = await page .evaluate (() => window .pending);
 
@@ -128,7 +129,8 @@ async function sceneCase (page, env, text, ms = 1000)
          .then (scene => browser .replaceWorld (scene))
          .then (() => "loaded", e => e .message);
    },
-   text .replaceAll ("BASE", env .base));
+   // Only a quoted "BASE/: a data URL's base64 or `;BASE64` is no server path.
+   text .replaceAll ('"BASE/', `"${env .base}/`));
 
    const loaded = (ms = 5000) => page .evaluate (ms => Promise .race ([ window .scenePending, new Promise (r => setTimeout (() => r ("pending"), ms)) ]), ms);
 
@@ -334,9 +336,103 @@ export const audioCases = {
    },
 };
 
+// --- data: URLs ---------------------------------------------------------------------------------------------------
+
+// The bytes of a clean fixture (see server.mjs) as base64, and as percent escapes of every byte.
+const fixture = path => readFileSync (new URL (`../../../../${path}`, import.meta.url));
+const base64  = path => fixture (path) .toString ("base64");
+const percent = path => Array .from (fixture (path), b => `%${b .toString (16) .padStart (2, "0")}`) .join ("");
+
+const PT_SANS_PATH = "oracle/synthetic-rea-b08-net/fonts/PTSans-Regular.ttf";
+const TONE_PATH    = "oracle/synthetic-rea-b05/media/tone22k-mono.wav";
+const GIF_PATH     = "crates/x3d-web/tests/browser/worlds/tex/green.gif";
+
+// A world as a data URL; DEF Data names its Shape.
+const DATA_WORLD = "#VRML V2.0 utf8\nDEF Data Shape { geometry Box { } }\n";
+
+// "data" when the world is a data URL, else worldName.
+const dataWorldName = async page => (await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .currentScene ?.worldURL ?? "")) .startsWith ("data:") ? "data" : await worldName (page);
+
+// A world-level loadURL whose first candidate is the data URL `url` and whose second is W.
+async function dataWorldCase (page, env, url)
+{
+   const out = await worldCase (page, env, [ url, W ]);
+
+   return { ... out, world: await dataWorldName (page) };
+}
+
+const IMAGE_WORLD = url => `#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 4 }
+Shape { appearance Appearance { texture ImageTexture { url [ ${url .map (u => `"${u}"`) .join (" ")} ] } } geometry Box { } }
+`;
+
+export const dataURLCases = {
+   // The X3D document of the world, percent-encoded (FileLoader's dataAsString branch).
+   worldPercent: (page, env) => dataWorldCase (page, env, `data:model/vrml,${encodeURIComponent (DATA_WORLD)}`),
+
+   // The X3D document in base64 (fetch decodes it).
+   worldBase64: (page, env) => dataWorldCase (page, env, `data:model/vrml;base64,${btoa (DATA_WORLD)}`),
+
+   // `;BASE64`: FileLoader's match of `;(base64)` is case-sensitive, so the base64 text is the document.
+   worldBase64Upper: (page, env) => dataWorldCase (page, env, `data:model/vrml;BASE64,${btoa (DATA_WORLD)}`),
+
+   // Base64 that does not decode: fetch rejects.
+   worldBadBase64: (page, env) => dataWorldCase (page, env, "data:model/vrml;base64,QQ=@"),
+
+   // A malformed escape: decodeURIComponent throws, so the text stays as it is (not decoded).
+   worldBadPercent: (page, env) => dataWorldCase (page, env, `data:model/vrml,${encodeURIComponent (DATA_WORLD)}%zz`),
+
+   // An empty document.
+   worldEmpty: (page, env) => dataWorldCase (page, env, "data:model/vrml,"),
+
+   // An image of each encoding; the second candidate is only requested if the first does not load.
+   async image (page, env)
+   {
+      const c     = await sceneCase (page, env, IMAGE_WORLD ([ `data:image/gif;BASE64,${base64 (GIF_PATH)}`, "BASE/status/404/i1.gif" ]));
+      const upper = { loaded: await c .loaded (), served: c .served (), console: c .console () };
+      const d     = await sceneCase (page, env, IMAGE_WORLD ([ `data:image/gif,${percent (GIF_PATH)}`, "BASE/status/404/i2.gif" ]));
+
+      return { upper, percent: { loaded: await d .loaded (), served: d .served (), console: d .console () } };
+   },
+
+   // Base64 of an image that does not decode, then a file.
+   async imageBadBase64 (page, env)
+   {
+      const c = await sceneCase (page, env, IMAGE_WORLD ([ "data:image/gif;base64,R0lG@@@@", "BASE/tests/browser/worlds/tex/green.gif" ]));
+
+      return { loaded: await c .loaded (), served: c .served (), console: c .console () };
+   },
+
+   // A font file as `;BASE64`.
+   async font (page, env)
+   {
+      const c = await sceneCase (page, env, FONT_WORLD ([ `data:font/ttf;BASE64,${base64 (PT_SANS_PATH)}`, "BASE/status/404/f9.ttf" ]));
+
+      return { loaded: await c .loaded (), served: c .served (), console: c .console (), textBounds: await fieldText (page, "T", "textBounds") };
+   },
+
+   // A sound as `;BASE64`.
+   async audio (page, env)
+   {
+      const c = await sceneCase (page, env, AUDIO_WORLD ([ `data:audio/wav;BASE64,${base64 (TONE_PATH)}`, "BASE/garbage/a9.wav" ]));
+
+      return { loaded: await c .loaded (), served: c .served (), console: c .console (), duration: await fieldText (page, "A", "duration_changed", 3) };
+   },
+
+   // A MovieTexture GIF as `;BASE64`.
+   async movie (page, env)
+   {
+      const c = await sceneCase (page, env, MOVIE_WORLD ([ `data:image/gif;BASE64,${base64 (GIF_PATH)}`, "BASE/status/404/m9.gif" ]));
+
+      return { loaded: await c .loaded (), served: c .served (), console: c .console () };
+   },
+};
+
 export const CASE_GROUPS = {
    loadURL: { context: DESKTOP, cases: loadURLCases },
    font: { context: DESKTOP, cases: fontCases },
    movie: { context: DESKTOP, cases: movieCases },
    audio: { context: DESKTOP, cases: audioCases },
+   dataURL: { context: DESKTOP, cases: dataURLCases },
 };
