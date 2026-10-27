@@ -241,6 +241,8 @@ pub enum FetchKey {
     Url(NodeId, u64),
     /// `Task::BrowserLoad` (request).
     Browser(u64),
+    /// [`Runtime::load_page_document`]: the page's loadURL, which is no task of the runtime.
+    Page,
 }
 
 impl FetchKey {
@@ -252,16 +254,15 @@ impl FetchKey {
         }
     }
 
-    pub fn task(&self) -> Task {
+    /// The task that goes on with the chain; the page's loadURL has none (its caller steps it again).
+    pub fn task(&self) -> Option<Task> {
         match *self {
-            FetchKey::Url(node, generation) => Task::UrlLoad(node, generation),
-            FetchKey::Browser(id) => Task::BrowserLoad(id),
+            FetchKey::Url(node, generation) => Some(Task::UrlLoad(node, generation)),
+            FetchKey::Browser(id) => Some(Task::BrowserLoad(id)),
+            FetchKey::Page => None,
         }
     }
 }
-
-/// The key of [`Runtime::load_page_document`], which has a runtime of its own and no task.
-const PAGE_LOAD: FetchKey = FetchKey::Browser(u64::MAX);
 
 /// FileLoader.loadDocumentError → loadDocumentAsync (this .url .shift ()): a candidate failed after its response
 /// came, and the next one is fetched now. With an asynchronous [`Fetcher`] its response comes later, so the chain
@@ -614,7 +615,7 @@ impl Runtime {
         mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
     ) -> LoadResult {
         let outer = (
-            self.running_fetch.replace(PAGE_LOAD),
+            self.running_fetch.replace(FetchKey::Page),
             std::mem::take(&mut self.fetch_suspended),
             self.fetch_wait.take(),
         );
@@ -632,7 +633,7 @@ impl Runtime {
             });
 
         if result != LoadResult::Suspended {
-            self.fetch_resume.remove(&PAGE_LOAD);
+            self.fetch_resume.remove(&FetchKey::Page);
         }
 
         (self.running_fetch, self.fetch_suspended, self.fetch_wait) = outer;
@@ -673,7 +674,7 @@ impl Runtime {
     /// the last one. Returns how many of the candidates are left, to pass with the next call, or `None` when the
     /// chain does not wait.
     pub fn abort_page_document(&mut self) -> Option<usize> {
-        let r = self.fetch_resume.get_mut(&PAGE_LOAD)?;
+        let r = self.fetch_resume.get_mut(&FetchKey::Page)?;
 
         r.urls.truncate(r.index + 1);
         Some(r.urls.len())
@@ -1069,7 +1070,7 @@ impl Runtime {
                 urls,
             },
         );
-        self.parked_fetches.push(key.task());
+        self.parked_fetches.extend(key.task());
         true
     }
 

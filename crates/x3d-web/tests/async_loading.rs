@@ -1506,3 +1506,107 @@ fn page_load_url_abort_reports_once_and_leaves_no_state() {
     // After the abort completed there is no chain to abort.
     assert_eq!(rt.abort_page_document(), None);
 }
+
+// --- PR #123 final review ------------------------------------------------------------------------------------------
+
+/// GoldenGate.parseIntoScene names no data URL (`worldURL .startsWith ("data:")`). X3DScene.worldURL is a URL that a
+/// URL parser serialized (`String (new URL (…))`), so its scheme is in lower case: `DATA:` and `Data:` are data URLs
+/// too. Other URLs keep their text in the message.
+#[test]
+fn a_world_that_no_parser_handles_names_a_data_url_in_any_scheme_case() {
+    const DATA: &str = "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.";
+    let named = |url: &str| {
+        format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'.")
+    };
+    let parse = |url: &str| {
+        Session::parse(GARBAGE, url, Box::new(TestFetcher::default()))
+            .err()
+            .expect("no parser handles the file")
+    };
+    let parse_string = |url: &str| {
+        Session::parse_string(
+            "this is no file format",
+            url,
+            Box::new(TestFetcher::default()),
+        )
+        .err()
+        .expect("no parser handles the text")
+    };
+
+    for url in [
+        "data:,x",
+        "DATA:,x",
+        "Data:text/plain,x",
+        " dAtA:;base64,QUJD",
+    ] {
+        assert_eq!(parse(url), DATA, "{url}");
+        assert_eq!(parse_string(url), DATA, "{url}");
+    }
+
+    for url in [URL, "datafile.wrl", "dat:,x", "data-x:,y"] {
+        assert_eq!(parse(url), named(url), "{url}");
+        assert_eq!(parse_string(url), named(url), "{url}");
+    }
+}
+
+/// The page load's resume entry has a key of its own (`FetchKey::Page`). A task run of its runtime keeps it, and a
+/// createX3DFromURL request with the largest id (the old `FetchKey::Browser (u64::MAX)` sentinel) does not replace it.
+#[test]
+fn a_page_load_keeps_its_own_resume_entry() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("p1.wrl"), w("p2.wrl"), w("p3.wrl")];
+
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    net.respond(&w("p1.wrl"), Err("Error: Not Found"));
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+
+    // A task run between two steps.
+    rt.run_tasks();
+
+    // A request of the runtime with the id u64::MAX whose chain waits at its second candidate (the first one loaded
+    // but did not parse).
+    rt.browser_request_id = u64::MAX - 1;
+    rt.browser_create_from_url(vec![w("b1.wrl"), w("b2.wrl")], 0, None);
+    net.respond(&w("b1.wrl"), Ok(GARBAGE));
+    rt.run_tasks();
+    assert_eq!(rt.fetch_resume.len(), 2, "{:?}", rt.fetch_resume);
+    assert!(rt.has_parked_fetches());
+
+    // The page chain is still at its second candidate: an abort ends it there.
+    assert_eq!(rt.abort_page_document(), Some(2));
+
+    let urls = &urls[..2];
+
+    net.respond(
+        &w("p2.wrl"),
+        Err("AbortError: signal is aborted without reason"),
+    );
+    assert_eq!(page_step(&mut rt, urls), (LoadResult::Failed, false));
+    assert!(!net.requested().contains(&w("p3.wrl")));
+
+    // The request's own chain still waits.
+    assert_eq!(rt.fetch_resume.len(), 1, "{:?}", rt.fetch_resume);
+    assert_eq!(rt.abort_page_document(), None);
+}
+
+/// Repeated page loads of one WebBrowser each have a runtime of their own; a replaced load leaves no entry in the
+/// next one.
+#[test]
+fn repeated_page_loads_share_no_resume_entry() {
+    let net = TestFetcher::default();
+    let mut first = page_loader(&net);
+    let mut second = page_loader(&net);
+    let a = vec![w("r1.wrl"), w("r2.wrl")];
+    let b = vec![w("r3.wrl")];
+
+    assert_eq!(page_step(&mut first, &a).0, LoadResult::Suspended);
+    assert_eq!(page_step(&mut second, &b).0, LoadResult::Suspended);
+    assert_eq!(first.abort_page_document(), Some(1));
+    assert_eq!(second.abort_page_document(), Some(1));
+
+    net.respond(&w("r3.wrl"), Ok(WORLD));
+    assert_eq!(page_step(&mut second, &b), (LoadResult::Loaded, true));
+    assert!(second.fetch_resume.is_empty());
+    assert_eq!(first.fetch_resume.len(), 1);
+}

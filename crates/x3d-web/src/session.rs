@@ -72,9 +72,10 @@ fn parse_setup() {
     x3d_render::traverse::install_particle_geometry();
 }
 
-/// GoldenGate.parseIntoScene's rejection when no parser handles a file: a data URL is not named.
+/// GoldenGate.parseIntoScene's rejection when no parser handles a file: a data URL is not named. X3DScene.worldURL is
+/// a URL that a URL parser serialized, so its scheme is in lower case (`DATA:` is a data URL too).
 fn no_handler(url: &str) -> String {
-    if url.starts_with("data:") {
+    if url::Url::parse(url).is_ok_and(|u| u.scheme() == "data") {
         "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.".to_string()
     } else {
         format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'.")
