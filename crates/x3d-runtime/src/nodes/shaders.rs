@@ -12,7 +12,7 @@
 //!   exist, `isValid` stays FALSE, and an Appearance never selects them.
 
 use super::State;
-use crate::loader::{FileLoader, Loaded};
+use crate::loader::{FileLoader, LoadHooks, LoadResult, Loaded, data_url_text};
 use crate::*;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -188,7 +188,8 @@ impl Runtime {
         let loader = FileLoader {
             type_name: "ShaderPart".into(),
             base: self.base_url(node),
-            data_as_string: false,
+            // `new FileLoader (this)`: the default `dataAsString = true`.
+            data_as_string: true,
         };
         let urls = self.url_strings(node);
         let shader_type = match self.pre_value(node, "type") {
@@ -198,15 +199,18 @@ impl Runtime {
         let type_name = self.type_name(node);
         let name = self.scene.node(node).name.clone();
 
-        let ok = self.load_document(&loader, &urls, |rt, loaded| {
+        let result = self.load_document_from(&loader, &urls, &LoadHooks::default(), 0, |rt, i, loaded| {
             let (data, url) = match loaded {
                 Loaded::Script(_) => return Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
                 Loaded::Data(data, url) => (data, url),
             };
-            // `fileURL` is not set for a data URL (FileLoader.loadDocument).
-            let file_url = if url.scheme() == "data" { rt.base_url(node) } else { url.to_string() };
+            // FileLoader's text branch hands a string to the callback, without `fileURL`; `$.decodeText` keeps a
+            // string as it is (a BOM too). A fetched data URL is `fileURL` like any other URL.
+            let text = data_url_text(&urls[i]).is_some();
+            let file_url = if text { rt.base_url(node) } else { url.to_string() };
+            let data = if text { String::from_utf8_lossy(&data).into_owned() } else { decode_text(&data) };
             // ShaderCompiler.process, then ShaderSource.getSource.
-            let source = super::shader_include::process(&decode_text(&data));
+            let source = super::shader_include::process(&data);
             let fragment = shader_type == "FRAGMENT";
             let options: Vec<String> = vec![];
 
@@ -236,7 +240,7 @@ impl Runtime {
 
         self.set_load_state(
             node,
-            if ok {
+            if !matches!(result, LoadResult::Failed) {
                 nodes::LoadState::Complete
             } else {
                 nodes::LoadState::Failed
@@ -612,73 +616,3 @@ impl Runtime {
 
 #[allow(dead_code)]
 fn _state_marker(_: &State) {}
-
-/// `fetch (dataURL)` as Chrome does it for the URL a ShaderPart carries: the text after the first
-/// comma, cut at a `#` (the fragment is not part of the data), percent-decoded (a malformed escape
-/// stays), base64 decoded when the media type ends in `;base64`.
-pub fn fetch_data_url(url: &str) -> Result<Vec<u8>, String> {
-    let url = url.trim_start();
-    let Some(rest) = url
-        .strip_prefix("data:")
-        .or_else(|| url.strip_prefix("DATA:"))
-    else {
-        return Err("TypeError: Failed to fetch".into());
-    };
-    let Some((head, payload)) = rest.split_once(',') else {
-        return Err("TypeError: Failed to fetch".into());
-    };
-    let payload = payload.split_once('#').map_or(payload, |(p, _)| p);
-    let mut bytes = Vec::with_capacity(payload.len());
-    let b = payload.as_bytes();
-    let mut i = 0;
-
-    while i < b.len() {
-        if b[i] == b'%'
-            && i + 2 < b.len() + 0
-            && b[i + 1].is_ascii_hexdigit()
-            && b[i + 2].is_ascii_hexdigit()
-        {
-            bytes.push(u8::from_str_radix(&payload[i + 1..i + 3], 16).unwrap());
-            i += 3;
-        } else {
-            bytes.push(b[i]);
-            i += 1;
-        }
-    }
-
-    if head.trim_end().to_ascii_lowercase().ends_with(";base64") {
-        let text: Vec<u8> = bytes
-            .into_iter()
-            .filter(|c| !c.is_ascii_whitespace())
-            .collect();
-        return decode_base64(&text).ok_or_else(|| "TypeError: Failed to fetch".to_string());
-    }
-
-    Ok(bytes)
-}
-
-fn decode_base64(s: &[u8]) -> Option<Vec<u8>> {
-    let mut out = vec![];
-    let (mut acc, mut bits) = (0u32, 0);
-
-    for &c in s.iter().take_while(|c| **c != b'=') {
-        let v = match c {
-            b'A'..=b'Z' => c - b'A',
-            b'a'..=b'z' => c - b'a' + 26,
-            b'0'..=b'9' => c - b'0' + 52,
-            b'+' | b'-' => 62,
-            b'/' | b'_' => 63,
-            _ => return None,
-        } as u32;
-        acc = (acc << 6) | v;
-        bits += 6;
-
-        if bits >= 8 {
-            bits -= 8;
-            out.push((acc >> bits) as u8);
-            acc &= (1 << bits) - 1;
-        }
-    }
-
-    Some(out)
-}

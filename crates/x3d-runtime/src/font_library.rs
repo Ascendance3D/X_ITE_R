@@ -120,7 +120,7 @@ impl Runtime {
         let mut urls = vec![];
 
         for u in &candidates {
-            match base.join(u) {
+            match crate::loader::join_url(&base, u) {
                 Ok(r) => urls.push(r),
                 Err(_) => return,
             }

@@ -177,12 +177,19 @@ fn truncate(s: &str) -> String {
     }
 }
 
+/// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
+fn is_js_space(c: char) -> bool {
+    c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
+}
+
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
 /// unless the header ends with `;base64` (case-sensitive: `;BASE64` is text), the text after the first comma is
 /// `decodeURIComponent`ed (kept as it is when that throws: one malformed escape keeps every escape) and a leading
 /// `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
 pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
-    let rest = candidate.trim_start().strip_prefix("data:")?;
+    let rest = candidate
+        .trim_start_matches(is_js_space)
+        .strip_prefix("data:")?;
     let (header, data) = rest.split_once(',')?;
 
     if header.ends_with(";base64") {
@@ -275,6 +282,13 @@ pub struct FetchResume {
     pub urls: Vec<String>,
 }
 
+/// `new URL (candidate, base)` as Chromium gives it: the `url` crate follows the URL standard, which removes every tab
+/// and newline, but Chromium keeps those after a `data:` scheme (`x3d_parse::chromium_url_input`). Every candidate
+/// URL of the runtime is resolved here.
+pub fn join_url(base: &url::Url, candidate: &str) -> Result<url::Url, url::ParseError> {
+    base.join(&x3d_parse::chromium_url_input(candidate))
+}
+
 /// The decoded fragment of `candidate` if FileLoader's `bindViewpoint` branch takes it: a URL that, resolved against
 /// `base`, differs from the referring document only by a non-empty fragment.
 pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Option<String> {
@@ -283,7 +297,7 @@ pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Opt
     }
 
     let referer = url::Url::parse(base).ok()?;
-    let r = referer.join(candidate).ok()?;
+    let r = join_url(&referer, candidate).ok()?;
 
     if r.scheme() == "data" || r.fragment().is_none_or(str::is_empty) {
         return None;
@@ -461,7 +475,7 @@ impl Runtime {
 
                 let base =
                     url::Url::parse(&loader.base).map_err(|e| Some(format!("TypeError: {e}")))?;
-                let r = base.join(candidate).map_err(|_| {
+                let r = join_url(&base, candidate).map_err(|_| {
                     Some(format!("TypeError: Failed to construct 'URL': Invalid URL"))
                 })?;
                 resolved = Some(r.clone());
@@ -530,9 +544,9 @@ impl Runtime {
                     return Err(None);
                 }
 
-                // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
+                // fetch (dataURL) of a ShaderPart that the text branch did not take: the shader text is carried in the URL.
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
-                    nodes::shaders::fetch_data_url(candidate).map_err(Some)?
+                    x3d_parse::decode_data_url(candidate).map_err(Some)?
                 } else {
                     self.fetcher.fetch(&r).map_err(Some)?
                 };
@@ -782,7 +796,7 @@ impl Runtime {
                 continue;
             }
 
-            let Ok(r) = base.join(candidate) else {
+            let Ok(r) = join_url(&base, candidate) else {
                 continue;
             };
 
@@ -852,7 +866,7 @@ impl Runtime {
             }
 
             let waits = url::Url::parse(&self.base_url(p.node))
-                .and_then(|b| b.join(&p.family[p.index]))
+                .and_then(|b| join_url(&b, &p.family[p.index]))
                 .is_ok_and(|u| self.fetcher.poll(&u) == FetchPoll::Pending);
 
             if waits {
@@ -1154,7 +1168,7 @@ impl Runtime {
 
         for (index, candidate) in urls.iter().enumerate().skip(start) {
             // `new URL (url, base)` is outside the try: an invalid URL rejects loadData.
-            let Ok(file_url) = base.join(candidate) else {
+            let Ok(file_url) = join_url(&base, candidate) else {
                 return;
             };
 
@@ -1294,7 +1308,7 @@ impl Runtime {
             }
 
             // `new URL (fontFamily, base)` throws for an invalid URL: loadData rejects silently.
-            let Ok(file_url) = base.join(f) else {
+            let Ok(file_url) = join_url(&base, f) else {
                 return;
             };
 
@@ -1443,10 +1457,10 @@ pub(crate) fn parse_bytes_waiting(
 
     let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
         let resolved_res = url::Url::parse(base)
-            .and_then(|b| b.join(uri.trim()))
+            .and_then(|b| join_url(&b, uri.trim()))
             .map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string());
 
-        if uri.trim_start().starts_with("data:") {
+        if x3d_parse::is_data_url(uri) {
             let res = x3d_parse::gltf_default_fetch(uri, base);
             if let Err(e) = &res {
                 failed(uri, resolved_res.ok(), e, BufferFailure::Fetch);

@@ -43,17 +43,20 @@ fn call_fetcher(uri: &str, base: &str) -> Result<Vec<u8>, String> {
 pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
     let trimmed = uri.trim_start();
 
-    if trimmed
-        .get(..5)
-        .is_some_and(|s| s.eq_ignore_ascii_case("data:"))
-    {
-        return crate::decode_data_url(trimmed);
+    // Chromium also reads `DATA:` and `da<TAB>ta:` as data URLs.
+    if crate::is_data_url(uri) {
+        return crate::decode_data_url(uri);
     }
 
+    // A tab or newline in the scheme is removed, as in the data URL check.
     let has_scheme = trimmed.find(':').is_some_and(|i| {
-        i > 0
-            && trimmed[..i]
-                .bytes()
+        let scheme = trimmed[..i]
+            .bytes()
+            .filter(|b| !matches!(b, b'\t' | b'\n' | b'\r'));
+
+        scheme.clone().next().is_some()
+            && scheme
+                .into_iter()
                 .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'+' | b'-' | b'.'))
     });
 

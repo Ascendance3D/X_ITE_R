@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { DESKTOP, settle } from "./runtime02_case.mjs";
 
 // The paths the server served since `from`, without the engines' own files.
-function served (env, from)
+export function served (env, from)
 {
    return env .server .requests .slice (from)
       .map (r => r .path)
@@ -17,7 +17,7 @@ function served (env, from)
 
 // Console lines without the origins, and only load messages. Chrome's own "Failed to load resource" lines come first;
 // the engine's lines keep their order: each case has one FileLoader chain, whose messages come in order.
-function orderedMessages (log, env)
+export function orderedMessages (log, env)
 {
    const lines = log
       .map (line => line .replaceAll (env .base, "http://test"))
@@ -43,7 +43,7 @@ async function requested (env, prefix, from)
 
 // loadURL of `urls` in the page, with the browser events it fires; window .pending is "resolved" or the rejection's
 // message.
-function pageLoadURL (urls)
+export function pageLoadURL (urls)
 {
    const canvas  = document .querySelector ("x3d-canvas");
    const browser = canvas .browser;
@@ -57,7 +57,7 @@ function pageLoadURL (urls)
 const race = (page, ms = 300) => page .evaluate (ms => Promise .race ([ window .pending, new Promise (r => setTimeout (() => r ("pending"), ms)) ]), ms);
 
 // The world's URL under the test worlds, or "page" for the empty world of the page (the engines' pages differ).
-const worldName = page => page .evaluate (() =>
+export const worldName = page => page .evaluate (() =>
 {
    const url = document .querySelector ("x3d-canvas") .browser .currentScene ?.worldURL ?? "";
 
@@ -115,7 +115,7 @@ async function heldWorldCase (page, env, key, urls, during)
 
 // The world of `text` (createX3DFromString, replaceWorld), started without waiting: a held response can hold the
 // scene's loadCount. `loaded ()` is "loaded" once the scene is the world, or "pending" after `ms` more milliseconds.
-async function sceneCase (page, env, text, ms = 1000)
+export async function sceneCase (page, env, text, ms = 1000)
 {
    page .log .length = 0;
 
