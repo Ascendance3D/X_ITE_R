@@ -1,0 +1,216 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {
+  "fallback.content.picture.png": [
+   "f9b9b718593e5230a04f2e9b3a689e6b6ce141ae8198b46e3ac7be352cdfb45f",
+   "f9b9b718593e5230a04f2e9b3a689e6b6ce141ae8198b46e3ac7be352cdfb45f",
+   "f9b9b718593e5230a04f2e9b3a689e6b6ce141ae8198b46e3ac7be352cdfb45f"
+  ],
+  "fallback.gltfLoads.picture.png": [
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759"
+  ],
+  "fallback.world.picture.png": [
+   "970a1a737f8e73f3ddfebbe1e838351324566b27c4869a9d9b5d7a4b32013e9e",
+   "970a1a737f8e73f3ddfebbe1e838351324566b27c4869a9d9b5d7a4b32013e9e",
+   "970a1a737f8e73f3ddfebbe1e838351324566b27c4869a9d9b5d7a4b32013e9e"
+  ],
+  "fallback.repeated.picture.png": [
+   "f55420321cd800883031480df02349d1874b2106612d5df09bee5335025533fd",
+   "f55420321cd800883031480df02349d1874b2106612d5df09bee5335025533fd",
+   "f55420321cd800883031480df02349d1874b2106612d5df09bee5335025533fd"
+  ],
+  "fallback.twoScenes.picture.png": [
+   "8ec1072bf6de76626682502bb83b186dafea403b192e73b1f58ce6be48dc90d8",
+   "8ec1072bf6de76626682502bb83b186dafea403b192e73b1f58ce6be48dc90d8",
+   "8ec1072bf6de76626682502bb83b186dafea403b192e73b1f58ce6be48dc90d8"
+  ],
+  "fallback.replacedDuringFallback.picture.png": [
+   "89aac7f7864e98d06076b094d64c289fd33a3ee9f2076bd2f9f079bd1ac87568",
+   "89aac7f7864e98d06076b094d64c289fd33a3ee9f2076bd2f9f079bd1ac87568",
+   "89aac7f7864e98d06076b094d64c289fd33a3ee9f2076bd2f9f079bd1ac87568"
+  ]
+ },
+ "values": {
+  "fallback.content": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": {
+    "a": [
+     "/garbage/a-first.wrl",
+     "/tests/browser/worlds/fallback/parts/a.wrl"
+    ],
+    "b": [
+     "/status/500/b-first.wrl",
+     "/garbage/b-second.wrl",
+     "/tests/browser/worlds/fallback/parts/b-missing.wrl",
+     "/tests/browser/worlds/fallback/parts/b.wrl"
+    ],
+    "c": [
+     "/tests/browser/worlds/tex/red.png",
+     "/tests/browser/worlds/fallback/parts/c.wrl"
+    ],
+    "d": [
+     "/tests/browser/worlds/fallback/parts/d.wrl"
+    ],
+    "texture": [
+     "/garbage/t-first.png",
+     "/tests/browser/worlds/tex/green.png"
+    ],
+    "e": [
+     "/garbage/e-first.wrl",
+     "/status/404/e-second.wrl"
+    ]
+   },
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Inline: Couldn't load any of the 2 URLs, tried in this order:",
+    "warning: ImageTexture: Couldn't load URL 'http://test/garbage/t-first.png', trying URL 2 of 2. Error: Couldn't load image 'blob:http://test/ID': error.",
+    "warning: Inline: Couldn't load URL 'http://test/garbage/a-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/a-first.wrl'.",
+    "warning: Inline: Couldn't load URL 'http://test/garbage/b-second.wrl', trying URL 3 of 4. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/b-second.wrl'.",
+    "warning: Inline: Couldn't load URL 'http://test/garbage/e-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/e-first.wrl'.",
+    "warning: Inline: Couldn't load URL 'http://test/status/500/b-first.wrl', trying URL 2 of 4. Error: Internal Server Error",
+    "warning: Inline: Couldn't load URL 'http://test/tests/browser/worlds/fallback/parts/b-missing.wrl', trying URL 4 of 4. Error: Not Found",
+    "warning: Inline: Couldn't load URL 'http://test/tests/browser/worlds/tex/red.png', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/tests/browser/worlds/tex/red.png'."
+   ],
+   "picture": {
+    "picture": "fallback.content.picture.png"
+   }
+  },
+  "fallback.gltfLoads": {
+   "result": "resolved",
+   "served": [
+    "/tests/browser/worlds/fallback/gltf-loads.wrl",
+    "/tests/browser/worlds/fallback/models/triangle.gltf",
+    "/tests/browser/worlds/fallback/models/triangle.bin"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "fallback.gltfLoads.picture.png"
+   }
+  },
+  "fallback.gltfFallback": {
+   "result": "pending",
+   "served": [
+    "/tests/browser/worlds/fallback/gltf-fallback.wrl",
+    "/tests/browser/worlds/fallback/models/missing-buffer.gltf",
+    "/tests/browser/worlds/fallback/models/no-such-buffer.bin",
+    "/tests/browser/worlds/fallback/models/triangle.gltf",
+    "/tests/browser/worlds/fallback/models/triangle.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/fallback/models/no-such-buffer.bin'. Error: Not Found"
+   ]
+  },
+  "fallback.gltfFailed": {
+   "result": "pending",
+   "served": [
+    "/tests/browser/worlds/fallback/gltf-failed.wrl",
+    "/tests/browser/worlds/fallback/models/two-missing.gltf",
+    "/tests/browser/worlds/fallback/models/gone-1.bin",
+    "/tests/browser/worlds/fallback/models/gone-2.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/fallback/models/gone-1.bin'. Error: Not Found",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/fallback/models/gone-2.bin'. Error: Not Found"
+   ]
+  },
+  "fallback.world": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "served": [
+    "/garbage/w-first.wrl",
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load URL 'http://test/garbage/w-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/w-first.wrl'."
+   ],
+   "picture": {
+    "picture": "fallback.world.picture.png"
+   }
+  },
+  "fallback.repeated": {
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "first": 2,
+   "second": 2,
+   "console": [
+    "warning: Inline: Couldn't load URL 'http://test/garbage/r-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/r-first.wrl'.",
+    "warning: Inline: Couldn't load URL 'http://test/garbage/r-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/r-first.wrl'."
+   ],
+   "picture": {
+    "picture": "fallback.repeated.picture.png"
+   }
+  },
+  "fallback.twoScenes": {
+   "replaced": true,
+   "first": 2,
+   "second": 2,
+   "console": [
+    "warning: Inline: Couldn't load URL 'http://test/garbage/s-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/s-first.wrl'.",
+    "warning: Inline: Couldn't load URL 'http://test/garbage/s-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/s-first.wrl'."
+   ],
+   "picture": {
+    "picture": "fallback.twoScenes.picture.png"
+   }
+  },
+  "fallback.replacedDuringFallback": {
+   "first": "Loading of X3D file aborted.",
+   "second": "resolved",
+   "world": "fallback/parts/d.wrl",
+   "served": [
+    "/tests/browser/worlds/fallback/held.wrl",
+    "/garbage/h-first.wrl",
+    "/hold/fb/tests/browser/worlds/fallback/parts/h.wrl",
+    "/tests/browser/worlds/fallback/parts/d.wrl"
+   ],
+   "console": [
+    "warning: Inline: Couldn't load URL 'http://test/garbage/h-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/h-first.wrl'."
+   ],
+   "picture": {
+    "picture": "fallback.replacedDuringFallback.picture.png"
+   }
+  },
+  "fallback.cancelledBeforeFallback": {
+   "first": "Loading of X3D file aborted.",
+   "second": "resolved",
+   "world": "fallback/parts/d.wrl",
+   "served": [
+    "/tests/browser/worlds/fallback/held-first.wrl",
+    "/hold/fc/garbage/q-first.wrl",
+    "/tests/browser/worlds/fallback/parts/d.wrl",
+    "/tests/browser/worlds/fallback/parts/q-next.wrl"
+   ],
+   "console": [
+    "warning: Inline: Couldn't load URL 'http://test/hold/fc/garbage/q-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/hold/fc/garbage/q-first.wrl'."
+   ]
+  },
+  "fallback.disposedDuringFallback": {
+   "result": "pending",
+   "served": [
+    "/tests/browser/worlds/fallback/held.wrl",
+    "/garbage/h-first.wrl",
+    "/hold/fb/tests/browser/worlds/fallback/parts/h.wrl"
+   ],
+   "errors": [
+    "pageerror: Couldn't create frame buffer."
+   ]
+  }
+ }
+}

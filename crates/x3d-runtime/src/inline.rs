@@ -42,7 +42,7 @@
 //! * A parse error prints the parser's message first, as VRMLParser does.
 //! * No automatic refresh after a failed load (X3D 4.0, 9.3.2 X3DUrlObject); X_ITE keeps refreshing.
 
-use crate::loader::{FileLoader, Loaded};
+use crate::loader::{FileLoader, LoadHooks, LoadResult, Loaded};
 use crate::nodes::LoadState;
 use crate::*;
 
@@ -482,15 +482,23 @@ impl Runtime {
         };
         let urls = self.url_strings(node);
 
-        let ok = self.load_document_opt(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => Err(Some(
-                "Error: Couldn't parse X3D. No suitable file handler found.".into(),
-            )),
-            Loaded::Data(data, url) => rt.inline_scene(node, generation, &data, &url),
-        });
+        self.allow_fetch_wait();
+
+        let result = self.load_document_from_opt(
+            &loader,
+            &urls,
+            &LoadHooks::default(),
+            0,
+            |rt, _, loaded| match loaded {
+                Loaded::Script(_) => Err(Some(
+                    "Error: Couldn't parse X3D. No suitable file handler found.".into(),
+                )),
+                Loaded::Data(data, url) => rt.inline_scene(node, generation, &data, &url),
+            },
+        );
 
         // loadDocumentError: `callback (null)`. A request that was replaced meanwhile has nothing to say.
-        if !ok && self.inline_request_is_current(node, generation) {
+        if result == LoadResult::Failed && self.inline_request_is_current(node, generation) {
             self.set_internal_scene(node, SceneArg::None);
         }
     }
@@ -522,7 +530,18 @@ impl Runtime {
         self.sync_svg_quality();
 
         // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
-        let parsed = crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url.as_str());
+        let parsed = crate::loader::parse_bytes_waiting(
+            &*self.fetcher,
+            data,
+            url.as_str(),
+            self.accept_waits,
+        );
+
+        // `await buffersArray`: the scene is built when the buffers are in.
+        if parsed.buffers_pending {
+            self.buffers_pending = true;
+            return Err(None);
+        }
 
         let mut scene = match parsed.scene {
             Ok(scene) => scene,
