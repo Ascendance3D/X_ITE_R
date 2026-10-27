@@ -11,9 +11,12 @@ fn oracle() -> PathBuf {
 }
 
 fn build(vrml: &str) -> x3d_render::geometry::Geometry {
+    build_source(&format!("#VRML V2.0 utf8\nDEF G {vrml}"))
+}
+
+fn build_source(source: &str) -> x3d_render::geometry::Geometry {
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
-    let source = format!("#VRML V2.0 utf8\nDEF G {vrml}");
-    let scene = x3d_parse::Parser::new(&source, "http://oracle/geometry.wrl")
+    let scene = x3d_parse::Parser::new(source, "http://oracle/geometry.wrl")
         .parse()
         .expect("parse");
     let mut rt = Runtime::new(
@@ -104,4 +107,33 @@ fn geometry_matches_x_ite() {
         cases.len(),
         errors.join("\n")
     );
+}
+
+/// Generated tangents of TriangleSets with zero-area triangles: the lengths of X3DGeometryNode.tangents in the pinned
+/// X_ITE (Chrome 156, 5 identical runs, lane report XITE_R_F1_DEGENERATE_TRIANGLE_WASM_01). Its MikkTSpace wasm traps
+/// when every triangle has two equal points, and generateTangents keeps no tangents; collinear and thin triangles, and
+/// a valid triangle next to a degenerate one, get tangents. X_ITE_R must not start mikktspace on the first kind: its
+/// panic there aborts the wasm32 build (finding F1 of PR #124).
+#[test]
+fn tangents_of_degenerate_triangles_match_x_ite() {
+    let cases = [
+        ("0 0 0, 1 0 0, 0 1 0", 12),
+        ("1 1 1, 1 2 1, 1 1 1", 0),
+        ("1 1 1, 1 1 1, 1 1 1", 0),
+        ("0 0 0, 1 0 0, 2 0 0", 12),
+        ("0 0 0, 1 0 0, 0 0.000001 0", 12),
+        ("0 0 0, 1 0 0, 0 1 0, 1 1 1, 1 2 1, 1 1 1", 24),
+        (
+            "1 1 1, 1 2 1, 1 1 1, 2 2 2, 2 2 2, 3 3 3, 0 0 0, 0 0 0, 0 0 0",
+            0,
+        ),
+    ];
+
+    for (points, tangents) in cases {
+        let g = build_source(&format!(
+            "#X3D V4.0 utf8\nPROFILE Interchange\nTriangleSet {{ coord Coordinate {{ point [ {points} ] }} }}"
+        ));
+
+        assert_eq!(g.tangents.len(), tangents, "{points}");
+    }
 }

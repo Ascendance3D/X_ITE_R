@@ -1,0 +1,307 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {
+  "degenerateTriangle.valid.picture.png": [
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a"
+  ],
+  "degenerateTriangle.twoEqual.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.threeEqual.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.collinear.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.thin.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.validAndTwoEqual.picture.png": [
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a"
+  ],
+  "degenerateTriangle.severalEqual.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.finding.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.repeated.0.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.repeated.1.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.repeated.2.picture.png": [
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55",
+   "31a4e754220b510960f64e9499e34e82e6ac152480a7fc91467d779709321e55"
+  ],
+  "degenerateTriangle.repeated.3.picture.png": [
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a",
+   "718abbe9d1771c5cefe3384e84731f5bfb5990948449c13f13fdd0e48bd24c2a"
+  ]
+ },
+ "values": {
+  "degenerateTriangle.valid": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.valid.picture.png"
+   }
+  },
+  "degenerateTriangle.twoEqual": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.twoEqual.picture.png"
+   }
+  },
+  "degenerateTriangle.threeEqual": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.threeEqual.picture.png"
+   }
+  },
+  "degenerateTriangle.collinear": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.collinear.picture.png"
+   }
+  },
+  "degenerateTriangle.thin": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.thin.picture.png"
+   }
+  },
+  "degenerateTriangle.validAndTwoEqual": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 6
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.validAndTwoEqual.picture.png"
+   }
+  },
+  "degenerateTriangle.severalEqual": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 9
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.severalEqual.picture.png"
+   }
+  },
+  "degenerateTriangle.finding": {
+   "result": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "geometry": {
+    "type": "TriangleSet",
+    "points": 3
+   },
+   "console": [],
+   "picture": {
+    "picture": "degenerateTriangle.finding.picture.png"
+   }
+  },
+  "degenerateTriangle.repeated": [
+   {
+    "result": "resolved",
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "geometry": {
+     "type": "TriangleSet",
+     "points": 3
+    },
+    "console": [],
+    "picture": {
+     "picture": "degenerateTriangle.repeated.0.picture.png"
+    }
+   },
+   {
+    "result": "resolved",
+    "events": [
+     "shutdown",
+     "shutdown",
+     "initialized",
+     "initialized",
+     "load",
+     "load"
+    ],
+    "geometry": {
+     "type": "TriangleSet",
+     "points": 3
+    },
+    "console": [],
+    "picture": {
+     "picture": "degenerateTriangle.repeated.1.picture.png"
+    }
+   },
+   {
+    "result": "resolved",
+    "events": [
+     "shutdown",
+     "shutdown",
+     "shutdown",
+     "initialized",
+     "initialized",
+     "initialized",
+     "load",
+     "load",
+     "load"
+    ],
+    "geometry": {
+     "type": "TriangleSet",
+     "points": 3
+    },
+    "console": [],
+    "picture": {
+     "picture": "degenerateTriangle.repeated.2.picture.png"
+    }
+   },
+   {
+    "result": "resolved",
+    "events": [
+     "shutdown",
+     "shutdown",
+     "shutdown",
+     "shutdown",
+     "initialized",
+     "initialized",
+     "initialized",
+     "initialized",
+     "load",
+     "load",
+     "load",
+     "load"
+    ],
+    "geometry": {
+     "type": "TriangleSet",
+     "points": 3
+    },
+    "console": [],
+    "picture": {
+     "picture": "degenerateTriangle.repeated.3.picture.png"
+    }
+   }
+  ]
+ }
+}
