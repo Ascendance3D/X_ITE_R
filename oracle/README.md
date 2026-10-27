@@ -690,7 +690,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --r
 
 ## Web loadURL messages 01 (2026-10-26): the world's candidates, fonts, MovieTexture and audio
 
-- `x_ite-web-runtime-02.mjs --suite loadurl01` runs the 36 cases of `crates/x3d-web/tests/browser/loadurl01_case.mjs` and
+- `x_ite-web-runtime-02.mjs --suite loadurl01` runs the 41 cases of `crates/x3d-web/tests/browser/loadurl01_case.mjs` and
   records `web-browser-loadurl-01-baseline/loadurl01-baseline.json` (no pictures). The cases cover the candidates of the
   world-level `loadURL` (messages, their order and attempt numbers; no candidate; the empty URL; a newer `loadURL`,
   `replaceWorld (null)` and `dispose ()` while a candidate is held), FontStyle font files, MovieTexture and AudioClip
@@ -711,6 +711,12 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --r
   `Data:` URLs (percent escapes, `;base64`, a document that no parser handles) and an image from a `DATA:` URL. X_ITE's
   match of `data:` is case-sensitive, so `fetch` decodes these URLs, and GoldenGate names no data URL. Three runs gave
   identical values (Chrome 156.0.8078.47). The 32 earlier values did not change.
+- PR #123 merge gate (2026-10-27): 5 `dataURL` cases were added (41 in total). They load the world from `data:` URLs
+  with UTF-8 escapes: a malformed sequence (`%E0%A4%A`), and an XML world whose WorldInfo title has a literal `é` and
+  valid escapes, then the same title with a malformed sequence, an overlong form (`%C0%AF`) and a surrogate
+  (`%ED%A0%80`). Where `decodeURIComponent` throws, X_ITE keeps the text as it is. `font.pending` now checks that the
+  font request is in flight before its response is released. Three runs gave identical values (Chrome 156.0.8078.47).
+  The 36 earlier values did not change.
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --runs 3 --suite loadurl01

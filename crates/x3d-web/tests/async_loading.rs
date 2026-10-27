@@ -1610,3 +1610,207 @@ fn repeated_page_loads_share_no_resume_entry() {
     assert!(second.fetch_resume.is_empty());
     assert_eq!(first.fetch_resume.len(), 1);
 }
+
+// --- PR #123 merge gate -----------------------------------------------------------------------------------------
+
+use x3d_runtime::loader::FetchKey;
+
+/// Each FontStyle loop that waits for a font file has that file's request in flight: [`Fetcher::poll`] starts it
+/// before the loop parks in `font_fetch_waits`, and its response is still held.
+fn assert_each_font_wait_has_its_request(s: &mut Session, net: &TestFetcher) {
+    let rt = &s.viewer().expect("live").rt;
+    let n = net.0.borrow();
+
+    for p in &rt.font_fetch_waits {
+        let url = w(&p.family[p.index]);
+
+        assert!(n.requested.contains(&url), "{url} waits without a request");
+        assert_eq!(
+            n.responses.get(&url),
+            Some(&None),
+            "{url} waits after its response"
+        );
+    }
+}
+
+/// The font request starts before its response is released, and no font wait exists without its request: after a
+/// failure (the next family), a repeated loadData, a cancelled load and a success (MiniMax, PR #123 merge gate).
+#[test]
+fn a_waiting_font_always_has_its_request_in_flight() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nShape { geometry Text { string \"Hg\" fontStyle DEF A FontStyle { family [ \"fonts/a1.ttf\" \"fonts/a2.ttf\" ] } } }\nShape { geometry Text { string \"Hg\" fontStyle DEF B FontStyle { family \"fonts/b.ttf\" } } }\n",
+        &net,
+        &[],
+    );
+    let a = s.named_node("A").expect("DEF A");
+    let b = s.named_node("B").expect("DEF B");
+    let count =
+        |net: &TestFetcher, path: &str| net.requested().iter().filter(|u| **u == w(path)).count();
+
+    // Both requests are in flight while the responses are held; nothing was read.
+    steps(&mut s, 1, 10);
+    assert_eq!(s.viewer().expect("live").rt.font_fetch_waits.len(), 2);
+    assert_eq!(count(&net, "fonts/a1.ttf"), 1);
+    assert_eq!(count(&net, "fonts/b.ttf"), 1);
+    assert_each_font_wait_has_its_request(&mut s, &net);
+    assert!(net.read().is_empty(), "{:?}", net.read());
+
+    // A repeated loadData of A shares the request in flight.
+    s.set_field(a, "family", "[ \"fonts/a1.ttf\" \"fonts/a2.ttf\" ]")
+        .expect("family");
+    steps(&mut s, 11, 10);
+    assert_eq!(count(&net, "fonts/a1.ttf"), 1);
+    assert_each_font_wait_has_its_request(&mut s, &net);
+
+    // A failure: the next family's request starts at once.
+    net.respond(&w("fonts/a1.ttf"), Err("Error: Not Found"));
+    steps(&mut s, 21, 10);
+    assert_eq!(count(&net, "fonts/a2.ttf"), 1);
+    assert_each_font_wait_has_its_request(&mut s, &net);
+
+    // B is cancelled (a newer family): its wait goes, and its late response is not read.
+    s.set_field(b, "family", "\"SANS\"").expect("family");
+    steps(&mut s, 31, 10);
+    net.respond(&w("fonts/b.ttf"), Ok(PT_SANS));
+    steps(&mut s, 41, 10);
+    assert_each_font_wait_has_its_request(&mut s, &net);
+    assert!(!net.read().contains(&w("fonts/b.ttf")), "{:?}", net.read());
+
+    // A success ends the last wait.
+    net.respond(&w("fonts/a2.ttf"), Ok(PT_SANS));
+    steps(&mut s, 51, 10);
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.font_fetch_waits.is_empty());
+    assert!(!rt.fonts_loading());
+    assert_eq!(count(&net, "fonts/a1.ttf"), 1);
+    assert_eq!(count(&net, "fonts/a2.ttf"), 1);
+    assert_eq!(count(&net, "fonts/b.ttf"), 1);
+}
+
+/// `decodeURIComponent` in Chromium 151 (PR #123 merge gate probe): the decoded text, or `None` where it throws
+/// `URIError: URI malformed`.
+const DECODE_URI_COMPONENT: &[(&str, Option<&str>)] = &[
+    ("%E0%A4%A", None),
+    ("%C3%A9", Some("é")),
+    ("%E0%A4%A4", Some("त")),
+    ("%C3%A9%E0%A4%A", None),
+    ("%C3%A9%zz", None),
+    ("%41%E0%A4%A%42", None),
+    ("é", Some("é")),
+    ("é%C3%A9", Some("éé")),
+    ("é%E0%A4%A", None),
+    ("%FF", None),
+    ("%80", None),
+    ("%C3", None),
+    ("%C3%28", None),
+    ("%C3%A9%C3", None),
+    ("%C0%AF", None),
+    ("%C1%BF", None),
+    ("%E0%80%80", None),
+    ("%ED%A0%80", None),
+    ("%ED%BF%BF", None),
+    ("%F4%90%80%80", None),
+    ("%F5%80%80%80", None),
+    ("%F8%80%80%80%80", None),
+    ("%F0%9F%98%80", Some("😀")),
+    ("%F0%9F%98", None),
+    ("%E2%82%AC", Some("€")),
+    ("%E2%82", None),
+    ("%e2%82%ac", Some("€")),
+    ("%+1", None),
+    ("%-1", None),
+    ("% 1", None),
+    ("%1", None),
+    ("%", None),
+    ("%%", None),
+    ("%2C%3B%2F%3F%23", Some(",;/?#")),
+    ("a%20b", Some("a b")),
+    ("€%E2%82%AC", Some("€€")),
+    ("%EF%BB%BF#VRML", Some("\u{feff}#VRML")),
+    ("😀%F0%9F%98%80", Some("😀😀")),
+    ("%00", Some("\0")),
+];
+
+#[test]
+fn decode_uri_component_matches_chromium() {
+    for (input, decoded) in DECODE_URI_COMPONENT {
+        assert_eq!(
+            x3d_runtime::loader::decode_uri_component(input).as_deref(),
+            *decoded,
+            "{input}"
+        );
+    }
+}
+
+/// The world text of a `data:` candidate (FileLoader's dataAsString branch): `decodeURIComponent (data)`, or the text
+/// as it is where that throws. A malformed UTF-8 escape keeps every escape and gives no replacement character.
+#[test]
+fn a_data_url_world_keeps_its_text_where_decode_uri_component_throws() {
+    for (input, decoded) in DECODE_URI_COMPONENT {
+        let net = TestFetcher::default();
+        let mut rt = page_loader(&net);
+        let mut text = None;
+        let result =
+            rt.load_page_document(URL, &[format!("data:model/vrml,{input}")], |_, loaded| {
+                if let Loaded::Data(data, _) = loaded {
+                    text = Some(String::from_utf8(data).expect("UTF-8"));
+                }
+
+                Err("Error: no parser".into())
+            });
+
+        assert_eq!(result, LoadResult::Failed, "{input}");
+        assert_eq!(text.as_deref(), Some(decoded.unwrap_or(input)), "{input}");
+        assert!(!text.unwrap_or_default().contains('\u{fffd}'), "{input}");
+        assert!(net.requested().is_empty());
+    }
+}
+
+/// A rejection of `accept` (createX3DFromString throws) is a failed candidate, not an escape from the chain: a load
+/// that goes on to a held candidate keeps its resume entry, the final failure removes it, and the runtime starts the
+/// next page load (MiniMax, PR #123 merge gate).
+#[test]
+fn a_page_load_whose_documents_are_rejected_leaves_no_resume_entry() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("j1.wrl"), w("j2.wrl")];
+    let reject = |rt: &mut Runtime, urls: &[String]| {
+        rt.load_page_document(URL, urls, |_, _| Err("Error: rejected".into()))
+    };
+
+    assert_eq!(reject(&mut rt, &urls), LoadResult::Suspended);
+    assert!(rt.fetch_resume.contains_key(&FetchKey::Page));
+
+    // j1 is rejected; j2 is held, so the entry stays.
+    net.respond(&w("j1.wrl"), Ok(WORLD));
+    assert_eq!(reject(&mut rt, &urls), LoadResult::Suspended);
+    assert_eq!(rt.fetch_resume[&FetchKey::Page].index, 1);
+
+    // j2 is rejected too: the final failure leaves no entry.
+    net.respond(&w("j2.wrl"), Ok(WORLD));
+    assert_eq!(reject(&mut rt, &urls), LoadResult::Failed);
+    assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
+    assert!(
+        page_log(&mut rt)
+            .iter()
+            .any(|l| l.contains("Error: rejected"))
+    );
+
+    // Every candidate rejected without a wait (a data URL needs no response).
+    let data = vec!["data:model/vrml,%23VRML%20V2.0%20utf8".to_string()];
+
+    assert_eq!(reject(&mut rt, &data), LoadResult::Failed);
+    assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
+
+    // The runtime starts another page load, and it loads.
+    let next = vec![w("j3.wrl")];
+
+    assert_eq!(page_step(&mut rt, &next).0, LoadResult::Suspended);
+    net.respond(&w("j3.wrl"), Ok(WORLD));
+    assert_eq!(page_step(&mut rt, &next), (LoadResult::Loaded, true));
+    assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
+    assert_eq!(net.requested(), [w("j1.wrl"), w("j2.wrl"), w("j3.wrl")]);
+}
