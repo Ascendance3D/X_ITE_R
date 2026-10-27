@@ -600,6 +600,15 @@ pub fn generate_tangents(g: &mut Geometry) {
         return;
     }
 
+    // mikktspace drops the triangles with two equal positions, then computes `count - 1` in usize: with none left it
+    // underflows and reads past its arrays. The X_ITE wasm traps there; this build cannot catch that panic in
+    // wasm32 (panic=abort), so it must not start.
+    let degenerate = |t: &[f32]| t[0..3] == t[3..6] || t[0..3] == t[6..9] || t[3..6] == t[6..9];
+
+    if positions.chunks_exact(9).all(degenerate) {
+        return;
+    }
+
     // The wasm returns one tangent per vertex of a whole triangle (a trailing partial face has none).
     let mut mesh = MikkMesh {
         positions: &positions,

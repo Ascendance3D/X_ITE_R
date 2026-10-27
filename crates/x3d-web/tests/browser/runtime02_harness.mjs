@@ -17,6 +17,7 @@ import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
 import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
+import { CASE_GROUPS as DEGENERATE01_GROUPS } from "./degenerate01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -30,12 +31,15 @@ export const ONLY     = process .env .XR_CASE;
 // The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
-// compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline).
+// compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline), and
+// the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
+// oracle/web-browser-degenerate-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
    loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
    dataurl01:  { dir: process .env .XR_DATAURL_BASELINE ?? join (REPO, "oracle/web-browser-data-url-01-baseline"), file: "dataurl01-baseline.json", groups: DATAURL01_GROUPS },
+   degenerate01: { dir: process .env .XR_DEGENERATE_BASELINE ?? join (REPO, "oracle/web-browser-degenerate-01-baseline"), file: "degenerate01-baseline.json", groups: DEGENERATE01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -350,6 +354,7 @@ const GROUP_FILES = {
    dataURLWorld: "dataurl01.test.mjs",
    dataURLImage: "dataurl01.test.mjs",
    dataURLGltf:  "dataurl01.test.mjs",
+   degenerateTriangle: "degenerate01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
