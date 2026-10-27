@@ -109,24 +109,37 @@ impl Runtime {
         }
     }
 
-    /// FontLibrary.loadData.
+    /// FontLibrary.loadData. With an asynchronous [`crate::Fetcher`] each `await browser .loadFont (fileURL)` waits
+    /// for its response: the loop stops there and goes on from that file when it is in.
     pub(crate) fn font_library_load(&mut self, node: NodeId) {
         let Ok(base) = url::Url::parse(&self.base_url(node)) else {
             return;
         };
+        let candidates = self.url_strings(node);
         // `Array .from (this ._url) .map (fileURL => new URL (fileURL, base))`: one bad url rejects the whole load.
         let mut urls = vec![];
 
-        for u in self.url_strings(node) {
-            match base.join(&u) {
+        for u in &candidates {
+            match base.join(u) {
                 Ok(r) => urls.push(r),
                 Err(_) => return,
             }
         }
 
+        self.allow_fetch_wait();
+
+        let wait = self.fetch_wait.take();
+        let start = wait
+            .as_ref()
+            .and_then(|k| self.fetch_resume_of(k, &candidates))
+            .map_or(0, |r| r.index);
         let mut font = None;
 
-        for file_url in urls {
+        for (index, file_url) in urls.into_iter().enumerate().skip(start) {
+            if self.fetch_waits(wait.as_ref(), &candidates, index, &file_url) {
+                return;
+            }
+
             match self.font_library_load_font(node, &file_url) {
                 Ok(Some(f)) => {
                     font = Some(f);

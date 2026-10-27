@@ -1,7 +1,7 @@
 # X_ITE_R browser API — supported and unsupported
 
 Reference: X_ITE 16.5.0 (`oracle/x_ite-pin`, commit `34cdf9f97`). Names are X_ITE's.
-"Compared" means a browser test checks the value against a pinned X_ITE recording: `oracle/web-browser-01-baseline` (runtime 01) or `oracle/web-browser-02-baseline` (runtime 02, 30 cases).
+"Compared" means a browser test checks the value against a pinned X_ITE recording: `oracle/web-browser-01-baseline` (runtime 01), `oracle/web-browser-02-baseline` (runtime 02, 30 cases), `oracle/web-browser-fallback-01-baseline` (10 cases) or `oracle/web-browser-loadurl-01-baseline` (21 cases).
 
 This is a small subset. It is not full X_ITE API compatibility.
 The Rust engine does all X3D work: parsing, events, sensors, picking, navigation and rendering. The JavaScript adapter only forwards page events and calls.
@@ -54,7 +54,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | `version`, `getVersion ()` | `"0.1.0"` (X_ITE: `"16.5.0"`) |
 | `currentScene` | supported, compared |
 | `getWorldURL ()`, `baseURL` | supported |
-| `loadURL (url [, parameter])` | supported, compared: MFString type check, Promise, rejection text, world kept on failure; a newer `loadURL` aborts an older one, which then never replaces the world. `parameter` is checked and then ignored |
+| `loadURL (url [, parameter])` | supported, compared: MFString type check, Promise, rejection text, world kept on failure; a newer `loadURL` aborts an older one, which then never replaces the world. Each candidate that fails is reported with X_ITE's FileLoader messages (`Couldn't load URL '...', trying URL n of m. ...`, `Couldn't load any of the n URLs, tried in this order:`), in order, by the engine. An abort ends the request in flight, which is reported (`AbortError: signal is aborted without reason`). An empty MFString, or one of empty URLs only, rejects with `Loading of X3D file aborted.`, fires no event and aborts no older `loadURL`, like X_ITE. `parameter` is checked and then ignored |
 | `createX3DFromString (x3dSyntax)` | supported, compared: a Promise of the scene after its Inline, texture and EXTERNPROTO loads; the scene is not the world; its `worldURL` is the page's base URL; a syntax error rejects |
 | `replaceWorld (scene)` | supported, compared: `null` or `undefined` gives an empty world; the event order `SHUTDOWN_EVENT shutdown INITIALIZED_EVENT initialized load`, the shutdown in the next frame; a newer `replaceWorld` rejects an older one with `Replacing world aborted.` |
 | `firstViewpoint ()`, `previousViewpoint ()`, `nextViewpoint ()`, `lastViewpoint ()` | supported, compared: the user viewpoints (those with a description), bound in the next frame |
@@ -86,11 +86,13 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 
 ### Resource loading
 
-Inline, ImageTexture and EXTERNPROTO files load with the page's `fetch` (`cache: "default"`, an `AbortSignal`), without blocking the page.
+The world of `loadURL`, Inline, ImageTexture, EXTERNPROTO, FontStyle and FontLibrary font files, MovieTexture, AudioClip and BufferAudioSource files load with the page's `fetch` (`cache: "default"`, an `AbortSignal`), without blocking the page. A `data:` URL is decoded by the engine, with no request, as the browser's `fetch` decodes it for every kind of file: `;base64` in any letter case, percent escapes, and a fetch error (`TypeError: Failed to fetch`) for base64 that does not decode. A world or Inline document that is not base64 is read as X_ITE's FileLoader reads it: only a lower-case `;base64` is base64, and one malformed escape keeps the text undecoded.
+The engine runs every fallback chain, also the world's; the JavaScript adapter only prints the engine's messages.
 A world waits for its loads before it replaces the current world, like X_ITE's scene `loadCount`; the current world runs meanwhile.
 Compared: relative URLs, HTTP errors (`Error: Not Found`), data that is no X3D or image, MFString fallbacks in order, cross-origin requests without CORS (`TypeError: Failed to fetch`), EXTERNPROTO fallbacks and waiting, and the console messages and their levels.
 Tested: requests that end after a newer `loadURL`, after `dispose ()` or after the element left the document never reach another world.
 Compared (`tests/browser/fallback01.test.mjs`): after a candidate that downloads but does not load (no parser takes it, it does not parse, an image does not decode, a glTF buffer fails), the next candidate is fetched then, in order, with X_ITE's messages; a candidate after the one that loads is never fetched. The external buffers of a glTF file are requested together and resolve against the glTF file. A load waits for its responses and never blocks the page.
+Compared (`tests/browser/loadurl01.test.mjs`): the candidates of the world-level `loadURL` and their messages, also when a newer `loadURL`, `replaceWorld` or `dispose ()` comes while one is in flight; a FontStyle font file that is missing or no font, then one that loads; a MovieTexture GIF or video that fails, then a GIF; an AudioClip file that does not decode, then one that does, and when none does. Each of these waits for the response of the next candidate, also when it is held.
 
 ## Known differences inside the supported part
 
@@ -102,12 +104,14 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - After the element is removed and added again while the pointer did not move, a TouchSensor stays `isOver`. X_ITE ends `isOver`, because its release checks the pointer against the detached canvas (an empty rectangle).
 - A hidden page (`visibilityState` hidden) cancels the frame loop, and showing the page starts it again. X_ITE keeps its loop scheduled and relies on the browser to pause `requestAnimationFrame`.
 - A URL is requested once per world, also when several nodes use it. X_ITE sends one request per node (the HTTP cache may answer).
+- A `data:` URL whose base64 does not decode gives the same message as in X_ITE, without Chromium's own `Failed to load resource: net::ERR_INVALID_URL` line before it: X_ITE_R makes no request for it.
+- An empty document (`data:model/vrml,`, or an empty file) is an empty world. X_ITE rejects it; in the recording page it fails with `ReferenceError: CharLS is not defined` (DICOMParser).
 - An image that does not decode fails with `Couldn't load image '<file URL>': error.`. X_ITE names the blob URL of the data.
 - A world with an Inline whose glTF file has a buffer that fails finishes loading. In X_ITE the world never does, also when the Inline loads its next candidate: GLTF2Parser does not remove the failed buffer from the scene's loading objects, so `loadURL` never settles.
 - A newer `loadURL` ends the loads of the older world. X_ITE's Inline FileLoaders of the older world go on: a candidate that responds after the replacement and does not parse is reported, and the next candidate is fetched.
-- `loadURL` does not report its own candidates that fail; it tries them in order like X_ITE. X_ITE logs `Couldn't load URL '...', trying URL 2 of 2. ...` for each.
 - After `dispose ()` X_ITE draws a frame and throws `Couldn't create frame buffer.`; X_ITE_R's frame loop has stopped.
-- `loadURL` rejects with `Loading of X3D file aborted.` after `dispose ()`. X_ITE's never settles.
+- `loadURL` rejects with `Loading of X3D file aborted.` after `dispose ()`. X_ITE's never settles. X_ITE's `dispose ()` also fires `shutdown`; X_ITE_R's fires no event.
+- A scene does not wait for its FontStyle font files or for an AudioClip's decode: it can go live while a font file or the next audio candidate is still in flight. The FontStyle and the AudioClip wait for their responses and complete later. In X_ITE these nodes hold the scene's loadCount, so `createX3DFromString` and `loadURL` settle only after them.
 - An Anchor or `loadURL` never opens a `javascript:`, `vbscript:`, `ecmascript:`, `vrmlscript:` or `data:` URL in a window or as the page location, in any letter case; it logs `X_ITE_R: Anchor URL '...' was not opened.`. X_ITE checks for script URLs in lower case only and opens the others. A new window opens with `noopener`.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
 - A node handle belongs to one world, and so does an `X3DScene` object. After the world is replaced (also by an Anchor), using an old node or scene throws `X_ITE_R: the node belongs to a world that was replaced.`; `currentScene` gives the new scene. In X_ITE the old objects stay usable but are no longer the world.
@@ -125,7 +129,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
 - Sound: the engine's Web Audio port is built in but was not tested in a page.
-- A FontStyle or FontLibrary font, a MovieTexture, and an AudioClip or BufferAudioSource candidate after one that did not decode are not waited for: such a URL fails with `TypeError: Failed to fetch` the first time, and `X_ITE_R: <url> was requested before it was loaded.` is logged.
+- MovieTexture frames are not decoded (the engine's `movie_load`): a GIF or PNG that downloads, or a `.webm`, `.ogv`, `.ogg`, `.mp4` or `.m4v` file that downloads, counts as loaded. X_ITE decodes the GIF or APNG and plays the video in a `<video>` element; a video that does not play fails there and the next candidate is tried. X_ITE_R tries the next candidate only after a video name it does not take as playable.
 - A `replaceWorld` while a `loadURL` waits for its Inline and texture responses does not stop that load: like X_ITE, the older world then replaces the newer one.
 
 ## Graphics

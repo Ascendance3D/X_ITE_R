@@ -380,6 +380,9 @@ pub struct Runtime {
     pub font_style_fonts: HashMap<NodeId, std::rc::Rc<x3d_text::Font>>,
     /// FontStyle load loops that wait for a FontLibrary that is still loading.
     pub pending_font_styles: Vec<font_library::PendingFontStyle>,
+    /// FontStyle load loops that wait for the response of a font file (an asynchronous [`Fetcher`]); `index` is the
+    /// family entry of that file. [`Runtime::resume_fetches`] goes on with them.
+    pub font_fetch_waits: Vec<font_library::PendingFontStyle>,
     /// X3DFontStyleNode.font: what each FontStyle's last completed loadData chose (kept while the next one loads).
     pub font_style_font: HashMap<NodeId, Option<std::rc::Rc<x3d_text::Font>>>,
     /// The font style node each Text listens to (None: the browser's default FontStyle).
@@ -645,6 +648,7 @@ impl Runtime {
             font_library_fonts: HashMap::new(),
             font_epoch: 0,
             pending_font_styles: vec![],
+            font_fetch_waits: vec![],
             font_style_fonts: HashMap::new(),
             font_style_font: HashMap::new(),
             text_font_styles: HashMap::new(),
@@ -1288,7 +1292,7 @@ impl Runtime {
             // The fallback chain waits for the response of its next candidate: the task runs again from there.
             if let Some(key) = key {
                 if std::mem::take(&mut self.fetch_suspended) {
-                    self.parked_fetches.push(key.task());
+                    self.parked_fetches.extend(key.task());
                 } else {
                     self.fetch_resume.remove(&key);
                 }
@@ -1298,13 +1302,14 @@ impl Runtime {
         }
 
         // Only a parked task goes on from where it waited. A request that was replaced, cancelled or disposed
-        // meanwhile (its task ran and did nothing) leaves no state.
+        // meanwhile (its task ran and did nothing) leaves no state. The page's loadURL is no task: its caller ends it.
         let parked = &self.parked_fetches;
 
         self.fetch_resume.retain(|k, _| {
-            parked
-                .iter()
-                .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
+            *k == loader::FetchKey::Page
+                || parked
+                    .iter()
+                    .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
         });
     }
 

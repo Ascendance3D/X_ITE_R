@@ -43,17 +43,11 @@ fn call_fetcher(uri: &str, base: &str) -> Result<Vec<u8>, String> {
 pub fn default_fetch(uri: &str, base: &str) -> Result<Vec<u8>, String> {
     let trimmed = uri.trim_start();
 
-    if let Some(rest) = trimmed.strip_prefix("data:") {
-        let Some(comma) = rest.find(',') else {
-            return Err("TypeError: Failed to fetch".into());
-        };
-        let (meta, data) = (&rest[..comma], &rest[comma + 1..]);
-
-        if meta.ends_with(";base64") {
-            return base64_decode(data).ok_or_else(|| "TypeError: Failed to fetch".to_string());
-        }
-
-        return Ok(percent_decode_bytes(data));
+    if trimmed
+        .get(..5)
+        .is_some_and(|s| s.eq_ignore_ascii_case("data:"))
+    {
+        return crate::decode_data_url(trimmed);
     }
 
     let has_scheme = trimmed.find(':').is_some_and(|i| {
