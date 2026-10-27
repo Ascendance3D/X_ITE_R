@@ -154,6 +154,11 @@ impl x3d_runtime::Fetcher for WebFetcher {
     }
 
     fn poll(&self, url: &url::Url) -> FetchPoll {
+        // `fetch (dataURL)` needs no request: the browser decodes the URL itself (see `fetch`).
+        if url.scheme() == "data" {
+            return FetchPoll::Loaded;
+        }
+
         let key = cache_key(url);
         let state = match self.cache.borrow().entries.get(&key) {
             Some(Entry::Pending) => Some(FetchPoll::Pending),
@@ -169,6 +174,10 @@ impl x3d_runtime::Fetcher for WebFetcher {
     }
 
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        if url.scheme() == "data" {
+            return x3d_parse::gltf_default_fetch(url.as_str(), "");
+        }
+
         let key = cache_key(url);
 
         match self.cache.borrow().entries.get(&key) {
@@ -177,10 +186,10 @@ impl x3d_runtime::Fetcher for WebFetcher {
             _ => {}
         }
 
-        // A URL the runtime did not ask for first. The fallback chains of Inline, the textures, EXTERNPROTO, Anchor
-        // and glTF buffers wait for their responses (FetchPoll), so this is a load that does not wait (a font, a
-        // MovieTexture, an audio file after one that did not decode): the page never blocks on a request, so this
-        // fetch fails now; the response serves later requests.
+        // A URL the runtime did not ask for first. Every fallback chain (the world's, Inline, the textures, EXTERNPROTO,
+        // Anchor, glTF buffers, fonts, MovieTexture, sounds) waits for its responses (FetchPoll), so this is a load
+        // that does not wait: the page never blocks on a request, so this fetch fails now; the response serves later
+        // requests.
         if !self.cache.borrow().entries.contains_key(&key) {
             self.start(key);
         }
@@ -198,6 +207,18 @@ struct World {
     cache: Rc<RefCell<FetchCache>>,
 }
 
+/// A loadURL of the page: the world's FileLoader ([`x3d_runtime::Runtime::load_page_document`]). It runs in a
+/// runtime of its own, whose log has its messages, with the fetches of the world it makes.
+struct PageLoad {
+    rt: x3d_runtime::Runtime,
+    /// The candidates; FileLoader.abort () leaves the one in flight as the last.
+    urls: Vec<String>,
+    base: String,
+    cache: Rc<RefCell<FetchCache>>,
+    /// How much of the log [`WebBrowser::take_log`] returned.
+    log_seen: usize,
+}
+
 #[wasm_bindgen]
 pub struct WebBrowser {
     surface: wgpu::Surface<'static>,
@@ -209,6 +230,8 @@ pub struct WebBrowser {
     max_texture_dimension: u32,
     lost: Arc<AtomicBool>,
     worlds: HashMap<u32, World>,
+    /// The page's loadURL calls whose world has not parsed yet, by id (the ids of worlds and loads differ).
+    loads: HashMap<u32, PageLoad>,
     current: Option<u32>,
     next_id: u32,
 }
@@ -332,6 +355,7 @@ impl WebBrowser {
             max_texture_dimension: limits.max_texture_dimension_2d,
             lost,
             worlds: HashMap::new(),
+            loads: HashMap::new(),
             current: None,
             next_id: 1,
         })
@@ -392,6 +416,96 @@ impl WebBrowser {
         Ok(self.add(world, cache, now))
     }
 
+    /// X3DBrowser.loadURL (url) of the page: start the world's FileLoader with the candidates `urls`, resolved against
+    /// `base`. The id of the load: [`WebBrowser::load_step`] goes on with it, [`WebBrowser::take_log`] gives its
+    /// messages, [`WebBrowser::progress`] waits for its responses and [`WebBrowser::discard`] ends it.
+    #[wasm_bindgen(js_name = loadURL)]
+    pub fn load_url(&mut self, urls: Vec<String>, base: &str) -> Result<u32, JsError> {
+        let cache = FetchCache::new();
+        let fetcher = Box::new(WebFetcher {
+            cache: cache.clone(),
+        });
+        let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", base)
+            .map_err(|e| JsError::new(&format!("{e:?}")))?;
+        let id = self.next_id;
+
+        self.next_id += 1;
+        self.loads.insert(
+            id,
+            PageLoad {
+                rt: x3d_runtime::Runtime::new(scene, fetcher),
+                urls,
+                base: base.to_string(),
+                cache,
+                log_seen: 0,
+            },
+        );
+        Ok(id)
+    }
+
+    /// Go on with load `id` with the responses that arrived: 0 while the response of a candidate is still to come,
+    /// the id of the new scene (whose own loads go on, see [`WebBrowser::loaded`]), or -1 when every candidate
+    /// failed (or the load is gone). The messages of the failed candidates are in the load's log.
+    #[wasm_bindgen(js_name = loadStep)]
+    pub fn load_step(&mut self, id: u32, now: f64) -> f64 {
+        let Some(load) = self.loads.get_mut(&id) else {
+            return -1.0;
+        };
+
+        load.cache.borrow_mut().settled = false;
+
+        let cache = load.cache.clone();
+        let base = load.base.clone();
+        let mut parsed = None;
+        let result = load
+            .rt
+            .load_page_document(&load.base, &load.urls, |rt, loaded| {
+                let (data, url) = match loaded {
+                    x3d_runtime::loader::Loaded::Data(data, url) => (data, url.to_string()),
+                    // `createX3DFromString (this .resolvedURL, data)` without a resolved URL: `new URL (null, base)`.
+                    x3d_runtime::loader::Loaded::Script(source) => (
+                        source.into_bytes(),
+                        url::Url::parse(&base)
+                            .and_then(|b| b.join("null"))
+                            .map_or_else(|_| base.clone(), String::from),
+                    ),
+                };
+                let fetcher = Box::new(WebFetcher {
+                    cache: cache.clone(),
+                });
+
+                parsed = Some(Session::parse_logged(&data, &url, fetcher, |line| {
+                    rt.log.push(line)
+                })?);
+                Ok(())
+            });
+
+        match (result, parsed) {
+            (x3d_runtime::loader::LoadResult::Suspended, _) => 0.0,
+            (x3d_runtime::loader::LoadResult::Loaded, Some(world)) => {
+                f64::from(self.add(world, cache, now))
+            }
+            _ => -1.0,
+        }
+    }
+
+    /// FileLoader.abort () of load `id`: the candidate in flight is the last one, and its request ends (AbortError,
+    /// which the next [`WebBrowser::load_step`] reports).
+    #[wasm_bindgen(js_name = abortLoad)]
+    pub fn abort_load(&mut self, id: u32) {
+        let Some(load) = self.loads.get_mut(&id) else {
+            return;
+        };
+
+        if let Some(n) = load.rt.abort_page_document() {
+            load.urls.truncate(n);
+        }
+
+        if let Some(c) = &load.cache.borrow().controller {
+            c.abort();
+        }
+    }
+
     /// X3DBrowser.createX3DFromString of the page: parse `text` with the world URL `url` and start its loads. The
     /// error is the message of X3DBrowser's rejection.
     #[wasm_bindgen(js_name = prepareString)]
@@ -416,10 +530,14 @@ impl WebBrowser {
         w.session.poll_load(now)
     }
 
-    /// A Promise that resolves when a response of scene `id` arrives (at once when one arrived since
+    /// A Promise that resolves when a response of scene or load `id` arrives (at once when one arrived since
     /// [`WebBrowser::loaded`], or the scene is gone).
     pub fn progress(&self, id: u32) -> js_sys::Promise {
-        let cache = self.worlds.get(&id).map(|w| w.cache.clone());
+        let cache = self
+            .worlds
+            .get(&id)
+            .map(|w| w.cache.clone())
+            .or_else(|| self.loads.get(&id).map(|l| l.cache.clone()));
 
         js_sys::Promise::new(&mut |resolve, _| match &cache {
             Some(c) if !c.borrow().settled => c.borrow_mut().waiters.push(resolve),
@@ -460,11 +578,13 @@ impl WebBrowser {
         Ok(())
     }
 
-    /// Release scene `id` (not the current world): its loads end.
+    /// Release scene or load `id` (not the current world): its loads end. A load's world that parsed stays.
     pub fn discard(&mut self, id: u32) {
         if self.current != Some(id) {
             self.worlds.remove(&id);
         }
+
+        self.loads.remove(&id);
     }
 
     /// The id of the current world.
@@ -847,9 +967,16 @@ impl WebBrowser {
         }))
     }
 
-    /// The runtime's log and Browser.print output of scene `id` since the last call.
+    /// The runtime's log and Browser.print output of scene or load `id` since the last call.
     #[wasm_bindgen(js_name = takeLog)]
     pub fn take_log(&mut self, id: u32) -> Vec<String> {
+        if let Some(load) = self.loads.get_mut(&id) {
+            let new = load.rt.log[load.log_seen.min(load.rt.log.len())..].to_vec();
+
+            load.log_seen = load.rt.log.len();
+            return new;
+        }
+
         self.worlds
             .get_mut(&id)
             .map_or(vec![], |w| w.session.take_log())

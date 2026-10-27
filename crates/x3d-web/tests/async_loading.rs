@@ -694,3 +694,525 @@ fn a_request_replaced_while_it_waits_leaves_no_state() {
     assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
     assert!(!rt.has_parked_fetches());
 }
+
+// --- web loadURL messages 01 ------------------------------------------------------------------------------------
+
+use x3d_runtime::Runtime;
+use x3d_runtime::loader::{LoadResult, Loaded};
+
+const PT_SANS: &[u8] =
+    include_bytes!("../../../oracle/synthetic-rea-b08-net/fonts/PTSans-Regular.ttf");
+const NOT_FONT: &[u8] = include_bytes!("../../../oracle/synthetic-rea-b08-net/fonts/notfont.ttf");
+const TONE: &[u8] = include_bytes!("../../../oracle/synthetic-rea-b05/media/tone22k-mono.wav");
+const GIF: &[u8] = include_bytes!("browser/worlds/tex/green.gif");
+
+/// The world FileLoader of the page's loadURL (WebBrowser.loadURL): its own runtime with the new world's fetcher.
+fn page_loader(net: &TestFetcher) -> Runtime {
+    let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", URL).expect("the empty scene");
+
+    Runtime::new(scene, Box::new(net.clone()))
+}
+
+/// One step of the page's loadURL (WebBrowser.loadStep): the result, and whether a world parsed.
+fn page_step(rt: &mut Runtime, urls: &[String]) -> (LoadResult, bool) {
+    let mut parsed = false;
+    let result = rt.load_page_document(URL, urls, |rt, loaded| {
+        let Loaded::Data(data, url) = loaded else {
+            return Err("Error: no script".into());
+        };
+
+        Session::parse_logged(
+            &data,
+            url.as_str(),
+            Box::new(TestFetcher::default()),
+            |line| rt.log.push(line),
+        )?;
+        parsed = true;
+        Ok(())
+    });
+
+    (result, parsed)
+}
+
+fn page_log(rt: &mut Runtime) -> Vec<String> {
+    std::mem::take(&mut rt.log)
+}
+
+const WORLD: &[u8] = b"#VRML V2.0 utf8\nShape { geometry Box { } }\n";
+
+#[test]
+fn page_load_url_first_candidate_loads_and_no_other_is_requested() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("a.wrl"), w("never.wrl")];
+
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    assert_eq!(net.requested(), [w("a.wrl")]);
+
+    net.respond(&w("a.wrl"), Ok(WORLD));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+    assert_eq!(net.requested(), [w("a.wrl")]);
+    assert_eq!(page_log(&mut rt), Vec::<String>::new());
+    assert!(rt.fetch_resume.is_empty());
+}
+
+#[test]
+fn page_load_url_reports_each_failed_candidate_in_order() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![
+        w("u2.wrl"),
+        w("u3.wrl"),
+        w("u4.wrl"),
+        String::new(),
+        w("ok.wrl"),
+    ];
+
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    net.respond(&w("u2.wrl"), Err("Error: Internal Server Error"));
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    // The next candidate is requested only after the one before failed.
+    assert_eq!(net.requested(), [w("u2.wrl"), w("u3.wrl")]);
+
+    net.respond(&w("u3.wrl"), Ok(GARBAGE));
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    net.respond(&w("u4.wrl"), Err("Error: Not Found"));
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    assert_eq!(
+        net.requested(),
+        [w("u2.wrl"), w("u3.wrl"), w("u4.wrl"), w("ok.wrl")]
+    );
+
+    net.respond(&w("ok.wrl"), Ok(WORLD));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+
+    // oracle/web-browser-loadurl-01-baseline, loadURL.severalThenLoads.
+    assert_eq!(
+        page_log(&mut rt),
+        [
+            format!(
+                "warn: Couldn't load URL '{}', trying URL 2 of 5. Error: Internal Server Error",
+                w("u2.wrl")
+            ),
+            format!(
+                "warn: Couldn't load URL '{}', trying URL 3 of 5. Error: Couldn't parse X3D. No suitable file handler found for '{}'.",
+                w("u3.wrl"),
+                w("u3.wrl")
+            ),
+            format!(
+                "warn: Couldn't load URL '{}', trying URL 4 of 5. Error: Not Found",
+                w("u4.wrl")
+            ),
+            "warn: Couldn't load empty URL, trying URL 5 of 5. Error: Empty URL.".to_string(),
+        ]
+    );
+}
+
+#[test]
+fn page_load_url_every_candidate_fails() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("u6.wrl"), w("u7.wrl")];
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("u6.wrl"), Err("Error: Not Found"));
+    page_step(&mut rt, &urls);
+    net.respond(&w("u7.wrl"), Ok(GARBAGE));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+
+    let log = page_log(&mut rt);
+
+    assert_eq!(log.len(), 2, "{log:?}");
+    assert_eq!(
+        log[1],
+        "error: Couldn't load any of the 2 URLs, tried in this order:"
+    );
+
+    // One candidate: its own message (loadURL.oneFails).
+    let mut rt = page_loader(&net);
+    let one = vec![w("u6.wrl")];
+
+    assert_eq!(page_step(&mut rt, &one).0, LoadResult::Failed);
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. Error: Not Found",
+            w("u6.wrl")
+        )]
+    );
+}
+
+#[test]
+fn page_load_url_waits_without_a_retry_loop() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("slow.wrl"), w("next.wrl")];
+
+    for _ in 0..50 {
+        assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Suspended);
+    }
+
+    // One request, no read, no message while the response is in flight.
+    assert_eq!(net.requested(), [w("slow.wrl")]);
+    assert!(net.read().is_empty());
+    assert!(page_log(&mut rt).is_empty());
+}
+
+#[test]
+fn page_load_url_abort_ends_the_chain_at_the_candidate_in_flight() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let mut urls = vec![w("held.wrl"), w("next.wrl")];
+
+    page_step(&mut rt, &urls);
+
+    // FileLoader.abort (): `this .url .length = 0`, and the request rejects (loadURL.replacedWhilePending).
+    let left = rt.abort_page_document().expect("the chain waits");
+
+    urls.truncate(left);
+    net.respond(
+        &w("held.wrl"),
+        Err("AbortError: signal is aborted without reason"),
+    );
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+    assert_eq!(net.requested(), [w("held.wrl")]);
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. AbortError: signal is aborted without reason",
+            w("held.wrl")
+        )]
+    );
+
+    // After a failed candidate the abort counts it (loadURL.replacedAfterFailure).
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let mut urls = vec![w("u9.wrl"), w("held.wrl"), w("next.wrl")];
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("u9.wrl"), Err("Error: Not Found"));
+    page_step(&mut rt, &urls);
+    urls.truncate(rt.abort_page_document().expect("the chain waits"));
+    net.respond(
+        &w("held.wrl"),
+        Err("AbortError: signal is aborted without reason"),
+    );
+    assert_eq!(page_step(&mut rt, &urls).0, LoadResult::Failed);
+    assert_eq!(net.requested(), [w("u9.wrl"), w("held.wrl")]);
+    assert_eq!(
+        page_log(&mut rt),
+        [
+            format!(
+                "warn: Couldn't load URL '{}', trying URL 2 of 3. Error: Not Found",
+                w("u9.wrl")
+            ),
+            "error: Couldn't load any of the 2 URLs, tried in this order:".to_string(),
+        ]
+    );
+    assert!(rt.fetch_resume.is_empty());
+}
+
+/// A live world of `text`, after the responses `first` (the world waits for them).
+fn live(text: &str, net: &TestFetcher, first: &[(&str, &[u8])]) -> Session {
+    let mut s = begin(text, net);
+
+    for (path, data) in first {
+        poll(&mut s);
+        net.respond(&w(path), Ok(data));
+    }
+
+    for i in 0..20 {
+        if s.poll_load(NOW + f64::from(i) * 0.016) {
+            break;
+        }
+    }
+
+    assert!(s.go_live(NOW), "the world went live");
+    s
+}
+
+fn steps(s: &mut Session, from: u32, n: u32) {
+    for i in from..from + n {
+        s.step(NOW + f64::from(i) * 0.016);
+    }
+}
+
+#[test]
+fn a_font_file_waits_for_its_response_then_the_next_family_is_fetched() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nShape { geometry Text { string \"Hg\" fontStyle FontStyle { family [ \"fonts/f1.ttf\" \"fonts/notfont.ttf\" \"fonts/PTSans-Regular.ttf\" ] } } }\n",
+        &net,
+        &[],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.requested(), [w("fonts/f1.ttf")]);
+
+    net.respond(&w("fonts/f1.ttf"), Err("Error: Not Found"));
+    steps(&mut s, 11, 10);
+    assert_eq!(net.requested(), [w("fonts/f1.ttf"), w("fonts/notfont.ttf")]);
+
+    net.respond(&w("fonts/notfont.ttf"), Ok(NOT_FONT));
+    steps(&mut s, 21, 10);
+    // No busy loop: one request per file while it is in flight.
+    assert_eq!(
+        net.requested(),
+        [
+            w("fonts/f1.ttf"),
+            w("fonts/notfont.ttf"),
+            w("fonts/PTSans-Regular.ttf")
+        ]
+    );
+
+    net.respond(&w("fonts/PTSans-Regular.ttf"), Ok(PT_SANS));
+    steps(&mut s, 31, 10);
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(!rt.fonts_loading());
+    assert!(rt.font_fetch_waits.is_empty());
+
+    // oracle/web-browser-loadurl-01-baseline, font.fallback.
+    let log: Vec<String> = s
+        .take_log()
+        .into_iter()
+        .filter(|l| l.contains("font"))
+        .collect();
+
+    assert_eq!(
+        log,
+        [
+            format!(
+                "error: FontStyle: Couldn't load URL '{}'. Error: Not Found",
+                w("fonts/f1.ttf")
+            ),
+            format!("warn: Error loading font '{}':", w("fonts/f1.ttf")),
+            format!(
+                "error: FontStyle: Couldn't load URL '{}'. Error: Unsupported OpenType signature not ",
+                w("fonts/notfont.ttf")
+            ),
+            format!("warn: Error loading font '{}':", w("fonts/notfont.ttf")),
+        ]
+    );
+}
+
+#[test]
+fn a_font_style_that_is_gone_ignores_its_late_response() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nDEF T Transform { children Shape { geometry Text { string \"Hg\" fontStyle FontStyle { family \"fonts/late.ttf\" } } } }\n",
+        &net,
+        &[],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.requested(), [w("fonts/late.ttf")]);
+
+    // A newer family: the load that waits is no longer the node's.
+    let style = {
+        let rt = &s.viewer().expect("live").rt;
+
+        rt.font_fetch_waits[0].node
+    };
+
+    s.set_field(style, "family", "\"SANS\"").expect("family");
+    steps(&mut s, 11, 10);
+    net.respond(&w("fonts/late.ttf"), Ok(PT_SANS));
+    steps(&mut s, 21, 10);
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.font_fetch_waits.is_empty());
+    assert!(!rt.fonts_loading());
+    assert!(net.read().is_empty(), "{:?}", net.read());
+}
+
+#[test]
+fn a_font_library_waits_for_the_file_after_one_that_does_not_parse() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#X3D V4.1 utf8\nFontLibrary { family \"Lib\" url [ \"fonts/notfont.ttf\" \"fonts/PTSans-Regular.ttf\" ] }\nShape { geometry Text { string \"Hg\" fontStyle FontStyle { family \"Lib\" } } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("fonts/notfont.ttf"), Ok(NOT_FONT));
+    assert!(!poll(&mut s), "loaded before the second font file");
+    assert_eq!(
+        net.requested(),
+        [w("fonts/notfont.ttf"), w("fonts/PTSans-Regular.ttf")]
+    );
+
+    net.respond(&w("fonts/PTSans-Regular.ttf"), Ok(PT_SANS));
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "FontLibrary: Couldn't load URL '{}'.",
+            w("fonts/notfont.ttf")
+        )),
+        "{log}"
+    );
+}
+
+#[test]
+fn a_movie_texture_waits_for_the_candidate_after_one_that_does_not_play() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#X3D V4.0 utf8\nShape { appearance Appearance { texture MovieTexture { url [ \"m1.avi\" \"tex/green.gif\" ] } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("m1.avi"), Ok(GARBAGE));
+    assert!(!poll(&mut s), "loaded before the GIF");
+    assert_eq!(net.requested(), [w("m1.avi"), w("tex/green.gif")]);
+
+    net.respond(&w("tex/green.gif"), Ok(GIF));
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "Error loading movie '{}': Couldn't load video '{}': error.",
+            w("m1.avi"),
+            w("m1.avi")
+        )),
+        "{log}"
+    );
+    assert!(!log.contains("tex/green.gif"), "{log}");
+}
+
+#[test]
+fn a_movie_texture_that_fails_reports_like_x_ite() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#X3D V4.0 utf8\nShape { appearance Appearance { texture MovieTexture { url \"m3.gif\" } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("m3.gif"), Err("Error: Not Found"));
+    assert!(poll(&mut s));
+
+    // oracle/web-browser-loadurl-01-baseline, movie.failed.
+    assert_eq!(
+        s.take_log(),
+        [
+            format!(
+                "error: MovieTexture: Couldn't load URL '{}'. Error: Not Found",
+                w("m3.gif")
+            ),
+            format!(
+                "warn: Error loading movie '{}': MovieTexture: No suitable file handler found.",
+                w("m3.gif")
+            ),
+            "error: Error: MovieTexture: No suitable file handler found.".to_string(),
+        ]
+    );
+}
+
+#[test]
+fn an_audio_clip_waits_for_the_candidate_after_one_that_does_not_decode() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nSound { source DEF A AudioClip { url [ \"a1.wav\" \"tone.wav\" ] } }\n",
+        &net,
+        &[("a1.wav", GARBAGE)],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.requested(), [w("a1.wav"), w("tone.wav")]);
+    assert_eq!(net.read(), [w("a1.wav")], "read before the response");
+
+    net.respond(&w("tone.wav"), Ok(TONE));
+    steps(&mut s, 14, 10);
+
+    let clip = s.named_node("A").expect("DEF A");
+
+    let duration: f64 = s
+        .field(clip, "duration_changed")
+        .expect("duration")
+        .value
+        .parse()
+        .expect("a number");
+
+    // The recording rounds to 3 decimals (audio.decodeFallback: "0.272").
+    assert_eq!(format!("{duration:.3}"), "0.272");
+
+    // oracle/web-browser-loadurl-01-baseline, audio.decodeFallback.
+    let log: Vec<String> = s
+        .take_log()
+        .into_iter()
+        .filter(|l| l.contains("AudioClip"))
+        .collect();
+
+    assert_eq!(
+        log,
+        [format!(
+            "warn: AudioClip: Couldn't load URL '{}', trying URL 2 of 2. EncodingError: Unable to decode audio data",
+            w("a1.wav")
+        )]
+    );
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.fetch_resume.is_empty());
+    assert!(!rt.has_parked_fetches());
+}
+
+#[test]
+fn every_audio_candidate_fails_to_decode() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nSound { source DEF A AudioClip { url [ \"a3.wav\" \"a4.wav\" ] } }\n",
+        &net,
+        &[("a3.wav", GARBAGE)],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.read(), [w("a3.wav")]);
+    net.respond(&w("a4.wav"), Ok(GARBAGE));
+    steps(&mut s, 14, 10);
+
+    let log: Vec<String> = s
+        .take_log()
+        .into_iter()
+        .filter(|l| l.contains("AudioClip"))
+        .collect();
+
+    // oracle/web-browser-loadurl-01-baseline, audio.allFail.
+    assert_eq!(
+        log,
+        [
+            format!(
+                "warn: AudioClip: Couldn't load URL '{}', trying URL 2 of 2. EncodingError: Unable to decode audio data",
+                w("a3.wav")
+            ),
+            "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:".to_string(),
+        ]
+    );
+    assert_eq!(net.requested(), [w("a3.wav"), w("a4.wav")]);
+}
+
+#[test]
+fn a_world_dropped_while_its_audio_waits_takes_no_late_response() {
+    let net = TestFetcher::default();
+    let mut s = live(
+        "#X3D V4.0 utf8\nSound { source AudioClip { url [ \"a5.wav\" \"held.wav\" ] } }\n",
+        &net,
+        &[("a5.wav", GARBAGE)],
+    );
+
+    steps(&mut s, 1, 10);
+    assert_eq!(net.requested().last(), Some(&w("held.wav")));
+
+    // The page replaces or disposes the world: the session goes, then the response comes.
+    drop(s);
+    net.respond(&w("held.wav"), Ok(TONE));
+    assert_eq!(net.read(), [w("a5.wav")]);
+}

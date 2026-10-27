@@ -687,3 +687,22 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-02-baseline --runs 5
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --runs 3 --suite fallback01
 ```
+
+## Web loadURL messages 01 (2026-10-26): the world's candidates, fonts, MovieTexture and audio
+
+- `x_ite-web-runtime-02.mjs --suite loadurl01` runs the 21 cases of `crates/x3d-web/tests/browser/loadurl01_case.mjs` and
+  records `web-browser-loadurl-01-baseline/loadurl01-baseline.json` (no pictures). The cases cover the candidates of the
+  world-level `loadURL` (messages, their order and attempt numbers; no candidate; the empty URL; a newer `loadURL`,
+  `replaceWorld (null)` and `dispose ()` while a candidate is held), FontStyle font files, MovieTexture and AudioClip
+  candidates, also with a held response.
+- The test server mounts two clean fixture sets for both engines: `/fonts/` (`synthetic-rea-b08-net/fonts`, see its
+  `PROVENANCE.txt`) and `/media/` (`synthetic-rea-b05/media`). `tests/browser/worlds/tex/green.gif` (2 × 2) was made
+  with Pillow for these tests.
+- Three runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+- The cases start a scene with `createX3DFromString` and record whether it loaded, without waiting for it: X_ITE's FontStyle,
+  MovieTexture and AudioClip hold the scene's loadCount while a response is held. A scene's MovieTexture needs its
+  `COMPONENT Texturing:3` line; without it X_ITE rejects with `CharLS is not defined`.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --runs 3 --suite loadurl01
+```

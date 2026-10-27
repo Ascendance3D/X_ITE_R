@@ -249,6 +249,9 @@ impl FetchKey {
     }
 }
 
+/// The key of [`Runtime::load_page_document`], which has a runtime of its own and no task.
+const PAGE_LOAD: FetchKey = FetchKey::Browser(u64::MAX);
+
 /// FileLoader.loadDocumentError → loadDocumentAsync (this .url .shift ()): a candidate failed after its response
 /// came, and the next one is fetched now. With an asynchronous [`Fetcher`] its response comes later, so the chain
 /// stops there and goes on from `index` (of `urls`) with `attempts` failed candidates when it is in.
@@ -588,6 +591,83 @@ impl Runtime {
         LoadResult::Failed
     }
 
+    /// X3DBrowser.loadURL of the page that embeds the browser: FileLoader.createX3DFromURL for the X3DWorld (its
+    /// messages name no node type), the fallback chain of `urls` against `base`. It runs in a runtime of its own,
+    /// whose fetcher is the new world's. With an asynchronous [`Fetcher`] the chain stops at a candidate whose
+    /// response is not in ([`LoadResult::Suspended`]); call again with the same `urls` when a response arrived, and
+    /// it goes on from that candidate. `accept` parses a candidate (`createX3DFromString`); an `Err` is its rejection.
+    pub fn load_page_document(
+        &mut self,
+        base: &str,
+        urls: &[String],
+        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+    ) -> LoadResult {
+        let outer = (
+            self.running_fetch.replace(PAGE_LOAD),
+            std::mem::take(&mut self.fetch_suspended),
+            self.fetch_wait.take(),
+        );
+        let loader = FileLoader {
+            type_name: String::new(),
+            base: base.to_string(),
+            data_as_string: true,
+        };
+
+        self.allow_fetch_wait();
+
+        let result =
+            self.load_document_from(&loader, urls, &LoadHooks::default(), 0, |rt, _, loaded| {
+                accept(rt, loaded)
+            });
+
+        if result != LoadResult::Suspended {
+            self.fetch_resume.remove(&PAGE_LOAD);
+        }
+
+        (self.running_fetch, self.fetch_suspended, self.fetch_wait) = outer;
+        result
+    }
+
+    /// A loop of single-candidate loads (MovieTexture, FontLibrary) of the running load task `wait` reaches candidate
+    /// `index` of `urls`, whose response is not in: the task stops and goes on from `index` when it is
+    /// ([`LoadResult::Suspended`]). Returns whether it waits. A data URL needs no response.
+    pub(crate) fn fetch_waits(
+        &mut self,
+        wait: Option<&FetchKey>,
+        urls: &[String],
+        index: usize,
+        url: &url::Url,
+    ) -> bool {
+        let Some(key) = wait else {
+            return false;
+        };
+
+        if url.scheme() == "data" || self.fetcher.poll(url) != FetchPoll::Pending {
+            return false;
+        }
+
+        self.fetch_resume.insert(
+            key.clone(),
+            FetchResume {
+                index,
+                attempts: 0,
+                urls: urls.to_vec(),
+            },
+        );
+        self.fetch_suspended = true;
+        true
+    }
+
+    /// FileLoader.abort () of [`Runtime::load_page_document`] (`this .url .length = 0`): the candidate in flight is
+    /// the last one. Returns how many of the candidates are left, to pass with the next call, or `None` when the
+    /// chain does not wait.
+    pub fn abort_page_document(&mut self) -> Option<usize> {
+        let r = self.fetch_resume.get_mut(&PAGE_LOAD)?;
+
+        r.urls.truncate(r.index + 1);
+        Some(r.urls.len())
+    }
+
     pub(crate) fn format_load_subject(candidate: &str, resolved: Option<&url::Url>) -> String {
         let data_url = resolved.is_some_and(|r| r.scheme() == "data");
         let resolved_text = match resolved {
@@ -729,6 +809,8 @@ impl Runtime {
     /// The fetches that waited for an asynchronous [`Fetcher`] go back to the front of the queue, in request order,
     /// and the tasks run. A load whose responses have still not arrived waits again.
     pub fn resume_fetches(&mut self) {
+        self.resume_font_fetches();
+
         if self.parked_fetches.is_empty() {
             return;
         }
@@ -738,6 +820,29 @@ impl Runtime {
         }
 
         self.run_tasks();
+    }
+
+    /// The FontStyle loops whose font file's response is in go on with that file (browser.loadFont).
+    fn resume_font_fetches(&mut self) {
+        for p in std::mem::take(&mut self.font_fetch_waits) {
+            // A newer loadData of the node took over, or the node is gone.
+            if !self.scene.is_live(p.node)
+                || self.font_style_snapshot.get(&p.node)
+                    != Some(&(p.family.clone(), p.style.clone()))
+            {
+                continue;
+            }
+
+            let waits = url::Url::parse(&self.base_url(p.node))
+                .and_then(|b| b.join(&p.family[p.index]))
+                .is_ok_and(|u| self.fetcher.poll(&u) == FetchPoll::Pending);
+
+            if waits {
+                self.font_fetch_waits.push(p);
+            } else {
+                self.font_style_continue_from(p.node, p.family, p.index, p.style, true);
+            }
+        }
     }
 
     /// Does a load wait for an asynchronous [`Fetcher`]?
@@ -862,8 +967,13 @@ impl Runtime {
     /// runs inside the FileLoader callback, so a file that does not decode rejects the candidate like a failed
     /// fetch: FileLoader reports it and tries the next URL. COMPLETE_STATE after the decode; no URL left:
     /// unloadData (AudioClip) or `setMediaElement (null)` (BufferAudioSource), FAILED_STATE.
+    ///
+    /// With an asynchronous [`Fetcher`] the chain waits for the responses of its candidates, also when it goes on
+    /// after a candidate that did not decode ([`Runtime::buffer_load_waits`]).
     fn buffer_load(&mut self, node: NodeId) {
         let urls = self.url_strings(node);
+
+        self.allow_fetch_wait();
         self.buffer_load_from(node, &urls, 0);
     }
 
@@ -919,6 +1029,33 @@ impl Runtime {
         }
     }
 
+    /// After candidate `attempts` of `node` did not decode, FileLoader fetches the next one (`rest` are the candidates
+    /// left); with an asynchronous [`Fetcher`] its response comes later. The load task then waits with the node's
+    /// chain at that candidate, and goes on from there when the response is in ([`Runtime::resume_fetches`],
+    /// [`Runtime::buffer_load`]). Returns whether it waits.
+    fn buffer_load_waits(&mut self, node: NodeId, attempts: usize, rest: &[String]) -> bool {
+        let urls = self.url_strings(node);
+        let index = attempts + 1;
+
+        // A chain of other candidates (the url changed) is not the node's current one.
+        if !self.fetcher.is_async() || urls.get(index..) != Some(rest) {
+            return false;
+        }
+
+        let key = FetchKey::Url(node, 0);
+
+        self.fetch_resume.insert(
+            key.clone(),
+            FetchResume {
+                index,
+                attempts: index,
+                urls,
+            },
+        );
+        self.parked_fetches.push(key.task());
+        true
+    }
+
     /// The FileLoader callback with `data === null`: every candidate failed.
     fn buffer_load_failed(&mut self, node: NodeId) {
         if self.builtin_name(node) == Some("AudioClip") {
@@ -965,7 +1102,7 @@ impl Runtime {
 
                     if p.rest.is_empty() {
                         self.buffer_load_failed(p.node);
-                    } else {
+                    } else if !self.buffer_load_waits(p.node, p.attempts, &p.rest) {
                         self.buffer_load_from(p.node, &p.rest, p.attempts + 1);
                     }
                 }
@@ -979,17 +1116,34 @@ impl Runtime {
     /// Decoding is not ported. A fetched GIF/PNG is taken as loaded. For video, headless
     /// Chromium fires `error` for a missing file and for formats it cannot play; an existing
     /// .webm/.ogv/.ogg/.mp4/.m4v is taken as playable (an assumption, not observed in the corpora).
+    ///
+    /// With an asynchronous [`Fetcher`] each candidate waits for its response (`await this .loadDocument (fileURL)`,
+    /// the `<video>` element's request): the loop stops there and goes on from that candidate when it is in.
     fn movie_load(&mut self, node: NodeId) {
         let base = self.base_url(node);
         let Ok(base) = url::Url::parse(&base) else {
             return;
         };
+        let urls = self.url_strings(node);
 
-        for candidate in self.url_strings(node) {
+        self.allow_fetch_wait();
+
+        let wait = self.fetch_wait.take();
+        let start = wait
+            .as_ref()
+            .and_then(|k| self.fetch_resume_of(k, &urls))
+            .map_or(0, |r| r.index);
+
+        for (index, candidate) in urls.iter().enumerate().skip(start) {
             // `new URL (url, base)` is outside the try: an invalid URL rejects loadData.
-            let Ok(file_url) = base.join(&candidate) else {
+            let Ok(file_url) = base.join(candidate) else {
                 return;
             };
+
+            if self.fetch_waits(wait.as_ref(), &urls, index, &file_url) {
+                return;
+            }
+
             let decoded =
                 decode_uri(file_url.as_str()).unwrap_or_else(|| file_url.as_str().to_string());
             let path = file_url.path().to_string();
@@ -1079,6 +1233,22 @@ impl Runtime {
         from: usize,
         style: String,
     ) {
+        self.font_style_continue_from(node, family, from, style, false);
+    }
+
+    /// [`Runtime::font_style_continue`]; `fetched`: entry `from` is a font file whose response this loop waited for
+    /// (its deprecation warning is out already).
+    ///
+    /// With an asynchronous [`Fetcher`] `await browser .loadFont (fileURL)` waits for the font file's response: the
+    /// loop is parked in `font_fetch_waits` and goes on with that file when it is in ([`Runtime::resume_fetches`]).
+    fn font_style_continue_from(
+        &mut self,
+        node: NodeId,
+        family: Vec<String>,
+        from: usize,
+        style: String,
+        fetched: bool,
+    ) {
         let Ok(base) = url::Url::parse(&self.base_url(node)) else {
             return;
         };
@@ -1116,11 +1286,28 @@ impl Runtime {
                 .any(|e| path.ends_with(e));
 
             if file_url.scheme() == "data" || font_file {
-                if self.scene.spec_version_of(self.scene.world) >= "4.1" {
+                if !(fetched && index == from)
+                    && self.scene.spec_version_of(self.scene.world) >= "4.1"
+                {
                     self.log_warn("Loading a font file via family field is deprecated, please use new FontLibrary node instead.");
                 }
 
                 let href = file_url.as_str().to_string();
+
+                if !self.font_cache.contains_key(&href)
+                    && self.fetcher.is_async()
+                    && file_url.scheme() != "data"
+                    && self.fetcher.poll(&file_url) == FetchPoll::Pending
+                {
+                    self.font_fetch_waits
+                        .push(crate::font_library::PendingFontStyle {
+                            node,
+                            family: family.clone(),
+                            index,
+                            style,
+                        });
+                    return;
+                }
 
                 let ok = match self.font_cache.get(&href) {
                     Some(ok) => *ok,

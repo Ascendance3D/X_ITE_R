@@ -1,0 +1,309 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "loadURL.firstLoads": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": []
+  },
+  "loadURL.failedThenLoads": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/status/404/u1.wrl",
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL 'http://test/status/404/u1.wrl', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  "loadURL.severalThenLoads": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/status/500/u2.wrl",
+    "/garbage/u3.wrl",
+    "/status/404/u4.wrl",
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL 'http://test/status/500/u2.wrl', trying URL 2 of 5. Error: Internal Server Error",
+    "warning: Couldn't load URL 'http://test/garbage/u3.wrl', trying URL 3 of 5. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/u3.wrl'.",
+    "warning: Couldn't load URL 'http://test/status/404/u4.wrl', trying URL 4 of 5. Error: Not Found",
+    "warning: Couldn't load empty URL, trying URL 5 of 5. Error: Empty URL."
+   ]
+  },
+  "loadURL.oneFails": {
+   "result": "Couldn't load X3D file.",
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "served": [
+    "/status/404/u5.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/status/404/u5.wrl'. Error: Not Found"
+   ]
+  },
+  "loadURL.allFail": {
+   "result": "Couldn't load X3D file.",
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "served": [
+    "/status/404/u6.wrl",
+    "/garbage/u7.wrl",
+    "/status/500/u8.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "warning: Couldn't load URL 'http://test/status/404/u6.wrl', trying URL 2 of 3. Error: Not Found",
+    "warning: Couldn't load URL 'http://test/garbage/u7.wrl', trying URL 3 of 3. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/u7.wrl'.",
+    "error: Couldn't load any of the 3 URLs, tried in this order:"
+   ]
+  },
+  "loadURL.noURL": {
+   "result": "Loading of X3D file aborted.",
+   "world": "page",
+   "events": [],
+   "served": [],
+   "console": []
+  },
+  "loadURL.emptyURL": {
+   "result": "Loading of X3D file aborted.",
+   "world": "page",
+   "events": [],
+   "served": [],
+   "console": [
+    "error: Couldn't load empty URL. Error: Empty URL."
+   ]
+  },
+  "loadURL.emptyThenLoads": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load empty URL, trying URL 2 of 2. Error: Empty URL."
+   ]
+  },
+  "loadURL.replacedWhilePending": {
+   "second": "resolved",
+   "world": "fallback/parts/d.wrl",
+   "first": "Loading of X3D file aborted.",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/hold/la/tests/browser/worlds/fallback/parts/w.wrl",
+    "/tests/browser/worlds/fallback/parts/d.wrl"
+   ],
+   "console": [
+    "error: Couldn't load URL 'http://test/hold/la/tests/browser/worlds/fallback/parts/w.wrl'. AbortError: signal is aborted without reason"
+   ]
+  },
+  "loadURL.replacedAfterFailure": {
+   "second": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "first": "Loading of X3D file aborted.",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/status/404/u9.wrl",
+    "/hold/lb/tests/browser/worlds/fallback/parts/w.wrl",
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL 'http://test/status/404/u9.wrl', trying URL 2 of 3. Error: Not Found",
+    "error: Couldn't load any of the 2 URLs, tried in this order:"
+   ]
+  },
+  "loadURL.replaceWorldWhilePending": {
+   "replaced": "resolved",
+   "first": "Couldn't load X3D file.",
+   "events": [
+    "error",
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/hold/lc/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Couldn't load URL 'http://test/hold/lc/tests/browser/worlds/fallback/parts/w.wrl'. AbortError: signal is aborted without reason"
+   ]
+  },
+  "loadURL.disposedWhilePending": {
+   "first": "pending",
+   "events": [
+    "shutdown"
+   ],
+   "served": [
+    "/hold/ld/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": []
+  },
+  "font.fallback": {
+   "loaded": "loaded",
+   "served": [
+    "/status/404/f1.ttf",
+    "/fonts/notfont.ttf",
+    "/fonts/PTSans-Regular.ttf"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: FontStyle: Couldn't load URL 'http://test/status/404/f1.ttf'. Error: Not Found",
+    "warning: Error loading font 'http://test/status/404/f1.ttf':",
+    "error: FontStyle: Couldn't load URL 'http://test/fonts/notfont.ttf'. Error: Unsupported OpenType signature not ",
+    "warning: Error loading font 'http://test/fonts/notfont.ttf':"
+   ],
+   "textBounds": "1.13 0.91"
+  },
+  "font.pending": {
+   "before": {
+    "loaded": "pending",
+    "console": []
+   },
+   "loaded": "loaded",
+   "served": [
+    "/hold/fh/fonts/PTSans-Regular.ttf"
+   ],
+   "console": [],
+   "textBounds": "1.13 0.91"
+  },
+  "movie.fallback": {
+   "loaded": "loaded",
+   "served": [
+    "/status/404/m1.gif",
+    "/status/404/m2.webm",
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: MovieTexture: Couldn't load URL 'http://test/status/404/m1.gif'. Error: Not Found",
+    "warning: Error loading movie 'http://test/status/404/m1.gif': MovieTexture: No suitable file handler found.",
+    "error: Error: MovieTexture: No suitable file handler found.",
+    "warning: Error loading movie 'http://test/status/404/m2.webm': Couldn't load video 'http://test/status/404/m2.webm': error.",
+    "error: Error: Couldn't load video 'http://test/status/404/m2.webm': error."
+   ]
+  },
+  "movie.notPlayable": {
+   "loaded": "loaded",
+   "served": [
+    "/garbage/m4.avi",
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": [
+    "warning: Error loading movie 'http://test/garbage/m4.avi': Couldn't load video 'http://test/garbage/m4.avi': error.",
+    "error: Error: Couldn't load video 'http://test/garbage/m4.avi': error."
+   ]
+  },
+  "movie.failed": {
+   "loaded": "loaded",
+   "served": [
+    "/status/404/m3.gif"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: MovieTexture: Couldn't load URL 'http://test/status/404/m3.gif'. Error: Not Found",
+    "warning: Error loading movie 'http://test/status/404/m3.gif': MovieTexture: No suitable file handler found.",
+    "error: Error: MovieTexture: No suitable file handler found."
+   ]
+  },
+  "movie.pending": {
+   "before": {
+    "loaded": "pending",
+    "console": []
+   },
+   "loaded": "loaded",
+   "served": [
+    "/hold/mh/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": []
+  },
+  "audio.decodeFallback": {
+   "loaded": "loaded",
+   "served": [
+    "/garbage/a1.wav",
+    "/media/tone22k-mono.wav"
+   ],
+   "console": [
+    "warning: AudioClip: Couldn't load URL 'http://test/garbage/a1.wav', trying URL 2 of 2. EncodingError: Unable to decode audio data"
+   ],
+   "duration": "0.272"
+  },
+  "audio.decodeFallbackHeld": {
+   "before": {
+    "loaded": "pending",
+    "console": [
+     "warning: AudioClip: Couldn't load URL 'http://test/garbage/a2.wav', trying URL 2 of 2. EncodingError: Unable to decode audio data"
+    ]
+   },
+   "loaded": "loaded",
+   "served": [
+    "/garbage/a2.wav",
+    "/hold/ah/media/tone22k-mono.wav"
+   ],
+   "console": [
+    "warning: AudioClip: Couldn't load URL 'http://test/garbage/a2.wav', trying URL 2 of 2. EncodingError: Unable to decode audio data"
+   ],
+   "duration": "0.272"
+  },
+  "audio.allFail": {
+   "loaded": "loaded",
+   "served": [
+    "/garbage/a3.wav",
+    "/garbage/a4.wav"
+   ],
+   "console": [
+    "warning: AudioClip: Couldn't load URL 'http://test/garbage/a3.wav', trying URL 2 of 2. EncodingError: Unable to decode audio data",
+    "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:"
+   ],
+   "duration": "-1"
+  }
+ }
+}

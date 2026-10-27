@@ -17,7 +17,7 @@ const DIR = dirname (fileURLToPath (import.meta.url));
 export const SHARDS = {
    phone:  [ "runtime02_phone.test.mjs" ],
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs" ],
-   input:  [ "runtime02_input.test.mjs" ],
+   input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs" ],
    cases:  [ "api.test.mjs", "runtime02.test.mjs", "fallback01.test.mjs" ],
 };
 
