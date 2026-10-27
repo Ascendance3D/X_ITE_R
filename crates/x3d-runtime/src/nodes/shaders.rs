@@ -617,11 +617,12 @@ fn _state_marker(_: &State) {}
 /// comma, cut at a `#` (the fragment is not part of the data), percent-decoded (a malformed escape
 /// stays), base64 decoded when the media type ends in `;base64`.
 pub fn fetch_data_url(url: &str) -> Result<Vec<u8>, String> {
-    let url = url.trim_start();
-    let Some(rest) = url
-        .strip_prefix("data:")
-        .or_else(|| url.strip_prefix("DATA:"))
-    else {
+    // The scheme in any case, a tab or newline in it removed (x3d_parse::is_data_url).
+    if !x3d_parse::is_data_url(url) {
+        return Err("TypeError: Failed to fetch".into());
+    }
+
+    let Some((_, rest)) = url.trim_matches(|c: char| c <= ' ').split_once(':') else {
         return Err("TypeError: Failed to fetch".into());
     };
     let Some((head, payload)) = rest.split_once(',') else {

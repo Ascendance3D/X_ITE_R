@@ -622,7 +622,7 @@ impl Runtime {
                 };
             }
         };
-        let Ok(resolved) = base.join(candidate) else {
+        let Ok(resolved) = crate::loader::join_url(&base, candidate) else {
             return Step::Failed {
                 error: "TypeError: Failed to construct 'URL': Invalid URL".into(),
                 resolved: None,

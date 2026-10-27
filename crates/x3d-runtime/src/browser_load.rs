@@ -605,7 +605,9 @@ impl Runtime {
                 .any(|s| first.trim_start().starts_with(s));
 
         if self.world_state.aborted.remove(&id) && fetched {
-            let resolved = url::Url::parse(&base).and_then(|b| b.join(first)).ok();
+            let resolved = url::Url::parse(&base)
+                .and_then(|b| crate::loader::join_url(&b, first))
+                .ok();
 
             self.print_load_error(
                 &loader,
