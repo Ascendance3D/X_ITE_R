@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
+import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -28,11 +29,13 @@ export const ONLY     = process .env .XR_CASE;
 
 // The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
-// (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline).
+// (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
+// compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
    loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
+   dataurl01:  { dir: process .env .XR_DATAURL_BASELINE ?? join (REPO, "oracle/web-browser-data-url-01-baseline"), file: "dataurl01-baseline.json", groups: DATAURL01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -132,6 +135,45 @@ const KNOWN_DIFFERENCES = {
       [ [ "world" ], "fallback/parts/w.wrl", "data" ],
       [ [ "served" ], [ "/tests/browser/worlds/fallback/parts/w.wrl" ], [ ] ],
       [ [ "console" ], [ "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined" ], [ ] ],
+   ],
+   // The web data URL compatibility 01 cases show the same known differences as the cases above.
+   "dataURLWorld.badBase64": [
+      // Chromium's own network error line of X_ITE's fetch (dataURL.worldBadBase64).
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURLWorld.noComma": [
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURLWorld.rawHashHeaderUpper": [
+      // `#` starts the fragment, so the document is empty (dataURL.worldEmpty): X_ITE's recording page fails in
+      // DICOMParser; X_ITE_R's world is empty.
+      [ [ "world" ], "fallback/parts/w.wrl", "data" ],
+      [ [ "served" ], [ "/tests/browser/worlds/fallback/parts/w.wrl" ], [ ] ],
+      [ [ "console" ], [ "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined" ], [ ] ],
+   ],
+   "dataURLImage.tabBeforeBase64": [
+      // X_ITE names the blob URL of the image data that does not decode; X_ITE_R names the URL.
+      [ [ "console" ],
+         [ "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't load image 'blob:<id>': error." ],
+         [ "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't load image 'data:image/gif;%09base64,R0lGODdhAgACAIEAAADIAP///wAAAAAAACwAAAAAAgACAAAIBgABCAQQEAA7': error." ] ],
+   ],
+   "dataURLImage.badBase64": [
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURLGltf.badBase64": [
+      // GLTF2Parser does not remove a failed buffer from the loading objects (fallback.gltfFailed), and Chromium's
+      // own network error line of X_ITE's fetch.
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "error: Couldn't load data URL. TypeError: Failed to fetch" ],
+         [ "error: Couldn't load data URL. TypeError: Failed to fetch" ] ],
    ],
    "fallback.disposedDuringFallback": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
@@ -305,6 +347,9 @@ const GROUP_FILES = {
    movie:   "loadurl01.test.mjs",
    audio:   "loadurl01.test.mjs",
    dataURL: "loadurl01.test.mjs",
+   dataURLWorld: "dataurl01.test.mjs",
+   dataURLImage: "dataurl01.test.mjs",
+   dataURLGltf:  "dataurl01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

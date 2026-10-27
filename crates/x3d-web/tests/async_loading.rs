@@ -1814,3 +1814,245 @@ fn a_page_load_whose_documents_are_rejected_leaves_no_resume_entry() {
     assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
     assert_eq!(net.requested(), [w("j1.wrl"), w("j2.wrl"), w("j3.wrl")]);
 }
+
+// --- raw tab, LF and CR in data URLs (XITE_R_WEB_DATA_URL_COMPAT_01) ------------------------------------------------
+
+/// The percent escapes of `doc`, but a tab, LF and CR in its title (between quotes) stay raw characters.
+fn escaped_with_raw_tabs(doc: &str) -> String {
+    let mut quoted = false;
+
+    doc.bytes()
+        .map(|b| match b {
+            b'"' => {
+                quoted = !quoted;
+                "%22".to_string()
+            }
+            b'\t' | b'\n' | b'\r' if quoted => (b as char).to_string(),
+            b if b.is_ascii_alphanumeric() => (b as char).to_string(),
+            b => format!("%{b:02X}"),
+        })
+        .collect()
+}
+
+/// The document the page's loadURL hands to the parser for the first candidate `url`, or `None` when it requests the
+/// next candidate (a parse that fails is not counted).
+fn page_document(url: &str) -> Option<String> {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let mut document = None;
+    let urls = vec![url.to_string(), w("w.wrl")];
+
+    rt.load_page_document(URL, &urls, |_, loaded| {
+        let Loaded::Data(data, _) = loaded else {
+            return Err("Error: no script".into());
+        };
+
+        document = Some(String::from_utf8(data).expect("UTF-8"));
+        Ok(())
+    });
+
+    assert_eq!(
+        net.requested(),
+        if document.is_some() {
+            vec![]
+        } else {
+            vec![w("w.wrl")]
+        },
+        "{url:?}"
+    );
+
+    document
+}
+
+/// The world's loadURL. A raw tab, LF or CR after `data:` in any case, also after leading tabs and newlines, is part
+/// of the document (FileLoader's text branch takes only `data:`; the browser's fetch decodes the others). After a
+/// leading space or with a tab in the scheme, Chrome 156 removes them like the URL standard. `;<TAB>base64` is no
+/// base64 flag after `DATA:`, but is one after `da<TAB>ta:`.
+#[test]
+fn page_load_url_keeps_a_raw_tab_after_the_data_scheme() {
+    let doc = "#VRML V2.0 utf8\nDEF Info WorldInfo { title \"a\tb\nc\rd\" }\n";
+    let body = escaped_with_raw_tabs(doc);
+    let removed = "#VRML V2.0 utf8\nDEF Info WorldInfo { title \"abcd\" }\n";
+    let cases = [
+        (format!("data:model/vrml,{body}"), Some(doc)),
+        (format!("DATA:model/vrml,{body}"), Some(doc)),
+        (format!("\t\nData:model/vrml,{body}"), Some(doc)),
+        (format!("da\tta:model/vrml,{body}"), Some(removed)),
+        (format!(" DATA:model/vrml,{body}"), Some(removed)),
+        (
+            format!("D\nA\rTA:model/vrml;base64,{}", base64(doc.as_bytes())),
+            Some(doc),
+        ),
+        (
+            format!("da\tta:model/vrml;\tbase64,{}", base64(doc.as_bytes())),
+            Some(doc),
+        ),
+        (
+            format!("DATA:model/vrml;\tbase64,{}", base64(doc.as_bytes())),
+            Some(&*base64(doc.as_bytes())),
+        ),
+        ("DA\tTA:model/vrml;base64,QQ=\t@".to_string(), None),
+    ];
+
+    for (url, expected) in cases {
+        assert_eq!(page_document(&url).as_deref(), expected, "{url:?}");
+    }
+}
+
+/// Images: after `data:`, `;<TAB>base64` is no base64 flag, so the GIF does not decode and the next candidate is
+/// requested; after `da<TAB>ta:` or ` data:` the tab is removed and the GIF decodes. A tab in the base64 body changes
+/// nothing, and no other candidate is requested.
+#[test]
+fn image_data_urls_with_raw_tabs_like_chromium() {
+    let gif = base64(GIF);
+    let (head, tail) = gif.split_at(8);
+    let image = |url: &str, next: &str| {
+        format!(
+            "#VRML V2.0 utf8\nShape {{ appearance Appearance {{ texture ImageTexture {{ url [ \"{url}\" \"{next}\" ] }} }} geometry Box {{ }} }}\n"
+        )
+    };
+
+    for url in [
+        format!("DA\tTA:image/gif;base64,{head}\t{tail}"),
+        format!("data:image/gif;base64,{head}\n{tail}"),
+        format!("data:image/gif\t;base64,{gif}"),
+        format!("da\tta:image/gif;\tbase64,{gif}"),
+        format!(" data:image/gif;\tbase64,{gif}"),
+    ] {
+        let net = TestFetcher::default();
+        let mut s = begin(&image(&url, "tex/i1.gif"), &net);
+
+        assert!(poll(&mut s), "{url:?}");
+        assert_eq!(net.requested(), Vec::<String>::new(), "{url:?}");
+        assert!(
+            !s.take_log().join("\n").contains("Couldn't load"),
+            "{url:?}"
+        );
+    }
+
+    let net = TestFetcher::default();
+    let mut s = begin(
+        &image(&format!("data:image/gif;\tbase64,{gif}"), "tex/i9.gif"),
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/i9.gif")]);
+    net.respond(&w("tex/i9.gif"), Ok(GIF));
+    assert!(poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/i9.gif")]);
+
+    // A data URL that does not decode, then a file: one request.
+    let net = TestFetcher::default();
+    let mut s = begin(
+        &image("DA\tTA:image/gif;base64,R0lG@@@@", "tex/green.gif"),
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/green.gif")]);
+    net.respond(&w("tex/green.gif"), Ok(GIF));
+    assert!(poll(&mut s));
+    assert_eq!(
+        s.take_log()
+            .into_iter()
+            .filter(|l| l.contains("Couldn't load"))
+            .collect::<Vec<_>>(),
+        [
+            "warn: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+        ]
+    );
+}
+
+/// An http(s) or relative candidate still loses every tab and newline (the URL standard and Chromium agree).
+#[test]
+fn http_candidates_drop_raw_tabs_and_newlines() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nShape { appearance Appearance { texture ImageTexture { url [ \"te\tx/gr\neen.gif\" \"http://example.test/worlds/tex/b\tad.png\" ] } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/green.gif")]);
+    net.respond(&w("tex/green.gif"), Ok(GIF));
+    assert!(poll(&mut s));
+    assert_eq!(net.requested(), [w("tex/green.gif")]);
+}
+
+/// The 36 bytes of a triangle with a 0x09 byte (x of the second point is `f32::from_bits (0x3f800009)`).
+fn triangle_with_a_tab_byte() -> Vec<u8> {
+    [
+        0.0f32,
+        0.0,
+        0.0,
+        f32::from_bits(0x3f80_0009),
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+    ]
+    .iter()
+    .flat_map(|f| f.to_le_bytes())
+    .collect()
+}
+
+/// A glTF buffer as a data URL: the scheme in any case, and a raw tab (JSON `\t`) in the percent-encoded body in place
+/// of the byte 0x09, which Chrome keeps after `data:`. Only the glTF file is requested; a buffer that does not decode
+/// fails.
+#[test]
+fn gltf_data_buffers_with_raw_tabs_like_chromium() {
+    let bytes = triangle_with_a_tab_byte();
+    let body: String = bytes
+        .iter()
+        .map(|&b| {
+            if b == 9 {
+                "\\t".to_string()
+            } else {
+                format!("%{b:02X}")
+            }
+        })
+        .collect();
+
+    for uri in [
+        format!("data:application/octet-stream,{body}"),
+        format!("DATA:application/octet-stream,{body}"),
+        format!("\\tDATA:application/octet-stream,{body}"),
+        format!("Da\\nta:application/octet-stream;base64,{}", base64(&bytes)),
+    ] {
+        let net = TestFetcher::default();
+        let mut s = begin(
+            "#VRML V2.0 utf8\nInline { url [ \"models/t.gltf\" \"models/u.gltf\" ] }\n",
+            &net,
+        );
+
+        assert!(!poll(&mut s));
+        net.respond(&w("models/t.gltf"), Ok(&gltf(&[&uri])));
+        assert!(poll(&mut s), "{uri:?}");
+        assert_eq!(net.requested(), [w("models/t.gltf")], "{uri:?}");
+        assert!(!s.take_log().join("\n").contains("Couldn't"), "{uri:?}");
+    }
+
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"models/t.gltf\" \"models/u.gltf\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(
+        &w("models/t.gltf"),
+        Ok(&gltf(&["DA\\tTA:application/octet-stream;base64,AA@@"])),
+    );
+    poll(&mut s);
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains("Couldn't load URL 'data URL'. TypeError: Failed to fetch")
+            || log.contains("Couldn't load data URL"),
+        "{log}"
+    );
+    assert!(!net.requested().iter().any(|u| u.contains("AA@@")));
+}

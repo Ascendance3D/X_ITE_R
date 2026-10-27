@@ -1,0 +1,60 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "X_ITE_R web data URL compat 01 test (synthetic): a tab in the scheme and before base64: the flag is kept"
+ },
+ "buffers": [
+  {
+   "uri": "da\tta:application/octet-stream;\tbase64,zczMPc3MTD6amZk+AADAPwAAEMAAAHBAAACEwAAAokAAAAA/",
+   "byteLength": 36
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 36
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    -4.125,
+    -2.25,
+    0.3
+   ],
+   "max": [
+    1.5,
+    5.0625,
+    3.75
+   ]
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     }
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0
+}

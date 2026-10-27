@@ -321,7 +321,9 @@ impl Runtime {
                 return x3d_text::fonts::load_default_font(f, &style);
             }
 
-            let file_url = base.as_ref().and_then(|b| b.join(f).ok())?;
+            let file_url = base
+                .as_ref()
+                .and_then(|b| crate::loader::join_url(b, f).ok())?;
             let path = file_url.path().to_ascii_lowercase();
 
             if file_url.scheme() == "data"
