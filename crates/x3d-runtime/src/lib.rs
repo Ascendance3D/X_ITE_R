@@ -1292,7 +1292,7 @@ impl Runtime {
             // The fallback chain waits for the response of its next candidate: the task runs again from there.
             if let Some(key) = key {
                 if std::mem::take(&mut self.fetch_suspended) {
-                    self.parked_fetches.push(key.task());
+                    self.parked_fetches.extend(key.task());
                 } else {
                     self.fetch_resume.remove(&key);
                 }
@@ -1302,13 +1302,14 @@ impl Runtime {
         }
 
         // Only a parked task goes on from where it waited. A request that was replaced, cancelled or disposed
-        // meanwhile (its task ran and did nothing) leaves no state.
+        // meanwhile (its task ran and did nothing) leaves no state. The page's loadURL is no task: its caller ends it.
         let parked = &self.parked_fetches;
 
         self.fetch_resume.retain(|k, _| {
-            parked
-                .iter()
-                .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
+            *k == loader::FetchKey::Page
+                || parked
+                    .iter()
+                    .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
         });
     }
 

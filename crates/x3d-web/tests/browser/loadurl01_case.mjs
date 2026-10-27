@@ -72,7 +72,7 @@ async function worldCase (page, env, urls)
 
    const from = env .server .requests .length;
 
-   await page .evaluate (pageLoadURL, urls .map (url => url .startsWith ("/") ? `${env .base}${url}` : url .startsWith ("data:") ? url : url && `${env .worlds}${url}`));
+   await page .evaluate (pageLoadURL, urls .map (url => url .startsWith ("/") ? `${env .base}${url}` : /^data:/i .test (url) ? url : url && `${env .worlds}${url}`));
 
    const result = await page .evaluate (() => window .pending);
 
@@ -385,6 +385,22 @@ export const dataURLCases = {
 
    // An empty document.
    worldEmpty: (page, env) => dataWorldCase (page, env, "data:model/vrml,"),
+
+   // The scheme in upper and mixed case (PR #123 final review). FileLoader's match of `data:` is case-sensitive, so
+   // fetch decodes the URL; worldURL is the serialized URL, whose scheme is in lower case.
+   worldSchemeUpper: (page, env) => dataWorldCase (page, env, `DATA:model/vrml,${encodeURIComponent (DATA_WORLD)}`),
+   worldSchemeMixedBase64: (page, env) => dataWorldCase (page, env, `Data:model/vrml;base64,${btoa (DATA_WORLD)}`),
+
+   // A document that no parser handles from an upper-case scheme: GoldenGate names no data URL.
+   worldSchemeUpperNoHandler: (page, env) => dataWorldCase (page, env, "DATA:text/plain,%00%01%02%20no%20file%20format%FF"),
+
+   // An image from an upper-case scheme; the second candidate is not requested.
+   async imageSchemeUpper (page, env)
+   {
+      const c = await sceneCase (page, env, IMAGE_WORLD ([ `DATA:image/gif;base64,${base64 (GIF_PATH)}`, "BASE/status/404/i3.gif" ]));
+
+      return { loaded: await c .loaded (), served: c .served (), console: c .console () };
+   },
 
    // An image of each encoding; the second candidate is only requested if the first does not load.
    async image (page, env)

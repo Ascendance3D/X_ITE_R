@@ -388,6 +388,48 @@
     "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined"
    ]
   },
+  "dataURL.worldSchemeUpper": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": []
+  },
+  "dataURL.worldSchemeMixedBase64": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": []
+  },
+  "dataURL.worldSchemeUpperNoHandler": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+   ]
+  },
+  "dataURL.imageSchemeUpper": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
+  },
   "dataURL.image": {
    "upper": {
     "loaded": "loaded",
