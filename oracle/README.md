@@ -671,3 +671,19 @@ node oracle/x_ite-web-api.mjs oracle/web-browser-01-baseline --runs 5
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-02-baseline --runs 5
 ```
+
+## Web resource fallback 01 (2026-10-26): candidates after a response that does not load
+
+- `x_ite-web-runtime-02.mjs --suite fallback01` runs the 10 cases of `crates/x3d-web/tests/browser/fallback01_case.mjs`
+  (worlds in `crates/x3d-web/tests/browser/worlds/fallback/`) and records `web-browser-fallback-01-baseline/fallback01-baseline.json`
+  and one PNG per picture. The cases cover Inline and ImageTexture candidates that do not parse or decode, glTF files whose
+  external buffers fail, a world candidate that does not parse, repeated URLs, two scenes, and loads that a newer
+  `loadURL` or `dispose ()` ends while a candidate is held.
+- Three runs gave identical values and identical picture hashes (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+- In X_ITE a world never finishes loading after a glTF buffer of one of its Inlines failed: GLTF2Parser adds the buffer to
+  the loading objects and does not remove it after a failure. So the glTF failure cases record whether `loadURL` settles
+  within 5 s, and they have no picture (X_ITE still draws the world before). `gltfLoads` is the control: it settles.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --runs 3 --suite fallback01
+```
