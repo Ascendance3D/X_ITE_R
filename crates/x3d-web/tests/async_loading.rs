@@ -325,3 +325,319 @@ fn a_failure_does_not_end_the_wait_for_another_resource() {
 
     assert_eq!(log.matches("Couldn't load URL").count(), 1, "{log}");
 }
+
+// --- fallback after a response that does not load (FileLoader.loadDocumentError) --------------------------------
+
+const GARBAGE: &[u8] = b"\x00\x01\x02 this is no file format \xff\xfe";
+
+/// A glTF 2.0 triangle whose positions are in the external buffers `uris` (36 bytes each; the first is used).
+fn gltf(uris: &[&str]) -> Vec<u8> {
+    let buffers: Vec<String> = uris
+        .iter()
+        .map(|u| format!("{{\"uri\":\"{u}\",\"byteLength\":36}}"))
+        .collect();
+
+    format!(
+        "{{\"asset\":{{\"version\":\"2.0\"}},\"buffers\":[{}],\"bufferViews\":[{{\"buffer\":0,\"byteLength\":36}}],\"accessors\":[{{\"bufferView\":0,\"componentType\":5126,\"count\":3,\"type\":\"VEC3\",\"min\":[0,0,0],\"max\":[1,1,0]}}],\"meshes\":[{{\"primitives\":[{{\"attributes\":{{\"POSITION\":0}}}}]}}],\"nodes\":[{{\"mesh\":0}}],\"scenes\":[{{\"nodes\":[0]}}],\"scene\":0}}",
+        buffers.join(",")
+    )
+    .into_bytes()
+}
+
+fn triangle() -> Vec<u8> {
+    [0.0f32, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+        .iter()
+        .flat_map(|f| f.to_le_bytes())
+        .collect()
+}
+
+const W: &str = "http://example.test/worlds/";
+
+fn w(path: &str) -> String {
+    format!("{W}{path}")
+}
+
+#[test]
+fn a_response_that_does_not_parse_moves_on_to_the_next_candidate() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"bad.wrl\" \"second.wrl\" \"third.wrl\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    assert_eq!(net.requested(), [w("bad.wrl")]);
+
+    net.respond(&w("bad.wrl"), Ok(GARBAGE));
+    assert!(!poll(&mut s), "loaded before the second candidate");
+    assert_eq!(net.requested(), [w("bad.wrl"), w("second.wrl")]);
+
+    net.respond(&w("second.wrl"), Ok(INNER));
+    assert!(poll(&mut s));
+    assert_eq!(
+        net.requested(),
+        [w("bad.wrl"), w("second.wrl")],
+        "the third candidate is not fetched"
+    );
+    assert_eq!(net.read(), [w("bad.wrl"), w("second.wrl")]);
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "Inline: Couldn't load URL '{}', trying URL 2 of 3.",
+            w("bad.wrl")
+        )),
+        "{log}"
+    );
+    assert_eq!(log.matches("Couldn't load").count(), 1, "{log}");
+}
+
+#[test]
+fn failures_of_each_kind_before_the_candidate_that_loads() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"a.wrl\" \"b.wrl\" \"c.png\" \"d.wrl\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("a.wrl"), Err("Error: Internal Server Error"));
+    assert!(!poll(&mut s));
+    net.respond(&w("b.wrl"), Ok(GARBAGE));
+    assert!(!poll(&mut s));
+    // An image is no scene: no parser takes it.
+    net.respond(&w("c.png"), Ok(PNG));
+    assert!(!poll(&mut s));
+    net.respond(&w("d.wrl"), Ok(INNER));
+    assert!(poll(&mut s));
+
+    assert_eq!(
+        net.requested(),
+        [w("a.wrl"), w("b.wrl"), w("c.png"), w("d.wrl")]
+    );
+
+    let log = s.take_log().join("\n");
+
+    for (url, n) in [("a.wrl", 2), ("b.wrl", 3), ("c.png", 4)] {
+        assert!(
+            log.contains(&format!(
+                "Inline: Couldn't load URL '{}', trying URL {n} of 4.",
+                w(url)
+            )),
+            "{url}: {log}"
+        );
+    }
+
+    assert!(log.contains("No suitable file handler found"), "{log}");
+}
+
+#[test]
+fn every_candidate_fails() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"bad.wrl\" \"missing.wrl\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("bad.wrl"), Ok(GARBAGE));
+    assert!(!poll(&mut s));
+    net.respond(&w("missing.wrl"), Err("Error: Not Found"));
+    assert!(poll(&mut s), "a failed Inline ends the wait");
+    assert!(s.go_live(NOW));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains("Inline: Couldn't load any of the 2 URLs, tried in this order:"),
+        "{log}"
+    );
+}
+
+#[test]
+fn the_first_candidate_loads_and_the_others_are_not_fetched() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"parts/inner.wrl\" \"second.wrl\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("parts/inner.wrl"), Ok(INNER));
+    assert!(poll(&mut s));
+    assert_eq!(net.requested(), [w("parts/inner.wrl")]);
+    assert!(!s.take_log().join("\n").contains("Couldn't load"));
+}
+
+#[test]
+fn a_texture_that_does_not_decode_moves_on_to_the_next_candidate() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nShape { appearance Appearance { texture ImageTexture { url [ \"tex/bad.png\" \"tex/red.png\" ] } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("tex/bad.png"), Ok(GARBAGE));
+    assert!(!poll(&mut s), "loaded before the second texture candidate");
+    assert_eq!(net.requested(), [w("tex/bad.png"), w("tex/red.png")]);
+
+    net.respond(&w("tex/red.png"), Ok(PNG));
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "ImageTexture: Couldn't load URL '{}', trying URL 2 of 2.",
+            w("tex/bad.png")
+        )),
+        "{log}"
+    );
+    assert_eq!(log.matches("Couldn't load URL").count(), 1, "{log}");
+}
+
+#[test]
+fn a_gltf_waits_for_its_buffers_and_a_failed_buffer_moves_on() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nInline { url [ \"models/a.gltf\" \"models/b.gltf\" ] }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(
+        &w("models/a.gltf"),
+        Ok(&gltf(&["missing.bin", "other.bin"])),
+    );
+    assert!(!poll(&mut s), "loaded before the buffers");
+    // `Promise .all`: both buffers are requested together, relative to the glTF file.
+    assert_eq!(
+        net.requested(),
+        [
+            w("models/a.gltf"),
+            w("models/missing.bin"),
+            w("models/other.bin")
+        ]
+    );
+
+    net.respond(&w("models/missing.bin"), Err("Error: Not Found"));
+    net.respond(&w("models/other.bin"), Ok(&triangle()));
+    assert!(!poll(&mut s), "loaded before the second candidate");
+    assert_eq!(net.requested().last(), Some(&w("models/b.gltf")));
+
+    net.respond(&w("models/b.gltf"), Ok(&gltf(&["tri.bin"])));
+    assert!(
+        !poll(&mut s),
+        "loaded before the buffer of the second candidate"
+    );
+    net.respond(&w("models/tri.bin"), Ok(&triangle()));
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    // The buffer's own FileLoader (of the world: no node type) logs its failure; the Inline logs nothing for it.
+    assert!(
+        log.contains(&format!(
+            "Couldn't load URL '{}'. Error: Not Found",
+            w("models/missing.bin")
+        )),
+        "{log}"
+    );
+    assert!(!log.contains("Inline: Couldn't load"), "{log}");
+    assert!(!log.contains("other.bin"), "{log}");
+}
+
+#[test]
+fn every_gltf_buffer_candidate_fails() {
+    let net = TestFetcher::default();
+    let mut s = begin("#VRML V2.0 utf8\nInline { url \"models/a.gltf\" }\n", &net);
+
+    assert!(!poll(&mut s));
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["missing.bin"])));
+    assert!(!poll(&mut s));
+    net.respond(&w("models/missing.bin"), Err("Error: Not Found"));
+    assert!(poll(&mut s), "the failed Inline ends the wait");
+    assert!(s.go_live(NOW));
+
+    let log = s.take_log().join("\n");
+
+    assert_eq!(
+        log.matches("Couldn't load").count(),
+        1,
+        "only the buffer logs: {log}"
+    );
+}
+
+#[test]
+fn an_externproto_moves_on_after_a_file_that_does_not_parse() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nEXTERNPROTO ColorBox [ exposedField SFColor color ] [ \"bad.wrl#ColorBox\" \"protos.wrl#ColorBox\" ]\nDEF Instance ColorBox { color 0 1 0 }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("bad.wrl"), Ok(GARBAGE));
+    assert!(!poll(&mut s), "loaded before the second candidate");
+    assert_eq!(net.requested(), [w("bad.wrl"), w("protos.wrl")]);
+
+    net.respond(&w("protos.wrl"), Ok(PROTOS));
+    assert!(poll(&mut s));
+    assert!(s.go_live(NOW));
+
+    let instance = s.named_node("Instance").expect("DEF Instance");
+
+    assert_eq!(s.field(instance, "color").unwrap().value, "0 1 0");
+}
+
+#[test]
+fn an_anchor_moves_on_after_a_world_that_does_not_parse() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nDEF Link Anchor { url [ \"bad.wrl\" \"next.wrl\" ] }\n",
+        &net,
+    );
+
+    assert!(poll(&mut s));
+    assert!(s.go_live(NOW));
+
+    let anchor = s.named_node("Link").expect("DEF Link");
+
+    s.viewer().expect("live").rt.anchor_load(
+        anchor,
+        vec!["bad.wrl".into(), "next.wrl".into()],
+        vec![],
+    );
+    s.step(NOW + 0.016);
+    assert_eq!(net.requested(), [w("bad.wrl")]);
+
+    net.respond(&w("bad.wrl"), Ok(GARBAGE));
+    s.step(NOW + 0.032);
+    assert_eq!(net.requested(), [w("bad.wrl"), w("next.wrl")]);
+    assert_eq!(
+        net.read(),
+        [w("bad.wrl")],
+        "the second world is read after its response"
+    );
+
+    net.respond(&w("next.wrl"), Ok(INNER));
+
+    for i in 3..8 {
+        s.step(NOW + f64::from(i) * 0.016);
+    }
+
+    assert_eq!(net.read(), [w("bad.wrl"), w("next.wrl")]);
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "Anchor: Couldn't load URL '{}', trying URL 2 of 2.",
+            w("bad.wrl")
+        )),
+        "{log}"
+    );
+    assert_eq!(log.matches("Couldn't load").count(), 1, "{log}");
+}

@@ -1000,6 +1000,9 @@ export const CASE_GROUPS = {
    api:     { context: DESKTOP, cases: apiCases },
 };
 
+// The helpers that the web resource fallback cases (fallback01_case.mjs) share.
+export { DESKTOP, loadMessages, pageLoad, served, settle };
+
 // The values of a case with each picture (a Buffer) replaced by the name of its file, which goes into `pictures`.
 export function splitPictures (value, key, pictures)
 {

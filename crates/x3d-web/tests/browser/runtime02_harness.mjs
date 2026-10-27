@@ -15,7 +15,8 @@ import { dirname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
-import { CASE_GROUPS, splitPictures } from "./runtime02_case.mjs";
+import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
+import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
 const CRATE    = normalize (join (fileURLToPath (import.meta.url), "../../.."));
@@ -24,7 +25,19 @@ const BASELINE = process .env .XR_BASELINE ?? join (REPO, "oracle/web-browser-02
 const EVIDENCE = process .env .XR_WEB_EVIDENCE;
 export const ONLY     = process .env .XR_CASE;
 
-const reference = JSON .parse (await readFile (join (BASELINE, "runtime02-baseline.json"), "utf8"));
+// The recordings: the runtime 02 cases, and the web resource fallback 01 cases (fallback01_case.mjs, recorded with
+// `--suite fallback01` into oracle/web-browser-fallback-01-baseline).
+const SUITES = {
+   runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
+   fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
+};
+
+for (const suite of Object .values (SUITES))
+   suite .reference = JSON .parse (await readFile (join (suite .dir, suite .file), "utf8"));
+
+// Every case group with the suite it belongs to.
+const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ name, suite ]) =>
+   Object .entries (suite .groups) .map (([ groupName, group ]) => [ groupName, { ... group, suite: name } ])));
 
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
@@ -54,6 +67,42 @@ const KNOWN_DIFFERENCES = {
    "loading.disposedDuringLoad": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
       [ [ "result" ], "pending", "Loading of X3D file aborted." ],
+   ],
+   "fallback.content": [
+      // X_ITE names the blob URL of the image data that does not decode; the Rust engine has none and names the file.
+      [ [ "console", 4 ],
+         "warning: ImageTexture: Couldn't load URL 'http://test/garbage/t-first.png', trying URL 2 of 2. Error: Couldn't load image 'blob:http://test/ID': error.",
+         "warning: ImageTexture: Couldn't load URL 'http://test/garbage/t-first.png', trying URL 2 of 2. Error: Couldn't load image 'http://test/garbage/t-first.png': error." ],
+   ],
+   "fallback.gltfFallback": [
+      // GLTF2Parser does not remove a failed buffer from the loading objects: X_ITE's world never finishes loading.
+      [ [ "result" ], "pending", "resolved" ],
+   ],
+   "fallback.gltfFailed": [
+      [ [ "result" ], "pending", "resolved" ],
+   ],
+   "fallback.world": [
+      // X_ITE_R's loadURL tries its candidates in order but does not report the ones that fail.
+      [ [ "console" ], [ "warning: Couldn't load URL 'http://test/garbage/w-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/w-first.wrl'." ], [ ] ],
+   ],
+   "fallback.repeated": [
+      // X_ITE fetches once per node (the HTTP cache may answer); X_ITE_R fetches a URL once per world.
+      [ [ "first" ], 2, 1 ],
+      [ [ "second" ], 2, 1 ],
+   ],
+   "fallback.cancelledBeforeFallback": [
+      // A newer loadURL ends the loads of the older world in X_ITE_R. X_ITE's Inline FileLoader of the older world
+      // goes on: it reports the held candidate that does not parse and fetches the next one.
+      [ [ "console" ], [ "warning: Inline: Couldn't load URL 'http://test/hold/fc/garbage/q-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/hold/fc/garbage/q-first.wrl'." ], [ ] ],
+      [ [ "served" ],
+         [ "/tests/browser/worlds/fallback/held-first.wrl", "/hold/fc/garbage/q-first.wrl", "/tests/browser/worlds/fallback/parts/d.wrl", "/tests/browser/worlds/fallback/parts/q-next.wrl" ],
+         [ "/tests/browser/worlds/fallback/held-first.wrl", "/hold/fc/garbage/q-first.wrl", "/tests/browser/worlds/fallback/parts/d.wrl" ] ],
+   ],
+   "fallback.disposedDuringFallback": [
+      // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
+      [ [ "result" ], "pending", "Loading of X3D file aborted." ],
+      // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
+      [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
 };
 
@@ -179,6 +228,7 @@ const GROUP_FILES = {
    scale:   "runtime02_input.test.mjs",
    loading: "runtime02.test.mjs",
    api:     "runtime02.test.mjs",
+   fallback: "fallback01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
@@ -195,7 +245,9 @@ export function referenceCases (file)
 
    for (const [ groupName, group ] of groups)
    {
-      describe (`runtime 02 ${groupName} cases, compared with pinned X_ITE`, () =>
+      const { dir, reference } = SUITES [group .suite];
+
+      describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, () =>
       {
          for (const [ name, run ] of Object .entries (group .cases))
          {
@@ -226,7 +278,7 @@ export function referenceCases (file)
                   // The pictures: the same background, silhouette and colors as X_ITE's (the thresholds of runtime 01).
                   for (const [ file, data ] of Object .entries (pictures))
                   {
-                     const recorded = await readFile (join (BASELINE, file));
+                     const recorded = await readFile (join (dir, file));
                      const m        = await page .evaluate (compareImages, [ recorded .toString ("base64"), data .toString ("base64") ]);
 
                      await evidence (file, data);
