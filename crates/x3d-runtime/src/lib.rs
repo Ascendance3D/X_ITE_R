@@ -1267,8 +1267,12 @@ impl Runtime {
             }
 
             let key = loader::FetchKey::of(&task);
-
-            self.running_fetch = key.clone();
+            // A task can run the tasks again (a frame); the state of the task around it stays.
+            let outer = (
+                std::mem::replace(&mut self.running_fetch, key.clone()),
+                std::mem::take(&mut self.fetch_suspended),
+                self.fetch_wait.take(),
+            );
 
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
@@ -1281,9 +1285,6 @@ impl Runtime {
                 | Task::BrowserParse(..) => {}
             }
 
-            self.running_fetch = None;
-            self.fetch_wait = None;
-
             // The fallback chain waits for the response of its next candidate: the task runs again from there.
             if let Some(key) = key {
                 if std::mem::take(&mut self.fetch_suspended) {
@@ -1292,7 +1293,19 @@ impl Runtime {
                     self.fetch_resume.remove(&key);
                 }
             }
+
+            (self.running_fetch, self.fetch_suspended, self.fetch_wait) = outer;
         }
+
+        // Only a parked task goes on from where it waited. A request that was replaced, cancelled or disposed
+        // meanwhile (its task ran and did nothing) leaves no state.
+        let parked = &self.parked_fetches;
+
+        self.fetch_resume.retain(|k, _| {
+            parked
+                .iter()
+                .any(|t| loader::FetchKey::of(t).as_ref() == Some(k))
+        });
     }
 
     /// Everything that settles between two frames: microtasks and the fetches they wait for.

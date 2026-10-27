@@ -525,7 +525,16 @@ fn a_gltf_waits_for_its_buffers_and_a_failed_buffer_moves_on() {
     net.respond(&w("models/missing.bin"), Err("Error: Not Found"));
     net.respond(&w("models/other.bin"), Ok(&triangle()));
     assert!(!poll(&mut s), "loaded before the second candidate");
-    assert_eq!(net.requested().last(), Some(&w("models/b.gltf")));
+    assert_eq!(
+        net.requested(),
+        [
+            w("models/a.gltf"),
+            w("models/missing.bin"),
+            w("models/other.bin"),
+            w("models/b.gltf")
+        ],
+        "each buffer is requested once"
+    );
 
     net.respond(&w("models/b.gltf"), Ok(&gltf(&["tri.bin"])));
     assert!(
@@ -640,4 +649,48 @@ fn an_anchor_moves_on_after_a_world_that_does_not_parse() {
         "{log}"
     );
     assert_eq!(log.matches("Couldn't load").count(), 1, "{log}");
+}
+
+#[test]
+fn a_request_replaced_while_it_waits_leaves_no_state() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#VRML V2.0 utf8\nDEF Box Inline { url \"parts/inner.wrl\" }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("parts/inner.wrl"), Ok(INNER));
+    assert!(poll(&mut s));
+    assert!(s.go_live(NOW));
+
+    let inline = s.named_node("Box").expect("DEF Box");
+
+    // The new url waits for its second candidate after the first did not parse.
+    s.set_field(inline, "url", "[ \"bad.wrl\" \"next.wrl\" ]")
+        .expect("url");
+    s.step(NOW + 0.016);
+    net.respond(&w("bad.wrl"), Ok(GARBAGE));
+    s.step(NOW + 0.032);
+    assert_eq!(net.requested().last(), Some(&w("next.wrl")));
+    assert_eq!(s.viewer().expect("live").rt.fetch_resume.len(), 1);
+
+    // A newer url replaces the request that waits: when a response comes, its state goes.
+    s.set_field(inline, "url", "\"parts/inner.wrl\"")
+        .expect("url");
+
+    for i in 3..6 {
+        s.step(NOW + f64::from(i) * 0.016);
+    }
+
+    net.respond(&w("next.wrl"), Ok(INNER));
+
+    for i in 6..9 {
+        s.step(NOW + f64::from(i) * 0.016);
+    }
+
+    let rt = &s.viewer().expect("live").rt;
+
+    assert!(rt.fetch_resume.is_empty(), "{:?}", rt.fetch_resume);
+    assert!(!rt.has_parked_fetches());
 }
