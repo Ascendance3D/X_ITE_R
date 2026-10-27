@@ -177,12 +177,19 @@ fn truncate(s: &str) -> String {
     }
 }
 
+/// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
+fn is_js_space(c: char) -> bool {
+    c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
+}
+
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
 /// unless the header ends with `;base64` (case-sensitive: `;BASE64` is text), the text after the first comma is
 /// `decodeURIComponent`ed (kept as it is when that throws: one malformed escape keeps every escape) and a leading
 /// `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
 pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
-    let rest = candidate.trim_start().strip_prefix("data:")?;
+    let rest = candidate
+        .trim_start_matches(is_js_space)
+        .strip_prefix("data:")?;
     let (header, data) = rest.split_once(',')?;
 
     if header.ends_with(";base64") {
