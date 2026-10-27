@@ -7,6 +7,7 @@
 
 pub mod color;
 pub mod compare;
+mod data_url;
 mod dom;
 mod formats;
 mod gltf2;
@@ -21,6 +22,7 @@ mod svg_canvas;
 pub mod woff1;
 mod xml;
 
+pub use data_url::decode_data_url;
 pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
 pub use html::parse_html_x3d;
 pub use parser::{ParseError, Parser, take_error_detail, take_error_warnings};

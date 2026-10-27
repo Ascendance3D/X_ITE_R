@@ -95,6 +95,7 @@ impl Runtime {
     pub fn fonts_loading(&self) -> bool {
         !self.font_style_loads.is_empty()
             || !self.pending_font_styles.is_empty()
+            || !self.font_fetch_waits.is_empty()
             || self.default_font == DefaultFont::Loading
     }
 

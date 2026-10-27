@@ -20,8 +20,19 @@ const TYPES = {
    ".css": "text/css", ".json": "application/json", ".png": "image/png", ".wrl": "model/vrml", ".x3dv": "model/x3d+vrml",
 };
 
+// Clean fixtures of other oracle sets that both engines load: /fonts/ (PT Sans, OFL; notfont.ttf, see PROVENANCE.txt)
+// and /media/ (synthetic tones).
+const REPO = normalize (join (new URL (".", import.meta.url) .pathname, "../../../.."));
+
+const FIXTURES = {
+   "/fonts/": join (REPO, "oracle/synthetic-rea-b08-net/fonts"),
+   "/media/": join (REPO, "oracle/synthetic-rea-b05/media"),
+};
+
 export async function startServer (root, { mounts = { }, pages = { } } = { })
 {
+   mounts = { ... FIXTURES, ... mounts };
+
    const holds    = new Map ();
    const requests = [ ];
 

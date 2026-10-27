@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
+import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
@@ -25,11 +26,13 @@ const BASELINE = process .env .XR_BASELINE ?? join (REPO, "oracle/web-browser-02
 const EVIDENCE = process .env .XR_WEB_EVIDENCE;
 export const ONLY     = process .env .XR_CASE;
 
-// The recordings: the runtime 02 cases, and the web resource fallback 01 cases (fallback01_case.mjs, recorded with
-// `--suite fallback01` into oracle/web-browser-fallback-01-baseline).
+// The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
+// `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
+// (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
+   loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -81,10 +84,6 @@ const KNOWN_DIFFERENCES = {
    "fallback.gltfFailed": [
       [ [ "result" ], "pending", "resolved" ],
    ],
-   "fallback.world": [
-      // X_ITE_R's loadURL tries its candidates in order but does not report the ones that fail.
-      [ [ "console" ], [ "warning: Couldn't load URL 'http://test/garbage/w-first.wrl', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/w-first.wrl'." ], [ ] ],
-   ],
    "fallback.repeated": [
       // X_ITE fetches once per node (the HTTP cache may answer); X_ITE_R fetches a URL once per world.
       [ [ "first" ], 2, 1 ],
@@ -97,6 +96,42 @@ const KNOWN_DIFFERENCES = {
       [ [ "served" ],
          [ "/tests/browser/worlds/fallback/held-first.wrl", "/hold/fc/garbage/q-first.wrl", "/tests/browser/worlds/fallback/parts/d.wrl", "/tests/browser/worlds/fallback/parts/q-next.wrl" ],
          [ "/tests/browser/worlds/fallback/held-first.wrl", "/hold/fc/garbage/q-first.wrl", "/tests/browser/worlds/fallback/parts/d.wrl" ] ],
+   ],
+   "loadURL.disposedWhilePending": [
+      // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
+      [ [ "first" ], "pending", "Loading of X3D file aborted." ],
+      // X_ITE's dispose () fires the shutdown event of the world; X_ITE_R's does not.
+      [ [ "events" ], [ "shutdown" ], [ ] ],
+   ],
+   "font.pending": [
+      // X_ITE's FontStyle holds the scene's loadCount until its font file is in; X_ITE_R's scene does not wait for
+      // fonts (the FontStyle itself waits for the response).
+      [ [ "before", "loaded" ], "pending", "loaded" ],
+   ],
+   "audio.decodeFallbackHeld": [
+      // X_ITE's AudioClip holds the scene's loadCount until a candidate decodes; X_ITE_R's scene does not wait for
+      // the decode (the AudioClip itself waits for the next response).
+      [ [ "before", "loaded" ], "pending", "loaded" ],
+   ],
+   "dataURL.worldBadBase64": [
+      // X_ITE's fetch of a data URL that does not decode logs Chromium's own network error first; X_ITE_R decodes
+      // the URL itself (no request) and gives the same rejection, without that line.
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURL.imageBadBase64": [
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ],
+         [ "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch" ] ],
+   ],
+   "dataURL.worldEmpty": [
+      // An empty document: GoldenGate of the recording page tries DICOMParser, which needs CharLS (the page does not
+      // load it), so X_ITE rejects and loads the next candidate. X_ITE_R's parser takes empty text as an empty world
+      // (existing parser behavior, not changed here).
+      [ [ "world" ], "fallback/parts/w.wrl", "data" ],
+      [ [ "served" ], [ "/tests/browser/worlds/fallback/parts/w.wrl" ], [ ] ],
+      [ [ "console" ], [ "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined" ], [ ] ],
    ],
    "fallback.disposedDuringFallback": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
@@ -127,7 +162,43 @@ before (async () =>
       args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
          "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
    });
+
+   await logAdapter ();
 });
+
+// The WebGPU adapter Chromium chose for this test process, as the page sees it (GPUAdapterInfo): NVIDIA, SwiftShader
+// (vendor google, architecture swiftshader) or lavapipe (vendor mesa, device llvmpipe). Only this tells which one ran;
+// VK_ICD_FILENAMES does not. Printed once per test file and kept with the evidence.
+async function logAdapter ()
+{
+   const context = await browser .newContext ();
+
+   try
+   {
+      const page = await context .newPage ();
+
+      await page .goto (`${server .base}/tests/browser/page.html`);
+
+      const info = await page .evaluate (async () =>
+      {
+         const adapter = await navigator .gpu ?.requestAdapter ({ powerPreference: "high-performance" });
+         const i       = adapter ?.info;
+
+         return i ? { vendor: i .vendor, architecture: i .architecture, device: i .device, description: i .description } : null;
+      });
+
+      console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}`);
+      await evidence ("webgpu-adapter.json", JSON .stringify (info, null, 1) + "\n");
+   }
+   catch (error)
+   {
+      console .log (`WebGPU adapter: unknown (${error .message})`);
+   }
+   finally
+   {
+      await context .close ();
+   }
+}
 
 after (async () =>
 {
@@ -229,6 +300,11 @@ const GROUP_FILES = {
    loading: "runtime02.test.mjs",
    api:     "runtime02.test.mjs",
    fallback: "fallback01.test.mjs",
+   loadURL: "loadurl01.test.mjs",
+   font:    "loadurl01.test.mjs",
+   movie:   "loadurl01.test.mjs",
+   audio:   "loadurl01.test.mjs",
+   dataURL: "loadurl01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

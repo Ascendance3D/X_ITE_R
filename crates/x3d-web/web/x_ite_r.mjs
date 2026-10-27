@@ -455,11 +455,24 @@ class X3DBrowser
          if (!(parameter instanceof MFString))
             throw new Error ("Browser.loadURL: parameter must be of type MFString.");
 
+         // FileLoader calls back at once when it fetches no candidate (there is none, or each is the empty URL), before
+         // this load is the browser's `[_fileLoader]`: X3DBrowser takes it for an older one. Nothing is aborted and no
+         // event fires; the empty URLs are reported first.
+         if (Array .from (url) .every (u => String (u) === ""))
+         {
+            if (this .#engine)
+               this .#reportOnly (url);
+            else if (url .length)
+               this .#ready .then (() => this .#engine && this .#reportOnly (url));
+
+            return reject (new Error ("Loading of X3D file aborted."));
+         }
+
          // `this [_fileLoader] ?.abort ()`: the older loadURL rejects with "Loading of X3D file aborted.".
-         const loader = { abort: false };
+         const loader = { abort: false, id: null };
 
          if (this .#fileLoader)
-            this .#fileLoader .abort = true;
+            this .#abortLoad (this .#fileLoader);
 
          this .#fileLoader = loader;
 
@@ -474,13 +487,13 @@ class X3DBrowser
             this .#fileLoader = null;
             this .#replaceWorld (id, true) .then (resolve, reject);
          },
-         error =>
+         () =>
          {
             if (this .#fileLoader !== loader || this .#disposed)
                return reject (new Error ("Loading of X3D file aborted."));
 
+            // The engine reported the candidates that failed (FileLoader.printError).
             this .#fileLoader = null;
-            console .error (error);
             this .#call (X3DConstants .INITIALIZED_ERROR);
             this .#dispatch ("error");
             reject (new Error ("Couldn't load X3D file."));
@@ -488,47 +501,69 @@ class X3DBrowser
       });
    }
 
-   // FileLoader.createX3DFromURL: the first url that fetches and parses, then its loads (Inline, textures,
-   // EXTERNPROTO). An abort ends the fetches; the scene loads that started go on, like FileLoader's.
+   // The messages of a loadURL whose candidates fail without a request.
+   #reportOnly (urls)
+   {
+      const load = this .#engine .loadURL (Array .from (urls, String), this .baseURL);
+
+      this .#engine .loadStep (load, Date .now () / 1000);
+      this .#flushLog (load);
+      this .#engine .discard (load);
+   }
+
+   // FileLoader.abort () of a loadURL: the candidate in flight is its last. The engine ends that request and reports
+   // it when it fails, like FileLoader.loadDocumentError.
+   #abortLoad (loader)
+   {
+      loader .abort = true;
+
+      if (loader .id !== null)
+         this .#engine ?.abortLoad (loader .id);
+   }
+
+   // FileLoader.createX3DFromURL for the X3DWorld: the engine tries the candidates in order, waits for each response
+   // and reports each candidate that fails (WebBrowser.loadURL). Then the scene's own loads (Inline, textures,
+   // EXTERNPROTO). An abort ends the request in flight; the scene loads that started go on, like FileLoader's.
    async #load (urls, loader)
    {
       await this .#ready;
 
-      let lastError = new Error ("no url");
+      if (loader .abort || !this .#engine)
+         throw new Error ("aborted");
 
-      for (const u of urls)
+      const load = loader .id = this .#engine .loadURL (Array .from (urls, String), this .baseURL);
+      let   id;
+
+      try
       {
-         if (loader .abort || this .#disposed)
-            throw new Error ("aborted");
-
-         let id;
-
-         try
+         while (true)
          {
-            const response = await fetch (new URL (u, this .baseURL));
-
-            if (!response .ok)
-               throw new Error (`${response .status} ${response .statusText}: ${response .url}`);
-
-            const bytes = new Uint8Array (await response .arrayBuffer ());
-
-            if (loader .abort || !this .#engine)
+            if (!this .#engine)
                throw new Error ("aborted");
 
-            id = this .#engine .prepare (bytes, response .url, Date .now () / 1000);
-         }
-         catch (error)
-         {
-            lastError = error;
-            continue;
-         }
+            // The messages of a candidate go out when its response comes, as X_ITE's do.
+            id = this .#engine .loadStep (load, Date .now () / 1000);
 
-         // A newer loadURL that started meanwhile takes over (the caller rejects this one).
-         await this .#loaded (id, () => this .#disposed || this .#fileLoader !== loader);
-         return id;
+            this .#flushLog (load);
+
+            if (id !== 0)
+               break;
+
+            await this .#engine .progress (load);
+         }
+      }
+      finally
+      {
+         loader .id = null;
+         this .#engine ?.discard (load);
       }
 
-      throw lastError;
+      if (id < 0)
+         throw new Error ("no candidate loaded");
+
+      // A newer loadURL that started meanwhile takes over (the caller rejects this one).
+      await this .#loaded (id, () => this .#disposed || this .#fileLoader !== loader);
+      return id;
    }
 
    // X3DBrowser.createX3DFromString (x3dSyntax): a Promise of the new scene, set up and loaded. The page is an
@@ -595,7 +630,7 @@ class X3DBrowser
 
          // `this [_fileLoader] ?.abort ()`: a loadURL that is still fetching fails.
          if (this .#fileLoader)
-            this .#fileLoader .abort = true;
+            this .#abortLoad (this .#fileLoader);
 
          return this .#replaceWorld (id, owned);
       }
