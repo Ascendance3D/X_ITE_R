@@ -740,3 +740,19 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --ru
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-data-url-01-baseline --runs 5 --suite dataurl01
 ```
+
+- `x_ite-web-runtime-02.mjs --suite degenerate01` runs the 9 cases of `crates/x3d-web/tests/browser/degenerate01_case.mjs`
+  and records `web-browser-degenerate-01-baseline/degenerate01-baseline.json` and 12 pictures. The cases are
+  TriangleSet worlds with zero-area triangles (two or three equal points, several of them, finding F1 of PR #124) and
+  controls (a valid triangle, collinear points, a very thin triangle, a valid triangle next to a degenerate one), and
+  the failing world loaded three times on one page before the valid one. Each case keeps the loadURL result, the
+  browser events, the TriangleSet's number of points, the load messages and the picture.
+- X_ITE's MikkTSpace wasm traps when every triangle has two equal points (`memory access out of bounds` or
+  `unreachable`); X3DGeometryNode.generateTangents catches it and logs it only when DEVELOPMENT is true (the pinned
+  source; the dist build sets it false). The cases leave those "RuntimeError" lines out of the messages;
+  `degenerate01.test.mjs` checks separately that X_ITE_R logs none.
+- Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-degenerate-01-baseline --runs 5 --suite degenerate01
+```
