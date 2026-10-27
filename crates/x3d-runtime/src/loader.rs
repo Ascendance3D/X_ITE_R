@@ -537,9 +537,9 @@ impl Runtime {
                     return Err(None);
                 }
 
-                // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
+                // fetch (dataURL) of a ShaderPart that the text branch did not take: the shader text is carried in the URL.
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
-                    nodes::shaders::fetch_data_url(candidate).map_err(Some)?
+                    x3d_parse::decode_data_url(candidate).map_err(Some)?
                 } else {
                     self.fetcher.fetch(&r).map_err(Some)?
                 };
