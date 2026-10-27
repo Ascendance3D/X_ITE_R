@@ -76,11 +76,38 @@ impl Session {
     /// Parse the world `data` from `url` (FileLoader). `fetcher` serves the world's Inline, EXTERNPROTO and texture
     /// URLs. A world that does not parse is an error.
     pub fn parse(data: &[u8], url: &str, fetcher: Box<dyn Fetcher>) -> Result<ParsedWorld, String> {
+        Session::parse_logged(data, url, fetcher, |_| {})
+    }
+
+    /// [`Session::parse`] as FileLoader.createX3DFromURLAsync parses a candidate of the page's loadURL: the error is
+    /// the rejection FileLoader.printError reports (as for an Inline), and the parser's own messages go to `log`
+    /// first (`warn: …` or `error: …`; VRMLParser prints the original error in DEVELOPMENT).
+    pub fn parse_logged(
+        data: &[u8],
+        url: &str,
+        fetcher: Box<dyn Fetcher>,
+        mut log: impl FnMut(String),
+    ) -> Result<ParsedWorld, String> {
         parse_setup();
 
-        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url)
-            .scene
-            .map_err(|e| format!("{e:?}"))?;
+        let scene = match x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url).scene {
+            Ok(scene) => scene,
+            Err(x3d_parse::LoadError::Parse(e)) => {
+                for w in x3d_parse::take_error_warnings() {
+                    log(format!("warn: {w}"));
+                }
+
+                log(format!("error: Error: {}", e.message));
+                return Err(format!("Error: \n{e}"));
+            }
+            // GoldenGate.parseIntoScene names the url of a file that no parser handles.
+            Err(x3d_parse::LoadError::NoHandler) => {
+                return Err(format!(
+                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
+                ));
+            }
+            Err(e) => return Err(format!("Error: {e}")),
+        };
 
         Ok(ParsedWorld {
             scene,

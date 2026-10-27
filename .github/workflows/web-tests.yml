@@ -145,7 +145,7 @@ jobs:
 
       - name: Test counts
         if: always()
-        run: grep -E '^ℹ (tests|pass|fail|skipped)' web-tests.log | tee -a "$GITHUB_STEP_SUMMARY" || true
+        run: grep -E '^ℹ (tests|pass|fail|skipped)|WebGPU adapter' web-tests.log | awk '!seen[$0]++' | tee -a "$GITHUB_STEP_SUMMARY" || true
 
       - uses: actions/upload-artifact@v7
         if: always()
