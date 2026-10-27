@@ -1,0 +1,390 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "dataURLWorld.lowerRaw": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.upperRaw": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.leadingTabRaw": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.leadingSpaceRaw": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 62 63 64"
+  },
+  "dataURLWorld.schemeTabRaw": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 62 63 64"
+  },
+  "dataURLWorld.upperEscaped": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.schemeNewlineBase64": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.base64BodyNewlines": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.tabBeforeBase64": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+   ],
+   "title": null
+  },
+  "dataURLWorld.schemeTabTabBeforeBase64": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.tabAfterMime": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "61 9 62 a 63 d 64"
+  },
+  "dataURLWorld.badBase64": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+   ],
+   "title": null
+  },
+  "dataURLWorld.noComma": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "warning: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+   ],
+   "title": null
+  },
+  "dataURLWorld.rawHashHeader": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "68 61 73 68"
+  },
+  "dataURLWorld.rawHashHeaderUpper": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined"
+   ],
+   "title": null
+  },
+  "dataURLWorld.otherScheme": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "error: Fetch API cannot load data-x:,y. URL scheme \"data-x\" is not supported.",
+    "warning: Couldn't load URL 'data-x:,y', trying URL 2 of 2. TypeError: Failed to fetch"
+   ],
+   "title": null
+  },
+  "dataURLImage.tabBeforeBase64": {
+   "loaded": "loaded",
+   "served": [
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": [
+    "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't load image 'blob:<id>': error."
+   ]
+  },
+  "dataURLImage.schemeTabTabBeforeBase64": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
+  },
+  "dataURLImage.leadingSpaceTabBeforeBase64": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
+  },
+  "dataURLImage.schemeAndBodyTabs": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
+  },
+  "dataURLImage.bodyNewline": {
+   "loaded": "loaded",
+   "served": [],
+   "console": []
+  },
+  "dataURLImage.badBase64": {
+   "loaded": "loaded",
+   "served": [
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "warning: ImageTexture: Couldn't load data URL, trying URL 2 of 2. TypeError: Failed to fetch"
+   ]
+  },
+  "dataURLImage.httpTabs": {
+   "loaded": "loaded",
+   "served": [
+    "/tests/browser/worlds/tex/green.gif"
+   ],
+   "console": []
+  },
+  "dataURLGltf.file": {
+   "result": "resolved",
+   "world": "dataurl/inline-file.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/inline-file.wrl",
+    "/tests/browser/worlds/dataurl/gltf-file.gltf",
+    "/tests/browser/worlds/dataurl/tri-tab.bin"
+   ],
+   "console": [],
+   "coordinates": null
+  },
+  "dataURLGltf.lowerTab": {
+   "result": "resolved",
+   "world": "dataurl/gltf-lower-tab.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/gltf-lower-tab.gltf"
+   ],
+   "console": [],
+   "coordinates": "[\n  0 0 0,\n  1.000001 0 0,\n  0 1 0\n]"
+  },
+  "dataURLGltf.upperTab": {
+   "result": "resolved",
+   "world": "dataurl/gltf-upper-tab.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/gltf-upper-tab.gltf"
+   ],
+   "console": [],
+   "coordinates": "[\n  0 0 0,\n  1.000001 0 0,\n  0 1 0\n]"
+  },
+  "dataURLGltf.schemeTab": {
+   "result": "resolved",
+   "world": "dataurl/gltf-scheme-tab.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/gltf-scheme-tab.gltf"
+   ],
+   "console": [],
+   "coordinates": "[\n  0 0 0,\n  1.000001 0 0,\n  0 1 0\n]"
+  },
+  "dataURLGltf.schemeTabPercent": {
+   "result": "resolved",
+   "world": "dataurl/inline-scheme-tab-percent.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/inline-scheme-tab-percent.wrl",
+    "/tests/browser/worlds/dataurl/gltf-scheme-tab-percent.gltf"
+   ],
+   "console": [
+    "error: Inline: Couldn't load URL 'http://test/tests/browser/worlds/dataurl/gltf-scheme-tab-percent.gltf'. RangeError: Invalid typed array length: 9"
+   ],
+   "coordinates": null
+  },
+  "dataURLGltf.tabBeforeBase64": {
+   "result": "resolved",
+   "world": "dataurl/gltf-tab-base64-flag.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/gltf-tab-base64-flag.gltf"
+   ],
+   "console": [],
+   "coordinates": "[\n  262551500 188101900 210139400000000000000,\n  0 12.26593 12.09163,\n  12.08136 12.14264 3124.078\n]"
+  },
+  "dataURLGltf.schemeTabTabBeforeBase64": {
+   "result": "resolved",
+   "world": "dataurl/gltf-scheme-tab-base64-flag.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/gltf-scheme-tab-base64-flag.gltf"
+   ],
+   "console": [],
+   "coordinates": "[\n  0.1 0.2 0.3,\n  1.5 -2.25 3.75,\n  -4.125 5.0625 0.5\n]"
+  },
+  "dataURLGltf.badBase64": {
+   "result": "pending",
+   "world": "dataurl/inline-bad-base64.wrl",
+   "events": [
+    "shutdown"
+   ],
+   "served": [
+    "/tests/browser/worlds/dataurl/inline-bad-base64.wrl",
+    "/tests/browser/worlds/dataurl/gltf-bad-base64.gltf"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "error: Couldn't load data URL. TypeError: Failed to fetch"
+   ],
+   "coordinates": null
+  }
+ }
+}

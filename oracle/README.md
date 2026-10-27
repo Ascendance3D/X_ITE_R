@@ -721,3 +721,22 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --r
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --runs 3 --suite loadurl01
 ```
+
+## Web data URL compatibility 01 (2026-10-27): raw tab, LF and CR in data URLs
+
+- `x_ite-web-runtime-02.mjs --suite dataurl01` runs the 31 cases of `crates/x3d-web/tests/browser/dataurl01_case.mjs` and
+  records `web-browser-data-url-01-baseline/dataurl01-baseline.json` (no pictures). The cases put raw tab, LF and CR
+  characters in and after the scheme of a world's data URL (a WorldInfo title shows whether they were kept), an
+  ImageTexture's data URL (whether the next candidate is requested) and a glTF buffer's data URL (the coordinates, or
+  the Inline's message for a buffer that fails), with `;<TAB>base64`, base64 that does not decode, a raw `#VRML`
+  header and an http control.
+- Chrome 156.0.8078.47 keeps a tab or newline after the scheme only when the URL starts with `data:` in any case,
+  after any leading tabs and newlines. A leading space or a tab in the scheme makes it remove all of them, as the URL
+  standard does. Chromium 151.0.7922.34 (Playwright's) kept them only after an exact lower-case `data:`; the probes are
+  in the lane report.
+- The glTF worlds and the Inline worlds in `crates/x3d-web/tests/browser/worlds/dataurl/` were written for these tests.
+- Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-data-url-01-baseline --runs 5 --suite dataurl01
+```

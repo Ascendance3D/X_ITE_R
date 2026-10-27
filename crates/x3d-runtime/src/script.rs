@@ -223,7 +223,7 @@ impl Runtime {
 
             let Some(resolved) = url::Url::parse(&loader.base)
                 .ok()
-                .and_then(|b| b.join(&candidate).ok())
+                .and_then(|b| crate::loader::join_url(&b, &candidate).ok())
             else {
                 let error = "TypeError: Failed to construct 'URL': Invalid URL".to_string();
                 self.tasks
@@ -262,7 +262,7 @@ impl Runtime {
         };
         let Some(resolved) = url::Url::parse(&loader.base)
             .ok()
-            .and_then(|b| b.join(&candidate).ok())
+            .and_then(|b| crate::loader::join_url(&b, &candidate).ok())
         else {
             return;
         };
