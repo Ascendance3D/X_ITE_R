@@ -388,6 +388,69 @@
     "warning: Couldn't load data URL, trying URL 2 of 2. ReferenceError: CharLS is not defined"
    ]
   },
+  "dataURL.worldBadUtf8": {
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/fallback/parts/w.wrl"
+   ],
+   "console": [
+    "warning: Couldn't load data URL, trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+   ]
+  },
+  "dataURL.worldUtf8Title": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "e9 e9 20ac 1f600"
+  },
+  "dataURL.worldUtf8TitleMalformed": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "e9 25 43 33 25 41 39 25 45 32 25 38 32 25 41 43 25 46 30 25 39 46 25 39 38 25 38 30 25 45 30 25 41 34 25 41"
+  },
+  "dataURL.worldUtf8TitleOverlong": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "e9 25 43 33 25 41 39 25 43 30 25 41 46"
+  },
+  "dataURL.worldUtf8TitleSurrogate": {
+   "result": "resolved",
+   "world": "data",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "served": [],
+   "console": [],
+   "title": "e9 25 43 33 25 41 39 25 45 44 25 41 30 25 38 30"
+  },
   "dataURL.worldSchemeUpper": {
    "result": "resolved",
    "world": "data",

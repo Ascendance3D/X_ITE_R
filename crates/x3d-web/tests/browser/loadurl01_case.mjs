@@ -235,6 +235,10 @@ export const fontCases = {
       const c      = await sceneCase (page, env, FONT_WORLD ([ "BASE/hold/fh/fonts/PTSans-Regular.ttf" ]), 300);
       const before = { loaded: await c .loaded (0), console: c .console () };
 
+      // The font request is in flight before its response is released (PR #123 merge gate).
+      if (!c .served () .some (path => path .startsWith ("/hold/fh/")))
+         throw new Error ("the font file was not requested before its response was released");
+
       env .server .release ("fh");
 
       const loaded = await c .loaded ();
@@ -361,6 +365,16 @@ async function dataWorldCase (page, env, url)
    return { ... out, world: await dataWorldName (page) };
 }
 
+// A world-level loadURL of an XML data URL whose text is not escaped except `title` (DEF Info WorldInfo); the title as
+// the world has it. XML has no `#`, which would start the URL's fragment.
+async function dataTitleCase (page, env, title)
+{
+   const out = await dataWorldCase (page, env, `data:model/x3d+xml,<X3D profile='Interchange' version='4.0'><Scene><WorldInfo DEF='Info' title='${title}'/></Scene></X3D>`);
+   const value = out .world === "data" ? await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("Info") .title) : null;
+
+   return { ... out, title: value === null ? null : Array .from (value, ch => ch .codePointAt (0) .toString (16)) .join (" ") };
+}
+
 const IMAGE_WORLD = url => `#X3D V4.0 utf8
 PROFILE Interchange
 Viewpoint { position 0 0 4 }
@@ -385,6 +399,17 @@ export const dataURLCases = {
 
    // An empty document.
    worldEmpty: (page, env) => dataWorldCase (page, env, "data:model/vrml,"),
+
+   // UTF-8 escapes (PR #123 merge gate). A malformed sequence: decodeURIComponent throws, so the text stays as it is.
+   worldBadUtf8: (page, env) => dataWorldCase (page, env, `data:model/vrml,${encodeURIComponent (DATA_WORLD)}%E0%A4%A`),
+
+   // A literal non-ASCII character and valid escapes in a title: decoded.
+   worldUtf8Title: (page, env) => dataTitleCase (page, env, "é%C3%A9%E2%82%AC%F0%9F%98%80"),
+
+   // The same title with one malformed sequence, an overlong form and a surrogate: every escape stays as it is.
+   worldUtf8TitleMalformed: (page, env) => dataTitleCase (page, env, "é%C3%A9%E2%82%AC%F0%9F%98%80%E0%A4%A"),
+   worldUtf8TitleOverlong: (page, env) => dataTitleCase (page, env, "é%C3%A9%C0%AF"),
+   worldUtf8TitleSurrogate: (page, env) => dataTitleCase (page, env, "é%C3%A9%ED%A0%80"),
 
    // The scheme in upper and mixed case (PR #123 final review). FileLoader's match of `data:` is case-sensitive, so
    // fetch decodes the URL; worldURL is the serialized URL, whose scheme is in lower case.
