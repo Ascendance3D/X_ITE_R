@@ -2264,16 +2264,31 @@ fn gltf_world_buffers_that_fail_log_in_the_order_they_fail() {
 /// issue 129: follow_buffers does not read successful buffers (fetch_error is used).
 #[test]
 fn follow_buffers_does_not_fetch_successful_body() {
+    // Using the same flow as a_gltf_world_buffer_that_fails_moves_on_while_another_is_in_flight.
+    // The previous buffer needs to fail while there's a fallback available. Let's use two gltf candidates.
     let net = TestFetcher::default();
     let mut rt = page_loader(&net);
-    let urls = vec![w("models/a.gltf")];
+    let urls = vec![w("models/a.gltf"), w("models/b.gltf")];
+
     page_step(&mut rt, &urls);
-    net.respond(&w("models/a.gltf"), Ok(&gltf(&["held.bin"])));
-    page_step(&mut rt, &urls); // The world's fallback chain requests the buffer.
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["gone.bin", "held.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    assert!(net.requested().contains(&w("models/b.gltf")));
+
+    net.respond(&w("models/b.gltf"), Ok(&gltf(&["tri.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/tri.bin"), Ok(&triangle()));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+
+    // The held buffer is still followed.
+    assert!(rt.follow_buffers(), "the held buffer is still followed");
 
     let previous_reads = net.read().len();
     net.respond(&w("models/held.bin"), Ok(&triangle())); // resolve it.
     assert!(!rt.follow_buffers(), "all buffers followed");
+
     // It should not fetch it again in follow_buffers.
     assert_eq!(
         net.read().len(),
