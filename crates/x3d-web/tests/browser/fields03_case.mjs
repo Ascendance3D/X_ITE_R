@@ -88,7 +88,7 @@ async function nodeOwnership (page)
          {
             const holder = make (scene, "Collision { }");
             holder .proxy = OT;
-            return [ names ([ holder .proxy ]), owner (holder .proxy), owner (OT) ];
+            return [ names ([ holder .proxy ]), owner (holder .proxy), owner (OT), holder .toVRMLString () .replace (/\s+/g, " ") ];
          });
 
          // 3 Mixed-scene MFNode.
@@ -96,7 +96,7 @@ async function nodeOwnership (page)
          {
             const g = make (scene, "Group { }");
             g .children = [ G, OT, T ];
-            return [ names (g .children), Array .from (g .children, owner) ];
+            return [ names (g .children), Array .from (g .children, owner), g .toVRMLString () .replace (/\s+/g, " ") ];
          });
 
          // 4 Root-node insertion: a node of another scene into this scene's rootNodes.
@@ -132,12 +132,6 @@ async function nodeOwnership (page)
             return [ bad, wrong, names (g .children) ];
          });
 
-         // 9 Scene replacement: nodes of the replaced scene after replaceWorld.
-         const kept = scene .getNamedNode ("T");
-         browser .replaceWorld (other);
-         await new Promise (r => setTimeout (r, 200));
-         out .s09 = attempt (() => [ browser .currentScene === other, kept .getNodeTypeName (), owner (kept), String (kept .translation) ]);
-
          // 10 Invalid node references.
          out .s10 = attempt (() =>
          {
@@ -165,6 +159,12 @@ async function nodeOwnership (page)
             g .children = [ other .getNamedNode ("OT"), make (scene, "Transform { }") ];
             return [ g .toVRMLString () .replace (/\s+/g, " "), g .toXMLString () .replace (/\s+/g, " ") ];
          });
+
+         // 9 Scene replacement: nodes of the replaced scene after replaceWorld.
+         const kept = scene .getNamedNode ("T");
+         browser .replaceWorld (other);
+         await new Promise (r => setTimeout (r, 200));
+         out .s09 = attempt (() => [ browser .currentScene === other, kept .getNodeTypeName (), owner (kept), String (kept .translation) ]);
       }
       finally
       {
@@ -174,7 +174,8 @@ async function nodeOwnership (page)
 
       out .log = logs;
 
-      return out;
+      // The recording is JSON: `undefined` is `null` there.
+      return JSON .parse (JSON .stringify (out, (key, value) => value === undefined ? null : value));
    });
 }
 
