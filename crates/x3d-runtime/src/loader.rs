@@ -39,8 +39,8 @@ pub enum FetchPoll {
 }
 
 /// Script URLs (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`): no fetch.
-fn is_script_url(candidate: &str) -> bool {
-    let trimmed = candidate.trim_start();
+pub(crate) fn is_script_url(candidate: &str) -> bool {
+    let trimmed = candidate.trim_start_matches(is_js_space);
 
     ["ecmascript:", "javascript:", "vrmlscript:"]
         .iter()
@@ -178,7 +178,7 @@ fn truncate(s: &str) -> String {
 }
 
 /// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
-fn is_js_space(c: char) -> bool {
+pub(crate) fn is_js_space(c: char) -> bool {
     c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
 }
 
@@ -465,7 +465,7 @@ impl Runtime {
                 }
 
                 // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
-                let trimmed = candidate.trim_start();
+                let trimmed = candidate.trim_start_matches(is_js_space);
                 for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
                     if trimmed.starts_with(scheme) {
                         let source = &trimmed[scheme.len()..];
@@ -1598,5 +1598,19 @@ pub(crate) fn parse_bytes_waiting(
         buffer_errors: buffer_errors.into_inner(),
         buffers_pending: !pending_buffers.is_empty(),
         pending_buffers,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_script_url_whitespace() {
+        assert!(is_script_url("\u{FEFF}javascript:"));
+        assert!(!is_script_url("\u{0085}javascript:"));
+        assert!(is_script_url("\u{00A0}javascript:"));
+        assert!(is_script_url("\u{2028}javascript:"));
+        assert!(is_script_url("\u{3000}javascript:"));
+        assert!(is_script_url(" \t\n\rjavascript:"));
     }
 }
