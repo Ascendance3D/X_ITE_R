@@ -45,11 +45,136 @@ impl Data {
         self.items().iter().map(Data::number).collect()
     }
 
+    /// The node id of SFNode data: a whole number in the range of [`NodeId`]; anything else is NULL ([`check_data`]
+    /// refuses it first).
     fn node(&self) -> Option<NodeId> {
         match self {
-            Data::Number(x) if *x >= 0.0 => Some(*x as NodeId),
+            Data::Number(x) if is_node_id(*x) => Some(*x as NodeId),
             _ => None,
         }
+    }
+}
+
+fn is_node_id(x: f64) -> bool {
+    x.fract() == 0.0 && (0.0..=f64::from(NodeId::MAX)).contains(&x)
+}
+
+/// The number of components of an element of a numeric field type (X_ITE's order, as [`value_data`] gives them);
+/// `None` for the other types.
+fn components(ty: FieldType) -> Option<usize> {
+    use FieldType as T;
+
+    Some(match ty {
+        T::SFInt32 | T::SFFloat | T::SFDouble | T::SFTime => 1,
+        T::MFInt32 | T::MFFloat | T::MFDouble | T::MFTime => 1,
+        T::SFVec2d | T::SFVec2f | T::MFVec2d | T::MFVec2f => 2,
+        T::SFColor | T::SFVec3d | T::SFVec3f | T::MFColor | T::MFVec3d | T::MFVec3f => 3,
+        T::SFColorRGBA | T::SFVec4d | T::SFVec4f | T::SFQuaternion => 4,
+        T::MFColorRGBA | T::MFVec4d | T::MFVec4f | T::MFQuaternion | T::MFRotation => 4,
+        // Axis and angle, tainted, then the quaternion.
+        T::SFRotation => 9,
+        T::SFMatrix3d | T::SFMatrix3f | T::MFMatrix3d | T::MFMatrix3f => 9,
+        T::SFMatrix4d | T::SFMatrix4f | T::MFMatrix4d | T::MFMatrix4f => 16,
+        _ => return None,
+    })
+}
+
+fn check_image(d: &Data) -> Result<(), String> {
+    let bad = || Err("SFImage data is not [width, height, comp, [pixels]]".to_string());
+    let [
+        Data::Number(w),
+        Data::Number(h),
+        Data::Number(c),
+        Data::List(pixels),
+    ] = d.items()
+    else {
+        return bad();
+    };
+
+    if ![*w, *h, *c].iter().all(|x| x.fract() == 0.0 && *x >= 0.0)
+        || pixels.len() as f64 != w * h
+        || !pixels.iter().all(|p| matches!(p, Data::Number(_)))
+    {
+        return bad();
+    }
+
+    Ok(())
+}
+
+fn check_node(d: &Data) -> Result<(), String> {
+    match d {
+        Data::Null => Ok(()),
+        Data::Number(x) if is_node_id(*x) => Ok(()),
+        _ => Err(format!("{d:?} is not a node id or null")),
+    }
+}
+
+/// Is `d` the data of a value of type `ty` (the shape [`value_data`] gives)? [`data_value`] makes a value of any
+/// data; this refuses the data no field object of the type gives instead of filling it in.
+pub fn check_data(ty: FieldType, d: &Data) -> Result<(), String> {
+    use FieldType as T;
+
+    let list = |what: &str| match d {
+        Data::List(items) => Ok(items.as_slice()),
+        _ => Err(format!("{} data is not a list of {what}", ty.name())),
+    };
+    let all = |items: &[Data], ok: fn(&Data) -> bool, what: &str| {
+        if items.iter().all(ok) {
+            Ok(())
+        } else {
+            Err(format!("{} data is not a list of {what}", ty.name()))
+        }
+    };
+
+    match ty {
+        T::SFBool if matches!(d, Data::Bool(_)) => Ok(()),
+        T::SFString if matches!(d, Data::String(_)) => Ok(()),
+        T::SFInt32 | T::SFFloat | T::SFDouble | T::SFTime if matches!(d, Data::Number(_)) => Ok(()),
+        T::SFBool | T::SFString | T::SFInt32 | T::SFFloat | T::SFDouble | T::SFTime => {
+            Err(format!("{d:?} is not {} data", ty.name()))
+        }
+        T::SFNode => check_node(d),
+        T::SFImage => check_image(d),
+        T::MFBool => all(
+            list("booleans")?,
+            |x| matches!(x, Data::Bool(_)),
+            "booleans",
+        ),
+        T::MFString => all(
+            list("strings")?,
+            |x| matches!(x, Data::String(_)),
+            "strings",
+        ),
+        T::MFNode => list("node ids")?.iter().try_for_each(check_node),
+        T::MFImage => list("SFImage data")?.iter().try_for_each(check_image),
+        _ => {
+            let items = list("numbers")?;
+            let n = components(ty).unwrap_or(1);
+
+            all(items, |x| matches!(x, Data::Number(_)), "numbers")?;
+
+            let single = ty.name().starts_with("SF");
+
+            if (single && items.len() != n) || (!single && items.len() % n != 0) {
+                return Err(format!(
+                    "{} data has {} numbers, not {}{n}",
+                    ty.name(),
+                    items.len(),
+                    if single { "" } else { "a multiple of " }
+                ));
+            }
+
+            Ok(())
+        }
+    }
+}
+
+/// The node ids of the data of a value of type `ty`: none unless it is SFNode or MFNode.
+pub fn data_nodes(ty: FieldType, d: &Data) -> Vec<NodeId> {
+    match ty {
+        FieldType::SFNode => d.node().into_iter().collect(),
+        FieldType::MFNode => d.items().iter().filter_map(Data::node).collect(),
+        _ => vec![],
     }
 }
 

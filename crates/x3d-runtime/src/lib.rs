@@ -364,6 +364,9 @@ pub struct Runtime {
     /// [`Runtime::field_observed`] is recorded here with the value it delivered, in event order, for the page to call
     /// its callbacks after the frame ([`Runtime::take_page_field_events`]).
     pub page_field_events: Option<Vec<(FKey, FieldValue)>>,
+    /// The nodes released since the page last asked ([`Runtime::take_page_released`]), when set: the page drops its
+    /// objects of them before a node that takes the id can meet them.
+    pub page_released: Option<Vec<NodeId>>,
     /// Node fields a Script holds as JavaScript objects (X_ITE's own field objects, which hold their value), and whether the
     /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
     pub js_mirror: HashMap<FKey, bool>,
@@ -648,6 +651,7 @@ impl Runtime {
             field_observed: Default::default(),
             pending_field_events: vec![],
             page_field_events: None,
+            page_released: None,
             js_mirror: HashMap::new(),
             js_dirty: vec![],
             shaders: Default::default(),
@@ -1159,6 +1163,14 @@ impl Runtime {
     /// The events of observed fields the page has not taken yet (see [`Runtime::page_field_events`]).
     pub fn take_page_field_events(&mut self) -> Vec<(FKey, FieldValue)> {
         self.page_field_events
+            .as_mut()
+            .map(std::mem::take)
+            .unwrap_or_default()
+    }
+
+    /// The nodes released since the last call (see [`Runtime::page_released`]).
+    pub fn take_page_released(&mut self) -> Vec<NodeId> {
+        self.page_released
             .as_mut()
             .map(std::mem::take)
             .unwrap_or_default()

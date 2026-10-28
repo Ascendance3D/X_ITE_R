@@ -806,6 +806,15 @@ impl WebBrowser {
         }
     }
 
+    /// The nodes the runtime released since the last call (see [`Session::take_released_nodes`]).
+    #[wasm_bindgen(js_name = takeReleasedNodes)]
+    pub fn take_released_nodes(&mut self, id: u32) -> Vec<u32> {
+        match self.worlds.get_mut(&id) {
+            Some(w) => w.session.take_released_nodes(),
+            None => vec![],
+        }
+    }
+
     /// X3DNode.getFieldDefinitions: `[name, accessType, typeName, default]` each; `default` is undefined for a
     /// user-defined field.
     #[wasm_bindgen(js_name = fieldDefinitions)]
