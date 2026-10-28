@@ -9,7 +9,7 @@
 //! asynchronous [`Fetcher`] parks a load until then). Only a loaded session goes live ([`Session::go_live`],
 //! X3DBrowser.replaceWorld), so the current world stays while the next one loads.
 
-use x3d_fields::{FieldValue, NodeId, access};
+use x3d_fields::{FieldType, FieldValue, NodeId, access};
 use x3d_render::traverse::Frame;
 use x3d_runtime::data::{self, Data};
 use x3d_runtime::{Fetcher, Runtime};
@@ -447,6 +447,54 @@ impl Session {
 
         rt.set_value(k, value);
         Ok(())
+    }
+
+    /// X3DObject.toVRMLString / toXMLString / toJSONString of an SFNode or MFNode value (`ty`, `data` of the page): the
+    /// nodes in full, named by their own execution context, as the Script engine prints them. `kind` is `vrml`, `xml`
+    /// or `json`. A node that is not in the world is an error.
+    pub fn print_nodes(&self, kind: &str, ty: FieldType, data: &Data) -> Result<String, String> {
+        data::check_data(ty, data)?;
+
+        if let Some(n) = data::data_nodes(ty, data)
+            .into_iter()
+            .find(|&n| !self.node_exists(n))
+        {
+            return Err(format!("node {n} is not in the world"));
+        }
+
+        let scene = &self.rt().scene;
+        let value = data::data_value(ty, data);
+
+        match kind {
+            "vrml" => Ok(scene.node_value_to_vrml_string(&value)),
+            "xml" => Ok(scene.field_value_to_xml_string(&value)),
+            "json" => Ok(scene.field_value_to_json_string(&value)),
+            _ => Err(format!("unknown text form '{kind}'")),
+        }
+    }
+
+    /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty` named `name`: the data of the
+    /// value read from `text`. The nodes it makes belong to this world and are set up; `unit` converts the values. A
+    /// value that cannot be read is an error with X_ITE's message.
+    pub fn parse_field(
+        &mut self,
+        ty: FieldType,
+        text: &str,
+        xml: bool,
+        name: &str,
+        unit: Option<String>,
+    ) -> Result<Data, String> {
+        let ctx = Some(self.rt().scene.world);
+
+        match self
+            .rt_mut()
+            .field_from_string(ty, text, ctx, xml, unit, name)
+        {
+            Ok(Some(value)) => Ok(data::value_data(&value)),
+            Ok(None) => Err(format!("Couldn't read value for field '{name}'.")),
+            Err(Some(message)) => Err(message),
+            Err(None) => Err("bad field value".to_string()),
+        }
     }
 
     // --- field objects of the page (X_ITE's own field classes, mirrored with the runtime) -------------------------
