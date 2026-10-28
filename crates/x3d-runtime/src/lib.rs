@@ -1626,27 +1626,13 @@ impl Runtime {
         name: &str,
     ) -> Result<Option<FieldValue>, Option<String>> {
         let Some(ctx) = ctx else {
-            let (scene, result) =
-                x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+            let (result, warnings) = field_from_string_without_scene(ty, text, xml, name);
 
-            // Without an execution context, the parser of a node value fails on the first node statement it reads (NULL and
-            // [ ] read none): only a value that needed no node and no warning stands.
-            let node_type = matches!(
-                ty,
-                x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
-            ) && !xml;
-
-            if !scene.nodes.is_empty()
-                || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_)))))
-            {
-                return Err(None);
-            }
-
-            for w in scene.warnings {
+            for w in warnings {
                 self.log_warn(w);
             }
 
-            return result.map_err(|e| Some(e.message));
+            return result;
         };
 
         let first_new = self.scene.nodes.len() as NodeId;
@@ -1815,4 +1801,29 @@ impl Runtime {
         self.setup_node(n);
         Some(n)
     }
+}
+
+/// X3DField.fromVRMLString / fromXMLString (value) without a scene: the value and the warnings the parser printed. The
+/// parser of a node value has no execution context then and fails on the first node statement it reads (NULL and
+/// `[ ]` read none): only a value that needed no node and no warning stands (`Err(None)`).
+pub fn field_from_string_without_scene(
+    ty: x3d_fields::FieldType,
+    text: &str,
+    xml: bool,
+    name: &str,
+) -> (Result<Option<FieldValue>, Option<String>>, Vec<String>) {
+    let (scene, result) =
+        x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+    let node_type = matches!(
+        ty,
+        x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
+    ) && !xml;
+
+    if !scene.nodes.is_empty()
+        || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_)))))
+    {
+        return (Err(None), vec![]);
+    }
+
+    (result.map_err(|e| Some(e.message)), scene.warnings)
 }
