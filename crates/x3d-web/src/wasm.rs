@@ -1205,6 +1205,14 @@ fn field_list(fields: Vec<(u32, String, Data)>) -> js_sys::Array {
     list
 }
 
+/// X_ITE prints a parser warning when it is made, so a warning made before a failure comes first (`[1 2` for an MFVec3f:
+/// "Array length must be multiple of components size", then "Expected ']'.").
+fn log_parser_warnings(warnings: &[String]) {
+    for warning in warnings {
+        web_sys::console::warn_1(&warning.into());
+    }
+}
+
 /// X3DField.fromVRMLString / fromXMLString (value) without a scene, which needs no world: `[data, warning, ...]`. A value
 /// that needs a node is a `TypeError`, as in X_ITE (the parser has no execution context: `scene` is `undefined` or
 /// `null`, named by `receiver`).
@@ -1223,25 +1231,23 @@ pub fn parse_field_without_scene(
     let data = match result {
         Ok(Some(value)) => x3d_runtime::data::value_data(&value),
         Ok(None) => {
+            log_parser_warnings(&warnings);
             return Err(JsError::new(&format!(
                 "Couldn't read value for field '{name}'."
             )));
         }
         Err(x3d_runtime::NoSceneError::Message(message)) => {
-            // X_ITE prints a parser warning when it is made, so a warning made before the failure comes first
-            // (`[1 2` for an MFVec3f: "Array length must be multiple of components size", then "Expected ']'.").
-            for warning in &warnings {
-                web_sys::console::warn_1(&warning.into());
-            }
-
+            log_parser_warnings(&warnings);
             return Err(JsError::new(&message));
         }
         Err(x3d_runtime::NoSceneError::NeedsScene) => {
+            log_parser_warnings(&warnings);
             return Err(JsError::new(&format!(
                 "TypeError: Cannot read properties of {receiver} (reading 'createNode')"
             )));
         }
-        Err(x3d_runtime::NoSceneError::NeedsSceneForUse) => {
+        Err(x3d_runtime::NoSceneError::NeedsSceneBrowser) => {
+            log_parser_warnings(&warnings);
             return Err(JsError::new(&format!(
                 "TypeError: Cannot read properties of {receiver} (reading 'getBrowser')"
             )));

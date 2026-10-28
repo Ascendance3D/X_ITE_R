@@ -257,6 +257,20 @@
     "result": "NULL",
     "log": []
    },
+   "proto.MFNode.fromVRMLString.\"[ EXTERNPROTO P [] \\\"a.wrl\\\" ]\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'getBrowser')",
+    "log": []
+   },
+   "proto.MFNode.fromVRMLString.\"[ PROTO P [] { Group { } } ]\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'getBrowser')",
+    "log": []
+   },
+   "proto.MFNode.fromVRMLString.\"[ ROUTE a.b TO c.d Group { } ]\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
+    "log": [
+     "warning: Parser error at line 1. TypeError: Cannot read properties of undefined (reading 'getLocalNode')"
+    ]
+   },
    "xml.SFNode.fromXMLString.\"<Transform/>\"": {
     "result": "NULL",
     "log": []

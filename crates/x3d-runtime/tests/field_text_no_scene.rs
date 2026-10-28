@@ -131,7 +131,7 @@ fn a_node_value_fails_as_the_pinned_parser_does() {
 
     assert!(matches!(
         read(FieldType::SFNode, "USE X", false).0,
-        Err(NoSceneError::NeedsSceneForUse)
+        Err(NoSceneError::NeedsSceneBrowser)
     ));
 
     for (ty, text, message) in [
@@ -158,4 +158,32 @@ fn a_node_value_fails_as_the_pinned_parser_does() {
         read(FieldType::SFNode, "NULL NULL", false).0,
         Ok(Some(FieldValue::SFNode(None)))
     ));
+}
+
+#[test]
+fn a_proto_value_needs_the_browser_and_a_route_warns_first() {
+    // Pinned X_ITE 16.5.0, `fieldText.noScene` "proto.*": a PROTO or EXTERNPROTO reads `getBrowser` of the missing
+    // context, even when a node is inside it; a ROUTE warns (its `getLocalNode` fails) before the node throws.
+    for text in [
+        "[ EXTERNPROTO P [] \"a.wrl\" ]",
+        "[ PROTO P [] { Group { } } ]",
+    ] {
+        let (result, warnings) = read(FieldType::MFNode, text, false);
+
+        assert!(
+            matches!(result, Err(NoSceneError::NeedsSceneBrowser)),
+            "{text}"
+        );
+        assert!(warnings.is_empty(), "{text}");
+    }
+
+    let (result, warnings) = read(FieldType::MFNode, "[ ROUTE a.b TO c.d Group { } ]", false);
+
+    assert!(matches!(result, Err(NoSceneError::NeedsScene)));
+    assert_eq!(
+        warnings,
+        [
+            "Parser error at line 1. TypeError: Cannot read properties of undefined (reading 'getLocalNode')"
+        ]
+    );
 }
