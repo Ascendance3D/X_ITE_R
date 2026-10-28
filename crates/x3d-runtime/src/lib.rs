@@ -1807,7 +1807,8 @@ impl Runtime {
     }
 }
 
-/// Why [`field_from_string_without_scene`] read no value.
+/// Why [`field_from_string_without_scene`] read no value. The web adapter maps the first two to X_ITE's `TypeError`
+/// texts (`Cannot read properties of undefined|null (reading 'createNode'|'getBrowser')`) and the third to an `Error`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NoSceneError {
     /// The value needs a node (X_ITE: the parser has no execution context and throws a `TypeError` at `createNode`).
