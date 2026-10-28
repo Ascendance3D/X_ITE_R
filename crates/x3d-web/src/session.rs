@@ -453,6 +453,10 @@ impl Session {
     /// nodes in full, named by their own execution context, as the Script engine prints them. `kind` is `vrml`, `xml`
     /// or `json`. A node that is not in the world is an error.
     pub fn print_nodes(&self, kind: &str, ty: FieldType, data: &Data) -> Result<String, String> {
+        if !matches!(ty, FieldType::SFNode | FieldType::MFNode) {
+            return Err(format!("{} is not a node field type", ty.name()));
+        }
+
         data::check_data(ty, data)?;
 
         if let Some(n) = data::data_nodes(ty, data)

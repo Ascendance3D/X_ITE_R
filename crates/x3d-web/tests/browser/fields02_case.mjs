@@ -153,7 +153,46 @@ async function fromString (page)
    });
 }
 
-const cases = { text, fromString };
+// Values read from text with no scene (issue #137, PR #150 QA): what is thrown and what the parser printed first.
+async function noScene (page)
+{
+   await load (page);
+
+   const out = { };
+
+   for (const [ key, type, method, string ] of [
+      [ "vrml", "SFNode", "fromVRMLString", "NULL" ], [ "vrml", "SFNode", "fromVRMLString", "Transform { }" ],
+      [ "vrml", "SFNode", "fromVRMLString", "Bogus { }" ], [ "vrml", "SFNode", "fromVRMLString", "" ],
+      [ "vrml", "SFNode", "fromVRMLString", "}" ], [ "vrml", "MFNode", "fromVRMLString", "[ ]" ],
+      [ "vrml", "MFNode", "fromVRMLString", "[ Group { } ]" ], [ "vrml", "MFNode", "fromVRMLString", "Group { }" ],
+      [ "vrml", "MFNode", "fromVRMLString", "[ Bogus { } ]" ],
+      [ "xml", "SFNode", "fromXMLString", "<Transform/>" ], [ "xml", "SFNode", "fromXMLString", "" ],
+      [ "xml", "SFNode", "fromXMLString", "NULL" ], [ "xml", "SFNode", "fromXMLString", "<Bogus" ],
+      [ "xml", "MFNode", "fromXMLString", "<Group/><Transform/>" ], [ "xml", "MFNode", "fromXMLString", "" ],
+      [ "xml", "MFNode", "fromXMLString", "[ ]" ], [ "xml", "MFNode", "fromXMLString", "<Bogus" ],
+      [ "warn", "SFVec3f", "fromVRMLString", "1 2 x" ], [ "warn", "SFInt32", "fromVRMLString", "abc" ],
+      [ "warn", "SFBool", "fromXMLString", "x" ], [ "warn", "MFString", "fromXMLString", "a b" ],
+      [ "warn", "MFVec3f", "fromVRMLString", "1 2 3 4" ], [ "warn", "SFString", "fromVRMLString", "plain" ],
+   ])
+   {
+      page .log .length = 0;
+
+      const result = await page .evaluate (([ type, method, string ]) => attempt (() =>
+      {
+         const field = new window .X3D_NS [type] ();
+
+         field [method] (string);
+
+         return String (field);
+      }), [ type, method, string ]);
+
+      out [`${key}.${type}.${method}.${JSON .stringify (string)}`] = { result, log: [ ... page .log ] };
+   }
+
+   return out;
+}
+
+const cases = { text, fromString, noScene };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };

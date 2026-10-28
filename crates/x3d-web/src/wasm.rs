@@ -1227,8 +1227,8 @@ pub fn parse_field_without_scene(
                 "Couldn't read value for field '{name}'."
             )));
         }
-        Err(Some(message)) => return Err(JsError::new(&message)),
-        Err(None) => {
+        Err(x3d_runtime::NoSceneError::Message(message)) => return Err(JsError::new(&message)),
+        Err(x3d_runtime::NoSceneError::NeedsScene) => {
             return Err(JsError::new(&format!(
                 "TypeError: Cannot read properties of {receiver} (reading 'createNode')"
             )));
