@@ -1,0 +1,1086 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "fieldAPI.namespace": {
+   "classes": [
+    "MFBool",
+    "MFColor",
+    "MFColorRGBA",
+    "MFDouble",
+    "MFFloat",
+    "MFImage",
+    "MFInt32",
+    "MFMatrix3d",
+    "MFMatrix3f",
+    "MFMatrix4d",
+    "MFMatrix4f",
+    "MFNode",
+    "MFQuaternion",
+    "MFRotation",
+    "MFString",
+    "MFTime",
+    "MFVec2d",
+    "MFVec2f",
+    "MFVec3d",
+    "MFVec3f",
+    "MFVec4d",
+    "MFVec4f",
+    "SFBool",
+    "SFColor",
+    "SFColorRGBA",
+    "SFDouble",
+    "SFFloat",
+    "SFImage",
+    "SFInt32",
+    "SFMatrix3d",
+    "SFMatrix3f",
+    "SFMatrix4d",
+    "SFMatrix4f",
+    "SFNode",
+    "SFQuaternion",
+    "SFRotation",
+    "SFString",
+    "SFTime",
+    "SFVec2d",
+    "SFVec2f",
+    "SFVec3d",
+    "SFVec3f",
+    "SFVec4d",
+    "SFVec4f"
+   ],
+   "others": [
+    [
+     "X3DField",
+     "function"
+    ],
+    [
+     "X3DArrayField",
+     "function"
+    ],
+    [
+     "X3DFieldDefinition",
+     "function"
+    ],
+    [
+     "FieldDefinitionArray",
+     "function"
+    ],
+    [
+     "X3DConstants",
+     "object"
+    ]
+   ],
+   "defaults": [
+    [
+     "MFBool",
+     "MFBool",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFColor",
+     "MFColor",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFColorRGBA",
+     "MFColorRGBA",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFDouble",
+     "MFDouble",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFFloat",
+     "MFFloat",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFImage",
+     "MFImage",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFInt32",
+     "MFInt32",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFMatrix3d",
+     "MFMatrix3d",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFMatrix3f",
+     "MFMatrix3f",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFMatrix4d",
+     "MFMatrix4d",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFMatrix4f",
+     "MFMatrix4f",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFNode",
+     "MFNode",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFQuaternion",
+     "MFQuaternion",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFRotation",
+     "MFRotation",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFString",
+     "MFString",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFTime",
+     "MFTime",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec2d",
+     "MFVec2d",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec2f",
+     "MFVec2f",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec3d",
+     "MFVec3d",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec3f",
+     "MFVec3f",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec4d",
+     "MFVec4d",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "MFVec4f",
+     "MFVec4f",
+     "[ ]",
+     true,
+     true
+    ],
+    [
+     "SFBool",
+     "SFBool",
+     "FALSE",
+     true,
+     false
+    ],
+    [
+     "SFColor",
+     "SFColor",
+     "0 0 0",
+     true,
+     false
+    ],
+    [
+     "SFColorRGBA",
+     "SFColorRGBA",
+     "0 0 0 0",
+     true,
+     false
+    ],
+    [
+     "SFDouble",
+     "SFDouble",
+     "0",
+     true,
+     false
+    ],
+    [
+     "SFFloat",
+     "SFFloat",
+     "0",
+     true,
+     false
+    ],
+    [
+     "SFImage",
+     "SFImage",
+     "0 0 0\n",
+     true,
+     false
+    ],
+    [
+     "SFInt32",
+     "SFInt32",
+     "0",
+     true,
+     false
+    ],
+    [
+     "SFMatrix3d",
+     "SFMatrix3d",
+     "1 0 0 0 1 0 0 0 1",
+     true,
+     false
+    ],
+    [
+     "SFMatrix3f",
+     "SFMatrix3f",
+     "1 0 0 0 1 0 0 0 1",
+     true,
+     false
+    ],
+    [
+     "SFMatrix4d",
+     "SFMatrix4d",
+     "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1",
+     true,
+     false
+    ],
+    [
+     "SFMatrix4f",
+     "SFMatrix4f",
+     "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1",
+     true,
+     false
+    ],
+    [
+     "SFQuaternion",
+     "SFQuaternion",
+     "0 0 0 0",
+     true,
+     false
+    ],
+    [
+     "SFRotation",
+     "SFRotation",
+     "0 0 1 0",
+     true,
+     false
+    ],
+    [
+     "SFString",
+     "SFString",
+     "\"\"",
+     true,
+     false
+    ],
+    [
+     "SFTime",
+     "SFTime",
+     "-1",
+     true,
+     false
+    ],
+    [
+     "SFVec2d",
+     "SFVec2d",
+     "0 0",
+     true,
+     false
+    ],
+    [
+     "SFVec2f",
+     "SFVec2f",
+     "0 0",
+     true,
+     false
+    ],
+    [
+     "SFVec3d",
+     "SFVec3d",
+     "0 0 0",
+     true,
+     false
+    ],
+    [
+     "SFVec3f",
+     "SFVec3f",
+     "0 0 0",
+     true,
+     false
+    ],
+    [
+     "SFVec4d",
+     "SFVec4d",
+     "0 0 0 1",
+     true,
+     false
+    ],
+    [
+     "SFVec4f",
+     "SFVec4f",
+     "0 0 0 1",
+     true,
+     false
+    ]
+   ],
+   "constants": [
+    [
+     "initializeOnly",
+     1
+    ],
+    [
+     "inputOnly",
+     2
+    ],
+    [
+     "outputOnly",
+     4
+    ],
+    [
+     "inputOutput",
+     7
+    ],
+    [
+     "CONNECTION_ERROR",
+     1001
+    ],
+    [
+     "BROWSER_EVENT",
+     1002
+    ],
+    [
+     "INITIALIZED_EVENT",
+     1003
+    ],
+    [
+     "SHUTDOWN_EVENT",
+     1004
+    ],
+    [
+     "INITIALIZED_ERROR",
+     1005
+    ],
+    [
+     "NOT_STARTED_STATE",
+     1006
+    ],
+    [
+     "IN_PROGRESS_STATE",
+     1007
+    ],
+    [
+     "COMPLETE_STATE",
+     1008
+    ],
+    [
+     "FAILED_STATE",
+     1009
+    ],
+    [
+     "SFBool",
+     1010
+    ],
+    [
+     "SFColor",
+     1011
+    ],
+    [
+     "SFColorRGBA",
+     1012
+    ],
+    [
+     "SFDouble",
+     1013
+    ],
+    [
+     "SFFloat",
+     1014
+    ],
+    [
+     "SFImage",
+     1015
+    ],
+    [
+     "SFInt32",
+     1016
+    ],
+    [
+     "SFMatrix3d",
+     1017
+    ],
+    [
+     "SFMatrix3f",
+     1018
+    ],
+    [
+     "SFMatrix4d",
+     1019
+    ],
+    [
+     "SFMatrix4f",
+     1020
+    ],
+    [
+     "SFNode",
+     1021
+    ],
+    [
+     "SFQuaternion",
+     1022
+    ],
+    [
+     "SFRotation",
+     1023
+    ],
+    [
+     "SFString",
+     1024
+    ],
+    [
+     "SFTime",
+     1025
+    ],
+    [
+     "SFVec2d",
+     1026
+    ],
+    [
+     "SFVec2f",
+     1027
+    ],
+    [
+     "SFVec3d",
+     1028
+    ],
+    [
+     "SFVec3f",
+     1029
+    ],
+    [
+     "SFVec4d",
+     1030
+    ],
+    [
+     "SFVec4f",
+     1031
+    ],
+    [
+     "MFBool",
+     1033
+    ],
+    [
+     "MFColor",
+     1034
+    ],
+    [
+     "MFColorRGBA",
+     1035
+    ],
+    [
+     "MFDouble",
+     1036
+    ],
+    [
+     "MFFloat",
+     1037
+    ],
+    [
+     "MFImage",
+     1038
+    ],
+    [
+     "MFInt32",
+     1039
+    ],
+    [
+     "MFMatrix3d",
+     1040
+    ],
+    [
+     "MFMatrix3f",
+     1041
+    ],
+    [
+     "MFMatrix4d",
+     1042
+    ],
+    [
+     "MFMatrix4f",
+     1043
+    ],
+    [
+     "MFNode",
+     1044
+    ],
+    [
+     "MFQuaternion",
+     1045
+    ],
+    [
+     "MFRotation",
+     1046
+    ],
+    [
+     "MFString",
+     1047
+    ],
+    [
+     "MFTime",
+     1048
+    ],
+    [
+     "MFVec2d",
+     1049
+    ],
+    [
+     "MFVec2f",
+     1050
+    ],
+    [
+     "MFVec3d",
+     1051
+    ],
+    [
+     "MFVec3f",
+     1052
+    ],
+    [
+     "MFVec4d",
+     1053
+    ],
+    [
+     "MFVec4f",
+     1054
+    ],
+    [
+     "X3DChildNode",
+     1069
+    ],
+    [
+     "X3DNode",
+     1073
+    ],
+    [
+     "X3DBoundedObject",
+     1115
+    ],
+    [
+     "LOD",
+     1145
+    ]
+   ],
+   "constantCount": 264,
+   "access": [
+    1,
+    2,
+    4,
+    7
+   ],
+   "events": [
+    1001,
+    1002,
+    1003,
+    1004,
+    1005
+   ],
+   "nodeTypes": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "fieldAPI.values": {
+   "color": [
+    "1 0.5 0",
+    1,
+    0.5,
+    0,
+    "0.5235987755982988,1,1"
+   ],
+   "vec3": [
+    "5 7 9",
+    "-3 6 -3",
+    32,
+    3.741657386773941,
+    "0.2672612 0.5345225 0.8017837",
+    "2 4 6"
+   ],
+   "rotation": [
+    "0 1 0 1.5707963267949",
+    "2.220446e-16 0 -1",
+    "-0 -1 -0 1.5707963267949",
+    "0 1 0 0.785398163397448"
+   ],
+   "matrix": [
+    "4.440892e-16 0 -2 0 0 2 0 0 2 0 4.440892e-16 0 1 2 3 1",
+    "1.110223e-16 0 0.5 0 0 0.5 0 0 -0.5 0 1.110223e-16 0 1.5 -1 -0.5 1",
+    "3 4 1"
+   ],
+   "image": [
+    "2 1 3\n  0xff0000 0xff00",
+    2,
+    1,
+    3,
+    [
+     16711680,
+     65280
+    ]
+   ],
+   "mfvec3": [
+    "[\n  10 2 3,\n  4 5 6,\n  7 8 9\n]",
+    3,
+    "7 8 9"
+   ],
+   "mfstring": [
+    "[\n  \"a\",\n  \"b \\\"c\\\"\"\n]",
+    2,
+    "b \"c\""
+   ],
+   "mffloat": [
+    "[\n  1,\n  2\n]",
+    2
+   ],
+   "quaternion": "0 0 0 1",
+   "vec2d": "1.5 -2",
+   "vec4f": "1 2 3 4",
+   "matrix3": "1 0 0 0 1 0 0 0 1",
+   "equals": [
+    true,
+    true
+   ],
+   "copy": "0 1 0 1.5707963267949"
+  },
+  "fieldAPI.live": {
+   "before": {
+    "same": true,
+    "sameMF": true,
+    "colorType": "SFColor",
+    "pointType": "MFVec3f",
+    "pointLength": 3,
+    "point1": "1 0 0",
+    "afterSet": [
+     "1 0.4 0.9",
+     "[\n  0 0 0,\n  5 0 0,\n  0 1 0,\n  7 8 9\n]",
+     4
+    ]
+   },
+   "after": {
+    "held": [
+     "1 0.4 0.9",
+     "[\n  0 0 0,\n  5 0 0,\n  0 1 0,\n  7 8 9\n]"
+    ],
+    "routed": [
+     "1 0.4 0.9",
+     "[\n  0 0 0,\n  5 0 0,\n  0 1 0,\n  7 8 9\n]",
+     4
+    ]
+   },
+   "routed": {
+    "now": "0 0 0",
+    "later": "1 2 3"
+   }
+  },
+  "fieldAPI.assign": {
+   "result": {
+    "T.translation": true,
+    "T.rotation": true,
+    "T.scale": true,
+    "M.transparency": true,
+    "M.emissiveColor": true,
+    "V.description": true,
+    "V.jump": true,
+    "I.coordIndex": true,
+    "C2.point": true,
+    "S.appearance": true,
+    "G.children": true,
+    "P.image": true,
+    "E.n": true,
+    "E.v": true,
+    "E.out": false,
+    "T.bboxCenter": true
+   },
+   "read": {
+    "T": [
+     "1 2 3",
+     "0 0 1 1",
+     "2 2 2",
+     "1 1 1"
+    ],
+    "M": [
+     0.25,
+     "0.1 0.2 0.3"
+    ],
+    "V": [
+     "w \"x\"",
+     false
+    ],
+    "I": "[\n  0,\n  1,\n  -1\n]",
+    "C2": "1 1 1",
+    "S": "A2",
+    "G": [
+     "T2",
+     "T3"
+    ],
+    "P": "1 2 3\n  0xff0000\n  0xff",
+    "E": [
+     9,
+     "4 5 6",
+     ""
+    ],
+    "routed": "1 2 3"
+   }
+  },
+  "fieldAPI.callbacks": {
+   "calls": [
+    [
+     "T.a",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T.b",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T2.a",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T2.b",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T3.a",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T3.b",
+     "1 2 3",
+     "SFVec3f"
+    ],
+    [
+     "frame"
+    ],
+    [
+     "T.a",
+     "4 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T.b",
+     "4 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T2.a",
+     "4 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T2.b",
+     "4 2 3",
+     "SFVec3f"
+    ],
+    [
+     "T3.b",
+     "4 2 3",
+     "SFVec3f"
+    ]
+   ],
+   "counts": [
+    2,
+    1
+   ]
+  },
+  "fieldAPI.definitions": {
+   "material": [
+    [
+     "metadata",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "ambientIntensity",
+     7,
+     1014,
+     "0.2"
+    ],
+    [
+     "ambientTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "ambientTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "diffuseColor",
+     7,
+     1011,
+     "0.8 0.8 0.8"
+    ],
+    [
+     "diffuseTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "diffuseTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "specularColor",
+     7,
+     1011,
+     "0 0 0"
+    ],
+    [
+     "specularTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "specularTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "emissiveColor",
+     7,
+     1011,
+     "0 0 0"
+    ],
+    [
+     "emissiveTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "emissiveTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "shininess",
+     7,
+     1014,
+     "0.2"
+    ],
+    [
+     "shininessTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "shininessTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "occlusionStrength",
+     7,
+     1014,
+     "1"
+    ],
+    [
+     "occlusionTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "occlusionTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "normalScale",
+     7,
+     1014,
+     "1"
+    ],
+    [
+     "normalTextureMapping",
+     7,
+     1024,
+     ""
+    ],
+    [
+     "normalTexture",
+     7,
+     1021,
+     "null"
+    ],
+    [
+     "transparency",
+     7,
+     1014,
+     "0"
+    ]
+   ],
+   "script": [
+    [
+     "n",
+     1,
+     1016,
+     "5"
+    ],
+    [
+     "v",
+     1,
+     1029,
+     "1 2 3"
+    ],
+    [
+     "go",
+     2,
+     1010,
+     "false"
+    ],
+    [
+     "out",
+     4,
+     1024,
+     ""
+    ]
+   ],
+   "isArray": true,
+   "get": [
+    true,
+    "0.8 0.8 0.8",
+    "undefined"
+   ],
+   "keys": [
+    "metadata",
+    "ambientIntensity",
+    "ambientTextureMapping",
+    "ambientTexture",
+    "diffuseColor",
+    "diffuseTextureMapping"
+   ],
+   "has": [
+    true,
+    false
+   ],
+   "getField": [
+    "diffuseColor",
+    7,
+    "diffuseColor"
+   ],
+   "unknown": "Unknown field 'nothing' in node class Material."
+  },
+  "fieldAPI.nodes": {
+   "roots": [
+    true,
+    "MFNode",
+    11,
+    [
+     "T",
+     "T2",
+     "T3",
+     "M2",
+     "C2",
+     "A2",
+     "G",
+     "P",
+     "I",
+     "V",
+     "E"
+    ]
+   ],
+   "children": [
+    true,
+    1,
+    "Shape"
+   ],
+   "sfnode": [
+    true,
+    "A",
+    "SFColor"
+   ],
+   "same": true,
+   "nodeType": true,
+   "typeName": [
+    "SFNode",
+    "Transform",
+    "T"
+   ]
+  }
+ }
+}

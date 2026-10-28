@@ -16,6 +16,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
+use x3d_runtime::data::Data;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -741,6 +742,103 @@ impl WebBrowser {
         Ok(vec![f.type_name.to_string(), f.access.to_string(), f.value])
     }
 
+    // --- field objects of the page (web/x_ite_r.mjs: X_ITE's own field classes) ----------------------------------
+
+    /// `[typeName, accessType, data]` of a node field (see [`Session::field_data`]); the page holds an object of it.
+    #[wasm_bindgen(js_name = fieldData)]
+    pub fn field_data(&mut self, id: u32, node: u32, name: &str) -> Result<js_sys::Array, JsError> {
+        let (type_name, access, data) = self
+            .session_mut(id)?
+            .field_data(node, name)
+            .map_err(|e| JsError::new(&e))?;
+
+        Ok(js_sys::Array::of3(
+            &type_name.into(),
+            &f64::from(access).into(),
+            &data_js(&data),
+        ))
+    }
+
+    /// X3DField.addEvent of the page's object of a node field (see [`Session::set_field_data`]).
+    #[wasm_bindgen(js_name = setFieldData)]
+    pub fn set_field_data(
+        &mut self,
+        id: u32,
+        node: u32,
+        name: &str,
+        data: JsValue,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_field_data(node, name, &js_data(&data))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// The changed fields the page holds objects of, as node, name, data, ... (see [`Session::take_field_changes`]).
+    #[wasm_bindgen(js_name = takeFieldChanges)]
+    pub fn take_field_changes(&mut self, id: u32) -> js_sys::Array {
+        match self.worlds.get_mut(&id) {
+            Some(w) => field_list(w.session.take_field_changes()),
+            None => js_sys::Array::new(),
+        }
+    }
+
+    /// X3DField.addFieldCallback / removeFieldCallback: whether the page gets the events of the field.
+    #[wasm_bindgen(js_name = observeField)]
+    pub fn observe_field(
+        &mut self,
+        id: u32,
+        node: u32,
+        name: &str,
+        on: bool,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .observe_field(node, name, on)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// The events of the observed fields, as node, name, data, ... in event order (see
+    /// [`Session::take_field_events`]).
+    #[wasm_bindgen(js_name = takeFieldEvents)]
+    pub fn take_field_events(&mut self, id: u32) -> js_sys::Array {
+        match self.worlds.get_mut(&id) {
+            Some(w) => field_list(w.session.take_field_events()),
+            None => js_sys::Array::new(),
+        }
+    }
+
+    /// The nodes the runtime released since the last call (see [`Session::take_released_nodes`]).
+    #[wasm_bindgen(js_name = takeReleasedNodes)]
+    pub fn take_released_nodes(&mut self, id: u32) -> Vec<u32> {
+        match self.worlds.get_mut(&id) {
+            Some(w) => w.session.take_released_nodes(),
+            None => vec![],
+        }
+    }
+
+    /// X3DNode.getFieldDefinitions: `[name, accessType, typeName, default]` each; `default` is undefined for a
+    /// user-defined field.
+    #[wasm_bindgen(js_name = fieldDefinitions)]
+    pub fn field_definitions(&self, id: u32, node: u32) -> js_sys::Array {
+        let Some(w) = self.worlds.get(&id) else {
+            return js_sys::Array::new();
+        };
+
+        w.session
+            .field_definitions(node)
+            .into_iter()
+            .map(|d| {
+                let entry = js_sys::Array::of3(
+                    &d.name.as_str().into(),
+                    &f64::from(d.access).into(),
+                    &d.type_name.into(),
+                );
+
+                entry.push(&d.default.as_ref().map_or(JsValue::UNDEFINED, data_js));
+                JsValue::from(entry)
+            })
+            .collect()
+    }
+
     /// Set the field from its VRML encoding (see [`Session::set_field`]).
     #[wasm_bindgen(js_name = setField)]
     pub fn set_field(&mut self, id: u32, node: u32, name: &str, vrml: &str) -> Result<(), JsError> {
@@ -1028,4 +1126,42 @@ impl WebBrowser {
             .get_mut(&id)
             .map_or(vec![], |w| w.session.take_log())
     }
+}
+
+// --- field data (x3d_runtime::data) ---------------------------------------------------------------------------------
+
+fn data_js(d: &Data) -> JsValue {
+    match d {
+        Data::Null => JsValue::NULL,
+        Data::Bool(b) => JsValue::from_bool(*b),
+        Data::Number(x) => JsValue::from_f64(*x),
+        Data::String(s) => JsValue::from_str(s),
+        Data::List(items) => items.iter().map(data_js).collect::<js_sys::Array>().into(),
+    }
+}
+
+fn js_data(v: &JsValue) -> Data {
+    if let Some(b) = v.as_bool() {
+        Data::Bool(b)
+    } else if let Some(x) = v.as_f64() {
+        Data::Number(x)
+    } else if let Some(s) = v.as_string() {
+        Data::String(s)
+    } else if js_sys::Array::is_array(v) {
+        Data::List(js_sys::Array::from(v).iter().map(|x| js_data(&x)).collect())
+    } else {
+        Data::Null
+    }
+}
+
+fn field_list(fields: Vec<(u32, String, Data)>) -> js_sys::Array {
+    let list = js_sys::Array::new();
+
+    for (node, name, data) in fields {
+        list.push(&f64::from(node).into());
+        list.push(&name.into());
+        list.push(&data_js(&data));
+    }
+
+    list
 }
