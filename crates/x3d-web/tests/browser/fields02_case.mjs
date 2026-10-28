@@ -173,6 +173,8 @@ async function noScene (page)
       [ "warn", "SFVec3f", "fromVRMLString", "1 2 x" ], [ "warn", "SFInt32", "fromVRMLString", "abc" ],
       [ "warn", "SFBool", "fromXMLString", "x" ], [ "warn", "MFString", "fromXMLString", "a b" ],
       [ "warn", "MFVec3f", "fromVRMLString", "1 2 3 4" ], [ "warn", "SFString", "fromVRMLString", "plain" ],
+      [ "warn", "MFVec3f", "fromVRMLString", "[1 2" ], [ "warn", "MFColor", "fromVRMLString", "[1 2" ],
+      [ "warn", "MFVec3f", "fromVRMLString", "[1 2 3 4" ],
    ])
    {
       page .log .length = 0;

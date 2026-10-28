@@ -274,6 +274,24 @@
    "warn.SFString.fromVRMLString.\"plain\"": {
     "result": "Error: Couldn't read value for field ''.",
     "log": []
+   },
+   "warn.MFVec3f.fromVRMLString.\"[1 2\"": {
+    "result": "Error: Expected ']'.",
+    "log": [
+     "warning: Array length must be multiple of components size, which is 3."
+    ]
+   },
+   "warn.MFColor.fromVRMLString.\"[1 2\"": {
+    "result": "Error: Expected ']'.",
+    "log": [
+     "warning: Array length must be multiple of components size, which is 3."
+    ]
+   },
+   "warn.MFVec3f.fromVRMLString.\"[1 2 3 4\"": {
+    "result": "Error: Expected ']'.",
+    "log": [
+     "warning: Array length must be multiple of components size, which is 3."
+    ]
    }
   }
  }
