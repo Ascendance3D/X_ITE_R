@@ -27,7 +27,7 @@ const wasm = init ();
 // * the field callbacks (addFieldCallback) run after each frame, once per event, in event order, with the value the
 //   event delivered (takeFieldEvents).
 //
-// Values cross as plain data (x3d-fields data.rs, the shape of the Script prelude's bridge.js).
+// Values cross as plain data (x3d-runtime data.rs, the shape of the Script prelude's bridge.js).
 
 // X3DConstants: X_ITE's, with the node types of the Core profile (oracle/x_ite-node-types.json). The node types of
 // other components are numbered after them when a node of one is first seen (X_ITE numbers them as the components

@@ -9,9 +9,9 @@
 //! asynchronous [`Fetcher`] parks a load until then). Only a loaded session goes live ([`Session::go_live`],
 //! X3DBrowser.replaceWorld), so the current world stays while the next one loads.
 
-use x3d_fields::data::{self, Data};
 use x3d_fields::{FieldValue, NodeId, access};
 use x3d_render::traverse::Frame;
+use x3d_runtime::data::{self, Data};
 use x3d_runtime::{Fetcher, Runtime};
 use x3d_viewer::nav::Touches;
 use x3d_viewer::viewer::{UiEvent, Viewer3d};
@@ -449,7 +449,7 @@ impl Session {
 
     // --- field objects of the page (X_ITE's own field classes, mirrored with the runtime) -------------------------
 
-    /// The type, access type and data (x3d_fields::data) of a node field. The page holds an object of the field from
+    /// The type, access type and data (x3d_runtime::data) of a node field. The page holds an object of the field from
     /// now on: [`Session::take_field_changes`] reports its changes.
     pub fn field_data(
         &mut self,

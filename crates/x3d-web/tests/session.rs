@@ -1,7 +1,7 @@
 //! The platform-neutral part of the browser module: the world the page loads is parsed and owned by the Rust runtime,
 //! its fields read and set like through X_ITE's SFNode, and a world that does not parse is an error.
 
-use x3d_fields::data::Data;
+use x3d_runtime::data::Data;
 use x3d_web::session::{FieldInfo, Session};
 
 const BOX: &[u8] = include_bytes!("../web/example/box.wrl");
