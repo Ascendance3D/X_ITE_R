@@ -18,7 +18,7 @@ export const SHARDS = {
    phone:  [ "runtime02_phone.test.mjs" ],
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs" ],
    input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs" ],
-   cases:  [ "api.test.mjs", "runtime02.test.mjs", "fallback01.test.mjs", "dataurl01.test.mjs", "degenerate01.test.mjs", "gltfworld01.test.mjs", "gltfworld02.test.mjs", "fields01.test.mjs", "fields02.test.mjs" ],
+   cases:  [ "api.test.mjs", "runtime02.test.mjs", "fallback01.test.mjs", "dataurl01.test.mjs", "degenerate01.test.mjs", "gltfworld01.test.mjs", "gltfworld02.test.mjs", "fields01.test.mjs", "fields02.test.mjs", "fields04.test.mjs" ],
 };
 
 export function check (shards = SHARDS, files = readdirSync (DIR) .filter (f => f .endsWith (".test.mjs")))
