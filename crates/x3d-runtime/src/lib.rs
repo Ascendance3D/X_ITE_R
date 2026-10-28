@@ -1821,7 +1821,8 @@ pub enum NoSceneError {
 /// `[ ]` read none), so only a value that needed no node and no warning stands ([`NoSceneError::NeedsScene`]); text with
 /// no node statement at all reads nothing (`Ok(None)`: X_ITE's "Couldn't read value" error). The XML
 /// parser reads no node at all: its `SFNode` is NULL and its `MFNode` is `[ ]` for any text, as in X_ITE 16.5.0.
-/// The warnings come with every result, but the pinned parser prints none before a failure: a failed value has none.
+/// The warnings come with every result. In the pinned X_ITE 16.5.0 parser, the cases compared so far print no warning
+/// before a failure. This function does not enforce that: a non-node failure returns the warnings the parser made.
 pub fn field_from_string_without_scene(
     ty: x3d_fields::FieldType,
     text: &str,
