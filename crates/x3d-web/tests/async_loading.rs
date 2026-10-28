@@ -68,6 +68,18 @@ impl Fetcher for TestFetcher {
         }
     }
 
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str()).err();
+        }
+        let net = self.0.borrow();
+        let key = without_fragment(url);
+        match net.responses.get(&key) {
+            Some(Some(Err(e))) => Some(e.clone()),
+            _ => None,
+        }
+    }
+
     fn is_async(&self) -> bool {
         true
     }
@@ -2247,6 +2259,27 @@ fn gltf_world_buffers_that_fail_log_in_the_order_they_fail() {
         assert!(!rt.follow_buffers());
         assert_eq!(page_log(&mut rt), [line(second)], "{buffers:?}");
     }
+}
+
+/// issue 129: follow_buffers does not read successful buffers (fetch_error is used).
+#[test]
+fn follow_buffers_does_not_fetch_successful_body() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf")];
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["held.bin"])));
+    page_step(&mut rt, &urls); // The world's fallback chain requests the buffer.
+
+    let previous_reads = net.read().len();
+    net.respond(&w("models/held.bin"), Ok(&triangle())); // resolve it.
+    assert!(!rt.follow_buffers(), "all buffers followed");
+    // It should not fetch it again in follow_buffers.
+    assert_eq!(
+        net.read().len(),
+        previous_reads,
+        "follow_buffers read successful payload"
+    );
 }
 
 /// gltfWorldHeld.fallback: the next candidate is requested while the failed candidate's other buffer is in flight,
