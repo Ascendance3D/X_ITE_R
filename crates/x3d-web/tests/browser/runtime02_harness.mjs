@@ -22,6 +22,7 @@ import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
+import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -51,6 +52,7 @@ const SUITES = {
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
+   fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -405,6 +407,7 @@ const GROUP_FILES = {
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
+   nodeOwnership: "fields03.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
