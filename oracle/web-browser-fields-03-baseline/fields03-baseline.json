@@ -19,7 +19,8 @@
      "Transform:OT"
     ],
     "other",
-    "other"
+    "other",
+    "Collision { proxy DEF OT Transform { } }"
    ],
    "s03": [
     [
@@ -31,7 +32,8 @@
      "page",
      "other",
      "page"
-    ]
+    ],
+    "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }"
    ],
    "s04": [
     2,
@@ -68,12 +70,6 @@
      "Box"
     ]
    ],
-   "s09": [
-    true,
-    "Transform",
-    "page",
-    "1 2 3"
-   ],
    "s10": [
     "TypeError: node?.getType is not a function",
     "TypeError: node?.getType is not a function",
@@ -96,6 +92,12 @@
    "s12": [
     "Group { children [ DEF OT Transform { } Transform { } ] }",
     "<Group> <Transform DEF='OT'/> <Transform/> </Group>"
+   ],
+   "s09": [
+    true,
+    "Transform",
+    "page",
+    "1 2 3"
    ],
    "log": []
   }
