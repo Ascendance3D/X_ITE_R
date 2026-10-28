@@ -112,3 +112,50 @@ fn a_warning_made_before_a_failure_is_returned_with_it() {
         ["Array length must be multiple of components size, which is 3."]
     );
 }
+
+#[test]
+fn a_node_value_fails_as_the_pinned_parser_does() {
+    // Pinned X_ITE 16.5.0, `fieldText.noScene` "bad.*": the first node statement asks the missing context; a parser
+    // error before any node statement is the parser's own.
+    for (ty, text) in [
+        (FieldType::SFNode, "abc"),
+        (FieldType::SFNode, "Transform {"),
+        (FieldType::MFNode, "abc"),
+        (FieldType::MFNode, "[ Group { }"),
+    ] {
+        assert!(
+            matches!(read(ty, text, false).0, Err(NoSceneError::NeedsScene)),
+            "{text}"
+        );
+    }
+
+    assert!(matches!(
+        read(FieldType::SFNode, "USE X", false).0,
+        Err(NoSceneError::NeedsSceneForUse)
+    ));
+
+    for (ty, text, message) in [
+        (FieldType::MFNode, "[ 1 ]", "Expected ']'."),
+        (FieldType::MFNode, "[", "Expected ']'."),
+    ] {
+        let (result, warnings) = read(ty, text, false);
+
+        assert!(
+            matches!(&result, Err(NoSceneError::Message(m)) if m == message),
+            "{text}: {result:?}"
+        );
+        assert!(warnings.is_empty(), "{text}");
+    }
+
+    for text in ["DEF X", "1"] {
+        assert!(
+            matches!(read(FieldType::SFNode, text, false).0, Ok(None)),
+            "{text}"
+        );
+    }
+
+    assert!(matches!(
+        read(FieldType::SFNode, "NULL NULL", false).0,
+        Ok(Some(FieldValue::SFNode(None)))
+    ));
+}

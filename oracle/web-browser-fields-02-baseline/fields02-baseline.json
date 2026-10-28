@@ -217,6 +217,46 @@
     "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
     "log": []
    },
+   "bad.SFNode.fromVRMLString.\"abc\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
+    "log": []
+   },
+   "bad.SFNode.fromVRMLString.\"Transform {\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
+    "log": []
+   },
+   "bad.SFNode.fromVRMLString.\"USE X\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'getBrowser')",
+    "log": []
+   },
+   "bad.SFNode.fromVRMLString.\"DEF X\"": {
+    "result": "Error: Couldn't read value for field ''.",
+    "log": []
+   },
+   "bad.SFNode.fromVRMLString.\"1\"": {
+    "result": "Error: Couldn't read value for field ''.",
+    "log": []
+   },
+   "bad.MFNode.fromVRMLString.\"abc\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
+    "log": []
+   },
+   "bad.MFNode.fromVRMLString.\"[ 1 ]\"": {
+    "result": "Error: Expected ']'.",
+    "log": []
+   },
+   "bad.MFNode.fromVRMLString.\"[ Group { }\"": {
+    "result": "TypeError: Cannot read properties of undefined (reading 'createNode')",
+    "log": []
+   },
+   "bad.MFNode.fromVRMLString.\"[\"": {
+    "result": "Error: Expected ']'.",
+    "log": []
+   },
+   "bad.SFNode.fromVRMLString.\"NULL NULL\"": {
+    "result": "NULL",
+    "log": []
+   },
    "xml.SFNode.fromXMLString.\"<Transform/>\"": {
     "result": "NULL",
     "log": []

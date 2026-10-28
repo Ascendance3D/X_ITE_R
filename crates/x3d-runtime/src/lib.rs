@@ -1633,7 +1633,7 @@ impl Runtime {
             }
 
             return match result {
-                Err(NoSceneError::NeedsScene) => Err(None),
+                Err(NoSceneError::NeedsScene | NoSceneError::NeedsSceneForUse) => Err(None),
                 Err(NoSceneError::Message(message)) => Err(Some(message)),
                 Ok(value) => Ok(value),
             };
@@ -1810,8 +1810,10 @@ impl Runtime {
 /// Why [`field_from_string_without_scene`] read no value.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NoSceneError {
-    /// The value needs a node (X_ITE: the parser has no execution context and throws a `TypeError`).
+    /// The value needs a node (X_ITE: the parser has no execution context and throws a `TypeError` at `createNode`).
     NeedsScene,
+    /// The value names a node with USE (X_ITE: the same `TypeError`, at `getBrowser`).
+    NeedsSceneForUse,
     /// The parser's own error (X_ITE: an `Error` with this message).
     Message(String),
 }
@@ -1829,15 +1831,21 @@ pub fn field_from_string_without_scene(
     xml: bool,
     name: &str,
 ) -> (Result<Option<FieldValue>, NoSceneError>, Vec<String>) {
-    let (scene, result) =
-        x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+    let (scene, result, used) =
+        x3d_parse::Parser::parse_field_probe(Scene::new(""), 0, ty, text, xml, None, name);
     // The XML parser of X_ITE sets NULL or `[ ]` and never makes a node, so it never needs a scene.
     let node_type = matches!(
         ty,
         x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
     ) && !xml;
 
-    if !scene.nodes.is_empty() || (node_type && (!scene.warnings.is_empty() || result.is_err())) {
+    // The first node statement fails, whatever the text after it holds. A parser error before any node statement
+    // (`[ 1 ]`: "Expected ']'.") is the parser's own.
+    if node_type && used.use_reference {
+        return (Err(NoSceneError::NeedsSceneForUse), vec![]);
+    }
+
+    if node_type && used.node_type {
         return (Err(NoSceneError::NeedsScene), vec![]);
     }
 
