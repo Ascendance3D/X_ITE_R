@@ -22,6 +22,7 @@ import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
+import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -51,6 +52,7 @@ const SUITES = {
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
+   fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -64,6 +66,19 @@ const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ n
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
 // listed in web/API.md.
 const KNOWN_DIFFERENCES = {
+   "fieldCascade.nested": [
+      // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
+      // (2 0 0) overwrites the nested value (9 9 9), and the nested event comes in the same cascade with the value D then holds.
+      // X_ITE_R delivers the callbacks after the frame: the nested set goes in the next frame and its value stays.
+      [ [ "final", 0 ], "2 0 0", "9 9 9" ],
+      [ [ "seq", 5 ], "D|2 0 0|later|0", "D|9 9 9|later|1" ],
+   ],
+   "fieldCascade.thrown": [
+      // After a callback throws, X_ITE 16.5.0 delivers no more events (the page's frame loop stops with the error, nothing
+      // is reported to the console here). X_ITE_R reports the error and goes on with the other callbacks and later events.
+      [ [ "seq" ], ["A|5 0 0|later|0", "B|5 0 0|later|0"], ["A|5 0 0|later|0", "B|5 0 0|later|0", "D|5 0 0|later|0", "C|5 0 0|later|0", "A|6 0 0|later|3", "B|6 0 0|later|3", "D|6 0 0|later|3", "C|6 0 0|later|3"] ],
+      [ [ "logs" ], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error", "error: Error: boom", "error: Error: boom"] ],
+   ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
       [ [ "touchCancelled", "LeftTouch.isActive" ], true, false ],
@@ -405,6 +420,7 @@ const GROUP_FILES = {
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
+   fieldCascade: "fields04.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
