@@ -50,7 +50,7 @@ function pageAttempt ()
 }
 
 
-// Node ownership and cross-scene assignment (issue #137 part C): twelve scenarios on what pinned X_ITE does when a node
+// Node ownership and cross-scene assignment (issue #137 part C): eleven compared scenarios, plus one deferred cross-scene ROUTE scenario (s06, issue #135), on what pinned X_ITE does when a node
 // moves between fields and scenes. Every value is a string or a plain list so both engines compare equal.
 async function nodeOwnership (page)
 {
@@ -110,7 +110,7 @@ async function nodeOwnership (page)
          // 5 A reference that stays in another scene: its own scene still lists it, its parent is unchanged.
          out .s05 = attempt (() => [ names (other .rootNodes), names (OG .children), owner (OG .children [0]) ]);
 
-         // 6 Routes across scenes (addRoute is the scene API of issue #135) are recorded in the PR text, not compared here.
+         // 6 Routes across scenes (addRoute is the scene API of issue #135) are deferred under #135: s06 is not compared here.
 
          // 7 Removal and reuse: the same node removed from one MFNode and placed in another.
          out .s07 = attempt (() =>
