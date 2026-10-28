@@ -1632,7 +1632,11 @@ impl Runtime {
                 self.log_warn(w);
             }
 
-            return result;
+            return match result {
+                Err(NoSceneError::NeedsScene) => Err(None),
+                Err(NoSceneError::Message(message)) => Err(Some(message)),
+                Ok(value) => Ok(value),
+            };
         };
 
         let first_new = self.scene.nodes.len() as NodeId;
@@ -1803,27 +1807,41 @@ impl Runtime {
     }
 }
 
+/// Why [`field_from_string_without_scene`] read no value.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum NoSceneError {
+    /// The value needs a node (X_ITE: the parser has no execution context and throws a `TypeError`).
+    NeedsScene,
+    /// The parser's own error (X_ITE: an `Error` with this message).
+    Message(String),
+}
+
 /// X3DField.fromVRMLString / fromXMLString (value) without a scene: the value and the warnings the parser printed. The
-/// parser of a node value has no execution context then and fails on the first node statement it reads (NULL and
-/// `[ ]` read none): only a value that needed no node and no warning stands (`Err(None)`).
+/// VRML parser of a node value has no execution context then and fails on the first node statement it reads (NULL and
+/// `[ ]` read none), so only a value that needed no node and no warning stands ([`NoSceneError::NeedsScene`]); text with
+/// no node statement at all reads nothing (`Ok(None)`: X_ITE's "Couldn't read value" error). The XML
+/// parser reads no node at all: its `SFNode` is NULL and its `MFNode` is `[ ]` for any text, as in X_ITE 16.5.0.
+/// The warnings come with every result, but the pinned parser prints none before a failure: a failed value has none.
 pub fn field_from_string_without_scene(
     ty: x3d_fields::FieldType,
     text: &str,
     xml: bool,
     name: &str,
-) -> (Result<Option<FieldValue>, Option<String>>, Vec<String>) {
+) -> (Result<Option<FieldValue>, NoSceneError>, Vec<String>) {
     let (scene, result) =
         x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+    // The XML parser of X_ITE sets NULL or `[ ]` and never makes a node, so it never needs a scene.
     let node_type = matches!(
         ty,
         x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
     ) && !xml;
 
-    if !scene.nodes.is_empty()
-        || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_)))))
-    {
-        return (Err(None), vec![]);
+    if !scene.nodes.is_empty() || (node_type && (!scene.warnings.is_empty() || result.is_err())) {
+        return (Err(NoSceneError::NeedsScene), vec![]);
     }
 
-    (result.map_err(|e| Some(e.message)), scene.warnings)
+    (
+        result.map_err(|e| NoSceneError::Message(e.message)),
+        scene.warnings,
+    )
 }

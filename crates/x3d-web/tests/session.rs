@@ -568,3 +568,19 @@ fn values_read_from_text_make_their_nodes_in_the_world() {
     );
     assert!(read(&mut s, x3d_fields::FieldType::SFNode, "<Group/>", true).is_ok());
 }
+
+#[test]
+fn only_node_field_types_are_printed() {
+    let s = load(BOX).unwrap();
+    let node = Data::Number(f64::from(s.named_node("BoxMaterial").unwrap()));
+
+    for ty in [
+        x3d_fields::FieldType::SFString,
+        x3d_fields::FieldType::SFInt32,
+        x3d_fields::FieldType::MFFloat,
+    ] {
+        let error = s.print_nodes("vrml", ty, &node).unwrap_err();
+
+        assert!(error.contains("not a node field type"), "{error}");
+    }
+}
