@@ -14,6 +14,9 @@ pub trait Fetcher {
     /// `fetch (url)` + `checkResponse`: the body bytes, or `String (error)` of the rejection.
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String>;
 
+    /// Returns the error message of a failed request without copying or consuming
+    /// a successful body. The default calls `fetch()`.
+    /// Must not copy or consume the body. The default calls `fetch`.
     fn fetch_error(&self, url: &url::Url) -> Option<String> {
         self.fetch(url).err()
     }

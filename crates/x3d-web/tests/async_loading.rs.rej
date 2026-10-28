@@ -1,0 +1,23 @@
+--- crates/x3d-web/tests/async_loading.rs
++++ crates/x3d-web/tests/async_loading.rs
+@@ -2277,6 +2277,20 @@
+     assert!(!rt.follow_buffers(), "all buffers followed");
+     // It should not fetch it again in follow_buffers.
+     assert_eq!(net.read().len(), previous_reads, "follow_buffers read successful payload");
+ }
+
++/// issue 129: follow_buffers properly fetches the error for a failed buffer load.
++#[test]
++fn follow_buffers_fetches_error_for_failed_body() {
++    let net = TestFetcher::default();
++    let mut rt = page_loader(&net);
++    let urls = vec![w("models/a.gltf")];
++    page_step(&mut rt, &urls);
++    net.respond(&w("models/a.gltf"), Ok(&gltf(&["gone.bin"])));
++    page_step(&mut rt, &urls);
++    net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
++    assert!(!rt.follow_buffers(), "failed buffer followed");
++    assert_eq!(page_log(&mut rt), [format!("error: Couldn't load URL '{}'. Error: Not Found", w("models/gone.bin"))]);
++}
++
+ /// gltfWorldHeld.fallback: the next candidate is requested while the failed candidate's other buffer is in flight,
