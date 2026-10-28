@@ -76,8 +76,22 @@ describe ("wasm exports, called directly", () =>
                         none ("SFNode", "Transform { }", false), none ("SFNode", "Transform { }", false, "null"),
                         none ("SFNode", "", false), none ("SFVec3f", "1 2 x", false), none ("SFBogus", "1", false) ];
 
+            // A warning made before a failure still reaches the console, first (pinned X_ITE: warning, then Error).
+            const warned = [ ];
+            const warn   = console .warn;
+
+            console .warn = (... args) => warned .push (args .join (" "));
+
+            try { r .noneWarnFail = [ none ("MFVec3f", "[1 2", false), none ("MFColor", "[1 2", false) ]; }
+            finally { console .warn = warn; }
+
+            r .noneWarned = warned;
+
             return r;
          });
+
+         assert .deepEqual (out .noneWarnFail, [ "Error: Expected ']'.", "Error: Expected ']'." ]);
+         assert .deepEqual (out .noneWarned, Array (2) .fill ("Array length must be multiple of components size, which is 3."));
 
          assert .ok (out .print [0] .startsWith ("DEF T Transf") && out .print [1] .startsWith ("<Transform ") && out .print [2] .startsWith ("{ \"Transfor"), JSON .stringify (out .print));
          assert .ok (out .printMF .startsWith ("DEF T Transf"), out .printMF);

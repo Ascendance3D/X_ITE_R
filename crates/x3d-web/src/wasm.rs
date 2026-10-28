@@ -1227,7 +1227,15 @@ pub fn parse_field_without_scene(
                 "Couldn't read value for field '{name}'."
             )));
         }
-        Err(x3d_runtime::NoSceneError::Message(message)) => return Err(JsError::new(&message)),
+        Err(x3d_runtime::NoSceneError::Message(message)) => {
+            // X_ITE prints a parser warning when it is made, so a warning made before the failure comes first
+            // (`[1 2` for an MFVec3f: "Array length must be multiple of components size", then "Expected ']'.").
+            for warning in &warnings {
+                web_sys::console::warn_1(&warning.into());
+            }
+
+            return Err(JsError::new(&message));
+        }
         Err(x3d_runtime::NoSceneError::NeedsScene) => {
             return Err(JsError::new(&format!(
                 "TypeError: Cannot read properties of {receiver} (reading 'createNode')"

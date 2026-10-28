@@ -97,3 +97,18 @@ fn the_warnings_of_a_value_that_stands_are_returned() {
     assert_eq!(warnings.len(), 1);
     assert!(warnings[0].contains("is an MFString array and can have multiple values"));
 }
+
+#[test]
+fn a_warning_made_before_a_failure_is_returned_with_it() {
+    // Pinned X_ITE 16.5.0 (`fieldText.noScene`): the typed array warns, then the closing bracket is missing.
+    let (result, warnings) = read(FieldType::MFVec3f, "[1 2", false);
+
+    assert!(
+        matches!(&result, Err(NoSceneError::Message(m)) if m == "Expected ']'."),
+        "{result:?}"
+    );
+    assert_eq!(
+        warnings,
+        ["Array length must be multiple of components size, which is 3."]
+    );
+}
