@@ -621,12 +621,14 @@ impl Runtime {
     /// messages name no node type), the fallback chain of `urls` against `base`. It runs in a runtime of its own,
     /// whose fetcher is the new world's. With an asynchronous [`Fetcher`] the chain stops at a candidate whose
     /// response is not in ([`LoadResult::Suspended`]); call again with the same `urls` when a response arrived, and
-    /// it goes on from that candidate. `accept` parses a candidate (`createX3DFromString`); an `Err` is its rejection.
+    /// it goes on from that candidate. `accept` parses a candidate (`createX3DFromString`); an `Err` is its rejection,
+    /// and `Err (None)` a rejection with no error (nothing is logged for it; a glTF whose buffers are not in yet, see
+    /// [`Runtime::parse_candidate`]).
     pub fn load_page_document(
         &mut self,
         base: &str,
         urls: &[String],
-        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>,
+        mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), Option<String>>,
     ) -> LoadResult {
         let outer = (
             self.running_fetch.replace(FetchKey::Page),
@@ -641,10 +643,13 @@ impl Runtime {
 
         self.allow_fetch_wait();
 
-        let result =
-            self.load_document_from(&loader, urls, &LoadHooks::default(), 0, |rt, _, loaded| {
-                accept(rt, loaded)
-            });
+        let result = self.load_document_from_opt(
+            &loader,
+            urls,
+            &LoadHooks::default(),
+            0,
+            |rt, _, loaded| accept(rt, loaded),
+        );
 
         if result != LoadResult::Suspended {
             self.fetch_resume.remove(&FetchKey::Page);
@@ -1426,6 +1431,55 @@ pub struct ParseBytesResult {
     pub buffer_errors: Vec<BufferFetchError>,
     /// A buffer's response is not in yet ([`parse_bytes_waiting`]): `scene` is no result, parse again later.
     pub buffers_pending: bool,
+}
+
+impl Runtime {
+    /// GLTF2Parser for the candidate `data` of the running fallback chain (the `accept` of [`Runtime::load_document`]
+    /// and [`Runtime::load_page_document`]): its buffers load through this runtime's fetcher. While a buffer's
+    /// response is not in, the result has `buffers_pending`, and the chain waits for it when the caller's `accept`
+    /// rejects with no error (`await buffersArray`: the scene is built when the buffers are in).
+    pub fn parse_candidate(&mut self, data: &[u8], url: &str) -> ParseBytesResult {
+        let parsed = parse_bytes_waiting(&*self.fetcher, data, url, self.accept_waits);
+
+        if parsed.buffers_pending {
+            self.buffers_pending = true;
+        }
+
+        parsed
+    }
+
+    /// The rejection of a candidate whose glTF `failures` made GLTF2Parser throw `message`, or `None` when `message`
+    /// is no buffer's error. The buffer FileLoaders' own messages come after the candidate's result.
+    pub fn gltf_buffer_rejection(
+        &mut self,
+        failures: Vec<BufferFetchError>,
+        message: &str,
+    ) -> Option<Option<String>> {
+        if !failures.iter().any(|f| f.error == message) {
+            return None;
+        }
+
+        // GLTF2Parser.js:600, `Promise .all`: an invalid buffer URL rejects it at once with that error, which the
+        // candidate's FileLoader logs. Otherwise the first buffer FileLoader to fail rejects it with no error
+        // (FileLoader.js:26), and the candidate's FileLoader logs nothing (FileLoader.js:382-383).
+        let thrown = failures
+            .iter()
+            .find(|f| f.kind == BufferFailure::InvalidUrl)
+            .map(|f| f.error.clone());
+
+        // Each buffer FileLoader logs its own failure when its fetch fails. A data URL is decoded without a request,
+        // so it fails before any requested file (recorded order in inline-buffer-errors-baseline.json); otherwise in
+        // buffer order.
+        let mut logged: Vec<_> = failures
+            .into_iter()
+            .filter(|f| f.kind == BufferFailure::Fetch)
+            .collect();
+
+        logged.sort_by_key(|f| !f.resolved.as_ref().is_some_and(|r| r.scheme() == "data"));
+        self.deferred_buffer_errors.extend(logged);
+
+        Some(thrown)
+    }
 }
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through

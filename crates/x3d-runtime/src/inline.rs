@@ -530,16 +530,10 @@ impl Runtime {
         self.sync_svg_quality();
 
         // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
-        let parsed = crate::loader::parse_bytes_waiting(
-            &*self.fetcher,
-            data,
-            url.as_str(),
-            self.accept_waits,
-        );
+        let parsed = self.parse_candidate(data, url.as_str());
 
         // `await buffersArray`: the scene is built when the buffers are in.
         if parsed.buffers_pending {
-            self.buffers_pending = true;
             return Err(None);
         }
 
@@ -552,33 +546,7 @@ impl Runtime {
                         .iter()
                         .any(|p| e.message.starts_with(p)) =>
             {
-                let failures = parsed.buffer_errors;
-
-                if failures.iter().any(|f| f.error == e.message) {
-                    use crate::loader::BufferFailure;
-
-                    // GLTF2Parser.js:600, `Promise .all`: an invalid buffer URL rejects it at once
-                    // with that error, which this Inline logs. Otherwise the first buffer
-                    // FileLoader to fail rejects it with no error (FileLoader.js:26), and this
-                    // Inline logs nothing (FileLoader.js:382-383).
-                    let thrown = failures
-                        .iter()
-                        .find(|f| f.kind == BufferFailure::InvalidUrl)
-                        .map(|f| f.error.clone());
-
-                    // Each buffer FileLoader logs its own failure when its fetch fails. A data URL is
-                    // decoded without a request, so it fails before any requested file (recorded
-                    // order in inline-buffer-errors-baseline.json); otherwise in buffer order.
-                    let mut logged: Vec<_> = failures
-                        .into_iter()
-                        .filter(|f| f.kind == BufferFailure::Fetch)
-                        .collect();
-
-                    logged.sort_by_key(|f| {
-                        !f.resolved.as_ref().is_some_and(|r| r.scheme() == "data")
-                    });
-                    self.deferred_buffer_errors.extend(logged);
-
+                if let Some(thrown) = self.gltf_buffer_rejection(parsed.buffer_errors, &e.message) {
                     return Err(thrown);
                 }
 

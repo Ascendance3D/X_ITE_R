@@ -1,0 +1,364 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {
+  "gltfWorld.external.picture.png": [
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9"
+  ],
+  "gltfWorld.externalInline.picture.png": [
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759",
+   "96a06cff7d7f8bd47e2c8b37ac410ef85aeac103d375d791b0cb2eb40a651759"
+  ],
+  "gltfWorld.data.picture.png": [
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9"
+  ],
+  "gltfWorld.delayed.picture.png": [
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9",
+   "84b0c5c6b3a1c4cdda0e55f64c715b43237299e4f539dbe14714b8bafe849af9"
+  ],
+  "gltfWorld.two.picture.png": [
+   "537cf514e7562ddb83a2af3ef35c41379583b52886193c32b0355107fc8ab403",
+   "537cf514e7562ddb83a2af3ef35c41379583b52886193c32b0355107fc8ab403",
+   "537cf514e7562ddb83a2af3ef35c41379583b52886193c32b0355107fc8ab403",
+   "537cf514e7562ddb83a2af3ef35c41379583b52886193c32b0355107fc8ab403",
+   "537cf514e7562ddb83a2af3ef35c41379583b52886193c32b0355107fc8ab403"
+  ]
+ },
+ "values": {
+  "gltfWorld.external": {
+   "result": "resolved",
+   "world": "gltfworld/external.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "gltfWorld.external.picture.png"
+   }
+  },
+  "gltfWorld.externalInline": {
+   "result": "resolved",
+   "world": "gltfworld/inline-external-gltf.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-external-gltf.wrl",
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "gltfWorld.externalInline.picture.png"
+   }
+  },
+  "gltfWorld.data": {
+   "result": "resolved",
+   "world": "gltfworld/data.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/data.gltf"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "gltfWorld.data.picture.png"
+   }
+  },
+  "gltfWorld.dataInline": {
+   "result": "resolved",
+   "world": "gltfworld/inline-data-gltf.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-data-gltf.wrl",
+    "/tests/browser/worlds/gltfworld/data.gltf"
+   ],
+   "console": []
+  },
+  "gltfWorld.glb": {
+   "result": "resolved",
+   "world": "gltfworld/external.glb",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/external.glb",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": []
+  },
+  "gltfWorld.glbInline": {
+   "result": "resolved",
+   "world": "gltfworld/inline-external-glb.wrl",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-external-glb.wrl",
+    "/tests/browser/worlds/gltfworld/external.glb",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": []
+  },
+  "gltfWorld.missing": {
+   "result": "Couldn't load X3D file.",
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/missing.gltf",
+    "/tests/browser/worlds/gltfworld/gone.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/gltfworld/gone.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorld.missingInline": {
+   "result": "pending",
+   "world": "gltfworld/inline-missing-gltf.wrl",
+   "events": [
+    "shutdown"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-missing-gltf.wrl",
+    "/tests/browser/worlds/gltfworld/missing.gltf",
+    "/tests/browser/worlds/gltfworld/gone.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/gltfworld/gone.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorld.badBase64": {
+   "result": "Couldn't load X3D file.",
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/bad-base64.gltf"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "error: Couldn't load data URL. TypeError: Failed to fetch"
+   ]
+  },
+  "gltfWorld.badBase64Inline": {
+   "result": "pending",
+   "world": "gltfworld/inline-bad-base64-gltf.wrl",
+   "events": [
+    "shutdown"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-bad-base64-gltf.wrl",
+    "/tests/browser/worlds/gltfworld/bad-base64.gltf"
+   ],
+   "console": [
+    "error: Failed to load resource: net::ERR_INVALID_URL",
+    "error: Couldn't load data URL. TypeError: Failed to fetch"
+   ]
+  },
+  "gltfWorld.oneMissing": {
+   "result": "Couldn't load X3D file.",
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "coordinates": [],
+   "served": [
+    "/tests/browser/worlds/gltfworld/one-missing.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin",
+    "/tests/browser/worlds/gltfworld/gone-2.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/gltfworld/gone-2.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorld.fallback": {
+   "result": "pending",
+   "world": "gltfworld/external.gltf",
+   "events": [
+    "shutdown"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/missing.gltf",
+    "/tests/browser/worlds/gltfworld/gone.bin",
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/tests/browser/worlds/gltfworld/gone.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorld.delayed": {
+   "during": {
+    "result": "pending",
+    "world": "page"
+   },
+   "result": "resolved",
+   "world": "gltfworld/delayed.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/delayed.gltf",
+    "/delay/600/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "gltfWorld.delayed.picture.png"
+   }
+  },
+  "gltfWorld.two": {
+   "during": {
+    "result": "pending",
+    "world": "page"
+   },
+   "result": "resolved",
+   "world": "gltfworld/two.gltf",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]",
+    "[\n  1.5 0 0,\n  2.5 0 0,\n  1.5 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/two.gltf",
+    "/delay/300/tests/browser/worlds/gltfworld/tri.bin",
+    "/tests/browser/worlds/gltfworld/tri2.bin"
+   ],
+   "console": [],
+   "picture": {
+    "picture": "gltfWorld.two.picture.png"
+   }
+  },
+  "gltfWorld.failedThenValid": [
+   {
+    "result": "Couldn't load X3D file.",
+    "world": "page",
+    "events": [
+     "error"
+    ],
+    "coordinates": [],
+    "served": [
+     "/tests/browser/worlds/gltfworld/missing.gltf",
+     "/tests/browser/worlds/gltfworld/gone.bin"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "error: Couldn't load URL 'http://test/tests/browser/worlds/gltfworld/gone.bin'. Error: Not Found"
+    ]
+   },
+   {
+    "result": "resolved",
+    "world": "gltfworld/external.gltf",
+    "events": [
+     "shutdown",
+     "shutdown",
+     "initialized",
+     "initialized",
+     "load",
+     "load"
+    ],
+    "coordinates": [
+     "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+    ],
+    "served": [
+     "/tests/browser/worlds/gltfworld/external.gltf",
+     "/tests/browser/worlds/gltfworld/tri.bin"
+    ],
+    "console": []
+   }
+  ],
+  "gltfWorld.replaced": {
+   "first": "Loading of X3D file aborted.",
+   "second": "resolved",
+   "world": "gltfworld/external.gltf",
+   "events": [
+    "shutdown",
+    "shutdown",
+    "initialized",
+    "initialized",
+    "load",
+    "load"
+   ],
+   "coordinates": [
+    "[\n  0 0 0,\n  1 0 0,\n  0 1 0\n]"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/held.gltf",
+    "/hold/gw-held/tests/browser/worlds/gltfworld/tri.bin",
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": []
+  }
+ }
+}

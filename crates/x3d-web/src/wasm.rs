@@ -478,9 +478,7 @@ impl WebBrowser {
                     cache: cache.clone(),
                 });
 
-                parsed = Some(Session::parse_logged(&data, &url, fetcher, |line| {
-                    rt.log.push(line)
-                })?);
+                parsed = Some(Session::parse_page(rt, &data, &url, fetcher)?);
                 Ok(())
             });
 
@@ -494,18 +492,35 @@ impl WebBrowser {
     }
 
     /// FileLoader.abort () of load `id`: the candidate in flight is the last one, and its request ends (AbortError,
-    /// which the next [`WebBrowser::load_step`] reports).
+    /// which the next [`WebBrowser::load_step`] reports). A candidate that waits for its glTF buffers goes on.
     #[wasm_bindgen(js_name = abortLoad)]
     pub fn abort_load(&mut self, id: u32) {
         let Some(load) = self.loads.get_mut(&id) else {
             return;
         };
 
+        let mut buffers_wait = false;
+
         if let Some(n) = load.rt.abort_page_document() {
             load.urls.truncate(n);
+
+            // A candidate whose response is in (or a data URL) waits for the buffers of its glTF. Their requests
+            // are GLTF2Parser's own FileLoaders, which the abort does not end: the load goes on and is discarded.
+            let candidate = url::Url::parse(&load.base)
+                .ok()
+                .zip(load.urls.last())
+                .and_then(|(base, c)| x3d_runtime::loader::join_url(&base, c).ok());
+
+            buffers_wait = candidate.is_some_and(|u| {
+                u.scheme() == "data"
+                    || matches!(
+                        load.cache.borrow().entries.get(&cache_key(&u)),
+                        Some(Entry::Loaded(_))
+                    )
+            });
         }
 
-        if let Some(c) = &load.cache.borrow().controller {
+        if !buffers_wait && let Some(c) = &load.cache.borrow().controller {
             c.abort();
         }
     }
