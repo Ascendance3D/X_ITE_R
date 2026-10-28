@@ -109,7 +109,8 @@ impl Session {
     /// [`Session::parse_logged`] for the `accept` of the page's loadURL ([`Runtime::load_page_document`] in `rt`):
     /// a glTF's buffers load through `rt`'s fetcher, which shares the responses of `fetcher`. The world waits for
     /// them (`Err (None)`: the chain goes on with this candidate when they are in), and a buffer that failed rejects
-    /// the candidate like GLTF2Parser: with no error, after which the buffer's own message is logged.
+    /// the candidate like GLTF2Parser: with no error, after which the buffer's own message is logged. It does so at
+    /// once, also while other buffers are in flight; those are followed ([`Runtime::follow_buffers`]).
     pub fn parse_page(
         rt: &mut Runtime,
         data: &[u8],
@@ -118,7 +119,12 @@ impl Session {
     ) -> Result<ParsedWorld, Option<String>> {
         parse_setup();
 
-        let parsed = rt.parse_candidate(data, url);
+        let mut parsed = rt.parse_candidate(data, url);
+
+        // A buffer that failed rejects the candidate at once, also while others are still in flight.
+        if let Some(thrown) = rt.gltf_buffer_failed_first(&mut parsed) {
+            return Err(thrown);
+        }
 
         if parsed.buffers_pending {
             return Err(None);

@@ -457,6 +457,7 @@ impl WebBrowser {
         };
 
         load.cache.borrow_mut().settled = false;
+        load.rt.follow_buffers();
 
         let cache = load.cache.clone();
         let base = load.base.clone();
@@ -521,8 +522,23 @@ impl WebBrowser {
         }
 
         if !buffers_wait && let Some(c) = &load.cache.borrow().controller {
+            // The followed buffers' requests share the controller: they end and log nothing.
+            load.rt.followed_buffers.clear();
             c.abort();
         }
+    }
+
+    /// The glTF buffers that load `id` follows after a candidate was rejected while they were in flight
+    /// ([`x3d_runtime::Runtime::follow_buffers`]): the failures that came go to its log. Whether some are still in
+    /// flight; the page keeps the load until they are in.
+    #[wasm_bindgen(js_name = followLoad)]
+    pub fn follow_load(&mut self, id: u32) -> bool {
+        let Some(load) = self.loads.get_mut(&id) else {
+            return false;
+        };
+
+        load.cache.borrow_mut().settled = false;
+        load.rt.follow_buffers()
     }
 
     /// X3DBrowser.createX3DFromString of the page: parse `text` with the world URL `url` and start its loads. The

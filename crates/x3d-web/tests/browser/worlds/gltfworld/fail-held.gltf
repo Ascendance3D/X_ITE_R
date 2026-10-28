@@ -1,0 +1,114 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "X_ITE_R F2 glTF world buffers 02 test (synthetic): the first buffer is missing, the second is held"
+ },
+ "buffers": [
+  {
+   "uri": "/status/404/tests/browser/worlds/gltfworld/gone-a.bin",
+   "byteLength": 36
+  },
+  {
+   "uri": "/hold/gx-a/tests/browser/worlds/gltfworld/tri2.bin",
+   "byteLength": 36
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 36
+  },
+  {
+   "buffer": 1,
+   "byteLength": 36
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    0,
+    0,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 3,
+   "type": "VEC3",
+   "min": [
+    1.5,
+    0,
+    0
+   ],
+   "max": [
+    2.5,
+    1,
+    0
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.9,
+     0.4,
+     0.1,
+     1
+    ],
+    "metallicFactor": 0,
+    "roughnessFactor": 1
+   },
+   "doubleSided": true
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "material": 0
+    }
+   ]
+  },
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 1
+     },
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  },
+  {
+   "mesh": 1
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ],
+ "scene": 0
+}

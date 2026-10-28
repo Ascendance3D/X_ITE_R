@@ -418,6 +418,10 @@ pub struct Runtime {
     /// they fail. The FileLoader that loads the Inline logs them after its own result
     /// ([`Runtime::load_document_from_opt`]).
     pub deferred_buffer_errors: Vec<loader::BufferFetchError>,
+    /// The glTF buffers (URI, resolved URL) that were still in flight when another buffer of their glTF failed and
+    /// rejected the page's candidate ([`Runtime::gltf_buffer_failed_first`]). Their World FileLoaders go on and each
+    /// logs its own failure ([`Runtime::follow_buffers`]).
+    pub followed_buffers: Vec<(String, url::Url)>,
     /// A BufferAudioSource's or AudioClip's decodeAudioData result waits in `pending_audio_decodes` until the
     /// pending events of the next prepareEvents are processed. When set (x3d-drive's offline audio frames), it
     /// waits until [`Runtime::flush_audio_decodes`] at the start of the next frame instead, like
@@ -665,6 +669,7 @@ impl Runtime {
             inline_geometries: HashMap::new(),
             pending_scenes: vec![],
             deferred_buffer_errors: vec![],
+            followed_buffers: vec![],
             defer_audio_decodes: false,
             pending_audio_decodes: vec![],
             frame_waiters: vec![],
