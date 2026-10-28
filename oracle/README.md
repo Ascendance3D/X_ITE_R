@@ -773,3 +773,17 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-degenerate-01-baseline -
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-01-baseline --runs 5 --suite gltfworld01
 ```
+
+- `x_ite-web-runtime-02.mjs --suite gltfworld02` runs the 6 cases of `crates/x3d-web/tests/browser/gltfworld02_case.mjs`
+  and records `web-browser-gltf-world-02-baseline/gltfworld02-baseline.json` (the CodeRabbit finding of PR #126). Each
+  case loads a glTF world with two buffers, one of which fails while the test server holds the other: the first or the
+  second fails, both fail in either order, a later candidate follows, and a newer loadURL replaces the world while both
+  are held. A case keeps the state while the buffer is held (`during`) and after it was released. The holds make the
+  order independent of the machine's speed.
+- X_ITE rejects the candidate at the first failure (`Promise .all`), before the held buffer comes: loadURL fails, or
+  the next candidate is requested at once. The held buffer's FileLoader goes on and logs its own failure later.
+- Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline --runs 5 --suite gltfworld02
+```

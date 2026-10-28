@@ -1431,6 +1431,8 @@ pub struct ParseBytesResult {
     pub buffer_errors: Vec<BufferFetchError>,
     /// A buffer's response is not in yet ([`parse_bytes_waiting`]): `scene` is no result, parse again later.
     pub buffers_pending: bool,
+    /// The buffers (URI, resolved URL) whose response is not in yet, in buffer order.
+    pub pending_buffers: Vec<(String, url::Url)>,
 }
 
 impl Runtime {
@@ -1480,6 +1482,47 @@ impl Runtime {
 
         Some(thrown)
     }
+
+    /// The rejection of a page candidate whose glTF has a buffer that failed while others are still in flight, or
+    /// `None` when no buffer failed yet (the chain waits for them). `Promise .all` (GLTF2Parser.js:600) rejects at the
+    /// first buffer that fails, so the candidate does not wait for the others. Their World FileLoaders are not
+    /// aborted: they are followed ([`Runtime::follow_buffers`]).
+    pub fn gltf_buffer_failed_first(
+        &mut self,
+        parsed: &mut ParseBytesResult,
+    ) -> Option<Option<String>> {
+        if !parsed.buffers_pending || parsed.buffer_errors.is_empty() {
+            return None;
+        }
+
+        let message = parsed.buffer_errors[0].error.clone();
+
+        self.buffers_pending = false;
+        self.followed_buffers
+            .extend(std::mem::take(&mut parsed.pending_buffers));
+        self.gltf_buffer_rejection(std::mem::take(&mut parsed.buffer_errors), &message)
+    }
+
+    /// The followed buffers ([`Runtime::followed_buffers`]) whose response came: each that failed logs its
+    /// FileLoader's message, as GLTF2Parser's buffer FileLoaders do after their candidate was rejected. Returns
+    /// whether some are still in flight.
+    pub fn follow_buffers(&mut self) -> bool {
+        let world = FileLoader {
+            type_name: String::new(),
+            base: String::new(),
+            data_as_string: false,
+        };
+
+        for (candidate, resolved) in std::mem::take(&mut self.followed_buffers) {
+            if self.fetcher.poll(&resolved) == FetchPoll::Pending {
+                self.followed_buffers.push((candidate, resolved));
+            } else if let Err(e) = self.fetcher.fetch(&resolved) {
+                self.print_load_error(&world, &candidate, Some(&resolved), &e, 1, 0);
+            }
+        }
+
+        !self.followed_buffers.is_empty()
+    }
 }
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
@@ -1498,7 +1541,7 @@ pub(crate) fn parse_bytes_waiting(
     wait: bool,
 ) -> ParseBytesResult {
     let wait = wait && fetcher.is_async();
-    let pending = std::cell::Cell::new(false);
+    let pending = std::cell::RefCell::new(Vec::new());
     let buffer_errors = std::cell::RefCell::new(Vec::new());
     let failed = |uri: &str, resolved: Option<url::Url>, error: &str, kind: BufferFailure| {
         buffer_errors.borrow_mut().push(BufferFetchError {
@@ -1531,7 +1574,7 @@ pub(crate) fn parse_bytes_waiting(
         };
 
         if wait && fetcher.poll(&resolved) == FetchPoll::Pending {
-            pending.set(true);
+            pending.borrow_mut().push((uri.to_string(), resolved));
             return Err("TypeError: Failed to fetch".to_string());
         }
 
@@ -1542,7 +1585,9 @@ pub(crate) fn parse_bytes_waiting(
 
     let scene = x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url));
 
-    if pending.get() {
+    let pending_buffers = pending.into_inner();
+
+    if !pending_buffers.is_empty() {
         // The messages of this parse are not the result: the next parse gives them.
         x3d_parse::take_error_warnings();
         x3d_parse::take_error_detail();
@@ -1551,6 +1596,7 @@ pub(crate) fn parse_bytes_waiting(
     ParseBytesResult {
         scene,
         buffer_errors: buffer_errors.into_inner(),
-        buffers_pending: pending.get(),
+        buffers_pending: !pending_buffers.is_empty(),
+        pending_buffers,
     }
 }

@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02]
  *
  * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
  * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
@@ -11,6 +11,7 @@
  * cases in the same way (<out_dir>/loadurl01-baseline.json, <out_dir>/dataurl01-baseline.json).
  * `--suite degenerate01` records the degenerate triangle 01 cases (<out_dir>/degenerate01-baseline.json).
  * `--suite gltfworld01` records the glTF world buffers 01 cases (<out_dir>/gltfworld01-baseline.json).
+ * `--suite gltfworld02` records the glTF world buffers 02 cases (<out_dir>/gltfworld02-baseline.json).
  *
  * Writes <out_dir>/runtime02-baseline.json (the values of the first run, the Chrome version and the WebGL renderer)
  * and one PNG per picture. Every run must give identical values; the run fails otherwise. The pictures of each run
@@ -43,7 +44,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);

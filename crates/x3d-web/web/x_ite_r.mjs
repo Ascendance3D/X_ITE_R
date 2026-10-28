@@ -555,7 +555,7 @@ class X3DBrowser
       finally
       {
          loader .id = null;
-         this .#engine ?.discard (load);
+         this .#follow (load);
       }
 
       if (id < 0)
@@ -564,6 +564,20 @@ class X3DBrowser
       // A newer loadURL that started meanwhile takes over (the caller rejects this one).
       await this .#loaded (id, () => this .#disposed || this .#fileLoader !== loader);
       return id;
+   }
+
+   // GLTF2Parser's buffer FileLoaders of a candidate that was rejected while they were in flight go on: each logs its
+   // own failure when its response comes. Then the load goes.
+   async #follow (load)
+   {
+      while (this .#engine ?.followLoad (load))
+      {
+         this .#flushLog (load);
+         await this .#engine .progress (load);
+      }
+
+      this .#flushLog (load);
+      this .#engine ?.discard (load);
    }
 
    // X3DBrowser.createX3DFromString (x3dSyntax): a Promise of the new scene, set up and loaded. The page is an
