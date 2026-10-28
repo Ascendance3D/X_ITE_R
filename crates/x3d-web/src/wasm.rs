@@ -14,9 +14,9 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
-use x3d_fields::data::Data;
 use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
+use x3d_runtime::data::Data;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -1119,7 +1119,7 @@ impl WebBrowser {
     }
 }
 
-// --- field data (x3d_fields::data) ---------------------------------------------------------------------------------
+// --- field data (x3d_runtime::data) ---------------------------------------------------------------------------------
 
 fn data_js(d: &Data) -> JsValue {
     match d {

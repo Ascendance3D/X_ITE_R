@@ -11,10 +11,9 @@
 //! * MFBool, MFString, MFNode: a list of the elements; MFImage: a list of SFImage data;
 //! * the other MF types: the flat list of the components of every element.
 
-use crate::jsmath::to_int32;
-use crate::math::*;
-use crate::types::FieldType;
-use crate::value::{FieldValue, Image, NodeId};
+use x3d_fields::jsmath::to_int32;
+use x3d_fields::math::*;
+use x3d_fields::{FieldType, FieldValue, Image, NodeId};
 
 /// A JavaScript value without objects: what crosses the boundary.
 #[derive(Clone, Debug, PartialEq)]
