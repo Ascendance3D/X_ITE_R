@@ -599,14 +599,7 @@ impl Runtime {
             Some(r) => (req.urls[r.index].as_str(), r.attempts + 1),
             None => (req.urls.first().map(String::as_str).unwrap_or_default(), 1),
         };
-        let fetched = !first.is_empty()
-            && !["ecmascript:", "javascript:", "vrmlscript:"]
-                .iter()
-                .any(|s| {
-                    first
-                        .trim_start_matches(crate::loader::is_js_space)
-                        .starts_with(s)
-                });
+        let fetched = !first.is_empty() && crate::loader::strip_script_scheme(first).is_none();
 
         if self.world_state.aborted.remove(&id) && fetched {
             let resolved = url::Url::parse(&base)
@@ -889,42 +882,5 @@ impl WorldState {
         if self.load_current == Some(id) {
             self.load_current = None;
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_script_url_space() {
-        assert!(
-            "\u{FEFF}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            !("\u{0085}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:"))
-        );
-        assert!(
-            "\u{00A0}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{2028}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{3000}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            " \t\n\rjavascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
     }
 }

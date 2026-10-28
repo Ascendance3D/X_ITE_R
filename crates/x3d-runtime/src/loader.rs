@@ -40,11 +40,17 @@ pub enum FetchPoll {
 
 /// Script URLs (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`): no fetch.
 pub(crate) fn is_script_url(candidate: &str) -> bool {
-    let trimmed = candidate.trim_start_matches(is_js_space);
+    strip_script_scheme(candidate).is_some()
+}
 
-    ["ecmascript:", "javascript:", "vrmlscript:"]
-        .iter()
-        .any(|s| trimmed.starts_with(s))
+pub(crate) fn strip_script_scheme(candidate: &str) -> Option<(&'static str, &str)> {
+    let trimmed = candidate.trim_start_matches(is_js_space);
+    for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
+        if trimmed.starts_with(scheme) {
+            return Some((scheme, &trimmed[scheme.len()..]));
+        }
+    }
+    None
 }
 
 /// Serves `<prefix><path>` from `root/<path>` like oracle/x_ite-dump.mjs's server.
@@ -465,12 +471,8 @@ impl Runtime {
                 }
 
                 // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
-                let trimmed = candidate.trim_start_matches(is_js_space);
-                for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
-                    if trimmed.starts_with(scheme) {
-                        let source = &trimmed[scheme.len()..];
-                        return accept(self, i, Loaded::Script(source.to_string()));
-                    }
+                if let Some((_, source)) = strip_script_scheme(candidate) {
+                    return accept(self, i, Loaded::Script(source.to_string()));
                 }
 
                 let base =
