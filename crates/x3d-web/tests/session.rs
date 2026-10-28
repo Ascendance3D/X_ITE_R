@@ -473,3 +473,114 @@ fn field_data_of_the_wrong_shape_or_with_bad_node_ids_is_refused() {
         .unwrap();
     assert_eq!(s.node_value(t, "children").unwrap(), [Some(m), None]);
 }
+
+#[test]
+fn nodes_print_in_full_in_the_three_text_forms() {
+    let s = load(BOX).unwrap();
+    let material = s.named_node("BoxMaterial").unwrap();
+    let node = Data::Number(f64::from(material));
+    let print = |kind: &str| {
+        s.print_nodes(kind, x3d_fields::FieldType::SFNode, &node)
+            .unwrap()
+    };
+
+    assert!(print("vrml").starts_with("DEF BoxMaterial Material {\n  "));
+    assert!(print("xml").starts_with("<Material DEF='BoxMaterial'"));
+    assert!(print("json").starts_with("{ \"Material\":"));
+    assert!(
+        s.print_nodes("yaml", x3d_fields::FieldType::SFNode, &node)
+            .is_err()
+    );
+}
+
+#[test]
+fn a_node_that_is_not_in_the_world_is_not_printed() {
+    let s = load(BOX).unwrap();
+    let list = Data::List(vec![Data::Number(f64::from(u32::MAX))]);
+
+    assert!(
+        s.print_nodes("vrml", x3d_fields::FieldType::MFNode, &list)
+            .is_err()
+    );
+    assert!(
+        s.print_nodes(
+            "vrml",
+            x3d_fields::FieldType::MFNode,
+            &Data::List(vec![Data::String("x".into())])
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn a_released_node_is_not_printed() {
+    let mut s = load(&inline_world()).unwrap();
+    let mut t = NOW;
+    let it = inline_node(&mut s, &mut t);
+
+    assert!(
+        s.print_nodes(
+            "vrml",
+            x3d_fields::FieldType::SFNode,
+            &Data::Number(f64::from(it))
+        )
+        .is_ok()
+    );
+
+    release_inline(&mut s, &mut t);
+
+    assert!(
+        s.print_nodes(
+            "vrml",
+            x3d_fields::FieldType::SFNode,
+            &Data::Number(f64::from(it))
+        )
+        .is_err(),
+        "a released id is no node of the world"
+    );
+}
+
+#[test]
+fn values_read_from_text_make_their_nodes_in_the_world() {
+    let mut s = load(BOX).unwrap();
+    let before = s.root_nodes().len();
+    let read = |s: &mut Session, ty, text: &str, xml| s.parse_field(ty, text, xml, "f", None);
+
+    assert_eq!(
+        read(&mut s, x3d_fields::FieldType::SFBool, "TRUE", false),
+        Ok(Data::Bool(true))
+    );
+    assert_eq!(
+        read(&mut s, x3d_fields::FieldType::SFBool, "x", false),
+        Err("Couldn't read value for field 'f'.".to_string())
+    );
+
+    let node = read(&mut s, x3d_fields::FieldType::SFNode, "Group { }", false).unwrap();
+    let Data::Number(id) = node else {
+        panic!("a node id, got {node:?}");
+    };
+
+    assert_eq!(s.type_name(id as NodeId).as_deref(), Some("Group"));
+    assert_eq!(s.root_nodes().len(), before, "the node is not in the scene");
+    assert_eq!(
+        read(&mut s, x3d_fields::FieldType::SFNode, "NULL", false),
+        Ok(Data::Null)
+    );
+    assert!(read(&mut s, x3d_fields::FieldType::SFNode, "<Group/>", true).is_ok());
+}
+
+#[test]
+fn only_node_field_types_are_printed() {
+    let s = load(BOX).unwrap();
+    let node = Data::Number(f64::from(s.named_node("BoxMaterial").unwrap()));
+
+    for ty in [
+        x3d_fields::FieldType::SFString,
+        x3d_fields::FieldType::SFInt32,
+        x3d_fields::FieldType::MFFloat,
+    ] {
+        let error = s.print_nodes("vrml", ty, &node).unwrap_err();
+
+        assert!(error.contains("not a node field type"), "{error}");
+    }
+}
