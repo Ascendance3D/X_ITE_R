@@ -9,6 +9,7 @@
 //! asynchronous [`Fetcher`] parks a load until then). Only a loaded session goes live ([`Session::go_live`],
 //! X3DBrowser.replaceWorld), so the current world stays while the next one loads.
 
+use x3d_fields::data::{self, Data};
 use x3d_fields::{FieldValue, NodeId, access};
 use x3d_render::traverse::Frame;
 use x3d_runtime::{Fetcher, Runtime};
@@ -21,6 +22,16 @@ pub struct FieldInfo {
     pub type_name: &'static str,
     pub access: &'static str,
     pub value: String,
+}
+
+/// One entry of X3DNode.getFieldDefinitions: a predefined field's definition holds the class's default value, a
+/// user-defined field's definition the field itself (`default` is `None`).
+#[derive(Clone, Debug, PartialEq)]
+pub struct FieldDefinition {
+    pub name: String,
+    pub access: u8,
+    pub type_name: &'static str,
+    pub default: Option<Data>,
 }
 
 /// A pointer event of the page, at pointer coordinates (X3DPointingDeviceSensorContext.getPointerFromEvent: pixels
@@ -220,6 +231,8 @@ impl Session {
         let mut rt = Runtime::new(world.scene, world.fetcher);
 
         rt.page_url = world.url.clone();
+        // The page calls the field callbacks (X3DField.addFieldCallback) after the frame: there is no Script host.
+        rt.page_field_events = Some(vec![]);
         x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
         rt.now = now;
@@ -432,6 +445,115 @@ impl Session {
 
         rt.set_value(k, value);
         Ok(())
+    }
+
+    // --- field objects of the page (X_ITE's own field classes, mirrored with the runtime) -------------------------
+
+    /// The type, access type and data (x3d_fields::data) of a node field. The page holds an object of the field from
+    /// now on: [`Session::take_field_changes`] reports its changes.
+    pub fn field_data(
+        &mut self,
+        node: NodeId,
+        name: &str,
+    ) -> Result<(&'static str, u8, Data), String> {
+        let k = self.field_key(node, name)?;
+        let rt = self.rt_mut();
+
+        rt.js_mirror.entry(k).or_insert(false);
+
+        let f = rt.field(k);
+
+        Ok((f.ty().name(), f.access, data::value_data(&f.value)))
+    }
+
+    /// X3DField.addEvent of the page's object of a node field: the field takes the object's value and sends its event
+    /// in the next frame's event cascade, as X3DField.setValue does. The access type is not checked here: X_ITE's
+    /// SFNode proxy refuses an outputOnly field, a field object of it does not.
+    pub fn set_field_data(&mut self, node: NodeId, name: &str, value: &Data) -> Result<(), String> {
+        let k = self.field_key(node, name)?;
+        let rt = self.rt_mut();
+        let value = data::data_value(rt.field(k).ty(), value);
+
+        rt.set_value(k, value);
+        // The page's object holds this value already.
+        rt.js_clean(k);
+        Ok(())
+    }
+
+    /// The node fields the page holds objects of whose value changed since the last call: node, field name, data.
+    pub fn take_field_changes(&mut self) -> Vec<(NodeId, String, Data)> {
+        let rt = self.rt_mut();
+
+        rt.take_js_dirty()
+            .into_iter()
+            .map(|k| {
+                let f = rt.field(k);
+
+                (k.0, f.name.clone(), data::value_data(&f.value))
+            })
+            .collect()
+    }
+
+    /// Does the page call field callbacks for this field (X3DField.addFieldCallback)?
+    pub fn observe_field(&mut self, node: NodeId, name: &str, on: bool) -> Result<(), String> {
+        let k = self.field_key(node, name)?;
+        let rt = self.rt_mut();
+
+        if on {
+            rt.field_observed.insert(k);
+        } else {
+            rt.field_observed.remove(&k);
+        }
+
+        Ok(())
+    }
+
+    /// The events of the observed fields since the last call, in event order: node, field name and the value each
+    /// event delivered (X3DField.processEvent calls the callbacks with it).
+    pub fn take_field_events(&mut self) -> Vec<(NodeId, String, Data)> {
+        let rt = self.rt_mut();
+
+        rt.take_page_field_events()
+            .into_iter()
+            .map(|(k, value)| (k.0, rt.field(k).name.clone(), data::value_data(&value)))
+            .collect()
+    }
+
+    /// X3DNode.getFieldDefinitions: the predefined fields with the class's default values, then the user-defined
+    /// fields.
+    pub fn field_definitions(&self, node: NodeId) -> Vec<FieldDefinition> {
+        if !self.node_exists(node) {
+            return vec![];
+        }
+
+        let scene = &self.rt().scene;
+        let n = scene.node(node);
+        let defaults = match &n.kind {
+            x3d_scene::NodeKind::Builtin(t) => Some(
+                &scene.table.types[*t]
+                    .variant(scene.spec_version_of(n.ctx))
+                    .fields,
+            ),
+            _ => None,
+        };
+        let definition = |f: &x3d_scene::Field, default: Option<Data>| FieldDefinition {
+            name: f.name.clone(),
+            access: f.access,
+            type_name: f.ty().name(),
+            default,
+        };
+
+        n.fields
+            .iter()
+            .map(|f| {
+                let default = defaults
+                    .and_then(|d| d.iter().find(|d| d.name == f.name))
+                    .map(|d| data::value_data(&d.default));
+
+                definition(f, default)
+            })
+            .chain(n.user_fields.iter().map(|f| definition(f, None)))
+            .collect()
     }
 
     fn field_key(&self, node: NodeId, name: &str) -> Result<x3d_runtime::FKey, String> {

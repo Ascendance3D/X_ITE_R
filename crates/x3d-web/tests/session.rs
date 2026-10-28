@@ -1,6 +1,7 @@
 //! The platform-neutral part of the browser module: the world the page loads is parsed and owned by the Rust runtime,
 //! its fields read and set like through X_ITE's SFNode, and a world that does not parse is an error.
 
+use x3d_fields::data::Data;
 use x3d_web::session::{FieldInfo, Session};
 
 const BOX: &[u8] = include_bytes!("../web/example/box.wrl");
@@ -147,4 +148,123 @@ Shape { appearance Appearance { material USE M } geometry Box { } }
             .iter()
             .any(|l| l.contains("Script") && l.contains("no script engine"))
     );
+}
+
+// --- field objects of the page (issue #137) -------------------------------------------------------------------------
+
+const ROUTED: &[u8] = b"#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+DEF T Transform { }
+DEF T2 Transform { }
+DEF M Material { }
+DEF E Script { field SFInt32 n 5 }
+ROUTE T.translation_changed TO T2.set_translation
+";
+
+fn vec3(x: f64, y: f64, z: f64) -> Data {
+    Data::List(vec![Data::Number(x), Data::Number(y), Data::Number(z)])
+}
+
+#[test]
+fn a_field_object_of_the_page_sends_its_event_and_learns_the_routed_value() {
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+
+    // The page holds objects of both fields.
+    assert_eq!(
+        s.field_data(t, "translation").unwrap(),
+        (
+            "SFVec3f",
+            x3d_fields::access::INPUT_OUTPUT,
+            vec3(0.0, 0.0, 0.0)
+        )
+    );
+    s.field_data(t2, "translation").unwrap();
+
+    s.set_field_data(t, "translation", &vec3(1.0, 2.0, 3.0))
+        .unwrap();
+
+    // The page's own object holds the value it sent: no change to report yet.
+    assert_eq!(s.take_field_changes(), []);
+
+    s.step(NOW + 0.1);
+
+    // The route changed T2 in the frame; T is unchanged since the page set it.
+    assert_eq!(
+        s.take_field_changes(),
+        [(t2, "translation".to_string(), vec3(1.0, 2.0, 3.0))]
+    );
+    assert_eq!(s.take_field_changes(), []);
+}
+
+#[test]
+fn observed_fields_give_each_event_with_its_value_in_order() {
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.observe_field(t2, "set_translation", true).unwrap();
+
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    s.set_field_data(t, "translation", &vec3(2.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+
+    let name = || "translation".to_string();
+
+    assert_eq!(
+        s.take_field_events(),
+        [
+            (t, name(), vec3(1.0, 0.0, 0.0)),
+            (t2, name(), vec3(1.0, 0.0, 0.0)),
+            (t, name(), vec3(2.0, 0.0, 0.0)),
+            (t2, name(), vec3(2.0, 0.0, 0.0)),
+        ]
+    );
+
+    s.observe_field(t2, "translation", false).unwrap();
+    s.set_field_data(t, "translation", &vec3(3.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.3);
+
+    assert_eq!(s.take_field_events(), [(t, name(), vec3(3.0, 0.0, 0.0))]);
+    assert!(s.observe_field(t, "noSuchField", true).is_err());
+}
+
+#[test]
+fn field_definitions_hold_class_defaults_and_user_fields() {
+    let mut s = load(ROUTED).unwrap();
+    let m = s.named_node("M").unwrap();
+    let e = s.named_node("E").unwrap();
+
+    // A changed field does not change the class's definition.
+    s.set_field_data(m, "transparency", &Data::Number(0.5))
+        .unwrap();
+
+    let defs = s.field_definitions(m);
+    let transparency = defs.iter().find(|d| d.name == "transparency").unwrap();
+
+    assert_eq!(transparency.type_name, "SFFloat");
+    assert_eq!(transparency.default, Some(Data::Number(0.0)));
+    assert_eq!(
+        defs.iter()
+            .find(|d| d.name == "diffuseColor")
+            .unwrap()
+            .default,
+        Some(vec3(0.8, 0.8, 0.8))
+    );
+
+    let n = s
+        .field_definitions(e)
+        .into_iter()
+        .find(|d| d.name == "n")
+        .unwrap();
+
+    assert_eq!((n.type_name, n.default), ("SFInt32", None));
+    assert!(s.field_definitions(u32::MAX).is_empty());
 }
