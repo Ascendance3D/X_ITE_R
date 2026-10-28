@@ -1241,6 +1241,11 @@ pub fn parse_field_without_scene(
                 "TypeError: Cannot read properties of {receiver} (reading 'createNode')"
             )));
         }
+        Err(x3d_runtime::NoSceneError::NeedsSceneForUse) => {
+            return Err(JsError::new(&format!(
+                "TypeError: Cannot read properties of {receiver} (reading 'getBrowser')"
+            )));
+        }
     };
 
     let out = js_sys::Array::of1(&data_js(&data));

@@ -49,8 +49,17 @@ enum Stmt {
     No,
 }
 
+/// What a field parse asked of the execution context (the pinned VRMLParser calls `createNode` for a node type and
+/// `getBrowser` to place a USE reference).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct ContextUse {
+    pub node_type: bool,
+    pub use_reference: bool,
+}
+
 pub struct Parser<'a> {
     input: &'a [u8],
+    context_use: ContextUse,
     last_index: usize,
     line_number: usize,
     /// Text of the last successful terminal match (`this .result [0]`).
@@ -85,6 +94,7 @@ impl<'a> Parser<'a> {
             scene: Scene::new(world_url),
             contexts: vec![ROOT],
             unknown_level: 0,
+            context_use: ContextUse::default(),
             named_nodes: HashMap::new(),
             imported_names: HashMap::new(),
             placeholders: HashMap::new(),
@@ -149,6 +159,22 @@ impl<'a> Parser<'a> {
         unit: Option<String>,
         name: &str,
     ) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+        let (scene, result, _) = Parser::parse_field_probe(scene, ctx, ty, text, xml, unit, name);
+
+        (scene, result)
+    }
+
+    /// [`Parser::parse_field_into`], and what the parse asked of the context: a value that reached a node statement needs
+    /// a scene when there is none.
+    pub fn parse_field_probe(
+        scene: Scene,
+        ctx: CtxId,
+        ty: FieldType,
+        text: &str,
+        xml: bool,
+        unit: Option<String>,
+        name: &str,
+    ) -> (Scene, Result<Option<FieldValue>, ParseError>, ContextUse) {
         let mut parser = Parser::new(text, "");
 
         parser.scene = scene;
@@ -185,7 +211,7 @@ impl<'a> Parser<'a> {
             parser.setup_nodes();
         }
 
-        (parser.scene, result)
+        (parser.scene, result, parser.context_use)
     }
 
     // --- helpers ---------------------------------------------------------------------------
@@ -749,6 +775,10 @@ impl<'a> Parser<'a> {
                 let name = self.result.clone();
                 let ctx = self.ctx();
 
+                if !self.context_use.node_type {
+                    self.context_use.use_reference = true;
+                }
+
                 if let Some(n) = self.scene.get_local_node(ctx, &name) {
                     return Ok(Stmt::Node(n));
                 }
@@ -1170,6 +1200,11 @@ impl<'a> Parser<'a> {
 
         let node_type_id = self.result.clone();
         let ctx = self.ctx();
+
+        // The first call fails in X_ITE, so only the first one counts.
+        if !self.context_use.use_reference {
+            self.context_use.node_type = true;
+        }
 
         let base_node = match self.scene.create_node(ctx, &node_type_id) {
             Some(n) => Some(n),
