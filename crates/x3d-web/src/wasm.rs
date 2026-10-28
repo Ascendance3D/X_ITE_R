@@ -457,6 +457,7 @@ impl WebBrowser {
         };
 
         load.cache.borrow_mut().settled = false;
+        load.rt.follow_buffers();
 
         let cache = load.cache.clone();
         let base = load.base.clone();
@@ -478,9 +479,7 @@ impl WebBrowser {
                     cache: cache.clone(),
                 });
 
-                parsed = Some(Session::parse_logged(&data, &url, fetcher, |line| {
-                    rt.log.push(line)
-                })?);
+                parsed = Some(Session::parse_page(rt, &data, &url, fetcher)?);
                 Ok(())
             });
 
@@ -494,20 +493,52 @@ impl WebBrowser {
     }
 
     /// FileLoader.abort () of load `id`: the candidate in flight is the last one, and its request ends (AbortError,
-    /// which the next [`WebBrowser::load_step`] reports).
+    /// which the next [`WebBrowser::load_step`] reports). A candidate that waits for its glTF buffers goes on.
     #[wasm_bindgen(js_name = abortLoad)]
     pub fn abort_load(&mut self, id: u32) {
         let Some(load) = self.loads.get_mut(&id) else {
             return;
         };
 
+        let mut buffers_wait = false;
+
         if let Some(n) = load.rt.abort_page_document() {
             load.urls.truncate(n);
+
+            // A candidate whose response is in (or a data URL) waits for the buffers of its glTF. Their requests
+            // are GLTF2Parser's own FileLoaders, which the abort does not end: the load goes on and is discarded.
+            let candidate = url::Url::parse(&load.base)
+                .ok()
+                .zip(load.urls.last())
+                .and_then(|(base, c)| x3d_runtime::loader::join_url(&base, c).ok());
+
+            buffers_wait = candidate.is_some_and(|u| {
+                u.scheme() == "data"
+                    || matches!(
+                        load.cache.borrow().entries.get(&cache_key(&u)),
+                        Some(Entry::Loaded(_))
+                    )
+            });
         }
 
-        if let Some(c) = &load.cache.borrow().controller {
+        if !buffers_wait && let Some(c) = &load.cache.borrow().controller {
+            // The followed buffers' requests share the controller: they end and log nothing.
+            load.rt.followed_buffers.clear();
             c.abort();
         }
+    }
+
+    /// The glTF buffers that load `id` follows after a candidate was rejected while they were in flight
+    /// ([`x3d_runtime::Runtime::follow_buffers`]): the failures that came go to its log. Whether some are still in
+    /// flight; the page keeps the load until they are in.
+    #[wasm_bindgen(js_name = followLoad)]
+    pub fn follow_load(&mut self, id: u32) -> bool {
+        let Some(load) = self.loads.get_mut(&id) else {
+            return false;
+        };
+
+        load.cache.borrow_mut().settled = false;
+        load.rt.follow_buffers()
     }
 
     /// X3DBrowser.createX3DFromString of the page: parse `text` with the world URL `url` and start its loads. The

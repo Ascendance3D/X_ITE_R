@@ -91,16 +91,67 @@ impl Session {
 
     /// [`Session::parse`] as FileLoader.createX3DFromURLAsync parses a candidate of the page's loadURL: the error is
     /// the rejection FileLoader.printError reports (as for an Inline), and the parser's own messages go to `log`
-    /// first (`warn: …` or `error: …`; VRMLParser prints the original error in DEVELOPMENT).
+    /// first (`warn: …` or `error: …`; VRMLParser prints the original error in DEVELOPMENT). A glTF's buffers do not
+    /// wait here; see [`Session::parse_page`].
     pub fn parse_logged(
         data: &[u8],
         url: &str,
         fetcher: Box<dyn Fetcher>,
-        mut log: impl FnMut(String),
+        log: impl FnMut(String),
     ) -> Result<ParsedWorld, String> {
         parse_setup();
 
-        let scene = match x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url).scene {
+        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, data, url).scene;
+
+        Session::parsed(scene, url, fetcher, log)
+    }
+
+    /// [`Session::parse_logged`] for the `accept` of the page's loadURL ([`Runtime::load_page_document`] in `rt`):
+    /// a glTF's buffers load through `rt`'s fetcher, which shares the responses of `fetcher`. The world waits for
+    /// them (`Err (None)`: the chain goes on with this candidate when they are in), and a buffer that failed rejects
+    /// the candidate like GLTF2Parser: with no error, after which the buffer's own message is logged. It does so at
+    /// once, also while other buffers are in flight; those are followed ([`Runtime::follow_buffers`]).
+    pub fn parse_page(
+        rt: &mut Runtime,
+        data: &[u8],
+        url: &str,
+        fetcher: Box<dyn Fetcher>,
+    ) -> Result<ParsedWorld, Option<String>> {
+        parse_setup();
+
+        let mut parsed = rt.parse_candidate(data, url);
+
+        // A buffer that failed rejects the candidate at once, also while others are still in flight.
+        if let Some(thrown) = rt.gltf_buffer_failed_first(&mut parsed) {
+            return Err(thrown);
+        }
+
+        if parsed.buffers_pending {
+            return Err(None);
+        }
+
+        let scene = match parsed.scene {
+            Err(x3d_parse::LoadError::Parse(e)) if e.line == 0 => {
+                if let Some(thrown) = rt.gltf_buffer_rejection(parsed.buffer_errors, &e.message) {
+                    return Err(thrown);
+                }
+
+                Err(x3d_parse::LoadError::Parse(e))
+            }
+            scene => scene,
+        };
+
+        Session::parsed(scene, url, fetcher, |line| rt.log.push(line)).map_err(Some)
+    }
+
+    /// The world of a parse result (`Err`: the rejection; the parser's own messages go to `log` first).
+    fn parsed(
+        scene: Result<x3d_scene::Scene, x3d_parse::LoadError>,
+        url: &str,
+        fetcher: Box<dyn Fetcher>,
+        mut log: impl FnMut(String),
+    ) -> Result<ParsedWorld, String> {
+        let scene = match scene {
             Ok(scene) => scene,
             Err(x3d_parse::LoadError::Parse(e)) => {
                 for w in x3d_parse::take_error_warnings() {

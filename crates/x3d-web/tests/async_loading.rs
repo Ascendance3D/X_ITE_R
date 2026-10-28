@@ -730,15 +730,10 @@ fn page_step(rt: &mut Runtime, urls: &[String]) -> (LoadResult, bool) {
     let mut parsed = false;
     let result = rt.load_page_document(URL, urls, |rt, loaded| {
         let Loaded::Data(data, url) = loaded else {
-            return Err("Error: no script".into());
+            return Err(Some("Error: no script".into()));
         };
 
-        Session::parse_logged(
-            &data,
-            url.as_str(),
-            Box::new(TestFetcher::default()),
-            |line| rt.log.push(line),
-        )?;
+        Session::parse_page(rt, &data, url.as_str(), Box::new(TestFetcher::default()))?;
         parsed = true;
         Ok(())
     });
@@ -1759,7 +1754,7 @@ fn a_data_url_world_keeps_its_text_where_decode_uri_component_throws() {
                     text = Some(String::from_utf8(data).expect("UTF-8"));
                 }
 
-                Err("Error: no parser".into())
+                Err(Some("Error: no parser".into()))
             });
 
         assert_eq!(result, LoadResult::Failed, "{input}");
@@ -1778,7 +1773,7 @@ fn a_page_load_whose_documents_are_rejected_leaves_no_resume_entry() {
     let mut rt = page_loader(&net);
     let urls = vec![w("j1.wrl"), w("j2.wrl")];
     let reject = |rt: &mut Runtime, urls: &[String]| {
-        rt.load_page_document(URL, urls, |_, _| Err("Error: rejected".into()))
+        rt.load_page_document(URL, urls, |_, _| Err(Some("Error: rejected".into())))
     };
 
     assert_eq!(reject(&mut rt, &urls), LoadResult::Suspended);
@@ -1844,7 +1839,7 @@ fn page_document(url: &str) -> Option<String> {
 
     rt.load_page_document(URL, &urls, |_, loaded| {
         let Loaded::Data(data, _) = loaded else {
-            return Err("Error: no script".into());
+            return Err(Some("Error: no script".into()));
         };
 
         document = Some(String::from_utf8(data).expect("UTF-8"));
@@ -2055,4 +2050,233 @@ fn gltf_data_buffers_with_raw_tabs_like_chromium() {
         "{log}"
     );
     assert!(!net.requested().iter().any(|u| u.contains("AA@@")));
+}
+
+// --- a glTF as the page's world (finding F2 of PR #124) --------------------------------------------------------------
+
+/// oracle/web-browser-gltf-world-01-baseline, gltfWorld.external and gltfWorld.two: the world waits for every buffer
+/// of its glTF (`Promise .all`: they are requested together) and parses when they are in.
+#[test]
+fn a_gltf_world_waits_for_its_buffers() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf")];
+
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["one.bin", "two.bin"])));
+    assert_eq!(
+        page_step(&mut rt, &urls),
+        (LoadResult::Suspended, false),
+        "parsed before its buffers"
+    );
+    assert_eq!(
+        net.requested(),
+        [w("models/a.gltf"), w("models/one.bin"), w("models/two.bin")]
+    );
+
+    net.respond(&w("models/two.bin"), Ok(&triangle()));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    net.respond(&w("models/one.bin"), Ok(&triangle()));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+    assert_eq!(page_log(&mut rt), Vec::<String>::new());
+    assert!(rt.fetch_resume.is_empty());
+    // Each buffer is requested once; a parse reads the responses that are in.
+    assert_eq!(
+        net.requested(),
+        [w("models/a.gltf"), w("models/one.bin"), w("models/two.bin")]
+    );
+}
+
+/// gltfWorld.missing and gltfWorld.oneMissing: a buffer that fails rejects the candidate with no error of its own;
+/// only the buffer's FileLoader logs. The load fails ("Couldn't load X3D file." of the page).
+#[test]
+fn a_gltf_world_whose_buffer_fails_logs_only_the_buffer() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf")];
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["tri.bin", "gone.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/tri.bin"), Ok(&triangle()));
+    net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
+
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. Error: Not Found",
+            w("models/gone.bin")
+        )]
+    );
+    assert!(rt.fetch_resume.is_empty());
+}
+
+/// gltfWorld.badBase64: a data URL buffer whose base64 does not decode fails like a request.
+#[test]
+fn a_gltf_world_whose_data_url_buffer_does_not_decode_fails() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf")];
+
+    page_step(&mut rt, &urls);
+    net.respond(
+        &w("models/a.gltf"),
+        Ok(&gltf(&["data:application/octet-stream;base64,@@@@"])),
+    );
+
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+    assert_eq!(
+        page_log(&mut rt),
+        ["error: Couldn't load data URL. TypeError: Failed to fetch"]
+    );
+    assert_eq!(net.requested(), [w("models/a.gltf")]);
+}
+
+/// gltfWorld.fallback: after a glTF whose buffer failed, the next candidate loads; the failed candidate gives no
+/// "trying URL 2 of 2" warning (its rejection has no error).
+#[test]
+fn a_gltf_world_whose_buffer_fails_moves_on_to_the_next_candidate() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf"), w("models/b.gltf")];
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["gone.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    net.respond(&w("models/b.gltf"), Ok(&gltf(&["tri.bin"])));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    net.respond(&w("models/tri.bin"), Ok(&triangle()));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. Error: Not Found",
+            w("models/gone.bin")
+        )]
+    );
+}
+
+/// A data URL buffer that decodes needs no request (gltfWorld.data).
+#[test]
+fn a_gltf_world_with_a_data_url_buffer_loads_at_once() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf")];
+    // triangle () in base64.
+    let data =
+        "data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAA";
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&[data])));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+    assert_eq!(net.requested(), [w("models/a.gltf")]);
+    assert_eq!(page_log(&mut rt), Vec::<String>::new());
+}
+
+// --- a glTF world buffer that fails while another is in flight (CodeRabbit finding of PR #126) ----------------------
+
+/// oracle/web-browser-gltf-world-02-baseline, gltfWorldHeld.failThenHeld and gltfWorldHeld.heldThenFail: `Promise .all`
+/// rejects at the first buffer that fails, so the candidate fails while the other buffer is still in flight. That
+/// buffer's FileLoader goes on: it is followed, and it logs nothing when it loads.
+#[test]
+fn a_gltf_world_buffer_that_fails_rejects_while_another_is_in_flight() {
+    for buffers in [["gone.bin", "held.bin"], ["held.bin", "gone.bin"]] {
+        let net = TestFetcher::default();
+        let mut rt = page_loader(&net);
+        let urls = vec![w("models/a.gltf")];
+
+        page_step(&mut rt, &urls);
+        net.respond(&w("models/a.gltf"), Ok(&gltf(&buffers)));
+        assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+        net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
+
+        assert_eq!(
+            page_step(&mut rt, &urls),
+            (LoadResult::Failed, false),
+            "{buffers:?}: the candidate waited for the buffer in flight"
+        );
+        assert_eq!(
+            page_log(&mut rt),
+            [format!(
+                "error: Couldn't load URL '{}'. Error: Not Found",
+                w("models/gone.bin")
+            )]
+        );
+        assert!(rt.fetch_resume.is_empty());
+        assert!(
+            rt.follow_buffers(),
+            "{buffers:?}: the held buffer is followed"
+        );
+
+        net.respond(&w("models/held.bin"), Ok(&triangle()));
+        assert!(!rt.follow_buffers());
+        assert_eq!(page_log(&mut rt), Vec::<String>::new());
+    }
+}
+
+/// gltfWorldHeld.bothFailSecondFirst and gltfWorldHeld.bothFailFirstFirst: when both buffers fail, each FileLoader
+/// logs when its own fetch fails, so the messages come in the order of the failures, not in buffer order.
+#[test]
+fn gltf_world_buffers_that_fail_log_in_the_order_they_fail() {
+    for (buffers, first, second) in [
+        (["late.bin", "gone.bin"], "gone.bin", "late.bin"),
+        (["gone.bin", "late.bin"], "gone.bin", "late.bin"),
+    ] {
+        let net = TestFetcher::default();
+        let mut rt = page_loader(&net);
+        let urls = vec![w("models/a.gltf")];
+        let line = |name: &str| {
+            format!(
+                "error: Couldn't load URL '{}'. Error: Not Found",
+                w(&format!("models/{name}"))
+            )
+        };
+
+        page_step(&mut rt, &urls);
+        net.respond(&w("models/a.gltf"), Ok(&gltf(&buffers)));
+        page_step(&mut rt, &urls);
+        net.respond(&w(&format!("models/{first}")), Err("Error: Not Found"));
+        assert_eq!(page_step(&mut rt, &urls), (LoadResult::Failed, false));
+        assert_eq!(page_log(&mut rt), [line(first)], "{buffers:?}");
+
+        net.respond(&w(&format!("models/{second}")), Err("Error: Not Found"));
+        assert!(!rt.follow_buffers());
+        assert_eq!(page_log(&mut rt), [line(second)], "{buffers:?}");
+    }
+}
+
+/// gltfWorldHeld.fallback: the next candidate is requested while the failed candidate's other buffer is in flight,
+/// and it becomes the world before that buffer comes.
+#[test]
+fn a_gltf_world_buffer_that_fails_moves_on_while_another_is_in_flight() {
+    let net = TestFetcher::default();
+    let mut rt = page_loader(&net);
+    let urls = vec![w("models/a.gltf"), w("models/b.gltf")];
+
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/a.gltf"), Ok(&gltf(&["gone.bin", "held.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/gone.bin"), Err("Error: Not Found"));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Suspended, false));
+    assert!(net.requested().contains(&w("models/b.gltf")));
+
+    net.respond(&w("models/b.gltf"), Ok(&gltf(&["tri.bin"])));
+    page_step(&mut rt, &urls);
+    net.respond(&w("models/tri.bin"), Ok(&triangle()));
+    assert_eq!(page_step(&mut rt, &urls), (LoadResult::Loaded, true));
+    assert!(rt.follow_buffers(), "the held buffer is still followed");
+
+    net.respond(&w("models/held.bin"), Ok(&triangle()));
+    assert!(!rt.follow_buffers());
+    assert_eq!(
+        page_log(&mut rt),
+        [format!(
+            "error: Couldn't load URL '{}'. Error: Not Found",
+            w("models/gone.bin")
+        )]
+    );
 }
