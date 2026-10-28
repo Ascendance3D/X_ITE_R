@@ -3,7 +3,7 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser } from "./pkg/x3d_web.js";
+import init, { WebBrowser, parseFieldWithoutScene } from "./pkg/x3d_web.js";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -12,6 +12,11 @@ import
 from "./pkg/fields.mjs";
 
 const wasm = init ();
+
+// Whether the engine's code is loaded: the text of a field value is read by it (X3DField.fromVRMLString).
+let wasmReady = false;
+
+wasm .then (() => wasmReady = true);
 
 // --- field values ------------------------------------------------------------------------------------------------
 //
@@ -201,7 +206,8 @@ Object .assign (Object .setPrototypeOf (X3DNodeRef .prototype, X3DChildObject .p
    { },
    dispose ()
    { },
-   // The node's text is its type name only (see API.md).
+   // X3DNode.toStream: the node's type name only. The other text forms of an SFNode or MFNode print the node in full
+   // (below, "text of nodes").
    toStream (generator)
    {
       generator .string += `${this .getTypeName ()} { }`;
@@ -618,6 +624,87 @@ function setFieldData (field, data, owner)
    else
       field .set (value .getValue ());
 }
+
+// --- text of nodes, values read from text ------------------------------------------------------------------------
+//
+// X3DNode.toStream prints `TypeName { }` only, so toString () needs nothing here. toVRMLString (), toXMLString () and
+// toJSONString () print the node in full: the engine's printer (the one of the Script engine, with the scene's
+// DEF/USE names) prints all nodes of an SFNode or MFNode at once. Options of the generators are not supported.
+{
+   const printed = (kind, original) => function (generator)
+   {
+      const type  = this .getTypeName ();
+      const nodes = type === "SFNode" ? [ this ] : Array .from (this);
+      const owner = nodes .map (handleOf) .find (Boolean);
+
+      // NULL, or no node: nothing for the engine to name.
+      if (!owner)
+         return original .call (this, generator);
+
+      generator .string += engineOf (owner) .printNodes (owner .scene, kind, type, fieldData (this, owner));
+   };
+
+   for (const type of [ "SFNode", "MFNode" ])
+   {
+      const prototype = Fields [type] .prototype;
+
+      for (const [ method, kind ] of [ [ "toVRMLStream", "vrml" ], [ "toXMLStream", "xml" ], [ "toJSONStream", "json" ] ])
+      {
+         const original = prototype [method];
+
+         Object .defineProperty (prototype, method, { value: printed (kind, original), writable: true, configurable: true, enumerable: false });
+      }
+   }
+}
+
+// X3DField.fromVRMLString / fromXMLString (value, scene) (VRMLParser.js and XMLParser.js put these on X3DField): the
+// value is read into the field with setValue, so a node field makes an event. `scene` is an X3DScene of this adapter:
+// the nodes of the value are made in its world and the field's unit converts the value. Without a scene, a value that
+// needs a node is a TypeError, as in X_ITE.
+function parseField (field, value, scene, xml)
+{
+   const handle = scene ?.[_node];
+   const type   = field .getTypeName ();
+   const name   = field .getName ();
+
+   if (scene && !handle ?.browser)
+      throw new TypeError ("scene .createNode is not a function");
+
+   let data;
+
+   try
+   {
+      if (handle)
+      {
+         data = engineOf (handle) .parseField (handle .scene, type, String (value), xml, name, field .getUnit ?.());
+      }
+      else
+      {
+         if (!wasmReady)
+            throw new Error ("X_ITE_R: the engine is not loaded yet; wait for browser .ready ().");
+
+         // The parser's warnings go to the console, as the browser's console prints them in X_ITE.
+         const [ result, ... warnings ] = parseFieldWithoutScene (type, String (value), xml, name, scene === null ? "null" : "undefined");
+
+         for (const warning of warnings)
+            console .warn (warning);
+
+         data = result;
+      }
+   }
+   catch (error)
+   {
+      throw engineError (error);
+   }
+
+   field .setValue (fieldFromData (type, data, handle));
+}
+
+X3DField .prototype .fromVRMLString = function (value, scene) { parseField (this, value, scene, false); };
+X3DField .prototype .fromXMLString  = function (value, scene) { parseField (this, value, scene, true); };
+
+for (const key of [ "fromVRMLString", "fromXMLString" ])
+   Object .defineProperty (X3DField .prototype, key, { enumerable: false });
 
 // --- scene and browser -------------------------------------------------------------------------------------------
 

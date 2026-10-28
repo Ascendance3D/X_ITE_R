@@ -1626,27 +1626,17 @@ impl Runtime {
         name: &str,
     ) -> Result<Option<FieldValue>, Option<String>> {
         let Some(ctx) = ctx else {
-            let (scene, result) =
-                x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+            let (result, warnings) = field_from_string_without_scene(ty, text, xml, name);
 
-            // Without an execution context, the parser of a node value fails on the first node statement it reads (NULL and
-            // [ ] read none): only a value that needed no node and no warning stands.
-            let node_type = matches!(
-                ty,
-                x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
-            ) && !xml;
-
-            if !scene.nodes.is_empty()
-                || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_)))))
-            {
-                return Err(None);
-            }
-
-            for w in scene.warnings {
+            for w in warnings {
                 self.log_warn(w);
             }
 
-            return result.map_err(|e| Some(e.message));
+            return match result {
+                Err(NoSceneError::NeedsScene | NoSceneError::NeedsSceneBrowser) => Err(None),
+                Err(NoSceneError::Message(message)) => Err(Some(message)),
+                Ok(value) => Ok(value),
+            };
         };
 
         let first_new = self.scene.nodes.len() as NodeId;
@@ -1815,4 +1805,54 @@ impl Runtime {
         self.setup_node(n);
         Some(n)
     }
+}
+
+/// Why [`field_from_string_without_scene`] read no value. The web adapter maps the first two to X_ITE's `TypeError`
+/// texts (`Cannot read properties of undefined|null (reading 'createNode'|'getBrowser')`) and the third to an `Error`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum NoSceneError {
+    /// The value needs a node (X_ITE: the parser has no execution context and throws a `TypeError` at `createNode`).
+    NeedsScene,
+    /// The value reads a USE reference or a PROTO first (X_ITE: the same `TypeError`, at `getBrowser`).
+    NeedsSceneBrowser,
+    /// The parser's own error (X_ITE: an `Error` with this message).
+    Message(String),
+}
+
+/// X3DField.fromVRMLString / fromXMLString (value) without a scene: the value and the warnings the parser printed. The
+/// VRML parser of a node value has no execution context then and fails on the first node statement it reads (NULL and
+/// `[ ]` read none), so only a value that needed no node stands ([`NoSceneError::NeedsScene`]); text with
+/// no node statement at all reads nothing (`Ok(None)`: X_ITE's "Couldn't read value" error). The XML
+/// parser reads no node at all: its `SFNode` is NULL and its `MFNode` is `[ ]` for any text, as in X_ITE 16.5.0.
+/// The warnings come with every result. A non-node failure returns the warnings the parser made before it: in the pinned
+/// X_ITE 16.5.0, an `MFVec3f` of `[1 2` warns "Array length must be multiple of components size", then fails.
+pub fn field_from_string_without_scene(
+    ty: x3d_fields::FieldType,
+    text: &str,
+    xml: bool,
+    name: &str,
+) -> (Result<Option<FieldValue>, NoSceneError>, Vec<String>) {
+    let (scene, result, call) =
+        x3d_parse::Parser::parse_field_probe(Scene::new(""), 0, ty, text, xml, None, name, true);
+    // The XML parser of X_ITE sets NULL or `[ ]` and never makes a node, so it never needs a scene.
+    let node_type = matches!(
+        ty,
+        x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode
+    ) && !xml;
+
+    // The first call on the missing context fails, whatever the text after it holds, and the warnings printed before it
+    // stand. A parser error before any call (`[ 1 ]`: "Expected ']'.") is the parser's own.
+    if node_type && let Some(call) = call {
+        let error = match call {
+            x3d_parse::ContextCall::CreateNode => NoSceneError::NeedsScene,
+            x3d_parse::ContextCall::GetBrowser => NoSceneError::NeedsSceneBrowser,
+        };
+
+        return (Err(error), scene.warnings);
+    }
+
+    (
+        result.map_err(|e| NoSceneError::Message(e.message)),
+        scene.warnings,
+    )
 }

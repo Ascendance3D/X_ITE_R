@@ -85,7 +85,9 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | `getField (name)` | X_ITE's X3DField with all its methods, and X_ITE's deprecation warning; compared |
 | `addFieldCallback`, `removeFieldCallback`, `getFieldCallbacks` | supported, compared: each event of the field calls the callbacks with the value of that event, in event order |
 | `getFieldDefinitions ()`, `getFieldDefinition (name)` | supported, compared: a `FieldDefinitionArray`; a predefined field's definition holds the class's default value, a user-defined field's definition the field |
-| `toString ()` | `TypeName { }` |
+| `toString ()` | `TypeName { }`, compared |
+| `toVRMLString ()`, `toXMLString ()`, `toJSONString ()` | the node in full, also for `MFNode` and `X3DScene .rootNodes`, with DEF and USE; compared (`tests/browser/fields02.test.mjs`) |
+| `fromString`, `fromVRMLString`, `fromXMLString` of every field class | supported, compared (`tests/browser/fields02.test.mjs`): values, errors (`Couldn't read value for field '...'.`) and the nodes of a value |
 
 ### Resource loading
 
@@ -103,8 +105,8 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 
 - Field callbacks run after the frame that processed their events, not inside its event cascade. A callback gets the value of its event, as in X_ITE; a field it sets sends its event in the next frame, where X_ITE's goes on in the same cascade. A callback that throws is reported, and the other callbacks of the event still run.
 - A node can only be assigned to a field of a node of the same world (a scene of `createX3DFromString` is a world of its own); otherwise the assignment throws `X_ITE_R: a node can only be used in the world it belongs to.`. X_ITE allows it.
-- `SFNode .toString ()` and the other text forms of a node give `TypeName { }`. X_ITE prints the node.
-- `X3DField .fromString` and `fromVRMLString` are not supported: the page has no VRML parser for them.
+- The text forms of nodes take no options: `toVRMLString ()`, `toXMLString ()` and `toJSONString ()` print with X_ITE's default generator options, and the options object (`style`, `indent`, ...) is ignored. `toString ()` needs none: X_ITE's `X3DNode .toStream` prints `TypeName { }`.
+- `X3DField .fromVRMLString` and `fromXMLString` take an `X3DScene` of this adapter as `scene`; the nodes of the value are made in that scene's world. `fromJSONString` calls `fromVRMLString`, as in X_ITE. A value read without a scene works for every type that needs no node, in a page where the engine is loaded (use `browser .ready ()`). Before that it throws `X_ITE_R: the engine is not loaded yet; wait for browser .ready ().`.
 - Removing the element from the document stops the frame loop and releases the buttons and touches that are down; adding it again restarts the loop. X_ITE keeps drawing, and its document `mouseup` listener releases later.
 - A `pointercancel` (for example a touch the browser takes for scrolling) releases the touch: the sensor or the viewer ends its drag. X_ITE has no `touchcancel` handler, and its TouchSensor stays active.
 - After the element is removed and added again while the pointer did not move, a TouchSensor stays `isOver`. X_ITE ends `isOver`, because its release checks the pointer against the detached canvas (an empty rectangle).
