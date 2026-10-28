@@ -18,6 +18,8 @@ import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
 import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
 import { CASE_GROUPS as DEGENERATE01_GROUPS } from "./degenerate01_case.mjs";
+import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
+import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -33,13 +35,16 @@ export const ONLY     = process .env .XR_CASE;
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
 // compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline), and
 // the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
-// oracle/web-browser-degenerate-01-baseline).
+// oracle/web-browser-degenerate-01-baseline), and the glTF world buffers 01 and 02 cases (gltfworld01_case.mjs,
+// gltfworld02_case.mjs, `--suite gltfworld01|gltfworld02` into oracle/web-browser-gltf-world-01|02-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
    loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
    dataurl01:  { dir: process .env .XR_DATAURL_BASELINE ?? join (REPO, "oracle/web-browser-data-url-01-baseline"), file: "dataurl01-baseline.json", groups: DATAURL01_GROUPS },
    degenerate01: { dir: process .env .XR_DEGENERATE_BASELINE ?? join (REPO, "oracle/web-browser-degenerate-01-baseline"), file: "degenerate01-baseline.json", groups: DEGENERATE01_GROUPS },
+   gltfworld01: { dir: process .env .XR_GLTFWORLD_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-01-baseline"), file: "gltfworld01-baseline.json", groups: GLTFWORLD01_GROUPS },
+   gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -178,6 +183,41 @@ const KNOWN_DIFFERENCES = {
       [ [ "console" ],
          [ "error: Failed to load resource: net::ERR_INVALID_URL", "error: Couldn't load data URL. TypeError: Failed to fetch" ],
          [ "error: Couldn't load data URL. TypeError: Failed to fetch" ] ],
+   ],
+   // The glTF world buffers 01 cases show the same known differences as the cases above.
+   "gltfWorld.badBase64": [
+      // Chromium's own network error line of X_ITE's fetch (dataURL.worldBadBase64).
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "error: Couldn't load data URL. TypeError: Failed to fetch" ],
+         [ "error: Couldn't load data URL. TypeError: Failed to fetch" ] ],
+   ],
+   "gltfWorld.badBase64Inline": [
+      // GLTF2Parser does not remove a failed buffer from the loading objects (fallback.gltfFailed), and Chromium's
+      // own network error line of X_ITE's fetch (dataURLGltf.badBase64).
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+      [ [ "console" ],
+         [ "error: Failed to load resource: net::ERR_INVALID_URL", "error: Couldn't load data URL. TypeError: Failed to fetch" ],
+         [ "error: Couldn't load data URL. TypeError: Failed to fetch" ] ],
+   ],
+   "gltfWorld.missingInline": [
+      // GLTF2Parser does not remove a failed buffer from the loading objects (fallback.gltfFailed).
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+   ],
+   "gltfWorld.fallback": [
+      // The same for a world candidate: the failed buffer of the first candidate stays a loading object of X_ITE's
+      // browser, so the next candidate becomes the world but its loadURL never finishes (fallback.gltfFallback).
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+   ],
+   "gltfWorldHeld.fallback": [
+      // The same as gltfWorld.fallback (fallback.gltfFallback), while the held buffer is in flight and after it came.
+      // The next candidate is requested and becomes the world while the buffer is held, in both.
+      [ [ "during", "result" ], "pending", "resolved" ],
+      [ [ "during", "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
    ],
    "fallback.disposedDuringFallback": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
@@ -355,6 +395,8 @@ const GROUP_FILES = {
    dataURLImage: "dataurl01.test.mjs",
    dataURLGltf:  "dataurl01.test.mjs",
    degenerateTriangle: "degenerate01.test.mjs",
+   gltfWorld: "gltfworld01.test.mjs",
+   gltfWorldHeld: "gltfworld02.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
