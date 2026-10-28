@@ -756,3 +756,20 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-data-url-01-baseline --r
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-degenerate-01-baseline --runs 5 --suite degenerate01
 ```
+
+- `x_ite-web-runtime-02.mjs --suite gltfworld01` runs the 16 cases of `crates/x3d-web/tests/browser/gltfworld01_case.mjs`
+  and records `web-browser-gltf-world-01-baseline/gltfworld01-baseline.json` and 5 pictures. The cases are glTF and
+  GLB files loaded as the world with loadURL (finding F2 of PR #124) and, for comparison, through an Inline: an
+  external buffer, a data URL buffer, a missing buffer, base64 that does not decode, two buffers (one late, one
+  missing), a buffer 600 ms late, a failed glTF candidate before one that loads, a failed world before a valid one,
+  and a world whose held buffer is replaced by a newer loadURL. Each case keeps the loadURL result, the world, the
+  browser events, the coordinates, the requests and the load messages. The test worlds are synthetic
+  (`crates/x3d-web/tests/browser/worlds/gltfworld/`).
+- GLTF2Parser adds each buffer to the loading objects and does not remove one that failed. For an Inline, and for a
+  world candidate after one whose buffer failed, X_ITE's loadURL then never settles; X_ITE_R's does
+  (`runtime02_harness.mjs`, the same known difference as `fallback.gltfFailed`).
+- Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-01-baseline --runs 5 --suite gltfworld01
+```
