@@ -4,110 +4,71 @@
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
 import init, { WebBrowser } from "./pkg/x3d_web.js";
+import
+{
+   __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
+   Fields, NODE_TYPES, X3D_CONSTANTS_CORE, X3D_COMPONENT_CONSTANTS,
+}
+from "./pkg/fields.mjs";
 
 const wasm = init ();
 
-// X3DConstants: the access types and browser events with X_ITE's values.
-const X3DConstants = Object .freeze ({
-   initializeOnly: 0b001,
-   inputOnly:      0b010,
-   outputOnly:     0b100,
-   inputOutput:    0b111,
-
-   CONNECTION_ERROR:  0,
-   BROWSER_EVENT:     1,
-   INITIALIZED_EVENT: 2,
-   SHUTDOWN_EVENT:    3,
-   INITIALIZED_ERROR: 4,
-});
-
-const ACCESS = { initializeOnly: 0b001, inputOnly: 0b010, outputOnly: 0b100, inputOutput: 0b111 };
-
 // --- field values ------------------------------------------------------------------------------------------------
+//
+// The field objects of the page are X_ITE's own (pkg/fields.mjs, the classes the Script engine uses too) and hold
+// their value in JavaScript, as in X_ITE. The engine owns the nodes. An X3DNodeRef stands where X_ITE has the
+// X3DNode: the value of an SFNode, the parent of the node's field objects. A node field has one object for as long
+// as the page uses the node; its value is mirrored with the engine:
+//
+// * the engine's changes (events, routes, sensors) reach the object after each frame and before each getField
+//   (takeFieldChanges);
+// * the object's events (setValue, an assignment through the SFNode proxy, a changed component or element) reach
+//   the engine at once (X3DChildObject.addEvent → setFieldData), and the field sends its event in the next frame;
+// * the field callbacks (addFieldCallback) run after each frame, once per event, in event order, with the value the
+//   event delivered (takeFieldEvents).
+//
+// Values cross as plain data (x3d-fields data.rs, the shape of the Script prelude's bridge.js).
 
-// Fixed-size numeric fields: the component names and the VRML text the engine reads.
-function numericField (typeName, names)
+// X3DConstants: X_ITE's, with the node types of the Core profile (oracle/x_ite-node-types.json). The node types of
+// other components are numbered after them when a node of one is first seen (X_ITE numbers them as the components
+// load).
+for (const [name, value] of X3D_CONSTANTS_CORE)
+   X3DConstants .addConstant (name, value);
+
+let nextConstant = Math .max (... X3D_CONSTANTS_CORE .map (([, value]) => value)) + 1;
+
+const componentOf = new Map ();
+
+for (const [component, names] of Object .entries (X3D_COMPONENT_CONSTANTS))
 {
-   return class
-   {
-      constructor (... values)
-      {
-         names .forEach ((name, i) => this [name] = Number (values [i] ?? 0));
-      }
-
-      static fromString (text)
-      {
-         return new this (... text .trim () .split (/\s+/) .map (Number));
-      }
-
-      getTypeName () { return typeName; }
-      toString () { return names .map (name => String (this [name])) .join (" "); }
-   };
+   for (const name of names)
+      componentOf .set (name, component);
 }
 
-const SFColor     = numericField ("SFColor",     [ "r", "g", "b" ]);
-const SFColorRGBA = numericField ("SFColorRGBA", [ "r", "g", "b", "a" ]);
-const SFVec2f     = numericField ("SFVec2f",     [ "x", "y" ]);
-const SFVec3f     = numericField ("SFVec3f",     [ "x", "y", "z" ]);
-const SFVec4f     = numericField ("SFVec4f",     [ "x", "y", "z", "w" ]);
-const SFVec2d     = numericField ("SFVec2d",     [ "x", "y" ]);
-const SFVec3d     = numericField ("SFVec3d",     [ "x", "y", "z" ]);
-const SFVec4d     = numericField ("SFVec4d",     [ "x", "y", "z", "w" ]);
-const SFRotation  = numericField ("SFRotation",  [ "x", "y", "z", "angle" ]);
-
-const NUMERIC = { SFColor, SFColorRGBA, SFVec2f, SFVec3f, SFVec4f, SFVec2d, SFVec3d, SFVec4d, SFRotation };
-
-// The VRML encoding of a string: quotes, with `"` and `\` escaped (X3DGenerator.EscapeString). Other characters,
-// newlines included, stand as they are.
-const vrmlString = string => `"${String (string) .replace (/["\\]/g, c => `\\${c}`)}"`;
-
-// The string of a VRML-encoded SFString.
-const parseVrmlString = text => text .trim () .slice (1, -1) .replace (/\\(.)/gs, "$1");
-
-class MFString extends Array
+function constantOf (name)
 {
-   constructor (... values)
+   // An external component adds the constants of all its node types when it loads.
+   for (const constant of X3D_COMPONENT_CONSTANTS [componentOf .get (name)] ?? [ name ])
    {
-      super ();
-      this .push (... values .map (String));
+      if (!Object .hasOwn (X3DConstants, constant))
+         X3DConstants .addConstant (constant, nextConstant ++);
    }
 
-   getTypeName () { return "MFString"; }
-   toString () { return `[${Array .from (this, vrmlString) .join (", ")}]`; }
+   if (!Object .hasOwn (X3DConstants, name))
+      X3DConstants .addConstant (name, nextConstant ++);
+
+   return X3DConstants [name];
 }
-
-// The VRML text of a value assigned from JavaScript, for a field of `typeName`.
-function vrmlOf (typeName, value)
-{
-   switch (typeName)
-   {
-      case "SFBool":
-         return value ? "TRUE" : "FALSE";
-      case "SFString":
-         return vrmlString (value);
-      case "SFFloat":
-      case "SFDouble":
-      case "SFTime":
-      case "SFInt32":
-         return String (Number (value));
-      case "MFString":
-         return `[${Array .from (value, vrmlString) .join (", ")}]`;
-   }
-
-   if (typeName in NUMERIC && value instanceof NUMERIC [typeName])
-      return value .toString ();
-
-   throw new TypeError (`X_ITE_R: cannot assign ${value} to a field of type ${typeName}.`);
-}
-
-// --- nodes -------------------------------------------------------------------------------------------------------
 
 // The wasm object of a browser (read-only, for tests and diagnostics).
 const _engine = Symbol .for ("X_ITE_R.engine");
 
-// The scene and world of a node or scene handle: its scene id in the engine and the world generation of that scene
-// (an Anchor can replace the world inside a scene). Every use checks both first, so an old handle never reaches a
-// node of a newer world.
+// The handle of a node or scene: its browser, its scene id in the engine, the world generation of that scene (an
+// Anchor can replace the world inside a scene) and, for a node, its id.
+const _node = Symbol ("X_ITE_R.node");
+
+// The engine of a handle. Every use checks the scene and its world generation first, so an old handle never reaches
+// a node of a newer world.
 function engineOf (handle)
 {
    const engine = handle .browser [_engine];
@@ -118,123 +79,503 @@ function engineOf (handle)
    return engine;
 }
 
-// X3DField.valueOf of a field read through a node: numbers, booleans and strings as JavaScript values, the vector
-// types as value objects, SFNode and MFNode as nodes; anything else as an X3DField (its `toString ()` text).
-function fieldValue (node, name)
+// An error of the engine as a page Error.
+const pageError = error => error instanceof Error && error .constructor === Error ? error : new Error (String (error ?.message ?? error));
+
+const FIELDS      = Symbol ("fields");      // field name → { field, data }
+const NAMES       = Symbol ("names");       // the names of the node's fields
+const DEFINITIONS = Symbol ("definitions"); // its FieldDefinitionArray
+const USER_DATA   = Symbol ("userData");
+
+// The X3DNodeRefs of a browser: scene id → { generation, refs: node id → X3DNodeRef }.
+const nodeRefTables = new WeakMap ();
+
+function sceneRefs (browser, scene, generation)
 {
-   const engine = engineOf (node);
-   const [ typeName, , text ] = engine .field (node .scene, node .id, name);
+   const tables = nodeRefTables .get (browser) ?? nodeRefTables .set (browser, new Map ()) .get (browser);
 
-   switch (typeName)
-   {
-      case "SFBool":
-         return text === "TRUE";
-      case "SFFloat":
-      case "SFDouble":
-      case "SFTime":
-      case "SFInt32":
-         return Number (text);
-      case "SFString":
-         return parseVrmlString (text);
-   }
+   let table = tables .get (scene);
 
-   if (typeName in NUMERIC)
-      return NUMERIC [typeName] .fromString (text);
+   if (!table || table .generation !== generation)
+      tables .set (scene, table = { generation, refs: new Map () });
 
-   // SFNode: the node or null; MFNode: an Array of them (X_ITE: an MFNode).
-   if (typeName === "SFNode" || typeName === "MFNode")
-   {
-      const nodes = Array .from (engine .nodeValue (node .scene, node .id, name), n => n < 0 ? null : SFNode (node .browser, node, Number (n)));
-
-      return typeName === "SFNode" ? nodes [0] : nodes;
-   }
-
-   return new X3DField (node, name);
+   return table .refs;
 }
 
-// X3DNode.getField (name): one field of one node.
-class X3DField
+function X3DNodeRef (handle)
 {
-   #node; #name;
+   X3DChildObject .call (this);
 
-   constructor (node, name)
-   {
-      this .#node = node;
-      this .#name = name;
-   }
-
-   #info () { return engineOf (this .#node) .field (this .#node .scene, this .#node .id, this .#name); }
-
-   getName ()       { return this .#name; }
-   getTypeName ()   { return this .#info () [0]; }
-   getAccessType () { return ACCESS [this .#info () [1]]; }
-   getValue ()      { return fieldValue (this .#node, this .#name); }
-   setValue (value) { engineOf (this .#node) .setField (this .#node .scene, this .#node .id, this .#name, vrmlOf (this .getTypeName (), value)); }
-   toString ()      { return this .#info () [2]; }
+   this [_node]       = handle;
+   this [FIELDS]      = new Map ();
+   this [NAMES]       = undefined;
+   this [DEFINITIONS] = undefined;
+   this [USER_DATA]   = undefined;
 }
 
-// The X3DNode behind an SFNode proxy (for the browser functions that take a node).
-const _node = Symbol ("X_ITE_R.node");
-
-// SFNode: a node of one world. `owner` is a handle of the same world (a scene or a node). Field names read and
-// assign like X_ITE's SFNode proxy.
-function SFNode (browser, owner, id)
+Object .assign (Object .setPrototypeOf (X3DNodeRef .prototype, X3DChildObject .prototype),
 {
-   const node   = { browser, id, scene: owner .scene, generation: owner .generation };
-   const target = {
-      getNodeTypeName: () => engineOf (node) .typeName (node .scene, id),
-      getNodeName:     () => engineOf (node) .nodeName (node .scene, id) ?? "",
-      getField:        name => { engineOf (node) .field (node .scene, id, name); return new X3DField (node, name); },
-      getTypeName:     () => "SFNode",
-      toString:        () => `${engineOf (node) .typeName (node .scene, id)} { }`,
-      [_node]:         node,
-   };
-
-   // The field's [typeName, accessType, value], or null when the node has no such field.
-   const field = key =>
+   getTypeName ()
    {
-      const engine = engineOf (node);
+      const h = this [_node];
 
-      try { return engine .field (node .scene, id, key); } catch { return null; }
+      return engineOf (h) .typeName (h .scene, h .id);
+   },
+   getType ()
+   {
+      // A PROTO instance is an X3DPrototypeInstance (an X3DNode).
+      return (NODE_TYPES [this .getTypeName ()] ?? [ "X3DNode", "X3DPrototypeInstance" ]) .map (constantOf);
+   },
+   getName ()
+   {
+      const h = this [_node];
+
+      return engineOf (h) .nodeName (h .scene, h .id) ?? "";
+   },
+   getDisplayName ()
+   {
+      return this .getName () .replace (/_\d+$/, "");
+   },
+   getField (name)
+   {
+      return attachedField (this, String (name));
+   },
+   // X3DBaseNode.getFieldDefinitions: the class's definitions (their values are the defaults), then the user-defined
+   // fields (their values are the fields).
+   getFieldDefinitions ()
+   {
+      const h = this [_node];
+
+      return this [DEFINITIONS] ??= new FieldDefinitionArray (Array .from (engineOf (h) .fieldDefinitions (h .scene, h .id),
+         ([ name, accessType, dataType, value ]) => value === undefined
+            ? new X3DFieldDefinition (accessType, name, attachedField (this, name))
+            : classDefinition (name, accessType, dataType, value)));
+   },
+   getFieldDefinition (name)
+   {
+      const definition = this .getFieldDefinitions () .get (name);
+
+      if (definition)
+         return definition;
+
+      throw new Error (`Unknown field '${name}' in node class ${this .getTypeName ()}.`);
+   },
+   getUserData (key)
+   {
+      return this [USER_DATA] ?.get (key);
+   },
+   setUserData (key, value)
+   {
+      (this [USER_DATA] ??= new Map ()) .set (key, value);
+   },
+   removeUserData (key)
+   {
+      this [USER_DATA] ?.delete (key);
+   },
+   // X3DBaseNode.addEvent (field): a field of the node made an event.
+   addEvent (field)
+   {
+      pushField (field);
+   },
+   addEventObject (field)
+   {
+      pushField (field);
+   },
+   // The engine keeps the parents of a node.
+   addParent ()
+   { },
+   removeParent ()
+   { },
+   isInitialized ()
+   {
+      return true;
+   },
+   setup ()
+   { },
+   dispose ()
+   { },
+   // The node's text is its type name only (see API.md).
+   toStream (generator)
+   {
+      generator .string += `${this .getTypeName ()} { }`;
+   },
+   toVRMLStream (generator)
+   {
+      this .toStream (generator);
+   },
+});
+
+for (const key of Object .keys (X3DNodeRef .prototype))
+   Object .defineProperty (X3DNodeRef .prototype, key, { enumerable: false });
+
+// The definitions of the node classes, one object each (X_ITE: Class .fieldDefinitions).
+const classDefinitions = new Map ();
+
+function classDefinition (name, accessType, dataType, value)
+{
+   const key = JSON .stringify ([ name, accessType, dataType, value ]);
+
+   let definition = classDefinitions .get (key);
+
+   if (!definition)
+      classDefinitions .set (key, definition = new X3DFieldDefinition (accessType, name, fieldFromData (dataType, value, null)));
+
+   return definition;
+}
+
+// The X3DNodeRef of node `id` of the world of `owner` (a scene or node handle).
+function nodeRef (owner, id)
+{
+   const refs = sceneRefs (owner .browser, owner .scene, owner .generation);
+
+   let ref = refs .get (id);
+
+   if (!ref)
+   {
+      refs .set (id, ref = new X3DNodeRef ({ browser: owner .browser, scene: owner .scene, generation: owner .generation, id }));
+      SFNodeCache .set (ref, guardNode (new Fields .SFNode (ref)));
+   }
+
+   return ref;
+}
+
+// An SFNode as the page gets it: X_ITE's own, which in addition refuses to be used when its node belongs to a world
+// that was replaced (API.md, known differences). X_ITE's proxy would read such a field as undefined: it catches the
+// error of getField.
+function guardNode (sfnode)
+{
+   const check = key =>
+   {
+      if (typeof key !== "string")
+         return;
+
+      const node = X3DField .prototype .getValue .call (sfnode);
+
+      if (node instanceof X3DNodeRef)
+         engineOf (node [_node]);
    };
 
-   return new Proxy (target, {
-      get (target, key)
-      {
-         if (typeof key === "string" && !(key in target))
-         {
-            const info = field (key);
-
-            // X_ITE allows reading initializeOnly fields too; an inputOnly field reads as undefined.
-            if (info)
-               return info [1] === "inputOnly" ? undefined : fieldValue (node, key);
-         }
-
-         return Reflect .get (target, key);
-      },
-      set (target, key, value)
-      {
-         if (typeof key === "string")
-         {
-            const info = field (key);
-
-            if (info)
-            {
-               if (info [1] === "outputOnly")
-                  return false;
-
-               engineOf (node) .setField (node .scene, id, key, vrmlOf (info [0], value));
-               return true;
-            }
-         }
-
-         return Reflect .set (target, key, value);
-      },
-      has (target, key)
-      {
-         return Boolean (typeof key === "string" && field (key)) || Reflect .has (target, key);
-      },
+   return new Proxy (sfnode,
+   {
+      get (target, key) { check (key); return Reflect .get (target, key); },
+      set (target, key, value) { check (key); return Reflect .set (target, key, value); },
+      has (target, key) { check (key); return Reflect .has (target, key); },
    });
+}
+
+// The SFNode of node `id` of the world of `owner`, or null.
+function nodeObject (owner, id)
+{
+   return id === null || id === undefined || id < 0 ? null : SFNodeCache .get (nodeRef (owner, Number (id)));
+}
+
+// The handle of an SFNode of this adapter, or undefined.
+function handleOf (node)
+{
+   return node instanceof Fields .SFNode ? node .getValue () ?.[_node] : undefined;
+}
+
+// The node id of an SFNode in the world of `owner`; null for NULL.
+function nodeIdOf (sfnode, owner)
+{
+   const handle = handleOf (sfnode);
+
+   if (!handle)
+      return null;
+
+   if (handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation)
+      throw new Error ("X_ITE_R: a node can only be used in the world it belongs to.");
+
+   return handle .id;
+}
+
+const attachedOf = new WeakMap (); // field object (and its target) → { ref, name, entry }
+
+// X3DNode.getField (name): the node's field object, current with the engine.
+function attachedField (ref, name)
+{
+   const h      = ref [_node];
+   const engine = engineOf (h);
+
+   // X_ITE's SFNode proxy asks for a field first for every name, its own methods included: only a field name or the
+   // `set_` or `_changed` name of one goes to the engine, which resolves those names as X3DBaseNode.getField does.
+   // Both names give the same field object.
+   ref [NAMES] ??= new Set (engine .fieldNames (h .scene, h .id));
+
+   if (!ref [NAMES] .has (name))
+   {
+      const base = name .replace (/^set_|_changed$/, "");
+
+      if (base === name || !ref [NAMES] .has (base))
+         throw new Error (`Unknown field '${name}' in node class ${ref .getTypeName ()}.`);
+
+      try
+      {
+         engine .fieldData (h .scene, h .id, name);
+      }
+      catch (error)
+      {
+         throw pageError (error);
+      }
+
+      name = base;
+   }
+
+   syncScene (h .browser, h .scene);
+
+   let entry = ref [FIELDS] .get (name);
+
+   if (entry)
+      return entry .field;
+
+   let info;
+
+   try
+   {
+      info = engine .fieldData (h .scene, h .id, name);
+   }
+   catch (error)
+   {
+      throw pageError (error);
+   }
+
+   const [ type, accessType, data ] = info;
+   const value = fieldFromData (type, data, h);
+   const field = type === "SFNode" ? guardNode (value) : value;
+
+   field .setName (name);
+   field .setAccessType (accessType);
+   field .addParent (ref);
+
+   entry = { field, data };
+   ref [FIELDS] .set (name, entry);
+
+   const attached = { ref, name, entry };
+
+   attachedOf .set (field, attached);
+   attachedOf .set (value, attached);
+
+   // An array field is a Proxy of its target, and X_ITE's array code makes its events on the target.
+   if (field instanceof X3DArrayField)
+      attachedOf .set (field .getTarget (), attached);
+
+   // So is an SFNode (its addFieldCallback adds to its target): the target is the own symbol value that is an SFNode
+   // and not the proxy.
+   if (field instanceof Fields .SFNode)
+   {
+      for (const symbol of Object .getOwnPropertySymbols (value))
+      {
+         const target = value [symbol];
+
+         if (target instanceof Fields .SFNode && target !== field && target !== value)
+            attachedOf .set (target, attached);
+      }
+   }
+
+   return field;
+}
+
+// X3DChildObject.addEvent of a node's field object: the engine takes its value.
+function pushField (field)
+{
+   const attached = attachedOf .get (field);
+
+   if (!attached)
+      return;
+
+   const h    = attached .ref [_node];
+   const data = fieldData (attached .entry .field, h);
+
+   attached .entry .data = data;
+
+   try
+   {
+      engineOf (h) .setFieldData (h .scene, h .id, attached .name, data);
+   }
+   catch (error)
+   {
+      throw pageError (error);
+   }
+}
+
+// The VRML encoding of a string: quotes, with `"` and `\` escaped (X3DGenerator.EscapeString). Other characters,
+// newlines included, stand as they are.
+const vrmlString = string => `"${String (string) .replace (/["\\]/g, c => `\\${c}`)}"`;
+
+// The string of a VRML-encoded SFString.
+const parseVrmlString = text => text .trim () .slice (1, -1) .replace (/\\(.)/gs, "$1");
+
+// The engine's changes of the fields the page holds objects of, in scene `scene` of `browser`.
+function syncScene (browser, scene)
+{
+   const table = nodeRefTables .get (browser) ?.get (scene);
+
+   if (!table ?.refs .size)
+      return;
+
+   const changes = browser [_engine] .takeFieldChanges (scene);
+
+   for (let i = 0; i < changes .length; i += 3)
+   {
+      const ref   = table .refs .get (changes [i]);
+      const entry = ref ?.[FIELDS] .get (changes [i + 1]);
+
+      if (!entry)
+         continue;
+
+      entry .data = changes [i + 2];
+      setFieldData (entry .field, entry .data, ref [_node]);
+   }
+}
+
+// After a frame: the engine's changes, then the field callbacks of the events of the frame, in event order, each with
+// the value its event delivered. A callback that throws is reported, and the other callbacks run.
+function processFieldEvents (browser, scene)
+{
+   const table = nodeRefTables .get (browser) ?.get (scene);
+
+   if (!table ?.refs .size)
+      return;
+
+   const events = browser [_engine] .takeFieldEvents (scene);
+
+   syncScene (browser, scene);
+
+   for (let i = 0; i < events .length; i += 3)
+   {
+      const ref   = table .refs .get (events [i]);
+      const entry = ref ?.[FIELDS] .get (events [i + 1]);
+
+      if (!entry)
+         continue;
+
+      const callbacks = entry .field .getFieldCallbacks ();
+
+      if (!callbacks .size)
+         continue;
+
+      // The callbacks see the value of their event; the field holds the current one again after them.
+      setFieldData (entry .field, events [i + 2], ref [_node]);
+
+      for (const callback of Array .from (callbacks .values ()))
+      {
+         try
+         {
+            callback (entry .field .valueOf ());
+         }
+         catch (error)
+         {
+            console .error (error);
+         }
+      }
+
+      setFieldData (entry .field, entry .data, ref [_node]);
+   }
+}
+
+// X3DField.addFieldCallback of a node's field object: the engine reports its events from now on.
+__bridge .fieldCallbackAdded = function (field)
+{
+   const attached = attachedOf .get (field);
+
+   if (!attached)
+      return;
+
+   const h = attached .ref [_node];
+
+   engineOf (h) .observeField (h .scene, h .id, attached .name, true);
+};
+
+// The plain data of a field object; `owner` is the handle of the world its nodes must belong to.
+function fieldData (field, owner)
+{
+   const type = field .getTypeName ();
+
+   switch (type)
+   {
+      case "SFBool": case "SFDouble": case "SFFloat": case "SFInt32": case "SFString": case "SFTime":
+         return field .getValue ();
+      case "SFNode":
+         return nodeIdOf (field, owner);
+      case "SFImage":
+         return [ field .width, field .height, field .comp, Array .from (field .array) ];
+      case "SFRotation":
+      {
+         const r = field .getValue (), s = __bridge .rotation4, q = r [s ._quaternion];
+
+         return [ r [s ._x], r [s ._y], r [s ._z], r [s ._angle], r [s ._tainted] ? 1 : 0, q .x, q .y, q .z, q .w ];
+      }
+      case "MFNode":
+         return Array .from (field, node => nodeIdOf (node, owner));
+      case "MFString":
+         return Array .from (field, String);
+      case "MFBool":
+         return Array .from (field, v => !! v);
+      case "MFImage":
+         return Array .from (field, image => fieldData (image, owner));
+   }
+
+   if (type .startsWith ("MF"))
+   {
+      const target = field .getTarget ();
+
+      return Array .from (target .getValue () .subarray (0, target .length * target .getComponents ()));
+   }
+
+   return Array .from (field .getValue (), Number);
+}
+
+// A new field object of type `type` with the value `data`; `owner` is the handle of the world of its nodes.
+function fieldFromData (type, data, owner)
+{
+   const C = Fields [type];
+
+   switch (type)
+   {
+      case "SFBool": case "SFDouble": case "SFFloat": case "SFInt32": case "SFString": case "SFTime":
+         return new C (data);
+      case "SFNode":
+         return new C (data === null ? null : nodeRef (owner, data));
+      case "SFImage":
+         return new C (data [0], data [1], data [2], new Fields .MFInt32 (... data [3]));
+      case "SFRotation":
+      {
+         const field = new C (), r = field .getValue (), s = __bridge .rotation4;
+
+         r [s ._x] = data [0]; r [s ._y] = data [1]; r [s ._z] = data [2]; r [s ._angle] = data [3];
+         r [s ._tainted] = !! data [4];
+         r [s ._quaternion] .set (data [5], data [6], data [7], data [8]);
+         return field;
+      }
+      case "MFNode":
+         return new C (... data .map (id => nodeObject (owner, id)));
+      case "MFString":
+      case "MFBool":
+         return new C (... data);
+      case "MFImage":
+         return new C (... data .map (d => fieldFromData ("SFImage", d, owner)));
+   }
+
+   if (type .startsWith ("MF"))
+   {
+      const field = new C (), target = field .getTarget ();
+
+      target .set (data, data .length / target .getComponents ());
+      return field;
+   }
+
+   return new C (... data);
+}
+
+// Give `field` the value `data` without an event (X3DField.set): the internal value objects stay the same objects.
+function setFieldData (field, data, owner)
+{
+   const value = fieldFromData (field .getTypeName (), data, owner);
+
+   if (field instanceof X3DArrayField)
+      field .getTarget () .set (value .getValue (), value .length);
+   else
+      field .set (value .getValue ());
 }
 
 // --- scene and browser -------------------------------------------------------------------------------------------
@@ -270,7 +611,7 @@ class X3DScene
    get rootNodes ()
    {
       // A BigInt64Array of node ids, -1 for NULL.
-      return Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => n < 0 ? null : SFNode (this .#browser, this .#handle, Number (n)));
+      return new Fields .MFNode (... Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => nodeObject (this .#handle, Number (n))));
    }
 
    getNamedNode (name)
@@ -282,7 +623,7 @@ class X3DScene
       if (id === undefined)
          throw new Error (`Named node '${name}' not found.`);
 
-      return SFNode (this .#browser, this .#handle, id);
+      return nodeObject (this .#handle, id);
    }
 }
 
@@ -309,7 +650,8 @@ class X3DBrowser
    #ready;
    #scene;
    #scenes = new Map ();
-   #callbacks = new Map ([ 0, 1, 2, 3, 4 ] .map (event => [ event, new Map () ]));
+   #callbacks = new Map ([ "CONNECTION_ERROR", "BROWSER_EVENT", "INITIALIZED_EVENT", "SHUTDOWN_EVENT", "INITIALIZED_ERROR" ]
+      .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
    #frames = 0;
    #fileLoader = null;
@@ -445,14 +787,14 @@ class X3DBrowser
    }
 
    // X3DBrowser.loadURL (url [, parameter]): replace the world with the first url that loads.
-   loadURL (url, parameter = new MFString ())
+   loadURL (url, parameter = new Fields .MFString ())
    {
       return new Promise ((resolve, reject) =>
       {
-         if (!(url instanceof MFString))
+         if (!(url instanceof Fields .MFString))
             throw new Error ("Browser.loadURL: url must be of type MFString.");
 
-         if (!(parameter instanceof MFString))
+         if (!(parameter instanceof Fields .MFString))
             throw new Error ("Browser.loadURL: parameter must be of type MFString.");
 
          // FileLoader calls back at once when it fetches no candidate (there is none, or each is the empty URL), before
@@ -729,7 +1071,7 @@ class X3DBrowser
    // The layerNode argument of the viewpoint functions: X_ITE_R has the active layer only.
    #activeLayer (layerNode)
    {
-      if (layerNode !== undefined && layerNode !== null && layerNode [_node])
+      if (layerNode !== undefined && layerNode !== null && handleOf (layerNode))
          throw new Error ("X_ITE_R: the layerNode argument is not supported; use the active layer (omit it).");
    }
 
@@ -771,7 +1113,7 @@ class X3DBrowser
    {
       const id = this .#engine ?.activeViewpoint ();
 
-      return id === undefined ? null : SFNode (this, this .#scene [_node], id);
+      return id === undefined ? null : nodeObject (this .#scene [_node], id);
    }
 
    // --- browser callbacks and events ----------------------------------------------------------------------------
@@ -1193,6 +1535,7 @@ class X3DBrowser
          {
             engine .frame (Date .now () / 1000, width, height);
             this .#flushLog ();
+            processFieldEvents (this, engine .current);
          }
          catch (error)
          {
@@ -1224,7 +1567,7 @@ class X3DBrowser
          case "src":
          {
             if (newValue)
-               this .loadURL (new MFString (newValue)) .catch (error => console .error (error));
+               this .loadURL (new Fields .MFString (newValue)) .catch (error => console .error (error));
 
             break;
          }
@@ -1276,7 +1619,7 @@ class X3DCanvasElement extends HTMLElement
    get src ()      { return this .getAttribute ("src"); }
    set src (value) { this .setAttribute ("src", value); }
 
-   get url ()      { return new MFString (... [ ... (this .getAttribute ("url") ?? "") .matchAll (/"(?:[^"\\]|\\.)*"/gs) ] .map (m => parseVrmlString (m [0]))); }
+   get url ()      { return new Fields .MFString (... [ ... (this .getAttribute ("url") ?? "") .matchAll (/"(?:[^"\\]|\\.)*"/gs) ] .map (m => parseVrmlString (m [0]))); }
    set url (value) { this .setAttribute ("url", Array .from (value, vrmlString) .join (", ")); }
 
    connectedCallback ()    { this .browser .connectedCallback (); }
@@ -1300,7 +1643,11 @@ customElements .define ("x3d-canvas", X3DCanvasElement);
 // X3D: X_ITE's namespace object, for the parts listed in API.md.
 const X3D = Object .freeze ({
    X3DConstants,
-   SFColor, SFColorRGBA, SFRotation, SFVec2d, SFVec2f, SFVec3d, SFVec3f, SFVec4d, SFVec4f, MFString,
+   X3DFieldDefinition,
+   FieldDefinitionArray,
+   X3DField,
+   X3DArrayField,
+   ... Fields,
 
    getBrowser (element)
    {

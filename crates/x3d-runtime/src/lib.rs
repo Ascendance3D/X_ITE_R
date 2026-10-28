@@ -359,6 +359,10 @@ pub struct Runtime {
     pub field_observed: std::collections::HashSet<FKey>,
     /// Field callbacks due while the host was busy; they run when it is back.
     pub(crate) pending_field_events: Vec<FKey>,
+    /// Field callbacks of a page (the browser build, which has no Script host): when set, each event of a field in
+    /// [`Runtime::field_observed`] is recorded here with the value it delivered, in event order, for the page to call
+    /// its callbacks after the frame ([`Runtime::take_page_field_events`]).
+    pub page_field_events: Option<Vec<(FKey, FieldValue)>>,
     /// Node fields a Script holds as JavaScript objects (X_ITE's own field objects, which hold their value), and whether the
     /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
     pub js_mirror: HashMap<FKey, bool>,
@@ -642,6 +646,7 @@ impl Runtime {
             ctx_events: Default::default(),
             field_observed: Default::default(),
             pending_field_events: vec![],
+            page_field_events: None,
             js_mirror: HashMap::new(),
             js_dirty: vec![],
             shaders: Default::default(),
@@ -1148,6 +1153,14 @@ impl Runtime {
         for n in new {
             self.add_parent(n, Holder::Field(k));
         }
+    }
+
+    /// The events of observed fields the page has not taken yet (see [`Runtime::page_field_events`]).
+    pub fn take_page_field_events(&mut self) -> Vec<(FKey, FieldValue)> {
+        self.page_field_events
+            .as_mut()
+            .map(std::mem::take)
+            .unwrap_or_default()
     }
 
     /// The mirrored fields whose value changed since the last call (the Script's objects of them are stale).

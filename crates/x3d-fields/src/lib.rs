@@ -4,6 +4,7 @@
 //!
 //! Semantics follow X_ITE exactly, including quirks; see the module docs.
 
+pub mod data;
 pub mod fdlibm;
 pub mod format;
 pub mod generator;
