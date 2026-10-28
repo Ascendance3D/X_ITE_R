@@ -1,0 +1,103 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "nodeOwnership.nodeOwnership": {
+   "s01": [
+    [
+     "Group:G"
+    ],
+    "page",
+    true
+   ],
+   "s02": [
+    [
+     "Transform:OT"
+    ],
+    "other",
+    "other"
+   ],
+   "s03": [
+    [
+     "Group:G",
+     "Transform:OT",
+     "Transform:T"
+    ],
+    [
+     "page",
+     "other",
+     "page"
+    ]
+   ],
+   "s04": [
+    2,
+    3,
+    [
+     "Transform:T",
+     "Group:G",
+     "Transform:OT"
+    ],
+    "other"
+   ],
+   "s05": [
+    [
+     "Group:OG"
+    ],
+    [
+     "Transform:OT"
+    ],
+    "other"
+   ],
+   "s07": [
+    [],
+    [
+     "Transform"
+    ],
+    false,
+    "none"
+   ],
+   "s08": [
+    null,
+    null,
+    [
+     "Group:G",
+     "Box"
+    ]
+   ],
+   "s09": [
+    true,
+    "Transform",
+    "page",
+    "1 2 3"
+   ],
+   "s10": [
+    "TypeError: node?.getType is not a function",
+    "TypeError: node?.getType is not a function",
+    null,
+    "NULL",
+    null,
+    "TypeError: node?.getType is not a function"
+   ],
+   "s11": [
+    [
+     "Transform",
+     "Transform",
+     "Transform"
+    ],
+    [
+     "Transform"
+    ],
+    false
+   ],
+   "s12": [
+    "Group { children [ DEF OT Transform { } Transform { } ] }",
+    "<Group> <Transform DEF='OT'/> <Transform/> </Group>"
+   ],
+   "log": []
+  }
+ }
+}
