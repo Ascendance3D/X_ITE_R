@@ -322,7 +322,13 @@ function nodeIdOf (sfnode, owner)
       return null;
 
    if (handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation)
+   {
+      // X_ITE's SFNode and MFNode setters swallow an error and keep a plain property instead (SFNode.js, the `set` trap),
+      // so the refusal would pass without a trace. The warning names it.
+      console .warn ("X_ITE_R: a node can only be used in the world it belongs to.");
+
       throw new Error ("X_ITE_R: a node can only be used in the world it belongs to.");
+   }
 
    retireReleased (owner .browser, owner .scene);
 
