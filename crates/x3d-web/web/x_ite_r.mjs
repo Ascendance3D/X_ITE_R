@@ -76,8 +76,15 @@ function engineOf (handle)
    if (!engine || !engine .exists (handle .scene) || engine .worldGeneration (handle .scene) !== handle .generation)
       throw new Error ("X_ITE_R: the node belongs to a world that was replaced.");
 
+   retireReleased (handle .browser, handle .scene);
+
+   if (handle .released)
+      throw new Error (RELEASED);
+
    return engine;
 }
+
+const RELEASED = "X_ITE_R: the node was released; it is no longer in the world.";
 
 // An error of the engine as a page Error.
 const pageError = error => error instanceof Error && error .constructor === Error ? error : new Error (String (error ?.message ?? error));
@@ -223,9 +230,34 @@ function classDefinition (name, accessType, dataType, value)
    return definition;
 }
 
+// The engine released nodes of scene `scene` of `browser`: a node that takes the id of one is another node, so the
+// X3DNodeRef of the id refuses to be used from now on and the id gets a new X3DNodeRef.
+function retireReleased (browser, scene)
+{
+   const released = browser [_engine] ?.takeReleasedNodes (scene);
+
+   if (!released ?.length)
+      return;
+
+   const refs = nodeRefTables .get (browser) ?.get (scene) ?.refs;
+
+   for (const id of released)
+   {
+      const ref = refs ?.get (id);
+
+      if (!ref)
+         continue;
+
+      refs .delete (id);
+      ref [_node] .released = true;
+   }
+}
+
 // The X3DNodeRef of node `id` of the world of `owner` (a scene or node handle).
 function nodeRef (owner, id)
 {
+   retireReleased (owner .browser, owner .scene);
+
    const refs = sceneRefs (owner .browser, owner .scene, owner .generation);
 
    let ref = refs .get (id);
@@ -285,6 +317,11 @@ function nodeIdOf (sfnode, owner)
 
    if (handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation)
       throw new Error ("X_ITE_R: a node can only be used in the world it belongs to.");
+
+   retireReleased (owner .browser, owner .scene);
+
+   if (handle .released)
+      throw new Error (RELEASED);
 
    return handle .id;
 }
@@ -408,6 +445,8 @@ const parseVrmlString = text => text .trim () .slice (1, -1) .replace (/\\(.)/gs
 // The engine's changes of the fields the page holds objects of, in scene `scene` of `browser`.
 function syncScene (browser, scene)
 {
+   retireReleased (browser, scene);
+
    const table = nodeRefTables .get (browser) ?.get (scene);
 
    if (!table ?.refs .size)
@@ -432,6 +471,8 @@ function syncScene (browser, scene)
 // the value its event delivered. A callback that throws is reported, and the other callbacks run.
 function processFieldEvents (browser, scene)
 {
+   retireReleased (browser, scene);
+
    const table = nodeRefTables .get (browser) ?.get (scene);
 
    if (!table ?.refs .size)

@@ -1,6 +1,7 @@
 //! The platform-neutral part of the browser module: the world the page loads is parsed and owned by the Rust runtime,
 //! its fields read and set like through X_ITE's SFNode, and a world that does not parse is an error.
 
+use x3d_fields::NodeId;
 use x3d_runtime::data::Data;
 use x3d_web::session::{FieldInfo, Session};
 
@@ -267,4 +268,208 @@ fn field_definitions_hold_class_defaults_and_user_fields() {
 
     assert_eq!((n.type_name, n.default), ("SFInt32", None));
     assert!(s.field_definitions(u32::MAX).is_empty());
+}
+
+// --- released nodes (PR #147 review): a released node's id may name another node later ---------------------------
+
+/// A world that gives the page a node of an Inline: the Inline's G exports its child IT, and a route moves G's
+/// children into the world's O when the page adds a node to G (through Src).
+fn inline_world() -> Vec<u8> {
+    let inner = "#X3D V4.0 utf8\nDEF G Group { children DEF IT Transform { translation 1 2 3 } }\nEXPORT G\n";
+    let url: String = inner
+        .chars()
+        .map(|c| match c {
+            '#' => "%23".to_string(),
+            ' ' => "%20".to_string(),
+            '\n' => "%0A".to_string(),
+            c => c.to_string(),
+        })
+        .collect();
+
+    format!(
+        "#X3D V4.0 utf8
+DEF I Inline {{ url \"data:model/x3d-vrml,{url}\" }}
+IMPORT I.G
+DEF Src Group {{ }}
+DEF O Group {{ }}
+DEF X Transform {{ }}
+ROUTE Src.children_changed TO G.addChildren
+ROUTE G.children_changed TO O.set_children
+"
+    )
+    .into_bytes()
+}
+
+/// Load the Inline world and step until O holds the Inline's IT; IT's id.
+fn inline_node(s: &mut Session, t: &mut f64) -> NodeId {
+    let x = s.named_node("X").unwrap();
+    let src = s.named_node("Src").unwrap();
+    let o = s.named_node("O").unwrap();
+
+    for _ in 0..20 {
+        *t += 0.1;
+        s.step(*t);
+    }
+
+    s.set_field_data(
+        src,
+        "children",
+        &Data::List(vec![Data::Number(f64::from(x))]),
+    )
+    .unwrap();
+
+    for _ in 0..3 {
+        *t += 0.1;
+        s.step(*t);
+    }
+
+    let children = s.node_value(o, "children").unwrap();
+    let it = children[0].expect("O holds the Inline's IT");
+
+    assert_eq!(s.node_name(it).as_deref(), Some("IT"));
+    it
+}
+
+/// Unload the Inline and empty O and Src: nothing refers to IT any more, the sweep releases it.
+fn release_inline(s: &mut Session, t: &mut f64) {
+    let i = s.named_node("I").unwrap();
+
+    for name in ["Src", "O"] {
+        let n = s.named_node(name).unwrap();
+
+        s.set_field_data(n, "children", &Data::List(vec![]))
+            .unwrap();
+    }
+
+    s.set_field_data(i, "load", &Data::Bool(false)).unwrap();
+
+    for _ in 0..3 {
+        *t += 0.1;
+        s.step(*t);
+    }
+}
+
+#[test]
+fn a_released_node_s_queued_events_are_dropped() {
+    let mut s = load(&inline_world()).unwrap();
+    let mut t = NOW;
+    let it = inline_node(&mut s, &mut t);
+    let i = s.named_node("I").unwrap();
+
+    s.take_released_nodes();
+    s.observe_field(it, "translation", true).unwrap();
+    s.take_field_events();
+
+    // The event of IT and the release of IT happen in the same frame: the page takes the events after it.
+    s.set_field_data(it, "translation", &vec3(5.0, 5.0, 5.0))
+        .unwrap();
+
+    for name in ["Src", "O"] {
+        let n = s.named_node(name).unwrap();
+
+        s.set_field_data(n, "children", &Data::List(vec![]))
+            .unwrap();
+    }
+
+    s.set_field_data(i, "load", &Data::Bool(false)).unwrap();
+    t += 0.1;
+    s.step(t);
+
+    assert!(s.type_name(it).is_none(), "the sweep released IT");
+    assert!(s.take_released_nodes().contains(&it));
+    assert_eq!(s.take_field_events(), []);
+}
+
+#[test]
+fn a_released_id_that_names_a_new_node_is_reported_and_keeps_no_events() {
+    let mut s = load(&inline_world()).unwrap();
+    let mut t = NOW;
+    let it = inline_node(&mut s, &mut t);
+    let i = s.named_node("I").unwrap();
+
+    s.observe_field(it, "translation", true).unwrap();
+    release_inline(&mut s, &mut t);
+
+    assert!(s.take_released_nodes().contains(&it));
+    assert!(
+        s.set_field_data(it, "translation", &vec3(1.0, 1.0, 1.0))
+            .is_err()
+    );
+
+    // The Inline loads again: its new nodes take the released slots, IT's id among them.
+    s.set_field_data(i, "load", &Data::Bool(true)).unwrap();
+
+    for _ in 0..20 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    assert!(
+        s.type_name(it).is_some(),
+        "the id of the old IT names a node of the new Inline scene"
+    );
+
+    // The new node is not observed: the page's callbacks of the old IT do not get its events.
+    s.set_field_data(it, "children", &Data::List(vec![])).ok();
+    s.set_field_data(it, "translation", &vec3(7.0, 7.0, 7.0))
+        .ok();
+    t += 0.1;
+    s.step(t);
+    assert_eq!(s.take_field_events(), []);
+}
+
+#[test]
+fn field_data_of_the_wrong_shape_or_with_bad_node_ids_is_refused() {
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let m = s.named_node("M").unwrap();
+    let n = |x: f64| Data::Number(x);
+    let list = |v: Vec<Data>| Data::List(v);
+
+    // Too few components, a string for a number, a number for a boolean.
+    assert!(
+        s.set_field_data(t, "translation", &list(vec![n(1.0), n(2.0)]))
+            .is_err()
+    );
+    assert!(
+        s.set_field_data(
+            t,
+            "translation",
+            &list(vec![n(1.0), n(2.0), Data::String("3".into())])
+        )
+        .is_err()
+    );
+    assert!(s.set_field_data(t, "translation", &n(1.0)).is_err());
+    assert!(
+        s.set_field_data(m, "diffuseColor", &list(vec![n(1.0); 4]))
+            .is_err()
+    );
+    assert!(s.set_field_data(t, "visible", &n(1.0)).is_err());
+
+    // Node ids: out of range, fractional, negative, not a number; then a node that is not in the world.
+    for bad in [
+        n(1e12),
+        n(1.5),
+        n(-1.0),
+        n(f64::NAN),
+        Data::String("1".into()),
+        n(f64::from(u32::MAX)),
+    ] {
+        assert!(
+            s.set_field_data(t, "children", &list(vec![bad.clone()]))
+                .is_err(),
+            "{bad:?}"
+        );
+    }
+
+    // Nothing was changed by the refused data.
+    assert_eq!(s.field(t, "translation").unwrap().value, "0 0 0");
+    assert!(s.node_value(t, "children").unwrap().is_empty());
+
+    // The right shapes are taken.
+    s.set_field_data(t, "translation", &vec3(1.0, 2.0, 3.0))
+        .unwrap();
+    s.set_field_data(t, "children", &list(vec![n(f64::from(m)), Data::Null]))
+        .unwrap();
+    assert_eq!(s.node_value(t, "children").unwrap(), [Some(m), None]);
 }

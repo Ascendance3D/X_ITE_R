@@ -233,6 +233,8 @@ impl Session {
         rt.page_url = world.url.clone();
         // The page calls the field callbacks (X3DField.addFieldCallback) after the frame: there is no Script host.
         rt.page_field_events = Some(vec![]);
+        // The page's objects of nodes are keyed by node id: it learns which ids were released.
+        rt.page_released = Some(vec![]);
         x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
         rt.now = now;
@@ -471,8 +473,19 @@ impl Session {
     /// SFNode proxy refuses an outputOnly field, a field object of it does not.
     pub fn set_field_data(&mut self, node: NodeId, name: &str, value: &Data) -> Result<(), String> {
         let k = self.field_key(node, name)?;
+        let ty = self.rt().field(k).ty();
+
+        data::check_data(ty, value).map_err(|e| format!("field '{name}': {e}"))?;
+
+        if let Some(n) = data::data_nodes(ty, value)
+            .into_iter()
+            .find(|&n| !self.node_exists(n))
+        {
+            return Err(format!("field '{name}': node {n} is not in the world"));
+        }
+
         let rt = self.rt_mut();
-        let value = data::data_value(rt.field(k).ty(), value);
+        let value = data::data_value(ty, value);
 
         rt.set_value(k, value);
         // The page's object holds this value already.
@@ -513,10 +526,19 @@ impl Session {
     pub fn take_field_events(&mut self) -> Vec<(NodeId, String, Data)> {
         let rt = self.rt_mut();
 
+        // The release sweep drops the events of released nodes; a node that is not live is skipped all the same, so
+        // no event reads a released slot.
         rt.take_page_field_events()
             .into_iter()
+            .filter(|(k, _)| rt.scene.is_live(k.0))
             .map(|(k, value)| (k.0, rt.field(k).name.clone(), data::value_data(&value)))
             .collect()
+    }
+
+    /// The nodes the runtime released since the last call: their ids may name other nodes from now on, so the page
+    /// drops its objects of them.
+    pub fn take_released_nodes(&mut self) -> Vec<NodeId> {
+        self.rt_mut().take_page_released()
     }
 
     /// X3DNode.getFieldDefinitions: the predefined fields with the class's default values, then the user-defined
