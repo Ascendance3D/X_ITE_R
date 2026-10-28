@@ -171,6 +171,8 @@ async function noScene (page)
       [ "bad", "SFNode", "fromVRMLString", "1" ], [ "bad", "MFNode", "fromVRMLString", "abc" ],
       [ "bad", "MFNode", "fromVRMLString", "[ 1 ]" ], [ "bad", "MFNode", "fromVRMLString", "[ Group { }" ],
       [ "bad", "MFNode", "fromVRMLString", "[" ], [ "bad", "SFNode", "fromVRMLString", "NULL NULL" ],
+      [ "proto", "MFNode", "fromVRMLString", "[ EXTERNPROTO P [] \"a.wrl\" ]" ], [ "proto", "MFNode", "fromVRMLString", "[ PROTO P [] { Group { } } ]" ],
+      [ "proto", "MFNode", "fromVRMLString", "[ ROUTE a.b TO c.d Group { } ]" ],
       [ "xml", "SFNode", "fromXMLString", "<Transform/>" ], [ "xml", "SFNode", "fromXMLString", "" ],
       [ "xml", "SFNode", "fromXMLString", "NULL" ], [ "xml", "SFNode", "fromXMLString", "<Bogus" ],
       [ "xml", "MFNode", "fromXMLString", "<Group/><Transform/>" ], [ "xml", "MFNode", "fromXMLString", "" ],

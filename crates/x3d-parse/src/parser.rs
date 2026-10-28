@@ -49,17 +49,21 @@ enum Stmt {
     No,
 }
 
-/// What a field parse asked of the execution context (the pinned VRMLParser calls `createNode` for a node type and
-/// `getBrowser` to place a USE reference).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct ContextUse {
-    pub node_type: bool,
-    pub use_reference: bool,
+/// A call the pinned VRMLParser makes on its execution context.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ContextCall {
+    /// `createNode`, for a node type.
+    CreateNode,
+    /// `getBrowser`, for a USE reference, or for the `X3DProtoDeclaration` / `X3DExternProtoDeclaration` of a PROTO.
+    GetBrowser,
 }
 
 pub struct Parser<'a> {
     input: &'a [u8],
-    context_use: ContextUse,
+    /// The first call the parse made on its execution context (the first one fails when there is none).
+    context_call: Option<ContextCall>,
+    /// No execution context at all: `ROUTE` finds no named node (X_ITE: `getLocalNode` of undefined).
+    no_context: bool,
     last_index: usize,
     line_number: usize,
     /// Text of the last successful terminal match (`this .result [0]`).
@@ -94,7 +98,8 @@ impl<'a> Parser<'a> {
             scene: Scene::new(world_url),
             contexts: vec![ROOT],
             unknown_level: 0,
-            context_use: ContextUse::default(),
+            context_call: None,
+            no_context: false,
             named_nodes: HashMap::new(),
             imported_names: HashMap::new(),
             placeholders: HashMap::new(),
@@ -159,7 +164,8 @@ impl<'a> Parser<'a> {
         unit: Option<String>,
         name: &str,
     ) -> (Scene, Result<Option<FieldValue>, ParseError>) {
-        let (scene, result, _) = Parser::parse_field_probe(scene, ctx, ty, text, xml, unit, name);
+        let (scene, result, _) =
+            Parser::parse_field_probe(scene, ctx, ty, text, xml, unit, name, false);
 
         (scene, result)
     }
@@ -174,12 +180,18 @@ impl<'a> Parser<'a> {
         xml: bool,
         unit: Option<String>,
         name: &str,
-    ) -> (Scene, Result<Option<FieldValue>, ParseError>, ContextUse) {
+        no_context: bool,
+    ) -> (
+        Scene,
+        Result<Option<FieldValue>, ParseError>,
+        Option<ContextCall>,
+    ) {
         let mut parser = Parser::new(text, "");
 
         parser.scene = scene;
         parser.contexts = vec![ctx];
         parser.field_unit = unit;
+        parser.no_context = no_context;
 
         let current = FieldValue::default_for(ty);
 
@@ -211,7 +223,7 @@ impl<'a> Parser<'a> {
             parser.setup_nodes();
         }
 
-        (parser.scene, result, parser.context_use)
+        (parser.scene, result, parser.context_call)
     }
 
     // --- helpers ---------------------------------------------------------------------------
@@ -221,6 +233,18 @@ impl<'a> Parser<'a> {
             message: message.into(),
             line: self.line_number,
         })
+    }
+
+    /// The parse calls its execution context. With none the call throws in X_ITE, so the parse stops here (the
+    /// warnings it made before stay, the ones it would make after never exist).
+    fn context_call_made(&mut self, call: ContextCall) -> R<()> {
+        self.context_call.get_or_insert(call);
+
+        if self.no_context {
+            return self.err("no execution context");
+        }
+
+        Ok(())
     }
 
     pub(crate) fn warn(&mut self, message: String) {
@@ -775,9 +799,7 @@ impl<'a> Parser<'a> {
                 let name = self.result.clone();
                 let ctx = self.ctx();
 
-                if !self.context_use.node_type {
-                    self.context_use.use_reference = true;
-                }
+                self.context_call_made(ContextCall::GetBrowser)?;
 
                 if let Some(n) = self.scene.get_local_node(ctx, &name) {
                     return Ok(Stmt::Node(n));
@@ -841,6 +863,7 @@ impl<'a> Parser<'a> {
 
                         if self.keyword("{") {
                             let ctx = self.ctx();
+                            self.context_call_made(ContextCall::GetBrowser)?;
                             let proto = self.scene.new_proto(ctx);
 
                             {
@@ -1030,6 +1053,7 @@ impl<'a> Parser<'a> {
                     if self.keyword("]") {
                         if let Some(FieldValue::MFString(url)) = self.mfstring_value()? {
                             let ctx = self.ctx();
+                            self.context_call_made(ContextCall::GetBrowser)?;
                             let e = self.scene.new_extern_proto(ctx, url);
 
                             {
@@ -1140,6 +1164,10 @@ impl<'a> Parser<'a> {
                                         let to = self.scene.get_local_node(ctx, &to_node_id);
 
                                         let result = match (from, to) {
+                                            _ if self.no_context => Err(
+                                                "TypeError: Cannot read properties of undefined (reading 'getLocalNode')"
+                                                    .to_string(),
+                                            ),
                                             (None, _) => Err(format!(
                                                 "Unknown named or imported node '{from_node_id}'."
                                             )),
@@ -1158,9 +1186,13 @@ impl<'a> Parser<'a> {
                                         // console .warn (`Parser error at line ${n}.`, error): the
                                         // dump prints the Error argument as String (error).
                                         if let Err(e) = result {
-                                            self.warn(format!(
-                                                "Parser error at line {line}. Error: {e}"
-                                            ));
+                                            let e = if e.starts_with("TypeError: ") {
+                                                e
+                                            } else {
+                                                format!("Error: {e}")
+                                            };
+
+                                            self.warn(format!("Parser error at line {line}. {e}"));
                                         }
 
                                         return Ok(true);
@@ -1201,10 +1233,7 @@ impl<'a> Parser<'a> {
         let node_type_id = self.result.clone();
         let ctx = self.ctx();
 
-        // The first call fails in X_ITE, so only the first one counts.
-        if !self.context_use.use_reference {
-            self.context_use.node_type = true;
-        }
+        self.context_call_made(ContextCall::CreateNode)?;
 
         let base_node = match self.scene.create_node(ctx, &node_type_id) {
             Some(n) => Some(n),
