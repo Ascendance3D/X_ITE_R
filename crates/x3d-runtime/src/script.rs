@@ -210,15 +210,8 @@ impl Runtime {
             }
 
             // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
-            let trimmed = candidate.trim_start_matches(crate::loader::is_js_space);
-
-            if let Some(scheme) = ["ecmascript:", "javascript:", "vrmlscript:"]
-                .iter()
-                .find(|s| trimmed.starts_with(**s))
-            {
-                let source = trimmed[scheme.len()..].to_string();
-
-                return self.script_accept(node, index, &candidate, &source, None);
+            if let Some((_, source)) = crate::loader::strip_script_scheme(&candidate) {
+                return self.script_accept(node, index, &candidate, source, None);
             }
 
             let Some(resolved) = url::Url::parse(&loader.base)
@@ -522,42 +515,5 @@ impl Runtime {
             ),
             _ => {}
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_script_url_space() {
-        assert!(
-            "\u{FEFF}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            !("\u{0085}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:"))
-        );
-        assert!(
-            "\u{00A0}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{2028}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{3000}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            " \t\n\rjavascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
     }
 }

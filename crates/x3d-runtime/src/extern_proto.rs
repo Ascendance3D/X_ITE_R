@@ -601,12 +601,7 @@ impl Runtime {
         }
 
         // Script URLs are no scenes.
-        let trimmed = candidate.trim_start_matches(crate::loader::is_js_space);
-
-        if ["ecmascript:", "javascript:", "vrmlscript:"]
-            .iter()
-            .any(|s| trimmed.starts_with(s))
-        {
+        if crate::loader::strip_script_scheme(candidate).is_some() {
             return Step::Failed {
                 error: "Error: Couldn't parse X3D. No suitable file handler found.".into(),
                 resolved: None,
@@ -1348,42 +1343,5 @@ impl Runtime {
                 Some((nk, ev))
             })
             .collect();
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_script_url_space() {
-        assert!(
-            "\u{FEFF}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            !("\u{0085}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:"))
-        );
-        assert!(
-            "\u{00A0}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{2028}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            "\u{3000}javascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
-        assert!(
-            " \t\n\rjavascript:"
-                .trim_start_matches(crate::loader::is_js_space)
-                .starts_with("javascript:")
-        );
     }
 }
