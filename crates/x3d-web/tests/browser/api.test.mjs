@@ -59,7 +59,7 @@ before (async () =>
    browser = await chromium .launch ({
       headless: true,
       args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
-         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
+         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu", "--js-flags=--expose-gc" ],
    });
 });
 
@@ -497,6 +497,42 @@ ROUTE G.children_changed TO O.set_children
       });
 
       assert .deepEqual (r, { before: "1 2 3", stale: "X_ITE_R: the node was released; it is no longer in the world.", same: false, fresh: "IT", events: 0 });
+      await page .context () .close ();
+   });
+   test ("17. replaceWorld keeps the scene of the page while it waits, though the page holds it no longer", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async () =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const results = [ ];
+
+         for (let i = 0; i < 5; ++ i)
+         {
+            // The page drops its X3DScene object as soon as replaceWorld has it.
+            const pending = browser .createX3DFromString (`#X3D V4.0 utf8\nDEF N${i} Group { }\n`)
+               .then (scene => browser .replaceWorld (scene))
+               .then (() => "resolved", error => error .message);
+
+            // Collect it (and run its FinalizationRegistry callback) while replaceWorld waits for frames.
+            for (let k = 0; k < 10; ++ k)
+            {
+               window .gc ();
+               await new Promise (resolve => setTimeout (resolve, 0));
+            }
+
+            const result = await pending;
+            let node;
+
+            try { node = browser .currentScene .getNamedNode (`N${i}`) .getNodeTypeName (); } catch (error) { node = error .message; }
+
+            results .push ({ result, node });
+         }
+
+         return results;
+      });
+
+      assert .deepEqual (r, Array .from ({ length: 5 }, () => ({ result: "resolved", node: "Group" })));
       await page .context () .close ();
    });
 });

@@ -698,6 +698,9 @@ class X3DBrowser
    #fileLoader = null;
    #reject = null;
    #replacing = null;
+   // The X3DScene object of the page that the replaceWorld in progress makes the world: while the call waits for
+   // frames, nothing else may hold it, and its FinalizationRegistry entry would discard the engine scene.
+   #replacingScene = null;
    #disposed = false;
    #listeners = new AbortController ();
    #buttons = 0;
@@ -1029,7 +1032,7 @@ class X3DBrowser
          if (this .#fileLoader)
             this .#abortLoad (this .#fileLoader);
 
-         return this .#replaceWorld (id, owned);
+         return this .#replaceWorld (id, owned, owned ? null : scene);
       }
       catch (error)
       {
@@ -1042,13 +1045,14 @@ class X3DBrowser
    // rejects this one with "Replacing world aborted.". `owned`: the adapter made the scene (loadURL, the empty
    // world), so a call that a newer one replaced releases it, unless the newer call uses the same scene. A scene of
    // the page (createX3DFromString) stays: its X3DScene releases it.
-   #replaceWorld (id, owned)
+   #replaceWorld (id, owned, scene = null)
    {
       return new Promise ((resolve, reject) =>
       {
          this .#reject ?.(new Error ("Replacing world aborted."));
-         this .#reject    = reject;
-         this .#replacing = id;
+         this .#reject         = reject;
+         this .#replacing      = id;
+         this .#replacingScene = scene;
 
          const current   = () => this .#reject === reject && this .#engine;
          const nextFrame = () => new Promise (requestAnimationFrame);
@@ -1088,8 +1092,9 @@ class X3DBrowser
             if (!current ())
                return;
 
-            this .#reject    = null;
-            this .#replacing = null;
+            this .#reject         = null;
+            this .#replacing      = null;
+            this .#replacingScene = null;
             this .#call (X3DConstants .INITIALIZED_EVENT);
             this .#dispatch ("initialized load");
             resolve ();
@@ -1098,8 +1103,9 @@ class X3DBrowser
          {
             if (this .#reject === reject)
             {
-               this .#reject    = null;
-               this .#replacing = null;
+               this .#reject         = null;
+               this .#replacing      = null;
+               this .#replacingScene = null;
             }
 
             reject (error);
