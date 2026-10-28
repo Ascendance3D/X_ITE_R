@@ -452,6 +452,10 @@ impl Session {
     /// X3DObject.toVRMLString / toXMLString / toJSONString of an SFNode or MFNode value (`ty`, `data` of the page): the
     /// nodes in full, named by their own execution context, as the Script engine prints them. `kind` is `vrml`, `xml`
     /// or `json`. A node that is not in the world is an error.
+    ///
+    /// Checks run in this order: the field type (only SFNode and MFNode), the data shape, that every node is in the world,
+    /// then `kind`. This is an adapter contract, not an X_ITE one: X_ITE has no such call (its `toVRMLString` takes no
+    /// `kind`), so the order is not compared with the pinned build. Every failure is an `Err` before any text is made.
     pub fn print_nodes(&self, kind: &str, ty: FieldType, data: &Data) -> Result<String, String> {
         if !matches!(ty, FieldType::SFNode | FieldType::MFNode) {
             return Err(format!("{} is not a node field type", ty.name()));

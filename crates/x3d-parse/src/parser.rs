@@ -170,8 +170,12 @@ impl<'a> Parser<'a> {
         (scene, result)
     }
 
-    /// [`Parser::parse_field_into`], and what the parse asked of the context: a value that reached a node statement needs
-    /// a scene when there is none.
+    /// [`Parser::parse_field_into`], and the first call the parse made on its execution context. `x3d-runtime` calls this, so
+    /// it is `pub`; use `parse_field_into` for a field with a scene. With `no_context` the parse stops at that call and
+    /// `ROUTE` warns as X_ITE does with an undefined context. The call is `None` for XML text and for text with no node,
+    /// PROTO or USE statement..
+    // The arguments of `parse_field_into` and the one flag; a second entry point keeps that function's callers unchanged.
+    #[allow(clippy::too_many_arguments)]
     pub fn parse_field_probe(
         scene: Scene,
         ctx: CtxId,
