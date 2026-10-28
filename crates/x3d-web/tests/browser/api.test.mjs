@@ -59,7 +59,7 @@ before (async () =>
    browser = await chromium .launch ({
       headless: true,
       args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
-         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
+         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu", "--js-flags=--expose-gc" ],
    });
 });
 
@@ -437,6 +437,102 @@ describe ("x3d-canvas", () =>
       }, `${base}/${WORLD}`);
 
       assert .deepEqual (r, { first: "resolved", chained: "resolved", world: true, node: "Group" });
+      await page .context () .close ();
+   });
+   test ("16. a node the engine released refuses to be used; a node that takes its id is a new node", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async () =>
+      {
+         const X3D     = window .X3D_NS;
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const frames  = async n => { for (let i = 0; i < n; ++ i) await new Promise (requestAnimationFrame); };
+         const inner   = "#X3D V4.0 utf8\nDEF G Group { children DEF IT Transform { translation 1 2 3 } }\nEXPORT G\n";
+         const world   = `#X3D V4.0 utf8
+DEF I Inline { url "data:model/x3d-vrml,${encodeURIComponent (inner)}" }
+IMPORT I.G
+DEF Src Group { }
+DEF O Group { }
+DEF X Transform { }
+ROUTE Src.children_changed TO G.addChildren
+ROUTE G.children_changed TO O.set_children
+`;
+         await browser .loadURL (new X3D .MFString (URL .createObjectURL (new Blob ([ world ]))));
+         await frames (10);
+
+         const scene = browser .currentScene;
+         const [ I, Src, O, X ] = [ "I", "Src", "O", "X" ] .map (name => scene .getNamedNode (name));
+
+         // The route puts the Inline's IT into O, where the page gets it.
+         const inlineNode = async () =>
+         {
+            Src .children = new X3D .MFNode (X);
+            await frames (3);
+            return O .children [0];
+         };
+
+         const old = await inlineNode ();
+         const before = String (old .translation);
+         let events = 0;
+
+         old .getField ("translation") .addFieldCallback ("test", () => ++ events);
+
+         // Nothing refers to IT any more: the engine releases it, and the Inline's next load reuses the slot.
+         Src .children = new X3D .MFNode ();
+         O .children   = new X3D .MFNode ();
+         I .load       = false;
+         await frames (3);
+         I .load = true;
+         await frames (10);
+
+         const fresh = await inlineNode ();
+         let stale;
+
+         try { stale = String (old .translation); } catch (error) { stale = error .message; }
+
+         fresh .translation = new X3D .SFVec3f (7, 7, 7);
+         await frames (3);
+
+         return { before, stale, same: fresh === old, fresh: String (fresh .getNodeName ()), events };
+      });
+
+      assert .deepEqual (r, { before: "1 2 3", stale: "X_ITE_R: the node was released; it is no longer in the world.", same: false, fresh: "IT", events: 0 });
+      await page .context () .close ();
+   });
+   test ("17. replaceWorld keeps the scene of the page while it waits, though the page holds it no longer", async () =>
+   {
+      const page = await openPage ();
+      const r    = await page .evaluate (async () =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const results = [ ];
+
+         for (let i = 0; i < 5; ++ i)
+         {
+            // The page drops its X3DScene object as soon as replaceWorld has it.
+            const pending = browser .createX3DFromString (`#X3D V4.0 utf8\nDEF N${i} Group { }\n`)
+               .then (scene => browser .replaceWorld (scene))
+               .then (() => "resolved", error => error .message);
+
+            // Collect it (and run its FinalizationRegistry callback) while replaceWorld waits for frames.
+            for (let k = 0; k < 10; ++ k)
+            {
+               window .gc ();
+               await new Promise (resolve => setTimeout (resolve, 0));
+            }
+
+            const result = await pending;
+            let node;
+
+            try { node = browser .currentScene .getNamedNode (`N${i}`) .getNodeTypeName (); } catch (error) { node = error .message; }
+
+            results .push ({ result, node });
+         }
+
+         return results;
+      });
+
+      assert .deepEqual (r, Array .from ({ length: 5 }, () => ({ result: "resolved", node: "Group" })));
       await page .context () .close ();
    });
 });
