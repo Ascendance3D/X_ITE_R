@@ -741,21 +741,6 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --ru
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-data-url-01-baseline --runs 5 --suite dataurl01
 ```
 
-- `x_ite-web-runtime-02.mjs --suite scripturl01` runs the 44 cases of `crates/x3d-web/tests/browser/scripturl01_case.mjs`
-  (issue #127) and records `web-browser-script-url-01-baseline/scripturl01-baseline.json` (no pictures). Each of 11
-  prefixes (none, U+0020, U+0009, U+FEFF, U+0085, U+00A0, U+2028, U+3000, U+2003, U+200B, U+180E) goes before
-  `ecmascript:` in the url of a Script node, the world's loadURL, an Inline and an EXTERNPROTO, each followed by a
-  second candidate that tells the outcomes apart. X_ITE 16.5.0 (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`) takes
-  U+0009, U+0020, U+FEFF, U+00A0, U+2028, U+3000 and U+2003 as source text, and requests U+0085, U+200B and U+180E as
-  a file (404, then the second candidate). The compared values are `requests` (and, for loadURL, the world and its
-  title); the rest is under `detail`, which the harness records but does not compare: X_ITE_R's web build has no
-  script engine, and its Inline and EXTERNPROTO take a script URL as no scene.
-- Three runs gave identical values (Chrome 156.0.8078.47).
-
-```
-node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-script-url-01-baseline --runs 3 --suite scripturl01
-```
-
 - `x_ite-web-runtime-02.mjs --suite degenerate01` runs the 9 cases of `crates/x3d-web/tests/browser/degenerate01_case.mjs`
   and records `web-browser-degenerate-01-baseline/degenerate01-baseline.json` and 12 pictures. The cases are
   TriangleSet worlds with zero-area triangles (two or three equal points, several of them, finding F1 of PR #124) and

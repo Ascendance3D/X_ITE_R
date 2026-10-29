@@ -419,7 +419,7 @@ pub fn pick(
     x: f64,
     y: f64,
     pointing: bool,
-    mut gpu: Option<&mut PointingGpu>,
+    gpu: Option<&mut PointingGpu>,
 ) -> Hit {
     let ray = hit_ray(cam, x, y);
     // The hit point, normal and texCoord come from the pointing buffer: a 1x1 float buffer drawn
@@ -437,7 +437,7 @@ pub fn pick(
     // The pointing buffer decides the pick when there is one. A ParticleSystem goes through it as a single instanced
     // draw, so no particle gets a shape record or a ray cast, and no CPU hit is computed at all: the buffer's own
     // float32 values are the hit.
-    if let Some(gpu) = gpu.as_deref_mut() {
+    if let Some(gpu) = gpu {
         match gpu_pick(gpu, shapes, geometry, cam, x, y, px, py, pointing) {
             // A miss: the pass wrote no fragment, so nothing is under the pointer.
             Ok(None) => return hit,
@@ -571,7 +571,7 @@ fn shape_candidate(
             hit_ray(
                 &PickCamera {
                     viewport: Vector4::new(v[0], v[1], v[2], v[3]),
-                    ..cam.clone()
+                    ..*cam
                 },
                 px,
                 py,
@@ -745,7 +745,7 @@ fn shape_candidate(
             p
         };
 
-        let hits = ray_triangles(&g, &o, &d, &|t| !clipped(&at(t)));
+        let hits = ray_triangles(g, &o, &d, &|t| !clipped(&at(t)));
 
         if hits.is_empty() {
             return None;
@@ -1350,6 +1350,12 @@ fn mult_dir_matrix(m: &Matrix4, v: Vector3) -> Vector3 {
     v
 }
 
+impl Default for Pointer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Pointer {
     pub fn new() -> Pointer {
         Pointer {
@@ -1531,10 +1537,8 @@ impl Pointer {
             }
             self.anchor_over.insert((s.node.path.to_vec(), n), over);
 
-            if over {
-                if let Some(FieldValue::SFString(d)) = rt.pre_value(n, "description") {
-                    self.out.description = Some(d.clone());
-                }
+            if over && let Some(FieldValue::SFString(d)) = rt.pre_value(n, "description") {
+                self.out.description = Some(d.clone());
             }
             return;
         }
@@ -1542,10 +1546,8 @@ impl Pointer {
         if rt.get_bool(n, "isOver") != over {
             set(rt, n, "isOver", FieldValue::SFBool(over));
 
-            if over {
-                if let Some(FieldValue::SFString(d)) = rt.pre_value(n, "description") {
-                    self.out.description = Some(d.clone());
-                }
+            if over && let Some(FieldValue::SFString(d)) = rt.pre_value(n, "description") {
+                self.out.description = Some(d.clone());
             }
         }
 
@@ -1600,24 +1602,25 @@ impl Pointer {
             self.anchor_active.insert(key, active);
 
             // The hidden TouchSensor: on release over the anchor, request the load.
-            if over && !active {
-                if let Some(rt) = crate::walk::rt_at(root, &s.node.path) {
-                    let n = s.node.node;
-                    let strings = |name: &str| match rt.pre_value(n, name) {
-                        Some(FieldValue::MFString(v)) => v.clone(),
-                        _ => vec![],
-                    };
-                    let description = match rt.pre_value(n, "description") {
-                        Some(FieldValue::SFString(d)) => d.clone(),
-                        _ => String::new(),
-                    };
-                    self.out.anchors.push(AnchorActivation {
-                        node: s.node.clone(),
-                        description,
-                        urls: strings("url"),
-                        parameters: strings("parameter"),
-                    });
-                }
+            if over
+                && !active
+                && let Some(rt) = crate::walk::rt_at(root, &s.node.path)
+            {
+                let n = s.node.node;
+                let strings = |name: &str| match rt.pre_value(n, name) {
+                    Some(FieldValue::MFString(v)) => v.clone(),
+                    _ => vec![],
+                };
+                let description = match rt.pre_value(n, "description") {
+                    Some(FieldValue::SFString(d)) => d.clone(),
+                    _ => String::new(),
+                };
+                self.out.anchors.push(AnchorActivation {
+                    node: s.node.clone(),
+                    description,
+                    urls: strings("url"),
+                    parameters: strings("parameter"),
+                });
             }
             return;
         }
@@ -1634,10 +1637,10 @@ impl Pointer {
         set(rt, n, "isActive", FieldValue::SFBool(active));
 
         match ty {
-            Some("TouchSensor" | "GeoTouchSensor") => {
-                if rt.get_bool(n, "enabled") && rt.get_bool(n, "isOver") && !active {
-                    set(rt, n, "touchTime", FieldValue::SFTime(now));
-                }
+            Some("TouchSensor" | "GeoTouchSensor")
+                if rt.get_bool(n, "enabled") && rt.get_bool(n, "isOver") && !active =>
+            {
+                set(rt, n, "touchTime", FieldValue::SFTime(now));
             }
             Some("PlaneSensor") | Some("CylinderSensor") | Some("SphereSensor") => {
                 if active {

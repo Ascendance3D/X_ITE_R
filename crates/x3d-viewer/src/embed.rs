@@ -347,10 +347,10 @@ impl EmbeddedViewer {
         let keep = self.core.as_ref().map(|c| c.viewer_kind().to_string());
         self.load(&path, options)?;
 
-        if let (Some(kind), Some(c)) = (keep, self.core.as_mut()) {
-            if kind != "NONE" {
-                c.set_viewer(&kind);
-            }
+        if let (Some(kind), Some(c)) = (keep, self.core.as_mut())
+            && kind != "NONE"
+        {
+            c.set_viewer(&kind);
         }
 
         Ok(())
@@ -434,10 +434,10 @@ impl EmbeddedViewer {
     }
 
     pub fn bind_viewpoint(&mut self, index: usize) {
-        if let Some(c) = self.core.as_mut() {
-            if let Some(n) = c.user_viewpoints().get(index).copied() {
-                c.bind_viewpoint(n);
-            }
+        if let Some(c) = self.core.as_mut()
+            && let Some(n) = c.user_viewpoints().get(index).copied()
+        {
+            c.bind_viewpoint(n);
         }
     }
 
