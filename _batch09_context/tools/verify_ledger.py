@@ -40,6 +40,7 @@ HISTORY = [
     ("before-b19", "ledger_b19.py C", lambda: _first("ledger_b19", "C")),
     ("before-b20", "ledger_b20.py C", lambda: _first("ledger_b20", "C")),
     ("before-recovery1", "ledger_recovery1.py C", lambda: _first("ledger_recovery1", "C")),
+    ("before-i90", "ledger_i90.py C", lambda: _first("ledger_i90", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]

@@ -1,0 +1,195 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "vis-items-alpha.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "21f5f9d3d69daaaced81614df6b3ede1f743d61bdac00b5bc3767c8c8338d59c",
+   "pngSha256": "38309797e63edc5f6049309aca8ea720f73dffad8f3ce3cbe2038dfba12b537f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-appearance.wrl",
+   "ok": true,
+   "log": [
+    "warn: Parser error at line 41: Unknown field 'applied' in class 'FillProperties'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b40dc0fc14e99e641cfa199be2ee91fb784534c8c23b0c049b4d212d2445b6b4",
+   "pngSha256": "3492fa606c5d2139cf78198ac36a79baa37ad25b03d3a34981b8d2e1cd8e336b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-coord.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "29544f1537d8efd77b5f85d9cbc2fcf3f8d504daebbaecc58efa01c53b65fad8",
+   "pngSha256": "878ab6dae1a671b625c55ec17aa4b05ebeb7ed2ca37f7a60fe9b53b8983aaff9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-espdu.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "be87c93fab932941796cc485747660cc05a4e95ec9852abf1348718148ef6d8b",
+   "pngSha256": "e31d0308f9ad27e475edade143715877906aaa2ad9bbbabfde3b9cd089feea62",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-hanim-seg.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8114447924af6a55459d584c31df1c054a3d62b7827ea5d39d930bfdb631a0bf",
+   "pngSha256": "8fd23a413db60b4066fa3b3e9e8f316fb3d39b0602f597f366c4e600833514f3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-hanim.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "77673a5a79d1df0dd3c40312c1d76d15d3a069172704d7989a002cfc6121e8b1",
+   "pngSha256": "5b64a4b4bf5edd72d60e5fc4edc57f471b1d221134988a6d4bd4e1ccd27299aa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-lights.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f8e7ca5af5fa4a3337ac27ad870686faa477dcda1753e5c4d756ffc83a10c01e",
+   "pngSha256": "5daa5de09b83ae3349277f1a74c0da23fd02d3bd90ddd5254914b0901fc6da3f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-movie.wrl",
+   "ok": true,
+   "log": [
+    "error: Error: Couldn't load video 'http://oracle/synthetic-rea-b09-visual/missing.mpg': error.",
+    "warn: Error loading movie 'http://oracle/synthetic-rea-b09-visual/missing.mpg': Couldn't load video 'http://oracle/synthetic-rea-b09-visual/missing.mpg': error."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c8455100387ac3e4af45c38837c199eaa6eb59935e578dcbca95990dab23aaa3",
+   "pngSha256": "c34e48b3fd29b16034747095009bbe5834e70d0b1352f5eac1c41088648b802a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-pointset.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ac658d86467ec4fa7dba2c42501b05ffc840cfe6f52784022a3c0099d60350c4",
+   "pngSha256": "3e4db340adad341c06ae548612b5b4dfaca026b2c6bdd909c63ba437877bb35a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-shape-bbox.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5c9ce69493c510363c24cd33674747060aedd25cc15389a87a684480c1b39ac7",
+   "pngSha256": "53b2becebcf94b4122fbec5d4c9832771fc2fc09b51d35ceeb9dfb47a6219f71",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-shape.wrl",
+   "ok": true,
+   "log": [
+    "warn: Parser error at line 29: Unknown field 'choice' in class 'Switch'.",
+    "warn: Parser error at line 32: Unknown field 'level' in class 'LOD'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fbf2ffe49e7d27e60167d004c97cd1f4d34f3b03729928ae5c058301dffad1d2",
+   "pngSha256": "e1644d5ac2bf8c7202b69e92ad5cf1bb9a6d4252ab8a53bd398e0176338ff211",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-sound.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "371490e23480788e9dc5fc18b0edd2f71da79d0b6a446d0a03c40cc412e92779",
+   "pngSha256": "9873f5ebc7facc9efc4e5a16a0209ad5b24cd379a7811d80555ae1e35de66d1b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-textures.wrl",
+   "ok": true,
+   "log": [
+    "warn: ImageTexture: Couldn't load URL 'http://oracle/synthetic-rea-b09-visual/missing-1.png', trying URL 2 of 2. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "883fbbcf9459fa6d76906828a9169f424a2a428c88aa5f75138e1a9f9c189018",
+   "pngSha256": "3ab5b17670eebf8f9dd127b3f311b03bd4acb35322a341af3ae24d926a08c79a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ],
+ "recordings": 3,
+ "note": "vis-items-* worlds (issue #90) recorded 3x, identical RGBA (rgbaSha256) each; tools/gen_rea_b09_visual_items.py. hanim-seg, lights, sound and alpha added in the second session (also 3x identical); the existing vis-* references were re-recorded 3x to /tmp and reproduced byte-identically (not overwritten)."
+}

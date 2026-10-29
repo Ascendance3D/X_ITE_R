@@ -43,7 +43,12 @@ pub struct SkinTables {
 fn coord_length(sg: &Sg, coord: Option<NodeId>) -> Option<usize> {
     let c =
         coord.filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")))?;
-    Some(sg.f32s(c, "point").len() / 3)
+    // CoordinateDouble's point is an MFVec3d, which `f32s` does not read.
+    Some(match sg.value(c, "point") {
+        Some(FieldValue::MFVec3f(v)) => v.len() / 3,
+        Some(FieldValue::MFVec3d(v)) => v.len() / 3,
+        _ => 0,
+    })
 }
 
 /// HAnimHumanoid.set_joints__: the HAnimJoint nodes of `joints` and their binding matrices

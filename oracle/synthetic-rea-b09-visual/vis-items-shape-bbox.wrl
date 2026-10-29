@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8  } } geometry Box { size 1.4 1.4 1.4 } bboxCenter 5 5 5 bboxSize 0.1 0.1 0.1 }
+] }
+Transform { translation -1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.8  } } geometry Box { size 1.4 1.4 1.4 } bboxCenter 0 0 0 bboxSize 0.1 0.1 0.1 }
+] }
+Transform { translation 1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2  } } geometry Box { size 1.4 1.4 1.4 } bboxCenter -1 -1 0 bboxSize 0.5 0.5 0.5 }
+] }

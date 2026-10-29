@@ -266,6 +266,7 @@ const GROUPS: &[&str] = &[
     "HAnimJoint",
     "HAnimSegment",
     "HAnimSite",
+    "EspduTransform",
 ];
 /// X3DCast (X3DChildNode, node) for the node types that can be a Collision's `proxy`: everything but the
 /// geometry, appearance, material, texture and property nodes.

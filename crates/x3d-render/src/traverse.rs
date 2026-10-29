@@ -708,6 +708,15 @@ fn instanced_bbox(sg: &Sg, n: NodeId, geometry: &Geometry, instances: &InstanceD
     bbox
 }
 
+/// X3DShapeNode.set_bbox__ with a non-default bboxSize: the box of bboxSize and bboxCenter; `None` at the default
+/// -1 -1 -1 (the geometry's box).
+fn declared_bbox(sg: &Sg, n: NodeId) -> Option<Box3> {
+    let default = Vector3::new(-1.0, -1.0, -1.0);
+    let size = sg.vec3(n, "bboxSize", default);
+
+    (!size.equals(&default)).then(|| Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO)))
+}
+
 /// The box of an x y z w vertex soup.
 fn soup_box(vertices: &[f32]) -> Box3 {
     if vertices.len() < 4 {
@@ -1503,6 +1512,9 @@ const GROUPS: &[&str] = &[
     "HAnimSegment",
     "HAnimSite",
     "ScreenGroup",
+    // EspduTransform is an X3DGroupingNode (DIS/EspduTransform.js): its children are drawn like a Group's; its
+    // translation, rotation, scale and center are DIS state, not a matrix (no getMatrix override).
+    "EspduTransform",
 ];
 
 impl<'a> Builder<'a> {
@@ -4222,6 +4234,15 @@ impl<'a> Builder<'a> {
 
         if let Some(i) = &instances {
             center = instanced_bbox(sg, n, &geometry, i).center();
+        } else if let Some(bbox) = declared_bbox(sg, n) {
+            // X3DShapeNode.set_bbox__: a non-default bboxSize is the shape's bbox, so addDisplayShape's view volume
+            // test uses the declared box (a box out of view culls the shape) and its center is the sort distance.
+            // The default box is the geometry's, which the view volume test cannot cull visibly.
+            if !self.bbox_in_view(mv, &bbox) {
+                return;
+            }
+
+            center = bbox.center();
         }
 
         mv.mult_vec_matrix3(&mut center);

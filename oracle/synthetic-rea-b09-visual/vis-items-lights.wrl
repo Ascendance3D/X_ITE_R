@@ -1,0 +1,65 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Group { children [ Group { children SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 global TRUE } }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+Group { children [ Group { children SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 global FALSE } }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Group { children [ Group { children PointLight { location 0 0 1 radius 10 global FALSE } }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Group { children [ Transform { rotation 0 1 0 0.8 children DirectionalLight { direction 0 0 -1 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ Transform { translation 0.6 0.5 0 scale 2 2 2 children PointLight { location 0 0 0.5 radius 1 } }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Group { children [ Transform { rotation 1 0 0 0.4 children SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 } }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 1 0 -1 intensity 0.3 color 1 0 0 }
+PointLight { location -0.5 0.5 1 radius 10 color 0 1 0 intensity 0.6 }
+SpotLight { location 0 -0.4 1.5 direction 0 0 -1 radius 10 beamWidth 0.2 cutOffAngle 0.5 color 0.2 0.4 1 }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+Group { children [ SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 1.0 cutOffAngle 0.4 }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Group { children [ SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.4 cutOffAngle 0.8 attenuation 1 0 0.5 color 1 0.8 0.3 ambientIntensity 0.3 }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Group { children [ PointLight { location 0 0 1 radius 10 intensity 3 color 0.4 0.6 1 }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 1 0 -1 intensity 0.15 color 1 0 0 }
+DirectionalLight { direction -1 0 -1 intensity 0.15 color 0 1 0 }
+DirectionalLight { direction 0 1 -1 intensity 0.15 color 0 0 1 }
+DirectionalLight { direction 0 -1 -1 intensity 0.15 color 1 1 0 }
+DirectionalLight { direction 1 1 -1 intensity 0.15 color 0 1 1 }
+DirectionalLight { direction -1 -1 -1 intensity 0.15 color 1 0 1 }
+DirectionalLight { direction 1 -1 -1 intensity 0.15 color 1 1 1 }
+DirectionalLight { direction -1 1 -1 intensity 0.15 color 0.5 0.5 1 }
+DirectionalLight { direction 0 0 -1 intensity 0.15 color 1 0.5 0 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 intensity 0.6 }
+SpotLight { location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 intensity 0.8 color 1 0.2 0.2 }
+Transform { translation -1 1 0 rotation 1 0 0 1.5708 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry ElevationGrid { solid FALSE xDimension 17 zDimension 17 xSpacing 0.125 zSpacing 0.125 height [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } } ] }
+] }
