@@ -284,7 +284,7 @@ X_ITE has neither, so there is no oracle; they are "enhanced" modes on top of th
 
 ## Automation (later, not on this workstation)
 
-When both ports are 1:1 with X_ITE and CodeMirror: a nightly VM on Ryan's Proxmox VE runs
+When both ports are 1:1 with X_ITE and CodeMirror: a dedicated nightly machine runs
 the build + every oracle check (draft: `tools/nightly.sh`, not installed anywhere), and a
 weekly job catches up with the newest upstream X_ITE release. Everything stays local.
 The viewer and editor should become drop-in parts for WRL Forge (Tauri + Rust).

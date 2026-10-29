@@ -1,8 +1,17 @@
 # X_ITE_R — Agent Guide
 
 Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/X_ITE_R`).
-The lane guide at `../CLAUDE.md` loads alongside this file and carries the lane-wide rules:
-read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
+
+## Rules
+
+- The repository is public. Do not commit credentials, machine paths, private archive contents or
+  private infrastructure details.
+- Pull request CI runs on GitHub-hosted runners. Do not move pull request jobs to self-hosted runners.
+- Clean-room rule: do not add historical Cybertown or blaxxun assets to the repository. Their
+  licensing is unclear. Use minimal synthetic reproductions or newly authored fixtures. The existing
+  `oracle/corpus-items*` snapshots wait for an owner licensing decision.
+- Never hard-code Cybertown or blaxxun (host names, world names, URL rewrites). Prefer
+  standards-compatible behavior and generic hooks that the embedding application drives.
 
 ## Layout
 
@@ -28,7 +37,7 @@ read-only archives, the clean-room rule, and no Cybertown/blaxxun hard-coding.
 ## Lane reports
 
 When closing a lane or submitting a final PR for a batch, agents must write a lane report to a durable directory outside the repository (never `/tmp`).
-The directory structure is: `~/Projects/cybertown/.reports/<topic>/<YYYY-MM-DD>-<lane>/REPORT.md`
+The directory structure is: `<reports root>/<topic>/<YYYY-MM-DD>-<lane>/REPORT.md`. The maintainer sets the reports root; it is outside the repository.
 
 The `<topic>` name (e.g., `xite-rust-project-recovery`) is PROPOSED and PENDING OWNER APPROVAL.
 
