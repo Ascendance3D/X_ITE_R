@@ -1074,6 +1074,39 @@ function engineError (error)
 // with NONE the page keeps its own touch behavior.
 const TOUCH_ACTION = { NONE: "auto" };
 
+// BrowserOptions.js fieldDefinitions of X_ITE 16.5.0: name, field type, initial value.
+const BROWSER_OPTIONS = [
+   [ "SplashScreen", "SFBool", true ], [ "Dashboard", "SFBool", true ], [ "Rubberband", "SFBool", true ],
+   [ "EnableInlineViewpoints", "SFBool", true ], [ "Antialiased", "SFBool", true ],
+   [ "TextureQuality", "SFString", "MEDIUM" ], [ "PrimitiveQuality", "SFString", "MEDIUM" ],
+   [ "QualityWhenMoving", "SFString", "SAME" ], [ "Shading", "SFString", "GOURAUD" ], [ "MotionBlur", "SFBool", false ],
+   [ "AlwaysUpdateGeometries", "SFBool", false ], [ "AutoUpdate", "SFBool", false ], [ "Cache", "SFBool", true ],
+   [ "ColorSpace", "SFString", "LINEAR_WHEN_PHYSICAL_MATERIAL" ], [ "ContentScale", "SFDouble", 1 ],
+   [ "ContextMenu", "SFBool", true ], [ "Debug", "SFBool", false ], [ "Exposure", "SFDouble", 1 ],
+   [ "DisplayColorSpace", "SFString", "SRGB" ], [ "Gravity", "SFDouble", 9.80665 ], [ "LoadUrlObjects", "SFBool", true ],
+   [ "LogarithmicDepthBuffer", "SFBool", false ], [ "MaximumFrameRate", "SFDouble", 80 ],
+   [ "MetadataReference", "SFString", "" ], [ "Multisampling", "SFInt32", 4 ], [ "Mute", "SFBool", false ],
+   [ "Notifications", "SFBool", true ], [ "OrderIndependentTransparency", "SFBool", false ],
+   [ "SoundIntensity", "SFFloat", 1 ], [ "StraightenHorizon", "SFBool", true ],
+   [ "TextCompression", "SFString", "CHAR_SPACING" ], [ "Timings", "SFBool", false ], [ "ToneMapping", "SFString", "NONE" ],
+   [ "WallFriction", "SFDouble", 0 ], [ "XRSessionMode", "SFString", "IMMERSIVE_VR" ],
+];
+
+// BrowserProperties.js fieldDefinitions: constants.
+const BROWSER_PROPERTIES = [
+   [ "ABSTRACT_NODES", true ], [ "CONCRETE_NODES", true ], [ "EXTERNAL_INTERACTIONS", true ], [ "PROTOTYPE_CREATE", true ],
+   [ "DOM_IMPORT", true ], [ "XML_ENCODING", true ], [ "CLASSIC_VRML_ENCODING", true ], [ "BINARY_ENCODING", false ],
+];
+
+// The aliases of BrowserOptions and RenderingProperties: AntiAliased is Antialiased.
+const ALIASES = Object .assign (Object .create (null), { AntiAliased: "Antialiased" });
+
+// The rendering properties that are the value of a browser option. X_ITE's Shading, Antialiased, ContentScale and
+// Multisampling properties are derived from the options and the context (the shading name, the samples clamped to
+// the context's maximum, whether the context is multisampled) and are not implemented.
+const RENDERING_OPTIONS     = [ "LogarithmicDepthBuffer" ];
+const RENDERING_UNSUPPORTED = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling", "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+
 class X3DBrowser
 {
    #element;
@@ -1162,6 +1195,58 @@ class X3DBrowser
    get version () { return "0.1.0"; }
    getName ()     { return this .name; }
    getVersion ()  { return this .version; }
+
+   // X3DBrowser.getBrowserOption, setBrowserOption, getBrowserProperty, getRenderingProperty, print, println. The
+   // values live in typed fields of the pinned definitions (BrowserOptions.js, BrowserProperties.js), so the
+   // coercion and the unknown-name error are X_ITE's. A set option is stored and read back; the renderer honors
+   // only the options API.md lists.
+   #options    = new Map (BROWSER_OPTIONS .map (([ name, type, value ]) => [ name, new Fields [type] (value) ]));
+   #properties = new Map (BROWSER_PROPERTIES .map (([ name, value ]) => [ name, new Fields .SFBool (value) ]));
+
+   // X3DBaseNode.getField: the name, or `set_name` and `name_changed` of an inputOutput field (the options only), or
+   // an alias; any other name throws, and a name that is not a string throws the TypeError of X_ITE's `name.match`.
+   static #field (map, name, typeName, inputOutput = false)
+   {
+      const field = map .get (name) ?? map .get (ALIASES [name]);
+
+      if (field)
+         return field;
+
+      const match = name .match (/^set_(.*?)$/) ?? name .match (/^(.*?)_changed$/);
+
+      if (match && inputOutput && map .has (match [1]))
+         return map .get (match [1]);
+
+      throw new Error (`Unknown field '${name}' in node class ${typeName}.`);
+   }
+
+   getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
+
+   setBrowserOption (name, value) { X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .setValue (value); }
+
+   getBrowserProperty (name) { return X3DBrowser .#field (this .#properties, name, "BrowserProperties") .getValue (); }
+
+   // The rendering properties that are the value of a browser option (LogarithmicDepthBuffer). The properties X_ITE
+   // derives from the options and the context (Shading, Antialiased, ContentScale, Multisampling) and those that
+   // describe its WebGL context (MaxTextureSize, TextureUnits, MaxLights, ColorDepth, TextureMemory,
+   // MaxAnisotropicDegree, MaxSamples, PixelsPerPoint, SoundDestinations, XRSession) are not implemented (API.md).
+   getRenderingProperty (name)
+   {
+      if (typeof name !== "string")
+         name .match (/^/); // X_ITE's getField throws the TypeError of `name.match` for a name that is not a string.
+
+      if (RENDERING_OPTIONS .includes (name))
+         return this .getBrowserOption (name);
+
+      if (RENDERING_UNSUPPORTED .includes (name))
+         throw new Error (`X_ITE_R: the rendering property '${name}' is not implemented.`);
+
+      throw new Error (`Unknown field '${name}' in node class RenderingProperties.`);
+   }
+
+   print (... args) { console .log (args .join (" ")); }
+
+   println (... args) { console .log (args .join (" ")); }
 
    get baseURL () { return document .baseURI; }
 

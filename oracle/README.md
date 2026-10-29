@@ -859,3 +859,22 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --run
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-viewpoints-01-baseline --runs 3 --suite viewpoints01
 ```
+
+## Web browser options 01 (2026-10-28): options, properties, rendering properties, print
+
+- `x_ite-web-runtime-02.mjs --suite options01` runs the 9 cases of `crates/x3d-web/tests/browser/options01_case.mjs`
+  against the pinned X_ITE and records `web-browser-options-01-baseline/options01-baseline.json` (no pictures):
+  the default of all 35 options, each set to a valid value, the coercion of `SFBool`, `SFInt32`, `SFFloat`,
+  `SFDouble` and `SFString` values, the unknown-name errors of the four getters and the setter, the eight
+  properties, the rendering properties (also after the options are set and X_ITE has run its frames), and the
+  console messages of `print` and `println`.
+- The page sets `splashScreen`, `contextMenu` and `notifications` to false and X_ITE reads attributes into the
+  options, so these three recorded defaults are false. The rendering properties `Shading`, `Antialiased`,
+  `ContentScale` and `Multisampling` are derived values (`POINTSET` gives `POINT`, `Antialiased` stays true after the
+  option is set false, `Multisampling` is clamped to the context's samples); the WebGL context values
+  (`MaxTextureSize` ...) are those of the recording GPU (RTX 3060 Ti through ANGLE).
+- Five runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --runs 5 --suite options01
+```
