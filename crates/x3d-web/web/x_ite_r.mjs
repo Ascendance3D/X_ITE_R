@@ -1121,6 +1121,8 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+         // An endUpdate () before the engine was ready.
+         this .#engine .setLive (this .#live);
          this .#listen ();
          this .#start ();
 

@@ -150,7 +150,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 
 - Script nodes: the browser build has no script engine (QuickJS does not build for wasm32-unknown-unknown). A Script logs `Couldn't load URL ... no script engine` and does not run; the rest of the world runs.
 - `createScene`, `createX3DFromURL`, `createVrmlFromString`, `createVrmlFromURL`, `importDocument`, `importJS`.
-- `bindViewpoint`, `beginUpdate`, `endUpdate`, `getUserViewpoints` and the other X3DBrowserContext functions.
+- `getUserViewpoints` and the other X3DBrowserContext functions.
 - Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println`, `toVRMLString` and the other stream functions.
 - `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`.
 - `captureStream` on the element.
