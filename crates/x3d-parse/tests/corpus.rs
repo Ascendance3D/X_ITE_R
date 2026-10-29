@@ -1,5 +1,6 @@
 //! The X0 oracle: oracle/corpus-x0 (50 files, read by path, never copied) against
-//! oracle/x0-baseline.json. Mismatches must be listed in tests/x0-known.tsv.
+//! oracle/x0-baseline.json. Mismatches must be listed in tests/x0-known.tsv. Both are private
+//! (issue #168): x3d-evidence finds and verifies them, or the test skips by name.
 
 use std::path::Path;
 use x3d_parse::compare::{Outcome, compare_corpus};
@@ -7,7 +8,15 @@ use x3d_parse::compare::{Outcome, compare_corpus};
 #[test]
 fn x0_corpus_matches_x_ite() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
-    let results = compare_corpus(&root.join("x0-baseline.json"), &root.join("corpus-x0")).unwrap();
+    let Some(baseline) =
+        x3d_evidence::key_or_tracked("x0-baseline.json", &root.join("x0-baseline.json"))
+    else {
+        return;
+    };
+    let Some(corpus) = x3d_evidence::key_or_tracked("corpus-x0", &root.join("corpus-x0")) else {
+        return;
+    };
+    let results = compare_corpus(&baseline, &corpus).unwrap();
     let known =
         std::fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/x0-known.tsv"))
             .unwrap();

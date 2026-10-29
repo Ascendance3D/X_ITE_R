@@ -11,4 +11,5 @@ x3d-fields = { path = "../x3d-fields" }
 serde_json = { version = "1", features = ["float_roundtrip"] }
 
 [dev-dependencies]
+x3d-evidence = { path = "../x3d-evidence" }
 x3d-parse = { path = "../x3d-parse" }
