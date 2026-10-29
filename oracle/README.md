@@ -12,10 +12,10 @@ one with its kind, file count, byte count and sha256 (for a directory, the sha25
 The keys are in one external evidence store, outside the repository: a private, dated directory
 `<backups root>/X_ITE_R/<date>-evidence-store/` that holds every row of `answer-keys.tsv` as real files and
 directories, with `README.md` and `SHA256SUMS`. The maintainer sets the backups root. Point `X3D_ORACLE_KEYS` at
-the store. The main checkout does not hold the 8 render keys (its render-key paths are empty, so `git status`
-shows ` D` for those tracked symlinks). It holds copies of the 4 JSON keys and the 12 private paths below as
+the store. The main checkout does not hold the 8 render keys (its render-key paths are empty and untracked). It holds copies of the 4 JSON keys and the 12 private paths below as
 ignored files. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
-checkout. Do not move a key back to a tracked symlink path.
+checkout. Do not move a key back to a key path. To give a command an `oracle/<name>` path, link the key:
+`X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py link . <name>...`.
 
 `tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust tests) find a key in this order:
 `$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this worktree's `oracle/`,
@@ -29,7 +29,7 @@ checkout.
 `guard` refuses (exit 4) when real data sits at a key path or `upstream/` that a commit tracks. A checkout,
 reset, restore, stash or merge to that commit could delete it. It also refuses such data that `.gitignore`
 does not cover, because `git clean -fd` deletes it. Run it before such an operation. It passes in the main
-checkout with the external store, because no real data is at a tracked symlink path.
+checkout with the external store, because no real data is at a key path.
 
 ### Private corpora (issue #168)
 
