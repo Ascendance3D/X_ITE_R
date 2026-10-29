@@ -29,6 +29,7 @@ import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
 import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
+import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -66,6 +67,7 @@ const SUITES = {
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
+   entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -74,6 +76,20 @@ for (const suite of Object .values (SUITES))
 // Every case group with the suite it belongs to.
 const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ name, suite ]) =>
    Object .entries (suite .groups) .map (([ groupName, group ]) => [ groupName, { ... group, suite: name } ])));
+
+// X_ITE_R's browser fires `initialized` and `load` for its first, empty world; X_ITE's fires nothing for it. The event
+// lists of an element made by X3D.createBrowser therefore start with this pair in X_ITE_R. For the `paths` of the events
+// arrays in the recording of `key`: [ path, X_ITE's array (checked against the recording), X_ITE_R's ].
+function startEventDifferences (key, paths)
+{
+   return paths .map (path =>
+   {
+      const recorded = path .reduce ((v, k) => v ?.[k], SUITES .entry01 .reference .values [key]);
+
+      assert .ok (Array .isArray (recorded), `startEventDifferences ${key}`);
+      return [ path, recorded, [ "initialized", "load", ... recorded ] ];
+   });
+}
 
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
@@ -336,6 +352,12 @@ const KNOWN_DIFFERENCES = {
       [ [ "MaxSamples" ], 8, notImplemented ("MaxSamples") ], [ [ "PixelsPerPoint" ], 1.3333333333333333, notImplemented ("PixelsPerPoint") ],
       [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ], [ [ "XRSession" ], false, notImplemented ("XRSession") ],
    ],
+   // The events of the first, empty world (see startEventDifferences).
+   "entryPoints.createBrowser": startEventDifferences ("entryPoints.createBrowser", [ [ "stillDetached", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserUrl": startEventDifferences ("entryPoints.createBrowserUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
+      .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -520,6 +542,7 @@ const GROUP_FILES = {
    browserOptions: "options01.test.mjs",
    canvasAttributes: "attributes01.test.mjs",
    canvasAttributesScaled: "attributes01.test.mjs",
+   entryPoints: "entry01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
