@@ -510,6 +510,13 @@ impl Runtime {
         self.field_observed.retain(|k| !dead.contains(&k.0));
         self.js_mirror.retain(|k, _| !dead.contains(&k.0));
         self.pending_field_events.retain(|k| !dead.contains(&k.0));
+        // A queued event of a released node must not reach the node that takes its id.
+        if let Some(events) = &mut self.page_field_events {
+            events.retain(|(k, _)| !dead.contains(&k.0));
+        }
+        if let Some(released) = &mut self.page_released {
+            released.extend(dead.iter().copied());
+        }
         self.pending_scenes
             .retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
         self.frame_waiters.retain(|w| !dead.contains(&w.node));

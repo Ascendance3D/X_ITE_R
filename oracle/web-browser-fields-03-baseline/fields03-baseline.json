@@ -1,0 +1,119 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "nodeOwnership.nodeOwnership": {
+   "s01": [
+    [
+     "Group:G"
+    ],
+    "page",
+    true
+   ],
+   "s02": [
+    [
+     "Transform:OT"
+    ],
+    "other",
+    "other",
+    "Collision { proxy DEF OT Transform { } }"
+   ],
+   "s03": [
+    [
+     "Group:G",
+     "Transform:OT",
+     "Transform:T"
+    ],
+    [
+     "page",
+     "other",
+     "page"
+    ],
+    "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }"
+   ],
+   "s04": [
+    2,
+    3,
+    [
+     "Transform:T",
+     "Group:G",
+     "Transform:OT"
+    ],
+    "other"
+   ],
+   "s05": [
+    [
+     "Group:OG"
+    ],
+    [
+     "Transform:OT"
+    ],
+    "other"
+   ],
+   "s07": [
+    [],
+    [
+     "Transform"
+    ],
+    false,
+    "none"
+   ],
+   "s08": [
+    null,
+    null,
+    [
+     "Group:G",
+     "Box"
+    ]
+   ],
+   "s10": [
+    "TypeError: node?.getType is not a function",
+    "TypeError: node?.getType is not a function",
+    null,
+    "NULL",
+    null,
+    "TypeError: node?.getType is not a function"
+   ],
+   "s11": [
+    [
+     "Transform",
+     "Transform",
+     "Transform"
+    ],
+    [
+     "Transform"
+    ],
+    false
+   ],
+   "s12": [
+    "Group { children [ DEF OT Transform { } Transform { } ] }",
+    "<Group> <Transform DEF='OT'/> <Transform/> </Group>"
+   ],
+   "s13": [
+    [
+     [
+      "Group:G",
+      "Transform:OT",
+      "Transform:T"
+     ],
+     "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }"
+    ],
+    [
+     "Transform:T"
+    ],
+    "Group { children DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } }"
+   ],
+   "s09": [
+    true,
+    "Transform",
+    "page",
+    "1 2 3"
+   ],
+   "log": []
+  }
+ }
+}

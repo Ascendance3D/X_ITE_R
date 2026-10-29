@@ -42,9 +42,8 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | member | state |
 | --- | --- |
 | `getBrowser ([selector or element])` | supported, compared; the same lookup as X_ITE (`undefined` when nothing matches) |
-| `X3DConstants` | access types and the five browser events only |
-| `SFColor`, `SFColorRGBA`, `SFRotation`, `SFVec2d/2f/3d/3f/4d/4f` | constructor, components (`r g b a`, `x y z w`, `angle`), `getTypeName`, `toString` |
-| `MFString` | constructor, `getTypeName`, `toString` (an `Array`) |
+| `X3DConstants` | X_ITE's: the access types, the browser events (`CONNECTION_ERROR` is 1001, as in X_ITE), the load states, the field types and the node types of the Core profile; the node types of other components are added when a node of one is first seen, compared (`tests/browser/fields01.test.mjs`) |
+| every field class (`SFBool` ... `MFVec4f`, `SFNode`, `MFNode`, `SFImage`, `MFImage`, `SFMatrix3d/3f/4d/4f`, `SFQuaternion`, ...), `X3DField`, `X3DArrayField`, `X3DFieldDefinition`, `FieldDefinitionArray` | X_ITE's own classes, with all their constructors and methods: the generated files of the Script prelude (`crates/x3d-script/src/prelude`, verbatim X_ITE 16.5.0) as one module, `pkg/fields.mjs`; compared |
 
 ### `X3DBrowser`
 
@@ -71,7 +70,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | member | state |
 | --- | --- |
 | `worldURL`, `getWorldURL ()` | supported, compared |
-| `rootNodes` | supported, compared; an `Array` of SFNode or `null` (X_ITE: an `MFNode`) |
+| `rootNodes` | supported, compared; an `MFNode` (a new one on each read) |
 | `getNamedNode (name)` | supported, compared, including the error text |
 
 ### `SFNode`
@@ -79,10 +78,16 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | member | state |
 | --- | --- |
 | `getNodeTypeName ()`, `getNodeName ()` | supported, compared |
-| `node.field` read | supported, compared: numbers, booleans and strings as JavaScript values, vector types as value objects, `SFNode` as a node, `MFNode` as an `Array`; other types as an `X3DField` (text only). An inputOnly field reads `undefined` |
-| `node.field = value` | supported, compared: SFBool, SFFloat, SFDouble, SFTime, SFInt32, SFString, the vector types and MFString. The setter returns `false` for an outputOnly field, like X_ITE's proxy. Other types throw a `TypeError` |
-| `getField (name)` | `getName`, `getTypeName`, `getAccessType`, `getValue`, `setValue`, `toString`; compared. X_ITE also prints a deprecation warning; X_ITE_R does not |
-| `toString ()` | `TypeName { }` |
+| the SFNode | X_ITE's own SFNode and its proxy (`getNodeTypeName`, `getNodeName`, `getNodeType`, `getFieldDefinitions`, `getField`, `equals`, ...); compared |
+| `node.field` read | supported, compared: `field .valueOf ()` as in X_ITE: numbers, booleans and strings as JavaScript values, every other type as the node's own field object, which is live. An inputOnly field reads `undefined` |
+| `node.field = value` | supported for every field type, compared: X3DField.setValue. The setter returns `false` for an outputOnly field, like X_ITE's proxy |
+| live field objects | supported, compared: one object per field; a changed component or element (`node .diffuseColor .r = 1`, `node .point [1] .x = 5`, `push`, `length`) reaches the node and its routes in the next frame; the engine's changes reach the object after each frame |
+| `getField (name)` | X_ITE's X3DField with all its methods, and X_ITE's deprecation warning; compared |
+| `addFieldCallback`, `removeFieldCallback`, `getFieldCallbacks` | supported, compared: each event of the field calls the callbacks with the value of that event, in event order |
+| `getFieldDefinitions ()`, `getFieldDefinition (name)` | supported, compared: a `FieldDefinitionArray`; a predefined field's definition holds the class's default value, a user-defined field's definition the field |
+| `toString ()` | `TypeName { }`, compared |
+| `toVRMLString ()`, `toXMLString ()`, `toJSONString ()` | the node in full, also for `MFNode` and `X3DScene .rootNodes`, with DEF and USE; compared (`tests/browser/fields02.test.mjs`) |
+| `fromString`, `fromVRMLString`, `fromXMLString` of every field class | supported, compared (`tests/browser/fields02.test.mjs`): values, errors (`Couldn't read value for field '...'.`) and the nodes of a value |
 
 ### Resource loading
 
@@ -98,7 +103,10 @@ Compared (`tests/browser/loadurl01.test.mjs`): the candidates of the world-level
 
 Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.test.mjs` or `tests/browser/runtime02_harness.mjs` when a compared case shows it.
 
-- A vector value is a copy: `node.diffuseColor.r = 1` does not change the node. Assign the whole value: `node.diffuseColor = new X3D.SFColor (1, 0, 0)`. In X_ITE the value object is live.
+- Field callbacks run after the frame that processed their events, not inside its event cascade. A callback gets the value of its event, as in X_ITE; a field it sets sends its event in the next frame, where X_ITE's goes on in the same cascade. A callback that throws is an uncaught page error, as in X_ITE: the callbacks and events after it never run, and the engine processes no event again (the frames go on). Registering a callback while another runs, and removing one in place, follow X_ITE's Map semantics. Compared in `tests/browser/fields04.test.mjs`. Refs #137.
+- A node can only be assigned to a field of a node of the same world (a scene of `createX3DFromString` is a world of its own). X_ITE allows it: the node keeps its own scene, and the field holds it. X_ITE_R refuses the assignment, prints the warning `X_ITE_R: a node can only be used in the world it belongs to.`, and leaves the field as it was. The same holds for a node list (`MFNode`), which is refused as a whole, and for `rootNodes .push` of a node of another world, which is refused without a warning. As in X_ITE, an `SFNode` setter keeps a plain JavaScript property when it fails, so the page reads the node back from that property. The text forms and the field value do not show it. An operation on the field after a refused one goes on (the engine keeps its old value, and a text form shows it, see `s13`). A node of a replaced world is refused as stale, where X_ITE keeps it usable. Refs #137, #145. Compared in `tests/browser/fields03.test.mjs` (12 compared scenarios, plus one deferred cross-scene `ROUTE` scenario, s06, which needs `addRoute` of #135).
+- The text forms of nodes take no options: `toVRMLString ()`, `toXMLString ()` and `toJSONString ()` print with X_ITE's default generator options, and the options object (`style`, `indent`, ...) is ignored. `toString ()` needs none: X_ITE's `X3DNode .toStream` prints `TypeName { }`.
+- `X3DField .fromVRMLString` and `fromXMLString` take an `X3DScene` of this adapter as `scene`; the nodes of the value are made in that scene's world. `fromJSONString` calls `fromVRMLString`, as in X_ITE. A value read without a scene works for every type that needs no node, in a page where the engine is loaded (use `browser .ready ()`). Before that it throws `X_ITE_R: the engine is not loaded yet; wait for browser .ready ().`.
 - Removing the element from the document stops the frame loop and releases the buttons and touches that are down; adding it again restarts the loop. X_ITE keeps drawing, and its document `mouseup` listener releases later.
 - A `pointercancel` (for example a touch the browser takes for scrolling) releases the touch: the sensor or the viewer ends its drag. X_ITE has no `touchcancel` handler, and its TouchSensor stays active.
 - After the element is removed and added again while the pointer did not move, a TouchSensor stays `isOver`. X_ITE ends `isOver`, because its release checks the pointer against the detached canvas (an empty rectangle).
@@ -115,6 +123,8 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - An Anchor or `loadURL` never opens a `javascript:`, `vbscript:`, `ecmascript:`, `vrmlscript:` or `data:` URL in a window or as the page location, in any letter case; it logs `X_ITE_R: Anchor URL '...' was not opened.`. X_ITE checks for script URLs in lower case only and opens the others. A new window opens with `noopener`.
 - The browser fires its first `initialized load` (the empty world) when the engine is ready, which is asynchronous (WebAssembly and the WebGPU device). Use `browser.ready ()` or wait for the `load` of your world.
 - A node handle belongs to one world, and so does an `X3DScene` object. After the world is replaced (also by an Anchor), using an old node or scene throws `X_ITE_R: the node belongs to a world that was replaced.`; `currentScene` gives the new scene. In X_ITE the old objects stay usable but are no longer the world.
+- The engine releases a node when its scene is disposed (an Inline unloads) and nothing refers to it any more, and a later node can take its id. Using a node object of a released node then throws `X_ITE_R: the node was released; it is no longer in the world.`, and its field callbacks get no more events; a node that takes the id is a new node object. In X_ITE the old node object stays usable.
+- Field values the page assigns are checked: data of the wrong shape (too few components, a number for a boolean) or a node that is not in the world throws instead of being filled in.
 - `ready ()` is not an X_ITE name. X_ITE starts synchronously and needs no such call.
 - The `layerNode` argument of the viewpoint functions is not supported: they act on the active layer, and a layer node throws.
 - Only the `src`, `url` and `contentScale` attributes are read. The other X_ITE attributes (`antialiased`, `splashScreen`, `update`, ...) have no effect.
@@ -125,7 +135,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - `createScene`, `createX3DFromURL`, `createVrmlFromString`, `createVrmlFromURL`, `importDocument`, `importJS`.
 - `bindViewpoint`, `addRoute`, `deleteRoute`, `beginUpdate`, `endUpdate`, `getUserViewpoints` and the other X3DBrowserContext functions.
 - Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println`, `toVRMLString` and the other stream functions.
-- `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`, all other field classes, live MF arrays, `addFieldCallback`, `getFieldDefinitions`.
+- `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`.
 - `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
 - Sound: the engine's Web Audio port is built in but was not tested in a page.
