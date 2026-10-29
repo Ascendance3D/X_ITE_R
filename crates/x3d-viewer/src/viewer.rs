@@ -8,7 +8,7 @@ use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Touches, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
-use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan_screens};
+use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
 use std::collections::HashMap;
 #[cfg(feature = "script")]
 use std::path::Path;
@@ -777,11 +777,12 @@ impl Viewer3d {
         let rt = &self.rt;
 
         for n in 0..rt.scene.nodes.len() as NodeId {
-            if rt.builtin_name(n) == Some("WorldInfo")
-                && let Some(FieldValue::SFString(t)) = rt.pre_value(n, "title")
-                && !t.is_empty()
-            {
-                return t.clone();
+            if rt.builtin_name(n) == Some("WorldInfo") {
+                if let Some(FieldValue::SFString(t)) = rt.pre_value(n, "title") {
+                    if !t.is_empty() {
+                        return t.clone();
+                    }
+                }
             }
         }
 
@@ -1037,10 +1038,10 @@ impl Viewer3d {
                 }
                 // Browser.bindViewpoint (layerNode, viewpointNode): the Script checked both types.
                 r if r.starts_with("bindViewpoint:") => {
-                    if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>()
-                        && self.rt.scene.is_live(n)
-                    {
-                        self.bind_viewpoint(n);
+                    if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>() {
+                        if self.rt.scene.is_live(n) {
+                            self.bind_viewpoint(n);
+                        }
                     }
                 }
                 // Browser.resize (width, height) and Browser.dispose ().
@@ -1197,10 +1198,10 @@ impl Viewer3d {
 
         // The update fields the last frame's GeneratedCubeMapTexture passes set to NONE.
         for n in std::mem::take(&mut self.generated_none) {
-            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path)
-                && let Some(k) = rt.pre(n.node, "update")
-            {
-                rt.set_value(k, FieldValue::SFString("NONE".into()));
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                if let Some(k) = rt.pre(n.node, "update") {
+                    rt.set_value(k, FieldValue::SFString("NONE".into()));
+                }
             }
         }
 
@@ -1575,7 +1576,7 @@ impl Viewer3d {
                         let positions = x3d_render::gpu::thick_line_positions(&lines);
                         let per = positions.len() / lines.instances.len();
                         let geometry =
-                            Rc::new(x3d_render::particles::line_triangle_geometry(positions));
+                            Rc::new(x3d_render::particles::line_triangle_geometry(&positions));
                         let matrices: Rc<Vec<Matrix4>> = Rc::new(
                             lines
                                 .instances
@@ -1866,10 +1867,10 @@ impl Viewer3d {
         }
 
         for (n, level) in std::mem::take(&mut lod.changes) {
-            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path)
-                && let Some(k) = rt.pre(n.node, "level_changed")
-            {
-                rt.set_value(k, FieldValue::SFInt32(level));
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                if let Some(k) = rt.pre(n.node, "level_changed") {
+                    rt.set_value(k, FieldValue::SFInt32(level));
+                }
             }
         }
 
@@ -1888,10 +1889,10 @@ impl Viewer3d {
         let now_ms = self.date_now * 1000.0;
 
         for r in std::mem::take(&mut lod.rendered_reached) {
-            if let Some(rt) = rt_at_mut(&mut self.rt, &r.path)
-                && rt.rendered_texture_traverse(r.node, now_ms)
-            {
-                rt.rendered_now.push(r.node);
+            if let Some(rt) = rt_at_mut(&mut self.rt, &r.path) {
+                if rt.rendered_texture_traverse(r.node, now_ms) {
+                    rt.rendered_now.push(r.node);
+                }
             }
         }
 
@@ -2659,10 +2660,10 @@ impl Viewer3d {
 
         // The viewers' mousedown and wheel: only inside the active layer's viewport
         // (X3DViewer.isPointerInRectangle).
-        if let Input::MouseDown { x, y, .. } | Input::Wheel { x, y, .. } = ev
-            && !layers::pointer_in_rectangle(&self.layer_rect(self.current), x, y)
-        {
-            return;
+        if let Input::MouseDown { x, y, .. } | Input::Wheel { x, y, .. } = ev {
+            if !layers::pointer_in_rectangle(&self.layer_rect(self.current), x, y) {
+                return;
+            }
         }
 
         let base = self.base();
