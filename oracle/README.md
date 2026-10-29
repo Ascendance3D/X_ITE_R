@@ -841,7 +841,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-02-baseline --run
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --runs 3 --suite routes01
 ### Web browser scene creation 01 (`web-browser-scene-create-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 17 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 23 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
   (issue #134) and records `web-browser-scene-create-01-baseline/scenecreate01-baseline.json` (no pictures):
   `createScene` (a Promise of an empty scene that is not the world, `worldURL` is the page's; every argument takes the
   profile branch and rejects with `Couldn't create scene: profile must be of type ProfileInfo.`; with `getProfile` and
@@ -853,6 +853,13 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --run
   is no X3D JSON gives an empty scene); `importDocument` (string, `XMLDocument`, XML element, HTML element; invalid input gives
   an empty scene, `undefined` a TypeError). The recorder page loads the Texturing3D libraries (CharLS, dicom-parser, jpeg-js,
   OpenJPEG) as upstream's `x_ite.html` does: `createScene` loads every component of the Full profile.
+- Six cases were added to the first 17 (2026-10-29), whose recorded values did not change: `profileInfo`,
+  `componentInfo` and `supportedLists` (`getProfile`, `getComponent`, `supportedProfiles`, `supportedComponents`, the
+  `ProfileInfo` / `ComponentInfo` objects and their arrays, their errors and aliases; the `providerURL` of an external
+  component is compared by its file only), `createSceneInfo` (`createScene (profile, ...components)` keeps the objects
+  given), `sceneProfile` (the `profile` and `components` of parsed scenes: classic VRML, VRML97, XML, JSON, a loaded
+  world) and `vrmlURLNodes` (the callback form delivers usable nodes of the world: an EXTERNPROTO scene, a fallback
+  list, `set_children`, every candidate failing).
 - Five runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
 
 ```

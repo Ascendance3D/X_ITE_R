@@ -446,6 +446,12 @@ pub struct Runtime {
     pub pending_browser: Vec<browser_load::PendingBrowserScene>,
     pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
     pub browser_request_id: u64,
+    /// createX3DFromURL / createVrmlFromURL requests of the page that embeds the browser (an external browser, no Script),
+    /// by request id: the base URL of their FileLoader (FileLoader.getBaseURL for the X3DWorld) and their requests.
+    pub page_browser_loads: HashMap<u64, browser_load::PageBrowserLoad>,
+    /// The outcomes of the page's requests (see [`Runtime::browser_create_from_page_url`]), in the order they settled: the
+    /// root context of the scene, or the rejection's message. [`Runtime::take_page_browser_settled`] hands them out.
+    pub page_browser_settled: Vec<(u64, Result<CtxId, String>)>,
     /// The URL of the page the browser element lives in (`location`): the world URL of a new X3DScene and the browser's
     /// `baseURL`. Empty: the embedder has no page.
     pub page_url: String,
@@ -688,6 +694,8 @@ impl Runtime {
             pending_browser: vec![],
             browser_frame_waiters: vec![],
             browser_request_id: 0,
+            page_browser_loads: HashMap::new(),
+            page_browser_settled: vec![],
             page_url: String::new(),
             world_state: browser_load::WorldState {
                 initialized_time: -1.0,

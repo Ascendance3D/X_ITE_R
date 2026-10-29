@@ -115,23 +115,11 @@ const KNOWN_DIFFERENCES = {
       [ [ "onDoc" ], [null, [["P", "translation_changed", "Q", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [null, [["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
       [ [ "oldNodes" ], null, "Error: X_ITE_R: the node belongs to a world that was replaced." ],
       [ [ "afterOld" ], [[["P", "translation_changed", "Q", "set_translation"], ["A", "translation_changed", "C", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [[["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
-   "sceneCreate.createSceneProfile": [
-      // X_ITE_R has no ProfileInfo and ComponentInfo (getProfile, getComponent): createScene takes no profile or components.
-      [ [ "result" ], { profile: ["ProfileInfo", "Interchange"], scene: ["Interchange", []], scene2: ["Interchange", ["Text:1"]], badComponent: "Error: Couldn't create scene: component must be of type ComponentInfo.", badProfile: "Error: Couldn't create scene: profile must be of type ProfileInfo." }, "no getProfile" ],
    ],
-   "sceneCreate.vrmlURLArguments": [
-      // The calls that load: the scene of the url is a scene of its own, and the field of a node of the world refuses its
-      // nodes with the warning of a node of another world (fields03), once for each of the five loads that finish.
-      [ [ "logs" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
-   ],
-   "sceneCreate.vrmlURLLoad": [
-      // The nodes of the loaded scene cannot go into the world (see above): the field keeps its value, and the refusal is the
-      // warning (the first of the two loads that finish is before the log is cleared).
-      [ [ "children" ], [6, ["Viewpoint", "Viewpoint", "Viewpoint", "Viewpoint", "ProximitySensor", "Shape"]], [0, []] ],
-      [ [ "events" ], ["children:6", "children:12"], [] ],
-      [ [ "second" ], 12, 0 ],
-      [ [ "failed" ], 12, 0 ],
-      [ [ "logs" ], ["error: Couldn't load URL 'http://test/status/404/v1.wrl'. Error: Not Found"], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "error: Couldn't load URL 'http://test/status/404/v1.wrl'. Error: Not Found"] ],
+   "sceneCreate.supportedLists": [
+      // The Annotation component, which X_ITE 16.5.0 ships but does not register, is a supported component of X_ITE_R
+      // (REA batch 04 owner decision, crates/x3d-scene/src/nodes.rs): it comes last.
+      [ [ "components" ], ["ComponentInfoArray", true, "ComponentInfoArray", 39, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1"]], ["ComponentInfoArray", true, "ComponentInfoArray", 40, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1", "Annotation:2"]] ],
    ],
    "sceneCreate.importDocumentHTML": [
       // X_ITE's HTMLParser reads an HTML element (the X3D element of a page); X_ITE_R takes XML (string, XMLDocument, element) only.

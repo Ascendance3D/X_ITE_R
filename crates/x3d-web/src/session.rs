@@ -401,6 +401,36 @@ impl Session {
         rt.create_vrml_from_string_at(text, world, base)
     }
 
+    /// X3DBrowser.createX3DFromURL (url, node, event) / createVrmlFromURL of a page (an external browser): FileLoader for
+    /// the X3DWorld in the world's own runtime, so the root nodes of the scene are the world's and can go into a field of
+    /// it. The urls resolve against the page's `base`. The id of the request: [`Session::take_scene_requests`] gives its
+    /// outcome once the scene is loaded and live.
+    pub fn create_x3d_from_url(&mut self, urls: Vec<String>, base: &str) -> u64 {
+        self.rt_mut().browser_create_from_page_url(urls, base)
+    }
+
+    /// The requests of [`Session::create_x3d_from_url`] that settled since the last call: the root nodes of the scene,
+    /// or the rejection's message (`Couldn't load X3D file.`).
+    pub fn take_scene_requests(&mut self) -> Vec<(u64, Result<Vec<Option<NodeId>>, String>)> {
+        let rt = self.rt_mut();
+
+        rt.take_page_browser_settled()
+            .into_iter()
+            .map(|(id, outcome)| (id, outcome.map(|ctx| rt.scene.ctx(ctx).root_nodes.clone())))
+            .collect()
+    }
+
+    /// X3DScene.profile and components of the world: the name of its profile (`None`: the scene has none) and its
+    /// components (name, level), in the order X_ITE's ComponentInfoArray holds them.
+    pub fn profile_and_components(&self) -> (Option<String>, Vec<(String, i32)>) {
+        let scene = &self.rt().scene;
+
+        (
+            scene.profile_of(scene.world).map(String::from),
+            scene.components_of(scene.world).to_vec(),
+        )
+    }
+
     /// X3DExecutionContext.getNamedNode (name) of the world; `None` where X_ITE throws "Named node not found".
     pub fn named_node(&self, name: &str) -> Option<NodeId> {
         let scene = &self.rt().scene;

@@ -205,6 +205,15 @@ impl x3d_runtime::Fetcher for WebFetcher {
         Err("TypeError: Failed to fetch".to_string())
     }
 
+    fn refresh(&self, url: &url::Url) {
+        if url.scheme() == "data" {
+            return;
+        }
+
+        // The entry is Pending until a response comes; each response replaces the one before.
+        self.start(cache_key(url));
+    }
+
     /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
     /// Thus we do not need to `self.start(key)` for missing entries.
     fn fetch_error(&self, url: &url::Url) -> Option<String> {
@@ -728,6 +737,66 @@ impl WebBrowser {
             .create_vrml_from_string(text, base)
             .map(|nodes| nodes.into_iter().map(|n| n.map_or(-1, i64::from)).collect())
             .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DBrowser.createX3DFromURL (url, node, event) / createVrmlFromURL of the page: start the FileLoader of the X3DWorld
+    /// in the runtime of the current world (scene `id`), with the candidates `urls` resolved against `base`. The id of the
+    /// request; [`WebBrowser::take_scene_requests`] gives its outcome.
+    #[wasm_bindgen(js_name = createX3DFromURL)]
+    pub fn create_x3d_from_url(
+        &mut self,
+        id: u32,
+        urls: Vec<String>,
+        base: &str,
+    ) -> Result<f64, JsError> {
+        Ok(self.session_mut(id)?.create_x3d_from_url(urls, base) as f64)
+    }
+
+    /// The requests of [`WebBrowser::create_x3d_from_url`] of scene `id` that settled: `[request, nodes]` pairs, where
+    /// `nodes` is the list of root node ids of the scene (-1 is NULL), or the message of the rejection (a string).
+    #[wasm_bindgen(js_name = takeSceneRequests)]
+    pub fn take_scene_requests(&mut self, id: u32) -> js_sys::Array {
+        let list = js_sys::Array::new();
+
+        if let Ok(session) = self.session_mut(id) {
+            for (request, outcome) in session.take_scene_requests() {
+                list.push(&(request as f64).into());
+
+                match outcome {
+                    Ok(nodes) => {
+                        let ids = js_sys::Array::new();
+
+                        for n in nodes {
+                            ids.push(&n.map_or(-1.0, f64::from).into());
+                        }
+
+                        list.push(&ids);
+                    }
+                    Err(message) => {
+                        list.push(&message.into());
+                    }
+                }
+            }
+        }
+
+        list
+    }
+
+    /// X3DScene.profile and components of scene `id`: `[profile name or null, [name, level, name, level, ...]]`.
+    #[wasm_bindgen(js_name = profileAndComponents)]
+    pub fn profile_and_components(&self, id: u32) -> Result<js_sys::Array, JsError> {
+        let (profile, components) = self.session(id)?.profile_and_components();
+        let list = js_sys::Array::new();
+
+        for (name, level) in components {
+            list.push(&name.into());
+            list.push(&f64::from(level).into());
+        }
+
+        Ok(js_sys::Array::of2(
+            &profile.map_or(JsValue::NULL, |p| p.into()),
+            &list,
+        ))
     }
 
     /// The node id of a DEF name of scene `id`, or `undefined`.
@@ -1361,4 +1430,49 @@ pub fn parse_field_without_scene(
     }
 
     Ok(out)
+}
+
+/// Configuration/SupportedComponents.js and SupportedProfiles.js of the pinned X_ITE (the engine's node table):
+/// `[components, profiles]`, each component `[name, title, level, external, [dependency, ...]]`, each profile
+/// `[name, title, [name, level, name, level, ...]]`, in X_ITE's order. The aliases are the page's to add.
+#[wasm_bindgen(js_name = configTable)]
+pub fn config_table() -> js_sys::Array {
+    let table = x3d_scene::nodes::table();
+    let components = js_sys::Array::new();
+    let profiles = js_sys::Array::new();
+
+    for c in &table.components {
+        let dependencies = js_sys::Array::new();
+
+        for d in &c.dependencies {
+            dependencies.push(&d.into());
+        }
+
+        let e = js_sys::Array::new();
+
+        e.push(&c.name.as_str().into());
+        e.push(&c.title.as_str().into());
+        e.push(&f64::from(c.level).into());
+        e.push(&c.external.into());
+        e.push(&dependencies);
+        components.push(&e);
+    }
+
+    for p in &table.profiles {
+        let list = js_sys::Array::new();
+
+        for (name, level) in &p.components {
+            list.push(&name.as_str().into());
+            list.push(&f64::from(*level).into());
+        }
+
+        let e = js_sys::Array::new();
+
+        e.push(&p.name.as_str().into());
+        e.push(&p.title.as_str().into());
+        e.push(&list);
+        profiles.push(&e);
+    }
+
+    js_sys::Array::of2(&components, &profiles)
 }

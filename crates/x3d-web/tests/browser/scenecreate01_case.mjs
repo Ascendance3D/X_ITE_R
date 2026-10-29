@@ -1,4 +1,4 @@
-// The scene creation 01 cases (issue #134): X3DBrowser.createScene, createVrmlFromString, createX3DFromURL (promise form
+// The scene creation 01 cases (issue #134): X3DBrowser.createScene, getProfile, getComponent, createVrmlFromString, createX3DFromURL (promise form
 // and the callback form), createVrmlFromURL, importJS and importDocument: arguments, results, errors and messages.
 // oracle/x_ite-web-runtime-02.mjs (--suite scenecreate01) runs them against pinned X_ITE 16.5.0 and records the values;
 // scenecreate01.test.mjs runs them against X_ITE_R and compares (runtime02_harness.mjs).
@@ -469,6 +469,161 @@ async function scenario (page, env, name, args = { })
 
                break;
             }
+            case "profileInfo":
+            {
+               // X3DBrowser.getProfile: the supported ProfileInfo (Configuration/ProfileInfo.js, SupportedProfiles.js).
+               const p    = browser .getProfile ("Interchange");
+               const list = c => Array .from (c, x => `${x .name}:${x .level}`);
+
+               out .profile = [ p .constructor .name, p instanceof X3D .ProfileInfo, X3D .ProfileInfo .typeName, p .getTypeName (), p .name, p .title, p .providerURL, p .providerUrl ];
+               out .keys = Object .keys (p);
+               out .same = [ p === browser .getProfile ("Interchange"), browser .getProfile ("MPEG-4") === browser .getProfile ("MPEG4Interactive"), browser .getProfile ("MPEG-4") .name ];
+               out .components = [ p .components .constructor .name, p .components instanceof X3D .ComponentInfoArray, p .components .getTypeName (), p .components .length, list (p .components) ];
+               out .access = [ p .components [0] ?.name, p .components .get ("Core") ?.level, p .components .has ("Core"), p .components .has ("NURBS"), 0 in p .components, 99 in p .components, p .components [99] ?? "none" ];
+               out .readOnly = attempt (() => { p .components [0] = null; return p .components [0] ?.name; });
+               out .profiles = [ "Core", "Interactive", "Immersive", "Full", "MedicalInterchange", "CADInterchange", "MPEG4Interactive", "X3DCore" ] .map (name => attempt (() => { const q = browser .getProfile (name); return [ q .name, q .title, q .components .length ]; }));
+               out .full = list (browser .getProfile ("Full") .components);
+               out .errors = [ attempt (() => browser .getProfile ("Nope")), attempt (() => browser .getProfile ()), attempt (() => browser .getProfile (null)) ];
+               out .text = [ attempt (() => String (p)), attempt (() => p .toVRMLString ()), attempt (() => p .components .get ("Core") .toVRMLString ()) ];
+               break;
+            }
+            case "componentInfo":
+            {
+               // X3DBrowser.getComponent (name, level): a new ComponentInfo, the level clamped to the supported one.
+               const c = browser .getComponent ("Text", 1);
+               // The provider URL of an external component is next to the script X_ITE runs from: only its file is compared.
+               const asset = url => String (url) .replace (/^.*\/assets\//, "ASSETS/");
+
+               out .component = [ c .constructor .name, c instanceof X3D .ComponentInfo, X3D .ComponentInfo .typeName, c .getTypeName (), c .name, c .level, c .title, asset (c .providerURL), asset (c .providerUrl), c .external, Array .from (c .dependencies) ];
+               out .keys = Object .keys (c);
+               out .fresh = c === browser .getComponent ("Text", 1);
+               out .levels = [ [ "Text" ], [ "Text", 0 ], [ "Text", 1 ], [ "Text", 5 ], [ "Text", -1 ], [ "Text", "1" ], [ "Text", 1.7 ], [ "Grouping" ], [ "Grouping", 2 ], [ "H-Anim" ], [ "TextureProjector", 1 ], [ "ProjectiveTextureMapping" ] ]
+                  .map (args => attempt (() => { const x = browser .getComponent (... args); return [ x .name, x .level ]; }));
+               out .errors = [ attempt (() => browser .getComponent ("Nope")), attempt (() => browser .getComponent ("Nope", 2)), attempt (() => browser .getComponent ()) ];
+               out .external = [ "Texturing3D", "NURBS", "Geospatial", "Core", "X_ITE" ] .map (name => attempt (() => { const x = browser .getComponent (name); return [ x .name, x .level, x .external, Array .from (x .dependencies) ]; }));
+               out .text = [ attempt (() => String (c)), attempt (() => c .toVRMLString ()) ];
+               break;
+            }
+            case "supportedLists":
+            {
+               // X3DBrowser.supportedProfiles and supportedComponents (ProfileInfoArray, ComponentInfoArray).
+               const profiles   = browser .supportedProfiles;
+               const components = browser .supportedComponents;
+
+               out .profiles = [ profiles .constructor .name, profiles instanceof X3D .ProfileInfoArray, profiles .getTypeName (), profiles .length, Array .from (profiles, p => p .name), [ ... profiles ] .length ];
+               out .components = [ components .constructor .name, components instanceof X3D .ComponentInfoArray, components .getTypeName (), components .length, Array .from (components, c => `${c .name}:${c .level}`) ];
+               out .same = [ profiles === browser .supportedProfiles, profiles === browser .getSupportedProfiles (), components === browser .getSupportedComponents (), profiles .get ("Interchange") === browser .getProfile ("Interchange") ];
+               out .alias = [ components .get ("H-Anim") ?.name, profiles .get ("MPEG-4") ?.name, components .has ("H-Anim"), components .length === Array .from (components) .length ];
+               out .supported = [ attempt (() => browser .getSupportedProfile ("Full") .name), attempt (() => browser .getSupportedProfile ("Nope")), attempt (() => browser .getSupportedComponent ("Text") .level), attempt (() => browser .getSupportedComponent ("Nope")) ];
+               // map, filter and slice make an array of the same type, of new values made from the old ones.
+               out .array = [
+                  attempt (() => profiles .map (p => p .name) .length),
+                  attempt (() => { const f = profiles .filter (p => p .name .startsWith ("C")); return [ f .constructor .name, f .length, f [0] .name, f [0] === profiles .get (f [0] .name), f [0] .components .length ]; }),
+                  attempt (() => { const f = components .slice (0, 2); return [ f .constructor .name, Array .from (f, c => c .name), f [0] === components [0] ]; }),
+                  attempt (() => components .find (c => c .name === "Text") ?.level),
+                  attempt (() => components .indexOf (components .get ("Core"))),
+                  attempt (() => Object .keys (profiles) .slice (0, 3)),
+               ];
+               break;
+            }
+            case "createSceneInfo":
+            {
+               // createScene (profile, ...components): the scene keeps the ProfileInfo and the ComponentInfo objects as given.
+               const profile = browser .getProfile ("Interchange");
+               const text    = browser .getComponent ("Text", 1);
+               const shape   = browser .getComponent ("Shape", 2);
+               const text2   = browser .getComponent ("Text");
+               const list    = scene => [ scene .profile ?.name ?? null, Array .from (scene .components, c => `${c .name}:${c .level}`) ];
+
+               const empty = await browser .createScene ();
+
+               out .empty = [ empty .profile, empty .components .constructor .name, empty .components .length, empty .getProfile (), empty .getComponents () === empty .components ];
+
+               const scene = await browser .createScene (profile, text, shape, text2);
+
+               out .scene = list (scene);
+               out .same = [ scene .profile === profile, scene .getProfile () === profile, scene .components .get ("Shape") === shape, scene .components .get ("Text") === text2, scene .components === scene .components ];
+
+               const full = await browser .createScene (browser .getProfile ("Full"));
+
+               out .full = list (full);
+
+               out .replace = await settled (browser .replaceWorld (scene) .then (() => "resolved"));
+               out .world = [ browser .currentScene === scene, list (browser .currentScene) ];
+               break;
+            }
+            case "sceneProfile":
+            {
+               // The profile and components of a scene that was parsed: its PROFILE and COMPONENT statements.
+               const list = scene => [ scene .profile ?.name ?? null, Array .from (scene .components, c => `${c .name}:${c .level}`), scene .profile === null || scene .profile === browser .getProfile (scene .profile .name) ];
+
+               await settled (browser .loadURL (url ("data:model/x3d-vrml," + encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Text:1\nCOMPONENT Shape:2\nDEF G Group { }\n"))));
+               await spin (2);
+
+               out .world = list (browser .currentScene);
+               out .same = browser .currentScene .components === browser .currentScene .components;
+
+               const scenes =
+               {
+                  x3d: "#X3D V4.0 utf8\nPROFILE Immersive\nCOMPONENT Geospatial:1\nTransform { }\n",
+                  noProfile: "#X3D V4.0 utf8\nTransform { }\n",
+                  vrml: "#VRML V2.0 utf8\nTransform { }\n",
+                  xml: "<X3D profile='Interactive' version='4.0'><head><component name='Text' level='1'/></head><Scene><Transform/></Scene></X3D>",
+                  json: JSON .stringify ({ X3D: { "@profile": "Core", "@version": "4.0", head: { component: [ { "@name": "Grouping", "@level": 1 } ] }, Scene: { "-children": [ { Transform: { } } ] } } }),
+               };
+
+               out .scenes = { };
+
+               for (const [ key, text ] of Object .entries (scenes))
+                  out .scenes [key] = await settled (browser .createX3DFromString (text) .then (list));
+
+               out .url = await settled (browser .createX3DFromURL (url (`${args .worlds}viewpoints.wrl`)) .then (list));
+               break;
+            }
+            case "vrmlURLNodes":
+            {
+               // The callback form: the nodes that go into the field are the world's, usable like its own.
+               await settled (browser .loadURL (url ("data:model/x3d-vrml," + encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\nDEF G Group { }\nDEF H Group { }\n"))));
+               await spin (2);
+
+               const G       = browser .currentScene .getNamedNode ("G");
+               const H       = browser .currentScene .getNamedNode ("H");
+               const roots   = browser .currentScene .rootNodes .length;
+               const waitFor = async (test, n = 80) => { for (let i = 0; i < n && !test (); ++ i) await new Promise (r => setTimeout (r, 25)); await spin (3); };
+
+               browser .createVrmlFromURL (url (`${args .worlds}extern.wrl`), G, "set_children");
+               await waitFor (() => G .children .length > 0);
+
+               out .extern = [ G .children .length, types (G .children), Array .from (G .children, n => n ?.getNodeName ()) ];
+
+               const first = G .children [1];
+
+               out .usable = attempt (() => { first .color = new X3D .SFColor (0, 1, 0); return String (first .color); });
+               out .roots  = browser .currentScene .rootNodes .length === roots;
+
+               // A fallback list: the first candidate fails, its message is FileLoader's.
+               logs .length = 0;
+               browser .createX3DFromURL (url ("/status/404/n1.wrl", `${args .worlds}viewpoints.wrl`), H, "addChildren");
+               await waitFor (() => H .children .length > 0);
+
+               out .fallback = [ H .children .length, Array .from (H .children, n => n ?.getNodeName ()) ];
+               out .fallbackLogs = logs .slice ();
+
+               // set_children replaces, removeChildren removes nothing of another load.
+               browser .createVrmlFromURL (url ("data:model/x3d-vrml," + encodeURIComponent ("#X3D V4.0 utf8\nDEF X Transform { }\nDEF Y Shape { }\n")), H, "set_children");
+               await waitFor (() => H .children .length === 2);
+
+               out .replaced = [ H .children .length, types (H .children), Array .from (H .children, n => n ?.getNodeName ()) ];
+
+               // Every candidate failing: nothing changes, the messages are FileLoader's.
+               logs .length = 0;
+               browser .createVrmlFromURL (url ("/status/404/n2.wrl", "/status/404/n3.wrl"), H, "addChildren");
+               await new Promise (r => setTimeout (r, 500));
+               await spin (2);
+
+               out .failed = [ H .children .length, logs .slice () ];
+               break;
+            }
             case "importDocumentHTML":
             {
                // An HTML element, as the X3D element of a page: the HTMLParser reads it.
@@ -506,6 +661,7 @@ const NAMES =
    "x3dURL", "x3dURLNodes", "x3dURLErrors", "x3dURLArguments",
    "vrmlURLArguments", "vrmlURLLoad",
    "importJS", "importJSErrors", "importDocument", "importDocumentErrors", "importDocumentHTML",
+   "profileInfo", "componentInfo", "supportedLists", "createSceneInfo", "sceneProfile", "vrmlURLNodes",
 ];
 
 const cases = Object .fromEntries (NAMES .map (name => [ name, (page, env) => scenario (page, env, name) ]));
