@@ -2,7 +2,7 @@
  "pinned": "34cdf9f97",
  "chrome": "156.0.8078.47",
  "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
- "runs": 5,
+ "runs": 3,
  "identicalValues": true,
  "pictures": {},
  "values": {
@@ -92,6 +92,20 @@
    "s12": [
     "Group { children [ DEF OT Transform { } Transform { } ] }",
     "<Group> <Transform DEF='OT'/> <Transform/> </Group>"
+   ],
+   "s13": [
+    [
+     [
+      "Group:G",
+      "Transform:OT",
+      "Transform:T"
+     ],
+     "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }"
+    ],
+    [
+     "Transform:T"
+    ],
+    "Group { children DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } }"
    ],
    "s09": [
     true,
