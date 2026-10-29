@@ -364,6 +364,17 @@ class CheckOutput(Case):
             self.skipTest("running as root: a mode-0 directory is still readable")
         self.unsafe(lambda: self.passes(os.path.join(locked, "via", "x.png")), "cannot resolve")
 
+    def test_worktree_with_another_manifest(self):
+        wt = os.path.join(self.tmp, "lanes", "wt")
+        git(self.root, "worktree", "add", "-q", "--detach", wt)
+        with open(os.path.join(wt, "oracle", "answer-keys.tsv"), "a") as f:
+            f.write(f"n.json\tfile\t1\t3\t{sha(b'abc')}\n")  # a commit with one more row
+        self.unsafe(lambda: self.passes(os.path.join(wt, "oracle", "n.json")), "is the key path")
+        self.passes(os.path.join(self.root, "oracle", "n.json"))  # not a row of this checkout's manifest
+        clone = os.path.join(self.tmp, "clone")
+        git(self.tmp, "clone", "-q", self.root, clone)
+        self.passes(os.path.join(clone, "oracle", "d"))  # the documented limit: a separate clone is not protected
+
     def test_cli_and_recorder_refuse(self):
         tool = os.path.join(self.root, "tools", "answer_keys.py")
         os.makedirs(os.path.dirname(tool))
@@ -394,6 +405,76 @@ class CheckOutput(Case):
                            env=env, capture_output=True, text=True)
         self.assertNotEqual(r.returncode, 0)
         self.assertNotIn("WRITE", r.stdout)
+
+
+class Recorders(Case):
+    """The 4 key recorders, run as scripts: an unsafe output stops them before any write, mkdir or browser start.
+    The browser is a stub `playwright` that records a launch and exits 97, so a safe output proves the check passed."""
+    RECORDERS = (("x_ite-dump.mjs", "out.json"), ("x_ite-shot.mjs", "out"), ("x_ite-shot-msaa.mjs", "out"),
+                 ("x_ite-text.mjs", None))
+
+    def setUp(self):
+        super().setUp()
+        self.node = shutil.which("node")
+        if self.node is None:
+            self.skipTest("node is not installed; the recorders are not run")
+        # The recorders load playwright from ../../../x_ite-tests/ relative to oracle/.
+        self.root, self.store = self.checkout(os.path.join("lane", "repo", "main")), self.keys()
+        src = os.path.dirname(os.path.dirname(ak.__file__))
+        os.makedirs(os.path.join(self.root, "tools"))
+        shutil.copy(ak.__file__, os.path.join(self.root, "tools", "answer_keys.py"))
+        for name in [r for r, _ in self.RECORDERS] + ["check-output.mjs"]:
+            shutil.copy(os.path.join(src, "oracle", name), os.path.join(self.root, "oracle", name))
+        stub = os.path.join(self.tmp, "lane", "x_ite-tests", "node_modules", "playwright")
+        os.makedirs(stub)
+        with open(os.path.join(stub, "index.js"), "w") as f:
+            f.write("const fs = require ('fs');\nmodule.exports = { chromium: { launch: async () => "
+                    "{ fs.writeFileSync (process.env.STUB_MARK, 'launched'); process.exit (97); } } };\n")
+        self.corpus = os.path.join(self.tmp, "corpus")
+        os.makedirs(self.corpus)
+        open(os.path.join(self.corpus, "a.wrl"), "w").close()
+        self.mark = os.path.join(self.tmp, "launched")
+        self.before = ak.measure(self.store)
+
+    def tearDown(self):
+        self.assertEqual(ak.measure(self.store), self.before)
+
+    def record(self, script, out, cwd):
+        env = {k: v for k, v in os.environ.items() if k != "X3D_ORACLE_KEYS"}
+        env["STUB_MARK"] = self.mark
+        args = [out] if script == "x_ite-text.mjs" else [os.path.relpath(self.corpus, cwd), out]
+        return subprocess.run([self.node, os.path.join(self.root, "oracle", script), *args], cwd=cwd, env=env,
+                              capture_output=True, text=True, timeout=60)
+
+    def test_unsafe_output_writes_nothing(self):
+        os.environ["X3D_ORACLE_KEYS"] = self.store
+        ak.link(self.root, ["d"], self.root)  # oracle/d is a link into the store
+        os.environ.pop("X3D_ORACLE_KEYS")
+        other = os.path.join(self.tmp, "elsewhere")  # not the repository: relative paths resolve against this
+        os.makedirs(other)
+        for script, _ in self.RECORDERS:
+            for out in (os.path.join(self.root, "oracle", "d", "new", "deeper"),  # through the link, into the store
+                        os.path.join(self.root, "oracle", "k.json", "new"),     # below a key path
+                        os.path.relpath(os.path.join(self.store, "fresh"), other)):  # in a store, relative
+                with self.subTest(script=script, out=out):
+                    r = self.record(script, out, other)
+                    self.assertEqual(r.returncode, ak.UNSAFE, r.stderr)
+                    self.assertIn("nothing written", r.stderr)
+                    self.assertIn(os.path.normpath(os.path.join(other, out)), r.stderr)  # resolved from the cwd
+                    self.assertFalse(os.path.lexists(os.path.join(other, out)))
+                    self.assertFalse(os.path.lexists(os.path.join(self.store, "d", "new")))
+                    self.assertFalse(os.path.lexists(os.path.join(self.root, "oracle", "k.json")))
+                    self.assertFalse(os.path.lexists(self.mark), "the browser started before the check")
+
+    def test_staging_output_passes_the_check(self):
+        other = os.path.join(self.tmp, "elsewhere")
+        os.makedirs(other)
+        for script, name in self.RECORDERS:
+            with self.subTest(script=script):
+                out = os.path.join("staging", name or "x_ite-text.json")
+                r = self.record(script, out, other)
+                self.assertEqual(r.returncode, 97, r.stderr)  # the stub browser started: the check passed
+                os.remove(self.mark)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
