@@ -14,7 +14,7 @@
 set -u -o pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ARCHIVES="${R02C1_ARCHIVES:-/home/ryan/Projects/cybertown/X_ITE/scratch/rust-r01a-evidence/published-crates}"
+ARCHIVES="${R02C1_ARCHIVES:?set R02C1_ARCHIVES to the directory of the published 0.1.0 crate tarballs}"
 OUT="${1:-/tmp/r02c1-published-consumer}"
 LOG="$OUT/commands.log"
 
@@ -26,7 +26,8 @@ declare -A PIN=(
 )
 
 if [ -e "$OUT" ]; then echo "published-consumer: REFUSED: $OUT exists" >&2; exit 2; fi
-case "$OUT" in /home/ryan/Projects/*) echo "published-consumer: REFUSED: $OUT is inside a source tree" >&2; exit 2;; esac
+ROOT="$(cd "$HERE/../../.." && pwd)"
+case "$OUT" in "$ROOT"|"$ROOT"/*) echo "published-consumer: REFUSED: $OUT is inside the source tree" >&2; exit 2;; esac
 mkdir -p "$OUT/published" "$OUT/consumer/src" || exit 2
 
 FAIL=0
