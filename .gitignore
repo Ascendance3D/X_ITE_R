@@ -26,3 +26,8 @@
 # Python bytecode caches. Python writes these when it imports a tool; never commit them.
 __pycache__/
 *.py[cod]
+
+# Private agent tooling and local links (not published).
+/.port-factory/
+/.claude/
+/upstream
