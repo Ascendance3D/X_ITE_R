@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # R0.2-C1 reproducible consumer of the published crates.io 0.1.0 archives.
 #
-#   bash crates/r0-2-c-tests/published-consumer/published-consumer.sh [OUT_DIR]
+#   R02C1_ARCHIVES=<dir> bash crates/r0-2-c-tests/published-consumer/published-consumer.sh [OUT_DIR]
 #
-# OUT_DIR must be outside any source tree. Default: /tmp/r02c1-published-consumer.
+# R02C1_ARCHIVES (required) is the directory of the published 0.1.0 crate tarballs (vrml97, vrml, x3d).
+# OUT_DIR must be outside this checkout. Default: /tmp/r02c1-published-consumer.
 # The script refuses to reuse an existing OUT_DIR. It never edits the archives or the
 # extracted crates: vrml and x3d reach the extracted vrml97 through an explicit
 # [patch.crates-io] entry in the consumer manifest. Exit 0 only when every step passes.
@@ -26,7 +27,8 @@ declare -A PIN=(
 )
 
 if [ -e "$OUT" ]; then echo "published-consumer: REFUSED: $OUT exists" >&2; exit 2; fi
-ROOT="$(cd "$HERE/../../.." && pwd)"
+ROOT="$(cd "$HERE/../../.." && pwd -P)"
+OUT="$(realpath -m -- "$OUT")"
 case "$OUT" in "$ROOT"|"$ROOT"/*) echo "published-consumer: REFUSED: $OUT is inside the source tree" >&2; exit 2;; esac
 mkdir -p "$OUT/published" "$OUT/consumer/src" || exit 2
 
