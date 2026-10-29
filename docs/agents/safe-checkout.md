@@ -1,7 +1,7 @@
 # Safe checkout update
 
 Use this procedure before any Git command that can write a tracked path in a checkout that holds work or evidence.
-The main checkout holds the gitignored answer keys (`oracle/answer-keys.tsv`), so this procedure always applies there.
+The main checkout holds ignored copies of answer keys (`oracle/answer-keys.tsv`) and empty key paths at tracked symlinks, so this procedure always applies there.
 The commands need GNU coreutils and findutils (`sha256sum -z`, `find -printf`, `cp --parents`, `stat -c`). On macOS, install the Homebrew `coreutils` and `findutils` packages and use their `g`-prefixed commands.
 
 ## Rules
@@ -15,10 +15,33 @@ The commands need GNU coreutils and findutils (`sha256sum -z`, `find -printf`, `
 
 ## Answer-key hazard (issue #65)
 
-The main checkout keeps 8 render keys and `upstream/` as real ignored directories at 9 paths that Git tracks as symlinks. `git status --short` shows each of them with `D` in the worktree column and an unchanged index.
-Git treats ignored files as expendable. A command that writes the tracked symlink at one of these paths deletes the real directory under it, and it often exits 0 and prints nothing.
+Git tracks 8 render keys as symlinks (`oracle/render-*-baseline`), and older commits also track `upstream` as a symlink. Git treats ignored files as expendable. When a real ignored directory is at one of these paths, a command that writes the tracked symlink deletes the directory, and it often exits 0 and prints nothing.
+
+Until 2026-10-29 the main checkout kept the 8 render keys and `upstream/` as real directories at these paths. They are now in the external evidence store (next section), and the 9 paths in the main checkout are empty. `git status --short` shows the 8 render-key symlinks with `D` in the worktree column and an unchanged index. This is the expected state.
 
 A failed merge also deletes keys. A non-fast-forward `git merge` or `git pull` of a branch that changes or deletes one of these symlinks stops with "Aborting" and exit 2. The merge then restores the symlink over the real directory.
+
+### External evidence store
+
+The owner chose one external store for the keys (issue #65). It is a private, dated directory `<backups root>/X_ITE_R/<date>-evidence-store/`, outside every worktree. The maintainer sets the backups root, outside the repository. The current store is dated 2026-10-29 and holds the main checkout's keys at `a5a6b6f5`.
+
+The store holds every row of `oracle/answer-keys.tsv` (24 entries) as real files and directories, with no symlinks:
+
+- the 12 X_ITE answer keys: `items-baseline.json`, `items2-baseline.json`, `x1-baseline.json`, `x_ite-text.json` and the 8 `render-*-baseline` directories;
+- the 12 private paths of issue #168.
+
+The store also holds `README.md` (the origin of each entry) and `SHA256SUMS` (every file, relative paths). Do not edit an entry in place, and never re-record a key in the store. To use it, set `X3D_ORACLE_KEYS` to its absolute path. Then the resolver searches only the store.
+
+The main checkout layout is:
+
+| path | state |
+| --- | --- |
+| the 8 `oracle/render-*-baseline` key paths | empty: no file, directory or symlink. The keys are only in the store |
+| `upstream` | empty. `a5a6b6f5` does not track it; older commits track it as a symlink |
+| the 4 JSON keys in `oracle/` | real ignored files, equal to the store. Their paths are not tracked |
+| the 12 #168 paths in `oracle/` | real ignored files and directories, equal to the store. Their paths are not tracked at `a5a6b6f5` |
+
+The render keys are not in the main checkout, so the strict tests there need `X3D_ORACLE_KEYS`. Keep the store and the checkout copies. Delete nothing.
 
 ### Operations that delete keys in the main checkout
 
@@ -40,8 +63,8 @@ These operations kept the keys in the same tests: `merge --no-autostash --ff-onl
 
 ### The inventory does not see the keys
 
-`git ls-files --others --ignored --exclude-standard --directory` lists nothing for a real directory at a tracked symlink path. So step 2 of the procedure does not list the 8 render keys or `upstream/`.
-Verify the keys directly before and after the command: steps 0 and 7.
+`git ls-files --others --ignored --exclude-standard --directory` lists nothing for a real directory at a tracked symlink path. So step 2 of the procedure does not list data at the 8 render-key paths or at `upstream`.
+Verify the keys and the empty key paths directly before and after the command: steps 0 and 7.
 
 ### Limits of other protections
 
@@ -50,22 +73,35 @@ Verify the keys directly before and after the command: steps 0 and 7.
 - `git update-index --skip-worktree` is not a protection. The bit is in one local index only, and a new clone or worktree does not have it.
 - Git 2.43 has no "precious" ignore patterns.
 
-Only a move of the keys out of every tracked path removes the hazard. That migration is open in issue #65; do not untrack the symlinks before it.
+Only a move of the keys out of every tracked path removes the hazard. In the main checkout, that move is done: the render keys are in the external store. Do not move a key back to a tracked symlink path. The tracked symlinks themselves stay until a separate change for issue #65 replaces them; do not untrack them before it.
 
 ## Procedure
 
 | step | action | stop when |
 | --- | --- | --- |
-| 0 | `env -u X3D_ORACLE_KEYS python3 -I -B tools/answer_keys.py verify` (every row of `oracle/answer-keys.tsv`; with the variable set, the resolver checks only the external location and not the keys in this checkout), and on the owner's workstation the protected-evidence check (`protect_check.sh` of Recovery Phase 6). Check that the 8 render keys and `upstream/` are real directories: `test -d <path> && test ! -L <path>` | a key fails, a check fails, or a key path is a symlink |
+| 0 | `X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py verify` (every row of `oracle/answer-keys.tsv`, in the store only), and `sha256sum -c --quiet SHA256SUMS` in the store. `env -u X3D_ORACLE_KEYS python3 -I -B tools/answer_keys.py verify <name>...` for each of the 16 keys that the main checkout holds in `oracle/` (the 4 JSON keys and the 12 #168 paths). `python3 -I -B tools/answer_keys.py guard . HEAD`, with and without `X3D_ORACLE_KEYS`. On the owner's workstation, the protected-evidence check (`protect_check.sh` of Recovery Phase 6). Check that the 8 render-key paths and `upstream` are empty: `test ! -e <path> && test ! -L <path>` | a key fails, a check fails, the guard refuses, or a render-key path or `upstream` is not empty |
 | 1 | `git rev-parse HEAD` and `git status --porcelain`; record both. Resolve the target once: `T=$(git rev-parse --verify <target>^{commit})`, and use `$T` (not a branch name) in every later step. `git diff --cached --quiet` must pass | HEAD or status differs from what you expect; `$T` is not the expected SHA; the index has staged changes |
 | 2 | list the tracked paths the command can write: `git diff -z --no-renames --name-only HEAD $T` for a merge (a rename lists the deleted old path and the new path); the path list for a restore. List the untracked and ignored paths: `git ls-files -z --others --exclude-standard` and `git ls-files -z --others --ignored --exclude-standard --directory`. Write each list to its own file in the holding directory of step 3 (or in `/tmp`) and keep it NUL-separated. Never expand a list into a shell word list: pass it with `xargs -0 -a <list> <command>`, or read it with `while IFS= read -r -d '' p`, and run each check per path | a listed untracked or ignored path is equal to a tracked path from this step, is a directory above one, or is below one. Compare whole path components; `--directory` lists an ignored directory once, with a trailing `/`. (Example: `$T` replaces the directory `gen/` with a file `gen`; a fast-forward then deletes the ignored `gen/out.bin` and exits 0) |
 | 3 | make a new, empty, dated holding directory under `<backups root>/X_ITE_R/` (the maintainer sets the backups root, outside the repository) (`mkdir` without `-p`; it must not exist before). Write three manifests of every listed path: `sha256sum -z` of each regular file, the target of each symlink (`find <path> -type l -printf '%P\0%l\0'`), and the type and mode of every entry (`find <path> -printf '%y %m %P\0'`), with relative paths, so the source and copy manifests compare directly. End every record with NUL, not a newline, because a file name can hold a newline. Record a listed path that does not exist as absent. Ownership, timestamps, ACLs and xattrs are not compared. Stop on any other file type | a listed path is not a regular file, a directory of regular files, or a symlink |
 | 4 | copy each existing path with unique content (working-tree bytes that `$T` does not hold, including paths that `$T` deletes) into the holding directory with its relative path. First check `test ! -e <holding>/<path> && test ! -L <holding>/<path>` (`-e` alone misses a dangling symlink), then copy with `cp -R -P -p --parents -- <path> <holding>/` (`-R` copies a directory, `-P` keeps a symlink as a symlink). Do not use `cp -n`: it skips an existing file and exits 0. A path recorded as absent in step 3 has nothing to copy. Check the copies against all three manifests | `<holding>/<path>` already exists; `cp` exits non-zero; a copy differs |
 | 5 | run the command with hooks and autostash off: `git -c core.hooksPath=/dev/null merge --no-autostash --ff-only $T`; record its exit status before any other command | `git merge` exits non-zero, or it does something other than the expected effect (for a merge: HEAD is not `$T`). After a non-zero exit, run no Git command that writes. Run step 7, then record `git rev-parse HEAD` and `git status --porcelain` (compare them with step 1) and check every listed path against the step 3 manifests. Record each difference, keep the holding directory and report; do not try a repair with Git |
 | 6 | check the index against `$T`: `git diff --cached --quiet $T`. Check the tracked paths from step 2 against `$T`: `xargs -0 -a <tracked list> git --literal-pathspecs diff --quiet $T --` (bytes, mode and symlink targets; any non-zero exit is a difference). Check every other listed path against the step 3 manifests | the index differs from `$T`; a tracked path differs from `$T`; a manifest entry differs |
-| 7 | repeat step 0, with `X3D_ORACLE_KEYS` unset | a key fails, a check fails, or a key path is a symlink. Stop and report; do not try a repair with Git |
+| 7 | repeat step 0 | a key fails, a check fails, or a key path is a symlink. Stop and report; do not try a repair with Git |
 
-Before step 5, the step 2 list of tracked paths (`git diff -z --no-renames --name-only HEAD $T`) must not contain a key path. The key paths are exactly 25: `upstream` and `oracle/<name>` for each row of `oracle/answer-keys.tsv`, of kind `file` or `dir`. They are the paths that `tools/answer_keys.py guard` protects (`GUARDED` and every manifest row). The 12 X_ITE answer keys are the files `items-baseline.json`, `items2-baseline.json`, `x1-baseline.json` and `x_ite-text.json`, and the directories `render-items-baseline`, `render-items2-baseline`, `render-msaa4-items-baseline`, `render-msaa4-items2-baseline`, `render-msaa4-x8-baseline`, `render-msaa8-items-baseline`, `render-msaa8-x8-baseline` and `render-synthetic-x8-baseline`. The 12 private paths of issue #168 are the directories `corpus-items`, `corpus-items2`, `corpus-items-media`, `corpus-items2-media`, `render-items`, `render-items2`, `corpus-x0`, `corpus-x1`, `render-x0-baseline` and `render-msaa4-x0-baseline`, and the files `x0-baseline.json` and `x0-xml-baseline.json`. Compare each listed path for exact equality with a key path, and also stop on a listed path below one. Other `oracle/render-*-baseline` directories are tracked baselines, not keys. Use exactly that `--no-renames` list. Do not use a diff with rename detection for this check, because it can omit the old path of a renamed key symlink. A fast-forward that changes, renames or deletes a key symlink is out of scope for this procedure.
+Before step 5, the step 2 list of tracked paths (`git diff -z --no-renames --name-only HEAD $T`) must not contain a key path. The key paths are exactly 25: `upstream` and `oracle/<name>` for each row of `oracle/answer-keys.tsv`, of kind `file` or `dir`. They are the paths that `tools/answer_keys.py guard` protects (`GUARDED` and every manifest row). The 12 X_ITE answer keys are the files `items-baseline.json`, `items2-baseline.json`, `x1-baseline.json` and `x_ite-text.json`, and the directories `render-items-baseline`, `render-items2-baseline`, `render-msaa4-items-baseline`, `render-msaa4-items2-baseline`, `render-msaa4-x8-baseline`, `render-msaa8-items-baseline`, `render-msaa8-x8-baseline` and `render-synthetic-x8-baseline`. The 12 private paths of issue #168 are the directories `corpus-items`, `corpus-items2`, `corpus-items-media`, `corpus-items2-media`, `render-items`, `render-items2`, `corpus-x0`, `corpus-x1`, `render-x0-baseline` and `render-msaa4-x0-baseline`, and the files `x0-baseline.json` and `x0-xml-baseline.json`. Compare each listed path for exact equality with a key path, and also stop on a listed path below one. Other `oracle/render-*-baseline` directories are tracked baselines, not keys. Use exactly that `--no-renames` list. Do not use a diff with rename detection for this check, because it can omit the old path of a renamed key symlink. A fast-forward whose step 2 tracked list contains a key path, or a path below one, is out of scope for this procedure, except as the next section permits.
+
+### Exception: a fast-forward that changes or deletes a key symlink
+
+Use this only for `git -c core.hooksPath=/dev/null merge --no-autostash --ff-only $T` in a checkout that uses the external store. The affected key paths are every key path that is equal to a path in the step 2 tracked list, or that is above or below one. All of these must be true before step 5:
+
+1. Every affected key path is empty: `test ! -e <path> && test ! -L <path>`. This includes tracked files below the path: they must be absent from the worktree too. A Git operation that deletes or changes a tracked symlink must never run while real data is at that path.
+2. A verified holding copy of every key exists outside every worktree: the step 0 store checks pass (24 of 24 rows, and `sha256sum -c` of `SHA256SUMS`).
+3. `python3 -I -B tools/answer_keys.py guard . HEAD $T` passes, with and without `X3D_ORACLE_KEYS`.
+4. Steps 3 and 4 copied every listed path, and each copy equals all three source manifests (file hashes, symlink targets, and type and mode).
+
+Stop on any unexpected state: a check that fails or cannot run, a path that is not empty, a count that differs from the record, or a file, symlink or directory that you did not expect. Do not try a repair with Git, and do not move data to make a check pass. Record what you found, keep the holding directory, and report.
+
+After step 5, run steps 6 and 7. Record the exception, its checks and their results on issue #65. The 2026-10-29 update of the main checkout from `cdfbffc7` to `a5a6b6f5` used this exception. It deleted the tracked `upstream` symlink and 3,605 tracked files below 11 #168 paths, with all of those paths empty, and it passed steps 6 and 7.
 
 ### Restore one modified tracked file before a fast-forward
 
