@@ -11,6 +11,10 @@ that is not a merge commit, or a git failure runs both suites.
 
 - Documentation: `docs/**`, and `*.md` outside `oracle/`, `upstream/`, `tools/` and `.github/` (pinned references
   and the PR template hold Markdown). No test reads these files. Neither suite runs.
+- Fast checks only (FAST_ONLY_FILES, FAST_ONLY_DIRS): repository metadata (`.gitignore`, `LICENSE`, the PR and issue
+  templates), `oracle/README.md`, and the tools that only "Fast checks" runs or that nothing in CI runs (the
+  answer-key resolver and its tests, the reference-pin and candidate gates, `nightly.sh`). Each is named; no Rust or
+  browser test reads it. Neither suite runs. `.gitattributes` is not in the list: it changes checked-out bytes.
 - Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web (not the worlds in
   `tests/browser/worlds/`, which a native test includes), the page adapter
   `crates/x3d-web/web/*.mjs` (not `web/example/`, which a native test includes), the browser baselines
@@ -20,7 +24,11 @@ that is not a merge commit, or a git failure runs both suites.
   files except tools/build-web.sh, the REA ledger trees `_batch*_context/`, and the other workflows. The browser
   tests read only crates/x3d-web and `oracle/web-browser-*`.
 
-This script and its workflows are not in either list, so a change to them runs both suites."""
+This script and its workflows are not in either list, so a change to them runs both suites.
+
+A draft pull request (DRAFT=true in the environment) runs neither suite: "Fast checks" and the result checks still
+run. Mark the PR ready for review to run the suites (the ready_for_review event starts a new run), or start them on the
+branch with `gh workflow run "Rust tests" --ref <branch>` and `gh workflow run "Web tests" --ref <branch>`."""
 import os, subprocess, sys, tomllib
 from pathlib import Path
 
@@ -46,6 +54,26 @@ NATIVE_ONLY_FILES = {
     ".github/workflows/code-review.yml",
 }
 BOTH_FILES = {"tools/build-web.sh", "tools/ci_changes.py"}
+# Read by no Rust or browser test. "Fast checks" runs the checks that read the tools (tools/test_answer_keys.py,
+# tools/verify-reference-pin.py, tools/verify-candidate.sh, tools/selftest-identity.sh). Exact names only.
+FAST_ONLY_FILES = {
+    ".gitignore",
+    ".git-blame-ignore-revs",
+    "LICENSE",
+    ".coderabbit.yaml",
+    ".github/CODEOWNERS",
+    ".github/pull_request_template.md",
+    "oracle/README.md",
+    "tools/answer_keys.py",
+    "tools/test_answer_keys.py",
+    "tools/verify-reference-pin.py",
+    "tools/reference-digest.py",
+    "tools/verify-candidate.sh",
+    "tools/selftest-identity.sh",
+    "tools/candidate.lock",
+    "tools/nightly.sh",
+}
+FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/",)
 
 
 def crate_dirs(root):
@@ -95,6 +123,10 @@ def is_docs(p):
     return p.startswith("docs/") or (p.endswith(".md") and not p.startswith(PROTECTED_MD))
 
 
+def is_fast_only(p):
+    return p in FAST_ONLY_FILES or p.startswith(FAST_ONLY_DIRS)
+
+
 def is_web_only(p):
     if p.startswith(WEB_NATIVE_FIXTURES):
         return False
@@ -126,6 +158,8 @@ def classify(paths, root=ROOT):
     for p in paths:
         if is_docs(p):
             rows.append((p, "none (documentation)"))
+        elif is_fast_only(p):
+            rows.append((p, "none (Fast checks only)"))
         elif is_web_only(p):
             web = True
             rows.append((p, "browser"))
@@ -175,9 +209,24 @@ def self_test():
         (["docs/agents/lane-reports.md", "crates/x3d-web/web/API.md"], False, False),
         (["docs/findings-xr-c04/hsl_count.py"], False, False),
         (["oracle/x_ite-pin-16.6.0/README.md"], True, False),
-        (["tools/candidate.lock"], True, False),
-        (["oracle/README.md"], True, False),
-        ([".github/pull_request_template.md"], True, True),
+        (["tools/candidate.lock"], False, False),
+        (["oracle/README.md"], False, False),
+        ([".github/pull_request_template.md"], False, False),
+        ([".gitignore"], False, False),
+        ([".gitignore", "tools/answer_keys.py", "tools/test_answer_keys.py", "docs/agents/safe-checkout.md"], False, False),
+        (["LICENSE", ".git-blame-ignore-revs", ".coderabbit.yaml", ".github/CODEOWNERS"], False, False),
+        ([".github/ISSUE_TEMPLATE/bug.yml"], False, False),
+        (["tools/verify-reference-pin.py", "tools/reference-digest.py", "tools/verify-candidate.sh"], False, False),
+        (["tools/selftest-identity.sh", "tools/nightly.sh"], False, False),
+        ([".gitattributes"], True, True),
+        (["tools/evidence_summary.py"], True, False),
+        (["oracle/tools/rea_b05.py"], True, False),
+        (["oracle/x_ite-shot.mjs"], True, False),
+        (["oracle/answer-keys.tsv"], True, False),
+        (["oracle/x_ite-pin/README.md"], True, False),
+        (["tools/answer_keys.py", "crates/vrml97/src/lib.rs"], True, False),
+        ([".gitignore", "crates/x3d-web/web/x_ite_r.mjs"], False, True),
+        (["tools/build-web.sh", ".gitignore"], True, True),
         (["crates/vrml97/src/lib.rs"], True, False),
         (["crates/x3d-oracle/src/main.rs"], True, False),
         (["crates/x3d-render/src/lib.rs"], True, True),
@@ -224,6 +273,9 @@ def self_test():
 def main(argv):
     if argv == ["--self-test"]:
         return self_test()
+    if argv == [] and os.environ.get("DRAFT") == "true":
+        report(False, False, [("(draft pull request: mark it ready for review, or use workflow_dispatch)", "none")])
+        return 0
     if argv == ["--all"]:
         report(True, True, [("(workflow_dispatch: every suite)", "both")])
         return 0
