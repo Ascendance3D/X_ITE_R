@@ -3,7 +3,7 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser, parseFieldWithoutScene } from "./pkg/x3d_web.js";
+import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene } from "./pkg/x3d_web.js";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -745,6 +745,155 @@ for (const key of [ "fromVRMLString", "fromXMLString" ])
 
 // --- scene and browser -------------------------------------------------------------------------------------------
 
+// --- routes ------------------------------------------------------------------------------------------------------
+//
+// X3DExecutionContext.routes, addRoute, deleteRoute and getRoute (Execution/X3DExecutionContext.js, Routing/X3DRoute.js,
+// Routing/RouteArray.js). The engine owns the routes; an X3DRoute object of the page stands for one of them, and the
+// scene gives the same object for the same route until the route is deleted.
+
+const routeScene = new WeakMap (); // X3DRoute → the X3DScene it belongs to
+
+const ROUTE_STREAM = "Source node does not exist in scene graph.";
+
+class X3DRoute
+{
+   // The engine's record `[id, source, sourceField, destination, destinationField, givenSourceField, givenDestinationField]`.
+   #data;
+   #deleted = false;
+
+   constructor (scene, data)
+   {
+      routeScene .set (this, scene);
+      this .#data = data;
+   }
+
+   update (data) { this .#data = data; }
+   retire ()     { this .#deleted = true; }
+
+   get id ()       { return this .#data [0]; }
+   get deleted ()  { return this .#deleted; }
+
+   getTypeName ()   { return "X3DRoute"; }
+   getId ()         { return this .#data [0]; }
+   getExecutionContext () { return routeScene .get (this); }
+
+   // A route that was deleted prints the field names it was given, like X3DRoute after disconnect ().
+   getSourceField ()      { return this .#deleted ? this .#data [5] : this .#data [2]; }
+   getDestinationField () { return this .#deleted ? this .#data [6] : this .#data [4]; }
+
+   getSourceNode ()      { return nodeObject (routeScene .get (this) [_node], this .#data [1]); }
+   getDestinationNode () { return nodeObject (routeScene .get (this) [_node], this .#data [3]); }
+
+   dispose () { routeScene .get (this) .deleteRoute (this); }
+
+   // A route alone is not in a scene graph that a generator knows: X_ITE's toStream refuses it.
+   toVRMLString ()  { throw new Error (ROUTE_STREAM); }
+   toXMLString ()   { throw new Error (ROUTE_STREAM); }
+   toJSONString ()  { throw new Error (ROUTE_STREAM); }
+}
+
+for (const key of [ "update", "retire", "id", "deleted", "getTypeName", "getId", "getExecutionContext", "getSourceNode", "getSourceField",
+                    "getDestinationNode", "getDestinationField", "dispose", "toVRMLString", "toXMLString", "toJSONString" ])
+   Object .defineProperty (X3DRoute .prototype, key, { enumerable: false });
+
+Object .defineProperties (X3DRoute .prototype,
+{
+   sourceNode:       { get: X3DRoute .prototype .getSourceNode,                                              enumerable: true },
+   sourceField:      { get: X3DRoute .prototype .getSourceField,                                             enumerable: true },
+   destinationNode:  { get: X3DRoute .prototype .getDestinationNode,                                         enumerable: true },
+   destinationField: { get: X3DRoute .prototype .getDestinationField,                                        enumerable: true },
+});
+
+Object .defineProperty (X3DRoute, "typeName", { value: "X3DRoute", enumerable: true });
+
+// X3DInfoArray of routes: read-only, live; the routes by index, and by the id of the route (has, get).
+const routeListOf = new WeakMap (); // RouteArray → function giving the current X3DRoute objects
+
+const routeArrayHandler =
+{
+   get (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return routeListOf .get (target) () [index];
+      }
+
+      return Reflect .get (target, key);
+   },
+   set (target, key, value)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return false;
+      }
+
+      return Reflect .set (target, key, value);
+   },
+   has (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return index < routeListOf .get (target) () .length;
+      }
+
+      return Reflect .has (target, key);
+   },
+   ownKeys (target)
+   {
+      return Object .keys (routeListOf .get (target) ()) .concat (Reflect .ownKeys (target));
+   },
+   getOwnPropertyDescriptor (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            const list = routeListOf .get (target) ();
+
+            if (index < list .length)
+               return { value: list [index], writable: false, enumerable: true, configurable: true };
+         }
+      }
+
+      return Reflect .getOwnPropertyDescriptor (target, key);
+   },
+};
+
+class RouteArray
+{
+   constructor (list)
+   {
+      const proxy = new Proxy (this, routeArrayHandler);
+
+      routeListOf .set (this, list);
+      routeListOf .set (proxy, list);
+
+      return proxy;
+   }
+
+   get length ()          { return routeListOf .get (this) () .length; }
+   getTypeName ()         { return "RouteArray"; }
+   has (id)               { return routeListOf .get (this) () .some (route => route .id === id); }
+   get (id)               { return routeListOf .get (this) () .find (route => route .id === id); }
+   *[Symbol .iterator] () { yield* routeListOf .get (this) (); }
+}
+
+for (const key of [ "getTypeName", "has", "get" ])
+   Object .defineProperty (RouteArray .prototype, key, { enumerable: false });
+
+Object .defineProperty (RouteArray, "typeName", { value: "RouteArray", enumerable: true });
+
 // The scene ids of the X3DScene objects the page dropped: a scene that is not the world is released with them.
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
 
@@ -779,6 +928,131 @@ class X3DScene
       return new Fields .MFNode (... Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => nodeObject (this .#handle, Number (n))));
    }
 
+   // --- routes (see "routes" above) ---
+
+   #routes = new Map (); // id → X3DRoute
+   #routeArray = null;
+
+   // The X3DRoute objects of the engine's routes now: one object per route, the deleted ones retired.
+   #routeList ()
+   {
+      const engine = this .#engine ();
+      const list   = [ ];
+      const seen   = new Set ();
+
+      for (const data of engine ?.routes (this .#handle .scene) ?? [ ])
+         list .push (this .#routeOf (data)), seen .add (data [0]);
+
+      for (const [ id, route ] of this .#routes)
+      {
+         if (!seen .has (id))
+         {
+            route .retire ();
+            this .#routes .delete (id);
+         }
+      }
+
+      return list;
+   }
+
+   // The X3DRoute object for the engine's record of a route.
+   #routeOf (data)
+   {
+      const id    = Number (data [0]);
+      const route = this .#routes .get (id) ?? new X3DRoute (this, data);
+
+      route .update (data);
+      this .#routes .set (id, route);
+      return route;
+   }
+
+   // X3DCast (X3DNode, node, false) of the arguments of a route function, and their ids in this scene: the message names the
+   // argument (`source node` of addRoute, `sourceNode` of getRoute).
+   #routeNodes (sourceNode, destinationNode, source, destination)
+   {
+      const nodes = [ [ sourceNode, source ], [ destinationNode, destination ] ];
+
+      for (const [ node, name ] of nodes)
+      {
+         if (!handleOf (node))
+            throw new Error (`Bad ROUTE specification: ${name} must be of type X3DNode.`);
+      }
+
+      return nodes .map (([ node ]) => nodeIdOf (node, this .#handle));
+   }
+
+   get routes ()
+   {
+      return this .#routeArray ??= new RouteArray (() => this .#routeList ());
+   }
+
+   getRoutes () { return this .routes; }
+
+   addRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      sourceField      = String (sourceField);
+      destinationField = String (destinationField);
+
+      const [ source, destination ] = this .#routeNodes (sourceNode, destinationNode, "source node", "destination node");
+
+      this .#routeList ();
+
+      try
+      {
+         return this .#routeOf (this .#engine () .addRoute (this .#handle .scene, source, sourceField, destination, destinationField));
+      }
+      catch (error)
+      {
+         throw engineError (error);
+      }
+   }
+
+   getRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      sourceField      = String (sourceField);
+      destinationField = String (destinationField);
+
+      const [ source, destination ] = this .#routeNodes (sourceNode, destinationNode, "sourceNode", "destinationNode");
+
+      this .#routeList ();
+
+      try
+      {
+         const data = this .#engine () .getRoute (this .#handle .scene, source, sourceField, destination, destinationField);
+
+         return data ? this .#routeOf (data) : undefined;
+      }
+      catch (error)
+      {
+         throw engineError (error);
+      }
+   }
+
+   deleteRoute (route)
+   {
+      // Case: sourceNode, sourceField, destinationNode, destinationField.
+      if (arguments .length === 4)
+         route = this .getRoute (... arguments);
+
+      if (!(route instanceof X3DRoute) || routeScene .get (route) !== this || route .deleted)
+         return;
+
+      this .#routeList ();
+
+      if (this .#engine () ?.deleteRoute (this .#handle .scene, route .id))
+      {
+         route .retire ();
+         this .#routes .delete (route .id);
+      }
+   }
+
+   // X3DObject.toVRMLString, toXMLString, toJSONString of the scene (options are not supported, see API.md).
+   // The empty world of a canvas before any load has no engine scene: its text is that of a scene no source set up.
+   #print (kind) { return this .#handle .scene === null ? printEmptyScene (kind) : this .#engine () .printScene (this .#handle .scene, kind); }
+   toVRMLString () { return this .#print ("vrml"); }
+   toXMLString ()  { return this .#print ("xml"); }
+   toJSONString () { return this .#print ("json"); }
+
    getNamedNode (name)
    {
       name = String (name);
@@ -807,6 +1081,39 @@ function engineError (error)
 // with NONE the page keeps its own touch behavior.
 const TOUCH_ACTION = { NONE: "auto" };
 
+// BrowserOptions.js fieldDefinitions of X_ITE 16.5.0: name, field type, initial value.
+const BROWSER_OPTIONS = [
+   [ "SplashScreen", "SFBool", true ], [ "Dashboard", "SFBool", true ], [ "Rubberband", "SFBool", true ],
+   [ "EnableInlineViewpoints", "SFBool", true ], [ "Antialiased", "SFBool", true ],
+   [ "TextureQuality", "SFString", "MEDIUM" ], [ "PrimitiveQuality", "SFString", "MEDIUM" ],
+   [ "QualityWhenMoving", "SFString", "SAME" ], [ "Shading", "SFString", "GOURAUD" ], [ "MotionBlur", "SFBool", false ],
+   [ "AlwaysUpdateGeometries", "SFBool", false ], [ "AutoUpdate", "SFBool", false ], [ "Cache", "SFBool", true ],
+   [ "ColorSpace", "SFString", "LINEAR_WHEN_PHYSICAL_MATERIAL" ], [ "ContentScale", "SFDouble", 1 ],
+   [ "ContextMenu", "SFBool", true ], [ "Debug", "SFBool", false ], [ "Exposure", "SFDouble", 1 ],
+   [ "DisplayColorSpace", "SFString", "SRGB" ], [ "Gravity", "SFDouble", 9.80665 ], [ "LoadUrlObjects", "SFBool", true ],
+   [ "LogarithmicDepthBuffer", "SFBool", false ], [ "MaximumFrameRate", "SFDouble", 80 ],
+   [ "MetadataReference", "SFString", "" ], [ "Multisampling", "SFInt32", 4 ], [ "Mute", "SFBool", false ],
+   [ "Notifications", "SFBool", true ], [ "OrderIndependentTransparency", "SFBool", false ],
+   [ "SoundIntensity", "SFFloat", 1 ], [ "StraightenHorizon", "SFBool", true ],
+   [ "TextCompression", "SFString", "CHAR_SPACING" ], [ "Timings", "SFBool", false ], [ "ToneMapping", "SFString", "NONE" ],
+   [ "WallFriction", "SFDouble", 0 ], [ "XRSessionMode", "SFString", "IMMERSIVE_VR" ],
+];
+
+// BrowserProperties.js fieldDefinitions: constants.
+const BROWSER_PROPERTIES = [
+   [ "ABSTRACT_NODES", true ], [ "CONCRETE_NODES", true ], [ "EXTERNAL_INTERACTIONS", true ], [ "PROTOTYPE_CREATE", true ],
+   [ "DOM_IMPORT", true ], [ "XML_ENCODING", true ], [ "CLASSIC_VRML_ENCODING", true ], [ "BINARY_ENCODING", false ],
+];
+
+// The aliases of BrowserOptions and RenderingProperties: AntiAliased is Antialiased.
+const ALIASES = Object .assign (Object .create (null), { AntiAliased: "Antialiased" });
+
+// The rendering properties that are the value of a browser option. X_ITE's Shading, Antialiased, ContentScale and
+// Multisampling properties are derived from the options and the context (the shading name, the samples clamped to
+// the context's maximum, whether the context is multisampled) and are not implemented.
+const RENDERING_OPTIONS     = [ "LogarithmicDepthBuffer" ];
+const RENDERING_UNSUPPORTED = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling", "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+
 class X3DBrowser
 {
    #element;
@@ -819,6 +1126,7 @@ class X3DBrowser
       .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
    #frames = 0;
+   #live = true;
    #fileLoader = null;
    #reject = null;
    #replacing = null;
@@ -853,13 +1161,21 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+         // An endUpdate () before the engine was ready.
+         this .#engine .setLive (this .#live);
          this .#listen ();
          this .#start ();
 
          // X3DBrowser.initialize: replaceWorld with an empty scene, which ends in "initialized load". A loadURL
          // then always replaces a world, so it starts with "shutdown".
-         this .#call (X3DConstants .INITIALIZED_EVENT);
-         this .#dispatch ("initialized load");
+         // A browser that is stopped from the start (update="false") never gets its frame: X_ITE fires nothing then, also
+         // not when it starts later.
+         if (this .#live)
+         {
+            this .#call (X3DConstants .INITIALIZED_EVENT);
+            this .#dispatch ("initialized load");
+         }
+
          return this;
       });
 
@@ -893,9 +1209,158 @@ class X3DBrowser
    getName ()     { return this .name; }
    getVersion ()  { return this .version; }
 
+   // X3DBrowser.getBrowserOption, setBrowserOption, getBrowserProperty, getRenderingProperty, print, println. The
+   // values live in typed fields of the pinned definitions (BrowserOptions.js, BrowserProperties.js), so the
+   // coercion and the unknown-name error are X_ITE's. A set option is stored and read back; the renderer honors
+   // only the options API.md lists.
+   #options    = new Map (BROWSER_OPTIONS .map (([ name, type, value ]) => [ name, new Fields [type] (value) ]));
+   #properties = new Map (BROWSER_PROPERTIES .map (([ name, value ]) => [ name, new Fields .SFBool (value) ]));
+
+   // X3DBaseNode.getField: the name, or `set_name` and `name_changed` of an inputOutput field (the options only), or
+   // an alias; any other name throws, and a name that is not a string throws the TypeError of X_ITE's `name.match`.
+   static #field (map, name, typeName, inputOutput = false)
+   {
+      const field = map .get (name) ?? map .get (ALIASES [name]);
+
+      if (field)
+         return field;
+
+      const match = name .match (/^set_(.*?)$/) ?? name .match (/^(.*?)_changed$/);
+
+      if (match && inputOutput && map .has (match [1]))
+         return map .get (match [1]);
+
+      throw new Error (`Unknown field '${name}' in node class ${typeName}.`);
+   }
+
+   getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
+
+   setBrowserOption (name, value)
+   {
+      const field = X3DBrowser .#field (this .#options, name, "BrowserOptions", true);
+
+      field .setValue (value);
+
+      // BrowserOptions.addInterest: the options with an effect that is not read when it is needed. ContentScale and
+      // MaximumFrameRate are read by the frame loop; the rest is stored (API.md).
+      if (field === this .#options .get ("AutoUpdate"))
+         this .#setAutoUpdate ();
+   }
+
+   // --- update ------------------------------------------------------------------------------------------------
+
+   // X3DBrowser.beginUpdate and endUpdate, as the `update` attribute and the AutoUpdate option call them: the live state
+   // of setLive (see isLive), and endUpdate also lets the input go (X_ITE: getViewer () .disconnect ()).
+   #wasLive;
+   #isIntersecting;
+   #checkUpdateListener = null;
+   #intersectionObserver = null;
+   #lastTime = 0;
+   #processed = 0;
+
+   #beginUpdate () { this .setLive (true); }
+
+   #endUpdate ()
+   {
+      this .#releaseInput ();
+      this .setLive (false);
+   }
+
+   // BrowserOptions.set_AutoUpdate__.
+   #setAutoUpdate ()
+   {
+      if (this .#checkUpdateListener)
+         document .removeEventListener ("visibilitychange", this .#checkUpdateListener);
+
+      this .#checkUpdateListener = null;
+      this .#intersectionObserver ?.disconnect ();
+      this .#intersectionObserver = null;
+
+      if (!this .#options .get ("AutoUpdate") .getValue () || this .#disposed)
+      {
+         this .#wasLive = undefined;
+         return;
+      }
+
+      this .#wasLive ??= this .#live;
+
+      this .#checkUpdateListener = () => this .#checkUpdate ();
+
+      document .addEventListener ("visibilitychange", this .#checkUpdateListener);
+
+      this .#intersectionObserver = new IntersectionObserver (entries =>
+      {
+         this .#isIntersecting = entries .some (entry => entry .isIntersecting);
+
+         this .#checkUpdate ();
+      });
+
+      this .#intersectionObserver .observe (this .#element);
+   }
+
+   // BrowserOptions.checkUpdate: a hidden or scrolled-out canvas stops, and starts again if it was live.
+   #checkUpdate ()
+   {
+      if (!this .#options .get ("AutoUpdate") .getValue ())
+         return;
+
+      if (this .#isIntersecting === undefined)
+         return;
+
+      if (!document .hidden && this .#isIntersecting)
+      {
+         if (this .#wasLive)
+            this .#beginUpdate ();
+
+         this .#wasLive = undefined;
+      }
+      else
+      {
+         // A second time here, the browser is not live any more: keep what the first time found.
+         this .#wasLive ??= this .#live;
+
+         this .#endUpdate ();
+      }
+   }
+
+   getBrowserProperty (name) { return X3DBrowser .#field (this .#properties, name, "BrowserProperties") .getValue (); }
+
+   // The rendering properties that are the value of a browser option (LogarithmicDepthBuffer). The properties X_ITE
+   // derives from the options and the context (Shading, Antialiased, ContentScale, Multisampling) and those that
+   // describe its WebGL context (MaxTextureSize, TextureUnits, MaxLights, ColorDepth, TextureMemory,
+   // MaxAnisotropicDegree, MaxSamples, PixelsPerPoint, SoundDestinations, XRSession) are not implemented (API.md).
+   getRenderingProperty (name)
+   {
+      if (typeof name !== "string")
+         name .match (/^/); // X_ITE's getField throws the TypeError of `name.match` for a name that is not a string.
+
+      if (RENDERING_OPTIONS .includes (name))
+         return this .getBrowserOption (name);
+
+      if (RENDERING_UNSUPPORTED .includes (name))
+         throw new Error (`X_ITE_R: the rendering property '${name}' is not implemented.`);
+
+      throw new Error (`Unknown field '${name}' in node class RenderingProperties.`);
+   }
+
+   print (... args) { console .log (args .join (" ")); }
+
+   println (... args) { console .log (args .join (" ")); }
+
    get baseURL () { return document .baseURI; }
 
    get currentScene () { return this .#scene; }
+
+   // X3DBrowser.addRoute / deleteRoute: those of the current scene, without the route (X3DBrowser.js:880).
+   addRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      this .#scene .addRoute (sourceNode, sourceField, destinationNode, destinationField);
+   }
+
+   deleteRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      this .#scene .deleteRoute (sourceNode, sourceField, destinationNode, destinationField);
+   }
 
    getWorldURL () { return this .#scene .worldURL; }
 
@@ -1144,7 +1609,7 @@ class X3DBrowser
                throw new Error ("X_ITE_R: Browser.replaceWorld: scene must be an X3DScene of this browser, null or undefined.");
 
             // An empty scene has nothing to load.
-            id = this .#engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, Date .now () / 1000);
+            id = this .#engine .prepareEmpty (this .baseURL, Date .now () / 1000);
             this .#engine .loaded (id, Date .now () / 1000);
             owned = true;
          }
@@ -1239,19 +1704,36 @@ class X3DBrowser
 
    // --- viewpoints ----------------------------------------------------------------------------------------------
 
-   // The layerNode argument of the viewpoint functions: X_ITE_R has the active layer only.
-   #activeLayer (layerNode)
+   // X3DCast (type, node) in the current world: the node id when `node` is an SFNode of this world whose node types include
+   // `type`, else undefined. X_ITE casts a node of any scene; a node of another world or a replaced one is no layer here.
+   #cast (type, node)
    {
-      if (layerNode !== undefined && layerNode !== null && handleOf (layerNode))
-         throw new Error ("X_ITE_R: the layerNode argument is not supported; use the active layer (omit it).");
+      const handle = handleOf (node);
+      const owner  = this .#scene ?.[_node];
+
+      if (!handle || !owner || handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation || handle .released)
+         return undefined;
+
+      const typeName = engineOf (handle) .typeName (handle .scene, handle .id);
+
+      return (NODE_TYPES [typeName] ?? [ ]) .includes (type) ? handle .id : undefined;
+   }
+
+   // A layer request: `layer:<node>:<request>` runs it on that layer; none, or a value that is no X3DLayerNode: the
+   // active layer, like `X3DCast (X3DConstants .X3DLayerNode, layerNode) ?? this .getActiveLayer ()`.
+   #layerRequest (layerNode, request)
+   {
+      const id = this .#cast ("X3DLayerNode", layerNode);
+
+      this .#engine ?.viewpointRequest (id === undefined ? request : `layer:${id}:${request}`);
    }
 
    // X3DBrowser.firstViewpoint, previousViewpoint, nextViewpoint, lastViewpoint ([layerNode]): the viewpoint
    // binds with the next frame's events.
-   firstViewpoint (layerNode)    { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("firstViewpoint"); }
-   previousViewpoint (layerNode) { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("previousViewpoint"); }
-   nextViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("nextViewpoint"); }
-   lastViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("lastViewpoint"); }
+   firstViewpoint (layerNode)    { this .#layerRequest (layerNode, "firstViewpoint"); }
+   previousViewpoint (layerNode) { this .#layerRequest (layerNode, "previousViewpoint"); }
+   nextViewpoint (layerNode)     { this .#layerRequest (layerNode, "nextViewpoint"); }
+   lastViewpoint (layerNode)     { this .#layerRequest (layerNode, "lastViewpoint"); }
 
    // X3DBrowser.changeViewpoint ([layerNode,] name).
    changeViewpoint (layerNode, name)
@@ -1262,8 +1744,23 @@ class X3DBrowser
          layerNode = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewpointRequest (`changeViewpoint:${String (name)}`);
+      this .#layerRequest (layerNode, `changeViewpoint:${String (name)}`);
+   }
+
+   // X3DBrowser.bindViewpoint (layerNode, viewpointNode): both must be of their type, the viewpoint binds with the next
+   // frame's events (its layer is the one that holds it; X_ITE only checks the type of layerNode).
+   bindViewpoint (layerNode, viewpointNode)
+   {
+      const layer = this .#cast ("X3DLayerNode", layerNode);
+      const vp    = this .#cast ("X3DViewpointNode", viewpointNode);
+
+      if (layer === undefined)
+         throw new Error ("Browser.bindViewpoint: layerNode must be of type X3DLayerNode.");
+
+      if (vp === undefined)
+         throw new Error ("Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.");
+
+      this .#engine ?.viewpointRequest (`bindViewpoint:${vp}`);
    }
 
    // X3DBrowser.viewAll ([layerNode,] [transitionTime = 1]).
@@ -1275,9 +1772,21 @@ class X3DBrowser
          layerNode      = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewAll (+transitionTime);
+      this .#engine ?.viewAll (+transitionTime, this .#cast ("X3DLayerNode", layerNode));
    }
+
+   // X3DBrowserContext.isLive, setLive, beginUpdate, endUpdate: the browser's live state. A browser that is not live
+   // pauses the TimeSensors and the like of its world; the page's own field assignments still send their events.
+   isLive () { return this .#live; }
+
+   setLive (value)
+   {
+      this .#live = !! value .valueOf ();
+      this .#engine ?.setLive (this .#live);
+   }
+
+   beginUpdate () { this .#beginUpdate (); }
+   endUpdate ()   { this .#endUpdate (); }
 
    // X3DBrowser.activeViewpoint: the bound viewpoint of the active layer; null for its default viewpoint.
    get activeViewpoint ()
@@ -1631,16 +2140,14 @@ class X3DBrowser
 
    // --- frames --------------------------------------------------------------------------------------------------
 
-   // The contentScale attribute (X_ITE's ContentScale browser option): a number, or "auto" for the device pixel
-   // ratio. The default is 1.
+   // The ContentScale browser option (the contentScale attribute sets it): -1 is "auto", the device pixel ratio. Any other
+   // value is used as it is, like X3DRenderingContext.limitFramebufferSize: 0, a negative or a NaN value gives a 1 x 1
+   // framebuffer.
    #contentScale ()
    {
-      const value = this .#element .getAttribute ("contentScale");
+      const value = this .#options .get ("ContentScale") .getValue ();
 
-      if (value === "auto")
-         return devicePixelRatio;
-
-      return Math .max (Number (value ?? 1), 0) || 1;
+      return value === -1 ? devicePixelRatio : value;
    }
 
    // X3DRenderingContext.limitFramebufferSize: the CSS size times contentScale, within the device's limit.
@@ -1691,6 +2198,17 @@ class X3DBrowser
             return;
          }
 
+         // X3DBrowserContext.traverse: a frame sooner than 1 / MaximumFrameRate after the last one is skipped
+         // (X3DTimeContext.advanceTime). A browser that is not live still processes the page's events and draws; its
+         // engine pauses the TimeSensors and the like (setLive).
+         const time = Date .now () / 1000;
+
+         if (time - this .#lastTime <= 1 / Math .max (this .#options .get ("MaximumFrameRate") .getValue (), 1))
+            return;
+
+         this .#lastTime = time;
+         ++ this .#processed;
+
          this .#flushTouches ();
 
          const [ width, height ] = this .#framebufferSize ();
@@ -1704,7 +2222,7 @@ class X3DBrowser
 
          try
          {
-            engine .frame (Date .now () / 1000, width, height);
+            engine .frame (time, width, height);
             this .#flushLog ();
             processFieldEvents (this, engine .current);
          }
@@ -1726,15 +2244,79 @@ class X3DBrowser
    }
 
    // X_ITE_R introspection for tests: whether a frame is scheduled and how many have run.
-   get [Symbol .for ("X_ITE_R.frameLoop")] () { return { running: this .#frame !== 0, frames: this .#frames }; }
+   get [Symbol .for ("X_ITE_R.frameLoop")] () { return { running: this .#frame !== 0, frames: this .#frames, processed: this .#processed, live: this .#live }; }
 
-   connectedCallback ()    { this .#start (); }
-   disconnectedCallback () { this .#stop (); this .#releaseInput (); }
+   connectedCallback ()    { this .#start (); this .#checkUpdate (); }
+   disconnectedCallback () { this .#stop (); this .#releaseInput (); this .#checkUpdate (); }
 
+   // X3DCoreContext.parseBooleanAttribute: only "true" and "false" are values; any other text is the default.
+   static #boolean (value)
+   {
+      if (value === "true")
+         return true;
+
+      if (value === "false")
+         return false;
+   }
+
+   // X3DCoreContext.attributeChangedCallback: an attribute sets its browser option. Removing the attribute (null) sets
+   // the default of the attribute, not the default of the option. The options themselves never write an attribute.
    attributeChangedCallback (name, oldValue, newValue)
    {
+      const boolean = X3DBrowser .#boolean (newValue);
+
       switch (name .toLowerCase ())
       {
+         case "antialiased":                  this .setBrowserOption ("Antialiased",                  boolean ?? true);  break;
+         case "cache":                        this .setBrowserOption ("Cache",                        boolean ?? true);  break;
+         case "colorspace":                   this .setBrowserOption ("ColorSpace",                   newValue || "LINEAR_WHEN_PHYSICAL_MATERIAL"); break;
+         case "contentscale":                 this .setBrowserOption ("ContentScale",                 newValue === "auto" ? -1 : newValue); break;
+         case "contextmenu":                  this .setBrowserOption ("ContextMenu",                  boolean ?? true);  break;
+         case "debug":                        this .setBrowserOption ("Debug",                        boolean ?? false); break;
+         case "displaycolorspace":            this .setBrowserOption ("DisplayColorSpace",            newValue || "SRGB"); break;
+         case "exposure":                     this .setBrowserOption ("Exposure",                     newValue); break;
+         case "logarithmicdepthbuffer":       this .setBrowserOption ("LogarithmicDepthBuffer",       boolean ?? false); break;
+         case "maximumframerate":             this .setBrowserOption ("MaximumFrameRate",             newValue); break;
+         case "multisampling":                this .setBrowserOption ("Multisampling",                newValue); break;
+         case "notifications":                this .setBrowserOption ("Notifications",                boolean ?? true);  break;
+         case "orderindependenttransparency": this .setBrowserOption ("OrderIndependentTransparency", boolean ?? false); break;
+         case "splashscreen":                 this .setBrowserOption ("SplashScreen",                 boolean ?? true);  break;
+         case "textcompression":              this .setBrowserOption ("TextCompression",              newValue || "CHAR_SPACING"); break;
+         case "timings":                      this .setBrowserOption ("Timings",                      boolean ?? false); break;
+         case "tonemapping":                  this .setBrowserOption ("ToneMapping",                  newValue || "NONE"); break;
+         case "xrsessionmode":                this .setBrowserOption ("XRSessionMode",                newValue || "IMMERSIVE_VR"); break;
+         case "oninitialized":
+         case "onshutdown":
+         {
+            try
+            {
+               this .#element [name] = new Function ("event", newValue);
+            }
+            catch (error)
+            {
+               console .error (error);
+            }
+
+            break;
+         }
+         case "update":
+         {
+            if (newValue === "auto")
+            {
+               this .setBrowserOption ("AutoUpdate", true);
+            }
+            else
+            {
+               this .setBrowserOption ("AutoUpdate", false);
+
+               if (boolean ?? true)
+                  this .#beginUpdate ();
+               else
+                  this .#endUpdate ();
+            }
+
+            break;
+         }
          case "src":
          {
             if (newValue)
@@ -1766,6 +2348,7 @@ class X3DBrowser
       this .#releaseInput ();
       this .#listeners .abort ();
       this .#stop ();
+      this .#setAutoUpdate ();
 
       if (this .#engine)
       {
@@ -1796,7 +2379,15 @@ class X3DCanvasElement extends HTMLElement
    connectedCallback ()    { this .browser .connectedCallback (); }
    disconnectedCallback () { this .browser .disconnectedCallback (); }
 
-   static get observedAttributes () { return [ "src", "url" ]; }
+   static get observedAttributes ()
+   {
+      const attributes = [ "antialiased", "baseURL", "cache", "colorSpace", "contentScale", "contextMenu", "debug", "displayColorSpace",
+         "exposure", "extensions", "logarithmicDepthBuffer", "maximumFrameRate", "multisampling", "notifications", "oninitialized",
+         "onshutdown", "orderIndependentTransparency", "splashScreen", "src", "textCompression", "timings", "toneMapping", "update",
+         "url", "xrSessionMode" ];
+
+      return attributes .concat (attributes .map (attribute => attribute .toLowerCase ()));
+   }
 
    attributeChangedCallback (name, oldValue, newValue)
    {
@@ -1805,6 +2396,7 @@ class X3DCanvasElement extends HTMLElement
 
    toDataURL (... args) { return this .browser .getCanvas () .toDataURL (... args); }
    toBlob (... args)    { return this .browser .getCanvas () .toBlob (... args); }
+   captureStream (... args) { return this .browser .getCanvas () .captureStream (... args); }
 
    get [Symbol .toStringTag] () { return "X3DCanvasElement"; }
 }
@@ -1812,13 +2404,66 @@ class X3DCanvasElement extends HTMLElement
 customElements .define ("x3d-canvas", X3DCanvasElement);
 
 // X3D: X_ITE's namespace object, for the parts listed in API.md.
-const X3D = Object .freeze ({
+let promise; // The return value of X3D (), as in X_ITE.
+
+// X3D (onfulfilled, onrejected): a promise that resolves when the document is loaded and every <x3d-canvas> has a browser.
+const X3D = Object .assign (function (onfulfilled, onrejected)
+{
+   promise ??= new Promise ((resolve, reject) =>
+   {
+      const ready = () =>
+      {
+         try
+         {
+            if (Array .from (document .querySelectorAll ("x3d-canvas")) .every (canvas => canvas .browser))
+               resolve ();
+            else
+               throw new Error ("Couldn't create browser.");
+         }
+         catch (error)
+         {
+            reject (error);
+         }
+      };
+
+      if (document .readyState === "complete")
+         ready ();
+      else
+         document .addEventListener ("DOMContentLoaded", ready, { once: true });
+   });
+
+   return promise .then (onfulfilled) .catch (onrejected);
+},
+{
    X3DConstants,
    X3DFieldDefinition,
    FieldDefinitionArray,
    X3DField,
    X3DArrayField,
+   X3DRoute,
+   RouteArray,
    ... Fields,
+},
+{
+   noConflict: (() =>
+   {
+      const
+         _had = "X3D" in window,
+         _X3D = window .X3D;
+
+      return function ()
+      {
+         if (window .X3D === X3D)
+         {
+            if (_had)
+               window .X3D = _X3D;
+            else
+               delete window .X3D;
+         }
+
+         return X3D;
+      };
+   })(),
 
    getBrowser (element)
    {
@@ -1831,6 +2476,19 @@ const X3D = Object .freeze ({
       return Array .from (document .querySelectorAll (String (element)))
          .find (element => element .nodeName .match (/^(?:x3d-canvas|X3DCanvas)$/i)) ?.browser;
    },
+
+   createBrowser (... args)
+   {
+      const element = document .createElement ("x3d-canvas");
+
+      if (args .length)
+         element .browser .loadURL (... args);
+
+      return element;
+   },
+
+   toString () { return Object .prototype .toString .call (this); },
+   [Symbol .toStringTag]: "X3D",
 });
 
 globalThis .X3D ??= X3D;
