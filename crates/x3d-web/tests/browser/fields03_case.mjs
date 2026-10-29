@@ -50,7 +50,7 @@ function pageAttempt ()
 }
 
 
-// Node ownership and cross-scene assignment (issue #137 part C): eleven compared scenarios, plus one deferred cross-scene ROUTE scenario (s06, issue #135), on what pinned X_ITE does when a node
+// Node ownership and cross-scene assignment (issue #137 part C): twelve compared scenarios, plus one deferred cross-scene ROUTE scenario (s06, issue #135), on what pinned X_ITE does when a node
 // moves between fields and scenes. Every value is a string or a plain list so both engines compare equal.
 async function nodeOwnership (page)
 {
@@ -158,6 +158,17 @@ async function nodeOwnership (page)
             const g = make (other, "Group { }");
             g .children = [ other .getNamedNode ("OT"), make (scene, "Transform { }") ];
             return [ g .toVRMLString () .replace (/\s+/g, " "), g .toXMLString () .replace (/\s+/g, " ") ];
+         });
+
+         // 13 A valid operation after a refused foreign node (the page's field must not keep a phantom value that breaks it).
+         out .s13 = attempt (() =>
+         {
+            const g = make (scene, "Group { }");
+            g .children = [ G, OT ];
+            g .children .push (T);
+            const afterPush = [ names (g .children), g .toVRMLString () .replace (/\s+/g, " ") ];
+            g .children = [ T ];
+            return [ afterPush, names (g .children), g .toVRMLString () .replace (/\s+/g, " ") ];
          });
 
          // 9 Scene replacement: nodes of the replaced scene after replaceWorld.

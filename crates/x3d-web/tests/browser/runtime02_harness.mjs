@@ -76,8 +76,11 @@ const KNOWN_DIFFERENCES = {
       [ [ "s12" ], ["Group { children [ DEF OT Transform { } Transform { } ] }", "<Group> <Transform DEF='OT'/> <Transform/> </Group>"], ["Group { }", "<Group/>"] ],
       // X_ITE keeps the nodes of a replaced world usable; X_ITE_R refuses their stale handles (API.md).
       [ [ "s09" ], [true, "Transform", "page", "1 2 3"], "Error: X_ITE_R: the node belongs to a world that was replaced." ],
-      // The refusals of s02, s03 and s12 each warn once (s04 pushes into rootNodes and refuses without a warning).
-      [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+      // s13: the refused value leaves the page's field usable. The operation after it goes on (the page reads the node it
+      // stored), and the engine, and so the text form, keeps the value it had.
+      [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
+      // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
+      [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
    ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
