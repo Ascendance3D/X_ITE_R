@@ -22,6 +22,10 @@
 # a JSON runs-on value, for example ["self-hosted","Linux","X64","proxmox"]. A pull request from another repository
 # always runs on the hosted image. The jobs run `sudo apt-get`, so a self-hosted runner needs passwordless sudo, the
 # Rust toolchain prerequisites and a Chromium that Playwright can install. Job names and commands are unchanged.
+# A variable must hold valid JSON ("ubuntu-24.04" or ["self-hosted","Linux","X64",...]); a bare word fails the run.
+# The fallback applies to an empty variable only: an offline self-hosted runner leaves the job queued and the required
+# check pending, never passed. The runner must be an isolated, preferably ephemeral, Linux VM with no credentials: the
+# jobs run same-repository branch code, and `target`, `~/.cargo` and the Playwright browsers persist between runs.
 
 name: Web tests
 
