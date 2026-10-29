@@ -91,7 +91,7 @@ pub fn encode_source_text(s: &str) -> String {
 
 /// A url that X_ITE takes as script source: `/^\s*(?:data|ecmascript|javascript|vrmlscript):/s`.
 pub(crate) fn is_source_url(s: &str) -> bool {
-    let t = s.trim_start();
+    let t = s.trim_start_matches(x3d_fields::url::is_js_space);
 
     ["data:", "ecmascript:", "javascript:", "vrmlscript:"]
         .iter()
@@ -130,10 +130,11 @@ pub(crate) fn source_cdata(scene: &Scene, id: NodeId) -> Option<usize> {
 pub(crate) fn printed_value(scene: &Scene, id: NodeId, i: usize) -> FieldValue {
     let field = &scene.node(id).fields[i];
 
-    if let FieldValue::MFFloat(v) = &field.value {
-        if field.name == "fieldOfView" && scene.type_name(id) == "OrthoViewpoint" {
-            return FieldValue::SFVec4f(field_of_view_vec4(v));
-        }
+    if let FieldValue::MFFloat(v) = &field.value
+        && field.name == "fieldOfView"
+        && scene.type_name(id) == "OrthoViewpoint"
+    {
+        return FieldValue::SFVec4f(field_of_view_vec4(v));
     }
 
     field.value.clone()
@@ -653,14 +654,14 @@ impl<'a> XmlGenerator<'a> {
             self.pop_container();
         }
 
-        if let Some(c) = cdata {
-            if let FieldValue::MFString(values) = &node.fields[c].value {
-                for value in values {
-                    self.g().push("<![CDATA[");
-                    self.g().push(value);
-                    self.g().push("]]>");
-                    self.g().brk();
-                }
+        if let Some(c) = cdata
+            && let FieldValue::MFString(values) = &node.fields[c].value
+        {
+            for value in values {
+                self.g().push("<![CDATA[");
+                self.g().push(value);
+                self.g().push("]]>");
+                self.g().brk();
             }
         }
 
@@ -1138,4 +1139,27 @@ pub(crate) fn proto_declaration_xml(scene: &Scene, extern_: bool, id: usize) -> 
 
     g.base.pop_ctx();
     g.base.g.string
+}
+
+#[cfg(test)]
+mod tests_xml_url {
+    use super::*;
+
+    #[test]
+    fn test_is_source_url_whitespace() {
+        let urls = [
+            "\u{FEFF}javascript:",
+            "\u{00A0}ecmascript:",
+            "\u{2028}vrmlscript:",
+            "\u{3000}data:",
+            " \t\n\rjavascript:",
+        ];
+        for url in urls {
+            assert!(is_source_url(url), "Failed to recognize {}", url);
+        }
+        let fail_urls = ["\u{0085}javascript:"];
+        for url in fail_urls {
+            assert!(!is_source_url(url), "Should not recognize {}", url);
+        }
+    }
 }
