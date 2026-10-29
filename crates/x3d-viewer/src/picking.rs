@@ -651,10 +651,10 @@ pub fn line_pick_process(
 
     let active = !geometries.is_empty();
 
-    if active != rt.get_bool(sensor, "isActive") {
-        if let Some(k) = rt.get_field(sensor, "isActive") {
-            rt.set_value(k, FieldValue::SFBool(active));
-        }
+    if active != rt.get_bool(sensor, "isActive")
+        && let Some(k) = rt.get_field(sensor, "isActive")
+    {
+        rt.set_value(k, FieldValue::SFBool(active));
     }
 
     set_if_changed(rt, sensor, "pickedGeometry", FieldValue::MFNode(geometries));
@@ -714,10 +714,10 @@ fn picked(
 fn send_picked(rt: &mut Runtime, sensor: NodeId, geometries: Vec<Option<NodeId>>) {
     let active = !geometries.is_empty();
 
-    if active != rt.get_bool(sensor, "isActive") {
-        if let Some(k) = rt.get_field(sensor, "isActive") {
-            rt.set_value(k, FieldValue::SFBool(active));
-        }
+    if active != rt.get_bool(sensor, "isActive")
+        && let Some(k) = rt.get_field(sensor, "isActive")
+    {
+        rt.set_value(k, FieldValue::SFBool(active));
     }
 
     set_if_changed(rt, sensor, "pickedGeometry", FieldValue::MFNode(geometries));

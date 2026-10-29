@@ -431,10 +431,10 @@ impl ViewerWindow {
                 }
             }
             Shortcut::Reload => {
-                if let Some(g) = &mut self.gfx {
-                    if let Err(e) = g.viewer.reload() {
-                        eprintln!("reload: {e}");
-                    }
+                if let Some(g) = &mut self.gfx
+                    && let Err(e) = g.viewer.reload()
+                {
+                    eprintln!("reload: {e}");
                 }
             }
             Shortcut::ListViewpoints => {
@@ -591,26 +591,26 @@ impl ViewerWindow {
             Tick::Failed(e) => return self.fail(event_loop, e),
             Tick::Finished => {
                 // The last frame of a scripted run: screenshot and final pose, then quit.
-                if let Some(p) = self.opts.png.clone() {
-                    if let Err(e) = self.screenshot(&p) {
-                        self.exit_error = Some(format!("screenshot: {e}"));
-                    }
+                if let Some(p) = self.opts.png.clone()
+                    && let Err(e) = self.screenshot(&p)
+                {
+                    self.exit_error = Some(format!("screenshot: {e}"));
                 }
 
                 let presented = self.presented;
 
-                if let Some(g) = &mut self.gfx {
-                    if let Some(v) = g.viewer.core() {
-                        let (p, _, _) = v.user_pose();
-                        eprintln!(
-                            "final pose: position [{:.6}, {:.6}, {:.6}] viewer {} status {:?} presented {presented} frames",
-                            p.x,
-                            p.y,
-                            p.z,
-                            v.viewer_kind(),
-                            v.status
-                        );
-                    }
+                if let Some(g) = &mut self.gfx
+                    && let Some(v) = g.viewer.core()
+                {
+                    let (p, _, _) = v.user_pose();
+                    eprintln!(
+                        "final pose: position [{:.6}, {:.6}, {:.6}] viewer {} status {:?} presented {presented} frames",
+                        p.x,
+                        p.y,
+                        p.z,
+                        v.viewer_kind(),
+                        v.status
+                    );
                 }
 
                 event_loop.exit();
@@ -812,13 +812,13 @@ impl ApplicationHandler for ViewerWindow {
         startup_mark("load");
 
         // The script's warm-up frames (frames the browser draws while loading), on its clock.
-        if let (Some(s), Some(t0)) = (&self.opts.script, t0) {
-            if let Some(v) = gfx.viewer.core() {
-                v.frame_rate = 1.0 / s["dt"].as_f64().unwrap_or(1.0 / 60.0);
+        if let (Some(s), Some(t0)) = (&self.opts.script, t0)
+            && let Some(v) = gfx.viewer.core()
+        {
+            v.frame_rate = 1.0 / s["dt"].as_f64().unwrap_or(1.0 / 60.0);
 
-                for _ in 0..s["warmup"].as_u64().unwrap_or(8) {
-                    v.step(t0);
-                }
+            for _ in 0..s["warmup"].as_u64().unwrap_or(8) {
+                v.step(t0);
             }
         }
 

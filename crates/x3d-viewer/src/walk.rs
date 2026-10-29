@@ -525,16 +525,17 @@ fn group_sensors(
     let mut local: Vec<SensorRef> = vec![];
 
     for c in kids {
-        if let Some(t) = sg.type_name(*c) {
-            if SENSORS.contains(&t) && sg.bool(*c, "enabled", true) {
-                local.push(SensorRef {
-                    node: NodeRef {
-                        path: path.clone(),
-                        node: *c,
-                    },
-                    model_view: *m,
-                });
-            }
+        if let Some(t) = sg.type_name(*c)
+            && SENSORS.contains(&t)
+            && sg.bool(*c, "enabled", true)
+        {
+            local.push(SensorRef {
+                node: NodeRef {
+                    path: path.clone(),
+                    node: *c,
+                },
+                model_view: *m,
+            });
         }
     }
 
@@ -1127,10 +1128,10 @@ impl<'a> Walker<'a> {
         let before = self.clip_planes.len();
 
         for &c in kids {
-            if sg.type_name(c) == Some("ClipPlane") {
-                if let Some(p) = x3d_render::traverse::clip_plane(sg, c, mv) {
-                    self.clip_planes.push(p);
-                }
+            if sg.type_name(c) == Some("ClipPlane")
+                && let Some(p) = x3d_render::traverse::clip_plane(sg, c, mv)
+            {
+                self.clip_planes.push(p);
             }
         }
 
@@ -1167,14 +1168,13 @@ impl<'a> Walker<'a> {
 
         // X3DGroupingNode PICKING: the pick and transform sensors are traversed (pickableSensorNodes);
         // inside a PickableGroup the other children only if they are visible objects.
-        if let Some(p) = self.pick.as_mut() {
-            if p.top()
-                && !PICK_SENSORS.contains(&ty)
-                && ty != "TransformSensor"
-                && !visible_object(sg, n, &mut p.visible, depth)
-            {
-                return;
-            }
+        if let Some(p) = self.pick.as_mut()
+            && p.top()
+            && !PICK_SENSORS.contains(&ty)
+            && ty != "TransformSensor"
+            && !visible_object(sg, n, &mut p.visible, depth)
+        {
+            return;
         }
 
         // getPickingHierarchy (): the grouping nodes, Inline nodes and the shape around a shape.
@@ -1245,33 +1245,29 @@ impl<'a> Walker<'a> {
                     model_view: *mv,
                 })
             }
-            _ if PICK_SENSORS.contains(&ty) => {
-                if self
+            _ if PICK_SENSORS.contains(&ty)
+                && self
                     .pick
                     .as_ref()
-                    .is_some_and(|p| p.input.sensors.iter().any(|s| s.node == n))
-                {
-                    self.scan.pick_sensor_matrices.push((n, *mv));
-                }
+                    .is_some_and(|p| p.input.sensors.iter().any(|s| s.node == n)) =>
+            {
+                self.scan.pick_sensor_matrices.push((n, *mv));
             }
             // EnvironmentLight.traverse: a GeneratedCubeMapTexture specularTexture renders (and
             // NEXT_FRAME_ONLY becomes NONE) like a shape's.
             "EnvironmentLight" => {
-                if let Some(lod) = self.lod.as_deref_mut() {
-                    if let Some(g) = sg
+                if let Some(lod) = self.lod.as_deref_mut()
+                    && let Some(g) = sg
                         .node(n, "specularTexture")
                         .filter(|t| sg.type_name(*t) == Some("GeneratedCubeMapTexture"))
-                    {
-                        if sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY"
-                            && sg.i32(g, "size", 128) > 0
-                            && !lod.generated_once.iter().any(|r| r.node == g)
-                        {
-                            lod.generated_once.push(NodeRef {
-                                path: path.clone(),
-                                node: g,
-                            });
-                        }
-                    }
+                    && sg.string(g, "update", "NONE") == "NEXT_FRAME_ONLY"
+                    && sg.i32(g, "size", 128) > 0
+                    && !lod.generated_once.iter().any(|r| r.node == g)
+                {
+                    lod.generated_once.push(NodeRef {
+                        path: path.clone(),
+                        node: g,
+                    });
                 }
             }
             "Shape" | "InstancedShape" => {
@@ -1281,20 +1277,20 @@ impl<'a> Walker<'a> {
 
                 // X3DShapeNode.picking: outside a PickableGroup a shape is traversed only as a
                 // TransformSensor target (isPickableObject).
-                if let (Some(p), Some(g)) = (self.pick.as_mut(), sg.node(n, "geometry")) {
-                    if p.top() || self.picking.is_some_and(|t| t.contains(&n)) {
-                        p.hierarchy.push(n);
+                if let (Some(p), Some(g)) = (self.pick.as_mut(), sg.node(n, "geometry"))
+                    && (p.top() || self.picking.is_some_and(|t| t.contains(&n)))
+                {
+                    p.hierarchy.push(n);
 
-                        for &i in p.sensors.last().unwrap() {
-                            let s = &p.input.sensors[i];
+                    for &i in p.sensors.last().unwrap() {
+                        let s = &p.input.sensors[i];
 
-                            if p.hierarchy.iter().any(|h| s.targets.contains(h)) {
-                                self.scan.pick_collected.push((s.node, g, *mv));
-                            }
+                        if p.hierarchy.iter().any(|h| s.targets.contains(h)) {
+                            self.scan.pick_collected.push((s.node, g, *mv));
                         }
-
-                        p.hierarchy.pop();
                     }
+
+                    p.hierarchy.pop();
                 }
 
                 // Appearance.traverse (DISPLAY): the rendered textures of an independent renderer.
@@ -1425,24 +1421,22 @@ impl<'a> Walker<'a> {
                 // DISPLAY: displayInstancedThick of a LINE system with transformed lines.
                 if let (Some(x3d_render::traverse::StyleParams::Line(l)), Some(g)) =
                     (style, &p.geometry)
+                    && self.lod.is_some()
+                    && geometry_type == 1
+                    && l.width > x3d_render::gpu::MAX_LINE_WIDTH
+                    && sg.bool(n, "visible", true)
                 {
-                    if self.lod.is_some()
-                        && geometry_type == 1
-                        && l.width > x3d_render::gpu::MAX_LINE_WIDTH
-                        && sg.bool(n, "visible", true)
-                    {
-                        let viewport = self.viewport();
+                    let viewport = self.viewport();
 
-                        self.scan.thick_lines.push(ThickLineDisplay {
-                            system: me(),
-                            model_view: *mv,
-                            geometry: g.clone(),
-                            instances: matrices.clone(),
-                            width: l.width,
-                            viewport,
-                            bbox: p.bbox,
-                        });
-                    }
+                    self.scan.thick_lines.push(ThickLineDisplay {
+                        system: me(),
+                        model_view: *mv,
+                        geometry: g.clone(),
+                        instances: matrices.clone(),
+                        width: l.width,
+                        viewport,
+                        bbox: p.bbox,
+                    });
                 }
 
                 // One run per system, its particles' entries made only by a pick or a collision query.
@@ -1535,17 +1529,17 @@ impl<'a> Walker<'a> {
                 }
             }
             "Inline" => {
-                if sg.bool(n, "load", true) {
-                    if let Some(ctx) = sg.inline_scene(n) {
-                        let roots = sg.roots_of(ctx);
-                        let pushed = self.push_clip_planes(sg, &roots, mv);
-                        // The Inline's scene group: its root sensors apply to its root nodes.
-                        let sensors = group_sensors(sg, path, &roots, mv, sensors);
-                        for r in roots {
-                            self.node(sg, path, r, mv, &sensors, anchors, collidable, depth + 1);
-                        }
-                        self.clip_planes.truncate(self.clip_planes.len() - pushed);
+                if sg.bool(n, "load", true)
+                    && let Some(ctx) = sg.inline_scene(n)
+                {
+                    let roots = sg.roots_of(ctx);
+                    let pushed = self.push_clip_planes(sg, &roots, mv);
+                    // The Inline's scene group: its root sensors apply to its root nodes.
+                    let sensors = group_sensors(sg, path, &roots, mv, sensors);
+                    for r in roots {
+                        self.node(sg, path, r, mv, &sensors, anchors, collidable, depth + 1);
                     }
+                    self.clip_planes.truncate(self.clip_planes.len() - pushed);
                 }
             }
             // StaticGroup: the plain Group in the frame that starts the optimization.

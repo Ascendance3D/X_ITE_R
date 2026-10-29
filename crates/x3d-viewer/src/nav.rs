@@ -252,7 +252,7 @@ impl Viewer {
             "NONE" => Viewer::None,
             "WALK" => Viewer::Fly(Box::new(Fly::new(true, now))),
             "FLY" => Viewer::Fly(Box::new(Fly::new(false, now))),
-            "PLANE" => Viewer::Plane(Box::new(Plane::new())),
+            "PLANE" => Viewer::Plane(Box::default()),
             "LOOKAT" => Viewer::LookAt(Box::new(LookAt::new(now))),
             // Unknown names: the default branch of X3DNavigationContext.set_viewer__.
             _ => {

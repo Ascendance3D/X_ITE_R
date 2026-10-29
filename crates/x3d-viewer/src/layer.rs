@@ -818,6 +818,12 @@ pub struct Layer {
     pub collision_particle_systems: Option<Vec<crate::walk::NodeRef>>,
 }
 
+impl Default for Layer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layer {
     pub fn new() -> Layer {
         Self::with_viewpoint(DEFAULT)
@@ -933,10 +939,10 @@ impl Layer {
             rt.set_value(k, FieldValue::SFBool(bound));
         }
 
-        if let Some(t) = bind_time {
-            if let Some(k) = rt.pre(n, "bindTime") {
-                rt.set_value(k, FieldValue::SFTime(t));
-            }
+        if let Some(t) = bind_time
+            && let Some(k) = rt.pre(n, "bindTime")
+        {
+            rt.set_value(k, FieldValue::SFTime(t));
         }
     }
 
@@ -968,10 +974,10 @@ impl Layer {
         let bound = from;
 
         for r in removed {
-            if let Some(i) = stack.iter().position(|n| n == r) {
-                if i > 0 {
-                    stack.remove(i);
-                }
+            if let Some(i) = stack.iter().position(|n| n == r)
+                && i > 0
+            {
+                stack.remove(i);
             }
         }
 
@@ -1146,20 +1152,20 @@ impl Layer {
     }
 
     fn nav_complete(&mut self, rt: &mut Runtime, nav: NodeId) {
-        if nav != DEFAULT {
-            if let Some(k) = rt.pre(nav, "transitionComplete") {
-                rt.set_value(k, FieldValue::SFBool(true));
-            }
+        if nav != DEFAULT
+            && let Some(k) = rt.pre(nav, "transitionComplete")
+        {
+            rt.set_value(k, FieldValue::SFBool(true));
         }
 
         self.transition_active.insert(nav, false);
     }
 
     pub(crate) fn nav_start(&mut self, rt: &mut Runtime, nav: NodeId) {
-        if nav != DEFAULT {
-            if let Some(k) = rt.private_field(nav, "transitionStart") {
-                rt.set_value(k, FieldValue::SFBool(true));
-            }
+        if nav != DEFAULT
+            && let Some(k) = rt.private_field(nav, "transitionStart")
+        {
+            rt.set_value(k, FieldValue::SFBool(true));
         }
 
         self.transition_active.insert(nav, true);
@@ -1362,7 +1368,7 @@ impl Layer {
         let mut d = direction;
         d.multiply(distance);
         user_position.add(&d);
-        let user_orientation = vp.look_at_rotation(&base, &user_position, &center);
+        let user_orientation = vp.look_at_rotation(base, &user_position, &center);
 
         let v = self.vp(n);
         let mut po = user_position;
