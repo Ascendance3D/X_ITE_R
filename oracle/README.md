@@ -9,18 +9,27 @@ Twelve answer keys are too large for Git: 4 JSON files and 8 render directories.
 (issue #168, below) use the same manifest. `answer-keys.tsv` lists each
 one with its kind, file count, byte count and sha256 (for a directory, the sha256 of its sorted `sha256sum` list).
 
-The keys stay in the main checkout. `tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust
-tests) find a key in this order: `$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this
-worktree's `oracle/`, then the main worktree's `oracle/`. A key is used only when it equals its row.
+The keys are in one external evidence store, outside the repository: a private, dated directory
+`<backups root>/X_ITE_R/<date>-evidence-store/` that holds every row of `answer-keys.tsv` as real files and
+directories, with `README.md` and `SHA256SUMS`. The maintainer sets the backups root. Point `X3D_ORACLE_KEYS` at
+the store. The main checkout does not hold the 8 render keys (its render-key paths are empty, so `git status`
+shows ` D` for those tracked symlinks). It holds copies of the 4 JSON keys and the 12 private paths below as
+ignored files and directories. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
+checkout. Do not move a key back to a tracked symlink path.
+
+`tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust tests) find a key in this order:
+`$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this worktree's `oracle/`,
+then the main worktree's `oracle/`. A key is used only when it equals its row.
 
 `$X3D_ORACLE_KEYS` must be an absolute path to an existing directory outside every worktree of this repository,
 and it must hold every key in `answer-keys.tsv`. Otherwise the resolver stops with exit 4 (Rust: `KeyError::Unsafe`) and searches
-no other location. There is no default store.
+no other location. The resolver has no default store, so set the variable for every strict run in the main
+checkout.
 
 `guard` refuses (exit 4) when real data sits at a key path or `upstream/` that a commit tracks. A checkout,
 reset, restore, stash or merge to that commit could delete it. It also refuses such data that `.gitignore`
-does not cover, because `git clean -fd` deletes it. Run it before such an operation; today it
-refuses the main checkout, whose render keys and `upstream/` are real directories at tracked symlink paths.
+does not cover, because `git clean -fd` deletes it. Run it before such an operation. It passes in the main
+checkout with the external store, because no real data is at a tracked symlink path.
 
 ### Private corpora (issue #168)
 
@@ -30,8 +39,8 @@ are historical Mall item files with no redistribution permission. They were remo
 `master` does not erase them from older commits.
 
 The tests that read them fail by name when they are absent, and skip by name when `X3D_EVIDENCE_ALLOW` lists
-them. The other sections of this file still name these paths; they are now found through the resolver. Restore
-them into the main checkout's `oracle/` from the private backup.
+them. The other sections of this file still name these paths; they are now found through the resolver. The
+external store holds them; the main checkout's `oracle/` holds ignored copies.
 
 `corpus-x0` and `corpus-x1` are Cybertown files copied out of the read-only archives (see their `PROVENANCE.json`),
 with no redistribution permission. They, and the X_ITE outputs that embed or render them (`x0-baseline.json`,
@@ -40,7 +49,8 @@ too. `x0-xml-baseline.json` was `synthetic-rea-xml/x0-xml-baseline.json`; it is 
 (same bytes), because a manifest name is one path component.
 
 ```
-python3 -I -B tools/answer_keys.py verify                       # every key
+X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py verify   # every key, in the store only
+env -u X3D_ORACLE_KEYS python3 -I -B tools/answer_keys.py verify # without the store; fails on a key that no checkout holds
 python3 -I -B tools/answer_keys.py resolve render-items2-baseline
 python3 -I -B tools/answer_keys.py guard . HEAD origin/master   # before a Git operation to origin/master
 ```
