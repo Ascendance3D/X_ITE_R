@@ -601,12 +601,7 @@ impl Runtime {
         }
 
         // Script URLs are no scenes.
-        let trimmed = candidate.trim_start();
-
-        if ["ecmascript:", "javascript:", "vrmlscript:"]
-            .iter()
-            .any(|s| trimmed.starts_with(s))
-        {
+        if crate::loader::strip_script_scheme(candidate).is_some() {
             return Step::Failed {
                 error: "Error: Couldn't parse X3D. No suitable file handler found.".into(),
                 resolved: None,

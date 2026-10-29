@@ -17,16 +17,20 @@ import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
 import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
+import { CASE_GROUPS as SCRIPTURL01_GROUPS } from "./scripturl01_case.mjs";
 import { CASE_GROUPS as DEGENERATE01_GROUPS } from "./degenerate01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
+import { CASE_GROUPS as SCENETEXT01_GROUPS } from "./scenetext01_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
+import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
+import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
@@ -42,26 +46,32 @@ export const ONLY     = process .env .XR_CASE;
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
 // compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline), and
-// the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
+// the web script URL whitespace 01 cases (scripturl01_case.mjs, `--suite scripturl01` into
+// oracle/web-browser-script-url-01-baseline), and the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
 // oracle/web-browser-degenerate-01-baseline), and the glTF world buffers 01 and 02 cases (gltfworld01_case.mjs,
 // gltfworld02_case.mjs, `--suite gltfworld01|gltfworld02` into oracle/web-browser-gltf-world-01|02-baseline), and the
 // field API 01 cases (fields01_case.mjs, `--suite fields01` into oracle/web-browser-fields-01-baseline), and the field API 02 cases (fields02_case.mjs, `--suite fields02` into
-// oracle/web-browser-fields-02-baseline).
+// oracle/web-browser-fields-02-baseline), and the web scene text 01 cases (scenetext01_case.mjs, `--suite scenetext01` into
+// oracle/web-browser-scene-text-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
    loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
    dataurl01:  { dir: process .env .XR_DATAURL_BASELINE ?? join (REPO, "oracle/web-browser-data-url-01-baseline"), file: "dataurl01-baseline.json", groups: DATAURL01_GROUPS },
+   scripturl01: { dir: process .env .XR_SCRIPTURL_BASELINE ?? join (REPO, "oracle/web-browser-script-url-01-baseline"), file: "scripturl01-baseline.json", groups: SCRIPTURL01_GROUPS },
    degenerate01: { dir: process .env .XR_DEGENERATE_BASELINE ?? join (REPO, "oracle/web-browser-degenerate-01-baseline"), file: "degenerate01-baseline.json", groups: DEGENERATE01_GROUPS },
    gltfworld01: { dir: process .env .XR_GLTFWORLD_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-01-baseline"), file: "gltfworld01-baseline.json", groups: GLTFWORLD01_GROUPS },
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
+   scenetext01: { dir: process .env .XR_SCENETEXT_BASELINE ?? join (REPO, "oracle/web-browser-scene-text-01-baseline"), file: "scenetext01-baseline.json", groups: SCENETEXT01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
+   attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
+   entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
 };
 
@@ -71,6 +81,20 @@ for (const suite of Object .values (SUITES))
 // Every case group with the suite it belongs to.
 const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ name, suite ]) =>
    Object .entries (suite .groups) .map (([ groupName, group ]) => [ groupName, { ... group, suite: name } ])));
+
+// X_ITE_R's browser fires `initialized` and `load` for its first, empty world; X_ITE's fires nothing for it. The event
+// lists of an element made by X3D.createBrowser therefore start with this pair in X_ITE_R. For the `paths` of the events
+// arrays in the recording of `key`: [ path, X_ITE's array (checked against the recording), X_ITE_R's ].
+function startEventDifferences (key, paths)
+{
+   return paths .map (path =>
+   {
+      const recorded = path .reduce ((v, k) => v ?.[k], SUITES .entry01 .reference .values [key]);
+
+      assert .ok (Array .isArray (recorded), `startEventDifferences ${key}`);
+      return [ path, recorded, [ "initialized", "load", ... recorded ] ];
+   });
+}
 
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
@@ -318,13 +342,9 @@ const KNOWN_DIFFERENCES = {
       // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
       [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
-   // The page of the cases sets splashScreen, contextMenu and notifications to false; X_ITE reads these attributes into the
-   // options (BrowserOptions.reset). X_ITE_R reads only src, url and contentScale and keeps the option defaults (API.md).
-   "browserOptions.defaults": [
-      [ [ "SplashScreen", 0 ], false, true ], [ [ "ContextMenu", 0 ], false, true ], [ [ "Notifications", 0 ], false, true ],
-   ],
-   "browserOptions.setValid": [
-      [ [ "SplashScreen", "before" ], false, true ], [ [ "ContextMenu", "before" ], false, true ], [ [ "Notifications", "before" ], false, true ],
+   // The baseURL attribute sets browser.baseURL in X_ITE; X_ITE_R keeps the page's base URL (API.md, "Canvas attributes").
+   "canvasAttributes.otherAttributes": [
+      [ [ "baseURL", 1 ], true, false ],
    ],
    // X_ITE's AntiAliased is an alias of the Antialiased rendering property, which X_ITE_R does not implement.
    "browserOptions.unknownNames": [
@@ -346,6 +366,12 @@ const KNOWN_DIFFERENCES = {
       [ [ "MaxSamples" ], 8, notImplemented ("MaxSamples") ], [ [ "PixelsPerPoint" ], 1.3333333333333333, notImplemented ("PixelsPerPoint") ],
       [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ], [ [ "XRSession" ], false, notImplemented ("XRSession") ],
    ],
+   // The events of the first, empty world (see startEventDifferences).
+   "entryPoints.createBrowser": startEventDifferences ("entryPoints.createBrowser", [ [ "stillDetached", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserUrl": startEventDifferences ("entryPoints.createBrowserUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
+      .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -516,16 +542,25 @@ const GROUP_FILES = {
    dataURLWorld: "dataurl01.test.mjs",
    dataURLImage: "dataurl01.test.mjs",
    dataURLGltf:  "dataurl01.test.mjs",
+   scriptURLScript: "scripturl01.test.mjs",
+   scriptURLWorld:  "scripturl01.test.mjs",
+   scriptURLInline: "scripturl01.test.mjs",
+   scriptURLExtern: "scripturl01.test.mjs",
    degenerateTriangle: "degenerate01.test.mjs",
    gltfWorld: "gltfworld01.test.mjs",
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
+   sceneText: "scenetext01.test.mjs",
+   sceneTextInitial: "scenetext01.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
+   canvasAttributes: "attributes01.test.mjs",
+   canvasAttributesScaled: "attributes01.test.mjs",
+   entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
 };
 
@@ -533,6 +568,17 @@ assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUP
 
 for (const file of new Set (Object .values (GROUP_FILES)))
    assert .ok (existsSync (join (dirname (fileURLToPath (import.meta.url)), file)), `GROUP_FILES: ${file} does not exist`);
+
+// The value without its top-level `detail` (an object that has one), which the cases record for X_ITE only.
+const withoutDetail = value =>
+{
+   if (!value || typeof value !== "object" || Array .isArray (value) || !("detail" in value))
+      return value;
+
+   const { detail, ... rest } = value;
+
+   return rest;
+};
 
 // The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
 export function referenceCases (file)
@@ -563,6 +609,11 @@ export function referenceCases (file)
 
                   assert .ok (theirs, `no X_ITE recording of ${key}`);
 
+                  // `detail` is recorded but not compared (scripturl01_case.mjs): what only X_ITE does.
+                  const compared = withoutDetail (ours);
+
+                  theirs = withoutDetail (theirs);
+
                   await evidence (`${key}.json`, JSON .stringify (ours, null, 1) + "\n");
 
                   for (const [ path, xite, xiteR ] of KNOWN_DIFFERENCES [key] ?? [ ])
@@ -571,7 +622,7 @@ export function referenceCases (file)
                      theirs = withValue (theirs, path, xiteR);
                   }
 
-                  assert .deepEqual (ours, theirs, `${key}\n${page .log .join ("\n")}`);
+                  assert .deepEqual (compared, theirs, `${key}\n${page .log .join ("\n")}`);
 
                   // The pictures: the same background, silhouette and colors as X_ITE's (the thresholds of runtime 01).
                   for (const [ file, data ] of Object .entries (pictures))

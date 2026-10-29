@@ -1038,6 +1038,26 @@ impl WebBrowser {
             .map_err(|e| JsError::new(&e))
     }
 
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the world `id` (see [`Session::print_scene`]).
+    #[wasm_bindgen(js_name = printScene)]
+    pub fn print_scene(&self, id: u32, kind: &str) -> Result<String, JsError> {
+        self.session(id)?
+            .print_scene(kind)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DBrowser.replaceWorld (null): the empty world, a scene no source set up (see [`Session::empty_world`]).
+    #[wasm_bindgen(js_name = prepareEmpty)]
+    pub fn prepare_empty(&mut self, url: &str, now: f64) -> u32 {
+        let cache = FetchCache::new();
+        let fetcher = Box::new(WebFetcher {
+            cache: cache.clone(),
+        });
+        let world = Session::empty_world(url, fetcher);
+
+        self.add(world, cache, now)
+    }
+
     /// X3DField.fromVRMLString / fromXMLString (value, scene) (see [`Session::parse_field`]): the data of the value
     /// `text` reads as for a field of type `type_name` of the world `id`.
     #[wasm_bindgen(js_name = parseField)]
@@ -1395,6 +1415,12 @@ fn log_parser_warnings(warnings: &[String]) {
     for warning in warnings {
         web_sys::console::warn_1(&warning.into());
     }
+}
+
+/// X3DScene.toVRMLString / toXMLString / toJSONString of the empty world a canvas has before any load.
+#[wasm_bindgen(js_name = printEmptyScene)]
+pub fn print_empty_scene(kind: &str) -> Result<String, JsError> {
+    Session::print_empty_scene(kind).map_err(|e| JsError::new(&e))
 }
 
 /// X3DField.fromVRMLString / fromXMLString (value) without a scene, which needs no world: `[data, warning, ...]`. A value
