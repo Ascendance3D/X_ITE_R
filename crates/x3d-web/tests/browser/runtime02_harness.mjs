@@ -23,6 +23,7 @@ import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
+import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -53,6 +54,7 @@ const SUITES = {
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
+   entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -61,6 +63,20 @@ for (const suite of Object .values (SUITES))
 // Every case group with the suite it belongs to.
 const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ name, suite ]) =>
    Object .entries (suite .groups) .map (([ groupName, group ]) => [ groupName, { ... group, suite: name } ])));
+
+// X_ITE_R's browser fires `initialized` and `load` for its first, empty world; X_ITE's fires nothing for it. The event
+// lists of an element made by X3D.createBrowser therefore start with this pair in X_ITE_R. For the `paths` of the events
+// arrays in the recording of `key`: [ path, X_ITE's array (checked against the recording), X_ITE_R's ].
+function startEventDifferences (key, paths)
+{
+   return paths .map (path =>
+   {
+      const recorded = path .reduce ((v, k) => v ?.[k], SUITES .entry01 .reference .values [key]);
+
+      assert .ok (Array .isArray (recorded), `startEventDifferences ${key}`);
+      return [ path, recorded, [ "initialized", "load", ... recorded ] ];
+   });
+}
 
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
@@ -249,6 +265,12 @@ const KNOWN_DIFFERENCES = {
       // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
       [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
+   // The events of the first, empty world (see startEventDifferences).
+   "entryPoints.createBrowser": startEventDifferences ("entryPoints.createBrowser", [ [ "stillDetached", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserUrl": startEventDifferences ("entryPoints.createBrowserUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
+   "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
+      .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -424,6 +446,7 @@ const GROUP_FILES = {
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
    nodeOwnership: "fields03.test.mjs",
+   entryPoints: "entry01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
