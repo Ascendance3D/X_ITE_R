@@ -914,3 +914,23 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-attributes-01-baseline --runs 5 --suite attributes01
 ```
+
+## Web browser entry 01 (2026-10-28): X3D entry points and captureStream
+
+- `x_ite-web-runtime-02.mjs --suite entry01` runs the 12 cases of `crates/x3d-web/tests/browser/entry01_case.mjs`
+  against the pinned X_ITE and records `web-browser-entry-01-baseline/entry01-baseline.json` (no pictures):
+  `typeof X3D`, its length and members; `X3D ()` with and without callbacks (the throwing `onfulfilled` is the only
+  `onrejected` path a page can reach); `X3D.noConflict ()` with `window.X3D` absent, an object, or `undefined` before
+  the library loads (an init script sets it); `X3D.createBrowser ()` with no argument, an MFString URL, a bad URL
+  and other arguments; `X3D.getBrowser` with every kind of argument; and `captureStream` of the page's canvas, of an
+  element that is not attached, and of `document.createElement ("x3d-canvas")`.
+- The unbundled source of the pin never assigns `window.X3D` (its dist bundle does), so the noConflict cases assign it
+  themselves, as the bundle would. A bad or non-MFString URL given to `createBrowser` is an unhandled rejection; the
+  cases record it from the page's `unhandledrejection` event. The pinned canvas fires no `initialized` or `load` for
+  its first, empty world (X_ITE_R does; `KNOWN_DIFFERENCES` in `runtime02_harness.mjs`).
+- The recorded frame rate of `captureStream ()` is 60 (Chrome 156.0.8078.47, headless). Five runs gave identical
+  values. Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-entry-01-baseline --runs 5 --suite entry01
+```
