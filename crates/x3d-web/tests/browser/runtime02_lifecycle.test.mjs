@@ -328,6 +328,7 @@ describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY), timeout: 
 
       try
       {
+         // A removed contentScale attribute is a ContentScale of 0, a 1 x 1 framebuffer, like X_ITE (attributes01.test.mjs).
          const size = async (style, scale) =>
          {
             await page .evaluate (([ style, scale ]) =>
@@ -356,8 +357,8 @@ describe ("runtime 02 canvas size and scroll", { skip: Boolean (ONLY), timeout: 
 
          const max = await page .evaluate (() => document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.engine")] .maxTextureDimension);
 
-         assert .deepEqual (await size ("display:block;width:400px;height:300px", null), [ 400, 300 ], "landscape, contentScale 1");
-         assert .deepEqual (await size ("display:block;width:300px;height:400px", null), [ 300, 400 ], "portrait (rotation)");
+         assert .deepEqual (await size ("display:block;width:400px;height:300px", "1"), [ 400, 300 ], "landscape, contentScale 1");
+         assert .deepEqual (await size ("display:block;width:300px;height:400px", "1"), [ 300, 400 ], "portrait (rotation)");
          assert .deepEqual (await size ("display:block;width:300px;height:400px", "auto"), [ 600, 800 ], "contentScale auto, DPR 2");
          assert .deepEqual (await size ("display:block;width:1px;height:1px", "auto"), [ 2, 2 ], "a small canvas");
 

@@ -22,7 +22,13 @@ import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
+import { CASE_GROUPS as SCENETEXT01_GROUPS } from "./scenetext01_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
+import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
+import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
+import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
+import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
+import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
@@ -42,7 +48,8 @@ export const ONLY     = process .env .XR_CASE;
 // oracle/web-browser-degenerate-01-baseline), and the glTF world buffers 01 and 02 cases (gltfworld01_case.mjs,
 // gltfworld02_case.mjs, `--suite gltfworld01|gltfworld02` into oracle/web-browser-gltf-world-01|02-baseline), and the
 // field API 01 cases (fields01_case.mjs, `--suite fields01` into oracle/web-browser-fields-01-baseline), and the field API 02 cases (fields02_case.mjs, `--suite fields02` into
-// oracle/web-browser-fields-02-baseline).
+// oracle/web-browser-fields-02-baseline), and the web scene text 01 cases (scenetext01_case.mjs, `--suite scenetext01` into
+// oracle/web-browser-scene-text-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
@@ -52,8 +59,14 @@ const SUITES = {
    gltfworld01: { dir: process .env .XR_GLTFWORLD_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-01-baseline"), file: "gltfworld01-baseline.json", groups: GLTFWORLD01_GROUPS },
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
+   scenetext01: { dir: process .env .XR_SCENETEXT_BASELINE ?? join (REPO, "oracle/web-browser-scene-text-01-baseline"), file: "scenetext01-baseline.json", groups: SCENETEXT01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
+   routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
+   viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
+   fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
+   attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
 };
 
@@ -81,6 +94,21 @@ function startEventDifferences (key, paths)
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
 // listed in web/API.md.
+const notImplemented = name => `Error: X_ITE_R: the rendering property '${name}' is not implemented.`;
+
+// The four derived rendering properties after each option set of the renderingDerived case: X_ITE's value (taken from
+// the recording, which must not be an error) and X_ITE_R's error.
+function derivedRenderingDifferences ()
+{
+   const recorded = SUITES .options01 .reference .values ["browserOptions.renderingDerived"];
+
+   return Object .entries (recorded) .flatMap (([ step, { properties } ]) => Object .entries (properties) .map (([ name, value ]) =>
+   {
+      assert .ok (!String (value) .startsWith ("Error"), `renderingDerived ${step} ${name}`);
+      return [ [ step, "properties", name ], value, notImplemented (name) ];
+   }));
+}
+
 const KNOWN_DIFFERENCES = {
    "nodeOwnership.nodeOwnership": [
       // X_ITE stores a node of another scene (the owner stays that scene); X_ITE_R refuses it, warns, and keeps the field as it was.
@@ -97,6 +125,41 @@ const KNOWN_DIFFERENCES = {
       [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
       // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
       [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "routesApi.scenes": [
+      // X_ITE runs every scene it holds, so the events of a scene that is not the world go on; X_ITE_R steps only the world,
+      // and the routes of another scene carry nothing.
+      [ [ "events" ], [["C|7 0 0|0", "OB|8 0 0|0"], "7 0 0", "8 0 0"], [["C|7 0 0|0"], "7 0 0", "0 0 0"] ],
+   ],
+   "routesApi.crossScene": [
+      // X_ITE accepts nodes of two scenes in one route and carries events between them. A route of X_ITE_R belongs to one world
+      // (the engine runs one world at a time), so a node of another world is refused with the warning and the error of a node of
+      // another world (fields03), the same for getRoute, addRoute and deleteRoute of the scene API and the browser's addRoute.
+      [ [ "mixed" ], ["A", "translation_changed", "OB", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "afterMixed" ], [[["A", "translation_changed", "B", "set_translation"], ["A", "translation_changed", "OB", "set_translation"]], []], [[["A", "translation_changed", "B", "set_translation"]], []] ],
+      [ [ "reverse" ], ["OA", "translation_changed", "C", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "afterReverse" ], [[["A", "translation_changed", "B", "set_translation"], ["A", "translation_changed", "OB", "set_translation"]], [["OA", "translation_changed", "C", "set_translation"]]], [[["A", "translation_changed", "B", "set_translation"]], []] ],
+      [ [ "getMixed" ], ["A", "translation_changed", "OB", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "getPageIn" ], null, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "addPageIn" ], ["A", "translation_changed", "B", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "sameRoute" ], true, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "deleteMixed" ], [[["A", "translation_changed", "B", "set_translation"]], [["OA", "translation_changed", "C", "set_translation"], ["A", "translation_changed", "B", "set_translation"]]], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "browserMixed" ], null, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "events" ], [["OB|7 0 0|0", "C|8 0 0|0"], "8 0 0", "7 0 0"], [[], "0 0 0", "0 0 0"] ],
+      [ [ "log" ], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "routesApi.browser": [
+      // The nodes of a replaced world: X_ITE keeps them usable, and its replaced scene keeps its routes; X_ITE_R refuses both as stale (API.md).
+      [ [ "onDoc" ], [null, [["P", "translation_changed", "Q", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [null, [["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
+      [ [ "oldNodes" ], null, "Error: X_ITE_R: the node belongs to a world that was replaced." ],
+      [ [ "afterOld" ], [[["P", "translation_changed", "Q", "set_translation"], ["A", "translation_changed", "C", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [[["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
+   ],
+   "fieldCascade.nested": [
+      // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
+      // (2 0 0) overwrites the nested value (9 9 9), and the nested event comes in the same cascade with the value D then holds.
+      // X_ITE_R delivers the callbacks after the frame: the nested set goes in the next frame and its value stays.
+      [ [ "final", 0 ], "2 0 0", "9 9 9" ],
+      [ [ "seq", 5 ], "D|2 0 0|later|0", "D|9 9 9|later|1" ],
    ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
@@ -265,6 +328,30 @@ const KNOWN_DIFFERENCES = {
       // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
       [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
+   // The baseURL attribute sets browser.baseURL in X_ITE; X_ITE_R keeps the page's base URL (API.md, "Canvas attributes").
+   "canvasAttributes.otherAttributes": [
+      [ [ "baseURL", 1 ], true, false ],
+   ],
+   // X_ITE's AntiAliased is an alias of the Antialiased rendering property, which X_ITE_R does not implement.
+   "browserOptions.unknownNames": [
+      [ [ 4, "rendering" ], true, notImplemented ("AntiAliased") ],
+   ],
+   // X_ITE's Shading, Antialiased, ContentScale and Multisampling rendering properties are derived from the options and
+   // the context. X_ITE_R does not implement them; getRenderingProperty throws.
+   "browserOptions.rendering": [
+      [ [ "defaults", "Shading" ], "GOURAUD", notImplemented ("Shading") ], [ [ "defaults", "Antialiased" ], true, notImplemented ("Antialiased") ],
+      [ [ "defaults", "ContentScale" ], 1, notImplemented ("ContentScale") ], [ [ "defaults", "Multisampling" ], 4, notImplemented ("Multisampling") ],
+      [ [ "alias" ], true, notImplemented ("AntiAliased") ],
+   ],
+   "browserOptions.renderingDerived": derivedRenderingDifferences (),
+   // The properties of X_ITE's WebGL context, the values of the GPU the recording was made on (RTX 3060 Ti through ANGLE).
+   "browserOptions.renderingContext": [
+      [ [ "MaxTextureSize" ], 32768, notImplemented ("MaxTextureSize") ], [ [ "TextureUnits" ], 64, notImplemented ("TextureUnits") ],
+      [ [ "MaxLights" ], 8, notImplemented ("MaxLights") ], [ [ "ColorDepth" ], 32, notImplemented ("ColorDepth") ],
+      [ [ "TextureMemory" ], "number:NaN", notImplemented ("TextureMemory") ], [ [ "MaxAnisotropicDegree" ], 16, notImplemented ("MaxAnisotropicDegree") ],
+      [ [ "MaxSamples" ], 8, notImplemented ("MaxSamples") ], [ [ "PixelsPerPoint" ], 1.3333333333333333, notImplemented ("PixelsPerPoint") ],
+      [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ], [ [ "XRSession" ], false, notImplemented ("XRSession") ],
+   ],
    // The events of the first, empty world (see startEventDifferences).
    "entryPoints.createBrowser": startEventDifferences ("entryPoints.createBrowser", [ [ "stillDetached", "events" ], [ "afterAttach", "events" ] ]),
    "entryPoints.createBrowserUrl": startEventDifferences ("entryPoints.createBrowserUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
@@ -274,7 +361,8 @@ const KNOWN_DIFFERENCES = {
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
-// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
+// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here. A case group can
+// give its own `timeout`.
 export const CASE_TIMEOUT = 180_000;
 
 // The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984) on the CPU: on CI's lavapipe, with
@@ -445,7 +533,15 @@ const GROUP_FILES = {
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
+   sceneText: "scenetext01.test.mjs",
+   sceneTextInitial: "scenetext01.test.mjs",
    nodeOwnership: "fields03.test.mjs",
+   fieldCascade: "fields04.test.mjs",
+   routesApi: "routes01.test.mjs",
+   viewpointsApi: "viewpoints01.test.mjs",
+   browserOptions: "options01.test.mjs",
+   canvasAttributes: "attributes01.test.mjs",
+   canvasAttributesScaled: "attributes01.test.mjs",
    entryPoints: "entry01.test.mjs",
 };
 
@@ -471,7 +567,7 @@ export function referenceCases (file)
          {
             const key = `${groupName}.${name}`;
 
-            test (key, { skip: ONLY && ONLY !== key, timeout: CASE_TIMEOUT }, async () =>
+            test (key, { skip: ONLY && ONLY !== key, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
                const page = await openPage (group .context);
 
