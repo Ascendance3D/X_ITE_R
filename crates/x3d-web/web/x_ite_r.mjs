@@ -1953,7 +1953,9 @@ class X3DBrowser
 
          this .#sceneRequests .delete (settled [i]);
 
-         if (!request || typeof nodes === "string")
+         // A scene that did not load changes nothing; the field of a world that an Anchor replaced inside this scene
+         // (another world generation) is not touched.
+         if (!request || typeof nodes === "string" || request .handle .scene !== world || engine .worldGeneration (world) !== request .handle .generation)
             continue;
 
          try
