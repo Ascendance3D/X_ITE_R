@@ -1,0 +1,29 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Sound { source AudioClip { url "media/tone.wav"  } }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Sound { source AudioClip { url "media/tone.wav" loop TRUE } intensity 0.5 spatialize FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 0.2 0.6 0.9  } } geometry Box { size 1 1 1 } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Sound { location 0.5 0 0 direction 1 0 0 minFront 1 maxFront 3 minBack 0.5 maxBack 1 source AudioClip { url "media/tone.wav"  } }
+Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.3  } } geometry Box { size 0.6 0.6 0.6 } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Sound { source AudioClip { url "media/tone.wav" description "tone" pitch 2 } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Sound { }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.3  } } geometry Sphere { radius 0.7 } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Transform { scale 2 2 2 children Sound { source AudioClip { url "media/tone.wav"  } maxFront 5 maxBack 5 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2  } } geometry Box { size 0.8 0.8 0.8 } }
+] }

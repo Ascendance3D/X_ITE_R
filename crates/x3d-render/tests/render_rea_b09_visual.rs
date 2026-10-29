@@ -1,10 +1,12 @@
 //! REA batch 09 still images of the node-survey groups against pinned X_ITE: every world of
-//! oracle/synthetic-rea-b09-visual (`oracle/tools/gen_rea_b09_visual.py`) with a baseline in
+//! oracle/synthetic-rea-b09-visual (`oracle/tools/gen_rea_b09_visual.py`, and the vis-items-* worlds of
+//! `oracle/tools/gen_rea_b09_visual_items.py`, issue #90: HAnim, Espdu, CoordinateDouble/Normal/PointSet, Shape/Appearance, textures, MovieTexture;
+//! recorded three times with identical pixels, see index-items.json beside the baselines) with a baseline in
 //! oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline
 //! (`oracle/tools/rea_b09_visual.py shots`, x_ite-shot.mjs / x_ite-shot-msaa.mjs, Multisampling 4).
 //!
 //! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off.
-//! `REA_ONLY=<substring>` restricts the worlds.
+//! `REA_ONLY=<substring>` restricts the worlds. A world of the corpus without a reference PNG fails the test.
 //!
 //! KNOWN_GAPS lists worlds the renderer cannot draw yet. Their references are kept, and the test requires
 //! them to stay over the bound: when the feature lands the entry fails the test and must be removed.
@@ -13,9 +15,19 @@ use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
 /// (world, why the renderer differs): worlds the renderer is known not to match. A world listed here must stay over the
-/// bound; the test fails once it matches, so its entry is removed then. None now (vis-screen matched with ScreenGroup and
-/// ScreenFontStyle rendering).
-const KNOWN_GAPS: &[(&str, &str)] = &[];
+/// bound; the test fails once it matches, so its entry is removed then. vis-items-alpha and vis-items-movie are the gaps the
+/// item-level worlds of issue #90 left (gen_rea_b09_visual_items.py); vis-items-espdu and vis-items-shape-bbox matched once
+/// EspduTransform drew its children and Shape culled by its declared bbox.
+const KNOWN_GAPS: &[(&str, &str)] = &[
+    (
+        "vis-items-alpha.wrl",
+        "Appearance alphaMode / alphaCutoff are not applied (Appearance.set_alphaMode__, set_transparent__): OPAQUE still blends the texture and material alpha, MASK neither cuts at alphaCutoff nor draws the kept pixels opaque",
+    ),
+    (
+        "vis-items-movie.wrl",
+        "MovieTexture frames are not decoded (GIF, APNG, WebM): the texture stays untextured white (x3d-shot: 'not rendered: MovieTexture')",
+    ),
+];
 
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {
@@ -55,6 +67,42 @@ fn rea_b09_visual_renders_match_x_ite() {
             .filter(|n| n.contains(&only))
             .collect();
         names.sort();
+
+        // A reference whose X_ITE run logged a parser error does not picture the world as written: the cells with the
+        // rejected field compare nothing, so it fails too (PR #166 review).
+        for index in ["index.json", "index-items.json"] {
+            let Ok(text) = std::fs::read_to_string(root.join(baseline).join(index)) else {
+                continue;
+            };
+            let json: serde_json::Value = serde_json::from_str(&text).unwrap();
+
+            for r in json["results"].as_array().into_iter().flatten() {
+                let file = r["file"].as_str().unwrap_or("?");
+                let logs = r["log"].as_array().into_iter().flatten();
+
+                for l in logs.filter_map(|l| l.as_str()) {
+                    if l.contains("Parser error") && file.contains(&only) {
+                        failures.push(format!("{file} MSAA {samples}: the reference logged {l:?}"));
+                    }
+                }
+            }
+        }
+
+        // A world without its reference fails: an absent answer key never passes (issue #90).
+        for e in std::fs::read_dir(root.join("synthetic-rea-b09-visual")).unwrap() {
+            let world = e.unwrap().file_name().into_string().unwrap();
+
+            if world.ends_with(".wrl")
+                && world.contains(&only)
+                && !names
+                    .iter()
+                    .any(|n| n.split('@').next() == Some(world.as_str()))
+            {
+                failures.push(format!(
+                    "{world} MSAA {samples}: no reference in {baseline}"
+                ));
+            }
+        }
 
         for name in names {
             let (w, h, want) =

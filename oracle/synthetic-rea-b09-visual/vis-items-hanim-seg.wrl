@@ -1,0 +1,25 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT HAnim:3
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C1 Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [  ] children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2  } } geometry IndexedFaceSet { solid FALSE coord USE C1 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C2 Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [ HAnimDisplacer { name "d" coordIndex [ 2 ] displacements [ 0 0.6 0 ] weight 1 } ] children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.9  } } geometry IndexedFaceSet { solid FALSE coord USE C2 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C3 Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [ HAnimDisplacer { name "d" coordIndex [ 0 1 ] displacements [ -0.3 -0.3 0, 0.3 -0.3 0 ] weight 0.5 } ] children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.9 0.3  } } geometry IndexedFaceSet { solid FALSE coord USE C3 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C4 Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [ HAnimDisplacer { name "d" coordIndex [ 3 ] displacements [ -0.4 0.4 0 ] weight 1 } HAnimDisplacer { name "d" coordIndex [ 1 ] displacements [ 0.4 -0.4 0 ] weight 1 } ] children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.6  } } geometry IndexedFaceSet { solid FALSE coord USE C4 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C5 Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [ HAnimDisplacer { name "d" coordIndex [ 2 ] displacements [ 0.5 0.5 0 ] weight 0 } ] children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2  } } geometry IndexedFaceSet { solid FALSE coord USE C5 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" coord DEF C6 CoordinateDouble { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } displacers [ HAnimDisplacer { name "d" coordIndex [ 2 ] displacements [ 0 0.6 0 ] weight 1 } ] children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.9  } } geometry IndexedFaceSet { solid FALSE coord USE C6 coordIndex [ 0 1 2 3 -1 ] } } } } ] }
+] }

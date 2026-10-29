@@ -525,14 +525,15 @@
    "rust": [
     "crates/x3d-runtime/src/nodes/transform_sensor.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-dis"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-dis",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-espdu (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-dis (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-espdu (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-dis (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-espdu 0 pixels over 8 at MSAA 0 and 4. Rust defect fixed: EspduTransform drew nothing ('not rendered'); it is an X3DGroupingNode (DIS/EspduTransform.js, no getMatrix or traverse override), so its children are drawn like a Group's and its translation, rotation, scale and center are DIS state, not a matrix (crates/x3d-render/src/traverse.rs GROUPS, sg.rs static shapes, crates/x3d-viewer/src/walk.rs GROUPS). Cells: defaults, translation, rotation + scale, center, enabled FALSE, linearVelocity + deadReckoning, nested Transform, visible FALSE, a scaled parent."
   },
   {
    "id": "node:ReceiverPdu",
@@ -1973,14 +1974,15 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-hanim, vis-items-hanim-seg (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-hanim, vis-items-hanim-seg (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-hanim and vis-items-hanim-seg 0 pixels over 8 at MSAA 0 and 4: center, rotation, translation, scale, scaleOrientation, nested joints, skinCoordIndex / skinCoordWeight skinning of two joints, a joint displacer, the humanoid's own transform."
   },
   {
    "id": "node:HAnimMotion",
@@ -2039,14 +2041,15 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-hanim, vis-items-hanim-seg (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-hanim, vis-items-hanim-seg (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-hanim and vis-items-hanim-seg 0 pixels over 8 at MSAA 0 and 4: children, bboxCenter / bboxSize, and the segment's coord with displacers (none, one, two, weight 0.5 and 0, a CoordinateDouble coord). Rust defect fixed: a CoordinateDouble segment coord (or humanoid skinCoord) had length 0, because its MFVec3d point was read as MFVec3f, so no displacement was applied (crates/x3d-render/src/hanim.rs coord_length)."
   },
   {
    "id": "node:HAnimSite",
@@ -2063,14 +2066,15 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-hanim (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-hanim (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-hanim 0 pixels over 8 at MSAA 0 and 4: a site under a joint (translation, rotation) and a site directly in the skeleton (scale)."
   },
   {
    "id": "node:ColorInterpolator",
@@ -2510,15 +2514,16 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)",
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-layout (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "oracle/synthetic-rea-b02/layout-group-root.wrl, layout-nested.wrl (stills)",
-   "notes": "Ported for REA batch 02 rows Layout/LayoutLayer; not one of the 20 selected rows. Still images pass; left NOT_TESTED until a runtime case exists. | b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/synthetic-rea-b02/layout-group-root.wrl, layout-nested.wrl (stills); oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-layout (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "Ported for REA batch 02 rows Layout/LayoutLayer; not one of the 20 selected rows. Still images pass; left NOT_TESTED until a runtime case exists. | b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-layout 0 pixels over 8 at MSAA 0 and 4: align, offsetUnits, sizeUnits, scaleMode PIXEL / FRACTION / STRETCH, nested content, a Viewport; with the b02 stills (layout-group-root, layout-nested) and the stepped b02 cases."
   },
   {
    "id": "node:LayoutLayer",
@@ -2606,14 +2611,15 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-light-dir, vis-items-lights (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-light-dir, vis-items-lights (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-light-dir and vis-items-lights 0 pixels over 8 at MSAA 0 and 4 (max channel difference 1): direction, color, intensity 0.4 / 2, ambientIntensity, on FALSE, global TRUE / FALSE, two and nine lights on one shape, a light under a rotated Transform, mixed with Point and Spot lights. Shadows and scope: sub:render.shadows and oracle/synthetic-rea-b03 (batch 03)."
   },
   {
    "id": "node:EnvironmentLight",
@@ -2649,14 +2655,15 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-light-point, vis-items-lights (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-light-point, vis-items-lights (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-light-point and vis-items-lights 0 pixels over 8 at MSAA 0 and 4 (max channel difference 1): location, radius cut-off, attenuation, intensity 0.4 / 2 / 3, color, ambientIntensity, on FALSE, a light behind the plane, global TRUE / FALSE, a light under a translated and scaled Transform."
   },
   {
    "id": "node:SpotLight",
@@ -2671,14 +2678,15 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-light-spot, vis-items-lights (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-light-spot, vis-items-lights (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-lights 0 pixels over 8 at MSAA 0 and 4; vis-light-spot 2 pixels over 8 (0.001%, bound 0.5%) at MSAA 0 and 4, max 131: two isolated pixels of the cell beamWidth 1.2 > cutOffAngle 0.5, both at the hard cone edge (angle 0.493 and 0.505 rad from the axis), where X_ITE draws gray and Rust white; a float rounding of the cut-off test, not a field difference. Covered: location, direction, radius, beamWidth below / above cutOffAngle, attenuation, intensity, color, ambientIntensity, on FALSE, global TRUE / FALSE, a light under a rotated Transform, mixed light types."
   },
   {
    "id": "node:Contour2D",
@@ -3784,14 +3792,15 @@
     "crates/x3d-scene/src/setup.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-coord, vis-rendering (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-coord, vis-rendering (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-coord 46 pixels over 8 at MSAA 0 (0.018%), 0 at MSAA 4; consumers IndexedLineSet, PointSet, TriangleSet, IndexedTriangleSet, IndexedFaceSet (textured, creaseAngle), IndexedQuadSet; HAnimSegment coord in vis-items-hanim-seg."
   },
   {
    "id": "node:IndexedLineSet",
@@ -3916,15 +3925,16 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-coord, vis-rendering (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: PointSet and IndexedLineSet now read their Normal node (pk-points, pk-lines normals)."
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-coord, vis-rendering (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: PointSet and IndexedLineSet now read their Normal node (pk-points, pk-lines normals). | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-coord 46 pixels over 8 at MSAA 0 (0.018%), 0 at MSAA 4: per-vertex and per-face normals on TriangleSet, IndexedTriangleSet, ElevationGrid, IndexedFaceSet with normalIndex, IndexedQuadSet."
   },
   {
    "id": "node:PointSet",
@@ -3940,15 +3950,16 @@
     "crates/x3d-runtime/src/nodes/rigid_body_physics/collidable.rs",
     "crates/x3d-viewer/src/picking.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-pointset, vis-items-coord, vis-rendering (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: Rust defect fixed: the Normal node was not read (PointSet.build: normalNode.addVectors); hit normals now match (pk-points). Points are picked like X_ITE (pk-points exact; PointProperties texCoord ulps in pk-points-style). The visual evidence item stays open."
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-pointset, vis-items-coord, vis-rendering (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: Rust defect fixed: the Normal node was not read (PointSet.build: normalNode.addVectors); hit normals now match (pk-points). Points are picked like X_ITE (pk-points exact; PointProperties texCoord ulps in pk-points-style). The visual evidence item stays open. | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-pointset 56 pixels over 8 at MSAA 0 (0.021%), 0 at MSAA 4: emissive, Color, ColorRGBA, lit Material, transparency, a scaled parent, LineProperties / FillProperties (ignored), empty coord and no coord, a texture (ignored)."
   },
   {
    "id": "node:Tangent",
@@ -4574,11 +4585,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-appearance, vis-items-alpha (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "alphaMode and alphaCutoff are not applied by the renderer: vis-items-alpha is a KNOWN_GAPS world (OPAQUE still blends the texture and material alpha; MASK neither cuts at alphaCutoff nor draws the kept pixels opaque)",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-appearance, vis-items-alpha (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-appearance 10 pixels over 8 at MSAA 0 (0.004%), 0 at MSAA 4: texture alone, with Material, with emissive, TextureTransform, LineProperties (applied, linetype, width), FillProperties (filled, hatched, hatchStyle, hatchColor). vis-items-alpha (alphaMode AUTO / OPAQUE / MASK + alphaCutoff / BLEND) fails: 59894 pixels over 8 at MSAA 0, so the entry stays PARTIAL."
   },
   {
    "id": "node:FillProperties",
@@ -4702,14 +4714,15 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-shape, vis-items-shape-bbox, vis-shape (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-shape, vis-items-shape-bbox, vis-shape (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-shape 2 pixels over 8 at MSAA 0 (0.001%), 0 at MSAA 4; vis-items-shape-bbox 0. Rust defect fixed: a non-default bboxSize is the shape's bbox in X3DShapeNode.set_bbox__, and addDisplayShape culls a shape whose box is outside the view volume and sorts by its center; the renderer drew it anyway (crates/x3d-render/src/traverse.rs shape, declared_bbox). Cells: no geometry, visible FALSE, bboxDisplay, no appearance, mirrored, empty Appearance, Switch, LOD, two shapes, transparency, emissive."
   },
   {
    "id": "node:TwoSidedMaterial",
@@ -4790,11 +4803,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-sound (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "audio output (playback, pitch, loop, timing) is not compared: there is no audio oracle",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-sound (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-sound 0 pixels over 8 at MSAA 0 and 4: an AudioClip source draws nothing and leaves its siblings unchanged."
   },
   {
    "id": "node:AudioDestination",
@@ -5097,11 +5111,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-sound (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "audio output (intensity, spatialize, ellipsoid attenuation, direction) is not compared: there is no audio oracle",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-sound (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-sound 0 pixels over 8 at MSAA 0 and 4: Sound draws nothing (with and without source, under a scaled Transform)."
   },
   {
    "id": "node:SpatialSound",
@@ -5323,14 +5338,15 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/texture_projector.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-textures, vis-items-appearance, vis-texturing (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-textures, vis-items-appearance, vis-texturing (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-textures 0 pixels over 8 at MSAA 0 and 4: Cylinder, Cone, ElevationGrid, Extrusion mapping, url fallback after a missing file, modulation with Material, an alpha texture with repeatS / repeatT FALSE."
   },
   {
    "id": "node:MovieTexture",
@@ -5352,11 +5368,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-movie (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "frames are not decoded: vis-items-movie is a KNOWN_GAPS world (animated GIF, APNG and WebM urls draw untextured white; x3d-shot: 'not rendered: MovieTexture')",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-movie (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-movie 78930 pixels over 8 at MSAA 0 (30.1%), 79936 at MSAA 4: stays PARTIAL."
   },
   {
    "id": "node:MultiTexture",
@@ -5436,14 +5453,15 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/texture_projector.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-textures, vis-items-pointset, vis-texturing (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
-   "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "missing": "",
+   "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-textures, vis-items-pointset, vis-texturing (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-textures 0 pixels over 8 at MSAA 0 and 4: RGB 2x2 on Box, Sphere, Cylinder, repeatS / repeatT FALSE outside 0..1, a 4x4 intensity image modulated by Material."
   },
   {
    "id": "node:RenderedTexture",

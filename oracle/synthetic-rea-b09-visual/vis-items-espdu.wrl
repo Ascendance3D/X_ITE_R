@@ -1,0 +1,35 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT DIS:1
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+EspduTransform {  children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+EspduTransform { translation 0.8 0.5 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+EspduTransform { rotation 0 0 1 0.8 scale 0.5 1.5 1 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+EspduTransform { center 0.5 0.5 0 rotation 0 0 1 0.8 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+EspduTransform { enabled FALSE children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+EspduTransform { linearVelocity 1 0 0 deadReckoning 1 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+EspduTransform {  children [ Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.9  } } geometry Box { size 0.6 0.6 0.6 } }
+Transform { translation 0.7 0.7 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.2  } } geometry Box { size 0.5 0.5 0.5 } } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+EspduTransform { visible FALSE children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Transform { scale 1.2 0.6 1 children EspduTransform { translation 0.3 0 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2  } } geometry Box { size 1 1 1 } } ] } }
+] }

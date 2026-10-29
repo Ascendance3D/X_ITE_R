@@ -1,0 +1,188 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "vis-items-alpha.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4d107155e78f373e984f1a357e04bc5a4e9a8b7e8ecab63ac28b4948d61d5274",
+   "pngSha256": "b96844901e6f34a4dc83b892dca0dcff5bb8741eb7ce06276b7e422ba583ba8e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-appearance.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cda54af59aa3050a9629d5696fb41fd8507435f33118ad0a50e3f66b1fb3c62f",
+   "pngSha256": "2682244f59608a9a7e21a934a8fc7b43feae02a2612178053a3b2cc1af8f5f26",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-coord.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "afad98c304a8dee6079130fe72376b30fb869505224d8571a3ecabc75c4bf1f4",
+   "pngSha256": "b96a7246b5900b062698ffdc40d0090b884542096cb2168a1d369191ba18db7a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-espdu.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e85528ef188aebb8533875d5f82910a4a9651b8bfc267da3a1fbef3fd4fa67aa",
+   "pngSha256": "8a775c9882c6a91a3fe67744457373fbb653670e9ae70dc19043889e0efce78d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-hanim-seg.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "111a8da8427deb44d3a14a5d27a5de35ed742af5d89490b0277a89261792cbfa",
+   "pngSha256": "d305a3f92412736a0429aed528c62a5f61b0aa0c17e7a910b294b8d168202fa4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-hanim.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "08f7cd45d2ec2bac30a55dabb828ea50bdc45b83533e4aa6d0ba32bca95b3770",
+   "pngSha256": "2800c1e2aa1ece8b020b964e9d5362fda366c6f81b293e4575395801882398e1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-lights.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "93bd2fe62b543447961ed0841cd125b48a8d22edd77eed6640c0be52368da351",
+   "pngSha256": "805c635985e616c7ec10d2583b424c906e28515b65614b5db448be5105dbde40",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-movie.wrl",
+   "ok": true,
+   "log": [
+    "error: Error: Couldn't load video 'http://oracle/synthetic-rea-b09-visual/missing.mpg': error.",
+    "warn: Error loading movie 'http://oracle/synthetic-rea-b09-visual/missing.mpg': Couldn't load video 'http://oracle/synthetic-rea-b09-visual/missing.mpg': error."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "aff5cdf66166f887f6c40604d9dab60459a8a628b7fc9d5b62ab0818b9cfeff2",
+   "pngSha256": "dd797da3f922bf4c2a69b3618b3b859934be91010bb3b1a98f190ce9d2d7da3e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-pointset.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3bcd8b0be3ee7b462f153f772fac996c9bc71eca7e196bcb23728844ed905546",
+   "pngSha256": "e5ef70d80201acf87e8e1cfb7ba0f404252239225f7004d67ae2a8b084f8dad2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-shape-bbox.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "eb520734e00d90ba0bdf160f569da0ec162e4b0785b7d295d3f69b1bfa5b5570",
+   "pngSha256": "048b49c74b2d6478cfb948b8cfbf2a813ee21e216cb7060c2a36ae2ad1843d95",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-shape.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "35ed20f362c5533a0ec58852b00d5e47510ac1593e21678b13600dc863dbe886",
+   "pngSha256": "2cec9081fbee4d73b5d6b0a1252c94535879435db60a91d5f1a2165e9ecf222c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-sound.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cd7eb7a11e86a5eb77860deec90b312a7043d6915ee773ec0368f0e109e22700",
+   "pngSha256": "b7615b2f5a7289b22c80b2e2bf69570821110c892a905e180707b1b37a73e227",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-items-textures.wrl",
+   "ok": true,
+   "log": [
+    "warn: ImageTexture: Couldn't load URL 'http://oracle/synthetic-rea-b09-visual/missing-1.png', trying URL 2 of 2. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "90b9a8e0b9a4f01ce04c98657bda6a678541990fc65e99d6db6f8976e0cbadb4",
+   "pngSha256": "02cc1f0c304391cba8cd7341032dea63fa02a9012837e648eee211848b3a7402",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ],
+ "recordings": 3,
+ "note": "vis-items-* worlds (issue #90) recorded 3x, identical RGBA (rgbaSha256) each; tools/gen_rea_b09_visual_items.py. hanim-seg, lights, sound and alpha added in the second session (also 3x identical); the existing vis-* references were re-recorded 3x to /tmp and reproduced byte-identically (not overwritten). vis-items-shape and vis-items-appearance were re-recorded (3x identical) after their Switch/LOD cells moved from choice/level to children and FillProperties lost the invalid applied field (PR #166 review), so no reference logs a parser warning."
+}
