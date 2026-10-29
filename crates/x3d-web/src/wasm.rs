@@ -865,6 +865,14 @@ impl WebBrowser {
             .map_err(|e| JsError::new(&e))
     }
 
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the world `id` (see [`Session::print_scene`]).
+    #[wasm_bindgen(js_name = printScene)]
+    pub fn print_scene(&self, id: u32, kind: &str) -> Result<String, JsError> {
+        self.session(id)?
+            .print_scene(kind)
+            .map_err(|e| JsError::new(&e))
+    }
+
     /// X3DField.fromVRMLString / fromXMLString (value, scene) (see [`Session::parse_field`]): the data of the value
     /// `text` reads as for a field of type `type_name` of the world `id`.
     #[wasm_bindgen(js_name = parseField)]

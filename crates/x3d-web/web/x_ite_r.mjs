@@ -764,6 +764,11 @@ class X3DScene
       return new Fields .MFNode (... Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => nodeObject (this .#handle, Number (n))));
    }
 
+   // X3DObject.toVRMLString, toXMLString, toJSONString of the scene (options are not supported, see API.md).
+   toVRMLString () { return this .#engine () ?.printScene (this .#handle .scene, "vrml") ?? ""; }
+   toXMLString ()  { return this .#engine () ?.printScene (this .#handle .scene, "xml") ?? ""; }
+   toJSONString () { return this .#engine () ?.printScene (this .#handle .scene, "json") ?? ""; }
+
    getNamedNode (name)
    {
       name = String (name);
