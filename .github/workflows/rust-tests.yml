@@ -1,4 +1,6 @@
-# Rust tests for pull requests, on a standard GitHub-hosted Linux runner (no GPU).
+# Rust tests for pull requests, on the self-hosted Linux runners of the xite-ci runner group (Proxmox VM, no GPU).
+# The VM provides Rust 1.95.0 and the system libraries; the toolchain and apt steps find them installed. The apt
+# steps wait for the dpkg lock, because two runners share the VM.
 #
 # The runner has no GPU, so the eight GPU tests are skipped here by name, and so is
 # rea_batch12_pick_cases_match_x_ite: its pk-* cases compare the GPU pointing buffer (pickProbes and
@@ -84,7 +86,9 @@ env:
 jobs:
   checks:
     name: Fast checks
-    runs-on: ubuntu-24.04
+    runs-on:
+      group: xite-ci
+      labels: [self-hosted, Linux, X64]
     timeout-minutes: 15
     outputs:
       rust: ${{ steps.changes.outputs.rust }}
@@ -136,19 +140,22 @@ jobs:
       - name: Formatting (cargo fmt)
         run: cargo fmt --all -- --check
 
-      # Workflow validation: actionlint, pinned by version and digest.
+      # Workflow validation: actionlint, pinned by version and digest. RUNNER_TEMP, not /tmp: the runners share the
+      # VM's /tmp, and two jobs must not write the same file.
       - name: Workflows (actionlint)
         run: |
-          curl -fsSL -o /tmp/actionlint.tar.gz \
+          curl -fsSL -o "$RUNNER_TEMP/actionlint.tar.gz" \
             https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
-          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  /tmp/actionlint.tar.gz" | sha256sum -c -
-          tar -xzf /tmp/actionlint.tar.gz -C /tmp actionlint
-          /tmp/actionlint -no-color
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -no-color
 
   test:
     needs: checks
     if: github.event_name != 'push' && needs.checks.outputs.rust == 'true'
-    runs-on: ubuntu-24.04
+    runs-on:
+      group: xite-ci
+      labels: [self-hosted, Linux, X64]
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@v7
@@ -161,8 +168,8 @@ jobs:
 
       - name: System libraries
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
+          sudo apt-get -o DPkg::Lock::Timeout=300 update
+          sudo apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
       # The shared key gives "Warm cache" the same cache; it is also the name the job-based key had.
       - uses: Swatinem/rust-cache@v2
@@ -232,7 +239,9 @@ jobs:
     name: Warm cache
     needs: checks
     if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
+    runs-on:
+      group: xite-ci
+      labels: [self-hosted, Linux, X64]
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
@@ -250,8 +259,8 @@ jobs:
       - name: System libraries
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
+          sudo apt-get -o DPkg::Lock::Timeout=300 update
+          sudo apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
       - name: Build the suite (no run)
         if: steps.cache.outputs.cache-hit != 'true'
@@ -263,7 +272,9 @@ jobs:
     name: Rust tests result
     needs: [checks, test]
     if: always() && github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on:
+      group: xite-ci
+      labels: [self-hosted, Linux, X64]
     timeout-minutes: 5
     steps:
       - name: Needed jobs passed

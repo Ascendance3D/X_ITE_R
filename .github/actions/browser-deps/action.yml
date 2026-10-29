@@ -14,13 +14,15 @@ runs:
 
     # The .deb files of Mesa and of Chromium's libraries, kept between runs: on 3 of 8 runners of PR #117 the Ubuntu
     # mirror sent 45 kB/s and this install took 15 to 17 minutes. apt checks each file against the package index and
-    # fetches it again when it differs.
+    # fetches it again when it differs. A self-hosted runner keeps its installed packages, so it needs no apt cache.
     - name: Runner image
       id: image
+      if: runner.environment == 'github-hosted'
       shell: bash
       run: printf "os=%s\nimage=%s-%s\n" "$ImageOS" "$ImageOS" "$ImageVersion" >> "$GITHUB_OUTPUT"
 
     - uses: actions/cache@v6
+      if: runner.environment == 'github-hosted'
       with:
         path: ~/apt-archives/*.deb
         key: apt-${{ steps.image.outputs.image }}-${{ hashFiles('crates/x3d-web/package-lock.json') }}
@@ -29,13 +31,22 @@ runs:
     - name: Chromium and Mesa Vulkan (lavapipe)
       shell: bash
       working-directory: crates/x3d-web
+      env:
+        RUNNER_ENVIRONMENT: ${{ runner.environment }}
       run: |
         # The runner's CPU: lavapipe renders on it, so the test durations depend on it.
         echo "$(nproc) CPUs: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2-)" | tee -a "$GITHUB_STEP_SUMMARY"
-        mkdir -p ~/apt-archives/partial
-        printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
-        npm ci --no-audit --no-fund
-        npx playwright install --with-deps chromium
-        sudo chmod -R a+r ~/apt-archives
+        if [ "$RUNNER_ENVIRONMENT" = github-hosted ]; then
+          mkdir -p ~/apt-archives/partial
+          printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          sudo chmod -R a+r ~/apt-archives
+        else
+          # The self-hosted VM has Mesa and Chromium's libraries installed. The runners share the VM, so this step
+          # changes no system file and installs no package; Playwright keeps one Chromium for all of them.
+          npm ci --no-audit --no-fund
+          npx playwright install chromium
+        fi
