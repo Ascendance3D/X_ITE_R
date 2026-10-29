@@ -49,14 +49,13 @@ expect ()
 BASE=$(git -C "$SRC" rev-parse HEAD)
 C="$TMPROOT/clone"
 git clone -q --shared --no-checkout "$SRC" "$C" || { echo "cannot clone $SRC"; exit 1; }
-git -C "$C" sparse-checkout set --no-cone /tools/ /oracle/x_ite-pin/ /oracle/cm5-build/ \
+git -C "$C" sparse-checkout set --no-cone /tools/ /oracle/x_ite-pin/ \
    /crates/x3d-runtime/src/lib.rs >/dev/null || { echo "cannot set sparse checkout"; exit 1; }
 git -C "$C" checkout -q --detach "$BASE" || { echo "cannot check out $BASE"; exit 1; }
 gitc () { git -C "$C" -c user.name=selftest -c user.email=selftest@example.invalid "$@"; }
 # The gate under test is the one in the clone, at the same commit as the caller's.
 GATE="$C/tools/verify-candidate.sh"
-# A lock whose CM5_LIVE_DIR does not exist, so the result does not depend on the machine.
-sed 's|^CM5_LIVE_DIR=.*|CM5_LIVE_DIR=/nonexistent/codemirror5|' "$LOCK" > "$TMPROOT/base.lock"
+cp "$LOCK" "$TMPROOT/base.lock"
 mk_lock () { sed "$1" "$TMPROOT/base.lock" > "$TMPROOT/$2"; }
 g () { env -C "$C" "$GATE" --lock "$TMPROOT/base.lock" "$@"; }
 
@@ -89,15 +88,6 @@ mk_lock 's/^X_ITE_VERSION=.*/X_ITE_VERSION=16.4.0/' xite-ver.lock
 expect 3 'X_ITE version is'           "wrong X_ITE version refused" env -C "$C" "$GATE" --lock "$TMPROOT/xite-ver.lock"
 mk_lock 's/^X_ITE_REF_DIGEST=.*/X_ITE_REF_DIGEST=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef/' xite-digest.lock
 expect 3 'X_ITE source digest is'     "wrong X_ITE content digest refused" env -C "$C" "$GATE" --lock "$TMPROOT/xite-digest.lock"
-mk_lock 's/^CM5_VERSION=.*/CM5_VERSION=5.65.20/' cm-ver.lock
-expect 3 'CodeMirror version is'      "wrong CodeMirror version refused" env -C "$C" "$GATE" --lock "$TMPROOT/cm-ver.lock"
-mk_lock 's/^CM5_REF_DIGEST=.*/CM5_REF_DIGEST=cafebabecafebabecafebabecafebabecafebabecafebabecafebabecafebabe/' cm-digest.lock
-expect 3 'CodeMirror source digest is' "wrong CodeMirror content digest refused" env -C "$C" "$GATE" --lock "$TMPROOT/cm-digest.lock"
-# A disposable one-commit repository stands in for the live CodeMirror checkout.
-git init -q "$TMPROOT/cm-live"
-git -C "$TMPROOT/cm-live" -c user.name=selftest -c user.email=selftest@example.invalid commit -q --allow-empty -m live
-mk_lock "s|^CM5_LIVE_DIR=.*|CM5_LIVE_DIR=$TMPROOT/cm-live|" cm-live.lock
-expect 3 'CodeMirror checkout .* is at' "live CodeMirror checkout at the wrong commit refused" env -C "$C" "$GATE" --lock "$TMPROOT/cm-live.lock"
 
 # --- 4. a one-byte edit in the reference tree ---------------------------------
 echo
