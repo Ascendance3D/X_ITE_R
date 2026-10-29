@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|routes01|viewpoints01|options01|attributes01|scenetext01|entry01|scripturl01]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|routes01|viewpoints01|options01|attributes01|scenetext01|entry01|scripturl01|scenecreate01]
  *
  * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
  * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
@@ -23,6 +23,7 @@
  * `--suite scenetext01` records the web scene text 01 cases (<out_dir>/scenetext01-baseline.json).
  *
  * `--suite entry01` records the entry point 01 cases (<out_dir>/entry01-baseline.json).
+ * `--suite scenecreate01` records the scene creation 01 cases (<out_dir>/scenecreate01-baseline.json).
  *
  * Writes <out_dir>/runtime02-baseline.json (the values of the first run, the Chrome version and the WebGL renderer)
  * and one PNG per picture. Every run must give identical values; the run fails otherwise. The pictures of each run
@@ -55,7 +56,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "routes01", "viewpoints01", "options01", "attributes01", "scenetext01", "entry01", "scripturl01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "routes01", "viewpoints01", "options01", "attributes01", "scenetext01", "entry01", "scripturl01", "scenecreate01" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
@@ -71,6 +72,11 @@ const HTML = `<!DOCTYPE html>
 <script src="../node_modules/libtess/libtess.cat.js"></script>
 <script src="../node_modules/@create3000/libgif/libgif.js"></script>
 <script src="../node_modules/apng-js/lib/index.js"></script>
+<!-- Texturing3D (DICOM) libraries, as upstream x_ite.html loads them: createScene loads every component of the Full profile. -->
+<script src="../node_modules/CharLS.js/dist/charLS-DynamicMemory-browser.js"></script>
+<script src="../node_modules/dicom-parser/dist/dicomParser.js"></script>
+<script src="../node_modules/jpeg-js/lib/decoder.js"></script>
+<script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
 <x3d-canvas splashScreen="false" contextMenu="false" notifications="false" timings="false" contentScale="1"
    style="display:block;width:400px;height:300px"></x3d-canvas>
 <input id="outside" style="display:block;width:100px">

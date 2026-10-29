@@ -33,6 +33,11 @@ pub trait Fetcher {
     fn poll(&self, _url: &url::Url) -> FetchPoll {
         FetchPoll::Loaded
     }
+
+    /// A FileLoader of its own requests `url` (the page's createVrmlFromURL, see `browser_load.rs`): an asynchronous fetcher
+    /// starts a request for it even when it holds a response or one is in flight; the response that comes replaces the one
+    /// it holds.
+    fn refresh(&self, _url: &url::Url) {}
 }
 
 /// The state of a URL at an asynchronous [`Fetcher`].
@@ -546,6 +551,16 @@ impl Runtime {
 
                 // `await fetch (...)`: the response of this candidate is not in yet. A data URL is not waited for,
                 // like in fetch_task_ready.
+                // The FileLoader of a page's createVrmlFromURL requests each candidate it reaches itself.
+                if let Some(FetchKey::Browser(id)) = wait.as_ref()
+                    && let Some(own) = self.page_browser_loads.get(id)
+                    && r.scheme() != "data"
+                    && i >= own.requested.get()
+                {
+                    own.requested.set(i + 1);
+                    self.fetcher.refresh(&r);
+                }
+
                 if wait.is_some()
                     && r.scheme() != "data"
                     && self.fetcher.poll(&r) == FetchPoll::Pending
@@ -780,7 +795,7 @@ impl Runtime {
             },
             Task::BrowserLoad(id) => match self.browser_loads.get(&id) {
                 Some(req) if !self.world_state.aborted.contains(&id) => (
-                    self.scene.world_url_of(req.parent).to_string(),
+                    self.browser_load_base(id, req.parent),
                     req.urls.clone(),
                     req.world.clone(),
                 ),
@@ -793,9 +808,18 @@ impl Runtime {
         };
 
         // A chain that waited goes on from the candidate it waits for: the candidates before it failed.
+        let mut offset = 0;
+
         if let Some(r) = FetchKey::of(task).and_then(|k| self.fetch_resume_of(&k, &urls)) {
             urls.drain(..r.index);
+            offset = r.index;
         }
+
+        // The FileLoader of a page's createVrmlFromURL requests each candidate it reaches itself.
+        let own = match *task {
+            Task::BrowserLoad(id) => self.page_browser_loads.get(&id),
+            _ => None,
+        };
 
         // load_document_from_opt's foreign rule: a `target` other than `_self` goes to another window unfetched.
         if let Some(parameters) = &world {
@@ -806,7 +830,7 @@ impl Runtime {
             }
         }
 
-        for candidate in &urls {
+        for (i, candidate) in urls.iter().enumerate() {
             if candidate.is_empty() || is_script_url(candidate) {
                 continue;
             }
@@ -814,6 +838,14 @@ impl Runtime {
             let Ok(r) = join_url(&base, candidate) else {
                 continue;
             };
+
+            if let Some(own) = own
+                && r.scheme() != "data"
+                && offset + i >= own.requested.get()
+            {
+                own.requested.set(offset + i + 1);
+                self.fetcher.refresh(&r);
+            }
 
             // `fetch (dataURL)` needs no request: a data URL that decodes is ready, and no later candidate is
             // requested; one that does not decode fails at once, like a failed response.

@@ -34,6 +34,16 @@ pub struct BrowserLoad {
     pub anchor: Option<NodeId>,
 }
 
+/// A createX3DFromURL / createVrmlFromURL request of the page that embeds the browser.
+#[derive(Debug)]
+pub struct PageBrowserLoad {
+    /// `browser .getBaseURL ()`: the candidates resolve against it.
+    pub base: String,
+    /// How many candidates (from the first) made their request: the FileLoader requests each candidate it reaches
+    /// itself ([`crate::loader::Fetcher::refresh`]), where the loads of a world share the response of a URL.
+    pub requested: std::cell::Cell<usize>,
+}
+
 /// A `createX3DFromString` request waiting for its microtask.
 #[derive(Clone, Debug)]
 pub struct BrowserString {
@@ -232,6 +242,41 @@ impl Runtime {
         id
     }
 
+    /// X3DBrowser.createX3DFromURL / createVrmlFromURL of the page that embeds the browser (an external browser): like
+    /// [`Runtime::browser_create_from_url`] without a Script, in the world's runtime, so the nodes of the scene are the
+    /// world's own. The FileLoader resolves the urls against `base` (the browser's base URL), and its messages name no
+    /// node type. The outcome goes to [`Runtime::take_page_browser_settled`] (X3DBrowser.js: `scene .setLive (true)`,
+    /// then the callback or the promise). `external` is true: the scene gets no execution context.
+    pub fn browser_create_from_page_url(&mut self, urls: Vec<String>, base: &str) -> u64 {
+        let parent = self.scene.world;
+
+        let id = self.browser_create_from_url(urls, parent, None);
+
+        self.page_browser_loads.insert(
+            id,
+            PageBrowserLoad {
+                base: base.to_string(),
+                requested: std::cell::Cell::new(0),
+            },
+        );
+        id
+    }
+
+    /// FileLoader.getBaseURL of a createX3DFromURL request: the browser's base URL for the page's (the X3DWorld's
+    /// FileLoader), else the base URL of the context it was made in.
+    pub(crate) fn browser_load_base(&self, id: u64, parent: CtxId) -> String {
+        match self.page_browser_loads.get(&id) {
+            Some(page) => page.base.clone(),
+            None => self.scene.world_url_of(parent).to_string(),
+        }
+    }
+
+    /// The page's requests that settled since the last call: (request id, root context of the scene or the message of
+    /// the rejection), in the order they settled.
+    pub fn take_page_browser_settled(&mut self) -> Vec<(u64, Result<CtxId, String>)> {
+        std::mem::take(&mut self.page_browser_settled)
+    }
+
     fn next_browser_request(&mut self) -> u64 {
         self.browser_request_id += 1;
         self.browser_request_id
@@ -250,7 +295,7 @@ impl Runtime {
         let type_name = req.script.map(|s| self.type_name(s)).unwrap_or_default();
         let loader = FileLoader {
             type_name,
-            base: self.scene.world_url_of(req.parent).to_string(),
+            base: self.browser_load_base(id, req.parent),
             data_as_string: true,
         };
         let base = loader.base.clone();
@@ -373,6 +418,11 @@ impl Runtime {
             world,
         });
 
+        // A scene of the page (an external browser) gets no execution context: its changes do not reach the world's.
+        if self.page_browser_loads.contains_key(&id) {
+            self.ctx_events.no_forward.insert(m.root_ctx);
+        }
+
         // `new X3DScene (browser)`: setLive (false); the Browser makes it live once it is delivered.
         self.inline_live.insert(m.root_ctx, false);
         self.attach_merged_scene(m, ctx_count, setup_order);
@@ -470,6 +520,12 @@ impl Runtime {
     }
 
     fn browser_settle(&mut self, id: u64, outcome: Result<CtxId, String>) {
+        // A request of the page: the page takes the outcome (it has no Script host).
+        if self.page_browser_loads.remove(&id).is_some() {
+            self.page_browser_settled.push((id, outcome));
+            return;
+        }
+
         let Some(mut host) = self.script_host.take() else {
             return;
         };

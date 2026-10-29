@@ -31,6 +31,7 @@ import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
 import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
+import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -71,6 +72,7 @@ const SUITES = {
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
+   scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -156,6 +158,15 @@ const KNOWN_DIFFERENCES = {
       [ [ "onDoc" ], [null, [["P", "translation_changed", "Q", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [null, [["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
       [ [ "oldNodes" ], null, "Error: X_ITE_R: the node belongs to a world that was replaced." ],
       [ [ "afterOld" ], [[["P", "translation_changed", "Q", "set_translation"], ["A", "translation_changed", "C", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [[["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
+   ],
+   "sceneCreate.supportedLists": [
+      // The Annotation component, which X_ITE 16.5.0 ships but does not register, is a supported component of X_ITE_R
+      // (REA batch 04 owner decision, crates/x3d-scene/src/nodes.rs): it comes last.
+      [ [ "components" ], ["ComponentInfoArray", true, "ComponentInfoArray", 39, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1"]], ["ComponentInfoArray", true, "ComponentInfoArray", 40, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1", "Annotation:2"]] ],
+   ],
+   "sceneCreate.importDocumentHTML": [
+      // X_ITE's HTMLParser reads an HTML element (the X3D element of a page); X_ITE_R takes XML (string, XMLDocument, element) only.
+      [ [ "result" ], { ctor: "X3DScene", isWorld: false, roots: ["Transform", "Shape"], worldURL: "PAGE" }, "Error: X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element." ],
    ],
    "fieldCascade.nested": [
       // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
@@ -550,6 +561,7 @@ const GROUP_FILES = {
    canvasAttributes: "attributes01.test.mjs",
    canvasAttributesScaled: "attributes01.test.mjs",
    entryPoints: "entry01.test.mjs",
+   sceneCreate: "scenecreate01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
