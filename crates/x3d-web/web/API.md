@@ -135,8 +135,6 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - `createScene`, `createX3DFromURL`, `createVrmlFromString`, `createVrmlFromURL`, `importDocument`, `importJS`.
 - `bindViewpoint`, `addRoute`, `deleteRoute`, `beginUpdate`, `endUpdate`, `getUserViewpoints` and the other X3DBrowserContext functions.
 - Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println`, `toVRMLString` and the other stream functions.
-- `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`.
-- `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
 - Sound: the engine's Web Audio port is built in but was not tested in a page.
 - MovieTexture frames are not decoded (the engine's `movie_load`): a GIF or PNG that downloads, or a `.webm`, `.ogv`, `.ogg`, `.mp4` or `.m4v` file that downloads, counts as loaded. X_ITE decodes the GIF or APNG and plays the video in a `<video>` element; a video that does not play fails there and the next candidate is tried. X_ITE_R tries the next candidate only after a video name it does not take as playable.
