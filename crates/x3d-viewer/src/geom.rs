@@ -382,7 +382,7 @@ impl Line3 {
         // Calculate U parameter and test bounds.
         let u = tvec.dot(&pvec) * inv_det;
 
-        if !(0.0..=1.0).contains(&u) {
+        if u < 0.0 || u > 1.0 {
             return false;
         }
 

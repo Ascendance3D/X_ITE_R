@@ -217,19 +217,19 @@ impl Triangle2 {
 
         let u = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / det;
 
-        if !(0.0..=1.0).contains(&u) {
+        if u < 0.0 || u > 1.0 {
             return false;
         }
 
         let v = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / det;
 
-        if !(0.0..=1.0).contains(&v) {
+        if v < 0.0 || v > 1.0 {
             return false;
         }
 
         let t = 1.0 - u - v;
 
-        !!(0.0..=1.0).contains(&t)
+        !(t < 0.0 || t > 1.0)
     }
 
     pub fn to_barycentric(point: &Vector2, a: &Vector2, b: &Vector2, c: &Vector2) -> Barycentric {
@@ -1046,8 +1046,8 @@ impl Bezier {
         let radii_check = transformed_point2.x / rx2 + transformed_point2.y / ry2;
 
         if radii_check > 1.0 {
-            rx *= jsmath::sqrt(radii_check);
-            ry *= jsmath::sqrt(radii_check);
+            rx = jsmath::sqrt(radii_check) * rx;
+            ry = jsmath::sqrt(radii_check) * ry;
         }
 
         let c_square_numerator =

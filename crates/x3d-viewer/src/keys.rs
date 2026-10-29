@@ -269,12 +269,11 @@ impl KeyTracker {
 
             let held = self.pressed.iter().any(|(p, ..)| p == physical);
 
-            if !held
-                && !repeat
-                && let Some(s) = shortcut(platform, without_mods, mods)
-            {
-                self.consumed.push(*physical);
-                return KeyAction::Shortcut(s);
+            if !held && !repeat {
+                if let Some(s) = shortcut(platform, without_mods, mods) {
+                    self.consumed.push(*physical);
+                    return KeyAction::Shortcut(s);
+                }
             }
 
             let (key, code) = dom_event(logical, physical);

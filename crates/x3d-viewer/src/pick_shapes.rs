@@ -84,7 +84,7 @@ fn value<'a>(rt: &'a Runtime, n: NodeId, name: &str) -> Option<&'a FieldValue> {
 
 fn num(rt: &Runtime, n: NodeId, name: &str, default: f64) -> f64 {
     match value(rt, n, name) {
-        Some(FieldValue::SFFloat(v)) => *v,
+        Some(FieldValue::SFFloat(v)) => *v as f64,
         Some(FieldValue::SFDouble(v)) => *v,
         Some(FieldValue::SFInt32(v)) => *v as f64,
         _ => default,

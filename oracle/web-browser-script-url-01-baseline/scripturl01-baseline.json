@@ -1,0 +1,478 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "scriptURLScript.none": {
+   "prefix": "",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.space": {
+   "prefix": "0020",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.tab": {
+   "prefix": "0009",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.feff": {
+   "prefix": "feff",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.nel": {
+   "prefix": "0085",
+   "requests": [
+    "ecmascript: function initialize () { which = 1; }"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "which": 2,
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Script: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLScript.nbsp": {
+   "prefix": "00a0",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.ls": {
+   "prefix": "2028",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.ideographicSpace": {
+   "prefix": "3000",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.emSpace": {
+   "prefix": "2003",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "which": 1,
+    "console": []
+   }
+  },
+  "scriptURLScript.zwsp": {
+   "prefix": "200b",
+   "requests": [
+    "​ecmascript: function initialize () { which = 1; }"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "which": 2,
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Script: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLScript.mongolianVowelSeparator": {
+   "prefix": "180e",
+   "requests": [
+    "᠎ecmascript: function initialize () { which = 1; }"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "which": 2,
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Script: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLWorld.none": {
+   "prefix": "",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.space": {
+   "prefix": "0020",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.tab": {
+   "prefix": "0009",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.feff": {
+   "prefix": "feff",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.nel": {
+   "prefix": "0085",
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "title": null,
+   "requests": [
+    "ecmascript:"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  "scriptURLWorld.nbsp": {
+   "prefix": "00a0",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.ls": {
+   "prefix": "2028",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.ideographicSpace": {
+   "prefix": "3000",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.emSpace": {
+   "prefix": "2003",
+   "result": "resolved",
+   "world": "page",
+   "title": "from script url",
+   "requests": [],
+   "console": []
+  },
+  "scriptURLWorld.zwsp": {
+   "prefix": "200b",
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "title": null,
+   "requests": [
+    "​ecmascript:"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  "scriptURLWorld.mongolianVowelSeparator": {
+   "prefix": "180e",
+   "result": "resolved",
+   "world": "fallback/parts/w.wrl",
+   "title": null,
+   "requests": [
+    "᠎ecmascript:"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  "scriptURLInline.none": {
+   "prefix": "",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.space": {
+   "prefix": "0020",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.tab": {
+   "prefix": "0009",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.feff": {
+   "prefix": "feff",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.nel": {
+   "prefix": "0085",
+   "requests": [
+    "ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "served": [
+     "/tests/browser/worlds/fallback/parts/w.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Inline: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLInline.nbsp": {
+   "prefix": "00a0",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.ls": {
+   "prefix": "2028",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.ideographicSpace": {
+   "prefix": "3000",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.emSpace": {
+   "prefix": "2003",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLInline.zwsp": {
+   "prefix": "200b",
+   "requests": [
+    "​ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "served": [
+     "/tests/browser/worlds/fallback/parts/w.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Inline: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLInline.mongolianVowelSeparator": {
+   "prefix": "180e",
+   "requests": [
+    "᠎ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "served": [
+     "/tests/browser/worlds/fallback/parts/w.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: Inline: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLExtern.none": {
+   "prefix": "",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.space": {
+   "prefix": "0020",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.tab": {
+   "prefix": "0009",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.feff": {
+   "prefix": "feff",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.nel": {
+   "prefix": "0085",
+   "requests": [
+    "ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "color": "0.9 0.5 0.1",
+    "served": [
+     "/tests/browser/worlds/protos.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: X3DExternProtoDeclaration: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLExtern.nbsp": {
+   "prefix": "00a0",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.ls": {
+   "prefix": "2028",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.ideographicSpace": {
+   "prefix": "3000",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.emSpace": {
+   "prefix": "2003",
+   "requests": [],
+   "detail": {
+    "loaded": "loaded",
+    "color": "1 0 0",
+    "served": [],
+    "console": []
+   }
+  },
+  "scriptURLExtern.zwsp": {
+   "prefix": "200b",
+   "requests": [
+    "​ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "color": "0.9 0.5 0.1",
+    "served": [
+     "/tests/browser/worlds/protos.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: X3DExternProtoDeclaration: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  },
+  "scriptURLExtern.mongolianVowelSeparator": {
+   "prefix": "180e",
+   "requests": [
+    "᠎ecmascript:"
+   ],
+   "detail": {
+    "loaded": "loaded",
+    "color": "0.9 0.5 0.1",
+    "served": [
+     "/tests/browser/worlds/protos.wrl"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "warning: X3DExternProtoDeclaration: Couldn't load URL '<script url>', trying URL 2 of 2. Error: Not Found"
+    ]
+   }
+  }
+ }
+}

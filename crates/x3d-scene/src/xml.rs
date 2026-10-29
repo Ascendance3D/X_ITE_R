@@ -89,9 +89,14 @@ pub fn encode_source_text(s: &str) -> String {
     out
 }
 
+/// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
+fn is_js_space(c: char) -> bool {
+    c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
+}
+
 /// A url that X_ITE takes as script source: `/^\s*(?:data|ecmascript|javascript|vrmlscript):/s`.
 pub(crate) fn is_source_url(s: &str) -> bool {
-    let t = s.trim_start_matches(x3d_fields::url::is_js_space);
+    let t = s.trim_start_matches(is_js_space);
 
     ["data:", "ecmascript:", "javascript:", "vrmlscript:"]
         .iter()
