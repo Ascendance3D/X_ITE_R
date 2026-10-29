@@ -876,8 +876,14 @@ class X3DBrowser
 
          // X3DBrowser.initialize: replaceWorld with an empty scene, which ends in "initialized load". A loadURL
          // then always replaces a world, so it starts with "shutdown".
-         this .#call (X3DConstants .INITIALIZED_EVENT);
-         this .#dispatch ("initialized load");
+         // A browser that is stopped from the start (update="false") never gets its frame: X_ITE fires nothing then, also
+         // not when it starts later.
+         if (this .#live)
+         {
+            this .#call (X3DConstants .INITIALIZED_EVENT);
+            this .#dispatch ("initialized load");
+         }
+
          return this;
       });
 
@@ -937,7 +943,94 @@ class X3DBrowser
 
    getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
 
-   setBrowserOption (name, value) { X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .setValue (value); }
+   setBrowserOption (name, value)
+   {
+      const field = X3DBrowser .#field (this .#options, name, "BrowserOptions", true);
+
+      field .setValue (value);
+
+      // BrowserOptions.addInterest: the options with an effect that is not read when it is needed. ContentScale and
+      // MaximumFrameRate are read by the frame loop; the rest is stored (API.md).
+      if (field === this .#options .get ("AutoUpdate"))
+         this .#setAutoUpdate ();
+   }
+
+   // --- update ------------------------------------------------------------------------------------------------
+
+   // X3DBrowser.beginUpdate, endUpdate and isLive: the browser processes frames while it is live. Private: only the
+   // `update` attribute and the AutoUpdate option drive them (API.md).
+   #live = true;
+   #wasLive;
+   #isIntersecting;
+   #checkUpdateListener = null;
+   #intersectionObserver = null;
+   #lastTime = 0;
+   #processed = 0;
+
+   #beginUpdate () { this .#live = true; }
+
+   #endUpdate ()
+   {
+      this .#releaseInput ();
+      this .#live = false;
+   }
+
+   // BrowserOptions.set_AutoUpdate__.
+   #setAutoUpdate ()
+   {
+      if (this .#checkUpdateListener)
+         document .removeEventListener ("visibilitychange", this .#checkUpdateListener);
+
+      this .#checkUpdateListener = null;
+      this .#intersectionObserver ?.disconnect ();
+      this .#intersectionObserver = null;
+
+      if (!this .#options .get ("AutoUpdate") .getValue () || this .#disposed)
+      {
+         this .#wasLive = undefined;
+         return;
+      }
+
+      this .#wasLive ??= this .#live;
+
+      this .#checkUpdateListener = () => this .#checkUpdate ();
+
+      document .addEventListener ("visibilitychange", this .#checkUpdateListener);
+
+      this .#intersectionObserver = new IntersectionObserver (entries =>
+      {
+         this .#isIntersecting = entries .some (entry => entry .isIntersecting);
+
+         this .#checkUpdate ();
+      });
+
+      this .#intersectionObserver .observe (this .#element);
+   }
+
+   // BrowserOptions.checkUpdate: a hidden or scrolled-out canvas stops, and starts again if it was live.
+   #checkUpdate ()
+   {
+      if (!this .#options .get ("AutoUpdate") .getValue ())
+         return;
+
+      if (this .#isIntersecting === undefined)
+         return;
+
+      if (!document .hidden && this .#isIntersecting)
+      {
+         if (this .#wasLive)
+            this .#beginUpdate ();
+
+         this .#wasLive = undefined;
+      }
+      else
+      {
+         // A second time here, the browser is not live any more: keep what the first time found.
+         this .#wasLive ??= this .#live;
+
+         this .#endUpdate ();
+      }
+   }
 
    getBrowserProperty (name) { return X3DBrowser .#field (this .#properties, name, "BrowserProperties") .getValue (); }
 
@@ -1701,16 +1794,14 @@ class X3DBrowser
 
    // --- frames --------------------------------------------------------------------------------------------------
 
-   // The contentScale attribute (X_ITE's ContentScale browser option): a number, or "auto" for the device pixel
-   // ratio. The default is 1.
+   // The ContentScale browser option (the contentScale attribute sets it): -1 is "auto", the device pixel ratio. Any other
+   // value is used as it is, like X3DRenderingContext.limitFramebufferSize: 0, a negative or a NaN value gives a 1 x 1
+   // framebuffer.
    #contentScale ()
    {
-      const value = this .#element .getAttribute ("contentScale");
+      const value = this .#options .get ("ContentScale") .getValue ();
 
-      if (value === "auto")
-         return devicePixelRatio;
-
-      return Math .max (Number (value ?? 1), 0) || 1;
+      return value === -1 ? devicePixelRatio : value;
    }
 
    // X3DRenderingContext.limitFramebufferSize: the CSS size times contentScale, within the device's limit.
@@ -1761,6 +1852,19 @@ class X3DBrowser
             return;
          }
 
+         // X3DBrowserContext.traverse: a stopped browser does nothing, and a frame sooner than 1 / MaximumFrameRate after the
+         // last one is skipped (X3DTimeContext.advanceTime).
+         if (!this .#live)
+            return;
+
+         const time = Date .now () / 1000;
+
+         if (time - this .#lastTime <= 1 / Math .max (this .#options .get ("MaximumFrameRate") .getValue (), 1))
+            return;
+
+         this .#lastTime = time;
+         ++ this .#processed;
+
          this .#flushTouches ();
 
          const [ width, height ] = this .#framebufferSize ();
@@ -1774,7 +1878,7 @@ class X3DBrowser
 
          try
          {
-            engine .frame (Date .now () / 1000, width, height);
+            engine .frame (time, width, height);
             this .#flushLog ();
             processFieldEvents (this, engine .current);
          }
@@ -1796,15 +1900,79 @@ class X3DBrowser
    }
 
    // X_ITE_R introspection for tests: whether a frame is scheduled and how many have run.
-   get [Symbol .for ("X_ITE_R.frameLoop")] () { return { running: this .#frame !== 0, frames: this .#frames }; }
+   get [Symbol .for ("X_ITE_R.frameLoop")] () { return { running: this .#frame !== 0, frames: this .#frames, processed: this .#processed, live: this .#live }; }
 
-   connectedCallback ()    { this .#start (); }
-   disconnectedCallback () { this .#stop (); this .#releaseInput (); }
+   connectedCallback ()    { this .#start (); this .#checkUpdate (); }
+   disconnectedCallback () { this .#stop (); this .#releaseInput (); this .#checkUpdate (); }
 
+   // X3DCoreContext.parseBooleanAttribute: only "true" and "false" are values; any other text is the default.
+   static #boolean (value)
+   {
+      if (value === "true")
+         return true;
+
+      if (value === "false")
+         return false;
+   }
+
+   // X3DCoreContext.attributeChangedCallback: an attribute sets its browser option. Removing the attribute (null) sets
+   // the default of the attribute, not the default of the option. The options themselves never write an attribute.
    attributeChangedCallback (name, oldValue, newValue)
    {
+      const boolean = X3DBrowser .#boolean (newValue);
+
       switch (name .toLowerCase ())
       {
+         case "antialiased":                  this .setBrowserOption ("Antialiased",                  boolean ?? true);  break;
+         case "cache":                        this .setBrowserOption ("Cache",                        boolean ?? true);  break;
+         case "colorspace":                   this .setBrowserOption ("ColorSpace",                   newValue || "LINEAR_WHEN_PHYSICAL_MATERIAL"); break;
+         case "contentscale":                 this .setBrowserOption ("ContentScale",                 newValue === "auto" ? -1 : newValue); break;
+         case "contextmenu":                  this .setBrowserOption ("ContextMenu",                  boolean ?? true);  break;
+         case "debug":                        this .setBrowserOption ("Debug",                        boolean ?? false); break;
+         case "displaycolorspace":            this .setBrowserOption ("DisplayColorSpace",            newValue || "SRGB"); break;
+         case "exposure":                     this .setBrowserOption ("Exposure",                     newValue); break;
+         case "logarithmicdepthbuffer":       this .setBrowserOption ("LogarithmicDepthBuffer",       boolean ?? false); break;
+         case "maximumframerate":             this .setBrowserOption ("MaximumFrameRate",             newValue); break;
+         case "multisampling":                this .setBrowserOption ("Multisampling",                newValue); break;
+         case "notifications":                this .setBrowserOption ("Notifications",                boolean ?? true);  break;
+         case "orderindependenttransparency": this .setBrowserOption ("OrderIndependentTransparency", boolean ?? false); break;
+         case "splashscreen":                 this .setBrowserOption ("SplashScreen",                 boolean ?? true);  break;
+         case "textcompression":              this .setBrowserOption ("TextCompression",              newValue || "CHAR_SPACING"); break;
+         case "timings":                      this .setBrowserOption ("Timings",                      boolean ?? false); break;
+         case "tonemapping":                  this .setBrowserOption ("ToneMapping",                  newValue || "NONE"); break;
+         case "xrsessionmode":                this .setBrowserOption ("XRSessionMode",                newValue || "IMMERSIVE_VR"); break;
+         case "oninitialized":
+         case "onshutdown":
+         {
+            try
+            {
+               this .#element [name] = new Function ("event", newValue);
+            }
+            catch (error)
+            {
+               console .error (error);
+            }
+
+            break;
+         }
+         case "update":
+         {
+            if (newValue === "auto")
+            {
+               this .setBrowserOption ("AutoUpdate", true);
+            }
+            else
+            {
+               this .setBrowserOption ("AutoUpdate", false);
+
+               if (boolean ?? true)
+                  this .#beginUpdate ();
+               else
+                  this .#endUpdate ();
+            }
+
+            break;
+         }
          case "src":
          {
             if (newValue)
@@ -1836,6 +2004,7 @@ class X3DBrowser
       this .#releaseInput ();
       this .#listeners .abort ();
       this .#stop ();
+      this .#setAutoUpdate ();
 
       if (this .#engine)
       {
@@ -1866,7 +2035,15 @@ class X3DCanvasElement extends HTMLElement
    connectedCallback ()    { this .browser .connectedCallback (); }
    disconnectedCallback () { this .browser .disconnectedCallback (); }
 
-   static get observedAttributes () { return [ "src", "url" ]; }
+   static get observedAttributes ()
+   {
+      const attributes = [ "antialiased", "baseURL", "cache", "colorSpace", "contentScale", "contextMenu", "debug", "displayColorSpace",
+         "exposure", "extensions", "logarithmicDepthBuffer", "maximumFrameRate", "multisampling", "notifications", "oninitialized",
+         "onshutdown", "orderIndependentTransparency", "splashScreen", "src", "textCompression", "timings", "toneMapping", "update",
+         "url", "xrSessionMode" ];
+
+      return attributes .concat (attributes .map (attribute => attribute .toLowerCase ()));
+   }
 
    attributeChangedCallback (name, oldValue, newValue)
    {
