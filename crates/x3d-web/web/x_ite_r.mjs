@@ -474,22 +474,28 @@ function syncScene (browser, scene)
 }
 
 // After a frame: the engine's changes, then the field callbacks of the events of the frame, in event order, each with
-// the value its event delivered. A callback that throws is reported, and the other callbacks run.
+// the value its event delivered. A callback that throws ends the delivery as X_ITE's event loop ends: the error is
+// uncaught (reported to the page, not to the console), the callbacks and events after it never run, and the engine
+// processes no event again.
 function processFieldEvents (browser, scene)
 {
    retireReleased (browser, scene);
 
    const table = nodeRefTables .get (browser) ?.get (scene);
 
+   // The events are taken even with no object to call: they would pile up in the engine.
+   const events = browser [_engine] .takeFieldEvents (scene);
+
    if (!table ?.refs .size)
       return;
-
-   const events = browser [_engine] .takeFieldEvents (scene);
 
    syncScene (browser, scene);
 
    for (let i = 0; i < events .length; i += 3)
    {
+      // A callback may have released nodes: their ids are not the nodes of the events any more.
+      retireReleased (browser, scene);
+
       const ref   = table .refs .get (events [i]);
       const entry = ref ?.[FIELDS] .get (events [i + 1]);
 
@@ -504,19 +510,28 @@ function processFieldEvents (browser, scene)
       // The callbacks see the value of their event; the field holds the current one again after them.
       setFieldData (entry .field, events [i + 2], ref [_node]);
 
-      for (const callback of Array .from (callbacks .values ()))
+      try
       {
-         try
+         // X_ITE walks the live Map it started with: a callback removed in place by an earlier one is skipped, and
+         // addFieldCallback copies the Map, so a callback added meanwhile waits for the next event.
+         for (const callback of callbacks .values ())
          {
-            callback (entry .field .valueOf ());
-         }
-         catch (error)
-         {
-            console .error (error);
+            try
+            {
+               callback (entry .field .valueOf ());
+            }
+            catch (error)
+            {
+               browser [_engine] .haltEvents (scene);
+               reportError (error);
+               return;
+            }
          }
       }
-
-      setFieldData (entry .field, entry .data, ref [_node]);
+      finally
+      {
+         setFieldData (entry .field, entry .data, ref [_node]);
+      }
    }
 }
 

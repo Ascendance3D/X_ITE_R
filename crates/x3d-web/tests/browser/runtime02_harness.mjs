@@ -73,12 +73,6 @@ const KNOWN_DIFFERENCES = {
       [ [ "final", 0 ], "2 0 0", "9 9 9" ],
       [ [ "seq", 5 ], "D|2 0 0|later|0", "D|9 9 9|later|1" ],
    ],
-   "fieldCascade.thrown": [
-      // After a callback throws, X_ITE 16.5.0 delivers no more events (the page's frame loop stops with the error, nothing
-      // is reported to the console here). X_ITE_R reports the error and goes on with the other callbacks and later events.
-      [ [ "seq" ], ["A|5 0 0|later|0", "B|5 0 0|later|0"], ["A|5 0 0|later|0", "B|5 0 0|later|0", "D|5 0 0|later|0", "C|5 0 0|later|0", "A|6 0 0|later|3", "B|6 0 0|later|3", "D|6 0 0|later|3", "C|6 0 0|later|3"] ],
-      [ [ "logs" ], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error", "error: Error: boom", "error: Error: boom"] ],
-   ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
       [ [ "touchCancelled", "LeftTouch.isActive" ], true, false ],

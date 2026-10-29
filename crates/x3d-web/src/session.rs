@@ -591,6 +591,11 @@ impl Session {
             .collect()
     }
 
+    /// A page field callback threw: stop the event processing for good (see [`Runtime::halt_events`]).
+    pub fn halt_events(&mut self) {
+        self.rt_mut().halt_events();
+    }
+
     /// The nodes the runtime released since the last call: their ids may name other nodes from now on, so the page
     /// drops its objects of them.
     pub fn take_released_nodes(&mut self) -> Vec<NodeId> {

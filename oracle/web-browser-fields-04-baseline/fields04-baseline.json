@@ -8,6 +8,7 @@
  "values": {
   "fieldCascade.chain": {
    "afterSetter": [],
+   "errors": [],
    "seq": [
     "A|1 0 0|later|0",
     "B|1 0 0|later|0",
@@ -23,6 +24,7 @@
     "2 0 0",
     "2 0 0"
    ],
+   "errors": [],
    "seq": [
     "A|2 0 0|later|0",
     "B|2 0 0|later|0",
@@ -36,6 +38,7 @@
    ]
   },
   "fieldCascade.selfRemove": {
+   "errors": [],
    "seq": [
     "A|3 0 0|later|0",
     "self|3 0 0|later|0",
@@ -54,6 +57,9 @@
    ]
   },
   "fieldCascade.thrown": {
+   "errors": [
+    "boom"
+   ],
    "seq": [
     "A|5 0 0|later|0",
     "B|5 0 0|later|0"
@@ -63,6 +69,7 @@
    ]
   },
   "fieldCascade.duplicate": {
+   "errors": [],
    "seq": [
     "A|7 0 0|later|0",
     "B|7 0 0|later|0",
@@ -74,7 +81,40 @@
     "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
    ]
   },
+  "fieldCascade.removeOther": {
+   "errors": [],
+   "seq": [
+    "A|10 0 0|later|0",
+    "kill|10 0 0|later|0",
+    "B|10 0 0|later|0",
+    "D|10 0 0|later|0",
+    "C|10 0 0|later|0"
+   ],
+   "logs": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "fieldCascade.registerSame": {
+   "errors": [],
+   "seq": [
+    "A|11 0 0|later|0",
+    "adder|11 0 0|later|0",
+    "B|11 0 0|later|0",
+    "D|11 0 0|later|0",
+    "C|11 0 0|later|0",
+    "A|12 0 0|later|3",
+    "adder|12 0 0|later|3",
+    "fresh|12 0 0|later|3",
+    "B|12 0 0|later|3",
+    "D|12 0 0|later|3",
+    "C|12 0 0|later|3"
+   ],
+   "logs": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
   "fieldCascade.removeBeforeEvent": {
+   "errors": [],
    "seq": [
     "A|8 0 0|later|0",
     "B|8 0 0|later|0",
