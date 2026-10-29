@@ -13,7 +13,7 @@ The keys are in one external evidence store, outside the repository: a private, 
 `<backups root>/X_ITE_R/<date>-evidence-store/` that holds every row of `answer-keys.tsv` as real files and
 directories, with `README.md` and `SHA256SUMS`. The maintainer sets the backups root. Point `X3D_ORACLE_KEYS` at
 the store. The main checkout does not hold the 8 render keys (its render-key paths are empty and untracked). It holds copies of the 4 JSON keys and the 12 private paths below as
-ignored files. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
+ignored files and directories. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
 checkout. Do not move a key back to a key path. To give a command an `oracle/<name>` path, link the key:
 `X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py link . <name>...`. A link is for reading only; remove
 it (`rm -- oracle/<name>`, no trailing slash) before a Git operation.
