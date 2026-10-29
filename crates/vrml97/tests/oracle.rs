@@ -9,6 +9,8 @@ fn run(baseline: &str, corpus: &str) -> Option<(usize, usize, usize, usize, Vec<
     // A gitignored key (oracle/answer-keys.tsv) is found and verified by x3d-evidence, or skipped by
     // name; a tracked one must exist.
     let path = x3d_evidence::key_or_tracked(baseline, &root.join(baseline))?;
+    // The corpus is tracked, or private (issue #168) and resolved like a key.
+    let dir = x3d_evidence::key_or_tracked(corpus, &root.join(corpus))?;
     let text = std::fs::read_to_string(path).unwrap();
     let json: serde_json::Value = serde_json::from_str(&text).unwrap();
     let (mut exact, mut differ, mut rejected_both, mut wrong_ok) = (0, 0, 0, 0);
@@ -16,7 +18,7 @@ fn run(baseline: &str, corpus: &str) -> Option<(usize, usize, usize, usize, Vec<
 
     for r in json["results"].as_array().unwrap() {
         let file = r["file"].as_str().unwrap();
-        let ours = vrml97::load_file(&root.join(corpus).join(file)).map(|s| s.to_vrml_string());
+        let ours = vrml97::load_file(&dir.join(file)).map(|s| s.to_vrml_string());
 
         match (r["ok"].as_bool().unwrap(), ours) {
             (true, Ok(text)) if text == r["vrml"].as_str().unwrap() => exact += 1,

@@ -22,6 +22,14 @@
 /oracle/items2-baseline.json
 /oracle/render-items2-baseline/
 /oracle/render-msaa4-items2-baseline/
+# Private corpora (issue #168): historical Mall items with no redistribution permission. Listed in
+# oracle/answer-keys.tsv and found by tools/answer_keys.py; never commit them.
+/oracle/corpus-items/
+/oracle/corpus-items2/
+/oracle/corpus-items-media/
+/oracle/corpus-items2-media/
+/oracle/render-items/
+/oracle/render-items2/
 # Python bytecode caches. Python writes these when it imports a tool; never commit them.
 __pycache__/
 *.py[cod]
