@@ -24,6 +24,7 @@ import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
+import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
@@ -55,6 +56,7 @@ const SUITES = {
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
+   routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
 };
@@ -85,6 +87,34 @@ const KNOWN_DIFFERENCES = {
       [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
       // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
       [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "routesApi.scenes": [
+      // X_ITE runs every scene it holds, so the events of a scene that is not the world go on; X_ITE_R steps only the world,
+      // and the routes of another scene carry nothing.
+      [ [ "events" ], [["C|7 0 0|0", "OB|8 0 0|0"], "7 0 0", "8 0 0"], [["C|7 0 0|0"], "7 0 0", "0 0 0"] ],
+   ],
+   "routesApi.crossScene": [
+      // X_ITE accepts nodes of two scenes in one route and carries events between them. A route of X_ITE_R belongs to one world
+      // (the engine runs one world at a time), so a node of another world is refused with the warning and the error of a node of
+      // another world (fields03), the same for getRoute, addRoute and deleteRoute of the scene API and the browser's addRoute.
+      [ [ "mixed" ], ["A", "translation_changed", "OB", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "afterMixed" ], [[["A", "translation_changed", "B", "set_translation"], ["A", "translation_changed", "OB", "set_translation"]], []], [[["A", "translation_changed", "B", "set_translation"]], []] ],
+      [ [ "reverse" ], ["OA", "translation_changed", "C", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "afterReverse" ], [[["A", "translation_changed", "B", "set_translation"], ["A", "translation_changed", "OB", "set_translation"]], [["OA", "translation_changed", "C", "set_translation"]]], [[["A", "translation_changed", "B", "set_translation"]], []] ],
+      [ [ "getMixed" ], ["A", "translation_changed", "OB", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "getPageIn" ], null, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "addPageIn" ], ["A", "translation_changed", "B", "set_translation"], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "sameRoute" ], true, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "deleteMixed" ], [[["A", "translation_changed", "B", "set_translation"]], [["OA", "translation_changed", "C", "set_translation"], ["A", "translation_changed", "B", "set_translation"]]], "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "browserMixed" ], null, "Error: X_ITE_R: a node can only be used in the world it belongs to." ],
+      [ [ "events" ], [["OB|7 0 0|0", "C|8 0 0|0"], "8 0 0", "7 0 0"], [[], "0 0 0", "0 0 0"] ],
+      [ [ "log" ], ["warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "routesApi.browser": [
+      // The nodes of a replaced world: X_ITE keeps them usable, and its replaced scene keeps its routes; X_ITE_R refuses both as stale (API.md).
+      [ [ "onDoc" ], [null, [["P", "translation_changed", "Q", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [null, [["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
+      [ [ "oldNodes" ], null, "Error: X_ITE_R: the node belongs to a world that was replaced." ],
+      [ [ "afterOld" ], [[["P", "translation_changed", "Q", "set_translation"], ["A", "translation_changed", "C", "set_translation"]], [["A", "translation_changed", "B", "set_translation"]]], [[["P", "translation_changed", "Q", "set_translation"]], "Error: X_ITE_R: the node belongs to a world that was replaced."] ],
    ],
    "fieldCascade.nested": [
       // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
@@ -436,6 +466,7 @@ const GROUP_FILES = {
    fieldText: "fields02.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
+   routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
 };
 

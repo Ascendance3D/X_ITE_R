@@ -6,7 +6,7 @@
 //! (`createX3DFromString`, a `loadURL` in progress) and wait for [`WebBrowser::replace`]. Each world has its own
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
-use crate::session::{Pointer, Session, Touch};
+use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::{Rc, Weak};
@@ -254,6 +254,20 @@ pub struct WebBrowser {
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
     live: bool,
+}
+
+/// A route as the array `routes` and its relatives give.
+fn route_js(r: &RouteInfo) -> js_sys::Array {
+    let a = js_sys::Array::new();
+
+    a.push(&(r.id as f64).into());
+    a.push(&r.source.into());
+    a.push(&r.source_field.as_str().into());
+    a.push(&r.destination.into());
+    a.push(&r.destination_field.as_str().into());
+    a.push(&r.raw_source_field.as_str().into());
+    a.push(&r.raw_destination_field.as_str().into());
+    a
 }
 
 /// `Err` when no world `id` exists.
@@ -719,6 +733,55 @@ impl WebBrowser {
                 .map(|n| n.map_or(-1, i64::from))
                 .collect()
         })
+    }
+
+    /// The routes of scene `id` in the order they were added, each as `[id, source, sourceField, destination,
+    /// destinationField, givenSourceField, givenDestinationField]` (see [`Session::routes`]).
+    #[wasm_bindgen(js_name = routes)]
+    pub fn routes(&self, id: u32) -> js_sys::Array {
+        self.worlds.get(&id).map_or_else(js_sys::Array::new, |w| {
+            w.session.routes().iter().map(route_js).collect()
+        })
+    }
+
+    /// X3DExecutionContext.getRoute: the route (see [`WebBrowser::routes`]) or `undefined`; an error where X_ITE throws.
+    #[wasm_bindgen(js_name = getRoute)]
+    pub fn get_route(
+        &self,
+        id: u32,
+        source: u32,
+        source_field: &str,
+        destination: u32,
+        destination_field: &str,
+    ) -> Result<JsValue, JsError> {
+        let session = &self.worlds.get(&id).ok_or_else(no_world)?.session;
+
+        Ok(session
+            .get_route(source, source_field, destination, destination_field)
+            .map_err(|e| JsError::new(&e))?
+            .map_or(JsValue::UNDEFINED, |r| route_js(&r).into()))
+    }
+
+    /// X3DExecutionContext.addRoute: the route that exists or the new one (see [`Session::add_route`]).
+    #[wasm_bindgen(js_name = addRoute)]
+    pub fn add_route(
+        &mut self,
+        id: u32,
+        source: u32,
+        source_field: &str,
+        destination: u32,
+        destination_field: &str,
+    ) -> Result<js_sys::Array, JsError> {
+        self.session_mut(id)?
+            .add_route(source, source_field, destination, destination_field)
+            .map(|r| route_js(&r))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DExecutionContext.deleteRoute (route) by the id of the route; whether the world had it.
+    #[wasm_bindgen(js_name = deleteRoute)]
+    pub fn delete_route(&mut self, id: u32, route: u32) -> Result<bool, JsError> {
+        Ok(self.session_mut(id)?.delete_route(route as usize))
     }
 
     #[wasm_bindgen(js_name = typeName)]
