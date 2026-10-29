@@ -338,7 +338,8 @@ const KNOWN_DIFFERENCES = {
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
-// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
+// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here. A case group can
+// give its own `timeout`.
 export const CASE_TIMEOUT = 180_000;
 
 // The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984) on the CPU: on CI's lavapipe, with
@@ -538,7 +539,7 @@ export function referenceCases (file)
          {
             const key = `${groupName}.${name}`;
 
-            test (key, { skip: ONLY && ONLY !== key, timeout: CASE_TIMEOUT }, async () =>
+            test (key, { skip: ONLY && ONLY !== key, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
                const page = await openPage (group .context);
 
