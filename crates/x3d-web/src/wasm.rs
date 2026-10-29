@@ -204,6 +204,19 @@ impl x3d_runtime::Fetcher for WebFetcher {
         );
         Err("TypeError: Failed to fetch".to_string())
     }
+
+    /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
+    /// Thus we do not need to `self.start(key)` for missing entries.
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str()).err();
+        }
+        let key = cache_key(url);
+        match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Failed(error)) => Some(error.clone()),
+            _ => None,
+        }
+    }
 }
 
 /// One world: the session and its fetches.
