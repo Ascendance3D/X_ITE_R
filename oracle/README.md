@@ -26,9 +26,10 @@ candidate in a staging directory, not a key.
 1. Make a new, empty staging directory outside every worktree and the store: `mkdir -- <staging>` (no `-p`).
 2. Check each output path: `X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py check-output <staging>/<name>`.
    It refuses (exit 4) the store, a key path `oracle/<name>` of any registered worktree (`git worktree list`; the
-   names of this manifest and of that worktree's one), the target of a link at a key path, and a directory that
-   holds every key (even one that is not a store), and any path below or above one of them. A separate clone is
-   not protected. It checks the path as given and
+   names of this manifest and of that worktree's one) and the target of a link at a key path, and any path below
+   or above one of them. It also refuses a path at or below a directory that holds every key (even one that is not
+   a store), but not a path above it: without `X3D_ORACLE_KEYS`, the parent of a store passes. Set the variable.
+   A separate clone is not protected. It checks the path as given and
    with every symlink resolved. `x_ite-shot.mjs`, `x_ite-shot-msaa.mjs`, `x_ite-dump.mjs` and `x_ite-text.mjs` run
    this check before they write, and write nothing when it fails. `x_ite-text.mjs` needs an output argument: its
    default, `oracle/x_ite-text.json`, is a key path.
