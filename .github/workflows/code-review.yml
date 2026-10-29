@@ -2,7 +2,7 @@ name: AI Code Review with MiniMax
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [labeled]
 
 permissions:
   pull-requests: write
@@ -13,9 +13,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+# On demand only (issue #180): CodeRabbit is the normal review. MiniMax reviews a PR when someone adds the label
+# needs-minimax-review, for example when CodeRabbit is rate-limited or skips the PR, or for a second review. To review
+# again after a push, remove the label and add it again. The Rust and Web test workflows do not run on "labeled".
 jobs:
   review:
     name: Review
+    if: github.event.label.name == 'needs-minimax-review'
     runs-on: ubuntu-latest
     steps:
       - name: Code Review
