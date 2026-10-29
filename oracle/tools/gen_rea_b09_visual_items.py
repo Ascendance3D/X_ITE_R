@@ -131,8 +131,8 @@ worlds["vis-items-shape.wrl"] = world([
     "Transform { scale -1 1 1 children Shape { appearance " + col("0.9 0.7 0.2") + " geometry Cone { bottomRadius 0.7 height 1.4 } } }",
     "Shape { appearance Appearance { } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0 0.9 0 ] } coordIndex [ 0 1 2 -1 ] } }",
     "Shape { appearance " + col("0.8 0.2 0.8") + " geometry Box { size 1.4 1.4 1.4 } bboxCenter 0 0 0 bboxSize 3 3 3 }",
-    "Switch { whichChoice 1 choice [ Shape { appearance " + col("1 0 0") + " geometry Sphere { radius 0.9 } } Shape { appearance " + col("0 1 0") + " geometry Sphere { radius 0.9 } } ] }",
-    "LOD { range [ 100 ] level [ Shape { appearance " + col("0.2 0.8 0.8") + " geometry Cylinder { radius 0.6 height 1.4 } } Shape { appearance " + col("1 0 0") + " geometry Sphere { radius 0.9 } } ] }",
+    "Switch { whichChoice 1 children [ Shape { appearance " + col("1 0 0") + " geometry Sphere { radius 0.9 } } Shape { appearance " + col("0 1 0") + " geometry Sphere { radius 0.9 } } ] }",
+    "LOD { range [ 100 ] children [ Shape { appearance " + col("0.2 0.8 0.8") + " geometry Cylinder { radius 0.6 height 1.4 } } Shape { appearance " + col("1 0 0") + " geometry Sphere { radius 0.9 } } ] }",
     "Shape { appearance " + col("0.7 0.7 0.2") + " geometry Sphere { radius 0.9 } }\nShape { appearance " + col("0.2 0.2 0.7") + " geometry Sphere { radius 0.9 } }",
     "Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.3 transparency 0.4 } } geometry Cone { bottomRadius 0.8 height 1.6 } }",
     "Shape { appearance Appearance { material Material { emissiveColor 0 0.6 0.9 } } geometry Cylinder { radius 0.7 height 1.4 top FALSE } }",
@@ -163,7 +163,7 @@ worlds["vis-items-appearance.wrl"] = world([
     shape(f"IndexedFaceSet {{ solid FALSE {TQ} }}", f"Appearance {{ material Material {{ diffuseColor 0.8 0.5 0.2 }} fillProperties {FP('filled FALSE')} }}"),
     shape(f"IndexedFaceSet {{ solid FALSE {TQ} }}", f"Appearance {{ material Material {{ diffuseColor 0.8 0.5 0.2 }} fillProperties {FP('hatched TRUE hatchStyle 3 hatchColor 0 0 1')} }}"),
     shape(f"IndexedFaceSet {{ solid FALSE {TQ} }}", f"Appearance {{ material Material {{ diffuseColor 0.8 0.5 0.2 }} fillProperties {FP('hatched TRUE filled FALSE hatchStyle 1 hatchColor 1 1 0')} }}"),
-    shape(f"IndexedFaceSet {{ solid FALSE {TQ} }}", f"Appearance {{ material Material {{ diffuseColor 0.8 0.5 0.2 }} fillProperties {FP('applied FALSE filled FALSE')} }}"),
+    shape(f"IndexedFaceSet {{ solid FALSE {TQ} }}", f"Appearance {{ material Material {{ diffuseColor 0.8 0.5 0.2 }} fillProperties {FP('filled FALSE hatched FALSE')} }}"),
 ], head="#X3D V4.0 utf8\nPROFILE Full\n")
 
 # --- Image and pixel textures on other geometry -----------------------------------------------------
