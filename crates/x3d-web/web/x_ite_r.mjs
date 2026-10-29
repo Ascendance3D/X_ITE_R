@@ -745,6 +745,155 @@ for (const key of [ "fromVRMLString", "fromXMLString" ])
 
 // --- scene and browser -------------------------------------------------------------------------------------------
 
+// --- routes ------------------------------------------------------------------------------------------------------
+//
+// X3DExecutionContext.routes, addRoute, deleteRoute and getRoute (Execution/X3DExecutionContext.js, Routing/X3DRoute.js,
+// Routing/RouteArray.js). The engine owns the routes; an X3DRoute object of the page stands for one of them, and the
+// scene gives the same object for the same route until the route is deleted.
+
+const routeScene = new WeakMap (); // X3DRoute → the X3DScene it belongs to
+
+const ROUTE_STREAM = "Source node does not exist in scene graph.";
+
+class X3DRoute
+{
+   // The engine's record `[id, source, sourceField, destination, destinationField, givenSourceField, givenDestinationField]`.
+   #data;
+   #deleted = false;
+
+   constructor (scene, data)
+   {
+      routeScene .set (this, scene);
+      this .#data = data;
+   }
+
+   update (data) { this .#data = data; }
+   retire ()     { this .#deleted = true; }
+
+   get id ()       { return this .#data [0]; }
+   get deleted ()  { return this .#deleted; }
+
+   getTypeName ()   { return "X3DRoute"; }
+   getId ()         { return this .#data [0]; }
+   getExecutionContext () { return routeScene .get (this); }
+
+   // A route that was deleted prints the field names it was given, like X3DRoute after disconnect ().
+   getSourceField ()      { return this .#deleted ? this .#data [5] : this .#data [2]; }
+   getDestinationField () { return this .#deleted ? this .#data [6] : this .#data [4]; }
+
+   getSourceNode ()      { return nodeObject (routeScene .get (this) [_node], this .#data [1]); }
+   getDestinationNode () { return nodeObject (routeScene .get (this) [_node], this .#data [3]); }
+
+   dispose () { routeScene .get (this) .deleteRoute (this); }
+
+   // A route alone is not in a scene graph that a generator knows: X_ITE's toStream refuses it.
+   toVRMLString ()  { throw new Error (ROUTE_STREAM); }
+   toXMLString ()   { throw new Error (ROUTE_STREAM); }
+   toJSONString ()  { throw new Error (ROUTE_STREAM); }
+}
+
+for (const key of [ "update", "retire", "id", "deleted", "getTypeName", "getId", "getExecutionContext", "getSourceNode", "getSourceField",
+                    "getDestinationNode", "getDestinationField", "dispose", "toVRMLString", "toXMLString", "toJSONString" ])
+   Object .defineProperty (X3DRoute .prototype, key, { enumerable: false });
+
+Object .defineProperties (X3DRoute .prototype,
+{
+   sourceNode:       { get: X3DRoute .prototype .getSourceNode,                                              enumerable: true },
+   sourceField:      { get: X3DRoute .prototype .getSourceField,                                             enumerable: true },
+   destinationNode:  { get: X3DRoute .prototype .getDestinationNode,                                         enumerable: true },
+   destinationField: { get: X3DRoute .prototype .getDestinationField,                                        enumerable: true },
+});
+
+Object .defineProperty (X3DRoute, "typeName", { value: "X3DRoute", enumerable: true });
+
+// X3DInfoArray of routes: read-only, live; the routes by index, and by the id of the route (has, get).
+const routeListOf = new WeakMap (); // RouteArray → function giving the current X3DRoute objects
+
+const routeArrayHandler =
+{
+   get (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return routeListOf .get (target) () [index];
+      }
+
+      return Reflect .get (target, key);
+   },
+   set (target, key, value)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return false;
+      }
+
+      return Reflect .set (target, key, value);
+   },
+   has (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return index < routeListOf .get (target) () .length;
+      }
+
+      return Reflect .has (target, key);
+   },
+   ownKeys (target)
+   {
+      return Object .keys (routeListOf .get (target) ()) .concat (Reflect .ownKeys (target));
+   },
+   getOwnPropertyDescriptor (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = +key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            const list = routeListOf .get (target) ();
+
+            if (index < list .length)
+               return { value: list [index], writable: false, enumerable: true, configurable: true };
+         }
+      }
+
+      return Reflect .getOwnPropertyDescriptor (target, key);
+   },
+};
+
+class RouteArray
+{
+   constructor (list)
+   {
+      const proxy = new Proxy (this, routeArrayHandler);
+
+      routeListOf .set (this, list);
+      routeListOf .set (proxy, list);
+
+      return proxy;
+   }
+
+   get length ()          { return routeListOf .get (this) () .length; }
+   getTypeName ()         { return "RouteArray"; }
+   has (id)               { return routeListOf .get (this) () .some (route => route .id === id); }
+   get (id)               { return routeListOf .get (this) () .find (route => route .id === id); }
+   *[Symbol .iterator] () { yield* routeListOf .get (this) (); }
+}
+
+for (const key of [ "getTypeName", "has", "get" ])
+   Object .defineProperty (RouteArray .prototype, key, { enumerable: false });
+
+Object .defineProperty (RouteArray, "typeName", { value: "RouteArray", enumerable: true });
+
 // The scene ids of the X3DScene objects the page dropped: a scene that is not the world is released with them.
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
 
@@ -777,6 +926,124 @@ class X3DScene
    {
       // A BigInt64Array of node ids, -1 for NULL.
       return new Fields .MFNode (... Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => nodeObject (this .#handle, Number (n))));
+   }
+
+   // --- routes (see "routes" above) ---
+
+   #routes = new Map (); // id → X3DRoute
+   #routeArray = null;
+
+   // The X3DRoute objects of the engine's routes now: one object per route, the deleted ones retired.
+   #routeList ()
+   {
+      const engine = this .#engine ();
+      const list   = [ ];
+      const seen   = new Set ();
+
+      for (const data of engine ?.routes (this .#handle .scene) ?? [ ])
+         list .push (this .#routeOf (data)), seen .add (data [0]);
+
+      for (const [ id, route ] of this .#routes)
+      {
+         if (!seen .has (id))
+         {
+            route .retire ();
+            this .#routes .delete (id);
+         }
+      }
+
+      return list;
+   }
+
+   // The X3DRoute object for the engine's record of a route.
+   #routeOf (data)
+   {
+      const id    = Number (data [0]);
+      const route = this .#routes .get (id) ?? new X3DRoute (this, data);
+
+      route .update (data);
+      this .#routes .set (id, route);
+      return route;
+   }
+
+   // X3DCast (X3DNode, node, false) of the arguments of a route function, and their ids in this scene: the message names the
+   // argument (`source node` of addRoute, `sourceNode` of getRoute).
+   #routeNodes (sourceNode, destinationNode, source, destination)
+   {
+      const nodes = [ [ sourceNode, source ], [ destinationNode, destination ] ];
+
+      for (const [ node, name ] of nodes)
+      {
+         if (!handleOf (node))
+            throw new Error (`Bad ROUTE specification: ${name} must be of type X3DNode.`);
+      }
+
+      return nodes .map (([ node ]) => nodeIdOf (node, this .#handle));
+   }
+
+   get routes ()
+   {
+      return this .#routeArray ??= new RouteArray (() => this .#routeList ());
+   }
+
+   getRoutes () { return this .routes; }
+
+   addRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      sourceField      = String (sourceField);
+      destinationField = String (destinationField);
+
+      const [ source, destination ] = this .#routeNodes (sourceNode, destinationNode, "source node", "destination node");
+
+      this .#routeList ();
+
+      try
+      {
+         return this .#routeOf (this .#engine () .addRoute (this .#handle .scene, source, sourceField, destination, destinationField));
+      }
+      catch (error)
+      {
+         throw engineError (error);
+      }
+   }
+
+   getRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      sourceField      = String (sourceField);
+      destinationField = String (destinationField);
+
+      const [ source, destination ] = this .#routeNodes (sourceNode, destinationNode, "sourceNode", "destinationNode");
+
+      this .#routeList ();
+
+      try
+      {
+         const data = this .#engine () .getRoute (this .#handle .scene, source, sourceField, destination, destinationField);
+
+         return data ? this .#routeOf (data) : undefined;
+      }
+      catch (error)
+      {
+         throw engineError (error);
+      }
+   }
+
+   deleteRoute (route)
+   {
+      // Case: sourceNode, sourceField, destinationNode, destinationField.
+      if (arguments .length === 4)
+         route = this .getRoute (... arguments);
+
+      if (!(route instanceof X3DRoute) || routeScene .get (route) !== this || route .deleted)
+         return;
+
+      this .#routeList ();
+
+      if (this .#engine () ?.deleteRoute (this .#handle .scene, route .id))
+      {
+         route .retire ();
+         this .#routes .delete (route .id);
+      }
    }
 
    getNamedNode (name)
@@ -852,6 +1119,7 @@ class X3DBrowser
       .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
    #frames = 0;
+   #live = true;
    #fileLoader = null;
    #reject = null;
    #replacing = null;
@@ -981,6 +1249,17 @@ class X3DBrowser
    get baseURL () { return document .baseURI; }
 
    get currentScene () { return this .#scene; }
+
+   // X3DBrowser.addRoute / deleteRoute: those of the current scene, without the route (X3DBrowser.js:880).
+   addRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      this .#scene .addRoute (sourceNode, sourceField, destinationNode, destinationField);
+   }
+
+   deleteRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      this .#scene .deleteRoute (sourceNode, sourceField, destinationNode, destinationField);
+   }
 
    getWorldURL () { return this .#scene .worldURL; }
 
@@ -1324,19 +1603,36 @@ class X3DBrowser
 
    // --- viewpoints ----------------------------------------------------------------------------------------------
 
-   // The layerNode argument of the viewpoint functions: X_ITE_R has the active layer only.
-   #activeLayer (layerNode)
+   // X3DCast (type, node) in the current world: the node id when `node` is an SFNode of this world whose node types include
+   // `type`, else undefined. X_ITE casts a node of any scene; a node of another world or a replaced one is no layer here.
+   #cast (type, node)
    {
-      if (layerNode !== undefined && layerNode !== null && handleOf (layerNode))
-         throw new Error ("X_ITE_R: the layerNode argument is not supported; use the active layer (omit it).");
+      const handle = handleOf (node);
+      const owner  = this .#scene ?.[_node];
+
+      if (!handle || !owner || handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation || handle .released)
+         return undefined;
+
+      const typeName = engineOf (handle) .typeName (handle .scene, handle .id);
+
+      return (NODE_TYPES [typeName] ?? [ ]) .includes (type) ? handle .id : undefined;
+   }
+
+   // A layer request: `layer:<node>:<request>` runs it on that layer; none, or a value that is no X3DLayerNode: the
+   // active layer, like `X3DCast (X3DConstants .X3DLayerNode, layerNode) ?? this .getActiveLayer ()`.
+   #layerRequest (layerNode, request)
+   {
+      const id = this .#cast ("X3DLayerNode", layerNode);
+
+      this .#engine ?.viewpointRequest (id === undefined ? request : `layer:${id}:${request}`);
    }
 
    // X3DBrowser.firstViewpoint, previousViewpoint, nextViewpoint, lastViewpoint ([layerNode]): the viewpoint
    // binds with the next frame's events.
-   firstViewpoint (layerNode)    { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("firstViewpoint"); }
-   previousViewpoint (layerNode) { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("previousViewpoint"); }
-   nextViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("nextViewpoint"); }
-   lastViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("lastViewpoint"); }
+   firstViewpoint (layerNode)    { this .#layerRequest (layerNode, "firstViewpoint"); }
+   previousViewpoint (layerNode) { this .#layerRequest (layerNode, "previousViewpoint"); }
+   nextViewpoint (layerNode)     { this .#layerRequest (layerNode, "nextViewpoint"); }
+   lastViewpoint (layerNode)     { this .#layerRequest (layerNode, "lastViewpoint"); }
 
    // X3DBrowser.changeViewpoint ([layerNode,] name).
    changeViewpoint (layerNode, name)
@@ -1347,8 +1643,23 @@ class X3DBrowser
          layerNode = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewpointRequest (`changeViewpoint:${String (name)}`);
+      this .#layerRequest (layerNode, `changeViewpoint:${String (name)}`);
+   }
+
+   // X3DBrowser.bindViewpoint (layerNode, viewpointNode): both must be of their type, the viewpoint binds with the next
+   // frame's events (its layer is the one that holds it; X_ITE only checks the type of layerNode).
+   bindViewpoint (layerNode, viewpointNode)
+   {
+      const layer = this .#cast ("X3DLayerNode", layerNode);
+      const vp    = this .#cast ("X3DViewpointNode", viewpointNode);
+
+      if (layer === undefined)
+         throw new Error ("Browser.bindViewpoint: layerNode must be of type X3DLayerNode.");
+
+      if (vp === undefined)
+         throw new Error ("Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.");
+
+      this .#engine ?.viewpointRequest (`bindViewpoint:${vp}`);
    }
 
    // X3DBrowser.viewAll ([layerNode,] [transitionTime = 1]).
@@ -1360,9 +1671,21 @@ class X3DBrowser
          layerNode      = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewAll (+transitionTime);
+      this .#engine ?.viewAll (+transitionTime, this .#cast ("X3DLayerNode", layerNode));
    }
+
+   // X3DBrowserContext.isLive, setLive, beginUpdate, endUpdate: the browser's live state. A browser that is not live
+   // pauses the TimeSensors and the like of its world; the page's own field assignments still send their events.
+   isLive () { return this .#live; }
+
+   setLive (value)
+   {
+      this .#live = !! value .valueOf ();
+      this .#engine ?.setLive (this .#live);
+   }
+
+   beginUpdate () { this .setLive (true); }
+   endUpdate ()   { this .setLive (false); }
 
    // X3DBrowser.activeViewpoint: the bound viewpoint of the active layer; null for its default viewpoint.
    get activeViewpoint ()
@@ -1903,6 +2226,8 @@ const X3D = Object .freeze ({
    FieldDefinitionArray,
    X3DField,
    X3DArrayField,
+   X3DRoute,
+   RouteArray,
    ... Fields,
 
    getBrowser (element)
