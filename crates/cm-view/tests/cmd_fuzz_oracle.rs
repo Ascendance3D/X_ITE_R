@@ -7,7 +7,8 @@
 //! on `cm_view::Editor` with `Metrics::oracle()` and compares every step.
 //!
 //! Baseline: `oracle/cm5-cmd-ops-baseline.json` (override with `CM_CMD_BASELINE`).
-//! Start documents from `oracle/corpus-items` are read by path (read-only).
+//! Start documents from `oracle/corpus-items` are read by path (read-only). Both are private
+//! (issue #168): x3d-evidence finds and verifies them, or the test skips by name.
 //! Known, explained differences: `tests/cmd-fuzz-known.tsv` (`seed<TAB>reason`).
 
 use std::path::PathBuf;
@@ -86,11 +87,28 @@ fn mode_spec(v: &Value) -> Spec {
 
 #[test]
 fn cmd_fuzz_oracle() {
-    let path = std::env::var("CM_CMD_BASELINE")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| root().join("oracle/cm5-cmd-ops-baseline.json"));
+    let path = match std::env::var("CM_CMD_BASELINE") {
+        Ok(p) => PathBuf::from(p),
+        Err(_) => match x3d_evidence::require_key("cm5-cmd-ops-baseline.json") {
+            Some(p) => p,
+            None => return,
+        },
+    };
     let data: Value =
         serde_json::from_str(&std::fs::read_to_string(&path).expect("baseline")).unwrap();
+    // Each corpus that holds start documents, resolved once.
+    let mut corpora = std::collections::HashMap::new();
+    for seq in data["sequences"].as_array().unwrap() {
+        if let Some((name, _)) = seq["init"]["path"].as_str().and_then(|r| r.split_once('/')) {
+            if !corpora.contains_key(name) {
+                let tracked = root().join("oracle").join(name);
+                let Some(dir) = x3d_evidence::key_or_tracked(name, &tracked) else {
+                    return;
+                };
+                corpora.insert(name.to_string(), dir);
+            }
+        }
+    }
     let known: Vec<i64> = std::fs::read_to_string(
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/cmd-fuzz-known.tsv"),
     )
@@ -113,7 +131,8 @@ fn cmd_fuzz_oracle() {
         let init = &seq["init"];
         let text = match init["path"].as_str() {
             Some(rel) => {
-                String::from_utf8(std::fs::read(root().join("oracle").join(rel)).unwrap()).unwrap()
+                let (name, rest) = rel.split_once('/').unwrap();
+                String::from_utf8(std::fs::read(corpora[name].join(rest)).unwrap()).unwrap()
             }
             None => init["text"].as_str().unwrap().to_string(),
         };
