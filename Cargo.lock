@@ -4192,6 +4192,7 @@ dependencies = [
  "flate2",
  "quick-xml",
  "serde_json",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-scene",
  "x3d-text",
@@ -4241,6 +4242,7 @@ name = "x3d-scene"
 version = "0.1.0"
 dependencies = [
  "serde_json",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
 ]

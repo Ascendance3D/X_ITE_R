@@ -81,6 +81,7 @@ ln -sfn "$LANE/x_ite-tests" "$BASE/x_ite-tests"
 # mismatched key is logged, and a stale link is removed; the steps that need it then fail and say so.
 for key in items-baseline.json items2-baseline.json x1-baseline.json render-items-baseline render-items2-baseline \
    corpus-items corpus-items2 corpus-items-media corpus-items2-media render-items render-items2 \
+   corpus-x0 corpus-x1 x0-baseline.json x0-xml-baseline.json render-x0-baseline render-msaa4-x0-baseline \
    render-msaa4-items2-baseline render-synthetic-x8-baseline x_ite-text.json; do
    if ! python3 -I -B "$W/tools/answer_keys.py" link "$W" "$key" >> "$LOGS/worktree.log" 2>&1; then
       if [ -L "$W/oracle/$key" ]; then rm -f -- "$W/oracle/$key"; fi

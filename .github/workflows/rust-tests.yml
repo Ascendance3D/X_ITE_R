@@ -54,8 +54,10 @@ env:
   X3D_EVIDENCE: ci
   # no-gpu-adapter and backend-absent: the runner has no GPU and no GL device. The two keys are gitignored
   # (oracle/answer-keys.tsv) and are not on the runner: x_ite-text.json (x3d-text oracle) and
-  # items-baseline.json (vrml97 items_parse_only).
-  X3D_EVIDENCE_ALLOW: no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json
+  # items-baseline.json (vrml97 items_parse_only). The private Cybertown archive outputs of issue #168 are not
+  # on the runner either: x0-baseline.json (x3d-parse, vrml97 and x3d-script x0 oracles) and x0-xml-baseline.json
+  # (x3d-scene and x3d-script XML/JSON x0 oracles).
+  X3D_EVIDENCE_ALLOW: no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
   X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
   CARGO_INCREMENTAL: "0"
   # The suite links about 170 release test binaries. lld links them in a fraction of the time and memory of the
