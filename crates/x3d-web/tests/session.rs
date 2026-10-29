@@ -762,3 +762,87 @@ fn createvrmlfromstring_makes_nodes_of_the_world() {
     );
     assert_eq!(s.root_nodes().len(), roots);
 }
+
+/// Serves one VRML file at `parts/p.wrl` next to the example world; every other URL fails.
+struct OneFile;
+
+impl x3d_runtime::Fetcher for OneFile {
+    fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        if url.as_str() == "http://example.test/example/parts/p.wrl" {
+            Ok(b"#VRML V2.0 utf8\nDEF P Transform { translation 1 2 3 }\nShape { }\n".to_vec())
+        } else {
+            Err("Error: Not Found".to_string())
+        }
+    }
+}
+
+#[test]
+fn createvrmlfromurl_loads_into_the_world_runtime() {
+    let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
+    let roots = s.root_nodes().len();
+
+    // The candidates resolve against the page's base URL; the first fails and is reported like FileLoader's.
+    let request = s.create_x3d_from_url(
+        vec!["missing.wrl".to_string(), "parts/p.wrl".to_string()],
+        "http://example.test/example/page.html",
+    );
+    let missing = s.create_x3d_from_url(
+        vec!["missing.wrl".to_string()],
+        "http://example.test/example/page.html",
+    );
+
+    assert!(
+        s.take_scene_requests().is_empty(),
+        "nothing settles before a frame"
+    );
+
+    let mut settled = vec![];
+
+    for i in 1..10 {
+        s.step(NOW + f64::from(i) * 0.1);
+        settled.extend(s.take_scene_requests());
+    }
+
+    assert_eq!(settled.len(), 2, "{settled:?}");
+
+    let (_, nodes) = settled.iter().find(|(id, _)| *id == request).unwrap();
+    let nodes = nodes.as_ref().expect("the second candidate loads");
+    let types: Vec<String> = nodes
+        .iter()
+        .map(|n| s.type_name(n.expect("no NULL root")).unwrap())
+        .collect();
+
+    // The nodes are the world's own (they can go into a field of it), but not its root nodes.
+    assert_eq!(types, ["Transform", "Shape"]);
+    assert_eq!(s.node_name(nodes[0].unwrap()).as_deref(), Some("P"));
+    assert_eq!(s.root_nodes().len(), roots);
+
+    let (_, failed) = settled.iter().find(|(id, _)| *id == missing).unwrap();
+
+    assert_eq!(failed.as_ref().unwrap_err(), "Couldn't load X3D file.");
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(
+            "Couldn't load URL 'http://example.test/example/missing.wrl', trying URL 2 of 2."
+        ),
+        "{log}"
+    );
+}
+
+#[test]
+fn the_world_has_the_profile_and_components_of_its_statements() {
+    let s = load(
+        b"#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Text:1\nCOMPONENT Shape:2\nGroup { }\n",
+    )
+    .unwrap();
+
+    assert_eq!(
+        s.profile_and_components(),
+        (
+            Some("Interchange".to_string()),
+            vec![("Text".to_string(), 1), ("Shape".to_string(), 2)]
+        )
+    );
+}

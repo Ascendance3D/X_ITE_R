@@ -3,7 +3,7 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser, parseFieldWithoutScene } from "./pkg/x3d_web.js";
+import init, { WebBrowser, parseFieldWithoutScene, configTable } from "./pkg/x3d_web.js";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -894,6 +894,300 @@ for (const key of [ "getTypeName", "has", "get" ])
 
 Object .defineProperty (RouteArray, "typeName", { value: "RouteArray", enumerable: true });
 
+// --- Configuration: ComponentInfo, ProfileInfo and their arrays ----------------------------------------------------------
+//
+// Configuration/ComponentInfo.js, ProfileInfo.js, ComponentInfoArray.js, ProfileInfoArray.js and Base/X3DInfoArray.js of
+// X_ITE. The supported components and profiles (SupportedComponents.js, SupportedProfiles.js) are the engine's table of the
+// pinned X_ITE (configTable), with X_ITE's aliases.
+
+const PROVIDER_URL = "https://create3000.github.io/x_ite/";
+
+// URLs.getProviderURL (component): the project's URL for a built-in component; an external one is a file next to the script.
+function providerURLOf (component)
+{
+   if (!component)
+      return PROVIDER_URL;
+
+   return new URL (`assets/components/${component}Component.js`, import .meta .url) .href;
+}
+
+class ComponentInfo
+{
+   constructor (name, level, title, providerURL, external = false, dependencies = [ ])
+   {
+      Object .defineProperties (this,
+      {
+         name: { value: name, enumerable: true },
+         level: { value: level, enumerable: true },
+         title: { value: title, enumerable: true },
+         providerURL: { value: providerURL || providerURLOf (external && name), enumerable: true },
+         external: { value: external },
+         dependencies: { value: dependencies },
+      });
+   }
+
+   getTypeName () { return "ComponentInfo"; }
+
+   get providerUrl () { return this .providerURL; } // legacy
+
+   get [Symbol .toStringTag] () { return this .getTypeName (); }
+
+   toVRMLString () { return `COMPONENT ${this .name} : ${this .level}`; }
+}
+
+class ProfileInfo
+{
+   constructor (name, title, providerURL, components)
+   {
+      Object .defineProperties (this,
+      {
+         name: { value: name, enumerable: true },
+         title: { value: title, enumerable: true },
+         providerURL: { value: providerURL || providerURLOf (), enumerable: true },
+         components: { value: components, enumerable: true },
+      });
+   }
+
+   getTypeName () { return "ProfileInfo"; }
+
+   get providerUrl () { return this .providerURL; } // legacy
+
+   get [Symbol .toStringTag] () { return this .getTypeName (); }
+
+   toVRMLString () { return `PROFILE ${this .name}`; }
+}
+
+// X3DInfoArray: a read-only, array-like list of values, with a name index (`get`, `has`; aliases are names too).
+const _infoArray = Symbol ("X_ITE_R.infoArray");
+const _infoIndex = Symbol ("X_ITE_R.infoIndex");
+const _infoType  = Symbol ("X_ITE_R.infoType");
+
+const isIndex = key => typeof key === "string" && Number .isInteger (+key) && +key >= 0;
+
+const infoArrayHandler =
+{
+   get (target, key)             { return isIndex (key) ? target [_infoArray] [+key] : Reflect .get (target, key); },
+   set (target, key, value)      { return isIndex (key) ? false : Reflect .set (target, key, value); },
+   has (target, key)             { return isIndex (key) ? +key < target [_infoArray] .length : Reflect .has (target, key); },
+   ownKeys (target)              { return Object .keys (target [_infoArray]) .concat (Reflect .ownKeys (target)); },
+   getOwnPropertyDescriptor (target, key)
+   {
+      if (isIndex (key))
+      {
+         const descriptor = +key < target [_infoArray] .length ? Reflect .getOwnPropertyDescriptor (target [_infoArray], key) : undefined;
+
+         if (descriptor)
+            descriptor .writable = false;
+
+         return descriptor;
+      }
+
+      return Reflect .getOwnPropertyDescriptor (target, key);
+   },
+};
+
+class X3DInfoArray
+{
+   constructor (values, valueType)
+   {
+      Object .defineProperty (this, _infoArray, { value: [ ], writable: true });
+      Object .defineProperty (this, _infoIndex, { value: new Map (), writable: true });
+      Object .defineProperty (this, _infoType, { value: valueType });
+
+      for (const value of values)
+         this .add (value .name, value);
+
+      return new Proxy (this, infoArrayHandler);
+   }
+
+   get length () { return this [_infoArray] .length; }
+
+   *[Symbol .iterator] () { yield* this [_infoArray]; }
+
+   copy ()
+   {
+      return new (this .constructor) (this [_infoArray]);
+   }
+
+   equals (array)
+   {
+      const a = this [_infoArray], b = array [_infoArray];
+
+      return a === b || (a .length === b .length && a .every ((value, i) => value === b [i]));
+   }
+
+   has (key) { return this [_infoIndex] .has (key); }
+   get (key) { return this [_infoIndex] .get (key); }
+
+   add (key, value)
+   {
+      if (this [_infoIndex] .has (key))
+         throw new Error (`Couldn't add value to ${this .getTypeName ()}, key '${key}' already exists.`);
+
+      if (!(value instanceof this [_infoType]))
+         throw new Error (`Couldn't add value to ${this .getTypeName ()}, value for key '${key}' has wrong type.`);
+
+      this [_infoArray] .push (value);
+      this [_infoIndex] .set (key, value);
+   }
+
+   alias (alias, value) { this [_infoIndex] .set (alias, value); }
+
+   // X3DInfoArray.update: the value of `oldKey` is replaced in place, or the value is added at the end.
+   update (oldKey, newKey, value)
+   {
+      if (!(value instanceof this [_infoType]))
+         throw new Error (`Couldn't update value of ${this .getTypeName ()}, value for key '${newKey}' has wrong type.`);
+
+      const oldValue = this [_infoIndex] .get (oldKey);
+
+      if (oldKey !== newKey)
+         this .remove (newKey);
+
+      this [_infoIndex] .delete (oldKey);
+      this [_infoIndex] .set (newKey, value);
+
+      const index = oldValue === undefined ? -1 : this [_infoArray] .indexOf (oldValue);
+
+      if (index > -1)
+         this [_infoArray] [index] = value;
+      else
+         this [_infoArray] .push (value);
+   }
+
+   remove (key)
+   {
+      const value = this [_infoIndex] .get (key);
+
+      if (value === undefined)
+         return;
+
+      const index = this [_infoArray] .indexOf (value);
+
+      this [_infoIndex] .delete (key);
+
+      if (index > -1)
+         this [_infoArray] .splice (index, 1);
+   }
+
+   filter (callbackFn, thisArg) { return new (this .constructor) (this [_infoArray] .filter (callbackFn, thisArg)); }
+   map (callbackFn, thisArg)    { return new (this .constructor) (this [_infoArray] .map (callbackFn, thisArg)); }
+   slice (start, end)           { return new (this .constructor) (this [_infoArray] .slice (start, end)); }
+
+   get [Symbol .toStringTag] () { return this .getTypeName (); }
+}
+
+// The non-destructive Array functions of X3DInfoArray.
+for (const name of [ "at", "entries", "every", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap", "forEach", "includes", "indexOf", "join", "keys", "lastIndexOf", "reduce", "reduceRight", "some", "values" ])
+   X3DInfoArray .prototype [name] = function (... args) { return Array .prototype [name] .apply (this [_infoArray], args); };
+
+// The values of a new array are new objects made from the descriptions (`add (name, { ... })`), as in X_ITE.
+class ComponentInfoArray extends X3DInfoArray
+{
+   constructor (values = [ ]) { return super (values, ComponentInfo); }
+
+   add (name, { level, title, providerURL, external = false, dependencies = [ ] })
+   {
+      super .add (name, new ComponentInfo (name, level, title, providerURL, external, dependencies));
+   }
+
+   getTypeName () { return "ComponentInfoArray"; }
+}
+
+class ProfileInfoArray extends X3DInfoArray
+{
+   constructor (values = [ ]) { return super (values, ProfileInfo); }
+
+   add (name, { title, providerURL, components })
+   {
+      super .add (name, new ProfileInfo (name, title, providerURL, new ComponentInfoArray (components)));
+   }
+
+   getTypeName () { return "ProfileInfoArray"; }
+}
+
+for (const type of [ ComponentInfo, ProfileInfo, X3DInfoArray, ComponentInfoArray, ProfileInfoArray ])
+{
+   for (const key of Object .getOwnPropertyNames (type .prototype))
+   {
+      if (key !== "constructor")
+         Object .defineProperty (type .prototype, key, { enumerable: false });
+   }
+}
+
+for (const type of [ ComponentInfo, ProfileInfo, ComponentInfoArray, ProfileInfoArray ])
+   Object .defineProperty (type, "typeName", { value: type .name, enumerable: true });
+
+// The browser's SupportedComponents and SupportedProfiles, made from the engine's table on first use (the engine must be loaded).
+let supportedConfig = null;
+
+function supported ()
+{
+   if (supportedConfig)
+      return supportedConfig;
+
+   if (!wasmReady)
+      throw new Error ("X_ITE_R: the engine is not loaded yet; wait for browser .ready ().");
+
+   const [ componentTable, profileTable ] = configTable ();
+   const components = new ComponentInfoArray ();
+
+   for (const [ name, title, level, external, dependencies ] of componentTable)
+      components .add (name, { title, level, external, dependencies: Array .from (dependencies) });
+
+   components .alias ("H-Anim", components .get ("HAnim"));
+   components .alias ("TextureProjector", components .get ("TextureProjection"));
+   components .alias ("ProjectiveTextureMapping", components .get ("TextureProjection"));
+
+   const profiles = new ProfileInfoArray ();
+
+   // SupportedProfiles.js getComponent (name, level): a ComponentInfo of the component at that level.
+   const component = (name, level) =>
+   {
+      const c = components .get (name);
+
+      return new ComponentInfo (c .name, level, c .title, c .providerURL, c .external, c .dependencies);
+   };
+
+   for (const [ name, title, list ] of profileTable)
+   {
+      const profileComponents = [ ];
+
+      for (let i = 0; i < list .length; i += 2)
+         profileComponents .push (component (list [i], list [i + 1]));
+
+      profiles .add (name, { title, components: profileComponents });
+   }
+
+   profiles .alias ("MPEG-4", profiles .get ("MPEG4Interactive"));
+
+   return supportedConfig = { components, profiles };
+}
+
+// X3DBrowser.getComponent (name, level): a new ComponentInfo, its level clamped to 1 ... the supported level.
+function getComponent (name, level)
+{
+   name   = String (name);
+   level |= 0;
+
+   const component = supported () .components .get (name);
+
+   if (component)
+   {
+      return new ComponentInfo (component .name,
+         Math .min (Math .max (level || component .level, 1), component .level),
+         component .title,
+         component .providerURL,
+         component .external,
+         component .dependencies);
+   }
+
+   throw new Error (`Component '${name}' at level '${level}' is not supported.`);
+}
+
+// The profile and components X3DBrowser.createScene gave a scene (X3DScene.setProfile, updateComponent), by X3DScene.
+const givenSceneInfo = new WeakMap ();
+
 // The scene ids of the X3DScene objects the page dropped: a scene that is not the world is released with them.
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
 
@@ -921,6 +1215,45 @@ class X3DScene
 
    get worldURL () { return this .#engine () ?.worldURL (this .#handle .scene) ?? this .#browser .baseURL; }
    getWorldURL () { return this .worldURL; }
+
+   // X3DScene.profile and components: those createScene gave, or those of the engine's scene (its PROFILE and COMPONENT
+   // statements). The profile is the browser's ProfileInfo of that name, the components a ComponentInfoArray made once.
+   #components = null;
+
+   get profile ()
+   {
+      const given = givenSceneInfo .get (this);
+
+      if (given)
+         return given .profile;
+
+      const name = this .#engine () ?.profileAndComponents (this .#handle .scene) [0] ?? null;
+
+      return name === null ? null : supported () .profiles .get (name) ?? null;
+   }
+
+   get components ()
+   {
+      const given = givenSceneInfo .get (this);
+
+      if (given)
+         return given .components;
+
+      if (this .#components)
+         return this .#components;
+
+      const list       = this .#engine () ?.profileAndComponents (this .#handle .scene) [1] ?? [ ];
+      const components = new ComponentInfoArray ();
+
+      // X3DParser: `scene .updateComponent (browser .getComponent (name, level))`.
+      for (let i = 0; i < list .length; i += 2)
+         components .update (list [i], list [i], getComponent (list [i], list [i + 1]));
+
+      return this .#components = components;
+   }
+
+   getProfile ()    { return this .profile; }
+   getComponents () { return this .components; }
 
    get rootNodes ()
    {
@@ -1087,6 +1420,9 @@ class X3DBrowser
    #frame = 0;
    #frames = 0;
    #fileLoader = null;
+
+   // The createVrmlFromURL requests in the world's runtime: request id → { field, handle of the node }.
+   #sceneRequests = new Map ();
    #reject = null;
    #replacing = null;
    // The X3DScene object of the page that the replaceWorld in progress makes the world: while the call waits for
@@ -1395,15 +1731,77 @@ class X3DBrowser
       return this .#sceneOf (id);
    }
 
-   // X3DBrowser.createScene ([profile, component, ...]): a Promise of a new, empty scene that is not the world. X_ITE_R
-   // has no ProfileInfo and ComponentInfo (getProfile, getComponent), so any argument is a profile that is none.
+   // X3DBrowser.createScene ([profile, component, ...]): a Promise of a new, empty scene that is not the world, with the
+   // ProfileInfo and the ComponentInfo objects as given (any argument takes the profile branch).
    async createScene (profile, ... components)
    {
-      if (arguments .length)
-         throw new Error ("Couldn't create scene: profile must be of type ProfileInfo.");
+      // `new X3DScene (this)`: no profile and no components until they are given.
+      const given = { profile: null, components: new ComponentInfoArray () };
 
-      return this .#emptyScene ();
+      if (arguments .length)
+      {
+         if (!(profile instanceof ProfileInfo))
+            throw new Error ("Couldn't create scene: profile must be of type ProfileInfo.");
+
+         given .profile = profile;
+
+         for (const component of components)
+         {
+            if (!(component instanceof ComponentInfo))
+               throw new Error ("Couldn't create scene: component must be of type ComponentInfo.");
+
+            // X3DScene.updateComponent.
+            given .components .update (component .name, component .name, component);
+         }
+      }
+
+      const scene = await this .#emptyScene ();
+
+      givenSceneInfo .set (scene, given);
+      return scene;
    }
+
+   // X3DBrowser.getProfile (name): the supported ProfileInfo (an alias is a name too).
+   getProfile (name)
+   {
+      const profile = supported () .profiles .get (String (name));
+
+      if (profile)
+         return profile;
+
+      throw new Error (`Profile '${name}' is not supported.`);
+   }
+
+   getSupportedProfile (name)
+   {
+      const profile = supported () .profiles .get (String (name));
+
+      if (profile)
+         return profile;
+
+      throw new Error (`Supported profile '${name}' does not exists.`);
+   }
+
+   getSupportedProfiles () { return supported () .profiles; }
+
+   get supportedProfiles () { return this .getSupportedProfiles (); }
+
+   // X3DBrowser.getComponent (name, level): a new ComponentInfo, at the supported level when `level` is 0 or none.
+   getComponent (name, level) { return getComponent (name, level); }
+
+   getSupportedComponent (name)
+   {
+      const component = supported () .components .get (String (name));
+
+      if (component)
+         return component;
+
+      throw new Error (`Supported component '${name}' does not exists.`);
+   }
+
+   getSupportedComponents () { return supported () .components; }
+
+   get supportedComponents () { return this .getSupportedComponents (); }
 
    // The empty scene of createScene and the imports that find no content: its world URL is the page's (`new X3DScene
    // (this)`: `location`).
@@ -1506,6 +1904,21 @@ class X3DBrowser
       if (field .getType () !== X3DConstants .MFNode)
          throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be of type MFNode.`);
 
+      const handle = ref [_node];
+      const engine = this .#engine;
+
+      // A node of the world: the scene loads in the world's own runtime (FileLoader for the X3DWorld), so its root nodes
+      // are the world's and go into the field once the scene is loaded and live (#sceneRequestsDone, after a frame).
+      if (engine && handle .scene === engine .current && engine .worldGeneration (handle .scene) === handle .generation)
+      {
+         const request = engine .createX3DFromURL (handle .scene, Array .from (url, String), this .baseURL);
+
+         this .#sceneRequests .set (request, { field, handle });
+         return;
+      }
+
+      // A node of a scene that is not the world (it has no frames to load in): the scene of the url is a scene of its
+      // own, whose nodes the field refuses (API.md).
       this .#loadScene (url) .then (scene =>
       {
          try
@@ -1518,6 +1931,46 @@ class X3DBrowser
          }
       },
       () => { });
+   }
+
+   // The createVrmlFromURL requests of the world that settled: `field .setValue (scene .rootNodes)` for each scene that
+   // loaded (X3DBrowser.js: after `scene .setLive (true)`); a scene that did not load changes nothing. The requests of a
+   // world that is gone are dropped.
+   #sceneRequestsDone ()
+   {
+      const engine = this .#engine;
+
+      if (!engine || !this .#sceneRequests .size)
+         return;
+
+      const world   = engine .current;
+      const settled = world === undefined ? [ ] : engine .takeSceneRequests (world);
+
+      for (let i = 0; i < settled .length; i += 2)
+      {
+         const request = this .#sceneRequests .get (settled [i]);
+         const nodes   = settled [i + 1];
+
+         this .#sceneRequests .delete (settled [i]);
+
+         if (!request || typeof nodes === "string")
+            continue;
+
+         try
+         {
+            request .field .setValue (new Fields .MFNode (... Array .from (nodes, n => nodeObject (request .handle, Number (n)))));
+         }
+         catch (error)
+         {
+            console .error (error .message);
+         }
+      }
+
+      for (const [ id, { handle } ] of this .#sceneRequests)
+      {
+         if (handle .scene !== world || engine .worldGeneration (handle .scene) !== handle .generation)
+            this .#sceneRequests .delete (id);
+      }
    }
 
    // FileLoader.createX3DFromURL (url, null, callback) for the X3DWorld, without a replaceWorld: the scene of the first
@@ -2203,6 +2656,7 @@ class X3DBrowser
             engine .frame (Date .now () / 1000, width, height);
             this .#flushLog ();
             processFieldEvents (this, engine .current);
+            this .#sceneRequestsDone ();
          }
          catch (error)
          {
@@ -2316,6 +2770,10 @@ const X3D = Object .freeze ({
    X3DArrayField,
    X3DRoute,
    RouteArray,
+   ComponentInfo,
+   ComponentInfoArray,
+   ProfileInfo,
+   ProfileInfoArray,
    ... Fields,
 
    getBrowser (element)

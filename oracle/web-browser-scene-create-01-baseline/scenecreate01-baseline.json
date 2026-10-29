@@ -1091,6 +1091,532 @@
     "isWorld": false
    },
    "logs": []
+  },
+  "sceneCreate.profileInfo": {
+   "profile": [
+    "ProfileInfo",
+    true,
+    "ProfileInfo",
+    "ProfileInfo",
+    "Interchange",
+    "Interchange",
+    "https://create3000.github.io/x_ite/",
+    "https://create3000.github.io/x_ite/"
+   ],
+   "keys": [
+    "name",
+    "title",
+    "providerURL",
+    "components"
+   ],
+   "same": [
+    true,
+    true,
+    "MPEG4Interactive"
+   ],
+   "components": [
+    "ComponentInfoArray",
+    true,
+    "ComponentInfoArray",
+    12,
+    [
+     "Core:1",
+     "EnvironmentalEffects:1",
+     "Geometry3D:2",
+     "Grouping:1",
+     "Interpolation:2",
+     "Lighting:1",
+     "Navigation:1",
+     "Networking:1",
+     "Rendering:3",
+     "Shape:1",
+     "Texturing:2",
+     "Time:1"
+    ]
+   ],
+   "access": [
+    "Core",
+    1,
+    true,
+    false,
+    true,
+    false,
+    "none"
+   ],
+   "readOnly": "Core",
+   "profiles": [
+    [
+     "Core",
+     "Core",
+     1
+    ],
+    [
+     "Interactive",
+     "Interactive",
+     16
+    ],
+    [
+     "Immersive",
+     "Immersive",
+     20
+    ],
+    [
+     "Full",
+     "Full",
+     37
+    ],
+    [
+     "MedicalInterchange",
+     "Medical interchange",
+     17
+    ],
+    [
+     "CADInterchange",
+     "Computer-Aided Design (CAD) interchange",
+     10
+    ],
+    [
+     "MPEG4Interactive",
+     "MPEG-4 interactive",
+     14
+    ],
+    "Error: Profile 'X3DCore' is not supported."
+   ],
+   "full": [
+    "CADGeometry:2",
+    "Core:2",
+    "CubeMapTexturing:3",
+    "DIS:2",
+    "EnvironmentalEffects:4",
+    "EnvironmentalSensor:3",
+    "EventUtilities:1",
+    "Followers:1",
+    "GaussianSplats:1",
+    "Geometry2D:2",
+    "Geometry3D:4",
+    "Geospatial:2",
+    "Grouping:3",
+    "HAnim:3",
+    "Interpolation:5",
+    "KeyDeviceSensor:2",
+    "Layering:1",
+    "Layout:2",
+    "Lighting:3",
+    "Navigation:3",
+    "Networking:4",
+    "NURBS:4",
+    "ParticleSystems:3",
+    "Picking:3",
+    "PointingDeviceSensor:1",
+    "Rendering:5",
+    "RigidBodyPhysics:2",
+    "Scripting:1",
+    "Shaders:1",
+    "Shape:4",
+    "Sound:3",
+    "Text:2",
+    "TextureProjection:2",
+    "Texturing:4",
+    "Texturing3D:2",
+    "Time:2",
+    "VolumeRendering:4"
+   ],
+   "errors": [
+    "Error: Profile 'Nope' is not supported.",
+    "Error: Profile 'undefined' is not supported.",
+    "Error: Profile 'null' is not supported."
+   ],
+   "text": [
+    "[object ProfileInfo]",
+    "PROFILE Interchange",
+    "COMPONENT Core : 1"
+   ],
+   "logs": []
+  },
+  "sceneCreate.componentInfo": {
+   "component": [
+    "ComponentInfo",
+    true,
+    "ComponentInfo",
+    "ComponentInfo",
+    "Text",
+    1,
+    "Text",
+    "ASSETS/components/TextComponent.js",
+    "ASSETS/components/TextComponent.js",
+    true,
+    []
+   ],
+   "keys": [
+    "name",
+    "level",
+    "title",
+    "providerURL"
+   ],
+   "fresh": false,
+   "levels": [
+    [
+     "Text",
+     2
+    ],
+    [
+     "Text",
+     2
+    ],
+    [
+     "Text",
+     1
+    ],
+    [
+     "Text",
+     2
+    ],
+    [
+     "Text",
+     1
+    ],
+    [
+     "Text",
+     1
+    ],
+    [
+     "Text",
+     1
+    ],
+    [
+     "Grouping",
+     3
+    ],
+    [
+     "Grouping",
+     2
+    ],
+    [
+     "HAnim",
+     3
+    ],
+    [
+     "TextureProjection",
+     1
+    ],
+    [
+     "TextureProjection",
+     2
+    ]
+   ],
+   "errors": [
+    "Error: Component 'Nope' at level '0' is not supported.",
+    "Error: Component 'Nope' at level '2' is not supported.",
+    "Error: Component 'undefined' at level '0' is not supported."
+   ],
+   "external": [
+    [
+     "Texturing3D",
+     2,
+     true,
+     []
+    ],
+    [
+     "NURBS",
+     4,
+     true,
+     []
+    ],
+    [
+     "Geospatial",
+     2,
+     true,
+     []
+    ],
+    [
+     "Core",
+     2,
+     false,
+     []
+    ],
+    [
+     "X_ITE",
+     1,
+     true,
+     []
+    ]
+   ],
+   "text": [
+    "[object ComponentInfo]",
+    "COMPONENT Text : 1"
+   ],
+   "logs": []
+  },
+  "sceneCreate.supportedLists": {
+   "profiles": [
+    "ProfileInfoArray",
+    true,
+    "ProfileInfoArray",
+    8,
+    [
+     "CADInterchange",
+     "Core",
+     "Full",
+     "Immersive",
+     "Interactive",
+     "Interchange",
+     "MedicalInterchange",
+     "MPEG4Interactive"
+    ],
+    8
+   ],
+   "components": [
+    "ComponentInfoArray",
+    true,
+    "ComponentInfoArray",
+    39,
+    [
+     "CADGeometry:2",
+     "Core:2",
+     "CubeMapTexturing:3",
+     "DIS:2",
+     "EnvironmentalEffects:4",
+     "EnvironmentalSensor:3",
+     "EventUtilities:1",
+     "Followers:1",
+     "GaussianSplats:1",
+     "Geometry2D:2",
+     "Geometry3D:4",
+     "Geospatial:2",
+     "Grouping:3",
+     "HAnim:3",
+     "Interpolation:5",
+     "KeyDeviceSensor:2",
+     "Layering:1",
+     "Layout:2",
+     "Lighting:3",
+     "Navigation:3",
+     "Networking:4",
+     "NURBS:4",
+     "ParticleSystems:3",
+     "Picking:3",
+     "PointingDeviceSensor:1",
+     "Shaders:1",
+     "TextureProjection:2",
+     "Rendering:5",
+     "RigidBodyPhysics:2",
+     "Scripting:1",
+     "Shape:4",
+     "Sound:3",
+     "Text:2",
+     "Texturing:4",
+     "Texturing3D:2",
+     "Time:2",
+     "VolumeRendering:4",
+     "WebXR:1",
+     "X_ITE:1"
+    ]
+   ],
+   "same": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "alias": [
+    "HAnim",
+    "MPEG4Interactive",
+    true,
+    true
+   ],
+   "supported": [
+    "Full",
+    "Error: Supported profile 'Nope' does not exists.",
+    2,
+    "Error: Supported component 'Nope' does not exists."
+   ],
+   "array": [
+    "Error: Couldn't add value to ProfileInfoArray, key 'undefined' already exists.",
+    [
+     "ProfileInfoArray",
+     2,
+     "CADInterchange",
+     false,
+     10
+    ],
+    [
+     "ComponentInfoArray",
+     [
+      "CADGeometry",
+      "Core"
+     ],
+     false
+    ],
+    2,
+    1,
+    [
+     "0",
+     "1",
+     "2"
+    ]
+   ],
+   "logs": []
+  },
+  "sceneCreate.createSceneInfo": {
+   "empty": [
+    null,
+    "ComponentInfoArray",
+    0,
+    null,
+    true
+   ],
+   "scene": [
+    "Interchange",
+    [
+     "Text:2",
+     "Shape:2"
+    ]
+   ],
+   "same": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "full": [
+    "Full",
+    []
+   ],
+   "replace": "resolved",
+   "world": [
+    true,
+    [
+     "Interchange",
+     [
+      "Text:2",
+      "Shape:2"
+     ]
+    ]
+   ],
+   "logs": []
+  },
+  "sceneCreate.sceneProfile": {
+   "world": [
+    "Interchange",
+    [
+     "Text:1",
+     "Shape:2"
+    ],
+    true
+   ],
+   "same": true,
+   "scenes": {
+    "x3d": [
+     "Immersive",
+     [
+      "Geospatial:1"
+     ],
+     true
+    ],
+    "noProfile": [
+     "Full",
+     [],
+     true
+    ],
+    "vrml": [
+     "Interchange",
+     [
+      "EnvironmentalSensor:3",
+      "PointingDeviceSensor:1",
+      "Scripting:1",
+      "Sound:3",
+      "Text:2"
+     ],
+     true
+    ],
+    "xml": [
+     "Interactive",
+     [
+      "Text:1"
+     ],
+     true
+    ],
+    "json": [
+     "Core",
+     [
+      "Grouping:1"
+     ],
+     true
+    ]
+   },
+   "url": [
+    "Interchange",
+    [
+     "EnvironmentalSensor:3",
+     "PointingDeviceSensor:1",
+     "Scripting:1",
+     "Sound:3",
+     "Text:2"
+    ],
+    true
+   ],
+   "logs": []
+  },
+  "sceneCreate.vrmlURLNodes": {
+   "extern": [
+    2,
+    [
+     "Viewpoint",
+     "ColorBox"
+    ],
+    [
+     "Camera",
+     "Instance"
+    ]
+   ],
+   "usable": "0 1 0",
+   "roots": true,
+   "fallback": [
+    6,
+    [
+     "One",
+     "Two",
+     "Hidden",
+     "Three",
+     "Camera",
+     ""
+    ]
+   ],
+   "fallbackLogs": [
+    "warn: Couldn't load URL 'http://test/status/404/n1.wrl', trying URL 2 of 2. Error: Not Found"
+   ],
+   "replaced": [
+    2,
+    [
+     "Transform",
+     "Shape"
+    ],
+    [
+     "X",
+     "Y"
+    ]
+   ],
+   "failed": [
+    2,
+    [
+     "warn: Couldn't load URL 'http://test/status/404/n2.wrl', trying URL 2 of 2. Error: Not Found",
+     "error: Couldn't load any of the 2 URLs, tried in this order:"
+    ]
+   ],
+   "logs": [
+    "warn: Couldn't load URL 'http://test/status/404/n2.wrl', trying URL 2 of 2. Error: Not Found",
+    "error: Couldn't load any of the 2 URLs, tried in this order:"
+   ],
+   "served": [
+    "/tests/browser/worlds/extern.wrl",
+    "/tests/browser/worlds/no-such-protos.wrl",
+    "/tests/browser/worlds/protos.wrl",
+    "/status/404/n1.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/status/404/n2.wrl",
+    "/status/404/n3.wrl"
+   ]
   }
  }
 }
