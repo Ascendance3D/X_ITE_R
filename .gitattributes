@@ -4,8 +4,6 @@
 
 # Pinned X_ITE 16.5.0 (git archive of create3000/x_ite @ 34cdf9f97): the read-only reference implementation.
 oracle/x_ite-pin/** linguist-vendored
-# CodeMirror 5.65.21 build (copy of upstream codemirror5): the reference for crates/cm-*.
-oracle/cm5-build/** linguist-vendored
 # Third-party Cybertown item corpora (worlds plus their authors' own QA scripts), used as test inputs.
 oracle/corpus-items/** linguist-vendored
 oracle/corpus-items2/** linguist-vendored

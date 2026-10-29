@@ -4,10 +4,10 @@
 # Runs in its own git worktree so it never touches the working tree agents and Ryan use:
 #   $BASE/scratch/rust-port   (worktree, detached at main)
 #   $BASE/x_ite-tests         (symlink; oracle scripts load playwright via ../../../x_ite-tests)
-# Gitignored inputs (big baselines, upstream/, built CM5) are symlinked from the main tree.
+# Gitignored inputs (big baselines, upstream/) are symlinked from the main tree.
 # Output: $MAIN/nightly/<UTC date>/{report.txt,logs/,bin/}; keeps the newest 14.
 # DRAFT — NOT INSTALLED. Owner decision (2026-10-11): nightlies do not run on a development
-# workstation. Once X_ITE and CodeMirror are ported 1:1, this moves to a dedicated nightly machine,
+# workstation. Once X_ITE is ported 1:1, this moves to a dedicated nightly machine,
 # together with the weekly upstream X_ITE catch-up. Set the three paths below for that machine.
 # Do not install a timer or cron job for it on a workstation.
 set -uo pipefail
@@ -91,11 +91,6 @@ while read -r rel; do
 done <<'EOF'
 upstream
 oracle/x_ite-pin/node_modules
-oracle/cm5-build/node_modules
-oracle/cm5-build/lib/codemirror.js
-oracle/cm5-build/addon/runmode/runmode.node.js
-oracle/cm5-build/addon/runmode/runmode-standalone.js
-oracle/cm5-build/keymap/vim.js
 EOF
 
 COMMIT=$(git -C "$W" rev-parse --short HEAD)
@@ -161,11 +156,8 @@ for c in basic reload order nested browser output exportimport; do
 done
 rm -rf "$V"
 
-step cm5-suite 900 node oracle/cm5-run.mjs
-expect cm5-suite "All passed"
-
 # Keep the binaries of this night.
-for b in x3d-view x3d-shot x3d-run x3d-drive x3d-parse cm-edit cm-render; do
+for b in x3d-view x3d-shot x3d-run x3d-drive x3d-parse; do
    [ -x "$R/$b" ] && cp "$R/$b" "$OUT/bin/"
 done
 
