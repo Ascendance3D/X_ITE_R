@@ -141,8 +141,8 @@ jobs:
       - name: Formatting (cargo fmt)
         run: cargo fmt --all -- --check
 
-      # Workflow validation: actionlint, pinned by version and digest. RUNNER_TEMP, not /tmp: the runners share the
-      # VM's /tmp, and two jobs must not write the same file.
+      # Workflow validation: actionlint, pinned by version and digest. RUNNER_TEMP, not /tmp: on a self-hosted runner
+      # /tmp survives between jobs, and the job-completed hook empties RUNNER_TEMP only.
       - name: Workflows (actionlint)
         run: |
           curl -fsSL -o "$RUNNER_TEMP/actionlint.tar.gz" \

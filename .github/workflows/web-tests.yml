@@ -68,7 +68,10 @@ jobs:
 
       - name: Test shards
         id: shards
-        run: echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
+        # The assignment fails the step when node fails; a failure inside echo "$(...)" would not.
+        run: |
+          shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)
+          echo "shards=$shards" >> "$GITHUB_OUTPUT"
 
   build:
     name: Browser module
