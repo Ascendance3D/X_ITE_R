@@ -6,15 +6,15 @@
 #   $BASE/x_ite-tests         (symlink; oracle scripts load playwright via ../../../x_ite-tests)
 # Gitignored inputs (big baselines, upstream/, built CM5) are symlinked from the main tree.
 # Output: $MAIN/nightly/<UTC date>/{report.txt,logs/,bin/}; keeps the newest 14.
-# DRAFT — NOT INSTALLED. Ryan (2026-10-11): nightlies must NOT run on this workstation.
-# Once X_ITE and CodeMirror are ported 1:1, this moves to a nightly VM on Ryan's Proxmox VE,
-# together with the weekly upstream X_ITE catch-up. Paths below are workstation paths and
-# must be adapted for the VM. Do not install a timer or cron job for it here.
+# DRAFT — NOT INSTALLED. Owner decision (2026-10-11): nightlies do not run on a development
+# workstation. Once X_ITE and CodeMirror are ported 1:1, this moves to a dedicated nightly machine,
+# together with the weekly upstream X_ITE catch-up. Set the three paths below for that machine.
+# Do not install a timer or cron job for it on a workstation.
 set -uo pipefail
 
-MAIN=/home/ryan/Projects/cybertown/X_ITE/scratch/rust-port
-LANE=/home/ryan/Projects/cybertown/X_ITE
-BASE=/home/ryan/Projects/cybertown/.worktrees/rust-port/nightly
+MAIN=${XITE_NIGHTLY_MAIN:?set XITE_NIGHTLY_MAIN to the main checkout}
+LANE=${XITE_NIGHTLY_LANE:?set XITE_NIGHTLY_LANE to the lane directory that holds x_ite-tests}
+BASE=${XITE_NIGHTLY_BASE:?set XITE_NIGHTLY_BASE to the nightly worktree base}
 W=$BASE/scratch/rust-port
 export CARGO_TARGET_DIR=$MAIN/target-nightly
 STAMP=$(date -u +%Y-%m-%d)
