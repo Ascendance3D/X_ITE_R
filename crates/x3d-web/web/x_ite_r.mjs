@@ -1790,6 +1790,7 @@ class X3DCanvasElement extends HTMLElement
 
    toDataURL (... args) { return this .browser .getCanvas () .toDataURL (... args); }
    toBlob (... args)    { return this .browser .getCanvas () .toBlob (... args); }
+   captureStream (... args) { return this .browser .getCanvas () .captureStream (... args); }
 
    get [Symbol .toStringTag] () { return "X3DCanvasElement"; }
 }
@@ -1797,13 +1798,64 @@ class X3DCanvasElement extends HTMLElement
 customElements .define ("x3d-canvas", X3DCanvasElement);
 
 // X3D: X_ITE's namespace object, for the parts listed in API.md.
-const X3D = Object .freeze ({
+let promise; // The return value of X3D (), as in X_ITE.
+
+// X3D (onfulfilled, onrejected): a promise that resolves when the document is loaded and every <x3d-canvas> has a browser.
+const X3D = Object .assign (function (onfulfilled, onrejected)
+{
+   promise ??= new Promise ((resolve, reject) =>
+   {
+      const ready = () =>
+      {
+         try
+         {
+            if (Array .from (document .querySelectorAll ("x3d-canvas")) .every (canvas => canvas .browser))
+               resolve ();
+            else
+               throw new Error ("Couldn't create browser.");
+         }
+         catch (error)
+         {
+            reject (error);
+         }
+      };
+
+      if (document .readyState === "complete")
+         ready ();
+      else
+         document .addEventListener ("DOMContentLoaded", ready, { once: true });
+   });
+
+   return promise .then (onfulfilled) .catch (onrejected);
+},
+{
    X3DConstants,
    X3DFieldDefinition,
    FieldDefinitionArray,
    X3DField,
    X3DArrayField,
    ... Fields,
+},
+{
+   noConflict: (() =>
+   {
+      const
+         _had = "X3D" in window,
+         _X3D = window .X3D;
+
+      return function ()
+      {
+         if (window .X3D === X3D)
+         {
+            if (_had)
+               window .X3D = _X3D;
+            else
+               delete window .X3D;
+         }
+
+         return X3D;
+      };
+   })(),
 
    getBrowser (element)
    {
@@ -1815,6 +1867,16 @@ const X3D = Object .freeze ({
 
       return Array .from (document .querySelectorAll (String (element)))
          .find (element => element .nodeName .match (/^(?:x3d-canvas|X3DCanvas)$/i)) ?.browser;
+   },
+
+   createBrowser (... args)
+   {
+      const element = document .createElement ("x3d-canvas");
+
+      if (args .length)
+         element .browser .loadURL (... args);
+
+      return element;
    },
 });
 
