@@ -6,7 +6,7 @@
 //! (`createX3DFromString`, a `loadURL` in progress) and wait for [`WebBrowser::replace`]. Each world has its own
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
-use crate::session::{Pointer, Session, Touch};
+use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::{Rc, Weak};
@@ -204,6 +204,19 @@ impl x3d_runtime::Fetcher for WebFetcher {
         );
         Err("TypeError: Failed to fetch".to_string())
     }
+
+    /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
+    /// Thus we do not need to `self.start(key)` for missing entries.
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str()).err();
+        }
+        let key = cache_key(url);
+        match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Failed(error)) => Some(error.clone()),
+            _ => None,
+        }
+    }
 }
 
 /// One world: the session and its fetches.
@@ -239,6 +252,22 @@ pub struct WebBrowser {
     loads: HashMap<u32, PageLoad>,
     current: Option<u32>,
     next_id: u32,
+    /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
+    live: bool,
+}
+
+/// A route as the array `routes` and its relatives give.
+fn route_js(r: &RouteInfo) -> js_sys::Array {
+    let a = js_sys::Array::new();
+
+    a.push(&(r.id as f64).into());
+    a.push(&r.source.into());
+    a.push(&r.source_field.as_str().into());
+    a.push(&r.destination.into());
+    a.push(&r.destination_field.as_str().into());
+    a.push(&r.raw_source_field.as_str().into());
+    a.push(&r.raw_destination_field.as_str().into());
+    a
 }
 
 /// `Err` when no world `id` exists.
@@ -363,6 +392,7 @@ impl WebBrowser {
             loads: HashMap::new(),
             current: None,
             next_id: 1,
+            live: true,
         })
     }
 
@@ -604,6 +634,7 @@ impl WebBrowser {
         let w = self.worlds.get_mut(&id).ok_or_else(no_world)?;
 
         w.session.resize(self.config.width, self.config.height);
+        w.session.set_live(self.live);
         w.session.go_live(now);
 
         if let Some(v) = w.session.viewer() {
@@ -704,6 +735,55 @@ impl WebBrowser {
         })
     }
 
+    /// The routes of scene `id` in the order they were added, each as `[id, source, sourceField, destination,
+    /// destinationField, givenSourceField, givenDestinationField]` (see [`Session::routes`]).
+    #[wasm_bindgen(js_name = routes)]
+    pub fn routes(&self, id: u32) -> js_sys::Array {
+        self.worlds.get(&id).map_or_else(js_sys::Array::new, |w| {
+            w.session.routes().iter().map(route_js).collect()
+        })
+    }
+
+    /// X3DExecutionContext.getRoute: the route (see [`WebBrowser::routes`]) or `undefined`; an error where X_ITE throws.
+    #[wasm_bindgen(js_name = getRoute)]
+    pub fn get_route(
+        &self,
+        id: u32,
+        source: u32,
+        source_field: &str,
+        destination: u32,
+        destination_field: &str,
+    ) -> Result<JsValue, JsError> {
+        let session = &self.worlds.get(&id).ok_or_else(no_world)?.session;
+
+        Ok(session
+            .get_route(source, source_field, destination, destination_field)
+            .map_err(|e| JsError::new(&e))?
+            .map_or(JsValue::UNDEFINED, |r| route_js(&r).into()))
+    }
+
+    /// X3DExecutionContext.addRoute: the route that exists or the new one (see [`Session::add_route`]).
+    #[wasm_bindgen(js_name = addRoute)]
+    pub fn add_route(
+        &mut self,
+        id: u32,
+        source: u32,
+        source_field: &str,
+        destination: u32,
+        destination_field: &str,
+    ) -> Result<js_sys::Array, JsError> {
+        self.session_mut(id)?
+            .add_route(source, source_field, destination, destination_field)
+            .map(|r| route_js(&r))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DExecutionContext.deleteRoute (route) by the id of the route; whether the world had it.
+    #[wasm_bindgen(js_name = deleteRoute)]
+    pub fn delete_route(&mut self, id: u32, route: u32) -> Result<bool, JsError> {
+        Ok(self.session_mut(id)?.delete_route(route as usize))
+    }
+
     #[wasm_bindgen(js_name = typeName)]
     pub fn type_name(&self, id: u32, node: u32) -> Option<String> {
         self.worlds.get(&id)?.session.type_name(node)
@@ -796,6 +876,13 @@ impl WebBrowser {
             .map_err(|e| JsError::new(&e))
     }
 
+    /// A page field callback threw: X_ITE processes no event again (see `Runtime::halt_events`).
+    #[wasm_bindgen(js_name = haltEvents)]
+    pub fn halt_events(&mut self, id: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.halt_events();
+        Ok(())
+    }
+
     /// The events of the observed fields, as node, name, data, ... in event order (see
     /// [`Session::take_field_events`]).
     #[wasm_bindgen(js_name = takeFieldEvents)]
@@ -863,6 +950,26 @@ impl WebBrowser {
         self.session(id)?
             .print_nodes(kind, ty, &js_data(&data))
             .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the world `id` (see [`Session::print_scene`]).
+    #[wasm_bindgen(js_name = printScene)]
+    pub fn print_scene(&self, id: u32, kind: &str) -> Result<String, JsError> {
+        self.session(id)?
+            .print_scene(kind)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DBrowser.replaceWorld (null): the empty world, a scene no source set up (see [`Session::empty_world`]).
+    #[wasm_bindgen(js_name = prepareEmpty)]
+    pub fn prepare_empty(&mut self, url: &str, now: f64) -> u32 {
+        let cache = FetchCache::new();
+        let fetcher = Box::new(WebFetcher {
+            cache: cache.clone(),
+        });
+        let world = Session::empty_world(url, fetcher);
+
+        self.add(world, cache, now)
     }
 
     /// X3DField.fromVRMLString / fromXMLString (value, scene) (see [`Session::parse_field`]): the data of the value
@@ -976,11 +1083,22 @@ impl WebBrowser {
         }
     }
 
-    /// X3DBrowser.viewAll (transitionTime).
+    /// X3DBrowser.viewAll (transitionTime) of the active layer, or of the layer node `layer`.
     #[wasm_bindgen(js_name = viewAll)]
-    pub fn view_all(&mut self, transition_time: f64) {
+    pub fn view_all(&mut self, transition_time: f64, layer: Option<u32>) {
         if let Some(s) = self.current_mut() {
-            s.view_all(transition_time);
+            s.view_all(layer, transition_time);
+        }
+    }
+
+    /// X3DBrowserContext.setLive (beginUpdate, endUpdate): the live state of the browser, for the world and the
+    /// worlds that follow.
+    #[wasm_bindgen(js_name = setLive)]
+    pub fn set_live(&mut self, live: bool) {
+        self.live = live;
+
+        if let Some(s) = self.current_mut() {
+            s.set_live(live);
         }
     }
 
@@ -1211,6 +1329,12 @@ fn log_parser_warnings(warnings: &[String]) {
     for warning in warnings {
         web_sys::console::warn_1(&warning.into());
     }
+}
+
+/// X3DScene.toVRMLString / toXMLString / toJSONString of the empty world a canvas has before any load.
+#[wasm_bindgen(js_name = printEmptyScene)]
+pub fn print_empty_scene(kind: &str) -> Result<String, JsError> {
+    Session::print_empty_scene(kind).map_err(|e| JsError::new(&e))
 }
 
 /// X3DField.fromVRMLString / fromXMLString (value) without a scene, which needs no world: `[data, warning, ...]`. A value

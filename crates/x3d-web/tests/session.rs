@@ -237,6 +237,34 @@ fn observed_fields_give_each_event_with_its_value_in_order() {
     assert!(s.observe_field(t, "noSuchField", true).is_err());
 }
 
+/// A page callback that throws ends X_ITE's event processing for good (X3DRoutingContext `_active` stays set): the later
+/// frames still run, but no event is processed, so nothing reaches the page and no route moves.
+#[test]
+fn halted_events_stay_halted_and_later_frames_run() {
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    assert_eq!(s.take_field_events().len(), 1);
+
+    s.halt_events();
+    s.set_field_data(t, "translation", &vec3(2.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+    s.step(NOW + 0.3);
+
+    assert_eq!(s.take_field_events(), []);
+    // The route did not run: T2 still holds the value of the first event.
+    assert_eq!(
+        s.field_data(t2, "translation").unwrap().2,
+        vec3(1.0, 0.0, 0.0)
+    );
+}
+
 #[test]
 fn field_definitions_hold_class_defaults_and_user_fields() {
     let mut s = load(ROUTED).unwrap();
@@ -494,6 +522,30 @@ fn nodes_print_in_full_in_the_three_text_forms() {
 }
 
 #[test]
+fn the_scene_prints_in_the_three_text_forms() {
+    let s = load(BOX).unwrap();
+
+    let vrml = s.print_scene("vrml").unwrap();
+    assert!(vrml.starts_with("#X3D V4.1 utf8 X_ITE V16.5.0\n"), "{vrml}");
+    assert!(vrml.contains("DEF BoxMaterial Material {"), "{vrml}");
+    assert!(s.print_scene("xml").unwrap().starts_with("<?xml"));
+    assert!(s.print_scene("json").unwrap().starts_with('{'));
+    assert!(s.print_scene("yaml").is_err());
+}
+
+#[test]
+fn the_empty_world_prints_without_a_profile() {
+    let vrml = x3d_web::session::Session::print_empty_scene("vrml").unwrap();
+    assert_eq!(vrml, "#X3D V4.1 utf8 X_ITE V16.5.0\n\n");
+    assert!(
+        x3d_web::session::Session::print_empty_scene("xml")
+            .unwrap()
+            .contains("profile='Full'")
+    );
+    assert!(x3d_web::session::Session::print_empty_scene("yaml").is_err());
+}
+
+#[test]
 fn a_node_that_is_not_in_the_world_is_not_printed() {
     let s = load(BOX).unwrap();
     let list = Data::List(vec![Data::Number(f64::from(u32::MAX))]);
@@ -583,4 +635,124 @@ fn only_node_field_types_are_printed() {
 
         assert!(error.contains("not a node field type"), "{error}");
     }
+}
+
+const LOOSE: &[u8] = b"#VRML V2.0 utf8
+DEF A Transform { }
+DEF B Transform { }
+DEF C Transform { }
+DEF G Group { }
+DEF PI PositionInterpolator { key [ 0 1 ] keyValue [ 0 0 0, 1 1 1 ] }
+ROUTE A.translation_changed TO B.set_translation
+";
+
+#[test]
+fn a_route_added_by_the_page_carries_events_and_deleting_it_stops_them() {
+    let mut s = load(LOOSE).unwrap();
+    let (a, b, c) = (
+        s.named_node("A").unwrap(),
+        s.named_node("B").unwrap(),
+        s.named_node("C").unwrap(),
+    );
+
+    let parsed = s.routes();
+    assert_eq!(parsed.len(), 1);
+    assert_eq!(
+        (
+            parsed[0].source,
+            parsed[0].source_field.as_str(),
+            parsed[0].destination,
+            parsed[0].destination_field.as_str()
+        ),
+        (a, "translation_changed", b, "set_translation")
+    );
+
+    // Any spelling of an inputOutput field names the same fields; the route prints X_ITE's names.
+    let route = s.add_route(a, "translation", c, "translation").unwrap();
+
+    assert_eq!(route.source_field, "translation_changed");
+    assert_eq!(route.destination_field, "set_translation");
+    assert_eq!(route.raw_source_field, "translation");
+    assert_eq!(s.routes().len(), 2);
+
+    // The same route again is the route that exists.
+    assert_eq!(
+        s.add_route(a, "translation_changed", c, "set_translation")
+            .unwrap(),
+        route
+    );
+    assert_eq!(
+        s.get_route(a, "translation", c, "translation"),
+        Ok(Some(route.clone()))
+    );
+    assert_eq!(s.routes().len(), 2);
+
+    s.field_data(c, "translation").unwrap();
+    s.set_field_data(a, "translation", &vec3(1.0, 2.0, 3.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    assert_eq!(
+        s.take_field_changes(),
+        [(c, "translation".to_string(), vec3(1.0, 2.0, 3.0))]
+    );
+
+    assert!(s.delete_route(route.id));
+    assert!(!s.delete_route(route.id));
+    assert_eq!(s.get_route(a, "translation", c, "translation"), Ok(None));
+
+    s.set_field_data(a, "translation", &vec3(4.0, 5.0, 6.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+    assert_eq!(s.take_field_changes(), []);
+    assert_eq!(s.routes().len(), 1);
+}
+
+#[test]
+fn a_bad_route_is_an_error_with_the_text_x_ite_throws() {
+    let mut s = load(LOOSE).unwrap();
+    let (a, c, g, pi) = (
+        s.named_node("A").unwrap(),
+        s.named_node("C").unwrap(),
+        s.named_node("G").unwrap(),
+        s.named_node("PI").unwrap(),
+    );
+
+    let message = |r: Result<x3d_web::session::RouteInfo, String>| r.unwrap_err();
+
+    assert_eq!(
+        message(s.add_route(a, "nope", c, "translation")),
+        "Unknown field 'nope' in node class Transform."
+    );
+    assert_eq!(
+        message(s.add_route(a, "translation", c, "nope")),
+        "Unknown field 'nope' in node class Transform."
+    );
+    assert_eq!(
+        message(s.add_route(a, "translation", c, "rotation")),
+        "Bad ROUTE specification: source field type must match destination field type of fields named \"translation\" and \"rotation\"."
+    );
+    assert_eq!(
+        message(s.add_route(g, "addChildren", g, "removeChildren")),
+        "Bad ROUTE specification: source field \"addChildren\" must be an output."
+    );
+    assert_eq!(
+        message(s.add_route(a, "bboxSize", c, "bboxSize")),
+        "Bad ROUTE specification: source field \"bboxSize\" must be an output."
+    );
+    assert_eq!(
+        message(s.add_route(a, "translation", c, "bboxSize")),
+        "Bad ROUTE specification: destination field \"bboxSize\" must be an input."
+    );
+    assert_eq!(
+        message(s.add_route(pi, "value_changed", pi, "set_fraction")),
+        "Bad ROUTE specification: source field type must match destination field type of fields named \"value_changed\" and \"set_fraction\"."
+    );
+    assert_eq!(
+        s.get_route(a, "translation", c, "rotation").unwrap_err(),
+        "Bad ROUTE specification: source field type must match destination field type of fields named \"translation\" and \"rotation\"."
+    );
+
+    // A node that is not in the world.
+    assert!(s.add_route(9999, "translation", c, "translation").is_err());
+    assert_eq!(s.routes().len(), 1);
 }

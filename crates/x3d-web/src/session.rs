@@ -16,6 +16,34 @@ use x3d_runtime::{Fetcher, Runtime};
 use x3d_viewer::nav::Touches;
 use x3d_viewer::viewer::{UiEvent, Viewer3d};
 
+/// A route of the world as the page's X3DRoute object shows it: the ends and the field names X3DRoute.getSourceField /
+/// getDestinationField print (`source_field` / `destination_field`), and the names as they were given (`raw_*`), which the
+/// route keeps printing after it is deleted.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RouteInfo {
+    pub id: usize,
+    pub source: NodeId,
+    pub source_field: String,
+    pub destination: NodeId,
+    pub destination_field: String,
+    pub raw_source_field: String,
+    pub raw_destination_field: String,
+}
+
+impl RouteInfo {
+    fn of(r: &x3d_scene::scene::Route) -> RouteInfo {
+        RouteInfo {
+            id: r.id,
+            source: r.source_node,
+            source_field: r.source_field.clone(),
+            destination: r.destination_node,
+            destination_field: r.destination_field.clone(),
+            raw_source_field: r.raw_source_field.clone(),
+            raw_destination_field: r.raw_destination_field.clone(),
+        }
+    }
+}
+
 /// A field of a node as the page sees it: X3DField.getTypeName, the access type and `toString ()`.
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldInfo {
@@ -75,6 +103,16 @@ pub struct ParsedWorld {
     scene: x3d_scene::Scene,
     fetcher: Box<dyn Fetcher>,
     url: String,
+}
+
+/// The scene's text in the form `kind` (`vrml`, `xml` or `json`), with X_ITE's default generator options.
+fn print_scene_of(scene: &x3d_scene::Scene, kind: &str) -> Result<String, String> {
+    match kind {
+        "vrml" => Ok(scene.to_vrml_string()),
+        "xml" => Ok(scene.to_xml_string_ctx(scene.world)),
+        "json" => Ok(scene.to_json_string_ctx(scene.world)),
+        _ => Err(format!("unknown text form '{kind}'")),
+    }
 }
 
 /// The browser's constant setup of every parse.
@@ -225,6 +263,27 @@ impl Session {
         })
     }
 
+    /// The empty world the browser starts with and X3DBrowser.replaceWorld (null) makes: a scene no source set up, so it
+    /// has no profile (its VRML text has no PROFILE line, its XML and JSON text say `Full`).
+    pub fn empty_world(url: &str, fetcher: Box<dyn Fetcher>) -> ParsedWorld {
+        let mut world = Session::parse_string("#X3D V4.0 utf8\n", url, fetcher)
+            .expect("the empty scene parses");
+
+        world.scene.profile = None;
+        world
+    }
+
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the empty world a canvas has before any load.
+    pub fn print_empty_scene(kind: &str) -> Result<String, String> {
+        parse_setup();
+
+        let mut scene =
+            x3d_parse::parse_string("#X3D V4.0 utf8\n", "").map_err(|e| format!("Error: {e}"))?;
+
+        scene.profile = None;
+        print_scene_of(&scene, kind)
+    }
+
     /// Set the parsed world up at `now` (seconds since the Unix epoch, X3DBrowser.getCurrentTime) and start its
     /// loads. The session is not live yet: see [`Session::poll_load`] and [`Session::go_live`].
     pub fn begin(world: ParsedWorld, now: f64, width: u32, height: u32) -> Session {
@@ -373,6 +432,87 @@ impl Session {
         scene.ctx(scene.world).root_nodes.clone()
     }
 
+    /// X3DExecutionContext.routes of the world: the routes in the order they were added.
+    pub fn routes(&self) -> Vec<RouteInfo> {
+        let scene = &self.rt().scene;
+
+        scene
+            .ctx(scene.world)
+            .routes
+            .iter()
+            .map(|r| RouteInfo::of(r))
+            .collect()
+    }
+
+    /// The route with these ends (X3DExecutionContext.getRoute without the node checks, which are the page's): the fields
+    /// must exist and X3DRoute.checkFields must accept them (`Err`, the text X_ITE throws), else the route or `None`.
+    pub fn get_route(
+        &self,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<Option<RouteInfo>, String> {
+        self.route_nodes(source, destination)?;
+
+        let scene = &self.rt().scene;
+
+        scene.route_ends(source, source_field, destination, destination_field)?;
+
+        Ok(scene
+            .find_route_index(
+                scene.world,
+                source,
+                source_field,
+                destination,
+                destination_field,
+            )
+            .map(|i| RouteInfo::of(&scene.ctx(scene.world).routes[i])))
+    }
+
+    /// X3DExecutionContext.addRoute: the route that exists with these ends, else a new one that carries events from now on.
+    pub fn add_route(
+        &mut self,
+        source: NodeId,
+        source_field: &str,
+        destination: NodeId,
+        destination_field: &str,
+    ) -> Result<RouteInfo, String> {
+        if let Some(route) = self.get_route(source, source_field, destination, destination_field)? {
+            return Ok(route);
+        }
+
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.add_route(world, source, source_field, destination, destination_field)?;
+
+        // The route is the last one of the world's list.
+        Ok(RouteInfo::of(
+            rt.scene
+                .ctx(world)
+                .routes
+                .last()
+                .expect("add_route made a route"),
+        ))
+    }
+
+    /// X3DExecutionContext.deleteRoute (route): the route with this id leaves the world; whether there was one.
+    pub fn delete_route(&mut self, id: usize) -> bool {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.delete_route_by_id(world, id)
+    }
+
+    fn route_nodes(&self, source: NodeId, destination: NodeId) -> Result<(), String> {
+        if !self.node_exists(source) || !self.node_exists(destination) {
+            return Err("node is not in the world".to_string());
+        }
+
+        Ok(())
+    }
+
     /// X3DNode.getNodeTypeName.
     pub fn type_name(&self, node: NodeId) -> Option<String> {
         self.node_exists(node).then(|| self.rt().type_name(node))
@@ -479,6 +619,12 @@ impl Session {
             "json" => Ok(scene.field_value_to_json_string(&value)),
             _ => Err(format!("unknown text form '{kind}'")),
         }
+    }
+
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the world, with X_ITE's default generator options; `kind` is
+    /// `vrml`, `xml` or `json`.
+    pub fn print_scene(&self, kind: &str) -> Result<String, String> {
+        print_scene_of(&self.rt().scene, kind)
     }
 
     /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty` named `name`: the data of the
@@ -589,6 +735,11 @@ impl Session {
             .filter(|(k, _)| rt.scene.is_live(k.0))
             .map(|(k, value)| (k.0, rt.field(k).name.clone(), data::value_data(&value)))
             .collect()
+    }
+
+    /// A page field callback threw: stop the event processing for good (see [`Runtime::halt_events`]).
+    pub fn halt_events(&mut self) {
+        self.rt_mut().halt_events();
     }
 
     /// The nodes the runtime released since the last call: their ids may name other nodes from now on, so the page
@@ -811,10 +962,29 @@ impl Session {
         }
     }
 
-    /// X3DBrowser.viewAll (transitionTime) of the active layer.
-    pub fn view_all(&mut self, transition_time: f64) {
+    /// X3DBrowser.viewAll (transitionTime) of the active layer, or of `layer` (a node id the page checked to be an
+    /// X3DLayerNode of this world).
+    pub fn view_all(&mut self, layer: Option<NodeId>, transition_time: f64) {
         if let Some(v) = self.viewer() {
-            v.browser_view_all(None, transition_time);
+            let layer = layer.filter(|&n| v.rt.scene.is_live(n));
+
+            v.browser_view_all(layer, transition_time);
+        }
+    }
+
+    /// X3DBrowserContext.setLive of the browser (beginUpdate, endUpdate): the live state of the world. A world that is
+    /// not live pauses its TimeSensors and the other nodes that follow the live state; the events of the page's own
+    /// field assignments still go through. The state outlives a world: [`WebBrowser::replace`] gives it to the next one.
+    pub fn set_live(&mut self, live: bool) {
+        match &mut self.stage {
+            Stage::Loading(rt, _) => rt.live = live,
+            Stage::Live(v) => {
+                v.rt.live = live;
+                // A world that started while the browser was not live still has to go live (scene .setLive (true)).
+                v.rt.go_live();
+                v.rt.refresh_live();
+            }
+            Stage::Gone => {}
         }
     }
 
