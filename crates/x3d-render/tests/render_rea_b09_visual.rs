@@ -68,6 +68,26 @@ fn rea_b09_visual_renders_match_x_ite() {
             .collect();
         names.sort();
 
+        // A reference whose X_ITE run logged a parser error does not picture the world as written: the cells with the
+        // rejected field compare nothing, so it fails too (PR #166 review).
+        for index in ["index.json", "index-items.json"] {
+            let Ok(text) = std::fs::read_to_string(root.join(baseline).join(index)) else {
+                continue;
+            };
+            let json: serde_json::Value = serde_json::from_str(&text).unwrap();
+
+            for r in json["results"].as_array().into_iter().flatten() {
+                let file = r["file"].as_str().unwrap_or("?");
+                let logs = r["log"].as_array().into_iter().flatten();
+
+                for l in logs.filter_map(|l| l.as_str()) {
+                    if l.contains("Parser error") && file.contains(&only) {
+                        failures.push(format!("{file} MSAA {samples}: the reference logged {l:?}"));
+                    }
+                }
+            }
+        }
+
         // A world without its reference fails: an absent answer key never passes (issue #90).
         for e in std::fs::read_dir(root.join("synthetic-rea-b09-visual")).unwrap() {
             let world = e.unwrap().file_name().into_string().unwrap();

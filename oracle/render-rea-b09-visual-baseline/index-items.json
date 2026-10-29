@@ -48,13 +48,11 @@
   {
    "file": "vis-items-appearance.wrl",
    "ok": true,
-   "log": [
-    "warn: Parser error at line 41: Unknown field 'applied' in class 'FillProperties'."
-   ],
+   "log": [],
    "width": 512,
    "height": 512,
-   "rgbaSha256": "8ec0379459ba9e3aa38b498db1537bd43241b0df0b489edf9115a3cd26cefd77",
-   "pngSha256": "d0f9bd7a39434a813914db9c4ecf7897094dfa717478df9c12885d93c744f09f",
+   "rgbaSha256": "cda54af59aa3050a9629d5696fb41fd8507435f33118ad0a50e3f66b1fb3c62f",
+   "pngSha256": "2682244f59608a9a7e21a934a8fc7b43feae02a2612178053a3b2cc1af8f5f26",
    "splashVisible": false,
    "canvasDisplay": "block"
   },
@@ -152,14 +150,11 @@
   {
    "file": "vis-items-shape.wrl",
    "ok": true,
-   "log": [
-    "warn: Parser error at line 29: Unknown field 'choice' in class 'Switch'.",
-    "warn: Parser error at line 32: Unknown field 'level' in class 'LOD'."
-   ],
+   "log": [],
    "width": 512,
    "height": 512,
-   "rgbaSha256": "f28a5217a724b030cc7c2bba3eda5aa2e18245fa867dfe6d45e121754aa4c5e0",
-   "pngSha256": "54868aa414eab394fa446f6a2cc0c31bb7161e5d59fafa3a9a7e6ba290bda48e",
+   "rgbaSha256": "35ed20f362c5533a0ec58852b00d5e47510ac1593e21678b13600dc863dbe886",
+   "pngSha256": "2cec9081fbee4d73b5d6b0a1252c94535879435db60a91d5f1a2165e9ecf222c",
    "splashVisible": false,
    "canvasDisplay": "block"
   },
@@ -189,5 +184,5 @@
   }
  ],
  "recordings": 3,
- "note": "vis-items-* worlds (issue #90) recorded 3x, identical RGBA (rgbaSha256) each; tools/gen_rea_b09_visual_items.py. hanim-seg, lights, sound and alpha added in the second session (also 3x identical); the existing vis-* references were re-recorded 3x to /tmp and reproduced byte-identically (not overwritten)."
+ "note": "vis-items-* worlds (issue #90) recorded 3x, identical RGBA (rgbaSha256) each; tools/gen_rea_b09_visual_items.py. hanim-seg, lights, sound and alpha added in the second session (also 3x identical); the existing vis-* references were re-recorded 3x to /tmp and reproduced byte-identically (not overwritten). vis-items-shape and vis-items-appearance were re-recorded (3x identical) after their Switch/LOD cells moved from choice/level to children and FillProperties lost the invalid applied field (PR #166 review), so no reference logs a parser warning."
 }
