@@ -23,6 +23,7 @@ import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
+import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -53,6 +54,7 @@ const SUITES = {
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
+   fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -81,6 +83,13 @@ const KNOWN_DIFFERENCES = {
       [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
       // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
       [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "fieldCascade.nested": [
+      // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
+      // (2 0 0) overwrites the nested value (9 9 9), and the nested event comes in the same cascade with the value D then holds.
+      // X_ITE_R delivers the callbacks after the frame: the nested set goes in the next frame and its value stays.
+      [ [ "final", 0 ], "2 0 0", "9 9 9" ],
+      [ [ "seq", 5 ], "D|2 0 0|later|0", "D|9 9 9|later|1" ],
    ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
@@ -424,6 +433,7 @@ const GROUP_FILES = {
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
    nodeOwnership: "fields03.test.mjs",
+   fieldCascade: "fields04.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
