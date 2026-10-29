@@ -996,7 +996,29 @@ impl Viewer3d {
         self.sync_browser_active();
 
         for r in std::mem::take(&mut self.rt.browser_requests) {
-            match r.as_str() {
+            self.browser_request(&r);
+        }
+    }
+
+    /// One request of [`Viewer3d::browser_requests`]. `layer:<node>:<request>` runs a viewpoint request on that layer
+    /// (X3DBrowser.nextViewpoint (layerNode) and the others with a layerNode): the layer's viewpoint list and bound
+    /// viewpoint are the ones in use for it, as with the active layer.
+    fn browser_request(&mut self, r: &str) {
+        {
+            match r {
+                r if r.starts_with("layer:") => {
+                    if let Some((layer, inner)) = r["layer:".len()..].split_once(':') {
+                        let home = self.current;
+                        let layer = layer
+                            .parse::<NodeId>()
+                            .ok()
+                            .filter(|&n| self.rt.scene.is_live(n));
+
+                        self.swap_to(layer.map_or(home, Some));
+                        self.browser_request(inner);
+                        self.swap_to(home);
+                    }
+                }
                 "nextViewpoint" => self.next_viewpoint(1),
                 "previousViewpoint" => self.next_viewpoint(-1),
                 "firstViewpoint" => self.first_viewpoint(),
@@ -1040,7 +1062,14 @@ impl Viewer3d {
                 r if r.starts_with("bindViewpoint:") => {
                     if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>() {
                         if self.rt.scene.is_live(n) {
+                            // `set_bind` of the viewpoint: the viewpoint belongs to the layer that holds it, whatever
+                            // the layerNode the page gave (X3DBrowser.bindViewpoint only checks its type).
+                            let home = self.current;
+                            let own = self.layer_of_viewpoint(n).unwrap_or(home);
+
+                            self.swap_to(own);
                             self.bind_viewpoint(n);
+                            self.swap_to(home);
                         }
                     }
                 }
@@ -2472,6 +2501,18 @@ impl Viewer3d {
             self.rt.set_value(k, FieldValue::SFBool(true));
             self.rt.process_events();
         }
+    }
+
+    /// The layer whose viewpoint list holds `n` (the current one first).
+    fn layer_of_viewpoint(&self, n: NodeId) -> Option<LayerKey> {
+        if self.layer.viewpoint_list().contains(&n) {
+            return Some(self.current);
+        }
+
+        self.others
+            .iter()
+            .find(|slot| slot.layer.viewpoint_list().contains(&n))
+            .map(|slot| slot.key)
     }
 
     fn bound_index(&self, list: &[NodeId]) -> Option<usize> {

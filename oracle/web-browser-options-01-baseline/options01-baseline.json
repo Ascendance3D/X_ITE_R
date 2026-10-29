@@ -1,0 +1,917 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "browserOptions.defaults": {
+   "SplashScreen": [
+    false,
+    "boolean"
+   ],
+   "Dashboard": [
+    true,
+    "boolean"
+   ],
+   "Rubberband": [
+    true,
+    "boolean"
+   ],
+   "EnableInlineViewpoints": [
+    true,
+    "boolean"
+   ],
+   "Antialiased": [
+    true,
+    "boolean"
+   ],
+   "TextureQuality": [
+    "MEDIUM",
+    "string"
+   ],
+   "PrimitiveQuality": [
+    "MEDIUM",
+    "string"
+   ],
+   "QualityWhenMoving": [
+    "SAME",
+    "string"
+   ],
+   "Shading": [
+    "GOURAUD",
+    "string"
+   ],
+   "MotionBlur": [
+    false,
+    "boolean"
+   ],
+   "AlwaysUpdateGeometries": [
+    false,
+    "boolean"
+   ],
+   "AutoUpdate": [
+    false,
+    "boolean"
+   ],
+   "Cache": [
+    true,
+    "boolean"
+   ],
+   "ColorSpace": [
+    "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "string"
+   ],
+   "ContentScale": [
+    1,
+    "number"
+   ],
+   "ContextMenu": [
+    false,
+    "boolean"
+   ],
+   "Debug": [
+    false,
+    "boolean"
+   ],
+   "Exposure": [
+    1,
+    "number"
+   ],
+   "DisplayColorSpace": [
+    "SRGB",
+    "string"
+   ],
+   "Gravity": [
+    9.80665,
+    "number"
+   ],
+   "LoadUrlObjects": [
+    true,
+    "boolean"
+   ],
+   "LogarithmicDepthBuffer": [
+    false,
+    "boolean"
+   ],
+   "MaximumFrameRate": [
+    80,
+    "number"
+   ],
+   "MetadataReference": [
+    "",
+    "string"
+   ],
+   "Multisampling": [
+    4,
+    "number"
+   ],
+   "Mute": [
+    false,
+    "boolean"
+   ],
+   "Notifications": [
+    false,
+    "boolean"
+   ],
+   "OrderIndependentTransparency": [
+    false,
+    "boolean"
+   ],
+   "SoundIntensity": [
+    1,
+    "number"
+   ],
+   "StraightenHorizon": [
+    true,
+    "boolean"
+   ],
+   "TextCompression": [
+    "CHAR_SPACING",
+    "string"
+   ],
+   "Timings": [
+    false,
+    "boolean"
+   ],
+   "ToneMapping": [
+    "NONE",
+    "string"
+   ],
+   "WallFriction": [
+    0,
+    "number"
+   ],
+   "XRSessionMode": [
+    "IMMERSIVE_VR",
+    "string"
+   ]
+  },
+  "browserOptions.setValid": {
+   "SplashScreen": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": false
+   },
+   "Dashboard": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "Rubberband": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "EnableInlineViewpoints": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "Antialiased": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "TextureQuality": {
+    "type": "SFString",
+    "before": "MEDIUM",
+    "set": "undefined",
+    "after": "HIGH"
+   },
+   "PrimitiveQuality": {
+    "type": "SFString",
+    "before": "MEDIUM",
+    "set": "undefined",
+    "after": "LOW"
+   },
+   "QualityWhenMoving": {
+    "type": "SFString",
+    "before": "SAME",
+    "set": "undefined",
+    "after": "LOW"
+   },
+   "Shading": {
+    "type": "SFString",
+    "before": "GOURAUD",
+    "set": "undefined",
+    "after": "PHONG"
+   },
+   "MotionBlur": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "AlwaysUpdateGeometries": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "AutoUpdate": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "Cache": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "ColorSpace": {
+    "type": "SFString",
+    "before": "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "set": "undefined",
+    "after": "LINEAR"
+   },
+   "ContentScale": {
+    "type": "SFDouble",
+    "before": 1,
+    "set": "undefined",
+    "after": 2
+   },
+   "ContextMenu": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": false
+   },
+   "Debug": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "Exposure": {
+    "type": "SFDouble",
+    "before": 1,
+    "set": "undefined",
+    "after": 1.5
+   },
+   "DisplayColorSpace": {
+    "type": "SFString",
+    "before": "SRGB",
+    "set": "undefined",
+    "after": "DISPLAY_P3"
+   },
+   "Gravity": {
+    "type": "SFDouble",
+    "before": 9.80665,
+    "set": "undefined",
+    "after": 3.5
+   },
+   "LoadUrlObjects": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "LogarithmicDepthBuffer": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "MaximumFrameRate": {
+    "type": "SFDouble",
+    "before": 80,
+    "set": "undefined",
+    "after": 30
+   },
+   "MetadataReference": {
+    "type": "SFString",
+    "before": "",
+    "set": "undefined",
+    "after": "ref"
+   },
+   "Multisampling": {
+    "type": "SFInt32",
+    "before": 4,
+    "set": "undefined",
+    "after": 2
+   },
+   "Mute": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "Notifications": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": false
+   },
+   "OrderIndependentTransparency": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "SoundIntensity": {
+    "type": "SFFloat",
+    "before": 1,
+    "set": "undefined",
+    "after": 0.5
+   },
+   "StraightenHorizon": {
+    "type": "SFBool",
+    "before": true,
+    "set": "undefined",
+    "after": false
+   },
+   "TextCompression": {
+    "type": "SFString",
+    "before": "CHAR_SPACING",
+    "set": "undefined",
+    "after": "SCALING"
+   },
+   "Timings": {
+    "type": "SFBool",
+    "before": false,
+    "set": "undefined",
+    "after": true
+   },
+   "ToneMapping": {
+    "type": "SFString",
+    "before": "NONE",
+    "set": "undefined",
+    "after": "ACES_NARKOWICZ"
+   },
+   "WallFriction": {
+    "type": "SFDouble",
+    "before": 0,
+    "set": "undefined",
+    "after": 0.25
+   },
+   "XRSessionMode": {
+    "type": "SFString",
+    "before": "IMMERSIVE_VR",
+    "set": "undefined",
+    "after": "IMMERSIVE_AR"
+   }
+  },
+  "browserOptions.coercion": {
+   "SFBool:Mute": [
+    {
+     "value": "0",
+     "set": "undefined",
+     "after": false,
+     "kind": "boolean"
+    },
+    {
+     "value": "1",
+     "set": "undefined",
+     "after": true,
+     "kind": "boolean"
+    },
+    {
+     "value": "\"x\"",
+     "set": "undefined",
+     "after": true,
+     "kind": "boolean"
+    },
+    {
+     "value": "\"\"",
+     "set": "undefined",
+     "after": false,
+     "kind": "boolean"
+    },
+    {
+     "value": "null",
+     "set": "undefined",
+     "after": false,
+     "kind": "boolean"
+    },
+    {
+     "value": "undefined",
+     "set": "undefined",
+     "after": false,
+     "kind": "boolean"
+    },
+    {
+     "value": "[]",
+     "set": "undefined",
+     "after": true,
+     "kind": "boolean"
+    },
+    {
+     "value": "\"false\"",
+     "set": "undefined",
+     "after": true,
+     "kind": "boolean"
+    },
+    {
+     "value": "number:NaN",
+     "set": "undefined",
+     "after": false,
+     "kind": "boolean"
+    }
+   ],
+   "SFInt32:Multisampling": [
+    {
+     "value": "3.7",
+     "set": "undefined",
+     "after": 3,
+     "kind": "number"
+    },
+    {
+     "value": "-3.7",
+     "set": "undefined",
+     "after": -3,
+     "kind": "number"
+    },
+    {
+     "value": "\"5\"",
+     "set": "undefined",
+     "after": 5,
+     "kind": "number"
+    },
+    {
+     "value": "\"x\"",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "number:NaN",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "null",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "number:Infinity",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "2147483648",
+     "set": "undefined",
+     "after": -2147483648,
+     "kind": "number"
+    },
+    {
+     "value": "true",
+     "set": "undefined",
+     "after": 1,
+     "kind": "number"
+    }
+   ],
+   "SFFloat:SoundIntensity": [
+    {
+     "value": "\"2.5\"",
+     "set": "undefined",
+     "after": 2.5,
+     "kind": "number"
+    },
+    {
+     "value": "0.1",
+     "set": "undefined",
+     "after": 0.1,
+     "kind": "number"
+    },
+    {
+     "value": "\"x\"",
+     "set": "undefined",
+     "after": "number:NaN",
+     "kind": "number"
+    },
+    {
+     "value": "null",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "true",
+     "set": "undefined",
+     "after": 1,
+     "kind": "number"
+    },
+    {
+     "value": "number:NaN",
+     "set": "undefined",
+     "after": "number:NaN",
+     "kind": "number"
+    },
+    {
+     "value": "1e+40",
+     "set": "undefined",
+     "after": 1e+40,
+     "kind": "number"
+    }
+   ],
+   "SFDouble:Gravity": [
+    {
+     "value": "\"2.5\"",
+     "set": "undefined",
+     "after": 2.5,
+     "kind": "number"
+    },
+    {
+     "value": "\"x\"",
+     "set": "undefined",
+     "after": "number:NaN",
+     "kind": "number"
+    },
+    {
+     "value": "null",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    },
+    {
+     "value": "true",
+     "set": "undefined",
+     "after": 1,
+     "kind": "number"
+    },
+    {
+     "value": "number:NaN",
+     "set": "undefined",
+     "after": "number:NaN",
+     "kind": "number"
+    },
+    {
+     "value": "number:Infinity",
+     "set": "undefined",
+     "after": "number:Infinity",
+     "kind": "number"
+    },
+    {
+     "value": "\"\"",
+     "set": "undefined",
+     "after": 0,
+     "kind": "number"
+    }
+   ],
+   "SFString:MetadataReference": [
+    {
+     "value": "5",
+     "set": "undefined",
+     "after": "5",
+     "kind": "string"
+    },
+    {
+     "value": "true",
+     "set": "undefined",
+     "after": "true",
+     "kind": "string"
+    },
+    {
+     "value": "null",
+     "set": "undefined",
+     "after": "null",
+     "kind": "string"
+    },
+    {
+     "value": "undefined",
+     "set": "undefined",
+     "after": "undefined",
+     "kind": "string"
+    },
+    {
+     "value": "[1,2]",
+     "set": "undefined",
+     "after": "1,2",
+     "kind": "string"
+    },
+    {
+     "value": "{}",
+     "set": "undefined",
+     "after": "[object Object]",
+     "kind": "string"
+    },
+    {
+     "value": "\"\"",
+     "set": "undefined",
+     "after": "",
+     "kind": "string"
+    }
+   ],
+   "noValue": [
+    "undefined",
+    false
+   ]
+  },
+  "browserOptions.unknownNames": [
+   {
+    "name": "\"Bogus\"",
+    "get": "Error: Unknown field 'Bogus' in node class BrowserOptions.",
+    "set": "Error: Unknown field 'Bogus' in node class BrowserOptions.",
+    "property": "Error: Unknown field 'Bogus' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'Bogus' in node class RenderingProperties."
+   },
+   {
+    "name": "\"\"",
+    "get": "Error: Unknown field '' in node class BrowserOptions.",
+    "set": "Error: Unknown field '' in node class BrowserOptions.",
+    "property": "Error: Unknown field '' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field '' in node class RenderingProperties."
+   },
+   {
+    "name": "\"shading\"",
+    "get": "Error: Unknown field 'shading' in node class BrowserOptions.",
+    "set": "Error: Unknown field 'shading' in node class BrowserOptions.",
+    "property": "Error: Unknown field 'shading' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'shading' in node class RenderingProperties."
+   },
+   {
+    "name": "\"SHADING\"",
+    "get": "Error: Unknown field 'SHADING' in node class BrowserOptions.",
+    "set": "Error: Unknown field 'SHADING' in node class BrowserOptions.",
+    "property": "Error: Unknown field 'SHADING' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'SHADING' in node class RenderingProperties."
+   },
+   {
+    "name": "\"AntiAliased\"",
+    "get": true,
+    "set": "undefined",
+    "property": "Error: Unknown field 'AntiAliased' in node class BrowserProperties.",
+    "rendering": true
+   },
+   {
+    "name": "\"set_Shading\"",
+    "get": "GOURAUD",
+    "set": "undefined",
+    "property": "Error: Unknown field 'set_Shading' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'set_Shading' in node class RenderingProperties."
+   },
+   {
+    "name": "\"Shading_changed\"",
+    "get": "true",
+    "set": "undefined",
+    "property": "Error: Unknown field 'Shading_changed' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'Shading_changed' in node class RenderingProperties."
+   },
+   {
+    "name": "\"toString\"",
+    "get": "Error: Unknown field 'toString' in node class BrowserOptions.",
+    "set": "Error: Unknown field 'toString' in node class BrowserOptions.",
+    "property": "Error: Unknown field 'toString' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field 'toString' in node class RenderingProperties."
+   },
+   {
+    "name": "\"__proto__\"",
+    "get": "Error: Unknown field '__proto__' in node class BrowserOptions.",
+    "set": "Error: Unknown field '__proto__' in node class BrowserOptions.",
+    "property": "Error: Unknown field '__proto__' in node class BrowserProperties.",
+    "rendering": "Error: Unknown field '__proto__' in node class RenderingProperties."
+   },
+   {
+    "name": "5",
+    "get": "TypeError: name.match is not a function",
+    "set": "TypeError: name.match is not a function",
+    "property": "TypeError: name.match is not a function",
+    "rendering": "TypeError: name.match is not a function"
+   },
+   {
+    "name": "null",
+    "get": "TypeError: Cannot read properties of null (reading 'match')",
+    "set": "TypeError: Cannot read properties of null (reading 'match')",
+    "property": "TypeError: Cannot read properties of null (reading 'match')",
+    "rendering": "TypeError: Cannot read properties of null (reading 'match')"
+   },
+   {
+    "name": "undefined",
+    "get": "TypeError: Cannot read properties of undefined (reading 'match')",
+    "set": "TypeError: Cannot read properties of undefined (reading 'match')",
+    "property": "TypeError: Cannot read properties of undefined (reading 'match')",
+    "rendering": "TypeError: Cannot read properties of undefined (reading 'match')"
+   }
+  ],
+  "browserOptions.properties": {
+   "ABSTRACT_NODES": [
+    true,
+    "boolean"
+   ],
+   "CONCRETE_NODES": [
+    true,
+    "boolean"
+   ],
+   "EXTERNAL_INTERACTIONS": [
+    true,
+    "boolean"
+   ],
+   "PROTOTYPE_CREATE": [
+    true,
+    "boolean"
+   ],
+   "DOM_IMPORT": [
+    true,
+    "boolean"
+   ],
+   "XML_ENCODING": [
+    true,
+    "boolean"
+   ],
+   "CLASSIC_VRML_ENCODING": [
+    true,
+    "boolean"
+   ],
+   "BINARY_ENCODING": [
+    false,
+    "boolean"
+   ]
+  },
+  "browserOptions.rendering": {
+   "defaults": {
+    "Shading": "GOURAUD",
+    "Antialiased": true,
+    "ContentScale": 1,
+    "LogarithmicDepthBuffer": false,
+    "Multisampling": 4
+   },
+   "logarithmic": {
+    "0": false,
+    "1": true,
+    "true": true,
+    "false": false
+   },
+   "alias": true,
+   "unknown": [
+    "Error: Unknown field 'Bogus' in node class RenderingProperties.",
+    "Error: Unknown field '' in node class RenderingProperties.",
+    "Error: Unknown field 'shading' in node class RenderingProperties.",
+    "Error: Unknown field 'BrowserOptions' in node class RenderingProperties.",
+    "Error: Unknown field 'set_Shading' in node class RenderingProperties.",
+    "Error: Unknown field 'Shading_changed' in node class RenderingProperties.",
+    "Error: Unknown field 'LogarithmicDepthBuffer_changed' in node class RenderingProperties.",
+    "TypeError: name.match is not a function",
+    "TypeError: Cannot read properties of null (reading 'match')",
+    "TypeError: Cannot read properties of undefined (reading 'match')"
+   ]
+  },
+  "browserOptions.renderingDerived": {
+   "Shading=PHONG": {
+    "option": "PHONG",
+    "properties": {
+     "Shading": "PHONG",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Shading=WIREFRAME": {
+    "option": "WIREFRAME",
+    "properties": {
+     "Shading": "WIREFRAME",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Shading=POINTSET": {
+    "option": "POINTSET",
+    "properties": {
+     "Shading": "POINT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Shading=x": {
+    "option": "x",
+    "properties": {
+     "Shading": "GOURAUD",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Shading=FLAT": {
+    "option": "FLAT",
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "ContentScale=2": {
+    "option": 2,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 2,
+     "Multisampling": 4
+    }
+   },
+   "ContentScale=1": {
+    "option": 1,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Multisampling=2": {
+    "option": 2,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 2
+    }
+   },
+   "Multisampling=0": {
+    "option": 0,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": false,
+     "ContentScale": 1,
+     "Multisampling": 0
+    }
+   },
+   "Multisampling=number:NaN": {
+    "option": 0,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": false,
+     "ContentScale": 1,
+     "Multisampling": 0
+    }
+   },
+   "Multisampling=4": {
+    "option": 4,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   },
+   "Antialiased=false": {
+    "option": false,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 0
+    }
+   },
+   "Antialiased=true": {
+    "option": true,
+    "properties": {
+     "Shading": "FLAT",
+     "Antialiased": true,
+     "ContentScale": 1,
+     "Multisampling": 4
+    }
+   }
+  },
+  "browserOptions.renderingContext": {
+   "MaxTextureSize": 32768,
+   "TextureUnits": 64,
+   "MaxLights": 8,
+   "ColorDepth": 32,
+   "TextureMemory": "number:NaN",
+   "MaxAnisotropicDegree": 16,
+   "MaxSamples": 8,
+   "PixelsPerPoint": 1.3333333333333333,
+   "SoundDestinations": 0,
+   "XRSession": false
+  },
+  "browserOptions.output": {
+   "returned": [
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined",
+    "undefined"
+   ],
+   "log": [
+    "log: a 1 true",
+    "log: x y",
+    "log: ",
+    "log: ",
+    "log:   1,2 [object Object]",
+    "log: 1 2 3 TRUE",
+    "log: line1",
+    "log: 0 0 NaN 1.5",
+    "log: "
+   ]
+  }
+ }
+}

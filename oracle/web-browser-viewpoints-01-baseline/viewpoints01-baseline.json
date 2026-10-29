@@ -1,0 +1,1159 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "viewpointsApi.api": {
+   "types": [
+    "bindViewpoint:function:2",
+    "getUserViewpoints:undefined:undefined",
+    "beginUpdate:function:0",
+    "endUpdate:function:0",
+    "isLive:function:0",
+    "setLive:function:1",
+    "firstViewpoint:function:1",
+    "previousViewpoint:function:1",
+    "nextViewpoint:function:1",
+    "lastViewpoint:function:1",
+    "changeViewpoint:function:2",
+    "viewAll:function:1"
+   ],
+   "layers": [
+    [
+     "Layer",
+     true
+    ],
+    [
+     "Layer",
+     true
+    ],
+    [
+     "Layer",
+     true
+    ]
+   ],
+   "vps": [
+    [
+     "R1",
+     true
+    ],
+    [
+     "RO",
+     true
+    ],
+    [
+     "RG",
+     false
+    ],
+    [
+     "RG1",
+     true
+    ],
+    [
+     "A1",
+     true
+    ]
+   ],
+   "initial": [
+    "R1,A1,B1",
+    "A1"
+   ],
+   "live": [
+    true,
+    "Boolean"
+   ],
+   "user": "TypeError: browser.getUserViewpoints is not a function",
+   "log": []
+  },
+  "viewpointsApi.bind": {
+   "bindL1A2": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "bindL1A3": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "bindAgain": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "bindL2B2": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A3,B2",
+     "A3"
+    ]
+   ],
+   "bindL1AH": [
+    "undefined",
+    [
+     "R1,A3,B2",
+     "A3"
+    ],
+    [
+     "R1,AH,B2",
+     "AH"
+    ]
+   ],
+   "bindOther": [
+    "undefined",
+    [
+     "R1,AH,B2",
+     "AH"
+    ],
+    [
+     "R1,AH,B1",
+     "AH"
+    ]
+   ],
+   "bindRoot": [
+    "undefined",
+    [
+     "R1,AH,B1",
+     "AH"
+    ],
+    [
+     "R2,AH,B1",
+     "AH"
+    ]
+   ],
+   "bindRH": [
+    "undefined",
+    [
+     "R2,AH,B1",
+     "AH"
+    ],
+    [
+     "RH,AH,B1",
+     "AH"
+    ]
+   ],
+   "bindOrtho": [
+    "undefined",
+    [
+     "RH,AH,B1",
+     "AH"
+    ],
+    [
+     "RO,AH,B1",
+     "AH"
+    ]
+   ],
+   "bindGroupChild": [
+    "undefined",
+    [
+     "RO,AH,B1",
+     "AH"
+    ],
+    [
+     "RG1,AH,B1",
+     "AH"
+    ]
+   ],
+   "bindL3": [
+    "undefined",
+    [
+     "RG1,AH,B1",
+     "AH"
+    ],
+    [
+     "RG1,A1,B1",
+     "A1"
+    ]
+   ],
+   "bounds": [
+    "RG1",
+    "A1",
+    "B1"
+   ],
+   "log": []
+  },
+  "viewpointsApi.errors": {
+   "none": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "layerOnly": [
+    "Error: Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "vpOnly": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "nullLayer": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "nullVp": [
+    "Error: Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "notLayer": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "notVp": [
+    "Error: Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "vpAsLayer": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "group": [
+    "Error: Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "number": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "string": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "undef": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "object": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "sfnodeNull": [
+    "Error: Browser.bindViewpoint: layerNode must be of type X3DLayerNode.",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "extra": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "errorsLogged": 0,
+   "log": []
+  },
+  "viewpointsApi.steps": {
+   "L1.first": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "L1.next": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L1.next2": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "L1.next3": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "L1.next4": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L1.prev": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "L1.last": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "L1.prev2": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L2.first": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L2.next": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L2.next2": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L2.next3": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L2.next4": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L2.prev": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L2.last": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L2.prev2": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.first": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.next": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.next2": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.next3": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.next4": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.prev": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.last": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "L3.prev2": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "noArg.first": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "noArg.next": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "box.next": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "number.last": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "null.prev": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "vpAsLayer.first": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "string.next": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "log": []
+  },
+  "viewpointsApi.change": {
+   "L1.A3": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "L1.AH": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,AH,B1",
+     "AH"
+    ]
+   ],
+   "L2.A1": [
+    "undefined",
+    [
+     "R1,AH,B1",
+     "AH"
+    ],
+    [
+     "R1,AH,B1",
+     "AH"
+    ]
+   ],
+   "L2.B2": [
+    "undefined",
+    [
+     "R1,AH,B1",
+     "AH"
+    ],
+    [
+     "R1,AH,B2",
+     "AH"
+    ]
+   ],
+   "L1.B1": [
+    "undefined",
+    [
+     "R1,AH,B2",
+     "AH"
+    ],
+    [
+     "R1,AH,B2",
+     "AH"
+    ]
+   ],
+   "name.A2": [
+    "undefined",
+    [
+     "R1,AH,B2",
+     "AH"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "name.B1": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L3.A1": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L1.none": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "L1.root": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A2,B2",
+     "A2"
+    ]
+   ],
+   "box.A1": [
+    "undefined",
+    [
+     "R1,A2,B2",
+     "A2"
+    ],
+    [
+     "R1,A1,B2",
+     "A1"
+    ]
+   ],
+   "null.A3": [
+    "undefined",
+    [
+     "R1,A1,B2",
+     "A1"
+    ],
+    [
+     "R1,A3,B2",
+     "A3"
+    ]
+   ],
+   "one.layer": [
+    "undefined",
+    [
+     "R1,A3,B2",
+     "A3"
+    ],
+    [
+     "R1,A3,B2",
+     "A3"
+    ]
+   ],
+   "none": [
+    "undefined",
+    [
+     "R1,A3,B2",
+     "A3"
+    ],
+    [
+     "R1,A3,B2",
+     "A3"
+    ]
+   ],
+   "number": [
+    "undefined",
+    [
+     "R1,A3,B2",
+     "A3"
+    ],
+    [
+     "R1,A3,B2",
+     "A3"
+    ]
+   ],
+   "log": []
+  },
+  "viewpointsApi.viewAll": {
+   "initial": {},
+   "viewAllNoLayer": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "afterNoLayer": {
+    "PS1": "0 0 3.66"
+   },
+   "viewAllL2": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "afterL2": {
+    "PS1": "0 0 3.66",
+    "PS2": "0 0 10.97"
+   },
+   "bindA3": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "viewAllL1": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "afterL1": {
+    "PS1": "0 0 3.66",
+    "PS2": "0 0 10.97"
+   },
+   "bindA2": [
+    "undefined",
+    [
+     "R1,A3,B1",
+     "A3"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "viewAllBox": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A2,B1",
+     "A2"
+    ]
+   ],
+   "afterBox": {
+    "PS1": "0 0 3.66",
+    "PS2": "0 0 10.97"
+   },
+   "bindA1": [
+    "undefined",
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "viewAllNull": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "viewAllL3": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "afterL3": {
+    "PS1": "0 0 3.66",
+    "PS2": "0 0 10.97",
+    "PS3": "0 0 1.83"
+   },
+   "viewAllNaN": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "viewAllTime": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "viewAllLayerOnly": [
+    "undefined",
+    [
+     "R1,A1,B1",
+     "A1"
+    ],
+    [
+     "R1,A1,B1",
+     "A1"
+    ]
+   ],
+   "end": {
+    "PS1": "0 0 3.66",
+    "PS2": "0 0 10.97",
+    "PS3": "0 0 1.83"
+   },
+   "log": []
+  },
+  "viewpointsApi.update": {
+   "running": [
+    true,
+    true,
+    true,
+    true,
+    "0 0 0"
+   ],
+   "begin0": null,
+   "beginWhileLive": [
+    true,
+    true,
+    true,
+    true,
+    "0 0 0"
+   ],
+   "end": null,
+   "afterEnd": [
+    false,
+    true
+   ],
+   "stopped": [
+    false,
+    true,
+    false,
+    true,
+    "0 0 0"
+   ],
+   "setWhileStopped": [
+    false,
+    true,
+    false,
+    true,
+    "1 2 3"
+   ],
+   "stoppedBind": [
+    null,
+    [
+     "R1,A2,B1",
+     "A2"
+    ],
+    [
+     "R1,A3,B1",
+     "A3"
+    ]
+   ],
+   "end2": [
+    false,
+    true,
+    false,
+    true,
+    "1 2 3"
+   ],
+   "begin": null,
+   "afterBegin": [
+    true,
+    true
+   ],
+   "resumed": [
+    true,
+    true,
+    true,
+    true,
+    "1 2 3"
+   ],
+   "resumedBind": [
+    "R1,A3,B1",
+    "A3"
+   ],
+   "setLiveFalse": [
+    false,
+    true,
+    false,
+    true,
+    "1 2 3"
+   ],
+   "setLiveFalseSet": [
+    false,
+    true,
+    false,
+    true,
+    "4 5 6"
+   ],
+   "setLiveTrue": [
+    true,
+    true,
+    true,
+    true,
+    "4 5 6"
+   ],
+   "begin2": null,
+   "beginAgain": [
+    true,
+    true,
+    true,
+    true,
+    "4 5 6"
+   ],
+   "log": []
+  },
+  "viewpointsApi.world": {
+   "before": [
+    false
+   ],
+   "afterLoad": [
+    false,
+    false,
+    true
+   ],
+   "afterBegin": [
+    true,
+    true,
+    true
+   ],
+   "log": []
+  }
+ }
+}
