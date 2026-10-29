@@ -270,7 +270,7 @@ function nodeRef (owner, id)
 
    if (!ref)
    {
-      refs .set (id, ref = new X3DNodeRef ({ browser: owner .browser, scene: owner .scene, generation: owner .generation, id }));
+      refs .set (id, ref = new X3DNodeRef ({ browser: owner .browser, scene: owner .scene, generation: owner .generation, id, keep: owner .keep }));
       SFNodeCache .set (ref, guardNode (new Fields .SFNode (ref)));
    }
 
@@ -1072,7 +1072,7 @@ class X3DBrowser
          throw new Error ("no candidate loaded");
 
       // A newer loadURL that started meanwhile takes over (the caller rejects this one).
-      await this .#loaded (id, () => this .#disposed || this .#fileLoader !== loader);
+      await this .#loaded (id, () => this .#disposed || (!loader .detached && this .#fileLoader !== loader));
       return id;
    }
 
@@ -1106,6 +1106,224 @@ class X3DBrowser
       try
       {
          id = this .#engine .prepareString (x3dSyntax, this .baseURL, Date .now () / 1000);
+      }
+      catch (error)
+      {
+         throw engineError (error);
+      }
+
+      this .#flushLog (id);
+      await this .#loaded (id, () => this .#disposed);
+      return this .#sceneOf (id);
+   }
+
+   // X3DBrowser.createScene ([profile, component, ...]): a Promise of a new, empty scene that is not the world. X_ITE_R
+   // has no ProfileInfo and ComponentInfo (getProfile, getComponent), so any argument is a profile that is none.
+   async createScene (profile, ... components)
+   {
+      if (arguments .length)
+         throw new Error ("Couldn't create scene: profile must be of type ProfileInfo.");
+
+      return this .#emptyScene ();
+   }
+
+   // The empty scene of createScene and the imports that find no content: its world URL is the page's (`new X3DScene
+   // (this)`: `location`).
+   async #emptyScene ()
+   {
+      await this .#ready;
+
+      if (!this .#engine)
+         throw new Error ("Browser disposed.");
+
+      const now = Date .now () / 1000;
+      const id  = this .#engine .prepareString ("#X3D V4.0 utf8\n", String (location), now);
+
+      this .#engine .loaded (id, now);
+      return this .#sceneOf (id);
+   }
+
+   // X3DBrowser.createVrmlFromString (vrmlSyntax): the root nodes (an MFNode) of the VRML text, made at once. The nodes
+   // are the current world's own, so the page can put them into a field of the world (X_ITE's belong to a scene of their
+   // own, which X_ITE_R's fields refuse, see API.md). The browser must be ready: a synchronous call cannot wait for it.
+   createVrmlFromString (vrmlSyntax)
+   {
+      const text = `${vrmlSyntax}`;
+
+      if (!this .#engine)
+         throw new Error ("X_ITE_R: the browser is not ready; await browser .ready () first.");
+
+      const engine = this .#engine;
+      const now    = Date .now () / 1000;
+
+      // Before the first world (the page's empty one) there is no scene to make nodes in: they belong to a scene of their
+      // own, which their handles keep alive.
+      const own = engine .current === undefined;
+      const id  = own ? engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, now) : engine .current;
+      let   ids;
+
+      try
+      {
+         if (own)
+            engine .loaded (id, now);
+
+         ids = engine .createVrmlFromString (id, text, this .baseURL);
+      }
+      catch (error)
+      {
+         this .#flushLog (id);
+
+         if (own)
+            engine .discard (id);
+
+         throw engineError (error);
+      }
+      finally
+      {
+         this .#flushLog (id);
+      }
+
+      const scene = this .#sceneOf (id);
+      const owner = scene [_node];
+
+      if (own)
+         owner .keep = scene;
+
+      return new Fields .MFNode (... Array .from (ids, n => nodeObject (owner, Number (n))));
+   }
+
+   // X3DBrowser.createX3DFromURL (url): a Promise of the scene of the first url that loads. The world stays. The
+   // callback form createX3DFromURL (url, node, event) is createVrmlFromURL.
+   createX3DFromURL (url, node, event)
+   {
+      if (arguments .length === 3)
+         return this .createVrmlFromURL (url, node, event);
+
+      if (!(url instanceof Fields .MFString))
+         throw new Error ("Browser.createX3DFromURL: url must be of type MFString.");
+
+      return this .#loadScene (url);
+   }
+
+   // X3DBrowser.createVrmlFromURL (url, node, event): the root nodes of the scene go to the input MFNode field `event`
+   // of `node` after the scene loaded; a url that does not load changes nothing.
+   createVrmlFromURL (url, node, event)
+   {
+      const value = node instanceof Fields .SFNode ? X3DField .prototype .getValue .call (node) : null;
+      const ref   = value instanceof X3DNodeRef ? value : null;
+
+      event = String (event);
+
+      if (!(url instanceof Fields .MFString))
+         throw new Error ("Browser.createVrmlFromURL: url must be of type MFString.");
+
+      if (!ref)
+         throw new Error ("Browser.createVrmlFromURL: node must be of type X3DNode.");
+
+      const field = ref .getField (event);
+
+      if (!field .isInput ())
+         throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be a input field.`);
+
+      if (field .getType () !== X3DConstants .MFNode)
+         throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be of type MFNode.`);
+
+      this .#loadScene (url) .then (scene =>
+      {
+         try
+         {
+            field .setValue (scene .rootNodes);
+         }
+         catch (error)
+         {
+            console .error (error .message);
+         }
+      },
+      () => { });
+   }
+
+   // FileLoader.createX3DFromURL (url, null, callback) for the X3DWorld, without a replaceWorld: the scene of the first
+   // candidate that loads, or the Error "Couldn't load X3D file.". The messages of the candidates that fail are the
+   // engine's. Unlike loadURL it is not the browser's one load: another call or a replaceWorld does not abort it.
+   async #loadScene (urls)
+   {
+      let id;
+
+      try
+      {
+         id = await this .#load (urls, { abort: false, id: null, detached: true });
+      }
+      catch
+      {
+         throw new Error ("Couldn't load X3D file.");
+      }
+
+      return this .#sceneOf (id);
+   }
+
+   // X3DBrowser.importJS (json): a Promise of the scene of X3D JSON (a string or an object). A value that is no X3D JSON
+   // gives an empty scene, like X_ITE's.
+   async importJS (json)
+   {
+      let input = json;
+
+      if (typeof json === "string")
+      {
+         try
+         {
+            input = JSON .parse (json);
+         }
+         catch
+         {
+            input = undefined;
+         }
+      }
+
+      const valid = input instanceof Object && Object .keys (input) .length === 1 && input .X3D instanceof Object;
+
+      return valid ? this .#importText (JSON .stringify (input)) : this .#emptyScene ();
+   }
+
+   // X3DBrowser.importDocument (dom): a Promise of the scene of an X3D XML string, XMLDocument or XML element. An HTML
+   // element (X_ITE's HTMLParser) is not supported; XML that does not parse gives an empty scene, like X_ITE's.
+   async importDocument (dom)
+   {
+      if (dom === undefined)
+         throw new TypeError ("Cannot read properties of undefined (reading 'nodeName')");
+
+      let text = null;
+
+      if (typeof dom === "string")
+         text = dom;
+      else if (dom instanceof HTMLElement)
+         throw new Error ("X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element.");
+      else if (dom instanceof Node)
+         text = new XMLSerializer () .serializeToString (dom);
+
+      if (text !== null)
+      {
+         const xml = new DOMParser () .parseFromString (text, "application/xml");
+
+         if (xml .getElementsByTagName ("parsererror") .length || xml .documentElement ?.nodeName !== "X3D")
+            text = null;
+      }
+
+      return text === null ? this .#emptyScene () : this .#importText (text);
+   }
+
+   // The scene of text that createX3DFromString parses, with the page's URL as its world URL.
+   async #importText (text)
+   {
+      await this .#ready;
+
+      if (!this .#engine)
+         throw new Error ("Browser disposed.");
+
+      let id;
+
+      try
+      {
+         id = this .#engine .prepareString (text, String (location), Date .now () / 1000);
       }
       catch (error)
       {

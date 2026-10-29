@@ -699,6 +699,23 @@ impl WebBrowser {
             .map(|w| w.session.world_generation() as f64)
     }
 
+    /// X3DBrowser.createVrmlFromString of the page: parse `#VRML V2.0 utf8` + `text` into scene `id` (the current world, or
+    /// an empty scene of the page's when there is no world yet) as nodes of its arena, see
+    /// [`Session::create_vrml_from_string`], with the page's `base` URL. The ids of the new scene's root nodes (-1 is
+    /// NULL). The error is the thrown Error's `String (error)`.
+    #[wasm_bindgen(js_name = createVrmlFromString)]
+    pub fn create_vrml_from_string(
+        &mut self,
+        id: u32,
+        text: &str,
+        base: &str,
+    ) -> Result<Vec<i64>, JsError> {
+        self.session_mut(id)?
+            .create_vrml_from_string(text, base)
+            .map(|nodes| nodes.into_iter().map(|n| n.map_or(-1, i64::from)).collect())
+            .map_err(|e| JsError::new(&e))
+    }
+
     /// The node id of a DEF name of scene `id`, or `undefined`.
     #[wasm_bindgen(js_name = namedNode)]
     pub fn named_node(&self, id: u32, name: &str) -> Option<u32> {

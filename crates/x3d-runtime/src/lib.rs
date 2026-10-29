@@ -1537,9 +1537,21 @@ impl Runtime {
         text: &str,
         parent: CtxId,
     ) -> Result<Vec<Option<NodeId>>, String> {
-        let source = format!("#VRML V2.0 utf8\n\n{text}");
         let world_url = self.scene.world_url_of(parent).to_string();
-        let scene = match x3d_parse::Parser::new(&source, &world_url).parse() {
+
+        self.create_vrml_from_string_at(text, parent, &world_url)
+    }
+
+    /// [`Runtime::create_vrml_from_string`] with the world URL `world_url` of the new scene: the page that embeds the
+    /// browser is an external browser, whose `createVrmlFromString` takes its base URL, not the world's.
+    pub fn create_vrml_from_string_at(
+        &mut self,
+        text: &str,
+        parent: CtxId,
+        world_url: &str,
+    ) -> Result<Vec<Option<NodeId>>, String> {
+        let source = format!("#VRML V2.0 utf8\n\n{text}");
+        let scene = match x3d_parse::Parser::new(&source, world_url).parse() {
             Ok(scene) => scene,
             Err(e) => {
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
