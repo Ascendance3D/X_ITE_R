@@ -14,9 +14,10 @@ pub trait Fetcher {
     /// `fetch (url)` + `checkResponse`: the body bytes, or `String (error)` of the rejection.
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String>;
 
-    /// Returns the error message of a failed request. Implementations should override this
-    /// if they can check the error without copying or consuming a successful body bytes payload.
-    /// The default calls `fetch(url)`.
+    /// The error message of a failed request, or `None` when the request succeeded. The default
+    /// calls [`Fetcher::fetch`], so for a successful request it copies the body and drops it.
+    /// A fetcher that holds a response cache overrides this to answer from the cached state
+    /// without copying: `WebFetcher` does.
     fn fetch_error(&self, url: &url::Url) -> Option<String> {
         self.fetch(url).err()
     }
