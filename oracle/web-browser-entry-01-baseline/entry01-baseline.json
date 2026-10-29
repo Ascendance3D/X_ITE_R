@@ -1,0 +1,598 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "entryPoints.typeOf": {
+   "typeof": "function",
+   "length": 2,
+   "callable": true,
+   "isFunction": true,
+   "toString": "[object X3D]",
+   "string": "[object X3D]",
+   "tag": "X3D",
+   "ownToString": true,
+   "members": [
+    [
+     "noConflict",
+     "function"
+    ],
+    [
+     "createBrowser",
+     "function"
+    ],
+    [
+     "getBrowser",
+     "function"
+    ],
+    [
+     "X3DConstants",
+     "object"
+    ],
+    [
+     "X3DField",
+     "function"
+    ],
+    [
+     "X3DArrayField",
+     "function"
+    ],
+    [
+     "X3DFieldDefinition",
+     "function"
+    ],
+    [
+     "FieldDefinitionArray",
+     "function"
+    ],
+    [
+     "SFVec3f",
+     "function"
+    ],
+    [
+     "MFString",
+     "function"
+    ]
+   ],
+   "lengths": [
+    [
+     "noConflict",
+     0
+    ],
+    [
+     "createBrowser",
+     0
+    ],
+    [
+     "getBrowser",
+     1
+    ]
+   ]
+  },
+  "entryPoints.call": {
+   "order": [
+    [
+     "fulfilled",
+     "undefined"
+    ],
+    [
+     "rejected",
+     "boom"
+    ]
+   ],
+   "isPromise": true,
+   "isThenable": "function",
+   "samePromise": false,
+   "value": "undefined",
+   "valueAgain": "undefined",
+   "withCallbacks": "result",
+   "rejectedPath": "recovered boom",
+   "noOnrejected": "rejected boom",
+   "onlyOnrejected": "undefined",
+   "nonFunctions": "undefined",
+   "nullCallbacks": "undefined",
+   "browserInCallback": true,
+   "chain": 2,
+   "rejectedRethrown": "rejected two after one",
+   "unhandled": []
+  },
+  "entryPoints.noConflictAbsent": {
+   "assigned": true,
+   "first": {
+    "returnsX3D": true,
+    "has": false,
+    "value": "undefined"
+   },
+   "second": {
+    "returnsX3D": true,
+    "has": false,
+    "value": "undefined"
+   },
+   "stillWorks": true,
+   "later": {
+    "returnsX3D": true,
+    "value": "later"
+   },
+   "again": {
+    "has": false
+   }
+  },
+  "entryPoints.noConflictPresent": {
+   "rawIsPrior": true,
+   "rawHas": true,
+   "rawIsLibrary": false,
+   "first": {
+    "returnsX3D": true,
+    "isPrior": true,
+    "value": "{\"prior\":true}"
+   },
+   "second": {
+    "returnsX3D": true,
+    "isPrior": true
+   },
+   "notLibrary": {
+    "returnsX3D": true,
+    "value": "page"
+   },
+   "restoredAgain": true
+  },
+  "entryPoints.noConflictUndefined": {
+   "returnsX3D": true,
+   "has": true,
+   "value": "undefined",
+   "second": {
+    "returnsX3D": true,
+    "has": true
+   }
+  },
+  "entryPoints.createBrowser": {
+   "detached": {
+    "nodeName": "X3D-CANVAS",
+    "localName": "x3d-canvas",
+    "tagName": "X3D-CANVAS",
+    "isConnected": false,
+    "hasParent": false,
+    "isHTMLElement": true,
+    "isCustomElement": true,
+    "toString": "[object X3DCanvasElement]",
+    "hasBrowser": true,
+    "browserType": "object",
+    "getBrowserSame": true,
+    "hasShadowRoot": true,
+    "ownsBrowser": true
+   },
+   "canvases": [
+    1,
+    1
+   ],
+   "twoElements": true,
+   "beforeAttach": {
+    "events": [],
+    "world": "page",
+    "hasScene": "object"
+   },
+   "stillDetached": {
+    "events": [],
+    "world": "page",
+    "hasScene": "object"
+   },
+   "attached": {
+    "nodeName": "X3D-CANVAS",
+    "localName": "x3d-canvas",
+    "tagName": "X3D-CANVAS",
+    "isConnected": true,
+    "hasParent": true,
+    "isHTMLElement": true,
+    "isCustomElement": true,
+    "toString": "[object X3DCanvasElement]",
+    "hasBrowser": true,
+    "browserType": "object",
+    "getBrowserSame": true,
+    "hasShadowRoot": true,
+    "ownsBrowser": true
+   },
+   "canvasesAttached": 2,
+   "afterAttach": {
+    "events": [],
+    "world": "page",
+    "hasScene": "object"
+   },
+   "getBrowserDefault": true,
+   "unhandled": []
+  },
+  "entryPoints.createBrowserUrl": {
+   "threw": false,
+   "isElement": true,
+   "beforeAttach": {
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "world": "data:model/x3d-vrml,%23X3D%20V4.0%20utf8",
+    "hasScene": "object"
+   },
+   "afterAttach": {
+    "events": [
+     "shutdown",
+     "initialized",
+     "load"
+    ],
+    "world": "data:model/x3d-vrml,%23X3D%20V4.0%20utf8",
+    "hasScene": "object"
+   },
+   "connected": true,
+   "unhandled": []
+  },
+  "entryPoints.createBrowserBadUrl": {
+   "threw": false,
+   "isElement": true,
+   "beforeAttach": {
+    "events": [
+     "error"
+    ],
+    "world": "page",
+    "hasScene": "object"
+   },
+   "afterAttach": {
+    "events": [
+     "error"
+    ],
+    "world": "page",
+    "hasScene": "object"
+   },
+   "connected": true,
+   "unhandled": [
+    "Error: Couldn't load X3D file."
+   ]
+  },
+  "entryPoints.createBrowserArgs": {
+   "string": {
+    "threw": false,
+    "isElement": true,
+    "beforeAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "afterAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "connected": true,
+    "unhandled": [
+     "Error: Browser.loadURL: url must be of type MFString."
+    ]
+   },
+   "undefined": {
+    "threw": false,
+    "isElement": true,
+    "beforeAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "afterAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "connected": true,
+    "unhandled": [
+     "Error: Browser.loadURL: url must be of type MFString."
+    ]
+   },
+   "null": {
+    "threw": false,
+    "isElement": true,
+    "beforeAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "afterAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "connected": true,
+    "unhandled": [
+     "Error: Browser.loadURL: url must be of type MFString."
+    ]
+   },
+   "emptyMFString": {
+    "threw": false,
+    "isElement": true,
+    "beforeAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "afterAttach": {
+     "events": [],
+     "world": "page",
+     "hasScene": "object"
+    },
+    "connected": true,
+    "unhandled": [
+     "Error: Loading of X3D file aborted."
+    ]
+   },
+   "withParameter": {
+    "threw": false,
+    "isElement": true,
+    "beforeAttach": {
+     "events": [
+      "shutdown",
+      "initialized",
+      "load"
+     ],
+     "world": "data:model/x3d-vrml,%23X3D%20V4.0%20utf8",
+     "hasScene": "object"
+    },
+    "afterAttach": {
+     "events": [
+      "shutdown",
+      "initialized",
+      "load"
+     ],
+     "world": "data:model/x3d-vrml,%23X3D%20V4.0%20utf8",
+     "hasScene": "object"
+    },
+    "connected": true,
+    "unhandled": []
+   }
+  },
+  "entryPoints.getBrowser": {
+   "none": "page browser",
+   "element": "page browser",
+   "made": "made browser",
+   "selector": "page browser",
+   "upper": "undefined",
+   "id": "undefined",
+   "noMatch": "undefined",
+   "badSelector": "DOMException: Failed to execute 'querySelectorAll' on 'Document': '!!' is not a valid selector.",
+   "empty": "page browser",
+   "zero": "page browser",
+   "null": "page browser",
+   "undefined": "page browser",
+   "body": "DOMException: Failed to execute 'querySelectorAll' on 'Document': '[object HTMLBodyElement]' is not a valid selector.",
+   "number": "DOMException: Failed to execute 'querySelectorAll' on 'Document': '5' is not a valid selector.",
+   "object": "DOMException: Failed to execute 'querySelectorAll' on 'Document': '[object Object]' is not a valid selector."
+  },
+  "entryPoints.captureStream": {
+   "types": {
+    "captureStream": "function",
+    "toBlob": "function",
+    "toDataURL": "function",
+    "length": 0
+   },
+   "none": {
+    "isMediaStream": true,
+    "active": true,
+    "tracks": 1,
+    "videoTracks": 1,
+    "audioTracks": 0,
+    "kinds": [
+     "video"
+    ],
+    "readyState": [
+     "live"
+    ],
+    "enabled": [
+     true
+    ],
+    "muted": [
+     false
+    ],
+    "trackIsCanvasCapture": [
+     "CanvasCaptureMediaStreamTrack"
+    ],
+    "frameRate": [
+     60
+    ]
+   },
+   "zero": {
+    "isMediaStream": true,
+    "active": true,
+    "tracks": 1,
+    "videoTracks": 1,
+    "audioTracks": 0,
+    "kinds": [
+     "video"
+    ],
+    "readyState": [
+     "live"
+    ],
+    "enabled": [
+     true
+    ],
+    "muted": [
+     false
+    ],
+    "trackIsCanvasCapture": [
+     "CanvasCaptureMediaStreamTrack"
+    ],
+    "frameRate": [
+     0
+    ]
+   },
+   "thirty": {
+    "isMediaStream": true,
+    "active": true,
+    "tracks": 1,
+    "videoTracks": 1,
+    "audioTracks": 0,
+    "kinds": [
+     "video"
+    ],
+    "readyState": [
+     "live"
+    ],
+    "enabled": [
+     true
+    ],
+    "muted": [
+     false
+    ],
+    "trackIsCanvasCapture": [
+     "CanvasCaptureMediaStreamTrack"
+    ],
+    "frameRate": [
+     30
+    ]
+   },
+   "negative": "DOMException: Failed to execute 'captureStream' on 'HTMLCanvasElement': Given frame rate is not supported.",
+   "string": "TypeError: Failed to execute 'captureStream' on 'HTMLCanvasElement': The provided double value is non-finite.",
+   "nan": "TypeError: Failed to execute 'captureStream' on 'HTMLCanvasElement': The provided double value is non-finite.",
+   "infinity": "TypeError: Failed to execute 'captureStream' on 'HTMLCanvasElement': The provided double value is non-finite.",
+   "toDataURL": true,
+   "toBlob": "image/png"
+  },
+  "entryPoints.captureStreamNotReady": {
+   "createBrowser": {
+    "detached": {
+     "captureStream": {
+      "isMediaStream": true,
+      "active": true,
+      "tracks": 1,
+      "videoTracks": 1,
+      "audioTracks": 0,
+      "kinds": [
+       "video"
+      ],
+      "readyState": [
+       "live"
+      ],
+      "enabled": [
+       true
+      ],
+      "muted": [
+       false
+      ],
+      "trackIsCanvasCapture": [
+       "CanvasCaptureMediaStreamTrack"
+      ],
+      "frameRate": [
+       60
+      ]
+     },
+     "captureStream30": {
+      "isMediaStream": true,
+      "active": true,
+      "tracks": 1,
+      "videoTracks": 1,
+      "audioTracks": 0,
+      "kinds": [
+       "video"
+      ],
+      "readyState": [
+       "live"
+      ],
+      "enabled": [
+       true
+      ],
+      "muted": [
+       false
+      ],
+      "trackIsCanvasCapture": [
+       "CanvasCaptureMediaStreamTrack"
+      ],
+      "frameRate": [
+       30
+      ]
+     },
+     "toDataURL": "data:image/png;base64,",
+     "toBlob": "undefined"
+    },
+    "attached": {
+     "captureStream": {
+      "isMediaStream": true,
+      "active": true,
+      "tracks": 1,
+      "videoTracks": 1,
+      "audioTracks": 0,
+      "kinds": [
+       "video"
+      ],
+      "readyState": [
+       "live"
+      ],
+      "enabled": [
+       true
+      ],
+      "muted": [
+       false
+      ],
+      "trackIsCanvasCapture": [
+       "CanvasCaptureMediaStreamTrack"
+      ],
+      "frameRate": [
+       60
+      ]
+     }
+    }
+   },
+   "createElement": {
+    "detached": {
+     "captureStream": {
+      "isMediaStream": true,
+      "active": true,
+      "tracks": 1,
+      "videoTracks": 1,
+      "audioTracks": 0,
+      "kinds": [
+       "video"
+      ],
+      "readyState": [
+       "live"
+      ],
+      "enabled": [
+       true
+      ],
+      "muted": [
+       false
+      ],
+      "trackIsCanvasCapture": [
+       "CanvasCaptureMediaStreamTrack"
+      ],
+      "frameRate": [
+       60
+      ]
+     },
+     "captureStream30": {
+      "isMediaStream": true,
+      "active": true,
+      "tracks": 1,
+      "videoTracks": 1,
+      "audioTracks": 0,
+      "kinds": [
+       "video"
+      ],
+      "readyState": [
+       "live"
+      ],
+      "enabled": [
+       true
+      ],
+      "muted": [
+       false
+      ],
+      "trackIsCanvasCapture": [
+       "CanvasCaptureMediaStreamTrack"
+      ],
+      "frameRate": [
+       30
+      ]
+     },
+     "toDataURL": "data:image/png;base64,",
+     "toBlob": "undefined"
+    }
+   }
+  }
+ }
+}
