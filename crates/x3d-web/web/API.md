@@ -72,6 +72,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | `worldURL`, `getWorldURL ()` | supported, compared |
 | `rootNodes` | supported, compared; an `MFNode` (a new one on each read) |
 | `getNamedNode (name)` | supported, compared, including the error text |
+| `toVRMLString ()`, `toXMLString ()`, `toJSONString ()` | supported, compared as exact text (`tests/browser/scenetext01.test.mjs`): the scene of `createX3DFromString`, the `currentScene` after `loadURL`, and the empty world of a canvas before any load (no PROFILE line in the VRML text, `Full` in XML and JSON). No options (see below) |
 
 ### `SFNode`
 
@@ -105,7 +106,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 
 - Field callbacks run after the frame that processed their events, not inside its event cascade. A callback gets the value of its event, as in X_ITE; a field it sets sends its event in the next frame, where X_ITE's goes on in the same cascade. A callback that throws is reported, and the other callbacks of the event still run.
 - A node can only be assigned to a field of a node of the same world (a scene of `createX3DFromString` is a world of its own). X_ITE allows it: the node keeps its own scene, and the field holds it. X_ITE_R refuses the assignment, prints the warning `X_ITE_R: a node can only be used in the world it belongs to.`, and leaves the field as it was. The same holds for a node list (`MFNode`), which is refused as a whole, and for `rootNodes .push` of a node of another world, which is refused without a warning. As in X_ITE, an `SFNode` setter keeps a plain JavaScript property when it fails, so the page reads the node back from that property. The text forms and the field value do not show it. An operation on the field after a refused one goes on (the engine keeps its old value, and a text form shows it, see `s13`). A node of a replaced world is refused as stale, where X_ITE keeps it usable. Refs #137, #145. Compared in `tests/browser/fields03.test.mjs` (12 compared scenarios, plus one deferred cross-scene `ROUTE` scenario, s06, which needs `addRoute` of #135).
-- The text forms of nodes take no options: `toVRMLString ()`, `toXMLString ()` and `toJSONString ()` print with X_ITE's default generator options, and the options object (`style`, `indent`, ...) is ignored. `toString ()` needs none: X_ITE's `X3DNode .toStream` prints `TypeName { }`.
+- The text forms of nodes and scenes take no options: `toVRMLString ()`, `toXMLString ()` and `toJSONString ()` (of an `X3DScene` too) print with X_ITE's default generator options, and the options object (`style`, `indent`, ...) is ignored. `toString ()` needs none: X_ITE's `X3DNode .toStream` prints `TypeName { }`.
 - `X3DField .fromVRMLString` and `fromXMLString` take an `X3DScene` of this adapter as `scene`; the nodes of the value are made in that scene's world. `fromJSONString` calls `fromVRMLString`, as in X_ITE. A value read without a scene works for every type that needs no node, in a page where the engine is loaded (use `browser .ready ()`). Before that it throws `X_ITE_R: the engine is not loaded yet; wait for browser .ready ().`.
 - Removing the element from the document stops the frame loop and releases the buttons and touches that are down; adding it again restarts the loop. X_ITE keeps drawing, and its document `mouseup` listener releases later.
 - A `pointercancel` (for example a touch the browser takes for scrolling) releases the touch: the sensor or the viewer ends its drag. X_ITE has no `touchcancel` handler, and its TouchSensor stays active.
@@ -134,7 +135,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - Script nodes: the browser build has no script engine (QuickJS does not build for wasm32-unknown-unknown). A Script logs `Couldn't load URL ... no script engine` and does not run; the rest of the world runs.
 - `createScene`, `createX3DFromURL`, `createVrmlFromString`, `createVrmlFromURL`, `importDocument`, `importJS`.
 - `bindViewpoint`, `addRoute`, `deleteRoute`, `beginUpdate`, `endUpdate`, `getUserViewpoints` and the other X3DBrowserContext functions.
-- Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println`, `toVRMLString` and the other stream functions.
+- Browser options and properties (`getBrowserOption`, `setBrowserOption`, `getBrowserProperty`, `getRenderingProperty`), `print`, `println` and the other stream functions. (The text forms of `X3DScene` and of nodes are supported.)
 - `X3D.createBrowser`, the `X3D (callback)` form, `X3D.noConflict`.
 - `captureStream` on the element.
 - Splash screen, context menu, notifications, timings, XR.
