@@ -40,6 +40,9 @@ env:
 jobs:
   changes:
     name: Changed paths
+    # Only same-repository PR branches (authors with write access) run on the persistent self-hosted runners;
+    # fork PRs skip, so their required result check fails closed.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on:
       group: xite-ci
       labels: [self-hosted, Linux, X64]
