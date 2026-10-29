@@ -350,6 +350,20 @@ class CheckOutput(Case):
         os.symlink(os.path.join(self.store, "d", "new"), dangling)
         self.unsafe(lambda: self.passes(dangling), "holds every key")
 
+    def test_unresolvable_path_is_refused(self):
+        loop = os.path.join(self.tmp, "loop1")
+        os.symlink(os.path.join(self.tmp, "loop2"), loop)
+        os.symlink(loop, os.path.join(self.tmp, "loop2"))
+        self.unsafe(lambda: self.passes(os.path.join(loop, "x.png")), "cannot resolve")
+        locked = os.path.join(self.tmp, "locked")
+        os.mkdir(locked)
+        os.symlink(os.path.join(self.store, "d"), os.path.join(locked, "via"))
+        os.chmod(locked, 0)
+        self.addCleanup(os.chmod, locked, 0o700)
+        if os.access(locked, os.X_OK):
+            self.skipTest("running as root: a mode-0 directory is still readable")
+        self.unsafe(lambda: self.passes(os.path.join(locked, "via", "x.png")), "cannot resolve")
+
     def test_cli_and_recorder_refuse(self):
         tool = os.path.join(self.root, "tools", "answer_keys.py")
         os.makedirs(os.path.dirname(tool))

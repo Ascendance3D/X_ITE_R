@@ -33,7 +33,8 @@ invalid $X3D_ORACLE_KEYS. Run it again after a checkout that changes the ignore 
 
 check-output refuses (exit 4) an output path that is, holds or is below a protected path: the store
 ($X3D_ORACLE_KEYS), a key path `oracle/NAME` of any worktree, or the target of a link at one. It checks the
-literal path and its real path, so a symlink anywhere on the way is followed. It also refuses a path at or below a
+literal path and its real path, so a symlink anywhere on the way is followed. A path that cannot be resolved (a
+symlink loop, a directory that cannot be read) is refused. It also refuses a path at or below a
 directory that holds an entry for every manifest name (a store that the variable does not name). The recorders
 that write answer keys (oracle/x_ite-shot.mjs, x_ite-shot-msaa.mjs, x_ite-dump.mjs, x_ite-text.mjs) run it first.
 
@@ -282,6 +283,26 @@ def link(dest, names, root=ROOT):
         print(f"{at} -> {src}")
 
 
+def _resolved(path):
+    """Real path of path. Parts that do not exist yet are kept. A dangling symlink is followed. Any other failure
+    (a symlink loop, a directory that cannot be read) is unsafe: the check cannot see where a write would go."""
+    head, rest, hops = os.path.abspath(path), [], 0
+    while True:
+        try:
+            return os.path.join(os.path.realpath(head, strict=True), *rest)
+        except FileNotFoundError:
+            if os.path.islink(head):
+                hops += 1
+                if hops > 40:
+                    raise KeyError_(UNSAFE, f"check-output: cannot resolve {path}: too many symlinks")
+                head = os.path.join(os.path.dirname(head), os.readlink(head))
+            else:
+                rest.insert(0, os.path.basename(head))
+                head = os.path.dirname(head)
+        except OSError as e:
+            raise KeyError_(UNSAFE, f"check-output: cannot resolve {path}: {e}")
+
+
 def check_output(path, root=ROOT):
     """Refuses (UNSAFE) when writing at path could write the store or a key path, directly or through a link."""
     rows = manifest(os.path.join(root, "oracle", "answer-keys.tsv"))
@@ -295,7 +316,7 @@ def check_output(path, root=ROOT):
             protected.append((p, f"the key path {p}"))
             if os.path.lexists(p):
                 protected.append((os.path.realpath(p), f"{os.path.realpath(p)}, the target of {p}"))
-    literal, real = os.path.abspath(path), os.path.realpath(path)
+    literal, real = os.path.abspath(path), _resolved(path)
     problems = []
     for q in dict.fromkeys((literal, real)):
         for prot, why in protected:
