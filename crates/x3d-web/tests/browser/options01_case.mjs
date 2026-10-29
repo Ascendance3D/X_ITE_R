@@ -58,7 +58,7 @@ async function load (page)
 
 // The result of `fn`, or its error as `Name: message`; the same text in both engines. NaN and undefined are
 // written as text, which the JSON of the recording would turn into null.
-function pageAttempt ()
+export function pageAttempt ()
 {
    const show = value => typeof value === "number" && !Number .isFinite (value) ? `number:${value}` : value === undefined ? "undefined" : value;
 

@@ -27,6 +27,7 @@ import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
+import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -61,6 +62,7 @@ const SUITES = {
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
+   attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -307,13 +309,9 @@ const KNOWN_DIFFERENCES = {
       // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
       [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
-   // The page of the cases sets splashScreen, contextMenu and notifications to false; X_ITE reads these attributes into the
-   // options (BrowserOptions.reset). X_ITE_R reads only src, url and contentScale and keeps the option defaults (API.md).
-   "browserOptions.defaults": [
-      [ [ "SplashScreen", 0 ], false, true ], [ [ "ContextMenu", 0 ], false, true ], [ [ "Notifications", 0 ], false, true ],
-   ],
-   "browserOptions.setValid": [
-      [ [ "SplashScreen", "before" ], false, true ], [ [ "ContextMenu", "before" ], false, true ], [ [ "Notifications", "before" ], false, true ],
+   // The baseURL attribute sets browser.baseURL in X_ITE; X_ITE_R keeps the page's base URL (API.md, "Canvas attributes").
+   "canvasAttributes.otherAttributes": [
+      [ [ "baseURL", 1 ], true, false ],
    ],
    // X_ITE's AntiAliased is an alias of the Antialiased rendering property, which X_ITE_R does not implement.
    "browserOptions.unknownNames": [
@@ -515,6 +513,8 @@ const GROUP_FILES = {
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
+   canvasAttributes: "attributes01.test.mjs",
+   canvasAttributesScaled: "attributes01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

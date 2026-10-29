@@ -878,3 +878,21 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-viewpoints-01-baseline -
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --runs 5 --suite options01
 ```
+
+## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
+
+- `x_ite-web-runtime-02.mjs --suite attributes01` runs the 10 cases of `crates/x3d-web/tests/browser/attributes01_case.mjs`
+  against the pinned X_ITE and records `web-browser-attributes-01-baseline/attributes01-baseline.json` (no pictures):
+  the option after each attribute value at start, on change and when removed (19 attributes), the options that leave
+  the attributes alone, the framebuffer size of `contentScale` (attribute and `ContentScale` option, at device pixel
+  ratio 1 and 2, `auto`, invalid values, a resized element), `MaximumFrameRate` (attribute and option), and the `update`
+  attribute with the `AutoUpdate` option (hidden and shown element, a `loadURL` and a new element while stopped).
+- Frames are observed as `time` events of a looping TimeSensor. The recording keeps ceilings (`ticks <= rate * seconds + 1`)
+  and "none" or "some", never counts, so it holds on a slow machine. A stopped window must give none.
+- X_ITE uses a `ContentScale` of 0, a negative or a NaN value as it is, which gives a 1 x 1 framebuffer; `update="auto"` on a
+  stopped browser leaves it stopped; `baseURL` sets `browser.baseURL` (X_ITE_R does not, see `web/API.md`).
+- Five runs gave identical values. Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-attributes-01-baseline --runs 5 --suite attributes01
+```
