@@ -204,6 +204,19 @@ impl x3d_runtime::Fetcher for WebFetcher {
         );
         Err("TypeError: Failed to fetch".to_string())
     }
+
+    /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
+    /// Thus we do not need to `self.start(key)` for missing entries.
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str()).err();
+        }
+        let key = cache_key(url);
+        match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Failed(error)) => Some(error.clone()),
+            _ => None,
+        }
+    }
 }
 
 /// One world: the session and its fetches.
@@ -794,6 +807,13 @@ impl WebBrowser {
         self.session_mut(id)?
             .observe_field(node, name, on)
             .map_err(|e| JsError::new(&e))
+    }
+
+    /// A page field callback threw: X_ITE processes no event again (see `Runtime::halt_events`).
+    #[wasm_bindgen(js_name = haltEvents)]
+    pub fn halt_events(&mut self, id: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.halt_events();
+        Ok(())
     }
 
     /// The events of the observed fields, as node, name, data, ... in event order (see
