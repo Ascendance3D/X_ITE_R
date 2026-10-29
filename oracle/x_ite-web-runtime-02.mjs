@@ -46,7 +46,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
