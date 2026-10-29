@@ -19,8 +19,8 @@
 # gl_backend_cannot_run_the_renderer_and_says_so start a GL device; the NVIDIA one does not (backend-absent).
 #
 # The "Fast checks" job runs first, on every PR: the reference pins, the answer-key guard, rustfmt, actionlint and
-# tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only or browser-only
-# PR leaves the suite out. The "Rust tests result" job always reports: it fails when a needed job did not pass.
+# tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only, metadata-only,
+# Fast-checks-tool-only or browser-only PR leaves the suite out, and so does a draft PR (docs/agents/ci.md). The "Rust tests result" job always reports: it fails when a needed job did not pass.
 #
 # A push to master runs "Fast checks" and "Warm cache" only. A PR can read its own caches and master's, not another
 # PR's; "Warm cache" builds the suite once for each new Cargo.lock on master, so the first run of every PR finds
@@ -36,6 +36,7 @@ name: Rust tests
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [master]
   workflow_dispatch:
@@ -101,6 +102,8 @@ jobs:
         id: changes
         env:
           EVENT: ${{ github.event_name }}
+          # A draft PR runs neither suite (tools/ci_changes.py); ready_for_review starts a new run.
+          DRAFT: ${{ github.event.pull_request.draft }}
         run: |
           python3 -I -B tools/ci_changes.py --self-test
           if [ "$EVENT" = pull_request ]; then
