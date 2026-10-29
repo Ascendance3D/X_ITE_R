@@ -1,0 +1,37 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT HAnim:3
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" center 0.3 0 0 rotation 0 0 1 0.8 children HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.4 0.2  } } geometry Box { size 1.2 0.5 0.5 } } } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" translation 0.4 -0.3 0 scale 0.6 1.4 1 children HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.6 0.9  } } geometry Box { size 1 1 1 } } } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" scaleOrientation 0 0 1 0.7 scale 1.6 0.5 1 children HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.3  } } geometry Box { size 0.8 0.8 0.8 } } } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "a" rotation 0 0 1 0.5 children [ Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2  } } geometry Box { size 0.6 0.2 0.2 } } HAnimJoint { name "b" translation 0.6 0 0 rotation 0 0 1 -1.0 children [ HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.3  } } geometry Box { size 0.8 0.25 0.25 } } } ] } ] } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children [ HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.9  } } geometry Box { size 0.9 0.9 0.9 } } } HAnimSite { name "tip" translation 0.7 0.7 0 rotation 0 0 1 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2  } } geometry Sphere { radius 0.25 } } } ] } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimSite { name "s" translation -0.5 0 0 scale 1.5 1.5 1.5 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.1  } } geometry Box { size 0.5 0.5 0.5 } } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+HAnimHumanoid { name "h" translation 0.3 -0.2 0 rotation 0 0 1 0.4 scale 0.7 0.7 0.7 skeleton [ HAnimJoint { name "j" children HAnimSegment { name "s" children Shape { appearance Appearance { material Material { diffuseColor 0.5 0.9 0.8  } } geometry Box { size 1 1 1 } } } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+HAnimHumanoid { name "h"  skeleton [ HAnimJoint { name "j" children [ HAnimSegment { name "s" bboxCenter 0 0 0 bboxSize 3 3 3 children [ Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.8  } } geometry Box { size 0.7 0.7 0.7 } } Transform { translation 0.8 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.3 0.9  } } geometry Box { size 0.4 0.4 0.4 } } } ] } ] } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+HAnimHumanoid { name "h" skeleton [ DEF R HAnimJoint { name "root" skinCoordIndex [ 0 1 2 3 ] skinCoordWeight [ 1 1 1 1 ] children DEF E HAnimJoint { name "elbow" center 0 0 0 rotation 0 0 1 0.7 skinCoordIndex [ 4 5 6 7 ] skinCoordWeight [ 1 1 1 1 ] } } ] joints [ USE R USE E ] skinCoord DEF SK Coordinate { point [ -0.9 -0.3 0, 0 -0.3 0, 0 0.3 0, -0.9 0.3 0, 0 -0.3 0, 0.9 -0.3 0, 0.9 0.3 0, 0 0.3 0 ] } skin [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.7 0.3  } } geometry IndexedFaceSet { solid FALSE coord USE SK coordIndex [ 0 1 2 3 -1 4 5 6 7 -1 ] } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+HAnimHumanoid { name "h" skeleton [ DEF R2 HAnimJoint { name "root" skinCoordIndex [ 0 1 2 3 4 5 ] skinCoordWeight [ 1 1 1 1 1 1 ] displacers HAnimDisplacer { name "bump" coordIndex [ 2 ] displacements [ 0 0.5 0 ] weight 1 } } ] joints [ USE R2 ] skinCoord DEF SK2 Coordinate { point [ -0.9 -0.5 0, 0 -0.5 0, 0 0.5 0, 0.9 -0.5 0, 0.9 0.5 0, -0.9 0.5 0 ] } skin [ Shape { appearance Appearance { material Material { diffuseColor 0.4 0.8 0.9  } } geometry IndexedFaceSet { solid FALSE coord USE SK2 coordIndex [ 0 1 2 5 -1 1 3 4 2 -1 ] } } ] }
+] }
