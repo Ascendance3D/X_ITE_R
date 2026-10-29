@@ -481,6 +481,19 @@ impl Session {
         }
     }
 
+    /// X3DScene.toVRMLString / toXMLString / toJSONString of the world, with X_ITE's default generator options; `kind` is
+    /// `vrml`, `xml` or `json`.
+    pub fn print_scene(&self, kind: &str) -> Result<String, String> {
+        let scene = &self.rt().scene;
+
+        match kind {
+            "vrml" => Ok(scene.to_vrml_string()),
+            "xml" => Ok(scene.to_xml_string_ctx(scene.world)),
+            "json" => Ok(scene.to_json_string_ctx(scene.world)),
+            _ => Err(format!("unknown text form '{kind}'")),
+        }
+    }
+
     /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty` named `name`: the data of the
     /// value read from `text`. The nodes it makes belong to this world and are set up; `unit` converts the values. A
     /// value that cannot be read is an error with X_ITE's message.
