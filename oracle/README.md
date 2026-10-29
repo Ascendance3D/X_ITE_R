@@ -50,7 +50,7 @@ too. `x0-xml-baseline.json` was `synthetic-rea-xml/x0-xml-baseline.json`; it is 
 
 ```
 X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py verify   # every key, in the store only
-python3 -I -B tools/answer_keys.py verify                       # without the store; fails on a key that no checkout holds
+env -u X3D_ORACLE_KEYS python3 -I -B tools/answer_keys.py verify # without the store; fails on a key that no checkout holds
 python3 -I -B tools/answer_keys.py resolve render-items2-baseline
 python3 -I -B tools/answer_keys.py guard . HEAD origin/master   # before a Git operation to origin/master
 ```
