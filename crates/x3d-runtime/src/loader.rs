@@ -47,12 +47,18 @@ pub enum FetchPoll {
 }
 
 /// Script URLs (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`): no fetch.
-fn is_script_url(candidate: &str) -> bool {
-    let trimmed = candidate.trim_start();
+pub(crate) fn is_script_url(candidate: &str) -> bool {
+    strip_script_scheme(candidate).is_some()
+}
 
-    ["ecmascript:", "javascript:", "vrmlscript:"]
-        .iter()
-        .any(|s| trimmed.starts_with(s))
+pub(crate) fn strip_script_scheme(candidate: &str) -> Option<(&'static str, &str)> {
+    let trimmed = candidate.trim_start_matches(is_js_space);
+    for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
+        if trimmed.starts_with(scheme) {
+            return Some((scheme, &trimmed[scheme.len()..]));
+        }
+    }
+    None
 }
 
 /// Serves `<prefix><path>` from `root/<path>` like oracle/x_ite-dump.mjs's server.
@@ -186,7 +192,7 @@ fn truncate(s: &str) -> String {
 }
 
 /// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
-fn is_js_space(c: char) -> bool {
+pub(crate) fn is_js_space(c: char) -> bool {
     c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
 }
 
@@ -473,12 +479,8 @@ impl Runtime {
                 }
 
                 // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
-                let trimmed = candidate.trim_start();
-                for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
-                    if trimmed.starts_with(scheme) {
-                        let source = &trimmed[scheme.len()..];
-                        return accept(self, i, Loaded::Script(source.to_string()));
-                    }
+                if let Some((_, source)) = strip_script_scheme(candidate) {
+                    return accept(self, i, Loaded::Script(source.to_string()));
                 }
 
                 let base =
@@ -1606,5 +1608,45 @@ pub(crate) fn parse_bytes_waiting(
         buffer_errors: buffer_errors.into_inner(),
         buffers_pending: !pending_buffers.is_empty(),
         pending_buffers,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // The prefixes of the scripturl01 recording: JavaScript `\s` (U+FEFF in, U+0085 out) and three that are not.
+    // The same table is in x3d-runtime/src/loader.rs and x3d-scene/src/xml.rs, so the two `is_js_space` cannot drift.
+    const JS_SPACE: [(char, bool); 11] = [
+        (' ', true),
+        ('\t', true),
+        ('\u{FEFF}', true),
+        ('\u{00A0}', true),
+        ('\u{2028}', true),
+        ('\u{3000}', true),
+        ('\u{2003}', true),
+        ('\u{0085}', false),
+        ('\u{200B}', false),
+        ('\u{180E}', false),
+        ('x', false),
+    ];
+
+    #[test]
+    fn js_space_table() {
+        for (c, space) in JS_SPACE {
+            assert_eq!(is_js_space(c), space, "{c:?}");
+        }
+    }
+
+    #[test]
+    fn test_script_url_whitespace() {
+        assert!(is_script_url("\u{FEFF}javascript:"));
+        assert!(!is_script_url("\u{0085}javascript:"));
+        assert!(!is_script_url("\u{200B}javascript:"));
+        assert!(!is_script_url("\u{180E}javascript:"));
+        assert!(is_script_url("\u{00A0}javascript:"));
+        assert!(is_script_url("\u{2028}javascript:"));
+        assert!(is_script_url("\u{3000}javascript:"));
+        assert!(is_script_url(" \t\n\rjavascript:"));
     }
 }

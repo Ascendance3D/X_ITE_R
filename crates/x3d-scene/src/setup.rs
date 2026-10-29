@@ -105,12 +105,11 @@ impl Scene {
                         _ => false,
                     };
 
-                    if has_coord {
-                        if let FieldValue::MFInt32(v) = &mut self.node_mut(id).fields[index].value {
-                            if v.last().is_some_and(|last| *last > -1) {
-                                v.push(-1);
-                            }
-                        }
+                    if has_coord
+                        && let FieldValue::MFInt32(v) = &mut self.node_mut(id).fields[index].value
+                        && v.last().is_some_and(|last| *last > -1)
+                    {
+                        v.push(-1);
                     }
                 }
             }

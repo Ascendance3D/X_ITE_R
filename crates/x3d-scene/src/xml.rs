@@ -89,9 +89,14 @@ pub fn encode_source_text(s: &str) -> String {
     out
 }
 
+/// JavaScript's `\s`: Unicode `White_Space` without U+0085, and U+FEFF.
+fn is_js_space(c: char) -> bool {
+    c == '\u{feff}' || (c.is_whitespace() && c != '\u{85}')
+}
+
 /// A url that X_ITE takes as script source: `/^\s*(?:data|ecmascript|javascript|vrmlscript):/s`.
 pub(crate) fn is_source_url(s: &str) -> bool {
-    let t = s.trim_start();
+    let t = s.trim_start_matches(is_js_space);
 
     ["data:", "ecmascript:", "javascript:", "vrmlscript:"]
         .iter()
@@ -130,10 +135,11 @@ pub(crate) fn source_cdata(scene: &Scene, id: NodeId) -> Option<usize> {
 pub(crate) fn printed_value(scene: &Scene, id: NodeId, i: usize) -> FieldValue {
     let field = &scene.node(id).fields[i];
 
-    if let FieldValue::MFFloat(v) = &field.value {
-        if field.name == "fieldOfView" && scene.type_name(id) == "OrthoViewpoint" {
-            return FieldValue::SFVec4f(field_of_view_vec4(v));
-        }
+    if let FieldValue::MFFloat(v) = &field.value
+        && field.name == "fieldOfView"
+        && scene.type_name(id) == "OrthoViewpoint"
+    {
+        return FieldValue::SFVec4f(field_of_view_vec4(v));
     }
 
     field.value.clone()
@@ -653,14 +659,14 @@ impl<'a> XmlGenerator<'a> {
             self.pop_container();
         }
 
-        if let Some(c) = cdata {
-            if let FieldValue::MFString(values) = &node.fields[c].value {
-                for value in values {
-                    self.g().push("<![CDATA[");
-                    self.g().push(value);
-                    self.g().push("]]>");
-                    self.g().brk();
-                }
+        if let Some(c) = cdata
+            && let FieldValue::MFString(values) = &node.fields[c].value
+        {
+            for value in values {
+                self.g().push("<![CDATA[");
+                self.g().push(value);
+                self.g().push("]]>");
+                self.g().brk();
             }
         }
 
@@ -1138,4 +1144,54 @@ pub(crate) fn proto_declaration_xml(scene: &Scene, extern_: bool, id: usize) -> 
 
     g.base.pop_ctx();
     g.base.g.string
+}
+
+#[cfg(test)]
+mod tests_xml_url {
+    use super::*;
+
+    // The prefixes of the scripturl01 recording: JavaScript `\s` (U+FEFF in, U+0085 out) and three that are not.
+    // The same table is in x3d-runtime/src/loader.rs and x3d-scene/src/xml.rs, so the two `is_js_space` cannot drift.
+    const JS_SPACE: [(char, bool); 11] = [
+        (' ', true),
+        ('\t', true),
+        ('\u{FEFF}', true),
+        ('\u{00A0}', true),
+        ('\u{2028}', true),
+        ('\u{3000}', true),
+        ('\u{2003}', true),
+        ('\u{0085}', false),
+        ('\u{200B}', false),
+        ('\u{180E}', false),
+        ('x', false),
+    ];
+
+    #[test]
+    fn js_space_table() {
+        for (c, space) in JS_SPACE {
+            assert_eq!(is_js_space(c), space, "{c:?}");
+        }
+    }
+
+    #[test]
+    fn test_is_source_url_whitespace() {
+        let urls = [
+            "\u{FEFF}javascript:",
+            "\u{00A0}ecmascript:",
+            "\u{2028}vrmlscript:",
+            "\u{3000}data:",
+            " \t\n\rjavascript:",
+        ];
+        for url in urls {
+            assert!(is_source_url(url), "Failed to recognize {}", url);
+        }
+        let fail_urls = [
+            "\u{0085}javascript:",
+            "\u{200B}javascript:",
+            "\u{180E}javascript:",
+        ];
+        for url in fail_urls {
+            assert!(!is_source_url(url), "Should not recognize {}", url);
+        }
+    }
 }
