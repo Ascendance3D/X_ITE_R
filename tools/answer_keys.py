@@ -32,10 +32,12 @@ also refuses such data that the worktree's ignore rules do not cover (`git clean
 invalid $X3D_ORACLE_KEYS. Run it again after a checkout that changes the ignore rules. The key paths are the names in this manifest and in each REV's one.
 
 check-output refuses (exit 4) an output path that is, holds or is below a protected path: the store
-($X3D_ORACLE_KEYS), a key path `oracle/NAME` of any worktree, or the target of a link at one. It checks the
+($X3D_ORACLE_KEYS), a key path `oracle/NAME` of any registered worktree (`git worktree list`; NAME from this
+manifest or that worktree's one), or the target of a link at one. A separate clone is not protected. It checks the
 literal path and its real path, so a symlink anywhere on the way is followed. A path that cannot be resolved (a
 symlink loop, a directory that cannot be read) is refused. It also refuses a path at or below a
-directory that holds an entry for every manifest name (a store that the variable does not name). The recorders
+directory that holds an entry for every manifest name (a store that the variable does not name), even when that
+directory is not a store: the check fails closed. The recorders
 that write answer keys (oracle/x_ite-shot.mjs, x_ite-shot-msaa.mjs, x_ite-dump.mjs, x_ite-text.mjs) run it first.
 
 The resolver never writes, moves or renames a key. `link` writes only symlinks under DEST/oracle and refuses to
@@ -311,7 +313,9 @@ def check_output(path, root=ROOT):
     if explicit:
         protected.append((explicit, "the store $X3D_ORACLE_KEYS"))
     for wt in worktrees(root):
-        for name in sorted(rows):
+        # Another worktree can be at a commit whose manifest has other rows; its key paths are protected too.
+        own = os.path.join(wt, "oracle", "answer-keys.tsv")
+        for name in sorted(set(rows) | (set(manifest(own)) if os.path.isfile(own) else set())):
             p = os.path.join(wt, "oracle", name)
             protected.append((p, f"the key path {p}"))
             if os.path.lexists(p):
