@@ -741,6 +741,21 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --ru
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-data-url-01-baseline --runs 5 --suite dataurl01
 ```
 
+- `x_ite-web-runtime-02.mjs --suite scripturl01` runs the 44 cases of `crates/x3d-web/tests/browser/scripturl01_case.mjs`
+  (issue #127) and records `web-browser-script-url-01-baseline/scripturl01-baseline.json` (no pictures). Each of 11
+  prefixes (none, U+0020, U+0009, U+FEFF, U+0085, U+00A0, U+2028, U+3000, U+2003, U+200B, U+180E) goes before
+  `ecmascript:` in the url of a Script node, the world's loadURL, an Inline and an EXTERNPROTO, each followed by a
+  second candidate that tells the outcomes apart. X_ITE 16.5.0 (`/^\s*(?:ecmascript|javascript|vrmlscript):/s`) takes
+  U+0009, U+0020, U+FEFF, U+00A0, U+2028, U+3000 and U+2003 as source text, and requests U+0085, U+200B and U+180E as
+  a file (404, then the second candidate). The compared values are `requests` (and, for loadURL, the world and its
+  title); the rest is under `detail`, which the harness records but does not compare: X_ITE_R's web build has no
+  script engine, and its Inline and EXTERNPROTO take a script URL as no scene.
+- Three runs gave identical values (Chrome 156.0.8078.47).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-script-url-01-baseline --runs 3 --suite scripturl01
+```
+
 - `x_ite-web-runtime-02.mjs --suite degenerate01` runs the 9 cases of `crates/x3d-web/tests/browser/degenerate01_case.mjs`
   and records `web-browser-degenerate-01-baseline/degenerate01-baseline.json` and 12 pictures. The cases are
   TriangleSet worlds with zero-area triangles (two or three equal points, several of them, finding F1 of PR #124) and
@@ -803,6 +818,24 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline -
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --runs 5 --suite fields01
+```
+
+### Web browser scene text 01 (`web-browser-scene-text-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite scenetext01` runs the 17 cases of `crates/x3d-web/tests/browser/scenetext01_case.mjs`
+  (issue #136) and records `web-browser-scene-text-01-baseline/scenetext01-baseline.json` (no pictures): the exact
+  `toVRMLString`, `toXMLString` and `toJSONString` of the scene `createX3DFromString` returns and of `currentScene`
+  after `loadURL` (a `data:` URL) of 16 synthetic worlds (empty, Box, DEF/USE, PROTO, EXTERNPROTO, ROUTEs, META and
+  WorldInfo with metadata, EXPORT, PROFILE and COMPONENT lines, UNIT lines, a Script, an Inline, non-ASCII text, a
+  `#VRML V2.0` world and an XML world), and of the empty world of a canvas before any load (and after
+  `replaceWorld (null)`). The test server's origin is replaced by `http://test`.
+- Pinned X_ITE 16.5.0: the header is `#X3D V4.1 utf8 X_ITE V16.5.0`; the empty world has no PROFILE line in its VRML
+  text and `Full` in XML and JSON. The pinned page cannot load a world whose profile is `Full` (or has no PROFILE
+  statement): it throws `ReferenceError: CharLS is not defined`, so no case uses them.
+- Three runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-scene-text-01-baseline --runs 3 --suite scenetext01
 ```
 
 ### Web browser field API 02 (`web-browser-fields-02-baseline/`)
@@ -902,4 +935,42 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-viewpoints-01-baseline -
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --runs 5 --suite options01
+```
+
+## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
+
+- `x_ite-web-runtime-02.mjs --suite attributes01` runs the 10 cases of `crates/x3d-web/tests/browser/attributes01_case.mjs`
+  against the pinned X_ITE and records `web-browser-attributes-01-baseline/attributes01-baseline.json` (no pictures):
+  the option after each attribute value at start, on change and when removed (19 attributes), the options that leave
+  the attributes alone, the framebuffer size of `contentScale` (attribute and `ContentScale` option, at device pixel
+  ratio 1 and 2, `auto`, invalid values, a resized element), `MaximumFrameRate` (attribute and option), and the `update`
+  attribute with the `AutoUpdate` option (hidden and shown element, a `loadURL` and a new element while stopped).
+- Frames are observed as `time` events of a looping TimeSensor. The recording keeps ceilings (`ticks <= rate * seconds + 1`)
+  and "none" or "some", never counts, so it holds on a slow machine. A stopped window must give none.
+- X_ITE uses a `ContentScale` of 0, a negative or a NaN value as it is, which gives a 1 x 1 framebuffer; `update="auto"` on a
+  stopped browser leaves it stopped; `baseURL` sets `browser.baseURL` (X_ITE_R does not, see `web/API.md`).
+- Five runs gave identical values. Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-attributes-01-baseline --runs 5 --suite attributes01
+```
+
+## Web browser entry 01 (2026-10-28): X3D entry points and captureStream
+
+- `x_ite-web-runtime-02.mjs --suite entry01` runs the 12 cases of `crates/x3d-web/tests/browser/entry01_case.mjs`
+  against the pinned X_ITE and records `web-browser-entry-01-baseline/entry01-baseline.json` (no pictures):
+  `typeof X3D`, its length and members; `X3D ()` with and without callbacks (the throwing `onfulfilled` is the only
+  `onrejected` path a page can reach); `X3D.noConflict ()` with `window.X3D` absent, an object, or `undefined` before
+  the library loads (an init script sets it); `X3D.createBrowser ()` with no argument, an MFString URL, a bad URL
+  and other arguments; `X3D.getBrowser` with every kind of argument; and `captureStream` of the page's canvas, of an
+  element that is not attached, and of `document.createElement ("x3d-canvas")`.
+- The unbundled source of the pin never assigns `window.X3D` (its dist bundle does), so the noConflict cases assign it
+  themselves, as the bundle would. A bad or non-MFString URL given to `createBrowser` is an unhandled rejection; the
+  cases record it from the page's `unhandledrejection` event. The pinned canvas fires no `initialized` or `load` for
+  its first, empty world (X_ITE_R does; `KNOWN_DIFFERENCES` in `runtime02_harness.mjs`).
+- The recorded frame rate of `captureStream ()` is 60 (Chrome 156.0.8078.47, headless). Five runs gave identical
+  values. Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-entry-01-baseline --runs 5 --suite entry01
 ```

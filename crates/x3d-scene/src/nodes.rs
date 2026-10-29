@@ -71,7 +71,7 @@ impl NodeType {
                 .newer
                 .iter()
                 .filter(|(k, _)| *k <= v)
-                .last()
+                .next_back()
                 .map(|(_, x)| x)
                 .unwrap_or(&self.x3d);
         }

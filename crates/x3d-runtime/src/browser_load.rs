@@ -655,10 +655,7 @@ impl Runtime {
             Some(r) => (req.urls[r.index].as_str(), r.attempts + 1),
             None => (req.urls.first().map(String::as_str).unwrap_or_default(), 1),
         };
-        let fetched = !first.is_empty()
-            && !["ecmascript:", "javascript:", "vrmlscript:"]
-                .iter()
-                .any(|s| first.trim_start().starts_with(s));
+        let fetched = !first.is_empty() && crate::loader::strip_script_scheme(first).is_none();
 
         if self.world_state.aborted.remove(&id) && fetched {
             let resolved = url::Url::parse(&base)
