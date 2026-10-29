@@ -188,7 +188,7 @@ class Store(Case):
 
 class Guard(Case):
     def linked(self):
-        """HEAD tracks oracle/d and upstream as symlinks, like X_ITE_R today."""
+        """HEAD tracks oracle/d and upstream as symlinks, like X_ITE_R before #179 untracked the render keys."""
         root = self.checkout()
         os.symlink("../../store/d", os.path.join(root, "oracle", "d"))
         os.symlink("../store/upstream", os.path.join(root, "upstream"))
@@ -295,6 +295,91 @@ class Guard(Case):
         os.environ.pop("X3D_ORACLE_KEYS")
         self.unsafe(lambda: ak.guard(root, ["no-such-rev"]), "not a commit")
 
+
+
+class CheckOutput(Case):
+    """A regeneration output must not write the store or a key path, directly or through a link (issue #65)."""
+
+    def setUp(self):
+        super().setUp()
+        self.root, self.store = self.checkout(), self.keys()
+        self.before = ak.measure(self.store)
+
+    def tearDown(self):
+        self.assertEqual(ak.measure(self.store), self.before)  # nothing here writes the store
+
+    def passes(self, path):
+        ak.check_output(path, self.root)
+
+    def test_staging_directory_passes(self):
+        self.passes(os.path.join(self.tmp, "staging", "d"))
+        os.environ["X3D_ORACLE_KEYS"] = self.store
+        self.passes(os.path.join(self.tmp, "staging", "d"))
+        self.passes(os.path.join(self.root, "oracle", "other-baseline"))  # a tracked baseline, not a key
+
+    def test_key_path_and_below(self):
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "d")), "is the key path")
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "d", "a.png")), "is below the key path")
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "k.json")), "is the key path")
+
+    def test_path_that_holds_a_key_path(self):
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle")), "holds the key path")
+
+    def test_link_at_a_key_path_into_the_store(self):
+        os.environ["X3D_ORACLE_KEYS"] = self.store
+        ak.link(self.root, ["d"], self.root)
+        target = os.path.join(self.store, "d")
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "d")), f"{target} is below the store")
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "d", "a")), "is below the store")
+        os.environ.pop("X3D_ORACLE_KEYS")  # the link target is still protected
+        self.unsafe(lambda: self.passes(os.path.join(self.root, "oracle", "d", "a")), "the target of")
+
+    def test_store_named_or_not(self):
+        out = os.path.join(self.store, "d")
+        os.environ["X3D_ORACLE_KEYS"] = self.store
+        self.unsafe(lambda: self.passes(out), "is below the store $X3D_ORACLE_KEYS")
+        os.environ.pop("X3D_ORACLE_KEYS")
+        self.unsafe(lambda: self.passes(out), "holds every key")
+        self.unsafe(lambda: self.passes(os.path.join(self.store, "new", "x.png")), "holds every key")
+
+    def test_staging_symlink_into_the_store(self):
+        stage = os.path.join(self.tmp, "stage")
+        os.symlink(os.path.join(self.store, "d"), stage)
+        self.unsafe(lambda: self.passes(os.path.join(stage, "a")), "holds every key")
+        dangling = os.path.join(self.tmp, "dangling")
+        os.symlink(os.path.join(self.store, "d", "new"), dangling)
+        self.unsafe(lambda: self.passes(dangling), "holds every key")
+
+    def test_cli_and_recorder_refuse(self):
+        tool = os.path.join(self.root, "tools", "answer_keys.py")
+        os.makedirs(os.path.dirname(tool))
+        shutil.copy(ak.__file__, tool)
+        env = {k: v for k, v in os.environ.items() if k != "X3D_ORACLE_KEYS"}
+        r = subprocess.run([sys.executable, "-I", "-B", tool, "check-output", os.path.join(self.tmp, "ok"),
+                            os.path.join(self.store, "d")], env=env, capture_output=True, text=True)
+        self.assertEqual(r.returncode, ak.UNSAFE, r.stderr)
+        self.assertIn("check-output: passed for", r.stdout)
+        self.assertIn("holds every key", r.stderr)
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("node is not installed; the recorder helper is not run")
+        helper = os.path.join(self.root, "oracle", "check-output.mjs")
+        shutil.copy(os.path.join(os.path.dirname(os.path.dirname(ak.__file__)), "oracle", "check-output.mjs"), helper)
+        run = lambda out: subprocess.run([node, "--input-type=module", "-e",
+                                          f"import {{ checkOutput }} from {helper!r}; checkOutput ({out!r}); "
+                                          "console .log ('WRITE')"], env=env, capture_output=True, text=True)
+        r = run(os.path.join(self.root, "oracle", "d"))
+        self.assertEqual(r.returncode, ak.UNSAFE, r.stderr)
+        self.assertNotIn("WRITE", r.stdout)
+        self.assertIn("nothing written", r.stderr)
+        r = run(os.path.join(self.tmp, "staging", "d"))
+        self.assertEqual((r.returncode, r.stdout.splitlines()[-1:]), (0, ["WRITE"]), r.stderr)
+        env["PATH"] = self.tmp  # no python3: the helper fails closed
+        r = subprocess.run([node, "--input-type=module", "-e", f"import {{ checkOutput }} from {helper!r}; "
+                            f"checkOutput ({os.path.join(self.tmp, 'staging')!r}); console .log ('WRITE')"],
+                           env=env, capture_output=True, text=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertNotIn("WRITE", r.stdout)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

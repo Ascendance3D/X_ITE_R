@@ -12,9 +12,13 @@ import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkOutput } from "./check-output.mjs";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
 const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
+const OUT = resolve (process .argv [2] ?? "oracle/x_ite-text.json");
+
+checkOutput (OUT);
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json", ".woff2": "font/woff2" };
 
@@ -221,7 +225,7 @@ try
 
    const json = { pinned: "oracle/x_ite-pin (X_ITE 16.5.0)", browser: browser .version (), ... result };
 
-   await writeFile (resolve (process .argv [2] ?? "oracle/x_ite-text.json"), JSON .stringify (json) + "\n");
+   await writeFile (OUT, JSON .stringify (json) + "\n");
    console .log (`${Object .keys (result .layouts) .length} layouts, ${Object .keys (result .fonts) .length} fonts`);
 }
 finally

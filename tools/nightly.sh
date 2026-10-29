@@ -4,7 +4,8 @@
 # Runs in its own git worktree so it never touches the working tree agents and Ryan use:
 #   $BASE/scratch/rust-port   (worktree, detached at main)
 #   $BASE/x_ite-tests         (symlink; oracle scripts load playwright via ../../../x_ite-tests)
-# Gitignored inputs (big baselines, upstream/) are symlinked from the main tree.
+# Answer keys (oracle/answer-keys.tsv) are linked from the external store that X3D_ORACLE_KEYS names; the main
+# checkout no longer holds the render keys (issue #65). upstream/ is symlinked from the main tree.
 # Output: $MAIN/nightly/<UTC date>/{report.txt,logs/,bin/}; keeps the newest 14.
 # DRAFT — NOT INSTALLED. Owner decision (2026-10-11): nightlies do not run on a development
 # workstation. Once X_ITE is ported 1:1, this moves to a dedicated nightly machine,
@@ -15,7 +16,8 @@ set -uo pipefail
 MAIN=${XITE_NIGHTLY_MAIN:?set XITE_NIGHTLY_MAIN to the main checkout}
 LANE=${XITE_NIGHTLY_LANE:?set XITE_NIGHTLY_LANE to the lane directory that holds x_ite-tests}
 BASE=${XITE_NIGHTLY_BASE:?set XITE_NIGHTLY_BASE to the nightly worktree base}
-for p in "$MAIN" "$LANE" "$BASE"; do
+KEYS=${X3D_ORACLE_KEYS:?set X3D_ORACLE_KEYS to the external evidence store (oracle/README.md)}
+for p in "$MAIN" "$LANE" "$BASE" "$KEYS"; do
   case "$p" in /*) ;; *) echo "nightly: $p is not an absolute path" >&2; exit 2;; esac
 done
 W=$BASE/scratch/rust-port
