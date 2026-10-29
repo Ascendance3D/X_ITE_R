@@ -1407,6 +1407,39 @@ function engineError (error)
 // with NONE the page keeps its own touch behavior.
 const TOUCH_ACTION = { NONE: "auto" };
 
+// BrowserOptions.js fieldDefinitions of X_ITE 16.5.0: name, field type, initial value.
+const BROWSER_OPTIONS = [
+   [ "SplashScreen", "SFBool", true ], [ "Dashboard", "SFBool", true ], [ "Rubberband", "SFBool", true ],
+   [ "EnableInlineViewpoints", "SFBool", true ], [ "Antialiased", "SFBool", true ],
+   [ "TextureQuality", "SFString", "MEDIUM" ], [ "PrimitiveQuality", "SFString", "MEDIUM" ],
+   [ "QualityWhenMoving", "SFString", "SAME" ], [ "Shading", "SFString", "GOURAUD" ], [ "MotionBlur", "SFBool", false ],
+   [ "AlwaysUpdateGeometries", "SFBool", false ], [ "AutoUpdate", "SFBool", false ], [ "Cache", "SFBool", true ],
+   [ "ColorSpace", "SFString", "LINEAR_WHEN_PHYSICAL_MATERIAL" ], [ "ContentScale", "SFDouble", 1 ],
+   [ "ContextMenu", "SFBool", true ], [ "Debug", "SFBool", false ], [ "Exposure", "SFDouble", 1 ],
+   [ "DisplayColorSpace", "SFString", "SRGB" ], [ "Gravity", "SFDouble", 9.80665 ], [ "LoadUrlObjects", "SFBool", true ],
+   [ "LogarithmicDepthBuffer", "SFBool", false ], [ "MaximumFrameRate", "SFDouble", 80 ],
+   [ "MetadataReference", "SFString", "" ], [ "Multisampling", "SFInt32", 4 ], [ "Mute", "SFBool", false ],
+   [ "Notifications", "SFBool", true ], [ "OrderIndependentTransparency", "SFBool", false ],
+   [ "SoundIntensity", "SFFloat", 1 ], [ "StraightenHorizon", "SFBool", true ],
+   [ "TextCompression", "SFString", "CHAR_SPACING" ], [ "Timings", "SFBool", false ], [ "ToneMapping", "SFString", "NONE" ],
+   [ "WallFriction", "SFDouble", 0 ], [ "XRSessionMode", "SFString", "IMMERSIVE_VR" ],
+];
+
+// BrowserProperties.js fieldDefinitions: constants.
+const BROWSER_PROPERTIES = [
+   [ "ABSTRACT_NODES", true ], [ "CONCRETE_NODES", true ], [ "EXTERNAL_INTERACTIONS", true ], [ "PROTOTYPE_CREATE", true ],
+   [ "DOM_IMPORT", true ], [ "XML_ENCODING", true ], [ "CLASSIC_VRML_ENCODING", true ], [ "BINARY_ENCODING", false ],
+];
+
+// The aliases of BrowserOptions and RenderingProperties: AntiAliased is Antialiased.
+const ALIASES = Object .assign (Object .create (null), { AntiAliased: "Antialiased" });
+
+// The rendering properties that are the value of a browser option. X_ITE's Shading, Antialiased, ContentScale and
+// Multisampling properties are derived from the options and the context (the shading name, the samples clamped to
+// the context's maximum, whether the context is multisampled) and are not implemented.
+const RENDERING_OPTIONS     = [ "LogarithmicDepthBuffer" ];
+const RENDERING_UNSUPPORTED = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling", "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+
 class X3DBrowser
 {
    #element;
@@ -1419,6 +1452,7 @@ class X3DBrowser
       .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
    #frames = 0;
+   #live = true;
    #fileLoader = null;
 
    // The createVrmlFromURL requests in the world's runtime: request id → { field, handle of the node }.
@@ -1456,6 +1490,8 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+         // An endUpdate () before the engine was ready.
+         this .#engine .setLive (this .#live);
          this .#listen ();
          this .#start ();
 
@@ -1495,6 +1531,58 @@ class X3DBrowser
    get version () { return "0.1.0"; }
    getName ()     { return this .name; }
    getVersion ()  { return this .version; }
+
+   // X3DBrowser.getBrowserOption, setBrowserOption, getBrowserProperty, getRenderingProperty, print, println. The
+   // values live in typed fields of the pinned definitions (BrowserOptions.js, BrowserProperties.js), so the
+   // coercion and the unknown-name error are X_ITE's. A set option is stored and read back; the renderer honors
+   // only the options API.md lists.
+   #options    = new Map (BROWSER_OPTIONS .map (([ name, type, value ]) => [ name, new Fields [type] (value) ]));
+   #properties = new Map (BROWSER_PROPERTIES .map (([ name, value ]) => [ name, new Fields .SFBool (value) ]));
+
+   // X3DBaseNode.getField: the name, or `set_name` and `name_changed` of an inputOutput field (the options only), or
+   // an alias; any other name throws, and a name that is not a string throws the TypeError of X_ITE's `name.match`.
+   static #field (map, name, typeName, inputOutput = false)
+   {
+      const field = map .get (name) ?? map .get (ALIASES [name]);
+
+      if (field)
+         return field;
+
+      const match = name .match (/^set_(.*?)$/) ?? name .match (/^(.*?)_changed$/);
+
+      if (match && inputOutput && map .has (match [1]))
+         return map .get (match [1]);
+
+      throw new Error (`Unknown field '${name}' in node class ${typeName}.`);
+   }
+
+   getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
+
+   setBrowserOption (name, value) { X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .setValue (value); }
+
+   getBrowserProperty (name) { return X3DBrowser .#field (this .#properties, name, "BrowserProperties") .getValue (); }
+
+   // The rendering properties that are the value of a browser option (LogarithmicDepthBuffer). The properties X_ITE
+   // derives from the options and the context (Shading, Antialiased, ContentScale, Multisampling) and those that
+   // describe its WebGL context (MaxTextureSize, TextureUnits, MaxLights, ColorDepth, TextureMemory,
+   // MaxAnisotropicDegree, MaxSamples, PixelsPerPoint, SoundDestinations, XRSession) are not implemented (API.md).
+   getRenderingProperty (name)
+   {
+      if (typeof name !== "string")
+         name .match (/^/); // X_ITE's getField throws the TypeError of `name.match` for a name that is not a string.
+
+      if (RENDERING_OPTIONS .includes (name))
+         return this .getBrowserOption (name);
+
+      if (RENDERING_UNSUPPORTED .includes (name))
+         throw new Error (`X_ITE_R: the rendering property '${name}' is not implemented.`);
+
+      throw new Error (`Unknown field '${name}' in node class RenderingProperties.`);
+   }
+
+   print (... args) { console .log (args .join (" ")); }
+
+   println (... args) { console .log (args .join (" ")); }
 
    get baseURL () { return document .baseURI; }
 
@@ -2190,19 +2278,36 @@ class X3DBrowser
 
    // --- viewpoints ----------------------------------------------------------------------------------------------
 
-   // The layerNode argument of the viewpoint functions: X_ITE_R has the active layer only.
-   #activeLayer (layerNode)
+   // X3DCast (type, node) in the current world: the node id when `node` is an SFNode of this world whose node types include
+   // `type`, else undefined. X_ITE casts a node of any scene; a node of another world or a replaced one is no layer here.
+   #cast (type, node)
    {
-      if (layerNode !== undefined && layerNode !== null && handleOf (layerNode))
-         throw new Error ("X_ITE_R: the layerNode argument is not supported; use the active layer (omit it).");
+      const handle = handleOf (node);
+      const owner  = this .#scene ?.[_node];
+
+      if (!handle || !owner || handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation || handle .released)
+         return undefined;
+
+      const typeName = engineOf (handle) .typeName (handle .scene, handle .id);
+
+      return (NODE_TYPES [typeName] ?? [ ]) .includes (type) ? handle .id : undefined;
+   }
+
+   // A layer request: `layer:<node>:<request>` runs it on that layer; none, or a value that is no X3DLayerNode: the
+   // active layer, like `X3DCast (X3DConstants .X3DLayerNode, layerNode) ?? this .getActiveLayer ()`.
+   #layerRequest (layerNode, request)
+   {
+      const id = this .#cast ("X3DLayerNode", layerNode);
+
+      this .#engine ?.viewpointRequest (id === undefined ? request : `layer:${id}:${request}`);
    }
 
    // X3DBrowser.firstViewpoint, previousViewpoint, nextViewpoint, lastViewpoint ([layerNode]): the viewpoint
    // binds with the next frame's events.
-   firstViewpoint (layerNode)    { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("firstViewpoint"); }
-   previousViewpoint (layerNode) { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("previousViewpoint"); }
-   nextViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("nextViewpoint"); }
-   lastViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("lastViewpoint"); }
+   firstViewpoint (layerNode)    { this .#layerRequest (layerNode, "firstViewpoint"); }
+   previousViewpoint (layerNode) { this .#layerRequest (layerNode, "previousViewpoint"); }
+   nextViewpoint (layerNode)     { this .#layerRequest (layerNode, "nextViewpoint"); }
+   lastViewpoint (layerNode)     { this .#layerRequest (layerNode, "lastViewpoint"); }
 
    // X3DBrowser.changeViewpoint ([layerNode,] name).
    changeViewpoint (layerNode, name)
@@ -2213,8 +2318,23 @@ class X3DBrowser
          layerNode = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewpointRequest (`changeViewpoint:${String (name)}`);
+      this .#layerRequest (layerNode, `changeViewpoint:${String (name)}`);
+   }
+
+   // X3DBrowser.bindViewpoint (layerNode, viewpointNode): both must be of their type, the viewpoint binds with the next
+   // frame's events (its layer is the one that holds it; X_ITE only checks the type of layerNode).
+   bindViewpoint (layerNode, viewpointNode)
+   {
+      const layer = this .#cast ("X3DLayerNode", layerNode);
+      const vp    = this .#cast ("X3DViewpointNode", viewpointNode);
+
+      if (layer === undefined)
+         throw new Error ("Browser.bindViewpoint: layerNode must be of type X3DLayerNode.");
+
+      if (vp === undefined)
+         throw new Error ("Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.");
+
+      this .#engine ?.viewpointRequest (`bindViewpoint:${vp}`);
    }
 
    // X3DBrowser.viewAll ([layerNode,] [transitionTime = 1]).
@@ -2226,9 +2346,21 @@ class X3DBrowser
          layerNode      = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewAll (+transitionTime);
+      this .#engine ?.viewAll (+transitionTime, this .#cast ("X3DLayerNode", layerNode));
    }
+
+   // X3DBrowserContext.isLive, setLive, beginUpdate, endUpdate: the browser's live state. A browser that is not live
+   // pauses the TimeSensors and the like of its world; the page's own field assignments still send their events.
+   isLive () { return this .#live; }
+
+   setLive (value)
+   {
+      this .#live = !! value .valueOf ();
+      this .#engine ?.setLive (this .#live);
+   }
+
+   beginUpdate () { this .setLive (true); }
+   endUpdate ()   { this .setLive (false); }
 
    // X3DBrowser.activeViewpoint: the bound viewpoint of the active layer; null for its default viewpoint.
    get activeViewpoint ()
