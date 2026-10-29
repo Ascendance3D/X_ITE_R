@@ -483,7 +483,7 @@ impl<'a> Sg<'a> {
             }
             "Group" | "Transform" | "Anchor" | "Collision" | "Billboard" | "StaticGroup"
             | "GeoLocation" | "GeoTransform" | "CADAssembly" | "CADLayer" | "CADPart"
-            | "PickableGroup" | "GroupAnnotation" => {
+            | "PickableGroup" | "GroupAnnotation" | "EspduTransform" => {
                 let mut m = *matrix;
                 if let Some(t) = self.group_matrix(n, ty) {
                     m.mult_left(&t);
