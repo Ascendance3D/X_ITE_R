@@ -29,7 +29,9 @@ candidate in a staging directory, not a key.
    names of this manifest and of that worktree's one) and the target of a link at a key path, and any path below
    or above one of them. It also refuses a path at or below a directory that holds every key (even one that is not
    a store), but not a path above it: without `X3D_ORACLE_KEYS`, the parent of a store passes. Set the variable.
-   A separate clone is not protected. It checks the path as given and
+   A separate clone is not protected. The check is for accidental writes, not a security boundary: a process that
+   puts a symlink at a checked path after the check and before the write is not stopped (an accepted residual
+   risk, issue #65). It checks the path as given and
    with every symlink resolved. `x_ite-shot.mjs`, `x_ite-shot-msaa.mjs`, `x_ite-dump.mjs` and `x_ite-text.mjs` run
    this check before they write, and write nothing when it fails. `x_ite-text.mjs` needs an output argument: its
    default, `oracle/x_ite-text.json`, is a key path.
