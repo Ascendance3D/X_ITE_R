@@ -1248,7 +1248,7 @@ class X3DBrowser
    #isIntersecting;
    #checkUpdateListener = null;
    #intersectionObserver = null;
-   #lastTime = 0;
+   #lastStamp = -Infinity;
    #processed = 0;
 
    #beginUpdate () { this .setLive (true); }
@@ -2175,7 +2175,7 @@ class X3DBrowser
       if (this .#frame || !this .#engine || this .#disposed || !this .#element .isConnected || document .visibilityState === "hidden")
          return;
 
-      const tick = () =>
+      const tick = stamp =>
       {
          this .#frame = requestAnimationFrame (tick);
          ++ this .#frames;
@@ -2194,12 +2194,15 @@ class X3DBrowser
          // X3DBrowserContext.traverse: a frame sooner than 1 / MaximumFrameRate after the last one is skipped
          // (X3DTimeContext.advanceTime). A browser that is not live still processes the page's events and draws; its
          // engine pauses the TimeSensors and the like (setLive).
-         const time = Date .now () / 1000;
-
-         if (time - this .#lastTime <= 1 / Math .max (this .#options .get ("MaximumFrameRate") .getValue (), 1))
+         // The interval is measured with the frame's timestamp: X_ITE draws on demand, so its first frame after an event comes
+         // long after the last one, where this loop runs every frame and Date.now () between two of them can be shorter than
+         // the frame period. The browser time is Date.now (), as X_ITE's.
+         if ((stamp - this .#lastStamp) / 1000 <= 1 / Math .max (this .#options .get ("MaximumFrameRate") .getValue (), 1))
             return;
 
-         this .#lastTime = time;
+         const time = Date .now () / 1000;
+
+         this .#lastStamp = stamp;
          ++ this .#processed;
 
          this .#flushTouches ();
