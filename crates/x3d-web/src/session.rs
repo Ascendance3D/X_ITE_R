@@ -925,10 +925,29 @@ impl Session {
         }
     }
 
-    /// X3DBrowser.viewAll (transitionTime) of the active layer.
-    pub fn view_all(&mut self, transition_time: f64) {
+    /// X3DBrowser.viewAll (transitionTime) of the active layer, or of `layer` (a node id the page checked to be an
+    /// X3DLayerNode of this world).
+    pub fn view_all(&mut self, layer: Option<NodeId>, transition_time: f64) {
         if let Some(v) = self.viewer() {
-            v.browser_view_all(None, transition_time);
+            let layer = layer.filter(|&n| v.rt.scene.is_live(n));
+
+            v.browser_view_all(layer, transition_time);
+        }
+    }
+
+    /// X3DBrowserContext.setLive of the browser (beginUpdate, endUpdate): the live state of the world. A world that is
+    /// not live pauses its TimeSensors and the other nodes that follow the live state; the events of the page's own
+    /// field assignments still go through. The state outlives a world: [`WebBrowser::replace`] gives it to the next one.
+    pub fn set_live(&mut self, live: bool) {
+        match &mut self.stage {
+            Stage::Loading(rt, _) => rt.live = live,
+            Stage::Live(v) => {
+                v.rt.live = live;
+                // A world that started while the browser was not live still has to go live (scene .setLive (true)).
+                v.rt.go_live();
+                v.rt.refresh_live();
+            }
+            Stage::Gone => {}
         }
     }
 

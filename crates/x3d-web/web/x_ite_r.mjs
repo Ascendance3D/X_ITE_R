@@ -1086,6 +1086,7 @@ class X3DBrowser
       .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
    #frames = 0;
+   #live = true;
    #fileLoader = null;
    #reject = null;
    #replacing = null;
@@ -1120,6 +1121,8 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+         // An endUpdate () before the engine was ready.
+         this .#engine .setLive (this .#live);
          this .#listen ();
          this .#start ();
 
@@ -1517,19 +1520,36 @@ class X3DBrowser
 
    // --- viewpoints ----------------------------------------------------------------------------------------------
 
-   // The layerNode argument of the viewpoint functions: X_ITE_R has the active layer only.
-   #activeLayer (layerNode)
+   // X3DCast (type, node) in the current world: the node id when `node` is an SFNode of this world whose node types include
+   // `type`, else undefined. X_ITE casts a node of any scene; a node of another world or a replaced one is no layer here.
+   #cast (type, node)
    {
-      if (layerNode !== undefined && layerNode !== null && handleOf (layerNode))
-         throw new Error ("X_ITE_R: the layerNode argument is not supported; use the active layer (omit it).");
+      const handle = handleOf (node);
+      const owner  = this .#scene ?.[_node];
+
+      if (!handle || !owner || handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation || handle .released)
+         return undefined;
+
+      const typeName = engineOf (handle) .typeName (handle .scene, handle .id);
+
+      return (NODE_TYPES [typeName] ?? [ ]) .includes (type) ? handle .id : undefined;
+   }
+
+   // A layer request: `layer:<node>:<request>` runs it on that layer; none, or a value that is no X3DLayerNode: the
+   // active layer, like `X3DCast (X3DConstants .X3DLayerNode, layerNode) ?? this .getActiveLayer ()`.
+   #layerRequest (layerNode, request)
+   {
+      const id = this .#cast ("X3DLayerNode", layerNode);
+
+      this .#engine ?.viewpointRequest (id === undefined ? request : `layer:${id}:${request}`);
    }
 
    // X3DBrowser.firstViewpoint, previousViewpoint, nextViewpoint, lastViewpoint ([layerNode]): the viewpoint
    // binds with the next frame's events.
-   firstViewpoint (layerNode)    { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("firstViewpoint"); }
-   previousViewpoint (layerNode) { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("previousViewpoint"); }
-   nextViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("nextViewpoint"); }
-   lastViewpoint (layerNode)     { this .#activeLayer (layerNode); this .#engine ?.viewpointRequest ("lastViewpoint"); }
+   firstViewpoint (layerNode)    { this .#layerRequest (layerNode, "firstViewpoint"); }
+   previousViewpoint (layerNode) { this .#layerRequest (layerNode, "previousViewpoint"); }
+   nextViewpoint (layerNode)     { this .#layerRequest (layerNode, "nextViewpoint"); }
+   lastViewpoint (layerNode)     { this .#layerRequest (layerNode, "lastViewpoint"); }
 
    // X3DBrowser.changeViewpoint ([layerNode,] name).
    changeViewpoint (layerNode, name)
@@ -1540,8 +1560,23 @@ class X3DBrowser
          layerNode = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewpointRequest (`changeViewpoint:${String (name)}`);
+      this .#layerRequest (layerNode, `changeViewpoint:${String (name)}`);
+   }
+
+   // X3DBrowser.bindViewpoint (layerNode, viewpointNode): both must be of their type, the viewpoint binds with the next
+   // frame's events (its layer is the one that holds it; X_ITE only checks the type of layerNode).
+   bindViewpoint (layerNode, viewpointNode)
+   {
+      const layer = this .#cast ("X3DLayerNode", layerNode);
+      const vp    = this .#cast ("X3DViewpointNode", viewpointNode);
+
+      if (layer === undefined)
+         throw new Error ("Browser.bindViewpoint: layerNode must be of type X3DLayerNode.");
+
+      if (vp === undefined)
+         throw new Error ("Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.");
+
+      this .#engine ?.viewpointRequest (`bindViewpoint:${vp}`);
    }
 
    // X3DBrowser.viewAll ([layerNode,] [transitionTime = 1]).
@@ -1553,9 +1588,21 @@ class X3DBrowser
          layerNode      = undefined;
       }
 
-      this .#activeLayer (layerNode);
-      this .#engine ?.viewAll (+transitionTime);
+      this .#engine ?.viewAll (+transitionTime, this .#cast ("X3DLayerNode", layerNode));
    }
+
+   // X3DBrowserContext.isLive, setLive, beginUpdate, endUpdate: the browser's live state. A browser that is not live
+   // pauses the TimeSensors and the like of its world; the page's own field assignments still send their events.
+   isLive () { return this .#live; }
+
+   setLive (value)
+   {
+      this .#live = !! value .valueOf ();
+      this .#engine ?.setLive (this .#live);
+   }
+
+   beginUpdate () { this .setLive (true); }
+   endUpdate ()   { this .setLive (false); }
 
    // X3DBrowser.activeViewpoint: the bound viewpoint of the active layer; null for its default viewpoint.
    get activeViewpoint ()

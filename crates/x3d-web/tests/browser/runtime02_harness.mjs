@@ -25,6 +25,7 @@ import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
+import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -56,6 +57,7 @@ const SUITES = {
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
+   viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
 };
 
@@ -291,7 +293,8 @@ const KNOWN_DIFFERENCES = {
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
-// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here.
+// with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here. A case group can
+// give its own `timeout`.
 export const CASE_TIMEOUT = 180_000;
 
 // The phone and tablet tests draw full-size framebuffers (1170 x 1800, 2360 x 984) on the CPU: on CI's lavapipe, with
@@ -465,6 +468,7 @@ const GROUP_FILES = {
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
    routesApi: "routes01.test.mjs",
+   viewpointsApi: "viewpoints01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
@@ -489,7 +493,7 @@ export function referenceCases (file)
          {
             const key = `${groupName}.${name}`;
 
-            test (key, { skip: ONLY && ONLY !== key, timeout: CASE_TIMEOUT }, async () =>
+            test (key, { skip: ONLY && ONLY !== key, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
                const page = await openPage (group .context);
 
