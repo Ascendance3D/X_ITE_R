@@ -346,5 +346,7 @@ for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
 
 export const CASE_GROUPS = {
-   viewpointsApi: { context: DESKTOP, cases },
+   // The four layers of the world take 100 s to 180 s for one case on CI's SwiftShader (1 s to 3 s on a GPU): the cap is
+   // 600 s, and the file has a CI shard of its own (shards.mjs).
+   viewpointsApi: { context: DESKTOP, cases, timeout: 600_000 },
 };
