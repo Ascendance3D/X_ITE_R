@@ -313,6 +313,8 @@ function handleOf (node)
    return node instanceof Fields .SFNode ? node .getValue () ?.[_node] : undefined;
 }
 
+const FOREIGN = "X_ITE_R: a node can only be used in the world it belongs to.";
+
 // The node id of an SFNode in the world of `owner`; null for NULL.
 function nodeIdOf (sfnode, owner)
 {
@@ -322,7 +324,13 @@ function nodeIdOf (sfnode, owner)
       return null;
 
    if (handle .browser !== owner .browser || handle .scene !== owner .scene || handle .generation !== owner .generation)
-      throw new Error ("X_ITE_R: a node can only be used in the world it belongs to.");
+   {
+      // X_ITE's SFNode and MFNode setters swallow an error and keep a plain property instead (SFNode.js, the `set` trap),
+      // so the refusal would pass without a trace. The warning names it.
+      console .warn (FOREIGN);
+
+      throw new Error (FOREIGN);
+   }
 
    retireReleased (owner .browser, owner .scene);
 
@@ -426,8 +434,22 @@ function pushField (field)
    if (!attached)
       return;
 
-   const h    = attached .ref [_node];
-   const data = fieldData (attached .entry .field, h);
+   const h = attached .ref [_node];
+   let data;
+
+   try
+   {
+      data = fieldData (attached .entry .field, h);
+   }
+   catch (error)
+   {
+      // A node of another world refuses the whole value and is warned about already. X_ITE takes it, so the page's
+      // operation goes on: the engine keeps the value it had, and the page's field is not left broken for the next one.
+      if (error ?.message === FOREIGN)
+         return;
+
+      throw error;
+   }
 
    attached .entry .data = data;
 
