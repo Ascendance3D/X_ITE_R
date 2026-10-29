@@ -16,6 +16,13 @@
 # Rust build once for each new Cargo.lock, and apt's .deb files): a PR can read its own caches and master's, not
 # another PR's.
 
+# Runner choice (issue #156): every job takes its runner from a repository variable and falls back to the
+# GitHub-hosted ubuntu-24.04 image when the variable is empty. CI_RUNS_ON_HEAVY (the Rust suite, the browser module,
+# the browser shards and the cache warm-up) and CI_RUNS_ON_LIGHT (path filters, fast checks and the result jobs) hold
+# a JSON runs-on value, for example ["self-hosted","Linux","X64","proxmox"]. A pull request from another repository
+# always runs on the hosted image. The jobs run `sudo apt-get`, so a self-hosted runner needs passwordless sudo, the
+# Rust toolchain prerequisites and a Chromium that Playwright can install. Job names and commands are unchanged.
+
 name: Web tests
 
 on:
@@ -40,7 +47,7 @@ env:
 jobs:
   changes:
     name: Changed paths
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_LIGHT || '"ubuntu-24.04"') }}
     timeout-minutes: 10
     outputs:
       web: ${{ steps.changes.outputs.web }}
@@ -72,7 +79,7 @@ jobs:
     name: Browser module
     needs: changes
     if: needs.changes.outputs.web == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_HEAVY || '"ubuntu-24.04"') }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -115,7 +122,7 @@ jobs:
     name: browser (${{ matrix.shard }})
     needs: [changes, build]
     if: github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_HEAVY || '"ubuntu-24.04"') }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -162,7 +169,7 @@ jobs:
   warm-deps:
     name: Warm browser dependencies
     if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_HEAVY || '"ubuntu-24.04"') }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -177,7 +184,7 @@ jobs:
     name: Web tests result
     needs: [changes, build, browser]
     if: always() && github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_LIGHT || '"ubuntu-24.04"') }}
     timeout-minutes: 5
     steps:
       - name: Needed jobs passed

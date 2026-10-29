@@ -2,11 +2,13 @@ name: AI Code Review with MiniMax
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review]
 
 permissions:
   pull-requests: write
 
+# A draft PR is not reviewed: the review runs when the PR opens ready, or when it leaves draft (ready_for_review), and
+# on every later push. Drafts hold intermediate work, and the final head is always reviewed before a merge.
 # Each review reads the whole PR diff (pulls.listFiles), so a new push cancels the review of the commit it replaces:
 # the next review covers that commit's changes too. Each PR has its own group.
 concurrency:
@@ -16,6 +18,7 @@ concurrency:
 jobs:
   review:
     name: Review
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Code Review

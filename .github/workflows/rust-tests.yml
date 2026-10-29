@@ -32,6 +32,13 @@
 # by-name skips below in the job summary, and fails on a line outside the allow list.
 # The audio tests need no GPU and no audio device: they render with an OfflineAudioContext.
 
+# Runner choice (issue #156): every job takes its runner from a repository variable and falls back to the
+# GitHub-hosted ubuntu-24.04 image when the variable is empty. CI_RUNS_ON_HEAVY (the Rust suite, the browser module,
+# the browser shards and the cache warm-up) and CI_RUNS_ON_LIGHT (path filters, fast checks and the result jobs) hold
+# a JSON runs-on value, for example ["self-hosted","Linux","X64","proxmox"]. A pull request from another repository
+# always runs on the hosted image. The jobs run `sudo apt-get`, so a self-hosted runner needs passwordless sudo, the
+# Rust toolchain prerequisites and a Chromium that Playwright can install. Job names and commands are unchanged.
+
 name: Rust tests
 
 on:
@@ -84,7 +91,7 @@ env:
 jobs:
   checks:
     name: Fast checks
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_LIGHT || '"ubuntu-24.04"') }}
     timeout-minutes: 15
     outputs:
       rust: ${{ steps.changes.outputs.rust }}
@@ -148,7 +155,7 @@ jobs:
   test:
     needs: checks
     if: github.event_name != 'push' && needs.checks.outputs.rust == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_HEAVY || '"ubuntu-24.04"') }}
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@v7
@@ -232,7 +239,7 @@ jobs:
     name: Warm cache
     needs: checks
     if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_HEAVY || '"ubuntu-24.04"') }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
@@ -263,7 +270,7 @@ jobs:
     name: Rust tests result
     needs: [checks, test]
     if: always() && github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.CI_RUNS_ON_LIGHT || '"ubuntu-24.04"') }}
     timeout-minutes: 5
     steps:
       - name: Needed jobs passed
