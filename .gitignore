@@ -30,6 +30,16 @@
 /oracle/corpus-items2-media/
 /oracle/render-items/
 /oracle/render-items2/
+# Private Cybertown archive corpora and the X_ITE outputs that embed them (issue #168). Listed in
+# oracle/answer-keys.tsv; never commit them.
+/oracle/corpus-x0/
+/oracle/corpus-x1/
+/oracle/x0-baseline.json
+/oracle/x0-xml-baseline.json
+/oracle/render-x0-baseline/
+/oracle/render-msaa4-x0-baseline/
+# The old tracked path of x0-xml-baseline.json. A restore from an older backup layout can put it back here.
+/oracle/synthetic-rea-xml/x0-xml-baseline.json
 # Python bytecode caches. Python writes these when it imports a tool; never commit them.
 __pycache__/
 *.py[cod]

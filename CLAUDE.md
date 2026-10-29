@@ -9,8 +9,8 @@ Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/
 - Pull request CI runs on GitHub-hosted runners. Do not move pull request jobs to self-hosted runners.
 - Clean-room rule: do not add historical Cybertown or blaxxun assets to the repository. Their
   licensing is unclear. Use minimal synthetic reproductions or newly authored fixtures. The
-  `oracle/corpus-items*` and `oracle/render-items*` snapshots are private (issue #168): never
-  commit them again.
+  `oracle/corpus-items*`, `oracle/render-items*` and `oracle/corpus-x0`/`corpus-x1` snapshots, and the X_ITE
+  outputs that embed them, are private (issue #168, `oracle/answer-keys.tsv`): never commit them again.
 - Never hard-code Cybertown or blaxxun (host names, world names, URL rewrites). Prefer
   standards-compatible behavior and generic hooks that the embedding application drives.
 

@@ -101,15 +101,7 @@ fn compare(
 }
 
 /// Run one baseline file against its inputs; returns the failures (empty when the oracle passes).
-fn run(
-    name: &str,
-    baseline_file: &str,
-    corpus: &Path,
-    known: &[(&str, &str, &str)],
-) -> Vec<String> {
-    let baseline = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../oracle/synthetic-rea-xml")
-        .join(baseline_file);
+fn run(name: &str, baseline: &Path, corpus: &Path, known: &[(&str, &str, &str)]) -> Vec<String> {
     let json: serde_json::Value =
         serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
     let results = json["results"].as_array().expect("baseline results");
@@ -194,7 +186,7 @@ fn synthetic_worlds_match_x_ite() {
     let corpus = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-xml");
     let failures = run(
         "synthetic-rea-xml",
-        "xml-baseline.json",
+        &corpus.join("xml-baseline.json"),
         &corpus,
         KNOWN_SYNTHETIC,
     );
@@ -204,8 +196,17 @@ fn synthetic_worlds_match_x_ite() {
 
 #[test]
 fn corpus_x0_matches_x_ite() {
-    let corpus = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/corpus-x0");
-    let failures = run("corpus-x0", "x0-xml-baseline.json", &corpus, KNOWN_X0);
+    // The corpus and its baseline are private (issue #168): found and verified, or skipped by name.
+    let oracle = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
+    let Some(baseline) =
+        x3d_evidence::key_or_tracked("x0-xml-baseline.json", &oracle.join("x0-xml-baseline.json"))
+    else {
+        return;
+    };
+    let Some(corpus) = x3d_evidence::key_or_tracked("corpus-x0", &oracle.join("corpus-x0")) else {
+        return;
+    };
+    let failures = run("corpus-x0", &baseline, &corpus, KNOWN_X0);
 
     assert!(failures.is_empty(), "\n{}", failures.join("\n"));
 }

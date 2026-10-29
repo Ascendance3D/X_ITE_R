@@ -9,12 +9,11 @@ fn oracle() -> PathBuf {
     std::fs::canonicalize(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle")).unwrap()
 }
 
-fn check(corpus: &str, baseline: &str) -> (usize, Vec<String>) {
+fn check(corpus: &Path, baseline: &Path) -> (usize, Vec<String>) {
     let root = oracle();
-    let json: serde_json::Value = serde_json::from_slice(
-        &std::fs::read(root.join("synthetic-rea-xml").join(baseline)).unwrap(),
-    )
-    .unwrap();
+    let json: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(baseline).unwrap()).unwrap();
+    let name = corpus.file_name().unwrap().to_string_lossy();
     let mut failures = vec![];
     let mut compared = 0;
 
@@ -24,7 +23,7 @@ fn check(corpus: &str, baseline: &str) -> (usize, Vec<String>) {
         }
 
         let file = r["file"].as_str().unwrap();
-        let path: PathBuf = root.join(corpus).join(file);
+        let path: PathBuf = corpus.join(file);
 
         for (format, key) in [(DumpFormat::Xml, "xml"), (DumpFormat::Json, "json")] {
             let (root2, path2) = (root.clone(), path.clone());
@@ -47,10 +46,10 @@ fn check(corpus: &str, baseline: &str) -> (usize, Vec<String>) {
                         .map(|i| i + 1)
                         .unwrap_or(0);
                     failures.push(format!(
-                        "{corpus}/{file} {key}: first difference at line {line}"
+                        "{name}/{file} {key}: first difference at line {line}"
                     ));
                 }
-                Err(e) => failures.push(format!("{corpus}/{file} {key}: {e}")),
+                Err(e) => failures.push(format!("{name}/{file} {key}: {e}")),
             }
         }
     }
@@ -60,7 +59,8 @@ fn check(corpus: &str, baseline: &str) -> (usize, Vec<String>) {
 
 #[test]
 fn synthetic_xml_json_after_load_match_x_ite() {
-    let (n, failures) = check("synthetic-rea-xml", "xml-baseline.json");
+    let corpus = oracle().join("synthetic-rea-xml");
+    let (n, failures) = check(&corpus, &corpus.join("xml-baseline.json"));
     assert!(n > 0);
     assert!(
         failures.is_empty(),
@@ -72,7 +72,17 @@ fn synthetic_xml_json_after_load_match_x_ite() {
 
 #[test]
 fn x0_xml_json_after_load_match_x_ite() {
-    let (n, failures) = check("corpus-x0", "x0-xml-baseline.json");
+    // The corpus and its baseline are private (issue #168): found and verified, or skipped by name.
+    let root = oracle();
+    let Some(baseline) =
+        x3d_evidence::key_or_tracked("x0-xml-baseline.json", &root.join("x0-xml-baseline.json"))
+    else {
+        return;
+    };
+    let Some(corpus) = x3d_evidence::key_or_tracked("corpus-x0", &root.join("corpus-x0")) else {
+        return;
+    };
+    let (n, failures) = check(&corpus, &baseline);
     assert!(n > 0);
     assert!(
         failures.is_empty(),
