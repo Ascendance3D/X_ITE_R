@@ -1150,6 +1150,29 @@ pub(crate) fn proto_declaration_xml(scene: &Scene, extern_: bool, id: usize) -> 
 mod tests_xml_url {
     use super::*;
 
+    // The prefixes of the scripturl01 recording: JavaScript `\s` (U+FEFF in, U+0085 out) and three that are not.
+    // The same table is in x3d-runtime/src/loader.rs and x3d-scene/src/xml.rs, so the two `is_js_space` cannot drift.
+    const JS_SPACE: [(char, bool); 11] = [
+        (' ', true),
+        ('\t', true),
+        ('\u{FEFF}', true),
+        ('\u{00A0}', true),
+        ('\u{2028}', true),
+        ('\u{3000}', true),
+        ('\u{2003}', true),
+        ('\u{0085}', false),
+        ('\u{200B}', false),
+        ('\u{180E}', false),
+        ('x', false),
+    ];
+
+    #[test]
+    fn js_space_table() {
+        for (c, space) in JS_SPACE {
+            assert_eq!(is_js_space(c), space, "{c:?}");
+        }
+    }
+
     #[test]
     fn test_is_source_url_whitespace() {
         let urls = [
@@ -1162,7 +1185,11 @@ mod tests_xml_url {
         for url in urls {
             assert!(is_source_url(url), "Failed to recognize {}", url);
         }
-        let fail_urls = ["\u{0085}javascript:"];
+        let fail_urls = [
+            "\u{0085}javascript:",
+            "\u{200B}javascript:",
+            "\u{180E}javascript:",
+        ];
         for url in fail_urls {
             assert!(!is_source_url(url), "Should not recognize {}", url);
         }
