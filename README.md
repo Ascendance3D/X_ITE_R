@@ -1,679 +1,199 @@
-# eXciteR
+# eXciteR (X_ITE_R)
 
-### X_ITE_R — A Native Rust Engine for VRML97 and X3D
+eXciteR is a Rust port of the [X_ITE](https://create3000.github.io/x_ite/) X3D browser. It loads VRML97 and X3D worlds, runs their events, sensors and scripts, and renders them with [wgpu](https://wgpu.rs/).
 
-**Bringing X_ITE into native Rust. Preserving interactive 3D worlds. Building for the future.**
+The port follows one pinned upstream version, X_ITE 16.5.0. Tests compare the Rust results with recordings of that version.
 
-[![Rust Tests](https://github.com/DJAscendance/X_ITE_R/actions/workflows/rust-tests.yml/badge.svg?branch=master)](https://github.com/DJAscendance/X_ITE_R/actions/workflows/rust-tests.yml)
-[![Rust](https://img.shields.io/badge/Rust-Native_Engine-CE422B?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Linux](https://img.shields.io/badge/Linux-x86__64-tested-2ea44f?logo=linux&logoColor=white)](https://github.com/DJAscendance/X_ITE_R)
-[![macOS](https://img.shields.io/badge/macOS_15%2B-Planned-lightgrey?logo=apple)](https://github.com/DJAscendance/X_ITE_R)
-[![VRML97](https://img.shields.io/badge/VRML97-Supported-007ACC)](https://www.web3d.org/)
-[![X3D](https://img.shields.io/badge/X3D-In_Development-7952B3)](https://www.web3d.org/)
+## Goals
 
-[![Audio Oracle](https://img.shields.io/badge/Audio_Oracle-X__ITE_Comparison-326CE5)](https://github.com/DJAscendance/X_ITE_R/actions/workflows/rust-tests.yml)
-[![Code Verification](https://img.shields.io/badge/Verification-Reference_Based-6f42c1)](https://github.com/DJAscendance/X_ITE_R/tree/master/oracle)
-[![Nightly Builds](https://img.shields.io/badge/Nightly_Builds-Planned-lightgrey)](https://github.com/DJAscendance/X_ITE_R/actions)
-[![Releases](https://img.shields.io/badge/Releases-Not_Yet_Public-lightgrey)](https://github.com/DJAscendance/X_ITE_R/releases)
+- **Browser first.** The engine compiles to WebAssembly and draws with WebGPU. The `x3d-web` crate provides an `<x3d-canvas>` element with X_ITE's JavaScript API names. No X_ITE JavaScript runs in the page.
+- **Native viewer.** `x3d-view` is a desktop application on the same engine. It is the main tool for testing rendering, input and audio against X_ITE outside a browser.
+- **A reusable engine.** The crates can be used by other Rust applications that need X3D scene processing.
 
----
+## Status
 
-## Overview
+The project is under active development. There is no stable release. It does not have full X_ITE compatibility.
 
-**eXciteR**, developed in the `X_ITE_R` repository, is a native Rust port of the [X_ITE X3D Browser](https://create3000.github.io/x_ite/).
+### Working
 
-The project brings X_ITE's scene processing, rendering, interaction, and runtime behavior into a native Rust engine.
+- Parsing of VRML97, X3D classic encoding (`.x3dv`), X3D XML (`.x3d`) and gzip-compressed worlds (`.wrz`).
+- Scene runtime: fields, ROUTEs, PROTO and EXTERNPROTO, Inline, TimeSensor animation, interpolators, sensors (touch, plane, key, string and others), and Script nodes (JavaScript through QuickJS).
+- Rendering with wgpu: geometry, materials, textures, lighting, shadows, particles, volume rendering, text and picking.
+- Navigation: EXAMINE, WALK, FLY and NONE, and viewpoint binding.
+- Audio: Sound and AudioClip, URL fallback and spatial attenuation, on the native viewer.
+- Browser build: `<x3d-canvas>` loads and draws a world, takes mouse, touch, wheel and keyboard input, and supports a subset of the X_ITE JavaScript API. [crates/x3d-web/web/API.md](crates/x3d-web/web/API.md) lists the supported and unsupported members.
 
-X_ITE is an established JavaScript implementation of the X3D standard. It supports interactive 3D content through a browser-based runtime.
+### Missing or incomplete
 
-eXciteR follows a different execution model. It uses native Rust code, a native application window, and GPU rendering without requiring the original JavaScript X_ITE engine at runtime.
+- Much of the browser JavaScript API: scene creation ([#134](https://github.com/Ascendance3D/X_ITE_R/issues/134)), browser context functions ([#135](https://github.com/Ascendance3D/X_ITE_R/issues/135)), browser options and properties ([#136](https://github.com/Ascendance3D/X_ITE_R/issues/136)), parts of the field API ([#137](https://github.com/Ascendance3D/X_ITE_R/issues/137)) and the X3D entry points ([#138](https://github.com/Ascendance3D/X_ITE_R/issues/138)).
+- MovieTexture frame decoding in the browser ([#139](https://github.com/Ascendance3D/X_ITE_R/issues/139)) and sound in the browser ([#140](https://github.com/Ascendance3D/X_ITE_R/issues/140)). MovieTexture audio is not implemented on any target.
+- HRTF spatial audio, full MIDI playback and CFF OpenType fonts.
+- WebXR ([#83](https://github.com/Ascendance3D/X_ITE_R/issues/83)) and the browser keyboard UI.
+- Some GPU picking precision and pointing-sensor cases ([#67](https://github.com/Ascendance3D/X_ITE_R/issues/67), [#79](https://github.com/Ascendance3D/X_ITE_R/issues/79)).
+- Release packages for all platforms.
 
-The project has two goals.
+The REA section below gives the measured coverage.
 
-**The first goal is compatibility.** Existing VRML97 and X3D content should produce behavior that matches the reference X_ITE implementation.
+## Targets
 
-**The second goal is a reusable native engine.** The Rust code should support standalone viewers and future applications that need interactive 3D scene processing.
+| target | state |
+| --- | --- |
+| Browser: `wasm32-unknown-unknown` with WebGPU | Chrome or Edge 113 or later. CI tests it in headless Chromium. |
+| Linux x86_64 | Main development platform. CI builds and tests it on a GitHub-hosted runner without a GPU. |
+| Windows x86_64 | Cross-built from Linux. Tested with DX12 on one PC. No package. |
+| macOS | Not verified ([#87](https://github.com/Ascendance3D/X_ITE_R/issues/87)). |
 
-The initial desktop viewer runs on Linux. Full engine compatibility and macOS delivery remain development goals.
+## Requirements
 
-> **Development status:** Active development. A working Linux desktop viewer exists, but the Rust port does not yet implement every X_ITE feature.
+- Rust 1.95.0, the version that CI uses. The workspace uses the 2024 edition.
+- On Ubuntu 24.04: `pkg-config`, `libasound2-dev`, `libwayland-dev`, `libxkbcommon-dev`, `libudev-dev`, `clang` and `lld`, and a Vulkan driver for rendering (for example `mesa-vulkan-drivers`).
+- For the browser build: the `wasm32-unknown-unknown` target and `wasm-bindgen-cli` 0.2.129 (the version in `Cargo.lock`).
+- For the browser tests: Node.js 24 and Playwright 1.62.1 with Chromium.
+- Python 3, for the reference checks in `tools/` and `oracle/tools/`.
 
-## Project Origins
-
-eXciteR began as a direct port of X_ITE 16.5.0 from JavaScript to Rust.
-
-The project uses a fixed upstream version to make behavior comparisons repeatable.
-
-| Property | Source |
-|---|---|
-| Original engine | [X_ITE X3D Browser](https://create3000.github.io/x_ite/) |
-| Upstream source | [create3000/x_ite](https://github.com/create3000/x_ite) |
-| Reference version | X_ITE 16.5.0 |
-| Reference commit | `34cdf9f97` |
-| Port language | Rust |
-| Repository | [DJAscendance/X_ITE_R](https://github.com/DJAscendance/X_ITE_R) |
-| Native viewer executable | `x3d-view` |
-| Project license declaration | MIT |
-
-X_ITE provides the reference for the port.
-
-eXciteR does not run the original JavaScript renderer inside a native wrapper. It implements scene behavior in Rust and compares the results with the original engine.
-
-The fixed upstream reference does not prevent future upgrades. It gives developers a stable point for measuring compatibility before they adopt changes from newer X_ITE versions.
-
-## What Works Today
-
-The current Linux viewer has passed independent desktop acceptance testing.
-
-| Capability | Current state |
-|---|---|
-| Native Linux application | Tested |
-| VRML97 world loading | Tested |
-| X3D world loading | Tested |
-| 3D geometry and materials | Tested |
-| Textures and lighting | Tested |
-| Camera navigation | Tested |
-| Viewpoint switching | Tested |
-| TimeSensors and animation | Tested |
-| Script execution and ROUTEs | Tested |
-| TouchSensor interaction | Tested |
-| Window resizing | Tested |
-| Sound and AudioClip | Tested |
-| Audio URL fallback | Tested |
-| PROTO-wrapped audio sources | Tested |
-| Clean application shutdown | Tested |
-
-These results establish a working native viewer.
-
-They do not establish complete X_ITE equivalence for every node, component, extension, or platform.
-
-### Native rendering
-
-The viewer uses the Rust `wgpu` graphics API.
-
-The engine contains work for geometry processing, scene traversal, materials, lighting, textures, shaders, picking, and related rendering behavior.
-
-The development program has also covered advanced rendering components. These include volume rendering, particle systems, and other X3D capabilities.
-
-Some of these components still require additional compatibility work.
-
-### Scene behavior
-
-The runtime contains implementations for interactive scene behavior.
-
-Development areas include event routing, sensors, scripting, field updates, scene state, navigation, and time-based animation.
-
-The project tests these behaviors against the fixed X_ITE reference.
-
-### Native audio
-
-The audio system supports the tested VRML97 Sound and AudioClip behavior.
-
-Completed repairs include audio URL fallback, PROTO-wrapped sound sources, and source playback when audio graph connections change.
-
-The test process also covers sound placement, distance attenuation, and stereo output.
-
-Some differences remain. These include the recorded HRTF limitation and timing-sensitive cases.
-
-## Web Browser (first batch)
-
-X_ITE_R also runs in a web page. [`crates/x3d-web`](crates/x3d-web/README.md) builds the Rust engine as WebAssembly, draws with WebGPU, and defines an `<x3d-canvas>` element with a small X_ITE-named JavaScript API.
-
-No X_ITE JavaScript runs in the page. The first batch loads and draws a world, and it reads and sets fields; [`crates/x3d-web/web/API.md`](crates/x3d-web/web/API.md) lists what is supported and what is not.
-
-## Desktop Viewer
-
-The current standalone application is named `x3d-view`.
-
-It provides a native window for loading and interacting with VRML97 and X3D scenes.
-
-### Supported files
-
-The tested viewer accepts these file formats:
-
-| Extension | Format |
-|---|---|
-| `.wrl` | VRML97 |
-| `.wrz` | Compressed VRML |
-| `.x3d` | X3D XML |
-| `.x3dv` | X3D Classic VRML encoding |
-
-Support for an extension does not mean that every component in every file is complete.
-
-### Requirements
-
-The tested Linux baseline is:
-
-- Ubuntu 24.04.
-- Linux x86-64.
-- A Vulkan-capable graphics driver.
-- Required Linux window and audio libraries.
-
-The tested standalone package does not require the Rust compiler.
-
-The current package needs glibc 2.39. Its runtime libraries include Vulkan, ALSA, and the applicable X11 or Wayland client libraries.
-
-The development tests used an NVIDIA RTX 3060 Ti.
-
-Other GPU configurations and desktop environments require further testing.
-
-### Running a packaged build
-
-Extract the Linux archive.
-
-```bash
-tar xzf x3d-view-linux-x86_64.tar.gz
+```sh
+sudo apt-get install -y pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld mesa-vulkan-drivers
 ```
 
-Start the included sample world.
+## Build
 
-```bash
-./x3d-view-linux-x86_64/x3d-view-launch.sh
-```
+Native viewer:
 
-Open a VRML97 world.
-
-```bash
-./x3d-view-linux-x86_64/x3d-view-launch.sh /path/to/world.wrl
-```
-
-Open an X3D world.
-
-```bash
-./x3d-view-linux-x86_64/x3d-view-launch.sh /path/to/world.x3d
-```
-
-A packaged build must be obtained from an approved build source. The project has not published a stable public release.
-
-### Viewer controls
-
-The viewer shortcuts use Ctrl on Linux and Command on macOS. All other keys go to the world
-(KeySensor, StringSensor).
-
-| Key | Action |
-|---|---|
-| Ctrl/Command + `1` | EXAMINE navigation |
-| Ctrl/Command + `2` | WALK navigation |
-| Ctrl/Command + `3` | FLY navigation |
-| Ctrl/Command + `4` | NONE navigation |
-| `Page Up` / `Page Down` | Change viewpoint |
-| `Home` / `End` | Viewpoint navigation |
-| Ctrl/Command + `l` | List viewpoints |
-| Ctrl/Command + `m` | Cycle multisampling |
-| Ctrl/Command + `z` | Cycle depth buffer |
-| Ctrl/Command + `r` | Reload |
-| Ctrl/Command + `s` | Save screenshot |
-| Ctrl/Command + `q` | Exit viewer |
-
-`Esc` does not exit the viewer. It goes to the world. Close the window to exit.
-
-Mouse controls depend on the selected navigation mode.
-
-## Build from Source
-
-The project uses a Rust workspace.
-
-The current repository includes the native engine crates, viewer code, automated tests, and reference comparison tools.
-
-### Prerequisites
-
-Install a compatible Rust toolchain and the Linux development libraries.
-
-The current GitHub CI uses Rust 1.95.0 on Ubuntu 24.04.
-
-For Ubuntu 24.04, install the libraries used by CI:
-
-```bash
-sudo apt-get update
-
-sudo apt-get install -y \
-  pkg-config \
-  libasound2-dev \
-  libwayland-dev \
-  libxkbcommon-dev \
-  libudev-dev \
-  clang
-```
-
-Install and configure a Vulkan driver for GPU rendering.
-
-### Clone
-
-```bash
-git clone https://github.com/DJAscendance/X_ITE_R.git
-cd X_ITE_R
-```
-
-Repository access is currently restricted.
-
-### Build the viewer
-
-```bash
+```sh
 cargo build --release -p x3d-viewer --bin x3d-view
 ```
 
-Run the viewer with a world file.
+Browser module:
 
-```bash
-./target/release/x3d-view /path/to/world.wrl
+```sh
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli --version 0.2.129 --locked
+tools/build-web.sh
 ```
 
-### Use the repository launcher
+`tools/build-web.sh` writes the module to `crates/x3d-web/web/pkg/` (gitignored).
 
-The repository also contains a launcher script.
+## Usage
 
-```bash
-./tools/x3d-view-launch.sh /path/to/world.wrl
+Open a world in the native viewer:
+
+```sh
+./target/release/x3d-view crates/x3d-viewer/samples/desktop-demo/demo.wrl
 ```
 
-This launcher looks for the built executable and passes supported arguments to it.
+`tools/x3d-view-launch.sh [world]` does the same and opens the demo world when you give no world.
 
-## Architecture
+The viewer shortcuts use Ctrl on Linux and Windows, and Command on macOS. All other keys go to the world (KeySensor, StringSensor).
 
-eXciteR separates scene data, runtime behavior, and rendering.
+| key | action |
+| --- | --- |
+| Ctrl + `1` / `2` / `3` / `4` | EXAMINE / WALK / FLY / NONE navigation |
+| `Page Up` / `Page Down` | previous / next viewpoint |
+| Ctrl + `l` | list the viewpoints |
+| Ctrl + `m` | cycle multisampling |
+| Ctrl + `r` | reload |
+| Ctrl + `s` | save a screenshot |
+| Ctrl + `q` | exit |
 
-This structure helps the project compare individual systems with X_ITE. It also supports future use of the native engine by other applications.
+`Esc` goes to the world and does not exit the viewer.
 
-### Main Rust components
+Show a world in a web page (after the browser build):
 
-| Component | Purpose |
-|---|---|
-| `x3d-fields` | X3D field types and values |
-| `x3d-parse` | VRML97 and X3D parsing |
-| `x3d-scene` | Scene and node representation |
-| `x3d-runtime` | Runtime state, events, and behavior |
-| `x3d-script` | Script execution support |
-| `x3d-render` | Rendering support |
-| `x3d-viewer` | Native viewer, input, navigation, and executable tools |
-
-The workspace contains additional components and test tools.
-
-The Rust architecture does not depend on running X_ITE JavaScript as its production renderer.
-
-## Compatibility and Code Verification
-
-**Reference behavior is the measure of compatibility.**
-
-A Rust unit test can show that a function works as written. It cannot, by itself, prove that the result matches X_ITE.
-
-eXciteR uses direct reference comparisons to measure that difference.
-
-### Verification process
-
-The project uses the following process:
-
-1. Identify a behavior in the fixed X_ITE reference.
-2. Record the reference output or event state.
-3. Implement or repair the behavior in Rust.
-4. Run the same input through the Rust implementation.
-5. Compare results against the reference.
-6. Keep known differences and blocked cases visible.
-7. Record the evidence before changing compatibility status.
-
-The reference tools and test worlds are stored under `oracle/`.
-
-This process covers more than rendered images. It also covers events, source loading, script behavior, audio samples, sensor results, and other runtime outputs.
-
-### REA coverage tracking
-
-The project also maintains a feature coverage ledger.
-
-REA refers to **Reverse Engineer Anything**, a development plugin used where its tools apply.
-
-The ledger is a separate project record. It tracks how far the Rust implementation matches the required behavior.
-
-The last confirmed ledger baseline contains 346 entries.
-
-| State | Entries |
-|---|---:|
-| COMPLETE | 250 |
-| PARTIAL | 69 |
-| DIFFERENT | 25 |
-| MISSING | 2 |
-| NOT_TESTED | 0 |
-| **Total** | **346** |
-
-These counts describe the recorded development baseline. They are not a percentage of full standards compliance.
-
-`COMPLETE` means that the entry has the required evidence for its approved scope.
-
-`PARTIAL` means that some required behavior or evidence remains incomplete.
-
-`DIFFERENT` records an intentional or approved difference.
-
-`MISSING` means that the required implementation is absent.
-
-An individual test result does not change the ledger automatically.
-
-The ledger remains in development. Future changes must follow the project's evidence rules.
-
-## Continuous Integration
-
-eXciteR uses GitHub Actions for automated checks.
-
-[View Rust test workflow](https://github.com/DJAscendance/X_ITE_R/actions/workflows/rust-tests.yml)
-
-The current workflow runs on a GitHub-hosted Ubuntu 24.04 runner.
-
-### Current CI checks
-
-| Check | Description |
-|---|---|
-| Formatting | Runs `cargo fmt --all -- --check` before the build |
-| Rust regression suite | Runs the X_ITE-only Rust workspace tests |
-| Audio reference comparison | Compares Rust audio behavior with recorded X_ITE baselines |
-| Test summary | Records passed, failed, ignored, and filtered test counts |
-| Build validation | Builds the native Rust test tools used by the workflow |
-
-The CI workflow excludes the separate CodeMirror crates.
-
-The standard GitHub runner has no dedicated GPU. Nine GPU-dependent test entries remain outside the hosted CI test run.
-
-These tests remain part of the local GPU verification process.
-
-The project does not count skipped GPU tests as passed.
-
-### Running the Rust tests
-
-```bash
-cargo test --workspace --release \
-  --exclude cm-core \
-  --exclude cm-modes \
-  --exclude cm-view \
-  --no-fail-fast
+```sh
+python3 -m http.server -d crates/x3d-web/web 8000
 ```
 
-Run this command in an environment with the required resources and graphics support.
+Open <http://localhost:8000/example/> in Chrome or Edge. The page uses the element as an X_ITE page does:
 
-For a standard runner without a GPU, use the exclusions documented in `.github/workflows/rust-tests.yml`.
-
-### Formatting
-
-The Rust code uses standard rustfmt formatting from the stable toolchain, with no `rustfmt.toml`.
-
-Format the workspace before committing:
-
-```bash
-cargo fmt --all
+```html
+<script type="module" src="../x_ite_r.mjs"></script>
+<x3d-canvas src="box.wrl"></x3d-canvas>
 ```
 
-Check it the way CI does:
+[crates/x3d-web/README.md](crates/x3d-web/README.md) has more examples.
 
-```bash
+## Test
+
+CI runs the workspace tests in its evidence mode. Some reference data (the answer keys in `oracle/answer-keys.tsv`) is not in the repository, and a runner without a GPU cannot run the GPU tests. In CI mode these tests skip by name, and each skip is logged:
+
+```sh
+export X3D_EVIDENCE=ci
+export X3D_EVIDENCE_ALLOW=no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json
+export X3D_EVIDENCE_LOG=$PWD/evidence-skips.tsv
+cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-fail-fast
+python3 -I -B tools/evidence_summary.py evidence-skips.tsv
+```
+
+Without a GPU, also add the skip list of the `GPU_TESTS` variable in `.github/workflows/rust-tests.yml` after `--`.
+
+Reference and format checks (CI's "Fast checks" job):
+
+```sh
 cargo fmt --all -- --check
+tools/verify-candidate.sh
+python3 -I -B tools/verify-reference-pin.py
+python3 -I -B tools/test_answer_keys.py
 ```
 
-Every Rust pull request must pass the CI formatting check. No nightly toolchain or Git hook is required.
+Browser tests:
 
-The generated CodeMirror files `crates/cm-modes/src/css_tables.rs` and `crates/cm-modes/tests/upstream_mode_tests.rs` are marked `rustfmt::skip` and stay as their generators write them.
-
-The commit that first formatted the workspace is listed in `.git-blame-ignore-revs`. To skip it in local blame:
-
-```bash
-git config blame.ignoreRevsFile .git-blame-ignore-revs
+```sh
+tools/build-web.sh
+cd crates/x3d-web && npm ci && npx playwright install chromium && npm test
 ```
 
-### Audio reference checks
-
-Build the scene test driver.
-
-```bash
-cargo build --release -p x3d-viewer --bin x3d-drive
-```
-
-Run the audio comparisons.
-
-```bash
-python3 -I -B oracle/tools/rea_b05.py check \
-  --target target/release \
-  --jobs 2
-```
-
-The tool reports exact matches, known differences, blocked comparisons, and failures.
-
-A known difference is not an exact match. A blocked comparison is not a passing comparison.
-
-## Development and Platform Status
-
-| Platform | Status |
-|---|---|
-| Linux x86-64 | Working native viewer; tested on Ubuntu 24.04 |
-| macOS 15+ | Development target; native package not yet verified |
-| Windows x86-64 | Development target; DX12 viewer tested on one Intel UHD PC; no package yet |
-| Mobile | Development target; not yet started |
-
-eXciteR targets every platform that X_ITE supports.
-
-Linux is the main development and verification platform today. macOS and Windows builds are
-tested on dedicated test machines. Mobile work has not started.
-
-### Windows graphics backend (test builds)
-
-On Windows, `x3d-view` uses DX12 by default and compiles shaders with Microsoft's DXC
-compiler, loaded from `dxcompiler.dll` beside `x3d-view.exe`. `tools/fetch-dxc.sh <dir>`
-downloads the pinned official release (v1.8.2505.1) and checks its SHA-256 values.
-
-- `WGPU_BACKEND` replaces the default (`dx12`, `vulkan`, `gl`, comma-separated). An unknown
-  name is an error.
-- `WGPU_DX12_COMPILER=fxc` selects the built-in FXC compiler. It works, but the first frame
-  can take minutes on a small CPU.
-- A missing `dxcompiler.dll` stops startup with an error. There is no automatic fallback.
-- GL cannot run this renderer (the scatter-depth pass reads a depth texture). It reports an
-  error instead of crashing.
-- Accepted limitation: the first start of a new build compiles the shader pipelines on the
-  first frame. On the tested Intel UHD PC that took 13.3 s to the first frame (2.9 s on later
-  starts), and the window can look unresponsive meanwhile.
-- `dxcompiler.dll` is not redistributed by this project until its license terms are approved.
-
-Builds come from Linux with `cargo xwin build --release --target x86_64-pc-windows-msvc`.
-
-## Known Limitations
-
-eXciteR is an active port. Some behavior still differs from the original engine.
-
-Current limitations and open work include:
-
-- Some X3D components remain PARTIAL.
-- HRTF spatial audio behavior does not yet match the reference.
-- Some audio URL changes produce timing-dependent reference results.
-- CFF OpenType fonts use fallback behavior in the tested desktop viewer.
-- MovieTexture audio is not yet implemented.
-- MIDI playback remains limited.
-- WebXR and the browser keyboard UI are recorded as MISSING.
-- GPU picking precision still needs additional compatibility work.
-- Some diagnostics can contain internal reference paths.
-- macOS packaging and testing are not yet complete.
-- Windows has no package yet, and the first start of a new build is slow (see the Windows section).
-
-The full compatibility ledger and regression tests provide more detailed records.
-
-Do not use this software as a complete replacement for every X_ITE function until the relevant compatibility checks pass.
-
-## Roadmap
-
-Development will continue in phases.
-
-### Phase 1 — Native Engine Foundation
-
-**Working baseline established.**
-
-Deliverables include the Rust workspace, parsing, scene handling, rendering, native viewer, and the initial compatibility test system.
-
-### Phase 2 — X_ITE Behavior Parity
-
-**In progress.**
-
-Complete the remaining PARTIAL ledger entries.
-
-Improve component behavior, shader and rendering support, sensor accuracy, scripting, audio, fonts, and scene handling.
-
-Preserve the approved differences until the project authorizes a change.
-
-### Phase 3 — Desktop Platform Support
-
-**Linux working. macOS planned.**
-
-Improve Linux packaging and test coverage.
-
-Build and verify the native application on macOS 15+.
-
-Document the required system libraries and graphics support for each platform.
-
-### Phase 4 — Engine Integration
-
-**Planned.**
-
-Provide stable ways for other native applications to use the Rust engine.
-
-Improve the embedded viewer interfaces.
-
-Continue separating reusable scene and runtime logic from application-specific window controls.
-
-Support future Rust-based tools that need VRML97 and X3D processing.
-
-Integration with WRL Forge is a possible future use. It is not part of the current X_ITE_R implementation scope.
-
-### Phase 5 — Automated Nightly Builds
-
-**Planned. Not yet active.**
-
-The long-term build system should create development packages automatically.
-
-Planned functions include:
-
-- Scheduled nightly builds from an approved development branch.
-- Validation of changes from completed pull requests.
-- Linux desktop packages.
-- macOS desktop packages after platform validation.
-- Build manifest and commit SHA.
-- SHA-256 checksums.
-- Automated test summaries.
-- A defined artifact retention period.
-- Separate development and stable release channels.
-- Clear labels for unverified builds.
-
-Nightly builds will be for testing.
-
-A passing nightly build will not be a stable release.
-
-The release system must preserve an owner approval step before publishing a stable release.
-
-No nightly download link is available until the workflow exists and produces verified packages.
-
-## Release Channels
-
-The planned release model separates development work from stable delivery.
-
-| Channel | Purpose | Current state |
-|---|---|---|
-| Development | Builds and tests for active work | Active |
-| Nightly | Automated test packages | Planned |
-| Preview | Milestone builds for wider testing | Planned |
-| Stable | Owner-approved production releases | Not yet available |
-
-Release packages should identify their source commit.
-
-Published packages should include checksums and platform requirements.
-
-The build process should not publish a release merely because a pull request passes CI.
-
-## Security and Supply Chain
-
-The project will use automated checks to help verify the Rust code and its dependencies.
-
-The current CI workflow runs the formatting check, the Rust regression suite, and the audio reference tests.
-
-Future work may add:
-
-- Static analysis with `cargo clippy`.
-- Dependency vulnerability checks with `cargo audit`.
-- Dependency license checks.
-- GitHub CodeQL where supported.
-- Release artifact checksums.
-- Software bill of materials (SBOM) output.
-- Release signing and provenance records.
-
-These checks are planned unless a workflow already implements them.
-
-A CI badge shows the result of the linked workflow. It does not prove that every dependency or code path is secure.
-
-Security reports should be handled privately when the repository becomes public and a reporting process is available.
-
-## Project Scope
-
-eXciteR is a native VRML97/X3D engine project.
-
-It is not a CodeMirror port.
-
-It is not the WRL Forge editor.
-
-It is not a browser extension.
-
-It is not a JavaScript wrapper around the original X_ITE renderer.
-
-The project may supply engine technology to other applications in the future. Such integration requires its own development and verification work.
-
-## Upstream Attribution
-
-eXciteR is derived from the open-source X_ITE project.
-
-**Original project:** [X_ITE X3D Browser](https://create3000.github.io/x_ite/)
-
-**Source repository:** [create3000/x_ite](https://github.com/create3000/x_ite)
-
-**Reference version:** 16.5.0
-
-**Reference commit:** `34cdf9f97`
-
-**Original development:** Holger Seelig and X_ITE contributors.
-
-The project recognizes the work that made X_ITE possible.
-
-The Rust port uses that work as its reference and preserves applicable third-party rights and notices.
-
-eXciteR is an independent native port. It is not presented as an official replacement or release from the upstream X_ITE maintainers.
+Without a GPU, run them on Mesa's software Vulkan driver: `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json npm test`.
+
+## Mandatory Reverse Engineer Anything (REA) Evidence
+
+The port measures compatibility against the pinned X_ITE source and its recorded runtime behavior. REA (Reverse Engineer Anything) is the analysis tool for that work. These rules apply to every compatibility change:
+
+- **Source identity.** X_ITE 16.5.0, commit `34cdf9f97145b3cd2b8e250f8c88dfdd083c0517`, vendored unchanged in `oracle/x_ite-pin/`. `tools/candidate.lock` pins its digest, and `tools/verify-candidate.sh` checks it. `oracle/x_ite-pin-16.6.0/` holds 16.6.0 for a later upgrade audit. No test reads it.
+- **Tool version.** New compatibility work uses `rea-agents@6.5.0`. The existing evidence does not record the REA version that made it.
+- **Operations.** Find the real REA operations before you use them, and record the operations you ran. Read the pinned JavaScript source directly, and compare the Rust code separately.
+- **Runtime evidence.** Observable behavior is compared with recordings of the pinned X_ITE in `oracle/` (baselines, recorders in `oracle/*.mjs` and `oracle/tools/`). Run logs are in `evidence/`.
+- **Scope and limitations.** A REA no-match does not prove that a feature is absent. Static analysis does not prove Rust runtime behavior: only a runtime test against a recording does.
+- **Ledger.** The coverage ledger has one entry per upstream feature. The in-repository copy is `_batch09_context/ledger/ledger.json`. On 2026-10-29 it held 346 entries: 249 COMPLETE, 71 PARTIAL, 25 DIFFERENT, 1 MISSING and 0 NOT_TESTED. Check it with `python3 -I -B _batch09_context/tools/verify_ledger.py`. That run reported its promotion history as consistent and 0 missing evidence references. A test result does not change a ledger status by itself.
+- **Remaining differences.** The DIFFERENT entries are recorded differences. The PARTIAL and MISSING entries are open work, tracked in the [issues](https://github.com/Ascendance3D/X_ITE_R/issues).
+
+A pull request that changes compatibility behavior records the source identity, tool version, operations, evidence IDs, scope, limitations, runtime tests and remaining differences in its description.
+
+## Repository layout
+
+| path | contents |
+| --- | --- |
+| `crates/x3d-fields`, `x3d-parse`, `x3d-scene` | field types, the VRML97/X3D parser and the scene model |
+| `crates/x3d-runtime`, `x3d-script` | event engine, PROTO and loading; Script nodes on QuickJS |
+| `crates/x3d-render`, `x3d-text` | wgpu renderer; fonts and glyph tessellation |
+| `crates/x3d-viewer` | native viewer `x3d-view` and test drivers |
+| `crates/x3d-web` | browser build: WebAssembly, WebGPU and `<x3d-canvas>` |
+| `crates/vrml97`, `x3d`, `vrml` | public facade crates and the `vrml` command-line tool |
+| `crates/x3d-oracle`, `x3d-evidence`, `r0-2-c-tests` | reference drivers, evidence policy and compatibility tests |
+| `crates/cm-core`, `cm-modes`, `cm-view` | an earlier copy of the CodeMirror 5 port. Development continues in [CodeMirror_R](https://github.com/Ascendance3D/CodeMirror_R). No X3D crate depends on it, and CI does not test it. |
+| `oracle/` | pinned X_ITE sources, recordings, baselines and recording scripts |
+| `evidence/` | REA and test run logs |
+| `_batch08_context/`, `_batch09_context/` | REA batch records, including the coverage ledger |
+| `tools/` | build, packaging and reference-check scripts |
+| `docs/` | design notes, findings, agent guides and reports |
+
+## Upstream and attribution
+
+X_ITE is developed by Holger Seelig and contributors at [create3000/x_ite](https://github.com/create3000/x_ite). The pinned 16.5.0 source in `oracle/x_ite-pin/` is unchanged, and its `package.json` declares the MIT License. The bundled X_ITE fonts keep their own licenses in their directories. The CodeMirror 5 tree in `oracle/cm5-build/` is copyright Marijn Haverbeke and others, under the MIT License (`oracle/cm5-build/LICENSE`).
+
+eXciteR is an independent project. It is not affiliated with or endorsed by the X_ITE authors.
 
 ## License
 
-The Rust workspace declares the **MIT License**.
-
-Upstream X_ITE and other third-party components retain their applicable copyright and license notices.
-
-Before public release, the repository must provide a root `LICENSE` file and verify the notices for all reused code and distributed assets.
-
-License declarations do not remove obligations attached to third-party code.
+MIT. See [LICENSE](LICENSE). The published crates `vrml`, `vrml97` and `x3d` include their own MIT license files.
 
 ## Contributing
 
-The repository is currently private.
+Bug reports and pull requests are welcome. For a large change, please open an [issue](https://github.com/Ascendance3D/X_ITE_R/issues) first.
 
-Public contribution instructions will be added before the project opens to outside contributors.
+- Run `cargo fmt --all` and the tests above before you open a pull request.
+- Link one issue in the pull request. Use `Refs #N` for partial work, and a closing keyword only when the issue is complete.
+- Do not change a pin, a baseline, a recording or an answer key to make a test pass.
+- Follow the REA rules above for compatibility changes.
+- A maintainer approves CI runs for pull requests from outside contributors. The required checks are `Rust tests result` and `Web tests result`.
 
-Future contributions should include clear test evidence and preserve the compatibility requirements.
-
-Rust changes must be formatted with `cargo fmt --all` and pass `cargo fmt --all -- --check`. See [Formatting](#formatting).
-
-Changes that affect X_ITE behavior should include reference comparisons when practical.
-
-Contributors should not remove known differences or weaken tests simply to produce a passing result.
-
-## Project Links
-
-| Resource | Link |
-|---|---|
-| Repository | [DJAscendance/X_ITE_R](https://github.com/DJAscendance/X_ITE_R) |
-| GitHub Actions | [Build and test status](https://github.com/DJAscendance/X_ITE_R/actions) |
-| Issues | [Issue tracker](https://github.com/DJAscendance/X_ITE_R/issues) |
-| Pull requests | [Development changes](https://github.com/DJAscendance/X_ITE_R/pulls) |
-| Future releases | [Releases](https://github.com/DJAscendance/X_ITE_R/releases) |
-| Original X_ITE | [X_ITE website](https://create3000.github.io/x_ite/) |
-| Original source | [X_ITE on GitHub](https://github.com/create3000/x_ite) |
-| X3D standards | [Web3D Consortium](https://www.web3d.org/) |
-| Rust | [rust-lang.org](https://www.rust-lang.org/) |
-
----
-
-**eXciteR — X_ITE, rebuilt in Rust.**
-
-*Preserving the worlds of yesterday. Building the native 3D engine of tomorrow.*
+CI: [GitHub Actions](https://github.com/Ascendance3D/X_ITE_R/actions).
