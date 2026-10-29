@@ -5,7 +5,7 @@ Everything here is headless and local. Nothing here goes to any remote.
 
 ## Where the gitignored answer keys are
 
-Twelve answer keys are too large for Git: 4 JSON files and 8 render directories. Seven private corpora
+Twelve answer keys are too large for Git: 4 JSON files and 8 render directories. Six private corpora
 (issue #168, below) use the same manifest. `answer-keys.tsv` lists each
 one with its kind, file count, byte count and sha256 (for a directory, the sha256 of its sorted `sha256sum` list).
 
@@ -26,8 +26,8 @@ refuses the main checkout, whose render keys and `upstream/` are real directorie
 
 `corpus-items`, `corpus-items2`, `corpus-items-media`, `corpus-items2-media`, `render-items` and `render-items2`
 are historical Mall item files with no redistribution permission. They were removed from the public repository at
-`3841786a`. `answer-keys.tsv` lists all six, and the resolver finds and verifies them like the keys. Removal from `master` does not erase them from
-older commits.
+`3841786a`. `answer-keys.tsv` lists all six, and the resolver finds and verifies them like the keys. Removal from
+`master` does not erase them from older commits.
 
 The tests that read them fail by name when they are absent, and skip by name when `X3D_EVIDENCE_ALLOW` lists
 them. The other sections of this file still name these paths; they are now found through the resolver. Restore
