@@ -174,12 +174,10 @@ def self_test():
         (["README.md"], False, False),
         (["docs/agents/lane-reports.md", "crates/x3d-web/web/API.md"], False, False),
         (["docs/findings-xr-c04/hsl_count.py"], False, False),
-        (["oracle/cm5-build/README.md"], True, False),
         (["oracle/x_ite-pin-16.6.0/README.md"], True, False),
         (["tools/candidate.lock"], True, False),
         (["oracle/README.md"], True, False),
         ([".github/pull_request_template.md"], True, True),
-        (["crates/cm-core/src/lib.rs"], True, False),
         (["crates/vrml97/src/lib.rs"], True, False),
         (["crates/x3d-oracle/src/main.rs"], True, False),
         (["crates/x3d-render/src/lib.rs"], True, True),
@@ -207,7 +205,7 @@ def self_test():
         (["upstream"], True, True),
         (["_batch09_context/ledger/ledger.json", "_batch09_context/tools/verify_ledger.py"], True, False),
         (["_batch09_context"], True, True),
-        (["README.md", "crates/cm-core/src/lib.rs", "crates/x3d-web/tests/browser/api.test.mjs"], True, True),
+        (["README.md", "crates/vrml97/src/lib.rs", "crates/x3d-web/tests/browser/api.test.mjs"], True, True),
     ]
     bad = 0
     for paths, rust, web in cases:

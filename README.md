@@ -1,5 +1,13 @@
 # eXciteR (X_ITE_R)
 
+[![Rust tests](https://img.shields.io/github/actions/workflow/status/Ascendance3D/X_ITE_R/rust-tests.yml?branch=master&label=Rust%20tests&style=flat-square&labelColor=0d1117&logo=githubactions&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/actions/workflows/rust-tests.yml)
+[![Web tests](https://img.shields.io/github/actions/workflow/status/Ascendance3D/X_ITE_R/web-tests.yml?branch=master&label=Web%20tests&style=flat-square&labelColor=0d1117&logo=githubactions&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/actions/workflows/web-tests.yml)
+[![license MIT](https://img.shields.io/badge/license-MIT-161b22?style=flat-square&labelColor=0d1117)](https://github.com/Ascendance3D/X_ITE_R/blob/master/LICENSE)
+[![X_ITE 16.5.0 pin](https://img.shields.io/badge/X__ITE-16.5.0_pin-161b22?style=flat-square&labelColor=0d1117)](https://github.com/Ascendance3D/X_ITE_R/tree/master/oracle/x_ite-pin)
+[![Rust 1.95](https://img.shields.io/badge/Rust-1.95-161b22?style=flat-square&labelColor=0d1117&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![WebAssembly WebGPU](https://img.shields.io/badge/WebAssembly-WebGPU-161b22?style=flat-square&labelColor=0d1117&logo=webassembly&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/tree/master/crates/x3d-web)
+[![VRML97 X3D](https://img.shields.io/badge/VRML97-X3D-161b22?style=flat-square&labelColor=0d1117)](https://www.web3d.org/)
+
 eXciteR is a Rust port of the [X_ITE](https://create3000.github.io/x_ite/) X3D browser. It loads VRML97 and X3D worlds, runs their events, sensors and scripts, and renders them with [wgpu](https://wgpu.rs/).
 
 The port follows one pinned upstream version, X_ITE 16.5.0. Tests compare the Rust results with recordings of that version.
@@ -120,7 +128,7 @@ CI runs the workspace tests in its evidence mode. Some reference data (the answe
 export X3D_EVIDENCE=ci
 export X3D_EVIDENCE_ALLOW=no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json
 export X3D_EVIDENCE_LOG=$PWD/evidence-skips.tsv
-cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-fail-fast
+cargo test --workspace --release --no-fail-fast
 python3 -I -B tools/evidence_summary.py evidence-skips.tsv
 ```
 
@@ -169,7 +177,6 @@ A pull request that changes compatibility behavior records the source identity, 
 | `crates/x3d-web` | browser build: WebAssembly, WebGPU and `<x3d-canvas>` |
 | `crates/vrml97`, `x3d`, `vrml` | public facade crates and the `vrml` command-line tool |
 | `crates/x3d-oracle`, `x3d-evidence`, `r0-2-c-tests` | reference drivers, evidence policy and compatibility tests |
-| `crates/cm-core`, `cm-modes`, `cm-view` | an earlier copy of the CodeMirror 5 port. Development continues in [CodeMirror_R](https://github.com/Ascendance3D/CodeMirror_R). No X3D crate depends on it, and CI does not test it. |
 | `oracle/` | pinned X_ITE sources, recordings, baselines and recording scripts |
 | `evidence/` | REA and test run logs |
 | `_batch08_context/`, `_batch09_context/` | REA batch records, including the coverage ledger |
@@ -178,7 +185,7 @@ A pull request that changes compatibility behavior records the source identity, 
 
 ## Upstream and attribution
 
-X_ITE is developed by Holger Seelig and contributors at [create3000/x_ite](https://github.com/create3000/x_ite). The pinned 16.5.0 source in `oracle/x_ite-pin/` is unchanged, and its `package.json` declares the MIT License. The bundled X_ITE fonts keep their own licenses in their directories. The CodeMirror 5 tree in `oracle/cm5-build/` is copyright Marijn Haverbeke and others, under the MIT License (`oracle/cm5-build/LICENSE`).
+X_ITE is developed by Holger Seelig and contributors at [create3000/x_ite](https://github.com/create3000/x_ite). The pinned 16.5.0 source in `oracle/x_ite-pin/` is unchanged, and its `package.json` declares the MIT License. The bundled X_ITE fonts keep their own licenses in their directories.
 
 eXciteR is an independent project. It is not affiliated with or endorsed by the X_ITE authors.
 

@@ -1,7 +1,6 @@
 /target/
 /target-*/
 /upstream/
-/oracle/cm5-build/node_modules/
 /oracle/x_ite-pin/node_modules
 # Large oracle baselines (86 MB, 228 MB). Regenerable; sha256 recorded in oracle/README.md.
 /oracle/x1-baseline.json
@@ -31,7 +30,6 @@
 /oracle/corpus-items2-media/
 /oracle/render-items/
 /oracle/render-items2/
-/oracle/cm5-cmd-ops-baseline.json
 # Python bytecode caches. Python writes these when it imports a tool; never commit them.
 __pycache__/
 *.py[cod]
