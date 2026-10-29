@@ -17,6 +17,7 @@ import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
 import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
+import { CASE_GROUPS as SCRIPTURL01_GROUPS } from "./scripturl01_case.mjs";
 import { CASE_GROUPS as DEGENERATE01_GROUPS } from "./degenerate01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
@@ -34,7 +35,8 @@ export const ONLY     = process .env .XR_CASE;
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
 // compatibility 01 cases (dataurl01_case.mjs, `--suite dataurl01` into oracle/web-browser-data-url-01-baseline), and
-// the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
+// the web script URL whitespace 01 cases (scripturl01_case.mjs, `--suite scripturl01` into
+// oracle/web-browser-script-url-01-baseline), and the degenerate triangle 01 cases (degenerate01_case.mjs, `--suite degenerate01` into
 // oracle/web-browser-degenerate-01-baseline), and the glTF world buffers 01 and 02 cases (gltfworld01_case.mjs,
 // gltfworld02_case.mjs, `--suite gltfworld01|gltfworld02` into oracle/web-browser-gltf-world-01|02-baseline).
 const SUITES = {
@@ -42,6 +44,7 @@ const SUITES = {
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
    loadurl01:  { dir: process .env .XR_LOADURL_BASELINE ?? join (REPO, "oracle/web-browser-loadurl-01-baseline"), file: "loadurl01-baseline.json", groups: LOADURL01_GROUPS },
    dataurl01:  { dir: process .env .XR_DATAURL_BASELINE ?? join (REPO, "oracle/web-browser-data-url-01-baseline"), file: "dataurl01-baseline.json", groups: DATAURL01_GROUPS },
+   scripturl01: { dir: process .env .XR_SCRIPTURL_BASELINE ?? join (REPO, "oracle/web-browser-script-url-01-baseline"), file: "scripturl01-baseline.json", groups: SCRIPTURL01_GROUPS },
    degenerate01: { dir: process .env .XR_DEGENERATE_BASELINE ?? join (REPO, "oracle/web-browser-degenerate-01-baseline"), file: "degenerate01-baseline.json", groups: DEGENERATE01_GROUPS },
    gltfworld01: { dir: process .env .XR_GLTFWORLD_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-01-baseline"), file: "gltfworld01-baseline.json", groups: GLTFWORLD01_GROUPS },
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
@@ -394,6 +397,10 @@ const GROUP_FILES = {
    dataURLWorld: "dataurl01.test.mjs",
    dataURLImage: "dataurl01.test.mjs",
    dataURLGltf:  "dataurl01.test.mjs",
+   scriptURLScript: "scripturl01.test.mjs",
+   scriptURLWorld:  "scripturl01.test.mjs",
+   scriptURLInline: "scripturl01.test.mjs",
+   scriptURLExtern: "scripturl01.test.mjs",
    degenerateTriangle: "degenerate01.test.mjs",
    gltfWorld: "gltfworld01.test.mjs",
    gltfWorldHeld: "gltfworld02.test.mjs",
@@ -403,6 +410,17 @@ assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUP
 
 for (const file of new Set (Object .values (GROUP_FILES)))
    assert .ok (existsSync (join (dirname (fileURLToPath (import.meta.url)), file)), `GROUP_FILES: ${file} does not exist`);
+
+// The value without its top-level `detail` (an object that has one), which the cases record for X_ITE only.
+const withoutDetail = value =>
+{
+   if (!value || typeof value !== "object" || Array .isArray (value) || !("detail" in value))
+      return value;
+
+   const { detail, ... rest } = value;
+
+   return rest;
+};
 
 // The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
 export function referenceCases (file)
@@ -433,6 +451,11 @@ export function referenceCases (file)
 
                   assert .ok (theirs, `no X_ITE recording of ${key}`);
 
+                  // `detail` is recorded but not compared (scripturl01_case.mjs): what only X_ITE does.
+                  const compared = withoutDetail (ours);
+
+                  theirs = withoutDetail (theirs);
+
                   await evidence (`${key}.json`, JSON .stringify (ours, null, 1) + "\n");
 
                   for (const [ path, xite, xiteR ] of KNOWN_DIFFERENCES [key] ?? [ ])
@@ -441,7 +464,7 @@ export function referenceCases (file)
                      theirs = withValue (theirs, path, xiteR);
                   }
 
-                  assert .deepEqual (ours, theirs, `${key}\n${page .log .join ("\n")}`);
+                  assert .deepEqual (compared, theirs, `${key}\n${page .log .join ("\n")}`);
 
                   // The pictures: the same background, silhouette and colors as X_ITE's (the thresholds of runtime 01).
                   for (const [ file, data ] of Object .entries (pictures))
