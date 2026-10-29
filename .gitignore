@@ -5,23 +5,25 @@
 # Large oracle baselines (86 MB, 228 MB). Regenerable; sha256 recorded in oracle/README.md.
 /oracle/x1-baseline.json
 /oracle/items-baseline.json
+# The 8 render-key patterns have no trailing slash, so they also cover the symlink that
+# `tools/answer_keys.py link` writes. Git does not track these paths (issue #65).
 # X7 render answer key (16 MB of PNGs). Regenerable; sha256 of its index.json in oracle/README.md.
-/oracle/render-items-baseline/
+/oracle/render-items-baseline
 # X8 render answer key (synthetic Text/Fog/Background scenes). Regenerable; sha256 of its index.json in oracle/README.md.
-/oracle/render-synthetic-x8-baseline/
+/oracle/render-synthetic-x8-baseline
 # X8 Text oracle (15 MB). Regenerable with oracle/x_ite-text.mjs; sha256 in oracle/README.md.
 /oracle/x_ite-text.json
 /nightly/
 /target-nightly/
 # MSAA render answer keys (X_ITE antialiased, Multisampling 4/8). Regenerable with oracle/x_ite-shot-msaa.mjs; sha256 in oracle/README.md.
-/oracle/render-msaa4-items-baseline/
-/oracle/render-msaa4-x8-baseline/
-/oracle/render-msaa8-items-baseline/
-/oracle/render-msaa8-x8-baseline/
+/oracle/render-msaa4-items-baseline
+/oracle/render-msaa4-x8-baseline
+/oracle/render-msaa8-items-baseline
+/oracle/render-msaa8-x8-baseline
 # corpus-items2 answer keys (primary item set). Regenerable; sha256 in oracle/README.md.
 /oracle/items2-baseline.json
-/oracle/render-items2-baseline/
-/oracle/render-msaa4-items2-baseline/
+/oracle/render-items2-baseline
+/oracle/render-msaa4-items2-baseline
 # Private corpora (issue #168): historical Mall items with no redistribution permission. Listed in
 # oracle/answer-keys.tsv and found by tools/answer_keys.py; never commit them.
 /oracle/corpus-items/
