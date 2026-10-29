@@ -1168,6 +1168,22 @@ impl Runtime {
             .unwrap_or_default()
     }
 
+    /// A page field callback threw: X3DRoutingContext [processEvents] never resets its `_active` flag, so no event is
+    /// processed again. Events still queue and the frames go on. The events recorded for the page are dropped too, as
+    /// the rest of the batch is in X_ITE.
+    pub fn halt_events(&mut self) {
+        self.processing = true;
+
+        if let Some(events) = self.page_field_events.as_mut() {
+            events.clear();
+        }
+    }
+
+    /// Did [`Runtime::halt_events`] stop the event processing?
+    pub fn events_halted(&self) -> bool {
+        self.processing
+    }
+
     /// The nodes released since the last call (see [`Runtime::page_released`]).
     pub fn take_page_released(&mut self) -> Vec<NodeId> {
         self.page_released

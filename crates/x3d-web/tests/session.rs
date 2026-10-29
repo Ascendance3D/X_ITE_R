@@ -237,6 +237,34 @@ fn observed_fields_give_each_event_with_its_value_in_order() {
     assert!(s.observe_field(t, "noSuchField", true).is_err());
 }
 
+/// A page callback that throws ends X_ITE's event processing for good (X3DRoutingContext `_active` stays set): the later
+/// frames still run, but no event is processed, so nothing reaches the page and no route moves.
+#[test]
+fn halted_events_stay_halted_and_later_frames_run() {
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    assert_eq!(s.take_field_events().len(), 1);
+
+    s.halt_events();
+    s.set_field_data(t, "translation", &vec3(2.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+    s.step(NOW + 0.3);
+
+    assert_eq!(s.take_field_events(), []);
+    // The route did not run: T2 still holds the value of the first event.
+    assert_eq!(
+        s.field_data(t2, "translation").unwrap().2,
+        vec3(1.0, 0.0, 0.0)
+    );
+}
+
 #[test]
 fn field_definitions_hold_class_defaults_and_user_fields() {
     let mut s = load(ROUTED).unwrap();
