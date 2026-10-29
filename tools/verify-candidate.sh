@@ -3,9 +3,8 @@
 #
 # The gate has two parts:
 #
-#   reference  Always on. The vendored X_ITE and CodeMirror sources must match the pins in
-#              tools/candidate.lock by version string and by content digest. When the live
-#              CodeMirror checkout (CM5_LIVE_DIR) exists, its HEAD must equal CM5_PIN.
+#   reference  Always on. The vendored X_ITE source must match the pin in
+#              tools/candidate.lock by commit, version string and content digest.
 #              CI runs this part on every pull request.
 #   identity   Only on request, with --expect <full sha>. HEAD must be that commit, or that
 #              commit plus ALLOWED_INFRA_FILES only, and no tracked file may be modified.
@@ -86,12 +85,6 @@ fi
 : "${X_ITE_VERSION:?X_ITE_VERSION missing from lock}"
 : "${X_ITE_REF_DIR:?X_ITE_REF_DIR missing from lock}"
 : "${X_ITE_REF_DIGEST:?X_ITE_REF_DIGEST missing from lock}"
-: "${CM5_PIN:?CM5_PIN missing from lock}"
-: "${CM5_VERSION:?CM5_VERSION missing from lock}"
-: "${CM5_REF_DIR:?CM5_REF_DIR missing from lock}"
-: "${CM5_REF_DIGEST:?CM5_REF_DIGEST missing from lock}"
-CM5_SUBS="${CM5_SUBS:-}"
-CM5_LIVE_DIR="${CM5_LIVE_DIR:-}"
 ALLOWED_INFRA_FILES="${ALLOWED_INFRA_FILES:-}"
 
 # --- reference sources, checked by content -----------------------------------
@@ -136,40 +129,9 @@ else
       REF_PROBLEMS+=("X_ITE source digest is '$XI_GOT', lock says '$XI_WANT'")
 fi
 
-# -- CodeMirror 5 --------------------------------------------------------
-CM_DIR="$ROOT/$CM5_REF_DIR"
-if [ ! -d "$CM_DIR" ]; then
-   REF_PROBLEMS+=("CodeMirror reference tree is missing: $CM5_REF_DIR")
-else
-   if [ -f "$ROOT/$CM5_VERSION_FILE" ]; then
-      CM_VER=$(json_version "$ROOT/$CM5_VERSION_FILE")
-      [ "$CM_VER" = "$CM5_VERSION" ] || \
-         REF_PROBLEMS+=("CodeMirror version is '$CM_VER', lock says $CM5_VERSION")
-   else
-      REF_PROBLEMS+=("CodeMirror version file is missing: $CM5_VERSION_FILE")
-   fi
-   # shellcheck disable=SC2086
-   CM_GOT=$(digest "$CM_DIR" $CM5_SUBS)
-   CM_WANT="${CM5_REF_FILES} ${CM5_REF_DIGEST}"
-   [ "$CM_GOT" = "$CM_WANT" ] || \
-      REF_PROBLEMS+=("CodeMirror source digest is '$CM_GOT', lock says '$CM_WANT'")
-fi
-# The live checkout exists only on the owner's machine (not in CI), so this check is
-# conditional. Its lock path resolves through X_ITE/scratch/rust-port (a symlink to X_ITE_R)
-# into the ignored upstream/ directory of the main checkout.
-CM_LIVE="not present (not checked)"
-if [ -n "$CM5_LIVE_DIR" ] && [ -e "$CM5_LIVE_DIR/.git" ]; then
-   CM_LIVE_SHA=$(git -C "$CM5_LIVE_DIR" rev-parse HEAD 2>/dev/null)
-   CM_LIVE="$CM_LIVE_SHA"
-   [ "$CM_LIVE_SHA" = "$CM5_PIN" ] || \
-      REF_PROBLEMS+=("CodeMirror checkout $CM5_LIVE_DIR is at '${CM_LIVE_SHA:0:8}', lock says ${CM5_PIN:0:8}")
-fi
-
 echo "reference"
 echo "  root               $ROOT"
 echo "  X_ITE              $X_ITE_PIN (version $X_ITE_VERSION, ${X_ITE_REF_FILES} files)"
-echo "  CodeMirror         $CM5_PIN (version $CM5_VERSION, ${CM5_REF_FILES} files)"
-echo "  CodeMirror live    $CM_LIVE"
 if [ "${#REF_PROBLEMS[@]}" -gt 0 ]; then
    for p in "${REF_PROBLEMS[@]}"; do echo "  reference problem  $p"; done
    # Reference drift refuses before any identity check, because a test run against

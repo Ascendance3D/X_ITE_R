@@ -22,7 +22,6 @@ the (not yet published) port, each checked against X_ITE output:
 
 - running worlds: events, routes, PROTOs, Inlines, Scripts
 - a wgpu renderer and an interactive viewer (`vrml view`)
-- a native VRML-aware code editor based on a CodeMirror 5 port
 
 These will be published as they reach parity.
 
