@@ -7,7 +7,7 @@ When closing a lane or submitting a final PR for a batch of work, agents are exp
 The report must be stored in a durable location outside this repository. **Never use `/tmp`.**
 
 The durable location is the owner's workspace directory, structured as follows:
-`~/Projects/cybertown/.reports/<topic>/<YYYY-MM-DD>-<lane>/REPORT.md`
+`<reports root>/<topic>/<YYYY-MM-DD>-<lane>/REPORT.md` (the maintainer sets the reports root, outside the repository)
 
 **Topic Names:** The topic name (e.g., `xite-rust-project-recovery`) is **PROPOSED and PENDING OWNER APPROVAL**, not final. This must be noted in the PR body.
 
