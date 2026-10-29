@@ -805,6 +805,24 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline -
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --runs 5 --suite fields01
 ```
 
+### Web browser scene text 01 (`web-browser-scene-text-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite scenetext01` runs the 17 cases of `crates/x3d-web/tests/browser/scenetext01_case.mjs`
+  (issue #136) and records `web-browser-scene-text-01-baseline/scenetext01-baseline.json` (no pictures): the exact
+  `toVRMLString`, `toXMLString` and `toJSONString` of the scene `createX3DFromString` returns and of `currentScene`
+  after `loadURL` (a `data:` URL) of 16 synthetic worlds (empty, Box, DEF/USE, PROTO, EXTERNPROTO, ROUTEs, META and
+  WorldInfo with metadata, EXPORT, PROFILE and COMPONENT lines, UNIT lines, a Script, an Inline, non-ASCII text, a
+  `#VRML V2.0` world and an XML world), and of the empty world of a canvas before any load (and after
+  `replaceWorld (null)`). The test server's origin is replaced by `http://test`.
+- Pinned X_ITE 16.5.0: the header is `#X3D V4.1 utf8 X_ITE V16.5.0`; the empty world has no PROFILE line in its VRML
+  text and `Full` in XML and JSON. The pinned page cannot load a world whose profile is `Full` (or has no PROFILE
+  statement): it throws `ReferenceError: CharLS is not defined`, so no case uses them.
+- Three runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-scene-text-01-baseline --runs 3 --suite scenetext01
+```
+
 ### Web browser field API 02 (`web-browser-fields-02-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite fields02` runs the cases of `crates/x3d-web/tests/browser/fields02_case.mjs`
