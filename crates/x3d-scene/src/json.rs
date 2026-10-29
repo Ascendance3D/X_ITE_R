@@ -646,25 +646,25 @@ impl<'a> JsonGenerator<'a> {
 
         // Source text, one line per array element.
 
-        if let Some(i) = source {
-            if let FieldValue::MFString(v) = &node.fields[i].value {
-                self.begin_array(Some("#sourceCode"), comma);
+        if let Some(i) = source
+            && let FieldValue::MFString(v) = &node.fields[i].value
+        {
+            self.begin_array(Some("#sourceCode"), comma);
 
-                for (k, line) in v[0].split('\n').enumerate() {
-                    if k != 0 {
-                        self.g().push(",");
-                    }
-
-                    self.g().tidy_break();
-                    self.g().list_indent();
-                    self.g().push("\"");
-                    self.g().push(&encode_json_string(line));
-                    self.g().push("\"");
+            for (k, line) in v[0].split('\n').enumerate() {
+                if k != 0 {
+                    self.g().push(",");
                 }
 
-                self.end_array();
-                comma = true;
+                self.g().tidy_break();
+                self.g().list_indent();
+                self.g().push("\"");
+                self.g().push(&encode_json_string(line));
+                self.g().push("\"");
             }
+
+            self.end_array();
+            comma = true;
         }
 
         // IS references.

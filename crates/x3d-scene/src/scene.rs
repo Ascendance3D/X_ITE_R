@@ -718,10 +718,10 @@ impl Scene {
     /// X3DExecutionContext.hasComponent of the scene that holds `ctx`.
     pub fn has_component_in(&self, ctx: CtxId, name: &str) -> bool {
         // `this [_profile] ?? browser .getProfile ("Full")`.
-        if let Some(p) = self.table.profile(self.profile_of(ctx).unwrap_or("Full")) {
-            if p.components.iter().any(|c| c.0 == name) {
-                return true;
-            }
+        if let Some(p) = self.table.profile(self.profile_of(ctx).unwrap_or("Full"))
+            && p.components.iter().any(|c| c.0 == name)
+        {
+            return true;
         }
 
         self.components_of(ctx).iter().any(|c| c.0 == name)
@@ -1049,11 +1049,10 @@ impl Scene {
                 .spec_version_of(ctx)
                 .parse::<f64>()
                 .is_ok_and(|v| v <= 3.3)
+            && let Some(f) = fields.iter_mut().find(|f| f.name == "direction")
         {
-            if let Some(f) = fields.iter_mut().find(|f| f.name == "direction") {
-                f.value = FieldValue::SFVec3f(Default::default());
-                f.modified = true;
-            }
+            f.value = FieldValue::SFVec3f(Default::default());
+            f.modified = true;
         }
 
         // GeoViewpoint constructor: the child objects navType and headlight, aliases of the node
