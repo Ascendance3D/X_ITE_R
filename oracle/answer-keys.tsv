@@ -22,3 +22,12 @@ corpus-items-media	dir	68	3484822	51d1c6e6823c5acb84f9c57af9b3b1bfcc84da8caec229
 corpus-items2-media	dir	68	3551601	1b0fd29b87397e1b32ade71c733ceaea4e7fc18005c091ebedc9215081c2c8bb
 render-items	dir	927	73037468	801c6fbb9d8c24c8f15952cd8ff3266d5292f7e7cc9bfdf91f933ff39d3445ef
 render-items2	dir	551	34850375	1a85c59cfa08d151e573baaae040e1e679bd1ab637267cd16fd14d071df2cca5
+# Private Cybertown archive corpora (issue #168): files copied out of the read-only Cybertown archives, with no
+# redistribution permission, and the X_ITE outputs that embed or render them. Removed from the public repository
+# after a269fa56. x0-xml-baseline.json was oracle/synthetic-rea-xml/x0-xml-baseline.json (same bytes). Measured 2026-10-29.
+corpus-x0	dir	51	1608011	f5dde38506df93b22fb60b362be63b727848ecd52dfbe5071c6462448a2db839
+corpus-x1	dir	501	14454839	724e5ca49b333d8a09b37b06d4f45ef2cd4273713ff4393f0fb9c9a9004e45d2
+x0-baseline.json	file	1	8807108	07f42767d4046908967651a2c181111357a4460c9cddb20eed50ed2685f4b3e4
+x0-xml-baseline.json	file	1	23728331	43b1451c139e589cbf2c1c7fa95d5975570d0aa04e7cc84a3c5710d5868a235d
+render-x0-baseline	dir	48	375649	618fc5fb3850528bddea6e13f6f4553057cb9a83476d426b7dc06b914aacea2f
+render-msaa4-x0-baseline	dir	48	421042	b1cffa4415270a021253ec8580c82b673ebd85bf996fc17ce9fa7e1fa9f402d0
