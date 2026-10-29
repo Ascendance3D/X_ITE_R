@@ -1,6 +1,6 @@
 // The CI shards of the browser tests (.github/workflows/web-tests.yml). Each shard runs whole test files on its own
 // runner, so no test is filtered or skipped. The shards are balanced by the CI durations on lavapipe: the phone test
-// alone takes about 4 minutes there.
+// alone takes about 4 minutes there, and the viewpoints 01 cases about 20 minutes on SwiftShader.
 //
 //   node tests/browser/shards.mjs matrix        the shard names as a JSON array, after the check below
 //   node tests/browser/shards.mjs files NAME    the files of one shard, one path per line
@@ -19,6 +19,7 @@ export const SHARDS = {
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs" ],
    input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs" ],
    cases:  [ "api.test.mjs", "runtime02.test.mjs", "fallback01.test.mjs", "dataurl01.test.mjs", "degenerate01.test.mjs", "gltfworld01.test.mjs", "gltfworld02.test.mjs", "fields01.test.mjs", "fields02.test.mjs", "fields03.test.mjs", "fields04.test.mjs", "routes01.test.mjs" ],
+   viewpoints: [ "viewpoints01.test.mjs" ],
 };
 
 export function check (shards = SHARDS, files = readdirSync (DIR) .filter (f => f .endsWith (".test.mjs")))
