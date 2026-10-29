@@ -45,8 +45,14 @@ runs:
           npx playwright install --with-deps chromium
           sudo chmod -R a+r ~/apt-archives
         else
-          # The self-hosted VM has Mesa and Chromium's libraries installed. The runners share the VM, so this step
-          # changes no system file and installs no package; Playwright keeps one Chromium for all of them.
+          # The self-hosted VM has Mesa and Chromium's libraries installed, and each runner user has the Chromium of the
+          # locked Playwright in its own cache, installed when the VM is provisioned. This step installs nothing: it
+          # fails when a browser that the locked Playwright names is not installed.
           npm ci --no-audit --no-fund
-          npx playwright install chromium
+          npx playwright install --dry-run chromium | awk '/Install location:/ { print $3 }' > "$RUNNER_TEMP/browsers.txt"
+          test -s "$RUNNER_TEMP/browsers.txt"
+          while read -r dir; do
+            test -d "$dir" || { echo "::error::Not installed for the locked Playwright: $dir"; exit 1; }
+            echo "Installed: $dir"
+          done < "$RUNNER_TEMP/browsers.txt"
         fi
