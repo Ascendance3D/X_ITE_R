@@ -24,6 +24,7 @@ import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
+import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -54,6 +55,7 @@ const SUITES = {
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
+   viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
 };
 
@@ -434,6 +436,7 @@ const GROUP_FILES = {
    fieldText: "fields02.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
+   viewpointsApi: "viewpoints01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

@@ -252,6 +252,8 @@ pub struct WebBrowser {
     loads: HashMap<u32, PageLoad>,
     current: Option<u32>,
     next_id: u32,
+    /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
+    live: bool,
 }
 
 /// `Err` when no world `id` exists.
@@ -376,6 +378,7 @@ impl WebBrowser {
             loads: HashMap::new(),
             current: None,
             next_id: 1,
+            live: true,
         })
     }
 
@@ -617,6 +620,7 @@ impl WebBrowser {
         let w = self.worlds.get_mut(&id).ok_or_else(no_world)?;
 
         w.session.resize(self.config.width, self.config.height);
+        w.session.set_live(self.live);
         w.session.go_live(now);
 
         if let Some(v) = w.session.viewer() {
@@ -996,11 +1000,22 @@ impl WebBrowser {
         }
     }
 
-    /// X3DBrowser.viewAll (transitionTime).
+    /// X3DBrowser.viewAll (transitionTime) of the active layer, or of the layer node `layer`.
     #[wasm_bindgen(js_name = viewAll)]
-    pub fn view_all(&mut self, transition_time: f64) {
+    pub fn view_all(&mut self, transition_time: f64, layer: Option<u32>) {
         if let Some(s) = self.current_mut() {
-            s.view_all(transition_time);
+            s.view_all(layer, transition_time);
+        }
+    }
+
+    /// X3DBrowserContext.setLive (beginUpdate, endUpdate): the live state of the browser, for the world and the
+    /// worlds that follow.
+    #[wasm_bindgen(js_name = setLive)]
+    pub fn set_live(&mut self, live: bool) {
+        self.live = live;
+
+        if let Some(s) = self.current_mut() {
+            s.set_live(live);
         }
     }
 
