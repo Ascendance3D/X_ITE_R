@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|options01]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|routes01|viewpoints01|options01]
  *
  * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
  * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
@@ -14,6 +14,8 @@
  * `--suite gltfworld02` records the glTF world buffers 02 cases (<out_dir>/gltfworld02-baseline.json).
  * `--suite fields01` records the field API 01 cases (<out_dir>/fields01-baseline.json).
  * `--suite fields02` records the field API 02 cases (<out_dir>/fields02-baseline.json).
+ * `--suite routes01` records the routes 01 cases (<out_dir>/routes01-baseline.json).
+ * `--suite viewpoints01` records the viewpoints 01 cases (<out_dir>/viewpoints01-baseline.json).
  *
  * `--suite options01` records the browser options 01 cases (<out_dir>/options01-baseline.json).
  *
@@ -48,7 +50,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "options01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "routes01", "viewpoints01", "options01" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
