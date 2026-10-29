@@ -14,7 +14,7 @@ The keys are in one external evidence store, outside the repository: a private, 
 directories, with `README.md` and `SHA256SUMS`. The maintainer sets the backups root. Point `X3D_ORACLE_KEYS` at
 the store. The main checkout does not hold the 8 render keys (its render-key paths are empty, so `git status`
 shows ` D` for those tracked symlinks). It holds copies of the 4 JSON keys and the 12 private paths below as
-ignored files. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
+ignored files and directories. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
 checkout. Do not move a key back to a tracked symlink path.
 
 `tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust tests) find a key in this order:
