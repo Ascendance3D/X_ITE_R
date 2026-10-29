@@ -781,14 +781,15 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
     let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
     let roots = s.root_nodes().len();
 
-    // The candidates resolve against the page's base URL; the first fails and is reported like FileLoader's.
+    // The candidates resolve against the page's base URL, not the world's (`../parts/p.wrl` against the world's URL
+    // would be http://example.test/parts/p.wrl, which fails); the first fails and is reported like FileLoader's.
     let request = s.create_x3d_from_url(
-        vec!["missing.wrl".to_string(), "parts/p.wrl".to_string()],
-        "http://example.test/example/page.html",
+        vec!["missing.wrl".to_string(), "../parts/p.wrl".to_string()],
+        "http://example.test/example/sub/page.html",
     );
     let missing = s.create_x3d_from_url(
         vec!["missing.wrl".to_string()],
-        "http://example.test/example/page.html",
+        "http://example.test/example/sub/page.html",
     );
 
     assert!(
@@ -825,7 +826,7 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
 
     assert!(
         log.contains(
-            "Couldn't load URL 'http://example.test/example/missing.wrl', trying URL 2 of 2."
+            "Couldn't load URL 'http://example.test/example/sub/missing.wrl', trying URL 2 of 2."
         ),
         "{log}"
     );
