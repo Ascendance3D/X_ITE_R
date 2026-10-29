@@ -42,6 +42,8 @@ items2 296/296, items 606/606, x0 47+3 expected, x1 470+25 expected+3 explained 
 ## 13. GPU MSAA 0 and 4
 Adapter: NVIDIA GeForce RTX 3060 Ti, Vulkan, driver 595.91.07 (llvmpipe also present, not used); X_ITE side ANGLE on the same card. items2 shots: 294/296 within tolerance at MSAA 0 and at MSAA 4. The two over are `art/djascendance-live` (1.85%/1.84%) and `art/rainbow-room` (2.54%/2.55%), identical to the prior run, known corpus exceptions.
 
+The item renders that this run wrote (`evidence/b06b08-{final,rem}/gates/gpu{0,4}/`, 1,184 PNG and 4 `index.json`) were removed from the public tree for issue #168 (historical Mall items with no redistribution permission). A private copy with checksums is kept outside the repository. The compare logs and `summary.txt` stay.
+
 ## 14. Ledger
 Authoritative `ledger/ledger.json` updated from the proposal; `ledger_verify.py`: OK, 346 entries. Before: COMPLETE 214, PARTIAL 52, DIFFERENT 25, NOT_TESTED 33, MISSING 22. After: **COMPLETE 219, PARTIAL 67, DIFFERENT 25, NOT_TESTED 33, MISSING 2** (63.29%). The brief expected 215/71; the difference is the five DIS entries, promoted because their evidence was confirmed. DIFFERENT preserved (25); MISSING are WebXR and keyboard UI. Pre-remediation copies are in `~/backups/xite-rust-b06-b08/`. `status.json` was not regenerated.
 

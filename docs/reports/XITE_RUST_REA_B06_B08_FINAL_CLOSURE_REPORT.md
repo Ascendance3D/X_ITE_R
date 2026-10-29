@@ -86,6 +86,8 @@ GPU identity (evidence `evidence/b06b08-final/gpu-identity.txt`):
 
 Item corpus on the GPU (`x3d-shot`, items2, 296 shots): MSAA 0 and MSAA 4 each 294 within tolerance, 2 over (`art/djascendance-live`, 1.85%/1.84%, and `art/rainbow-room`, 2.54%/2.55%, max level 94 and 82); these are the known GPU corpus exceptions, unchanged. Batch 02-07 render/viewer suites (images true) pass at both sample counts where they cover them; Batch 07 volume 38 cases, 290 shots. Known failure: `multi_viewer_b08 x_ite_two_canvases_rigid_bodies_msaa4`, frame 40, `rb-a`: X_ITE pair vs alone 0, Rust pair vs alone 0, Rust vs X_ITE 0.0058 in both pair and alone. So it is a single-canvas rigid-body MSAA 4 difference, not a multi-viewer defect. Not yet investigated.
 
+The item renders that this run wrote (`evidence/b06b08-{final,rem}/gates/gpu{0,4}/`, 1,184 PNG and 4 `index.json`) were removed from the public tree for issue #168 (historical Mall items with no redistribution permission). A private copy with checksums is kept outside the repository. The compare logs and `summary.txt` stay.
+
 ## 11. Workspace test results
 
 `cargo test --release --workspace --no-fail-fast --locked` on the integration tree:
