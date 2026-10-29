@@ -24,7 +24,12 @@ fn run(corpus: &str, expect: Expect) {
     let Some(baseline) = x3d_evidence::key_or_tracked(&baseline, &root.join(&baseline)) else {
         return;
     };
-    let results = compare_corpus(&baseline, &root.join(corpus_dir(corpus)), true, threads).unwrap();
+    // The corpus is tracked, or private (issue #168) and resolved like a key.
+    let dir = corpus_dir(corpus);
+    let Some(dir) = x3d_evidence::key_or_tracked(&dir, &root.join(&dir)) else {
+        return;
+    };
+    let results = compare_corpus(&baseline, &dir, true, threads).unwrap();
     let known = std::fs::read_to_string(
         Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/{corpus}-known.tsv")),
     )

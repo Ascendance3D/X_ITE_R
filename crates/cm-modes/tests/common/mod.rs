@@ -3,6 +3,7 @@
 //! `run` / `digest` / `readText` functions there.
 #![allow(dead_code)]
 
+use std::collections::HashMap;
 use std::io::Read;
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::{Path, PathBuf};
@@ -273,9 +274,28 @@ pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Rep
                 .push(format!("{key} case {i}: rust mode has indent, js does not"));
         }
     }
-    let files = base["files"].as_array().unwrap();
+    // Each `oracle/<corpus>/` that holds files, resolved once: tracked, or private (issue #168) and
+    // found and verified by x3d-evidence. A permitted skip leaves that corpus's files out.
+    let mut corpora: HashMap<String, Option<PathBuf>> = HashMap::new();
+    let mut files: Vec<(&Value, PathBuf)> = vec![];
+    for f in base["files"].as_array().unwrap() {
+        let p = f["path"].as_str().unwrap();
+        let path = match p.strip_prefix("oracle/").and_then(|r| r.split_once('/')) {
+            Some((name, rest)) => {
+                let dir = corpora.entry(name.to_string()).or_insert_with(|| {
+                    x3d_evidence::key_or_tracked(name, &root().join("oracle").join(name))
+                });
+                match dir {
+                    Some(dir) => dir.join(rest),
+                    None => continue,
+                }
+            }
+            None => root().join(p),
+        };
+        files.push((f, path));
+    }
     let threads = 12;
-    let chunks: Vec<Vec<(usize, &Value)>> = (0..threads)
+    let chunks: Vec<Vec<(usize, &(&Value, PathBuf))>> = (0..threads)
         .map(|t| {
             files
                 .iter()
@@ -291,9 +311,9 @@ pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Rep
                 s.spawn(move || {
                     let registry = Registry::with_all_modes();
                     let (mut tm, mut im) = (vec![], vec![]);
-                    for (_, f) in chunk {
+                    for (_, (f, path)) in chunk {
                         let p = f["path"].as_str().unwrap();
-                        let (gz, text) = read_text(&root().join(p));
+                        let (gz, text) = read_text(path);
                         assert_eq!(gz, f["gz"].as_bool().unwrap(), "{p}");
                         assert_eq!(text.len() as u64, f["units"].as_u64().unwrap(), "{p}: decoded length");
                         let spec = spec_from_json(&f["spec"], special);
@@ -312,7 +332,7 @@ pub fn check_baseline(key: &str, special: &(dyn Fn(&str) -> Spec + Sync)) -> Rep
             .collect();
         hs.into_iter().map(|h| h.join().unwrap()).collect()
     });
-    for f in files {
+    for (f, _) in &files {
         rep.files += 1;
         rep.callbacks += f["callbacks"].as_u64().unwrap() as usize;
         rep.js_errors += !f["error"].is_null() as usize;
