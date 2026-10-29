@@ -15,6 +15,9 @@ set -uo pipefail
 MAIN=${XITE_NIGHTLY_MAIN:?set XITE_NIGHTLY_MAIN to the main checkout}
 LANE=${XITE_NIGHTLY_LANE:?set XITE_NIGHTLY_LANE to the lane directory that holds x_ite-tests}
 BASE=${XITE_NIGHTLY_BASE:?set XITE_NIGHTLY_BASE to the nightly worktree base}
+for p in "$MAIN" "$LANE" "$BASE"; do
+  case "$p" in /*) ;; *) echo "nightly: $p is not an absolute path" >&2; exit 2;; esac
+done
 W=$BASE/scratch/rust-port
 export CARGO_TARGET_DIR=$MAIN/target-nightly
 STAMP=$(date -u +%Y-%m-%d)
