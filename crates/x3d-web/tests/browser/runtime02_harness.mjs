@@ -26,6 +26,7 @@ import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
+import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -59,6 +60,7 @@ const SUITES = {
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -71,6 +73,21 @@ const CASE_GROUPS = Object .fromEntries (Object .entries (SUITES) .flatMap (([ n
 // The values where X_ITE_R knowingly differs from X_ITE 16.5.0: case → [ path, X_ITE's value, X_ITE_R's value ].
 // The X_ITE value is checked against the recording, so a new recording cannot hide a difference. Each entry is
 // listed in web/API.md.
+const notImplemented = name => `Error: X_ITE_R: the rendering property '${name}' is not implemented.`;
+
+// The four derived rendering properties after each option set of the renderingDerived case: X_ITE's value (taken from
+// the recording, which must not be an error) and X_ITE_R's error.
+function derivedRenderingDifferences ()
+{
+   const recorded = SUITES .options01 .reference .values ["browserOptions.renderingDerived"];
+
+   return Object .entries (recorded) .flatMap (([ step, { properties } ]) => Object .entries (properties) .map (([ name, value ]) =>
+   {
+      assert .ok (!String (value) .startsWith ("Error"), `renderingDerived ${step} ${name}`);
+      return [ [ step, "properties", name ], value, notImplemented (name) ];
+   }));
+}
+
 const KNOWN_DIFFERENCES = {
    "nodeOwnership.nodeOwnership": [
       // X_ITE stores a node of another scene (the owner stays that scene); X_ITE_R refuses it, warns, and keeps the field as it was.
@@ -290,6 +307,34 @@ const KNOWN_DIFFERENCES = {
       // X_ITE draws a frame after dispose () and throws; X_ITE_R's frame loop has stopped.
       [ [ "errors" ], [ "pageerror: Couldn't create frame buffer." ], [ ] ],
    ],
+   // The page of the cases sets splashScreen, contextMenu and notifications to false; X_ITE reads these attributes into the
+   // options (BrowserOptions.reset). X_ITE_R reads only src, url and contentScale and keeps the option defaults (API.md).
+   "browserOptions.defaults": [
+      [ [ "SplashScreen", 0 ], false, true ], [ [ "ContextMenu", 0 ], false, true ], [ [ "Notifications", 0 ], false, true ],
+   ],
+   "browserOptions.setValid": [
+      [ [ "SplashScreen", "before" ], false, true ], [ [ "ContextMenu", "before" ], false, true ], [ [ "Notifications", "before" ], false, true ],
+   ],
+   // X_ITE's AntiAliased is an alias of the Antialiased rendering property, which X_ITE_R does not implement.
+   "browserOptions.unknownNames": [
+      [ [ 4, "rendering" ], true, notImplemented ("AntiAliased") ],
+   ],
+   // X_ITE's Shading, Antialiased, ContentScale and Multisampling rendering properties are derived from the options and
+   // the context. X_ITE_R does not implement them; getRenderingProperty throws.
+   "browserOptions.rendering": [
+      [ [ "defaults", "Shading" ], "GOURAUD", notImplemented ("Shading") ], [ [ "defaults", "Antialiased" ], true, notImplemented ("Antialiased") ],
+      [ [ "defaults", "ContentScale" ], 1, notImplemented ("ContentScale") ], [ [ "defaults", "Multisampling" ], 4, notImplemented ("Multisampling") ],
+      [ [ "alias" ], true, notImplemented ("AntiAliased") ],
+   ],
+   "browserOptions.renderingDerived": derivedRenderingDifferences (),
+   // The properties of X_ITE's WebGL context, the values of the GPU the recording was made on (RTX 3060 Ti through ANGLE).
+   "browserOptions.renderingContext": [
+      [ [ "MaxTextureSize" ], 32768, notImplemented ("MaxTextureSize") ], [ [ "TextureUnits" ], 64, notImplemented ("TextureUnits") ],
+      [ [ "MaxLights" ], 8, notImplemented ("MaxLights") ], [ [ "ColorDepth" ], 32, notImplemented ("ColorDepth") ],
+      [ [ "TextureMemory" ], "number:NaN", notImplemented ("TextureMemory") ], [ [ "MaxAnisotropicDegree" ], 16, notImplemented ("MaxAnisotropicDegree") ],
+      [ [ "MaxSamples" ], 8, notImplemented ("MaxSamples") ], [ [ "PixelsPerPoint" ], 1.3333333333333333, notImplemented ("PixelsPerPoint") ],
+      [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ], [ [ "XRSession" ], false, notImplemented ("XRSession") ],
+   ],
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -469,6 +514,7 @@ const GROUP_FILES = {
    fieldCascade: "fields04.test.mjs",
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
+   browserOptions: "options01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
