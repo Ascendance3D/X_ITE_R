@@ -1878,6 +1878,9 @@ const X3D = Object .assign (function (onfulfilled, onrejected)
 
       return element;
    },
+
+   toString () { return Object .prototype .toString .call (this); },
+   [Symbol .toStringTag]: "X3D",
 });
 
 globalThis .X3D ??= X3D;
