@@ -1,0 +1,990 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "routesApi.objects": {
+   "initial": [
+    1,
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ],
+    "RouteArray"
+   ],
+   "parsed": [
+    "X3DRoute",
+    "X3DRoute",
+    "function"
+   ],
+   "added": [
+    "X3DRoute",
+    "X3DRoute",
+    [
+     "A",
+     "translation_changed",
+     "C",
+     "set_translation"
+    ],
+    "function",
+    "function"
+   ],
+   "keys": [
+    [],
+    [
+     "sourceNode",
+     "sourceField",
+     "destinationNode",
+     "destinationField"
+    ],
+    [
+     "0",
+     "1"
+    ],
+    "{}",
+    "{\"0\":{},\"1\":{}}"
+   ],
+   "nodes": [
+    true,
+    true,
+    true,
+    true,
+    "C"
+   ],
+   "list": [
+    2,
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ],
+    true,
+    false,
+    null,
+    true,
+    false
+   ],
+   "iterate": [
+    2,
+    1,
+    [
+     "0",
+     "1"
+    ]
+   ],
+   "readonly": [
+    2,
+    "translation_changed",
+    2
+   ],
+   "string": [
+    "string",
+    "Error: Source node does not exist in scene graph.",
+    "Error: Source node does not exist in scene graph.",
+    "Error: Source node does not exist in scene graph."
+   ],
+   "log": []
+  },
+  "routesApi.flow": {
+   "parsedOnly": [],
+   "sync": [
+    "1 0 0",
+    "0 0 0",
+    "0 0 0",
+    "0 0 0"
+   ],
+   "frame1": [
+    "1 0 0",
+    "1 0 0",
+    "1 0 0",
+    "1 0 0"
+   ],
+   "frame4": [
+    "1 0 0",
+    "1 0 0",
+    "1 0 0",
+    "1 0 0"
+   ],
+   "seq1": [
+    "B|1 0 0|0",
+    "C|1 0 0|0",
+    "D|1 0 0|0"
+   ],
+   "afterDelete": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "C",
+      "translation_changed",
+      "D",
+      "set_translation"
+     ]
+    ],
+    "translation_changed",
+    "set_translation",
+    [
+     "A",
+     "translation_changed",
+     "C",
+     "set_translation"
+    ]
+   ],
+   "seq2": [
+    "B|2 0 0|4"
+   ],
+   "stopped": [
+    "2 0 0",
+    "2 0 0",
+    "1 0 0",
+    "1 0 0"
+   ],
+   "afterDelete4": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ]
+   ],
+   "seq3": [
+    "C|3 0 0|8"
+   ],
+   "stopped2": [
+    "3 0 0",
+    "1 0 0"
+   ],
+   "readded": [
+    false,
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ]
+   ],
+   "seq4": [
+    "B|4 0 0|12",
+    "C|4 0 0|12"
+   ],
+   "final": [
+    "4 0 0",
+    "4 0 0"
+   ],
+   "parsedDeleted": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ],
+    "4 0 0",
+    "5 0 0"
+   ],
+   "log": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "routesApi.order": {
+   "parsed": [
+    "B|1 0 0|0",
+    "C|1 0 0|0",
+    "D|1 0 0|0",
+    "E|1 0 0|0"
+   ],
+   "added": [
+    "B|1 0 0|0",
+    "C|1 0 0|0",
+    "D|1 0 0|0",
+    "E|1 0 0|0"
+   ],
+   "same": true,
+   "log": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "routesApi.errors": {
+   "addNodes": [
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destination node must be of type X3DNode."
+    ]
+   ],
+   "addMissing": [
+    "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+    "Error: Bad ROUTE specification: destination node must be of type X3DNode.",
+    "Error: Bad ROUTE specification: destination node must be of type X3DNode.",
+    "Error: Unknown field 'undefined' in node class Transform."
+   ],
+   "addFields": [
+    [
+     "Error: Unknown field 'nope' in node class Transform.",
+     "Error: Unknown field 'nope' in node class Transform."
+    ],
+    [
+     "Error: Unknown field '' in node class Transform.",
+     "Error: Unknown field '' in node class Transform."
+    ],
+    [
+     "Error: Unknown field 'undefined' in node class Transform.",
+     "Error: Unknown field 'undefined' in node class Transform."
+    ],
+    [
+     "Error: Unknown field 'null' in node class Transform.",
+     "Error: Unknown field 'null' in node class Transform."
+    ],
+    [
+     "Error: Unknown field '5' in node class Transform.",
+     "Error: Unknown field '5' in node class Transform."
+    ],
+    [
+     "Error: Unknown field 'Translation' in node class Transform.",
+     "Error: Unknown field 'Translation' in node class Transform."
+    ],
+    [
+     "Error: Unknown field 'translation_changed_changed' in node class Transform.",
+     "Error: Unknown field 'translation_changed_changed' in node class Transform."
+    ],
+    [
+     "Error: Unknown field 'set_nope' in node class Transform.",
+     "Error: Unknown field 'set_nope' in node class Transform."
+    ]
+   ],
+   "routesAfterFields": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ]
+   ],
+   "types": [
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"translation\" and \"rotation\".",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"rotation\" and \"translation\".",
+    {},
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"children\" and \"geometry\".",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"geometry\" and \"children\"."
+   ],
+   "access": [
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"addChildren\" and \"translation\".",
+    {},
+    "Error: Bad ROUTE specification: destination field \"bboxSize\" must be an input.",
+    "Error: Bad ROUTE specification: source field \"bboxSize\" must be an output.",
+    "Error: Bad ROUTE specification: source field \"addChildren\" must be an output.",
+    "addChildren",
+    "value_changed",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"value_changed\" and \"set_fraction\"."
+   ],
+   "routesAfterAccess": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ],
+    [
+     "A",
+     "children_changed",
+     "G",
+     "set_children"
+    ],
+    [
+     "A",
+     "translation_changed",
+     "C",
+     "set_translation"
+    ],
+    [
+     "G",
+     "children_changed",
+     "G",
+     "addChildren"
+    ],
+    [
+     "PI",
+     "value_changed",
+     "A",
+     "set_translation"
+    ]
+   ],
+   "extra": [
+    "A",
+    "translation_changed",
+    "D",
+    "set_translation"
+   ],
+   "getNodes": [
+    [
+     "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destinationNode must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destinationNode must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destinationNode must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destinationNode must be of type X3DNode."
+    ],
+    [
+     "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+     "Error: Bad ROUTE specification: destinationNode must be of type X3DNode."
+    ]
+   ],
+   "getFields": [
+    "Error: Unknown field 'nope' in node class Transform.",
+    "Error: Unknown field 'nope' in node class Transform.",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"translation\" and \"rotation\".",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"addChildren\" and \"translation\".",
+    {},
+    "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+    "Error: Unknown field 'undefined' in node class Transform."
+   ],
+   "getFound": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ],
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ],
+    {},
+    null
+   ],
+   "deleteBad": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "deleteFour": [
+    "Error: Unknown field 'nope' in node class Transform.",
+    "Error: Unknown field 'nope' in node class Transform.",
+    "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+    "Error: Bad ROUTE specification: destinationNode must be of type X3DNode.",
+    "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"translation\" and \"rotation\".",
+    null,
+    null
+   ],
+   "deleteThree": null,
+   "deleteTwo": null,
+   "routesAfterDelete": [
+    [
+     "G",
+     "children_changed",
+     "G",
+     "addChildren"
+    ],
+    [
+     "PI",
+     "value_changed",
+     "A",
+     "set_translation"
+    ],
+    [
+     "A",
+     "translation_changed",
+     "D",
+     "set_translation"
+    ]
+   ],
+   "deleteTwice": [
+    null,
+    null,
+    [
+     [
+      "G",
+      "children_changed",
+      "G",
+      "addChildren"
+     ],
+     [
+      "PI",
+      "value_changed",
+      "A",
+      "set_translation"
+     ]
+    ]
+   ],
+   "logs": 0,
+   "N": [
+    "A",
+    "C",
+    "G",
+    "S",
+    "X"
+   ],
+   "log": []
+  },
+  "routesApi.names": {
+   "variants": [
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ],
+    [
+     [
+      "D",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ],
+     2
+    ]
+   ],
+   "after": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ]
+   ],
+   "same": [
+    [
+     true
+    ],
+    [
+     true
+    ]
+   ],
+   "same2": [
+    true,
+    true,
+    2
+   ],
+   "stringified": [
+    "A",
+    "translation_changed",
+    "C",
+    "set_translation"
+   ],
+   "interpolator": [
+    "PI",
+    "value_changed",
+    "D",
+    "set_translation"
+   ],
+   "routes": [
+    [
+     "A",
+     "translation_changed",
+     "B",
+     "set_translation"
+    ],
+    [
+     "D",
+     "translation_changed",
+     "E",
+     "set_translation"
+    ],
+    [
+     "A",
+     "translation_changed",
+     "C",
+     "set_translation"
+    ],
+    [
+     "PI",
+     "value_changed",
+     "D",
+     "set_translation"
+    ]
+   ],
+   "log": []
+  },
+  "routesApi.scenes": {
+   "before": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "OA",
+      "translation_changed",
+      "OB",
+      "set_translation"
+     ]
+    ]
+   ],
+   "own": [
+    [
+     "OA",
+     "translation_changed",
+     "OB",
+     "set_translation"
+    ],
+    1,
+    false
+   ],
+   "getOther": [
+    "OA",
+    "translation_changed",
+    "OB",
+    "set_translation"
+   ],
+   "getNone": null,
+   "routesOf": [
+    1,
+    1
+   ],
+   "deleteForeign": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "OA",
+      "translation_changed",
+      "OB",
+      "set_translation"
+     ]
+    ]
+   ],
+   "deleteOwn": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ],
+    []
+   ],
+   "deleteOwnFour": [
+    [],
+    []
+   ],
+   "events": [
+    [
+     "C|7 0 0|0",
+     "OB|8 0 0|0"
+    ],
+    "7 0 0",
+    "8 0 0"
+   ],
+   "log": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "routesApi.crossScene": {
+   "mixed": [
+    "A",
+    "translation_changed",
+    "OB",
+    "set_translation"
+   ],
+   "afterMixed": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "OB",
+      "set_translation"
+     ]
+    ],
+    []
+   ],
+   "reverse": [
+    "OA",
+    "translation_changed",
+    "C",
+    "set_translation"
+   ],
+   "afterReverse": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "OB",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "OA",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ]
+   ],
+   "getMixed": [
+    "A",
+    "translation_changed",
+    "OB",
+    "set_translation"
+   ],
+   "getPageIn": null,
+   "addPageIn": [
+    "A",
+    "translation_changed",
+    "B",
+    "set_translation"
+   ],
+   "sameRoute": true,
+   "deleteMixed": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "OA",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ]
+   ],
+   "browserMixed": null,
+   "events": [
+    [
+     "OB|7 0 0|0",
+     "C|8 0 0|0"
+    ],
+    "8 0 0",
+    "7 0 0"
+   ],
+   "log": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "routesApi.browser": {
+   "add": [
+    null,
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ]
+   ],
+   "addAgain": [
+    null,
+    2
+   ],
+   "addBad": [
+    "Error: Unknown field 'nope' in node class Transform.",
+    "Error: Bad ROUTE specification: source node must be of type X3DNode.",
+    "Error: Bad ROUTE specification: source node must be of type X3DNode."
+   ],
+   "flow": [
+    "3 0 0",
+    "3 0 0"
+   ],
+   "getRoute": [
+    "undefined",
+    "undefined"
+   ],
+   "deleteBad": [
+    "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+    "Error: Bad ROUTE specification: sourceNode must be of type X3DNode.",
+    "Error: Unknown field 'undefined' in node class Transform.",
+    "Error: Unknown field 'nope' in node class Transform."
+   ],
+   "delete": [
+    null,
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ]
+   ],
+   "deleteAgain": [
+    null,
+    1
+   ],
+   "stopped": [
+    "4 0 0",
+    "3 0 0"
+   ],
+   "onDoc": [
+    null,
+    [
+     [
+      "P",
+      "translation_changed",
+      "Q",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ]
+   ],
+   "oldNodes": null,
+   "afterOld": [
+    [
+     [
+      "P",
+      "translation_changed",
+      "Q",
+      "set_translation"
+     ],
+     [
+      "A",
+      "translation_changed",
+      "C",
+      "set_translation"
+     ]
+    ],
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ]
+   ],
+   "log": []
+  },
+  "routesApi.lifecycle": {
+   "deleted": [
+    [
+     "A",
+     "translation",
+     "D",
+     "translation"
+    ],
+    1,
+    false,
+    "function"
+   ],
+   "again": [
+    false,
+    [
+     "A",
+     "translation_changed",
+     "D",
+     "set_translation"
+    ],
+    2
+   ],
+   "oldStillDeletes": [
+    null,
+    2
+   ],
+   "newDeletes": [
+    null,
+    1
+   ],
+   "parsedNodes": [
+    true,
+    true,
+    true
+   ],
+   "iterOrder": [
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ]
+    ]
+   ],
+   "during": [
+    [
+     "B|1 0 0|0",
+     "added|2|0"
+    ],
+    "0 0 0",
+    [
+     [
+      "A",
+      "translation_changed",
+      "B",
+      "set_translation"
+     ],
+     [
+      "B",
+      "translation_changed",
+      "E",
+      "set_translation"
+     ]
+    ]
+   ],
+   "during2": [
+    [
+     "B|2 0 0|3",
+     "added|2|3"
+    ],
+    "2 0 0"
+   ],
+   "log": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  }
+ }
+}

@@ -824,6 +824,42 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --run
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-02-baseline --runs 5 --suite fields02
 ```
 
+### Web browser routes 01 (`web-browser-routes-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite routes01` runs the 9 cases of `crates/x3d-web/tests/browser/routes01_case.mjs`
+  (issue #135, part 1: routes only) and records `web-browser-routes-01-baseline/routes01-baseline.json` (no pictures):
+  `X3DScene .addRoute`, `deleteRoute` (route and four arguments), `getRoute`, `routes` (`RouteArray`) and the `X3DRoute`
+  object; events over an added route against a parsed `ROUTE` (same frames, same order); the exact errors of bad nodes,
+  bad field names, type mismatches and access types (`addRoute` says `source node must be ...`, `getRoute` says
+  `sourceNode must be ...`; unknown fields throw, nothing is logged); `X3DBrowser .addRoute` / `deleteRoute`, which
+  delegate to `currentScene` and return nothing (so `browser .deleteRoute (route)` throws the `getRoute` error); and routes
+  between two scenes (`routesApi.crossScene`: X_ITE does not look at the scene of a node, takes the route and carries events
+  between the scenes). The test world is synthetic and inline (a `data:` URL).
+- Three runs gave identical values (Chrome 156.0.8078.47).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --runs 3 --suite routes01
+```
+
+### Web browser viewpoints 01 (`web-browser-viewpoints-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite viewpoints01` runs the 8 cases of `crates/x3d-web/tests/browser/viewpoints01_case.mjs`
+  (issue #135, part 2) and records `web-browser-viewpoints-01-baseline/viewpoints01-baseline.json` (no pictures): the
+  `layerNode` argument of `bindViewpoint`, `firstViewpoint`, `previousViewpoint`, `nextViewpoint`, `lastViewpoint`,
+  `changeViewpoint` and `viewAll` on a world with the root layer (four viewpoints, one without description, an
+  `OrthoViewpoint`, a `ViewpointGroup`) and a `LayerSet` of three layers (the second has no viewpoint); the exact errors of
+  `bindViewpoint` (`Browser.bindViewpoint: layerNode must be of type X3DLayerNode.`, `... viewpointNode must be of type
+  X3DViewpointNode.`; extra arguments are ignored); a value that is no layer node means the active layer; the layer of
+  `bindViewpoint` is only type checked; `browser .getUserViewpoints` is `undefined`; `endUpdate` / `beginUpdate` /
+  `setLive` / `isLive` against a running TimeSensor, a route and a field assignment (the TimeSensor stops, `isActive`
+  stays `true`, assignments and routes and viewpoint binding still work), and the live state over a `loadURL`.
+  The test world is synthetic and inline (a `data:` URL).
+- Three runs gave identical values (Chrome 156.0.8078.47). Positions of a transition are not recorded: they depend on timing.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-viewpoints-01-baseline --runs 3 --suite viewpoints01
+```
+
 ## Web browser options 01 (2026-10-28): options, properties, rendering properties, print
 
 - `x_ite-web-runtime-02.mjs --suite options01` runs the 9 cases of `crates/x3d-web/tests/browser/options01_case.mjs`

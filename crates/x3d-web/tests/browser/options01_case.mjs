@@ -100,8 +100,8 @@ async function defaults (page)
    }, [ OPTIONS ]);
 }
 
-// Each option set to a valid value (a new page for each, so that they do not depend on each other), read back.
-// Also the value read after setting the default again.
+// Each option set to a valid value and read back, in the order of OPTIONS on one page (as recorded): an option is
+// read after the options before it were set.
 async function setValid (page)
 {
    await load (page);

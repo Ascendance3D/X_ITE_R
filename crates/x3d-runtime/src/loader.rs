@@ -14,6 +14,14 @@ pub trait Fetcher {
     /// `fetch (url)` + `checkResponse`: the body bytes, or `String (error)` of the rejection.
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String>;
 
+    /// The error message of a failed request, or `None` when the request succeeded. The default
+    /// calls [`Fetcher::fetch`], so for a successful request it copies the body and drops it.
+    /// A fetcher that holds a response cache overrides this to answer from the cached state
+    /// without copying: `WebFetcher` does.
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        self.fetch(url).err()
+    }
+
     /// An asynchronous fetcher (a web page's `fetch`) answers [`Fetcher::fetch`] only for a URL whose response has
     /// arrived. The runtime then asks [`Fetcher::poll`] before a load runs, and holds the load until
     /// [`Runtime::resume_fetches`]. A synchronous fetcher (the default) is always ready.
@@ -1516,7 +1524,7 @@ impl Runtime {
         for (candidate, resolved) in std::mem::take(&mut self.followed_buffers) {
             if self.fetcher.poll(&resolved) == FetchPoll::Pending {
                 self.followed_buffers.push((candidate, resolved));
-            } else if let Err(e) = self.fetcher.fetch(&resolved) {
+            } else if let Some(e) = self.fetcher.fetch_error(&resolved) {
                 self.print_load_error(&world, &candidate, Some(&resolved), &e, 1, 0);
             }
         }
