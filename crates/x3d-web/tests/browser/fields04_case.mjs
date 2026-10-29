@@ -69,6 +69,12 @@ async function scenario (page, name)
 
       let seq = [ ], inSetter = false, frames = 0;
 
+      // The uncaught errors of the page: a callback that throws is not reported to the console.
+      const errors = [ ];
+      const onError = event => { errors .push (String (event .error ?.message ?? event .message)); event .preventDefault (); };
+
+      window .addEventListener ("error", onError);
+
       const field = n => nodes [n] .getField ("translation");
       const note  = (key, v) => seq .push ([ key, String (v), inSetter ? "sync" : "later", frames ] .join ("|"));
       const watch = n => field (n) .addFieldCallback (n, v => note (n, v));
@@ -117,6 +123,21 @@ async function scenario (page, name)
                setA (7);
                await spin (3);
                break;
+            case "removeOther":
+               // A callback removes another callback of the same field that has not run yet: it is skipped.
+               field ("A") .addFieldCallback ("kill", v => { note ("kill", v); field ("A") .removeFieldCallback ("victim"); });
+               field ("A") .addFieldCallback ("victim", v => note ("victim", v));
+               setA (10);
+               await spin (3);
+               break;
+            case "registerSame":
+               // A callback adds a callback to its own field: the new one waits for the next event of the field.
+               field ("A") .addFieldCallback ("adder", v => { note ("adder", v); field ("A") .addFieldCallback ("fresh", w => note ("fresh", w)); });
+               setA (11);
+               await spin (3);
+               setA (12);
+               await spin (3);
+               break;
             case "removeBeforeEvent":
                // A callback removed before its event is delivered.
                setA (8);
@@ -129,8 +150,10 @@ async function scenario (page, name)
       {
          console .warn  = warn;
          console .error = error;
+         window .removeEventListener ("error", onError);
       }
 
+      out .errors = errors;
       out .seq  = seq;
       out .logs = logs;
 
@@ -138,7 +161,7 @@ async function scenario (page, name)
    }, name);
 }
 
-const cases = Object .fromEntries ([ "chain", "nested", "selfRemove", "thrown", "duplicate", "removeBeforeEvent" ] .map (name => [ name, page => scenario (page, name) ]));
+const cases = Object .fromEntries ([ "chain", "nested", "selfRemove", "thrown", "duplicate", "removeOther", "registerSame", "removeBeforeEvent" ] .map (name => [ name, page => scenario (page, name) ]));
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };

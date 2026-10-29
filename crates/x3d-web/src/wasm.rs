@@ -796,6 +796,13 @@ impl WebBrowser {
             .map_err(|e| JsError::new(&e))
     }
 
+    /// A page field callback threw: X_ITE processes no event again (see `Runtime::halt_events`).
+    #[wasm_bindgen(js_name = haltEvents)]
+    pub fn halt_events(&mut self, id: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.halt_events();
+        Ok(())
+    }
+
     /// The events of the observed fields, as node, name, data, ... in event order (see
     /// [`Session::take_field_events`]).
     #[wasm_bindgen(js_name = takeFieldEvents)]
