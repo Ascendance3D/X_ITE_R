@@ -6,6 +6,8 @@
     python3 -I -B tools/answer_keys.py link DEST NAME... symlink DEST/oracle/NAME to each verified key
     python3 -I -B tools/answer_keys.py guard WORKTREE [REV...]
                                                      refuse before a Git operation on WORKTREE to REV (default HEAD)
+    python3 -I -B tools/answer_keys.py check-output PATH...
+                                                     refuse a regeneration output that could write protected evidence
 
 Search order, first hit wins:
   1. $X3D_ORACLE_KEYS/NAME. When the variable is set, it is the only location searched.
@@ -28,6 +30,15 @@ REV tracks that path, a path below it, or a parent of it as anything but a direc
 restore, stash or merge to REV could then delete the data, because Git treats ignored files as expendable. It
 also refuses such data that the worktree's ignore rules do not cover (`git clean -fd` deletes it), and an
 invalid $X3D_ORACLE_KEYS. Run it again after a checkout that changes the ignore rules. The key paths are the names in this manifest and in each REV's one.
+
+check-output refuses (exit 4) an output path that is, holds or is below a protected path: the store
+($X3D_ORACLE_KEYS), a key path `oracle/NAME` of any registered worktree (`git worktree list`; NAME from this
+manifest or that worktree's one), or the target of a link at one. A separate clone is not protected. It checks the
+literal path and its real path, so a symlink anywhere on the way is followed. A path that cannot be resolved (a
+symlink loop, a directory that cannot be read) is refused. It also refuses a path at or below a
+directory that holds an entry for every manifest name (a store that the variable does not name), even when that
+directory is not a store: the check fails closed. The recorders
+that write answer keys (oracle/x_ite-shot.mjs, x_ite-shot-msaa.mjs, x_ite-dump.mjs, x_ite-text.mjs) run it first.
 
 The resolver never writes, moves or renames a key. `link` writes only symlinks under DEST/oracle and refuses to
 replace a real file or directory. Exit codes: 0 found (or guard passed), 2 absent, 3 mismatch, 4 unsafe (invalid
@@ -274,6 +285,61 @@ def link(dest, names, root=ROOT):
         print(f"{at} -> {src}")
 
 
+def _resolved(path):
+    """Real path of path. Parts that do not exist yet are kept. A dangling symlink is followed. Any other failure
+    (a symlink loop, a directory that cannot be read) is unsafe: the check cannot see where a write would go."""
+    head, rest, hops = os.path.abspath(path), [], 0
+    while True:
+        try:
+            return os.path.join(os.path.realpath(head, strict=True), *rest)
+        except FileNotFoundError:
+            if os.path.islink(head):
+                hops += 1
+                if hops > 40:
+                    raise KeyError_(UNSAFE, f"check-output: cannot resolve {path}: too many symlinks")
+                head = os.path.join(os.path.dirname(head), os.readlink(head))
+            else:
+                rest.insert(0, os.path.basename(head))
+                head = os.path.dirname(head)
+        except OSError as e:
+            raise KeyError_(UNSAFE, f"check-output: cannot resolve {path}: {e}")
+
+
+def check_output(path, root=ROOT):
+    """Refuses (UNSAFE) when writing at path could write the store or a key path, directly or through a link."""
+    rows = manifest(os.path.join(root, "oracle", "answer-keys.tsv"))
+    protected = []
+    explicit = store(root, rows)
+    if explicit:
+        protected.append((explicit, "the store $X3D_ORACLE_KEYS"))
+    for wt in worktrees(root):
+        # Another worktree can be at a commit whose manifest has other rows; its key paths are protected too.
+        own = os.path.join(wt, "oracle", "answer-keys.tsv")
+        for name in sorted(set(rows) | (set(manifest(own)) if os.path.isfile(own) else set())):
+            p = os.path.join(wt, "oracle", name)
+            protected.append((p, f"the key path {p}"))
+            if os.path.lexists(p):
+                protected.append((os.path.realpath(p), f"{os.path.realpath(p)}, the target of {p}"))
+    literal, real = os.path.abspath(path), _resolved(path)
+    problems = []
+    for q in dict.fromkeys((literal, real)):
+        for prot, why in protected:
+            if inside(q, prot):
+                problems.append(f"{q} is {why}" if q == prot else f"{q} is below {why}")
+            elif inside(prot, q):
+                problems.append(f"{q} holds {why}")
+        d = q
+        while True:
+            if os.path.isdir(d) and all(os.path.lexists(os.path.join(d, n)) for n in rows):
+                problems.append(f"{q}: {d} holds every key of oracle/answer-keys.tsv, so it is a store")
+            if os.path.dirname(d) == d:
+                break
+            d = os.path.dirname(d)
+    if problems:
+        raise KeyError_(UNSAFE, f"check-output: refused for {path}; write a regenerated key to a staging "
+                                "directory (oracle/README.md):\n  " + "\n  ".join(dict.fromkeys(problems)))
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
     try:
@@ -288,6 +354,10 @@ if __name__ == "__main__":
         elif len(a) >= 2 and a[0] == "guard":
             guard(os.path.abspath(a[1]), a[2:] or ["HEAD"])
             print(f"guard: passed for {os.path.abspath(a[1])} at " + ", ".join(a[2:] or ["HEAD"]))
+        elif len(a) >= 2 and a[0] == "check-output":
+            for p in a[1:]:
+                check_output(p)
+                print(f"check-output: passed for {os.path.abspath(p)}")
         else:
             raise KeyError_(1, __doc__.split("\n\n")[1])
     except KeyError_ as e:

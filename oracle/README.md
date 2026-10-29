@@ -12,10 +12,32 @@ one with its kind, file count, byte count and sha256 (for a directory, the sha25
 The keys are in one external evidence store, outside the repository: a private, dated directory
 `<backups root>/X_ITE_R/<date>-evidence-store/` that holds every row of `answer-keys.tsv` as real files and
 directories, with `README.md` and `SHA256SUMS`. The maintainer sets the backups root. Point `X3D_ORACLE_KEYS` at
-the store. The main checkout does not hold the 8 render keys (its render-key paths are empty, so `git status`
-shows ` D` for those tracked symlinks). It holds copies of the 4 JSON keys and the 12 private paths below as
+the store. The main checkout does not hold the 8 render keys (its render-key paths are empty and untracked). It holds copies of the 4 JSON keys and the 12 private paths below as
 ignored files and directories. `docs/agents/safe-checkout.md` describes the layout and the rules for a Git operation in the main
-checkout. Do not move a key back to a tracked symlink path.
+checkout. Do not move a key back to a key path. To give a command an `oracle/<name>` path, link the key:
+`X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py link . <name>...`. A link is for reading only; remove
+it (`rm -- oracle/<name>`, no trailing slash) before a Git operation.
+
+### Regenerate a key
+
+The store and the key paths are reference evidence. Tests read them; nothing writes them. A regenerated key is a
+candidate in a staging directory, not a key.
+
+1. Make a new, empty staging directory outside every worktree and the store: `mkdir -- <staging>` (no `-p`).
+2. Check each output path: `X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py check-output <staging>/<name>`.
+   It refuses (exit 4) the store, a key path `oracle/<name>` of any registered worktree (`git worktree list`; the
+   names of this manifest and of that worktree's one) and the target of a link at a key path, and any path below
+   or above one of them. It also refuses a path at or below a directory that holds every key (even one that is not
+   a store), but not a path above it: without `X3D_ORACLE_KEYS`, the parent of a store passes. Set the variable.
+   A separate clone is not protected. The check is for accidental writes, not a security boundary: a process that
+   puts a symlink at a checked path after the check and before the write is not stopped (an accepted residual
+   risk, issue #65). It checks the path as given and
+   with every symlink resolved. `x_ite-shot.mjs`, `x_ite-shot-msaa.mjs`, `x_ite-dump.mjs` and `x_ite-text.mjs` run
+   this check before they write, and write nothing when it fails. `x_ite-text.mjs` needs an output argument: its
+   default, `oracle/x_ite-text.json`, is a key path.
+3. Record into `<staging>/<name>`, and compare the candidate with the key.
+4. Promotion is a separate change that the owner approves: a new dated store with its own `SHA256SUMS`, and a
+   reviewed change of the row in `answer-keys.tsv`. Never write a candidate into the store or to a key path.
 
 `tools/answer_keys.py` (Python and shell) and the `x3d-evidence` crate (Rust tests) find a key in this order:
 `$X3D_ORACLE_KEYS` (only there, when set), a real file or directory in this worktree's `oracle/`,
@@ -29,7 +51,7 @@ checkout.
 `guard` refuses (exit 4) when real data sits at a key path or `upstream/` that a commit tracks. A checkout,
 reset, restore, stash or merge to that commit could delete it. It also refuses such data that `.gitignore`
 does not cover, because `git clean -fd` deletes it. Run it before such an operation. It passes in the main
-checkout with the external store, because no real data is at a tracked symlink path.
+checkout with the external store, because no real data is at a key path.
 
 ### Private corpora (issue #168)
 
@@ -433,9 +455,9 @@ All three were captured twice (concurrently with 4 other Chrome runs): scene tex
 rgba hashes identical for 296/296 at both 0 and 4 samples (4x was not +-1 here).
 
 ```
-node oracle/x_ite-dump.mjs oracle/corpus-items2 oracle/items2-baseline.json
-node oracle/x_ite-shot.mjs oracle/render-items2 oracle/render-items2-baseline --jobs 4
-node oracle/x_ite-shot-msaa.mjs oracle/render-items2 oracle/render-msaa4-items2-baseline --jobs 4
+node oracle/x_ite-dump.mjs oracle/corpus-items2 <staging>/items2-baseline.json          # a candidate; see "Regenerate a key"
+node oracle/x_ite-shot.mjs oracle/render-items2 <staging>/render-items2-baseline --jobs 4
+node oracle/x_ite-shot-msaa.mjs oracle/render-items2 <staging>/render-msaa4-items2-baseline --jobs 4
 x3d-run compare "$(python3 -I -B tools/answer_keys.py resolve items2-baseline.json)" oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
 x3d-shot batch oracle/render-items2 out && x3d-shot compare "$(python3 -I -B tools/answer_keys.py resolve render-items2-baseline)" out
 x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare "$(python3 -I -B tools/answer_keys.py resolve render-msaa4-items2-baseline)" out4

@@ -17,6 +17,7 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, extname, join, normalize, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkOutput } from "./check-output.mjs";
 import { deflateSync } from "node:zlib";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
@@ -36,6 +37,8 @@ const ONLY     = opt ("--only", "");
 
 const corpus = resolve (corpusArg);
 const outDir = resolve (outArg);
+
+checkOutput (outDir);
 const files  = (await readdir (corpus, { recursive: true, withFileTypes: true }))
    .filter (d => d .isFile ())
    .map (d => relative (corpus, join (d .parentPath, d .name)))
