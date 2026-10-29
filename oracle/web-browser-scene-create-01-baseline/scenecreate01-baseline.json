@@ -1,0 +1,1096 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "sceneCreate.createScene": {
+   "promise": [
+    true,
+    "Promise"
+   ],
+   "scene": {
+    "ctor": "X3DScene",
+    "worldURL": "PAGE",
+    "roots": [],
+    "isWorld": false
+   },
+   "distinct": [
+    true,
+    true,
+    true
+   ],
+   "keys": [
+    0,
+    "function",
+    true
+   ],
+   "replace": "resolved",
+   "after": [
+    true,
+    "PAGE",
+    0
+   ],
+   "old": [
+    0,
+    "PAGE"
+   ],
+   "logs": []
+  },
+  "sceneCreate.createSceneErrors": {
+   "errors": [
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo.",
+    "Error: Couldn't create scene: profile must be of type ProfileInfo."
+   ],
+   "afterWorld": 0,
+   "logs": []
+  },
+  "sceneCreate.createSceneProfile": {
+   "result": {
+    "profile": [
+     "ProfileInfo",
+     "Interchange"
+    ],
+    "scene": [
+     "Interchange",
+     []
+    ],
+    "scene2": [
+     "Interchange",
+     [
+      "Text:1"
+     ]
+    ],
+    "badComponent": "Error: Couldn't create scene: component must be of type ComponentInfo.",
+    "badProfile": "Error: Couldn't create scene: profile must be of type ProfileInfo."
+   },
+   "logs": []
+  },
+  "sceneCreate.vrmlString": {
+   "results": [
+    [
+     "MFNode",
+     true,
+     1,
+     [
+      "Transform"
+     ],
+     [
+      ""
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     2,
+     [
+      "Transform",
+      "Transform"
+     ],
+     [
+      "A",
+      "A"
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     1,
+     [
+      "P"
+     ],
+     [
+      ""
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     3,
+     [
+      "Group",
+      "Transform",
+      "Shape"
+     ],
+     [
+      "",
+      "",
+      ""
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     0,
+     [],
+     []
+    ],
+    [
+     "MFNode",
+     true,
+     0,
+     [],
+     []
+    ],
+    [
+     "MFNode",
+     true,
+     0,
+     [],
+     []
+    ],
+    [
+     "MFNode",
+     true,
+     2,
+     [
+      "Transform",
+      "Transform"
+     ],
+     [
+      "A",
+      "B"
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     1,
+     [
+      "Transform"
+     ],
+     [
+      ""
+     ]
+    ],
+    [
+     "MFNode",
+     true,
+     1,
+     [
+      "WorldInfo"
+     ],
+     [
+      ""
+     ]
+    ]
+   ],
+   "usable": [
+    "1 2 3",
+    "T"
+   ],
+   "set": "4 5 6",
+   "distinct": [
+    true,
+    "1 2 3"
+   ],
+   "world": [
+    true,
+    0
+   ],
+   "isNamed": "Error: Named node 'T' not found.",
+   "logs": []
+  },
+  "sceneCreate.vrmlStringErrors": {
+   "results": [
+    [
+     [
+      "returned",
+      1
+     ],
+     [
+      "warn: Parser error at line 3: Unknown node type or proto 'Foo'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+     ]
+    ],
+    [
+     "Error: \n********************************************************************************\nParser error at line 3:11\nin 'PAGE'\n\n\nTransform \n          ^\nUnexpected end of file. Expected '}' at the end of node body.\n********************************************************************************\n",
+     [
+      "error: Error: Expected '}' at the end of node body."
+     ]
+    ],
+    [
+     [
+      "returned",
+      1
+     ],
+     [
+      "warn: Parser error at line 3: Unknown field 'foo' in class 'Transform'."
+     ]
+    ],
+    [
+     "Error: \n********************************************************************************\nParser error at line 3:24\nin 'PAGE'\n\n\nTransform { translation a \n                       ^\nCouldn't read value for field 'translation'.\n********************************************************************************\n",
+     [
+      "error: Error: Couldn't read value for field 'translation'."
+     ]
+    ],
+    [
+     "Error: \n********************************************************************************\nParser error at line 3:0\nin 'PAGE'\n\n\n\n^\nUnknown statement.\n********************************************************************************\n",
+     [
+      "error: Error: Unknown statement."
+     ]
+    ],
+    [
+     [
+      "returned",
+      1
+     ],
+     []
+    ],
+    [
+     [
+      "returned",
+      0
+     ],
+     [
+      "warn: Parser error at line 3: Unknown node type or proto 'undefined'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+     ]
+    ],
+    [
+     "Error: \n********************************************************************************\nParser error at line 3:0\nin 'PAGE'\n\n\n[object Object\n^\nUnknown statement.\n********************************************************************************\n",
+     [
+      "error: Error: Unknown statement."
+     ]
+    ],
+    [
+     [
+      "returned",
+      0
+     ],
+     [
+      "warn: Parser: Named or imported node 'Nope' not found."
+     ]
+    ],
+    [
+     [
+      "returned",
+      0
+     ],
+     [
+      "warn: Parser error at line 3. Error: Unknown named or imported node 'A'."
+     ]
+    ],
+    [
+     [
+      "returned",
+      1
+     ],
+     [
+      "warn: Parser error at line 3: Unknown node type or proto 'Q'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+     ]
+    ]
+   ],
+   "world": [
+    true,
+    0
+   ],
+   "logs": []
+  },
+  "sceneCreate.vrmlStringWorld": {
+   "assign": 2,
+   "types": [
+    "Transform",
+    "Transform"
+   ],
+   "push": 3,
+   "add": 3,
+   "world": 1,
+   "logs": []
+  },
+  "sceneCreate.x3dURL": {
+   "results": [
+    [
+     "file",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl",
+      "roots": [
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "ProximitySensor",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Viewpoint",
+      "Viewpoint",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ],
+    [
+     "hash",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl#Two",
+      "roots": [
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "ProximitySensor",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Viewpoint",
+      "Viewpoint",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ],
+    [
+     "fallback",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl",
+      "roots": [
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "ProximitySensor",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Viewpoint",
+      "Viewpoint",
+      "Error: Named node 'Instance' not found."
+     ],
+     [
+      "warn: Couldn't load URL 'http://test/status/404/s1.wrl', trying URL 2 of 2. Error: Not Found"
+     ]
+    ],
+    [
+     "second",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/fallback/parts/w.wrl",
+      "roots": [
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Error: Named node 'One' not found.",
+      "Error: Named node 'Two' not found.",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ],
+    [
+     "emptyThen",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl",
+      "roots": [
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "Viewpoint",
+       "ProximitySensor",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Viewpoint",
+      "Viewpoint",
+      "Error: Named node 'Instance' not found."
+     ],
+     [
+      "warn: Couldn't load empty URL, trying URL 2 of 2. Error: Empty URL."
+     ]
+    ],
+    [
+     "extern",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "http://test/tests/browser/worlds/extern.wrl",
+      "roots": [
+       "Viewpoint",
+       "ColorBox"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Error: Named node 'One' not found.",
+      "Error: Named node 'Two' not found.",
+      "ColorBox"
+     ],
+     [
+      "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://test/tests/browser/worlds/no-such-protos.wrl#ColorBox', trying URL 2 of 2. Error: Not Found"
+     ]
+    ],
+    [
+     "data",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "data:model/x3d-vrml,%23X3D%20V4.0%20utf8%0APROFILE%20Interchange%0ADEF%20A%20Transform%20%7B%20%7D%0AShape%20%7B%20geometry%20Box%20%7B%20%7D%20%7D%0A",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     [
+      "Transform",
+      "Error: Named node 'B' not found.",
+      "Error: Named node 'V' not found.",
+      "Error: Named node 'One' not found.",
+      "Error: Named node 'Two' not found.",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ],
+    [
+     "dataVrml",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "data:model/vrml,%23VRML%20V2.0%20utf8%0ADEF%20V%20Viewpoint%20%7B%20%7D%0A",
+      "roots": [
+       "Viewpoint"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Error: Named node 'B' not found.",
+      "Viewpoint",
+      "Error: Named node 'One' not found.",
+      "Error: Named node 'Two' not found.",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ],
+    [
+     "base64",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "data:model/x3d-vrml;base64,I1gzRCBWNC4wIHV0ZjgKUFJPRklMRSBJbnRlcmNoYW5nZQpERUYgQiBUcmFuc2Zvcm0geyB9Cg==",
+      "roots": [
+       "Transform"
+      ],
+      "isWorld": false
+     },
+     [
+      "Error: Named node 'A' not found.",
+      "Transform",
+      "Error: Named node 'V' not found.",
+      "Error: Named node 'One' not found.",
+      "Error: Named node 'Two' not found.",
+      "Error: Named node 'Instance' not found."
+     ],
+     []
+    ]
+   ],
+   "world": [
+    true,
+    true
+   ],
+   "logs": [],
+   "served": [
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/status/404/s1.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/fallback/parts/w.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/extern.wrl",
+    "/tests/browser/worlds/no-such-protos.wrl",
+    "/tests/browser/worlds/protos.wrl"
+   ]
+  },
+  "sceneCreate.x3dURLNodes": {
+   "inst": [
+    "ColorBox",
+    "0.2 0.9 0.3"
+   ],
+   "set": "1 0 0",
+   "roots": [
+    "Viewpoint",
+    "ColorBox"
+   ],
+   "logs": [
+    "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://test/tests/browser/worlds/no-such-protos.wrl#ColorBox', trying URL 2 of 2. Error: Not Found"
+   ],
+   "served": [
+    "/tests/browser/worlds/extern.wrl",
+    "/tests/browser/worlds/no-such-protos.wrl",
+    "/tests/browser/worlds/protos.wrl"
+   ]
+  },
+  "sceneCreate.x3dURLErrors": {
+   "results": [
+    [
+     "one404",
+     "Error: Couldn't load X3D file.",
+     [
+      "error: Couldn't load URL 'http://test/status/404/e1.wrl'. Error: Not Found"
+     ]
+    ],
+    [
+     "garbage",
+     "Error: Couldn't load X3D file.",
+     [
+      "error: Couldn't load URL 'http://test/garbage/e2.wrl'. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/e2.wrl'."
+     ]
+    ],
+    [
+     "all",
+     "Error: Couldn't load X3D file.",
+     [
+      "warn: Couldn't load URL 'http://test/status/404/e3.wrl', trying URL 2 of 3. Error: Not Found",
+      "warn: Couldn't load URL 'http://test/garbage/e4.wrl', trying URL 3 of 3. Error: Couldn't parse X3D. No suitable file handler found for 'http://test/garbage/e4.wrl'.",
+      "error: Couldn't load any of the 3 URLs, tried in this order:"
+     ]
+    ],
+    [
+     "none",
+     "Error: Couldn't load X3D file.",
+     []
+    ],
+    [
+     "empty",
+     "Error: Couldn't load X3D file.",
+     [
+      "error: Couldn't load empty URL. Error: Empty URL."
+     ]
+    ],
+    [
+     "emptyTwo",
+     "Error: Couldn't load X3D file.",
+     [
+      "warn: Couldn't load empty URL, trying URL 2 of 2. Error: Empty URL.",
+      "error: Couldn't load any of the 2 URLs, tried in this order:"
+     ]
+    ],
+    [
+     "hash404",
+     "Error: Couldn't load X3D file.",
+     [
+      "error: Couldn't load URL 'http://test/status/404/e6.wrl#Fragment'. Error: Not Found"
+     ]
+    ],
+    [
+     "scriptURL",
+     "Error: Couldn't load X3D file.",
+     [
+      "error: Couldn't load URL 'javascript:Browser.print(1)'. Error: Couldn't parse X3D. No suitable file handler found for 'PAGEDIR/null'."
+     ]
+    ]
+   ],
+   "world": [
+    true
+   ],
+   "logs": [
+    "error: Couldn't load URL 'javascript:Browser.print(1)'. Error: Couldn't parse X3D. No suitable file handler found for 'PAGEDIR/null'."
+   ],
+   "served": [
+    "/status/404/e1.wrl",
+    "/garbage/e2.wrl",
+    "/status/404/e3.wrl",
+    "/garbage/e4.wrl",
+    "/status/500/e5.wrl",
+    "/status/404/e6.wrl"
+   ]
+  },
+  "sceneCreate.x3dURLArguments": {
+   "errors": [
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString.",
+    "Error: Browser.createX3DFromURL: url must be of type MFString."
+   ],
+   "two": [
+    true,
+    {
+     "ctor": "X3DScene",
+     "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl",
+     "roots": [
+      "Viewpoint",
+      "Viewpoint",
+      "Viewpoint",
+      "Viewpoint",
+      "ProximitySensor",
+      "Shape"
+     ],
+     "isWorld": false
+    }
+   ],
+   "four": [
+    true,
+    {
+     "ctor": "X3DScene",
+     "worldURL": "http://test/tests/browser/worlds/viewpoints.wrl",
+     "roots": [
+      "Viewpoint",
+      "Viewpoint",
+      "Viewpoint",
+      "Viewpoint",
+      "ProximitySensor",
+      "Shape"
+     ],
+     "isWorld": false
+    }
+   ],
+   "logs": [],
+   "served": [
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl"
+   ]
+  },
+  "sceneCreate.vrmlURLArguments": {
+   "world": null,
+   "createX3DFromURL": [
+    "Error: Browser.createVrmlFromURL: url must be of type MFString.",
+    "Error: Browser.createVrmlFromURL: node must be of type X3DNode.",
+    "Error: Browser.createVrmlFromURL: node must be of type X3DNode.",
+    "Error: Browser.createVrmlFromURL: node must be of type X3DNode.",
+    "Error: Unknown field 'nope' in node class Group.",
+    "Error: Browser.createVrmlFromURL: event named 'bboxSize' must be a input field.",
+    "Error: Browser.createVrmlFromURL: event named 'translation' must be of type MFNode.",
+    "undefined",
+    "Error: Unknown field 'undefined' in node class Group.",
+    "undefined",
+    "undefined"
+   ],
+   "createVrmlFromURL": [
+    "Error: Browser.createVrmlFromURL: url must be of type MFString.",
+    "Error: Browser.createVrmlFromURL: node must be of type X3DNode.",
+    "Error: Unknown field 'undefined' in node class Group.",
+    "Error: Browser.createVrmlFromURL: url must be of type MFString.",
+    "Error: Unknown field 'nope' in node class Group.",
+    "undefined",
+    "Error: Browser.createVrmlFromURL: event named 'bboxSize' must be a input field.",
+    "Error: Browser.createVrmlFromURL: event named 'translation' must be of type MFNode.",
+    "Error: Browser.createVrmlFromURL: event named 'set_translation' must be of type MFNode.",
+    "undefined",
+    "undefined"
+   ],
+   "logs": [],
+   "served": [
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl"
+   ]
+  },
+  "sceneCreate.vrmlURLLoad": {
+   "returned": [
+    "undefined"
+   ],
+   "sync": 0,
+   "children": [
+    6,
+    [
+     "Viewpoint",
+     "Viewpoint",
+     "Viewpoint",
+     "Viewpoint",
+     "ProximitySensor",
+     "Shape"
+    ]
+   ],
+   "events": [
+    "children:6",
+    "children:12"
+   ],
+   "second": 12,
+   "failed": 12,
+   "logs": [
+    "error: Couldn't load URL 'http://test/status/404/v1.wrl'. Error: Not Found"
+   ],
+   "served": [
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/tests/browser/worlds/viewpoints.wrl",
+    "/status/404/v1.wrl"
+   ]
+  },
+  "sceneCreate.importJS": {
+   "results": [
+    [
+     "object",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     "1 2 3",
+     []
+    ],
+    [
+     "string",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     "1 2 3",
+     []
+    ],
+    [
+     "empty",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     "Error: Named node 'A' not found.",
+     []
+    ],
+    [
+     "noProfile",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Group"
+      ],
+      "isWorld": false
+     },
+     "Error: Named node 'A' not found.",
+     []
+    ]
+   ],
+   "world": [
+    true
+   ],
+   "logs": []
+  },
+  "sceneCreate.importJSErrors": {
+   "results": [
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ]
+   ],
+   "logs": []
+  },
+  "sceneCreate.importDocument": {
+   "results": [
+    [
+     "string",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     "1 2 3",
+     []
+    ],
+    [
+     "document",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     "1 2 3",
+     []
+    ],
+    [
+     "element",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [
+       "Transform",
+       "Shape"
+      ],
+      "isWorld": false
+     },
+     "1 2 3",
+     []
+    ],
+    [
+     "empty",
+     true,
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     "Error: Named node 'A' not found.",
+     []
+    ]
+   ],
+   "world": [
+    true
+   ],
+   "logs": []
+  },
+  "sceneCreate.importDocumentErrors": {
+   "results": [
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     "TypeError: Cannot read properties of undefined (reading 'nodeName')",
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     []
+    ],
+    [
+     {
+      "ctor": "X3DScene",
+      "worldURL": "PAGE",
+      "roots": [],
+      "isWorld": false
+     },
+     [
+      "error: Error: Unknown node type 'Foo'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+     ]
+    ]
+   ],
+   "logs": [
+    "error: Error: Unknown node type 'Foo'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  "sceneCreate.importDocumentHTML": {
+   "result": {
+    "ctor": "X3DScene",
+    "worldURL": "PAGE",
+    "roots": [
+     "Transform",
+     "Shape"
+    ],
+    "isWorld": false
+   },
+   "logs": []
+  }
+ }
+}

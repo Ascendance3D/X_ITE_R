@@ -612,3 +612,33 @@ fn only_node_field_types_are_printed() {
         assert!(error.contains("not a node field type"), "{error}");
     }
 }
+
+#[test]
+fn createvrmlfromstring_makes_nodes_of_the_world() {
+    let mut s = load(BOX).unwrap();
+    let roots = s.root_nodes().len();
+    let nodes = s
+        .create_vrml_from_string("DEF N Transform { translation 1 2 3 } Shape { }", URL)
+        .expect("the text parses");
+    let types: Vec<String> = nodes
+        .iter()
+        .map(|n| s.type_name(n.expect("no NULL root")).unwrap())
+        .collect();
+
+    assert_eq!(types, ["Transform", "Shape"]);
+
+    // The nodes are the world's own, but not its root nodes, and a DEF name is the new scene's.
+    assert_eq!(s.root_nodes().len(), roots);
+    assert_eq!(s.named_node("N"), None);
+
+    // Text that does not parse is an error, and the world is as before.
+    let error = s
+        .create_vrml_from_string("Transform {", URL)
+        .expect_err("an open node");
+
+    assert!(
+        error.contains("Expected '}' at the end of node body."),
+        "{error}"
+    );
+    assert_eq!(s.root_nodes().len(), roots);
+}

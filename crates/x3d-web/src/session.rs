@@ -359,6 +359,20 @@ impl Session {
         (node as usize) < scene.nodes.len() && !scene.free_nodes.contains(&node)
     }
 
+    /// X3DBrowser.createVrmlFromString (text) of a page (an external browser): the root nodes of the new scene, made in
+    /// the world's arena so the page can put them into a field of the world. The scene's world URL is the page's `base`.
+    /// The error is the thrown Error's `String (error)`.
+    pub fn create_vrml_from_string(
+        &mut self,
+        text: &str,
+        base: &str,
+    ) -> Result<Vec<Option<NodeId>>, String> {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.create_vrml_from_string_at(text, world, base)
+    }
+
     /// X3DExecutionContext.getNamedNode (name) of the world; `None` where X_ITE throws "Named node not found".
     pub fn named_node(&self, name: &str) -> Option<NodeId> {
         let scene = &self.rt().scene;

@@ -24,6 +24,7 @@ import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
+import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -55,6 +56,7 @@ const SUITES = {
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -83,6 +85,28 @@ const KNOWN_DIFFERENCES = {
       [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
       // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
       [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "sceneCreate.createSceneProfile": [
+      // X_ITE_R has no ProfileInfo and ComponentInfo (getProfile, getComponent): createScene takes no profile or components.
+      [ [ "result" ], { profile: ["ProfileInfo", "Interchange"], scene: ["Interchange", []], scene2: ["Interchange", ["Text:1"]], badComponent: "Error: Couldn't create scene: component must be of type ComponentInfo.", badProfile: "Error: Couldn't create scene: profile must be of type ProfileInfo." }, "no getProfile" ],
+   ],
+   "sceneCreate.vrmlURLArguments": [
+      // The calls that load: the scene of the url is a scene of its own, and the field of a node of the world refuses its
+      // nodes with the warning of a node of another world (fields03), once for each of the five loads that finish.
+      [ [ "logs" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+   ],
+   "sceneCreate.vrmlURLLoad": [
+      // The nodes of the loaded scene cannot go into the world (see above): the field keeps its value, and the refusal is the
+      // warning (the first of the two loads that finish is before the log is cleared).
+      [ [ "children" ], [6, ["Viewpoint", "Viewpoint", "Viewpoint", "Viewpoint", "ProximitySensor", "Shape"]], [0, []] ],
+      [ [ "events" ], ["children:6", "children:12"], [] ],
+      [ [ "second" ], 12, 0 ],
+      [ [ "failed" ], 12, 0 ],
+      [ [ "logs" ], ["error: Couldn't load URL 'http://test/status/404/v1.wrl'. Error: Not Found"], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "error: Couldn't load URL 'http://test/status/404/v1.wrl'. Error: Not Found"] ],
+   ],
+   "sceneCreate.importDocumentHTML": [
+      // X_ITE's HTMLParser reads an HTML element (the X3D element of a page); X_ITE_R takes XML (string, XMLDocument, element) only.
+      [ [ "result" ], { ctor: "X3DScene", isWorld: false, roots: ["Transform", "Shape"], worldURL: "PAGE" }, "Error: X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element." ],
    ],
    "fieldCascade.nested": [
       // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
@@ -434,6 +458,7 @@ const GROUP_FILES = {
    fieldText: "fields02.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
+   sceneCreate: "scenecreate01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
