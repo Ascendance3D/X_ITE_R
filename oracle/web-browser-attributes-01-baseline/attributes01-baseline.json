@@ -1,0 +1,2269 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "canvasAttributes.options": {
+   "antialiased": {
+    "option": "Antialiased",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      true,
+      "boolean"
+     ],
+     [
+      "",
+      true,
+      "boolean"
+     ],
+     [
+      "x",
+      true,
+      "boolean"
+     ],
+     [
+      null,
+      true,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "cache": {
+    "option": "Cache",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      true,
+      "boolean"
+     ],
+     [
+      "",
+      true,
+      "boolean"
+     ],
+     [
+      "x",
+      true,
+      "boolean"
+     ],
+     [
+      null,
+      true,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "colorSpace": {
+    "option": "ColorSpace",
+    "start": [
+     "LINEAR",
+     "LINEAR",
+     "string"
+    ],
+    "steps": [
+     [
+      "LINEAR",
+      "LINEAR",
+      "string"
+     ],
+     [
+      "",
+      "LINEAR_WHEN_PHYSICAL_MATERIAL",
+      "string"
+     ],
+     [
+      "x",
+      "x",
+      "string"
+     ],
+     [
+      null,
+      "LINEAR_WHEN_PHYSICAL_MATERIAL",
+      "string"
+     ]
+    ],
+    "upper": [
+     "LINEAR_WHEN_PHYSICAL_MATERIAL",
+     "string"
+    ]
+   },
+   "contentScale": {
+    "option": "ContentScale",
+    "start": [
+     "2",
+     2,
+     "number"
+    ],
+    "steps": [
+     [
+      "2",
+      2,
+      "number"
+     ],
+     [
+      "auto",
+      -1,
+      "number"
+     ],
+     [
+      "x",
+      "number:NaN",
+      "number"
+     ],
+     [
+      "",
+      0,
+      "number"
+     ],
+     [
+      "0",
+      0,
+      "number"
+     ],
+     [
+      "0.5",
+      0.5,
+      "number"
+     ],
+     [
+      null,
+      0,
+      "number"
+     ]
+    ],
+    "upper": [
+     -1,
+     "number"
+    ]
+   },
+   "contextMenu": {
+    "option": "ContextMenu",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      true,
+      "boolean"
+     ],
+     [
+      "",
+      true,
+      "boolean"
+     ],
+     [
+      "x",
+      true,
+      "boolean"
+     ],
+     [
+      null,
+      true,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "debug": {
+    "option": "Debug",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      false,
+      "boolean"
+     ],
+     [
+      "",
+      false,
+      "boolean"
+     ],
+     [
+      "x",
+      false,
+      "boolean"
+     ],
+     [
+      null,
+      false,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "displayColorSpace": {
+    "option": "DisplayColorSpace",
+    "start": [
+     "DISPLAY_P3",
+     "DISPLAY_P3",
+     "string"
+    ],
+    "steps": [
+     [
+      "DISPLAY_P3",
+      "DISPLAY_P3",
+      "string"
+     ],
+     [
+      "",
+      "SRGB",
+      "string"
+     ],
+     [
+      "x",
+      "x",
+      "string"
+     ],
+     [
+      null,
+      "SRGB",
+      "string"
+     ]
+    ],
+    "upper": [
+     "SRGB",
+     "string"
+    ]
+   },
+   "exposure": {
+    "option": "Exposure",
+    "start": [
+     "2.5",
+     2.5,
+     "number"
+    ],
+    "steps": [
+     [
+      "2.5",
+      2.5,
+      "number"
+     ],
+     [
+      "x",
+      "number:NaN",
+      "number"
+     ],
+     [
+      "",
+      0,
+      "number"
+     ],
+     [
+      "0",
+      0,
+      "number"
+     ],
+     [
+      "-1",
+      -1,
+      "number"
+     ],
+     [
+      "3",
+      3,
+      "number"
+     ],
+     [
+      null,
+      0,
+      "number"
+     ]
+    ],
+    "upper": [
+     "number:NaN",
+     "number"
+    ]
+   },
+   "logarithmicDepthBuffer": {
+    "option": "LogarithmicDepthBuffer",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      false,
+      "boolean"
+     ],
+     [
+      "",
+      false,
+      "boolean"
+     ],
+     [
+      "x",
+      false,
+      "boolean"
+     ],
+     [
+      null,
+      false,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "maximumFrameRate": {
+    "option": "MaximumFrameRate",
+    "start": [
+     "2.5",
+     2.5,
+     "number"
+    ],
+    "steps": [
+     [
+      "2.5",
+      2.5,
+      "number"
+     ],
+     [
+      "x",
+      "number:NaN",
+      "number"
+     ],
+     [
+      "",
+      0,
+      "number"
+     ],
+     [
+      "0",
+      0,
+      "number"
+     ],
+     [
+      "-1",
+      -1,
+      "number"
+     ],
+     [
+      "3",
+      3,
+      "number"
+     ],
+     [
+      null,
+      0,
+      "number"
+     ]
+    ],
+    "upper": [
+     "number:NaN",
+     "number"
+    ]
+   },
+   "multisampling": {
+    "option": "Multisampling",
+    "start": [
+     "2.5",
+     2,
+     "number"
+    ],
+    "steps": [
+     [
+      "2.5",
+      2,
+      "number"
+     ],
+     [
+      "x",
+      0,
+      "number"
+     ],
+     [
+      "",
+      0,
+      "number"
+     ],
+     [
+      "0",
+      0,
+      "number"
+     ],
+     [
+      "-1",
+      -1,
+      "number"
+     ],
+     [
+      "3",
+      3,
+      "number"
+     ],
+     [
+      null,
+      0,
+      "number"
+     ]
+    ],
+    "upper": [
+     0,
+     "number"
+    ]
+   },
+   "notifications": {
+    "option": "Notifications",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      true,
+      "boolean"
+     ],
+     [
+      "",
+      true,
+      "boolean"
+     ],
+     [
+      "x",
+      true,
+      "boolean"
+     ],
+     [
+      null,
+      true,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "orderIndependentTransparency": {
+    "option": "OrderIndependentTransparency",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      false,
+      "boolean"
+     ],
+     [
+      "",
+      false,
+      "boolean"
+     ],
+     [
+      "x",
+      false,
+      "boolean"
+     ],
+     [
+      null,
+      false,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "splashScreen": {
+    "option": "SplashScreen",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      true,
+      "boolean"
+     ],
+     [
+      "",
+      true,
+      "boolean"
+     ],
+     [
+      "x",
+      true,
+      "boolean"
+     ],
+     [
+      null,
+      true,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "textCompression": {
+    "option": "TextCompression",
+    "start": [
+     "SCALING",
+     "SCALING",
+     "string"
+    ],
+    "steps": [
+     [
+      "SCALING",
+      "SCALING",
+      "string"
+     ],
+     [
+      "",
+      "CHAR_SPACING",
+      "string"
+     ],
+     [
+      "x",
+      "x",
+      "string"
+     ],
+     [
+      null,
+      "CHAR_SPACING",
+      "string"
+     ]
+    ],
+    "upper": [
+     "CHAR_SPACING",
+     "string"
+    ]
+   },
+   "timings": {
+    "option": "Timings",
+    "start": [
+     "true",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "true",
+      true,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      false,
+      "boolean"
+     ],
+     [
+      "",
+      false,
+      "boolean"
+     ],
+     [
+      "x",
+      false,
+      "boolean"
+     ],
+     [
+      null,
+      false,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "toneMapping": {
+    "option": "ToneMapping",
+    "start": [
+     "ACES_NARKOWICZ",
+     "ACES_NARKOWICZ",
+     "string"
+    ],
+    "steps": [
+     [
+      "ACES_NARKOWICZ",
+      "ACES_NARKOWICZ",
+      "string"
+     ],
+     [
+      "",
+      "NONE",
+      "string"
+     ],
+     [
+      "x",
+      "x",
+      "string"
+     ],
+     [
+      null,
+      "NONE",
+      "string"
+     ]
+    ],
+    "upper": [
+     "NONE",
+     "string"
+    ]
+   },
+   "update": {
+    "option": "AutoUpdate",
+    "start": [
+     "auto",
+     true,
+     "boolean"
+    ],
+    "steps": [
+     [
+      "auto",
+      true,
+      "boolean"
+     ],
+     [
+      "true",
+      false,
+      "boolean"
+     ],
+     [
+      "false",
+      false,
+      "boolean"
+     ],
+     [
+      "TRUE",
+      false,
+      "boolean"
+     ],
+     [
+      "",
+      false,
+      "boolean"
+     ],
+     [
+      "x",
+      false,
+      "boolean"
+     ],
+     [
+      null,
+      false,
+      "boolean"
+     ]
+    ],
+    "upper": [
+     false,
+     "boolean"
+    ]
+   },
+   "xrSessionMode": {
+    "option": "XRSessionMode",
+    "start": [
+     "IMMERSIVE_AR",
+     "IMMERSIVE_AR",
+     "string"
+    ],
+    "steps": [
+     [
+      "IMMERSIVE_AR",
+      "IMMERSIVE_AR",
+      "string"
+     ],
+     [
+      "",
+      "IMMERSIVE_VR",
+      "string"
+     ],
+     [
+      "x",
+      "x",
+      "string"
+     ],
+     [
+      null,
+      "IMMERSIVE_VR",
+      "string"
+     ]
+    ],
+    "upper": [
+     "IMMERSIVE_VR",
+     "string"
+    ]
+   }
+  },
+  "canvasAttributes.startValues": {
+   "attributes": {
+    "Antialiased": true,
+    "Cache": false,
+    "ColorSpace": "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "ContentScale": 2,
+    "ContextMenu": false,
+    "Debug": true,
+    "DisplayColorSpace": "SRGB",
+    "Exposure": 0.5,
+    "LogarithmicDepthBuffer": false,
+    "MaximumFrameRate": 25,
+    "Multisampling": 2,
+    "Notifications": false,
+    "OrderIndependentTransparency": false,
+    "SplashScreen": false,
+    "TextCompression": "CHAR_SPACING",
+    "Timings": true,
+    "ToneMapping": "ACES_NARKOWICZ",
+    "AutoUpdate": false,
+    "XRSessionMode": "IMMERSIVE_VR"
+   },
+   "none": {
+    "Antialiased": true,
+    "Cache": true,
+    "ColorSpace": "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "ContentScale": 1,
+    "ContextMenu": true,
+    "Debug": false,
+    "DisplayColorSpace": "SRGB",
+    "Exposure": 1,
+    "LogarithmicDepthBuffer": false,
+    "MaximumFrameRate": 80,
+    "Multisampling": 4,
+    "Notifications": true,
+    "OrderIndependentTransparency": false,
+    "SplashScreen": true,
+    "TextCompression": "CHAR_SPACING",
+    "Timings": false,
+    "ToneMapping": "NONE",
+    "AutoUpdate": false,
+    "XRSessionMode": "IMMERSIVE_VR"
+   },
+   "created": {
+    "Antialiased": true,
+    "Cache": true,
+    "ColorSpace": "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "ContentScale": 1,
+    "ContextMenu": true,
+    "Debug": false,
+    "DisplayColorSpace": "SRGB",
+    "Exposure": 0.25,
+    "LogarithmicDepthBuffer": false,
+    "MaximumFrameRate": 80,
+    "Multisampling": 4,
+    "Notifications": true,
+    "OrderIndependentTransparency": false,
+    "SplashScreen": true,
+    "TextCompression": "CHAR_SPACING",
+    "Timings": false,
+    "ToneMapping": "NONE",
+    "AutoUpdate": true,
+    "XRSessionMode": "IMMERSIVE_VR"
+   },
+   "connected": {
+    "Antialiased": true,
+    "Cache": true,
+    "ColorSpace": "LINEAR_WHEN_PHYSICAL_MATERIAL",
+    "ContentScale": 1,
+    "ContextMenu": true,
+    "Debug": false,
+    "DisplayColorSpace": "SRGB",
+    "Exposure": 0.25,
+    "LogarithmicDepthBuffer": false,
+    "MaximumFrameRate": 80,
+    "Multisampling": 4,
+    "Notifications": true,
+    "OrderIndependentTransparency": false,
+    "SplashScreen": true,
+    "TextCompression": "CHAR_SPACING",
+    "Timings": false,
+    "ToneMapping": "NONE",
+    "AutoUpdate": true,
+    "XRSessionMode": "IMMERSIVE_VR"
+   }
+  },
+  "canvasAttributes.optionsKeepAttributes": {
+   "before": {
+    "antialiased": null,
+    "baseURL": null,
+    "cache": null,
+    "colorSpace": null,
+    "contentScale": "1",
+    "contextMenu": "false",
+    "debug": null,
+    "displayColorSpace": null,
+    "exposure": null,
+    "extensions": null,
+    "logarithmicDepthBuffer": null,
+    "maximumFrameRate": null,
+    "multisampling": null,
+    "notifications": "false",
+    "orderIndependentTransparency": null,
+    "splashScreen": "false",
+    "src": null,
+    "textCompression": null,
+    "timings": "false",
+    "toneMapping": null,
+    "update": null,
+    "url": null,
+    "xrSessionMode": null
+   },
+   "steps": [
+    [
+     "SplashScreen",
+     false,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Antialiased",
+     false,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "AutoUpdate",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Cache",
+     false,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "ColorSpace",
+     "LINEAR",
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "ContentScale",
+     3,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "ContextMenu",
+     false,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Debug",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "DisplayColorSpace",
+     "DISPLAY_P3",
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Exposure",
+     2,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "LogarithmicDepthBuffer",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "MaximumFrameRate",
+     30,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Multisampling",
+     2,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Notifications",
+     false,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "OrderIndependentTransparency",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "TextCompression",
+     "SCALING",
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Timings",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "ToneMapping",
+     "ACES_NARKOWICZ",
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "XRSessionMode",
+     "IMMERSIVE_AR",
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "Mute",
+     true,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ],
+    [
+     "SoundIntensity",
+     0.5,
+     {
+      "antialiased": null,
+      "baseURL": null,
+      "cache": null,
+      "colorSpace": null,
+      "contentScale": "1",
+      "contextMenu": "false",
+      "debug": null,
+      "displayColorSpace": null,
+      "exposure": null,
+      "extensions": null,
+      "logarithmicDepthBuffer": null,
+      "maximumFrameRate": null,
+      "multisampling": null,
+      "notifications": "false",
+      "orderIndependentTransparency": null,
+      "splashScreen": "false",
+      "src": null,
+      "textCompression": null,
+      "timings": "false",
+      "toneMapping": null,
+      "update": null,
+      "url": null,
+      "xrSessionMode": null
+     }
+    ]
+   ],
+   "attributeAfter": 0.75,
+   "optionAfter": [
+    4,
+    "0.75"
+   ]
+  },
+  "canvasAttributes.otherAttributes": {
+   "baseURL": [
+    true,
+    true
+   ],
+   "extensions": "x",
+   "handlers": [
+    "function",
+    "function"
+   ]
+  },
+  "canvasAttributes.contentScale": {
+   "ratio": 1,
+   "start": [
+    [
+     400,
+     300
+    ],
+    1,
+    "1"
+   ],
+   "steps": [
+    [
+     "attribute",
+     "2",
+     [
+      800,
+      600
+     ],
+     2,
+     "2"
+    ],
+    [
+     "attribute",
+     "0.5",
+     [
+      200,
+      150
+     ],
+     0.5,
+     "0.5"
+    ],
+    [
+     "attribute",
+     "auto",
+     [
+      400,
+      300
+     ],
+     -1,
+     "auto"
+    ],
+    [
+     "attribute",
+     "x",
+     [
+      1,
+      1
+     ],
+     "number:NaN",
+     "x"
+    ],
+    [
+     "attribute",
+     "0",
+     [
+      1,
+      1
+     ],
+     0,
+     "0"
+    ],
+    [
+     "attribute",
+     "-3",
+     [
+      1,
+      1
+     ],
+     -3,
+     "-3"
+    ],
+    [
+     "attribute",
+     "",
+     [
+      1,
+      1
+     ],
+     0,
+     ""
+    ],
+    [
+     "attribute",
+     "3",
+     [
+      1200,
+      900
+     ],
+     3,
+     "3"
+    ],
+    [
+     "attribute",
+     null,
+     [
+      1,
+      1
+     ],
+     0,
+     null
+    ],
+    [
+     "option",
+     2,
+     [
+      800,
+      600
+     ],
+     2,
+     null
+    ],
+    [
+     "option",
+     -1,
+     [
+      400,
+      300
+     ],
+     -1,
+     null
+    ],
+    [
+     "option",
+     0,
+     [
+      1,
+      1
+     ],
+     0,
+     null
+    ],
+    [
+     "option",
+     0.25,
+     [
+      100,
+      75
+     ],
+     0.25,
+     null
+    ],
+    [
+     "option",
+     1,
+     [
+      400,
+      300
+     ],
+     1,
+     null
+    ],
+    [
+     "option",
+     "number:NaN",
+     [
+      1,
+      1
+     ],
+     "number:NaN",
+     null
+    ],
+    [
+     "option",
+     -5,
+     [
+      1,
+      1
+     ],
+     -5,
+     null
+    ]
+   ],
+   "resized auto": [
+    200,
+    100
+   ],
+   "resized 2": [
+    400,
+    200
+   ]
+  },
+  "canvasAttributes.frameRate": {
+   "unlimited": {
+    "none": false,
+    "some": true,
+    "atMostRate": true
+   },
+   "attribute 10": [
+    10,
+    {
+     "none": false,
+     "some": true,
+     "atMostRate": true
+    }
+   ],
+   "attribute 30": [
+    30,
+    {
+     "none": false,
+     "some": true,
+     "atMostRate": true
+    }
+   ],
+   "attribute 0": [
+    0,
+    {
+     "atMostRate": true
+    }
+   ],
+   "attribute 1": [
+    1,
+    {
+     "atMostRate": true
+    }
+   ],
+   "option 10": [
+    10,
+    {
+     "none": false,
+     "some": true,
+     "atMostRate": true
+    }
+   ],
+   "option 20": [
+    20,
+    {
+     "none": false,
+     "some": true,
+     "atMostRate": true
+    }
+   ],
+   "option -5": [
+    -5,
+    {
+     "atMostRate": true
+    }
+   ],
+   "option 0": [
+    0,
+    {
+     "atMostRate": true
+    }
+   ],
+   "lifted": {
+    "none": false,
+    "some": true,
+    "atMostRate": true
+   }
+  },
+  "canvasAttributes.update": {
+   "steps": [
+    [
+     "start",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=true",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false again",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=false repeated",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "removed",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=x",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=TRUE",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=true, before auto",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=auto",
+     true,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "hidden",
+     true,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "shown",
+     true,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "option AutoUpdate false",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "hidden, no auto update",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "shown, no auto update",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "option AutoUpdate true",
+     true,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "hidden, option",
+     true,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "shown, option",
+     true,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false after auto",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "hidden, update=false",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "shown, update=false",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=true",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ],
+    [
+     "update=false before auto",
+     false,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=auto while stopped",
+     true,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "hidden, auto while stopped",
+     true,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "shown, auto while stopped",
+     true,
+     {
+      "none": true,
+      "some": false
+     }
+    ],
+    [
+     "update=true after auto",
+     false,
+     {
+      "none": false,
+      "some": true
+     }
+    ]
+   ]
+  },
+  "canvasAttributes.loadWhileStopped": {
+   "outcome": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "world": "SFNode",
+   "stopped": {
+    "none": true,
+    "some": false
+   },
+   "resumed": {
+    "none": false,
+    "some": true
+   }
+  },
+  "canvasAttributes.startStopped": {
+   "startEvents": [],
+   "option": false,
+   "load": "resolved",
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "stopped": {
+    "none": true,
+    "some": false
+   },
+   "resumed": {
+    "none": false,
+    "some": true
+   },
+   "eventsAfterResume": [
+    "shutdown",
+    "initialized",
+    "load"
+   ]
+  },
+  "canvasAttributesScaled.contentScale": {
+   "ratio": 2,
+   "start": [
+    [
+     400,
+     300
+    ],
+    1,
+    "1"
+   ],
+   "steps": [
+    [
+     "attribute",
+     "2",
+     [
+      800,
+      600
+     ],
+     2,
+     "2"
+    ],
+    [
+     "attribute",
+     "0.5",
+     [
+      200,
+      150
+     ],
+     0.5,
+     "0.5"
+    ],
+    [
+     "attribute",
+     "auto",
+     [
+      800,
+      600
+     ],
+     -1,
+     "auto"
+    ],
+    [
+     "attribute",
+     "x",
+     [
+      1,
+      1
+     ],
+     "number:NaN",
+     "x"
+    ],
+    [
+     "attribute",
+     "0",
+     [
+      1,
+      1
+     ],
+     0,
+     "0"
+    ],
+    [
+     "attribute",
+     "-3",
+     [
+      1,
+      1
+     ],
+     -3,
+     "-3"
+    ],
+    [
+     "attribute",
+     "",
+     [
+      1,
+      1
+     ],
+     0,
+     ""
+    ],
+    [
+     "attribute",
+     "3",
+     [
+      1200,
+      900
+     ],
+     3,
+     "3"
+    ],
+    [
+     "attribute",
+     null,
+     [
+      1,
+      1
+     ],
+     0,
+     null
+    ],
+    [
+     "option",
+     2,
+     [
+      800,
+      600
+     ],
+     2,
+     null
+    ],
+    [
+     "option",
+     -1,
+     [
+      800,
+      600
+     ],
+     -1,
+     null
+    ],
+    [
+     "option",
+     0,
+     [
+      1,
+      1
+     ],
+     0,
+     null
+    ],
+    [
+     "option",
+     0.25,
+     [
+      100,
+      75
+     ],
+     0.25,
+     null
+    ],
+    [
+     "option",
+     1,
+     [
+      400,
+      300
+     ],
+     1,
+     null
+    ],
+    [
+     "option",
+     "number:NaN",
+     [
+      1,
+      1
+     ],
+     "number:NaN",
+     null
+    ],
+    [
+     "option",
+     -5,
+     [
+      1,
+      1
+     ],
+     -5,
+     null
+    ]
+   ],
+   "resized auto": [
+    400,
+    200
+   ],
+   "resized 2": [
+    400,
+    200
+   ]
+  }
+ }
+}
