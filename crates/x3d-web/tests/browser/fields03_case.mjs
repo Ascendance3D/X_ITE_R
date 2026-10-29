@@ -174,6 +174,11 @@ async function nodeOwnership (page)
          // 9 Scene replacement: nodes of the replaced scene after replaceWorld.
          const kept = scene .getNamedNode ("T");
          browser .replaceWorld (other);
+
+         // The world switch is not synchronous: wait for it (a slow runner needs more than a fixed delay).
+         for (let i = 0; i < 100 && browser .currentScene !== other; ++ i)
+            await new Promise (r => setTimeout (r, 100));
+
          await new Promise (r => setTimeout (r, 200));
          out .s09 = attempt (() => [ browser .currentScene === other, kept .getNodeTypeName (), owner (kept), String (kept .translation) ]);
       }
