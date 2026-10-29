@@ -21,7 +21,11 @@ To run the suites on a draft, do one of these:
 
 ## AI review
 
-There is one AI review per push. CodeRabbit reviews a PR to the default branch. MiniMax (`code-review.yml`) reviews a PR to another base, for example a stacked PR, which CodeRabbit skips. Neither reviews a draft.
+CodeRabbit is the normal review. It reviews a PR to the default branch. It skips a draft, and it skips a PR to another base (for example a stacked PR).
+
+MiniMax (`code-review.yml`) runs only on demand: add the label `needs-minimax-review` to the PR. Use it when CodeRabbit is rate-limited or skips the PR, or when you want a second review. To review again after a push, remove the label and add it again. Adding a label starts no Rust or browser suite.
+
+To start CodeRabbit by hand, for example after its limit resets, comment `@coderabbitai review` on the PR.
 
 ## Browser shards
 
