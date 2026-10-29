@@ -1,5 +1,13 @@
 # eXciteR (X_ITE_R)
 
+[![Rust tests](https://img.shields.io/github/actions/workflow/status/Ascendance3D/X_ITE_R/rust-tests.yml?branch=master&label=Rust%20tests&style=flat-square&labelColor=0d1117&logo=githubactions&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/actions/workflows/rust-tests.yml)
+[![Web tests](https://img.shields.io/github/actions/workflow/status/Ascendance3D/X_ITE_R/web-tests.yml?branch=master&label=Web%20tests&style=flat-square&labelColor=0d1117&logo=githubactions&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/actions/workflows/web-tests.yml)
+[![license MIT](https://img.shields.io/badge/license-MIT-161b22?style=flat-square&labelColor=0d1117)](https://github.com/Ascendance3D/X_ITE_R/blob/master/LICENSE)
+[![X_ITE 16.5.0 pin](https://img.shields.io/badge/X__ITE-16.5.0_pin-161b22?style=flat-square&labelColor=0d1117)](https://github.com/Ascendance3D/X_ITE_R/tree/master/oracle/x_ite-pin)
+[![Rust 1.95](https://img.shields.io/badge/Rust-1.95-161b22?style=flat-square&labelColor=0d1117&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![WebAssembly WebGPU](https://img.shields.io/badge/WebAssembly-WebGPU-161b22?style=flat-square&labelColor=0d1117&logo=webassembly&logoColor=white)](https://github.com/Ascendance3D/X_ITE_R/tree/master/crates/x3d-web)
+[![VRML97 X3D](https://img.shields.io/badge/VRML97-X3D-161b22?style=flat-square&labelColor=0d1117)](https://www.web3d.org/)
+
 eXciteR is a Rust port of the [X_ITE](https://create3000.github.io/x_ite/) X3D browser. It loads VRML97 and X3D worlds, runs their events, sensors and scripts, and renders them with [wgpu](https://wgpu.rs/).
 
 The port follows one pinned upstream version, X_ITE 16.5.0. Tests compare the Rust results with recordings of that version.
