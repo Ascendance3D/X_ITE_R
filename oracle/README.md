@@ -802,3 +802,39 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-01-baseline -
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline --runs 5 --suite gltfworld02
 ```
+
+### Web browser field API 01 (`web-browser-fields-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite fields01` runs the 7 cases of `crates/x3d-web/tests/browser/fields01_case.mjs`
+  (issue #137) and records `web-browser-fields-01-baseline/fields01-baseline.json`: the field classes of the X3D
+  namespace and X3DConstants, the field classes as values, live SF and MF field objects of nodes (one object per field,
+  changed components and elements reach the node and its routes, routed values reach a held object), assignments of
+  every kind of field through the SFNode proxy, `addFieldCallback` (the callbacks of each event, in event order, with
+  the event's value; `removeFieldCallback`), `getFieldDefinitions`, and `rootNodes` as an MFNode. The test world is
+  synthetic and inline (a `data:` URL).
+- The world needs `COMPONENT Scripting:1` for its Script node: X_ITE rejects a Script under `PROFILE Interchange`
+  without it.
+- Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --runs 5 --suite fields01
+```
+
+### Web browser field API 02 (`web-browser-fields-02-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite fields02` runs the cases of `crates/x3d-web/tests/browser/fields02_case.mjs`
+  (issue #137) and records `web-browser-fields-02-baseline/fields02-baseline.json`: `toString`, `toVRMLString`,
+  `toXMLString` and `toJSONString` of an SFNode, an MFNode (a field and `rootNodes`), NULL and an empty MFNode, with
+  DEF and USE; and `fromString`, `fromVRMLString` and `fromXMLString` of every kind of field, their error texts, the
+  nodes of a value read with a scene and without one, and a value read into a node's field. The test world is
+  synthetic and inline (a `data:` URL). `fields01-baseline.json` is not changed.
+- PR #150 QA added the case `fieldText.noScene` (3 cases now): SFNode and MFNode values read with no scene and the
+  console lines printed first. Pinned X_ITE 16.5.0: the XML parser sets NULL or `[ ]` for any text and never needs a
+  scene; the VRML parser throws a `TypeError` at the first node statement; text with no node statement throws
+  `Couldn't read value for field ''.`; a node value that fails prints no warning, but a typed array such as `MFVec3f` `[1 2`
+  warns first and then throws `Expected ']'.`. The cases of the earlier recording are unchanged.
+- Five runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-02-baseline --runs 5 --suite fields02
+```

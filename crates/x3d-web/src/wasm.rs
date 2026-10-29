@@ -16,6 +16,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
+use x3d_runtime::data::Data;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -202,6 +203,19 @@ impl x3d_runtime::Fetcher for WebFetcher {
             &format!("X_ITE_R: {url} was requested before it was loaded.").into(),
         );
         Err("TypeError: Failed to fetch".to_string())
+    }
+
+    /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
+    /// Thus we do not need to `self.start(key)` for missing entries.
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        if url.scheme() == "data" {
+            return x3d_parse::decode_data_url(url.as_str()).err();
+        }
+        let key = cache_key(url);
+        match self.cache.borrow().entries.get(&key) {
+            Some(Entry::Failed(error)) => Some(error.clone()),
+            _ => None,
+        }
     }
 }
 
@@ -741,11 +755,154 @@ impl WebBrowser {
         Ok(vec![f.type_name.to_string(), f.access.to_string(), f.value])
     }
 
+    // --- field objects of the page (web/x_ite_r.mjs: X_ITE's own field classes) ----------------------------------
+
+    /// `[typeName, accessType, data]` of a node field (see [`Session::field_data`]); the page holds an object of it.
+    #[wasm_bindgen(js_name = fieldData)]
+    pub fn field_data(&mut self, id: u32, node: u32, name: &str) -> Result<js_sys::Array, JsError> {
+        let (type_name, access, data) = self
+            .session_mut(id)?
+            .field_data(node, name)
+            .map_err(|e| JsError::new(&e))?;
+
+        Ok(js_sys::Array::of3(
+            &type_name.into(),
+            &f64::from(access).into(),
+            &data_js(&data),
+        ))
+    }
+
+    /// X3DField.addEvent of the page's object of a node field (see [`Session::set_field_data`]).
+    #[wasm_bindgen(js_name = setFieldData)]
+    pub fn set_field_data(
+        &mut self,
+        id: u32,
+        node: u32,
+        name: &str,
+        data: JsValue,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_field_data(node, name, &js_data(&data))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// The changed fields the page holds objects of, as node, name, data, ... (see [`Session::take_field_changes`]).
+    #[wasm_bindgen(js_name = takeFieldChanges)]
+    pub fn take_field_changes(&mut self, id: u32) -> js_sys::Array {
+        match self.worlds.get_mut(&id) {
+            Some(w) => field_list(w.session.take_field_changes()),
+            None => js_sys::Array::new(),
+        }
+    }
+
+    /// X3DField.addFieldCallback / removeFieldCallback: whether the page gets the events of the field.
+    #[wasm_bindgen(js_name = observeField)]
+    pub fn observe_field(
+        &mut self,
+        id: u32,
+        node: u32,
+        name: &str,
+        on: bool,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .observe_field(node, name, on)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// A page field callback threw: X_ITE processes no event again (see `Runtime::halt_events`).
+    #[wasm_bindgen(js_name = haltEvents)]
+    pub fn halt_events(&mut self, id: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.halt_events();
+        Ok(())
+    }
+
+    /// The events of the observed fields, as node, name, data, ... in event order (see
+    /// [`Session::take_field_events`]).
+    #[wasm_bindgen(js_name = takeFieldEvents)]
+    pub fn take_field_events(&mut self, id: u32) -> js_sys::Array {
+        match self.worlds.get_mut(&id) {
+            Some(w) => field_list(w.session.take_field_events()),
+            None => js_sys::Array::new(),
+        }
+    }
+
+    /// The nodes the runtime released since the last call (see [`Session::take_released_nodes`]).
+    #[wasm_bindgen(js_name = takeReleasedNodes)]
+    pub fn take_released_nodes(&mut self, id: u32) -> Vec<u32> {
+        match self.worlds.get_mut(&id) {
+            Some(w) => w.session.take_released_nodes(),
+            None => vec![],
+        }
+    }
+
+    /// X3DNode.getFieldDefinitions: `[name, accessType, typeName, default]` each; `default` is undefined for a
+    /// user-defined field.
+    #[wasm_bindgen(js_name = fieldDefinitions)]
+    pub fn field_definitions(&self, id: u32, node: u32) -> js_sys::Array {
+        let Some(w) = self.worlds.get(&id) else {
+            return js_sys::Array::new();
+        };
+
+        w.session
+            .field_definitions(node)
+            .into_iter()
+            .map(|d| {
+                let entry = js_sys::Array::of3(
+                    &d.name.as_str().into(),
+                    &f64::from(d.access).into(),
+                    &d.type_name.into(),
+                );
+
+                entry.push(&d.default.as_ref().map_or(JsValue::UNDEFINED, data_js));
+                JsValue::from(entry)
+            })
+            .collect()
+    }
+
     /// Set the field from its VRML encoding (see [`Session::set_field`]).
     #[wasm_bindgen(js_name = setField)]
     pub fn set_field(&mut self, id: u32, node: u32, name: &str, vrml: &str) -> Result<(), JsError> {
         self.session_mut(id)?
             .set_field(node, name, vrml)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DObject.toVRMLString / toXMLString / toJSONString of the nodes of an SFNode or MFNode value (see
+    /// [`Session::print_nodes`]); `kind` is `vrml`, `xml` or `json`.
+    #[wasm_bindgen(js_name = printNodes)]
+    pub fn print_nodes(
+        &self,
+        id: u32,
+        kind: &str,
+        type_name: &str,
+        data: JsValue,
+    ) -> Result<String, JsError> {
+        let ty = x3d_fields::FieldType::from_name(type_name)
+            .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
+
+        self.session(id)?
+            .print_nodes(kind, ty, &js_data(&data))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DField.fromVRMLString / fromXMLString (value, scene) (see [`Session::parse_field`]): the data of the value
+    /// `text` reads as for a field of type `type_name` of the world `id`.
+    #[wasm_bindgen(js_name = parseField)]
+    pub fn parse_field(
+        &mut self,
+        id: u32,
+        type_name: &str,
+        text: &str,
+        xml: bool,
+        name: &str,
+        unit: Option<String>,
+    ) -> Result<JsValue, JsError> {
+        let ty = x3d_fields::FieldType::from_name(type_name)
+            .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
+
+        self.session_mut(id)?
+            .parse_field(ty, text, xml, name, unit)
+            .map(|data| data_js(&data))
             .map_err(|e| JsError::new(&e))
     }
 
@@ -1028,4 +1185,100 @@ impl WebBrowser {
             .get_mut(&id)
             .map_or(vec![], |w| w.session.take_log())
     }
+}
+
+// --- field data (x3d_runtime::data) ---------------------------------------------------------------------------------
+
+fn data_js(d: &Data) -> JsValue {
+    match d {
+        Data::Null => JsValue::NULL,
+        Data::Bool(b) => JsValue::from_bool(*b),
+        Data::Number(x) => JsValue::from_f64(*x),
+        Data::String(s) => JsValue::from_str(s),
+        Data::List(items) => items.iter().map(data_js).collect::<js_sys::Array>().into(),
+    }
+}
+
+fn js_data(v: &JsValue) -> Data {
+    if let Some(b) = v.as_bool() {
+        Data::Bool(b)
+    } else if let Some(x) = v.as_f64() {
+        Data::Number(x)
+    } else if let Some(s) = v.as_string() {
+        Data::String(s)
+    } else if js_sys::Array::is_array(v) {
+        Data::List(js_sys::Array::from(v).iter().map(|x| js_data(&x)).collect())
+    } else {
+        Data::Null
+    }
+}
+
+fn field_list(fields: Vec<(u32, String, Data)>) -> js_sys::Array {
+    let list = js_sys::Array::new();
+
+    for (node, name, data) in fields {
+        list.push(&f64::from(node).into());
+        list.push(&name.into());
+        list.push(&data_js(&data));
+    }
+
+    list
+}
+
+/// X_ITE prints a parser warning when it is made, so a warning made before a failure comes first (`[1 2` for an MFVec3f:
+/// "Array length must be multiple of components size", then "Expected ']'.").
+fn log_parser_warnings(warnings: &[String]) {
+    for warning in warnings {
+        web_sys::console::warn_1(&warning.into());
+    }
+}
+
+/// X3DField.fromVRMLString / fromXMLString (value) without a scene, which needs no world: `[data, warning, ...]`. A value
+/// that needs a node is a `TypeError`, as in X_ITE (the parser has no execution context: `scene` is `undefined` or
+/// `null`, named by `receiver`).
+#[wasm_bindgen(js_name = parseFieldWithoutScene)]
+pub fn parse_field_without_scene(
+    type_name: &str,
+    text: &str,
+    xml: bool,
+    name: &str,
+    receiver: &str,
+) -> Result<js_sys::Array, JsError> {
+    let ty = x3d_fields::FieldType::from_name(type_name)
+        .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
+    let (result, warnings) = x3d_runtime::field_from_string_without_scene(ty, text, xml, name);
+
+    let data = match result {
+        Ok(Some(value)) => x3d_runtime::data::value_data(&value),
+        Ok(None) => {
+            log_parser_warnings(&warnings);
+            return Err(JsError::new(&format!(
+                "Couldn't read value for field '{name}'."
+            )));
+        }
+        Err(x3d_runtime::NoSceneError::Message(message)) => {
+            log_parser_warnings(&warnings);
+            return Err(JsError::new(&message));
+        }
+        Err(x3d_runtime::NoSceneError::NeedsScene) => {
+            log_parser_warnings(&warnings);
+            return Err(JsError::new(&format!(
+                "TypeError: Cannot read properties of {receiver} (reading 'createNode')"
+            )));
+        }
+        Err(x3d_runtime::NoSceneError::NeedsSceneBrowser) => {
+            log_parser_warnings(&warnings);
+            return Err(JsError::new(&format!(
+                "TypeError: Cannot read properties of {receiver} (reading 'getBrowser')"
+            )));
+        }
+    };
+
+    let out = js_sys::Array::of1(&data_js(&data));
+
+    for warning in warnings {
+        out.push(&warning.into());
+    }
+
+    Ok(out)
 }

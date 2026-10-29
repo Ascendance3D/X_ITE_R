@@ -145,6 +145,15 @@ impl Runtime {
 
     /// The field callbacks of `k` (X3DField.processEvent: `callback (this .valueOf ())`).
     fn field_callbacks(&mut self, k: FKey) {
+        if self.script_host.is_none() && self.page_field_events.is_some() {
+            let value = self.value(k).clone();
+
+            self.page_field_events
+                .get_or_insert_default()
+                .push((k, value));
+            return;
+        }
+
         match self.script_host.take() {
             Some(mut host) => {
                 for p in std::mem::take(&mut self.pending_field_events) {
