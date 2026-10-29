@@ -13,7 +13,7 @@
 #
 #   __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json \
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
-#     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
+#     cargo test --workspace --release -j 16 --no-fail-fast
 #
 # It runs strict (X3D_EVIDENCE unset), so a missing key or adapter fails. The Mesa EGL vendor lets
 # gl_backend_cannot_run_the_renderer_and_says_so start a GL device; the NVIDIA one does not (backend-absent).
@@ -120,11 +120,11 @@ jobs:
       - name: Answer-key resolver and guard
         run: python3 -I -B tools/test_answer_keys.py
 
-      # The ACTIVE references: X_ITE 16.5.0 (oracle/x_ite-pin) and CodeMirror 5.65.21
-      # (oracle/cm5-build), checked by version and content digest against tools/candidate.lock.
+      # The ACTIVE reference: X_ITE 16.5.0 (oracle/x_ite-pin), checked by version and content digest
+      # against tools/candidate.lock.
       # This is the reference half of the gate only; no commit identity is checked or approved.
       # The self-test runs in a disposable sparse clone and proves each refusal names its reason.
-      - name: Active reference pins (X_ITE 16.5.0, CodeMirror 5.65.21)
+      - name: Active reference pin (X_ITE 16.5.0)
         run: |
           tools/verify-candidate.sh
           tools/selftest-identity.sh
@@ -175,7 +175,7 @@ jobs:
           rm -f "$X3D_EVIDENCE_LOG"
           # GPU_TESTS is a list of arguments: it is split on purpose.
           # shellcheck disable=SC2086
-          cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-fail-fast -- $GPU_TESTS 2>&1 | tee suite.log
+          cargo test --workspace --release --no-fail-fast -- $GPU_TESTS 2>&1 | tee suite.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Test counts
@@ -212,7 +212,7 @@ jobs:
       # does not hide the test results.
       - name: Clippy (deny-by-default lints)
         if: success() || failure()
-        run: cargo clippy --release --workspace --all-targets --exclude cm-core --exclude cm-modes --exclude cm-view
+        run: cargo clippy --release --workspace --all-targets
 
       # The account's artifact storage can be full; the logs are then only in the job log.
       - uses: actions/upload-artifact@v7
@@ -255,7 +255,7 @@ jobs:
 
       - name: Build the suite (no run)
         if: steps.cache.outputs.cache-hit != 'true'
-        run: cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-run
+        run: cargo test --workspace --release --no-run
 
   # The one check that always reports: success only when "Fast checks" passed and the suite passed or was not needed.
   # A cancelled or failed job fails it, so it never passes for a run that did not finish.

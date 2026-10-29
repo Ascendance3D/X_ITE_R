@@ -1,6 +1,6 @@
 # Reference pins for the X_ITE -> Rust port.
 # Read by tools/verify-candidate.sh. Fail-closed: the reference checks must match every
-# X_ITE_* and CM5_* value here. CI runs the reference checks on every pull request.
+# X_ITE_* value here. CI runs the reference checks on every pull request.
 #
 # --- Historical evidence: the R0.1 research candidate --------------------------
 # R0.1 approved one research snapshot, a553381 (2026-10-14, "math: port Matrix4.factor and
@@ -32,20 +32,6 @@ X_ITE_VERSION_FILE=oracle/x_ite-pin/package.json
 # owner approval and is not done here.
 X_ITE_REF_DIGEST=83fb7cae30ef3a9a5040acbe463024f72683ecde29d70c0d68a06165eab8506f
 X_ITE_REF_FILES=857
-
-# --- Reference source: CodeMirror 5 ------------------------------------------
-# The CodeMirror 5 source the cm-* crates are ported from.
-CM5_PIN=4ca3d0551cf9125114e0802877480599472dc186
-CM5_VERSION=5.65.21
-CM5_REF_DIR=oracle/cm5-build
-CM5_SUBS="src mode addon keymap lib test"
-CM5_VERSION_FILE=oracle/cm5-build/package.json
-CM5_REF_DIGEST=d2daa3a3a863163603b645e453e2ffc6c1a4277d228108a4d437c7627f0f911c
-CM5_REF_FILES=440
-# The live CodeMirror checkout, when it is present. Checked for its commit.
-# It is present only on the owner's machine: the path resolves through the
-# X_ITE/scratch/rust-port symlink into the ignored upstream/ directory of the main checkout.
-CM5_LIVE_DIR=/home/ryan/Projects/cybertown/X_ITE/scratch/rust-port/upstream/codemirror5
 
 # Infrastructure that may change on top of an expected commit (--expect <sha>).
 # A commit whose entire diff against the expected commit touches only these paths
