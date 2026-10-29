@@ -3,7 +3,7 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser, parseFieldWithoutScene } from "./pkg/x3d_web.js";
+import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene } from "./pkg/x3d_web.js";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -1046,6 +1046,13 @@ class X3DScene
       }
    }
 
+   // X3DObject.toVRMLString, toXMLString, toJSONString of the scene (options are not supported, see API.md).
+   // The empty world of a canvas before any load has no engine scene: its text is that of a scene no source set up.
+   #print (kind) { return this .#handle .scene === null ? printEmptyScene (kind) : this .#engine () .printScene (this .#handle .scene, kind); }
+   toVRMLString () { return this .#print ("vrml"); }
+   toXMLString ()  { return this .#print ("xml"); }
+   toJSONString () { return this .#print ("json"); }
+
    getNamedNode (name)
    {
       name = String (name);
@@ -1602,7 +1609,7 @@ class X3DBrowser
                throw new Error ("X_ITE_R: Browser.replaceWorld: scene must be an X3DScene of this browser, null or undefined.");
 
             // An empty scene has nothing to load.
-            id = this .#engine .prepareString ("#X3D V4.0 utf8\n", this .baseURL, Date .now () / 1000);
+            id = this .#engine .prepareEmpty (this .baseURL, Date .now () / 1000);
             this .#engine .loaded (id, Date .now () / 1000);
             owned = true;
          }

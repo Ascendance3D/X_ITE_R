@@ -22,6 +22,7 @@ import { CASE_GROUPS as GLTFWORLD01_GROUPS } from "./gltfworld01_case.mjs";
 import { CASE_GROUPS as GLTFWORLD02_GROUPS } from "./gltfworld02_case.mjs";
 import { CASE_GROUPS as FIELDS01_GROUPS } from "./fields01_case.mjs";
 import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
+import { CASE_GROUPS as SCENETEXT01_GROUPS } from "./scenetext01_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
@@ -46,7 +47,8 @@ export const ONLY     = process .env .XR_CASE;
 // oracle/web-browser-degenerate-01-baseline), and the glTF world buffers 01 and 02 cases (gltfworld01_case.mjs,
 // gltfworld02_case.mjs, `--suite gltfworld01|gltfworld02` into oracle/web-browser-gltf-world-01|02-baseline), and the
 // field API 01 cases (fields01_case.mjs, `--suite fields01` into oracle/web-browser-fields-01-baseline), and the field API 02 cases (fields02_case.mjs, `--suite fields02` into
-// oracle/web-browser-fields-02-baseline).
+// oracle/web-browser-fields-02-baseline), and the web scene text 01 cases (scenetext01_case.mjs, `--suite scenetext01` into
+// oracle/web-browser-scene-text-01-baseline).
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
@@ -56,6 +58,7 @@ const SUITES = {
    gltfworld01: { dir: process .env .XR_GLTFWORLD_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-01-baseline"), file: "gltfworld01-baseline.json", groups: GLTFWORLD01_GROUPS },
    gltfworld02: { dir: process .env .XR_GLTFWORLD02_BASELINE ?? join (REPO, "oracle/web-browser-gltf-world-02-baseline"), file: "gltfworld02-baseline.json", groups: GLTFWORLD02_GROUPS },
    fields01: { dir: process .env .XR_FIELDS01_BASELINE ?? join (REPO, "oracle/web-browser-fields-01-baseline"), file: "fields01-baseline.json", groups: FIELDS01_GROUPS },
+   scenetext01: { dir: process .env .XR_SCENETEXT_BASELINE ?? join (REPO, "oracle/web-browser-scene-text-01-baseline"), file: "scenetext01-baseline.json", groups: SCENETEXT01_GROUPS },
    fields02: { dir: process .env .XR_FIELDS02_BASELINE ?? join (REPO, "oracle/web-browser-fields-02-baseline"), file: "fields02-baseline.json", groups: FIELDS02_GROUPS },
    fields03: { dir: process .env .XR_FIELDS03_BASELINE ?? join (REPO, "oracle/web-browser-fields-03-baseline"), file: "fields03-baseline.json", groups: FIELDS03_GROUPS },
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
@@ -508,6 +511,8 @@ const GROUP_FILES = {
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
+   sceneText: "scenetext01.test.mjs",
+   sceneTextInitial: "scenetext01.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
    routesApi: "routes01.test.mjs",

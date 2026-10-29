@@ -522,6 +522,30 @@ fn nodes_print_in_full_in_the_three_text_forms() {
 }
 
 #[test]
+fn the_scene_prints_in_the_three_text_forms() {
+    let s = load(BOX).unwrap();
+
+    let vrml = s.print_scene("vrml").unwrap();
+    assert!(vrml.starts_with("#X3D V4.1 utf8 X_ITE V16.5.0\n"), "{vrml}");
+    assert!(vrml.contains("DEF BoxMaterial Material {"), "{vrml}");
+    assert!(s.print_scene("xml").unwrap().starts_with("<?xml"));
+    assert!(s.print_scene("json").unwrap().starts_with('{'));
+    assert!(s.print_scene("yaml").is_err());
+}
+
+#[test]
+fn the_empty_world_prints_without_a_profile() {
+    let vrml = x3d_web::session::Session::print_empty_scene("vrml").unwrap();
+    assert_eq!(vrml, "#X3D V4.1 utf8 X_ITE V16.5.0\n\n");
+    assert!(
+        x3d_web::session::Session::print_empty_scene("xml")
+            .unwrap()
+            .contains("profile='Full'")
+    );
+    assert!(x3d_web::session::Session::print_empty_scene("yaml").is_err());
+}
+
+#[test]
 fn a_node_that_is_not_in_the_world_is_not_printed() {
     let s = load(BOX).unwrap();
     let list = Data::List(vec![Data::Number(f64::from(u32::MAX))]);
