@@ -12,6 +12,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { basename, extname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkOutput } from "./check-output.mjs";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
 const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
@@ -19,6 +20,8 @@ const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("play
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json" };
 
 const [ corpusArg, outArg ] = process .argv .slice (2);
+
+checkOutput (outArg);
 const corpus = normalize (join (process .cwd (), corpusArg));
 // Recursive, so corpora that keep their directory layout (corpus-items) work too.
 // For a flat corpus the relative path is just the file name, as before.

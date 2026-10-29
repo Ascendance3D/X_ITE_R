@@ -1,7 +1,7 @@
 # Safe checkout update
 
 Use this procedure before any Git command that can write a tracked path in a checkout that holds work or evidence.
-The main checkout holds ignored copies of answer keys (`oracle/answer-keys.tsv`) and empty key paths at tracked symlinks, so this procedure always applies there.
+The main checkout holds ignored copies of answer keys (`oracle/answer-keys.tsv`) and empty key paths that older commits track as symlinks, so this procedure always applies there.
 The commands need GNU coreutils and findutils (`sha256sum -z`, `find -printf`, `cp --parents`, `stat -c`). On macOS, install the Homebrew `coreutils` and `findutils` packages and use their `g`-prefixed commands.
 
 ## Rules
@@ -15,9 +15,9 @@ The commands need GNU coreutils and findutils (`sha256sum -z`, `find -printf`, `
 
 ## Answer-key hazard (issue #65)
 
-Git tracks 8 render keys as symlinks (`oracle/render-*-baseline`), and older commits also track `upstream` as a symlink. Git treats ignored files as expendable. When a real ignored directory is at one of these paths, a command that writes the tracked symlink deletes the directory, and it often exits 0 and prints nothing.
+Older commits track the 8 render-key paths (`oracle/render-*-baseline`) and `upstream` as symlinks. Master does not track them, but a checkout, reset, restore or merge of an older commit writes them again. Git treats ignored files as expendable. When a real ignored directory is at one of these paths, a command that writes the tracked symlink deletes the directory, and it often exits 0 and prints nothing.
 
-Until 2026-10-29 the main checkout kept the 8 render keys and `upstream/` as real directories at these paths. They are now in the external evidence store (next section), and the 9 paths in the main checkout are empty. `git status --short` shows the 8 render-key symlinks with `D` in the worktree column and an unchanged index. This is the expected state.
+Until 2026-10-29 the main checkout kept the 8 render keys and `upstream/` as real directories at these paths. They are now in the external evidence store (next section), and the 9 paths in the main checkout are empty. Master ignores the 9 paths and tracks none of them, so `git status --short` shows nothing for them.
 
 A failed merge also deletes keys. A non-fast-forward `git merge` or `git pull` of a branch that changes or deletes one of these symlinks stops with "Aborting" and exit 2. The merge then restores the symlink over the real directory.
 
@@ -42,6 +42,8 @@ The main checkout layout is:
 | the 12 #168 paths in `oracle/` | real ignored files and directories, equal to the store. Their paths are not tracked at `a5a6b6f5` |
 
 The render keys are not in the main checkout, so the strict tests there need `X3D_ORACLE_KEYS`. Keep the store and the checkout copies. Delete nothing.
+
+A command that reads a key by its `oracle/` path (for example `x3d-shot compare oracle/render-items2-baseline …`) needs a link there: `X3D_ORACLE_KEYS=<store> python3 -I -B tools/answer_keys.py link . <name>...`. The link is a symlink into the store, and the ignore rules cover it. A Git operation that writes the path replaces the link and does not change the store. A link is for reading only: a command that writes through it writes the store. The link is not a security boundary. It protects the store from a Git path replacement, not from a process that follows the link. Only `check-output` (in the 4 key recorders) refuses such a write, and other writers (for example `x3d-shot batch` or `cp`) do not run it. Never give a linked path, a key path or a store path to a command as its output. Write a regenerated key to a staging directory (`oracle/README.md`, "Regenerate a key"). Remove the links before the procedure below, because step 0 stops on a symlink at a render-key path: `test -L oracle/<name> && rm -- oracle/<name>` for each linked name, with no trailing slash, so `rm` removes only the link. Never copy a key to a key path.
 
 ### Operations that delete keys in the main checkout
 
@@ -73,7 +75,7 @@ Verify the keys and the empty key paths directly before and after the command: s
 - `git update-index --skip-worktree` is not a protection. The bit is in one local index only, and a new clone or worktree does not have it.
 - Git 2.43 has no "precious" ignore patterns.
 
-Only a move of the keys out of every tracked path removes the hazard. In the main checkout, that move is done: the render keys are in the external store. Do not move a key back to a tracked symlink path. The tracked symlinks themselves stay until a separate change for issue #65 replaces them; do not untrack them before it.
+Only a move of the keys out of every tracked path removes the hazard. In the main checkout, that move is done: the render keys are in the external store. Do not move a key back to a tracked symlink path. Master does not track the 8 render-key symlinks. Older commits still track them, so run `tools/answer_keys.py guard . HEAD <rev>` before any operation to an older `<rev>`. The guard refuses when real data is at a path that `<rev>` tracks.
 
 ## Procedure
 
