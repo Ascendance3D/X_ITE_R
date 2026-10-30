@@ -125,6 +125,11 @@ jobs:
       - name: Answer-key resolver and guard
         run: python3 -I -B tools/test_answer_keys.py
 
+      # The standards fixture manifests (oracle/standards/): the checker's synthetic tests, then the real manifests.
+      # It runs on every pull request (about 2 s), so a change to a fixture that a manifest lists also fails here.
+      - name: Standards fixture manifests
+        run: python3 -I -B oracle/tools/test_standards_manifest.py
+
       # The ACTIVE reference: X_ITE 16.5.0 (oracle/x_ite-pin), checked by version and content digest
       # against tools/candidate.lock.
       # This is the reference half of the gate only; no commit identity is checked or approved.

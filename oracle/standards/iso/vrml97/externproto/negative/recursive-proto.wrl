@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md). NEGATIVE: this file is invalid.
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.8.4: a prototype may be instantiated in a file anywhere after the completion of the prototype
+# definition. A prototype may not be instantiated inside its own implementation (recursive
+# prototypes are illegal). Loop instantiates itself inside its own definition.
+PROTO Loop [ ]
+{
+  Group { children [ Loop { } ] }
+}
+Loop { }
