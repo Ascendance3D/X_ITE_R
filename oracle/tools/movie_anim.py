@@ -6,7 +6,8 @@
       SET (default anim) into /tmp/movie-anim-xite/runN/NAME-msaaM. The baseline oracle/<set dir>/NAME-msaaM
       (js.json, js/*.png) is written from run 1 only when every run gave the same js.json and the same PNG
       bytes; recordings.json keeps the sha256 of each run's files. A difference between runs writes nothing
-      and exits 1.
+      and exits 1. An existing target (a case directory, cases.txt or recordings.json) stops the tool before it
+      records and again before it writes; nothing is overwritten. Tests: oracle/tools/test_movie_anim.py.
 
 Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_movie_anim.py, MSAA 0 and 4) and
 load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0).
@@ -34,10 +35,36 @@ def files(case_dir):
     return out
 
 
+def targets(out_dir, cases, msaa):
+    """Every path that write_baseline makes. It stops before the first write if one of them exists, so an
+    existing baseline is never overwritten and a recording is never written in part."""
+    paths = [os.path.join(out_dir, f"{name}-msaa{m}") for name, _, _ in cases for m in msaa]
+    paths += [os.path.join(out_dir, "cases.txt"), os.path.join(out_dir, "recordings.json")]
+    found = [p for p in paths if os.path.lexists(p)]
+    if found:
+        sys.exit(f"{', '.join(found)} exists; a new recording goes to a new baseline directory")
+    return paths
+
+
+def write_baseline(tmp, out_dir, cases, msaa, report):
+    """Copies run 1 of each case from tmp into out_dir, with cases.txt and recordings.json."""
+    targets(out_dir, cases, msaa)
+    os.makedirs(out_dir, exist_ok=True)
+    lines = []
+    for name, world, script in cases:
+        for m in msaa:
+            key = f"{name}-msaa{m}"
+            shutil.copytree(os.path.join(tmp, "run1", key), os.path.join(out_dir, key))
+            lines.append(f"{name} {world} {script} {m}\n")
+    open(os.path.join(out_dir, "cases.txt"), "w").writelines(lines)
+    json.dump(report, open(os.path.join(out_dir, "recordings.json"), "w"), indent=1)
+
+
 def record(runs, name):
     baseline, synthetic, worlds, MSAA = SETS[name]
     out_dir = os.path.join(root, "oracle", baseline)
     CASES = [(n, f"oracle/{synthetic}/{n}.wrl", f"oracle/{synthetic}/{n}.json") for n in worlds]
+    targets(out_dir, CASES, MSAA)
     tmp = "/tmp/movie-anim-xite"
     shutil.rmtree(tmp, ignore_errors=True)
     report, same = {}, True
@@ -65,22 +92,11 @@ def record(runs, name):
         json.dump(report, open(os.path.join(tmp, "recordings.json"), "w"), indent=1)
         sys.exit(f"runs differ; nothing written (see {tmp}/recordings.json)")
 
-    os.makedirs(out_dir, exist_ok=True)
-    lines = []
-    for name, world, script in CASES:
-        for msaa in MSAA:
-            key = f"{name}-msaa{msaa}"
-            dst = os.path.join(out_dir, key)
-            if os.path.exists(dst):
-                sys.exit(f"{dst} exists; a new recording goes to a new baseline directory")
-            shutil.copytree(os.path.join(tmp, "run1", key), dst)
-            lines.append(f"{name} {world} {script} {msaa}\n")
-    open(os.path.join(out_dir, "cases.txt"), "w").writelines(lines)
-    json.dump(report, open(os.path.join(out_dir, "recordings.json"), "w"), indent=1)
+    write_baseline(tmp, out_dir, CASES, MSAA, report)
 
-
-args = sys.argv[1:]
-if args and args[0] == "record":
-    record(int(args[1]) if len(args) > 1 else 5, args[2] if len(args) > 2 else "anim")
-else:
-    sys.exit(__doc__)
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if args and args[0] == "record":
+        record(int(args[1]) if len(args) > 1 else 5, args[2] if len(args) > 2 else "anim")
+    else:
+        sys.exit(__doc__)
