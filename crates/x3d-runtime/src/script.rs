@@ -85,6 +85,17 @@ pub trait ScriptHost {
     fn held_nodes(&mut self, _rt: &mut Runtime, _candidates: &[NodeId]) -> Option<Vec<NodeId>> {
         None
     }
+
+    /// Which of `candidates` (root contexts of scenes that `createX3DFromURL` / `createVrmlFromURL` gave a Script, none of
+    /// whose nodes anything else keeps) JavaScript can still reach through their X3DScene object. Like
+    /// [`ScriptHost::held_nodes`], the host collects garbage first; `None` means the host cannot say, and every scene is held.
+    fn held_scenes(&mut self, _rt: &mut Runtime, _candidates: &[CtxId]) -> Option<Vec<CtxId>> {
+        None
+    }
+
+    /// The scenes were released and their context ids may be handed out again: the host forgets its objects and
+    /// callbacks of them.
+    fn release_scenes(&mut self, _rt: &mut Runtime, _ctxs: &[CtxId]) {}
 }
 
 /// A Script candidate that failed: what FileLoader.printError reports when the next candidate starts.
