@@ -10,6 +10,7 @@ pub mod image_texture_3d;
 pub mod interp;
 pub mod key_sensor;
 pub mod load_sensor;
+pub mod movie_texture;
 pub mod nurbs;
 pub mod particle_systems;
 pub mod pick_sensor;
@@ -302,7 +303,11 @@ impl Runtime {
                     access::OUTPUT_ONLY,
                     FieldValue::SFInt32(0),
                 );
-                self.nrt_mut(node).state = State::UrlObject(Default::default())
+                self.nrt_mut(node).state = State::UrlObject(Default::default());
+
+                if name == "MovieTexture" {
+                    self.movie_construct(node);
+                }
             }
             _ => {}
         }
@@ -405,6 +410,11 @@ impl Runtime {
             // X3DTexture2DNode.initialize (clearTexture), then X3DUrlObject's.
             "ImageTexture" | "MovieTexture" => {
                 self.set_texture_2d_size(node, 1, 1);
+
+                if name == "MovieTexture" {
+                    self.movie_initialize(node);
+                }
+
                 self.inline_initialize(node)
             }
             "Inline"

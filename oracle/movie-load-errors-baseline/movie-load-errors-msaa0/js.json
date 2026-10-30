@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "poses": {
+    "42": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 8\n}\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nTransform {\n  translation -3.3 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_static MovieTexture {\n        url \"media/static.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_static LoadSensor {\n  children USE M_static\n}\n\nTransform {\n  translation -1.1 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_notpng MovieTexture {\n        url \"media/notpng.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_notpng LoadSensor {\n  children USE M_notpng\n}\n\nTransform {\n  translation 1.1 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_noframes MovieTexture {\n        url \"media/noframes.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_noframes LoadSensor {\n  children USE M_noframes\n}\n\nTransform {\n  translation 3.3 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_trunchead MovieTexture {\n        url \"media/trunc-head.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_trunchead LoadSensor {\n  children USE M_trunchead\n}\n\nTransform {\n  translation -3.3 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_fallback MovieTexture {\n        url [\n          \"media/trunc-head.png\",\n          \"media/good.png\"\n        ]\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_fallback LoadSensor {\n  children USE M_fallback\n}\n\nTransform {\n  translation -1.1 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_truncanim MovieTexture {\n        url \"media/trunc-anim.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_truncanim LoadSensor {\n  children USE M_truncanim\n}\n\nTransform {\n  translation 1.1 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_baddata MovieTexture {\n        url \"media/bad-data.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_baddata LoadSensor {\n  children USE M_baddata\n}\n\nTransform {\n  translation 3.3 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_good MovieTexture {\n        url \"media/good.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_good LoadSensor {\n  children USE M_good\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString press\n  inputOnly      SFBool   static_loaded\n  inputOnly      SFInt32  static_width\n  inputOnly      SFInt32  static_height\n  inputOnly      SFTime   static_duration\n  inputOnly      SFBool   notpng_loaded\n  inputOnly      SFInt32  notpng_width\n  inputOnly      SFInt32  notpng_height\n  inputOnly      SFTime   notpng_duration\n  inputOnly      SFBool   noframes_loaded\n  inputOnly      SFInt32  noframes_width\n  inputOnly      SFInt32  noframes_height\n  inputOnly      SFTime   noframes_duration\n  inputOnly      SFBool   trunchead_loaded\n  inputOnly      SFInt32  trunchead_width\n  inputOnly      SFInt32  trunchead_height\n  inputOnly      SFTime   trunchead_duration\n  inputOnly      SFBool   fallback_loaded\n  inputOnly      SFInt32  fallback_width\n  inputOnly      SFInt32  fallback_height\n  inputOnly      SFTime   fallback_duration\n  inputOnly      SFBool   truncanim_loaded\n  inputOnly      SFInt32  truncanim_width\n  inputOnly      SFInt32  truncanim_height\n  inputOnly      SFTime   truncanim_duration\n  inputOnly      SFBool   baddata_loaded\n  inputOnly      SFInt32  baddata_width\n  inputOnly      SFInt32  baddata_height\n  inputOnly      SFTime   baddata_duration\n  inputOnly      SFBool   good_loaded\n  inputOnly      SFInt32  good_width\n  inputOnly      SFInt32  good_height\n  inputOnly      SFTime   good_duration\n  initializeOnly MFNode   movies [\n    USE M_static\n    USE M_notpng\n    USE M_noframes\n    USE M_trunchead\n    USE M_fallback\n    USE M_truncanim\n    USE M_baddata\n    USE M_good\n  ]\n\n  url \"javascript:\nvar next = 0;\n\nfunction press (value, time)\n{\n   switch (next ++)\n   {\n      case 0: movies [0] .url = new MFString ('media/static.png'); print ('static url'); break;\n      case 1: movies [1] .url = new MFString ('media/notpng.png'); print ('notpng url'); break;\n      case 2: movies [2] .url = new MFString ('media/noframes.png'); print ('noframes url'); break;\n      case 3: movies [3] .url = new MFString ('media/trunc-head.png'); print ('trunchead url'); break;\n      case 4: movies [4] .url = new MFString ('media/trunc-head.png', 'media/good.png'); print ('fallback url'); break;\n      case 5: movies [5] .url = new MFString ('media/trunc-anim.png'); print ('truncanim url'); break;\n      case 6: movies [6] .url = new MFString ('media/bad-data.png'); print ('baddata url'); break;\n      case 7: movies [7] .url = new MFString ('media/good.png'); print ('good url'); break;\n   }\n}\n\nfunction static_loaded (value)\n{\n   print ('static loaded ' + value);\n}\n\nfunction static_width (value)\n{\n   print ('static width ' + value);\n}\n\nfunction static_height (value)\n{\n   print ('static height ' + value);\n}\n\nfunction static_duration (value)\n{\n   print ('static duration ' + value);\n}\n\nfunction notpng_loaded (value)\n{\n   print ('notpng loaded ' + value);\n}\n\nfunction notpng_width (value)\n{\n   print ('notpng width ' + value);\n}\n\nfunction notpng_height (value)\n{\n   print ('notpng height ' + value);\n}\n\nfunction notpng_duration (value)\n{\n   print ('notpng duration ' + value);\n}\n\nfunction noframes_loaded (value)\n{\n   print ('noframes loaded ' + value);\n}\n\nfunction noframes_width (value)\n{\n   print ('noframes width ' + value);\n}\n\nfunction noframes_height (value)\n{\n   print ('noframes height ' + value);\n}\n\nfunction noframes_duration (value)\n{\n   print ('noframes duration ' + value);\n}\n\nfunction trunchead_loaded (value)\n{\n   print ('trunchead loaded ' + value);\n}\n\nfunction trunchead_width (value)\n{\n   print ('trunchead width ' + value);\n}\n\nfunction trunchead_height (value)\n{\n   print ('trunchead height ' + value);\n}\n\nfunction trunchead_duration (value)\n{\n   print ('trunchead duration ' + value);\n}\n\nfunction fallback_loaded (value)\n{\n   print ('fallback loaded ' + value);\n}\n\nfunction fallback_width (value)\n{\n   print ('fallback width ' + value);\n}\n\nfunction fallback_height (value)\n{\n   print ('fallback height ' + value);\n}\n\nfunction fallback_duration (value)\n{\n   print ('fallback duration ' + value);\n}\n\nfunction truncanim_loaded (value)\n{\n   print ('truncanim loaded ' + value);\n}\n\nfunction truncanim_width (value)\n{\n   print ('truncanim width ' + value);\n}\n\nfunction truncanim_height (value)\n{\n   print ('truncanim height ' + value);\n}\n\nfunction truncanim_duration (value)\n{\n   print ('truncanim duration ' + value);\n}\n\nfunction baddata_loaded (value)\n{\n   print ('baddata loaded ' + value);\n}\n\nfunction baddata_width (value)\n{\n   print ('baddata width ' + value);\n}\n\nfunction baddata_height (value)\n{\n   print ('baddata height ' + value);\n}\n\nfunction baddata_duration (value)\n{\n   print ('baddata duration ' + value);\n}\n\nfunction good_loaded (value)\n{\n   print ('good loaded ' + value);\n}\n\nfunction good_width (value)\n{\n   print ('good width ' + value);\n}\n\nfunction good_height (value)\n{\n   print ('good height ' + value);\n}\n\nfunction good_duration (value)\n{\n   print ('good duration ' + value);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.press\nROUTE L_static.isLoaded TO S.static_loaded\nROUTE M_static.width TO S.static_width\nROUTE M_static.height TO S.static_height\nROUTE M_static.duration_changed TO S.static_duration\nROUTE L_notpng.isLoaded TO S.notpng_loaded\nROUTE M_notpng.width TO S.notpng_width\nROUTE M_notpng.height TO S.notpng_height\nROUTE M_notpng.duration_changed TO S.notpng_duration\nROUTE L_noframes.isLoaded TO S.noframes_loaded\nROUTE M_noframes.width TO S.noframes_width\nROUTE M_noframes.height TO S.noframes_height\nROUTE M_noframes.duration_changed TO S.noframes_duration\nROUTE L_trunchead.isLoaded TO S.trunchead_loaded\nROUTE M_trunchead.width TO S.trunchead_width\nROUTE M_trunchead.height TO S.trunchead_height\nROUTE M_trunchead.duration_changed TO S.trunchead_duration\nROUTE L_fallback.isLoaded TO S.fallback_loaded\nROUTE M_fallback.width TO S.fallback_width\nROUTE M_fallback.height TO S.fallback_height\nROUTE M_fallback.duration_changed TO S.fallback_duration\nROUTE L_truncanim.isLoaded TO S.truncanim_loaded\nROUTE M_truncanim.width TO S.truncanim_width\nROUTE M_truncanim.height TO S.truncanim_height\nROUTE M_truncanim.duration_changed TO S.truncanim_duration\nROUTE L_baddata.isLoaded TO S.baddata_loaded\nROUTE M_baddata.width TO S.baddata_width\nROUTE M_baddata.height TO S.baddata_height\nROUTE M_baddata.duration_changed TO S.baddata_duration\nROUTE L_good.isLoaded TO S.good_loaded\nROUTE M_good.width TO S.good_width\nROUTE M_good.height TO S.good_height\nROUTE M_good.duration_changed TO S.good_duration\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 8\n}\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nTransform {\n  translation -3.3 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_static MovieTexture {\n        url \"media/static.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_static LoadSensor {\n  children USE M_static\n}\n\nTransform {\n  translation -1.1 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_notpng MovieTexture {\n        url \"media/notpng.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_notpng LoadSensor {\n  children USE M_notpng\n}\n\nTransform {\n  translation 1.1 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_noframes MovieTexture {\n        url \"media/noframes.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_noframes LoadSensor {\n  children USE M_noframes\n}\n\nTransform {\n  translation 3.3 1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_trunchead MovieTexture {\n        url \"media/trunc-head.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_trunchead LoadSensor {\n  children USE M_trunchead\n}\n\nTransform {\n  translation -3.3 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_fallback MovieTexture {\n        url [\n          \"media/trunc-head.png\",\n          \"media/good.png\"\n        ]\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_fallback LoadSensor {\n  children USE M_fallback\n}\n\nTransform {\n  translation -1.1 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_truncanim MovieTexture {\n        url \"media/trunc-anim.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_truncanim LoadSensor {\n  children USE M_truncanim\n}\n\nTransform {\n  translation 1.1 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_baddata MovieTexture {\n        url \"media/bad-data.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_baddata LoadSensor {\n  children USE M_baddata\n}\n\nTransform {\n  translation 3.3 -1.1 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M_good MovieTexture {\n        url \"media/good.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF L_good LoadSensor {\n  children USE M_good\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString press\n  inputOnly      SFBool   static_loaded\n  inputOnly      SFInt32  static_width\n  inputOnly      SFInt32  static_height\n  inputOnly      SFTime   static_duration\n  inputOnly      SFBool   notpng_loaded\n  inputOnly      SFInt32  notpng_width\n  inputOnly      SFInt32  notpng_height\n  inputOnly      SFTime   notpng_duration\n  inputOnly      SFBool   noframes_loaded\n  inputOnly      SFInt32  noframes_width\n  inputOnly      SFInt32  noframes_height\n  inputOnly      SFTime   noframes_duration\n  inputOnly      SFBool   trunchead_loaded\n  inputOnly      SFInt32  trunchead_width\n  inputOnly      SFInt32  trunchead_height\n  inputOnly      SFTime   trunchead_duration\n  inputOnly      SFBool   fallback_loaded\n  inputOnly      SFInt32  fallback_width\n  inputOnly      SFInt32  fallback_height\n  inputOnly      SFTime   fallback_duration\n  inputOnly      SFBool   truncanim_loaded\n  inputOnly      SFInt32  truncanim_width\n  inputOnly      SFInt32  truncanim_height\n  inputOnly      SFTime   truncanim_duration\n  inputOnly      SFBool   baddata_loaded\n  inputOnly      SFInt32  baddata_width\n  inputOnly      SFInt32  baddata_height\n  inputOnly      SFTime   baddata_duration\n  inputOnly      SFBool   good_loaded\n  inputOnly      SFInt32  good_width\n  inputOnly      SFInt32  good_height\n  inputOnly      SFTime   good_duration\n  initializeOnly MFNode   movies [\n    USE M_static\n    USE M_notpng\n    USE M_noframes\n    USE M_trunchead\n    USE M_fallback\n    USE M_truncanim\n    USE M_baddata\n    USE M_good\n  ]\n\n  url \"javascript:\nvar next = 0;\n\nfunction press (value, time)\n{\n   switch (next ++)\n   {\n      case 0: movies [0] .url = new MFString ('media/static.png'); print ('static url'); break;\n      case 1: movies [1] .url = new MFString ('media/notpng.png'); print ('notpng url'); break;\n      case 2: movies [2] .url = new MFString ('media/noframes.png'); print ('noframes url'); break;\n      case 3: movies [3] .url = new MFString ('media/trunc-head.png'); print ('trunchead url'); break;\n      case 4: movies [4] .url = new MFString ('media/trunc-head.png', 'media/good.png'); print ('fallback url'); break;\n      case 5: movies [5] .url = new MFString ('media/trunc-anim.png'); print ('truncanim url'); break;\n      case 6: movies [6] .url = new MFString ('media/bad-data.png'); print ('baddata url'); break;\n      case 7: movies [7] .url = new MFString ('media/good.png'); print ('good url'); break;\n   }\n}\n\nfunction static_loaded (value)\n{\n   print ('static loaded ' + value);\n}\n\nfunction static_width (value)\n{\n   print ('static width ' + value);\n}\n\nfunction static_height (value)\n{\n   print ('static height ' + value);\n}\n\nfunction static_duration (value)\n{\n   print ('static duration ' + value);\n}\n\nfunction notpng_loaded (value)\n{\n   print ('notpng loaded ' + value);\n}\n\nfunction notpng_width (value)\n{\n   print ('notpng width ' + value);\n}\n\nfunction notpng_height (value)\n{\n   print ('notpng height ' + value);\n}\n\nfunction notpng_duration (value)\n{\n   print ('notpng duration ' + value);\n}\n\nfunction noframes_loaded (value)\n{\n   print ('noframes loaded ' + value);\n}\n\nfunction noframes_width (value)\n{\n   print ('noframes width ' + value);\n}\n\nfunction noframes_height (value)\n{\n   print ('noframes height ' + value);\n}\n\nfunction noframes_duration (value)\n{\n   print ('noframes duration ' + value);\n}\n\nfunction trunchead_loaded (value)\n{\n   print ('trunchead loaded ' + value);\n}\n\nfunction trunchead_width (value)\n{\n   print ('trunchead width ' + value);\n}\n\nfunction trunchead_height (value)\n{\n   print ('trunchead height ' + value);\n}\n\nfunction trunchead_duration (value)\n{\n   print ('trunchead duration ' + value);\n}\n\nfunction fallback_loaded (value)\n{\n   print ('fallback loaded ' + value);\n}\n\nfunction fallback_width (value)\n{\n   print ('fallback width ' + value);\n}\n\nfunction fallback_height (value)\n{\n   print ('fallback height ' + value);\n}\n\nfunction fallback_duration (value)\n{\n   print ('fallback duration ' + value);\n}\n\nfunction truncanim_loaded (value)\n{\n   print ('truncanim loaded ' + value);\n}\n\nfunction truncanim_width (value)\n{\n   print ('truncanim width ' + value);\n}\n\nfunction truncanim_height (value)\n{\n   print ('truncanim height ' + value);\n}\n\nfunction truncanim_duration (value)\n{\n   print ('truncanim duration ' + value);\n}\n\nfunction baddata_loaded (value)\n{\n   print ('baddata loaded ' + value);\n}\n\nfunction baddata_width (value)\n{\n   print ('baddata width ' + value);\n}\n\nfunction baddata_height (value)\n{\n   print ('baddata height ' + value);\n}\n\nfunction baddata_duration (value)\n{\n   print ('baddata duration ' + value);\n}\n\nfunction good_loaded (value)\n{\n   print ('good loaded ' + value);\n}\n\nfunction good_width (value)\n{\n   print ('good width ' + value);\n}\n\nfunction good_height (value)\n{\n   print ('good height ' + value);\n}\n\nfunction good_duration (value)\n{\n   print ('good duration ' + value);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.press\nROUTE L_static.isLoaded TO S.static_loaded\nROUTE M_static.width TO S.static_width\nROUTE M_static.height TO S.static_height\nROUTE M_static.duration_changed TO S.static_duration\nROUTE L_notpng.isLoaded TO S.notpng_loaded\nROUTE M_notpng.width TO S.notpng_width\nROUTE M_notpng.height TO S.notpng_height\nROUTE M_notpng.duration_changed TO S.notpng_duration\nROUTE L_noframes.isLoaded TO S.noframes_loaded\nROUTE M_noframes.width TO S.noframes_width\nROUTE M_noframes.height TO S.noframes_height\nROUTE M_noframes.duration_changed TO S.noframes_duration\nROUTE L_trunchead.isLoaded TO S.trunchead_loaded\nROUTE M_trunchead.width TO S.trunchead_width\nROUTE M_trunchead.height TO S.trunchead_height\nROUTE M_trunchead.duration_changed TO S.trunchead_duration\nROUTE L_fallback.isLoaded TO S.fallback_loaded\nROUTE M_fallback.width TO S.fallback_width\nROUTE M_fallback.height TO S.fallback_height\nROUTE M_fallback.duration_changed TO S.fallback_duration\nROUTE L_truncanim.isLoaded TO S.truncanim_loaded\nROUTE M_truncanim.width TO S.truncanim_width\nROUTE M_truncanim.height TO S.truncanim_height\nROUTE M_truncanim.duration_changed TO S.truncanim_duration\nROUTE L_baddata.isLoaded TO S.baddata_loaded\nROUTE M_baddata.width TO S.baddata_width\nROUTE M_baddata.height TO S.baddata_height\nROUTE M_baddata.duration_changed TO S.baddata_duration\nROUTE L_good.isLoaded TO S.good_loaded\nROUTE M_good.width TO S.good_width\nROUTE M_good.height TO S.good_height\nROUTE M_good.duration_changed TO S.good_duration\n"
+  },
+  "prints": [],
+  "log": [
+    "error: RangeError: Offset is outside the bounds of the DataView",
+    "error: RangeError: Offset is outside the bounds of the DataView",
+    "warn: Error loading movie 'http://oracle/synthetic-movie-load-errors/media/trunc-head.png': Offset is outside the bounds of the DataView",
+    "warn: Error loading movie 'http://oracle/synthetic-movie-load-errors/media/trunc-head.png': Offset is outside the bounds of the DataView"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "console": [
+    "log: static width 0",
+    "log: static height 0",
+    "log: static duration -1",
+    "log: notpng width 0",
+    "log: notpng height 0",
+    "log: notpng duration -1",
+    "log: noframes width 0",
+    "log: noframes height 0",
+    "log: noframes duration -1",
+    "log: trunchead width 0",
+    "log: trunchead height 0",
+    "log: trunchead duration -1",
+    "log: fallback width 0",
+    "log: fallback height 0",
+    "log: fallback duration -1",
+    "log: truncanim width 0",
+    "log: truncanim height 0",
+    "log: truncanim duration -1",
+    "log: baddata width 0",
+    "log: baddata height 0",
+    "log: baddata duration -1",
+    "log: good width 0",
+    "log: good height 0",
+    "log: good duration -1",
+    "log: static url",
+    "log: notpng url",
+    "log: noframes url",
+    "log: trunchead url",
+    "log: trunchead width 0",
+    "log: trunchead height 0",
+    "log: trunchead duration -1",
+    "log: trunchead loaded false",
+    "log: fallback url",
+    "log: fallback width 8",
+    "log: fallback height 8",
+    "log: fallback duration 2",
+    "log: fallback loaded true",
+    "log: truncanim url",
+    "log: truncanim width 8",
+    "log: truncanim height 8",
+    "log: truncanim duration 2",
+    "log: truncanim loaded true",
+    "log: baddata url",
+    "log: baddata width 8",
+    "log: baddata height 8",
+    "log: baddata duration 1",
+    "log: baddata loaded true",
+    "log: good url",
+    "log: good width 8",
+    "log: good height 8",
+    "log: good duration 2",
+    "log: good loaded true"
+  ]
+}

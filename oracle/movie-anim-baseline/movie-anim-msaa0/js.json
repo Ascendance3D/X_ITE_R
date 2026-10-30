@@ -1,0 +1,252 @@
+{
+  "ok": true,
+  "poses": {
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "96": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "97": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "96": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nTransform {\n  translation -3.3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M0 MovieTexture {\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M1 MovieTexture {\n        url \"media/anim4.gif\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M2 MovieTexture {\n        url \"media/anim4.gif\"\n        speed 2\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M3 MovieTexture {\n        url \"media/anim4.gif\"\n        speed -1\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3.3 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M4 MovieTexture {\n        url \"media/dispose.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M5 MovieTexture {\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n        stopTime 946684801.56875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M6 MovieTexture {\n        url \"media/hold.png\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M7 MovieTexture {\n        url \"media/hold.png\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3.3 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M8 MovieTexture {\n        url \"media/once.png\"\n        speed 0\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M9 MovieTexture {\n        enabled FALSE\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M10 MovieTexture {\n        enabled FALSE\n        url \"media/hold.png\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M11 MovieTexture {\n        url \"media/anim4.gif\"\n        speed 0.5\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString press\n  initializeOnly MFNode   movies [\n    USE M0\n    USE M1\n    USE M2\n    USE M3\n    USE M4\n    USE M5\n    USE M6\n    USE M7\n    USE M8\n    USE M9\n    USE M10\n    USE M11\n  ]\n  initializeOnly MFNode   looping [\n    USE M0\n    USE M3\n    USE M4\n    USE M5\n    USE M6\n    USE M8\n    USE M9\n    USE M11\n  ]\n  initializeOnly SFNode   stopped USE M5\n\n  url \"javascript:\nfunction press (value, time)\n{\n   for (var i = 0; i < movies .length; ++ i)\n      movies [i] .startTime = time;\n\n   for (var i = 0; i < looping .length; ++ i)\n      looping [i] .loop = true;\n\n   stopped .stopTime = time + 0.6;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.press\n",
+    "97": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nTransform {\n  translation -3.3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M0 MovieTexture {\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M1 MovieTexture {\n        url \"media/anim4.gif\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M2 MovieTexture {\n        url \"media/anim4.gif\"\n        speed 2\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M3 MovieTexture {\n        url \"media/anim4.gif\"\n        speed -1\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3.3 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M4 MovieTexture {\n        url \"media/dispose.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M5 MovieTexture {\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n        stopTime 946684801.56875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M6 MovieTexture {\n        url \"media/hold.png\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 0 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M7 MovieTexture {\n        url \"media/hold.png\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3.3 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M8 MovieTexture {\n        url \"media/once.png\"\n        speed 0\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.1 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M9 MovieTexture {\n        enabled FALSE\n        url \"media/anim4.gif\"\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.1 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M10 MovieTexture {\n        enabled FALSE\n        url \"media/hold.png\"\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 -2.2 0\n  children Shape {\n    appearance Appearance {\n      texture DEF M11 MovieTexture {\n        url \"media/anim4.gif\"\n        speed 0.5\n        loop TRUE\n        startTime 946684800.96875\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.9 -0.9 0,\n          0.9 -0.9 0,\n          0.9 0.9 0,\n          -0.9 0.9 0\n        ]\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString press\n  initializeOnly MFNode   movies [\n    USE M0\n    USE M1\n    USE M2\n    USE M3\n    USE M4\n    USE M5\n    USE M6\n    USE M7\n    USE M8\n    USE M9\n    USE M10\n    USE M11\n  ]\n  initializeOnly MFNode   looping [\n    USE M0\n    USE M3\n    USE M4\n    USE M5\n    USE M6\n    USE M8\n    USE M9\n    USE M11\n  ]\n  initializeOnly SFNode   stopped USE M5\n\n  url \"javascript:\nfunction press (value, time)\n{\n   for (var i = 0; i < movies .length; ++ i)\n      movies [i] .startTime = time;\n\n   for (var i = 0; i < looping .length; ++ i)\n      looping [i] .loop = true;\n\n   stopped .stopTime = time + 0.6;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.press\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
