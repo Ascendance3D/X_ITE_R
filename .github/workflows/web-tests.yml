@@ -69,9 +69,12 @@ jobs:
             python3 -I -B tools/ci_changes.py --all
           fi
 
+      # The shard check's own tests (no browser, no build), then the matrix after the check.
       - name: Test shards
         id: shards
-        run: echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
+        run: |
+          node --test crates/x3d-web/tests/browser/shards_check.mjs
+          echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
 
   build:
     name: Browser module

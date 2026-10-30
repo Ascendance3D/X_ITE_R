@@ -48,6 +48,7 @@ export async function check (shards = SHARDS, files = readdirSync (DIR) .filter 
    const errors = [ ];
    const seen   = new Map ();
    const split  = new Map ();
+   const whole  = new Set ();
 
    for (const [ name, list ] of Object .entries (shards))
    {
@@ -59,23 +60,34 @@ export async function check (shards = SHARDS, files = readdirSync (DIR) .filter 
 
       for (const entry of list)
       {
-         const file = fileOf (entry);
+         const file = fileOf (entry ?? { });
+
+         if (typeof file !== "string" || !file)
+         {
+            errors .push (`shard ${name} has an entry that is not a file name or { file, cases }: ${JSON .stringify (entry)}`);
+            continue;
+         }
 
          if (typeof entry !== "string")
          {
+            const cases = Array .isArray (entry .cases) ? entry .cases : [ ];
+
             if (list .length !== 1)
                errors .push (`shard ${name} has a case list for ${file} and other entries`);
 
-            if (!Array .isArray (entry .cases) || !entry .cases .length)
-               errors .push (`shard ${name} has no cases for ${file}`);
+            if (!cases .length)
+               errors .push (`shard ${name} has no case list (an array of group.case keys) for ${file}`);
 
             if (!split .has (file))
                split .set (file, [ ]);
 
-            split .get (file) .push ([ name, entry .cases ?? [ ] ]);
+            split .get (file) .push ([ name, cases ]);
          }
 
          const kind = typeof entry === "string" ? "file" : "cases";
+
+         if (kind === "file")
+            whole .add (file);
 
          if (seen .has (file) && (kind === "file" || seen .get (file) .kind === "file"))
             errors .push (`${file} is in shards ${seen .get (file) .name} and ${name}`);
@@ -93,9 +105,10 @@ export async function check (shards = SHARDS, files = readdirSync (DIR) .filter 
          errors .push (`${file} is in no shard`);
    }
 
+   // A file that is also listed whole has its error above; the case lists of a missing file cannot be read.
    for (const [ file, lists ] of split)
    {
-      if (!files .includes (file))
+      if (!files .includes (file) || whole .has (file))
          continue;
 
       const all   = await keysOf (file);
@@ -108,7 +121,7 @@ export async function check (shards = SHARDS, files = readdirSync (DIR) .filter 
             if (count .has (key))
                count .get (key) .push (name);
             else
-               errors .push (`${key} (shard ${name}) is not a case of ${file}`);
+               errors .push (`${JSON .stringify (key)} (shard ${name}) is not a case of ${file}; its cases are ${all .join (", ")}`);
          }
       }
 
