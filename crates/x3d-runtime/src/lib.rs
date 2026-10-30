@@ -452,6 +452,12 @@ pub struct Runtime {
     /// The outcomes of the page's requests (see [`Runtime::browser_create_from_page_url`]), in the order they settled: the
     /// root context of the scene, or the rejection's message. [`Runtime::take_page_browser_settled`] hands them out.
     pub page_browser_settled: Vec<(u64, Result<CtxId, String>)>,
+    /// createX3DFromURL / createVrmlFromURL requests (of a Script or of the page) that are not attached yet: their scene
+    /// can be a candidate of the reachability sweep (see `release.rs`, "Scenes loaded from a URL").
+    pub(crate) browser_url_requests: std::collections::HashSet<u64>,
+    /// Settled scenes of the page's URL requests that pass the simple-scene gate, with their nodes: they become sweep
+    /// candidates when the page takes the outcome ([`Runtime::take_page_browser_settled`]).
+    pub(crate) page_url_scenes: HashMap<CtxId, std::ops::Range<NodeId>>,
     /// The URL of the page the browser element lives in (`location`): the world URL of a new X3DScene and the browser's
     /// `baseURL`. Empty: the embedder has no page.
     pub page_url: String,
@@ -615,8 +621,12 @@ pub struct Runtime {
     pub dynamic_nodes: std::collections::HashSet<NodeId>,
     /// Nodes for which the missing geometry provider was already logged (`warn_no_geometry_provider`).
     pub(crate) provider_warned: std::collections::HashSet<NodeId>,
-    /// Execution contexts made by `createVrmlFromString` whose nodes are all runtime-created.
+    /// Execution contexts made by `createVrmlFromString`, `createX3DFromURL` or `createVrmlFromURL` whose nodes are all
+    /// sweep candidates.
     pub dynamic_ctxs: std::collections::HashSet<CtxId>,
+    /// The `dynamic_ctxs` of a Script's `createX3DFromURL` / `createVrmlFromURL`: the Script got an X3DScene object of
+    /// them, which keeps the scene while JavaScript holds it ([`crate::script::ScriptHost::held_scenes`]).
+    pub dynamic_scenes: std::collections::HashSet<CtxId>,
     /// Something that can change reachability happened since the last dynamic sweep.
     pub dynamic_dirty: bool,
     /// Frames since the last dynamic sweep (a Script dropping a reference raises no event).
@@ -696,6 +706,8 @@ impl Runtime {
             browser_request_id: 0,
             page_browser_loads: HashMap::new(),
             page_browser_settled: vec![],
+            browser_url_requests: Default::default(),
+            page_url_scenes: HashMap::new(),
             page_url: String::new(),
             world_state: browser_load::WorldState {
                 initialized_time: -1.0,
@@ -772,6 +784,7 @@ impl Runtime {
             released_log: vec![],
             dynamic_nodes: Default::default(),
             dynamic_ctxs: Default::default(),
+            dynamic_scenes: Default::default(),
             dynamic_dirty: false,
             provider_warned: Default::default(),
             dynamic_idle: 0,
@@ -1573,22 +1586,42 @@ impl Runtime {
                 );
             }
         };
-        let simple = scene.contexts.len() == 1
-            && scene.protos.is_empty()
-            && scene.externprotos.is_empty()
-            && scene.imported.is_empty()
-            && scene.exported.is_empty();
+        let simple = simple_scene(&scene);
         let m = self.import_scene(scene, parent, None);
 
         // The new scene is a candidate of the reachability sweep as a whole (a node keeps its scene).
-        if simple && (m.node_offset..m.node_end).all(|n| self.dynamic_eligible(n)) {
-            self.dynamic_nodes.extend(m.node_offset..m.node_end);
-            self.dynamic_ctxs.insert(m.root_ctx);
-            self.dynamic_dirty = true;
+        if simple {
+            self.register_dynamic_scene(m.root_ctx, m.node_offset..m.node_end);
         }
 
         Ok(self.scene.ctx(m.root_ctx).root_nodes.clone())
     }
+
+    /// Make the scene `ctx` with the nodes `nodes` a candidate of the reachability sweep as a whole (a node keeps its
+    /// scene), when every node may be released ([`Runtime::dynamic_eligible`]). The caller checked [`simple_scene`].
+    pub(crate) fn register_dynamic_scene(
+        &mut self,
+        ctx: CtxId,
+        nodes: std::ops::Range<NodeId>,
+    ) -> bool {
+        if !nodes.clone().all(|n| self.dynamic_eligible(n)) {
+            return false;
+        }
+
+        self.dynamic_nodes.extend(nodes);
+        self.dynamic_ctxs.insert(ctx);
+        self.dynamic_dirty = true;
+        true
+    }
+}
+
+/// The simple-scene gate of the reachability sweep: one execution context and no PROTO, EXTERNPROTO, IMPORT or EXPORT.
+pub(crate) fn simple_scene(scene: &Scene) -> bool {
+    scene.contexts.len() == 1
+        && scene.protos.is_empty()
+        && scene.externprotos.is_empty()
+        && scene.imported.is_empty()
+        && scene.exported.is_empty()
 }
 
 impl Runtime {

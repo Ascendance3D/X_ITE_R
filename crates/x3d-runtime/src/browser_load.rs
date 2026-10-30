@@ -61,6 +61,9 @@ pub struct PendingBrowserScene {
     pub scene_node: NodeId,
     /// The scene of a `Browser.loadURL`: it replaces the world once it is complete.
     pub world: bool,
+    /// The nodes of a scene of `createX3DFromURL` / `createVrmlFromURL` that passes the simple-scene gate: it becomes a
+    /// candidate of the reachability sweep once its outcome is delivered (see `release.rs`, "Scenes loaded from a URL").
+    pub release: Option<std::ops::Range<NodeId>>,
 }
 
 /// What `Browser.replaceWorld` was given.
@@ -238,6 +241,7 @@ impl Runtime {
                 anchor: None,
             },
         );
+        self.browser_url_requests.insert(id);
         self.tasks.push_back(Task::BrowserLoad(id));
         id
     }
@@ -273,8 +277,22 @@ impl Runtime {
 
     /// The page's requests that settled since the last call: (request id, root context of the scene or the message of
     /// the rejection), in the order they settled.
+    ///
+    /// The page rule of the reachability sweep: the page holds the outcome until it takes it here. Then the page's
+    /// handles hold nothing, as for the page's `createVrmlFromString`: a scene that passes the simple-scene gate is a
+    /// sweep candidate from now on, and it stays only while something in the world refers to one of its nodes.
     pub fn take_page_browser_settled(&mut self) -> Vec<(u64, Result<CtxId, String>)> {
-        std::mem::take(&mut self.page_browser_settled)
+        let settled = std::mem::take(&mut self.page_browser_settled);
+
+        for (_, outcome) in &settled {
+            if let Ok(ctx) = outcome
+                && let Some(nodes) = self.page_url_scenes.remove(ctx)
+            {
+                self.register_dynamic_scene(*ctx, nodes);
+            }
+        }
+
+        settled
     }
 
     fn next_browser_request(&mut self) -> u64 {
@@ -405,6 +423,8 @@ impl Runtime {
 
         let setup_order = std::mem::take(&mut scene.setup_order);
         let ctx_count = scene.contexts.len();
+        let url = self.browser_url_requests.remove(&id);
+        let simple = url && crate::simple_scene(&scene);
         let m = self.scene.merge_extern(scene, parent);
         let (scene_node, count) = self.new_load_count_scene();
 
@@ -416,6 +436,7 @@ impl Runtime {
             ctx: m.root_ctx,
             scene_node,
             world,
+            release: simple.then_some(m.node_offset..m.node_end),
         });
 
         // A scene of the page (an external browser) gets no execution context: its changes do not reach the world's.
@@ -483,7 +504,20 @@ impl Runtime {
 
             self.inline_live.insert(w.ctx, true);
             self.refresh_live();
+
+            let page = self.page_browser_loads.contains_key(&w.id);
+
             self.browser_settle(w.id, Ok(w.ctx));
+
+            // The scene becomes a sweep candidate once its outcome is delivered: a Script's now (the promise or the
+            // createVrmlFromURL event has its value), the page's when it takes the outcome.
+            if let Some(nodes) = w.release {
+                if page {
+                    self.page_url_scenes.insert(w.ctx, nodes);
+                } else if self.register_dynamic_scene(w.ctx, nodes) {
+                    self.dynamic_scenes.insert(w.ctx);
+                }
+            }
         }
 
         for r in replacing {
@@ -520,6 +554,8 @@ impl Runtime {
     }
 
     fn browser_settle(&mut self, id: u64, outcome: Result<CtxId, String>) {
+        self.browser_url_requests.remove(&id);
+
         // A request of the page: the page takes the outcome (it has no Script host).
         if self.page_browser_loads.remove(&id).is_some() {
             self.page_browser_settled.push((id, outcome));
