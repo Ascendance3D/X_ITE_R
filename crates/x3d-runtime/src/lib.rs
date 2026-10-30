@@ -587,6 +587,10 @@ pub struct Runtime {
     /// node, in the mode `audio_mode` names.
     pub audio: Option<sound::AudioEngine>,
     pub audio_mode: sound::AudioMode,
+    /// X3DSoundContext.startAudioElement ran since the embedder last cleared this: a sound source or
+    /// MovieTexture started or resumed its media. X_ITE then tries every waiting `play` and the
+    /// AudioContext's `resume` again (startAudioElements); the browser build's page does the same.
+    pub audio_element_started: bool,
     /// The Web Audio state of the Sound nodes.
     pub sound: HashMap<NodeId, nodes::sound::SoundState>,
     /// X3DSoundContext [_soundDestinationNodes] (insertion ordered set).
@@ -760,6 +764,7 @@ impl Runtime {
             physics: Default::default(),
             audio: None,
             audio_mode: sound::default_mode(),
+            audio_element_started: false,
             sound: HashMap::new(),
             sound_destinations: vec![],
             time_states: HashMap::new(),

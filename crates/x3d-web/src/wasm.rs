@@ -1212,6 +1212,52 @@ impl WebBrowser {
         self.worlds.get(&self.current?)?.session.active_viewpoint()
     }
 
+    /// Has a Sound node of any world or load of this browser made its audio context? The page then makes its
+    /// AudioContext (X3DSoundContext.getAudioContext) and gives its clock to the engine ([`WebBrowser::set_audio_clock`]).
+    #[wasm_bindgen(js_name = hasAudio)]
+    pub fn has_audio(&self) -> bool {
+        self.worlds.values().any(|w| w.session.has_audio())
+            || self.loads.values().any(|l| l.rt.audio.is_some())
+    }
+
+    /// X3DSoundContext.startAudioElement: did a world or load start a media element since the last call? The page
+    /// then calls the waiting AudioContext's resume () again (startAudioElements).
+    #[wasm_bindgen(js_name = takeAudioStarts)]
+    pub fn take_audio_starts(&mut self) -> bool {
+        let mut started = false;
+
+        for w in self.worlds.values_mut() {
+            started |= w.session.take_audio_element_started();
+        }
+
+        for l in self.loads.values_mut() {
+            started |= std::mem::take(&mut l.rt.audio_element_started);
+        }
+
+        started
+    }
+
+    /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.
+    #[wasm_bindgen(js_name = setAudioClock)]
+    pub fn set_audio_clock(&mut self, time: f64) {
+        for w in self.worlds.values_mut() {
+            w.session.set_audio_clock(time);
+        }
+
+        for l in self.loads.values_mut() {
+            if let Some(audio) = l.rt.audio.as_mut() {
+                audio.set_clock(time);
+            }
+        }
+    }
+
+    /// The audio graph of the current world as JSON ([`Session::audio_graph_json`]), or `undefined` while no Sound
+    /// node has made the audio context. For tests and diagnostics.
+    #[wasm_bindgen(js_name = audioGraph)]
+    pub fn audio_graph(&self) -> Option<String> {
+        self.worlds.get(&self.current?)?.session.audio_graph_json()
+    }
+
     // --- frames --------------------------------------------------------------------------------------------------
 
     /// Step the current world to `now` and draw it into the canvas, sized `width` x `height` device pixels. A lost

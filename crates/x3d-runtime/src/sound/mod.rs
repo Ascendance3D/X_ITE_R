@@ -186,6 +186,61 @@ pub struct AudioEngine {
     stream_destinations: std::collections::HashSet<usize>,
     /// The buffer sources and oscillators told that the graph pulls them.
     pulled: std::collections::HashSet<usize>,
+    /// `currentTime` from an outside audio context ([`AudioEngine::set_clock`]).
+    clock: Option<f64>,
+    /// The creation number of the node in each arena slot ([`AudioEngine::graph`] orders by it).
+    serials: Vec<u64>,
+    next_serial: u64,
+    /// What a page could read back from each AudioBufferSourceNode ([`AudioEngine::graph`]).
+    sources: std::collections::HashMap<usize, SourceInfo>,
+}
+
+/// The state of an AudioBufferSourceNode as a page reads it back: its buffer, its loop attributes and
+/// the calls of `start` and `stop` it got.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct SourceInfo {
+    /// `buffer`: (numberOfChannels, length, sampleRate), or none.
+    pub buffer: Option<(usize, usize, f32)>,
+    pub loop_: bool,
+    pub loop_start: f64,
+    pub loop_end: f64,
+    /// The arguments of `start (when, offset)`.
+    pub started: Option<(f64, f64)>,
+    /// `stop (when)`.
+    pub stopped: Option<f64>,
+}
+
+/// One node of [`AudioGraph`].
+#[derive(Clone, Debug, PartialEq)]
+pub struct GraphNode {
+    /// The arena slot ([`AId`]).
+    pub id: usize,
+    /// The creation number: the order in which the nodes were made.
+    pub serial: u64,
+    /// The Web Audio class name, for example `GainNode`.
+    pub kind: &'static str,
+    pub number_of_inputs: usize,
+    pub number_of_outputs: usize,
+    pub channel_count: usize,
+    pub channel_count_mode: &'static str,
+    pub channel_interpretation: &'static str,
+    /// `gain .value` of a GainNode.
+    pub gain: Option<f32>,
+    /// `playbackRate .value` and the [`SourceInfo`] of an AudioBufferSourceNode.
+    pub playback_rate: Option<f32>,
+    pub source: Option<SourceInfo>,
+}
+
+/// The audio graph of the engine as a page sees a Web Audio graph (a diagnostic snapshot): the live
+/// nodes, the connections made and not undone, and the context's clock.
+#[derive(Clone, Debug, PartialEq)]
+pub struct AudioGraph {
+    pub nodes: Vec<GraphNode>,
+    /// (from, output, to, input), arena slots.
+    pub connections: Vec<(usize, usize, usize, usize)>,
+    pub destination: usize,
+    pub current_time: f64,
+    pub sample_rate: f32,
 }
 
 /// The render quantum size of Web Audio.
@@ -259,6 +314,10 @@ impl AudioEngine {
             listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0],
             stream_destinations: Default::default(),
             pulled: Default::default(),
+            clock: None,
+            serials: vec![],
+            next_serial: 0,
+            sources: Default::default(),
         };
         let destination = engine.base().destination();
         engine.destination = engine.add(ANode::Destination(destination));
@@ -272,8 +331,17 @@ impl AudioEngine {
         }
     }
 
+    /// `audioContext .currentTime`: the context's own clock, or the clock [`AudioEngine::set_clock`] gives.
     pub fn current_time(&self) -> f64 {
-        self.base().current_time()
+        self.clock.unwrap_or_else(|| self.base().current_time())
+    }
+
+    /// Take `currentTime` from an outside audio context from now on. The browser build's engine is
+    /// `Silent` and never renders, so its own clock stays at 0; the page gives it the clock of its
+    /// AudioContext (X3DSoundContext.getAudioContext) before each frame, so the AudioElements and
+    /// the time-dependent Sound nodes see the time pass as in X_ITE.
+    pub fn set_clock(&mut self, time: f64) {
+        self.clock = Some(time);
     }
 
     pub fn sample_rate(&self) -> f32 {
@@ -285,15 +353,86 @@ impl AudioEngine {
     }
 
     pub fn add(&mut self, node: ANode) -> AId {
+        let serial = self.next_serial;
+
+        self.next_serial += 1;
+
         if let Some(i) = self.nodes.iter().position(Option::is_none) {
             self.stream_destinations.remove(&i);
             self.pulled.remove(&i);
+            self.sources.remove(&i);
             self.nodes[i] = Some(node);
+            self.serials[i] = serial;
             return AId(i);
         }
 
         self.nodes.push(Some(node));
+        self.serials.push(serial);
         AId(self.nodes.len() - 1)
+    }
+
+    /// A snapshot of the graph as a page would read it from Web Audio nodes (see [`AudioGraph`]).
+    pub fn graph(&self) -> AudioGraph {
+        let nodes = self
+            .nodes
+            .iter()
+            .enumerate()
+            .filter_map(|(i, n)| {
+                let n = n.as_ref()?;
+                let node = n.node();
+                let kind = match n {
+                    ANode::Gain(..) => "GainNode",
+                    ANode::Oscillator(_) => "OscillatorNode",
+                    ANode::BufferSource(_) => "AudioBufferSourceNode",
+                    ANode::Biquad(_) => "BiquadFilterNode",
+                    ANode::Delay(_) => "DelayNode",
+                    ANode::WaveShaper(_) => "WaveShaperNode",
+                    ANode::Convolver(..) => "ConvolverNode",
+                    ANode::Compressor(..) => "DynamicsCompressorNode",
+                    ANode::Analyser(..) => "AnalyserNode",
+                    ANode::Splitter(_) => "ChannelSplitterNode",
+                    ANode::Merger(_) => "ChannelMergerNode",
+                    ANode::Panner(_) => "PannerNode",
+                    ANode::StreamDestination(_) => "MediaStreamAudioDestinationNode",
+                    ANode::StreamSource(_) => "MediaStreamAudioSourceNode",
+                    ANode::Destination(_) => "AudioDestinationNode",
+                };
+                let source = matches!(n, ANode::BufferSource(_));
+
+                Some(GraphNode {
+                    id: i,
+                    serial: self.serials[i],
+                    kind,
+                    number_of_inputs: node.number_of_inputs(),
+                    number_of_outputs: node.number_of_outputs(),
+                    channel_count: node.channel_count(),
+                    channel_count_mode: match node.channel_count_mode() {
+                        ChannelCountMode::Max => "max",
+                        ChannelCountMode::ClampedMax => "clamped-max",
+                        ChannelCountMode::Explicit => "explicit",
+                    },
+                    channel_interpretation: match node.channel_interpretation() {
+                        ChannelInterpretation::Speakers => "speakers",
+                        ChannelInterpretation::Discrete => "discrete",
+                    },
+                    gain: matches!(n, ANode::Gain(..)).then(|| self.param_value(AId(i), "gain")),
+                    playback_rate: source.then(|| self.param_value(AId(i), "playbackRate")),
+                    source: source.then(|| self.sources.get(&i).cloned().unwrap_or_default()),
+                })
+            })
+            .collect();
+
+        AudioGraph {
+            nodes,
+            connections: self
+                .connections
+                .iter()
+                .map(|c| (c.0.0, c.1, c.2.0, c.3))
+                .collect(),
+            destination: self.destination.0,
+            current_time: self.current_time(),
+            sample_rate: self.sample_rate(),
+        }
     }
 
     pub fn get(&self, id: AId) -> &ANode {
@@ -772,7 +911,18 @@ impl AudioEngine {
             audio_node_options: Default::default(),
         };
         let node = AudioWorkletNode::new::<buffer_source::Processor>(self.base(), options);
-        self.add(ANode::BufferSource(node))
+        let info = SourceInfo {
+            buffer: buffer.map(|b| (b.number_of_channels(), b.length(), b.sample_rate())),
+            ..Default::default()
+        };
+        let id = self.add(ANode::BufferSource(node));
+
+        self.sources.insert(id.0, info);
+        id
+    }
+
+    fn source_info(&mut self, id: AId) -> Option<&mut SourceInfo> {
+        self.sources.get_mut(&id.0)
     }
 
     fn post_buffer_source(&self, id: AId, message: buffer_source::Message) {
@@ -786,6 +936,9 @@ impl AudioEngine {
     pub fn buffer_source_start(&mut self, id: AId, when: f64, offset: f64) {
         let value = |name| self.param(id, name).map_or(0.0, |p| p.value());
         let unit_rate = value("playbackRate") == 1.0 && value("detune") == 0.0;
+        if let Some(info) = self.source_info(id) {
+            info.started = Some((when, offset));
+        }
         let when = when.max(self.current_time());
         self.post_buffer_source(
             id,
@@ -799,18 +952,30 @@ impl AudioEngine {
 
     /// `audioBufferSource .stop (when)`.
     pub fn buffer_source_stop(&mut self, id: AId, when: f64) {
+        if let Some(info) = self.source_info(id) {
+            info.stopped = Some(when);
+        }
         self.post_buffer_source(id, buffer_source::Message::Stop(when));
     }
 
     pub fn buffer_source_set_loop(&mut self, id: AId, v: bool) {
+        if let Some(info) = self.source_info(id) {
+            info.loop_ = v;
+        }
         self.post_buffer_source(id, buffer_source::Message::Loop(v));
     }
 
     pub fn buffer_source_set_loop_start(&mut self, id: AId, v: f64) {
+        if let Some(info) = self.source_info(id) {
+            info.loop_start = v;
+        }
         self.post_buffer_source(id, buffer_source::Message::LoopStart(v));
     }
 
     pub fn buffer_source_set_loop_end(&mut self, id: AId, v: f64) {
+        if let Some(info) = self.source_info(id) {
+            info.loop_end = v;
+        }
         self.post_buffer_source(id, buffer_source::Message::LoopEnd(v));
     }
 
