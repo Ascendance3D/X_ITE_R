@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "oracle/standards/MANIFEST.schema.json",
+  "title": "Standards fixture manifest",
+  "description": "One manifest of oracle/standards/manifests/. oracle/tools/standards_manifest.py checks every rule of this schema in code (standard library only) and reads its required fields and enums from this file. README.md states the classes, the tags and the promotion rule.",
+  "type": "object",
+  "required": ["schema", "manifest", "description", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "oracle/standards/MANIFEST.schema.json" },
+    "manifest": { "enum": ["iso-vrml97", "regression"] },
+    "description": { "type": "string" },
+    "entries": { "type": "array", "items": { "$ref": "#/$defs/entry" } }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "id", "path", "sha256", "bytes", "standard", "encoding", "header", "class", "x_ite_parity", "origin",
+        "license", "provenance", "license_record", "dependencies", "expected", "reference", "spec_citations",
+        "negative_of", "private"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "pattern": "^oracle/" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "standard": { "enum": ["VRML97", "X3D-3.3", "X3D-4.0", "X3D-4.1-regression", "blaxxun-compat"] },
+        "encoding": { "enum": ["classic", "xml", "json"] },
+        "header": { "type": "string", "minLength": 1 },
+        "class": {
+          "enum": [
+            "ISO_VERIFIED", "ISO_REVIEW_NEEDED", "REGRESSION_ONLY", "BLAXXUN_COMPAT", "LICENSE_REVIEW", "REJECT",
+            "PRIVATE_KEEP_OUT"
+          ]
+        },
+        "x_ite_parity": { "enum": ["MATCH", "DIFFER", "NONE", "UNKNOWN"] },
+        "origin": { "enum": ["project-authored", "owner-created-pending", "third-party-permitted", "private", "unknown"] },
+        "license": { "type": "string", "minLength": 1 },
+        "provenance": {
+          "type": "object",
+          "required": ["author", "date", "method"],
+          "additionalProperties": false,
+          "properties": {
+            "author": { "type": "string", "minLength": 1 },
+            "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+            "method": { "type": "string", "minLength": 1 }
+          }
+        },
+        "license_record": { "type": "string", "minLength": 1 },
+        "dependencies": { "type": "array", "items": { "$ref": "#/$defs/dependency" } },
+        "expected": {
+          "type": "object",
+          "required": ["standard"],
+          "properties": {
+            "standard": { "enum": ["valid", "invalid", "unstated", "not-reviewed"] },
+            "parse": { "enum": ["ok", "error-reported"] },
+            "console": { "type": "array", "items": { "type": "string" } },
+            "notes": { "type": "string" }
+          }
+        },
+        "reference": { "type": "string", "minLength": 1 },
+        "spec_citations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "negative_of": { "type": ["string", "null"] },
+        "private": { "const": false },
+        "tags": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }, "uniqueItems": true }
+      }
+    },
+    "dependency": {
+      "description": "A file the entry loads, directly or through another dependency. A present local file has path, sha256 and bytes. A URL the entry names on purpose although nothing is there has absent: true, with path for a local file or url for a host in the reserved .invalid domain.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "pattern": "^oracle/" },
+        "url": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "absent": { "const": true }
+      }
+    }
+  }
+}

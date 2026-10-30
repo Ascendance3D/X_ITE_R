@@ -1,0 +1,17 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.5.3 Relative URLs.
+# Item 1: Local is defined and instantiated in this file. The Inline inside its definition
+# resolves against this file, the file in which the prototype is instantiated.
+# Item 3: Wrap comes from the existing project-authored library
+# oracle/synthetic-externproto/lib-nested.wrl. That file declares, at its top level,
+# EXTERNPROTO Widget "lib-widget.wrl#Widget". The URL resolves against lib-nested.wrl, the file from
+# which the statement is read, not against this file (this directory has no lib-widget.wrl).
+PROTO Local [ ]
+{
+  Inline { url "../../inline/positive/basic-child.wrl" }
+}
+DEF LocalInstance Local { }
+EXTERNPROTO Wrap [ field SFFloat size ] "../../../../../synthetic-externproto/lib-nested.wrl#Wrap"
+DEF WrapInstance Wrap { size 3 }

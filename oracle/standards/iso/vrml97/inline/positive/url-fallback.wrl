@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.5.2 URLs: the url strings are locations in decreasing order of preference. When the browser
+# cannot locate the data of one, it shall try the next. The first entry is a local file that does
+# not exist, the second a host in the reserved .invalid domain (RFC 2606), the third basic-child.wrl.
+DEF Fallback Inline {
+  url [ "absent-fallback-child.wrl"
+        "http://inline-url-fallback.invalid/child.wrl"
+        "basic-child.wrl" ]
+}
