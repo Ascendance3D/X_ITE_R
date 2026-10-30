@@ -10,6 +10,28 @@ Three workflows run on a pull request: `rust-tests.yml`, `web-tests.yml` and `co
 - A path that the script does not know runs both suites.
 - "Fast checks" (reference pins, answer-key tests, the candidate gate, rustfmt, actionlint) runs on every pull request.
 
+## How the Rust suite runs (issue #185)
+
+CI and the local strict suite run the tests with cargo-nextest (`.config/nextest.toml`), then the doctests with `cargo test --doc`. nextest does not run doctests, so a pass needs both steps.
+
+- **CI** (`rust-tests.yml`, profile `ci`): as many tests at once as the runner has CPUs. The "Runner resources" step prints the CPUs and the memory. The GPU tests are excluded by name (`GPU_TESTS`, the same 13 names as before), because the hosted runner has no GPU. CI does not claim GPU coverage.
+- **Local** (the RTX machine): `X3D_ORACLE_KEYS=<evidence store> tools/strict-suite.sh`. It runs 8 tests at once by default (`XITE_R_TEST_JOBS`, at least 6) and 12 compiler jobs (`XITE_R_BUILD_JOBS`). It runs strict and includes the GPU tests. It prints the wall-clock time, the CPU time and the counts of each step, and it exits non-zero when nextest or the doctests fail.
+- Tests that share a resource run in a nextest test group, not skipped. Today that is only `rea_batch08_net` (fixed UDP ports 41234–41236).
+
+### Build isolation
+
+`~/Projects/cybertown/.cargo/config.toml` sets `build.build-dir` to a cache that every worktree shares. **`CARGO_TARGET_DIR` does not move `build.build-dir`.** A second build in another worktree can therefore overwrite the files of a running suite: the file hashes do not depend on the worktree path. This caused false doctest and compile failures (issue #185).
+
+- To isolate a build, set both `CARGO_BUILD_BUILD_DIR` and `CARGO_TARGET_DIR`. `tools/strict-suite.sh` does this (`XITE_R_SUITE_DIR`, default `/tmp/xiter-suite-<worktree>`).
+- It holds a lock on that directory, so a second `strict-suite.sh` run cannot share it. A cargo command started by hand with the same `CARGO_BUILD_BUILD_DIR` is not locked out. The script stops when such a process is already running at the start, but this scan is advisory only.
+- It needs a systemd user session (`systemd-run --user`), `flock` and GNU time (`/usr/bin/time`), and it stops when one is missing. The memory peak comes from cgroup v2; when it is not available, the summary says "memory peak unavailable".
+- Check the effective build directory in the `Running … (path)` lines of the log, or in `/proc/<cargo pid>/environ`.
+- Do not start another cargo command in the same build directory while a suite runs.
+
+### NVIDIA shader cache
+
+When the NVIDIA shader disk cache is full, a changed shader is compiled again in every test process. `tools/strict-suite.sh` sets `__GL_SHADER_DISK_CACHE_SIZE` for its own run only, so it changes no file and no profile. Do not clear the cache without owner approval.
+
 ## Draft pull requests
 
 A draft PR runs "Fast checks" and the two result checks only. The result checks report "suite not needed".
