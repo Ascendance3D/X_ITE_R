@@ -4,15 +4,26 @@ version = "0.1.0"
 edition.workspace = true
 license.workspace = true
 publish.workspace = true
-description = "X3D Script node engine on QuickJS (rquickjs), ported from X_ITE's Scripting component (MIT)."
+description = "X3D Script node: the engine-independent Script implementation, and its QuickJS (rquickjs) engine, ported from X_ITE's Scripting component (MIT)."
+
+[features]
+default = ["quickjs"]
+# QuickJsHost, the native engine (and the oracle compare tools, which use it).
+quickjs = ["dep:rquickjs", "dep:serde_json"]
+
+[[bin]]
+name = "x3d-run"
+required-features = ["quickjs"]
 
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-runtime = { path = "../x3d-runtime" }
-rquickjs = { version = "0.11", features = [] }
-serde_json = "1"
+# The native engine (feature `quickjs`). It is C code that does not build for wasm32-unknown-unknown: the browser
+# build (x3d-web) uses the crate without it and runs the Scripts in the page's own engine.
+rquickjs = { version = "0.11", features = [], optional = true }
+serde_json = { version = "1", optional = true }
 
 [dev-dependencies]
 x3d-evidence = { path = "../x3d-evidence" }

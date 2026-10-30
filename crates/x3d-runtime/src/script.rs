@@ -1,6 +1,6 @@
 //! The Script node (Components/Scripting/Script.js, X3DScriptNode.js) without the engine:
 //! url loading, callback wiring (initialize__), set_field__, call__, setError. The ECMAScript
-//! engine is a [`ScriptHost`] (crate x3d-script implements it with QuickJS).
+//! engine is a [`ScriptHost`] (crate x3d-script: QuickJS natively, the page's own engine in the browser build).
 
 use crate::loader::{self, FileLoader};
 use crate::*;
@@ -71,6 +71,10 @@ pub trait ScriptHost {
 
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
+
+    /// The runtime that owns the host moved to `rt`. A host whose JavaScript can run between host calls (the page's
+    /// engine runs promise jobs after the call returns) reaches the runtime there from now on.
+    fn attach(&mut self, _rt: &mut Runtime) {}
 
     /// The nodes were released and their ids may be handed out again: a wrapper of one of them
     /// that a Script still holds points to `tombstone` from now on.
@@ -255,6 +259,25 @@ impl Runtime {
             self.fetches.push_back(Task::ScriptFetch(node, index));
             return;
         }
+    }
+
+    /// The response of Script candidate `index` is in, or there is nothing to wait for (an asynchronous [`crate::Fetcher`],
+    /// see [`Runtime::fetch_task_ready`]).
+    pub(crate) fn script_fetch_ready(&self, node: NodeId, index: usize) -> bool {
+        if node as usize >= self.scene.nodes.len() || self.scene.free_nodes.contains(&node) {
+            return true;
+        }
+
+        let loader = self.script_loader(node);
+        let Some(resolved) = self.url_strings(node).get(index).and_then(|candidate| {
+            url::Url::parse(&loader.base)
+                .ok()
+                .and_then(|b| crate::loader::join_url(&b, candidate).ok())
+        }) else {
+            return true;
+        };
+
+        !matches!(self.fetcher.poll(&resolved), crate::FetchPoll::Pending)
     }
 
     /// The fetch of Script candidate `index` completed (a macrotask): its source, or `checkResponse` threw (two ticks to the

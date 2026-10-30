@@ -779,6 +779,11 @@ impl Runtime {
     /// Is the fetch task ready to run with an asynchronous [`Fetcher`]? FileLoader tries the candidates in turn, so
     /// the responses up to the first that arrived must be there; the candidates after it are not requested.
     pub(crate) fn fetch_task_ready(&self, task: &Task) -> bool {
+        // A Script's fetch is of one candidate (Script.loadData's FileLoader): it runs when that response is in.
+        if let Task::ScriptFetch(node, index) = *task {
+            return self.script_fetch_ready(node, index);
+        }
+
         // `world`: the parameters of a loadURL or Anchor load, whose foreign targets are never fetched.
         let (base, mut urls, world) = match *task {
             Task::UrlLoad(node, _) => {
