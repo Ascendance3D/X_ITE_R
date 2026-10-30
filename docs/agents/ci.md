@@ -51,4 +51,6 @@ To start CodeRabbit by hand, for example after its limit resets, comment `@coder
 
 ## Browser shards
 
-The browser suite runs in 5 shards (`crates/x3d-web/tests/browser/shards.mjs`). Issue #180 measured this layout against one job. Six recent runs took 14–22 minutes of wall-clock time and 40–52 runner minutes. Each shard adds 34–54 seconds of setup to its test step. One job would take 33–44 minutes of wall-clock time (2.1 to 2.4 times as long) and would save 4–6 runner minutes per run (about 11%). The 5 shards stay.
+The browser suite runs in shards (`crates/x3d-web/tests/browser/shards.mjs`). Issue #180 measured this layout against one job. Six recent runs took 14–22 minutes of wall-clock time and 40–52 runner minutes. Each shard adds 34–54 seconds of setup to its test step. One job would take 33–44 minutes of wall-clock time (2.1 to 2.4 times as long) and would save 4–6 runner minutes per run (about 11%). The 5 shards stay.
+
+Issue #187 split the two longest shards by measured times: `cases` into `cases-1` and `cases-2` (whole files, about 439 s of tests each), and the 8 cases of `viewpoints01.test.mjs` into `viewpoints-1` to `viewpoints-3`. A shard with part of a file's cases sets `XR_CASES`, and the harness registers only those cases, so no case shows as skipped. `shards.mjs` refuses a case that is in no shard or in two.
