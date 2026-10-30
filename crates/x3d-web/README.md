@@ -1,7 +1,7 @@
 # x3d-web — X_ITE_R in a web page
 
 `x3d-web` puts the Rust engine of X_ITE_R behind an `<x3d-canvas>` element. The engine is built as WebAssembly and draws with WebGPU.
-No X_ITE JavaScript runs: `web/x_ite_r.mjs` is a thin adapter that defines the element and the X_ITE-named API.
+`web/x_ite_r.mjs` is a thin adapter that defines the element and the X_ITE-named API. The only X_ITE JavaScript in the page is the field classes and, when the page sets `scripts="true"`, the Script engine's prelude: Script nodes then run in the page's engine with the page's privileges (see [`web/API.md`](web/API.md), "Script nodes").
 
 The element loads and draws a world, forwards mouse, touch, wheel and keyboard input to the engine, and loads Inline, texture and EXTERNPROTO files without blocking the page.
 JavaScript reads and sets fields, creates scenes from strings, replaces the world and calls the viewpoint functions.
@@ -46,7 +46,7 @@ The page shows a blue Box, and the buttons set the Material's `diffuseColor` thr
 
 The engine crates needed four changes to build for `wasm32-unknown-unknown`:
 
-- `x3d-render` and `x3d-viewer` have a `script` feature (on by default). It brings in QuickJS (`x3d-script`) and the file loaders. QuickJS is C code that does not build for `wasm32-unknown-unknown` (`rquickjs-sys`: `stdlib.h` not found), so this crate turns the feature off.
+- `x3d-render` and `x3d-viewer` have a `script` feature (on by default). It brings in QuickJS (`x3d-script`) and the file loaders. QuickJS is C code that does not build for `wasm32-unknown-unknown` (`rquickjs-sys`: `stdlib.h` not found), so this crate turns the feature off. It uses `x3d-script` without its `quickjs` feature instead: the Script implementation runs in the page's engine (`src/script.rs`, issue #133).
 - `std::time::Instant` and `SystemTime` panic on `wasm32-unknown-unknown`. `x3d-render`, `x3d-runtime` and `x3d-viewer` use the `web-time` crate, which is std's own type on other targets.
 - `x3d-render` creates its first pipeline on a second thread. wasm32 has no threads and its wgpu objects are not `Send`, so the first frame creates the pipeline there.
 - `std::process::id` panics on wasm32. The particle random seed uses 0 for it there.

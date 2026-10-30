@@ -360,10 +360,12 @@ pub struct Runtime {
     pub field_observed: std::collections::HashSet<FKey>,
     /// Field callbacks due while the host was busy; they run when it is back.
     pub(crate) pending_field_events: Vec<FKey>,
-    /// Field callbacks of a page (the browser build, which has no Script host): when set, each event of a field in
-    /// [`Runtime::field_observed`] is recorded here with the value it delivered, in event order, for the page to call
-    /// its callbacks after the frame ([`Runtime::take_page_field_events`]).
+    /// Field callbacks of a page (the browser build): when set, each event of a field in [`Runtime::page_observed`] is
+    /// recorded here with the value it delivered, in event order, for the page to call its callbacks after the frame
+    /// ([`Runtime::take_page_field_events`]). The Scripts' own callbacks ([`Runtime::field_observed`]) run in the cascade.
     pub page_field_events: Option<Vec<(FKey, FieldValue)>>,
+    /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
+    pub page_observed: std::collections::HashSet<FKey>,
     /// The nodes released since the page last asked ([`Runtime::take_page_released`]), when set: the page drops its
     /// objects of them before a node that takes the id can meet them.
     pub page_released: Option<Vec<NodeId>>,
@@ -371,6 +373,10 @@ pub struct Runtime {
     /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
     pub js_mirror: HashMap<FKey, bool>,
     js_dirty: Vec<FKey>,
+    /// Node fields the page holds as objects (the browser build), kept apart from the Scripts' ([`Runtime::js_mirror`]):
+    /// each side refreshes its own objects ([`Runtime::take_page_dirty`]).
+    pub page_mirror: HashMap<FKey, bool>,
+    page_dirty: Vec<FKey>,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -519,6 +525,9 @@ pub struct Runtime {
     pub live_watchers: Vec<(NodeId, bool)>,
     /// Record every console message (log / warn / error) in order in [`Runtime::console`].
     pub record_console: bool,
+    /// Browser.print / Browser.println also go to [`Runtime::log`] as `log: …` lines, in order with its warnings and
+    /// errors (the browser build, whose page writes the log to its console as X_ITE does), not to [`Runtime::prints`].
+    pub log_prints: bool,
     /// All console output in the order it was logged: `log: text`, `warn: first line`, `error: first line`.
     pub console: Vec<String>,
     /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
@@ -667,9 +676,12 @@ impl Runtime {
             field_observed: Default::default(),
             pending_field_events: vec![],
             page_field_events: None,
+            page_observed: Default::default(),
             page_released: None,
             js_mirror: HashMap::new(),
             js_dirty: vec![],
+            page_mirror: HashMap::new(),
+            page_dirty: vec![],
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
@@ -737,6 +749,7 @@ impl Runtime {
             inline_live: HashMap::new(),
             live_watchers: vec![],
             record_console: false,
+            log_prints: false,
             console: vec![],
             live: false,
             timeouts: vec![],
@@ -860,7 +873,11 @@ impl Runtime {
             self.console.push(format!("log: {text}"));
         }
 
-        self.prints.push(text);
+        if self.log_prints {
+            self.log.push(format!("log: {text}"));
+        } else {
+            self.prints.push(text);
+        }
     }
 
     pub(crate) fn create_internal_node(&mut self, name: &'static str) -> NodeId {
@@ -1147,6 +1164,14 @@ impl Runtime {
             }
         }
 
+        // A field the page holds as an object: the page refreshes it after the frame.
+        if let Some(dirty) = self.page_mirror.get_mut(&k) {
+            if !*dirty {
+                *dirty = true;
+                self.page_dirty.push(k);
+            }
+        }
+
         if old.is_empty() && new.is_empty() {
             return;
         }
@@ -1228,6 +1253,25 @@ impl Runtime {
     /// The Script's object of `k` holds the field's current value (it wrote it): not stale.
     pub fn js_clean(&mut self, k: FKey) {
         if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            *dirty = false;
+        }
+    }
+
+    /// The fields the page mirrors ([`Runtime::page_mirror`]) whose value changed since the last call.
+    pub fn take_page_dirty(&mut self) -> Vec<FKey> {
+        let keys = std::mem::take(&mut self.page_dirty);
+
+        keys.into_iter()
+            .filter(|k| match self.page_mirror.get_mut(k) {
+                Some(dirty) => std::mem::replace(dirty, false),
+                None => false,
+            })
+            .collect()
+    }
+
+    /// The page's object of `k` holds the field's current value (the page wrote it): not stale.
+    pub fn page_clean(&mut self, k: FKey) {
+        if let Some(dirty) = self.page_mirror.get_mut(&k) {
             *dirty = false;
         }
     }

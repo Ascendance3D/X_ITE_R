@@ -1696,7 +1696,9 @@ const timerGlobals =
    clearInterval (id = undefined)     { timerList = timerList .filter (t => t .id !== id); },
 };
 
-Date .now = () => X ("datenow");
+// The page's Date.now is the page's: the browser time is Date.now () there already.
+if (!PAGE)
+   Date .now = () => X ("datenow");
 
 global .__nextTimer = function (untilMs)
 {

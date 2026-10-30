@@ -4,7 +4,7 @@
 use super::*;
 
 /// X3DCast (X3DConstants .X3DNode, value, false): a node, not null.
-fn node_arg(a: &[Value<'_>], i: usize) -> Option<NodeId> {
+fn node_arg<V: Val>(a: &[V], i: usize) -> Option<NodeId> {
     a.get(i).and_then(arg_node).flatten()
 }
 
@@ -81,8 +81,7 @@ fn proto_ids(c: CtxId, extern_: bool) -> Vec<usize> {
     }
 }
 
-pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Value<'js>> {
-    let undefined = Value::new_undefined(ctx.clone());
+pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
     let c = ctx_of_script(num_arg(ctx, a, 0));
     let what = str_arg(ctx, a, 1);
     let a = &a[2..];
@@ -90,7 +89,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
     macro_rules! string {
         ($v:expr) => {
-            Ok(rquickjs::String::from_str(ctx.clone(), &$v)?.into_value())
+            Ok(J::from(&$v))
         };
     }
 
@@ -104,21 +103,18 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 || r.first_world() == Some(c);
 
             match r.scene.contexts[c].parent.filter(|_| !own) {
-                Some(p) => Ok(Value::new_number(ctx.clone(), p as f64)),
-                None => Ok(Value::new_null(ctx.clone())),
+                Some(p) => Ok(J::Number(p as f64)),
+                None => Ok(J::Null),
             }
         }
         // X3DBaseNode.isLive of an execution context.
-        "live" => Ok(Value::new_bool(ctx.clone(), rt().ctx_live(c))),
+        "live" => Ok(J::Bool(rt().ctx_live(c))),
         // X3DExecutionContext.getLocalScene: the scene the context belongs to.
-        "sceneRoot" => Ok(Value::new_number(
-            ctx.clone(),
-            rt().scene.scene_root(c) as f64,
-        )),
+        "sceneRoot" => Ok(J::Number(rt().scene.scene_root(c) as f64)),
         // X3DExecutionContext.getOuterNode: the PROTO instance whose body the context is; null for a scene.
         "outerNode" => match rt().scene.contexts[c].outer {
-            x3d_scene::Outer::Instance(n) => Ok(node_js(ctx, Some(n))),
-            _ => Ok(Value::new_null(ctx.clone())),
+            x3d_scene::Outer::Instance(n) => Ok(node_js(Some(n))),
+            _ => Ok(J::Null),
         },
         "unique" => {
             let name = str_at(1);
@@ -142,7 +138,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             if mode == "remove" {
                 rt().scene.remove_named_node(c, &name);
                 dirty();
-                return Ok(undefined);
+                return Ok(J::Undefined);
             }
 
             let verb = if mode == "add" { "add" } else { "update" };
@@ -201,14 +197,14 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             }
 
             dirty();
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         // --- imported nodes
         "importedGet" => {
             let name = str_at(0);
 
             match rt().scene.ctx(c).imported.get(&name) {
-                Some(id) => Ok(node_js(ctx, Some(rt().scene.imported[id].instance))),
+                Some(id) => Ok(node_js(Some(rt().scene.imported[id].instance))),
                 None => throw(ctx, &format!("Imported node '{name}' not found.")),
             }
         }
@@ -216,12 +212,12 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             let name = str_at(0);
 
             match rt().scene.get_local_node(c, &name) {
-                Some(n) => Ok(node_js(ctx, Some(n))),
+                Some(n) => Ok(node_js(Some(n))),
                 None => throw(ctx, &format!("Unknown named or imported node '{name}'.")),
             }
         }
         "nodeOrImported" => match node_arg(a, 0) {
-            Some(n) => Ok(node_js(ctx, Some(node_or_imported(c, n)))),
+            Some(n) => Ok(node_js(Some(node_or_imported(c, n)))),
             None => throw(
                 ctx,
                 "Couldn't get localized node: node must be of type X3DNode.",
@@ -287,7 +283,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
                     rt().nrt_mut(instance);
                     sg(c);
-                    Ok(undefined)
+                    Ok(J::Undefined)
                 }
                 Err(e) => throw(ctx, &e),
             }
@@ -298,7 +294,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             match rt().scene.rename_imported_node(c, &old, &new) {
                 Ok(()) => {
                     sg(c);
-                    Ok(undefined)
+                    Ok(J::Undefined)
                 }
                 Err(e) => throw(ctx, &e),
             }
@@ -310,7 +306,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 sg(c);
             }
 
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         "rootSet" => {
             // X3DScene.setRootNodes (value): rootNodes .assign (value)
@@ -318,13 +314,13 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 rt().set_root_nodes(c, list);
             }
 
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         "importedExported" => {
             let id = num_arg(ctx, a, 0) as usize;
 
             match exported_of(id) {
-                Some(n) => Ok(node_js(ctx, Some(n))),
+                Some(n) => Ok(node_js(Some(n))),
                 None => throw(
                     ctx,
                     &format!(
@@ -337,11 +333,11 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
         // X3DExportedNode.setDescription.
         "exportedDescription" => {
             rt().scene.exported[num_arg(ctx, a, 0) as usize].description = str_at(1);
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         "importedDescription" => {
             rt().scene.imported[num_arg(ctx, a, 0) as usize].description = str_at(1);
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         // --- exported nodes
         "exportedUpdate" => {
@@ -371,7 +367,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             {
                 Ok(()) => {
                     sg(root);
-                    Ok(undefined)
+                    Ok(J::Undefined)
                 }
                 Err(e) => throw(ctx, &e),
             }
@@ -386,7 +382,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 sg(root);
             }
 
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         // --- routes (identified by their id)
         "routeAdd" | "routeGet" => {
@@ -421,16 +417,13 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             }
 
             match rt().scene.find_route_index(c, src, &sf, dst, &df) {
-                Some(i) => Ok(Value::new_number(
-                    ctx.clone(),
-                    rt().scene.ctx(c).routes[i].id as f64,
-                )),
-                None => Ok(Value::new_null(ctx.clone())),
+                Some(i) => Ok(J::Number(rt().scene.ctx(c).routes[i].id as f64)),
+                None => Ok(J::Null),
             }
         }
         "routeDelete" => {
             let id = num_arg(ctx, a, 0) as usize;
-            Ok(Value::new_bool(ctx.clone(), rt().delete_route_by_id(c, id)))
+            Ok(J::Bool(rt().delete_route_by_id(c, id)))
         }
         "routeList" => {
             let routes: Vec<_> = rt()
@@ -448,32 +441,32 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                     )
                 })
                 .collect();
-            let arr = Array::new(ctx.clone())?;
+            let arr = Arr::new();
 
             for (i, (id, sn, sf, dn, df)) in routes.into_iter().enumerate() {
-                let o = Object::new(ctx.clone())?;
-                o.set("id", id as f64)?;
-                o.set("sourceNode", node_js(ctx, Some(sn)))?;
-                o.set("sourceField", sf)?;
-                o.set("destinationNode", node_js(ctx, Some(dn)))?;
-                o.set("destinationField", df)?;
-                arr.set(i, o)?;
+                let o = Obj::new();
+                o.set("id", id as f64);
+                o.set("sourceNode", node_js(Some(sn)));
+                o.set("sourceField", sf);
+                o.set("destinationNode", node_js(Some(dn)));
+                o.set("destinationField", df);
+                arr.set(i, o);
             }
 
-            Ok(arr.into_value())
+            Ok(arr.into())
         }
         // --- proto and extern proto declarations
         "protoIds" => {
-            let arr = Array::new(ctx.clone())?;
+            let arr = Arr::new();
 
             for (i, id) in proto_ids(c, a.first().is_some_and(coerce_bool))
                 .into_iter()
                 .enumerate()
             {
-                arr.set(i, id as f64)?;
+                arr.set(i, id as f64);
             }
 
-            Ok(arr.into_value())
+            Ok(arr.into())
         }
         "protoGet" => {
             let (extern_, name) = (a.first().is_some_and(coerce_bool), str_at(1));
@@ -484,7 +477,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             };
 
             match found {
-                Some(id) => Ok(Value::new_number(ctx.clone(), id as f64)),
+                Some(id) => Ok(J::Number(id as f64)),
                 None if extern_ => throw(
                     ctx,
                     &format!("Extern proto declaration '{name}' not found."),
@@ -539,7 +532,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
                 rt().dynamic_dirty_mark();
                 sg(c);
-                return Ok(undefined);
+                return Ok(J::Undefined);
             }
 
             let verb = if mode == "add" { "add" } else { "update" };
@@ -629,7 +622,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             flush_warnings();
             sg(c);
-            Ok(undefined)
+            Ok(J::Undefined)
         }
         // `declaration .toVRMLString ()` … (Scene::proto_declaration_string).
         "protoString" => {
@@ -640,7 +633,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             let format = str_arg(ctx, a, 2);
             let text = rt().scene.proto_declaration_string(extern_, id, &format);
 
-            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+            Ok(J::from(&text))
         }
         "protoInfo" => {
             let (extern_, id) = (
@@ -660,10 +653,10 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 let d = &r.protos[id];
                 (d.name.clone(), d.fields.clone(), d.has_metadata, None)
             };
-            let o = Object::new(ctx.clone())?;
+            let o = Obj::new();
 
-            o.set("name", name.as_str())?;
-            o.set("isExternProto", urls.is_some())?;
+            o.set("name", name.as_str());
+            o.set("isExternProto", urls.is_some());
 
             // X3DExternProtoDeclaration.loadState (X3DUrlObject.checkLoadState).
             if extern_ {
@@ -678,10 +671,10 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                     x3d_runtime::nodes::LoadState::Complete => "COMPLETE_STATE",
                     x3d_runtime::nodes::LoadState::Failed => "FAILED_STATE",
                 };
-                o.set("loadState", name)?;
+                o.set("loadState", name);
             }
 
-            let fa = Array::new(ctx.clone())?;
+            let fa = Arr::new();
             let mut defs: Vec<(String, i32, &'static str, FieldValue)> = vec![];
 
             if has_metadata {
@@ -703,28 +696,28 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             }));
 
             for (j, (fname, access, ty, value)) in defs.into_iter().enumerate() {
-                let fo = Object::new(ctx.clone())?;
-                fo.set("name", fname.as_str())?;
-                fo.set("accessType", access)?;
-                fo.set("dataType", ty)?;
-                fo.set("value", new_value_js(ctx, value))?;
-                fa.set(j, fo)?;
+                let fo = Obj::new();
+                fo.set("name", fname.as_str());
+                fo.set("accessType", access);
+                fo.set("dataType", ty);
+                fo.set("value", new_value_js(value));
+                fa.set(j, fo);
             }
 
-            o.set("fields", fa)?;
+            o.set("fields", fa);
 
             if let Some(urls) = urls {
-                o.set("urls", new_value_js(ctx, FieldValue::MFString(urls)))?;
+                o.set("urls", new_value_js(FieldValue::MFString(urls)));
             }
 
             // X3DExternProtoDeclaration.getProtoDeclaration: the PROTO the load found.
             if extern_ {
                 if let Some(Some(p)) = rt().extern_loaded.get(&id) {
-                    o.set("loaded", *p as f64)?;
+                    o.set("loaded", *p as f64);
                 }
             }
 
-            Ok(o.into_value())
+            Ok(o.into())
         }
         other => throw(ctx, &format!("x3d-script: unknown context op '{other}'")),
     }

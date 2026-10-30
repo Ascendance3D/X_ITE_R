@@ -21,8 +21,9 @@ that is not a merge commit, or a git failure runs both suites.
   `oracle/web-browser-*` and their X_ITE recorders `oracle/x_ite-web-*`, web-tests.yml and its browser-deps action.
 - Native only (the browser suite is left out): a workspace crate that crates/x3d-web does not build with (its
   normal, build and target dependencies, followed through path dependencies), the other `oracle/` and `tools/`
-  files except tools/build-web.sh, the REA ledger trees `_batch*_context/`, and the other workflows. The browser
-  tests read only crates/x3d-web and `oracle/web-browser-*`.
+  files except tools/build-web.sh and the synthetic Script worlds `oracle/synthetic-x6*` (both suites read them), the
+  REA ledger trees `_batch*_context/`, and the other workflows. The browser tests read crates/x3d-web,
+  `oracle/web-browser-*` and `oracle/synthetic-x6*`.
 
 This script and its workflows are not in either list, so a change to them runs both suites.
 
@@ -54,6 +55,9 @@ NATIVE_ONLY_FILES = {
     ".github/workflows/code-review.yml",
 }
 BOTH_FILES = {"tools/build-web.sh", "tools/ci_changes.py"}
+# Oracle files that a native test and a browser test both read: the synthetic Script worlds and their X_ITE recording
+# (crates/x3d-script's tests and crates/x3d-web/tests/browser/script01.test.mjs).
+BOTH_PREFIXES = ("oracle/synthetic-x6/", "oracle/synthetic-x6-baseline.json")
 # Read by no Rust or browser test. "Fast checks" runs the checks that read the tools (tools/test_answer_keys.py,
 # tools/verify-reference-pin.py, tools/verify-candidate.sh, tools/selftest-identity.sh). Exact names only.
 FAST_ONLY_FILES = {
@@ -135,7 +139,7 @@ def is_web_only(p):
 
 
 def is_native_only(p, crates, closure):
-    if p in BOTH_FILES:
+    if p in BOTH_FILES or p.startswith(BOTH_PREFIXES):
         return False
     parts = p.split("/")
     if p in NATIVE_ONLY_FILES or p.startswith(("oracle/", "tools/")) or (
@@ -232,6 +236,8 @@ def self_test():
         (["crates/x3d-render/src/lib.rs"], True, True),
         (["crates/x3d-fields/src/lib.rs"], True, True),
         (["crates/x3d-web/src/wasm.rs"], True, True),
+        (["oracle/synthetic-x6/s01-router.wrl"], True, True),
+        (["oracle/synthetic-x6-baseline.json"], True, True),
         (["crates/x3d-web/web/example/box.wrl"], True, True),
         (["crates/x3d-web/tests/session.rs"], True, True),
         (["crates/x3d-web/tests/browser/runtime02_phone.test.mjs"], False, True),
