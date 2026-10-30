@@ -321,6 +321,26 @@ pub fn load_image_texture(
     None
 }
 
+/// MovieTexture: the GIF frame or APNG picture its texture holds (setTextureData, updateTextureData). Texture
+/// type 1 (flipY) like ImageTexture, X3DTexture2DNode parameters without mipmaps (only an ImageTexture can
+/// mipmap), and setTransparent (false) whatever the alpha.
+pub fn movie_texture(sg: &Sg, n: NodeId) -> Option<TextureImage> {
+    let (width, height, rgba, _) = sg.rt.movie_texture_frame(n)?;
+    let mut t = finish(
+        width,
+        height,
+        rgba.to_vec(),
+        true,
+        sg.bool(n, "repeatS", true),
+        sg.bool(n, "repeatT", true),
+        String::new(),
+        false,
+    );
+    t.transparent = false;
+    apply_texture_properties(&mut t, sg, n, false);
+    Some(t)
+}
+
 /// The six private ImageTextures of Background (Background.initialize): the `xxxUrl` list is the
 /// texture's `url`, the browser's backgroundTextureProperties (X3DEnvironmentalEffectsContext.js:
 /// CLAMP_TO_EDGE, NICEST filters, generateMipMaps FALSE) replace the default TextureProperties,

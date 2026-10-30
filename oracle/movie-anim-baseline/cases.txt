@@ -1,0 +1,2 @@
+movie-anim oracle/synthetic-movie-anim/movie-anim.wrl oracle/synthetic-movie-anim/movie-anim.json 0
+movie-anim oracle/synthetic-movie-anim/movie-anim.wrl oracle/synthetic-movie-anim/movie-anim.json 4

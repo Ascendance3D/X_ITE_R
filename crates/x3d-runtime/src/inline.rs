@@ -416,6 +416,7 @@ impl Runtime {
             Some("Script") => self.script_unload_data(node),
             Some("BufferAudioSource") => self.buffer_unload_data(node),
             Some("AudioClip") => self.audio_clip_unload_data(node),
+            Some("MovieTexture") => self.movie_clear(node),
             // ImageTexture.unloadData: clearTexture (an image still decoding is dropped).
             Some("ImageTexture") => {
                 self.decoded_images.retain(|(n, ..)| *n != node);
