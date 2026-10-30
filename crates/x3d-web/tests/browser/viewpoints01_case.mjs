@@ -347,6 +347,6 @@ for (const [ name, run ] of Object .entries (cases))
 
 export const CASE_GROUPS = {
    // The four layers of the world take 100 s to 180 s for one case on CI's SwiftShader (1 s to 3 s on a GPU): the cap is
-   // 600 s, and the file has a CI shard of its own (shards.mjs).
+   // 600 s, and the cases run in 3 CI shards of their own (shards.mjs).
    viewpointsApi: { context: DESKTOP, cases, timeout: 600_000 },
 };

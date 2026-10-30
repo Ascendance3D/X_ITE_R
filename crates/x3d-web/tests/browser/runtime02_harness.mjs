@@ -5,7 +5,9 @@
 //
 //   tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test)
 //
-// XR_CASE=<group.case> runs one reference case. XR_WEB_EVIDENCE=<dir> writes this run's values and pictures there.
+// XR_CASE=<group.case> runs one reference case. XR_CASES=<group.case>,... registers only these reference cases of the
+// file: a CI shard that has part of the cases of a file (shards.mjs). XR_WEB_EVIDENCE=<dir> writes this run's values
+// and pictures there.
 
 import { after, before, describe, test } from "node:test";
 import assert from "node:assert/strict";
@@ -42,6 +44,7 @@ const REPO     = join (CRATE, "../..");
 const BASELINE = process .env .XR_BASELINE ?? join (REPO, "oracle/web-browser-02-baseline");
 const EVIDENCE = process .env .XR_WEB_EVIDENCE;
 export const ONLY     = process .env .XR_CASE;
+const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES .split (",")) : null;
 
 // The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
@@ -591,13 +594,26 @@ export function referenceCases (file)
 
    assert .ok (groups .length, `GROUP_FILES gives no case group to ${file}`);
 
+   // A selected key that is not a case of this file fails the file: a shard never runs fewer cases in silence.
+   if (SELECTED)
+   {
+      const keys = groups .flatMap (([ groupName, group ]) => Object .keys (group .cases) .map (name => `${groupName}.${name}`));
+
+      for (const key of SELECTED)
+         assert .ok (keys .includes (key), `XR_CASES: ${key} is not a reference case of ${file}`);
+   }
+
    for (const [ groupName, group ] of groups)
    {
       const { dir, reference } = SUITES [group .suite];
+      const cases              = Object .entries (group .cases) .filter (([ name ]) => !SELECTED || SELECTED .has (`${groupName}.${name}`));
+
+      if (!cases .length)
+         continue;
 
       describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, () =>
       {
-         for (const [ name, run ] of Object .entries (group .cases))
+         for (const [ name, run ] of cases)
          {
             const key = `${groupName}.${name}`;
 

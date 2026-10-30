@@ -8,10 +8,11 @@
 # Locally: tools/build-web.sh && (cd crates/x3d-web && npm ci && npm test); see crates/x3d-web/README.md.
 #
 # One job builds the module; the test files then run in parallel shards, one runner each, as
-# crates/x3d-web/tests/browser/shards.mjs lists them. That list must name every test file once, or the "Changed
-# paths" job fails. tools/ci_changes.py leaves the build and the shards out when no changed path reaches the browser
-# module or its tests, and for a draft PR (docs/agents/ci.md). Five shards, not one job: issue #180 measured a
-# single job at 2.1 to 2.4 times the wall-clock time for a saving of about 11% in runner minutes. The "Web tests result" job always reports: it fails when a needed job did not pass.
+# crates/x3d-web/tests/browser/shards.mjs lists them. That list must name every test file once, or split a file's
+# reference cases over shards with each case named once (XR_CASES), or the "Changed paths" job fails. tools/ci_changes.py leaves the build and the shards out when no changed path reaches the browser
+# module or its tests, and for a draft PR (docs/agents/ci.md). Shards, not one job: issue #180 measured a
+# single job at 2.1 to 2.4 times the wall-clock time for a saving of about 11% in runner minutes. Issue #187 split the
+# two longest shards (cases, viewpoints) into 2 and 3 by measured times. The "Web tests result" job always reports: it fails when a needed job did not pass.
 #
 # A push to master runs "Browser module" and "Warm browser dependencies" only, to fill master's caches (the module's
 # Rust build once for each new Cargo.lock, and apt's .deb files): a PR can read its own caches and master's, not
@@ -68,9 +69,12 @@ jobs:
             python3 -I -B tools/ci_changes.py --all
           fi
 
+      # The shard check's own tests (no browser, no build), then the matrix after the check.
       - name: Test shards
         id: shards
-        run: echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
+        run: |
+          node --test crates/x3d-web/tests/browser/shards_check.mjs
+          echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
 
   build:
     name: Browser module
@@ -145,6 +149,9 @@ jobs:
           XR_WEB_EVIDENCE: ${{ github.workspace }}/web-evidence
         run: |
           mapfile -t files < <(node tests/browser/shards.mjs files "$SHARD")
+          # The case keys of a shard that has part of a file's cases; empty for a shard of whole files.
+          XR_CASES="$(node tests/browser/shards.mjs cases "$SHARD")"
+          export XR_CASES
           node --test --test-concurrency=1 "${files[@]}" 2>&1 | tee ../../web-tests.log
           test "${PIPESTATUS[0]}" -eq 0
 
