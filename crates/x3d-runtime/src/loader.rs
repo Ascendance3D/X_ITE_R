@@ -1232,7 +1232,7 @@ impl Runtime {
             let gif = path.ends_with(".gif") || href.starts_with("data:image/gif");
             let png = path.ends_with(".png") || href.starts_with("data:image/png");
 
-            let error = if gif || png {
+            let (name, error) = if gif || png {
                 let loader = FileLoader {
                     type_name: "MovieTexture".into(),
                     base: href.to_string(),
@@ -1246,20 +1246,26 @@ impl Runtime {
                     Ok(())
                 });
 
-                match data {
-                    Some(data) if ok && gif => {
-                        match nodes::movie_texture::MovieMedia::decode_gif(&data) {
-                            Some(media) => return self.movie_set_frames(node, media),
-                            None => nodes::movie_texture::GIF_PARSE_ERROR.to_string(),
-                        }
-                    }
-                    Some(data) if ok => {
-                        if let Some(media) = nodes::movie_texture::MovieMedia::decode_apng(&data) {
-                            self.movie_set_frames(node, media);
-                        }
+                use nodes::movie_texture::{DecodeError, MovieMedia};
+
+                let media = match data.filter(|_| ok) {
+                    Some(data) if gif => MovieMedia::decode_gif(&data),
+                    Some(data) => MovieMedia::decode_apng(&data),
+                    None => Err(DecodeError::Fail(
+                        "Error",
+                        "MovieTexture: No suitable file handler found.".into(),
+                    )),
+                };
+
+                match media {
+                    Ok(media) => return self.movie_set_frames(node, media),
+                    Err(DecodeError::Fail(name, error)) => (name, error),
+                    // setAPNG's unhandled rejection, or the browser's out-of-memory error: IN_PROGRESS.
+                    Err(DecodeError::NotAnimated) => return,
+                    Err(DecodeError::TooLarge(error)) => {
+                        self.log_error(format!("RangeError: {error}"));
                         return;
                     }
-                    _ => "MovieTexture: No suitable file handler found.".to_string(),
                 }
             } else {
                 let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
@@ -1270,11 +1276,11 @@ impl Runtime {
                     return;
                 }
 
-                format!("Couldn't load video '{href}': error.")
+                ("Error", format!("Couldn't load video '{href}': error."))
             };
 
             self.log_warn(format!("Error loading movie '{decoded}': {error}"));
-            self.log_error(format!("Error: {error}"));
+            self.log_error(format!("{name}: {error}"));
         }
 
         self.movie_clear(node);

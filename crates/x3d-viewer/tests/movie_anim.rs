@@ -1,14 +1,20 @@
-//! MovieTexture GIF / APNG playback (issue #90) against pinned X_ITE 16.5.0 (oracle/movie-anim-baseline, recorded
-//! five times with identical results by `oracle/tools/movie_anim.py record`): GIF frames chosen from elapsedTime in
-//! equal steps (loop, no loop, speed 2, 0.5 and -1, stopTime, enabled FALSE), GIF disposal and transparency, and the
-//! APNG states that do not depend on the wall clock (frame 0 before the start, a 60 s first frame, speed 0). The world
-//! and its event script are oracle/synthetic-movie-anim (oracle/tools/gen_movie_anim.py): a key press starts every
-//! MovieTexture through a Script.
+//! MovieTexture GIF / APNG (issue #90) against pinned X_ITE 16.5.0. Each baseline was recorded five times with
+//! identical results by `oracle/tools/movie_anim.py record`:
 //!
-//! Each case of oracle/movie-anim-baseline/cases.txt (`name world script msaa [text_tol]`) runs `x3d-drive` on the
+//! - oracle/movie-anim-baseline: GIF frames chosen from elapsedTime in equal steps (loop, no loop, speed 2, 0.5 and
+//!   -1, stopTime, enabled FALSE), GIF disposal and transparency, and the APNG states that do not depend on the wall
+//!   clock (frame 0 before the start, a 60 s first frame, speed 0). The world and its event script are
+//!   oracle/synthetic-movie-anim (oracle/tools/gen_movie_anim.py): a key press starts every MovieTexture through a
+//!   Script.
+//! - oracle/movie-load-errors-baseline: the load states of PNG data that apng-js does not take as an animated PNG
+//!   (IN_PROGRESS), of a PNG cut in its header (warning, next URL, FAILED) and of APNGs with cut or invalid frame
+//!   data (COMPLETE), from oracle/synthetic-movie-load-errors (oracle/tools/gen_movie_load_errors.py).
+//!
+//! Each case of a baseline's cases.txt (`name world script msaa [text_tol]`) runs `x3d-drive` on the
 //! world and its event script and compares the result with the oracle's `js.json` like
 //! crates/x3d-viewer/tests/rea_batch09_inputs.rs: scene text exact (or within `text_tol`), poses within 1e-4, the
-//! sorted log exact, captured frames with at most 0.5% of the pixels more than 8 off. Without a GPU adapter the
+//! sorted log exact, the `log:` lines of the console in order (the X_ITE page keeps warnings and errors only in
+//! the log), captured frames with at most 0.5% of the pixels more than 8 off. Without a GPU adapter the
 //! image part is skipped and reported (x3d_evidence::no_gpu).
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
@@ -97,6 +103,7 @@ fn nums(v: &Value) -> Vec<f64> {
 #[allow(clippy::too_many_arguments)]
 fn compare_case(
     root: &Path,
+    baseline: &str,
     name: &str,
     world: &str,
     script: &str,
@@ -105,11 +112,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/movie-anim-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/{baseline}/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
-        "movie-anim-{}-{name}-msaa{msaa}",
+        "{baseline}-{}-{name}-msaa{msaa}",
         std::process::id()
     ));
     std::fs::create_dir_all(&out).unwrap();
@@ -167,6 +174,23 @@ fn compare_case(
 
     if js.get("log") != rs.get("log") {
         fail(format!("log differs: {} / {}", js["log"], rs["log"]));
+    }
+
+    let prints = |r: &Value| -> Vec<Value> {
+        r["console"].as_array().map_or(vec![], |c| {
+            c.iter()
+                .filter(|l| l.as_str().is_some_and(|l| l.starts_with("log: ")))
+                .cloned()
+                .collect()
+        })
+    };
+
+    if prints(&js) != prints(&rs) {
+        fail(format!(
+            "console differs: {:?} / {:?}",
+            prints(&js),
+            prints(&rs)
+        ));
     }
 
     for (k, a) in js["poses"].as_object().unwrap() {
@@ -235,13 +259,12 @@ fn compare_case(
     let _ = std::fs::remove_dir_all(&out);
 }
 
-#[test]
-fn movie_anim_cases_match_x_ite() {
+fn compare_baseline(baseline: &str) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/movie-anim-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join(format!("oracle/{baseline}/cases.txt"))).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
@@ -262,6 +285,7 @@ fn movie_anim_cases_match_x_ite() {
 
         compare_case(
             &root,
+            baseline,
             name,
             world,
             script,
@@ -280,4 +304,14 @@ fn movie_anim_cases_match_x_ite() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+#[test]
+fn movie_anim_cases_match_x_ite() {
+    compare_baseline("movie-anim-baseline");
+}
+
+#[test]
+fn movie_load_errors_match_x_ite() {
+    compare_baseline("movie-load-errors-baseline");
 }

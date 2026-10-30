@@ -326,6 +326,12 @@ pub fn load_image_texture(
 /// mipmap), and setTransparent (false) whatever the alpha.
 pub fn movie_texture(sg: &Sg, n: NodeId) -> Option<TextureImage> {
     let (width, height, rgba, _) = sg.rt.movie_texture_frame(n)?;
+
+    // An APNG whose IHDR is 0 pixels wide or high has empty frames.
+    if width == 0 || height == 0 {
+        return None;
+    }
+
     let mut t = finish(
         width,
         height,
