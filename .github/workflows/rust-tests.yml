@@ -9,14 +9,15 @@
 # would otherwise return early without an adapter and report a pass, and rea_b21_wide_lines_match_x_ite (wide LINE
 # particles in the pointing, collision and shadow passes; its CPU collision half runs here), and
 # rea_b22_two_layer_shadows_match_x_ite (wide LINE particle shadows in two layers, a GPU shadow pass). The thirteen
-# skipped tests all stay in the local process, run on the RTX machine:
+# skipped tests all stay in the local process, run on the RTX machine (issue #185):
 #
-#   __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json \
-#   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
-#     cargo test --workspace --release -j 16 --no-fail-fast
+#   X3D_ORACLE_KEYS=<evidence store> tools/strict-suite.sh
 #
-# It runs strict (X3D_EVIDENCE unset), so a missing key or adapter fails. The Mesa EGL vendor lets
-# gl_backend_cannot_run_the_renderer_and_says_so start a GL device; the NVIDIA one does not (backend-absent).
+# It runs every test with cargo-nextest (8 tests at once by default, at least 6; .config/nextest.toml), then the
+# doctests with `cargo test --doc`, in its own build directory (CARGO_BUILD_BUILD_DIR and CARGO_TARGET_DIR) under a
+# lock, and prints the wall-clock time, CPU time and counts of each step. It runs strict (X3D_EVIDENCE unset), so a
+# missing key or adapter fails. It sets the Mesa EGL vendor, which lets gl_backend_cannot_run_the_renderer_and_says_so
+# start a GL device; the NVIDIA one does not (backend-absent).
 #
 # The "Fast checks" job runs first, on every PR: the reference pins, the answer-key guard, rustfmt, actionlint and
 # tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only, metadata-only,
@@ -69,20 +70,21 @@ env:
   # x3d-drive and x3d-particles-drive print a "no pointing GPU" notice per run; the GPU-less runner runs them
   # hundreds of times.
   X3D_QUIET_NO_GPU: "1"
+  # The GPU tests, by name: `test(name)` matches a test whose name contains `name`, as libtest's --skip did.
   GPU_TESTS: >-
-    --skip x1_runtime_matches_x_ite
-    --skip items_runtime_matches_x_ite
-    --skip rea_batch09_nav_shard0_match_x_ite
-    --skip rea_batch09_nav_shard1_match_x_ite
-    --skip rea_batch09_nav_shard2_match_x_ite
-    --skip rea_batch09_nav_shard3_match_x_ite
-    --skip rea_batch09_inputs_cases_match_x_ite
-    --skip rea_batch08_net_cases_match_x_ite
-    --skip rea_batch12_pick_cases_match_x_ite
-    --skip rea_b14_particle_pick_matches_x_ite
-    --skip rea_b15_particle_collision_matches_x_ite
-    --skip rea_b21_wide_lines_match_x_ite
-    --skip rea_b22_two_layer_shadows_match_x_ite
+    test(x1_runtime_matches_x_ite)
+    | test(items_runtime_matches_x_ite)
+    | test(rea_batch09_nav_shard0_match_x_ite)
+    | test(rea_batch09_nav_shard1_match_x_ite)
+    | test(rea_batch09_nav_shard2_match_x_ite)
+    | test(rea_batch09_nav_shard3_match_x_ite)
+    | test(rea_batch09_inputs_cases_match_x_ite)
+    | test(rea_batch08_net_cases_match_x_ite)
+    | test(rea_batch12_pick_cases_match_x_ite)
+    | test(rea_b14_particle_pick_matches_x_ite)
+    | test(rea_b15_particle_collision_matches_x_ite)
+    | test(rea_b21_wide_lines_match_x_ite)
+    | test(rea_b22_two_layer_shadows_match_x_ite)
 
 jobs:
   checks:
@@ -174,25 +176,49 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang lld
 
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest@0.9.150
+
+      # The runner's CPUs and memory: nextest runs as many tests at once as there are CPUs (profile ci).
+      - name: Runner resources
+        run: |
+          { echo "CPUs: $(nproc)"; free -m | awk '/^Mem:/ {print "Memory: " $2 " MiB"}'; } | tee -a "$GITHUB_STEP_SUMMARY"
+
       # The shared key gives "Warm cache" the same cache; it is also the name the job-based key had.
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: test
           cache-on-failure: true
 
+      # Every test except the GPU tests, with cargo-nextest (issue #185): the test binaries run at the same time,
+      # as many tests at once as the runner has CPUs. nextest does not run doctests; the next step does.
       - name: Rust suite (GPU tests skipped)
         run: |
           rm -f "$X3D_EVIDENCE_LOG"
-          # GPU_TESTS is a list of arguments: it is split on purpose.
-          # shellcheck disable=SC2086
-          cargo test --workspace --release --no-fail-fast -- $GPU_TESTS 2>&1 | tee suite.log
+          cargo nextest run --workspace --release --profile ci --no-fail-fast -E "not ($GPU_TESTS)" 2>&1 | tee suite.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Doctests
+        if: success() || failure()
+        run: |
+          cargo test --workspace --release --doc --no-fail-fast 2>&1 | tee doctests.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Test counts
         if: always()
         run: |
-          grep '^test result' suite.log | awk '{p+=$4; f+=$6; i+=$8; s+=$12} END {printf "passed %d, failed %d, ignored %d, filtered out %d\n", p, f, i, s}' | tee -a "$GITHUB_STEP_SUMMARY"
-          grep -E '^test .* FAILED$' suite.log | tee -a "$GITHUB_STEP_SUMMARY" || true
+          # Information only: the suite and doctest steps above give the pass or fail result.
+          summary=$(grep -E '^ *Summary \[' suite.log 2>/dev/null | tail -1 | sed 's/^ *//') || true
+          if [ -n "$summary" ]; then
+            echo "nextest: $summary" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::no nextest Summary line in suite.log; see the Rust suite step for the result"
+            echo "nextest: no Summary line (see the Rust suite step)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          { grep '^test result' doctests.log 2>/dev/null || true; } | awk '{n++; p+=$4; f+=$6; i+=$8} END {if (n) printf "doctests: passed %d, failed %d, ignored %d\n", p, f, i; else print "doctests: no test result line (see the Doctests step)"}' | tee -a "$GITHUB_STEP_SUMMARY"
+          grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' suite.log 2>/dev/null | sort -u | tee -a "$GITHUB_STEP_SUMMARY" || true
+          grep -E '^test .* FAILED$' doctests.log 2>/dev/null | tee -a "$GITHUB_STEP_SUMMARY" || true
 
       - name: Evidence skips
         if: success() || failure()
@@ -232,6 +258,8 @@ jobs:
           name: test-logs
           path: |
             suite.log
+            doctests.log
+            target/nextest/ci/junit.xml
             rea_b05.log
             evidence-skips.tsv
           if-no-files-found: ignore

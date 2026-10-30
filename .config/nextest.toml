@@ -1,0 +1,44 @@
+# cargo-nextest configuration (issue #185). nextest runs each test in its own process and runs many test binaries at
+# once; plain `cargo test` runs its test binaries one after another. Doctests are not run by nextest: the local entry
+# point (tools/strict-suite.sh) and rust-tests.yml run `cargo test --doc` as a separate, required step.
+#
+# Tests that share a resource run in a test group instead of being skipped. The shared resources found:
+#   - fixed UDP ports 41234, 41235 and 41236: x3d-viewer tests/rea_batch08_net.rs (SENDER_PORTS, LISTEN_PORT).
+# Not shared: every other test output is a temp path with the process id; X3D_EVIDENCE_LOG gets one append-mode
+# write_all per skip; the nested cargo calls of r0-2-c-tests wait on Cargo's own build-directory lock.
+
+[test-groups]
+# One test at a time may hold the fixed UDP ports.
+udp-fixed-ports = { max-threads = 1 }
+
+[profile.default]
+# The owner's minimum is 6 concurrent tests; the default is 8. tools/strict-suite.sh passes -j explicitly.
+test-threads = 8
+# Run every test and report every failure, as `cargo test --no-fail-fast` did.
+fail-fast = false
+# Report, never kill: a test over 60 s is printed as SLOW and runs on (no timeout is added).
+slow-timeout = { period = "60s" }
+# Print the output of a failed test when it fails, and the list of failed tests again at the end.
+failure-output = "immediate-final"
+status-level = "pass"
+final-status-level = "slow"
+
+[[profile.default.overrides]]
+filter = 'binary_id(x3d-viewer::rea_batch08_net)'
+test-group = 'udp-fixed-ports'
+
+# The GitHub-hosted runner: as many tests at once as the runner has CPUs, and a JUnit file for the job summary.
+[profile.ci]
+test-threads = "num-cpus"
+fail-fast = false
+slow-timeout = { period = "60s" }
+failure-output = "immediate-final"
+status-level = "pass"
+final-status-level = "slow"
+
+[[profile.ci.overrides]]
+filter = 'binary_id(x3d-viewer::rea_batch08_net)'
+test-group = 'udp-fixed-ports'
+
+[profile.ci.junit]
+path = "junit.xml"
