@@ -1,0 +1,7 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.5.3 item 3: a relative URL resolves against the VRML file from which the statement is read.
+# This Inline names nested/inner.wrl. The Inline in inner.wrl names ../basic-child.wrl, which
+# resolves against nested/inner.wrl, not against this file.
+DEF Outer Inline { url "nested/inner.wrl" }

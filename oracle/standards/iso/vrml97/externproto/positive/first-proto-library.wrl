@@ -1,0 +1,15 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.9.3: a URL without "#name" uses the first PROTO statement of the file, excluding EXTERNPROTOs.
+# The EXTERNPROTO below comes first and must be skipped. Leading is the first PROTO; Trailing
+# is the second.
+EXTERNPROTO Skipped [ field SFVec3f size ] "fragment-library.wrl#First"
+PROTO Leading [ field SFFloat height 3 ]
+{
+  Shape { geometry Cylinder { height IS height radius 0.5 } }
+}
+PROTO Trailing [ field SFFloat height 4 ]
+{
+  Shape { geometry Cone { height IS height } }
+}

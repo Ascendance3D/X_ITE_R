@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# Project-authored behavior fixture (oracle/standards/README.md). REGRESSION_ONLY, tag behavior.
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.9.2: events sent to an instance of an externally prototyped node may be ignored until the
+# implementation of the node is found. No clause found states the result when no URL gives an
+# implementation. This file records what an implementation does. It asserts no ISO result.
+EXTERNPROTO Gone [ field SFFloat size ] [ "absent-missing-library.wrl#Gone"
+                                          "http://externproto-missing-library.invalid/lib.wrl#Gone" ]
+DEF GoneInstance Gone { size 2 }
+DEF Present Shape { geometry Box { size 0.5 0.5 0.5 } }

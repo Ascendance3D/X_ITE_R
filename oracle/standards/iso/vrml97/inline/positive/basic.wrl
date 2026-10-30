@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 6.25 Inline: the url field names a VRML file of children nodes, which become the Inline's children.
+# 4.5.3 item 3: the relative URL resolves against this file.
+DEF Basic Inline {
+  url "basic-child.wrl"
+  bboxCenter 0 0 0
+  bboxSize 2 2 2
+}
