@@ -929,6 +929,25 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --run
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-scene-create-01-baseline --runs 5 --suite scenecreate01
 ```
 
+### Web browser root nodes 01 (`web-browser-rootnodes-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite rootnodes01` runs the 9 cases of `crates/x3d-web/tests/browser/rootnodes01_case.mjs`
+  (issue #137) and records `web-browser-rootnodes-01-baseline/rootnodes01-baseline.json` and 1 picture: `X3DScene
+  .rootNodes` as a live field (the same object on every read, `rootNodes [i] === getNamedNode (...)`, name `rootNodes`,
+  access type inputOutput); `push`, `unshift`, `splice`, `pop`, `shift` and `length` changes; `rootNodes = value` and
+  `setRootNodes` (a plain array throws `TypeError: field.getValue is not a function`); `addRootNode` (no event for a node
+  that is a root node already) and `removeRootNode` (every copy removed, an event also when nothing was removed; NULL,
+  `undefined` and a string throw `TypeError: Invalid value used as weak map key`); NULL entries and duplicates (`USE`);
+  the `rootNodes` field callbacks in order with a node field's (two changes before a frame are one event, the callback
+  gets the live field); `toVRMLString ()` after each change; and the drawn world after `removeRootNode` / `addRootNode`.
+  The test world is synthetic and inline (a `data:` URL).
+- Five runs gave identical values and identical picture hashes (Chrome 156.0.8078.47). Prepare the worktree as in
+  "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-rootnodes-01-baseline --runs 5 --suite rootnodes01
+```
+
 ### Web browser viewpoints 01 (`web-browser-viewpoints-01-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite viewpoints01` runs the 8 cases of `crates/x3d-web/tests/browser/viewpoints01_case.mjs`

@@ -16,6 +16,10 @@ use x3d_runtime::{Fetcher, Runtime};
 use x3d_viewer::nav::Touches;
 use x3d_viewer::viewer::{UiEvent, Viewer3d};
 
+/// The node id of an event of the world's `rootNodes` field in [`Session::take_field_events`]: no node has it (the
+/// field belongs to the scene, not to a node).
+pub const ROOT_NODES_EVENT: NodeId = NodeId::MAX;
+
 /// A route of the world as the page's X3DRoute object shows it: the ends and the field names X3DRoute.getSourceField /
 /// getDestinationField print (`source_field` / `destination_field`), and the names as they were given (`raw_*`), which the
 /// route keeps printing after it is deleted.
@@ -476,6 +480,35 @@ impl Session {
         scene.ctx(scene.world).root_nodes.clone()
     }
 
+    /// `rootNodes .assign (list)` of the world (X3DScene.rootNodes of the page, addRootNode, removeRootNode,
+    /// setRootNodes): the world holds `list` at once and the `rootNodes` field sends its event in the next frame's
+    /// event cascade, among the other events in the order they were made (see [`ROOT_NODES_EVENT`]).
+    pub fn set_root_nodes(&mut self, list: Vec<Option<NodeId>>) -> Result<(), String> {
+        if let Some(n) = list.iter().flatten().find(|&&n| !self.node_exists(n)) {
+            return Err(format!("rootNodes: node {n} is not in the world"));
+        }
+
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+        let k = rt.page_root_nodes_field();
+
+        rt.set_root_nodes(world, list);
+        rt.add_event(k);
+        Ok(())
+    }
+
+    /// Does the page call field callbacks for the world's `rootNodes` (X3DField.addFieldCallback)?
+    pub fn observe_root_nodes(&mut self, on: bool) {
+        let rt = self.rt_mut();
+        let k = rt.page_root_nodes_field();
+
+        if on {
+            rt.field_observed.insert(k);
+        } else {
+            rt.field_observed.remove(&k);
+        }
+    }
+
     /// X3DExecutionContext.routes of the world: the routes in the order they were added.
     pub fn routes(&self) -> Vec<RouteInfo> {
         let scene = &self.rt().scene;
@@ -774,10 +807,25 @@ impl Session {
 
         // The release sweep drops the events of released nodes; a node that is not live is skipped all the same, so
         // no event reads a released slot.
+        let root_nodes = rt.private_field(rt.browser_node, "rootNodes");
+
         rt.take_page_field_events()
             .into_iter()
             .filter(|(k, _)| rt.scene.is_live(k.0))
-            .map(|(k, value)| (k.0, rt.field(k).name.clone(), data::value_data(&value)))
+            .map(|(k, value)| {
+                if Some(k) == root_nodes {
+                    // X3DField.processEvent: `callback (this .valueOf ())`, the live field, so the current root nodes.
+                    let roots = rt.scene.ctx(rt.scene.world).root_nodes.clone();
+
+                    return (
+                        ROOT_NODES_EVENT,
+                        "rootNodes".to_string(),
+                        data::value_data(&FieldValue::MFNode(roots)),
+                    );
+                }
+
+                (k.0, rt.field(k).name.clone(), data::value_data(&value))
+            })
             .collect()
     }
 

@@ -102,16 +102,23 @@ const USER_DATA   = Symbol ("userData");
 // The X3DNodeRefs of a browser: scene id → { generation, refs: node id → X3DNodeRef }.
 const nodeRefTables = new WeakMap ();
 
-function sceneRefs (browser, scene, generation)
+// The table of scene `scene` of `browser` in world generation `generation`: its X3DNodeRefs (`refs`) and the page's
+// `rootNodes` field of the scene (`rootNodes`, made on its first read).
+function sceneTable (browser, scene, generation)
 {
    const tables = nodeRefTables .get (browser) ?? nodeRefTables .set (browser, new Map ()) .get (browser);
 
    let table = tables .get (scene);
 
    if (!table || table .generation !== generation)
-      tables .set (scene, table = { generation, refs: new Map () });
+      tables .set (scene, table = { generation, refs: new Map (), rootNodes: null });
 
-   return table .refs;
+   return table;
+}
+
+function sceneRefs (browser, scene, generation)
+{
+   return sceneTable (browser, scene, generation) .refs;
 }
 
 function X3DNodeRef (handle)
@@ -426,6 +433,73 @@ function attachedField (ref, name)
    return field;
 }
 
+// The node id of the events of a scene's rootNodes (session.rs ROOT_NODES_EVENT).
+const ROOT_NODES_EVENT = 4294967295;
+
+// The parent of a scene's rootNodes field (X_ITE: the X3DScene, an X3DBaseNode): its events reach the engine.
+function RootNodesParent (handle)
+{
+   X3DChildObject .call (this);
+
+   this [_node] = handle;
+}
+
+Object .setPrototypeOf (RootNodesParent .prototype, X3DChildObject .prototype);
+
+for (const key of [ "addEvent", "addEventObject" ])
+   Object .defineProperty (RootNodesParent .prototype, key, { value (field) { pushField (field); }, writable: true, configurable: true });
+
+Object .defineProperty (RootNodesParent .prototype, "isInitialized", { value () { return true; }, writable: true, configurable: true });
+
+// X3DExecutionContext.rootNodes of the world of scene handle `h`: one live field object per world, an inputOutput MFNode
+// named `rootNodes` as X3DScene's. Its changes (push, splice, length, assignment) reach the engine as its node fields'
+// do; a change of the engine's list reaches the object when it is read.
+function rootNodesField (h)
+{
+   const engine = engineOf (h);
+   const table  = sceneTable (h .browser, h .scene, h .generation);
+   const data   = Array .from (engine .rootNodes (h .scene), n => n < 0 ? null : Number (n));
+
+   if (table .rootNodes)
+   {
+      const { entry } = table .rootNodes;
+
+      // A value the engine refused (a node of another world) stays in the page's object, as with a node field.
+      if (data .length !== entry .data .length || data .some ((id, i) => id !== entry .data [i]))
+      {
+         entry .data = data;
+         setFieldData (entry .field, data, h);
+      }
+
+      return entry .field;
+   }
+
+   const field  = fieldFromData ("MFNode", data, h);
+   const parent = new RootNodesParent (h);
+
+   field .setName ("rootNodes");
+   field .setAccessType (X3DConstants .inputOutput);
+   field .addParent (parent);
+
+   const attached = { ref: parent, name: "rootNodes", entry: { field, data }, root: true };
+
+   attachedOf .set (field, attached);
+   attachedOf .set (field .getTarget (), attached);
+
+   table .rootNodes = attached;
+
+   return field;
+}
+
+// X3DCast (X3DConstants .X3DNode, node, false) of addRootNode and removeRootNode: the node of an SFNode of this adapter,
+// else null (SFNodeCache .get (null) then throws X_ITE's TypeError).
+function rootNodeCast (node)
+{
+   const value = node instanceof Fields .SFNode ? node .getValue () : node;
+
+   return value instanceof X3DNodeRef ? value : null;
+}
+
 // X3DChildObject.addEvent of a node's field object: the engine takes its value.
 function pushField (field)
 {
@@ -455,7 +529,11 @@ function pushField (field)
 
    try
    {
-      engineOf (h) .setFieldData (h .scene, h .id, attached .name, data);
+      // The scene's rootNodes: `rootNodes .assign (value)` of the world.
+      if (attached .root)
+         engineOf (h) .setRootNodes (h .scene, data);
+      else
+         engineOf (h) .setFieldData (h .scene, h .id, attached .name, data);
    }
    catch (error)
    {
@@ -508,7 +586,7 @@ function processFieldEvents (browser, scene)
    // The events are taken even with no object to call: they would pile up in the engine.
    const events = browser [_engine] .takeFieldEvents (scene);
 
-   if (!table ?.refs .size)
+   if (!table ?.refs .size && !table ?.rootNodes)
       return;
 
    syncScene (browser, scene);
@@ -517,6 +595,32 @@ function processFieldEvents (browser, scene)
    {
       // A callback may have released nodes: their ids are not the nodes of the events any more.
       retireReleased (browser, scene);
+
+      // An event of the scene's rootNodes. X_ITE calls its callbacks with the live field (MFNode.valueOf), so they see
+      // its value now, not that of the event.
+      if (events [i] === ROOT_NODES_EVENT)
+      {
+         const field = table .rootNodes ?.entry .field;
+
+         if (!field)
+            continue;
+
+         for (const callback of field .getFieldCallbacks () .values ())
+         {
+            try
+            {
+               callback (field .valueOf ());
+            }
+            catch (error)
+            {
+               browser [_engine] .haltEvents (scene);
+               reportError (error);
+               return;
+            }
+         }
+
+         continue;
+      }
 
       const ref   = table .refs .get (events [i]);
       const entry = ref ?.[FIELDS] .get (events [i + 1]);
@@ -567,7 +671,10 @@ __bridge .fieldCallbackAdded = function (field)
 
    const h = attached .ref [_node];
 
-   engineOf (h) .observeField (h .scene, h .id, attached .name, true);
+   if (attached .root)
+      engineOf (h) .observeRootNodes (h .scene, true);
+   else
+      engineOf (h) .observeField (h .scene, h .id, attached .name, true);
 };
 
 // The plain data of a field object; `owner` is the handle of the world its nodes must belong to.
@@ -1255,10 +1362,49 @@ class X3DScene
    getProfile ()    { return this .profile; }
    getComponents () { return this .components; }
 
+   // X3DScene.rootNodes (X3DExecutionContext.js, X3DScene.js): a live inputOutput MFNode, the same object on every
+   // read. The empty world of a canvas before any load has no engine scene: its field holds what the page gives it.
+   #emptyRootNodes = null;
+
    get rootNodes ()
    {
-      // A BigInt64Array of node ids, -1 for NULL.
-      return new Fields .MFNode (... Array .from (this .#engine () ?.rootNodes (this .#handle .scene) ?? [ ], n => nodeObject (this .#handle, Number (n))));
+      if (this .#handle .scene === null)
+         return this .#emptyRootNodes ??= new Fields .MFNode ();
+
+      return rootNodesField (this .#handle);
+   }
+
+   set rootNodes (value) { this .setRootNodes (value); }
+
+   getRootNodes () { return this .rootNodes; }
+
+   // X3DScene.setRootNodes: `this .getRootNodes () .assign (value)`.
+   setRootNodes (value)
+   {
+      this .rootNodes .assign (value);
+   }
+
+   // X3DScene.addRootNode: a node that is not a root node yet is pushed.
+   addRootNode (node)
+   {
+      node = SFNodeCache .get (rootNodeCast (node));
+
+      const rootNodes = this .rootNodes;
+
+      if (rootNodes .includes (node))
+         return;
+
+      rootNodes .push (node);
+   }
+
+   // X3DScene.removeRootNode: the root nodes without the node, assigned (an event also when nothing was removed).
+   removeRootNode (node)
+   {
+      node = SFNodeCache .get (rootNodeCast (node));
+
+      const rootNodes = this .rootNodes;
+
+      rootNodes .assign (rootNodes .filter (rootNode => rootNode !== node));
    }
 
    // --- routes (see "routes" above) ---

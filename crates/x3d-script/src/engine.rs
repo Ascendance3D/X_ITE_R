@@ -2911,7 +2911,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let add = str_arg(ctx, a, 1) == "add";
             let node = a.get(2).and_then(arg_node).flatten();
             let c = ctx_of_script(script);
-            let roots = &mut rt().scene.ctx_mut(c).root_nodes;
+            let mut roots = rt().scene.ctx(c).root_nodes.clone();
 
             if add {
                 if roots.contains(&node) {
@@ -2923,12 +2923,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 roots.retain(|n| *n != node);
             }
 
-            rt().rebuild_parents();
-
             // rootNodes .push (node) / .assign (...): the rootNodes field fires.
-            let rounds = rt().root_nodes_rounds(c);
-            rt().ctx_event(c, CtxField::SceneGraph, rounds);
-            rt().ctx_event(c, CtxField::BBox, rounds);
+            rt().set_root_nodes(c, roots);
             Ok(undefined)
         }
         "exportedNode" => {

@@ -136,6 +136,31 @@ impl Runtime {
         if ctx == self.scene.world { 4 } else { 1 }
     }
 
+    /// `rootNodes .assign (list)` of the context `ctx` (X3DScene.addRootNode, removeRootNode, setRootNodes and the
+    /// `rootNodes` field of a Script or a page): the context holds `list` at once, the parents follow, and the change
+    /// fields fire as the X3DWorld cascade makes them fire (see [`Runtime::root_nodes_rounds`]).
+    pub fn set_root_nodes(&mut self, ctx: CtxId, list: Vec<Option<NodeId>>) {
+        self.scene.ctx_mut(ctx).root_nodes = list;
+        self.rebuild_parents();
+
+        let rounds = self.root_nodes_rounds(ctx);
+
+        self.ctx_event(ctx, CtxField::SceneGraph, rounds);
+        self.ctx_event(ctx, CtxField::BBox, rounds);
+    }
+
+    /// The field that carries the `rootNodes` events of the world to the page (the browser build): X3DField.addEvent of
+    /// X_ITE's `rootNodes` field taints it among the other fields, so its callbacks run in the order of the events. A
+    /// private field of the browser node; its value is not the root nodes (the page reads them from the context).
+    pub fn page_root_nodes_field(&mut self) -> FKey {
+        self.add_private_field(
+            self.browser_node,
+            "rootNodes",
+            access::OUTPUT_ONLY,
+            FieldValue::SFTime(0.0),
+        )
+    }
+
     /// X3DBaseNode.parentsChanged: the `sceneGraph_changed` and `bbox_changed` of the context the node belongs to.
     pub(crate) fn ctx_parents_changed(&mut self, node: NodeId) {
         let ctx = self.scene.node(node).ctx;
