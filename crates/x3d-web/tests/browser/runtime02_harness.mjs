@@ -32,6 +32,7 @@ import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
 import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
+import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -73,6 +74,7 @@ const SUITES = {
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
+   rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -120,16 +122,17 @@ const KNOWN_DIFFERENCES = {
       // The pinned SFNode proxy would keep a plain property, so the page reads the node back, but the node has no such field value.
       [ [ "s02", 3 ], "Collision { proxy DEF OT Transform { } }", "Collision { }" ],
       [ [ "s03", 2 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
-      [ [ "s04", 1 ], 3, 2 ],
-      [ [ "s04", 2 ], ["Transform:T", "Group:G", "Transform:OT"], ["Transform:T", "Group:G"] ],
       [ [ "s12" ], ["Group { children [ DEF OT Transform { } Transform { } ] }", "<Group> <Transform DEF='OT'/> <Transform/> </Group>"], ["Group { }", "<Group/>"] ],
       // X_ITE keeps the nodes of a replaced world usable; X_ITE_R refuses their stale handles (API.md).
       [ [ "s09" ], [true, "Transform", "page", "1 2 3"], "Error: X_ITE_R: the node belongs to a world that was replaced." ],
       // s13: the refused value leaves the page's field usable. The operation after it goes on (the page reads the node it
       // stored), and the engine, and so the text form, keeps the value it had.
       [ [ "s13", 0, 1 ], "Group { children [ DEF G Group { } DEF OT Transform { } DEF T Transform { translation 1 2 3 children [ DEF S Shape { appearance Appearance { material DEF M Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 3 4 } } USE S ] } ] }", "Group { }" ],
-      // The refusals of s02, s03, s12 and s13 (the assignment and the push after it) each warn once (s04 pushes into rootNodes and refuses without a warning).
-      [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
+      // The refusals of s02, s03, s04, s12 and s13 (the assignment and the push after it) each warn once.
+      // s04: `scene .rootNodes` is the scene's live field (#137), so the refused push behaves as a refused node field: it
+      // warns, the page's field keeps the node it was given (the values of s04 read it back, as X_ITE's), and the world does
+      // not hold it (its text forms and the drawn world keep the root nodes they had).
+      [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
    ],
    "routesApi.scenes": [
       // X_ITE runs every scene it holds, so the events of a scene that is not the world go on; X_ITE_R steps only the world,
@@ -562,6 +565,7 @@ const GROUP_FILES = {
    canvasAttributesScaled: "attributes01.test.mjs",
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
+   rootNodes: "rootnodes01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");

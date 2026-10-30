@@ -871,3 +871,72 @@ fn the_world_has_the_profile_and_components_of_its_statements() {
         )
     );
 }
+
+/// X3DScene.rootNodes of the page (issue #137): `rootNodes .assign (list)` changes the world at once, and the `rootNodes`
+/// event comes in the order of the events, after a node field set before it and before one set after it.
+#[test]
+fn the_root_nodes_of_the_page_change_the_world_and_send_their_event_in_order() {
+    use x3d_web::session::ROOT_NODES_EVENT;
+
+    let mut s = load(ROUTED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+    let m = s.named_node("M").unwrap();
+    let roots = s.root_nodes();
+    let ids = |list: &[Option<NodeId>]| {
+        Data::List(
+            list.iter()
+                .map(|n| n.map_or(Data::Null, |n| Data::Number(f64::from(n))))
+                .collect(),
+        )
+    };
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.observe_root_nodes(true);
+
+    // A node field, then the root nodes, in one frame.
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+
+    let mut more = roots.clone();
+    more.push(Some(m));
+    more.push(None);
+    s.set_root_nodes(more.clone()).unwrap();
+
+    // The world holds the list at once: the scene prints it.
+    assert_eq!(s.root_nodes(), more);
+    assert!(s.print_scene("vrml").unwrap().contains("USE M"));
+
+    s.step(NOW + 0.1);
+
+    let name = || "translation".to_string();
+
+    assert_eq!(
+        s.take_field_events(),
+        [
+            (t, name(), vec3(1.0, 0.0, 0.0)),
+            (ROOT_NODES_EVENT, "rootNodes".to_string(), ids(&more)),
+        ]
+    );
+
+    // Two changes before a frame are one event, with the value at the time of the callbacks.
+    s.set_root_nodes(vec![Some(t)]).unwrap();
+    s.set_root_nodes(vec![Some(t2), Some(t)]).unwrap();
+    s.step(NOW + 0.2);
+    assert_eq!(
+        s.take_field_events(),
+        [(
+            ROOT_NODES_EVENT,
+            "rootNodes".to_string(),
+            ids(&[Some(t2), Some(t)])
+        )]
+    );
+
+    // Not observed: no event. A node id that is not in the world is refused and changes nothing.
+    s.observe_root_nodes(false);
+    s.set_root_nodes(vec![]).unwrap();
+    s.step(NOW + 0.3);
+    assert_eq!(s.take_field_events(), []);
+    assert!(s.set_root_nodes(vec![Some(100_000)]).is_err());
+    assert_eq!(s.root_nodes(), []);
+}
