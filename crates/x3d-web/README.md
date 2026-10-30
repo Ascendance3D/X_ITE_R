@@ -84,5 +84,5 @@ The zoom cases wait 0.4 s (twice ExamineViewer's MOVE_TIME) after each wheel or 
 
 Headless Chromium does not always composite a WebGPU canvas, so the test reads the picture from the GPU (`WebBrowser.readPixels`).
 `XR_WEB_EVIDENCE=<dir>` writes the values, the pictures and the image metrics of a run.
-CI runs the browser tests in `.github/workflows/web-tests.yml` on lavapipe, in parallel shards of whole test files (`tests/browser/shards.mjs`).
-Every `*.test.mjs` file must be in exactly one shard; CI fails when one is not. `npm test` runs every file.
+CI runs the browser tests in `.github/workflows/web-tests.yml` on lavapipe, in parallel shards of test files (`tests/browser/shards.mjs`).
+Every `*.test.mjs` file must be in exactly one shard, or have its reference cases split over shards with each case in exactly one (`XR_CASES`); CI fails when one is not. `npm test` runs every file.
