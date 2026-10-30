@@ -1,0 +1,27 @@
+{
+ "movie-load-errors-msaa0": {
+  "runs": [
+   {
+    "js.json": "28d322be12999f3c2b71a9b055b3c8bd214086f2966e8c827e03c4303ad49942",
+    "js/42.png": "154e066fb9ddf76f7399ff32d86e796cb9f780d962ad0aced03c3a4131548508"
+   },
+   {
+    "js.json": "28d322be12999f3c2b71a9b055b3c8bd214086f2966e8c827e03c4303ad49942",
+    "js/42.png": "154e066fb9ddf76f7399ff32d86e796cb9f780d962ad0aced03c3a4131548508"
+   },
+   {
+    "js.json": "28d322be12999f3c2b71a9b055b3c8bd214086f2966e8c827e03c4303ad49942",
+    "js/42.png": "154e066fb9ddf76f7399ff32d86e796cb9f780d962ad0aced03c3a4131548508"
+   },
+   {
+    "js.json": "28d322be12999f3c2b71a9b055b3c8bd214086f2966e8c827e03c4303ad49942",
+    "js/42.png": "154e066fb9ddf76f7399ff32d86e796cb9f780d962ad0aced03c3a4131548508"
+   },
+   {
+    "js.json": "28d322be12999f3c2b71a9b055b3c8bd214086f2966e8c827e03c4303ad49942",
+    "js/42.png": "154e066fb9ddf76f7399ff32d86e796cb9f780d962ad0aced03c3a4131548508"
+   }
+  ],
+  "identical": true
+ }
+}

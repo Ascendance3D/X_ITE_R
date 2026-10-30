@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
-"""MovieTexture GIF / APNG playback baselines (issue #90; pinned X_ITE 16.5.0, headless Chrome on the GPU).
+"""MovieTexture GIF / APNG baselines (issue #90; pinned X_ITE 16.5.0, headless Chrome on the GPU).
 
-  python3 -I oracle/tools/movie_anim.py record [RUNS]
-      Runs x_ite-anim.mjs (MSAA 0) and x_ite-anim-msaa.mjs (MSAA 4) RUNS times (default 5) on each case of
-      CASES into /tmp/movie-anim-xite/runN/NAME-msaaM. The baseline oracle/movie-anim-baseline/NAME-msaaM
+  python3 -I oracle/tools/movie_anim.py record [RUNS] [SET]
+      Runs x_ite-anim.mjs (MSAA 0) and x_ite-anim-msaa.mjs (MSAA 4) RUNS times (default 5) on each case of the
+      SET (default anim) into /tmp/movie-anim-xite/runN/NAME-msaaM. The baseline oracle/<set dir>/NAME-msaaM
       (js.json, js/*.png) is written from run 1 only when every run gave the same js.json and the same PNG
       bytes; recordings.json keeps the sha256 of each run's files. A difference between runs writes nothing
       and exits 1.
 
-The worlds and scripts come from oracle/tools/gen_movie_anim.py. A baseline is written only from an X_ITE
-run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs), never copied.
+Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_movie_anim.py, MSAA 0 and 4) and
+load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0).
+A baseline is written only from an X_ITE run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs),
+never copied.
 """
 import hashlib, json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-out_dir = os.path.join(root, "oracle", "movie-anim-baseline")
-CASES = [(n, f"oracle/synthetic-movie-anim/{n}.wrl", f"oracle/synthetic-movie-anim/{n}.json") for n in ("movie-anim",)]
-MSAA = ["0", "4"]
+SETS = {
+    "anim": ("movie-anim-baseline", "synthetic-movie-anim", ["movie-anim"], ["0", "4"]),
+    "load-errors": ("movie-load-errors-baseline", "synthetic-movie-load-errors", ["movie-load-errors"], ["0"]),
+}
 
 
 def sha(path):
@@ -31,7 +34,10 @@ def files(case_dir):
     return out
 
 
-def record(runs):
+def record(runs, name):
+    baseline, synthetic, worlds, MSAA = SETS[name]
+    out_dir = os.path.join(root, "oracle", baseline)
+    CASES = [(n, f"oracle/{synthetic}/{n}.wrl", f"oracle/{synthetic}/{n}.json") for n in worlds]
     tmp = "/tmp/movie-anim-xite"
     shutil.rmtree(tmp, ignore_errors=True)
     report, same = {}, True
@@ -75,6 +81,6 @@ def record(runs):
 
 args = sys.argv[1:]
 if args and args[0] == "record":
-    record(int(args[1]) if len(args) > 1 else 5)
+    record(int(args[1]) if len(args) > 1 else 5, args[2] if len(args) > 2 else "anim")
 else:
     sys.exit(__doc__)

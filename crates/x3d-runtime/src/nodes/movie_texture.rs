@@ -15,6 +15,10 @@
 //! apng-js Player runs on `requestAnimationFrame` and the wall clock; here its tick runs at the start of each
 //! set_time with the browser time as the clock. In the pinned X_ITE oracle only the APNG frames that do not
 //! depend on that clock can be compared (oracle/tools/gen_movie_anim.py).
+//!
+//! The load states of PNG data follow apng-js parseAPNG ([`DecodeError`], oracle/tools/gen_movie_load_errors.py).
+//! All decoded frames of one MovieTexture together are at most [`MAX_DECODED_BYTES`]; larger media are rejected
+//! before the frames are allocated and the node stays IN_PROGRESS.
 
 use crate::*;
 
@@ -51,31 +55,229 @@ struct Player {
     next_render_time: f64,
 }
 
+/// Why a GIF or an APNG gives no media element.
+#[derive(Debug, PartialEq)]
+pub enum DecodeError {
+    /// loadData's `catch`: the warning, the next URL, then FAILED_STATE. The JavaScript error name and message:
+    /// libgif's on_error type (`Error: parse`) or what apng-js parseAPNG throws.
+    Fail(&'static str, String),
+    /// apng-js parseAPNG returns (does not throw) its error for data that is not a PNG or not an animated PNG:
+    /// `setAPNG` is not awaited, its rejection is unhandled and the node stays IN_PROGRESS without a message.
+    NotAnimated,
+    /// The decoded frames would be larger than [`MAX_DECODED_BYTES`]: an error message and the node stays
+    /// IN_PROGRESS, as X_ITE does when the browser cannot create the frames ("Out of memory at ImageData
+    /// creation").
+    TooLarge(String),
+}
+
+/// The largest size of all decoded frames of one MovieTexture together (RGBA, 4 bytes a pixel).
+pub const MAX_DECODED_BYTES: u64 = 512 << 20;
+
 /// libgif `load_raw` on_error type for a GIF it cannot parse.
 pub const GIF_PARSE_ERROR: &str = "parse";
 
-impl MovieMedia {
-    /// libgif `load_raw`: the frames and their delays (centiseconds × 10).
-    pub fn decode_gif(data: &[u8]) -> Option<MovieMedia> {
-        use image::{AnimationDecoder, ImageDecoder};
+/// The bytes of one full-size RGBA frame, if `frames` of them fit in [`MAX_DECODED_BYTES`].
+fn frame_bytes(width: u32, height: u32, frames: usize) -> Result<usize, DecodeError> {
+    let one = u64::from(width)
+        .checked_mul(u64::from(height))
+        .and_then(|n| n.checked_mul(4));
+    let all = one.and_then(|n| n.checked_mul(frames as u64));
 
-        let decoder = image::codecs::gif::GifDecoder::new(std::io::Cursor::new(data)).ok()?;
-        let (width, height) = decoder.dimensions();
-        let frames = decoder.into_frames().collect_frames().ok()?;
+    match (one, all) {
+        (Some(one), Some(all)) if all <= MAX_DECODED_BYTES => Ok(one as usize),
+        _ => Err(DecodeError::TooLarge(format!(
+            "MovieTexture: {frames} frames of {width} x {height} pixels are more than the limit of {} MiB.",
+            MAX_DECODED_BYTES >> 20
+        ))),
+    }
+}
 
-        if frames.is_empty() {
-            return None;
+/// The number of images of a GIF from its block structure, without decoding (`None` if the blocks are not
+/// complete; the decoder then finds the error or the end).
+fn gif_image_count(d: &[u8]) -> Option<usize> {
+    fn skip_sub_blocks(d: &[u8], mut i: usize) -> Option<usize> {
+        loop {
+            let length = *d.get(i)? as usize;
+            i = i.checked_add(1 + length)?;
+
+            if length == 0 {
+                return Some(i);
+            }
         }
+    }
 
-        let delays = frames.iter().map(|f| ratio_ms(f.delay())).collect();
+    let color_table = |flags: u8| {
+        if flags & 0x80 != 0 {
+            3 << ((flags & 7) + 1)
+        } else {
+            0
+        }
+    };
+    let mut i = 13 + color_table(*d.get(10)?);
+    let mut count = 0;
 
-        Some(MovieMedia {
+    loop {
+        match *d.get(i)? {
+            0x3b => return Some(count),
+            0x21 => i = skip_sub_blocks(d, i + 2)?,
+            0x2c => {
+                i += 10 + color_table(*d.get(i + 9)?);
+                i = skip_sub_blocks(d, i + 1)?;
+                count += 1;
+            }
+            _ => return None,
+        }
+    }
+}
+
+/// An eachChunk callback: chunk type, offset and length; `false` ends the walk.
+type ChunkCallback<'a> = dyn FnMut(&[u8], u64, u64) -> Result<bool, DecodeError> + 'a;
+
+/// The parts of an APNG that apng-js parseAPNG reads before the browser decodes the frame images.
+struct ApngStructure {
+    width: u32,
+    height: u32,
+    /// `frame .delay` of each fcTL in milliseconds.
+    delays: Vec<f64>,
+}
+
+/// apng-js parseAPNG without the images: `Ok (None)` where it returns errNotPNG or errNotAPNG, `Err` with the
+/// name and message of what it throws. Its `DataView` reads past the end of the data throw; the frames' IHDR
+/// copies (`headerDataBytes .set`) throw without an IHDR or with one shorter than 8 bytes.
+fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
+    const SIGNATURE: [u8; 8] = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+    let range = || {
+        DecodeError::Fail(
+            "RangeError",
+            "Offset is outside the bounds of the DataView".into(),
+        )
+    };
+    let read = |off: u64, n: usize| -> Result<u32, DecodeError> {
+        let o = usize::try_from(off).map_err(|_| range())?;
+        let bytes = b
+            .get(o..o.checked_add(n).ok_or_else(range)?)
+            .ok_or_else(range)?;
+        Ok(bytes.iter().fold(0, |v, &x| v << 8 | u32::from(x)))
+    };
+
+    // eachChunk: chunk type of up to 4 bytes (readString of a subarray), the walk ends after `false`, IEND or the
+    // end of the data.
+    let each_chunk = |f: &mut ChunkCallback| {
+        let mut off = 8u64;
+
+        loop {
+            let length = u64::from(read(off, 4)?);
+            let start = (off + 4).min(b.len() as u64) as usize;
+            let kind = &b[start..(off + 8).min(b.len() as u64) as usize];
+            let more = f(kind, off, length)?;
+            off += 12 + length;
+
+            if !more || kind == b"IEND" || off >= b.len() as u64 {
+                return Ok(());
+            }
+        }
+    };
+
+    if b.get(..8) != Some(&SIGNATURE[..]) {
+        return Ok(None);
+    }
+
+    let mut animated = false;
+    each_chunk(&mut |kind, _, _| {
+        animated = kind == b"acTL";
+        Ok(!animated)
+    })?;
+
+    if !animated {
+        return Ok(None);
+    }
+
+    let (mut width, mut height, mut header, mut delays) = (0, 0, None, vec![]);
+    each_chunk(&mut |kind, off, length| {
+        match kind {
+            b"IHDR" => {
+                header = Some(length.min((b.len() as u64).saturating_sub(off + 8)));
+                width = read(off + 8, 4)?;
+                height = read(off + 12, 4)?;
+            }
+            b"acTL" => {
+                read(off + 12, 4)?;
+            }
+            b"fcTL" => {
+                read(off + 12, 4)?;
+                read(off + 16, 4)?;
+                read(off + 20, 4)?;
+                read(off + 24, 4)?;
+                let numerator = read(off + 28, 2)?;
+                let denominator = match read(off + 30, 2)? {
+                    0 => 100,
+                    d => d,
+                };
+                read(off + 32, 1)?;
+                read(off + 33, 1)?;
+                // At least 100 ms if 10 ms or less.
+                let delay = 1000.0 * f64::from(numerator) / f64::from(denominator);
+                delays.push(if delay <= 10.0 { 100.0 } else { delay });
+            }
+            _ => {}
+        }
+        Ok(true)
+    })?;
+
+    if delays.is_empty() {
+        return Ok(None);
+    }
+
+    match header {
+        None => Err(DecodeError::Fail(
+            "TypeError",
+            "Cannot read properties of null (reading 'set')".into(),
+        )),
+        Some(length) if length < 8 => Err(DecodeError::Fail(
+            "RangeError",
+            "offset is out of bounds".into(),
+        )),
+        Some(_) => Ok(Some(ApngStructure {
             width,
             height,
-            frames: frames
-                .into_iter()
-                .map(|f| f.into_buffer().into_raw())
-                .collect(),
+            delays,
+        })),
+    }
+}
+
+impl MovieMedia {
+    /// libgif `load_raw`: the frames and their delays (centiseconds × 10).
+    pub fn decode_gif(data: &[u8]) -> Result<MovieMedia, DecodeError> {
+        use image::{AnimationDecoder, ImageDecoder};
+
+        let parse = || DecodeError::Fail("Error", GIF_PARSE_ERROR.into());
+        let mut decoder =
+            image::codecs::gif::GifDecoder::new(std::io::Cursor::new(data)).map_err(|_| parse())?;
+        let (width, height) = decoder.dimensions();
+        // The size of all images before the decoder allocates its canvas (at least one).
+        let one = frame_bytes(width, height, gif_image_count(data).unwrap_or(1).max(1))?;
+        decoder
+            .set_limits(image::Limits::default())
+            .map_err(|_| parse())?;
+
+        let (mut frames, mut delays) = (vec![], vec![]);
+
+        for frame in decoder.into_frames() {
+            let frame = frame.map_err(|_| parse())?;
+            // The block count can be lower than the frames of a GIF without a trailer.
+            frame_bytes(width, height, frames.len() + 1)?;
+            delays.push(ratio_ms(frame.delay()));
+            frames.push(frame.into_buffer().into_raw());
+        }
+
+        if frames.is_empty() || frames.iter().any(|f| f.len() != one) {
+            return Err(parse());
+        }
+
+        Ok(MovieMedia {
+            width,
+            height,
+            frames,
             delays,
             kind: Kind::Gif {
                 cycle: 0.0,
@@ -86,40 +288,46 @@ impl MovieMedia {
         })
     }
 
-    /// apng-js parseAPNG and PNGMedia (whose `player .stop ()` renders frame 0). `None` for data apng-js does not
-    /// take as an animated PNG (parseAPNG returns, not throws, its error).
-    pub fn decode_apng(data: &[u8]) -> Option<MovieMedia> {
+    /// apng-js parseAPNG, the frame images and PNGMedia (whose `player .stop ()` renders frame 0). The size, the
+    /// frame count and the delays are those of parseAPNG. The browser decodes each frame image; the frames are
+    /// those the `image` crate composites until it finds an error. A frame after that error keeps the picture
+    /// before it: X_ITE draws nothing for frame data the browser cannot decode (an empty canvas for an invalid
+    /// first frame); what it draws for the rows of a partly cut frame is not known.
+    pub fn decode_apng(data: &[u8]) -> Result<MovieMedia, DecodeError> {
         use image::{AnimationDecoder, ImageDecoder};
 
-        let decoder = image::codecs::png::PngDecoder::new(std::io::Cursor::new(data)).ok()?;
+        let ApngStructure {
+            width,
+            height,
+            delays,
+        } = apng_structure(data)?.ok_or(DecodeError::NotAnimated)?;
+        let one = frame_bytes(width, height, delays.len())?;
+        let mut frames: Vec<Vec<u8>> = Vec::with_capacity(delays.len());
 
-        if !decoder.is_apng().ok()? {
-            return None;
+        let decoder = image::codecs::png::PngDecoder::with_limits(
+            std::io::Cursor::new(data),
+            image::Limits::default(),
+        )
+        .ok()
+        .filter(|d| d.dimensions() == (width, height) && d.is_apng().unwrap_or(false));
+
+        if let Some(apng) = decoder.and_then(|d| d.apng().ok()) {
+            for frame in apng.into_frames() {
+                match frame.map(|f| f.into_buffer().into_raw()) {
+                    Ok(f) if f.len() == one && frames.len() < delays.len() => frames.push(f),
+                    _ => break,
+                }
+            }
         }
 
-        let (width, height) = decoder.dimensions();
-        let frames = decoder.apng().ok()?.into_frames().collect_frames().ok()?;
-
-        if frames.is_empty() {
-            return None;
+        while frames.len() < delays.len() {
+            frames.push(frames.last().cloned().unwrap_or_else(|| vec![0; one]));
         }
-
-        // `frame .delay = 1000 * delayN / delayD` (delayD 0: 100), and at least 100 ms if 10 ms or less.
-        let delays = frames
-            .iter()
-            .map(|f| match ratio_ms(f.delay()) {
-                d if d <= 10.0 => 100.0,
-                d => d,
-            })
-            .collect();
 
         let mut media = MovieMedia {
             width,
             height,
-            frames: frames
-                .into_iter()
-                .map(|f| f.into_buffer().into_raw())
-                .collect(),
+            frames,
             delays,
             kind: Kind::Apng {
                 num_plays: 0,
@@ -130,7 +338,7 @@ impl MovieMedia {
         };
 
         media.player_stop();
-        Some(media)
+        Ok(media)
     }
 
     /// `duration` in seconds: libgif get_duration_ms, apng .playTime.
@@ -632,7 +840,10 @@ mod tests {
         image::RgbaImage::new(2, 2)
             .write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png)
             .unwrap();
-        assert!(MovieMedia::decode_apng(&png).is_none());
+        assert_eq!(
+            MovieMedia::decode_apng(&png).err(),
+            Some(DecodeError::NotAnimated)
+        );
     }
 
     #[test]
@@ -689,5 +900,132 @@ mod tests {
         // A tick a whole play (0.4 s) or more late skips the plays it missed, as apng-js does.
         m.tick(1520.0);
         assert_eq!(m.current_frame(0.0), Some(3));
+    }
+
+    fn png_chunk(kind: &[u8], body: &[u8]) -> Vec<u8> {
+        let crc = !kind.iter().chain(body).fold(!0u32, |c, &b| {
+            (0..8).fold(c ^ u32::from(b), |c, _| {
+                if c & 1 != 0 {
+                    0xedb8_8320 ^ (c >> 1)
+                } else {
+                    c >> 1
+                }
+            })
+        });
+        [
+            &(body.len() as u32).to_be_bytes()[..],
+            kind,
+            body,
+            &crc.to_be_bytes(),
+        ]
+        .concat()
+    }
+
+    /// A GIF of `width` x `height` with `images` images of 1 x 1 pixel.
+    fn gif_canvas(width: u16, height: u16, images: usize) -> Vec<u8> {
+        let mut d = b"GIF89a".to_vec();
+        d.extend(width.to_le_bytes());
+        d.extend(height.to_le_bytes());
+        d.extend([0xf0, 0, 0, 0, 0, 0, 255, 255, 255]);
+
+        for _ in 0..images {
+            d.extend([0x21, 0xf9, 4, 4, 10, 0, 0, 0]);
+            d.extend([0x2c, 0, 0, 0, 0, 1, 0, 1, 0, 0, 2, 2, 0x44, 0x01, 0]);
+        }
+
+        d.push(0x3b);
+        d
+    }
+
+    #[test]
+    fn oversized_media_are_rejected_before_the_frames_are_allocated() {
+        let too_large =
+            |r: Result<MovieMedia, DecodeError>| matches!(r, Err(DecodeError::TooLarge(_)));
+
+        // 43 bytes, a 65535 x 65535 canvas (16 GiB a frame): this stopped the process (SIGABRT) before the limit.
+        let gif = gif_canvas(65535, 65535, 1);
+        assert_eq!(gif.len(), 43);
+        assert!(too_large(MovieMedia::decode_gif(&gif)));
+
+        // 9 frames of 4096 x 4096 (64 MiB each) are more than 512 MiB together; 8 are not.
+        assert!(too_large(MovieMedia::decode_gif(&gif_canvas(
+            4096, 4096, 9
+        ))));
+        assert_eq!(gif_image_count(&gif_canvas(4096, 4096, 8)), Some(8));
+        assert!(frame_bytes(4096, 4096, 8).is_ok());
+
+        // 127 bytes, an APNG with a 65535 x 65535 canvas.
+        let mut apng = b"\x89PNG\r\n\x1a\n".to_vec();
+        apng.extend(png_chunk(
+            b"IHDR",
+            &[0, 0, 255, 255, 0, 0, 255, 255, 8, 6, 0, 0, 0],
+        ));
+        apng.extend(png_chunk(b"acTL", &[0, 0, 0, 1, 0, 0, 0, 0]));
+        apng.extend(png_chunk(
+            b"fcTL",
+            &[
+                0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
+                0,
+            ],
+        ));
+        // zlib data of 64 zero bytes, as in the probe file.
+        apng.extend(png_chunk(
+            b"IDAT",
+            &[120, 156, 99, 96, 160, 12, 0, 0, 0, 64, 0, 1],
+        ));
+        apng.extend(png_chunk(b"IEND", &[]));
+        assert_eq!(apng.len(), 127);
+        assert!(too_large(MovieMedia::decode_apng(&apng)));
+
+        // The products are checked: no overflow.
+        assert!(frame_bytes(u32::MAX, u32::MAX, usize::MAX).is_err());
+    }
+
+    /// The media of oracle/synthetic-movie-load-errors (oracle/movie-load-errors-baseline).
+    fn load_error_media(name: &str) -> Vec<u8> {
+        std::fs::read(
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../oracle/synthetic-movie-load-errors/media")
+                .join(name),
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn png_load_errors_follow_apng_js() {
+        for name in ["static.png", "notpng.png", "noframes.png"] {
+            assert_eq!(
+                MovieMedia::decode_apng(&load_error_media(name)).err(),
+                Some(DecodeError::NotAnimated),
+                "{name}"
+            );
+        }
+
+        assert_eq!(
+            MovieMedia::decode_apng(&load_error_media("trunc-head.png")).err(),
+            Some(DecodeError::Fail(
+                "RangeError",
+                "Offset is outside the bounds of the DataView".into()
+            ))
+        );
+
+        // The structure is valid: the size and the delays are apng-js's, frame 0 is decoded.
+        let m = MovieMedia::decode_apng(&load_error_media("trunc-anim.png")).unwrap();
+        assert_eq!(
+            (m.width, m.height, m.frames.len(), m.duration()),
+            (8, 8, 2, 2.0)
+        );
+        assert_eq!(texel(&m, 0, 3, 3), RED);
+
+        // Frame data the decoder cannot read leaves the canvas empty.
+        let m = MovieMedia::decode_apng(&load_error_media("bad-data.png")).unwrap();
+        assert_eq!(
+            (m.width, m.height, m.frames.len(), m.duration()),
+            (8, 8, 1, 1.0)
+        );
+        assert!(m.frames[0].iter().all(|&b| b == 0));
+
+        let m = MovieMedia::decode_apng(&load_error_media("good.png")).unwrap();
+        assert_eq!(texel(&m, 1, 3, 3), GREEN);
     }
 }

@@ -1046,3 +1046,20 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-entry-01-baseline --runs
 python3 -I oracle/tools/gen_movie_anim.py
 python3 -I oracle/tools/movie_anim.py record 5
 ```
+
+### MovieTexture PNG load errors (2026-10-30, PR #190 review)
+
+- `tools/gen_movie_load_errors.py` writes `synthetic-movie-load-errors/`: 8 × 8 PNG media (static, not a PNG, acTL
+  without fcTL, cut in the header, an APNG cut in its second frame, an APNG with invalid frame data, a good APNG) and
+  one world. A MovieTexture that stays IN_PROGRESS at the first load stops X_ITE's `loadURL`, so a Script sets the
+  `url` of one case for each key press; a LoadSensor and the node's outputs are printed.
+- `tools/movie_anim.py record 5 load-errors` wrote `movie-load-errors-baseline/` (MSAA 0). The five runs of
+  2026-10-30 were identical. X_ITE: IN_PROGRESS without a message for the static PNG, the non-PNG and the APNG without
+  fcTL; a warning, the next URL and FAILED for the cut header; COMPLETE for both APNGs with a valid chunk structure
+  (the invalid frame draws nothing). What the browser draws for the rows of a partly cut frame is not recorded:
+  nothing is started, so only frame 0 is shown.
+
+```
+python3 -I oracle/tools/gen_movie_load_errors.py
+python3 -I oracle/tools/movie_anim.py record 5 load-errors
+```
