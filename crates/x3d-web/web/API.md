@@ -178,6 +178,8 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 
 ## Script nodes
 
+**Status: PARTIAL.** (This entry replaces "Script nodes: not implemented".) Script nodes run in the browser build, off by default. They are not COMPLETE: the kept differences below are open, and the Script life cycle cases of `tests/browser/scriptlife01.test.mjs` list the ones that a pinned recording shows.
+
 Refs #133. A Script node runs in the page's own JavaScript engine, as in X_ITE. The engine and its Script implementation are the native viewer's (`crates/x3d-script`, the X_ITE 16.5.0 prelude), so field access, routing, event order and the Script lifecycle are the same.
 
 **Security.** A Script runs with the privileges of the page. It can read and change the document, call the page's functions and send requests as the page. X_ITE_R gives no isolation from the host page; treat Script code as code of the page.
@@ -194,6 +196,17 @@ Kept differences from X_ITE:
 - The promise jobs of a Script run when the page's JavaScript stack is empty, after the engine's call. A change they make to a field object reaches the engine at its next call.
 - A function that a Script left in the page and that is called after its world was replaced throws `X_ITE_R: the Script's world is gone.` X_ITE keeps the old world's nodes usable.
 - There is no time limit: a Script that does not return stops the page, as in X_ITE. The native viewer stops it after 10 s.
+- There is no case of `importJS` or `importDocument` with a Script that runs: the Script switch applies to them, but no test compares them with X_ITE.
+- When the `<x3d-canvas>` element is disposed (it leaves the document), the Scripts' `shutdown` output is lost.
+
+Compared with pinned X_ITE 16.5.0 in `tests/browser/scriptlife01.test.mjs` (12 cases, synthetic worlds, `oracle/web-browser-script-life-01-baseline`, recorded 5 times with identical values): `initialize` (events sent from it, the order of the Scripts, `directOutput`), the events of Script fields (eventIns, eventOuts, routes, an interpolator, the page's events, several events in one task), `eventsProcessed`, `shutdown` when the Script's code is replaced and when the world is replaced, Script errors (in `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string or object), and the `rootNodes` of `Browser .currentScene` in a Script and the callbacks of the page. The cases that differ are listed in `KNOWN_DIFFERENCES` (`tests/browser/runtime02_harness.mjs`), with X_ITE's value checked against the recording:
+
+- The page's field callbacks (`addFieldCallback`) of a Script's output run after the Script handlers that the same engine call runs. In X_ITE they run before the handlers of the routes that follow.
+- X_ITE 16.5.0 does not call `shutdown` when a world is replaced or its element is disposed (the old scene is not disposed in the cases); it calls it when the Script's code is replaced. X_ITE_R calls it when the world is replaced, and an event that `shutdown` sends is not delivered.
+- A field callback that a Script adds to `Browser .currentScene .rootNodes` never runs in X_ITE_R. In X_ITE it runs when it is added and after each change.
+- `rootNodes .push (node)` in a Script changes only the Script's copy in X_ITE_R; the world keeps its root nodes. `addRootNode`, `removeRootNode` and `setRootNodes` change the world.
+- A node that is a root node and the value of a Script field prints in full in both places in X_ITE_R; X_ITE prints it once with `DEF` and `USE`.
+- X_ITE 16.5.0 throws `array[i].set is not a function` for a change of the root nodes while a Script is a root node itself. The cases keep the Script in a Group, so X_ITE_R's behavior there is not compared.
 
 ## Canvas attributes
 
