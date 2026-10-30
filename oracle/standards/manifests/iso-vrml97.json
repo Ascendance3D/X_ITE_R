@@ -1,0 +1,772 @@
+{
+ "schema": "oracle/standards/MANIFEST.schema.json",
+ "manifest": "iso-vrml97",
+ "description": "VRML97 (ISO/IEC 14772-1:1997) candidates. Every entry is ISO_REVIEW_NEEDED: no entry is verified against the ISO text. x_ite_parity records the pinned X_ITE 16.5.0 only; it is not evidence of ISO compliance.",
+ "entries": [
+  {
+   "id": "standards/iso/vrml97/inline/positive/basic.wrl",
+   "path": "oracle/standards/iso/vrml97/inline/positive/basic.wrl",
+   "sha256": "5cd17ced2aa97a017c6aa32a385e1f6d712d553d5bfd9482f4399afc1d2522f7",
+   "bytes": 441,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+     "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+     "bytes": 452
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "Inline loads basic-child.wrl as its children."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 6.25 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/inline/positive/basic-child.wrl",
+   "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+   "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+   "bytes": 452,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "Children nodes at the top level; loaded by basic.wrl and others."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 6.25 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.6.5 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "standards/iso/vrml97/inline/positive/url-fallback.wrl",
+   "path": "oracle/standards/iso/vrml97/inline/positive/url-fallback.wrl",
+   "sha256": "bde33308d7983cb2c4590c7d90edaf273ff06280637d503949342fde8c80eef7",
+   "bytes": 636,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+     "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+     "bytes": 452
+    },
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/absent-fallback-child.wrl",
+     "absent": true
+    },
+    {
+     "url": "http://inline-url-fallback.invalid/child.wrl",
+     "absent": true
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [
+     "warn: Inline: Couldn't load URL 'http://oracle/standards/iso/vrml97/inline/positive/absent-fallback-child.wrl', trying URL 2 of 3. Error: Not Found",
+     "warn: Inline: Couldn't load URL 'http://inline-url-fallback.invalid/child.wrl', trying URL 3 of 3. TypeError: Failed to fetch"
+    ],
+    "notes": "Entries 1 (missing local file) and 2 (.invalid host) fail; entry 3 loads."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.5.2 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 6.25 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/inline/positive/relative-nested.wrl",
+   "path": "oracle/standards/iso/vrml97/inline/positive/relative-nested.wrl",
+   "sha256": "fb210a18dd44f05716442b61623c55c77bbb2e31def8ee8d74989bed9496b2e9",
+   "bytes": 491,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+     "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+     "bytes": 452
+    },
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/nested/inner.wrl",
+     "sha256": "2fe72eb78eb6ed748b315b397a5e0558f7e0f18e5f9017f95ae8fb0f93ade78d",
+     "bytes": 371
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "nested/inner.wrl resolves its ../basic-child.wrl against itself."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 6.25 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/inline/positive/nested/inner.wrl",
+   "path": "oracle/standards/iso/vrml97/inline/positive/nested/inner.wrl",
+   "sha256": "2fe72eb78eb6ed748b315b397a5e0558f7e0f18e5f9017f95ae8fb0f93ade78d",
+   "bytes": 371,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+     "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+     "bytes": 452
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "Loaded by relative-nested.wrl."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 6.25 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/positive/fragment-select.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/positive/fragment-select.wrl",
+   "sha256": "5724f513f3e62e5bb2788fbb298c2c38f7b5decbf026917f02042682affd9760",
+   "bytes": 681,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/externproto/positive/fragment-library.wrl",
+     "sha256": "109a1db67ea5d85d4f7db135ae9a24ffce14ea08e1f882f3f07391585701714b",
+     "bytes": 464
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "#Second selects the second PROTO of fragment-library.wrl (X_ITE 16.5.0: proto Second)."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.9.2 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/positive/fragment-library.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/positive/fragment-library.wrl",
+   "sha256": "109a1db67ea5d85d4f7db135ae9a24ffce14ea08e1f882f3f07391585701714b",
+   "bytes": 464,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "Two PROTOs, First then Second."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.8.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/positive/first-proto.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/positive/first-proto.wrl",
+   "sha256": "10d1637415a18743380b3268355fad061f2c63074ecc051b503c5b29012f938f",
+   "bytes": 587,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/externproto/positive/first-proto-library.wrl",
+     "sha256": "b836c2cc983f899e402b59751df237d7316cb5f4b5c461d3c7303606584124ed",
+     "bytes": 679
+    },
+    {
+     "path": "oracle/standards/iso/vrml97/externproto/positive/fragment-library.wrl",
+     "sha256": "109a1db67ea5d85d4f7db135ae9a24ffce14ea08e1f882f3f07391585701714b",
+     "bytes": 464
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "No fragment: the first PROTO excluding EXTERNPROTOs is Leading (X_ITE 16.5.0: proto Leading)."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/positive/first-proto-library.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/positive/first-proto-library.wrl",
+   "sha256": "b836c2cc983f899e402b59751df237d7316cb5f4b5c461d3c7303606584124ed",
+   "bytes": 679,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/externproto/positive/fragment-library.wrl",
+     "sha256": "109a1db67ea5d85d4f7db135ae9a24ffce14ea08e1f882f3f07391585701714b",
+     "bytes": 464
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "An EXTERNPROTO, then PROTO Leading, then PROTO Trailing."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/positive/proto-relative-base.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/positive/proto-relative-base.wrl",
+   "sha256": "07da0974182d981868606aab2e245889e7de15a736b479e6dc5fbeba5b798acc",
+   "bytes": 970,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/standards/iso/vrml97/inline/positive/basic-child.wrl",
+     "sha256": "9de84811178fa3678fd8f31e27ba58dec8825634707cc34a7c4ded22af72ad29",
+     "bytes": 452
+    },
+    {
+     "path": "oracle/synthetic-externproto/lib-nested.wrl",
+     "sha256": "4310b4bb21a2f46b892a4316dcdf94bd68fc613ba8f1d9e1f4fe9c74767b5c2e",
+     "bytes": 305
+    },
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "console": [],
+    "notes": "Item 1 inside one file; item 3 through oracle/synthetic-externproto/lib-nested.wrl (X_ITE 16.5.0: Wrap body Widget, no load error)."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.8.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "standards/iso/vrml97/externproto/negative/recursive-proto.wrl",
+   "path": "oracle/standards/iso/vrml97/externproto/negative/recursive-proto.wrl",
+   "sha256": "93dafee66a26c5022304ab430b13b4a6e617830fc931989e556cdbb5055e42d6",
+   "bytes": 559,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-29",
+    "method": "authored for this library from the clause text of the Web3D copy of ISO/IEC 14772-1"
+   },
+   "license_record": "none",
+   "dependencies": [],
+   "expected": {
+    "standard": "invalid",
+    "parse": "error-reported",
+    "console": [
+     "warn: Parser error at line 9: Unknown node type or proto 'Loop'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+    ],
+    "notes": "Recursive PROTO: invalid. X_ITE 16.5.0 and the Rust parser report the unknown node Loop and load the rest."
+   },
+   "reference": "none",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.8.4 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "negative"
+   ]
+  },
+  {
+   "id": "synthetic-externproto/lib-widget.wrl",
+   "path": "oracle/synthetic-externproto/lib-widget.wrl",
+   "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+   "bytes": 535,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "PROTO Widget with defaults, IS and an exposedField. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.8.2 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.8.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "synthetic-externproto/lib-two.wrl",
+   "path": "oracle/synthetic-externproto/lib-two.wrl",
+   "sha256": "c618b35de0b33195d55fbaa0cc092fff26a916d28ba9ff98fce4999d0c92fc25",
+   "bytes": 379,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "Two PROTOs, Other first. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "synthetic-externproto/lib-nested.wrl",
+   "path": "oracle/synthetic-externproto/lib-nested.wrl",
+   "sha256": "4310b4bb21a2f46b892a4316dcdf94bd68fc613ba8f1d9e1f4fe9c74767b5c2e",
+   "bytes": 305,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "EXTERNPROTO at the top level, used in a PROTO body. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false,
+   "tags": [
+    "library"
+   ]
+  },
+  {
+   "id": "synthetic-externproto/main-basic.wrl",
+   "path": "oracle/synthetic-externproto/main-basic.wrl",
+   "sha256": "a8bb68edabe0afb77cd850c01ff4cf53dc72130ccc40878bfb6323794d110bc0",
+   "bytes": 401,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "#Widget fragment; defaults from the implementation; explicit values. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.2 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "synthetic-externproto/main-fallback.wrl",
+   "path": "oracle/synthetic-externproto/main-fallback.wrl",
+   "sha256": "95456b68db3895f789739fed880f012c0387883eb2def179fab8d7b018d994f4",
+   "bytes": 273,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    },
+    {
+     "path": "oracle/synthetic-externproto/missing-widget.wrl",
+     "absent": true
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "Entry 1 missing; entry 2 used. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.5.2 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "synthetic-externproto/main-fragmentless.wrl",
+   "path": "oracle/synthetic-externproto/main-fragmentless.wrl",
+   "sha256": "06d5e020f9fc03a78ea86c43a205eb57703dde4a59d1cc86d76c570e0056ec50",
+   "bytes": 240,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-two.wrl",
+     "sha256": "c618b35de0b33195d55fbaa0cc092fff26a916d28ba9ff98fce4999d0c92fc25",
+     "bytes": 379
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "No fragment: the first PROTO (Other) is used; names differ. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "synthetic-externproto/main-nested.wrl",
+   "path": "oracle/synthetic-externproto/main-nested.wrl",
+   "sha256": "c9e043976d41916267ebfefe1dbc5343482615aa9901bd3e35b27405fb8a2244",
+   "bytes": 278,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-nested.wrl",
+     "sha256": "4310b4bb21a2f46b892a4316dcdf94bd68fc613ba8f1d9e1f4fe9c74767b5c2e",
+     "bytes": 305
+    },
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "An EXTERNPROTO inside an externally loaded PROTO body. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.3 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.5.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  },
+  {
+   "id": "synthetic-externproto/main-zero.wrl",
+   "path": "oracle/synthetic-externproto/main-zero.wrl",
+   "sha256": "a1d29494ebe393dfc8cb15afe9997b0bb84158998b3bad0a121dbe5d80667c06",
+   "bytes": 261,
+   "standard": "VRML97",
+   "encoding": "classic",
+   "header": "#VRML V2.0 utf8",
+   "class": "ISO_REVIEW_NEEDED",
+   "x_ite_parity": "MATCH",
+   "origin": "project-authored",
+   "license": "MIT",
+   "provenance": {
+    "author": "X_ITE_R project",
+    "date": "2026-10-15",
+    "method": "existing synthetic fixture, referenced in place (not copied)"
+   },
+   "license_record": "none",
+   "dependencies": [
+    {
+     "path": "oracle/synthetic-externproto/lib-widget.wrl",
+     "sha256": "cdd26cfa9144d24b3d24a40649dac66aaa43f2f036462efda03d1dd6dfe7f7eb",
+     "bytes": 535
+    }
+   ],
+   "expected": {
+    "standard": "valid",
+    "parse": "ok",
+    "notes": "An explicit 0 stays 0. X_ITE parity: crates/x3d-script/tests/corpus.rs synthetic_externproto_matches_x_ite."
+   },
+   "reference": "oracle/synthetic-externproto-baseline.json",
+   "spec_citations": [
+    "ISO/IEC 14772-1:1997 4.9.2 (Web3D free copy; equality with the ISO text UNVERIFIED)",
+    "ISO/IEC 14772-1:1997 4.8.3 (Web3D free copy; equality with the ISO text UNVERIFIED)"
+   ],
+   "negative_of": null,
+   "private": false
+  }
+ ]
+}

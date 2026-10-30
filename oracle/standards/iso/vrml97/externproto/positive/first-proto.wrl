@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# 4.9.3: the URL has no "#name", so the first PROTO statement of first-proto-library.wrl
+# (excluding EXTERNPROTOs) defines Chosen. That PROTO is Leading. The name of that prototype does
+# not need to match the name given in the EXTERNPROTO statement.
+EXTERNPROTO Chosen [ field SFFloat height ] "first-proto-library.wrl"
+DEF ChosenDefault Chosen { }
+DEF ChosenExplicit Chosen { height 1 }

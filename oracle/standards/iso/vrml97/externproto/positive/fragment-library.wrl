@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# Project-authored standards fixture (oracle/standards/README.md).
+# Clause numbers are those of the Web3D free copy of ISO/IEC 14772-1:1997; equality with the ISO text UNVERIFIED.
+# A library of two PROTOs for fragment-select.wrl and first-proto-library.wrl (4.9.3).
+PROTO First [ field SFVec3f size 1 1 1 ]
+{
+  Shape { geometry Box { size IS size } }
+}
+PROTO Second [ field SFFloat radius 2 ]
+{
+  Shape { geometry Sphere { radius IS radius } }
+}
