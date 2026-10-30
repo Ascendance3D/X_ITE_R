@@ -463,9 +463,19 @@ impl MovieMedia {
         }
 
         if now >= player.next_render_time {
-            while now - player.next_render_time >= play_time / rate {
-                player.next_render_time += play_time / rate;
-                player.num_plays += 1;
+            // apng-js adds the missed plays one at a time. At a high rate a play is less than the precision
+            // of `now` (milliseconds since 1970), and that loop does not end: one division gives the same
+            // count. `min (now)` keeps the rounding of the product from going past `now`.
+            let step = play_time / rate;
+            let behind = now - player.next_render_time;
+
+            if step > 0.0 && behind >= step {
+                let plays = (behind / step).floor();
+
+                player.next_render_time = (player.next_render_time + plays * step).min(now);
+                player.num_plays = player
+                    .num_plays
+                    .saturating_add(plays.min(u32::MAX as f64) as u32);
             }
 
             loop {
@@ -474,9 +484,16 @@ impl MovieMedia {
                 let Kind::Apng { player, .. } = &mut self.kind else {
                     unreachable!()
                 };
+                let last = player.next_render_time;
                 player.next_render_time += self.delays[player.current_frame_number] / rate;
 
-                if player.ended || player.paused || now <= player.next_render_time {
+                // A delay that does not move the time (less than its precision) renders 1 frame each tick.
+                if player.ended
+                    || player.paused
+                    || now <= player.next_render_time
+                    || player.next_render_time <= last
+                    || player.next_render_time.is_nan()
+                {
                     break;
                 }
             }
@@ -523,7 +540,7 @@ impl MovieMedia {
         player.current_frame_number = player.current_frame_number.wrapping_add(1) % length;
 
         if player.current_frame_number == length - 1 {
-            player.num_plays += 1;
+            player.num_plays = player.num_plays.saturating_add(1);
 
             if *num_plays != 0 && player.num_plays >= *num_plays {
                 player.ended = true;
@@ -900,6 +917,38 @@ mod tests {
         // A tick a whole play (0.4 s) or more late skips the plays it missed, as apng-js does.
         m.tick(1520.0);
         assert_eq!(m.current_frame(0.0), Some(3));
+    }
+
+    #[test]
+    fn apng_player_ticks_end_at_extreme_rates() {
+        // The runtime clock is milliseconds since 1970: at a rate of 1e8 or more, a play (0.4 s) is less than
+        // the precision of `now`, and a tick that adds one play or one delay at a time does not end.
+        let now = 946_684_800_125.0;
+
+        for rate in [1e8, 1e9, f64::MAX, f64::INFINITY, f64::NAN] {
+            let mut m = MovieMedia::decode_apng(&media("once.png")).unwrap();
+
+            m.set_loop(true, 0.0);
+            m.set_playback_rate(rate);
+            m.play(0.0, now);
+            // 5 ticks pass the last frame after a skip of more plays than u32::MAX.
+            for t in [1.0, 2.0, 3.0, 4.0, 1000.0] {
+                m.tick(now + t);
+            }
+            assert!(m.current_frame(0.0).is_some_and(|f| f < 4), "rate {rate}");
+            assert!(m.looping());
+        }
+
+        // A high rate that the clock can still resolve keeps the frame order: each tick is 1 frame later.
+        let mut m = MovieMedia::decode_apng(&media("once.png")).unwrap();
+
+        m.set_loop(true, 0.0);
+        m.set_playback_rate(1e3);
+        m.play(0.0, 0.0);
+        for (now, frame) in [(0.15, 1), (0.25, 2), (0.35, 3), (0.45, 0), (1.05, 2)] {
+            m.tick(now);
+            assert_eq!(m.current_frame(0.0), Some(frame), "now {now}");
+        }
     }
 
     fn png_chunk(kind: &[u8], body: &[u8]) -> Vec<u8> {
