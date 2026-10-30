@@ -1023,3 +1023,43 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-attributes-01-baseline -
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-entry-01-baseline --runs 5 --suite entry01
 ```
+
+## MovieTexture GIF and APNG playback (2026-10-30, issue #90)
+
+- `tools/gen_movie_anim.py` writes `synthetic-movie-anim/`: 8 × 8 GIF and APNG media made with the standard library
+  (exact frame rectangles, delays, disposal, transparency, dispose and blend operations), the world `movie-anim.wrl`
+  (12 unlit MovieTexture quads) and its event script. A key press at frame 32 starts every MovieTexture through a
+  Script: X_ITE starts a time-dependent node from the file only through `loop` at initialize, before the media are in,
+  so the start would depend on the load time.
+- `tools/movie_anim.py record` runs `x_ite-anim.mjs` (MSAA 0) and `x_ite-anim-msaa.mjs` (MSAA 4) five times and writes
+  `movie-anim-baseline/` (`cases.txt`, `NAME-msaaM/js.json` and `js/*.png`) only when every run gave the same bytes;
+  `recordings.json` keeps the sha256 of each run's files. The five runs of 2026-10-30 were identical.
+- GIF frames follow `elapsedTime` (GifMedia: equal steps, not the frame delays). apng-js plays on
+  `requestAnimationFrame` and the wall clock, not on the browser time the recorder steps; in the headless recorder its
+  ticks are rare and irregular. A world that played an APNG once showed an arbitrary middle frame 8 virtual seconds
+  after the start, and the five runs did not agree, so it is not a baseline. The APNG cases are the states that do not
+  depend on that clock: frame 0 before the start, a first frame of 60 s, speed 0 and `enabled FALSE`.
+- `crates/x3d-viewer/tests/movie_anim.rs` compares `x3d-drive` with the baseline. Prepare the worktree as in
+  "Recording from a worktree".
+
+```
+python3 -I oracle/tools/gen_movie_anim.py
+python3 -I oracle/tools/movie_anim.py record 5
+```
+
+### MovieTexture PNG load errors (2026-10-30, PR #190 review)
+
+- `tools/gen_movie_load_errors.py` writes `synthetic-movie-load-errors/`: 8 × 8 PNG media (static, not a PNG, acTL
+  without fcTL, cut in the header, an APNG cut in its second frame, an APNG with invalid frame data, a good APNG) and
+  one world. A MovieTexture that stays IN_PROGRESS at the first load stops X_ITE's `loadURL`, so a Script sets the
+  `url` of one case for each key press; a LoadSensor and the node's outputs are printed.
+- `tools/movie_anim.py record 5 load-errors` wrote `movie-load-errors-baseline/` (MSAA 0). The five runs of
+  2026-10-30 were identical. X_ITE: IN_PROGRESS without a message for the static PNG, the non-PNG and the APNG without
+  fcTL; a warning, the next URL and FAILED for the cut header; COMPLETE for both APNGs with a valid chunk structure
+  (the invalid frame draws nothing). What the browser draws for the rows of a partly cut frame is not recorded:
+  nothing is started, so only frame 0 is shown.
+
+```
+python3 -I oracle/tools/gen_movie_load_errors.py
+python3 -I oracle/tools/movie_anim.py record 5 load-errors
+```

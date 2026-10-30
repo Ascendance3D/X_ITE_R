@@ -3188,6 +3188,14 @@ impl<'a> Builder<'a> {
                 texture::load_image_texture(sg, n, &base, self.root.fetcher.as_ref()).map(Rc::new)
             }
             "PixelTexture" => texture::pixel_texture(sg, n).map(Rc::new),
+            // A GIF or an APNG; video frames are not decoded.
+            "MovieTexture" => {
+                let t = texture::movie_texture(sg, n).map(Rc::new);
+                if t.is_none() && sg.rt.url_load_state(n) != x3d_runtime::nodes::LoadState::Failed {
+                    self.unsupported.insert(ty.to_string());
+                }
+                t
+            }
             "ComposedCubeMapTexture" => {
                 // Slot textures that are COMPLETE: an ImageTexture by its load state, a PixelTexture
                 // with a valid image.

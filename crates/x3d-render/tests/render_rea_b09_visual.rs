@@ -21,7 +21,7 @@ use x3d_render::gpu::Gpu;
 /// alphaCutoff.
 const KNOWN_GAPS: &[(&str, &str)] = &[(
     "vis-items-movie.wrl",
-    "MovieTexture frames are not decoded (GIF, APNG, WebM): the texture stays untextured white (x3d-shot: 'not rendered: MovieTexture')",
+    "MovieTexture video (WebM) frames are not decoded: those textures stay untextured white (x3d-shot: 'not rendered: MovieTexture'); GIF and APNG are decoded since crates/x3d-viewer/tests/movie_anim.rs",
 )];
 
 #[test]

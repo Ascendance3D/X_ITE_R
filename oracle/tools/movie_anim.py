@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+"""MovieTexture GIF / APNG baselines (issue #90; pinned X_ITE 16.5.0, headless Chrome on the GPU).
+
+  python3 -I oracle/tools/movie_anim.py record [RUNS] [SET]
+      Runs x_ite-anim.mjs (MSAA 0) and x_ite-anim-msaa.mjs (MSAA 4) RUNS times (default 5) on each case of the
+      SET (default anim) into /tmp/movie-anim-xite/runN/NAME-msaaM. The baseline oracle/<set dir>/NAME-msaaM
+      (js.json, js/*.png) is written from run 1 only when every run gave the same js.json and the same PNG
+      bytes; recordings.json keeps the sha256 of each run's files. A difference between runs writes nothing
+      and exits 1. An existing target (a case directory, cases.txt or recordings.json) stops the tool before it
+      records and again before it writes; nothing is overwritten. Tests: oracle/tools/test_movie_anim.py.
+
+Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_movie_anim.py, MSAA 0 and 4) and
+load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0).
+A baseline is written only from an X_ITE run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs),
+never copied.
+"""
+import hashlib, json, os, shutil, subprocess, sys
+
+root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+SETS = {
+    "anim": ("movie-anim-baseline", "synthetic-movie-anim", ["movie-anim"], ["0", "4"]),
+    "load-errors": ("movie-load-errors-baseline", "synthetic-movie-load-errors", ["movie-load-errors"], ["0"]),
+}
+
+
+def sha(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+
+
+def files(case_dir):
+    """sha256 of js.json and of every PNG, by name relative to the case directory."""
+    out = {"js.json": sha(os.path.join(case_dir, "js.json"))}
+    for f in sorted(os.listdir(os.path.join(case_dir, "js"))):
+        out["js/" + f] = sha(os.path.join(case_dir, "js", f))
+    return out
+
+
+def targets(out_dir, cases, msaa):
+    """Every path that write_baseline makes. It stops before the first write if one of them exists, so an
+    existing baseline is never overwritten and a recording is never written in part."""
+    paths = [os.path.join(out_dir, f"{name}-msaa{m}") for name, _, _ in cases for m in msaa]
+    paths += [os.path.join(out_dir, "cases.txt"), os.path.join(out_dir, "recordings.json")]
+    found = [p for p in paths if os.path.lexists(p)]
+    if found:
+        sys.exit(f"{', '.join(found)} exists; a new recording goes to a new baseline directory")
+    return paths
+
+
+def write_baseline(tmp, out_dir, cases, msaa, report):
+    """Copies run 1 of each case from tmp into out_dir, with cases.txt and recordings.json."""
+    targets(out_dir, cases, msaa)
+    os.makedirs(out_dir, exist_ok=True)
+    lines = []
+    for name, world, script in cases:
+        for m in msaa:
+            key = f"{name}-msaa{m}"
+            shutil.copytree(os.path.join(tmp, "run1", key), os.path.join(out_dir, key))
+            lines.append(f"{name} {world} {script} {m}\n")
+    open(os.path.join(out_dir, "cases.txt"), "w").writelines(lines)
+    json.dump(report, open(os.path.join(out_dir, "recordings.json"), "w"), indent=1)
+
+
+def record(runs, name):
+    baseline, synthetic, worlds, MSAA = SETS[name]
+    out_dir = os.path.join(root, "oracle", baseline)
+    CASES = [(n, f"oracle/{synthetic}/{n}.wrl", f"oracle/{synthetic}/{n}.json") for n in worlds]
+    targets(out_dir, CASES, MSAA)
+    tmp = "/tmp/movie-anim-xite"
+    shutil.rmtree(tmp, ignore_errors=True)
+    report, same = {}, True
+
+    for name, world, script in CASES:
+        for msaa in MSAA:
+            key = f"{name}-msaa{msaa}"
+            hashes = []
+            for run in range(1, runs + 1):
+                d = os.path.join(tmp, f"run{run}", key)
+                os.makedirs(d)
+                anim = "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"
+                cmd = ["node", os.path.join(root, "oracle", anim), world, script,
+                       "--out", os.path.join(d, "js.json"), "--png-dir", os.path.join(d, "js")]
+                if msaa != "0":
+                    cmd += ["--ms", msaa]
+                subprocess.run(cmd, check=True, cwd=root, timeout=300)
+                hashes.append(files(d))
+            agree = all(h == hashes[0] for h in hashes)
+            same &= agree
+            report[key] = {"runs": hashes, "identical": agree}
+            print(f"{key}: {runs} runs, {'identical' if agree else 'DIFFERENT'}")
+
+    if not same:
+        json.dump(report, open(os.path.join(tmp, "recordings.json"), "w"), indent=1)
+        sys.exit(f"runs differ; nothing written (see {tmp}/recordings.json)")
+
+    write_baseline(tmp, out_dir, CASES, MSAA, report)
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if args and args[0] == "record":
+        record(int(args[1]) if len(args) > 1 else 5, args[2] if len(args) > 2 else "anim")
+    else:
+        sys.exit(__doc__)

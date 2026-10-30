@@ -1,0 +1,38 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+Transform { translation -3.3 2.2 0 children Shape { appearance Appearance { texture DEF M0 MovieTexture { url "media/anim4.gif"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.1 2.2 0 children Shape { appearance Appearance { texture DEF M1 MovieTexture { url "media/anim4.gif"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.1 2.2 0 children Shape { appearance Appearance { texture DEF M2 MovieTexture { url "media/anim4.gif" speed 2 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 3.3 2.2 0 children Shape { appearance Appearance { texture DEF M3 MovieTexture { url "media/anim4.gif" speed -1 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -3.3 0.0 0 children Shape { appearance Appearance { texture DEF M4 MovieTexture { url "media/dispose.gif"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.1 0.0 0 children Shape { appearance Appearance { texture DEF M5 MovieTexture { url "media/anim4.gif"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.1 0.0 0 children Shape { appearance Appearance { texture DEF M6 MovieTexture { url "media/hold.png"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 3.3 0.0 0 children Shape { appearance Appearance { texture DEF M7 MovieTexture { url "media/hold.png"  } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -3.3 -2.2 0 children Shape { appearance Appearance { texture DEF M8 MovieTexture { url "media/once.png" speed 0 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.1 -2.2 0 children Shape { appearance Appearance { texture DEF M9 MovieTexture { url "media/anim4.gif" enabled FALSE } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.1 -2.2 0 children Shape { appearance Appearance { texture DEF M10 MovieTexture { url "media/hold.png" enabled FALSE } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 3.3 -2.2 0 children Shape { appearance Appearance { texture DEF M11 MovieTexture { url "media/anim4.gif" speed 0.5 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+DEF K KeySensor { }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFString press
+  initializeOnly MFNode movies [ USE M0 USE M1 USE M2 USE M3 USE M4 USE M5 USE M6 USE M7 USE M8 USE M9 USE M10 USE M11 ]
+  initializeOnly MFNode looping [ USE M0 USE M3 USE M4 USE M5 USE M6 USE M8 USE M9 USE M11 ]
+  initializeOnly SFNode stopped USE M5
+  url "javascript:
+function press (value, time)
+{
+   for (var i = 0; i < movies .length; ++ i)
+      movies [i] .startTime = time;
+
+   for (var i = 0; i < looping .length; ++ i)
+      looping [i] .loop = true;
+
+   stopped .stopTime = time + 0.6;
+}
+"
+}
+ROUTE K.keyPress TO S.press
