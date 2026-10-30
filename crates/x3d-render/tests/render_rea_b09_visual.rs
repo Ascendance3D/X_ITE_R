@@ -15,19 +15,14 @@ use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
 /// (world, why the renderer differs): worlds the renderer is known not to match. A world listed here must stay over the
-/// bound; the test fails once it matches, so its entry is removed then. vis-items-alpha and vis-items-movie are the gaps the
-/// item-level worlds of issue #90 left (gen_rea_b09_visual_items.py); vis-items-espdu and vis-items-shape-bbox matched once
-/// EspduTransform drew its children and Shape culled by its declared bbox.
-const KNOWN_GAPS: &[(&str, &str)] = &[
-    (
-        "vis-items-alpha.wrl",
-        "Appearance alphaMode / alphaCutoff are not applied (Appearance.set_alphaMode__, set_transparent__): OPAQUE still blends the texture and material alpha, MASK neither cuts at alphaCutoff nor draws the kept pixels opaque",
-    ),
-    (
-        "vis-items-movie.wrl",
-        "MovieTexture frames are not decoded (GIF, APNG, WebM): the texture stays untextured white (x3d-shot: 'not rendered: MovieTexture')",
-    ),
-];
+/// bound; the test fails once it matches, so its entry is removed then. vis-items-movie is the gap the item-level worlds
+/// of issue #90 left (gen_rea_b09_visual_items.py); vis-items-espdu and vis-items-shape-bbox matched once EspduTransform
+/// drew its children and Shape culled by its declared bbox, and vis-items-alpha once Appearance applied alphaMode and
+/// alphaCutoff.
+const KNOWN_GAPS: &[(&str, &str)] = &[(
+    "vis-items-movie.wrl",
+    "MovieTexture frames are not decoded (GIF, APNG, WebM): the texture stays untextured white (x3d-shot: 'not rendered: MovieTexture')",
+)];
 
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {

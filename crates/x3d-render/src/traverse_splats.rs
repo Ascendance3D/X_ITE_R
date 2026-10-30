@@ -93,6 +93,8 @@ impl Builder<'_> {
             projectors: vec![],
             lights: vec![],
             transparent: true,
+            alpha_mode: AlphaMode::Blend,
+            alpha_cutoff: 0.0,
             back_material: None,
             blend: None,
             depth: None,

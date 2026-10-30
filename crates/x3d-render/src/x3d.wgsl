@@ -77,11 +77,11 @@ struct DrawUniforms {
     emissive_transparency: vec4<f32>,
     // x: mode (0 unlit, 1 lit Material), y: lighting, z: color material, w: texture
     flags: vec4<u32>,
-    // x: flip y, y: alpha mode opaque, z: geometry type, w: projection z scale off (background)
+    // x: flip y, y: alpha mode (0 BLEND, 1 OPAQUE, 2 MASK), z: geometry type, w: projection z scale off (background)
     flags2: vec4<u32>,
     // x: number of clip planes, y: depth range on, z: X3D_PHONG_MATERIAL
     flags3: vec4<u32>,
-    // DepthMode depthRange: near, far
+    // DepthMode depthRange: near, far; z: x3d_AlphaCutoff (alpha mode MASK)
     depth_range: vec4<f32>,
     // ClipPlanes2.glsl x3d_ClipPlane [X3D_NUM_CLIP_PLANES]: normal, distanceFromOrigin
     clip_planes: array<vec4<f32>, 6>,
@@ -2428,7 +2428,14 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
         final_color = vec4<f32>(emissive_color.rgb * projector_color, emissive_color.a);
     }
 
+    // Fragment2.glsl X3D_ALPHA_MODE_OPAQUE / X3D_ALPHA_MODE_MASK.
     if (draw.flags2.y == 1u) {
+        final_color.a = 1.0;
+    } else if (draw.flags2.y == 2u) {
+        if (final_color.a < draw.depth_range.z) {
+            discard;
+        }
+
         final_color.a = 1.0;
     }
 
