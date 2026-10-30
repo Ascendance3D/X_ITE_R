@@ -32,6 +32,8 @@ const SCRIPT: &str = "
   function loadProto (v) { Browser .createX3DFromURL (new MFString ('proto.wrl')) .then (function (s) { }); }
   function clear (v)     { grp .children = new MFNode (); }
   function drop (v)      { held = null; heldNode = null; }
+  function loadMark (v)  { Browser .createX3DFromURL (new MFString ('part.wrl')) .then (function (s) { s .setProfile ('stale'); held = s; }); }
+  function report (v)    { print ('profile: ' + (held .profile === 'stale' ? 'stale' : held .profile .name)); }
 ";
 
 fn world() -> String {
@@ -39,6 +41,7 @@ fn world() -> String {
         "#X3D V3.3 utf8\nPROFILE Full\nDEF GRP Group {{ }}\nDEF SC Script {{ directOutput TRUE
   inputOnly SFBool loadKeep inputOnly SFBool loadDrop inputOnly SFBool loadNode inputOnly SFBool loadVrml
   inputOnly SFBool loadProto inputOnly SFBool clear inputOnly SFBool drop
+  inputOnly SFBool loadMark inputOnly SFBool report
   initializeOnly SFNode grp USE GRP
   url \"ecmascript:{SCRIPT}\" }}\n"
     )
@@ -287,5 +290,41 @@ fn a_url_scene_with_a_proto_is_not_a_candidate() {
 
         w.steps(70);
         assert_eq!(w.nodes_of(c), nodes);
+    });
+}
+
+/// A released scene's context slot is used again: the new scene does not show the profile that `setProfile` gave the
+/// released scene, and a scene that stays keeps its own.
+#[test]
+fn a_reused_context_slot_does_not_keep_the_released_profile() {
+    big(|| {
+        let mut w = World::new("profile");
+
+        w.v.rt.record_console = true;
+        w.call("loadMark", 10);
+
+        let (c, nodes) = w.loaded();
+
+        w.call("report", 2);
+        assert_eq!(
+            w.v.rt.console.last().map(String::as_str),
+            Some("log: profile: stale"),
+            "the held scene keeps its profile: {:?}",
+            w.v.rt.log
+        );
+
+        w.call("drop", 3);
+        w.assert_released(c, &nodes);
+
+        w.call("loadKeep", 10);
+        assert_eq!(w.scene(), Some(c), "the new scene uses the released slot");
+
+        w.call("report", 2);
+        assert_eq!(
+            w.v.rt.console.last().map(String::as_str),
+            Some("log: profile: Interchange"),
+            "{:?}",
+            w.v.rt.log
+        );
     });
 }

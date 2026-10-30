@@ -2157,6 +2157,7 @@ global .__releaseScenes = function (ids)
       contextObjects .delete (id);
       contextRefs .delete (id);
       sceneComponents .delete (- (id + 2));
+      profileValues .delete (- (id + 2));
 
       for (let index = 0; index < 4; ++ index)
       {
