@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Check the standards fixture manifests: python3 -I -B oracle/tools/standards_manifest.py check [MANIFEST.json ...]
 
-With no manifest named, checks every oracle/standards/manifests/*.json. Prints one line per problem and exits 1 when
-there is one, else prints a summary and exits 0. Standard library only; it reads files and writes nothing.
+With no manifest named, checks every oracle/standards/manifests/*.json; with names, only those manifests. Prints one
+line per problem and exits 1 when there is one, else prints a summary and exits 0. Standard library only; it reads
+files and writes nothing.
 
 oracle/standards/MANIFEST.schema.json is the source of the required fields and the enums. The checks:
 
@@ -20,7 +21,8 @@ oracle/standards/MANIFEST.schema.json is the source of the required fields and t
   a local path that does not exist or an `.invalid` URL.
 - No entry has `ISO_VERIFIED` (no promotion; README.md), every entry has `private: false`, and the class, tag and
   manifest rules of README.md hold.
-- Every scene file below `oracle/standards/` is an entry of exactly one manifest, and no path is in two manifests.
+- No path is in two of the checked manifests. With no manifest named, also: every scene file below
+  `oracle/standards/` is an entry of a manifest.
 """
 import hashlib, json, os, re, sys
 from urllib.parse import unquote, urlsplit
@@ -364,7 +366,9 @@ def check_entry(root, schema, manifest, e, keys, problems):
 def check(root=ROOT, manifests=None):
     """The problems found, as text lines, and the number of entries checked."""
     problems, keys, schema = [], answer_keys(root), Schema(root)
-    if manifests is None:
+    # The scene coverage check needs every manifest: with named manifests it would report the scenes of the others.
+    full_set = manifests is None
+    if full_set:
         d = os.path.join(root, MANIFESTS)
         manifests = sorted(os.path.join(d, f) for f in os.listdir(d) if f.endswith(".json"))
     owner, count = {}, 0
@@ -396,12 +400,12 @@ def check(root=ROOT, manifests=None):
                 if p in owner:
                     problems.append(f"{name}: path {p} is also in {owner[p]}")
                 owner[p] = name
-    lib = os.path.join(root, LIBRARY)
-    for d, _, files in os.walk(lib):
-        for f in files:
-            rel = os.path.relpath(os.path.join(d, f), root).replace(os.sep, "/")
-            if f.endswith(SCENE_EXTENSIONS) and rel not in owner:
-                problems.append(f"{rel}: a library scene in no manifest")
+    if full_set:
+        for d, _, files in os.walk(os.path.join(root, LIBRARY)):
+            for f in files:
+                rel = os.path.relpath(os.path.join(d, f), root).replace(os.sep, "/")
+                if f.endswith(SCENE_EXTENSIONS) and rel not in owner:
+                    problems.append(f"{rel}: a library scene in no manifest")
     return problems, count
 
 

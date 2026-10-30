@@ -285,6 +285,47 @@ class Coverage(Case):
         self.assertTrue(any("is also in" in p for p in sm.check(self.root)[0]))
 
 
+class Selection(Case):
+    """Named manifests (check iso-vrml97.json ...) against the default set: only the default set checks that every
+    library scene is in a manifest (PR #183 review)."""
+    BEHAVIOR = "oracle/standards/behavior/vrml97/inline/b.wrl"
+
+    def setUp(self):
+        super().setUp()
+        self.write(self.BEHAVIOR, SCENES[CHILD])
+        self.manifest(self.entries)
+        self.manifest([entry(self.BEHAVIOR, SCENES[CHILD], **{"class": "REGRESSION_ONLY", "tags": ["behavior"],
+                                                              "expected": {"standard": "unstated"}})], "regression")
+
+    def named(self, *names):
+        return sm.check(self.root, [os.path.join(self.root, sm.MANIFESTS, f"{n}.json") for n in names])
+
+    def test_default_checks_all_library_scenes(self):
+        self.assertEqual(sm.check(self.root), ([], 3))
+
+    def test_one_named_manifest_passes(self):
+        self.assertEqual(self.named("iso-vrml97"), ([], 2))
+
+    def test_two_named_manifests_pass(self):
+        self.assertEqual(self.named("iso-vrml97", "regression"), ([], 3))
+
+    def test_named_manifest_invalid_entry_fails(self):
+        self.manifest(self.changed(sha256="0" * 64))
+        problems, _ = self.named("iso-vrml97")
+        self.assertTrue(any("sha256" in p for p in problems), problems)
+
+    def test_named_manifests_keep_the_duplicate_path_check(self):
+        self.manifest([entry(CHILD, SCENES[CHILD], **{"class": "REGRESSION_ONLY"})], "regression")
+        problems, _ = self.named("iso-vrml97", "regression")
+        self.assertTrue(any("is also in" in p for p in problems), problems)
+
+    def test_default_detects_scene_in_no_manifest(self):
+        self.write(LIB + "stray.wrl", SCENES[CHILD])
+        problems, _ = sm.check(self.root)
+        self.assertEqual(problems, [LIB + "stray.wrl: a library scene in no manifest"])
+        self.assertEqual(self.named("iso-vrml97"), ([], 2))
+
+
 class Real(unittest.TestCase):
     def test_real_manifests(self):
         problems, count = sm.check()
@@ -293,6 +334,8 @@ class Real(unittest.TestCase):
 
     def test_cli(self):
         self.assertEqual(sm.main(["check"]), 0)
+        for name in ("iso-vrml97", "regression"):
+            self.assertEqual(sm.main(["check", os.path.join(sm.ROOT, sm.MANIFESTS, f"{name}.json")]), 0)
         self.assertEqual(sm.main([]), 2)
 
 
