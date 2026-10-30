@@ -208,10 +208,17 @@ jobs:
       - name: Test counts
         if: always()
         run: |
-          grep -E '^ *Summary \[' suite.log | tail -1 | sed 's/^ */nextest: /' | tee -a "$GITHUB_STEP_SUMMARY"
-          grep '^test result' doctests.log | awk '{p+=$4; f+=$6; i+=$8} END {printf "doctests: passed %d, failed %d, ignored %d\n", p, f, i}' | tee -a "$GITHUB_STEP_SUMMARY"
-          grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' suite.log | sort -u | tee -a "$GITHUB_STEP_SUMMARY" || true
-          grep -E '^test .* FAILED$' doctests.log | tee -a "$GITHUB_STEP_SUMMARY" || true
+          # Information only: the suite and doctest steps above give the pass or fail result.
+          summary=$(grep -E '^ *Summary \[' suite.log 2>/dev/null | tail -1 | sed 's/^ *//') || true
+          if [ -n "$summary" ]; then
+            echo "nextest: $summary" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::no nextest Summary line in suite.log; see the Rust suite step for the result"
+            echo "nextest: no Summary line (see the Rust suite step)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          { grep '^test result' doctests.log 2>/dev/null || true; } | awk '{n++; p+=$4; f+=$6; i+=$8} END {if (n) printf "doctests: passed %d, failed %d, ignored %d\n", p, f, i; else print "doctests: no test result line (see the Doctests step)"}' | tee -a "$GITHUB_STEP_SUMMARY"
+          grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' suite.log 2>/dev/null | sort -u | tee -a "$GITHUB_STEP_SUMMARY" || true
+          grep -E '^test .* FAILED$' doctests.log 2>/dev/null | tee -a "$GITHUB_STEP_SUMMARY" || true
 
       - name: Evidence skips
         if: success() || failure()

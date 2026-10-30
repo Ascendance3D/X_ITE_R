@@ -23,7 +23,8 @@ CI and the local strict suite run the tests with cargo-nextest (`.config/nextest
 `~/Projects/cybertown/.cargo/config.toml` sets `build.build-dir` to a cache that every worktree shares. **`CARGO_TARGET_DIR` does not move `build.build-dir`.** A second build in another worktree can therefore overwrite the files of a running suite: the file hashes do not depend on the worktree path. This caused false doctest and compile failures (issue #185).
 
 - To isolate a build, set both `CARGO_BUILD_BUILD_DIR` and `CARGO_TARGET_DIR`. `tools/strict-suite.sh` does this (`XITE_R_SUITE_DIR`, default `/tmp/xiter-suite-<worktree>`).
-- It holds a lock on that directory. It refuses to start when another run holds the lock, or when another cargo process builds into the same directory.
+- It holds a lock on that directory, so a second `strict-suite.sh` run cannot share it. A cargo command started by hand with the same `CARGO_BUILD_BUILD_DIR` is not locked out. The script stops when such a process is already running at the start, but this scan is advisory only.
+- It needs a systemd user session (`systemd-run --user`), `flock` and GNU time (`/usr/bin/time`), and it stops when one is missing. The memory peak comes from cgroup v2; when it is not available, the summary says "memory peak unavailable".
 - Check the effective build directory in the `Running … (path)` lines of the log, or in `/proc/<cargo pid>/environ`.
 - Do not start another cargo command in the same build directory while a suite runs.
 
