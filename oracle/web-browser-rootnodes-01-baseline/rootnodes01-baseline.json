@@ -1,0 +1,295 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {
+  "rootNodes.picture.picture.png": [
+   "9f52f3fb15dd3f02de4e56bb961a06090999a2c3f23311475c57337b391ca42f",
+   "9f52f3fb15dd3f02de4e56bb961a06090999a2c3f23311475c57337b391ca42f",
+   "9f52f3fb15dd3f02de4e56bb961a06090999a2c3f23311475c57337b391ca42f",
+   "9f52f3fb15dd3f02de4e56bb961a06090999a2c3f23311475c57337b391ca42f",
+   "9f52f3fb15dd3f02de4e56bb961a06090999a2c3f23311475c57337b391ca42f"
+  ]
+ },
+ "values": {
+  "rootNodes.live": {
+   "same": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "field": [
+    true,
+    "MFNode",
+    "rootNodes",
+    7
+   ],
+   "before": [
+    3,
+    [
+     "Transform:T",
+     "Group:G",
+     "TouchSensor:S"
+    ]
+   ],
+   "pushed": 4,
+   "after": [
+    4,
+    4,
+    [
+     "Transform:T",
+     "Group:G",
+     "TouchSensor:S",
+     "Group:G"
+    ]
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF G Group { } DEF S TouchSensor { } USE G",
+   "later": [
+    true,
+    [
+     "Transform:T",
+     "Group:G",
+     "TouchSensor:S",
+     "Group:G"
+    ]
+   ],
+   "text2": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF G Group { } DEF S TouchSensor { } USE G",
+   "errors": [],
+   "seq": [],
+   "logs": []
+  },
+  "rootNodes.push": {
+   "pushed": 4,
+   "after": [
+    4,
+    [
+     "Transform:T",
+     "Group:G",
+     "TouchSensor:S",
+     "Transform:R"
+    ],
+    true
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF G Group { } DEF S TouchSensor { } DEF R Transform { translation 2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Sphere { } } }",
+   "named": true,
+   "unshift": 5,
+   "final": [
+    "TouchSensor:S",
+    "Transform:T",
+    "Group:G",
+    "TouchSensor:S",
+    "Transform:R"
+   ],
+   "errors": [],
+   "seq": [
+    "roots|Transform:T,Group:G,TouchSensor:S,Transform:R|later|0",
+    "roots|TouchSensor:S,Transform:T,Group:G,TouchSensor:S,Transform:R|later|3"
+   ],
+   "logs": []
+  },
+  "rootNodes.splice": {
+   "spliced": [
+    "Group:G"
+   ],
+   "after": [
+    "Transform:T",
+    "TouchSensor:S"
+   ],
+   "popped": "TouchSensor:S",
+   "length": [
+    "Transform:T",
+    "NULL",
+    "NULL"
+   ],
+   "shrink": [],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive",
+   "shift": null,
+   "errors": [],
+   "seq": [
+    "roots|Transform:T,TouchSensor:S|later|0",
+    "roots|Transform:T|later|3",
+    "roots|Transform:T,NULL,NULL|later|6",
+    "roots||later|9"
+   ],
+   "logs": []
+  },
+  "rootNodes.assign": {
+   "assign": [
+    "TouchSensor:S",
+    "Transform:T"
+   ],
+   "same": [
+    true,
+    [
+     "TouchSensor:S",
+     "Transform:T"
+    ]
+   ],
+   "set": [
+    "Group:G"
+   ],
+   "array": "TypeError: field.getValue is not a function",
+   "setArr": "TypeError: field.getValue is not a function",
+   "nulls": [
+    "NULL",
+    "Transform:T"
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive NULL DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } }",
+   "final": [
+    true,
+    [
+     "NULL",
+     "Transform:T"
+    ]
+   ],
+   "errors": [],
+   "seq": [
+    "roots|TouchSensor:S,Transform:T|later|0",
+    "roots|Group:G|later|3",
+    "roots|NULL,Transform:T|later|12"
+   ],
+   "logs": []
+  },
+  "rootNodes.addRemove": {
+   "add": null,
+   "afterAdd": [
+    "Transform:T",
+    "Group:G",
+    "TouchSensor:S",
+    "Group:N"
+   ],
+   "again": null,
+   "afterAgain": [
+    "Transform:T",
+    "Group:G",
+    "TouchSensor:S",
+    "Group:N"
+   ],
+   "remove": null,
+   "afterRemove": [
+    "Transform:T",
+    "TouchSensor:S",
+    "Group:N"
+   ],
+   "missing": null,
+   "afterMissing": [
+    "Transform:T",
+    "TouchSensor:S",
+    "Group:N"
+   ],
+   "addNull": "TypeError: Invalid value used as weak map key",
+   "removeNull": "TypeError: Invalid value used as weak map key",
+   "addText": "TypeError: Invalid value used as weak map key",
+   "removeUndef": "TypeError: Invalid value used as weak map key",
+   "afterBad": [
+    "Transform:T",
+    "TouchSensor:S",
+    "Group:N"
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF S TouchSensor { } DEF N Group { }",
+   "errors": [],
+   "seq": [
+    "roots|Transform:T,Group:G,TouchSensor:S,Group:N|later|0",
+    "roots|Transform:T,TouchSensor:S,Group:N|later|6",
+    "roots|Transform:T,TouchSensor:S,Group:N|later|9"
+   ],
+   "logs": []
+  },
+  "rootNodes.nulls": {
+   "push": 4,
+   "after": [
+    "Transform:T",
+    "Group:G",
+    "TouchSensor:S",
+    "NULL"
+   ],
+   "remove": null,
+   "after2": [
+    "Transform:T",
+    "Group:G",
+    "NULL"
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF G Group { } NULL",
+   "errors": [],
+   "seq": [
+    "roots|Transform:T,Group:G,TouchSensor:S,NULL|later|0",
+    "roots|Transform:T,Group:G,NULL|later|3"
+   ],
+   "logs": []
+  },
+  "rootNodes.duplicates": {
+   "push": 5,
+   "after": [
+    "Transform:T",
+    "Group:G",
+    "TouchSensor:S",
+    "Transform:T",
+    "Transform:T"
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF T Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } } geometry Box { } } } DEF G Group { } DEF S TouchSensor { } USE T USE T",
+   "add": null,
+   "remove": null,
+   "after2": [
+    "Group:G",
+    "TouchSensor:S"
+   ],
+   "text2": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interactive DEF G Group { } DEF S TouchSensor { }",
+   "errors": [],
+   "seq": [
+    "roots|Transform:T,Group:G,TouchSensor:S,Transform:T,Transform:T|later|0",
+    "roots|Group:G,TouchSensor:S|later|3"
+   ],
+   "logs": []
+  },
+  "rootNodes.callbacks": {
+   "arg": [
+    [
+     true,
+     true
+    ],
+    [
+     true,
+     true
+    ],
+    [
+     true,
+     true
+    ]
+   ],
+   "callbacks": [
+    "b",
+    "arg"
+   ],
+   "errors": [],
+   "seq": [
+    "t|-2 1 0|later|0",
+    "a|Transform:T,Group:G,TouchSensor:S,Group:G|later|0",
+    "b|Transform:T,Group:G,TouchSensor:S,Group:G|later|0",
+    "a|Transform:T,Group:G|later|3",
+    "b|Transform:T,Group:G|later|3",
+    "t|-2 0 0|later|3",
+    "b|Transform:T,Group:G,TouchSensor:S|later|6"
+   ],
+   "logs": [
+    "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "rootNodes.picture": {
+   "roots": [
+    "Group:G",
+    "TouchSensor:S",
+    "Transform"
+   ],
+   "errors": [],
+   "seq": [],
+   "logs": [],
+   "picture": {
+    "picture": "rootNodes.picture.picture.png"
+   }
+  }
+ }
+}

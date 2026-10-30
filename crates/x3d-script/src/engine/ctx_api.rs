@@ -315,11 +315,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
         "rootSet" => {
             // X3DScene.setRootNodes (value): rootNodes .assign (value)
             if let Some(FieldValue::MFNode(list)) = value_arg(a, 0) {
-                rt().scene.ctx_mut(c).root_nodes = list;
-                rt().rebuild_parents();
-                let rounds = rt().root_nodes_rounds(c);
-                rt().ctx_event(c, CtxField::SceneGraph, rounds);
-                rt().ctx_event(c, CtxField::BBox, rounds);
+                rt().set_root_nodes(c, list);
             }
 
             Ok(undefined)

@@ -821,6 +821,24 @@ impl WebBrowser {
         })
     }
 
+    /// `rootNodes .assign (list)` of scene `id` (see [`Session::set_root_nodes`]): `list` holds node ids and nulls.
+    #[wasm_bindgen(js_name = setRootNodes)]
+    pub fn set_root_nodes(&mut self, id: u32, list: js_sys::Array) -> Result<(), JsError> {
+        let list = list.iter().map(|v| v.as_f64().map(|n| n as u32)).collect();
+
+        self.session_mut(id)?
+            .set_root_nodes(list)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DField.addFieldCallback / removeFieldCallback of the `rootNodes` field of scene `id`: its events come with
+    /// [`WebBrowser::take_field_events`] as node `ROOT_NODES_EVENT` (4294967295).
+    #[wasm_bindgen(js_name = observeRootNodes)]
+    pub fn observe_root_nodes(&mut self, id: u32, on: bool) -> Result<(), JsError> {
+        self.session_mut(id)?.observe_root_nodes(on);
+        Ok(())
+    }
+
     /// The routes of scene `id` in the order they were added, each as `[id, source, sourceField, destination,
     /// destinationField, givenSourceField, givenDestinationField]` (see [`Session::routes`]).
     #[wasm_bindgen(js_name = routes)]
