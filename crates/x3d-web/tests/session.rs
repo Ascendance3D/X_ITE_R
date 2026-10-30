@@ -823,9 +823,15 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
 
     let mut settled = vec![];
 
+    // The page uses an outcome when it takes it (issue #172: after that, a scene that nothing in the world refers to is
+    // released at the next sweep), so stop when both are in.
     for i in 1..10 {
         s.step(NOW + f64::from(i) * 0.1);
         settled.extend(s.take_scene_requests());
+
+        if settled.len() == 2 {
+            break;
+        }
     }
 
     assert_eq!(settled.len(), 2, "{settled:?}");
@@ -854,6 +860,113 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
         ),
         "{log}"
     );
+}
+
+/// Issue #172, the page rule: the page holds the outcome of its createX3DFromURL / createVrmlFromURL until it takes it
+/// (`take_scene_requests`). After that the page's ids hold nothing (as for the page's createVrmlFromString): the scene is a
+/// sweep candidate and stays only while the world refers to one of its nodes.
+fn page_scene(s: &mut Session, t: &mut f64, frames: usize) -> Vec<NodeId> {
+    let request = s.create_x3d_from_url(
+        vec!["../parts/p.wrl".to_string()],
+        "http://example.test/example/sub/page.html",
+    );
+
+    // The page does not take the outcome for many frames (idle sweeps run): the scene stays.
+    for _ in 0..frames {
+        *t += 0.1;
+        s.step(*t);
+    }
+
+    let settled = s.take_scene_requests();
+
+    assert_eq!(settled.len(), 1, "{settled:?}");
+    assert_eq!(settled[0].0, request);
+
+    let nodes: Vec<NodeId> = settled[0]
+        .1
+        .as_ref()
+        .expect("the scene loads")
+        .iter()
+        .map(|n| n.expect("no NULL root"))
+        .collect();
+
+    for &n in &nodes {
+        assert!(
+            s.type_name(n).is_some(),
+            "the untaken outcome kept node {n}"
+        );
+    }
+
+    nodes
+}
+
+#[test]
+fn a_page_url_scene_the_page_drops_is_released() {
+    let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
+    let mut t = NOW;
+    let nodes = page_scene(&mut s, &mut t, 40);
+
+    s.take_released_nodes();
+
+    // The page puts the nodes nowhere: the next sweep releases the scene.
+    for _ in 0..2 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    let released = s.take_released_nodes();
+
+    for &n in &nodes {
+        assert!(s.type_name(n).is_none(), "node {n} was released");
+        assert!(released.contains(&n), "the page is told about node {n}");
+    }
+}
+
+#[test]
+fn a_page_url_scene_in_a_world_field_stays_until_the_field_lets_it_go() {
+    let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
+    let mut t = NOW;
+    let nodes = page_scene(&mut s, &mut t, 3);
+    let transform = s.root_nodes()[1].unwrap();
+    let before = s.node_value(transform, "children").unwrap();
+
+    // createVrmlFromURL (url, node, "set_children") of the page: only P goes into the world.
+    s.set_field_data(
+        transform,
+        "children",
+        &Data::List(vec![Data::Number(f64::from(nodes[0]))]),
+    )
+    .unwrap();
+
+    for _ in 0..40 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    // P is in the world, and it keeps its scene: the other root (Shape) stays too.
+    for &n in &nodes {
+        assert!(s.type_name(n).is_some(), "node {n} stays");
+    }
+
+    let children: Vec<Data> = before
+        .iter()
+        .map(|n| Data::Number(f64::from(n.unwrap())))
+        .collect();
+
+    s.set_field_data(transform, "children", &Data::List(children))
+        .unwrap();
+
+    for _ in 0..2 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    for &n in &nodes {
+        assert!(s.type_name(n).is_none(), "node {n} was released");
+    }
+
+    // The world's own nodes are as before.
+    assert_eq!(s.node_value(transform, "children").unwrap(), before);
 }
 
 #[test]

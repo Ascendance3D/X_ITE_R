@@ -633,6 +633,49 @@ impl ScriptHost for QuickJsHost {
         Some(held)
     }
 
+    fn held_scenes(
+        &mut self,
+        rt: &mut Runtime,
+        candidates: &[x3d_scene::CtxId],
+    ) -> Option<Vec<x3d_scene::CtxId>> {
+        self.enter(rt);
+
+        // prelude/rest.js: the scenes' X3DScene objects are unpinned, garbage is collected, and the objects left are held.
+        let ids: Vec<f64> = candidates.iter().map(|c| *c as f64).collect();
+
+        self.context
+            .with(|ctx| {
+                ctx.globals()
+                    .get::<_, Function>("__unpinScenes")
+                    .and_then(|f| f.call::<_, ()>((ids.clone(),)))
+            })
+            .ok()?;
+        self.collect();
+
+        let held = self.context.with(|ctx| {
+            ctx.globals()
+                .get::<_, Function>("__heldScenes")
+                .and_then(|f| f.call::<_, Vec<f64>>((ids,)))
+                .ok()
+                .map(|ids| ids.into_iter().map(|i| i as x3d_scene::CtxId).collect())
+        })?;
+
+        self.context.with(|ctx| while ctx.execute_pending_job() {});
+        Some(held)
+    }
+
+    fn release_scenes(&mut self, rt: &mut Runtime, ctxs: &[x3d_scene::CtxId]) {
+        self.enter(rt);
+
+        let ids: Vec<f64> = ctxs.iter().map(|c| *c as f64).collect();
+
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__releaseScenes") {
+                let _ = f.call::<_, ()>((ids,));
+            }
+        });
+    }
+
     fn release_nodes(&mut self, rt: &mut Runtime, nodes: &[NodeId], tombstone: NodeId) {
         self.enter(rt);
 
