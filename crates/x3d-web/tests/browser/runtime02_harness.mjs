@@ -35,6 +35,7 @@ import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
+import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
@@ -78,6 +79,7 @@ const SUITES = {
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
+   scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -117,6 +119,97 @@ function derivedRenderingDifferences ()
       assert .ok (!String (value) .startsWith ("Error"), `renderingDerived ${step} ${name}`);
       return [ [ step, "properties", name ], value, notImplemented (name) ];
    }));
+}
+
+// The known differences of the Script life cycle 01 cases (scriptlife01_case.mjs; web/API.md, "Script nodes"). The
+// X_ITE value of each entry is taken from the recording and checked against it (referenceCases), and X_ITE_R's is
+// derived from it by the rule named here, so the differences stay visible and a new recording cannot hide one.
+function scriptLifeDifferences ()
+{
+   const recorded = key => SUITES .scriptlife01 .reference .values [`scriptLife.${key}`];
+   const insertAfter = (seq, line, lines) => { const i = seq .indexOf (line); assert .ok (i >= 0, line); return [ ... seq .slice (0, i + 1), ... lines, ... seq .slice (i + 1) ]; };
+   const without = (seq, test) => seq .filter (line => !test (line));
+   const differences = { };
+
+   // 1. The callbacks of the page's fields run after the Script handlers that the same engine call runs (X_ITE: before
+   //    the handlers of the routes that follow). A `page: *_changed` line moves behind the `log:` lines that follow it.
+   {
+      const seq = recorded ("events") .seq;
+      const moved = [ ];
+
+      for (let i = 0; i < seq .length; ++ i)
+      {
+         if (/^page: [xvm]_changed / .test (seq [i]))
+         {
+            let j = i + 1;
+            const callback = seq [i];
+            const logs = [ ];
+
+            while (j < seq .length && seq [j] .startsWith ("log: "))
+               logs .push (seq [j ++]);
+
+            moved .push (... logs, callback);
+            i = j - 1;
+         }
+         else
+            moved .push (seq [i]);
+      }
+
+      assert .notDeepEqual (moved, seq, "scriptLife.events: the order differs");
+      differences ["scriptLife.events"] = [ [ [ "seq" ], seq, moved ] ];
+   }
+
+   // 2. X_ITE 16.5.0 calls `shutdown` when a Script's code is replaced, but not when its world is replaced or its element
+   //    leaves the document (the old scene is not disposed). X_ITE_R calls it when the world is replaced; its output is
+   //    lost when the element leaves the document (web/API.md).
+   {
+      const seq = recorded ("shutdown") .seq;
+
+      differences ["scriptLife.shutdown"] = [ [ [ "seq" ], seq, insertAfter (seq, "page: replaceWorld", [ "log: A shutdown n=7", "log: B shutdown", "log: C shutdown" ]) ] ];
+   }
+
+   {
+      const seq = recorded ("errors") .seq;
+
+      differences ["scriptLife.errors"] = [ [ [ "seq" ], seq, insertAfter (seq, "page: replaceWorld", [
+         "log: A shutdown",
+         "error: JavaScript Error in Script 'A', in function 'shutdown'",
+         "error: TypeError: boom in shutdown" ]) ] ];
+   }
+
+   // 3. A field callback that a Script adds to `Browser .currentScene .rootNodes` never runs in X_ITE_R (X_ITE runs it
+   //    once when the callback is added and after each change).
+   for (const key of [ "rootNodesPage", "rootNodesAdd", "rootNodesRemove", "rootNodesSet", "rootNodesPush" ])
+   {
+      const seq = recorded (key) .seq;
+
+      differences [`scriptLife.${key}`] = [ [ [ "seq" ], seq, without (seq, line => line .startsWith ("log: S callback ")) ] ];
+   }
+
+   // 4. `rootNodes .push` of a Script's `Browser .currentScene` changes only the Script's copy in X_ITE_R: the world keeps
+   //    its root nodes and the page's callback does not run.
+   {
+      const { seq, final, vrml } = recorded ("rootNodesPush");
+      const entry = differences ["scriptLife.rootNodesPush"] [0];
+
+      entry [2] = without (entry [2], line => line .startsWith ("page: rootNodes callback ")) .map (line => line === "log: S push Transform:A,Group:X,Group:H,Group:" ? "log: S push Transform:A,Group:X,Group:H" : line === "log: S read Transform:A,Group:X,Group:H,Group:" ? "log: S read Transform:A,Group:X,Group:H" : line);
+
+      assert .ok (final .endsWith (",Group:") && vrml .endsWith (" Group { }"), "rootNodesPush");
+      differences ["scriptLife.rootNodesPush"] .push (
+         [ [ "final" ], final, final .slice (0, - ",Group:" .length) ],
+         [ [ "vrml" ], vrml, vrml .slice (0, - " Group { }" .length) ]);
+   }
+
+   // 5. A node that is a root node and the value of a Script field is printed once with DEF and USE in X_ITE; X_ITE_R
+   //    prints it in full in both places.
+   {
+      const { vrml } = recorded ("rootNodesAdd");
+
+      assert .ok (vrml .includes ("saved DEF _1 Group { } url") && vrml .endsWith (" } } USE _1"), "rootNodesAdd");
+      differences ["scriptLife.rootNodesAdd"] .push ([ [ "vrml" ], vrml, vrml .replace ("saved DEF _1 Group { } url", "saved Group { } url") .replace (/ USE _1$/, " Group { }") ]);
+   }
+
+   return differences;
 }
 
 const KNOWN_DIFFERENCES = {
@@ -378,6 +471,7 @@ const KNOWN_DIFFERENCES = {
    "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
    "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
       .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
+   ... scriptLifeDifferences (),
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -569,6 +663,7 @@ const GROUP_FILES = {
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
+   scriptLife: "scriptlife01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
