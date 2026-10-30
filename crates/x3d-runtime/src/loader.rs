@@ -1192,9 +1192,11 @@ impl Runtime {
     /// MovieTexture.loadData: one attempt per URL, each with its own FileLoader (GIF/PNG) or a
     /// `<video>` element (anything else).
     ///
-    /// Decoding is not ported. A fetched GIF/PNG is taken as loaded. For video, headless
-    /// Chromium fires `error` for a missing file and for formats it cannot play; an existing
-    /// .webm/.ogv/.ogg/.mp4/.m4v is taken as playable (an assumption, not observed in the corpora).
+    /// A GIF is decoded as libgif does (`load_raw`; a file it cannot parse rejects with its on_error type). A PNG
+    /// goes to apng-js parseAPNG: data that is not an animated PNG returns parseAPNG's error, which setAPNG, not
+    /// awaited, rejects outside the try: the load ends without a warning and the node stays IN_PROGRESS. Video is
+    /// not decoded: for video, headless Chromium fires `error` for a missing file and for formats it cannot play;
+    /// an existing .webm/.ogv/.ogg/.mp4/.m4v is taken as playable (an assumption, not observed in the corpora).
     ///
     /// With an asynchronous [`Fetcher`] each candidate waits for its response (`await this .loadDocument (fileURL)`,
     /// the `<video>` element's request): the loop stops there and goes on from that candidate when it is in.
@@ -1227,24 +1229,38 @@ impl Runtime {
                 decode_uri(file_url.as_str()).unwrap_or_else(|| file_url.as_str().to_string());
             let path = file_url.path().to_string();
             let href = file_url.as_str();
-            let image = path.ends_with(".gif")
-                || path.ends_with(".png")
-                || href.starts_with("data:image/gif")
-                || href.starts_with("data:image/png");
+            let gif = path.ends_with(".gif") || href.starts_with("data:image/gif");
+            let png = path.ends_with(".png") || href.starts_with("data:image/png");
 
-            let error = if image {
+            let error = if gif || png {
                 let loader = FileLoader {
                     type_name: "MovieTexture".into(),
                     base: href.to_string(),
                     data_as_string: false,
                 };
-                let ok = self.load_document(&loader, &[href.to_string()], |_, _| Ok(()));
+                let mut data = None;
+                let ok = self.load_document(&loader, &[href.to_string()], |_, loaded| {
+                    if let Loaded::Data(bytes, _) = loaded {
+                        data = Some(bytes);
+                    }
+                    Ok(())
+                });
 
-                if ok {
-                    return;
+                match data {
+                    Some(data) if ok && gif => {
+                        match nodes::movie_texture::MovieMedia::decode_gif(&data) {
+                            Some(media) => return self.movie_set_frames(node, media),
+                            None => nodes::movie_texture::GIF_PARSE_ERROR.to_string(),
+                        }
+                    }
+                    Some(data) if ok => {
+                        if let Some(media) = nodes::movie_texture::MovieMedia::decode_apng(&data) {
+                            self.movie_set_frames(node, media);
+                        }
+                        return;
+                    }
+                    _ => "MovieTexture: No suitable file handler found.".to_string(),
                 }
-
-                "MovieTexture: No suitable file handler found.".to_string()
             } else {
                 let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
                     .iter()
@@ -1261,6 +1277,7 @@ impl Runtime {
             self.log_error(format!("Error: {error}"));
         }
 
+        self.movie_clear(node);
         self.set_load_state(node, nodes::LoadState::Failed);
     }
 

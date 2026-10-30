@@ -74,6 +74,8 @@ pub enum SoundCb {
     Update,
     /// AudioClip.set_pitch__.
     Pitch,
+    /// MovieTexture.set_speed__ (speed and pitch).
+    Speed,
 }
 
 /// AudioElement.create (Browser/Sound/AudioElement.js): a media element over an AudioBuffer.
@@ -111,6 +113,8 @@ pub struct SoundState {
     /// OscillatorSource.periodicWaveNode (`None`: the browser's default PeriodicWave).
     pub periodic_wave: Option<NodeId>,
     pub media: Option<AudioElement>,
+    /// MovieTexture: its media element, a decoded GIF or APNG.
+    pub movie: Option<super::movie_texture::MovieMedia>,
     /// MicrophoneSource.restore.
     pub restore: bool,
     /// SpatialSound.currentTraversed (Sound too).
@@ -260,7 +264,7 @@ impl Runtime {
         self.audio.as_mut().unwrap()
     }
 
-    fn snd(&mut self, node: NodeId) -> &mut SoundState {
+    pub(super) fn snd(&mut self, node: NodeId) -> &mut SoundState {
         self.sound.entry(node).or_default()
     }
 
@@ -289,7 +293,7 @@ impl Runtime {
         }
     }
 
-    fn sound_interest(&mut self, node: NodeId, field: &str, cb: SoundCb) {
+    pub(super) fn sound_interest(&mut self, node: NodeId, field: &str, cb: SoundCb) {
         self.interest(node, field, Cb::Sound(cb));
     }
 
@@ -677,6 +681,7 @@ impl Runtime {
                 }
             }
             SoundCb::Time => self.sound_set_time(node),
+            SoundCb::Speed => self.movie_set_speed(node),
             SoundCb::Detune => match name {
                 "OscillatorSource" => {
                     if let Some(o) = self.snd(node).node {
@@ -872,11 +877,10 @@ impl Runtime {
 
     /// set_loop () of an X3DTimeDependentNode (after set_loop__).
     pub(crate) fn sound_set_loop(&mut self, node: NodeId) {
-        if self
-            .builtin_name(node)
-            .is_some_and(|n| SOURCES.contains(&n))
-        {
-            self.source_set_loop(node);
+        match self.builtin_name(node) {
+            Some("MovieTexture") => self.movie_set_loop(node),
+            Some(n) if SOURCES.contains(&n) => self.source_set_loop(node),
+            _ => {}
         }
     }
 
@@ -888,6 +892,7 @@ impl Runtime {
             Some(n) if PROCESSING.contains(&n) => {
                 self.sound_emit(node, "elapsedTime", FieldValue::SFTime(0.0))
             }
+            Some("MovieTexture") => self.movie_set_start(node),
             _ => {
                 // X3DSoundSourceNode.set_start.
                 if self.snd_ref(node).is_none_or(|s| s.media.is_none()) {
@@ -906,6 +911,7 @@ impl Runtime {
             Some("OscillatorSource") => self.osc_set_stop(node),
             Some("MicrophoneSource") => self.mic_set_pause(node),
             Some(n) if PROCESSING.contains(&n) => {}
+            Some("MovieTexture") => self.movie_pause(node),
             _ => self.media_set(node, |e, m| m.pause(e)),
         }
     }
@@ -916,6 +922,7 @@ impl Runtime {
             Some("OscillatorSource") => self.osc_set_start(node),
             Some("MicrophoneSource") => self.mic_set_resume(node),
             Some(n) if PROCESSING.contains(&n) => {}
+            Some("MovieTexture") => self.movie_resume(node),
             _ => self.media_set(node, |e, m| m.play(e)),
         }
     }
@@ -926,6 +933,7 @@ impl Runtime {
             Some("OscillatorSource") => self.osc_set_stop(node),
             Some("MicrophoneSource") => self.mic_set_stop(node, false),
             Some(n) if PROCESSING.contains(&n) => {}
+            Some("MovieTexture") => self.movie_pause(node),
             _ => self.media_set(node, |e, m| m.pause(e)),
         }
     }
@@ -960,6 +968,7 @@ impl Runtime {
                 let t = self.time_elapsed_time(node);
                 self.sound_emit(node, "elapsedTime", FieldValue::SFTime(t));
             }
+            Some("MovieTexture") => self.movie_set_time(node),
             _ => {
                 // X3DSoundSourceNode.set_time.
                 if self.snd_ref(node).is_none_or(|s| s.media.is_none()) {
