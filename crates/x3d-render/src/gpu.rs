@@ -18,7 +18,7 @@
 
 use crate::texture::{Filter, TextureImage, Wrap, mip_chain};
 use crate::traverse::{
-    BlendEquation, BlendFactor, BlendParams, DepthFunc, DrawItem, Frame, LineParams,
+    AlphaMode, BlendEquation, BlendFactor, BlendParams, DepthFunc, DrawItem, Frame, LineParams,
     MAX_CLIP_PLANES, MAX_LIGHTS, MaterialParams, Shading, StyleParams,
 };
 use std::collections::HashMap;
@@ -533,7 +533,7 @@ struct DrawU {
     flags2: [u32; 4],
     // x: number of clip planes, y: depth range on, z: X3D_PHONG_MATERIAL
     flags3: [u32; 4],
-    /// DepthMode depthRange (near, far).
+    /// DepthMode depthRange (near, far); z: x3d_AlphaCutoff.
     depth_range: [f32; 4],
     /// x3d_ClipPlane: normal, distanceFromOrigin.
     clip_planes: [[f32; 4]; MAX_CLIP_PLANES],
@@ -4981,7 +4981,17 @@ impl Renderer {
             d.n0 = [normal[0], normal[1], normal[2], 0.0];
             d.n1 = [normal[3], normal[4], normal[5], 0.0];
             d.n2 = [normal[6], normal[7], normal[8], 0.0];
-            d.flags2 = [0, (!is_transparent) as u32, g.geometry_type as u32, 0];
+            // X3DMaterialNode.addRenderOptions: X3D_ALPHA_MODE_BLEND (0), _OPAQUE (1) or _MASK (2), and
+            // x3d_AlphaCutoff (Appearance.getAlphaCutoff) for MASK. The item's mode is opaque or masked exactly
+            // when it is drawn with the opaque shapes.
+            let alpha_mode = match item.alpha_mode {
+                AlphaMode::Opaque | AlphaMode::Auto => 1,
+                AlphaMode::Mask => 2,
+                AlphaMode::Blend => 0,
+            };
+            debug_assert_eq!(is_transparent, alpha_mode == 0);
+            d.flags2 = [0, alpha_mode, g.geometry_type as u32, 0];
+            d.depth_range[2] = item.alpha_cutoff;
 
             let n_clip = item.clip_planes.len().min(MAX_CLIP_PLANES);
             d.flags3[0] = n_clip as u32;
@@ -5029,7 +5039,8 @@ impl Renderer {
 
             if let Some(dm) = &item.depth {
                 d.flags3[1] = 1;
-                d.depth_range = [dm.range[0] as f32, dm.range[1] as f32, 0.0, 0.0];
+                d.depth_range[0] = dm.range[0] as f32;
+                d.depth_range[1] = dm.range[1] as f32;
             }
 
             // FogContainer.setShaderUniforms: the draw's fog is the innermost LocalFog, else the bound Fog;

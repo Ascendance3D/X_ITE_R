@@ -26,6 +26,52 @@ pub enum Shading {
     Unlit,
 }
 
+/// AlphaMode.js: Appearance.alphaMode. A [`DrawItem`] holds the shape's effective mode, never `Auto`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum AlphaMode {
+    #[default]
+    Auto,
+    /// X3D_ALPHA_MODE_OPAQUE: Fragment2.glsl sets finalColor .a to 1.
+    Opaque,
+    /// X3D_ALPHA_MODE_MASK: Fragment2.glsl discards a fragment with finalColor .a < x3d_AlphaCutoff, then sets
+    /// finalColor .a to 1.
+    Mask,
+    /// X3D_ALPHA_MODE_BLEND: the alpha is kept, and the shape is drawn with the transparent shapes.
+    Blend,
+}
+
+impl AlphaMode {
+    /// Appearance.set_alphaMode__: `AlphaMode .get (alphaMode) ?? AlphaMode .AUTO`, an exact, case-sensitive name.
+    pub fn from_name(name: &str) -> Self {
+        match name {
+            "OPAQUE" => Self::Opaque,
+            "MASK" => Self::Mask,
+            "BLEND" => Self::Blend,
+            _ => Self::Auto,
+        }
+    }
+
+    /// X3DShapeNode.set_transparent__ (and ParticleSystem.set_transparent__): `auto_transparent` is the
+    /// appearance's or the geometry's transparency. AUTO is transparent with it and draws as BLEND, else as
+    /// OPAQUE; any other mode is itself, and only BLEND is transparent. Returns (transparent, effective mode).
+    pub fn resolve(self, auto_transparent: bool) -> (bool, Self) {
+        match self {
+            Self::Auto if auto_transparent => (true, Self::Blend),
+            Self::Auto => (false, Self::Opaque),
+            mode => (mode == Self::Blend, mode),
+        }
+    }
+
+    /// Appearance.set_alphaCutoff__: the alphaCutoff field for MASK, else 0.
+    pub fn cutoff(self, alpha_cutoff: f64) -> f64 {
+        if self == Self::Mask {
+            alpha_cutoff
+        } else {
+            0.0
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct MaterialParams {
     pub shading: Shading,
@@ -492,6 +538,10 @@ pub struct DrawItem {
     /// (X3DMaterialNode objectsKeys: getGlobalLightsKeys () .concat (localObjectsKeys)).
     pub lights: Vec<u32>,
     pub transparent: bool,
+    /// The shape's effective alpha mode ([`AlphaMode::resolve`]): `Opaque`, `Mask` or `Blend`.
+    pub alpha_mode: AlphaMode,
+    /// x3d_AlphaCutoff ([`AlphaMode::cutoff`]): 0 unless `alpha_mode` is `Mask`.
+    pub alpha_cutoff: f32,
     /// The back face material (Appearance.backMaterial, or a TwoSidedMaterial's back side):
     /// X3DGeometryNode.display draws a non-solid geometry twice, back faces with this material
     /// first, then front faces with `material`.
@@ -2051,6 +2101,8 @@ impl<'a> Builder<'a> {
             projectors: self.local_projectors.clone(),
             lights: self.local_lights.clone(),
             transparent: false,
+            alpha_mode: AlphaMode::Opaque,
+            alpha_cutoff: 0.0,
             back_material: None,
             blend: None,
             depth: None,
@@ -4518,7 +4570,7 @@ impl<'a> Builder<'a> {
             .node(gnode, "color")
             .is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
 
-        let transparent = extra_transparent
+        let auto_transparent = extra_transparent
             || color_transparent
             || fill_transparent
             || front_transparent
@@ -4526,6 +4578,16 @@ impl<'a> Builder<'a> {
             || texture_transparent
             || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent))
             || blend.is_some();
+
+        // Appearance.set_alphaMode__ / set_alphaCutoff__ and X3DShapeNode.set_transparent__. Without an
+        // Appearance the shape uses the default one (AUTO).
+        let alpha_mode = AlphaMode::from_name(
+            &appearance.map_or_else(String::new, |a| sg.string(a, "alphaMode", "AUTO")),
+        );
+        let alpha_cutoff = appearance.map_or(0.0, |a| {
+            alpha_mode.cutoff(sg.f64(a, "alphaCutoff", 0.5)) as f32
+        });
+        let (transparent, alpha_mode) = alpha_mode.resolve(auto_transparent);
 
         let custom = self.custom_draw(sg, appearance);
 
@@ -4540,6 +4602,8 @@ impl<'a> Builder<'a> {
             projectors: self.local_projectors.clone(),
             lights: self.local_lights.clone(),
             transparent,
+            alpha_mode,
+            alpha_cutoff,
             back_material,
             blend,
             depth,
@@ -4596,6 +4660,8 @@ impl<'a> Builder<'a> {
             projectors: vec![],
             lights: self.local_lights.clone(),
             transparent: true,
+            alpha_mode: AlphaMode::Blend,
+            alpha_cutoff: 0.0,
             back_material: None,
             blend: None,
             depth: None,
