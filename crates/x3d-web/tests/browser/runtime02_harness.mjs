@@ -36,6 +36,7 @@ import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
+import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
@@ -78,6 +79,7 @@ const SUITES = {
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
+   sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -118,6 +120,11 @@ function derivedRenderingDifferences ()
       return [ [ step, "properties", name ], value, notImplemented (name) ];
    }));
 }
+
+// The AudioDestinationNode of the engine's Web Audio port (the web-audio-api crate) has numberOfOutputs 1, the value of
+// the Web Audio specification; Chromium's has 0. Nothing in X3D connects from the destination. For the audio graphs at
+// `paths` of a sound 01 case.
+const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "nodes", 0, "numberOfOutputs" ], 0, 1 ]);
 
 const KNOWN_DIFFERENCES = {
    "nodeOwnership.nodeOwnership": [
@@ -378,6 +385,11 @@ const KNOWN_DIFFERENCES = {
    "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
    "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
       .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
+   "sound.loop": destinationOutputs ([ [ ] ]),
+   "sound.unlock": destinationOutputs ([ [ "before" ], [ "after" ] ]),
+   "sound.unlockByStart": destinationOutputs ([ [ "before" ] ]),
+   "sound.once": destinationOutputs ([ [ "ended" ] ]),
+   "sound.pauseResume": destinationOutputs ([ [ "paused" ], [ "resumed" ] ]),
 };
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
@@ -394,13 +406,17 @@ export const MOBILE_TIMEOUT = 1_010_000;
 export let server;
 let browser;
 
+// The extra Chromium flags of the case groups this test file registers (a group's `browserArgs`, for example the
+// autoplay policy of the sound 01 cases). The groups of one file must agree: the file has one browser.
+let browserArgs = null;
+
 before (async () =>
 {
    server  = await startServer (CRATE);
    browser = await chromium .launch ({
       headless: true,
       args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
-         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
+         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu", ... browserArgs ?? [ ] ],
    });
 
    await logAdapter ();
@@ -569,6 +585,7 @@ const GROUP_FILES = {
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
+   sound: "sound01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
@@ -601,6 +618,14 @@ export function referenceCases (file)
 
       for (const key of SELECTED)
          assert .ok (keys .includes (key), `XR_CASES: ${key} is not a reference case of ${file}`);
+   }
+
+   for (const [ groupName, group ] of groups)
+   {
+      const args = JSON .stringify (group .browserArgs ?? [ ]);
+
+      assert .ok (browserArgs === null || JSON .stringify (browserArgs) === args, `${file}: its case groups need different browser flags`);
+      browserArgs = group .browserArgs ?? [ ];
    }
 
    for (const [ groupName, group ] of groups)

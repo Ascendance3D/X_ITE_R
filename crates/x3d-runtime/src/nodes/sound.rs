@@ -900,6 +900,8 @@ impl Runtime {
                 }
                 self.sound_emit(node, "elapsedTime", FieldValue::SFTime(0.0));
                 self.media_set(node, |e, m| m.set_current_time(e, 0.0));
+                // getBrowser () .startAudioElement (this .mediaElement)
+                self.audio_element_started = true;
                 self.media_set(node, |e, m| m.play(e));
             }
         }
@@ -923,7 +925,13 @@ impl Runtime {
             Some("MicrophoneSource") => self.mic_set_resume(node),
             Some(n) if PROCESSING.contains(&n) => {}
             Some("MovieTexture") => self.movie_resume(node),
-            _ => self.media_set(node, |e, m| m.play(e)),
+            _ => {
+                // getBrowser () .startAudioElement (this .mediaElement): nothing without a media element.
+                if self.snd_ref(node).is_some_and(|s| s.media.is_some()) {
+                    self.audio_element_started = true;
+                }
+                self.media_set(node, |e, m| m.play(e))
+            }
         }
     }
 

@@ -1622,6 +1622,10 @@ class X3DBrowser
    #touches = new Map ();
    #touchMoved = false;
    #lastTouch = -Infinity;
+   // X3DSoundContext: the page's AudioContext, and whether its resume () has not succeeded yet (X_ITE keeps it in
+   // `_audioElements` until then).
+   #audioContext = null;
+   #audioWaiting = false;
 
    constructor (element)
    {
@@ -2801,6 +2805,11 @@ class X3DBrowser
       const engine = () => this .#engine;
       const on     = (target, type, listener, options = { }) => target .addEventListener (type, listener, { signal, ... options });
 
+      // X3DSoundContext.initialize: these events of the canvas try the waiting resume () again (startAudioElements),
+      // so a user gesture unlocks the AudioContext under the browser's autoplay policy.
+      for (const type of [ "blur", "click", "contextmenu", "dblclick", "focus", "keydown", "keyup", "mousedown", "mouseup", "pointerup", "touchend", "touchstart", "wheel" ])
+         on (canvas, type, () => this .#resumeAudio ());
+
       on (canvas, "pointerdown", event =>
       {
          if (!engine ())
@@ -2995,6 +3004,40 @@ class X3DBrowser
       return [ Math .max (width | 0, 1), Math .max (height | 0, 1) ];
    }
 
+   // X3DSoundContext.getAudioContext: the engine's first Sound node makes the audio context (the engine's Web Audio
+   // port). The page then makes its own AudioContext and calls resume () (startAudioElement), as X_ITE does. The
+   // engine's context does not render in the page, so its clock stays at 0; before each frame it takes this
+   // context's currentTime, the clock X_ITE's AudioElement reads. While the browser's autoplay policy holds the
+   // context, its clock stands still, as X_ITE's does. Nothing is connected to this context: X_ITE_R plays no sound
+   // in a page yet (web/API.md).
+   #audioClock (engine)
+   {
+      if (!this .#audioContext)
+      {
+         if (!engine .hasAudio ())
+            return;
+
+         this .#audioContext = new AudioContext ();
+         this .#audioWaiting = true;
+         this .#resumeAudio ();
+      }
+
+      engine .setAudioClock (this .#audioContext .currentTime);
+   }
+
+   // X3DSoundContext.startAudioElements for the AudioContext: resume () until it succeeds once.
+   #resumeAudio ()
+   {
+      if (!this .#audioWaiting)
+         return;
+
+      const context = this .#audioContext;
+
+      context .resume ()
+         .then (() => { if (this .#audioContext === context) this .#audioWaiting = false; })
+         .catch (Function .prototype);
+   }
+
    // The frame loop runs while the element is in a document, the page is visible and the browser is not disposed.
    #start ()
    {
@@ -3044,7 +3087,17 @@ class X3DBrowser
 
          try
          {
+            this .#audioClock (engine);
             engine .frame (time, width, height);
+
+            // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
+            // again, so a user activation from outside the canvas also unlocks the context.
+            if (engine .takeAudioStarts ())
+            {
+               this .#audioClock (engine);
+               this .#resumeAudio ();
+            }
+
             this .#flushLog ();
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
