@@ -367,6 +367,9 @@ pub struct Runtime {
     /// Each event also holds the length of [`Runtime::log`] when X3DField.processEvent began, so the page can print the
     /// log lines made before it first and call the callback before the lines that its routes make.
     pub page_field_events: Option<Vec<(FKey, FieldValue, usize)>>,
+    /// Replacing or unloading the world does not call the Scripts' `shutdown ()`, as X_ITE 16.5.0 (the old scene is
+    /// never disposed there). Set by the browser build; the native build keeps the call (ISO/IEC 14772-1 4.12.3).
+    pub replace_skips_shutdown: bool,
     /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
     pub page_observed: std::collections::HashSet<FKey>,
     /// The nodes released since the page last asked ([`Runtime::take_page_released`]), when set: the page drops its
@@ -685,6 +688,7 @@ impl Runtime {
             field_observed: Default::default(),
             pending_field_events: vec![],
             page_field_events: None,
+            replace_skips_shutdown: false,
             page_observed: Default::default(),
             page_released: None,
             js_mirror: HashMap::new(),

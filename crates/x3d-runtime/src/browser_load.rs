@@ -857,8 +857,9 @@ impl Runtime {
             .push((old, ctx_events::CtxField::SceneGraph, 1));
         self.deliver_ctx_events();
 
-        // Kept difference (owner-approved): the Scripts of the old world get shutdown (), X_ITE has none.
-        self.dispose_scene(old);
+        // Kept difference (owner-approved) of the native build: the Scripts of the old world get shutdown (), X_ITE has
+        // none. The browser build follows X_ITE (see `replace_skips_shutdown`).
+        self.dispose_scene_with(old, !self.replace_skips_shutdown);
 
         if old == ROOT {
             self.extern_cache.clear();
