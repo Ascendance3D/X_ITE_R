@@ -1104,3 +1104,29 @@ python3 -I oracle/tools/movie_anim.py record 5
 python3 -I oracle/tools/gen_movie_load_errors.py
 python3 -I oracle/tools/movie_anim.py record 5 load-errors
 ```
+
+### Anchor, Collision and InstancedShape pointer paths (REA batch 24, issue #94)
+
+- `tools/gen_rea_b24_anchor_collision_instanced.py` writes `synthetic-rea-b24-anchor-collision-instanced/` (authored, no
+  historical assets): `ci-pick` (InstancedShape hits as a 2601-probe grid, `pickProbes` compared bit for bit),
+  `ci-events` (TouchSensor events over instances), `cl-render` (Collision `enabled`, `visible`, `proxy`, `bboxDisplay`,
+  nesting: pictures and probes), `cl-events` (TouchSensor events under Collision nodes whose `enabled` and `visible`
+  change at run time), `an-nested` (Anchor in Anchor, an Anchor with a TouchSensor child, an Anchor over instances).
+- `tools/rea_b24.py record NAME WORLD SCRIPT MSAA` wrote `rea-batch24-anchor-collision-instanced-baseline/` (MSAA 0 and
+  4, each three identical X_ITE runs, `loadFrames` left out of the identity check). The pinned X_ITE needs the
+  `x_ite-pin/node_modules` link of "Recording from a worktree".
+- `crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs` compares `x3d-drive` with the baseline (GPU test; it
+  skips without an adapter through `x3d_evidence::no_gpu`).
+- The anchor-click, anchor-load and collision-walk cases of batch 09 (`synthetic-rea-b09-stepped`) and the
+  `pick-instanced` and `nav-instanced-*` cases of batch 09 nav already record the click, load, avatar-collision and
+  per-instance touch paths.
+- One Rust defect was fixed with this batch: `pointerEvents FALSE` on a Shape or InstancedShape was ignored by
+  the pointing pass (the shape stays a collision object).
+- Known gap `an-nested`: a fragment Anchor click binds its Viewpoint one frame later in Rust than in X_ITE (X_ITE calls the
+  Anchor's `set_active__` in the mouse handler). Moving the request ahead breaks the batch 09 anchor-load cases (owner
+  decision, issue #94).
+```
+python3 -I -B oracle/tools/gen_rea_b24_anchor_collision_instanced.py
+python3 -I -B oracle/tools/rea_b24.py record ci-pick oracle/synthetic-rea-b24-anchor-collision-instanced/ci-pick.wrl \
+  oracle/synthetic-rea-b24-anchor-collision-instanced/ci-pick.json 0
+```

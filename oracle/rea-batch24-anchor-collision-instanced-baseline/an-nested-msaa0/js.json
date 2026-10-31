@@ -1,0 +1,99 @@
+{
+  "ok": true,
+  "poses": {
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "v1",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "95": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "v1",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "96": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "v1",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V1 Viewpoint {\n  description \"v1\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n  transitionType \"TELEPORT\"\n}\n\nBackground {\n  skyColor 0.1 0.1 0.15\n}\n\nDEF V2 Viewpoint {\n  description \"v2\"\n  position 2 0 10\n}\n\nDEF V3 Viewpoint {\n  description \"v3\"\n  position -2 0 10\n}\n\nDEF V4 Viewpoint {\n  description \"v4\"\n  position 0 2 10\n}\n\nTransform {\n  translation -2.4 1.4 0\n  children DEF AO Anchor {\n    description \"outer\"\n    url \"#V2\"\n    children [\n      DEF AI Anchor {\n        description \"inner\"\n        url \"#V3\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.3 0.3\n              emissiveColor 0.8 0.3 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Transform {\n        translation 0 -1.1 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.6 0.6\n              emissiveColor 0.8 0.6 0.6\n            }\n          }\n          geometry Box {\n            size 0.8 0.4 0.8\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0.4 1.4 0\n  children DEF AT Anchor {\n    description \"with sensor\"\n    url \"#V4\"\n    children [\n      DEF TS TouchSensor {\n        description \"child sensor\"\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n            emissiveColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 2.6 1.4 0\n  children DEF AI2 Anchor {\n    description \"instanced\"\n    url \"#V3\"\n    children InstancedShape {\n      translations [\n        -0.5 0 0,\n        0.5 0.2 0.1\n      ]\n      rotations 0 0 1 0.5\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n          emissiveColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 0.7 0.7 0.7\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.8 0\n  children [\n    DEF AE Anchor {\n      description \"empty\"\n      children [\n        DEF TE TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.8 0.3\n              emissiveColor 0.8 0.8 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      ]\n    }\n    DEF AF Anchor {\n      description \"fallback\"\n      url [\n        \"#nosuch\",\n        \"#V2\"\n      ]\n      children Transform {\n        translation 1.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.8 0.8\n              emissiveColor 0.3 0.8 0.8\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"V1:true V1:false V3:true Kz V3:false V1:true V1:false V2:true Kz V2:false V1:true TS.over:true TS.touch Kz TS.over:false V1:false V3:true TS.over:true Kz V3:false V1:true \"\n  initializeOnly SFNode   v1 USE V1\n  inputOnly      SFBool   on_1\n  inputOnly      SFBool   on_2\n  inputOnly      SFBool   on_3\n  inputOnly      SFBool   on_4\n  inputOnly      SFBool   on_ov\n  inputOnly      SFTime   on_tt\n  inputOnly      SFBool   on_ov2\n  inputOnly      SFBool   on_ov3\n\n  url \"ecmascript:\nfunction on_1 (v) { log = log + 'V1:' + v + ' '; }\nfunction on_2 (v) { log = log + 'V2:' + v + ' '; }\nfunction on_3 (v) { log = log + 'V3:' + v + ' '; }\nfunction on_4 (v) { log = log + 'V4:' + v + ' '; }\nfunction on_ov (v) { log = log + 'TS.over:' + v + ' '; }\nfunction on_ov2 (v) { log = log + 'TE.over:' + v + ' '; }\nfunction on_ov3 (v) { log = log + 'AO.over:' + v + ' '; }\nfunction on_tt (v) { log = log + 'TS.touch '; }\nfunction on_key (k) { log = log + 'K' + k + ' '; if (k == 'z') v1 .set_bind = true; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE V1.isBound TO R.on_1\nROUTE V2.isBound TO R.on_2\nROUTE V3.isBound TO R.on_3\nROUTE V4.isBound TO R.on_4\nROUTE TS.isOver TO R.on_ov\nROUTE TS.touchTime TO R.on_tt\nROUTE TE.isOver TO R.on_ov2\n",
+    "95": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V1 Viewpoint {\n  description \"v1\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n  transitionType \"TELEPORT\"\n}\n\nBackground {\n  skyColor 0.1 0.1 0.15\n}\n\nDEF V2 Viewpoint {\n  description \"v2\"\n  position 2 0 10\n}\n\nDEF V3 Viewpoint {\n  description \"v3\"\n  position -2 0 10\n}\n\nDEF V4 Viewpoint {\n  description \"v4\"\n  position 0 2 10\n}\n\nTransform {\n  translation -2.4 1.4 0\n  children DEF AO Anchor {\n    description \"outer\"\n    url \"#V2\"\n    children [\n      DEF AI Anchor {\n        description \"inner\"\n        url \"#V3\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.3 0.3\n              emissiveColor 0.8 0.3 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Transform {\n        translation 0 -1.1 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.6 0.6\n              emissiveColor 0.8 0.6 0.6\n            }\n          }\n          geometry Box {\n            size 0.8 0.4 0.8\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0.4 1.4 0\n  children DEF AT Anchor {\n    description \"with sensor\"\n    url \"#V4\"\n    children [\n      DEF TS TouchSensor {\n        description \"child sensor\"\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n            emissiveColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 2.6 1.4 0\n  children DEF AI2 Anchor {\n    description \"instanced\"\n    url \"#V3\"\n    children InstancedShape {\n      translations [\n        -0.5 0 0,\n        0.5 0.2 0.1\n      ]\n      rotations 0 0 1 0.5\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n          emissiveColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 0.7 0.7 0.7\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.8 0\n  children [\n    DEF AE Anchor {\n      description \"empty\"\n      children [\n        DEF TE TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.8 0.3\n              emissiveColor 0.8 0.8 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      ]\n    }\n    DEF AF Anchor {\n      description \"fallback\"\n      url [\n        \"#nosuch\",\n        \"#V2\"\n      ]\n      children Transform {\n        translation 1.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.8 0.8\n              emissiveColor 0.3 0.8 0.8\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"V1:true V1:false V3:true Kz V3:false V1:true V1:false V2:true Kz V2:false V1:true TS.over:true TS.touch Kz TS.over:false V1:false V3:true TS.over:true Kz V3:false V1:true TS.over:false V1:false V3:true Kz V3:false V1:true TE.over:true Kz TE.over:false Kz V1:false V3:true Kz V3:false V1:true \"\n  initializeOnly SFNode   v1 USE V1\n  inputOnly      SFBool   on_1\n  inputOnly      SFBool   on_2\n  inputOnly      SFBool   on_3\n  inputOnly      SFBool   on_4\n  inputOnly      SFBool   on_ov\n  inputOnly      SFTime   on_tt\n  inputOnly      SFBool   on_ov2\n  inputOnly      SFBool   on_ov3\n\n  url \"ecmascript:\nfunction on_1 (v) { log = log + 'V1:' + v + ' '; }\nfunction on_2 (v) { log = log + 'V2:' + v + ' '; }\nfunction on_3 (v) { log = log + 'V3:' + v + ' '; }\nfunction on_4 (v) { log = log + 'V4:' + v + ' '; }\nfunction on_ov (v) { log = log + 'TS.over:' + v + ' '; }\nfunction on_ov2 (v) { log = log + 'TE.over:' + v + ' '; }\nfunction on_ov3 (v) { log = log + 'AO.over:' + v + ' '; }\nfunction on_tt (v) { log = log + 'TS.touch '; }\nfunction on_key (k) { log = log + 'K' + k + ' '; if (k == 'z') v1 .set_bind = true; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE V1.isBound TO R.on_1\nROUTE V2.isBound TO R.on_2\nROUTE V3.isBound TO R.on_3\nROUTE V4.isBound TO R.on_4\nROUTE TS.isOver TO R.on_ov\nROUTE TS.touchTime TO R.on_tt\nROUTE TE.isOver TO R.on_ov2\n",
+    "96": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V1 Viewpoint {\n  description \"v1\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n  transitionType \"TELEPORT\"\n}\n\nBackground {\n  skyColor 0.1 0.1 0.15\n}\n\nDEF V2 Viewpoint {\n  description \"v2\"\n  position 2 0 10\n}\n\nDEF V3 Viewpoint {\n  description \"v3\"\n  position -2 0 10\n}\n\nDEF V4 Viewpoint {\n  description \"v4\"\n  position 0 2 10\n}\n\nTransform {\n  translation -2.4 1.4 0\n  children DEF AO Anchor {\n    description \"outer\"\n    url \"#V2\"\n    children [\n      DEF AI Anchor {\n        description \"inner\"\n        url \"#V3\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.3 0.3\n              emissiveColor 0.8 0.3 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Transform {\n        translation 0 -1.1 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.6 0.6\n              emissiveColor 0.8 0.6 0.6\n            }\n          }\n          geometry Box {\n            size 0.8 0.4 0.8\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0.4 1.4 0\n  children DEF AT Anchor {\n    description \"with sensor\"\n    url \"#V4\"\n    children [\n      DEF TS TouchSensor {\n        description \"child sensor\"\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n            emissiveColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 2.6 1.4 0\n  children DEF AI2 Anchor {\n    description \"instanced\"\n    url \"#V3\"\n    children InstancedShape {\n      translations [\n        -0.5 0 0,\n        0.5 0.2 0.1\n      ]\n      rotations 0 0 1 0.5\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n          emissiveColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 0.7 0.7 0.7\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.8 0\n  children [\n    DEF AE Anchor {\n      description \"empty\"\n      children [\n        DEF TE TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.8 0.3\n              emissiveColor 0.8 0.8 0.3\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      ]\n    }\n    DEF AF Anchor {\n      description \"fallback\"\n      url [\n        \"#nosuch\",\n        \"#V2\"\n      ]\n      children Transform {\n        translation 1.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.8 0.8\n              emissiveColor 0.3 0.8 0.8\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"V1:true V1:false V3:true Kz V3:false V1:true V1:false V2:true Kz V2:false V1:true TS.over:true TS.touch Kz TS.over:false V1:false V3:true TS.over:true Kz V3:false V1:true TS.over:false V1:false V3:true Kz V3:false V1:true TE.over:true Kz TE.over:false Kz V1:false V3:true Kz V3:false V1:true \"\n  initializeOnly SFNode   v1 USE V1\n  inputOnly      SFBool   on_1\n  inputOnly      SFBool   on_2\n  inputOnly      SFBool   on_3\n  inputOnly      SFBool   on_4\n  inputOnly      SFBool   on_ov\n  inputOnly      SFTime   on_tt\n  inputOnly      SFBool   on_ov2\n  inputOnly      SFBool   on_ov3\n\n  url \"ecmascript:\nfunction on_1 (v) { log = log + 'V1:' + v + ' '; }\nfunction on_2 (v) { log = log + 'V2:' + v + ' '; }\nfunction on_3 (v) { log = log + 'V3:' + v + ' '; }\nfunction on_4 (v) { log = log + 'V4:' + v + ' '; }\nfunction on_ov (v) { log = log + 'TS.over:' + v + ' '; }\nfunction on_ov2 (v) { log = log + 'TE.over:' + v + ' '; }\nfunction on_ov3 (v) { log = log + 'AO.over:' + v + ' '; }\nfunction on_tt (v) { log = log + 'TS.touch '; }\nfunction on_key (k) { log = log + 'K' + k + ' '; if (k == 'z') v1 .set_bind = true; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE V1.isBound TO R.on_1\nROUTE V2.isBound TO R.on_2\nROUTE V3.isBound TO R.on_3\nROUTE V4.isBound TO R.on_4\nROUTE TS.isOver TO R.on_ov\nROUTE TS.touchTime TO R.on_tt\nROUTE TE.isOver TO R.on_ov2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
