@@ -35,6 +35,14 @@ Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/
 - The full local suite (including the GPU tests CI skips) is the command in the header
   comment of `.github/workflows/rust-tests.yml`.
 
+## Agents
+
+- Default subagent count is zero. The main agent codes, tests, debugs, runs Git and writes reports.
+- Do not delegate only to isolate context or command output. Redirect large build and test output to log files and read targeted ranges.
+- Ask the owner for explicit approval before you launch any subagent. Never run two agents on one worktree.
+- Use Sonnet for routine work. Use Opus only for difficult reasoning.
+- Report CodeRabbit and MiniMax findings to the owner before you fix, reply to, or rerun a review. Do not merge without owner approval.
+
 ## Lane reports
 
 When closing a lane or submitting a final PR for a batch, agents must write a lane report to a durable directory outside the repository (never `/tmp`).
