@@ -1481,7 +1481,13 @@ impl Viewer3d {
     fn collision_world_unconditional(&mut self) -> Option<World> {
         let mut shapes = vec![];
 
-        for s in &self.scan_display.shapes {
+        // Shapes with pointerEvents FALSE are collision objects but not pointing objects: they follow the others.
+        for s in self
+            .scan_display
+            .shapes
+            .iter()
+            .chain(&self.scan_display.unpointed_shapes)
+        {
             if !s.collidable {
                 continue;
             }
@@ -3029,8 +3035,29 @@ impl Viewer3d {
             // window, a page) is only reported: the viewer opens nothing.
             // The sensor's events are processed with the next events of the browser, which is where the interest of the
             // Anchor's TouchSensor (`set_active__`) runs (see [`Viewer3d::phase`]).
-            self.pending_anchors
-                .push((a.node.node, a.urls.clone(), a.parameters.clone()));
+            // A url that only names a viewpoint of this world is handled where X_ITE handles it: Anchor.set_active__ runs inside the
+            // mouse handler and calls FileLoader.createX3DFromURL, whose changeViewpoint hook binds the viewpoint at once, in the
+            // frame of the click. A scene is requested with the next events of the browser (above).
+            let fragment = a.urls.first().and_then(|first| {
+                let rt = rt_at(&self.rt, &a.node.path)?;
+                let base = rt
+                    .scene
+                    .world_url_of(rt.scene.node(a.node.node).ctx)
+                    .to_string();
+                let hooks = x3d_runtime::loader::LoadHooks {
+                    bind_viewpoint: true,
+                    ..Default::default()
+                };
+
+                x3d_runtime::loader::viewpoint_fragment(&base, first, &hooks)
+            });
+
+            if let Some(name) = fragment {
+                self.change_viewpoint(&name);
+            } else {
+                self.pending_anchors
+                    .push((a.node.node, a.urls.clone(), a.parameters.clone()));
+            }
 
             self.anchors.push(a);
         }
