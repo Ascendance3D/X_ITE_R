@@ -1054,6 +1054,89 @@ fn the_root_nodes_of_the_page_change_the_world_and_send_their_event_in_order() {
     assert_eq!(s.root_nodes(), []);
 }
 
+// --- sound (issue #140) ---------------------------------------------------------------------------------------------
+
+/// The synthetic tone of REA batch 05 (0.25 s, 48 kHz stereo), for every URL.
+struct Tone;
+
+impl x3d_runtime::Fetcher for Tone {
+    fn fetch(&self, _url: &url::Url) -> Result<Vec<u8>, String> {
+        Ok(include_bytes!("../../../oracle/synthetic-rea-b05/media/tone48k-stereo.wav").to_vec())
+    }
+}
+
+fn sound_world(clip: &str) -> Session {
+    let world = format!(
+        "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Sound:2\nSound {{ source DEF A AudioClip {{ url \"tone.wav\" {clip} }} }}\n"
+    );
+    let mut s = Session::load(world.as_bytes(), URL, Box::new(Tone), NOW, 64, 64).unwrap();
+
+    // The decode result waits for the next frame's events.
+    s.step(NOW + 0.02);
+    s.step(NOW + 0.04);
+    s
+}
+
+#[test]
+fn the_audio_graph_is_none_until_a_sound_node_makes_the_audio_context() {
+    let s = load(BOX).unwrap();
+
+    assert!(!s.has_audio());
+    assert_eq!(s.audio_graph_json(), None);
+}
+
+#[test]
+fn the_audio_graph_shows_the_playing_clip() {
+    let s = sound_world("loop TRUE");
+    let json = s
+        .audio_graph_json()
+        .expect("the Sound node made the audio context");
+
+    assert!(s.has_audio());
+    assert!(json.contains(r#""kind":"AudioDestinationNode""#), "{json}");
+    assert!(json.contains(r#""kind":"ChannelSplitterNode""#), "{json}");
+    assert!(
+        json.contains(
+            r#""buffer":{"numberOfChannels":2,"length":12000,"sampleRate":48000.0},"loop":true,"loopStart":0.0,"loopEnd":0.0,"started":[0.0,0.0],"stopped":null"#
+        ),
+        "{json}"
+    );
+    // The engine's own clock: it never renders in the browser build.
+    assert!(
+        json.ends_with(r#""currentTime":0.0,"sampleRate":48000.0}"#),
+        "{json}"
+    );
+}
+
+#[test]
+fn a_clip_ends_when_the_page_audio_clock_passes_its_duration() {
+    let mut s = sound_world("");
+    let clip = s.named_node("A").unwrap();
+    let active = |s: &Session| s.field(clip, "isActive").unwrap().value;
+
+    s.set_audio_clock(5.0);
+    s.set_field(clip, "startTime", &format!("{}", NOW + 0.05))
+        .unwrap();
+    s.step(NOW + 0.06);
+
+    assert_eq!(active(&s), "TRUE");
+    assert!(s.take_audio_element_started(), "startAudioElement ran");
+    assert!(!s.take_audio_element_started(), "the flag is cleared");
+
+    // 0.2 s of the page's audio clock: the clip of 0.25 s still plays.
+    s.set_audio_clock(5.2);
+    s.step(NOW + 0.3);
+    assert_eq!(active(&s), "TRUE");
+
+    // The clock stands still while the page's AudioContext waits for a user gesture: the clip goes on.
+    s.step(NOW + 2.0);
+    assert_eq!(active(&s), "TRUE");
+
+    s.set_audio_clock(5.3);
+    s.step(NOW + 2.1);
+    assert_eq!(active(&s), "FALSE");
+}
+
 /// A Script host for the tests (issue #133): each Script defines `prepareEvents` only, which sets the world's root
 /// nodes to `roots` once it is armed, as a Script's `addRootNode` or `rootNodes` assignment does. `attached` counts
 /// the moves of the runtime the host was told of.
