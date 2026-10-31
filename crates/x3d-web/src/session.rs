@@ -440,6 +440,14 @@ impl Session {
         std::mem::take(&mut self.rt_mut().audio_element_started)
     }
 
+    /// The calls the world's audio engine made on its Web Audio nodes since the last call, with the engine's number
+    /// ([`x3d_runtime::sound::AudioEngine::take_ops`]); the page makes them on real nodes of its AudioContext.
+    pub fn take_audio_ops(&self) -> Option<(u64, Vec<x3d_runtime::sound::ops::Op>)> {
+        let audio = self.rt().audio.as_ref()?;
+
+        Some((audio.uid(), audio.take_ops()))
+    }
+
     /// The page's audio clock (`audioContext .currentTime`) for the world's audio context, if it has one
     /// ([`x3d_runtime::sound::AudioEngine::set_clock`]).
     pub fn set_audio_clock(&mut self, time: f64) {
@@ -453,6 +461,12 @@ impl Session {
     /// cascade.
     pub fn set_sound_options(&mut self, mute: bool, intensity: f64) {
         set_sound_options(self.rt_mut(), mute, intensity);
+    }
+
+    /// The world's audio graph ([`x3d_runtime::sound::AudioEngine::graph`]), or `None` while no Sound node has made the audio
+    /// context.
+    pub fn audio_graph(&self) -> Option<x3d_runtime::sound::AudioGraph> {
+        Some(self.rt().audio.as_ref()?.graph())
     }
 
     /// The world's audio graph as JSON (a diagnostic snapshot, [`x3d_runtime::sound::AudioGraph`]), or `None` while

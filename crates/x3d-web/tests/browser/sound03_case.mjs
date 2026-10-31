@@ -14,11 +14,11 @@ import { DESKTOP, settle } from "./runtime02_case.mjs";
 import { sceneCase } from "./loadurl01_case.mjs";
 import { NODE_CLASSES, WORLD, gesture, installCapture, normalizeGraph, pageFacts, rawGraph, state as state01 } from "./sound01_case.mjs";
 
-const WIDE = "minFront 20 minBack 20 maxFront 40 maxBack 40";
-const FRONT = "Viewpoint { position 0 0 10 }";
-const CLIP = (fields = "loop TRUE") => `AudioClip { url "BASE/media/tone48k-stereo.wav" ${fields} }`;
-const SOUND = (fields, clip = CLIP ()) => `Sound { ${fields}\n  source ${clip} }`;
-const WORLD3 = (viewpoint, body, component = "Sound:2") => `#X3D V4.0 utf8\nPROFILE Full\nCOMPONENT ${component}\n${viewpoint}\n${body}\n`;
+export const WIDE = "minFront 20 minBack 20 maxFront 40 maxBack 40";
+export const FRONT = "Viewpoint { position 0 0 10 }";
+export const CLIP = (fields = "loop TRUE") => `AudioClip { url "BASE/media/tone48k-stereo.wav" ${fields} }`;
+export const SOUND = (fields, clip = CLIP ()) => `Sound { ${fields}\n  source ${clip} }`;
+export const WORLD3 = (viewpoint, body, component = "Sound:2") => `#X3D V4.0 utf8\nPROFILE Full\nCOMPONENT ${component}\n${viewpoint}\n${body}\n`;
 
 // Capture installed, world loaded and settled.
 async function load (page, env, text)
@@ -30,7 +30,7 @@ async function load (page, env, text)
    return { loaded: await c .loaded (), console: c .console () };
 }
 
-const setOption = (page, name, value) => page .evaluate (([ name, value ]) => document .querySelector ("x3d-canvas") .browser .setBrowserOption (name, value), [ name, value ]);
+export const setOption = (page, name, value) => page .evaluate (([ name, value ]) => document .querySelector ("x3d-canvas") .browser .setBrowserOption (name, value), [ name, value ]);
 
 // The listener of the page's AudioContext: position, forward and up. X_ITE: the context's AudioListener; X_ITE_R: `listener` of
 // audioGraph (). Rounded to 5 decimals.
@@ -84,7 +84,7 @@ async function wholeGraph (page)
 // that no destination pulls), and it also taps a connection into a MediaStreamAudioDestinationNode (the output of an
 // AudioDestination node). `window .tapMax` is the largest root mean square seen by any tap; `window .tapped` counts the
 // connections made into a destination.
-function installTap ()
+export function installTap ()
 {
    const Gain          = window .GainNode;
    const Analyser      = window .AnalyserNode;
@@ -147,8 +147,14 @@ function installTap ()
 
    const buffer = new Float32Array (2048);
 
+   // `tapSum` and `tapCount` give the mean level (sound04_case.mjs): each poll adds the loudest of its analysers.
+   window .tapSum   = 0;
+   window .tapCount = 0;
+
    setInterval (() =>
    {
+      let loudest = 0;
+
       for (const analyser of analysers)
       {
          analyser .getFloatTimeDomainData (buffer);
@@ -158,8 +164,14 @@ function installTap ()
          for (const v of buffer)
             sum += v * v;
 
-         window .tapMax = Math .max (window .tapMax, Math .sqrt (sum / buffer .length));
+         const rms = Math .sqrt (sum / buffer .length);
+
+         loudest = Math .max (loudest, rms);
+         window .tapMax = Math .max (window .tapMax, rms);
       }
+
+      window .tapSum += loudest;
+      ++ window .tapCount;
    },
    20);
 }

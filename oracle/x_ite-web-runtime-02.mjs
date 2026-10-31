@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|routes01|viewpoints01|options01|attributes01|scenetext01|entry01|scripturl01|scenecreate01|rootnodes01|scriptlife01|sound01|sound03]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|routes01|viewpoints01|options01|attributes01|scenetext01|entry01|scripturl01|scenecreate01|rootnodes01|scriptlife01|sound01|sound03|sound04]
  *
  * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
  * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
@@ -26,6 +26,7 @@
  * `--suite scenecreate01` records the scene creation 01 cases (<out_dir>/scenecreate01-baseline.json).
  * `--suite rootnodes01` records the root nodes 01 cases (<out_dir>/rootnodes01-baseline.json).
  * `--suite sound01` records the sound 01 cases (<out_dir>/sound01-baseline.json).
+ * `--suite sound04` records the sound 04 cases (<out_dir>/sound04-baseline.json): the level the page's output carries (RMS).
  * `--suite sound03` records the sound 03 cases (<out_dir>/sound03-baseline.json): Mute, SoundIntensity, pitch, ranges, priority,
  *   listener, AudioContext life cycle, AudioDestination, a world replaced while playing, and the audible tap.
  * `--suite scriptlife01` records the Script life cycle 01 cases (<out_dir>/scriptlife01-baseline.json).
@@ -61,7 +62,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "routes01", "viewpoints01", "options01", "attributes01", "scenetext01", "entry01", "scripturl01", "scenecreate01", "rootnodes01", "scriptlife01", "sound01", "sound03" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "routes01", "viewpoints01", "options01", "attributes01", "scenetext01", "entry01", "scripturl01", "scenecreate01", "rootnodes01", "scriptlife01", "sound01", "sound03", "sound04" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
@@ -204,6 +205,34 @@ for (const b of browsers .values ())
 await server .close ();
 
 const sha  = data => createHash ("sha256") .update (data) .digest ("hex");
+
+// sound04 measures a level, which differs a little from run to run in X_ITE itself (the audio clock against the frames): the
+// runs must agree on everything but `rms` and on `rms` within RMS_RUN_TOLERANCE, and the recording keeps the mean of the runs
+// (4 decimals) and the raw runs (`levels`). The test of X_ITE_R (runtime02_harness.mjs, RMS_TOLERANCE) uses the same number.
+const RMS_RUN_TOLERANCE = 0.005;
+const levels            = { };
+
+if (SUITE === "sound04")
+{
+   for (const key of Object .keys (runs [0] .values))
+   {
+      const rms = runs .map (r => r .values [key] .rms);
+
+      levels [key] = rms;
+
+      if (Math .max (... rms) - Math .min (... rms) > RMS_RUN_TOLERANCE)
+      {
+         console .error (`FAIL: ${key} levels differ by more than ${RMS_RUN_TOLERANCE}: ${rms .join (" ")}`);
+         process .exit (1);
+      }
+
+      const mean = rms .reduce ((a, b) => a + b, 0) / rms .length;
+
+      for (const r of runs)
+         r .values [key] .rms = Number (mean .toFixed (4));
+   }
+}
+
 const json = runs .map (r => JSON .stringify (r .values));
 
 if (json .some (j => j !== json [0]))
@@ -232,6 +261,7 @@ await writeFile (join (outDir, `${SUITE}-baseline.json`), JSON .stringify ({
    gl,
    runs: RUNS,
    identicalValues: true,
+   ... (SUITE === "sound04" ? { rmsRunTolerance: RMS_RUN_TOLERANCE, levels } : { }),
    pictures: Object .fromEntries (Object .keys (runs [0] .pictures) .map (file => [ file, runs .map (r => sha (r .pictures [file])) ])),
    values: runs [0] .values,
 }, null, 1) + "\n");

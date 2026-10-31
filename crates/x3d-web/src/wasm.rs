@@ -264,6 +264,10 @@ pub struct WebBrowser {
     audio_clock: Option<f64>,
     /// The page's Mute and SoundIntensity options ([`WebBrowser::set_sound_options`]); a world that starts takes them.
     sound_options: Option<(bool, f64)>,
+    /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
+    audio_known: std::collections::HashSet<u64>,
+    /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
+    audio_payloads: x3d_runtime::sound::ops::Payloads,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -299,6 +303,10 @@ impl WebBrowser {
     /// The device and surface of `canvas` (WebGPU). Fails when the page has no WebGPU adapter, or the adapter lacks
     /// what the renderer needs (the WebGPU default limits, a usable canvas format).
     pub async fn create(canvas: web_sys::HtmlCanvasElement) -> Result<WebBrowser, JsError> {
+        // The page's Sound nodes are real browser nodes: the engine records its Web Audio calls for the page to make
+        // (web/audio_mirror.mjs). Before the first world, because an engine makes its choice when it is created.
+        x3d_runtime::sound::set_default_record_ops(true);
+
         let (width, height) = (canvas.width().max(1), canvas.height().max(1));
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::BROWSER_WEBGPU,
@@ -411,6 +419,8 @@ impl WebBrowser {
             loads: HashMap::new(),
             audio_clock: None,
             sound_options: None,
+            audio_known: Default::default(),
+            audio_payloads: Default::default(),
             current: None,
             next_id: 1,
             live: true,
@@ -679,16 +689,19 @@ impl WebBrowser {
 
         w.session.resize(self.config.width, self.config.height);
         w.session.set_live(self.live);
+
+        // The page's Mute and SoundIntensity first: go_live activates the world's sound destinations, and they take the
+        // gain of these options, not the default one (a world that starts muted is never heard).
+        if let Some((mute, intensity)) = self.sound_options {
+            w.session.set_sound_options(mute, intensity);
+        }
+
         w.session.go_live(now);
 
         // The world's audio context starts with the clock 0: it takes the page's latest clock at once, so the first
         // frame after a replaceWorld while the canvas was detached is no jump from 0 (a clip would end in it).
         if let Some(time) = self.audio_clock {
             w.session.set_audio_clock(time);
-        }
-
-        if let Some((mute, intensity)) = self.sound_options {
-            w.session.set_sound_options(mute, intensity);
         }
 
         if let Some(v) = w.session.viewer() {
@@ -1312,6 +1325,82 @@ impl WebBrowser {
         for l in self.loads.values_mut() {
             crate::session::set_sound_options(&mut l.rt, mute, intensity);
         }
+    }
+
+    /// The calls that the audio engines of the worlds and loads made on their Web Audio nodes since the last call, as
+    /// JSON: `{"engines": [{"uid": n, "ops": [["connect", 1, 0, 0, 0], ...]}], "gone": [uid, ...]}`, or `undefined`
+    /// when there is nothing. The page makes each call on a real node of its AudioContext (web/audio_mirror.mjs).
+    /// `gone` lists the engines that no longer exist (a replaced world, a discarded load): the page stops and
+    /// disconnects their nodes. A buffer argument is `{"buffer": n}`; read it with [`WebBrowser::audio_buffer`].
+    #[wasm_bindgen(js_name = takeAudioOps)]
+    pub fn take_audio_ops(&mut self) -> Option<String> {
+        let mut live = std::collections::HashSet::new();
+        let mut engines = Vec::new();
+        let mut taken = Vec::new();
+
+        for w in self.worlds.values() {
+            taken.extend(w.session.take_audio_ops());
+        }
+
+        for l in self.loads.values() {
+            taken.extend(l.rt.audio.as_ref().map(|a| (a.uid(), a.take_ops())));
+        }
+
+        self.audio_payloads = Default::default();
+
+        for (uid, ops) in taken {
+            live.insert(uid);
+
+            if self.audio_known.insert(uid) || !ops.is_empty() {
+                let json = x3d_runtime::sound::ops::to_json(&ops, &mut self.audio_payloads);
+
+                engines.push(format!("{{\"uid\":{uid},\"ops\":{json}}}"));
+            }
+        }
+
+        let gone: Vec<String> = self
+            .audio_known
+            .iter()
+            .filter(|uid| !live.contains(uid))
+            .map(|uid| uid.to_string())
+            .collect();
+
+        self.audio_known.retain(|uid| live.contains(uid));
+
+        if engines.is_empty() && gone.is_empty() {
+            return None;
+        }
+
+        Some(format!(
+            "{{\"engines\":[{}],\"gone\":[{}]}}",
+            engines.join(","),
+            gone.join(",")
+        ))
+    }
+
+    /// Buffer `index` of the last [`WebBrowser::take_audio_ops`]: `[sampleRate, channel 0, channel 1, ...]`, each channel
+    /// a Float32Array.
+    #[wasm_bindgen(js_name = audioBuffer)]
+    pub fn audio_buffer(&self, index: u32) -> Option<js_sys::Array> {
+        let (data, rate) = self.audio_payloads.buffers.get(index as usize)?;
+        let out = js_sys::Array::new();
+
+        out.push(&JsValue::from_f64(f64::from(*rate)));
+
+        for channel in data.iter() {
+            out.push(&js_sys::Float32Array::from(channel.as_slice()));
+        }
+
+        Some(out)
+    }
+
+    /// Encoded file `index` of the last [`WebBrowser::take_audio_ops`] (`{"encoded": n}`): the bytes of the file an
+    /// AudioBuffer was decoded from. The page decodes it itself (`decodeAudioData`), as X_ITE does.
+    #[wasm_bindgen(js_name = audioBytes)]
+    pub fn audio_bytes(&self, index: u32) -> Option<js_sys::Uint8Array> {
+        let bytes = self.audio_payloads.encoded.get(index as usize)?;
+
+        Some(js_sys::Uint8Array::from(bytes.as_slice()))
     }
 
     /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.

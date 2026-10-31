@@ -5,6 +5,7 @@
 
 import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
+import { AudioMirror } from "./audio_mirror.mjs";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -1679,6 +1680,8 @@ class X3DBrowser
    // `_audioElements` until then).
    #audioContext = null;
    #audioWaiting = false;
+   // The real Web Audio nodes of the engine's Sound nodes, on #audioContext (audio_mirror.mjs).
+   #audioMirror = null;
 
    constructor (element)
    {
@@ -1707,6 +1710,8 @@ class X3DBrowser
             : null);
          // An endUpdate () before the engine was ready.
          this .#engine .setLive (this .#live);
+         // Mute and SoundIntensity set before the engine was ready: the engine takes them for the worlds to come.
+         this .#applySoundOptions ();
          this .#listen ();
          this .#start ();
 
@@ -1792,7 +1797,17 @@ class X3DBrowser
          this .#setAutoUpdate ();
 
       if (field === this .#options .get ("Mute") || field === this .#options .get ("SoundIntensity"))
-         this .#engine ?.setSoundOptions (this .#options .get ("Mute") .getValue (), this .#options .get ("SoundIntensity") .getValue ());
+         this .#applySoundOptions ();
+   }
+
+   // The options Mute and SoundIntensity, now and for the worlds to come (the engine keeps them).
+   #applySoundOptions ()
+   {
+      if (!this .#engine)
+         return;
+
+      this .#engine .setSoundOptions (this .#options .get ("Mute") .getValue (), this .#options .get ("SoundIntensity") .getValue ());
+      this .#flushAudio (this .#engine);
    }
 
    // --- update ------------------------------------------------------------------------------------------------
@@ -2560,6 +2575,8 @@ class X3DBrowser
             // The clock the engine keeps is the page's latest: with the canvas detached no frame has given a newer one.
             this .#audioClock (this .#engine);
             this .#engine .replace (id, Date .now () / 1000);
+            // The replaced world's sources stop now, not at the next frame (the canvas may be detached).
+            this .#flushAudio (this .#engine);
             this .#scene = this .#sceneOf (id);
             this .#flushLog ();
 
@@ -3068,8 +3085,8 @@ class X3DBrowser
    // port). The page then makes its own AudioContext and calls resume () (startAudioElement), as X_ITE does. The
    // engine's context does not render in the page, so its clock stays at 0; before each frame it takes this
    // context's currentTime, the clock X_ITE's AudioElement reads. While the browser's autoplay policy holds the
-   // context, its clock stands still, as X_ITE's does. Nothing is connected to this context: X_ITE_R plays no sound
-   // in a page yet (web/API.md).
+   // context, its clock stands still, as X_ITE's does. The engine's Web Audio calls are made on real nodes of this
+   // context (#flushAudio), so the page plays the sound (web/API.md, "Sound output").
    #audioClock (engine)
    {
       if (!this .#audioContext)
@@ -3078,11 +3095,28 @@ class X3DBrowser
             return;
 
          this .#audioContext = new AudioContext ();
+         this .#audioMirror  = new AudioMirror (this .#audioContext, { buffer: index => this .#engine ?.audioBuffer (index), bytes: index => this .#engine ?.audioBytes (index) });
          this .#audioWaiting = true;
          this .#resumeAudio ();
       }
 
       engine .setAudioClock (this .#audioContext .currentTime);
+   }
+
+   // Option B of issue #140: the calls the engine's Sound nodes made on Web Audio nodes since the last flush are made on
+   // real nodes of the page's AudioContext, which reach its destination (audio_mirror.mjs). The context is made first:
+   // an engine that has audio has recorded the calls that make its nodes.
+   #flushAudio (engine)
+   {
+      this .#audioClock (engine);
+
+      if (!this .#audioMirror)
+         return;
+
+      const json = engine .takeAudioOps ();
+
+      if (json !== undefined)
+         this .#audioMirror .apply (JSON .parse (json));
    }
 
    // X3DSoundContext.startAudioElements for the AudioContext: resume () until it succeeds once.
@@ -3151,12 +3185,16 @@ class X3DBrowser
             engine .frame (time, width, height);
 
             // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
-            // again, so a user activation from outside the canvas also unlocks the context.
+            // again, so a user activation from outside the canvas also unlocks the context. The resume () comes before the
+            // nodes of the frame start (X_ITE calls it when the element starts): a source's start () can itself unlock the
+            // context, and the resume () then finds it running.
             if (engine .takeAudioStarts ())
             {
                this .#audioClock (engine);
                this .#resumeAudio ();
             }
+
+            this .#flushAudio (engine);
 
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
@@ -3295,6 +3333,8 @@ class X3DBrowser
       // harmless, but it is closed once.
       const context = this .#audioContext;
 
+      this .#audioMirror ?.dispose ();
+      this .#audioMirror  = null;
       this .#audioContext = null;
       this .#audioWaiting = false;
       context ?.close () .catch (Function .prototype);

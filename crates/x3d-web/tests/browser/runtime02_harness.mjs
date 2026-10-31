@@ -39,6 +39,7 @@ import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as SOUND03_GROUPS } from "./sound03_case.mjs";
+import { CASE_GROUPS as SOUND04_GROUPS } from "./sound04_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
@@ -60,6 +61,13 @@ const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES
 // field API 01 cases (fields01_case.mjs, `--suite fields01` into oracle/web-browser-fields-01-baseline), and the field API 02 cases (fields02_case.mjs, `--suite fields02` into
 // oracle/web-browser-fields-02-baseline), and the web scene text 01 cases (scenetext01_case.mjs, `--suite scenetext01` into
 // oracle/web-browser-scene-text-01-baseline).
+// The level of the page's output depends on the machine: the page's AudioContext runs at the sample rate of the audio output
+// (48 kHz here, 44.1 kHz on the CI runner), and pinned X_ITE reads about 3% lower on the runner than here. Each environment
+// is compared with pinned X_ITE 16.5.0 measured in that environment, with the same tolerance: `sound04-baseline.json` (the
+// owner's machine) and `sound04-runner-baseline.json` (GitHub Actions, ubuntu-24.04). GitHub Actions selects the runner one;
+// XR_SOUND04_REFERENCE=local or runner overrides.
+const SOUND04_REFERENCE = process .env .XR_SOUND04_REFERENCE ?? (process .env .GITHUB_ACTIONS === "true" ? "runner" : "local");
+
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
@@ -83,6 +91,7 @@ const SUITES = {
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
+   sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
@@ -435,14 +444,13 @@ const KNOWN_DIFFERENCES = {
         [ "GainNode > AudioDestinationNode", "GainNode > GainNode", "OscillatorNode > GainNode" ] ],
       [ [ "page", "resumeCalls" ], [ "running", "running" ], [ "running" ] ],
    ],
-   // UNRESOLVED FUNCTIONAL GAP (issue #140): a page of X_ITE_R carries no signal. X_ITE's graph reaches the page's AudioContext
-   // destination and a tap there measures the tone; X_ITE_R's engine renders into its own Web Audio port and connects nothing to
-   // the page's context (web/API.md, "Sound output"). The graph-state cases above are equal; these three are not.
-   "soundMore.audibleClip": [ [ [ "connectedToOutput" ], true, false ], [ [ "audible" ], true, false ] ],
-   "soundMore.audibleMuted": [ [ [ "connectedToOutput" ], true, false ] ],
-   "soundMore.audibleOscillator": [ [ [ "connectedToOutput" ], true, false ], [ [ "audible" ], true, false ] ],
    ... scriptLifeDifferences (),
 };
+
+// The level of the page's output (sound04_case.mjs) differs from run to run in X_ITE itself: the recording of each case was made
+// with 8 runs (the raw levels are in the baseline, `levels`; the largest spread was 0.0029). The tolerance is set from that spread alone, before the
+// first X_ITE_R measurement; it is not widened to pass.
+export const RMS_TOLERANCE = 0.005;
 
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
 // with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here. A case group can
@@ -639,6 +647,7 @@ const GROUP_FILES = {
    rootNodes: "rootnodes01.test.mjs",
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
+   soundLevel: "sound04.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
 };
 
@@ -719,6 +728,13 @@ export function referenceCases (file)
                   {
                      assert .deepEqual (at (theirs, path), xite, `${key}: the recording no longer has the known difference at ${path .join (".")}`);
                      theirs = withValue (theirs, path, xiteR);
+                  }
+
+                  // A measured level (sound04_case.mjs) is equal within RMS_TOLERANCE: the value of this run takes the recorded one.
+                  if (typeof compared ?.rms === "number" && typeof theirs ?.rms === "number")
+                  {
+                     assert .ok (Math .abs (compared .rms - theirs .rms) <= RMS_TOLERANCE, `${key}: rms ${compared .rms} against the recorded ${theirs .rms} (tolerance ${RMS_TOLERANCE})`);
+                     compared .rms = theirs .rms;
                   }
 
                   assert .deepEqual (compared, theirs, `${key}\n${page .log .join ("\n")}`);
