@@ -364,7 +364,9 @@ pub struct Runtime {
     /// Field callbacks of a page (the browser build): when set, each event of a field in [`Runtime::page_observed`] is
     /// recorded here with the value it delivered, in event order, for the page to call its callbacks after the frame
     /// ([`Runtime::take_page_field_events`]). The Scripts' own callbacks ([`Runtime::field_observed`]) run in the cascade.
-    pub page_field_events: Option<Vec<(FKey, FieldValue)>>,
+    /// Each event also holds the length of [`Runtime::log`] when X3DField.processEvent began, so the page can print the
+    /// log lines made before it first and call the callback before the lines that its routes make.
+    pub page_field_events: Option<Vec<(FKey, FieldValue, usize)>>,
     /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
     pub page_observed: std::collections::HashSet<FKey>,
     /// The nodes released since the page last asked ([`Runtime::take_page_released`]), when set: the page drops its
@@ -1216,7 +1218,7 @@ impl Runtime {
     }
 
     /// The events of observed fields the page has not taken yet (see [`Runtime::page_field_events`]).
-    pub fn take_page_field_events(&mut self) -> Vec<(FKey, FieldValue)> {
+    pub fn take_page_field_events(&mut self) -> Vec<(FKey, FieldValue, usize)> {
         self.page_field_events
             .as_mut()
             .map(std::mem::take)

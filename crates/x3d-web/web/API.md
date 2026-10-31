@@ -202,7 +202,7 @@ Compared with pinned X_ITE 16.5.0 in `tests/browser/script01.test.mjs`: the 8 sy
 
 Kept differences from X_ITE:
 
-- `Browser.print` and the Script's console messages reach the page's console when the engine returns from the event or frame, not during the Script's call.
+- `Browser.print` and the Script's console messages reach the page's console when the engine returns from the event or frame, not during the Script's call. The page's field callbacks (`addFieldCallback`) print in X_ITE's order: the lines made before an event, then its callbacks, then the lines its routes make (compared, `scriptLife.events`). A callback that changes the world still runs after the engine call, not inside the route chain.
 - The promise jobs of a Script run when the page's JavaScript stack is empty, after the engine's call. A change they make to a field object reaches the engine at its next call.
 - A function that a Script left in the page and that is called after its world was replaced throws `X_ITE_R: the Script's world is gone.` X_ITE keeps the old world's nodes usable.
 - There is no time limit: a Script that does not return stops the page, as in X_ITE. The native viewer stops it after 10 s.
@@ -211,7 +211,6 @@ Kept differences from X_ITE:
 
 Compared with pinned X_ITE 16.5.0 in `tests/browser/scriptlife01.test.mjs` (12 cases, synthetic worlds, `oracle/web-browser-script-life-01-baseline`, recorded 5 times with identical values): `initialize` (events sent from it, the order of the Scripts, `directOutput`), the events of Script fields (eventIns, eventOuts, routes, an interpolator, the page's events, several events in one task), `eventsProcessed`, `shutdown` when the Script's code is replaced and when the world is replaced, Script errors (in `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string or object), and the `rootNodes` of `Browser .currentScene` in a Script (a live `MFNode`, the same object on every read: `push`, `splice`, `assign`, `addRootNode`, `removeRootNode` and `setRootNodes` change the world, a callback runs once when the world starts and after each change, before the page's callbacks) and the callbacks of the page. A node that is a root node and a Script field value prints once with `DEF` and `USE`: the page's text forms read the clone counts as they are now. The cases that differ are listed in `KNOWN_DIFFERENCES` (`tests/browser/runtime02_harness.mjs`), with X_ITE's value checked against the recording:
 
-- The page's field callbacks (`addFieldCallback`) of a Script's output run after the Script handlers that the same engine call runs. In X_ITE they run before the handlers of the routes that follow.
 - X_ITE 16.5.0 does not call `shutdown` when a world is replaced or its element is disposed (the old scene is not disposed in the cases); it calls it when the Script's code is replaced. X_ITE_R calls it when the world is replaced, and an event that `shutdown` sends is not delivered.
 - X_ITE 16.5.0 throws `array[i].set is not a function` for a change of the root nodes while a Script is a root node itself. The cases keep the Script in a Group, so X_ITE_R's behavior there is not compared.
 

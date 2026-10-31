@@ -138,35 +138,7 @@ function scriptLifeDifferences ()
    const without = (seq, test) => seq .filter (line => !test (line));
    const differences = { };
 
-   // 1. The callbacks of the page's fields run after the Script handlers that the same engine call runs (X_ITE: before
-   //    the handlers of the routes that follow). A `page: *_changed` line moves behind the `log:` lines that follow it.
-   {
-      const seq = recorded ("events") .seq;
-      const moved = [ ];
-
-      for (let i = 0; i < seq .length; ++ i)
-      {
-         if (/^page: [xvm]_changed / .test (seq [i]))
-         {
-            let j = i + 1;
-            const callback = seq [i];
-            const logs = [ ];
-
-            while (j < seq .length && seq [j] .startsWith ("log: "))
-               logs .push (seq [j ++]);
-
-            moved .push (... logs, callback);
-            i = j - 1;
-         }
-         else
-            moved .push (seq [i]);
-      }
-
-      assert .notDeepEqual (moved, seq, "scriptLife.events: the order differs");
-      differences ["scriptLife.events"] = [ [ [ "seq" ], seq, moved ] ];
-   }
-
-   // 2. X_ITE 16.5.0 calls `shutdown` when a Script's code is replaced, but not when its world is replaced or its element
+   // 1. X_ITE 16.5.0 calls `shutdown` when a Script's code is replaced, but not when its world is replaced or its element
    //    leaves the document (the old scene is not disposed). X_ITE_R calls it when the world is replaced; its output is
    //    lost when the element leaves the document (web/API.md).
    {
