@@ -9,6 +9,7 @@
 use crate::geom::{Camera, Plane3, Triangle3, ViewVolume};
 use crate::lookat::Box3;
 use x3d_fields::jsmath;
+use x3d_fields::jsmath::number_to_string;
 use x3d_fields::math::{Matrix3, Matrix4, Vector2, Vector3, Vector4};
 
 // ---------------------------------------------------------------------------------------------
@@ -27,6 +28,13 @@ impl Default for Box2 {
         Box2 {
             matrix: Matrix3([0.0; 9]),
         }
+    }
+}
+
+impl std::fmt::Display for Box2 {
+    /// Box2.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, {}", self.size(), self.center())
     }
 }
 
@@ -263,6 +271,18 @@ impl Triangle2 {
 pub struct Spheroid3 {
     pub semi_major_axis: f64,
     pub semi_minor_axis: f64,
+}
+
+impl std::fmt::Display for Spheroid3 {
+    /// Spheroid3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {}",
+            number_to_string(self.semi_major_axis),
+            number_to_string(self.semi_minor_axis)
+        )
+    }
 }
 
 impl Spheroid3 {
