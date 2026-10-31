@@ -1,0 +1,44 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Transform { translation 0 0 -0.6 children [ Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+Transform { translation 0.3 0 0.2 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Transform { translation 0.3 0 0.2 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } }
+Transform { translation 0 0 -0.6 children [ Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Transform { scale 1 1 -1 children [ Transform { translation 0 0 0.7 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 -0.2 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Transform { rotation 0 1 0 1.5708 children [ Transform { translation 0 0 0.7 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 -0.2 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Switch { whichChoice 0 children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Switch { whichChoice -1 children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 1 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Billboard { axisOfRotation 0 1 0 children [ Transform { translation 0.0 0.0 -0.3 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 emissiveColor 1 0 0 transparency 0.5 } } geometry Box { size 1.3 1.3 0.05 } } }Transform { translation 0.0 0.0 0.3 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 emissiveColor 0 0 1 transparency 0.5 } } geometry Box { size 1.3 1.3 0.05 } } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Collision { children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Anchor { children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+LOD { range [ 20 ] children [ Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.3 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Transform { translation -0.5 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0 1 0 transparency 0.5 } } geometry Sphere { radius 0.7 } } }Transform { translation 0.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 transparency 0.5 } } geometry Sphere { radius 0.7 } } }
+] }

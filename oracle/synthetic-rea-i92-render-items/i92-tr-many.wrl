@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Transform { translation -0.4 0 -0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.30000000000000004 0 -0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.2 0 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.09999999999999998 0 -0.29999999999999993 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.0 0 -0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.09999999999999998 0 0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.20000000000000007 0 0.30000000000000016 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.30000000000000004 0 0.5000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.4 0 0.7000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.5 0 0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Transform { translation -0.4 0 0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.30000000000000004 0 0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.2 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation -0.09999999999999998 0 0.29999999999999993 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.0 0 0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.09999999999999998 0 -0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.20000000000000007 0 -0.30000000000000016 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.30000000000000004 0 -0.5000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.4 0 -0.7000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+Transform { translation 0.5 0 -0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 transparency 0.6 } } geometry Sphere { radius 0.55 } } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Transform { translation -0.4 0.0 -0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.30000000000000004 0.05 -0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.2 0.1 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.09999999999999998 0.15000000000000002 -0.29999999999999993 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.0 0.2 -0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.09999999999999998 0.25 0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.20000000000000007 0.30000000000000004 0.30000000000000016 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.30000000000000004 0.35000000000000003 0.5000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.4 0.4 0.7000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.5 0.45 0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Transform { translation -0.4 0.0 0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.30000000000000004 0.05 0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.2 0.1 0.5 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation -0.09999999999999998 0.15000000000000002 0.29999999999999993 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.0 0.2 0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.09999999999999998 0.25 -0.09999999999999998 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.20000000000000007 0.30000000000000004 -0.30000000000000016 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.30000000000000004 0.35000000000000003 -0.5000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 0.5 1.0 0.0 emissiveColor 0.5 1.0 0.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.4 0.4 -0.7000000000000001 children Shape { appearance Appearance { material Material { diffuseColor 1.0 0.0 0.5 emissiveColor 1.0 0.0 0.5 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.5 0.45 -0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.0 0.5 1.0 emissiveColor 0.0 0.5 1.0 transparency 0.7 } } geometry Box { size 1.6 1.6 0.05 } } }
+] }

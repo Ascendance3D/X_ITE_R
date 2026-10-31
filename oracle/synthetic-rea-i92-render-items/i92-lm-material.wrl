@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 shininess 0 specularColor 1 1 1 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 shininess 1 specularColor 1 1 1 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 0.2 specularColor 1 0.2 0.2 shininess 0.5 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0.4 0.4 0.9 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 emissiveColor 0.3 0 0 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.5 0.5 0.5 ambientIntensity 1 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.5 0.5 0.5 ambientIntensity 0 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 1 1 1 transparency 0.3 specularColor 1 1 1 shininess 0.5 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 1 1 1 transparency 0.9 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 specularColor 0.5 0.5 0.5 shininess 0.2 } } geometry Box { size 1.4 1.4 1.4 } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 specularColor 0.5 0.5 0.5 shininess 0.2 } } geometry Cylinder { height 1.6 radius 0.7 } } ] }
+] }

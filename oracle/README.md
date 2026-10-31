@@ -1143,3 +1143,12 @@ python3 -I -B oracle/tools/gen_rea_b24_anchor_collision_instanced.py
 python3 -I -B oracle/tools/rea_b24.py record ci-pick oracle/synthetic-rea-b24-anchor-collision-instanced/ci-pick.wrl \
   oracle/synthetic-rea-b24-anchor-collision-instanced/ci-pick.json 0
 ```
+
+## Render items (issue #92)
+
+`oracle/synthetic-rea-i92-render-items/` holds 46 synthetic worlds (headlight `hl-*`, lighting model `lm-*`, transparency
+sorting `tr-*`, fog `fg-*`), written by `oracle/tools/gen_rea_i92_render_items.py`. `oracle/tools/rea_i92_render_items.py shots`
+records each one three times with the pinned X_ITE at MSAA 0 and at MSAA 4 and writes `oracle/rea-i92-render-items-baseline/{png,msaa4}`
+only when the three runs are identical and no world logs an error. A world whose multisampled output differs between X_ITE's own runs gets
+no MSAA 4 picture and is listed in `msaa4/unstable.json` (`fg-transparent`, `tr-many`, `tr-ortho`). `crates/x3d-render/tests/render_rea_i92_items.rs`
+replays every world and fails on a missing reference, an error log or a picture over the bound (8 per channel, 0.5% of pixels).

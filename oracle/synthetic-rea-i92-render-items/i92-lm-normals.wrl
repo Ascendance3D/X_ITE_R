@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry Box { size 1.4 1.4 1.4 } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0.5, 0.9 -0.9 0, 0.9 0.9 0.5, -0.9 0.9 0 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 ] creaseAngle 0 } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0.5, 0.9 -0.9 0, 0.9 0.9 0.5, -0.9 0.9 0 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 ] creaseAngle 3.14 } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0.5, 0.9 -0.9 0, 0.9 0.9 0.5, -0.9 0.9 0 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 ] creaseAngle 0.3 } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0.5, 0.9 -0.9 0, 0.9 0.9 0.5, -0.9 0.9 0 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 ] normalPerVertex TRUE normal Normal { vector [ -0.6 -0.6 0.5, 0.6 -0.6 0.5, 0.6 0.6 0.5, -0.6 0.6 0.5 ] } coordIndex [ 0 1 2 3 -1 ] } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0.5, 0.9 -0.9 0, 0.9 0.9 0.5, -0.9 0.9 0 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 ] normalPerVertex FALSE normal Normal { vector [ 0 0.6 0.8, 0.6 0 0.8 ] } } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry Cone { height 1.6 bottomRadius 0.8 } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry Cylinder { height 1.6 radius 0.7 } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry Extrusion { crossSection [ 1 1, 1 -1, -1 -1, -1 1, 1 1 ] spine [ 0 -0.8 0, 0 0.8 0 ] scale [ 0.8 0.8, 0.4 0.4 ] creaseAngle 0 } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.6 zSpacing 0.6 height [ 0 0.3 0 0.3, 0.3 0 0.3 0, 0 0.3 0 0.3, 0.3 0 0.3 0 ] creaseAngle 0.6 solid FALSE } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.6 zSpacing 0.6 height [ 0 0.3 0 0.3, 0.3 0 0.3 0, 0 0.3 0 0.3, 0.3 0 0.3 0 ] creaseAngle 0 solid FALSE } } ] }
+] }
