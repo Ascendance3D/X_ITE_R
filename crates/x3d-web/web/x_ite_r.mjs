@@ -1751,9 +1751,13 @@ class X3DBrowser
       field .setValue (value);
 
       // BrowserOptions.addInterest: the options with an effect that is not read when it is needed. ContentScale and
-      // MaximumFrameRate are read by the frame loop; the rest is stored (API.md).
+      // MaximumFrameRate are read by the frame loop; Mute and SoundIntensity go to the engine (the gain of its sound
+      // destinations); the rest is stored (API.md).
       if (field === this .#options .get ("AutoUpdate"))
          this .#setAutoUpdate ();
+
+      if (field === this .#options .get ("Mute") || field === this .#options .get ("SoundIntensity"))
+         this .#engine ?.setSoundOptions (this .#options .get ("Mute") .getValue (), this .#options .get ("SoundIntensity") .getValue ());
    }
 
    // --- update ------------------------------------------------------------------------------------------------
