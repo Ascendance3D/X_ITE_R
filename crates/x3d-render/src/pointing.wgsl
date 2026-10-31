@@ -130,6 +130,13 @@ fn vs_main(
         clip = vec4<f32>(clip.xy + in.offset * 2.0 / u.viewport.zw * clip.w, clip.z, clip.w);
     }
 
+    if u.flags.y != 0.0 {
+        // gl.depthRange (n, f): window z = n + (f - n) * (z / w + 1) / 2, as in x3d.wgsl.
+        let n = u.flags.z;
+        let f = u.flags.w;
+        clip.z = 2.0 * n * clip.w + (f - n) * (clip.z + clip.w) - clip.w;
+    }
+
     out.position = vec4<f32>(clip.x, -clip.y, 0.5 * (clip.z + clip.w), clip.w);
     return out;
 }
