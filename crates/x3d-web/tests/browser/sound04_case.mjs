@@ -76,6 +76,41 @@ export const soundCases = {
    audibleMutedBeforeLoad: (page, env) => level (page, env, WORLD3 (FRONT, SOUND (WIDE)), { before: page => setOption (page, "Mute", true) }),
    audibleIntensityBeforeLoad: (page, env) => level (page, env, WORLD3 (FRONT, SOUND (WIDE)), { before: page => setOption (page, "SoundIntensity", 0.5) }),
 
+   // Mute set on a canvas the moment it is made, before its engine is ready: the stored option applies when it becomes ready.
+   async audibleMutedBeforeReady (page, env)
+   {
+      await page .evaluate (installTap);
+      await page .evaluate (installCapture, NODE_CLASSES);
+      await page .evaluate (async text =>
+      {
+         const element = document .createElement ("x3d-canvas");
+
+         element .setAttribute ("style", "display:block;width:200px;height:150px");
+         document .body .append (element);
+         // At once: the element has no engine yet in X_ITE_R (it is made asynchronously).
+         element .browser .setBrowserOption ("Mute", true);
+
+         const browser = element .browser;
+
+         await browser .replaceWorld (await browser .createX3DFromString (text));
+      },
+      WORLD3 (FRONT, SOUND (WIDE)) .replaceAll ('"BASE/', `"${env .base}/`));
+
+      await gesture (page);
+      await settle (page, 300);
+      await page .evaluate (() => { window .tapMax = 0; window .tapSum = 0; window .tapCount = 0; });
+      await settle (page, 1500);
+
+      const facts = await pageFacts (page);
+      const tap   = await page .evaluate (() => ({ tapped: window .tapped, rms: window .tapSum / Math .max (window .tapCount, 1) }));
+
+      return {
+         contextRunning: facts .states .length > 0 && facts .states .every (s => s === "running"),
+         connectedToOutput: tap .tapped > 0,
+         rms: Number (tap .rms .toFixed (Number (process .env .XR_RMS_DIGITS ?? 4))),
+      };
+   },
+
    // Mute set, then cleared: the signal comes back.
    async audibleUnmuted (page, env)
    {
