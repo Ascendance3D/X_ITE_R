@@ -1019,6 +1019,13 @@ impl Viewer3d {
                         self.swap_to(home);
                     }
                 }
+                // Browser.beginUpdate / endUpdate (X3DBrowserContext.setLive): a browser that is not live pauses the TimeSensors and the
+                // other nodes that follow the live state (X3DBrowser.js: beginUpdate -> setLive (true), endUpdate -> setLive (false)).
+                "setLive:true" | "setLive:false" => {
+                    self.rt.live = r.ends_with("true");
+                    self.rt.go_live();
+                    self.rt.refresh_live();
+                }
                 "nextViewpoint" => self.next_viewpoint(1),
                 "previousViewpoint" => self.next_viewpoint(-1),
                 "firstViewpoint" => self.first_viewpoint(),
