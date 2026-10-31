@@ -711,6 +711,8 @@ impl Runtime {
         if let Some(m) = self.movie(node) {
             m.set_current_time_zero();
             m.play(elapsed, now);
+            // getBrowser () .startAudioElement (this .mediaElement)
+            self.audio_element_started = true;
         }
     }
 
@@ -727,6 +729,7 @@ impl Runtime {
 
         if let Some(m) = self.movie(node) {
             m.play(elapsed, now);
+            self.audio_element_started = true;
         }
     }
 

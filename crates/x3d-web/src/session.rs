@@ -427,6 +427,89 @@ impl Session {
         self.rt().world_state.generation
     }
 
+    /// Has a Sound node of this world made the audio context (X3DSoundContext.getAudioContext)?
+    pub fn has_audio(&self) -> bool {
+        self.rt().audio.is_some()
+    }
+
+    /// Did a sound source or MovieTexture of this world start its media since the last call
+    /// ([`Runtime::audio_element_started`])? Clears the flag.
+    pub fn take_audio_element_started(&mut self) -> bool {
+        std::mem::take(&mut self.rt_mut().audio_element_started)
+    }
+
+    /// The page's audio clock (`audioContext .currentTime`) for the world's audio context, if it has one
+    /// ([`x3d_runtime::sound::AudioEngine::set_clock`]).
+    pub fn set_audio_clock(&mut self, time: f64) {
+        if let Some(audio) = self.rt_mut().audio.as_mut() {
+            audio.set_clock(time);
+        }
+    }
+
+    /// The world's audio graph as JSON (a diagnostic snapshot, [`x3d_runtime::sound::AudioGraph`]), or `None` while
+    /// no Sound node has made the audio context (X3DSoundContext.getAudioContext). Numbers are JavaScript numbers:
+    /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value.
+    pub fn audio_graph_json(&self) -> Option<String> {
+        let g = self.rt().audio.as_ref()?.graph();
+        let num = |v: f64| {
+            if v.is_finite() {
+                format!("{v:?}")
+            } else {
+                "null".into()
+            }
+        };
+        let opt = |v: Option<f64>| v.map_or("null".into(), num);
+        let nodes: Vec<String> = g
+            .nodes
+            .iter()
+            .map(|n| {
+                let source = n.source.as_ref().map_or("null".into(), |s| {
+                    format!(
+                        r#"{{"buffer":{},"loop":{},"loopStart":{},"loopEnd":{},"started":{},"stopped":{}}}"#,
+                        s.buffer.map_or("null".into(), |(c, l, r)| format!(
+                            r#"{{"numberOfChannels":{c},"length":{l},"sampleRate":{}}}"#,
+                            num(r as f64)
+                        )),
+                        s.loop_,
+                        num(s.loop_start),
+                        num(s.loop_end),
+                        s.started.map_or("null".into(), |(w, o)| format!("[{},{}]", num(w), num(o))),
+                        opt(s.stopped),
+                    )
+                });
+
+                format!(
+                    r#"{{"id":{},"serial":{},"kind":"{}","numberOfInputs":{},"numberOfOutputs":{},"channelCount":{},"channelCountMode":"{}","channelInterpretation":"{}","gain":{},"playbackRate":{},"source":{}}}"#,
+                    n.id,
+                    n.serial,
+                    n.kind,
+                    n.number_of_inputs,
+                    n.number_of_outputs,
+                    n.channel_count,
+                    n.channel_count_mode,
+                    n.channel_interpretation,
+                    opt(n.gain.map(f64::from)),
+                    opt(n.playback_rate.map(f64::from)),
+                    source,
+                )
+            })
+            .collect();
+        let connections: Vec<String> = g
+            .connections
+            .iter()
+            .map(|(a, o, b, i)| format!("[{a},{o},{b},{i}]"))
+            .collect();
+
+        Some(format!(
+            r#"{{"nodes":[{}],"connections":[{}],"destination":{},"currentTime":{},"sampleRate":{}}}"#,
+            nodes.join(","),
+            connections.join(","),
+            g.destination,
+            num(g.current_time),
+            num(g.sample_rate as f64),
+        ))
+    }
+
     fn rt(&self) -> &Runtime {
         match &self.stage {
             Stage::Loading(rt, _) => rt,

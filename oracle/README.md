@@ -948,6 +948,25 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-scene-create-01-baseline
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-rootnodes-01-baseline --runs 5 --suite rootnodes01
 ```
 
+### Web browser sound 01 (`web-browser-sound-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite sound01` runs the 12 cases of `crates/x3d-web/tests/browser/sound01_case.mjs`
+  (issue #140) and records `web-browser-sound-01-baseline/sound01-baseline.json` (no pictures): an AudioClip that plays
+  through a Sound node (the synthetic tone `synthetic-rea-b05/media/tone48k-stereo.wav`). Each case records the Web Audio
+  graph of the page (a capture wraps the page's Web Audio constructors and `connect`, `disconnect`, `start`, `stop`,
+  numbered from the destination), the AudioClip's `isActive`, `isPaused` and `duration_changed`, the AudioContexts the
+  page made, their state and the states at each `resume ()` call, and whether the audio clock runs. The cases: a looping
+  clip; the unlock (a document with no user activation, then a click on the canvas); the unlock by a clip that the page
+  starts from script; a clip that does not loop (its `isActive` events); pause and resume (the resume offset); `stopTime`; `loop` turned off while playing; the order of the clip's field events; a url that does not load; a replaced world; and the Sound fields `intensity`, `location` and `spatialize`.
+- The group runs in a browser with `--autoplay-policy=document-user-activation-required` (the group's `browserArgs`):
+  headless Chrome otherwise starts an AudioContext with no gesture. Playwright's `page .evaluate` gives the page a user
+  activation, so the unlock cases reload the page with an init script and take the state before the gesture in the page.
+- Five runs gave identical values (Chrome 156.0.8078.47), and three earlier runs of the same cases gave the same values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs 5 --suite sound01
+```
+
 ### Web browser Script life cycle 01 (`web-browser-script-life-01-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 12 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`

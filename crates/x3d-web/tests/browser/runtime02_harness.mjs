@@ -37,6 +37,7 @@ import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
+import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
@@ -79,6 +80,7 @@ const SUITES = {
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
+   sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
@@ -120,6 +122,11 @@ function derivedRenderingDifferences ()
       return [ [ step, "properties", name ], value, notImplemented (name) ];
    }));
 }
+
+// The AudioDestinationNode of the engine's Web Audio port (the web-audio-api crate) has numberOfOutputs 1, the value of
+// the Web Audio specification; Chromium's has 0. Nothing in X3D connects from the destination. For the audio graphs at
+// `paths` of a sound 01 case.
+const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "nodes", 0, "numberOfOutputs" ], 0, 1 ]);
 
 // The known differences of the Script life cycle 01 cases (scriptlife01_case.mjs; web/API.md, "Script nodes"). The
 // X_ITE value of each entry is taken from the recording and checked against it (referenceCases), and X_ITE_R's is
@@ -439,6 +446,24 @@ const KNOWN_DIFFERENCES = {
    "entryPoints.createBrowserBadUrl": startEventDifferences ("entryPoints.createBrowserBadUrl", [ [ "beforeAttach", "events" ], [ "afterAttach", "events" ] ]),
    "entryPoints.createBrowserArgs": [ "string", "undefined", "null", "emptyMFString", "withParameter" ]
       .flatMap (name => startEventDifferences ("entryPoints.createBrowserArgs", [ [ name, "beforeAttach", "events" ], [ name, "afterAttach", "events" ] ])),
+   "sound.loop": destinationOutputs ([ [ ] ]),
+   "sound.unlock": destinationOutputs ([ [ "before" ], [ "after" ] ]),
+   "sound.unlockByStart": destinationOutputs ([ [ "before" ] ]),
+   "sound.once": destinationOutputs ([ [ "ended" ] ]),
+   "sound.pauseResume": destinationOutputs ([ [ "paused" ], [ "resumed" ] ]),
+   "sound.stop": destinationOutputs ([ [ "playing" ], [ "stopped" ] ]),
+   "sound.loopOff": destinationOutputs ([ [ "ended" ] ]),
+   "sound.events": destinationOutputs ([ [ "ended" ] ]),
+   "sound.badUrl": destinationOutputs ([ [ ] ]),
+   "sound.replace": [
+      ... destinationOutputs ([ [ "playing" ] ]),
+      // X_ITE keeps the page's audio context after replaceWorld: the old sources are gone and only the destination is
+      // left. X_ITE_R's audio engine goes with the replaced world, so there is no graph until a Sound node of the new
+      // world makes one; nothing is audible either way (the page's context is the same in both: `page`).
+      [ [ "replaced", "graph" ], { nodes: [ { kind: "AudioDestinationNode", numberOfInputs: 1, numberOfOutputs: 0, channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" } ], connections: [ ], clock: "running", sampleRate: 48000 }, null ],
+   ],
+   "sound.intensity": destinationOutputs ([ [ ] ]),
+   "sound.unspatialized": destinationOutputs ([ [ ] ]),
    ... scriptLifeDifferences (),
 };
 
@@ -456,13 +481,17 @@ export const MOBILE_TIMEOUT = 1_010_000;
 export let server;
 let browser;
 
+// The extra Chromium flags of the case groups this test file registers (a group's `browserArgs`, for example the
+// autoplay policy of the sound 01 cases). The groups of one file must agree: the file has one browser.
+let browserArgs = null;
+
 before (async () =>
 {
    server  = await startServer (CRATE);
    browser = await chromium .launch ({
       headless: true,
       args: [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan",
-         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu" ],
+         "--use-vulkan=native", "--ignore-gpu-blocklist", "--enable-gpu", ... browserArgs ?? [ ] ],
    });
 
    await logAdapter ();
@@ -631,6 +660,7 @@ const GROUP_FILES = {
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
+   sound: "sound01.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
 };
 
@@ -664,6 +694,14 @@ export function referenceCases (file)
 
       for (const key of SELECTED)
          assert .ok (keys .includes (key), `XR_CASES: ${key} is not a reference case of ${file}`);
+   }
+
+   for (const [ groupName, group ] of groups)
+   {
+      const args = JSON .stringify (group .browserArgs ?? [ ]);
+
+      assert .ok (browserArgs === null || JSON .stringify (browserArgs) === args, `${file}: its case groups need different browser flags`);
+      browserArgs = group .browserArgs ?? [ ];
    }
 
    for (const [ groupName, group ] of groups)

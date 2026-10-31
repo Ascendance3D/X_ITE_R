@@ -259,6 +259,9 @@ pub struct WebBrowser {
     worlds: HashMap<u32, World>,
     /// The page's loadURL calls whose world has not parsed yet, by id (the ids of worlds and loads differ).
     loads: HashMap<u32, PageLoad>,
+    /// The latest `audioContext .currentTime` the page gave ([`WebBrowser::set_audio_clock`]); a world that starts
+    /// later (replaceWorld while the canvas is detached) takes it, not the clock 0 of a new audio context.
+    audio_clock: Option<f64>,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -404,6 +407,7 @@ impl WebBrowser {
             lost,
             worlds: HashMap::new(),
             loads: HashMap::new(),
+            audio_clock: None,
             current: None,
             next_id: 1,
             live: true,
@@ -673,6 +677,12 @@ impl WebBrowser {
         w.session.resize(self.config.width, self.config.height);
         w.session.set_live(self.live);
         w.session.go_live(now);
+
+        // The world's audio context starts with the clock 0: it takes the page's latest clock at once, so the first
+        // frame after a replaceWorld while the canvas was detached is no jump from 0 (a clip would end in it).
+        if let Some(time) = self.audio_clock {
+            w.session.set_audio_clock(time);
+        }
 
         if let Some(v) = w.session.viewer() {
             v.rendering_properties().apply(&mut self.renderer);
@@ -1238,6 +1248,54 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = activeViewpoint)]
     pub fn active_viewpoint(&self) -> Option<u32> {
         self.worlds.get(&self.current?)?.session.active_viewpoint()
+    }
+
+    /// Has a Sound node of any world or load of this browser made its audio context? The page then makes its
+    /// AudioContext (X3DSoundContext.getAudioContext) and gives its clock to the engine ([`WebBrowser::set_audio_clock`]).
+    #[wasm_bindgen(js_name = hasAudio)]
+    pub fn has_audio(&self) -> bool {
+        self.worlds.values().any(|w| w.session.has_audio())
+            || self.loads.values().any(|l| l.rt.audio.is_some())
+    }
+
+    /// X3DSoundContext.startAudioElement: did a world or load start a media element since the last call? The page
+    /// then calls the waiting AudioContext's resume () again (startAudioElements).
+    #[wasm_bindgen(js_name = takeAudioStarts)]
+    pub fn take_audio_starts(&mut self) -> bool {
+        let mut started = false;
+
+        for w in self.worlds.values_mut() {
+            started |= w.session.take_audio_element_started();
+        }
+
+        for l in self.loads.values_mut() {
+            started |= std::mem::take(&mut l.rt.audio_element_started);
+        }
+
+        started
+    }
+
+    /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.
+    #[wasm_bindgen(js_name = setAudioClock)]
+    pub fn set_audio_clock(&mut self, time: f64) {
+        self.audio_clock = Some(time);
+
+        for w in self.worlds.values_mut() {
+            w.session.set_audio_clock(time);
+        }
+
+        for l in self.loads.values_mut() {
+            if let Some(audio) = l.rt.audio.as_mut() {
+                audio.set_clock(time);
+            }
+        }
+    }
+
+    /// The audio graph of the current world as JSON ([`Session::audio_graph_json`]), or `undefined` while no Sound
+    /// node has made the audio context. For tests and diagnostics.
+    #[wasm_bindgen(js_name = audioGraph)]
+    pub fn audio_graph(&self) -> Option<String> {
+        self.worlds.get(&self.current?)?.session.audio_graph_json()
     }
 
     // --- frames --------------------------------------------------------------------------------------------------
