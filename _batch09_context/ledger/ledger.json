@@ -3465,9 +3465,9 @@
    "tests": [
     "oracle/tools/rea_b07_ps.py check: 103 cases, per-particle replay of X_ITE's Math.random (randomSeed + Wind CPU draws), all pass; crates/x3d-viewer/tests/particles_b07.rs (oracle cases + 5 lifecycle tests: Inline 100 cycles, Script create/drop 100, Group removal 50), crates/x3d-runtime/tests/particles_b07_units.rs (4); 06R suite 37/37 unchanged"
    ],
-   "missing": "Owner decision: the 3 strong-wind worlds (ps-wind-strong, -r24, -r144) pass only with TOL_STRONG = 1e-4 + 2e-5*|ref| (encoded in rea_b07_ps.py and particles_b07.rs); against the 06R limit 311/2007, 35/666, 341/4878 velocity values fail. Cause measured: GPU turbulence normal deviates from float32 per step (turbulence-step-noise.log). Wind speed unit conversion not modeled.",
+   "missing": "Owner decision: the 3 strong-wind worlds (ps-wind-strong, -r24, -r144) pass only with TOL_STRONG = 1e-4 + 2e-5*|ref| (encoded in rea_b07_ps.py and particles_b07.rs); against the 06R limit 311/2007, 35/666, 341/4878 velocity values fail. Cause measured: GPU turbulence normal deviates from float32 per step (turbulence-step-noise.log). Owner decision 2026-10-31: TOL_STRONG stays, because the cause is the GPU's float32 turbulence, not the unit conversion. The unit conversion is modeled and equals pinned X_ITE 16.5.0.",
    "oracle": "pinned X_ITE 16.5.0 per-particle transform-feedback readback (oracle/tools/x_ite_particles_b07.mjs), 24/60/144 Hz, events, ROUTE and Script changes; force rows, polylines texture, scene text and console log equal; velocity max 3.8e-6, position 4.4e-6 within the 06R limits",
-   "notes": "Batch 06R: restored from NOT_TESTED (scanner artifact). Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/particles/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). 41 wind worlds; the 38 ordinary ones pass the unchanged 06R limit; '103 pass' includes the 3 strong worlds under TOL_STRONG."
+   "notes": "Batch 06R: restored from NOT_TESTED (scanner artifact). Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/particles/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). 41 wind worlds; the 38 ordinary ones pass the unchanged 06R limit; '103 pass' includes the 3 strong worlds under TOL_STRONG. | Issue #82 2026-10-31: the unit conversion is modeled (Rust pressure = 10**(2*log(speed))*0.64615 equals WindPhysicsModel.js line 47 of the pin, same clamps and Math.random draw order); the old open item 'Wind speed unit conversion not modeled' was stale. Owner decision 2026-10-31: TOL_STRONG stays."
   },
   {
    "id": "node:LinePickSensor",
@@ -4804,7 +4804,7 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-web/tests/browser/sound03.test.mjs (oracle/web-browser-sound-03-baseline)",
-  "crates/x3d-web/tests/browser/sound04.test.mjs (oracle/web-browser-sound-04-baseline)",
+    "crates/x3d-web/tests/browser/sound04.test.mjs (oracle/web-browser-sound-04-baseline)",
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound",
     "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-sound (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
@@ -5114,7 +5114,7 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-web/tests/browser/sound03.test.mjs (oracle/web-browser-sound-03-baseline)",
-  "crates/x3d-web/tests/browser/sound04.test.mjs (oracle/web-browser-sound-04-baseline)",
+    "crates/x3d-web/tests/browser/sound04.test.mjs (oracle/web-browser-sound-04-baseline)",
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound",
     "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-sound (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
    ],
