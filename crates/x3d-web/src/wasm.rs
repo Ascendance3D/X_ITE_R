@@ -259,6 +259,9 @@ pub struct WebBrowser {
     worlds: HashMap<u32, World>,
     /// The page's loadURL calls whose world has not parsed yet, by id (the ids of worlds and loads differ).
     loads: HashMap<u32, PageLoad>,
+    /// The latest `audioContext .currentTime` the page gave ([`WebBrowser::set_audio_clock`]); a world that starts
+    /// later (replaceWorld while the canvas is detached) takes it, not the clock 0 of a new audio context.
+    audio_clock: Option<f64>,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -404,6 +407,7 @@ impl WebBrowser {
             lost,
             worlds: HashMap::new(),
             loads: HashMap::new(),
+            audio_clock: None,
             current: None,
             next_id: 1,
             live: true,
@@ -673,6 +677,12 @@ impl WebBrowser {
         w.session.resize(self.config.width, self.config.height);
         w.session.set_live(self.live);
         w.session.go_live(now);
+
+        // The world's audio context starts with the clock 0: it takes the page's latest clock at once, so the first
+        // frame after a replaceWorld while the canvas was detached is no jump from 0 (a clip would end in it).
+        if let Some(time) = self.audio_clock {
+            w.session.set_audio_clock(time);
+        }
 
         if let Some(v) = w.session.viewer() {
             v.rendering_properties().apply(&mut self.renderer);
@@ -1268,6 +1278,8 @@ impl WebBrowser {
     /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.
     #[wasm_bindgen(js_name = setAudioClock)]
     pub fn set_audio_clock(&mut self, time: f64) {
+        self.audio_clock = Some(time);
+
         for w in self.worlds.values_mut() {
             w.session.set_audio_clock(time);
         }

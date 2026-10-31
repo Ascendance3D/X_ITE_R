@@ -2518,6 +2518,8 @@ class X3DBrowser
                throw new Error ("X_ITE_R: the scene is gone.");
 
             this .#releaseInput ();
+            // The clock the engine keeps is the page's latest: with the canvas detached no frame has given a newer one.
+            this .#audioClock (this .#engine);
             this .#engine .replace (id, Date .now () / 1000);
             this .#scene = this .#sceneOf (id);
             this .#flushLog ();
@@ -3255,6 +3257,14 @@ class X3DBrowser
          this .#engine .free ();
          this .#engine = null;
       }
+
+      // The AudioContext is the page's own (#audioClock makes it): it goes with the browser. Closing it twice is
+      // harmless, but it is closed once.
+      const context = this .#audioContext;
+
+      this .#audioContext = null;
+      this .#audioWaiting = false;
+      context ?.close () .catch (Function .prototype);
    }
 }
 
