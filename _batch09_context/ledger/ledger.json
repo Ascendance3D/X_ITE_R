@@ -6708,15 +6708,16 @@
    "rust": [
     "crates/x3d-fields/src/math"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
    "tests": [
     "crates/x3d-viewer/tests/geom_math.rs (oracle/geom-math-baseline.json from oracle/tools/geom_xite.mjs)",
-    "crates/x3d-render/tests/geometry_rea_b12.rs::rea_b12_triangulation_matches_x_ite (oracle/synthetic-rea-b12-geom, 9 cases)"
+    "crates/x3d-render/tests/geometry_rea_b12.rs::rea_b12_triangulation_matches_x_ite (oracle/synthetic-rea-b12-geom, 9 cases)",
+    "crates/x3d-viewer/tests/math_tostring.rs (oracle/math-tostring-baseline.json from oracle/tools/math_tostring_xite.mjs, 3882 cases, 19 classes)"
    ],
-   "missing": "toString methods of the math classes are not ported",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: the pinned X_ITE's own standard/Math/Geometry modules (node, three identical runs) on 2434 cases (degenerate ones and seeded random ones): Line3 (fromPoints, closest point to a point and a line, perpendicular vectors, intersectsTriangle, multMatrixLine / multLineMatrix), Line2, Plane3 (distance, closest point, intersectsLine, multLeft / multRight), Sphere3 and Cylinder3 intersectsLine, Triangle3 area / normal / quadNormal, ViewVolume unProjectPoint / unProjectRay / projectPoint / projectLine, Camera.ortho, Box3 fromExtents / multRight / getExtents: the port's geom.rs and lookat.rs equal it bit for bit. Checkpoint after 804802d: the oracle's random matrices were NaN (Matrix4 .set took raw elements, Rotation4 four numbers), so 1000 of those cases compared NaN with NaN; fixed (setTransform), they now pass with real matrices. New in geom2.rs, each bit-exact: Box2, Triangle2, Spheroid3, the rest of Box3 (set, extents, points, axes, normals, add, multLeft, containsPoint, intersectsBox ...), Camera frustum / perspective / perspective2 / orthoBox, the ViewVolume instance (set, getViewport, getEdges, intersectsSphere, intersectsBox), SAT, Bezier, eigen_decomposition, MergeSort, QuickSort; x3d-render's perspective equals Camera.perspective. 3567 cases Batch 12 2026-10-21: Triangle3.triangulatePolygon is now compared directly through convex FALSE IndexedFaceSet and Extrusion caps."
+   "notes": "b09 cloud checkpoint after b2e5b9f: the pinned X_ITE's own standard/Math/Geometry modules (node, three identical runs) on 2434 cases (degenerate ones and seeded random ones): Line3 (fromPoints, closest point to a point and a line, perpendicular vectors, intersectsTriangle, multMatrixLine / multLineMatrix), Line2, Plane3 (distance, closest point, intersectsLine, multLeft / multRight), Sphere3 and Cylinder3 intersectsLine, Triangle3 area / normal / quadNormal, ViewVolume unProjectPoint / unProjectRay / projectPoint / projectLine, Camera.ortho, Box3 fromExtents / multRight / getExtents: the port's geom.rs and lookat.rs equal it bit for bit. Checkpoint after 804802d: the oracle's random matrices were NaN (Matrix4 .set took raw elements, Rotation4 four numbers), so 1000 of those cases compared NaN with NaN; fixed (setTransform), they now pass with real matrices. New in geom2.rs, each bit-exact: Box2, Triangle2, Spheroid3, the rest of Box3 (set, extents, points, axes, normals, add, multLeft, containsPoint, intersectsBox ...), Camera frustum / perspective / perspective2 / orthoBox, the ViewVolume instance (set, getViewport, getEdges, intersectsSphere, intersectsBox), SAT, Bezier, eigen_decomposition, MergeSort, QuickSort; x3d-render's perspective equals Camera.perspective. 3567 cases Batch 12 2026-10-21: Triangle3.triangulatePolygon is now compared directly through convex FALSE IndexedFaceSet and Extrusion caps. | Issue #76 2026-10-31: toString of all 19 math classes (Numbers: Complex, Color3, Color4, Matrix2, Matrix3, Matrix4, Quaternion, Rotation4, Vector2, Vector3, Vector4; Geometry: Box2, Box3, Cylinder3, Line2, Line3, Plane3, Sphere3, Spheroid3) equals pinned X_ITE 16.5.0 on 3882 cases, three identical recordings."
   },
   {
    "id": "sub:exec.context-api",
