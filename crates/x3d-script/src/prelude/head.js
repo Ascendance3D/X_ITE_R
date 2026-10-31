@@ -19,7 +19,12 @@
 const X = global .__x;
 const H = Symbol ("handle");
 
+// The browser build (x3d-web, web/pkg/script.mjs): the realm is an object of the page whose prototype is the page's
+// global object, and the engine is the page's (V8 in Chromium). The prelude then leaves the page's built-ins alone.
+const PAGE = global .__page === true;
+
 delete global .__x;
+delete global .__page;
 
 // X_ITE runs in the page; its modules write their polyfills to `window` (Features.js). The Script realm is the page here too.
 const window = global;
@@ -50,8 +55,8 @@ for (const name of ["dispose", "asyncDispose"])
 
 // Error.captureStackTrace (target): V8's `stack` starts with a header line (`Error`, or `name: message` for an error), then the
 // frames. QuickJS gives the frames only. The frames themselves are the engine's (a kept difference: they name QuickJS's source
-// positions).
-if (typeof Error .captureStackTrace === "function")
+// positions). The page's engine has V8's own.
+if (!PAGE && typeof Error .captureStackTrace === "function")
 {
    const captureStackTrace = Error .captureStackTrace;
 

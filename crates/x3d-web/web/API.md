@@ -16,6 +16,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | `src` property and attribute | supported, compared |
 | `url` property (MFString) and attribute (`"a.wrl", "b.wrl"`) | supported, tested: the first URL that loads |
 | `contentScale` attribute | supported, compared: a number, or `auto` for `devicePixelRatio`; the default is 1. The framebuffer is clamped to the device's maximum texture size, like X_ITE's `limitFramebufferSize` |
+| `scripts` attribute | X_ITE_R only, default off: `scripts="true"` lets the Script nodes of the worlds that start after it run, with the privileges of the page (see "Script nodes") |
 | events `initialized`, `load`, `error`, `shutdown` | supported, order compared (`shutdown initialized load` for a world, `error` for a failure); also for a world an Anchor loads |
 | `oninitialized`, `onshutdown` properties | supported (called before the event, like X_ITE). The attribute forms are not read |
 | `captureStream (frameRate)` | supported, compared (`oracle/web-browser-entry-01-baseline`): the canvas's `captureStream`, a `MediaStream` with one live `CanvasCaptureMediaStreamTrack` (video, no audio); frame rate 0 and 30 give a track of that rate, and the canvas's errors for -1, `NaN`, `Infinity` and a string are the same |
@@ -173,7 +174,39 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 - The profile and components of a scene of `createScene` are kept by the page's `X3DScene` object; the engine's scene has neither (no text form prints them, since `X3DScene .toVRMLString ()` is not supported).
 - `createVrmlFromString` before the first world (the page's empty one): the nodes belong to a scene of their own, which they keep alive, and not to the world (there is none to make them in). After a `loadURL` or `replaceWorld` they are the world's. The nodes of a world that was replaced are stale (see the known difference of a replaced world above).
 - `importDocument (htmlElement)`: X_ITE's HTMLParser reads the HTML element of an `<X3D>` in a page (tag and attribute names are case-insensitive there); X_ITE_R rejects an `HTMLElement` with `X_ITE_R: Browser.importDocument: an HTML element is not supported; ...`. It takes the XML string, an `XMLDocument` or an XML element (serialized and parsed by the engine's XML parser). The DOM integration of #146 is not here.
-- `importJS`, `importDocument`: the scene's `worldURL` is the page's URL, like X_ITE's; no Script is run, since the browser build has no script engine (the JSON parser needs none).
+- `importJS`, `importDocument`: the scene's `worldURL` is the page's URL, like X_ITE's. Its Scripts run only when the page lets them (see "Script nodes").
+
+## Script nodes
+
+**Status: PARTIAL.** (This entry replaces "Script nodes: not implemented".) Script nodes run in the browser build, off by default. They are not COMPLETE: the kept differences below are open, and the Script life cycle cases of `tests/browser/scriptlife01.test.mjs` list the ones that a pinned recording shows.
+
+Refs #133. A Script node runs in the page's own JavaScript engine, as in X_ITE. The engine and its Script implementation are the native viewer's (`crates/x3d-script`, the X_ITE 16.5.0 prelude), so field access, routing, event order and the Script lifecycle are the same.
+
+**Security.** A Script runs with the privileges of the page. It can read and change the document, call the page's functions and send requests as the page. X_ITE_R gives no isolation from the host page; treat Script code as code of the page.
+
+**The switch.** The Scripts do not run by default. The page lets them run with the `scripts="true"` attribute of `<x3d-canvas>`, which is read when a world starts (`loadURL`, `src`, `createX3DFromString`, `createX3DFromURL`, `importJS`, `importDocument`). Any other value, or no attribute, keeps them off: a Script then logs `Couldn't load URL ... no script engine`, and the rest of the world runs. The attribute does not check where a Script's code comes from: a world from another server, an Inline or an external `.js` file runs with the page's privileges as well. Set it only for content you trust.
+
+**Content Security Policy.** The Script engine evaluates source text with `new Function` and `eval`, so a page that lets Scripts run and has a Content Security Policy needs `'unsafe-eval'` in its `script-src`. Give that only to the page that embeds X_ITE_R for trusted content, not to unrelated applications. X_ITE_R itself needs only `'wasm-unsafe-eval'` for its WebAssembly. Without `'unsafe-eval'` the Scripts of a world do not run: the engine logs `X_ITE_R: the Scripts of this world cannot run: EvalError: ...`, each Script logs `no script engine`, and the rest of the world runs.
+
+Compared with pinned X_ITE 16.5.0 in `tests/browser/script01.test.mjs`: the 8 synthetic Script worlds of `oracle/synthetic-x6` (scene text and console, `oracle/synthetic-x6-baseline.json`) and the 11 Script cases of `oracle/web-browser-script-url-01-baseline`, including what the Script did. The same file tests the default, the policy, the lifecycle and event order, and the page's `rootNodes` field when a Script changes the root nodes.
+
+Kept differences from X_ITE:
+
+- `Browser.print` and the Script's console messages reach the page's console when the engine returns from the event or frame, not during the Script's call.
+- The promise jobs of a Script run when the page's JavaScript stack is empty, after the engine's call. A change they make to a field object reaches the engine at its next call.
+- A function that a Script left in the page and that is called after its world was replaced throws `X_ITE_R: the Script's world is gone.` X_ITE keeps the old world's nodes usable.
+- There is no time limit: a Script that does not return stops the page, as in X_ITE. The native viewer stops it after 10 s.
+- There is no case of `importJS` or `importDocument` with a Script that runs: the Script switch applies to them, but no test compares them with X_ITE.
+- When the `<x3d-canvas>` element is disposed (it leaves the document), the Scripts' `shutdown` output is lost.
+
+Compared with pinned X_ITE 16.5.0 in `tests/browser/scriptlife01.test.mjs` (12 cases, synthetic worlds, `oracle/web-browser-script-life-01-baseline`, recorded 5 times with identical values): `initialize` (events sent from it, the order of the Scripts, `directOutput`), the events of Script fields (eventIns, eventOuts, routes, an interpolator, the page's events, several events in one task), `eventsProcessed`, `shutdown` when the Script's code is replaced and when the world is replaced, Script errors (in `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string or object), and the `rootNodes` of `Browser .currentScene` in a Script and the callbacks of the page. The cases that differ are listed in `KNOWN_DIFFERENCES` (`tests/browser/runtime02_harness.mjs`), with X_ITE's value checked against the recording:
+
+- The page's field callbacks (`addFieldCallback`) of a Script's output run after the Script handlers that the same engine call runs. In X_ITE they run before the handlers of the routes that follow.
+- X_ITE 16.5.0 does not call `shutdown` when a world is replaced or its element is disposed (the old scene is not disposed in the cases); it calls it when the Script's code is replaced. X_ITE_R calls it when the world is replaced, and an event that `shutdown` sends is not delivered.
+- A field callback that a Script adds to `Browser .currentScene .rootNodes` never runs in X_ITE_R. In X_ITE it runs when it is added and after each change.
+- `rootNodes .push (node)` in a Script changes only the Script's copy in X_ITE_R; the world keeps its root nodes. `addRootNode`, `removeRootNode` and `setRootNodes` change the world.
+- A node that is a root node and the value of a Script field prints in full in both places in X_ITE_R; X_ITE prints it once with `DEF` and `USE`.
+- X_ITE 16.5.0 throws `array[i].set is not a function` for a change of the root nodes while a Script is a root node itself. The cases keep the Script in a Group, so X_ITE_R's behavior there is not compared.
 
 ## Canvas attributes
 
@@ -194,7 +227,6 @@ The `update` attribute and the `AutoUpdate` option call `beginUpdate` and `endUp
 
 ## Not implemented
 
-- Script nodes: the browser build has no script engine (QuickJS does not build for wasm32-unknown-unknown). A Script logs `Couldn't load URL ... no script engine` and does not run; the rest of the world runs.
 - `getUserViewpoints` and the other X3DBrowserContext functions.
 - `toVRMLString` and the other stream functions of the browser.
 - Most rendering properties: `getRenderingProperty` throws `X_ITE_R: the rendering property '...' is not implemented.` for `Shading`, `Antialiased` (and its alias `AntiAliased`), `ContentScale` and `Multisampling`, which X_ITE derives from the options and the context (`Shading` is the mapped name, `POINTSET` gives `POINT` and an unknown name `GOURAUD`; `Multisampling` is clamped to the context's samples; `Antialiased` is true while the context is multisampled; `ContentScale` is the scale in use), and for the properties of X_ITE's WebGL context: `MaxTextureSize`, `TextureUnits`, `MaxLights`, `ColorDepth`, `TextureMemory`, `MaxAnisotropicDegree`, `MaxSamples`, `PixelsPerPoint`, `SoundDestinations` and `XRSession`. The WebGPU renderer has no such values.

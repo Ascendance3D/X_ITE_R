@@ -526,7 +526,7 @@ impl Runtime {
             Task::ScriptLoad(n)
             | Task::ScriptLoaded(n, _)
             | Task::UrlLoad(n, _)
-            | Task::ScriptFetch(n, _)
+            | Task::ScriptFetch(n, ..)
             | Task::ScriptCandidate(n, ..) => !dead.contains(n),
             Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
         };
@@ -577,7 +577,9 @@ impl Runtime {
         self.world_infos.retain(|_, list| !list.is_empty());
         self.scripts.retain(|n| !dead.contains(n));
         self.field_observed.retain(|k| !dead.contains(&k.0));
+        self.page_observed.retain(|k| !dead.contains(&k.0));
         self.js_mirror.retain(|k, _| !dead.contains(&k.0));
+        self.page_mirror.retain(|k, _| !dead.contains(&k.0));
         self.pending_field_events.retain(|k| !dead.contains(&k.0));
         // A queued event of a released node must not reach the node that takes its id.
         if let Some(events) = &mut self.page_field_events {
