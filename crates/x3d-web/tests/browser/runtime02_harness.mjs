@@ -483,6 +483,19 @@ const KNOWN_DIFFERENCES = {
    "sound.unlockByStart": destinationOutputs ([ [ "before" ] ]),
    "sound.once": destinationOutputs ([ [ "ended" ] ]),
    "sound.pauseResume": destinationOutputs ([ [ "paused" ], [ "resumed" ] ]),
+   "sound.stop": destinationOutputs ([ [ "playing" ], [ "stopped" ] ]),
+   "sound.loopOff": destinationOutputs ([ [ "ended" ] ]),
+   "sound.events": destinationOutputs ([ [ "ended" ] ]),
+   "sound.badUrl": destinationOutputs ([ [ ] ]),
+   "sound.replace": [
+      ... destinationOutputs ([ [ "playing" ] ]),
+      // X_ITE keeps the page's audio context after replaceWorld: the old sources are gone and only the destination is
+      // left. X_ITE_R's audio engine goes with the replaced world, so there is no graph until a Sound node of the new
+      // world makes one; nothing is audible either way (the page's context is the same in both: `page`).
+      [ [ "replaced", "graph" ], { nodes: [ { kind: "AudioDestinationNode", numberOfInputs: 1, numberOfOutputs: 0, channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" } ], connections: [ ], clock: "running", sampleRate: 48000 }, null ],
+   ],
+   "sound.intensity": destinationOutputs ([ [ ] ]),
+   "sound.unspatialized": destinationOutputs ([ [ ] ]),
    ... scriptLifeDifferences (),
 };
 

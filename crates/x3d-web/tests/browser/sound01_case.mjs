@@ -313,14 +313,14 @@ export function normalizeGraph (raw)
 }
 
 // The world: a Sound in front of the viewer (inside its inner ellipsoid: full gain) with AudioClip A. `clip` gives the
-// AudioClip's other fields.
-const WORLD = clip => `#X3D V4.0 utf8
+// AudioClip's other fields, `sound` the Sound's, `file` the media file.
+const WORLD = (clip, sound = "", file = "tone48k-stereo.wav") => `#X3D V4.0 utf8
 PROFILE Interchange
 COMPONENT Sound:2
 Viewpoint { position 0 0 10 }
 DEF S Sound {
-  minFront 20 minBack 20 maxFront 40 maxBack 40
-  source DEF A AudioClip { url "BASE/media/tone48k-stereo.wav" ${clip} }
+  minFront 20 minBack 20 maxFront 40 maxBack 40 ${sound}
+  source DEF A AudioClip { url "BASE/media/${file}" ${clip} }
 }
 `;
 
@@ -348,6 +348,19 @@ const watchActive = page => page .evaluate (() =>
 
 const activeEvents = page => page .evaluate (() => window .activeEvents);
 
+// Keep the events of AudioClip A's isActive, isPaused and duration_changed, in the order they came, in window .clipEvents.
+const watchAll = page => page .evaluate (() =>
+{
+   const A = document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("A");
+
+   window .clipEvents = [ ];
+
+   for (const name of [ "isActive", "isPaused", "duration_changed" ])
+      A .addFieldCallback ("sound01", name, value => window .clipEvents .push (`${name} ${typeof value === "number" ? Number (value .toFixed (4)) : value}`));
+});
+
+const clipEvents = page => page .evaluate (() => window .clipEvents);
+
 const pageFacts = page => page .evaluate (() => window .audioCapture .page ());
 
 // What the audio of the world is now.
@@ -357,11 +370,11 @@ async function state (page)
 }
 
 // The world of `clip` with the capture in place, loaded and settled.
-async function start (page, env, clip)
+async function start (page, env, clip, sound, file)
 {
    await page .evaluate (installCapture, NODE_CLASSES);
 
-   const c = await sceneCase (page, env, WORLD (clip));
+   const c = await sceneCase (page, env, WORLD (clip, sound, file));
 
    return { loaded: await c .loaded (), console: c .console () };
 }
@@ -480,6 +493,110 @@ export const soundCases = {
       return { ... load, paused, resumed: await state (page) };
    },
 };
+
+// More of the playback behavior and the Sound node (issue #140): stop, loop, the field events, an AudioClip that does not
+// load, a world that is replaced, and the Sound's own fields.
+Object .assign (soundCases,
+{
+   // A looping clip, stopped by stopTime: isActive goes FALSE and the source is stopped.
+   async stop (page, env)
+   {
+      const load = await start (page, env, "loop TRUE");
+
+      await gesture (page);
+      await watchAll (page);
+      await settle (page, 300);
+
+      const playing = await state (page);
+
+      await setTimes (page, [ "stopTime" ]);
+      await settle (page, 500);
+
+      return { ... load, playing, events: await clipEvents (page), stopped: await state (page) };
+   },
+
+   // loop is turned off while the clip plays: it ends at the end of the clip.
+   async loopOff (page, env)
+   {
+      const load = await start (page, env, "loop TRUE");
+
+      await gesture (page);
+      await watchAll (page);
+      await settle (page, 300);
+      await page .evaluate (() => { document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("A") .loop = false; });
+      await settle (page, 1000);
+
+      return { ... load, events: await clipEvents (page), ended: await state (page) };
+   },
+
+   // Start, pause, resume and let the clip end: the order of the field events.
+   async events (page, env)
+   {
+      const load = await start (page, env, "");
+
+      await gesture (page);
+      await watchAll (page);
+      await setTimes (page, [ "startTime" ]);
+      await settle (page, 100);
+      await setTimes (page, [ "pauseTime" ]);
+      await settle (page, 100);
+      await setTimes (page, [ "resumeTime" ]);
+      await settle (page, 1000);
+
+      return { ... load, events: await clipEvents (page), ended: await state (page) };
+   },
+
+   // The url does not load: the messages, the fields and the graph.
+   async badUrl (page, env)
+   {
+      const load = await start (page, env, "loop TRUE", "", "missing.wav");
+
+      await gesture (page);
+
+      return { ... load, ... await state (page) };
+   },
+
+   // The world is replaced while the clip plays: the source stops and leaves the graph; the page keeps its context.
+   async replace (page, env)
+   {
+      const load = await start (page, env, "loop TRUE");
+
+      await gesture (page);
+      await settle (page, 300);
+
+      const playing = await state (page);
+
+      await page .evaluate (async () =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+
+         await browser .replaceWorld (await browser .createX3DFromString ("#X3D V4.0 utf8\nPROFILE Interchange\nGroup { }\n"));
+      });
+
+      await settle (page, 500);
+
+      return { ... load, playing, replaced: { graph: normalizeGraph (await rawGraph (page)), page: await pageFacts (page) } };
+   },
+
+   // The Sound's own fields: intensity, and a location off the viewer's axis (the pan gains).
+   async intensity (page, env)
+   {
+      const load = await start (page, env, "loop TRUE", "intensity 0.5 location 5 0 0");
+
+      await gesture (page);
+
+      return { ... load, ... await state (page) };
+   },
+
+   async unspatialized (page, env)
+   {
+      const load = await start (page, env, "loop TRUE", "spatialize FALSE location 5 0 0 intensity 0.8");
+
+      await gesture (page);
+
+      return { ... load, ... await state (page) };
+   },
+});
 
 // Chromium's autoplay policy of a desktop page: an AudioContext starts only after a user gesture. Headless Chromium
 // lets it start at once otherwise (no gesture needed), so the unlock would not be seen.
