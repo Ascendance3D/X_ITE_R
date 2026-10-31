@@ -21,9 +21,10 @@ that is not a merge commit, or a git failure runs both suites.
   `oracle/web-browser-*` and their X_ITE recorders `oracle/x_ite-web-*`, web-tests.yml and its browser-deps action.
 - Native only (the browser suite is left out): a workspace crate that crates/x3d-web does not build with (its
   normal, build and target dependencies, followed through path dependencies), the other `oracle/` and `tools/`
-  files except tools/build-web.sh and the synthetic Script worlds `oracle/synthetic-x6*` (both suites read them), the
+  files except tools/build-web.sh and the synthetic Script worlds `oracle/synthetic-x6*`, `oracle/synthetic-inline-scripts*`,
+  `oracle/synthetic-externproto*` and `oracle/synthetic-followers*` (both suites read them), the
   REA ledger trees `_batch*_context/`, and the other workflows. The browser tests read crates/x3d-web,
-  `oracle/web-browser-*` and `oracle/synthetic-x6*`.
+  `oracle/web-browser-*` and the synthetic Script worlds named above.
 
 This script and its workflows are not in either list, so a change to them runs both suites.
 
@@ -57,7 +58,16 @@ NATIVE_ONLY_FILES = {
 BOTH_FILES = {"tools/build-web.sh", "tools/ci_changes.py"}
 # Oracle files that a native test and a browser test both read: the synthetic Script worlds and their X_ITE recording
 # (crates/x3d-script's tests and crates/x3d-web/tests/browser/script01.test.mjs).
-BOTH_PREFIXES = ("oracle/synthetic-x6/", "oracle/synthetic-x6-baseline.json")
+BOTH_PREFIXES = (
+    "oracle/synthetic-x6/",
+    "oracle/synthetic-x6-baseline.json",
+    "oracle/synthetic-inline-scripts/",
+    "oracle/synthetic-inline-scripts-baseline.json",
+    "oracle/synthetic-externproto/",
+    "oracle/synthetic-externproto-baseline.json",
+    "oracle/synthetic-followers/",
+    "oracle/synthetic-followers-baseline.json",
+)
 # Read by no Rust or browser test. "Fast checks" runs the checks that read the tools (tools/test_answer_keys.py,
 # tools/verify-reference-pin.py, tools/verify-candidate.sh, tools/selftest-identity.sh). Exact names only.
 FAST_ONLY_FILES = {
@@ -238,6 +248,13 @@ def self_test():
         (["crates/x3d-web/src/wasm.rs"], True, True),
         (["oracle/synthetic-x6/s01-router.wrl"], True, True),
         (["oracle/synthetic-x6-baseline.json"], True, True),
+        (["oracle/synthetic-inline-scripts/basic.wrl"], True, True),
+        (["oracle/synthetic-inline-scripts-baseline.json"], True, True),
+        (["oracle/synthetic-externproto/main-basic.wrl"], True, True),
+        (["oracle/synthetic-externproto-baseline.json"], True, True),
+        (["oracle/synthetic-followers/order.wrl"], True, True),
+        (["oracle/synthetic-followers-baseline.json"], True, True),
+        (["oracle/synthetic-inline-reload-baseline.json"], True, False),
         (["crates/x3d-web/web/example/box.wrl"], True, True),
         (["crates/x3d-web/tests/session.rs"], True, True),
         (["crates/x3d-web/tests/browser/runtime02_phone.test.mjs"], False, True),

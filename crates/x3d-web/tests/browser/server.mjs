@@ -21,13 +21,17 @@ const TYPES = {
 };
 
 // Clean fixtures of other oracle sets that both engines load: /fonts/ (PT Sans, OFL; notfont.ttf, see PROVENANCE.txt),
-// /media/ (synthetic tones) and /synthetic-x6/ (the synthetic Script worlds, script01.test.mjs).
+// /media/ (synthetic tones) and /synthetic-x6/, /synthetic-inline-scripts/, /synthetic-externproto/ and /synthetic-followers/ (the synthetic Script
+// worlds, script01.test.mjs).
 const REPO = normalize (join (new URL (".", import.meta.url) .pathname, "../../../.."));
 
 const FIXTURES = {
    "/fonts/": join (REPO, "oracle/synthetic-rea-b08-net/fonts"),
    "/media/": join (REPO, "oracle/synthetic-rea-b05/media"),
    "/synthetic-x6/": join (REPO, "oracle/synthetic-x6"),
+   "/synthetic-inline-scripts/": join (REPO, "oracle/synthetic-inline-scripts"),
+   "/synthetic-externproto/": join (REPO, "oracle/synthetic-externproto"),
+   "/synthetic-followers/": join (REPO, "oracle/synthetic-followers"),
 };
 
 export async function startServer (root, { mounts = { }, pages = { } } = { })
