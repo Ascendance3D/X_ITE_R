@@ -4414,14 +4414,16 @@
    "rust": [
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "geometry-cases.json: per-vertex arrays exact"
+    "geometry-cases.json: per-vertex arrays exact",
+    "crates/x3d-render/tests/render_rea_b08_shaders.rs (attrib-color, attrib-float, attrib-matrix3, attrib-missing, attrib-nocolor; MSAA 0 and 4)",
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs (attrib-matrix4, attrib-dup-name, attrib-short-array, attrib-float2-float4, attrib-tangent-fogdepth, tangent-*; MSAA 0 and 4)"
    ],
-   "missing": "renderer does not consume them yet: fog depth in the fog shader, tangents (normal maps), channels 1-3 (MultiTexture), generator modes, vertex attributes (needs ComposedShader)",
-   "oracle": "",
-   "notes": "FloatVertexAttribute fallback reads the typed-array capacity like X_ITE (16 / next power of two, zeros); stale elements after a run-time shrink are not modelled"
+   "missing": "",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97) pictures at MSAA 0 and 4: oracle/render-rea-b08-shaders-baseline, render-msaa4-rea-b08-shaders-baseline, render-rea-b09-inputs-baseline, render-msaa4-rea-b09-inputs-baseline",
+   "notes": "FloatVertexAttribute fallback reads the typed-array capacity like X_ITE (16 / next power of two, zeros); stale elements after a run-time shrink are not modelled | Issue #70 2026-10-31: no renderer change was needed; the attribute, tangent and fog-depth worlds already matched. Recordings are those of batches 08 and 09."
   },
   {
    "id": "node:Matrix3VertexAttribute",
@@ -4434,14 +4436,16 @@
    "rust": [
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "geometry-cases.json: per-vertex arrays exact"
+    "geometry-cases.json: per-vertex arrays exact",
+    "crates/x3d-render/tests/render_rea_b08_shaders.rs (attrib-color, attrib-float, attrib-matrix3, attrib-missing, attrib-nocolor; MSAA 0 and 4)",
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs (attrib-matrix4, attrib-dup-name, attrib-short-array, attrib-float2-float4, attrib-tangent-fogdepth, tangent-*; MSAA 0 and 4)"
    ],
-   "missing": "renderer does not consume them yet: fog depth in the fog shader, tangents (normal maps), channels 1-3 (MultiTexture), generator modes, vertex attributes (needs ComposedShader)",
-   "oracle": "",
-   "notes": "FloatVertexAttribute fallback reads the typed-array capacity like X_ITE (16 / next power of two, zeros); stale elements after a run-time shrink are not modelled"
+   "missing": "",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97) pictures at MSAA 0 and 4: oracle/render-rea-b08-shaders-baseline, render-msaa4-rea-b08-shaders-baseline, render-rea-b09-inputs-baseline, render-msaa4-rea-b09-inputs-baseline",
+   "notes": "FloatVertexAttribute fallback reads the typed-array capacity like X_ITE (16 / next power of two, zeros); stale elements after a run-time shrink are not modelled | Issue #70 2026-10-31: no renderer change was needed; the attribute, tangent and fog-depth worlds already matched. Recordings are those of batches 08 and 09."
   },
   {
    "id": "node:Matrix4VertexAttribute",
