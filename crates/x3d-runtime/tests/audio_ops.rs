@@ -4,7 +4,7 @@
 //! reference interpreter ([`Model`]) and compares it, node by node and connection by connection, with `AudioEngine::graph`:
 //! the log cannot lose a call without the graph showing it.
 
-use x3d_runtime::sound::ops::{Arg, Model, to_json};
+use x3d_runtime::sound::ops::{Arg, Model, Payloads, to_json};
 use x3d_runtime::sound::{AId, AudioEngine, AudioMode};
 
 fn engine() -> AudioEngine {
@@ -188,15 +188,63 @@ fn the_json_has_one_array_for_each_op_and_numbers_the_buffers() {
     e.buffer_source_start(source, 0.0, 0.25);
 
     let ops = e.take_ops();
-    let mut buffers = Vec::new();
-    let json = to_json(&ops, &mut buffers);
+    let mut payloads = Payloads::default();
+    let json = to_json(&ops, &mut payloads);
 
     assert_eq!(
         json,
         r#"[["bufferSource",1,{"buffer":0}],["sourceStart",1,0.0,0.25]]"#
     );
-    assert_eq!(buffers.len(), 1);
-    assert_eq!(buffers[0].0.as_slice(), &[data]);
-    assert_eq!(buffers[0].1, 48000.0);
+    assert_eq!(payloads.buffers.len(), 1);
+    assert_eq!(payloads.buffers[0].0.as_slice(), &[data]);
+    assert_eq!(payloads.buffers[0].1, 48000.0);
     assert!(matches!(ops[0].args[1], Arg::Buffer(..)));
+}
+
+/// A 16-bit mono WAV file of `frames` frames at `rate`.
+fn wav(rate: u32, frames: usize) -> Vec<u8> {
+    let data: Vec<u8> = (0..frames)
+        .flat_map(|i| (((i as f32 / 7.0).sin() * 20000.0) as i16).to_le_bytes())
+        .collect();
+    let mut out = Vec::new();
+
+    out.extend(b"RIFF");
+    out.extend((36 + data.len() as u32).to_le_bytes());
+    out.extend(b"WAVEfmt ");
+    out.extend(16u32.to_le_bytes());
+    out.extend(1u16.to_le_bytes());
+    out.extend(1u16.to_le_bytes());
+    out.extend(rate.to_le_bytes());
+    out.extend((rate * 2).to_le_bytes());
+    out.extend(2u16.to_le_bytes());
+    out.extend(16u16.to_le_bytes());
+    out.extend(b"data");
+    out.extend((data.len() as u32).to_le_bytes());
+    out.extend(data);
+    out
+}
+
+#[test]
+fn a_decoded_buffer_goes_to_the_page_as_the_file_it_came_from() {
+    let mut e = engine();
+    // 22.05 kHz: the engine resamples it to its own rate, the page must resample the file itself (once, as X_ITE does).
+    let file = wav(22050, 2205);
+    let decoded = e.decode(file.clone()).unwrap();
+    let made = e.create_buffer(1, 4, 48000.0, Some(&[0.1, 0.2, 0.3, 0.4]));
+
+    assert_eq!(decoded.sample_rate(), 48000.0);
+    e.buffer_source(Some(&decoded));
+    e.buffer_source(Some(&made));
+
+    let ops = e.take_ops();
+
+    assert!(
+        matches!(&ops[0].args[1], Arg::Encoded(bytes) if **bytes == file),
+        "decoded: {:?}",
+        ops[0].args[1]
+    );
+    assert!(
+        matches!(ops[1].args[1], Arg::Buffer(..)),
+        "made by createBuffer: its samples"
+    );
 }

@@ -267,7 +267,7 @@ pub struct WebBrowser {
     /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
-    audio_buffers: Vec<x3d_runtime::sound::ops::BufferData>,
+    audio_payloads: x3d_runtime::sound::ops::Payloads,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -420,7 +420,7 @@ impl WebBrowser {
             audio_clock: None,
             sound_options: None,
             audio_known: Default::default(),
-            audio_buffers: Vec::new(),
+            audio_payloads: Default::default(),
             current: None,
             next_id: 1,
             live: true,
@@ -1346,13 +1346,13 @@ impl WebBrowser {
             taken.extend(l.rt.audio.as_ref().map(|a| (a.uid(), a.take_ops())));
         }
 
-        self.audio_buffers.clear();
+        self.audio_payloads = Default::default();
 
         for (uid, ops) in taken {
             live.insert(uid);
 
             if self.audio_known.insert(uid) || !ops.is_empty() {
-                let json = x3d_runtime::sound::ops::to_json(&ops, &mut self.audio_buffers);
+                let json = x3d_runtime::sound::ops::to_json(&ops, &mut self.audio_payloads);
 
                 engines.push(format!("{{\"uid\":{uid},\"ops\":{json}}}"));
             }
@@ -1382,7 +1382,7 @@ impl WebBrowser {
     /// a Float32Array.
     #[wasm_bindgen(js_name = audioBuffer)]
     pub fn audio_buffer(&self, index: u32) -> Option<js_sys::Array> {
-        let (data, rate) = self.audio_buffers.get(index as usize)?;
+        let (data, rate) = self.audio_payloads.buffers.get(index as usize)?;
         let out = js_sys::Array::new();
 
         out.push(&JsValue::from_f64(f64::from(*rate)));
@@ -1392,6 +1392,15 @@ impl WebBrowser {
         }
 
         Some(out)
+    }
+
+    /// Encoded file `index` of the last [`WebBrowser::take_audio_ops`] (`{"encoded": n}`): the bytes of the file an
+    /// AudioBuffer was decoded from. The page decodes it itself (`decodeAudioData`), as X_ITE does.
+    #[wasm_bindgen(js_name = audioBytes)]
+    pub fn audio_bytes(&self, index: u32) -> Option<js_sys::Uint8Array> {
+        let bytes = self.audio_payloads.encoded.get(index as usize)?;
+
+        Some(js_sys::Uint8Array::from(bytes.as_slice()))
     }
 
     /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.

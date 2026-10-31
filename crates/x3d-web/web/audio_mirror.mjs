@@ -20,8 +20,11 @@ export class AudioMirror
    #context;
    #engines = new Map ();     // uid -> Map (slot -> AudioNode)
    #read;
+   #queue = Promise .resolve ();
+   #disposed = false;
 
-   // `context`: the page's AudioContext. `read (index)`: [ sampleRate, ... Float32Array ] of an op's buffer argument.
+   // `context`: the page's AudioContext. `read .buffer (index)`: [ sampleRate, ... Float32Array ] of an op's `{ buffer }`
+   // argument; `read .bytes (index)`: the Uint8Array of its `{ encoded }` argument (the file an AudioBuffer was decoded from).
    constructor (context, read)
    {
       this .#context = context;
@@ -41,19 +44,45 @@ export class AudioMirror
       return nodes;
    }
 
-   // The batch of `takeAudioOps` (parsed): the calls of each engine, then the engines that no longer exist.
+   // The batch of `takeAudioOps` (parsed): the calls of each engine, then the engines that no longer exist. The big arguments
+   // are read now (the engine keeps them only until its next batch); the calls run in order, and a call that needs the page to
+   // decode a file waits for it, with the calls after it.
    apply (batch)
    {
-      for (const { uid, ops } of batch .engines)
+      for (const { ops } of batch .engines)
       {
-         const nodes = this .#nodes (uid);
-
          for (const op of ops)
-            quiet (() => this .#op (nodes, op));
+         {
+            for (let i = 1; i < op .length; ++ i)
+            {
+               const a = op [i];
+
+               if (a ?.buffer !== undefined)
+                  op [i] = { buffer: this .#read .buffer (a .buffer) };
+               else if (a ?.encoded !== undefined)
+                  op [i] = { encoded: this .#read .bytes (a .encoded) };
+            }
+         }
       }
 
-      for (const uid of batch .gone)
-         this .#teardown (uid);
+      this .#queue = this .#queue .then (async () =>
+      {
+         for (const { uid, ops } of batch .engines)
+         {
+            const nodes = this .#nodes (uid);
+
+            for (const op of ops)
+            {
+               if (this .#disposed)
+                  return;
+
+               try { await this .#op (nodes, op); } catch { }
+            }
+         }
+
+         for (const uid of batch .gone)
+            this .#teardown (uid);
+      });
    }
 
    // An engine that goes away (a replaced world, a discarded load) takes its sources with it: a source that was told to stop
@@ -76,6 +105,8 @@ export class AudioMirror
    // The browser goes away: every engine's nodes.
    dispose ()
    {
+      this .#disposed = true;
+
       for (const uid of [ ... this .#engines .keys () ])
          this .#teardown (uid);
    }
@@ -85,9 +116,14 @@ export class AudioMirror
       return id === DESTINATION ? this .#context .destination : nodes .get (id);
    }
 
-   #buffer (data)
+   // An AudioBuffer: decoded by the page from the file it came from (resampled once, to the context's rate, as X_ITE's
+   // decodeAudioData does), else made from its samples.
+   async #buffer (data)
    {
-      const [ rate, ... channels ] = this .#read (data .buffer);
+      if (data .encoded)
+         return this .#context .decodeAudioData (data .encoded .buffer .slice (data .encoded .byteOffset, data .encoded .byteOffset + data .encoded .byteLength));
+
+      const [ rate, ... channels ] = data .buffer;
       const buffer = this .#context .createBuffer (channels .length, channels [0] .length, rate);
 
       channels .forEach ((channel, i) => buffer .copyToChannel (channel, i));
@@ -95,7 +131,7 @@ export class AudioMirror
       return buffer;
    }
 
-   #op (nodes, [ name, id, ... a ])
+   async #op (nodes, [ name, id, ... a ])
    {
       const context = this .#context;
       const node    = () => this .#node (nodes, id);
@@ -110,10 +146,12 @@ export class AudioMirror
          {
             const source = context .createBufferSource ();
 
-            if (a [0] !== false)
-               quiet (() => { source .buffer = this .#buffer (a [0]); });
+            make (source);
 
-            return make (source);
+            if (a [0] !== false)
+               source .buffer = await this .#buffer (a [0]);
+
+            return;
          }
          case "biquad":      return make (context .createBiquadFilter ());
          case "delay":       return make (new DelayNode (context, { maxDelayTime: a [0], delayTime: a [1] }));
@@ -163,7 +201,7 @@ export class AudioMirror
          case "waveShaperCurve":      node () .curve = Float32Array .from (a [0]); return;
          case "waveShaperOversample": node () .oversample = a [0]; return;
          case "convolverNormalize":   node () .normalize = a [0]; return;
-         case "convolverBuffer":      node () .buffer = this .#buffer (a [0]); return;
+         case "convolverBuffer":      node () .buffer = await this .#buffer (a [0]); return;
          case "analyserFftSize":      node () .fftSize = a [0]; return;
          case "analyserSmoothing":    node () .smoothingTimeConstant = a [0]; return;
          case "analyserDecibels":

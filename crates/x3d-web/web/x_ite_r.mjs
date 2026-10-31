@@ -3095,7 +3095,7 @@ class X3DBrowser
             return;
 
          this .#audioContext = new AudioContext ();
-         this .#audioMirror  = new AudioMirror (this .#audioContext, index => this .#engine ?.audioBuffer (index));
+         this .#audioMirror  = new AudioMirror (this .#audioContext, { buffer: index => this .#engine ?.audioBuffer (index), bytes: index => this .#engine ?.audioBytes (index) });
          this .#audioWaiting = true;
          this .#resumeAudio ();
       }
