@@ -446,11 +446,20 @@ impl Session {
         }
     }
 
+    /// `setBrowserOption ("Mute", mute)` and `("SoundIntensity", intensity)`: the runtime's options take the page's
+    /// values, and its BrowserOptions.set_SoundIntensity__ sets the gain of the sound destinations in the next event
+    /// cascade.
+    pub fn set_sound_options(&mut self, mute: bool, intensity: f64) {
+        set_sound_options(self.rt_mut(), mute, intensity);
+    }
+
     /// The world's audio graph as JSON (a diagnostic snapshot, [`x3d_runtime::sound::AudioGraph`]), or `None` while
     /// no Sound node has made the audio context (X3DSoundContext.getAudioContext). Numbers are JavaScript numbers:
-    /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value.
+    /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value. `listener` is the nine values of
+    /// the context's listener: position, forward and up.
     pub fn audio_graph_json(&self) -> Option<String> {
-        let g = self.rt().audio.as_ref()?.graph();
+        let audio = self.rt().audio.as_ref()?;
+        let g = audio.graph();
         let num = |v: f64| {
             if v.is_finite() {
                 format!("{v:?}")
@@ -494,6 +503,12 @@ impl Session {
                 )
             })
             .collect();
+        // audioContext .listener .{position,forward,up}{X,Y,Z} .value, as ListenerPointSource sets them.
+        let listener: Vec<String> = audio
+            .listener_values()
+            .iter()
+            .map(|&v| num(f64::from(v)))
+            .collect();
         let connections: Vec<String> = g
             .connections
             .iter()
@@ -501,12 +516,13 @@ impl Session {
             .collect();
 
         Some(format!(
-            r#"{{"nodes":[{}],"connections":[{}],"destination":{},"currentTime":{},"sampleRate":{}}}"#,
+            r#"{{"nodes":[{}],"connections":[{}],"destination":{},"currentTime":{},"sampleRate":{},"listener":[{}]}}"#,
             nodes.join(","),
             connections.join(","),
             g.destination,
             num(g.current_time),
             num(g.sample_rate as f64),
+            listener.join(","),
         ))
     }
 
@@ -1242,4 +1258,14 @@ fn value_string(rt: &Runtime, value: &FieldValue) -> String {
         FieldValue::SFNode(_) | FieldValue::MFNode(_) => rt.scene.node_value_to_string(value),
         _ => rt.scene.node_value_to_vrml_string(value),
     }
+}
+
+/// The page's Mute and SoundIntensity options for a runtime (see [`Session::set_sound_options`]).
+pub fn set_sound_options(rt: &mut Runtime, mute: bool, intensity: f64) {
+    use x3d_runtime::browser_options::OptionValue;
+
+    rt.browser_options
+        .set_option("Mute", OptionValue::Bool(mute));
+    rt.browser_options
+        .set_option("SoundIntensity", OptionValue::Float(intensity));
 }
