@@ -504,10 +504,10 @@ fn field_data_of_the_wrong_shape_or_with_bad_node_ids_is_refused() {
 
 #[test]
 fn nodes_print_in_full_in_the_three_text_forms() {
-    let s = load(BOX).unwrap();
+    let mut s = load(BOX).unwrap();
     let material = s.named_node("BoxMaterial").unwrap();
     let node = Data::Number(f64::from(material));
-    let print = |kind: &str| {
+    let mut print = |kind: &str| {
         s.print_nodes(kind, x3d_fields::FieldType::SFNode, &node)
             .unwrap()
     };
@@ -523,7 +523,7 @@ fn nodes_print_in_full_in_the_three_text_forms() {
 
 #[test]
 fn the_scene_prints_in_the_three_text_forms() {
-    let s = load(BOX).unwrap();
+    let mut s = load(BOX).unwrap();
 
     let vrml = s.print_scene("vrml").unwrap();
     assert!(vrml.starts_with("#X3D V4.1 utf8 X_ITE V16.5.0\n"), "{vrml}");
@@ -547,7 +547,7 @@ fn the_empty_world_prints_without_a_profile() {
 
 #[test]
 fn a_node_that_is_not_in_the_world_is_not_printed() {
-    let s = load(BOX).unwrap();
+    let mut s = load(BOX).unwrap();
     let list = Data::List(vec![Data::Number(f64::from(u32::MAX))]);
 
     assert!(
@@ -623,7 +623,7 @@ fn values_read_from_text_make_their_nodes_in_the_world() {
 
 #[test]
 fn only_node_field_types_are_printed() {
-    let s = load(BOX).unwrap();
+    let mut s = load(BOX).unwrap();
     let node = Data::Number(f64::from(s.named_node("BoxMaterial").unwrap()));
 
     for ty in [
@@ -1154,4 +1154,23 @@ fn a_script_that_changes_the_root_nodes_sends_the_event_of_the_page() {
             ),
         ]
     );
+}
+
+/// A node that a change makes shared (here: a root node that a Group holds too) prints once with DEF and USE: the generator
+/// reads the clone counts as they are now, not as they were when the world loaded (issue #133).
+#[test]
+fn a_node_shared_after_the_load_prints_with_def_and_use() {
+    let mut s = load(b"#VRML V2.0 utf8\nGroup { children DEF T Transform { } }\n").unwrap();
+    let t = s.named_node("T").unwrap();
+    let mut roots = s.root_nodes();
+
+    assert!(!s.print_scene("vrml").unwrap().contains("USE"));
+
+    roots.push(Some(t));
+    s.set_root_nodes(roots).unwrap();
+
+    let vrml = s.print_scene("vrml").unwrap();
+
+    assert!(vrml.contains("DEF T Transform { }"), "{vrml}");
+    assert!(vrml.trim_end().ends_with("USE T"), "{vrml}");
 }
