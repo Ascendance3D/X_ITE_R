@@ -138,22 +138,29 @@ impl Runtime {
         }
 
         // Process field callbacks.
+        if self.page_observed.contains(&k) {
+            self.page_field_callbacks(k);
+        }
+
         if self.field_observed.contains(&k) {
             self.field_callbacks(k);
         }
     }
 
-    /// The field callbacks of `k` (X3DField.processEvent: `callback (this .valueOf ())`).
-    fn field_callbacks(&mut self, k: FKey) {
-        if self.script_host.is_none() && self.page_field_events.is_some() {
+    /// The page's field callbacks of `k` (the browser build): recorded with the value of the event, for the page to call
+    /// after the frame.
+    fn page_field_callbacks(&mut self, k: FKey) {
+        if self.page_field_events.is_some() {
             let value = self.value(k).clone();
 
             self.page_field_events
                 .get_or_insert_default()
                 .push((k, value));
-            return;
         }
+    }
 
+    /// The Scripts' field callbacks of `k` (X3DField.processEvent: `callback (this .valueOf ())`).
+    fn field_callbacks(&mut self, k: FKey) {
         match self.script_host.take() {
             Some(mut host) => {
                 for p in std::mem::take(&mut self.pending_field_events) {

@@ -3,7 +3,8 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable } from "./pkg/x3d_web.js";
+import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp } from "./pkg/x3d_web.js";
+import { createScriptRealm } from "./pkg/script.mjs";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -458,21 +459,15 @@ function rootNodesField (h)
 {
    const engine = engineOf (h);
    const table  = sceneTable (h .browser, h .scene, h .generation);
-   const data   = Array .from (engine .rootNodes (h .scene), n => n < 0 ? null : Number (n));
 
    if (table .rootNodes)
    {
-      const { entry } = table .rootNodes;
+      refreshRootNodes (table);
 
-      // A value the engine refused (a node of another world) stays in the page's object, as with a node field.
-      if (data .length !== entry .data .length || data .some ((id, i) => id !== entry .data [i]))
-      {
-         entry .data = data;
-         setFieldData (entry .field, data, h);
-      }
-
-      return entry .field;
+      return table .rootNodes .entry .field;
    }
+
+   const data = rootNodesData (engine, h);
 
    const field  = fieldFromData ("MFNode", data, h);
    const parent = new RootNodesParent (h);
@@ -489,6 +484,24 @@ function rootNodesField (h)
    table .rootNodes = attached;
 
    return field;
+}
+
+// The engine's root nodes of the world of scene handle `h`, as MFNode data.
+const rootNodesData = (engine, h) => Array .from (engine .rootNodes (h .scene), n => n < 0 ? null : Number (n));
+
+// The retained rootNodes field of a scene table takes the engine's list when it changed (a Script, an assignment of the
+// page). A value the engine refused (a node of another world) stays in the page's object, as with a node field.
+function refreshRootNodes (table)
+{
+   const { ref, entry } = table .rootNodes;
+   const h    = ref [_node];
+   const data = rootNodesData (engineOf (h), h);
+
+   if (data .length !== entry .data .length || data .some ((id, i) => id !== entry .data [i]))
+   {
+      entry .data = data;
+      setFieldData (entry .field, data, h);
+   }
 }
 
 // X3DCast (X3DConstants .X3DNode, node, false) of addRootNode and removeRootNode: the node of an SFNode of this adapter,
@@ -554,6 +567,11 @@ function syncScene (browser, scene)
    retireReleased (browser, scene);
 
    const table = nodeRefTables .get (browser) ?.get (scene);
+
+   // The retained rootNodes field first: a scene can hold it with no node field object (issue #133). A table of a world
+   // that was replaced is left alone.
+   if (table ?.rootNodes && browser [_engine] .worldGeneration (scene) === table .generation)
+      refreshRootNodes (table);
 
    if (!table ?.refs .size)
       return;
@@ -1647,6 +1665,11 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+         // The Scripts of a world run only when the page lets them (the `scripts` attribute, read when the world starts):
+         // they run with the privileges of the page, in its JavaScript engine (API.md, "Script nodes").
+         this .#engine .setScriptRealm (host => this .#element .getAttribute ("scripts") === "true"
+            ? createScriptRealm (host, scriptOp)
+            : null);
          // An endUpdate () before the engine was ready.
          this .#engine .setLive (this .#live);
          this .#listen ();
@@ -2734,8 +2757,9 @@ class X3DBrowser
       for (let i = 0; i < foreign .length; i += 2)
       {
          // The loadURL callback of a foreign URL: `window .open (url, target)`, or `location = url`. A script URL in
-         // any case (X_ITE matches only lower case) never runs: the engine has no script engine, and the page must not
-         // run code from a world. A new window gets no opener.
+         // any case (X_ITE matches only lower case) never runs: the page does not run a world's code through a
+         // navigation (Script nodes run only when the page lets them, API.md "Script nodes"). A new window gets no
+         // opener.
          let url;
 
          try

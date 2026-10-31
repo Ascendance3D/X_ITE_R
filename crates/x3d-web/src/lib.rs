@@ -1,6 +1,7 @@
 //! X_ITE_R in a web page. The Rust engine (parser, runtime, x3d-viewer's frame loop, x3d-render's WebGPU renderer)
 //! is built for wasm32-unknown-unknown; `web/x_ite_r.mjs` is the thin page adapter that defines `<x3d-canvas>` and the
-//! X_ITE-named JavaScript API on top of it. No X_ITE JavaScript runs.
+//! X_ITE-named JavaScript API on top of it. No X_ITE JavaScript runs, except the field classes and, for the Script nodes
+//! of a page that lets them run, x3d-script's prelude (`script`, issue #133).
 //!
 //! [`session`] is the platform-neutral part (load a world from bytes, read and set fields, step frames) and is tested
 //! natively. `wasm` (wasm32 only) adds the WebGPU device and canvas surface and exports [`wasm::WebBrowser`] through
@@ -8,6 +9,8 @@
 
 pub mod session;
 
+#[cfg(target_arch = "wasm32")]
+pub mod script;
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
 

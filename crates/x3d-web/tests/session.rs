@@ -823,9 +823,15 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
 
     let mut settled = vec![];
 
+    // The page uses an outcome when it takes it (issue #172: after that, a scene that nothing in the world refers to is
+    // released at the next sweep), so stop when both are in.
     for i in 1..10 {
         s.step(NOW + f64::from(i) * 0.1);
         settled.extend(s.take_scene_requests());
+
+        if settled.len() == 2 {
+            break;
+        }
     }
 
     assert_eq!(settled.len(), 2, "{settled:?}");
@@ -854,6 +860,113 @@ fn createvrmlfromurl_loads_into_the_world_runtime() {
         ),
         "{log}"
     );
+}
+
+/// Issue #172, the page rule: the page holds the outcome of its createX3DFromURL / createVrmlFromURL until it takes it
+/// (`take_scene_requests`). After that the page's ids hold nothing (as for the page's createVrmlFromString): the scene is a
+/// sweep candidate and stays only while the world refers to one of its nodes.
+fn page_scene(s: &mut Session, t: &mut f64, frames: usize) -> Vec<NodeId> {
+    let request = s.create_x3d_from_url(
+        vec!["../parts/p.wrl".to_string()],
+        "http://example.test/example/sub/page.html",
+    );
+
+    // The page does not take the outcome for many frames (idle sweeps run): the scene stays.
+    for _ in 0..frames {
+        *t += 0.1;
+        s.step(*t);
+    }
+
+    let settled = s.take_scene_requests();
+
+    assert_eq!(settled.len(), 1, "{settled:?}");
+    assert_eq!(settled[0].0, request);
+
+    let nodes: Vec<NodeId> = settled[0]
+        .1
+        .as_ref()
+        .expect("the scene loads")
+        .iter()
+        .map(|n| n.expect("no NULL root"))
+        .collect();
+
+    for &n in &nodes {
+        assert!(
+            s.type_name(n).is_some(),
+            "the untaken outcome kept node {n}"
+        );
+    }
+
+    nodes
+}
+
+#[test]
+fn a_page_url_scene_the_page_drops_is_released() {
+    let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
+    let mut t = NOW;
+    let nodes = page_scene(&mut s, &mut t, 40);
+
+    s.take_released_nodes();
+
+    // The page puts the nodes nowhere: the next sweep releases the scene.
+    for _ in 0..2 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    let released = s.take_released_nodes();
+
+    for &n in &nodes {
+        assert!(s.type_name(n).is_none(), "node {n} was released");
+        assert!(released.contains(&n), "the page is told about node {n}");
+    }
+}
+
+#[test]
+fn a_page_url_scene_in_a_world_field_stays_until_the_field_lets_it_go() {
+    let mut s = Session::load(BOX, URL, Box::new(OneFile), NOW, 512, 384).unwrap();
+    let mut t = NOW;
+    let nodes = page_scene(&mut s, &mut t, 3);
+    let transform = s.root_nodes()[1].unwrap();
+    let before = s.node_value(transform, "children").unwrap();
+
+    // createVrmlFromURL (url, node, "set_children") of the page: only P goes into the world.
+    s.set_field_data(
+        transform,
+        "children",
+        &Data::List(vec![Data::Number(f64::from(nodes[0]))]),
+    )
+    .unwrap();
+
+    for _ in 0..40 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    // P is in the world, and it keeps its scene: the other root (Shape) stays too.
+    for &n in &nodes {
+        assert!(s.type_name(n).is_some(), "node {n} stays");
+    }
+
+    let children: Vec<Data> = before
+        .iter()
+        .map(|n| Data::Number(f64::from(n.unwrap())))
+        .collect();
+
+    s.set_field_data(transform, "children", &Data::List(children))
+        .unwrap();
+
+    for _ in 0..2 {
+        t += 0.1;
+        s.step(t);
+    }
+
+    for &n in &nodes {
+        assert!(s.type_name(n).is_none(), "node {n} was released");
+    }
+
+    // The world's own nodes are as before.
+    assert_eq!(s.node_value(transform, "children").unwrap(), before);
 }
 
 #[test]
@@ -1022,4 +1135,106 @@ fn a_clip_ends_when_the_page_audio_clock_passes_its_duration() {
     s.set_audio_clock(5.3);
     s.step(NOW + 2.1);
     assert_eq!(active(&s), "FALSE");
+}
+
+/// A Script host for the tests (issue #133): each Script defines `prepareEvents` only, which sets the world's root
+/// nodes to `roots` once it is armed, as a Script's `addRootNode` or `rootNodes` assignment does. `attached` counts
+/// the moves of the runtime the host was told of.
+struct RootsHost {
+    roots: std::rc::Rc<std::cell::RefCell<Option<Vec<Option<NodeId>>>>>,
+    attached: std::rc::Rc<std::cell::Cell<u32>>,
+}
+
+impl x3d_runtime::ScriptHost for RootsHost {
+    fn create_context(
+        &mut self,
+        _rt: &mut x3d_runtime::Runtime,
+        _node: NodeId,
+        _source: &str,
+        callbacks: &[String],
+    ) -> Result<Vec<bool>, x3d_runtime::ScriptError> {
+        Ok(callbacks.iter().map(|c| c == "prepareEvents").collect())
+    }
+
+    fn call(
+        &mut self,
+        rt: &mut x3d_runtime::Runtime,
+        _node: NodeId,
+        _call: x3d_runtime::ScriptCall,
+    ) -> Result<(), x3d_runtime::ScriptError> {
+        if let Some(list) = self.roots.borrow_mut().take() {
+            let world = rt.scene.world;
+
+            rt.set_root_nodes(world, list);
+        }
+
+        Ok(())
+    }
+
+    fn attach(&mut self, _rt: &mut x3d_runtime::Runtime) {
+        self.attached.set(self.attached.get() + 1);
+    }
+}
+
+const SCRIPTED: &[u8] = b"#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+DEF T Transform { }
+DEF M Material { }
+DEF S Script { url \"ecmascript: function prepareEvents () { }\" }
+";
+
+/// The page's rootNodes field and node field callbacks with a Script host (issue #133): a root node list that a
+/// Script changes sends the event of the page's rootNodes field, and the page's own field callbacks still come while
+/// Scripts run. The host learns that the runtime moved when the world went live.
+#[test]
+fn a_script_that_changes_the_root_nodes_sends_the_event_of_the_page() {
+    use x3d_web::session::ROOT_NODES_EVENT;
+
+    let roots = std::rc::Rc::new(std::cell::RefCell::new(None));
+    let attached = std::rc::Rc::new(std::cell::Cell::new(0));
+    let host = RootsHost {
+        roots: roots.clone(),
+        attached: attached.clone(),
+    };
+    let world = Session::parse(SCRIPTED, URL, Box::new(NoFetch)).unwrap();
+    let mut s = Session::begin_with_scripts(world, NOW, 512, 384, |_| {
+        Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>)
+    });
+
+    assert!(s.go_live(NOW));
+    assert_eq!(
+        attached.get(),
+        1,
+        "the host is attached to the live runtime"
+    );
+
+    let t = s.named_node("T").unwrap();
+    let m = s.named_node("M").unwrap();
+
+    s.observe_root_nodes(true);
+    s.observe_field(t, "translation", true).unwrap();
+    s.step(NOW + 0.1);
+    s.take_field_events();
+
+    // The Script changes the list in prepareEvents; the page set a node field before the frame.
+    let list = vec![Some(m), Some(t)];
+
+    *roots.borrow_mut() = Some(list.clone());
+    s.set_field_data(t, "translation", &vec3(1.0, 2.0, 3.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+
+    assert_eq!(s.root_nodes(), list);
+    assert_eq!(
+        s.take_field_events(),
+        [
+            (t, "translation".to_string(), vec3(1.0, 2.0, 3.0)),
+            (
+                ROOT_NODES_EVENT,
+                "rootNodes".to_string(),
+                Data::List(vec![Data::Number(f64::from(m)), Data::Number(f64::from(t))])
+            ),
+        ]
+    );
 }
