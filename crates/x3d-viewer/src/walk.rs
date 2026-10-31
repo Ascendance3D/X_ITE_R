@@ -126,6 +126,9 @@ pub struct Scan {
     /// The pointing objects in traversal order, without the particles of ParticleSystems: [`Self::particle_pointing`]
     /// holds those, and [`Self::pointing_shapes`] puts them in their places.
     pub shapes: Vec<ShapeInst>,
+    /// The collidable Shape and InstancedShape nodes with pointerEvents FALSE (X3DShapeNode.set_pointingObject__: isEnabled () and
+    /// pointerEvents; set_collisionObject__ is isEnabled () alone): collision objects, never pointing objects.
+    pub unpointed_shapes: Vec<ShapeInst>,
     /// The drawn particles of the ParticleSystems with pointerEvents (X3DShapeNode.traverse POINTER → addPointingShape),
     /// one run per system reached, each with the index in [`Self::shapes`] where its particles come.
     pub particle_pointing: Vec<ParticleRun>,
@@ -1380,6 +1383,7 @@ impl<'a> Walker<'a> {
                     vec![(*mv, None)]
                 };
 
+                let pointing = sg.bool(n, "pointerEvents", true);
                 let depth = pointing_depth(sg, n);
                 let (style, textures) = match sg.node(n, "geometry") {
                     Some(g) => pointing_appearance(sg, n, node_geometry_type(sg, g)),
@@ -1391,7 +1395,12 @@ impl<'a> Walker<'a> {
                     .filter(|_| sg.node(n, "geometry").is_some())
                 {
                     let g = sg.node(n, "geometry").unwrap();
-                    self.scan.shapes.push(ShapeInst {
+
+                    if !pointing && !collidable {
+                        continue;
+                    }
+
+                    let inst = ShapeInst {
                         shape: me(),
                         geometry: g,
                         model_view: *model_view,
@@ -1411,7 +1420,13 @@ impl<'a> Walker<'a> {
                         depth,
                         particle: false,
                         particle_geometry: None,
-                    });
+                    };
+
+                    if pointing {
+                        self.scan.shapes.push(inst);
+                    } else {
+                        self.scan.unpointed_shapes.push(inst);
+                    }
                 }
             }
             // ParticleSystem.traverse POINTER (X3DShapeNode.traverse → addPointingShape): one instanced draw of the

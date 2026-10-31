@@ -1481,7 +1481,13 @@ impl Viewer3d {
     fn collision_world_unconditional(&mut self) -> Option<World> {
         let mut shapes = vec![];
 
-        for s in &self.scan_display.shapes {
+        // Shapes with pointerEvents FALSE are collision objects but not pointing objects: they follow the others.
+        for s in self
+            .scan_display
+            .shapes
+            .iter()
+            .chain(&self.scan_display.unpointed_shapes)
+        {
             if !s.collidable {
                 continue;
             }
