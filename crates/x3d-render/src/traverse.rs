@@ -582,6 +582,9 @@ pub struct InstanceData {
     /// A ParticleSystem quad with a texCoord ramp (`X3D_TEX_COORD_RAMP`): the ramp texture coordinates of the
     /// four quad corners of every instance (empty: the geometry's).
     pub tex_coords: Vec<[[f32; 4]; 4]>,
+    /// `tex_coords` replaces the texture coordinate of every vertex, not only of a quad corner (a texCoord ramp on a
+    /// GEOMETRY ParticleSystem, see `particles::instances`).
+    pub tex_all: bool,
     /// The instances are the particles of a ParticleSystem (an InstancedShape otherwise).
     pub particle: bool,
 }
@@ -638,6 +641,7 @@ pub fn instance_data(sg: &Sg, n: NodeId) -> InstanceData {
         normals,
         colors: vec![],
         tex_coords: vec![],
+        tex_all: false,
         particle: false,
     }
 }
@@ -4199,6 +4203,7 @@ impl<'a> Builder<'a> {
             matrices: particles.matrices,
             colors: particles.colors,
             tex_coords: particles.tex_coords,
+            tex_all: particles.tex_all,
             particle: true,
         };
 

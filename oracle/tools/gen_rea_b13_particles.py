@@ -107,6 +107,84 @@ EVENTS = {
     "pr-events-maxparticles": ("pr-quad-color", [{"frame": 20, "node": "PS", "field": "maxParticles", "value": 20}]),
 }
 
+# Gap cases (issue #93): Script-created, Inline and GEOMETRY texCoord-ramp particle systems. They have explicit seeds
+# (GAP_SEED + index) so that adding one never changes the seed of an older case.
+GAP_SEED = 9300000
+GAP_CHILD_DIR = "inline"
+TEXTURED = f"Appearance {{ material Material {{ }} texture {PIXELS} }}"
+BODY_QUAD_RAMP = (f'geometryType "QUAD" maxParticles 150 particleLifetime 3 particleSize 0.15 0.15 {RAMP_RGB} '
+                  f"emitter {CONE} appearance Appearance {{ material Material {{ diffuseColor 1 1 1 }} }}")
+
+
+def script_created(body):
+    """A root Script makes the ParticleSystem and names it PS in the world's scene before the first frame."""
+    return ("DEF MK Script {\n  directOutput TRUE\n  url \"ecmascript:\n" + body + "\"\n}\n")
+
+
+GAP_CASES = {
+    # createNode and field assignment
+    "pr-script-created-node": script_created(
+        "function initialize () {\n"
+        "  var scene = Browser .currentScene;\n"
+        "  var ps = scene .createNode ('ParticleSystem');\n"
+        "  ps .geometryType = 'QUAD'; ps .maxParticles = 150; ps .particleLifetime = 3;\n"
+        "  ps .particleSize = new SFVec2f (0.15, 0.15);\n"
+        "  ps .colorKey = new MFFloat (0, 0.5, 1);\n"
+        "  var color = scene .createNode ('Color');\n"
+        "  color .color = new MFColor (new SFColor (1, 0, 0), new SFColor (1, 1, 0), new SFColor (0, 0.4, 1));\n"
+        "  ps .color = color;\n"
+        "  var em = scene .createNode ('ConeEmitter');\n"
+        "  em .direction = new SFVec3f (0, 1, 0); em .angle = 0.5; em .speed = 1.2; em .variation = 0.2;\n"
+        "  ps .emitter = em;\n"
+        "  var ap = scene .createNode ('Appearance'); var mat = scene .createNode ('Material');\n"
+        "  mat .diffuseColor = new SFColor (1, 1, 1); ap .material = mat; ps .appearance = ap;\n"
+        "  scene .addRootNode (ps);\n"
+        "  scene .updateNamedNode ('PS', ps);\n"
+        "}"),
+    # createNode again, for a GEOMETRY system: geometry, textured appearance and a texCoord ramp made by the Script
+    "pr-script-created-geometry": script_created(
+        "function initialize () {\n"
+        "  var scene = Browser .currentScene;\n"
+        "  var ps = scene .createNode ('ParticleSystem');\n"
+        "  ps .geometryType = 'GEOMETRY'; ps .maxParticles = 60; ps .particleLifetime = 3;\n"
+        "  var box = scene .createNode ('Box'); box .size = new SFVec3f (0.2, 0.2, 0.2); ps .geometry = box;\n"
+        "  ps .texCoordKey = new MFFloat (0, 0.5);\n"
+        "  var tc = scene .createNode ('TextureCoordinate');\n"
+        "  tc .point = new MFVec2f (new SFVec2f (0, 0), new SFVec2f (0.5, 0), new SFVec2f (0.5, 0.5), new SFVec2f (0, 0.5),\n"
+        "                           new SFVec2f (0.5, 0.5), new SFVec2f (1, 0.5), new SFVec2f (1, 1), new SFVec2f (0.5, 1));\n"
+        "  ps .texCoord = tc;\n"
+        "  var em = scene .createNode ('ConeEmitter');\n"
+        "  em .direction = new SFVec3f (0, 1, 0); em .angle = 0.5; em .speed = 1.2; em .variation = 0.2;\n"
+        "  ps .emitter = em;\n"
+        "  var ap = scene .createNode ('Appearance'); ap .material = scene .createNode ('Material');\n"
+        "  var tex = scene .createNode ('PixelTexture');\n"
+        "  tex .image = new SFImage (2, 2, 3, new MFInt32 (0xff4040, 0x40ff40, 0x4040ff, 0xffff40));\n"
+        "  ap .texture = tex; ps .appearance = ap;\n"
+        "  scene .addRootNode (ps);\n"
+        "  scene .updateNamedNode ('PS', ps);\n"
+        "}"),
+    # the same without the ramp (what the geometry's own texCoord does under a particle system)
+    "pr-geometry-texture": ps("GEOMETRY", "geometry Box { size 0.2 0.2 0.2 }", max_particles=60, appearance=TEXTURED),
+    # a texCoord ramp on GEOMETRY particles: the geometry keeps its own texCoord
+    "pr-geometry-texramp": ps("GEOMETRY", TEXRAMP + " geometry Box { size 0.2 0.2 0.2 }", max_particles=60,
+                              appearance=TEXTURED),
+    "pr-geometry-texramp-rgb": ps("GEOMETRY", TEXRAMP + " " + RAMP_RGB + " geometry Box { size 0.2 0.2 0.2 }",
+                                  max_particles=60, appearance=TEXTURED),
+}
+
+# Inline: the particle system is in a child file, so the world's PS (the node the particle oracle and
+# x3d-particles-drive step, as in rea-batch18's InstancedShape worlds) is a disabled stub and records no particles; the
+# images and the per-frame seeds carry the case. The child files live in a directory the case lister does not read.
+INLINE_CHILDREN = {
+    "pr-inline": ps("QUAD", RAMP_RGB).replace("DEF PS ", ""),
+    "pr-inline-transform": ps("QUAD", RAMP_RGB).replace("DEF PS ", ""),
+}
+INLINE_CASES = {
+    "pr-inline": 'DEF PS ParticleSystem { enabled FALSE }\nInline { url "inline/pr-inline.x3dv" }\n',
+    "pr-inline-transform": 'DEF PS ParticleSystem { enabled FALSE }\n'
+                           'Transform { scale -1 1 1 rotation 0 1 0 0.6 children [ Inline { url "inline/pr-inline-transform.x3dv" } ] }\n',
+}
+
 
 def main():
     os.makedirs(os.path.join(ROOT, "scripts"), exist_ok=True)
@@ -127,7 +205,20 @@ def main():
         with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
             json.dump(dict(script, seed=7000003 * (i + 1) % 2147483647, events=events), f)
 
-    print(f"{len(CASES) + len(EVENTS)} cases in {ROOT}")
+    os.makedirs(os.path.join(ROOT, GAP_CHILD_DIR), exist_ok=True)
+
+    for i, (name, body) in enumerate({**GAP_CASES, **INLINE_CASES}.items()):
+        with open(os.path.join(ROOT, name + ".x3dv"), "w") as f:
+            f.write(HEAD + VIEW + body)
+
+        with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
+            json.dump(dict(script, seed=GAP_SEED + i), f)
+
+    for name, body in INLINE_CHILDREN.items():
+        with open(os.path.join(ROOT, GAP_CHILD_DIR, name + ".x3dv"), "w") as f:
+            f.write(HEAD + body)
+
+    print(f"{len(CASES) + len(EVENTS) + len(GAP_CASES) + len(INLINE_CASES)} cases in {ROOT}")
 
 
 if __name__ == "__main__":

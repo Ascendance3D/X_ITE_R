@@ -1,0 +1,26 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF MK Script {
+  directOutput TRUE
+  url "ecmascript:
+function initialize () {
+  var scene = Browser .currentScene;
+  var ps = scene .createNode ('ParticleSystem');
+  ps .geometryType = 'QUAD'; ps .maxParticles = 150; ps .particleLifetime = 3;
+  ps .particleSize = new SFVec2f (0.15, 0.15);
+  ps .colorKey = new MFFloat (0, 0.5, 1);
+  var color = scene .createNode ('Color');
+  color .color = new MFColor (new SFColor (1, 0, 0), new SFColor (1, 1, 0), new SFColor (0, 0.4, 1));
+  ps .color = color;
+  var em = scene .createNode ('ConeEmitter');
+  em .direction = new SFVec3f (0, 1, 0); em .angle = 0.5; em .speed = 1.2; em .variation = 0.2;
+  ps .emitter = em;
+  var ap = scene .createNode ('Appearance'); var mat = scene .createNode ('Material');
+  mat .diffuseColor = new SFColor (1, 1, 1); ap .material = mat; ps .appearance = ap;
+  scene .addRootNode (ps);
+  scene .updateNamedNode ('PS', ps);
+}"
+}

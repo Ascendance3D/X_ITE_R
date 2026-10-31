@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF PS ParticleSystem { enabled FALSE }
+Transform { scale -1 1 1 rotation 0 1 0 0.6 children [ Inline { url "inline/pr-inline-transform.x3dv" } ] }

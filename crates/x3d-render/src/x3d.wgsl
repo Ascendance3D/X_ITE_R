@@ -130,7 +130,7 @@ struct DrawUniforms {
     // 9 multiscatterColor, x3d_ScatterMaterialIdEXT.
     ext: array<vec4<f32>, 10>,
     // X3D_INSTANCING (Instancing2.glsl, InstancedShape and ParticleSystem): x 1 for an instanced draw, y its
-    // instances have x3d_Color, z texCoord ramp corners, w the first of them in `instances`.
+    // instances have x3d_Color, z texCoord ramp corners (2: one for every vertex), w the first of them in `instances`.
     inst_flags: vec4<u32>,
     // x: vertices per instance when every instance has its own vertices (LineProperties lines, one draw of all of
     // them: the instance is gl_VertexID / x), 0 when the draw is instanced (the instance is gl_InstanceID).
@@ -307,6 +307,10 @@ fn vertex_common(in: VIn, vertex: u32, instance: u32) -> VOut {
     // that the vertex's own texture coordinate (0 0, 1 0, 1 1, 0 1) names.
     if (draw.inst_flags.y == 1u) {
         out.color = inst.color;
+    }
+    if (draw.inst_flags.z == 2u) {
+        // A texCoord ramp on a GEOMETRY system: every vertex reads the ramp's (zero) texel.
+        out.tex_coord = inst.tex[0];
     }
     if (draw.inst_flags.z == 1u) {
         let c = in.tex_coord.xy;
