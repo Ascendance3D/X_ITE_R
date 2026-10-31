@@ -19,3 +19,5 @@ anchor-load-fail oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle
 anchor-load-param oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-param.json 0
 anchor-load-hash oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-hash.json 0
 anchor-load-disabled oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-disabled.json 0
+sensors-drag oracle/synthetic-rea-verify/drag-sensors.wrl oracle/synthetic-rea-verify/scripts/drag-sensors.json 0
+sensors-touch oracle/synthetic-rea-verify/touch-sensor.wrl oracle/synthetic-rea-verify/scripts/touch-sensor.json 0
