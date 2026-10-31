@@ -25,11 +25,13 @@ pub mod decode;
 pub mod delay;
 pub mod fft_frame;
 pub mod gain;
+pub mod ops;
 pub mod oscillator;
 pub mod panner;
 pub mod param_timeline;
 pub mod wave_shaper;
 
+use ops::{Arg, Op};
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context as TaskContext, Poll};
@@ -63,6 +65,16 @@ pub fn set_default_mode(mode: AudioMode) {
 
 pub fn default_mode() -> AudioMode {
     DEFAULT_MODE.lock().unwrap().clone()
+}
+
+static NEXT_UID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+
+static DEFAULT_RECORD_OPS: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Whether new engines record their calls as [`ops::Op`]s (`AudioEngine::record_ops`): the page of X_ITE_R sets it, so
+/// that the engine's Web Audio calls reach the page's AudioContext.
+pub fn set_default_record_ops(on: bool) {
+    DEFAULT_RECORD_OPS.store(on, std::sync::atomic::Ordering::Relaxed);
 }
 
 /// A Web Audio node of the engine's arena.
@@ -193,6 +205,11 @@ pub struct AudioEngine {
     next_serial: u64,
     /// What a page could read back from each AudioBufferSourceNode ([`AudioEngine::graph`]).
     sources: std::collections::HashMap<usize, SourceInfo>,
+    /// Whether the calls on the nodes are recorded in `ops` ([`ops`]).
+    recording: bool,
+    ops: std::sync::Mutex<Vec<Op>>,
+    /// A number no other engine of this process has: the page names its mirror of this engine's nodes by it.
+    uid: u64,
 }
 
 /// The state of an AudioBufferSourceNode as a page reads it back: its buffer, its loop attributes and
@@ -241,6 +258,32 @@ pub struct AudioGraph {
     pub destination: usize,
     pub current_time: f64,
     pub sample_rate: f32,
+}
+
+/// The name of an AudioParam as an op argument (the names `set_param` takes).
+fn param_name(name: &str) -> &'static str {
+    [
+        "frequency",
+        "detune",
+        "playbackRate",
+        "Q",
+        "gain",
+        "delayTime",
+        "attack",
+        "knee",
+        "ratio",
+        "release",
+        "threshold",
+        "positionX",
+        "positionY",
+        "positionZ",
+        "orientationX",
+        "orientationY",
+        "orientationZ",
+    ]
+    .into_iter()
+    .find(|n| *n == name)
+    .unwrap_or("")
 }
 
 /// The render quantum size of Web Audio.
@@ -318,10 +361,34 @@ impl AudioEngine {
             serials: vec![],
             next_serial: 0,
             sources: Default::default(),
+            recording: DEFAULT_RECORD_OPS.load(std::sync::atomic::Ordering::Relaxed),
+            ops: Default::default(),
+            uid: NEXT_UID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
         };
         let destination = engine.base().destination();
         engine.destination = engine.add(ANode::Destination(destination));
         engine
+    }
+
+    /// The number that names this engine (see `uid`).
+    pub fn uid(&self) -> u64 {
+        self.uid
+    }
+
+    /// Record the calls on the nodes from now on ([`ops`]), or stop.
+    pub fn record_ops(&mut self, on: bool) {
+        self.recording = on;
+    }
+
+    /// The calls recorded since the last call, oldest first.
+    pub fn take_ops(&self) -> Vec<Op> {
+        std::mem::take(&mut *self.ops.lock().unwrap())
+    }
+
+    fn emit(&self, name: &'static str, args: Vec<Arg>) {
+        if self.recording {
+            self.ops.lock().unwrap().push(Op { name, args });
+        }
     }
 
     pub fn base(&self) -> &ConcreteBaseAudioContext {
@@ -476,6 +543,7 @@ impl AudioEngine {
             self.disconnect_to(from, output, to, input);
         }
 
+        self.emit("release", vec![Arg::Int(id.0)]);
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
         self.update_pull();
@@ -489,6 +557,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| c.0 != id && c.2 != id);
+        self.emit("releaseKeep", vec![Arg::Int(id.0)]);
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
         self.update_pull();
@@ -567,6 +636,10 @@ impl AudioEngine {
 
         if !self.connections.contains(&(from, output, to, input)) {
             self.connections.push((from, output, to, input));
+            self.emit(
+                "connect",
+                vec![Arg::Int(from.0), Arg::Int(output), Arg::Int(to.0), Arg::Int(input)],
+            );
             self.update_pull();
         }
     }
@@ -580,6 +653,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| c.0 != from);
+        self.emit("disconnect", vec![Arg::Int(from.0)]);
         self.update_pull();
     }
 
@@ -594,6 +668,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| !(c.0 == from && c.2 == to));
+        self.emit("disconnectDest", vec![Arg::Int(from.0), Arg::Int(to.0)]);
         self.update_pull();
         true
     }
@@ -609,6 +684,10 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| *c != (from, output, to, input));
+        self.emit(
+            "disconnectTo",
+            vec![Arg::Int(from.0), Arg::Int(output), Arg::Int(to.0), Arg::Int(input)],
+        );
         self.update_pull();
         true
     }
@@ -646,6 +725,8 @@ impl AudioEngine {
         for n in self.get(id).all() {
             n.set_channel_count(count);
         }
+
+        self.emit("channelCount", vec![Arg::Int(id.0), Arg::Int(count)]);
     }
 
     pub fn set_channel_count_mode(&self, id: AId, mode: &str) {
@@ -675,6 +756,18 @@ impl AudioEngine {
         for n in self.get(id).all() {
             n.set_channel_count_mode(mode);
         }
+
+        self.emit(
+            "channelCountMode",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(match mode {
+                    ChannelCountMode::ClampedMax => "clamped-max",
+                    ChannelCountMode::Explicit => "explicit",
+                    _ => "max",
+                }),
+            ],
+        );
     }
 
     pub fn set_channel_interpretation(&self, id: AId, interpretation: &str) {
@@ -701,6 +794,18 @@ impl AudioEngine {
         for n in self.get(id).all() {
             n.set_channel_interpretation(interpretation);
         }
+
+        self.emit(
+            "channelInterpretation",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(if interpretation == ChannelInterpretation::Discrete {
+                    "discrete"
+                } else {
+                    "speakers"
+                }),
+            ],
+        );
     }
 
     // --- node constructors ------------------------------------------------------------------
@@ -719,7 +824,17 @@ impl AudioEngine {
             audio_node_options: Default::default(),
         };
         let node = AudioWorkletNode::new::<gain::Processor>(self.base(), options);
-        self.add(ANode::Gain(node, shared))
+        let id = self.add(ANode::Gain(node, shared));
+
+        self.emit("gain", vec![Arg::Int(id.0), Arg::Num(f64::from(gain))]);
+        id
+    }
+
+    fn emit_gain_event(&self, id: AId, kind: &'static str, value: f32, time: f64) {
+        self.emit(
+            "gainEvent",
+            vec![Arg::Int(id.0), Arg::Str(kind), Arg::Num(f64::from(value)), Arg::Num(time)],
+        );
     }
 
     fn post_gain(&self, id: AId, kind: param_timeline::Kind, value: f32, time: f64) {
@@ -735,11 +850,13 @@ impl AudioEngine {
 
     /// `gain .gain .setValueAtTime (value, time)`.
     pub fn gain_set_value_at_time(&self, id: AId, value: f32, time: f64) {
+        self.emit_gain_event(id, "setValue", value, time);
         self.post_gain(id, param_timeline::Kind::SetValue, value, time);
     }
 
     /// `gain .gain .exponentialRampToValueAtTime (value, time)`.
     pub fn gain_exponential_ramp(&self, id: AId, value: f32, time: f64) {
+        self.emit_gain_event(id, "exponentialRamp", value, time);
         self.post_gain(id, param_timeline::Kind::ExponentialRamp, value, time);
     }
 
@@ -775,8 +892,14 @@ impl AudioEngine {
         // AudioParam .value setter: the intrinsic value, then setValueAtTime (intrinsic, now).
         if let (ANode::Gain(_, shared), "gain") = (self.get(id), name) {
             shared.set(v);
-            self.gain_set_value_at_time(id, shared.get(), self.current_time());
+            self.post_gain(id, param_timeline::Kind::SetValue, shared.get(), self.current_time());
         }
+
+        // The page's node takes `.value = v` itself (its own setValueAtTime of the current time).
+        self.emit(
+            "param",
+            vec![Arg::Int(id.0), Arg::Str(param_name(name)), Arg::Num(f64::from(v))],
+        );
 
         // `.value = v` is setValueAtTime (v, currentTime): the kernels that switch to their
         // sample-accurate code keep the event times (param_timeline.rs).
@@ -830,6 +953,13 @@ impl AudioEngine {
 
     /// `new OscillatorNode (audioContext)`: type "sine".
     pub fn oscillator(&mut self) -> AId {
+        let id = self.oscillator_node();
+
+        self.emit("oscillator", vec![Arg::Int(id.0)]);
+        id
+    }
+
+    fn oscillator_node(&mut self) -> AId {
         use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
 
         let wave = self.basic_wave(oscillator::Shape::Sine);
@@ -864,6 +994,18 @@ impl AudioEngine {
     /// `oscillatorNode .type = …` (not "custom").
     pub fn oscillator_set_type(&mut self, id: AId, shape: oscillator::Shape) {
         let wave = self.basic_wave(shape);
+        self.emit(
+            "oscillatorType",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(match shape {
+                    oscillator::Shape::Sine => "sine",
+                    oscillator::Shape::Square => "square",
+                    oscillator::Shape::Sawtooth => "sawtooth",
+                    oscillator::Shape::Triangle => "triangle",
+                }),
+            ],
+        );
         self.post(id, oscillator::Message::Wave(wave));
     }
 
@@ -875,16 +1017,22 @@ impl AudioEngine {
             imag,
             false,
         ));
+        self.emit(
+            "oscillatorWave",
+            vec![Arg::Int(id.0), Arg::List(real.to_vec()), Arg::List(imag.to_vec())],
+        );
         self.post(id, oscillator::Message::Wave(wave));
     }
 
     /// `oscillatorNode .start ()`.
     pub fn oscillator_start(&mut self, id: AId) {
+        self.emit("oscillatorStart", vec![Arg::Int(id.0)]);
         self.post(id, oscillator::Message::Start(0.0));
     }
 
     /// `oscillatorNode .stop (when)`.
     pub fn oscillator_stop(&mut self, id: AId, when: f64) {
+        self.emit("oscillatorStop", vec![Arg::Int(id.0), Arg::Num(when.max(0.0))]);
         self.post(id, oscillator::Message::Stop(when.max(0.0)));
     }
 
@@ -918,6 +1066,22 @@ impl AudioEngine {
         let id = self.add(ANode::BufferSource(node));
 
         self.sources.insert(id.0, info);
+        self.emit(
+            "bufferSource",
+            vec![
+                Arg::Int(id.0),
+                buffer.map_or(Arg::Bool(false), |b| {
+                    Arg::Buffer(
+                        Arc::new(
+                            (0..b.number_of_channels())
+                                .map(|c| b.get_channel_data(c).to_vec())
+                                .collect(),
+                        ),
+                        b.sample_rate(),
+                    )
+                }),
+            ],
+        );
         id
     }
 
@@ -939,6 +1103,10 @@ impl AudioEngine {
         if let Some(info) = self.source_info(id) {
             info.started = Some((when, offset));
         }
+        self.emit(
+            "sourceStart",
+            vec![Arg::Int(id.0), Arg::Num(when), Arg::Num(offset)],
+        );
         let when = when.max(self.current_time());
         self.post_buffer_source(
             id,
@@ -955,6 +1123,7 @@ impl AudioEngine {
         if let Some(info) = self.source_info(id) {
             info.stopped = Some(when);
         }
+        self.emit("sourceStop", vec![Arg::Int(id.0), Arg::Num(when)]);
         self.post_buffer_source(id, buffer_source::Message::Stop(when));
     }
 
@@ -962,6 +1131,7 @@ impl AudioEngine {
         if let Some(info) = self.source_info(id) {
             info.loop_ = v;
         }
+        self.emit("sourceLoop", vec![Arg::Int(id.0), Arg::Bool(v)]);
         self.post_buffer_source(id, buffer_source::Message::Loop(v));
     }
 
@@ -969,6 +1139,7 @@ impl AudioEngine {
         if let Some(info) = self.source_info(id) {
             info.loop_start = v;
         }
+        self.emit("sourceLoopStart", vec![Arg::Int(id.0), Arg::Num(v)]);
         self.post_buffer_source(id, buffer_source::Message::LoopStart(v));
     }
 
@@ -976,6 +1147,7 @@ impl AudioEngine {
         if let Some(info) = self.source_info(id) {
             info.loop_end = v;
         }
+        self.emit("sourceLoopEnd", vec![Arg::Int(id.0), Arg::Num(v)]);
         self.post_buffer_source(id, buffer_source::Message::LoopEnd(v));
     }
 
@@ -987,11 +1159,30 @@ impl AudioEngine {
             self.base(),
             AudioWorkletNodeOptions::<()>::default(),
         );
-        self.add(ANode::Biquad(node))
+        let id = self.add(ANode::Biquad(node));
+
+        self.emit("biquad", vec![Arg::Int(id.0)]);
+        id
     }
 
     /// `biquadFilterNode .type = value`.
     pub fn biquad_set_type(&self, id: AId, value: biquad::Type) {
+        self.emit(
+            "biquadType",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(match value {
+                    biquad::Type::Lowpass => "lowpass",
+                    biquad::Type::Highpass => "highpass",
+                    biquad::Type::Bandpass => "bandpass",
+                    biquad::Type::Lowshelf => "lowshelf",
+                    biquad::Type::Highshelf => "highshelf",
+                    biquad::Type::Peaking => "peaking",
+                    biquad::Type::Notch => "notch",
+                    biquad::Type::Allpass => "allpass",
+                }),
+            ],
+        );
         if let ANode::Biquad(n) = self.get(id) {
             n.port().post_message(Some(biquad::Message::Type(value)));
         }
@@ -1012,7 +1203,13 @@ impl AudioEngine {
             .parameter_data
             .insert("delayTime".into(), delay_time);
         let node = AudioWorkletNode::new::<delay::Processor>(self.base(), options);
-        Some(self.add(ANode::Delay(node)))
+        let id = self.add(ANode::Delay(node));
+
+        self.emit(
+            "delay",
+            vec![Arg::Int(id.0), Arg::Num(max_delay_time), Arg::Num(delay_time)],
+        );
+        Some(id)
     }
 
     /// `new WaveShaperNode (audioContext)`.
@@ -1021,11 +1218,15 @@ impl AudioEngine {
 
         let options = AudioWorkletNodeOptions::<()>::default();
         let node = AudioWorkletNode::new::<wave_shaper::Processor>(self.base(), options);
-        self.add(ANode::WaveShaper(node))
+        let id = self.add(ANode::WaveShaper(node));
+
+        self.emit("waveShaper", vec![Arg::Int(id.0)]);
+        id
     }
 
     /// `waveShaperNode .curve = curve`.
     pub fn wave_shaper_set_curve(&self, id: AId, curve: Vec<f32>) {
+        self.emit("waveShaperCurve", vec![Arg::Int(id.0), Arg::List(curve.clone())]);
         if let ANode::WaveShaper(n) = self.get(id) {
             n.port()
                 .post_message(Some(wave_shaper::Message::Curve(Arc::new(curve))));
@@ -1034,6 +1235,17 @@ impl AudioEngine {
 
     /// `waveShaperNode .oversample = value`.
     pub fn wave_shaper_set_oversample(&self, id: AId, value: wave_shaper::Oversample) {
+        self.emit(
+            "waveShaperOversample",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(match value {
+                    wave_shaper::Oversample::None => "none",
+                    wave_shaper::Oversample::X2 => "2x",
+                    wave_shaper::Oversample::X4 => "4x",
+                }),
+            ],
+        );
         if let ANode::WaveShaper(n) = self.get(id) {
             n.port()
                 .post_message(Some(wave_shaper::Message::Oversample(value)));
@@ -1045,6 +1257,7 @@ impl AudioEngine {
         let node = self.convolver_node(false);
         let id = self.add(ANode::Convolver(node, false));
         self.convolver_normalize.insert(id.0, true);
+        self.emit("convolver", vec![Arg::Int(id.0)]);
         id
     }
 
@@ -1072,6 +1285,7 @@ impl AudioEngine {
     /// `convolverNode .normalize = value`: used by the next `.buffer = …`.
     pub fn convolver_set_normalize(&mut self, id: AId, value: bool) {
         self.convolver_normalize.insert(id.0, value);
+        self.emit("convolverNormalize", vec![Arg::Int(id.0), Arg::Bool(value)]);
     }
 
     /// `convolverNode .buffer = buffer` (ConvolverHandler::SetBuffer): 1, 2 or 4 channels.
@@ -1084,6 +1298,13 @@ impl AudioEngine {
             return;
         }
 
+        self.emit(
+            "convolverBuffer",
+            vec![
+                Arg::Int(id.0),
+                Arg::Buffer(Arc::new(channels.clone()), buffer.sample_rate()),
+            ],
+        );
         let normalize = self.convolver_normalize.get(&id.0).copied().unwrap_or(true);
         let reverb = Box::new(convolver::Reverb::new(
             &channels,
@@ -1175,7 +1396,10 @@ impl AudioEngine {
             audio_node_options,
         };
         let node = AudioWorkletNode::new::<compressor::Processor>(self.base(), options);
-        self.add(ANode::Compressor(node, reduction))
+        let id = self.add(ANode::Compressor(node, reduction));
+
+        self.emit("compressor", vec![Arg::Int(id.0)]);
+        id
     }
 
     /// `dynamicsCompressorNode .reduction`.
@@ -1205,10 +1429,21 @@ impl AudioEngine {
             audio_node_options,
         };
         let node = AudioWorkletNode::new::<analyser::Processor>(self.base(), options);
-        self.add(ANode::Analyser(
+        let id = self.add(ANode::Analyser(
             node,
             Box::new(analyser::Analyser::new(shared)),
-        ))
+        ));
+
+        self.emit("analyser", vec![Arg::Int(id.0)]);
+        id
+    }
+
+    /// An AnalyserNode setting that the control half (`analyser.rs`) took: the page's node takes it too.
+    pub fn analyser_setting(&self, id: AId, name: &'static str, values: &[f64]) {
+        let mut args = vec![Arg::Int(id.0)];
+
+        args.extend(values.iter().map(|&v| Arg::Num(v)));
+        self.emit(name, args);
     }
 
     pub fn splitter(&mut self, number_of_outputs: usize) -> AId {
@@ -1219,7 +1454,10 @@ impl AudioEngine {
                 ..Default::default()
             },
         );
-        self.add(ANode::Splitter(node))
+        let id = self.add(ANode::Splitter(node));
+
+        self.emit("splitter", vec![Arg::Int(id.0), Arg::Int(number_of_outputs)]);
+        id
     }
 
     pub fn merger(&mut self, number_of_inputs: usize) -> AId {
@@ -1230,7 +1468,10 @@ impl AudioEngine {
                 ..Default::default()
             },
         );
-        self.add(ANode::Merger(node))
+        let id = self.add(ANode::Merger(node));
+
+        self.emit("merger", vec![Arg::Int(id.0), Arg::Int(number_of_inputs)]);
+        id
     }
 
     /// `new PannerNode (audioContext)`: "equalpower", "inverse", channelCount 2, "clamped-max".
@@ -1252,12 +1493,15 @@ impl AudioEngine {
         };
         let equal_power = AudioWorkletNode::new::<panner::Processor>(self.base(), options);
         let hrtf = PannerNode::new(self.base(), PannerOptions::default());
-        self.add(ANode::Panner(Box::new(PannerSet {
+        let id = self.add(ANode::Panner(Box::new(PannerSet {
             equal_power,
             hrtf,
             hrtf_active: false,
             attributes: Default::default(),
-        })))
+        })));
+
+        self.emit("panner", vec![Arg::Int(id.0)]);
+        id
     }
 
     /// The PannerNode attribute setters.
@@ -1282,6 +1526,23 @@ impl AudioEngine {
         h.set_cone_inner_angle(a.cone_inner_angle);
         h.set_cone_outer_angle(a.cone_outer_angle);
         h.set_cone_outer_gain(a.cone_outer_gain);
+        self.emit(
+            "pannerAttributes",
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(match a.distance_model {
+                    panner::DistanceModel::Linear => "linear",
+                    panner::DistanceModel::Inverse => "inverse",
+                    panner::DistanceModel::Exponential => "exponential",
+                }),
+                Arg::Num(a.ref_distance),
+                Arg::Num(a.max_distance),
+                Arg::Num(a.rolloff_factor),
+                Arg::Num(a.cone_inner_angle),
+                Arg::Num(a.cone_outer_angle),
+                Arg::Num(a.cone_outer_gain),
+            ],
+        );
     }
 
     /// `pannerNode .panningModel = hrtf ? "HRTF" : "equalpower"`: the inputs move to the other
@@ -1294,6 +1555,8 @@ impl AudioEngine {
         if p.hrtf_active == hrtf {
             return;
         }
+
+        self.emit("pannerModel", vec![Arg::Int(id.0), Arg::Bool(hrtf)]);
 
         let incoming: Vec<_> = self
             .connections
@@ -1362,6 +1625,10 @@ impl AudioEngine {
             }
         }
 
+        self.emit(
+            "listener",
+            values.iter().map(|&v| Arg::Num(f64::from(v))).collect(),
+        );
         self.listener_values = values;
     }
 

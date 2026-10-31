@@ -440,6 +440,14 @@ impl Session {
         std::mem::take(&mut self.rt_mut().audio_element_started)
     }
 
+    /// The calls the world's audio engine made on its Web Audio nodes since the last call, with the engine's number
+    /// ([`x3d_runtime::sound::AudioEngine::take_ops`]); the page makes them on real nodes of its AudioContext.
+    pub fn take_audio_ops(&self) -> Option<(u64, Vec<x3d_runtime::sound::ops::Op>)> {
+        let audio = self.rt().audio.as_ref()?;
+
+        Some((audio.uid(), audio.take_ops()))
+    }
+
     /// The page's audio clock (`audioContext .currentTime`) for the world's audio context, if it has one
     /// ([`x3d_runtime::sound::AudioEngine::set_clock`]).
     pub fn set_audio_clock(&mut self, time: f64) {
