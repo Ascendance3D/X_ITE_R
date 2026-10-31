@@ -1,0 +1,24 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world (authored for issue #97): Browser.endUpdate () from a Script stops the world.
+# A TimeSensor and a Script's own prepareEvents run until count 15 of the Script, then the Script calls
+# Browser.endUpdate (), and at 22 Browser.beginUpdate (). The scene text of every frame shows what stopped (the count, the TimeSensor's fraction) and what did not.
+DEF TS TimeSensor { loop TRUE cycleInterval 4 }
+DEF CNT Script {
+  inputOutput SFInt32 prepares 0
+  inputOutput SFFloat fraction 0
+  inputOutput SFInt32 fractions 0
+  inputOutput SFInt32 ended 0
+  inputOutput SFInt32 began 0
+  inputOnly SFFloat on_fraction
+  url "ecmascript:
+    function prepareEvents () {
+      prepares = prepares + 1;
+      if (prepares == 15) { Browser .endUpdate (); ended = prepares; }
+      if (prepares == 22) { Browser .beginUpdate (); began = prepares; }
+    }
+    function on_fraction (v) { fraction = v; fractions = fractions + 1; }
+  "
+}
+ROUTE TS.fraction_changed TO CNT.on_fraction

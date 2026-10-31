@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"B ABSTRACT_NODES boolean true\",\n    \"B CONCRETE_NODES boolean true\",\n    \"B EXTERNAL_INTERACTIONS boolean true\",\n    \"B PROTOTYPE_CREATE boolean true\",\n    \"B DOM_IMPORT boolean true\",\n    \"B XML_ENCODING boolean true\",\n    \"B CLASSIC_VRML_ENCODING boolean true\",\n    \"B BINARY_ENCODING boolean false\",\n    \"R Shading string \\\"GOURAUD\\\"\",\n    \"R MaxTextureSize number -\",\n    \"R TextureUnits number -\",\n    \"R MaxLights number -\",\n    \"R Antialiased boolean -\",\n    \"R ColorDepth number -\",\n    \"R TextureMemory number -\",\n    \"R ContentScale number 1\",\n    \"R LogarithmicDepthBuffer boolean false\",\n    \"R MaxAnisotropicDegree number -\",\n    \"R MaxSamples number -\",\n    \"R Multisampling number -\",\n    \"R PixelsPerPoint number 1.3333333333333333\",\n    \"R SoundDestinations number 0\",\n    \"R XRSession boolean false\"\n  ]\n\n  url \"ecmascript:\n    function initialize () {\n      var r = [];\n      var gpu = ['MaxTextureSize', 'TextureUnits', 'MaxLights', 'ColorDepth', 'TextureMemory', 'MaxAnisotropicDegree', 'MaxSamples', 'Antialiased', 'Multisampling'];\n      function list (o, get, tag) {\n        Array .from (o .getFieldDefinitions ()) .forEach (function (d) {\n          var v;\n          try { v = get (d .name); } catch (e) { v = 'THROW ' + e .message; }\n          r .push (tag + ' ' + d .name + ' ' + typeof v + ' ' + (gpu .indexOf (d .name) >= 0 ? '-' : v !== null && typeof v === 'object' ? String (v) : JSON .stringify (v)));\n        });\n      }\n      list (Browser .getBrowserProperties (), function (n) { return Browser .getBrowserProperty (n); }, 'B');\n      list (Browser .getRenderingProperties (), function (n) { return Browser .getRenderingProperty (n); }, 'R');\n      out = new MFString (... r);\n    }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
