@@ -526,7 +526,7 @@ impl Runtime {
             Task::ScriptLoad(n)
             | Task::ScriptLoaded(n, _)
             | Task::UrlLoad(n, _)
-            | Task::ScriptFetch(n, _)
+            | Task::ScriptFetch(n, ..)
             | Task::ScriptCandidate(n, ..) => !dead.contains(n),
             Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
         };
