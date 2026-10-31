@@ -16,7 +16,7 @@ import { DESKTOP, settle } from "./runtime02_case.mjs";
 import { sceneCase } from "./loadurl01_case.mjs";
 
 // The Web Audio classes a page can construct: the capture wraps each one.
-const NODE_CLASSES = [
+export const NODE_CLASSES = [
    "AnalyserNode", "AudioBufferSourceNode", "BiquadFilterNode", "ChannelMergerNode", "ChannelSplitterNode", "ConvolverNode",
    "DelayNode", "DynamicsCompressorNode", "GainNode", "MediaStreamAudioDestinationNode", "MediaStreamAudioSourceNode",
    "OscillatorNode", "PannerNode", "StereoPannerNode", "WaveShaperNode",
@@ -24,7 +24,7 @@ const NODE_CLASSES = [
 
 // Runs in the page before the world loads. window .audioCapture .graph () gives the snapshot of the first AudioContext
 // in the form of X_ITE_R's audioGraph (); window .audioCapture .page () the page-level facts.
-function installCapture (classes)
+export function installCapture (classes)
 {
    const nodes    = [ ];
    const info     = new Map ();
@@ -183,6 +183,13 @@ function installCapture (classes)
             sampleRate: context .sampleRate,
          };
       },
+      // The listener of the first context as X_ITE_R's audioGraph () gives it: position, forward, up.
+      listener ()
+      {
+         const l = contexts [0] ?.listener;
+
+         return l ? [ l .positionX, l .positionY, l .positionZ, l .forwardX, l .forwardY, l .forwardZ, l .upX, l .upY, l .upZ ] .map (p => p .value) : null;
+      },
       page ()
       {
          return {
@@ -209,7 +216,7 @@ function pageGraph ()
    return window .audioCapture .graph ();
 }
 
-const rawGraph = page => page .evaluate (pageGraph);
+export const rawGraph = page => page .evaluate (pageGraph);
 
 // The fields of AudioClip A that do not depend on the frame times, in the page.
 function pageFields ()
@@ -314,7 +321,7 @@ export function normalizeGraph (raw)
 
 // The world: a Sound in front of the viewer (inside its inner ellipsoid: full gain) with AudioClip A. `clip` gives the
 // AudioClip's other fields, `sound` the Sound's, `file` the media file.
-const WORLD = (clip, sound = "", file = "tone48k-stereo.wav") => `#X3D V4.0 utf8
+export const WORLD = (clip, sound = "", file = "tone48k-stereo.wav") => `#X3D V4.0 utf8
 PROFILE Interchange
 COMPONENT Sound:2
 Viewpoint { position 0 0 10 }
@@ -361,10 +368,10 @@ const watchAll = page => page .evaluate (() =>
 
 const clipEvents = page => page .evaluate (() => window .clipEvents);
 
-const pageFacts = page => page .evaluate (() => window .audioCapture .page ());
+export const pageFacts = page => page .evaluate (() => window .audioCapture .page ());
 
 // What the audio of the world is now.
-async function state (page)
+export async function state (page)
 {
    return { fields: await clipFields (page), graph: normalizeGraph (await rawGraph (page)), page: await pageFacts (page) };
 }
@@ -380,7 +387,7 @@ async function start (page, env, clip, sound, file)
 }
 
 // A click in the middle of the canvas: a user gesture (user activation) for the autoplay policy.
-async function gesture (page)
+export async function gesture (page)
 {
    const box = await page .locator ("x3d-canvas") .boundingBox ();
 
