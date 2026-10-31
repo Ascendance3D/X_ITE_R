@@ -5226,7 +5226,11 @@ impl Renderer {
                 di.inst_flags = [
                     1,
                     !i.colors.is_empty() as u32,
-                    !i.tex_coords.is_empty() as u32,
+                    if i.tex_all {
+                        2
+                    } else {
+                        !i.tex_coords.is_empty() as u32
+                    },
                     instance_data.len() as u32,
                 ];
 

@@ -627,6 +627,19 @@ buffer) come from `tools/rea_b17_emitter_hits.py record` (three identical runs).
 `crates/x3d-viewer/tests/rea_b17_emitter_hits.rs` replays them through particles_b06_common with the batch 06R
 tolerances.
 
+Issue #93 added cases to the B13 and B17 sets. B17 `ve-speed-*`: the same quad stacks as `ve-hits-*` with direction,
+speed 2 and variation 0.3 (the particles move), and `ve-speed-64-bounded` (hits past 32 in the emitter and in a
+BoundedPhysicsModel at once). B13 `pr-script-created-node` and `pr-script-created-geometry` (a root Script makes the
+ParticleSystem with `createNode` and names it PS with `updateNamedNode`; `createX3DFromString` cannot do this because
+`updateNamedNode` refuses a node of another scene), `pr-inline` and `pr-inline-transform` (the ParticleSystem is in an
+Inline child file under `inline/`; the world's PS, the node the tools step, is a disabled stub as in B18's InstancedShape
+worlds, so only the images and the per-frame seeds carry those cases), and `pr-geometry-texture`, `pr-geometry-texramp`,
+`pr-geometry-texramp-rgb` (a texCoord ramp on a GEOMETRY system: X_ITE samples the zero texel of the ramp for every
+vertex, `texCoordCount` being 0). They come from `tools/rea_b13_particles.py record` (a copy of the B18 recorder: three
+identical runs per image pass) and `tools/rea_b17_emitter_hits.py record`. A BVH deeper than the GLSL stack of 32 cannot be
+built (the median split makes N triangles `ceil (log2 N)` deep); `crates/x3d-runtime/tests/particles_bvh_depth.rs`
+pins the Rust depth.
+
 The wide LINE particle baselines `rea-batch21-wide-lines-baseline/` (pick probes, every frame's collision probes and
 the shadow images of 1 to 24 px lines) come from `tools/rea_b21_wide_lines.py record` (three identical runs). Their
 worlds are `synthetic-rea-b21-wide-lines/` (`tools/gen_rea_b21_wide_lines.py`), and

@@ -192,8 +192,18 @@ pub struct ParticleInstances {
     pub matrices: Vec<Matrix4>,
     pub colors: Vec<[f32; 4]>,
     pub tex_coords: Vec<[[f32; 4]; 4]>,
+    /// A texCoord ramp on a GEOMETRY system: every vertex of the geometry takes the ramp's texture coordinate (the zero
+    /// texel; see [`instances`]), whatever its own texture coordinate is. `tex_coords` then holds one zero entry per
+    /// instance.
+    pub tex_all: bool,
 }
 
+/// With a texCoord ramp X_ITE draws with `X3D_TEX_COORD_RAMP`, so every vertex of every geometry type takes
+/// `texelFetch (x3d_TexCoordRamp, int (x3d_Particle [3]) + map [gl_VertexID % 6], 0)` instead of its own texture
+/// coordinate. A GEOMETRY system has `texCoordCount` 0 (`set_geometryType__`): the ramp holds the keys only, and the
+/// record's index `numKeys + index0 * 0` names texels that are zero (`set_texCoord__` copies `numKeys * 0 * 4` values;
+/// the rest of the texture is zero-filled, and a fetch past it is zero). The geometry's own texture coordinates are
+/// ignored: all vertices sample (0, 0). A POINT or LINE system with a ramp is not modeled.
 pub fn instances(
     particles: &[Particle],
     ramps: &Ramps,
@@ -204,10 +214,12 @@ pub fn instances(
         .tex_coords
         .as_ref()
         .filter(|_| geometry_type.tex_coord_count() == 4);
+    let tex_all = ramps.tex_coords.is_some() && geometry_type == GeometryType::Geometry;
     let mut out = ParticleInstances {
         matrices: vec![],
         colors: vec![],
         tex_coords: vec![],
+        tex_all,
     };
 
     for p in particles {
@@ -227,7 +239,9 @@ pub fn instances(
             out.colors.push([p[4], p[5], p[6], p[7]]);
         }
 
-        if let Some(r) = tex_ramp {
+        if tex_all {
+            out.tex_coords.push([[0.0; 4]; 4]);
+        } else if let Some(r) = tex_ramp {
             // texelFetch (x3d_TexCoordRamp, int (x3d_Particle [3]) + map [gl_VertexID], 0).
             let index0 = p[3] as i64;
 
@@ -292,6 +306,28 @@ mod tests {
         // POINT has no texture coordinate count: no ramp coordinates; no color material: no colors.
         let i = instances(&records, &ramps, GeometryType::Point, false);
         assert!(i.tex_coords.is_empty() && i.colors.is_empty());
+    }
+
+    #[test]
+    fn a_ramp_on_a_geometry_system_zeroes_every_vertex_coordinate() {
+        let ramp = Ramp {
+            count: 2,
+            texels: vec![[0.0; 4]; 4],
+        };
+        let ramps = Ramps {
+            tex_coords: Some(ramp),
+            tex_coords_count: 0,
+            ..Default::default()
+        };
+        let records = [particle([1.0, 2.0, 3.0, 1.0], [0.0; 4], 2.0)];
+        let i = instances(&records, &ramps, GeometryType::Geometry, false);
+
+        assert!(i.tex_all);
+        assert_eq!(i.tex_coords, vec![[[0.0; 4]; 4]]);
+
+        // Without a ramp, or for a quad type, the geometry keeps its own coordinates.
+        let i = instances(&records, &Ramps::default(), GeometryType::Geometry, false);
+        assert!(!i.tex_all && i.tex_coords.is_empty());
     }
 
     #[test]
