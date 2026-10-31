@@ -301,8 +301,9 @@ pub enum Task {
     UrlLoad(NodeId, u64),
     /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
     ExternLoad(ExternId, u64),
-    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index.
-    ScriptFetch(NodeId, usize),
+    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index, and
+    /// the load generation of the Script (see [`script::ScriptState::generation`]). A fetch of an older generation does nothing.
+    ScriptFetch(NodeId, usize, u64),
     /// FileLoader.loadDocumentError → loadDocumentAsync of the next Script candidate (node, its index), `hops` more microtask
     /// ticks from now, printing the failure of the candidate before it when it runs.
     ScriptCandidate(NodeId, usize, u8, Option<Box<script::CandidateError>>),
@@ -452,6 +453,8 @@ pub struct Runtime {
     pub pending_browser: Vec<browser_load::PendingBrowserScene>,
     pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
     pub browser_request_id: u64,
+    /// The last Script load generation handed out (runtime-wide, so no node id that is reused matches an old fetch).
+    pub script_generation: u64,
     /// createX3DFromURL / createVrmlFromURL requests of the page that embeds the browser (an external browser, no Script),
     /// by request id: the base URL of their FileLoader (FileLoader.getBaseURL for the X3DWorld) and their requests.
     pub page_browser_loads: HashMap<u64, browser_load::PageBrowserLoad>,
@@ -716,6 +719,7 @@ impl Runtime {
             pending_browser: vec![],
             browser_frame_waiters: vec![],
             browser_request_id: 0,
+            script_generation: 0,
             page_browser_loads: HashMap::new(),
             page_browser_settled: vec![],
             browser_url_requests: Default::default(),
@@ -1393,7 +1397,9 @@ impl Runtime {
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
-                Task::ScriptFetch(node, index) => self.script_fetch(node, index),
+                Task::ScriptFetch(node, index, generation) => {
+                    self.script_fetch(node, index, generation)
+                }
                 Task::BrowserLoad(id) => self.browser_load(id),
                 Task::ScriptLoad(..)
                 | Task::ScriptCandidate(..)
