@@ -33,6 +33,8 @@ static LOCK: Mutex<()> = Mutex::new(());
 // 1. the oracle comparison
 
 /// The velocity / position tolerance of the cases generated with `tol: "strong"` (see rea_b07_ps.py TOL_STRONG).
+/// Owner decision 2026-10-31 (issue #82): it stays. The cause is the GPU's float32 turbulence step noise, not the wind speed
+/// unit conversion, which equals pinned X_ITE 16.5.0.
 const STRONG: [(&str, f64, f64); 2] = [("velocity", 1e-4, 2e-5), ("position", 1e-4, 2e-5)];
 
 fn dumps(js: &Value, data: &[f32]) -> Vec<(u64, Vec<[f32; STRIDE]>)> {
