@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction 0 0 -1 }
+Background { skyColor 0.5 0.5 0.6 }
+Fog { fogType "LINEAR" color 0.8 0.8 0.9 visibilityRange 12 }
+Transform { translation -1.2 0 0 children [ LocalFog { fogType "LINEAR" color 1 0.3 0.3 visibilityRange 8 enabled TRUE } Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Sphere { radius 0.5 } } ] }
+Transform { translation 0.0 0 -3 children [ LocalFog { fogType "EXPONENTIAL" color 1 0.3 0.3 visibilityRange 8 enabled TRUE } Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Sphere { radius 0.5 } } ] }
+Transform { translation 1.2 0 -6 children [ LocalFog { fogType "EXPONENTIAL2" color 1 0.3 0.3 visibilityRange 8 enabled FALSE } Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Sphere { radius 0.5 } } ] }

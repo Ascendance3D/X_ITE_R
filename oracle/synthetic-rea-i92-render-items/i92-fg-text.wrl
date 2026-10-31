@@ -1,0 +1,12 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction 0 0 -1 }
+Background { skyColor 0.5 0.5 0.6 }
+Fog { fogType "LINEAR" color 0.8 0.8 0.9 visibilityRange 12 }
+Transform { translation -1.5 0.6 -0.0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Text { string "FOG0" fontStyle FontStyle { size 0.6 } } } }
+Transform { translation -1.5 0.6 -2.5 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Text { string "FOG1" fontStyle FontStyle { size 0.6 } } } }
+Transform { translation -1.5 0.6 -5.0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Text { string "FOG2" fontStyle FontStyle { size 0.6 } } } }
+Transform { translation -1.5 0.6 -7.5 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Text { string "FOG3" fontStyle FontStyle { size 0.6 } } } }
+Transform { translation -1.5 0.6 -10.0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Text { string "FOG4" fontStyle FontStyle { size 0.6 } } } }

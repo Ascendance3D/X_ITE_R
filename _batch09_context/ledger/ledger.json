@@ -7173,11 +7173,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "GPU compare 296 Items2 worlds"
+    "GPU compare 296 Items2 worlds",
+    "crates/x3d-render/tests/render_rea_i92_items.rs (46 synthetic worlds, MSAA 0+4)"
    ],
-   "missing": "",
+   "missing": "art/rainbow-room and art/djascendance-live exceed the bound (non-power-of-two texture mipmaps, X8 gap)",
    "oracle": "",
-   "notes": ""
+   "notes": "Issue #92 2026-10-31: Items2 compare 294 within tolerance, 2 over (art/rainbow-room 2.54%, art/djascendance-live 1.85%: NPOT mipmaps, recorded in x3d-script/tests/items2-known.tsv) at MSAA 0 and MSAA 4; the 46 render-i92 worlds pass at MSAA 0, and at MSAA 4 wherever X_ITE is reproducible (3 worlds are not)."
   },
   {
    "id": "sub:render.transparency-sorting",
@@ -7190,10 +7191,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "",
+   "tests": [
+    "crates/x3d-render/tests/render_rea_i92_items.rs (tr-* and fg-transparent, MSAA 0; MSAA 4 where X_ITE is reproducible)"
+   ],
+   "missing": "MSAA 4 of tr-many, tr-ortho and fg-transparent has no X_ITE reference (not reproducible); OIT is not compared",
    "oracle": "",
-   "notes": ""
+   "notes": "Issue #92 2026-10-31 items: tr-order, tr-opaque, tr-nested (LOD cell), tr-points-lines, tr-textured, tr-many, tr-ortho, fg-transparent; all within the bound at MSAA 0. No MSAA 4 reference for tr-many, tr-ortho and fg-transparent: X_ITE's multisampled output differs between its own runs (oracle/rea-i92-render-items-baseline/msaa4/unstable.json). oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%)."
   },
   {
    "id": "sub:render.shadows",
@@ -7297,12 +7300,14 @@
    "rust": [
     "crates/x3d-render/src/x3d.wgsl"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
-   "tests": [],
+   "tests": [
+    "crates/x3d-render/tests/render_rea_i92_items.rs (lm-*, MSAA 0+4); crates/x3d-render/tests/render_rea_b09_visual.rs"
+   ],
    "missing": "",
    "oracle": "",
-   "notes": ""
+   "notes": "Issue #92 2026-10-31 items: lm-normals, lm-sides, lm-material, lm-color-material, lm-attenuation, fg-specular, fg-emissive, fg-unlit; oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%); all within the bound at MSAA 0 and 4."
   },
   {
    "id": "sub:render.headlight",
@@ -7313,12 +7318,14 @@
    "rust": [
     "crates/x3d-render"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
-   "tests": [],
+   "tests": [
+    "crates/x3d-render/tests/render_rea_i92_items.rs (hl-*, MSAA 0+4)"
+   ],
    "missing": "",
    "oracle": "",
-   "notes": ""
+   "notes": "Issue #92 2026-10-31 items: hl-default, hl-on-light, hl-off-light, hl-off, hl-ortho, hl-rotated-viewpoint, hl-tilted-nav-type, hl-two-navinfo, fg-nofog-headlight; oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%); all within the bound at MSAA 0 and 4."
   },
   {
    "id": "sub:render.fog",
@@ -7329,12 +7336,14 @@
    "rust": [
     "crates/x3d-render/src/fog.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
-   "tests": [],
-   "missing": "no subsystem-level test listed; node:Fog, node:LocalFog and node:FogCoordinate are COMPLETE",
+   "tests": [
+    "crates/x3d-render/tests/render_rea_i92_items.rs (fg-*, MSAA 0+4); crates/x3d-render/tests/fog.rs (x_ite-fog.json)"
+   ],
+   "missing": "",
    "oracle": "",
-   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): 'LocalFog, FogCoordinate' removed from missing: node:LocalFog became COMPLETE in b11 and node:FogCoordinate is COMPLETE."
+   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): 'LocalFog, FogCoordinate' removed from missing: node:LocalFog became COMPLETE in b11 and node:FogCoordinate is COMPLETE. | Issue #92 2026-10-31 items: fg-linear, fg-linear-short, fg-exp, fg-exp2, fg-range0, fg-range-neg, fg-unknown-type, fg-unbound, fg-two-fogs, fg-localfog, fg-coordinate, fg-in-transform, fg-scaled-view, fg-rotated-view, fg-ortho, fg-points, fg-lines, fg-textured, fg-text, fg-color-bg, fg-red; oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%); all within the bound at MSAA 0 and 4. fog.rs oracle tests (x_ite-fog.json) now fail when the file is absent."
   },
   {
    "id": "sub:text.fonts",
@@ -7348,11 +7357,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "x3d-text oracle"
+    "x3d-text oracle",
+    "crates/x3d-text/tests/oracle.rs (228 glyphs, 57 full vertex, 41 layouts)"
    ],
-   "missing": "",
+   "missing": "only the 12 fonts of the answer key are compared; glyph vertices of 171 of 228 glyphs by count and area only",
    "oracle": "",
-   "notes": ""
+   "notes": "Issue #92 2026-10-31: x3d-text oracle with oracle/x_ite-text.json present: 228 glyphs checked (counts, area), 57 with every vertex, 41 layouts, 12 fonts in the key; with an empty key directory the layouts test fails (never passes)."
   },
   {
    "id": "sub:sound.engine",

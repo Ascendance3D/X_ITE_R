@@ -1,0 +1,42 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight TRUE }
+Background { skyColor 0.12 0.14 0.2 }
+DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Transform { translation -3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.3 specularColor 0.9 0.9 0.9 shininess 0.4 } } geometry Sphere { radius 0.9 } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.3 specularColor 0.9 0.9 0.9 shininess 0.4 } } geometry Box { size 1.4 1.4 1.4 } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.3 specularColor 0.9 0.9 0.9 shininess 0.4 } } geometry Cone { height 1.6 bottomRadius 0.8 } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.3 specularColor 0.9 0.9 0.9 shininess 0.4 } } geometry Cylinder { height 1.6 radius 0.7 } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Transform { rotation 0 1 0 0.8 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } } } }
+] }
+Transform { translation 1.100 0.000 0 children [
+Transform { rotation 1 0 0 -0.8 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.6 0.6 0.6 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } } } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Shape { appearance Appearance { } geometry Sphere { radius 0.9 } }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0.2 0.7 0.4 } } geometry Sphere { radius 0.9 } }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.2 0.6 0.9 transparency 0.5 specularColor 1 1 1 shininess 0.6 } } geometry Sphere { radius 0.9 } }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } geometry Sphere { radius 0.9 } }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Shape { appearance Appearance { } geometry Sphere { radius 0.9 } }
+] }
