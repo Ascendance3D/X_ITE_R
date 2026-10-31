@@ -1,0 +1,16 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world (authored for issue #97): Browser.currentSpeed and Browser.currentFrameRate while the viewer moves.
+# The WALK viewer moves forward while a key is held; the Script writes both properties every frame.
+NavigationInfo { type "WALK" speed 4 }
+Viewpoint { position 0 1.6 20 }
+DEF BOX Transform { children Shape { geometry Box { } } }
+DEF REC Script {
+  inputOutput SFFloat speed -1
+  inputOutput SFFloat rate -1
+  inputOutput SFInt32 frames 0
+  url "ecmascript:
+    function prepareEvents () { speed = Browser .currentSpeed; rate = Browser .currentFrameRate; frames = frames + 1; }
+  "
+}

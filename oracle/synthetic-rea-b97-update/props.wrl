@@ -1,0 +1,26 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world (authored for issue #97): every BrowserProperties and RenderingProperties entry read through
+# Browser.getBrowserProperty / getRenderingProperty. `out` has one line per entry: name, JS type, value. The GPU's limits
+# (MaxTextureSize, TextureUnits, MaxLights, ColorDepth, TextureMemory, MaxAnisotropicDegree, MaxSamples, Antialiased,
+# Multisampling) are the machine's, not X_ITE's: only their types are written.
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  url "ecmascript:
+    function initialize () {
+      var r = [];
+      var gpu = ['MaxTextureSize', 'TextureUnits', 'MaxLights', 'ColorDepth', 'TextureMemory', 'MaxAnisotropicDegree', 'MaxSamples', 'Antialiased', 'Multisampling'];
+      function list (o, get, tag) {
+        Array .from (o .getFieldDefinitions ()) .forEach (function (d) {
+          var v;
+          try { v = get (d .name); } catch (e) { v = 'THROW ' + e .message; }
+          r .push (tag + ' ' + d .name + ' ' + typeof v + ' ' + (gpu .indexOf (d .name) >= 0 ? '-' : v !== null && typeof v === 'object' ? String (v) : JSON .stringify (v)));
+        });
+      }
+      list (Browser .getBrowserProperties (), function (n) { return Browser .getBrowserProperty (n); }, 'B');
+      list (Browser .getRenderingProperties (), function (n) { return Browser .getRenderingProperty (n); }, 'R');
+      out = new MFString (... r);
+    }
+  "
+}
