@@ -122,6 +122,10 @@ fn eigen_decomposition(matrix: &Matrix3, values: &mut [f64; 3], vectors: &mut [[
     }
 }
 
+/// Matrix2.js: four numbers, column by column. Only the value type and its `toString` are ported.
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
+pub struct Matrix2(pub [f64; 4]);
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Matrix3(pub [f64; 9]);
 
@@ -688,6 +692,17 @@ impl Matrix4 {
             }
             None => self.factor(translation, rotation, scale, scale_orientation),
         }
+    }
+}
+
+impl std::fmt::Display for Matrix2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let parts: Vec<String> = self
+            .0
+            .iter()
+            .map(|v| jsmath::number_to_string(*v))
+            .collect();
+        f.write_str(&parts.join(" "))
     }
 }
 

@@ -15,6 +15,7 @@
 //!   normalize either.
 //! * `copy` is provided as an explicit method. `toString` is not ported.
 
+use x3d_fields::jsmath::number_to_string;
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
 
 /// Algorithm.js:interval
@@ -67,6 +68,13 @@ fn mat3_mult_matrix_dir2(m: &Matrix3, v: &mut Vector2) {
 pub struct Line2 {
     pub point: Vector2,
     pub direction: Vector2,
+}
+
+impl std::fmt::Display for Line2 {
+    /// Line2.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, {}", self.point, self.direction)
+    }
 }
 
 impl Line2 {
@@ -195,6 +203,13 @@ pub struct Uvt {
 pub struct Line3 {
     pub point: Vector3,
     pub direction: Vector3,
+}
+
+impl std::fmt::Display for Line3 {
+    /// Line3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, {}", self.point, self.direction)
+    }
 }
 
 impl Line3 {
@@ -427,6 +442,18 @@ pub struct Plane3 {
     pub distance_from_origin: f64,
 }
 
+impl std::fmt::Display for Plane3 {
+    /// Plane3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}, {}",
+            self.normal,
+            number_to_string(self.distance_from_origin)
+        )
+    }
+}
+
 impl Plane3 {
     /// Plane3.js: constructor, which calls `set`. The normal is NOT normalized.
     pub fn new(point: Vector3, normal: Vector3) -> Self {
@@ -562,6 +589,13 @@ pub struct Sphere3 {
     pub center: Vector3,
 }
 
+impl std::fmt::Display for Sphere3 {
+    /// Sphere3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {}", number_to_string(self.radius), self.center)
+    }
+}
+
 impl Sphere3 {
     /// Sphere3.js: constructor, which calls `set`.
     pub fn new(radius: f64, center: Vector3) -> Self {
@@ -644,6 +678,13 @@ impl Sphere3 {
 pub struct Cylinder3 {
     pub axis: Line3,
     pub radius: f64,
+}
+
+impl std::fmt::Display for Cylinder3 {
+    /// Cylinder3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, {}", self.axis, number_to_string(self.radius))
+    }
 }
 
 impl Cylinder3 {

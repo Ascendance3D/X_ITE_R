@@ -20,6 +20,13 @@ pub struct Box3 {
     pub matrix: Matrix4,
 }
 
+impl std::fmt::Display for Box3 {
+    /// Box3.toString.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, {}", self.size(), self.center())
+    }
+}
+
 impl Box3 {
     /// Box3.setExtents.
     pub fn from_extents(min: &Vector3, max: &Vector3) -> Box3 {
