@@ -98,6 +98,8 @@ pub struct Session {
     size: (u32, u32),
     /// How much of the runtime's log [`Session::take_log`] returned.
     log_seen: usize,
+    /// The world was unloaded ([`Session::unload`]).
+    unloaded: bool,
     /// The INITIALIZED_EVENT of the world's own replaceWorld is still to come: the page fires that one itself.
     own_initialized: bool,
 }
@@ -291,23 +293,40 @@ impl Session {
     /// Set the parsed world up at `now` (seconds since the Unix epoch, X3DBrowser.getCurrentTime) and start its
     /// loads. The session is not live yet: see [`Session::poll_load`] and [`Session::go_live`].
     pub fn begin(world: ParsedWorld, now: f64, width: u32, height: u32) -> Session {
-        let mut rt = Runtime::new(world.scene, world.fetcher);
+        Session::begin_with_scripts(world, now, width, height, |_| None)
+    }
+
+    /// [`Session::begin`] with the Script host that `scripts` gives for the world's runtime, before any Script of the
+    /// world loads (`None`: the Scripts do not run; each logs that there is no script engine). The runtime does not
+    /// move before [`Session::go_live`], which gives the host its new place ([`x3d_runtime::ScriptHost::attach`]).
+    pub fn begin_with_scripts(
+        world: ParsedWorld,
+        now: f64,
+        width: u32,
+        height: u32,
+        scripts: impl FnOnce(&mut Runtime) -> Option<Box<dyn x3d_runtime::ScriptHost>>,
+    ) -> Session {
+        let mut rt = Box::new(Runtime::new(world.scene, world.fetcher));
 
         rt.page_url = world.url.clone();
-        // The page calls the field callbacks (X3DField.addFieldCallback) after the frame: there is no Script host.
+        // The page calls its field callbacks (X3DField.addFieldCallback) after the frame; the Scripts' run in the cascade.
         rt.page_field_events = Some(vec![]);
+        // Browser.print of a Script: console.log of the page.
+        rt.log_prints = true;
         // The page's objects of nodes are keyed by node id: it learns which ids were released.
         rt.page_released = Some(vec![]);
         x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
         rt.now = now;
         rt.browser_options = x3d_runtime::browser_options::BrowserOptions::new(width, height);
+        rt.script_host = scripts(&mut *rt);
         rt.begin_load_scene();
 
         let mut session = Session {
-            stage: Stage::Loading(Box::new(rt), false),
+            stage: Stage::Loading(rt, false),
             size: (width, height),
             log_seen: 0,
+            unloaded: false,
             own_initialized: true,
         };
 
@@ -365,6 +384,15 @@ impl Session {
             self.size.0,
             self.size.1,
         )));
+
+        // The runtime moved into the viewer: the Script host reaches it there.
+        let rt = self.rt_mut();
+
+        if let Some(mut host) = rt.script_host.take() {
+            host.attach(rt);
+            rt.script_host = Some(host);
+        }
+
         true
     }
 
@@ -573,10 +601,9 @@ impl Session {
 
         let rt = self.rt_mut();
         let world = rt.scene.world;
-        let k = rt.page_root_nodes_field();
 
+        // The runtime queues the event of the page's rootNodes field (also for a Script's change).
         rt.set_root_nodes(world, list);
-        rt.add_event(k);
         Ok(())
     }
 
@@ -586,9 +613,9 @@ impl Session {
         let k = rt.page_root_nodes_field();
 
         if on {
-            rt.field_observed.insert(k);
+            rt.page_observed.insert(k);
         } else {
-            rt.field_observed.remove(&k);
+            rt.page_observed.remove(&k);
         }
     }
 
@@ -823,7 +850,7 @@ impl Session {
         let k = self.field_key(node, name)?;
         let rt = self.rt_mut();
 
-        rt.js_mirror.entry(k).or_insert(false);
+        rt.page_mirror.entry(k).or_insert(false);
 
         let f = rt.field(k);
 
@@ -851,7 +878,7 @@ impl Session {
 
         rt.set_value(k, value);
         // The page's object holds this value already.
-        rt.js_clean(k);
+        rt.page_clean(k);
         Ok(())
     }
 
@@ -859,7 +886,7 @@ impl Session {
     pub fn take_field_changes(&mut self) -> Vec<(NodeId, String, Data)> {
         let rt = self.rt_mut();
 
-        rt.take_js_dirty()
+        rt.take_page_dirty()
             .into_iter()
             .map(|k| {
                 let f = rt.field(k);
@@ -875,9 +902,9 @@ impl Session {
         let rt = self.rt_mut();
 
         if on {
-            rt.field_observed.insert(k);
+            rt.page_observed.insert(k);
         } else {
-            rt.field_observed.remove(&k);
+            rt.page_observed.remove(&k);
         }
 
         Ok(())
@@ -1184,8 +1211,18 @@ impl Session {
 /// that never went live is only dropped.
 impl Drop for Session {
     fn drop(&mut self) {
+        self.unload();
+    }
+}
+
+impl Session {
+    /// The world goes (X3DBrowser.replaceWorld): `shutdown` of its nodes, then its scenes are disposed, once. Its last
+    /// log lines (what `shutdown` printed) stay for [`Session::take_log`].
+    pub fn unload(&mut self) {
         if let Stage::Live(v) = &mut self.stage {
-            v.rt.unload_world();
+            if !std::mem::replace(&mut self.unloaded, true) {
+                v.rt.unload_world();
+            }
         }
     }
 }

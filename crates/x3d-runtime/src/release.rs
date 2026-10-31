@@ -54,6 +54,26 @@
 //! with [`Runtime::take_released`], and a freed id is handed out again like any released one; no Script
 //! wrapper or value can name it (they were the reason the node was held).
 //!
+//! # Scenes loaded from a URL (issue #172)
+//!
+//! A scene of `createX3DFromURL` / `createVrmlFromURL` that passes the same simple-scene gate (one context, no PROTO,
+//! EXTERNPROTO, IMPORT or EXPORT, every node eligible) joins `dynamic_ctxs` and is swept like a `createVrmlFromString`
+//! scene, by the same code. X_ITE keeps nothing of it once the load is over (`removeLoadingObject (fileLoader)`,
+//! Browser/X3DBrowser.js): the garbage collector frees it when the promise's value and the fields its root nodes went to let go.
+//!
+//! * A Script's scene becomes a candidate when its outcome is delivered (the promise resolves, or the createVrmlFromURL
+//!   event is sent), not before: a scene that still loads is a live context. The Script holds an X3DScene object of it
+//!   (`dynamic_scenes`), so the host is also asked whether JavaScript still reaches that object
+//!   ([`ScriptHost::held_scenes`]). It is asked first, before the nodes: the X3DScene object holds the objects of its
+//!   named nodes, so they are garbage only once the scene object is. A held scene object keeps the whole scene.
+//! * The page's scene becomes a candidate when the page takes the outcome ([`Runtime::take_page_browser_settled`]).
+//!   Until then the outcome holds it; after that the page's node ids hold nothing, as for its `createVrmlFromString`,
+//!   and the scene stays only while something in the world refers to one of its nodes.
+//!
+//! When such a scene goes, its change-field events and its state in the change-field tables are dropped, and the host
+//! forgets its X3DScene object and callbacks ([`ScriptHost::release_scenes`]), so nothing reaches the scene that takes
+//! the context slot next.
+//!
 //! # R0.3-E: table slots
 //!
 //! Execution contexts, PROTO and EXTERNPROTO declarations and IMPORT and EXPORT records are tables
@@ -326,6 +346,39 @@ impl Runtime {
 
         self.close_transient(&candidates, &by_ctx, &transient_nodes, &mut keep, &mut work);
 
+        // A scene that `createX3DFromURL` / `createVrmlFromURL` gave a Script stays while the Script holds its X3DScene
+        // object (X_ITE: the scene holds its root nodes). The host is asked only about scenes none of whose nodes stays, and
+        // before it is asked about the nodes: the X3DScene object holds objects of its named nodes, so a node object is
+        // only garbage once the scene object is.
+        let ask_scenes: Vec<CtxId> = {
+            let mut ask: Vec<CtxId> = transient_nodes
+                .iter()
+                .filter(|(c, nodes)| {
+                    self.dynamic_scenes.contains(c) && !nodes.iter().any(|n| keep.contains(n))
+                })
+                .map(|(c, _)| *c)
+                .collect();
+            ask.sort_unstable();
+            ask
+        };
+
+        if !ask_scenes.is_empty() {
+            let held = self.script_held_scenes(&ask_scenes);
+
+            for (c, nodes) in &transient_nodes {
+                if held.contains(c) {
+                    for &n in nodes {
+                        if keep.insert(n) {
+                            work.push(n);
+                        }
+                    }
+                }
+            }
+
+            self.close_keep(&candidates, &by_ctx, &mut keep, &mut work);
+            self.close_transient(&candidates, &by_ctx, &transient_nodes, &mut keep, &mut work);
+        }
+
         // A runtime-created node that would go stays while a Script holds it (X_ITE: until the garbage collector frees it). The
         // host is asked only now, so that it looks only at what nothing else keeps.
         let ask: Vec<NodeId> = {
@@ -374,11 +427,19 @@ impl Runtime {
             .filter(|c| !kept_ctxs.contains(c))
             .collect();
 
-        // A `createVrmlFromString` scene goes with its last node.
+        // A `createVrmlFromString` scene, or a simple scene loaded from a URL, goes with its last node.
+        let mut gone_scenes: Vec<CtxId> = vec![];
+
         for (c, nodes) in &transient_nodes {
             if nodes.iter().all(|n| release.contains(n)) {
                 empty.push(*c);
                 self.dynamic_ctxs.remove(c);
+
+                if self.dynamic_scenes.remove(c) {
+                    gone_scenes.push(*c);
+                }
+
+                self.forget_scene_events(*c);
             }
         }
 
@@ -403,6 +464,14 @@ impl Runtime {
 
         for &c in &empty {
             self.empty_context(c);
+        }
+
+        if !gone_scenes.is_empty()
+            && let Some(mut host) = self.script_host.take()
+        {
+            gone_scenes.sort_unstable();
+            host.release_scenes(self, &gone_scenes);
+            self.script_host = Some(host);
         }
 
         self.reclaim_tables();
@@ -457,7 +526,7 @@ impl Runtime {
             Task::ScriptLoad(n)
             | Task::ScriptLoaded(n, _)
             | Task::UrlLoad(n, _)
-            | Task::ScriptFetch(n, _)
+            | Task::ScriptFetch(n, ..)
             | Task::ScriptCandidate(n, ..) => !dead.contains(n),
             Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
         };
@@ -508,7 +577,9 @@ impl Runtime {
         self.world_infos.retain(|_, list| !list.is_empty());
         self.scripts.retain(|n| !dead.contains(n));
         self.field_observed.retain(|k| !dead.contains(&k.0));
+        self.page_observed.retain(|k| !dead.contains(&k.0));
         self.js_mirror.retain(|k, _| !dead.contains(&k.0));
+        self.page_mirror.retain(|k, _| !dead.contains(&k.0));
         self.pending_field_events.retain(|k| !dead.contains(&k.0));
         // A queued event of a released node must not reach the node that takes its id.
         if let Some(events) = &mut self.page_field_events {
@@ -681,6 +752,39 @@ impl Runtime {
         }
 
         held
+    }
+
+    /// Which of the scenes `ctxs` a Script holds through its X3DScene object. A host that cannot say holds them all
+    /// ([`ScriptHost::held_scenes`]).
+    fn script_held_scenes(&mut self, ctxs: &[CtxId]) -> HashSet<CtxId> {
+        if self.scripts.is_empty() {
+            return HashSet::new();
+        }
+
+        let Some(mut host) = self.script_host.take() else {
+            return ctxs.iter().copied().collect();
+        };
+
+        let answer = host.held_scenes(self, ctxs);
+
+        self.script_host = Some(host);
+
+        match answer {
+            Some(list) => list.into_iter().collect(),
+            None => ctxs.iter().copied().collect(),
+        }
+    }
+
+    /// A released scene's context id may be handed out again: its change-field events and its state in the change-field
+    /// tables must not reach the scene that takes the slot.
+    fn forget_scene_events(&mut self, c: CtxId) {
+        let e = &mut self.ctx_events;
+
+        e.no_forward.remove(&c);
+        e.watched.remove(&c);
+        e.pending.retain(|x| x.0 != c);
+        e.parsed.retain(|x| x.0 != c);
+        e.deferred.retain(|x| x.0 != c);
     }
 
     /// A node keeps its scene, and a route keeps both of its ends: for the scenes that `createVrmlFromString` made (their own

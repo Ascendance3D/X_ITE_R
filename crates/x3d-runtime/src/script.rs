@@ -1,6 +1,6 @@
 //! The Script node (Components/Scripting/Script.js, X3DScriptNode.js) without the engine:
 //! url loading, callback wiring (initialize__), set_field__, call__, setError. The ECMAScript
-//! engine is a [`ScriptHost`] (crate x3d-script implements it with QuickJS).
+//! engine is a [`ScriptHost`] (crate x3d-script: QuickJS natively, the page's own engine in the browser build).
 
 use crate::loader::{self, FileLoader};
 use crate::*;
@@ -72,6 +72,10 @@ pub trait ScriptHost {
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 
+    /// The runtime that owns the host moved to `rt`. A host whose JavaScript can run between host calls (the page's
+    /// engine runs promise jobs after the call returns) reaches the runtime there from now on.
+    fn attach(&mut self, _rt: &mut Runtime) {}
+
     /// The nodes were released and their ids may be handed out again: a wrapper of one of them
     /// that a Script still holds points to `tombstone` from now on.
     fn release_nodes(&mut self, _rt: &mut Runtime, _nodes: &[NodeId], _tombstone: NodeId) {}
@@ -85,6 +89,17 @@ pub trait ScriptHost {
     fn held_nodes(&mut self, _rt: &mut Runtime, _candidates: &[NodeId]) -> Option<Vec<NodeId>> {
         None
     }
+
+    /// Which of `candidates` (root contexts of scenes that `createX3DFromURL` / `createVrmlFromURL` gave a Script, none of
+    /// whose nodes anything else keeps) JavaScript can still reach through their X3DScene object. Like
+    /// [`ScriptHost::held_nodes`], the host collects garbage first; `None` means the host cannot say, and every scene is held.
+    fn held_scenes(&mut self, _rt: &mut Runtime, _candidates: &[CtxId]) -> Option<Vec<CtxId>> {
+        None
+    }
+
+    /// The scenes were released and their context ids may be handed out again: the host forgets its objects and
+    /// callbacks of them.
+    fn release_scenes(&mut self, _rt: &mut Runtime, _ctxs: &[CtxId]) {}
 }
 
 /// A Script candidate that failed: what FileLoader.printError reports when the next candidate starts.
@@ -102,6 +117,9 @@ pub struct ScriptState {
     pub functions: Vec<String>,
     /// The Script belongs to a scene that was disposed: it takes no more events.
     pub closed: bool,
+    /// The load generation: a fetch carries the one of its request, and `unloadData` (close, reload, `load` FALSE) takes a new
+    /// one from the runtime, so a response that arrives after it is dropped.
+    pub generation: u64,
 }
 
 impl Runtime {
@@ -112,8 +130,25 @@ impl Runtime {
         }
     }
 
+    /// A generation no earlier request of any Script has.
+    fn next_script_generation(&mut self) -> u64 {
+        self.script_generation += 1;
+        self.script_generation
+    }
+
+    /// Is `generation` the current load generation of the live Script `node`?
+    fn script_generation_is_current(&self, node: NodeId, generation: u64) -> bool {
+        (node as usize) < self.scene.nodes.len()
+            && !self.scene.free_nodes.contains(&node)
+            && matches!(self.nrt(node).map(|n| &n.state),
+                Some(nodes::State::Script(s)) if s.generation == generation)
+    }
+
     /// Script.initialize: X3DUrlObject.initialize, then requestImmediateLoad.
     pub(crate) fn script_initialize(&mut self, node: NodeId) {
+        let generation = self.next_script_generation();
+        self.script_state(node).generation = generation;
+
         self.interest(node, "load", Cb::UrlSetLoad);
         self.interest(node, "url", Cb::UrlSetUrl);
 
@@ -241,14 +276,40 @@ impl Runtime {
                 return;
             }
 
-            self.fetches.push_back(Task::ScriptFetch(node, index));
+            let generation = self.script_state(node).generation;
+            self.fetches
+                .push_back(Task::ScriptFetch(node, index, generation));
             return;
         }
     }
 
+    /// The response of Script candidate `index` is in, or there is nothing to wait for (an asynchronous [`crate::Fetcher`],
+    /// see [`Runtime::fetch_task_ready`]).
+    pub(crate) fn script_fetch_ready(&self, node: NodeId, index: usize, generation: u64) -> bool {
+        // A node that is gone, or a request that `unloadData` replaced: nothing to wait for (the task then does nothing).
+        if !self.script_generation_is_current(node, generation) {
+            return true;
+        }
+
+        let loader = self.script_loader(node);
+        let Some(resolved) = self.url_strings(node).get(index).and_then(|candidate| {
+            url::Url::parse(&loader.base)
+                .ok()
+                .and_then(|b| crate::loader::join_url(&b, candidate).ok())
+        }) else {
+            return true;
+        };
+
+        !matches!(self.fetcher.poll(&resolved), crate::FetchPoll::Pending)
+    }
+
     /// The fetch of Script candidate `index` completed (a macrotask): its source, or `checkResponse` threw (two ticks to the
     /// next candidate).
-    pub(crate) fn script_fetch(&mut self, node: NodeId, index: usize) {
+    pub(crate) fn script_fetch(&mut self, node: NodeId, index: usize, generation: u64) {
+        if !self.script_generation_is_current(node, generation) {
+            return;
+        }
+
         let loader = self.script_loader(node);
         let Some(candidate) = self.url_strings(node).get(index).cloned() else {
             return;
@@ -420,6 +481,10 @@ impl Runtime {
 
         // `this .shutdown = null`: a reentrant unload does not call it twice.
         self.script_state(node).functions.clear();
+
+        // The request in flight belongs to the source that is unloaded: its response is dropped.
+        let generation = self.next_script_generation();
+        self.script_state(node).generation = generation;
 
         if initialized && has_shutdown {
             self.script_call(node, ScriptCall::Plain("shutdown".into()), "shutdown");

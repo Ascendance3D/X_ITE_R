@@ -967,6 +967,28 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-rootnodes-01-baseline --
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs 5 --suite sound01
 ```
 
+### Web browser Script life cycle 01 (`web-browser-script-life-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 12 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
+  (issue #133) and records `web-browser-script-life-01-baseline/scriptlife01-baseline.json` (no pictures). The worlds are
+  synthetic and inline: Script `initialize` (events sent from it, the order of Scripts, `directOutput`); the events of Script
+  fields (eventIns, eventOuts, a route chain, an interpolator, page events, two events in one task, several field types);
+  `eventsProcessed`; `shutdown` (world replaced twice, Script code replaced, element removed); Script errors (in
+  `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string and object, a
+  wrong value type); and `Browser .currentScene .rootNodes` in a Script (read, `addRootNode`, `removeRootNode`,
+  `setRootNodes`, `push`) with the field callbacks of the page and of the Script. Each case records one ordered list of
+  the console messages and the page callbacks (`seq`).
+- X_ITE 16.5.0 does not call `shutdown` for a replaced world and throws `array[i].set is not a function` when a Script
+  that is a root node sees a root node change; the cases record the first and avoid the second (the Script is in a Group).
+- Five runs gave identical values (Chrome 156.0.8078.47), and five more runs in separate processes at the same time gave
+  the same values. `scriptlife01.test.mjs` compares X_ITE_R with `scripts="true"`; its known differences are in
+  `KNOWN_DIFFERENCES` (`scriptLifeDifferences`, `runtime02_harness.mjs`) and `web/API.md`. Prepare the worktree as in
+  "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-script-life-01-baseline --runs 5 --suite scriptlife01
+```
+
 ### Web browser viewpoints 01 (`web-browser-viewpoints-01-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite viewpoints01` runs the 8 cases of `crates/x3d-web/tests/browser/viewpoints01_case.mjs`

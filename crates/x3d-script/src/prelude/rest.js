@@ -622,8 +622,10 @@ function unitConversion (units, category, value, from)
    return value;
 }
 
-// One object per execution context (`Browser .currentScene === Browser .currentScene`).
+// One object per execution context (`Browser .currentScene === Browser .currentScene`). `contextObjects` pins each object;
+// `contextRefs` finds it again while release.rs asks whether a Script still holds a scene (__unpinScenes, __heldScenes).
 const contextObjects = new Map ();
+const contextRefs = new Map ();
 const contextKeys = new WeakMap ();
 
 function executionContext (script)
@@ -635,6 +637,7 @@ function executionContext (script)
    if (!object)
    {
       contextObjects .set (key, object = makeExecutionContext (- (key + 2)));
+      contextRefs .set (key, new WeakRef (object));
       contextKeys .set (object, key);
    }
 
@@ -1693,7 +1696,9 @@ const timerGlobals =
    clearInterval (id = undefined)     { timerList = timerList .filter (t => t .id !== id); },
 };
 
-Date .now = () => X ("datenow");
+// The page's Date.now is the page's: the browser time is Date.now () there already.
+if (!PAGE)
+   Date .now = () => X ("datenow");
 
 global .__nextTimer = function (untilMs)
 {
@@ -2114,6 +2119,54 @@ global .__heldNodes = function (ids)
    }
 
    return held;
+};
+
+// release.rs asks which of the scenes `ids` (root contexts of createX3DFromURL / createVrmlFromURL scenes none of whose
+// nodes anything else keeps) a Script still reaches through their X3DScene object: as for nodes, the objects are unpinned,
+// the host collects garbage, and the objects that are left are held (X_ITE: the garbage collector frees the others).
+global .__unpinScenes = function (ids)
+{
+   for (const id of ids)
+      contextObjects .delete (id);
+};
+
+global .__heldScenes = function (ids)
+{
+   const held = [ ];
+
+   for (const id of ids)
+   {
+      const object = contextRefs .get (id) ?.deref ();
+
+      if (object === undefined)
+      {
+         contextRefs .delete (id);
+         continue;
+      }
+
+      contextObjects .set (id, object);
+      held .push (id);
+   }
+
+   return held;
+};
+
+// The scenes were released and their context ids may be handed out again: their objects and change-field callbacks go.
+global .__releaseScenes = function (ids)
+{
+   for (const id of ids)
+   {
+      contextObjects .delete (id);
+      contextRefs .delete (id);
+      sceneComponents .delete (- (id + 2));
+      profileValues .delete (- (id + 2));
+
+      for (let index = 0; index < 4; ++ index)
+      {
+         ctxFieldCallbacks .delete (id * 4 + index);
+         ctxFieldObjects .delete (id * 4 + index);
+      }
+   }
 };
 
 // engine.rs: before and after every call into the Script realm (bridge.js).

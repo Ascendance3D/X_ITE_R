@@ -1,0 +1,301 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "scriptLife.initialize": {
+   "fields": [
+    6,
+    "a,B,c",
+    "1 2 3",
+    10,
+    "4 5 6"
+   ],
+   "errors": [],
+   "seq": [
+    "log: A initialize n=5 names=3 v=1 2 3",
+    "log: B initialize got=-1",
+    "log: C initialize 1 2 3",
+    "log: C initialize 4 5 6",
+    "log: B set_in 10 number",
+    "log: B eventsProcessed got=10"
+   ]
+  },
+  "scriptLife.events": {
+   "fields": [
+    101,
+    "5 10 15",
+    null
+   ],
+   "wrongType": null,
+   "errors": [],
+   "seq": [
+    "log: S initialize",
+    "page: set_x 1",
+    "log: S set_x 1 true",
+    "page: x_changed 10",
+    "log: R set_y 10",
+    "log: Q set_z 11",
+    "page: set_x 2 and 3 in one task",
+    "log: S set_x 3 true",
+    "page: x_changed 30",
+    "log: R set_y 30",
+    "log: Q set_z 31",
+    "page: set_v",
+    "log: S set_v 1 2 3",
+    "page: v_changed 3 2 1",
+    "log: R set_w 3 2 1",
+    "page: set_m",
+    "log: S set_m 2 [",
+    "page: m_changed [\n  \"p\",\n  \"extra\"\n]",
+    "log: R set_n [",
+    "page: set_b",
+    "log: S set_b true",
+    "page: set_x 101 (a second event of the Script in one handler)",
+    "log: S set_x 101 true",
+    "page: x_changed 102",
+    "log: R set_y 102",
+    "log: Q set_z 103",
+    "page: interpolator",
+    "log: S set_v 5 10 15",
+    "page: v_changed 15 10 5",
+    "log: R set_w 15 10 5",
+    "page: set_x with a string",
+    "log: S set_x 0 true",
+    "page: x_changed 0",
+    "log: R set_y 0",
+    "log: Q set_z 1"
+   ]
+  },
+  "scriptLife.eventsProcessed": {
+   "errors": [],
+   "seq": [
+    "page: nothing",
+    "page: set_a 1",
+    "log: A set_a 1",
+    "log: A eventsProcessed 1 0",
+    "log: B set_sum 1",
+    "log: B eventsProcessed",
+    "page: set_a 2, set_b 3 in one task",
+    "log: A set_a 2",
+    "log: A set_b 3",
+    "log: A eventsProcessed 2 3",
+    "log: B set_sum 5",
+    "log: B eventsProcessed",
+    "page: set_c 4",
+    "log: C set_c 4",
+    "log: C eventsProcessed",
+    "page: set_a 5, then a frame, then set_b 6",
+    "log: A set_a 5",
+    "log: A eventsProcessed 5 3",
+    "log: B set_sum 8",
+    "log: B eventsProcessed",
+    "log: A set_b 6",
+    "log: A eventsProcessed 5 6",
+    "log: B set_sum 11",
+    "log: B eventsProcessed"
+   ]
+  },
+  "scriptLife.shutdown": {
+   "before": [
+    7
+   ],
+   "after": "Group:H",
+   "errors": [],
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "page: replaceWorld",
+    "page: replaceWorld again"
+   ]
+  },
+  "scriptLife.errors": {
+   "d": [
+    0
+   ],
+   "errors": [],
+   "seq": [
+    "log: A initialize",
+    "error: JavaScript Error in Script 'A', in function 'initialize'",
+    "error: Error: boom in initialize",
+    "log: E top level",
+    "log: B top level",
+    "log: B initialize",
+    "log: D initialize",
+    "error: Script: Couldn't load URL 'javascript:",
+    "error: Script: Couldn't load URL 'javascript: function initialize () { print ('C initialize'); } function set_x (value) { print ('C set_x ' + value); } fu…'. SyntaxError: Function statements require a function name",
+    "page: set_x 1",
+    "log: A set_x 1",
+    "log: A set_x done 1",
+    "log: B set_x 1",
+    "log: D set_x 1",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: set_x 2",
+    "log: A set_x 2",
+    "error: JavaScript Error in Script 'A', in function 'set_x'",
+    "error: Error: boom in set_x",
+    "log: B set_x 2",
+    "log: D set_x 2",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: set_x 3",
+    "log: A set_x 3",
+    "log: A set_x done 3",
+    "log: B set_x 3",
+    "log: D set_x 3",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: set_x 4",
+    "log: A set_x 4",
+    "log: A set_x done 4",
+    "log: B set_x 4",
+    "error: JavaScript Error in Script 'B', in function 'set_x'",
+    "error: a string",
+    "log: D set_x 4",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: set_x 5",
+    "log: A set_x 5",
+    "log: A set_x done 5",
+    "log: B set_x 5",
+    "error: JavaScript Error in Script 'B', in function 'set_x'",
+    "error: [object Object]",
+    "log: D set_x 5",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: set_x 6",
+    "log: A set_x 6",
+    "log: A set_x done 6",
+    "log: B set_x 6",
+    "log: D set_x 6",
+    "log: D n=0 number",
+    "log: A eventsProcessed",
+    "error: JavaScript Error in Script 'A', in function 'eventsProcessed'",
+    "error: ReferenceError: undefinedFunction is not defined",
+    "page: replaceWorld"
+   ]
+  },
+  "scriptLife.shutdownUrl": {
+   "n": 1,
+   "errors": [],
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "page: url",
+    "log: A shutdown n=1",
+    "log: B set_in 99",
+    "log: A2 initialize n=1"
+   ]
+  },
+  "scriptLife.shutdownDispose": {
+   "errors": [],
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "page: dispose"
+   ]
+  },
+  "scriptLife.rootNodesPage": {
+   "initial": "Transform:A,Group:X,Group:H",
+   "add": null,
+   "push": 5,
+   "remove": null,
+   "final": "Transform:A,Group:H,Group:,Transform:",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 DEF A Transform { } DEF H Group { children DEF S Script { inputOnly SFTime add inputOnly SFTime remove inputOnly SFTime set inputOnly SFTime push inputOnly SFTime read initializeOnly SFNode saved NULL url <code> } } Group { } Transform { }",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Group:H",
+    "log: S callback 3 Transform:A,Group:X,Group:H",
+    "page: page addRootNode",
+    "log: S callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: rootNodes callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: page push",
+    "log: S callback 5 Transform:A,Group:X,Group:H,Group:,Transform:",
+    "page: rootNodes callback 5 Transform:A,Group:X,Group:H,Group:,Transform:",
+    "page: page removeRootNode",
+    "log: S callback 4 Transform:A,Group:H,Group:,Transform:",
+    "page: rootNodes callback 4 Transform:A,Group:H,Group:,Transform:",
+    "page: Script read",
+    "log: S read Transform:A,Group:H,Group:,Transform:"
+   ]
+  },
+  "scriptLife.rootNodesAdd": {
+   "initial": "Transform:A,Group:X,Group:H",
+   "final": "Transform:A,Group:X,Group:H,Group:",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 DEF A Transform { } DEF X Group { } DEF H Group { children DEF S Script { inputOnly SFTime add inputOnly SFTime remove inputOnly SFTime set inputOnly SFTime push inputOnly SFTime read initializeOnly SFNode saved DEF _1 Group { } url <code> } } USE _1",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Group:H",
+    "log: S callback 3 Transform:A,Group:X,Group:H",
+    "page: Script add",
+    "log: S add Transform:A,Group:X,Group:H,Group:",
+    "log: S callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: rootNodes callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: Script read",
+    "log: S read Transform:A,Group:X,Group:H,Group:"
+   ]
+  },
+  "scriptLife.rootNodesRemove": {
+   "initial": "Transform:A,Group:X,Group:H",
+   "final": "Transform:A,Group:H",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 DEF A Transform { } DEF H Group { children DEF S Script { inputOnly SFTime add inputOnly SFTime remove inputOnly SFTime set inputOnly SFTime push inputOnly SFTime read initializeOnly SFNode saved NULL url <code> } }",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Group:H",
+    "log: S callback 3 Transform:A,Group:X,Group:H",
+    "page: Script remove",
+    "log: S remove Transform:A,Group:H",
+    "log: S callback 2 Transform:A,Group:H",
+    "page: rootNodes callback 2 Transform:A,Group:H",
+    "page: Script read",
+    "log: S read Transform:A,Group:H"
+   ]
+  },
+  "scriptLife.rootNodesSet": {
+   "initial": "Transform:A,Group:X,Group:H",
+   "final": "Transform:,Group:X",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 Transform { } DEF X Group { }",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Group:H",
+    "log: S callback 3 Transform:A,Group:X,Group:H",
+    "page: Script set",
+    "log: S set Transform:,Group:X",
+    "log: S callback 2 Transform:,Group:X",
+    "page: rootNodes callback 2 Transform:,Group:X",
+    "page: Script read",
+    "log: S read Transform:,Group:X"
+   ]
+  },
+  "scriptLife.rootNodesPush": {
+   "initial": "Transform:A,Group:X,Group:H",
+   "final": "Transform:A,Group:X,Group:H,Group:",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 DEF A Transform { } DEF X Group { } DEF H Group { children DEF S Script { inputOnly SFTime add inputOnly SFTime remove inputOnly SFTime set inputOnly SFTime push inputOnly SFTime read initializeOnly SFNode saved NULL url <code> } } Group { }",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Group:H",
+    "log: S callback 3 Transform:A,Group:X,Group:H",
+    "page: Script push",
+    "log: S push Transform:A,Group:X,Group:H,Group:",
+    "log: S callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: rootNodes callback 4 Transform:A,Group:X,Group:H,Group:",
+    "page: Script read",
+    "log: S read Transform:A,Group:X,Group:H,Group:"
+   ]
+  }
+ }
+}

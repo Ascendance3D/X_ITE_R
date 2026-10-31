@@ -301,8 +301,9 @@ pub enum Task {
     UrlLoad(NodeId, u64),
     /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
     ExternLoad(ExternId, u64),
-    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index.
-    ScriptFetch(NodeId, usize),
+    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index, and
+    /// the load generation of the Script (see [`script::ScriptState::generation`]). A fetch of an older generation does nothing.
+    ScriptFetch(NodeId, usize, u64),
     /// FileLoader.loadDocumentError → loadDocumentAsync of the next Script candidate (node, its index), `hops` more microtask
     /// ticks from now, printing the failure of the candidate before it when it runs.
     ScriptCandidate(NodeId, usize, u8, Option<Box<script::CandidateError>>),
@@ -360,10 +361,12 @@ pub struct Runtime {
     pub field_observed: std::collections::HashSet<FKey>,
     /// Field callbacks due while the host was busy; they run when it is back.
     pub(crate) pending_field_events: Vec<FKey>,
-    /// Field callbacks of a page (the browser build, which has no Script host): when set, each event of a field in
-    /// [`Runtime::field_observed`] is recorded here with the value it delivered, in event order, for the page to call
-    /// its callbacks after the frame ([`Runtime::take_page_field_events`]).
+    /// Field callbacks of a page (the browser build): when set, each event of a field in [`Runtime::page_observed`] is
+    /// recorded here with the value it delivered, in event order, for the page to call its callbacks after the frame
+    /// ([`Runtime::take_page_field_events`]). The Scripts' own callbacks ([`Runtime::field_observed`]) run in the cascade.
     pub page_field_events: Option<Vec<(FKey, FieldValue)>>,
+    /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
+    pub page_observed: std::collections::HashSet<FKey>,
     /// The nodes released since the page last asked ([`Runtime::take_page_released`]), when set: the page drops its
     /// objects of them before a node that takes the id can meet them.
     pub page_released: Option<Vec<NodeId>>,
@@ -371,6 +374,10 @@ pub struct Runtime {
     /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
     pub js_mirror: HashMap<FKey, bool>,
     js_dirty: Vec<FKey>,
+    /// Node fields the page holds as objects (the browser build), kept apart from the Scripts' ([`Runtime::js_mirror`]):
+    /// each side refreshes its own objects ([`Runtime::take_page_dirty`]).
+    pub page_mirror: HashMap<FKey, bool>,
+    page_dirty: Vec<FKey>,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -446,12 +453,20 @@ pub struct Runtime {
     pub pending_browser: Vec<browser_load::PendingBrowserScene>,
     pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
     pub browser_request_id: u64,
+    /// The last Script load generation handed out (runtime-wide, so no node id that is reused matches an old fetch).
+    pub script_generation: u64,
     /// createX3DFromURL / createVrmlFromURL requests of the page that embeds the browser (an external browser, no Script),
     /// by request id: the base URL of their FileLoader (FileLoader.getBaseURL for the X3DWorld) and their requests.
     pub page_browser_loads: HashMap<u64, browser_load::PageBrowserLoad>,
     /// The outcomes of the page's requests (see [`Runtime::browser_create_from_page_url`]), in the order they settled: the
     /// root context of the scene, or the rejection's message. [`Runtime::take_page_browser_settled`] hands them out.
     pub page_browser_settled: Vec<(u64, Result<CtxId, String>)>,
+    /// createX3DFromURL / createVrmlFromURL requests (of a Script or of the page) that are not attached yet: their scene
+    /// can be a candidate of the reachability sweep (see `release.rs`, "Scenes loaded from a URL").
+    pub(crate) browser_url_requests: std::collections::HashSet<u64>,
+    /// Settled scenes of the page's URL requests that pass the simple-scene gate, with their nodes: they become sweep
+    /// candidates when the page takes the outcome ([`Runtime::take_page_browser_settled`]).
+    pub(crate) page_url_scenes: HashMap<CtxId, std::ops::Range<NodeId>>,
     /// The URL of the page the browser element lives in (`location`): the world URL of a new X3DScene and the browser's
     /// `baseURL`. Empty: the embedder has no page.
     pub page_url: String,
@@ -513,6 +528,9 @@ pub struct Runtime {
     pub live_watchers: Vec<(NodeId, bool)>,
     /// Record every console message (log / warn / error) in order in [`Runtime::console`].
     pub record_console: bool,
+    /// Browser.print / Browser.println also go to [`Runtime::log`] as `log: …` lines, in order with its warnings and
+    /// errors (the browser build, whose page writes the log to its console as X_ITE does), not to [`Runtime::prints`].
+    pub log_prints: bool,
     /// All console output in the order it was logged: `log: text`, `warn: first line`, `error: first line`.
     pub console: Vec<String>,
     /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
@@ -619,8 +637,12 @@ pub struct Runtime {
     pub dynamic_nodes: std::collections::HashSet<NodeId>,
     /// Nodes for which the missing geometry provider was already logged (`warn_no_geometry_provider`).
     pub(crate) provider_warned: std::collections::HashSet<NodeId>,
-    /// Execution contexts made by `createVrmlFromString` whose nodes are all runtime-created.
+    /// Execution contexts made by `createVrmlFromString`, `createX3DFromURL` or `createVrmlFromURL` whose nodes are all
+    /// sweep candidates.
     pub dynamic_ctxs: std::collections::HashSet<CtxId>,
+    /// The `dynamic_ctxs` of a Script's `createX3DFromURL` / `createVrmlFromURL`: the Script got an X3DScene object of
+    /// them, which keeps the scene while JavaScript holds it ([`crate::script::ScriptHost::held_scenes`]).
+    pub dynamic_scenes: std::collections::HashSet<CtxId>,
     /// Something that can change reachability happened since the last dynamic sweep.
     pub dynamic_dirty: bool,
     /// Frames since the last dynamic sweep (a Script dropping a reference raises no event).
@@ -661,9 +683,12 @@ impl Runtime {
             field_observed: Default::default(),
             pending_field_events: vec![],
             page_field_events: None,
+            page_observed: Default::default(),
             page_released: None,
             js_mirror: HashMap::new(),
             js_dirty: vec![],
+            page_mirror: HashMap::new(),
+            page_dirty: vec![],
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
@@ -698,8 +723,11 @@ impl Runtime {
             pending_browser: vec![],
             browser_frame_waiters: vec![],
             browser_request_id: 0,
+            script_generation: 0,
             page_browser_loads: HashMap::new(),
             page_browser_settled: vec![],
+            browser_url_requests: Default::default(),
+            page_url_scenes: HashMap::new(),
             page_url: String::new(),
             world_state: browser_load::WorldState {
                 initialized_time: -1.0,
@@ -729,6 +757,7 @@ impl Runtime {
             inline_live: HashMap::new(),
             live_watchers: vec![],
             record_console: false,
+            log_prints: false,
             console: vec![],
             live: false,
             timeouts: vec![],
@@ -777,6 +806,7 @@ impl Runtime {
             released_log: vec![],
             dynamic_nodes: Default::default(),
             dynamic_ctxs: Default::default(),
+            dynamic_scenes: Default::default(),
             dynamic_dirty: false,
             provider_warned: Default::default(),
             dynamic_idle: 0,
@@ -852,7 +882,11 @@ impl Runtime {
             self.console.push(format!("log: {text}"));
         }
 
-        self.prints.push(text);
+        if self.log_prints {
+            self.log.push(format!("log: {text}"));
+        } else {
+            self.prints.push(text);
+        }
     }
 
     pub(crate) fn create_internal_node(&mut self, name: &'static str) -> NodeId {
@@ -1139,6 +1173,14 @@ impl Runtime {
             }
         }
 
+        // A field the page holds as an object: the page refreshes it after the frame.
+        if let Some(dirty) = self.page_mirror.get_mut(&k) {
+            if !*dirty {
+                *dirty = true;
+                self.page_dirty.push(k);
+            }
+        }
+
         if old.is_empty() && new.is_empty() {
             return;
         }
@@ -1220,6 +1262,25 @@ impl Runtime {
     /// The Script's object of `k` holds the field's current value (it wrote it): not stale.
     pub fn js_clean(&mut self, k: FKey) {
         if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            *dirty = false;
+        }
+    }
+
+    /// The fields the page mirrors ([`Runtime::page_mirror`]) whose value changed since the last call.
+    pub fn take_page_dirty(&mut self) -> Vec<FKey> {
+        let keys = std::mem::take(&mut self.page_dirty);
+
+        keys.into_iter()
+            .filter(|k| match self.page_mirror.get_mut(k) {
+                Some(dirty) => std::mem::replace(dirty, false),
+                None => false,
+            })
+            .collect()
+    }
+
+    /// The page's object of `k` holds the field's current value (the page wrote it): not stale.
+    pub fn page_clean(&mut self, k: FKey) {
+        if let Some(dirty) = self.page_mirror.get_mut(&k) {
             *dirty = false;
         }
     }
@@ -1341,7 +1402,9 @@ impl Runtime {
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
-                Task::ScriptFetch(node, index) => self.script_fetch(node, index),
+                Task::ScriptFetch(node, index, generation) => {
+                    self.script_fetch(node, index, generation)
+                }
                 Task::BrowserLoad(id) => self.browser_load(id),
                 Task::ScriptLoad(..)
                 | Task::ScriptCandidate(..)
@@ -1578,22 +1641,42 @@ impl Runtime {
                 );
             }
         };
-        let simple = scene.contexts.len() == 1
-            && scene.protos.is_empty()
-            && scene.externprotos.is_empty()
-            && scene.imported.is_empty()
-            && scene.exported.is_empty();
+        let simple = simple_scene(&scene);
         let m = self.import_scene(scene, parent, None);
 
         // The new scene is a candidate of the reachability sweep as a whole (a node keeps its scene).
-        if simple && (m.node_offset..m.node_end).all(|n| self.dynamic_eligible(n)) {
-            self.dynamic_nodes.extend(m.node_offset..m.node_end);
-            self.dynamic_ctxs.insert(m.root_ctx);
-            self.dynamic_dirty = true;
+        if simple {
+            self.register_dynamic_scene(m.root_ctx, m.node_offset..m.node_end);
         }
 
         Ok(self.scene.ctx(m.root_ctx).root_nodes.clone())
     }
+
+    /// Make the scene `ctx` with the nodes `nodes` a candidate of the reachability sweep as a whole (a node keeps its
+    /// scene), when every node may be released ([`Runtime::dynamic_eligible`]). The caller checked [`simple_scene`].
+    pub(crate) fn register_dynamic_scene(
+        &mut self,
+        ctx: CtxId,
+        nodes: std::ops::Range<NodeId>,
+    ) -> bool {
+        if !nodes.clone().all(|n| self.dynamic_eligible(n)) {
+            return false;
+        }
+
+        self.dynamic_nodes.extend(nodes);
+        self.dynamic_ctxs.insert(ctx);
+        self.dynamic_dirty = true;
+        true
+    }
+}
+
+/// The simple-scene gate of the reachability sweep: one execution context and no PROTO, EXTERNPROTO, IMPORT or EXPORT.
+pub(crate) fn simple_scene(scene: &Scene) -> bool {
+    scene.contexts.len() == 1
+        && scene.protos.is_empty()
+        && scene.externprotos.is_empty()
+        && scene.imported.is_empty()
+        && scene.exported.is_empty()
 }
 
 impl Runtime {

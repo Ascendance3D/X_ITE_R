@@ -263,6 +263,11 @@ pub struct WebBrowser {
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
     live: bool,
+    /// The page's Script realm factory (`setScriptRealm`); none: no Script runs.
+    script_realm: Option<js_sys::Function>,
+    /// The last log lines of the world that a replace removed (what its Scripts' `shutdown` printed): the next
+    /// [`WebBrowser::take_log`] of the current world gives them first.
+    retired_log: Vec<String>,
 }
 
 /// A route as the array `routes` and its relatives give.
@@ -402,6 +407,8 @@ impl WebBrowser {
             current: None,
             next_id: 1,
             live: true,
+            script_realm: None,
+            retired_log: vec![],
         })
     }
 
@@ -436,16 +443,34 @@ impl WebBrowser {
         now: f64,
     ) -> u32 {
         let id = self.next_id;
+        let factory = self.script_realm.clone();
+        let session =
+            Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
+                let factory = factory.as_ref()?;
+
+                match crate::script::PageJsHost::new(rt, factory) {
+                    Ok(Some(host)) => Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>),
+                    Ok(None) => None,
+                    Err(e) => {
+                        rt.log_error(format!(
+                            "X_ITE_R: the Scripts of this world cannot run: {e}"
+                        ));
+                        None
+                    }
+                }
+            });
 
         self.next_id += 1;
-        self.worlds.insert(
-            id,
-            World {
-                session: Session::begin(world, now, self.config.width, self.config.height),
-                cache,
-            },
-        );
+        self.worlds.insert(id, World { session, cache });
         id
+    }
+
+    /// The page's Script realm factory, or null (the default): no Script runs. For each world that starts after the
+    /// call, the engine calls `factory (hostId)`, which returns the realm (`web/pkg/script.mjs` createScriptRealm) of
+    /// the world's Scripts, or null when they must not run. A Script runs with the privileges of the page.
+    #[wasm_bindgen(js_name = setScriptRealm)]
+    pub fn set_script_realm(&mut self, factory: Option<js_sys::Function>) {
+        self.script_realm = factory;
     }
 
     /// Parse the world `data` from `url` (FileLoader) and start its loads: the id of the new scene. The current world
@@ -637,7 +662,10 @@ impl WebBrowser {
         }
 
         if let Some(old) = self.current.take() {
-            self.worlds.remove(&old);
+            if let Some(mut w) = self.worlds.remove(&old) {
+                w.session.unload();
+                self.retired_log.extend(w.session.take_log());
+            }
         }
 
         let w = self.worlds.get_mut(&id).ok_or_else(no_world)?;
@@ -1429,9 +1457,17 @@ impl WebBrowser {
             return new;
         }
 
-        self.worlds
-            .get_mut(&id)
-            .map_or(vec![], |w| w.session.take_log())
+        let mut log = if self.current == Some(id) {
+            std::mem::take(&mut self.retired_log)
+        } else {
+            vec![]
+        };
+
+        if let Some(w) = self.worlds.get_mut(&id) {
+            log.extend(w.session.take_log());
+        }
+
+        log
     }
 }
 
