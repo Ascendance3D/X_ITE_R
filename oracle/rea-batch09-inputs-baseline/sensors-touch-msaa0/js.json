@@ -1,0 +1,1410 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0 0 0\n  inputOutput SFVec3f normal 0 0 0\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.6480091 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over TRUE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active TRUE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nDEF G Group {\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool  over FALSE\n  inputOutput SFBool  active FALSE\n  inputOutput SFVec3f hit 0.007281038 0.007281038 1\n  inputOutput SFVec3f normal 0 0 1\n  inputOutput SFTime  touch 946684800.4\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE TS.isOver TO OBS.set_over\nROUTE TS.isActive TO OBS.set_active\nROUTE TS.hitPoint_changed TO OBS.set_hit\nROUTE TS.hitNormal_changed TO OBS.set_normal\nROUTE TS.touchTime TO OBS.set_touch\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
