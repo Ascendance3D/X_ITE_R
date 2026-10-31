@@ -20,8 +20,11 @@ pub enum Arg {
     Str(&'static str),
     /// A list of numbers (a wave table, a curve).
     List(Vec<f32>),
-    /// Planar sample data and its sample rate (an AudioBuffer).
+    /// Planar sample data and its sample rate (an AudioBuffer made by `createBuffer`).
     Buffer(Arc<Vec<Vec<f32>>>, f32),
+    /// The encoded file an AudioBuffer was decoded from (`decodeAudioData`): the page decodes it itself, so that it is
+    /// resampled once, to the page context's rate, as X_ITE does.
+    Encoded(Arc<Vec<u8>>),
 }
 
 /// One call on a Web Audio node: its name (`"connect"`, `"param"`, ...) and arguments.
@@ -46,9 +49,16 @@ fn number(v: f64) -> String {
 /// Planar samples and the sample rate of an AudioBuffer argument.
 pub type BufferData = (Arc<Vec<Vec<f32>>>, f32);
 
-/// The ops as JSON for the page: `[["connect", 1, 0, 0, 0], ...]`. A buffer argument is `{"buffer": n}`, `n` indexing
-/// `buffers`, to which each buffer of the ops is appended; the page reads them one by one.
-pub fn to_json(ops: &[Op], buffers: &mut Vec<BufferData>) -> String {
+/// The big arguments of the ops of one `to_json` call, by index.
+#[derive(Default)]
+pub struct Payloads {
+    pub buffers: Vec<BufferData>,
+    pub encoded: Vec<Arc<Vec<u8>>>,
+}
+
+/// The ops as JSON for the page: `[["connect", 1, 0, 0, 0], ...]`. A buffer argument is `{"buffer": n}` and an encoded
+/// file `{"encoded": n}`, `n` indexing `payloads`, to which each one of the ops is appended; the page reads them one by one.
+pub fn to_json(ops: &[Op], payloads: &mut Payloads) -> String {
     let mut out = String::from("[");
 
     for (i, op) in ops.iter().enumerate() {
@@ -77,8 +87,12 @@ pub fn to_json(ops: &[Op], buffers: &mut Vec<BufferData>) -> String {
                     out.push(']');
                 }
                 Arg::Buffer(data, rate) => {
-                    out.push_str(&format!("{{\"buffer\":{}}}", buffers.len()));
-                    buffers.push((Arc::clone(data), *rate));
+                    out.push_str(&format!("{{\"buffer\":{}}}", payloads.buffers.len()));
+                    payloads.buffers.push((Arc::clone(data), *rate));
+                }
+                Arg::Encoded(bytes) => {
+                    out.push_str(&format!("{{\"encoded\":{}}}", payloads.encoded.len()));
+                    payloads.encoded.push(Arc::clone(bytes));
                 }
             }
         }

@@ -209,6 +209,9 @@ pub struct AudioEngine {
     /// Whether the calls on the nodes are recorded in `ops` ([`ops`]).
     recording: bool,
     ops: std::sync::Mutex<Vec<Op>>,
+    /// The files `decode` read while recording, by the identity of the buffer they gave ([`buffer_key`]).
+    encoded:
+        std::sync::Mutex<std::collections::HashMap<(usize, usize, usize), (u64, Arc<Vec<u8>>)>>,
     /// A number no other engine of this process has: the page names its mirror of this engine's nodes by it.
     uid: u64,
 }
@@ -259,6 +262,20 @@ pub struct AudioGraph {
     pub destination: usize,
     pub current_time: f64,
     pub sample_rate: f32,
+}
+
+/// What identifies a decoded buffer: where its first channel is, its length and its channel count; and a checksum of the
+/// samples, so that a buffer which later takes a freed address is not taken for the old one.
+fn buffer_key(b: &AudioBuffer) -> ((usize, usize, usize), u64) {
+    let first = b.get_channel_data(0);
+    let sum = first.iter().fold(0xcbf2_9ce4_8422_2325_u64, |h, v| {
+        (h ^ u64::from(v.to_bits())).wrapping_mul(0x0100_0000_01b3)
+    });
+
+    (
+        (first.as_ptr() as usize, first.len(), b.number_of_channels()),
+        sum,
+    )
 }
 
 /// The name of an AudioParam as an op argument (the names `set_param` takes).
@@ -364,6 +381,7 @@ impl AudioEngine {
             sources: Default::default(),
             recording: DEFAULT_RECORD_OPS.load(std::sync::atomic::Ordering::Relaxed),
             ops: Default::default(),
+            encoded: Default::default(),
             uid: NEXT_UID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
         };
         let destination = engine.base().destination();
@@ -1102,16 +1120,7 @@ impl AudioEngine {
             "bufferSource",
             vec![
                 Arg::Int(id.0),
-                buffer.map_or(Arg::Bool(false), |b| {
-                    Arg::Buffer(
-                        Arc::new(
-                            (0..b.number_of_channels())
-                                .map(|c| b.get_channel_data(c).to_vec())
-                                .collect(),
-                        ),
-                        b.sample_rate(),
-                    )
-                }),
+                buffer.map_or(Arg::Bool(false), |b| self.buffer_arg(b)),
             ],
         );
         id
@@ -1339,10 +1348,7 @@ impl AudioEngine {
 
         self.emit(
             "convolverBuffer",
-            vec![
-                Arg::Int(id.0),
-                Arg::Buffer(Arc::new(channels.clone()), buffer.sample_rate()),
-            ],
+            vec![Arg::Int(id.0), self.buffer_arg(&buffer)],
         );
         let normalize = self.convolver_normalize.get(&id.0).copied().unwrap_or(true);
         let reverb = Box::new(convolver::Reverb::new(
@@ -1771,6 +1777,42 @@ impl AudioEngine {
     /// audioContext .decodeAudioData (arrayBuffer): resampled to the context's sample rate.
     /// PCM WAV as Chromium does it (decode.rs); other formats with `web-audio-api`.
     pub fn decode(&self, bytes: Vec<u8>) -> Result<AudioBuffer, String> {
+        let buffer = self.decode_pcm(&bytes)?;
+
+        if self.recording {
+            let (key, sum) = buffer_key(&buffer);
+
+            self.encoded
+                .lock()
+                .unwrap()
+                .insert(key, (sum, Arc::new(bytes)));
+        }
+
+        Ok(buffer)
+    }
+
+    /// The argument that gives a buffer to the page: the file it was decoded from, else its samples.
+    fn buffer_arg(&self, b: &AudioBuffer) -> Arg {
+        let (key, sum) = buffer_key(b);
+
+        if let Some((s, bytes)) = self.encoded.lock().unwrap().get(&key) {
+            if *s == sum {
+                return Arg::Encoded(Arc::clone(bytes));
+            }
+        }
+
+        Arg::Buffer(
+            Arc::new(
+                (0..b.number_of_channels())
+                    .map(|c| b.get_channel_data(c).to_vec())
+                    .collect(),
+            ),
+            b.sample_rate(),
+        )
+    }
+
+    fn decode_pcm(&self, bytes: &[u8]) -> Result<AudioBuffer, String> {
+        let bytes = bytes.to_vec();
         if let Some((channels, rate)) = decode::decode_wav(&bytes) {
             let context_rate = self.sample_rate();
             let channels: Vec<Vec<f32>> = if rate == context_rate {
