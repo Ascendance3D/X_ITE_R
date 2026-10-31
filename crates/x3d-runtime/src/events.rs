@@ -91,6 +91,8 @@ impl Runtime {
 
     /// X3DField.processEvent (event).
     pub fn process_event(&mut self, k: FKey, mut event: Event) {
+        let log_len = self.log.len();
+
         if !event.visited.contains(&k) {
             event.visited.push(k);
         }
@@ -139,7 +141,7 @@ impl Runtime {
 
         // Process field callbacks.
         if self.page_observed.contains(&k) {
-            self.page_field_callbacks(k);
+            self.page_field_callbacks(k, log_len);
         }
 
         if self.field_observed.contains(&k) {
@@ -148,14 +150,21 @@ impl Runtime {
     }
 
     /// The page's field callbacks of `k` (the browser build): recorded with the value of the event, for the page to call
-    /// after the frame.
-    fn page_field_callbacks(&mut self, k: FKey) {
+    /// after the frame. `log_len` is the length of the log before the event's interests and routes ran.
+    fn page_field_callbacks(&mut self, k: FKey, log_len: usize) {
         if self.page_field_events.is_some() {
             let value = self.value(k).clone();
+            // The Scripts' `rootNodes` callbacks run after this event, in the context's cascade, and X_ITE calls the
+            // page's after them: that event follows every line of the frame.
+            let log_len = if self.private_field(self.browser_node, "rootNodes") == Some(k) {
+                usize::MAX
+            } else {
+                log_len
+            };
 
             self.page_field_events
                 .get_or_insert_default()
-                .push((k, value));
+                .push((k, value, log_len));
         }
     }
 

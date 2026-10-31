@@ -922,6 +922,17 @@ impl Session {
     /// The events of the observed fields since the last call, in event order: node, field name and the value each
     /// event delivered (X3DField.processEvent calls the callbacks with it).
     pub fn take_field_events(&mut self) -> Vec<(NodeId, String, Data)> {
+        self.take_field_events_logged()
+            .into_iter()
+            .map(|(node, name, data, _)| (node, name, data))
+            .collect()
+    }
+
+    /// Like [`Session::take_field_events`], with the number of log lines (those [`Session::take_log`] has not given yet)
+    /// that came before each event: the page prints them before it calls the event's callbacks, as X_ITE does. Call
+    /// [`Session::take_log`] right after, so the numbers count from the same line.
+    pub fn take_field_events_logged(&mut self) -> Vec<(NodeId, String, Data, usize)> {
+        let seen = self.log_seen;
         let rt = self.rt_mut();
 
         // The release sweep drops the events of released nodes; a node that is not live is skipped all the same, so
@@ -930,8 +941,10 @@ impl Session {
 
         rt.take_page_field_events()
             .into_iter()
-            .filter(|(k, _)| rt.scene.is_live(k.0))
-            .map(|(k, value)| {
+            .filter(|(k, _, _)| rt.scene.is_live(k.0))
+            .map(|(k, value, log_len)| {
+                let before = log_len.saturating_sub(seen);
+
                 if Some(k) == root_nodes {
                     // X3DField.processEvent: `callback (this .valueOf ())`, the live field, so the current root nodes.
                     let roots = rt.scene.ctx(rt.scene.world).root_nodes.clone();
@@ -940,10 +953,16 @@ impl Session {
                         ROOT_NODES_EVENT,
                         "rootNodes".to_string(),
                         data::value_data(&FieldValue::MFNode(roots)),
+                        before,
                     );
                 }
 
-                (k.0, rt.field(k).name.clone(), data::value_data(&value))
+                (
+                    k.0,
+                    rt.field(k).name.clone(),
+                    data::value_data(&value),
+                    before,
+                )
             })
             .collect()
     }
