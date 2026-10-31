@@ -33,6 +33,10 @@ module_path_test!(path_vrml97_fields_generator, vrml97::fields::generator);
 module_path_test!(path_vrml97_fields_jsmath, vrml97::fields::jsmath);
 module_path_test!(path_vrml97_fields_math, vrml97::fields::math);
 module_path_test!(path_vrml97_fields_math_color, vrml97::fields::math::color);
+module_path_test!(
+    path_vrml97_fields_math_complex,
+    vrml97::fields::math::complex
+);
 module_path_test!(path_vrml97_fields_math_matrix, vrml97::fields::math::matrix);
 module_path_test!(
     path_vrml97_fields_math_quaternion,
@@ -61,7 +65,7 @@ module_path_test!(path_vrml97_scene_setup, vrml97::scene::setup);
 module_path_test!(path_vrml97_scene_vrml, vrml97::scene::vrml);
 
 /// The 24 paths above, as text, in the same order.
-const MODULE_PATHS: [&str; 24] = [
+const MODULE_PATHS: [&str; 25] = [
     "fields",
     "fields::fdlibm",
     "fields::format",
@@ -69,6 +73,7 @@ const MODULE_PATHS: [&str; 24] = [
     "fields::jsmath",
     "fields::math",
     "fields::math::color",
+    "fields::math::complex",
     "fields::math::matrix",
     "fields::math::quaternion",
     "fields::math::rotation",
