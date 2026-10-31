@@ -1343,11 +1343,7 @@ impl WebBrowser {
         }
 
         for l in self.loads.values() {
-            taken.extend(
-                l.rt.audio
-                    .as_ref()
-                    .map(|a| (a.uid(), a.take_ops())),
-            );
+            taken.extend(l.rt.audio.as_ref().map(|a| (a.uid(), a.take_ops())));
         }
 
         self.audio_buffers.clear();

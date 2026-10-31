@@ -69,7 +69,8 @@ pub fn default_mode() -> AudioMode {
 
 static NEXT_UID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
 
-static DEFAULT_RECORD_OPS: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+static DEFAULT_RECORD_OPS: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
 
 /// Whether new engines record their calls as [`ops::Op`]s (`AudioEngine::record_ops`): the page of X_ITE_R sets it, so
 /// that the engine's Web Audio calls reach the page's AudioContext.
@@ -638,7 +639,12 @@ impl AudioEngine {
             self.connections.push((from, output, to, input));
             self.emit(
                 "connect",
-                vec![Arg::Int(from.0), Arg::Int(output), Arg::Int(to.0), Arg::Int(input)],
+                vec![
+                    Arg::Int(from.0),
+                    Arg::Int(output),
+                    Arg::Int(to.0),
+                    Arg::Int(input),
+                ],
             );
             self.update_pull();
         }
@@ -686,7 +692,12 @@ impl AudioEngine {
         self.connections.retain(|c| *c != (from, output, to, input));
         self.emit(
             "disconnectTo",
-            vec![Arg::Int(from.0), Arg::Int(output), Arg::Int(to.0), Arg::Int(input)],
+            vec![
+                Arg::Int(from.0),
+                Arg::Int(output),
+                Arg::Int(to.0),
+                Arg::Int(input),
+            ],
         );
         self.update_pull();
         true
@@ -833,7 +844,12 @@ impl AudioEngine {
     fn emit_gain_event(&self, id: AId, kind: &'static str, value: f32, time: f64) {
         self.emit(
             "gainEvent",
-            vec![Arg::Int(id.0), Arg::Str(kind), Arg::Num(f64::from(value)), Arg::Num(time)],
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(kind),
+                Arg::Num(f64::from(value)),
+                Arg::Num(time),
+            ],
         );
     }
 
@@ -892,13 +908,22 @@ impl AudioEngine {
         // AudioParam .value setter: the intrinsic value, then setValueAtTime (intrinsic, now).
         if let (ANode::Gain(_, shared), "gain") = (self.get(id), name) {
             shared.set(v);
-            self.post_gain(id, param_timeline::Kind::SetValue, shared.get(), self.current_time());
+            self.post_gain(
+                id,
+                param_timeline::Kind::SetValue,
+                shared.get(),
+                self.current_time(),
+            );
         }
 
         // The page's node takes `.value = v` itself (its own setValueAtTime of the current time).
         self.emit(
             "param",
-            vec![Arg::Int(id.0), Arg::Str(param_name(name)), Arg::Num(f64::from(v))],
+            vec![
+                Arg::Int(id.0),
+                Arg::Str(param_name(name)),
+                Arg::Num(f64::from(v)),
+            ],
         );
 
         // `.value = v` is setValueAtTime (v, currentTime): the kernels that switch to their
@@ -1019,7 +1044,11 @@ impl AudioEngine {
         ));
         self.emit(
             "oscillatorWave",
-            vec![Arg::Int(id.0), Arg::List(real.to_vec()), Arg::List(imag.to_vec())],
+            vec![
+                Arg::Int(id.0),
+                Arg::List(real.to_vec()),
+                Arg::List(imag.to_vec()),
+            ],
         );
         self.post(id, oscillator::Message::Wave(wave));
     }
@@ -1032,7 +1061,10 @@ impl AudioEngine {
 
     /// `oscillatorNode .stop (when)`.
     pub fn oscillator_stop(&mut self, id: AId, when: f64) {
-        self.emit("oscillatorStop", vec![Arg::Int(id.0), Arg::Num(when.max(0.0))]);
+        self.emit(
+            "oscillatorStop",
+            vec![Arg::Int(id.0), Arg::Num(when.max(0.0))],
+        );
         self.post(id, oscillator::Message::Stop(when.max(0.0)));
     }
 
@@ -1207,7 +1239,11 @@ impl AudioEngine {
 
         self.emit(
             "delay",
-            vec![Arg::Int(id.0), Arg::Num(max_delay_time), Arg::Num(delay_time)],
+            vec![
+                Arg::Int(id.0),
+                Arg::Num(max_delay_time),
+                Arg::Num(delay_time),
+            ],
         );
         Some(id)
     }
@@ -1226,7 +1262,10 @@ impl AudioEngine {
 
     /// `waveShaperNode .curve = curve`.
     pub fn wave_shaper_set_curve(&self, id: AId, curve: Vec<f32>) {
-        self.emit("waveShaperCurve", vec![Arg::Int(id.0), Arg::List(curve.clone())]);
+        self.emit(
+            "waveShaperCurve",
+            vec![Arg::Int(id.0), Arg::List(curve.clone())],
+        );
         if let ANode::WaveShaper(n) = self.get(id) {
             n.port()
                 .post_message(Some(wave_shaper::Message::Curve(Arc::new(curve))));
@@ -1456,7 +1495,10 @@ impl AudioEngine {
         );
         let id = self.add(ANode::Splitter(node));
 
-        self.emit("splitter", vec![Arg::Int(id.0), Arg::Int(number_of_outputs)]);
+        self.emit(
+            "splitter",
+            vec![Arg::Int(id.0), Arg::Int(number_of_outputs)],
+        );
         id
     }
 

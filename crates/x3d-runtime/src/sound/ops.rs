@@ -68,7 +68,12 @@ pub fn to_json(ops: &[Op], buffers: &mut Vec<BufferData>) -> String {
                 Arg::Str(v) => out.push_str(&format!("\"{v}\"")),
                 Arg::List(v) => {
                     out.push('[');
-                    out.push_str(&v.iter().map(|&x| number(f64::from(x))).collect::<Vec<_>>().join(","));
+                    out.push_str(
+                        &v.iter()
+                            .map(|&x| number(f64::from(x)))
+                            .collect::<Vec<_>>()
+                            .join(","),
+                    );
                     out.push(']');
                 }
                 Arg::Buffer(data, rate) => {
@@ -83,4 +88,158 @@ pub fn to_json(ops: &[Op], buffers: &mut Vec<BufferData>) -> String {
 
     out.push(']');
     out
+}
+
+/// What a page that makes the ops would hold: the nodes (class name, channel attributes, a GainNode's `gain`, an
+/// AudioBufferSourceNode's loop and start and stop calls) and the connections. It is the reference interpreter of the ops: a
+/// test replays the log into it and compares it with `AudioEngine::graph`, so the ops cannot drift from the graph the engine
+/// keeps. (The real mirror, web/audio_mirror.mjs, runs in the page; its tests are the browser tests of sound04.)
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Model {
+    /// Slot to node; slot 0 is the destination.
+    pub nodes: std::collections::BTreeMap<usize, ModelNode>,
+    pub connections: std::collections::BTreeSet<(usize, usize, usize, usize)>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ModelNode {
+    pub kind: &'static str,
+    pub channel_count: Option<usize>,
+    pub channel_count_mode: Option<&'static str>,
+    pub channel_interpretation: Option<&'static str>,
+    pub gain: Option<f64>,
+    pub loop_: bool,
+    pub started: Option<(f64, f64)>,
+    pub stopped: Option<f64>,
+}
+
+impl ModelNode {
+    fn new(kind: &'static str) -> ModelNode {
+        ModelNode {
+            kind,
+            channel_count: None,
+            channel_count_mode: None,
+            channel_interpretation: None,
+            gain: (kind == "GainNode").then_some(1.0),
+            loop_: false,
+            started: None,
+            stopped: None,
+        }
+    }
+}
+
+fn int(a: &Arg) -> usize {
+    match a {
+        Arg::Int(v) => *v,
+        other => panic!("not an integer: {other:?}"),
+    }
+}
+
+fn num(a: &Arg) -> f64 {
+    match a {
+        Arg::Num(v) => *v,
+        other => panic!("not a number: {other:?}"),
+    }
+}
+
+fn text(a: &Arg) -> &'static str {
+    match a {
+        Arg::Str(v) => v,
+        other => panic!("not a string: {other:?}"),
+    }
+}
+
+impl Model {
+    /// A model with the destination, as an engine starts.
+    pub fn new() -> Model {
+        let mut m = Model::default();
+
+        m.nodes.insert(0, ModelNode::new("AudioDestinationNode"));
+        m
+    }
+
+    pub fn apply(&mut self, op: &Op) {
+        let a = &op.args;
+        let kind = match op.name {
+            "gain" => Some("GainNode"),
+            "oscillator" => Some("OscillatorNode"),
+            "bufferSource" => Some("AudioBufferSourceNode"),
+            "biquad" => Some("BiquadFilterNode"),
+            "delay" => Some("DelayNode"),
+            "waveShaper" => Some("WaveShaperNode"),
+            "convolver" => Some("ConvolverNode"),
+            "compressor" => Some("DynamicsCompressorNode"),
+            "analyser" => Some("AnalyserNode"),
+            "splitter" => Some("ChannelSplitterNode"),
+            "merger" => Some("ChannelMergerNode"),
+            "panner" => Some("PannerNode"),
+            _ => None,
+        };
+
+        if let Some(kind) = kind {
+            let mut node = ModelNode::new(kind);
+
+            if let (Some(Arg::Num(g)), "gain") = (a.get(1), op.name) {
+                node.gain = Some(*g);
+            }
+
+            self.nodes.insert(int(&a[0]), node);
+            return;
+        }
+
+        match op.name {
+            "release" | "releaseKeep" => {
+                let id = int(&a[0]);
+
+                self.connections.retain(|c| c.0 != id && c.2 != id);
+                self.nodes.remove(&id);
+            }
+            "connect" => {
+                self.connections
+                    .insert((int(&a[0]), int(&a[1]), int(&a[2]), int(&a[3])));
+            }
+            "disconnect" => self.connections.retain(|c| c.0 != int(&a[0])),
+            "disconnectDest" => self
+                .connections
+                .retain(|c| !(c.0 == int(&a[0]) && c.2 == int(&a[1]))),
+            "disconnectTo" => {
+                self.connections
+                    .remove(&(int(&a[0]), int(&a[1]), int(&a[2]), int(&a[3])));
+            }
+            "channelCount" => {
+                self.nodes.get_mut(&int(&a[0])).unwrap().channel_count = Some(int(&a[1]))
+            }
+            "channelCountMode" => {
+                self.nodes.get_mut(&int(&a[0])).unwrap().channel_count_mode = Some(text(&a[1]))
+            }
+            "channelInterpretation" => {
+                self.nodes
+                    .get_mut(&int(&a[0]))
+                    .unwrap()
+                    .channel_interpretation = Some(text(&a[1]));
+            }
+            "param" if text(&a[1]) == "gain" => {
+                let node = self.nodes.get_mut(&int(&a[0])).unwrap();
+
+                if node.kind == "GainNode" {
+                    node.gain = Some(num(&a[2]));
+                }
+            }
+            "sourceStart" => {
+                self.nodes.get_mut(&int(&a[0])).unwrap().started = Some((num(&a[1]), num(&a[2])))
+            }
+            "sourceStop" => self.nodes.get_mut(&int(&a[0])).unwrap().stopped = Some(num(&a[1])),
+            "sourceLoop" => {
+                self.nodes.get_mut(&int(&a[0])).unwrap().loop_ = matches!(a[1], Arg::Bool(true))
+            }
+            // The other calls change what a page hears, not what it reads from the graph here.
+            _ => {}
+        }
+    }
+
+    pub fn apply_all(&mut self, ops: &[Op]) {
+        for op in ops {
+            self.apply(op);
+        }
+    }
 }

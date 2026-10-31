@@ -147,8 +147,14 @@ export function installTap ()
 
    const buffer = new Float32Array (2048);
 
+   // `tapSum` and `tapCount` give the mean level (sound04_case.mjs): each poll adds the loudest of its analysers.
+   window .tapSum   = 0;
+   window .tapCount = 0;
+
    setInterval (() =>
    {
+      let loudest = 0;
+
       for (const analyser of analysers)
       {
          analyser .getFloatTimeDomainData (buffer);
@@ -158,8 +164,14 @@ export function installTap ()
          for (const v of buffer)
             sum += v * v;
 
-         window .tapMax = Math .max (window .tapMax, Math .sqrt (sum / buffer .length));
+         const rms = Math .sqrt (sum / buffer .length);
+
+         loudest = Math .max (loudest, rms);
+         window .tapMax = Math .max (window .tapMax, rms);
       }
+
+      window .tapSum += loudest;
+      ++ window .tapCount;
    },
    20);
 }

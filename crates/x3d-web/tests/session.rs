@@ -1475,3 +1475,99 @@ fn the_root_nodes_event_of_a_handler_follows_its_lines() {
         ]
     );
 }
+
+// --- the page's Web Audio nodes (issue #140) ---------------------------------------------------------------------------
+
+fn sound_text(clip: &str) -> String {
+    format!(
+        "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Sound:2\nSound {{ source DEF A AudioClip {{ url \"tone.wav\" {clip} }} }}\n"
+    )
+}
+
+/// The gains of the graph's GainNodes, in the order of their slots.
+fn gains(s: &Session) -> Vec<f32> {
+    s.audio_graph()
+        .unwrap()
+        .nodes
+        .iter()
+        .filter_map(|n| n.gain)
+        .collect()
+}
+
+#[test]
+fn the_calls_a_world_makes_on_web_audio_nodes_are_the_graph_the_engine_keeps() {
+    use x3d_runtime::sound::ops::Model;
+
+    x3d_runtime::sound::set_default_record_ops(true);
+
+    let mut s = sound_world("loop TRUE");
+    let (_, ops) = s.take_audio_ops().expect("the Sound node made an engine");
+    let mut m = Model::new();
+
+    m.apply_all(&ops);
+
+    let g = s.audio_graph().unwrap();
+    let kinds: Vec<_> = g.nodes.iter().map(|n| (n.id, n.kind)).collect();
+    let model: Vec<_> = m.nodes.iter().map(|(id, n)| (*id, n.kind)).collect();
+
+    assert_eq!(kinds, model);
+    assert_eq!(
+        g.connections
+            .iter()
+            .copied()
+            .collect::<std::collections::BTreeSet<_>>(),
+        m.connections
+    );
+    assert!(
+        ops.iter().any(|o| o.name == "sourceStart"),
+        "the clip's source started on the page's node too: {:?}",
+        ops.iter().map(|o| o.name).collect::<Vec<_>>()
+    );
+    assert!(ops.iter().any(|o| o.name == "bufferSource"));
+    assert!(ops.iter().any(|o| o.name == "connect"));
+
+    // A second call has nothing left to give until the world calls again.
+    assert!(s.take_audio_ops().unwrap().1.is_empty());
+}
+
+/// An AudioDestination is an enabled sound destination at once: go_live gives it the gain of the page's options.
+fn destination_world() -> Session {
+    let text = "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Sound:3\nAudioDestination { children OscillatorSource { frequency 220 } }\n";
+    let parsed = Session::parse(text.as_bytes(), URL, Box::new(Tone)).unwrap();
+
+    Session::begin(parsed, NOW, 64, 64)
+}
+
+#[test]
+fn a_world_that_goes_live_after_the_page_set_mute_is_silent_at_once() {
+    // WebBrowser::replace: the stored options first, then go_live.
+    let mut s = destination_world();
+
+    s.set_sound_options(true, 0.3);
+    assert!(s.go_live(NOW));
+
+    let at_once = gains(&s);
+
+    s.step(NOW + 0.02);
+
+    assert!(
+        at_once.contains(&0.0),
+        "the destination is muted: {at_once:?}"
+    );
+    assert_eq!(at_once, gains(&s), "the next event cascade changes no gain");
+}
+
+#[test]
+fn the_options_set_after_go_live_wait_for_the_event_cascade() {
+    // The order WebBrowser::replace had: it left the destination at the default gain until the next frame, so a page could
+    // hear (and the graph show) an unmuted destination of a muted browser.
+    let mut s = destination_world();
+
+    assert!(s.go_live(NOW));
+    s.set_sound_options(true, 0.3);
+
+    let at_once = gains(&s);
+
+    s.step(NOW + 0.02);
+    assert_ne!(at_once, gains(&s));
+}
