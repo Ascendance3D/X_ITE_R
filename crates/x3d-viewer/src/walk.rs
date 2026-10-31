@@ -73,6 +73,8 @@ pub struct ShapeInst {
     pub style: Option<x3d_render::traverse::StyleParams>,
     /// X3D_TEXTURE and X3D_MATERIAL_TEXTURES of the pointing shader (appearance and material texture nodes).
     pub textures: (bool, bool),
+    /// The appearance's DepthMode (Appearance.getDepthMode): X3DRenderObject.pointing enables it around the shape's draw.
+    pub depth: Option<x3d_render::traverse::DepthParams>,
     /// One drawn particle of a ParticleSystem (`shape`): `instance` is its x3d_InstanceMatrix, which does not turn
     /// normals (no X3D_INSTANCE_NORMAL). In [`Scan::shapes`] it is a pointing object (collidable FALSE), in
     /// [`Scan::particle_collisions`] a collision object; the ParticleSystem's bbox in `explicit_bbox` is
@@ -657,6 +659,15 @@ fn visible_object(
 }
 
 /// geometryContext .geometryType of a geometry node: 0 points, 1 lines, 2 the rest.
+/// Appearance.getDepthMode of the shape `n`: its DepthMode node, if any.
+fn pointing_depth(sg: &Sg, n: NodeId) -> Option<x3d_render::traverse::DepthParams> {
+    sg.node(n, "appearance")
+        .filter(|a| sg.type_name(*a) == Some("Appearance"))
+        .and_then(|a| sg.node(a, "depthMode"))
+        .filter(|d| sg.type_name(*d) == Some("DepthMode"))
+        .map(|d| x3d_render::traverse::depth_params(sg, d))
+}
+
 fn node_geometry_type(sg: &Sg, g: NodeId) -> u8 {
     match sg.type_name(g) {
         Some("PointSet") => 0,
@@ -1369,6 +1380,7 @@ impl<'a> Walker<'a> {
                     vec![(*mv, None)]
                 };
 
+                let depth = pointing_depth(sg, n);
                 let (style, textures) = match sg.node(n, "geometry") {
                     Some(g) => pointing_appearance(sg, n, node_geometry_type(sg, g)),
                     None => (None, pointing_appearance(sg, n, 2).1),
@@ -1396,6 +1408,7 @@ impl<'a> Walker<'a> {
                         skin: self.hanim.last().cloned().flatten(),
                         style,
                         textures,
+                        depth,
                         particle: false,
                         particle_geometry: None,
                     });
@@ -1464,6 +1477,7 @@ impl<'a> Walker<'a> {
                     skin: self.hanim.last().cloned().flatten(),
                     style,
                     textures,
+                    depth: pointing_depth(sg, n),
                     particle: true,
                     particle_geometry: p.geometry.clone(),
                 };
@@ -1811,6 +1825,7 @@ mod particle_run_tests {
             skin: None,
             style: None,
             textures: (false, false),
+            depth: None,
             particle: false,
             particle_geometry: None,
         }
