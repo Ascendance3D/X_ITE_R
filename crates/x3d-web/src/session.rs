@@ -463,6 +463,12 @@ impl Session {
         set_sound_options(self.rt_mut(), mute, intensity);
     }
 
+    /// The world's audio graph ([`x3d_runtime::sound::AudioEngine::graph`]), or `None` while no Sound node has made the audio
+    /// context.
+    pub fn audio_graph(&self) -> Option<x3d_runtime::sound::AudioGraph> {
+        Some(self.rt().audio.as_ref()?.graph())
+    }
+
     /// The world's audio graph as JSON (a diagnostic snapshot, [`x3d_runtime::sound::AudioGraph`]), or `None` while
     /// no Sound node has made the audio context (X3DSoundContext.getAudioContext). Numbers are JavaScript numbers:
     /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value. `listener` is the nine values of
