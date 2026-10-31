@@ -83,6 +83,9 @@ export const soundCases = {
       await page .evaluate (installCapture, NODE_CLASSES);
       await page .evaluate (async text =>
       {
+         // The page's own canvas goes: the case has one canvas, the new one (the gesture clicks it).
+         document .querySelector ("x3d-canvas") .remove ();
+
          const element = document .createElement ("x3d-canvas");
 
          element .setAttribute ("style", "display:block;width:200px;height:150px");
