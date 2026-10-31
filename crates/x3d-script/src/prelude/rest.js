@@ -651,7 +651,7 @@ const ctxFieldObjects = new Map ();
 
 function ctxFieldObject (ctx, index, name)
 {
-   const id = ctx * 4 + index;
+   const id = ctx * 5 + index;
 
    let o = ctxFieldObjects .get (id);
 
@@ -691,13 +691,94 @@ function ctxFieldObject (ctx, index, name)
    return o;
 }
 
+// X3DExecutionContext.rootNodes of a Script's `Browser .currentScene`: one live inputOutput MFNode per context (the same object
+// on every read). Its changes (push, splice, length, assignment) reach the runtime as the page's rootNodes field does; a change of
+// the runtime's list reaches the object when it is read, before a Script runs and before its callbacks.
+const rootFields = new Map (); // context → { ref: WeakRef (field), script }
+
+// The parent of the field: its events reach the runtime (X_ITE: the X3DScene, an X3DBaseNode).
+function RootNodesParent (script)
+{
+   X3DChildObject .call (this);
+
+   this .script = script;
+}
+
+Object .setPrototypeOf (RootNodesParent .prototype, X3DChildObject .prototype);
+
+for (const key of [ "addEvent", "addEventObject" ])
+   Object .defineProperty (RootNodesParent .prototype, key, { value (field) { X ("cx", this .script, "rootSet", A (field)); }, writable: true, configurable: true });
+
+Object .defineProperty (RootNodesParent .prototype, "isInitialized", { value () { return true; }, writable: true, configurable: true });
+
+// The registry holds the fields weakly: a field belongs to its scene's object (makeExecutionContext), so a scene that a Script
+// dropped is released with its root nodes.
+function rootFieldOf (key)
+{
+   const entry = rootFields .get (key);
+   const field = entry ?.ref .deref ();
+
+   if (entry && !field)
+      rootFields .delete (key);
+
+   return field && { field, script: entry .script };
+}
+
+function refreshRootField (entry)
+{
+   const data = X ("fexport", X ("rootNodes", entry .script) .__h);
+
+   if (!sameData (data, fieldData (entry .field)))
+      setFieldData (entry .field, data);
+}
+
+// `field` is what the scene object holds (null before the first read).
+function rootNodesField (script, field)
+{
+   if (field)
+   {
+      refreshRootField ({ field, script });
+      return field;
+   }
+
+   field = R (X ("rootNodes", script));
+
+   field .setName ("rootNodes");
+   field .setAccessType (X3DConstants .inputOutput);
+   field .addParent (new RootNodesParent (script));
+
+   rootFields .set (- (script + 2), { ref: new WeakRef (field), script });
+
+   return field;
+}
+
 global .__ctxEvent = function (ctx, index)
 {
    const previous = currentScript;
 
    try
    {
-      for (const { fn, script } of ctxFieldCallbacks .get (ctx * 4 + index) ?.values () ?? [ ])
+      if (index === 4)
+      {
+         const entry = rootFieldOf (ctx);
+
+         if (entry)
+         {
+            refreshRootField (entry);
+
+            for (const callback of entry .field .getFieldCallbacks () .values ())
+            {
+               currentScript = callbackScripts .get (callback) ?? previous;
+
+               try { callback (entry .field .valueOf ()); }
+               catch (error) { scriptConsole .error (error); }
+            }
+         }
+
+         return;
+      }
+
+      for (const { fn, script } of ctxFieldCallbacks .get (ctx * 5 + index) ?.values () ?? [ ])
       {
          currentScript = script;
 
@@ -1003,6 +1084,7 @@ function makeExecutionContext (script)
    const ctxKey = - (script + 2);
    const info = () => X ("sceneInfo", script);
    let namedTouched = false;
+   let rootField = null;
    const node = n => R (n);
    const metaValues = v => Array .isArray (v) ? v .map (String) : [String (v)];
 
@@ -1140,7 +1222,7 @@ function makeExecutionContext (script)
       toVRMLString ()         { return X ("sceneString", script, "vrml"); },
       toXMLString ()          { return X ("sceneString", script, "xml"); },
       toJSONString ()         { return X ("sceneString", script, "json"); },
-      get rootNodes ()        { return R (X ("rootNodes", script)); },
+      get rootNodes ()        { return rootField = rootNodesField (script, rootField); },
       set rootNodes (value)   { this .setRootNodes (value); },
       getWorldInfos ()        { return R (X ("worldInfos", script)); },
       get worldURL ()         { return X ("worldURL", script); },
@@ -2161,16 +2243,29 @@ global .__releaseScenes = function (ids)
       sceneComponents .delete (- (id + 2));
       profileValues .delete (- (id + 2));
 
-      for (let index = 0; index < 4; ++ index)
+      rootFields .delete (id);
+
+      for (let index = 0; index < 5; ++ index)
       {
-         ctxFieldCallbacks .delete (id * 4 + index);
-         ctxFieldObjects .delete (id * 4 + index);
+         ctxFieldCallbacks .delete (id * 5 + index);
+         ctxFieldObjects .delete (id * 5 + index);
       }
    }
 };
 
 // engine.rs: before and after every call into the Script realm (bridge.js).
-global .__enter = enter;
+global .__enter = function ()
+{
+   enter ();
+
+   for (const key of [ ... rootFields .keys () ])
+   {
+      const entry = rootFieldOf (key);
+
+      if (entry)
+         refreshRootField (entry);
+   }
+};
 global .__leave = leave;
 
 // The Script was shut down: its global object and callbacks are not needed any more.

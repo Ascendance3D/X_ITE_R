@@ -700,7 +700,12 @@ impl Session {
     /// Checks run in this order: the field type (only SFNode and MFNode), the data shape, that every node is in the world,
     /// then `kind`. This is an adapter contract, not an X_ITE one: X_ITE has no such call (its `toVRMLString` takes no
     /// `kind`), so the order is not compared with the pinned build. Every failure is an `Err` before any text is made.
-    pub fn print_nodes(&self, kind: &str, ty: FieldType, data: &Data) -> Result<String, String> {
+    pub fn print_nodes(
+        &mut self,
+        kind: &str,
+        ty: FieldType,
+        data: &Data,
+    ) -> Result<String, String> {
         if !matches!(ty, FieldType::SFNode | FieldType::MFNode) {
             return Err(format!("{} is not a node field type", ty.name()));
         }
@@ -713,6 +718,9 @@ impl Session {
         {
             return Err(format!("node {n} is not in the world"));
         }
+
+        // X3DGenerator.NeedsName reads each node's clone count as it is now, not as it was when the world loaded.
+        self.rt_mut().publish_clone_counts();
 
         let scene = &self.rt().scene;
         let value = data::data_value(ty, data);
@@ -727,7 +735,8 @@ impl Session {
 
     /// X3DScene.toVRMLString / toXMLString / toJSONString of the world, with X_ITE's default generator options; `kind` is
     /// `vrml`, `xml` or `json`.
-    pub fn print_scene(&self, kind: &str) -> Result<String, String> {
+    pub fn print_scene(&mut self, kind: &str) -> Result<String, String> {
+        self.rt_mut().publish_clone_counts();
         print_scene_of(&self.rt().scene, kind)
     }
 

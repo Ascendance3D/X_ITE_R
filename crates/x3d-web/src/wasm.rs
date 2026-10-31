@@ -1070,7 +1070,7 @@ impl WebBrowser {
     /// [`Session::print_nodes`]); `kind` is `vrml`, `xml` or `json`.
     #[wasm_bindgen(js_name = printNodes)]
     pub fn print_nodes(
-        &self,
+        &mut self,
         id: u32,
         kind: &str,
         type_name: &str,
@@ -1079,15 +1079,15 @@ impl WebBrowser {
         let ty = x3d_fields::FieldType::from_name(type_name)
             .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
 
-        self.session(id)?
+        self.session_mut(id)?
             .print_nodes(kind, ty, &js_data(&data))
             .map_err(|e| JsError::new(&e))
     }
 
     /// X3DScene.toVRMLString / toXMLString / toJSONString of the world `id` (see [`Session::print_scene`]).
     #[wasm_bindgen(js_name = printScene)]
-    pub fn print_scene(&self, id: u32, kind: &str) -> Result<String, JsError> {
-        self.session(id)?
+    pub fn print_scene(&mut self, id: u32, kind: &str) -> Result<String, JsError> {
+        self.session_mut(id)?
             .print_scene(kind)
             .map_err(|e| JsError::new(&e))
     }
