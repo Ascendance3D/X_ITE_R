@@ -558,6 +558,14 @@ function pushField (field)
 // newlines included, stand as they are.
 const vrmlString = string => `"${String (string) .replace (/["\\]/g, c => `\\${c}`)}"`;
 
+// The engine's lines start with the console function X_ITE calls: "error: ", "warn: ", "info: " or "log: ".
+function printLogLine (line)
+{
+   const [ , level, text ] = line .match (/^(error|warn|info|log): ([^]*)$/) ?? [ , "warn", line ];
+
+   console [level] (text);
+}
+
 // The string of a VRML-encoded SFString.
 const parseVrmlString = text => text .trim () .slice (1, -1) .replace (/\\(.)/gs, "$1");
 
@@ -595,22 +603,49 @@ function syncScene (browser, scene)
 // the value its event delivered. A callback that throws ends the delivery as X_ITE's event loop ends: the error is
 // uncaught (reported to the page, not to the console), the callbacks and events after it never run, and the engine
 // processes no event again.
+//
+// The console lines of the frame (a Script's Browser.print, the engine's messages) go out in the same pass. Each event
+// carries the number of lines made before its X3DField.processEvent began; they print before its callbacks, so the
+// callbacks come before the lines that the event's routes make, as in X_ITE.
 function processFieldEvents (browser, scene)
 {
    retireReleased (browser, scene);
 
    const table = nodeRefTables .get (browser) ?.get (scene);
 
-   // The events are taken even with no object to call: they would pile up in the engine.
+   // The events are taken even with no object to call: they would pile up in the engine. The lines follow at once, so
+   // their numbers count from the same line.
    const events = browser [_engine] .takeFieldEvents (scene);
+   const lines  = browser [_engine] .takeLog (scene);
+   let   printed = 0;
 
+   const printUpTo = count =>
+   {
+      for (; printed < Math .min (count, lines .length); ++ printed)
+         printLogLine (lines [printed]);
+   };
+
+   try
+   {
+      deliverFieldEvents (browser, scene, table, events, printUpTo);
+   }
+   finally
+   {
+      printUpTo (lines .length);
+   }
+}
+
+function deliverFieldEvents (browser, scene, table, events, printUpTo)
+{
    if (!table ?.refs .size && !table ?.rootNodes)
       return;
 
    syncScene (browser, scene);
 
-   for (let i = 0; i < events .length; i += 3)
+   for (let i = 0; i < events .length; i += 4)
    {
+      printUpTo (events [i + 3]);
+
       // A callback may have released nodes: their ids are not the nodes of the events any more.
       retireReleased (browser, scene);
 
@@ -2709,13 +2744,8 @@ class X3DBrowser
       if (id === undefined)
          return;
 
-      // The engine's lines start with the console function X_ITE calls: "error: ", "warn: ", "info: " or "log: ".
       for (const line of this .#engine ?.takeLog (id) ?? [ ])
-      {
-         const [ , level, text ] = line .match (/^(error|warn|info|log): ([^]*)$/) ?? [ , "warn", line ];
-
-         console [level] (text);
-      }
+         printLogLine (line);
    }
 
    // What the engine has for the page after an event or a frame: the cursor, the browser events of an Anchor that
@@ -3124,7 +3154,6 @@ class X3DBrowser
                this .#resumeAudio ();
             }
 
-            this .#flushLog ();
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
          }

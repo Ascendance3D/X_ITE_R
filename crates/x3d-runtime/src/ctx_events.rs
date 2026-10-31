@@ -240,10 +240,32 @@ impl Runtime {
         };
 
         let batch = std::mem::take(&mut self.ctx_events.pending);
+        let mut printed = false;
 
         for (ctx, field, rounds) in batch {
             for _ in 0..rounds {
+                let lines = self.log.len();
+
                 host.ctx_event(self, ctx, field as u32);
+                printed |= field == CtxField::RootNodes && self.log.len() > lines;
+            }
+        }
+
+        // X_ITE calls the page's `rootNodes` callbacks after the Scripts': when those printed, the page's event follows
+        // their lines.
+        if printed {
+            let end = self.log.len();
+            let k = self.private_field(self.browser_node, "rootNodes");
+
+            for i in std::mem::take(&mut self.page_root_nodes_unplaced) {
+                if let Some(e) = self
+                    .page_field_events
+                    .as_mut()
+                    .and_then(|e| e.get_mut(i))
+                    .filter(|e| Some(e.0) == k)
+                {
+                    e.2 = end;
+                }
             }
         }
 

@@ -955,6 +955,12 @@ impl Runtime {
     /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none), then stops getting
     ///   `prepareEvents`, `eventsProcessed` and field events (X_ITE keeps calling them for ever).
     pub(crate) fn dispose_scene(&mut self, root: CtxId) {
+        self.dispose_scene_with(root, true);
+    }
+
+    /// [`Runtime::dispose_scene`]; `shutdown` false leaves the Scripts' `shutdown ()` uncalled (see
+    /// [`Runtime::replace_skips_shutdown`]).
+    pub(crate) fn dispose_scene_with(&mut self, root: CtxId, shutdown: bool) {
         if !self.disposed_scenes.insert(root) {
             return;
         }
@@ -970,7 +976,7 @@ impl Runtime {
         // ISO/IEC 14772-1 4.12.3: `shutdown ()` runs while the scene is still connected. What it
         // sends is queued; the routes below are deleted before the queue is processed.
         for &n in &nodes {
-            if self.builtin_name(n) == Some("Script") {
+            if shutdown && self.builtin_name(n) == Some("Script") {
                 self.script_close(n);
             }
         }
@@ -1041,7 +1047,7 @@ impl Runtime {
     /// (ISO/IEC 14772-1 4.12.3) and the world stops. Events the Scripts queued are left for the
     /// caller's next event processing.
     pub fn unload_world(&mut self) {
-        self.dispose_scene(self.scene.world);
+        self.dispose_scene_with(self.scene.world, !self.replace_skips_shutdown);
 
         // The cached EXTERNPROTO scenes belong to the world (see `extern_scene`) and went with it.
         self.extern_cache.clear();

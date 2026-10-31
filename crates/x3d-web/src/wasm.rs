@@ -1030,7 +1030,24 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = takeFieldEvents)]
     pub fn take_field_events(&mut self, id: u32) -> js_sys::Array {
         match self.worlds.get_mut(&id) {
-            Some(w) => field_list(w.session.take_field_events()),
+            Some(w) => {
+                // The lines of a replaced world come first in `takeLog` of the current world.
+                let retired = if self.current == Some(id) {
+                    self.retired_log.len()
+                } else {
+                    0
+                };
+                let list = js_sys::Array::new();
+
+                for (node, name, data, before) in w.session.take_field_events_logged() {
+                    list.push(&f64::from(node).into());
+                    list.push(&name.into());
+                    list.push(&data_js(&data));
+                    list.push(&(before.saturating_add(retired) as f64).into());
+                }
+
+                list
+            }
             None => js_sys::Array::new(),
         }
     }
