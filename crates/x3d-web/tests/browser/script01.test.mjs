@@ -367,3 +367,107 @@ function prepareEvents (time) {
       }
    });
 });
+
+// The order of the page's field callbacks and the lines of the Scripts (PR 196). The expected lists are the order of
+// pinned X_ITE 16.5.0, taken from its console in a one-off run of these worlds and steps (no new baseline).
+describe ("The page's field callbacks and the Script lines, in the order of X_ITE", () =>
+{
+   const WORLD = handler => `#VRML V2.0 utf8
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventOut SFInt32 x_changed
+  url "javascript:
+function set_x (value) { print ('S handler set_x ' + value); ${handler} x_changed = value + 1; print ('S handler done'); }
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  url "javascript: function set_y (value) { print ('R route set_y ' + value); }"
+}
+ROUTE S.x_changed TO R.set_y
+`;
+
+   // Runs the steps in the page with `note`, `S`, `scene` and `make`; answers the page and Script lines.
+   async function run (world, steps)
+   {
+      const page = await openPage (DESKTOP);
+
+      try
+      {
+         await allowScripts (page);
+         await loadText (page, world);
+         page .log .length = 0;
+
+         await page .evaluate (async steps =>
+         {
+            const X3D     = window .X3D_NS;
+            const browser = document .querySelector ("x3d-canvas") .browser;
+            const frame   = () => new Promise (r => requestAnimationFrame (() => r ()));
+            const spin    = async n => { for (let i = 0; i < n; ++ i) await frame (); };
+            const scene   = () => browser .currentScene;
+            const S       = scene () .getNamedNode ("S");
+            const note    = text => console .log (`page: ${text}`);
+            const make    = vrml => { const f = new X3D .SFNode (); f .fromVRMLString (vrml, scene ()); return f .valueOf (); };
+
+            await new Function ("S", "scene", "note", "make", "spin", `return (async () => { ${steps} })()`) (S, scene, note, make, spin);
+         },
+         steps);
+
+         assert .deepEqual (pageErrors (page), [ ]);
+         return prints (page);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   }
+
+   test ("order.input", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      // CodeRabbit finding 1: the Script's handler is an interest of the field, so its lines come before the page's callback.
+      const lines = await run (WORLD (""), `
+         S .addFieldCallback ("page", "set_x", v => note (\`callback set_x \${v}\`));
+         S .addFieldCallback ("page", "x_changed", v => note (\`callback x_changed \${v}\`));
+         note ("set_x 1");
+         S .set_x = 1;
+         await spin (3);`);
+
+      assert .deepEqual (lines, [ "page: set_x 1", "S handler set_x 1", "S handler done", "page: callback set_x 1", "page: callback x_changed 2", "R route set_y 2" ]);
+   });
+
+   test ("order.rootNodes", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      // CodeRabbit finding 2: the rootNodes callback comes in its turn, in both orders of the two changes in one task.
+      const lines = await run (WORLD (""), `
+         scene () .rootNodes .addFieldCallback ("page", v => note (\`callback rootNodes \${v .length}\`));
+         S .addFieldCallback ("page", "x_changed", v => note (\`callback x_changed \${v}\`));
+         note ("addRootNode and set_x 1 in one task");
+         scene () .addRootNode (make ("Group { }"));
+         S .set_x = 1;
+         await spin (3);
+         note ("set_x 2 and then addRootNode in one task");
+         S .set_x = 2;
+         scene () .addRootNode (make ("Group { }"));
+         await spin (3);`);
+
+      assert .deepEqual (lines, [
+         "page: addRootNode and set_x 1 in one task", "page: callback rootNodes 3", "S handler set_x 1", "S handler done", "page: callback x_changed 2", "R route set_y 2",
+         "page: set_x 2 and then addRootNode in one task", "S handler set_x 2", "S handler done", "page: callback rootNodes 4", "page: callback x_changed 3", "R route set_y 3",
+      ]);
+   });
+
+   test ("order.rootNodesInHandler", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      // A Script's handler changes the root nodes: the page's callback follows the handler's lines.
+      const lines = await run (WORLD ("Browser .currentScene .addRootNode (Browser .currentScene .createNode ('Group'));"), `
+         scene () .rootNodes .addFieldCallback ("page", v => note (\`callback rootNodes \${v .length}\`));
+         S .addFieldCallback ("page", "x_changed", v => note (\`callback x_changed \${v}\`));
+         note ("set_x 1");
+         S .set_x = 1;
+         await spin (3);`);
+
+      assert .deepEqual (lines, [ "page: set_x 1", "S handler set_x 1", "S handler done", "page: callback rootNodes 3", "page: callback x_changed 2", "R route set_y 2" ]);
+   });
+});
