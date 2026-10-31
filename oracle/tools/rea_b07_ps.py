@@ -46,6 +46,10 @@ TOL = {"life": (0.0, 0.0), "lifetime": (0.0, 0.0), "elapsed": (0.0, 0.0), "color
 # per frame): the GPU's turbulence normal (sin / cos / sqrt of the shader on the RTX) deviates from plain float32 by
 # about 2e-7 relative per step, which the 06R tolerance (measured on speeds <= 4) does not cover once the force is
 # larger than ~1 per frame. Measured and reasoned in REPORT.md; the Rust step itself equals a plain float32 emulation.
+# Owner decision 2026-10-31 (issue #82): TOL_STRONG stays. The wind speed unit conversion is not the cause: Rust applies
+# the pinned X_ITE 16.5.0 formula (WindPhysicsModel.js: pressure = 10 ** (2 * Math.log (speed)) * 0.64615) with the same
+# clamps and Math.random draw order, and the 38 ordinary wind worlds pass the unchanged 06R limit. Only the 3 strong worlds
+# (ps-wind-strong, -r24, -r144) need TOL_STRONG, because of the GPU's float32 turbulence step noise.
 TOL_STRONG = {"velocity": (1e-4, 2e-5), "position": (1e-4, 2e-5)}
 TOL_STEP = {"deltaTime": (0.0, 1e-12), "creationTime": (1e-9, 0.0)}
 CHI2_CRIT_DOF2 = 18.42   # alpha 1e-4
