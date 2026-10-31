@@ -1103,7 +1103,9 @@ fn the_audio_graph_shows_the_playing_clip() {
     );
     // The engine's own clock: it never renders in the browser build.
     assert!(
-        json.ends_with(r#""currentTime":0.0,"sampleRate":48000.0}"#),
+        json.ends_with(
+            r#""currentTime":0.0,"sampleRate":48000.0,"listener":[0.0,0.0,0.0,0.0,0.0,-1.0,0.0,1.0,0.0]}"#
+        ),
         "{json}"
     );
 }

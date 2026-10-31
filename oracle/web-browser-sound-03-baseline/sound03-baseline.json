@@ -1,0 +1,4731 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "soundMore.mute": {
+   "loaded": "loaded",
+   "console": [],
+   "steps": [
+    {
+     "set": "initial",
+     "destinationGain": 1
+    },
+    {
+     "set": "SoundIntensity=0.5",
+     "destinationGain": 0.5
+    },
+    {
+     "set": "Mute=true",
+     "destinationGain": 0
+    },
+    {
+     "set": "Mute=false",
+     "destinationGain": 0.5
+    },
+    {
+     "set": "SoundIntensity=3",
+     "destinationGain": 1
+    },
+    {
+     "set": "SoundIntensity=-1",
+     "destinationGain": 0
+    },
+    {
+     "set": "SoundIntensity=1",
+     "destinationGain": 1
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.muteBefore": {
+   "loaded": "loaded",
+   "muted": 0,
+   "unmuted": 0.5,
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.5
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.pitchFast": {
+   "loaded": "loaded",
+   "console": [],
+   "fields": {
+    "isActive": true,
+    "isPaused": false,
+    "duration": 0.25
+   },
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1.5,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   },
+   "page": {
+    "contexts": 1,
+    "states": [
+     "running"
+    ],
+    "resumeCalls": [
+     "running"
+    ]
+   }
+  },
+  "soundMore.pitchNegative": {
+   "loaded": "loaded",
+   "console": [],
+   "fields": {
+    "isActive": true,
+    "isPaused": false,
+    "duration": 0.25
+   },
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 0,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   },
+   "page": {
+    "contexts": 1,
+    "states": [
+     "running"
+    ],
+    "resumeCalls": [
+     "running"
+    ]
+   }
+  },
+  "soundMore.pitchSlow": {
+   "loaded": "loaded",
+   "console": [],
+   "fields": {
+    "isActive": true,
+    "isPaused": false,
+    "duration": 0.25
+   },
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 0.5,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   },
+   "page": {
+    "contexts": 1,
+    "states": [
+     "running"
+    ],
+    "resumeCalls": [
+     "running"
+    ]
+   }
+  },
+  "soundMore.pitchChanged": {
+   "loaded": "loaded",
+   "console": [],
+   "fields": {
+    "isActive": true,
+    "isPaused": false,
+    "duration": 0.25
+   },
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 2,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   },
+   "page": {
+    "contexts": 1,
+    "states": [
+     "running"
+    ],
+    "resumeCalls": [
+     "running"
+    ]
+   }
+  },
+  "soundMore.rangeFront": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.20000000298023224
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.15000000596046448
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.15000000596046448
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeBack": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.625
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.46875
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.46875
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeInside": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeOutside": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeOnMinimum": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeOnMaximum": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      2,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      0
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      3,
+      1
+     ],
+     [
+      9,
+      0,
+      4,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      10,
+      1,
+      6,
+      0
+     ],
+     [
+      10,
+      1,
+      7,
+      0
+     ],
+     [
+      10,
+      0,
+      8,
+      0
+     ],
+     [
+      11,
+      0,
+      9,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.rangeSpatial": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.16484573483467102
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.10692215710878372
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.137508824467659
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      1,
+      0
+     ],
+     [
+      3,
+      0,
+      1,
+      0
+     ],
+     [
+      4,
+      0,
+      3,
+      0
+     ],
+     [
+      5,
+      0,
+      3,
+      0
+     ],
+     [
+      6,
+      0,
+      3,
+      1
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      8,
+      0,
+      4,
+      0
+     ],
+     [
+      8,
+      1,
+      5,
+      0
+     ],
+     [
+      8,
+      1,
+      6,
+      0
+     ],
+     [
+      8,
+      0,
+      7,
+      0
+     ],
+     [
+      9,
+      0,
+      8,
+      0
+     ],
+     [
+      10,
+      0,
+      9,
+      0
+     ],
+     [
+      11,
+      0,
+      10,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   }
+  },
+  "soundMore.priority": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "AudioDestinationNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 0,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "ChannelMergerNode",
+      "numberOfInputs": 2,
+      "numberOfOutputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.8088849782943726
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.6832190752029419
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.75
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.6832190752029419
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0.8088849782943726
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 0
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "ChannelSplitterNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 2,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete"
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "GainNode",
+      "numberOfInputs": 1,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "gain": 1
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     },
+     {
+      "kind": "AudioBufferSourceNode",
+      "numberOfInputs": 0,
+      "numberOfOutputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "playbackRate": 1,
+      "buffer": {
+       "numberOfChannels": 2,
+       "length": 12000,
+       "sampleRate": 48000
+      },
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 0,
+      "started": {
+       "when": 0,
+       "offset": 0
+      }
+     }
+    ],
+    "connections": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      1,
+      0
+     ],
+     [
+      5,
+      0,
+      1,
+      0
+     ],
+     [
+      6,
+      0,
+      2,
+      0
+     ],
+     [
+      7,
+      0,
+      2,
+      0
+     ],
+     [
+      8,
+      0,
+      3,
+      0
+     ],
+     [
+      9,
+      0,
+      3,
+      0
+     ],
+     [
+      10,
+      0,
+      5,
+      0
+     ],
+     [
+      11,
+      0,
+      5,
+      0
+     ],
+     [
+      12,
+      0,
+      5,
+      1
+     ],
+     [
+      13,
+      0,
+      5,
+      1
+     ],
+     [
+      14,
+      0,
+      7,
+      0
+     ],
+     [
+      15,
+      0,
+      7,
+      0
+     ],
+     [
+      16,
+      0,
+      7,
+      1
+     ],
+     [
+      17,
+      0,
+      7,
+      1
+     ],
+     [
+      18,
+      0,
+      9,
+      0
+     ],
+     [
+      19,
+      0,
+      9,
+      0
+     ],
+     [
+      20,
+      0,
+      9,
+      1
+     ],
+     [
+      21,
+      0,
+      9,
+      1
+     ],
+     [
+      22,
+      0,
+      10,
+      0
+     ],
+     [
+      22,
+      1,
+      11,
+      0
+     ],
+     [
+      22,
+      1,
+      12,
+      0
+     ],
+     [
+      22,
+      0,
+      13,
+      0
+     ],
+     [
+      23,
+      0,
+      14,
+      0
+     ],
+     [
+      23,
+      1,
+      15,
+      0
+     ],
+     [
+      23,
+      1,
+      16,
+      0
+     ],
+     [
+      23,
+      0,
+      17,
+      0
+     ],
+     [
+      24,
+      0,
+      18,
+      0
+     ],
+     [
+      24,
+      1,
+      19,
+      0
+     ],
+     [
+      24,
+      1,
+      20,
+      0
+     ],
+     [
+      24,
+      0,
+      21,
+      0
+     ],
+     [
+      25,
+      0,
+      22,
+      0
+     ],
+     [
+      26,
+      0,
+      23,
+      0
+     ],
+     [
+      27,
+      0,
+      24,
+      0
+     ],
+     [
+      28,
+      0,
+      25,
+      0
+     ],
+     [
+      29,
+      0,
+      26,
+      0
+     ],
+     [
+      30,
+      0,
+      27,
+      0
+     ],
+     [
+      31,
+      0,
+      28,
+      0
+     ],
+     [
+      32,
+      0,
+      29,
+      0
+     ],
+     [
+      33,
+      0,
+      30,
+      0
+     ]
+    ],
+    "clock": "running",
+    "sampleRate": 48000
+   },
+   "priorities": [
+    0,
+    0.5,
+    1
+   ]
+  },
+  "soundMore.listenerDefault": {
+   "loaded": "loaded",
+   "console": [],
+   "listener": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  "soundMore.listenerFixed": {
+   "loaded": "loaded",
+   "console": [],
+   "listener": [
+    1,
+    2,
+    -7,
+    -1,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "soundMore.listenerTrack": {
+   "loaded": "loaded",
+   "console": [],
+   "listener": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  "soundMore.lifecycle": {
+   "steps": [
+    {
+     "name": "loaded",
+     "page": {
+      "contexts": 1,
+      "states": [
+       "running"
+      ],
+      "resumeCalls": [
+       "running"
+      ]
+     },
+     "graph": {
+      "nodes": [
+       {
+        "kind": "AudioDestinationNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 0,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "ChannelMergerNode",
+        "numberOfInputs": 2,
+        "numberOfOutputs": 1,
+        "channelCount": 1,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "ChannelSplitterNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "AudioBufferSourceNode",
+        "numberOfInputs": 0,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "playbackRate": 1,
+        "buffer": {
+         "numberOfChannels": 2,
+         "length": 12000,
+         "sampleRate": 48000
+        },
+        "loop": true,
+        "loopStart": 0,
+        "loopEnd": 0,
+        "started": {
+         "when": 0,
+         "offset": 0
+        }
+       }
+      ],
+      "connections": [
+       [
+        1,
+        0,
+        0,
+        0
+       ],
+       [
+        2,
+        0,
+        1,
+        0
+       ],
+       [
+        3,
+        0,
+        1,
+        0
+       ],
+       [
+        4,
+        0,
+        3,
+        0
+       ],
+       [
+        5,
+        0,
+        3,
+        0
+       ],
+       [
+        6,
+        0,
+        3,
+        1
+       ],
+       [
+        7,
+        0,
+        3,
+        1
+       ],
+       [
+        8,
+        0,
+        4,
+        0
+       ],
+       [
+        8,
+        1,
+        5,
+        0
+       ],
+       [
+        8,
+        1,
+        6,
+        0
+       ],
+       [
+        8,
+        0,
+        7,
+        0
+       ],
+       [
+        9,
+        0,
+        8,
+        0
+       ],
+       [
+        10,
+        0,
+        9,
+        0
+       ],
+       [
+        11,
+        0,
+        10,
+        0
+       ]
+      ],
+      "clock": "running",
+      "sampleRate": 48000
+     }
+    },
+    {
+     "name": "gesture",
+     "page": {
+      "contexts": 1,
+      "states": [
+       "running"
+      ],
+      "resumeCalls": [
+       "running"
+      ]
+     },
+     "graph": {
+      "nodes": [
+       {
+        "kind": "AudioDestinationNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 0,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "ChannelMergerNode",
+        "numberOfInputs": 2,
+        "numberOfOutputs": 1,
+        "channelCount": 1,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "ChannelSplitterNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "AudioBufferSourceNode",
+        "numberOfInputs": 0,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "playbackRate": 1,
+        "buffer": {
+         "numberOfChannels": 2,
+         "length": 12000,
+         "sampleRate": 48000
+        },
+        "loop": true,
+        "loopStart": 0,
+        "loopEnd": 0,
+        "started": {
+         "when": 0,
+         "offset": 0
+        }
+       }
+      ],
+      "connections": [
+       [
+        1,
+        0,
+        0,
+        0
+       ],
+       [
+        2,
+        0,
+        1,
+        0
+       ],
+       [
+        3,
+        0,
+        1,
+        0
+       ],
+       [
+        4,
+        0,
+        3,
+        0
+       ],
+       [
+        5,
+        0,
+        3,
+        0
+       ],
+       [
+        6,
+        0,
+        3,
+        1
+       ],
+       [
+        7,
+        0,
+        3,
+        1
+       ],
+       [
+        8,
+        0,
+        4,
+        0
+       ],
+       [
+        8,
+        1,
+        5,
+        0
+       ],
+       [
+        8,
+        1,
+        6,
+        0
+       ],
+       [
+        8,
+        0,
+        7,
+        0
+       ],
+       [
+        9,
+        0,
+        8,
+        0
+       ],
+       [
+        10,
+        0,
+        9,
+        0
+       ],
+       [
+        11,
+        0,
+        10,
+        0
+       ]
+      ],
+      "clock": "running",
+      "sampleRate": 48000
+     }
+    },
+    {
+     "name": "replacedPlaying",
+     "page": {
+      "contexts": 1,
+      "states": [
+       "running"
+      ],
+      "resumeCalls": [
+       "running"
+      ]
+     },
+     "graph": {
+      "nodes": [
+       {
+        "kind": "AudioDestinationNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 0,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "ChannelMergerNode",
+        "numberOfInputs": 2,
+        "numberOfOutputs": 1,
+        "channelCount": 1,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0.75
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 0
+       },
+       {
+        "kind": "ChannelSplitterNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers",
+        "gain": 0.5
+       },
+       {
+        "kind": "GainNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "gain": 1
+       },
+       {
+        "kind": "AudioBufferSourceNode",
+        "numberOfInputs": 0,
+        "numberOfOutputs": 1,
+        "channelCount": 2,
+        "channelCountMode": "max",
+        "channelInterpretation": "speakers",
+        "playbackRate": 1,
+        "buffer": {
+         "numberOfChannels": 2,
+         "length": 12000,
+         "sampleRate": 48000
+        },
+        "loop": true,
+        "loopStart": 0,
+        "loopEnd": 0,
+        "started": {
+         "when": 0,
+         "offset": 0
+        }
+       }
+      ],
+      "connections": [
+       [
+        1,
+        0,
+        0,
+        0
+       ],
+       [
+        2,
+        0,
+        1,
+        0
+       ],
+       [
+        3,
+        0,
+        1,
+        0
+       ],
+       [
+        4,
+        0,
+        3,
+        0
+       ],
+       [
+        5,
+        0,
+        3,
+        0
+       ],
+       [
+        6,
+        0,
+        3,
+        1
+       ],
+       [
+        7,
+        0,
+        3,
+        1
+       ],
+       [
+        8,
+        0,
+        4,
+        0
+       ],
+       [
+        8,
+        1,
+        5,
+        0
+       ],
+       [
+        8,
+        1,
+        6,
+        0
+       ],
+       [
+        8,
+        0,
+        7,
+        0
+       ],
+       [
+        9,
+        0,
+        8,
+        0
+       ],
+       [
+        10,
+        0,
+        9,
+        0
+       ],
+       [
+        11,
+        0,
+        10,
+        0
+       ]
+      ],
+      "clock": "running",
+      "sampleRate": 48000
+     }
+    },
+    {
+     "name": "replacedEmpty",
+     "page": {
+      "contexts": 1,
+      "states": [
+       "running"
+      ],
+      "resumeCalls": [
+       "running"
+      ]
+     },
+     "graph": {
+      "nodes": [
+       {
+        "kind": "AudioDestinationNode",
+        "numberOfInputs": 1,
+        "numberOfOutputs": 0,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "speakers"
+       }
+      ],
+      "connections": [],
+      "clock": "running",
+      "sampleRate": 48000
+     }
+    },
+    {
+     "name": "disposed",
+     "page": {
+      "contexts": 1,
+      "states": [
+       "running"
+      ],
+      "resumeCalls": [
+       "running"
+      ]
+     }
+    }
+   ]
+  },
+  "soundMore.audioDestination": {
+   "loaded": "loaded",
+   "console": [],
+   "graph": {
+    "kinds": [
+     "AudioDestinationNode",
+     "GainNode",
+     "GainNode",
+     "GainNode",
+     "MediaStreamAudioDestinationNode",
+     "OscillatorNode"
+    ],
+    "edges": [
+     "GainNode > GainNode",
+     "GainNode > MediaStreamAudioDestinationNode",
+     "OscillatorNode > GainNode"
+    ]
+   },
+   "page": {
+    "contexts": 1,
+    "states": [
+     "running"
+    ],
+    "resumeCalls": [
+     "running",
+     "running"
+    ]
+   }
+  },
+  "soundMore.replacePlaying": {
+   "loaded": "loaded",
+   "console": [],
+   "before": {
+    "fields": {
+     "isActive": true,
+     "isPaused": false,
+     "duration": 0.25
+    },
+    "graph": {
+     "nodes": [
+      {
+       "kind": "AudioDestinationNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 0,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "ChannelMergerNode",
+       "numberOfInputs": 2,
+       "numberOfOutputs": 1,
+       "channelCount": 1,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0.75
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0.75
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0
+      },
+      {
+       "kind": "ChannelSplitterNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 2,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "discrete"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers",
+       "gain": 0.5
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "AudioBufferSourceNode",
+       "numberOfInputs": 0,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "playbackRate": 1,
+       "buffer": {
+        "numberOfChannels": 2,
+        "length": 12000,
+        "sampleRate": 48000
+       },
+       "loop": true,
+       "loopStart": 0,
+       "loopEnd": 0,
+       "started": {
+        "when": 0,
+        "offset": 0
+       }
+      }
+     ],
+     "connections": [
+      [
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       2,
+       0,
+       1,
+       0
+      ],
+      [
+       3,
+       0,
+       1,
+       0
+      ],
+      [
+       4,
+       0,
+       3,
+       0
+      ],
+      [
+       5,
+       0,
+       3,
+       0
+      ],
+      [
+       6,
+       0,
+       3,
+       1
+      ],
+      [
+       7,
+       0,
+       3,
+       1
+      ],
+      [
+       8,
+       0,
+       4,
+       0
+      ],
+      [
+       8,
+       1,
+       5,
+       0
+      ],
+      [
+       8,
+       1,
+       6,
+       0
+      ],
+      [
+       8,
+       0,
+       7,
+       0
+      ],
+      [
+       9,
+       0,
+       8,
+       0
+      ],
+      [
+       10,
+       0,
+       9,
+       0
+      ],
+      [
+       11,
+       0,
+       10,
+       0
+      ]
+     ],
+     "clock": "running",
+     "sampleRate": 48000
+    },
+    "page": {
+     "contexts": 1,
+     "states": [
+      "running"
+     ],
+     "resumeCalls": [
+      "running"
+     ]
+    }
+   },
+   "after": {
+    "fields": {
+     "isActive": true,
+     "isPaused": false,
+     "duration": 0.25
+    },
+    "graph": {
+     "nodes": [
+      {
+       "kind": "AudioDestinationNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 0,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "ChannelMergerNode",
+       "numberOfInputs": 2,
+       "numberOfOutputs": 1,
+       "channelCount": 1,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0.75
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0.75
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 0
+      },
+      {
+       "kind": "ChannelSplitterNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 2,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "discrete"
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "explicit",
+       "channelInterpretation": "speakers",
+       "gain": 0.800000011920929
+      },
+      {
+       "kind": "GainNode",
+       "numberOfInputs": 1,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "gain": 1
+      },
+      {
+       "kind": "AudioBufferSourceNode",
+       "numberOfInputs": 0,
+       "numberOfOutputs": 1,
+       "channelCount": 2,
+       "channelCountMode": "max",
+       "channelInterpretation": "speakers",
+       "playbackRate": 2,
+       "buffer": {
+        "numberOfChannels": 2,
+        "length": 12000,
+        "sampleRate": 48000
+       },
+       "loop": true,
+       "loopStart": 0,
+       "loopEnd": 0,
+       "started": {
+        "when": 0,
+        "offset": "timing"
+       }
+      }
+     ],
+     "connections": [
+      [
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       2,
+       0,
+       1,
+       0
+      ],
+      [
+       3,
+       0,
+       1,
+       0
+      ],
+      [
+       4,
+       0,
+       3,
+       0
+      ],
+      [
+       5,
+       0,
+       3,
+       0
+      ],
+      [
+       6,
+       0,
+       3,
+       1
+      ],
+      [
+       7,
+       0,
+       3,
+       1
+      ],
+      [
+       8,
+       0,
+       4,
+       0
+      ],
+      [
+       8,
+       1,
+       5,
+       0
+      ],
+      [
+       8,
+       1,
+       6,
+       0
+      ],
+      [
+       8,
+       0,
+       7,
+       0
+      ],
+      [
+       9,
+       0,
+       8,
+       0
+      ],
+      [
+       10,
+       0,
+       9,
+       0
+      ],
+      [
+       11,
+       0,
+       10,
+       0
+      ]
+     ],
+     "clock": "running",
+     "sampleRate": 48000
+    },
+    "page": {
+     "contexts": 1,
+     "states": [
+      "running"
+     ],
+     "resumeCalls": [
+      "running"
+     ]
+    }
+   }
+  },
+  "soundMore.audibleClip": {
+   "loaded": "loaded",
+   "contextStates": [
+    "running"
+   ],
+   "contextRunning": true,
+   "connectedToOutput": true,
+   "audible": true
+  },
+  "soundMore.audibleMuted": {
+   "loaded": "loaded",
+   "contextStates": [
+    "running"
+   ],
+   "contextRunning": true,
+   "connectedToOutput": true,
+   "audible": false
+  },
+  "soundMore.audibleOscillator": {
+   "loaded": "loaded",
+   "contextStates": [
+    "running"
+   ],
+   "contextRunning": true,
+   "connectedToOutput": true,
+   "audible": true
+  }
+ }
+}

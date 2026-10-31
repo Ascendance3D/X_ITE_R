@@ -144,4 +144,184 @@ describe ("sound 02", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
          await page .context () .close ();
       }
    });
+
+   // The following tests check the engine's graph against values worked out from the source of the pinned X_ITE 16.5.0
+   // (Sound.traverse, AudioClip.set_pitch__, X3DSoundContext.addSoundDestination, BrowserOptions.set_SoundIntensity__,
+   // ListenerPointSource.traverse). There is no pinned recording: they read the engine's graph (audioGraph ()), so they
+   // show what the engine would give to the page's audio output, not what the page hears.
+
+   // Loads `text` and gives the graph once `ready (graph)` holds.
+   const graphOf = (page, text, ready = "graph .nodes .length > 1") => page .evaluate (async ([ text, ready ]) =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+      const later   = ms => new Promise (resolve => setTimeout (resolve, ms));
+      const test    = new Function ("graph", `return ${ready};`);
+
+      await browser .replaceWorld (await browser .createX3DFromString (text));
+
+      let graph = null;
+
+      for (let i = 0; i < 200; ++ i)
+      {
+         const raw = engine .audioGraph ();
+
+         graph = raw && JSON .parse (raw);
+
+         if (graph && test (graph))
+            break;
+
+         await later (50);
+      }
+
+      return graph;
+   },
+   [ text, ready ]);
+
+   // The Sound node's gains: the stereo gain (spatialize FALSE: the pan is 0.5 and the rotation 0).
+   const stereoGain = graph =>
+   {
+      const into = graph .connections .filter (([ , , to ]) => to === graph .destination) .map (([ from ]) => from);
+      const sd   = graph .nodes .find (n => n .id === into [0]);
+      const next = graph .connections .filter (([ , , to ]) => to === sd .id) .map (([ from ]) => graph .nodes .find (n => n .id === from));
+
+      return { sd: sd .gain, stereo: next .find (n => n .kind === "GainNode") .gain };
+   };
+
+   const SOUND = (viewpoint, sound, clip = "loop TRUE") => `#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Sound:2
+${viewpoint}
+Sound { spatialize FALSE ${sound}
+  source AudioClip { ${clip} url "${server .base}/media/tone48k-stereo.wav" } }
+`;
+
+   test ("Sound range: the gain follows minFront/maxFront in front of the sound and minBack/maxBack behind it", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const range = "minFront 2 minBack 4 maxFront 12 maxBack 20";
+
+         // The viewer is 10 away on the axis. Gain: (max - distance) / (max - min) on the side of the viewer.
+         const front  = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", range), "graph .nodes .some (n => n .kind === 'GainNode' && n .gain > 0)");
+         const back   = await graphOf (page, SOUND ("Viewpoint { position 0 0 -10 orientation 0 1 0 3.14159265358979 }", range), "graph .nodes .some (n => n .kind === 'GainNode' && n .gain > 0)");
+         const inside = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", "minFront 20 minBack 20 maxFront 40 maxBack 40"), "graph .nodes .some (n => n .kind === 'GainNode' && n .gain > 0)");
+         const out    = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", "minFront 1 minBack 1 maxFront 5 maxBack 5"), "graph .nodes .length > 1");
+
+         assert .ok (Math .abs (stereoGain (front) .stereo - 0.2) < 1e-5, `front: ${stereoGain (front) .stereo}`);
+         assert .ok (Math .abs (stereoGain (back) .stereo - 0.625) < 1e-5, `back: ${stereoGain (back) .stereo}`);
+         assert .equal (stereoGain (inside) .stereo, 1, "inside the minimum ellipsoid");
+         assert .equal (stereoGain (out) .stereo, 0, "outside the maximum ellipsoid");
+         assert .deepEqual (page .log .filter (line => line .startsWith ("pageerror")), [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("Sound priority is stored and does not change the graph; the pitch of an AudioClip sets the playback rate", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const ready  = "graph .nodes .some (n => n .kind === 'AudioBufferSourceNode' && n .source .started)";
+         const wide   = "minFront 20 minBack 20 maxFront 40 maxBack 40";
+         const plain  = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", wide), ready);
+         const high   = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", `${wide} priority 1`), ready);
+         const stored = await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .currentScene .rootNodes [1] .priority);
+         const fast   = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", wide, "loop TRUE pitch 1.5"), ready);
+         const slow   = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", wide, "loop TRUE pitch -1"), ready);
+         const rate   = graph => graph .nodes .find (n => n .kind === "AudioBufferSourceNode") .playbackRate;
+         const gains  = graph => graph .nodes .map (n => [ n .kind, n .gain ]);
+
+         assert .deepEqual (gains (high), gains (plain), "priority is not read by X_ITE");
+         assert .equal (rate (plain), 1);
+         assert .equal (rate (fast), 1.5);
+         assert .equal (rate (slow), 0, "AudioClip.set_pitch__: Math .max (pitch, 0)");
+
+         assert .equal (stored, 1, "the field keeps its value");
+         assert .deepEqual (page .log .filter (line => line .startsWith ("pageerror")), [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("Mute and SoundIntensity set the gain of the sound destinations", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const wide  = "minFront 20 minBack 20 maxFront 40 maxBack 40";
+         const graph = await graphOf (page, SOUND ("Viewpoint { position 0 0 10 }", wide), "graph .nodes .some (n => n .kind === 'GainNode' && n .gain > 0)");
+
+         assert .equal (stereoGain (graph) .sd, 1);
+
+         const read = async options =>
+         {
+            return page .evaluate (async options =>
+            {
+               const browser = document .querySelector ("x3d-canvas") .browser;
+               const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+               const later   = ms => new Promise (resolve => setTimeout (resolve, ms));
+               const result  = [ ];
+
+               for (const [ name, value ] of options)
+               {
+                  browser .setBrowserOption (name, value);
+                  await later (300);
+
+                  const graph = JSON .parse (engine .audioGraph ());
+                  const into  = graph .connections .filter (([ , , to ]) => to === graph .destination) .map (([ from ]) => from);
+
+                  result .push (graph .nodes .find (n => n .id === into [0]) .gain);
+               }
+
+               return result;
+            },
+            options);
+         };
+
+         const gains = await read ([ [ "SoundIntensity", 0.5 ], [ "Mute", true ], [ "Mute", false ], [ "SoundIntensity", 3 ], [ "SoundIntensity", -1 ] ]);
+
+         assert .deepEqual (gains, [ 0.5, 0, 0.5, 1, 0 ]);
+         assert .deepEqual (page .log .filter (line => line .startsWith ("pageerror")), [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("ListenerPointSource sets the audio listener's position, forward and up", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const text = `#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:3
+Viewpoint { position 0 0 0 }
+ListenerPointSource { position 1 2 3 orientation 0 1 0 1.5707963267949 trackCurrentView FALSE }
+Sound { source AudioClip { loop TRUE url "${server .base}/media/tone48k-stereo.wav" } }
+`;
+         const graph = await graphOf (page, text, "graph .listener .some (v => v !== 0)");
+         const near  = (a, b) => a .length === b .length && a .every ((v, i) => Math .abs (v - b [i]) < 1e-5);
+
+         // forward = orientation * (0, 0, -1), up = orientation * (0, 1, 0): a quarter turn about y.
+         assert .ok (near (graph .listener, [ 1, 2, 3, -1, 0, 0, 0, 1, 0 ]), JSON .stringify (graph .listener));
+         assert .deepEqual (page .log .filter (line => line .startsWith ("pageerror")), [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
 });
