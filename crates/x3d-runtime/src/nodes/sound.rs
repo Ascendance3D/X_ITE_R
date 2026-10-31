@@ -1515,6 +1515,8 @@ impl Runtime {
             }
             _ => 0,
         };
+        self.audio()
+            .analyser_setting(n, "analyserFftSize", &[size as f64]);
         self.sound_emit(node, "frequencyBinCount", FieldValue::SFInt32(bins as i32));
     }
 
@@ -1531,6 +1533,9 @@ impl Runtime {
                 a.set_max_decibels(hi);
             }
         }
+
+        self.audio()
+            .analyser_setting(n, "analyserDecibels", &[min.min(max), min.max(max)]);
     }
 
     fn analyser_set_smoothing(&mut self, node: NodeId) {
@@ -1540,6 +1545,8 @@ impl Runtime {
         if let ANode::Analyser(_, a) = self.audio().get_mut(n) {
             a.set_smoothing_time_constant(v);
         }
+
+        self.audio().analyser_setting(n, "analyserSmoothing", &[v]);
     }
 
     /// Analyser.set_time: the four data fields, every frame.
