@@ -5,9 +5,9 @@
 // The statistic (fixed before any X_ITE_R measurement): installTap (sound03_case.mjs) puts an AnalyserNode (fftSize 2048, a
 // window of 2048 samples) on every connection into the page's AudioContext destination. Every 20 ms the page takes the root
 // mean square of each window and keeps the loudest. A case resets the sums after its setup and settles, waits 1500 ms, and
-// takes the mean of those values (about 75 polls). `rms` is that mean rounded to 2 decimals. A first version took the largest
+// takes the mean of those values (about 75 polls). `rms` is that mean rounded to 4 decimals. A first version took the largest
 // value instead, which varied by 0.004 from run to run in X_ITE itself (0.215 to 0.219); the mean varies less.
-// XR_RMS_DIGITS=5 records more digits, to measure the spread (the recording then fails, and prints every run).
+// X_ITE's own runs differ by up to 0.003 (8 runs, measured before any X_ITE_R run); the recorder keeps the mean.
 // The comparison allows a tolerance (runtime02_harness.mjs).
 
 import { DESKTOP, settle } from "./runtime02_case.mjs";
@@ -58,7 +58,7 @@ async function level (page, env, text, { before, setup } = { })
       loaded: await c .loaded (),
       contextRunning: facts .states .length > 0 && facts .states .every (s => s === "running"),
       connectedToOutput: tap .tapped > 0,
-      rms: Number (tap .rms .toFixed (Number (process .env .XR_RMS_DIGITS ?? 2))),
+      rms: Number (tap .rms .toFixed (Number (process .env .XR_RMS_DIGITS ?? 4))),
    };
 }
 

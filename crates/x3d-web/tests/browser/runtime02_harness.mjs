@@ -39,6 +39,7 @@ import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as SOUND03_GROUPS } from "./sound03_case.mjs";
+import { CASE_GROUPS as SOUND04_GROUPS } from "./sound04_case.mjs";
 import { CASE_GROUPS as RUNTIME02_GROUPS, splitPictures } from "./runtime02_case.mjs";
 import { startServer } from "./server.mjs";
 
@@ -83,6 +84,7 @@ const SUITES = {
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
+   sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: "sound04-baseline.json", groups: SOUND04_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
@@ -444,6 +446,11 @@ const KNOWN_DIFFERENCES = {
    ... scriptLifeDifferences (),
 };
 
+// The level of the page's output (sound04_case.mjs) differs from run to run in X_ITE itself: the recording of each case was made
+// with 8 runs (the raw levels are in the baseline, `levels`; the largest spread was 0.0029). The tolerance is set from that spread alone, before the
+// first X_ITE_R measurement; it is not widened to pass.
+export const RMS_TOLERANCE = 0.005;
+
 // A test that waits longer has hung (a held response that was never released, a frame that never comes): it fails
 // with its name instead of running into the CI job's limit. The slowest test takes 35 s on lavapipe here. A case group can
 // give its own `timeout`.
@@ -639,6 +646,7 @@ const GROUP_FILES = {
    rootNodes: "rootnodes01.test.mjs",
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
+   soundLevel: "sound04.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
 };
 
@@ -719,6 +727,13 @@ export function referenceCases (file)
                   {
                      assert .deepEqual (at (theirs, path), xite, `${key}: the recording no longer has the known difference at ${path .join (".")}`);
                      theirs = withValue (theirs, path, xiteR);
+                  }
+
+                  // A measured level (sound04_case.mjs) is equal within RMS_TOLERANCE: the value of this run takes the recorded one.
+                  if (typeof compared ?.rms === "number" && typeof theirs ?.rms === "number")
+                  {
+                     assert .ok (Math .abs (compared .rms - theirs .rms) <= RMS_TOLERANCE, `${key}: rms ${compared .rms} against the recorded ${theirs .rms} (tolerance ${RMS_TOLERANCE})`);
+                     compared .rms = theirs .rms;
                   }
 
                   assert .deepEqual (compared, theirs, `${key}\n${page .log .join ("\n")}`);

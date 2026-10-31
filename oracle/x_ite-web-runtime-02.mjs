@@ -205,6 +205,34 @@ for (const b of browsers .values ())
 await server .close ();
 
 const sha  = data => createHash ("sha256") .update (data) .digest ("hex");
+
+// sound04 measures a level, which differs a little from run to run in X_ITE itself (the audio clock against the frames): the
+// runs must agree on everything but `rms` and on `rms` within RMS_RUN_TOLERANCE, and the recording keeps the mean of the runs
+// (4 decimals) and the raw runs (`levels`). The test of X_ITE_R (runtime02_harness.mjs, RMS_TOLERANCE) uses the same number.
+const RMS_RUN_TOLERANCE = 0.005;
+const levels            = { };
+
+if (SUITE === "sound04")
+{
+   for (const key of Object .keys (runs [0] .values))
+   {
+      const rms = runs .map (r => r .values [key] .rms);
+
+      levels [key] = rms;
+
+      if (Math .max (... rms) - Math .min (... rms) > RMS_RUN_TOLERANCE)
+      {
+         console .error (`FAIL: ${key} levels differ by more than ${RMS_RUN_TOLERANCE}: ${rms .join (" ")}`);
+         process .exit (1);
+      }
+
+      const mean = rms .reduce ((a, b) => a + b, 0) / rms .length;
+
+      for (const r of runs)
+         r .values [key] .rms = Number (mean .toFixed (4));
+   }
+}
+
 const json = runs .map (r => JSON .stringify (r .values));
 
 if (json .some (j => j !== json [0]))
@@ -233,6 +261,7 @@ await writeFile (join (outDir, `${SUITE}-baseline.json`), JSON .stringify ({
    gl,
    runs: RUNS,
    identicalValues: true,
+   ... (SUITE === "sound04" ? { rmsRunTolerance: RMS_RUN_TOLERANCE, levels } : { }),
    pictures: Object .fromEntries (Object .keys (runs [0] .pictures) .map (file => [ file, runs .map (r => sha (r .pictures [file])) ])),
    values: runs [0] .values,
 }, null, 1) + "\n");
