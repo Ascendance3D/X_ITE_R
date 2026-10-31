@@ -8,6 +8,12 @@
 //   field marshalling for every VRML97 field type, the Browser object, Script errors, Scripts in PROTOs, external .js
 //   with URL fallback). oracle/synthetic-x6-baseline.json holds X_ITE's `toVRMLString ()` of each world after
 //   createX3DFromURL with the time frozen at 946684800 (oracle/x_ite-dump.mjs), and its sorted console messages.
+// * inlineScripts.*, externproto.*, followers.*: the other clean-room Script sets of the native suite, in the same
+//   format (oracle/synthetic-inline-scripts: Scripts in Inline worlds, nesting, order, output, Browser access and
+//   import/export; oracle/synthetic-externproto: EXTERNPROTO worlds with a Script, fallback and missing files;
+//   oracle/synthetic-followers: the initial state of every follower node routed into Scripts). The reload sets
+//   (oracle/synthetic-inline-reload, oracle/synthetic-externproto-reload) are step scenarios an embedding application
+//   drives, with files published while the world runs, so they are not in this file.
 // * scriptURL.*: the Script cases of scripturl01 (scripturl01_case.mjs), whose X_ITE recording has what the Script did
 //   (`detail`: `which` and the console) that scripturl01.test.mjs cannot compare with Scripts off.
 //
@@ -25,7 +31,15 @@ import { CASE_TIMEOUT, DESKTOP, openPage, server } from "./runtime02_harness.mjs
 import { scriptCases } from "./scripturl01_case.mjs";
 
 const REPO = join (new URL (".", import.meta.url) .pathname, "../../../..");
-const X6   = JSON .parse (readFileSync (join (REPO, "oracle/synthetic-x6-baseline.json"), "utf8"));
+// The clean-room Script sets, each with X_ITE's recording in the dump format of oracle/x_ite-dump.mjs. `prefix` names
+// the test; `dir` is the set's directory under oracle/ (the server mounts it as /<dir>/).
+const SETS = [
+   { prefix: "x6",            dir: "synthetic-x6" },
+   { prefix: "inlineScripts", dir: "synthetic-inline-scripts" },
+   { prefix: "externproto",   dir: "synthetic-externproto" },
+   { prefix: "followers",     dir: "synthetic-followers" },
+]
+.map (set => ({ ... set, results: JSON .parse (readFileSync (join (REPO, `oracle/${set .dir}-baseline.json`), "utf8")) .results }));
 const URL1 = JSON .parse (readFileSync (join (process .env .XR_SCRIPTURL_BASELINE ?? join (REPO, "oracle/web-browser-script-url-01-baseline"), "scripturl01-baseline.json"), "utf8"));
 
 const env = () => ({ base: server .base, foreign: server .foreign, worlds: `${server .base}/tests/browser/worlds/`, server });
@@ -53,47 +67,51 @@ async function loadText (page, text, ms = 300)
 
 const prints = page => page .log .filter (line => line .startsWith ("log: ")) .map (line => line .slice (5));
 
-describe ("Scripts of the synthetic X6 worlds, compared with pinned X_ITE", () =>
+describe ("Scripts of the clean-room Script sets, compared with pinned X_ITE", () =>
 {
-   for (const { file, vrml, log } of X6 .results)
+   for (const { prefix, dir, results } of SETS)
    {
-      test (`x6.${file}`, { timeout: CASE_TIMEOUT }, async () =>
+      for (const { file, vrml, log } of results)
       {
-         const page = await openPage (DESKTOP);
-
-         try
+         test (`${prefix}.${file}`, { timeout: CASE_TIMEOUT }, async () =>
          {
-            await allowScripts (page);
-            // X_ITE's dump froze the browser time (getCurrentTime) at 946684800.
-            await page .clock .setFixedTime (new Date (946684800000));
-            page .log .length = 0;
+            const page = await openPage (DESKTOP);
 
-            const text = await page .evaluate (async url =>
+            try
             {
-               const X3D   = window .X3D_NS;
-               const scene = await X3D .getBrowser () .createX3DFromURL (new X3D .MFString (url));
+               await allowScripts (page);
+               // X_ITE's dump froze the browser time (getCurrentTime) at 946684800.
+               await page .clock .setFixedTime (new Date (946684800000));
+               page .log .length = 0;
 
-               return scene .toVRMLString ();
-            },
-            `${server .base}/synthetic-x6/${file}`);
+               const text = await page .evaluate (async url =>
+               {
+                  const X3D   = window .X3D_NS;
+                  const scene = await X3D .getBrowser () .createX3DFromURL (new X3D .MFString (url));
 
-            assert .equal (text .replaceAll (`${server .base}/synthetic-x6`, "http://oracle/synthetic-x6"), vrml, file);
+                  return scene .toVRMLString ();
+               },
+               `${server .base}/${dir}/${file}`);
 
-            // The recording has the console sorted, levels named as console's functions; Chromium's own resource
-            // messages are not X_ITE's.
-            const messages = page .log
-               .filter (line => !line .startsWith ("error: Failed to load resource"))
-               .map (line => line .replace (/^warning: /, "warn: ") .replaceAll (`${server .base}/synthetic-x6`, "http://oracle/synthetic-x6"))
-               .sort ();
+               assert .equal (text .replaceAll (`${server .base}/${dir}`, `http://oracle/${dir}`), vrml, file);
 
-            assert .deepEqual (messages, log, `${file} console`);
-            assert .deepEqual (pageErrors (page), [ ]);
-         }
-         finally
-         {
-            await page .context () .close ();
-         }
-      });
+               // The recording (oracle/x_ite-pin/src/dump.html) has only `console.error` and `console.warn`, sorted, levels
+               // named as console's functions; what the Scripts print (`log:`) is not in it. Chromium's own resource
+               // messages are not X_ITE's.
+               const messages = page .log
+                  .filter (line => /^(error|warning): /.test (line) && !line .startsWith ("error: Failed to load resource"))
+                  .map (line => line .replace (/^warning: /, "warn: ") .replaceAll (`${server .base}/${dir}`, `http://oracle/${dir}`))
+                  .sort ();
+
+               assert .deepEqual (messages, log, `${file} console`);
+               assert .deepEqual (pageErrors (page), [ ]);
+            }
+            finally
+            {
+               await page .context () .close ();
+            }
+         });
+      }
    }
 });
 

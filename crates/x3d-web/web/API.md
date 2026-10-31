@@ -192,7 +192,7 @@ Each difference below is listed in `KNOWN_DIFFERENCES` of `tests/browser/api.tes
 
 ## Script nodes
 
-**Status: PARTIAL.** (This entry replaces "Script nodes: not implemented".) Script nodes run in the browser build, off by default. They are not COMPLETE: the kept differences below are open, and the Script life cycle cases of `tests/browser/scriptlife01.test.mjs` list the ones that a pinned recording shows.
+**Status: PARTIAL.** (This entry replaces "Script nodes: not implemented".) Script nodes run in the browser build, off by default. The three acceptance criteria of #133 are met: the engine design is approved (the page's own engine), a Script with fields, routes, `initialize` and `eventsProcessed` runs, and the native Script oracle cases that need no DOM pass in the browser build (below). The node stays PARTIAL because the kept differences below are open, and the Script life cycle cases of `tests/browser/scriptlife01.test.mjs` list the ones that a pinned recording shows.
 
 Refs #133. A Script node runs in the page's own JavaScript engine, as in X_ITE. The engine and its Script implementation are the native viewer's (`crates/x3d-script`, the X_ITE 16.5.0 prelude), so field access, routing, event order and the Script lifecycle are the same.
 
@@ -202,7 +202,7 @@ Refs #133. A Script node runs in the page's own JavaScript engine, as in X_ITE. 
 
 **Content Security Policy.** The Script engine evaluates source text with `new Function` and `eval`, so a page that lets Scripts run and has a Content Security Policy needs `'unsafe-eval'` in its `script-src`. Give that only to the page that embeds X_ITE_R for trusted content, not to unrelated applications. X_ITE_R itself needs only `'wasm-unsafe-eval'` for its WebAssembly. Without `'unsafe-eval'` the Scripts of a world do not run: the engine logs `X_ITE_R: the Scripts of this world cannot run: EvalError: ...`, each Script logs `no script engine`, and the rest of the world runs.
 
-Compared with pinned X_ITE 16.5.0 in `tests/browser/script01.test.mjs`: the 8 synthetic Script worlds of `oracle/synthetic-x6` (scene text and console, `oracle/synthetic-x6-baseline.json`) and the 11 Script cases of `oracle/web-browser-script-url-01-baseline`, including what the Script did. The same file tests the default, the policy, the lifecycle and event order, and the page's `rootNodes` field when a Script changes the root nodes.
+Compared with pinned X_ITE 16.5.0 in `tests/browser/script01.test.mjs`: the 48 worlds of the four clean-room Script sets of the native suite: `oracle/synthetic-x6` (8), `oracle/synthetic-inline-scripts` (18), `oracle/synthetic-externproto` (12) and `oracle/synthetic-followers` (10) (scene text and the `error` and `warn` console lines, the recordings `oracle/<set>-baseline.json`; what a Script prints with `Browser.print` or `console.log` is not in them). The reload sets `oracle/synthetic-inline-reload` and `oracle/synthetic-externproto-reload` are step scenarios that an embedding application drives with files published while the world runs; they are not run here and the 11 Script cases of `oracle/web-browser-script-url-01-baseline`, including what the Script did. The same file tests the default, the policy, the lifecycle and event order, and the page's `rootNodes` field when a Script changes the root nodes.
 
 Kept differences from X_ITE:
 
