@@ -14,10 +14,9 @@ fn oracle() -> Option<Value> {
 
 #[test]
 fn fog_node_type_and_visibility() {
-    let Some(o) = oracle() else {
-        eprintln!("oracle/x_ite-fog.json missing; run node oracle/x_ite-fog.mjs");
-        return;
-    };
+    // The file is tracked: an absent or unreadable oracle fails, it never passes (issue #92).
+    let o = oracle()
+        .expect("oracle/x_ite-fog.json missing or unreadable; run node oracle/x_ite-fog.mjs");
     let cases = o["nodes"].as_array().unwrap();
 
     for c in cases {
@@ -38,10 +37,9 @@ fn fog_node_type_and_visibility() {
 
 #[test]
 fn fog_interpolant_matches_the_shader() {
-    let Some(o) = oracle() else {
-        eprintln!("oracle/x_ite-fog.json missing; run node oracle/x_ite-fog.mjs");
-        return;
-    };
+    // The file is tracked: an absent or unreadable oracle fails, it never passes (issue #92).
+    let o = oracle()
+        .expect("oracle/x_ite-fog.json missing or unreadable; run node oracle/x_ite-fog.mjs");
     let samples = o["interpolant"].as_array().unwrap();
     let mut worst = 0.0f64;
 

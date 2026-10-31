@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 1, 0 1 0 0.6, 0 0 1 0.3, 1 1 0 0.1 ] } } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex FALSE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0.3 0.3 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 emissiveColor 0 0 0.3 transparency 0.5 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 transparency 0.5 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 1, 0 1 0 0.6, 0 0 1 0.3, 1 1 0 0.1 ] } } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 specularColor 1 1 1 shininess 0.9 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } colorPerVertex TRUE color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0 ] } } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0.5 -0.6 -1 intensity 0.8 }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 specularColor 1 1 1 shininess 0.9 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] normal Normal { vector [ 0 0 1 ] } } } ] }
+] }
