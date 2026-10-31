@@ -658,13 +658,18 @@ impl PointingGpu {
                 }),
                 clip_planes,
                 flags: match &tri.depth {
-                    // gl.depthRange (near, far)
-                    Some(d) => [
-                        tri.constant_tex_coord as u8 as f32,
-                        1.0,
-                        d.range[0] as f32,
-                        d.range[1] as f32,
-                    ],
+                    // gl.depthRange (near, far). WebGL rejects near > far (INVALID_OPERATION) and keeps the range in force,
+                    // which is the default (0, 1): DepthMode.disable restores it after every shape. The pinned reference
+                    // (oracle rea-batch23 renderer.json) ignores a reversed range, so a reversed range draws unchanged.
+                    Some(d) => {
+                        let [n, f] = if d.range[0] > d.range[1] {
+                            [0.0, 1.0]
+                        } else {
+                            d.range
+                        };
+
+                        [tri.constant_tex_coord as u8 as f32, 1.0, n as f32, f as f32]
+                    }
                     None => [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
                 },
                 instancing: match &tri.instances {

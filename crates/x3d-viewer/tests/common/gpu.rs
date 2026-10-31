@@ -62,6 +62,11 @@ fn adapter() -> Option<&'static wgpu::Adapter> {
         .map(|(_, adapter)| adapter)
 }
 
+/// Name, backend and driver of the binary's adapter, for evidence output; `None` with no adapter.
+pub fn adapter_info() -> Option<wgpu::AdapterInfo> {
+    serialized(|| adapter().map(|a| a.get_info()))
+}
+
 /// A new device and queue for one test, or `None` with no adapter (hosted CI).
 pub fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
     let device = serialized(|| {
