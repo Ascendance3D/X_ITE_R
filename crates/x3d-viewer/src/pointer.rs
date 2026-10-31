@@ -1190,6 +1190,7 @@ fn pointing_draw_base(
         // A ParticleSystem's draw puts its particles' matrices here ([`particle_draw`]).
         instances: None,
         per_instance_vertices: 0,
+        depth: s.depth,
     }
 }
 

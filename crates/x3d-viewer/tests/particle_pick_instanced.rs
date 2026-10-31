@@ -84,6 +84,7 @@ fn template(geometry: Rc<Geometry>, style: Option<StyleParams>, clip: Vec<[f64; 
         skin: None,
         style,
         textures: (false, false),
+        depth: None,
         particle: true,
         particle_geometry: Some(geometry),
     }
