@@ -1,0 +1,1252 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 3,
+ "warmup": 8,
+ "seed": 23000001,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "3": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  }
+ },
+ "log": [
+  "frame 1: 0 emitter.animate calls",
+  "frame 1: 0 randomSeed uniform writes",
+  "frame 2: 0 emitter.animate calls",
+  "frame 2: 0 randomSeed uniform writes",
+  "frame 3: 0 emitter.animate calls",
+  "frame 3: 0 randomSeed uniform writes",
+  "animate called 0 times in 3 steps"
+ ],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\n\nViewpoint { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nTransform {\n  translation -3.15 3.15 1\n  children DEF c00_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.85 3.85 -1\n  children DEF c00_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.75 3.85 -1\n  children DEF c01_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.25 3.15 1\n  children DEF c01_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -1.5 3.5 0\n  children DEF c02_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 3.85 -1\n  children DEF c02_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 3.15 1\n  children DEF c02_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.45 3.15 1\n  children DEF c03_A Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.55 3.85 -1\n  children DEF c03_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.5 3.5 0\n  children DEF c04_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 3.5 0\n  children DEF c04_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 3.5 0\n  children DEF c05_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.65 3.85 -1\n  children DEF c05_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 2.5 3.5 0\n  children DEF c06_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.25 3.15 1\n  children DEF c06_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 3.5 3.5 0\n  children DEF c07_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 3.5 0\n  children DEF c07_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 2.5 0\n  children DEF c08_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.85 2.75 -1\n  children DEF c08_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.5 2.5 0\n  children DEF c09_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.25 2.25 1\n  children DEF c09_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2.5 0\n  children DEF c10_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2.5 0\n  children DEF c10_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 2.5 0\n  children DEF c11_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.55 2.75 -1\n  children DEF c11_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.5 2.5 0\n  children DEF c12_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.45 2.25 1\n  children DEF c12_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2.5 0\n  children DEF c13_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2.5 0\n  children DEF c13_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2.5 0\n  children DEF c14_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.75 2.75 -1\n  children DEF c14_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.5 2.5 0\n  children DEF c15_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.15 2.25 1\n  children DEF c15_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.5 1.5 0\n  children DEF c16_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 1.5 0\n  children DEF c16_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 1.5 0\n  children DEF c17_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.75 1.65 -1\n  children DEF c17_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.5 0\n  children DEF c18_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.35 1.35 1\n  children DEF c18_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.5 1.5 0\n  children DEF c19_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 1.5 0\n  children DEF c19_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1.5 0\n  children DEF c20_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.55 1.65 -1\n  children DEF c20_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 1.5 1.5 0\n  children DEF c21_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.35 1.35 1\n  children DEF c21_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children DEF c22_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children DEF c22_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 1.5 0\n  children DEF c23_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.85 1.65 -1\n  children DEF c23_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -3.5 0.5 0\n  children DEF c24_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.15 0.45 1\n  children DEF c24_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -2.5 0.5 0\n  children DEF c25_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 0.5 0\n  children DEF c25_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 0.5 0\n  children DEF c26_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 0.55 -1\n  children DEF c26_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -0.5 0.5 0\n  children DEF c27_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.45 0.45 1\n  children DEF c27_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 0.45 0.45 1\n  children DEF c28_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 0.55 0.55 -1\n  children DEF c28_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 1.35 0.45 1\n  children DEF c29_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.65 0.55 -1\n  children DEF c29_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 2.25 0.45 1\n  children DEF c30_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 2.5 0.5 0\n  children DEF c30_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.75 0.55 -1\n  children DEF c30_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.15 0.45 1\n  children DEF c31_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 3.85 0.55 -1\n  children DEF c31_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthTest FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -3.15 -0.45 1\n  children DEF c32_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthTest FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.85 -0.55 -1\n  children DEF c32_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.75 -0.55 -1\n  children DEF c33_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 1\n        depthTest FALSE\n        depthFunction \"NEVER\"\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.25 -0.45 1\n  children DEF c33_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -0.5 0\n  children DEF c33_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 -0.55 -1\n  children DEF c34_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 -0.45 1\n  children DEF c34_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.45 -0.45 1\n  children DEF c35_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.55 -0.55 -1\n  children DEF c35_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.55 -0.55 -1\n  children DEF c36_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.45 -0.45 1\n  children DEF c36_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.35 -0.45 1\n  children DEF c37_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.65 -0.55 -1\n  children DEF c37_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.25 -0.65 -3\n  children DEF c38_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation 1.75 -0.35 3\n  children DEF c38_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation 2.45 -0.35 3\n  children DEF c39_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation 4.55 -0.65 -3\n  children DEF c39_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -4.55 -1.95 -3\n  children DEF c40_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -2.45 -1.05 3\n  children DEF c40_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.75 0.25\n      }\n    }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation -1.75 -1.05 3\n  children DEF c41_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation -3.25 -1.95 -3\n  children DEF c41_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.75 0.25\n      }\n    }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -1.65 -1.65 -1\n  children DEF c42_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 -1.35 1\n  children DEF c42_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.5 0.5\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -1.5 0\n  children DEF c43_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -1.5 0\n  children DEF c43_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.5 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -1.5 0\n  children DEF c44_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -1.5 0\n  children DEF c44_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0 0.5\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -1.5 0\n  children DEF c45_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -1.5 0\n  children DEF c45_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1.5 0\n  children DEF c46_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1.5 0\n  children DEF c46_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -1\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -1.5 0\n  children DEF c47_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -1.5 0\n  children DEF c47_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -2\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -2.5 0\n  children DEF c48_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -2.5 0\n  children DEF c48_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -4\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -2.5 0\n  children DEF c49_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -2.5 0\n  children DEF c49_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -16\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 -2.5 0\n  children DEF c50_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 -2.5 0\n  children DEF c50_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -100000\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -2.5 0\n  children DEF c51_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -2.5 0\n  children DEF c51_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -2.5 0\n  children DEF c52_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -2.5 0\n  children DEF c52_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 100000\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -2.5 0\n  children DEF c53_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -2.5 0\n  children DEF c53_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -1 0\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c54_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c54_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c55_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c55_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -1 0\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c56_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c56_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -0.5 -1\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c57_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c57_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 1,
+  "particleLifetime": 5,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "pickProbes": {
+  "3": [
+   {
+    "id": 1,
+    "shape": "c00_A",
+    "point": [
+     -3.138139009475708,
+     3.1527016162872314,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c01_B",
+    "point": [
+     -2.2498574256896973,
+     3.1527016162872314,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001975297927856,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c02_C",
+    "point": [
+     -1.3470133543014526,
+     3.1527016162872314,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041478872299194,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c03_A",
+    "point": [
+     -0.4441411793231964,
+     3.1527016162872314,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371665000916,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c04_A",
+    "point": [
+     0.5096697807312012,
+     3.5030019283294678,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120872259140015,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c05_A",
+    "point": [
+     1.512862205505371,
+     3.5030019283294678,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c06_A",
+    "point": [
+     2.5160224437713623,
+     3.5030019283294678,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284719467163,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c07_A",
+    "point": [
+     3.5030019283294678,
+     3.5030019283294678,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528276443481,
+     0.5037528276443481,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c08_A",
+    "point": [
+     -3.486821174621582,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c09_B",
+    "point": [
+     -2.2498574256896973,
+     2.2644202709198,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001975297927856,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c10_B",
+    "point": [
+     -1.496681571006775,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041478872299194,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c11_A",
+    "point": [
+     -0.49349015951156616,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371665000916,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c12_A",
+    "point": [
+     0.5096697807312012,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120872259140015,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c13_B",
+    "point": [
+     1.512862205505371,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c14_A",
+    "point": [
+     2.5160224437713623,
+     2.5160224437713623,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284719467163,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c15_B",
+    "point": [
+     3.1527016162872314,
+     2.2644202709198,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528276443481,
+     0.5200284719467163,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c16_A",
+    "point": [
+     -3.486821174621582,
+     1.512862205505371,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c17_B",
+    "point": [
+     -2.7498257160186768,
+     1.6641484498977661,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001975297927856,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c18_A",
+    "point": [
+     -1.496681571006775,
+     1.512862205505371,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041478872299194,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c19_A",
+    "point": [
+     -0.49349015951156616,
+     1.512862205505371,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371665000916,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c20_B",
+    "point": [
+     0.5606368184089661,
+     1.6641484498977661,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120872259140015,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c21_B",
+    "point": [
+     1.3615761995315552,
+     1.3615761995315552,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c22_B",
+    "point": [
+     2.5160224437713623,
+     1.512862205505371,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284719467163,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c23_B",
+    "point": [
+     3.853302001953125,
+     1.6641484498977661,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528872489929,
+     0.5160780549049377,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c24_A",
+    "point": [
+     -3.486821174621582,
+     0.5096697807312012,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c25_B",
+    "point": [
+     -2.4998416900634766,
+     0.5096697807312012,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001974701881409,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c26_B",
+    "point": [
+     -1.6463496685028076,
+     0.5606368184089661,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041479468345642,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c27_B",
+    "point": [
+     -0.4441412091255188,
+     0.4587027430534363,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371068954468,
+     0.5120871663093567,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c28_B",
+    "point": [
+     0.5606367588043213,
+     0.5606367588043213,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120871663093567,
+     0.5120871663093567,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c29_A",
+    "point": [
+     1.3615761995315552,
+     0.45870280265808105,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c30_B",
+    "point": [
+     2.5160224437713623,
+     0.5096697807312012,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284719467163,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c31_B",
+    "point": [
+     3.853302001953125,
+     0.5606368184089661,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528872489929,
+     0.5120872259140015,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c32_B",
+    "point": [
+     -3.835503339767456,
+     -0.5428392291069031,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5081371665000916,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c33_B",
+    "point": [
+     -2.2498574256896973,
+     -0.4441411793231964,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001975297927856,
+     0.5081371665000916,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c34_A",
+    "point": [
+     -1.6463496685028076,
+     -0.5428392291069031,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041479468345642,
+     0.5081371665000916,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c35_B",
+    "point": [
+     -0.5428392291069031,
+     -0.5428392291069031,
+     -11
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.508137047290802,
+     0.508137047290802,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c36_B",
+    "point": [
+     0.4587027430534363,
+     -0.4441412091255188,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120871663093567,
+     0.5081371068954468,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c37_A",
+    "point": [
+     1.3615761995315552,
+     -0.4441411793231964,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5081371665000916,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c38_B",
+    "point": [
+     1.7612158060073853,
+     -0.34544315934181213,
+     -7
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284123420715,
+     0.5081371068954468,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c39_A",
+    "point": [
+     2.452101469039917,
+     -0.34544315934181213,
+     -7
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528276443481,
+     0.5081371068954468,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c40_B",
+    "point": [
+     -2.440775156021118,
+     -1.0476770401000977,
+     -7
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5164730548858643,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c41_A",
+    "point": [
+     -1.7498891353607178,
+     -1.0476770401000977,
+     -7
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001975297927856,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c42_B",
+    "point": [
+     -1.3470133543014526,
+     -1.3470133543014526,
+     -9
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041478872299194,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c43_A",
+    "point": [
+     -0.49349015951156616,
+     -1.496681571006775,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371665000916,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c44_B",
+    "point": [
+     0.5096697807312012,
+     -1.496681571006775,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120872259140015,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c45_A",
+    "point": [
+     1.512862205505371,
+     -1.496681571006775,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c46_B",
+    "point": [
+     2.5160224437713623,
+     -1.496681571006775,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5200284719467163,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c47_B",
+    "point": [
+     3.5030019283294678,
+     -1.496681571006775,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5037528276443481,
+     0.5041478872299194,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c48_B",
+    "point": [
+     -3.486821174621582,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.516473114490509,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c49_B",
+    "point": [
+     -2.4998416900634766,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5001974701881409,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c50_B",
+    "point": [
+     -1.496681571006775,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5041478872299194,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c51_A",
+    "point": [
+     -0.49349015951156616,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5081371665000916,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c52_A",
+    "point": [
+     0.5096697807312012,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5120872259140015,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c53_A",
+    "point": [
+     1.512862205505371,
+     -2.4998416900634766,
+     -10
+    ],
+    "normal": [
+     0,
+     0,
+     1
+    ],
+    "texCoord": [
+     0.5160780549049377,
+     0.5001974701881409,
+     0,
+     1
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c54_A",
+    "point": [
+     2.5214500427246094,
+     -2.5051932334899902,
+     -10.02145004272461
+    ],
+    "normal": [
+     0.7071067511413156,
+     0,
+     0.7071067511413156
+    ],
+    "texCoord": [
+     0.537919282913208,
+     0.49350786209106445,
+     0,
+     0.9999999403953552
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c55_B",
+    "point": [
+     3.504636764526367,
+     -2.5009894371032715,
+     -10.004636764526367
+    ],
+    "normal": [
+     0.7071067511413156,
+     0,
+     0.7071067511413156
+    ],
+    "texCoord": [
+     0.5081973075866699,
+     0.49876272678375244,
+     0,
+     0.9999999403953552
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c56_B",
+    "point": [
+     -3.4902522563934326,
+     -3.4902517795562744,
+     -10.009747505187988
+    ],
+    "normal": [
+     0.7071067511413156,
+     0,
+     0.7071067511413156
+    ],
+    "texCoord": [
+     0.5172314643859863,
+     0.512185275554657,
+     0,
+     0.9999999403953552
+    ]
+   },
+   {
+    "id": 1,
+    "shape": "c57_A",
+    "point": [
+     -2.4998655319213867,
+     -3.4868998527526855,
+     -10.00013542175293
+    ],
+    "normal": [
+     0.7071067932881648,
+     0,
+     0.7071067932881648
+    ],
+    "texCoord": [
+     0.5002382397651672,
+     0.5163751244544983,
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ "geometry": {},
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\n\nViewpoint { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nTransform {\n  translation -3.15 3.15 1\n  children DEF c00_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.85 3.85 -1\n  children DEF c00_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.75 3.85 -1\n  children DEF c01_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.25 3.15 1\n  children DEF c01_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -1.5 3.5 0\n  children DEF c02_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 3.85 -1\n  children DEF c02_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 3.15 1\n  children DEF c02_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.45 3.15 1\n  children DEF c03_A Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.55 3.85 -1\n  children DEF c03_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.5 3.5 0\n  children DEF c04_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 3.5 0\n  children DEF c04_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 3.5 0\n  children DEF c05_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.65 3.85 -1\n  children DEF c05_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 2.5 3.5 0\n  children DEF c06_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.25 3.15 1\n  children DEF c06_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NEVER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 3.5 3.5 0\n  children DEF c07_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 3.5 0\n  children DEF c07_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 2.5 0\n  children DEF c08_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.85 2.75 -1\n  children DEF c08_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.5 2.5 0\n  children DEF c09_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.25 2.25 1\n  children DEF c09_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2.5 0\n  children DEF c10_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2.5 0\n  children DEF c10_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 2.5 0\n  children DEF c11_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.55 2.75 -1\n  children DEF c11_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.5 2.5 0\n  children DEF c12_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.45 2.25 1\n  children DEF c12_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2.5 0\n  children DEF c13_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2.5 0\n  children DEF c13_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2.5 0\n  children DEF c14_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.75 2.75 -1\n  children DEF c14_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.5 2.5 0\n  children DEF c15_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.15 2.25 1\n  children DEF c15_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.5 1.5 0\n  children DEF c16_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 1.5 0\n  children DEF c16_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 1.5 0\n  children DEF c17_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.75 1.65 -1\n  children DEF c17_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.5 0\n  children DEF c18_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.35 1.35 1\n  children DEF c18_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.5 1.5 0\n  children DEF c19_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 1.5 0\n  children DEF c19_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1.5 0\n  children DEF c20_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.55 1.65 -1\n  children DEF c20_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 1.5 1.5 0\n  children DEF c21_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.35 1.35 1\n  children DEF c21_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"NOT_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children DEF c22_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children DEF c22_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 1.5 0\n  children DEF c23_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.85 1.65 -1\n  children DEF c23_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -3.5 0.5 0\n  children DEF c24_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.15 0.45 1\n  children DEF c24_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"GREATER_EQUAL\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -2.5 0.5 0\n  children DEF c25_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 0.5 0\n  children DEF c25_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 0.5 0\n  children DEF c26_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 0.55 -1\n  children DEF c26_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -0.5 0.5 0\n  children DEF c27_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.45 0.45 1\n  children DEF c27_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"ALWAYS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 0.45 0.45 1\n  children DEF c28_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 0.55 0.55 -1\n  children DEF c28_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 1.35 0.45 1\n  children DEF c29_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.65 0.55 -1\n  children DEF c29_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 2.25 0.45 1\n  children DEF c30_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 2.5 0.5 0\n  children DEF c30_B Shape {\n    appearance Appearance {\n      depthMode DepthMode { }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.75 0.55 -1\n  children DEF c30_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.15 0.45 1\n  children DEF c31_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 3.85 0.55 -1\n  children DEF c31_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthTest FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -3.15 -0.45 1\n  children DEF c32_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthTest FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -3.85 -0.55 -1\n  children DEF c32_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.75 -0.55 -1\n  children DEF c33_A Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 1\n        depthTest FALSE\n        depthFunction \"NEVER\"\n        depthMask FALSE\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -2.25 -0.45 1\n  children DEF c33_B Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -0.5 0\n  children DEF c33_C Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.65 -0.55 -1\n  children DEF c34_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 -0.45 1\n  children DEF c34_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.45 -0.45 1\n  children DEF c35_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.55 -0.55 -1\n  children DEF c35_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.55 -0.55 -1\n  children DEF c36_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 0.45 -0.45 1\n  children DEF c36_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.35 -0.45 1\n  children DEF c37_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation 1.65 -0.55 -1\n  children DEF c37_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation 3.25 -0.65 -3\n  children DEF c38_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation 1.75 -0.35 3\n  children DEF c38_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation 2.45 -0.35 3\n  children DEF c39_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation 4.55 -0.65 -3\n  children DEF c39_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -4.55 -1.95 -3\n  children DEF c40_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -2.45 -1.05 3\n  children DEF c40_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.75 0.25\n      }\n    }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation -1.75 -1.05 3\n  children DEF c41_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.56 0.56\n    }\n  }\n}\n\nTransform {\n  translation -3.25 -1.95 -3\n  children DEF c41_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.75 0.25\n      }\n    }\n    geometry Rectangle2D {\n      size 1.04 1.04\n    }\n  }\n}\n\nTransform {\n  translation -1.65 -1.65 -1\n  children DEF c42_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.88 0.88\n    }\n  }\n}\n\nTransform {\n  translation -1.35 -1.35 1\n  children DEF c42_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.5 0.5\n      }\n    }\n    geometry Rectangle2D {\n      size 0.72 0.72\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -1.5 0\n  children DEF c43_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -1.5 0\n  children DEF c43_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0.5 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -1.5 0\n  children DEF c44_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -1.5 0\n  children DEF c44_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthRange 0 0.5\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -1.5 0\n  children DEF c45_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -1.5 0\n  children DEF c45_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1.5 0\n  children DEF c46_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1.5 0\n  children DEF c46_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -1\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -1.5 0\n  children DEF c47_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -1.5 0\n  children DEF c47_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -2\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -2.5 0\n  children DEF c48_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -2.5 0\n  children DEF c48_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -4\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -2.5 0\n  children DEF c49_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -2.5 0\n  children DEF c49_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -16\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 -2.5 0\n  children DEF c50_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -1.5 -2.5 0\n  children DEF c50_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 -100000\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -2.5 0\n  children DEF c51_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -0.5 -2.5 0\n  children DEF c51_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 1\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -2.5 0\n  children DEF c52_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0.5 -2.5 0\n  children DEF c52_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 0 100000\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -2.5 0\n  children DEF c53_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 1.5 -2.5 0\n  children DEF c53_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -1 0\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c54_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c54_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c55_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation 3.5 -2.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c55_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -1 0\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c56_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c56_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset -0.5 -1\n        depthFunction \"LESS\"\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c57_A Shape {\n    appearance Appearance { }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -3.5 0\n  rotation 0 1 0 0.785398163\n  children DEF c57_B Shape {\n    appearance Appearance {\n      depthMode DepthMode {\n        polygonOffset 1 0\n      }\n    }\n    geometry Rectangle2D {\n      size 0.8 0.8\n    }\n  }\n}\n",
+ "console": [],
+ "animateCalls": 0,
+ "fileF32": "js.f32"
+}
