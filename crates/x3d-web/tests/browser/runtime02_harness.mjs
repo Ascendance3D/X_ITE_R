@@ -61,6 +61,13 @@ const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES
 // field API 01 cases (fields01_case.mjs, `--suite fields01` into oracle/web-browser-fields-01-baseline), and the field API 02 cases (fields02_case.mjs, `--suite fields02` into
 // oracle/web-browser-fields-02-baseline), and the web scene text 01 cases (scenetext01_case.mjs, `--suite scenetext01` into
 // oracle/web-browser-scene-text-01-baseline).
+// The level of the page's output depends on the machine: the page's AudioContext runs at the sample rate of the audio output
+// (48 kHz here, 44.1 kHz on the CI runner), and pinned X_ITE reads about 3% lower on the runner than here. Each environment
+// is compared with pinned X_ITE 16.5.0 measured in that environment, with the same tolerance: `sound04-baseline.json` (the
+// owner's machine) and `sound04-runner-baseline.json` (GitHub Actions, ubuntu-24.04). GitHub Actions selects the runner one;
+// XR_SOUND04_REFERENCE=local or runner overrides.
+const SOUND04_REFERENCE = process .env .XR_SOUND04_REFERENCE ?? (process .env .GITHUB_ACTIONS === "true" ? "runner" : "local");
+
 const SUITES = {
    runtime02:  { dir: BASELINE, file: "runtime02-baseline.json", groups: RUNTIME02_GROUPS },
    fallback01: { dir: process .env .XR_FALLBACK_BASELINE ?? join (REPO, "oracle/web-browser-fallback-01-baseline"), file: "fallback01-baseline.json", groups: FALLBACK01_GROUPS },
@@ -84,7 +91,7 @@ const SUITES = {
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
-   sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: "sound04-baseline.json", groups: SOUND04_GROUPS },
+   sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
