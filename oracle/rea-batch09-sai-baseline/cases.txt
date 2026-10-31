@@ -168,3 +168,6 @@ fcb-sfnode oracle/synthetic-rea-b09-sai/fcb-sfnode.wrl oracle/synthetic-rea-b09-
 fldx-count oracle/synthetic-rea-b09-sai/fldx-count.wrl oracle/synthetic-rea-b09-sai/sai.json
 scx-print oracle/synthetic-rea-b09-sai/scx-print.wrl oracle/synthetic-rea-b09-sai/sai.json
 text-screen oracle/synthetic-rea-b09-sai/text-screen.wrl oracle/synthetic-rea-b09-sai/sai.json
+update-end oracle/synthetic-rea-b97-update/update-end.wrl oracle/synthetic-rea-b97-update/update.json
+update-props oracle/synthetic-rea-b97-update/props.wrl oracle/synthetic-rea-b97-update/props.json
+update-speed oracle/synthetic-rea-b97-update/speed.wrl oracle/synthetic-rea-b97-update/speed.json
