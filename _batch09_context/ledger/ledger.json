@@ -4560,7 +4560,9 @@
    "upstream_version": "16.5.0 @ 34cdf9f97",
    "upstream_lines": 35,
    "in_node_table": true,
-   "rust": [],
+   "rust": [
+    "crates/x3d-scene/data/x_ite-nodes.json"
+   ],
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
@@ -7241,7 +7243,12 @@
    "component": "Rendering",
    "upstream": "ClipPlane",
    "upstream_version": "16.5.0 @ 34cdf9f97",
-   "rust": [],
+   "rust": [
+    "crates/x3d-render/src/traverse.rs",
+    "crates/x3d-viewer/src/walk.rs",
+    "crates/x3d-render/src/depth_gpu.rs",
+    "crates/x3d-runtime/src/nodes/shader_includes/01-ClipPlanes.glsl"
+   ],
    "status": "COMPLETE",
    "behavior": "",
    "tests": [
