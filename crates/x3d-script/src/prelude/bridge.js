@@ -563,6 +563,15 @@ function leave ()
 
 __bridge .fieldCallbackAdded = function (field)
 {
+   for (const [key, root] of rootFields)
+   {
+      if (root .field === field || root .field .getTarget () === field)
+      {
+         X ("ctxObserve", key);
+         return;
+      }
+   }
+
    const entry = attachedOf .get (field);
 
    if (entry)

@@ -21,6 +21,8 @@ pub enum CtxField {
     BBox = 1,
     Profile = 2,
     Metadata = 3,
+    /// `rootNodes` of the scene: an inputOutput MFNode that fires once per change (a Script's `rootNodes` callbacks).
+    RootNodes = 4,
 }
 
 impl CtxField {
@@ -30,6 +32,7 @@ impl CtxField {
             CtxField::BBox,
             CtxField::Profile,
             CtxField::Metadata,
+            CtxField::RootNodes,
         ]
         .get(i as usize)
         .copied()
@@ -150,6 +153,7 @@ impl Runtime {
 
         self.ctx_event(ctx, CtxField::SceneGraph, rounds);
         self.ctx_event(ctx, CtxField::BBox, rounds);
+        self.ctx_event(ctx, CtxField::RootNodes, 1);
 
         if self.page_field_events.is_some() && ctx == self.scene.world {
             let k = self.page_root_nodes_field();
@@ -274,6 +278,17 @@ impl Runtime {
             merge(&mut self.ctx_events.deferred, w, field, later, true);
         }
 
+        // The world's `rootNodes` field fires once when the world is set up (X3DWorld.set_rootNodes__).
+        if !replaced || !self.scene.scene_infos.contains_key(&w) {
+            merge(
+                &mut self.ctx_events.pending,
+                w,
+                CtxField::RootNodes,
+                1,
+                false,
+            );
+        }
+
         // The Scripts of the world have registered their callbacks: the first event reaches them before anything else happens.
         if !replaced {
             self.deliver_ctx_events();
@@ -317,6 +332,13 @@ impl Runtime {
             false,
         );
         merge(&mut self.ctx_events.parsed, ctx, CtxField::BBox, 1, false);
+        merge(
+            &mut self.ctx_events.parsed,
+            ctx,
+            CtxField::RootNodes,
+            1,
+            false,
+        );
     }
 
     /// The start of X3DRoutingContext [processEvents]: what the parser tainted reaches the callbacks that exist by now.
