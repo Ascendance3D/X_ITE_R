@@ -133,28 +133,7 @@ const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "
 // derived from it by the rule named here, so the differences stay visible and a new recording cannot hide one.
 function scriptLifeDifferences ()
 {
-   const recorded = key => SUITES .scriptlife01 .reference .values [`scriptLife.${key}`];
-   const insertAfter = (seq, line, lines) => { const i = seq .indexOf (line); assert .ok (i >= 0, line); return [ ... seq .slice (0, i + 1), ... lines, ... seq .slice (i + 1) ]; };
-   const without = (seq, test) => seq .filter (line => !test (line));
    const differences = { };
-
-   // 1. X_ITE 16.5.0 calls `shutdown` when a Script's code is replaced, but not when its world is replaced or its element
-   //    leaves the document (the old scene is not disposed). X_ITE_R calls it when the world is replaced; its output is
-   //    lost when the element leaves the document (web/API.md).
-   {
-      const seq = recorded ("shutdown") .seq;
-
-      differences ["scriptLife.shutdown"] = [ [ [ "seq" ], seq, insertAfter (seq, "page: replaceWorld", [ "log: A shutdown n=7", "log: B shutdown", "log: C shutdown" ]) ] ];
-   }
-
-   {
-      const seq = recorded ("errors") .seq;
-
-      differences ["scriptLife.errors"] = [ [ [ "seq" ], seq, insertAfter (seq, "page: replaceWorld", [
-         "log: A shutdown",
-         "error: JavaScript Error in Script 'A', in function 'shutdown'",
-         "error: TypeError: boom in shutdown" ]) ] ];
-   }
 
    return differences;
 }

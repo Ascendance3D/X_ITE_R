@@ -311,6 +311,8 @@ impl Session {
         rt.page_url = world.url.clone();
         // The page calls its field callbacks (X3DField.addFieldCallback) after the frame; the Scripts' run in the cascade.
         rt.page_field_events = Some(vec![]);
+        // X_ITE 16.5.0 does not call a Script's `shutdown` when the world is replaced.
+        rt.replace_skips_shutdown = true;
         // Browser.print of a Script: console.log of the page.
         rt.log_prints = true;
         // The page's objects of nodes are keyed by node id: it learns which ids were released.

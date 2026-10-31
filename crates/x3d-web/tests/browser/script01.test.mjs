@@ -181,11 +181,11 @@ describe ("Script lifecycle and switch of the page", () =>
          // The page reads the Script's field.
          assert .equal (await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("S") .x), 7);
 
-         // A world that replaces it: shutdown, once.
+         // A world that replaces it: no shutdown, as in X_ITE 16.5.0 (scriptlife01 compares it with the recording).
          await loadText (page, "#VRML V2.0 utf8\nGroup { }\n");
          await loadText (page, "#VRML V2.0 utf8\nGroup { }\n");
 
-         assert .deepEqual (prints (page), [ "initialize 0", "set_x 7", "routed 70", "eventsProcessed 7", "shutdown 7" ]);
+         assert .deepEqual (prints (page), [ "initialize 0", "set_x 7", "routed 70", "eventsProcessed 7" ]);
          assert .deepEqual (pageErrors (page), [ ]);
       }
       finally
