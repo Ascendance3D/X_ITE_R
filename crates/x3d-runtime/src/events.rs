@@ -91,8 +91,6 @@ impl Runtime {
 
     /// X3DField.processEvent (event).
     pub fn process_event(&mut self, k: FKey, mut event: Event) {
-        let log_len = self.log.len();
-
         if !event.visited.contains(&k) {
             event.visited.push(k);
         }
@@ -124,6 +122,9 @@ impl Runtime {
             self.call_interest(i, k);
         }
 
+        // The page's callbacks follow the interests (a Script's input handler) and precede the lines of later events.
+        let log_len = self.log.len();
+
         // Process routes.
         let field_interests = self
             .frt
@@ -150,21 +151,20 @@ impl Runtime {
     }
 
     /// The page's field callbacks of `k` (the browser build): recorded with the value of the event, for the page to call
-    /// after the frame. `log_len` is the length of the log before the event's interests and routes ran.
+    /// after the frame. `log_len` is the length of the log after the event's interests ran. The `rootNodes` event waits
+    /// for the Scripts' `rootNodes` callbacks, which run later in the cascade and print first (see
+    /// [`Runtime::deliver_ctx_events`]); without them it keeps its place.
     fn page_field_callbacks(&mut self, k: FKey, log_len: usize) {
-        if self.page_field_events.is_some() {
-            let value = self.value(k).clone();
-            // The Scripts' `rootNodes` callbacks run after this event, in the context's cascade, and X_ITE calls the
-            // page's after them: that event follows every line of the frame.
-            let log_len = if self.private_field(self.browser_node, "rootNodes") == Some(k) {
-                usize::MAX
-            } else {
-                log_len
-            };
+        let value = self.value(k).clone();
+        let root_nodes = self.private_field(self.browser_node, "rootNodes") == Some(k);
+        let Some(events) = self.page_field_events.as_mut() else {
+            return;
+        };
 
-            self.page_field_events
-                .get_or_insert_default()
-                .push((k, value, log_len));
+        events.push((k, value, log_len));
+
+        if root_nodes {
+            self.page_root_nodes_unplaced.push(events.len() - 1);
         }
     }
 
@@ -260,6 +260,7 @@ impl Runtime {
             }
         }
 
+        self.page_root_nodes_unplaced.clear();
         self.processing = false;
     }
 

@@ -367,6 +367,9 @@ pub struct Runtime {
     /// Each event also holds the length of [`Runtime::log`] when X3DField.processEvent began, so the page can print the
     /// log lines made before it first and call the callback before the lines that its routes make.
     pub page_field_events: Option<Vec<(FKey, FieldValue, usize)>>,
+    /// The `rootNodes` records of [`Runtime::page_field_events`] whose position waits for the Scripts' `rootNodes` callbacks
+    /// of the cascade (see [`Runtime::deliver_ctx_events`]).
+    pub(crate) page_root_nodes_unplaced: Vec<usize>,
     /// Replacing or unloading the world does not call the Scripts' `shutdown ()`, as X_ITE 16.5.0 (the old scene is
     /// never disposed there). Set by the browser build; the native build keeps the call (ISO/IEC 14772-1 4.12.3).
     pub replace_skips_shutdown: bool,
@@ -688,6 +691,7 @@ impl Runtime {
             field_observed: Default::default(),
             pending_field_events: vec![],
             page_field_events: None,
+            page_root_nodes_unplaced: vec![],
             replace_skips_shutdown: false,
             page_observed: Default::default(),
             page_released: None,
@@ -1223,6 +1227,7 @@ impl Runtime {
 
     /// The events of observed fields the page has not taken yet (see [`Runtime::page_field_events`]).
     pub fn take_page_field_events(&mut self) -> Vec<(FKey, FieldValue, usize)> {
+        self.page_root_nodes_unplaced.clear();
         self.page_field_events
             .as_mut()
             .map(std::mem::take)
@@ -1234,6 +1239,8 @@ impl Runtime {
     /// the rest of the batch is in X_ITE.
     pub fn halt_events(&mut self) {
         self.processing = true;
+
+        self.page_root_nodes_unplaced.clear();
 
         if let Some(events) = self.page_field_events.as_mut() {
             events.clear();
