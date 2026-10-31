@@ -21,13 +21,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// (case name, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str)] = &[(
-    "an-nested",
-    "an Anchor click that binds a Viewpoint by fragment takes effect one frame later than in X_ITE: X_ITE calls the Anchor's \
-     set_active__ inside the mouse handler (the viewpoint is bound in the frame of the mouseup), Rust requests the load in the \
-     next frame's prepareEvents. The bound Viewpoint, its pose and the isOver verification after the release (TS.over:true in \
-     X_ITE) differ by that frame. Moving the request ahead breaks anchor-load-ok/fail/param/hash of batch 09 (owner decision)",
-)];
+const KNOWN_GAPS: &[(&str, &str)] = &[];
 
 fn quat(r: &[f64]) -> [f64; 4] {
     let n = (r[0] * r[0] + r[1] * r[1] + r[2] * r[2]).sqrt();
