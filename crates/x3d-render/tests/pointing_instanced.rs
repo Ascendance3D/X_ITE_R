@@ -69,6 +69,7 @@ fn draw(vertices: Vec<[f32; 4]>, id: f32) -> PointingTriangle {
         particle: true,
         instances: None,
         per_instance_vertices: 0,
+        depth: None,
     }
 }
 

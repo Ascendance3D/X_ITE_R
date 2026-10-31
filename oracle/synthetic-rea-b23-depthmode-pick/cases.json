@@ -1,0 +1,1354 @@
+[
+ {
+  "case": "default-near-first",
+  "requirement": "default nearest",
+  "cell": 0,
+  "point": [
+   40.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c00_A",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c00_B",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "default-near-second",
+  "requirement": "default nearest",
+  "cell": 1,
+  "point": [
+   101.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c01_A",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c01_B",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "default-three",
+  "requirement": "default nearest",
+  "cell": 2,
+  "point": [
+   163.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c02_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c02_B",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c02_C",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "default-explicit-node",
+  "requirement": "default nearest",
+  "cell": 3,
+  "point": [
+   225.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c03_A",
+    "z": 1.0,
+    "mode": "",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c03_B",
+    "z": -1.0,
+    "mode": "",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-never-tie",
+  "requirement": "depthFunction",
+  "cell": 4,
+  "point": [
+   287.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c04_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c04_B",
+    "z": 0.0,
+    "mode": "depthFunction \"NEVER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-never-far",
+  "requirement": "depthFunction",
+  "cell": 5,
+  "point": [
+   349.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c05_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c05_B",
+    "z": -1.0,
+    "mode": "depthFunction \"NEVER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-never-near",
+  "requirement": "depthFunction",
+  "cell": 6,
+  "point": [
+   411.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c06_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c06_B",
+    "z": 1.0,
+    "mode": "depthFunction \"NEVER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less-tie",
+  "requirement": "depthFunction",
+  "cell": 7,
+  "point": [
+   472.5,
+   472.5
+  ],
+  "shapes": [
+   {
+    "def": "c07_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c07_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less-far",
+  "requirement": "depthFunction",
+  "cell": 8,
+  "point": [
+   40.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c08_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c08_B",
+    "z": -1.0,
+    "mode": "depthFunction \"LESS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less-near",
+  "requirement": "depthFunction",
+  "cell": 9,
+  "point": [
+   101.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c09_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c09_B",
+    "z": 1.0,
+    "mode": "depthFunction \"LESS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-equal-tie",
+  "requirement": "depthFunction",
+  "cell": 10,
+  "point": [
+   163.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c10_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c10_B",
+    "z": 0.0,
+    "mode": "depthFunction \"EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-equal-far",
+  "requirement": "depthFunction",
+  "cell": 11,
+  "point": [
+   225.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c11_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c11_B",
+    "z": -1.0,
+    "mode": "depthFunction \"EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-equal-near",
+  "requirement": "depthFunction",
+  "cell": 12,
+  "point": [
+   287.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c12_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c12_B",
+    "z": 1.0,
+    "mode": "depthFunction \"EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less_equal-tie",
+  "requirement": "depthFunction",
+  "cell": 13,
+  "point": [
+   349.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c13_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c13_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less_equal-far",
+  "requirement": "depthFunction",
+  "cell": 14,
+  "point": [
+   411.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c14_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c14_B",
+    "z": -1.0,
+    "mode": "depthFunction \"LESS_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-less_equal-near",
+  "requirement": "depthFunction",
+  "cell": 15,
+  "point": [
+   472.5,
+   411.5
+  ],
+  "shapes": [
+   {
+    "def": "c15_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c15_B",
+    "z": 1.0,
+    "mode": "depthFunction \"LESS_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater-tie",
+  "requirement": "depthFunction",
+  "cell": 16,
+  "point": [
+   40.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c16_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c16_B",
+    "z": 0.0,
+    "mode": "depthFunction \"GREATER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater-far",
+  "requirement": "depthFunction",
+  "cell": 17,
+  "point": [
+   101.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c17_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c17_B",
+    "z": -1.0,
+    "mode": "depthFunction \"GREATER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater-near",
+  "requirement": "depthFunction",
+  "cell": 18,
+  "point": [
+   163.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c18_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c18_B",
+    "z": 1.0,
+    "mode": "depthFunction \"GREATER\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-not_equal-tie",
+  "requirement": "depthFunction",
+  "cell": 19,
+  "point": [
+   225.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c19_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c19_B",
+    "z": 0.0,
+    "mode": "depthFunction \"NOT_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-not_equal-far",
+  "requirement": "depthFunction",
+  "cell": 20,
+  "point": [
+   287.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c20_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c20_B",
+    "z": -1.0,
+    "mode": "depthFunction \"NOT_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-not_equal-near",
+  "requirement": "depthFunction",
+  "cell": 21,
+  "point": [
+   349.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c21_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c21_B",
+    "z": 1.0,
+    "mode": "depthFunction \"NOT_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater_equal-tie",
+  "requirement": "depthFunction",
+  "cell": 22,
+  "point": [
+   411.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c22_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c22_B",
+    "z": 0.0,
+    "mode": "depthFunction \"GREATER_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater_equal-far",
+  "requirement": "depthFunction",
+  "cell": 23,
+  "point": [
+   472.5,
+   349.5
+  ],
+  "shapes": [
+   {
+    "def": "c23_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c23_B",
+    "z": -1.0,
+    "mode": "depthFunction \"GREATER_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-greater_equal-near",
+  "requirement": "depthFunction",
+  "cell": 24,
+  "point": [
+   40.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c24_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c24_B",
+    "z": 1.0,
+    "mode": "depthFunction \"GREATER_EQUAL\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-always-tie",
+  "requirement": "depthFunction",
+  "cell": 25,
+  "point": [
+   101.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c25_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c25_B",
+    "z": 0.0,
+    "mode": "depthFunction \"ALWAYS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-always-far",
+  "requirement": "depthFunction",
+  "cell": 26,
+  "point": [
+   163.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c26_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c26_B",
+    "z": -1.0,
+    "mode": "depthFunction \"ALWAYS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "func-always-near",
+  "requirement": "depthFunction",
+  "cell": 27,
+  "point": [
+   225.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c27_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c27_B",
+    "z": 1.0,
+    "mode": "depthFunction \"ALWAYS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "mask-false-first-near",
+  "requirement": "depthMask",
+  "cell": 28,
+  "point": [
+   287.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c28_A",
+    "z": 1.0,
+    "mode": "depthMask FALSE",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c28_B",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "mask-false-second-far",
+  "requirement": "depthMask",
+  "cell": 29,
+  "point": [
+   349.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c29_A",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c29_B",
+    "z": -1.0,
+    "mode": "depthMask FALSE",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "mask-false-then-true",
+  "requirement": "depthMask",
+  "cell": 30,
+  "point": [
+   411.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c30_A",
+    "z": 1.0,
+    "mode": "depthMask FALSE",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c30_B",
+    "z": 0.0,
+    "mode": "depthMask TRUE",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c30_C",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "test-false-second-far",
+  "requirement": "depthTest",
+  "cell": 31,
+  "point": [
+   472.5,
+   287.5
+  ],
+  "shapes": [
+   {
+    "def": "c31_A",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c31_B",
+    "z": -1.0,
+    "mode": "depthTest FALSE",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "test-false-first-near",
+  "requirement": "depthTest",
+  "cell": 32,
+  "point": [
+   40.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c32_A",
+    "z": 1.0,
+    "mode": "depthTest FALSE",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c32_B",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "state-per-shape",
+  "requirement": "per-shape state",
+  "cell": 33,
+  "point": [
+   101.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c33_A",
+    "z": -1.0,
+    "mode": "depthTest FALSE depthMask FALSE depthFunction \"NEVER\" depthRange 1 1",
+    "rotationY": 0.0
+   },
+   {
+    "def": "c33_B",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c33_C",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-1-1-near",
+  "requirement": "depthRange",
+  "cell": 34,
+  "point": [
+   163.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c34_A",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c34_B",
+    "z": 1.0,
+    "mode": "depthRange 1 1",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-0-0-far",
+  "requirement": "depthRange",
+  "cell": 35,
+  "point": [
+   225.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c35_A",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c35_B",
+    "z": -1.0,
+    "mode": "depthRange 0 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-reversed-near",
+  "requirement": "depthRange",
+  "cell": 36,
+  "point": [
+   287.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c36_A",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c36_B",
+    "z": 1.0,
+    "mode": "depthRange 1 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-reversed-far",
+  "requirement": "depthRange",
+  "cell": 37,
+  "point": [
+   349.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c37_A",
+    "z": 1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c37_B",
+    "z": -1.0,
+    "mode": "depthRange 1 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-reversed-wide-near",
+  "requirement": "depthRange",
+  "cell": 38,
+  "point": [
+   411.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c38_A",
+    "z": -3.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c38_B",
+    "z": 3.0,
+    "mode": "depthRange 1 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-reversed-wide-far",
+  "requirement": "depthRange",
+  "cell": 39,
+  "point": [
+   472.5,
+   225.5
+  ],
+  "shapes": [
+   {
+    "def": "c39_A",
+    "z": 3.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c39_B",
+    "z": -3.0,
+    "mode": "depthRange 1 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-narrow-reversed-near",
+  "requirement": "depthRange",
+  "cell": 40,
+  "point": [
+   40.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c40_A",
+    "z": -3.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c40_B",
+    "z": 3.0,
+    "mode": "depthRange 0.75 0.25",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-narrow-reversed-far",
+  "requirement": "depthRange",
+  "cell": 41,
+  "point": [
+   101.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c41_A",
+    "z": 3.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c41_B",
+    "z": -3.0,
+    "mode": "depthRange 0.75 0.25",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-half-near",
+  "requirement": "depthRange",
+  "cell": 42,
+  "point": [
+   163.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c42_A",
+    "z": -1.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c42_B",
+    "z": 1.0,
+    "mode": "depthRange 0.5 0.5",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-upper-half",
+  "requirement": "depthRange",
+  "cell": 43,
+  "point": [
+   225.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c43_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c43_B",
+    "z": 0.0,
+    "mode": "depthRange 0.5 1",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "range-lower-half",
+  "requirement": "depthRange",
+  "cell": 44,
+  "point": [
+   287.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c44_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c44_B",
+    "z": 0.0,
+    "mode": "depthRange 0 0.5 depthFunction \"LESS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-none-less",
+  "requirement": "polygonOffset",
+  "cell": 45,
+  "point": [
+   349.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c45_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c45_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\"",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-minus1-less",
+  "requirement": "polygonOffset",
+  "cell": 46,
+  "point": [
+   411.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c46_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c46_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset 0 -1",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-minus2-less",
+  "requirement": "polygonOffset",
+  "cell": 47,
+  "point": [
+   472.5,
+   163.5
+  ],
+  "shapes": [
+   {
+    "def": "c47_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c47_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset 0 -2",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-minus4-less",
+  "requirement": "polygonOffset",
+  "cell": 48,
+  "point": [
+   40.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c48_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c48_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset 0 -4",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-minus16-less",
+  "requirement": "polygonOffset",
+  "cell": 49,
+  "point": [
+   101.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c49_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c49_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset 0 -16",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-minus100000-less",
+  "requirement": "polygonOffset",
+  "cell": 50,
+  "point": [
+   163.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c50_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c50_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset 0 -100000",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-plus1-lequal",
+  "requirement": "polygonOffset",
+  "cell": 51,
+  "point": [
+   225.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c51_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c51_B",
+    "z": 0.0,
+    "mode": "polygonOffset 0 1",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-units-plus100000-lequal",
+  "requirement": "polygonOffset",
+  "cell": 52,
+  "point": [
+   287.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c52_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c52_B",
+    "z": 0.0,
+    "mode": "polygonOffset 0 100000",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-factor-flat-minus1",
+  "requirement": "polygonOffset",
+  "cell": 53,
+  "point": [
+   349.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c53_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 0.0
+   },
+   {
+    "def": "c53_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset -1 0",
+    "rotationY": 0.0
+   }
+  ]
+ },
+ {
+  "case": "poly-tilted-none-less",
+  "requirement": "polygonOffset",
+  "cell": 54,
+  "point": [
+   411.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c54_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 45
+   },
+   {
+    "def": "c54_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\"",
+    "rotationY": 45
+   }
+  ]
+ },
+ {
+  "case": "poly-tilted-factor-minus1",
+  "requirement": "polygonOffset",
+  "cell": 55,
+  "point": [
+   472.5,
+   101.5
+  ],
+  "shapes": [
+   {
+    "def": "c55_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 45
+   },
+   {
+    "def": "c55_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset -1 0",
+    "rotationY": 45
+   }
+  ]
+ },
+ {
+  "case": "poly-tilted-factor-minus-half-units-minus1",
+  "requirement": "polygonOffset",
+  "cell": 56,
+  "point": [
+   40.5,
+   40.5
+  ],
+  "shapes": [
+   {
+    "def": "c56_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 45
+   },
+   {
+    "def": "c56_B",
+    "z": 0.0,
+    "mode": "depthFunction \"LESS\" polygonOffset -0.5 -1",
+    "rotationY": 45
+   }
+  ]
+ },
+ {
+  "case": "poly-tilted-factor-plus1-lequal",
+  "requirement": "polygonOffset",
+  "cell": 57,
+  "point": [
+   101.5,
+   40.5
+  ],
+  "shapes": [
+   {
+    "def": "c57_A",
+    "z": 0.0,
+    "mode": null,
+    "rotationY": 45
+   },
+   {
+    "def": "c57_B",
+    "z": 0.0,
+    "mode": "polygonOffset 1 0",
+    "rotationY": 45
+   }
+  ]
+ }
+]

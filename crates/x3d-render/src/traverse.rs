@@ -6833,7 +6833,7 @@ fn blend_params(sg: &Sg, b: NodeId) -> BlendParams {
 }
 
 /// DepthMode.enable state.
-fn depth_params(sg: &Sg, d: NodeId) -> DepthParams {
+pub fn depth_params(sg: &Sg, d: NodeId) -> DepthParams {
     let func = match sg.string(d, "depthFunction", "LESS_EQUAL").as_str() {
         "NEVER" => DepthFunc::Never,
         "LESS" => DepthFunc::Less,

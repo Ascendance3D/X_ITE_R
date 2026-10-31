@@ -9,6 +9,7 @@
 //! and particle k of a draw with x3d_Id `id` carries `id + k`.
 
 use bytemuck::{Pod, Zeroable};
+use std::collections::HashMap;
 use std::rc::Rc;
 use x3d_fields::math::Matrix4;
 
@@ -120,6 +121,9 @@ pub struct PointingTriangle {
     pub instances: Option<Rc<Vec<Matrix4>>>,
     /// 0: every particle draws the whole vertex range; n: particle k draws vertices k·n .. (k+1)·n of it.
     pub per_instance_vertices: u32,
+    /// The appearance's DepthMode (X3DRenderObject.pointing: `depthModeNode .enable (gl)` around the draw): depth test and
+    /// function, depth mask, depth range and polygon offset. `None` keeps the pass defaults (LEQUAL, writes on).
+    pub depth: Option<crate::traverse::DepthParams>,
 }
 
 /// What the pointing buffer holds after the draw: gl_FragData 0 to 2.
@@ -137,14 +141,68 @@ pub const IDENTITY: [f32; 16] = [
     1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
 ];
 
+/// What a pointing pipeline varies with: the primitive topology, the gl_FragData pass and the DepthMode state.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+struct PipelineKey {
+    lines: bool,
+    second_pass: bool,
+    depth_test: bool,
+    depth_write: bool,
+    depth_func: wgpu::CompareFunction,
+    /// DepthMode polygonOffset (units, factor bits): POLYGON_OFFSET_FILL, polygons only.
+    bias: (i32, u32),
+}
+
+impl PipelineKey {
+    fn new(tri: &PointingTriangle, second_pass: bool) -> PipelineKey {
+        use crate::traverse::DepthFunc;
+
+        let mut key = PipelineKey {
+            lines: tri.primitive == PointingPrimitive::Lines,
+            second_pass,
+            depth_test: true,
+            depth_write: true,
+            depth_func: wgpu::CompareFunction::LessEqual,
+            bias: (0, 0),
+        };
+
+        if let Some(d) = &tri.depth {
+            key.depth_test = d.test;
+            key.depth_write = d.mask;
+            key.depth_func = match d.func {
+                DepthFunc::Never => wgpu::CompareFunction::Never,
+                DepthFunc::Less => wgpu::CompareFunction::Less,
+                DepthFunc::Equal => wgpu::CompareFunction::Equal,
+                DepthFunc::LessEqual => wgpu::CompareFunction::LessEqual,
+                DepthFunc::Greater => wgpu::CompareFunction::Greater,
+                DepthFunc::NotEqual => wgpu::CompareFunction::NotEqual,
+                DepthFunc::GreaterEqual => wgpu::CompareFunction::GreaterEqual,
+                DepthFunc::Always => wgpu::CompareFunction::Always,
+            };
+
+            // POLYGON_OFFSET_FILL: polygons only (not GL points or lines).
+            if tri.primitive == PointingPrimitive::Triangles {
+                key.bias = (
+                    d.polygon_offset[1].round() as i32,
+                    (d.polygon_offset[0] as f32).to_bits(),
+                );
+            }
+        }
+
+        key
+    }
+}
+
 /// MultiSampleFramebuffer / PointingBuffer: DEPTH_COMPONENT24.
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
 
 pub struct PointingGpu {
     device: wgpu::Device,
     queue: wgpu::Queue,
-    /// [triangles, lines] × [gl_FragData 0 and 1, gl_FragData 2].
-    pipelines: [[wgpu::RenderPipeline; 2]; 2],
+    /// The pipelines made so far, by [`PipelineKey`]: the pass defaults and each DepthMode state a draw asked for.
+    pipelines: HashMap<PipelineKey, wgpu::RenderPipeline>,
+    module: wgpu::ShaderModule,
+    pipeline_layout: wgpu::PipelineLayout,
     uniforms: wgpu::Buffer,
     layout: wgpu::BindGroupLayout,
     group: wgpu::BindGroup,
@@ -255,90 +313,7 @@ impl PointingGpu {
             bind_group_layouts: &[Some(&layout)],
             immediate_size: 0,
         });
-        let attributes = [
-            wgpu::VertexAttribute {
-                format: wgpu::VertexFormat::Float32x4,
-                offset: 0,
-                shader_location: 0,
-            },
-            wgpu::VertexAttribute {
-                format: wgpu::VertexFormat::Float32x3,
-                offset: 16,
-                shader_location: 1,
-            },
-            wgpu::VertexAttribute {
-                format: wgpu::VertexFormat::Float32x4,
-                offset: 28,
-                shader_location: 2,
-            },
-            wgpu::VertexAttribute {
-                format: wgpu::VertexFormat::Float32x2,
-                offset: 44,
-                shader_location: 3,
-            },
-        ];
-        let buffers = [Some(wgpu::VertexBufferLayout {
-            array_stride: std::mem::size_of::<VertexData>() as u64,
-            step_mode: wgpu::VertexStepMode::Vertex,
-            attributes: &attributes,
-        })];
-        let rgba32 = |_: ()| {
-            Some(wgpu::ColorTargetState {
-                format: wgpu::TextureFormat::Rgba32Float,
-                blend: None,
-                write_mask: wgpu::ColorWrites::ALL,
-            })
-        };
-        let make = |topology: wgpu::PrimitiveTopology,
-                    entry: &'static str,
-                    targets: &[Option<wgpu::ColorTargetState>]| {
-            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-                label: Some(entry),
-                layout: Some(&pipeline_layout),
-                vertex: wgpu::VertexState {
-                    module: &module,
-                    entry_point: Some("vs_main"),
-                    compilation_options: Default::default(),
-                    buffers: &buffers,
-                },
-                // gl.disable (gl .CULL_FACE)
-                primitive: wgpu::PrimitiveState {
-                    topology,
-                    cull_mode: None,
-                    ..Default::default()
-                },
-                // X3DRenderingContext: gl.depthFunc (gl .LEQUAL), depth writes on. X3DRenderObject.pointing also enables an
-                // appearance's DepthMode node; that is not ported here (a DepthMode shape is picked with these defaults).
-                depth_stencil: Some(wgpu::DepthStencilState {
-                    format: DEPTH_FORMAT,
-                    depth_write_enabled: Some(true),
-                    depth_compare: Some(wgpu::CompareFunction::LessEqual),
-                    stencil: Default::default(),
-                    bias: Default::default(),
-                }),
-                multisample: wgpu::MultisampleState::default(),
-                fragment: Some(wgpu::FragmentState {
-                    module: &module,
-                    entry_point: Some(entry),
-                    compilation_options: Default::default(),
-                    targets,
-                }),
-                multiview_mask: None,
-                cache: None,
-            })
-        };
-        // WebGPU allows 32 bytes of color attachments per sample, so gl_FragData 2 is drawn in a second, identical pass
-        // (same primitives, same order, same depth test) into its own buffer.
-        let pipelines = [
-            wgpu::PrimitiveTopology::TriangleList,
-            wgpu::PrimitiveTopology::LineList,
-        ]
-        .map(|t| {
-            [
-                make(t, "fs_a", &[rgba32(()), rgba32(())]),
-                make(t, "fs_b", &[rgba32(())]),
-            ]
-        });
+        let pipelines = HashMap::new();
         let uniforms = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("pointing uniforms"),
             size: UNIFORM_STRIDE,
@@ -398,6 +373,8 @@ impl PointingGpu {
             device,
             queue,
             pipelines,
+            module,
+            pipeline_layout,
             uniforms,
             layout,
             group,
@@ -415,6 +392,98 @@ impl PointingGpu {
             samples: 0,
             draws: 0,
         }
+    }
+
+    /// The pipeline of `key`, made on first use. gl_FragData 2 is drawn in a second, identical pass (WebGPU allows 32 bytes
+    /// of color attachments per sample): same primitives, same order, same depth state, its own buffer.
+    fn make_pipeline(&self, key: PipelineKey) -> wgpu::RenderPipeline {
+        let attributes = [
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x4,
+                offset: 0,
+                shader_location: 0,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x3,
+                offset: 16,
+                shader_location: 1,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x4,
+                offset: 28,
+                shader_location: 2,
+            },
+            wgpu::VertexAttribute {
+                format: wgpu::VertexFormat::Float32x2,
+                offset: 44,
+                shader_location: 3,
+            },
+        ];
+        let buffers = [Some(wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<VertexData>() as u64,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &attributes,
+        })];
+        let rgba32 = || {
+            Some(wgpu::ColorTargetState {
+                format: wgpu::TextureFormat::Rgba32Float,
+                blend: None,
+                write_mask: wgpu::ColorWrites::ALL,
+            })
+        };
+        let (entry, targets) = if key.second_pass {
+            ("fs_b", vec![rgba32()])
+        } else {
+            ("fs_a", vec![rgba32(), rgba32()])
+        };
+        self.device
+            .create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: Some(entry),
+                layout: Some(&self.pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &self.module,
+                    entry_point: Some("vs_main"),
+                    compilation_options: Default::default(),
+                    buffers: &buffers,
+                },
+                // gl.disable (gl .CULL_FACE)
+                primitive: wgpu::PrimitiveState {
+                    topology: if key.lines {
+                        wgpu::PrimitiveTopology::LineList
+                    } else {
+                        wgpu::PrimitiveTopology::TriangleList
+                    },
+                    cull_mode: None,
+                    ..Default::default()
+                },
+                // X3DRenderingContext: gl.depthFunc (gl .LEQUAL), depth writes on; X3DRenderObject.pointing then enables
+                // the appearance's DepthMode (DepthMode.enable): test and function, mask, polygon offset. gl.disable
+                // (DEPTH_TEST) also stops depth writes. The depth range is the vertex shader's (flags .y).
+                depth_stencil: Some(wgpu::DepthStencilState {
+                    format: DEPTH_FORMAT,
+                    depth_write_enabled: Some(key.depth_test && key.depth_write),
+                    depth_compare: Some(if key.depth_test {
+                        key.depth_func
+                    } else {
+                        wgpu::CompareFunction::Always
+                    }),
+                    stencil: Default::default(),
+                    bias: wgpu::DepthBiasState {
+                        constant: key.bias.0,
+                        slope_scale: f32::from_bits(key.bias.1),
+                        clamp: 0.0,
+                    },
+                }),
+                multisample: wgpu::MultisampleState::default(),
+                fragment: Some(wgpu::FragmentState {
+                    module: &self.module,
+                    entry_point: Some(entry),
+                    compilation_options: Default::default(),
+                    targets: &targets,
+                }),
+                multiview_mask: None,
+                cache: None,
+            })
     }
 
     fn bind_group(
@@ -588,7 +657,21 @@ impl PointingGpu {
                     ]
                 }),
                 clip_planes,
-                flags: [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
+                flags: match &tri.depth {
+                    // gl.depthRange (near, far). WebGL rejects near > far (INVALID_OPERATION) and keeps the range in force,
+                    // which is the default (0, 1): DepthMode.disable restores it after every shape. The pinned reference
+                    // (oracle rea-batch23 renderer.json) ignores a reversed range, so a reversed range draws unchanged.
+                    Some(d) => {
+                        let [n, f] = if d.range[0] > d.range[1] {
+                            [0.0, 1.0]
+                        } else {
+                            d.range
+                        };
+
+                        [tri.constant_tex_coord as u8 as f32, 1.0, n as f32, f as f32]
+                    }
+                    None => [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
+                },
                 instancing: match &tri.instances {
                     Some(m) => {
                         first += m.len() as u32;
@@ -643,6 +726,20 @@ impl PointingGpu {
 
         self.queue.write_buffer(&self.uniforms, 0, &uniforms);
         crate::transfer::split_upload(uniforms.len(), particle_draws * UNIFORM_STRIDE as usize);
+
+        // The pipelines of the draws, made before the passes borrow them.
+        let keys: Vec<[PipelineKey; 2]> = draws
+            .iter()
+            .map(|d| [PipelineKey::new(d, false), PipelineKey::new(d, true)])
+            .collect();
+
+        for key in keys.iter().flatten() {
+            if !self.pipelines.contains_key(key) {
+                let pipeline = self.make_pipeline(*key);
+
+                self.pipelines.insert(*key, pipeline);
+            }
+        }
 
         let mut encoder = self
             .device
@@ -701,9 +798,8 @@ impl PointingGpu {
                     continue;
                 }
 
-                let lines = (tri.primitive == PointingPrimitive::Lines) as usize;
                 let [x, y, w, h] = tri.viewport.map(|v| v as f32);
-                pass.set_pipeline(&self.pipelines[lines][pass_index]);
+                pass.set_pipeline(&self.pipelines[&keys[k][pass_index]]);
                 pass.set_bind_group(0, &self.group, &[(k as u64 * UNIFORM_STRIDE) as u32]);
                 pass.set_viewport(x, y, w, h, 0.0, 1.0);
                 pass.draw(range.clone(), 0..instances);
