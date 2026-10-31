@@ -1,0 +1,14 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF PS ParticleSystem {
+  geometryType "GEOMETRY"
+  maxParticles 60
+  particleLifetime 3
+  particleSize 0.15 0.15
+  texCoordKey [0 0.5] texCoord TextureCoordinate { point [0 0, 0.5 0, 0.5 0.5, 0 0.5, 0.5 0.5, 1 0.5, 1 1, 0.5 1] } colorKey [0 0.5 1] color Color { color [1 0 0, 1 1 0, 0 0.4 1] } geometry Box { size 0.2 0.2 0.2 }
+  emitter ConeEmitter { direction 0 1 0 angle 0.5 speed 1.2 variation 0.2 }
+  appearance Appearance { material Material { } texture PixelTexture { image 4 4 4 0x40ff40c0 0xff4040ff 0x40ff40c0 0xff4040ff 0xff4040ff 0x40ff40c0 0xff4040ff 0x40ff40c0 0x40ff40c0 0xff4040ff 0x40ff40c0 0xff4040ff 0xff4040ff 0x40ff40c0 0xff4040ff 0x40ff40c0 } }
+}

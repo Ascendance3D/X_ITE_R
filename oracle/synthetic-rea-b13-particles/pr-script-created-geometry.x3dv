@@ -1,0 +1,29 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF MK Script {
+  directOutput TRUE
+  url "ecmascript:
+function initialize () {
+  var scene = Browser .currentScene;
+  var ps = scene .createNode ('ParticleSystem');
+  ps .geometryType = 'GEOMETRY'; ps .maxParticles = 60; ps .particleLifetime = 3;
+  var box = scene .createNode ('Box'); box .size = new SFVec3f (0.2, 0.2, 0.2); ps .geometry = box;
+  ps .texCoordKey = new MFFloat (0, 0.5);
+  var tc = scene .createNode ('TextureCoordinate');
+  tc .point = new MFVec2f (new SFVec2f (0, 0), new SFVec2f (0.5, 0), new SFVec2f (0.5, 0.5), new SFVec2f (0, 0.5),
+                           new SFVec2f (0.5, 0.5), new SFVec2f (1, 0.5), new SFVec2f (1, 1), new SFVec2f (0.5, 1));
+  ps .texCoord = tc;
+  var em = scene .createNode ('ConeEmitter');
+  em .direction = new SFVec3f (0, 1, 0); em .angle = 0.5; em .speed = 1.2; em .variation = 0.2;
+  ps .emitter = em;
+  var ap = scene .createNode ('Appearance'); ap .material = scene .createNode ('Material');
+  var tex = scene .createNode ('PixelTexture');
+  tex .image = new SFImage (2, 2, 3, new MFInt32 (0xff4040, 0x40ff40, 0x4040ff, 0xffff40));
+  ap .texture = tex; ps .appearance = ap;
+  scene .addRootNode (ps);
+  scene .updateNamedNode ('PS', ps);
+}"
+}

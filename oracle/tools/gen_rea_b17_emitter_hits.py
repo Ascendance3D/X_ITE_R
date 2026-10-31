@@ -21,6 +21,16 @@ speed 0, so each one stays where it was emitted.
                       (the BVH sorts triangles by centroid; the quads' centroids tie on the split axis, so the listing
                       order sets the traversal order, and with it which hits are stored where)
 
+Issue #93 adds the particles that move (nonzero speed), appended after the cases above so that no seed changes:
+
+  ve-speed-N[-down|-shuffle|-uneven]  the same stacks with direction 0 1 0, speed 2, variation 0.3 and a 1 s lifetime
+  ve-speed-64-bounded  64 quads at y = 1.5 emitting downward (speed 2) onto a BoundedPhysicsModel of 40 planes (the floor
+                       at y = 0 and 39 planes below it): hits past 32 in the emitter and in the bounded model at once
+
+A BVH deeper than the GLSL stack (BVH_STACK_SIZE = 32) cannot be built: BVH.js splits every node at the median
+(leftSize = size >>> 1), so a tree of N triangles has depth ceil(log2 N) and 32 needs more than 2 ** 31 triangles.
+That gap has no case; crates/x3d-runtime has a unit test of the depth bound.
+
 Newly authored; no historical content.
 """
 import json, os, random
@@ -32,18 +42,18 @@ DT = 1 / 30
 HALF = 5
 
 
-def stack(ys):
+def stack(ys, direction="0 1 0", speed=0, variation=0):
     """VolumeEmitter of horizontal quads at the heights ys, in that order."""
     points = ", ".join(f"{-HALF} {y:.4f} {-HALF}, {HALF} {y:.4f} {-HALF}, {HALF} {y:.4f} {HALF}, {-HALF} {y:.4f} {HALF}"
                        for y in ys)
     index = " ".join(f"{4 * i} {4 * i + 3} {4 * i + 2} {4 * i + 1} -1" for i in range(len(ys)))
-    return (f"VolumeEmitter {{ direction 0 1 0 speed 0 variation 0 coordIndex [ {index} ] "
+    return (f"VolumeEmitter {{ direction {direction} speed {speed:g} variation {variation:g} coordIndex [ {index} ] "
             f"coord Coordinate {{ point [ {points} ] }} }}")
 
 
-def ps(emitter, n=32, life=0.25):
+def ps(emitter, n=32, life=0.25, physics=""):
     return (f'DEF PS ParticleSystem {{\n  geometryType "POINT"\n  maxParticles {n}\n  particleLifetime {life:g}\n'
-            f"  lifetimeVariation 0\n  emitter {emitter}\n}}\n")
+            f"  lifetimeVariation 0\n  emitter {emitter}\n{physics}}}\n")
 
 
 def up(n):
@@ -76,6 +86,24 @@ for hits in (33, 40, 64, 128):
     CASES[f"ve-hits-{hits}-down"] = ps(stack(up(hits)[::-1]))
     CASES[f"ve-hits-{hits}-shuffle"] = ps(stack(shuffled(up(hits), 1700 + hits)))
     CASES[f"ve-hits-{hits}-uneven"] = ps(stack(uneven(hits, 1800 + hits)))
+
+# Nonzero speed (issue #93). These come after every older case: the script seeds count the cases in order.
+MOVING = dict(speed=2, variation=0.3)
+
+for hits in (33, 64, 128):
+    CASES[f"ve-speed-{hits}"] = ps(stack(up(hits), **MOVING), life=1)
+
+CASES["ve-speed-64-down"] = ps(stack(up(64)[::-1], **MOVING), life=1)
+CASES["ve-speed-64-shuffle"] = ps(stack(shuffled(up(64), 1764), **MOVING), life=1)
+CASES["ve-speed-128-uneven"] = ps(stack(uneven(128, 1828), **MOVING), life=1)
+
+FLOOR_PLANES = [0] + [-0.5 - 0.05 * k for k in range(39)]
+FLOOR_POINTS = ", ".join(f"-6 {y:g} -6, 6 {y:g} -6, 6 {y:g} 6, -6 {y:g} 6" for y in FLOOR_PLANES)
+FLOOR_INDEX = " ".join(f"{4 * i} {4 * i + 3} {4 * i + 2} {4 * i + 1} -1" for i in range(len(FLOOR_PLANES)))
+FLOOR = (f"BoundedPhysicsModel {{ damping 0.5 geometry IndexedFaceSet {{ solid FALSE coord Coordinate {{ point "
+         f"[ {FLOOR_POINTS} ] }} coordIndex [ {FLOOR_INDEX} ] }} }}")
+CASES["ve-speed-64-bounded"] = ps(stack([1.5 + 0.002 * k for k in range(64)], direction="0 -1 0", speed=2, variation=0.3),
+                                  life=3, physics=f"  physics [ {FLOOR} ]\n")
 
 
 def main():

@@ -83,6 +83,13 @@ cases! {
     hits_128_down => "ve-hits-128-down",
     hits_128_shuffle => "ve-hits-128-shuffle",
     hits_128_uneven => "ve-hits-128-uneven",
+    speed_33 => "ve-speed-33",
+    speed_64 => "ve-speed-64",
+    speed_128 => "ve-speed-128",
+    speed_64_down => "ve-speed-64-down",
+    speed_64_shuffle => "ve-speed-64-shuffle",
+    speed_128_uneven => "ve-speed-128-uneven",
+    speed_64_bounded => "ve-speed-64-bounded",
 }
 
 /// Step `l` to frame `k` with the baseline's seed of that frame; the particle state after it.
