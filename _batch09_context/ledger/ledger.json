@@ -6118,12 +6118,13 @@
    "tests": [
     "crates/x3d-render/tests/render_rea2.rs",
     "crates/x3d-viewer/tests/rea_b23_depthmode_pick.rs::depthmode_pick_matches_pinned_x_ite (58 cells, adapter name and backend printed)",
+    "crates/x3d-viewer/tests/rea_b23_depthmode_pick_cpu.rs::depthmode_cpu_pick_matches_pinned_x_ite (the same 58 cells on the CPU ray cast, no adapter needed)",
     "crates/x3d-render/tests/pointing_depthmode.rs",
     "crates/x3d-viewer/tests/depthmode_pick.rs"
    ],
-   "missing": "pointing without a GPU (the CPU ray cast) ignores DepthMode: the nearest hit wins; the main color pass is not compared for a reversed depthRange (WebGL ignores near > far; only the pointing pass applies that rule)",
+   "missing": "the main color pass is not compared for a reversed depthRange (WebGL ignores near > far; only the pointing pass applies that rule)",
    "oracle": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4; oracle/rea-batch23-depthmode-pick-baseline/dm-pick (pinned 16.5.0, WebGL 2 on ANGLE/OpenGL, RTX 3060 Ti; 58 pointing cells: default, depthFunction x8, depthMask, depthTest, per-shape state, depthRange, polygonOffset; 5 identical recordings, then 58 of 58 match wgpu/Vulkan on the same GPU)",
-   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console); Wave 3 2026-10-31 (#79): GPU pointing applies DepthMode (X3DRenderObject.pointing, depthModeNode.enable). Rust defect fixed: a reversed depthRange (near > far) was applied; WebGL raises INVALID_OPERATION and keeps the default, so X_ITE ignores it. Negative checks: ignoring depthRange fails 4 cells and a unit test; applying a reversed range fails 3 cells and a unit test."
+   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console); Wave 3 2026-10-31 (#79): GPU pointing applies DepthMode (X3DRenderObject.pointing, depthModeNode.enable). Rust defect fixed: a reversed depthRange (near > far) was applied; WebGL raises INVALID_OPERATION and keeps the default, so X_ITE ignores it. Negative checks: ignoring depthRange fails 4 cells and a unit test; applying a reversed range fails 3 cells and a unit test. Wave 3 2026-10-31 (#79, CPU path): the CPU ray cast runs its hits through a 24-bit depth buffer in drawing order (depth function, mask, test, range, polygon offset) when a candidate has a DepthMode; without one the nearest hit still wins in double. 58 of 58 cells match; ignoring DepthMode in the CPU path fails the cells."
   },
   {
    "id": "node:DiffuseTransmissionMaterialExtension",
