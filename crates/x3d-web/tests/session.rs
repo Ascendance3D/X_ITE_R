@@ -1053,3 +1053,105 @@ fn the_root_nodes_of_the_page_change_the_world_and_send_their_event_in_order() {
     assert!(s.set_root_nodes(vec![Some(100_000)]).is_err());
     assert_eq!(s.root_nodes(), []);
 }
+
+/// A Script host for the tests (issue #133): each Script defines `prepareEvents` only, which sets the world's root
+/// nodes to `roots` once it is armed, as a Script's `addRootNode` or `rootNodes` assignment does. `attached` counts
+/// the moves of the runtime the host was told of.
+struct RootsHost {
+    roots: std::rc::Rc<std::cell::RefCell<Option<Vec<Option<NodeId>>>>>,
+    attached: std::rc::Rc<std::cell::Cell<u32>>,
+}
+
+impl x3d_runtime::ScriptHost for RootsHost {
+    fn create_context(
+        &mut self,
+        _rt: &mut x3d_runtime::Runtime,
+        _node: NodeId,
+        _source: &str,
+        callbacks: &[String],
+    ) -> Result<Vec<bool>, x3d_runtime::ScriptError> {
+        Ok(callbacks.iter().map(|c| c == "prepareEvents").collect())
+    }
+
+    fn call(
+        &mut self,
+        rt: &mut x3d_runtime::Runtime,
+        _node: NodeId,
+        _call: x3d_runtime::ScriptCall,
+    ) -> Result<(), x3d_runtime::ScriptError> {
+        if let Some(list) = self.roots.borrow_mut().take() {
+            let world = rt.scene.world;
+
+            rt.set_root_nodes(world, list);
+        }
+
+        Ok(())
+    }
+
+    fn attach(&mut self, _rt: &mut x3d_runtime::Runtime) {
+        self.attached.set(self.attached.get() + 1);
+    }
+}
+
+const SCRIPTED: &[u8] = b"#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+DEF T Transform { }
+DEF M Material { }
+DEF S Script { url \"ecmascript: function prepareEvents () { }\" }
+";
+
+/// The page's rootNodes field and node field callbacks with a Script host (issue #133): a root node list that a
+/// Script changes sends the event of the page's rootNodes field, and the page's own field callbacks still come while
+/// Scripts run. The host learns that the runtime moved when the world went live.
+#[test]
+fn a_script_that_changes_the_root_nodes_sends_the_event_of_the_page() {
+    use x3d_web::session::ROOT_NODES_EVENT;
+
+    let roots = std::rc::Rc::new(std::cell::RefCell::new(None));
+    let attached = std::rc::Rc::new(std::cell::Cell::new(0));
+    let host = RootsHost {
+        roots: roots.clone(),
+        attached: attached.clone(),
+    };
+    let world = Session::parse(SCRIPTED, URL, Box::new(NoFetch)).unwrap();
+    let mut s = Session::begin_with_scripts(world, NOW, 512, 384, |_| {
+        Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>)
+    });
+
+    assert!(s.go_live(NOW));
+    assert_eq!(
+        attached.get(),
+        1,
+        "the host is attached to the live runtime"
+    );
+
+    let t = s.named_node("T").unwrap();
+    let m = s.named_node("M").unwrap();
+
+    s.observe_root_nodes(true);
+    s.observe_field(t, "translation", true).unwrap();
+    s.step(NOW + 0.1);
+    s.take_field_events();
+
+    // The Script changes the list in prepareEvents; the page set a node field before the frame.
+    let list = vec![Some(m), Some(t)];
+
+    *roots.borrow_mut() = Some(list.clone());
+    s.set_field_data(t, "translation", &vec3(1.0, 2.0, 3.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+
+    assert_eq!(s.root_nodes(), list);
+    assert_eq!(
+        s.take_field_events(),
+        [
+            (t, "translation".to_string(), vec3(1.0, 2.0, 3.0)),
+            (
+                ROOT_NODES_EVENT,
+                "rootNodes".to_string(),
+                Data::List(vec![Data::Number(f64::from(m)), Data::Number(f64::from(t))])
+            ),
+        ]
+    );
+}

@@ -4306,6 +4306,7 @@ dependencies = [
  "x3d-render",
  "x3d-runtime",
  "x3d-scene",
+ "x3d-script",
  "x3d-viewer",
 ]
 
