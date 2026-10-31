@@ -437,12 +437,6 @@ const KNOWN_DIFFERENCES = {
         [ "GainNode > AudioDestinationNode", "GainNode > GainNode", "OscillatorNode > GainNode" ] ],
       [ [ "page", "resumeCalls" ], [ "running", "running" ], [ "running" ] ],
    ],
-   // UNRESOLVED FUNCTIONAL GAP (issue #140): a page of X_ITE_R carries no signal. X_ITE's graph reaches the page's AudioContext
-   // destination and a tap there measures the tone; X_ITE_R's engine renders into its own Web Audio port and connects nothing to
-   // the page's context (web/API.md, "Sound output"). The graph-state cases above are equal; these three are not.
-   "soundMore.audibleClip": [ [ [ "connectedToOutput" ], true, false ], [ [ "audible" ], true, false ] ],
-   "soundMore.audibleMuted": [ [ [ "connectedToOutput" ], true, false ] ],
-   "soundMore.audibleOscillator": [ [ [ "connectedToOutput" ], true, false ], [ [ "audible" ], true, false ] ],
    ... scriptLifeDifferences (),
 };
 

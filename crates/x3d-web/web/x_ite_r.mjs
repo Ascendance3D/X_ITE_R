@@ -3183,15 +3183,18 @@ class X3DBrowser
          {
             this .#audioClock (engine);
             engine .frame (time, width, height);
-            this .#flushAudio (engine);
 
             // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
-            // again, so a user activation from outside the canvas also unlocks the context.
+            // again, so a user activation from outside the canvas also unlocks the context. The resume () comes before the
+            // nodes of the frame start (X_ITE calls it when the element starts): a source's start () can itself unlock the
+            // context, and the resume () then finds it running.
             if (engine .takeAudioStarts ())
             {
                this .#audioClock (engine);
                this .#resumeAudio ();
             }
+
+            this .#flushAudio (engine);
 
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
