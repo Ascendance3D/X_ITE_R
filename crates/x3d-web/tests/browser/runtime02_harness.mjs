@@ -177,38 +177,6 @@ function scriptLifeDifferences ()
          "error: TypeError: boom in shutdown" ]) ] ];
    }
 
-   // 3. A field callback that a Script adds to `Browser .currentScene .rootNodes` never runs in X_ITE_R (X_ITE runs it
-   //    once when the callback is added and after each change).
-   for (const key of [ "rootNodesPage", "rootNodesAdd", "rootNodesRemove", "rootNodesSet", "rootNodesPush" ])
-   {
-      const seq = recorded (key) .seq;
-
-      differences [`scriptLife.${key}`] = [ [ [ "seq" ], seq, without (seq, line => line .startsWith ("log: S callback ")) ] ];
-   }
-
-   // 4. `rootNodes .push` of a Script's `Browser .currentScene` changes only the Script's copy in X_ITE_R: the world keeps
-   //    its root nodes and the page's callback does not run.
-   {
-      const { seq, final, vrml } = recorded ("rootNodesPush");
-      const entry = differences ["scriptLife.rootNodesPush"] [0];
-
-      entry [2] = without (entry [2], line => line .startsWith ("page: rootNodes callback ")) .map (line => line === "log: S push Transform:A,Group:X,Group:H,Group:" ? "log: S push Transform:A,Group:X,Group:H" : line === "log: S read Transform:A,Group:X,Group:H,Group:" ? "log: S read Transform:A,Group:X,Group:H" : line);
-
-      assert .ok (final .endsWith (",Group:") && vrml .endsWith (" Group { }"), "rootNodesPush");
-      differences ["scriptLife.rootNodesPush"] .push (
-         [ [ "final" ], final, final .slice (0, - ",Group:" .length) ],
-         [ [ "vrml" ], vrml, vrml .slice (0, - " Group { }" .length) ]);
-   }
-
-   // 5. A node that is a root node and the value of a Script field is printed once with DEF and USE in X_ITE; X_ITE_R
-   //    prints it in full in both places.
-   {
-      const { vrml } = recorded ("rootNodesAdd");
-
-      assert .ok (vrml .includes ("saved DEF _1 Group { } url") && vrml .endsWith (" } } USE _1"), "rootNodesAdd");
-      differences ["scriptLife.rootNodesAdd"] .push ([ [ "vrml" ], vrml, vrml .replace ("saved DEF _1 Group { } url", "saved Group { } url") .replace (/ USE _1$/, " Group { }") ]);
-   }
-
    return differences;
 }
 
