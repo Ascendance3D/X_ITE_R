@@ -1257,3 +1257,219 @@ fn a_node_shared_after_the_load_prints_with_def_and_use() {
     assert!(vrml.contains("DEF T Transform { }"), "{vrml}");
     assert!(vrml.trim_end().ends_with("USE T"), "{vrml}");
 }
+
+/// A Script host for the order tests (issue #133, `Session::take_field_events_logged`). Script `S` prints on `set_x`,
+/// sets `x_changed` to the value plus one and prints again; with `add_root` it also adds a root node in the handler.
+/// Script `R` prints on `set_y`. The sources name the Script.
+struct OrderHost {
+    sources: std::collections::HashMap<NodeId, String>,
+    add_root: bool,
+}
+
+impl x3d_runtime::ScriptHost for OrderHost {
+    fn create_context(
+        &mut self,
+        _rt: &mut x3d_runtime::Runtime,
+        node: NodeId,
+        source: &str,
+        callbacks: &[String],
+    ) -> Result<Vec<bool>, x3d_runtime::ScriptError> {
+        self.sources.insert(node, source.trim().to_string());
+        Ok(callbacks.iter().map(|c| c.starts_with("set_")).collect())
+    }
+
+    fn call(
+        &mut self,
+        rt: &mut x3d_runtime::Runtime,
+        node: NodeId,
+        call: x3d_runtime::ScriptCall,
+    ) -> Result<(), x3d_runtime::ScriptError> {
+        let x3d_runtime::ScriptCall::Field(name, x3d_fields::FieldValue::SFInt32(v)) = call else {
+            return Ok(());
+        };
+
+        match (self.sources[&node].as_str(), name.as_str()) {
+            ("S", "set_x") => {
+                rt.print(format!("S handler set_x {v}"));
+
+                if self.add_root {
+                    let world = rt.scene.world;
+                    let mut list = rt.scene.ctx(world).root_nodes.clone();
+
+                    list.push(list[0]);
+                    rt.set_root_nodes(world, list);
+                }
+
+                let k = rt.get_field(node, "x_changed").unwrap();
+
+                rt.set_value(k, x3d_fields::FieldValue::SFInt32(v + 1));
+                rt.print("S handler done".to_string());
+            }
+            ("R", "set_y") => rt.print(format!("R route set_y {v}")),
+            _ => {}
+        }
+
+        Ok(())
+    }
+}
+
+const ORDERED: &[u8] = b"#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed url \"ecmascript: S\" }
+DEF R Script { inputOnly SFInt32 set_y url \"ecmascript: R\" }
+ROUTE S.x_changed TO R.set_y
+";
+
+/// A live session of [`ORDERED`] that observes the root nodes, `S.set_x` and `S.x_changed` as asked, with the log empty.
+fn ordered(add_root: bool, observe_set_x: bool) -> (Session, NodeId) {
+    let host = OrderHost {
+        sources: Default::default(),
+        add_root,
+    };
+    let world = Session::parse(ORDERED, URL, Box::new(NoFetch)).unwrap();
+    let mut s = Session::begin_with_scripts(world, NOW, 512, 384, |_| {
+        Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>)
+    });
+
+    assert!(s.go_live(NOW));
+
+    let n = s.named_node("S").unwrap();
+
+    s.observe_root_nodes(true);
+    s.observe_field(n, "x_changed", true).unwrap();
+
+    if observe_set_x {
+        s.observe_field(n, "set_x", true).unwrap();
+    }
+
+    s.step(NOW + 0.1);
+    s.take_field_events_logged();
+    s.take_log();
+    (s, n)
+}
+
+fn int(v: i32) -> Data {
+    Data::Number(f64::from(v))
+}
+
+/// An observed input of a Script: its handler (an interest of the field) prints before the page's callback, as in
+/// X_ITE 16.5.0 (`page: set_x 1`, `S handler set_x 1`, `S handler done`, `callback set_x 1`, `callback x_changed 2`,
+/// `R route set_y 2`), so the callbacks follow the two handler lines and precede the line of the route.
+#[test]
+fn the_callback_of_a_script_input_follows_the_lines_of_its_handler() {
+    let (mut s, n) = ordered(false, true);
+
+    s.set_field_data(n, "set_x", &int(1)).unwrap();
+    s.step(NOW + 0.2);
+
+    assert_eq!(
+        s.take_field_events_logged(),
+        [
+            (n, "set_x".to_string(), int(1), 2),
+            (n, "x_changed".to_string(), int(2), 2),
+        ]
+    );
+    assert_eq!(
+        s.take_log(),
+        [
+            "log: S handler set_x 1",
+            "log: S handler done",
+            "log: R route set_y 2"
+        ]
+    );
+}
+
+/// The `rootNodes` event has the position of its turn in the cascade, not the end of the frame (the pinned order of
+/// `addRootNode` then `set_x`: `callback rootNodes`, `S set_x`, `callback x_changed`, `R route set_y`; of `set_x` then
+/// `addRootNode`: `S set_x`, `callback rootNodes`, `callback x_changed`, `R route set_y`).
+#[test]
+fn the_root_nodes_event_has_the_position_of_its_turn() {
+    use x3d_web::session::ROOT_NODES_EVENT;
+
+    let (mut s, n) = ordered(false, false);
+    let roots = s.root_nodes();
+    let grown = |count: usize| {
+        let mut list = roots.clone();
+
+        list.resize(roots.len() + count, roots[0]);
+        list
+    };
+    let rootnodes = |count: usize, at: usize| {
+        (
+            ROOT_NODES_EVENT,
+            "rootNodes".to_string(),
+            Data::List(
+                grown(count)
+                    .into_iter()
+                    .map(|r| Data::Number(f64::from(r.unwrap())))
+                    .collect(),
+            ),
+            at,
+        )
+    };
+    let lines = [
+        "log: S handler set_x",
+        "log: S handler done",
+        "log: R route set_y",
+    ];
+    let log = |x: i32| {
+        vec![
+            format!("{} {x}", lines[0]),
+            lines[1].to_string(),
+            format!("{} {}", lines[2], x + 1),
+        ]
+    };
+
+    // The root nodes change, then the input: the event comes before the handler's lines.
+    s.set_root_nodes(grown(1)).unwrap();
+    s.set_field_data(n, "set_x", &int(1)).unwrap();
+    s.step(NOW + 0.2);
+
+    assert_eq!(
+        s.take_field_events_logged(),
+        [rootnodes(1, 0), (n, "x_changed".to_string(), int(2), 2)]
+    );
+    assert_eq!(s.take_log(), log(1));
+
+    // The input, then the root nodes change: the event follows the handler's lines.
+    s.set_field_data(n, "set_x", &int(2)).unwrap();
+    s.set_root_nodes(grown(2)).unwrap();
+    s.step(NOW + 0.3);
+
+    assert_eq!(
+        s.take_field_events_logged(),
+        [rootnodes(2, 2), (n, "x_changed".to_string(), int(3), 2)]
+    );
+    assert_eq!(s.take_log(), log(2));
+}
+
+/// A handler that changes the root nodes and an observed field: the `rootNodes` event follows the handler's lines
+/// (the pinned order: `S handler set_x`, `S handler done`, `callback rootNodes`, `callback x_changed`, `R route set_y`).
+#[test]
+fn the_root_nodes_event_of_a_handler_follows_its_lines() {
+    use x3d_web::session::ROOT_NODES_EVENT;
+
+    let (mut s, n) = ordered(true, false);
+
+    s.set_field_data(n, "set_x", &int(1)).unwrap();
+    s.step(NOW + 0.2);
+
+    let events = s.take_field_events_logged();
+
+    assert_eq!(
+        events
+            .iter()
+            .map(|(node, name, _, at)| (*node, name.as_str(), *at))
+            .collect::<Vec<_>>(),
+        [(ROOT_NODES_EVENT, "rootNodes", 2), (n, "x_changed", 2)]
+    );
+    assert_eq!(
+        s.take_log(),
+        [
+            "log: S handler set_x 1",
+            "log: S handler done",
+            "log: R route set_y 2"
+        ]
+    );
+}
