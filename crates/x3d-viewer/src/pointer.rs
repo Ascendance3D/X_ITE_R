@@ -184,12 +184,33 @@ enum Prims {
     Lines(Vec<usize>),
 }
 
+/// One primitive the CPU ray cast hits at the pointer's pixel: the values of the hit and what the depth buffer needs.
+struct CpuHit {
+    /// View-space distance.
+    dist: f64,
+    point: Vector3,
+    normal: Vector3,
+    tex_coord: Vector4,
+    /// Normalized device z of the hit (before gl.depthRange).
+    ndc_z: f64,
+    /// Triangles only: the largest change of ndc z per pixel along x or y (the polygon offset's slope); points and lines
+    /// have no polygon offset.
+    slope: Option<f64>,
+}
+
 /// A shape the CPU ray cast found primitives near the pointer in; the GPU path keeps no such record.
 struct Candidate {
     shape: usize,
     geometry: Rc<Geometry>,
-    /// The CPU's own hit: view-space distance, point, normal, texCoord.
-    cpu: Option<(f64, Vector3, Vector3, Vector4)>,
+    /// The CPU's own hits, in the pointing pass's drawing order (the primitive index).
+    cpu: Vec<CpuHit>,
+}
+
+/// ndc z of a view-space point.
+fn ndc_z(projection: &Matrix4, eye: &Vector3) -> f64 {
+    let mut clip = Vector4::new(eye.x, eye.y, eye.z, 1.0);
+    projection.mult_vec_matrix4(&mut clip);
+    clip.z / clip.w
 }
 
 /// The pointing objects of a layer (X3DRenderObject.pointingShapes): the shapes in traversal order and the
@@ -456,25 +477,17 @@ pub fn pick(
     // The CPU ray cast: it needs a shape record per particle, so the runs are expanded here and only here.
     let shapes = shapes.expanded();
     let candidates = cpu_candidates(&shapes, geometry, cam, x, y, px, py, pointing);
-    let winner = candidates
-        .iter()
-        .enumerate()
-        .filter_map(|(k, c)| c.cpu.map(|(dist, p, n, tc)| (k, dist, p, n, tc)))
-        .fold(
-            None,
-            |best: Option<(usize, f64, Vector3, Vector3, Vector4)>, h| {
-                if best.as_ref().is_none_or(|b| h.1 <= b.1) {
-                    Some(h)
-                } else {
-                    best
-                }
-            },
-        );
-    let Some((k, _, p, normal, tc)) = winner else {
+    let Some((c, h)) = cpu_winner(&shapes, &candidates) else {
         return hit;
     };
-    let c = &candidates[k];
-    fill_hit(&mut hit, &shapes[c.shape], &c.geometry, p, normal, tc);
+    fill_hit(
+        &mut hit,
+        &shapes[c.shape],
+        &c.geometry,
+        h.point,
+        h.normal,
+        h.tex_coord,
+    );
     hit
 }
 
@@ -544,9 +557,9 @@ fn pointing_geometry(
     })
 }
 
-/// The primitives of `s` that can cover the pointer's pixel, and with `want_cpu` the CPU ray cast's own hit among
-/// them (view-space distance, point, normal, texCoord). `None` when none of them can. `sray` is the ray through the
-/// pixel's center in the layer's own viewport.
+/// The primitives of `s` that can cover the pointer's pixel, and with `want_cpu` the CPU ray cast's own hits among
+/// them in primitive order (view-space distance, point, normal, texCoord, depth). `None` when none of them can. `sray`
+/// is the ray through the pixel's center in the layer's own viewport.
 fn shape_candidate(
     s: &ShapeInst,
     g: &Geometry,
@@ -555,7 +568,7 @@ fn shape_candidate(
     py: f64,
     sray: &Line3,
     want_cpu: bool,
-) -> Option<(Prims, Option<(f64, Vector3, Vector3, Vector4)>)> {
+) -> Option<(Prims, Vec<CpuHit>)> {
     let shape_ray = |s: &ShapeInst| {
         if s.viewport
             == [
@@ -613,7 +626,7 @@ fn shape_candidate(
         if g.geometry_type == 0 {
             let size_of = |eye: &Vector3| point_size(s.style.as_ref(), s.textures, eye);
             let mut points = vec![];
-            let mut cpu: Option<(f64, Vector3, Vector3, Vector4)> = None;
+            let mut cpu: Vec<CpuHit> = vec![];
 
             for j in 0..g.vertex_count() {
                 let (eye, win) = window(
@@ -636,13 +649,15 @@ fn shape_candidate(
 
                 points.push(j);
 
-                if want_cpu
-                    && (wx - px).abs() < half
-                    && (wy - py).abs() < half
-                    && !clipped(&eye)
-                    && cpu.as_ref().is_none_or(|c| -eye.z < c.0)
-                {
-                    cpu = Some((-eye.z, eye, normal_at(j), Vector4::new(0.0, 0.0, 0.0, 1.0)));
+                if want_cpu && (wx - px).abs() < half && (wy - py).abs() < half && !clipped(&eye) {
+                    cpu.push(CpuHit {
+                        dist: -eye.z,
+                        point: eye,
+                        normal: normal_at(j),
+                        tex_coord: Vector4::new(0.0, 0.0, 0.0, 1.0),
+                        ndc_z: ndc_z(&cam.projection, &eye),
+                        slope: None,
+                    });
                 }
             }
 
@@ -652,7 +667,7 @@ fn shape_candidate(
         if g.geometry_type == 1 {
             let width = line_width(s.style.as_ref());
             let mut segments = vec![];
-            let mut cpu: Option<(f64, Vector3, Vector3, Vector4)> = None;
+            let mut cpu: Vec<CpuHit> = vec![];
 
             for k in 0..g.vertex_count() / 2 {
                 let (e0, w0) = window(
@@ -701,14 +716,15 @@ fn shape_candidate(
                     && !clipped(&eye)
                     && -eye.z >= cam.near
                     && -eye.z <= cam.far
-                    && cpu.as_ref().is_none_or(|c| -eye.z < c.0)
                 {
-                    cpu = Some((
-                        -eye.z,
-                        eye,
-                        normal_at(2 * k),
-                        Vector4::new(0.0, 0.0, 0.0, 1.0),
-                    ));
+                    cpu.push(CpuHit {
+                        dist: -eye.z,
+                        point: eye,
+                        normal: normal_at(2 * k),
+                        tex_coord: Vector4::new(0.0, 0.0, 0.0, 1.0),
+                        ndc_z: ndc_z(&cam.projection, &eye),
+                        slope: None,
+                    });
                 }
             }
 
@@ -752,15 +768,16 @@ fn shape_candidate(
         }
 
         if !want_cpu {
-            return Some((Prims::Triangles(hits), None));
+            return Some((Prims::Triangles(hits), vec![]));
         }
 
-        // The nearest strict hit is the CPU's own (a view-space depth between the near and the far plane).
-        let cpu = hits
-            .iter()
-            .filter(|h| h.strict)
-            .min_by(|a, b| a.t.total_cmp(&b.t))
-            .and_then(|th| {
+        // Every strict hit between the near and the far plane, in triangle order (the order the pointing pass draws).
+        let mut order: Vec<&TriHit> = hits.iter().filter(|h| h.strict).collect();
+        order.sort_by_key(|h| h.tri);
+
+        let cpu = order
+            .into_iter()
+            .filter_map(|th| {
                 let p = at(th.t);
 
                 if -p.z < cam.near || -p.z > cam.far {
@@ -796,11 +813,157 @@ fn shape_candidate(
                     tc = Vector4::new(lerp(0), lerp(1), lerp(2), lerp(3));
                 }
 
-                Some((-p.z, p, normal, tc))
-            });
+                Some(CpuHit {
+                    dist: -p.z,
+                    point: p,
+                    normal,
+                    tex_coord: tc,
+                    ndc_z: ndc_z(&cam.projection, &p),
+                    slope: triangle_slope(s, g, cam, th.tri),
+                })
+            })
+            .collect();
 
         Some((Prims::Triangles(hits), cpu))
     }
+}
+
+/// The largest change of ndc z per pixel, along x or y, over triangle `tri` of `g` (the slope that gl.polygonOffset's
+/// factor scales). `None` when a vertex is behind the eye or the triangle is edge-on.
+fn triangle_slope(s: &ShapeInst, g: &Geometry, cam: &PickCamera, tri: usize) -> Option<f64> {
+    let mut w = [[0.0f64; 3]; 3];
+
+    for (i, corner) in w.iter_mut().enumerate() {
+        let v = &g.vertices[(tri * 3 + i) * 4..(tri * 3 + i) * 4 + 3];
+        let mut eye = Vector3::new(v[0] as f64, v[1] as f64, v[2] as f64);
+        s.model_view.mult_vec_matrix3(&mut eye);
+        let mut clip = Vector4::new(eye.x, eye.y, eye.z, 1.0);
+        cam.projection.mult_vec_matrix4(&mut clip);
+
+        if clip.w <= 0.0 {
+            return None;
+        }
+
+        *corner = [
+            (clip.x / clip.w + 1.0) / 2.0 * s.viewport[2],
+            (clip.y / clip.w + 1.0) / 2.0 * s.viewport[3],
+            clip.z / clip.w,
+        ];
+    }
+
+    // z = a x + b y + c over the three corners.
+    let (e1, e2) = (
+        [w[1][0] - w[0][0], w[1][1] - w[0][1], w[1][2] - w[0][2]],
+        [w[2][0] - w[0][0], w[2][1] - w[0][1], w[2][2] - w[0][2]],
+    );
+    let det = e1[0] * e2[1] - e1[1] * e2[0];
+
+    if det.abs() < 1e-12 {
+        return None;
+    }
+
+    let a = (e1[2] * e2[1] - e2[2] * e1[1]) / det;
+    let b = (e2[2] * e1[0] - e1[2] * e2[0]) / det;
+    Some(a.abs().max(b.abs()))
+}
+
+/// The depth buffer of the pointing pass is DEPTH_COMPONENT24: depths are compared as 24-bit integers.
+const D24: f64 = 16_777_215.0;
+
+/// The 24-bit depth the pointing pass stores for `hit` under `depth` (X3DRenderObject.pointing enables the appearance's
+/// DepthMode around the draw): ndc z through gl.depthRange, then the polygon offset of a triangle (factor times the
+/// slope, plus units of the smallest depth step), clamped to the buffer. A reversed range keeps the default (0, 1), as
+/// WebGL rejects it (see `PointingGpu`).
+fn window_depth(depth: Option<&x3d_render::traverse::DepthParams>, hit: &CpuHit) -> i64 {
+    let (range, offset) = match depth {
+        Some(d) => (
+            if d.range[0] > d.range[1] {
+                [0.0, 1.0]
+            } else {
+                d.range
+            },
+            d.polygon_offset,
+        ),
+        None => ([0.0, 1.0], [0.0, 0.0]),
+    };
+    let z = range[0] + (range[1] - range[0]) * (hit.ndc_z + 1.0) / 2.0;
+    let mut q = (z.clamp(0.0, 1.0) * D24).round() as i64;
+
+    if let Some(slope) = hit.slope {
+        let slope = slope * (range[1] - range[0]) / 2.0;
+        q += (offset[0] * slope * D24).round() as i64 + offset[1].round() as i64;
+    }
+
+    q.clamp(0, D24 as i64)
+}
+
+/// Whether a fragment of depth `q` passes the depth test against the stored depth `stored`.
+fn depth_passes(func: x3d_render::traverse::DepthFunc, q: i64, stored: i64) -> bool {
+    use x3d_render::traverse::DepthFunc;
+
+    match func {
+        DepthFunc::Never => false,
+        DepthFunc::Less => q < stored,
+        DepthFunc::Equal => q == stored,
+        DepthFunc::LessEqual => q <= stored,
+        DepthFunc::Greater => q > stored,
+        DepthFunc::NotEqual => q != stored,
+        DepthFunc::GreaterEqual => q >= stored,
+        DepthFunc::Always => true,
+    }
+}
+
+/// The hit the pointing pass would leave: the candidates' hits through the depth buffer in drawing order. A fragment
+/// that passes the depth test writes its id (the last one stays), and the depth only when the mask is on and the test is
+/// enabled (gl.disable (DEPTH_TEST) also stops depth writes). The buffer is cleared to the far depth.
+///
+/// Without any DepthMode in the candidates the depth test is the default LEQUAL on every fragment, which is the nearest
+/// hit (the last on a tie): that is decided in the ray cast's own double values, as before, not in 24 bits.
+fn cpu_winner<'a>(
+    shapes: &[ShapeInst],
+    candidates: &'a [Candidate],
+) -> Option<(&'a Candidate, &'a CpuHit)> {
+    if candidates.iter().all(|c| shapes[c.shape].depth.is_none()) {
+        return candidates
+            .iter()
+            .filter_map(|c| {
+                c.cpu
+                    .iter()
+                    .min_by(|a, b| a.dist.total_cmp(&b.dist))
+                    .map(|h| (c, h))
+            })
+            .fold(None, |best, h| match best {
+                Some(b) if h.1.dist > b.1.dist => Some(b),
+                _ => Some(h),
+            });
+    }
+
+    let mut stored = D24 as i64;
+    let mut winner = None;
+
+    for c in candidates {
+        let depth = shapes[c.shape].depth.as_ref();
+
+        for h in &c.cpu {
+            let q = window_depth(depth, h);
+            let (test, func, mask) = match depth {
+                Some(d) => (d.test, d.func, d.mask),
+                None => (true, x3d_render::traverse::DepthFunc::LessEqual, true),
+            };
+
+            if test && !depth_passes(func, q, stored) {
+                continue;
+            }
+
+            winner = Some((c, h));
+
+            if test && mask {
+                stored = q;
+            }
+        }
+    }
+
+    winner
 }
 
 /// The hit values of a pointing-buffer sample: the point, the normal turned back into the shape's frame (touch ():
