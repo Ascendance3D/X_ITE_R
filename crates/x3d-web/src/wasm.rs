@@ -262,6 +262,8 @@ pub struct WebBrowser {
     /// The latest `audioContext .currentTime` the page gave ([`WebBrowser::set_audio_clock`]); a world that starts
     /// later (replaceWorld while the canvas is detached) takes it, not the clock 0 of a new audio context.
     audio_clock: Option<f64>,
+    /// The page's Mute and SoundIntensity options ([`WebBrowser::set_sound_options`]); a world that starts takes them.
+    sound_options: Option<(bool, f64)>,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -408,6 +410,7 @@ impl WebBrowser {
             worlds: HashMap::new(),
             loads: HashMap::new(),
             audio_clock: None,
+            sound_options: None,
             current: None,
             next_id: 1,
             live: true,
@@ -682,6 +685,10 @@ impl WebBrowser {
         // frame after a replaceWorld while the canvas was detached is no jump from 0 (a clip would end in it).
         if let Some(time) = self.audio_clock {
             w.session.set_audio_clock(time);
+        }
+
+        if let Some((mute, intensity)) = self.sound_options {
+            w.session.set_sound_options(mute, intensity);
         }
 
         if let Some(v) = w.session.viewer() {
@@ -1290,6 +1297,21 @@ impl WebBrowser {
         }
 
         started
+    }
+
+    /// The page's `Mute` and `SoundIntensity` browser options, for the worlds and loads now and for those to come
+    /// (BrowserOptions.set_SoundIntensity__: the gain of every sound destination is `!Mute * clamp (SoundIntensity, 0, 1)`).
+    #[wasm_bindgen(js_name = setSoundOptions)]
+    pub fn set_sound_options(&mut self, mute: bool, intensity: f64) {
+        self.sound_options = Some((mute, intensity));
+
+        for w in self.worlds.values_mut() {
+            w.session.set_sound_options(mute, intensity);
+        }
+
+        for l in self.loads.values_mut() {
+            crate::session::set_sound_options(&mut l.rt, mute, intensity);
+        }
     }
 
     /// `audioContext .currentTime` of the page's AudioContext, for the audio contexts of every world and load.
