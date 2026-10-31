@@ -565,7 +565,9 @@ __bridge .fieldCallbackAdded = function (field)
 {
    for (const [key, root] of rootFields)
    {
-      if (root .field === field || root .field .getTarget () === field)
+      const target = root .ref .deref ();
+
+      if (target === field || target ?.getTarget () === field)
       {
          X ("ctxObserve", key);
          return;

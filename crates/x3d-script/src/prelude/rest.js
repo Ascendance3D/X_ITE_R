@@ -694,7 +694,7 @@ function ctxFieldObject (ctx, index, name)
 // X3DExecutionContext.rootNodes of a Script's `Browser .currentScene`: one live inputOutput MFNode per context (the same object
 // on every read). Its changes (push, splice, length, assignment) reach the runtime as the page's rootNodes field does; a change of
 // the runtime's list reaches the object when it is read, before a Script runs and before its callbacks.
-const rootFields = new Map (); // context → { field, script }
+const rootFields = new Map (); // context → { ref: WeakRef (field), script }
 
 // The parent of the field: its events reach the runtime (X_ITE: the X3DScene, an X3DBaseNode).
 function RootNodesParent (script)
@@ -711,33 +711,43 @@ for (const key of [ "addEvent", "addEventObject" ])
 
 Object .defineProperty (RootNodesParent .prototype, "isInitialized", { value () { return true; }, writable: true, configurable: true });
 
-function refreshRootField (entry, script)
+// The registry holds the fields weakly: a field belongs to its scene's object (makeExecutionContext), so a scene that a Script
+// dropped is released with its root nodes.
+function rootFieldOf (key)
 {
-   const data = X ("fexport", X ("rootNodes", script) .__h);
+   const entry = rootFields .get (key);
+   const field = entry ?.ref .deref ();
+
+   if (entry && !field)
+      rootFields .delete (key);
+
+   return field && { field, script: entry .script };
+}
+
+function refreshRootField (entry)
+{
+   const data = X ("fexport", X ("rootNodes", entry .script) .__h);
 
    if (!sameData (data, fieldData (entry .field)))
       setFieldData (entry .field, data);
 }
 
-function rootNodesField (script)
+// `field` is what the scene object holds (null before the first read).
+function rootNodesField (script, field)
 {
-   const key = - (script + 2);
-
-   let entry = rootFields .get (key);
-
-   if (entry)
+   if (field)
    {
-      refreshRootField (entry, script);
-      return entry .field;
+      refreshRootField ({ field, script });
+      return field;
    }
 
-   const field = R (X ("rootNodes", script));
+   field = R (X ("rootNodes", script));
 
    field .setName ("rootNodes");
    field .setAccessType (X3DConstants .inputOutput);
    field .addParent (new RootNodesParent (script));
 
-   rootFields .set (key, entry = { field, script });
+   rootFields .set (- (script + 2), { ref: new WeakRef (field), script });
 
    return field;
 }
@@ -750,11 +760,11 @@ global .__ctxEvent = function (ctx, index)
    {
       if (index === 4)
       {
-         const entry = rootFields .get (ctx);
+         const entry = rootFieldOf (ctx);
 
          if (entry)
          {
-            refreshRootField (entry, entry .script);
+            refreshRootField (entry);
 
             for (const callback of entry .field .getFieldCallbacks () .values ())
             {
@@ -1074,6 +1084,7 @@ function makeExecutionContext (script)
    const ctxKey = - (script + 2);
    const info = () => X ("sceneInfo", script);
    let namedTouched = false;
+   let rootField = null;
    const node = n => R (n);
    const metaValues = v => Array .isArray (v) ? v .map (String) : [String (v)];
 
@@ -1211,7 +1222,7 @@ function makeExecutionContext (script)
       toVRMLString ()         { return X ("sceneString", script, "vrml"); },
       toXMLString ()          { return X ("sceneString", script, "xml"); },
       toJSONString ()         { return X ("sceneString", script, "json"); },
-      get rootNodes ()        { return rootNodesField (script); },
+      get rootNodes ()        { return rootField = rootNodesField (script, rootField); },
       set rootNodes (value)   { this .setRootNodes (value); },
       getWorldInfos ()        { return R (X ("worldInfos", script)); },
       get worldURL ()         { return X ("worldURL", script); },
@@ -2247,8 +2258,13 @@ global .__enter = function ()
 {
    enter ();
 
-   for (const entry of rootFields .values ())
-      refreshRootField (entry, entry .script);
+   for (const key of [ ... rootFields .keys () ])
+   {
+      const entry = rootFieldOf (key);
+
+      if (entry)
+         refreshRootField (entry);
+   }
 };
 global .__leave = leave;
 
