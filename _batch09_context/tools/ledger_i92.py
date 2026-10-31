@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Issue #92 ledger update (render core, lighting, transparency, headlight, fog, fonts): python3 -I ledger_i92.py check|apply
 
-Starts from ledger/before-i92/ledger.json (sha256 b9ef79f44968116be079f20eaab12bb06d606b916f0f90af2250b2a09916b6c4). Item lists and evidence against pinned X_ITE 16.5.0 (34cdf9f97):
+Starts from ledger/before-i92/ledger.json (sha256 c04b6085b1b5d8ddf27e37abd23f5cc79c953eed329bfbeb6df9242ccc8e7318). Item lists and evidence against pinned X_ITE 16.5.0 (34cdf9f97):
 crates/x3d-render/tests/render_rea_i92_items.rs replays 46 synthetic worlds (oracle/synthetic-rea-i92-render-items: headlight 8, lighting model 5,
 transparency sorting 7, fog 26) against oracle/rea-i92-render-items-baseline (three identical X_ITE recordings per world, MSAA 0 and 4). Three worlds
 (fg-transparent, tr-many, tr-ortho at MSAA 4) have no MSAA 4 reference because X_ITE's own output changes from run to run. The x3d-text oracle
@@ -13,7 +13,7 @@ import json, os, sys, collections, hashlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTH = os.path.join(HERE, "..", "ledger", "ledger.json")
 SNAP = os.path.join(HERE, "..", "ledger", "before-i92", "ledger.json")
-SNAP_SHA256 = "b9ef79f44968116be079f20eaab12bb06d606b916f0f90af2250b2a09916b6c4"
+SNAP_SHA256 = "c04b6085b1b5d8ddf27e37abd23f5cc79c953eed329bfbeb6df9242ccc8e7318"
 SUB = ("oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against "
        "oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%)")
 NOTES = {

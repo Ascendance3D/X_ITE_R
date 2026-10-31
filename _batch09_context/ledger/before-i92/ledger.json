@@ -3606,14 +3606,15 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "DIFFERENT",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl"
+    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (sensors-drag, sensors-touch; oracle/rea-batch09-inputs-baseline/sensors-drag-msaa0 and sensors-touch-msaa0, recorded from pinned X_ITE 16.5.0, 3 identical runs each)"
    ],
    "missing": "",
-   "oracle": "no structural difference; numeric deltas <= 9e-6",
-   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press."
+   "oracle": "scene text, poses and log identical to pinned X_ITE in 60 frames of two worlds (GPU pointing path)",
+   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press. | Issue #67 2026-10-31 (owner approved the move off DIFFERENT): re-measured on the GPU pointing path with x3d-drive against pinned X_ITE recordings of oracle/synthetic-rea-verify/drag-sensors.wrl (PlaneSensor, SphereSensor, CylinderSensor) and touch-sensor.wrl: scene text, poses and log are identical in all 60 frames, so the earlier float32 note no longer applies to this path. Without a pointing GPU the CPU stand-in still intersects in f64 (not measured here)."
   },
   {
    "id": "node:PlaneSensor",
@@ -3628,14 +3629,15 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "DIFFERENT",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl"
+    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (sensors-drag, sensors-touch; oracle/rea-batch09-inputs-baseline/sensors-drag-msaa0 and sensors-touch-msaa0, recorded from pinned X_ITE 16.5.0, 3 identical runs each)"
    ],
    "missing": "",
-   "oracle": "no structural difference; numeric deltas <= 9e-6",
-   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press."
+   "oracle": "scene text, poses and log identical to pinned X_ITE in 60 frames of two worlds (GPU pointing path)",
+   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press. | Issue #67 2026-10-31 (owner approved the move off DIFFERENT): re-measured on the GPU pointing path with x3d-drive against pinned X_ITE recordings of oracle/synthetic-rea-verify/drag-sensors.wrl (PlaneSensor, SphereSensor, CylinderSensor) and touch-sensor.wrl: scene text, poses and log are identical in all 60 frames, so the earlier float32 note no longer applies to this path. Without a pointing GPU the CPU stand-in still intersects in f64 (not measured here)."
   },
   {
    "id": "node:SphereSensor",
@@ -3650,14 +3652,15 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "DIFFERENT",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl"
+    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (sensors-drag, sensors-touch; oracle/rea-batch09-inputs-baseline/sensors-drag-msaa0 and sensors-touch-msaa0, recorded from pinned X_ITE 16.5.0, 3 identical runs each)"
    ],
    "missing": "",
-   "oracle": "no structural difference; numeric deltas <= 9e-6",
-   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press."
+   "oracle": "scene text, poses and log identical to pinned X_ITE in 60 frames of two worlds (GPU pointing path)",
+   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press. | Issue #67 2026-10-31 (owner approved the move off DIFFERENT): re-measured on the GPU pointing path with x3d-drive against pinned X_ITE recordings of oracle/synthetic-rea-verify/drag-sensors.wrl (PlaneSensor, SphereSensor, CylinderSensor) and touch-sensor.wrl: scene text, poses and log are identical in all 60 frames, so the earlier float32 note no longer applies to this path. Without a pointing GPU the CPU stand-in still intersects in f64 (not measured here)."
   },
   {
    "id": "node:TouchSensor",
@@ -3672,14 +3675,15 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "DIFFERENT",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl"
+    "oracle/synthetic-rea-verify/{touch-sensor,drag-sensors}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (sensors-drag, sensors-touch; oracle/rea-batch09-inputs-baseline/sensors-drag-msaa0 and sensors-touch-msaa0, recorded from pinned X_ITE 16.5.0, 3 identical runs each)"
    ],
    "missing": "",
-   "oracle": "no structural difference; numeric deltas <= 9e-6",
-   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press."
+   "oracle": "scene text, poses and log identical to pinned X_ITE in 60 frames of two worlds (GPU pointing path)",
+   "notes": "X_ITE takes the hit point from a GPU RGBA32F pointing buffer (interpolated float32 eye-space position); Rust intersects in f64. Values differ in the 6th-7th digit. Fixed this lane: TouchSensor hit outputs on every motion (overSensors.set + set_over__ each move), onverifymotion after a press. | Issue #67 2026-10-31 (owner approved the move off DIFFERENT): re-measured on the GPU pointing path with x3d-drive against pinned X_ITE recordings of oracle/synthetic-rea-verify/drag-sensors.wrl (PlaneSensor, SphereSensor, CylinderSensor) and touch-sensor.wrl: scene text, poses and log are identical in all 60 frames, so the earlier float32 note no longer applies to this path. Without a pointing GPU the CPU stand-in still intersects in f64 (not measured here)."
   },
   {
    "id": "node:ClipPlane",

@@ -9,7 +9,7 @@ Reads the authoritative ledger (default _batch09_context/ledger/ledger.json) and
     ends at the authoritative ledger.
   - totals equal to the totals that follow from the first snapshot (ledger/before) and the statuses of the chain; they are not
     fixed numbers, so a new batch adds one step to HISTORY (its snapshot in ledger/before-bNN and its tool's change set)
-  - the 25 DIFFERENT entries equal the Batch 09 snapshot (ledger/before-cloud) byte for byte
+  - the 21 DIFFERENT entries that remain (25 in ledger/before-cloud, less the four pointing sensors that left in issue #67) equal the Batch 09 snapshot byte for byte
   - every file path named in an entry's tests / rust fields exists (missing ones are reported, never fixed)
 Exit 1 on a hard failure; missing evidence paths are listed as warnings and do not change the exit code.
 
@@ -23,6 +23,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 LEDGER = os.path.join(HERE, "..", "ledger")
 AUTH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(LEDGER, "ledger.json")
 ALLOWED = {"COMPLETE", "PARTIAL", "DIFFERENT", "NOT_TESTED", "MISSING"}
+LEFT_DIFFERENT = {"node:PlaneSensor", "node:SphereSensor", "node:CylinderSensor", "node:TouchSensor"}  # owner decision 2026-10-31, issue #67
 BASELINE_B09 = {"COMPLETE": 245, "PARTIAL": 74, "DIFFERENT": 25, "NOT_TESTED": 0, "MISSING": 2}
 PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3dv|x3d|html|mjs|json|js|py|sh|md|png)\b)")
 
@@ -48,6 +49,7 @@ HISTORY = [
     ("before-i93", "ledger_i93.py C", lambda: _first("ledger_i93", "C")),
     ("before-i94", "ledger_i94.py C", lambda: _first("ledger_i94", "C")),
     ("before-i97", "ledger_i97.py C", lambda: _first("ledger_i97", "C")),
+    ("before-i67", "ledger_i67.py C", lambda: _first("ledger_i67", "C")),
     ("before-i92", "ledger_i92.py C", lambda: _first("ledger_i92", "C")),
 ]
 
@@ -73,7 +75,7 @@ for n, (snap, tool, changes) in enumerate(HISTORY):
         if k not in C:
             if a[k] != b[k]: bad.append(f"{step}: entry outside the change set changed: {k}")
             continue
-        if "DIFFERENT" in (a[k]["status"], b[k]["status"]): bad.append(f"{step}: DIFFERENT entry in the change set: {k}")
+        if "DIFFERENT" in (a[k]["status"], b[k]["status"]) and k not in LEFT_DIFFERENT: bad.append(f"{step}: DIFFERENT entry in the change set: {k}")
         want = C[k] or a[k]["status"]
         if b[k]["status"] != want: bad.append(f"{step}: {k} is {b[k]['status']}, the tool sets {want}")
         if a[k].get("notes") and not b[k]["notes"].startswith(a[k]["notes"]): bad.append(f"{step}: {k}: earlier notes lost")
@@ -86,8 +88,8 @@ for s in ALLOWED:
     if c.get(s, 0) != expected.get(s, 0): bad.append(f"total {s}: {c.get(s, 0)} != {expected.get(s, 0)} from the promotion history")
 
 snap = {i["id"]: i for i in load(os.path.join(LEDGER, "before-cloud", "ledger.json"))}
-diff = [k for k, v in snap.items() if v["status"] == "DIFFERENT"]
-if len(diff) != 25: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 25")
+diff = [k for k, v in snap.items() if v["status"] == "DIFFERENT" and k not in LEFT_DIFFERENT]
+if len(diff) != 21: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 21")
 for k in diff:
     if cur.get(k) != snap[k]: bad.append(f"DIFFERENT entry changed: {k}")
 
