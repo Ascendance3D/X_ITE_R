@@ -123,19 +123,6 @@ function startEventDifferences (key, paths)
 // listed in web/API.md.
 const notImplemented = name => `Error: X_ITE_R: the rendering property '${name}' is not implemented.`;
 
-// The four derived rendering properties after each option set of the renderingDerived case: X_ITE's value (taken from
-// the recording, which must not be an error) and X_ITE_R's error.
-function derivedRenderingDifferences ()
-{
-   const recorded = SUITES .options01 .reference .values ["browserOptions.renderingDerived"];
-
-   return Object .entries (recorded) .flatMap (([ step, { properties } ]) => Object .entries (properties) .map (([ name, value ]) =>
-   {
-      assert .ok (!String (value) .startsWith ("Error"), `renderingDerived ${step} ${name}`);
-      return [ [ step, "properties", name ], value, notImplemented (name) ];
-   }));
-}
-
 // The AudioDestinationNode of the engine's Web Audio port (the web-audio-api crate) has numberOfOutputs 1, the value of
 // the Web Audio specification; Chromium's has 0. Nothing in X3D connects from the destination. For the audio graphs at
 // `paths` of a sound 01 case.
@@ -466,18 +453,6 @@ const KNOWN_DIFFERENCES = {
    "canvasAttributes.otherAttributes": [
       [ [ "baseURL", 1 ], true, false ],
    ],
-   // X_ITE's AntiAliased is an alias of the Antialiased rendering property, which X_ITE_R does not implement.
-   "browserOptions.unknownNames": [
-      [ [ 4, "rendering" ], true, notImplemented ("AntiAliased") ],
-   ],
-   // X_ITE's Shading, Antialiased, ContentScale and Multisampling rendering properties are derived from the options and
-   // the context. X_ITE_R does not implement them; getRenderingProperty throws.
-   "browserOptions.rendering": [
-      [ [ "defaults", "Shading" ], "GOURAUD", notImplemented ("Shading") ], [ [ "defaults", "Antialiased" ], true, notImplemented ("Antialiased") ],
-      [ [ "defaults", "ContentScale" ], 1, notImplemented ("ContentScale") ], [ [ "defaults", "Multisampling" ], 4, notImplemented ("Multisampling") ],
-      [ [ "alias" ], true, notImplemented ("AntiAliased") ],
-   ],
-   "browserOptions.renderingDerived": derivedRenderingDifferences (),
    // The properties of X_ITE's WebGL context, the values of the GPU the recording was made on (RTX 3060 Ti through ANGLE).
    "browserOptions.renderingContext": [
       [ [ "MaxTextureSize" ], 32768, notImplemented ("MaxTextureSize") ], [ [ "TextureUnits" ], 64, notImplemented ("TextureUnits") ],

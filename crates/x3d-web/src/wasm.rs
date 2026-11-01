@@ -1507,6 +1507,39 @@ impl WebBrowser {
         }
     }
 
+    /// The `Shading` browser option as the renderer's mode (BrowserOptions.set_Shading__ with Shading.js): `POINT`,
+    /// `WIREFRAME`, `FLAT`, `GOURAUD` or `PHONG`; any other text gives `GOURAUD`, like X_ITE.
+    #[wasm_bindgen(js_name = setShading)]
+    pub fn set_shading(&mut self, name: &str) {
+        use x3d_render::gpu::ShadingMode;
+
+        self.renderer.set_shading(match name {
+            "POINT" => ShadingMode::Point,
+            "WIREFRAME" => ShadingMode::Wireframe,
+            "FLAT" => ShadingMode::Flat,
+            "PHONG" => ShadingMode::Phong,
+            _ => ShadingMode::Gouraud,
+        });
+    }
+
+    /// The `Multisampling` rendering property: the sample count to draw with (0 or 1 draws without multisampling).
+    /// The renderer uses the highest count the device supports that is not above the request.
+    #[wasm_bindgen(js_name = setSampleCount)]
+    pub fn set_sample_count(&mut self, samples: u32) {
+        self.renderer.set_sample_count(samples);
+    }
+
+    /// The highest sample count the device supports: X_ITE's `MaxSamples`, the limit of `Multisampling`.
+    #[wasm_bindgen(getter, js_name = maxSamples)]
+    pub fn max_samples(&self) -> u32 {
+        self.renderer
+            .supported_samples()
+            .iter()
+            .copied()
+            .max()
+            .unwrap_or(1)
+    }
+
     /// The page's `Mute` and `SoundIntensity` browser options, for the worlds and loads now and for those to come
     /// (BrowserOptions.set_SoundIntensity__: the gain of every sound destination is `!Mute * clamp (SoundIntensity, 0, 1)`).
     #[wasm_bindgen(js_name = setSoundOptions)]
