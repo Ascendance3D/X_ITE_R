@@ -604,7 +604,61 @@ async function loadUrlObjects (page)
    return out;
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects };
+// EnableInlineViewpoints (X3DLayerNode.getUserViewpoints of X_ITE 16.5.0): the viewpoints with a description that
+// firstViewpoint, previousViewpoint, nextViewpoint and lastViewpoint walk include those of Inline scenes only while the
+// option is TRUE; the option is read at each call. Observed through the public SAI: the description of
+// `browser.activeViewpoint` after each call, with the option true (the default), false, and true again.
+const INLINE_VP = encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { description "inline one" }
+Viewpoint { description "inline two" }
+`);
+
+const VP_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { description "main one" }
+Inline { url "data:model/x3d-vrml,${INLINE_VP}" }
+Viewpoint { description "main two" }
+Viewpoint { }
+`)}`;
+
+async function enableInlineViewpoints (page)
+{
+   await loadWorld (page, VP_WORLD);
+   await settle (page, 500);
+
+   const walk = () => page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const wait    = () => new Promise (resolve => setTimeout (resolve, 150));
+      const active  = () => browser .activeViewpoint ?.description ?? null;
+      const out     = { option: browser .getBrowserOption ("EnableInlineViewpoints") };
+
+      for (const call of [ "firstViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint",
+                           "previousViewpoint", "previousViewpoint", "lastViewpoint", "previousViewpoint" ])
+      {
+         browser [call] ();
+         await wait ();
+         (out .sequence ??= [ ]) .push ([ call, active () ]);
+      }
+
+      return out;
+   });
+
+   const out = { };
+
+   out .on = await walk ();
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("EnableInlineViewpoints", false));
+   out .off = await walk ();
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("EnableInlineViewpoints", true));
+   out .onAgain = await walk ();
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };

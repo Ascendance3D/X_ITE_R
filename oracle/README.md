@@ -1138,6 +1138,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
   directory; five identical runs, Chrome 156.0.8078.47) and merged; the other values are byte-identical. It records whether an Inline loads
   (`browser.firstViewpoint ()` binds the only viewpoint, which is in the Inline's document) with `LoadUrlObjects` true and false, a new `url`, and
   the option set back.
+- Case `browserOptions.enableInlineViewpoints` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
+  byte-identical. It records the bound viewpoint's description after `firstViewpoint`, `nextViewpoint`, `previousViewpoint` and `lastViewpoint` in a
+  world with viewpoints of its own and of an Inline, with the option true, false and true again.
 
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 
