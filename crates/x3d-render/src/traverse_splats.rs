@@ -76,6 +76,12 @@ impl Builder<'_> {
             self.bbox_shape(n, bbox, mv);
         }
 
+        // addDisplayShape: the view volume's `intersectsSphere (bboxSize .norm () / 2, bboxCenter)` in view space culls
+        // a shape whose bbox is out of view (GaussianSplatsShape.set_bbox__ sets the shape's bboxSize / bboxCenter).
+        if !self.bbox_in_view(mv, &bbox) {
+            return;
+        }
+
         // addDisplayShape: distance = the bbox center z in view space.
         let mut center = bbox.center();
         mv.mult_vec_matrix3(&mut center);
