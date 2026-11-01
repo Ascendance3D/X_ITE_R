@@ -359,6 +359,39 @@ DEF R Script
 }
 ROUTE S.x_changed TO R.set_y
 `,
+
+   // Issue #202, item 1: page callbacks on fields inside a route chain S -> R -> Q. The callback on S.x_changed writes another
+   // field (T.translation) and reads fields; the callback on R.y_changed reads T.translation.
+   callbackInChain: `#VRML V2.0 utf8
+DEF T Transform { }
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventOut SFInt32 x_changed
+  url "javascript:
+function set_x (value) { window .mark ('S set_x ' + value); x_changed = value; window .mark ('S after x_changed'); }
+function eventsProcessed () { window .mark ('S eventsProcessed'); }
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  eventOut SFInt32 y_changed
+  field SFNode t USE T
+  directOutput TRUE
+  url "javascript:
+function set_y (value) { window .mark ('R set_y ' + value + ' T=' + t .translation); y_changed = value; window .mark ('R after y_changed'); }
+function eventsProcessed () { window .mark ('R eventsProcessed'); }
+"
+}
+DEF Q Script
+{
+  eventIn SFInt32 set_z
+  url "javascript: function set_z (value) { window .mark ('Q set_z ' + value); }"
+}
+ROUTE S.x_changed TO R.set_y
+ROUTE R.y_changed TO Q.set_z
+`,
 };
 
 // The case of a world: load it, run the steps, and answer the ordered `seq` with the values the steps returned.
@@ -476,6 +509,22 @@ async function scenario (page, name)
                browser .println ("page Browser.println");
                note ("after the page print");
                await spin (3);
+               break;
+            }
+            case "callbackInChain":
+            {
+               const S = node ("S");
+               const R = node ("R");
+               const T = node ("T");
+
+               S .addFieldCallback ("page", "x_changed", v => { note (`x_changed ${v} T=${T .translation} S.x=${S .x_changed}`); T .translation = new X3D .SFVec3f (v, 0, 0); note (`x_changed wrote T=${T .translation}`); });
+               R .addFieldCallback ("page", "y_changed", v => note (`y_changed ${v} T=${T .translation}`));
+               T .addFieldCallback ("page", "translation_changed", v => note (`translation_changed ${v}`));
+               note ("set_x 1");
+               S .set_x = 1;
+               note ("after the assignment");
+               await spin (3);
+               out .final = String (T .translation);
                break;
             }
             case "initialize":

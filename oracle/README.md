@@ -1042,9 +1042,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
 
 ### Web browser Script life cycle 01 (`web-browser-script-life-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 50 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 51 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
   (issues #133 and #202) and records `web-browser-script-life-01-baseline/scriptlife01-baseline.json` (no pictures). Group
-  `scriptLife` (19 cases, inline synthetic worlds): Script `initialize` (events sent from it, the order of Scripts,
+  `scriptLife` (20 cases, inline synthetic worlds): Script `initialize` (events sent from it, the order of Scripts,
   `directOutput`); the events of Script fields (eventIns, eventOuts, a route chain, an interpolator, page events, two events in
   one task, several field types); `eventsProcessed`; `shutdown` (world replaced twice, Script code replaced, element removed);
   Script errors (in `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string
