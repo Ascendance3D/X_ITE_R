@@ -82,3 +82,49 @@ jobs:
         run: |
           python3 -I -B tools/evidence_summary.py "$X3D_EVIDENCE_LOG" | tee -a "$GITHUB_STEP_SUMMARY"
           test "${PIPESTATUS[0]}" -eq 0
+
+  # The two video frame cases (movieFrames.webm, movieFrames.mp4) that web-tests.yml skips on the hosted runner, whose
+  # video decode is slower than their sampling window (issue #139). `env -u CI` removes the variable that makes the test
+  # skip them. The media files are committed, so the runner needs Node and Playwright's Chromium but not ffmpeg.
+  browser-video:
+    runs-on: [self-hosted, Linux, X64, gpu]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      # wasm-bindgen's CLI must be the exact version of the wasm-bindgen crate in Cargo.lock.
+      - name: wasm-bindgen CLI
+        run: |
+          version=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
+          wasm-bindgen --version 2>/dev/null | grep -qx "wasm-bindgen $version" || cargo install wasm-bindgen-cli --version "$version" --locked
+
+      - name: Build the browser module
+        run: tools/build-web.sh
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: crates/x3d-web/package-lock.json
+
+      - name: npm packages and Playwright's Chromium
+        working-directory: crates/x3d-web
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install chromium
+
+      - name: Movie frame cases, video included
+        working-directory: crates/x3d-web
+        run: |
+          env -u CI node --test --test-concurrency=1 tests/browser/movie01.test.mjs 2>&1 | tee ../../movie01.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Test counts
+        if: always()
+        run: grep -E '^ℹ (tests|pass|fail|skipped)' movie01.log | tee -a "$GITHUB_STEP_SUMMARY" || true
