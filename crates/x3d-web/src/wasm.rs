@@ -1009,6 +1009,92 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// The imported nodes of scene `id` in the order of `getImportedNodes ()`, as [imported name, Inline node, exported name,
+    /// description, instance node] arrays.
+    #[wasm_bindgen(js_name = importedNodeList)]
+    pub fn imported_node_list(&self, id: u32) -> js_sys::Array {
+        let list = js_sys::Array::new();
+
+        if let Some(w) = self.worlds.get(&id) {
+            for (name, inline, exported, description, instance) in w.session.imported_nodes() {
+                let row = js_sys::Array::new();
+
+                row.push(&name.into());
+                row.push(&inline.into());
+                row.push(&exported.into());
+                row.push(&description.into());
+                row.push(&instance.into());
+                list.push(&row);
+            }
+        }
+
+        list
+    }
+
+    /// The instance node of the imported name in scene `id`, or undefined.
+    #[wasm_bindgen(js_name = importedInstance)]
+    pub fn imported_instance(&self, id: u32, name: &str) -> Option<u32> {
+        self.worlds.get(&id)?.session.imported_instance(name)
+    }
+
+    /// The node the Inline of the imported name exports in scene `id`, or undefined while the Inline does not provide it.
+    #[wasm_bindgen(js_name = importedExportedNode)]
+    pub fn imported_exported_node(&self, id: u32, name: &str) -> Option<u32> {
+        self.worlds.get(&id)?.session.imported_exported_node(name)
+    }
+
+    /// `getUniqueImportName (name)` of scene `id`.
+    #[wasm_bindgen(js_name = uniqueImportName)]
+    pub fn unique_import_name(&self, id: u32, name: &str) -> String {
+        self.worlds
+            .get(&id)
+            .map_or_else(|| name.to_string(), |w| w.session.unique_import_name(name))
+    }
+
+    /// `updateImportedNode (inline, exportedName, importedName, description)` of scene `id` (also `addImportedNode`, after the
+    /// page's checks): see [`Session::set_imported_node`].
+    #[wasm_bindgen(js_name = setImportedNode)]
+    pub fn set_imported_node(
+        &mut self,
+        id: u32,
+        inline: u32,
+        exported: &str,
+        imported: &str,
+        description: &str,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_imported_node(inline, exported, imported, description)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `removeImportedNode (name)` of scene `id`.
+    #[wasm_bindgen(js_name = removeImportedNode)]
+    pub fn remove_imported_node(&mut self, id: u32, name: &str) -> Result<(), JsError> {
+        self.session_mut(id)?.remove_imported_node(name);
+        Ok(())
+    }
+
+    /// `renameImportedNode (old, new)` of scene `id`.
+    #[wasm_bindgen(js_name = renameImportedNode)]
+    pub fn rename_imported_node(&mut self, id: u32, old: &str, new: &str) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .rename_imported_node(old, new)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `X3DImportedNode.setDescription` of the record `name` of scene `id`.
+    #[wasm_bindgen(js_name = setImportedDescription)]
+    pub fn set_imported_description(
+        &mut self,
+        id: u32,
+        name: &str,
+        description: &str,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_imported_description(name, description);
+        Ok(())
+    }
+
     /// The local node of the exported name in scene `id`, or undefined.
     #[wasm_bindgen(js_name = exportedNode)]
     pub fn exported_node(&self, id: u32, name: &str) -> Option<u32> {
