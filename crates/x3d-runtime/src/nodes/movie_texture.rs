@@ -22,6 +22,19 @@
 
 use crate::*;
 
+/// The next token of a page video element: unique across the runtimes of a page.
+static NEXT_VIDEO_TOKEN: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+
+/// A candidate that the page's video element loads.
+pub(crate) struct PendingVideo {
+    pub(crate) node: NodeId,
+    /// The `url` field when the load started; another list is a newer load.
+    urls: Vec<String>,
+    /// The candidate's index in `urls`.
+    index: usize,
+    url: String,
+}
+
 /// The frames of a GIF or an APNG, full-size RGBA rows from the top.
 pub struct MovieMedia {
     pub width: u32,
@@ -40,6 +53,36 @@ enum Kind {
     Gif { cycle: f64, looping: bool },
     /// PNGMedia: `apng .numPlays` and the apng-js Player.
     Apng { num_plays: u32, player: Player },
+    /// A video element of the page (the browser build, [`VideoOp`]): the page decodes and plays it, and gives the
+    /// frame pixels and `currentTime` ([`Runtime::video_frame`]).
+    Video {
+        token: u64,
+        duration: f64,
+        current_time: f64,
+        looping: bool,
+        /// A frame arrived that the texture does not hold yet.
+        dirty: bool,
+    },
+}
+
+/// What the engine asks of the page's `<video>` elements (the browser build; [`Runtime::take_video_ops`]). The
+/// page makes one element for each live token ([`Runtime::video_tokens`]) and removes the elements of the tokens
+/// that are not live any more.
+#[derive(Clone, Debug, PartialEq)]
+pub enum VideoOp {
+    /// MovieTexture.loadVideo: `crossOrigin = "anonymous"`, `preload = "auto"`, `playsInline`, `src = url`. The page
+    /// answers [`Runtime::video_loaded`] on `loadeddata`, or [`Runtime::video_failed`] on `error` or `abort`.
+    Load { token: u64, url: String },
+    /// X3DSoundSourceNode.startAudioElement: `play ()`.
+    Play(u64),
+    /// X3DSoundSourceNode.stopAudioElement: `pause ()`.
+    Pause(u64),
+    /// X3DSoundSourceNode.set_start: `currentTime = 0`.
+    Rewind(u64),
+    /// X3DSoundSourceNode.set_loop: `loop`.
+    Loop(u64, bool),
+    /// MovieTexture.set_speed__: `playbackRate` and `preservesPitch`.
+    Rate(u64, f64, bool),
 }
 
 /// The apng-js Player (lib/index.js), without the canvas: frame `n` of [`MovieMedia::frames`] is the picture
@@ -343,7 +386,19 @@ impl MovieMedia {
 
     /// `duration` in seconds: libgif get_duration_ms, apng .playTime.
     pub fn duration(&self) -> f64 {
+        if let Kind::Video { duration, .. } = self.kind {
+            return duration;
+        }
+
         self.play_time() / 1000.0
+    }
+
+    /// The token of the page's video element, if this media is a video.
+    pub fn video_token(&self) -> Option<u64> {
+        match self.kind {
+            Kind::Video { token, .. } => Some(token),
+            _ => None,
+        }
     }
 
     fn play_time(&self) -> f64 {
@@ -371,6 +426,7 @@ impl MovieMedia {
                     player.current_frame_number as f64 / self.frames.len() as f64 * self.duration()
                 }
             }
+            Kind::Video { current_time, .. } => *current_time,
         }
     }
 
@@ -393,6 +449,7 @@ impl MovieMedia {
                 (!frame.is_nan() && frame < length).then_some(frame as usize)
             }
             Kind::Apng { player, .. } => Some(player.current_frame_number),
+            Kind::Video { .. } => Some(0),
         }
     }
 
@@ -401,6 +458,7 @@ impl MovieMedia {
         match &self.kind {
             Kind::Gif { looping, .. } => *looping,
             Kind::Apng { num_plays, .. } => *num_plays == 0,
+            Kind::Video { looping, .. } => *looping,
         }
     }
 
@@ -414,6 +472,7 @@ impl MovieMedia {
                 *looping = value;
             }
             Kind::Apng { num_plays, .. } => *num_plays = if value { 0 } else { 1 },
+            Kind::Video { looping, .. } => *looping = value,
         }
     }
 
@@ -422,6 +481,8 @@ impl MovieMedia {
         self.playback_rate = match self.kind {
             Kind::Gif { .. } => value,
             Kind::Apng { .. } => value.max(0.0),
+            // Chrome throws for a negative playbackRate (MovieTexture.set_speed__ then plays at 1).
+            Kind::Video { .. } => value,
         };
     }
 
@@ -432,6 +493,7 @@ impl MovieMedia {
         match &mut self.kind {
             Kind::Gif { cycle, .. } => *cycle = cycle_now,
             Kind::Apng { .. } => self.player_play(now),
+            Kind::Video { .. } => {}
         }
     }
 
@@ -608,7 +670,7 @@ impl Runtime {
 
         self.movie_set_media_element(node, Some(media));
         self.set_texture_2d_size(node, width, height);
-        self.movie_update_outputs(node, width as i32, height as i32, 4, duration);
+        self.movie_update_outputs(node, width as i32, height as i32, 4, false, duration);
         self.set_load_state(node, nodes::LoadState::Complete);
         self.movie_set_speed(node);
     }
@@ -618,7 +680,7 @@ impl Runtime {
     pub(crate) fn movie_clear(&mut self, node: NodeId) {
         self.set_texture_2d_size(node, 1, 1);
         self.movie_set_media_element(node, None);
-        self.movie_update_outputs(node, 0, 0, 0, -1.0);
+        self.movie_update_outputs(node, 0, 0, 0, false, -1.0);
     }
 
     /// MovieTexture.updateOutputs (hasSound is FALSE for a GIF or an APNG).
@@ -628,13 +690,14 @@ impl Runtime {
         width: i32,
         height: i32,
         color_depth: i32,
+        has_sound: bool,
         duration: f64,
     ) {
         for (name, value) in [
             ("width", FieldValue::SFInt32(width)),
             ("height", FieldValue::SFInt32(height)),
             ("colorDepth", FieldValue::SFInt32(color_depth)),
-            ("hasSound", FieldValue::SFBool(false)),
+            ("hasSound", FieldValue::SFBool(has_sound)),
             ("duration_changed", FieldValue::SFTime(duration)),
         ] {
             if let Some(k) = self.pre(node, name) {
@@ -646,9 +709,7 @@ impl Runtime {
     /// X3DSoundSourceNode.setMediaElement.
     fn movie_set_media_element(&mut self, node: NodeId, value: Option<MovieMedia>) {
         // getBrowser () .stopAudioElement (this .mediaElement)
-        if let Some(m) = self.movie(node) {
-            m.pause();
-        }
+        self.movie_pause(node);
 
         let Some(value) = value else {
             if let Some(s) = self.sound.get_mut(&node) {
@@ -684,6 +745,10 @@ impl Runtime {
 
         if let Some(m) = self.movie(node) {
             m.set_loop(value, elapsed);
+
+            if let Some(token) = m.video_token() {
+                self.video_ops.push(VideoOp::Loop(token, value));
+            }
         }
     }
 
@@ -691,8 +756,19 @@ impl Runtime {
     pub(crate) fn movie_set_speed(&mut self, node: NodeId) {
         let rate = self.get_f64(node, "speed") * self.get_f64(node, "pitch").max(0.0);
 
+        let pitch = self.get_f64(node, "pitch");
+
         if let Some(m) = self.movie(node) {
             m.set_playback_rate(rate);
+
+            if let Some(token) = m.video_token() {
+                // Chrome throws for a negative playbackRate; set_speed__ then logs it and plays at 1.
+                self.video_ops.push(VideoOp::Rate(
+                    token,
+                    if rate < 0.0 { 1.0 } else { rate },
+                    pitch == 1.0,
+                ));
+            }
         }
     }
 
@@ -711,6 +787,12 @@ impl Runtime {
         if let Some(m) = self.movie(node) {
             m.set_current_time_zero();
             m.play(elapsed, now);
+
+            if let Some(token) = m.video_token() {
+                self.video_ops.push(VideoOp::Rewind(token));
+                self.video_ops.push(VideoOp::Play(token));
+            }
+
             // getBrowser () .startAudioElement (this .mediaElement)
             self.audio_element_started = true;
         }
@@ -720,6 +802,10 @@ impl Runtime {
     pub(crate) fn movie_pause(&mut self, node: NodeId) {
         if let Some(m) = self.movie(node) {
             m.pause();
+
+            if let Some(token) = m.video_token() {
+                self.video_ops.push(VideoOp::Pause(token));
+            }
         }
     }
 
@@ -729,6 +815,11 @@ impl Runtime {
 
         if let Some(m) = self.movie(node) {
             m.play(elapsed, now);
+
+            if let Some(token) = m.video_token() {
+                self.video_ops.push(VideoOp::Play(token));
+            }
+
             self.audio_element_started = true;
         }
     }
@@ -766,13 +857,190 @@ impl Runtime {
         };
 
         if let Some(frame) = m.current_frame(elapsed) {
-            if frame != m.shown {
+            let fresh = match &mut m.kind {
+                Kind::Video { dirty, .. } => std::mem::take(dirty),
+                _ => false,
+            };
+
+            if frame != m.shown || fresh {
                 m.shown = frame;
                 self.touch(node);
             }
 
             self.add_node_event(node);
         }
+    }
+
+    /// A MovieTexture candidate that is no GIF or PNG, in a browser build: the page's `<video>` element loads it
+    /// (MovieTexture.loadVideo). The node stays IN_PROGRESS until the page answers [`Runtime::video_loaded`] or
+    /// [`Runtime::video_failed`]; the candidates after it wait for that.
+    pub(crate) fn movie_load_video(
+        &mut self,
+        node: NodeId,
+        urls: Vec<String>,
+        index: usize,
+        file_url: url::Url,
+    ) {
+        let token = NEXT_VIDEO_TOKEN.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+
+        self.pending_videos.insert(
+            token,
+            PendingVideo {
+                node,
+                urls,
+                index,
+                url: file_url.to_string(),
+            },
+        );
+        self.video_ops.push(VideoOp::Load {
+            token,
+            url: file_url.to_string(),
+        });
+    }
+
+    /// The calls for the page's `<video>` elements since the last call.
+    pub fn take_video_ops(&mut self) -> Vec<VideoOp> {
+        std::mem::take(&mut self.video_ops)
+    }
+
+    /// The tokens of the video elements this runtime wants: those that load and those a MovieTexture plays.
+    pub fn video_tokens(&self) -> Vec<u64> {
+        let mut tokens: Vec<u64> = self.pending_videos.keys().copied().collect();
+
+        tokens.extend(
+            self.sound
+                .values()
+                .filter_map(|s| s.movie.as_ref()?.video_token()),
+        );
+        tokens
+    }
+
+    /// The page's video element `token` has its first frame (`loadeddata`): `rgba` are the pixels of that frame
+    /// (`width` x `height`, rows from the top). MovieTexture.setVideo: the media element, the texture, the outputs
+    /// (colorDepth 3), COMPLETE_STATE and set_speed__. Returns whether the token is this runtime's.
+    pub fn video_loaded(
+        &mut self,
+        token: u64,
+        width: u32,
+        height: u32,
+        duration: f64,
+        has_sound: bool,
+        rgba: Vec<u8>,
+    ) -> bool {
+        let Some(p) = self.pending_videos.remove(&token) else {
+            return false;
+        };
+
+        // A newer load, or a node that is gone, took over.
+        if !self.scene.is_live(p.node) || self.url_strings(p.node) != p.urls {
+            return true;
+        }
+
+        if rgba.len() as u64 != u64::from(width) * u64::from(height) * 4 {
+            return true;
+        }
+
+        let media = MovieMedia {
+            width,
+            height,
+            frames: vec![rgba],
+            delays: vec![],
+            kind: Kind::Video {
+                token,
+                duration,
+                current_time: 0.0,
+                looping: false,
+                dirty: false,
+            },
+            playback_rate: 1.0,
+            shown: 0,
+        };
+
+        self.movie_set_media_element(p.node, Some(media));
+        self.set_texture_2d_size(p.node, width, height);
+        self.movie_update_outputs(p.node, width as i32, height as i32, 3, has_sound, duration);
+        self.set_load_state(p.node, nodes::LoadState::Complete);
+        self.movie_set_speed(p.node);
+        self.touch(p.node);
+        true
+    }
+
+    /// The page's video element `token` failed (`error` or `abort`, `event`): MovieTexture.loadData's catch (the
+    /// warning and the error), then the next candidate, or FAILED_STATE when none is left. Returns whether the token
+    /// is this runtime's.
+    pub fn video_failed(&mut self, token: u64, event: &str) -> bool {
+        let Some(p) = self.pending_videos.remove(&token) else {
+            return false;
+        };
+
+        if !self.scene.is_live(p.node) || self.url_strings(p.node) != p.urls {
+            return true;
+        }
+
+        let decoded = crate::loader::decode_uri(&p.url).unwrap_or_else(|| p.url.clone());
+        let error = format!("Couldn't load video '{}': {event}.", p.url);
+
+        self.log_warn(format!("Error loading movie '{decoded}': {error}"));
+        self.log_error(format!("Error: {error}"));
+
+        let next = p.index + 1;
+
+        if next >= p.urls.len() {
+            self.movie_clear(p.node);
+            self.set_load_state(p.node, nodes::LoadState::Failed);
+            return true;
+        }
+
+        // The chain goes on with the candidate after this one: a task that waits for its response, as after a
+        // candidate that did not decode.
+        let key = loader::FetchKey::Url(p.node, 0);
+
+        self.fetch_resume.insert(
+            key.clone(),
+            loader::FetchResume {
+                index: next,
+                attempts: next,
+                urls: p.urls,
+            },
+        );
+        self.parked_fetches.extend(key.task());
+        self.resume_fetches();
+        true
+    }
+
+    /// A new frame of the page's video element `token`: `currentTime`, and the pixels when the picture changed
+    /// (`rgba` is empty when it did not). The texture holds them from the next frame on (set_time). Returns whether
+    /// the token is this runtime's.
+    pub fn video_frame(&mut self, token: u64, current_time: f64, rgba: Vec<u8>) -> bool {
+        for s in self.sound.values_mut() {
+            let Some(m) = s.movie.as_mut() else {
+                continue;
+            };
+            let Kind::Video {
+                token: t,
+                current_time: c,
+                dirty,
+                ..
+            } = &mut m.kind
+            else {
+                continue;
+            };
+
+            if *t != token {
+                continue;
+            }
+
+            *c = current_time;
+
+            if rgba.len() == m.frames[0].len() {
+                m.frames[0] = rgba;
+                *dirty = true;
+            }
+
+            return true;
+        }
+
+        false
     }
 }
 

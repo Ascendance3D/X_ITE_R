@@ -154,6 +154,11 @@ impl x3d_runtime::Fetcher for WebFetcher {
         true
     }
 
+    // The page plays the videos of MovieTextures in `<video>` elements (WebBrowser::take_video_ops).
+    fn plays_video(&self) -> bool {
+        true
+    }
+
     fn poll(&self, url: &url::Url) -> FetchPoll {
         // `fetch (dataURL)` needs no request: the browser decodes the URL itself (see `fetch`). One that does not
         // decode rejects at once.
@@ -268,6 +273,8 @@ pub struct WebBrowser {
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
     audio_payloads: x3d_runtime::sound::ops::Payloads,
+    /// The last [`WebBrowser::take_video_ops`] told the page about video elements.
+    video_known: bool,
     current: Option<u32>,
     next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
@@ -421,6 +428,7 @@ impl WebBrowser {
             sound_options: None,
             audio_known: Default::default(),
             audio_payloads: Default::default(),
+            video_known: false,
             current: None,
             next_id: 1,
             live: true,
@@ -1310,6 +1318,139 @@ impl WebBrowser {
         }
 
         started
+    }
+
+    /// The calls that the MovieTextures of the worlds and loads made on the page's `<video>` elements since the last call,
+    /// and the tokens of the elements they want: `{ live: [token, ...], ops: [["load", token, url], ["play", token], ...] }`,
+    /// or `undefined` when there is nothing and there was nothing last time. The page makes an element for each live token
+    /// when its `load` call comes, makes the other calls on it, and removes the elements of the tokens that are not live
+    /// (web/x_ite_r.mjs, #serviceVideos). The calls are `load` (token, url), `play`, `pause`, `rewind` (`currentTime = 0`),
+    /// `loop` (token, bool) and `rate` (token, playbackRate, preservesPitch).
+    #[wasm_bindgen(js_name = takeVideoOps)]
+    pub fn take_video_ops(&mut self) -> JsValue {
+        use x3d_runtime::nodes::movie_texture::VideoOp;
+
+        let mut live: Vec<u64> = Vec::new();
+        let mut ops: Vec<VideoOp> = Vec::new();
+
+        for w in self.worlds.values_mut() {
+            live.extend(w.session.video_tokens());
+            ops.extend(w.session.take_video_ops());
+        }
+
+        for l in self.loads.values_mut() {
+            live.extend(l.rt.video_tokens());
+            ops.extend(l.rt.take_video_ops());
+        }
+
+        if live.is_empty() && ops.is_empty() && !self.video_known {
+            return JsValue::UNDEFINED;
+        }
+
+        self.video_known = !live.is_empty();
+
+        let call = |items: &[JsValue]| -> JsValue {
+            let a = js_sys::Array::new();
+
+            for i in items {
+                a.push(i);
+            }
+
+            a.into()
+        };
+        let num = |t: u64| JsValue::from_f64(t as f64);
+        let js_ops = js_sys::Array::new();
+
+        for op in ops {
+            js_ops.push(&match op {
+                VideoOp::Load { token, url } => {
+                    call(&["load".into(), num(token), url.as_str().into()])
+                }
+                VideoOp::Play(t) => call(&["play".into(), num(t)]),
+                VideoOp::Pause(t) => call(&["pause".into(), num(t)]),
+                VideoOp::Rewind(t) => call(&["rewind".into(), num(t)]),
+                VideoOp::Loop(t, v) => call(&["loop".into(), num(t), v.into()]),
+                VideoOp::Rate(t, r, p) => call(&["rate".into(), num(t), r.into(), p.into()]),
+            });
+        }
+
+        let out = js_sys::Object::new();
+
+        let _ = js_sys::Reflect::set(
+            &out,
+            &"live".into(),
+            &live.iter().map(|t| num(*t)).collect::<js_sys::Array>(),
+        );
+        let _ = js_sys::Reflect::set(&out, &"ops".into(), &js_ops);
+        out.into()
+    }
+
+    /// The page's video element `token` has its first frame: its size, `duration`, whether it has audio, and the pixels of
+    /// that frame (RGBA, rows from the top).
+    #[wasm_bindgen(js_name = videoLoaded)]
+    pub fn video_loaded(
+        &mut self,
+        token: f64,
+        width: u32,
+        height: u32,
+        duration: f64,
+        has_sound: bool,
+        rgba: &[u8],
+    ) {
+        let token = token as u64;
+
+        for w in self.worlds.values_mut() {
+            if w.session
+                .video_loaded(token, (width, height), duration, has_sound, rgba.to_vec())
+            {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt
+                .video_loaded(token, width, height, duration, has_sound, rgba.to_vec())
+            {
+                return;
+            }
+        }
+    }
+
+    /// The page's video element `token` failed: `event` is the type of its `error` or `abort` event.
+    #[wasm_bindgen(js_name = videoFailed)]
+    pub fn video_failed(&mut self, token: f64, event: &str) {
+        let token = token as u64;
+
+        for w in self.worlds.values_mut() {
+            if w.session.video_failed(token, event) {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt.video_failed(token, event) {
+                return;
+            }
+        }
+    }
+
+    /// A frame of the page's video element `token`: its `currentTime`, and the pixels (RGBA, rows from the top) when the
+    /// picture changed; `rgba` is empty when it did not.
+    #[wasm_bindgen(js_name = videoFrame)]
+    pub fn video_frame(&mut self, token: f64, current_time: f64, rgba: &[u8]) {
+        let token = token as u64;
+
+        for w in self.worlds.values_mut() {
+            if w.session.video_frame(token, current_time, rgba.to_vec()) {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt.video_frame(token, current_time, rgba.to_vec()) {
+                return;
+            }
+        }
     }
 
     /// The page's `Mute` and `SoundIntensity` browser options, for the worlds and loads now and for those to come

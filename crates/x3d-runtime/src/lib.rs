@@ -515,6 +515,10 @@ pub struct Runtime {
     /// Where the fallback chain of a waiting load goes on (an asynchronous [`Fetcher`]): the candidate whose
     /// response it waits for. See [`loader::FetchResume`].
     pub fetch_resume: HashMap<loader::FetchKey, loader::FetchResume>,
+    /// The calls for the page's `<video>` elements that MovieTextures made ([`Runtime::take_video_ops`]).
+    pub video_ops: Vec<nodes::movie_texture::VideoOp>,
+    /// The video elements the page loads for a MovieTexture candidate, by token.
+    pub(crate) pending_videos: HashMap<u64, nodes::movie_texture::PendingVideo>,
     /// The load task that runs now, if its fallback chain can wait for a response ([`Runtime::run_tasks`]).
     pub running_fetch: Option<loader::FetchKey>,
     /// The load that runs now waits for a response: [`Runtime::run_tasks`] parks its task.
@@ -759,6 +763,8 @@ impl Runtime {
             disposed_scenes: Default::default(),
             fetches: Default::default(),
             parked_fetches: vec![],
+            video_ops: vec![],
+            pending_videos: HashMap::new(),
             fetch_resume: HashMap::new(),
             running_fetch: None,
             fetch_suspended: false,
