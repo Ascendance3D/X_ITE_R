@@ -1141,6 +1141,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
 - Case `browserOptions.enableInlineViewpoints` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
   byte-identical. It records the bound viewpoint's description after `firstViewpoint`, `nextViewpoint`, `previousViewpoint` and `lastViewpoint` in a
   world with viewpoints of its own and of an Inline, with the option true, false and true again.
+- Case `browserOptions.straightenHorizon` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
+  byte-identical. It records a ProximitySensor's `orientation_changed` and `position_changed` (the user's view, four decimals) for a rolled
+  viewpoint: the default, the option FALSE before the world, set TRUE (after the one second transition), and `viewAll (0)` with FALSE and TRUE.
 
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 

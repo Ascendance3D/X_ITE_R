@@ -658,7 +658,68 @@ async function enableInlineViewpoints (page)
    return out;
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints };
+// StraightenHorizon (BrowserOptions.set_StraightenHorizon__ and X3DBrowser.viewAll of X_ITE 16.5.0): setting the option
+// TRUE straightens the active layer's view with a one second transition (X3DViewpointNode.straightenView); viewAll
+// straightens the new view while the option is TRUE. Observed through the public SAI: the `orientation_changed` and
+// `position_changed` of a ProximitySensor around the world (the user's view, rounded to four decimals) after the
+// transition, and after `viewAll (0)`.
+const STRAIGHTEN_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF P ProximitySensor { size 1e6 1e6 1e6 }
+Viewpoint { position 0 0 10 orientation 0 0 1 0.6 }
+Transform { translation 2 1 0 children Shape { geometry Box { size 2 3 1 } } }
+`)}`;
+
+async function straightenHorizon (page)
+{
+   const read = () => page .evaluate (() =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const P       = browser .currentScene .getNamedNode ("P");
+      const round   = array => array .map (value => Math .round (value * 10000) / 10000 + 0);
+
+      return { option: browser .getBrowserOption ("StraightenHorizon"), orientation: round ([ P .orientation_changed .x, P .orientation_changed .y, P .orientation_changed .z, P .orientation_changed .angle ]), position: round ([ P .position_changed .x, P .position_changed .y, P .position_changed .z ]) };
+   });
+
+   const out = { };
+
+   const option = value => page .evaluate (value => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("StraightenHorizon", value), value);
+
+   // The default (TRUE): the view of a rolled viewpoint is straight at once.
+   await loadWorld (page, STRAIGHTEN_WORLD);
+   out .initial = await read ();
+
+   // FALSE before the world: the view stays rolled, whatever the option does later when it stays FALSE; TRUE straightens it.
+   await option (false);
+   await loadWorld (page, STRAIGHTEN_WORLD);
+   out .off = await read ();
+
+   await option (false);
+   await settle (page, 1500);
+   out .offAgain = await read ();
+
+   await option (true);
+   await settle (page, 1800);
+   out .on = await read ();
+
+   // viewAll with the option FALSE and TRUE, each on a fresh world with a rolled view.
+   for (const value of [ false, true ])
+   {
+      await option (false);
+      await loadWorld (page, STRAIGHTEN_WORLD);
+      await option (value);
+      await settle (page, 1800);
+      await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .viewAll (0));
+      await settle (page, 500);
+      out [value ? "viewAllOn" : "viewAllOff"] = await read ();
+   }
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("StraightenHorizon", true));
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints, straightenHorizon };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
