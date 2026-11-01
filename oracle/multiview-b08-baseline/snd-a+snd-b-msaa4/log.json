@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "info": [
+    {
+      "x_ite": "16.5.0",
+      "multisampling": 4,
+      "antialiased": true
+    },
+    {
+      "x_ite": "16.5.0",
+      "multisampling": 4,
+      "antialiased": true
+    }
+  ],
+  "warmup": [
+    8,
+    8
+  ],
+  "log": []
+}

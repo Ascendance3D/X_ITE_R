@@ -1,0 +1,10 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+Viewpoint { position 0 0 9 }
+ParticleSystem { maxParticles 80 particleLifetime 2 geometryType "POINT"
+  emitter SurfaceEmitter { speed 0.5 surface Box { size 1 1 1 } }
+  physics [ ForcePhysicsModel { force 0 -1 0 } BoundedPhysicsModel { geometry Box { size 4 3 4 } } ]
+  appearance Appearance { material Material { emissiveColor 1 1 0 } } }
+Transform { translation 2 0 0 children ParticleSystem { maxParticles 60 particleLifetime 1.5 geometryType "POINT" emitter ConeEmitter { direction 0 1 0 angle 0.5 speed 1.5 }
+  physics WindPhysicsModel { speed 1 gustiness 0.5 direction 1 0 0 } appearance Appearance { material Material { emissiveColor 0 1 1 } } } }
