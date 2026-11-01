@@ -1,0 +1,109 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  17,
+  36,
+  96
+ ],
+ "dump": [],
+ "frames": 96,
+ "events": [
+  {
+   "frame": 2,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "mousemove",
+   "x": 264,
+   "y": 261
+  },
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 272,
+   "y": 266
+  },
+  {
+   "frame": 5,
+   "type": "mousemove",
+   "x": 280,
+   "y": 271
+  },
+  {
+   "frame": 6,
+   "type": "mousemove",
+   "x": 288,
+   "y": 276
+  },
+  {
+   "frame": 7,
+   "type": "mousemove",
+   "x": 296,
+   "y": 281
+  },
+  {
+   "frame": 8,
+   "type": "mousemove",
+   "x": 304,
+   "y": 286
+  },
+  {
+   "frame": 9,
+   "type": "mousemove",
+   "x": 312,
+   "y": 291
+  },
+  {
+   "frame": 10,
+   "type": "mousemove",
+   "x": 320,
+   "y": 296
+  },
+  {
+   "frame": 11,
+   "type": "mousemove",
+   "x": 328,
+   "y": 301
+  },
+  {
+   "frame": 12,
+   "type": "mousemove",
+   "x": 336,
+   "y": 306
+  },
+  {
+   "frame": 13,
+   "type": "mousemove",
+   "x": 344,
+   "y": 311
+  },
+  {
+   "frame": 14,
+   "type": "mousemove",
+   "x": 352,
+   "y": 316
+  },
+  {
+   "frame": 15,
+   "type": "mousemove",
+   "x": 360,
+   "y": 321
+  },
+  {
+   "frame": 16,
+   "type": "mouseup",
+   "button": 0,
+   "x": 360,
+   "y": 321
+  }
+ ]
+}
