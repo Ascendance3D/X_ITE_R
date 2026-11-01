@@ -9,13 +9,14 @@
 //!
 //! `EXT_meshopt_compression` / `KHR_meshopt_compression` decode through `meshopt.rs`.
 //!
-//! Missing: `KHR_draco_mesh_compression` (X_ITE loads draco_decoder_gltf.js), BasisU, AVIF and
+//! `KHR_draco_mesh_compression` decodes through `draco.rs`. Missing: BasisU, AVIF and
 //! WebP textures (the url is passed on as X_ITE does, decoding is the texture loader's), and
 //! video textures.
 
 mod access;
 mod animation;
 mod bbox;
+mod draco;
 mod geometry;
 mod glb;
 mod material;
@@ -235,6 +236,8 @@ pub(super) struct P<'j, 's> {
     pub default_appearance: Option<NodeId>,
     pub default_texture_transform: Option<NodeId>,
     pub meshopt: bool,
+    /// `this .draco`: `draco_decoder_gltf.js` was loaded for `KHR_draco_mesh_compression`.
+    pub draco: bool,
     pub texture_mappings: HashMap<usize, Option<String>>,
     /// Element type of the keyframe time array being converted (`times .map (...)` keeps it).
     pub times_ct: Ct,
@@ -307,6 +310,7 @@ impl<'j, 's> P<'j, 's> {
             default_appearance: None,
             default_texture_transform: None,
             meshopt: false,
+            draco: false,
             texture_mappings: HashMap::new(),
             times_ct: Ct::F32,
             setup_done: HashSet::new(),
@@ -650,6 +654,7 @@ impl<'j, 's> P<'j, 's> {
                     components.push(("EventUtilities", Some(1)));
                     components.push(("Scripting", Some(1)));
                 }
+                "KHR_draco_mesh_compression" => self.draco = true,
                 "KHR_gaussian_splatting" => components.push(("GaussianSplats", Some(1))),
                 "KHR_meshopt_compression" | "EXT_meshopt_compression" => self.meshopt = true,
                 "KHR_texture_transform" => components.push(("Texturing3D", Some(2))),
