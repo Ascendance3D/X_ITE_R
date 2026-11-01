@@ -3,7 +3,11 @@
 // rendering) runs in Rust; this file only fetches the world, runs the requestAnimationFrame loop and converts
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
-import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp } from "./pkg/x3d_web.js";
+import init, {
+   WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp,
+   chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
+   chainTypeName, chainNodeName, chainNamedNode, chainRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
+} from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
 import { VideoMirror } from "./video_mirror.mjs";
@@ -107,6 +111,43 @@ function worldComponentConstants (profile, list)
 
 // The wasm object of a browser (read-only, for tests and diagnostics).
 const _engine = Symbol .for ("X_ITE_R.engine");
+
+// The engine of a browser while a field callback runs in the engine's route chain (issue #202).
+const _inChain = Symbol ("X_ITE_R.inChain");
+
+// The engine calls of a field callback that runs in the route chain. The `WebBrowser` is borrowed by the export that runs the
+// chain, so these go through the engine's free functions, which reach the world in the middle of its chain. Other calls
+// throw: they would need the `WebBrowser` (API.md, "Script nodes").
+const CHAIN_OPERATIONS = {
+   exists: scene => chainExists (scene),
+   worldGeneration: scene => chainWorldGeneration (scene),
+   takeReleasedNodes: scene => chainTakeReleasedNodes (scene),
+   fieldNames: (scene, node) => chainFieldNames (scene, node),
+   fieldData: (scene, node, name) => chainFieldData (scene, node, name),
+   setFieldData: (scene, node, name, data) => chainSetFieldData (scene, node, name, data),
+   takeFieldChanges: scene => chainTakeFieldChanges (scene),
+   observeField: (scene, node, name, on) => chainObserveField (scene, node, name, on),
+   typeName: (scene, node) => chainTypeName (scene, node),
+   nodeName: (scene, node) => chainNodeName (scene, node),
+   namedNode: (scene, name) => chainNamedNode (scene, name),
+   rootNodes: scene => chainRootNodes (scene),
+   nodeValue: (scene, node, name) => chainNodeValue (scene, node, name),
+   routes: scene => chainRoutes (scene),
+   fieldDefinitions: (scene, node) => chainFieldDefinitions (scene, node),
+   getRoute: (scene, ... args) => chainGetRoute (scene, ... args),
+   addRoute: (scene, ... args) => chainAddRoute (scene, ... args),
+   deleteRoute: (scene, route) => chainDeleteRoute (scene, route),
+};
+
+const chainEngine = new Proxy ({ }, {
+   get (target, name)
+   {
+      return CHAIN_OPERATIONS [name] ?? (() =>
+      {
+         throw new Error (`X_ITE_R: the browser call '${String (name)}' is not available inside a field callback that runs in the route chain.`);
+      });
+   },
+});
 
 // The handle of a node or scene: its browser, its scene id in the engine, the world generation of that scene (an
 // Anchor can replace the world inside a scene) and, for a node, its id.
@@ -725,31 +766,77 @@ function deliverFieldEvents (browser, scene, table, events, printUpTo)
       if (!callbacks .size)
          continue;
 
-      // The callbacks see the value of their event; the field holds the current one again after them.
-      setFieldData (entry .field, events [i + 2], ref [_node]);
+      const failed = callFieldCallbacks (ref, entry, events [i + 2]);
 
-      try
+      if (failed)
       {
-         // X_ITE walks the live Map it started with: a callback removed in place by an earlier one is skipped, and
-         // addFieldCallback copies the Map, so a callback added meanwhile waits for the next event.
-         for (const callback of callbacks .values ())
+         browser [_engine] .haltEvents (scene);
+         reportError (failed .error);
+         return;
+      }
+   }
+}
+
+// The callbacks of a field with the value `data` of its event: they see the value of the event, and the field holds the current
+// one again after them. X_ITE walks the live Map it started with: a callback removed in place by an earlier one is skipped, and
+// addFieldCallback copies the Map, so a callback added meanwhile waits for the next event. A callback that throws ends the
+// delivery: `{ error }`.
+function callFieldCallbacks (ref, entry, data)
+{
+   setFieldData (entry .field, data, ref [_node]);
+
+   try
+   {
+      for (const callback of entry .field .getFieldCallbacks () .values ())
+      {
+         try
          {
-            try
-            {
-               callback (entry .field .valueOf ());
-            }
-            catch (error)
-            {
-               browser [_engine] .haltEvents (scene);
-               reportError (error);
-               return;
-            }
+            callback (entry .field .valueOf ());
+         }
+         catch (error)
+         {
+            return { error };
          }
       }
-      finally
-      {
-         setFieldData (entry .field, entry .data, ref [_node]);
-      }
+   }
+   finally
+   {
+      setFieldData (entry .field, entry .data, ref [_node]);
+   }
+}
+
+// The engine calls the page's field callbacks in its route chain, where X_ITE's X3DField.processEvent calls them (issue #202):
+// the callbacks of the event of field `name` of `node`, with the engine reachable through the chain calls only. The lines the
+// event follows are on the console already. `true`: a callback threw; the error is reported, and the engine processes no event
+// again, as X_ITE's event loop.
+function deliverChainEvent (browser, scene, node, name, data)
+{
+   const previous = browser [_inChain] (chainEngine);
+
+   try
+   {
+      retireReleased (browser, scene);
+
+      const ref   = nodeRefTables .get (browser) ?.get (scene) ?.refs .get (node);
+      const entry = ref ?.[FIELDS] .get (name);
+
+      if (!entry ?.field .getFieldCallbacks () .size)
+         return false;
+
+      // The engine's value of the field is the value of its event now.
+      entry .data = data;
+
+      const failed = callFieldCallbacks (ref, entry, data);
+
+      if (!failed)
+         return false;
+
+      reportError (failed .error);
+      return true;
+   }
+   finally
+   {
+      browser [_inChain] (previous);
    }
 }
 
@@ -2286,6 +2373,7 @@ class X3DBrowser
    #element;
    #canvas;
    #engine = null;
+   #chain = null;
    #ready;
    #scene;
    #scenes = new Map ();
@@ -2355,6 +2443,8 @@ class X3DBrowser
          // they run with the privileges of the page, in its JavaScript engine (API.md, "Script nodes").
          // A Script's print and console lines go to the page's console in the Script's call, as X_ITE logs them.
          this .#engine .setLogSink (printLogLine);
+         // The field callbacks run in the route chain, as X_ITE's do.
+         this .#engine .setFieldEventSink ((scene, node, name, data) => deliverChainEvent (this, scene, node, name, data));
          this .#engine .setScriptRealm (host =>
          {
             if (this .#element .getAttribute ("scripts") !== "true")
@@ -2414,7 +2504,17 @@ class X3DBrowser
       this .#element .shadowRoot .append (slot);
    }
 
-   get [_engine] () { return this .#engine; }
+   get [_engine] () { return this .#chain ?? this .#engine; }
+
+   // The engine calls of the page's code in the engine's route chain (`engine` is `chainEngine`), or null: the engine itself.
+   // Returns what was set before.
+   [_inChain] (engine)
+   {
+      const previous = this .#chain;
+
+      this .#chain = engine;
+      return previous;
+   }
 
    // X3DBrowser.name, version, getName, getVersion: this engine's own name and version.
    get name ()    { return "X_ITE_R"; }

@@ -555,6 +555,14 @@ pub struct Runtime {
     /// How many lines of [`Runtime::log`] the page has taken (the page tells at each take). A Script's line waits in the log
     /// behind the lines before it.
     pub log_taken: usize,
+    /// How many lines of [`Runtime::log`] [`Runtime::flush_console`] handed to the console sink in the route chain: the page
+    /// does not take those again ([`Runtime::untaken_log_from`]).
+    pub log_sunk: usize,
+    /// The page's field callbacks, called at the point of X3DField.processEvent where X_ITE calls them, inside the route chain
+    /// (issue #202): see [`PageEventSink`]. `None`: the events are recorded in [`Runtime::page_field_events`].
+    pub page_event_sink: Option<PageEventSink>,
+    /// A page callback asked to stop the event processing ([`PageEventSink`]): [`Runtime::process_events`] halts at once.
+    pub(crate) halt_pending: bool,
     /// All console output in the order it was logged: `log: text`, `warn: first line`, `error: first line`.
     pub console: Vec<String>,
     /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
@@ -790,6 +798,9 @@ impl Runtime {
             log_prints: false,
             console_sink: None,
             log_taken: 0,
+            log_sunk: 0,
+            page_event_sink: None,
+            halt_pending: false,
             console: vec![],
             live: false,
             timeouts: vec![],
@@ -916,7 +927,7 @@ impl Runtime {
 
         make(self);
 
-        let waits = before > self.log_taken
+        let waits = before > self.untaken_log_from()
             || self
                 .page_field_events
                 .as_ref()
@@ -2058,4 +2069,35 @@ pub fn field_from_string_without_scene(
         result.map_err(|e| NoSceneError::Message(e.message)),
         scene.warnings,
     )
+}
+
+/// A page's field callback sink: called as `sink (runtime, field, value)` at the point of X3DField.processEvent where X_ITE calls
+/// `callback (this .valueOf ())`, with the value of the event. It returns `true` when a callback threw: the event processing
+/// halts, as X_ITE's does. The runtime is handed to the sink as the exclusive borrow it is: the sink may give it to page code
+/// that calls back into the engine for the duration of the call, never past it. Such calls must not process events, call
+/// Scripts or touch the sink (they read or write fields and drain the page's change lists), as the sink runs in the middle of
+/// X3DRoutingContext [processEvents].
+pub type PageEventSink = Box<dyn FnMut(&mut Runtime, FKey, &FieldValue) -> bool>;
+
+impl Runtime {
+    /// The first line of [`Runtime::log`] that no page console or `takeLog` has seen.
+    pub fn untaken_log_from(&self) -> usize {
+        self.log_taken.max(self.log_sunk)
+    }
+
+    /// Hand the lines of the log that the page has not seen to the console sink, in order, as the page's console writes them
+    /// before it calls the callback of the event that comes next. `false`: there is no console sink, so nothing went out.
+    pub fn flush_console(&mut self) -> bool {
+        let Some(sink) = &self.console_sink else {
+            return false;
+        };
+        let from = self.untaken_log_from().min(self.log.len());
+
+        for line in &self.log[from..] {
+            sink(line);
+        }
+
+        self.log_sunk = self.log.len();
+        true
+    }
 }
