@@ -198,7 +198,7 @@ impl<'j, 's> P<'j, 's> {
             p.resolved = true;
         }
 
-        // primitiveExtensionsObject: KHR_draco_mesh_compression needs the decoder (missing).
+        self.primitive_extensions_object(key, primitive.get("extensions"))?;
 
         let data = self.prim_data(key, primitive);
         let shape = self.create_shape(key, &data, weights, skin, instancing)?;
@@ -210,6 +210,88 @@ impl<'j, 's> P<'j, 's> {
 
         self.prims.entry(key).or_default().shape = Some(result);
         shapes.push(result);
+        Ok(())
+    }
+
+    /// `primitiveExtensionsObject (extensions, primitive)`.
+    fn primitive_extensions_object(&mut self, key: (usize, usize), extensions: V<'j>) -> R<()> {
+        if !extensions.is_obj() {
+            return Ok(());
+        }
+
+        for (name, value) in extensions.entries() {
+            if name == "KHR_draco_mesh_compression" {
+                self.khr_draco_mesh_compression_object(key, value)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    /// `khrDracoMeshCompressionObject (draco, primitive)`: the decoded arrays replace the
+    /// `array` of the primitive's indices accessor and of each named attribute accessor.
+    fn khr_draco_mesh_compression_object(&mut self, key: (usize, usize), draco: V<'j>) -> R<()> {
+        if !draco.is_obj() || !self.draco {
+            return Ok(());
+        }
+
+        // `this .bufferViews [draco .bufferView] .getBuffer ()`
+        let Some(bv) = self
+            .buffer_views
+            .arr()
+            .and_then(|a| draco.get("bufferView").index(a.len()))
+        else {
+            return Err(
+                "TypeError: Cannot read properties of undefined (reading 'getBuffer')".into(),
+            );
+        };
+        let Some(bytes) = self.buffer_view_buffer(bv, None)? else {
+            return Err(
+                "TypeError: Cannot read properties of undefined (reading 'byteLength')".into(),
+            );
+        };
+
+        // `Object .entries (attributes)`: undefined or null throws.
+        let attrs = draco.get("attributes");
+
+        if !attrs.is_obj() {
+            return Err("TypeError: Cannot convert undefined or null to object".into());
+        }
+
+        let ids: Vec<(String, u32)> = attrs
+            .entries()
+            .into_iter()
+            .map(|(k, v)| (k, v.to_number() as u32))
+            .collect();
+        let decoded = super::draco::decode_mesh(&bytes, &ids)?;
+
+        if let Some(indices) = decoded.indices {
+            // `Object .defineProperty (primitive .indices, "array", ...)` on undefined throws.
+            let Some(acc) = self.prims.get(&key).and_then(|p| p.indices) else {
+                return Err("TypeError: Object.defineProperty called on non-object".into());
+            };
+
+            self.acc[acc].array = Some(Rc::new(TArr {
+                ct: Ct::U32,
+                v: indices.into_iter().map(f64::from).collect(),
+            }));
+        }
+
+        for (name, values) in decoded.attributes {
+            let acc = self
+                .prims
+                .get(&key)
+                .and_then(|p| p.attributes.iter().find(|(k, _)| *k == name))
+                .and_then(|(_, v)| *v);
+
+            if let Some(acc) = acc {
+                self.acc[acc].array = Some(Rc::new(TArr {
+                    ct: Ct::F32,
+                    v: values.into_iter().map(f64::from).collect(),
+                }));
+            }
+        }
+
         Ok(())
     }
 
