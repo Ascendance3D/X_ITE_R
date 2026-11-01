@@ -207,11 +207,13 @@ export const movieFallbackCases = {
    noneplay: (page, env) => candidatesCase (page, env, [ BAD, "BASE/status/404/missing.mp4" ]),
 };
 
-// The video decode of the hosted GPU-less runner is slower than the sampling window (CI run 41270817878: the capture of
-// frame 0 of a video never fell inside its window); the two video frame cases run locally.
-const CI_VIDEO = process .env .CI ? "the video decode on the hosted runner exceeds the sampling window; run locally" : false;
+// The frame cases sample a wall clock. On the hosted GPU-less runner the video decode is slower than the sampling window
+// (CI run 41270817878) and the load made the gif and apng cases flake on unrelated pull requests (runs 41276225933 and
+// the one of PR 229). They are skipped when CI is set and run in gpu-tests.yml (browser-video, `env -u CI`) and locally.
+// The fallback cases stay on the hosted runner.
+const CI_TIMED = process .env .CI ? "the frame cases sample a wall clock, which the hosted runner's load made flaky (gif, apng, video); gpu-tests.yml runs them" : false;
 
 export const CASE_GROUPS = {
-   movieFrames: { skipCases: { webm: CI_VIDEO, mp4: CI_VIDEO }, context: DESKTOP, browserArgs: [ "--autoplay-policy=no-user-gesture-required" ], cases: movieFramesCases },
+   movieFrames: { skipCases: Object .fromEntries (Object .keys (movieFramesCases) .map (name => [ name, CI_TIMED ])), context: DESKTOP, browserArgs: [ "--autoplay-policy=no-user-gesture-required" ], cases: movieFramesCases },
    movieFallback: { context: DESKTOP, browserArgs: [ "--autoplay-policy=no-user-gesture-required" ], cases: movieFallbackCases },
 };
