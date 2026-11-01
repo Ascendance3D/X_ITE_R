@@ -134,14 +134,6 @@ const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "
 function scriptLifeDifferences ()
 {
    const differences = {
-      // Issue #202, field callbacks in the route chain (web/API.md, "Script nodes"). fieldCascade.nested: a callback of B writes D while D's
-      // routed event from A is still queued. X_ITE ends with the written value (its callback sees `9 9 9` one frame later); X_ITE_R, which calls
-      // the callback at the same point of the chain, processes the queued event after the write, so D ends with the routed value and the
-      // write's own event delivers it again in the same frame. The cause is not found yet (open item of #202).
-      "fieldCascade.nested": [
-         [ [ "final", 0 ], "9 9 9", "2 0 0" ],
-         [ [ "seq", 5 ], "D|9 9 9|later|1", "D|2 0 0|later|0" ],
-      ],
       // Issue #202, item 4 (the reload sets, scriptlife01_case.mjs). The engine is the one of the native suites, so the differences are
       // the ones its known lists name (crates/x3d-script/tests/synthetic-inline-reload-known.tsv).
       // inlineRetry.externprotoAgain: both engines keep the EXTERNPROTO's failure and ask for the file once (`requests` is equal). X_ITE
@@ -263,13 +255,6 @@ const KNOWN_DIFFERENCES = {
    "sceneCreate.importDocumentHTML": [
       // X_ITE's HTMLParser reads an HTML element (the X3D element of a page); X_ITE_R takes XML (string, XMLDocument, element) only.
       [ [ "result" ], { ctor: "X3DScene", isWorld: false, roots: ["Transform", "Shape"], worldURL: "PAGE" }, "Error: X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element." ],
-   ],
-   "fieldCascade.nested": [
-      // X_ITE queues the event of a field set inside a callback behind the route events still waiting: D's route event
-      // (2 0 0) overwrites the nested value (9 9 9), and the nested event comes in the same cascade with the value D then holds.
-      // X_ITE_R delivers the callbacks after the frame: the nested set goes in the next frame and its value stays.
-      [ [ "final", 0 ], "2 0 0", "9 9 9" ],
-      [ [ "seq", 5 ], "D|2 0 0|later|0", "D|9 9 9|later|1" ],
    ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
