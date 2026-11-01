@@ -22,7 +22,9 @@ const TYPES = {
 
 // Clean fixtures of other oracle sets that both engines load: /fonts/ (PT Sans, OFL; notfont.ttf, see PROVENANCE.txt),
 // /media/ (synthetic tones) and /synthetic-x6/, /synthetic-inline-scripts/, /synthetic-externproto/ and /synthetic-followers/ (the synthetic Script
-// worlds, script01.test.mjs).
+// worlds, script01.test.mjs), /synthetic-inline-reload/ and /synthetic-externproto-reload/ (the reload worlds,
+// scriptlife01_case.mjs). `server .publish (path, body)` makes a path answer 200 with the body from then on (a resource that
+// appears while the world runs); `server .unpublish ()` removes them all.
 const REPO = normalize (join (new URL (".", import.meta.url) .pathname, "../../../.."));
 
 const FIXTURES = {
@@ -32,14 +34,17 @@ const FIXTURES = {
    "/synthetic-inline-scripts/": join (REPO, "oracle/synthetic-inline-scripts"),
    "/synthetic-externproto/": join (REPO, "oracle/synthetic-externproto"),
    "/synthetic-followers/": join (REPO, "oracle/synthetic-followers"),
+   "/synthetic-inline-reload/": join (REPO, "oracle/synthetic-inline-reload"),
+   "/synthetic-externproto-reload/": join (REPO, "oracle/synthetic-externproto-reload"),
 };
 
 export async function startServer (root, { mounts = { }, pages = { } } = { })
 {
    mounts = { ... FIXTURES, ... mounts };
 
-   const holds    = new Map ();
-   const requests = [ ];
+   const holds     = new Map ();
+   const requests  = [ ];
+   const published = new Map ();
 
    // A hold: a Promise and its release.
    const hold = key =>
@@ -63,6 +68,12 @@ export async function startServer (root, { mounts = { }, pages = { } } = { })
 
       try
       {
+         if (published .has (pathname))
+         {
+            res .writeHead (200, { "Content-Type": TYPES [extname (pathname) .toLowerCase ()] ?? "application/octet-stream", "Cache-Control": "no-store" });
+            return res .end (published .get (pathname));
+         }
+
          if (pathname in pages)
          {
             res .writeHead (200, { "Content-Type": "text/html", "Cache-Control": "no-store" });
@@ -143,6 +154,8 @@ export async function startServer (root, { mounts = { }, pages = { } } = { })
       release: key => hold (key) .release (),
       // A new hold for `key` (the next request waits again).
       arm: key => holds .delete (key),
+      publish: (path, body) => published .set (path, body),
+      unpublish: () => published .clear (),
       close: () => Promise .all (servers .map (server => new Promise (resolve => server .close (resolve)))),
    };
 }

@@ -10,6 +10,9 @@
 // every callback of the page, in the order they happen, each as one line. What the cases do not record is a time or a
 // frame count: the pages of the engines count frames differently.
 
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { DESKTOP } from "./runtime02_case.mjs";
 
 const WORLDS = {
@@ -267,6 +270,95 @@ function read () { print ('S read ' + names (Browser .currentScene .rootNodes));
 "
 } }
 `,
+   // Item 1 of issue #202: the same Script as XML and as X3D JSON, for importDocument and importJS.
+   importXml: `<X3D profile='Full' version='4.0'><Scene>
+<Transform DEF='T' translation='1 2 3'/>
+<Script DEF='S' directOutput='true'>
+<field name='set_x' type='SFInt32' accessType='inputOnly'/>
+<field name='x_changed' type='SFInt32' accessType='outputOnly'/>
+<field name='n' type='SFInt32' accessType='initializeOnly' value='5'/>
+<field name='target' type='SFNode' accessType='initializeOnly'><Transform USE='T'/></field>
+<![CDATA[ecmascript:
+function initialize () { print ('S initialize n=' + n + ' ' + target .translation); target .translation = new SFVec3f (4, 5, 6); }
+function set_x (value) { n = value; print ('S set_x ' + value); x_changed = value * 2; }
+function eventsProcessed () { print ('S eventsProcessed n=' + n); }
+function shutdown () { print ('S shutdown'); }
+]]></Script>
+</Scene></X3D>`,
+
+   importJson: JSON .stringify ({ X3D: { "@profile": "Full", "@version": "4.0", Scene: { "-children": [
+      { Transform: { "@DEF": "T", "@translation": [ 1, 2, 3 ] } },
+      { Script: { "@DEF": "S", "@directOutput": true,
+         field: [
+            { "@name": "set_x", "@type": "SFInt32", "@accessType": "inputOnly" },
+            { "@name": "x_changed", "@type": "SFInt32", "@accessType": "outputOnly" },
+            { "@name": "n", "@type": "SFInt32", "@accessType": "initializeOnly", "@value": 5 },
+            { "@name": "target", "@type": "SFNode", "@accessType": "initializeOnly", "-children": [ { Transform: { "@USE": "T" } } ] } ],
+         "#sourceText": [
+            "ecmascript:",
+            "function initialize () { print ('S initialize n=' + n + ' ' + target .translation); target .translation = new SFVec3f (4, 5, 6); }",
+            "function set_x (value) { n = value; print ('S set_x ' + value); x_changed = value * 2; }",
+            "function eventsProcessed () { print ('S eventsProcessed n=' + n); }",
+            "function shutdown () { print ('S shutdown'); }" ] } } ] } } }),
+
+   // Item 2: functions and nodes that a Script leaves in the page, used after its world was replaced.
+   staleFunction: `#VRML V2.0 utf8
+DEF T Transform { translation 1 2 3 }
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventOut SFInt32 x_changed
+  field SFInt32 n 7
+  field SFNode target USE T
+  directOutput TRUE
+  url "javascript:
+function initialize () {
+  window .kept = {
+    read: function () { return n + ' ' + target .translation; },
+    write: function (v) { n = v; target .translation = new SFVec3f (v, v, v); return 'written ' + v; },
+    send: function (v) { x_changed = v; return 'sent ' + v; },
+    print: function () { print ('kept print n=' + n); return 'printed'; },
+    node: target,
+    scene: Browser .currentScene
+  };
+  print ('S initialize');
+}
+function set_x (value) { n = value; }
+"
+}
+`,
+
+   // Item 3: a Script (and the page) that interleave console output with calls into the page.
+   printTiming: `#VRML V2.0 utf8
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventOut SFInt32 x_changed
+  url "javascript:
+function initialize () { print ('S initialize 1'); window .mark ('in initialize'); print ('S initialize 2'); }
+function set_x (value) {
+  print ('S set_x a');
+  window .mark ('in set_x 1');
+  console .log ('S console.log');
+  window .mark ('in set_x 2');
+  Browser .print ('S Browser.print', 1, 'two');
+  Browser .println ('S Browser.println');
+  console .warn ('S console.warn');
+  window .mark ('in set_x 3');
+  x_changed = value;
+  window .mark ('after x_changed');
+  print ('S set_x b');
+}
+function eventsProcessed () { print ('S eventsProcessed'); window .mark ('in eventsProcessed'); }
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  url "javascript: function set_y (value) { print ('R set_y ' + value); window .mark ('in R set_y'); print ('R set_y done'); }"
+}
+ROUTE S.x_changed TO R.set_y
+`,
 };
 
 // The case of a world: load it, run the steps, and answer the ordered `seq` with the values the steps returned.
@@ -301,13 +393,91 @@ async function scenario (page, name)
       const note    = text => seq .push (`page: ${text}`);
       const names   = nodes => Array .from (nodes, n => n ? `${n .getNodeTypeName ()}:${n .getNodeName ()}` : "NULL") .join (",");
       const load    = async text => { await browser .replaceWorld (await browser .createX3DFromString (text)); await spin (4); };
+      const imported = async (how, text) =>
+      {
+         const doc = () => new DOMParser () .parseFromString (text, "application/xml");
+         const scene = await ({
+            jsString:    () => browser .importJS (text),
+            jsObject:    () => browser .importJS (JSON .parse (text)),
+            xmlString:   () => browser .importDocument (text),
+            xmlDocument: () => browser .importDocument (doc ()),
+            xmlElement:  () => browser .importDocument (doc () .documentElement),
+         }) [how] ();
+
+         await browser .replaceWorld (scene);
+         await spin (4);
+      };
 
       try
       {
-         await load (world);
+         // A function the Script of a case calls to put a line into `seq` from inside its own call.
+         window .mark = text => note (`mark ${text}`);
+
+         const how = { importJsString: "jsString", importJsObject: "jsObject", importXmlString: "xmlString", importXmlDocument: "xmlDocument", importXmlElement: "xmlElement" } [name];
+
+         if (how)
+         {
+            note ("import");
+            await imported (how, world);
+         }
+         else
+            await load (world);
 
          switch (name)
          {
+            case "importJsString":
+            case "importJsObject":
+            case "importXmlString":
+            case "importXmlDocument":
+            case "importXmlElement":
+            {
+               const S = node ("S");
+
+               S .addFieldCallback ("page", "x_changed", v => note (`x_changed ${v}`));
+               out .fields = [ S .n, String (node ("T") .translation) ];
+               note ("set_x 3");
+               S .set_x = 3;
+               await spin (3);
+               out .after = [ S .n, String (node ("T") .translation) ];
+               out .vrml  = scene () .toVRMLString () .replace (/\s+/g, " ") .trim () .split (" url ") [0];
+               note ("replaceWorld");
+               await load ("#VRML V2.0 utf8\nGroup { }\n");
+               await spin (10);
+               break;
+            }
+            case "staleFunction":
+            {
+               const kept = window .kept;
+
+               out .before = attempt (() => kept .read ());
+               note ("replaceWorld");
+               await load ("#VRML V2.0 utf8\nDEF G Group { }\n");
+               out .read  = attempt (() => kept .read ());
+               out .write = attempt (() => kept .write (9));
+               out .send  = attempt (() => kept .send (4));
+               out .print = attempt (() => kept .print ());
+               out .node  = attempt (() => String (kept .node .translation));
+               out .scene = attempt (() => kept .scene .rootNodes .length);
+               out .world = names (scene () .rootNodes);
+               await spin (5);
+               break;
+            }
+            case "printTiming":
+            {
+               const S = node ("S");
+
+               S .addFieldCallback ("page", "x_changed", v => { note (`x_changed ${v}`); browser .print ("page print in callback"); console .log ("page console.log in callback"); });
+               note ("set_x 1");
+               S .set_x = 1;
+               note ("after the assignment");
+               await spin (3);
+               note ("page print");
+               browser .print ("page Browser.print");
+               browser .println ("page Browser.println");
+               note ("after the page print");
+               await spin (3);
+               break;
+            }
             case "initialize":
             {
                out .fields = [ node ("A") .n, Array .from (node ("A") .names) .join (), String (node ("A") .v), node ("B") .got, String (node ("T") .translation) ];
@@ -480,10 +650,205 @@ async function scenario (page, name)
 
 // The Script of the root nodes cases is in a Group, not a root node: X_ITE 16.5.0 throws `array[i].set is not a
 // function` for a change of the root nodes while a Script is a root node itself, and the cases do not record that.
-const WORLD_OF = name => name .startsWith ("shutdown") ? "shutdown" : name .startsWith ("rootNodes") ? "rootNodes" : name;
+const WORLD_OF = name => name .startsWith ("shutdown") ? "shutdown" : name .startsWith ("rootNodes") ? "rootNodes" : name .startsWith ("importJs") ? "importJson" : name .startsWith ("importXml") ? "importXml" : name;
 
-const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => name !== "rootNodes"), "shutdownUrl", "shutdownDispose", ... [ "Page", "Add", "Remove", "Set", "Push" ] .map (how => `rootNodes${how}`) ] .map (name => [ name, page => scenario (page, name) ]));
+const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => ![ "rootNodes", "importXml", "importJson" ] .includes (name)), "shutdownUrl", "shutdownDispose", "importJsString", "importJsObject", "importXmlString", "importXmlDocument", "importXmlElement", ... [ "Page", "Add", "Remove", "Set", "Push" ] .map (how => `rootNodes${how}`) ] .map (name => [ name, page => scenario (page, name) ]));
+
+// --- The reload sets (issue #202, item 4) ---------------------------------------------------------------------------------
+//
+// oracle/synthetic-inline-reload and oracle/synthetic-externproto-reload are step scenarios: each frame of a scenario has
+// actions on an Inline (or an EXTERNPROTO), and the native suites compare them frame by frame with the pinned X_ITE's
+// stepped page (oracle/x_ite-inline.mjs). A real page cannot step the frames, so these cases drive a scenario with the
+// page's API only and compare what is settled: after the world and after each frame that has actions, they wait 400 ms, then
+// in windows of 650 ms (longer than the 0.5 s cycle of the worlds' clocks) until two windows in a row have the same non-empty set of clock ticks (at most about 5 s, as a slow runner starts
+// and stops clocks late); the ticks of the last window count. They record the console lines that name a state (`warn`, `error`, and
+// the `initialize`, `shutdown` and `created` prints), the digit-normalized set of the other lines (the clocks' ticks: only
+// whether a clock ran, not how often), and the `url` and `load` of the Inlines the scenario drives.
+//
+// Only the scenarios that a page can drive in both engines are cases: actions of the types `url`, `load`, `remove` and
+// `publish` on a named Inline of the world (X_ITE_R's page has no `loadNow`, `unloadNow`, `autoRefresh` timing in frames
+// or EXTERNPROTO declaration objects, and cannot reach the Inlines of an Inline), no two actions in adjacent frames
+// (their order against the loads is frame timing), and no scenario that the native suite marks `skip`. Of the EXTERNPROTO
+// set, the scenarios without actions.
+
+const REPO         = join (dirname (fileURLToPath (import.meta.url)), "../../../..");
+const RELOAD_SETS  = { inline: "synthetic-inline-reload", externproto: "synthetic-externproto-reload" };
+const RELOAD_TYPES = [ "url", "load", "remove", "publish" ];
+const EARLY_MS     = 400;
+const WINDOW_MS    = 650;
+// The most windows a step waits for its clock ticks to settle (about 5 s): a slow machine starts and stops clocks late.
+const MAX_WINDOWS  = 8;
+
+function reloadScenarios ()
+{
+   const found = { };
+
+   for (const [ prefix, set ] of Object .entries (RELOAD_SETS))
+   {
+      for (const file of readdirSync (join (REPO, "oracle", set)) .filter (f => /^c.*\.json$/ .test (f)) .sort ())
+      {
+         const scenario = JSON .parse (readFileSync (join (REPO, "oracle", set, file), "utf8"));
+         const actions  = scenario .actions ?? [ ];
+         const frames   = [ ... new Set (actions .map (a => a .frame)) ] .sort ((a, b) => a - b);
+
+         if (scenario .oracle === "skip")
+            continue;
+
+         if (actions .some (a => !RELOAD_TYPES .includes (a .type) || (a .name ?? "") .includes ("/")))
+            continue;
+
+         if (set === RELOAD_SETS .externproto && actions .length)
+            continue;
+
+         if (frames .some ((f, i) => i && f - frames [i - 1] < 3))
+            continue;
+
+         // c35 lives on the Inline's wall-clock autoRefresh: X_ITE retries a failed load again and again, so the number of its error
+         // lines grows with the time a step waits (3 in 1 s, 9 in 5 s); the native suites compare it frame by frame.
+         if (set === RELOAD_SETS .inline && file === "c35-auto-refresh-after-failure.json")
+            continue;
+
+         // The Driver of the EXTERNPROTO worlds moves an instance at its second tick, which a wall clock places in one or the
+         // next window: c01 is the one scenario that shows it in the last window of its only step.
+         if (set === RELOAD_SETS .externproto && file === "c01-initial.json")
+            continue;
+
+         found [`${prefix}.${file .slice (0, -5)}`] = [ set, scenario ];
+      }
+   }
+
+   return found;
+}
+
+async function reloadCase (page, env, set, scenario)
+{
+   const dir     = join (REPO, "oracle", set);
+   const actions = scenario .actions ?? [ ];
+   const names   = [ ... new Set ([ ... (set === RELOAD_SETS .inline ? [ "Inl" ] : [ ]), ... actions .map (a => a .name) .filter (Boolean) ]) ];
+   const frames  = [ ... new Set (actions .map (a => a .frame)) ] .sort ((a, b) => a - b);
+   const steps   = [ ];
+
+   env .server .unpublish ();
+
+   // The lines of the first EARLY_MS after an action (a clock of the replaced scene may still run) are not counted as ticks. Then
+   // the step waits in windows of WINDOW_MS until two windows in a row have the same non-empty set of ticks (a slow machine starts
+   // the clocks late and stops the old scene's clocks late; at most MAX_WINDOWS, for a step in which nothing ticks), and the ticks
+   // are that set.
+   const settle = () => page .evaluate (async ([ early, win, max ]) =>
+   {
+      const r    = window .__reload;
+      const wait = ms => new Promise (resolve => setTimeout (resolve, ms));
+      const set  = from => [ ... new Set (r .lines .slice (from) .filter (line => !r .states (line)) .map (line => line .replace (/\d+(\.\d+)?/g, "N"))) ] .sort () .join ("\n");
+
+      await wait (early);
+
+      let previous = null;
+
+      for (let i = 0; i < max; ++ i)
+      {
+         r .mark = r .lines .length;
+         await wait (win);
+
+         const current = set (r .mark);
+
+         if (current && current === previous)
+            break;
+
+         previous = current;
+      }
+   }, [ EARLY_MS, WINDOW_MS, MAX_WINDOWS ]);
+
+   const snapshot = async () => page .evaluate (names =>
+   {
+      const X3D      = window .X3D_NS;
+      const browser  = X3D .getBrowser (document .querySelector ("x3d-canvas"));
+      const lines    = window .__reload .lines .splice (0);
+      const late     = lines .slice (window .__reload .mark);
+      const states   = window .__reload .states;
+      const inlines  = { };
+
+      for (const name of names)
+      {
+         try
+         {
+            const node = browser .currentScene .getNamedNode (name);
+
+            inlines [name] = [ Array .from (node .url) .map (u => u .split (window .location .origin) .join ("http://oracle")), node .load ];
+         }
+         catch (error) { inlines [name] = String (error ?.message ?? error); }
+      }
+
+      return {
+         stable: lines .filter (states),
+         ticks:  [ ... new Set (late .filter (line => !states (line)) .map (line => line .replace (/\d+(\.\d+)?/g, "N"))) ] .sort (),
+         inlines,
+      };
+   }, names);
+
+   await page .evaluate (async ([ url ]) =>
+   {
+      const X3D     = window .X3D_NS;
+      const canvas  = document .querySelector ("x3d-canvas");
+      const browser = X3D .getBrowser (canvas);
+      const lines   = [ ];
+      const origin  = window .location .origin;
+
+      window .__reload = { lines, mark: 0, states: line => !line .startsWith ("log: ") || /\b(initialize|shutdown|created)\b/ .test (line) };
+      canvas .setAttribute ("scripts", "true");
+
+      for (const type of [ "log", "warn", "error" ])
+         console [type] = (... args) => lines .push (`${type}: ${args .join (" ") .split ("\n") [0] .split (origin) .join ("http://oracle")}`);
+
+      window .addEventListener ("error", event => { lines .push (`pageerror: ${String (event .error ?.message ?? event .message)}`); event .preventDefault (); });
+
+      try { await browser .loadURL (new X3D .MFString (url)); }
+      catch (error) { lines .push (`loadURL rejected: ${String (error ?.message ?? error)}`); }
+   }, [ `${env .base}/${set}/${scenario .world}` ]);
+
+   await settle ();
+   steps .push ({ k: 0, ... await snapshot () });
+
+   for (const frame of frames)
+   {
+      const now = actions .filter (a => a .frame === frame);
+
+      for (const a of now .filter (a => a .type === "publish"))
+         env .server .publish (`/${set}/${a .path}`, readFileSync (join (dir, a .from)));
+
+      // All the actions of one frame in one task, as the oracle applies them between two frames.
+      await page .evaluate (now =>
+      {
+         const X3D     = window .X3D_NS;
+         const browser = X3D .getBrowser (document .querySelector ("x3d-canvas"));
+         const node    = name => browser .currentScene .getNamedNode (name);
+
+         for (const a of now)
+         {
+            switch (a .type)
+            {
+               case "url":    node (a .name) .url = new X3D .MFString (... a .url); break;
+               case "load":   node (a .name) .load = a .value; break;
+               case "remove":
+               {
+                  const group = node (a .group);
+
+                  group .children = new X3D .MFNode (... Array .from (group .children) .filter (c => c ?.getNodeName () !== a .name));
+                  break;
+               }
+            }
+         }
+      }, now .filter (a => a .type !== "publish"));
+
+      await settle ();
+      steps .push ({ k: frame, ... await snapshot () });
+   }
+
+   return { steps };
+}
+
+const reloadCases = Object .fromEntries (Object .entries (reloadScenarios ()) .map (([ key, [ set, scenario ] ]) => [ key, (page, env) => reloadCase (page, env, set, scenario) ]));
 
 export const CASE_GROUPS = {
    scriptLife: { context: DESKTOP, cases },
+   scriptReload: { context: DESKTOP, cases: reloadCases },
 };

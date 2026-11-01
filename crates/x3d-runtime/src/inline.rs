@@ -958,10 +958,12 @@ impl Runtime {
     /// * routes are deleted, scenes go not live;
     /// * a nested Inline cancels its request and drops the scene it has parsed (X_ITE lets it finish);
     ///   so does an EXTERNPROTO declaration of the scene (R0.3-E);
-    /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none), then stops getting
+    /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none, so the browser build skips it, see
+    ///   [`Runtime::replace_skips_shutdown`]), then stops getting
     ///   `prepareEvents`, `eventsProcessed` and field events (X_ITE keeps calling them for ever).
     pub(crate) fn dispose_scene(&mut self, root: CtxId) {
-        self.dispose_scene_with(root, true);
+        // An Inline that unloads or reloads: the browser build calls no `shutdown ()`, as X_ITE 16.5.0 (issue #202).
+        self.dispose_scene_with(root, !self.replace_skips_shutdown);
     }
 
     /// [`Runtime::dispose_scene`]; `shutdown` false leaves the Scripts' `shutdown ()` uncalled (see

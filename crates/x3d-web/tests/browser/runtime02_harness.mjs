@@ -146,7 +146,42 @@ const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "
 // derived from it by the rule named here, so the differences stay visible and a new recording cannot hide one.
 function scriptLifeDifferences ()
 {
-   const differences = { };
+   const gone = "Error: X_ITE_R: the Script's world is gone.";
+
+   const differences = {
+      // Issue #202, item 2: X_ITE keeps the nodes and the Script of a replaced world usable for what a Script left in the page.
+      // X_ITE_R's engine world goes with the replaced world, so the page's functions throw and its node handle reads nothing.
+      "scriptLife.staleFunction": [
+         [ [ "read" ], "7 1 2 3", "7 undefined" ],
+         [ [ "write" ], "written 9", gone ],
+         [ [ "send" ], "sent 4", gone ],
+         [ [ "print" ], "printed", gone ],
+         [ [ "node" ], "9 9 9", "undefined" ],
+         [ [ "scene" ], 2, gone ],
+         [ [ "seq" ], [ "log: S initialize", "page: replaceWorld", "log: kept print n=9" ], [ "log: S initialize", "page: replaceWorld" ] ],
+      ],
+      // Issue #202, item 3: the page's console lines of a Script (`print`, `console`) reach the page when the engine returns from the
+      // event, frame or `initialize`; X_ITE logs them in the Script's call. The lines of the page's own calls (`window .mark`) come
+      // at once, so they move in front of the Script's lines of the same engine call, in the order they were made.
+      "scriptLife.printTiming": [
+         [ [ "seq" ],
+            [ "log: S initialize 1", "page: mark in initialize", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "log: S set_x a", "page: mark in set_x 1", "log: S console.log", "page: mark in set_x 2", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "page: mark in set_x 3", "page: mark after x_changed", "log: S set_x b", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "page: mark in R set_y", "log: R set_y done", "log: S eventsProcessed", "page: mark in eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ],
+            [ "page: mark in initialize", "log: S initialize 1", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "page: mark in set_x 1", "page: mark in set_x 2", "page: mark in set_x 3", "page: mark after x_changed", "page: mark in R set_y", "page: mark in eventsProcessed", "log: S set_x a", "log: S console.log", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "log: S set_x b", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "log: R set_y done", "log: S eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ] ],
+      ],
+      // Issue #202, item 4 (the reload sets, scriptlife01_case.mjs). The engine is the one of the native suites, so the differences are
+      // the ones its known lists name (crates/x3d-script/tests/synthetic-inline-reload-known.tsv).
+      // c17: the page's fetch layer keeps a failed response of a world for good (`WebFetcher`, `Entry::Failed`), so an Inline whose
+      // url is set again after the file was published asks nothing and fails again; X_ITE fetches again (no-store) and loads it.
+      // Structural (a failed entry would need a load-attempt boundary, and X_ITE's EXTERNPROTO caches a failure for good), owner decision.
+      "scriptReload.inline.c17-recover-same-url": [
+         [ [ "steps", 1, "stable" ], [ "log: B initialize" ], [ "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found" ] ],
+         [ [ "steps", 1, "ticks" ], [ "log: B fraction N", "log: parent tick N" ], [ "log: parent tick N" ] ],
+      ],
+      // c29: a Script of a replaced scene keeps getting prepareEvents in X_ITE for ever; X_ITE_R removes its interest.
+      "scriptReload.inline.c29-script-interests": [
+         [ [ "steps", 1, "ticks" ], [ "log: B fraction N", "log: P prepare N" ], [ "log: B fraction N" ] ],
+      ],
+   };
 
    return differences;
 }
@@ -714,6 +749,7 @@ const GROUP_FILES = {
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
+   scriptReload: "scriptlife01.test.mjs",
    movieFrames: "movie01.test.mjs",
    movieFallback: "movie01.test.mjs",
 };

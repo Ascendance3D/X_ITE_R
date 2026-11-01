@@ -189,6 +189,54 @@
     "page: replaceWorld"
    ]
   },
+  "scriptLife.staleFunction": {
+   "before": "7 1 2 3",
+   "read": "7 1 2 3",
+   "write": "written 9",
+   "send": "sent 4",
+   "print": "printed",
+   "node": "9 9 9",
+   "scene": 2,
+   "world": "Group:G",
+   "errors": [],
+   "seq": [
+    "log: S initialize",
+    "page: replaceWorld",
+    "log: kept print n=9"
+   ]
+  },
+  "scriptLife.printTiming": {
+   "errors": [],
+   "seq": [
+    "log: S initialize 1",
+    "page: mark in initialize",
+    "log: S initialize 2",
+    "page: set_x 1",
+    "page: after the assignment",
+    "log: S set_x a",
+    "page: mark in set_x 1",
+    "log: S console.log",
+    "page: mark in set_x 2",
+    "log: S Browser.print 1 two",
+    "log: S Browser.println",
+    "warn: S console.warn",
+    "page: mark in set_x 3",
+    "page: mark after x_changed",
+    "log: S set_x b",
+    "page: x_changed 1",
+    "log: page print in callback",
+    "log: page console.log in callback",
+    "log: R set_y 1",
+    "page: mark in R set_y",
+    "log: R set_y done",
+    "log: S eventsProcessed",
+    "page: mark in eventsProcessed",
+    "page: page print",
+    "log: page Browser.print",
+    "log: page Browser.println",
+    "page: after the page print"
+   ]
+  },
   "scriptLife.shutdownUrl": {
    "n": 1,
    "errors": [],
@@ -207,6 +255,111 @@
     "log: A initialize",
     "log: B initialize",
     "page: dispose"
+   ]
+  },
+  "scriptLife.importJsString": {
+   "fields": [
+    5,
+    "4 5 6"
+   ],
+   "after": [
+    3,
+    "4 5 6"
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Full DEF T Transform { translation 4 5 6 } DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed initializeOnly SFInt32 n 3 initializeOnly SFNode target USE T",
+   "errors": [],
+   "seq": [
+    "page: import",
+    "log: S initialize n=5 1 2 3",
+    "page: set_x 3",
+    "log: S set_x 3",
+    "page: x_changed 6",
+    "log: S eventsProcessed n=3",
+    "page: replaceWorld"
+   ]
+  },
+  "scriptLife.importJsObject": {
+   "fields": [
+    5,
+    "4 5 6"
+   ],
+   "after": [
+    3,
+    "4 5 6"
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Full DEF T Transform { translation 4 5 6 } DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed initializeOnly SFInt32 n 3 initializeOnly SFNode target USE T",
+   "errors": [],
+   "seq": [
+    "page: import",
+    "log: S initialize n=5 1 2 3",
+    "page: set_x 3",
+    "log: S set_x 3",
+    "page: x_changed 6",
+    "log: S eventsProcessed n=3",
+    "page: replaceWorld"
+   ]
+  },
+  "scriptLife.importXmlString": {
+   "fields": [
+    5,
+    "4 5 6"
+   ],
+   "after": [
+    3,
+    "4 5 6"
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Full DEF T Transform { translation 4 5 6 } DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed initializeOnly SFInt32 n 3 initializeOnly SFNode target USE T",
+   "errors": [],
+   "seq": [
+    "page: import",
+    "log: S initialize n=5 1 2 3",
+    "page: set_x 3",
+    "log: S set_x 3",
+    "page: x_changed 6",
+    "log: S eventsProcessed n=3",
+    "page: replaceWorld"
+   ]
+  },
+  "scriptLife.importXmlDocument": {
+   "fields": [
+    5,
+    "4 5 6"
+   ],
+   "after": [
+    3,
+    "4 5 6"
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Full DEF T Transform { translation 4 5 6 } DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed initializeOnly SFInt32 n 3 initializeOnly SFNode target USE T",
+   "errors": [],
+   "seq": [
+    "page: import",
+    "log: S initialize n=5 1 2 3",
+    "page: set_x 3",
+    "log: S set_x 3",
+    "page: x_changed 6",
+    "log: S eventsProcessed n=3",
+    "page: replaceWorld"
+   ]
+  },
+  "scriptLife.importXmlElement": {
+   "fields": [
+    5,
+    "4 5 6"
+   ],
+   "after": [
+    3,
+    "4 5 6"
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Full DEF T Transform { translation 4 5 6 } DEF S Script { inputOnly SFInt32 set_x outputOnly SFInt32 x_changed initializeOnly SFInt32 n 3 initializeOnly SFNode target USE T",
+   "errors": [],
+   "seq": [
+    "page: import",
+    "log: S initialize n=5 1 2 3",
+    "page: set_x 3",
+    "log: S set_x 3",
+    "page: x_changed 6",
+    "log: S eventsProcessed n=3",
+    "page: replaceWorld"
    ]
   },
   "scriptLife.rootNodesPage": {
@@ -295,6 +448,1126 @@
     "page: rootNodes callback 4 Transform:A,Group:X,Group:H,Group:",
     "page: Script read",
     "log: S read Transform:A,Group:X,Group:H,Group:"
+   ]
+  },
+  "scriptReload.inline.c01-initial": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c02-url-replace": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c03-fallback-initial": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone.wrl', trying URL 2 of 3. Error: Not Found",
+      "error: Error: Expected '}' at the end of node body.",
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/content-bad.wrl', trying URL 3 of 3. Error: ",
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone.wrl",
+        "content-bad.wrl",
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c03b-fallback-runtime": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone.wrl', trying URL 2 of 3. Error: Not Found",
+      "error: Error: Expected '}' at the end of node body.",
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/content-bad.wrl', trying URL 3 of 3. Error: ",
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone.wrl",
+        "content-bad.wrl",
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c04-missing": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c05-load-toggle": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       false
+      ]
+     }
+    },
+    {
+     "k": 7,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c05b-load-off-initial": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       false
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c08-overlap-same-frame": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [
+      "log: C initialize"
+     ],
+     "ticks": [
+      "log: C fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-c.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c11-inline-extern": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: Gizmo initialize level=3"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-extern.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 7,
+     "stable": [
+      "log: Gizmo two initialize level=3"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-extern-two.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c12-repeat-success": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 3,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 6,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 9,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 12,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 15,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 18,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c13-repeat-failure": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 3,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone1.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone1.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 6,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone2.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone2.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 9,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone1.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone1.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 12,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone2.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone2.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 15,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c15-remove-loaded": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c16-recover-new-url": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/gone.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "gone.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c17-recover-same-url": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found"
+     ],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "late.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 6,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "late.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c21-empty-url": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [],
+       true
+      ]
+     }
+    },
+    {
+     "k": 7,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c24-shared": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize",
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found.",
+      "Second": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: B fraction N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found.",
+      "Second": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c26-same-url-again": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c27-x3d": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-x3d.wrl"
+       ],
+       false
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [
+      "log: X initialize"
+     ],
+     "ticks": [
+      "log: X tick N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-x3d.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 8,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 11,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       false
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c29-script-interests": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: P initialize"
+     ],
+     "ticks": [
+      "log: P prepare N",
+      "log: P processed",
+      "log: P tick"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-prep.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 5,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: P prepare N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c30-dispose-nested-loaded": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: Mid initialize",
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: Mid tick N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found.",
+      "Mid": [
+       [
+        "nest-mid.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 6,
+     "stable": [
+      "log: C initialize"
+     ],
+     "ticks": [
+      "log: C fraction N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found.",
+      "Mid": [
+       [
+        "content-c.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c31-load-frames-0": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [],
+     "ticks": [
+      "log: world prepare N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found."
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c32-load-frames-1": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: B initialize"
+     ],
+     "ticks": [
+      "log: B fraction N",
+      "log: world prepare N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c33-load-frames-2": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: Mid initialize",
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: Mid tick N",
+      "log: world prepare N"
+     ],
+     "inlines": {
+      "Inl": "Named node 'Inl' not found."
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c34-vrml97-load-field": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [],
+     "ticks": [],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       false
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.inline.c37-url-and-load-false-same-frame": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: A initialize"
+     ],
+     "ticks": [
+      "log: A fraction N",
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-a.wrl"
+       ],
+       true
+      ]
+     }
+    },
+    {
+     "k": 4,
+     "stable": [],
+     "ticks": [
+      "log: parent tick N"
+     ],
+     "inlines": {
+      "Inl": [
+       [
+        "content-b.wrl"
+       ],
+       false
+      ]
+     }
+    }
+   ]
+  },
+  "scriptReload.externproto.c04-fallback-timing": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: nofound initialize",
+      "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-externproto-reload/lib-nofound.wrl', trying URL 2 of 3. Error: PROTO not found.",
+      "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-externproto-reload/missing-gadget.wrl#Gadget', trying URL 3 of 3. Error: Not Found",
+      "log: A initialize level=2 tag=A"
+     ],
+     "ticks": [],
+     "inlines": {}
+    }
+   ]
+  },
+  "scriptReload.externproto.c15-shared-scene": {
+   "steps": [
+    {
+     "k": 0,
+     "stable": [
+      "log: multi root initialize"
+     ],
+     "ticks": [],
+     "inlines": {}
+    }
    ]
   }
  }
