@@ -1037,7 +1037,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
   after `importJS` (a JSON string and object) and `importDocument` (an XML string, an `XMLDocument`, an element), a function
   and a node handle that a Script left in the page and uses after `replaceWorld` (`staleFunction`), and the order of a
   Script's `print` and `console` lines against its calls into the page (`printTiming`). Each case records one ordered list of
-  the console messages and the page callbacks (`seq`).
+  the console messages and the page callbacks (`seq`). `staleFunction` compares equal in X_ITE_R since
+  issue #202 (no entry in `KNOWN_DIFFERENCES`). `printTiming` has one narrowed entry: a Script's console lines reach the page
+  console during its call as in X_ITE, but the page callback on a field of the route chain still runs after the engine call.
 - Group `scriptReload` (27 cases): the reload sets `synthetic-inline-reload` and `synthetic-externproto-reload` driven by the
   page's API (`url`, `load`, `remove`, `publish` actions; the server's `publish ()` makes a file appear while the world runs).
   A page cannot step frames, so each case compares what is settled: after the world and after each frame with actions it waits

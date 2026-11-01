@@ -2020,7 +2020,7 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
             }
 
             let text = str_arg(ctx, a, 0);
-            rt().print(text);
+            rt().script_line(|rt| rt.print(text));
 
             Ok(J::Undefined)
         }
@@ -2028,9 +2028,9 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
             let text = str_arg(ctx, a, 1);
 
             match str_arg(ctx, a, 0).as_str() {
-                "warn" => rt().log_warn(text),
-                "error" => rt().log_error(text),
-                _ => rt().print(text),
+                "warn" => rt().script_line(|rt| rt.log_warn(text)),
+                "error" => rt().script_line(|rt| rt.log_error(text)),
+                _ => rt().script_line(|rt| rt.print(text)),
             }
 
             Ok(J::Undefined)

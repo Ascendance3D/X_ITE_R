@@ -254,6 +254,8 @@ pub fn script_op(host: f64, args: js_sys::Array) -> Result<JsValue, JsValue> {
 pub struct PageJsHost {
     table: Table,
     realm: JsValue,
+    /// A Script context was made: the page may hold objects of this host.
+    used: bool,
 }
 
 impl PageJsHost {
@@ -281,7 +283,11 @@ impl PageJsHost {
 
         REALMS.with(|r| r.borrow_mut().insert(table.id(), realm.clone()));
 
-        Ok(Some(PageJsHost { table, realm }))
+        Ok(Some(PageJsHost {
+            table,
+            realm,
+            used: false,
+        }))
     }
 
     fn cx(&self) -> PageCx<'_> {
@@ -300,6 +306,19 @@ impl Drop for PageJsHost {
 }
 
 impl ScriptHost for PageJsHost {
+    /// The realm goes from the table of realms and from this host, so the page's objects are its only holders: the page
+    /// sees when it dropped them (a `FinalizationRegistry` on the realm, `web/x_ite_r.mjs`). The table stays; its native
+    /// calls reach the runtime, which the caller keeps in place.
+    fn retire(&mut self) -> Option<u64> {
+        if !self.used {
+            return None;
+        }
+
+        REALMS.with(|r| r.borrow_mut().remove(&self.table.id()));
+        self.realm = JsValue::UNDEFINED;
+        Some(self.table.id())
+    }
+
     fn create_context(
         &mut self,
         rt: &mut Runtime,
@@ -308,6 +327,7 @@ impl ScriptHost for PageJsHost {
         callbacks: &[String],
     ) -> Result<Vec<bool>, ScriptError> {
         self.table.enter(rt);
+        self.used = true;
         sai::create_context(&self.cx(), rt, node, source, callbacks)
     }
 
