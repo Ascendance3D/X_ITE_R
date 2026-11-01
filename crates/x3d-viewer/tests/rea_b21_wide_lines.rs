@@ -382,9 +382,7 @@ fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dy
 /// "collision values", "png").
 fn run_case(root: &Path, name: &str, cpu: bool) -> Vec<(&'static str, String)> {
     let found: std::cell::RefCell<Vec<(&'static str, String)>> = Default::default();
-    let base = root
-        .join("oracle/rea-b21-wide-lines-baseline")
-        .join(name);
+    let base = root.join("oracle/rea-b21-wide-lines-baseline").join(name);
     let world = root
         .join("oracle/synthetic-rea-b21-wide-lines")
         .join(format!("{name}.x3dv"));

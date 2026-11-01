@@ -12,10 +12,9 @@ use serde_json::Value;
 
 #[test]
 fn gltf_inline_scenarios_match_x_ite() {
-    let text = std::fs::read_to_string(
-        oracle_root().join("rea-b08-gltf-baseline/inline-baseline.json"),
-    )
-    .expect("baseline");
+    let text =
+        std::fs::read_to_string(oracle_root().join("rea-b08-gltf-baseline/inline-baseline.json"))
+            .expect("baseline");
     let json: Value = serde_json::from_str(&text).unwrap();
     let base: Vec<&Value> = json["results"].as_array().unwrap().iter().collect();
     let mut failures = vec![];

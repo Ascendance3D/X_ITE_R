@@ -152,10 +152,8 @@ fn compare_case(
     let dir = root.join(format!("oracle/rea-b12-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!(
-        "rea-b12-{}-{name}-msaa{msaa}",
-        std::process::id()
-    ));
+    let out =
+        std::env::temp_dir().join(format!("rea-b12-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -307,8 +305,7 @@ fn check_cases(prefixes: &[&str]) {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases =
-        std::fs::read_to_string(root.join("oracle/rea-b12-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b12-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
     if !gpu {

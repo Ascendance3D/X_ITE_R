@@ -23,10 +23,7 @@ fn run(name: &str) -> (Value, Value) {
     let script = oracle
         .join("synthetic-rea-b06/scripts")
         .join(format!("{name}.json"));
-    let js_path = oracle
-        .join("rea-b06-baseline")
-        .join(name)
-        .join("js.json");
+    let js_path = oracle.join("rea-b06-baseline").join(name).join("js.json");
     let out = std::env::temp_dir().join(format!(
         "x3d-physics-b06-{}-{name}.json",
         std::process::id()

@@ -232,8 +232,7 @@ fn rea_batch08_gs_cases_match_x_ite() {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases =
-        std::fs::read_to_string(root.join("oracle/rea-b08-gs-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b08-gs-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
