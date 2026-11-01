@@ -169,6 +169,39 @@ const KNOWN_DIFFERENCES = {
       // not hold it (its text forms and the drawn world keep the root nodes they had).
       [ [ "log" ], [], ["warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to.", "warn: X_ITE_R: a node can only be used in the world it belongs to."] ],
    ],
+   // A call before browser .ready (), field API 01 (web/API.md, "Before ready"): X_ITE is ready at once, X_ITE_R's engine loads
+   // asynchronously, so the calls that need a node made by the engine throw. Everything else of the list, and every call after
+   // ready (), is equal.
+   "fieldEarly.detached": [
+      [ [ "before", "addRoot" ], 1, "TypeError: Invalid value used as weak map key" ],
+      [ [ "before", "createNode" ], "SFNode", "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "getName" ], "", "TypeError: Cannot read properties of undefined (reading 'getNodeName')" ],
+      [ [ "before", "setField" ], "1 2 3", "TypeError: Cannot set properties of undefined (setting 'translation')" ],
+      [ [ "before", "setMFField" ], 1, "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "vrml" ], 1, "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "vrmlField" ], "4 5 6", "TypeError: Cannot read properties of undefined (reading '0')" ],
+   ],
+   "fieldEarly.attached": [
+      [ [ "before", "addRoot" ], 1, "TypeError: Invalid value used as weak map key" ],
+      [ [ "before", "createNode" ], "SFNode", "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "getName" ], "", "TypeError: Cannot read properties of undefined (reading 'getNodeName')" ],
+      [ [ "before", "setField" ], "1 2 3", "TypeError: Cannot set properties of undefined (setting 'translation')" ],
+      [ [ "before", "setMFField" ], 1, "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "vrml" ], 1, "Error: X_ITE_R: the browser is not ready; await browser .ready () first." ],
+      [ [ "before", "vrmlField" ], "4 5 6", "TypeError: Cannot read properties of undefined (reading '0')" ],
+   ],
+   // createNode (field API 01): the node made by createNode is held by a scene of its own in the engine, so the text forms of a
+   // node that is put into the world write it with a DEF (a name that X_ITE does not give); a type that only another node
+   // holds (GeoOrigin) is refused by the VRML parser as a root node.
+   "fieldEarly.createNode": [
+      [ [ "type GeoOrigin" ], [ "SFNode", "GeoOrigin", "", null, 4, "GeoOrigin { }" ], "Error: X_ITE_R: a GeoOrigin node cannot be made on its own." ],
+      [ [ "text" ], "Group {\n  children Shape { }\n}", "Group {\n  children DEF _1 Shape { }\n}" ],
+      [ [ "scene" ], "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nTransform {\n  translation 1 2 3\n}\n", "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF _1 Transform {\n  translation 1 2 3\n}\n" ],
+   ],
+   "fieldEarly.createNodeInterchange": [
+      [ [ "text" ], "Group {\n  children Shape { }\n}", "Group {\n  children DEF _1 Shape { }\n}" ],
+      [ [ "scene" ], "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nTransform {\n  translation 1 2 3\n}\n", "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF _1 Transform {\n  translation 1 2 3\n}\n" ],
+   ],
    "routesApi.scenes": [
       // X_ITE runs every scene it holds, so the events of a scene that is not the world go on; X_ITE_R steps only the world,
       // and the routes of another scene carry nothing.
@@ -644,6 +677,9 @@ const GROUP_FILES = {
    gltfWorld: "gltfworld01.test.mjs",
    gltfWorldHeld: "gltfworld02.test.mjs",
    fieldAPI: "fields01.test.mjs",
+   fieldRoundTrip: "fields01.test.mjs",
+   fieldConstants: "fields01.test.mjs",
+   fieldEarly: "fields01.test.mjs",
    fieldText: "fields02.test.mjs",
    sceneText: "scenetext01.test.mjs",
    sceneTextInitial: "scenetext01.test.mjs",

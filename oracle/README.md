@@ -880,7 +880,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline -
 
 ### Web browser field API 01 (`web-browser-fields-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite fields01` runs the 7 cases of `crates/x3d-web/tests/browser/fields01_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite fields01` runs the 14 cases of `crates/x3d-web/tests/browser/fields01_case.mjs`
   (issue #137) and records `web-browser-fields-01-baseline/fields01-baseline.json`: the field classes of the X3D
   namespace and X3DConstants, the field classes as values, live SF and MF field objects of nodes (one object per field,
   changed components and elements reach the node and its routes, routed values reach a held object), assignments of
@@ -889,6 +889,13 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline -
   synthetic and inline (a `data:` URL).
 - The world needs `COMPONENT Scripting:1` for its Script node: X_ITE rejects a Script under `PROFILE Interchange`
   without it.
+- Round trip (2026-11-01, issue #137): `fieldRoundTrip.sf` and `fieldRoundTrip.mf` give a Script `E` and a routed Script `F` a
+  field of every SF and MF type except SFNode/MFNode, and record after each step (assignment, a changed component or element,
+  `setValue`, `push`, `splice`, `unshift`, `length`) the page's object, its components, the text form the world writes and the
+  routed field. `fieldConstants.constants` records `X3DConstants` before any world, after `PROFILE Full` and after nodes of
+  several components (names only for the added ones: X_ITE numbers them in module load order, which varies). `fieldEarly.*`
+  records calls before `ready ()` (a fresh `X3D .createBrowser ()`, detached and attached) and `createNode` (Full and Interchange
+  worlds). The earlier 7 cases were re-recorded unchanged.
 - Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
 
 ```
