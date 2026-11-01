@@ -4228,6 +4228,8 @@ dependencies = [
  "image",
  "percent-encoding",
  "rustfft",
+ "serde_json",
+ "sha2",
  "url",
  "web-audio-api",
  "web-time",
