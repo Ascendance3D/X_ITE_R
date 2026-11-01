@@ -1,0 +1,17 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT Sound:1
+Viewpoint { position 0 0 8 }
+DEF SND Sound { source DEF AC AudioClip { url "tone.wav" loop TRUE pitch 1 } }
+DEF T Transform { children Switch { whichChoice 0 children [ DEF SW Shape { appearance Appearance { material Material { diffuseColor 0.3 0.3 0.3 } } geometry Box { size 1 1 1 } } ] } }
+DEF SC Switch { whichChoice -1 children [ Transform { translation 0 -1.6 0 children Shape { appearance Appearance { material Material { emissiveColor 0 1 0 } } geometry Sphere { radius 0.4 } } } ] }
+DEF S Script { eventIn SFBool act eventIn SFTime dur eventIn SFTime el eventIn SFBool pau eventOut SFVec3f p eventOut SFVec3f sc eventOut SFRotation r eventOut SFInt32 w
+url "ecmascript: var d = 0; var y = 0; function pau(v) { y = v ? 1 : 0; } function act(v) { w = v ? 0 : -1; } function dur(v) { d = v; sc = new SFVec3f(1, 0.5 + v, 1); } function el(v) { p = new SFVec3f(((v % 2) - 1) * 2, y, 0); r = new SFRotation(0, 0, 1, v * 1.3); }" }
+ROUTE AC.isActive TO S.act
+ROUTE AC.duration_changed TO S.dur
+ROUTE AC.elapsedTime TO S.el
+ROUTE AC.isPaused TO S.pau
+ROUTE S.p TO T.set_translation
+ROUTE S.sc TO T.set_scale
+ROUTE S.r TO T.set_rotation
+ROUTE S.w TO SC.set_whichChoice
