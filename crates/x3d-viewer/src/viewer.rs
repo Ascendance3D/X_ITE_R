@@ -2887,6 +2887,20 @@ impl Viewer3d {
         self.refresh_display_scan();
     }
 
+    /// The world goes out of the browser but its runtime is kept (issue #202): drop what only drawing and picking use, the
+    /// frame caches and the GPU buffers of the pointing and the collision depth. The runtime and its scene stay.
+    pub fn shed_drawing(&mut self) {
+        self.geom_cache = HashMap::new();
+        self.particle_depth_geometry = HashMap::new();
+        self.thick_line_systems = vec![];
+        self.thick_line_depth = HashMap::new();
+        self.render_cache = Default::default();
+        self.pick_shapes = Default::default();
+        self.pointing_gpu = None;
+        self.depth_gpu = None;
+        self.rt.audio = None;
+    }
+
     /// The pointing buffer and the collision depth buffer on the GPU (`None`: the CPU ray cast and depth stand-in).
     /// Both have to be on `device`, the one that draws the frame, so that no resource of one device meets another
     /// device. A caller that draws no frames of its own (the headless drivers) passes the device it made them on.

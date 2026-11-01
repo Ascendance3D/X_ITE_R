@@ -1391,6 +1391,13 @@ const givenSceneInfo = new WeakMap ();
 // The text and world URL of an X3DScene object whose world was replaced (X3DBrowser.replaceWorld).
 const replacedScenes = new WeakMap ();
 
+// The engine's replaced world that a Script's functions and nodes in the page still reach goes when the page dropped them
+// (issue #202). A held value does not refer to the realm.
+const realmRegistry = new FinalizationRegistry (({ engine, host }) =>
+{
+   try { engine .releaseRetired (host); } catch { /* the engine is gone */ }
+});
+
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
 
 class X3DScene
@@ -1772,9 +1779,21 @@ class X3DBrowser
          this .#engine = engine;
          // The Scripts of a world run only when the page lets them (the `scripts` attribute, read when the world starts):
          // they run with the privileges of the page, in its JavaScript engine (API.md, "Script nodes").
-         this .#engine .setScriptRealm (host => this .#element .getAttribute ("scripts") === "true"
-            ? createScriptRealm (host, scriptOp)
-            : null);
+         // A Script's print and console lines go to the page's console in the Script's call, as X_ITE logs them.
+         this .#engine .setLogSink (printLogLine);
+         this .#engine .setScriptRealm (host =>
+         {
+            if (this .#element .getAttribute ("scripts") !== "true")
+               return null;
+
+            const realm = createScriptRealm (host, scriptOp);
+
+            // Functions and node objects of a Script that the page keeps work after the world was replaced: the engine keeps
+            // the replaced world until the page has dropped every one of them, which the realm they all reach shows.
+            realmRegistry .register (realm, { engine, host });
+
+            return realm;
+          });
          // An endUpdate () before the engine was ready.
          this .#engine .setLive (this .#live);
          // Mute and SoundIntensity set before the engine was ready: the engine takes them for the worlds to come.

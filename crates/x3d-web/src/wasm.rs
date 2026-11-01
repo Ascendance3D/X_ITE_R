@@ -281,6 +281,11 @@ pub struct WebBrowser {
     live: bool,
     /// The page's Script realm factory (`setScriptRealm`); none: no Script runs.
     script_realm: Option<js_sys::Function>,
+    /// The page's console writer (`setLogSink`): a Script's `print` and `console` lines go to it in the Script's call.
+    log_sink: Option<js_sys::Function>,
+    /// Worlds that a replace removed while the page may still hold functions or node objects of their Scripts
+    /// (issue #202), by their Script host's key. The page tells when it dropped them all ([`WebBrowser::release_retired`]).
+    retired: HashMap<u64, Session>,
     /// The last log lines of the world that a replace removed (what its Scripts' `shutdown` printed): the next
     /// [`WebBrowser::take_log`] of the current world gives them first.
     retired_log: Vec<String>,
@@ -433,6 +438,8 @@ impl WebBrowser {
             next_id: 1,
             live: true,
             script_realm: None,
+            log_sink: None,
+            retired: HashMap::new(),
             retired_log: vec![],
         })
     }
@@ -469,12 +476,21 @@ impl WebBrowser {
     ) -> u32 {
         let id = self.next_id;
         let factory = self.script_realm.clone();
+        let sink = self.log_sink.clone();
         let session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 let factory = factory.as_ref()?;
 
                 match crate::script::PageJsHost::new(rt, factory) {
-                    Ok(Some(host)) => Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>),
+                    Ok(Some(host)) => {
+                        if let Some(sink) = sink {
+                            rt.console_sink = Some(Box::new(move |line| {
+                                let _ = sink.call1(&JsValue::NULL, &JsValue::from_str(line));
+                            }));
+                        }
+
+                        Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>)
+                    }
                     Ok(None) => None,
                     Err(e) => {
                         rt.log_error(format!(
@@ -496,6 +512,27 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = setScriptRealm)]
     pub fn set_script_realm(&mut self, factory: Option<js_sys::Function>) {
         self.script_realm = factory;
+    }
+
+    /// The page's console writer, or null: `sink (line)` takes a line `log: text`, `warn: text` or `error: text`. A Script's
+    /// `print` and `console` lines of the worlds that start after the call go to it in the Script's call (when nothing waits
+    /// before them), not when the engine returns (issue #202).
+    #[wasm_bindgen(js_name = setLogSink)]
+    pub fn set_log_sink(&mut self, sink: Option<js_sys::Function>) {
+        self.log_sink = sink;
+    }
+
+    /// The page dropped every function and node object of the Scripts of the replaced world with the Script host key `host`:
+    /// the engine releases the world it kept for them (issue #202). Unknown keys do nothing.
+    #[wasm_bindgen(js_name = releaseRetired)]
+    pub fn release_retired(&mut self, host: f64) {
+        self.retired.remove(&(host as u64));
+    }
+
+    /// For tests: how many replaced worlds the engine keeps for functions and node objects the page holds.
+    #[wasm_bindgen(getter, js_name = retiredWorlds)]
+    pub fn retired_worlds(&self) -> u32 {
+        self.retired.len() as u32
     }
 
     /// Parse the world `data` from `url` (FileLoader) and start its loads: the id of the new scene. The current world
@@ -690,6 +727,10 @@ impl WebBrowser {
             if let Some(mut w) = self.worlds.remove(&old) {
                 w.session.unload();
                 self.retired_log.extend(w.session.take_log());
+
+                if let Some(key) = w.session.retire() {
+                    self.retired.insert(key, w.session);
+                }
             }
         }
 
@@ -1735,6 +1776,7 @@ impl WebBrowser {
             let new = load.rt.log[load.log_seen.min(load.rt.log.len())..].to_vec();
 
             load.log_seen = load.rt.log.len();
+            load.rt.log_taken = load.log_seen;
             return new;
         }
 
