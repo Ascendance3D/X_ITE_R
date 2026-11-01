@@ -1,0 +1,84 @@
+# The GPU tests that the hosted runner cannot run (GPU_TESTS in rust-tests.yml), on the organization's GPU runner
+# (gh-runner-ascendance3d-3: labels self-hosted, Linux, X64, proxmox, gpu; runner group xite-ci).
+#
+# This workflow never runs for a pull request. A pull request from a fork would execute its code on the runner host, so
+# the triggers are a push to master and a manual run, and pull request jobs stay on GitHub-hosted runners (CLAUDE.md).
+#
+# Strict about the adapter: X3D_EVIDENCE_ALLOW lists only the private answer keys that are not on the runner, so a test
+# that finds no GPU adapter fails instead of skipping. The list below is the same as GPU_TESTS in rust-tests.yml; keep them
+# equal (tools/check_gpu_test_lists.py checks it).
+name: GPU tests
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  X3D_EVIDENCE: ci
+  X3D_EVIDENCE_ALLOW: x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
+  X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
+  X3D_QUIET_NO_GPU: "1"
+  GPU_TESTS: >-
+    test(x1_runtime_matches_x_ite)
+    | test(items_runtime_matches_x_ite)
+    | test(rea_batch09_nav_shard0_match_x_ite)
+    | test(rea_batch09_nav_shard1_match_x_ite)
+    | test(rea_batch09_nav_shard2_match_x_ite)
+    | test(rea_batch09_nav_shard3_match_x_ite)
+    | test(rea_batch09_inputs_cases_match_x_ite)
+    | test(rea_batch08_net_cases_match_x_ite)
+    | test(rea_batch12_pick_cases_match_x_ite)
+    | test(rea_b14_particle_pick_matches_x_ite)
+    | test(rea_b15_particle_collision_matches_x_ite)
+    | test(rea_b21_wide_lines_match_x_ite)
+    | test(rea_b22_two_layer_shadows_match_x_ite)
+    | test(rea_b24_nav_shard0_match_x_ite)
+    | test(rea_b24_nav_shard1_match_x_ite)
+    | test(rea_b24_nav_shard2_match_x_ite)
+
+jobs:
+  gpu:
+    runs-on: [self-hosted, Linux, X64, gpu]
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest@0.9.150
+
+      - name: GPU and runner
+        run: |
+          { echo "CPUs: $(nproc)"; free -m | awk '/^Mem:/ {print "Memory: " $2 " MiB"}'; (nvidia-smi -L || true); } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: GPU tests
+        run: |
+          rm -f "$X3D_EVIDENCE_LOG"
+          cargo nextest run --workspace --release --profile ci --no-fail-fast -j 8 -E "$GPU_TESTS" 2>&1 | tee gpu.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Test counts
+        if: always()
+        run: |
+          grep -E '^ *Summary \[' gpu.log | tail -1 | sed 's/^ *//' | tee -a "$GITHUB_STEP_SUMMARY" || true
+          grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' gpu.log | sort -u | tee -a "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Evidence skips
+        if: success() || failure()
+        run: |
+          python3 -I -B tools/evidence_summary.py "$X3D_EVIDENCE_LOG" | tee -a "$GITHUB_STEP_SUMMARY"
+          test "${PIPESTATUS[0]}" -eq 0
