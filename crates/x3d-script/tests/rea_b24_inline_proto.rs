@@ -41,22 +41,15 @@ const KNOWN_CONSOLE: &[(&str, &str, u64, &str)] = &[
         0,
         "initial load: the page's extra frames and LoadSensor order",
     ),
-    // An Inline whose load is in flight when its body is disposed: X_ITE lets the load finish, builds the
-    // disposed scene and initializes its Scripts (`leaf initialize` twice, one `leaf time` more); Rust cancels the
-    // request (`Runtime::dispose_scene`, kept by the register of issue #63 for the EXTERNPROTO case).
+    // The native build gives the Scripts of a replaced body `shutdown ()`.
+    // c03: the second update disposes the first update's body before its Scripts initialized; the native build
+    // shuts that body down first, so its observer Script never initializes (one `obs initialize` less).
     (
-        "*",
+        "native",
         "c03",
         2,
-        "disposed body, Inline load in flight: X_ITE finishes it",
+        "native shutdown () of a body replaced before it initialized",
     ),
-    (
-        "*",
-        "c03",
-        3,
-        "disposed body, Inline load in flight: X_ITE finishes it",
-    ),
-    // The native build gives the Scripts of a replaced body `shutdown ()`.
     ("native", "c05", 5, "native shutdown () of a replaced body"),
     ("native", "c06", 5, "native shutdown () of a replaced body"),
     ("native", "c07", 7, "native shutdown () of a replaced body"),
@@ -68,7 +61,6 @@ const KNOWN_CONSOLE: &[(&str, &str, u64, &str)] = &[
 /// counter is internal (a LoadSensor on the Inline, the Inline's Scripts and the scene text agree in all steps),
 /// and the first case is the in-flight load of `c03`.
 const KNOWN_LOAD_COUNT: &[(&str, u64)] = &[
-    ("c03", 2),
     ("c05", 5),
     ("c05", 6),
     ("c06", 5),
@@ -244,8 +236,8 @@ fn replaced_body_shutdown_follows_the_build() {
     assert!(all.iter().all(|l| !l.contains("shutdown")));
 }
 
-/// X_ITE finishes the load of an Inline whose body is already disposed (its Scripts initialize); Rust cancels it.
-/// The one remaining difference of the lane (awaiting the owner's decision, issue #63).
+/// X_ITE finishes the load of an Inline whose body is already disposed (its Scripts initialize); so does Rust
+/// (issue #58, owner decision option B: the cancel was dropped).
 #[test]
 fn disposed_body_inline_load_in_flight() {
     let base = baseline();
@@ -256,5 +248,5 @@ fn disposed_body_inline_load_in_flight() {
     let (x, r) = (&base["c03"]["steps"], &rust["steps"]);
 
     assert_eq!(count(x, 2, "leaf initialize"), 2, "X_ITE");
-    assert_eq!(count(r, 2, "leaf initialize"), 1, "Rust");
+    assert_eq!(count(r, 2, "leaf initialize"), 2, "Rust");
 }

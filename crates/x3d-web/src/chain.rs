@@ -79,10 +79,32 @@ pub fn node_exists(rt: &Runtime, node: NodeId) -> bool {
     (node as usize) < rt.scene.nodes.len() && !rt.scene.free_nodes.contains(&node)
 }
 
+/// X3DImportedNodeInstance delegates getNodeTypeName, getField and getFieldDefinitions to the node its Inline exports,
+/// while the Inline provides it (`$.try (() => importedNode .getExportedNode ())`); any other node is itself.
+pub fn inner_node(rt: &Runtime, node: NodeId) -> NodeId {
+    if !node_exists(rt, node) {
+        return node;
+    }
+
+    if let x3d_scene::NodeKind::Imported(i) = rt.scene.node(node).kind {
+        let rec = &rt.scene.imported[i];
+
+        if let Some(&scene) = rt.inline_scenes.get(&rec.inline) {
+            if let Some(n) = rt.scene.get_exported_node(scene, &rec.exported_name) {
+                return n;
+            }
+        }
+    }
+
+    node
+}
+
 pub fn field_key(rt: &Runtime, node: NodeId, name: &str) -> Result<FKey, String> {
     if !node_exists(rt, node) {
         return Err("node is not in the world".to_string());
     }
+
+    let node = inner_node(rt, node);
 
     rt.get_field(node, name).ok_or_else(|| {
         format!(
@@ -96,6 +118,8 @@ pub fn field_names(rt: &Runtime, node: NodeId) -> Vec<String> {
     if !node_exists(rt, node) {
         return vec![];
     }
+
+    let node = inner_node(rt, node);
 
     let n = rt.scene.node(node);
 
@@ -174,6 +198,8 @@ pub fn observe_field(rt: &mut Runtime, node: NodeId, name: &str, on: bool) -> Re
 }
 
 pub fn type_name(rt: &Runtime, node: NodeId) -> Option<String> {
+    let node = inner_node(rt, node);
+
     node_exists(rt, node).then(|| rt.type_name(node))
 }
 
@@ -271,6 +297,8 @@ pub fn field_definitions(rt: &Runtime, node: NodeId) -> Vec<FieldDefinition> {
     if !node_exists(rt, node) {
         return vec![];
     }
+
+    let node = inner_node(rt, node);
 
     let scene = &rt.scene;
     let n = scene.node(node);

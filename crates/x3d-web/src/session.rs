@@ -682,6 +682,128 @@ impl Session {
         rt.scene.remove_named_node(world, name);
     }
 
+    /// X3DImportedNode.getExportedNode of record `imp`: the node the Inline exports under the record's exported name.
+    fn imported_exported(&self, imp: usize) -> Option<NodeId> {
+        let rt = self.rt();
+        let rec = &rt.scene.imported[imp];
+        let scene = *rt.inline_scenes.get(&rec.inline)?;
+
+        rt.scene.get_exported_node(scene, &rec.exported_name)
+    }
+
+    /// X3DExecutionContext.getImportedNodes of the world: (imported name, Inline node, exported name, description,
+    /// instance node) in the array's order.
+    pub fn imported_nodes(&self) -> Vec<(String, NodeId, String, String, NodeId)> {
+        let scene = &self.rt().scene;
+
+        scene
+            .ctx(scene.world)
+            .imported
+            .values()
+            .iter()
+            .map(|&i| {
+                let r = &scene.imported[i];
+
+                (
+                    r.imported_name.clone(),
+                    r.inline,
+                    r.exported_name.clone(),
+                    r.description.clone(),
+                    r.instance,
+                )
+            })
+            .collect()
+    }
+
+    /// X3DExecutionContext.getImportedNode (name) of the world: the instance node, or None.
+    pub fn imported_instance(&self, name: &str) -> Option<NodeId> {
+        let scene = &self.rt().scene;
+
+        scene
+            .ctx(scene.world)
+            .imported
+            .get(name)
+            .map(|i| scene.imported[i].instance)
+    }
+
+    /// X3DImportedNode.getExportedNode of the world's record `name`: the node of the Inline's scene, or None while the
+    /// Inline does not provide it.
+    pub fn imported_exported_node(&self, name: &str) -> Option<NodeId> {
+        let scene = &self.rt().scene;
+        let i = scene.ctx(scene.world).imported.get(name)?;
+
+        self.imported_exported(i)
+    }
+
+    /// X3DExecutionContext.getUniqueImportName of the world.
+    pub fn unique_import_name(&self, name: &str) -> String {
+        let scene = &self.rt().scene;
+
+        scene.get_unique_import_name(scene.world, name)
+    }
+
+    /// X3DExecutionContext.updateImportedNode (also `addImportedNode`, after the page's duplicate check) of the world: the
+    /// page checked that `inline` is an Inline node of this scene and the names; the record of `imported` is replaced.
+    pub fn set_imported_node(
+        &mut self,
+        inline: NodeId,
+        exported: &str,
+        imported: &str,
+        description: &str,
+    ) -> Result<(), String> {
+        if !self.node_exists(inline) {
+            return Err(format!("importedNode: node {inline} is not in the world"));
+        }
+
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        remove_imported(rt, world, imported);
+
+        // A node `createNode` made lives in a context below the world's; it still belongs to the world.
+        let id = rt
+            .scene
+            .place_imported_node(world, inline, exported, imported, description)?;
+        let instance = rt.scene.imported[id].instance;
+
+        rt.nrt_mut(instance);
+        rt.scene_graph_changed();
+        rt.ctx_event(world, x3d_runtime::ctx_events::CtxField::SceneGraph, 1);
+        Ok(())
+    }
+
+    /// X3DExecutionContext.removeImportedNode (name) of the world; an unknown name is ignored.
+    pub fn remove_imported_node(&mut self, name: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        if remove_imported(rt, world, name) {
+            rt.scene_graph_changed();
+            rt.ctx_event(world, x3d_runtime::ctx_events::CtxField::SceneGraph, 1);
+        }
+    }
+
+    /// X3DExecutionContext.renameImportedNode (old, new) of the world; the error is X_ITE's text.
+    pub fn rename_imported_node(&mut self, old: &str, new: &str) -> Result<(), String> {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.scene.rename_imported_node(world, old, new)?;
+        rt.scene_graph_changed();
+        rt.ctx_event(world, x3d_runtime::ctx_events::CtxField::SceneGraph, 1);
+        Ok(())
+    }
+
+    /// X3DImportedNode.setDescription of the world's record `name`.
+    pub fn set_imported_description(&mut self, name: &str, description: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        if let Some(i) = rt.scene.ctx(world).imported.get(name) {
+            rt.scene.imported[i].description = description.to_string();
+        }
+    }
+
     /// X3DExecutionContext.createProto (name) of the world: an instance, set up and not part of the world; `None` where X_ITE
     /// throws "Unknown proto or externproto type".
     pub fn create_proto(&mut self, name: &str) -> Option<NodeId> {
@@ -880,7 +1002,7 @@ impl Session {
             return Err(format!("field '{name}' is outputOnly"));
         }
 
-        let ctx = rt.scene.node(node).ctx;
+        let ctx = rt.scene.node(crate::chain::inner_node(rt, node)).ctx;
         let value = match rt.field_from_string(ty, vrml, Some(ctx), false, None, name) {
             Ok(Some(v)) => v,
             Ok(None) => return Err(format!("no {} value in '{vrml}'", ty.name())),
@@ -1339,4 +1461,28 @@ pub fn set_sound_options(rt: &mut Runtime, mute: bool, intensity: f64) {
         .set_option("Mute", OptionValue::Bool(mute));
     rt.browser_options
         .set_option("SoundIntensity", OptionValue::Float(intensity));
+}
+
+/// X3DImportedNode.dispose: the record leaves the context and the routes of its instance are deleted.
+fn remove_imported(rt: &mut Runtime, ctx: x3d_scene::CtxId, name: &str) -> bool {
+    let Some(id) = rt.scene.remove_imported_node(ctx, name) else {
+        return false;
+    };
+
+    let instance = rt.scene.imported[id].instance;
+    let routes: Vec<usize> = rt
+        .scene
+        .ctx(ctx)
+        .routes
+        .iter()
+        .filter(|r| r.source_node == instance || r.destination_node == instance)
+        .map(|r| r.id)
+        .collect();
+
+    for r in routes {
+        rt.delete_route_by_id(ctx, r);
+    }
+
+    rt.dynamic_dirty_mark();
+    true
 }
