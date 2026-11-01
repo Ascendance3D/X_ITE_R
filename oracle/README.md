@@ -1026,19 +1026,31 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
 
 ### Web browser Script life cycle 01 (`web-browser-script-life-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 12 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
-  (issue #133) and records `web-browser-script-life-01-baseline/scriptlife01-baseline.json` (no pictures). The worlds are
-  synthetic and inline: Script `initialize` (events sent from it, the order of Scripts, `directOutput`); the events of Script
-  fields (eventIns, eventOuts, a route chain, an interpolator, page events, two events in one task, several field types);
-  `eventsProcessed`; `shutdown` (world replaced twice, Script code replaced, element removed); Script errors (in
-  `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string and object, a
-  wrong value type); and `Browser .currentScene .rootNodes` in a Script (read, `addRootNode`, `removeRootNode`,
-  `setRootNodes`, `push`) with the field callbacks of the page and of the Script. Each case records one ordered list of
+- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 47 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
+  (issues #133 and #202) and records `web-browser-script-life-01-baseline/scriptlife01-baseline.json` (no pictures). Group
+  `scriptLife` (19 cases, inline synthetic worlds): Script `initialize` (events sent from it, the order of Scripts,
+  `directOutput`); the events of Script fields (eventIns, eventOuts, a route chain, an interpolator, page events, two events in
+  one task, several field types); `eventsProcessed`; `shutdown` (world replaced twice, Script code replaced, element removed);
+  Script errors (in `initialize`, a handler, `eventsProcessed`, `shutdown`, at the top level, a syntax error, a thrown string
+  and object, a wrong value type); `Browser .currentScene .rootNodes` in a Script (read, `addRootNode`, `removeRootNode`,
+  `setRootNodes`, `push`) with the field callbacks of the page and of the Script; and, from issue #202, a Script that runs
+  after `importJS` (a JSON string and object) and `importDocument` (an XML string, an `XMLDocument`, an element), a function
+  and a node handle that a Script left in the page and uses after `replaceWorld` (`staleFunction`), and the order of a
+  Script's `print` and `console` lines against its calls into the page (`printTiming`). Each case records one ordered list of
   the console messages and the page callbacks (`seq`).
+- Group `scriptReload` (28 cases): the reload sets `synthetic-inline-reload` and `synthetic-externproto-reload` driven by the
+  page's API (`url`, `load`, `remove`, `publish` actions; the server's `publish ()` makes a file appear while the world runs).
+  A page cannot step frames, so each case compares what is settled: after the world and after each frame with actions it waits
+  400 ms, then 650 ms, and records the `warn`, `error`, `initialize`, `shutdown` and `created` lines of the whole wait, which
+  clocks ran in the last 650 ms (digit-normalized, so only that a clock ran), and the `url` and `load` of the driven Inline. The
+  scenarios that need `loadNow`, `unloadNow`, `autoRefresh` timing, an EXTERNPROTO declaration, the Inline of an Inline, or two
+  actions in adjacent frames are not cases (listed in the comment of `reloadScenarios`), nor is `externproto/c01-initial` (a
+  clock tick that falls in one window or the next). The pinned X_ITE's recorded stepped baselines of the same sets are
+  `synthetic-inline-reload-baseline.json` and `synthetic-externproto-reload-baseline.json` (`x_ite-inline.mjs`).
 - X_ITE 16.5.0 does not call `shutdown` for a replaced world and throws `array[i].set is not a function` when a Script
   that is a root node sees a root node change; the cases record the first and avoid the second (the Script is in a Group).
-- Five runs gave identical values (Chrome 156.0.8078.47), and five more runs in separate processes at the same time gave
-  the same values. `scriptlife01.test.mjs` compares X_ITE_R with `scripts="true"`; its known differences are in
+- Five runs gave identical values (Chrome 156.0.8078.47) for the 12 cases of #133 (and five more runs in separate processes at
+  the same time gave the same values) and again for all 47 cases (issue #202). `scriptlife01.test.mjs` compares X_ITE_R with `scripts="true"`; its known differences are in
   `KNOWN_DIFFERENCES` (`scriptLifeDifferences`, `runtime02_harness.mjs`) and `web/API.md`. Prepare the worktree as in
   "Recording from a worktree".
 
