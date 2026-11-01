@@ -30,7 +30,17 @@ fn summarizes_a_scene() {
     assert_eq!(s.node_types.get("TimeSensor"), Some(&1));
 }
 
+/// The pinned X_ITE has no VRML 1.0 parser, and `x3d-parse` still does not dispatch a
+/// `#VRML V1.0` header to its VRML97 parser (`is_valid_vrml`). Since the `vrml1` feature of
+/// `x3d-parse` is on by default, the header goes to the separate `x3d-vrml1` loader instead
+/// (a port of the x_ite-vrml1-parser extension, not a pin parity item).
 #[test]
-fn rejects_vrml1() {
-    assert!(vrml::parse_bytes(b"#VRML V1.0 ascii\nSeparator { }\n", "memory:").is_err());
+fn reads_vrml1_through_the_vrml1_loader() {
+    assert!(!vrml::vrml97::is_valid_vrml("#VRML V1.0 ascii\n"));
+
+    let scene =
+        vrml::parse_bytes(b"#VRML V1.0 ascii\nSeparator { Cube { } }\n", "memory:").unwrap();
+
+    assert_eq!(vrml::summarize(&scene).node_types.get("Box"), Some(&1));
+    assert!(vrml::parse_bytes(b"#VRML V1.0 ascii\nSeparator { Foo 1 }\n", "memory:").is_err());
 }

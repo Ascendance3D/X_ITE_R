@@ -6,7 +6,13 @@ license.workspace = true
 publish.workspace = true
 description = "VRML97 / X3D classic encoding parser, ported from X_ITE (MIT)."
 
+[features]
+default = ["vrml1"]
+# `#VRML V1.0 ascii` input (a port of the x_ite-vrml1-parser extension, not part of the pin).
+vrml1 = ["dep:x3d-vrml1"]
+
 [dependencies]
+x3d-vrml1 = { path = "../x3d-vrml1", optional = true }
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-text = { path = "../x3d-text" }
