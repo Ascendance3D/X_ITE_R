@@ -2935,6 +2935,32 @@
      4.4835
     ]
    }
+  },
+  "browserOptions.gravity": {
+   "default": {
+    "option": 9.80665,
+    "position": [
+     0,
+     1.6,
+     10
+    ]
+   },
+   "zero": {
+    "option": 0,
+    "position": [
+     0,
+     3,
+     10
+    ]
+   },
+   "restored": {
+    "option": 9.80665,
+    "position": [
+     0,
+     1.6,
+     10
+    ]
+   }
   }
  }
 }
