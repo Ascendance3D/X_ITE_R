@@ -83,6 +83,57 @@ export const gltfCases = {
    // Buffer A fails while B is held, and a glTF that loads is the next candidate.
    fallback: (page, env) => heldCase (page, env, [ "fail-held-fallback.gltf", "external.gltf" ], [ "gx-e" ]),
 
+   // #128: an Inline of a glTF whose first buffer fails while the second is held, and a glTF that loads is the Inline's
+   // next url: when is the failure logged and the next url requested?
+   inlineFailThenHeld: (page, env) => heldCase (page, env, [ "inline-fail-held-fallback.wrl" ], [ "gx-h" ]),
+
+   // #130: the first buffer fails, the candidate is rejected; the second and third buffers are followed, both held
+   // and missing. They are released one after the other with no wait between: the third first, then the second.
+   async followedReverse (page, env)
+   {
+      env .server .arm ("gx-j1");
+      env .server .arm ("gx-j2");
+      page .log .length = 0;
+
+      const from = env .server .requests .length;
+
+      await page .evaluate (pageLoadURL, [ `${env .base}${DIR}fail-held-held-fail-fail.gltf` ]);
+      await requested (env, [ "gx-j1", "gx-j2" ], from);
+
+      const during = { result: await race (page, 2000), ... await state (page, env, from) };
+
+      env .server .release ("gx-j2");
+      env .server .release ("gx-j1");
+      await page .waitForTimeout (1000);
+
+      return { during, ... await state (page, env, from) };
+   },
+
+   // #131: the first buffer fails, the candidate is rejected; the second buffer is followed, held and missing. A newer
+   // loadURL replaces the page's world, then the held buffer is released: is its failure logged?
+   async supersededFollowed (page, env)
+   {
+      env .server .arm ("gx-k");
+      page .log .length = 0;
+
+      const from = env .server .requests .length;
+
+      await page .evaluate (pageLoadURL, [ `${env .base}${DIR}fail-held-fail.gltf` ]);
+      await requested (env, [ "gx-k" ], from);
+
+      const first = await race (page, 2000);
+
+      await page .evaluate (pageLoadURL, [ `${env .base}${DIR}external.gltf` ]);
+
+      const second = await race (page, 5000);
+
+      env .server .release ("gx-k");
+      await page .waitForTimeout (1000);
+      await settle (page, 300);
+
+      return { first, second, ... await state (page, env, from) };
+   },
+
    // Both buffers are held, then a new loadURL replaces the world; then A fails and B loads.
    async replaced (page, env)
    {

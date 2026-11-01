@@ -3197,11 +3197,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-script/tests/rea_b24_inline_proto.rs (rea_b24_inline_proto_matches_x_ite, replaced_body_shutdown_follows_the_build, disposed_body_inline_load_in_flight; 8 cases c01-c08 in oracle/synthetic-rea-b24-inline-proto: updateInstances, nested Inline, two updates in one tick, instance removed, EXTERNPROTO url swap, load FALSE then TRUE, loadNow)"
+    "crates/x3d-script/tests/rea_b24_inline_proto.rs (rea_b24_inline_proto_matches_x_ite, replaced_body_shutdown_follows_the_build, disposed_body_inline_load_in_flight; 8 cases c01-c08 in oracle/synthetic-rea-b24-inline-proto: updateInstances, nested Inline, two updates in one tick, instance removed, EXTERNPROTO url swap, load FALSE then TRUE, loadNow)",
+    "crates/x3d-web/tests/browser/gltfworld02_case.mjs (inlineFailThenHeld, followedReverse, supersededFollowed; oracle/web-browser-gltf-world-02-baseline, 5 identical recordings)"
    ],
    "missing": "native build keeps shutdown () of a replaced body and its nested Inline scenes (owner-approved, ISO 4.12.3; X_ITE runs none); an Inline load in flight when its body is disposed is cancelled, X_ITE lets it finish and initializes the disposed scene's Scripts (needs an owner decision, #63); root scene loadCount lags by one or two steps in X_ITE after an EXTERNPROTO body loads its Inline (internal field, all other lines agree); initial load logs extra frames in X_ITE and LoadSensor isActive comes before the Inline scene initializes there; plain Inline reload paths (set_internal_scene, inline_abort) not checked for the browser shutdown rule",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/synthetic-rea-b24-inline-proto-baseline.json (8 cases, 3 identical recordings)",
-   "notes": "Issue #52 2026-11-01: X_ITE never disposes the nodes of a replaced body one by one (X3DExecutionContext.dispose clears routes and tables), so no Script in the old body or its nested Inline scenes gets shutdown (); the old scenes stop ticking and the new body builds a fresh Inline. instance_dispose_body and inline_close now use dispose_scene_with(.., !replace_skips_shutdown); x3d-web sets the flag, so the browser build matches in every step except the in-flight load. EmbeddedViewer rule: embed.rs is a Rust host API with no X_ITE counterpart; its unload runs shutdown () by the native policy above, and no scene content can reach it. Plain PROTO updateInstances (c01-c04) already matched. Mutations (shutdown restored in either path) are caught."
+   "notes": "Issue #52 2026-11-01: X_ITE never disposes the nodes of a replaced body one by one (X3DExecutionContext.dispose clears routes and tables), so no Script in the old body or its nested Inline scenes gets shutdown (); the old scenes stop ticking and the new body builds a fresh Inline. instance_dispose_body and inline_close now use dispose_scene_with(.., !replace_skips_shutdown); x3d-web sets the flag, so the browser build matches in every step except the in-flight load. EmbeddedViewer rule: embed.rs is a Rust host API with no X_ITE counterpart; its unload runs shutdown () by the native policy above, and no scene content can reach it. Plain PROTO updateInstances (c01-c04) already matched. Mutations (shutdown restored in either path) are caught. | Issues #128/#130/#131 2026-11-01: an Inline glTF rejects at the first failed buffer and follows the others (fixed, matches X_ITE); buffer failures log in arrival order and a newer loadURL does not abort followed buffers (no difference). Only the leaked loading object (fallback.gltfFailed) remains."
   },
   {
    "id": "node:InlineGeometry",
@@ -6493,11 +6494,12 @@
     "render_rea_b08_gltf (16 x MSAA 0/4)",
     "gltf_inline_b08 (18)",
     "rea_b08_gltf_reload (7)",
-    "rea_b08_gltf_viewer_buffers"
+    "rea_b08_gltf_viewer_buffers",
+    "crates/x3d-web/tests/browser/gltfworld02_case.mjs (inlineFailThenHeld, followedReverse, supersededFollowed; oracle/web-browser-gltf-world-02-baseline, 5 identical recordings)"
    ],
    "missing": "KHR_draco_mesh_compression skipped (X_ITE rejects garbage Draco; Rust loads undecoded); KHR/EXT_meshopt_compression stub; KHR_texture_basisu, EXT_texture_avif, EXT_texture_webp no decoder; EXT_texture_video runtime not exercised; buffer-fetch console text differs in 2 Inline cases; stepped animation cases run only by x10_compare.py",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Viewer3d top-level glTF now uses the runtime fetcher (integration fix)."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Viewer3d top-level glTF now uses the runtime fetcher (integration fix). | Issues #128/#130/#131 2026-11-01: an Inline glTF rejects at the first failed buffer and follows the others (fixed, matches X_ITE); buffer failures log in arrival order and a newer loadURL does not abort followed buffers (no difference). Only the leaked loading object (fallback.gltfFailed) remains."
   },
   {
    "id": "sub:parse.glb2",

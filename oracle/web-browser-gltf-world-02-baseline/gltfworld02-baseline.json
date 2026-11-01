@@ -174,6 +174,107 @@
     "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-e.bin'. Error: Not Found"
    ]
   },
+  "gltfWorldHeld.inlineFailThenHeld": {
+   "during": {
+    "result": "pending",
+    "world": "gltfworld/inline-fail-held-fallback.wrl",
+    "events": [
+     "shutdown"
+    ],
+    "served": [
+     "/tests/browser/worlds/gltfworld/inline-fail-held-fallback.wrl",
+     "/tests/browser/worlds/gltfworld/inline-fail-held.gltf",
+     "/status/404/tests/browser/worlds/gltfworld/gone-h.bin",
+     "/hold/gx-h/tests/browser/worlds/gltfworld/tri2.bin",
+     "/tests/browser/worlds/gltfworld/external.gltf",
+     "/tests/browser/worlds/gltfworld/tri.bin"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-h.bin'. Error: Not Found"
+    ]
+   },
+   "result": "pending",
+   "world": "gltfworld/inline-fail-held-fallback.wrl",
+   "events": [
+    "shutdown"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/inline-fail-held-fallback.wrl",
+    "/tests/browser/worlds/gltfworld/inline-fail-held.gltf",
+    "/status/404/tests/browser/worlds/gltfworld/gone-h.bin",
+    "/hold/gx-h/tests/browser/worlds/gltfworld/tri2.bin",
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-h.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorldHeld.followedReverse": {
+   "during": {
+    "result": "Couldn't load X3D file.",
+    "world": "page",
+    "events": [
+     "error"
+    ],
+    "served": [
+     "/tests/browser/worlds/gltfworld/fail-held-held-fail-fail.gltf",
+     "/status/404/tests/browser/worlds/gltfworld/gone-j0.bin",
+     "/hold/gx-j1/status/404/tests/browser/worlds/gltfworld/gone-j1.bin",
+     "/hold/gx-j2/status/404/tests/browser/worlds/gltfworld/gone-j2.bin"
+    ],
+    "console": [
+     "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-j0.bin'. Error: Not Found"
+    ]
+   },
+   "world": "page",
+   "events": [
+    "error"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/fail-held-held-fail-fail.gltf",
+    "/status/404/tests/browser/worlds/gltfworld/gone-j0.bin",
+    "/hold/gx-j1/status/404/tests/browser/worlds/gltfworld/gone-j1.bin",
+    "/hold/gx-j2/status/404/tests/browser/worlds/gltfworld/gone-j2.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-j0.bin'. Error: Not Found",
+    "error: Couldn't load URL 'http://test/hold/gx-j2/status/404/tests/browser/worlds/gltfworld/gone-j2.bin'. Error: Not Found",
+    "error: Couldn't load URL 'http://test/hold/gx-j1/status/404/tests/browser/worlds/gltfworld/gone-j1.bin'. Error: Not Found"
+   ]
+  },
+  "gltfWorldHeld.supersededFollowed": {
+   "first": "Couldn't load X3D file.",
+   "second": "resolved",
+   "world": "gltfworld/external.gltf",
+   "events": [
+    "shutdown",
+    "shutdown",
+    "initialized",
+    "initialized",
+    "load",
+    "load"
+   ],
+   "served": [
+    "/tests/browser/worlds/gltfworld/fail-held-fail.gltf",
+    "/status/404/tests/browser/worlds/gltfworld/gone-k0.bin",
+    "/hold/gx-k/status/404/tests/browser/worlds/gltfworld/gone-k1.bin",
+    "/tests/browser/worlds/gltfworld/external.gltf",
+    "/tests/browser/worlds/gltfworld/tri.bin"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: Couldn't load URL 'http://test/status/404/tests/browser/worlds/gltfworld/gone-k0.bin'. Error: Not Found",
+    "error: Couldn't load URL 'http://test/hold/gx-k/status/404/tests/browser/worlds/gltfworld/gone-k1.bin'. Error: Not Found"
+   ]
+  },
   "gltfWorldHeld.replaced": {
    "first": "Loading of X3D file aborted.",
    "second": "resolved",
