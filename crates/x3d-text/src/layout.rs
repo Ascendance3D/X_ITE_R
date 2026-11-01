@@ -1068,6 +1068,23 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
 
                     skia_quad(from, at(cx, cy), at(gx, gy), &mut contour);
                 }
+                // CFF outlines: not Skia's cubic edge builder, a fixed 16 lines per curve (ScreenText with a CFF font is
+                // not verified against the canvas).
+                Cmd::C(x1, y1, x2, y2, gx, gy) => {
+                    let p0 = *contour.last().unwrap_or(&[0.0, 0.0]);
+                    let (p1, p2, p3) = (at(x1, y1), at(x2, y2), at(gx, gy));
+
+                    for k in 1..=16 {
+                        let t = k as f64 / 16.0;
+                        let u = 1.0 - t;
+                        let w = [u * u * u, 3.0 * u * u * t, 3.0 * u * t * t, t * t * t];
+
+                        contour.push([
+                            w[0] * p0[0] + w[1] * p1[0] + w[2] * p2[0] + w[3] * p3[0],
+                            w[0] * p0[1] + w[1] * p1[1] + w[2] * p2[1] + w[3] * p3[1],
+                        ]);
+                    }
+                }
             }
         }
 

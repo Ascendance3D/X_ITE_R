@@ -2,6 +2,9 @@
 //! (WOFF2 is decompressed first, like `X3DTextContext.decompressFont`), and the glyph geometry
 //! of `Browser/Text/PolygonText.js` (`createGlyphGeometry`).
 //!
+//! OpenType-CFF fonts (`OTTO`, a `CFF ` table) load too; their charstring outlines come from
+//! ttf-parser's Type 2 interpreter and are turned into opentype.js `getPath` commands (`M`, `L`, `C`).
+//!
 //! The glyph table is parsed here instead of with ttf-parser's outline builder because
 //! libtess' output depends on where each contour starts and on the duplicated closing points
 //! opentype.js `getPath` produces (`buildPath` / `getPath` in opentype.mjs).
@@ -38,13 +41,15 @@ struct Point {
     last: bool,
 }
 
-/// One entry of an opentype.js path (`Glyph.getPath` output: M, L, Q; the Z commands are only
-/// emitted for stroked paths, so there are none).
+/// One entry of an opentype.js path (`Glyph.getPath` output: M, L, Q for TrueType and M, L, C for CFF;
+/// the Z commands are only emitted for stroked paths, so there are none).
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Cmd {
     M(f64, f64),
     L(f64, f64),
     Q(f64, f64, f64, f64),
+    /// A cubic Bezier (CFF charstrings): two control points, then the end point.
+    C(f64, f64, f64, f64, f64, f64),
 }
 
 pub struct Font {
@@ -55,6 +60,11 @@ pub struct Font {
     pub num_glyphs: u16,
     loca: Vec<u32>,
     glyf: (usize, usize),
+    /// An OpenType-CFF font: the outlines are Type 2 charstrings, `loca` and `glyf` stay empty.
+    cff: bool,
+    /// opentype.js `parseCFFCharstring` ends with `if (haveWidth) glyph .advanceWidth = width`: building a glyph's path
+    /// replaces the advance it took from `hmtx`. Filled in by the first [`Font::glyph_commands`] of a glyph.
+    cff_widths: RefCell<HashMap<u16, u16>>,
     advances: Vec<u16>,
     cmap: HashMap<u32, u16>,
     has_gpos: bool,
@@ -88,17 +98,33 @@ impl Font {
         let face = Face::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let raw = RawFace::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let table = |tag: &[u8; 4]| raw.table(Tag::from_bytes(tag));
-        let glyf_tag = table(b"glyf").ok_or_else(|| {
-            FontError::Parse("no glyf table (only TrueType outlines are supported)".into())
-        })?;
-        let loca_tag = table(b"loca").ok_or_else(|| FontError::Parse("no loca table".into()))?;
+        // opentype.js `parse`: `glyf` + `loca` for TrueType outlines, else a `CFF ` table (CFF2 is not supported here).
+        let cff = table(b"glyf").is_none() && table(b"CFF ").is_some();
+        let glyf_tag = match table(b"glyf") {
+            Some(t) => t,
+            None if cff => &[][..],
+            None => {
+                return Err(FontError::Parse(
+                    "no glyf or CFF table (only TrueType and CFF outlines are supported)".into(),
+                ));
+            }
+        };
+        let loca_tag = match table(b"loca") {
+            Some(t) => t,
+            None if cff => &[][..],
+            None => return Err(FontError::Parse("no loca table".into())),
+        };
         let head = table(b"head").ok_or_else(|| FontError::Parse("no head table".into()))?;
         let long_loca = be16s(head, 50).unwrap_or(0) != 0;
         let num_glyphs = face.number_of_glyphs();
 
-        let mut loca = Vec::with_capacity(num_glyphs as usize + 1);
+        let mut loca = Vec::with_capacity(if cff { 0 } else { num_glyphs as usize + 1 });
 
         for i in 0..=num_glyphs as usize {
+            if cff {
+                break;
+            }
+
             let v = if long_loca {
                 let o = i * 4;
                 u32::from_be_bytes([
@@ -114,7 +140,11 @@ impl Font {
             loca.push(v);
         }
 
-        let glyf_start = glyf_tag.as_ptr() as usize - data.as_ptr() as usize;
+        let glyf_start = if cff {
+            0
+        } else {
+            glyf_tag.as_ptr() as usize - data.as_ptr() as usize
+        };
         let mut advances = Vec::with_capacity(num_glyphs as usize);
 
         for g in 0..num_glyphs {
@@ -156,6 +186,8 @@ impl Font {
             num_glyphs,
             loca,
             glyf: (glyf_start, glyf_tag.len()),
+            cff,
+            cff_widths: RefCell::new(HashMap::new()),
             advances,
             cmap,
             has_gpos: face.tables().gpos.is_some(),
@@ -172,6 +204,10 @@ impl Font {
     }
 
     pub fn advance_width(&self, glyph: u16) -> f64 {
+        if let Some(w) = self.cff_widths.borrow().get(&glyph) {
+            return *w as f64;
+        }
+
         self.advances.get(glyph as usize).copied().unwrap_or(0) as f64
     }
 
@@ -540,7 +576,8 @@ impl Font {
     /// opentype.js `glyph .xMin`, `yMin`, `xMax`, `yMax`: the bounding box of the glyph's `glyf` header in font units (0 where
     /// opentype.js leaves it undefined: an empty glyph).
     pub fn glyph_bounds(&self, glyph: u16) -> [f64; 4] {
-        if glyph >= self.num_glyphs {
+        // A CFF glyph has no `xMin` and friends in opentype.js (ScreenText reads `glyph .xMin || 0`).
+        if glyph >= self.num_glyphs || self.cff {
             return [0.0; 4];
         }
 
@@ -565,6 +602,10 @@ impl Font {
     /// coordinates scaled to font size 1 and y up (the double negation of opentype.js and
     /// PolygonText cancels).
     pub fn glyph_commands(&self, glyph: u16) -> Vec<Cmd> {
+        if self.cff {
+            return self.cff_commands(glyph);
+        }
+
         let points = self.glyph_points(glyph, 0, &mut vec![]);
         let scale = 1.0 / self.units_per_em * 1.0;
         let s = |p: &Point| (p.x * scale, p.y * scale);
@@ -628,6 +669,75 @@ impl Font {
         out
     }
 
+    /// `parseCFFCharstring` + `Glyph.getPath (0, 0, 1)` of a CFF glyph: `M`, `L` and `C` commands scaled to font size 1.
+    /// The path is built on first use in opentype.js, and that replaces the glyph's advance by the charstring width.
+    fn cff_commands(&self, glyph: u16) -> Vec<Cmd> {
+        struct Out {
+            scale: f64,
+            cmds: Vec<Cmd>,
+        }
+
+        impl ttf_parser::OutlineBuilder for Out {
+            fn move_to(&mut self, x: f32, y: f32) {
+                self.cmds
+                    .push(Cmd::M(x as f64 * self.scale, y as f64 * self.scale));
+            }
+
+            fn line_to(&mut self, x: f32, y: f32) {
+                self.cmds
+                    .push(Cmd::L(x as f64 * self.scale, y as f64 * self.scale));
+            }
+
+            fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
+                let s = self.scale;
+
+                self.cmds.push(Cmd::Q(
+                    x1 as f64 * s,
+                    y1 as f64 * s,
+                    x as f64 * s,
+                    y as f64 * s,
+                ));
+            }
+
+            fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
+                let s = self.scale;
+
+                self.cmds.push(Cmd::C(
+                    x1 as f64 * s,
+                    y1 as f64 * s,
+                    x2 as f64 * s,
+                    y2 as f64 * s,
+                    x as f64 * s,
+                    y as f64 * s,
+                ));
+            }
+
+            // `Path.closePath` Z commands are dropped by `getPath` (no stroke).
+            fn close(&mut self) {}
+        }
+
+        let Ok(face) = Face::parse(&self.data, 0) else {
+            return vec![];
+        };
+        let gid = ttf_parser::GlyphId(glyph);
+        let mut out = Out {
+            scale: 1.0 / self.units_per_em * 1.0,
+            cmds: vec![],
+        };
+
+        if glyph >= self.num_glyphs {
+            return vec![];
+        }
+
+        let _ = face.outline_glyph(gid, &mut out);
+
+        if let Some(w) = face.tables().cff.and_then(|c| c.glyph_width(gid)) {
+            self.cff_widths.borrow_mut().entry(glyph).or_insert(w);
+        }
+
+        out.cmds
+    }
+
     /// PolygonText.getGlyphGeometry: the triangles (three vertices each, x/y in em units) libtess
     /// produces for the glyph's contours, cached per glyph and quality.
     pub fn glyph_geometry(
@@ -676,6 +786,49 @@ fn bezier_quadric(
     }
 }
 
+/// Bezier.cubic (standard/Math/Algorithms/Bezier.js): `p = Matrix4 (x0 y0 z0 0, ..., x3 y3 z3 0) .multLeft (c)`, then
+/// `p .multVecMatrix (Vector4 (1, t, t², t³))`, with the operation order of `Matrix4.multLeft` and `multVecMatrix`.
+fn bezier_cubic(
+    p0: [f64; 2],
+    p1: [f64; 2],
+    p2: [f64; 2],
+    p3: [f64; 2],
+    steps: usize,
+    points: &mut Vec<[f64; 2]>,
+) {
+    const C: [f64; 16] = [
+        1.0, 0.0, 0.0, 0.0, -3.0, 3.0, 0.0, 0.0, 3.0, -6.0, 3.0, 0.0, -1.0, 3.0, -3.0, 1.0,
+    ];
+    // a [4 k + j]: coordinate j of point k (z and w are 0).
+    let a = [
+        p0[0], p0[1], 0.0, 0.0, p1[0], p1[1], 0.0, 0.0, p2[0], p2[1], 0.0, 0.0, p3[0], p3[1], 0.0,
+        0.0,
+    ];
+    // Matrix4.multLeft: this [4 r + j] = a00 * b0 + a04 * b1 + a08 * b2 + a12 * b3.
+    let mut m = [0.0f64; 16];
+
+    for r in 0..4 {
+        for j in 0..4 {
+            m[4 * r + j] = a[j] * C[4 * r]
+                + a[4 + j] * C[4 * r + 1]
+                + a[8 + j] * C[4 * r + 2]
+                + a[12 + j] * C[4 * r + 3];
+        }
+    }
+
+    let d = (steps - 1) as f64;
+
+    for i in 0..steps {
+        let t = i as f64 / d;
+        let tt = t * t;
+        let ttt = t * t * t;
+        let x = 1.0 * m[0] + t * m[4] + tt * m[8] + ttt * m[12];
+        let y = 1.0 * m[1] + t * m[5] + tt * m[9] + ttt * m[13];
+
+        points.push([x, y]);
+    }
+}
+
 /// PolygonText.createGlyphGeometry.
 pub fn create_glyph_geometry(commands: &[Cmd], quality: PrimitiveQuality) -> Vec<[f64; 2]> {
     let steps = quality.bezier_steps();
@@ -707,6 +860,11 @@ pub fn create_glyph_geometry(commands: &[Cmd], quality: PrimitiveQuality) -> Vec
             }
             Cmd::Q(x1, y1, cx, cy) => {
                 bezier_quadric([x, y], [x1, y1], [cx, cy], steps, &mut points);
+                x = cx;
+                y = cy;
+            }
+            Cmd::C(x1, y1, x2, y2, cx, cy) => {
+                bezier_cubic([x, y], [x1, y1], [x2, y2], [cx, cy], steps, &mut points);
                 x = cx;
                 y = cy;
             }
