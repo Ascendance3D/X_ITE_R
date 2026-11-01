@@ -1126,15 +1126,23 @@ impl Runtime {
     /// X3DPrototypeInstance.update: the declaration's interface changed. Fields of the same name
     /// and type are reused (and with them their routes), then `construct ()`.
     pub(crate) fn extern_instance_update(&mut self, inst: NodeId) {
-        let NodeKind::Instance(ProtoRef::Extern(e)) = self.scene.node(inst).kind else {
-            return;
+        // The declaration an instance follows: an EXTERNPROTO's interface, or a PROTO's.
+        let (decl_fields, has_metadata) = match self.scene.node(inst).kind {
+            NodeKind::Instance(ProtoRef::Extern(e)) => {
+                let d = &self.scene.externprotos[e];
+                (d.fields.clone(), d.has_metadata)
+            }
+            NodeKind::Instance(ProtoRef::Proto(p)) => {
+                let d = &self.scene.protos[p];
+                (d.fields.clone(), d.has_metadata)
+            }
+            _ => return,
         };
 
         // The new definitions: metadata (unless the interface redefines it), then the interface.
-        let decl = &self.scene.externprotos[e];
         let mut defs: Vec<Field> = vec![];
 
-        if decl.has_metadata {
+        if has_metadata {
             defs.push(Field::new(
                 "metadata",
                 access::INPUT_OUTPUT,
@@ -1143,7 +1151,7 @@ impl Runtime {
         }
 
         defs.extend(
-            decl.fields
+            decl_fields
                 .iter()
                 .map(|f| Field::new(&f.name, f.access, f.value.clone())),
         );
@@ -1267,7 +1275,60 @@ impl Runtime {
             let _ = result;
         }
 
-        self.extern_instance_construct(inst);
+        match self.scene.node(inst).kind {
+            NodeKind::Instance(ProtoRef::Proto(_)) => self.proto_instance_construct(inst),
+            _ => self.extern_instance_construct(inst),
+        }
+    }
+
+    /// X3DPrototypeInstance.construct for an instance of a PROTO: the old body goes, a new one is
+    /// realized when the instance is initialized, and the instance follows the declaration's updates.
+    pub(crate) fn proto_instance_construct(&mut self, inst: NodeId) {
+        self.instance_dispose_body(inst);
+
+        if self.is_initialized(inst) {
+            self.realize(inst);
+        }
+
+        self.instance_update.insert(inst);
+    }
+
+    /// Every live instance node of a PROTO declaration, in the order they were created.
+    pub fn proto_instances(&self, p: ProtoId) -> Vec<NodeId> {
+        (0..self.scene.nodes.len() as NodeId)
+            .filter(|&n| {
+                matches!(self.scene.node(n).kind, NodeKind::Instance(ProtoRef::Proto(x)) if x == p)
+                    && !self.ctx_dead(self.scene.node(n).ctx)
+            })
+            .collect()
+    }
+
+    /// X3DProtoDeclarationNode.updateInstances (`_updateInstances .processEvent ()`): every instance
+    /// takes the declaration's interface as it is now.
+    pub fn proto_update_instances(&mut self, extern_: bool, p: usize) {
+        let list = if extern_ {
+            self.extern_instances(p)
+        } else {
+            self.proto_instances(p)
+        };
+
+        for inst in list {
+            self.extern_instance_update(inst);
+        }
+    }
+
+    /// X3DBaseNode.addUserDefinedField on a PROTO declaration: a field of the same name goes first,
+    /// the new one comes last.
+    pub fn proto_add_user_field(&mut self, p: ProtoId, field: Field) {
+        let d = &mut self.scene.protos[p];
+
+        d.fields.retain(|f| f.name != field.name);
+        d.fields.push(field);
+    }
+
+    /// X3DBaseNode.removeUserDefinedField on a PROTO declaration (nothing when it has no such field).
+    pub fn proto_remove_user_field(&mut self, p: ProtoId, name: &str) {
+        self.scene.protos[p].fields.retain(|f| f.name != name);
     }
 
     /// The routes that end (`true`) or start (`false`) at a field of `inst`, in the order of their contexts.
@@ -1304,6 +1365,11 @@ impl Runtime {
                 other => Some(other),
             }
         };
+
+        // The page's mirrors of the old field objects name the old layout: they stop being refreshed.
+        self.js_mirror
+            .retain(|k, _| !matches!(k, (n, FieldLoc::Pre(_)) if *n == inst));
+        self.drop_js_dirty_of(inst);
 
         let old = std::mem::take(&mut self.frt);
 

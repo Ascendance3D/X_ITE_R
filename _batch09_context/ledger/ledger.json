@@ -4387,7 +4387,7 @@
     "crates/x3d-render/src/traverse_shaders.rs",
     "crates/x3d-runtime/src/nodes/shaders.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "render_rea_b08_shaders (84 worlds x MSAA 0/4 vs X_ITE)",
@@ -4398,11 +4398,12 @@
     "rea_b08_shaders case textures-runtime, textures-shared (MSAA 0/4)",
     "shader_include (x3d-runtime unit, x3d-render link)",
     "include-* worlds MSAA 0/4",
-    "crates/x3d-viewer/tests/rea_b24_shaderpart.rs rea_b24_shaderpart_cases_match_x_ite (16 worlds: url fallback and steps, load switch, shader selection, vertex stage, include errors; log, scene text, poses and pictures; KNOWN table for the compile text)"
+    "crates/x3d-viewer/tests/rea_b24_shaderpart.rs rea_b24_shaderpart_cases_match_x_ite (16 worlds: url fallback and steps, load switch, shader selection, vertex stage, include errors; log, scene text, poses and pictures; KNOWN table for the compile text)",
+    "crates/x3d-viewer/tests/rea_b21_wide_lines.rs (rea_b21_wide_lines_match_x_ite, rea_b21_wide_lines_cpu_collision_match_x_ite: the LineTransform shader that uses transformFeedbackVaryings)"
    ],
-   "missing": "transformFeedbackVaryings not ported; includes that need macro context do not link standalone in X_ITE either (ctx-* worlds of batch 08 link them in context); MSAA runtime cases pass",
+   "missing": "",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-shaderpart-baseline (16 cases, MSAA 0, 5 identical recordings), oracle/synthetic-rea-b24-shaderpart",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames. Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4. | Issue #95 2026-10-31: the batch 24 shader selection and url-step worlds equal X_ITE for ComposedShader validity."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames. Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4. | Issue #95 2026-10-31: the batch 24 shader selection and url-step worlds equal X_ITE for ComposedShader validity. | Issue #72 2026-10-31: ComposedShader.js declares no transformFeedbackVaryings field (fieldDefinitions: metadata, activate, isSelected, isValid, language, parts, user fields); setTransformFeedbackVaryings is called only by X3DShadersContext.createShader for the built-in LineTransform shaders (X3DShapeContext) and the particle emitters (X3DParticleEmitterNode), so no scene can set it. The port draws wide lines and particles with its own GPU passes, compared with X_ITE. Includes that need macro context do not link standalone in X_ITE either (the ctx-* worlds of batch 08 link them in context)."
   },
   {
    "id": "node:FloatVertexAttribute",
@@ -5244,11 +5245,12 @@
     "render_rea_b08_net (fl-*)",
     "rea_batch08_net (fl-runtime)",
     "rea_b08_net_unload",
-    "rea_b08_release_tables"
+    "rea_b08_release_tables",
+    "crates/x3d-text/tests/rea_b24_cff.rs (cff_font_metrics_kerning_and_glyph_outlines, cff_text_layouts_match_x_ite, bare_cff_and_non_font_data_do_not_parse; authored OpenType-CFF font with hint masks, subroutines, the flex operators, seac-style endchar and the opentype.js advance quirk)"
    ],
-   "missing": "CFF/OpenType-CFF fonts not loaded (X_ITE's opentype.js reads them); two libraries with one family not pinned (order-dependent in X_ITE)",
-   "oracle": "",
-   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): Per-context font tables released with the context (integration fix, rea_b08_release_tables)."
+   "missing": "no end-to-end runtime FontLibrary or FontStyle run with a CFF font (Font::parse is compared); two libraries with one family not pinned (order-dependent in X_ITE); CID-keyed CFF and CFF2 not recorded; a bare CFF is rejected like X_ITE",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/synthetic-rea-b24-cff-baseline.json (glyph paths, libtess triangles, 12 layouts; 5 identical recordings), authored fonts in oracle/synthetic-rea-b24-cff",
+   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): Per-context font tables released with the context (integration fix, rea_b08_release_tables). | Issue #74 2026-10-31: CFF outlines are interpreted by ttf-parser (no new dependency). A glyph's advance follows the charstring width once its path is built, like opentype.js; they can differ only for a malformed font."
   },
   {
    "id": "node:FontStyle",
@@ -6831,10 +6833,13 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "corpus-exact; SAI proto API (createProto, field updates on declaration) not ported",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-script/tests/rea_b24_proto_sai.rs (rea_b24_proto_sai_matches_x_ite: createProto found, unknown and EXTERNPROTO, declaration surface, field add/replace/remove, late and held instances, requestUpdateInstances timing, nested PROTO context, instance with IS fields; console compared as one list)",
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs rea_batch09_sai_cases_match_x_ite (member listing unchanged)"
+   ],
+   "missing": "corpus-exact; a body Script's shutdown () runs when an update disposes the body (X_ITE prints nothing); an update that disposes and rebuilds a body logs initialize once (X_ITE twice); getBody on an EXTERNPROTO, createInstance with the non-public setup argument and live X3DField objects from getUserDefinedFields not ported; addUserDefinedField on an EXTERNPROTO not probed; field objects a Script holds across a layout change stop refreshing; page load runs two more frames in X_ITE than the port, so consoles are compared as one list",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/synthetic-rea-b24-proto-sai-baseline.json (5 cases, 3 identical recordings)",
+   "notes": "Issue #78 2026-10-31: createProto already matched; added the declaration methods (getName, getType, getBody, getUserDefinedFields, getFieldDefinitions, newInstance, createInstance), the declaration field updates and instance updates through the generic extern_instance_update, an instance's getFieldDefinitions following its declaration, and the drop of a stale JS field mirror (it panicked after a layout shrink). Mutations (update propagation skipped, add not replacing) are caught."
   },
   {
    "id": "sub:proto.externproto",
@@ -7372,11 +7377,12 @@
    "behavior": "",
    "tests": [
     "x3d-text oracle",
-    "crates/x3d-text/tests/oracle.rs (228 glyphs, 57 full vertex, 41 layouts)"
+    "crates/x3d-text/tests/oracle.rs (228 glyphs, 57 full vertex, 41 layouts)",
+    "crates/x3d-text/tests/rea_b24_cff.rs (cff_font_metrics_kerning_and_glyph_outlines, cff_text_layouts_match_x_ite, bare_cff_and_non_font_data_do_not_parse; authored OpenType-CFF font with hint masks, subroutines, the flex operators, seac-style endchar and the opentype.js advance quirk)"
    ],
-   "missing": "only the 12 fonts of the answer key are compared; glyph vertices of 171 of 228 glyphs by count and area only",
-   "oracle": "",
-   "notes": "Issue #92 2026-10-31: x3d-text oracle with oracle/x_ite-text.json present: 228 glyphs checked (counts, area), 57 with every vertex, 41 layouts, 12 fonts in the key; with an empty key directory the layouts test fails (never passes)."
+   "missing": "only the 12 fonts of the answer key and one authored CFF font are compared; glyph vertices of 171 of 228 glyphs by count and area only; ScreenText with a CFF font not compared (cubics flattened into 16 lines)",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/synthetic-rea-b24-cff-baseline.json (glyph paths, libtess triangles, 12 layouts; 5 identical recordings), authored fonts in oracle/synthetic-rea-b24-cff",
+   "notes": "Issue #92 2026-10-31: x3d-text oracle with oracle/x_ite-text.json present: 228 glyphs checked (counts, area), 57 with every vertex, 41 layouts, 12 fonts in the key; with an empty key directory the layouts test fails (never passes). | Issue #74 2026-10-31: one authored OpenType-CFF font is compared in layouts (justify, size, spacing, vertical, right-to-left, length, maxExtent, .notdef, kerning)."
   },
   {
    "id": "sub:sound.engine",

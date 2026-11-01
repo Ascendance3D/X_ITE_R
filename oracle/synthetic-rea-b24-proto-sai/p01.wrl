@@ -1,0 +1,64 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# createProto: found, unknown, PROTO and EXTERNPROTO, outer-context lookup, declaration surface.
+PROTO Box1 [
+  field SFInt32 level 2
+  exposedField SFString tag "A"
+  eventIn SFInt32 poke
+  eventOut SFInt32 result
+]
+{
+  Group { }
+}
+EXTERNPROTO Ext [ field SFInt32 level eventIn SFInt32 poke ] "lib.wrl#Lib"
+DEF S Script {
+  url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+
+   show ('create Box1', () => { const n = cs .createProto ('Box1'); return n .getNodeTypeName () + ' ' + n .level + ' ' + n .tag + ' ' + typeof n; });
+   show ('create twice differs', () => cs .createProto ('Box1') !== cs .createProto ('Box1'));
+   show ('create unknown', () => cs .createProto ('Nope'));
+   show ('create empty', () => cs .createProto (''));
+   show ('create number', () => cs .createProto (5));
+   show ('create undefined', () => cs .createProto ());
+   show ('create node name', () => cs .createProto ('Group'));
+   show ('create Ext', () => { const n = cs .createProto ('Ext'); return n .getNodeTypeName () + ' ' + n .level; });
+   show ('instance fields', () => Array .from (cs .createProto ('Box1') .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','));
+   show ('instance type', () => typeof cs .createProto ('Box1') .getType ());
+   show ('instance set level', () => { const n = cs .createProto ('Box1'); n .level = 9; return n .level; });
+   show ('instance in scene', () => { const n = cs .createProto ('Box1'); return cs .rootNodes .length; });
+   show ('instance exec ctx', () => typeof cs .createProto ('Box1') .getExecutionContext);
+
+   const d = cs .protos .get ('Box1');
+   show ('decl name', () => d .name);
+   show ('decl isExternProto', () => d .isExternProto);
+   show ('decl fields', () => Array .from (d .fields, f => f .name + ':' + f .accessType + ':' + f .dataType + ':' + f .value) .join (','));
+   show ('decl appInfo', () => { d .appInfo = 'hello'; d .documentation = 'doc'; return d .appInfo + '/' + d .documentation; });
+   show ('decl newInstance', () => { const n = d .newInstance (); return n .getNodeTypeName () + ' ' + n .level; });
+   show ('decl createInstance', () => { const n = d .createInstance (cs); return n .getNodeTypeName () + ' ' + n .tag; });
+   show ('decl getBody', () => d .getBody () .rootNodes .length);
+   show ('decl type', () => d .getType () .join (','));
+   show ('decl typeName', () => d .getTypeName ());
+   show ('decl getName', () => d .getName ());
+   show ('decl getExecutionContext', () => d .getExecutionContext () === cs);
+   show ('decl body ctx', () => d .getBody () .rootNodes .length + ' ' + d .getBody () .isScene + ' ' + (d .getBody () .rootNodes [0] .getNodeTypeName ()));
+   show ('decl getUserDefinedFields', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));
+   show ('decl proto self', () => d .getProtoDeclaration () === d);
+
+   const e = cs .externprotos .get ('Ext');
+   show ('ext isExternProto', () => e .isExternProto);
+   show ('ext name', () => e .name);
+   show ('ext fields', () => Array .from (e .fields, f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','));
+   show ('ext loadState', () => e .loadState);
+   show ('ext newInstance', () => { const n = e .newInstance (); return n .getNodeTypeName () + ' ' + n .level; });
+}
+"
+}
