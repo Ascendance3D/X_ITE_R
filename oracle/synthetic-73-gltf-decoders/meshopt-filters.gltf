@@ -1,0 +1,9 @@
+{"asset":{"version":"2.0","generator":"x_ite_r-73"},"extensionsUsed":["EXT_meshopt_compression"],"extensionsRequired":["EXT_meshopt_compression"],
+"scene":0,"scenes":[{"nodes":[0]}],"nodes":[{"mesh":0}],
+"meshes":[{"primitives":[{"attributes":{"POSITION":0,"NORMAL":1,"COLOR_0":2},"indices":3,"mode":3}]}],
+"accessors":[{"bufferView":0,"componentType":5126,"count":5,"type":"VEC3","min":[-1,0,0],"max":[1,1,0.25]},
+{"bufferView":1,"componentType":5120,"normalized":true,"count":5,"type":"VEC3"},
+{"bufferView":2,"componentType":5121,"normalized":true,"count":5,"type":"VEC4"},
+{"bufferView":3,"componentType":5125,"count":6,"type":"SCALAR"}],
+"bufferViews":[{"buffer":0,"byteLength":60,"extensions":{"EXT_meshopt_compression":{"buffer":0,"byteOffset":0,"byteLength":58,"byteStride":12,"count":5,"mode":"ATTRIBUTES","filter":"EXPONENTIAL"}}},{"buffer":0,"byteLength":20,"extensions":{"EXT_meshopt_compression":{"buffer":0,"byteOffset":60,"byteLength":26,"byteStride":4,"count":5,"mode":"ATTRIBUTES","filter":"OCTAHEDRAL"}}},{"buffer":0,"byteLength":20,"extensions":{"EXT_meshopt_compression":{"buffer":0,"byteOffset":88,"byteLength":46,"byteStride":4,"count":5,"mode":"ATTRIBUTES","filter":"COLOR"}}},{"buffer":0,"byteLength":24,"extensions":{"EXT_meshopt_compression":{"buffer":0,"byteOffset":136,"byteLength":11,"byteStride":4,"count":6,"mode":"INDICES","filter":"NONE"}}}],
+"buffers":[{"byteLength":148,"uri":"data:application/octet-stream;base64,oV7mZgBAAD8/ABAAAQACAAIABABAAAACAAEAEABAABAAAQAAAAAAAAAAAAAAAPIAAADyAAAA8gAAAAAAoaoAAAAAAAAAAAAAAAAAAAAAAAAAAAB/fwAAAKH/AIF9AYIA/f4DgwCDfQB/AAB9fQAAAAAAAAAAAAAAAAAAAAAAAAAAQH/B/wEAANEABAQEBA4AAAAAAA=="}]}

@@ -1,0 +1,17 @@
+Synthetic fixtures for issue #73 (glTF-level decoder comparison against pinned X_ITE 16.5.0).
+Newly authored; no Cybertown or blaxxun asset. Not derived from any third-party file.
+
+*.gltf geometry   crates/x3d-parse/tests/gltf_decoders_73.rs (GEN_73=1 ... generate_fixtures -- --ignored)
+                  meshopt-pure and draco-core encoders; a 5-vertex, 3-triangle fan.
+tex-*.gltf, tex.avif, tex.ktx2
+                  crates/x3d-render/src/texture.rs, compare73_tests (generate_texture_fixtures).
+                  tex.avif: ravif; tex.ktx2: hand-built 4x4 UASTC solid block (200,100,50,255).
+tex-lossy.webp, tex-lossless.webp
+                  Pillow 10.2 (libwebp): 16x16 gradient, RGBA, alpha 128 for x >= 12;
+                  im.save(.., quality=60, method=6) and im.save(.., lossless=True).
+
+Baselines: oracle/gltf-decoders-73-baseline/
+  gltf-baseline.json    oracle/x_ite-gltf.mjs on this directory (toVRMLString per file)
+  texture-pixels.json   same page, with ImageTexture.getTextureData() read for each texture that
+                        loaded (a throwaway script outside the repository)
+Five runs of each were byte-identical (Chrome headless, pinned X_ITE 34cdf9f97).
