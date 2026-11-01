@@ -37,6 +37,7 @@ import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
+import { CASE_GROUPS as MOVIE01_GROUPS } from "./movie01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as SOUND03_GROUPS } from "./sound03_case.mjs";
 import { CASE_GROUPS as SOUND04_GROUPS } from "./sound04_case.mjs";
@@ -92,6 +93,7 @@ const SUITES = {
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
+   movie01: { dir: process .env .XR_MOVIE01_BASELINE ?? join (REPO, "oracle/web-browser-movie-01-baseline"), file: "movie01-baseline.json", groups: MOVIE01_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
 };
 
@@ -649,6 +651,8 @@ const GROUP_FILES = {
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
+   movieFrames: "movie01.test.mjs",
+   movieFallback: "movie01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
@@ -705,7 +709,7 @@ export function referenceCases (file)
          {
             const key = `${groupName}.${name}`;
 
-            test (key, { skip: ONLY && ONLY !== key, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
+            test (key, { skip: (ONLY && ONLY !== key) || group .skipCases ?.[name] || false, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
                const page = await openPage (group .context);
 
