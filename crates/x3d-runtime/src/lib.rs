@@ -546,6 +546,12 @@ pub struct Runtime {
     /// Browser.print / Browser.println also go to [`Runtime::log`] as `log: …` lines, in order with its warnings and
     /// errors (the browser build, whose page writes the log to its console as X_ITE does), not to [`Runtime::prints`].
     pub log_prints: bool,
+    /// The browser build's console: a Script's `print` and `console` lines go to it at once, in the Script's call, as X_ITE
+    /// logs them (issue #202), when the page has no line or event waiting for its turn (see [`Runtime::script_line`]).
+    pub console_sink: Option<Box<dyn Fn(&str)>>,
+    /// How many lines of [`Runtime::log`] the page has taken (the page tells at each take). A Script's line waits in the log
+    /// behind the lines before it.
+    pub log_taken: usize,
     /// All console output in the order it was logged: `log: text`, `warn: first line`, `error: first line`.
     pub console: Vec<String>,
     /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
@@ -778,6 +784,8 @@ impl Runtime {
             live_watchers: vec![],
             record_console: false,
             log_prints: false,
+            console_sink: None,
+            log_taken: 0,
             console: vec![],
             live: false,
             timeouts: vec![],
@@ -894,6 +902,33 @@ impl Runtime {
         }
 
         self.log.push(line);
+    }
+
+    /// A line a Script made (`print`, `console`): `make` logs it as the engine does, and with a [`Runtime::console_sink`] the
+    /// line goes to the page's console at once when nothing waits before it (no earlier line in the log that the page has not
+    /// taken, no event of an observed field whose callbacks come first). Otherwise it stays in the log, in order.
+    pub fn script_line(&mut self, make: impl FnOnce(&mut Self)) {
+        let before = self.log.len();
+
+        make(self);
+
+        let waits = before > self.log_taken
+            || self
+                .page_field_events
+                .as_ref()
+                .is_some_and(|events| !events.is_empty());
+
+        if waits || self.console_sink.is_none() {
+            return;
+        }
+
+        let lines: Vec<String> = self.log.drain(before..).collect();
+
+        if let Some(sink) = &self.console_sink {
+            for line in &lines {
+                sink(line);
+            }
+        }
     }
 
     /// Browser.print / Browser.println: `console .log (string)`.
