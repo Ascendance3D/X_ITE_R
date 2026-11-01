@@ -656,6 +656,29 @@ impl Session {
         scene.ctx(scene.world).root_nodes.clone()
     }
 
+    /// X3DExecutionContext.updateNamedNode (name, node) of the world: the node gets `name`, the node that had `name` loses it,
+    /// and the node's earlier name is dropped. addNamedNode is the same call for a node that has no name (the page checks
+    /// the arguments first, with X_ITE's error texts).
+    pub fn set_named_node(&mut self, name: &str, node: NodeId) -> Result<(), String> {
+        if !self.node_exists(node) {
+            return Err(format!("namedNode: node {node} is not in the world"));
+        }
+
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.scene.update_named_node(world, name, node);
+        Ok(())
+    }
+
+    /// X3DExecutionContext.removeNamedNode (name) of the world: the node of that name loses it; an unknown name is ignored.
+    pub fn remove_named_node(&mut self, name: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.scene.remove_named_node(world, name);
+    }
+
     /// `rootNodes .assign (list)` of the world (X3DScene.rootNodes of the page, addRootNode, removeRootNode,
     /// setRootNodes): the world holds `list` at once and the `rootNodes` field sends its event in the next frame's
     /// event cascade, among the other events in the order they were made (see [`ROOT_NODES_EVENT`]).

@@ -1669,6 +1669,59 @@ class X3DScene
 
       return nodeObject (this .#handle, id);
    }
+
+   // The checks that addNamedNode and updateNamedNode share, in X_ITE's order (X3DExecutionContext.js): the node must be an
+   // X3DNode of this scene, and the name must not be empty. Returns the node's handle.
+   #namedNodeArguments (verb, name, node)
+   {
+      const handle = handleOf (node);
+
+      if (!handle)
+         throw new Error (`Couldn't ${verb} named node: node must be of type X3DNode.`);
+
+      if (handle .scene !== this .#handle .scene || handle .browser !== this .#handle .browser)
+         throw new Error (`Couldn't ${verb} named node: node does not belong to this execution context.`);
+
+      if (!name)
+         throw new Error (`Couldn't ${verb} named node: node name is empty.`);
+
+      return handle;
+   }
+
+   // X3DExecutionContext.addNamedNode (name, node): a node that has no name gets one.
+   addNamedNode (name, node)
+   {
+      name = String (name);
+
+      const handle = this .#namedNodeArguments ("add", name, node);
+      const engine = this .#engine ();
+
+      if (engine .namedNode (this .#handle .scene, name) !== undefined)
+         throw new Error (`Couldn't add named node: node named '${name}' is already in use.`);
+
+      const own = engine .nodeName (this .#handle .scene, handle .id) ?? "";
+
+      if (own && engine .namedNode (this .#handle .scene, own) === handle .id)
+         throw new Error (`Couldn't add named node: node named '${own}' already has a name.`);
+
+      engine .setNamedNode (this .#handle .scene, name, handle .id);
+   }
+
+   // X3DExecutionContext.updateNamedNode (name, node): the node gets the name; the node that had it loses it.
+   updateNamedNode (name, node)
+   {
+      name = String (name);
+
+      const handle = this .#namedNodeArguments ("update", name, node);
+
+      this .#engine () .setNamedNode (this .#handle .scene, name, handle .id);
+   }
+
+   // X3DExecutionContext.removeNamedNode (name): the node of that name loses it; an unknown name does nothing.
+   removeNamedNode (name)
+   {
+      this .#engine () ?.removeNamedNode (this .#handle .scene, String (name));
+   }
 }
 
 // A rejection of the engine as the Error X_ITE gives: "TypeError: text" is a TypeError with the message "text".
