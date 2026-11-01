@@ -1757,6 +1757,19 @@ impl Scene {
             return Err("Couldn't update imported node: imported name is empty.".to_string());
         }
 
+        self.place_imported_node(ctx, inline, exported_name, imported_name, description)
+    }
+
+    /// The record of X3DExecutionContext.updateImportedNode once its arguments are checked: `inline` may live in a context
+    /// below `ctx` (a node `createNode` made for a page).
+    pub fn place_imported_node(
+        &mut self,
+        ctx: CtxId,
+        inline: NodeId,
+        exported_name: &str,
+        imported_name: &str,
+        description: &str,
+    ) -> Result<ImportedId, String> {
         let id = self.imported_slots.take().unwrap_or(self.imported.len());
         let instance = self.push_node(Node {
             kind: NodeKind::Imported(id),

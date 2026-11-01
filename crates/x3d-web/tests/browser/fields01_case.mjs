@@ -1182,11 +1182,133 @@ async function createProtoCase (page, env)
    return out;
 }
 
+// X3DExecutionContext.addImportedNode, updateImportedNode, renameImportedNode, removeImportedNode, getImportedNode and
+// getImportedNodes (issue #137): the imported names of the Inline nodes of a world, their errors, the X3DImportedNode items and
+// what the text form shows.
+const INLINE_FILE = `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Full\nDEF Inner Transform { translation 1 2 3 }\nDEF Other Group { }\nEXPORT Inner AS Out\nEXPORT Other\n")}`;
+const IMPORTED_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8\nPROFILE Full\nDEF I Inline { url "${INLINE_FILE}" }\nDEF J Inline { url "${INLINE_FILE}" }\nDEF G Group { }\n`)}`;
+
+async function importedNodesCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, IMPORTED_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+      const imports = () => scene .toVRMLString () .split ("\n") .filter (line => line .startsWith ("IMPORT"));
+      const items   = () => attempt (() => Array .from (scene .getImportedNodes (), i => [ i .importedName, i .exportedName, i .description ]));
+      const inlineI = scene .getNamedNode ("I");
+      const inlineJ = scene .getNamedNode ("J");
+      const foreign = await browser .createScene ();
+
+      // The data URLs of the Inline nodes load in a few frames.
+      await new Promise (resolve => setTimeout (resolve, 1500));
+
+      out .loaded = [ inlineI .load, inlineJ .load ];
+      out .start  = [ scene .getImportedNodes () .length, attempt (() => scene .getImportedNodes () .getTypeName ()), imports () ];
+
+      // addImportedNode
+      out .add           = attempt (() => scene .addImportedNode (inlineI, "Out"));
+      out .addState      = [ items (), imports () ];
+      out .addDuplicate  = attempt (() => scene .addImportedNode (inlineI, "Other", "Out"));
+      out .addAs         = attempt (() => scene .addImportedNode (inlineI, "Other", "Alias", "a description"));
+      out .addAsState    = [ items (), imports () ];
+      out .addOtherInline = attempt (() => scene .addImportedNode (inlineJ, "Out", "FromJ"));
+      out .addNotInline  = attempt (() => scene .addImportedNode (scene .getNamedNode ("G"), "Out", "X1"));
+      out .addNoNode     = attempt (() => scene .addImportedNode (undefined, "Out", "X2"));
+      out .addNull       = attempt (() => scene .addImportedNode (null, "Out", "X3"));
+      out .addNotNode    = attempt (() => scene .addImportedNode ({ }, "Out", "X4"));
+      out .addEmptyExported = attempt (() => scene .addImportedNode (inlineI, "", "X5"));
+      out .addEmptyImported = attempt (() => scene .addImportedNode (inlineI, "Out", ""));
+      out .addNumbers    = attempt (() => scene .addImportedNode (inlineI, 5, 6));
+      out .addNoArgs     = attempt (() => scene .addImportedNode ());
+      out .addForeign    = attempt (() => scene .addImportedNode (foreign .createNode ("Inline"), "Out", "X6"));
+      out .addMissing    = attempt (() => scene .addImportedNode (inlineI, "Nothing", "Missing"));
+      out .addDescriptionNumber = attempt (() => scene .addImportedNode (inlineJ, "Out", "Described", 7));
+      out .addState2     = [ items (), imports () ];
+
+      // getImportedNode and the X3DImportedNode items
+      const list = scene .getImportedNodes ();
+      const item = list .get ("Out");
+      const inst = scene .getImportedNode ("Out");
+
+      out .getUnknown = attempt (() => scene .getImportedNode ("nope"));
+      out .getNoArgs  = attempt (() => scene .getImportedNode ());
+      out .getNumber  = attempt (() => scene .getImportedNode (5));
+      out .sameList   = [ scene .getImportedNodes () === list, scene .importedNodes === list, list .has ("Out"), list .has ("zzz"), list [0] === item ];
+      out .item = attempt (() => [ item .getTypeName (), item .importedName, item .exportedName, item .description, item .inlineNode === inlineI,
+         item .exportedNode .getNodeName (), item .exportedNode .getNodeTypeName (), item .instance === inst, item .getExecutionContext () === scene,
+         String (item), Object .keys (item) ]);
+      out .itemMethods = attempt (() => [ item .getImportedName (), item .getExportedName (), item .getDescription (), item .getInlineNode () != null,
+         item .getInstance () != null, item .getExportedNode () != null ]);
+      out .itemSetDescription = attempt (() => { item .description = "changed"; return [ item .description, list .get ("Out") .description, imports () ]; });
+      out .inst = attempt (() => [ inst .getNodeName (), inst .getNodeTypeName (), inst .getTypeName (), String (inst) .length > 0 ]);
+      out .instField = attempt (() => inst .translation .toString ());
+      out .instFieldWrite = attempt (() => { inst .translation = new window .X3D_NS .SFVec3f (7, 8, 9); return scene .getImportedNode ("Out") .translation .toString (); });
+      out .instInnerTranslation = attempt (() => item .exportedNode .translation .toString ());
+      out .instDefinitions = attempt (() => inst .getFieldDefinitions () .length);
+      out .instInRoot = attempt (() => scene .rootNodes .indexOf (inst));
+      out .localNode = attempt (() => [ scene .getLocalNode ("G") .getNodeName (), scene .getLocalNode ("Out") === inst ]);
+
+      // updateImportedNode
+      out .updateNew     = attempt (() => scene .updateImportedNode (inlineJ, "Other", "Upd"));
+      out .updateReplace = attempt (() => scene .updateImportedNode (inlineJ, "Other", "Out", "replaced"));
+      out .updateState   = [ items (), imports (), item .importedName, list .get ("Out") === item, scene .getImportedNode ("Out") === inst, list .length ];
+      out .updateDefault = attempt (() => scene .updateImportedNode (inlineI, "Out"));
+      out .updateNotInline = attempt (() => scene .updateImportedNode (scene .getNamedNode ("G"), "Out", "X7"));
+      out .updateForeign = attempt (() => scene .updateImportedNode (foreign .createNode ("Inline"), "Out", "X8"));
+      out .updateEmpty   = attempt (() => scene .updateImportedNode (inlineI, "", "X9"));
+      out .updateEmptyImported = attempt (() => scene .updateImportedNode (inlineI, "Out", ""));
+      out .updateState2  = [ items (), imports () ];
+
+      // renameImportedNode
+      out .rename        = attempt (() => scene .renameImportedNode ("Upd", "Renamed"));
+      out .renameState   = [ items (), imports (), attempt (() => scene .getImportedNode ("Renamed") .getNodeName ()), attempt (() => scene .getImportedNode ("Upd")) ];
+      out .renameUnknown = attempt (() => scene .renameImportedNode ("nope", "Z"));
+      out .renameExisting = attempt (() => scene .renameImportedNode ("Renamed", "Out"));
+      out .renameNoArgs  = attempt (() => scene .renameImportedNode ());
+
+      // removeImportedNode
+      out .removeKnown   = attempt (() => scene .removeImportedNode ("Renamed"));
+      out .removeState   = [ items (), imports (), attempt (() => scene .getImportedNode ("Renamed")) ];
+      out .removeUnknown = attempt (() => scene .removeImportedNode ("nope"));
+      out .removeNumber  = attempt (() => scene .removeImportedNode (5));
+      out .removeNoArgs  = attempt (() => scene .removeImportedNode ());
+      out .removeAgain   = attempt (() => scene .removeImportedNode ("Renamed"));
+      out .addAfterRemove = attempt (() => scene .addImportedNode (inlineI, "Other", "Renamed"));
+      out .removedItem   = attempt (() => [ list .has ("Out"), list .length, items () ]);
+      out .uniqueName    = attempt (() => scene .getUniqueImportName ("Out"));
+
+      // An Inline that createNode made belongs to the scene too.
+      const made = scene .createNode ("Inline");
+
+      out .addMade      = attempt (() => scene .addImportedNode (made, "Out", "FromMade"));
+      out .addMadeState = [ items (), attempt (() => scene .getImportedNode ("FromMade") .getNodeTypeName ()) ];
+      out .removeMade   = attempt (() => scene .removeImportedNode ("FromMade"));
+
+      // The inline's own context has no imported nodes of the world.
+      out .foreign = [ foreign .getImportedNodes () === list, foreign .getImportedNodes () .length ];
+
+      out .text = attempt (() => scene .toVRMLString ());
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
 export const CASE_GROUPS = {
    fieldAPI: { context: DESKTOP, cases },
    fieldRoundTrip: { context: DESKTOP, cases: roundTripCases },
    fieldConstants: { context: DESKTOP, cases: { constants: async (page, env) => { await page .waitForFunction (() => window .ready, null, { timeout: 30000 }); return constants (page, env); } } },
-   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase, namedLists: namedListsCase, createProto: createProtoCase,
+   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase, namedLists: namedListsCase, createProto: createProtoCase, importedNodes: importedNodesCase,
       // Nodes of external components the world did not load: a world of the Interchange profile (one of them first, then the same list).
       createNodeInterchange: (page, env) => createNodeCase (page, env, `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\n")}`) } },
 };
