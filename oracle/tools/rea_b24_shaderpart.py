@@ -4,7 +4,7 @@
   python3 -I oracle/tools/rea_b24_shaderpart.py record NAME [RUNS]
       Runs oracle/x_ite-anim.mjs RUNS times (default 5) on oracle/synthetic-rea-b24-shaderpart/NAME.wrl with
       NAME.json. Only if every run gives the same js.json and the same PNG hashes is the first run kept as
-      oracle/rea-batch24-shaderpart-baseline/NAME-msaa0 and the case added to cases.txt; otherwise the case is
+      oracle/rea-b24-shaderpart-baseline/NAME-msaa0 and the case added to cases.txt; otherwise the case is
       reported UNSTABLE and nothing is written. A baseline is written only from X_ITE runs.
 """
 import hashlib, json, os, shutil, subprocess, sys
@@ -32,12 +32,12 @@ if any(s != sums[0] for s in sums):
             print("DIFFERS:", k)
     print(f"UNSTABLE {name}")
     sys.exit(2)
-dest = os.path.join(root, "oracle", "rea-batch24-shaderpart-baseline", f"{name}-msaa0")
+dest = os.path.join(root, "oracle", "rea-b24-shaderpart-baseline", f"{name}-msaa0")
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
 shutil.copy(f"{tmp}/run0/js.json", dest)
 shutil.copytree(f"{tmp}/run0/js", f"{dest}/js")
-cases = os.path.join(root, "oracle", "rea-batch24-shaderpart-baseline", "cases.txt")
+cases = os.path.join(root, "oracle", "rea-b24-shaderpart-baseline", "cases.txt")
 lines = open(cases).read().splitlines() if os.path.exists(cases) else []
 lines = [l for l in lines if l.split()[:1] != [name]] + [f"{name} {world} {script} 0"]
 open(cases, "w").write("\n".join(sorted(lines)) + "\n")

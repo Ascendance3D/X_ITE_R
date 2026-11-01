@@ -2,14 +2,14 @@
 """REA batch 08 (glTF lane) oracle baselines (pinned X_ITE, headless Chrome on the GPU).
 
   python3 -I oracle/tools/rea_b08_gltf.py parse
-      oracle/synthetic-rea-b08-gltf/**/*.gltf|glb -> oracle/rea-batch08-gltf-baseline/gltf-baseline.json (x_ite-gltf.mjs)
+      oracle/synthetic-rea-b08-gltf/**/*.gltf|glb -> oracle/rea-b08-gltf-baseline/gltf-baseline.json (x_ite-gltf.mjs)
   python3 -I oracle/tools/rea_b08_gltf.py shots
       oracle/synthetic-rea-b08-gltf/render/*.gltf -> oracle/render-rea-b08-gltf-baseline (x_ite-shot-gltf.mjs) and
       oracle/render-msaa4-rea-b08-gltf-baseline (x_ite-shot-msaa-gltf.mjs, 4 samples).
   python3 -I oracle/tools/rea_b08_gltf.py case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in $B08_GLTF_TARGET (default /tmp/b08/gltf/target/release); on success the
-      X_ITE side (js.json, js/*.png) is kept as oracle/rea-batch08-gltf-baseline/NAME-msaaMSAA and the case line is
-      added to oracle/rea-batch08-gltf-baseline/cases.txt.
+      X_ITE side (js.json, js/*.png) is kept as oracle/rea-b08-gltf-baseline/NAME-msaaMSAA and the case line is
+      added to oracle/rea-b08-gltf-baseline/cases.txt.
 
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied.
 """
@@ -17,7 +17,7 @@ import os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 args = sys.argv[1:]
-BASE = "rea-batch08-gltf-baseline"
+BASE = "rea-b08-gltf-baseline"
 
 if args[0] == "parse":
     subprocess.run(["node", "x_ite-gltf.mjs", "synthetic-rea-b08-gltf", f"{BASE}/gltf-baseline.json"], check=True, cwd=os.path.join(root, "oracle"), timeout=900)

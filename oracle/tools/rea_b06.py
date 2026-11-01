@@ -3,7 +3,7 @@
 
   python3 -I oracle/tools/rea_b06.py baseline [NAME ...] [--jobs N]
       oracle/synthetic-rea-b06/NAME.x3dv (+ scripts/NAME.json, written by gen_rea_b06.py) ->
-      oracle/rea-batch06-baseline/NAME/js.json, from oracle/x_ite-anim.mjs. A baseline is written only from an
+      oracle/rea-b06-baseline/NAME/js.json, from oracle/x_ite-anim.mjs. A baseline is written only from an
       X_ITE run. Every world is run TWICE and the two results are compared in full; the baseline is the first
       run, and when the runs differ the differing paths are printed and stored under "nondeterministic".
   python3 -I oracle/tools/rea_b06.py check [NAME ...] [--target DIR] [--jobs N] [--json OUT] [--verbose]
@@ -25,7 +25,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 worlds_dir = os.path.join(root, "oracle", "synthetic-rea-b06")
-baseline_dir = os.path.join(root, "oracle", "rea-batch06-baseline")
+baseline_dir = os.path.join(root, "oracle", "rea-b06-baseline")
 
 # Maximum absolute error allowed per quantity ("TYPE.field", "dt", "TYPE.contacts.position", ...). All start at 0:
 # nothing has been measured against the Rust side yet. A quantity not listed uses DEFAULT_TOLERANCE.

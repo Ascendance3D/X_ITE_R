@@ -2,7 +2,7 @@
 //! pinned X_ITE 16.5.0.
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b21-wide-lines (oracle/tools/gen_rea_b21_wide_lines.py). A case's
-//! X_ITE baseline is oracle/rea-batch21-wide-lines-baseline/NAME/ (`js.json`, `js.f32`, `png/<frame>.png`), recorded by
+//! X_ITE baseline is oracle/rea-b21-wide-lines-baseline/NAME/ (`js.json`, `js.f32`, `png/<frame>.png`), recorded by
 //! `oracle/tools/rea_b21_wide_lines.py record` (three identical runs, `antialiased="false"`, 512 x 512).
 //!
 //! Each case runs `x3d-particles-drive` with the baseline's seeds at the oracle's canvas size and compares:
@@ -383,7 +383,7 @@ fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dy
 fn run_case(root: &Path, name: &str, cpu: bool) -> Vec<(&'static str, String)> {
     let found: std::cell::RefCell<Vec<(&'static str, String)>> = Default::default();
     let base = root
-        .join("oracle/rea-batch21-wide-lines-baseline")
+        .join("oracle/rea-b21-wide-lines-baseline")
         .join(name);
     let world = root
         .join("oracle/synthetic-rea-b21-wide-lines")

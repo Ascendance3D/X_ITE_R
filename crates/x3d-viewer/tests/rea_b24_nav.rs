@@ -1,10 +1,10 @@
 //! REA batch 24 (issue #91): navigation cases beyond batch 09 against pinned X_ITE 16.5.0: collision against a ceiling, the
 //! step-up threshold, avatarSize variants (radius 0 and 1, avatarHeight 3, stepHeight 0 and 3), NavigationInfo speed, EXAMINE
 //! around a Viewpoint centerOfRotation and WALK inside a tilted Transform. Worlds and scripts: oracle/synthetic-rea-b24-nav
-//! (generator oracle/tools/gen_rea_b24_nav.py); baselines: oracle/rea-batch24-nav-baseline (oracle/tools/rea_b24_nav.py
+//! (generator oracle/tools/gen_rea_b24_nav.py); baselines: oracle/rea-b24-nav-baseline (oracle/tools/rea_b24_nav.py
 //! record, three identical X_ITE runs each, no pictures). The comparison is the one of rea_batch09_nav.rs, copied:
 //!
-//! Each case of oracle/rea-batch24-nav-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b24-nav-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it), poses within 1e-4, the sorted log exact, the pointing
@@ -134,7 +134,7 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch24-nav-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b24-nav-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
@@ -331,7 +331,7 @@ fn run_shard(shard: usize) {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch24-nav-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b24-nav-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = renderer_available();
     if !gpu {

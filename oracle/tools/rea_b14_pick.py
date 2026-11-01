@@ -6,7 +6,7 @@
 runs `x3d-oracle particles` (default target/release/x3d-oracle) three times on oracle/synthetic-rea-b14-particle-pick/NAME.x3dv
 with scripts/NAME.json. `--png-dir` is always passed: it makes the page reshape its drawing buffer to the 512 x 512
 canvas, without which browser .touch has a 1 x 1 viewport; the images themselves are not kept. The three js.json and
-js.f32 must be identical; the first is kept as oracle/rea-batch14-particle-pick-baseline/NAME/. A baseline is never
+js.f32 must be identical; the first is kept as oracle/rea-b14-particle-pick-baseline/NAME/. A baseline is never
 taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
@@ -30,7 +30,7 @@ same = all(filecmp.cmp(os.path.join(a, f), os.path.join(b, f), shallow=False) fo
 print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'}")
 if not same:
     sys.exit(1)
-dest = os.path.join(root, "oracle", "rea-batch14-particle-pick-baseline", name)
+dest = os.path.join(root, "oracle", "rea-b14-particle-pick-baseline", name)
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
 for f in ("js.json", "js.f32"):

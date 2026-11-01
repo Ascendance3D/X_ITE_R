@@ -7,7 +7,7 @@ runs `x3d-oracle particles` (default target/release/x3d-oracle) three times on
 oracle/synthetic-rea-b21-wide-lines/NAME.x3dv with scripts/NAME.json and `--png-dir` (antialiased="false"; it also
 reshapes the drawing buffer to the 512 x 512 canvas, which the pick probes need, as in batch 14). The three js.json and
 js.f32 must be identical and every PNG must decode to the same pixels (rea_b18_particle_lines.pixels). The first run is
-kept as oracle/rea-batch21-wide-lines-baseline/NAME/ (js.json, js.f32, png/). A baseline is never taken from Rust.
+kept as oracle/rea-b21-wide-lines-baseline/NAME/ (js.json, js.f32, png/). A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
 
@@ -43,7 +43,7 @@ def main():
     print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'} ({len(pngs)} images)")
     if not same:
         sys.exit(1)
-    dest = os.path.join(root, "oracle", "rea-batch21-wide-lines-baseline", name)
+    dest = os.path.join(root, "oracle", "rea-b21-wide-lines-baseline", name)
     shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
     for f in ("js.json", "js.f32"):

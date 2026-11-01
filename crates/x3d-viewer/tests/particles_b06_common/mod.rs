@@ -1,4 +1,4 @@
-//! Shared by the particles_b06_* tests: replay a baseline case of X_ITE (oracle/rea-batch06-baseline)
+//! Shared by the particles_b06_* tests: replay a baseline case of X_ITE (oracle/rea-b06-baseline)
 //! through the real runtime (Viewer3d, virtual time, the baseline's `Math.random` seeds) and compare
 //! the transform feedback state with X_ITE's.
 #![allow(dead_code)]
@@ -67,7 +67,7 @@ pub struct Baseline {
 
 impl Baseline {
     pub fn load(name: &str) -> Baseline {
-        let dir = oracle().join("rea-batch06-baseline").join(name);
+        let dir = oracle().join("rea-b06-baseline").join(name);
 
         Baseline {
             js: json(&dir.join("js.json")),

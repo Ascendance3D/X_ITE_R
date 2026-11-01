@@ -6,7 +6,7 @@
   python3 -I oracle/tools/rea_b09_nav.py run [--only SUBSTRING] [--jobs N] [--target DIR]
       for every case: x10_compare.py against the release build in DIR (default target-viewer/release);
       on success the X_ITE side (js.json, js/*.png) is kept as
-      oracle/rea-batch09-nav-baseline/NAME-msaaM and the case line is written to cases.txt.
+      oracle/rea-b09-nav-baseline/NAME-msaaM and the case line is written to cases.txt.
 
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied. Navigation
 poses and scene text do not depend on the multisampling level; the pictures of IMAGE_CASES are
@@ -96,7 +96,7 @@ def main():
             work.append((c, "0", False))
     with ThreadPoolExecutor(jobs) as ex:
         results = list(ex.map(lambda w: (w, run_case(w[0], w[1], target, w[2])), work))
-    bdir = os.path.join(root, "oracle", "rea-batch09-nav-baseline")
+    bdir = os.path.join(root, "oracle", "rea-b09-nav-baseline")
     os.makedirs(bdir, exist_ok=True)
     lines = {}
     cpath = os.path.join(bdir, "cases.txt")

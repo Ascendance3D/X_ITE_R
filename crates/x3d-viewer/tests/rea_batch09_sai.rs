@@ -1,4 +1,4 @@
-//! REA batch 09 lane scene-sai: SAI / execution-context / PROTO / Script cases against pinned X_ITE (oracle/rea-batch09-sai-baseline, made by
+//! REA batch 09 lane scene-sai: SAI / execution-context / PROTO / Script cases against pinned X_ITE (oracle/rea-b09-sai-baseline, made by
 //! `oracle/tools/rea_b09_sai.py case`; worlds and scripts in oracle/synthetic-rea-b09-sai). Each world's Script records what the SAI
 //! returned into a field of its own, so the scene text (`toVRMLString`) at every dumped frame carries it. Compared like
 //! oracle/tools/x10_compare.py: scene text exact, the sorted log exact, poses 1e-4. No rendering.
@@ -23,10 +23,10 @@ fn nums(v: &Value) -> Vec<f64> {
 }
 
 fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &mut Vec<String>) {
-    let dir = root.join(format!("oracle/rea-batch09-sai-baseline/{name}"));
+    let dir = root.join(format!("oracle/rea-b09-sai-baseline/{name}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch09-sai-{}-{name}", std::process::id()));
+    let out = std::env::temp_dir().join(format!("rea-b09-sai-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let status = Command::new(env!("CARGO_BIN_EXE_x3d-drive"))
@@ -125,7 +125,7 @@ fn rea_batch09_sai_cases_match_x_ite() {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch09-sai-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b09-sai-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let mut failures = vec![];
     let mut checked = 0;

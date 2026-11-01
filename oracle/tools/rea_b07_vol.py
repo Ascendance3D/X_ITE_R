@@ -6,8 +6,8 @@
       oracle/render-msaa4-rea-b07-vol-baseline (x_ite-shot-msaa.mjs, 4 samples).
   python3 -I oracle/tools/rea_b07_vol.py case NAME WORLD SCRIPT MSAA [TEXT_TOL] [--target DIR]
       x10_compare.py against the release build in DIR (default /tmp/b07-vol-target/release); on success the
-      X_ITE side (js.json, js/*.png) is kept as oracle/rea-batch07-vol-baseline/NAME-msaaMSAA and the case line
-      is added to oracle/rea-batch07-vol-baseline/cases.txt.
+      X_ITE side (js.json, js/*.png) is kept as oracle/rea-b07-vol-baseline/NAME-msaaMSAA and the case line
+      is added to oracle/rea-b07-vol-baseline/cases.txt.
 
 The worlds come from oracle/tools/gen_rea_b07_vol.py. A baseline is written only from an X_ITE run; the Rust
 result is compared, never copied.
@@ -52,13 +52,13 @@ elif args[0] == "case":
         if len(pngs) > 1 and len(hashes) < min(len(pngs), 3):
             print("REJECTED: the captured X_ITE frames are nearly all the same picture", len(hashes), "of", len(pngs))
             sys.exit(4)
-        dest = os.path.join(root, "oracle", "rea-batch07-vol-baseline", f"{name}-msaa{msaa}")
+        dest = os.path.join(root, "oracle", "rea-b07-vol-baseline", f"{name}-msaa{msaa}")
         shutil.rmtree(dest, ignore_errors=True)
         os.makedirs(dest)
         shutil.copy(os.path.join(out, "js.json"), dest)
         if os.path.isdir(os.path.join(out, "js")):
             shutil.copytree(os.path.join(out, "js"), os.path.join(dest, "js"))
-        cases = os.path.join(root, "oracle", "rea-batch07-vol-baseline", "cases.txt")
+        cases = os.path.join(root, "oracle", "rea-b07-vol-baseline", "cases.txt")
         line = " ".join([name, world, script, msaa] + ([tol] if tol else []))
         lines = open(cases).read().splitlines() if os.path.exists(cases) else []
         lines = [l for l in lines if l.split()[:1] != [name] or l.split()[3:4] != [msaa]] + [line]

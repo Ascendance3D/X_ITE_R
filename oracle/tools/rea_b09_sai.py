@@ -3,7 +3,7 @@
 
   python3 -I oracle/tools/rea_b09_sai.py case NAME WORLD SCRIPT
       oracle/tools/x10_compare.py --no-images against the release build in $B09_TARGET (default target-viewer/release);
-      on success the X_ITE side (js.json) is kept as oracle/rea-batch09-sai-baseline/NAME and the case line
+      on success the X_ITE side (js.json) is kept as oracle/rea-b09-sai-baseline/NAME and the case line
       `NAME WORLD SCRIPT` is added to cases.txt. WORLD and SCRIPT are paths relative to the repository root.
   python3 -I oracle/tools/rea_b09_sai.py xite NAME WORLD SCRIPT
       the X_ITE side only, into /tmp/rea-b09-sai-xite/NAME/js.json (run it again to see that it repeats).
@@ -15,7 +15,7 @@ import os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 mode, args = sys.argv[1], sys.argv[2:]
-baseline = os.path.join(root, "oracle", "rea-batch09-sai-baseline")
+baseline = os.path.join(root, "oracle", "rea-b09-sai-baseline")
 
 if mode == "xite":
     name, world, script = args[:3]

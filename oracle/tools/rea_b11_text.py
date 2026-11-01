@@ -3,8 +3,8 @@
 
   python3 -I oracle/tools/rea_b11_text.py record NAME WORLD SCRIPT
       X_ITE 16.5.0 three times; the compared view (scene text at every dumped frame, poses, log, console, ok, warmupFrames) must be
-      identical in all three, then the first js.json is kept as oracle/rea-batch11-baseline/NAME and the case line is added to
-      oracle/rea-batch11-baseline/text-cases.txt. (`loadFrames` is the frame the load finished in; it follows Chrome's I/O and is not
+      identical in all three, then the first js.json is kept as oracle/rea-b11-baseline/NAME and the case line is added to
+      oracle/rea-b11-baseline/text-cases.txt. (`loadFrames` is the frame the load finished in; it follows Chrome's I/O and is not
       compared.) A baseline is never taken from Rust.
 """
 import json, os, shutil, subprocess, sys
@@ -12,7 +12,7 @@ import json, os, shutil, subprocess, sys
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 mode, name, world, script = sys.argv[1:5]
 assert mode == "record"
-base = os.path.join(root, "oracle", "rea-batch11-baseline")
+base = os.path.join(root, "oracle", "rea-b11-baseline")
 os.makedirs(base, exist_ok=True)
 runs = []
 for i in (1, 2, 3):

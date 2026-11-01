@@ -1,8 +1,8 @@
-//! REA batch 02 live-viewer features against pinned X_ITE (oracle/rea-batch02-baseline, made by
+//! REA batch 02 live-viewer features against pinned X_ITE (oracle/rea-b02-baseline, made by
 //! `oracle/tools/rea_b02.py case`): runtime field changes of MultiTexture and the texture
 //! transforms, and the batch 02 cases recorded there since.
 //!
-//! Each case of oracle/rea-batch02-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b02-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it: absolute below magnitude 1, relative above), poses within
@@ -103,11 +103,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch02-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b02-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
-        "rea-batch02-{}-{name}-msaa{msaa}",
+        "rea-b02-{}-{name}-msaa{msaa}",
         std::process::id()
     ));
     std::fs::create_dir_all(&out).unwrap();
@@ -232,7 +232,7 @@ fn rea_batch02_cases_match_x_ite() {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch02-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b02-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

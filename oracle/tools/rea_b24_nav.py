@@ -4,7 +4,7 @@
   python3 -I -B oracle/tools/rea_b24_nav.py record [--only SUBSTRING] [--jobs N]
       For every case of oracle/synthetic-rea-b24-nav/cases.txt (made by gen_rea_b24_nav.py): record the X_ITE side three
       times (x_ite-anim.mjs). The three js.json must be identical (`loadFrames`, which follows Chrome's I/O, is left out of the
-      check; rea_b24_nav.rs does not compare it). The first is kept as oracle/rea-batch24-nav-baseline/NAME-msaa0 and the case
+      check; rea_b24_nav.rs does not compare it). The first is kept as oracle/rea-b24-nav-baseline/NAME-msaa0 and the case
       line is written to cases.txt there. A case whose recordings differ is listed in UNSTABLE.txt with the differing keys and
       is not kept. A baseline is never taken from Rust. No pictures: the navigation result is the camera pose.
 """
@@ -17,7 +17,7 @@ assert args and args[0] == "record"
 opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
 only, jobs = opt("--only"), int(opt("--jobs", "6"))
 src = os.path.join(root, "oracle", "synthetic-rea-b24-nav", "cases.txt")
-dest_dir = os.path.join(root, "oracle", "rea-batch24-nav-baseline")
+dest_dir = os.path.join(root, "oracle", "rea-b24-nav-baseline")
 os.makedirs(dest_dir, exist_ok=True)
 table = [l.split() for l in open(src).read().splitlines() if l.strip()]
 table = [c for c in table if not only or only in c[0]]

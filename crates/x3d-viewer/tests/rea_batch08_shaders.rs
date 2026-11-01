@@ -1,4 +1,4 @@
-//! REA batch 08 shaders lane (ComposedShader, ShaderPart) stepped cases against pinned X_ITE (oracle/rea-batch08-shaders-baseline, made by
+//! REA batch 08 shaders lane (ComposedShader, ShaderPart) stepped cases against pinned X_ITE (oracle/rea-b08-shaders-baseline, made by
 //! `oracle/tools/rea_b08_shaders.py case`): run-time changes of shader user fields, parts, textures,
 //! `activate` and events, Group removal and Script-created ComposedShader / ShaderPart nodes
 //! (worlds: oracle/synthetic-rea-b08-shaders/*-runtime.wrl with their .json event scripts).
@@ -6,7 +6,7 @@
 //! The baseline directory is written only by X_ITE runs on the owner's machine. Until it exists this
 //! test fails with "baseline missing": the comparison has not run.
 //!
-//! Each case of oracle/rea-batch08-shaders-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b08-shaders-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it: absolute below magnitude 1, relative above), poses within
@@ -108,12 +108,12 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!(
-        "oracle/rea-batch08-shaders-baseline/{name}-msaa{msaa}"
+        "oracle/rea-b08-shaders-baseline/{name}-msaa{msaa}"
     ));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
-        "rea-batch08-shaders-{}-{name}-msaa{msaa}",
+        "rea-b08-shaders-{}-{name}-msaa{msaa}",
         std::process::id()
     ));
     std::fs::create_dir_all(&out).unwrap();
@@ -237,8 +237,8 @@ fn rea_batch08_shader_cases_match_x_ite() {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch08-shaders-baseline/cases.txt"))
-        .expect("baseline missing: oracle/rea-batch08-shaders-baseline/cases.txt (make it with oracle/tools/rea_b08_shaders.py case on a machine with X_ITE and a GPU); comparison NOT RUN");
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b08-shaders-baseline/cases.txt"))
+        .expect("baseline missing: oracle/rea-b08-shaders-baseline/cases.txt (make it with oracle/tools/rea_b08_shaders.py case on a machine with X_ITE and a GPU); comparison NOT RUN");
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

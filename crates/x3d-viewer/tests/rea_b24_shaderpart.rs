@@ -1,4 +1,4 @@
-//! Issue #95 ShaderPart lane: stepped cases against pinned X_ITE 16.5.0 (oracle/rea-batch24-shaderpart-baseline, made by
+//! Issue #95 ShaderPart lane: stepped cases against pinned X_ITE 16.5.0 (oracle/rea-b24-shaderpart-baseline, made by
 //! `oracle/tools/rea_b24_shaderpart.py record`, worlds oracle/synthetic-rea-b24-shaderpart): url changes of a
 //! loaded ShaderPart (MFString fallback, empty url, missing file, load around a url write), vertex-stage url
 //! and error text, ShaderRegistry includes used without their context, and shader-list selection when a part
@@ -143,7 +143,7 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!(
-        "oracle/rea-batch24-shaderpart-baseline/{name}-msaa{msaa}"
+        "oracle/rea-b24-shaderpart-baseline/{name}-msaa{msaa}"
     ));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
@@ -278,8 +278,8 @@ fn rea_b24_shaderpart_cases_match_x_ite() {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch24-shaderpart-baseline/cases.txt"))
-        .expect("baseline missing: oracle/rea-batch24-shaderpart-baseline/cases.txt (make it with oracle/tools/rea_b24_shaderpart.py record); comparison NOT RUN");
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b24-shaderpart-baseline/cases.txt"))
+        .expect("baseline missing: oracle/rea-b24-shaderpart-baseline/cases.txt (make it with oracle/tools/rea_b24_shaderpart.py record); comparison NOT RUN");
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

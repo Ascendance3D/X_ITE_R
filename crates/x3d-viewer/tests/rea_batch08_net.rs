@@ -1,8 +1,8 @@
-//! REA batch 08 lane net stepped cases against pinned X_ITE (oracle/rea-batch08-net-baseline, made by
+//! REA batch 08 lane net stepped cases against pinned X_ITE (oracle/rea-b08-net-baseline, made by
 //! `oracle/tools/rea_b08_net.py case`): DISEntityManager, DISEntityTypeMapping, ReceiverPdu, SignalPdu, TransmitterPdu,
 //! InlineGeometry and FontLibrary (worlds: oracle/synthetic-rea-b08-net).
 //!
-//! Each case of oracle/rea-batch08-net-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b08-net-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it: absolute below magnitude 1, relative above), poses within
@@ -218,11 +218,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch08-net-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b08-net-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
-        "rea-batch08-net-{}-{name}-msaa{msaa}",
+        "rea-b08-net-{}-{name}-msaa{msaa}",
         std::process::id()
     ));
     std::fs::create_dir_all(&out).unwrap();
@@ -375,7 +375,7 @@ fn rea_batch08_net_cases_match_x_ite() {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch08-net-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b08-net-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

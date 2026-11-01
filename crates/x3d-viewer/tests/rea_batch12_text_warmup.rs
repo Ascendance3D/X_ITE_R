@@ -1,5 +1,5 @@
 //! REA batch 12 (node:Text warm-up): what every X_ITE 16.5.0 run of oracle/synthetic-rea-b11-text/warm-stamp*.wrl shares
-//! (oracle/rea-batch12-baseline/text-warmup/patterns.txt, 42 runs over Batch 11 and 12). A Script stamps each origin / textBounds /
+//! (oracle/rea-b12-baseline/text-warmup/patterns.txt, 42 runs over Batch 11 and 12). A Script stamps each origin / textBounds /
 //! lineBounds event of a Text with its frame count. The first build, in frame 1, has no font yet: lineBounds [ 0 0, 0 0 ],
 //! origin 0 0 0, textBounds 0 0, for the browser's default FontStyle and for a FontStyle of the world. The font's values come in a
 //! later frame. Which frame, and how many builds there are, follows Chrome's I/O in the oracle and is not compared (documented
@@ -14,7 +14,7 @@ fn stamps(world: &str) -> Vec<String> {
         .canonicalize()
         .unwrap();
     let out = std::env::temp_dir().join(format!(
-        "rea-batch12-text-warmup-{}-{world}.json",
+        "rea-b12-text-warmup-{}-{world}.json",
         std::process::id()
     ));
     let status = Command::new(env!("CARGO_BIN_EXE_x3d-drive"))
