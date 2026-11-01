@@ -1163,6 +1163,22 @@ replays every world and fails on a missing reference, an error log or a picture 
 - `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio oracle/rea-batch24-audio-decode-baseline/audio-decode-baseline.json --runs 5`
 - `crates/x3d-runtime/tests/rea_b24_audio_decode.rs` compares the port; its header lists the per-format results.
 
+## AudioDestination mediaDeviceID (issue #81)
+
+- `x_ite-audio-sink.mjs` sets `mediaDeviceID` of one AudioDestination in the pinned X_ITE (headless Chromium) to `""`,
+  the first enumerated output, `"default"`, an unknown id, `""`, the unknown id again and `"default"`, and records the
+  node's `<audio>` element `sinkId` after each step, the enumerable outputs, unhandled rejections and the console
+  (without `info` and GL driver lines) in `web-audio-sink-baseline/sink-baseline.json`.
+- X_ITE: `""` and the current sink are left alone, `"default"` is accepted, an unknown id makes `setSinkId` reject and
+  the sink stays where it was. Nothing is logged and no rejection is unhandled (`startAudioElements` catches it). The
+  headless host has one output (id `""`), so a real device id is not recorded.
+- Three runs gave identical bytes (Chrome 151.0.7922.34). `sound::sink::tests::follows_the_recorded_baseline`
+  replays the steps. Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-audio-sink.mjs oracle/web-audio-sink-baseline/sink-baseline.json --runs 3
+```
+
 ## Navigation items (issue #91, 2026-10-31)
 
 `synthetic-rea-b24-nav/` (generator `tools/gen_rea_b24_nav.py`) holds 40 navigation cases that batch 09 does not have: ceiling,
