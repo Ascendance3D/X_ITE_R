@@ -1138,11 +1138,55 @@ async function namedListsCase (page, env)
    return out;
 }
 
+// X3DExecutionContext.createProto (issue #137): an instance of a PROTO the world declares.
+const PROTO_WORLD = `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Full\nPROTO Pair [ inputOutput SFFloat amount 2 inputOutput SFString label \"hi\" ] { Group { children Shape { } } }\nPROTO Plain [ ] { Transform { } }\nPair { }\n")}`;
+
+async function createProtoCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, PROTO_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+
+      const pair = scene .createProto ("Pair");
+
+      out .pair = [ typeof pair, pair ?.constructor ?.name, attempt (() => pair .getNodeTypeName ()), attempt (() => pair .getNodeName ()),
+         attempt (() => pair .amount), attempt (() => pair .label), attempt (() => pair .getFieldDefinitions () .length),
+         attempt (() => pair .getNodeType ()), attempt (() => scene .rootNodes .length), attempt (() => String (pair)) ];
+      out .plain = attempt (() => scene .createProto ("Plain") .getNodeTypeName ());
+      out .twice = attempt (() => scene .createProto ("Pair") === pair);
+      out .unknown = attempt (() => scene .createProto ("Nope"));
+      out .builtin = attempt (() => scene .createProto ("Group"));
+      out .empty   = attempt (() => scene .createProto (""));
+      out .noArgs  = attempt (() => scene .createProto ());
+      out .number  = attempt (() => scene .createProto (5));
+
+      // The instance is not part of the world until it is added.
+      out .beforeAdd = attempt (() => scene .toVRMLString () .split ("\n") .filter (l => l .startsWith ("Pair")));
+      scene .addRootNode (pair);
+      pair .amount = 5;
+      out .afterAdd = attempt (() => scene .toVRMLString () .split ("\n") .filter (l => /^(Pair|\s+amount)/ .test (l)));
+      out .fieldWrite = attempt (() => { pair .label = "set"; return pair .label; });
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
 export const CASE_GROUPS = {
    fieldAPI: { context: DESKTOP, cases },
    fieldRoundTrip: { context: DESKTOP, cases: roundTripCases },
    fieldConstants: { context: DESKTOP, cases: { constants: async (page, env) => { await page .waitForFunction (() => window .ready, null, { timeout: 30000 }); return constants (page, env); } } },
-   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase, namedLists: namedListsCase,
+   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase, namedLists: namedListsCase, createProto: createProtoCase,
       // Nodes of external components the world did not load: a world of the Interchange profile (one of them first, then the same list).
       createNodeInterchange: (page, env) => createNodeCase (page, env, `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\n")}`) } },
 };

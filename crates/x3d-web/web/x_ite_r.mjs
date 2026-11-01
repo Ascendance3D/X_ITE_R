@@ -1798,6 +1798,25 @@ class X3DScene
    toXMLString ()  { return this .#print ("xml"); }
    toJSONString () { return this .#print ("json"); }
 
+   // X3DExecutionContext.createProto (name): an instance of a PROTO or EXTERNPROTO the scene declares, not part of the scene
+   // until it is added. 
+   createProto (name)
+   {
+      name = String (name);
+
+      const engine = this .#engine ();
+
+      if (!engine)
+         throw new Error ("X_ITE_R: the browser is not ready; await browser .ready () first.");
+
+      const id = engine .createProto (this .#handle .scene, name);
+
+      if (id === undefined)
+         throw new Error (`Unknown proto or externproto type '${name}'.`);
+
+      return nodeObject (this .#handle, id);
+   }
+
    // X3DExecutionContext.createNode (typeName): a new node of a concrete node type, made in this scene and not part of it until
    // it is added (a root node, or the value of a node's field). As in X_ITE, a node type of an external component is known once
    // the component is loaded, which a world's PROFILE or COMPONENT statement or a node of the component does (X3DConstants).
