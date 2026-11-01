@@ -2,16 +2,20 @@
 # (gh-runner-ascendance3d-3: labels self-hosted, Linux, X64, proxmox, gpu; runner group xite-ci).
 #
 # This workflow never runs for a pull request. A pull request from a fork would execute its code on the runner host, so
-# the triggers are a push to master and a manual run, and pull request jobs stay on GitHub-hosted runners (CLAUDE.md).
+# the triggers are a push to master, a nightly run and a manual run, and pull request jobs stay on GitHub-hosted runners (CLAUDE.md).
 #
-# Strict about the adapter: X3D_EVIDENCE_ALLOW lists only the private answer keys that are not on the runner, so a test
-# that finds no GPU adapter fails instead of skipping. The list below is the same as GPU_TESTS in rust-tests.yml; keep them
+# Strict about the adapter: X3D_EVIDENCE_ALLOW lists only the private answer keys (every name in oracle/answer-keys.tsv,
+# which the runner never holds), so a test that finds no GPU adapter fails instead of skipping. A preflight step checks the
+# runner first (.github/actions/runner-preflight). The list below is the same as GPU_TESTS in rust-tests.yml; keep them
 # equal (tools/check_gpu_test_lists.py checks it).
 name: GPU tests
 
 on:
   push:
     branches: [master]
+  # Every night on master, so a driver or package change on the runner shows before a merge depends on it.
+  schedule:
+    - cron: "17 3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -25,7 +29,7 @@ env:
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
   X3D_EVIDENCE: ci
-  X3D_EVIDENCE_ALLOW: x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
+  # X3D_EVIDENCE_ALLOW is set by the "Allowed absent keys" step from oracle/answer-keys.tsv (tools/gpu_evidence_allow.py).
   X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
   X3D_QUIET_NO_GPU: "1"
   GPU_TESTS: >-
@@ -55,7 +59,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: ./.github/actions/runner-preflight
+
       - uses: dtolnay/rust-toolchain@1.95.0
+
+      - name: Allowed absent keys
+        run: echo "X3D_EVIDENCE_ALLOW=$(python3 -I -B tools/gpu_evidence_allow.py)" >> "$GITHUB_ENV"
 
       - uses: taiki-e/install-action@v2
         with:
@@ -93,6 +102,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+
+      - uses: ./.github/actions/runner-preflight
 
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
