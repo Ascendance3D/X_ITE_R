@@ -288,11 +288,21 @@ pub fn paint(
     }
 
     // addColorStop
-    for (offset, _) in stops {
+    for (offset, c) in stops {
         if !(0.0..=1.0).contains(offset) {
             return Err(format!(
                 "IndexSizeError: Failed to execute 'addColorStop' on 'CanvasGradient': The provided value ({}) is outside the range (0.0, 1.0).",
                 x3d_fields::jsmath::number_to_string(*offset)
+            ));
+        }
+
+        // The stop color is the string `rgba(r,g,b,a)` built from the channels; a NaN channel (a
+        // CSS Color 4 function Chrome does not compute to `rgb()`) is not a color.
+        if !c.iter().all(|v| v.is_finite()) {
+            let [r, g, b, a] = c.map(x3d_fields::jsmath::number_to_string);
+
+            return Err(format!(
+                "SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('rgba({r},{g},{b},{a})') could not be parsed as a color."
             ));
         }
     }
