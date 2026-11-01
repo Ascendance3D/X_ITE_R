@@ -849,7 +849,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-degenerate-01-baseline -
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-01-baseline --runs 5 --suite gltfworld01
 ```
 
-- `x_ite-web-runtime-02.mjs --suite gltfworld02` runs the 6 cases of `crates/x3d-web/tests/browser/gltfworld02_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite gltfworld02` runs the 9 cases of `crates/x3d-web/tests/browser/gltfworld02_case.mjs`
   and records `web-browser-gltf-world-02-baseline/gltfworld02-baseline.json` (the CodeRabbit finding of PR #126). Each
   case loads a glTF world with two buffers, one of which fails while the test server holds the other: the first or the
   second fails, both fail in either order, a later candidate follows, and a newer loadURL replaces the world while both
@@ -857,6 +857,21 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-01-baseline -
   order independent of the machine's speed.
 - X_ITE rejects the candidate at the first failure (`Promise .all`), before the held buffer comes: loadURL fails, or
   the next candidate is requested at once. The held buffer's FileLoader goes on and logs its own failure later.
+- Issues #128, #130 and #131 added 3 cases (`inlineFailThenHeld`, `followedReverse`, `supersededFollowed`; synthetic
+  files `inline-fail-held*.{gltf,wrl}`, `fail-held-held-fail-fail.gltf`, `fail-held-fail.gltf`). The 6 older values
+  are identical in the new recording.
+  - #128 (Inline, one buffer failed, one held): X_ITE logs the failure and requests the Inline's next url
+    (`external.gltf`) while the buffer is still held; its loadURL stays pending (`fallback.gltfFailed`). X_ITE_R waited
+    for the held buffer (`inline.rs` did not call `gltf_buffer_failed_first`); fixed, now only the known
+    `fallback.gltfFailed` difference remains (entry `gltfWorldHeld.inlineFailThenHeld`). An independent capture of
+    pinned X_ITE with the REA `capture_browser_scenario` tool (evidence
+    `ev_8669c3cff95e3aec39e21480e4968ddb1d76a6d0b91356437d782845df44a691`, a 3 s server hold) shows the same order:
+    failure message, then the `external.gltf` request, then the held response.
+  - #130 (two followed failures released together, third buffer first): X_ITE logs them in arrival order (the third,
+    then the second); X_ITE_R matches. No difference.
+  - #131 (newer loadURL while a followed buffer is held and missing): X_ITE does not abort the buffer's FileLoader and
+    logs its failure after the world was replaced; X_ITE_R matches. No difference. (The pre-failure variant is the
+    `replaced` case, which also matched.)
 - Five runs gave identical values (Chrome 156.0.8078.47, RTX 3060 Ti through ANGLE GL).
 
 ```
