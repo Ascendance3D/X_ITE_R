@@ -269,6 +269,49 @@ fn finish(
     }
 }
 
+/// True for an ISO BMFF `ftyp` box whose major or compatible brands include `avif` or `avis`.
+fn is_avif(data: &[u8]) -> bool {
+    if data.len() < 12 || &data[4..8] != b"ftyp" {
+        return false;
+    }
+    let size = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
+    let end = size.clamp(12, data.len());
+    // major brand (8..12), minor version (12..16), then compatible brands.
+    let brand = |b: &[u8]| b == b"avif" || b == b"avis";
+    brand(&data[8..12])
+        || data
+            .get(16..end)
+            .is_some_and(|c| c.chunks_exact(4).any(brand))
+}
+
+/// Decodes an image byte stream. X_ITE hands image bytes to the browser, which also decodes AVIF
+/// (GLTF2Parser.js:1080 passes `EXT_texture_avif` urls through); the `image` crate has no AVIF
+/// decoder, so AVIF goes to `avif-rust` (pure Rust, builds for wasm32) and everything else to `image`.
+fn decode_image(data: &[u8]) -> Result<image::DynamicImage, ()> {
+    if is_avif(data) {
+        #[cfg(not(feature = "avif"))]
+        {
+            // AVIF support not compiled in (x3d-render feature `avif`): undecodable like any other image.
+            return Err(());
+        }
+        #[cfg(feature = "avif")]
+        return decode_avif(data);
+    }
+    image::load_from_memory(data).map_err(|_| ())
+}
+
+#[cfg(feature = "avif")]
+fn decode_avif(data: &[u8]) -> Result<image::DynamicImage, ()> {
+    let a = avif_rust::image_from_bytes(data).map_err(|_| ())?;
+    let (w, h) = (
+        u32::try_from(a.width).map_err(|_| ())?,
+        u32::try_from(a.height).map_err(|_| ())?,
+    );
+    image::RgbaImage::from_raw(w, h, a.rgba)
+        .map(image::DynamicImage::ImageRgba8)
+        .ok_or(())
+}
+
 /// ImageTexture.loadData: FileLoader URL fallback; a candidate that does not decode fails and
 /// the next one is tried.
 pub fn load_image_texture(
@@ -321,7 +364,7 @@ pub fn load_image_texture(
             return Some(t);
         }
 
-        let Ok(img) = image::load_from_memory(&data) else {
+        let Ok(img) = decode_image(&data) else {
             continue;
         };
         let img = img.to_rgba8();
@@ -421,7 +464,7 @@ pub fn load_background_texture(
         let Ok(data) = fetcher.fetch(&resolved) else {
             continue;
         };
-        let Ok(img) = image::load_from_memory(&data) else {
+        let Ok(img) = decode_image(&data) else {
             continue;
         };
         let img = img.to_rgba8();
@@ -664,7 +707,7 @@ pub fn load_image_cube(
         let Ok(data) = fetcher.fetch(&resolved) else {
             continue;
         };
-        let Ok(img) = image::load_from_memory(&data) else {
+        let Ok(img) = decode_image(&data) else {
             continue;
         };
         let img = img.to_rgba8();
@@ -981,7 +1024,7 @@ pub fn image_texture_atlas(
     data: &[u8],
     [over_x, over_y, slices]: [i32; 3],
 ) -> Option<(TextureImage, [i32; 4])> {
-    let img = image::load_from_memory(data).ok()?.to_rgba8();
+    let img = decode_image(data).ok()?.to_rgba8();
     let (w, h) = img.dimensions();
     let (width, height, depth, rgba, transparent) =
         x3d_runtime::nodes::texture_projector::atlas_tiles(
@@ -1279,5 +1322,67 @@ mod ktx_tests {
         assert!(is_ktx_url(&u("data:image/ktx2;base64,AAAA")));
         assert!(!is_ktx_url(&u("file:///t/a.png")));
         assert!(!is_ktx_url(&u("file:///t/a.ktx2x")));
+    }
+}
+
+#[cfg(test)]
+mod avif_tests {
+    use super::*;
+
+    /// Encodes a flat-color 16x16 image with ravif (dev-dependency only; the decoder does not use it).
+    fn encode(rgba: [u8; 4]) -> Vec<u8> {
+        let px = vec![rgb::RGBA8::new(rgba[0], rgba[1], rgba[2], rgba[3]); 16 * 16];
+        let img = imgref::Img::new(px.as_slice(), 16, 16);
+        ravif::Encoder::new()
+            .with_quality(95.0)
+            .with_alpha_quality(100.0)
+            .with_speed(10)
+            .encode_rgba(img)
+            .expect("encode")
+            .avif_file
+    }
+
+    #[test]
+    fn avif_brand_detection() {
+        let f = encode([10, 20, 30, 255]);
+        assert!(is_avif(&f));
+        assert!(!is_avif(b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR"));
+        assert!(!is_avif(b"\0\0\0\x18ftypmp42\0\0\0\0mp42isom"));
+        assert!(!is_avif(&[]));
+    }
+
+    #[cfg(feature = "avif")]
+    #[test]
+    fn avif_decodes_within_lossy_tolerance() {
+        // AV1 is lossy and converts RGB->YUV->RGB, so each channel may be off by a few levels.
+        for want in [[200u8, 40, 40, 255], [30, 160, 220, 255]] {
+            let img = decode_image(&encode(want)).expect("decode").to_rgba8();
+            assert_eq!(img.dimensions(), (16, 16));
+            for p in img.pixels() {
+                for c in 0..4 {
+                    let d = (i32::from(p.0[c]) - i32::from(want[c])).abs();
+                    assert!(d <= 12, "channel {c}: got {} want {}", p.0[c], want[c]);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn avif_rejects_corrupt_data() {
+        let f = encode([90, 90, 90, 255]);
+        assert!(decode_image(&f[..f.len() / 2]).is_err());
+        let mut junk = f[..24].to_vec();
+        junk.extend_from_slice(&[0xff; 40]);
+        assert!(decode_image(&junk).is_err());
+        assert!(decode_image(b"\0\0\0\x14ftypavif\0\0\0\0avif").is_err());
+    }
+
+    /// Without the `avif` feature a well-formed AVIF fails like any undecodable image.
+    #[cfg(not(feature = "avif"))]
+    #[test]
+    fn avif_not_compiled_in_is_rejected() {
+        let f = encode([90, 90, 90, 255]);
+        assert!(is_avif(&f));
+        assert!(decode_image(&f).is_err());
     }
 }
