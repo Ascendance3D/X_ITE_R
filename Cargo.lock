@@ -4244,6 +4244,7 @@ dependencies = [
  "serde_json",
  "x3d-evidence",
  "x3d-fields",
+ "x3d-parse",
  "x3d-scene",
  "x3d-text",
  "x3d-vrml1",

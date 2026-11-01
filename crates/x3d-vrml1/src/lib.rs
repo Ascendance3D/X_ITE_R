@@ -6,6 +6,11 @@
 //! of the X_ITE 16.5.0 pin that the rest of this workspace is checked against: the extension is
 //! a separate port, done by reading the shipped package and diffing against its output.
 //!
+//! Like X_ITE, where the application registers the extension with `GoldenGate.addParsers`,
+//! `x3d-parse` loads VRML 1.0 only when asked: build it with its Cargo feature `vrml1` (off by
+//! default) and pass `x3d_parse::ParseOptions { vrml1: true }` to `parse_bytes_with` or
+//! `parse_string_with`. Otherwise `#VRML V1.0` is rejected, as in the pinned X_ITE.
+//!
 //! Like the extension, the loader works in two passes. The text is first read into a tree of
 //! VRML 1.0 nodes (the extension's `VRML1Parser`), then the tree is converted into X3D nodes of
 //! the engine's [`Scene`] (its `Converter`). VRML 1.0 is a state machine: `Material`,

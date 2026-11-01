@@ -55,8 +55,8 @@ pub fn decode_text(bytes: &[u8]) -> String {
     }
 }
 
-/// VRMLParser.isValid. A `#VRML V1.0` header is not VRML97: with the default `vrml1` feature the
-/// VRML 1.0 loader of `x3d-vrml1` takes it in [`parse_bytes`].
+/// VRMLParser.isValid. A `#VRML V1.0` header is not VRML97. It is rejected, as in the pinned X_ITE,
+/// unless the caller opts in with [`ParseOptions::vrml1`] (see [`parse_bytes_with`]).
 pub fn is_valid_vrml(input: &str) -> bool {
     if input.starts_with("#VRML V1.0") {
         return false;
@@ -153,11 +153,35 @@ impl std::fmt::Display for LoadError {
     }
 }
 
+/// Per-call parser registration, the counterpart of X_ITE's `GoldenGate.addParsers`. The default
+/// registers nothing beyond the built-in parsers, which is the behavior of the pinned X_ITE 16.5.0.
+///
+/// There are two switches for VRML 1.0 (`#VRML V1.0 ascii`, a port of the x_ite-vrml1-parser
+/// extension, not a pin parity item), both off by default: the Cargo feature `vrml1` compiles the
+/// `x3d-vrml1` loader in, and [`ParseOptions::vrml1`] lets one call use it. Without the feature
+/// the option is ignored and the input finds no handler.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct ParseOptions {
+    /// Try the VRML 1.0 loader, after the built-in parsers, for `#VRML V1.0` input.
+    pub vrml1: bool,
+}
+
 /// GoldenGate.parseIntoScene: the first parser whose input converts and that accepts it, in
 /// X_ITE's order (XML, VRML, JSON, glTF, GLB, OBJ, STL ASCII, STL binary, PLY ASCII, PLY binary,
 /// SVG). glTF and GLB are not ported; input only they would accept finds no handler.
+///
+/// This is [`parse_bytes_with`] with the default [`ParseOptions`], so `#VRML V1.0` input finds no handler.
 pub fn parse_bytes(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
-    let mut scene = golden_gate(data, world_url)?;
+    parse_bytes_with(data, world_url, &ParseOptions::default())
+}
+
+/// [`parse_bytes`] with explicit [`ParseOptions`].
+pub fn parse_bytes_with(
+    data: &[u8],
+    world_url: &str,
+    options: &ParseOptions,
+) -> Result<Scene, LoadError> {
+    let mut scene = golden_gate(data, world_url, options)?;
 
     scene.clone_counts = Some(scene.parse_clone_counts());
     Ok(scene)
@@ -167,20 +191,34 @@ pub fn parse_bytes(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
 /// byte order mark removal, as `$.decodeText` leaves a string alone). The binary parsers' input is an ArrayBuffer, which a
 /// string is not, so they never match.
 pub fn parse_string(text: &str, world_url: &str) -> Result<Scene, LoadError> {
-    let mut scene = golden_gate_input(Vec::new(), text.to_string(), world_url)?;
+    parse_string_with(text, world_url, &ParseOptions::default())
+}
+
+/// [`parse_string`] with explicit [`ParseOptions`].
+pub fn parse_string_with(
+    text: &str,
+    world_url: &str,
+    options: &ParseOptions,
+) -> Result<Scene, LoadError> {
+    let mut scene = golden_gate_input(Vec::new(), text.to_string(), world_url, options)?;
 
     scene.clone_counts = Some(scene.parse_clone_counts());
     Ok(scene)
 }
 
-fn golden_gate(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
+fn golden_gate(data: &[u8], world_url: &str, options: &ParseOptions) -> Result<Scene, LoadError> {
     let data = gunzip(data);
     let text = decode_text(&data);
 
-    golden_gate_input(data, text, world_url)
+    golden_gate_input(data, text, world_url, options)
 }
 
-fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Scene, LoadError> {
+fn golden_gate_input(
+    data: Vec<u8>,
+    text: String,
+    world_url: &str,
+    options: &ParseOptions,
+) -> Result<Scene, LoadError> {
     let mut svg_root = None;
 
     // createInput ("STRING"): undefined when bytes decode to nothing.
@@ -266,9 +304,10 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
     }
 
     // The VRML 1.0 extension parser (x_ite-vrml1-parser) is added to GoldenGate's list after the
-    // built-in ones. It is not a parser of the pinned X_ITE 16.5.0.
+    // built-in ones (GoldenGate.addParsers), only when the application registers it. It is not a
+    // parser of the pinned X_ITE 16.5.0, which rejects `#VRML V1.0` without it.
     #[cfg(feature = "vrml1")]
-    if let Some(s) = string {
+    if let (true, Some(s)) = (options.vrml1, string) {
         if x3d_vrml1::is_vrml1(s) {
             return x3d_vrml1::parse_str(s, world_url).map_err(|e| {
                 LoadError::Parse(ParseError {
@@ -279,6 +318,7 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
         }
     }
 
+    let _ = options;
     Err(LoadError::NoHandler)
 }
 
