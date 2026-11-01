@@ -47,7 +47,7 @@ The REA section below gives the measured coverage.
 | target | state |
 | --- | --- |
 | Browser: `wasm32-unknown-unknown` with WebGPU | Chrome or Edge 113 or later. CI tests it in headless Chromium. |
-| Linux x86_64 | Main development platform. CI builds and tests it on a GitHub-hosted runner without a GPU. |
+| Linux x86_64 | Main development platform. CI builds and tests it without a GPU, on the project's self-hosted runners (GitHub-hosted for fork pull requests). |
 | Windows x86_64 | Cross-built from Linux. Tested with DX12 on one PC. No package. |
 | macOS | Not verified ([#87](https://github.com/Ascendance3D/X_ITE_R/issues/87)). |
 

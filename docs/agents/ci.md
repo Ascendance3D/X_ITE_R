@@ -14,7 +14,7 @@ Three workflows run on a pull request: `rust-tests.yml`, `web-tests.yml` and `co
 
 CI and the local strict suite run the tests with cargo-nextest (`.config/nextest.toml`), then the doctests with `cargo test --doc`. nextest does not run doctests, so a pass needs both steps.
 
-- **CI** (`rust-tests.yml`, profile `ci`): as many tests at once as the runner has CPUs. The "Runner resources" step prints the CPUs and the memory. The GPU tests are excluded by name (`GPU_TESTS`, 16 names: the batch 09 to 22 GPU tests and the three rea_b24_nav shards), because the hosted runner has no GPU. CI does not claim GPU coverage.
+- **CI** (`rust-tests.yml`, profile `ci`): as many tests at once as the runner has CPUs. The "Runner resources" step prints the CPUs and the memory. The GPU tests are excluded by name (`GPU_TESTS`, 16 names: the batch 09 to 22 GPU tests and the three rea_b24_nav shards), because the CI runners have no GPU. CI does not claim GPU coverage.
 - **Local** (the RTX machine): `X3D_ORACLE_KEYS=<evidence store> tools/strict-suite.sh`. It runs 8 tests at once by default (`XITE_R_TEST_JOBS`, at least 6) and 12 compiler jobs (`XITE_R_BUILD_JOBS`). It runs strict and includes the GPU tests. It prints the wall-clock time, the CPU time and the counts of each step, and it exits non-zero when nextest or the doctests fail.
 - Tests that share a resource run in a nextest test group, not skipped. Today that is only `rea_batch08_net` (fixed UDP ports 41234–41236).
 
@@ -31,6 +31,16 @@ CI and the local strict suite run the tests with cargo-nextest (`.config/nextest
 ### NVIDIA shader cache
 
 When the NVIDIA shader disk cache is full, a changed shader is compiled again in every test process. `tools/strict-suite.sh` sets `__GL_SHADER_DISK_CACHE_SIZE` for its own run only, so it changes no file and no profile. Do not clear the cache without owner approval.
+
+## Where the jobs run (issue #162)
+
+Owner ruling 2026-11-01: the jobs of `rust-tests.yml` and `web-tests.yml` run on the self-hosted `xite-ci` runners (`gh-runner-ascendance3d-2` and `-3`, labels `self-hosted, Linux, X64`) when the run is trusted, and on GitHub-hosted `ubuntu-24.04` otherwise. `code-review.yml` and its external AI service are unchanged and stay on `ubuntu-latest`.
+
+- **Trusted** is: a pull request whose head repository is this repository, a push to master, and `workflow_dispatch`. A pull request from a fork is not trusted and stays on `ubuntu-24.04`.
+- Every job has `runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}`. `github.event.pull_request` is empty for push and dispatch runs, so the event name is tested first.
+- **Switch back without a commit:** set the repository variable `XITE_RUNNER_LABELS` to a JSON array, for example `["ubuntu-24.04"]`, to move the trusted runs to GitHub-hosted runners; delete the variable to return to self-hosted. A fork's run ignores the variable. A run that is already queued keeps the labels it had.
+- The two runners are one VM (8 vCPU, 13.6 GB RAM, no swap), so jobs of two runs can overlap. Steps that write shared state use `flock` on `/tmp/xite-ci-*.lock`: apt installs (only the missing packages are installed), `playwright install`, `cargo install wasm-bindgen-cli`, and `rea_batch08_net` (fixed UDP ports 41234 to 41236; it runs apart from the rest of the suite). Temporary files use `$RUNNER_TEMP`. The apt `.deb` cache is skipped on a self-hosted runner. A workspace is removed after each job.
+- Rust build caches (`Swatinem/rust-cache`) restore into the shared `~/.cargo` of the runner user; the browser shards queue on two runners.
 
 ## Draft pull requests
 
@@ -57,7 +67,7 @@ Issue #187 split the two longest shards by measured times: `cases` into `cases-1
 
 ## GPU runner
 
-`gpu-tests.yml` runs the GPU tests (the `GPU_TESTS` names) on the organization's GPU runner, `gh-runner-ascendance3d-3` (labels `self-hosted, Linux, X64, proxmox, gpu`, runner group `xite-ci`, which allows public repositories since 2026-11-01). It runs on a push to master and by hand, never for a pull request: a fork's pull request would run its code on that host, so pull request jobs stay on GitHub-hosted runners. The adapter is strict (`X3D_EVIDENCE_ALLOW` lists only the private keys that are not on the runner). `tools/check_gpu_test_lists.py` (Fast checks) keeps the list equal to `GPU_TESTS` in `rust-tests.yml`. The `browser-video` job runs `movie01.test.mjs` with `CI` unset, so the `movieFrames.*` cases (all skipped on the hosted runner, where their wall-clock sampling flaked) run there; it needs Node 24 and Playwright's Chromium, installed per run without sudo.
+`gpu-tests.yml` runs the GPU tests (the `GPU_TESTS` names) on the organization's GPU runner, `gh-runner-ascendance3d-3` (labels `self-hosted, Linux, X64, proxmox, gpu`, runner group `xite-ci`, which allows public repositories since 2026-11-01). It runs on a push to master and by hand, never for a pull request: a pull request could run its code on the GPU host, so the GPU jobs have no pull request trigger. The adapter is strict (`X3D_EVIDENCE_ALLOW` lists only the private keys that are not on the runner). `tools/check_gpu_test_lists.py` (Fast checks) keeps the list equal to `GPU_TESTS` in `rust-tests.yml`. The `browser-video` job runs `movie01.test.mjs` with `CI` unset, so the `movieFrames.*` cases (all skipped on the hosted runner, where their wall-clock sampling flaked) run there; it needs Node 24 and Playwright's Chromium, installed per run without sudo.
 
 ### Keeping the GPU runner from failing on simple things
 

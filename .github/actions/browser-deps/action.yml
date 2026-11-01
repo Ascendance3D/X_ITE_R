@@ -15,12 +15,16 @@ runs:
     # The .deb files of Mesa and of Chromium's libraries, kept between runs: on 3 of 8 runners of PR #117 the Ubuntu
     # mirror sent 45 kB/s and this install took 15 to 17 minutes. apt checks each file against the package index and
     # fetches it again when it differs.
+    # Not on a self-hosted runner: its Mesa and Chromium libraries are preinstalled, the runners share one machine
+    # (one ~/apt-archives and one /etc/apt/apt.conf.d), and there is no slow mirror to avoid.
     - name: Runner image
       id: image
+      if: runner.environment != 'self-hosted'
       shell: bash
       run: printf "os=%s\nimage=%s-%s\n" "$ImageOS" "$ImageOS" "$ImageVersion" >> "$GITHUB_OUTPUT"
 
     - uses: actions/cache@v6
+      if: runner.environment != 'self-hosted'
       with:
         path: ~/apt-archives/*.deb
         key: apt-${{ steps.image.outputs.image }}-${{ hashFiles('crates/x3d-web/package-lock.json') }}
@@ -32,10 +36,29 @@ runs:
       run: |
         # The runner's CPU: lavapipe renders on it, so the test durations depend on it.
         echo "$(nproc) CPUs: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2-)" | tee -a "$GITHUB_STEP_SUMMARY"
-        mkdir -p ~/apt-archives/partial
-        printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends mesa-vulkan-drivers
-        npm ci --no-audit --no-fund
-        npx playwright install --with-deps chromium
-        sudo chmod -R a+r ~/apt-archives
+        # Two runners share one machine on a self-hosted host: apt, dpkg and Playwright's browser directory
+        # (~/.cache/ms-playwright) each allow one writer, so those steps take a machine-wide lock (flock) and
+        # install only what is missing. On a GitHub-hosted runner the lock is private to the job.
+        lock=/tmp/xite-ci-apt.lock
+        if [ "$RUNNER_ENVIRONMENT" != self-hosted ]; then
+          mkdir -p ~/apt-archives/partial
+          printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
+        fi
+        if [ "$RUNNER_ENVIRONMENT" = self-hosted ]; then
+          # The runner service runs with "no new privileges", so sudo cannot work here: nothing may be installed. The
+          # image must already hold lavapipe and Chromium's libraries; check, and install only Playwright's browser.
+          if ! ls /usr/share/vulkan/icd.d/lvp_icd*.json >/dev/null 2>&1; then
+            echo "::error::lavapipe (mesa-vulkan-drivers) is missing on this self-hosted runner and sudo is not available; install it on the runner image."
+            exit 1
+          fi
+          npm ci --no-audit --no-fund
+          flock "$lock" npx playwright install chromium
+        else
+          if ! dpkg -s mesa-vulkan-drivers >/dev/null 2>&1; then
+            flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 update
+            flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends mesa-vulkan-drivers
+          fi
+          npm ci --no-audit --no-fund
+          flock "$lock" npx playwright install --with-deps chromium
+        fi
+        if [ "$RUNNER_ENVIRONMENT" != self-hosted ]; then sudo chmod -R a+r ~/apt-archives; fi
