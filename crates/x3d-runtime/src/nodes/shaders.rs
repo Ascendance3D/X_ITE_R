@@ -232,7 +232,14 @@ impl Runtime {
             match result {
                 Ok(()) => Ok(()),
                 Err(log) => Err(match log_position(&log) {
-                    Some((_, line)) => format!("Error: Error in {type_name} '{name}' in URL '{file_url}', line {line}, {log}"),
+                    Some(_) => {
+                        // `getSourceFileName (match [1]) || fileURL`, with the position ANGLE reports.
+                        let log = super::shader_include::remap_log(&source, &log);
+                        let (file, line) = log_position(&log).unwrap_or_default();
+                        let file_name = super::shader_include::source_file_name(&file).unwrap_or(file_url.as_str());
+
+                        format!("Error: Error in {type_name} '{name}' in URL '{file_name}', line {line}, {log}")
+                    }
                     None => format!("Error: Error in {type_name} '{name}' in URL '{file_url}', {log}"),
                 }),
             }
