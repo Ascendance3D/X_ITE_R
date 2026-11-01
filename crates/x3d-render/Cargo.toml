@@ -26,12 +26,16 @@ mikktspace = "=0.3.0"
 naga = { version = "=30.0.1", default-features = false, features = ["glsl-in", "wgsl-in", "wgsl-out"] }
 # Instant on wasm32-unknown-unknown too (std::time::Instant panics there).
 web-time = "1"
+avif-rust = { version = "0.1.2", optional = true }
 
 [features]
-default = ["script"]
+default = ["script", "avif"]
 # Script nodes in QuickJS, and the oracle loader that runs them (`load`, `render_file`). QuickJS is C
 # code that does not build for wasm32-unknown-unknown, so the browser build (x3d-web) turns it off.
 script = ["dep:x3d-script"]
+# AVIF texture decoding (avif-rust 0.1.2, MIT, pure Rust, builds for wasm32). Without it an AVIF image fails to
+# decode like any other undecodable image. Disable for a build that carries no AV1 decoder.
+avif = ["dep:avif-rust"]
 
 [[bin]]
 name = "x3d-shot"
@@ -42,4 +46,7 @@ name = "node_census"
 required-features = ["script"]
 
 [dev-dependencies]
+imgref = "1.12.3"
+ravif = { version = "0.13.0", default-features = false }
+rgb = "0.8.53"
 x3d-evidence = { path = "../x3d-evidence" }
