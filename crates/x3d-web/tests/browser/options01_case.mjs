@@ -1,5 +1,5 @@
 // The browser options 01 cases (issue #136): getBrowserOption, setBrowserOption, getBrowserProperty,
-// getRenderingProperty, print and println.
+// getRenderingProperty, print and println; part 4 (issue #141): browser.description and the notification.
 // oracle/x_ite-web-runtime-02.mjs (--suite options01) runs them against pinned X_ITE 16.5.0 and records the values;
 // options01.test.mjs runs them against X_ITE_R and compares (runtime02_harness.mjs).
 
@@ -283,7 +283,137 @@ async function output (page)
    return { returned, log: [ ... page .log ] };
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output };
+// browser.description and the notification it shows (Notification.js of X_ITE 16.5.0): the element
+// `.x_ite-private-notification > span` in the shadow DOM, its text and inline styles, the 5000 ms hide, the Notifications
+// option. The 5000 ms timer is controlled: the page takes over setTimeout and clearTimeout for that delay only, holds the
+// callback and runs it when the case says so, so no case waits for the hide. What is compared is the text, the class,
+// the inline visibility and transition, whether the inline width is the width of the span, and a few computed styles (not
+// the visibility, which a running transition keeps for 300 ms);
+// not the pixel width (fonts) and not the background (X_ITE draws a logo from its assets).
+async function notification (page)
+{
+   await load (page);
+
+   return page .evaluate (async () =>
+   {
+      const canvas  = document .querySelector ("x3d-canvas");
+      const browser = canvas .browser;
+      const held    = [ ];
+      const realSet = window .setTimeout;
+      const realClr = window .clearTimeout;
+      const BASE    = 900000000;
+
+      window .setTimeout = (fn, delay, ... args) =>
+      {
+         if (delay !== 5000)
+            return realSet (fn, delay, ... args);
+
+         held .push ({ fn, delay, cleared: false, ran: false });
+
+         return BASE + held .length - 1;
+      };
+
+      window .clearTimeout = id =>
+      {
+         if (id >= BASE && id < BASE + held .length)
+            held [id - BASE] .cleared = true;
+         else
+            realClr (id);
+      };
+
+      const element = () => canvas .shadowRoot .querySelector (".x_ite-private-notification");
+
+      const snap = () =>
+      {
+         const el = element ();
+
+         if (!el)
+            return null;
+
+         const span     = el .firstElementChild;
+         const computed = getComputedStyle (el);
+
+         return {
+            tag: el .tagName, className: el .className, children: Array .from (el .children, child => child .tagName),
+            text: span ?.textContent ?? null, visibility: el .style .visibility, transition: el .style .transition,
+            widthIsSpanWidth: el .style .width === `${span ?.clientWidth}px`, widthPositive: parseFloat (el .style .width) > 0,
+            width: el .style .width === "0px" ? "0px" : el .style .width === "" ? "" : "set",
+            inShadow: canvas .shadowRoot .contains (el),
+            computed: [ computed .position, computed .top, computed .right, computed .whiteSpace, computed .pointerEvents ],
+         };
+      };
+
+      const timers = () => held .map (t => [ t .delay, t .cleared, t .ran ]);
+      const run    = () => { const t = held .findLast (t => !t .cleared && !t .ran); t .ran = true; t .fn (); };
+      const state  = async () => { const immediate = snap (); await frames (); return { immediate, snap: snap (), timers: timers (), description: attempt (() => browser .description) }; };
+      const out    = { };
+
+      try
+      {
+         out .api = {
+            inBrowser: "description" in browser, getter: typeof browser .getDescription, setter: typeof browser .setDescription,
+            initial: attempt (() => browser .description), initialGetter: attempt (() => browser .getDescription ()),
+         };
+         out .initial = { snap: snap (), timers: timers (), visibility: getComputedStyle (element ()) .visibility };
+
+         // The page sets notifications="false": nothing shows until the option is set.
+         out .optionAtStart = browser .getBrowserOption ("Notifications");
+         browser .description = "pre";
+         out .pageDefault = await state ();
+
+         browser .setBrowserOption ("Notifications", true);
+         browser .description = "Hello";
+         out .show = await state ();
+
+         browser .description = "Hello";
+         out .same = await state ();
+
+         browser .description = "A\nB";
+         browser .description = "C";
+         out .replace = await state ();
+
+         browser .setDescription ("D");
+         out .method = await state ();
+
+         browser .description = "";
+         out .empty = await state ();
+
+         run ();
+         out .hidden = await state ();
+
+         browser .description = "again";
+         out .again = await state ();
+
+         browser .setBrowserOption ("Notifications", false);
+         browser .description = "off";
+         out .off = await state ();
+         run ();
+         out .offRun = await state ();
+
+         browser .setBrowserOption ("Notifications", true);
+         browser .description = "on";
+         out .on = await state ();
+
+         out .coercion = { };
+
+         for (const [ key, value ] of [ [ "number", 5 ], [ "null", null ], [ "undefined", undefined ], [ "true", true ], [ "object", { } ], [ "array", [ 1, 2 ] ] ])
+         {
+            const set = attempt (() => { browser .description = value; return "ok"; });
+
+            out .coercion [key] = { set, ... await state () };
+         }
+      }
+      finally
+      {
+         window .setTimeout   = realSet;
+         window .clearTimeout = realClr;
+      }
+
+      return out;
+   });
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
