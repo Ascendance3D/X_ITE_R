@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40">
+<rect x="0" width="9" height="9" fill="lab(50% 40 20)"/><rect x="10" width="9" height="9" fill="lch(50% 40 120)"/><rect x="20" width="9" height="9" fill="oklab(0.6 0.1 0.05)"/><rect x="30" width="9" height="9" fill="oklch(0.6 0.15 40)"/><rect x="40" width="9" height="9" fill="lab(50 40 20 / 0.5)"/><rect x="50" width="9" height="9" fill="oklch(60% 0.15 40deg / 20%)"/><rect x="60" width="9" height="9" fill="lab(none 40 20)"/><rect x="70" width="9" height="9" fill="lab(50, 40, 20)"/>
+</svg>
