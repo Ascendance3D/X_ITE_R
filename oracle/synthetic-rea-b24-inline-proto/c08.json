@@ -1,0 +1,1 @@
+{ "world": "c08.wrl", "authority": "XITE_COMPATIBILITY", "dt": 0.1, "frames": 10, "actions": [{ "frame": 4, "type": "loadNow", "name": "Hold" }] }

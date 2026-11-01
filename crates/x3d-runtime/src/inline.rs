@@ -1089,8 +1089,10 @@ impl Runtime {
 
         self.inline_abort(node);
 
+        // An Inline whose container (a scene, a PROTO instance body) is disposed: X_ITE disposes neither its nodes
+        // nor its scene's Scripts, so the browser build calls no `shutdown ()` in it (`replace_skips_shutdown`).
         if let Some(c) = self.inline_scenes.remove(&node) {
-            self.dispose_scene(c);
+            self.dispose_scene_with(c, !self.replace_skips_shutdown);
         }
 
         self.inline_geometry_clear(node);

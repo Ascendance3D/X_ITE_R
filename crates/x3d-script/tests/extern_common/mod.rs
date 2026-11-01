@@ -73,6 +73,15 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
 
 /// [`run_scenario`] for a case directory under `oracle/`.
 pub fn run_scenario_in(dir_name: &str, name: &str) -> Result<Value, String> {
+    run_scenario_with(dir_name, name, |_| {})
+}
+
+/// [`run_scenario_in`] with `setup` run on the new runtime before the world is loaded (a build flag).
+pub fn run_scenario_with(
+    dir_name: &str,
+    name: &str,
+    setup: impl FnOnce(&mut Runtime),
+) -> Result<Value, String> {
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
     let root = oracle_root();
@@ -104,6 +113,7 @@ pub fn run_scenario_in(dir_name: &str, name: &str) -> Result<Value, String> {
     let mut rt = Runtime::new(scene, fetcher);
 
     rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
+    setup(&mut rt);
     rt.live = true;
     rt.now = t0;
     rt.record_console = true;
