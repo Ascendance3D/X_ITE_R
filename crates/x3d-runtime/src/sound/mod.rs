@@ -29,6 +29,7 @@ pub mod ops;
 pub mod oscillator;
 pub mod panner;
 pub mod param_timeline;
+pub mod sink;
 pub mod wave_shaper;
 
 use ops::{Arg, Op};
@@ -1749,6 +1750,15 @@ impl AudioEngine {
             .map_err(|_| "Could not start audio source".to_string())?;
         let node = ctx.create_media_stream_source(&stream);
         Ok(self.add(ANode::StreamSource(node)))
+    }
+
+    /// `audioElement .setSinkId (id)` of an AudioDestination, on the context: see [`sink`]. A silent or
+    /// offline context has no output device, so nothing moves.
+    pub fn set_sink_id(&mut self, id: &str) -> sink::SinkOutcome {
+        match &self.ctx {
+            Ctx::Realtime(c) => sink::select_sink(&mut sink::ContextSink(c), id),
+            Ctx::Offline(_) => sink::SinkOutcome::Unchanged,
+        }
     }
 
     /// audioContext .createBuffer (channels, length, sampleRate) filled with `data` (planar).
