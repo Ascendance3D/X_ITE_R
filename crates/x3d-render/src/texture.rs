@@ -1241,7 +1241,7 @@ mod ktx_tests {
 
     /// A 4x4 KTX2 holding one UASTC LDR solid-colour block (mode 8), no supercompression. Hand
     /// built from the KTX 2.0 layout; no external asset.
-    fn solid_uastc_ktx2(rgba: [u8; 4], faces: u32) -> Vec<u8> {
+    pub(super) fn solid_uastc_ktx2(rgba: [u8; 4], faces: u32) -> Vec<u8> {
         let mut out = vec![];
         let w32 = |o: &mut Vec<u8>, v: u32| o.extend_from_slice(&v.to_le_bytes());
         let w64 = |o: &mut Vec<u8>, v: u64| o.extend_from_slice(&v.to_le_bytes());
@@ -1384,5 +1384,235 @@ mod avif_tests {
         let f = encode([90, 90, 90, 255]);
         assert!(is_avif(&f));
         assert!(decode_image(&f).is_err());
+    }
+}
+
+/// #73: the browser-decoded pixels of pinned X_ITE 16.5.0 against the Rust decoders, one glTF per
+/// image format (`oracle/synthetic-73-gltf-decoders`, `oracle/gltf-decoders-73-baseline`).
+#[cfg(test)]
+mod compare73_tests {
+    use super::*;
+    use std::path::{Path, PathBuf};
+
+    fn dir() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-73-gltf-decoders")
+    }
+
+    fn b64(data: &[u8]) -> String {
+        const T: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        let mut out = String::new();
+
+        for c in data.chunks(3) {
+            let n = (c[0] as u32) << 16
+                | (*c.get(1).unwrap_or(&0) as u32) << 8
+                | *c.get(2).unwrap_or(&0) as u32;
+
+            for i in 0..4 {
+                out.push(if i <= c.len() {
+                    T[(n >> (18 - 6 * i) & 63) as usize] as char
+                } else {
+                    '='
+                });
+            }
+        }
+
+        out
+    }
+
+    /// A 16x16 gradient with a translucent right edge (the same content as tex-*.webp).
+    fn avif_bytes() -> Vec<u8> {
+        let px: Vec<rgb::RGBA8> = (0..16u32 * 16)
+            .map(|i| {
+                let (x, y) = (i % 16, i / 16);
+                rgb::RGBA8::new(
+                    (x * 16) as u8,
+                    (y * 16) as u8,
+                    ((x * y) % 256) as u8,
+                    if x < 12 { 255 } else { 128 },
+                )
+            })
+            .collect();
+
+        ravif::Encoder::new()
+            .with_quality(80.0)
+            .with_alpha_quality(100.0)
+            .with_speed(10)
+            .encode_rgba(imgref::Img::new(px.as_slice(), 16, 16))
+            .expect("encode")
+            .avif_file
+    }
+
+    fn ktx2_bytes() -> Vec<u8> {
+        ktx_tests::solid_uastc_ktx2([200, 100, 50, 255], 1)
+    }
+
+    /// A quad whose material has a base color texture: image 0 is a 1x1 PNG fallback, image 1
+    /// the extension's image `uri`.
+    fn gltf(ext: &str, uri: &str, mime: &str) -> String {
+        let pos: [f32; 12] = [-1., -1., 0., 1., -1., 0., 1., 1., 0., -1., 1., 0.];
+        let uv: [f32; 8] = [0., 1., 1., 1., 1., 0., 0., 0.];
+        let mut buf: Vec<u8> = pos
+            .iter()
+            .chain(uv.iter())
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+
+        for i in [0u16, 1, 2, 0, 2, 3] {
+            buf.extend_from_slice(&i.to_le_bytes());
+        }
+
+        let png1 = b64(&[
+            0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d, 0x49, 0x48, 0x44, 0x52,
+            0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 0x1f, 0x15, 0xc4, 0x89, 0, 0, 0, 0x0d, 0x49,
+            0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0xf8, 0xff, 0xff, 0x3f, 0, 5, 0xfe, 2, 0xfe, 0xa7,
+            0x35, 0x81, 0x84, 0, 0, 0, 0, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+        ]);
+
+        format!(
+            r#"{{"asset":{{"version":"2.0","generator":"x_ite_r-73"}},"extensionsUsed":["{ext}"],
+"scene":0,"scenes":[{{"nodes":[0]}}],"nodes":[{{"mesh":0}}],
+"meshes":[{{"primitives":[{{"attributes":{{"POSITION":0,"TEXCOORD_0":1}},"indices":2,"material":0}}]}}],
+"materials":[{{"pbrMetallicRoughness":{{"baseColorTexture":{{"index":0}}}}}}],
+"textures":[{{"source":0,"extensions":{{"{ext}":{{"source":1}}}}}}],
+"images":[{{"uri":"data:image/png;base64,{png1}"}},{{"uri":"{uri}","mimeType":"{mime}"}}],
+"accessors":[{{"bufferView":0,"byteOffset":0,"componentType":5126,"count":4,"type":"VEC3","min":[-1,-1,0],"max":[1,1,0]}},
+{{"bufferView":0,"byteOffset":48,"componentType":5126,"count":4,"type":"VEC2"}},
+{{"bufferView":0,"byteOffset":80,"componentType":5123,"count":6,"type":"SCALAR"}}],
+"bufferViews":[{{"buffer":0,"byteLength":92}}],
+"buffers":[{{"byteLength":92,"uri":"data:application/octet-stream;base64,{}"}}]}}
+"#,
+            b64(&buf)
+        )
+    }
+
+    fn files() -> Vec<(&'static str, &'static str, &'static str, &'static str)> {
+        // (gltf, extension, image file, mime type)
+        vec![
+            (
+                "tex-webp-lossless.gltf",
+                "EXT_texture_webp",
+                "tex-lossless.webp",
+                "image/webp",
+            ),
+            (
+                "tex-webp-lossy.gltf",
+                "EXT_texture_webp",
+                "tex-lossy.webp",
+                "image/webp",
+            ),
+            (
+                "tex-avif.gltf",
+                "EXT_texture_avif",
+                "tex.avif",
+                "image/avif",
+            ),
+            (
+                "tex-ktx2.gltf",
+                "KHR_texture_basisu",
+                "tex.ktx2",
+                "image/ktx2",
+            ),
+        ]
+    }
+
+    #[test]
+    #[ignore]
+    fn generate_texture_fixtures() {
+        if std::env::var("GEN_73").is_err() {
+            return;
+        }
+
+        std::fs::write(dir().join("tex.avif"), avif_bytes()).unwrap();
+        std::fs::write(dir().join("tex.ktx2"), ktx2_bytes()).unwrap();
+
+        for (name, ext, file, mime) in files() {
+            std::fs::write(dir().join(name), gltf(ext, file, mime)).unwrap();
+        }
+    }
+
+    #[test]
+    fn texture_fixtures_are_current() {
+        // The AVIF encoder is not guaranteed bit-stable across versions: only the glTF text and
+        // the KTX2 bytes are compared; the committed tex.avif is the input of the baseline.
+        assert_eq!(std::fs::read(dir().join("tex.ktx2")).unwrap(), ktx2_bytes());
+
+        for (name, ext, file, mime) in files() {
+            assert_eq!(
+                std::fs::read_to_string(dir().join(name)).unwrap(),
+                gltf(ext, file, mime)
+            );
+        }
+    }
+
+    /// Prints the per-format comparison; asserts the dimensions and the pixels X_ITE recorded.
+    /// Tolerances are per format and recorded in the comment of each case.
+    #[test]
+    fn decoded_pixels_match_x_ite() {
+        let baseline: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(
+                Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../oracle/gltf-decoders-73-baseline/texture-pixels.json"),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        let mut report = vec![];
+        let results = baseline["results"].as_array().unwrap();
+
+        for (name, _, file, _) in files() {
+            let entry = results.iter().find(|r| r["file"] == name).unwrap();
+            let tex = &entry["textures"].as_array().unwrap()[0];
+            let data = std::fs::read(dir().join(file)).unwrap();
+            let rust = if file.ends_with(".ktx2") {
+                decode_ktx2(&data)
+            } else {
+                decode_image(&data).ok().map(|i| {
+                    let i = i.to_rgba8();
+                    (i.width(), i.height(), i.into_raw())
+                })
+            };
+            let (w, h) = (
+                tex["width"].as_u64().unwrap(),
+                tex["height"].as_u64().unwrap(),
+            );
+            let want = tex["rgba"].as_str().map(|h| {
+                (0..h.len() / 2)
+                    .map(|i| u8::from_str_radix(&h[2 * i..2 * i + 2], 16).unwrap())
+                    .collect::<Vec<u8>>()
+            });
+            let (rw, rh, rgba) = rust.expect("Rust decodes the fixture");
+
+            assert_eq!((w, h), (u64::from(rw), u64::from(rh)), "{file}: dimensions");
+
+            // A KTX2 texture is uploaded in a GPU format by libktx; readPixels returns no color
+            // for it (all zero), so only the dimensions are comparable.
+            if file.ends_with(".ktx2") {
+                report.push(format!(
+                    "{file}: {w}x{h} equal; X_ITE pixels not readable (compressed GPU texture)"
+                ));
+                continue;
+            }
+
+            let want = want.expect("X_ITE pixels");
+            let max = rgba
+                .iter()
+                .zip(&want)
+                .map(|(a, b)| (i32::from(*a) - i32::from(*b)).unsigned_abs())
+                .max()
+                .unwrap_or(0);
+            let differing = rgba.iter().zip(&want).filter(|(a, b)| a != b).count();
+
+            // WebP (lossless and lossy VP8) is bit-exact with Chrome's decoder. AVIF differs by one
+            // level in some channels (Chrome's libavif/dav1d YUV to RGB rounding vs avif-rust).
+            let tolerance = if file.ends_with(".avif") { 1 } else { 0 };
+
+            assert!(max <= tolerance, "{file}: max channel delta {max}");
+            report.push(format!(
+                "{file}: {w}x{h}, bytes differing {differing}/{}, max channel delta {max}",
+                want.len()
+            ));
+        }
+
+        println!("{}", report.join("\n"));
     }
 }

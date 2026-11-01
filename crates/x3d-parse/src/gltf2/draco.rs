@@ -3,7 +3,7 @@
 //! The codec is the `draco-core` crate (Apache-2.0, pure Rust, `unsafe` forbidden), so it also
 //! builds for wasm32.
 
-use draco_core::{DecoderBuffer, Mesh, MeshDecoder, PointCloud, PointCloudDecoder};
+use draco_core::{DecoderBuffer, Mesh, MeshDecoder, PointCloud};
 
 /// What `dracoDecodeMesh` hands to its callbacks.
 pub(super) struct Decoded {
@@ -39,7 +39,6 @@ pub(super) fn decode_mesh(data: &[u8], attributes: &[(String, u32)]) -> Result<D
     };
 
     let mut mesh = Mesh::new();
-    let mut cloud = PointCloud::new();
     let (geometry, num_points): (&PointCloud, usize) = match kind {
         TRIANGULAR_MESH => {
             MeshDecoder::new()
@@ -54,12 +53,9 @@ pub(super) fn decode_mesh(data: &[u8], attributes: &[(String, u32)]) -> Result<D
             );
             (&mesh, mesh.num_points())
         }
-        POINT_CLOUD => {
-            PointCloudDecoder::new()
-                .decode(&mut buffer, &mut cloud)
-                .map_err(|e| format!("Error: {e}"))?;
-            (&cloud, cloud.num_points())
-        }
+        // The draco_decoder_gltf.js X_ITE ships answers a point cloud with an error (observed for a
+        // sequentially encoded cloud): "Unsupported geometry type." (#73).
+        POINT_CLOUD => return Err("Error: Unsupported geometry type.".into()),
         other => return Err(format!("Error: Invalid geometry type {other}.")),
     };
 
