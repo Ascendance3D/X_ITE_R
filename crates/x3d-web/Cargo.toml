@@ -10,6 +10,11 @@ description = "X_ITE_R in a web page: the Rust engine as WebAssembly behind an <
 # cdylib: the wasm32 module (web/pkg, made by tools/build-web.sh); rlib: the native tests of `session`.
 crate-type = ["cdylib", "rlib"]
 
+[features]
+default = ["avif"]
+# AVIF texture decoding in x3d-render; disable for a build without an AV1 decoder.
+avif = ["x3d-render/avif"]
+
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
