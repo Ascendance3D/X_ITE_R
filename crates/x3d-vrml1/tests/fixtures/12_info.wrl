@@ -1,0 +1,8 @@
+#VRML V1.0 ascii
+Info { string "root info" }
+Separator {
+  Info { string "inner info" }
+  Info { string "second" }
+  Cube { }
+}
+WorldInfo { title "T" info [ "a" "b" ] }

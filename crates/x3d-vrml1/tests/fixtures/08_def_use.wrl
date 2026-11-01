@@ -1,0 +1,9 @@
+#VRML V1.0 ascii
+Separator {
+  DEF Red Material { diffuseColor 1 0 0 }
+  DEF Box Cube { }
+  Separator { USE Red Sphere { } }
+  Separator { USE Box }
+  DEF Part Separator { Translation { translation 1 0 0 } Cone { } }
+  USE Part
+}

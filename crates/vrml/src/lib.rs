@@ -22,7 +22,8 @@ pub use vrml97::{Scene, load_file, parse_bytes};
 /// The version a file declares in its header line.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Version {
-    /// `#VRML V1.0 ascii` (not supported by the parser, like X_ITE).
+    /// `#VRML V1.0 ascii`. [`parse_bytes`] rejects it, as the pinned X_ITE 16.5.0 does. The
+    /// opt-in VRML 1.0 loader is `x3d_parse::ParseOptions::vrml1`.
     Vrml1,
     /// `#VRML V2.0 utf8` (VRML97).
     Vrml2,

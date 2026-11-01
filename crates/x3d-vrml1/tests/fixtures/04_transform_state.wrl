@@ -1,0 +1,16 @@
+#VRML V1.0 ascii
+Separator {
+  Translation { translation 1 2 3 }
+  Rotation { rotation 0 1 0 1.5708 }
+  Scale { scaleFactor 2 2 2 }
+  Cube { }
+  Separator {
+    Transform { translation 0 5 0 rotation 1 0 0 0.5 scaleFactor 1 2 1 }
+    Sphere { }
+  }
+  Cone { }
+}
+Separator {
+  MatrixTransform { matrix 1 0 0 0  0 1 0 0  0 0 1 0  4 5 6 1 }
+  Cube { }
+}
