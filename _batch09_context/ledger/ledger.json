@@ -4604,15 +4604,16 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape",
-    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-appearance, vis-items-alpha (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-appearance, vis-items-alpha (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)",
+    "crates/x3d-render/tests/alpha_mode.rs (4 cases: AlphaMode names, transparency resolution, cutoff only for MASK, shapes carry the mode and cutoff)"
    ],
-   "missing": "alphaMode and alphaCutoff are not applied by the renderer: vis-items-alpha is a KNOWN_GAPS world (OPAQUE still blends the texture and material alpha; MASK neither cuts at alphaCutoff nor draws the kept pixels opaque)",
+   "missing": "",
    "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-appearance, vis-items-alpha (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-appearance 10 pixels over 8 at MSAA 0 (0.004%), 0 at MSAA 4: texture alone, with Material, with emissive, TextureTransform, LineProperties (applied, linetype, width), FillProperties (filled, hatched, hatchStyle, hatchColor). vis-items-alpha (alphaMode AUTO / OPAQUE / MASK + alphaCutoff / BLEND) fails: 59894 pixels over 8 at MSAA 0, so the entry stays PARTIAL."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-appearance 10 pixels over 8 at MSAA 0 (0.004%), 0 at MSAA 4: texture alone, with Material, with emissive, TextureTransform, LineProperties (applied, linetype, width), FillProperties (filled, hatched, hatchStyle, hatchColor). vis-items-alpha (alphaMode AUTO / OPAQUE / MASK + alphaCutoff / BLEND) fails: 59894 pixels over 8 at MSAA 0, so the entry stays PARTIAL. | Issue #90 2026-11-01: alphaMode and alphaCutoff are applied (PR #184); vis-items-alpha is removed from KNOWN_GAPS and matches pinned X_ITE at MSAA 0 and 4 on the RTX 3060 Ti (render_rea_b09_visual: pass). alpha_mode.rs: 4 cases pass."
   },
   {
    "id": "node:FillProperties",
