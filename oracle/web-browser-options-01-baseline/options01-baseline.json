@@ -2849,6 +2849,92 @@
      ]
     ]
    }
+  },
+  "browserOptions.straightenHorizon": {
+   "initial": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "off": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "offAgain": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "on": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "viewAllOff": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     2,
+     1,
+     5.2872
+    ]
+   },
+   "viewAllOn": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     2,
+     1,
+     4.4835
+    ]
+   }
   }
  }
 }
