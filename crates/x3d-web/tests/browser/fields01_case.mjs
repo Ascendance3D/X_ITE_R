@@ -866,11 +866,92 @@ async function createNodeCase (page, env, world = CONSTANTS_FULL)
    return out;
 }
 
+// X3DExecutionContext.addNamedNode, updateNamedNode, removeNamedNode and getNamedNode (issue #137): the names of a
+// world's nodes, their errors and what the text form shows.
+const NAMED_WORLD = `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Full\nDEF A Transform { children DEF B Shape { } }\nDEF C Group { }\n")}`;
+
+async function namedNodesCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, NAMED_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const X3D     = window .X3D_NS;
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+      const name    = n => n .getNodeName ();
+      const lookup  = n => attempt (() => name (scene .getNamedNode (n)));
+      const foreign = await browser .createScene ();
+      const roots   = () => Array .from (scene .rootNodes, n => `${n .getNodeTypeName ()}:${name (n)}`);
+
+      out .start = [ lookup ("A"), lookup ("B"), lookup ("C"), lookup ("Z"), roots () ];
+
+      // addNamedNode
+      const n1 = scene .createNode ("Group");
+      const n2 = scene .createNode ("Group");
+
+      out .addNew       = attempt (() => scene .addNamedNode ("N1", n1));
+      out .addNewState  = [ name (n1), lookup ("N1") ];
+      out .addDuplicate = attempt (() => scene .addNamedNode ("N1", n2));
+      out .addRenamed   = attempt (() => scene .addNamedNode ("N2", n1));
+      out .addEmpty     = attempt (() => scene .addNamedNode ("", n2));
+      out .addNoNode    = attempt (() => scene .addNamedNode ("N3"));
+      out .addNullNode  = attempt (() => scene .addNamedNode ("N3", null));
+      out .addNotNode   = attempt (() => scene .addNamedNode ("N3", { }));
+      out .addNumber    = attempt (() => scene .addNamedNode (5, n2));
+      out .addNumberState = [ name (n2), lookup ("5") ];
+      out .addNoArgs    = attempt (() => scene .addNamedNode ());
+      out .addForeign   = attempt (() => scene .addNamedNode ("F", foreign .createNode ("Group")));
+      out .addExisting  = attempt (() => scene .addNamedNode ("A", scene .createNode ("Group")));
+
+      // updateNamedNode
+      const n3 = scene .createNode ("Transform");
+
+      out .updateNew    = attempt (() => scene .updateNamedNode ("U1", n3));
+      out .updateNewState = [ name (n3), lookup ("U1") ];
+      out .updateRename = attempt (() => scene .updateNamedNode ("U2", n3));
+      out .updateRenameState = [ name (n3), lookup ("U1"), lookup ("U2") ];
+      out .updateTaken  = attempt (() => scene .updateNamedNode ("A", n3));
+      out .updateTakenState = [ name (n3), lookup ("A"), lookup ("U2"), roots () ];
+      out .updateEmpty  = attempt (() => scene .updateNamedNode ("", n3));
+      out .updateNotNode = attempt (() => scene .updateNamedNode ("X", 3));
+      out .updateNoNode = attempt (() => scene .updateNamedNode ("X"));
+      out .updateForeign = attempt (() => scene .updateNamedNode ("X", foreign .createNode ("Group")));
+
+      // removeNamedNode
+      out .removeKnown   = attempt (() => scene .removeNamedNode ("C"));
+      out .removeState   = [ lookup ("C"), roots () ];
+      out .removeUnknown = attempt (() => scene .removeNamedNode ("nope"));
+      out .removeNumber  = attempt (() => scene .removeNamedNode (5));
+      out .removeNoArgs  = attempt (() => scene .removeNamedNode ());
+      out .removeAgain   = attempt (() => scene .removeNamedNode ("C"));
+
+      // getNamedNode
+      out .getNoArgs = attempt (() => scene .getNamedNode ());
+      out .getEmpty  = attempt (() => scene .getNamedNode (""));
+      out .getNumber = attempt (() => scene .getNamedNode (5));
+
+      // A named node put in the world shows its name in the text form.
+      scene .addRootNode (n1);
+      out .text = attempt (() => scene .toVRMLString ());
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
 export const CASE_GROUPS = {
    fieldAPI: { context: DESKTOP, cases },
    fieldRoundTrip: { context: DESKTOP, cases: roundTripCases },
    fieldConstants: { context: DESKTOP, cases: { constants: async (page, env) => { await page .waitForFunction (() => window .ready, null, { timeout: 30000 }); return constants (page, env); } } },
-   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase,
+   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase,
       // Nodes of external components the world did not load: a world of the Interchange profile (one of them first, then the same list).
       createNodeInterchange: (page, env) => createNodeCase (page, env, `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\n")}`) } },
 };

@@ -902,6 +902,11 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-gltf-world-02-baseline -
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --runs 5 --suite fields01
 ```
 
+- Case `fieldEarly.namedNodes` (2026-11-01, issue #137) was added to the baseline without a full re-record: it was recorded alone
+  (`--only fieldEarly.namedNodes --runs 5` into a scratch directory; five identical runs, Chrome 156.0.8078.47) and its value was
+  merged into `fieldEarly`'s `values`; the other 14 values are byte-identical to before. It records `addNamedNode`,
+  `updateNamedNode`, `removeNamedNode` and `getNamedNode` with their errors (`createScene ()` returns a promise in 16.5.0).
+
 ### Web browser scene text 01 (`web-browser-scene-text-01-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite scenetext01` runs the 17 cases of `crates/x3d-web/tests/browser/scenetext01_case.mjs`
