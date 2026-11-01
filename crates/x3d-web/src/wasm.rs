@@ -298,6 +298,8 @@ pub struct WebBrowser {
     script_realm: Option<js_sys::Function>,
     /// The page's console writer (`setLogSink`): a Script's `print` and `console` lines go to it in the Script's call.
     log_sink: Option<js_sys::Function>,
+    /// The page's field callback sink (`setFieldEventSink`): see [`crate::chain`].
+    field_event_sink: Option<js_sys::Function>,
     /// Worlds that a replace removed while the page may still hold functions or node objects of their Scripts
     /// (issue #202), by their Script host's key. The page tells when it dropped them all ([`WebBrowser::release_retired`]).
     retired: HashMap<u64, Session>,
@@ -455,6 +457,7 @@ impl WebBrowser {
             live: true,
             script_realm: None,
             log_sink: None,
+            field_event_sink: None,
             retired: HashMap::new(),
             retired_log: vec![],
         })
@@ -493,6 +496,7 @@ impl WebBrowser {
         let id = self.next_id;
         let factory = self.script_realm.clone();
         let sink = self.log_sink.clone();
+        let event_sink = self.field_event_sink.clone();
         let engine_options = self.engine_options.clone();
         let session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
@@ -501,18 +505,44 @@ impl WebBrowser {
                     rt.browser_options.set_option(&name, value);
                 }
 
+                // The page's console and field callbacks run in the route chain (issue #202): the lines made before an
+                // event go to the console first, then the page's callbacks of the event are called.
+                if let Some(sink) = &sink {
+                    let sink = sink.clone();
+
+                    rt.console_sink = Some(Box::new(move |line| {
+                        let _ = sink.call1(&JsValue::NULL, &JsValue::from_str(line));
+                    }));
+                }
+
+                if let Some(event_sink) = event_sink {
+                    if rt.console_sink.is_some() {
+                        rt.page_event_sink = Some(Box::new(move |rt, k, value| {
+                            let name = rt.field(k).name.clone();
+                            let data = data_js(&x3d_runtime::data::value_data(value));
+                            let args = js_sys::Array::of4(
+                                &f64::from(id).into(),
+                                &f64::from(k.0).into(),
+                                &name.into(),
+                                &data,
+                            );
+
+                            // The page's callbacks run with the runtime reachable through the `chain*` exports.
+                            let halted = crate::chain::enter(rt, id, || {
+                                event_sink.apply(&JsValue::NULL, &args)
+                            });
+
+                            // The page reports an error of a callback itself and answers `true`; an error that escapes it
+                            // halts the same way.
+                            !matches!(halted, Ok(v) if v.as_bool() == Some(false))
+                        }));
+                    }
+                }
+
                 let factory = factory.as_ref()?;
 
                 match crate::script::PageJsHost::new(rt, factory) {
-                    Ok(Some(host)) => {
-                        if let Some(sink) = sink {
-                            rt.console_sink = Some(Box::new(move |line| {
-                                let _ = sink.call1(&JsValue::NULL, &JsValue::from_str(line));
-                            }));
-                        }
-
-                        Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>)
-                    }
+                    Ok(Some(host)) => Some(Box::new(host) as Box<dyn x3d_runtime::ScriptHost>),
                     Ok(None) => None,
                     Err(e) => {
                         rt.log_error(format!(
@@ -542,6 +572,17 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = setLogSink)]
     pub fn set_log_sink(&mut self, sink: Option<js_sys::Function>) {
         self.log_sink = sink;
+    }
+
+    /// The page's field callback sink, or null (the default: the page takes the events after the frame,
+    /// `takeFieldEvents`). For the worlds that start after the call (and only with a log sink, [`WebBrowser::set_log_sink`]),
+    /// `sink (scene, node, fieldName, data)` is called in the route chain, where X_ITE's X3DField.processEvent calls the field
+    /// callbacks, and answers `false`, or `true` when a callback threw (the event processing halts). While it runs the page
+    /// reaches the world through the `chain*` functions only; the `WebBrowser` is borrowed by the call that runs the chain
+    /// (issue #202, [`crate::chain`]).
+    #[wasm_bindgen(js_name = setFieldEventSink)]
+    pub fn set_field_event_sink(&mut self, sink: Option<js_sys::Function>) {
+        self.field_event_sink = sink;
     }
 
     /// The page dropped every function and node object of the Scripts of the replaced world with the Script host key `host`:
@@ -1240,16 +1281,7 @@ impl WebBrowser {
         w.session
             .field_definitions(node)
             .into_iter()
-            .map(|d| {
-                let entry = js_sys::Array::of3(
-                    &d.name.as_str().into(),
-                    &f64::from(d.access).into(),
-                    &d.type_name.into(),
-                );
-
-                entry.push(&d.default.as_ref().map_or(JsValue::UNDEFINED, data_js));
-                JsValue::from(entry)
-            })
+            .map(field_definition_js)
             .collect()
     }
 
@@ -2102,4 +2134,184 @@ pub fn config_table() -> js_sys::Array {
     }
 
     js_sys::Array::of2(&components, &profiles)
+}
+
+// --- the page's calls from a field callback in the route chain (issue #202, crate::chain) --------------------------------
+
+fn chain_run<R>(world: u32, f: impl FnOnce(&mut x3d_runtime::Runtime) -> R) -> Result<R, JsError> {
+    crate::chain::with_runtime(world, f).map_err(|e| JsError::new(&e))
+}
+
+/// `WebBrowser.exists` for the world whose callback is running.
+#[wasm_bindgen(js_name = chainExists)]
+pub fn chain_exists(world: u32) -> bool {
+    crate::chain::is_active(world)
+}
+
+/// `WebBrowser.worldGeneration` inside a field callback.
+#[wasm_bindgen(js_name = chainWorldGeneration)]
+pub fn chain_world_generation(world: u32) -> Result<f64, JsError> {
+    chain_run(world, |rt| crate::chain::world_generation(rt) as f64)
+}
+
+/// `WebBrowser.takeReleasedNodes` inside a field callback.
+#[wasm_bindgen(js_name = chainTakeReleasedNodes)]
+pub fn chain_take_released_nodes(world: u32) -> Result<Vec<u32>, JsError> {
+    chain_run(world, |rt| rt.take_page_released())
+}
+
+/// `WebBrowser.fieldNames` inside a field callback.
+#[wasm_bindgen(js_name = chainFieldNames)]
+pub fn chain_field_names(world: u32, node: u32) -> Result<Vec<String>, JsError> {
+    chain_run(world, |rt| crate::chain::field_names(rt, node))
+}
+
+/// `WebBrowser.fieldData` inside a field callback.
+#[wasm_bindgen(js_name = chainFieldData)]
+pub fn chain_field_data(world: u32, node: u32, name: &str) -> Result<js_sys::Array, JsError> {
+    let (type_name, access, data) =
+        chain_run(world, |rt| crate::chain::field_data(rt, node, name))?
+            .map_err(|e| JsError::new(&e))?;
+
+    Ok(js_sys::Array::of3(
+        &type_name.into(),
+        &f64::from(access).into(),
+        &data_js(&data),
+    ))
+}
+
+/// `WebBrowser.setFieldData` inside a field callback: the field takes the value and its event is queued with the events
+/// the chain is processing.
+#[wasm_bindgen(js_name = chainSetFieldData)]
+pub fn chain_set_field_data(
+    world: u32,
+    node: u32,
+    name: &str,
+    data: JsValue,
+) -> Result<(), JsError> {
+    chain_run(world, |rt| {
+        crate::chain::set_field_data(rt, node, name, &js_data(&data))
+    })?
+    .map_err(|e| JsError::new(&e))
+}
+
+/// `WebBrowser.takeFieldChanges` inside a field callback.
+#[wasm_bindgen(js_name = chainTakeFieldChanges)]
+pub fn chain_take_field_changes(world: u32) -> Result<js_sys::Array, JsError> {
+    chain_run(world, |rt| field_list(crate::chain::take_field_changes(rt)))
+}
+
+/// `WebBrowser.observeField` inside a field callback (X3DField.addFieldCallback): the next events of the field reach the sink,
+/// also those still queued in the chain.
+#[wasm_bindgen(js_name = chainObserveField)]
+pub fn chain_observe_field(world: u32, node: u32, name: &str, on: bool) -> Result<(), JsError> {
+    chain_run(world, |rt| crate::chain::observe_field(rt, node, name, on))?
+        .map_err(|e| JsError::new(&e))
+}
+
+/// `WebBrowser.typeName` inside a field callback.
+#[wasm_bindgen(js_name = chainTypeName)]
+pub fn chain_type_name(world: u32, node: u32) -> Result<Option<String>, JsError> {
+    chain_run(world, |rt| crate::chain::type_name(rt, node))
+}
+
+/// `WebBrowser.nodeName` inside a field callback.
+#[wasm_bindgen(js_name = chainNodeName)]
+pub fn chain_node_name(world: u32, node: u32) -> Result<Option<String>, JsError> {
+    chain_run(world, |rt| crate::chain::node_name(rt, node))
+}
+
+/// `WebBrowser.namedNode` inside a field callback.
+#[wasm_bindgen(js_name = chainNamedNode)]
+pub fn chain_named_node(world: u32, name: &str) -> Result<Option<u32>, JsError> {
+    chain_run(world, |rt| crate::chain::named_node(rt, name))
+}
+
+/// `WebBrowser.rootNodes` inside a field callback.
+#[wasm_bindgen(js_name = chainRootNodes)]
+pub fn chain_root_nodes(world: u32) -> Result<Vec<i64>, JsError> {
+    chain_run(world, |rt| {
+        crate::chain::root_nodes(rt)
+            .into_iter()
+            .map(|n| n.map_or(-1, i64::from))
+            .collect()
+    })
+}
+
+/// `WebBrowser.nodeValue` inside a field callback.
+#[wasm_bindgen(js_name = chainNodeValue)]
+pub fn chain_node_value(world: u32, node: u32, name: &str) -> Result<Vec<i64>, JsError> {
+    let nodes = chain_run(world, |rt| crate::chain::node_value(rt, node, name))?
+        .map_err(|e| JsError::new(&e))?;
+
+    Ok(nodes.into_iter().map(|n| n.map_or(-1, i64::from)).collect())
+}
+
+/// `WebBrowser.routes` inside a field callback.
+#[wasm_bindgen(js_name = chainRoutes)]
+pub fn chain_routes(world: u32) -> Result<js_sys::Array, JsError> {
+    chain_run(world, |rt| {
+        crate::chain::routes(rt).iter().map(route_js).collect()
+    })
+}
+
+/// `WebBrowser.getRoute` inside a field callback.
+#[wasm_bindgen(js_name = chainGetRoute)]
+pub fn chain_get_route(
+    world: u32,
+    source: u32,
+    source_field: &str,
+    destination: u32,
+    destination_field: &str,
+) -> Result<JsValue, JsError> {
+    let route = chain_run(world, |rt| {
+        crate::chain::get_route(rt, source, source_field, destination, destination_field)
+    })?
+    .map_err(|e| JsError::new(&e))?;
+
+    Ok(route.map_or(JsValue::UNDEFINED, |r| route_js(&r).into()))
+}
+
+/// `WebBrowser.addRoute` inside a field callback.
+#[wasm_bindgen(js_name = chainAddRoute)]
+pub fn chain_add_route(
+    world: u32,
+    source: u32,
+    source_field: &str,
+    destination: u32,
+    destination_field: &str,
+) -> Result<js_sys::Array, JsError> {
+    chain_run(world, |rt| {
+        crate::chain::add_route(rt, source, source_field, destination, destination_field)
+    })?
+    .map(|r| route_js(&r))
+    .map_err(|e| JsError::new(&e))
+}
+
+/// `WebBrowser.deleteRoute` inside a field callback.
+#[wasm_bindgen(js_name = chainDeleteRoute)]
+pub fn chain_delete_route(world: u32, route: u32) -> Result<bool, JsError> {
+    chain_run(world, |rt| crate::chain::delete_route(rt, route as usize))
+}
+
+/// `WebBrowser.fieldDefinitions` inside a field callback.
+#[wasm_bindgen(js_name = chainFieldDefinitions)]
+pub fn chain_field_definitions(world: u32, node: u32) -> Result<js_sys::Array, JsError> {
+    chain_run(world, |rt| {
+        crate::chain::field_definitions(rt, node)
+            .into_iter()
+            .map(field_definition_js)
+            .collect()
+    })
+}
+
+fn field_definition_js(d: crate::session::FieldDefinition) -> JsValue {
+    let entry = js_sys::Array::of3(
+        &d.name.as_str().into(),
+        &f64::from(d.access).into(),
+        &d.type_name.into(),
+    );
+
+    entry.push(&d.default.as_ref().map_or(JsValue::UNDEFINED, data_js));
+    JsValue::from(entry)
 }

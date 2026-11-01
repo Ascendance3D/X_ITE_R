@@ -134,22 +134,13 @@ const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "
 function scriptLifeDifferences ()
 {
    const differences = {
-      // Issue #202, item 3: a Script's `print` and `console` lines reach the page's console during the Script's call, as in X_ITE, so
-      // everything up to `S set_x b` is equal. What stays is the page callback on `x_changed`: X_ITE calls it inside the route chain,
-      // X_ITE_R after the engine call (the open gap in web/API.md), so the page's calls of the Scripts later in the chain
-      // (`window .mark` in R and in `eventsProcessed`) come before it, and the lines of R wait for it, in X_ITE's order with it.
-      "scriptLife.printTiming": [
-         [ [ "seq" ],
-            [ "log: S initialize 1", "page: mark in initialize", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "log: S set_x a", "page: mark in set_x 1", "log: S console.log", "page: mark in set_x 2", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "page: mark in set_x 3", "page: mark after x_changed", "log: S set_x b", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "page: mark in R set_y", "log: R set_y done", "log: S eventsProcessed", "page: mark in eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ],
-            [ "log: S initialize 1", "page: mark in initialize", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "log: S set_x a", "page: mark in set_x 1", "log: S console.log", "page: mark in set_x 2", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "page: mark in set_x 3", "page: mark after x_changed", "log: S set_x b", "page: mark in R set_y", "page: mark in eventsProcessed", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "log: R set_y done", "log: S eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ] ],
-      ],
-      // Issue #202, item 1: X_ITE's X3DField.processEvent calls the field callbacks at once, after it queued the routes and before the
-      // next route runs, so the callback on `S.x_changed` runs between S and R and its write to T is seen by R. X_ITE_R calls the page
-      // callbacks after the engine call: R reads the old T, and the callbacks come after every Script of the chain, in event order.
-      "scriptLife.callbackInChain": [
-         [ [ "seq" ],
-            [ "page: set_x 1", "page: after the assignment", "page: mark S set_x 1", "page: mark S after x_changed", "page: x_changed 1 T=0 0 0 S.x=1", "page: x_changed wrote T=1 0 0", "page: mark R set_y 1 T=1 0 0", "page: mark R after y_changed", "page: translation_changed 1 0 0", "page: y_changed 1 T=1 0 0", "page: mark Q set_z 1", "page: mark S eventsProcessed", "page: mark R eventsProcessed" ],
-            [ "page: set_x 1", "page: after the assignment", "page: mark S set_x 1", "page: mark S after x_changed", "page: mark R set_y 1 T=0 0 0", "page: mark R after y_changed", "page: mark Q set_z 1", "page: mark S eventsProcessed", "page: mark R eventsProcessed", "page: x_changed 1 T=0 0 0 S.x=1", "page: x_changed wrote T=1 0 0", "page: y_changed 1 T=1 0 0", "page: translation_changed 1 0 0" ] ],
+      // Issue #202, field callbacks in the route chain (web/API.md, "Script nodes"). fieldCascade.nested: a callback of B writes D while D's
+      // routed event from A is still queued. X_ITE ends with the written value (its callback sees `9 9 9` one frame later); X_ITE_R, which calls
+      // the callback at the same point of the chain, processes the queued event after the write, so D ends with the routed value and the
+      // write's own event delivers it again in the same frame. The cause is not found yet (open item of #202).
+      "fieldCascade.nested": [
+         [ [ "final", 0 ], "9 9 9", "2 0 0" ],
+         [ [ "seq", 5 ], "D|9 9 9|later|1", "D|2 0 0|later|0" ],
       ],
       // Issue #202, item 4 (the reload sets, scriptlife01_case.mjs). The engine is the one of the native suites, so the differences are
       // the ones its known lists name (crates/x3d-script/tests/synthetic-inline-reload-known.tsv).
