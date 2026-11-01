@@ -19,6 +19,8 @@ pollster = "1"
 bytemuck = { version = "1", features = ["derive"] }
 image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp"] }
 serde_json = "1"
+# KHR_texture_basisu: KTX2 / Basis Universal transcoder (Apache-2.0, pure Rust, builds for wasm32).
+basisu = "0.1.0"
 sha2 = "0.10"
 # The tangent generator X_ITE ships as assets/lib/mikktspace_bg.wasm (built from mikktspace 0.3.0).
 mikktspace = "=0.3.0"

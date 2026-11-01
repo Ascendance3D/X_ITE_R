@@ -9,9 +9,9 @@
 //!
 //! `EXT_meshopt_compression` / `KHR_meshopt_compression` decode through `meshopt.rs`.
 //!
-//! `KHR_draco_mesh_compression` decodes through `draco.rs`. Missing: BasisU, AVIF and
-//! WebP textures (the url is passed on as X_ITE does, decoding is the texture loader's), and
-//! video textures.
+//! `KHR_draco_mesh_compression` decodes through `draco.rs`. The BasisU, AVIF and
+//! WebP texture urls are passed on as X_ITE does (decoding is the texture loader's: KTX2 in
+//! `x3d-render`'s `texture.rs`). Missing: AVIF and video textures.
 
 mod access;
 mod animation;
