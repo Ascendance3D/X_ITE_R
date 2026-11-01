@@ -1617,6 +1617,325 @@
     "/status/404/n2.wrl",
     "/status/404/n3.wrl"
    ]
+  },
+  "sceneCreate.x3dString": {
+   "texts": {
+    "empty": [
+     [
+      "X3DScene",
+      false,
+      0,
+      [],
+      "PAGE",
+      "Full"
+     ],
+     []
+    ],
+    "blanks": [
+     [
+      "X3DScene",
+      false,
+      0,
+      [],
+      "PAGE",
+      "Full"
+     ],
+     []
+    ],
+    "noHeader": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Transform"
+      ],
+      "PAGE",
+      "Full"
+     ],
+     []
+    ],
+    "badHeader": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Transform"
+      ],
+      "PAGE",
+      "Full"
+     ],
+     []
+    ],
+    "x3dHeader": [
+     [
+      "X3DScene",
+      false,
+      2,
+      [
+       "Transform",
+       "Group"
+      ],
+      "PAGE",
+      "Immersive"
+     ],
+     []
+    ],
+    "vrml1": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "vrmlBom": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "crlf": [
+     [
+      "X3DScene",
+      false,
+      2,
+      [
+       "Transform",
+       "Group"
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     []
+    ],
+    "xml": [
+     [
+      "X3DScene",
+      false,
+      2,
+      [
+       "Transform",
+       "Group"
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     []
+    ],
+    "xmlBad": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "xmlUnknown": [
+     [
+      "X3DScene",
+      false,
+      0,
+      [],
+      "PAGE",
+      "Interchange"
+     ],
+     [
+      "error: Error: Unknown node type 'Nope'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+     ]
+    ],
+    "json": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Transform"
+      ],
+      "PAGE",
+      "Core"
+     ],
+     [
+      "warn: Node type 'Transform' does not match component/profile statements in 'PAGE'."
+     ]
+    ],
+    "jsonBad": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "jsonNoX3D": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "unknownNode": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       null
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     [
+      "warn: Parser error at line 2: Unknown node type or proto 'Nope'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+     ]
+    ],
+    "unknownField": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Transform"
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     [
+      "warn: Parser error at line 2: Unknown field 'nope' in class 'Transform'."
+     ]
+    ],
+    "badRoute": [
+     [
+      "X3DScene",
+      false,
+      0,
+      [],
+      "PAGE",
+      "Interchange"
+     ],
+     [
+      "warn: Parser error at line 2. Error: Unknown named or imported node 'A'."
+     ]
+    ],
+    "unclosed": [
+     "Error: \n********************************************************************************\nParser error at line 2:29\nin 'PAGE'\n\n#VRML V2.0 utf8\nTransform { children [ Box {\n                            ^\nUnexpected end of file. Expected '}' at the end of node body.\n********************************************************************************\n",
+     [
+      "error: Error: Expected '}' at the end of node body."
+     ]
+    ],
+    "gltf": [
+     [
+      "X3DScene",
+      false,
+      0,
+      [],
+      "PAGE",
+      "Interchange"
+     ],
+     []
+    ]
+   },
+   "args": {
+    "undef": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "null": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "num": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "bool": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "obj": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "arr": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Group"
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     []
+    ],
+    "none": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ],
+    "extra": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       "Group"
+      ],
+      "PAGE",
+      "Interchange"
+     ],
+     []
+    ],
+    "sfnode": [
+     [
+      "X3DScene",
+      false,
+      1,
+      [
+       null
+      ],
+      "PAGE",
+      "Full"
+     ],
+     []
+    ],
+    "fn": [
+     "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+     []
+    ]
+   },
+   "symbol": "Error: Couldn't parse X3D. No suitable file handler found for 'PAGE'.",
+   "promise": [
+    true,
+    "Promise"
+   ],
+   "world": [
+    true,
+    0
+   ],
+   "logs": []
+  },
+  "sceneCreate.replaceWorldArgs": {
+   "promise": [
+    true,
+    "Promise",
+    null,
+    true
+   ],
+   "none": [
+    "undefined",
+    false,
+    0
+   ],
+   "undef": [
+    "undefined",
+    false,
+    0
+   ],
+   "null": [
+    "undefined",
+    false,
+    0
+   ],
+   "afterNull": [
+    false,
+    0
+   ],
+   "backToB": [
+    "undefined",
+    false,
+    1
+   ],
+   "extra": [
+    "undefined",
+    false,
+    1
+   ],
+   "logs": []
   }
  }
 }

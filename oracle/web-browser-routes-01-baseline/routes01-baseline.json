@@ -2,7 +2,7 @@
  "pinned": "34cdf9f97",
  "chrome": "156.0.8078.47",
  "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
- "runs": 3,
+ "runs": 5,
  "identicalValues": true,
  "pictures": {},
  "values": {
@@ -984,6 +984,121 @@
    ],
    "log": [
     "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"
+   ]
+  },
+  "routesApi.browserEvent": {
+   "registry": [
+    [
+     [
+      "CONNECTION_ERROR",
+      1
+     ],
+     [
+      "BROWSER_EVENT",
+      1
+     ],
+     [
+      "INITIALIZED_EVENT",
+      1
+     ],
+     [
+      "SHUTDOWN_EVENT",
+      1
+     ],
+     [
+      "INITIALIZED_ERROR",
+      1
+     ]
+    ],
+    5
+   ],
+   "odd": [
+    null,
+    null,
+    null,
+    "k-CONNECTION_ERROR,a2,k-BROWSER_EVENT,k-INITIALIZED_EVENT,k-SHUTDOWN_EVENT,k-INITIALIZED_ERROR",
+    2,
+    6,
+    null,
+    null,
+    null,
+    "TypeError: Cannot read properties of undefined (reading 'delete')",
+    null,
+    null,
+    null,
+    1,
+    null,
+    6
+   ],
+   "idle": [
+    [],
+    null
+   ],
+   "loadURL": [
+    [
+     "SHUTDOWN_EVENT:SHUTDOWN_EVENT",
+     "INITIALIZED_EVENT:INITIALIZED_EVENT"
+    ],
+    "V1"
+   ],
+   "created": [
+    [],
+    "V1"
+   ],
+   "replaceWorld": [
+    [
+     "SHUTDOWN_EVENT:SHUTDOWN_EVENT",
+     "INITIALIZED_EVENT:INITIALIZED_EVENT"
+    ],
+    "V1"
+   ],
+   "nextViewpoint": [
+    [],
+    "V2"
+   ],
+   "bindViewpoint": [
+    [],
+    "V1"
+   ],
+   "lastViewpoint": [
+    [],
+    "V2"
+   ],
+   "setLiveFalse": [
+    [],
+    "V2"
+   ],
+   "setLiveTrue": [
+    [],
+    "V2"
+   ],
+   "endUpdate": [
+    [],
+    "V2"
+   ],
+   "beginUpdate": [
+    [],
+    "V2"
+   ],
+   "badLoad": [
+    [
+     "INITIALIZED_ERROR:INITIALIZED_ERROR"
+    ],
+    "V2"
+   ],
+   "removed": [
+    0,
+    5
+   ],
+   "afterRemove": [
+    [
+     "SHUTDOWN_EVENT:SHUTDOWN_EVENT"
+    ],
+    "V1"
+   ],
+   "log": [
+    "error: Error: Bad ROUTE specification: Expected a node name.",
+    "error: Couldn't load data URL. Error: "
    ]
   }
  }
