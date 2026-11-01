@@ -1,0 +1,1 @@
+{ "world": "c07.wrl", "authority": "XITE_COMPATIBILITY", "dt": 0.1, "frames": 10, "actions": [{ "frame": 4, "type": "load", "name": "Hold", "value": false }, { "frame": 7, "type": "load", "name": "Hold", "value": true }] }

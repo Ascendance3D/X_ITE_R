@@ -1,0 +1,2155 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "case": "c01",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: driver tick 1",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      print ('updated');\n   }\n   if (n == 4 || n == 6) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3",
+      "log: updated",
+      "log: obs initialize load=true",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n  initializeOnly SFString extra \"x\"\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      print ('updated');\n   }\n   if (n == 4 || n == 6) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 4",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 8"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c02",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: driver tick 1",
+      "log: nest initialize",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"nest.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      print ('updated');\n   }\n   if (n == 4 || n == 6) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3",
+      "log: updated",
+      "log: obs initialize load=true",
+      "log: nest initialize",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n  initializeOnly SFString extra \"x\"\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"nest.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      print ('updated');\n   }\n   if (n == 4 || n == 6) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 1,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: driver tick 4",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 5"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 8"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c03",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: driver tick 1",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      d .updateInstances ();\n      print ('updated twice');\n   }\n   if (n == 5 || n == 7) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3",
+      "log: updated twice",
+      "log: obs initialize load=true",
+      "log: obs initialize load=true",
+      "log: leaf initialize",
+      "log: leaf initialize"
+     ],
+     "loadCount": 2,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n  initializeOnly SFString extra \"x\"\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3)\n   {\n      const d = Browser .currentScene .protos .get ('Hold');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('x'));\n      d .updateInstances ();\n      d .updateInstances ();\n      print ('updated twice');\n   }\n   if (n == 5 || n == 7) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 6"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 8"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c04",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: driver tick 1",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF G Group {\n  children DEF H Hold { }\n}\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3) { Browser .currentScene .getNamedNode ('G') .children = new MFNode (); print ('removed'); }\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3",
+      "log: removed"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nPROTO Hold [\n  initializeOnly SFString tag \"a\"\n  inputOnly      SFTime   probe\n]\n{\n  Group {\n    children [\n      DEF In Inline {\n        global TRUE\n        url \"leaf.wrl\"\n      }\n      DEF LS LoadSensor {\n        children USE In\n      }\n      DEF Obs Script {\n        initializeOnly SFNode  inl USE In\n        inputOnly      SFTime  probe IS probe\n        inputOnly      SFBool  active\n        inputOnly      SFBool  loaded\n        inputOnly      SFFloat progress\n\n        url \"javascript:\nfunction show (label)\n{\n   print ('obs ' + label + ' load=' + inl .load);\n}\nfunction initialize () { show ('initialize'); }\nfunction probe (t) { show ('probe'); }\nfunction active (v) { print ('obs isActive ' + v); }\nfunction loaded (v) { print ('obs isLoaded ' + v); }\nfunction progress (v) { print ('obs progress ' + v); }\nfunction shutdown () { show ('shutdown'); }\n\"\n      }\n    ]\n  }\n\n  ROUTE LS.isActive TO Obs.active\n  ROUTE LS.isLoaded TO Obs.loaded\n  ROUTE LS.progress TO Obs.progress\n}\n\nDEF G Group { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n == 2) probe_out = t;\n   if (n == 3) { Browser .currentScene .getNamedNode ('G') .children = new MFNode (); print ('removed'); }\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\n"
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 6"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 8"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c05",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: driver tick 1",
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold.wrl#Hold\"\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 4",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "IN_PROGRESS",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold-other.wrl#Hold\"\n\nDEF H Hold {\n  tag \"a\"\n}\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5",
+      "log: obs initialize load=true",
+      "log: nest initialize",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 8",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 9,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 9"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 10",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c06",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: driver tick 1",
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: nest initialize",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-nest.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold-nest.wrl#Hold\"\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-nest.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-nest.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-nest.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 4",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "IN_PROGRESS",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold-other.wrl#Hold\"\n\nDEF H Hold {\n  tag \"a\"\n}\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5",
+      "log: obs initialize load=true",
+      "log: nest initialize",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 8",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 9,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 9"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 10",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold-other.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c07",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: driver tick 1",
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold.wrl#Hold\"\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 4",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "NOT_STARTED",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold.wrl#Hold\"\n\nDEF H Hold {\n  tag \"a\"\n}\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 5"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "NOT_STARTED",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "NOT_STARTED",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7",
+      "log: obs initialize load=true",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold.wrl#Hold\"\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf time",
+      "log: driver tick 8",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 9,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 9"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 10",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "c08",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: driver tick 1",
+      "log: obs initialize load=true",
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf initialize",
+      "log: leaf time",
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: leaf time",
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nEXTERNPROTO Hold [\n  initializeOnly SFString tag\n  inputOnly      SFTime   probe\n]\n\"lib-hold.wrl#Hold\"\n\nDEF H Hold { }\n\nDEF Clock TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nDEF Driver Script {\n  inputOnly  SFTime tick\n  outputOnly SFTime probe_out\n\n  url \"javascript:\nlet n = 0;\nfunction tick (t)\n{\n   n = n + 1;\n   print ('driver tick ' + n);\n   if (n % 2 == 0) probe_out = t;\n}\n\"\n}\n\nROUTE Clock.cycleTime TO Driver.tick\nROUTE Driver.probe_out TO H.probe\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 2",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 3"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [
+      "log: leaf time"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 4",
+      "log: obs probe load=true",
+      "log: obs initialize load=true",
+      "log: leaf initialize"
+     ],
+     "loadCount": 1,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: obs isActive true",
+      "log: obs progress 0",
+      "log: leaf time",
+      "log: driver tick 5"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [
+      "log: obs isActive false",
+      "log: obs isLoaded true",
+      "log: obs progress 1",
+      "log: leaf time",
+      "log: driver tick 6",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 7"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 8",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 9,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 9"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: leaf time",
+      "log: driver tick 10",
+      "log: obs probe load=true"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Hold",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib-hold.wrl#Hold"
+       ],
+       "proto": "Hold",
+       "fields": [
+        "tag",
+        "probe"
+       ]
+      }
+     ],
+     "instances": {
+      "H": {
+       "type": "Hold",
+       "body": [
+        "Group"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
