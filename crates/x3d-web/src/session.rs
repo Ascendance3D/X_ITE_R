@@ -679,6 +679,15 @@ impl Session {
         rt.scene.remove_named_node(world, name);
     }
 
+    /// X3DExecutionContext.createProto (name) of the world: an instance, set up and not part of the world; `None` where X_ITE
+    /// throws "Unknown proto or externproto type".
+    pub fn create_proto(&mut self, name: &str) -> Option<NodeId> {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.create_proto_setup(world, name)
+    }
+
     /// X3DExecutionContext.getNamedNodes of the world: the nodes in the array's order.
     pub fn named_nodes(&self) -> Vec<NodeId> {
         let scene = &self.rt().scene;

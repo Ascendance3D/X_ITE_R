@@ -914,6 +914,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --run
   identical runs, same Chrome) and merged; the other 16 values are byte-identical. It records `getNamedNodes ()` and
   `getExportedNodes ()`: the array objects (type names, live length, index access, iteration, Array methods, write errors) and
   their `X3DExportedNode` items.
+- Case `fieldEarly.createProto` (2026-11-01, issue #137) was added the same way (five identical runs) and merged; the other 17
+  values are byte-identical. It records `createProto` of the world's PROTOs, the instance (type name, fields, node type) and
+  the errors for unknown names.
 
 ### Web browser scene text 01 (`web-browser-scene-text-01-baseline/`)
 

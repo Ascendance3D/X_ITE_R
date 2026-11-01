@@ -945,6 +945,13 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// `createProto (name)` of scene `id`: the node id of the new instance, or undefined when the scene declares no such PROTO
+    /// or EXTERNPROTO.
+    #[wasm_bindgen(js_name = createProto)]
+    pub fn create_proto(&mut self, id: u32, name: &str) -> Result<Option<u32>, JsError> {
+        Ok(self.session_mut(id)?.create_proto(name))
+    }
+
     /// The named nodes of scene `id` in the order of `getNamedNodes ()`.
     #[wasm_bindgen(js_name = namedNodeList)]
     pub fn named_node_list(&self, id: u32) -> Vec<u32> {

@@ -8459,6 +8459,40 @@
     "ExportedNodesArray"
    ],
    "log": []
+  },
+  "fieldEarly.createProto": {
+   "pair": [
+    "object",
+    "SFNode",
+    "Pair",
+    "",
+    2,
+    "hi",
+    3,
+    [
+     1073,
+     1074
+    ],
+    1,
+    "Pair { }"
+   ],
+   "plain": "Plain",
+   "twice": false,
+   "unknown": "Error: Unknown proto or externproto type 'Nope'.",
+   "builtin": "Error: Unknown proto or externproto type 'Group'.",
+   "empty": "Error: Unknown proto or externproto type ''.",
+   "noArgs": "Error: Unknown proto or externproto type 'undefined'.",
+   "number": "Error: Unknown proto or externproto type '5'.",
+   "beforeAdd": [
+    "Pair { }"
+   ],
+   "afterAdd": [
+    "Pair { }",
+    "Pair {",
+    "  amount 5"
+   ],
+   "fieldWrite": "set",
+   "log": []
   }
  }
 }
