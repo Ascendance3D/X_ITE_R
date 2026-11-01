@@ -1,0 +1,101 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Transform {
+  children Shape {
+    appearance Appearance {
+      material DEF _1 Material { }
+      texture ImageTexture {
+        url "tex.png"
+        repeatS FALSE
+      }
+    }
+    geometry IndexedFaceSet {
+      solid FALSE
+      ccw FALSE
+      creaseAngle 0.5
+      texCoordIndex [
+        0,
+        1,
+        2,
+        -1,
+        0,
+        2,
+        3,
+        -1
+      ]
+      normalIndex [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        -1
+      ]
+      coordIndex [
+        0,
+        1,
+        2,
+        -1,
+        0,
+        2,
+        3,
+        -1
+      ]
+      texCoord TextureCoordinate {
+        point [
+          0 0,
+          1 0,
+          1 1,
+          0 1
+        ]
+      }
+      normal Normal {
+        vector 0 0 1
+      }
+      coord Coordinate {
+        point [
+          0 0 0,
+          1 0 0,
+          1 1 0,
+          0 1 0
+        ]
+      }
+    }
+  }
+}
+
+Transform {
+  children Shape {
+    appearance Appearance {
+      material USE _1
+    }
+    geometry IndexedFaceSet {
+      solid FALSE
+      texCoordIndex -1
+      normalIndex -1
+      coordIndex [
+        0,
+        1,
+        2,
+        -1
+      ]
+      coord Coordinate {
+        point [
+          0 0 0,
+          1 0 0,
+          1 1 0
+        ]
+      }
+    }
+  }
+}

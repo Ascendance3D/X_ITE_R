@@ -1,0 +1,6 @@
+#VRML V1.0 ascii
+# a comment
+Separator { # trailing
+  Material { diffuseColor 0.5, 0.5, 0.5 } # c
+  Cube { width 1,height 2 }
+}

@@ -1,0 +1,17 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+OrthoViewpoint {
+  position 0 2 5
+  orientation 0 1 0 0.5
+  fieldOfView 0 0 0 1
+  nearDistance 0.5
+  farDistance 20
+}

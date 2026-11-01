@@ -1,0 +1,7 @@
+#VRML V1.0 ascii
+Separator {
+  MaterialBinding { value PER_PART }
+  FontStyle { size 12 }
+  AsciiText { string "hi" }
+  Cube { }
+}

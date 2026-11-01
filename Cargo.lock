@@ -4679,8 +4679,10 @@ dependencies = [
  "serde_json",
  "x3d-evidence",
  "x3d-fields",
+ "x3d-parse",
  "x3d-scene",
  "x3d-text",
+ "x3d-vrml1",
 ]
 
 [[package]]
@@ -4781,6 +4783,15 @@ dependencies = [
  "x3d-runtime",
  "x3d-scene",
  "x3d-script",
+]
+
+[[package]]
+name = "x3d-vrml1"
+version = "0.1.0"
+dependencies = [
+ "x3d-fields",
+ "x3d-parse",
+ "x3d-scene",
 ]
 
 [[package]]
