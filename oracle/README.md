@@ -1152,3 +1152,13 @@ records each one three times with the pinned X_ITE at MSAA 0 and at MSAA 4 and w
 only when the three runs are identical and no world logs an error. A world whose multisampled output differs between X_ITE's own runs gets
 no MSAA 4 picture and is listed in `msaa4/unstable.json` (`fg-transparent`, `tr-many`, `tr-ortho`). `crates/x3d-render/tests/render_rea_i92_items.rs`
 replays every world and fails on a missing reference, an error log or a picture over the bound (8 per channel, 0.5% of pixels).
+
+## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
+
+- `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;
+  clean-room) with `browser.getAudioContext ()` of the pinned X_ITE in headless Chromium and records length, rate,
+  channels, per-channel sha256, a few samples, the peak and all samples (base64 float32) in
+  `rea-batch24-audio-decode-baseline/audio-decode-baseline.json`. Prepare the worktree as in "Recording from a
+  worktree" above; `--runs 5` fails unless the five recordings are byte-identical.
+- `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio oracle/rea-batch24-audio-decode-baseline/audio-decode-baseline.json --runs 5`
+- `crates/x3d-runtime/tests/rea_b24_audio_decode.rs` compares the port; its header lists the per-format results.
