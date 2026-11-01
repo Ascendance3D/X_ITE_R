@@ -1,6 +1,6 @@
 //! REA batch 08: the glTF 2.0 and GLB parsers (GLTF2Parser.js, GLB2Parser.js) against pinned
-//! X_ITE. Baseline: `oracle/rea-batch08-gltf-baseline/gltf-baseline.json`, written by
-//! `node oracle/x_ite-gltf.mjs synthetic-rea-b08-gltf rea-batch08-gltf-baseline/gltf-baseline.json`.
+//! X_ITE. Baseline: `oracle/rea-b08-gltf-baseline/gltf-baseline.json`, written by
+//! `node oracle/x_ite-gltf.mjs synthetic-rea-b08-gltf rea-b08-gltf-baseline/gltf-baseline.json`.
 //! For every input X_ITE loaded, the Rust scene must print the same toVRMLString, toXMLString and
 //! toJSONString text; an input X_ITE rejected must be rejected too, with the same error text.
 //!
@@ -31,7 +31,7 @@ fn first_difference(expected: &str, actual: &str) -> String {
 fn gltf_matches_x_ite() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b08-gltf");
     let baseline_path = std::env::var("GLTF_BASELINE")
-        .unwrap_or_else(|_| "../../oracle/rea-batch08-gltf-baseline/gltf-baseline.json".into());
+        .unwrap_or_else(|_| "../../oracle/rea-b08-gltf-baseline/gltf-baseline.json".into());
     let baseline: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join(baseline_path))
             .unwrap(),

@@ -3,7 +3,7 @@
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b22-two-layer-shadows (oracle/tools/gen_rea_b22_two_layer_shadows.py):
 //! two layers side by side, the first in the left half of the 512 x 512 canvas, the second in the right half. A case's
-//! X_ITE baseline is oracle/rea-batch22-two-layer-shadows-baseline/NAME/ (`js.json`, `js.f32`, `png/<frame>.png`),
+//! X_ITE baseline is oracle/rea-b22-two-layer-shadows-baseline/NAME/ (`js.json`, `js.f32`, `png/<frame>.png`),
 //! recorded by `oracle/tools/rea_b22_two_layer_shadows.py record` (three identical runs).
 //!
 //! Each case runs `x3d-particles-drive` with the baseline's seeds and compares:
@@ -175,7 +175,7 @@ fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dy
 fn run_case(root: &Path, name: &str) -> Vec<String> {
     let mut found = vec![];
     let base = root
-        .join("oracle/rea-batch22-two-layer-shadows-baseline")
+        .join("oracle/rea-b22-two-layer-shadows-baseline")
         .join(name);
     let world = root
         .join("oracle/synthetic-rea-b22-two-layer-shadows")

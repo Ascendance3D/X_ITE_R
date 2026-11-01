@@ -1,6 +1,6 @@
 //! REA batch 06R: runtime field changes of a ParticleSystem and its emitter, replayed through the real
 //! runtime against X_ITE 16.5.0 (oracle/tools/x_ite_particles_events.mjs sets the fields between frames;
-//! scripts in oracle/synthetic-rea-b06/events, baselines in oracle/rea-batch06-baseline/particles-events-*).
+//! scripts in oracle/synthetic-rea-b06/events, baselines in oracle/rea-b06-baseline/particles-events-*).
 //!
 //! * point: emitter speed, variation, on (FALSE then TRUE), ParticleSystem particleLifetime,
 //!   lifetimeVariation and createParticles change while particles fly.

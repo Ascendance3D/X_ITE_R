@@ -173,7 +173,7 @@ GAP_CASES = {
 }
 
 # Inline: the particle system is in a child file, so the world's PS (the node the particle oracle and
-# x3d-particles-drive step, as in rea-batch18's InstancedShape worlds) is a disabled stub and records no particles; the
+# x3d-particles-drive step, as in rea-b18's InstancedShape worlds) is a disabled stub and records no particles; the
 # images and the per-frame seeds carry the case. The child files live in a directory the case lister does not read.
 INLINE_CHILDREN = {
     "pr-inline": ps("QUAD", RAMP_RGB).replace("DEF PS ", ""),

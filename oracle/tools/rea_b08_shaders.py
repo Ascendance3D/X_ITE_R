@@ -6,8 +6,8 @@
       oracle/render-msaa4-rea-b08-shaders-baseline (x_ite-shot-msaa.mjs, 4 samples).
   python3 -I oracle/tools/rea_b08_shaders.py case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in $B08_SHADERS_TARGET (default /tmp/b08-shaders-target/release); on success the X_ITE
-      side (js.json, js/*.png) is kept as oracle/rea-batch08-shaders-baseline/NAME-msaaMSAA and the case
-      line is added to oracle/rea-batch08-shaders-baseline/cases.txt.
+      side (js.json, js/*.png) is kept as oracle/rea-b08-shaders-baseline/NAME-msaaMSAA and the case
+      line is added to oracle/rea-b08-shaders-baseline/cases.txt.
 
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied.
 Still images of worlds in STEPPED_ONLY are removed after `shots`: their pictures depend on how many
@@ -45,13 +45,13 @@ elif args[0] == "case":
     print("\n".join(l for l in r.stdout.splitlines() if l.startswith("FAIL") or "within tolerance, " in l or l.startswith("PASS both")))
     print(f"exit {r.returncode}")
     if r.returncode == 0:
-        dest = os.path.join(root, "oracle", "rea-batch08-shaders-baseline", f"{name}-msaa{msaa}")
+        dest = os.path.join(root, "oracle", "rea-b08-shaders-baseline", f"{name}-msaa{msaa}")
         shutil.rmtree(dest, ignore_errors=True)
         os.makedirs(dest)
         shutil.copy(os.path.join(out, "js.json"), dest)
         if os.path.isdir(os.path.join(out, "js")):
             shutil.copytree(os.path.join(out, "js"), os.path.join(dest, "js"))
-        cases = os.path.join(root, "oracle", "rea-batch08-shaders-baseline", "cases.txt")
+        cases = os.path.join(root, "oracle", "rea-b08-shaders-baseline", "cases.txt")
         line = " ".join([name, world, script, msaa] + ([tol] if tol else []))
         lines = open(cases).read().splitlines() if os.path.exists(cases) else []
         lines = [l for l in lines if l.split()[:1] != [name] or l.split()[3:4] != [msaa]] + [line]

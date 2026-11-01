@@ -6,7 +6,7 @@
 runs `x3d-oracle particles` (default target/release/x3d-oracle) FIVE times on oracle/synthetic-rea-b23-depthmode-pick/dm-pick.x3dv
 with scripts/dm-pick.json. `--png-dir` is always passed so the page reshapes its drawing buffer to 512 x 512 (without it
 `browser .touch` has a 1 x 1 viewport). The five js.json and js.f32 must be byte-identical; only then is the first kept as
-oracle/rea-batch23-depthmode-pick-baseline/dm-pick/. The WebGL renderer string is kept beside it as renderer.json
+oracle/rea-b23-depthmode-pick-baseline/dm-pick/. The WebGL renderer string is kept beside it as renderer.json
 (oracle/tools/webgl_renderer_probe.mjs, needs $XITE_TESTS). A baseline is never taken from Rust. Staging is /tmp/rea-b23-record.
 """
 import filecmp, hashlib, json, os, shutil, subprocess, sys
@@ -32,7 +32,7 @@ print(f"dm-pick: five X_ITE runs {'identical' if same else 'DIFFER'}, js.json sh
 if not same:
     sys.exit(1)
 probe = subprocess.run(["node", os.path.join(root, "oracle", "tools", "webgl_renderer_probe.mjs")], check=True, capture_output=True, text=True, timeout=60).stdout
-dest = os.path.join(root, "oracle", "rea-batch23-depthmode-pick-baseline", "dm-pick")
+dest = os.path.join(root, "oracle", "rea-b23-depthmode-pick-baseline", "dm-pick")
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
 for f in ("js.json", "js.f32"):

@@ -161,7 +161,7 @@ The port measures compatibility against the pinned X_ITE source and its recorded
 - **Operations.** Find the real REA operations before you use them, and record the operations you ran. Read the pinned JavaScript source directly, and compare the Rust code separately.
 - **Runtime evidence.** Observable behavior is compared with recordings of the pinned X_ITE in `oracle/` (baselines, recorders in `oracle/*.mjs` and `oracle/tools/`). Run logs are in `evidence/`.
 - **Scope and limitations.** A REA no-match does not prove that a feature is absent. Static analysis does not prove Rust runtime behavior: only a runtime test against a recording does.
-- **Ledger.** The coverage ledger has one entry per upstream feature. The in-repository copy is `_batch09_context/ledger/ledger.json`. On 2026-10-29 it held 346 entries: 249 COMPLETE, 71 PARTIAL, 25 DIFFERENT, 1 MISSING and 0 NOT_TESTED. Check it with `python3 -I -B _batch09_context/tools/verify_ledger.py`. That run reported its promotion history as consistent and 0 missing evidence references. A test result does not change a ledger status by itself.
+- **Ledger.** The coverage ledger has one entry per upstream feature. The in-repository copy is `ledger/ledger.json`. On 2026-10-29 it held 346 entries: 249 COMPLETE, 71 PARTIAL, 25 DIFFERENT, 1 MISSING and 0 NOT_TESTED. Check it with `python3 -I -B ledger/tools/verify_ledger.py`. That run reported its promotion history as consistent and 0 missing evidence references. A test result does not change a ledger status by itself.
 - **Remaining differences.** The DIFFERENT entries are recorded differences. The PARTIAL and MISSING entries are open work, tracked in the [issues](https://github.com/Ascendance3D/X_ITE_R/issues).
 
 A pull request that changes compatibility behavior records the source identity, tool version, operations, evidence IDs, scope, limitations, runtime tests and remaining differences in its description.
@@ -179,7 +179,7 @@ A pull request that changes compatibility behavior records the source identity, 
 | `crates/x3d-oracle`, `x3d-evidence`, `r0-2-c-tests` | reference drivers, evidence policy and compatibility tests |
 | `oracle/` | pinned X_ITE sources, recordings, baselines and recording scripts |
 | `evidence/` | REA and test run logs |
-| `_batch08_context/`, `_batch09_context/` | REA batch records, including the coverage ledger |
+| `ledger/history/b08-recovery/`, `ledger/history/b09/` | REA batch records, including the coverage ledger |
 | `tools/` | build, packaging and reference-check scripts |
 | `docs/` | design notes, findings, agent guides and reports |
 

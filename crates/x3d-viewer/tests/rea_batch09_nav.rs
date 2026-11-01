@@ -1,6 +1,6 @@
 //! REA batch 09: navigation and pointer picking against pinned X_ITE.
 //!
-//! Each case of oracle/rea-batch09-nav-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b09-nav-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it), poses within 1e-4, the sorted log exact, the pointing
@@ -129,13 +129,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch09-nav-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b09-nav-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!(
-        "rea-batch09-{}-{name}-msaa{msaa}",
-        std::process::id()
-    ));
+    let out =
+        std::env::temp_dir().join(format!("rea-b09-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -317,7 +315,7 @@ fn run_shard(shard: usize) {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch09-nav-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b09-nav-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = renderer_available();
     if !gpu {

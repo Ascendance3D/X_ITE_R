@@ -2,7 +2,7 @@
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b18-particle-lines (oracle/tools/gen_rea_b18_particle_lines.py):
 //! ParticleSystem LINE particles and InstancedShape IndexedLineSets with LineProperties (linewidthScaleFactor 2 to 24,
-//! linetype 2). A case's X_ITE baseline is oracle/rea-batch18-particle-lines-baseline/NAME/, recorded three times per
+//! linetype 2). A case's X_ITE baseline is oracle/rea-b18-particle-lines-baseline/NAME/, recorded three times per
 //! image pass by oracle/tools/rea_b18_particle_lines.py, in the layout and format of rea_b13_particles.rs: `js.json`
 //! and `js.f32` (seeds and particle records), `png/<frame>.png` (anim.html, `antialiased="false"`) and
 //! `msaa4/<frame>.png` (anim-msaa.html, multisampling 4).
@@ -184,7 +184,7 @@ fn compare_images(
 
 fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> bool {
     let base = root
-        .join("oracle/rea-batch18-particle-lines-baseline")
+        .join("oracle/rea-b18-particle-lines-baseline")
         .join(name);
     let world = root
         .join("oracle/synthetic-rea-b18-particle-lines")
@@ -387,7 +387,7 @@ fn rea_b18_particle_line_cases_match_x_ite() {
     );
     if !without.is_empty() {
         failures.push(format!(
-            "worlds without a baseline in oracle/rea-batch18-particle-lines-baseline: {}",
+            "worlds without a baseline in oracle/rea-b18-particle-lines-baseline: {}",
             without.join(", ")
         ));
     }

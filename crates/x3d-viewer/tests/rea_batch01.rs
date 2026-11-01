@@ -4,7 +4,7 @@
 //! GeoViewpoint (navigation in the geo frame, legacy navType / headlight), Viewpoint.navigationInfo
 //! and GeoLOD.
 //!
-//! Each case of oracle/rea-batch01-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b01-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it: absolute below magnitude 1, relative above), poses within
@@ -105,13 +105,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch01-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b01-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!(
-        "rea-batch01-{}-{name}-msaa{msaa}",
-        std::process::id()
-    ));
+    let out =
+        std::env::temp_dir().join(format!("rea-b01-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -233,8 +231,7 @@ fn rea_batch01_cases_match_x_ite() {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch01-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b01-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

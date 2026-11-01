@@ -2,7 +2,7 @@
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b17-emitter-hits (oracle/tools/gen_rea_b17_emitter_hits.py): a
 //! VolumeEmitter whose emission lines meet 31 to 128 quads, more than the GLSL intersection array (ARRAY_SIZE = 32)
-//! holds. A case's X_ITE baseline is oracle/rea-batch17-emitter-hits-baseline/NAME/ (`js.json`, `js.f32`: every
+//! holds. A case's X_ITE baseline is oracle/rea-b17-emitter-hits-baseline/NAME/ (`js.json`, `js.f32`: every
 //! frame's transform feedback buffer), recorded by `oracle/tools/rea_b17_emitter_hits.py record` with
 //! `x3d-oracle particles` (three identical runs). Each case is replayed through the real runtime with the baseline's
 //! seeds (particles_b06_common::replay) and compared with the batch 06R tolerances (compare_steps, compare_dumps).
@@ -12,7 +12,7 @@ mod particles_b06_common;
 use particles_b06_common::*;
 
 const WORLDS: &str = "synthetic-rea-b17-emitter-hits";
-const BASELINES: &str = "rea-batch17-emitter-hits-baseline";
+const BASELINES: &str = "rea-b17-emitter-hits-baseline";
 
 fn script(name: &str) -> serde_json::Value {
     json(

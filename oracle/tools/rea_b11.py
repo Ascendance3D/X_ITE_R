@@ -3,14 +3,14 @@
 
   python3 -I oracle/tools/rea_b11.py record NAME WORLD SCRIPT MSAA
       X_ITE side only, run twice; the two runs (js.json and every PNG) must be identical, then the first is kept as
-      oracle/rea-batch11-baseline/NAME-msaaMSAA and the case line is added to cases.txt. A baseline is never taken from Rust.
+      oracle/rea-b11-baseline/NAME-msaaMSAA and the case line is added to cases.txt. A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 mode, name, world, script, msaa = sys.argv[1:6]
 assert mode == "record"
-cases_dir = os.path.join(root, "oracle", "rea-batch11-baseline")
+cases_dir = os.path.join(root, "oracle", "rea-b11-baseline")
 os.makedirs(cases_dir, exist_ok=True)
 anim = "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"
 runs = []

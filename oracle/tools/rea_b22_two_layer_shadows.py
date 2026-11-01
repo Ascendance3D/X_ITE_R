@@ -6,7 +6,7 @@
 runs `x3d-oracle particles` (default target/release/x3d-oracle) three times on
 oracle/synthetic-rea-b22-two-layer-shadows/NAME.x3dv with scripts/NAME.json and `--png-dir`, as
 rea_b21_wide_lines.py does. The three js.json and js.f32 must be identical and every PNG must decode to the same pixels
-(rea_b18_particle_lines.pixels). The first run is kept as oracle/rea-batch22-two-layer-shadows-baseline/NAME/ (js.json,
+(rea_b18_particle_lines.pixels). The first run is kept as oracle/rea-b22-two-layer-shadows-baseline/NAME/ (js.json,
 js.f32, png/). A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
@@ -43,7 +43,7 @@ def main():
     print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'} ({len(pngs)} images)")
     if not same:
         sys.exit(1)
-    dest = os.path.join(root, "oracle", "rea-batch22-two-layer-shadows-baseline", name)
+    dest = os.path.join(root, "oracle", "rea-b22-two-layer-shadows-baseline", name)
     shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
     for f in ("js.json", "js.f32"):

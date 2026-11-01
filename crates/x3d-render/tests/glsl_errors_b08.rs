@@ -1,6 +1,6 @@
 //! Compile error log text of a fragment ShaderPart against the log of the pinned X_ITE (ANGLE on the owner's
 //! GPU), the cases of `errors-runtime.wrl` (oracle/tools/gen_rea_b08_shaders.py ERR_FRAG). The expected text
-//! is what X_ITE logged (oracle/rea-batch08-shaders-baseline/errors-runtime-msaa0/js.json, `Error in ShaderPart
+//! is what X_ITE logged (oracle/rea-b08-shaders-baseline/errors-runtime-msaa0/js.json, `Error in ShaderPart
 //! 'FP' ..., line N, <log>`). The sources start with an empty line, as a data URL of the corpus does.
 //! `PROBE=1` prints every case.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """REA batch 11 lane b11-3-ortho: OrthoViewpoint viewAll / LookAt as stepped worlds + key scripts (oracle/synthetic-rea-b11-ortho).
-512x512, dt = 1/30, KeySensor driven like gen_rea_b10_secondary.py. Cases are added to oracle/rea-batch10-baseline/cases.txt by
+512x512, dt = 1/30, KeySensor driven like gen_rea_b10_secondary.py. Cases are added to oracle/rea-b10-baseline/cases.txt by
 `rea_b10.py stepped record`.
 
   python3 -I oracle/tools/gen_rea_b11_ortho.py

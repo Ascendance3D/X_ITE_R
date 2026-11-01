@@ -1,5 +1,5 @@
 //! REA batch 24 (issue #94): Anchor pointer paths, Collision render and pointer paths and per-instance InstancedShape picking
-//! against pinned X_ITE 16.5.0 (oracle/rea-batch24-anchor-collision-instanced-baseline, made by `oracle/tools/rea_b24.py record`,
+//! against pinned X_ITE 16.5.0 (oracle/rea-b24-anchor-collision-instanced-baseline, made by `oracle/tools/rea_b24.py record`,
 //! three identical runs each, MSAA 0 and 4). Worlds and scripts: oracle/synthetic-rea-b24-anchor-collision-instanced
 //! (generator oracle/tools/gen_rea_b24_anchor_collision_instanced.py):
 //! ci-pick      InstancedShape hits as a probe grid (script key pickProbes: id, point, normal, texCoord of every probe, bit for bit)
@@ -129,7 +129,7 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!(
-        "oracle/rea-batch24-anchor-collision-instanced-baseline/{name}-msaa{msaa}"
+        "oracle/rea-b24-anchor-collision-instanced-baseline/{name}-msaa{msaa}"
     ));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
@@ -291,7 +291,7 @@ fn rea_b24_anchor_collision_instanced_match_x_ite() {
         .canonicalize()
         .unwrap();
     let cases = std::fs::read_to_string(
-        root.join("oracle/rea-batch24-anchor-collision-instanced-baseline/cases.txt"),
+        root.join("oracle/rea-b24-anchor-collision-instanced-baseline/cases.txt"),
     )
     .unwrap();
     let only = std::env::var("REA_ONLY").ok();

@@ -1,4 +1,4 @@
-//! Batch 06R closure cases against the saved pinned X_ITE output (`oracle/rea-batch06-rem`), with the
+//! Batch 06R closure cases against the saved pinned X_ITE output (`oracle/rea-b06-rem`), with the
 //! tolerances of `oracle/tools/rea_b06_particles.py` (position 5e-6 + 2e-6 |ref|, velocity 3e-6 + 1e-6 |ref|,
 //! everything else exact).
 
@@ -27,7 +27,7 @@ fn floats(path: &PathBuf) -> Vec<f32> {
 /// (max position error, max velocity error, violations) of the Rust driver against the saved run.
 fn compare(case: &str) -> (f64, f64, usize) {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../oracle/rea-batch06-rem")
+        .join("../../oracle/rea-b06-rem")
         .join(case);
     let out = std::env::temp_dir().join(format!("rem-{case}-{}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
