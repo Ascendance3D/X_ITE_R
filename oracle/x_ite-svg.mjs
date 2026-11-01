@@ -18,7 +18,8 @@ import { extname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
-const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
+// XITE_TESTS: the x_ite-tests checkout whose node_modules holds playwright (needed from a worktree).
+const { chromium } = createRequire (join (process .env .XITE_TESTS ?? join (ROOT, "../../../x_ite-tests"), "/")) ("playwright");
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json" };
 

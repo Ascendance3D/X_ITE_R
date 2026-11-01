@@ -6577,11 +6577,13 @@
     "svg quality options",
     "render_rea_b08_svg (25 x MSAA 0/4)",
     "css_colors_b08 (16419)",
-    "svg_b08_lifecycle"
+    "svg_b08_lifecycle",
+    "crates/x3d-parse/tests/rea_b24_css4_color.rs (3,233 CSS Color 4 values vs headless Chrome through convertColor: hwb, lab, lch, oklab, oklch, color; 85 hwb() half-level ties within one 8-bit level, proven exact ties)",
+    "crates/x3d-parse/tests/svg_rea.rs svg_css4_colors_match_x_ite (4 SVG files, oracle/synthetic-rea-b24-css4/svg-baseline.json, incl. the gradient stop X_ITE rejects)"
    ],
-   "missing": "hwb/lab/lch/oklab/oklch/color() not parsed; 43 hsl() values one level off Chrome; one radial-focal gradient pixel one level off; SVG quality is a thread-local not reset for a top-level world",
+   "missing": "relative color syntax (lab(from red l a b)) not parsed; 43 hsl() and 85 hwb() values one level off Chrome (half-level ties, owner decision #55); one radial-focal gradient pixel one level off; SVG quality is a thread-local not reset for a top-level world",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates):"
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #75 2026-10-31: Chrome computes only hwb() to rgb(); lab(), lch(), oklab(), oklch() and color() stay as such a string, which X3DParser.convertColor reads as rgb(): the first channel is NaN and the rest shift one place (emissiveColor NaN ...). A NaN gradient stop color makes addColorStop throw and X_ITE reject the file; the port does the same. Baselines: oracle/synthetic-rea-b24-css4 (5 identical recordings)."
   },
   {
    "id": "sub:parse.html-support",
