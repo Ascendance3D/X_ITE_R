@@ -659,8 +659,9 @@ const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => 
 // oracle/synthetic-inline-reload and oracle/synthetic-externproto-reload are step scenarios: each frame of a scenario has
 // actions on an Inline (or an EXTERNPROTO), and the native suites compare them frame by frame with the pinned X_ITE's
 // stepped page (oracle/x_ite-inline.mjs). A real page cannot step the frames, so these cases drive a scenario with the
-// page's API only and compare what is settled: after the world and after each frame that has actions, they wait 1050 ms
-// (the last 650 ms count for ticks: longer than the 0.5 s cycle of the worlds' clocks) and record the console lines that name a state (`warn`, `error`, and
+// page's API only and compare what is settled: after the world and after each frame that has actions, they wait 400 ms, then
+// in windows of 650 ms (longer than the 0.5 s cycle of the worlds' clocks) until a window has a clock tick (at most about 5 s,
+// as a slow runner starts the clocks late), and one window more; the ticks of these windows count. They record the console lines that name a state (`warn`, `error`, and
 // the `initialize`, `shutdown` and `created` prints), the digit-normalized set of the other lines (the clocks' ticks: only
 // whether a clock ran, not how often), and the `url` and `load` of the Inlines the scenario drives.
 //
@@ -674,7 +675,9 @@ const REPO         = join (dirname (fileURLToPath (import.meta.url)), "../../../
 const RELOAD_SETS  = { inline: "synthetic-inline-reload", externproto: "synthetic-externproto-reload" };
 const RELOAD_TYPES = [ "url", "load", "remove", "publish" ];
 const EARLY_MS     = 400;
-const SETTLE_MS    = 650;
+const WINDOW_MS    = 650;
+// The most windows a step waits for its first clock tick (about 5 s): a slow machine starts the clocks late.
+const MAX_WINDOWS  = 8;
 
 function reloadScenarios ()
 {
@@ -700,6 +703,11 @@ function reloadScenarios ()
          if (frames .some ((f, i) => i && f - frames [i - 1] < 3))
             continue;
 
+         // c35 lives on the Inline's wall-clock autoRefresh: X_ITE retries a failed load again and again, so the number of its error
+         // lines grows with the time a step waits (3 in 1 s, 9 in 5 s); the native suites compare it frame by frame.
+         if (set === RELOAD_SETS .inline && file === "c35-auto-refresh-after-failure.json")
+            continue;
+
          // The Driver of the EXTERNPROTO worlds moves an instance at its second tick, which a wall clock places in one or the
          // next window: c01 is the one scenario that shows it in the last window of its only step.
          if (set === RELOAD_SETS .externproto && file === "c01-initial.json")
@@ -722,9 +730,31 @@ async function reloadCase (page, env, set, scenario)
 
    env .server .unpublish ();
 
-   // The lines of the first EARLY_MS after an action (a clock of the replaced scene may still run) are not counted as ticks.
-   const pause  = ms => page .evaluate (ms => new Promise (resolve => setTimeout (resolve, ms)), ms);
-   const settle = async () => { await pause (EARLY_MS); await page .evaluate (() => { window .__reload .mark = window .__reload .lines .length; }); await pause (SETTLE_MS); };
+   // The lines of the first EARLY_MS after an action (a clock of the replaced scene may still run) are not counted as ticks. Then
+   // the step waits in windows of WINDOW_MS until one has a tick (a slow machine starts the clocks late; at most MAX_WINDOWS, for
+   // a step in which nothing ticks), and one window more, and the ticks are those of these windows.
+   const settle = () => page .evaluate (async ([ early, win, max ]) =>
+   {
+      const r    = window .__reload;
+      const wait = ms => new Promise (resolve => setTimeout (resolve, ms));
+
+      await wait (early);
+      r .mark = r .lines .length;
+
+      for (let i = 0; i < max; ++ i)
+      {
+         await wait (win);
+
+         if (r .lines .slice (r .mark) .some (line => !r .states (line)))
+         {
+            await wait (win);
+            return;
+         }
+
+         if (i < max - 1)
+            r .mark = r .lines .length;
+      }
+   }, [ EARLY_MS, WINDOW_MS, MAX_WINDOWS ]);
 
    const snapshot = async () => page .evaluate (names =>
    {
@@ -732,7 +762,7 @@ async function reloadCase (page, env, set, scenario)
       const browser  = X3D .getBrowser (document .querySelector ("x3d-canvas"));
       const lines    = window .__reload .lines .splice (0);
       const late     = lines .slice (window .__reload .mark);
-      const states   = line => !line .startsWith ("log: ") || /\b(initialize|shutdown|created)\b/ .test (line);
+      const states   = window .__reload .states;
       const inlines  = { };
 
       for (const name of names)
@@ -761,7 +791,7 @@ async function reloadCase (page, env, set, scenario)
       const lines   = [ ];
       const origin  = window .location .origin;
 
-      window .__reload = { lines, mark: 0 };
+      window .__reload = { lines, mark: 0, states: line => !line .startsWith ("log: ") || /\b(initialize|shutdown|created)\b/ .test (line) };
       canvas .setAttribute ("scripts", "true");
 
       for (const type of [ "log", "warn", "error" ])

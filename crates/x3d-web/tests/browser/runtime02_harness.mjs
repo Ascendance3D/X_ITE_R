@@ -177,12 +177,6 @@ function scriptLifeDifferences ()
          [ [ "steps", 1, "stable" ], [ "log: B initialize" ], [ "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found" ] ],
          [ [ "steps", 1, "ticks" ], [ "log: B fraction N", "log: parent tick N" ], [ "log: parent tick N" ] ],
       ],
-      // c35: X3D 4.0 9.3.2, no automatic refresh after a failed load; X_ITE keeps refreshing and loads the file once it exists.
-      "scriptReload.inline.c35-auto-refresh-after-failure": [
-         [ [ "steps", 0, "stable" ], Array (3) .fill ("error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found"), [ "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found" ] ],
-         [ [ "steps", 1, "stable" ], [ "log: B initialize", "log: B initialize" ], [ ] ],
-         [ [ "steps", 1, "ticks" ], [ "log: B fraction N" ], [ ] ],
-      ],
       // c29: a Script of a replaced scene keeps getting prepareEvents in X_ITE for ever; X_ITE_R removes its interest.
       "scriptReload.inline.c29-script-interests": [
          [ [ "steps", 1, "ticks" ], [ "log: B fraction N", "log: P prepare N" ], [ "log: B fraction N" ] ],

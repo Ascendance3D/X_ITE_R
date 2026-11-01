@@ -1506,45 +1506,6 @@
     }
    ]
   },
-  "scriptReload.inline.c35-auto-refresh-after-failure": {
-   "steps": [
-    {
-     "k": 0,
-     "stable": [
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found",
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found",
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found"
-     ],
-     "ticks": [],
-     "inlines": {
-      "Inl": [
-       [
-        "late.wrl"
-       ],
-       true
-      ]
-     }
-    },
-    {
-     "k": 4,
-     "stable": [
-      "log: B initialize",
-      "log: B initialize"
-     ],
-     "ticks": [
-      "log: B fraction N"
-     ],
-     "inlines": {
-      "Inl": [
-       [
-        "late.wrl"
-       ],
-       true
-      ]
-     }
-    }
-   ]
-  },
   "scriptReload.inline.c37-url-and-load-false-same-frame": {
    "steps": [
     {
