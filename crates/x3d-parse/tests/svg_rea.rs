@@ -210,6 +210,16 @@ fn svg_matches_x_ite() {
 }
 
 /// PrimitiveQuality and TextureQuality change the curve subdivision and the gradient texture size.
+/// REA batch 24: CSS Color 4 functions as SVG paint (`hwb`, `lab`, `lch`, `oklab`, `oklch`,
+/// `color`), including the NaN channels X_ITE derives from the ones Chrome does not compute to
+/// `rgb()`, and a gradient stop whose NaN color makes X_ITE reject the file.
+/// Baseline: `XITE_TESTS=<x_ite-tests> node oracle/x_ite-svg.mjs oracle/synthetic-rea-b24-css4
+/// oracle/synthetic-rea-b24-css4/svg-baseline.json`.
+#[test]
+fn svg_css4_colors_match_x_ite() {
+    check("synthetic-rea-b24-css4", "svg-baseline.json", "CSS Color 4");
+}
+
 /// The page sets them (`SVG_QUALITY=<primitive>,<texture> node oracle/x_ite-svg.mjs ...`) and the
 /// Rust parser is given the same options (the runtime does so through `sync_svg_quality`).
 #[test]
