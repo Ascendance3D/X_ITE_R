@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24, issue #52 (no archive content).
+# A scene loaded by an Inline: reports its life.
+DEF LeafClock TimeSensor { loop TRUE cycleInterval 1 }
+DEF Leaf Script {
+  eventIn SFTime cycle
+  url "javascript:
+function initialize () { print ('leaf initialize'); }
+function cycle (t) { print ('leaf time'); }
+function shutdown () { print ('leaf shutdown'); }
+"
+}
+ROUTE LeafClock.time TO Leaf.cycle
+Shape { geometry Box { } }

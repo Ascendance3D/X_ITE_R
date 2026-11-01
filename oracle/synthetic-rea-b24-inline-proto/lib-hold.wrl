@@ -1,0 +1,35 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Networking:3
+COMPONENT Scripting:1
+# Synthetic, newly authored for the Rust port REA batch 24, issue #52 (no archive content).
+# EXTERNPROTO library: Hold with an Inline and an observer Script.
+PROTO Hold [ initializeOnly SFString tag "a" inputOnly SFTime probe ]
+{
+  Group { children [
+    DEF In Inline { url "leaf.wrl" }
+    DEF LS LoadSensor { watchList [ USE In ] }
+    DEF Obs Script {
+      initializeOnly SFNode inl USE In
+      inputOnly SFTime probe IS probe
+      inputOnly SFBool active
+      inputOnly SFBool loaded
+      inputOnly SFFloat progress
+      url "javascript:
+function show (label)
+{
+   print ('obs ' + label + ' load=' + inl .load);
+}
+function initialize () { show ('initialize'); }
+function probe (t) { show ('probe'); }
+function active (v) { print ('obs isActive ' + v); }
+function loaded (v) { print ('obs isLoaded ' + v); }
+function progress (v) { print ('obs progress ' + v); }
+function shutdown () { show ('shutdown'); }
+"
+    }
+    ROUTE LS.isActive TO Obs.active
+    ROUTE LS.isLoaded TO Obs.loaded
+    ROUTE LS.progress TO Obs.progress
+  ] }
+}

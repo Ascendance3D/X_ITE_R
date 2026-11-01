@@ -1,0 +1,24 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Networking:3
+COMPONENT Scripting:1
+# Synthetic, newly authored for the Rust port REA batch 24, issue #52 (no archive content).
+# EXTERNPROTO url swap: the new declaration replaces the body, with its loaded Inline, of a live instance.
+EXTERNPROTO Hold [ initializeOnly SFString tag inputOnly SFTime probe ] "lib-hold.wrl#Hold"
+DEF H Hold { }
+DEF Clock TimeSensor { cycleInterval 0.1 loop TRUE }
+DEF Driver Script {
+  inputOnly SFTime tick
+  outputOnly SFTime probe_out
+  url "javascript:
+let n = 0;
+function tick (t)
+{
+   n = n + 1;
+   print ('driver tick ' + n);
+   if (n % 2 == 0) probe_out = t;
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.probe_out TO H.probe

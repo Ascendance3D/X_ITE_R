@@ -1025,8 +1025,10 @@ impl Runtime {
         };
 
         // The body is disposed like a scene: its Scripts get `shutdown ()` (4.12.3), its routes go,
-        // its nodes are released at the next sweep.
-        self.dispose_scene(body);
+        // its nodes are released at the next sweep. X_ITE calls no `shutdown ()` for a disposed body (its
+        // Scripts, and those of the Inline scenes inside, are never disposed); the browser build follows it
+        // (`replace_skips_shutdown`, as for a replaced world).
+        self.dispose_scene_with(body, !self.replace_skips_shutdown);
 
         if self.dead_ctxs.insert(body) {
             self.bodies_disposed += 1;
