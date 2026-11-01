@@ -929,6 +929,22 @@ impl WebBrowser {
         self.worlds.get(&id)?.session.named_node(name)
     }
 
+    /// `updateNamedNode (name, node)` of scene `id` (also `addNamedNode`, after the page's checks): see
+    /// [`Session::set_named_node`].
+    #[wasm_bindgen(js_name = setNamedNode)]
+    pub fn set_named_node(&mut self, id: u32, name: &str, node: u32) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_named_node(name, node)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `removeNamedNode (name)` of scene `id`.
+    #[wasm_bindgen(js_name = removeNamedNode)]
+    pub fn remove_named_node(&mut self, id: u32, name: &str) -> Result<(), JsError> {
+        self.session_mut(id)?.remove_named_node(name);
+        Ok(())
+    }
+
     /// The root nodes of scene `id` as node ids; -1 is NULL.
     #[wasm_bindgen(js_name = rootNodes)]
     pub fn root_nodes(&self, id: u32) -> Vec<i64> {
