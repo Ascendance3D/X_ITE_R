@@ -624,6 +624,64 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
             sg(c);
             Ok(J::Undefined)
         }
+        // X3DProtoDeclarationNode.createInstance: (extern, id) in the context `c`.
+        "protoNew" => {
+            let (extern_, id) = (
+                a.first().is_some_and(coerce_bool),
+                num_arg(ctx, a, 1) as usize,
+            );
+            let proto = if extern_ {
+                x3d_scene::ProtoRef::Extern(id)
+            } else {
+                x3d_scene::ProtoRef::Proto(id)
+            };
+            let n = rt().create_instance_setup(c, proto);
+
+            Ok(node_js(Some(n)))
+        }
+        // X3DProtoDeclarationNode.requestUpdateInstances: (extern, id), at the next event cascade.
+        "protoRequest" => {
+            let (extern_, id) = (
+                a.first().is_some_and(coerce_bool),
+                num_arg(ctx, a, 1) as usize,
+            );
+
+            if !rt().pending_proto_updates.contains(&(extern_, id)) {
+                rt().pending_proto_updates.push((extern_, id));
+            }
+
+            Ok(J::Undefined)
+        }
+        // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO declaration:
+        // (id, "add", name, accessType, value) or (id, "remove", name).
+        "protoField" => {
+            let id = num_arg(ctx, a, 0) as usize;
+            let name = str_at(2);
+
+            if str_at(1) == "remove" {
+                rt().proto_remove_user_field(id, &name);
+            } else if let Some(value) = value_arg(a, 4) {
+                let access = num_arg(ctx, a, 3) as u8;
+
+                rt().proto_add_user_field(id, x3d_scene::Field::new(&name, access, value));
+            }
+
+            Ok(J::Undefined)
+        }
+        // X3DProtoDeclarationNode.updateInstances.
+        "protoUpdate" => {
+            let (extern_, id) = (
+                a.first().is_some_and(coerce_bool),
+                num_arg(ctx, a, 1) as usize,
+            );
+
+            rt().proto_update_instances(extern_, id);
+            Ok(J::Undefined)
+        }
+        // X3DProtoDeclaration.getBody: the context of the body.
+        "protoBody" => Ok(J::Number(
+            rt().scene.protos[num_arg(ctx, a, 0) as usize].body as f64,
+        )),
         // `declaration .toVRMLString ()` … (Scene::proto_declaration_string).
         "protoString" => {
             let (extern_, id) = (
@@ -641,22 +699,31 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
                 num_arg(ctx, a, 1) as usize,
             );
             let r = &rt().scene;
-            let (name, fields, has_metadata, urls) = if extern_ {
+            let (name, ctxid, fields, has_metadata, urls) = if extern_ {
                 let d = &r.externprotos[id];
                 (
                     d.name.clone(),
+                    d.ctx,
                     d.fields.clone(),
                     d.has_metadata,
                     Some(d.url.clone()),
                 )
             } else {
                 let d = &r.protos[id];
-                (d.name.clone(), d.fields.clone(), d.has_metadata, None)
+                (
+                    d.name.clone(),
+                    d.ctx,
+                    d.fields.clone(),
+                    d.has_metadata,
+                    None,
+                )
             };
             let o = Obj::new();
 
             o.set("name", name.as_str());
+            o.set("ctx", ctxid as f64);
             o.set("isExternProto", urls.is_some());
+            o.set("hasMetadata", has_metadata);
 
             // X3DExternProtoDeclaration.loadState (X3DUrlObject.checkLoadState).
             if extern_ {

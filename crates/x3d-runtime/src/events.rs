@@ -213,6 +213,12 @@ impl Runtime {
                     self.browser_options.process_events();
                     self.content_scale_events();
 
+                    // X3DProtoDeclarationNode.requestUpdateInstances: `_updateInstances` is an event; its
+                    // interests (the instances' `update`) run with the field events.
+                    for (extern_, id) in std::mem::take(&mut self.pending_proto_updates) {
+                        self.proto_update_instances(extern_, id);
+                    }
+
                     // set_StraightenHorizon__ (`getActiveLayer () ?.straightenView ()` when TRUE) and the ExamineViewer's
                     // `disconnect` interest: the viewer runs them, after the requests the Scripts made before.
                     if let Some(on) = self.browser_options.straighten_set.take() {
@@ -230,7 +236,9 @@ impl Runtime {
                         self.process_event(k, event);
                     }
 
-                    if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events()
+                    if self.tainted_fields.is_empty()
+                        && self.pending_proto_updates.is_empty()
+                        && !self.browser_options.has_pending_events()
                     {
                         break;
                     }
@@ -266,6 +274,7 @@ impl Runtime {
 
     pub fn has_pending_events(&self) -> bool {
         !self.tainted_fields.is_empty()
+            || !self.pending_proto_updates.is_empty()
             || !self.tainted_nodes.is_empty()
             || self.browser_options.has_pending_events()
     }

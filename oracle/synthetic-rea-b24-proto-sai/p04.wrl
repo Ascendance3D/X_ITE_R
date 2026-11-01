@@ -1,0 +1,49 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# createProto from a nested execution context: the lookup goes outward through the enclosing contexts.
+PROTO Outer [ field SFInt32 depth 1 ]
+{
+  PROTO Inner [ field SFInt32 depth 7 ]
+  {
+    Group { }
+  }
+  DEF Probe Script {
+    field SFInt32 depth IS depth
+    url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+
+   show ('body isScene', () => cs .isScene);
+   show ('body inner', () => cs .createProto ('Inner') .depth);
+   show ('body unknown', () => cs .createProto ('Nope'));
+   show ('body protos', () => Array .from (cs .protos, p => p .name) .join (','));
+}
+"
+  }
+}
+DEF O Outer { depth 3 }
+DEF Top Script {
+  url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+
+   show ('top inner', () => cs .createProto ('Inner') .depth);
+   show ('top outer', () => cs .createProto ('Outer') .depth);
+   show ('top protos', () => Array .from (cs .protos, p => p .name) .join (','));
+}
+"
+}
