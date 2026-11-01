@@ -773,6 +773,8 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --ru
   four-second frames (red, green, blue, yellow), a data URL, `loop FALSE` and `speed 0.5`. `movieFallback.*` are the
   candidates after a video that is no video, a missing one and a GIF that is no GIF, with the requests and the messages.
 - Three runs gave identical values (Chrome 156.0.8078.47). The browser runs with `--autoplay-policy=no-user-gesture-required`.
+  `movieFrames.webm` and `movieFrames.mp4` are skipped when `CI` is set: the video decode of the hosted GPU-less runner exceeds
+  the sampling window (they run locally).
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-movie-01-baseline --runs 3 --suite movie01

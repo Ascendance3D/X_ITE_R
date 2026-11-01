@@ -709,7 +709,7 @@ export function referenceCases (file)
          {
             const key = `${groupName}.${name}`;
 
-            test (key, { skip: ONLY && ONLY !== key, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
+            test (key, { skip: (ONLY && ONLY !== key) || group .skipCases ?.[name] || false, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
                const page = await openPage (group .context);
 
