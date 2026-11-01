@@ -40,10 +40,16 @@ env:
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
 
+# Where the jobs run (issue #162, owner ruling 2026-11-01): on the self-hosted xite-ci runners (labels self-hosted, Linux,
+# X64) unless the run is a pull request whose head branch is in another repository (a fork): that run stays on the
+# GitHub-hosted ubuntu-24.04. A push to master and workflow_dispatch are trusted (write access). A pull_request run has
+# github.event.pull_request, the other events have none, hence the event_name test first. The repository variable
+# XITE_RUNNER_LABELS (a JSON array such as ["ubuntu-24.04"]) replaces the self-hosted labels of the trusted runs, so the
+# owner can switch back without a commit; a fork's run ignores it. docs/agents/ci.md has the details.
 jobs:
   changes:
     name: Changed paths
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
     timeout-minutes: 10
     outputs:
       web: ${{ steps.changes.outputs.web }}
@@ -80,7 +86,7 @@ jobs:
     name: Browser module
     needs: changes
     if: needs.changes.outputs.web == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -103,9 +109,10 @@ jobs:
       # wasm-bindgen's CLI must be the exact version of the wasm-bindgen crate in Cargo.lock.
       - name: wasm-bindgen CLI
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
+        # flock: the self-hosted runners share one ~/.cargo/bin, and two installs of the same binary must not overlap.
         run: |
           version=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
-          wasm-bindgen --version 2>/dev/null | grep -qx "wasm-bindgen $version" || cargo install wasm-bindgen-cli --version "$version" --locked
+          wasm-bindgen --version 2>/dev/null | grep -qx "wasm-bindgen $version" || flock /tmp/xite-ci-cargo-install.lock cargo install wasm-bindgen-cli --version "$version" --locked
 
       - name: Build the browser module
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
@@ -123,7 +130,7 @@ jobs:
     name: browser (${{ matrix.shard }})
     needs: [changes, build]
     if: github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -173,7 +180,7 @@ jobs:
   warm-deps:
     name: Warm browser dependencies
     if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -188,7 +195,7 @@ jobs:
     name: Web tests result
     needs: [changes, build, browser]
     if: always() && github.event_name != 'push'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
     timeout-minutes: 5
     steps:
       - name: Needed jobs passed
