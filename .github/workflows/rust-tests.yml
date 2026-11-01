@@ -126,6 +126,10 @@ jobs:
           python3 -I -B tools/verify-reference-pin.py
           python3 -I -B tools/verify-reference-pin.py --self-test
 
+      # gpu-tests.yml (the GPU runner) lists the same GPU tests as GPU_TESTS below.
+      - name: GPU test lists
+        run: python3 -I -B tools/check_gpu_test_lists.py
+
       # The answer-key resolver checks and guard (issue #65), on synthetic Git repositories in a temporary
       # directory. The Rust half is the x3d-evidence unit tests in the test step.
       - name: Answer-key resolver and guard
