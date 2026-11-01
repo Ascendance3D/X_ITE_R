@@ -1,0 +1,328 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "case": "p01",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: create Box1: Box1 2 A object",
+      "log: create twice differs: true",
+      "log: create unknown threw Error: Unknown proto or externproto type 'Nope'.",
+      "log: create empty threw Error: Unknown proto or externproto type ''.",
+      "log: create number threw Error: Unknown proto or externproto type '5'.",
+      "log: create undefined threw Error: Unknown proto or externproto type 'undefined'.",
+      "log: create node name threw Error: Unknown proto or externproto type 'Group'.",
+      "log: create Ext: Ext 0",
+      "log: instance fields: metadata:7:1021,level:1:1016,tag:7:1024,poke:2:1016,result:4:1016",
+      "log: instance type: number",
+      "log: instance set level: 9",
+      "log: instance in scene: 1",
+      "log: instance exec ctx: undefined",
+      "log: decl name: Box1",
+      "log: decl isExternProto: false",
+      "log: decl fields: metadata:7:1021:null,level:1:1016:2,tag:7:1024:A,poke:2:1016:0,result:4:1016:0",
+      "log: decl appInfo: hello/doc",
+      "log: decl newInstance: Box1 2",
+      "log: decl createInstance: Box1 A",
+      "log: decl getBody: 1",
+      "log: decl type: 1055,1056",
+      "log: decl typeName: X3DProtoDeclaration",
+      "log: decl getName: Box1",
+      "log: decl getExecutionContext: true",
+      "log: decl body ctx: 1 false Group",
+      "log: decl getUserDefinedFields: level,tag,poke,result",
+      "log: decl proto self: true",
+      "log: ext isExternProto: true",
+      "log: ext name: Ext",
+      "log: ext fields: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: ext loadState: 1007",
+      "log: ext newInstance: Ext 0"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Ext [\n  initializeOnly SFInt32 level\n  inputOnly      SFInt32 poke\n]\n\"lib.wrl#Lib\"\n\nPROTO Box1 [\n  initializeOnly SFInt32  level 2\n  inputOutput    SFString tag \"A\"\n  inputOnly      SFInt32  poke\n  outputOnly     SFInt32  result\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n\n   show ('create Box1', () => { const n = cs .createProto ('Box1'); return n .getNodeTypeName () + ' ' + n .level + ' ' + n .tag + ' ' + typeof n; });\n   show ('create twice differs', () => cs .createProto ('Box1') !== cs .createProto ('Box1'));\n   show ('create unknown', () => cs .createProto ('Nope'));\n   show ('create empty', () => cs .createProto (''));\n   show ('create number', () => cs .createProto (5));\n   show ('create undefined', () => cs .createProto ());\n   show ('create node name', () => cs .createProto ('Group'));\n   show ('create Ext', () => { const n = cs .createProto ('Ext'); return n .getNodeTypeName () + ' ' + n .level; });\n   show ('instance fields', () => Array .from (cs .createProto ('Box1') .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','));\n   show ('instance type', () => typeof cs .createProto ('Box1') .getType ());\n   show ('instance set level', () => { const n = cs .createProto ('Box1'); n .level = 9; return n .level; });\n   show ('instance in scene', () => { const n = cs .createProto ('Box1'); return cs .rootNodes .length; });\n   show ('instance exec ctx', () => typeof cs .createProto ('Box1') .getExecutionContext);\n\n   const d = cs .protos .get ('Box1');\n   show ('decl name', () => d .name);\n   show ('decl isExternProto', () => d .isExternProto);\n   show ('decl fields', () => Array .from (d .fields, f => f .name + ':' + f .accessType + ':' + f .dataType + ':' + f .value) .join (','));\n   show ('decl appInfo', () => { d .appInfo = 'hello'; d .documentation = 'doc'; return d .appInfo + '/' + d .documentation; });\n   show ('decl newInstance', () => { const n = d .newInstance (); return n .getNodeTypeName () + ' ' + n .level; });\n   show ('decl createInstance', () => { const n = d .createInstance (cs); return n .getNodeTypeName () + ' ' + n .tag; });\n   show ('decl getBody', () => d .getBody () .rootNodes .length);\n   show ('decl type', () => d .getType () .join (','));\n   show ('decl typeName', () => d .getTypeName ());\n   show ('decl getName', () => d .getName ());\n   show ('decl getExecutionContext', () => d .getExecutionContext () === cs);\n   show ('decl body ctx', () => d .getBody () .rootNodes .length + ' ' + d .getBody () .isScene + ' ' + (d .getBody () .rootNodes [0] .getNodeTypeName ()));\n   show ('decl getUserDefinedFields', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));\n   show ('decl proto self', () => d .getProtoDeclaration () === d);\n\n   const e = cs .externprotos .get ('Ext');\n   show ('ext isExternProto', () => e .isExternProto);\n   show ('ext name', () => e .name);\n   show ('ext fields', () => Array .from (e .fields, f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','));\n   show ('ext loadState', () => e .loadState);\n   show ('ext newInstance', () => { const n = e .newInstance (); return n .getNodeTypeName () + ' ' + n .level; });\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    }
+   ]
+  },
+  {
+   "case": "p02",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: start decl: metadata:7:1021,level:1:1016,tag:7:1024",
+      "log: start early: metadata:7:1021,level:1:1016,tag:7:1024",
+      "log: decl canUserDefinedFields: true",
+      "log: decl getUserDefinedFields: level,tag",
+      "log: add extra: undefined",
+      "log: after add decl: metadata:7:1021,level:1:1016,tag:7:1024,extra:1:1029",
+      "log: after add early: metadata:7:1021,level:1:1016,tag:7:1024,extra:1:1029",
+      "log: after add late: metadata:7:1021,level:1:1016,tag:7:1024,extra:1:1029",
+      "log: late extra: 1 2 3",
+      "log: early extra: undefined",
+      "log: early level: 7",
+      "log: updateInstances: undefined",
+      "log: after upd early: metadata:7:1021,level:1:1016,tag:7:1024,extra:1:1029",
+      "log: upd early extra: 1 2 3",
+      "log: upd early level: 7",
+      "log: requestUpdateInstances: undefined",
+      "log: add replace extra: undefined",
+      "log: replace decl: metadata:7:1021,level:1:1016,tag:7:1024,extra:7:1024",
+      "log: replace late: metadata:7:1021,level:1:1016,tag:7:1024,extra:7:1024 four",
+      "log: decl fields: metadata:7:1021:null,level:1:1016:2,tag:7:1024:A,extra:7:1024:four",
+      "log: add non-field threw TypeError: field.setTainted is not a function",
+      "log: remove extra: undefined",
+      "log: remove missing: undefined",
+      "log: after remove decl: metadata:7:1021,level:1:1016,tag:7:1024",
+      "log: after remove late: metadata:7:1021,level:1:1016,tag:7:1024",
+      "log: decl toVRMLString: PROTO Box2 [",
+      "log: final early: metadata:7:1021,level:1:1016,tag:7:1024",
+      "log: final early level: 7"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Box2 [\n  initializeOnly SFInt32  level 2\n  inputOutput    SFString tag \"A\"\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction names (o) { return Array .from (o .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','); }\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const d  = cs .protos .get ('Box2');\n   const early = cs .createProto ('Box2');\n\n   early .level = 7;\n\n   show ('start decl', () => names (d));\n   show ('start early', () => names (early));\n   show ('decl canUserDefinedFields', () => d .canUserDefinedFields ());\n   show ('decl getUserDefinedFields', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));\n   show ('add extra', () => d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFVec3f (1, 2, 3)));\n   show ('after add decl', () => names (d));\n   show ('after add early', () => names (early));\n   show ('after add late', () => names (cs .createProto ('Box2')));\n   show ('late extra', () => cs .createProto ('Box2') .extra);\n   show ('early extra', () => early .extra);\n   show ('early level', () => early .level);\n   show ('updateInstances', () => d .updateInstances ());\n   show ('after upd early', () => names (early));\n   show ('upd early extra', () => early .extra);\n   show ('upd early level', () => early .level);\n   show ('requestUpdateInstances', () => d .requestUpdateInstances ());\n   show ('add replace extra', () => d .addUserDefinedField (X3DConstants .inputOutput, 'extra', new SFString ('four')));\n   show ('replace decl', () => names (d));\n   show ('replace late', () => { const n = cs .createProto ('Box2'); return names (n) + ' ' + n .extra; });\n   show ('decl fields', () => Array .from (d .fields, f => f .name + ':' + f .accessType + ':' + f .dataType + ':' + f .value) .join (','));\n   show ('add non-field', () => d .addUserDefinedField (X3DConstants .inputOutput, 'bad', 5));\n   show ('remove extra', () => d .removeUserDefinedField ('extra'));\n   show ('remove missing', () => d .removeUserDefinedField ('nothing'));\n   show ('after remove decl', () => names (d));\n   show ('after remove late', () => names (cs .createProto ('Box2')));\n   show ('decl toVRMLString', () => d .toVRMLString ());\n   d .updateInstances ();\n   show ('final early', () => names (early));\n   show ('final early level', () => early .level);\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
+  },
+  {
+   "case": "p03",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: init held metadata,level,tag level=5",
+      "log: after request metadata,level,tag,extra extra=undefined",
+      "log: tick 1 metadata,level,tag,extra extra=x level=5",
+      "log: after update metadata,level,tag,extra extra=changed level=5",
+      "log: tick 2 metadata,level,tag,extra extra=changed level=5",
+      "log: tick 3 metadata,level,tag,extra extra=changed level=5"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Box3 [\n  initializeOnly SFInt32  level 2\n  inputOutput    SFString tag \"A\"\n  initializeOnly SFString extra \"again\"\n]\n{\n  Group { }\n}\n\nDEF Clock TimeSensor {\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime tick\n  initializeOnly SFNode held Box3 {\n    level 5\n    extra \"changed\"\n  }\n\n  url \"javascript:\nlet n = 0;\nfunction names (o) { return Array .from (o .getFieldDefinitions (), f => f .name) .join (','); }\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const d  = cs .protos .get ('Box3');\n\n   held = cs .createProto ('Box3');\n   held .level = 5;\n   print ('init held ' + names (held) + ' level=' + held .level);\n   d .addUserDefinedField (X3DConstants .inputOutput, 'extra', new SFString ('x'));\n   d .requestUpdateInstances ();\n   print ('after request ' + names (held) + ' extra=' + held .extra);\n}\n\nfunction tick (t)\n{\n   if (++ n > 3)\n      return;\n\n   const d = Browser .currentScene .protos .get ('Box3');\n\n   print ('tick ' + n + ' ' + names (held) + ' extra=' + held .extra + ' level=' + held .level);\n\n   if (n === 1)\n   {\n      held .extra = 'changed';\n      d .removeUserDefinedField ('extra');\n      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('again'));\n      d .updateInstances ();\n      print ('after update ' + names (held) + ' extra=' + held .extra + ' level=' + held .level);\n   }\n}\n\"\n}\n\nROUTE Clock.time TO S.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
+  },
+  {
+   "case": "p04",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: body isScene: false",
+      "log: body inner: 7",
+      "log: body unknown threw Error: Unknown proto or externproto type 'Nope'.",
+      "log: body protos: Inner",
+      "log: top inner threw Error: Unknown proto or externproto type 'Inner'.",
+      "log: top outer: 1",
+      "log: top protos: Outer",
+      "log: body isScene: false",
+      "log: body inner: 7",
+      "log: body unknown threw Error: Unknown proto or externproto type 'Nope'.",
+      "log: body protos: Inner"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "O": {
+       "type": "Outer",
+       "body": [
+        "Script"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Outer [\n  initializeOnly SFInt32 depth 1\n]\n{\n  PROTO Inner [\n    initializeOnly SFInt32 depth 7\n  ]\n  {\n    Group { }\n  }\n\n  DEF Probe Script {\n    initializeOnly SFInt32 depth IS depth\n\n    url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n\n   show ('body isScene', () => cs .isScene);\n   show ('body inner', () => cs .createProto ('Inner') .depth);\n   show ('body unknown', () => cs .createProto ('Nope'));\n   show ('body protos', () => Array .from (cs .protos, p => p .name) .join (','));\n}\n\"\n  }\n}\n\nDEF O Outer {\n  depth 3\n}\n\nDEF Top Script {\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n\n   show ('top inner', () => cs .createProto ('Inner') .depth);\n   show ('top outer', () => cs .createProto ('Outer') .depth);\n   show ('top protos', () => Array .from (cs .protos, p => p .name) .join (','));\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "O": {
+       "type": "Outer",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "O": {
+       "type": "Outer",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "p05",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: fresh level: 2",
+      "log: set level: 11",
+      "log: type name: Gauge",
+      "log: node type: 1073,1074",
+      "log: echo watch: none",
+      "log: add root: 2",
+      "log: route: 1",
+      "log: set setting: sent",
+      "log: named: Gauge",
+      "log: toVRMLString: DEF Made Gauge {",
+      "log: Body initialize level=2",
+      "log: Body setting 21",
+      "log: got 42"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "Made": {
+       "type": "Gauge",
+       "body": [
+        "Script"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Gauge [\n  initializeOnly SFInt32 level 2\n  inputOnly      SFInt32 setting\n  outputOnly     SFInt32 echo\n]\n{\n  DEF Body Script {\n    initializeOnly SFInt32 level IS level\n    inputOnly      SFInt32 setting IS setting\n    outputOnly     SFInt32 echo IS echo\n\n    url \"javascript:\nfunction initialize () { print ('Body initialize level=' + level); }\nfunction setting (v) { print ('Body setting ' + v); echo = v * 2; }\n\"\n  }\n}\n\nDEF Make Script {\n  initializeOnly SFNode  made DEF Made Gauge {\n    level 11\n  }\n  inputOnly      SFInt32 got\n\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const g  = cs .createProto ('Gauge');\n\n   show ('fresh level', () => g .level);\n   g .level = 11;\n   show ('set level', () => g .level);\n   show ('type name', () => g .getNodeTypeName ());\n   show ('node type', () => g .getNodeType () .join (','));\n   show ('echo watch', () => { g .echo_changed = undefined; return 'none'; });\n   show ('add root', () => { cs .rootNodes .push (g); return cs .rootNodes .length; });\n   show ('route', () => { cs .addRoute (g, 'echo', cs .getNamedNode ('Make'), 'got'); return cs .routes .length; });\n   show ('set setting', () => { g .setting = 21; return 'sent'; });\n   show ('named', () => { cs .updateNamedNode ('Made', g); return cs .getNamedNode ('Made') .getNodeTypeName (); });\n   show ('toVRMLString', () => g .toVRMLString ());\n   made = g;\n}\n\nfunction got (v) { print ('got ' + v); }\n\"\n}\n\nUSE Made\n\nROUTE Made.echo TO Make.got\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "Made": {
+       "type": "Gauge",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "Made": {
+       "type": "Gauge",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

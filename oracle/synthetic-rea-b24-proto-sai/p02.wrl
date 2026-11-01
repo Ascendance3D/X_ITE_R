@@ -1,0 +1,60 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# Field updates on a PROTO declaration, seen by instances created before and after.
+PROTO Box2 [
+  field SFInt32 level 2
+  exposedField SFString tag "A"
+]
+{
+  Group { }
+}
+DEF S Script {
+  url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function names (o) { return Array .from (o .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','); }
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const d  = cs .protos .get ('Box2');
+   const early = cs .createProto ('Box2');
+
+   early .level = 7;
+
+   show ('start decl', () => names (d));
+   show ('start early', () => names (early));
+   show ('decl canUserDefinedFields', () => d .canUserDefinedFields ());
+   show ('decl getUserDefinedFields', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));
+   show ('add extra', () => d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFVec3f (1, 2, 3)));
+   show ('after add decl', () => names (d));
+   show ('after add early', () => names (early));
+   show ('after add late', () => names (cs .createProto ('Box2')));
+   show ('late extra', () => cs .createProto ('Box2') .extra);
+   show ('early extra', () => early .extra);
+   show ('early level', () => early .level);
+   show ('updateInstances', () => d .updateInstances ());
+   show ('after upd early', () => names (early));
+   show ('upd early extra', () => early .extra);
+   show ('upd early level', () => early .level);
+   show ('requestUpdateInstances', () => d .requestUpdateInstances ());
+   show ('add replace extra', () => d .addUserDefinedField (X3DConstants .inputOutput, 'extra', new SFString ('four')));
+   show ('replace decl', () => names (d));
+   show ('replace late', () => { const n = cs .createProto ('Box2'); return names (n) + ' ' + n .extra; });
+   show ('decl fields', () => Array .from (d .fields, f => f .name + ':' + f .accessType + ':' + f .dataType + ':' + f .value) .join (','));
+   show ('add non-field', () => d .addUserDefinedField (X3DConstants .inputOutput, 'bad', 5));
+   show ('remove extra', () => d .removeUserDefinedField ('extra'));
+   show ('remove missing', () => d .removeUserDefinedField ('nothing'));
+   show ('after remove decl', () => names (d));
+   show ('after remove late', () => names (cs .createProto ('Box2')));
+   show ('decl toVRMLString', () => d .toVRMLString ());
+   d .updateInstances ();
+   show ('final early', () => names (early));
+   show ('final early level', () => early .level);
+}
+"
+}
