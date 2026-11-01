@@ -45,6 +45,12 @@ pub trait Fetcher {
     /// starts a request for it even when it holds a response or one is in flight; the response that comes replaces the one
     /// it holds.
     fn refresh(&self, _url: &url::Url) {}
+
+    /// A load attempt of an Inline starts over (its url is set again): an asynchronous fetcher forgets the failed
+    /// response it holds for `url`, so the attempt asks for the file again, as X_ITE's `fetch` of each Inline load does.
+    /// A response that arrived or is in flight stays. EXTERNPROTO keeps its failure (X_ITE's scene cache holds it for
+    /// good), so only the Inline's own url set calls this.
+    fn forget_failure(&self, _url: &url::Url) {}
 }
 
 /// The state of a URL at an asynchronous [`Fetcher`].
