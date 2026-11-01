@@ -14,13 +14,20 @@ pub fn oracle_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle")
 }
 
+pub const RELOAD_DIR: &str = "synthetic-externproto-reload";
+
 pub fn case_dir() -> PathBuf {
-    oracle_root().join("synthetic-externproto-reload")
+    oracle_root().join(RELOAD_DIR)
 }
 
 /// The scenarios, by name.
 pub fn case_names() -> Vec<String> {
-    let mut names: Vec<String> = std::fs::read_dir(case_dir())
+    case_names_in(RELOAD_DIR)
+}
+
+/// The scenarios of another case directory under `oracle/`, by name.
+pub fn case_names_in(dir: &str) -> Vec<String> {
+    let mut names: Vec<String> = std::fs::read_dir(oracle_root().join(dir))
         .unwrap()
         .filter_map(|e| {
             e.ok()?
@@ -61,10 +68,15 @@ impl Fetcher for OverlayFetcher {
 
 /// Run one scenario and return its trace: `{ case, ok, steps: [ { k, loadCount, console, externs, instances, vrml? } ] }`.
 pub fn run_scenario(name: &str) -> Result<Value, String> {
+    run_scenario_in(RELOAD_DIR, name)
+}
+
+/// [`run_scenario`] for a case directory under `oracle/`.
+pub fn run_scenario_in(dir_name: &str, name: &str) -> Result<Value, String> {
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
     let root = oracle_root();
-    let dir = case_dir();
+    let dir = root.join(dir_name);
     let text = std::fs::read_to_string(dir.join(format!("{name}.json")))
         .map_err(|e| format!("{name}.json: {e}"))?;
     let scenario: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
@@ -76,7 +88,7 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
 
     let url = format!(
         "{ORACLE_PREFIX}{}",
-        encode_path(&format!("synthetic-externproto-reload/{world}"))
+        encode_path(&format!("{dir_name}/{world}"))
     );
     let data = std::fs::read(dir.join(world)).map_err(|e| format!("{world}: {e}"))?;
     let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
@@ -111,7 +123,7 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
 
         for a in actions.iter().filter(|a| a["frame"].as_u64() == Some(k)) {
             rt.now = prev;
-            apply(&mut rt, &overlay, a)?;
+            apply(&mut rt, &overlay, &dir, dir_name, a)?;
         }
 
         rt.settle();
@@ -138,18 +150,24 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
     Ok(json!({ "case": name, "ok": true, "steps": steps, "cleanup": cleanup }))
 }
 
-fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
+fn apply(
+    rt: &mut Runtime,
+    overlay: &Overlay,
+    dir: &Path,
+    dir_name: &str,
+    a: &Value,
+) -> Result<(), String> {
     let kind = a["type"].as_str().unwrap_or("");
 
     if kind == "publish" {
         let from = a["from"].as_str().ok_or("publish needs from")?;
         let path = a["path"].as_str().ok_or("publish needs path")?;
-        let data = std::fs::read(case_dir().join(from)).map_err(|e| format!("{from}: {e}"))?;
+        let data = std::fs::read(dir.join(from)).map_err(|e| format!("{from}: {e}"))?;
 
         overlay
             .0
             .borrow_mut()
-            .insert(format!("/synthetic-externproto-reload/{path}"), data);
+            .insert(format!("/{dir_name}/{path}"), data);
         return Ok(());
     }
 

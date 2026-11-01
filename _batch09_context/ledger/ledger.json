@@ -5520,12 +5520,14 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "mapping field (multi-texture mapping) not used by the renderer",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs (texcoord-mapping, phong-textures-mapping: PhysicalMaterial and Material texture mappings against MultiTextureCoordinate, TextureCoordinateGenerator and MultiTextureTransform mappings, an unmatched mapping, a repeated mapping; MSAA 0 and 4)"
+   ],
+   "missing": "",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97) pictures at MSAA 0 and 4: oracle/render-rea-b09-inputs-baseline and render-msaa4-rea-b09-inputs-baseline (texcoord-mapping.wrl, phong-textures-mapping.wrl)",
+   "notes": "Issue #71 2026-10-31: no renderer change was needed; the mapping worlds recorded in batch 09 already match. Mutation: mapping_channel always 0 fails all four mapping shots. Not pinned: first-match against last-match of a repeated mapping name (the repeated-name case renders the same either way)."
   },
   {
    "id": "node:TextureCoordinateGenerator",
@@ -6841,10 +6843,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "cached EXTERNPROTO live-state parity; disposed-context cancel is a deliberate difference",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-script/tests/rea_b24_externproto_live.rs (rea_b24_externproto_live_matches_x_ite: two declarations sharing one url and cached scene, reload to another file or the cached scene, same-frame reload, loadNow on a cache hit, load FALSE then url change then load TRUE, an interface change; disposed-context cases d1-d4; shared_scene_declarations_stay_independent; disposed_context_cancels_the_load)"
+   ],
+   "missing": "disposed-context cancel is a deliberate difference: pinned X_ITE builds the PROTO body (and runs its Script initialize) in a disposed scene when the declaration's load was in flight one tick after the Inline was asked for; Rust cancels it with its context (owner decision pending, #63); createX3DFromString with an EXTERNPROTO after load not compared",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97) logs: oracle/synthetic-rea-b24-externproto-live-baseline.json (10 cases, 5 identical recordings)",
+   "notes": "Issue #58 2026-10-31: shared-declaration live state matches X_ITE in every recorded step with no KNOWN entry. The d1 disposed-context difference is pinned by two KNOWN entries (d1-dispose-load, d1-dispose-url) and by disposed_context_cancels_the_load; matching X_ITE means dropping the two cancel guards (extern_close, the ctx_dead filter in extern_instances) and the entries."
   },
   {
    "id": "sub:routing.routes",
