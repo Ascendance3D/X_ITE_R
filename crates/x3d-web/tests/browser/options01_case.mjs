@@ -1,5 +1,5 @@
 // The browser options 01 cases (issue #136): getBrowserOption, setBrowserOption, getBrowserProperty,
-// getRenderingProperty, print and println; part 4 (issue #141): browser.description and the notification.
+// getRenderingProperty, print and println; part 4 (issue #141): browser.description and the notification; part 5: the keys of the browser (debug shortcuts).
 // oracle/x_ite-web-runtime-02.mjs (--suite options01) runs them against pinned X_ITE 16.5.0 and records the values;
 // options01.test.mjs runs them against X_ITE_R and compares (runtime02_harness.mjs).
 
@@ -413,7 +413,120 @@ async function notification (page)
    });
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification };
+// The keys that X3DCoreContext handles itself ([_keydown] of X_ITE 16.5.0), sent with Playwright's keyboard to the focused
+// canvas: Home, End, Page Up and Page Down change the viewpoint; Ctrl+Plus toggles the Timings option; Ctrl+1 to Ctrl+5
+// (Shading) and Ctrl+S (end/begin update) act only with the Debug option set. Compared after each key: whether the page's
+// keydown listener saw `defaultPrevented`, the bound viewpoint, the options Timings, Shading and Debug, isLive, and what a
+// KeySensor of the world got (the feed to the world stays; the sensor is disabled until the end, because an enabled
+// KeySensor calls preventDefault for every key). Not compared: Shift+F8 (clipboard), the notification text.
+const KEYS_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT KeyDeviceSensor:1
+DEF V1 Viewpoint { description "V1" position 0 0 10 }
+DEF V2 Viewpoint { description "V2" position 0 0 12 }
+DEF V3 Viewpoint { description "V3" position 0 0 14 }
+DEF K KeySensor { enabled FALSE }
+Shape { geometry Box { } }
+`)}`;
+
+async function debugKeys (page)
+{
+   await page .evaluate (pageLoadURL, [ KEYS_WORLD ]);
+
+   const result = await page .evaluate (() => window .pending);
+
+   if (result !== "resolved")
+      throw new Error (`the world did not load: ${result}\n${page .log .join ("\n")}`);
+
+   await settle (page, 100);
+
+   await page .evaluate (() =>
+   {
+      const canvas  = document .querySelector ("x3d-canvas");
+      const browser = canvas .browser;
+      const scene   = browser .currentScene;
+
+      window .seen   = [ ];
+      window .pressed = [ ];
+
+      window .addEventListener ("keydown", event => window .seen .push ([ event .keyCode, event .defaultPrevented ]));
+      scene .getNamedNode ("K") .addFieldCallback ("keys", "keyPress", value => window .pressed .push (String (value)));
+      canvas .focus ();
+   });
+
+   const frames = () => page .evaluate (() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (() => requestAnimationFrame (() => requestAnimationFrame (() => r ())))))) ;
+
+   const state = () => page .evaluate (() =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const seen    = window .seen .splice (0);
+      const pressed = window .pressed .splice (0);
+
+      return {
+         seen, pressed,
+         bound:   [ "V1", "V2", "V3" ] .filter (name => scene .getNamedNode (name) .isBound) .join (","),
+         timings: browser .getBrowserOption ("Timings"), shading: browser .getBrowserOption ("Shading"),
+         rendering: browser .getRenderingProperty ("Shading"), live: browser .isLive (), debug: browser .getBrowserOption ("Debug"),
+      };
+   });
+
+   const out = { initial: await state () };
+
+   const press = async (label, ... keys) =>
+   {
+      for (const key of keys)
+         await page .keyboard .press (key);
+
+      await frames ();
+      out [label] = await state ();
+   };
+
+   // The viewpoint keys, with and without Debug.
+   await press ("end",      "End");
+   await press ("home",     "Home");
+   await press ("pageDown", "PageDown");
+   await press ("pageDown2", "PageDown");
+   await press ("pageUp",   "PageUp");
+   await press ("pageDown3", "PageDown", "PageDown", "PageDown");
+
+   // Ctrl+Plus: the Timings option (Ctrl+= is keyCode 187, as Ctrl+Shift+= with the plus sign).
+   await press ("plainPlus", "=");
+   await press ("ctrlPlus",  "Control+=");
+   await press ("ctrlPlus2", "Control+Shift+=");
+   await press ("ctrlPlus3", "Control+=");
+
+   // The Debug keys with the Debug option false: nothing happens and the keys are not claimed.
+   await press ("debugOffCtrl1", "Control+1");
+   await press ("debugOffCtrlS", "Control+s");
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("Debug", true));
+
+   await press ("plain1", "1");
+   await press ("plainS", "s");
+   await press ("ctrl1", "Control+1");
+   await press ("ctrl2", "Control+2");
+   await press ("ctrl3", "Control+3");
+   await press ("ctrl4", "Control+4");
+   await press ("ctrl5", "Control+5");
+   await press ("shiftCtrl1", "Control+Shift+!");
+   await press ("ctrlS",  "Control+s");
+   await press ("ctrlS2", "Control+s");
+   await press ("altCtrl1", "Alt+Control+1");
+   await press ("keyDisabled", "a");
+
+   // An enabled KeySensor gets the keys as before (and claims every key, as KeySensor.js does).
+   await page .evaluate (() => { document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("K") .enabled = true; });
+   await press ("key",    "a", "Shift+b", "Home");
+
+   // KeySensor.js calls preventDefault for every key while it is enabled; X_ITE_R's KeySensor does not (API.md, known
+   // differences): only the key codes of this step are compared, not whether they were claimed.
+   out .key .seen = out .key .seen .map (([ code ]) => code);
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
