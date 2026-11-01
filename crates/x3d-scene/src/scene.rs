@@ -1355,6 +1355,21 @@ impl Scene {
         self.contexts[ctx].named_nodes.get(name)
     }
 
+    /// X3DExecutionContext.getNamedNodes: the named nodes of `ctx` in the order of its NamedNodesArray.
+    pub fn named_node_list(&self, ctx: CtxId) -> Vec<NodeId> {
+        self.contexts[ctx].named_nodes.values().to_vec()
+    }
+
+    /// X3DScene.getExportedNodes: the exported nodes of `ctx` in the order of its ExportedNodesArray.
+    pub fn exported_node_list(&self, ctx: CtxId) -> Vec<&ExportedNode> {
+        self.contexts[ctx]
+            .exported
+            .values()
+            .iter()
+            .map(|&e| &self.exported[e])
+            .collect()
+    }
+
     pub fn get_unique_name(&self, ctx: CtxId, name: &str) -> String {
         let named = &self.contexts[ctx].named_nodes;
         get_unique_name(|n| named.has(n), name)
