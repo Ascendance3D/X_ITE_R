@@ -12,7 +12,7 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -31,7 +31,7 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -50,7 +50,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -69,7 +69,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -88,7 +88,7 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -107,7 +107,7 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
@@ -126,13 +126,11 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "before": "red",
    "colors": [
     "red",
-    "red",
-    "green",
     "green",
     "blue"
    ],
@@ -145,7 +143,7 @@
     "width": 16,
     "height": 16,
     "colorDepth": 4,
-    "duration": 4
+    "duration": 16
    },
    "color": "red",
    "served": [
@@ -163,7 +161,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "color": "red",
    "served": [
@@ -181,7 +179,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "color": "red",
    "served": [
@@ -200,7 +198,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "color": "red",
    "served": [
@@ -218,7 +216,7 @@
     "width": 64,
     "height": 64,
     "colorDepth": 3,
-    "duration": 4
+    "duration": 16
    },
    "color": "red",
    "served": [
