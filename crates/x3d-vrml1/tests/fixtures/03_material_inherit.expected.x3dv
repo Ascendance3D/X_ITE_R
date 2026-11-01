@@ -1,0 +1,51 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Transform {
+  children [
+    Shape {
+      appearance Appearance {
+        material DEF _1 Material {
+          ambientIntensity 0.4
+          diffuseColor 0 1 0
+          specularColor 1 1 1
+          emissiveColor 0.1 0.1 0.1
+          shininess 0.5
+          transparency 0.25
+        }
+      }
+      geometry Box { }
+    }
+    Shape {
+      appearance Appearance {
+        material USE _1
+      }
+      geometry Sphere { }
+    }
+    Transform {
+      children Shape {
+        appearance Appearance {
+          material Material {
+            ambientIntensity 0.2
+            diffuseColor 0 0 1
+            shininess 0.2
+          }
+        }
+        geometry Cone { }
+      }
+    }
+    Shape {
+      appearance Appearance {
+        material USE _1
+      }
+      geometry Cylinder { }
+    }
+  ]
+}

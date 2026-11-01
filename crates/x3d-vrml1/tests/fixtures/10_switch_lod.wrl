@@ -1,0 +1,5 @@
+#VRML V1.0 ascii
+Separator {
+  Switch { whichChild 1 Cube { } Sphere { } }
+  LOD { range [ 10, 20 ] center 0 1 0 Cube { } Sphere { } Cone { } }
+}

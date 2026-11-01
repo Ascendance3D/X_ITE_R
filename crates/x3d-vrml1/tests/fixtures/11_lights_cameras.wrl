@@ -1,0 +1,7 @@
+#VRML V1.0 ascii
+Separator {
+  PerspectiveCamera { position 0 1 5 orientation 0 1 0 0.3 heightAngle 0.5 nearDistance 0.1 farDistance 50 }
+  DirectionalLight { intensity 0.5 color 1 0.5 0 direction 0 -1 0 }
+  PointLight { location 1 2 3 on FALSE }
+  SpotLight { location 0 5 0 direction 0 -1 0 cutOffAngle 0.5 dropOffRate 0.3 }
+}

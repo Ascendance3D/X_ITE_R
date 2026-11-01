@@ -1,0 +1,9 @@
+#VRML V1.0 ascii
+Separator {
+  Cube { width 3 height 4 depth 5 }
+  Sphere { radius 2.5 }
+  Cone { parts SIDES bottomRadius 3 height 6 }
+  Cone { parts BOTTOM }
+  Cylinder { parts (SIDES | TOP) radius 0.5 height 4 }
+  Cylinder { }
+}
