@@ -2233,6 +2233,471 @@
      "description": "1,2"
     }
    }
+  },
+  "browserOptions.debugKeys": {
+   "initial": {
+    "seen": [],
+    "pressed": [],
+    "bound": "V1",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "end": {
+    "seen": [
+     [
+      35,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "home": {
+    "seen": [
+     [
+      36,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V1",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "pageDown": {
+    "seen": [
+     [
+      34,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V2",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "pageDown2": {
+    "seen": [
+     [
+      34,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "pageUp": {
+    "seen": [
+     [
+      33,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V2",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "pageDown3": {
+    "seen": [
+     [
+      34,
+      true
+     ],
+     [
+      34,
+      true
+     ],
+     [
+      34,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "plainPlus": {
+    "seen": [
+     [
+      187,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "ctrlPlus": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      187,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "ctrlPlus2": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      16,
+      false
+     ],
+     [
+      187,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": false,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "ctrlPlus3": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      187,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "debugOffCtrl1": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      49,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "debugOffCtrlS": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      83,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": false
+   },
+   "plain1": {
+    "seen": [
+     [
+      49,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": true
+   },
+   "plainS": {
+    "seen": [
+     [
+      83,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": true
+   },
+   "ctrl1": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      49,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   },
+   "ctrl2": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      50,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "WIREFRAME",
+    "rendering": "WIREFRAME",
+    "live": true,
+    "debug": true
+   },
+   "ctrl3": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      51,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "FLAT",
+    "rendering": "FLAT",
+    "live": true,
+    "debug": true
+   },
+   "ctrl4": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      52,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "GOURAUD",
+    "rendering": "GOURAUD",
+    "live": true,
+    "debug": true
+   },
+   "ctrl5": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      53,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "PHONG",
+    "rendering": "PHONG",
+    "live": true,
+    "debug": true
+   },
+   "shiftCtrl1": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      16,
+      false
+     ],
+     [
+      49,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   },
+   "ctrlS": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      83,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": false,
+    "debug": true
+   },
+   "ctrlS2": {
+    "seen": [
+     [
+      17,
+      false
+     ],
+     [
+      83,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   },
+   "altCtrl1": {
+    "seen": [
+     [
+      18,
+      false
+     ],
+     [
+      17,
+      false
+     ],
+     [
+      49,
+      true
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   },
+   "keyDisabled": {
+    "seen": [
+     [
+      65,
+      false
+     ]
+    ],
+    "pressed": [],
+    "bound": "V3",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   },
+   "key": {
+    "seen": [
+     65,
+     16,
+     66,
+     36
+    ],
+    "pressed": [
+     "b"
+    ],
+    "bound": "V1",
+    "timings": true,
+    "shading": "POINT",
+    "rendering": "POINT",
+    "live": true,
+    "debug": true
+   }
   }
  }
 }
