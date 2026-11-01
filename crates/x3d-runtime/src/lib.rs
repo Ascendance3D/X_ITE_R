@@ -509,6 +509,9 @@ pub struct Runtime {
     pub dead_ctxs: std::collections::HashSet<CtxId>,
     /// Root contexts of Inline scenes that were disposed or discarded (see `inline.rs`).
     pub disposed_scenes: std::collections::HashSet<CtxId>,
+    /// Contexts that something was built under after their scene was disposed (a load that finished late, issue #58);
+    /// they are disposed again at the end of the frame, once the Scripts built there have initialized.
+    pub late_arrivals: Vec<CtxId>,
     /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
     pub fetches: std::collections::VecDeque<Task>,
     /// Fetches that wait for an asynchronous [`Fetcher`] (see [`Runtime::resume_fetches`]), in request order.
@@ -768,6 +771,7 @@ impl Runtime {
             pending_proto_updates: vec![],
             dead_ctxs: Default::default(),
             disposed_scenes: Default::default(),
+            late_arrivals: Vec::new(),
             fetches: Default::default(),
             parked_fetches: vec![],
             video_ops: vec![],
