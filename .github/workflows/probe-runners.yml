@@ -1,0 +1,37 @@
+name: Probe runners (temporary)
+on:
+  pull_request:
+    paths: [".github/workflows/probe-runners.yml"]
+permissions:
+  contents: read
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: wrlforge, labels: '["self-hosted","Linux","X64","linux-proxmox"]' }
+          - { name: proxmox-a, labels: '["self-hosted","Linux","X64","proxmox"]' }
+          - { name: proxmox-b, labels: '["self-hosted","Linux","X64","proxmox"]' }
+          - { name: proxmox-c, labels: '["self-hosted","Linux","X64","proxmox"]' }
+          - { name: gpu, labels: '["self-hosted","Linux","X64","gpu"]' }
+    name: probe (${{ matrix.name }})
+    runs-on: ${{ fromJSON(matrix.labels) }}
+    timeout-minutes: 10
+    steps:
+      - name: Report the runner (read-only)
+        shell: bash
+        run: |
+          echo "runner: $RUNNER_NAME ($RUNNER_OS/$RUNNER_ARCH) env=$RUNNER_ENVIRONMENT user=$(id -un) home=$HOME"
+          echo "cpus: $(nproc) mem: $(awk '/MemTotal/ {printf "%d MiB", $2/1024}' /proc/meminfo) disk: $(df -h / | awk 'NR==2 {print $4" free of "$2}')"
+          grep -m1 PRETTY_NAME /etc/os-release
+          for t in cargo rustup rustc clang lld node npm python3 pkg-config xvfb-run wasm-bindgen sudo flock; do printf '%-12s %s\n' "$t" "$(command -v $t || echo MISSING)"; done
+          echo "path: $PATH"
+          ls "$HOME/.cargo/bin" 2>/dev/null | head -20 | tr '\n' ' '; echo
+          rustc --version 2>/dev/null || true
+          node --version 2>/dev/null || true
+          for p in libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev mesa-vulkan-drivers; do printf '%-22s %s\n' "$p" "$(dpkg -s $p 2>/dev/null | awk '/^Version:/ {print $2}' || true)"; done
+          echo "vulkan icds:"; ls /usr/share/vulkan/icd.d /etc/vulkan/icd.d 2>/dev/null
+          (command -v vulkaninfo >/dev/null && vulkaninfo --summary 2>/dev/null | rg -i "deviceName|driverName|driverInfo" | head -6) || echo "no vulkaninfo"
+          (sudo -n true 2>&1 && echo "sudo: works") || echo "sudo: not usable"
+          ls ~/.cache/ms-playwright 2>/dev/null | head -3
