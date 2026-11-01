@@ -184,9 +184,7 @@ fn compare_images(
 }
 
 fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> bool {
-    let base = root
-        .join("oracle/rea-b13-particles-baseline")
-        .join(name);
+    let base = root.join("oracle/rea-b13-particles-baseline").join(name);
     let world = root
         .join("oracle/synthetic-rea-b13-particles")
         .join(format!("{name}.x3dv"));
