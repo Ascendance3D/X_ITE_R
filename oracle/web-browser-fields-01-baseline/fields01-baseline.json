@@ -8493,6 +8493,467 @@
    ],
    "fieldWrite": "set",
    "log": []
+  },
+  "fieldEarly.importedNodes": {
+   "loaded": [
+    true,
+    true
+   ],
+   "start": [
+    0,
+    "ImportedNodesArray",
+    []
+   ],
+   "add": "undefined",
+   "addState": [
+    [
+     [
+      "Out",
+      "Out",
+      ""
+     ]
+    ],
+    [
+     "IMPORT I.Out"
+    ]
+   ],
+   "addDuplicate": "Error: Couldn't add imported node: imported name 'Out' already in use.",
+   "addAs": "undefined",
+   "addAsState": [
+    [
+     [
+      "Out",
+      "Out",
+      ""
+     ],
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ]
+    ],
+    [
+     "IMPORT I.Out",
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\""
+    ]
+   ],
+   "addOtherInline": "undefined",
+   "addNotInline": "Error: Node must be of type Inline node.",
+   "addNoNode": "Error: Node must be of type Inline node.",
+   "addNull": "Error: Node must be of type Inline node.",
+   "addNotNode": "Error: Node must be of type Inline node.",
+   "addEmptyExported": "Error: Couldn't update imported node: exported name is empty.",
+   "addEmptyImported": "Error: Couldn't update imported node: imported name is empty.",
+   "addNumbers": "undefined",
+   "addNoArgs": "Error: Node must be of type Inline node.",
+   "addForeign": "Error: Couldn't update imported node: Inline node does not belong to this execution context.",
+   "addMissing": "undefined",
+   "addDescriptionNumber": "undefined",
+   "addState2": [
+    [
+     [
+      "Out",
+      "Out",
+      ""
+     ],
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ]
+    ],
+    [
+     "IMPORT I.Out",
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\""
+    ]
+   ],
+   "getUnknown": "Error: Imported node 'nope' not found.",
+   "getNoArgs": "Error: Imported node 'undefined' not found.",
+   "getNumber": "Error: Imported node '5' not found.",
+   "sameList": [
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "item": [
+    "X3DImportedNode",
+    "Out",
+    "Out",
+    "",
+    true,
+    "Inner",
+    "Transform",
+    true,
+    true,
+    "[object X3DImportedNode]",
+    []
+   ],
+   "itemMethods": [
+    "Out",
+    "Out",
+    "",
+    true,
+    true,
+    true
+   ],
+   "itemSetDescription": [
+    "changed",
+    "changed",
+    [
+     "IMPORT I.Out DESCRIPTION \"changed\"",
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\""
+    ]
+   ],
+   "inst": [
+    "Out",
+    "Transform",
+    "SFNode",
+    true
+   ],
+   "instField": "1 2 3",
+   "instFieldWrite": "7 8 9",
+   "instInnerTranslation": "7 8 9",
+   "instDefinitions": 13,
+   "instInRoot": -1,
+   "localNode": [
+    "G",
+    true
+   ],
+   "updateNew": "undefined",
+   "updateReplace": "undefined",
+   "updateState": [
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Upd",
+      "Other",
+      ""
+     ],
+     [
+      "Out",
+      "Other",
+      "replaced"
+     ]
+    ],
+    [
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\"",
+     "IMPORT J.Other AS Upd",
+     "IMPORT J.Other AS Out DESCRIPTION \"replaced\""
+    ],
+    "Out",
+    false,
+    false,
+    7
+   ],
+   "updateDefault": "undefined",
+   "updateNotInline": "Error: Node must be of type Inline node.",
+   "updateForeign": "Error: Couldn't update imported node: Inline node does not belong to this execution context.",
+   "updateEmpty": "Error: Couldn't update imported node: exported name is empty.",
+   "updateEmptyImported": "Error: Couldn't update imported node: imported name is empty.",
+   "updateState2": [
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Upd",
+      "Other",
+      ""
+     ],
+     [
+      "Out",
+      "Out",
+      ""
+     ]
+    ],
+    [
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\"",
+     "IMPORT J.Other AS Upd",
+     "IMPORT I.Out"
+    ]
+   ],
+   "rename": "undefined",
+   "renameState": [
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Renamed",
+      "Other",
+      ""
+     ],
+     [
+      "Out",
+      "Out",
+      ""
+     ]
+    ],
+    [
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\"",
+     "IMPORT J.Other AS Renamed",
+     "IMPORT I.Out"
+    ],
+    "Renamed",
+    "Error: Imported node 'Upd' not found."
+   ],
+   "renameUnknown": "Error: Couldn't rename imported node: imported node does not exists.",
+   "renameExisting": "Error: Couldn't rename imported node: new imported name does already exists.",
+   "renameNoArgs": "Error: Couldn't rename imported node: imported node does not exists.",
+   "removeKnown": "undefined",
+   "removeState": [
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Out",
+      "Out",
+      ""
+     ]
+    ],
+    [
+     "IMPORT I.Other AS Alias DESCRIPTION \"a description\"",
+     "IMPORT J.Out AS FromJ",
+     "IMPORT I.5 AS 6",
+     "IMPORT I.Nothing AS Missing",
+     "IMPORT J.Out AS Described DESCRIPTION \"7\"",
+     "IMPORT I.Out"
+    ],
+    "Error: Imported node 'Renamed' not found."
+   ],
+   "removeUnknown": "undefined",
+   "removeNumber": "undefined",
+   "removeNoArgs": "undefined",
+   "removeAgain": "undefined",
+   "addAfterRemove": "undefined",
+   "removedItem": [
+    true,
+    7,
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Out",
+      "Out",
+      ""
+     ],
+     [
+      "Renamed",
+      "Other",
+      ""
+     ]
+    ]
+   ],
+   "uniqueName": "Out_1",
+   "addMade": "undefined",
+   "addMadeState": [
+    [
+     [
+      "Alias",
+      "Other",
+      "a description"
+     ],
+     [
+      "FromJ",
+      "Out",
+      ""
+     ],
+     [
+      "6",
+      "5",
+      ""
+     ],
+     [
+      "Missing",
+      "Nothing",
+      ""
+     ],
+     [
+      "Described",
+      "Out",
+      "7"
+     ],
+     [
+      "Out",
+      "Out",
+      ""
+     ],
+     [
+      "Renamed",
+      "Other",
+      ""
+     ],
+     [
+      "FromMade",
+      "Out",
+      ""
+     ]
+    ],
+    "X3DImportedNodeInstance"
+   ],
+   "removeMade": "undefined",
+   "foreign": [
+    false,
+    0
+   ],
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I Inline {\n  url \"data:model/x3d-vrml,%23X3D%20V4.0%20utf8%0APROFILE%20Full%0ADEF%20Inner%20Transform%20%7B%20translation%201%202%203%20%7D%0ADEF%20Other%20Group%20%7B%20%7D%0AEXPORT%20Inner%20AS%20Out%0AEXPORT%20Other%0A\"\n}\n\nDEF J Inline {\n  url \"data:model/x3d-vrml,%23X3D%20V4.0%20utf8%0APROFILE%20Full%0ADEF%20Inner%20Transform%20%7B%20translation%201%202%203%20%7D%0ADEF%20Other%20Group%20%7B%20%7D%0AEXPORT%20Inner%20AS%20Out%0AEXPORT%20Other%0A\"\n}\n\nDEF G Group { }\n\nIMPORT I.Other AS Alias DESCRIPTION \"a description\"\nIMPORT J.Out AS FromJ\nIMPORT I.5 AS 6\nIMPORT I.Nothing AS Missing\nIMPORT J.Out AS Described DESCRIPTION \"7\"\nIMPORT I.Out\nIMPORT I.Other AS Renamed\n",
+   "log": []
   }
  }
 }

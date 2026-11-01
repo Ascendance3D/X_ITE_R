@@ -1518,7 +1518,7 @@ const liveInfoArray = (array, list) =>
       const index  = new Map ();
 
       for (const value of values)
-         index .set (value instanceof X3DExportedNode ? value .exportedName : value .getNodeName (), value);
+         index .set (value instanceof X3DExportedNode ? value .exportedName : value instanceof X3DImportedNode ? value .importedName : value .getNodeName (), value);
 
       return [ values, index ];
    };
@@ -1640,7 +1640,102 @@ class ExportedNodesArray extends X3DInfoArray
    getTypeName () { return "ExportedNodesArray"; }
 }
 
-for (const type of [ NamedNodesArray, ExportedNodesArray ])
+// X3DImportedNode: `IMPORT inlineName.exportedName AS importedName` of a scene (Execution/X3DImportedNode.js). The object keeps
+// the Inline, the names and the description it was made with; a rename changes the importedName of the object that is the
+// scene's, the description setter also changes the scene's record while this object still is the scene's.
+// getInlineNode (), getExportedNode () and getInstance () give the SFNode where X_ITE gives its internal node.
+class X3DImportedNode
+{
+   #scene;
+   #handle;
+   #inlineId;
+   #exportedName;
+   #importedName;
+   #instanceId;
+   #description;
+
+   constructor (scene, handle, inlineId, exportedName, importedName, instanceId, description)
+   {
+      this .#scene        = scene;
+      this .#handle       = handle;
+      this .#inlineId     = inlineId;
+      this .#exportedName = exportedName;
+      this .#importedName = importedName;
+      this .#instanceId   = instanceId;
+      this .#description  = description;
+   }
+
+   get instanceId () { return this .#instanceId; }
+
+   rename (importedName) { this .#importedName = importedName; }
+
+   getTypeName ()         { return "X3DImportedNode"; }
+   getExecutionContext () { return this .#scene; }
+   getInlineNode ()       { return nodeObject (this .#handle, this .#inlineId); }
+   getExportedName ()     { return this .#exportedName; }
+   getImportedName ()     { return this .#importedName; }
+   getInstance ()         { return nodeObject (this .#handle, this .#instanceId); }
+   getDescription ()      { return this .#description; }
+
+   getExportedNode ()
+   {
+      const id = engineOf (this .#handle) .importedExportedNode (this .#handle .scene, this .#importedName);
+
+      if (id === undefined || importedNodeCache .get (this .#scene) ?.get (this .#importedName) !== this)
+         throw new Error (`Exported node '${this .#exportedName}' not found.`);
+
+      return nodeObject (this .#handle, id);
+   }
+
+   setDescription (value)
+   {
+      this .#description = String (value);
+
+      if (importedNodeCache .get (this .#scene) ?.get (this .#importedName) === this)
+         engineOf (this .#handle) .setImportedDescription (this .#handle .scene, this .#importedName, this .#description);
+   }
+
+   get inlineNode ()    { return this .getInlineNode (); }
+   get exportedName ()  { return this .#exportedName; }
+   get exportedNode ()  { return this .getExportedNode (); }
+   get importedName ()  { return this .#importedName; }
+   get instance ()      { return this .getInstance (); }
+   get description ()   { return this .#description; }
+   set description (value) { this .setDescription (value); }
+
+   get [Symbol .toStringTag] () { return "X3DImportedNode"; }
+}
+
+Object .defineProperty (X3DImportedNode, "typeName", { value: "X3DImportedNode", enumerable: true });
+
+for (const key of Object .getOwnPropertyNames (X3DImportedNode .prototype))
+{
+   if (key !== "constructor" && !/^(inlineNode|exportedName|exportedNode|importedName|instance|description)$/ .test (key))
+      Object .defineProperty (X3DImportedNode .prototype, key, { enumerable: false });
+}
+
+const importedNodeCache = new WeakMap (); // X3DScene → Map (imported name → its X3DImportedNode)
+
+class ImportedNodesArray extends X3DInfoArray
+{
+   constructor (values = [ ], list = null)
+   {
+      const entries = Array .from (values, value => [ value .getImportedName (), value ]);
+      const array   = super ([ ], X3DImportedNode);
+
+      for (const [ key, value ] of entries)
+         array .add (key, value);
+
+      if (list)
+         liveInfoArray (array, list);
+
+      return array;
+   }
+
+   getTypeName () { return "ImportedNodesArray"; }
+}
+
+for (const type of [ NamedNodesArray, ExportedNodesArray, ImportedNodesArray ])
 {
    for (const key of Object .getOwnPropertyNames (type .prototype))
    {
@@ -2070,6 +2165,141 @@ class X3DScene
 
       this .#engine () ?.removeExportedNode (this .#handle .scene, exportedName);
       exportedNodeCache .get (this) ?.delete (exportedName);
+   }
+
+   // X3DScene.getImportedNodes (): the live ImportedNodesArray. An X3DImportedNode lasts until its name is replaced or removed;
+   // a rename keeps it.
+   #importedNodes = null;
+
+   getImportedNodes ()
+   {
+      return this .#importedNodes ??= new ImportedNodesArray ([ ], () =>
+      {
+         const cache = importedNodeCache .get (this) ?? new Map ();
+         const next  = new Map ();
+
+         for (const [ name, inline, exported, description, instance ] of this .#engine () ?.importedNodeList (this .#handle .scene) ?? [ ])
+         {
+            const old = [ ... cache .values () ] .find (item => item .instanceId === instance);
+
+            if (old && old .importedName !== name)
+               old .rename (name);
+
+            next .set (name, old ?? new X3DImportedNode (this, this .#handle, inline, exported, name, instance, description));
+         }
+
+         importedNodeCache .set (this, next);
+
+         return [ ... next .values () ];
+      });
+   }
+
+   get importedNodes () { return this .getImportedNodes (); }
+
+   // X3DExecutionContext.addImportedNode (inlineNode, exportedName, importedName = exportedName, description = ""): the imported
+   // name must be free; then it is updateImportedNode.
+   addImportedNode (inlineNode, exportedName, importedName = exportedName, description = "")
+   {
+      exportedName = String (exportedName);
+      importedName = String (importedName);
+
+      if (this .#engine () ?.importedInstance (this .#handle .scene, importedName) !== undefined)
+         throw new Error (`Couldn't add imported node: imported name '${importedName}' already in use.`);
+
+      this .updateImportedNode (inlineNode, exportedName, importedName, description);
+   }
+
+   // X3DExecutionContext.updateImportedNode (inlineNode, exportedName, importedName, description = ""), checks in X_ITE's
+   // order; the record of the imported name is replaced and goes to the end of the list.
+   updateImportedNode (inlineNode, exportedName, importedName, description = "")
+   {
+      const handle = handleOf (inlineNode);
+
+      exportedName = String (exportedName);
+      importedName = importedName === undefined ? exportedName : String (importedName);
+      description  = String (description);
+
+      if (!handle || engineOf (handle) .typeName (handle .scene, handle .id) !== "Inline")
+         throw new Error ("Node must be of type Inline node.");
+
+      if (handle .scene !== this .#handle .scene || handle .browser !== this .#handle .browser)
+         throw new Error ("Couldn't update imported node: Inline node does not belong to this execution context.");
+
+      if (!exportedName)
+         throw new Error ("Couldn't update imported node: exported name is empty.");
+
+      if (!importedName)
+         throw new Error ("Couldn't update imported node: imported name is empty.");
+
+      this .#engine () .setImportedNode (this .#handle .scene, handle .id, exportedName, importedName, description);
+
+      importedNodeCache .get (this) ?.delete (importedName);
+   }
+
+   // X3DExecutionContext.renameImportedNode (oldImportedName, newImportedName): the X3DImportedNode stays.
+   renameImportedNode (oldImportedName, newImportedName)
+   {
+      // X_ITE looks the old name up as given: only the text of a name finds one.
+      if (typeof oldImportedName !== "string")
+         throw new Error ("Couldn't rename imported node: imported node does not exists.");
+
+      try
+      {
+         this .#engine () .renameImportedNode (this .#handle .scene, oldImportedName, String (newImportedName));
+      }
+      catch (error)
+      {
+         throw pageError (error);
+      }
+
+      this .getImportedNodes () .length; // moves the cached X3DImportedNode to its new name
+   }
+
+   // X3DExecutionContext.removeImportedNode (importedName): an unknown name does nothing.
+   removeImportedNode (importedName)
+   {
+      importedName = String (importedName);
+
+      this .#engine () ?.removeImportedNode (this .#handle .scene, importedName);
+      importedNodeCache .get (this) ?.delete (importedName);
+   }
+
+   // X3DExecutionContext.getImportedNode (importedName): the instance node, or an Error.
+   getImportedNode (importedName)
+   {
+      importedName = String (importedName);
+
+      const id = this .#engine () ?.importedInstance (this .#handle .scene, importedName);
+
+      if (id === undefined)
+         throw new Error (`Imported node '${importedName}' not found.`);
+
+      return nodeObject (this .#handle, id);
+   }
+
+   getUniqueImportName (name)
+   {
+      return this .#engine () ?.uniqueImportName (this .#handle .scene, String (name)) ?? String (name);
+   }
+
+   // X3DExecutionContext.getLocalNode (name): a named node, else the instance of an imported node.
+   getLocalNode (name)
+   {
+      name = String (name);
+
+      const engine = this .#engine ();
+
+      const named = engine ?.namedNode (this .#handle .scene, name);
+
+      if (named !== undefined)
+         return nodeObject (this .#handle, named);
+
+      const imported = engine ?.importedInstance (this .#handle .scene, name);
+
+      if (imported !== undefined)
+         return nodeObject (this .#handle, imported);
+
+      throw new Error (`Unknown named or imported node '${name}'.`);
    }
 
    // X3DScene.getExportedNode (exportedName): the local node, or an Error.

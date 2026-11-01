@@ -283,21 +283,24 @@ impl Runtime {
         Some(e)
     }
 
-    /// A declaration whose context was disposed: no request, no timer, nothing in progress. A fetch
-    /// that is in flight, or a scene that waits for its loadCount, is dropped when it comes back (its
-    /// request is not current). X_ITE lets the load finish into the disposed scene.
+    /// A declaration whose context was disposed: no timer and no request that has not started. A load that is in
+    /// flight finishes into the disposed scene, as in X_ITE (issue #58): the instance bodies are built, then
+    /// the scene is disposed again at the end of the frame (`Runtime::late_arrivals`).
     pub(crate) fn extern_close(&mut self, e: ExternId) {
         if !self.extern_states.contains_key(&e) {
             return;
         }
 
-        self.extern_cancel(e);
-        self.extern_load_events.retain(|x| *x != e);
         self.xs(e).timer = None;
 
+        // A load in flight is not cancelled: X_ITE lets it finish into the disposed scene and builds the instance
+        // bodies there (ExternProtoDeclaration has no abort on dispose; issue #58, owner decision option B).
         if self.extern_load_state(e) == LoadState::InProgress {
-            self.extern_set_load_state(e, LoadState::NotStarted);
+            return;
         }
+
+        self.extern_cancel(e);
+        self.extern_load_events.retain(|x| *x != e);
     }
 
     /// `loadNow ()` of the SAI object: start over from NOT_STARTED.
@@ -857,6 +860,12 @@ impl Runtime {
         self.xs(e).fetch = None;
         self.extern_set_load_state(e, LoadState::Complete);
         self.extern_set_proto(e, Some(proto));
+
+        // The declaration's context was disposed while the load was in flight (issue #58): the scene and the
+        // instance bodies it just built are in a disposed scene. X_ITE leaves them to the garbage collector.
+        if self.ctx_dead(self.scene.externprotos[e].ctx) {
+            self.late_arrivals.push(self.scene.externprotos[e].ctx);
+        }
         Ok(())
     }
 
@@ -889,7 +898,6 @@ impl Runtime {
         (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
                 matches!(self.scene.node(n).kind, NodeKind::Instance(ProtoRef::Extern(x)) if x == e)
-                    && !self.ctx_dead(self.scene.node(n).ctx)
             })
             .collect()
     }

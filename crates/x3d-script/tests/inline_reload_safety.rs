@@ -361,10 +361,10 @@ fn auto_refresh_timer_is_cleared_with_its_scene() {
     });
 }
 
-/// A request that is queued (its fetch has not run) when its scene is disposed is cancelled: the
-/// nested Inline is not left IN_PROGRESS and never loads.
+/// A request that is queued (its fetch has not run) when its scene is disposed is not cancelled, as in X_ITE
+/// (issue #58): the nested Inline loads and its Scripts initialize, and nothing is left in progress afterwards.
 #[test]
-fn nested_request_queued_in_a_disposed_scene_is_cancelled() {
+fn nested_request_queued_in_a_disposed_scene_still_loads() {
     on_big_stack(|| {
         let (run, steps) = trace(
             "main-nested.wrl",
@@ -387,10 +387,10 @@ fn nested_request_queued_in_a_disposed_scene_is_cancelled() {
         );
         assert!(!run.rt.has_unfinished_loads());
         assert!(
-            !lines(&steps, 0, 14)
+            lines(&steps, 0, 14)
                 .iter()
                 .any(|l| l.contains("B initialize")),
-            "B was never fetched"
+            "B was fetched and initialized, as in X_ITE"
         );
     });
 }
