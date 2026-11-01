@@ -1,0 +1,23 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# An Inline that is given a scene at tick 3; that scene holds an EXTERNPROTO. At tick 5 the Inline is
+# load-changed, which disposes the scene it loaded while that scene's declaration may still be loading.
+DEF Inl Inline { url [] }
+DEF Clock TimeSensor { cycleInterval 0.1 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  eventOut MFString first_url
+  eventOut SFBool load_out
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) {
+  n = n + 1;
+  print ('driver tick ' + n);
+  if (n == 3) first_url = new MFString ('lib-ext-inline.wrl');
+  if (n == 5) { load_out = false; }
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.first_url TO Inl.set_url
+ROUTE Driver.load_out TO Inl.set_load
