@@ -452,6 +452,10 @@ impl Runtime {
                 }
             }
             Cb::UrlSetUrl => {
+                if self.builtin_name(node) == Some("Inline") {
+                    self.inline_forget_failures(node);
+                }
+
                 if !self.get_bool(node, "load") {
                     return;
                 }
@@ -471,6 +475,20 @@ impl Runtime {
             }
             Cb::UrlSetAutoRefresh => self.inline_auto_refresh_changed(node),
             _ => {}
+        }
+    }
+
+    /// The url of an Inline is set again: a failed response of one of its candidates is forgotten, so the next load
+    /// attempt asks for the file again (see [`Fetcher::forget_failure`]).
+    fn inline_forget_failures(&self, node: NodeId) {
+        let Ok(base) = url::Url::parse(&self.base_url(node)) else {
+            return;
+        };
+
+        for candidate in self.url_strings(node) {
+            if let Ok(url) = crate::loader::join_url(&base, &candidate) {
+                self.fetcher.forget_failure(&url);
+            }
         }
     }
 
