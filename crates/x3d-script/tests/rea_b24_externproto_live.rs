@@ -13,8 +13,8 @@
 //! * `d1` to `d4`: an Inline scene that holds an EXTERNPROTO is disposed (`load` FALSE, or a new `url`)
 //!   1 to 4 ticks after it was asked for. When the disposal comes while the declaration's scene is
 //!   still in flight, X_ITE lets the load finish into the disposed scene (the PROTO body is built and its
-//!   Script's `initialize` runs); Rust cancels the declaration (`Runtime::extern_close`). That is the one
-//!   known difference, listed below and asserted directly in `disposed_context_cancels_the_load`.
+//!   Script's `initialize` runs); so does Rust since issue #58 (the owner decision of the register: the
+//!   cancel of `Runtime::extern_close` was dropped), asserted in `disposed_context_loads_into_the_disposed_scene`.
 
 mod extern_common;
 
@@ -24,15 +24,9 @@ use std::collections::HashMap;
 
 const DIR: &str = "synthetic-rea-b24-externproto-live";
 
-/// `case, first step, last step, fields`: differences in these fields in these steps are the deliberate
-/// difference of Rust. The disposal comes one tick after the Inline scene was asked for, while the
-/// declaration inside it is still loading: X_ITE finishes that load into the disposed scene and builds the
-/// instance body (`A initialize level=9` is logged although the scene is gone); Rust cancels the load
-/// (`Runtime::extern_close`) and logs nothing. Awaiting the owner's decision (register, issue #63).
-const KNOWN: &[(&str, u64, u64, &[&str])] = &[
-    ("d1-dispose-load", 4, 4, &["console"]),
-    ("d1-dispose-url", 4, 4, &["console"]),
-];
+/// `case, first step, last step, fields`: differences in these fields in these steps are a deliberate difference of
+/// Rust. None is left: a disposed context no longer cancels the load of its declarations (issue #58).
+const KNOWN: &[(&str, u64, u64, &[&str])] = &[];
 
 fn baseline() -> HashMap<String, Value> {
     let text = std::fs::read_to_string(oracle_root().join(format!("{DIR}-baseline.json")))
@@ -166,9 +160,9 @@ fn lines(trace: &Value, needle: &str) -> Vec<u64> {
         .collect()
 }
 
-/// The disposed-context cancel, pinned: what X_ITE does and what Rust does instead, side by side.
+/// The disposed-context load, pinned: X_ITE and Rust both let the load finish into the disposed scene.
 #[test]
-fn disposed_context_cancels_the_load() {
+fn disposed_context_loads_into_the_disposed_scene() {
     let base = baseline();
     let body = "A initialize level=9";
 
@@ -184,8 +178,12 @@ fn disposed_context_cancels_the_load() {
             "{name}: X_ITE builds the body once"
         );
 
-        // Rust: the declaration was closed with its context; the body is never built.
-        assert!(lines(&rust, body).is_empty(), "{name}: Rust builds no body");
+        // Rust: the same, and nothing is left behind (below).
+        assert_eq!(
+            lines(&rust, body),
+            vec![4],
+            "{name}: Rust builds the body once"
+        );
 
         // Nothing is left behind.
         let c = &rust["cleanup"];
