@@ -7960,6 +7960,79 @@
    "text": "Group {\n  children Shape { }\n}",
    "scene": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nTransform {\n  translation 1 2 3\n}\n",
    "log": []
+  },
+  "fieldEarly.namedNodes": {
+   "start": [
+    "A",
+    "B",
+    "C",
+    "Error: Named node 'Z' not found.",
+    [
+     "Transform:A",
+     "Group:C"
+    ]
+   ],
+   "addNew": "undefined",
+   "addNewState": [
+    "N1",
+    "N1"
+   ],
+   "addDuplicate": "Error: Couldn't add named node: node named 'N1' is already in use.",
+   "addRenamed": "Error: Couldn't add named node: node named 'N1' already has a name.",
+   "addEmpty": "Error: Couldn't add named node: node name is empty.",
+   "addNoNode": "Error: Couldn't add named node: node must be of type X3DNode.",
+   "addNullNode": "Error: Couldn't add named node: node must be of type X3DNode.",
+   "addNotNode": "Error: Couldn't add named node: node must be of type X3DNode.",
+   "addNumber": "undefined",
+   "addNumberState": [
+    "5",
+    "5"
+   ],
+   "addNoArgs": "Error: Couldn't add named node: node must be of type X3DNode.",
+   "addForeign": "Error: Couldn't add named node: node does not belong to this execution context.",
+   "addExisting": "Error: Couldn't add named node: node named 'A' is already in use.",
+   "updateNew": "undefined",
+   "updateNewState": [
+    "U1",
+    "U1"
+   ],
+   "updateRename": "undefined",
+   "updateRenameState": [
+    "U2",
+    "Error: Named node 'U1' not found.",
+    "U2"
+   ],
+   "updateTaken": "undefined",
+   "updateTakenState": [
+    "A",
+    "A",
+    "Error: Named node 'U2' not found.",
+    [
+     "Transform:",
+     "Group:C"
+    ]
+   ],
+   "updateEmpty": "Error: Couldn't update named node: node name is empty.",
+   "updateNotNode": "Error: Couldn't update named node: node must be of type X3DNode.",
+   "updateNoNode": "Error: Couldn't update named node: node must be of type X3DNode.",
+   "updateForeign": "Error: Couldn't update named node: node does not belong to this execution context.",
+   "removeKnown": "undefined",
+   "removeState": [
+    "Error: Named node 'C' not found.",
+    [
+     "Transform:",
+     "Group:"
+    ]
+   ],
+   "removeUnknown": "undefined",
+   "removeNumber": "undefined",
+   "removeNoArgs": "undefined",
+   "removeAgain": "undefined",
+   "getNoArgs": "Error: Named node 'undefined' not found.",
+   "getEmpty": "Error: Named node '' not found.",
+   "getNumber": "Error: Named node '5' not found.",
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nTransform {\n  children DEF B Shape { }\n}\n\nGroup { }\n\nDEF N1 Group { }\n",
+   "log": []
   }
  }
 }
