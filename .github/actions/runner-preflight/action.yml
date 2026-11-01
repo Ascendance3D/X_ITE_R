@@ -1,0 +1,36 @@
+name: GPU runner preflight
+description: >-
+  Checks what a job on the GPU runner needs before it builds anything, and fails at once with the missing item named.
+  A missing GPU, Node 24 or cargo fails. Other gaps are warnings.
+
+runs:
+  using: composite
+  steps:
+    - name: Preflight
+      shell: bash
+      run: |
+        fail=0
+        need() { if ! eval "$2" >/dev/null 2>&1; then echo "::error::preflight: $1 is missing on this runner"; fail=1; fi; }
+        warn() { if ! eval "$2" >/dev/null 2>&1; then echo "::warning::preflight: $1"; fi; }
+        need "an NVIDIA GPU (nvidia-smi -L)" "nvidia-smi -L"
+        need "a Vulkan ICD for the GPU (/usr/share/vulkan/icd.d or /etc/vulkan/icd.d)" "ls /usr/share/vulkan/icd.d/*nvidia* /etc/vulkan/icd.d/*nvidia*"
+        need "cargo" "command -v cargo"
+        need "rustup" "command -v rustup"
+        need "Node 24 or newer" "node -e 'process.exit(parseInt(process.versions.node) >= 24 ? 0 : 1)'"
+        need "python3" "command -v python3"
+        warn "clang and lld are missing (the hosted workflow links with them)" "command -v clang && command -v lld"
+        warn "the wasm32-unknown-unknown target is not installed (browser-video installs it)" "rustup target list --installed | grep -q wasm32-unknown-unknown"
+        warn "less than 30 GiB free in the workspace" "test \"$(df --output=avail -B1G . | tail -1 | tr -d ' ')\" -ge 30"
+        warn "crates.io is not reachable" "curl -fsS -o /dev/null --max-time 15 https://index.crates.io/config.json"
+        warn "github.com is not reachable" "curl -fsS -o /dev/null --max-time 15 https://github.com"
+        {
+          echo "### Runner preflight"
+          echo "CPUs: $(nproc)"
+          free -m | awk '/^Mem:/ {print "Memory: " $2 " MiB"}'
+          cg="/sys/fs/cgroup$(cut -d: -f3 /proc/self/cgroup)"
+          echo "cgroup memory.max: $(cat "$cg/memory.max" 2>/dev/null || echo unknown) (this job's cgroup; the runner service's own cap is in its systemd unit)"
+          df -h . | tail -1
+          nvidia-smi -L 2>&1 | head -3
+          echo "node $(node -v 2>&1), $(cargo --version 2>&1)"
+        } | tee -a "$GITHUB_STEP_SUMMARY"
+        exit "$fail"
