@@ -1,0 +1,495 @@
+{
+  "ok": true,
+  "poses": {
+    "30": {
+      "position": [
+        0,
+        1.6,
+        8.236800328125002
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        1.6,
+        5.2800001640625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        0,
+        1.6,
+        5.2800001640625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"WALK\"\n  avatarSize [\n    1,\n    1.6,\n    0.75\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nCollision {\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3 0.5 2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "collisionProbes": [
+    {
+      "distance": 0.5363598215295842,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.5227593519087741,
+      "id": 1,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.3062220745611557,
+      "id": 0,
+      "normal": [
+        -2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 1.3062223964262432,
+      "id": 0,
+      "normal": [
+        5.551112145275951e-17,
+        1,
+        3.3306686768288234e-16
+      ]
+    },
+    {
+      "distance": 1.306222557358787,
+      "id": 0,
+      "normal": [
+        -2.465190328815662e-32,
+        1,
+        2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.3062226378250588,
+      "id": 0,
+      "normal": [
+        -5.551112145275951e-17,
+        1,
+        3.3306686768288234e-16
+      ]
+    },
+    {
+      "distance": 1.3062221550274276,
+      "id": 0,
+      "normal": [
+        2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.5231069762615272,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.7057906798109423,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.5005637542444195,
+      "id": 1,
+      "normal": [
+        0,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.5764483343927653,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.5764482539264935,
+      "id": 0,
+      "normal": [
+        -1.3183898417423734e-16,
+        1,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.5764483343927653,
+      "id": 0,
+      "normal": [
+        -4.9303800698842184e-32,
+        1,
+        1.1102228922762743e-16
+      ]
+    },
+    {
+      "distance": 1.5764488976566684,
+      "id": 0,
+      "normal": [
+        1.3183898417423734e-16,
+        1,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.5764484148590372,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 0.5007542028225047,
+      "id": 1,
+      "normal": [
+        0,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.0800000829608367,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.5898373135398904,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -1.2819751242557097e-16,
+        -0.577350269189626,
+        -0.8164965809277259
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.8164965809277258,
+        -0.5773502691896261,
+        6.40987562127855e-17
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896256,
+        -0.577350269189626,
+        0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5773502691896255,
+        -0.577350269189626,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965809277258,
+        -0.5773502691896261,
+        0
+      ]
+    },
+    {
+      "distance": 0.5898373638313104,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.7058044596599997,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.5008217039663179,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        3.2049378106392725e-16,
+        -0.9082484193757544,
+        -0.41843136677529785
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.4184313667752981,
+        -0.7865661124422733,
+        0.45412436848951976
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.6169900773689662,
+        -0.6938055024773021,
+        0.3714258595742296
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.6169900773689665,
+        -0.7865661151224066,
+        0.02523868002653117
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.4184314258374511,
+        -0.9082483921657201,
+        1.489374871288649e-7
+      ]
+    },
+    {
+      "distance": 0.5008455320410747,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 0.5363637543186217,
+      "id": 1,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.5229219340110831,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        2.8844440295753455e-16,
+        -0.9957818904133451,
+        0.09175198485495904
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.09175198485495886,
+        -0.4978911193130043,
+        0.8623723132060878
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5449108598972867,
+        -0.8332249540678461,
+        0.09385270739107728
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5449108598972865,
+        -0.4978914420587251,
+        0.6746675230739086
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.09175181643632783,
+        -0.9957819059311774,
+        8.40074817593119e-7
+      ]
+    },
+    {
+      "distance": 0.5218573451177033,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.60000000750577,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896261,
+        0.5773502691896255,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 0.5685892892076228,
+      "id": 1,
+      "normal": [
+        0,
+        -1.6653345369377348e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.5686177239764441,
+      "id": 1,
+      "normal": [
+        0,
+        -2.2204455198548468e-16,
+        1
+      ]
+    }
+  ]
+}

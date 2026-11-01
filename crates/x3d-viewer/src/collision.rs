@@ -893,6 +893,24 @@ impl World {
         directions: &[Vector3],
         ground: bool,
     ) -> (Vec<Closest>, Option<Ground>) {
+        // avatarSize[0] 0: Camera.ortho (-0, 0, ...) has a zero width, the projection matrix is not finite and the depth
+        // read is NaN: no distance (the probe prints distance null, id -1, normal 0 0 0), so constrainTranslation finds the
+        // avatar inside an obstacle and returns no translation, and gravitate neither falls nor steps up.
+        if nav.collision_radius() == 0.0 {
+            return (
+                directions
+                    .iter()
+                    .map(|_| Closest {
+                        shape: None,
+                        distance: f64::NAN,
+                        normal: Vector3::ZERO,
+                        hit: false,
+                    })
+                    .collect(),
+                ground.then_some(Ground { distance: f64::NAN }),
+            );
+        }
+
         let closest: Vec<(DepthQuery, Rotation4, f64)> = directions
             .iter()
             .map(|d| Self::closest_query(vp, base, nav, d))
