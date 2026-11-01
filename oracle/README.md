@@ -1123,6 +1123,10 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
   alone (`--only browserOptions.notification --runs 5` into a scratch directory; five identical runs, Chrome 156.0.8078.47) and its value
   was merged into `values`; the other nine values are byte-identical to before. It records `browser.description` and the notification
   element of Notification.js (text, class, inline styles, coercion, the Notifications option) with the 5000 ms timer taken over by the page.
+- Case `browserOptions.debugKeys` (2026-11-01, issue #141) was added to the options01 baseline without a full re-record: it was recorded
+  alone (`--only browserOptions.debugKeys --runs 5` into a scratch directory; five identical runs, Chrome 156.0.8078.47) and its value
+  was merged into `values`; the other values are byte-identical to before. It records the keys X3DCoreContext handles itself (Home, End,
+  Page Up, Page Down, Ctrl+Plus, the Debug keys Ctrl+1..5 and Ctrl+S) sent with Playwright's keyboard.
 
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 

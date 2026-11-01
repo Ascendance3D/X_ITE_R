@@ -3476,6 +3476,12 @@ class X3DBrowser
       {
          on (this .#element, type, event =>
          {
+            // X3DCoreContext [_keydown], [_keyup]: first the browser's own keys, then the KeySensor feed.
+            if (type === "keydown")
+               this .#browserKeyDown (event);
+            else
+               this .#browserKeyUp (event);
+
             if (!engine ())
                return;
 
@@ -3486,6 +3492,73 @@ class X3DBrowser
 
       // A hidden page draws nothing; it draws again when it is shown.
       on (document, "visibilitychange", () => document .visibilityState === "hidden" ? this .#stop () : this .#start ());
+   }
+
+   // X3DCoreContext.getControlKey: the state of the Ctrl key as the browser's own keydown and keyup handlers keep it (the
+   // keyCode of the event, not event .ctrlKey), so a keyup the page never saw leaves the key down. Shift and the other
+   // modifiers are not kept: only Shift+F8 (not done) reads them.
+   #controlKey = false;
+
+   // X3DCoreContext [_keydown] (event). The keys call event .preventDefault () where X_ITE does, and only there. Ctrl+1 to
+   // Ctrl+5 (Shading) and Ctrl+S (begin/end update) act only if the Debug option is set; their `setDescription` notification
+   // is shown where the browser has a description (see API.md). Not done: Shift+F8 (copies the active viewpoint as text).
+   #browserKeyDown (event)
+   {
+      const shading = (name, text) =>
+      {
+         if (! this .getBrowserOption ("Debug") || ! this .#controlKey)
+            return;
+
+         event .preventDefault ();
+         this .setBrowserOption ("Shading", name);
+         this .setDescription ?.(`Shading: ${text}`);
+      };
+
+      switch (event .keyCode)
+      {
+         case 17: this .#controlKey = true; break;
+         case 49: shading ("POINT",     "Pointset");  break;
+         case 50: shading ("WIREFRAME", "Wireframe"); break;
+         case 51: shading ("FLAT",      "Flat");      break;
+         case 52: shading ("GOURAUD",   "Gouraud");   break;
+         case 53: shading ("PHONG",     "Phong");     break;
+         case 83: // s
+         {
+            if (! this .getBrowserOption ("Debug") || ! this .#controlKey)
+               break;
+
+            event .preventDefault ();
+
+            if (this .isLive ())
+               this .endUpdate ();
+            else
+               this .beginUpdate ();
+
+            this .setDescription ?.(this .isLive () ? "Begin Update" : "End Update");
+            break;
+         }
+         case 171: // Plus // Firefox
+         case 187: // Plus // Opera
+         {
+            if (! this .#controlKey)
+               break;
+
+            event .preventDefault ();
+            this .setBrowserOption ("Timings", ! this .getBrowserOption ("Timings"));
+            break;
+         }
+         case 36: event .preventDefault (); this .firstViewpoint ();    break; // Home
+         case 35: event .preventDefault (); this .lastViewpoint ();     break; // End
+         case 33: event .preventDefault (); this .previousViewpoint (); break; // Page Up
+         case 34: event .preventDefault (); this .nextViewpoint ();     break; // Page Down
+      }
+   }
+
+   // X3DCoreContext [_keyup] (event): `event .which`.
+   #browserKeyUp (event)
+   {
+      if (event .which === 17)
+         this .#controlKey = false;
    }
 
    // The buttons and touches that are down are released (removal, cancellation, a new world): the sensors and the
