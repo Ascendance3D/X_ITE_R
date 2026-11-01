@@ -5,7 +5,7 @@ rea_b06_particles.py (the 06 tool is unchanged); read its docstring for the reco
 
   python3 -I oracle/tools/gen_rea_b07_ps.py                       # (re)write the worlds and scripts
   python3 -I oracle/tools/rea_b07_ps.py baseline [NAME ...] [--jobs N]
-      oracle/synthetic-rea-b07-ps/NAME.x3dv + scripts/NAME.json  ->  oracle/rea-batch07-ps-baseline/NAME/
+      oracle/synthetic-rea-b07-ps/NAME.x3dv + scripts/NAME.json  ->  oracle/rea-b07-ps-baseline/NAME/
       (oracle/tools/x_ite_particles_b07.mjs). Every case is run twice with the same Math.random seed; the bit
       identity of the two runs (steps, forceDraws, particle floats) is recorded under "determinism". A baseline is
       written only from an X_ITE run, never from the Rust driver.
@@ -32,7 +32,7 @@ root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 tools_dir = os.path.join(root, "oracle", "tools")
 worlds_dir = os.path.join(root, "oracle", "synthetic-rea-b07-ps")
 scripts_dir = os.path.join(worlds_dir, "scripts")
-baseline_dir = os.path.join(root, "oracle", "rea-batch07-ps-baseline")
+baseline_dir = os.path.join(root, "oracle", "rea-b07-ps-baseline")
 
 import importlib.util
 _spec = importlib.util.spec_from_file_location("gen_rea_b07_ps", os.path.join(tools_dir, "gen_rea_b07_ps.py"))

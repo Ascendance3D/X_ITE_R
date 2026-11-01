@@ -23,7 +23,7 @@ that is not a merge commit, or a git failure runs both suites.
   normal, build and target dependencies, followed through path dependencies), the other `oracle/` and `tools/`
   files except tools/build-web.sh and the synthetic Script worlds `oracle/synthetic-x6*`, `oracle/synthetic-inline-scripts*`,
   `oracle/synthetic-externproto*` and `oracle/synthetic-followers*` (both suites read them), the
-  REA ledger trees `_batch*_context/`, and the other workflows. The browser tests read crates/x3d-web,
+  REA ledger tree `ledger/`, and the other workflows. The browser tests read crates/x3d-web,
   `oracle/web-browser-*` and the synthetic Script worlds named above.
 
 This script and its workflows are not in either list, so a change to them runs both suites.
@@ -153,7 +153,7 @@ def is_native_only(p, crates, closure):
         return False
     parts = p.split("/")
     if p in NATIVE_ONLY_FILES or p.startswith(("oracle/", "tools/")) or (
-            len(parts) > 1 and parts[0].startswith("_batch") and parts[0].endswith("_context")):
+            len(parts) > 1 and parts[0] == "ledger"):
         return True
     if len(parts) > 2 and parts[0] == "crates":
         d = "/".join(parts[:2])
@@ -275,8 +275,8 @@ def self_test():
         ([".github/workflows/new.yml"], True, True),
         (["crates/new-crate/src/lib.rs"], True, True),
         (["upstream"], True, True),
-        (["_batch09_context/ledger/ledger.json", "_batch09_context/tools/verify_ledger.py"], True, False),
-        (["_batch09_context"], True, True),
+        (["ledger/ledger.json", "ledger/tools/verify_ledger.py"], True, False),
+        (["ledger"], True, True),
         (["README.md", "crates/vrml97/src/lib.rs", "crates/x3d-web/tests/browser/api.test.mjs"], True, True),
     ]
     bad = 0

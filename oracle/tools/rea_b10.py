@@ -6,17 +6,17 @@ SUITE is `stepped` (oracle/synthetic-rea-b10-stepped, made by gen_rea_b10_screen
   python3 -I oracle/tools/rea_b10.py SUITE case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in $B09_TARGET (default /tmp/b10/target/release);
       on success the X_ITE side (js.json, js/*.png) is kept as
-      oracle/rea-batch10-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
+      oracle/rea-b10-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
   python3 -I oracle/tools/rea_b10.py SUITE xite-case NAME WORLD SCRIPT MSAA
       the X_ITE side only (x_ite-anim.mjs / x_ite-anim-msaa.mjs), into /tmp/rea-b10-SUITE-xite/NAME-msaaMSAA
       (to check that a stepped X_ITE run repeats).
 
   python3 -I oracle/tools/rea_b10.py stepped record-sai NAME WORLD SCRIPT
       event cases (oracle/synthetic-rea-b10-sai, rea_batch10_sai.rs): X_ITE three times, identical js.json, kept in
-      oracle/rea-batch10-sai-baseline/NAME.
+      oracle/rea-b10-sai-baseline/NAME.
   python3 -I oracle/tools/rea_b10.py stepped record NAME WORLD SCRIPT MSAA
       X_ITE side only, run twice; the two runs (js.json and every PNG) must be identical, then the first is kept as
-      oracle/rea-batch10-baseline/NAME-msaaMSAA and the case line is added to cases.txt (so a Rust defect can be
+      oracle/rea-b10-baseline/NAME-msaaMSAA and the case line is added to cases.txt (so a Rust defect can be
       recorded before it is fixed; the baseline is never taken from Rust).
 
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied.
@@ -29,7 +29,7 @@ suite, mode, args = args[0], args[1], args[2:]
 assert suite in ("stepped",)
 corpus = f"synthetic-rea-b10-{suite}"
 shots = []
-cases_dir = os.path.join(root, "oracle", f"rea-batch10-baseline")
+cases_dir = os.path.join(root, "oracle", f"rea-b10-baseline")
 
 if mode == "shots":
     only = args[args.index("--only") + 1] if "--only" in args else None
@@ -49,7 +49,7 @@ elif mode == "xite-case":
         cmd += ["--ms", msaa]
     subprocess.run(cmd, check=True, cwd=root, timeout=300)
 elif mode == "record-sai":
-    # Event cases (no images): X_ITE three times, every js.json identical, kept in oracle/rea-batch10-sai-baseline/NAME.
+    # Event cases (no images): X_ITE three times, every js.json identical, kept in oracle/rea-b10-sai-baseline/NAME.
     name, world, script = args[:3]
     runs = []
     for i in (1, 2, 3):
@@ -67,11 +67,11 @@ elif mode == "record-sai":
     print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'}")
     if not same:
         sys.exit(1)
-    dest = os.path.join(root, "oracle", "rea-batch10-sai-baseline", name)
+    dest = os.path.join(root, "oracle", "rea-b10-sai-baseline", name)
     shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
     shutil.copy(runs[0], dest)
-    cases = os.path.join(root, "oracle", "rea-batch10-sai-baseline", "cases.txt")
+    cases = os.path.join(root, "oracle", "rea-b10-sai-baseline", "cases.txt")
     lines = open(cases).read().splitlines() if os.path.exists(cases) else []
     lines = [l for l in lines if l.split()[:1] != [name]] + [" ".join([name, world, script])]
     open(cases, "w").write("\n".join(lines) + "\n")

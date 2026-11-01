@@ -6,8 +6,8 @@
       oracle/render-msaa4-rea-b04-baseline (x_ite-shot-msaa.mjs, 4 samples).
   python3 -I oracle/tools/rea_b04.py case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in /tmp/fp-rel/release; on success the X_ITE
-      side (js.json, js/*.png) is kept as oracle/rea-batch04-baseline/NAME-msaaMSAA and the case
-      line is added to oracle/rea-batch04-baseline/cases.txt.
+      side (js.json, js/*.png) is kept as oracle/rea-b04-baseline/NAME-msaaMSAA and the case
+      line is added to oracle/rea-b04-baseline/cases.txt.
 
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied.
 Still images of worlds in STEPPED_ONLY are removed after `shots`: their pictures depend on how many
@@ -41,8 +41,8 @@ elif args[0] == "case":
         cmd += ["--msaa", msaa]
     if tol:
         cmd += ["--text-tol", tol]
-    # Stand-in references (rea-batch04-baseline/standins.json): Rust runs another world.
-    standin = json.load(open(os.path.join(root, "oracle", "rea-batch04-baseline", "standins.json"))).get(name)
+    # Stand-in references (rea-b04-baseline/standins.json): Rust runs another world.
+    standin = json.load(open(os.path.join(root, "oracle", "rea-b04-baseline", "standins.json"))).get(name)
     if standin:
         cmd += ["--rs-world", standin["rs_world"]]
         for o, n in standin["subs"]:
@@ -51,13 +51,13 @@ elif args[0] == "case":
     print("\n".join(l for l in r.stdout.splitlines() if l.startswith("FAIL") or "within tolerance, " in l or l.startswith("PASS both")))
     print(f"exit {r.returncode}")
     if r.returncode == 0:
-        dest = os.path.join(root, "oracle", "rea-batch04-baseline", f"{name}-msaa{msaa}")
+        dest = os.path.join(root, "oracle", "rea-b04-baseline", f"{name}-msaa{msaa}")
         shutil.rmtree(dest, ignore_errors=True)
         os.makedirs(dest)
         shutil.copy(os.path.join(out, "js.json"), dest)
         if os.path.isdir(os.path.join(out, "js")):
             shutil.copytree(os.path.join(out, "js"), os.path.join(dest, "js"))
-        cases = os.path.join(root, "oracle", "rea-batch04-baseline", "cases.txt")
+        cases = os.path.join(root, "oracle", "rea-b04-baseline", "cases.txt")
         line = " ".join([name, world, script, msaa] + ([tol] if tol else []))
         lines = open(cases).read().splitlines() if os.path.exists(cases) else []
         lines = [l for l in lines if l.split()[:1] != [name] or l.split()[3:4] != [msaa]] + [line]

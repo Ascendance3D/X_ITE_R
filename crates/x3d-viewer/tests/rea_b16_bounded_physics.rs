@@ -1,7 +1,7 @@
 //! BoundedPhysicsModel replay (lane XITE_R_BOUNDED_PHYSICS_REPLAY_01) against pinned X_ITE 16.5.0.
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b16-bounded (oracle/tools/gen_rea_b16_bounded.py). A case's X_ITE
-//! baseline is oracle/rea-batch16-bounded-baseline/NAME/ (`js.json`, `js.f32`: every frame's transform feedback
+//! baseline is oracle/rea-b16-bounded-baseline/NAME/ (`js.json`, `js.f32`: every frame's transform feedback
 //! buffer), recorded by `oracle/tools/rea_b16_bounded.py record` with `x3d-oracle particles` (three identical runs).
 //! Each case is replayed through the real runtime with the baseline's seeds and its field events
 //! (particles_b06_common::replay) and compared with the batch 06R tolerances (compare_steps, compare_dumps).
@@ -15,7 +15,7 @@ fn run_case(name: &str) {
 
     big(move || {
         let o = oracle();
-        let dir = o.join("rea-batch16-bounded-baseline").join(&name);
+        let dir = o.join("rea-b16-bounded-baseline").join(&name);
         let base = Baseline {
             js: json(&dir.join("js.json")),
             dir,

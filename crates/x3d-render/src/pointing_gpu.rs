@@ -660,7 +660,7 @@ impl PointingGpu {
                 flags: match &tri.depth {
                     // gl.depthRange (near, far). WebGL rejects near > far (INVALID_OPERATION) and keeps the range in force,
                     // which is the default (0, 1): DepthMode.disable restores it after every shape. The pinned reference
-                    // (oracle rea-batch23 renderer.json) ignores a reversed range, so a reversed range draws unchanged.
+                    // (oracle rea-b23 renderer.json) ignores a reversed range, so a reversed range draws unchanged.
                     Some(d) => {
                         let [n, f] = if d.range[0] > d.range[1] {
                             [0.0, 1.0]

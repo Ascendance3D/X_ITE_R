@@ -4,7 +4,7 @@
   python3 -I -B oracle/tools/rea_b24.py record NAME WORLD SCRIPT MSAA
       X_ITE side only, run three times: the event cases need three identical recordings and the images two, so every case is
       recorded three times. All runs (js.json and every PNG) must be identical, then the first is kept as
-      oracle/rea-batch24-anchor-collision-instanced-baseline/NAME-msaaMSAA and the case line is added to cases.txt. A baseline is never taken from Rust.
+      oracle/rea-b24-anchor-collision-instanced-baseline/NAME-msaaMSAA and the case line is added to cases.txt. A baseline is never taken from Rust.
       (`loadFrames`, the frame the load finished in, follows Chrome's I/O; like rea_b12.py, it is left out of
       the identity check, and rea_b24_anchor_collision_instanced.rs does not compare it.)
 """
@@ -13,7 +13,7 @@ import filecmp, json, os, shutil, subprocess, sys
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 mode, name, world, script, msaa = sys.argv[1:6]
 assert mode == "record"
-cases_dir = os.path.join(root, "oracle", "rea-batch24-anchor-collision-instanced-baseline")
+cases_dir = os.path.join(root, "oracle", "rea-b24-anchor-collision-instanced-baseline")
 os.makedirs(cases_dir, exist_ok=True)
 anim = "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"
 runs = []

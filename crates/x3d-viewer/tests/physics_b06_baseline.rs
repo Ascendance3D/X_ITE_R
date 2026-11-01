@@ -1,7 +1,7 @@
 //! REA batch 06 (RigidBodyPhysics): real .x3dv scenes (oracle/synthetic-rea-b06) are run through the real
 //! runtime (the x3d-drive binary: Viewer3d, virtual time, the pinned frame rate) and every recorded value is
 //! compared EXACTLY (f64 equality, no tolerance) with what X_ITE 16.5.0 produced for the same scene
-//! (oracle/rea-batch06-baseline/NAME/js.json): every field of every listed node in every recorded
+//! (oracle/rea-b06-baseline/NAME/js.json): every field of every listed node in every recorded
 //! frame, the `getTimeStep ()` results and the frame each was made in.
 //!
 //! The expected numbers are X_ITE's, not ours. All 47 cases are asserted exact.
@@ -24,7 +24,7 @@ fn run(name: &str) -> (Value, Value) {
         .join("synthetic-rea-b06/scripts")
         .join(format!("{name}.json"));
     let js_path = oracle
-        .join("rea-batch06-baseline")
+        .join("rea-b06-baseline")
         .join(name)
         .join("js.json");
     let out = std::env::temp_dir().join(format!(

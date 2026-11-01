@@ -3,7 +3,7 @@
 against the Rust port's particle driver.
 
   python3 -I oracle/tools/rea_b06_particles.py baseline [NAME ...] [--jobs N]
-      oracle/synthetic-rea-b06/NAME.x3dv + scripts/NAME.json  ->  oracle/rea-batch06-baseline/NAME/
+      oracle/synthetic-rea-b06/NAME.x3dv + scripts/NAME.json  ->  oracle/rea-b06-baseline/NAME/
       (oracle/tools/x_ite_particles.mjs). Every case is run twice with the same Math.random seed; the
       bit-identity of the two runs is recorded in js.json ("determinism"). Statistical cases (-stat)
       are run a third time with another seed to measure the null Kolmogorov-Smirnov distances. A
@@ -66,7 +66,7 @@ root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 tools_dir = os.path.join(root, "oracle", "tools")
 worlds_dir = os.path.join(root, "oracle", "synthetic-rea-b06")
 scripts_dir = os.path.join(worlds_dir, "scripts")
-baseline_dir = os.path.join(root, "oracle", "rea-batch06-baseline")
+baseline_dir = os.path.join(root, "oracle", "rea-b06-baseline")
 
 _spec = importlib.util.spec_from_file_location("gen_rea_b06_particles", os.path.join(tools_dir, "gen_rea_b06_particles.py"))
 G = importlib.util.module_from_spec(_spec)

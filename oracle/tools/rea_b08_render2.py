@@ -9,7 +9,7 @@ SUITE is `gs` (GaussianSplats) or `vs` (VolumeScatterMaterialExtension).
   python3 -I oracle/tools/rea_b08_render2.py SUITE case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in $B08_TARGET (default /tmp/b08/render2/target/release);
       on success the X_ITE side (js.json, js/*.png) is kept as
-      oracle/rea-batch08-SUITE-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
+      oracle/rea-b08-SUITE-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
   python3 -I oracle/tools/rea_b08_render2.py SUITE xite-case NAME WORLD SCRIPT MSAA
       the X_ITE side only (x_ite-anim.mjs / x_ite-anim-msaa.mjs), into /tmp/rea-b08-SUITE-xite/NAME-msaaMSAA
       (to check that a stepped X_ITE run repeats).
@@ -24,7 +24,7 @@ suite, mode, args = args[0], args[1], args[2:]
 assert suite in ("gs", "vs")
 corpus = f"synthetic-rea-b08-{suite}"
 shots = [("x_ite-shot.mjs", f"render-rea-b08-{suite}-baseline"), ("x_ite-shot-msaa.mjs", f"render-msaa4-rea-b08-{suite}-baseline")]
-cases_dir = os.path.join(root, "oracle", f"rea-batch08-{suite}-baseline")
+cases_dir = os.path.join(root, "oracle", f"rea-b08-{suite}-baseline")
 
 if mode == "shots":
     only = args[args.index("--only") + 1] if "--only" in args else None

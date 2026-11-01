@@ -1,6 +1,6 @@
 //! VRML97 AudioClip loading and Sound.source resolution: the load states, repeated loads, and the
 //! scene changes that the X_ITE oracle cases (`vrml_audio_oracle`) do not print. The expected values are
-//! the ones X_ITE 16.5.0 recorded for the same worlds in oracle/rea-batch05-baseline (the warning
+//! the ones X_ITE 16.5.0 recorded for the same worlds in oracle/rea-b05-baseline (the warning
 //! text, `duration_changed` 0.25 / 0.27210416666666665 / -1) and X_ITE's states for the same code paths
 //! (AudioClip.loadData: COMPLETE_STATE after setArrayBuffer, FAILED_STATE after `dataCallback (null)`).
 //! Stepping only: no GPU, no audio device.

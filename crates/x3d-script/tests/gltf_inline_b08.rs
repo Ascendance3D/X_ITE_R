@@ -2,7 +2,7 @@
 //! pinned X_ITE. `oracle/synthetic-rea-b08-gltf-inline/` holds one scenario per case (set `url`,
 //! `load`, `loadNow`, `unloadNow`, remove the Inline from its Group, valid and invalid glTF/GLB files);
 //! `oracle/x_ite-inline.mjs` recorded the pinned X_ITE in
-//! `oracle/rea-batch08-gltf-baseline/inline-baseline.json`. For every step the console messages,
+//! `oracle/rea-b08-gltf-baseline/inline-baseline.json`. For every step the console messages,
 //! the load count, the state and root nodes of the Inline and the scene text must be equal.
 
 mod gltf_inline_common;
@@ -13,7 +13,7 @@ use serde_json::Value;
 #[test]
 fn gltf_inline_scenarios_match_x_ite() {
     let text = std::fs::read_to_string(
-        oracle_root().join("rea-batch08-gltf-baseline/inline-baseline.json"),
+        oracle_root().join("rea-b08-gltf-baseline/inline-baseline.json"),
     )
     .expect("baseline");
     let json: Value = serde_json::from_str(&text).unwrap();

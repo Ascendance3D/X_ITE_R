@@ -1,7 +1,7 @@
 //! ParticleSystem avatar collision (lane XITE_R_PARTICLE_AVATAR_COLLISION_02) against pinned X_ITE 16.5.0.
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b15-particle-collision (oracle/tools/gen_rea_b15_particle_collision.py).
-//! A case's X_ITE baseline is oracle/rea-batch15-particle-collision-baseline/NAME/ (`js.json`, `js.f32`), recorded by
+//! A case's X_ITE baseline is oracle/rea-b15-particle-collision-baseline/NAME/ (`js.json`, `js.f32`), recorded by
 //! `oracle/tools/rea_b15_collision.py record` with `x3d-oracle particles` (three identical runs). Its `collisionProbes`
 //! are, after the listed frames: the DEF names of the frame's collision shapes, getClosestObject along nine directions
 //! (hit, shape, distance, normal), constrainTranslation of a few moves, the user pose, the viewpoint's positionOffset
@@ -203,7 +203,7 @@ fn compare_frame(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
 
 fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<String>) {
     let base = root
-        .join("oracle/rea-batch15-particle-collision-baseline")
+        .join("oracle/rea-b15-particle-collision-baseline")
         .join(name);
     let world = root
         .join("oracle/synthetic-rea-b15-particle-collision")
@@ -338,7 +338,7 @@ fn check_all(cpu: bool, gaps: Gaps, threads: usize) {
         .unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let mut names: Vec<String> =
-        std::fs::read_dir(root.join("oracle/rea-batch15-particle-collision-baseline"))
+        std::fs::read_dir(root.join("oracle/rea-b15-particle-collision-baseline"))
             .unwrap()
             .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
             .collect();

@@ -1,6 +1,6 @@
 //! decodeAudioData of MP3, Ogg Vorbis, FLAC, Opus and WAV files against Chromium (issue #98).
 //!
-//! `oracle/rea-batch24-audio-decode-baseline/audio-decode-baseline.json` is what the AudioContext of the pinned
+//! `oracle/rea-b24-audio-decode-baseline/audio-decode-baseline.json` is what the AudioContext of the pinned
 //! X_ITE (16.5.0, 34cdf9f97) in headless Chromium decodes the synthetic files of
 //! `oracle/synthetic-rea-b24-audio/` to (`oracle/x_ite-audio-decode.mjs`, five identical recordings): length,
 //! sample rate, channels and every sample. The files are clean-room: ffmpeg sine plus seeded noise, 0.3 s.
@@ -67,7 +67,7 @@ struct Measure {
 
 fn measure(file: &str) -> Measure {
     let baseline: Value = serde_json::from_slice(
-        &std::fs::read(root().join("rea-batch24-audio-decode-baseline/audio-decode-baseline.json"))
+        &std::fs::read(root().join("rea-b24-audio-decode-baseline/audio-decode-baseline.json"))
             .unwrap(),
     )
     .unwrap();

@@ -1,7 +1,7 @@
 //! DepthMode in the CPU ray cast's pick (issue #79) against pinned X_ITE 16.5.0.
 //!
 //! The same 54 cells and the same baseline as `rea_b23_depthmode_pick.rs`
-//! (oracle/synthetic-rea-b23-depthmode-pick, oracle/rea-batch23-depthmode-pick-baseline/dm-pick/), but the viewer has no
+//! (oracle/synthetic-rea-b23-depthmode-pick, oracle/rea-b23-depthmode-pick-baseline/dm-pick/), but the viewer has no
 //! pointing GPU, so every pick is the CPU ray cast through the emulated depth buffer
 //! (`pointer::cpu_winner`: 24-bit depths, depth function, mask, test, range and polygon offset in drawing order).
 //! This test needs no adapter, so it runs on hosted CI too.
@@ -32,7 +32,7 @@ fn json(path: PathBuf) -> Value {
 
 #[test]
 fn depthmode_cpu_pick_matches_pinned_x_ite() {
-    let base = root().join("oracle/rea-batch23-depthmode-pick-baseline/dm-pick");
+    let base = root().join("oracle/rea-b23-depthmode-pick-baseline/dm-pick");
     let want = json(base.join("js.json"));
     let want = want["pickProbes"]["3"].as_array().unwrap().clone();
     let script = json(root().join("oracle/synthetic-rea-b23-depthmode-pick/scripts/dm-pick.json"));
