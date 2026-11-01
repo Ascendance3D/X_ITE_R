@@ -370,8 +370,9 @@ pub struct Runtime {
     /// The `rootNodes` records of [`Runtime::page_field_events`] whose position waits for the Scripts' `rootNodes` callbacks
     /// of the cascade (see [`Runtime::deliver_ctx_events`]).
     pub(crate) page_root_nodes_unplaced: Vec<usize>,
-    /// Replacing or unloading the world does not call the Scripts' `shutdown ()`, as X_ITE 16.5.0 (the old scene is
-    /// never disposed there). Set by the browser build; the native build keeps the call (ISO/IEC 14772-1 4.12.3).
+    /// Replacing or unloading the world, or replacing the body of a PROTO instance, does not call the Scripts'
+    /// `shutdown ()`, as X_ITE 16.5.0 (the old scene or body is never disposed there). Set by the browser build; the
+    /// native build keeps the call (ISO/IEC 14772-1 4.12.3).
     pub replace_skips_shutdown: bool,
     /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
     pub page_observed: std::collections::HashSet<FKey>,
