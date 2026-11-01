@@ -2,6 +2,11 @@
 //! defaults. A name not listed here is parsed as a custom node whose fields come from its
 //! `fields [ ... ]` declaration (the extension's `CustomNode`).
 
+// The defaults below are the literal numbers of the extension (for example 0.785398 for a spot light's cutOffAngle and a camera's
+// heightAngle). The extension prints them as written, and output equal to the extension is the point of this crate, so they must not
+// be replaced by `std::f32::consts::FRAC_PI_4` (0.7853982).
+#![allow(clippy::approx_constant)]
+
 use x3d_fields::FieldValue as V;
 use x3d_fields::math::{Color3, Matrix4, Rotation4, Vector2, Vector3};
 
