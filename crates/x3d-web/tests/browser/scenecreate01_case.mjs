@@ -624,6 +624,87 @@ async function scenario (page, env, name, args = { })
                out .failed = [ H .children .length, logs .slice () ];
                break;
             }
+            case "x3dString":
+            {
+               // createX3DFromString: the argument is `String (x3dSyntax)`; every form of text and every failure.
+               const world = browser .currentScene;
+               const list  = scene => scene instanceof Object ? [ scene .constructor ?.name, scene === world, scene .rootNodes .length, types (scene .rootNodes), short (scene .worldURL), scene .profile ?.name ?? null ] : scene;
+               const texts =
+               {
+                  empty: "",
+                  blanks: "   \n  ",
+                  noHeader: "Transform { }",
+                  badHeader: "#VRML V9.0 utf8\nTransform { }",
+                  x3dHeader: "#X3D V3.3 utf8\nPROFILE Immersive\nDEF A Transform { }\nDEF B Group { }",
+                  vrml1: "#VRML V1.0 ascii\nSeparator { }",
+                  vrmlBom: "\ufeff#VRML V2.0 utf8\nTransform { }",
+                  crlf: "#VRML V2.0 utf8\r\nTransform { }\r\nGroup { }\r\n",
+                  xml: "<X3D profile='Interchange' version='4.0'><Scene><Transform/><Group/></Scene></X3D>",
+                  xmlBad: "<X3D profile='Interchange'><Scene><Transform></Scene></X3D>",
+                  xmlUnknown: "<X3D profile='Interchange' version='4.0'><Scene><Nope/></Scene></X3D>",
+                  json: JSON .stringify ({ X3D: { "@profile": "Core", "@version": "4.0", Scene: { "-children": [ { Transform: { } } ] } } }),
+                  jsonBad: "{ \"X3D\": ",
+                  jsonNoX3D: "{ \"a\": 1 }",
+                  unknownNode: "#VRML V2.0 utf8\nNope { }",
+                  unknownField: "#VRML V2.0 utf8\nTransform { nope 1 }",
+                  badRoute: "#VRML V2.0 utf8\nROUTE A.x TO B.y",
+                  unclosed: "#VRML V2.0 utf8\nTransform { children [ Box { ",
+                  gltf: JSON .stringify ({ asset: { version: "2.0" }, scenes: [ { nodes: [ ] } ], scene: 0 }),
+               };
+
+               out .texts = { };
+
+               for (const [ key, text ] of Object .entries (texts))
+               {
+                  logs .length = 0;
+                  out .texts [key] = [ await settled (browser .createX3DFromString (text) .then (list)), logs .slice () ];
+               }
+
+               // Not a string.
+               const args = { undef: [ undefined ], null: [ null ], num: [ 5 ], bool: [ true ], obj: [ { } ], arr: [ [ "#VRML V2.0 utf8\nGroup { }" ] ],
+                              none: [ ], extra: [ "#VRML V2.0 utf8\nGroup { }", 7 ], sfnode: [ new X3D .SFNode () ], fn: [ () => 1 ] };
+
+               out .args = { };
+
+               for (const [ key, list2 ] of Object .entries (args))
+               {
+                  logs .length = 0;
+                  out .args [key] = [ await settled (browser .createX3DFromString (... list2) .then (list)), logs .slice () ];
+               }
+
+               out .symbol  = await settled (attempt (() => browser .createX3DFromString (Symbol ("x"))) .then (list));
+               out .promise = (() => { const p = browser .createX3DFromString (""); p .catch (() => { }); return [ p instanceof Promise, p .constructor .name ]; }) ();
+               out .world   = [ browser .currentScene === world, world .rootNodes .length ];
+               break;
+            }
+            case "replaceWorldArgs":
+            {
+               // replaceWorld: its argument, its Promise and null / undefined / no argument (an empty world).
+               const a = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF A Transform { }");
+               const wait = async fn =>
+               {
+                  const r = await settled (fn ());
+                  await spin (3);
+                  return [ r === undefined ? "undefined" : r, browser .currentScene === a, browser .currentScene .rootNodes .length ];
+               };
+               const p = browser .replaceWorld (a);
+
+               out .promise = [ p instanceof Promise, p .constructor .name, await settled (p), browser .currentScene === a ];
+               out .none      = await wait (() => browser .replaceWorld ());
+               out .undef     = await wait (() => browser .replaceWorld (undefined));
+               out .null      = await wait (() => browser .replaceWorld (null));
+               out .afterNull = [ browser .currentScene === a, browser .currentScene .rootNodes .length ];
+
+               const b = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF B Transform { }");
+
+               out .backToB = await wait (() => browser .replaceWorld (b));
+
+               // Not compared (known differences, API.md): the same scene again, a value that is no scene, a replaced scene again.
+               const c = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF C Transform { }");
+
+               out .extra = await wait (() => browser .replaceWorld (c, 1));
+               break;
+            }
             case "importDocumentHTML":
             {
                // An HTML element, as the X3D element of a page: the HTMLParser reads it.
@@ -662,6 +743,7 @@ const NAMES =
    "vrmlURLArguments", "vrmlURLLoad",
    "importJS", "importJSErrors", "importDocument", "importDocumentErrors", "importDocumentHTML",
    "profileInfo", "componentInfo", "supportedLists", "createSceneInfo", "sceneProfile", "vrmlURLNodes",
+   "x3dString", "replaceWorldArgs",
 ];
 
 const cases = Object .fromEntries (NAMES .map (name => [ name, (page, env) => scenario (page, env, name) ]));

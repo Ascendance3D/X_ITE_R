@@ -2212,6 +2212,12 @@ class X3DBrowser
       }
       catch (error)
       {
+         // X_ITE's classic parser logs the last line of its report (`Error: Expected '}' ...`) and rejects with the report.
+         const report = String (error ?.message ?? error) .match (/(?:^|\n)\*+\nParser error at line [^]*\n([^\n]+)\n\*+\n?$/);
+
+         if (report)
+            console .error (new Error (report [1] .replace (/^Unexpected end of file\. (?=Expected)/, "")));
+
          throw engineError (error);
       }
 
@@ -2779,33 +2785,46 @@ class X3DBrowser
    // --- browser callbacks and events ----------------------------------------------------------------------------
 
    // X3DBrowser.addBrowserCallback (key, [event,] callback) and removeBrowserCallback (key, [event]).
-   addBrowserCallback (key, event, callback)
+   // As X_ITE's: only 2 or 3 arguments register (2: every event type), only 1 or 2 remove, an event type that is not one of the
+   // five is added by a 3-argument add and throws a TypeError in a 2-argument remove; getBrowserCallbacks () with no argument
+   // is the Map of every registration (a key twice if it is in two event types).
+   addBrowserCallback (... args)
    {
-      if (arguments .length === 2)
+      if (args .length === 2)
       {
          for (const map of this .#callbacks .values ())
-            map .set (key, event);
+            map .set (args [0], args [1]);
       }
-      else
+      else if (args .length === 3)
       {
-         this .#callbacks .get (event) ?.set (key, callback);
+         const [ key, event, callback ] = args;
+         const map = new Map (this .#callbacks .get (event));
+
+         this .#callbacks .set (event, map);
+         map .set (key, callback);
       }
    }
 
-   removeBrowserCallback (key, event)
+   removeBrowserCallback (... args)
+   {
+      if (args .length === 1)
+      {
+         for (const map of this .#callbacks .values ())
+            map .delete (args [0]);
+      }
+      else if (args .length === 2)
+      {
+         this .#callbacks .get (args [1]) .delete (args [0]);
+      }
+   }
+
+   getBrowserCallbacks (event)
    {
       if (arguments .length === 1)
-      {
-         for (const map of this .#callbacks .values ())
-            map .delete (key);
-      }
-      else
-      {
-         this .#callbacks .get (event) ?.delete (key);
-      }
-   }
+         return this .#callbacks .get (event);
 
-   getBrowserCallbacks (event) { return this .#callbacks .get (event); }
+      return new Map ([ ... this .#callbacks ] .flatMap (([ , map ]) => [ ... map ]));
+   }
 
    #call (event)
    {
