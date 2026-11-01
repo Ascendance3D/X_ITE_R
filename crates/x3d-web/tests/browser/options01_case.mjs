@@ -719,7 +719,54 @@ async function straightenHorizon (page)
    return out;
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints, straightenHorizon };
+// Gravity (X3DRenderObject.gravitate of X_ITE 16.5.0): a WALK viewer above the floor falls with the acceleration `Gravity`
+// (the speed grows by Gravity / frame rate) and stops at the avatar height; with Gravity 0 it never starts to fall. The
+// option is read in every frame. Observed through the public SAI: the user's position (a ProximitySensor's
+// `position_changed`, four decimals) after the frames of the fall, which the floor and the avatar height fix.
+const GRAVITY_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF P ProximitySensor { size 1e6 1e6 1e6 }
+NavigationInfo { type "WALK" avatarSize [ 0.25 1.6 0.75 ] }
+Viewpoint { position 0 3 10 }
+Transform { translation 0 -0.1 0 children Shape { geometry Box { size 100 0.2 100 } } }
+`)}`;
+
+async function gravity (page)
+{
+   const read = () => page .evaluate (() =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const P       = browser .currentScene .getNamedNode ("P");
+      const round   = array => array .map (value => Math .round (value * 10000) / 10000 + 0);
+
+      return { option: browser .getBrowserOption ("Gravity"), position: round ([ P .position_changed .x, P .position_changed .y, P .position_changed .z ]) };
+   });
+
+   const option = value => page .evaluate (value => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("Gravity", value), value);
+   const out    = { };
+
+   // The default: the viewer falls from 3 to the avatar height 1.6 above the floor.
+   await loadWorld (page, GRAVITY_WORLD);
+   await settle (page, 3000);
+   out .default = await read ();
+
+   // Gravity 0 before the world: the viewer stays where the viewpoint put it.
+   await option (0);
+   await loadWorld (page, GRAVITY_WORLD);
+   await settle (page, 3000);
+   out .zero = await read ();
+
+   // The option is read in every frame: the viewer falls when it is set.
+   await option (9.80665);
+   await settle (page, 3000);
+   out .restored = await read ();
+
+   await option (9.80665);
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints, straightenHorizon, gravity };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
