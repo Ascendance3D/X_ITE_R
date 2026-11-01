@@ -1134,6 +1134,19 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
   alone (`--only browserOptions.debugKeys --runs 5` into a scratch directory; five identical runs, Chrome 156.0.8078.47) and its value
   was merged into `values`; the other values are byte-identical to before. It records the keys X3DCoreContext handles itself (Home, End,
   Page Up, Page Down, Ctrl+Plus, the Debug keys Ctrl+1..5 and Ctrl+S) sent with Playwright's keyboard.
+- Case `browserOptions.loadUrlObjects` (2026-11-01, issue #136) was added the same way (`--only browserOptions.loadUrlObjects --runs 5` into a scratch
+  directory; five identical runs, Chrome 156.0.8078.47) and merged; the other values are byte-identical. It records whether an Inline loads
+  (`browser.firstViewpoint ()` binds the only viewpoint, which is in the Inline's document) with `LoadUrlObjects` true and false, a new `url`, and
+  the option set back.
+- Case `browserOptions.enableInlineViewpoints` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
+  byte-identical. It records the bound viewpoint's description after `firstViewpoint`, `nextViewpoint`, `previousViewpoint` and `lastViewpoint` in a
+  world with viewpoints of its own and of an Inline, with the option true, false and true again.
+- Case `browserOptions.straightenHorizon` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
+  byte-identical. It records a ProximitySensor's `orientation_changed` and `position_changed` (the user's view, four decimals) for a rolled
+  viewpoint: the default, the option FALSE before the world, set TRUE (after the one second transition), and `viewAll (0)` with FALSE and TRUE.
+- Case `browserOptions.gravity` (2026-11-01, issue #136) was added the same way (five identical runs) and merged; the other values are
+  byte-identical. It records the resting position (ProximitySensor `position_changed`) of a WALK viewer that starts 3 m above a floor, with the
+  default, with Gravity 0 before the world and with the default set again (a negative value was dropped: the climb depends on the frame rate).
 
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 

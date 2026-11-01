@@ -282,6 +282,8 @@ pub struct WebBrowser {
     audio_clock: Option<f64>,
     /// The page's Mute and SoundIntensity options ([`WebBrowser::set_sound_options`]); a world that starts takes them.
     sound_options: Option<(bool, f64)>,
+    /// The page's browser options the engine reads itself ([`WebBrowser::set_engine_option`]); a world that starts takes them.
+    engine_options: Vec<(String, x3d_runtime::browser_options::OptionValue)>,
     /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
@@ -444,6 +446,7 @@ impl WebBrowser {
             loads: HashMap::new(),
             audio_clock: None,
             sound_options: None,
+            engine_options: Vec::new(),
             audio_known: Default::default(),
             audio_payloads: Default::default(),
             video_known: false,
@@ -490,8 +493,14 @@ impl WebBrowser {
         let id = self.next_id;
         let factory = self.script_realm.clone();
         let sink = self.log_sink.clone();
+        let engine_options = self.engine_options.clone();
         let session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
+                // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
+                for (name, value) in engine_options {
+                    rt.browser_options.set_option(&name, value);
+                }
+
                 let factory = factory.as_ref()?;
 
                 match crate::script::PageJsHost::new(rt, factory) {
@@ -1615,6 +1624,37 @@ impl WebBrowser {
             .copied()
             .max()
             .unwrap_or(1)
+    }
+
+    /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
+    /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad) and
+    /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
+    /// (X3DRenderObject.gravitate). The page gives the option's value already coerced to the field type. Returns whether
+    /// the engine has the option.
+    #[wasm_bindgen(js_name = setEngineOption)]
+    pub fn set_engine_option(&mut self, name: &str, flag: bool, number: f64) -> bool {
+        use x3d_runtime::browser_options::OptionValue;
+
+        let value = match name {
+            "EnableInlineViewpoints" | "LoadUrlObjects" | "StraightenHorizon" => {
+                OptionValue::Bool(flag)
+            }
+            "Gravity" => OptionValue::Double(number),
+            _ => return false,
+        };
+
+        self.engine_options.retain(|(n, _)| n != name);
+        self.engine_options.push((name.to_string(), value.clone()));
+
+        for w in self.worlds.values_mut() {
+            w.session.set_engine_option(name, value.clone());
+        }
+
+        for l in self.loads.values_mut() {
+            l.rt.browser_options.set_option(name, value.clone());
+        }
+
+        true
     }
 
     /// The page's `Mute` and `SoundIntensity` browser options, for the worlds and loads now and for those to come
