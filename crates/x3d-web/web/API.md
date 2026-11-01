@@ -276,6 +276,13 @@ The WebGPU column is the vendors' published state as known in mid-2026; this lan
 
 Tested in desktop Chrome emulation only (`tests/browser/runtime02_phone.test.mjs`, `tests/browser/runtime02_tablet.test.mjs`): a phone (390 × 844, DPR 3) and a tablet (820 × 1180, DPR 2, rotated to landscape), with touch input. These tests check input, coordinates, framebuffer size, rotation and cleanup. They are no proof of a mobile browser or a mobile GPU.
 
+Measured on 2026-11-01 (Chromium 151.0.7922.34 under Playwright, headless, WebGPU adapter NVIDIA Ampere through Vulkan on a desktop): `runtime02_phone` 1 of 1, `runtime02_tablet` 1 of 1, `runtime02_input` 11 of 11 (touch tap and navigate, scale coordinates among them) and `runtime02_lifecycle` 10 of 10 passed, none skipped. The phone and tablet emulation set `isMobile` and `hasTouch` and send touch through the DevTools protocol (`Input.dispatchTouchEvent`); that is not a real touchscreen. Real-device testing stays open (issue #143). It needs:
+
+- Chrome for Android 121 or later on one Android 12 or later phone with an Adreno or Mali GPU, and Safari on one iOS or iPadOS 26 device;
+- the OS and browser versions, the device model, and the `GPUAdapterInfo` of the adapter recorded with the result;
+- the runtime02 cases or a documented subset: one-finger rotate, two-finger pinch, tap on a TouchSensor, page scroll with `touch-action`, device rotation, tab hide and show, removal and `dispose ()`;
+- the memory limits and the device-loss behavior under real memory pressure.
+
 ## replaceWorld arguments (issue #134)
 
 Compared with pinned X_ITE 16.5.0 in `sceneCreate.replaceWorldArgs` and `sceneCreate.replaceWorldGuards` (`tests/browser/scenecreate01_case.mjs`): the Promise, `null`, `undefined`, no argument and an extra argument, and the three forms below. For each of them X_ITE_R gives the same result, the same root nodes and the same world as X_ITE, and also prints an error to the page console that says what X_ITE accepted silently. These lines are X_ITE_R's own (declared in `KNOWN_DIFFERENCES`, `sceneCreate.replaceWorldGuards`, `tests/browser/runtime02_harness.mjs`); X_ITE logs nothing.
