@@ -2,8 +2,8 @@
 //! X3DTexture2DNode.js, X3DSingleTextureNode.js).
 //!
 //! X_ITE decodes with the browser's image decoder; here the `image` crate decodes PNG, JPEG, GIF
-//! (first frame) and BMP. Colour management that Chrome applies to tagged images
-//! (`colorSpaceConversion`, gAMA/iCCP chunks) is not reproduced.
+//! (first frame) and BMP; `basisu` transcodes KTX2 / Basis Universal to RGBA (`decode_ktx2`).
+//! Colour management that Chrome applies to tagged images (`colorSpaceConversion`, gAMA/iCCP chunks) is not reproduced.
 
 use crate::sg::Sg;
 use x3d_fields::{FieldValue, NodeId};
@@ -299,6 +299,28 @@ pub fn load_image_texture(
         let Ok(data) = fetcher.fetch(&resolved) else {
             continue;
         };
+
+        if is_ktx_url(&resolved) {
+            // setLinear (true), setMipMaps (false), setKTXTexture: setTransparent (false).
+            let Some((w, h, rgba)) = decode_ktx2(&data) else {
+                continue;
+            };
+            let mut t = finish(
+                w,
+                h,
+                rgba,
+                true,
+                repeat_s,
+                repeat_t,
+                resolved.to_string(),
+                false,
+            );
+
+            t.transparent = false;
+            apply_texture_properties(&mut t, sg, n, false);
+            return Some(t);
+        }
+
         let Ok(img) = image::load_from_memory(&data) else {
             continue;
         };
@@ -319,6 +341,37 @@ pub fn load_image_texture(
     }
 
     None
+}
+
+/// ImageTexture.js:58: `fileURL .pathname .match (/\.ktx2?(?:\.gz)?$/)` or
+/// `fileURL .href .match (/^\s*data:image\/ktx2[;,]/s)`.
+fn is_ktx_url(url: &url::Url) -> bool {
+    let path = url.path();
+    let path = path.strip_suffix(".gz").unwrap_or(path);
+
+    path.ends_with(".ktx")
+        || path.ends_with(".ktx2")
+        || url.as_str().trim_start().starts_with("data:image/ktx2;")
+        || url.as_str().trim_start().starts_with("data:image/ktx2,")
+}
+
+/// `decoder .loadKTXFromBuffer (data)` (libktx.js, KHR_texture_basisu): a 2D KTX2 texture, Basis
+/// Universal (ETC1S / UASTC) or ASTC, transcoded with the `basisu` crate to RGBA8, level 0. The
+/// libktx decoder picks a GPU format; the pixels are the same. Rows are top first.
+pub fn decode_ktx2(data: &[u8]) -> Option<(u32, u32, Vec<u8>)> {
+    let tex = basisu::Transcoder::new(data).ok()?;
+
+    // "Invalid KTX texture target, must be 'TEXTURE_2D'.": no cube map, no array.
+    if tex.face_count() != 1 || tex.layer_count() > 1 {
+        return None;
+    }
+
+    let (w, h) = tex.base_dimensions();
+    let rgba = tex
+        .transcode(0, basisu::TargetFormat::Rgba32, basisu::DecodeFlags::NONE)
+        .ok()?;
+
+    (rgba.len() == w as usize * h as usize * 4).then_some((w, h, rgba))
 }
 
 /// MovieTexture: the GIF frame or APNG picture its texture holds (setTextureData, updateTextureData). Texture
@@ -1137,4 +1190,94 @@ pub fn image_texture_3d(
         transparent,
         true,
     )
+}
+
+#[cfg(test)]
+mod ktx_tests {
+    use super::*;
+
+    /// A 4x4 KTX2 holding one UASTC LDR solid-colour block (mode 8), no supercompression. Hand
+    /// built from the KTX 2.0 layout; no external asset.
+    fn solid_uastc_ktx2(rgba: [u8; 4], faces: u32) -> Vec<u8> {
+        let mut out = vec![];
+        let w32 = |o: &mut Vec<u8>, v: u32| o.extend_from_slice(&v.to_le_bytes());
+        let w64 = |o: &mut Vec<u8>, v: u64| o.extend_from_slice(&v.to_le_bytes());
+
+        out.extend_from_slice(&[
+            0xAB, b'K', b'T', b'X', b' ', b'2', b'0', 0xBB, 0x0D, 0x0A, 0x1A, 0x0A,
+        ]);
+        // vkFormat, typeSize, width, height, depth, layers, faces, levels, supercompression
+        for v in [0, 1, 4, 4, 0, 0, faces, 1, 0] {
+            w32(&mut out, v);
+        }
+        // dfd offset / length, kvd offset / length
+        for v in [104, 44, 0, 0] {
+            w32(&mut out, v);
+        }
+        w64(&mut out, 0);
+        w64(&mut out, 0);
+        // level index: data at 160, 16 bytes
+        w64(&mut out, 160);
+        w64(&mut out, 16);
+        w64(&mut out, 16);
+        assert_eq!(out.len(), 104);
+        // DFD: 44 bytes, basic block, UASTC (166), BT709, sRGB transfer, 4x4, 16 bytes per block,
+        // one sample of 128 bits with channel id 3 (RGBA).
+        for v in [
+            44u32,
+            0,
+            2 | 40 << 16,
+            166 | 1 << 8 | 2 << 16,
+            3 | 3 << 8,
+            16,
+            0,
+            127 << 16 | 3 << 24,
+            0,
+            0,
+            u32::MAX,
+        ] {
+            w32(&mut out, v);
+        }
+        out.resize(160, 0);
+
+        // Mode 8 prefix code 0x17 (5 bits), then r, g, b, a: least significant bit first.
+        let block: u128 = 0x17
+            | (rgba[0] as u128) << 5
+            | (rgba[1] as u128) << 13
+            | (rgba[2] as u128) << 21
+            | (rgba[3] as u128) << 29;
+
+        out.extend_from_slice(&block.to_le_bytes());
+        out
+    }
+
+    #[test]
+    fn ktx2_uastc_solid_block_transcodes_to_rgba() {
+        let (w, h, rgba) = decode_ktx2(&solid_uastc_ktx2([200, 100, 50, 255], 1)).expect("decodes");
+
+        assert_eq!((w, h), (4, 4));
+        assert_eq!(rgba.len(), 4 * 4 * 4);
+        assert!(
+            rgba.chunks_exact(4).all(|p| p == [200, 100, 50, 255]),
+            "{rgba:?}"
+        );
+    }
+
+    #[test]
+    fn ktx2_cube_map_and_garbage_are_rejected() {
+        assert!(decode_ktx2(&solid_uastc_ktx2([1, 2, 3, 255], 6)).is_none());
+        assert!(decode_ktx2(b"not a ktx2 file").is_none());
+    }
+
+    #[test]
+    fn ktx_url_detection_follows_image_texture_js() {
+        let u = |s: &str| url::Url::parse(s).unwrap();
+
+        assert!(is_ktx_url(&u("file:///t/a.ktx2")));
+        assert!(is_ktx_url(&u("file:///t/a.ktx")));
+        assert!(is_ktx_url(&u("file:///t/a.ktx2.gz")));
+        assert!(is_ktx_url(&u("data:image/ktx2;base64,AAAA")));
+        assert!(!is_ktx_url(&u("file:///t/a.png")));
+        assert!(!is_ktx_url(&u("file:///t/a.ktx2x")));
+    }
 }
