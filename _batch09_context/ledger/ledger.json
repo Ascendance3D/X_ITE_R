@@ -4847,11 +4847,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): destination-fields.wrl and every world; crates/x3d-viewer/tests/rea_b05_reload.rs"
+    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): destination-fields.wrl and every world; crates/x3d-viewer/tests/rea_b05_reload.rs",
+    "crates/x3d-runtime/src/sound/sink.rs tests (known_device_is_selected, unknown_id_leaves_the_output_alone, empty_id_is_the_default_device, current_sink_is_not_opened_again, id_match_is_exact, device_that_will_not_open_keeps_the_output, follows_the_recorded_baseline; native_context_selects_a_listed_device is #[ignore], Linux only)"
    ],
-   "missing": "mediaDeviceID (setSinkId) does not select an output device; the native context uses the system default",
-   "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds",
-   "notes": ""
+   "missing": "macOS (CoreAudio) not run; one native context serves all AudioDestination nodes, so the last mediaDeviceID set decides the device (X_ITE: one audio element per node); native ids are hashed names, so Chrome's \"default\" alias is unknown natively; the headless host has one output, so a real device id is not in the baseline",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/web-audio-sink-baseline/sink-baseline.json (3 identical runs)",
+   "notes": "Issue #81 2026-10-31: select_sink (sound/sink.rs) mirrors set_mediaDeviceID_impl__: equal to current sinkId is a no-op, empty selects the default, an unknown id or one that fails to open leaves the output where it was with no log (X_ITE catches the setSinkId rejection). Only AudioDestination acts; StreamAudioDestination is skipped. Mutations (prefix match, no empty-id case) are caught."
   },
   {
    "id": "node:BiquadFilter",
