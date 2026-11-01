@@ -3196,10 +3196,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "known differences: replaced PROTO body closes nested Inlines; EmbeddedViewer rule",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-script/tests/rea_b24_inline_proto.rs (rea_b24_inline_proto_matches_x_ite, replaced_body_shutdown_follows_the_build, disposed_body_inline_load_in_flight; 8 cases c01-c08 in oracle/synthetic-rea-b24-inline-proto: updateInstances, nested Inline, two updates in one tick, instance removed, EXTERNPROTO url swap, load FALSE then TRUE, loadNow)"
+   ],
+   "missing": "native build keeps shutdown () of a replaced body and its nested Inline scenes (owner-approved, ISO 4.12.3; X_ITE runs none); an Inline load in flight when its body is disposed is cancelled, X_ITE lets it finish and initializes the disposed scene's Scripts (needs an owner decision, #63); root scene loadCount lags by one or two steps in X_ITE after an EXTERNPROTO body loads its Inline (internal field, all other lines agree); initial load logs extra frames in X_ITE and LoadSensor isActive comes before the Inline scene initializes there; plain Inline reload paths (set_internal_scene, inline_abort) not checked for the browser shutdown rule",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/synthetic-rea-b24-inline-proto-baseline.json (8 cases, 3 identical recordings)",
+   "notes": "Issue #52 2026-11-01: X_ITE never disposes the nodes of a replaced body one by one (X3DExecutionContext.dispose clears routes and tables), so no Script in the old body or its nested Inline scenes gets shutdown (); the old scenes stop ticking and the new body builds a fresh Inline. instance_dispose_body and inline_close now use dispose_scene_with(.., !replace_skips_shutdown); x3d-web sets the flag, so the browser build matches in every step except the in-flight load. EmbeddedViewer rule: embed.rs is a Rust host API with no X_ITE counterpart; its unload runs shutdown () by the native policy above, and no scene content can reach it. Plain PROTO updateInstances (c01-c04) already matched. Mutations (shutdown restored in either path) are caught."
   },
   {
    "id": "node:InlineGeometry",
