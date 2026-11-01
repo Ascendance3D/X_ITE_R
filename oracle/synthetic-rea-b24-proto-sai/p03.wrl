@@ -1,0 +1,52 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# requestUpdateInstances: when instances take the changed interface, and what a held instance keeps.
+PROTO Box3 [
+  field SFInt32 level 2
+  exposedField SFString tag "A"
+]
+{
+  Group { }
+}
+DEF Clock TimeSensor { loop TRUE cycleInterval 1 }
+DEF S Script {
+  eventIn SFTime tick
+  field SFNode held NULL
+  url "javascript:
+let n = 0;
+function names (o) { return Array .from (o .getFieldDefinitions (), f => f .name) .join (','); }
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const d  = cs .protos .get ('Box3');
+
+   held = cs .createProto ('Box3');
+   held .level = 5;
+   print ('init held ' + names (held) + ' level=' + held .level);
+   d .addUserDefinedField (X3DConstants .inputOutput, 'extra', new SFString ('x'));
+   d .requestUpdateInstances ();
+   print ('after request ' + names (held) + ' extra=' + held .extra);
+}
+
+function tick (t)
+{
+   if (++ n > 3)
+      return;
+
+   const d = Browser .currentScene .protos .get ('Box3');
+
+   print ('tick ' + n + ' ' + names (held) + ' extra=' + held .extra + ' level=' + held .level);
+
+   if (n === 1)
+   {
+      held .extra = 'changed';
+      d .removeUserDefinedField ('extra');
+      d .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFString ('again'));
+      d .updateInstances ();
+      print ('after update ' + names (held) + ' extra=' + held .extra + ' level=' + held .level);
+   }
+}
+"
+}
+ROUTE Clock.time TO S.tick

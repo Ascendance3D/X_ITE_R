@@ -1511,6 +1511,60 @@ engineMembers (X3DExportedNode,
 
 engineMembers (X3DProtoDeclarationNode,
 {
+   getName () { return this [ENGINE_STATE] .info () .name; },
+   getType () { return [X3DConstants .X3DProtoDeclarationNode, this [ENGINE_STATE] .extern ? X3DConstants .X3DExternProtoDeclaration : X3DConstants .X3DProtoDeclaration]; },
+   canUserDefinedFields () { return true; },
+   // X3DProtoDeclarationNode.getExecutionContext: the context the declaration lives in.
+   getExecutionContext () { return executionContext (- (this [ENGINE_STATE] .info () .ctx + 2)); },
+   // X3DProtoDeclarationNode.getUserDefinedFields: the interface fields, named, with their declared default values.
+   getUserDefinedFields ()
+   {
+      return Array .from (protoFields (this [ENGINE_STATE]))
+         .slice (this [ENGINE_STATE] .info () .hasMetadata ? 1 : 0)
+         .map (d => Object .freeze ({
+            getName () { return d .name; },
+            getAccessType () { return d .accessType; },
+            getType () { return d .dataType; },
+            getValue () { return d .value; },
+         }));
+   },
+   getFieldDefinitions () { return protoFields (this [ENGINE_STATE]); },
+   // X3DProtoDeclarationNode.createInstance (executionContext): an instance in that context, set up.
+   createInstance (context)
+   {
+      const key = contextKeys .get (context);
+
+      if (key === undefined)
+         throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')");
+
+      const s = this [ENGINE_STATE];
+
+      return R (X ("cx", - (key + 2), "protoNew", s .extern, s .id));
+   },
+   newInstance () { return this .createInstance (this .getExecutionContext ()); },
+   // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO declaration.
+   addUserDefinedField (accessType, name, field)
+   {
+      const s = this [ENGINE_STATE];
+
+      if (s .extern)
+         throw new Error ("Couldn't add user-defined field, node does not support this.");
+
+      if (! (field instanceof X3DField))
+         throw new TypeError ("field.setTainted is not a function");
+
+      X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "add", String (name), accessType, A (field));
+   },
+   removeUserDefinedField (name)
+   {
+      const s = this [ENGINE_STATE];
+
+      if (! s .extern)
+         X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "remove", String (name));
+   },
+   requestUpdateInstances () { const s = this [ENGINE_STATE]; X ("cx", - (s .info () .ctx + 2), "protoRequest", s .extern, s .id); },
+   // X3DProtoDeclarationNode.updateInstances: every instance takes the interface as it is now.
+   updateInstances () { const s = this [ENGINE_STATE]; X ("cx", - (s .info () .ctx + 2), "protoUpdate", s .extern, s .id); },
    getAppInfo () { return this [ENGINE_STATE] .appInfo; },
    setAppInfo (value) { this [ENGINE_STATE] .appInfo = String (value); },
    getDocumentation () { return this [ENGINE_STATE] .documentation; },
@@ -1538,7 +1592,12 @@ for (const [C, extern] of [[X3DProtoDeclaration, false], [X3DExternProtoDeclarat
    });
 }
 
-engineMembers (X3DProtoDeclaration, { getProtoDeclaration () { return this; } });
+engineMembers (X3DProtoDeclaration,
+{
+   getProtoDeclaration () { return this; },
+   // X3DProtoDeclaration.getBody: the execution context of the PROTO's body.
+   getBody () { return executionContext (- (X ("cx", -1, "protoBody", this [ENGINE_STATE] .id) + 2)); },
+});
 
 engineMembers (X3DExternProtoDeclaration,
 {

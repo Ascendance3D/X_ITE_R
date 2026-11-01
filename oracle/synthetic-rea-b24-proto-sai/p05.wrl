@@ -1,0 +1,51 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# An instance made with createProto: IS fields reach its body, it joins the scene, a route reaches it.
+PROTO Gauge [
+  field SFInt32 level 2
+  eventIn SFInt32 setting
+  eventOut SFInt32 echo
+]
+{
+  DEF Body Script {
+    field SFInt32 level IS level
+    eventIn SFInt32 setting IS setting
+    eventOut SFInt32 echo IS echo
+    url "javascript:
+function initialize () { print ('Body initialize level=' + level); }
+function setting (v) { print ('Body setting ' + v); echo = v * 2; }
+"
+  }
+}
+DEF Make Script {
+  field SFNode made NULL
+  eventIn SFInt32 got
+  url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const g  = cs .createProto ('Gauge');
+
+   show ('fresh level', () => g .level);
+   g .level = 11;
+   show ('set level', () => g .level);
+   show ('type name', () => g .getNodeTypeName ());
+   show ('node type', () => g .getNodeType () .join (','));
+   show ('echo watch', () => { g .echo_changed = undefined; return 'none'; });
+   show ('add root', () => { cs .rootNodes .push (g); return cs .rootNodes .length; });
+   show ('route', () => { cs .addRoute (g, 'echo', cs .getNamedNode ('Make'), 'got'); return cs .routes .length; });
+   show ('set setting', () => { g .setting = 21; return 'sent'; });
+   show ('named', () => { cs .updateNamedNode ('Made', g); return cs .getNamedNode ('Made') .getNodeTypeName (); });
+   show ('toVRMLString', () => g .toVRMLString ());
+   made = g;
+}
+
+function got (v) { print ('got ' + v); }
+"
+}
