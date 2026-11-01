@@ -1,0 +1,4 @@
+# Custom labels of the organization's self-hosted runners (gpu-tests.yml).
+self-hosted-runner:
+  labels:
+    - gpu
