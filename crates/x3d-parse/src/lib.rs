@@ -227,7 +227,7 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
         }
     }
 
-    // GLB2Parser
+    // GLBParser (container versions 2 and 3)
     if gltf2::is_valid_glb(&data) {
         return gltf2::parse_glb(&data, world_url)
             .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
