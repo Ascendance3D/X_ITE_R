@@ -1041,10 +1041,10 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
 - Group `scriptReload` (27 cases): the reload sets `synthetic-inline-reload` and `synthetic-externproto-reload` driven by the
   page's API (`url`, `load`, `remove`, `publish` actions; the server's `publish ()` makes a file appear while the world runs).
   A page cannot step frames, so each case compares what is settled: after the world and after each frame with actions it waits
-  400 ms, then in windows of 650 ms until one window has a clock tick (at most 8 windows, about 5 s: a slow runner starts the
-  clocks late, PR #235) and one window more, and records the `warn`, `error`, `initialize`, `shutdown` and `created` lines of
-  the whole wait, which clocks ran in the tick windows (digit-normalized, so only that a clock ran), and the `url` and `load` of
-  the driven Inline. A step in which nothing ticks (four of them) waits the full 5 s. The
+  400 ms, then in windows of 650 ms until two windows in a row have the same non-empty set of clock ticks (at most 8 windows,
+  about 5 s: a slow runner starts and stops clocks late, PR #235) and records the `warn`, `error`, `initialize`, `shutdown`
+  and `created` lines of the whole wait, which clocks ran in the last window (digit-normalized, so only that a clock ran),
+  and the `url` and `load` of the driven Inline. A step in which nothing ticks (four of them) waits the full 5 s. The
   scenarios that need `loadNow`, `unloadNow`, `autoRefresh` timing, an EXTERNPROTO declaration, the Inline of an Inline, or two
   actions in adjacent frames are not cases (listed in the comment of `reloadScenarios`), nor are `externproto/c01-initial` (a
   clock tick that falls in one window or the next) and `inline/c35` (the autoRefresh error count grows with the time waited). The pinned X_ITE's recorded stepped baselines of the same sets are

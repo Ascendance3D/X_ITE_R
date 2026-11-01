@@ -660,8 +660,8 @@ const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => 
 // actions on an Inline (or an EXTERNPROTO), and the native suites compare them frame by frame with the pinned X_ITE's
 // stepped page (oracle/x_ite-inline.mjs). A real page cannot step the frames, so these cases drive a scenario with the
 // page's API only and compare what is settled: after the world and after each frame that has actions, they wait 400 ms, then
-// in windows of 650 ms (longer than the 0.5 s cycle of the worlds' clocks) until a window has a clock tick (at most about 5 s,
-// as a slow runner starts the clocks late), and one window more; the ticks of these windows count. They record the console lines that name a state (`warn`, `error`, and
+// in windows of 650 ms (longer than the 0.5 s cycle of the worlds' clocks) until two windows in a row have the same non-empty set of clock ticks (at most about 5 s, as a slow runner starts
+// and stops clocks late); the ticks of the last window count. They record the console lines that name a state (`warn`, `error`, and
 // the `initialize`, `shutdown` and `created` prints), the digit-normalized set of the other lines (the clocks' ticks: only
 // whether a clock ran, not how often), and the `url` and `load` of the Inlines the scenario drives.
 //
@@ -676,7 +676,7 @@ const RELOAD_SETS  = { inline: "synthetic-inline-reload", externproto: "syntheti
 const RELOAD_TYPES = [ "url", "load", "remove", "publish" ];
 const EARLY_MS     = 400;
 const WINDOW_MS    = 650;
-// The most windows a step waits for its first clock tick (about 5 s): a slow machine starts the clocks late.
+// The most windows a step waits for its clock ticks to settle (about 5 s): a slow machine starts and stops clocks late.
 const MAX_WINDOWS  = 8;
 
 function reloadScenarios ()
@@ -731,28 +731,30 @@ async function reloadCase (page, env, set, scenario)
    env .server .unpublish ();
 
    // The lines of the first EARLY_MS after an action (a clock of the replaced scene may still run) are not counted as ticks. Then
-   // the step waits in windows of WINDOW_MS until one has a tick (a slow machine starts the clocks late; at most MAX_WINDOWS, for
-   // a step in which nothing ticks), and one window more, and the ticks are those of these windows.
+   // the step waits in windows of WINDOW_MS until two windows in a row have the same non-empty set of ticks (a slow machine starts
+   // the clocks late and stops the old scene's clocks late; at most MAX_WINDOWS, for a step in which nothing ticks), and the ticks
+   // are that set.
    const settle = () => page .evaluate (async ([ early, win, max ]) =>
    {
       const r    = window .__reload;
       const wait = ms => new Promise (resolve => setTimeout (resolve, ms));
+      const set  = from => [ ... new Set (r .lines .slice (from) .filter (line => !r .states (line)) .map (line => line .replace (/\d+(\.\d+)?/g, "N"))) ] .sort () .join ("\n");
 
       await wait (early);
-      r .mark = r .lines .length;
+
+      let previous = null;
 
       for (let i = 0; i < max; ++ i)
       {
+         r .mark = r .lines .length;
          await wait (win);
 
-         if (r .lines .slice (r .mark) .some (line => !r .states (line)))
-         {
-            await wait (win);
-            return;
-         }
+         const current = set (r .mark);
 
-         if (i < max - 1)
-            r .mark = r .lines .length;
+         if (current && current === previous)
+            break;
+
+         previous = current;
       }
    }, [ EARLY_MS, WINDOW_MS, MAX_WINDOWS ]);
 
