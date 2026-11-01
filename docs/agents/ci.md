@@ -14,7 +14,7 @@ Three workflows run on a pull request: `rust-tests.yml`, `web-tests.yml` and `co
 
 CI and the local strict suite run the tests with cargo-nextest (`.config/nextest.toml`), then the doctests with `cargo test --doc`. nextest does not run doctests, so a pass needs both steps.
 
-- **CI** (`rust-tests.yml`, profile `ci`): as many tests at once as the runner has CPUs. The "Runner resources" step prints the CPUs and the memory. The GPU tests are excluded by name (`GPU_TESTS`, the same 13 names as before), because the hosted runner has no GPU. CI does not claim GPU coverage.
+- **CI** (`rust-tests.yml`, profile `ci`): as many tests at once as the runner has CPUs. The "Runner resources" step prints the CPUs and the memory. The GPU tests are excluded by name (`GPU_TESTS`, 16 names: the batch 09 to 22 GPU tests and the three rea_b24_nav shards), because the hosted runner has no GPU. CI does not claim GPU coverage.
 - **Local** (the RTX machine): `X3D_ORACLE_KEYS=<evidence store> tools/strict-suite.sh`. It runs 8 tests at once by default (`XITE_R_TEST_JOBS`, at least 6) and 12 compiler jobs (`XITE_R_BUILD_JOBS`). It runs strict and includes the GPU tests. It prints the wall-clock time, the CPU time and the counts of each step, and it exits non-zero when nextest or the doctests fail.
 - Tests that share a resource run in a nextest test group, not skipped. Today that is only `rea_batch08_net` (fixed UDP ports 41234–41236).
 
