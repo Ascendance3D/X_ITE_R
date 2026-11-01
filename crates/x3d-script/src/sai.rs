@@ -2166,6 +2166,48 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
                 _ => None,
             };
 
+            // An instance shares its declaration's definitions (`this [_fieldDefinitions] = protoNode .getFieldDefinitions ()`):
+            // once the declaration's interface changed, they name the new interface although the instance's fields stay the old
+            // ones until `updateInstances`.
+            if let NodeKind::Instance(ProtoRef::Proto(p)) = &n.kind {
+                let d = &rt().scene.protos[*p];
+                let mut list: Vec<(String, u8, FieldValue)> = vec![];
+
+                if d.has_metadata {
+                    list.push((
+                        "metadata".into(),
+                        access::INPUT_OUTPUT,
+                        FieldValue::SFNode(None),
+                    ));
+                }
+
+                list.extend(
+                    d.fields
+                        .iter()
+                        .map(|f| (f.name.clone(), f.access, f.value.clone())),
+                );
+
+                let same = list.len() == n.fields.len()
+                    && list.iter().zip(&n.fields).all(|(l, f)| {
+                        l.0 == f.name
+                            && l.1 == f.access
+                            && Field::new("", 0, l.2.clone()).ty() == f.ty()
+                    });
+
+                if !same {
+                    for (i, (name, acc, value)) in list.iter().enumerate() {
+                        let o = Obj::new();
+                        o.set("name", name.as_str());
+                        o.set("accessType", *acc as i32);
+                        o.set("dataType", Field::new("", 0, value.clone()).ty().name());
+                        o.set("value", value_data(value));
+                        arr.set(i, o);
+                    }
+
+                    return Ok(arr.into());
+                }
+            }
+
             for (i, f) in n.fields.iter().enumerate() {
                 let o = Obj::new();
                 o.set("name", f.name.as_str());
