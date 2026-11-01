@@ -1,4 +1,4 @@
-//! GLB2Parser.js and the entry points of the glTF parsers.
+//! GLB2Parser.js / GLBParser.js (container versions 2 and 3) and the entry points of the glTF parsers.
 
 use super::*;
 use std::cell::RefCell;
@@ -116,27 +116,99 @@ pub(crate) fn parse_gltf(input: &J, world_url: &str) -> R<Scene> {
     Ok(scene)
 }
 
-/// GLB2Parser.isValid
+const GLB_MAGIC: u32 = 0x46546C67; // glTF
+const CHUNK_ENCODING_PLAIN: u32 = 0;
+const JSON_CHUNK: u32 = 0x4e4f534a;
+const BUFFER_CHUNK: u32 = 0x004e4942;
+
+/// GLBParser.js VERSION_LAYOUT: header length, chunk header length, chunk alignment.
+fn glb_layout(version: u32) -> Option<(usize, usize, usize)> {
+    match version {
+        2 => Some((12, 8, 4)),
+        3 => Some((16, 16, 8)),
+        _ => None,
+    }
+}
+
+fn le_u32(data: &[u8], i: usize) -> u32 {
+    u32::from_le_bytes([data[i], data[i + 1], data[i + 2], data[i + 3]])
+}
+
+fn le_u64(data: &[u8], i: usize) -> u64 {
+    let mut b = [0u8; 8];
+
+    b.copy_from_slice(&data[i..i + 8]);
+    u64::from_le_bytes(b)
+}
+
+/// GLBParser.isValid (X_ITE 16.7.0): versions 2 and 3; version 3 has a 64-bit total length.
 pub(crate) fn is_valid_glb(data: &[u8]) -> bool {
-    if data.len() < 12 {
+    if data.len() < 8 || le_u32(data, 0) != GLB_MAGIC {
         return false;
     }
 
-    let u32_at = |i: usize| u32::from_le_bytes([data[i], data[i + 1], data[i + 2], data[i + 3]]);
+    let Some((header_length, _, _)) = glb_layout(le_u32(data, 4)) else {
+        return false;
+    };
 
-    u32_at(0) == 0x46546C67 && u32_at(4) == 2 && u32_at(8) as usize == data.len()
+    if data.len() < header_length {
+        return false;
+    }
+
+    if le_u32(data, 4) >= 3 {
+        le_u64(data, 8) == data.len() as u64
+    } else {
+        le_u32(data, 8) as usize == data.len()
+    }
 }
 
-/// GLB2Parser.parseIntoScene
+/// GLBParser.parseIntoScene. Version 2 keeps the 16.5.0 GLB2Parser behavior (no chunk length
+/// checks, no alignment step); version 3 follows 16.7.0 GLBParser.
 pub(crate) fn parse_glb(data: &[u8], world_url: &str) -> R<Scene> {
+    let version = le_u32(data, 4);
+    let v3 = version >= 3;
+    let (header_length, chunk_header_length, alignment) = glb_layout(version).unwrap_or((12, 8, 4));
     let mut scene = Scene::new(world_url);
 
     // chunks ()
     let mut json: Vec<String> = vec![];
     let mut buffers: Vec<Option<Rc<Vec<u8>>>> = vec![];
-    let mut i = 12usize;
+    let mut i = header_length;
 
     while i < data.len() {
+        if v3 {
+            if i + chunk_header_length > data.len() {
+                return Err("Error: GLB Parser: Invalid chuck header length.".into());
+            }
+
+            // chunkHeader: type, encoding, 64-bit length.
+            let ty = le_u32(data, i);
+            let encoding = le_u32(data, i + 4);
+            let length = le_u64(data, i + 8);
+
+            i += chunk_header_length;
+
+            if length > (data.len() - i) as u64 {
+                return Err("Error: GLB Parser: Invalid chunk length.".into());
+            }
+
+            let length = length as usize;
+
+            if encoding == CHUNK_ENCODING_PLAIN {
+                let slice = &data[i..i + length];
+
+                match ty {
+                    JSON_CHUNK => json.push(crate::decode_text(slice)),
+                    BUFFER_CHUNK => buffers.push(Some(Rc::new(slice.to_vec()))),
+                    _ => {}
+                }
+            }
+
+            // alignUp (i + length, alignment)
+            i = (i + length).div_ceil(alignment) * alignment;
+            continue;
+        }
+
         let u32_at = |k: usize| -> R<u32> {
             data.get(k..k + 4)
                 .map(|b| u32::from_le_bytes([b[0], b[1], b[2], b[3]]))
@@ -154,8 +226,8 @@ pub(crate) fn parse_glb(data: &[u8], world_url: &str) -> R<Scene> {
         let slice = &data[i.min(data.len())..end];
 
         match ty {
-            0x4e4f534a => json.push(crate::decode_text(slice)),
-            0x004e4942 => buffers.push(Some(Rc::new(slice.to_vec()))),
+            JSON_CHUNK => json.push(crate::decode_text(slice)),
+            BUFFER_CHUNK => buffers.push(Some(Rc::new(slice.to_vec()))),
             _ => {}
         }
 
@@ -175,7 +247,13 @@ pub(crate) fn parse_glb(data: &[u8], world_url: &str) -> R<Scene> {
         let mut p = P::new(&mut scene, V::new(&value), world_url, &fetch);
 
         p.buffers = buffers.clone();
-        p.root_object()?;
+
+        // GLBParser.glb: a rootObject failure is caught and the next JSON chunk is tried.
+        if let Err(e) = p.root_object() {
+            if !v3 {
+                return Err(e);
+            }
+        }
     }
 
     Ok(scene)
