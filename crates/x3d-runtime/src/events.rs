@@ -157,6 +157,25 @@ impl Runtime {
     fn page_field_callbacks(&mut self, k: FKey, log_len: usize) {
         let value = self.value(k).clone();
         let root_nodes = self.private_field(self.browser_node, "rootNodes") == Some(k);
+
+        // In the route chain, at the point X_ITE calls the callback: the page's sink (issue #202). The `rootNodes` event
+        // keeps its place after the Scripts' callbacks, and no event runs before the ones recorded earlier.
+        if !root_nodes
+            && self.page_field_events.as_ref().is_some_and(Vec::is_empty)
+            && self.page_event_sink.is_some()
+            && self.flush_console()
+        {
+            if let Some(mut sink) = self.page_event_sink.take() {
+                if sink(self, k, &value) {
+                    self.halt_pending = true;
+                }
+
+                self.page_event_sink = Some(sink);
+            }
+
+            return;
+        }
+
         let Some(events) = self.page_field_events.as_mut() else {
             return;
         };
@@ -234,6 +253,17 @@ impl Runtime {
 
                     for (k, event) in tainted {
                         self.process_event(k, event);
+
+                        if self.halt_pending {
+                            break;
+                        }
+                    }
+
+                    // A page callback threw: the rest of the batch is dropped and no event is processed again, as in X_ITE.
+                    if self.halt_pending {
+                        self.halt_pending = false;
+                        self.halt_events();
+                        return;
                     }
 
                     if self.tainted_fields.is_empty()

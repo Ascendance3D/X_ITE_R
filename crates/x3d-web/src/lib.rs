@@ -7,6 +7,7 @@
 //! natively. `wasm` (wasm32 only) adds the WebGPU device and canvas surface and exports [`wasm::WebBrowser`] through
 //! wasm-bindgen. Build the page module with `tools/build-web.sh`.
 
+pub mod chain;
 pub mod session;
 
 #[cfg(target_arch = "wasm32")]

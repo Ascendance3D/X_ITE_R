@@ -35,7 +35,7 @@ pub struct RouteInfo {
 }
 
 impl RouteInfo {
-    fn of(r: &x3d_scene::scene::Route) -> RouteInfo {
+    pub(crate) fn of(r: &x3d_scene::scene::Route) -> RouteInfo {
         RouteInfo {
             id: r.id,
             source: r.source_node,
@@ -426,7 +426,7 @@ impl Session {
     /// Counts the worlds this session has had (an Anchor replaces the world inside the runtime): the page's node
     /// handles belong to one of them.
     pub fn world_generation(&self) -> u64 {
-        self.rt().world_state.generation
+        crate::chain::world_generation(self.rt())
     }
 
     /// Has a Sound node of this world made the audio context (X3DSoundContext.getAudioContext)?
@@ -602,9 +602,7 @@ impl Session {
 
     /// Is `node` a node of the world now (not a released or out-of-range id from the page)?
     fn node_exists(&self, node: NodeId) -> bool {
-        let scene = &self.rt().scene;
-
-        (node as usize) < scene.nodes.len() && !scene.free_nodes.contains(&node)
+        crate::chain::node_exists(self.rt(), node)
     }
 
     /// X3DBrowser.createVrmlFromString (text) of a page (an external browser): the root nodes of the new scene, made in
@@ -653,16 +651,12 @@ impl Session {
 
     /// X3DExecutionContext.getNamedNode (name) of the world; `None` where X_ITE throws "Named node not found".
     pub fn named_node(&self, name: &str) -> Option<NodeId> {
-        let scene = &self.rt().scene;
-
-        scene.get_named_node(scene.world, name)
+        crate::chain::named_node(self.rt(), name)
     }
 
     /// X3DExecutionContext.rootNodes of the world (NULL entries kept).
     pub fn root_nodes(&self) -> Vec<Option<NodeId>> {
-        let scene = &self.rt().scene;
-
-        scene.ctx(scene.world).root_nodes.clone()
+        crate::chain::root_nodes(self.rt())
     }
 
     /// X3DExecutionContext.updateNamedNode (name, node) of the world: the node gets `name`, the node that had `name` loses it,
@@ -686,16 +680,6 @@ impl Session {
         let world = rt.scene.world;
 
         rt.scene.remove_named_node(world, name);
-    }
-
-    /// X3DImportedNodeInstance delegates getNodeTypeName, getField and getFieldDefinitions to the node its Inline exports,
-    /// while the Inline provides it (`$.try (() => importedNode .getExportedNode ())`); any other node is itself.
-    fn inner_node(&self, node: NodeId) -> NodeId {
-        if self.node_exists(node) {
-            rt_inner(self.rt(), node)
-        } else {
-            node
-        }
     }
 
     /// X3DImportedNode.getExportedNode of record `imp`: the node the Inline exports under the record's exported name.
@@ -919,14 +903,7 @@ impl Session {
 
     /// X3DExecutionContext.routes of the world: the routes in the order they were added.
     pub fn routes(&self) -> Vec<RouteInfo> {
-        let scene = &self.rt().scene;
-
-        scene
-            .ctx(scene.world)
-            .routes
-            .iter()
-            .map(|r| RouteInfo::of(r))
-            .collect()
+        crate::chain::routes(self.rt())
     }
 
     /// The route with these ends (X3DExecutionContext.getRoute without the node checks, which are the page's): the fields
@@ -938,21 +915,13 @@ impl Session {
         destination: NodeId,
         destination_field: &str,
     ) -> Result<Option<RouteInfo>, String> {
-        self.route_nodes(source, destination)?;
-
-        let scene = &self.rt().scene;
-
-        scene.route_ends(source, source_field, destination, destination_field)?;
-
-        Ok(scene
-            .find_route_index(
-                scene.world,
-                source,
-                source_field,
-                destination,
-                destination_field,
-            )
-            .map(|i| RouteInfo::of(&scene.ctx(scene.world).routes[i])))
+        crate::chain::get_route(
+            self.rt(),
+            source,
+            source_field,
+            destination,
+            destination_field,
+        )
     }
 
     /// X3DExecutionContext.addRoute: the route that exists with these ends, else a new one that carries events from now on.
@@ -963,31 +932,18 @@ impl Session {
         destination: NodeId,
         destination_field: &str,
     ) -> Result<RouteInfo, String> {
-        if let Some(route) = self.get_route(source, source_field, destination, destination_field)? {
-            return Ok(route);
-        }
-
-        let rt = self.rt_mut();
-        let world = rt.scene.world;
-
-        rt.add_route(world, source, source_field, destination, destination_field)?;
-
-        // The route is the last one of the world's list.
-        Ok(RouteInfo::of(
-            rt.scene
-                .ctx(world)
-                .routes
-                .last()
-                .expect("add_route made a route"),
-        ))
+        crate::chain::add_route(
+            self.rt_mut(),
+            source,
+            source_field,
+            destination,
+            destination_field,
+        )
     }
 
     /// X3DExecutionContext.deleteRoute (route): the route with this id leaves the world; whether there was one.
     pub fn delete_route(&mut self, id: usize) -> bool {
-        let rt = self.rt_mut();
-        let world = rt.scene.world;
-
-        rt.delete_route_by_id(world, id)
+        crate::chain::delete_route(self.rt_mut(), id)
     }
 
     fn route_nodes(&self, source: NodeId, destination: NodeId) -> Result<(), String> {
@@ -1000,43 +956,22 @@ impl Session {
 
     /// X3DNode.getNodeTypeName.
     pub fn type_name(&self, node: NodeId) -> Option<String> {
-        let node = self.inner_node(node);
-
-        self.node_exists(node).then(|| self.rt().type_name(node))
+        crate::chain::type_name(self.rt(), node)
     }
 
     /// X3DNode.getNodeName.
     pub fn node_name(&self, node: NodeId) -> Option<String> {
-        self.node_exists(node)
-            .then(|| self.rt().scene.node(node).name.clone())
+        crate::chain::node_name(self.rt(), node)
     }
 
     /// The nodes of an SFNode or MFNode field (`None` for NULL); `Err` for a field of another type.
     pub fn node_value(&self, node: NodeId, name: &str) -> Result<Vec<Option<NodeId>>, String> {
-        let k = self.field_key(node, name)?;
-
-        match &self.rt().field(k).value {
-            FieldValue::SFNode(n) => Ok(vec![*n]),
-            FieldValue::MFNode(list) => Ok(list.clone()),
-            v => Err(format!("{} is not a node field", v.field_type().name())),
-        }
+        crate::chain::node_value(self.rt(), node, name)
     }
 
     /// The names of X3DNode.getFieldDefinitions, then the user-defined fields.
     pub fn field_names(&self, node: NodeId) -> Vec<String> {
-        if !self.node_exists(node) {
-            return vec![];
-        }
-
-        let node = self.inner_node(node);
-
-        let n = self.rt().scene.node(node);
-
-        n.fields
-            .iter()
-            .chain(&n.user_fields)
-            .map(|f| f.name.clone())
-            .collect()
+        crate::chain::field_names(self.rt(), node)
     }
 
     /// X3DNode.getField (name): its type, access type and `toString ()` value.
@@ -1067,7 +1002,7 @@ impl Session {
             return Err(format!("field '{name}' is outputOnly"));
         }
 
-        let ctx = rt.scene.node(rt_inner(rt, node)).ctx;
+        let ctx = rt.scene.node(crate::chain::inner_node(rt, node)).ctx;
         let value = match rt.field_from_string(ty, vrml, Some(ctx), false, None, name) {
             Ok(Some(v)) => v,
             Ok(None) => return Err(format!("no {} value in '{vrml}'", ty.name())),
@@ -1158,67 +1093,24 @@ impl Session {
         node: NodeId,
         name: &str,
     ) -> Result<(&'static str, u8, Data), String> {
-        let k = self.field_key(node, name)?;
-        let rt = self.rt_mut();
-
-        rt.page_mirror.entry(k).or_insert(false);
-
-        let f = rt.field(k);
-
-        Ok((f.ty().name(), f.access, data::value_data(&f.value)))
+        crate::chain::field_data(self.rt_mut(), node, name)
     }
 
     /// X3DField.addEvent of the page's object of a node field: the field takes the object's value and sends its event
     /// in the next frame's event cascade, as X3DField.setValue does. The access type is not checked here: X_ITE's
     /// SFNode proxy refuses an outputOnly field, a field object of it does not.
     pub fn set_field_data(&mut self, node: NodeId, name: &str, value: &Data) -> Result<(), String> {
-        let k = self.field_key(node, name)?;
-        let ty = self.rt().field(k).ty();
-
-        data::check_data(ty, value).map_err(|e| format!("field '{name}': {e}"))?;
-
-        if let Some(n) = data::data_nodes(ty, value)
-            .into_iter()
-            .find(|&n| !self.node_exists(n))
-        {
-            return Err(format!("field '{name}': node {n} is not in the world"));
-        }
-
-        let rt = self.rt_mut();
-        let value = data::data_value(ty, value);
-
-        rt.set_value(k, value);
-        // The page's object holds this value already.
-        rt.page_clean(k);
-        Ok(())
+        crate::chain::set_field_data(self.rt_mut(), node, name, value)
     }
 
     /// The node fields the page holds objects of whose value changed since the last call: node, field name, data.
     pub fn take_field_changes(&mut self) -> Vec<(NodeId, String, Data)> {
-        let rt = self.rt_mut();
-
-        rt.take_page_dirty()
-            .into_iter()
-            .map(|k| {
-                let f = rt.field(k);
-
-                (k.0, f.name.clone(), data::value_data(&f.value))
-            })
-            .collect()
+        crate::chain::take_field_changes(self.rt_mut())
     }
 
     /// Does the page call field callbacks for this field (X3DField.addFieldCallback)?
     pub fn observe_field(&mut self, node: NodeId, name: &str, on: bool) -> Result<(), String> {
-        let k = self.field_key(node, name)?;
-        let rt = self.rt_mut();
-
-        if on {
-            rt.page_observed.insert(k);
-        } else {
-            rt.page_observed.remove(&k);
-        }
-
-        Ok(())
+        crate::chain::observe_field(self.rt_mut(), node, name, on)
     }
 
     /// The events of the observed fields since the last call, in event order: node, field name and the value each
@@ -1234,7 +1126,8 @@ impl Session {
     /// that came before each event: the page prints them before it calls the event's callbacks, as X_ITE does. Call
     /// [`Session::take_log`] right after, so the numbers count from the same line.
     pub fn take_field_events_logged(&mut self) -> Vec<(NodeId, String, Data, usize)> {
-        let seen = self.log_seen;
+        // Lines the route chain handed to the console already are not the page's to print again.
+        let seen = self.log_seen.max(self.rt().log_sunk);
         let rt = self.rt_mut();
 
         // The release sweep drops the events of released nodes; a node that is not live is skipped all the same, so
@@ -1269,6 +1162,18 @@ impl Session {
             .collect()
     }
 
+    /// The page's field callbacks in the route chain (see [`crate::chain`], [`x3d_runtime::PageEventSink`]); `None`: the events are
+    /// recorded for [`Session::take_field_events`]. The sink is used only with a console sink
+    /// ([`Session::set_console_sink`]), which gets the lines made before each event first.
+    pub fn set_page_event_sink(&mut self, sink: Option<x3d_runtime::PageEventSink>) {
+        self.rt_mut().page_event_sink = sink;
+    }
+
+    /// The page's console writer for the lines of the log (see [`Runtime::console_sink`]).
+    pub fn set_console_sink(&mut self, sink: Option<Box<dyn Fn(&str)>>) {
+        self.rt_mut().console_sink = sink;
+    }
+
     /// A page field callback threw: stop the event processing for good (see [`Runtime::halt_events`]).
     pub fn halt_events(&mut self) {
         self.rt_mut().halt_events();
@@ -1283,55 +1188,11 @@ impl Session {
     /// X3DNode.getFieldDefinitions: the predefined fields with the class's default values, then the user-defined
     /// fields.
     pub fn field_definitions(&self, node: NodeId) -> Vec<FieldDefinition> {
-        if !self.node_exists(node) {
-            return vec![];
-        }
-
-        let node = self.inner_node(node);
-
-        let scene = &self.rt().scene;
-        let n = scene.node(node);
-        let defaults = match &n.kind {
-            x3d_scene::NodeKind::Builtin(t) => Some(
-                &scene.table.types[*t]
-                    .variant(scene.spec_version_of(n.ctx))
-                    .fields,
-            ),
-            _ => None,
-        };
-        let definition = |f: &x3d_scene::Field, default: Option<Data>| FieldDefinition {
-            name: f.name.clone(),
-            access: f.access,
-            type_name: f.ty().name(),
-            default,
-        };
-
-        n.fields
-            .iter()
-            .map(|f| {
-                let default = defaults
-                    .and_then(|d| d.iter().find(|d| d.name == f.name))
-                    .map(|d| data::value_data(&d.default));
-
-                definition(f, default)
-            })
-            .chain(n.user_fields.iter().map(|f| definition(f, None)))
-            .collect()
+        crate::chain::field_definitions(self.rt(), node)
     }
 
     fn field_key(&self, node: NodeId, name: &str) -> Result<x3d_runtime::FKey, String> {
-        if !self.node_exists(node) {
-            return Err("node is not in the world".to_string());
-        }
-
-        let node = self.inner_node(node);
-
-        self.rt().get_field(node, name).ok_or_else(|| {
-            format!(
-                "Unknown field '{name}' in node class {}.",
-                self.rt().type_name(node)
-            )
-        })
+        crate::chain::field_key(self.rt(), node, name)
     }
 
     /// One frame of the browser's event loop at `now` (seconds since the Unix epoch). The loads whose responses
@@ -1362,7 +1223,7 @@ impl Session {
 
     /// The warnings and errors the runtime logged (parse warnings, failed loads, ...) since the last call.
     pub fn take_log(&mut self) -> Vec<String> {
-        let seen = self.log_seen;
+        let seen = self.log_seen.max(self.rt().log_sunk);
         let log = &self.rt().log;
         let new = log[seen.min(log.len())..].to_vec();
         let len = log.len();
@@ -1576,6 +1437,8 @@ impl Session {
     pub fn unload(&mut self) {
         if let Stage::Live(v) = &mut self.stage {
             if !std::mem::replace(&mut self.unloaded, true) {
+                // The page's callbacks of a world that goes are not called in the route chain of its `shutdown`s.
+                v.rt.page_event_sink = None;
                 v.rt.unload_world();
             }
         }
@@ -1598,21 +1461,6 @@ pub fn set_sound_options(rt: &mut Runtime, mute: bool, intensity: f64) {
         .set_option("Mute", OptionValue::Bool(mute));
     rt.browser_options
         .set_option("SoundIntensity", OptionValue::Float(intensity));
-}
-
-/// The node an X3DImportedNodeInstance delegates to (see [`Session::inner_node`]), for code that holds the runtime.
-fn rt_inner(rt: &Runtime, node: NodeId) -> NodeId {
-    if let x3d_scene::NodeKind::Imported(i) = rt.scene.node(node).kind {
-        let rec = &rt.scene.imported[i];
-
-        if let Some(&scene) = rt.inline_scenes.get(&rec.inline) {
-            if let Some(n) = rt.scene.get_exported_node(scene, &rec.exported_name) {
-                return n;
-            }
-        }
-    }
-
-    node
 }
 
 /// X3DImportedNode.dispose: the record leaves the context and the routes of its instance are deleted.
