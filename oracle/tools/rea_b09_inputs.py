@@ -6,7 +6,7 @@ SUITE is `stepped` (oracle/synthetic-rea-b09-stepped: Fog/LocalFog/FogCoordinate
   python3 -I oracle/tools/rea_b09_inputs.py SUITE case NAME WORLD SCRIPT MSAA [TEXT_TOL]
       x10_compare.py against the release build in $B09_TARGET (default /tmp/b09/target/release);
       on success the X_ITE side (js.json, js/*.png) is kept as
-      oracle/rea-batch09-inputs-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
+      oracle/rea-b09-inputs-baseline/NAME-msaaMSAA and the case line is added to cases.txt.
   python3 -I oracle/tools/rea_b09_inputs.py SUITE xite-case NAME WORLD SCRIPT MSAA
       the X_ITE side only (x_ite-anim.mjs / x_ite-anim-msaa.mjs), into /tmp/rea-b09-SUITE-xite/NAME-msaaMSAA
       (to check that a stepped X_ITE run repeats).
@@ -21,7 +21,7 @@ suite, mode, args = args[0], args[1], args[2:]
 assert suite in ("stepped",)
 corpus = f"synthetic-rea-b09-{suite}"
 shots = []
-cases_dir = os.path.join(root, "oracle", f"rea-batch09-inputs-baseline")
+cases_dir = os.path.join(root, "oracle", f"rea-b09-inputs-baseline")
 
 if mode == "shots":
     only = args[args.index("--only") + 1] if "--only" in args else None

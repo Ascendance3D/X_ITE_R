@@ -2,7 +2,7 @@
 """REA batch 05 Sound oracle: pinned X_ITE (headless Chrome, offline audio) against x3d-drive.
 
   python3 -I oracle/tools/rea_b05.py baseline [NAME ...]
-      oracle/synthetic-rea-b05/NAME.wrl -> oracle/rea-batch05-baseline/NAME/{js.json, js.audio.f32}
+      oracle/synthetic-rea-b05/NAME.wrl -> oracle/rea-b05-baseline/NAME/{js.json, js.audio.f32}
       (oracle/x_ite-anim.mjs). A baseline is written only from an X_ITE run.
   python3 -I oracle/tools/rea_b05.py check [NAME ...] [--target DIR] [--jobs N] [--json OUT]
       x3d-drive (DIR/x3d-drive, default /tmp/fp-rel/release) against the baseline, with the
@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 worlds_dir = os.path.join(root, "oracle", "synthetic-rea-b05")
-baseline_dir = os.path.join(root, "oracle", "rea-batch05-baseline")
+baseline_dir = os.path.join(root, "oracle", "rea-b05-baseline")
 
 # Open differences (not approved as DIFFERENT): name -> reason.
 KNOWN = {

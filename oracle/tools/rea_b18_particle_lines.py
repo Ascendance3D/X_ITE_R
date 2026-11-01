@@ -8,7 +8,7 @@ runs `x3d-oracle particles` (default target/release/x3d-oracle) three times per 
 oracle/synthetic-rea-b18-particle-lines/NAME.x3dv with scripts/NAME.json: `png` (antialiased="false") and `msaa4`
 (--ms 4). Within a pass the three js.json and js.f32 must be identical and every PNG must decode to the same pixels
 (the encoder may differ, so file bytes are not compared). The first run of each pass is kept as
-oracle/rea-batch18-particle-lines-baseline/NAME/ in the layout of rea-batch13-particles-baseline (js.json, js.f32,
+oracle/rea-b18-particle-lines-baseline/NAME/ in the layout of rea-b13-particles-baseline (js.json, js.f32,
 png/, msaa4/). A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, struct, subprocess, sys, zlib
@@ -89,7 +89,7 @@ def main():
         print(f"{name}: records differ between the png and msaa4 passes")
         sys.exit(1)
 
-    dest = os.path.join(root, "oracle", "rea-batch18-particle-lines-baseline", name)
+    dest = os.path.join(root, "oracle", "rea-b18-particle-lines-baseline", name)
     shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
     for f in ("js.json", "js.f32"):

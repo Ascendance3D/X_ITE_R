@@ -1,5 +1,5 @@
 //! Issue #95: compile error text of a fragment ShaderPart that includes a ShaderRegistry file without the macros
-//! and uniforms it needs, against the log of pinned X_ITE 16.5.0 (oracle/rea-batch24-shaderpart-baseline/include-*,
+//! and uniforms it needs, against the log of pinned X_ITE 16.5.0 (oracle/rea-b24-shaderpart-baseline/include-*,
 //! worlds oracle/synthetic-rea-b24-shaderpart/include-*.wrl). ANGLE reports `<file number>:<line in the file>` from
 //! the `#line` directives of ShaderCompiler.process, and X_ITE names the include file; the log of this port counts
 //! physical lines, so `remap_log` rewrites it. The stepped comparison of the same worlds (pictures, scene text and
@@ -19,7 +19,7 @@ fn source(include: &str) -> String {
 /// The `line N, ERROR: ...` tail and the file of X_ITE's one error line of `include-<name>`.
 fn x_ite(name: &str) -> (String, String) {
     let path = format!(
-        "{}/../../oracle/rea-batch24-shaderpart-baseline/include-{name}-msaa0/js.json",
+        "{}/../../oracle/rea-b24-shaderpart-baseline/include-{name}-msaa0/js.json",
         env!("CARGO_MANIFEST_DIR")
     );
     let v: serde_json::Value =

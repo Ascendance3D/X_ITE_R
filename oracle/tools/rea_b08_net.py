@@ -7,8 +7,8 @@
   python3 -I oracle/tools/rea_b08_net.py case NAME WORLD SCRIPT MSAA [TEXT_TOL] [--udp]
       x10_compare.py against the release build in $B08_NET_TARGET (default /tmp/b08/net/target/release), plus
       the equality of the sorted warn / error `log` of both sides (x10_compare does not look at it). On success
-      the X_ITE side (js.json, js/*.png) is kept as oracle/rea-batch08-net-baseline/NAME-msaaMSAA and the case line is
-      added to oracle/rea-batch08-net-baseline/cases.txt.
+      the X_ITE side (js.json, js/*.png) is kept as oracle/rea-b08-net-baseline/NAME-msaaMSAA and the case line is
+      added to oracle/rea-b08-net-baseline/cases.txt.
       --udp: a loopback sender (127.0.0.1 only) sends DIS-PDU-shaped datagrams to port 41234 (the `port` of the
       reader nodes) and 41235 (nobody) during the whole run, and a listener on 41236 (the `port` of the writer
       nodes) records anything the nodes send. Both X_ITE and Rust must leave 41234 closed (connected UDP sockets
@@ -148,7 +148,7 @@ elif args[0] == "case":
         code = code or (0 if ok else 1)
     print(f"exit {code}")
     if code == 0:
-        dest = os.path.join(root, "oracle", "rea-batch08-net-baseline", f"{name}-msaa{msaa}")
+        dest = os.path.join(root, "oracle", "rea-b08-net-baseline", f"{name}-msaa{msaa}")
         shutil.rmtree(dest, ignore_errors=True)
         os.makedirs(dest)
         shutil.copy(os.path.join(out, "js.json"), dest)
@@ -156,7 +156,7 @@ elif args[0] == "case":
             shutil.copytree(os.path.join(out, "js"), os.path.join(dest, "js"))
         if udp is not None:
             json.dump(udp, open(os.path.join(dest, "udp.json"), "w"), indent=1)
-        cases = os.path.join(root, "oracle", "rea-batch08-net-baseline", "cases.txt")
+        cases = os.path.join(root, "oracle", "rea-b08-net-baseline", "cases.txt")
         line = " ".join([name, world, script, msaa] + ([tol] if tol else []) + (["--udp"] if udp_on else []))
         lines = open(cases).read().splitlines() if os.path.exists(cases) else []
         lines = [l for l in lines if l.split()[:1] != [name] or l.split()[3:4] != [msaa]] + [line]

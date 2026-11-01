@@ -98,7 +98,7 @@ export XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests   # Playwright for the 
 
 Then prove the recorder: re-record two existing cases into `/tmp` and compare them with the stored baseline,
 for example `node oracle/x_ite-inline.mjs oracle/synthetic-rea-b08-gltf-inline /tmp/sanity.json r-missing-bin
-r-bad-base64` against `rea-batch08-gltf-baseline/inline-baseline.json`. Record new cases into a new case
+r-bad-base64` against `rea-b08-gltf-baseline/inline-baseline.json`. Record new cases into a new case
 directory and a new baseline file, at least five times; use whole-list console equality only when all
 recordings are byte-identical.
 - `x_ite-pin/src/dump.html` — loads one file with `createX3DFromURL`, returns
@@ -585,9 +585,9 @@ target/release/x3d-oracle particles WORLD SCRIPT --out js.json [--png-dir png [-
 `x3d-oracle particles` also reads an additive script key that the Node tools do not have:
 `"pickProbes": { "frames": [...], "points": [[x, y], ...] }`. After each listed frame it records `browser .touch`
 at every point (id, the DEF name of the hit shape, point, normal, texCoord). Scripts without the key give
-byte-identical output, checked on pr-quad of `rea-batch13-particles-baseline`. Pass `--png-dir` with it: without that
+byte-identical output, checked on pr-quad of `rea-b13-particles-baseline`. Pass `--png-dir` with it: without that
 the drawing buffer stays 1 x 1 and `touch` hits nothing. The ParticleSystem pointing baselines
-`rea-batch14-particle-pick-baseline/` come from `tools/rea_b14_pick.py record`. Their worlds are
+`rea-b14-particle-pick-baseline/` come from `tools/rea_b14_pick.py record`. Their worlds are
 `synthetic-rea-b14-particle-pick/` (`tools/gen_rea_b14_particle_pick.py`), and
 `crates/x3d-viewer/tests/rea_b14_particle_pick.rs` compares against them.
 
@@ -595,18 +595,18 @@ A second additive key, `"collisionProbes": { "frames": [...], "directions": [[x,
 z], ...], "nodes": [DEF, ...] }`, records after each listed frame (after its pick probes) the DEF names of the frame's
 collision shapes, `getClosestObject` along every direction (id, shape, distance, normal), `constrainTranslation` of
 every translation, the user pose, the viewpoint's positionOffset and isActive / collideTime of the named Collision
-nodes. The ParticleSystem avatar collision baselines `rea-batch15-particle-collision-baseline/` come from
+nodes. The ParticleSystem avatar collision baselines `rea-b15-particle-collision-baseline/` come from
 `tools/rea_b15_collision.py record`. Their worlds are `synthetic-rea-b15-particle-collision/`
 (`tools/gen_rea_b15_particle_collision.py`), and `crates/x3d-viewer/tests/rea_b15_particle_collision.rs` compares
 against them.
 
-The BoundedPhysicsModel replay baselines `rea-batch16-bounded-baseline/` (every frame's transform feedback buffer)
+The BoundedPhysicsModel replay baselines `rea-b16-bounded-baseline/` (every frame's transform feedback buffer)
 come from `tools/rea_b16_bounded.py record` (three identical runs). Their worlds are `synthetic-rea-b16-bounded/`
 (`tools/gen_rea_b16_bounded.py`), and `crates/x3d-viewer/tests/rea_b16_bounded_physics.rs` replays them through
 particles_b06_common with the batch 06R tolerances. A Script there is run by a field event on its input: one started
 by a TimeSensor (startTime between two frames) did not run under this protocol, in X_ITE or in Rust.
 
-The wide and stippled instanced line baselines `rea-batch18-particle-lines-baseline/` (ParticleSystem LINE particles
+The wide and stippled instanced line baselines `rea-b18-particle-lines-baseline/` (ParticleSystem LINE particles
 and InstancedShape IndexedLineSets with LineProperties) come from `tools/rea_b18_particle_lines.py record`: three runs
 per image pass (`png`, `msaa4`) with identical records and identical decoded pixels. Their worlds are
 `synthetic-rea-b18-particle-lines/` (`tools/gen_rea_b18_particle_lines.py`; the InstancedShape worlds hold a disabled
@@ -621,7 +621,7 @@ Fields that differ between two Node runs as well, so they differ between tools t
 
 Everything else matched byte for byte.
 
-The VolumeEmitter intersection-limit baselines `rea-batch17-emitter-hits-baseline/` (every frame's transform feedback
+The VolumeEmitter intersection-limit baselines `rea-b17-emitter-hits-baseline/` (every frame's transform feedback
 buffer) come from `tools/rea_b17_emitter_hits.py record` (three identical runs). Their worlds are
 `synthetic-rea-b17-emitter-hits/` (`tools/gen_rea_b17_emitter_hits.py`: emission lines through 31 to 128 quads), and
 `crates/x3d-viewer/tests/rea_b17_emitter_hits.rs` replays them through particles_b06_common with the batch 06R
@@ -640,12 +640,12 @@ identical runs per image pass) and `tools/rea_b17_emitter_hits.py record`. A BVH
 built (the median split makes N triangles `ceil (log2 N)` deep); `crates/x3d-runtime/tests/particles_bvh_depth.rs`
 pins the Rust depth.
 
-The wide LINE particle baselines `rea-batch21-wide-lines-baseline/` (pick probes, every frame's collision probes and
+The wide LINE particle baselines `rea-b21-wide-lines-baseline/` (pick probes, every frame's collision probes and
 the shadow images of 1 to 24 px lines) come from `tools/rea_b21_wide_lines.py record` (three identical runs). Their
 worlds are `synthetic-rea-b21-wide-lines/` (`tools/gen_rea_b21_wide_lines.py`), and
 `crates/x3d-viewer/tests/rea_b21_wide_lines.rs` compares them with the B13, B14, B15 and B18 rules.
 
-The two-layer wide LINE particle shadow baselines `rea-batch22-two-layer-shadows-baseline/` (images of two layers side
+The two-layer wide LINE particle shadow baselines `rea-b22-two-layer-shadows-baseline/` (images of two layers side
 by side) come from `tools/rea_b22_two_layer_shadows.py record` (three identical runs). Their worlds are
 `synthetic-rea-b22-two-layer-shadows/` (`tools/gen_rea_b22_two_layer_shadows.py`), and
 `crates/x3d-viewer/tests/rea_b22_two_layer_shadows.rs` compares the records, the whole images (B18 rule) and each layer's
@@ -1183,7 +1183,7 @@ python3 -I oracle/tools/movie_anim.py record 5 load-errors
   `ci-events` (TouchSensor events over instances), `cl-render` (Collision `enabled`, `visible`, `proxy`, `bboxDisplay`,
   nesting: pictures and probes), `cl-events` (TouchSensor events under Collision nodes whose `enabled` and `visible`
   change at run time), `an-nested` (Anchor in Anchor, an Anchor with a TouchSensor child, an Anchor over instances).
-- `tools/rea_b24.py record NAME WORLD SCRIPT MSAA` wrote `rea-batch24-anchor-collision-instanced-baseline/` (MSAA 0 and
+- `tools/rea_b24.py record NAME WORLD SCRIPT MSAA` wrote `rea-b24-anchor-collision-instanced-baseline/` (MSAA 0 and
   4, each three identical X_ITE runs, `loadFrames` left out of the identity check). The pinned X_ITE needs the
   `x_ite-pin/node_modules` link of "Recording from a worktree".
 - `crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs` compares `x3d-drive` with the baseline (GPU test; it
@@ -1216,9 +1216,9 @@ replays every world and fails on a missing reference, an error log or a picture 
 - `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;
   clean-room) with `browser.getAudioContext ()` of the pinned X_ITE in headless Chromium and records length, rate,
   channels, per-channel sha256, a few samples, the peak and all samples (base64 float32) in
-  `rea-batch24-audio-decode-baseline/audio-decode-baseline.json`. Prepare the worktree as in "Recording from a
+  `rea-b24-audio-decode-baseline/audio-decode-baseline.json`. Prepare the worktree as in "Recording from a
   worktree" above; `--runs 5` fails unless the five recordings are byte-identical.
-- `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio oracle/rea-batch24-audio-decode-baseline/audio-decode-baseline.json --runs 5`
+- `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio oracle/rea-b24-audio-decode-baseline/audio-decode-baseline.json --runs 5`
 - `crates/x3d-runtime/tests/rea_b24_audio_decode.rs` compares the port; its header lists the per-format results.
 
 ## AudioDestination mediaDeviceID (issue #81)
@@ -1242,5 +1242,5 @@ node oracle/x_ite-audio-sink.mjs oracle/web-audio-sink-baseline/sink-baseline.js
 `synthetic-rea-b24-nav/` (generator `tools/gen_rea_b24_nav.py`) holds 40 navigation cases that batch 09 does not have: ceiling,
 step-up threshold, avatarSize variants, speed, Gravity, centerOfRotation, trackball (StraightenHorizon false), PLANE limits and
 double click, WALK in a tilted Transform. `tools/rea_b24_nav.py record` records each case from the pinned X_ITE three times
-(identical, no pictures) into `rea-batch24-nav-baseline/`; `crates/x3d-viewer/tests/rea_b24_nav.rs` compares Rust with it.
+(identical, no pictures) into `rea-b24-nav-baseline/`; `crates/x3d-viewer/tests/rea_b24_nav.rs` compares Rust with it.
 The item lists of the five navigation subsystems are in `docs/reports/NAV_ITEM_LISTS.md`.

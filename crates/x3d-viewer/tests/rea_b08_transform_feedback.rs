@@ -3,7 +3,7 @@
 //! X_ITE sets it only for its own shaders (`browser .createShader ({ transformFeedbackVaryings })`, no field) and
 //! hands it to `gl.transformFeedbackVaryings (program, varyings, INTERLEAVED_ATTRIBS)` before the link. The
 //! oracle (`oracle/tools/rea_b08_transform_feedback.mjs`, headless Chrome on the GPU) wrote
-//! oracle/rea-batch08-shaders-baseline/transform-feedback.json: per case `isValid` and the console warnings.
+//! oracle/rea-b08-shaders-baseline/transform-feedback.json: per case `isValid` and the console warnings.
 //! Here the same vertex and fragment shader is linked by the Rust runtime with the same list
 //! (`Runtime::composed_set_transform_feedback_varyings`, then `activate`, which relinks) and `isValid` and the
 //! warnings must be the same.
@@ -20,7 +20,7 @@ fn transform_feedback_varyings_match_x_ite() {
         .stack_size(256 << 20)
         .spawn(|| {
             let oracle = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
-            let baseline: Value = serde_json::from_str(&std::fs::read_to_string(oracle.join("rea-batch08-shaders-baseline/transform-feedback.json")).expect("baseline missing: comparison NOT RUN")).unwrap();
+            let baseline: Value = serde_json::from_str(&std::fs::read_to_string(oracle.join("rea-b08-shaders-baseline/transform-feedback.json")).expect("baseline missing: comparison NOT RUN")).unwrap();
             let (vs, fs) = (baseline["vertex"].as_str().unwrap(), baseline["fragment"].as_str().unwrap());
             let dir = std::env::temp_dir().join(format!("rea-b08-tf-{}", std::process::id()));
             std::fs::create_dir_all(&dir).unwrap();

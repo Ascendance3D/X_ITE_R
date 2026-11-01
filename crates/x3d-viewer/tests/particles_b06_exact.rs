@@ -1,6 +1,6 @@
 //! REA batch 06R: the 29 exact ParticleSystem cases of oracle/synthetic-rea-b06 through the real
 //! runtime (Viewer3d, virtual time) against the per-particle state X_ITE 16.5.0 leaves in its
-//! transform feedback buffer (oracle/rea-batch06-baseline/particles-*/js.json + js.f32, read back
+//! transform feedback buffer (oracle/rea-b06-baseline/particles-*/js.json + js.f32, read back
 //! from the GPU). The shader's `randomSeed` of every frame is X_ITE's recorded one; everything else
 //! is the port: LCG, draw order, emitters, BVH, bounce, the 15-frame deltaTime average, the burst
 //! and birth schedule. Tolerances are `rea_b06_particles.py` TOL (life, lifetime, elapsed, color

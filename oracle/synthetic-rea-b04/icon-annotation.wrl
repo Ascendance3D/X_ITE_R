@@ -2,7 +2,7 @@
 # REA batch 04: X_ITE 16.5.0's dormant IconAnnotation cannot initialize (X3DUrlObject.initialize
 # reads _load, which IconAnnotation does not define), so the reference is
 # icon-annotation-ref.wrl: the same world with GeoMetadata, X_ITE's other X3DUrlObject whose
-# requestImmediateLoad is empty, in its place (oracle/rea-batch04-baseline/standins.json).
+# requestImmediateLoad is empty, in its place (oracle/rea-b04-baseline/standins.json).
 PROFILE Interchange
 COMPONENT Annotation:1
 COMPONENT Geospatial:1

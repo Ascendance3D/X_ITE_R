@@ -4,14 +4,14 @@
 //!    fields, 24 / 30 / 50 / 60 / 75 / 120 / 144 Hz, enabled toggling, run-time field changes, combinations,
 //!    legacy specification versions, degenerate polylines, 20000 particles) is run through the real runtime
 //!    (`x3d-particles-drive`, the binary of this package) with the Math.random stream X_ITE recorded
-//!    (oracle/rea-batch07-ps-baseline, written by rea_b07_ps.py from pinned X_ITE 16.5.0, never from Rust)
+//!    (oracle/rea-b07-ps-baseline, written by rea_b07_ps.py from pinned X_ITE 16.5.0, never from Rust)
 //!    and compared with X_ITE: every particle of every dumped frame within the 06R limits, the per-step counts,
 //!    the force texture, the polylines texture, the scene text and the console log.
 //! 2. Lifecycle: the `polylines` cache and the particle buffers exist while a system runs and are gone
 //!    with it (Inline load / reload / unload, removal from a live Group, Script-created instances), they
 //!    follow coord / emitter changes without growing, and every counter is flat over 100 cycles.
 //!
-//! The comparison needs oracle/rea-batch07-ps-baseline; re-create it with
+//! The comparison needs oracle/rea-b07-ps-baseline; re-create it with
 //! `python3 -I oracle/tools/gen_rea_b07_ps.py && python3 -I oracle/tools/rea_b07_ps.py baseline`.
 
 mod particles_b06_common;
@@ -78,7 +78,7 @@ struct Outcome {
 
 fn run_case(driver: &Path, tmp: &Path, name: &str) -> Outcome {
     let o = oracle();
-    let base_dir = o.join("rea-batch07-ps-baseline").join(name);
+    let base_dir = o.join("rea-b07-ps-baseline").join(name);
     let script_path = o
         .join("synthetic-rea-b07-ps/scripts")
         .join(format!("{name}.json"));

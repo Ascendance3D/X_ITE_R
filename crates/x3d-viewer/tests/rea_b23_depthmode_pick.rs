@@ -2,7 +2,7 @@
 //!
 //! The world and script are oracle/synthetic-rea-b23-depthmode-pick (oracle/tools/gen_rea_b23_depthmode_pick.py): 54 cells,
 //! each with two or three coincident Rectangle2D shapes drawn in scene order under the pointer. The baseline is
-//! oracle/rea-batch23-depthmode-pick-baseline/dm-pick/, recorded by `oracle/tools/rea_b23_record.py record` with
+//! oracle/rea-b23-depthmode-pick-baseline/dm-pick/, recorded by `oracle/tools/rea_b23_record.py record` with
 //! `x3d-oracle particles` (five byte-identical runs): `browser .touch (x, y)` at every cell center, the DEF name of the hit
 //! shape. `renderer.json` beside it names the GPU the reference ran on: WebGL 2 on ANGLE over OpenGL, 24 depth bits.
 //!
@@ -42,7 +42,7 @@ fn depthmode_pick_matches_pinned_x_ite() {
         return x3d_evidence::no_gpu("no adapter, skipped");
     };
     let info = adapter_info().expect("adapter");
-    let base = root().join("oracle/rea-batch23-depthmode-pick-baseline/dm-pick");
+    let base = root().join("oracle/rea-b23-depthmode-pick-baseline/dm-pick");
     let renderer = json(base.join("renderer.json"));
 
     println!(

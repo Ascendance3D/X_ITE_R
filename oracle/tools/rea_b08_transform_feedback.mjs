@@ -2,7 +2,7 @@
  * REA batch 08 shaders lane: what the pinned X_ITE does with `ComposedShader.setTransformFeedbackVaryings`
  * (only X_ITE's own shaders set it, through `browser .createShader ({ ..., transformFeedbackVaryings })`;
  * there is no field). One shader per case, 400 ms to link, then `isValid` and the console warnings are
- * written to oracle/rea-batch08-shaders-baseline/transform-feedback.json. The Rust port compares in
+ * written to oracle/rea-b08-shaders-baseline/transform-feedback.json. The Rust port compares in
  * crates/x3d-viewer/tests/rea_b08_transform_feedback.rs.
  *
  *   node oracle/tools/rea_b08_transform_feedback.mjs
@@ -94,7 +94,7 @@ for (const [name, varyings] of cases)
    results .push ({ name, varyings, valid, warnings: logs .filter (l => l .type === "warning") .map (l => l .text .trim ()) });
 }
 
-await writeFile (join (ORACLE, "rea-batch08-shaders-baseline/transform-feedback.json"), JSON .stringify ({ pinned: "x_ite-pin", vertex: VS, fragment: FS, cases: results }, null, 1) + "\n");
+await writeFile (join (ORACLE, "rea-b08-shaders-baseline/transform-feedback.json"), JSON .stringify ({ pinned: "x_ite-pin", vertex: VS, fragment: FS, cases: results }, null, 1) + "\n");
 console .log (JSON .stringify (results));
 await browser .close ();
 server .close ();

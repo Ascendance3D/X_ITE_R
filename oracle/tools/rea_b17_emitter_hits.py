@@ -6,7 +6,7 @@ crates/x3d-viewer/tests/rea_b17_emitter_hits.rs.
 
 runs `x3d-oracle particles` (default target/release/x3d-oracle) three times on
 oracle/synthetic-rea-b17-emitter-hits/NAME.x3dv with scripts/NAME.json. The three js.json and js.f32 must be identical;
-the first is kept as oracle/rea-batch17-emitter-hits-baseline/NAME/. A baseline is never taken from Rust.
+the first is kept as oracle/rea-b17-emitter-hits-baseline/NAME/. A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
 
@@ -29,7 +29,7 @@ same = all(filecmp.cmp(os.path.join(a, f), os.path.join(b, f), shallow=False) fo
 print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'}")
 if not same:
     sys.exit(1)
-dest = os.path.join(root, "oracle", "rea-batch17-emitter-hits-baseline", name)
+dest = os.path.join(root, "oracle", "rea-b17-emitter-hits-baseline", name)
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
 for f in ("js.json", "js.f32"):

@@ -1,5 +1,5 @@
 //! REA batch 06R: the 8 statistical ParticleSystem cases (20000 births each) through the real
-//! runtime against X_ITE's samples (oracle/rea-batch06-baseline/particles-*-stat/samples.f32, the
+//! runtime against X_ITE's samples (oracle/rea-b06-baseline/particles-*-stat/samples.f32, the
 //! born records of the GPU run, subsampled to 20000 rows). With X_ITE's `randomSeed`s the port
 //! draws the same random numbers, so beyond the two-sample Kolmogorov-Smirnov test of
 //! `rea_b06_particles.py` (D <= 2.5 sqrt ((n + m) / (n m)), 0.025 at 20000 vs 20000) the samples can be

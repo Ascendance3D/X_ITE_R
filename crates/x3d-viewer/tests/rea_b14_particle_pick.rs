@@ -1,7 +1,7 @@
 //! ParticleSystem pointing (lane XITE_R_PARTICLE_PICKING_01) against pinned X_ITE 16.5.0.
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b14-particle-pick (oracle/tools/gen_rea_b14_particle_pick.py). A case's
-//! X_ITE baseline is oracle/rea-batch14-particle-pick-baseline/NAME/ (`js.json`, `js.f32`), recorded by
+//! X_ITE baseline is oracle/rea-b14-particle-pick-baseline/NAME/ (`js.json`, `js.f32`), recorded by
 //! `oracle/tools/rea_b14_pick.py record` with `x3d-oracle particles` (three identical runs). Its `pickProbes` are
 //! `browser .touch (x, y)` at every probe point after frames 15, 30 and 45: id, the DEF name of the hit shape node, the
 //! hit point, normal and texCoord.
@@ -113,7 +113,7 @@ fn compare_probes(want: &Value, got: &Value) -> (usize, usize, Option<String>) {
 
 fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
     let base = root
-        .join("oracle/rea-batch14-particle-pick-baseline")
+        .join("oracle/rea-b14-particle-pick-baseline")
         .join(name);
     let world = root
         .join("oracle/synthetic-rea-b14-particle-pick")
@@ -237,7 +237,7 @@ fn rea_b14_particle_pick_matches_x_ite() {
         .unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let mut names: Vec<String> =
-        std::fs::read_dir(root.join("oracle/rea-batch14-particle-pick-baseline"))
+        std::fs::read_dir(root.join("oracle/rea-b14-particle-pick-baseline"))
             .unwrap()
             .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
             .collect();

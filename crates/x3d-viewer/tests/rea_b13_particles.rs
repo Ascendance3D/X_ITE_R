@@ -1,7 +1,7 @@
 //! ParticleSystem rendering (lane XITE_R_PARTICLE_RENDER_01) against pinned X_ITE.
 //!
 //! The worlds and scripts are oracle/synthetic-rea-b13-particles (oracle/tools/gen_rea_b13_particles.py). A case's
-//! X_ITE baseline is oracle/rea-batch13-particles-baseline/NAME/: `js.json` and `js.f32` in the format of
+//! X_ITE baseline is oracle/rea-b13-particles-baseline/NAME/: `js.json` and `js.f32` in the format of
 //! oracle/tools/x_ite_particles_b07.mjs (the per-frame emitter seeds and the 28-float particle records after each dump
 //! frame) as written by `x3d-oracle particles`, `png/<frame>.png` the 512 x 512 canvas after that frame (anim.html, `antialiased="false"`) and
 //! `msaa4/<frame>.png` the same with `antialiased="true" multisampling="4"` (anim-msaa.html).
@@ -184,9 +184,7 @@ fn compare_images(
 }
 
 fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> bool {
-    let base = root
-        .join("oracle/rea-batch13-particles-baseline")
-        .join(name);
+    let base = root.join("oracle/rea-b13-particles-baseline").join(name);
     let world = root
         .join("oracle/synthetic-rea-b13-particles")
         .join(format!("{name}.x3dv"));
@@ -346,7 +344,7 @@ fn rea_b13_particle_cases_match_x_ite() {
     );
     assert!(
         !checked.is_empty(),
-        "no case has a baseline in oracle/rea-batch13-particles-baseline"
+        "no case has a baseline in oracle/rea-b13-particles-baseline"
     );
     assert!(
         failures.is_empty(),

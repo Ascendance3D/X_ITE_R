@@ -1,4 +1,4 @@
-//! REA batch 10 lane Text / ScreenGroup / ScreenFontStyle: event cases against pinned X_ITE (oracle/rea-batch10-sai-baseline, made by
+//! REA batch 10 lane Text / ScreenGroup / ScreenFontStyle: event cases against pinned X_ITE (oracle/rea-b10-sai-baseline, made by
 //! `oracle/tools/rea_b10.py stepped record-sai`; worlds in oracle/synthetic-rea-b10-sai). A Script records the output events of a Text
 //! (origin, textBounds, lineBounds) and its font style's changes, frame by frame, into a field of its own, so the scene text
 //! (`toVRMLString`) at every dumped frame carries it. Compared like rea_batch09_sai.rs: scene text exact, the sorted log exact,
@@ -24,10 +24,10 @@ fn nums(v: &Value) -> Vec<f64> {
 }
 
 fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &mut Vec<String>) {
-    let dir = root.join(format!("oracle/rea-batch10-sai-baseline/{name}"));
+    let dir = root.join(format!("oracle/rea-b10-sai-baseline/{name}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!("rea-batch10-sai-{}-{name}", std::process::id()));
+    let out = std::env::temp_dir().join(format!("rea-b10-sai-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let status = Command::new(env!("CARGO_BIN_EXE_x3d-drive"))
@@ -126,7 +126,7 @@ fn rea_batch10_sai_cases_match_x_ite() {
         .canonicalize()
         .unwrap();
     let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch10-sai-baseline/cases.txt")).unwrap();
+        std::fs::read_to_string(root.join("oracle/rea-b10-sai-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let mut failures = vec![];
     let mut checked = 0;

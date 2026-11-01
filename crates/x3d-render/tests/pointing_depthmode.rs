@@ -194,7 +194,7 @@ fn depth_range_moves_the_shape_in_depth() {
         1.0
     );
     // A reversed range (near > far) is INVALID_OPERATION in WebGL and changes nothing: the far shape stays behind, and a
-    // nearer one still wins (pinned X_ITE 16.5.0, oracle rea-batch23: range-reversed-*).
+    // nearer one still wins (pinned X_ITE 16.5.0, oracle rea-b23: range-reversed-*).
     assert_eq!(
         winner(
             &mut g,

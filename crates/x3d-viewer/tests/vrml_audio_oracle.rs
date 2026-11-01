@@ -1,6 +1,6 @@
 //! VRML97 Sound / AudioClip (and BufferAudioSource, which shares AudioClip's loader) against pinned X_ITE 16.5.0
 //! (34cdf9f97). Worlds: oracle/synthetic-rea-b05/{clip-*,sound-*,buffer-fa*-decode}.wrl, written by
-//! `oracle/tools/gen_rea_audio_repair.py`; baselines: oracle/rea-batch05-baseline/NAME, written only by
+//! `oracle/tools/gen_rea_audio_repair.py`; baselines: oracle/rea-b05-baseline/NAME, written only by
 //! `oracle/tools/rea_b05.py baseline NAME` from an X_ITE run (headless Chrome, OfflineAudioContext).
 //!
 //! Compared like `rea_b05.py check`: the scene text at every dumped frame, the sorted X_ITE log, the Script print
@@ -98,7 +98,7 @@ fn prints(result: &Value) -> Vec<String> {
 /// Returns the differences of one case (empty: it matches), whether only the audio differs, and the first
 /// different audio sample.
 fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
-    let base = root.join(format!("oracle/rea-batch05-baseline/{name}"));
+    let base = root.join(format!("oracle/rea-b05-baseline/{name}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(base.join("js.json")).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!("vrml-audio-oracle-{}-{name}", std::process::id()));

@@ -1,7 +1,7 @@
 //! REA batch 08 (glTF lane), issue #56: an Inline's glTF whose buffers fail to load, step by step
 //! against the pinned X_ITE. `oracle/synthetic-rea-b08-gltf-inline-buffers/` holds the scenarios;
 //! `oracle/x_ite-inline.mjs` recorded the pinned X_ITE (five byte-identical recordings) in
-//! `oracle/rea-batch08-gltf-baseline/inline-buffer-errors-baseline.json`.
+//! `oracle/rea-b08-gltf-baseline/inline-buffer-errors-baseline.json`.
 //!
 //! `s-*`: one failed buffer whose authored URI and resolved URL differ (`DATA:`, a leading space,
 //! percent-encoding, dot segments), or whose URI is no URL (`s-invalid-url`). The console subject
@@ -24,7 +24,7 @@ fn scenarios_match_x_ite(prefix: &str) {
     set_case_dir("synthetic-rea-b08-gltf-inline-buffers");
 
     let text = std::fs::read_to_string(
-        oracle_root().join("rea-batch08-gltf-baseline/inline-buffer-errors-baseline.json"),
+        oracle_root().join("rea-b08-gltf-baseline/inline-buffer-errors-baseline.json"),
     )
     .expect("baseline");
     let json: Value = serde_json::from_str(&text).unwrap();

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """REA batch 10 secondary GPU work: stepped worlds for LayoutGroup (run-time layout / viewport / children changes, canvas resize),
 OrthoViewpoint (viewAll, lookAt) and LocalFog on a volume draw (oracle/synthetic-rea-b10-secondary). 512x512, dt = 1/30, KeySensor
-driven like gen_rea_b10_screen.py. Cases are listed in oracle/rea-batch10-baseline/cases.txt by `rea_b10.py stepped record`.
+driven like gen_rea_b10_screen.py. Cases are listed in oracle/rea-b10-baseline/cases.txt by `rea_b10.py stepped record`.
 
   python3 -I oracle/tools/gen_rea_b10_secondary.py
 """

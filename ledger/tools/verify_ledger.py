@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Repository-local ledger check: python3 -I -B verify_ledger.py [ledger.json]
+
+Reads the authoritative ledger (default ledger/ledger.json) and checks, without changing anything:
+  - 346 unique IDs, every status one of the five allowed values
+  - the promotion history: HISTORY is the chain of ledger snapshots and the tool that made each next step. For every step,
+    the entries outside the tool's change set are byte-identical from one snapshot to the next, each changed entry has the
+    status the tool sets (or keeps its status when the tool sets none) and keeps its earlier notes as a prefix. The last step
+    ends at the authoritative ledger.
+  - totals equal to the totals that follow from the first snapshot (ledger/before) and the statuses of the chain; they are not
+    fixed numbers, so a new batch adds one step to HISTORY (its snapshot in ledger/before-bNN and its tool's change set)
+  - the 21 DIFFERENT entries that remain (25 in ledger/before-cloud, less the four pointing sensors that left in issue #67) equal the Batch 09 snapshot byte for byte
+  - every file path named in an entry's tests / rust fields exists (missing ones are reported, never fixed)
+Exit 1 on a hard failure; missing evidence paths are listed as warnings and do not change the exit code.
+
+BASELINE_B09 keeps the totals this tool enforced before Batch 11 (the Batch 09 ledger after the ten promotions); it is printed
+for reference only."""
+import collections, importlib, json, os, re, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
+LEDGER = os.path.join(HERE, "..")
+SNAPS = os.path.join(LEDGER, "snapshots")
+AUTH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(LEDGER, "ledger.json")
+ALLOWED = {"COMPLETE", "PARTIAL", "DIFFERENT", "NOT_TESTED", "MISSING"}
+LEFT_DIFFERENT = {"node:PlaneSensor", "node:SphereSensor", "node:CylinderSensor", "node:TouchSensor"}  # owner decision 2026-10-31, issue #67
+BASELINE_B09 = {"COMPLETE": 245, "PARTIAL": 74, "DIFFERENT": 25, "NOT_TESTED": 0, "MISSING": 2}
+PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3dv|x3d|html|mjs|json|js|py|sh|md|png)\b)")
+
+# (snapshot the step starts from, tool, its change set as {id: status or None}); a step ends at the next one's snapshot, the last
+# at the authoritative ledger.
+def _first(name, attr): return {k: v[0] for k, v in getattr(importlib.import_module(name), attr).items()}
+HISTORY = [
+    ("before", "ledger_b09.py P", lambda: _first("ledger_b09", "P")),
+    ("before-cloud", "ledger_b09_cloud.py C", lambda: _first("ledger_b09_cloud", "C")),
+    ("before-promotion", "ledger_b09_promote.py P", lambda: {k: "COMPLETE" for k in importlib.import_module("ledger_b09_promote").P}),
+    ("before-b10", "ledger_b10.py C", lambda: _first("ledger_b10", "C")),
+    ("before-b11", "ledger_b11.py C", lambda: _first("ledger_b11", "C")),
+    ("before-b12", "ledger_b12.py C", lambda: _first("ledger_b12", "C")),
+    ("before-b13", "ledger_b13.py C", lambda: _first("ledger_b13", "C")),
+    ("before-b19", "ledger_b19.py C", lambda: _first("ledger_b19", "C")),
+    ("before-b20", "ledger_b20.py C", lambda: _first("ledger_b20", "C")),
+    ("before-recovery1", "ledger_recovery1.py C", lambda: _first("ledger_recovery1", "C")),
+    ("before-i90", "ledger_i90.py C", lambda: _first("ledger_i90", "C")),
+    ("before-i79", "ledger_i79.py C", lambda: _first("ledger_i79", "C")),
+    ("before-i82", "ledger_i82.py C", lambda: _first("ledger_i82", "C")),
+    ("before-i76", "ledger_i76.py C", lambda: _first("ledger_i76", "C")),
+    ("before-i85", "ledger_i85.py C", lambda: _first("ledger_i85", "C")),
+    ("before-i93", "ledger_i93.py C", lambda: _first("ledger_i93", "C")),
+    ("before-i94", "ledger_i94.py C", lambda: _first("ledger_i94", "C")),
+    ("before-i97", "ledger_i97.py C", lambda: _first("ledger_i97", "C")),
+    ("before-i67", "ledger_i67.py C", lambda: _first("ledger_i67", "C")),
+    ("before-i92", "ledger_i92.py C", lambda: _first("ledger_i92", "C")),
+    ("before-i70", "ledger_i70.py C", lambda: _first("ledger_i70", "C")),
+    ("before-i75", "ledger_i75.py C", lambda: _first("ledger_i75", "C")),
+    ("before-i71", "ledger_i71.py C", lambda: _first("ledger_i71", "C")),
+    ("before-i58", "ledger_i58.py C", lambda: _first("ledger_i58", "C")),
+    ("before-i95", "ledger_i95.py C", lambda: _first("ledger_i95", "C")),
+    ("before-i98", "ledger_i98.py C", lambda: _first("ledger_i98", "C")),
+    ("before-i74", "ledger_i74.py C", lambda: _first("ledger_i74", "C")),
+    ("before-i72", "ledger_i72.py C", lambda: _first("ledger_i72", "C")),
+    ("before-i78", "ledger_i78.py C", lambda: _first("ledger_i78", "C")),
+    ("before-i91", "ledger_i91.py C", lambda: _first("ledger_i91", "C")),
+    ("before-i81", "ledger_i81.py C", lambda: _first("ledger_i81", "C")),
+    ("before-i139", "ledger_i139.py C", lambda: _first("ledger_i139", "C")),
+    ("before-i52", "ledger_i52.py C", lambda: _first("ledger_i52", "C")),
+    ("before-i90b", "ledger_i90b.py C", lambda: _first("ledger_i90b", "C")),
+    ("before-i128", "ledger_i128.py C", lambda: _first("ledger_i128", "C")),
+    ("before-rename", "ledger_rename.py C", lambda: _first("ledger_rename", "C")),
+]
+
+def load(p): return json.load(open(p))["items"]
+items = load(AUTH)
+bad, warn = [], []
+ids = [i["id"] for i in items]
+if len(ids) != 346 or len(set(ids)) != 346: bad.append(f"IDs: {len(ids)} total, {len(set(ids))} unique (want 346/346)")
+cur = {i["id"]: i for i in items}
+for i in items:
+    if i["status"] not in ALLOWED: bad.append(f"{i['id']}: status {i['status']!r} not allowed")
+
+snaps = [os.path.join(SNAPS, s, "ledger.json") for s, _, _ in HISTORY]
+status = {i["id"]: i["status"] for i in load(snaps[0])}  # replayed through the chain
+for n, (snap, tool, changes) in enumerate(HISTORY):
+    last = n == len(HISTORY) - 1
+    a = {i["id"]: i for i in load(snaps[n])}
+    b = cur if last else {i["id"]: i for i in load(snaps[n + 1])}
+    step = f"{snap} -> {'ledger.json' if last else HISTORY[n + 1][0]} ({tool})"
+    if set(a) != set(b): bad.append(f"{step}: ID set differs: {sorted(set(a) ^ set(b))}"); continue
+    C = changes()
+    for k in a:
+        if k not in C:
+            if a[k] != b[k]: bad.append(f"{step}: entry outside the change set changed: {k}")
+            continue
+        if "DIFFERENT" in (a[k]["status"], b[k]["status"]) and k not in LEFT_DIFFERENT: bad.append(f"{step}: DIFFERENT entry in the change set: {k}")
+        want = C[k] or a[k]["status"]
+        if b[k]["status"] != want: bad.append(f"{step}: {k} is {b[k]['status']}, the tool sets {want}")
+        if a[k].get("notes") and not b[k]["notes"].startswith(a[k]["notes"]): bad.append(f"{step}: {k}: earlier notes lost")
+        status[k] = want
+    print(f"step {step}: {len(C)} entries, totals after {dict(sorted(collections.Counter(i['status'] for i in b.values()).items()))}")
+
+c = collections.Counter(i["status"] for i in items)
+expected = collections.Counter(status.values())
+for s in ALLOWED:
+    if c.get(s, 0) != expected.get(s, 0): bad.append(f"total {s}: {c.get(s, 0)} != {expected.get(s, 0)} from the promotion history")
+
+snap = {i["id"]: i for i in load(os.path.join(SNAPS, "before-cloud", "ledger.json"))}
+diff = [k for k, v in snap.items() if v["status"] == "DIFFERENT" and k not in LEFT_DIFFERENT]
+if len(diff) != 21: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 21")
+for k in diff:
+    if cur.get(k) != snap[k]: bad.append(f"DIFFERENT entry changed: {k}")
+
+# Folders renamed on 2026-11-01 (docs/renames.md). A frozen entry may still name the old path; it counts as present when the new path exists.
+RENAMED = (("_batch09_context/tools/", "ledger/tools/"), ("_batch09_context/ledger/", "ledger/"), ("_batch09_context/", "ledger/history/b09/"),
+           ("_batch08_context/", "ledger/history/b08-recovery/"), ("oracle/rea-batch", "oracle/rea-b"))
+def renamed(r):
+    for old, new in RENAMED:
+        if r.startswith(old): return new + r[len(old):]
+    return r
+for i in items:
+    refs = set(PATH.findall(" ".join(i.get("tests", []) + i.get("rust", []))))
+    for r in sorted(refs):
+        if not (os.path.exists(os.path.join(ROOT, r)) or os.path.exists(os.path.join(ROOT, renamed(r)))): warn.append(f"{i['id']}: missing evidence path {r}")
+print(dict(c), "total", sum(c.values()))
+print("history baseline (Batch 09, not enforced):", BASELINE_B09)
+for w in warn: print("WARN", w)
+print(f"{len(warn)} missing evidence references")
+print("\n".join(bad) or "OK"); sys.exit(1 if bad else 0)

@@ -1,4 +1,4 @@
-//! REA batch 12: stepped cases against pinned X_ITE 16.5.0 (oracle/rea-batch12-baseline, made by `oracle/tools/rea_b12.py record`,
+//! REA batch 12: stepped cases against pinned X_ITE 16.5.0 (oracle/rea-b12-baseline, made by `oracle/tools/rea_b12.py record`,
 //! three identical runs each, MSAA 0 and 4). Worlds and scripts: oracle/synthetic-rea-b12-* (generators oracle/tools/gen_rea_b12_*.py):
 //! vw-* Browser.viewAll, StraightenHorizon, pose and bind events, LookAt on Ortho / perspective / Geo viewpoints and layers.
 //! bbb-* Billboard bboxDisplay, camera moves, run-time changes and the SHADOW pass.
@@ -149,13 +149,11 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-batch12-baseline/{name}-msaa{msaa}"));
+    let dir = root.join(format!("oracle/rea-b12-baseline/{name}-msaa{msaa}"));
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
-    let out = std::env::temp_dir().join(format!(
-        "rea-batch12-{}-{name}-msaa{msaa}",
-        std::process::id()
-    ));
+    let out =
+        std::env::temp_dir().join(format!("rea-b12-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -307,8 +305,7 @@ fn check_cases(prefixes: &[&str]) {
         .join("../..")
         .canonicalize()
         .unwrap();
-    let cases =
-        std::fs::read_to_string(root.join("oracle/rea-batch12-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join("oracle/rea-b12-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
     if !gpu {

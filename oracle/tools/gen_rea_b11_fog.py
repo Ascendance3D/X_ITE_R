@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """REA batch 11 lane b11-4-fog-screen: LocalFog / Fog on normal geometry and on volume draws as stepped worlds + key scripts
 (oracle/synthetic-rea-b11-fog). 512x512, dt = 1/30, KeySensor driven like gen_rea_b11_ortho.py. Cases are added to
-oracle/rea-batch10-baseline/cases.txt by `rea_b10.py stepped record`.
+oracle/rea-b10-baseline/cases.txt by `rea_b10.py stepped record`.
 
   python3 -I oracle/tools/gen_rea_b11_fog.py
 """
