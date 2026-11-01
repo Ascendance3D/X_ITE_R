@@ -1217,13 +1217,17 @@ fn x_ite_two_canvases_script_and_rigid_body_msaa4() {
 
 /// Particles: two ParticleSystem worlds (Surface/Cone emitters with Force, Wind and Bounded models; Surface on a
 /// Sphere, Point emitter with Force) as pictures at frames 5, 20 and 40. `Math.random` is the constant 0.37 on the
-/// oracle page, like the Rust seed lists. The Rust pictures differ from X_ITE's by 0.7% to 2.7% of the pixels (MSAA 0 and 4),
-/// the same alone as in a pair, so it is a particle rendering gap and not a multi-viewer one: the test asserts the
-/// multi-viewer properties (X_ITE pair = X_ITE alone, Rust pair = Rust alone) and prints, but does not gate, the
-/// Rust-vs-X_ITE numbers. Not investigated further in issue #60.
+/// oracle page, like the Rust seed lists. Issue #261: the Rust pictures used to differ from X_ITE's by 0.7% to 2.7% of
+/// the pixels. Most of that was the harness: the page installed its virtual `Date.now` only after the load, so X_ITE's
+/// `creationTime` and first frames ran on the real clock and its systems were saturated at `maxParticles`. With the
+/// virtual `Date.now` from the start (issue #262) and the baselines re-recorded (five identical runs), MSAA 0 differs by
+/// at most 0.014% and is gated at the usual 0.5%. MSAA 4 differs by 0.03% to 0.52% (worst p-a frame 40) and stays
+/// ungated: the remainder is partial coverage of the 1-pixel POINT particles. wgpu draws a point as exactly one
+/// pixel, ANGLE/GL rasterizes it differently under MSAA (like the known `pr-line` note); emulating points as quads is
+/// outside this test. The multi-viewer properties (X_ITE pair = X_ITE alone, Rust pair = Rust alone) are asserted at both.
 #[test]
 fn x_ite_two_canvases_particles_msaa0() {
-    oracle_pair_gated(0, ["p-a", "p-b"], false);
+    oracle_pair_gated(0, ["p-a", "p-b"], true);
 }
 
 #[test]
