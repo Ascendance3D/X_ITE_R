@@ -219,6 +219,19 @@ impl x3d_runtime::Fetcher for WebFetcher {
         self.start(cache_key(url));
     }
 
+    fn forget_failure(&self, url: &url::Url) {
+        if url.scheme() == "data" {
+            return;
+        }
+
+        let key = cache_key(url);
+        let mut cache = self.cache.borrow_mut();
+
+        if matches!(cache.entries.get(&key), Some(Entry::Failed(_))) {
+            cache.entries.remove(&key);
+        }
+    }
+
     /// `follow_buffers` only reaches this after `poll` says `Failed` or `Loaded`.
     /// Thus we do not need to `self.start(key)` for missing entries.
     fn fetch_error(&self, url: &url::Url) -> Option<String> {

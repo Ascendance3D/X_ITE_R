@@ -848,7 +848,164 @@ async function reloadCase (page, env, set, scenario)
 
 const reloadCases = Object .fromEntries (Object .entries (reloadScenarios ()) .map (([ key, [ set, scenario ] ]) => [ key, (page, env) => reloadCase (page, env, set, scenario) ]));
 
+// --- A failed response and the next load attempt (issue #202, c17) ----------------------------------------------------------
+//
+// pinned X_ITE fetches again at each load of an Inline (`fetch` with `cache: "default"` over a `no-store` server), so an Inline
+// whose file was published after a 404 loads it at the next attempt; a failed url that nothing loads again is not asked for again.
+// An EXTERNPROTO caches its scene for good (FileLoader's static scene cache), a failure too. The cases wait for events (the
+// console lines of the page), never for a time: what must not happen is shown by a later load (an Inline of another failed url) that
+// has finished, twice.
+//
+// The worlds and the files are published by the server while the case runs (`publish`), the cases count the requests of one path.
+const RETRY_LATE   = "/synthetic-retry/late.wrl";
+const RETRY_LIB    = "/synthetic-retry/lib.wrl";
+const RETRY_BODIES = {
+   late: `#VRML V2.0 utf8\nDEF L Script { url "javascript:\nfunction initialize () { print ('L initialize'); }\n" }\n`,
+   lib:  `#VRML V2.0 utf8\nPROTO G [ ] { DEF S Script { url "javascript:\nfunction initialize () { print ('G initialize'); }\n" } }\n`,
+};
+
+async function retryCase (page, env, name)
+{
+   const server = env .server;
+   const origin = env .base;
+   const world  = `${origin}/synthetic-retry/main.wrl`;
+   const externproto = name .startsWith ("externproto");
+   const scene  = `#VRML V2.0 utf8\nEXTERNPROTO G [ ] "${origin}${RETRY_LIB}#G"\nDEF I G { }\n`;
+   const text   = `#VRML V2.0 utf8\nDEF Inl Inline { url "${externproto ? "a.wrl" : "late.wrl"}" }\nDEF Other Inline { url "other0.wrl" }\n`;
+
+   server .unpublish ();
+   server .publish ("/synthetic-retry/main.wrl", Buffer .from (text));
+
+   // The EXTERNPROTO cases: two scenes (a Inline's files) that use the same EXTERNPROTO, whose file is not there yet.
+   if (externproto)
+      for (const file of [ "a", "b" ])
+         server .publish (`/synthetic-retry/${file}.wrl`, Buffer .from (scene));
+
+   // The server's log has the requests of the earlier runs and cases.
+   const first = server .requests .length;
+
+   await page .evaluate (async ([ url ]) =>
+   {
+      const X3D     = window .X3D_NS;
+      const canvas  = document .querySelector ("x3d-canvas");
+      const browser = X3D .getBrowser (canvas);
+      const lines   = [ ];
+      const origin  = window .location .origin;
+
+      canvas .setAttribute ("scripts", "true");
+      window .__retry = { lines, count: 0 };
+
+      for (const type of [ "log", "warn", "error" ])
+         console [type] = (... args) => lines .push (`${type}: ${args .join (" ") .split ("\n") [0] .split (origin) .join ("http://oracle")}`);
+
+      window .addEventListener ("error", event => { lines .push (`pageerror: ${String (event .error ?.message ?? event .message)}`); event .preventDefault (); });
+
+      try { await browser .loadURL (new X3D .MFString (url)); }
+      catch (error) { lines .push (`loadURL rejected: ${String (error ?.message ?? error)}`); }
+   }, [ world ]);
+
+   // Polls for a line of the page (up to 20 s), and returns whether it came.
+   const until = (pattern, from) => page .evaluate (async ([ pattern, from ]) =>
+   {
+      const lines = window .__retry .lines;
+      const re    = new RegExp (pattern);
+
+      for (let i = 0; i < 400; ++ i)
+      {
+         if (lines .slice (from) .some (line => re .test (line)))
+            return true;
+
+         await new Promise (resolve => setTimeout (resolve, 50));
+      }
+
+      return false;
+   }, [ pattern, from ]);
+
+   const mark   = () => page .evaluate (() => window .__retry .lines .length);
+   const count  = path => server .requests .slice (first) .filter (r => r .path === path) .length;
+   const result = { steps: [ ] };
+
+   // Another Inline fails to load, twice in a row (each with a url that was not asked for yet): every request made before the first of
+   // them is settled by then, so a request that must not be made is not made.
+   const barrier = async () =>
+   {
+      for (let i = 0; i < 2; ++ i)
+      {
+         const from = await mark ();
+         const url  = `other${++ window_counter}.wrl`;
+
+         await page .evaluate (url => { window .X3D_NS .getBrowser (document .querySelector ("x3d-canvas")) .currentScene .getNamedNode ("Other") .url = new window .X3D_NS .MFString (url); }, url);
+         await until (`other${window_counter}\\.wrl`, from);
+      }
+   };
+
+   let window_counter = 0;
+
+   const step = async (label, action, expected) =>
+   {
+      const from = result .steps .length ? await mark () : 0;
+
+      if (action)
+         await action ();
+
+      const came = expected ? await until (expected, from) : true;
+
+      await barrier ();
+
+      const lines = await page .evaluate (from => window .__retry .lines .slice (from) .filter (line => /^(error|warn):|initialize/ .test (line)) .map (line => line .replace (/other\d+\.wrl/g, "otherN.wrl")), from);
+
+      result .steps .push ({ label, came, requests: count (externproto ? RETRY_LIB : RETRY_LATE), lines: lines .filter (line => ! line .includes ("otherN.wrl")) });
+   };
+
+   const set = value => () => page .evaluate (([ name, value ]) =>
+   {
+      const X3D  = window .X3D_NS;
+      const node = X3D .getBrowser (document .querySelector ("x3d-canvas")) .currentScene .getNamedNode (name);
+
+      if (typeof value === "boolean")
+         node .load = value;
+      else
+         node .url = new X3D .MFString (... value);
+   }, [ "Inl", value ]);
+
+   const publish = () => { server .publish (externproto ? RETRY_LIB : RETRY_LATE, Buffer .from (externproto ? RETRY_BODIES .lib : RETRY_BODIES .late)); };
+
+   await until (externproto ? "EXTERNPROTO|Couldn't load URL .*lib" : "Couldn't load URL .*late", 0);
+   await step ("failed", null, null);
+
+   publish ();
+
+   switch (name)
+   {
+      // Nothing sets the url again: the failed url is not asked for again.
+      case "inlineNotSetAgain":
+         await step ("published", null, null);
+         break;
+      // The url is set again (to the same url): the Inline loads the published file.
+      case "inlineSameUrl":
+         await step ("url again", set ([ "late.wrl" ]), "L initialize");
+         break;
+      // `load` is switched off and on again.
+      case "inlineLoadToggle":
+         await step ("load false", set (false), null);
+         await step ("load true", set (true), null);
+         break;
+      // The Inline's url is set to another scene with the same EXTERNPROTO after the file was published: the Inline's
+      // attempt starts over, the EXTERNPROTO keeps its failure.
+      case "externprotoAgain":
+         await step ("again", set ([ "b.wrl" ]), "G initialize|Couldn't load URL .*lib");
+         break;
+   }
+
+   server .unpublish ();
+
+   return result;
+}
+
+const retryCases = Object .fromEntries ([ "inlineNotSetAgain", "inlineSameUrl", "inlineLoadToggle", "externprotoAgain" ] .map (name => [ name, (page, env) => retryCase (page, env, name) ]));
+
 export const CASE_GROUPS = {
+   inlineRetry: { context: DESKTOP, cases: retryCases },
    scriptLife: { context: DESKTOP, cases },
    scriptReload: { context: DESKTOP, cases: reloadCases },
 };
