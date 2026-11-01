@@ -1571,3 +1571,182 @@ fn the_options_set_after_go_live_wait_for_the_event_cascade() {
     s.step(NOW + 0.02);
     assert_ne!(at_once, gains(&s));
 }
+
+// --- the page's field callbacks in the route chain (issue #202, x3d_web::chain) ---------------------------------------------
+
+const CHAINED: &[u8] = b"#X3D V4.0 utf8
+PROFILE Interchange
+DEF T Transform { }
+DEF T2 Transform { }
+DEF T3 Transform { }
+ROUTE T.translation_changed TO T2.set_translation
+";
+
+fn node_value(rt: &mut x3d_runtime::Runtime, node: NodeId, name: &str) -> Data {
+    x3d_web::chain::field_data(rt, node, name).unwrap().2
+}
+
+/// The sink runs at the point of the event: a write it makes through the chain functions is seen by the callbacks of the events
+/// after it, and its own event comes after the events already queued. Nothing else of the chain is reachable meanwhile.
+#[test]
+fn a_callback_in_the_route_chain_sees_and_makes_writes_in_order() {
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    let mut s = load(CHAINED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+    let t3 = s.named_node("T3").unwrap();
+    let seen: Rc<RefCell<Vec<String>>> = Rc::default();
+
+    for n in [t, t2, t3] {
+        s.observe_field(n, "translation", true).unwrap();
+        s.observe_field(n, "set_translation", true).unwrap();
+    }
+
+    s.set_console_sink(Some(Box::new(|_| {})));
+
+    let log = seen.clone();
+
+    s.set_page_event_sink(Some(Box::new(move |rt, k, value| {
+        let name = rt.field(k).name.clone();
+        let node = k.0;
+
+        // Only events of `translation` and `T2.set_translation` matter here.
+        if name != "translation" && node != t2 {
+            return false;
+        }
+
+        let value = x3d_runtime::data::value_data(value);
+
+        x3d_web::chain::enter(rt, 7, || {
+            // The page's calls go through `with_runtime` only, one at a time, for the world of the callback.
+            let t3_now = x3d_web::chain::with_runtime(7, |rt| {
+                assert!(
+                    x3d_web::chain::with_runtime(7, |_| ()).is_err(),
+                    "a second borrow of the runtime is refused"
+                );
+                node_value(rt, t3, "translation")
+            })
+            .unwrap();
+
+            assert!(x3d_web::chain::with_runtime(8, |_| ()).is_err());
+            log.borrow_mut()
+                .push(format!("{node}.{name} {value:?} T3={t3_now:?}"));
+
+            if node == t {
+                x3d_web::chain::with_runtime(7, |rt| {
+                    x3d_web::chain::set_field_data(rt, t3, "translation", &vec3(9.0, 0.0, 0.0))
+                })
+                .unwrap()
+                .unwrap();
+            }
+        });
+
+        assert!(!x3d_web::chain::is_active(7), "the slot is restored");
+        false
+    })));
+
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+
+    let one = format!("{:?}", vec3(1.0, 0.0, 0.0));
+    let nine = format!("{:?}", vec3(9.0, 0.0, 0.0));
+    let zero = format!("{:?}", vec3(0.0, 0.0, 0.0));
+
+    // T's event (T3 still unset), then the route's event on T2 (it sees the write), then the event of the write itself.
+    assert_eq!(
+        *seen.borrow(),
+        [
+            format!("{t}.translation {one} T3={zero}"),
+            format!("{t2}.translation {one} T3={nine}"),
+            format!("{t3}.translation {nine} T3={nine}"),
+        ]
+    );
+    // The events were handed to the sink, not recorded for the page.
+    assert_eq!(s.take_field_events(), []);
+    // The write is the world's value, and the page's own object of it is clean (it made the write).
+    assert_eq!(s.take_field_changes(), []);
+}
+
+/// A sink that answers `true` (a callback threw) stops the event processing for good, as `halt_events`.
+#[test]
+fn a_callback_that_throws_in_the_route_chain_halts_the_events() {
+    use std::cell::Cell;
+    use std::rc::Rc;
+
+    let mut s = load(CHAINED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+    let calls = Rc::new(Cell::new(0));
+    let count = calls.clone();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.observe_field(t2, "translation", true).unwrap();
+    s.set_console_sink(Some(Box::new(|_| {})));
+    s.set_page_event_sink(Some(Box::new(move |_, _, _| {
+        count.set(count.get() + 1);
+        true
+    })));
+
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    assert_eq!(calls.get(), 1, "the event of T2 never ran");
+
+    s.set_field_data(t, "translation", &vec3(2.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.2);
+    assert_eq!(calls.get(), 1, "no event is processed again");
+    assert_eq!(s.take_field_events(), []);
+}
+
+/// The slot of the chain functions is restored when the callback panics, so a stale runtime pointer is never left behind.
+#[test]
+fn the_chain_slot_is_restored_after_a_panic_and_outside_a_callback() {
+    let mut s = load(CHAINED).unwrap();
+    let t = s.named_node("T").unwrap();
+
+    assert!(x3d_web::chain::with_runtime(3, |_| ()).is_err());
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.set_console_sink(Some(Box::new(|_| {})));
+    s.set_page_event_sink(Some(Box::new(|rt, _, _| {
+        x3d_web::chain::enter(rt, 3, || {
+            assert!(x3d_web::chain::is_active(3));
+
+            if s_always() {
+                panic!("a callback panics");
+            }
+        });
+        false
+    })));
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+
+    let caught = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| s.step(NOW + 0.1)));
+
+    assert!(caught.is_err());
+    assert!(!x3d_web::chain::is_active(3));
+    assert!(x3d_web::chain::with_runtime(3, |_| ()).is_err());
+}
+
+/// A sink does nothing without a console sink: the events are recorded for the page, as before.
+#[test]
+fn without_a_console_sink_the_events_are_recorded() {
+    let mut s = load(CHAINED).unwrap();
+    let t = s.named_node("T").unwrap();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.set_page_event_sink(Some(Box::new(|_, _, _| panic!("not called"))));
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+    assert_eq!(s.take_field_events().len(), 1);
+}
+
+/// True; keeps the compiler from seeing the panic as the end of the closure.
+fn s_always() -> bool {
+    std::hint::black_box(true)
+}
