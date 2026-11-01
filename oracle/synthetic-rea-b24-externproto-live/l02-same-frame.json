@@ -1,0 +1,5 @@
+{ "world": "main-two.wrl", "authority": "XITE_COMPATIBILITY", "dt": 0.1, "frames": 14,
+  "actions": [ { "frame": 3, "type": "url", "name": "First",  "url": ["lib-b.wrl#Gadget"] },
+               { "frame": 3, "type": "url", "name": "Second", "url": ["lib-b.wrl#Gadget"] },
+               { "frame": 8, "type": "loadNow", "name": "First" },
+               { "frame": 8, "type": "loadNow", "name": "Second" } ] }
