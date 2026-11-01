@@ -1,0 +1,52 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# Two declarations with the same URL (same file, same fragment), one instance each. The scene is cached
+# once; each declaration then changes, reloads or stops loading on its own.
+EXTERNPROTO First [
+  field SFInt32 level
+  field SFString tag
+  exposedField SFVec3f offset
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+] "lib-a.wrl#Gadget"
+EXTERNPROTO Second [
+  field SFInt32 level
+  field SFString tag
+  exposedField SFVec3f offset
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+] [ "lib-a.wrl#Gadget" ]
+DEF I1 First {}
+DEF I2 Second { level 5 }
+DEF Mirror Script {
+  eventIn SFInt32 from1
+  eventIn SFInt32 from2
+  eventIn SFVec3f offset1
+  url "javascript:
+function from1 (v) { print ('mirror 1 ' + v); }
+function from2 (v) { print ('mirror 2 ' + v); }
+function offset1 (v) { print ('mirror 1 offset ' + v); }
+"
+}
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  eventOut SFInt32 poke_out
+  eventOut SFVec3f offset_out
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) {
+  n = n + 1;
+  print ('driver tick ' + n);
+  poke_out = n;
+  if (n == 2) offset_out = new SFVec3f (0, 0, 5);
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.poke_out TO I1.poke
+ROUTE Driver.poke_out TO I2.poke
+ROUTE Driver.offset_out TO I1.set_offset
+ROUTE I1.result TO Mirror.from1
+ROUTE I2.result TO Mirror.from2
+ROUTE I1.offset_changed TO Mirror.offset1

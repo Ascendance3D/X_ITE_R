@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# A scene that is loaded by an Inline and holds an EXTERNPROTO with an instance of its own.
+EXTERNPROTO Gadget [ field SFInt32 level  field SFString tag ] "lib-a.wrl#Gadget"
+DEF Inner Gadget { level 9 }
+DEF Probe Script { url "javascript:
+function initialize () { print ('inline scene initialize'); }
+" }
