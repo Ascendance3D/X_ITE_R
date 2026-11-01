@@ -194,6 +194,10 @@ jobs:
           missing=""
           for p in $pkgs; do dpkg -s "$p" >/dev/null 2>&1 || missing="$missing $p"; done
           if [ -n "$missing" ]; then
+            if [ "$RUNNER_ENVIRONMENT" = self-hosted ]; then
+              echo "::error::missing packages on this self-hosted runner:$missing (sudo is not available there; install them on the runner image)"
+              exit 1
+            fi
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 update
             # shellcheck disable=SC2086
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends $missing
@@ -325,6 +329,10 @@ jobs:
           missing=""
           for p in $pkgs; do dpkg -s "$p" >/dev/null 2>&1 || missing="$missing $p"; done
           if [ -n "$missing" ]; then
+            if [ "$RUNNER_ENVIRONMENT" = self-hosted ]; then
+              echo "::error::missing packages on this self-hosted runner:$missing (sudo is not available there; install them on the runner image)"
+              exit 1
+            fi
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 update
             # shellcheck disable=SC2086
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends $missing
