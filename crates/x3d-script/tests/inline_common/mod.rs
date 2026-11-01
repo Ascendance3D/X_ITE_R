@@ -80,6 +80,16 @@ pub struct Run {
 impl Run {
     /// Load the world of a scenario and settle it (step 0 is the state after this).
     pub fn start(world: &str, t0: f64, dt: f64) -> Result<Run, String> {
+        Run::start_with(world, t0, dt, |_| {})
+    }
+
+    /// [`Run::start`] with `setup` run on the new runtime before the world is loaded (a build flag).
+    pub fn start_with(
+        world: &str,
+        t0: f64,
+        dt: f64,
+        setup: impl FnOnce(&mut Runtime),
+    ) -> Result<Run, String> {
         x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
         let root = oracle_root();
@@ -103,6 +113,7 @@ impl Run {
         rt.live = true;
         rt.now = t0;
         rt.record_console = true;
+        setup(&mut rt);
         rt.load_scene();
         rt.replace_world();
         rt.settle();
@@ -147,6 +158,11 @@ impl Run {
 
 /// Run one scenario and return its trace: `{ case, ok, steps: [ { k, loadCount, console, inlines, vrml? } ] }`.
 pub fn run_scenario(name: &str) -> Result<Value, String> {
+    run_scenario_with(name, |_| {})
+}
+
+/// [`run_scenario`] with `setup` run on the new runtime before the world is loaded (a build flag).
+pub fn run_scenario_with(name: &str, setup: impl FnOnce(&mut Runtime)) -> Result<Value, String> {
     let sc = scenario(name);
     let t0 = sc["t0"].as_f64().unwrap_or(946684800.0);
     let dt = sc["dt"].as_f64().unwrap_or(0.1);
@@ -154,7 +170,7 @@ pub fn run_scenario(name: &str) -> Result<Value, String> {
     let actions = sc["actions"].as_array().cloned().unwrap_or_default();
     let world = sc["world"].as_str().ok_or("scenario has no world")?;
 
-    let mut run = Run::start(world, t0, dt)?;
+    let mut run = Run::start_with(world, t0, dt, setup)?;
     let mut steps = vec![run.record(0)];
 
     for k in 1..=frames {
