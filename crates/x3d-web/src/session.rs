@@ -448,6 +448,39 @@ impl Session {
         Some((audio.uid(), audio.take_ops()))
     }
 
+    /// The calls of the world's MovieTextures for the page's `<video>` elements since the last call.
+    pub fn take_video_ops(&mut self) -> Vec<x3d_runtime::nodes::movie_texture::VideoOp> {
+        self.rt_mut().take_video_ops()
+    }
+
+    /// The tokens of the video elements the world wants.
+    pub fn video_tokens(&self) -> Vec<u64> {
+        self.rt().video_tokens()
+    }
+
+    /// The page's video element `token` loaded ([`Runtime::video_loaded`]); false when it is not this world's.
+    pub fn video_loaded(
+        &mut self,
+        token: u64,
+        size: (u32, u32),
+        duration: f64,
+        has_sound: bool,
+        rgba: Vec<u8>,
+    ) -> bool {
+        self.rt_mut()
+            .video_loaded(token, size.0, size.1, duration, has_sound, rgba)
+    }
+
+    /// The page's video element `token` failed ([`Runtime::video_failed`]); false when it is not this world's.
+    pub fn video_failed(&mut self, token: u64, event: &str) -> bool {
+        self.rt_mut().video_failed(token, event)
+    }
+
+    /// A frame of the page's video element `token` ([`Runtime::video_frame`]); false when it is not this world's.
+    pub fn video_frame(&mut self, token: u64, current_time: f64, rgba: Vec<u8>) -> bool {
+        self.rt_mut().video_frame(token, current_time, rgba)
+    }
+
     /// The page's audio clock (`audioContext .currentTime`) for the world's audio context, if it has one
     /// ([`x3d_runtime::sound::AudioEngine::set_clock`]).
     pub fn set_audio_clock(&mut self, time: f64) {

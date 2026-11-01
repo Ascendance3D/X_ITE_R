@@ -34,6 +34,13 @@ pub trait Fetcher {
         FetchPoll::Loaded
     }
 
+    /// Does the page play a video that this fetcher's page loads (a browser build)? A MovieTexture candidate that is
+    /// no GIF or PNG then goes to a `<video>` element of the page ([`nodes::movie_texture::VideoOp`]), and fails or
+    /// plays as the element does. Without it the video is not decoded.
+    fn plays_video(&self) -> bool {
+        false
+    }
+
     /// A FileLoader of its own requests `url` (the page's createVrmlFromURL, see `browser_load.rs`): an asynchronous fetcher
     /// starts a request for it even when it holds a response or one is in flight; the response that comes replaces the one
     /// it holds.
@@ -113,6 +120,18 @@ impl Fetcher for LocalFetcher {
             Err(_) => Err("Error: Not Found".into()),
         }
     }
+}
+
+/// MovieTexture.loadData takes a GIF or a PNG file (by its path, or a `data:image/gif` or `data:image/png` URL) as an image
+/// it decodes itself; any other candidate is a video.
+pub(crate) fn movie_is_image(url: &url::Url) -> bool {
+    let path = url.path();
+    let href = url.as_str();
+
+    path.ends_with(".gif")
+        || href.starts_with("data:image/gif")
+        || path.ends_with(".png")
+        || href.starts_with("data:image/png")
 }
 
 /// `decodeURI`: decode escapes except reserved characters; `None` on a malformed sequence.
@@ -852,6 +871,15 @@ impl Runtime {
                 self.fetcher.refresh(&r);
             }
 
+            // A MovieTexture video is requested by the page's video element, not by the engine: it is ready.
+            if let Task::UrlLoad(node, _) = *task
+                && self.fetcher.plays_video()
+                && self.builtin_name(node) == Some("MovieTexture")
+                && !movie_is_image(&r)
+            {
+                return true;
+            }
+
             // `fetch (dataURL)` needs no request: a data URL that decodes is ready, and no later candidate is
             // requested; one that does not decode fails at once, like a failed response.
             if r.scheme() == "data" {
@@ -1212,6 +1240,8 @@ impl Runtime {
         };
         let urls = self.url_strings(node);
 
+        // A newer load of the node takes over: a video element of an older one is not wanted any more.
+        self.pending_videos.retain(|_, p| p.node != node);
         self.allow_fetch_wait();
 
         let wait = self.fetch_wait.take();
@@ -1226,16 +1256,19 @@ impl Runtime {
                 return;
             };
 
-            if self.fetch_waits(wait.as_ref(), &urls, index, &file_url) {
-                return;
-            }
-
             let decoded =
                 decode_uri(file_url.as_str()).unwrap_or_else(|| file_url.as_str().to_string());
             let path = file_url.path().to_string();
             let href = file_url.as_str();
             let gif = path.ends_with(".gif") || href.starts_with("data:image/gif");
             let png = path.ends_with(".png") || href.starts_with("data:image/png");
+
+            // The page's video element requests a video itself: the engine has no response to wait for.
+            if (gif || png || !self.fetcher.plays_video())
+                && self.fetch_waits(wait.as_ref(), &urls, index, &file_url)
+            {
+                return;
+            }
 
             let (name, error) = if gif || png {
                 let loader = FileLoader {
@@ -1273,6 +1306,10 @@ impl Runtime {
                     }
                 }
             } else {
+                if self.fetcher.plays_video() {
+                    return self.movie_load_video(node, urls.clone(), index, file_url.clone());
+                }
+
                 let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
                     .iter()
                     .any(|e| path.to_ascii_lowercase().ends_with(e));

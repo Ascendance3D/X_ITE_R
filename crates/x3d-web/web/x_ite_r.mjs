@@ -6,6 +6,7 @@
 import init, { WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
+import { VideoMirror } from "./video_mirror.mjs";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -1682,6 +1683,8 @@ class X3DBrowser
    #audioWaiting = false;
    // The real Web Audio nodes of the engine's Sound nodes, on #audioContext (audio_mirror.mjs).
    #audioMirror = null;
+   // The <video> elements of the engine's MovieTextures (video_mirror.mjs).
+   #videoMirror = null;
 
    constructor (element)
    {
@@ -3119,6 +3122,18 @@ class X3DBrowser
          this .#audioMirror .apply (JSON .parse (json));
    }
 
+   // The calls the engine's MovieTextures made on <video> elements since the last frame are made (video_mirror.mjs).
+   #flushVideos (engine)
+   {
+      const calls = engine .takeVideoOps ();
+
+      if (calls === undefined)
+         return;
+
+      this .#videoMirror ??= new VideoMirror (() => this .#engine);
+      this .#videoMirror .apply (calls);
+   }
+
    // X3DSoundContext.startAudioElements for the AudioContext: resume () until it succeeds once.
    #resumeAudio ()
    {
@@ -3182,6 +3197,7 @@ class X3DBrowser
          try
          {
             this .#audioClock (engine);
+            this .#videoMirror ?.push ();
             engine .frame (time, width, height);
 
             // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
@@ -3195,6 +3211,7 @@ class X3DBrowser
             }
 
             this .#flushAudio (engine);
+            this .#flushVideos (engine);
 
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
@@ -3333,6 +3350,8 @@ class X3DBrowser
       // harmless, but it is closed once.
       const context = this .#audioContext;
 
+      this .#videoMirror ?.dispose ();
+      this .#videoMirror  = null;
       this .#audioMirror ?.dispose ();
       this .#audioMirror  = null;
       this .#audioContext = null;

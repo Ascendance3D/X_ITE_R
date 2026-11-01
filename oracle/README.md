@@ -763,6 +763,24 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --r
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --runs 3 --suite loadurl01
 ```
 
+## Web MovieTexture 01 (2026-10-31): frames and video fallback (issue #139)
+
+- `x_ite-web-runtime-02.mjs --suite movie01` runs the 13 cases of `crates/x3d-web/tests/browser/movie01_case.mjs`
+  (media in `crates/x3d-web/tests/browser/worlds/movie/`, made by `oracle/tools/gen_movie_web.py` and ffmpeg) and records
+  `web-browser-movie-01-baseline/movie01-baseline.json` (no pictures). `movieFrames.*` start the node from the page's clock
+  and read the color at the middle of the canvas 0.5 s into each of media frames 0 to 4 (a sample counts only when the clock
+  readings before and after the capture are 0.5 s inside its frame, else it is taken one loop later): a GIF, an APNG, a WebM and an MP4 of four
+  four-second frames (red, green, blue, yellow), a data URL, `loop FALSE` and `speed 0.5`. `movieFallback.*` are the
+  candidates after a video that is no video, a missing one and a GIF that is no GIF, with the requests and the messages.
+- Three runs gave identical values (Chrome 156.0.8078.47). The browser runs with `--autoplay-policy=no-user-gesture-required`.
+  `movieFrames.webm` and `movieFrames.mp4` are skipped when `CI` is set: the video decode of the hosted GPU-less runner exceeds
+  the sampling window (they run locally).
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-movie-01-baseline --runs 3 --suite movie01
+```
+
+
 ## Web data URL compatibility 01 (2026-10-27): raw tab, LF and CR in data URLs
 
 - `x_ite-web-runtime-02.mjs --suite dataurl01` runs the 31 cases of `crates/x3d-web/tests/browser/dataurl01_case.mjs` and

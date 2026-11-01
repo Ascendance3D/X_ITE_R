@@ -1,0 +1,249 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "movieFrames.gif": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "red"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFrames.apng": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "red"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFrames.webm": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "red"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFrames.mp4": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "red"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFrames.gifData": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "red"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFrames.gifOnce": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "yellow"
+   ],
+   "active": false,
+   "console": []
+  },
+  "movieFrames.gifSlow": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "before": "red",
+   "colors": [
+    "red",
+    "green",
+    "blue"
+   ],
+   "active": true,
+   "console": []
+  },
+  "movieFallback.brokenThenGif": {
+   "loaded": "loaded",
+   "state": {
+    "width": 16,
+    "height": 16,
+    "colorDepth": 4,
+    "duration": 16
+   },
+   "color": "red",
+   "served": [
+    "/tests/browser/worlds/movie/broken.webm",
+    "/tests/browser/worlds/movie/steps4.gif"
+   ],
+   "console": [
+    "warning: Error loading movie 'http://test/tests/browser/worlds/movie/broken.webm': Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error.",
+    "error: Error: Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error."
+   ]
+  },
+  "movieFallback.brokenThenWebm": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "color": "red",
+   "served": [
+    "/tests/browser/worlds/movie/broken.webm",
+    "/tests/browser/worlds/movie/steps4.webm"
+   ],
+   "console": [
+    "warning: Error loading movie 'http://test/tests/browser/worlds/movie/broken.webm': Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error.",
+    "error: Error: Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error."
+   ]
+  },
+  "movieFallback.missingThenMp4": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "color": "red",
+   "served": [
+    "/status/404/missing.webm",
+    "/tests/browser/worlds/movie/steps4.mp4"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Error loading movie 'http://test/status/404/missing.webm': Couldn't load video 'http://test/status/404/missing.webm': error.",
+    "error: Error: Couldn't load video 'http://test/status/404/missing.webm': error."
+   ]
+  },
+  "movieFallback.notGifThenWebm": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "color": "red",
+   "served": [
+    "/garbage/n1.gif",
+    "/tests/browser/worlds/movie/steps4.webm"
+   ],
+   "console": [
+    "warning: Error loading movie 'http://test/garbage/n1.gif': parse",
+    "error: Error: parse"
+   ]
+  },
+  "movieFallback.firstPlays": {
+   "loaded": "loaded",
+   "state": {
+    "width": 64,
+    "height": 64,
+    "colorDepth": 3,
+    "duration": 16
+   },
+   "color": "red",
+   "served": [
+    "/tests/browser/worlds/movie/steps4.webm"
+   ],
+   "console": []
+  },
+  "movieFallback.noneplay": {
+   "loaded": "loaded",
+   "state": {
+    "width": 0,
+    "height": 0,
+    "colorDepth": 0,
+    "duration": -1
+   },
+   "color": "white",
+   "served": [
+    "/tests/browser/worlds/movie/broken.webm",
+    "/status/404/missing.mp4"
+   ],
+   "console": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "warning: Error loading movie 'http://test/tests/browser/worlds/movie/broken.webm': Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error.",
+    "error: Error: Couldn't load video 'http://test/tests/browser/worlds/movie/broken.webm': error.",
+    "warning: Error loading movie 'http://test/status/404/missing.mp4': Couldn't load video 'http://test/status/404/missing.mp4': error.",
+    "error: Error: Couldn't load video 'http://test/status/404/missing.mp4': error."
+   ]
+  }
+ }
+}

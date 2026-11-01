@@ -5396,11 +5396,13 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
-    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-movie (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-movie (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)",
+    "crates/x3d-web/tests/browser/movie01.test.mjs (movieFrames.gif/apng/webm/mp4/gifData/gifOnce/gifSlow, movieFallback.brokenThenGif/brokenThenWebm/missingThenMp4/notGifThenWebm/firstPlays/noneplay; baseline oracle/web-browser-movie-01-baseline, 3 identical runs)",
+    "crates/x3d-web/tests/async_loading.rs a_video_is_the_pages_element_and_a_video_that_fails_goes_on_with_the_next_candidate"
    ],
    "missing": "frames are not decoded: vis-items-movie is a KNOWN_GAPS world (animated GIF, APNG and WebM urls draw untextured white; x3d-shot: 'not rendered: MovieTexture')",
    "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-movie (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-movie 78930 pixels over 8 at MSAA 0 (30.1%), 79936 at MSAA 4: stays PARTIAL."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-movie 78930 pixels over 8 at MSAA 0 (30.1%), 79936 at MSAA 4: stays PARTIAL. | Issue #139 2026-10-31 (browser build): a non-GIF/PNG candidate goes to a page <video> element (video_mirror.mjs); a video that fails logs X_ITE's two messages, then the next url is requested. Frame colors over time (GIF, APNG, WebM, MP4, data-URL GIF, loop FALSE, speed 0.5), width, height, colorDepth, duration_changed and the fallback messages match. Browser differences: video sound plays through the element, not X_ITE's createMediaElementSource graph (gain, Mute, spatialization do not reach it); video ops flush only from the frame tick, so a video does not start while the frame loop is stopped; the WebM and MP4 frame cases (movieFrames.webm, movieFrames.mp4) are skipped on CI because the hosted runner's video decode exceeds the sampling window, so they run only locally."
   },
   {
    "id": "node:MultiTexture",
