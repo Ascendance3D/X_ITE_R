@@ -366,6 +366,16 @@ const KNOWN_DIFFERENCES = {
       [ [ "result" ], "pending", "resolved" ],
       [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
    ],
+   "gltfWorldHeld.inlineFailThenHeld": [
+      // Issue #128: no difference in the Inline's own steps. X_ITE_R rejects the glTF candidate at the first failed
+      // buffer, logs the failure and requests the Inline's next url while the other buffer is held, like X_ITE
+      // (`Promise .all`). The only difference is the known one (fallback.gltfFailed): the failed buffer stays a loading
+      // object of X_ITE's browser, so its loadURL never settles.
+      [ [ "during", "result" ], "pending", "resolved" ],
+      [ [ "during", "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+      [ [ "result" ], "pending", "resolved" ],
+      [ [ "events" ], [ "shutdown" ], [ "shutdown", "initialized", "load" ] ],
+   ],
    "gltfWorldHeld.fallback": [
       // The same as gltfWorld.fallback (fallback.gltfFallback), while the held buffer is in flight and after it came.
       // The next candidate is requested and becomes the world while the buffer is held, in both.

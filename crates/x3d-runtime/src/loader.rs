@@ -923,6 +923,9 @@ impl Runtime {
     pub fn resume_fetches(&mut self) {
         self.resume_font_fetches();
 
+        // The glTF buffers that an Inline's rejected candidate left in flight (issue #128) log their own failures.
+        self.follow_buffers();
+
         if self.parked_fetches.is_empty() {
             return;
         }
