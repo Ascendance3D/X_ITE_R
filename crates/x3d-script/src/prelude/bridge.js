@@ -64,6 +64,7 @@ function constantOf (name)
 // release.rs asks whether a Script still reaches a node only JavaScript could hold (__unpin, __heldNodes).
 const NODE        = Symbol ("node");
 const FIELDS      = Symbol ("fields");      // field id (engine.rs fkey_id) → { field, h, id, data }
+const DEFINITIONS_KEY = Symbol ("definitionsKey");
 const DEFINITIONS = Symbol ("definitions"); // its FieldDefinitionArray
 const USER_DATA   = Symbol ("userData");    // X3DObject.setUserData of the node (kept by the node, not by its SFNode object)
 const nodeRefs    = new Map (); // node id → WeakRef of its X3DNodeRef
@@ -123,7 +124,20 @@ Object .assign (Object .setPrototypeOf (X3DNodeRef .prototype, X3DChildObject .p
    // defaults) and of the user-defined fields (their values are the fields).
    getFieldDefinitions ()
    {
-      return this [DEFINITIONS] ??= new FieldDefinitionArray (X ("nfields", this [NODE]) .map (fieldDefinition));
+      // A PROTO instance shares its declaration's definitions, which change with the declaration's interface.
+      if (this [DEFINITIONS] === undefined || ! NODE_TYPES [this .getTypeName ()])
+      {
+         const list = X ("nfields", this [NODE]);
+         const key  = JSON .stringify (list .map (d => [d .name, d .accessType, d .dataType]));
+
+         if (this [DEFINITIONS] === undefined || this [DEFINITIONS_KEY] !== key)
+         {
+            this [DEFINITIONS_KEY] = key;
+            this [DEFINITIONS]     = new FieldDefinitionArray (list .map (fieldDefinition));
+         }
+      }
+
+      return this [DEFINITIONS];
    },
    getFieldDefinition (name)
    {

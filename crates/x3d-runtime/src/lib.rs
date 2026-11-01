@@ -502,6 +502,8 @@ pub struct Runtime {
     /// Instances of EXTERNPROTOs that went through `construct ()`: `updateInstances` calls their
     /// `update ()` (the others get `construct ()`).
     pub instance_update: std::collections::HashSet<NodeId>,
+    /// `requestUpdateInstances` calls waiting for the next event cascade: `(extern, declaration)`.
+    pub pending_proto_updates: Vec<(bool, usize)>,
     /// Bodies of instances that were replaced (X3DExecutionContext.dispose).
     pub dead_ctxs: std::collections::HashSet<CtxId>,
     /// Root contexts of Inline scenes that were disposed or discarded (see `inline.rs`).
@@ -752,6 +754,7 @@ impl Runtime {
             extern_cache: vec![],
             instance_bodies: HashMap::new(),
             instance_update: Default::default(),
+            pending_proto_updates: vec![],
             dead_ctxs: Default::default(),
             disposed_scenes: Default::default(),
             fetches: Default::default(),
@@ -1261,6 +1264,12 @@ impl Runtime {
     }
 
     /// The mirrored fields whose value changed since the last call (the Script's objects of them are stale).
+    /// Forget the pending refreshes of the predefined fields of `inst` (its field layout changed).
+    pub(crate) fn drop_js_dirty_of(&mut self, inst: NodeId) {
+        self.js_dirty
+            .retain(|k| !matches!(k, (n, FieldLoc::Pre(_)) if *n == inst));
+    }
+
     pub fn take_js_dirty(&mut self) -> Vec<FKey> {
         let keys = std::mem::take(&mut self.js_dirty);
 
@@ -1922,6 +1931,17 @@ impl Runtime {
     pub fn create_proto_setup(&mut self, ctx: CtxId, name: &str) -> Option<NodeId> {
         let n = self.scene.create_proto_instance(ctx, name)?;
 
+        Some(self.setup_new_instance(n))
+    }
+
+    /// X3DProtoDeclarationNode.createInstance (executionContext): an instance of the declaration, set up.
+    pub fn create_instance_setup(&mut self, ctx: CtxId, proto: ProtoRef) -> NodeId {
+        let n = self.scene.instantiate_proto(ctx, proto);
+
+        self.setup_new_instance(n)
+    }
+
+    fn setup_new_instance(&mut self, n: NodeId) -> NodeId {
         self.nrt_mut(n);
         self.construct_node(n);
 
@@ -1940,7 +1960,7 @@ impl Runtime {
         }
 
         self.setup_node(n);
-        Some(n)
+        n
     }
 }
 
