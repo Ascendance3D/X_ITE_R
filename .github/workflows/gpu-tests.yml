@@ -25,7 +25,7 @@ env:
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
   X3D_EVIDENCE: ci
-  X3D_EVIDENCE_ALLOW: x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
+  X3D_EVIDENCE_ALLOW: x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json,x1-baseline.json
   X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
   X3D_QUIET_NO_GPU: "1"
   GPU_TESTS: >-
