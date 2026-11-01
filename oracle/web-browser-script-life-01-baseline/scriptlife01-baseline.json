@@ -237,6 +237,25 @@
     "page: after the page print"
    ]
   },
+  "scriptLife.callbackInChain": {
+   "final": "1 0 0",
+   "errors": [],
+   "seq": [
+    "page: set_x 1",
+    "page: after the assignment",
+    "page: mark S set_x 1",
+    "page: mark S after x_changed",
+    "page: x_changed 1 T=0 0 0 S.x=1",
+    "page: x_changed wrote T=1 0 0",
+    "page: mark R set_y 1 T=1 0 0",
+    "page: mark R after y_changed",
+    "page: translation_changed 1 0 0",
+    "page: y_changed 1 T=1 0 0",
+    "page: mark Q set_z 1",
+    "page: mark S eventsProcessed",
+    "page: mark R eventsProcessed"
+   ]
+  },
   "scriptLife.shutdownUrl": {
    "n": 1,
    "errors": [],
