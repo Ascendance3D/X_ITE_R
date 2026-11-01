@@ -12,8 +12,10 @@ x3d-scene = { path = "../x3d-scene" }
 x3d-text = { path = "../x3d-text" }
 flate2 = "1"
 meshopt-pure = { version = "1.3.0", default-features = false }
+draco-core = { version = "2.3.3", default-features = false, features = ["decoder", "point_cloud_decode", "edgebreaker_valence_decode", "legacy_bitstream_decode"] }
 quick-xml = "0.41"
 serde_json = { version = "1", features = ["float_roundtrip"] }
 
 [dev-dependencies]
+draco-core = { version = "2.3.3", features = ["encoder"] }
 x3d-evidence = { path = "../x3d-evidence" }
