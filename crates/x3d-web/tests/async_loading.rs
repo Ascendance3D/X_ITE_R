@@ -6,6 +6,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+use x3d_runtime::nodes::movie_texture::VideoOp;
 use x3d_runtime::{FetchPoll, Fetcher};
 use x3d_web::session::Session;
 
@@ -24,6 +25,32 @@ struct Network {
 
 #[derive(Clone, Default)]
 struct TestFetcher(Rc<RefCell<Network>>);
+
+/// The fetcher of a page that plays videos in its own `<video>` elements (the browser build).
+#[derive(Clone, Default)]
+struct VideoFetcher(TestFetcher);
+
+impl Fetcher for VideoFetcher {
+    fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        self.0.fetch(url)
+    }
+
+    fn fetch_error(&self, url: &url::Url) -> Option<String> {
+        self.0.fetch_error(url)
+    }
+
+    fn is_async(&self) -> bool {
+        true
+    }
+
+    fn poll(&self, url: &url::Url) -> FetchPoll {
+        self.0.poll(url)
+    }
+
+    fn plays_video(&self) -> bool {
+        true
+    }
+}
 
 impl TestFetcher {
     fn respond(&self, url: &str, response: Result<&[u8], &str>) {
@@ -1104,6 +1131,66 @@ fn a_movie_texture_waits_for_the_candidate_after_one_that_does_not_play() {
         "{log}"
     );
     assert!(!log.contains("tex/green.gif"), "{log}");
+}
+
+#[test]
+fn a_video_is_the_pages_element_and_a_video_that_fails_goes_on_with_the_next_candidate() {
+    let net = TestFetcher::default();
+    let parsed = Session::parse(
+        "#X3D V4.0 utf8\nShape { appearance Appearance { texture DEF M MovieTexture { url [ \"m1.webm\" \"m2.mp4\" \"tex/green.gif\" ] } } geometry Box { } }\n".as_bytes(),
+        URL,
+        Box::new(VideoFetcher(net.clone())),
+    )
+    .expect("the world parses");
+    let mut s = Session::begin(parsed, NOW, 400, 300);
+
+    poll(&mut s);
+
+    // The engine requests no video itself: the page's element does.
+    assert_eq!(net.requested(), Vec::<String>::new());
+
+    let ops = s.take_video_ops();
+    let [VideoOp::Load { token, url }] = ops.as_slice() else {
+        panic!("{ops:?}");
+    };
+
+    assert_eq!(url, &w("m1.webm"));
+    assert_eq!(s.video_tokens(), [*token]);
+    assert!(
+        !s.video_failed(token + 1000, "error"),
+        "a token of another runtime"
+    );
+
+    // The first fails: the second is asked for, and still no request of the engine.
+    assert!(s.video_failed(*token, "error"));
+    poll(&mut s);
+
+    let ops = s.take_video_ops();
+    let [VideoOp::Load { token: second, url }] = ops.as_slice() else {
+        panic!("{ops:?}");
+    };
+
+    assert_eq!(url, &w("m2.mp4"));
+    assert_eq!(net.requested(), Vec::<String>::new());
+
+    // The second plays: its first frame is the texture, and the node has the video's outputs.
+    let pixels = [255u8, 0, 0, 255].repeat(4 * 2);
+
+    assert!(s.video_loaded(*second, (4, 2), 4.0, false, pixels));
+    assert_eq!(s.video_tokens(), [*second]);
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "Error loading movie '{}': Couldn't load video '{}': error.",
+            w("m1.webm"),
+            w("m1.webm")
+        )),
+        "{log}"
+    );
+    assert!(!log.contains("m2.mp4"), "{log}");
 }
 
 #[test]

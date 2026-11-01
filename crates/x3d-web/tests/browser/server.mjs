@@ -17,7 +17,7 @@ import { extname, join, normalize } from "node:path";
 
 const TYPES = {
    ".html": "text/html", ".mjs": "text/javascript", ".js": "text/javascript", ".wasm": "application/wasm",
-   ".css": "text/css", ".json": "application/json", ".png": "image/png", ".wrl": "model/vrml", ".x3dv": "model/x3d+vrml",
+   ".css": "text/css", ".json": "application/json", ".png": "image/png", ".gif": "image/gif", ".webm": "video/webm", ".mp4": "video/mp4", ".wrl": "model/vrml", ".x3dv": "model/x3d+vrml",
 };
 
 // Clean fixtures of other oracle sets that both engines load: /fonts/ (PT Sans, OFL; notfont.ttf, see PROVENANCE.txt),
