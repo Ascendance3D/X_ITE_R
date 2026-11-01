@@ -8033,6 +8033,159 @@
    "getNumber": "Error: Named node '5' not found.",
    "text": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nTransform {\n  children DEF B Shape { }\n}\n\nGroup { }\n\nDEF N1 Group { }\n",
    "log": []
+  },
+  "fieldEarly.exportedNodes": {
+   "start": [
+    "A",
+    "C",
+    "Error: Exported node 'A' not found.",
+    "Error: Exported node 'Z' not found.",
+    [
+     "EXPORT A AS ExA",
+     "EXPORT C"
+    ]
+   ],
+   "addNew": "undefined",
+   "addNewState": [
+    "N1",
+    "N1",
+    [
+     "EXPORT A AS ExA",
+     "EXPORT C",
+     "EXPORT N1 AS E1"
+    ]
+   ],
+   "addDuplicate": "Error: Couldn't add exported node: exported name 'E1' already in use.",
+   "addDuplicateBadNode": "Error: Couldn't add exported node: exported name 'E1' already in use.",
+   "addSameNode": "undefined",
+   "addDescription": "undefined",
+   "addDescriptionState": [
+    "N2",
+    [
+     "EXPORT A AS ExA",
+     "EXPORT C",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\""
+    ]
+   ],
+   "addEmpty": "Error: Couldn't update exported node: node exported name is empty.",
+   "addNoNode": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "addNullNode": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "addNotNode": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "addNumber": "undefined",
+   "addNumberState": [
+    "N2",
+    [
+     "EXPORT A AS ExA",
+     "EXPORT C",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+     "EXPORT N2 AS 5"
+    ]
+   ],
+   "addNoArgs": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "addForeign": "Error: Couldn't update exported node: node does not belong to this execution context.",
+   "addDescriptionNull": "undefined",
+   "addDescriptionNumber": "undefined",
+   "addDescriptionState2": [
+    "EXPORT A AS ExA",
+    "EXPORT C",
+    "EXPORT N1 AS E1",
+    "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+    "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+    "EXPORT N2 AS 5",
+    "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+    "EXPORT N1 AS E6 DESCRIPTION \"7\""
+   ],
+   "updateNew": "undefined",
+   "updateNewState": [
+    "N3",
+    [
+     "EXPORT A AS ExA",
+     "EXPORT C",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+     "EXPORT N2 AS 5",
+     "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+     "EXPORT N1 AS E6 DESCRIPTION \"7\"",
+     "EXPORT N3 AS U1"
+    ]
+   ],
+   "updateReplace": "undefined",
+   "updateReplaceState": [
+    "N3",
+    [
+     "EXPORT N3 AS ExA DESCRIPTION \"replaced\"",
+     "EXPORT C",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+     "EXPORT N2 AS 5",
+     "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+     "EXPORT N1 AS E6 DESCRIPTION \"7\"",
+     "EXPORT N3 AS U1"
+    ]
+   ],
+   "updateEmpty": "Error: Couldn't update exported node: node exported name is empty.",
+   "updateNotNode": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "updateNoNode": "Error: Couldn't update exported node: node must be of type X3DNode.",
+   "updateForeign": "Error: Couldn't update exported node: node does not belong to this execution context.",
+   "updateUnnamed": "undefined",
+   "updateUnnamedState": [
+    "EXPORT N3 AS ExA DESCRIPTION \"replaced\"",
+    "EXPORT C",
+    "EXPORT N1 AS E1",
+    "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+    "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+    "EXPORT N2 AS 5",
+    "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+    "EXPORT N1 AS E6 DESCRIPTION \"7\"",
+    "EXPORT N3 AS U1",
+    "EXPORT _1 AS U2"
+   ],
+   "removeKnown": "undefined",
+   "removeState": [
+    "Error: Exported node 'C' not found.",
+    [
+     "EXPORT N3 AS ExA DESCRIPTION \"replaced\"",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+     "EXPORT N2 AS 5",
+     "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+     "EXPORT N1 AS E6 DESCRIPTION \"7\"",
+     "EXPORT N3 AS U1",
+     "EXPORT _1 AS U2"
+    ]
+   ],
+   "removeUnknown": "undefined",
+   "removeNumber": "undefined",
+   "removeNoArgs": "undefined",
+   "removeAgain": "undefined",
+   "addAfterRemove": "undefined",
+   "addAfterRemoveState": [
+    "N2",
+    [
+     "EXPORT N3 AS ExA DESCRIPTION \"replaced\"",
+     "EXPORT N1 AS E1",
+     "EXPORT N1 AS E2 DESCRIPTION \"again\"",
+     "EXPORT N2 AS E3 DESCRIPTION \"some text\"",
+     "EXPORT N1 AS E5 DESCRIPTION \"null\"",
+     "EXPORT N1 AS E6 DESCRIPTION \"7\"",
+     "EXPORT N3 AS U1",
+     "EXPORT _1 AS U2",
+     "EXPORT N2 AS C"
+    ]
+   ],
+   "getNoArgs": "Error: Exported node 'undefined' not found.",
+   "getEmpty": "Error: Exported node '' not found.",
+   "getNumber": "Error: Exported node '5' not found.",
+   "getType": "Transform",
+   "text": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  children DEF B Shape { }\n}\n\nDEF C Group { }\n\nEXPORT N3 AS ExA DESCRIPTION \"replaced\"\nEXPORT N1 AS E1\nEXPORT N1 AS E2 DESCRIPTION \"again\"\nEXPORT N2 AS E3 DESCRIPTION \"some text\"\nEXPORT N1 AS E5 DESCRIPTION \"null\"\nEXPORT N1 AS E6 DESCRIPTION \"7\"\nEXPORT N3 AS U1\nEXPORT _1 AS U2\nEXPORT N2 AS C\n",
+   "log": []
   }
  }
 }

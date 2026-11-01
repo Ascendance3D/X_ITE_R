@@ -947,11 +947,102 @@ async function namedNodesCase (page, env)
    return out;
 }
 
+// X3DScene.addExportedNode, updateExportedNode, removeExportedNode and getExportedNode (issue #137): the exported names of a
+// world's nodes, their errors and what the text form shows.
+const EXPORTED_WORLD = `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Full\nDEF A Transform { children DEF B Shape { } }\nDEF C Group { }\nEXPORT A AS ExA\nEXPORT C\n")}`;
+
+async function exportedNodesCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, EXPORTED_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+      const name    = n => n .getNodeName ();
+      const lookup  = n => attempt (() => name (scene .getExportedNode (n)));
+      const foreign = await browser .createScene ();
+      const exports = () => scene .toVRMLString () .split ("\n") .filter (line => line .startsWith ("EXPORT"));
+
+      out .start = [ lookup ("ExA"), lookup ("C"), lookup ("A"), lookup ("Z"), exports () ];
+
+      // addExportedNode
+      const n1 = scene .createNode ("Group");
+      const n2 = scene .createNode ("Group");
+
+      scene .addNamedNode ("N1", n1);
+      scene .addNamedNode ("N2", n2);
+
+      out .addNew        = attempt (() => scene .addExportedNode ("E1", n1));
+      out .addNewState   = [ lookup ("E1"), name (n1), exports () ];
+      out .addDuplicate  = attempt (() => scene .addExportedNode ("E1", n2));
+      out .addDuplicateBadNode = attempt (() => scene .addExportedNode ("E1", 5));
+      out .addSameNode   = attempt (() => scene .addExportedNode ("E2", n1, "again"));
+      out .addDescription = attempt (() => scene .addExportedNode ("E3", n2, "some text"));
+      out .addDescriptionState = [ lookup ("E3"), exports () ];
+      out .addEmpty      = attempt (() => scene .addExportedNode ("", n2));
+      out .addNoNode     = attempt (() => scene .addExportedNode ("E4"));
+      out .addNullNode   = attempt (() => scene .addExportedNode ("E4", null));
+      out .addNotNode    = attempt (() => scene .addExportedNode ("E4", { }));
+      out .addNumber     = attempt (() => scene .addExportedNode (5, n2));
+      out .addNumberState = [ lookup ("5"), exports () ];
+      out .addNoArgs     = attempt (() => scene .addExportedNode ());
+      out .addForeign    = attempt (() => scene .addExportedNode ("F", foreign .createNode ("Group")));
+      out .addDescriptionNull = attempt (() => scene .addExportedNode ("E5", n1, null));
+      out .addDescriptionNumber = attempt (() => scene .addExportedNode ("E6", n1, 7));
+      out .addDescriptionState2 = exports ();
+
+      // updateExportedNode
+      const n3 = scene .createNode ("Transform");
+
+      scene .addNamedNode ("N3", n3);
+
+      out .updateNew     = attempt (() => scene .updateExportedNode ("U1", n3));
+      out .updateNewState = [ lookup ("U1"), exports () ];
+      out .updateReplace = attempt (() => scene .updateExportedNode ("ExA", n3, "replaced"));
+      out .updateReplaceState = [ lookup ("ExA"), exports () ];
+      out .updateEmpty   = attempt (() => scene .updateExportedNode ("", n3));
+      out .updateNotNode = attempt (() => scene .updateExportedNode ("X", 3));
+      out .updateNoNode  = attempt (() => scene .updateExportedNode ("X"));
+      out .updateForeign = attempt (() => scene .updateExportedNode ("X", foreign .createNode ("Group")));
+      out .updateUnnamed = attempt (() => scene .updateExportedNode ("U2", scene .createNode ("Group")));
+      out .updateUnnamedState = exports ();
+
+      // removeExportedNode
+      out .removeKnown   = attempt (() => scene .removeExportedNode ("C"));
+      out .removeState   = [ lookup ("C"), exports () ];
+      out .removeUnknown = attempt (() => scene .removeExportedNode ("nope"));
+      out .removeNumber  = attempt (() => scene .removeExportedNode (5));
+      out .removeNoArgs  = attempt (() => scene .removeExportedNode ());
+      out .removeAgain   = attempt (() => scene .removeExportedNode ("C"));
+      out .addAfterRemove = attempt (() => scene .addExportedNode ("C", n2));
+      out .addAfterRemoveState = [ lookup ("C"), exports () ];
+
+      // getExportedNode
+      out .getNoArgs = attempt (() => scene .getExportedNode ());
+      out .getEmpty  = attempt (() => scene .getExportedNode (""));
+      out .getNumber = attempt (() => scene .getExportedNode (5));
+      out .getType   = attempt (() => scene .getExportedNode ("ExA") .getNodeTypeName ());
+
+      out .text = attempt (() => scene .toVRMLString ());
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
 export const CASE_GROUPS = {
    fieldAPI: { context: DESKTOP, cases },
    fieldRoundTrip: { context: DESKTOP, cases: roundTripCases },
    fieldConstants: { context: DESKTOP, cases: { constants: async (page, env) => { await page .waitForFunction (() => window .ready, null, { timeout: 30000 }); return constants (page, env); } } },
-   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase,
+   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase,
       // Nodes of external components the world did not load: a world of the Interchange profile (one of them first, then the same list).
       createNodeInterchange: (page, env) => createNodeCase (page, env, `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\n")}`) } },
 };

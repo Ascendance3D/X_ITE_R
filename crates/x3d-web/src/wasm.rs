@@ -945,6 +945,34 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// `updateExportedNode (name, node, description)` of scene `id` (also `addExportedNode`, after the page's checks): see
+    /// [`Session::set_exported_node`].
+    #[wasm_bindgen(js_name = setExportedNode)]
+    pub fn set_exported_node(
+        &mut self,
+        id: u32,
+        name: &str,
+        node: u32,
+        description: &str,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .set_exported_node(name, node, description)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `removeExportedNode (name)` of scene `id`.
+    #[wasm_bindgen(js_name = removeExportedNode)]
+    pub fn remove_exported_node(&mut self, id: u32, name: &str) -> Result<(), JsError> {
+        self.session_mut(id)?.remove_exported_node(name);
+        Ok(())
+    }
+
+    /// The local node of the exported name in scene `id`, or undefined.
+    #[wasm_bindgen(js_name = exportedNode)]
+    pub fn exported_node(&self, id: u32, name: &str) -> Option<u32> {
+        self.worlds.get(&id)?.session.exported_node(name)
+    }
+
     /// The root nodes of scene `id` as node ids; -1 is NULL.
     #[wasm_bindgen(js_name = rootNodes)]
     pub fn root_nodes(&self, id: u32) -> Vec<i64> {
