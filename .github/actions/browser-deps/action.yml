@@ -44,10 +44,21 @@ runs:
           mkdir -p ~/apt-archives/partial
           printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' "$HOME/apt-archives" | sudo tee /etc/apt/apt.conf.d/99-ci-archives
         fi
-        if ! dpkg -s mesa-vulkan-drivers >/dev/null 2>&1; then
-          flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 update
-          flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends mesa-vulkan-drivers
+        if [ "$RUNNER_ENVIRONMENT" = self-hosted ]; then
+          # The runner service runs with "no new privileges", so sudo cannot work here: nothing may be installed. The
+          # image must already hold lavapipe and Chromium's libraries; check, and install only Playwright's browser.
+          if ! ls /usr/share/vulkan/icd.d/lvp_icd*.json >/dev/null 2>&1; then
+            echo "::error::lavapipe (mesa-vulkan-drivers) is missing on this self-hosted runner and sudo is not available; install it on the runner image."
+            exit 1
+          fi
+          npm ci --no-audit --no-fund
+          flock "$lock" npx playwright install chromium
+        else
+          if ! dpkg -s mesa-vulkan-drivers >/dev/null 2>&1; then
+            flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 update
+            flock "$lock" sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends mesa-vulkan-drivers
+          fi
+          npm ci --no-audit --no-fund
+          flock "$lock" npx playwright install --with-deps chromium
         fi
-        npm ci --no-audit --no-fund
-        flock "$lock" npx playwright install --with-deps chromium
         if [ "$RUNNER_ENVIRONMENT" != self-hosted ]; then sudo chmod -R a+r ~/apt-archives; fi
