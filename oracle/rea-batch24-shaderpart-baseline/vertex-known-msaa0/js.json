@@ -1,0 +1,216 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvoid main()\n{\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VP ShaderPart {\n            url \"data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   vp USE VP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'b') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'c') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Afloat f (vec2 a) { return a; }%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n   if (k == 'd') vp .url = new MFString ('data:x-shader/x-vertex,%0Aattribute vec4 x3d_Vertex;%0Aattribute vec3 x3d_Normal;%0Auniform mat4 x3d_ProjectionMatrix;%0Auniform mat4 x3d_ModelViewMatrix;%0Auniform mat3 x3d_NormalMatrix;%0Avarying vec3 vN;%0Avoid main()%0A{%0A   vN = normalize (x3d_NormalMatrix * x3d_Normal);%0A   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;%0A}%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ShaderPart: Couldn't load data URL. Error: Error in ShaderPart 'VP' in URL 'http://oracle/synthetic-rea-b24-shaderpart/vertex-known.wrl', line 3, ERROR: 0:3: 'attribute' : syntax error",
+    "error: ShaderPart: Couldn't load data URL. Error: Error in ShaderPart 'VP' in URL 'http://oracle/synthetic-rea-b24-shaderpart/vertex-known.wrl', line 8, ERROR: 0:8: 'return' : function return is not matching type:"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

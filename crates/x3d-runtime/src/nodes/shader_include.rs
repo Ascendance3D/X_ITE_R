@@ -68,6 +68,60 @@ fn include_name(line: &str) -> Option<&str> {
     (!name.is_empty() && !name.contains('/')).then_some(name)
 }
 
+/// ShaderCompiler.getSourceFileName: the name of include file number `n` (from 1); `None` for 0 and unknown numbers.
+pub fn source_file_name(number: &str) -> Option<&'static str> {
+    let n: usize = number.parse().ok()?;
+
+    n.checked_sub(1)
+        .and_then(|i| INCLUDES.get(i))
+        .map(|(name, _)| *name)
+}
+
+/// The compiler of this port counts physical lines of the processed source (`0:<line>`); ANGLE follows the `#line`
+/// directives ShaderCompiler.process writes and reports `<file number>:<line in that file>`. Rewrites the
+/// `ERROR: 0:<physical>` position of every log line to that form, so the position names the include file.
+pub fn remap_log(source: &str, log: &str) -> String {
+    // (file, delta) in force on each physical line (index = physical line): line = physical + delta.
+    let mut at: Vec<(usize, i64)> = vec![(0, 0)];
+    let (mut file, mut delta) = (0usize, 0i64);
+
+    for (i, line) in source.split('\n').enumerate() {
+        let physical = i as i64 + 1;
+        at.push((file, delta));
+        let mut words = line.split_whitespace();
+
+        if words.next() == Some("#line") {
+            if let (Some(l), Some(f)) = (words.next(), words.next()) {
+                if let (Ok(l), Ok(f)) = (l.parse::<i64>(), f.parse::<usize>()) {
+                    file = f;
+                    delta = l - (physical + 1);
+                }
+            }
+        }
+    }
+
+    let mut out = String::with_capacity(log.len());
+
+    for (n, line) in log.split('\n').enumerate() {
+        if n > 0 {
+            out.push('\n');
+        }
+
+        let remapped = line.strip_prefix("ERROR: 0:").and_then(|rest| {
+            let end = rest.find(|c: char| !c.is_ascii_digit())?;
+            let physical: usize = rest[..end].parse().ok()?;
+            let (f, d) = *at.get(physical)?;
+
+            (f != 0 || d != 0)
+                .then(|| format!("ERROR: {f}:{}{}", physical as i64 + d, &rest[end..]))
+        });
+
+        out.push_str(remapped.as_deref().unwrap_or(line));
+    }
+
+    out
+}
+
 /// ShaderCompiler.process: each include line becomes `#line 1 N`, the file (itself processed), a
 /// newline and `#line <next line> <parent>`. An unknown name gives an empty file number 0.
 pub fn process(source: &str) -> String {
