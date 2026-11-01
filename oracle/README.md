@@ -961,8 +961,8 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --run
 
 ### Web browser scene creation 01 (`web-browser-scene-create-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 25 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
-  (issue #134; `x3dString` and `replaceWorldArgs` added: `createX3DFromString` arguments, text forms and failures, `replaceWorld` with null / undefined / none / extra argument) and records `web-browser-scene-create-01-baseline/scenecreate01-baseline.json` (no pictures):
+- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 26 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
+  (issue #134; `x3dString`, `replaceWorldArgs` and `replaceWorldGuards` added: `createX3DFromString` arguments, text forms and failures, `replaceWorld` with null / undefined / none / extra argument; `replaceWorldGuards`: the scene that is already the world, a scene of a replaced world and 17 values that are no scene, among them `MFNode` forms, which X_ITE accepts and X_ITE_R matches while it logs an error for each, `KNOWN_DIFFERENCES` `sceneCreate.replaceWorldGuards`) and records `web-browser-scene-create-01-baseline/scenecreate01-baseline.json` (no pictures):
   `createScene` (a Promise of an empty scene that is not the world, `worldURL` is the page's; every argument takes the
   profile branch and rejects with `Couldn't create scene: profile must be of type ProfileInfo.`; with `getProfile` and
   `getComponent` the profile and components); `createVrmlFromString` (an `MFNode`, `#VRML V2.0 utf8` in front, the parser

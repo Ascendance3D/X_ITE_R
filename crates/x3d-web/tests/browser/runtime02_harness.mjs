@@ -151,7 +151,24 @@ function scriptLifeDifferences ()
    return differences;
 }
 
+// replaceWorld arguments (issue #134, scenecreate01_case.mjs replaceWorldGuards): X_ITE accepts each silently; X_ITE_R does the
+// same and logs one error for it. The messages, in the order of the case: the same scene, a scene of a replaced world,
+// then each value (10 that give an empty world, 4 MFNode forms, 3 that give an empty world).
+const REPLACE_PREFIX = "error: X_ITE_R: Browser.replaceWorld: the ";
+const REPLACE_EMPTY  = `${REPLACE_PREFIX}argument is no X3DScene of this browser; the world is replaced by an empty world.`;
+const REPLACE_NODES  = `${REPLACE_PREFIX}argument is no X3DScene of this browser; the world is replaced by a world with the root nodes of the MFNode.`;
+const REPLACE_GUARD_LOGS =
+[
+   `${REPLACE_PREFIX}scene is already the world; it stays the world.`,
+   `${REPLACE_PREFIX}scene belongs to a world that was replaced; the world is made again from the scene's text as it was then (nodes of the old world stay unusable).`,
+   ... Array (10) .fill (REPLACE_EMPTY), ... Array (4) .fill (REPLACE_NODES), ... Array (3) .fill (REPLACE_EMPTY),
+];
+
 const KNOWN_DIFFERENCES = {
+   // X_ITE logs nothing for the arguments of replaceWorldGuards: the lines are X_ITE_R's own (API.md, replaceWorld).
+   "sceneCreate.replaceWorldGuards": [
+      [ [ "logs" ], [], REPLACE_GUARD_LOGS ],
+   ],
    "nodeOwnership.nodeOwnership": [
       // X_ITE stores a node of another scene (the owner stays that scene); X_ITE_R refuses it, warns, and keeps the field as it was.
       // The pinned SFNode proxy would keep a plain property, so the page reads the node back, but the node has no such field value.

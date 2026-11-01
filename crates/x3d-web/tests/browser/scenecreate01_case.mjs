@@ -699,10 +699,70 @@ async function scenario (page, env, name, args = { })
 
                out .backToB = await wait (() => browser .replaceWorld (b));
 
-               // Not compared (known differences, API.md): the same scene again, a value that is no scene, a replaced scene again.
                const c = await browser .createX3DFromString ("#VRML V2.0 utf8\nDEF C Transform { }");
 
                out .extra = await wait (() => browser .replaceWorld (c, 1));
+               break;
+            }
+            case "replaceWorldGuards":
+            {
+               // replaceWorld with what looks like a mistake (issue #134): X_ITE resolves each. The result, the world and its root
+               // nodes are compared; X_ITE_R also logs a message for each (a known difference of the console lines only).
+               const make  = name => browser .createX3DFromString (`#VRML V2.0 utf8\nDEF ${name} Transform { }`);
+               const state = async fn =>
+               {
+                  const r = await settled (fn ());
+                  await spin (3);
+
+                  const scene = browser .currentScene;
+
+                  return [ r === undefined ? "undefined" : r, types (scene .rootNodes), scene .getNamedNode ? (() => { try { return scene .getNamedNode ("A") ?.getNodeName () ?? null; } catch (e) { return "none"; } }) () : null ];
+               };
+               const a = await make ("A");
+
+               await settled (browser .replaceWorld (a));
+               await spin (3);
+
+               // The scene that is the world.
+               out .same = [ await state (() => browser .replaceWorld (a)), browser .currentScene === a ];
+
+               // A scene of a replaced world: the scene is the world again, with the root nodes it had.
+               const b = await make ("B");
+
+               await settled (browser .replaceWorld (b));
+               await spin (3);
+               out .staleBefore = [ browser .currentScene === b, types (browser .currentScene .rootNodes) ];
+               out .stale = [ await state (() => browser .replaceWorld (a)), browser .currentScene === a, browser .currentScene === b ];
+
+               // A value that is no X3DScene: an empty world, an MFNode of root nodes gives a world with them.
+               const values =
+               {
+                  number: () => 1, string: () => "x", object: () => ({ }), array: () => [ ], emptyString: () => "", zero: () => 0, boolean: () => true,
+                  function: () => () => { }, node: () => browser .currentScene .rootNodes [0], sfnode: () => new X3D .SFNode (),
+                  mfnode: () => new X3D .MFNode (browser .currentScene .rootNodes [0]), emptyMFNode: () => new X3D .MFNode (), liveRootNodes: () => browser .currentScene .rootNodes, nullMFNode: () => new X3D .MFNode (null),
+                  mfstring: () => new X3D .MFString ("x"), sfstring: () => new X3D .SFString ("x"), date: () => new Date (0),
+               };
+
+               out .values = { };
+
+               for (const [ key, makeValue ] of Object .entries (values))
+               {
+                  const d = await make_scene ();
+
+                  await settled (browser .replaceWorld (d));
+                  await spin (3);
+
+                  const before = browser .currentScene;
+                  const value  = makeValue ();
+
+                  out .values [key] = [ await state (() => browser .replaceWorld (value)), browser .currentScene === before ];
+               }
+
+               async function make_scene ()
+               {
+                  return browser .createX3DFromString ("#VRML V2.0 utf8\nDEF A Transform { }");
+               }
+
                break;
             }
             case "importDocumentHTML":
@@ -743,7 +803,7 @@ const NAMES =
    "vrmlURLArguments", "vrmlURLLoad",
    "importJS", "importJSErrors", "importDocument", "importDocumentErrors", "importDocumentHTML",
    "profileInfo", "componentInfo", "supportedLists", "createSceneInfo", "sceneProfile", "vrmlURLNodes",
-   "x3dString", "replaceWorldArgs",
+   "x3dString", "replaceWorldArgs", "replaceWorldGuards",
 ];
 
 const cases = Object .fromEntries (NAMES .map (name => [ name, (page, env) => scenario (page, env, name) ]));

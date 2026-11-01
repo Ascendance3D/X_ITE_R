@@ -1936,6 +1936,180 @@
     1
    ],
    "logs": []
+  },
+  "sceneCreate.replaceWorldGuards": {
+   "same": [
+    [
+     "undefined",
+     [
+      "Transform"
+     ],
+     "A"
+    ],
+    true
+   ],
+   "staleBefore": [
+    true,
+    [
+     "Transform"
+    ]
+   ],
+   "stale": [
+    [
+     "undefined",
+     [
+      "Transform"
+     ],
+     "A"
+    ],
+    true,
+    false
+   ],
+   "values": {
+    "number": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "string": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "object": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "array": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "emptyString": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "zero": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "boolean": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "function": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "node": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "sfnode": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "mfnode": [
+     [
+      "undefined",
+      [
+       "Transform"
+      ],
+      "none"
+     ],
+     false
+    ],
+    "emptyMFNode": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "liveRootNodes": [
+     [
+      "undefined",
+      [
+       "Transform"
+      ],
+      "none"
+     ],
+     false
+    ],
+    "nullMFNode": [
+     [
+      "undefined",
+      [
+       null
+      ],
+      "none"
+     ],
+     false
+    ],
+    "mfstring": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "sfstring": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ],
+    "date": [
+     [
+      "undefined",
+      [],
+      "none"
+     ],
+     false
+    ]
+   },
+   "logs": []
   }
  }
 }
