@@ -34,8 +34,8 @@
 //!   declarations of R0.3-B. A scene that finishes for an older generation (a slower earlier request,
 //!   or a request cancelled by `load` FALSE) is discarded; X_ITE lets it replace the current result
 //!   or show a disabled Inline.
-//! * A scene that is disposed takes its nested Inlines with it: their loads are cancelled, their
-//!   scenes are not live, the Scripts in them stop receiving `prepareEvents` and `eventsProcessed`.
+//! * A scene that is disposed takes its nested Inlines with it: their scenes are not live (a load that is
+//!   already in flight is not cancelled, as in X_ITE, issue #58), the Scripts in them stop receiving `prepareEvents` and `eventsProcessed`.
 //!   X_ITE leaves all of that running.
 //! * A scene that contains itself (directly, or through other scenes) is not loaded again: the
 //!   candidate fails with an error. X_ITE loads it without end.
@@ -385,7 +385,7 @@ impl Runtime {
     pub(crate) fn inline_request_is_current(&self, node: NodeId, generation: u64) -> bool {
         let current = matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::UrlObject(s)) if s.generation == generation && s.load_state == LoadState::InProgress);
 
-        current && !self.ctx_dead(self.scene.node(node).ctx)
+        current
     }
 
     /// X3DUrlObject.requestUnload.
@@ -798,6 +798,9 @@ impl Runtime {
 
         self.run_tasks();
 
+        // What a load that finished late built in a disposed scene has initialized by now (issue #58).
+        self.dispose_late_arrivals();
+
         // The end of a frame: nothing is being processed, and the scenes disposed during it are over.
         self.release_disposed();
     }
@@ -974,8 +977,9 @@ impl Runtime {
     /// every scene inside it (a nested Inline's scene, the body of a PROTO instance):
     ///
     /// * routes are deleted, scenes go not live;
-    /// * a nested Inline cancels its request and drops the scene it has parsed (X_ITE lets it finish);
-    ///   so does an EXTERNPROTO declaration of the scene (R0.3-E);
+    /// * a nested Inline drops the scene it has parsed, and a request that is not in flight; one that is in flight
+    ///   finishes, as in X_ITE (issue #58), and so does the load of an EXTERNPROTO declaration of the scene
+    ///   (R0.3-E); what such a load builds is disposed again at the end of the frame (`late_arrivals`);
     /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none, so the browser build skips it, see
     ///   [`Runtime::replace_skips_shutdown`]), then stops getting
     ///   `prepareEvents`, `eventsProcessed` and field events (X_ITE keeps calling them for ever).
@@ -1069,6 +1073,43 @@ impl Runtime {
         self.world_infos.retain(|_, list| !list.is_empty());
     }
 
+    /// Something was built under `ctx` after its scene had been disposed (a load that finished late, see
+    /// [`Runtime::extern_close`]): its Scripts have initialized and its observable work is done, so it is disposed
+    /// like the rest of the scene (routes deleted, not live, queued for the sweep). Nothing happens when `ctx` is
+    /// not inside a disposed scene.
+    pub(crate) fn dispose_late_arrivals(&mut self) {
+        for ctx in std::mem::take(&mut self.late_arrivals) {
+            self.dispose_late_arrival(ctx);
+        }
+    }
+
+    fn dispose_late_arrival(&mut self, ctx: CtxId) {
+        let mut c = ctx;
+
+        for _ in 0..256 {
+            if self.disposed_scenes.contains(&c) {
+                break;
+            }
+
+            match self.scene.ctx(c).outer {
+                Outer::Instance(n) => c = self.scene.node(n).ctx,
+                _ => match self.scene.ctx(c).parent {
+                    Some(p) => c = p,
+                    None => return,
+                },
+            }
+        }
+
+        if !self.disposed_scenes.contains(&c) {
+            return;
+        }
+
+        // `dispose_scene_with` runs once per root; this run covers what arrived since the first one. The Scripts
+        // that already had `shutdown ()` do not get it twice (`script_close`).
+        self.disposed_scenes.remove(&c);
+        self.dispose_scene_with(c, !self.replace_skips_shutdown);
+    }
+
     /// The world is unloaded (or replaced by another one): every Script in it gets `shutdown ()`
     /// (ISO/IEC 14772-1 4.12.3) and the world stops. Events the Scripts queued are left for the
     /// caller's next event processing.
@@ -1112,6 +1153,12 @@ impl Runtime {
 
         s.scene_closed = true;
         s.timer = None;
+
+        // A load in flight is not cancelled: X_ITE lets it finish (Inline.js has no abort on dispose), builds the
+        // disposed scene and initializes its Scripts (issue #58). The scene it delivers is not live (`ctx_live`).
+        if s.load_state == LoadState::InProgress {
+            return;
+        }
 
         self.inline_abort(node);
 
