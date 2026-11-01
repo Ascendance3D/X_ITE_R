@@ -4,9 +4,10 @@
 // (runtime02_harness.mjs).
 //
 // The media are clean synthetic files (worlds/movie, oracle/tools/gen_movie_web.py): 16 x 16 pixels (GIF, PNG) or
-// 64 x 64 (video), four solid frames of one second each: red, green, blue, yellow. The world shows them on an unlit
+// 64 x 64 (video), four solid frames of four seconds each: red, green, blue, yellow. The world shows them on an unlit
 // rectangle. The time is the browser's: the MovieTexture starts at a time the page reads, and the cases read the
-// color at the middle of each frame, so the values do not depend on the frame timing of either engine.
+// color early in each frame and accept a sample only when the whole capture was inside its frame, so the values do not depend on
+// the frame timing or the capture speed of either engine.
 
 import { readFileSync } from "node:fs";
 import { DESKTOP, settle } from "./runtime02_case.mjs";
@@ -61,9 +62,54 @@ const nodeState = page => page .evaluate (() =>
    };
 });
 
-// The video, GIF or PNG at `url` plays from a start time the page sets (with `loop`). The color before the start, then at the
-// middle of each of the four frames and once more in the next loop, and the node's state; `fields` goes into the node.
-async function framesCase (page, env, url, fields = "", loop = true)
+// Each media frame lasts FRAME seconds. A sample waits until PHASE seconds into its frame and takes the picture; the picture
+// is taken at some instant between the clock readings before and after the capture. The sample counts only if both readings
+// are inside the frame by MARGIN seconds, so the capture can last FRAME - PHASE - MARGIN seconds (3 s) in either engine and
+// the color is that of the intended frame. A sample whose capture was slower than that is taken again one loop later.
+const FRAME  = 4;
+const PHASE  = 0.5;
+const MARGIN = 0.5;
+
+// The color of media frame `n` (counted from the start, over loops) of a node that plays at `rate`, started at the page time
+// window .movieT0. `loop`: a sample that missed its window is taken again one loop (4 frames) later. After the end of a node
+// that does not loop (`n` >= 4) any instant counts.
+async function frameColor (page, env, n, rate, loop)
+{
+   const wall = FRAME / rate;
+
+   for (let attempt = 0; attempt < 3; ++ attempt)
+   {
+      const index = n + attempt * 4;
+
+      await page .evaluate (([ start ]) => new Promise (resolve =>
+      {
+         const wait = () => Date .now () / 1000 - window .movieT0 >= start ? resolve () : setTimeout (wait, 5);
+
+         wait ();
+      }),
+      [ index * wall + PHASE ]);
+
+      const before = await page .evaluate (() => Date .now () / 1000 - window .movieT0);
+      const color  = await centerColor (page, env);
+      const after  = await page .evaluate (() => Date .now () / 1000 - window .movieT0);
+
+      if (!loop && n >= 4)
+         return color;
+
+      if (before >= index * wall + MARGIN && after <= (index + 1) * wall - MARGIN)
+         return color;
+
+      if (!loop)
+         throw new Error (`the capture of frame ${n} took from ${before} to ${after} s, outside its window`);
+   }
+
+   throw new Error (`the capture of frame ${n} never fell inside its window`);
+}
+
+// The video, GIF or PNG at `url` plays from a start time the page sets (with `loop`). The color before the start, then the
+// color of each of the `frames` media frames (frame 4 is the first one again in the next loop), and the node's state;
+// `fields` goes into the node, `rate` is its speed.
+async function framesCase (page, env, url, { fields = "", loop = true, rate = 1, frames = [ 0, 1, 2, 3, 4 ] } = { })
 {
    const c = await sceneCase (page, env, MOVIE_WORLD ([ url ], fields), 1500);
 
@@ -85,18 +131,8 @@ async function framesCase (page, env, url, fields = "", loop = true)
 
    const colors = [ ];
 
-   for (const offset of [ 0.5, 1.5, 2.5, 3.5, 4.5 ])
-   {
-      await page .evaluate (offset => new Promise (resolve =>
-      {
-         const wait = () => Date .now () / 1000 - window .movieT0 >= offset ? resolve () : setTimeout (wait, 5);
-
-         wait ();
-      }),
-      offset);
-
-      colors .push (await centerColor (page, env));
-   }
+   for (const n of frames)
+      colors .push (await frameColor (page, env, n, rate, loop));
 
    const active = await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("M") .isActive);
 
@@ -128,10 +164,10 @@ export const movieFramesCases = {
    gifData: (page, env) => framesCase (page, env, `data:image/gif;base64,${fixture ("steps4.gif") .toString ("base64")}`),
 
    // The GIF does not loop: it stops on its last frame.
-   gifOnce: (page, env) => framesCase (page, env, GIF, "", false),
+   gifOnce: (page, env) => framesCase (page, env, GIF, { loop: false, frames: [ 0, 1, 2, 3, 5 ] }),
 
-   // The GIF at speed 0.5: each frame lasts two seconds (the frames at 0.5, 1.5, ... are red, red, green, green, blue).
-   gifSlow: (page, env) => framesCase (page, env, GIF, "speed 0.5"),
+   // The GIF at speed 0.5: each frame lasts twice as long, and the sample of frame n waits for it.
+   gifSlow: (page, env) => framesCase (page, env, GIF, { fields: "speed 0.5", rate: 0.5, frames: [ 0, 1, 2 ] }),
 };
 
 // A candidate after a candidate that does not play or load.
@@ -141,7 +177,7 @@ async function candidatesCase (page, env, urls, wait = 4000)
 
    const state = await nodeState (page);
 
-   await page .evaluate (() => { document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("M") .startTime = 1; });
+   // The node is not started: its texture shows the first frame.
    await settle (page, 500);
 
    return { loaded: await c .loaded (0), state, color: await centerColor (page, env), served: c .served (), console: c .console () .map (line => line .replace (/[?&]_=\d+/, "")) };
