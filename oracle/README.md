@@ -1178,3 +1178,11 @@ replays every world and fails on a missing reference, an error log or a picture 
 ```
 node oracle/x_ite-audio-sink.mjs oracle/web-audio-sink-baseline/sink-baseline.json --runs 3
 ```
+
+## Navigation items (issue #91, 2026-10-31)
+
+`synthetic-rea-b24-nav/` (generator `tools/gen_rea_b24_nav.py`) holds 40 navigation cases that batch 09 does not have: ceiling,
+step-up threshold, avatarSize variants, speed, Gravity, centerOfRotation, trackball (StraightenHorizon false), PLANE limits and
+double click, WALK in a tilted Transform. `tools/rea_b24_nav.py record` records each case from the pinned X_ITE three times
+(identical, no pictures) into `rea-batch24-nav-baseline/`; `crates/x3d-viewer/tests/rea_b24_nav.rs` compares Rust with it.
+The item lists of the five navigation subsystems are in `docs/reports/NAV_ITEM_LISTS.md`.

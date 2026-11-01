@@ -7069,11 +7069,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "x10 rotate/zoom suites"
+    "x10 rotate/zoom suites",
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
    ],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "missing": "not compared: two-finger touch pan and double tap (E15), a press outside the viewport (E16), the macOS scroll factor (E17); E14 (touch rotate and pinch) only in the x3d-web browser lane, E18 only through x10_compare.py on a private world",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 13 of 18 items compared in committed tests; new cases: centerOfRotation, OrthoViewpoint, trackball rotation and spin, spin stopped by a wheel step."
   },
   {
    "id": "sub:nav.walk-fly",
@@ -7086,10 +7087,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+   ],
+   "missing": "not compared: Rubberband overlay (F15), touch (F16), ContentScale (F17), macOS roll angle (F18)",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 14 of 18 items compared; new cases: StraightenHorizon false, FLY look-around past vertical, speed 0, 1 and 16, walk inside a tilted Transform."
   },
   {
    "id": "sub:nav.plane",
@@ -7103,11 +7106,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "x10 plane suite"
+    "x10 plane suite",
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
    ],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "missing": "not compared: touch (P09), macOS scroll factor (P10)",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 8 of 10 items compared; new cases: zoom-in limit (225 wheel steps), double click, Alt double click."
   },
   {
    "id": "sub:nav.lookat",
@@ -7121,11 +7125,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "x10 lookat suite"
+    "x10 lookat suite",
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
    ],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "missing": "not compared: touch (L06), macOS scroll factor (L07)",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 5 of 7 items compared; new case: lookat around a Viewpoint centerOfRotation."
   },
   {
    "id": "sub:nav.none",
@@ -7156,10 +7161,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+   ],
+   "missing": "not compared: active-layer gravity with two Layers (C17); C18 only indirectly through the trans-*-walk poses; probe distance differs from X_ITE by up to 1.3e-6 (5.7e-6 on a slanted wall, where the shape id also differs) so the new cases allow 1e-5",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. Non-particle cases C01-C16 compared: ceiling collision, step-up threshold (stepHeight 0, 0.75, 3), avatarHeight, collision radius 0 and 1, avatarSize defaults, speed, Gravity option. Fixed: avatarSize[0] = 0 makes X_ITE's collision depth NaN, so the avatar cannot move; collision_queries now returns NaN for radius 0."
   },
   {
    "id": "sub:nav.transitions",
