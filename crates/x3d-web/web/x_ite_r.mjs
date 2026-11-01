@@ -1388,6 +1388,9 @@ function getComponent (name, level)
 const givenSceneInfo = new WeakMap ();
 
 // The scene ids of the X3DScene objects the page dropped: a scene that is not the world is released with them.
+// The text and world URL of an X3DScene object whose world was replaced (X3DBrowser.replaceWorld).
+const replacedScenes = new WeakMap ();
+
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
 
 class X3DScene
@@ -2581,32 +2584,147 @@ class X3DBrowser
 
       try
       {
-         let id    = this .#sceneId (scene);
-         let owned = false;
+         const engine = this .#engine;
+         const handle = scene instanceof X3DScene ? scene [_node] : null;
+         const mine   = handle ?.browser === this && handle .scene !== null;
+         let id       = null;
+         let owned    = false;
+         let same     = false;
+         let fill     = null;
+         let revive   = null;
 
-         if (id === null)
+         if (mine && (!engine .exists (handle .scene) || engine .worldGeneration (handle .scene) !== handle .generation))
          {
-            if (scene !== null && scene !== undefined)
-               throw new Error ("X_ITE_R: Browser.replaceWorld: scene must be an X3DScene of this browser, null or undefined.");
+            // A scene of a world that was replaced: X_ITE keeps it usable, and it becomes the world again with what it held.
+            // The engine has disposed that world, so the scene is made again from the text kept when the world went.
+            revive = replacedScenes .get (scene);
 
-            // An empty scene has nothing to load.
-            id = this .#engine .prepareEmpty (this .baseURL, Date .now () / 1000);
-            this .#engine .loaded (id, Date .now () / 1000);
-            owned = true;
+            if (!revive)
+               engineOf (handle);
+
+            console .error ("X_ITE_R: Browser.replaceWorld: the scene belongs to a world that was replaced; the world is made again from the scene's text as it was then (nodes of the old world stay unusable).");
+         }
+         else if (mine)
+         {
+            id = this .#sceneId (scene);
+
+            // The scene that is the world: X_ITE runs the same shutdown and initialize events and keeps it.
+            if (id === engine .current)
+            {
+               same = true;
+               console .error ("X_ITE_R: Browser.replaceWorld: the scene is already the world; it stays the world.");
+            }
+         }
+         else if (scene !== null && scene !== undefined)
+         {
+            // X_ITE takes any other value for no scene: an empty world, or for an MFNode a world with its nodes as root nodes.
+            console .error ("X_ITE_R: Browser.replaceWorld: the argument is no X3DScene of this browser; the world is replaced by " +
+               (scene instanceof Fields .MFNode ? "a world with the root nodes of the MFNode." : "an empty world."));
+
+            if (scene instanceof Fields .MFNode)
+            {
+               const list = Array .from (scene);
+
+               fill = target => this .#fillRootNodes (target, list);
+            }
          }
 
-         if (id === this .#engine .current)
-            throw new Error ("X_ITE_R: the scene is already the world.");
+         if (!revive && id === null)
+         {
+            // An empty scene has nothing to load.
+            id = engine .prepareEmpty (this .baseURL, Date .now () / 1000);
+            engine .loaded (id, Date .now () / 1000);
+            owned = true;
+         }
 
          // `this [_fileLoader] ?.abort ()`: a loadURL that is still fetching fails.
          if (this .#fileLoader)
             this .#abortLoad (this .#fileLoader);
 
-         return this .#replaceWorld (id, owned, owned ? null : scene);
+         if (revive)
+         {
+            return this .#reviveScene (scene, revive) .then (revived => this .#replaceWorld (revived, false, scene));
+         }
+
+         return this .#replaceWorld (id, owned, owned ? null : scene, same, fill);
       }
       catch (error)
       {
          return Promise .reject (error);
+      }
+   }
+
+   // The root nodes of the MFNode `list` of replaceWorld as the root nodes of the empty scene `id`: the nodes are printed
+   // and made again in `id` (the old world is still current), as X_ITE's scene takes nodes of another scene. A NULL or
+   // a node of a world that is gone stays NULL.
+   #fillRootNodes (id, list)
+   {
+      const engine = this .#engine;
+      const groups = new Map ();
+      const roots  = list .map (() => null);
+
+      list .forEach ((node, i) =>
+      {
+         const h = node ?.[_node] ?? handleOf (node);
+
+         if (!h || h .browser !== this || h .released || !engine .exists (h .scene) || engine .worldGeneration (h .scene) !== h .generation)
+            return;
+
+         if (!groups .has (h .scene))
+            groups .set (h .scene, [ ]);
+
+         groups .get (h .scene) .push ([ i, h .id ]);
+      });
+
+      for (const [ scene, entries ] of groups)
+      {
+         const text = engine .printNodes (scene, "vrml", "MFNode", entries .map (e => e [1]));
+         const made = engine .createVrmlFromString (id, text, this .baseURL);
+
+         entries .forEach ((e, k) => { roots [e [0]] = k < made .length && made [k] >= 0 ? Number (made [k]) : null; });
+      }
+
+      engine .setRootNodes (id, roots);
+      this .#flushLog (id);
+   }
+
+   // A scene of a world that was replaced, made again: the text and world URL kept when the world went give a new engine
+   // scene, which the page's X3DScene object takes over (its identity stays). Resolves with the engine scene id.
+   async #reviveScene (scene, kept)
+   {
+      const handle = scene [_node];
+      const engine = this .#engine;
+      const now    = Date .now () / 1000;
+      const id     = engine .prepareString (kept .text, kept .url, now);
+
+      this .#flushLog (id);
+      await this .#loaded (id, () => this .#disposed);
+
+      handle .scene      = id;
+      handle .generation = engine .worldGeneration (id);
+      sceneRegistry .register (scene, { browser: this, scene: id });
+      this .#scenes .set (`${id}:${handle .generation}`, new WeakRef (scene));
+      return id;
+   }
+
+   // The text of the world that a replace removes, kept with its X3DScene object: X_ITE keeps a replaced scene usable, so the
+   // scene can become the world again (replaceWorld). The object holds it, and the text goes with the object.
+   #keepText ()
+   {
+      const engine  = this .#engine;
+      const current = engine .current;
+      const outgoing = this .#scene;
+
+      if (current === undefined || !outgoing || outgoing [_node] .scene !== current)
+         return;
+
+      try
+      {
+         replacedScenes .set (outgoing, { text: engine .printScene (current, "vrml"), url: engine .worldURL (current) });
+      }
+      catch (error)
+      {
+         // A world that cannot print is not made again: its scene stays stale.
       }
    }
 
@@ -2615,7 +2733,7 @@ class X3DBrowser
    // rejects this one with "Replacing world aborted.". `owned`: the adapter made the scene (loadURL, the empty
    // world), so a call that a newer one replaced releases it, unless the newer call uses the same scene. A scene of
    // the page (createX3DFromString) stays: its X3DScene releases it.
-   #replaceWorld (id, owned, scene = null)
+   #replaceWorld (id, owned, scene = null, same = false, fill = null)
    {
       return new Promise ((resolve, reject) =>
       {
@@ -2652,14 +2770,19 @@ class X3DBrowser
             if (!this .#engine .exists (id))
                throw new Error ("X_ITE_R: the scene is gone.");
 
-            this .#releaseInput ();
-            // The clock the engine keeps is the page's latest: with the canvas detached no frame has given a newer one.
-            this .#audioClock (this .#engine);
-            this .#engine .replace (id, Date .now () / 1000);
-            // The replaced world's sources stop now, not at the next frame (the canvas may be detached).
-            this .#flushAudio (this .#engine);
-            this .#scene = this .#sceneOf (id);
-            this .#flushLog ();
+            if (!same)
+            {
+               fill ?.(id);
+               this .#releaseInput ();
+               // The clock the engine keeps is the page's latest: with the canvas detached no frame has given a newer one.
+               this .#audioClock (this .#engine);
+               this .#keepText ();
+               this .#engine .replace (id, Date .now () / 1000);
+               // The replaced world's sources stop now, not at the next frame (the canvas may be detached).
+               this .#flushAudio (this .#engine);
+               this .#scene = this .#sceneOf (id);
+               this .#flushLog ();
+            }
 
             await nextFrame ();
 
