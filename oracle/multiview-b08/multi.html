@@ -47,6 +47,11 @@ brs .forEach ((b, i) =>
 
 let timers = [ ], timerId = 0;
 
+// Date.now () is the virtual DATE from the start, not only after start (): X3DTimeDependentNode.real_pause / real_resume
+// (a time-dependent node that starts before its scene is live) measure the pause with Date.now (), and a real clock
+// over the load made the pause interval the wall-clock load time (1.017 s) and elapsedTime of an AudioClip negative.
+Date .now = () => DATE;
+
 function installVirtualClock ()
 {
    Date .now = () => DATE;
