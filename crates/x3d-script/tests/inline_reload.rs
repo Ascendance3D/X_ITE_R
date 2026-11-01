@@ -16,7 +16,7 @@
 
 mod inline_common;
 
-use inline_common::{big_stack, case_names, oracle_root, run_scenario};
+use inline_common::{big_stack, case_names, oracle_root, run_scenario_with};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::path::Path;
@@ -91,10 +91,15 @@ fn baseline() -> HashMap<String, Value> {
 }
 
 /// Compare one case; returns the differences as `(step, field, x_ite, rust)`.
-fn compare_case(name: &str, expected: &Value) -> Vec<(u64, &'static str, String, String)> {
+fn compare_case(
+    name: &str,
+    expected: &Value,
+    browser: bool,
+) -> Vec<(u64, &'static str, String, String)> {
     let actual = {
         let n = name.to_string();
-        big_stack(move || run_scenario(&n)).unwrap_or_else(|e| panic!("{name}: {e}"))
+        big_stack(move || run_scenario_with(&n, move |rt| rt.replace_skips_shutdown = browser))
+            .unwrap_or_else(|e| panic!("{name}: {e}"))
     };
 
     let (es, as_) = (
@@ -129,7 +134,27 @@ fn compare_case(name: &str, expected: &Value) -> Vec<(u64, &'static str, String,
 /// checked by `inline_reload_safety.rs`.
 #[test]
 fn synthetic_inline_reload_matches_x_ite() {
-    let (base, known) = (baseline(), known());
+    check_all(false);
+}
+
+/// The browser build (`Runtime::replace_skips_shutdown`, issues #52 and #202) follows X_ITE when an Inline
+/// unloads or reloads: no Script of the old scene gets `shutdown ()`. The entries of the table that exist only for
+/// that call are left out, so every step of every case must equal the pinned X_ITE without them.
+#[test]
+fn synthetic_inline_reload_browser_build_matches_x_ite_shutdown() {
+    check_all(true);
+}
+
+fn check_all(browser: bool) {
+    let (base, mut known) = (baseline(), known());
+
+    if browser {
+        let before = known.len();
+
+        known.retain(|k| !k.4.contains("Script.shutdown ()"));
+        assert!(before - known.len() >= 30, "the shutdown entries are there");
+    }
+
     let mut unexplained = vec![];
     let mut used = vec![false; known.len()];
     let mut exact = 0;
@@ -146,7 +171,7 @@ fn synthetic_inline_reload_matches_x_ite() {
 
         compared += 1;
 
-        let diffs = compare_case(&name, expected);
+        let diffs = compare_case(&name, expected, browser);
 
         if diffs.is_empty() {
             exact += 1;
