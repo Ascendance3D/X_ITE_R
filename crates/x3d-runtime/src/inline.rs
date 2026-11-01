@@ -531,7 +531,13 @@ impl Runtime {
         self.sync_svg_quality();
 
         // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
-        let parsed = self.parse_candidate(data, url.as_str());
+        let mut parsed = self.parse_candidate(data, url.as_str());
+
+        // `Promise .all` rejects at the first buffer that failed, also while others are in flight: the Inline goes on
+        // to its next url at once and the other buffers are followed (issue #128).
+        if let Some(thrown) = self.gltf_buffer_failed_first(&mut parsed) {
+            return Err(thrown);
+        }
 
         // `await buffersArray`: the scene is built when the buffers are in.
         if parsed.buffers_pending {
