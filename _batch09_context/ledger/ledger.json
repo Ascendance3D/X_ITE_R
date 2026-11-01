@@ -5520,12 +5520,14 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "mapping field (multi-texture mapping) not used by the renderer",
-   "oracle": "",
-   "notes": ""
+   "tests": [
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs (texcoord-mapping, phong-textures-mapping: PhysicalMaterial and Material texture mappings against MultiTextureCoordinate, TextureCoordinateGenerator and MultiTextureTransform mappings, an unmatched mapping, a repeated mapping; MSAA 0 and 4)"
+   ],
+   "missing": "",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97) pictures at MSAA 0 and 4: oracle/render-rea-b09-inputs-baseline and render-msaa4-rea-b09-inputs-baseline (texcoord-mapping.wrl, phong-textures-mapping.wrl)",
+   "notes": "Issue #71 2026-10-31: no renderer change was needed; the mapping worlds recorded in batch 09 already match. Mutation: mapping_channel always 0 fails all four mapping shots. Not pinned: first-match against last-match of a repeated mapping name (the repeated-name case renders the same either way)."
   },
   {
    "id": "node:TextureCoordinateGenerator",
