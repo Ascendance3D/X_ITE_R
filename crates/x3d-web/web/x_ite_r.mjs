@@ -2142,6 +2142,8 @@ class X3DBrowser
          this .#engine .setLive (this .#live);
          // Mute and SoundIntensity set before the engine was ready: the engine takes them for the worlds to come.
          this .#applySoundOptions ();
+         // The options the engine reads itself, set before the engine was ready.
+         this .#applyEngineOptions ();
          // Shading and Multisampling set before the engine was ready, and the samples the device supports.
          this .#applyDerivedRendering ();
          this .#listen ();
@@ -2326,6 +2328,11 @@ class X3DBrowser
       if (field === this .#options .get ("Mute") || field === this .#options .get ("SoundIntensity"))
          this .#applySoundOptions ();
 
+      const engineOption = X3DBrowser .#engineOptions .find (name => this .#options .get (name) === field);
+
+      if (engineOption)
+         this .#applyEngineOption (engineOption);
+
       if (field === this .#options .get ("Shading"))
          this .#updateShading ();
 
@@ -2334,6 +2341,27 @@ class X3DBrowser
 
       if (field === this .#options .get ("Multisampling") || field === this .#options .get ("Antialiased"))
          this .#updateMultisampling ();
+   }
+
+   // The options the shared engine reads itself (WebBrowser.setEngineOption): EnableInlineViewpoints
+   // (X3DLayerNode.getUserViewpoints), LoadUrlObjects (X3DUrlObject.requestImmediateLoad), StraightenHorizon
+   // (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll) and Gravity (X3DRenderObject.gravitate).
+   static #engineOptions = [ "EnableInlineViewpoints", "LoadUrlObjects", "StraightenHorizon", "Gravity" ];
+
+   #applyEngineOptions ()
+   {
+      for (const name of X3DBrowser .#engineOptions)
+         this .#applyEngineOption (name);
+   }
+
+   #applyEngineOption (name)
+   {
+      if (!this .#engine)
+         return;
+
+      const value = this .#options .get (name) .getValue ();
+
+      this .#engine .setEngineOption (name, typeof value === "boolean" ? value : false, typeof value === "number" ? value : 0);
    }
 
    // The options Mute and SoundIntensity, now and for the worlds to come (the engine keeps them).

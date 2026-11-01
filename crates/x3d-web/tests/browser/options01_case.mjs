@@ -56,6 +56,18 @@ async function load (page)
    await settle (page, 100);
 }
 
+async function loadWorld (page, url)
+{
+   await page .evaluate (pageLoadURL, [ url ]);
+
+   const result = await page .evaluate (() => window .pending);
+
+   if (result !== "resolved")
+      throw new Error (`the world did not load: ${result}\n${page .log .join ("\n")}`);
+
+   await settle (page, 300);
+}
+
 // The result of `fn`, or its error as `Name: message`; the same text in both engines. NaN and undefined are
 // written as text, which the JSON of the recording would turn into null.
 export function pageAttempt ()
@@ -526,7 +538,235 @@ async function debugKeys (page)
    return out;
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys };
+// LoadUrlObjects (X3DUrlObject.requestImmediateLoad of X_ITE 16.5.0): with the option FALSE an Inline of a world does not
+// start to load. The option is read when a load starts, so a load that is complete stays, setting the option TRUE does not
+// start the load by itself, and a new `url` does. Observed through the public SAI: the Inline's document has the only
+// Viewpoint, so `browser.firstViewpoint ()` binds it (`browser.activeViewpoint`, its description) only after the Inline has
+// loaded; an Inline's viewpoints are listed, not bound by themselves.
+const INNER = encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { description "inline viewpoint" }
+`);
+
+const URL_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF I Inline { url "data:model/x3d-vrml,${INNER}" }
+Shape { geometry Box { } }
+`)}`;
+
+async function loadUrlObjects (page)
+{
+   const browser = fn => page .evaluate (fn);
+   const prints  = async () =>
+   {
+      await settle (page, 500);
+      await browser (() => document .querySelector ("x3d-canvas") .browser .firstViewpoint ());
+      await settle (page, 300);
+
+      return browser (() => document .querySelector ("x3d-canvas") .browser .activeViewpoint ?.description ?? null);
+   };
+
+   const out = { };
+
+   // The default: the Inline loads.
+   await loadWorld (page, URL_WORLD);
+   out .default = { option: await browser (() => document .querySelector ("x3d-canvas") .browser .getBrowserOption ("LoadUrlObjects")), active: await prints () };
+
+   // The option FALSE before the world: the Inline does not start.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", false));
+   await loadWorld (page, URL_WORLD);
+   out .off = { option: await browser (() => document .querySelector ("x3d-canvas") .browser .getBrowserOption ("LoadUrlObjects")), active: await prints () };
+
+   // A new url with the option still FALSE: still nothing.
+   const setUrl = url => page .evaluate (url => { document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("I") .url = [ url ]; }, url);
+
+   await setUrl (`data:model/x3d-vrml,${INNER}`);
+   await settle (page, 300);
+   out .offUrl = await prints ();
+
+   // The option TRUE: nothing starts by itself; a new url does.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", true));
+   await settle (page, 300);
+   out .onIdle = await prints ();
+
+   await setUrl (`data:model/x3d-vrml,${INNER}`);
+   await settle (page, 300);
+   out .onUrl = await prints ();
+
+   // A load that is complete stays when the option goes FALSE, and a new url then loads nothing.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", false));
+   await setUrl (`data:model/x3d-vrml,${INNER}#again`);
+   await settle (page, 300);
+   out .completeThenOff = await prints ();
+
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", true));
+
+   return out;
+}
+
+// EnableInlineViewpoints (X3DLayerNode.getUserViewpoints of X_ITE 16.5.0): the viewpoints with a description that
+// firstViewpoint, previousViewpoint, nextViewpoint and lastViewpoint walk include those of Inline scenes only while the
+// option is TRUE; the option is read at each call. Observed through the public SAI: the description of
+// `browser.activeViewpoint` after each call, with the option true (the default), false, and true again.
+const INLINE_VP = encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { description "inline one" }
+Viewpoint { description "inline two" }
+`);
+
+const VP_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { description "main one" }
+Inline { url "data:model/x3d-vrml,${INLINE_VP}" }
+Viewpoint { description "main two" }
+Viewpoint { }
+`)}`;
+
+async function enableInlineViewpoints (page)
+{
+   await loadWorld (page, VP_WORLD);
+   await settle (page, 500);
+
+   const walk = () => page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const wait    = () => new Promise (resolve => setTimeout (resolve, 150));
+      const active  = () => browser .activeViewpoint ?.description ?? null;
+      const out     = { option: browser .getBrowserOption ("EnableInlineViewpoints") };
+
+      for (const call of [ "firstViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint", "nextViewpoint",
+                           "previousViewpoint", "previousViewpoint", "lastViewpoint", "previousViewpoint" ])
+      {
+         browser [call] ();
+         await wait ();
+         (out .sequence ??= [ ]) .push ([ call, active () ]);
+      }
+
+      return out;
+   });
+
+   const out = { };
+
+   out .on = await walk ();
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("EnableInlineViewpoints", false));
+   out .off = await walk ();
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("EnableInlineViewpoints", true));
+   out .onAgain = await walk ();
+
+   return out;
+}
+
+// StraightenHorizon (BrowserOptions.set_StraightenHorizon__ and X3DBrowser.viewAll of X_ITE 16.5.0): setting the option
+// TRUE straightens the active layer's view with a one second transition (X3DViewpointNode.straightenView); viewAll
+// straightens the new view while the option is TRUE. Observed through the public SAI: the `orientation_changed` and
+// `position_changed` of a ProximitySensor around the world (the user's view, rounded to four decimals) after the
+// transition, and after `viewAll (0)`.
+const STRAIGHTEN_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF P ProximitySensor { size 1e6 1e6 1e6 }
+Viewpoint { position 0 0 10 orientation 0 0 1 0.6 }
+Transform { translation 2 1 0 children Shape { geometry Box { size 2 3 1 } } }
+`)}`;
+
+async function straightenHorizon (page)
+{
+   const read = () => page .evaluate (() =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const P       = browser .currentScene .getNamedNode ("P");
+      const round   = array => array .map (value => Math .round (value * 10000) / 10000 + 0);
+
+      return { option: browser .getBrowserOption ("StraightenHorizon"), orientation: round ([ P .orientation_changed .x, P .orientation_changed .y, P .orientation_changed .z, P .orientation_changed .angle ]), position: round ([ P .position_changed .x, P .position_changed .y, P .position_changed .z ]) };
+   });
+
+   const out = { };
+
+   const option = value => page .evaluate (value => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("StraightenHorizon", value), value);
+
+   // The default (TRUE): the view of a rolled viewpoint is straight at once.
+   await loadWorld (page, STRAIGHTEN_WORLD);
+   out .initial = await read ();
+
+   // FALSE before the world: the view stays rolled, whatever the option does later when it stays FALSE; TRUE straightens it.
+   await option (false);
+   await loadWorld (page, STRAIGHTEN_WORLD);
+   out .off = await read ();
+
+   await option (false);
+   await settle (page, 1500);
+   out .offAgain = await read ();
+
+   await option (true);
+   await settle (page, 1800);
+   out .on = await read ();
+
+   // viewAll with the option FALSE and TRUE, each on a fresh world with a rolled view.
+   for (const value of [ false, true ])
+   {
+      await option (false);
+      await loadWorld (page, STRAIGHTEN_WORLD);
+      await option (value);
+      await settle (page, 1800);
+      await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .viewAll (0));
+      await settle (page, 500);
+      out [value ? "viewAllOn" : "viewAllOff"] = await read ();
+   }
+
+   await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("StraightenHorizon", true));
+
+   return out;
+}
+
+// Gravity (X3DRenderObject.gravitate of X_ITE 16.5.0): a WALK viewer above the floor falls with the acceleration `Gravity`
+// (the speed grows by Gravity / frame rate) and stops at the avatar height; with Gravity 0 it never starts to fall. The
+// option is read in every frame. Observed through the public SAI: the user's position (a ProximitySensor's
+// `position_changed`, four decimals) after the frames of the fall, which the floor and the avatar height fix.
+const GRAVITY_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF P ProximitySensor { size 1e6 1e6 1e6 }
+NavigationInfo { type "WALK" avatarSize [ 0.25 1.6 0.75 ] }
+Viewpoint { position 0 3 10 }
+Transform { translation 0 -0.1 0 children Shape { geometry Box { size 100 0.2 100 } } }
+`)}`;
+
+async function gravity (page)
+{
+   const read = () => page .evaluate (() =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const P       = browser .currentScene .getNamedNode ("P");
+      const round   = array => array .map (value => Math .round (value * 10000) / 10000 + 0);
+
+      return { option: browser .getBrowserOption ("Gravity"), position: round ([ P .position_changed .x, P .position_changed .y, P .position_changed .z ]) };
+   });
+
+   const option = value => page .evaluate (value => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("Gravity", value), value);
+   const out    = { };
+
+   // The default: the viewer falls from 3 to the avatar height 1.6 above the floor.
+   await loadWorld (page, GRAVITY_WORLD);
+   await settle (page, 3000);
+   out .default = await read ();
+
+   // Gravity 0 before the world: the viewer stays where the viewpoint put it.
+   await option (0);
+   await loadWorld (page, GRAVITY_WORLD);
+   await settle (page, 3000);
+   out .zero = await read ();
+
+   // The option is read in every frame: the viewer falls when it is set.
+   await option (9.80665);
+   await settle (page, 3000);
+   out .restored = await read ();
+
+   await option (9.80665);
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects, enableInlineViewpoints, straightenHorizon, gravity };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };

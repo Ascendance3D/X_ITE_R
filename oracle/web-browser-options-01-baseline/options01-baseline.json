@@ -2698,6 +2698,269 @@
     "live": true,
     "debug": true
    }
+  },
+  "browserOptions.loadUrlObjects": {
+   "default": {
+    "option": true,
+    "active": "inline viewpoint"
+   },
+   "off": {
+    "option": false,
+    "active": null
+   },
+   "offUrl": null,
+   "onIdle": null,
+   "onUrl": "inline viewpoint",
+   "completeThenOff": "inline viewpoint"
+  },
+  "browserOptions.enableInlineViewpoints": {
+   "on": {
+    "option": true,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "nextViewpoint",
+      "inline two"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "inline two"
+     ]
+    ]
+   },
+   "off": {
+    "option": false,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ]
+    ]
+   },
+   "onAgain": {
+    "option": true,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "nextViewpoint",
+      "inline two"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "inline two"
+     ]
+    ]
+   }
+  },
+  "browserOptions.straightenHorizon": {
+   "initial": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "off": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "offAgain": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "on": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     0,
+     0,
+     10
+    ]
+   },
+   "viewAllOff": {
+    "option": false,
+    "orientation": [
+     0,
+     0,
+     1,
+     0.6
+    ],
+    "position": [
+     2,
+     1,
+     5.2872
+    ]
+   },
+   "viewAllOn": {
+    "option": true,
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "position": [
+     2,
+     1,
+     4.4835
+    ]
+   }
+  },
+  "browserOptions.gravity": {
+   "default": {
+    "option": 9.80665,
+    "position": [
+     0,
+     1.6,
+     10
+    ]
+   },
+   "zero": {
+    "option": 0,
+    "position": [
+     0,
+     3,
+     10
+    ]
+   },
+   "restored": {
+    "option": 9.80665,
+    "position": [
+     0,
+     1.6,
+     10
+    ]
+   }
   }
  }
 }

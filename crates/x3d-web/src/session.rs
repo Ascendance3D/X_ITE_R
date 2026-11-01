@@ -496,6 +496,15 @@ impl Session {
         set_sound_options(self.rt_mut(), mute, intensity);
     }
 
+    /// `setBrowserOption (name, value)` for an option the engine reads itself (see `WebBrowser::set_engine_option`).
+    pub fn set_engine_option(
+        &mut self,
+        name: &str,
+        value: x3d_runtime::browser_options::OptionValue,
+    ) {
+        self.rt_mut().browser_options.set_option(name, value);
+    }
+
     /// The world's audio graph ([`x3d_runtime::sound::AudioEngine::graph`]), or `None` while no Sound node has made the audio
     /// context.
     pub fn audio_graph(&self) -> Option<x3d_runtime::sound::AudioGraph> {
