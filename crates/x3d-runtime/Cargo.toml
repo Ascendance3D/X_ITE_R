@@ -14,7 +14,7 @@ x3d-text = { path = "../x3d-text" }
 url = "2"
 percent-encoding = "2"
 # Image headers only (X3DTexture2DNode width and height); the same crate x3d-render decodes with.
-image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp", "webp"] }
 # The Sound component (sound.rs): a Rust implementation of the W3C Web Audio API, the API X_ITE's
 # Sound nodes are written against. Its default backend is cpal (ALSA on Linux, CoreAudio on macOS).
 web-audio-api = "1.7.0"
