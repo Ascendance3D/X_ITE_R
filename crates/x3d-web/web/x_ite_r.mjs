@@ -1713,11 +1713,15 @@ const BROWSER_PROPERTIES = [
 // The aliases of BrowserOptions and RenderingProperties: AntiAliased is Antialiased.
 const ALIASES = Object .assign (Object .create (null), { AntiAliased: "Antialiased" });
 
-// The rendering properties that are the value of a browser option. X_ITE's Shading, Antialiased, ContentScale and
-// Multisampling properties are derived from the options and the context (the shading name, the samples clamped to
-// the context's maximum, whether the context is multisampled) and are not implemented.
+// The rendering properties that are the value of a browser option (LogarithmicDepthBuffer). Shading, Antialiased,
+// ContentScale and Multisampling are derived from the options and the context (#derivedRendering); the rest describe
+// X_ITE's WebGL context and are not implemented.
 const RENDERING_OPTIONS     = [ "LogarithmicDepthBuffer" ];
-const RENDERING_UNSUPPORTED = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling", "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+const RENDERING_DERIVED     = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling" ];
+const RENDERING_UNSUPPORTED = [ "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+
+// Shading.js: the names of the shading option; "POINTSET" is "POINT", any other text is GOURAUD.
+const SHADINGS = [ "POINT", "WIREFRAME", "FLAT", "GOURAUD", "PHONG" ];
 
 class X3DBrowser
 {
@@ -1798,6 +1802,8 @@ class X3DBrowser
          this .#engine .setLive (this .#live);
          // Mute and SoundIntensity set before the engine was ready: the engine takes them for the worlds to come.
          this .#applySoundOptions ();
+         // Shading and Multisampling set before the engine was ready, and the samples the device supports.
+         this .#applyDerivedRendering ();
          this .#listen ();
          this .#start ();
 
@@ -1868,6 +1874,46 @@ class X3DBrowser
       throw new Error (`Unknown field '${name}' in node class ${typeName}.`);
    }
 
+   // The derived rendering properties (BrowserOptions.set_Shading__, set_ContentScale__, set_Multisampling__,
+   // set_Antialiased__). Multisampling is clamped to the samples the device supports (X_ITE: getMaxSamples ()), and
+   // Antialiased is true while that count is above 0, whatever the Antialiased option says.
+   #derived = { Shading: "GOURAUD", Antialiased: true, ContentScale: 1, Multisampling: 4 };
+
+   #maxSamples () { return this .#engine ?.maxSamples ?? 4; }
+
+   #updateShading ()
+   {
+      const text = this .#options .get ("Shading") .getValue () .replace ("POINTSET", "POINT");
+
+      this .#derived .Shading = SHADINGS .includes (text) ? text : "GOURAUD";
+      this .#engine ?.setShading (this .#derived .Shading);
+   }
+
+   #updateContentScale ()
+   {
+      const value = this .#options .get ("ContentScale") .getValue ();
+
+      this .#derived .ContentScale = value === -1 ? this .#contentScale () : Math .max (value, 0) || 1;
+   }
+
+   #updateMultisampling ()
+   {
+      const requested = this .#options .get ("Multisampling") .getValue ();
+      const samples   = Math .min (Math .max (isNaN (requested) ? 4 : requested, 0), this .#maxSamples ());
+
+      this .#derived .Multisampling = this .#options .get ("Antialiased") .getValue () ? samples : 0;
+      this .#derived .Antialiased   = samples > 0;
+      this .#engine ?.setSampleCount (this .#derived .Multisampling);
+   }
+
+   // Applies every derived property to the engine, once it exists.
+   #applyDerivedRendering ()
+   {
+      this .#updateShading ();
+      this .#updateContentScale ();
+      this .#updateMultisampling ();
+   }
+
    getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
 
    setBrowserOption (name, value)
@@ -1884,6 +1930,15 @@ class X3DBrowser
 
       if (field === this .#options .get ("Mute") || field === this .#options .get ("SoundIntensity"))
          this .#applySoundOptions ();
+
+      if (field === this .#options .get ("Shading"))
+         this .#updateShading ();
+
+      if (field === this .#options .get ("ContentScale"))
+         this .#updateContentScale ();
+
+      if (field === this .#options .get ("Multisampling") || field === this .#options .get ("Antialiased"))
+         this .#updateMultisampling ();
    }
 
    // The options Mute and SoundIntensity, now and for the worlds to come (the engine keeps them).
@@ -1985,6 +2040,9 @@ class X3DBrowser
 
       if (RENDERING_OPTIONS .includes (name))
          return this .getBrowserOption (name);
+
+      if (RENDERING_DERIVED .includes (name))
+         return this .#derived [ALIASES [name] ?? name];
 
       if (RENDERING_UNSUPPORTED .includes (name))
          throw new Error (`X_ITE_R: the rendering property '${name}' is not implemented.`);
