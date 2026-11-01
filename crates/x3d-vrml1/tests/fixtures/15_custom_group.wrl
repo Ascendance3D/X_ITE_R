@@ -1,0 +1,8 @@
+#VRML V1.0 ascii
+Group {
+  Material { diffuseColor 1 1 0 }
+  Cube { }
+}
+Sphere { }
+Unknown { fields [ SFString foo, SFLong bar ] foo "x" bar 3 Cube { } }
+Cone { }

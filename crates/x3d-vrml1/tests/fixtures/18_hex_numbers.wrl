@@ -1,0 +1,5 @@
+#VRML V1.0 ascii
+Separator {
+  Coordinate3 { point [ 1e1 -2.5E-1 .5, +3. 4 5 ] }
+  IndexedFaceSet { coordIndex [ 0x0, 1, 0x1, -1 ] }
+}

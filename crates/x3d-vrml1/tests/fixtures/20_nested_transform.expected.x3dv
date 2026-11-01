@@ -1,0 +1,43 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Transform {
+  translation 0.7529222 1.986343 2
+  rotation 0 0 1 0.7854
+  scale 2 1 1
+  scaleOrientation 0 0 0.999999999999997 0.500000000000001
+  children [
+    Shape {
+      appearance Appearance {
+        material DEF _1 Material { }
+      }
+      geometry Box { }
+    }
+    Transform {
+      translation 0 2.866009 0.2955202
+      rotation 1 0 0 0.299999999999999
+      scale 1 3 1
+      scaleOrientation -0.999999999999998 0 0 0.300000000000001
+      children Shape {
+        appearance Appearance {
+          material USE _1
+        }
+        geometry Sphere { }
+      }
+    }
+  ]
+}
+
+Shape {
+  appearance Appearance {
+    material USE _1
+  }
+  geometry Box { }
+}

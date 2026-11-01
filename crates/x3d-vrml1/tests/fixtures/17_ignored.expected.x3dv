@@ -1,0 +1,18 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Transform {
+  children Shape {
+    appearance Appearance {
+      material Material { }
+    }
+    geometry Box { }
+  }
+}

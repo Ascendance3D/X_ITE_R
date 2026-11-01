@@ -1,0 +1,35 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Transform {
+  children [
+    Viewpoint {
+      position 0 1 5
+      orientation 0 1 0 0.3
+      fieldOfView 0.5
+      nearDistance 0.1
+      farDistance 50
+    }
+    DirectionalLight {
+      color 1 0.5 0
+      intensity 0.5
+      direction 0 -1 0
+    }
+    PointLight {
+      on FALSE
+      location 1 2 3
+    }
+    SpotLight {
+      location 0 5 0
+      direction 0 -1 0
+      cutOffAngle 0.5
+    }
+  ]
+}

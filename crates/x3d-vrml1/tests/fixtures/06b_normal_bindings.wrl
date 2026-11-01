@@ -1,0 +1,13 @@
+#VRML V1.0 ascii
+Separator {
+  Coordinate3 { point [ 0 0 0, 1 0 0, 1 1 0 ] }
+  Normal { vector [ 0 0 1, 0 1 0 ] }
+  NormalBinding { value PER_FACE }
+  IndexedFaceSet { coordIndex [ 0, 1, 2, -1 ] }
+  NormalBinding { value PER_FACE_INDEXED }
+  IndexedFaceSet { coordIndex [ 0, 1, 2, -1 ] normalIndex [ 1, -1 ] }
+  NormalBinding { value PER_VERTEX }
+  IndexedFaceSet { coordIndex [ 0, 1, 2, -1 ] }
+  NormalBinding { value PER_VERTEX_INDEXED }
+  IndexedFaceSet { coordIndex [ 0, 1, 2, -1 ] normalIndex [ 0, 1, 0, -1 ] }
+}

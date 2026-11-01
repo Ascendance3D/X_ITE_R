@@ -1,0 +1,10 @@
+#VRML V1.0 ascii
+Separator {
+  WWWInline { name "part.wrl" bboxSize 1 1 1 }
+  WWWAnchor {
+    name "http://example.test/next.wrl"
+    description "next"
+    Cube { }
+  }
+}
+WWWInline { name [ "a.wrl", "b.wrl" ] }

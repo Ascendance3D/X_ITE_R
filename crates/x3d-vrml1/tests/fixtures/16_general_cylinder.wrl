@@ -1,0 +1,5 @@
+#VRML V1.0 ascii
+Separator {
+  ShapeHints { vertexOrdering COUNTERCLOCKWISE creaseAngle 0.8 }
+  GeneralCylinder { parts (TOP | BOTTOM) }
+}

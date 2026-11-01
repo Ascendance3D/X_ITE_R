@@ -1,0 +1,34 @@
+#X3D V4.1 utf8 X_ITE V16.7.0
+
+PROFILE Interchange
+
+COMPONENT EnvironmentalSensor : 3
+COMPONENT PointingDeviceSensor : 1
+COMPONENT Scripting : 1
+COMPONENT Sound : 3
+COMPONENT Text : 2
+
+Shape {
+  appearance Appearance {
+    material DEF _1 Material {
+      ambientIntensity 0.2
+      diffuseColor 1 1 0
+      shininess 0.2
+    }
+  }
+  geometry Box { }
+}
+
+Shape {
+  appearance Appearance {
+    material USE _1
+  }
+  geometry Sphere { }
+}
+
+Shape {
+  appearance Appearance {
+    material USE _1
+  }
+  geometry Cone { }
+}
