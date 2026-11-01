@@ -2698,6 +2698,20 @@
     "live": true,
     "debug": true
    }
+  },
+  "browserOptions.loadUrlObjects": {
+   "default": {
+    "option": true,
+    "active": "inline viewpoint"
+   },
+   "off": {
+    "option": false,
+    "active": null
+   },
+   "offUrl": null,
+   "onIdle": null,
+   "onUrl": "inline viewpoint",
+   "completeThenOff": "inline viewpoint"
   }
  }
 }

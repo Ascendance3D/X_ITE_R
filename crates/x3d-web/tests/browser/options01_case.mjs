@@ -56,6 +56,18 @@ async function load (page)
    await settle (page, 100);
 }
 
+async function loadWorld (page, url)
+{
+   await page .evaluate (pageLoadURL, [ url ]);
+
+   const result = await page .evaluate (() => window .pending);
+
+   if (result !== "resolved")
+      throw new Error (`the world did not load: ${result}\n${page .log .join ("\n")}`);
+
+   await settle (page, 300);
+}
+
 // The result of `fn`, or its error as `Name: message`; the same text in both engines. NaN and undefined are
 // written as text, which the JSON of the recording would turn into null.
 export function pageAttempt ()
@@ -526,7 +538,73 @@ async function debugKeys (page)
    return out;
 }
 
-const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys };
+// LoadUrlObjects (X3DUrlObject.requestImmediateLoad of X_ITE 16.5.0): with the option FALSE an Inline of a world does not
+// start to load. The option is read when a load starts, so a load that is complete stays, setting the option TRUE does not
+// start the load by itself, and a new `url` does. Observed through the public SAI: the Inline's document has the only
+// Viewpoint, so `browser.firstViewpoint ()` binds it (`browser.activeViewpoint`, its description) only after the Inline has
+// loaded; an Inline's viewpoints are listed, not bound by themselves.
+const INNER = encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { description "inline viewpoint" }
+`);
+
+const URL_WORLD = `data:model/x3d-vrml,${encodeURIComponent (`#X3D V4.0 utf8
+PROFILE Interchange
+DEF I Inline { url "data:model/x3d-vrml,${INNER}" }
+Shape { geometry Box { } }
+`)}`;
+
+async function loadUrlObjects (page)
+{
+   const browser = fn => page .evaluate (fn);
+   const prints  = async () =>
+   {
+      await settle (page, 500);
+      await browser (() => document .querySelector ("x3d-canvas") .browser .firstViewpoint ());
+      await settle (page, 300);
+
+      return browser (() => document .querySelector ("x3d-canvas") .browser .activeViewpoint ?.description ?? null);
+   };
+
+   const out = { };
+
+   // The default: the Inline loads.
+   await loadWorld (page, URL_WORLD);
+   out .default = { option: await browser (() => document .querySelector ("x3d-canvas") .browser .getBrowserOption ("LoadUrlObjects")), active: await prints () };
+
+   // The option FALSE before the world: the Inline does not start.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", false));
+   await loadWorld (page, URL_WORLD);
+   out .off = { option: await browser (() => document .querySelector ("x3d-canvas") .browser .getBrowserOption ("LoadUrlObjects")), active: await prints () };
+
+   // A new url with the option still FALSE: still nothing.
+   const setUrl = url => page .evaluate (url => { document .querySelector ("x3d-canvas") .browser .currentScene .getNamedNode ("I") .url = [ url ]; }, url);
+
+   await setUrl (`data:model/x3d-vrml,${INNER}`);
+   await settle (page, 300);
+   out .offUrl = await prints ();
+
+   // The option TRUE: nothing starts by itself; a new url does.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", true));
+   await settle (page, 300);
+   out .onIdle = await prints ();
+
+   await setUrl (`data:model/x3d-vrml,${INNER}`);
+   await settle (page, 300);
+   out .onUrl = await prints ();
+
+   // A load that is complete stays when the option goes FALSE, and a new url then loads nothing.
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", false));
+   await setUrl (`data:model/x3d-vrml,${INNER}#again`);
+   await settle (page, 300);
+   out .completeThenOff = await prints ();
+
+   await browser (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("LoadUrlObjects", true));
+
+   return out;
+}
+
+const cases = { defaults, setValid, coercion, unknownNames, properties, rendering, renderingDerived, renderingContext, output, notification, debugKeys, loadUrlObjects };
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };
