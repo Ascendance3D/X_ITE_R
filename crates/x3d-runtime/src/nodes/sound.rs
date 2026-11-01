@@ -611,7 +611,7 @@ impl Runtime {
                 }
 
                 self.sound_interest(node, "mediaDeviceID", SoundCb::MediaDeviceId);
-                self.destination_set_media_device_id(node);
+                self.destination_set_media_device_id(node, name);
             }
             "SpatialSound" => self.spatial_initialize(node),
             "Sound" => self.vrml_sound_initialize(node),
@@ -788,7 +788,7 @@ impl Runtime {
                 if name == "MicrophoneSource" {
                     self.mic_set_media_device_id(node)
                 } else {
-                    self.destination_set_media_device_id(node)
+                    self.destination_set_media_device_id(node, name)
                 }
             }
             SoundCb::Spatialize if name == "Sound" => self.vrml_sound_set_spatialize(node),
@@ -1893,9 +1893,17 @@ impl Runtime {
         self.bus_set_gain(node);
     }
 
-    /// AudioDestination.set_mediaDeviceID__ (`setSinkId`). The output device of the native
-    /// context is the system default; another device is not selected.
-    fn destination_set_media_device_id(&mut self, _node: NodeId) {}
+    /// AudioDestination.set_mediaDeviceID__ (`setSinkId`): the output device of the native context
+    /// (see `sound::sink`). An unknown id changes nothing and logs nothing, as in X_ITE. A
+    /// StreamAudioDestination has no `mediaDeviceID`.
+    fn destination_set_media_device_id(&mut self, node: NodeId, name: &str) {
+        if name != "AudioDestination" {
+            return;
+        }
+
+        let id = self.get_str(node, "mediaDeviceID");
+        self.audio().set_sink_id(&id);
+    }
 
     /// X3DSoundContext.addSoundDestination.
     fn add_sound_destination(&mut self, node: NodeId) {
