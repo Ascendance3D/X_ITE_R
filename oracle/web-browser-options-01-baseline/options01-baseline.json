@@ -912,6 +912,1327 @@
     "log: 0 0 NaN 1.5",
     "log: "
    ]
+  },
+  "browserOptions.notification": {
+   "api": {
+    "inBrowser": true,
+    "getter": "function",
+    "setter": "function",
+    "initial": "",
+    "initialGetter": ""
+   },
+   "initial": {
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "",
+     "visibility": "",
+     "transition": "",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [],
+    "visibility": "hidden"
+   },
+   "optionAtStart": false,
+   "pageDefault": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "",
+     "visibility": "",
+     "transition": "",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "",
+     "visibility": "",
+     "transition": "",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [],
+    "description": "pre"
+   },
+   "show": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "",
+     "visibility": "",
+     "transition": "",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "Hello",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "Hello"
+   },
+   "same": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "Hello",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "Hello",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "Hello"
+   },
+   "replace": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "Hello",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "C",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "C"
+   },
+   "method": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "C",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "D"
+   },
+   "empty": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": ""
+   },
+   "hidden": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      false,
+      true
+     ]
+    ],
+    "description": ""
+   },
+   "again": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "D",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      true
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "again"
+   },
+   "off": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      true
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "off"
+   },
+   "offRun": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      true
+     ],
+     [
+      5000,
+      false,
+      true
+     ]
+    ],
+    "description": "off"
+   },
+   "on": {
+    "immediate": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "again",
+     "visibility": "hidden",
+     "transition": "visibility 300ms, width 300ms ease-in-out",
+     "widthIsSpanWidth": false,
+     "widthPositive": false,
+     "width": "0px",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "snap": {
+     "tag": "DIV",
+     "className": "x_ite-private-notification",
+     "children": [
+      "SPAN"
+     ],
+     "text": "on",
+     "visibility": "visible",
+     "transition": "width 300ms ease-in-out",
+     "widthIsSpanWidth": true,
+     "widthPositive": true,
+     "width": "set",
+     "inShadow": true,
+     "computed": [
+      "absolute",
+      "20px",
+      "0px",
+      "pre",
+      "none"
+     ]
+    },
+    "timers": [
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      false
+     ],
+     [
+      5000,
+      true,
+      true
+     ],
+     [
+      5000,
+      true,
+      true
+     ],
+     [
+      5000,
+      false,
+      false
+     ]
+    ],
+    "description": "on"
+   },
+   "coercion": {
+    "number": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "on",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "5",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "5"
+    },
+    "null": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "5",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "null",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "null"
+    },
+    "undefined": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "null",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "undefined",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "undefined"
+    },
+    "true": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "undefined",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "true",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "true"
+    },
+    "object": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "true",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "[object Object]",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "[object Object]"
+    },
+    "array": {
+     "set": "ok",
+     "immediate": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "[object Object]",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "snap": {
+      "tag": "DIV",
+      "className": "x_ite-private-notification",
+      "children": [
+       "SPAN"
+      ],
+      "text": "1,2",
+      "visibility": "visible",
+      "transition": "width 300ms ease-in-out",
+      "widthIsSpanWidth": true,
+      "widthPositive": true,
+      "width": "set",
+      "inShadow": true,
+      "computed": [
+       "absolute",
+       "20px",
+       "0px",
+       "pre",
+       "none"
+      ]
+     },
+     "timers": [
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       true
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       true,
+       false
+      ],
+      [
+       5000,
+       false,
+       false
+      ]
+     ],
+     "description": "1,2"
+    }
+   }
   }
  }
 }

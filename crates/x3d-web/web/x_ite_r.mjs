@@ -1876,6 +1876,18 @@ class X3DBrowser
       this .#canvas .style .cssText = "display:block;width:100%;height:100%;outline:none;touch-action:none";
       element .shadowRoot .append (this .#canvas);
 
+      // Notification.initialize: `div.x_ite-private-notification > span`, in a zero-height box before the canvas that
+      // stands for X_ITE's positioned surface; the rules are in the shadow <style> of X3DCanvasElement.
+      const box = document .createElement ("div");
+
+      this .#notification = document .createElement ("div");
+      this .#notificationSpan = document .createElement ("span");
+      this .#notification .classList .add ("x_ite-private-notification");
+      this .#notification .append (this .#notificationSpan);
+      box .classList .add ("x_ite-private-notification-box");
+      box .append (this .#notification);
+      this .#canvas .before (box);
+
       this .#ready = wasm .then (() => WebBrowser .create (this .#canvas)) .then (engine =>
       {
          if (this .#disposed)
@@ -1953,6 +1965,61 @@ class X3DBrowser
    get version () { return "0.1.0"; }
    getName ()     { return this .name; }
    getVersion ()  { return this .version; }
+
+   // X3DBrowser.description, getDescription, setDescription and Notification.js. The text is the SFString `string` of
+   // X_ITE's Notification (a set value is coerced to a string, and a set always counts as a change). X_ITE handles the
+   // change in its next event cycle, once for any number of sets; here that is the next microtask. The Notifications
+   // option is read then; an empty string, or the option off, leaves the element as it is. Otherwise the text is
+   // shown, the width is that of the text, and a timer of 5000 ms hides it (a new text clears the timer).
+   #notification     = null;
+   #notificationSpan = null;
+   #notificationTime = null;
+   #notificationPending = false;
+   #description      = new Fields .SFString ();
+
+   get description ()      { return this .getDescription (); }
+   set description (value) { this .setDescription (value); }
+
+   getDescription () { return this .#description .getValue (); }
+
+   setDescription (value)
+   {
+      this .#description .setValue (value);
+
+      if (this .#notificationPending)
+         return;
+
+      this .#notificationPending = true;
+      queueMicrotask (() => { this .#notificationPending = false; this .#showNotification (); });
+   }
+
+   #showNotification ()
+   {
+      if (!this .getBrowserOption ("Notifications") || this .#description .getValue () .length === 0)
+         return;
+
+      clearTimeout (this .#notificationTime);
+
+      this .#notificationSpan .textContent = this .#description .getValue ();
+
+      Object .assign (this .#notification .style,
+      {
+         visibility: "visible",
+         width: `${this .#notificationSpan .clientWidth}px`,
+         transition: "width 300ms ease-in-out",
+      });
+
+      this .#notificationTime = setTimeout (() =>
+      {
+         Object .assign (this .#notification .style,
+         {
+            visibility: "hidden",
+            width: "0px",
+            transition: "visibility 0s 300ms, width 300ms ease-in-out",
+         });
+      },
+      5000);
+   }
 
    // X3DBrowser.getBrowserOption, setBrowserOption, getBrowserProperty, getRenderingProperty, print, println. The
    // values live in typed fields of the pinned definitions (BrowserOptions.js, BrowserProperties.js), so the
@@ -3764,7 +3831,16 @@ class X3DCanvasElement extends HTMLElement
       super ();
 
       this .attachShadow ({ mode: "open", delegatesFocus: true });
-      this .shadowRoot .innerHTML = "<style>:host { display: inline-block; width: 300px; height: 150px; }</style>";
+      // The notification rules are those of x_ite.css (.x_ite-private-notification) with the light theme's variables
+      // filled in; X_ITE's logo (an asset) is not drawn, its space is kept.
+      this .shadowRoot .innerHTML = `<style>:host { display: inline-block; width: 300px; height: 150px; }
+.x_ite-private-notification-box { position: relative; height: 0; }
+.x_ite-private-notification { visibility: hidden; position: absolute; top: 20px; right: 0px; width: 0px; box-sizing: content-box;
+  backdrop-filter: blur(8px); background: linear-gradient(to bottom, rgba(247, 247, 252, 0.642) 0%, rgba(222, 221, 226, 0.6) 100%);
+  background-clip: padding-box; border: 4px solid rgba(229, 229, 234, 0.66); border-right: none; border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px; padding: 5px 0px 3px 7px; color: black; font-family: X_ITE PT Sans, sans-serif; font-size: 10pt;
+  line-height: 1.1; white-space: pre; pointer-events: none; }
+.x_ite-private-notification span { display: inline-block; position: relative; top: -1px; padding: 0 16px 2px 22px; }</style>`;
 
       Object .defineProperty (this, "browser", { value: new X3DBrowser (this), enumerable: true });
    }
