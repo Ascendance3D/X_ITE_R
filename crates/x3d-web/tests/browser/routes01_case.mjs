@@ -368,6 +368,90 @@ DEF E Transform { }
                out .afterOld = [ list (doc), attempt (() => list (scene)) ];
                break;
             }
+            case "browserEvent":
+            {
+               // BROWSER_EVENT callbacks (issue #135): X_ITE never calls them. A callback of each event type records its name,
+               // across a world load, replaceWorld, viewpoint binding, setLive / beginUpdate / endUpdate and removal.
+               const C        = X3D .X3DConstants;
+               const NAMES    = { };
+               const events   = [ ];
+               const wait     = ms => new Promise (r => setTimeout (r, ms));
+               const WORLD2   = "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Layering:1\nDEF T Transform { }\nLayerSet { activeLayer 1 order [ 0 1 ] layers [ DEF L1 Layer { children [ DEF V1 Viewpoint { description \"V1\" } DEF V2 Viewpoint { description \"V2\" position 0 0 5 } ] } ] }\n";
+               const kinds    = [ "CONNECTION_ERROR", "BROWSER_EVENT", "INITIALIZED_EVENT", "SHUTDOWN_EVENT", "INITIALIZED_ERROR" ];
+               const active   = () => browser .activeViewpoint ?.getNodeName () ?? null;
+
+               for (const kind of kinds)
+                  NAMES [C [kind]] = kind;
+
+               const mark = label => events .push (label);
+
+               for (const kind of kinds)
+                  browser .addBrowserCallback (`k-${kind}`, C [kind], event => mark (`${kind}:${NAMES [event]}`));
+
+               // The shape of the registry.
+               out .registry = [ kinds .map (kind => [ kind, browser .getBrowserCallbacks (C [kind]) ?.size ]), browser .getBrowserCallbacks () .size ];
+
+               const flush = async label =>
+               {
+                  await spin (6);
+                  await wait (200);
+                  out [label] = [ events .splice (0), active () ];
+               };
+
+               // The registry calls the API leaves open: argument counts, an unknown event type, removal of a missing key.
+               const odd = [ ];
+               const fn  = () => mark ("odd");
+
+               odd .push (attempt (() => browser .addBrowserCallback ("a1", fn, 1, 2)), attempt (() => browser .addBrowserCallback ("a0")), attempt (() => browser .addBrowserCallback ("a2", fn)),
+                          [ ... browser .getBrowserCallbacks () .keys () ] .join (), browser .getBrowserCallbacks (C .BROWSER_EVENT) .size, browser .getBrowserCallbacks () .size);
+               odd .push (attempt (() => browser .removeBrowserCallback ("a2")), attempt (() => browser .removeBrowserCallback ("missing")), attempt (() => browser .removeBrowserCallback ("missing", C .BROWSER_EVENT)),
+                          attempt (() => browser .removeBrowserCallback ("k-x", 99)), attempt (() => browser .removeBrowserCallback ()), attempt (() => browser .removeBrowserCallback ("a", C .BROWSER_EVENT, 1)));
+               odd .push (attempt (() => browser .addBrowserCallback ("u", 99, fn)), browser .getBrowserCallbacks (99) ?.size ?? null, attempt (() => browser .getBrowserCallbacks (98)), browser .getBrowserCallbacks () .size);
+               out .odd = odd;
+
+               await flush ("idle");
+
+               // A world loaded by URL.
+               await browser .loadURL (new X3D .MFString (`data:model/x3d-vrml,${encodeURIComponent (WORLD2)}`));
+               await flush ("loadURL");
+
+               // replaceWorld.
+               const doc = await browser .createX3DFromString (WORLD2);
+               await flush ("created");
+               browser .replaceWorld (doc);
+               for (let i = 0; i < 100 && browser .currentScene !== doc; ++ i) await wait (100);
+               await flush ("replaceWorld");
+
+               // Viewpoint binding.
+               const layer = doc .getNamedNode ("L1");
+               attempt (() => browser .nextViewpoint ());
+               await flush ("nextViewpoint");
+               attempt (() => browser .bindViewpoint (layer, doc .getNamedNode ("V1")));
+               await flush ("bindViewpoint");
+               attempt (() => browser .lastViewpoint ());
+               await flush ("lastViewpoint");
+
+               // Live state.
+               browser .setLive (false);
+               await flush ("setLiveFalse");
+               browser .setLive (true);
+               await flush ("setLiveTrue");
+               browser .endUpdate ();
+               await flush ("endUpdate");
+               browser .beginUpdate ();
+               await flush ("beginUpdate");
+
+               // A world that fails, and the removal of the callbacks.
+               out .badLoad = await browser .loadURL (new X3D .MFString ("data:model/x3d-vrml,%23X3D%20V4.0%20utf8%0APROFILE%20Interchange%0AROUTE%20")) .then (() => "resolved", e => `${e ?.constructor ?.name}: ${e ?.message}`);
+               await flush ("badLoad");
+               browser .removeBrowserCallback ("k-BROWSER_EVENT", C .BROWSER_EVENT);
+               out .removed = [ browser .getBrowserCallbacks (C .BROWSER_EVENT) .size, browser .getBrowserCallbacks () .size ];
+               browser .removeBrowserCallback ("k-INITIALIZED_EVENT");
+               browser .replaceWorld (await browser .createX3DFromString (WORLD2));
+               await wait (500);
+               await flush ("afterRemove");
+               break;
+            }
             case "lifecycle":
             {
                // The route object after deleteRoute, routes of a scene that is not the world, and a route of a deleted route again.
@@ -414,7 +498,7 @@ DEF E Transform { }
    }, name);
 }
 
-const cases = Object .fromEntries ([ "objects", "flow", "order", "errors", "names", "scenes", "crossScene", "browser", "lifecycle" ] .map (name => [ name, page => scenario (page, name) ]));
+const cases = Object .fromEntries ([ "objects", "flow", "order", "errors", "names", "scenes", "crossScene", "browser", "lifecycle", "browserEvent" ] .map (name => [ name, page => scenario (page, name) ]));
 
 for (const [ name, run ] of Object .entries (cases))
    cases [name] = async (page, env) => { await page .evaluate (pageAttempt); return run (page, env); };

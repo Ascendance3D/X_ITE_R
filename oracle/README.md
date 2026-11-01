@@ -934,7 +934,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-02-baseline --run
 
 ### Web browser routes 01 (`web-browser-routes-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite routes01` runs the 9 cases of `crates/x3d-web/tests/browser/routes01_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite routes01` runs the 10 cases of `crates/x3d-web/tests/browser/routes01_case.mjs`
   (issue #135, part 1: routes only) and records `web-browser-routes-01-baseline/routes01-baseline.json` (no pictures):
   `X3DScene .addRoute`, `deleteRoute` (route and four arguments), `getRoute`, `routes` (`RouteArray`) and the `X3DRoute`
   object; events over an added route against a parsed `ROUTE` (same frames, same order); the exact errors of bad nodes,
@@ -943,16 +943,19 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-02-baseline --run
   delegate to `currentScene` and return nothing (so `browser .deleteRoute (route)` throws the `getRoute` error); and routes
   between two scenes (`routesApi.crossScene`: X_ITE does not look at the scene of a node, takes the route and carries events
   between the scenes). The test world is synthetic and inline (a `data:` URL).
-- Three runs gave identical values (Chrome 156.0.8078.47).
+  `routesApi.browserEvent` (issue #135): a `BROWSER_EVENT` callback (and one of each other event type) across a world load,
+  `replaceWorld`, viewpoint binding, `setLive` / `beginUpdate` / `endUpdate`, a failing load and removal: X_ITE never fires
+  `BROWSER_EVENT`; the registry calls (argument counts, unknown event type, `getBrowserCallbacks ()` without argument) are recorded too.
+- Five runs gave identical values (Chrome 156.0.8078.47).
 
 ```
-node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --runs 3 --suite routes01
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-routes-01-baseline --runs 5 --suite routes01
 ```
 
 ### Web browser scene creation 01 (`web-browser-scene-create-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 23 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
-  (issue #134) and records `web-browser-scene-create-01-baseline/scenecreate01-baseline.json` (no pictures):
+- `x_ite-web-runtime-02.mjs --suite scenecreate01` runs the 25 cases of `crates/x3d-web/tests/browser/scenecreate01_case.mjs`
+  (issue #134; `x3dString` and `replaceWorldArgs` added: `createX3DFromString` arguments, text forms and failures, `replaceWorld` with null / undefined / none / extra argument) and records `web-browser-scene-create-01-baseline/scenecreate01-baseline.json` (no pictures):
   `createScene` (a Promise of an empty scene that is not the world, `worldURL` is the page's; every argument takes the
   profile branch and rejects with `Couldn't create scene: profile must be of type ProfileInfo.`; with `getProfile` and
   `getComponent` the profile and components); `createVrmlFromString` (an `MFNode`, `#VRML V2.0 utf8` in front, the parser
