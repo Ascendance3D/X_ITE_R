@@ -58,3 +58,12 @@ Issue #187 split the two longest shards by measured times: `cases` into `cases-1
 ## GPU runner
 
 `gpu-tests.yml` runs the GPU tests (the `GPU_TESTS` names) on the organization's GPU runner, `gh-runner-ascendance3d-3` (labels `self-hosted, Linux, X64, proxmox, gpu`, runner group `xite-ci`, which allows public repositories since 2026-11-01). It runs on a push to master and by hand, never for a pull request: a fork's pull request would run its code on that host, so pull request jobs stay on GitHub-hosted runners. The adapter is strict (`X3D_EVIDENCE_ALLOW` lists only the private keys that are not on the runner). `tools/check_gpu_test_lists.py` (Fast checks) keeps the list equal to `GPU_TESTS` in `rust-tests.yml`. The `browser-video` job runs `movie01.test.mjs` with `CI` unset, so the `movieFrames.*` cases (all skipped on the hosted runner, where their wall-clock sampling flaked) run there; it needs Node 24 and Playwright's Chromium, installed per run without sudo.
+
+### Keeping the GPU runner from failing on simple things
+
+- **Preflight** (`.github/actions/runner-preflight`) runs first in both jobs: GPU and Vulkan ICD, cargo, rustup, Node 24, python3 fail the job at once with the missing item named; clang/lld, the wasm32 target, 30 GiB free and network reach are warnings. The step summary prints CPUs, memory, the job's cgroup `memory.max`, disk and the GPU.
+- **Allowed absent keys** come from `oracle/answer-keys.tsv` through `tools/gpu_evidence_allow.py`, not from a hand-kept list: the runner never holds the private keys, so every manifest key may be absent. A missing GPU adapter still fails.
+- **Test a change to `gpu-tests.yml` before merging it:** `gh workflow run gpu-tests.yml --ref <branch>` runs the branch's version on the runner (manual dispatch only; the file must already exist on master).
+- **Nightly run** (03:17 UTC, master) shows runner drift (driver or package updates) before a merge depends on it.
+- The runner's per-job hook wipes the workspace, so every run builds from scratch; the service's memory cap is in its systemd unit on the VM, not in this repository.
+
