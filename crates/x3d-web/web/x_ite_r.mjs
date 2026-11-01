@@ -68,6 +68,43 @@ function constantOf (name)
    return X3DConstants [name];
 }
 
+// The constants of the external components a world loads: X_ITE adds the constants of an external component as its module
+// loads, and a world loads the components of its PROFILE, its COMPONENT statements and what those depend on, so after the
+// world's first frame every node type of those components is in X3DConstants, whether or not the world has a node of
+// them. `profile` is the engine's profile name, `list` its [name, level, ...] components (profileAndComponents).
+function worldComponentConstants (profile, list)
+{
+   const config = supported ();
+   const names  = [ ];
+   const add    = name =>
+   {
+      const component = config .components .get (name);
+
+      if (component && !names .includes (component .name))
+      {
+         names .push (component .name);
+
+         for (const dependency of component .dependencies)
+            add (dependency);
+      }
+   };
+
+   for (const component of config .profiles .get (profile) ?.components ?? [ ])
+      add (component .name);
+
+   for (let i = 0; i < list .length; i += 2)
+      add (list [i]);
+
+   for (const name of names)
+   {
+      for (const constant of X3D_COMPONENT_CONSTANTS [name] ?? [ ])
+      {
+         if (!Object .hasOwn (X3DConstants, constant))
+            X3DConstants .addConstant (constant, nextConstant ++);
+      }
+   }
+}
+
 // The wasm object of a browser (read-only, for tests and diagnostics).
 const _engine = Symbol .for ("X_ITE_R.engine");
 
@@ -1587,6 +1624,30 @@ class X3DScene
    toXMLString ()  { return this .#print ("xml"); }
    toJSONString () { return this .#print ("json"); }
 
+   // X3DExecutionContext.createNode (typeName): a new node of a concrete node type, made in this scene and not part of it until
+   // it is added (a root node, or the value of a node's field). As in X_ITE, a node type of an external component is known once
+   // the component is loaded, which a world's PROFILE or COMPONENT statement or a node of the component does (X3DConstants).
+   createNode (typeName)
+   {
+      const name = String (typeName);
+
+      if (!Object .hasOwn (NODE_TYPES, name) || (componentOf .has (name) && !Object .hasOwn (X3DConstants, name)))
+         throw new Error (`Unknown node type '${name}'.`);
+
+      const engine = this .#engine ();
+
+      if (!engine)
+         throw new Error ("X_ITE_R: the browser is not ready; await browser .ready () first.");
+
+      const id = Number (engine .createVrmlFromString (this .#handle .scene, `${name} { }`, this .#browser .baseURL) [0]);
+
+      // The VRML parser keeps no root node of a type like GeoOrigin, which only another node holds.
+      if (id < 0)
+         throw new Error (`X_ITE_R: a ${name} node cannot be made on its own.`);
+
+      return nodeObject (this .#handle, id);
+   }
+
    getNamedNode (name)
    {
       name = String (name);
@@ -1931,6 +1992,17 @@ class X3DBrowser
    getWorldURL () { return this .#scene .worldURL; }
 
    getCanvas () { return this .#canvas; }
+
+   // The world's PROFILE and COMPONENT statements put the node types of their external components into X3DConstants.
+   #worldConstants ()
+   {
+      if (!this .#engine || this .#engine .current === undefined)
+         return;
+
+      const [ profile, list ] = this .#engine .profileAndComponents (this .#engine .current);
+
+      worldComponentConstants (profile ?? "", Array .from (list ?? [ ]));
+   }
 
    // X_ITE_R: resolves when the Rust engine and its WebGPU device are ready (X_ITE has no equivalent; it is
    // ready synchronously). Rejects when the page has no WebGPU, or the adapter cannot run the renderer.
@@ -2591,6 +2663,7 @@ class X3DBrowser
             this .#reject         = null;
             this .#replacing      = null;
             this .#replacingScene = null;
+            this .#worldConstants ();
             this .#call (X3DConstants .INITIALIZED_EVENT);
             this .#dispatch ("initialized load");
             resolve ();
@@ -2802,6 +2875,7 @@ class X3DBrowser
                break;
             case 1003:
                this .#scene = this .#sceneOf (engine .current);
+               this .#worldConstants ();
                this .#call (X3DConstants .INITIALIZED_EVENT);
                this .#dispatch ("initialized load");
                break;
