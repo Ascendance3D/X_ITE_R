@@ -55,7 +55,8 @@ pub fn decode_text(bytes: &[u8]) -> String {
     }
 }
 
-/// VRMLParser.isValid.
+/// VRMLParser.isValid. A `#VRML V1.0` header is not VRML97: with the default `vrml1` feature the
+/// VRML 1.0 loader of `x3d-vrml1` takes it in [`parse_bytes`].
 pub fn is_valid_vrml(input: &str) -> bool {
     if input.starts_with("#VRML V1.0") {
         return false;
@@ -261,6 +262,20 @@ fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Sce
     if let Some(root) = &svg_root {
         if svg::is_valid(root) {
             return svg::parse_svg(root, world_url);
+        }
+    }
+
+    // The VRML 1.0 extension parser (x_ite-vrml1-parser) is added to GoldenGate's list after the
+    // built-in ones. It is not a parser of the pinned X_ITE 16.5.0.
+    #[cfg(feature = "vrml1")]
+    if let Some(s) = string {
+        if x3d_vrml1::is_vrml1(s) {
+            return x3d_vrml1::parse_str(s, world_url).map_err(|e| {
+                LoadError::Parse(ParseError {
+                    message: format!("{} (column {})", e.message, e.column),
+                    line: e.line,
+                })
+            });
         }
     }
 
