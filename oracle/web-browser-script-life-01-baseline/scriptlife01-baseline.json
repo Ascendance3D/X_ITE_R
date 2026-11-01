@@ -1569,6 +1569,88 @@
      "inlines": {}
     }
    ]
+  },
+  "inlineRetry.inlineNotSetAgain": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "published",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    }
+   ]
+  },
+  "inlineRetry.inlineSameUrl": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "url again",
+     "came": true,
+     "requests": 2,
+     "lines": [
+      "log: L initialize"
+     ]
+    }
+   ]
+  },
+  "inlineRetry.inlineLoadToggle": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "load false",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    },
+    {
+     "label": "load true",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    }
+   ]
+  },
+  "inlineRetry.externprotoAgain": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "again",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. TypeError: Cannot read properties of null (reading 'setWorldURL')"
+     ]
+    }
+   ]
   }
  }
 }

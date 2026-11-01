@@ -170,12 +170,11 @@ function scriptLifeDifferences ()
       ],
       // Issue #202, item 4 (the reload sets, scriptlife01_case.mjs). The engine is the one of the native suites, so the differences are
       // the ones its known lists name (crates/x3d-script/tests/synthetic-inline-reload-known.tsv).
-      // c17: the page's fetch layer keeps a failed response of a world for good (`WebFetcher`, `Entry::Failed`), so an Inline whose
-      // url is set again after the file was published asks nothing and fails again; X_ITE fetches again (no-store) and loads it.
-      // Structural (a failed entry would need a load-attempt boundary, and X_ITE's EXTERNPROTO caches a failure for good), owner decision.
-      "scriptReload.inline.c17-recover-same-url": [
-         [ [ "steps", 1, "stable" ], [ "log: B initialize" ], [ "error: Inline: Couldn't load URL 'http://oracle/synthetic-inline-reload/late.wrl'. Error: Not Found" ] ],
-         [ [ "steps", 1, "ticks" ], [ "log: B fraction N", "log: parent tick N" ], [ "log: parent tick N" ] ],
+      // inlineRetry.externprotoAgain: both engines keep the EXTERNPROTO's failure and ask for the file once (`requests` is equal). X_ITE
+      // gives the later user of the cached failure its own TypeError (`setWorldURL` of null); X_ITE_R repeats the error of the request
+      // (the native known list, synthetic-externproto-reload-known.tsv, has the same line for c17).
+      "inlineRetry.externprotoAgain": [
+         [ [ "steps", 1, "lines" ], [ "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. TypeError: Cannot read properties of null (reading 'setWorldURL')" ], [ "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. Error: Not Found" ] ],
       ],
       // c29: a Script of a replaced scene keeps getting prepareEvents in X_ITE for ever; X_ITE_R removes its interest.
       "scriptReload.inline.c29-script-interests": [
@@ -750,6 +749,7 @@ const GROUP_FILES = {
    soundLevel: "sound04.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
    scriptReload: "scriptlife01.test.mjs",
+   inlineRetry: "scriptlife01.test.mjs",
    movieFrames: "movie01.test.mjs",
    movieFallback: "movie01.test.mjs",
 };

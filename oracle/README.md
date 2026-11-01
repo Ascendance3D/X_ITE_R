@@ -1026,7 +1026,7 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
 
 ### Web browser Script life cycle 01 (`web-browser-script-life-01-baseline/`)
 
-- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 46 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
+- `x_ite-web-runtime-02.mjs --suite scriptlife01` runs the 50 cases of `crates/x3d-web/tests/browser/scriptlife01_case.mjs`
   (issues #133 and #202) and records `web-browser-script-life-01-baseline/scriptlife01-baseline.json` (no pictures). Group
   `scriptLife` (19 cases, inline synthetic worlds): Script `initialize` (events sent from it, the order of Scripts,
   `directOutput`); the events of Script fields (eventIns, eventOuts, a route chain, an interpolator, page events, two events in
@@ -1049,10 +1049,20 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-sound-01-baseline --runs
   actions in adjacent frames are not cases (listed in the comment of `reloadScenarios`), nor are `externproto/c01-initial` (a
   clock tick that falls in one window or the next) and `inline/c35` (the autoRefresh error count grows with the time waited). The pinned X_ITE's recorded stepped baselines of the same sets are
   `synthetic-inline-reload-baseline.json` and `synthetic-externproto-reload-baseline.json` (`x_ite-inline.mjs`).
+- Group `inlineRetry` (4 cases, issue #202, c17): a failed response and the next load attempt, counted in requests to the server
+  and waited for by polling the page's console lines (a barrier of two later failing Inlines shows what was not requested).
+  Pinned X_ITE fetches again when an Inline's url is set again (`inlineSameUrl`: 2 requests, the file loads), does not
+  fetch a failed url again that nothing loads (`inlineNotSetAgain`: 1 request) or when `load` is switched off and on
+  after the failure (`inlineLoadToggle`: 1 request), and keeps an EXTERNPROTO's failure for good, also when an Inline's
+  url is set to another scene with the same EXTERNPROTO (`externprotoAgain`: 1 request, a `setWorldURL` TypeError;
+  X_ITE_R repeats the request's own error instead, a known difference of the message only).
+  X_ITE_R's `WebFetcher` forgets a failed response when an Inline's url is set (`Fetcher::forget_failure`), so
+  `scriptReload.inline.c17-recover-same-url` is no known difference any more. The four cases were recorded five times
+  with identical values and merged into the baseline file (the other 46 values are unchanged).
 - X_ITE 16.5.0 does not call `shutdown` for a replaced world and throws `array[i].set is not a function` when a Script
   that is a root node sees a root node change; the cases record the first and avoid the second (the Script is in a Group).
 - Five runs gave identical values (Chrome 156.0.8078.47) for the 12 cases of #133 (and five more runs in separate processes at
-  the same time gave the same values) and again for all 46 cases (issue #202). `scriptlife01.test.mjs` compares X_ITE_R with `scripts="true"`; its known differences are in
+  the same time gave the same values) and again for the 46 cases of #202 before `inlineRetry`. `scriptlife01.test.mjs` compares X_ITE_R with `scripts="true"`; its known differences are in
   `KNOWN_DIFFERENCES` (`scriptLifeDifferences`, `runtime02_harness.mjs`) and `web/API.md`. Prepare the worktree as in
   "Recording from a worktree".
 
