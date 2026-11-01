@@ -92,8 +92,8 @@ jobs:
           python3 -I -B tools/evidence_summary.py "$X3D_EVIDENCE_LOG" | tee -a "$GITHUB_STEP_SUMMARY"
           test "${PIPESTATUS[0]}" -eq 0
 
-  # The two video frame cases (movieFrames.webm, movieFrames.mp4) that web-tests.yml skips on the hosted runner, whose
-  # video decode is slower than their sampling window (issue #139). `env -u CI` removes the variable that makes the test
+  # The movieFrames.* cases (gif, apng, webm, mp4 ...) that web-tests.yml skips on the hosted runner, whose load and video
+  # decode break their wall-clock sampling window (issue #139). `env -u CI` removes the variable that makes the test
   # skip them. The media files are committed, so the runner needs Node and Playwright's Chromium but not ffmpeg.
   browser-video:
     runs-on: [self-hosted, Linux, X64, gpu]
