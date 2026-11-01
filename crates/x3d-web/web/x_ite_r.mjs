@@ -1189,8 +1189,8 @@ class X3DInfoArray
 {
    constructor (values, valueType)
    {
-      Object .defineProperty (this, _infoArray, { value: [ ], writable: true });
-      Object .defineProperty (this, _infoIndex, { value: new Map (), writable: true });
+      Object .defineProperty (this, _infoArray, { value: [ ], writable: true, configurable: true });
+      Object .defineProperty (this, _infoIndex, { value: new Map (), writable: true, configurable: true });
       Object .defineProperty (this, _infoType, { value: valueType });
 
       for (const value of values)
@@ -1272,6 +1272,26 @@ class X3DInfoArray
    filter (callbackFn, thisArg) { return new (this .constructor) (this [_infoArray] .filter (callbackFn, thisArg)); }
    map (callbackFn, thisArg)    { return new (this .constructor) (this [_infoArray] .map (callbackFn, thisArg)); }
    slice (start, end)           { return new (this .constructor) (this [_infoArray] .slice (start, end)); }
+   toReversed ()                { return new (this .constructor) ([ ... this [_infoArray] ] .reverse ()); }
+   toSorted (compareFn)         { return new (this .constructor) ([ ... this [_infoArray] ] .sort (compareFn)); }
+
+   toSpliced (start, deleteCount, ... insertValues)
+   {
+      const array = [ ... this [_infoArray] ];
+
+      array .splice (start, deleteCount, ... insertValues);
+
+      return new (this .constructor) (array);
+   }
+
+   with (index, value)
+   {
+      const array = [ ... this [_infoArray] ];
+
+      array [index] = value;
+
+      return new (this .constructor) (array);
+   }
 
    get [Symbol .toStringTag] () { return this .getTypeName (); }
 }
@@ -1399,6 +1419,150 @@ const realmRegistry = new FinalizationRegistry (({ engine, host }) =>
 });
 
 const sceneRegistry = new FinalizationRegistry (({ browser, scene }) => browser [_engine] ?.discard (scene));
+
+// Execution/NamedNodesArray.js, ExportedNodesArray.js and X3DExportedNode.js: the live lists getNamedNodes () and getExportedNodes ()
+// give. They are X3DInfoArrays whose list is read from the engine at each use; `filter`, `map`, `slice` and `copy` give a list
+// of the same class that holds the values it was made from.
+const liveInfoArray = (array, list) =>
+{
+   const read = () =>
+   {
+      const values = list ();
+      const index  = new Map ();
+
+      for (const value of values)
+         index .set (value instanceof X3DExportedNode ? value .exportedName : value .getNodeName (), value);
+
+      return [ values, index ];
+   };
+
+   Object .defineProperty (array, _infoArray, { get: () => read () [0], set () { } });
+   Object .defineProperty (array, _infoIndex, { get: () => read () [1], set () { } });
+
+   return array;
+};
+
+class NamedNodesArray extends X3DInfoArray
+{
+   constructor (values = [ ], list = null)
+   {
+      const entries = Array .from (values, value => [ value .getNodeName (), value ]);
+      const array   = super ([ ], Fields .SFNode);
+
+      for (const [ key, value ] of entries)
+         array .add (key, value);
+
+      if (list)
+         liveInfoArray (array, list);
+
+      return array;
+   }
+
+   getTypeName () { return "NamedNodesArray"; }
+}
+
+// X3DExportedNode: `EXPORT localName AS exportedName` of a scene. The object keeps the node and the description it was made
+// with; the description setter also changes the scene's record while this object still is the scene's.
+class X3DExportedNode
+{
+   #scene;
+   #handle;
+   #exportedName;
+   #localId;
+   #description;
+
+   constructor (scene, handle, exportedName, localId, description)
+   {
+      this .#scene        = scene;
+      this .#handle       = handle;
+      this .#exportedName = exportedName;
+      this .#localId      = localId;
+      this .#description  = description;
+   }
+
+   getTypeName ()         { return "X3DExportedNode"; }
+   getExecutionContext () { return this .#scene; }
+   getExportedName ()     { return this .#exportedName; }
+   getDescription ()      { return this .#description; }
+
+   setDescription (value)
+   {
+      this .#description = String (value);
+
+      if (exportedNodeCache .get (this .#scene) ?.get (this .#exportedName) === this)
+         engineOf (this .#handle) .setExportedNode (this .#handle .scene, this .#exportedName, this .#localId, this .#description);
+   }
+
+   get exportedName () { return this .#exportedName; }
+   get localNode ()    { return nodeObject (this .#handle, this .#localId); }
+   get description ()  { return this .#description; }
+   set description (value) { this .setDescription (value); }
+
+   #localName () { return engineOf (this .#handle) .nodeName (this .#handle .scene, this .#localId) ?? ""; }
+
+   toVRMLString ()
+   {
+      const local = this .#localName ();
+
+      return `EXPORT ${local}${this .#exportedName !== local ? ` AS ${this .#exportedName}` : ""}${this .#description ? ` DESCRIPTION "${this .#description}"` : ""}`;
+   }
+
+   toXMLString ()
+   {
+      const local = this .#localName ();
+
+      return `<EXPORT localDEF='${local}'${this .#exportedName !== local ? ` AS='${this .#exportedName}'` : ""}${this .#description ? ` DESCRIPTION='${this .#description}'` : ""}/>`;
+   }
+
+   toJSONString ()
+   {
+      const local = this .#localName ();
+
+      return `\n{ "EXPORT":\n  {\n    "@localDEF": "${local}"${this .#exportedName !== local ? `,\n    "@AS": "${this .#exportedName}"` : ""}${this .#description ? `,\n    "@DESCRIPTION": "${this .#description}"` : ""}\n  }\n}`;
+   }
+
+   get [Symbol .toStringTag] () { return "X3DExportedNode"; }
+}
+
+Object .defineProperty (X3DExportedNode, "typeName", { value: "X3DExportedNode", enumerable: true });
+
+for (const key of Object .getOwnPropertyNames (X3DExportedNode .prototype))
+{
+   if (key !== "constructor" && !/^(exportedName|localNode|description)$/ .test (key))
+      Object .defineProperty (X3DExportedNode .prototype, key, { enumerable: false });
+}
+
+const exportedNodeCache = new WeakMap (); // X3DScene → Map (exported name → its X3DExportedNode)
+
+class ExportedNodesArray extends X3DInfoArray
+{
+   constructor (values = [ ], list = null)
+   {
+      const entries = Array .from (values, value => [ value .getExportedName (), value ]);
+      const array   = super ([ ], X3DExportedNode);
+
+      for (const [ key, value ] of entries)
+         array .add (key, value);
+
+      if (list)
+         liveInfoArray (array, list);
+
+      return array;
+   }
+
+   getTypeName () { return "ExportedNodesArray"; }
+}
+
+for (const type of [ NamedNodesArray, ExportedNodesArray ])
+{
+   for (const key of Object .getOwnPropertyNames (type .prototype))
+   {
+      if (key !== "constructor")
+         Object .defineProperty (type .prototype, key, { enumerable: false });
+   }
+
+   Object .defineProperty (type, "typeName", { value: type .name, enumerable: true });
+}
 
 class X3DScene
 {
@@ -1634,6 +1798,25 @@ class X3DScene
    toXMLString ()  { return this .#print ("xml"); }
    toJSONString () { return this .#print ("json"); }
 
+   // X3DExecutionContext.createProto (name): an instance of a PROTO or EXTERNPROTO the scene declares, not part of the scene
+   // until it is added. 
+   createProto (name)
+   {
+      name = String (name);
+
+      const engine = this .#engine ();
+
+      if (!engine)
+         throw new Error ("X_ITE_R: the browser is not ready; await browser .ready () first.");
+
+      const id = engine .createProto (this .#handle .scene, name);
+
+      if (id === undefined)
+         throw new Error (`Unknown proto or externproto type '${name}'.`);
+
+      return nodeObject (this .#handle, id);
+   }
+
    // X3DExecutionContext.createNode (typeName): a new node of a concrete node type, made in this scene and not part of it until
    // it is added (a root node, or the value of a node's field). As in X_ITE, a node type of an external component is known once
    // the component is loaded, which a world's PROFILE or COMPONENT statement or a node of the component does (X3DConstants).
@@ -1723,6 +1906,41 @@ class X3DScene
       this .#engine () ?.removeNamedNode (this .#handle .scene, String (name));
    }
 
+   // X3DExecutionContext.getNamedNodes (): the live NamedNodesArray of the scene, the same object each time.
+   #namedNodes    = null;
+   #exportedNodes = null;
+
+   getNamedNodes ()
+   {
+      return this .#namedNodes ??= new NamedNodesArray ([ ], () =>
+         Array .from (this .#engine () ?.namedNodeList (this .#handle .scene) ?? [ ], id => nodeObject (this .#handle, id)));
+   }
+
+   get namedNodes () { return this .getNamedNodes (); }
+
+   // X3DScene.getExportedNodes (): the live ExportedNodesArray; an X3DExportedNode lasts until its name is replaced or removed.
+   getExportedNodes ()
+   {
+      return this .#exportedNodes ??= new ExportedNodesArray ([ ], () =>
+      {
+         const cache = exportedNodeCache .get (this) ?? new Map ();
+         const next  = new Map ();
+
+         for (const [ name, local, description ] of this .#engine () ?.exportedNodeList (this .#handle .scene) ?? [ ])
+         {
+            const old = cache .get (name);
+
+            next .set (name, old ?? new X3DExportedNode (this, this .#handle, name, local, description));
+         }
+
+         exportedNodeCache .set (this, next);
+
+         return [ ... next .values () ];
+      });
+   }
+
+   get exportedNodes () { return this .getExportedNodes (); }
+
    // X3DScene.addExportedNode (exportedName, node, description = ""): the name must be free; then it is updateExportedNode.
    addExportedNode (exportedName, node, description = "")
    {
@@ -1753,12 +1971,18 @@ class X3DScene
          throw new Error ("Couldn't update exported node: node exported name is empty.");
 
       this .#engine () .setExportedNode (this .#handle .scene, exportedName, handle .id, description);
+
+      // X_ITE makes a new X3DExportedNode for each update.
+      exportedNodeCache .get (this) ?.delete (exportedName);
    }
 
    // X3DScene.removeExportedNode (exportedName): an unknown name does nothing.
    removeExportedNode (exportedName)
    {
-      this .#engine () ?.removeExportedNode (this .#handle .scene, String (exportedName));
+      exportedName = String (exportedName);
+
+      this .#engine () ?.removeExportedNode (this .#handle .scene, exportedName);
+      exportedNodeCache .get (this) ?.delete (exportedName);
    }
 
    // X3DScene.getExportedNode (exportedName): the local node, or an Error.

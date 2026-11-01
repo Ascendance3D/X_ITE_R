@@ -8186,6 +8186,313 @@
    "getType": "Transform",
    "text": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  children DEF B Shape { }\n}\n\nDEF C Group { }\n\nEXPORT N3 AS ExA DESCRIPTION \"replaced\"\nEXPORT N1 AS E1\nEXPORT N1 AS E2 DESCRIPTION \"again\"\nEXPORT N2 AS E3 DESCRIPTION \"some text\"\nEXPORT N1 AS E5 DESCRIPTION \"null\"\nEXPORT N1 AS E6 DESCRIPTION \"7\"\nEXPORT N3 AS U1\nEXPORT _1 AS U2\nEXPORT N2 AS C\n",
    "log": []
+  },
+  "fieldEarly.namedLists": {
+   "namedShape": [
+    "object",
+    true,
+    true,
+    "[object NamedNodesArray]",
+    "NamedNodesArray",
+    "NamedNodesArray",
+    "NamedNodesArray",
+    3,
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    "[object NamedNodesArray]",
+    false
+   ],
+   "namedItems": [
+    [
+     "A",
+     "B",
+     "C"
+    ],
+    "A",
+    false,
+    "undefined",
+    "B",
+    true,
+    false,
+    "SFNode",
+    true,
+    true
+   ],
+   "namedMethods": [
+    true,
+    1,
+    "C",
+    "TypeError: value.getNodeName is not a function",
+    [
+     "B"
+    ],
+    3,
+    [
+     "B",
+     "C"
+    ],
+    [
+     "C",
+     "B",
+     "A"
+    ],
+    "B",
+    true,
+    false,
+    true,
+    [
+     0,
+     1,
+     2
+    ],
+    true,
+    "A",
+    3,
+    true,
+    "undefined",
+    "undefined"
+   ],
+   "namedWrite": [
+    "TypeError: 'set' on proxy: trap returned falsish for property '0'",
+    "TypeError: 'set' on proxy: trap returned falsish for property 'length'",
+    3,
+    "TypeError"
+   ],
+   "namedAdd": [
+    5,
+    [
+     "A",
+     "B",
+     "C",
+     "N1",
+     "N2"
+    ]
+   ],
+   "namedUpdate": [
+    4,
+    [
+     "B",
+     "C",
+     "A",
+     "N2"
+    ]
+   ],
+   "namedRemove": [
+    3,
+    [
+     "B",
+     "C",
+     "A"
+    ]
+   ],
+   "namedLive": [
+    true
+   ],
+   "exportedShape": [
+    "object",
+    true,
+    "[object ExportedNodesArray]",
+    "ExportedNodesArray",
+    "ExportedNodesArray",
+    "ExportedNodesArray",
+    2,
+    [
+     "0",
+     "1"
+    ],
+    "{\"0\":{},\"1\":{}}",
+    "[object ExportedNodesArray]",
+    false
+   ],
+   "exportedItems": [
+    [
+     [
+      "ExA",
+      "",
+      ""
+     ],
+     [
+      "C",
+      "C",
+      ""
+     ]
+    ],
+    false,
+    "undefined",
+    false,
+    "X3DExportedNode",
+    "X3DExportedNode",
+    "X3DExportedNode",
+    [],
+    "{}",
+    "[object X3DExportedNode]",
+    "ExA",
+    false,
+    "",
+    true,
+    true,
+    "EXPORT  AS ExA",
+    "EXPORT C",
+    "<EXPORT localDEF='' AS='ExA'/>",
+    "\n{ \"EXPORT\":\n  {\n    \"@localDEF\": \"\",\n    \"@AS\": \"ExA\"\n  }\n}"
+   ],
+   "exportedMethods": [
+    true,
+    1,
+    "C",
+    "TypeError: value.getExportedName is not a function",
+    [
+     [
+      "C",
+      "C",
+      ""
+     ]
+    ],
+    1,
+    "C",
+    [
+     0,
+     1
+    ],
+    true,
+    "ExA",
+    false
+   ],
+   "exportedWrite": [
+    "TypeError: 'set' on proxy: trap returned falsish for property '0'",
+    "TypeError",
+    "TypeError",
+    [
+     [
+      "ExA",
+      "",
+      ""
+     ],
+     [
+      "C",
+      "C",
+      ""
+     ]
+    ]
+   ],
+   "descriptionSet": [
+    "undefined",
+    "new text",
+    "new text",
+    "undefined",
+    "7",
+    [
+     "EXPORT _1 AS ExA DESCRIPTION \"7\"",
+     "EXPORT C"
+    ]
+   ],
+   "exportedAdd": [
+    3,
+    [
+     [
+      "ExA",
+      "",
+      "7"
+     ],
+     [
+      "C",
+      "C",
+      ""
+     ],
+     [
+      "E1",
+      "N2",
+      "about"
+     ]
+    ]
+   ],
+   "exportedUpdate": [
+    3,
+    [
+     [
+      "ExA",
+      "N2",
+      ""
+     ],
+     [
+      "C",
+      "C",
+      ""
+     ],
+     [
+      "E1",
+      "N2",
+      "about"
+     ]
+    ],
+    "ExA",
+    "",
+    false
+   ],
+   "exportedRemove": [
+    2,
+    [
+     [
+      "ExA",
+      "N2",
+      ""
+     ],
+     [
+      "E1",
+      "N2",
+      "about"
+     ]
+    ],
+    true
+   ],
+   "scenesOther": [
+    true,
+    true
+   ],
+   "foreign": [
+    false,
+    0,
+    0,
+    "ExportedNodesArray"
+   ],
+   "log": []
+  },
+  "fieldEarly.createProto": {
+   "pair": [
+    "object",
+    "SFNode",
+    "Pair",
+    "",
+    2,
+    "hi",
+    3,
+    [
+     1073,
+     1074
+    ],
+    1,
+    "Pair { }"
+   ],
+   "plain": "Plain",
+   "twice": false,
+   "unknown": "Error: Unknown proto or externproto type 'Nope'.",
+   "builtin": "Error: Unknown proto or externproto type 'Group'.",
+   "empty": "Error: Unknown proto or externproto type ''.",
+   "noArgs": "Error: Unknown proto or externproto type 'undefined'.",
+   "number": "Error: Unknown proto or externproto type '5'.",
+   "beforeAdd": [
+    "Pair { }"
+   ],
+   "afterAdd": [
+    "Pair { }",
+    "Pair {",
+    "  amount 5"
+   ],
+   "fieldWrite": "set",
+   "log": []
   }
  }
 }

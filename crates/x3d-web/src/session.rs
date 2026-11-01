@@ -679,6 +679,33 @@ impl Session {
         rt.scene.remove_named_node(world, name);
     }
 
+    /// X3DExecutionContext.createProto (name) of the world: an instance, set up and not part of the world; `None` where X_ITE
+    /// throws "Unknown proto or externproto type".
+    pub fn create_proto(&mut self, name: &str) -> Option<NodeId> {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.create_proto_setup(world, name)
+    }
+
+    /// X3DExecutionContext.getNamedNodes of the world: the nodes in the array's order.
+    pub fn named_nodes(&self) -> Vec<NodeId> {
+        let scene = &self.rt().scene;
+
+        scene.named_node_list(scene.world)
+    }
+
+    /// X3DScene.getExportedNodes of the world: (exported name, local node, description) in the array's order.
+    pub fn exported_nodes(&self) -> Vec<(String, NodeId, String)> {
+        let scene = &self.rt().scene;
+
+        scene
+            .exported_node_list(scene.world)
+            .into_iter()
+            .map(|e| (e.exported_name.clone(), e.local, e.description.clone()))
+            .collect()
+    }
+
     /// X3DScene.updateExportedNode (exportedName, node, description) of the world (also `addExportedNode`, after the
     /// page's duplicate check): the error is X_ITE's text.
     pub fn set_exported_node(

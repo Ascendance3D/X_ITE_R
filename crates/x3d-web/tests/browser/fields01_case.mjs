@@ -1038,11 +1038,155 @@ async function exportedNodesCase (page, env)
    return out;
 }
 
+// X3DExecutionContext.getNamedNodes and X3DScene.getExportedNodes (issue #137): the NamedNodesArray and ExportedNodesArray
+// objects, their live length and index access, iteration, array methods, and the X3DExportedNode items.
+async function namedListsCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, EXPORTED_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+      const kind    = fn => { try { fn (); return "no error"; } catch (error) { return error ?.constructor ?.name; } };
+      const names   = list => attempt (() => Array .from (list, n => n .getNodeName ()));
+      const exps    = list => attempt (() => Array .from (list, e => [e .exportedName, e .localNode .getNodeName (), e .description]));
+
+      const named = scene .getNamedNodes ();
+      const exported = scene .getExportedNodes ();
+
+      out .namedShape = [ typeof named, named === scene .getNamedNodes (), named === scene .namedNodes, Object .prototype .toString .call (named),
+         attempt (() => named .getTypeName ()), attempt (() => named .constructor .typeName), attempt (() => named .constructor .name),
+         named .length, Object .keys (named), attempt (() => String (named)), Array .isArray (named) ];
+      out .namedItems = [ names (named), attempt (() => named [0] .getNodeName ()), attempt (() => named [2] === undefined), attempt (() => named [-1]),
+         attempt (() => named ["1"] .getNodeName ()), attempt (() => 1 in named), attempt (() => 9 in named), attempt (() => named [0] .getTypeName ()),
+         attempt (() => named [0] instanceof Object), attempt (() => named [0] === scene .getNamedNode ("A")) ];
+      out .namedMethods = [ attempt (() => named .includes (scene .getNamedNode ("B"))), attempt (() => named .indexOf (scene .getNamedNode ("B"))),
+         attempt (() => named .at (-1) .getNodeName ()), attempt (() => named .map (n => n .getNodeName ())),
+         attempt (() => names (named .filter (n => n .getNodeName () === "B"))), attempt (() => named .filter (n => true) .length),
+         attempt (() => names (named .slice (1))), attempt (() => names (named .toReversed ())),
+         attempt (() => named .find (n => n .getNodeName () === "B") .getNodeName ()), attempt (() => named .some (n => true)),
+         attempt (() => named .every (n => n .getNodeName () === "A")), attempt (() => named .join (",") .length > 0),
+         attempt (() => [ ... named .keys () ]), attempt (() => named .has ("A")), attempt (() => named .get ("A") .getNodeName ()),
+         attempt (() => named .copy () .length), attempt (() => named .equals (named)), attempt (() => named .push), attempt (() => named .pop) ];
+      out .namedWrite = [ attempt (() => { "use strict"; named [0] = 1; }), attempt (() => { "use strict"; named .length = 0; }), named .length,
+         kind (() => { "use strict"; scene .namedNodes = 1; }) ];
+
+      // The array is live.
+      const n1 = scene .createNode ("Group");
+
+      scene .addNamedNode ("N1", n1);
+      scene .addNamedNode ("N2", scene .createNode ("Transform"));
+      out .namedAdd = [ named .length, names (named) ];
+      scene .updateNamedNode ("A", n1);
+      out .namedUpdate = [ named .length, names (named) ];
+      scene .removeNamedNode ("N2");
+      scene .removeNamedNode ("nope");
+      out .namedRemove = [ named .length, names (named) ];
+      out .namedLive = [ named === scene .getNamedNodes () ];
+
+      // The exported nodes.
+      out .exportedShape = [ typeof exported, exported === scene .getExportedNodes (), Object .prototype .toString .call (exported),
+         attempt (() => exported .getTypeName ()), attempt (() => exported .constructor .typeName), attempt (() => exported .constructor .name),
+         exported .length, Object .keys (exported), attempt (() => JSON .stringify (exported)), attempt (() => String (exported)), Array .isArray (exported) ];
+      out .exportedItems = [ exps (exported), attempt (() => exported [1] === undefined), attempt (() => exported [-1]), attempt (() => 5 in exported),
+         attempt (() => exported [0] .getTypeName ()), attempt (() => exported [0] .constructor .typeName), attempt (() => exported [0] .constructor .name),
+         attempt (() => Object .keys (exported [0])), attempt (() => JSON .stringify (exported [0])), attempt (() => String (exported [0])),
+         attempt (() => exported [0] .getExportedName ()),
+         attempt (() => exported [0] .localNode === scene .getNamedNode ("A")), attempt (() => exported [0] .getDescription ()),
+         attempt (() => exported [0] .getExecutionContext () === scene), attempt (() => exported [0] === exported [0]),
+         attempt (() => exported [0] .toVRMLString ()), attempt (() => exported [1] .toVRMLString ()), attempt (() => exported [0] .toXMLString ()), attempt (() => exported [0] .toJSONString ()) ];
+      out .exportedMethods = [ attempt (() => exported .includes (exported [1])), attempt (() => exported .indexOf (exported [1])),
+         attempt (() => exported .at (-1) .exportedName), attempt (() => exported .map (e => e .exportedName)),
+         attempt (() => exps (exported .filter (e => e .exportedName === "C"))), attempt (() => exported .slice (1) .length),
+         attempt (() => exported .find (e => e .exportedName === "C") .exportedName), attempt (() => [ ... exported .keys () ]),
+         attempt (() => exported .has ("ExA")), attempt (() => exported .get ("ExA") .exportedName), attempt (() => exported .has ("A")) ];
+      out .exportedWrite = [ attempt (() => { "use strict"; exported [0] = 1; }), kind (() => { "use strict"; exported [0] .exportedName = "Q"; }),
+         kind (() => { "use strict"; exported [0] .localNode = null; }), exps (exported) ];
+
+      // The items follow the scene.
+      const item = exported [0];
+
+      out .descriptionSet = [ attempt (() => { item .description = "new text"; }), item .description, item .getDescription (), attempt (() => item .setDescription (7)), item .description,
+         attempt (() => scene .toVRMLString () .split ("\n") .filter (l => l .startsWith ("EXPORT"))) ];
+
+      const n2 = scene .createNode ("Group");
+
+      scene .addNamedNode ("N2", n2);
+      scene .addExportedNode ("E1", n2, "about");
+      out .exportedAdd = [ exported .length, exps (exported) ];
+      scene .updateExportedNode ("ExA", n2);
+      out .exportedUpdate = [ exported .length, exps (exported), item .exportedName, attempt (() => item .localNode .getNodeName ()), exported [0] === item ];
+      scene .removeExportedNode ("C");
+      out .exportedRemove = [ exported .length, exps (exported), exported === scene .getExportedNodes () ];
+
+      // An exported name that is not named in the world.
+      out .scenesOther = attempt (() => { const s = browser .currentScene; return [ s === scene, s .getNamedNodes () === named ]; });
+      const foreign = await browser .createScene ();
+
+      out .foreign = [ foreign .getNamedNodes () === named, foreign .getNamedNodes () .length, foreign .getExportedNodes () .length, attempt (() => foreign .getExportedNodes () .getTypeName ()) ];
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
+// X3DExecutionContext.createProto (issue #137): an instance of a PROTO the world declares.
+const PROTO_WORLD = `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Full\nPROTO Pair [ inputOutput SFFloat amount 2 inputOutput SFString label \"hi\" ] { Group { children Shape { } } }\nPROTO Plain [ ] { Transform { } }\nPair { }\n")}`;
+
+async function createProtoCase (page, env)
+{
+   await page .evaluate (() => { window .attempt = fn => { try { const v = fn (); return v === undefined ? "undefined" : v; } catch (error) { return `${error ?.constructor ?.name}: ${error ?.message}`; } }; });
+
+   await loadWorld (page, PROTO_WORLD);
+
+   const out = await page .evaluate (async () =>
+   {
+      const browser = document .querySelector ("x3d-canvas") .browser;
+      const scene   = browser .currentScene;
+      const out     = { };
+      const attempt = window .attempt;
+
+      const pair = scene .createProto ("Pair");
+
+      out .pair = [ typeof pair, pair ?.constructor ?.name, attempt (() => pair .getNodeTypeName ()), attempt (() => pair .getNodeName ()),
+         attempt (() => pair .amount), attempt (() => pair .label), attempt (() => pair .getFieldDefinitions () .length),
+         attempt (() => pair .getNodeType ()), attempt (() => scene .rootNodes .length), attempt (() => String (pair)) ];
+      out .plain = attempt (() => scene .createProto ("Plain") .getNodeTypeName ());
+      out .twice = attempt (() => scene .createProto ("Pair") === pair);
+      out .unknown = attempt (() => scene .createProto ("Nope"));
+      out .builtin = attempt (() => scene .createProto ("Group"));
+      out .empty   = attempt (() => scene .createProto (""));
+      out .noArgs  = attempt (() => scene .createProto ());
+      out .number  = attempt (() => scene .createProto (5));
+
+      // The instance is not part of the world until it is added.
+      out .beforeAdd = attempt (() => scene .toVRMLString () .split ("\n") .filter (l => l .startsWith ("Pair")));
+      scene .addRootNode (pair);
+      pair .amount = 5;
+      out .afterAdd = attempt (() => scene .toVRMLString () .split ("\n") .filter (l => /^(Pair|\s+amount)/ .test (l)));
+      out .fieldWrite = attempt (() => { pair .label = "set"; return pair .label; });
+
+      return out;
+   });
+
+   out .log = page .log .filter (line => !/^(log|info|debug):/ .test (line));
+
+   return out;
+}
+
 export const CASE_GROUPS = {
    fieldAPI: { context: DESKTOP, cases },
    fieldRoundTrip: { context: DESKTOP, cases: roundTripCases },
    fieldConstants: { context: DESKTOP, cases: { constants: async (page, env) => { await page .waitForFunction (() => window .ready, null, { timeout: 30000 }); return constants (page, env); } } },
-   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase,
+   fieldEarly: { context: DESKTOP, cases: { ... earlyCases, createNode: createNodeCase, namedNodes: namedNodesCase, exportedNodes: exportedNodesCase, namedLists: namedListsCase, createProto: createProtoCase,
       // Nodes of external components the world did not load: a world of the Interchange profile (one of them first, then the same list).
       createNodeInterchange: (page, env) => createNodeCase (page, env, `data:model/x3d-vrml,${encodeURIComponent ("#X3D V4.0 utf8\nPROFILE Interchange\n")}`) } },
 };

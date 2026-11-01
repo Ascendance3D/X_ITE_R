@@ -945,6 +945,39 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// `createProto (name)` of scene `id`: the node id of the new instance, or undefined when the scene declares no such PROTO
+    /// or EXTERNPROTO.
+    #[wasm_bindgen(js_name = createProto)]
+    pub fn create_proto(&mut self, id: u32, name: &str) -> Result<Option<u32>, JsError> {
+        Ok(self.session_mut(id)?.create_proto(name))
+    }
+
+    /// The named nodes of scene `id` in the order of `getNamedNodes ()`.
+    #[wasm_bindgen(js_name = namedNodeList)]
+    pub fn named_node_list(&self, id: u32) -> Vec<u32> {
+        self.worlds
+            .get(&id)
+            .map_or_else(Vec::new, |w| w.session.named_nodes())
+    }
+
+    /// The exported nodes of scene `id` in the order of `getExportedNodes ()`, as [name, local node, description] triples.
+    #[wasm_bindgen(js_name = exportedNodeList)]
+    pub fn exported_node_list(&self, id: u32) -> js_sys::Array {
+        let list = js_sys::Array::new();
+
+        if let Some(w) = self.worlds.get(&id) {
+            for (name, local, description) in w.session.exported_nodes() {
+                list.push(&js_sys::Array::of3(
+                    &name.into(),
+                    &local.into(),
+                    &description.into(),
+                ));
+            }
+        }
+
+        list
+    }
+
     /// `updateExportedNode (name, node, description)` of scene `id` (also `addExportedNode`, after the page's checks): see
     /// [`Session::set_exported_node`].
     #[wasm_bindgen(js_name = setExportedNode)]
