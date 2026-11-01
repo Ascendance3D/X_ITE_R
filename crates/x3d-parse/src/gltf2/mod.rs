@@ -7,6 +7,8 @@
 //! identity). Where the JS code throws (`TypeError` from a missing property, `RangeError` from a
 //! typed array constructor), the error text is `String (error)` of that exception.
 //!
+//! `EXT_meshopt_compression` / `KHR_meshopt_compression` decode through `meshopt.rs`.
+//!
 //! Missing: `KHR_draco_mesh_compression` (X_ITE loads draco_decoder_gltf.js), BasisU, AVIF and
 //! WebP textures (the url is passed on as X_ITE does, decoding is the texture loader's), and
 //! video textures.

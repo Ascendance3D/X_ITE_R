@@ -1378,6 +1378,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "meshopt-pure"
+version = "1.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "442047e34b8a2b5bde280628982846bb867daafd034257a8bf12f83d3f64bacb"
+
+[[package]]
 name = "mikktspace"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4190,6 +4196,7 @@ name = "x3d-parse"
 version = "0.1.0"
 dependencies = [
  "flate2",
+ "meshopt-pure",
  "quick-xml",
  "serde_json",
  "x3d-evidence",
