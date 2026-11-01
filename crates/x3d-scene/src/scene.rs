@@ -1829,6 +1829,19 @@ impl Scene {
             return Err("Couldn't update exported node: node exported name is empty.".to_string());
         }
 
+        self.place_exported_node(ctx, exported_name, local, description);
+        Ok(())
+    }
+
+    /// The record of X3DScene.updateExportedNode once its arguments are checked: `local` may live in a context below `ctx`
+    /// (a node `createNode` made for a page).
+    pub fn place_exported_node(
+        &mut self,
+        ctx: CtxId,
+        exported_name: &str,
+        local: NodeId,
+        description: &str,
+    ) {
         let id = self.exported_slots.take().unwrap_or(self.exported.len());
 
         place(
@@ -1844,7 +1857,14 @@ impl Scene {
         self.contexts[ctx]
             .exported
             .update(exported_name, exported_name, id);
-        Ok(())
+    }
+
+    /// X3DScene.removeExportedNode: the record leaves the context's table (the runtime releases it with the context).
+    pub fn remove_exported_node(&mut self, ctx: CtxId, exported_name: &str) -> Option<ExportedId> {
+        let id = self.contexts[ctx].exported.get(exported_name)?;
+
+        self.contexts[ctx].exported.remove(exported_name);
+        Some(id)
     }
 
     /// X3DScene.getExportedNode (name) → the local node.

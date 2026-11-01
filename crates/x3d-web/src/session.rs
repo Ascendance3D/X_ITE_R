@@ -679,6 +679,48 @@ impl Session {
         rt.scene.remove_named_node(world, name);
     }
 
+    /// X3DScene.updateExportedNode (exportedName, node, description) of the world (also `addExportedNode`, after the
+    /// page's duplicate check): the error is X_ITE's text.
+    pub fn set_exported_node(
+        &mut self,
+        name: &str,
+        node: NodeId,
+        description: &str,
+    ) -> Result<(), String> {
+        if !self.node_exists(node) {
+            return Err(format!("exportedNode: node {node} is not in the world"));
+        }
+
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        if rt.scene.is_imported(node) {
+            return Err(
+                "Couldn't update exported node: node cannot be of type X3DImportedNodeInstance."
+                    .to_string(),
+            );
+        }
+
+        // The page checked the scene and the name; a node `createNode` made lives in a context below the world's.
+        rt.scene.place_exported_node(world, name, node, description);
+        Ok(())
+    }
+
+    /// X3DScene.removeExportedNode (name) of the world; an unknown name is ignored.
+    pub fn remove_exported_node(&mut self, name: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        rt.scene.remove_exported_node(world, name);
+    }
+
+    /// X3DScene.getExportedNode (name) of the world: the local node, or None when the name is not exported.
+    pub fn exported_node(&self, name: &str) -> Option<NodeId> {
+        let scene = &self.rt().scene;
+
+        scene.get_exported_node(scene.world, name)
+    }
+
     /// `rootNodes .assign (list)` of the world (X3DScene.rootNodes of the page, addRootNode, removeRootNode,
     /// setRootNodes): the world holds `list` at once and the `rootNodes` field sends its event in the next frame's
     /// event cascade, among the other events in the order they were made (see [`ROOT_NODES_EVENT`]).
