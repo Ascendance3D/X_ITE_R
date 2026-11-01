@@ -1,0 +1,58 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 5 }
+NavigationInfo { headlight FALSE }
+Transform { children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.3 } shaders [ ComposedShader { language "GLSL" parts [ ShaderPart { type "VERTEX" url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+void main()
+{
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;
+}
+" } DEF F1 ShaderPart { type "FRAGMENT" url "data:x-shader/x-fragment,
+precision mediump float;
+void main() { gl_FragColor = vec4 (1.0) oops; }
+" } ] } ComposedShader { language "GLSL" parts [ ShaderPart { type "VERTEX" url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+void main()
+{
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;
+}
+" } DEF F2 ShaderPart { type "FRAGMENT" url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+void main() { gl_FragColor = vec4 (vec3 (0.2, 1.0, 0.3) * (0.4 + 0.6 * abs (vN.z)), 1.0); }
+" } ] } ] } geometry Sphere { radius 1.2 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode f1 USE F1
+  initializeOnly SFNode f2 USE F2
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') f1 .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avarying vec3 vN;%0Avoid main() { gl_FragColor = vec4 (vec3 (1.0, 0.2, 0.2) * (0.4 + 0.6 * abs (vN.z)), 1.0); }%0A');
+   if (k == 'b') f1 .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avoid main() { gl_FragColor = vec4 (1.0) oops; }%0A');
+   if (k == 'c') f1 .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avarying vec3 vN;%0Avoid main() { gl_FragColor = vec4 (vec3 (0.2, 0.4, 1.0) * (0.4 + 0.6 * abs (vN.z)), 1.0); }%0A');
+   if (k == 'd') f2 .load = false;
+   if (k == 'e') f1 .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avoid main() { gl_FragColor = nothing (1.0); }%0A');
+   if (k == 'f') f2 .load = true;
+   if (k == 'g') f1 .load = false;
+   if (k == 'h') f1 .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avarying vec3 vN;%0Avoid main() { gl_FragColor = vec4 (vec3 (1.0, 0.2, 0.2) * (0.4 + 0.6 * abs (vN.z)), 1.0); }%0A');
+   if (k == 'i') f1 .load = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

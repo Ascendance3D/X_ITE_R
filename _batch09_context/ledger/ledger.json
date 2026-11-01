@@ -4397,11 +4397,12 @@
     "rea_batch08_shaders (stepped, baseline not yet made)",
     "rea_b08_shaders case textures-runtime, textures-shared (MSAA 0/4)",
     "shader_include (x3d-runtime unit, x3d-render link)",
-    "include-* worlds MSAA 0/4"
+    "include-* worlds MSAA 0/4",
+    "crates/x3d-viewer/tests/rea_b24_shaderpart.rs rea_b24_shaderpart_cases_match_x_ite (16 worlds: url fallback and steps, load switch, shader selection, vertex stage, include errors; log, scene text, poses and pictures; KNOWN table for the compile text)"
    ],
-   "missing": "transformFeedbackVaryings not ported; 11 of 26 ShaderRegistry includes need macro/uniform context and do not link standalone (not exercised against X_ITE); MSAA runtime cases pass",
-   "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames. Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4."
+   "missing": "transformFeedbackVaryings not ported; includes that need macro context do not link standalone in X_ITE either (ctx-* worlds of batch 08 link them in context); MSAA runtime cases pass",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-shaderpart-baseline (16 cases, MSAA 0, 5 identical recordings), oracle/synthetic-rea-b24-shaderpart",
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames. Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4. | Issue #95 2026-10-31: the batch 24 shader selection and url-step worlds equal X_ITE for ComposedShader validity."
   },
   {
    "id": "node:FloatVertexAttribute",
@@ -4535,11 +4536,13 @@
    "tests": [
     "render_rea_b08_shaders (bad-*, file-*, data-base64)",
     "glsl_compat_b08",
-    "rea_b08_shaders_reload"
+    "rea_b08_shaders_reload",
+    "crates/x3d-viewer/tests/rea_b24_shaderpart.rs rea_b24_shaderpart_cases_match_x_ite (16 worlds: url fallback and steps, load switch, shader selection, vertex stage, include errors; log, scene text, poses and pictures; KNOWN table for the compile text)",
+    "crates/x3d-render/tests/rea_b24_shaderpart.rs (include_compile_errors_name_the_include_file_and_line_like_x_ite, remap_log_follows_the_line_directives)"
    ],
-   "missing": "stepped url/type change cases vs X_ITE not run; compile error console text not compared with X_ITE; include of the 11 context-dependent registry files only unit-tested",
-   "oracle": "",
-   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): url fallback, data: URLs, compile errors with X_ITE's message format, custom options. Remediation: #include <Name> expansion implemented and tested against X_ITE output."
+   "missing": "compile error console text of the includes Fragment, Material, PBR, Unlit, Stipple (ANGLE rejects an #if on an undefined macro; the port treats it as 0), Texture, PointSize, Vertex and of a vertex-stage statement error differs from ANGLE (KNOWN table in rea_b24_shaderpart); only MSAA 0 recorded for the new cases; type is initializeOnly so no stepped type case exists (parts-runtime and the bad-type worlds cover it)",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-batch24-shaderpart-baseline (16 cases, MSAA 0, 5 identical recordings), oracle/synthetic-rea-b24-shaderpart",
+   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): url fallback, data: URLs, compile errors with X_ITE's message format, custom options. Remediation: #include <Name> expansion implemented and tested against X_ITE output. | Issue #95 2026-10-31: url fallback, empty and bad urls, url = url, load switch, shader selection and vertex-stage steps equal X_ITE. An error inside an include now reports the include file and its line like X_ITE (remap_log through the #line directives). Mutations on the line delta, the include name, ignored compile errors and the stage are caught."
   },
   {
    "id": "node:ShaderProgram",
@@ -4886,11 +4889,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): buffer-inline/rate/wav48/wav22/bad-url/wav-events.wrl; crates/x3d-viewer/tests/rea_b05_reload.rs"
+    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): buffer-inline/rate/wav48/wav22/bad-url/wav-events.wrl; crates/x3d-viewer/tests/rea_b05_reload.rs",
+    "crates/x3d-runtime/tests/rea_b24_audio_decode.rs (same_rate_mp3_and_flac_are_bit_identical, resampled_wav_is_within_5e_5_of_chromium, known_ogg_48000_chromium_drops_the_last_64_frames, known_resampled_non_wav_differs_from_chromium, known_opus_is_rejected_by_the_port)"
    ],
-   "missing": "only PCM WAV decodes like Chromium (decode.rs: Chromium sample conversion + SincResampler); MP3, Ogg, FLAC and other formats go through web-audio-api (symphonia), not Chromium FFmpeg, and are not compared",
-   "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds",
-   "notes": "in node table since the 2026-10-16 regeneration"
+   "missing": "non-WAV files whose rate differs from the 48 kHz context are resampled by web-audio-api (rubato), not like Chromium: max abs difference 0.33 to 0.46 and 14401 frames against Chromium's 14400 (MP3, FLAC) or 13931 and 14349 (Ogg); Ogg 48 kHz mono: Chromium returns 14336 frames and drops the last 64, the port 14400; Opus: Chromium decodes it, the port rejects it; a resampled WAV is within 5e-5 of Chromium, not exact",
+   "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds; Chromium decodeAudioData of 11 synthetic files (3 MP3, 3 Ogg, 3 FLAC, 1 Opus, 1 WAV; oracle/rea-batch24-audio-decode-baseline, 5 identical recordings)",
+   "notes": "in node table since the 2026-10-16 regeneration | Issue #98 2026-10-31: exact for a 48 kHz MP3 and FLAC. The known differences are pinned by tests that fail once a file starts matching Chromium. A fix needs the file's native-rate frames, which web-audio-api does not expose."
   },
   {
    "id": "node:ChannelMerger",
