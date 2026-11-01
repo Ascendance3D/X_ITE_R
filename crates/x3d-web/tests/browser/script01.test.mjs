@@ -238,12 +238,99 @@ DEF S Script
          // A Script has the page's privileges: it reads the document and leaves a function there.
          assert .deepEqual (before, { title: await page .title (), call: "X_ITE", x: "undefined", page: "undefined", builtins: true });
 
-         // Its world gone, the function's call into the engine throws.
+         // Its world replaced, the function still works, as in X_ITE (the engine keeps the world for it, issue #202).
          await loadText (page, "#VRML V2.0 utf8\nGroup { }\n");
 
          const after = await page .evaluate (() => { try { return document .scriptCall (); } catch (error) { return error .message; } });
 
-         assert .equal (after, "X_ITE_R: the Script's world is gone.");
+         assert .equal (after, "X_ITE");
+         assert .deepEqual (pageErrors (page), [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   // The engine keeps a replaced world for the functions and node objects its Scripts left in the page (issue #202), and
+   // releases it when the page has dropped them all: the page's objects are the only holders (a FinalizationRegistry on
+   // the Script realm). Not compared with X_ITE: its replaced scene lives as long as the page refers to it.
+   test ("scripts.retiredWorld", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      const page = await openPage (DESKTOP);
+
+      try
+      {
+         const cdp = await page .context () .newCDPSession (page);
+         const retired = () => page .evaluate (() => document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.engine")] .retiredWorlds);
+
+         // Polls: the engine's count falls when the page's engine has collected the objects, whenever it does.
+         const settles = async count =>
+         {
+            for (let i = 0; i < 100; ++ i)
+            {
+               await cdp .send ("HeapProfiler.collectGarbage");
+               await page .waitForTimeout (50);
+
+               if (await retired () === count)
+                  return count;
+            }
+
+            return await retired ();
+         };
+
+         await allowScripts (page);
+         await loadText (page, `#VRML V2.0 utf8
+DEF T Transform { translation 1 2 3 }
+DEF S Script
+{
+  field SFNode target USE T
+  url "javascript:
+function initialize () { window .kept = { read: function () { return target .translation + ''; }, node: target }; }
+"
+}
+`);
+
+         assert .equal (await retired (), 0);
+         await loadText (page, "#VRML V2.0 utf8\nDEF G Group { }\n");
+
+         // The page holds the function and the node: the world stays and they work.
+         assert .equal (await retired (), 1);
+         assert .equal (await page .evaluate (() => window .kept .read () + " " + window .kept .node .translation), "1 2 3 1 2 3");
+         await cdp .send ("HeapProfiler.collectGarbage");
+         assert .equal (await retired (), 1);
+         assert .equal (await page .evaluate (() => window .kept .read ()), "1 2 3");
+
+         // The page drops them: the world goes.
+         await page .evaluate (() => { delete window .kept; });
+         assert .equal (await settles (0), 0);
+
+         // A node object alone: it keeps the world (the realm is reachable from it).
+         await loadText (page, `#VRML V2.0 utf8
+DEF T Transform { translation 4 5 6 }
+DEF S Script
+{
+  field SFNode target USE T
+  url "javascript: function initialize () { window .nodeOnly = target; }"
+}
+`);
+         await loadText (page, "#VRML V2.0 utf8\nGroup { }\n");
+
+         for (let i = 0; i < 5; ++ i)
+         {
+            await cdp .send ("HeapProfiler.collectGarbage");
+            await page .waitForTimeout (50);
+         }
+
+         assert .equal (await retired (), 1);
+         assert .equal (await page .evaluate (() => String (window .nodeOnly .translation)), "4 5 6");
+         await page .evaluate (() => { delete window .nodeOnly; });
+         assert .equal (await settles (0), 0);
+
+         // A world whose Scripts left nothing in the page goes too.
+         await loadText (page, "#VRML V2.0 utf8\nDEF S Script { url \"javascript: function initialize () { }\" }\n");
+         await loadText (page, "#VRML V2.0 utf8\nGroup { }\n");
+         assert .equal (await settles (0), 0);
          assert .deepEqual (pageErrors (page), [ ]);
       }
       finally

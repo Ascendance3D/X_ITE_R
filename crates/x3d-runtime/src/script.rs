@@ -19,6 +19,13 @@ pub enum ScriptCall {
 }
 
 pub trait ScriptHost {
+    /// The world was replaced and goes out of the browser (the browser build, issue #202): a host whose Scripts left functions
+    /// or node objects in the page keeps its table, and its realm no longer, so the page's objects go on working with the
+    /// runtime they reach. Returns the table's key, or `None` when nothing of this host can be reached from the page.
+    fn retire(&mut self) -> Option<u64> {
+        None
+    }
+
     /// Script.createContext: evaluate the source in a fresh global object for `node` and
     /// return which of `callbacks` are functions.
     fn create_context(

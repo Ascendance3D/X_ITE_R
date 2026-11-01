@@ -146,27 +146,15 @@ const destinationOutputs = paths => paths .map (path => [ [ ... path, "graph", "
 // derived from it by the rule named here, so the differences stay visible and a new recording cannot hide one.
 function scriptLifeDifferences ()
 {
-   const gone = "Error: X_ITE_R: the Script's world is gone.";
-
    const differences = {
-      // Issue #202, item 2: X_ITE keeps the nodes and the Script of a replaced world usable for what a Script left in the page.
-      // X_ITE_R's engine world goes with the replaced world, so the page's functions throw and its node handle reads nothing.
-      "scriptLife.staleFunction": [
-         [ [ "read" ], "7 1 2 3", "7 undefined" ],
-         [ [ "write" ], "written 9", gone ],
-         [ [ "send" ], "sent 4", gone ],
-         [ [ "print" ], "printed", gone ],
-         [ [ "node" ], "9 9 9", "undefined" ],
-         [ [ "scene" ], 2, gone ],
-         [ [ "seq" ], [ "log: S initialize", "page: replaceWorld", "log: kept print n=9" ], [ "log: S initialize", "page: replaceWorld" ] ],
-      ],
-      // Issue #202, item 3: the page's console lines of a Script (`print`, `console`) reach the page when the engine returns from the
-      // event, frame or `initialize`; X_ITE logs them in the Script's call. The lines of the page's own calls (`window .mark`) come
-      // at once, so they move in front of the Script's lines of the same engine call, in the order they were made.
+      // Issue #202, item 3: a Script's `print` and `console` lines reach the page's console during the Script's call, as in X_ITE, so
+      // everything up to `S set_x b` is equal. What stays is the page callback on `x_changed`: X_ITE calls it inside the route chain,
+      // X_ITE_R after the engine call (the open gap in web/API.md), so the page's calls of the Scripts later in the chain
+      // (`window .mark` in R and in `eventsProcessed`) come before it, and the lines of R wait for it, in X_ITE's order with it.
       "scriptLife.printTiming": [
          [ [ "seq" ],
             [ "log: S initialize 1", "page: mark in initialize", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "log: S set_x a", "page: mark in set_x 1", "log: S console.log", "page: mark in set_x 2", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "page: mark in set_x 3", "page: mark after x_changed", "log: S set_x b", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "page: mark in R set_y", "log: R set_y done", "log: S eventsProcessed", "page: mark in eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ],
-            [ "page: mark in initialize", "log: S initialize 1", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "page: mark in set_x 1", "page: mark in set_x 2", "page: mark in set_x 3", "page: mark after x_changed", "page: mark in R set_y", "page: mark in eventsProcessed", "log: S set_x a", "log: S console.log", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "log: S set_x b", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "log: R set_y done", "log: S eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ] ],
+            [ "log: S initialize 1", "page: mark in initialize", "log: S initialize 2", "page: set_x 1", "page: after the assignment", "log: S set_x a", "page: mark in set_x 1", "log: S console.log", "page: mark in set_x 2", "log: S Browser.print 1 two", "log: S Browser.println", "warn: S console.warn", "page: mark in set_x 3", "page: mark after x_changed", "log: S set_x b", "page: mark in R set_y", "page: mark in eventsProcessed", "page: x_changed 1", "log: page print in callback", "log: page console.log in callback", "log: R set_y 1", "log: R set_y done", "log: S eventsProcessed", "page: page print", "log: page Browser.print", "log: page Browser.println", "page: after the page print" ] ],
       ],
       // Issue #202, item 4 (the reload sets, scriptlife01_case.mjs). The engine is the one of the native suites, so the differences are
       // the ones its known lists name (crates/x3d-script/tests/synthetic-inline-reload-known.tsv).

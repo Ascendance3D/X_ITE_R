@@ -1124,8 +1124,10 @@ impl Session {
         let seen = self.log_seen;
         let log = &self.rt().log;
         let new = log[seen.min(log.len())..].to_vec();
+        let len = log.len();
 
-        self.log_seen = log.len();
+        self.log_seen = len;
+        self.rt_mut().log_taken = len;
         new
     }
 
@@ -1311,6 +1313,25 @@ impl Drop for Session {
 impl Session {
     /// The world goes (X3DBrowser.replaceWorld): `shutdown` of its nodes, then its scenes are disposed, once. Its last
     /// log lines (what `shutdown` printed) stay for [`Session::take_log`].
+    /// The world was replaced and unloaded, and the page may still hold functions or node objects of its Scripts
+    /// (issue #202): the session is kept by the caller, under the key this returns, while the page can reach them. Its
+    /// runtime stays where it is (the Script host's table points at it); it takes no more events or frames and the page
+    /// takes no more of its events. `None`: nothing of the world can be reached from the page.
+    pub fn retire(&mut self) -> Option<u64> {
+        let key = self.rt_mut().script_host.as_mut()?.retire()?;
+
+        if let Stage::Live(v) = &mut self.stage {
+            v.shed_drawing();
+        }
+
+        let rt = self.rt_mut();
+
+        rt.page_field_events = None;
+        rt.page_released = None;
+        rt.log_taken = rt.log.len();
+        Some(key)
+    }
+
     pub fn unload(&mut self) {
         if let Stage::Live(v) = &mut self.stage {
             if !std::mem::replace(&mut self.unloaded, true) {
