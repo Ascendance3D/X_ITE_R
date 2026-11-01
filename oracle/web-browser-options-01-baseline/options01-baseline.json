@@ -2712,6 +2712,143 @@
    "onIdle": null,
    "onUrl": "inline viewpoint",
    "completeThenOff": "inline viewpoint"
+  },
+  "browserOptions.enableInlineViewpoints": {
+   "on": {
+    "option": true,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "nextViewpoint",
+      "inline two"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "inline two"
+     ]
+    ]
+   },
+   "off": {
+    "option": false,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ]
+    ]
+   },
+   "onAgain": {
+    "option": true,
+    "sequence": [
+     [
+      "firstViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "nextViewpoint",
+      "inline two"
+     ],
+     [
+      "nextViewpoint",
+      "main two"
+     ],
+     [
+      "nextViewpoint",
+      "main one"
+     ],
+     [
+      "nextViewpoint",
+      "inline one"
+     ],
+     [
+      "previousViewpoint",
+      "main one"
+     ],
+     [
+      "previousViewpoint",
+      "main two"
+     ],
+     [
+      "lastViewpoint",
+      "main two"
+     ],
+     [
+      "previousViewpoint",
+      "inline two"
+     ]
+    ]
+   }
   }
  }
 }
