@@ -1722,6 +1722,57 @@ class X3DScene
    {
       this .#engine () ?.removeNamedNode (this .#handle .scene, String (name));
    }
+
+   // X3DScene.addExportedNode (exportedName, node, description = ""): the name must be free; then it is updateExportedNode.
+   addExportedNode (exportedName, node, description = "")
+   {
+      exportedName = String (exportedName);
+
+      if (this .#engine () ?.exportedNode (this .#handle .scene, exportedName) !== undefined)
+         throw new Error (`Couldn't add exported node: exported name '${exportedName}' already in use.`);
+
+      this .updateExportedNode (exportedName, node, description);
+   }
+
+   // X3DScene.updateExportedNode (exportedName, node, description = ""), checks in X_ITE's order (the page cannot hold an
+   // imported node instance, so that check is the engine's alone).
+   updateExportedNode (exportedName, node, description = "")
+   {
+      exportedName = String (exportedName);
+      description  = String (description);
+
+      const handle = handleOf (node);
+
+      if (!handle)
+         throw new Error ("Couldn't update exported node: node must be of type X3DNode.");
+
+      if (handle .scene !== this .#handle .scene || handle .browser !== this .#handle .browser)
+         throw new Error ("Couldn't update exported node: node does not belong to this execution context.");
+
+      if (!exportedName)
+         throw new Error ("Couldn't update exported node: node exported name is empty.");
+
+      this .#engine () .setExportedNode (this .#handle .scene, exportedName, handle .id, description);
+   }
+
+   // X3DScene.removeExportedNode (exportedName): an unknown name does nothing.
+   removeExportedNode (exportedName)
+   {
+      this .#engine () ?.removeExportedNode (this .#handle .scene, String (exportedName));
+   }
+
+   // X3DScene.getExportedNode (exportedName): the local node, or an Error.
+   getExportedNode (exportedName)
+   {
+      exportedName = String (exportedName);
+
+      const id = this .#engine () ?.exportedNode (this .#handle .scene, exportedName);
+
+      if (id === undefined)
+         throw new Error (`Exported node '${exportedName}' not found.`);
+
+      return nodeObject (this .#handle, id);
+   }
 }
 
 // A rejection of the engine as the Error X_ITE gives: "TypeError: text" is a TypeError with the message "text".

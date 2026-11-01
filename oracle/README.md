@@ -906,6 +906,10 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fields-01-baseline --run
   (`--only fieldEarly.namedNodes --runs 5` into a scratch directory; five identical runs, Chrome 156.0.8078.47) and its value was
   merged into `fieldEarly`'s `values`; the other 14 values are byte-identical to before. It records `addNamedNode`,
   `updateNamedNode`, `removeNamedNode` and `getNamedNode` with their errors (`createScene ()` returns a promise in 16.5.0).
+- Case `fieldEarly.exportedNodes` (2026-11-01, issue #137) was added the same way (`--only fieldEarly.exportedNodes --runs 5`
+  into a scratch directory; five identical runs, same Chrome) and merged; the other 15 values are byte-identical to before.
+  It records `addExportedNode`, `updateExportedNode`, `removeExportedNode` and `getExportedNode` with their errors, the
+  `EXPORT` lines of `toVRMLString ()` and descriptions.
 
 ### Web browser scene text 01 (`web-browser-scene-text-01-baseline/`)
 
