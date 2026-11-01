@@ -4889,11 +4889,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): buffer-inline/rate/wav48/wav22/bad-url/wav-events.wrl; crates/x3d-viewer/tests/rea_b05_reload.rs"
+    "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-batch05-baseline, 48 kHz offline co-simulation, audio tolerance 0): buffer-inline/rate/wav48/wav22/bad-url/wav-events.wrl; crates/x3d-viewer/tests/rea_b05_reload.rs",
+    "crates/x3d-runtime/tests/rea_b24_audio_decode.rs (same_rate_mp3_and_flac_are_bit_identical, resampled_wav_is_within_5e_5_of_chromium, known_ogg_48000_chromium_drops_the_last_64_frames, known_resampled_non_wav_differs_from_chromium, known_opus_is_rejected_by_the_port)"
    ],
-   "missing": "only PCM WAV decodes like Chromium (decode.rs: Chromium sample conversion + SincResampler); MP3, Ogg, FLAC and other formats go through web-audio-api (symphonia), not Chromium FFmpeg, and are not compared",
-   "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds",
-   "notes": "in node table since the 2026-10-16 regeneration"
+   "missing": "non-WAV files whose rate differs from the 48 kHz context are resampled by web-audio-api (rubato), not like Chromium: max abs difference 0.33 to 0.46 and 14401 frames against Chromium's 14400 (MP3, FLAC) or 13931 and 14349 (Ogg); Ogg 48 kHz mono: Chromium returns 14336 frames and drops the last 64, the port 14400; Opus: Chromium decodes it, the port rejects it; a resampled WAV is within 5e-5 of Chromium, not exact",
+   "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds; Chromium decodeAudioData of 11 synthetic files (3 MP3, 3 Ogg, 3 FLAC, 1 Opus, 1 WAV; oracle/rea-batch24-audio-decode-baseline, 5 identical recordings)",
+   "notes": "in node table since the 2026-10-16 regeneration | Issue #98 2026-10-31: exact for a 48 kHz MP3 and FLAC. The known differences are pinned by tests that fail once a file starts matching Chromium. A fix needs the file's native-rate frames, which web-audio-api does not expose."
   },
   {
    "id": "node:ChannelMerger",
