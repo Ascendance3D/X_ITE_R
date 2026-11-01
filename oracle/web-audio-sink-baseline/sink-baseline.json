@@ -1,0 +1,63 @@
+{
+ "pinned": "34cdf9f97",
+ "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+ "devices": [
+  {
+   "id": "",
+   "label": ""
+  }
+ ],
+ "steps": [
+  {
+   "name": "initial",
+   "mediaDeviceID": "",
+   "sinkId": "",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "empty",
+   "mediaDeviceID": "",
+   "sinkId": "",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "first-output",
+   "mediaDeviceID": "",
+   "sinkId": "",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "default",
+   "mediaDeviceID": "default",
+   "sinkId": "default",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "unknown",
+   "mediaDeviceID": "no-such-device-0000",
+   "sinkId": "default",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "empty-after-unknown",
+   "mediaDeviceID": "",
+   "sinkId": "",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "unknown-again",
+   "mediaDeviceID": "no-such-device-0000",
+   "sinkId": "",
+   "hasSetSinkId": "function"
+  },
+  {
+   "name": "unknown-then-default",
+   "mediaDeviceID": "default",
+   "sinkId": "default",
+   "hasSetSinkId": "function"
+  }
+ ],
+ "rejections": [],
+ "maxChannelCount": 2,
+ "log": []
+}
