@@ -6,7 +6,7 @@ Reference: X_ITE 16.5.0 at `34cdf9f97` (`oracle/x_ite-pin`). 16.6.0 is out of sc
 
 ## Context
 
-X_ITE 16.5.0 ships the Annotation classes but does not register the component (`COMPONENT Annotation` fails there). Observed by REA batch 04: the dormant classes cannot initialize in two cases. `AnnotationLayer`: `X3DLayerNode` reads `_hidden`, `_visible` and `_children`, which it lacks. `IconAnnotation`: `X3DUrlObject` reads `_load`, which it lacks (the ledger cites a probe, `evidence/boundary/annotation-layer-x_ite-probe.json`, which is not in this tree).
+X_ITE 16.5.0 ships the Annotation classes but does not register the component. Observed by REA batch 04: the dormant classes cannot initialize in two cases. `AnnotationLayer`: `X3DLayerNode` reads `_hidden`, `_visible` and `_children`, which it lacks. `IconAnnotation`: `X3DUrlObject` reads `_load`, which it lacks (the ledger cites a probe, `evidence/boundary/annotation-layer-x_ite-probe.json`, which is not in this tree).
 
 Ledger entries: `node:AnnotationLayer`, `node:AnnotationTarget`, `node:GroupAnnotation`, `node:IconAnnotation`, `node:TextAnnotation`, `node:URLAnnotation`.
 

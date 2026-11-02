@@ -16,7 +16,7 @@ No DOM and no stand-in objects: the page's own globals are not provided. The led
 
 ## Consequences
 
-A Script that needs the DOM fails natively. The browser build is a different case: its Scripts run in the page's own JavaScript engine (`crates/x3d-web/web/API.md`; not checked for a Script section in this record).
+A Script that needs the DOM fails natively. The browser build was not examined for this record; it is out of scope here.
 
 The ledger (`ledger/ledger.json`) is not changed by this record; it keeps its status and notes. The record states the decision once so that no implementation ticket reopens it (issue #63).
 
