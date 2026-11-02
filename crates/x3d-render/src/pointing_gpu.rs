@@ -126,6 +126,23 @@ pub struct PointingTriangle {
     pub depth: Option<crate::traverse::DepthParams>,
 }
 
+/// A GaussianSplats shape in the pointing pass (GaussianSplats.fs.js X3D_POINTING_PASS): it is drawn by the splat program, which
+/// writes the quad's vertex, x3d_Id, a constant normal and the quad texCoord.
+pub struct PointingSplat {
+    pub draw: Rc<crate::splats::SplatDraw>,
+    /// The draw goes in front of `draws [at]` of the pass (the pointing shapes' order, which the x3d_Ids follow).
+    pub at: usize,
+    pub id: f32,
+    /// x3d_ProjectionMatrix, column-major.
+    pub projection: [f32; 16],
+    /// gl.viewport: the layer's viewport shifted by the pointer position.
+    pub viewport: [i32; 4],
+    /// x3d_Viewport (renderContext .viewport): the layer's viewport itself, which the focal length and the quad size use.
+    pub layer_viewport: [f64; 4],
+    /// View-space clip planes.
+    pub clip_planes: Vec<[f64; 4]>,
+}
+
 /// What the pointing buffer holds after the draw: gl_FragData 0 to 2.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct PointingSample {
@@ -212,6 +229,9 @@ pub struct PointingGpu {
     instance_capacity: usize,
     /// The instance matrices the instance buffer holds, in order (kept alive so the addresses identify them).
     instance_sources: Vec<Rc<Vec<Matrix4>>>,
+    /// The splat program of the pointing pass and its buffers.
+    splat: crate::splats_gpu::SplatGpu,
+    splat_frame: u64,
     targets: [wgpu::Texture; 3],
     views: [wgpu::TextureView; 3],
     depth: wgpu::TextureView,
@@ -382,6 +402,8 @@ impl PointingGpu {
             instance_buffer,
             instance_capacity,
             instance_sources: vec![],
+            splat: Default::default(),
+            splat_frame: 0,
             targets,
             views,
             depth,
@@ -547,16 +569,62 @@ impl PointingGpu {
         &mut self,
         draws: &[PointingTriangle],
     ) -> Result<Option<PointingSample>, ReadbackFailure> {
+        self.sample_with_splats(draws, &[])
+    }
+
+    /// [`PointingGpu::sample_all`] with the GaussianSplats shapes `splats` drawn among `draws` (each in front of `draws [at]`,
+    /// `at` ascending).
+    pub fn sample_with_splats(
+        &mut self,
+        draws: &[PointingTriangle],
+        splats: &[PointingSplat],
+    ) -> Result<Option<PointingSample>, ReadbackFailure> {
         self.samples += 1;
-        self.draws = draws.len();
+        self.draws = draws.len() + splats.len();
 
         if self.lost {
             return Err(ReadbackFailure::DeviceLost);
         }
 
-        if draws.is_empty() {
+        if draws.is_empty() && splats.is_empty() {
             return Ok(None);
         }
+
+        // The splat program's buffers, uniforms and pipelines (the pointing pass's pipelines draw into its two attachments).
+        let prepared = if splats.is_empty() {
+            vec![]
+        } else {
+            self.splat_frame += 1;
+            let inputs: Vec<crate::splats_gpu::SplatInput> = splats
+                .iter()
+                .map(|s| crate::splats_gpu::SplatInput {
+                    draw: &s.draw,
+                    clip_planes: s.clip_planes.clone(),
+                    viewport: s.layer_viewport,
+                    fog: None,
+                    depth_projection: None,
+                    pick_id: Some(s.id),
+                })
+                .collect();
+
+            self.splat.prepare(
+                &self.device,
+                &self.queue,
+                &self.layout,
+                wgpu::TextureFormat::Rgba32Float,
+                1,
+                DEPTH_FORMAT,
+                false,
+                false,
+                0.0,
+                &splats[0].projection,
+                self.splat_frame,
+                &inputs,
+            );
+            let prepared = self.splat.take_prepared();
+            self.splat.prune(self.splat_frame);
+            prepared
+        };
 
         // The instance matrices of the instanced draws, one draw's after the other: written only when they are not
         // those of the last pass (a pick that repeats on the same walk draws the same systems).
@@ -782,7 +850,19 @@ impl PointingGpu {
                 pass.set_vertex_buffer(0, self.vertices.slice(..bytes));
             }
 
+            let mut next_splat = 0;
+
             for (k, (tri, range)) in draws.iter().zip(&ranges).enumerate() {
+                while next_splat < splats.len() && splats[next_splat].at <= k {
+                    self.draw_splat(
+                        &mut pass,
+                        &splats[next_splat],
+                        &prepared[next_splat],
+                        pass_index,
+                    );
+                    next_splat += 1;
+                }
+
                 if range.is_empty() {
                     continue;
                 }
@@ -803,6 +883,16 @@ impl PointingGpu {
                 pass.set_bind_group(0, &self.group, &[(k as u64 * UNIFORM_STRIDE) as u32]);
                 pass.set_viewport(x, y, w, h, 0.0, 1.0);
                 pass.draw(range.clone(), 0..instances);
+            }
+
+            while next_splat < splats.len() {
+                self.draw_splat(
+                    &mut pass,
+                    &splats[next_splat],
+                    &prepared[next_splat],
+                    pass_index,
+                );
+                next_splat += 1;
             }
         }
 
@@ -861,6 +951,23 @@ impl PointingGpu {
             normal: [b[0], b[1], b[2]],
             tex_coord: c,
         }))
+    }
+
+    /// One splat draw of a pass: the program's own pipeline for the pass, under the pointing group (its layout is the pipeline's
+    /// group 0).
+    fn draw_splat(
+        &self,
+        pass: &mut wgpu::RenderPass<'_>,
+        splat: &PointingSplat,
+        prepared: &crate::splats_gpu::Prepared,
+        pass_index: usize,
+    ) {
+        let [x, y, w, h] = splat.viewport.map(|v| v as f32);
+
+        pass.set_bind_group(0, &self.group, &[0]);
+        pass.set_viewport(x, y, w, h, 0.0, 1.0);
+        self.splat
+            .draw_prepared_pass(pass, prepared, pass_index == 1);
     }
 
     /// Record a readback that did not arrive. A lost device is lost at once; a mapping that failed under a clean poll

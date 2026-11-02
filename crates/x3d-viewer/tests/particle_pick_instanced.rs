@@ -87,6 +87,7 @@ fn template(geometry: Rc<Geometry>, style: Option<StyleParams>, clip: Vec<[f64; 
         depth: None,
         particle: true,
         particle_geometry: Some(geometry),
+        splats: None,
     }
 }
 
@@ -460,6 +461,7 @@ fn a_run_keeps_its_place_among_the_shapes() {
         anchors: vec![],
         particle: false,
         particle_geometry: Some(quad.clone()),
+        splats: None,
         ..template(quad.clone(), None, vec![])
     };
     let run = ParticleRun {
@@ -557,6 +559,7 @@ fn a_line_run_after_another_shape_keeps_its_particles() {
         anchors: vec![],
         particle: false,
         particle_geometry: Some(quad.clone()),
+        splats: None,
         ..template(quad.clone(), None, vec![])
     };
 

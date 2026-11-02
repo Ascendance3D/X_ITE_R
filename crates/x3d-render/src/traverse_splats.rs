@@ -127,3 +127,60 @@ impl Builder<'_> {
         });
     }
 }
+
+thread_local! {
+    /// The data sets of the pointing walks (the display's frame cache is not at hand there): by runtime and node, kept while the
+    /// node's write stamp stays, the last few only.
+    static POINTING_DATA: std::cell::RefCell<Vec<((u64, NodeId), u64, Rc<splats::SplatData>)>> =
+        const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// A GaussianSplats node of a POINTER walk as X3DShapeNode.traverse hands it to addPointingShape: the draw and the shape's bbox
+/// (bboxSize and bboxCenter as extents, which set_bbox__ copies to the shape). `None` when the node has no splats
+/// (X3DShapeNode.isEnabled: numSplats), so it is no pointing object.
+pub fn splats_pointing(
+    sg: &Sg,
+    n: NodeId,
+    mv: &Matrix4,
+) -> Option<(Rc<SplatDraw>, (Vector3, Vector3))> {
+    let stamp = sg.rt.stamp(n);
+    let key = (sg.rt.uid, n);
+    let cached = POINTING_DATA.with(|c| {
+        c.borrow()
+            .iter()
+            .find(|e| e.0 == key && e.1 == stamp)
+            .map(|e| e.2.clone())
+    });
+    let data = cached.unwrap_or_else(|| {
+        let data = Rc::new(splats::build(&splats::fields_of(sg, n), None));
+
+        POINTING_DATA.with(|c| {
+            let mut c = c.borrow_mut();
+            c.retain(|e| e.0 != key);
+
+            if c.len() >= 8 {
+                c.remove(0);
+            }
+
+            c.push((key, stamp, data.clone()));
+        });
+        data
+    });
+
+    if data.count == 0 {
+        return None;
+    }
+
+    let bbox = Builder::splats_bbox(sg, n, &data);
+    let linear = sg.string(n, "colorSpace", "SRGB_REC709_DISPLAY") == "LIN_REC709_DISPLAY";
+
+    Some((
+        Rc::new(SplatDraw {
+            node: n,
+            data,
+            model_view: *mv,
+            linear,
+        }),
+        bbox.extents(),
+    ))
+}
