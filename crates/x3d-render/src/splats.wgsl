@@ -68,6 +68,8 @@ struct VOut {
     @location(1) coord_xy: vec2<f32>,
     @location(2) conic: vec3<f32>,
     @location(3) vertex: vec3<f32>,
+    // GaussianSplats.vs.js X3D_POINTING_PASS: texCoord = (x3d_Vertex .xy + 1.0) / 2.0
+    @location(4) tex_coord: vec2<f32>,
 }
 
 fn compute_cov3d(rotation: vec4<f32>, scale: vec3<f32>) -> mat3x3<f32> {
@@ -214,8 +216,7 @@ fn compute_color_from_sh(texel: vec2<u32>, splat_center: vec3<f32>) -> vec3<f32>
     return color;
 }
 
-@vertex
-fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> VOut {
+fn splat_vertex(vi: u32, ii: u32) -> VOut {
     var corners = array<vec2<f32>, 6>(
         vec2<f32>(-1.0, -1.0), vec2<f32>(1.0, -1.0), vec2<f32>(1.0, 1.0),
         vec2<f32>(-1.0, -1.0), vec2<f32>(1.0, 1.0), vec2<f32>(-1.0, 1.0),
@@ -226,6 +227,7 @@ fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> 
     out.coord_xy = vec2<f32>(0.0);
     out.conic = vec3<f32>(0.0);
     out.vertex = vec3<f32>(0.0);
+    out.tex_coord = vec2<f32>(0.0);
     out.position = vec4<f32>(0.0, 0.0, 2.0, 1.0);
 
     // Texel Coord
@@ -283,6 +285,7 @@ fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> 
     }
 
     out.coord_xy = corner * quad_pixel_size;
+    out.tex_coord = (corner + 1.0) / 2.0;
 
     // GL clip z (-1 .. 1) to the WebGPU range; the reversed depth projection already has it.
     var p = clip_splat_center;
@@ -298,6 +301,20 @@ fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> 
     out.vertex = inv_clip_splat_center.xyz / inv_clip_splat_center.w;
     out.color = vec4<f32>(compute_color_from_sh(texel, splat_center), opacity);
 
+    return out;
+}
+
+@vertex
+fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> VOut {
+    return splat_vertex(vi, ii);
+}
+
+// The pointing pass (Pointing2.vs of the pinned shaders' X3D_POINTING_PASS): the viewport origin is the lower left there, the
+// WebGPU one the upper left, so clip y is negated, as in pointing.wgsl.
+@vertex
+fn vs_pick(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> VOut {
+    var out = splat_vertex(vi, ii);
+    out.position.y = -out.position.y;
     return out;
 }
 
@@ -366,4 +383,46 @@ fn fs_depth(in: VOut) {
     if (alpha < 1.0 / 255.0) {
         discard;
     }
+}
+
+// GaussianSplats.fs.js X3D_POINTING_PASS: the same clip and alpha tests; gl_FragData 0 to 2 are the vertex and x3d_Id, a constant
+// normal and the texCoord. fs_pick_a writes the first two, fs_pick_b the third (the pointing buffer's two passes).
+fn pick_test(in: VOut) {
+    for (var i = 0u; i < min(u.counts.x, 6u); i = i + 1u) {
+        let clip_plane = u.clip_planes[i];
+
+        if (dot(in.vertex, clip_plane.xyz) < clip_plane.w) {
+            discard;
+        }
+    }
+
+    let exponent = -0.5 * (in.conic.x * in.coord_xy.x * in.coord_xy.x + in.conic.z * in.coord_xy.y * in.coord_xy.y) - in.conic.y * in.coord_xy.x * in.coord_xy.y;
+
+    if (exponent > 0.0) {
+        discard;
+    }
+
+    let alpha = min(0.99, exp(exponent) * in.color.a);
+
+    if (alpha < 1.0 / 255.0) {
+        discard;
+    }
+}
+
+struct PickA {
+    @location(0) data0: vec4<f32>,
+    @location(1) data1: vec4<f32>,
+}
+
+@fragment
+fn fs_pick_a(in: VOut) -> PickA {
+    pick_test(in);
+    // x3d_Id travels in the extra uniform's y.
+    return PickA(vec4<f32>(in.vertex, u.extra.y), vec4<f32>(0.0, 0.0, 1.0, 0.0));
+}
+
+@fragment
+fn fs_pick_b(in: VOut) -> @location(0) vec4<f32> {
+    pick_test(in);
+    return vec4<f32>(in.tex_coord, 0.0, 1.0);
 }

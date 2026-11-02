@@ -26,6 +26,9 @@ pub struct SplatInput<'a> {
     /// A shadow map's view: the projection of the light and the depth pipeline (GaussianSplats.fs.js X3D_DEPTH_PASS) in place
     /// of the frame's projection and the color pipeline.
     pub depth_projection: Option<[f32; 16]>,
+    /// The pointing pass (GaussianSplats.fs.js X3D_POINTING_PASS): the x3d_Id of the draw. The projection is `depth_projection`'s
+    /// place: the pointing pass's own.
+    pub pick_id: Option<f32>,
 }
 
 struct DataGpu {
@@ -55,10 +58,14 @@ struct PipelineKey {
     logarithmic: bool,
     /// A shadow map draw: no color target, a depth format of its own.
     depth: bool,
+    /// The pointing pass: 1 the first (vertex and id, normal), 2 the second (texCoord).
+    pick: u8,
 }
 
 pub struct Prepared {
     pipeline: PipelineKey,
+    /// The pointing pass's second pipeline.
+    pipeline_b: Option<PipelineKey>,
     group: (usize, usize),
     offset: u32,
     instances: u32,
@@ -116,8 +123,8 @@ pub fn assemble(logarithmic: bool) -> String {
         };
 
         patch(
-            "    @location(3) vertex: vec3<f32>,\n}",
-            "    @location(3) vertex: vec3<f32>,\n    @location(4) log_depth: f32,\n}\n\nstruct FOut {\n    @location(0) color: vec4<f32>,\n    @builtin(frag_depth) depth: f32,\n}",
+            "    @location(4) tex_coord: vec2<f32>,\n}",
+            "    @location(4) tex_coord: vec2<f32>,\n    @location(5) log_depth: f32,\n}\n\nstruct FOut {\n    @location(0) color: vec4<f32>,\n    @builtin(frag_depth) depth: f32,\n}",
         );
         patch(
             "    out.position = p;\n",
@@ -178,6 +185,19 @@ fn pad4(values: &[f32], per: usize) -> Vec<f32> {
     }
 
     out
+}
+
+impl SplatInput<'_> {
+    /// The index and bind group keys of a shadow map's and a pointing pass's draws are apart from the frame's.
+    fn key_kind(&self) -> usize {
+        if self.pick_id.is_some() {
+            2 << 16
+        } else if self.depth_projection.is_some() {
+            1 << 16
+        } else {
+            0
+        }
+    }
 }
 
 impl SplatGpu {
@@ -316,15 +336,7 @@ impl SplatGpu {
 
             // The sorted indices (GaussianSplatsShape.sortIndices).
             let mv = matrix_f32(&d.model_view);
-            let index_key = (
-                data_key,
-                ordinal
-                    + if input.depth_projection.is_some() {
-                        1 << 16
-                    } else {
-                        0
-                    },
-            );
+            let index_key = (data_key, ordinal + input.key_kind());
             let count = data.count;
             let fresh = !self
                 .indices
@@ -366,6 +378,7 @@ impl SplatGpu {
 
             // The uniforms.
             let projection = &input.depth_projection.unwrap_or(*projection);
+            let pick_id = input.pick_id.unwrap_or(0.0);
             let inv_projection = inverse_f32(projection);
             let model_view_inverse = inverse_f32(&mv);
             let (viewport_w, viewport_h) = (input.viewport[2] as f32, input.viewport[3] as f32);
@@ -447,7 +460,7 @@ impl SplatGpu {
             }
 
             f(projection, &mut bytes);
-            f(&[log_far_factor, 0.0, 0.0, 0.0], &mut bytes);
+            f(&[log_far_factor, pick_id, 0.0, 0.0], &mut bytes);
 
             debug_assert_eq!(bytes.len(), UNIFORM_BYTES);
             bytes.resize(stride as usize, 0);
@@ -478,15 +491,24 @@ impl SplatGpu {
         let (module, layout) = self.module.as_ref().unwrap();
         // A shadow map's prepare holds only depth draws.
         let depth = inputs.iter().any(|i| i.depth_projection.is_some());
-        let pipeline_key = PipelineKey {
+        // A pointing pass's prepare holds only pointing draws, which go through the buffer's two passes.
+        let pick = inputs.iter().any(|i| i.pick_id.is_some());
+        let key_of = |pick: u8| PipelineKey {
             format,
             samples,
             reversed,
             logarithmic,
             depth,
+            pick,
         };
+        let pipeline_key = key_of(pick as u8);
+        let pipeline_b = pick.then(|| key_of(2));
 
-        if !self.pipelines.contains_key(&pipeline_key) {
+        for pipeline_key in std::iter::once(pipeline_key).chain(pipeline_b) {
+            if self.pipelines.contains_key(&pipeline_key) {
+                continue;
+            }
+
             let blend = wgpu::BlendState {
                 // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
                 color: wgpu::BlendComponent {
@@ -506,7 +528,20 @@ impl SplatGpu {
                 bind_group_layouts: &[(!depth).then_some(frame_layout), Some(layout)],
                 immediate_size: 0,
             });
-            let targets = if depth {
+            let rgba32 = || {
+                Some(wgpu::ColorTargetState {
+                    format: wgpu::TextureFormat::Rgba32Float,
+                    blend: None,
+                    write_mask: wgpu::ColorWrites::ALL,
+                })
+            };
+            let targets = if pick {
+                if pipeline_key.pick == 1 {
+                    vec![rgba32(), rgba32()]
+                } else {
+                    vec![rgba32()]
+                }
+            } else if depth {
                 vec![]
             } else {
                 vec![Some(wgpu::ColorTargetState {
@@ -520,7 +555,7 @@ impl SplatGpu {
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module,
-                    entry_point: Some("vs_main"),
+                    entry_point: Some(if pick { "vs_pick" } else { "vs_main" }),
                     compilation_options: Default::default(),
                     buffers: &[],
                 },
@@ -538,8 +573,8 @@ impl SplatGpu {
                         depth_format
                     },
                     // drawShapes: gl.depthMask (false) for the transparent shapes; a shadow map writes depth.
-                    depth_write_enabled: Some(depth),
-                    depth_compare: Some(if reversed && !depth {
+                    depth_write_enabled: Some(depth || pick),
+                    depth_compare: Some(if reversed && !depth && !pick {
                         wgpu::CompareFunction::GreaterEqual
                     } else {
                         wgpu::CompareFunction::LessEqual
@@ -548,13 +583,23 @@ impl SplatGpu {
                     bias: Default::default(),
                 }),
                 multisample: wgpu::MultisampleState {
-                    count: if depth { 1 } else { samples },
+                    count: if depth || pick { 1 } else { samples },
                     mask: !0,
                     alpha_to_coverage_enabled: false,
                 },
                 fragment: Some(wgpu::FragmentState {
                     module,
-                    entry_point: Some(if depth { "fs_depth" } else { "fs_main" }),
+                    entry_point: Some(if pick {
+                        if pipeline_key.pick == 1 {
+                            "fs_pick_a"
+                        } else {
+                            "fs_pick_b"
+                        }
+                    } else if depth {
+                        "fs_depth"
+                    } else {
+                        "fs_main"
+                    }),
                     compilation_options: Default::default(),
                     targets: &targets,
                 }),
@@ -564,7 +609,9 @@ impl SplatGpu {
             self.pipelines.insert(pipeline_key, (p, frame_no));
         }
 
-        self.pipelines.get_mut(&pipeline_key).unwrap().1 = frame_no;
+        for key in std::iter::once(pipeline_key).chain(pipeline_b) {
+            self.pipelines.get_mut(&key).unwrap().1 = frame_no;
+        }
 
         let mut ordinals: HashMap<usize, usize> = HashMap::new();
 
@@ -575,15 +622,7 @@ impl SplatGpu {
                 *o += 1;
                 *o - 1
             };
-            let group_key = (
-                data_key,
-                ordinal
-                    + if input.depth_projection.is_some() {
-                        1 << 16
-                    } else {
-                        0
-                    },
-            );
+            let group_key = (data_key, ordinal + input.key_kind());
 
             match self.groups.get_mut(&group_key) {
                 Some(g) => g.1 = frame_no,
@@ -636,6 +675,7 @@ impl SplatGpu {
 
             self.prepared.push(Prepared {
                 pipeline: pipeline_key,
+                pipeline_b,
                 group: group_key,
                 offset: (stride * i as u64) as u32,
                 instances: input.draw.data.count as u32,
@@ -651,11 +691,21 @@ impl SplatGpu {
 
     /// Draw a prepared splat draw taken by [`SplatGpu::take_prepared`].
     pub fn draw_prepared(&self, pass: &mut wgpu::RenderPass<'_>, p: &Prepared) {
+        self.draw_prepared_pass(pass, p, false);
+    }
+
+    /// [`SplatGpu::draw_prepared`] for the pointing buffer's second pass (`second`) or its first.
+    pub fn draw_prepared_pass(&self, pass: &mut wgpu::RenderPass<'_>, p: &Prepared, second: bool) {
         if p.instances == 0 {
             return;
         }
 
-        pass.set_pipeline(&self.pipelines[&p.pipeline].0);
+        let key = if second {
+            p.pipeline_b.as_ref().unwrap_or(&p.pipeline)
+        } else {
+            &p.pipeline
+        };
+        pass.set_pipeline(&self.pipelines[key].0);
         pass.set_bind_group(1, &self.groups[&p.group].0, &[p.offset]);
         pass.draw(0..6, 0..p.instances);
     }
