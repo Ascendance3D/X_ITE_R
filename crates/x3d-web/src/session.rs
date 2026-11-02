@@ -516,7 +516,22 @@ impl Session {
     /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value. `listener` is the nine values of
     /// the context's listener: position, forward and up.
     pub fn audio_graph_json(&self) -> Option<String> {
-        let audio = self.rt().audio.as_ref()?;
+        Some(audio_json(self.rt().audio.as_ref()?))
+    }
+
+    /// The graph of a page whose AudioContext outlives its worlds: the destination alone, as the context of X_ITE after
+    /// `replaceWorld` (the old world's nodes are gone; issue #293).
+    pub fn empty_audio_graph_json(clock: f64) -> String {
+        let mut engine =
+            x3d_runtime::sound::AudioEngine::new(x3d_runtime::sound::AudioMode::Silent);
+
+        engine.set_clock(clock);
+        audio_json(&engine)
+    }
+}
+
+fn audio_json(audio: &x3d_runtime::sound::AudioEngine) -> String {
+    {
         let g = audio.graph();
         let num = |v: f64| {
             if v.is_finite() {
@@ -573,7 +588,7 @@ impl Session {
             .map(|(a, o, b, i)| format!("[{a},{o},{b},{i}]"))
             .collect();
 
-        Some(format!(
+        format!(
             r#"{{"nodes":[{}],"connections":[{}],"destination":{},"currentTime":{},"sampleRate":{},"listener":[{}]}}"#,
             nodes.join(","),
             connections.join(","),
@@ -581,9 +596,11 @@ impl Session {
             num(g.current_time),
             num(g.sample_rate as f64),
             listener.join(","),
-        ))
+        )
     }
+}
 
+impl Session {
     /// The runtime, loading or live: the loads in flight (font files, decodes) of a world that is not live yet.
     pub fn runtime(&self) -> &Runtime {
         self.rt()

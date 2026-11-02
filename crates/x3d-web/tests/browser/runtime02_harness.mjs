@@ -509,33 +509,10 @@ const KNOWN_DIFFERENCES = {
    "sound.loopOff": destinationOutputs ([ [ "ended" ] ]),
    "sound.events": destinationOutputs ([ [ "ended" ] ]),
    "sound.badUrl": destinationOutputs ([ [ ] ]),
-   "sound.replace": [
-      ... destinationOutputs ([ [ "playing" ] ]),
-      // X_ITE keeps the page's audio context after replaceWorld: the old sources are gone and only the destination is
-      // left. X_ITE_R's audio engine goes with the replaced world, so there is no graph until a Sound node of the new
-      // world makes one; nothing is audible either way (the page's context is the same in both: `page`).
-      [ [ "replaced", "graph" ], { nodes: [ { kind: "AudioDestinationNode", numberOfInputs: 1, numberOfOutputs: 0, channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" } ], connections: [ ], clock: "running", sampleRate: 48000 }, null ],
-   ],
+   "sound.replace": destinationOutputs ([ [ "playing" ], [ "replaced" ] ]),
    "sound.intensity": destinationOutputs ([ [ ] ]),
    "sound.unspatialized": destinationOutputs ([ [ ] ]),
    // Sound 03 (sound03_case.mjs): the differences the pinned recording shows. Everything else in the suite is equal.
-   "soundMore.lifecycle": [
-      // As sound.replace: X_ITE keeps the page's context with the destination alone after replaceWorld; X_ITE_R's audio engine
-      // goes with the replaced world.
-      [ [ "steps", 3, "graph" ], { nodes: [ { kind: "AudioDestinationNode", numberOfInputs: 1, numberOfOutputs: 0, channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" } ], connections: [ ], clock: "running", sampleRate: 48000 }, null ],
-      // X_ITE never closes its AudioContext (its browser has no such step in dispose); X_ITE_R's dispose () closes the page's
-      // context once (web/API.md, "Sound").
-      [ [ "steps", 4, "page", "states" ], [ "running" ], [ "closed" ] ],
-   ],
-   "soundMore.audioDestination": [
-      // X_ITE's AudioDestination node feeds a MediaStreamAudioDestinationNode (and calls resume () a second time for its audio
-      // element); X_ITE_R's feeds the engine's destination. mediaDeviceID and the output element are not compared (web/API.md).
-      [ [ "graph", "kinds" ], [ "AudioDestinationNode", "GainNode", "GainNode", "GainNode", "MediaStreamAudioDestinationNode", "OscillatorNode" ],
-        [ "AudioDestinationNode", "GainNode", "GainNode", "GainNode", "GainNode", "OscillatorNode" ] ],
-      [ [ "graph", "edges" ], [ "GainNode > GainNode", "GainNode > MediaStreamAudioDestinationNode", "OscillatorNode > GainNode" ],
-        [ "GainNode > AudioDestinationNode", "GainNode > GainNode", "OscillatorNode > GainNode" ] ],
-      [ [ "page", "resumeCalls" ], [ "running", "running" ], [ "running" ] ],
-   ],
    ... scriptLifeDifferences (),
 };
 

@@ -2322,7 +2322,14 @@ impl WebBrowser {
     /// node has made the audio context. For tests and diagnostics.
     #[wasm_bindgen(js_name = audioGraph)]
     pub fn audio_graph(&self) -> Option<String> {
-        self.worlds.get(&self.current?)?.session.audio_graph_json()
+        let json = self.worlds.get(&self.current?)?.session.audio_graph_json();
+
+        // The page's AudioContext outlives its worlds (X_ITE keeps it after `replaceWorld`): a world with no Sound node of its
+        // own shows the destination alone.
+        json.or_else(|| {
+            self.audio_clock
+                .map(crate::session::Session::empty_audio_graph_json)
+        })
     }
 
     // --- frames --------------------------------------------------------------------------------------------------

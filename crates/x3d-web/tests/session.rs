@@ -1793,3 +1793,66 @@ fn without_a_console_sink_the_events_are_recorded() {
 fn s_always() -> bool {
     std::hint::black_box(true)
 }
+
+/// Issue #293: X_ITE's AudioDestination feeds a MediaStreamAudioDestinationNode whose stream an `<audio>` element plays. The
+/// recorded graph shows that node and no edge to the context's destination; the page makes it (op "mediaStream") and plays
+/// the stream (op "elementStart", which also calls the context's `resume ()` again).
+#[test]
+fn an_audio_destination_feeds_a_media_stream_node_and_starts_its_audio_element() {
+    use x3d_runtime::sound::ops::Model;
+
+    x3d_runtime::sound::set_default_record_ops(true);
+
+    let world = "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Sound:3\nAudioDestination { gain 0.5 children OscillatorSource { frequency 220 } }\n";
+    let mut s = Session::load(world.as_bytes(), URL, Box::new(Tone), NOW, 64, 64).unwrap();
+
+    s.step(NOW + 0.02);
+
+    let (_, ops) = s.take_audio_ops().expect("the node made an engine");
+    let names: Vec<_> = ops.iter().map(|o| o.name).collect();
+
+    assert!(names.contains(&"mediaStream"), "{names:?}");
+    assert!(names.contains(&"elementStart"), "{names:?}");
+
+    let g = s.audio_graph().unwrap();
+    let streams: Vec<_> = g
+        .nodes
+        .iter()
+        .filter(|n| n.kind == "MediaStreamAudioDestinationNode")
+        .map(|n| n.id)
+        .collect();
+
+    assert_eq!(streams.len(), 1);
+    assert!(
+        g.connections
+            .iter()
+            .all(|c| c.0 != streams[0] && c.2 != g.destination),
+        "nothing feeds the context's destination: {:?}",
+        g.connections
+    );
+    assert!(g.connections.iter().any(|c| c.2 == streams[0]));
+
+    let mut m = Model::new();
+
+    m.apply_all(&ops);
+
+    assert_eq!(
+        g.nodes.iter().map(|n| (n.id, n.kind)).collect::<Vec<_>>(),
+        m.nodes
+            .iter()
+            .map(|(id, n)| (*id, n.kind))
+            .collect::<Vec<_>>()
+    );
+}
+
+/// Issue #293: the page's AudioContext outlives its worlds (X_ITE keeps it after `replaceWorld`): the graph of a page with an
+/// audio clock and no Sound node is the destination alone.
+#[test]
+fn the_empty_audio_graph_of_a_page_with_a_context_is_the_destination_alone() {
+    let json = Session::empty_audio_graph_json(2.5);
+
+    assert!(json.contains(r#""kind":"AudioDestinationNode""#), "{json}");
+    assert!(json.contains(r#""connections":[]"#), "{json}");
+    assert!(json.contains(r#""currentTime":2.5"#), "{json}");
+    assert_eq!(json.matches(r#""kind""#).count(), 1, "{json}");
+}

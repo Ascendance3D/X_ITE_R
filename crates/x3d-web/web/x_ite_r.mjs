@@ -7674,6 +7674,8 @@ class X3DBrowser
    // X3DSoundContext.startAudioElements for the AudioContext: resume () until it succeeds once.
    #resumeAudio ()
    {
+      this .#audioMirror ?.startElements ();
+
       if (!this .#audioWaiting)
          return;
 
@@ -7915,17 +7917,14 @@ class X3DBrowser
          this .#afterChain (() => engine .free ());
       }
 
-      // The AudioContext is the page's own (#audioClock makes it): it goes with the browser. Closing it twice is
-      // harmless, but it is closed once.
-      const context = this .#audioContext;
-
+      // The AudioContext is the page's own (#audioClock makes it). X_ITE never closes its AudioContext (its browser has no such
+      // step in dispose), so it is left to the page here too (issue #293); the nodes of the worlds are disconnected.
       this .#videoMirror ?.dispose ();
       this .#videoMirror  = null;
       this .#audioMirror ?.dispose ();
       this .#audioMirror  = null;
       this .#audioContext = null;
       this .#audioWaiting = false;
-      context ?.close () .catch (Function .prototype);
    }
 }
 
