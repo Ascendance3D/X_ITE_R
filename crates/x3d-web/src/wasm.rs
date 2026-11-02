@@ -539,7 +539,7 @@ impl WebBrowser {
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
                 for (name, value) in engine_options {
-                    rt.browser_options.set_option(&name, value);
+                    rt.browser_options.init_option(&name, value);
                 }
 
                 // The page's console and field callbacks run in the route chain (issue #202): the lines made before an
@@ -917,6 +917,19 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = worldURL)]
     pub fn world_url(&self, id: u32) -> Option<String> {
         self.worlds.get(&id).map(|w| w.session.world_url())
+    }
+
+    /// X3DScene.setEncoding of scene `id`.
+    #[wasm_bindgen(js_name = setEncoding)]
+    pub fn set_encoding(&mut self, id: u32, encoding: &str) {
+        if let Some(w) = self.worlds.get_mut(&id) {
+            w.session.set_encoding(encoding);
+        }
+    }
+
+    /// X3DScene.getEncoding of scene `id`.
+    pub fn encoding(&self, id: u32) -> Option<String> {
+        self.worlds.get(&id).map(|w| w.session.encoding())
     }
 
     /// The world generation of scene `id`: it changes when an Anchor replaces the world inside the scene, and node
@@ -1879,6 +1892,14 @@ impl WebBrowser {
         }
     }
 
+    /// X3DNetworkingContext.getDisplayLoadCount of the world: the page says "Loading n file(s)" or "Loading done" when it
+    /// changes between two frames (`[_set_loadCount]`, whose field event the browser processes once per frame).
+    #[wasm_bindgen(js_name = displayLoadCounts)]
+    pub fn display_load_counts(&mut self) -> Vec<i32> {
+        self.current_mut()
+            .map_or(vec![], |s| s.display_load_counts())
+    }
+
     /// The descriptions that the engine set itself since the last call, in order: a viewpoint that was bound
     /// (X3DViewpointNode.set_bound__) and a pointing device sensor that is over (set_over__), each `browser .setDescription`.
     #[wasm_bindgen(js_name = takeDescriptions)]
@@ -1968,6 +1989,12 @@ impl WebBrowser {
     }
 
     /// The bound viewpoint's user position, orientation (axis, angle) and center of rotation, ten numbers (Shift+F8).
+    /// The Shift+F8 text of the bound viewpoint, in the encoding of the world.
+    #[wasm_bindgen(js_name = viewpointText)]
+    pub fn viewpoint_text(&mut self) -> Option<String> {
+        self.current_mut()?.viewpoint_text()
+    }
+
     #[wasm_bindgen(js_name = userPose)]
     pub fn user_pose(&mut self) -> Option<Vec<f64>> {
         self.current_mut()?.user_pose().map(|p| p.to_vec())

@@ -472,6 +472,18 @@ impl BrowserOptions {
         true
     }
 
+    /// An option's value as the world starts, without an event: the page's options the engine reads itself reach a new
+    /// world as its starting state, so no interest runs (X_ITE runs `set_StraightenHorizon__` only when the field is set,
+    /// not when the browser is made with its value).
+    pub fn init_option(&mut self, name: &str, value: OptionValue) -> bool {
+        let Some(i) = self.options.index(name) else {
+            return false;
+        };
+
+        self.options.fields[i].1 = value;
+        true
+    }
+
     /// A RenderingProperties value the browser sets (`getRenderingProperties () ._Name = value`).
     pub fn set_rendering_value(&mut self, name: &str, value: OptionValue) {
         if self.rendering.index(name).is_some() {
