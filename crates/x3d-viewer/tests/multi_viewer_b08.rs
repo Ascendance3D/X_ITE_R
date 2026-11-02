@@ -320,7 +320,8 @@ impl Rig {
     fn shot(&self, v: &mut EmbeddedViewer, k: u32) -> Vec<u8> {
         v.frame(T0 + k as f64 * DT, &self.view, FORMAT, self.w, self.h)
             .unwrap();
-        self.read()
+        // The mirrored draw leaves the target upside down when the viewer multisamples.
+        self.read(v.renderer().sample_count() > 1)
     }
 
     /// [`Rig::shot`] and collect the Browser.print lines the frame moved to the status line.
@@ -338,7 +339,7 @@ impl Rig {
         img
     }
 
-    fn read(&self) -> Vec<u8> {
+    fn read(&self, flipped: bool) -> Vec<u8> {
         let bpr = (self.w * 4).div_ceil(256) * 256;
         let buf = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: None,
@@ -370,7 +371,9 @@ impl Rig {
         let mut out = vec![];
 
         for y in 0..self.h {
-            out.extend_from_slice(&data[(y * bpr) as usize..(y * bpr + self.w * 4) as usize]);
+            // The mirrored draw (`set_gl_sample_orientation`) leaves the target upside down.
+            let row = if flipped { self.h - 1 - y } else { y };
+            out.extend_from_slice(&data[(row * bpr) as usize..(row * bpr + self.w * 4) as usize]);
         }
 
         out
@@ -1249,12 +1252,13 @@ fn x_ite_two_canvases_script_and_rigid_body_msaa4() {
 /// the pixels. Most of that was the harness: the page installed its virtual `Date.now` only after the load, so X_ITE's
 /// `creationTime` and first frames ran on the real clock and its systems were saturated at `maxParticles`. With the
 /// virtual `Date.now` from the start (issue #262) and the baselines re-recorded (five identical runs), MSAA 0 differs by
-/// at most 0.014% and is gated at the usual 0.5%. MSAA 4 differs by 0.03% to 0.52% (worst p-a frame 40) at this
-/// picture size and stays ungated here; it is gated at 192 x 144 by `x_ite_two_canvases_particles_192x144_msaa4`
-/// (worst 0.148%), because the remainder is a handful of pixels (29 to 36 here, 2 to 41 there, one MSAA sample each, either
-/// direction) that is only a large share of a 96 x 72 picture. It is not a point coverage model: drawing the 1 pixel points
-/// as quads gives these six pictures unchanged, and a static PointSet at MSAA 4 is exact. The multi-viewer properties
-/// (X_ITE pair = X_ITE alone, Rust pair = Rust alone) are asserted at both.
+/// at most 0.014% and is gated at the usual 0.5%. MSAA 4 was 0.03% to 0.52% (worst p-a frame 40: 36 pixels over 8
+/// levels), the particle records agree with X_ITE's to 1.3e-7 (frames 5, 20, 40, measured from the page's output buffer),
+/// so the cause was the picture, not the simulation: `Rig` did not mirror the draw. `Renderer::render` ignored
+/// `set_gl_sample_orientation` (only `render_to_rgba` honored it), so the MSAA sample pattern of this rig was never ANGLE/GL's.
+/// With the mirrored draw (the target then holds the picture upside down and `Rig::read` reverses the rows, as
+/// `render_to_rgba` does) MSAA 4 is 0.00000 for this pair, the sound pair and every other pair of this file, and is gated at
+/// the usual 0.5%. The multi-viewer properties (X_ITE pair = X_ITE alone, Rust pair = Rust alone) are asserted at both.
 #[test]
 fn x_ite_two_canvases_particles_msaa0() {
     oracle_pair_gated(0, ["p-a", "p-b"], true);
@@ -1262,7 +1266,7 @@ fn x_ite_two_canvases_particles_msaa0() {
 
 #[test]
 fn x_ite_two_canvases_particles_msaa4() {
-    oracle_pair_gated(4, ["p-a", "p-b"], false);
+    oracle_pair_gated(4, ["p-a", "p-b"], true);
 }
 
 /// Sound: there is no audio-output oracle, so what is compared is the picture of a world whose Script turns the
@@ -1278,7 +1282,8 @@ fn x_ite_two_canvases_particles_msaa4() {
 /// always had, and the X_ITE side is exact at MSAA 0 (the Script's event sequence also agrees, except that X_ITE
 /// sends `duration_changed` before `isActive`: its decode ends in real time before the first frame, Rust's after the
 /// frame's pending events; the picture does not show it). At MSAA 4 the Rust-vs-X_ITE difference is the antialiased
-/// edge of the rotated box and of the sphere (at most 0.7%, no timing), so only MSAA 0 is gated.
+/// edge of the rotated box and of the sphere (at most 0.7%, no timing): the unmirrored sample pattern of the rig (see the
+/// particles test); with the mirrored draw MSAA 4 is 0.00000 and gated like MSAA 0.
 #[test]
 fn x_ite_two_canvases_sound_msaa0() {
     oracle_pair_gated(0, ["snd-a", "snd-b"], true);
@@ -1286,18 +1291,14 @@ fn x_ite_two_canvases_sound_msaa0() {
 
 #[test]
 fn x_ite_two_canvases_sound_msaa4() {
-    oracle_pair_gated(4, ["snd-a", "snd-b"], false);
+    oracle_pair_gated(4, ["snd-a", "snd-b"], true);
 }
 
 /// The same particle pair in pictures of 192 x 144 (four times the area), gated at the same 0.5% of the pixels more
-/// than 8 levels off, MSAA 4 included. Issue #261: at 96 x 72 the MSAA 4 particle pictures differ from X_ITE by 29 to
-/// 36 pixels (worst 0.521%, p-a frame 40), at 192 x 144 by 2 to 41 pixels (worst 0.148%). What differs is the same
-/// handful of pixels, one MSAA sample (at most 64 levels) in either direction with equal summed brightness, so the
-/// share fell with the area and was not a coverage model of the points: a quad-expanded 1 pixel point (the PointProperties
-/// sprite path) draws the six pictures of the 96 x 72 test identically, a static PointSet of 1 pixel points at MSAA 4
-/// is exact (0 pixels, oracle/render-msaa4-rea-b09-visual-baseline), and the particle worlds of rea_b13_particles at
-/// 512 x 512 are within 0.02%. The limit is unchanged; the test pictures were too small for a share of sparse 1 pixel
-/// geometry to mean anything at the 2 pixel scale.
+/// than 8 levels off, MSAA 4 included. Issue #261: before the rig mirrored the draw (see the particles test above) the
+/// MSAA 4 pictures differed from X_ITE by 29 to 36 pixels at 96 x 72 (worst 0.521%) and by 2 to 41 at 192 x 144 (worst
+/// 0.148%); the mirror made both 0.00000. Kept as a second picture size, whose X_ITE pictures were recorded five times
+/// identically (oracle/multiview-b08-baseline-192x144).
 #[test]
 fn x_ite_two_canvases_particles_192x144_msaa4() {
     oracle_pair_sized(
