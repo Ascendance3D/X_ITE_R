@@ -92,6 +92,10 @@ pub enum Key {
     PageDown,
 }
 
+/// PointingDevice `CONTEXT_MENU_TIME` (1200 ms, in seconds) and the pixels of movement that cancel a long tap.
+pub const TOUCH_MENU_TIME: f64 = 1.2;
+pub const TOUCH_TOLERANCE: f64 = 7.0;
+
 /// A user event in viewport pixels (origin bottom left).
 #[derive(Clone, Debug)]
 pub enum UiEvent {
@@ -116,6 +120,12 @@ pub enum UiEvent {
     },
     /// The "dblclick" DOM event (the harness sends the two mousedown / mouseup pairs before it).
     DblClick {
+        x: f64,
+        y: f64,
+    },
+    /// The DOM `contextmenu` event of the element: the host's own trigger for the menu (the right button on Linux and
+    /// Windows, Ctrl+click on macOS, the keyboard's menu key).
+    ContextMenu {
         x: f64,
         y: f64,
     },
@@ -272,6 +282,10 @@ pub struct Viewer3d {
     grabbing: bool,
     /// The last pointer position of a touch (TouchEvent has no position of its own on touchend).
     touch_pointer: (f64, f64),
+    /// PointingDevice `touchTimeout`: where and when (the viewer's clock) a one-finger touch began on no sensor.
+    touch_menu: Option<(f64, f64, f64)>,
+    /// The touch that is down began on the open menu or dialog: it acts as the left button of the UI.
+    touch_ui: bool,
     /// loadURL or an Anchor with another window or a page as target: (target, url). The host opens it.
     pub foreign: Vec<(String, String)>,
     /// A Script called Browser.resize (width, height): applied here; a host that owns the canvas size takes it
@@ -531,6 +545,8 @@ impl Viewer3d {
             over: false,
             grabbing: false,
             touch_pointer: (0.0, 0.0),
+            touch_menu: None,
+            touch_ui: false,
             foreign: vec![],
             resize_request: None,
             current: None,
@@ -1264,6 +1280,7 @@ impl Viewer3d {
         self.date_now = self.date_now.max(now);
         self.geom_cache.clear();
         self.frame_count += 1;
+        self.touch_menu_timer(now);
         self.timings_update(now);
 
         // Timeouts that fired between frames (setTimeout).
@@ -2720,6 +2737,7 @@ impl Viewer3d {
                     self.mouse_move(x, y)
                 }
             }
+            UiEvent::ContextMenu { x, y } => self.ui_context_menu(x, y),
             UiEvent::Wheel { delta_y, x, y } => {
                 // The layer of the open menu is over the surface.
                 if !self.ui.is_open() {
@@ -2746,13 +2764,26 @@ impl Viewer3d {
 
                 self.touch_pointer = (x, y);
 
+                // The layer of an open menu or dialog is over the surface: a touch on it is the UI's press.
+                if self.native_ui && self.ui.is_open() {
+                    self.touch_ui = true;
+                    self.ui_mouse_down(0, x, y);
+                    return;
+                }
+
                 if self.pointing_down(x, y) {
                     return;
+                }
+
+                // Show the context menu on a long tap: only when no sensor took the press.
+                if self.native_ui {
+                    self.touch_menu = Some((x, y, self.date_now));
                 }
             }
             2 => {
                 let (x, y) = self.touch_pointer;
 
+                self.touch_menu = None;
                 self.pointing_up(x, y);
             }
             _ => {}
@@ -2761,24 +2792,54 @@ impl Viewer3d {
         self.viewer_input(Input::TouchStart(t));
     }
 
-    /// PointingDevice.touchmove (one touch: mousemove), then the viewer's.
+    /// PointingDevice.touchmove (one touch: mousemove), then the viewer's. A move of more than 7 pixels from the
+    /// start cancels the long tap.
     fn touch_move(&mut self, t: Touches) {
         if t.n == 1 {
             let (x, y) = t.p[0];
 
             self.touch_pointer = (x, y);
+
+            if self.touch_ui {
+                self.ui_mouse_move(x, y);
+                return;
+            }
+
             self.pointer_motion(x, y, true);
+
+            if let Some((tx, ty, _)) = self.touch_menu {
+                if (tx - x).hypot(ty - y) > TOUCH_TOLERANCE {
+                    self.touch_menu = None;
+                }
+            }
         }
 
         self.viewer_input(Input::TouchMove(t));
     }
 
-    /// PointingDevice.touchend (mouseup with button 0), then the viewer's.
+    /// PointingDevice.touchend (mouseup with button 0, and the long tap's timer is cleared), then the viewer's.
     fn touch_end(&mut self) {
         let (x, y) = self.touch_pointer;
 
+        self.touch_menu = None;
+
+        if std::mem::take(&mut self.touch_ui) {
+            self.ui_mouse_up(0, x, y);
+            return;
+        }
+
         self.pointing_up(x, y);
         self.viewer_input(Input::TouchEnd);
+    }
+
+    /// The timer of PointingDevice.touchstart: after 1200 ms (`CONTEXT_MENU_TIME`) the menu opens at the touch.
+    fn touch_menu_timer(&mut self, now: f64) {
+        if let Some((x, y, at)) = self.touch_menu {
+            if now - at >= TOUCH_MENU_TIME {
+                self.touch_menu = None;
+                self.show_context_menu(x, y);
+            }
+        }
     }
 
     fn viewer_input(&mut self, ev: Input) {

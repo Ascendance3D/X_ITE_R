@@ -24,6 +24,7 @@ use crate::backend::{self, GpuErrors};
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
 use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
 use crate::script::apply;
+use crate::touch::{Phase as TouchPhase2, TouchTracker};
 use crate::ui::UiRequest;
 use crate::viewer::UiEvent;
 use serde_json::Value;
@@ -32,7 +33,7 @@ use std::sync::{Arc, OnceLock};
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
-use winit::event::{ElementState, MouseButton, MouseScrollDelta, WindowEvent};
+use winit::event::{ElementState, MouseButton, MouseScrollDelta, TouchPhase, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::ModifiersState;
 use winit::platform::modifier_supplement::KeyEventExtModifierSupplement;
@@ -306,6 +307,7 @@ pub struct ViewerWindow {
     cursor: (f64, f64),
     /// Time and position of the previous left button release (the browser's click count for "dblclick").
     last_left_up: Option<(std::time::Instant, f64, f64)>,
+    touches: TouchTracker,
     scripted: Option<ScriptedRun>,
     shots: u32,
     last_title: String,
@@ -324,6 +326,7 @@ impl ViewerWindow {
             keys: KeyTracker::default(),
             cursor: (0.0, 0.0),
             last_left_up: None,
+            touches: TouchTracker::default(),
             scripted: opts.script.as_ref().map(ScriptedRun::new),
             shots: 0,
             last_title: String::new(),
@@ -914,11 +917,17 @@ impl ApplicationHandler for ViewerWindow {
                     _ => return,
                 };
                 let (x, y) = self.cursor;
-                self.input(if state == ElementState::Pressed {
-                    UiEvent::MouseDown { button: b, x, y }
+
+                if state == ElementState::Pressed {
+                    // macOS: Ctrl+click is the host's `contextmenu` event, which follows the press.
+                    let ctrl = self.mods.control_key();
+
+                    for e in Platform::current().press_events(b, ctrl, x, y) {
+                        self.input(e);
+                    }
                 } else {
-                    UiEvent::MouseUp { button: b, x, y }
-                });
+                    self.input(UiEvent::MouseUp { button: b, x, y });
+                }
 
                 // The second release of a double click fires the DOM "dblclick" event (LOOKAT, PLANE).
                 if b == 0 && state == ElementState::Released {
@@ -934,6 +943,24 @@ impl ApplicationHandler for ViewerWindow {
                         }
                         _ => self.last_left_up = Some((now, x, y)),
                     }
+                }
+            }
+            WindowEvent::Touch(touch) => {
+                let (w, h) = self
+                    .gfx
+                    .as_ref()
+                    .map(|g| g.viewer.size())
+                    .map_or((0.0, 0.0), |(w, h)| (w as f64, h as f64));
+                let phase = match touch.phase {
+                    TouchPhase::Started => TouchPhase2::Started,
+                    TouchPhase::Moved => TouchPhase2::Moved,
+                    TouchPhase::Ended => TouchPhase2::Ended,
+                    TouchPhase::Cancelled => TouchPhase2::Cancelled,
+                };
+                let pos = (touch.location.x, h - touch.location.y);
+
+                if let Some(e) = self.touches.event(phase, touch.id, pos, w) {
+                    self.input(e);
                 }
             }
             WindowEvent::MouseWheel { delta, .. } => {

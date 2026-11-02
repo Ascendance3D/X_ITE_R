@@ -1326,3 +1326,18 @@ keyboard shortcut of X3DCoreContext (Ctrl+Plus Timings, the Debug keys Ctrl+1..5
 the five modifier flags, Shift+F8 and its clipboard text), after every key: options, `isLive`, description, bound viewpoint, flags and
 clipboard. `crates/x3d-viewer/tests/native_keys_01.rs` replays the same keys on the native viewer and compares each step. The
 Shift+F8 case waits 4 s after the viewpoint change so the viewpoint transition has ended.
+
+## Menu triggers 01 (issue #287)
+
+`node oracle/x_ite-menu-triggers-01.mjs oracle/menu-triggers-01-baseline --runs 5` (prepare the worktree as in "Recording from a
+worktree"; Playwright from `XITE_TESTS` or `crates/x3d-web/node_modules`) records what opens the context menu of the pinned X_ITE
+16.5.0 in headless Chrome (Linux) with touch emulation (`hasTouch`, CDP `Input.dispatchTouchEvent`): the events that reach the
+element and whether the menu is open, for the right button, a left click, a real Ctrl+click, a macOS-style event sequence, bare
+`contextmenu` events, and touch holds of 50 ms to 1.5 s with moves of 6 to 40 px, on a box with and without a TouchSensor.
+
+- `ContextMenu.js` listens only to the element's `contextmenu` event and has no Ctrl check. The long tap is
+  `PointingDevice.js`: `CONTEXT_MENU_TIME` 1200 ms, cancelled by `touchend` or a move of more than 7 px (`Math.hypot`), and started only
+  when the touched hit has no sensor. The recording brackets it: 1100 ms closed, 1300 ms open; 7 px open, 8 px closed.
+- Real Ctrl+click on Linux gives a plain click (no `contextmenu`). The macOS sequence (`mousedown` button 0 with ctrlKey, `contextmenu`,
+  `mouseup`) is synthetic: it is Chromium's documented macOS behavior, not recorded on macOS.
+- `crates/x3d-viewer/tests/native_menu_triggers.rs` replays each case on the native viewer.

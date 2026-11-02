@@ -348,6 +348,10 @@ pub struct Scene {
     /// XMLParser's `xmlElement [_node]` (DOMIntegration): for each element of the XML text that made a node, a route or the
     /// scene, its number in document order (`Element::index`) and what it made.
     pub xml_targets: Vec<(usize, XmlTarget)>,
+    /// The XML text this scene was parsed from (`scene [_x3d]` of XMLParser.js is its X3D element).
+    pub xml_source: Option<String>,
+    /// The XML scenes merged into this one (an Inline's, `merge`): per root context the text and what its elements made.
+    pub xml_scenes: std::collections::BTreeMap<CtxId, (String, Vec<(usize, XmlTarget)>)>,
     /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
     pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
     /// Fields whose value a Script gave with components that are not all numbers (X_ITE's Vector3 holds any JavaScript value): the
@@ -532,6 +536,8 @@ impl Scene {
             warnings: vec![],
             setup_order: vec![],
             xml_targets: vec![],
+            xml_source: None,
+            xml_scenes: Default::default(),
             clone_counts: None,
             scene_infos: Default::default(),
             raw_tokens: Default::default(),
@@ -2211,6 +2217,27 @@ impl Scene {
         for e in &mut other.exported {
             e.ctx += m.ctx_offset;
             e.local += m.node_offset;
+        }
+
+        // The XML of the merged scene and what its elements made, in the ids of this scene.
+        if let Some(source) = other.xml_source.take() {
+            let targets = other
+                .xml_targets
+                .iter()
+                .map(|&(index, target)| {
+                    let target = match target {
+                        XmlTarget::Node(n) => XmlTarget::Node(n + m.node_offset),
+                        XmlTarget::Scene(c) => XmlTarget::Scene(c + m.ctx_offset),
+                        XmlTarget::Route(c, id) => {
+                            XmlTarget::Route(c + m.ctx_offset, id + route_offset)
+                        }
+                    };
+
+                    (index, target)
+                })
+                .collect();
+
+            self.xml_scenes.insert(m.root_ctx, (source, targets));
         }
 
         self.route_counter += other.route_counter;
