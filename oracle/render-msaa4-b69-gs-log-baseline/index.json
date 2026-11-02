@@ -1,0 +1,439 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 1500,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "gs-basic.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "74d80294706ea28af5b681776d695efedfcc7732c10a58cf0ad59c68d292e966",
+   "pngSha256": "f5622ccfeb10ea0eee60e67efdd5dc1f7867c83357ca310a5d4676398d302414",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-bbox-default.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6d458d359a1e46f889868b893a73c11e91edbcdea98b595b49b8cc495a5a60cf",
+   "pngSha256": "f363a3bd7a8d4fc42671353e3fc780832093a22b5a3977622593724de4982e8f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-bbox.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5d34a0b60af7dd0d769a3c6b42abd83ecb5973360451c597e2b1f4ec642cf676",
+   "pngSha256": "60b872fcfb0efa9a10b3e6202bb80c375300e5d8279a41c33fcfb02db7c9bda1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-clip.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "718d3d160805b7d36ab54e9d78dcc0e7585b67d06d3886b6c8cda606da975d52",
+   "pngSha256": "1ce31fb31967890f925f518070862780b484ce252e4c233e0c38d0358e44ffe6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-colorspace-unknown.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "10973d83e9ea6b4f60486b893b4a6863299d0c75823eb7abec4e91efe9311982",
+   "pngSha256": "1da028ebe3476714de04e2b627e5a8aebc35d508b62ce5c70c1f62c65d3b15d4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-edge.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "833d09de3859393adc6b67a87e6477ff4f175d93bb38688f8f2a6730c23cc1a4",
+   "pngSha256": "e1301202e2c46e639504e94a74fc848b69f8557c50bc3334226e177fb696c57b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-empty.wrl",
+   "ok": false,
+   "error": "TIMEOUT 45s",
+   "log": []
+  },
+  {
+   "file": "gs-fog-exp.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b7b9d6f1144380f9e13e4a84e2aae4d21b3fcbeb516dcf67904d76c61292c591",
+   "pngSha256": "d3e6213bc29cd1d27362f9921262907931a30b67a80c83fa4648a5d2d55f880c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-fog-linear.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "172227aa4fd5053b877e0fe9a3724f2f250fe6527fb06c5129fecd618196cfa8",
+   "pngSha256": "462b97e6c2481a76d7f2de99d0d2cd1259f6ef68849dd875cbc80628dadf3966",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2e7309e625b1e544f05d7f02d934a5643559b05669d23d815de080e2d46cea0e",
+   "pngSha256": "472f1fc68be0b2ffea2857561ad65f5a5f7bd258011466a9b0aecd90ee115d8a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-linear.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8f0e21ca3ab2ef3453268c928bfb08cffc18701b0cbcab8677bb45242d6192d4",
+   "pngSha256": "e9f500552f6817bf3a48f428955b1b40990e7dc70643d45433c9355b3272eb97",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-near-far.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0dd002d866e0db794f0d3b9e81622d0733a66d82e9b9d05cc550d7642299ac9a",
+   "pngSha256": "0a4cbb7040da62c2efa76622feb5760cddcafdc68b72a1f5ab90a4629d9767ad",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-nosh.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d7b472b53c0ea339ec8a81619f79a4dab9d0a1d571485b830efcd28cbe8833f1",
+   "pngSha256": "33c5251708fd120cb64e1e511bed1acda799192468dac6fea094f55c719b2412",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-opaque.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "91d380df400cb6e6a8f7b27ce840b583455dab41136d2cb686190da8f15133e8",
+   "pngSha256": "381e439b5da7ad05cf393c3b917095e72eee28becb77afd7d3b721e26fd55e2c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "1862a5e02eb6cd2db128f31c7d87c3ef979e7e6cb7c09e4640d12da5973fd94d",
+   "pngSha256": "9a2a4d87182e9a4bc20df3b4aa32f4c2f4732432304a9c05be39ba19fab00af2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-overlap.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "aa8d1b1f25f4f295e5c064c98730de78aeda12db714b389194179c606e0b6e9c",
+   "pngSha256": "ca60c8dd559efb2765a743bb4122b25ed6fdddd2152371376fa01b754aee61c2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ply.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3c824254c3df1797f3026e9a381b9051567af3d5153492bc2cda8699c2d2cfc5",
+   "pngSha256": "3428840b42fd35f8c6feeb7febb57346ab11520f29f0a9735fa7e2c41a4254b5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-random-3000.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fc9134616d5408ea6c948a772f35e90c424ee46c56a68843e7b21301a94c8cc9",
+   "pngSha256": "aa9fceaaf3768128550b7114d4865ad9b6ec7641f4af4cddc5103cd44803c529",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-route.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d6918c41fec6395579cc5a3c42cffb621e0cc1236f314c8f9d19cb79a39c3b16",
+   "pngSha256": "8ae1548ef163f94081f4333e28e9038c3fff71af0f5bf0b3869ffa79788e5b25",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-runtime.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3dca04485386d145c2eb52e1549b49a37c2014de9c732845b4f74b752851fb97",
+   "pngSha256": "c847c0caeff004416e930e17d1db6f6d8825525cfa0ffa3c61a8c1193afc735c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh-partial.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "bf330930f1a9cbc7f1beaff00ff7e0a5cfd04526970e8eda3007c84e1c5ad135",
+   "pngSha256": "31e16f7ab1bd064a37110303a0af7f6919e5deaaf77dfe734230390f0e885eca",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh0.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0f0c1b63318b55475e1da28c6651672deaac216546c7993a0007df4117fdcdae",
+   "pngSha256": "3c2bad4fa37f52f347735b37487e5a831b972fb675267de0887e748f507efd36",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh1.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b03269007c4cce21126d2f4353b6ef40b908c8c22ffc88c8d1e7324b1178bc4f",
+   "pngSha256": "9dd2fc8eed0f48dc3417292be2de9048d4a3af87ed68d4268f146bdaed5f27c0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4efd34250f0fb89cc675a02dc5fbb0b9ed51f78d3cf605e6cc2ba76a820088c7",
+   "pngSha256": "2a22b6161294aeb711d49f0ba6ffc17a6163170d6e69b5e3edff5bb2c91fa625",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view1.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "85d19925d325f5f27ab0e03b344693e9a180867a75e142a336cc91760a886b56",
+   "pngSha256": "997e87a25cf97efc70841c1ddebc6a4246f965f8db0a8a6274c6a96d00284a68",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5938704eda77ba97120ecec791f2152a46007d8ec396e14b67676179d0d95696",
+   "pngSha256": "ec84ed19ce5ba8182f2d5debfc3c10f14aafcd5bd983b5663da11cac1e0f44e8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "175bce585a99530a642172f8f7af4dda4a6d8d4cd9bfa7cd41a99d0f04f528de",
+   "pngSha256": "ba4619279bfe8b0aecbd703fd48c6b9d49cd1e5ce8189ad0c6a4f382cc87c440",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b404b9bafefff45531c0f803ab668a2a9b3af8b4499d7b81539517dc2f1c1995",
+   "pngSha256": "97600e7d4a75ef4794ec1e3a55d02dcb552b5fddeead0360f0e1095b9d2f3329",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-opacities.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7dd49a31ce18a7ad2cce2c31d4cee9685fb8412ef587ee4f2e630e310520adda",
+   "pngSha256": "9cea95b1b50f401416d5bf8e00778f5846e23ec6e2f20a3db4ab40a97281ade3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-scales.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "88ad83fc949319ec85d07af02045869954d8c5694ad05ac2b3af1c57b9021a3b",
+   "pngSha256": "fe01feabcf476408b0f41fc5bc2efc612378508e3239aeb461ab441cb2466ed7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-sh.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e0ac17b5629b3a7c72c62671baf10017aa9c8d8339d164338f9bb9bcc4ffefdd",
+   "pngSha256": "f781ef3021cd02d4194972a7d24780589068724a740e2c5fa3446cdb2be9d887",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-srgb.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "10973d83e9ea6b4f60486b893b4a6863299d0c75823eb7abec4e91efe9311982",
+   "pngSha256": "1da028ebe3476714de04e2b627e5a8aebc35d508b62ce5c70c1f62c65d3b15d4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ties.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e26173106c760846793da37ae2deab14b67711dccb5db261ad6a522056c34d2f",
+   "pngSha256": "3b454efac39747961ac8b06487095c9bc9b470c29eb5b70c9eb6d5327680c786",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transform.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "76658968449e13a117280a30a4f0fa87880318b4cc1f510c0fac25174e2863ab",
+   "pngSha256": "d589b60f198523de5faa4daa9296dbbe342a8ac833f5ebe26b5f00cbb1a5f295",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transmission.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "dbf2c160d6b94cb98a6a4b25fbf636e3c03164f906e5e26e71a8f766b32c55dd",
+   "pngSha256": "1363985b61be8a114e90899e7bf5f7286025b7eed8b27cc5b02bdef85ae2b271",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transparent-mix.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6bfa030e0c22f8ab6e62e9d915d8ebf0c452b61931bf46037cd83b83bcf142cf",
+   "pngSha256": "8460f4da95a76e0b791494851747ba51243233baed0e77009e7c310c77df3be5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-visible-false.wrl",
+   "ok": false,
+   "error": "TIMEOUT 45s",
+   "log": []
+  }
+ ],
+ "recordings": 3,
+ "note": "Issue #69: GaussianSplats under LogarithmicDepthBuffer at Multisampling 4 over oracle/synthetic-rea-b08-gs (x_ite-shot-msaa.mjs --ms 4 --log --settle 1500; the option is set with setBrowserOption before the world loads; the same method at Multisampling 0 reproduces render-b69-gs-log-baseline byte for byte, 35 of 35). Three recordings: 21 of 35 worlds are byte-identical; the other 14 differ by one level in single channels and by no pixel over 8 (resolve rounding of blended multisampled splats), so the first recording is kept. gs-empty and gs-visible-false time out in the pinned page at 45 s, as at MSAA 0 (no picture, no reference)."
+}
