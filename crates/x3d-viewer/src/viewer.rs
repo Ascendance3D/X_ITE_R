@@ -1261,6 +1261,7 @@ impl Viewer3d {
         self.date_now = self.date_now.max(now);
         self.geom_cache.clear();
         self.frame_count += 1;
+        self.timings_update(now);
 
         // Timeouts that fired between frames (setTimeout).
         let date_now = self.date_now;
@@ -3354,7 +3355,10 @@ impl Viewer3d {
         b.layer_cameras = cameras.into_iter().filter(|(k, _)| k.is_some()).collect();
         // X3DRenderingContext.reshape: the viewport, projection and ScreenGroup / ScreenText scale are in drawing-buffer pixels
         // (the canvas size × ContentScale).
-        b.build(width, height)
+        let frame = b.build(width, height);
+
+        self.timings_count(&frame);
+        frame
     }
 
     /// The bound viewpoint's camera and the bindables of a layer for the renderer.
