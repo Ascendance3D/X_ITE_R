@@ -1050,7 +1050,8 @@ impl WebBrowser {
     /// Route `route` of context `ctx` of scene `id` is deleted.
     #[wasm_bindgen(js_name = deleteRouteById)]
     pub fn delete_route_by_id(&mut self, id: u32, ctx: u32, route: u32) -> Result<(), JsError> {
-        self.session_mut(id)?.delete_route_in(ctx as usize, route as usize);
+        self.session_mut(id)?
+            .delete_route_in(ctx as usize, route as usize);
         Ok(())
     }
 

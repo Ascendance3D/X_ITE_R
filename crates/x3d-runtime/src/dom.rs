@@ -58,7 +58,14 @@ impl Runtime {
                     continue;
                 }
 
-                if let Some(r) = self.scene.ctx(c).routes.iter().find(|r| r.id == id).cloned() {
+                if let Some(r) = self
+                    .scene
+                    .ctx(c)
+                    .routes
+                    .iter()
+                    .find(|r| r.id == id)
+                    .cloned()
+                {
                     self.activate_route(&r);
                 }
             }
@@ -138,7 +145,8 @@ impl Runtime {
     /// X3DNode.dispose: the node leaves its context's names, its routes are deleted, and it is removed from every field and root
     /// node list that holds it (the MFNode fields first, then the SFNode fields).
     pub fn dispose_node(&mut self, node: NodeId) {
-        if !self.scene.is_live(node) || matches!(self.scene.node(node).kind, NodeKind::Internal(_)) {
+        if !self.scene.is_live(node) || matches!(self.scene.node(node).kind, NodeKind::Internal(_))
+        {
             return;
         }
 
