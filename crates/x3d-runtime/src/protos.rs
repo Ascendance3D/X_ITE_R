@@ -479,7 +479,9 @@ impl Runtime {
 
         if op == DeclOp::Remove {
             if extern_ {
-                self.scene.ctx_mut(ctx).externprotos.remove(name);
+                // X3DExecutionContext.removeExternProtoDeclaration, with the load of the declaration cancelled (timer, queued
+                // load event, request), not left to reach the instances afterwards.
+                self.extern_remove(ctx, name);
             } else {
                 self.scene.ctx_mut(ctx).protos.remove(name);
             }

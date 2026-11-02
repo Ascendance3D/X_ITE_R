@@ -902,18 +902,35 @@ impl Session {
         Some(self.rt_mut().create_instance_setup(ctx, proto))
     }
 
+    /// The error of a declaration index that is not in the world (an index of another scene).
+    fn decl_missing(&self, extern_: bool, id: usize) -> Result<(), String> {
+        if self.decl_exists(extern_, id) {
+            Ok(())
+        } else {
+            let kind = if extern_ { "extern proto" } else { "proto" };
+
+            Err(format!("{kind} declaration {id} is not in the world"))
+        }
+    }
+
     /// X3DProtoDeclarationNode.requestUpdateInstances: at the next event cascade.
-    pub fn decl_request_update(&mut self, extern_: bool, id: usize) {
+    pub fn decl_request_update(&mut self, extern_: bool, id: usize) -> Result<(), String> {
+        self.decl_missing(extern_, id)?;
+
         let rt = self.rt_mut();
 
         if !rt.pending_proto_updates.contains(&(extern_, id)) {
             rt.pending_proto_updates.push((extern_, id));
         }
+
+        Ok(())
     }
 
     /// X3DProtoDeclarationNode.updateInstances.
-    pub fn decl_update_instances(&mut self, extern_: bool, id: usize) {
+    pub fn decl_update_instances(&mut self, extern_: bool, id: usize) -> Result<(), String> {
+        self.decl_missing(extern_, id)?;
         self.rt_mut().proto_update_instances(extern_, id);
+        Ok(())
     }
 
     /// X3DBaseNode.addUserDefinedField on a PROTO declaration.
@@ -925,6 +942,8 @@ impl Session {
         type_name: &str,
         value: &Data,
     ) -> Result<(), String> {
+        self.decl_missing(false, id)?;
+
         let ty =
             FieldType::from_name(type_name).ok_or_else(|| format!("unknown type '{type_name}'"))?;
 
@@ -937,15 +956,20 @@ impl Session {
     }
 
     /// X3DBaseNode.removeUserDefinedField on a PROTO declaration.
-    pub fn decl_remove_user_field(&mut self, id: usize, name: &str) {
+    pub fn decl_remove_user_field(&mut self, id: usize, name: &str) -> Result<(), String> {
+        self.decl_missing(false, id)?;
         self.rt_mut().proto_remove_user_field(id, name);
+        Ok(())
     }
 
     /// `declaration .toVRMLString ()` / `toXMLString ()` / `toJSONString ()` (`format` is `vrml`, `xml` or `json`).
-    pub fn decl_string(&self, extern_: bool, id: usize, format: &str) -> String {
-        self.rt()
+    pub fn decl_string(&self, extern_: bool, id: usize, format: &str) -> Result<String, String> {
+        self.decl_missing(extern_, id)?;
+
+        Ok(self
+            .rt()
             .scene
-            .proto_declaration_string(extern_, id, format)
+            .proto_declaration_string(extern_, id, format))
     }
 
     /// X3DProtoDeclaration.getBody: the body's execution context.
