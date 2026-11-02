@@ -1238,17 +1238,23 @@ fn x_ite_two_canvases_particles_msaa4() {
 /// Sound: there is no audio-output oracle, so what is compared is the picture of a world whose Script turns the
 /// SAI-visible state of an AudioClip into geometry: `isActive` (a sphere shown or hidden), `isPaused` (box height),
 /// `duration_changed` (box scale) and `elapsedTime` (box position and rotation). The audible signal itself, the
-/// Sound node's spatialization and the audio device are NOT compared. Both clips are `loop TRUE` (a non-looping clip
-/// started through a TimeSensor route never became active in the pinned X_ITE); snd-b is paused at frame 15.
+/// Sound node's spatialization and the audio device are NOT compared. Both clips are `loop TRUE`; snd-b is paused at
+/// frame 15.
 /// Issue #262: Rust used to differ from X_ITE by 3% to 7% of the pixels (the box sat at another `elapsedTime`). The
 /// cause was the harness, not the clip. A time-dependent node that starts while its scene is not live pauses
 /// (`real_pause`) and resumes (`real_resume`) when the scene goes live, and measures the interval with `Date.now ()`;
 /// the page installed its virtual `Date.now` only after the load, so the interval was the real load time (1.017 s)
 /// and `elapsedTime` ran from -1.017. The page now has the virtual `Date.now` from the start, as Rust's clock
-/// always had, and the X_ITE side is exact at MSAA 0 (the Script's event sequence also agrees, except that X_ITE
-/// sends `duration_changed` before `isActive`: its decode ends in real time before the first frame, Rust's after the
-/// frame's pending events; the picture does not show it). At MSAA 4 the Rust-vs-X_ITE difference is the antialiased
-/// edge of the rotated box and of the sphere (at most 0.7%, no timing), so only MSAA 0 is gated.
+/// always had, and the X_ITE side is exact at MSAA 0 (0.00000 in all six pictures).
+/// Two earlier statements of this comment did not hold up in single-canvas pages of real Chromium, recorded 5 times
+/// with identical values (`soundMore.loadTimeEvents`, `soundMore.routeStart`, web/API.md "Sound"): X_ITE sends
+/// `isActive true`, then `duration_changed`, then `elapsedTime` for a load-time loop clip (the order Rust has; the
+/// `duration_changed`-first order reported for this two-canvas page was not reproduced in a single canvas; a real-time
+/// race between the decode and the first frame is the likely cause, not verified), and a clip that does not loop and is started by a TimeSensor route (cycleTime to startTime)
+/// does become active and ends (`isActive true`, `isActive false`) in X_ITE and in X_ITE_R.
+/// At MSAA 4 the Rust-vs-X_ITE difference is the antialiased edge of the rotated box and of the sphere, not timing
+/// (MSAA 0 is exact): 0.217% to 0.622% of the pixels (worst snd-b frame 20, 0.622%). It exceeds the 0.5% limit (owner
+/// decision 2026-10-18: no wider limit), so MSAA 4 stays ungated until the owner approves the difference.
 #[test]
 fn x_ite_two_canvases_sound_msaa0() {
     oracle_pair_gated(0, ["snd-a", "snd-b"], true);
