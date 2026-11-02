@@ -14,8 +14,8 @@
 //!   compared: the simulation's records differ from X_ITE's by float32 noise (REA batch 06R, within 1e-5 + 1e-5 *
 //!   |reference|), and the hit point moves with them.
 //!
-//! KNOWN_GAPS lists cases whose reference probes differ in value only (the hit shapes still have to match); the test
-//! requires them to keep differing. pp-two-systems has two systems; only PS is dumped, so its second system stands still,
+//! PICK_ULPS lists the cases whose reference probes differ in the last float32 digits of a value (the hit shapes still have to
+//! match), each with the largest distance in ulps that is allowed: the largest the recordings show. pp-two-systems has two systems; only PS is dumped, so its second system stands still,
 //! which makes its records exact without a reference.
 //!
 //! The two equal-depth cases are the depth ties of the instanced pointing draw (lane
@@ -26,24 +26,32 @@
 //!
 //! The pointing pass needs a GPU: without an adapter the test is skipped. `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
+use common::ulps::within_ulps;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// (case, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str)] = &[
+/// (case, largest allowed float32 ulp distance of a probe number, why Rust differs). The hit shapes (id, DEF name) must match,
+/// and so must every number that is not within the limit. The limit is the largest distance the recordings show, not a round
+/// number: a probe that moves further fails.
+const PICK_ULPS: &[(&str, u64, &str)] = &[
     (
         "pp-row-line",
+        3,
         "LINE particles: every probe hits the same particle system, but the hit point differs by up to 3 float32 ulps on 20 \
          of 68 hits: GL line rasterization vs. the quad emulation, the sub:pointer.picking line gap of rea_batch12 pk-lines",
     ),
     (
         "pp-row-point-props",
+        1,
         "POINT particles with PointProperties: same hits, the hit texCoord (gl_PointCoord) differs by 1 float32 ulp on 16 \
          of 216 hits, the rea_batch12 pk-points-style gap",
     ),
     (
         "pp-slant-point-props",
+        1,
         "POINT particles with PointProperties: same hits, the hit texCoord (gl_PointCoord) differs by 1 float32 ulp on 4 \
          of 52 hits, the rea_batch12 pk-points-style gap",
     ),
@@ -76,7 +84,12 @@ fn selection(p: &Value) -> (Option<i64>, Option<&str>) {
 }
 
 /// Compares the probes of every frame; returns (value differences, selection differences, first difference).
-fn compare_probes(want: &Value, got: &Value) -> (usize, usize, Option<String>) {
+fn compare_probes(
+    want: &Value,
+    got: &Value,
+    max_ulps: u64,
+    seen: &mut u64,
+) -> (usize, usize, Option<String>) {
     let (mut values, mut selections, mut first) = (0, 0, None);
 
     for (frame, w) in want.as_object().unwrap() {
@@ -95,6 +108,11 @@ fn compare_probes(want: &Value, got: &Value) -> (usize, usize, Option<String>) {
 
         for (i, (p, q)) in w.iter().zip(&g).enumerate() {
             if same(p, q) {
+                continue;
+            }
+
+            // Equal selection and every number within the allowed ulps: the case's documented tolerance, not a difference.
+            if selection(p) == selection(q) && within_ulps(p, q, max_ulps, seen) {
                 continue;
             }
 
@@ -194,8 +212,21 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         .flat_map(|v| v.as_array().unwrap())
         .filter(|p| p["id"] == 1)
         .count();
-    let (values, selections, first) = compare_probes(want, &rs["pickProbesReference"]);
-    let (own_values, own_selections, own_first) = compare_probes(want, &rs["pickProbes"]);
+    let max_ulps = PICK_ULPS
+        .iter()
+        .find(|(case, ..)| *case == name)
+        .map_or(0, |(_, ulps, _)| *ulps);
+    let mut seen = 0;
+    let (values, selections, first) =
+        compare_probes(want, &rs["pickProbesReference"], max_ulps, &mut seen);
+    let (own_values, own_selections, own_first) =
+        compare_probes(want, &rs["pickProbes"], 0, &mut 0);
+
+    if max_ulps > 0 {
+        eprintln!(
+            "{name}: probe numbers differ by at most {seen} float32 ulps (allowed {max_ulps})"
+        );
+    }
 
     eprintln!(
         "{name}: {probes} probes, {hits} X_ITE hits; X_ITE records: {values} value / {selections} hit differences; own records: {own_selections} hit differences ({own_values} values moved with the records)"
@@ -208,18 +239,11 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         ));
     }
 
-    match KNOWN_GAPS.iter().find(|(gap, _)| *gap == name) {
-        Some((_, why)) if selections == 0 && values == 0 => fail(format!(
-            "matches X_ITE now; remove it from KNOWN_GAPS ({why})"
-        )),
-        Some((_, why)) if selections == 0 => {
-            eprintln!("{name}: known gap, {values} value differences ({why})")
-        }
-        _ if selections + values > 0 => fail(format!(
-            "X_ITE records: {selections} hit and {values} value differences; first {}",
+    if selections + values > 0 {
+        fail(format!(
+            "X_ITE records: {selections} hit and {values} value differences (allowed {max_ulps} float32 ulps); first {}",
             first.unwrap_or_default()
-        )),
-        _ => {}
+        ));
     }
 
     let _ = std::fs::remove_dir_all(&out);
@@ -249,11 +273,11 @@ fn rea_b14_particle_pick_matches_x_ite() {
         "baselines missing: {names:?}"
     );
 
-    // Every known gap names a case that exists.
-    for (gap, _) in KNOWN_GAPS {
+    // Every tolerance names a case that exists.
+    for (gap, ..) in PICK_ULPS {
         assert!(
             only.is_some() || names.iter().any(|n| n == gap),
-            "KNOWN_GAPS names {gap}, which has no baseline"
+            "PICK_ULPS names {gap}, which has no baseline"
         );
     }
 
