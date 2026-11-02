@@ -45,7 +45,6 @@ These are not in the issue's thirteen groups but are in the harness. Each needs 
 | Group | Difference | Evidence | Ask |
 | --- | --- | --- | --- |
 | Annotation component | `supportedComponents` has Annotation after X_ITE's 39 (40 in all). X_ITE 16.5.0 ships it but does not register it. | `sceneCreate.supportedLists`; REA batch 04 owner decision, `crates/x3d-scene/src/nodes.rs` | Already an owner decision (REA batch 04); confirm |
-| `importDocument (htmlElement)` | X_ITE's HTMLParser reads the HTML element of an `<X3D>`; X_ITE_R rejects an `HTMLElement`, takes XML only. DOM integration is #146. | `sceneCreate.importDocumentHTML`; ledger `sub:browser.dom-integration` (`DIFFERENT`, note: "DOM-only feature; native host has no DOM") | Decide: gap tracked in #146, or approve |
 | Sound | After `replaceWorld` X_ITE keeps the page's context with the destination alone; X_ITE_R's audio engine goes with the replaced world. `AudioDestination` feeds the engine's destination, not a `MediaStreamAudioDestinationNode`. | `soundMore.lifecycle`, `soundMore.audioDestination`; API.md "Sound" bullets | Decide (node:AudioClip is `PARTIAL`; the `missing` text lists these) |
 | Field callbacks | Callbacks run after the frame that processed their events; a field a callback sets sends its event in the next frame. | API.md first bullet (no `KNOWN_DIFFERENCES` key) | Decide: live values are #137 |
 
