@@ -3155,6 +3155,17 @@ impl Viewer3d {
         }
     }
 
+    /// X3DBrowser.isLive (): false between `endUpdate` and `beginUpdate` (Debug Ctrl+S).
+    pub fn is_live(&self) -> bool {
+        self.live
+    }
+
+    /// X3DCoreContext getControlKey, getShiftKey, getAltKey, getCommandKey and getAltGrKey: the browser's modifier flags
+    /// (set by the keydown and keyup of keyCodes 17, 16, 18, 91 and 225).
+    pub fn key_flags(&self) -> [bool; 5] {
+        [self.ctrl, self.shift, self.alt, self.command, self.alt_gr]
+    }
+
     /// The element's keydown / keyup listeners: X3DCoreContext (modifier state, viewpoint keys) and
     /// X3DKeyDeviceSensorContext (the key device sensors, then processEvents).
     fn key_event(&mut self, down: bool, key: &str, code: u32) {

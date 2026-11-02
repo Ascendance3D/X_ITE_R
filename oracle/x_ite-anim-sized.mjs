@@ -17,6 +17,7 @@
  * virtual: getCurrentTime, Date.now and setTimeout follow the script's clock.
  */
 import { createServer } from "node:http";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { extname, join, normalize, relative, resolve } from "node:path";
@@ -24,6 +25,11 @@ import { fileURLToPath } from "node:url";
 import { deflateSync } from "node:zlib";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
+
+// anim.html loads libtess and the other libraries from x_ite-pin/node_modules (ignored by Git, so a new worktree lacks it). Without it
+// the page never sets `window.ready` and the run ended only after a 30 s wait with an empty log; say so at once instead.
+if (!existsSync (join (ROOT, "x_ite-pin", "node_modules")))
+   throw new Error ("oracle/x_ite-pin/node_modules is missing: link it first (ln -s ~/Projects/cybertown/X_ITE/x_ite/node_modules oracle/x_ite-pin/node_modules, see oracle/README.md, Recording from a worktree)");
 const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css",
