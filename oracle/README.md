@@ -1327,3 +1327,15 @@ element and whether the menu is open, for the right button, a left click, a real
 - Real Ctrl+click on Linux gives a plain click (no `contextmenu`). The macOS sequence (`mousedown` button 0 with ctrlKey, `contextmenu`,
   `mouseup`) is synthetic: it is Chromium's documented macOS behavior, not recorded on macOS.
 - `crates/x3d-viewer/tests/native_menu_triggers.rs` replays each case on the native viewer.
+
+## Script fetched-candidate frame (issue #54)
+
+- `oracle/synthetic-rea-b09-sai/scr-url-fetch-frame.wrl` (made by `oracle/tools/gen_rea_b09_script.py scr-url-fetch-frame`) has Scripts whose
+  candidates need no fetch (U03, U04, U12) and Scripts whose candidates need one (a base64 data URL, files, a missing file with a second
+  candidate), and a reporter that ticks every frame.
+- Pinned X_ITE does not repeat: 14 runs gave four frame maps and five orders (`oracle/rea-b09-sai-baseline-variable/scr-url-fetch-frame/xite-runs.json`).
+  It is therefore not in `rea-b09-sai-baseline/cases.txt` (the recorder's rule is five identical runs). To record again:
+  `node oracle/x_ite-anim.mjs oracle/synthetic-rea-b09-sai/scr-url-fetch-frame.wrl oracle/synthetic-rea-b09-sai/sai.json --out /tmp/run.json`
+  (prepare the worktree as in "Recording from a worktree").
+- `crates/x3d-viewer/tests/rea_b54_script_fetch_frame.rs` checks X_ITE_R against ISO/IEC 19775-1 V4.0 29.2.3 and the recorded envelope;
+  the decision is in `docs/adr/0007-script-no-dom.md`.
