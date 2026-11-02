@@ -1,0 +1,7 @@
+#VRML V2.0 utf8
+# Synthetic EXTERNPROTO file for externremove01_case.mjs (issue #58): the second version of the body.
+PROTO Ext [ ]
+{
+  Script { url "javascript: function initialize () { print ('B2 initialize'); }" }
+}
+Group { }
