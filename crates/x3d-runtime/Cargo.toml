@@ -11,6 +11,8 @@ x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-text = { path = "../x3d-text" }
+# VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
+vp9dec = "0.1.1"
 url = "2"
 percent-encoding = "2"
 # Image headers only (X3DTexture2DNode width and height); the same crate x3d-render decodes with.
@@ -25,6 +27,8 @@ rustfft = "6.4.1"
 web-time = "1"
 
 [dev-dependencies]
+# VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
+vp9dec = "0.1.1"
 url = "2"
 serde_json = "1"
 sha2 = "0.10"

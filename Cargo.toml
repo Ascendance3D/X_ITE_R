@@ -12,3 +12,7 @@ publish = false
 # backtraces readable. The test profile inherits from dev.
 [profile.dev]
 debug = "line-tables-only"
+
+# vp9dec at opt-level 3 overflows the stack of rustc 1.95 (SIGSEGV in LLVM); 2 builds.
+[profile.release.package.vp9dec]
+opt-level = 2

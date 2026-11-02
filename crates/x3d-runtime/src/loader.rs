@@ -1335,8 +1335,18 @@ impl Runtime {
                     .iter()
                     .any(|e| path.to_ascii_lowercase().ends_with(e));
 
-                if playable && self.fetcher.fetch(&file_url).is_ok() {
-                    return;
+                if playable {
+                    if let Ok(data) = self.fetcher.fetch(&file_url) {
+                        // A WebM with a VP9 track is decoded; any other playable file is taken as playing.
+                        if path.to_ascii_lowercase().ends_with(".webm")
+                            && let Some(media) =
+                                nodes::movie_texture::MovieMedia::decode_webm(&data)
+                        {
+                            return self.movie_set_frames(node, media);
+                        }
+
+                        return;
+                    }
                 }
 
                 ("Error", format!("Couldn't load video '{href}': error."))

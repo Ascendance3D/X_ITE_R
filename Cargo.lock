@@ -3858,6 +3858,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "vp9dec"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85dc9eb9e26fa02ce81898998c5e1ccc718f14bfc485c7a4518f464bba57d338"
+
+[[package]]
 name = "vrml"
 version = "0.1.0"
 dependencies = [
@@ -4723,6 +4729,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "url",
+ "vp9dec",
  "web-audio-api",
  "web-time",
  "x3d-evidence",
