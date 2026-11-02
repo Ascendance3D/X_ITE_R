@@ -1614,6 +1614,74 @@ impl Session {
             _ => vec![],
         }
     }
+
+    /// The descriptions the engine set itself (a bound viewpoint, an over pointing sensor) since the last call.
+    pub fn take_descriptions(&mut self) -> Vec<String> {
+        std::mem::take(&mut self.rt_mut().description_events)
+    }
+
+    /// `X3DViewpointNode.getDescriptions () .join (" » ")` of a viewpoint of the active layer.
+    pub fn viewpoint_description(&self, node: NodeId) -> String {
+        match &self.stage {
+            Stage::Live(v) if self.node_exists(node) => v.viewpoint_description(node),
+            _ => String::new(),
+        }
+    }
+
+    /// `browser ._availableViewers`: the viewers the bound NavigationInfo allows.
+    pub fn available_viewers(&self) -> Vec<String> {
+        match &self.stage {
+            Stage::Live(v) => v.available_viewers(),
+            _ => vec![],
+        }
+    }
+
+    /// `browser .getCurrentViewer ()`: the browser's `viewer` field.
+    pub fn viewer_field(&self) -> String {
+        match &self.stage {
+            Stage::Live(v) => v.viewer_field().to_string(),
+            _ => "NONE".to_string(),
+        }
+    }
+
+    /// `browser ._viewer = kind` (the context menu's viewer choice).
+    pub fn set_viewer(&mut self, kind: &str) {
+        if let Some(v) = self.viewer() {
+            v.set_viewer(kind);
+        }
+    }
+
+    /// The first WorldInfo of the world's own scene (`getWorldInfos () [0]`): its title and info, then the META statements of
+    /// the scene as key, value pairs. `None` when the world has no WorldInfo.
+    pub fn world_info(&self) -> (Option<(String, Vec<String>)>, Vec<(String, String)>) {
+        let rt = self.rt();
+        let world = rt.scene.world;
+        let info = rt
+            .world_infos
+            .get(&world)
+            .and_then(|list| list.first().copied())
+            .map(|n| {
+                let title = match rt.pre_value(n, "title") {
+                    Some(FieldValue::SFString(t)) => t.clone(),
+                    _ => String::new(),
+                };
+                let lines = match rt.pre_value(n, "info") {
+                    Some(FieldValue::MFString(l)) => l.clone(),
+                    _ => vec![],
+                };
+
+                (title, lines)
+            });
+
+        (info, rt.scene.meta_of(world).to_vec())
+    }
+
+    /// The bound viewpoint's user position, orientation and center of rotation (Shift+F8).
+    pub fn user_pose(&mut self) -> Option<[f64; 10]> {
+        let (p, mut o, c) = self.viewer()?.user_pose();
+
+        Some([p.x, p.y, p.z, o.x(), o.y(), o.z(), o.angle(), c.x, c.y, c.z])
+    }
 }
 
 /// The world goes like on X3DBrowser.replaceWorld: `shutdown` of its nodes, then its scenes are disposed. A scene
