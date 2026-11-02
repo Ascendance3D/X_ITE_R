@@ -313,16 +313,6 @@ const KNOWN_DIFFERENCES = {
       // X_ITE's dispose () fires the shutdown event of the world; X_ITE_R's does not.
       [ [ "events" ], [ "shutdown" ], [ ] ],
    ],
-   "font.pending": [
-      // X_ITE's FontStyle holds the scene's loadCount until its font file is in; X_ITE_R's scene does not wait for
-      // fonts (the FontStyle itself waits for the response).
-      [ [ "before", "loaded" ], "pending", "loaded" ],
-   ],
-   "audio.decodeFallbackHeld": [
-      // X_ITE's AudioClip holds the scene's loadCount until a candidate decodes; X_ITE_R's scene does not wait for
-      // the decode (the AudioClip itself waits for the next response).
-      [ [ "before", "loaded" ], "pending", "loaded" ],
-   ],
    "dataURL.worldBadBase64": [
       // X_ITE's fetch of a data URL that does not decode logs Chromium's own network error first; X_ITE_R decodes
       // the URL itself (no request) and gives the same rejection, without that line.
