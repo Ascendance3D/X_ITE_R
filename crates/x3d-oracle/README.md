@@ -78,6 +78,27 @@ Only the first line is meaningful, since Playwright appends a stack with its own
 positions. A launch failure exits 1 with a message on stderr, as the Node tool's uncaught
 exception does.
 
+## Another ANGLE backend (issue #89)
+
+`X3D_ORACLE_ANGLE` replaces `gl` in `--use-angle=gl` for `particles` and `anim` (`gl` by default, which is what every
+baseline was recorded with; `gles`, `vulkan` or `swiftshader` also; anything else is an error). Nothing else in the launch
+changes. It measures the pinned X_ITE on another implementation; it never replaces a baseline. Measured 2026-11-02 on the RTX
+machine, 53 particle replays (`rea-b16-bounded-baseline` 26, `rea-b17-emitter-hits-baseline` 27, `x3d-oracle particles`
+with `X3D_ORACLE_ANGLE=swiftshader`) against the recorded `js.json` and `js.f32`:
+
+* `gl` run again: byte-identical to the baseline (the control).
+* SwiftShader: every `js.json` (the seeds, steps and dump layout) is identical; no `js.f32` is bit-identical (30 to 2880
+  floats of 1.7k to 33k differ); 36 of 53 are within the batch 06R tolerance (`1e-5 + 1e-5 * |reference|`) and 17 are over it.
+  The worst difference is 2.4e-3 (`ve-hits-128-uneven`, 236 floats over); `bp-damping-zero-box` and `bp-normals-sphere` have
+  424 and 455 floats over (7.2e-4 and 5.5e-4). The differences are in the position components (24 to 26 of the record); no
+  case differs by the size of a different intersection entry (inference from the 2.4e-3 maximum), so the `ARRAY_SIZE` clamp (the 33rd to 128th hit landing in the last
+  entry) behaves the same on both implementations. The cases over the tolerance are ve-hits-34, ve-hits-40 (4 and 3 floats),
+  ve-hits-40-uneven, the 64 and 128 hit cases and four ve-speed cases; none of the 31, 32 and 33 hit cases is over it, and
+  the counts are not monotone in the number of hits. A second and third SwiftShader run of `ve-hits-128-uneven` were
+  byte-identical to the first (the other cases were run once).
+
+This is X_ITE on a software rasterizer, not a second GPU: it says nothing about Metal.
+
 ## Platforms
 
 The transport is `--remote-debugging-pipe` on fd 3 / fd 4, so the browser can be driven on

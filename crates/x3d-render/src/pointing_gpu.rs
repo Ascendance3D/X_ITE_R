@@ -255,11 +255,12 @@ impl PointingGpu {
     /// A headless Vulkan device of its own (the discrete GPU), like [`crate::gpu::Gpu::new`].
     pub fn new_headless() -> Result<PointingGpu, String> {
         let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
-        desc.backends = if std::env::var("X3D_POINTING_BACKEND").as_deref() == Ok("gl") {
-            wgpu::Backends::GL
-        } else {
-            wgpu::Backends::VULKAN
-        };
+        desc.backends = crate::gpu::headless_backends(
+            std::env::var("X3D_POINTING_BACKEND")
+                .or_else(|_| std::env::var("X3D_BACKEND"))
+                .ok()
+                .as_deref(),
+        )?;
         let instance = wgpu::Instance::new(desc);
         let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
             power_preference: wgpu::PowerPreference::HighPerformance,
