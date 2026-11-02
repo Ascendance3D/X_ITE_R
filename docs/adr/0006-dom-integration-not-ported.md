@@ -1,6 +1,6 @@
 # 0006. DOM integration: not ported to the native host
 
-Status: **Proposed.** The ledger note says only "DOM-only feature; native host has no DOM"; no dated owner decision was found for it. The browser build has its own differences (ADR 0001, group on `importDocument (htmlElement)` and issue #146).
+Status: **Accepted (2026-11-02), for the native host only.** The native host has no DOM, so DOM integration has nothing to read there; this follows from the architecture. The browser build ports it (issue #146; part 1 landed in #291) and keeps no difference for it once #146 closes.
 
 Reference: X_ITE 16.5.0 at `34cdf9f97` (`oracle/x_ite-pin`). 16.6.0 is out of scope.
 

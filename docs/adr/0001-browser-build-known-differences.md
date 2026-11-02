@@ -1,6 +1,6 @@
 # 0001. Known differences of the browser build from X_ITE 16.5.0
 
-Status: **Proposed.** Every group below waits for an owner decision (issue #145). Nothing here changes code or a test.
+Status: **Accepted (2026-11-02).** The engineering decisions below follow the standing rule: match pinned X_ITE 16.5.0 unless it breaks the applicable standard; where the standard is silent, keep X_ITE's observable behavior when that is technically possible. Nothing here changes code or a test.
 
 Reference: X_ITE 16.5.0 at `34cdf9f97` (`oracle/x_ite-pin`). 16.6.0 is out of scope.
 
@@ -51,9 +51,29 @@ These are not in the issue's thirteen groups but are in the harness. Each needs 
 
 ## Decision
 
-None yet. Each row's **Ask** becomes the decision when the owner answers on #145. When a row is approved, change its
-group's line here to `Approved (<date>)`; when it is a gap, link the issue. Do not remove an entry from
-`KNOWN_DIFFERENCES` unless the case now matches the pinned recording (the rule used by #279).
+The rule: a difference stays only when (1) X_ITE breaks the applicable standard, (2) X_ITE has a defect that no test or page can depend on, or (3) the engine design makes the X_ITE behavior impossible. Everything else is a gap with an issue.
+
+| # | Group | Decision | Reason |
+| --- | --- | --- | --- |
+| 1 | Touch cancel and element removal | Keep the difference. | ISO/IEC 19775-1, Pointing device sensor component (TouchSensor): `isActive` ends when the pointing device is released or lost. A cancelled touch is a lost pointer, so a TouchSensor that stays active (X_ITE has no `touchcancel` handler) breaks the standard. |
+| 2 | Blob URL in image errors | Keep the difference. | The standard does not define error text. X_ITE names a blob URL that is random in each run, so no page or test can depend on it. |
+| 3 | One fetch per URL per world | Keep the difference. | The content is equal. X_ITE depends on the HTTP cache for the same result; request counts are not defined by the standard. |
+| 4 | `dispose ()` | Keep the rejection and the missing frame. **Gap (#292):** the `shutdown` event that X_ITE fires. | A promise that never settles and a frame that throws `Couldn't create frame buffer.` are X_ITE defects. The missing `shutdown` event is observable X_ITE behavior that the engine can match: tracked in #292. |
+| 5 | GLTF2Parser leaked loading object | Keep the difference. | A world that never finishes loading after a failed glTF buffer is an X_ITE defect; ISO/IEC 19775-1 requires a failed load to end (LoadSensor, Inline `load` events). |
+| 6 | A newer `loadURL` ends the older world's loads | Keep the difference. | ISO/IEC 19775-2 `replaceWorld` unloads the old scene; messages for a world nobody sees are not observable content. |
+| 7 | Font and audio load holding | Gap, fixed by #279 and closed in #144. | Matches X_ITE (`X3DUrlObject` `loadCount`). |
+| 8 | Chromium's network error line for a bad data URL | Keep the difference. | A browser log line, not X3D behavior. The rejection is equal. |
+| 9 | An empty document is an empty world | Keep the difference. | The X_ITE result in the recording page is `ReferenceError: CharLS is not defined`, an artifact of a page that does not load the DICOM component. ISO/IEC 19775-1 defines an empty scene as valid. |
+| 10 | Anchor script-scheme blocking | Keep the difference. | URI schemes are case-insensitive (RFC 3986, section 3.1). X_ITE checks lower case only, so `JavaScript:` opens. Blocking every letter case follows the RFC and is the safe reading. |
+| 11 | Node handles bound to one world | Keep the difference. | The approved architecture runs one world at a time. A node of another world has no meaning to the engine. |
+| 12 | Frame loop paused when hidden or removed | Keep the difference. | The visible result is equal. `requestAnimationFrame` pauses hidden pages in both. |
+| 13 | Names and startup | Keep the difference. | The name `X_ITE_R` and version identify the product. Loading WebAssembly and WebGPU is asynchronous. |
+| A | Annotation component | Keep (ADR 0002). | Existing decision. |
+| B | `importDocument (htmlElement)` | Gap, tracked in #146 (part 1 landed in #291). | Matches X_ITE. |
+| C | Sound after `replaceWorld`; `AudioDestination` | Gap, tracked in #293. | Matches X_ITE; `node:AudioClip` is `PARTIAL`. |
+| D | Field callbacks | Gap, tracked in #137 and #202; the route-chain callbacks of #269 and #285 already run inside the cascade. | Matches X_ITE. |
+
+Groups 1, 4 and 10 name the standards that decide them. A kept difference stays in `KNOWN_DIFFERENCES` so the test keeps comparing with the pinned value. A gap is removed from `KNOWN_DIFFERENCES` only when the case matches the pinned recording.
 
 ## Consequences
 
