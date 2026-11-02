@@ -7011,9 +7011,9 @@
    "tests": [
     "multi_viewer_b08 (17)"
    ],
-   "missing": "owner decision 2026-10-18: 0.65% limit rejected; x_ite_two_canvases_rigid_bodies_msaa4 f40 is 0.579% (single-viewer edge difference); viewers on different threads, particle pictures, sound, second device not tested; process-global geometry provider",
+   "missing": "owner decision 2026-10-18: 0.65% limit rejected; x_ite_two_canvases_rigid_bodies_msaa4 is 0.00000 at frames 5, 20 and 40 (the earlier 0.579% came from the harness frame rate, fixed in 510f48fc; issue #60); viewers on different threads, particle pictures, sound, second device not tested; process-global geometry provider",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Script host state and browser options per viewer (two bugs fixed). Remediation: x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% traced to the physics substep boundary above (not multi-viewer: pair equals alone in both engines); limit not relaxed; test still fails."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Script host state and browser options per viewer (two bugs fixed). Remediation: x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% traced to the physics substep boundary above (not multi-viewer: pair equals alone in both engines); limit not relaxed; test still fails. | Issue #60 2026-11-01: x_ite_two_canvases_rigid_bodies_msaa4 rerun on master 7375acdd (RTX 3060 Ti, Vulkan): 1 passed; X_ITE pair vs alone, Rust pair vs X_ITE pair, Rust alone vs X_ITE alone and Rust pair vs Rust alone are 0.00000 at frames 5, 20 and 40 for rb-a and rb-b. The float32 ulp explanation of the 0.579% was wrong. Multi-viewer threads, particles and sound cases are in PR #260. Status stays PARTIAL."
   },
   {
    "id": "sub:browser.keyboard-ui",
@@ -7459,9 +7459,9 @@
     "rea_b03_pick_vectors nested_compound_tree_culls_like_ammo (3)",
     "physics_rem_fall (frames 1-7; full run ignored, open)"
    ],
-   "missing": "rb-a (box falling from rest, 8 substeps/frame) takes one substep fewer than pinned X_ITE at frame 8 when sum/fixedTimeStep lands one ulp below an integer; rounding the quotient to float32 fixes it but regresses the rate/stack corpus, so it is not applied (x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% stays open)",
+   "missing": "the earlier rb-a substep difference at frame 8 was the harness measuring the frame rate from clock deltas; with currentFrameRate pinned to 1/DT (510f48fc) rb-a and rb-b equal pinned X_ITE at MSAA 4 (issue #60)",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit. | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path pick_shapes.rs is crates/x3d-viewer/src/pick_shapes.rs (git history has no crates/x3d-runtime/src/pick_shapes.rs)."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit. | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path pick_shapes.rs is crates/x3d-viewer/src/pick_shapes.rs (git history has no crates/x3d-runtime/src/pick_shapes.rs). | Issue #60 2026-11-01: x_ite_two_canvases_rigid_bodies_msaa4 rerun on master 7375acdd (RTX 3060 Ti, Vulkan): 1 passed; X_ITE pair vs alone, Rust pair vs X_ITE pair, Rust alone vs X_ITE alone and Rust pair vs Rust alone are 0.00000 at frames 5, 20 and 40 for rb-a and rb-b. The float32 ulp explanation of the 0.579% was wrong. Multi-viewer threads, particles and sound cases are in PR #260. Status stays PARTIAL."
   },
   {
    "id": "sub:pointer.picking",
