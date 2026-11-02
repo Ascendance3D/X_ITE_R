@@ -109,6 +109,8 @@ pub struct EmbeddedViewer {
     gpu_lent: bool,
     /// A world lost its GPU buffers to a lost device: later worlds pick and collide on the CPU.
     gpu_lost: bool,
+    /// The native UI over the world ([`crate::ui`]).
+    overlay: crate::overlay_gpu::OverlayGpu,
 }
 
 /// The host drops the viewer: its world is unloaded like by [`EmbeddedViewer::unload`].
@@ -153,6 +155,7 @@ impl EmbeddedViewer {
             gpu: None,
             gpu_lent: false,
             gpu_lost: false,
+            overlay: Default::default(),
         }
     }
 
@@ -320,7 +323,11 @@ impl EmbeddedViewer {
             &[],
         );
         self.leave();
-        self.core = Some(v?);
+        let mut v = v?;
+
+        // The native window shows the context menu and the Notification, and handles X_ITE's browser keys.
+        v.native_ui = true;
+        self.core = Some(v);
         self.attach_gpu();
         Ok(())
     }
@@ -574,6 +581,25 @@ impl EmbeddedViewer {
         info.build_ms = (t2 - t1).as_secs_f64() * 1e3;
         self.renderer
             .render(&frame, target, format, width, height)?;
+
+        // The context menu, the dialog and the notification over the world.
+        if let Some(o) = core.overlay() {
+            self.overlay.update(
+                self.renderer.device(),
+                self.renderer.queue(),
+                &o,
+                format.is_srgb(),
+            );
+        }
+
+        self.overlay.draw(
+            self.renderer.device(),
+            self.renderer.queue(),
+            target,
+            format,
+            width,
+            height,
+        );
         info.render_ms = t2.elapsed().as_secs_f64() * 1e3;
         info.gpu_ms = self.renderer.gpu_time_ms(false);
         info.draw_calls = self.renderer.stats.draw_calls;
