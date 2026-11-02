@@ -129,6 +129,13 @@ texture, lights, three viewpoints, an animation, a TouchSensor + Script and a lo
 `tools/package-desktop.sh <dir>` builds the release binary and packs it with the launcher, the
 sample and a README listing the runtime packages (Vulkan driver, ALSA, X11 or Wayland libraries).
 
+## Platform smoke runs (issue #88)
+
+Two scripts check the native host on the machine that runs them. Neither replaces the manual macOS 15 run that #88 still needs.
+
+- `tools/audio-smoke.sh` plays a quiet 440 Hz tone through the realtime AudioContext on the default output device and checks that the device clock runs and the tone reaches an analyser (`crates/x3d-runtime/tests/audio_device_smoke.rs`, an ignored test). Without an output device it fails with `evidence no-audio-device`; with `X3D_EVIDENCE=ci` and `X3D_EVIDENCE_ALLOW=no-audio-device` it records a named skip in `X3D_EVIDENCE_LOG`. It cannot show that sound leaves the speakers.
+- `tools/wayland-smoke.sh` starts a private headless Weston, runs `x3d-view` with `DISPLAY` unset in the scripted mode, and checks that three frames are presented on the Wayland compositor. A control run with a missing socket must fail. A headless Weston has no `wl_seat`, so no key reaches the window: key delivery from the compositor, a hardware keyboard and macOS are unverified. `tests/native_keys.rs` checks the key path from winit key events to KeySensor and StringSensor without a window.
+
 ## Benchmark
 
 `x3d-bench <file.wrl> [--oracle dir] [--size 1024x768] [--frames 100] [--readback]` runs an EXAMINE
