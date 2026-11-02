@@ -272,15 +272,22 @@ struct Rig {
     queue: wgpu::Queue,
     tex: wgpu::Texture,
     view: wgpu::TextureView,
+    /// The size of the target and of the pictures read back.
+    w: u32,
+    h: u32,
 }
 
 impl Rig {
     fn new(device: wgpu::Device, queue: wgpu::Queue) -> Rig {
+        Rig::sized(device, queue, W, H)
+    }
+
+    fn sized(device: wgpu::Device, queue: wgpu::Queue, w: u32, h: u32) -> Rig {
         let tex = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("multiview target"),
             size: wgpu::Extent3d {
-                width: W,
-                height: H,
+                width: w,
+                height: h,
                 depth_or_array_layers: 1,
             },
             mip_level_count: 1,
@@ -296,11 +303,13 @@ impl Rig {
             queue,
             tex,
             view,
+            w,
+            h,
         }
     }
 
     fn viewer(&self, samples: u32) -> EmbeddedViewer {
-        let mut v = EmbeddedViewer::new(self.device.clone(), self.queue.clone(), (W, H));
+        let mut v = EmbeddedViewer::new(self.device.clone(), self.queue.clone(), (self.w, self.h));
         v.set_multisampling(samples);
         // Mirror the draw so the MSAA sample pattern is the GL oracle's (x3d-shot --gl-samples).
         v.renderer().set_gl_sample_orientation(samples > 0);
@@ -309,7 +318,7 @@ impl Rig {
 
     /// Step to `T0 + k * DT`, draw and read the pixels back.
     fn shot(&self, v: &mut EmbeddedViewer, k: u32) -> Vec<u8> {
-        v.frame(T0 + k as f64 * DT, &self.view, FORMAT, W, H)
+        v.frame(T0 + k as f64 * DT, &self.view, FORMAT, self.w, self.h)
             .unwrap();
         self.read()
     }
@@ -330,10 +339,10 @@ impl Rig {
     }
 
     fn read(&self) -> Vec<u8> {
-        let bpr = (W * 4).div_ceil(256) * 256;
+        let bpr = (self.w * 4).div_ceil(256) * 256;
         let buf = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: None,
-            size: (bpr * H) as u64,
+            size: (bpr * self.h) as u64,
             usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
             mapped_at_creation: false,
         });
@@ -345,12 +354,12 @@ impl Rig {
                 layout: wgpu::TexelCopyBufferLayout {
                     offset: 0,
                     bytes_per_row: Some(bpr),
-                    rows_per_image: Some(H),
+                    rows_per_image: Some(self.h),
                 },
             },
             wgpu::Extent3d {
-                width: W,
-                height: H,
+                width: self.w,
+                height: self.h,
                 depth_or_array_layers: 1,
             },
         );
@@ -360,8 +369,8 @@ impl Rig {
         let data = buf.slice(..).get_mapped_range().expect("map");
         let mut out = vec![];
 
-        for y in 0..H {
-            out.extend_from_slice(&data[(y * bpr) as usize..(y * bpr + W * 4) as usize]);
+        for y in 0..self.h {
+            out.extend_from_slice(&data[(y * bpr) as usize..(y * bpr + self.w * 4) as usize]);
         }
 
         out
@@ -1129,12 +1138,31 @@ fn oracle_pair(samples: u32, pair: [&'static str; 2]) {
 /// worlds where Rust and X_ITE differ for a reason that is not about several viewers, see the particle and sound tests).
 /// The multi-viewer properties stay asserted: X_ITE pair vs X_ITE alone within 0.5%, Rust pair vs Rust alone exactly 0.
 fn oracle_pair_gated(samples: u32, pair: [&'static str; 2], gate_rust_vs_x_ite: bool) {
+    oracle_pair_sized(
+        samples,
+        pair,
+        gate_rust_vs_x_ite,
+        (W, H),
+        "multiview-b08-baseline",
+    );
+}
+
+/// [`oracle_pair_gated`] for pictures of `size` and the X_ITE pictures in `oracle/<baseline>`
+/// (`node oracle/x_ite-multi-b08.mjs <dir>/<world>-msaa<N> <N> <w> <h> 5,20,40 <world>/main.x3dv`, and the pair in
+/// `<dir>/<a>+<b>-msaa<N>`).
+fn oracle_pair_sized(
+    samples: u32,
+    pair: [&'static str; 2],
+    gate_rust_vs_x_ite: bool,
+    size: (u32, u32),
+    baseline: &'static str,
+) {
     let Some((d, q)) = device() else {
         return x3d_evidence::no_gpu("no adapter, skipped");
     };
     spawn_big_stack(move || {
-        let rig = Rig::new(d, q);
-        let base = oracle_dir().join("multiview-b08-baseline");
+        let rig = Rig::sized(d, q, size.0, size.1);
+        let base = oracle_dir().join(baseline);
         let paired = rust_frames(&rig, samples, &pair);
         let mut worst = 0.0f64;
         let mut fails: Vec<String> = vec![];
@@ -1221,10 +1249,12 @@ fn x_ite_two_canvases_script_and_rigid_body_msaa4() {
 /// the pixels. Most of that was the harness: the page installed its virtual `Date.now` only after the load, so X_ITE's
 /// `creationTime` and first frames ran on the real clock and its systems were saturated at `maxParticles`. With the
 /// virtual `Date.now` from the start (issue #262) and the baselines re-recorded (five identical runs), MSAA 0 differs by
-/// at most 0.014% and is gated at the usual 0.5%. MSAA 4 differs by 0.03% to 0.52% (worst p-a frame 40) and stays
-/// ungated: the remainder is partial coverage of the 1-pixel POINT particles. wgpu draws a point as exactly one
-/// pixel, ANGLE/GL rasterizes it differently under MSAA (like the known `pr-line` note); emulating points as quads is
-/// outside this test. The multi-viewer properties (X_ITE pair = X_ITE alone, Rust pair = Rust alone) are asserted at both.
+/// at most 0.014% and is gated at the usual 0.5%. MSAA 4 differs by 0.03% to 0.52% (worst p-a frame 40) at this
+/// picture size and stays ungated here; it is gated at 192 x 144 by `x_ite_two_canvases_particles_192x144_msaa4`
+/// (worst 0.148%), because the remainder is a handful of pixels (29 to 36 here, 2 to 41 there, one MSAA sample each, either
+/// direction) that is only a large share of a 96 x 72 picture. It is not a point coverage model: drawing the 1 pixel points
+/// as quads gives these six pictures unchanged, and a static PointSet at MSAA 4 is exact. The multi-viewer properties
+/// (X_ITE pair = X_ITE alone, Rust pair = Rust alone) are asserted at both.
 #[test]
 fn x_ite_two_canvases_particles_msaa0() {
     oracle_pair_gated(0, ["p-a", "p-b"], true);
@@ -1257,6 +1287,37 @@ fn x_ite_two_canvases_sound_msaa0() {
 #[test]
 fn x_ite_two_canvases_sound_msaa4() {
     oracle_pair_gated(4, ["snd-a", "snd-b"], false);
+}
+
+/// The same particle pair in pictures of 192 x 144 (four times the area), gated at the same 0.5% of the pixels more
+/// than 8 levels off, MSAA 4 included. Issue #261: at 96 x 72 the MSAA 4 particle pictures differ from X_ITE by 29 to
+/// 36 pixels (worst 0.521%, p-a frame 40), at 192 x 144 by 2 to 41 pixels (worst 0.148%). What differs is the same
+/// handful of pixels, one MSAA sample (at most 64 levels) in either direction with equal summed brightness, so the
+/// share fell with the area and was not a coverage model of the points: a quad-expanded 1 pixel point (the PointProperties
+/// sprite path) draws the six pictures of the 96 x 72 test identically, a static PointSet of 1 pixel points at MSAA 4
+/// is exact (0 pixels, oracle/render-msaa4-rea-b09-visual-baseline), and the particle worlds of rea_b13_particles at
+/// 512 x 512 are within 0.02%. The limit is unchanged; the test pictures were too small for a share of sparse 1 pixel
+/// geometry to mean anything at the 2 pixel scale.
+#[test]
+fn x_ite_two_canvases_particles_192x144_msaa4() {
+    oracle_pair_sized(
+        4,
+        ["p-a", "p-b"],
+        true,
+        (192, 144),
+        "multiview-b08-baseline-192x144",
+    );
+}
+
+#[test]
+fn x_ite_two_canvases_particles_192x144_msaa0() {
+    oracle_pair_sized(
+        0,
+        ["p-a", "p-b"],
+        true,
+        (192, 144),
+        "multiview-b08-baseline-192x144",
+    );
 }
 
 // --- particle simulation state ---------------------------------------------------------------------------------
