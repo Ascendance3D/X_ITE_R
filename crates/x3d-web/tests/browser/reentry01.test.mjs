@@ -503,4 +503,27 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
          await page .context () .close ();
       }
    });
+
+   // Issue #132: the engine has no `prepare` export (X_ITE has no such call); the page loads through `prepareString` and
+   // `loadURL`, which wait for their responses. The case checks the export surface only.
+   test ("the engine exports no prepare", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const kinds = await page .evaluate (() =>
+         {
+            const engine = window .t .browser [Symbol .for ("X_ITE_R.engine")];
+
+            return { prepare: typeof engine .prepare, prepareString: typeof engine .prepareString, loadURL: typeof engine .loadURL };
+         });
+
+         assert .deepEqual (kinds, { prepare: "undefined", prepareString: "function", loadURL: "function" });
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
 });
