@@ -345,6 +345,9 @@ pub struct Scene {
     /// Nodes parsed outside PROTO declarations, in the order X3DParser.getNodes () collects
     /// them (when the node body closes). X3DParser.setupNodes sets them up in this order.
     pub setup_order: Vec<NodeId>,
+    /// XMLParser's `xmlElement [_node]` (DOMIntegration): for each element of the XML text that made a node, a route or the
+    /// scene, its number in document order (`Element::index`) and what it made.
+    pub xml_targets: Vec<(usize, XmlTarget)>,
     /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
     pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
     /// Fields whose value a Script gave with components that are not all numbers (X_ITE's Vector3 holds any JavaScript value): the
@@ -450,6 +453,16 @@ impl SlotTable {
     }
 }
 
+/// What an XML element made (XMLParser's `xmlElement [_node]`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum XmlTarget {
+    Node(NodeId),
+    /// A `Scene` element: the execution context it filled.
+    Scene(CtxId),
+    /// A `ROUTE` element: the id of the route (`Route::id`) in the context.
+    Route(CtxId, usize),
+}
+
 /// An execution context id together with the generation of its slot: it names that context and no
 /// context that takes the slot after it was released (see [`Scene::ctx_handle`]).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -518,6 +531,7 @@ impl Scene {
             externprotos: vec![],
             warnings: vec![],
             setup_order: vec![],
+            xml_targets: vec![],
             clone_counts: None,
             scene_infos: Default::default(),
             raw_tokens: Default::default(),

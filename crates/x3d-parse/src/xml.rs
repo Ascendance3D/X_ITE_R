@@ -97,6 +97,84 @@ fn parse_x3d(root: &Element, world_url: &str, html: bool) -> Result<Scene, Parse
     Ok(parser.p.scene)
 }
 
+/// DOMIntegration.processAddedNode: `text`, the XML of one element, is parsed by `XMLParser.childElement` into the
+/// execution context `ctx` of `scene`, below `parent` (`pushParent`) or among the root nodes of `ctx`. The scene comes back with
+/// the nodes it made at the end of its node table and in `setup_order`; the targets are in `Scene::xml_targets`, which is
+/// cleared first. `Err` is the message of a text that is not well-formed XML.
+pub fn parse_child_into(
+    scene: Scene,
+    ctx: CtxId,
+    parent: Option<NodeId>,
+    text: &str,
+) -> (Scene, Result<(), String>) {
+    let root = match crate::dom::parse_document(text) {
+        Ok(root) => root,
+        Err(e) => return (scene, Err(e)),
+    };
+    let node = XNode::Element(root);
+    let mut p = Parser::new("", "");
+
+    p.name = "XML Parser";
+    p.scene = scene;
+    p.scene.xml_targets.clear();
+    p.contexts = vec![ctx];
+
+    let mut parser = XmlParser {
+        p,
+        parents: parent.map(Parent::Node).into_iter().collect(),
+        placeholder_types: Default::default(),
+        links: vec![],
+        html: false,
+        proto_names: Default::default(),
+        proto_fields: Default::default(),
+    };
+
+    parser.child_element(&node);
+    parser.propagate_links();
+
+    (
+        std::mem::replace(&mut parser.p.scene, Scene::new("")),
+        Ok(()),
+    )
+}
+
+/// XMLParser.nodeAttribute for the attribute `name="value"` of `node`: the value is read into the field of that name when it
+/// is initializable. The scene comes back with the new value in the field (`Err` when there is nothing to set).
+pub fn parse_attribute_into(
+    scene: Scene,
+    ctx: CtxId,
+    node: NodeId,
+    name: &str,
+    value: &str,
+) -> (Scene, Option<(FieldLoc, FieldValue)>) {
+    let mut element = Element::new("");
+
+    element.attrs.push((name.to_string(), value.to_string()));
+
+    let mut p = Parser::new("", "");
+
+    p.name = "XML Parser";
+    p.scene = scene;
+    p.contexts = vec![ctx];
+
+    let mut parser = XmlParser {
+        p,
+        parents: vec![],
+        placeholder_types: Default::default(),
+        links: vec![],
+        html: false,
+        proto_names: Default::default(),
+        proto_fields: Default::default(),
+    };
+
+    let result = parser.attribute_value(&element, node);
+
+    (
+        std::mem::replace(&mut parser.p.scene, Scene::new("")),
+        result,
+    )
+}
+
 /// X3DNode.getSourceText: the `url` field of the node types that keep source text in it.
 fn source_text_index(scene: &Scene, id: NodeId) -> Option<usize> {
     let node = scene.node(id);
@@ -165,6 +243,11 @@ impl<'a> XmlParser<'a> {
         for child in &el.children {
             if let XNode::Element(e) = child {
                 if matches!(e.name.as_str(), "Scene" | "SCENE") {
+                    let ctx = self.ctx();
+
+                    self.scene()
+                        .xml_targets
+                        .push((e.index, XmlTarget::Scene(ctx)));
                     self.children_elements(e);
                 }
             }
@@ -550,11 +633,19 @@ impl<'a> XmlParser<'a> {
         let ctx = self.ctx();
 
         let Some(node) = self.scene().create_proto_instance(ctx, name) else {
-            return self.warn(format!(
+            self.warn(format!(
                 "XML Parser:  Unknown proto or externproto type '{name}'."
+            ));
+
+            // The catch of XMLParser.protoInstanceElement then prints the Error object with console.error (DEVELOPMENT).
+            return self.p.scene.error(format!(
+                "Error: Unknown proto or externproto type '{name}'."
             ));
         };
 
+        self.scene()
+            .xml_targets
+            .push((el.index, XmlTarget::Node(node)));
         self.def_attribute(el, node);
         self.add_node(el, Some(node));
         self.parents.push(Parent::Node(node));
@@ -654,6 +745,9 @@ impl<'a> XmlParser<'a> {
             return self.warn("XML Parser: Invalid XML.".into());
         }
 
+        self.scene()
+            .xml_targets
+            .push((el.index, XmlTarget::Node(node)));
         self.def_attribute(el, node);
         self.add_node(el, Some(node));
         self.parents.push(Parent::Node(node));
@@ -672,8 +766,13 @@ impl<'a> XmlParser<'a> {
 
         for a in attrs {
             if el.attr(a).is_none() {
-                return self.warn(format!(
+                self.warn(format!(
                     "XML Parser: Bad ROUTE specification: Expected {a} attribute."
+                ));
+
+                // XMLParser.routeElement: `if (DEVELOPMENT) console .error (error)`.
+                return self.p.scene.error(format!(
+                    "Error: Bad ROUTE specification: Expected {a} attribute."
                 ));
             }
         }
@@ -687,14 +786,25 @@ impl<'a> XmlParser<'a> {
         ) {
             (None, _) => Err(format!("Unknown named or imported node '{from}'.")),
             (_, None) => Err(format!("Unknown named or imported node '{to}'.")),
-            (Some(f), Some(t)) => self
-                .scene()
-                .add_route(ctx, f, from_field, t, to_field)
-                .map(|_| ()),
+            (Some(f), Some(t)) => {
+                self.scene()
+                    .add_route(ctx, f, from_field, t, to_field)
+                    .map(|route| {
+                        // XMLParser.routeElement: `xmlElement [_node] = route`.
+                        if let Some(route) = route {
+                            self.scene()
+                                .xml_targets
+                                .push((el.index, XmlTarget::Route(ctx, route)));
+                        }
+                    })
+            }
         };
 
         if let Err(e) = result {
             self.warn(format!("XML Parser: {e}"));
+
+            // XMLParser.routeElement: `if (DEVELOPMENT) console .error (error)`.
+            self.p.scene.error(format!("Error: {e}"));
         }
     }
 
@@ -1001,6 +1111,25 @@ impl<'a> XmlParser<'a> {
                 f.modified = true;
             }
         }
+    }
+
+    /// XMLParser.nodeAttribute without the assignment: the field and the value the attribute reads into, for the caller to set
+    /// with the events of a live field.
+    fn attribute_value(&mut self, el: &'a Element, node: NodeId) -> Option<(FieldLoc, FieldValue)> {
+        let (name, value) = el.attrs.first()?;
+        let i = self.p.scene.get_predefined_field(node, name)?;
+        let field = &self.p.scene.node(node).fields[i];
+
+        if !field.is_initializable() {
+            return None;
+        }
+
+        let (ty, current) = (field.ty(), field.value.clone());
+        let field_name = field.name.clone();
+        let unit = self.p.field_unit_of(node, &field_name);
+
+        self.field_value(&field_name, ty, &current, Some(value), unit)
+            .map(|v| (FieldLoc::Pre(i), v))
     }
 
     /// XMLParser.fieldValue: the new value, or `None` when the attribute is missing, the value
