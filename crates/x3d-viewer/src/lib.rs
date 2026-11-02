@@ -12,10 +12,14 @@ pub mod keys;
 pub mod layer;
 pub mod lookat;
 pub mod nav;
+#[cfg(feature = "embed")]
+pub mod overlay_gpu;
 pub mod pick_shapes;
 pub mod picking;
 pub mod pointer;
 pub mod script;
+pub mod ui;
+pub mod ui_text;
 pub mod viewer;
 pub mod walk;
 

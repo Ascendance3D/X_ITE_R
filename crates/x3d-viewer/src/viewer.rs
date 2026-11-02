@@ -21,6 +21,8 @@ use x3d_render::traverse::{Builder, CameraOverride, Frame};
 #[cfg(feature = "script")]
 use x3d_runtime::LocalFetcher;
 use x3d_runtime::Runtime;
+
+mod ui_hooks;
 #[cfg(feature = "script")]
 use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
@@ -287,6 +289,21 @@ pub struct Viewer3d {
     /// X3DPointingDeviceSensorContext.getPointingLayer: the layer of the pressed hit while the
     /// button is down.
     pointing_layer: Option<LayerKey>,
+    /// ContextMenu and Notification ([`crate::ui`]).
+    pub ui: crate::ui::BrowserUi,
+    /// The host is the native window ([`crate::embed::EmbeddedViewer`]): the viewer runs the browser UI of
+    /// [`crate::ui`] and the browser's own keys (Ctrl+Plus, the Debug keys, Shift+F8). The browser build draws its own
+    /// UI and handles those keys itself, and the oracle drivers have none of it.
+    pub native_ui: bool,
+    /// X3DCoreContext `_commandKey` (keyCode 91) and `_altGrKey` (225).
+    command: bool,
+    alt_gr: bool,
+    /// X3DBrowser.isLive (): false between `endUpdate` and `beginUpdate` (Debug Ctrl+S).
+    live: bool,
+    /// The window is fullscreen (the context menu's text).
+    pub fullscreen: bool,
+    /// Keys of the user menu entries that were clicked.
+    user_clicks: Vec<String>,
 }
 
 /// A system's transformed LINE triangles and their collision shapes: every particle's triangles one after the other,
@@ -521,6 +538,13 @@ impl Viewer3d {
             drawn: vec![None],
             active: Some(None),
             pointing_layer: None,
+            ui: Default::default(),
+            native_ui: false,
+            command: false,
+            alt_gr: false,
+            live: true,
+            fullscreen: false,
+            user_clicks: vec![],
         };
 
         v.layer.viewport = (width as f64, height as f64);
@@ -548,6 +572,7 @@ impl Viewer3d {
 
     fn reset_world(&mut self, before: Option<HeldPose>) {
         self.world_gen = self.rt.world_state.generation;
+        self.close_ui();
 
         // `browser .getActiveViewpoint ()` and the viewer still name the old world's until the events of the new bindables run.
         self.held_pose = Some(before.unwrap_or_else(|| self.hold_pose()));
@@ -928,7 +953,8 @@ impl Viewer3d {
             date_now: self.date_now,
             frame_rate: self.frame_rate,
             shift: self.shift,
-            ctrl: self.ctrl,
+            // X3DFlyViewer: `getControlKey () || getCommandKey ()`.
+            ctrl: self.ctrl || self.command,
             alt: self.alt,
             // X3DViewer.getViewport: the active layer's rectangle.
             viewport: self.layer_rect(self.home_layer()),
@@ -1213,6 +1239,11 @@ impl Viewer3d {
             return;
         }
 
+        // X3DBrowser.endUpdate (): the clock and the rendering stop (Debug Ctrl+S).
+        if !self.live {
+            return;
+        }
+
         if let Some(last) = self.last_time {
             let dt = now - last;
 
@@ -1338,6 +1369,8 @@ impl Viewer3d {
         if !self.rt.description.is_empty() && self.rt.description != self.status_description {
             self.status = self.rt.description.clone();
             self.status_description = self.status.clone();
+            // Notification.set_string__.
+            self.notify(&self.status.clone());
         }
     }
 
@@ -2664,11 +2697,32 @@ impl Viewer3d {
                 Key::PageUp => self.next_viewpoint(-1),
                 Key::PageDown => self.next_viewpoint(1),
             },
-            UiEvent::MouseDown { button, x, y } => self.mouse_down(button, x, y),
-            UiEvent::MouseUp { button, x, y } => self.mouse_up(button, x, y),
-            UiEvent::MouseMove { x, y } => self.mouse_move(x, y),
-            UiEvent::Wheel { delta_y, x, y } => self.viewer_input(Input::Wheel { delta_y, x, y }),
-            UiEvent::DblClick { x, y } => self.viewer_input(Input::DblClick { x, y }),
+            UiEvent::MouseDown { button, x, y } => {
+                if !self.ui_mouse_down(button, x, y) {
+                    self.mouse_down(button, x, y)
+                }
+            }
+            UiEvent::MouseUp { button, x, y } => {
+                if !self.ui_mouse_up(button, x, y) {
+                    self.mouse_up(button, x, y)
+                }
+            }
+            UiEvent::MouseMove { x, y } => {
+                if !self.ui_mouse_move(x, y) {
+                    self.mouse_move(x, y)
+                }
+            }
+            UiEvent::Wheel { delta_y, x, y } => {
+                // The layer of the open menu is over the surface.
+                if !self.ui.is_open() {
+                    self.viewer_input(Input::Wheel { delta_y, x, y })
+                }
+            }
+            UiEvent::DblClick { x, y } => {
+                if !self.ui.is_open() {
+                    self.viewer_input(Input::DblClick { x, y })
+                }
+            }
             UiEvent::TouchStart(t) => self.touch_start(t),
             UiEvent::TouchMove(t) => self.touch_move(t),
             UiEvent::TouchEnd(_) => self.touch_end(),
@@ -3051,6 +3105,7 @@ impl Viewer3d {
             // X3DPointingDeviceSensorNode.set_over__: `getBrowser () .setDescription (this ._description)`.
             self.rt.description = d.clone();
             self.status_description = d.clone();
+            self.notify(&d);
             self.status = d;
         }
 
@@ -3111,11 +3166,18 @@ impl Viewer3d {
             (16, d) => self.shift = d,
             (17, d) => self.ctrl = d,
             (18, d) => self.alt = d,
+            (91, d) => self.command = d,
+            (225, d) => self.alt_gr = d,
             (36, true) => self.first_viewpoint(),
             (35, true) => self.last_viewpoint(),
             (33, true) => self.next_viewpoint(-1),
             (34, true) => self.next_viewpoint(1),
             _ => {}
+        }
+
+        // X3DCoreContext [_keydown]: the browser's own keys come before the key device sensors'.
+        if down {
+            self.browser_keydown(e.code);
         }
 
         // Must advance time, because the events are processed now (advanceOnlyTime).
@@ -3130,7 +3192,10 @@ impl Viewer3d {
     }
 
     fn mouse_down(&mut self, button: u8, x: f64, y: f64) {
-        if button == 0 && self.pointing_down(x, y) {
+        // PointingDevice.mousedown: `getShiftKey () && (getControlKey () || getCommandKey ())` returns.
+        let selecting = self.shift && (self.ctrl || self.command);
+
+        if button == 0 && !selecting && self.pointing_down(x, y) {
             return;
         }
 

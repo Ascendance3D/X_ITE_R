@@ -107,7 +107,14 @@ Keys go to the world as DOM keydown / keyup (KeySensor, StringSensor; repeats to
 first / last viewpoint, PageUp / PageDown previous / next, as in X_ITE. Viewer shortcuts take Ctrl
 (Linux) or Command (macOS): `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, `l` list viewpoints, `m`
 multisampling, `z` depth buffer, `r` reload, `s` screenshot to `/tmp/x3d-view-N.png`, `q` quit.
-Esc is a world key and never quits. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in
+Esc is a world key and never quits. X_ITE's browser keys (`X3DCoreContext`) work too: Ctrl + `+` switches the `Timings`
+option, Shift + F8 copies the bound Viewpoint / OrthoViewpoint as text to the clipboard (wl-copy, xclip, xsel, pbcopy or
+clip) in the encoding of the world's file, and with the `Debug` option Ctrl + `1` to `5` set Shading and Ctrl + `s` ends
+or begins the update (these take Ctrl + `1` to `4` and `s` from the viewer shortcuts while Debug is on). The right
+button opens X_ITE's context menu (viewpoints, viewers, qualities, animations, Browser Timings, Fullscreen, World
+Info, About), drawn over the world; a description (a viewpoint's, a sensor's, a menu action's) shows as the
+notification at the top right for five seconds. The `ContextMenu` and `Notifications` options switch them off.
+Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in
 X_ITE. Environment: `X3D_VIEW_NOVSYNC=1` (do not wait for vsync), `X3D_VIEW_STATS=1` (adapter, surface
 format, alpha mode, and per-frame CPU/GPU averages on exit).
 

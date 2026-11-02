@@ -4783,6 +4783,7 @@ dependencies = [
  "x3d-runtime",
  "x3d-scene",
  "x3d-script",
+ "x3d-text",
 ]
 
 [[package]]
