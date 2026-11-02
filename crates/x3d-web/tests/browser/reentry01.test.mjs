@@ -503,4 +503,27 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
          await page .context () .close ();
       }
    });
+
+   // Issue #132: the engine has no `prepare` export. It parsed a world without waiting for glTF buffers, X_ITE has no such
+   // call, and the page loads through `prepareString` and `loadURL`, which wait.
+   test ("the engine exports no prepare (it parsed a glTF without its buffers)", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const kinds = await page .evaluate (() =>
+         {
+            const engine = window .t .browser [Symbol .for ("X_ITE_R.engine")];
+
+            return { prepare: typeof engine .prepare, prepareString: typeof engine .prepareString, loadURL: typeof engine .loadURL };
+         });
+
+         assert .deepEqual (kinds, { prepare: "undefined", prepareString: "function", loadURL: "function" });
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
 });
