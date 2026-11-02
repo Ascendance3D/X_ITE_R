@@ -818,6 +818,213 @@ impl Session {
         rt.create_proto_setup(world, name)
     }
 
+    // --- PROTO and EXTERNPROTO declarations (X3DExecutionContext, X3DProtoDeclaration, X3DExternProtoDeclaration) ------
+    //
+    // A declaration is named by its table index (`extern_` false: `scene.protos`, true: `scene.externprotos`). The page
+    // keeps one object per index and scene. An index the scene does not have belongs to another scene.
+
+    /// The declarations of the world in the order of `protos` / `externprotos`.
+    pub fn decl_ids(&self, extern_: bool) -> Vec<usize> {
+        let rt = self.rt();
+
+        rt.decl_ids(rt.scene.world, extern_)
+    }
+
+    /// X3DExecutionContext.getProtoDeclaration / getExternProtoDeclaration of the world (X_ITE's error text).
+    pub fn decl_get(&self, extern_: bool, name: &str) -> Result<usize, String> {
+        let rt = self.rt();
+
+        rt.decl_get(rt.scene.world, extern_, name)
+    }
+
+    /// Does the world's runtime have the declaration `id`?
+    fn decl_exists(&self, extern_: bool, id: usize) -> bool {
+        let scene = &self.rt().scene;
+
+        id < if extern_ {
+            scene.externprotos.len()
+        } else {
+            scene.protos.len()
+        }
+    }
+
+    /// X3DExecutionContext.add/update/remove(Extern)ProtoDeclaration of the world. `id` is `None` for an argument that is no
+    /// declaration of that kind, and an index past the table for a declaration of another scene.
+    pub fn decl_op(
+        &mut self,
+        extern_: bool,
+        op: x3d_runtime::DeclOp,
+        name: &str,
+        id: Option<usize>,
+    ) -> Result<(), String> {
+        let foreign = id.is_some_and(|i| !self.decl_exists(extern_, i));
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        if foreign {
+            let kind = if extern_ { "extern proto" } else { "proto" };
+            let verb = if op == x3d_runtime::DeclOp::Add {
+                "add"
+            } else {
+                "update"
+            };
+
+            return Err(format!(
+                "Couldn't {verb} {kind} declaration: {kind} does not belong to this execution context."
+            ));
+        }
+
+        rt.decl_op(world, extern_, op, name, id)
+    }
+
+    /// X3DExecutionContext.getUniqueProtoName / getUniqueExternProtoName of the world.
+    pub fn decl_unique_name(&self, extern_: bool, name: &str) -> String {
+        let scene = &self.rt().scene;
+
+        if extern_ {
+            scene.get_unique_extern_proto_name(scene.world, name)
+        } else {
+            scene.get_unique_proto_name(scene.world, name)
+        }
+    }
+
+    /// What the SAI object of the declaration reads (see [`x3d_runtime::DeclInfo`]).
+    pub fn decl_info(&self, extern_: bool, id: usize) -> Option<x3d_runtime::DeclInfo> {
+        self.decl_exists(extern_, id)
+            .then(|| self.rt().decl_info(extern_, id))
+    }
+
+    /// X3DProtoDeclarationNode.createInstance: an instance in the declaration's own context, set up and not part of the
+    /// world.
+    pub fn decl_new_instance(&mut self, extern_: bool, id: usize) -> Option<NodeId> {
+        let ctx = self.decl_info(extern_, id)?.ctx;
+        let proto = if extern_ {
+            x3d_scene::ProtoRef::Extern(id)
+        } else {
+            x3d_scene::ProtoRef::Proto(id)
+        };
+
+        Some(self.rt_mut().create_instance_setup(ctx, proto))
+    }
+
+    /// The error of a declaration index that is not in the world (an index of another scene).
+    fn decl_missing(&self, extern_: bool, id: usize) -> Result<(), String> {
+        if self.decl_exists(extern_, id) {
+            Ok(())
+        } else {
+            let kind = if extern_ { "extern proto" } else { "proto" };
+
+            Err(format!("{kind} declaration {id} is not in the world"))
+        }
+    }
+
+    /// X3DProtoDeclarationNode.requestUpdateInstances: at the next event cascade.
+    pub fn decl_request_update(&mut self, extern_: bool, id: usize) -> Result<(), String> {
+        self.decl_missing(extern_, id)?;
+
+        let rt = self.rt_mut();
+
+        if !rt.pending_proto_updates.contains(&(extern_, id)) {
+            rt.pending_proto_updates.push((extern_, id));
+        }
+
+        Ok(())
+    }
+
+    /// X3DProtoDeclarationNode.updateInstances.
+    pub fn decl_update_instances(&mut self, extern_: bool, id: usize) -> Result<(), String> {
+        self.decl_missing(extern_, id)?;
+        self.rt_mut().proto_update_instances(extern_, id);
+        Ok(())
+    }
+
+    /// X3DBaseNode.addUserDefinedField on a PROTO declaration.
+    pub fn decl_add_user_field(
+        &mut self,
+        id: usize,
+        name: &str,
+        access: u8,
+        type_name: &str,
+        value: &Data,
+    ) -> Result<(), String> {
+        self.decl_missing(false, id)?;
+
+        let ty =
+            FieldType::from_name(type_name).ok_or_else(|| format!("unknown type '{type_name}'"))?;
+
+        data::check_data(ty, value).map_err(|e| format!("field '{name}': {e}"))?;
+        self.rt_mut().proto_add_user_field(
+            id,
+            x3d_scene::Field::new(name, access, data::data_value(ty, value)),
+        );
+        Ok(())
+    }
+
+    /// X3DBaseNode.removeUserDefinedField on a PROTO declaration.
+    pub fn decl_remove_user_field(&mut self, id: usize, name: &str) -> Result<(), String> {
+        self.decl_missing(false, id)?;
+        self.rt_mut().proto_remove_user_field(id, name);
+        Ok(())
+    }
+
+    /// `declaration .toVRMLString ()` / `toXMLString ()` / `toJSONString ()` (`format` is `vrml`, `xml` or `json`).
+    pub fn decl_string(&self, extern_: bool, id: usize, format: &str) -> Result<String, String> {
+        self.decl_missing(extern_, id)?;
+
+        Ok(self
+            .rt()
+            .scene
+            .proto_declaration_string(extern_, id, format))
+    }
+
+    /// X3DProtoDeclaration.getBody: the body's execution context.
+    pub fn decl_body(&self, id: usize) -> Option<usize> {
+        self.decl_exists(false, id)
+            .then(|| self.rt().scene.protos[id].body)
+    }
+
+    /// The root nodes of an execution context of the world's scene (a PROTO body).
+    pub fn ctx_root_nodes(&self, ctx: usize) -> Vec<Option<NodeId>> {
+        self.rt().scene.ctx(ctx).root_nodes.clone()
+    }
+
+    /// The named nodes of an execution context in the array's order.
+    pub fn ctx_named_nodes(&self, ctx: usize) -> Vec<NodeId> {
+        self.rt().scene.named_node_list(ctx)
+    }
+
+    /// `toVRMLString ()` / `toXMLString ()` / `toJSONString ()` of an execution context (a PROTO body).
+    pub fn ctx_string(&self, ctx: usize, format: &str) -> String {
+        let scene = &self.rt().scene;
+
+        match format {
+            "xml" => scene.to_xml_string_ctx(ctx),
+            "json" => scene.to_json_string_ctx(ctx),
+            _ => scene.to_vrml_string_ctx(ctx),
+        }
+    }
+
+    /// X3DUrlObject members of an EXTERNPROTO (`url`, `load`, `autoRefresh`, `autoRefreshTimeLimit`, `loadNow`, `unloadNow`).
+    pub fn extern_url_op(&mut self, id: usize, what: &str, text: Vec<String>, number: f64) -> bool {
+        if !self.decl_exists(true, id) {
+            return false;
+        }
+
+        let rt = self.rt_mut();
+
+        match what {
+            "url" => rt.extern_set_url(id, text),
+            "load" => rt.extern_set_load(id, number != 0.0),
+            "autoRefresh" => rt.extern_set_auto_refresh(id, number),
+            "autoRefreshTimeLimit" => rt.extern_set_auto_refresh_time_limit(id, number),
+            "loadNow" => rt.extern_load_now(id),
+            "unloadNow" => rt.extern_unload_now(id),
+            _ => return false,
+        }
+
+        true
+    }
+
     /// X3DExecutionContext.getNamedNodes of the world: the nodes in the array's order.
     pub fn named_nodes(&self) -> Vec<NodeId> {
         let scene = &self.rt().scene;

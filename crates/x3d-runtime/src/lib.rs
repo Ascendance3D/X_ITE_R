@@ -57,6 +57,7 @@ use x3d_scene::*;
 
 pub use extern_proto::{CacheEntry, ExternState, PendingExtern};
 pub use loader::{FetchPoll, Fetcher, LocalFetcher, parse_bytes_with_fetcher};
+pub use protos::{DeclField, DeclInfo, DeclOp};
 pub use script::{ScriptCall, ScriptError, ScriptHost};
 
 /// A field identity: node + location (X_ITE field object identity).
