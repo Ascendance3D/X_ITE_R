@@ -4,7 +4,8 @@
 //! GaussianSplats.vs.js calls `logarithmic (gl_Position)` and GaussianSplats.fs.js `logarithmic ()`, so the splats are depth
 //! tested against opaque shapes in the same logarithmic depth. `REA_ONLY=<substring>` restricts the worlds.
 //!
-//! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off.
+//! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off. Multisampling 0 and 4: the
+//! MSAA 4 references are `oracle/render-msaa4-b69-gs-log-baseline` (`x_ite-shot-msaa.mjs --ms 4 --log`, see its index.json).
 
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -24,56 +25,75 @@ fn splats_in_logarithmic_depth_match_x_ite() {
         .canonicalize()
         .unwrap();
     let only = std::env::var("REA_ONLY").unwrap_or_default();
-    let baseline = "render-b69-gs-log-baseline";
-    let mut names: Vec<String> = std::fs::read_dir(root.join(baseline))
-        .unwrap()
-        .filter_map(|e| {
-            e.ok()?
-                .file_name()
-                .into_string()
-                .ok()?
-                .strip_suffix(".png")
-                .map(str::to_string)
-        })
-        .filter(|n| n.contains(&only))
-        .collect();
     let mut failures = vec![];
+    let mut checked = 0;
 
-    names.sort();
     g.renderer.set_depth_mode(DepthMode::Logarithmic);
 
-    for name in &names {
-        let (w, h, want) =
-            x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.png"))).unwrap();
-        let shot = x3d_render::render_file(
-            &mut g,
-            &root,
-            &root.join(format!("synthetic-rea-b08-gs/{name}")),
-            w,
-            h,
-        )
-        .unwrap();
-        let rgba: Vec<u8> = shot
-            .rgba
-            .chunks_exact(4)
-            .flat_map(|p| [p[0], p[1], p[2], 255])
+    for (samples, baseline) in [
+        (0u32, "render-b69-gs-log-baseline"),
+        (4, "render-msaa4-b69-gs-log-baseline"),
+    ] {
+        g.renderer.set_sample_count(samples);
+        g.renderer.set_gl_sample_orientation(samples > 1);
+
+        if samples > 1 && g.renderer.sample_count() != samples {
+            eprintln!("{samples}x not supported here");
+            continue;
+        }
+
+        let mut names: Vec<String> = std::fs::read_dir(root.join(baseline))
+            .unwrap()
+            .filter_map(|e| {
+                e.ok()?
+                    .file_name()
+                    .into_string()
+                    .ok()?
+                    .strip_suffix(".png")
+                    .map(str::to_string)
+            })
+            .filter(|n| n.contains(&only))
             .collect();
-        let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
-        eprintln!(
-            "{name}: over {} ({:.3}%), max {}",
-            s.pixels_over, s.pct_over, s.max_delta
-        );
+        names.sort();
 
-        if s.pixels_over * 1000 > (w * h) as usize * 5 {
-            failures.push(format!(
-                "{name}: {} pixels over 8 ({:.3}%), max {}",
+        for name in &names {
+            let (w, h, want) =
+                x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.png")))
+                    .unwrap();
+            let shot = x3d_render::render_file(
+                &mut g,
+                &root,
+                &root.join(format!("synthetic-rea-b08-gs/{name}")),
+                w,
+                h,
+            )
+            .unwrap();
+            let rgba: Vec<u8> = shot
+                .rgba
+                .chunks_exact(4)
+                .flat_map(|p| [p[0], p[1], p[2], 255])
+                .collect();
+            let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
+
+            eprintln!(
+                "{name} MSAA {samples}: over {} ({:.3}%), max {}",
                 s.pixels_over, s.pct_over, s.max_delta
-            ));
+            );
+            checked += 1;
+
+            if s.pixels_over * 1000 > (w * h) as usize * 5 {
+                failures.push(format!(
+                    "{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}",
+                    s.pixels_over, s.pct_over, s.max_delta
+                ));
+            }
         }
     }
 
+    g.renderer.set_sample_count(0);
+    g.renderer.set_gl_sample_orientation(false);
     g.renderer.set_depth_mode(DepthMode::Standard);
-    assert!(!names.is_empty());
+    assert!(checked > 0);
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
