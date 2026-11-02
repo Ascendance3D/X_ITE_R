@@ -197,3 +197,72 @@ fn menu_and_notification_are_drawn_over_the_world() {
         assert_eq!(px(&gone, w, w - 10, 28), px(&plain, w, w - 10, 28));
     });
 }
+
+#[test]
+fn timings_panel_is_drawn_at_the_bottom_left_and_gone_again() {
+    let Some((device, queue)) = device() else {
+        return x3d_evidence::no_gpu("no adapter, skipped");
+    };
+    spawn_big_stack(move || {
+        let (w, h) = (640, 480);
+        let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (w, h));
+        let p = world(
+            "timings.wrl",
+            "#VRML V2.0 utf8\nBackground { skyColor 0 0 0 }\nShape { geometry Box {} }\n",
+        );
+
+        v.load(
+            &p,
+            LoadOptions {
+                root: None,
+                start_time: Some(T0),
+            },
+        )
+        .unwrap();
+
+        let (tex, view) = target(&device, FORMAT, w, h);
+        let mut now = T0 + 1.0;
+        let shot = |v: &mut EmbeddedViewer, now: &mut f64, n: usize| {
+            for _ in 0..n {
+                *now += 1.0 / 30.0;
+                v.frame(*now, &view, FORMAT, w, h).unwrap();
+            }
+
+            read(&device, &queue, &tex, w, h)
+        };
+        // The corner inside the panel (padding), and a pixel above it.
+        let (cx, cy) = (6, h - 6);
+        let plain = shot(&mut v, &mut now, 3);
+
+        assert_eq!(px(&plain, w, cx, cy)[..3], [0, 0, 0]);
+
+        // Ctrl+Plus through the key events of the window.
+        for (down, key, code) in [(true, "Control", 17), (true, "=", 187), (false, "=", 187)] {
+            v.input(UiEvent::NativeKey {
+                down,
+                key: key.into(),
+                code,
+            });
+        }
+
+        let on = shot(&mut v, &mut now, 3);
+        let light = px(&on, w, cx, cy);
+
+        assert!(light[0] > 200 && light[1] > 200, "panel body {light:?}");
+        // The panel is small: the middle of the world is not covered.
+        assert_eq!(px(&on, w, w - 6, 6)[..3], [0, 0, 0]);
+
+        // The same keys again hide it.
+        for (down, key, code) in [(true, "=", 187), (false, "=", 187)] {
+            v.input(UiEvent::NativeKey {
+                down,
+                key: key.into(),
+                code,
+            });
+        }
+
+        let off = shot(&mut v, &mut now, 3);
+
+        assert_eq!(px(&off, w, cx, cy)[..3], [0, 0, 0]);
+    });
+}
