@@ -601,6 +601,12 @@ impl EmbeddedViewer {
             height,
         );
         info.render_ms = t2.elapsed().as_secs_f64() * 1e3;
+        // BrowserTimings: the tick, the step, and the build plus the draw.
+        core.record_frame_times(
+            t0.elapsed().as_secs_f64() * 1e3,
+            info.step_ms,
+            info.build_ms + info.render_ms,
+        );
         info.gpu_ms = self.renderer.gpu_time_ms(false);
         info.draw_calls = self.renderer.stats.draw_calls;
         info.geometry_uploads = self.renderer.stats.geometry_uploads;

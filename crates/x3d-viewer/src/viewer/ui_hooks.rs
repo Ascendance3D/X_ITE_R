@@ -6,6 +6,7 @@ use super::*;
 use crate::ui::{
     Action, Item, Kind, Menu, MenuOutcome, OptionSet, Overlay, UiRequest, WorldInfoPanel,
 };
+use crate::ui_timings::{Counts, FrameTimes, Hit};
 use x3d_runtime::browser_options::OptionValue;
 
 /// `browser .getName ()` and `getProviderURL ()` of this port.
@@ -40,6 +41,7 @@ impl Viewer3d {
         self.rt.browser_options.set_option(name, value);
         self.rt.process_events();
         self.browser_requests();
+        self.sync_timings();
     }
 
     /// `browser .setDescription (text)`: the status line and the Notification.
@@ -67,8 +69,71 @@ impl Viewer3d {
         std::mem::take(&mut self.ui.requests)
     }
 
+    /// BrowserTimings.set_enabled__: the panel follows the `Timings` browser option.
+    pub(super) fn sync_timings(&mut self) {
+        let on = self.native_ui && self.option_bool("Timings");
+
+        self.ui.timings.set_enabled(on);
+    }
+
+    /// BrowserTimings.update, at each frame (`prepareEvents`).
+    pub(super) fn timings_update(&mut self, now: f64) {
+        self.sync_timings();
+        self.ui.timings.update(now);
+    }
+
+    /// The times of the frame that the host just drew: the whole tick, `step` and the build plus the draw (ms).
+    pub fn record_frame_times(&mut self, system_ms: f64, step_ms: f64, display_ms: f64) {
+        self.ui.timings.record(FrameTimes {
+            system: system_ms,
+            step: step_ms,
+            display: display_ms,
+        });
+    }
+
+    /// Whether the Timings panel needs the counts of the frame.
+    pub(super) fn timings_count(&mut self, frame: &x3d_render::traverse::Frame) {
+        if !self.ui.timings.visible {
+            return;
+        }
+
+        let mut c = Counts::default();
+
+        fn walk(frame: &x3d_render::traverse::Frame, c: &mut Counts) {
+            for item in &frame.items {
+                // BrowserTimings.countPrimitives: the vertices of the geometry, times the instances.
+                let n = item
+                    .instances
+                    .as_ref()
+                    .map_or(1, |i| i.matrices.len().max(1)) as f64;
+                let vertices = item.geometry.vertices.len() as f64 / 4.0 * n;
+
+                match item.geometry.geometry_type {
+                    0 => c.points += vertices,
+                    1 => c.lines += vertices / 2.0,
+                    2 | 3 => c.triangles += vertices / 3.0,
+                    _ => {}
+                }
+
+                if item.transparent {
+                    c.transparent += 1;
+                } else {
+                    c.opaque += 1;
+                }
+            }
+
+            for layer in &frame.layers {
+                walk(layer, c);
+            }
+        }
+
+        walk(frame, &mut c);
+        self.ui.timings.set_counts(c);
+    }
+
     /// The overlay for the window, if it changed since the last call.
     pub fn overlay(&mut self) -> Option<Overlay> {
+        self.sync_timings();
         self.ui.overlay(self.width, self.height, self.date_now)
     }
 
@@ -391,6 +456,12 @@ impl Viewer3d {
         (x, self.height as f64 - y)
     }
 
+    fn timings_hit(&self, p: (f64, f64)) -> Option<Hit> {
+        self.ui
+            .timings
+            .takes_pointer(&self.ui.text, self.height as f64, p.0, p.1)
+    }
+
     /// A `mousedown` of the surface. Returns whether the UI took it: the layer of an open menu or dialog is over the
     /// surface; a right press goes to the viewer and then opens the menu (the `contextmenu` event follows it).
     pub(super) fn ui_mouse_down(&mut self, button: u8, x: f64, y: f64) -> bool {
@@ -426,6 +497,22 @@ impl Viewer3d {
             return true;
         }
 
+        // The Timings panel is over the surface: its button and its two titled cells take the pointer (the rest of the
+        // panel has `pointer-events: none`); a `contextmenu` event on any part of it bubbles to the surface.
+        let hit = self.timings_hit(p);
+
+        if let Some(hit) = hit {
+            if button == 0 && hit == Hit::Button {
+                self.ui.timings.pressed = true;
+            }
+
+            if button == 2 && self.option_bool("ContextMenu") {
+                self.show_context_menu(x, y);
+            }
+
+            return true;
+        }
+
         if button < 3 {
             self.ui.world_buttons[button as usize] = true;
         }
@@ -446,6 +533,15 @@ impl Viewer3d {
 
         let p = self.ui_point(x, y);
         let held = button < 3 && std::mem::take(&mut self.ui.world_buttons[button as usize]);
+
+        // The button's `click`: the press and the release are on the button.
+        if button == 0 && std::mem::take(&mut self.ui.timings.pressed) {
+            if !self.ui.is_open() && self.timings_hit(p) == Some(Hit::Button) {
+                self.ui.timings.set_type();
+            }
+
+            return true;
+        }
 
         if !self.ui.is_open() {
             return false;
@@ -502,7 +598,8 @@ impl Viewer3d {
         let p = self.ui_point(x, y);
 
         if !self.ui.is_open() {
-            return false;
+            // The panel's button and titled cells are elements over the canvas: the world sees no move over them.
+            return self.timings_hit(p).is_some();
         }
 
         if let Some(menu) = &mut self.ui.menu {

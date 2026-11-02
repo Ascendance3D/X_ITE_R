@@ -16,7 +16,7 @@
 //!   (macOS, [`crate::keys::Platform::press_events`]), and PointingDevice's long tap (1200 ms, 7 px, no sensor;
 //!   [`crate::viewer::Viewer3d::input`] with the touch events of [`crate::touch`]).
 //! * The Notification grows over 300 ms with a smoothstep curve, where CSS `ease-in-out` is a cubic Bezier.
-//! * The Browser Timings entry and Ctrl+Plus switch the `Timings` option; the native window draws no timings panel.
+//! * The Browser Timings entry and Ctrl+Plus switch the `Timings` option; the panel is [`crate::ui_timings`].
 //! * The Fullscreen entry asks the window for borderless fullscreen; About opens the system's URL opener.
 //! * A description that the world itself sets to the text it already has (a Script's `browser.description`) shows
 //!   again only through [`crate::viewer::Viewer3d::set_description`]; the per-frame check of the runtime's description
@@ -859,6 +859,8 @@ pub struct BrowserUi {
     pub notification: Notification,
     pub menu: Option<Menu>,
     pub world_info: Option<WorldInfoPanel>,
+    /// The Browser Timings panel (`Browser/Core/BrowserTimings.js`).
+    pub timings: crate::ui_timings::TimingsPanel,
     /// The entries of the host's user menu: (key, text).
     pub user_menu: Vec<(String, String)>,
     pub requests: Vec<UiRequest>,
@@ -892,7 +894,7 @@ impl BrowserUi {
     /// The next overlay for a window of `width` × `height`, or `None` when it is as the last one. `Some` with an empty
     /// canvas clears it.
     pub fn overlay(&mut self, width: u32, height: u32, now: f64) -> Option<Overlay> {
-        let full = self.is_open();
+        let full = self.is_open() || self.timings.visible;
         let (pw, pill) = match self.notification.rect(&self.text, width as f64, now) {
             Some((x, _, w, _)) if !full => (w.ceil() as i64, Some(x)),
             Some((_, _, w, _)) => (w.ceil() as i64, None),
@@ -900,7 +902,7 @@ impl BrowserUi {
         };
         let key = (
             full,
-            self.revision,
+            self.revision.wrapping_add(self.timings.revision),
             if pw > 0 || full {
                 self.notification.text.clone()
             } else {
@@ -919,6 +921,8 @@ impl BrowserUi {
 
         if full {
             let mut canvas = Canvas::new(width, height);
+
+            self.timings.paint(&mut canvas, &mut self.text);
 
             if let Some(p) = &self.world_info {
                 p.paint(&mut canvas, &mut self.text);

@@ -21,6 +21,7 @@ pub mod script;
 pub mod touch;
 pub mod ui;
 pub mod ui_text;
+pub mod ui_timings;
 pub mod viewer;
 pub mod walk;
 
