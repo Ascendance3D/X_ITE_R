@@ -214,6 +214,26 @@ pub fn node_name(rt: &Runtime, node: NodeId) -> Option<String> {
     node_exists(rt, node).then(|| rt.scene.node(node).name.clone())
 }
 
+/// `Session::parse_field` of the world in the middle of its chain: X3DField.fromVRMLString / fromXMLString (value, scene) in a
+/// field callback (a node it makes is a node of the world).
+pub fn parse_field(
+    rt: &mut Runtime,
+    ty: FieldType,
+    text: &str,
+    xml: bool,
+    name: &str,
+    unit: Option<String>,
+) -> Result<Data, String> {
+    let ctx = Some(rt.scene.world);
+
+    match rt.field_from_string(ty, text, ctx, xml, unit, name) {
+        Ok(Some(value)) => Ok(data::value_data(&value)),
+        Ok(None) => Err(format!("Couldn't read value for field '{name}'.")),
+        Err(Some(message)) => Err(message),
+        Err(None) => Err("bad field value".to_string()),
+    }
+}
+
 pub fn named_node(rt: &Runtime, name: &str) -> Option<NodeId> {
     rt.scene.get_named_node(rt.scene.world, name)
 }

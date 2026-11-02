@@ -6,6 +6,88 @@
  "identicalValues": true,
  "pictures": {},
  "values": {
+  "inlineRetry.inlineNotSetAgain": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "published",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    }
+   ]
+  },
+  "inlineRetry.inlineSameUrl": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "url again",
+     "came": true,
+     "requests": 2,
+     "lines": [
+      "log: L initialize"
+     ]
+    }
+   ]
+  },
+  "inlineRetry.inlineLoadToggle": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "load false",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    },
+    {
+     "label": "load true",
+     "came": true,
+     "requests": 1,
+     "lines": []
+    }
+   ]
+  },
+  "inlineRetry.externprotoAgain": {
+   "steps": [
+    {
+     "label": "failed",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. Error: Not Found"
+     ]
+    },
+    {
+     "label": "again",
+     "came": true,
+     "requests": 1,
+     "lines": [
+      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. TypeError: Cannot read properties of null (reading 'setWorldURL')"
+     ]
+    }
+   ]
+  },
   "scriptLife.initialize": {
    "fields": [
     6,
@@ -189,6 +271,66 @@
     "page: replaceWorld"
    ]
   },
+  "scriptLife.disposeInCall": {
+   "errors": [],
+   "seq": [
+    "page: set_x 1",
+    "page: after the assignment",
+    "log: S before dispose",
+    "page: mark S before",
+    "log: S after dispose",
+    "page: mark S after",
+    "log: S end",
+    "log: R set_y 1"
+   ]
+  },
+  "scriptLife.promiseJobs": {
+   "errors": [],
+   "seq": [
+    "page: set_x 1",
+    "page: after the assignment",
+    "page: page microtask",
+    "log: S set_x 1",
+    "log: S set_x end",
+    "page: mark S set_x end",
+    "log: job 1",
+    "page: mark job 1",
+    "log: job 2",
+    "log: R set_y 2",
+    "page: set_a 1",
+    "page: after set_a",
+    "page: page microtask",
+    "log: async begin",
+    "log: async after await",
+    "log: R set_y 11"
+   ]
+  },
+  "scriptLife.rootScript": {
+   "initial": "Transform:A,Group:X,Script:S",
+   "add": null,
+   "push": 5,
+   "remove": null,
+   "assign": null,
+   "final": "Script:S,Transform:A,Group:",
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0 PROFILE Interchange COMPONENT EnvironmentalSensor : 3 COMPONENT PointingDeviceSensor : 1 COMPONENT Scripting : 1 COMPONENT Sound : 3 COMPONENT Text : 2 DEF S Script { inputOnly SFTime read inputOnly SFTime add initializeOnly SFNode saved NULL url <code> } DEF A Transform { } Group { }",
+   "errors": [],
+   "seq": [
+    "log: S initialize Transform:A,Group:X,Script:S",
+    "page: page addRootNode",
+    "page: rootNodes callback 4 Transform:A,Group:X,Script:S,Group:",
+    "page: page push",
+    "page: rootNodes callback 5 Transform:A,Group:X,Script:S,Group:,Transform:",
+    "page: page removeRootNode",
+    "page: rootNodes callback 4 Transform:A,Script:S,Group:,Transform:",
+    "page: page rootNodes assign",
+    "page: rootNodes callback 2 Script:S,Transform:A",
+    "page: Script read",
+    "log: S read Script:S,Transform:A",
+    "page: Script add",
+    "log: S add Script:S,Transform:A,Group:",
+    "page: rootNodes callback 3 Script:S,Transform:A,Group:"
+   ]
+  },
   "scriptLife.staleFunction": {
    "before": "7 1 2 3",
    "read": "7 1 2 3",
@@ -254,6 +396,39 @@
     "page: mark Q set_z 1",
     "page: mark S eventsProcessed",
     "page: mark R eventsProcessed"
+   ]
+  },
+  "scriptLife.chainRoots": {
+   "added": null,
+   "removed": null,
+   "final": "Script:S,Script:R,Script:Q,Transform:N",
+   "errors": [],
+   "seq": [
+    "log: Q1 initialize",
+    "page: set_x 1",
+    "page: after the assignment",
+    "log: S set_x 1",
+    "log: S after x_changed",
+    "page: x_changed 1",
+    "page: x_changed done",
+    "log: R set_y 1 roots=S,R,Q,N",
+    "log: Q1 set_z 1 roots=4"
+   ]
+  },
+  "scriptLife.chainUrl": {
+   "final": "Transform:T,Script:S,Script:R,Script:Q",
+   "errors": [],
+   "seq": [
+    "log: Q1 initialize",
+    "page: set_x 1",
+    "page: after the assignment",
+    "log: S set_x 1",
+    "log: S after x_changed",
+    "page: x_changed 1",
+    "page: x_changed done",
+    "log: R set_y 1 roots=T,S,R,Q",
+    "log: Q1 shutdown",
+    "log: Q2 initialize"
    ]
   },
   "scriptLife.shutdownUrl": {
@@ -1586,88 +1761,6 @@
      ],
      "ticks": [],
      "inlines": {}
-    }
-   ]
-  },
-  "inlineRetry.inlineNotSetAgain": {
-   "steps": [
-    {
-     "label": "failed",
-     "came": true,
-     "requests": 1,
-     "lines": [
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
-     ]
-    },
-    {
-     "label": "published",
-     "came": true,
-     "requests": 1,
-     "lines": []
-    }
-   ]
-  },
-  "inlineRetry.inlineSameUrl": {
-   "steps": [
-    {
-     "label": "failed",
-     "came": true,
-     "requests": 1,
-     "lines": [
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
-     ]
-    },
-    {
-     "label": "url again",
-     "came": true,
-     "requests": 2,
-     "lines": [
-      "log: L initialize"
-     ]
-    }
-   ]
-  },
-  "inlineRetry.inlineLoadToggle": {
-   "steps": [
-    {
-     "label": "failed",
-     "came": true,
-     "requests": 1,
-     "lines": [
-      "error: Inline: Couldn't load URL 'http://oracle/synthetic-retry/late.wrl'. Error: Not Found"
-     ]
-    },
-    {
-     "label": "load false",
-     "came": true,
-     "requests": 1,
-     "lines": []
-    },
-    {
-     "label": "load true",
-     "came": true,
-     "requests": 1,
-     "lines": []
-    }
-   ]
-  },
-  "inlineRetry.externprotoAgain": {
-   "steps": [
-    {
-     "label": "failed",
-     "came": true,
-     "requests": 1,
-     "lines": [
-      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. Error: Not Found"
-     ]
-    },
-    {
-     "label": "again",
-     "came": true,
-     "requests": 1,
-     "lines": [
-      "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-retry/lib.wrl#G'. TypeError: Cannot read properties of null (reading 'setWorldURL')"
-     ]
     }
    ]
   }
