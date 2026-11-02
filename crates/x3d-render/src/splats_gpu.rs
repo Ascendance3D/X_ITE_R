@@ -29,6 +29,14 @@ pub struct SplatInput<'a> {
     /// The pointing pass (GaussianSplats.fs.js X3D_POINTING_PASS): the x3d_Id of the draw. The projection is `depth_projection`'s
     /// place: the pointing pass's own.
     pub pick_id: Option<f32>,
+    /// The collision depth buffer (X3DRenderObject.depth, GaussianSplats.fs.js X3D_DEPTH_PASS with X3D_NORMAL_BUFFER): with
+    /// `pick_id` as x3d_Id, it writes depth and id to the first attachment, the normal and the front face to the second.
+    pub collision: bool,
+    /// This projection in place of the pass's (a batch of collision passes under different view-projections).
+    pub projection: Option<[f32; 16]>,
+    /// The sorted index buffer and bind group of this input are the slot's, not the n-th of its data set: the draws of one
+    /// shape in several passes share them.
+    pub slot: Option<usize>,
 }
 
 struct DataGpu {
@@ -58,7 +66,7 @@ struct PipelineKey {
     logarithmic: bool,
     /// A shadow map draw: no color target, a depth format of its own.
     depth: bool,
-    /// The pointing pass: 1 the first (vertex and id, normal), 2 the second (texCoord).
+    /// The pointing pass: 1 the first (vertex and id, normal), 2 the second (texCoord); 3 the collision depth buffer.
     pick: u8,
 }
 
@@ -190,7 +198,9 @@ fn pad4(values: &[f32], per: usize) -> Vec<f32> {
 impl SplatInput<'_> {
     /// The index and bind group keys of a shadow map's and a pointing pass's draws are apart from the frame's.
     fn key_kind(&self) -> usize {
-        if self.pick_id.is_some() {
+        if self.collision {
+            3 << 16
+        } else if self.pick_id.is_some() {
             2 << 16
         } else if self.depth_projection.is_some() {
             1 << 16
@@ -291,11 +301,11 @@ impl SplatGpu {
         for input in inputs {
             let d = input.draw;
             let data_key = Rc::as_ptr(&d.data) as usize;
-            let ordinal = {
+            let ordinal = input.slot.unwrap_or_else(|| {
                 let o = ordinals.entry(data_key).or_insert(0);
                 *o += 1;
                 *o - 1
-            };
+            });
             let data = &d.data;
 
             // The data set.
@@ -377,7 +387,10 @@ impl SplatGpu {
             }
 
             // The uniforms.
-            let projection = &input.depth_projection.unwrap_or(*projection);
+            let projection = &input
+                .projection
+                .or(input.depth_projection)
+                .unwrap_or(*projection);
             let pick_id = input.pick_id.unwrap_or(0.0);
             let inv_projection = inverse_f32(projection);
             let model_view_inverse = inverse_f32(&mv);
@@ -493,6 +506,7 @@ impl SplatGpu {
         let depth = inputs.iter().any(|i| i.depth_projection.is_some());
         // A pointing pass's prepare holds only pointing draws, which go through the buffer's two passes.
         let pick = inputs.iter().any(|i| i.pick_id.is_some());
+        let collision = inputs.iter().any(|i| i.collision);
         let key_of = |pick: u8| PipelineKey {
             format,
             samples,
@@ -501,8 +515,8 @@ impl SplatGpu {
             depth,
             pick,
         };
-        let pipeline_key = key_of(pick as u8);
-        let pipeline_b = pick.then(|| key_of(2));
+        let pipeline_key = key_of(if collision { 3 } else { pick as u8 });
+        let pipeline_b = (pick && !collision).then(|| key_of(2));
 
         for pipeline_key in std::iter::once(pipeline_key).chain(pipeline_b) {
             if self.pipelines.contains_key(&pipeline_key) {
@@ -536,7 +550,7 @@ impl SplatGpu {
                 })
             };
             let targets = if pick {
-                if pipeline_key.pick == 1 {
+                if pipeline_key.pick != 2 {
                     vec![rgba32(), rgba32()]
                 } else {
                     vec![rgba32()]
@@ -590,7 +604,9 @@ impl SplatGpu {
                 fragment: Some(wgpu::FragmentState {
                     module,
                     entry_point: Some(if pick {
-                        if pipeline_key.pick == 1 {
+                        if pipeline_key.pick == 3 {
+                            "fs_collision"
+                        } else if pipeline_key.pick == 1 {
                             "fs_pick_a"
                         } else {
                             "fs_pick_b"
@@ -617,11 +633,11 @@ impl SplatGpu {
 
         for (i, input) in inputs.iter().enumerate() {
             let data_key = Rc::as_ptr(&input.draw.data) as usize;
-            let ordinal = {
+            let ordinal = input.slot.unwrap_or_else(|| {
                 let o = ordinals.entry(data_key).or_insert(0);
                 *o += 1;
                 *o - 1
-            };
+            });
             let group_key = (data_key, ordinal + input.key_kind());
 
             match self.groups.get_mut(&group_key) {
