@@ -427,3 +427,33 @@ fn walk_start_lag_follows_the_splat_load() {
         }
     }
 }
+
+/// Issue #69, MSAA 4: the collision depth buffer is offscreen, so a multisampled display must change no probe. The pinned page
+/// recorded at `--aa --ms 4` (oracle/b69-gs-collision-msaa4-baseline, `b69_gs_collision_record.py record NAME 4`, five
+/// byte-identical runs each) gives the same `collisionProbes` as at MSAA 0 in every case, WALK fall included. Rust has no
+/// display-dependent collision path, so the MSAA 0 comparison above covers both. Data only (no GPU).
+#[test]
+fn collision_probes_do_not_depend_on_msaa() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let mut n = 0;
+
+    for e in std::fs::read_dir(root.join("oracle/b69-gs-collision-baseline")).unwrap() {
+        let name = e.unwrap().file_name().to_string_lossy().into_owned();
+        let at = |dir: &str| json(&root.join("oracle").join(dir).join(&name).join("js.json"));
+        let (a, b) = (
+            at("b69-gs-collision-baseline"),
+            at("b69-gs-collision-msaa4-baseline"),
+        );
+
+        assert_eq!(
+            a["collisionProbes"], b["collisionProbes"],
+            "{name}: MSAA 4 changes the collision probes"
+        );
+        n += 1;
+    }
+
+    assert!(n >= 13, "cases missing: {n}");
+}

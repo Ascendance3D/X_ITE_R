@@ -1,0 +1,1215 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 12,
+ "warmup": 8,
+ "seed": 69000002,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "12": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  }
+ },
+ "log": [
+  "frame 1: 0 emitter.animate calls",
+  "frame 1: 0 randomSeed uniform writes",
+  "frame 2: 0 emitter.animate calls",
+  "frame 2: 0 randomSeed uniform writes",
+  "frame 3: 0 emitter.animate calls",
+  "frame 3: 0 randomSeed uniform writes",
+  "frame 4: 0 emitter.animate calls",
+  "frame 4: 0 randomSeed uniform writes",
+  "frame 5: 0 emitter.animate calls",
+  "frame 5: 0 randomSeed uniform writes",
+  "frame 6: 0 emitter.animate calls",
+  "frame 6: 0 randomSeed uniform writes",
+  "frame 7: 0 emitter.animate calls",
+  "frame 7: 0 randomSeed uniform writes",
+  "frame 8: 0 emitter.animate calls",
+  "frame 8: 0 randomSeed uniform writes",
+  "frame 9: 0 emitter.animate calls",
+  "frame 9: 0 randomSeed uniform writes",
+  "frame 10: 0 emitter.animate calls",
+  "frame 10: 0 randomSeed uniform writes",
+  "frame 11: 0 emitter.animate calls",
+  "frame 11: 0 randomSeed uniform writes",
+  "frame 12: 0 emitter.animate calls",
+  "frame 12: 0 randomSeed uniform writes",
+  "animate called 0 times in 12 steps"
+ ],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"FLY\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nDEF COL Collision {\n  children GaussianSplats {\n    positions [\n      0.2686 0.0053 -0.0156,\n      1.0167 -0.0419 0.0162,\n      0.0263 0.3455 0.0257,\n      0.0152 0.9761 0.0009,\n      0.0433 0.0558 0.3486,\n      -0.0107 -0.0419 0.9753,\n      -0.3228 -0.0508 0.012,\n      -1.0048 0.0024 0.0173,\n      0.0058 -0.3586 -0.0102,\n      -0.0573 -1.0527 0.0211,\n      0.0327 -0.0568 -0.2917,\n      0.04 -0.0074 -0.9573,\n      0.142 -0.0266 -0.2031,\n      0.6505 -0.0413 -0.8594,\n      -0.2053 -0.0191 -0.2727,\n      -0.6584 0.0294 -0.8394,\n      -0.0178 -0.2163 -0.2358,\n      -0.0278 -0.5967 -0.8092\n    ]\n    orientations [\n      0.1545 0.1869 -0.646 -0.7238,\n      0.7784 0.049 0.5102 0.3625,\n      0.793 -0.1978 0.5667 -0.1043,\n      -0.5125 -0.6695 0.382 0.3783,\n      0.1399 0.4329 -0.5849 0.6714,\n      0.4089 0.5671 -0.6934 0.1742,\n      -0.8135 -0.5253 -0.1598 0.1918,\n      0.2034 0.126 0.2554 0.9368,\n      0.1546 -0.9277 0.2238 0.2555,\n      0.8647 -0.4645 -0.0815 0.173,\n      0.4606 -0.3721 -0.5434 0.595,\n      -0.5971 -0.2948 0.2712 0.6949,\n      0.2707 0.584 -0.295 -0.7061,\n      0.5809 0.498 0.6381 -0.086,\n      -0.7451 0.153 -0.3674 0.5351,\n      -0.7325 0.5962 0.0914 -0.3157,\n      0.4614 -0.4788 0.4248 0.6143,\n      -0.0375 0.3821 -0.6885 -0.6152\n    ]\n    scales [\n      0.0819 0.053 0.0517,\n      0.0432 0.0779 0.0696,\n      0.0868 0.0839 0.0449,\n      0.0852 0.0741 0.0864,\n      0.0687 0.0542 0.0432,\n      0.0422 0.0759 0.0565,\n      0.0478 0.0421 0.0834,\n      0.0654 0.0616 0.076,\n      0.043 0.0714 0.0633,\n      0.056 0.0582 0.0556,\n      0.0519 0.0494 0.0618,\n      0.0626 0.0513 0.046,\n      0.0546 0.0797 0.0536,\n      0.0875 0.0864 0.0511,\n      0.0423 0.0852 0.0747,\n      0.087 0.0706 0.0571,\n      0.0803 0.0812 0.0404,\n      0.0463 0.0462 0.0434\n    ]\n    opacities [\n      0.949,\n      0.775,\n      0.734,\n      0.914,\n      0.913,\n      0.92,\n      0.778,\n      0.759,\n      0.87,\n      0.792,\n      0.875,\n      0.832,\n      0.787,\n      0.886,\n      0.931,\n      0.763,\n      0.857,\n      0.944\n    ]\n    sphericalHarmonicsDegree0Coef0 [\n      0.1405 0.8729 0.1527,\n      -0.738 0.9311 0.1455,\n      -0.366 1.131 0.0723,\n      1.182 0.5425 -0.4738,\n      1.1796 -0.623 0.8012,\n      1.1613 0.2108 1.197,\n      1.1173 0.9933 -0.0444,\n      -0.1978 1.1556 0.2423,\n      -0.0948 0.6139 0.6761,\n      0.3912 -0.1992 -0.0457,\n      -0.5963 -0.1561 -0.1325,\n      -0.4184 0.8136 0.877,\n      0.0338 0.0395 0.019,\n      0.8734 0.526 0.238,\n      0.9931 0.9993 0.3539,\n      0.9233 0.1544 0.7647,\n      0.9251 -0.7001 -0.2572,\n      0.9089 -0.6277 0.2042\n    ]\n  }\n}\n\nDEF COL_OFF Collision {\n  enabled FALSE\n  children GaussianSplats {\n    positions -0.0317 -0.0476 -0.5125\n    orientations -0.4922 -0.6184 -0.1404 0.5963\n    scales 0.076 0.0753 0.0644\n    opacities 0.834\n    sphericalHarmonicsDegree0Coef0 -0.2466 -0.4547 -0.5876\n  }\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 1,
+  "particleLifetime": 5,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "collisionProbes": {
+  "1": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  },
+  "2": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  },
+  "3": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  },
+  "5": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  },
+  "8": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  },
+  "12": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14199998405115388,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.34859995518161946,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.35859994579994514,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.20309990840069525,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.17363989205087926,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.18407994823875407,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.1784399242045327,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0.04690009159930475
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {
+    "COL": {
+     "isActive": true,
+     "collideTime": 946684800
+    },
+    "COL_OFF": {
+     "isActive": false,
+     "collideTime": -1
+    }
+   }
+  }
+ },
+ "geometry": {},
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"FLY\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nDEF COL Collision {\n  children GaussianSplats {\n    positions [\n      0.2686 0.0053 -0.0156,\n      1.0167 -0.0419 0.0162,\n      0.0263 0.3455 0.0257,\n      0.0152 0.9761 0.0009,\n      0.0433 0.0558 0.3486,\n      -0.0107 -0.0419 0.9753,\n      -0.3228 -0.0508 0.012,\n      -1.0048 0.0024 0.0173,\n      0.0058 -0.3586 -0.0102,\n      -0.0573 -1.0527 0.0211,\n      0.0327 -0.0568 -0.2917,\n      0.04 -0.0074 -0.9573,\n      0.142 -0.0266 -0.2031,\n      0.6505 -0.0413 -0.8594,\n      -0.2053 -0.0191 -0.2727,\n      -0.6584 0.0294 -0.8394,\n      -0.0178 -0.2163 -0.2358,\n      -0.0278 -0.5967 -0.8092\n    ]\n    orientations [\n      0.1545 0.1869 -0.646 -0.7238,\n      0.7784 0.049 0.5102 0.3625,\n      0.793 -0.1978 0.5667 -0.1043,\n      -0.5125 -0.6695 0.382 0.3783,\n      0.1399 0.4329 -0.5849 0.6714,\n      0.4089 0.5671 -0.6934 0.1742,\n      -0.8135 -0.5253 -0.1598 0.1918,\n      0.2034 0.126 0.2554 0.9368,\n      0.1546 -0.9277 0.2238 0.2555,\n      0.8647 -0.4645 -0.0815 0.173,\n      0.4606 -0.3721 -0.5434 0.595,\n      -0.5971 -0.2948 0.2712 0.6949,\n      0.2707 0.584 -0.295 -0.7061,\n      0.5809 0.498 0.6381 -0.086,\n      -0.7451 0.153 -0.3674 0.5351,\n      -0.7325 0.5962 0.0914 -0.3157,\n      0.4614 -0.4788 0.4248 0.6143,\n      -0.0375 0.3821 -0.6885 -0.6152\n    ]\n    scales [\n      0.0819 0.053 0.0517,\n      0.0432 0.0779 0.0696,\n      0.0868 0.0839 0.0449,\n      0.0852 0.0741 0.0864,\n      0.0687 0.0542 0.0432,\n      0.0422 0.0759 0.0565,\n      0.0478 0.0421 0.0834,\n      0.0654 0.0616 0.076,\n      0.043 0.0714 0.0633,\n      0.056 0.0582 0.0556,\n      0.0519 0.0494 0.0618,\n      0.0626 0.0513 0.046,\n      0.0546 0.0797 0.0536,\n      0.0875 0.0864 0.0511,\n      0.0423 0.0852 0.0747,\n      0.087 0.0706 0.0571,\n      0.0803 0.0812 0.0404,\n      0.0463 0.0462 0.0434\n    ]\n    opacities [\n      0.949,\n      0.775,\n      0.734,\n      0.914,\n      0.913,\n      0.92,\n      0.778,\n      0.759,\n      0.87,\n      0.792,\n      0.875,\n      0.832,\n      0.787,\n      0.886,\n      0.931,\n      0.763,\n      0.857,\n      0.944\n    ]\n    sphericalHarmonicsDegree0Coef0 [\n      0.1405 0.8729 0.1527,\n      -0.738 0.9311 0.1455,\n      -0.366 1.131 0.0723,\n      1.182 0.5425 -0.4738,\n      1.1796 -0.623 0.8012,\n      1.1613 0.2108 1.197,\n      1.1173 0.9933 -0.0444,\n      -0.1978 1.1556 0.2423,\n      -0.0948 0.6139 0.6761,\n      0.3912 -0.1992 -0.0457,\n      -0.5963 -0.1561 -0.1325,\n      -0.4184 0.8136 0.877,\n      0.0338 0.0395 0.019,\n      0.8734 0.526 0.238,\n      0.9931 0.9993 0.3539,\n      0.9233 0.1544 0.7647,\n      0.9251 -0.7001 -0.2572,\n      0.9089 -0.6277 0.2042\n    ]\n  }\n}\n\nDEF COL_OFF Collision {\n  enabled FALSE\n  children GaussianSplats {\n    positions -0.0317 -0.0476 -0.5125\n    orientations -0.4922 -0.6184 -0.1404 0.5963\n    scales 0.076 0.0753 0.0644\n    opacities 0.834\n    sphericalHarmonicsDegree0Coef0 -0.2466 -0.4547 -0.5876\n  }\n}\n",
+ "console": [],
+ "animateCalls": 0,
+ "fileF32": "js.f32"
+}
