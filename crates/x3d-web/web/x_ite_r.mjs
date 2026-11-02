@@ -4762,6 +4762,9 @@ class BrowserUI
 
 let htmlTables = null;
 
+// The conversion of the `<X3D>` element that a scene was imported from (`importDocument`), see htmlToXML.
+const htmlImports = new WeakMap ();
+
 // HTMLSupport: node type names (exact or upper case) and field names (exact or lower case) of the pinned X_ITE.
 function htmlSupportTables ()
 {
@@ -4807,13 +4810,19 @@ const ATTRIBUTE_NAMES = new Map ([
    "conversionFactor", "content", "profile", "version", "DEF", "USE", "containerField",
 ] .map (name => [ name .toLowerCase (), name ]));
 
-// An HTML `<X3D>` element as the XML text of the same X3D document.
-function htmlToXML (root)
+// The PROTO names and fields that the HTML parser has seen in a world (XMLParser's `protoNames` and `protoFields`), kept for
+// the elements that are added to it later.
+const newHtmlState = () => ({ protoNames: new Map (), protoFields: new Map () });
+
+// An HTML `<X3D>` element as the XML text of the same X3D document, or with `fragment` the element of that document that was
+// added to it. The result is the text and the elements of the page that its XML elements are, in document order (null for the
+// XML elements that no page element is): a mutation finds the node of an element with them.
+function htmlToXML (root, state = newHtmlState (), fragment = null)
 {
    const { types, fields } = htmlSupportTables ();
-   const protoNames  = new Map (); // upper case or exact name → name of a declared PROTO
-   const protoFields = new Map (); // name of a PROTO → (lower case or exact name → field name)
+   const { protoNames, protoFields } = state; // upper case or exact name → name of a declared PROTO; PROTO → (lower case or exact name → field name)
    const out         = [ ];
+   const elements    = [ ];
    const get         = (element, name) => element .getAttribute (name);
 
    // `attribute="value"` of the attributes the element is read with.
@@ -4828,6 +4837,7 @@ function htmlToXML (root)
 
    const inherit = (element, tag, names, body) =>
    {
+      elements .push (element);
       out .push (`<${tag}${named (element, names)}`);
 
       if (body)
@@ -4972,6 +4982,7 @@ function htmlToXML (root)
             {
                if (iface)
                {
+                  elements .push (iface);
                   out .push ("<ProtoInterface>");
                   protoFields .set (name, interfaceFields (iface));
                   out .push ("</ProtoInterface>");
@@ -5014,6 +5025,7 @@ function htmlToXML (root)
             return;
 
          case "IMPORT":
+            elements .push (element);
             out .push (`<IMPORT${named (element, [ "inlineDEF" ])}`);
             {
                const exported = get (element, "importedDEF") || get (element, "exportedDEF");
@@ -5046,6 +5058,7 @@ function htmlToXML (root)
 
       if (use)
       {
+         elements .push (element);
          out .push (`<${tag} USE="${xmlAttr (use)}"${typeName === "ProtoInstance" ? named (element, [ "name" ]) : ""}/>`);
          return;
       }
@@ -5055,33 +5068,58 @@ function htmlToXML (root)
 
       const fieldMap = protoName === undefined ? undefined : protoFields .get (protoName);
 
+      elements .push (element);
       out .push (`<${tag}${attributesOf (element, protoName === undefined ? undefined : fieldMap ?? new Map ())}>`);
       children (element, childElement);
       out .push (`</${tag}>`);
    };
 
-   // The X3D element: the head (head elements first, then the X3D element's own head children), then the scene.
+   // The field that an attribute of an element is read into (XMLParser.attributeToCamelCase), or undefined.
+   const fieldName = (element, name) =>
    {
+      const protoName = types .has (element .nodeName) ? undefined : protoNames .get (element .nodeName);
+
+      return (protoName === undefined ? fields : protoFields .get (protoName) ?? new Map ()) .get (name);
+   };
+
+   if (fragment)
+   {
+      childElement (fragment);
+   }
+   else
+   {
+      // The X3D element: the head (head elements first, then the X3D element's own head children), then the scene.
+      const scene = Array .from (root .childNodes) .find (child => child .nodeName === "Scene" || child .nodeName === "SCENE");
+
+      elements .push (null);
       out .push (`<X3D${named (root, [ "profile", "version" ])}>`);
+      elements .push (null);
       out .push ("<head>");
       children (root, child => { if (child .nodeName === "head" || child .nodeName === "HEAD") children (child, headChild); });
       children (root, headChild);
       out .push ("</head>");
+      elements .push (scene ?? null);
       out .push ("<Scene>");
       children (root, child => { if (child .nodeName === "Scene" || child .nodeName === "SCENE") children (child, childElement); });
       out .push ("</Scene>");
       out .push ("</X3D>");
    }
 
-   return out .join ("");
+   return { xml: out .join (""), elements, fieldName, state };
 }
 
-// Browser/DOMIntegration.js: the last `<X3D>` child of the canvas is the world.
+// Browser/DOMIntegration.js: the last `<X3D>` child of the canvas is the world, and the changes of its elements are the world's
+// changes. X_ITE keeps the node of an element in `element [_node]`; here `#targets` holds what the XML parse of the engine made
+// of an element (see htmlToXML, `Session::xml_targets`).
 class DOMIntegration
 {
    #browser;
    #observer;
    #rootElement = null;
+   #changes = null;
+   #html = null;
+   #handle = null;
+   #targets = new WeakMap ();
 
    constructor (browser)
    {
@@ -5105,6 +5143,11 @@ class DOMIntegration
             return;
 
          this .#rootElement = rootElement;
+         this .#changes ?.disconnect ();
+         this .#changes = null;
+         this .#html    = null;
+         this .#handle  = null;
+         this .#targets = new WeakMap ();
 
          if (!rootElement)
          {
@@ -5115,6 +5158,26 @@ class DOMIntegration
          const scene = await this .#browser .importDocument (rootElement);
 
          this .#browser .replaceWorld (scene);
+
+         // Start observing, as X_ITE does after the world was replaced.
+         const html   = htmlImports .get (scene);
+         const handle = scene [_node];
+
+         if (!html || rootElement !== this .#rootElement || !handle ?.browser)
+            return;
+
+         this .#html   = html;
+         this .#handle = handle;
+
+         this .#register (engineOf (handle) .xmlTargets (handle .scene), html .elements);
+
+         this .#changes = new MutationObserver (mutations =>
+         {
+            for (const mutation of mutations)
+               this .#processMutation (mutation);
+         });
+
+         this .#changes .observe (rootElement, { attributes: true, childList: true, subtree: true });
       }
       catch (error)
       {
@@ -5122,9 +5185,140 @@ class DOMIntegration
       }
    }
 
+   // What the elements of an XML text made, `[index, kind, a, b]` each, and the page elements of that text.
+   #register (targets, elements)
+   {
+      for (let i = 0; i < targets .length; i += 4)
+      {
+         const element = elements [targets [i]];
+
+         if (element)
+            this .#targets .set (element, { kind: targets [i + 1], a: targets [i + 2], b: targets [i + 3] });
+      }
+   }
+
+   #node (element)
+   {
+      const target = this .#targets .get (element);
+
+      return target ?.kind === 0 ? target .a : undefined;
+   }
+
+   #processMutation (mutation)
+   {
+      if (!this .#handle)
+         return;
+
+      try
+      {
+         switch (mutation .type)
+         {
+            case "attributes":
+            {
+               this .#processAttribute (mutation);
+               break;
+            }
+            case "childList":
+            {
+               for (const node of mutation .addedNodes)
+                  this .#processAddedNode (node);
+
+               for (const node of mutation .removedNodes)
+                  this .#processRemovedNode (node);
+
+               break;
+            }
+         }
+      }
+      finally
+      {
+         // The warnings and errors of the engine's parser.
+         const handle = this .#handle;
+
+         if (handle .browser [_engine] ?.exists (handle .scene))
+         {
+            for (const line of handle .browser [_engine] .takeLog (handle .scene))
+               printLogLine (line);
+         }
+      }
+   }
+
+   #processAttribute ({ target: element, attributeName })
+   {
+      const node = this .#node (element);
+
+      if (node !== undefined)
+      {
+         const attribute = element .getAttributeNode (attributeName);
+
+         // XMLParser.nodeAttribute: a missing attribute or a name of no field throws, and the parser ignores that.
+         const name = attribute && this .#html .fieldName (element, attribute .name);
+
+         if (name !== undefined && name !== null)
+            engineOf (this .#handle) .xmlAttribute (this .#handle .scene, node, name, attribute .value);
+      }
+      else
+      {
+         // The attribute of a child that is not a node, such as fieldValue (or ROUTE): the child is read again.
+         const parentNode = this .#node (element .parentNode);
+
+         if (parentNode !== undefined)
+            this .#child (element, parentNode);
+      }
+   }
+
+   // XMLParser.childElement (element) with the node `parent` (-1: among the root nodes of the world) as the parent.
+   #child (element, parent)
+   {
+      const { xml, elements } = htmlToXML (null, this .#html .state, element);
+
+      if (xml === "")
+         return;
+
+      this .#register (engineOf (this .#handle) .xmlChild (this .#handle .scene, parent, xml), elements);
+   }
+
+   #processAddedNode (element)
+   {
+      // Only process element nodes.
+      if (element .nodeType !== Node .ELEMENT_NODE)
+         return;
+
+      if (element .nodeName === "X3D")
+         return;
+
+      if (this .#targets .has (element))
+         return;
+
+      const parent = element .parentNode;
+
+      // The root scene, a node, or else the world.
+      this .#child (element, /^(?:Scene|SCENE)$/ .test (parent .nodeName) ? -1 : this .#node (parent) ?? -1);
+   }
+
+   #processRemovedNode (element)
+   {
+      // Works also for root nodes, and removes ROUTE elements.
+      const target = this .#targets .get (element);
+
+      if (!target)
+         return;
+
+      const handle = this .#handle;
+
+      switch (target .kind)
+      {
+         case 0: engineOf (handle) .disposeNode (handle .scene, target .a); break;
+         case 2: engineOf (handle) .deleteRouteById (handle .scene, target .a, target .b); break;
+      }
+
+      this .#targets .delete (element);
+   }
+
    dispose ()
    {
       this .#observer .disconnect ();
+      this .#changes ?.disconnect ();
    }
 }
 
@@ -6180,6 +6374,7 @@ class X3DBrowser
          throw new TypeError ("Cannot read properties of undefined (reading 'nodeName')");
 
       let text = null;
+      let html = null;
 
       if (typeof dom === "string")
          text = dom;
@@ -6191,7 +6386,8 @@ class X3DBrowser
          if (dom .nodeName !== "X3D")
             return this .#emptyScene ();
 
-         text = htmlToXML (dom);
+         html = htmlToXML (dom);
+         text = html .xml;
       }
       else if (dom instanceof Node)
          text = new XMLSerializer () .serializeToString (dom);
@@ -6204,7 +6400,16 @@ class X3DBrowser
             text = null;
       }
 
-      return text === null ? this .#emptyScene () : this .#importText (text);
+      if (text === null)
+         return this .#emptyScene ();
+
+      const scene = await this .#importText (text);
+
+      // DOMIntegration finds the node of an element with this.
+      if (html)
+         htmlImports .set (scene, html);
+
+      return scene;
    }
 
    // The scene of text that createX3DFromString parses, with the page's URL as its world URL.
