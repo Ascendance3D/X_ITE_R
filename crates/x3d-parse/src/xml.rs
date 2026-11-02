@@ -550,8 +550,13 @@ impl<'a> XmlParser<'a> {
         let ctx = self.ctx();
 
         let Some(node) = self.scene().create_proto_instance(ctx, name) else {
-            return self.warn(format!(
+            self.warn(format!(
                 "XML Parser:  Unknown proto or externproto type '{name}'."
+            ));
+
+            // The catch of XMLParser.protoInstanceElement then prints the Error object with console.error (DEVELOPMENT).
+            return self.p.scene.error(format!(
+                "Error: Unknown proto or externproto type '{name}'."
             ));
         };
 

@@ -1,6 +1,6 @@
 # 0006. DOM integration: not ported to the native host
 
-Status: **Proposed.** The ledger note says only "DOM-only feature; native host has no DOM"; no dated owner decision was found for it. The browser build has its own differences (ADR 0001, group on `importDocument (htmlElement)` and issue #146).
+Status: **Proposed.** The ledger note says only "DOM-only feature; native host has no DOM"; no dated owner decision was found for it. The browser build ports it in part (issue #146, below).
 
 Reference: X_ITE 16.5.0 at `34cdf9f97` (`oracle/x_ite-pin`). 16.6.0 is out of scope.
 
@@ -12,7 +12,7 @@ Ledger entries: `sub:browser.dom-integration`.
 
 ## Decision
 
-Not ported to the native host. Whether the browser build should port it is issue #146's question, not this record's.
+Not ported to the native host. The browser build ports it (issue #146): since the first part of #146 the canvas follows its `<X3D>` child and `importDocument (htmlElement)` reads an HTML `<X3D>` element, both compared with pinned X_ITE (`tests/browser/dom01.test.mjs`). The mutations of the element and the Inline and CustomEvent parts follow in later PRs, so the entry `sub:browser.dom-integration` stays `DIFFERENT` until they are in.
 
 ## Consequences
 
