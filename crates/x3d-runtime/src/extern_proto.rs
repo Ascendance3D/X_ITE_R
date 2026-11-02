@@ -265,20 +265,18 @@ impl Runtime {
         }
     }
 
-    /// X3DExecutionContext.removeExternProtoDeclaration: the declaration leaves its context and its
-    /// load is cancelled, so nothing it started can reach its instances afterwards (X_ITE lets an
-    /// in-flight load finish). The instances keep the body they have.
+    /// X3DExecutionContext.removeExternProtoDeclaration (X_ITE 16.5.0): the declaration leaves the name table of its context
+    /// and nothing else happens. It is not disposed and its loader is not aborted, so a load in flight finishes and builds
+    /// the bodies of the instances that still use it, its `loadState` events and its timers go on, and a declaration the
+    /// caller still holds keeps working (`loadNow ()`, `url`). Issue #58, pinned in the `externRemove` cases.
+    ///
+    /// The standards (ISO/IEC 14772-1 4.9 and the SAI of ISO/IEC 19775-2) do not say what becomes of a load when its
+    /// declaration is removed from a scene, so X_ITE breaks no clause and this port follows it. (The text of 19775-1/-2 is not
+    /// in the repository; this rests on 14772-1.)
     pub fn extern_remove(&mut self, ctx: CtxId, name: &str) -> Option<ExternId> {
         let e = self.scene.ctx(ctx).externprotos.get(name)?;
 
         self.scene.ctx_mut(ctx).externprotos.remove(name);
-        self.extern_cancel(e);
-        self.extern_load_events.retain(|x| *x != e);
-        self.xs(e).timer = None;
-
-        if self.extern_load_state(e) == LoadState::InProgress {
-            self.extern_set_load_state(e, LoadState::NotStarted);
-        }
 
         Some(e)
     }
@@ -673,8 +671,8 @@ impl Runtime {
             };
         };
 
-        // Cached scenes: not for a URL with a query; the key has no fragment.
-        let key = if resolved.query().is_none() {
+        // Cached scenes: not for a URL with a query, nor with the `Cache` option off; the key has no fragment.
+        let key = if resolved.query().is_none() && self.browser_options.cache() {
             let mut k = resolved.clone();
 
             k.set_fragment(None);
