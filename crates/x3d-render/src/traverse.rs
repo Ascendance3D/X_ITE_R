@@ -1433,6 +1433,7 @@ pub struct Builder<'a> {
 mod traverse_shaders;
 #[path = "traverse_splats.rs"]
 mod traverse_splats;
+pub use traverse_splats::splats_pointing;
 
 /// One GeneratedCubeMapTexture.renderTexture: six frames drawn into the texture's faces before
 /// the frame that samples it (X3DRenderObject.draw: rendered textures first).

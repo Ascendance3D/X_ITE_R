@@ -2701,6 +2701,7 @@ impl Renderer {
                         viewport: view.viewport.map(|v| v as f64),
                         fog: None,
                         depth_projection: Some(f32x16(&view.projection)),
+                        pick_id: None,
                     });
                 }
             }
@@ -4821,6 +4822,7 @@ impl Renderer {
                     viewport: item.viewport.unwrap_or(layer_rect),
                     fog: item.fog.as_ref().or(frame.fog.as_ref()),
                     depth_projection: None,
+                    pick_id: None,
                 });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
