@@ -44,6 +44,7 @@ import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as SHUTDOWN01_GROUPS } from "./shutdown01_case.mjs";
 import { CASE_GROUPS as EXTERNREMOVE01_GROUPS } from "./externremove01_case.mjs";
+import { CASE_GROUPS as SPLATSORT01_GROUPS } from "./splatsort01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as MOVIE01_GROUPS } from "./movie01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
@@ -111,6 +112,7 @@ const SUITES = {
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
    shutdown01: { dir: process .env .XR_SHUTDOWN01_BASELINE ?? join (REPO, "oracle/web-browser-shutdown-01-baseline"), file: "shutdown01-baseline.json", groups: SHUTDOWN01_GROUPS },
    externremove01: { dir: process .env .XR_EXTERNREMOVE01_BASELINE ?? join (REPO, "oracle/web-browser-externproto-remove-01-baseline"), file: "externremove01-baseline.json", groups: EXTERNREMOVE01_GROUPS },
+   splatsort01: { dir: process .env .XR_SPLATSORT01_BASELINE ?? join (REPO, "oracle/web-browser-splat-sort-01-baseline"), file: "splatsort01-baseline.json", groups: SPLATSORT01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -249,6 +251,10 @@ const KNOWN_DIFFERENCES = {
         [ "log: B1 initialize", "page: loaded", "page: reload", "page: remove", "page: replaceWorld", "page: released", "log: B2 initialize" ],
         [ "log: B1 initialize", "page: loaded", "page: reload", "page: remove", "page: replaceWorld", "page: released" ] ],
    ],
+   // Issue #69 (web/API.md, "GaussianSplats"): X_ITE sorts the splats in a worker and draws the frame of a view change with the
+   // last sorted order, then again when the worker answers; X_ITE_R sorts in the frame it draws, so that frame is right at once.
+   // The pictures once the sorts are done are equal (0 levels).
+   "splatSort.flip": [ [ [ "trace" ], [ "post sort", "draw 2", "recv sorted", "draw 2" ], [ ] ] ],
    "browserUi.splash": UI01_DIFFERENCES,
    "browserUi.menuEntries": [
       [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
@@ -768,6 +774,7 @@ const GROUP_FILES = {
    soundLevel: "sound04.test.mjs",
    scriptShutdown: "shutdown01.test.mjs",
    externRemove: "externremove01.test.mjs",
+   splatSort: "splatsort01.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
    scriptReload: "scriptlife01.test.mjs",
    inlineRetry: "scriptlife01.test.mjs",

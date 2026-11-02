@@ -405,3 +405,37 @@ fn bin(index: i32) -> usize {
     // (index << 2) wraps in 32 bits; a valid index is below 2^20, INT_MIN wraps to 0.
     (((index as u32).wrapping_shl(2)) >> 2) as usize
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn rotation_y(angle: f32) -> [f32; 16] {
+        let (s, c) = angle.sin_cos();
+
+        [
+            c, 0.0, -s, 0.0, //
+            0.0, 1.0, 0.0, 0.0, //
+            s, 0.0, c, 0.0, //
+            0.0, 0.0, 0.0, 1.0,
+        ]
+    }
+
+    /// Issue #69: the sort of a draw depends on its model-view matrix alone. X_ITE sorts in a worker and draws the frame of a
+    /// view change with the previous order (web/API.md, "GaussianSplats"); here the order of the frame is the order of its view,
+    /// so a half turn reverses two splats at once and the same matrix gives the same order again.
+    #[test]
+    fn the_order_of_a_frame_is_the_order_of_its_model_view_matrix() {
+        let positions = [0.0, 0.0, 0.6, 0.15, 0.0, -0.6];
+        let mut scratch = SortScratch::default();
+        let front = rotation_y(0.0);
+        let back = rotation_y(std::f32::consts::PI);
+        let a = sort_indices(&positions, 2, &front, &mut scratch);
+        let b = sort_indices(&positions, 2, &back, &mut scratch);
+        let c = sort_indices(&positions, 2, &front, &mut scratch);
+
+        assert_eq!(a.len(), 2);
+        assert_eq!(b, vec![a[1], a[0]], "the half turn flips the order");
+        assert_eq!(a, c, "a matrix gives its order whatever was sorted before");
+    }
+}
