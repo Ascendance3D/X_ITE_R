@@ -6,7 +6,7 @@
 import init, {
    WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp,
    chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
-   chainTypeName, chainNodeName, chainNamedNode, chainRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
+   chainTypeName, chainNodeName, chainNamedNode, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
 } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
@@ -115,6 +115,9 @@ const _engine = Symbol .for ("X_ITE_R.engine");
 // The engine of a browser while a field callback runs in the engine's route chain (issue #202).
 const _inChain = Symbol ("X_ITE_R.inChain");
 
+// The end of the route chain of a browser: the calls that were held back during it run (issue #202).
+const _chainEnd = Symbol ("X_ITE_R.chainEnd");
+
 // The engine calls of a field callback that runs in the route chain. The `WebBrowser` is borrowed by the export that runs the
 // chain, so these go through the engine's free functions, which reach the world in the middle of its chain. Other calls
 // throw: they would need the `WebBrowser` (API.md, "Script nodes").
@@ -131,6 +134,7 @@ const CHAIN_OPERATIONS = {
    nodeName: (scene, node) => chainNodeName (scene, node),
    namedNode: (scene, name) => chainNamedNode (scene, name),
    rootNodes: scene => chainRootNodes (scene),
+   setRootNodes: (scene, list) => chainSetRootNodes (scene, list),
    nodeValue: (scene, node, name) => chainNodeValue (scene, node, name),
    routes: scene => chainRoutes (scene),
    fieldDefinitions: (scene, node) => chainFieldDefinitions (scene, node),
@@ -872,6 +876,10 @@ function deliverChainEvent (browser, scene, node, name, data)
    finally
    {
       browser [_inChain] (previous);
+
+      // The calls the callback made that need the `WebBrowser` itself (setLive, the disposal) run now that the chain is over.
+      if (!previous)
+         browser [_chainEnd] ();
    }
 }
 
@@ -4932,6 +4940,25 @@ class X3DBrowser
       return previous;
    }
 
+   // Calls that need the `WebBrowser` while the engine runs its route chain (it is borrowed) wait here until the chain is over.
+   #held = [ ];
+
+   #afterChain (call)
+   {
+      if (this .#chain)
+         this .#held .push (call);
+      else
+         call ();
+   }
+
+   [_chainEnd] ()
+   {
+      const held = this .#held .splice (0);
+
+      for (const call of held)
+         call ();
+   }
+
    // X3DBrowser.name, version, getName, getVersion: this engine's own name and version.
    get name ()    { return "X_ITE_R"; }
    get version () { return "0.1.0"; }
@@ -6145,7 +6172,7 @@ class X3DBrowser
    setLive (value)
    {
       this .#live = !! value .valueOf ();
-      this .#engine ?.setLive (this .#live);
+      this .#afterChain (() => this .#engine ?.setLive (this .#live));
    }
 
    beginUpdate () { this .#beginUpdate (); }
@@ -6998,8 +7025,11 @@ class X3DBrowser
 
       if (this .#engine)
       {
-         this .#engine .free ();
+         // In the route chain of a field callback the engine is borrowed: it is freed when the chain is over.
+         const engine = this .#engine;
+
          this .#engine = null;
+         this .#afterChain (() => engine .free ());
       }
 
       // The AudioContext is the page's own (#audioClock makes it): it goes with the browser. Closing it twice is
