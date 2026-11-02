@@ -4,7 +4,7 @@
 // values. The names follow X_ITE 16.5.0 (oracle/x_ite-pin); web/API.md lists what exists and what does not.
 
 import init, {
-   WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, scriptOp,
+   WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, htmlSupport, scriptOp,
    chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
    chainTypeName, chainNodeName, chainNamedNode, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
 } from "./pkg/x3d_web.js";
@@ -4753,6 +4753,381 @@ class BrowserUI
    }
 }
 
+// --- DOM integration: X3D content written as HTML ---------------------------------------------------------------------------
+//
+// Browser/DOMIntegration.js and the HTML parts of Parser/XMLParser.js and Parser/HTMLSupport.js of X_ITE (issue #146). X_ITE
+// parses the DOM elements itself; here the engine parses XML text, so an HTML `<X3D>` element is written as XML first, with the
+// names X_ITE's HTML parser would look up: `TRANSFORM` is `Transform`, `diffusecolor` is `diffuseColor`, `PROTODECLARE` is
+// `ProtoDeclare`. Everything else (the values, DEF and USE, the warnings) is the engine's XML parser's.
+
+let htmlTables = null;
+
+// HTMLSupport: node type names (exact or upper case) and field names (exact or lower case) of the pinned X_ITE.
+function htmlSupportTables ()
+{
+   if (htmlTables)
+      return htmlTables;
+
+   const [ types, fields ] = htmlSupport ();
+   const tables = { types: new Map (), fields: new Map () };
+
+   for (const name of types)
+   {
+      tables .types .set (name, name);
+      tables .types .set (name .toUpperCase (), name);
+   }
+
+   tables .types .set ("ProtoInstance", "ProtoInstance");
+   tables .types .set ("PROTOINSTANCE", "ProtoInstance");
+
+   for (const name of fields)
+   {
+      tables .fields .set (name, name);
+      tables .fields .set (name .toLowerCase (), name);
+   }
+
+   return htmlTables = tables;
+}
+
+// The elements the XML parser knows by name (upper case or as written), with the name the engine's XML parser knows.
+const XML_ELEMENT_NAMES = new Map ([
+   "head", "component", "unit", "meta", "Scene", "ExternProtoDeclare", "ProtoDeclare", "ProtoInterface", "ProtoBody", "IS",
+   "ProtoInstance", "fieldValue", "field", "connect", "ROUTE", "IMPORT", "EXPORT", "X3D",
+] .flatMap (name => [ [ name, name ], [ name .toUpperCase (), name ] ]));
+
+const xmlText   = text => String (text) .replace (/&/g, "&amp;") .replace (/</g, "&lt;") .replace (/>/g, "&gt;");
+const xmlAttr   = text => xmlText (text) .replace (/"/g, "&quot;") .replace (/\t/g, "&#9;") .replace (/\n/g, "&#10;") .replace (/\r/g, "&#13;");
+const xmlName   = name => /^[A-Za-z_][\w.:-]*$/ .test (name);
+const RESERVED  = new Map ([ [ "def", "DEF" ], [ "use", "USE" ], [ "containerfield", "containerField" ] ]);
+
+// The attributes an element is read with by name (getAttribute, case-insensitive in HTML) and the names they have in XML.
+const ATTRIBUTE_NAMES = new Map ([
+   "name", "url", "appinfo", "documentation", "accessType", "type", "value", "nodeField", "protoField", "fromNode", "fromField",
+   "toNode", "toField", "inlineDEF", "importedDEF", "exportedDEF", "AS", "DESCRIPTION", "localDEF", "level", "category",
+   "conversionFactor", "content", "profile", "version", "DEF", "USE", "containerField",
+] .map (name => [ name .toLowerCase (), name ]));
+
+// An HTML `<X3D>` element as the XML text of the same X3D document.
+function htmlToXML (root)
+{
+   const { types, fields } = htmlSupportTables ();
+   const protoNames  = new Map (); // upper case or exact name → name of a declared PROTO
+   const protoFields = new Map (); // name of a PROTO → (lower case or exact name → field name)
+   const out         = [ ];
+   const get         = (element, name) => element .getAttribute (name);
+
+   // `attribute="value"` of the attributes the element is read with.
+   const named = (element, names) => names .map (name =>
+   {
+      const value = get (element, name);
+
+      return value === null ? "" : ` ${ATTRIBUTE_NAMES .get (name .toLowerCase ()) ?? name}="${xmlAttr (value)}"`;
+   }) .join ("");
+
+   const children = (element, callback) => { for (const child of Array .from (element .childNodes)) callback (child); };
+
+   const inherit = (element, tag, names, body) =>
+   {
+      out .push (`<${tag}${named (element, names)}`);
+
+      if (body)
+      {
+         out .push (">");
+         body ();
+         out .push (`</${tag}>`);
+      }
+      else
+      {
+         out .push ("/>");
+      }
+   };
+
+   // head children: component, unit, meta.
+   const headChild = element =>
+   {
+      switch (element .nodeName)
+      {
+         case "component": case "COMPONENT": inherit (element, "component", [ "name", "level" ]); return;
+         case "unit": case "UNIT": inherit (element, "unit", [ "category", "name", "conversionFactor" ]); return;
+         case "meta": case "META": inherit (element, "meta", [ "name", "content" ]); return;
+      }
+   };
+
+   // The field elements of a PROTO or EXTERNPROTO interface, and the names of the fields.
+   const interfaceFields = element =>
+   {
+      const names = new Map ();
+
+      children (element, child =>
+      {
+         if (child .nodeName === "field" || child .nodeName === "FIELD")
+         {
+            fieldElement (child);
+
+            const name = get (child, "name");
+
+            if (name && ! [ "DEF", "USE", "containerField" ] .some (r => r === name || r .toLowerCase () === name))
+               names .set (name, name) .set (name .toLowerCase (), name);
+         }
+      });
+
+      return names;
+   };
+
+   const fieldElement = element => inherit (element, "field", [ "accessType", "type", "name", "appinfo", "documentation", "value" ], () => children (element, childElement));
+
+   const attributesOf = (element, fieldMap) =>
+   {
+      let text = "";
+
+      for (const attribute of Array .from (element .attributes))
+      {
+         const reserved = RESERVED .get (attribute .name .toLowerCase ());
+
+         if (reserved)
+         {
+            text += ` ${reserved}="${xmlAttr (attribute .value)}"`;
+            continue;
+         }
+
+         const name = (fieldMap ?? fields) .get (attribute .name);
+
+         if (name !== undefined)
+            text += ` ${name}="${xmlAttr (attribute .value)}"`;
+      }
+
+      return text;
+   };
+
+   // X_ITE's HTMLParser moves the text of a Script into elements and CDATA sections (XMLParser.scriptElement).
+   const scriptChildren = element =>
+   {
+      let document;
+
+      try
+      {
+         document = new DOMParser () .parseFromString (element .outerHTML, "application/xml");
+
+         if (document .getElementsByTagName ("parsererror") .length)
+            throw new Error ("Invalid XML.");
+      }
+      catch (error)
+      {
+         // XMLParser.nodeElement: the Error object, as a development build of X_ITE logs it.
+         console .error (error);
+         return false;
+      }
+
+      element .textContent = "// Content moved into childNodes.";
+
+      // The live childNodes, as X_ITE walks them: appending a node takes it out of the list, so every second child stays.
+      for (const child of document .children [0] .childNodes)
+      {
+         if (child .nodeType === 1 || child .nodeType === 4)
+            element .append (child);
+      }
+
+      return true;
+   };
+
+   const childElement = element =>
+   {
+      switch (element .nodeName)
+      {
+         case "#comment": case "#text":
+            return;
+
+         case "#cdata-section":
+            out .push (`<![CDATA[${element .data .replace (/\]\]>/g, "]]]]><![CDATA[>")}]]>`);
+            return;
+
+         case "ExternProtoDeclare": case "EXTERNPROTODECLARE":
+         {
+            const name = get (element, "name");
+
+            if (!name)
+               return;
+
+            inherit (element, "ExternProtoDeclare", [ "name", "url", "appinfo", "documentation" ], () =>
+            {
+               protoFields .set (name, interfaceFields (element));
+            });
+
+            protoNames .set (name, name) .set (name .toUpperCase (), name);
+            return;
+         }
+
+         case "ProtoDeclare": case "PROTODECLARE":
+         {
+            const name = get (element, "name");
+
+            if (!name)
+               return;
+
+            const kids = Array .from (element .childNodes);
+            const iface = kids .find (child => child .nodeName === "ProtoInterface" || child .nodeName === "PROTOINTERFACE");
+            const body  = kids .find (child => child .nodeName === "ProtoBody" || child .nodeName === "PROTOBODY");
+
+            inherit (element, "ProtoDeclare", [ "name", "appinfo", "documentation" ], () =>
+            {
+               if (iface)
+               {
+                  out .push ("<ProtoInterface>");
+                  protoFields .set (name, interfaceFields (iface));
+                  out .push ("</ProtoInterface>");
+               }
+               else
+               {
+                  protoFields .set (name, new Map ());
+               }
+
+               if (body)
+                  inherit (body, "ProtoBody", [ ], () => children (body, childElement));
+            });
+
+            protoNames .set (name, name) .set (name .toUpperCase (), name);
+            return;
+         }
+
+         case "IS":
+            inherit (element, "IS", [ ], () => children (element, child =>
+            {
+               if (child .nodeName === "connect" || child .nodeName === "CONNECT")
+                  inherit (child, "connect", [ "nodeField", "protoField" ]);
+            }));
+            return;
+
+         case "ProtoInstance": case "PROTOINSTANCE":
+            inherit (element, "ProtoInstance", [ "name", "DEF", "USE", "containerField" ], () => children (element, childElement));
+            return;
+
+         case "fieldValue": case "FIELDVALUE":
+            inherit (element, "fieldValue", [ "name", "value" ], () => children (element, childElement));
+            return;
+
+         case "field": case "FIELD":
+            fieldElement (element);
+            return;
+
+         case "ROUTE":
+            inherit (element, "ROUTE", [ "fromNode", "fromField", "toNode", "toField" ]);
+            return;
+
+         case "IMPORT":
+            out .push (`<IMPORT${named (element, [ "inlineDEF" ])}`);
+            {
+               const exported = get (element, "importedDEF") || get (element, "exportedDEF");
+
+               out .push (`${exported === null ? "" : ` importedDEF="${xmlAttr (exported)}"`}${named (element, [ "AS", "DESCRIPTION" ])}/>`);
+            }
+            return;
+
+         case "EXPORT":
+            inherit (element, "EXPORT", [ "localDEF", "AS", "DESCRIPTION" ]);
+            return;
+
+         default:
+            nodeElement (element);
+            return;
+      }
+   };
+
+   const nodeElement = element =>
+   {
+      // A built-in node first, then a PROTO of the name (XMLParser.nodeElement).
+      const typeName  = types .get (element .nodeName);
+      const protoName = typeName === undefined ? protoNames .get (element .nodeName) : undefined;
+      const tag       = typeName ?? protoName ?? element .nodeName;
+
+      if (!xmlName (tag))
+         return;
+
+      const use = get (element, "USE");
+
+      if (use)
+      {
+         out .push (`<${tag} USE="${xmlAttr (use)}"${typeName === "ProtoInstance" ? named (element, [ "name" ]) : ""}/>`);
+         return;
+      }
+
+      if (element .nodeName === "SCRIPT" && !scriptChildren (element))
+         return;
+
+      const fieldMap = protoName === undefined ? undefined : protoFields .get (protoName);
+
+      out .push (`<${tag}${attributesOf (element, protoName === undefined ? undefined : fieldMap ?? new Map ())}>`);
+      children (element, childElement);
+      out .push (`</${tag}>`);
+   };
+
+   // The X3D element: the head (head elements first, then the X3D element's own head children), then the scene.
+   {
+      out .push (`<X3D${named (root, [ "profile", "version" ])}>`);
+      out .push ("<head>");
+      children (root, child => { if (child .nodeName === "head" || child .nodeName === "HEAD") children (child, headChild); });
+      children (root, headChild);
+      out .push ("</head>");
+      out .push ("<Scene>");
+      children (root, child => { if (child .nodeName === "Scene" || child .nodeName === "SCENE") children (child, childElement); });
+      out .push ("</Scene>");
+      out .push ("</X3D>");
+   }
+
+   return out .join ("");
+}
+
+// Browser/DOMIntegration.js: the last `<X3D>` child of the canvas is the world.
+class DOMIntegration
+{
+   #browser;
+   #observer;
+   #rootElement = null;
+
+   constructor (browser)
+   {
+      this .#browser  = browser;
+      this .#observer = new MutationObserver (() => this .#processCanvasMutation ());
+
+      this .#observer .observe (browser .getElement (), { attributes: false, childList: true });
+      this .#processCanvasMutation ();
+   }
+
+   #processCanvasMutation ()
+   {
+      this .#processRootElement (this .#browser .getElement () .querySelector (":scope > X3D:last-of-type"));
+   }
+
+   async #processRootElement (rootElement)
+   {
+      try
+      {
+         if (rootElement === this .#rootElement)
+            return;
+
+         this .#rootElement = rootElement;
+
+         if (!rootElement)
+         {
+            this .#browser .replaceWorld (null);
+            return;
+         }
+
+         const scene = await this .#browser .importDocument (rootElement);
+
+         this .#browser .replaceWorld (scene);
+      }
+      catch (error)
+      {
+         console .error ("Error importing document:", error);
+      }
+   }
+
+   dispose ()
+   {
+      this .#observer .disconnect ();
+   }
+}
+
 class X3DBrowser
 {
    #element;
@@ -4899,8 +5274,12 @@ class X3DBrowser
 
          this .#fallback (`X_ITE_R cannot start: ${error ?.message ?? error}`);
       });
+
+      // X3DBrowser: `this [_DOMIntegration] = new DOMIntegration (this)`; the world written inside the element.
+      this .#dom = new DOMIntegration (this);
    }
 
+   #dom;
    #ui;
 
    // The WorldInfo and META statements of the world for the menu entry "Show World Info".
@@ -5805,7 +6184,15 @@ class X3DBrowser
       if (typeof dom === "string")
          text = dom;
       else if (dom instanceof HTMLElement)
-         throw new Error ("X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element.");
+      {
+         await this .#ready;
+
+         // X_ITE's XMLParser reads an `<X3D>` element; any other element gives a scene with a profile and nothing in it.
+         if (dom .nodeName !== "X3D")
+            return this .#emptyScene ();
+
+         text = htmlToXML (dom);
+      }
       else if (dom instanceof Node)
          text = new XMLSerializer () .serializeToString (dom);
 
@@ -7014,6 +7401,7 @@ class X3DBrowser
          return;
 
       this .#disposed = true;
+      this .#dom ?.dispose ();
       this .#fileLoader = null;
       this .#releaseInput ();
       this .#listeners .abort ();
