@@ -161,6 +161,32 @@ pub enum Platform {
 }
 
 impl Platform {
+    /// Whether a press of the left button with Ctrl down is the host's `contextmenu` event: Chrome and Safari on macOS
+    /// give Ctrl+click the context menu (after the `mousedown` of button 0); Linux and Windows give it a plain click.
+    pub const fn ctrl_click_is_context_menu(self, left: bool, ctrl: bool) -> bool {
+        matches!(self, Platform::MacOs) && left && ctrl
+    }
+
+    /// The events of the viewer for a mouse press at (x, y) (bottom-left origin): the `mousedown`, and on macOS with
+    /// Ctrl down the `contextmenu` event that follows it. The release is a plain `MouseUp`.
+    pub fn press_events(
+        self,
+        button: u8,
+        ctrl: bool,
+        x: f64,
+        y: f64,
+    ) -> Vec<crate::viewer::UiEvent> {
+        use crate::viewer::UiEvent;
+
+        let mut events = vec![UiEvent::MouseDown { button, x, y }];
+
+        if self.ctrl_click_is_context_menu(button == 0, ctrl) {
+            events.push(UiEvent::ContextMenu { x, y });
+        }
+
+        events
+    }
+
     pub const fn current() -> Platform {
         if cfg!(target_os = "macos") {
             Platform::MacOs

@@ -74,6 +74,9 @@ impl Viewer3d {
 
     /// The world went (or the viewer is closing): no menu or dialog stays.
     pub(super) fn close_ui(&mut self) {
+        self.touch_menu = None;
+        self.touch_ui = false;
+
         if self.ui.menu.is_some() || self.ui.world_info.is_some() {
             self.ui.menu = None;
             self.ui.world_info = None;
@@ -481,6 +484,14 @@ impl Viewer3d {
         }
 
         true
+    }
+
+    /// The DOM `contextmenu` event: ContextMenu.show. An open menu's layer hides on the press that precedes it, so a
+    /// new menu opens at the event's point; a dialog's overlay passes the event on to the element as well.
+    pub(super) fn ui_context_menu(&mut self, x: f64, y: f64) {
+        if self.native_ui {
+            self.show_context_menu(x, y);
+        }
     }
 
     pub(super) fn ui_mouse_move(&mut self, x: f64, y: f64) -> bool {
