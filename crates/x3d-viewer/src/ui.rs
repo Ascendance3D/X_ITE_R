@@ -12,8 +12,9 @@
 //!
 //! * The look: Ubuntu (X_ITE's default sans font) instead of `X_ITE PT Sans`, no logo or icons, no fade, blur or
 //!   scroll bars; English texts only; the menu title and the About entry name this port and its repository.
-//! * The menu opens on the right button's press (the `contextmenu` event of Linux and Windows browsers); a Ctrl+click
-//!   (macOS) and a long touch are not menu events here.
+//! * The menu opens on the host's `contextmenu` event: the right button's press (Linux and Windows browsers), Ctrl+click
+//!   (macOS, [`crate::keys::Platform::press_events`]), and PointingDevice's long tap (1200 ms, 7 px, no sensor;
+//!   [`crate::viewer::Viewer3d::input`] with the touch events of [`crate::touch`]).
 //! * The Notification grows over 300 ms with a smoothstep curve, where CSS `ease-in-out` is a cubic Bezier.
 //! * The Browser Timings entry and Ctrl+Plus switch the `Timings` option; the panel is [`crate::ui_timings`].
 //! * The Fullscreen entry asks the window for borderless fullscreen; About opens the system's URL opener.
