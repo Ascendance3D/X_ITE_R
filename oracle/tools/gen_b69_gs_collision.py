@@ -67,6 +67,11 @@ worlds = {
     "gc-bbox-edge-in": ([cloud(8, "bboxCenter 0 0 -3.8 bboxSize 1.5 1.5 1.5")], []),
     # WALK gravity onto a splat floor: the viewpoint's positionOffset follows the frames.
     "gc-walk-floor": ([floor(-1.0)], []),
+    # The same fall with no splats and with 441 and 3969 (21 and 63 per side) of them: the avatar's start is two frames later
+    # whenever the scene holds splats, whatever their count (docs/gaussian-splats-walk-start-lag.md).
+    "gc-walk-lag-control": ([], []),
+    "gc-walk-lag-n441": ([floor(-1.0, half=2.5, step=0.25)], []),
+    "gc-walk-lag-n3969": ([floor(-1.0, half=7.5, step=0.25)], []),
     "gc-walk-far": ([floor(-1.0, scale=(0.18, 0.02, 0.18)).replace("GaussianSplats {", "GaussianSplats {\n  bboxCenter 0 -1 -4.5 bboxSize 1 1 1")], []),
     "gc-mixed": ([box("0 0 -1.0", 0.6), cloud(7), box("1.0 0 0", 0.5)], []),
 }
