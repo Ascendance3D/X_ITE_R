@@ -26,9 +26,17 @@ const POSE_TOL: f64 = 1e-4;
 /// Cases whose pose and positionOffset X_ITE reports this many frames later than Rust does. A WALK avatar falls under
 /// gravity (the splat floor of gc-walk-floor does not stop it, in X_ITE or here), and the pinned page's fall starts two
 /// frames after the probe script's frame 0 when the scene holds GaussianSplats: its first probes are the values Rust has
-/// at frames 3 and 4 (pc-walk-gravity, with no splats, has none of that lag). The cause is not established; the splats'
-/// asynchronous load is the candidate. The test compares Rust's frame k with X_ITE's frame k + LAG.
-const LAGGED: &[(&str, u64)] = &[("gc-walk-floor", 2)];
+/// at frames 3 and 4. The cause is the page's asynchronous splat load (docs/gaussian-splats-walk-start-lag.md): the
+/// NavigationInfo's viewer ("WALK") takes effect when the browser's `initialized` event fires, that waits for loadCount 0,
+/// and the splat worker's ready and first sorted message keep loadCount at 1 for two more traversed frames. Rust has no
+/// such load, so its avatar is a WALK avatar from the first frame. gc-walk-lag-control (no splats) shows no lag, and
+/// the splat count does not change it (gc-walk-lag-n441, gc-walk-lag-n3969). The test compares Rust's frame k with
+/// X_ITE's frame k + LAG; `walk_start_lag_follows_the_splat_load` pins the measured difference in the X_ITE baselines.
+const LAGGED: &[(&str, u64)] = &[
+    ("gc-walk-floor", 2),
+    ("gc-walk-lag-n441", 2),
+    ("gc-walk-lag-n3969", 2),
+];
 
 /// (case, frame, why Rust differs).
 const KNOWN_GAPS: &[(&str, &str, &str)] = &[];
@@ -365,4 +373,57 @@ fn b69_gs_collision_matches_x_ite() {
     }
 
     check_all(KNOWN_GAPS, 3);
+}
+
+/// X_ITE's recorded fall (pose y per frame) of a gc-walk case.
+fn walk_fall(root: &Path, name: &str) -> Vec<f64> {
+    let v = json(
+        &root
+            .join("oracle/b69-gs-collision-baseline")
+            .join(name)
+            .join("js.json"),
+    );
+    let probes = v["collisionProbes"].as_object().unwrap();
+
+    (1..=14)
+        .map(|k| {
+            probes[&k.to_string()]["pose"]["position"][1]
+                .as_f64()
+                .unwrap()
+        })
+        .collect()
+}
+
+/// Issue #69: in the X_ITE baselines the WALK fall of a scene with splats is exactly LAG frames behind the same fall
+/// without splats, for every splat count recorded. This is data only (no GPU), so hosted CI checks it too.
+#[test]
+fn walk_start_lag_follows_the_splat_load() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let control = walk_fall(&root, "gc-walk-lag-control");
+
+    assert!(control[0] < -0.3 && control[0] > -0.5, "{control:?}");
+
+    for (name, lag) in LAGGED {
+        let fall = walk_fall(&root, name);
+        let lag = *lag as usize;
+
+        assert!(
+            (fall[0] - control[0]).abs() > 0.1,
+            "{name} starts level with the control: {fall:?}"
+        );
+
+        for k in 0..control.len() - lag {
+            assert!(
+                (fall[k + lag] - control[k]).abs() < 1e-6,
+                "{name} frame {} is not the control's frame {}: {} vs {}",
+                k + 1 + lag,
+                k + 1,
+                fall[k + lag],
+                control[k]
+            );
+        }
+    }
 }
