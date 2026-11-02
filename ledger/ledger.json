@@ -7033,9 +7033,9 @@
     "crates/x3d-viewer/src/keys.rs unit tests (10)",
     "oracle/synthetic-rea/key-sensors.wrl (x10_compare.py vs X_ITE 16.5.0: 342 PASS, 0 FAIL)"
    ],
-   "missing": "ContextMenu and Notification are not ported; Debug shading keys (Debug-option Ctrl+1..5 / Ctrl+S), Ctrl+Plus timings and Shift+F8 viewpoint copy are not compared with X_ITE; KeySensor commandKey / altGrKey fields not compared; Wayland and macOS keyboard input not validated against X_ITE",
+   "missing": "browser: Debug shading keys (Ctrl+1..5, Ctrl+S), Shift+F8 for GeoViewpoint and the encoding, and the Loading n files notifications are not compared; native: no Timings panel, no macOS Ctrl+click or touch long-press, x10_compare key-sensors 342/0 not run; Wayland and macOS keyboard input not validated against X_ITE",
    "oracle": "",
-   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): PR #15 (lane feat/viewer-keyboard-input, merge 3606b2a, 2026-10-23) ported X3DCoreContext key handling: every native key reaches KeySensor / StringSensor through Viewer3d::key_event, Home / End / PageUp / PageDown change the viewpoint without a modifier, held keys are released on focus loss. PR #15 did not update the ledger; its body proposed PARTIAL."
+   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): PR #15 (lane feat/viewer-keyboard-input, merge 3606b2a, 2026-10-23) ported X3DCoreContext key handling: every native key reaches KeySensor / StringSensor through Viewer3d::key_event, Home / End / PageUp / PageDown change the viewpoint without a modifier, held keys are released on focus loss. PR #15 did not update the ledger; its body proposed PARTIAL. | Issues #141 and #80 2026-11-01: the browser context menu, notification, timings panel and Shift+F8 (#274, ui01, 5 identical recordings against pinned X_ITE 16.5.0) and the native context menu, notification overlay, World Info dialog, Ctrl+Plus, debug keys and Shift+F8 (#282, 19 tests with real mouse and key events) exist. commandKey and altGrKey are browser flags (key codes 91 and 225), not KeySensor fields, so the earlier KeySensor wording was wrong. Status stays PARTIAL."
   },
   {
    "id": "sub:browser.dom-integration",
