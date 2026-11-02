@@ -1188,12 +1188,11 @@ impl WebBrowser {
         let s = self.session_mut(id)?;
 
         if now {
-            s.decl_update_instances(extern_, decl as usize);
+            s.decl_update_instances(extern_, decl as usize)
         } else {
-            s.decl_request_update(extern_, decl as usize);
+            s.decl_request_update(extern_, decl as usize)
         }
-
-        Ok(())
+        .map_err(|e| JsError::new(&e))
     }
 
     /// `addUserDefinedField (accessType, name, field)` of a PROTO (`type_name` and `data` as the page's field object holds
@@ -1211,8 +1210,9 @@ impl WebBrowser {
         let s = self.session_mut(id)?;
 
         if type_name.is_empty() {
-            s.decl_remove_user_field(decl as usize, name);
-            return Ok(());
+            return s
+                .decl_remove_user_field(decl as usize, name)
+                .map_err(|e| JsError::new(&e));
         }
 
         s.decl_add_user_field(decl as usize, name, access, type_name, &js_data(&data))
@@ -1228,9 +1228,9 @@ impl WebBrowser {
         decl: u32,
         format: &str,
     ) -> Result<String, JsError> {
-        Ok(self
-            .session(id)?
-            .decl_string(extern_, decl as usize, format))
+        self.session(id)?
+            .decl_string(extern_, decl as usize, format)
+            .map_err(|e| JsError::new(&e))
     }
 
     /// `body` of a PROTO: its execution context, or undefined.

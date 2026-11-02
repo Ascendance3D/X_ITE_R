@@ -145,10 +145,14 @@ fn instances_and_text_forms() {
 
     assert_eq!(s.type_name(node).as_deref(), Some("Pa"));
 
-    let vrml = s.decl_string(false, pa, "vrml");
+    let vrml = s.decl_string(false, pa, "vrml").expect("vrml");
 
     assert!(vrml.starts_with("PROTO Pa"), "{vrml}");
-    assert!(s.decl_string(false, pa, "xml").contains("ProtoDeclare"));
+    assert!(
+        s.decl_string(false, pa, "xml")
+            .expect("xml")
+            .contains("ProtoDeclare")
+    );
 
     s.decl_add_user_field(
         pa,
@@ -174,4 +178,31 @@ fn instances_and_text_forms() {
             .any(|f| f.name == "extra")
     );
     assert!(s.decl_info(false, 99).is_none());
+}
+
+#[test]
+fn an_index_that_is_not_in_the_world_is_an_error_not_a_panic() {
+    let mut s = load();
+    let past = 999;
+    let value = x3d_runtime::data::Data::Number(1.0);
+
+    assert!(
+        s.decl_add_user_field(past, "f", 3, "SFFloat", &value)
+            .is_err()
+    );
+    assert!(s.decl_remove_user_field(past, "f").is_err());
+    assert!(s.decl_string(false, past, "vrml").is_err());
+    assert!(s.decl_string(true, past, "vrml").is_err());
+    assert!(s.decl_request_update(false, past).is_err());
+    assert!(s.decl_update_instances(true, past).is_err());
+}
+
+#[test]
+fn removing_an_extern_proto_goes_through_the_cancelling_removal() {
+    let mut s = load();
+    let ea = s.decl_get(true, "Ea").expect("Ea");
+
+    s.decl_op(true, DeclOp::Remove, "Ea", Some(ea))
+        .expect("removed");
+    assert!(s.decl_get(true, "Ea").is_err());
 }
