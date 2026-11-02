@@ -132,7 +132,10 @@ pub fn parse_child_into(
     parser.child_element(&node);
     parser.propagate_links();
 
-    (std::mem::replace(&mut parser.p.scene, Scene::new("")), Ok(()))
+    (
+        std::mem::replace(&mut parser.p.scene, Scene::new("")),
+        Ok(()),
+    )
 }
 
 /// XMLParser.nodeAttribute for the attribute `name="value"` of `node`: the value is read into the field of that name when it
@@ -166,7 +169,10 @@ pub fn parse_attribute_into(
 
     let result = parser.attribute_value(&element, node);
 
-    (std::mem::replace(&mut parser.p.scene, Scene::new("")), result)
+    (
+        std::mem::replace(&mut parser.p.scene, Scene::new("")),
+        result,
+    )
 }
 
 /// X3DNode.getSourceText: the `url` field of the node types that keep source text in it.
@@ -239,7 +245,9 @@ impl<'a> XmlParser<'a> {
                 if matches!(e.name.as_str(), "Scene" | "SCENE") {
                     let ctx = self.ctx();
 
-                    self.scene().xml_targets.push((e.index, XmlTarget::Scene(ctx)));
+                    self.scene()
+                        .xml_targets
+                        .push((e.index, XmlTarget::Scene(ctx)));
                     self.children_elements(e);
                 }
             }
@@ -635,7 +643,9 @@ impl<'a> XmlParser<'a> {
             ));
         };
 
-        self.scene().xml_targets.push((el.index, XmlTarget::Node(node)));
+        self.scene()
+            .xml_targets
+            .push((el.index, XmlTarget::Node(node)));
         self.def_attribute(el, node);
         self.add_node(el, Some(node));
         self.parents.push(Parent::Node(node));
@@ -735,7 +745,9 @@ impl<'a> XmlParser<'a> {
             return self.warn("XML Parser: Invalid XML.".into());
         }
 
-        self.scene().xml_targets.push((el.index, XmlTarget::Node(node)));
+        self.scene()
+            .xml_targets
+            .push((el.index, XmlTarget::Node(node)));
         self.def_attribute(el, node);
         self.add_node(el, Some(node));
         self.parents.push(Parent::Node(node));
@@ -774,17 +786,18 @@ impl<'a> XmlParser<'a> {
         ) {
             (None, _) => Err(format!("Unknown named or imported node '{from}'.")),
             (_, None) => Err(format!("Unknown named or imported node '{to}'.")),
-            (Some(f), Some(t)) => self
-                .scene()
-                .add_route(ctx, f, from_field, t, to_field)
-                .map(|route| {
-                    // XMLParser.routeElement: `xmlElement [_node] = route`.
-                    if let Some(route) = route {
-                        self.scene()
-                            .xml_targets
-                            .push((el.index, XmlTarget::Route(ctx, route)));
-                    }
-                }),
+            (Some(f), Some(t)) => {
+                self.scene()
+                    .add_route(ctx, f, from_field, t, to_field)
+                    .map(|route| {
+                        // XMLParser.routeElement: `xmlElement [_node] = route`.
+                        if let Some(route) = route {
+                            self.scene()
+                                .xml_targets
+                                .push((el.index, XmlTarget::Route(ctx, route)));
+                        }
+                    })
+            }
         };
 
         if let Err(e) = result {
