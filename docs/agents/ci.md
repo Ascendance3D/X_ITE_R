@@ -6,7 +6,7 @@ Three workflows run on a pull request: `rust-tests.yml`, `web-tests.yml` and `co
 
 `tools/ci_changes.py` reads the changed paths and decides whether the Rust suite and the browser suite are needed. Its docstring lists the rules, and `--self-test` checks them.
 
-- Documentation, repository metadata and the tools that only "Fast checks" runs start no suite.
+- Documentation, repository metadata and the tools that only "Fast checks" runs start no suite. Issue #180 added the tools and files that no pull request job runs (`check_gpu_test_lists.py`, `strict-suite.sh`, `gpu-tests.yml` with its preflight action, the actionlint config and others; the list is in the `tools/ci_changes.py` docstring). `tools/test_ci_changes.py` ("Fast checks") pins each classification and proves that every other tracked path classifies as before.
 - A path that the script does not know runs both suites.
 - "Fast checks" (reference pins, answer-key tests, the candidate gate, rustfmt, actionlint) runs on every pull request.
 
@@ -64,6 +64,8 @@ To start CodeRabbit by hand, for example after its limit resets, comment `@coder
 The browser suite runs in shards (`crates/x3d-web/tests/browser/shards.mjs`). Issue #180 measured the five-shard layout of that time against one job. Six recent runs took 14–22 minutes of wall-clock time and 40–52 runner minutes. Each shard adds 34–54 seconds of setup to its test step. One job would take 33–44 minutes of wall-clock time (2.1 to 2.4 times as long) and would save 4–6 runner minutes per run (about 11%). The shards stayed.
 
 Issue #187 split the two longest shards by measured times: `cases` into `cases-1` and `cases-2` (whole files, about 439 s of tests each), and the 8 cases of `viewpoints01.test.mjs` into `viewpoints-1` to `viewpoints-3`. A shard with part of a file's cases sets `XR_CASES`, and the harness registers only those cases, so no case shows as skipped. `shards.mjs` refuses a case that is in no shard or in two. The layout is now 8 shards. Run 41002388704 (one run) measured the longest shard at 7:23 and the Web tests run at 9.0 minutes of wall-clock time and 42.8 runner minutes; 3 runs before took 15:01–20:04, 16.7–21.6 minutes and 37.2–51.4 runner minutes. `shards_check.mjs` tests the check.
+
+Issue #180 measured the eight-shard layout again on six recent pull-request runs (self-hosted runners, runs 41409674851, 41411495619, 41411823757, 41412393833, 41412716825, 41412891282). The longest shard took 985, 1648, 1057, 1280, 1240 and 1221 s; the eight shards together took 3599 to 4487 s of job time (60 to 75 minutes); the whole Web tests run took 18 to 23 minutes of wall-clock time. "Warm browser dependencies" runs on a push to master only and took 47 s (run 41415646217); it costs a pull request nothing. One job would run the shards one after another: 60 to 75 minutes less the setup it saves (8 shards at 34 to 54 s, about 5 minutes), so 55 to 70 minutes against a longest shard of 16 to 27 minutes. That is 3 to 4 times as long, so the shards stay. Merging only the smallest ones (`phone` 134 to 246 s, `tablet` 161 to 305 s) would save one job of about 1 minute of setup and is not worth a change to `shards.mjs`. The AI review rules (issue #180 item 3) were settled by #181 and are not touched here.
 
 ## GPU runner
 

@@ -136,6 +136,10 @@ jobs:
       - name: GPU test lists
         run: python3 -I -B tools/check_gpu_test_lists.py
 
+      # Pins the path classification of tools/ci_changes.py (issue #180).
+      - name: CI path classification
+        run: python3 -I -B tools/test_ci_changes.py
+
       # The answer-key resolver checks and guard (issue #65), on synthetic Git repositories in a temporary
       # directory. The Rust half is the x3d-evidence unit tests in the test step.
       - name: Answer-key resolver and guard
