@@ -7270,6 +7270,9 @@ class X3DBrowser
       for (const type of [ "blur", "click", "contextmenu", "dblclick", "focus", "keydown", "keyup", "mousedown", "mouseup", "pointerup", "touchend", "touchstart", "wheel" ])
          on (canvas, type, () => this .#resumeAudio ());
 
+      // Script.loadData: the page ends, so the Scripts get `shutdown ()` (X_ITE listens for `unload` on the window too).
+      on (window, "unload", () => { if (this .#engine && !this .#chain) this .#unloadScripts (this .#engine); });
+
       // ContextMenu.initialize: the `contextmenu` event of the element.
       on (this .#element, "contextmenu", event => this .#ui .showMenu (event));
 
@@ -7889,6 +7892,23 @@ class X3DBrowser
       }
    }
 
+   // The Scripts of the current world get `shutdown ()` (the browser ends: `dispose ()`, the page's `unload`), and what they print
+   // goes to the console. A second call does nothing.
+   #unloadScripts (engine)
+   {
+      try
+      {
+         engine .unload ();
+
+         for (const line of engine .takeLog (engine .current) ?? [ ])
+            printLogLine (line);
+      }
+      catch (error)
+      {
+         console .error (error);
+      }
+   }
+
    // X3DBrowser.dispose (): the worlds are unloaded, their requests end, the input listeners go, the frame loop
    // stops and the engine is freed.
    dispose ()
@@ -7898,6 +7918,18 @@ class X3DBrowser
 
       this .#disposed = true;
       this .#dom ?.dispose ();
+
+      // X_ITE's loadURL goes on after `dispose ()`: when its file arrives, replaceWorld sends the browser's `shutdown` event (it
+      // does so for a browser with no load in flight never). The world that was loaded is not shut down by it.
+      if (this .#fileLoader)
+      {
+         requestAnimationFrame (() =>
+         {
+            this .#call (X3DConstants .SHUTDOWN_EVENT);
+            this .#dispatch ("shutdown");
+         });
+      }
+
       this .#fileLoader = null;
       this .#releaseInput ();
       this .#listeners .abort ();
@@ -7913,7 +7945,12 @@ class X3DBrowser
          const engine = this .#engine;
 
          this .#engine = null;
-         this .#afterChain (() => engine .free ());
+         this .#afterChain (() =>
+         {
+            // ISO/IEC 14772-1 4.12.3: the world is unloaded, so its Scripts get `shutdown ()` (X_ITE 16.5.0 calls none; issue #292).
+            this .#unloadScripts (engine);
+            engine .free ();
+         });
       }
 
       // The AudioContext is the page's own (#audioClock makes it): it goes with the browser. Closing it twice is
