@@ -33,6 +33,7 @@ pub mod browser_load;
 pub mod browser_options;
 pub mod bullet;
 pub mod ctx_events;
+pub mod dom;
 pub mod data;
 pub mod events;
 pub mod extern_proto;

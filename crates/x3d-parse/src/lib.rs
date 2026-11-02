@@ -26,6 +26,7 @@ pub use data_url::{chromium_url_input, decode_data_url, is_data_url};
 pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
 pub use html::parse_html_x3d;
 pub use parser::{ContextCall, ParseError, Parser, take_error_detail, take_error_warnings};
+pub use xml::{parse_attribute_into, parse_child_into};
 pub use svg::{Quality as SvgQuality, set_quality as set_svg_quality};
 
 use std::io::Read;
