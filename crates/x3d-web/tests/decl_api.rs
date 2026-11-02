@@ -206,3 +206,38 @@ fn removing_an_extern_proto_goes_through_the_cancelling_removal() {
         .expect("removed");
     assert!(s.decl_get(true, "Ea").is_err());
 }
+
+#[test]
+fn an_interface_change_keeps_the_is_references_of_the_body_on_their_fields() {
+    let mut s = load();
+    let pa = s.decl_get(false, "Pa").unwrap();
+    let value = x3d_runtime::data::Data::Number(9.0);
+
+    // `label` comes before `size`: removing it moves `size`, and the body's `radius IS size` follows it.
+    s.decl_remove_user_field(pa, "label").unwrap();
+    assert!(
+        s.decl_string(false, pa, "vrml")
+            .unwrap()
+            .contains("radius IS size"),
+        "after a field before it was removed"
+    );
+
+    // A field of the same name replaces the old one at the end; the reference stays on `size`.
+    s.decl_add_user_field(pa, "size", 3, "SFFloat", &value)
+        .unwrap();
+    s.decl_add_user_field(pa, "other", 3, "SFFloat", &value)
+        .unwrap();
+    assert!(
+        s.decl_string(false, pa, "vrml")
+            .unwrap()
+            .contains("radius IS size")
+    );
+
+    // A reference to a field that is gone ends with it.
+    s.decl_remove_user_field(pa, "size").unwrap();
+    assert!(
+        !s.decl_string(false, pa, "vrml")
+            .unwrap()
+            .contains("radius IS")
+    );
+}
