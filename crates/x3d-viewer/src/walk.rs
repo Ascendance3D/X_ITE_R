@@ -1435,9 +1435,13 @@ impl<'a> Walker<'a> {
             }
             // GaussianSplats.traverse POINTER (X3DShapeNode.traverse → addPointingShape of its private shape): the splat
             // program draws the quads into the pointing buffer. set_pointingObject__: isEnabled () and pointerEvents, which
-            // the node copies to the shape when it initializes (default FALSE, unlike a Shape's).
+            // the node copies to the shape when it initializes (default FALSE, unlike a Shape's). COLLISION
+            // (addCollisionShape): the same program draws them into the collision depth buffer; set_collisionObject__ is
+            // isEnabled () alone, so pointerEvents FALSE makes a collision object that is not a pointing object.
             "GaussianSplats" if !self.camera && self.pick.is_none() && self.picking.is_none() => {
-                if !sg.bool(n, "pointerEvents", false) {
+                let pointing = sg.bool(n, "pointerEvents", false);
+
+                if !pointing && !collidable {
                     return;
                 }
 
@@ -1445,7 +1449,7 @@ impl<'a> Walker<'a> {
                     return;
                 };
 
-                self.scan.shapes.push(ShapeInst {
+                let inst = ShapeInst {
                     shape: me(),
                     geometry: n,
                     model_view: *mv,
@@ -1454,8 +1458,8 @@ impl<'a> Walker<'a> {
                     all_instances: None,
                     explicit_bbox: Some(bbox),
                     sensors: sensors.to_vec(),
-                    collidable: false,
-                    collisions: vec![],
+                    collidable,
+                    collisions: self.collision_stack.clone(),
                     anchors: anchors.to_vec(),
                     clip_planes: self.clip_planes.clone(),
                     viewport: self.viewport(),
@@ -1466,7 +1470,13 @@ impl<'a> Walker<'a> {
                     particle: false,
                     particle_geometry: None,
                     splats: Some(draw),
-                });
+                };
+
+                if pointing {
+                    self.scan.shapes.push(inst);
+                } else {
+                    self.scan.unpointed_shapes.push(inst);
+                }
             }
             // ParticleSystem.traverse POINTER (X3DShapeNode.traverse → addPointingShape): one instanced draw of the
             // particles in the pointing pass, so each drawn particle is a hit candidate in buffer order under its

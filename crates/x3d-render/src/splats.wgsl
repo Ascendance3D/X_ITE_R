@@ -426,3 +426,11 @@ fn fs_pick_b(in: VOut) -> @location(0) vec4<f32> {
     pick_test(in);
     return vec4<f32>(in.tex_coord, 0.0, 1.0);
 }
+
+// GaussianSplats.fs.js X3D_DEPTH_PASS with X3D_NORMAL_BUFFER (the collision depth buffer): gl_FragData 0 is the fragment depth
+// and x3d_Id, gl_FragData 1 the constant local normal and gl_FrontFacing.
+@fragment
+fn fs_collision(in: VOut, @builtin(front_facing) front: bool) -> PickA {
+    pick_test(in);
+    return PickA(vec4<f32>(in.position.z, u.extra.y, u.extra.y, u.extra.y), vec4<f32>(0.0, 0.0, 1.0, select(0.0, 1.0, front)));
+}

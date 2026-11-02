@@ -2702,6 +2702,9 @@ impl Renderer {
                         fog: None,
                         depth_projection: Some(f32x16(&view.projection)),
                         pick_id: None,
+                        collision: false,
+                        projection: None,
+                        slot: None,
                     });
                 }
             }
@@ -4823,6 +4826,9 @@ impl Renderer {
                     fog: item.fog.as_ref().or(frame.fog.as_ref()),
                     depth_projection: None,
                     pick_id: None,
+                    collision: false,
+                    projection: None,
+                    slot: None,
                 });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
