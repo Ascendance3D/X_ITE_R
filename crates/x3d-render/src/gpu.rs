@@ -5825,6 +5825,7 @@ impl Renderer {
             samples,
             self.depth_mode.depth_format(),
             self.depth_mode == DepthMode::Reversed,
+            self.depth_mode == DepthMode::Logarithmic,
             &fu.projection,
             frame_no,
             &splat_inputs,
