@@ -1132,3 +1132,280 @@ fn the_browser_build_and_the_drivers_have_no_native_ui() {
         assert!(ui.v.overlay().is_none_or(|o| o.canvas.is_empty()));
     });
 }
+
+// --- the Timings panel (BrowserTimings.js) -----------------------------------------------------------------------
+
+const UI01: &str = include_str!("../../../oracle/web-browser-ui-01-baseline/ui01-baseline.json");
+
+/// The pinned panel's state in the form that oracle/web-browser-ui-01 recorded it (`timingsState`), as far as it is
+/// not a property of the DOM.
+fn pinned(name: &str) -> serde_json::Value {
+    let all: serde_json::Value = serde_json::from_str(UI01).unwrap();
+
+    all["values"]["browserUi.timings"][name].clone()
+}
+
+/// The native panel in that form.
+fn native_state(ui: &Ui) -> serde_json::Value {
+    use x3d_viewer::ui_timings::ROWS;
+
+    let t = &ui.v.ui.timings;
+    let numeric = |v: &str| {
+        let ends = |u: &str| v.ends_with(u);
+        let digits = |s: &str| {
+            !s.is_empty()
+                && s.chars()
+                    .all(|c| c.is_ascii_digit() || c == ',' || c == '.')
+        };
+
+        v.is_empty()
+            || (ends(" fps") || ends(" ms") || ends(" m/s") || ends(" km/h"))
+                && v.split(' ')
+                    .next()
+                    .is_some_and(|n| n.len() >= 4 && n.as_bytes()[n.len() - 3] == b'.' && digits(n))
+            || v.split("; ").count() == 3 && v.split("; ").all(digits)
+            || v.split(" + ").count() == 2 && v.split(" + ").all(digits)
+            || digits(v)
+    };
+    let shown = t.visible_rows();
+
+    serde_json::json!({
+        "hidden": !t.visible,
+        "head": "Browser Timings",
+        "button": t.button_text(),
+        "table": [if t.more { "more" } else { "less" }],
+        "option": ui.flag("Timings"),
+        "numeric": t.values.iter().map(|v| numeric(v)).collect::<Vec<_>>(),
+        "rowDisplay": (0..ROWS.len()).map(|i| if i < shown { "table-row" } else { "none" }).collect::<Vec<_>>(),
+        "position": ["absolute", "0px", "0px"],
+    })
+}
+
+/// The properties of a pinned state that the native panel reproduces.
+fn same_as_pinned(ui: &Ui, name: &str) {
+    let p = pinned(name);
+    let n = native_state(ui);
+
+    for key in [
+        "hidden",
+        "head",
+        "button",
+        "table",
+        "option",
+        "numeric",
+        "rowDisplay",
+        "position",
+    ] {
+        assert_eq!(n[key], p[key], "{name}: {key}");
+    }
+}
+
+fn cover_world() -> String {
+    main_world().replace("size 4 4 4", "size 40 40 40")
+}
+
+impl Ui {
+    fn ctrl_plus(&mut self) {
+        self.key(true, "Control", 17);
+        self.key(true, "=", 187);
+        self.key(false, "=", 187);
+        self.key(false, "Control", 17);
+        self.frames(2);
+    }
+
+    /// The panel's parts in top-left canvas pixels.
+    fn panel(&self) -> x3d_viewer::ui_timings::Layout {
+        self.v.ui.timings.layout(&self.v.ui.text, SIZE as f64)
+    }
+
+    fn panel_button(&self) -> (f64, f64) {
+        let b = self.panel().button;
+
+        (b[0] + b[2] / 2.0, b[1] + b[3] / 2.0)
+    }
+}
+
+#[test]
+fn timings_panel_rows_texts_and_types_are_the_pinned_ones() {
+    use x3d_viewer::ui_timings::ROWS;
+
+    big(|| {
+        let mut ui = Ui::open("timings.x3dv", &cover_world());
+
+        // The Notification of the load has gone.
+        ui.seconds(6.0);
+        let _ = ui.v.overlay();
+        let p = pinned("initial");
+
+        // The rows of BrowserTimings.initialize: label, value cell class, title, row class.
+        for (i, row) in p["rows"].as_array().unwrap().iter().enumerate() {
+            assert_eq!(row[0], format!("{}:", ROWS[i].0), "label {i}");
+            assert_eq!(row[1], ROWS[i].1, "class {i}");
+            assert_eq!(row[2], ROWS[i].2, "title {i}");
+            assert_eq!(row[3] == "x_ite-private-more", i == 1, "more {i}");
+        }
+
+        assert_eq!(p["rows"].as_array().unwrap().len(), ROWS.len());
+
+        // Hidden until the option is set; the panel starts as LESS.
+        same_as_pinned(&ui, "initial");
+        assert!(ui.v.overlay().is_none_or(|o| o.canvas.is_empty()));
+
+        // Ctrl+Plus (the winit key path of ctrl_plus_toggles_timings) shows it.
+        ui.ctrl_plus();
+        same_as_pinned(&ui, "on");
+        assert!(ui.v.overlay().is_some_and(|o| !o.canvas.is_empty()));
+
+        // The button: a real left click on it, down and up, changes the type; again, back.
+        let (bx, by) = ui.panel_button();
+
+        ui.click(bx, by);
+        ui.frames(2);
+        same_as_pinned(&ui, "more");
+        ui.v.overlay();
+
+        let (bx, by) = ui.panel_button();
+
+        ui.click(bx, by);
+        ui.frames(2);
+        same_as_pinned(&ui, "less");
+
+        // Ctrl+Plus again hides it, and again shows it.
+        ui.ctrl_plus();
+        same_as_pinned(&ui, "keyOff");
+        ui.ctrl_plus();
+        same_as_pinned(&ui, "keyOn");
+
+        // The option off (the menu entry, setBrowserOption): hidden, and the overlay is cleared once.
+        let _ = ui.v.overlay();
+        ui.v.set_browser_option(
+            "Timings",
+            x3d_runtime::browser_options::OptionValue::Bool(false),
+        );
+        same_as_pinned(&ui, "off");
+        assert!(ui.v.overlay().is_some_and(|o| o.canvas.is_empty()));
+        assert!(ui.v.overlay().is_none());
+    });
+}
+
+#[test]
+fn timings_panel_pointer_rules_and_cleanup() {
+    big(|| {
+        let mut ui = Ui::open("timings-pointer.x3dv", &cover_world());
+
+        ui.seconds(6.0);
+        let _ = ui.v.overlay();
+
+        ui.ctrl_plus();
+
+        let l = ui.panel();
+        let (bx, by) = ui.panel_button();
+
+        // `pointer-events: none` on the panel: a press on its label cells goes to the world (the TouchSensor).
+        let (lx, ly) = (l.table_x + 4.0, l.top + 40.0);
+
+        assert!(lx < l.rect[0] + l.rect[2] && ly < l.rect[1] + l.rect[3]);
+        ui.moved(lx, ly);
+        ui.down(0, lx, ly);
+        ui.up(0, lx, ly);
+        let base = ui.hist();
+        assert!(
+            base.ends_with("act=true act=false"),
+            "the world got the press: {base}"
+        );
+
+        // `pointer-events: all` on the button: the world gets nothing, and the panel changes its type once.
+        let before = ui.v.ui.timings.more;
+
+        ui.moved(bx, by);
+        ui.down(0, bx, by);
+        ui.up(0, bx, by);
+        assert_eq!(ui.hist(), base, "no press reached the world");
+        assert_ne!(ui.v.ui.timings.more, before);
+
+        // A press on the button that is released elsewhere is no click.
+        let (bx, by) = ui.panel_button();
+        let before = ui.v.ui.timings.more;
+
+        ui.moved(bx, by);
+        ui.down(0, bx, by);
+        ui.up(0, 300.0, 100.0);
+        assert_eq!(ui.v.ui.timings.more, before);
+        assert_eq!(ui.hist(), base, "the release did not reach the world");
+        assert!(!ui.v.ui.timings.pressed);
+
+        // The two titled cells take the pointer too (MORE shows them).
+        assert!(ui.v.ui.timings.more);
+
+        let cell = ui.panel().cells[0];
+        let (cx, cy) = (cell[0] + cell[2] / 2.0, cell[1] + cell[3] / 2.0);
+
+        ui.click(cx, cy);
+        assert_eq!(ui.hist(), base, "a titled cell took the click");
+
+        // The context menu event bubbles from the button to the surface.
+        let (bx, by) = ui.panel_button();
+
+        ui.right_click(bx, by);
+        assert!(ui.menu_open());
+        ui.v.hide_context_menu();
+
+        // Cleanup: option off -> hidden and the overlay cleared; the panel takes no pointer any more.
+        ui.seconds(6.0);
+        let _ = ui.v.overlay();
+        ui.ctrl_plus();
+
+        let after_keys = ui.hist();
+
+        assert!(!ui.v.ui.timings.visible);
+        assert!(ui.v.overlay().is_some_and(|o| o.canvas.is_empty()));
+        assert!(ui.v.overlay().is_none());
+        ui.moved(bx, by);
+        ui.down(0, bx, by);
+        ui.up(0, bx, by);
+        assert_eq!(ui.hist(), format!("{after_keys} act=true act=false"));
+    });
+}
+
+#[test]
+fn timings_panel_values() {
+    big(|| {
+        let mut ui = Ui::open(
+            "timings-values.x3dv",
+            "#VRML V2.0 utf8\nShape { geometry Box { } }\nShape { appearance Appearance { material Material { transparency 0.5 } } geometry Box { } }\n",
+        );
+
+        ui.ctrl_plus();
+        assert_eq!(ui.v.ui.timings.values[0], "0.00 fps", "reset: no frame yet");
+        assert_eq!(ui.v.ui.timings.values[1], "0.00 m/s");
+
+        // The button is the first click: MORE.
+        let (bx, by) = ui.panel_button();
+
+        ui.click(bx, by);
+
+        // A second of frames at 30 per second: the StopWatch's average is the 33.3 ms between the updates.
+        for _ in 0..40 {
+            ui.frames(1);
+            let f = ui.v.build_frame();
+
+            drop(f);
+            ui.v.record_frame_times(5.0, 1.0, 2.0);
+        }
+
+        let v = ui.v.ui.timings.values.clone();
+
+        assert_eq!(v[0], "30.00 fps");
+        assert_eq!(v[1], "0.00 m/s");
+        assert_eq!(v[2], "5.00 ms", "Browser: the tick");
+        assert_eq!(v[3], "3.00 ms", "X3D total: step + display");
+        assert_eq!(v[4], "1.00 ms", "Event Processing: the step");
+        assert_eq!(v[9], "2.00 ms", "Rendering: build + draw");
+        assert_eq!(
+            v[10], "0; 0; 24",
+            "12 triangles of the Box and the Sphere's"
+        );
+        assert_eq!(v[11], "1 + 1", "one opaque and one transparent shape");
+        assert_eq!(v[12], "0");
+    });
+}
