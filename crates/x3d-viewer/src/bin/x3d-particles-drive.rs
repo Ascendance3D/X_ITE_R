@@ -203,6 +203,8 @@ fn run(
                 .map_err(|e| fail(format!("no GPU for --png-dir: {e}")))?;
 
             v.rendering_properties().apply(&mut g.renderer);
+            // The baselines are ANGLE/GL pictures: mirror the draw so the MSAA sample pattern is theirs (issue #261).
+            g.renderer.set_gl_sample_orientation(true);
             Some(g)
         }
         None => None,
