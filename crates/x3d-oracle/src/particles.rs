@@ -264,6 +264,14 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
             // no particle system exists yet, so the protocol's JSON and .f32 are unchanged (checked on every case).
             page.evaluate(PNG_RESHAPE, None)?;
         }
+        // X3D_ORACLE_LOG_DEPTH=1: the browser option LogarithmicDepthBuffer, set before the world loads (issue #69, the
+        // pointing pass under logarithmic depth). Unset or any other value leaves the page as every baseline was recorded.
+        if std::env::var("X3D_ORACLE_LOG_DEPTH").as_deref() == Ok("1") {
+            page.evaluate(
+                "() => { document.getElementById('c').browser.setBrowserOption('LogarithmicDepthBuffer', true); }",
+                None,
+            )?;
+        }
 
         let rel = relative(&common.root, &resolve(&file_arg));
         let world = format!(
