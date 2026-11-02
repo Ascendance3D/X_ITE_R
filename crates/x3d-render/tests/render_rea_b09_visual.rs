@@ -19,10 +19,7 @@ use x3d_render::gpu::Gpu;
 /// of issue #90 left (gen_rea_b09_visual_items.py); vis-items-espdu and vis-items-shape-bbox matched once EspduTransform
 /// drew its children and Shape culled by its declared bbox, and vis-items-alpha once Appearance applied alphaMode and
 /// alphaCutoff.
-const KNOWN_GAPS: &[(&str, &str)] = &[(
-    "vis-items-movie.wrl",
-    "MovieTexture video (WebM) frames are not decoded: those textures stay untextured white (x3d-shot: 'not rendered: MovieTexture'); GIF and APNG are decoded since crates/x3d-viewer/tests/movie_anim.rs",
-)];
+const KNOWN_GAPS: &[(&str, &str)] = &[];
 
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {
