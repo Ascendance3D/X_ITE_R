@@ -1,0 +1,162 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "scriptShutdown.replaceWorld": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: replaceWorld",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: replaceWorld again",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)"
+   ]
+  },
+  "scriptShutdown.loadURL": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: loadURL",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)"
+   ]
+  },
+  "scriptShutdown.replaceInline": {
+   "seq": [
+    "log: W initialize",
+    "log: N initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: replaceWorld",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)"
+   ]
+  },
+  "scriptShutdown.removeRootNode": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: removeRootNode A",
+    "page: setRootNodes"
+   ]
+  },
+  "scriptShutdown.inlineLoadFalse": {
+   "seq": [
+    "log: W initialize",
+    "log: N initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: load false",
+    "page: load true",
+    "log: N initialize"
+   ]
+  },
+  "scriptShutdown.inlineUrl": {
+   "seq": [
+    "log: W initialize",
+    "log: N initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: url",
+    "log: M initialize"
+   ]
+  },
+  "scriptShutdown.inlineRemove": {
+   "seq": [
+    "log: W initialize",
+    "log: N initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: removeRootNode I"
+   ]
+  },
+  "scriptShutdown.dispose": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: dispose"
+   ]
+  },
+  "scriptShutdown.disposeReplacing": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: replaceWorld, then dispose"
+   ]
+  },
+  "scriptShutdown.unload": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: unload",
+    "log: A shutdown",
+    "log: B shutdown"
+   ]
+  },
+  "scriptShutdown.remove": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: remove the element"
+   ]
+  },
+  "scriptShutdown.codeReplaced": {
+   "seq": [
+    "log: A initialize",
+    "log: B initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: url",
+    "log: A shutdown",
+    "log: A2 initialize"
+   ]
+  },
+  "scriptShutdown.idleReplace": {
+   "seq": [
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: replaceWorld",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)"
+   ]
+  }
+ }
+}

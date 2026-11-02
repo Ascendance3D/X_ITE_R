@@ -38,6 +38,7 @@ import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
+import { CASE_GROUPS as SHUTDOWN01_GROUPS } from "./shutdown01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as MOVIE01_GROUPS } from "./movie01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
@@ -99,6 +100,7 @@ const SUITES = {
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
    movie01: { dir: process .env .XR_MOVIE01_BASELINE ?? join (REPO, "oracle/web-browser-movie-01-baseline"), file: "movie01-baseline.json", groups: MOVIE01_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
+   shutdown01: { dir: process .env .XR_SHUTDOWN01_BASELINE ?? join (REPO, "oracle/web-browser-shutdown-01-baseline"), file: "shutdown01-baseline.json", groups: SHUTDOWN01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -182,7 +184,45 @@ const UI01_DIFFERENCES =
       .map (state => [ [ state, "title" ], SPLASH_TITLE_X, SPLASH_TITLE_R ]),
 ];
 
+// Script shutdown 01 (shutdown01_case.mjs, issue #292; web/API.md, "Script nodes", the matrix). ISO/IEC 14772-1 4.12.3 asks for a
+// Script's `shutdown ()` when its world is unloaded or replaced, or its node is deleted; X_ITE 16.5.0 calls none in a replaced
+// world, an unloaded Inline scene or a disposed browser. X_ITE_R calls them (after the browser's `shutdown` event, in the order
+// of the Scripts). The cases that agree are the removal of a root node (the node is not deleted: its name and the page's
+// handle keep it), the code replaced by a new `url`, the `unload` event of the window, a Script that never started, and the
+// element removed from the document (it is not disposed: it can be put back).
+const SHUT_START = [ "event: shutdown (callback)", "event: shutdown (element)", "event: initialized (element)" ];
+const SHUT_EVENT = [ "event: shutdown (callback)", "event: shutdown (element)" ];
+const SHUT_MAIN   = [ "log: A initialize", "log: B initialize", ... SHUT_START ];
+const SHUT_INLINE = [ "log: W initialize", "log: N initialize", ... SHUT_START ];
+const shutdownDifference = (head, x, r) => [ [ [ "seq" ], [ ... head, ... x ], [ ... head, ... r ] ] ];
+
+const SHUTDOWN_DIFFERENCES =
+{
+   "scriptShutdown.replaceWorld": shutdownDifference (SHUT_MAIN,
+      [ "page: replaceWorld", ... SHUT_EVENT, ... SHUT_START .slice (2), "page: replaceWorld again", ... SHUT_EVENT, ... SHUT_START .slice (2) ],
+      [ "page: replaceWorld", ... SHUT_EVENT, "log: A shutdown", "log: B shutdown", ... SHUT_START .slice (2), "page: replaceWorld again", ... SHUT_EVENT, ... SHUT_START .slice (2) ]),
+   "scriptShutdown.loadURL": shutdownDifference (SHUT_MAIN,
+      [ "page: loadURL", ... SHUT_EVENT, ... SHUT_START .slice (2) ],
+      [ "page: loadURL", ... SHUT_EVENT, "log: A shutdown", "log: B shutdown", ... SHUT_START .slice (2) ]),
+   "scriptShutdown.replaceInline": shutdownDifference (SHUT_INLINE,
+      [ "page: replaceWorld", ... SHUT_EVENT, ... SHUT_START .slice (2) ],
+      [ "page: replaceWorld", ... SHUT_EVENT, "log: W shutdown", "log: N shutdown", ... SHUT_START .slice (2) ]),
+   "scriptShutdown.inlineLoadFalse": shutdownDifference (SHUT_INLINE,
+      [ "page: load false", "page: load true", "log: N initialize" ],
+      [ "page: load false", "log: N shutdown", "page: load true", "log: N initialize" ]),
+   "scriptShutdown.inlineUrl": shutdownDifference (SHUT_INLINE,
+      [ "page: url", "log: M initialize" ],
+      [ "page: url", "log: M initialize", "log: N shutdown" ]),
+   "scriptShutdown.disposeReplacing": shutdownDifference (SHUT_MAIN,
+      [ "page: replaceWorld, then dispose" ],
+      [ "page: replaceWorld, then dispose", "log: A shutdown", "log: B shutdown" ]),
+   "scriptShutdown.dispose": shutdownDifference (SHUT_MAIN,
+      [ "page: dispose" ],
+      [ "page: dispose", "log: A shutdown", "log: B shutdown" ]),
+};
+
 const KNOWN_DIFFERENCES = {
+   ... SHUTDOWN_DIFFERENCES,
    "browserUi.splash": UI01_DIFFERENCES,
    "browserUi.menuEntries": [
       [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
@@ -349,8 +389,6 @@ const KNOWN_DIFFERENCES = {
    "loadURL.disposedWhilePending": [
       // X_ITE's loadURL never settles after dispose (); X_ITE_R's rejects.
       [ [ "first" ], "pending", "Loading of X3D file aborted." ],
-      // X_ITE's dispose () fires the shutdown event of the world; X_ITE_R's does not.
-      [ [ "events" ], [ "shutdown" ], [ ] ],
    ],
    "dataURL.worldBadBase64": [
       // X_ITE's fetch of a data URL that does not decode logs Chromium's own network error first; X_ITE_R decodes
@@ -725,6 +763,7 @@ const GROUP_FILES = {
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",
+   scriptShutdown: "shutdown01.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
    scriptReload: "scriptlife01.test.mjs",
    inlineRetry: "scriptlife01.test.mjs",
@@ -747,6 +786,29 @@ const withoutDetail = value =>
 
    return rest;
 };
+
+// Issue #292: the cases that print from a Script's `shutdown ()` in a replaced world, an unloaded Inline scene or a disposed browser.
+// X_ITE 16.5.0 calls none there and X_ITE_R does (ISO/IEC 14772-1 4.12.3; shutdown01_case.mjs compares each event on its own, with
+// the lines in KNOWN_DIFFERENCES). These cases compare everything else: the `shutdown` print lines are left out of both sides, and
+// X_ITE_R must have printed at least one (a stale entry fails).
+const SHUTDOWN_PRINTS = new Set ([
+   "scriptLife.shutdown", "scriptLife.errors", "scriptLife.importJsString", "scriptLife.importJsObject", "scriptLife.importXmlString",
+   "scriptLife.importXmlDocument", "scriptLife.importXmlElement",
+]);
+
+// The print of a `shutdown ()`, and the error lines of one that throws (scriptLife.errors: `boom in shutdown`).
+const isShutdownPrint = line => typeof line === "string" && /^(?:log: )?[\w-]+ shutdown\b|in function 'shutdown'$|boom in shutdown$/ .test (line);
+
+function withoutShutdownPrints (value, count = { n: 0 })
+{
+   if (Array .isArray (value))
+      return value .filter (item => !(isShutdownPrint (item) && ++ count .n)) .map (item => withoutShutdownPrints (item, count));
+
+   if (value && typeof value === "object")
+      return Object .fromEntries (Object .entries (value) .map (([ key, item ]) => [ key, withoutShutdownPrints (item, count) ]));
+
+   return value;
+}
 
 // The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
 export function referenceCases (file, { skip = false } = { })
@@ -799,9 +861,20 @@ export function referenceCases (file, { skip = false } = { })
                   assert .ok (theirs, `no X_ITE recording of ${key}`);
 
                   // `detail` is recorded but not compared (scripturl01_case.mjs): what only X_ITE does.
-                  const compared = withoutDetail (ours);
+                  let compared = withoutDetail (ours);
 
                   theirs = withoutDetail (theirs);
+
+                  if (SHUTDOWN_PRINTS .has (key) || key .startsWith ("scriptReload.inline."))
+                  {
+                     const count = { n: 0 };
+
+                     compared = withoutShutdownPrints (compared, count);
+                     theirs   = withoutShutdownPrints (theirs, { n: 0 });
+
+                     if (SHUTDOWN_PRINTS .has (key))
+                        assert .ok (count .n, `${key}: X_ITE_R printed no shutdown line any more: remove it from SHUTDOWN_PRINTS`);
+                  }
 
                   await evidence (`${key}.json`, JSON .stringify (ours, null, 1) + "\n");
 
