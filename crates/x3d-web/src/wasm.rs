@@ -795,6 +795,15 @@ impl WebBrowser {
         })
     }
 
+    /// The browser ends (`dispose ()`, the page's `unload`): the Scripts of the current world get `shutdown ()`
+    /// (ISO/IEC 14772-1 4.12.3). What they print waits in the log of the current world.
+    pub fn unload(&mut self) {
+        if let Some(w) = self.current.and_then(|id| self.worlds.get_mut(&id)) {
+            w.session.unload();
+            self.retired_log.extend(w.session.take_log());
+        }
+    }
+
     /// X3DBrowser.replaceWorld with the loaded scene `id` at the browser time `now`: the current world goes (its
     /// shutdown, its requests), then the new one goes live and is drawn with its own rendering properties. The page
     /// fires `shutdown` before this call, while the old world is still current.
