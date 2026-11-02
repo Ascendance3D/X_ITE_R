@@ -422,6 +422,12 @@ impl AudioEngine {
         }
     }
 
+    /// Whether the engine renders on an output device. `AudioMode::Realtime` falls back to a silent offline context when
+    /// the host has no output device or the backend (ALSA, CoreAudio) cannot open one.
+    pub fn is_realtime(&self) -> bool {
+        matches!(self.ctx, Ctx::Realtime(_))
+    }
+
     pub fn base(&self) -> &ConcreteBaseAudioContext {
         match &self.ctx {
             Ctx::Offline(c) => c.base(),

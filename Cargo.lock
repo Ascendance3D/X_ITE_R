@@ -4725,6 +4725,7 @@ dependencies = [
  "url",
  "web-audio-api",
  "web-time",
+ "x3d-evidence",
  "x3d-fields",
  "x3d-parse",
  "x3d-scene",
