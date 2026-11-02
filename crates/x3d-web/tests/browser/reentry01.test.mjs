@@ -166,7 +166,12 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
 
          console .log (`re-entry 01 calls in a callback: ${JSON .stringify (result .inside)}`);
 
-         for (const name of [ "createNode", "beginUpdate", "endUpdate", "firstViewpoint" ])
+         // beginUpdate and endUpdate work in a callback as outside it: the page's live state changes at once and the engine's
+         // after the chain (issue #202).
+         for (const name of [ "beginUpdate", "endUpdate" ])
+            assert.ok (result .inside [name] === undefined, `${name}: ${result .inside [name]}`);
+
+         for (const name of [ "createNode", "firstViewpoint" ])
             assert .ok (UNAVAILABLE .test (result .inside [name]) || GUARD .test (result .inside [name]), `${name}: ${result .inside [name]}`);
 
          // The options live in the page: they work inside a callback.
@@ -402,9 +407,9 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
       }
    });
 
-   // Open (todo): inside a callback a change of the root nodes needs `chainSetRootNodes` in x_ite_r.mjs's CHAIN_OPERATIONS;
+   // inside a callback a change of the root nodes needs `chainSetRootNodes` in x_ite_r.mjs's CHAIN_OPERATIONS;
    // the engine export exists (crates/x3d-web/src/wasm.rs), the page entry follows the merge of the file's other owner.
-   test ("a root-node change in a callback works as outside it", { todo: true }, async () =>
+   test ("a root-node change in a callback works as outside it", async () =>
    {
       const page = await open ();
 
@@ -430,8 +435,8 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
             return { inside, roots: scene .rootNodes .length };
          });
 
-         assert .deepEqual (result .inside, { before: 3, push: "pushed", after: 3 });
-         assert .equal (result .roots, 3);
+         assert .deepEqual (result .inside, { before: 3, push: "pushed", after: 4 });
+         assert .equal (result .roots, 4);
       }
       finally
       {
@@ -439,10 +444,10 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
       }
    });
 
-   // Open (todo): `browser .dispose ()` in a callback frees the engine while the export that runs the chain still borrows it
+   // `browser .dispose ()` in a callback frees the engine while the export that runs the chain still borrows it
    // (wasm-bindgen: "attempted to take ownership of Rust value while it was borrowed"), after the browser is marked disposed,
    // so the engine is never freed. The fix in x_ite_r.mjs frees it after the callback returns.
-   test ("dispose in a callback does not throw and frees the engine after it", { todo: true }, async () =>
+   test ("dispose in a callback does not throw and frees the engine after it", async () =>
    {
       const page = await open ();
 
@@ -472,9 +477,9 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
       }
    });
 
-   // Open (todo): `browser .endUpdate ()` in a callback sets the page's live state to false and then throws (the engine call is
+   // `browser .endUpdate ()` in a callback sets the page's live state to false and then throws (the engine call is
    // refused by the borrow guard), so the call fails and still changes the state. Found by this suite (issue #202).
-   test ("a call that throws in a callback changes no state", { todo: true }, async () =>
+   test ("endUpdate in a callback works as outside it", async () =>
    {
       const page = await open ();
 
@@ -491,7 +496,7 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
             return browser .isLive ();
          });
 
-         assert .equal (live, true);
+         assert .equal (live, false);
       }
       finally
       {
