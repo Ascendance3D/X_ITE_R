@@ -29,6 +29,10 @@ struct SplatUniforms {
     fog_m0: vec4<f32>,
     fog_m1: vec4<f32>,
     fog_m2: vec4<f32>,
+    // The projection of the pass (the frame's, or the light's in a shadow map).
+    projection: mat4x4<f32>,
+    // x: x3d_LogarithmicFarFactor1_2
+    extra: vec4<f32>,
 }
 
 @group(1) @binding(0) var<uniform> u: SplatUniforms;
@@ -234,7 +238,7 @@ fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> 
 
     let splat_center = positions[index].xyz;
     let view_splat_center = u.model_view * vec4<f32>(splat_center, 1.0); // g_pos_view
-    var clip_splat_center = frame.projection * view_splat_center; // g_pos_screen
+    var clip_splat_center = u.projection * view_splat_center; // g_pos_screen
 
     clip_splat_center = clip_splat_center / clip_splat_center.w; // perspective division
 
@@ -338,4 +342,28 @@ fn fs_main(in: VOut) -> @location(0) vec4<f32> {
 
     final_color = vec4<f32>(tone_map(final_color.rgb, u.mode.z == 1u), final_color.a);
     return final_color;
+}
+
+// GaussianSplats.fs.js X3D_DEPTH_PASS: the same alpha test, no color; the depth of the quad is written (shadow maps).
+@fragment
+fn fs_depth(in: VOut) {
+    for (var i = 0u; i < min(u.counts.x, 6u); i = i + 1u) {
+        let clip_plane = u.clip_planes[i];
+
+        if (dot(in.vertex, clip_plane.xyz) < clip_plane.w) {
+            discard;
+        }
+    }
+
+    let exponent = -0.5 * (in.conic.x * in.coord_xy.x * in.coord_xy.x + in.conic.z * in.coord_xy.y * in.coord_xy.y) - in.conic.y * in.coord_xy.x * in.coord_xy.y;
+
+    if (exponent > 0.0) {
+        discard;
+    }
+
+    let alpha = min(0.99, exp(exponent) * in.color.a);
+
+    if (alpha < 1.0 / 255.0) {
+        discard;
+    }
 }
