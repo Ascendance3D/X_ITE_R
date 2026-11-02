@@ -59,6 +59,39 @@
    "canvasDisplay": "block"
   },
   {
+   "file": "gs-shadow-event-false.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0bf9b0db8c6170ecc65dda5faa75ebbf56d4a29e7e99bb84d7b55071dbfc4df7",
+   "pngSha256": "1f739759e375e309233fa3ed592a9764f84df50fb3b3f8501d6caf671acc51d7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-event-true.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cb86d82a4ef408a1cec50128265be9be88d7e4de51a552b261a20311d39aeeec",
+   "pngSha256": "c22d232f378c5ccc1aec8e128d69e9aa70a820cc083df853a22c8b26ac7574ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-field-false.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cb86d82a4ef408a1cec50128265be9be88d7e4de51a552b261a20311d39aeeec",
+   "pngSha256": "c22d232f378c5ccc1aec8e128d69e9aa70a820cc083df853a22c8b26ac7574ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
    "file": "gs-shadow-point.wrl",
    "ok": true,
    "log": [],
