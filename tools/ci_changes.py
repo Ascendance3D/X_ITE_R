@@ -12,8 +12,11 @@ that is not a merge commit, or a git failure runs both suites.
 - Documentation: `docs/**`, and `*.md` outside `oracle/`, `upstream/`, `tools/` and `.github/` (pinned references
   and the PR template hold Markdown). No test reads these files. Neither suite runs.
 - Fast checks only (FAST_ONLY_FILES, FAST_ONLY_DIRS): repository metadata (`.gitignore`, `LICENSE`, the PR and issue
-  templates), `oracle/README.md`, and the tools that only "Fast checks" runs or that nothing in CI runs (the
-  answer-key resolver and its tests, the reference-pin and candidate gates, `nightly.sh`). Each is named; no Rust or
+  templates, the actionlint config), `oracle/README.md`, the tools that only "Fast checks" runs or that nothing in a pull
+  request runs (the answer-key resolver and its tests, the reference-pin and candidate gates, `nightly.sh`,
+  `check_gpu_test_lists.py`, `test_ci_changes.py`, `gpu_evidence_allow.py`, `strict-suite.sh`, `fetch-dxc.sh`, `package-desktop.sh`,
+  `x3d-view-launch.sh`), and the GPU workflow with its preflight action (they run on master and by hand only).
+  `tools/test_ci_changes.py` pins each entry. Each is named; no Rust or
   browser test reads it. Neither suite runs. `.gitattributes` is not in the list: it changes checked-out bytes.
 - Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web (not the worlds in
   `tests/browser/worlds/`, which a native test includes), the page adapter
@@ -86,8 +89,21 @@ FAST_ONLY_FILES = {
     "tools/selftest-identity.sh",
     "tools/candidate.lock",
     "tools/nightly.sh",
+    # Issue #180. check_gpu_test_lists.py is a "Fast checks" step. The files below are run by no pull request job:
+    # gpu-tests.yml (push to master and workflow_dispatch only; "Fast checks" lints it with actionlint and
+    # check_gpu_test_lists.py reads it), its preflight action, the actionlint config, and the helper scripts that only
+    # a person or gpu-tests.yml starts. No Rust or browser test reads any of them.
+    "tools/check_gpu_test_lists.py",
+    "tools/test_ci_changes.py",
+    "tools/gpu_evidence_allow.py",
+    "tools/strict-suite.sh",
+    "tools/fetch-dxc.sh",
+    "tools/package-desktop.sh",
+    "tools/x3d-view-launch.sh",
+    ".github/actionlint.yaml",
+    ".github/workflows/gpu-tests.yml",
 }
-FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/",)
+FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/", ".github/actions/runner-preflight/")
 
 
 def crate_dirs(root):
@@ -267,6 +283,11 @@ def self_test():
         ([".github/workflows/web-tests.yml"], False, True),
         ([".github/actions/browser-deps/action.yml"], False, True),
         ([".github/actions/other/action.yml"], True, True),
+        ([".github/actionlint.yaml", ".github/workflows/gpu-tests.yml"], False, False),
+        ([".github/actions/runner-preflight/action.yml"], False, False),
+        (["tools/check_gpu_test_lists.py", "tools/test_ci_changes.py", "tools/gpu_evidence_allow.py", "tools/strict-suite.sh"], False, False),
+        (["tools/fetch-dxc.sh", "tools/package-desktop.sh", "tools/x3d-view-launch.sh"], False, False),
+        (["tools/evidence_summary.py"], True, False),
         ([".github/workflows/rust-tests.yml"], True, False),
         (["Cargo.lock"], True, True),
         (["Cargo.toml"], True, True),
