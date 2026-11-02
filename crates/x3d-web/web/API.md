@@ -128,7 +128,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | `node.field = value` | supported for every field type, compared: X3DField.setValue. The setter returns `false` for an outputOnly field, like X_ITE's proxy |
 | live field objects | supported, compared: one object per field; a changed component or element (`node .diffuseColor .r = 1`, `node .point [1] .x = 5`, `push`, `length`) reaches the node and its routes in the next frame; the engine's changes reach the object after each frame |
 | `getField (name)` | X_ITE's X3DField with all its methods, and X_ITE's deprecation warning; compared |
-| `addFieldCallback`, `removeFieldCallback`, `getFieldCallbacks` | supported, compared: each event of the field calls the callbacks with the value of that event, in event order |
+| `addFieldCallback`, `removeFieldCallback`, `getFieldCallbacks` | supported, compared: each event of the field calls the callbacks with the value of that event, in event order. Inside a callback that runs in the route chain these work: the field operations, `rootNodes` changes, `setLive`/`beginUpdate`/`endUpdate` (the engine's live state changes when the chain ends) and `dispose ()` (the engine is freed when the chain ends); other browser calls throw (issue #202, `tests/browser/reentry01.test.mjs`) |
 | `getFieldDefinitions ()`, `getFieldDefinition (name)` | supported, compared: a `FieldDefinitionArray`; a predefined field's definition holds the class's default value, a user-defined field's definition the field |
 | `toString ()` | `TypeName { }`, compared |
 | `toVRMLString ()`, `toXMLString ()`, `toJSONString ()` | the node in full, also for `MFNode` and `X3DScene .rootNodes`, with DEF and USE; compared (`tests/browser/fields02.test.mjs`) |
