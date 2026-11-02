@@ -6,4 +6,5 @@
 
 import { referenceCases } from "./runtime02_harness.mjs";
 
-referenceCases ("fields05.test.mjs");
+// Skipped until phase 2 of #137 adds the page side (x_ite_r.mjs, API.md); phase 2 removes the skip.
+referenceCases ("fields05.test.mjs", { skip: "needs the page side of #137, phase 2" });
