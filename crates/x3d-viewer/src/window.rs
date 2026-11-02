@@ -8,6 +8,9 @@
 //! only the application shortcuts in [`crate::keys`] (Ctrl on Linux, Command on macOS, + 1-4, Q,
 //! M, Z, R, L, S) stay with the window. Escape is an X3D key; closing is the window manager's.
 //!
+//! The context menu (right button) and the Notification are drawn over the world by [`crate::ui`] and
+//! [`crate::overlay_gpu`]; Fullscreen, About and Shift+F8 are asked of the window (`UiRequest`).
+//!
 //! Status (load errors, Browser.print, sensor descriptions, Anchor activations) is shown in the
 //! title bar and logged to stderr; there is no in-window text.
 //!
@@ -21,6 +24,7 @@ use crate::backend::{self, GpuErrors};
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
 use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
 use crate::script::apply;
+use crate::ui::UiRequest;
 use crate::viewer::UiEvent;
 use serde_json::Value;
 use std::path::PathBuf;
@@ -401,6 +405,36 @@ impl ViewerWindow {
         }
 
         self.last_prints = prints.len();
+        self.ui_requests();
+    }
+
+    /// What the context menu and Shift+F8 ask of the window: fullscreen, a URL, the clipboard.
+    fn ui_requests(&mut self) {
+        let Some(g) = &mut self.gfx else { return };
+        let Some(core) = g.viewer.core() else {
+            return;
+        };
+
+        for r in core.take_ui_requests() {
+            match r {
+                UiRequest::ToggleFullscreen => {
+                    let on = g.window.fullscreen().is_none();
+
+                    g.window
+                        .set_fullscreen(on.then_some(winit::window::Fullscreen::Borderless(None)));
+                    core.set_fullscreen(on);
+                }
+                UiRequest::OpenUrl(url) => open_url(&url),
+                UiRequest::Clipboard(text) => {
+                    if copy_to_clipboard(&text) {
+                        core.clipboard_done();
+                        eprintln!("Viewpoint copied to clipboard.\n{text}");
+                    } else {
+                        eprintln!("No clipboard tool found; the viewpoint:\n{text}");
+                    }
+                }
+            }
+        }
     }
 
     fn key_action(&mut self, event_loop: &ActiveEventLoop, action: KeyAction) {
@@ -917,6 +951,11 @@ impl ApplicationHandler for ViewerWindow {
                 ..
             } => {
                 let pressed = event.state == ElementState::Pressed;
+                self.keys.debug = self
+                    .gfx
+                    .as_mut()
+                    .and_then(|g| g.viewer.core())
+                    .is_some_and(|c| c.debug_option());
                 let action = self.keys.event(
                     Platform::current(),
                     pressed,
@@ -939,6 +978,65 @@ impl ApplicationHandler for ViewerWindow {
             _ => {}
         }
     }
+}
+
+/// `window .open (url)`: the system's opener.
+fn open_url(url: &str) {
+    let (program, args): (&str, Vec<&str>) = if cfg!(target_os = "macos") {
+        ("open", vec![url])
+    } else if cfg!(windows) {
+        ("explorer", vec![url])
+    } else {
+        ("xdg-open", vec![url])
+    };
+
+    if std::process::Command::new(program)
+        .args(args)
+        .spawn()
+        .is_err()
+    {
+        eprintln!("About: {url}");
+    }
+}
+
+/// `navigator .clipboard .writeText (text)` with the platform's clipboard tool. Whether it worked.
+fn copy_to_clipboard(text: &str) -> bool {
+    use std::io::Write;
+
+    let tools: &[(&str, &[&str])] = if cfg!(target_os = "macos") {
+        &[("pbcopy", &[])]
+    } else if cfg!(windows) {
+        &[("clip", &[])]
+    } else {
+        &[
+            ("wl-copy", &[]),
+            ("xclip", &["-selection", "clipboard"]),
+            ("xsel", &["--clipboard", "--input"]),
+        ]
+    };
+
+    for (program, args) in tools {
+        let Ok(mut child) = std::process::Command::new(program)
+            .args(*args)
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .spawn()
+        else {
+            continue;
+        };
+
+        if let Some(mut stdin) = child.stdin.take() {
+            if stdin.write_all(text.as_bytes()).is_err() {
+                continue;
+            }
+        }
+
+        // The tools stay running as the selection owner (xclip, wl-copy): do not wait for them.
+        return true;
+    }
+
+    false
 }
 
 /// Run the window on the calling thread (a large-stack thread: QuickJS needs it).

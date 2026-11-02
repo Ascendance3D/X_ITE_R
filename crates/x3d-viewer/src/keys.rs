@@ -204,11 +204,26 @@ pub enum Shortcut {
 /// (`key_without_modifiers`). Escape, Home, End, PageUp and PageDown are never shortcuts: they are
 /// X3D keys (X_ITE handles the last four itself, for every key device sensor too).
 pub fn shortcut(platform: Platform, key: &Key, mods: ModifiersState) -> Option<Shortcut> {
+    shortcut_in(platform, key, mods, false)
+}
+
+/// [`shortcut`] with the Debug browser option: X_ITE's Debug keys (Ctrl+1 to 5 shading, Ctrl+S begin / end update,
+/// `X3DCoreContext [_keydown]`) take Ctrl+1 to 4 and Ctrl+S from the viewer shortcuts, and go to X3D.
+pub fn shortcut_in(
+    platform: Platform,
+    key: &Key,
+    mods: ModifiersState,
+    debug: bool,
+) -> Option<Shortcut> {
     if !platform.shortcut_modifier(mods) {
         return None;
     }
 
     let Key::Character(c) = key else { return None };
+
+    if debug && matches!(c.as_str(), "1" | "2" | "3" | "4" | "5" | "s" | "S") {
+        return None;
+    }
 
     Some(match c.as_str() {
         "1" => Shortcut::Viewer("EXAMINE"),
@@ -244,6 +259,8 @@ pub struct KeyTracker {
     pressed: Vec<(PhysicalKey, String, u32)>,
     /// Keys whose press was a shortcut.
     consumed: Vec<PhysicalKey>,
+    /// The Debug browser option is on ([`shortcut_in`]); the window sets it before each event.
+    pub debug: bool,
 }
 
 impl KeyTracker {
@@ -270,7 +287,7 @@ impl KeyTracker {
             let held = self.pressed.iter().any(|(p, ..)| p == physical);
 
             if !held && !repeat {
-                if let Some(s) = shortcut(platform, without_mods, mods) {
+                if let Some(s) = shortcut_in(platform, without_mods, mods, self.debug) {
                     self.consumed.push(*physical);
                     return KeyAction::Shortcut(s);
                 }
