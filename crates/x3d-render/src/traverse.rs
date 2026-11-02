@@ -2920,11 +2920,14 @@ impl<'a> Builder<'a> {
                     None => Box3::EMPTY,
                 }
             }
-            // GaussianSplatsShape.getBBox (bbox, shadows): its castShadow is TRUE (see shadow_display).
+            // GaussianSplatsShape.getBBox (bbox, shadows): X3DShapeNode.getBBox gives an empty box for shadows when the
+            // shape's castShadow is FALSE (it is TRUE until the node's field processes an event).
             "GaussianSplats" => {
                 let data = self.splat_data(sg, n);
 
-                if data.count == 0 && default_size(sg) {
+                if shadows && !sg.rt.splat_cast_shadow(n) {
+                    Box3::EMPTY
+                } else if data.count == 0 && default_size(sg) {
                     Box3::EMPTY
                 } else {
                     Self::splats_bbox(sg, n, &data)
@@ -3101,12 +3104,12 @@ impl<'a> Builder<'a> {
                 }
             }
             // GaussianSplatsShape.addDepthShape (X3DShapeNode.traverse SHADOW): the shape casts shadows when it is enabled
-            // (numSplats). Its castShadow starts TRUE and only follows the node's field through an event
-            // (GaussianSplats.initialize adds the field interest but copies the other fields only), so it is TRUE here.
+            // (numSplats) and its castShadow is TRUE (set_shadowObject__). That starts TRUE and only follows the node's
+            // field through an event (GaussianSplats.initialize adds the field interest but copies the other fields only).
             "GaussianSplats" => {
                 let data = self.splat_data(sg, n);
 
-                if data.count > 0 {
+                if data.count > 0 && sg.rt.splat_cast_shadow(n) {
                     out.push(DepthItem {
                         geometry: crate::volume::empty_geometry(),
                         model_view: *mv,
