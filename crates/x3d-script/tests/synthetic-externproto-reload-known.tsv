@@ -17,7 +17,6 @@ c10-disable-while-loading	5	16	console,externs,vrml	disabled declaration must no
 # properties of null (reading 'setWorldURL')") although the file exists by then. Rust fetches again.
 c17-recover-same-url	9	24	console,externs,instances,loadCount,vrml	a resource that becomes available must be loadable again
 # X_ITE lets a load of a removed declaration finish and replace the bodies; Rust cancels the load.
-c20-remove-while-loading	5	16	console,externs,vrml	a removed declaration keeps no active load
 # A Script in an instance body that is replaced or removed gets `shutdown ()` (ISO/IEC 14772-1 4.12.3,
 # "invoked when the corresponding Script node is deleted"). X_ITE has no shutdown call, so its console lacks
 # the "A shutdown" / "B shutdown" lines. Rust follows the standard; R0.3-D asserts it in extern_reload.rs.
@@ -38,3 +37,4 @@ c16-recover-new-url	4	4	console	Script.shutdown () runs when its instance body i
 c17-recover-same-url	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
 c18-all-without-proto	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
 c19-load-now	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c20-remove-while-loading	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
