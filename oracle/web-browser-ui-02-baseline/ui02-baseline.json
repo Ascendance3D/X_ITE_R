@@ -127,37 +127,37 @@
   },
   "browserUi02.shiftF8Geo": {
    "geo": {
-    "clipboard": "GeoViewpoint {\n  position 10 20 1000000\n  orientation 0.0799367 0.981942 0.171463 3.11368\n  centerOfRotation 10 20 0\n  fieldOfView 0.7\n}\n",
+    "clipboard": "GeoViewpoint {\n  position 9.99999999999995 20 999999.999999998\n  orientation 0.079936692574321 0.981942250466734 0.171462946226303 3.11367799997241\n  centerOfRotation 10 20 0\n  fieldOfView 0.7\n}\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "geoOrigin": {
-    "clipboard": "GeoViewpoint {\n  geoOrigin GeoOrigin {\n    geoCoords 10 20 0\n    rotateYUp TRUE\n  }\n  position 10.5 20.5 5000\n  orientation -0.0244309 0.999171 -0.0325788 0.301799\n  centerOfRotation 10 20 0\n}\n",
+    "clipboard": "GeoViewpoint {\n  geoOrigin GeoOrigin {\n    geoCoords 10 20 0\n    rotateYUp TRUE\n  }\n  position 10.5 20.5 4999.99999999907\n  orientation -0.0244308583484375 0.999170532681367 -0.0325788241285392 0.301799429181076\n  centerOfRotation 10 20 0\n}\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "utm": {
-    "clipboard": "GeoViewpoint {\n  geoSystem [\n    \"UTM\",\n    \"Z33\",\n    \"N\"\n  ]\n  position 498596 5007060 3000\n  orientation 0.320521 0.946781 0.0295386 3.12159\n  centerOfRotation 0 -3.46692 0\n}\n",
+    "clipboard": "GeoViewpoint {\n  geoSystem [\n    \"UTM\",\n    \"Z33\",\n    \"N\"\n  ]\n  position 498595.935290792 5007063.0140478 3000\n  orientation 0.320520860945154 0.946780780926096 0.0295386284033254 3.12159344948856\n  centerOfRotation 0 -3.46692179999081 0\n}\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "gc": {
-    "clipboard": "GeoViewpoint {\n  geoSystem \"GC\"\n  position 5000000 3000000 4000000\n  orientation 0.47553 0.839876 0.261687 2.8474\n}\n",
+    "clipboard": "GeoViewpoint {\n  geoSystem \"GC\"\n  position 5000000 3000000 4000000\n  orientation 0.47552961264567 0.839875826769667 0.261687185595756 2.84740341944062\n}\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "geoXml": {
-    "clipboard": "<GeoViewpoint\n    position='10 20 1000000'\n    orientation='0.0799367 0.981942 0.171463 3.11368'\n    centerOfRotation='10 20 0'\n    fieldOfView='0.7'/>\n",
+    "clipboard": "<GeoViewpoint\n    position='9.99999999999995 20 999999.999999998'\n    orientation='0.079936692574321 0.981942250466734 0.171462946226303 3.11367799997241'\n    centerOfRotation='10 20 0'\n    fieldOfView='0.7'/>\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "geoOriginXml": {
-    "clipboard": "<GeoViewpoint\n    position='10.5 20.5 5000'\n    orientation='-0.0244309 0.999171 -0.0325788 0.301799'\n    centerOfRotation='10 20 0'>\n  <GeoOrigin\n      geoCoords='10 20 0'\n      rotateYUp='true'/>\n</GeoViewpoint>\n",
+    "clipboard": "<GeoViewpoint\n    position='10.5 20.5 4999.99999999907'\n    orientation='-0.0244308583484375 0.999170532681367 -0.0325788241285392 0.301799429181076'\n    centerOfRotation='10 20 0'>\n  <GeoOrigin\n      geoCoords='10 20 0'\n      rotateYUp='true'/>\n</GeoViewpoint>\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    },
    "geoJson": {
-    "clipboard": "{ \"GeoViewpoint\":\n  {\n    \"@position\": [ 10, 20, 1000000 ],\n    \"@orientation\": [ 0.0799367, 0.981942, 0.171463, 3.11368 ],\n    \"@centerOfRotation\": [ 10, 20, 0 ],\n    \"@fieldOfView\": 0.7\n  }\n}\n",
+    "clipboard": "{ \"GeoViewpoint\":\n  {\n    \"@position\": [ 9.99999999999995, 20, 999999.999999998 ],\n    \"@orientation\": [ 0.079936692574321, 0.981942250466734, 0.171462946226303, 3.11367799997241 ],\n    \"@centerOfRotation\": [ 10, 20, 0 ],\n    \"@fieldOfView\": 0.7\n  }\n}\n",
     "description": "Viewpoint copied to clipboard.",
     "active": "GeoViewpoint"
    }
@@ -198,7 +198,7 @@
     "xml": "XML"
    },
    "vrmlString": "Viewpoint {\n  position 1 2 10\n  orientation 0 0.999999999999999 0 0.5\n  centerOfRotation 0 1 0\n  fieldOfView 0.6\n}\n",
-   "scripted": "<Viewpoint/>\n"
+   "scripted": "<Viewpoint\n    position='3 4 5'/>\n"
   },
   "browserUi02.loading": {
    "one": {

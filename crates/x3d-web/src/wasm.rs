@@ -539,7 +539,7 @@ impl WebBrowser {
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
                 for (name, value) in engine_options {
-                    rt.browser_options.set_option(&name, value);
+                    rt.browser_options.init_option(&name, value);
                 }
 
                 // The page's console and field callbacks run in the route chain (issue #202): the lines made before an

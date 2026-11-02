@@ -337,6 +337,9 @@ impl Default for BrowserActive {
 
 pub struct Runtime {
     pub scene: Scene,
+    /// Root contexts of scenes the page made (createVrmlFromString of an external browser): such a scene has no execution
+    /// context, so its bindables count in the world's lists (BindableList.getBound: `scene .getExecutionContext ()`).
+    pub external_scenes: std::collections::HashSet<CtxId>,
     /// The display load counts seen since the page last took them: at each [`Runtime::run_tasks`], where a frame's events are
     /// over and its loads are not, so a load that starts and ends within one frame is seen (the page says "Loading n files").
     pub loading_samples: Vec<i32>,
@@ -708,6 +711,7 @@ impl Runtime {
             nrt: vec![],
             tainted_fields: vec![],
             tainted_nodes: vec![],
+            external_scenes: Default::default(),
             loading_samples: vec![],
             content_scale_armed: false,
             processing: false,

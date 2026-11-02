@@ -880,6 +880,9 @@ impl Viewer3d {
         }
 
         self.set_active_navigation_info(true);
+        // The viewer is made (ExamineViewer.initialize runs set_activeViewpoint__) and the bound viewpoint becomes the
+        // browser's active one (the interest runs it again); the second pass starts from the first one's offset.
+        self.active_viewpoint_changed();
         self.refresh_display_scan();
     }
 
@@ -1464,22 +1467,26 @@ impl Viewer3d {
         }
 
         if self.layer.viewpoint() != before_vp {
-            // browser ._activeViewpoint changed: ExamineViewer.set_activeViewpoint__.
-            let base = self.base();
-            let nav = self.nav_info();
-            let env = self.env();
-            let vp = self.layer.vp(self.layer.viewpoint());
-            let mut constrain = |t: Vector3, _: &crate::layer::Vp| t;
-            let mut cx = Cx {
-                env: &env,
-                base: &base,
-                vp,
-                nav: &nav,
-                constrain: &mut constrain,
-                requests: vec![],
-            };
-            self.nav.active_viewpoint_changed(&mut cx);
+            self.active_viewpoint_changed();
         }
+    }
+
+    /// browser ._activeViewpoint changed: ExamineViewer.set_activeViewpoint__.
+    fn active_viewpoint_changed(&mut self) {
+        let base = self.base();
+        let nav = self.nav_info();
+        let env = self.env();
+        let vp = self.layer.vp(self.layer.viewpoint());
+        let mut constrain = |t: Vector3, _: &crate::layer::Vp| t;
+        let mut cx = Cx {
+            env: &env,
+            base: &base,
+            vp,
+            nav: &nav,
+            constrain: &mut constrain,
+            requests: vec![],
+        };
+        self.nav.active_viewpoint_changed(&mut cx);
     }
 
     /// X3DWorld.set_activeLayer__: a Script's or a key handler's new activeLayer takes effect while

@@ -625,7 +625,16 @@ impl Session {
         let rt = self.rt_mut();
         let world = rt.scene.world;
 
-        rt.create_vrml_from_string_at(text, world, base)
+        let nodes = rt.create_vrml_from_string_at(text, world, base)?;
+
+        // The page is an external browser: the scene gets no execution context, so its bindables bind in the world.
+        if let Some(n) = nodes.iter().flatten().next() {
+            let ctx = rt.scene.node(*n).ctx;
+
+            rt.external_scenes.insert(ctx);
+        }
+
+        Ok(nodes)
     }
 
     /// X3DBrowser.createX3DFromURL (url, node, event) / createVrmlFromURL of a page (an external browser): FileLoader for

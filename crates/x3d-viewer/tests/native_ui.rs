@@ -938,36 +938,16 @@ fn shift_f8_copies_a_geo_viewpoint_and_follows_the_encoding() {
             "GeoViewpoint {\n  geoSystem \"GC\"\n  position 5000000 3000000 4000000\n  orientation 0.47552961264567 0.839875826769667 0.261687185595756 2.84740341944062\n}\n"
         );
 
-        // GD/WE: the default geoSystem is not written; the position and the center are geographic coordinates again (X_ITE's
-        // digits differ after the 6th, from matrix noise).
-        let geo = text(
-            "geo.wrl",
-            "#X3D V4.0 utf8\nPROFILE Full\nGeoViewpoint { description \"Geo\" geoSystem [ \"GD\" \"WE\" ] position 10 20 1000000 orientation 0 1 0 0.3 centerOfRotation 10 20 0 fieldOfView 0.7 }\nShape { geometry Box { } }\n",
+        // GD/WE: the default geoSystem is not written; the position and the center are geographic coordinates again. The
+        // digits are pinned X_ITE's exactly (oracle/web-browser-ui-02-baseline, case shiftF8Geo): the position's noise
+        // comes from the Geodetic iteration, the orientation's from the two set_activeViewpoint__ passes.
+        assert_eq!(
+            text(
+                "geo.wrl",
+                "#X3D V4.0 utf8\nPROFILE Full\nGeoViewpoint { description \"Geo\" geoSystem [ \"GD\" \"WE\" ] position 10 20 1000000 orientation 0 1 0 0.3 centerOfRotation 10 20 0 fieldOfView 0.7 }\nShape { geometry Box { } }\n",
+            ),
+            "GeoViewpoint {\n  position 9.99999999999995 20 999999.999999998\n  orientation 0.079936692574321 0.981942250466734 0.171462946226303 3.11367799997241\n  centerOfRotation 10 20 0\n  fieldOfView 0.7\n}\n"
         );
-
-        let lines: Vec<&str> = geo.lines().collect();
-        let numbers = |line: &str| -> Vec<f64> {
-            line.split_whitespace()
-                .skip(1)
-                .map(|n| n.parse().unwrap())
-                .collect()
-        };
-
-        assert_eq!(lines[0], "GeoViewpoint {");
-        assert!(lines[1].starts_with("  position "), "{geo}");
-
-        for (got, want) in numbers(lines[1]).iter().zip([10.0, 20.0, 1e6]) {
-            assert!((got - want).abs() < 1e-6, "{geo}");
-        }
-
-        for (got, want) in numbers(lines[2])
-            .iter()
-            .zip([0.0799367, 0.981942, 0.171463, 3.11368])
-        {
-            assert!((got - want).abs() < 1e-5, "{geo}");
-        }
-
-        assert!(geo.ends_with("  centerOfRotation 10 20 0\n  fieldOfView 0.7\n}\n"));
 
         // A GeoOrigin is copied with its geoSystem (default, not written), geoCoords and rotateYUp.
         let origin = text(

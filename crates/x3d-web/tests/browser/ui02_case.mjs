@@ -102,23 +102,18 @@ async function copy (page, url)
    });
 }
 
-// The numbers of a geospatial text are compared to 6 significant digits. X_ITE's user position is the cartesian result of
-// matrix products (10 20 1000000 comes out as 9.99999999999995 20 999999.999999998, and a user orientation that is half a
-// turn about an axis is only good to about 1e-8 radian); the engine's is not, so the exact digits are not a behavior.
-const rounded = result => ({ ...result, clipboard: result .clipboard .replace (/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/gi, n => String (Number (Number (n) .toPrecision (6)))) });
-
 async function shiftF8Geo (page)
 {
    await page .context () .grantPermissions ([ "clipboard-read", "clipboard-write" ]);
 
    return {
-      geo: rounded (await copy (page, data ("model/x3d-vrml", GEO_VRML))),
-      geoOrigin: rounded (await copy (page, data ("model/x3d-vrml", GEO_ORIGIN_VRML))),
-      utm: rounded (await copy (page, data ("model/x3d-vrml", GEO_UTM_VRML))),
-      gc: rounded (await copy (page, data ("model/x3d-vrml", GEO_GC_VRML))),
-      geoXml: rounded (await copy (page, data ("model/x3d+xml", GEO_XML))),
-      geoOriginXml: rounded (await copy (page, data ("model/x3d+xml", GEO_ORIGIN_XML))),
-      geoJson: rounded (await copy (page, data ("model/x3d+json", GEO_JSON))),
+      geo: await copy (page, data ("model/x3d-vrml", GEO_VRML)),
+      geoOrigin: await copy (page, data ("model/x3d-vrml", GEO_ORIGIN_VRML)),
+      utm: await copy (page, data ("model/x3d-vrml", GEO_UTM_VRML)),
+      gc: await copy (page, data ("model/x3d-vrml", GEO_GC_VRML)),
+      geoXml: await copy (page, data ("model/x3d+xml", GEO_XML)),
+      geoOriginXml: await copy (page, data ("model/x3d+xml", GEO_ORIGIN_XML)),
+      geoJson: await copy (page, data ("model/x3d+json", GEO_JSON)),
    };
 }
 
@@ -182,7 +177,10 @@ async function shiftF8Encodings (page)
    {
       const browser = document .querySelector ("x3d-canvas") .browser;
       const scene   = await browser .createScene (browser .getProfile ("Full"));
+      const node    = scene .createNode ("Viewpoint");
 
+      node .position = new window .X3D_NS .SFVec3f (3, 4, 5);
+      scene .rootNodes .push (node);
       await browser .replaceWorld (scene);
    });
    out .scripted = await keyAfter ();
