@@ -3224,9 +3224,9 @@
     "rea_b08_net_reload",
     "rea_b08_net_unload"
    ],
-   "missing": "X_ITE (Cache on) gives a second InlineGeometry with the same url a copy() without routes ('TODO: add routes'); Rust keeps the routes; untested; ig-select reload picture check disabled",
+   "missing": "X_ITE (Cache on) gives a second InlineGeometry with the same url a copy() without routes ('TODO: add routes' in InlineGeometry.js); Rust keeps the routes; a decided difference (ADR 0012) that is untested: no second-instance recording exists; ig-select reload picture check disabled",
    "oracle": "",
-   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates):"
+   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): decided as an approved difference. ISO/IEC 19775-1 V4.0 has no InlineGeometry node (it is an X_ITE node), so no clause decides it. Status stays PARTIAL because the difference has no test."
   },
   {
    "id": "node:LoadSensor",
@@ -5074,14 +5074,14 @@
    "rust": [
     "crates/x3d-runtime/src/nodes/sound.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/tools/rea_b05.py check (oracle/synthetic-rea-b05, X_ITE baselines oracle/rea-b05-baseline, 48 kHz offline co-simulation, audio tolerance 0): microphone.wrl (no input device: no events, as X_ITE headless); crates/x3d-viewer/tests/rea_b05_reload.rs"
    ],
-   "missing": "live capture from a device is not compared (the oracle host has no input device)",
+   "missing": "",
    "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds",
-   "notes": ""
+   "notes": "Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): the oracle host has no input device, so X_ITE raises no events there and neither does Rust (synthetic-rea-b05/microphone.wrl, offline co-simulation, tolerance 0). Live capture from a device (getUserMedia) is NOT compared and cannot be on this host; the decision accepts that. ISO/IEC 19775-1 V4.0 16.4.14 defines live input and gives no result for a host without an input device. Promoted PARTIAL to COMPLETE on that decision only."
   },
   {
    "id": "node:OscillatorSource",
@@ -5294,7 +5294,7 @@
     "crates/x3d-parse/src/parser.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-text",
@@ -5304,9 +5304,9 @@
     "crates/x3d-viewer/tests/rea_batch11_text.rs (tb-fallback, tb-layout, tb-align, tb-late)",
     "crates/x3d-viewer/tests/rea_batch12_text_warmup.rs::rea_batch12_text_first_build_has_no_font"
    ],
-   "missing": "origin / textBounds / lineBounds during the oracle's warm-up frames (node-text-outputs-open): X_ITE itself is not repeatable there (one or two default-font rebuilds, depending on the machine's load; 3 quiet runs gave one pair, a fourth quiet run two, runs under CPU load one pair and a later load frame), so it cannot be exact evidence",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact) Batch 10 review 2026-10-20: HOLD. Rendering (vis-text-font, vis-text-layout), run-time FontStyle and Text changes with pictures (text-runtime), events (text-events, text-fontstyle, text-family, text-screen-scale) are exact. The warm-up frames stay open because the oracle is not deterministic there. Batch 11 2026-10-21: HOLD stays. Run-time changes, family fallback, layout inputs, stale alignments and late-made Texts now have exact evidence (3 identical X_ITE runs each). Rust defects fixed: FontStyle alignments kept from setup / last justify change; font-file cache keyed by resolved file. Warm-up frames: 30 X_ITE runs gave several patterns (first build at frame 1 empty, font arrives frame 2-5, 1-3 rebuilds), so no exact evidence is possible. Batch 12 2026-10-21: HOLD stays. Rust defect fixed: the first build had the font already (the default FontStyle and a world FontStyle loaded before the first frame); X_ITE's FontStyle load starts with `await $.sleep (0)` and the world does not wait for it, so the first build at frame 1 has no font in every X_ITE run (42 of 42). Rust now takes the same steps. The later warm-up frames still differ per X_ITE run (oracle/rea-batch12-baseline/text-warmup/patterns.txt); the arrival frame is not chosen."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact) Batch 10 review 2026-10-20: HOLD. Rendering (vis-text-font, vis-text-layout), run-time FontStyle and Text changes with pictures (text-runtime), events (text-events, text-fontstyle, text-family, text-screen-scale) are exact. The warm-up frames stay open because the oracle is not deterministic there. Batch 11 2026-10-21: HOLD stays. Run-time changes, family fallback, layout inputs, stale alignments and late-made Texts now have exact evidence (3 identical X_ITE runs each). Rust defects fixed: FontStyle alignments kept from setup / last justify change; font-file cache keyed by resolved file. Warm-up frames: 30 X_ITE runs gave several patterns (first build at frame 1 empty, font arrives frame 2-5, 1-3 rebuilds), so no exact evidence is possible. Batch 12 2026-10-21: HOLD stays. Rust defect fixed: the first build had the font already (the default FontStyle and a world FontStyle loaded before the first frame); X_ITE's FontStyle load starts with `await $.sleep (0)` and the world does not wait for it, so the first build at frame 1 has no font in every X_ITE run (42 of 42). Rust now takes the same steps. The later warm-up frames still differ per X_ITE run (oracle/rea-batch12-baseline/text-warmup/patterns.txt); the arrival frame is not chosen. | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): origin, textBounds and lineBounds in the oracle's warm-up frames are not compared, because pinned X_ITE itself is not repeatable there (one or two default-font rebuilds depending on load); an engineering decision from the recordings, no ISO clause is involved. Promoted PARTIAL to COMPLETE: no other gap was listed."
   },
   {
    "id": "node:TextureProjector",
@@ -5824,9 +5824,9 @@
    "tests": [
     "oracle/tools/rea_b07_vol.py; crates/x3d-render/tests/render_rea_b07_vol.rs (145 worlds x MSAA 0/4 = 290 shots, all within 0.5% over 8); crates/x3d-viewer/tests/rea_batch07_vol.rs (19 stepped worlds x MSAA 0/4 = 38 cases: ROUTE/Script field changes, Inline, orbit, TextureQuality, Group removal, Script-created instance); crates/x3d-viewer/tests/rea_b07_vol_reload.rs (2 tests: 24 worlds x 5 reloads bounded, 0 after unload; Iso/Segmented removal + Script instance release)"
    ],
-   "missing": "weightFunction ALPHA1 and ONE_MINUS_ALPHA1 hang pinned X_ITE, so no baseline exists (worlds kept in oracle/synthetic-rea-b07-vol/unverifiable/). DIFFERENT candidate: owner decision.",
+   "missing": "weightFunction ALPHA1 and ONE_MINUS_ALPHA1 hang pinned X_ITE (it writes blendColor_ <id> .a, invalid GLSL), so no X_ITE baseline exists; X_ITE also uses ALPHA0 and ALPHA1 where ISO/IEC 19775-1 V4.0 41.4.1 Table 41.3 has ALPHA1 and ALPHA2 and draws ALPHA2 as CONSTANT. Rust follows the standard for ALPHA1, ALPHA2 and their ONE_MINUS forms (render_b68_owner::blended_alpha_weight_functions_follow_the_standard) and keeps ALPHA0 because X_ITE draws it; a difference from X_ITE by the standard, decided in ADR 0012",
    "oracle": "pinned X_ITE 16.5.0 pictures (x_ite-shot.mjs, x_ite-shot-msaa.mjs) and stepped captures (x_ite-anim.mjs): scene text, sorted log, frames within 0.5% of pixels over 8 at MSAA 0 and 4",
-   "notes": "Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/volume/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). All other weight functions pass."
+   "notes": "Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/volume/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). All other weight functions pass. | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): ALPHA1 and ALPHA2 follow ISO/IEC 19775-1 V4.0 41.4.1 Table 41.3, pinned by a regression test; worlds and X_ITE recordings in oracle/synthetic-rea-b68-owner (5 identical runs). Status stays PARTIAL: no X_ITE baseline exists for the weight functions in question."
   },
   {
    "id": "node:BoundaryEnhancementVolumeStyle",
@@ -6006,9 +6006,9 @@
    "tests": [
     "oracle/tools/rea_b07_vol.py; crates/x3d-render/tests/render_rea_b07_vol.rs (145 worlds x MSAA 0/4 = 290 shots, all within 0.5% over 8); crates/x3d-viewer/tests/rea_batch07_vol.rs (19 stepped worlds x MSAA 0/4 = 38 cases: ROUTE/Script field changes, Inline, orbit, TextureQuality, Group removal, Script-created instance); crates/x3d-viewer/tests/rea_b07_vol_reload.rs (2 tests: 24 worlds x 5 reloads bounded, 0 after unload; Iso/Segmented removal + Script instance release)"
    ],
-   "missing": "A non-Material X3DMaterialNode as material: X_ITE throws; Rust logs it as unsupported. DIFFERENT candidate: owner decision.",
+   "missing": "A non-Material X3DMaterialNode (PhysicalMaterial) as material: pinned X_ITE throws and never draws (5 of 5 runs); Rust draws the volume and logs the node as unsupported; a decided difference (ADR 0012), pinned by render_b68_owner",
    "oracle": "pinned X_ITE 16.5.0 pictures (x_ite-shot.mjs, x_ite-shot-msaa.mjs) and stepped captures (x_ite-anim.mjs): scene text, sorted log, frames within 0.5% of pixels over 8 at MSAA 0 and 4",
-   "notes": "Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/volume/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). Material cases pass."
+   "notes": "Batch 07 (2026-10-18), evidence .reports/xite-rust-rea-batch-07/volume/REPORT.md and gates/summary.txt (858 workspace tests, 0 failed). Material cases pass. | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): the difference is decided and tested (worlds sh-material and sh-physicalmaterial, X_ITE recordings 5 identical runs). Status stays PARTIAL."
   },
   {
    "id": "node:SilhouetteEnhancementVolumeStyle",
@@ -6413,16 +6413,16 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-render/src/x3d.wgsl"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "render_rea_b08_vs (19 x MSAA 0/4)",
     "rea_batch08_vs (vs-runtime 16 frames)",
     "rea_b08_vs_reload"
    ],
-   "missing": "owner decision pending on the contract item 5 reading for attached nodes",
+   "missing": "",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Items 1-4, 6 n/a, 7 have evidence in the lane report; item 5 met under the clarified reading. ALT: COMPLETE if the owner accepts the item-5 reading and the local GPU gates pass."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Items 1-4, 6 n/a, 7 have evidence in the lane report; item 5 met under the clarified reading. ALT: COMPLETE if the owner accepts the item-5 reading and the local GPU gates pass. | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): the contract item 5 reading for attached nodes is the clarified reading already used for the eight COMPLETE volume styles (attached-node removal and Script-created events); the contract's own wording is not in the repository. Promoted PARTIAL to COMPLETE: no other gap was listed."
   },
   {
    "id": "sub:parse.vrml-classic",
@@ -6612,14 +6612,14 @@
     "crates/x3d-parse/src/html_support.rs",
     "crates/x3d-parse/src/xml.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
    "tests": [
     "html_support_rea (325 checks)"
    ],
-   "missing": "owner decision pending: judged on the parser contract, or a DOM integration layer (live attributes, importDocument) required",
+   "missing": "",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Name and field maps equal to X_ITE on 53 HTML inputs and 12 XML twins. ALT: COMPLETE if the owner accepts the parser-contract reading."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Name and field maps equal to X_ITE on 53 HTML inputs and 12 XML twins. ALT: COMPLETE if the owner accepts the parser-contract reading. | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): judged on the parser contract (name and field maps equal X_ITE on 53 HTML inputs and 12 XML twins, 325 checks). The part that needs a DOM (live attributes, importDocument) is not part of this entry: ADR 0006 and issue #146; sub:browser.dom-integration stays DIFFERENT. Promoted PARTIAL to COMPLETE: no other gap was listed."
   },
   {
    "id": "sub:parse.golden-gate",
