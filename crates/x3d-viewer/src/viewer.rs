@@ -307,6 +307,17 @@ fn geom_of(
         return Some(g.clone());
     }
 
+    // A GaussianSplats shape has no geometry: an empty one stands in, with the shape's box.
+    if s.splats.is_some() {
+        let (min, max) = s.explicit_bbox.unwrap_or((Vector3::ZERO, Vector3::ZERO));
+
+        return Some(Rc::new(Geometry {
+            min,
+            max,
+            ..Default::default()
+        }));
+    }
+
     let key = (s.shape.path.to_vec(), s.geometry);
 
     if let Some(g) = cache.get(&key) {
@@ -1510,6 +1521,7 @@ impl Viewer3d {
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
                     instances: None,
+                    splats: s.splats.clone().map(|d| (d, s.viewport)),
                 });
             }
         }
@@ -1527,6 +1539,7 @@ impl Viewer3d {
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
                     instances: None,
+                    splats: None,
                 });
             }
         }
@@ -1649,6 +1662,7 @@ impl Viewer3d {
                         matrices,
                         per_vertices: per,
                     }),
+                    splats: None,
                 });
 
                 continue;
@@ -1671,6 +1685,7 @@ impl Viewer3d {
                         matrices: r.matrices.clone(),
                         per_vertices: 0,
                     }),
+                    splats: None,
                 });
             }
         }

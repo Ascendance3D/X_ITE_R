@@ -57,6 +57,7 @@ use x3d_scene::*;
 
 pub use extern_proto::{CacheEntry, ExternState, PendingExtern};
 pub use loader::{FetchPoll, Fetcher, LocalFetcher, parse_bytes_with_fetcher};
+pub use protos::{DeclField, DeclInfo, DeclOp};
 pub use script::{ScriptCall, ScriptError, ScriptHost};
 
 /// A field identity: node + location (X_ITE field object identity).
@@ -1536,9 +1537,25 @@ impl Runtime {
                 .values()
                 .any(|s| s.load_state == nodes::LoadState::InProgress)
             || (0..self.scene.nodes.len() as NodeId).any(|n| {
-                matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry"))
-                    && self.url_load_state(n) == nodes::LoadState::InProgress
+                matches!(
+                    self.builtin_name(n),
+                    Some("Inline" | "InlineGeometry" | "AudioClip")
+                ) && self.url_load_state(n) == nodes::LoadState::InProgress
             })
+    }
+
+    /// X3DUrlObject.setLoadState: a FontStyle is a loading object of its scene from `requestAsyncLoad` until
+    /// X3DFontStyleNode.loadData ends (its `sleep (0)` timer, a FontLibrary it waits for, a font file it fetches), and so
+    /// is an AudioClip until `setArrayBuffer` has decoded a candidate (which `has_unfinished_loads` covers while it
+    /// is IN_PROGRESS). Returns whether a FontStyle load is outstanding, or a decode that the next prepareEvents
+    /// resolves. A decode held by `defer_audio_decodes` is the driver's to flush, so the load does not wait for it.
+    /// Only with an asynchronous [`Fetcher`] (the page): a native load does not wait for a font, so a Text builds once
+    /// without it in the first frame (oracle/synthetic-rea-b11-text/warm-stamp-fs.wrl).
+    fn has_held_url_objects(&self) -> bool {
+        (self.fetcher.is_async() && !self.font_style_loads.is_empty())
+            || !self.pending_font_styles.is_empty()
+            || !self.font_fetch_waits.is_empty()
+            || (!self.defer_audio_decodes && !self.pending_audio_decodes.is_empty())
     }
 
     /// Everything `browser .createX3DFromURL` does before its promise resolves: setup, loads,
@@ -1615,11 +1632,35 @@ impl Runtime {
                 return false;
             }
 
-            let waiting = self.has_unfinished_loads();
+            let waiting = self.has_unfinished_loads() || self.has_held_url_objects();
 
             self.load_frames += 1;
+
+            // The frame of a page: the `sleep (0)` timers of the FontStyle loads fire first, and their continuations
+            // (a font file is fetched) run after it.
+            let fonts = self.fetcher.is_async() && !self.font_style_loads.is_empty();
+
+            if fonts {
+                self.font_style_timers();
+            }
+
             self.frame();
+
+            if fonts {
+                self.font_style_continuations();
+            }
+
             self.run_tasks();
+
+            // A decode that ended in this frame went on to fetch its next candidate (its request starts when the parked
+            // task runs), and a font file was asked for: the scene waits for the response.
+            if self.has_parked_fetches() || !self.font_fetch_waits.is_empty() {
+                self.resume_fetches();
+
+                if self.has_parked_fetches() || !self.font_fetch_waits.is_empty() {
+                    return false;
+                }
+            }
 
             if !waiting {
                 break;

@@ -215,6 +215,19 @@ pub fn root_nodes(rt: &Runtime) -> Vec<Option<NodeId>> {
     rt.scene.ctx(rt.scene.world).root_nodes.clone()
 }
 
+/// `rootNodes .assign (list)` of the world, as `Session::set_root_nodes`: the world holds `list` at once and the page's
+/// `rootNodes` field queues its event with the others (nothing is processed here).
+pub fn set_root_nodes(rt: &mut Runtime, list: Vec<Option<NodeId>>) -> Result<(), String> {
+    if let Some(n) = list.iter().flatten().find(|&&n| !node_exists(rt, n)) {
+        return Err(format!("rootNodes: node {n} is not in the world"));
+    }
+
+    let world = rt.scene.world;
+
+    rt.set_root_nodes(world, list);
+    Ok(())
+}
+
 pub fn node_value(rt: &Runtime, node: NodeId, name: &str) -> Result<Vec<Option<NodeId>>, String> {
     let k = field_key(rt, node, name)?;
 

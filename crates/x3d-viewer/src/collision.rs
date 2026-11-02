@@ -50,6 +50,9 @@ pub struct CShape {
     /// The particles of a ParticleSystem as consecutive collision shapes (`model_view` and `instance` are then the
     /// system's and unused): particle k is the shape under `matrices [k]`.
     pub instances: Option<CInstances>,
+    /// A GaussianSplats shape (`geometry` is empty) and the viewport of the display it was collected in: the collision
+    /// depth buffer draws it with the splat program. There is no CPU stand-in for it.
+    pub splats: Option<(Rc<x3d_render::splats::SplatDraw>, [f64; 4])>,
 }
 
 #[derive(Clone)]
@@ -468,6 +471,7 @@ impl World {
                         .as_ref()
                         .map_or(0, |i| i.per_vertices as u32),
                     id: id as f32,
+                    splat: s.splats.as_ref().map(|(d, v)| (d, *v)),
                 }
             })
             .collect()
@@ -1183,6 +1187,7 @@ mod tests {
             clip_planes: Rc::new([]),
             collisions: Rc::new([]),
             instances: None,
+            splats: None,
         }
     }
 
