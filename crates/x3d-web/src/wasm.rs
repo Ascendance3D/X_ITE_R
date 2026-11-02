@@ -1014,14 +1014,39 @@ impl WebBrowser {
     }
 
     /// DOMIntegration.processAddedNode for scene `id`: the XML of one element parsed into the context of node `parent`
-    /// (-1: among the root nodes of the world); what its elements made, as [`WebBrowser::xml_targets`].
+    /// (-1: among the root nodes of context `ctx`, -1: of the world); what its elements made, as [`WebBrowser::xml_targets`].
     #[wasm_bindgen(js_name = xmlChild)]
-    pub fn xml_child(&mut self, id: u32, parent: i32, text: &str) -> Result<Vec<u32>, JsError> {
+    pub fn xml_child(
+        &mut self,
+        id: u32,
+        parent: i32,
+        ctx: i32,
+        text: &str,
+    ) -> Result<Vec<u32>, JsError> {
         let parent = u32::try_from(parent).ok();
+        let ctx = usize::try_from(ctx).ok();
 
         self.session_mut(id)?
-            .xml_child(parent, text)
+            .xml_child(parent, ctx, text)
             .map_err(|e| JsError::new(&e))
+    }
+
+    /// X3DUrlObject.checkLoadState of node `node` of scene `id` (see [`Session::load_state`]), or undefined.
+    #[wasm_bindgen(js_name = loadState)]
+    pub fn load_state(&self, id: u32, node: u32) -> Option<u32> {
+        self.worlds.get(&id)?.session.load_state(node)
+    }
+
+    /// The XML of the scene of Inline `node` of scene `id` and what its elements made: `[text, ...targets]`, or undefined.
+    #[wasm_bindgen(js_name = inlineXml)]
+    pub fn inline_xml(&self, id: u32, node: u32) -> Option<js_sys::Array> {
+        let (text, targets) = self.worlds.get(&id)?.session.inline_xml(node)?;
+        let out = js_sys::Array::of2(
+            &text.into(),
+            &js_sys::Uint32Array::from(targets.as_slice()).into(),
+        );
+
+        Some(out)
     }
 
     /// DOMIntegration.processAttribute for scene `id`: the attribute `name="value"` read into the field of node `node`.
@@ -1041,6 +1066,13 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = disposeNode)]
     pub fn dispose_node(&mut self, id: u32, node: u32) -> Result<(), JsError> {
         self.session_mut(id)?.dispose_node(node);
+        Ok(())
+    }
+
+    /// The `Scene` element of context `ctx` of scene `id` was removed: its context is disposed.
+    #[wasm_bindgen(js_name = disposeContext)]
+    pub fn dispose_context(&mut self, id: u32, ctx: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.dispose_context(ctx as usize);
         Ok(())
     }
 

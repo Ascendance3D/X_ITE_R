@@ -1,0 +1,774 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "domEvents.events": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform { }\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> </scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "attribute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform {\n  translation 1 2 3\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [
+       [
+        "translation",
+        "TRANSFORM",
+        "A",
+        "CustomEvent",
+        "Transform",
+        "A",
+        "1 2 3",
+        "node,value"
+       ],
+       [
+        "translation",
+        "TRANSFORM",
+        "C",
+        "CustomEvent",
+        "Transform",
+        "C",
+        "1 2 3",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"1 2 3\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> </scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "second",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n  scale 2 2 2\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform {\n  translation 1 2 3\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [
+       [
+        "scale",
+        "TRANSFORM",
+        "A",
+        "CustomEvent",
+        "Transform",
+        "A",
+        "2 2 2",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"1 2 3\" scale=\"2 2 2\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> </scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "inputOnly",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n  scale 2 2 2\n  bboxSize 1 1 1\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform {\n  translation 1 2 3\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"1 2 3\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> </scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "added",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n  scale 2 2 2\n  bboxSize 1 1 1\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform {\n  translation 1 2 3\n}\n\nDEF D Transform {\n  translation 4 5 6\n}\n\nROUTE A.translation_changed TO C.set_translation\nROUTE A.translation_changed TO D.set_translation\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"1 2 3\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> <transform def=\"D\" translation=\"4 5 6\"></transform><route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"D\" tofield=\"set_translation\"></route></scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform,Transform",
+       "named": "A,S,B,C,D",
+       "routes": "2",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "afterAdd",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 7 8 9\n  scale 2 2 2\n  bboxSize 1 1 1\n  children DEF S Shape {\n    geometry DEF B Box { }\n  }\n}\n\nDEF C Transform {\n  translation 7 8 9\n}\n\nDEF D Transform {\n  translation 7 8 9\n}\n\nROUTE A.translation_changed TO C.set_translation\nROUTE A.translation_changed TO D.set_translation\n",
+      "events": [
+       [
+        "translation",
+        "TRANSFORM",
+        "A",
+        "CustomEvent",
+        "Transform",
+        "A",
+        "7 8 9",
+        "node,value"
+       ],
+       [
+        "translation",
+        "TRANSFORM",
+        "C",
+        "CustomEvent",
+        "Transform",
+        "C",
+        "7 8 9",
+        "node,value"
+       ],
+       [
+        "translation",
+        "TRANSFORM",
+        "D",
+        "CustomEvent",
+        "Transform",
+        "D",
+        "7 8 9",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"7 8 9\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> <transform def=\"D\" translation=\"4 5 6\"></transform><route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"D\" tofield=\"set_translation\"></route></scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform,Transform",
+       "named": "A,S,B,C,D",
+       "routes": "2",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "child",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 7 8 9\n  scale 2 2 2\n  bboxSize 1 1 1\n  children [\n    DEF S Shape {\n      geometry DEF B Box { }\n    }\n    DEF G Group { }\n  ]\n}\n\nDEF C Transform {\n  translation 7 8 9\n}\n\nDEF D Transform {\n  translation 7 8 9\n}\n\nROUTE A.translation_changed TO C.set_translation\nROUTE A.translation_changed TO D.set_translation\n",
+      "events": [
+       [
+        "children",
+        "TRANSFORM",
+        "A",
+        "CustomEvent",
+        "Transform",
+        "A",
+        "[\n  Shape { }\n  Group { }\n]",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"7 8 9\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape><group def=\"G\"></group></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> <transform def=\"D\" translation=\"4 5 6\"></transform><route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"D\" tofield=\"set_translation\"></route></scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform,Transform",
+       "named": "A,S,B,C,D,G",
+       "routes": "2",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "removed",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 7 8 9\n  scale 2 2 2\n  bboxSize 1 1 1\n  children [\n    DEF S Shape {\n      geometry DEF B Box { }\n    }\n    DEF G Group { }\n  ]\n}\n\nDEF C Transform {\n  translation 7 8 9\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"7 8 9\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape><group def=\"G\"></group></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"D\" tofield=\"set_translation\"></route></scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C,G",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "afterRemove",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 0 0 1\n  scale 2 2 2\n  bboxSize 1 1 1\n  children [\n    DEF S Shape {\n      geometry DEF B Box { }\n    }\n    DEF G Group { }\n  ]\n}\n\nDEF C Transform {\n  translation 0 0 1\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "events": [
+       [
+        "translation",
+        "TRANSFORM",
+        "A",
+        "CustomEvent",
+        "Transform",
+        "A",
+        "0 0 1",
+        "node,value"
+       ],
+       [
+        "translation",
+        "TRANSFORM",
+        "C",
+        "CustomEvent",
+        "Transform",
+        "C",
+        "0 0 1",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\" translation=\"0 0 1\" scale=\"2 2 2\" bboxsize=\"1 1 1\"><shape def=\"S\"><box def=\"B\"></box></shape><group def=\"G\"></group></transform> <transform def=\"C\"></transform> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"C\" tofield=\"set_translation\"></route> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"D\" tofield=\"set_translation\"></route></scene></x3d>",
+      "read": {
+       "roots": "Transform,Transform",
+       "named": "A,S,B,C,G",
+       "routes": "1",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ]
+   ],
+   "log": []
+  },
+  "domEvents.inline": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  load FALSE\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "error",
+        "INLINE",
+        "I2",
+        "CustomEvent",
+        "Inline",
+        "I2",
+        "undefined",
+        "node"
+       ],
+       [
+        "error",
+        "INLINE",
+        "I2",
+        "CustomEvent",
+        "Inline",
+        "I2",
+        "undefined",
+        "node"
+       ],
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"false\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "inner attribute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  load FALSE\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "translation",
+        "Transform",
+        "In",
+        "CustomEvent",
+        "Transform",
+        "In",
+        "2 2 2",
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"2 2 2\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"false\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "load",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I3",
+        "CustomEvent",
+        "Inline",
+        "I3",
+        true,
+        "node,value"
+       ],
+       [
+        "load",
+        "INLINE",
+        "I3",
+        "CustomEvent",
+        "Inline",
+        "I3",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"2 2 2\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "unload",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  load FALSE\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        false,
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\" load=\"false\"></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "reload",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        true,
+        "node,value"
+       ],
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\" load=\"true\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "newUrl",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [
+       [
+        "error",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,nothing&quot;\" load=\"true\"></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "addInline",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n\nDEF I4 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I4",
+        "CustomEvent",
+        "Inline",
+        "I4",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,nothing&quot;\" load=\"true\"></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> <inline def=\"I4\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline></scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group,Inline",
+       "named": "I1,I2,I3,G,I4",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "addToInner",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n\nDEF I4 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,nothing&quot;\" load=\"true\"></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> <inline def=\"I4\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform><group def=\"Added\"></group></Scene></X3D></inline></scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group,Inline",
+       "named": "I1,I2,I3,G,I4",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "removeInline",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I2 Inline {\n  url \"data:model/x3d+xml,nothing\"\n}\n\nDEF I3 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n\nDEF G Group { }\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,nothing&quot;\" load=\"true\"></inline> <inline def=\"I2\" url=\"&quot;data:model/x3d+xml,nothing&quot;\"></inline> <inline def=\"I3\" load=\"true\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> <group def=\"G\"></group> </scene></x3d>",
+      "read": {
+       "roots": "Inline,Inline,Inline,Group",
+       "named": "I1,I2,I3,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ]
+   ],
+   "log": [
+    "error: Inline: Couldn't load data URL. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.",
+    "error: Inline: Couldn't load data URL. Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.",
+    "error: Error: Unknown node type 'group'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  "domEvents.inlineText": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "reload",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        true,
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\" load=\"true\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "toXml",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\" load=\"true\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "toText",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\" load=\"true\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ]
+   ],
+   "log": []
+  },
+  "domEvents.removeScene": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  children DEF S Shape {\n    geometry Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <transform def=\"A\"><shape def=\"S\"><box></box></shape></transform> <group def=\"G\"></group> <route fromnode=\"A\" fromfield=\"translation_changed\" tonode=\"G\" tofield=\"set_bboxCenter\"></route> </scene></x3d>",
+      "read": {
+       "roots": "Transform,Group",
+       "named": "A,S,G",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "remove",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"></x3d>",
+      "read": {
+       "roots": "",
+       "named": "",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "afterRemove",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene><group def=\"N\"></group></scene></x3d>",
+      "read": {
+       "roots": "",
+       "named": "",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "addToX3D",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF M Group { }\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene><group def=\"N\"></group></scene><group def=\"M\"></group></x3d>",
+      "read": {
+       "roots": "Group",
+       "named": "M",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Unknown field 'set_bboxCenter' in node class Group.",
+    "error: Error: Unknown field 'set_bboxCenter' in node class Group.",
+    "error: Error: Unknown node type 'SCENE'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  "domEvents.userField": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF Sc Script {\n  inputOutput SFInt32 a 3\n}\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <script def=\"Sc\">// Content moved into childNodes.<field name=\"a\" type=\"SFInt32\" accessType=\"inputOutput\" value=\"3\"></field></script> </scene></x3d>",
+      "read": {
+       "roots": "Script",
+       "named": "Sc",
+       "routes": "0",
+       "a": "3",
+       "b": "undefined"
+      }
+     }
+    ],
+    [
+     "value",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF Sc Script {\n  inputOutput SFInt32 a 9\n}\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <script def=\"Sc\">// Content moved into childNodes.<field name=\"a\" type=\"SFInt32\" accessType=\"inputOutput\" value=\"9\"></field></script> </scene></x3d>",
+      "read": {
+       "roots": "Script",
+       "named": "Sc",
+       "routes": "0",
+       "a": "9",
+       "b": "undefined"
+      }
+     }
+    ],
+    [
+     "type",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF Sc Script {\n  inputOutput SFString a \"x\"\n}\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <script def=\"Sc\">// Content moved into childNodes.<field name=\"a\" type=\"SFString\" accessType=\"inputOutput\" value=\"x\"></field></script> </scene></x3d>",
+      "read": {
+       "roots": "Script",
+       "named": "Sc",
+       "routes": "0",
+       "a": "x",
+       "b": "undefined"
+      }
+     }
+    ],
+    [
+     "newField",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF Sc Script {\n  inputOutput SFString a \"x\"\n}\n",
+      "events": [],
+      "dom": "<x3d profile=\"Full\"><scene> <script def=\"Sc\">// Content moved into childNodes.<field name=\"a\" type=\"SFString\" accessType=\"inputOutput\" value=\"x\"></field><field name=\"b\" type=\"SFFloat\" accessType=\"inputOutput\" value=\"1.5\"></field></script> </scene></x3d>",
+      "read": {
+       "roots": "Script",
+       "named": "Sc",
+       "routes": "0",
+       "a": "x",
+       "b": "undefined"
+      }
+     }
+    ]
+   ],
+   "log": []
+  }
+ }
+}

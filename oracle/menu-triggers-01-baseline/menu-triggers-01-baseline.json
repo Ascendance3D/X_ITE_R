@@ -1,0 +1,736 @@
+{
+ "pinned": "X_ITE 16.5.0 34cdf9f97",
+ "runs": 5,
+ "cases": {
+  "rightClick": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 2,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    },
+    {
+     "type": "mousedown",
+     "button": 2,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "contextmenu",
+     "button": 2,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    },
+    {
+     "type": "mouseup",
+     "button": 2,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "leftClick": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    },
+    {
+     "type": "mousedown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "mouseup",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "click",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "ctrlClickReal": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    },
+    {
+     "type": "mousedown",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "mouseup",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "click",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "mouse"
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "ctrlClickMacSequence": {
+   "events": [
+    {
+     "type": "mousedown",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": false,
+     "pointer": null
+    },
+    {
+     "type": "contextmenu",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": false,
+     "pointer": null
+    },
+    {
+     "type": "mouseup",
+     "button": 0,
+     "ctrl": true,
+     "x": 100,
+     "y": 100,
+     "trusted": false,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "contextmenuButton0": {
+   "events": [
+    {
+     "type": "contextmenu",
+     "button": 0,
+     "ctrl": false,
+     "x": 140,
+     "y": 120,
+     "trusted": false,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 126,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "contextmenuCtrl": {
+   "events": [
+    {
+     "type": "contextmenu",
+     "button": 0,
+     "ctrl": true,
+     "x": 140,
+     "y": 120,
+     "trusted": false,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 126,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "touchTap": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold400": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold700": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1000": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1100": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1300": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "touchHold1500": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "touchHold1500Move6": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchmove",
+     "button": null,
+     "ctrl": false,
+     "x": 106,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "touchHold1500Move7": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchmove",
+     "button": null,
+     "ctrl": false,
+     "x": 107,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 100,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  },
+  "touchHold1500Move8": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchmove",
+     "button": null,
+     "ctrl": false,
+     "x": 108,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1500Move40": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 100,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchmove",
+     "button": null,
+     "ctrl": false,
+     "x": 140,
+     "y": 100,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1500OnSensor": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 160,
+     "y": 160,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 160,
+     "y": 160,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": false,
+    "left": null,
+    "top": null,
+    "first": null
+   }
+  },
+  "touchHold1500OnShape": {
+   "events": [
+    {
+     "type": "pointerdown",
+     "button": 0,
+     "ctrl": false,
+     "x": 160,
+     "y": 160,
+     "trusted": true,
+     "pointer": "touch"
+    },
+    {
+     "type": "touchstart",
+     "button": null,
+     "ctrl": false,
+     "x": 160,
+     "y": 160,
+     "trusted": true,
+     "pointer": null
+    },
+    {
+     "type": "touchend",
+     "button": null,
+     "ctrl": false,
+     "x": -1,
+     "y": -1,
+     "trusted": true,
+     "pointer": null
+    }
+   ],
+   "menu": {
+    "open": true,
+    "left": 126,
+    "top": 86,
+    "first": "X_ITE v16.5.0"
+   }
+  }
+ }
+}

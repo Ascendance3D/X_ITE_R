@@ -3,7 +3,7 @@
  * touch, coordinates, resource loading, scene API) against the pinned X_ITE in headless Chrome and record the values
  * and the pictures. crates/x3d-web/tests/browser/runtime02.test.mjs runs the same cases against X_ITE_R and compares.
  *
- *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|fields05|dom01|dom02|routes01|viewpoints01|options01|ui01|attributes01|scenetext01|entry01|scripturl01|scenecreate01|rootnodes01|scriptlife01|sound01|sound03|sound04|movie01]
+ *   node oracle/x_ite-web-runtime-02.mjs <out_dir> [--runs 5] [--only <group.case>] [--suite runtime02|fallback01|loadurl01|dataurl01|degenerate01|gltfworld01|gltfworld02|fields01|fields02|fields03|fields04|fields05|dom01|dom02|dom03|routes01|viewpoints01|options01|ui01|attributes01|scenetext01|entry01|scripturl01|scenecreate01|rootnodes01|scriptlife01|sound01|sound03|sound04|movie01]
  *
  * `--suite fallback01` records the web resource fallback 01 cases (tests/browser/fallback01_case.mjs) instead, into
  * <out_dir>/fallback01-baseline.json; their test is fallback01.test.mjs.
@@ -17,6 +17,7 @@
  * `--suite fields02` records the field API 02 cases (<out_dir>/fields02-baseline.json).
  * `--suite fields05` records the field API 05 cases (<out_dir>/fields05-baseline.json): PROTO and EXTERNPROTO declarations.
  * `--suite dom01` records the DOM integration 01 cases (<out_dir>/dom01-baseline.json): X3D content written as HTML inside the canvas.
+ * `--suite dom03` records the DOM integration 03 cases (<out_dir>/dom03-baseline.json): the CustomEvents and Inline elements of that content.
  * `--suite dom02` records the DOM integration 02 cases (<out_dir>/dom02-baseline.json): changes of the elements of that content.
  * `--suite routes01` records the routes 01 cases (<out_dir>/routes01-baseline.json).
  * `--suite viewpoints01` records the viewpoints 01 cases (<out_dir>/viewpoints01-baseline.json).
@@ -67,7 +68,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "scenecreate01", "rootnodes01", "scriptlife01", "shutdown01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "dom03", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "scenecreate01", "rootnodes01", "scriptlife01", "shutdown01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);

@@ -220,4 +220,28 @@ impl Runtime {
 
         self.rebuild_parents();
     }
+
+    /// X3DExecutionContext.dispose for the `Scene` element that was removed (DOMIntegration.processRemovedNode): the routes are
+    /// deleted, the names, imported nodes and declarations are cleared, and the root nodes are gone.
+    pub fn dispose_context(&mut self, ctx: CtxId) {
+        if ctx >= self.scene.contexts.len() {
+            return;
+        }
+
+        let routes: Vec<usize> = self.scene.ctx(ctx).routes.iter().map(|r| r.id).collect();
+
+        for id in routes {
+            self.delete_route_by_id(ctx, id);
+        }
+
+        let c = self.scene.ctx_mut(ctx);
+
+        c.named_nodes = Default::default();
+        c.imported = Default::default();
+        c.protos = Default::default();
+        c.externprotos = Default::default();
+
+        self.set_root_nodes(ctx, vec![]);
+        self.dynamic_dirty_mark();
+    }
 }

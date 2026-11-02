@@ -31,6 +31,7 @@ import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as FIELDS05_GROUPS } from "./fields05_case.mjs";
 import { CASE_GROUPS as DOM01_GROUPS } from "./dom01_case.mjs";
 import { CASE_GROUPS as DOM02_GROUPS } from "./dom02_case.mjs";
+import { CASE_GROUPS as DOM03_GROUPS } from "./dom03_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
@@ -90,6 +91,7 @@ const SUITES = {
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   dom03: { dir: process .env .XR_DOM03_BASELINE ?? join (REPO, "oracle/web-browser-dom-03-baseline"), file: "dom03-baseline.json", groups: DOM03_GROUPS },
    dom02: { dir: process .env .XR_DOM02_BASELINE ?? join (REPO, "oracle/web-browser-dom-02-baseline"), file: "dom02-baseline.json", groups: DOM02_GROUPS },
    dom01: { dir: process .env .XR_DOM01_BASELINE ?? join (REPO, "oracle/web-browser-dom-01-baseline"), file: "dom01-baseline.json", groups: DOM01_GROUPS },
    fields05: { dir: process .env .XR_FIELDS05_BASELINE ?? join (REPO, "oracle/web-browser-fields-05-baseline"), file: "fields05-baseline.json", groups: FIELDS05_GROUPS },
@@ -225,8 +227,17 @@ const SHUTDOWN_DIFFERENCES =
       [ "page: dispose", "log: A shutdown", "log: B shutdown" ]),
 };
 
+// DOM integration 03: the first load events of the Inline elements of a world (dom03_case.mjs, `inline`; web/API.md, "DOM
+// integration"). X_ITE starts the DOM code while the world's loads run: the failed Inline's state is read, then its field event
+// arrives (two `error` events), and the loaded one finishes later (`load`). Here all loads of the world are over then.
+const INLINE_EVENT = (type, def) => [ type, "INLINE", def, "CustomEvent", "Inline", def, "undefined", "node" ];
+
+const DOM03_START_X = [ INLINE_EVENT ("error", "I2"), INLINE_EVENT ("error", "I2"), INLINE_EVENT ("load", "I1") ];
+const DOM03_START_R = [ INLINE_EVENT ("load", "I1"), INLINE_EVENT ("error", "I2") ];
+
 const KNOWN_DIFFERENCES = {
    ... SHUTDOWN_DIFFERENCES,
+   "domEvents.inline": [ [ [ "steps", 0, 1, "events" ], DOM03_START_X, DOM03_START_R ] ],
    "browserUi.splash": UI01_DIFFERENCES,
    "browserUi.menuEntries": [
       [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
@@ -753,6 +764,7 @@ const GROUP_FILES = {
    protoDeclarations: "fields05.test.mjs",
    domImport: "dom01.test.mjs",
    domMutation: "dom02.test.mjs",
+   domEvents: "dom03.test.mjs",
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",

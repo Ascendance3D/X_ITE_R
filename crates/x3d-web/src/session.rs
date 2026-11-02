@@ -671,19 +671,56 @@ impl Session {
         flatten_targets(&self.rt().scene.xml_targets)
     }
 
-    /// DOMIntegration.processAddedNode: the XML `text` of one element is parsed into the world below `parent` (the context
-    /// of that node), or among the root nodes of the world without one. The result is what its elements made, as
-    /// [`Session::xml_targets`].
-    pub fn xml_child(&mut self, parent: Option<NodeId>, text: &str) -> Result<Vec<u32>, String> {
+    /// DOMIntegration.processAddedNode: the XML `text` of one element is parsed below `parent` (into the context of that node),
+    /// or without a parent among the root nodes of context `ctx` (the world's when `None`). The result is what its elements
+    /// made, as [`Session::xml_targets`].
+    pub fn xml_child(
+        &mut self,
+        parent: Option<NodeId>,
+        ctx: Option<usize>,
+        text: &str,
+    ) -> Result<Vec<u32>, String> {
         if parent.is_some_and(|p| !self.node_exists(p)) {
             return Err("the parent node is not in the world".to_string());
         }
 
         let rt = self.rt_mut();
-        let ctx = parent.map_or(rt.scene.world, |p| rt.scene.node(p).ctx);
+        let ctx = parent
+            .map(|p| rt.scene.node(p).ctx)
+            .or(ctx.filter(|&c| c < rt.scene.contexts.len()))
+            .unwrap_or(rt.scene.world);
 
         rt.xml_child_into(ctx, parent, text)
             .map(|targets| flatten_targets(&targets))
+    }
+
+    /// X3DUrlObject.checkLoadState of `node`: 0 NOT_STARTED, 1 IN_PROGRESS, 2 COMPLETE, 3 FAILED; `None` for a node without one.
+    pub fn load_state(&self, node: NodeId) -> Option<u32> {
+        if !self.node_exists(node) {
+            return None;
+        }
+
+        let rt = self.rt();
+        let k = rt.private_field(node, "loadState")?;
+
+        match rt.field(k).value {
+            x3d_fields::FieldValue::SFInt32(v) => Some(v as u32),
+            _ => None,
+        }
+    }
+
+    /// `node .getInternalScene () [_x3d]` of an Inline: the XML text its scene was parsed from and what each element made
+    /// (as [`Session::xml_targets`]); `None` when the scene is not an XML scene or is not loaded.
+    pub fn inline_xml(&self, node: NodeId) -> Option<(String, Vec<u32>)> {
+        if !self.node_exists(node) {
+            return None;
+        }
+
+        let rt = self.rt();
+        let ctx = *rt.inline_scenes.get(&node)?;
+        let (source, targets) = rt.scene.xml_scenes.get(&ctx)?;
+
+        Some((source.clone(), flatten_targets(targets)))
     }
 
     /// DOMIntegration.processAttribute: XMLParser.nodeAttribute for the attribute `name="value"` of `node`.
@@ -698,6 +735,11 @@ impl Session {
         if self.node_exists(node) {
             self.rt_mut().dispose_node(node);
         }
+    }
+
+    /// The `Scene` element of context `ctx` was removed: X3DExecutionContext.dispose.
+    pub fn dispose_context(&mut self, ctx: usize) {
+        self.rt_mut().dispose_context(ctx);
     }
 
     /// The route `id` of context `ctx` leaves it (X3DRoute.dispose of a removed `ROUTE` element).
