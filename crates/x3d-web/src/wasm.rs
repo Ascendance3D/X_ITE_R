@@ -2780,6 +2780,26 @@ pub fn chain_node_name(world: u32, node: u32) -> Result<Option<String>, JsError>
     chain_run(world, |rt| crate::chain::node_name(rt, node))
 }
 
+/// `WebBrowser.parseField` inside a field callback (X3DField.fromVRMLString / fromXMLString (value, scene)).
+#[wasm_bindgen(js_name = chainParseField)]
+pub fn chain_parse_field(
+    world: u32,
+    type_name: &str,
+    text: &str,
+    xml: bool,
+    name: &str,
+    unit: Option<String>,
+) -> Result<JsValue, JsError> {
+    let ty = x3d_fields::FieldType::from_name(type_name)
+        .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
+
+    chain_run(world, |rt| {
+        crate::chain::parse_field(rt, ty, text, xml, name, unit)
+    })?
+    .map(|data| data_js(&data))
+    .map_err(|e| JsError::new(&e))
+}
+
 /// `WebBrowser.namedNode` inside a field callback.
 #[wasm_bindgen(js_name = chainNamedNode)]
 pub fn chain_named_node(world: u32, name: &str) -> Result<Option<u32>, JsError> {
