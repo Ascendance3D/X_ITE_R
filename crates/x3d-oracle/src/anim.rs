@@ -236,9 +236,10 @@ pub fn run(variant: Variant, argv: &Argv, common: &Common) -> Result<(String, bo
     let track = variant.settle() && truthy("settle");
     let console = variant.full() && truthy("console");
 
+    let oracle_args = crate::chrome::oracle_args()?;
     let mut page = Page::open(
         &common.chrome,
-        crate::chrome::ORACLE_ARGS,
+        &oracle_args.iter().map(String::as_str).collect::<Vec<_>>(),
         w as u32,
         h as u32,
         &base,
