@@ -977,6 +977,44 @@ fn live(text: &str, net: &TestFetcher, first: &[(&str, &[u8])]) -> Session {
     s
 }
 
+/// A world after the responses `first`, still loading: a url object (an AudioClip, a FontStyle) holds the scene's loadCount
+/// (issue #144, X3DUrlObject.setLoadState), so the session is not live yet.
+fn held(text: &str, net: &TestFetcher, first: &[(&str, &[u8])]) -> Session {
+    let mut s = begin(text, net);
+
+    for (path, data) in first {
+        poll(&mut s);
+        net.respond(&w(path), Ok(data));
+    }
+
+    poll(&mut s);
+    s
+}
+
+/// The responses `rest` come, the world loads and goes live.
+fn finish_load(s: &mut Session, net: &TestFetcher, rest: &[(&str, &[u8])]) {
+    for (path, data) in rest {
+        net.respond(&w(path), Ok(data));
+    }
+
+    assert!(poll(s), "the world loaded");
+    assert!(s.go_live(NOW), "the world went live");
+}
+
+/// `steps` for a world that may still be loading (a FontStyle holds the load while its font file is in flight, issue #144):
+/// the load continues, and the world goes live when it has loaded.
+fn pump(s: &mut Session, from: u32, n: u32) {
+    for i in from..from + n {
+        let now = NOW + f64::from(i) * 0.016;
+
+        if s.is_live() {
+            s.step(now);
+        } else if s.poll_load(now) {
+            assert!(s.go_live(now), "the world went live");
+        }
+    }
+}
+
 fn steps(s: &mut Session, from: u32, n: u32) {
     for i in from..from + n {
         s.step(NOW + f64::from(i) * 0.016);
@@ -984,23 +1022,40 @@ fn steps(s: &mut Session, from: u32, n: u32) {
 }
 
 #[test]
+fn a_font_style_holds_the_scene_until_its_font_file_is_in() {
+    let net = TestFetcher::default();
+    let mut s = held(
+        "#X3D V4.0 utf8\nShape { geometry Text { string \"Hg\" fontStyle FontStyle { family \"fonts/hold.ttf\" } } }\n",
+        &net,
+        &[],
+    );
+
+    // oracle/web-browser-loadurl-01-baseline, font.pending: the scene waits for the font file.
+    assert_eq!(net.requested(), [w("fonts/hold.ttf")]);
+    assert!(!s.is_loaded(), "the FontStyle holds the scene's load");
+
+    finish_load(&mut s, &net, &[("fonts/hold.ttf", PT_SANS)]);
+    assert!(!s.viewer().expect("live").rt.fonts_loading());
+}
+
+#[test]
 fn a_font_file_waits_for_its_response_then_the_next_family_is_fetched() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nShape { geometry Text { string \"Hg\" fontStyle FontStyle { family [ \"fonts/f1.ttf\" \"fonts/notfont.ttf\" \"fonts/PTSans-Regular.ttf\" ] } } }\n",
         &net,
         &[],
     );
 
-    steps(&mut s, 1, 10);
+    pump(&mut s, 1, 10);
     assert_eq!(net.requested(), [w("fonts/f1.ttf")]);
 
     net.respond(&w("fonts/f1.ttf"), Err("Error: Not Found"));
-    steps(&mut s, 11, 10);
+    pump(&mut s, 11, 10);
     assert_eq!(net.requested(), [w("fonts/f1.ttf"), w("fonts/notfont.ttf")]);
 
     net.respond(&w("fonts/notfont.ttf"), Ok(NOT_FONT));
-    steps(&mut s, 21, 10);
+    pump(&mut s, 21, 10);
     // No busy loop: one request per file while it is in flight.
     assert_eq!(
         net.requested(),
@@ -1012,7 +1067,7 @@ fn a_font_file_waits_for_its_response_then_the_next_family_is_fetched() {
     );
 
     net.respond(&w("fonts/PTSans-Regular.ttf"), Ok(PT_SANS));
-    steps(&mut s, 31, 10);
+    pump(&mut s, 31, 10);
 
     let rt = &s.viewer().expect("live").rt;
 
@@ -1046,28 +1101,28 @@ fn a_font_file_waits_for_its_response_then_the_next_family_is_fetched() {
 #[test]
 fn a_font_style_that_is_gone_ignores_its_late_response() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nDEF T Transform { children Shape { geometry Text { string \"Hg\" fontStyle FontStyle { family \"fonts/late.ttf\" } } } }\n",
         &net,
         &[],
     );
 
-    steps(&mut s, 1, 10);
+    pump(&mut s, 1, 10);
     assert_eq!(net.requested(), [w("fonts/late.ttf")]);
 
     // A newer family: the load that waits is no longer the node's.
     let style = {
-        let rt = &s.viewer().expect("live").rt;
+        let rt = s.runtime();
 
         rt.font_fetch_waits[0].node
     };
 
     s.set_field(style, "family", "\"SANS\"").expect("family");
-    steps(&mut s, 11, 10);
+    pump(&mut s, 11, 10);
     net.respond(&w("fonts/late.ttf"), Ok(PT_SANS));
-    steps(&mut s, 21, 10);
+    pump(&mut s, 21, 10);
 
-    let rt = &s.viewer().expect("live").rt;
+    let rt = s.runtime();
 
     assert!(rt.font_fetch_waits.is_empty());
     assert!(!rt.fonts_loading());
@@ -1225,17 +1280,18 @@ fn a_movie_texture_that_fails_reports_like_x_ite() {
 #[test]
 fn an_audio_clip_waits_for_the_candidate_after_one_that_does_not_decode() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nSound { source DEF A AudioClip { url [ \"a1.wav\" \"tone.wav\" ] } }\n",
         &net,
         &[("a1.wav", GARBAGE)],
     );
 
-    steps(&mut s, 1, 10);
     assert_eq!(net.requested(), [w("a1.wav"), w("tone.wav")]);
     assert_eq!(net.read(), [w("a1.wav")], "read before the response");
+    // oracle/web-browser-loadurl-01-baseline, audio.decodeFallbackHeld: the scene waits for the candidate that decodes.
+    assert!(!s.is_loaded(), "the AudioClip holds the scene's load");
 
-    net.respond(&w("tone.wav"), Ok(TONE));
+    finish_load(&mut s, &net, &[("tone.wav", TONE)]);
     steps(&mut s, 14, 10);
 
     let clip = s.named_node("A").expect("DEF A");
@@ -1274,15 +1330,15 @@ fn an_audio_clip_waits_for_the_candidate_after_one_that_does_not_decode() {
 #[test]
 fn every_audio_candidate_fails_to_decode() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nSound { source DEF A AudioClip { url [ \"a3.wav\" \"a4.wav\" ] } }\n",
         &net,
         &[("a3.wav", GARBAGE)],
     );
 
-    steps(&mut s, 1, 10);
     assert_eq!(net.read(), [w("a3.wav")]);
-    net.respond(&w("a4.wav"), Ok(GARBAGE));
+    assert!(!s.is_loaded(), "the AudioClip holds the scene's load");
+    finish_load(&mut s, &net, &[("a4.wav", GARBAGE)]);
     steps(&mut s, 14, 10);
 
     let log: Vec<String> = s
@@ -1308,13 +1364,12 @@ fn every_audio_candidate_fails_to_decode() {
 #[test]
 fn a_world_dropped_while_its_audio_waits_takes_no_late_response() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let s = held(
         "#X3D V4.0 utf8\nSound { source AudioClip { url [ \"a5.wav\" \"held.wav\" ] } }\n",
         &net,
         &[("a5.wav", GARBAGE)],
     );
 
-    steps(&mut s, 1, 10);
     assert_eq!(net.requested().last(), Some(&w("held.wav")));
 
     // The page replaces or disposes the world: the session goes, then the response comes.
@@ -1516,13 +1571,13 @@ fn page_load_url_data_urls_like_x_ite() {
 #[test]
 fn two_font_loads_of_the_same_family_and_style_end_with_one_font() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nShape { geometry DEF T Text { string \"Hg\" fontStyle DEF F FontStyle { family \"fonts/PTSans-Regular.ttf\" style \"PLAIN\" } } }\n",
         &net,
         &[],
     );
 
-    steps(&mut s, 1, 10);
+    pump(&mut s, 1, 10);
     assert_eq!(net.requested(), [w("fonts/PTSans-Regular.ttf")]);
 
     let style = s.named_node("F").expect("DEF F");
@@ -1530,12 +1585,12 @@ fn two_font_loads_of_the_same_family_and_style_end_with_one_font() {
     // The same family and style again: a second loadData.
     s.set_field(style, "family", "\"fonts/PTSans-Regular.ttf\"")
         .expect("family");
-    steps(&mut s, 11, 10);
+    pump(&mut s, 11, 10);
 
-    let waits = s.viewer().expect("live").rt.font_fetch_waits.len();
+    let waits = s.runtime().font_fetch_waits.len();
 
     net.respond(&w("fonts/PTSans-Regular.ttf"), Ok(PT_SANS));
-    steps(&mut s, 21, 10);
+    pump(&mut s, 21, 10);
 
     // One request, read once the response is in.
     assert_eq!(net.requested(), [w("fonts/PTSans-Regular.ttf")]);
@@ -1544,7 +1599,7 @@ fn two_font_loads_of_the_same_family_and_style_end_with_one_font() {
 
     let text = s.named_node("T").expect("DEF T");
     let bounds = s.field(text, "textBounds").expect("textBounds").value;
-    let rt = &s.viewer().expect("live").rt;
+    let rt = s.runtime();
 
     assert!(rt.font_fetch_waits.is_empty());
     assert!(!rt.fonts_loading());
@@ -1712,7 +1767,7 @@ use x3d_runtime::loader::FetchKey;
 /// Each FontStyle loop that waits for a font file has that file's request in flight: [`Fetcher::poll`] starts it
 /// before the loop parks in `font_fetch_waits`, and its response is still held.
 fn assert_each_font_wait_has_its_request(s: &mut Session, net: &TestFetcher) {
-    let rt = &s.viewer().expect("live").rt;
+    let rt = s.runtime();
     let n = net.0.borrow();
 
     for p in &rt.font_fetch_waits {
@@ -1732,7 +1787,7 @@ fn assert_each_font_wait_has_its_request(s: &mut Session, net: &TestFetcher) {
 #[test]
 fn a_waiting_font_always_has_its_request_in_flight() {
     let net = TestFetcher::default();
-    let mut s = live(
+    let mut s = held(
         "#X3D V4.0 utf8\nShape { geometry Text { string \"Hg\" fontStyle DEF A FontStyle { family [ \"fonts/a1.ttf\" \"fonts/a2.ttf\" ] } } }\nShape { geometry Text { string \"Hg\" fontStyle DEF B FontStyle { family \"fonts/b.ttf\" } } }\n",
         &net,
         &[],
@@ -1743,8 +1798,8 @@ fn a_waiting_font_always_has_its_request_in_flight() {
         |net: &TestFetcher, path: &str| net.requested().iter().filter(|u| **u == w(path)).count();
 
     // Both requests are in flight while the responses are held; nothing was read.
-    steps(&mut s, 1, 10);
-    assert_eq!(s.viewer().expect("live").rt.font_fetch_waits.len(), 2);
+    pump(&mut s, 1, 10);
+    assert_eq!(s.runtime().font_fetch_waits.len(), 2);
     assert_eq!(count(&net, "fonts/a1.ttf"), 1);
     assert_eq!(count(&net, "fonts/b.ttf"), 1);
     assert_each_font_wait_has_its_request(&mut s, &net);
@@ -1753,29 +1808,29 @@ fn a_waiting_font_always_has_its_request_in_flight() {
     // A repeated loadData of A shares the request in flight.
     s.set_field(a, "family", "[ \"fonts/a1.ttf\" \"fonts/a2.ttf\" ]")
         .expect("family");
-    steps(&mut s, 11, 10);
+    pump(&mut s, 11, 10);
     assert_eq!(count(&net, "fonts/a1.ttf"), 1);
     assert_each_font_wait_has_its_request(&mut s, &net);
 
     // A failure: the next family's request starts at once.
     net.respond(&w("fonts/a1.ttf"), Err("Error: Not Found"));
-    steps(&mut s, 21, 10);
+    pump(&mut s, 21, 10);
     assert_eq!(count(&net, "fonts/a2.ttf"), 1);
     assert_each_font_wait_has_its_request(&mut s, &net);
 
     // B is cancelled (a newer family): its wait goes, and its late response is not read.
     s.set_field(b, "family", "\"SANS\"").expect("family");
-    steps(&mut s, 31, 10);
+    pump(&mut s, 31, 10);
     net.respond(&w("fonts/b.ttf"), Ok(PT_SANS));
-    steps(&mut s, 41, 10);
+    pump(&mut s, 41, 10);
     assert_each_font_wait_has_its_request(&mut s, &net);
     assert!(!net.read().contains(&w("fonts/b.ttf")), "{:?}", net.read());
 
     // A success ends the last wait.
     net.respond(&w("fonts/a2.ttf"), Ok(PT_SANS));
-    steps(&mut s, 51, 10);
+    pump(&mut s, 51, 10);
 
-    let rt = &s.viewer().expect("live").rt;
+    let rt = s.runtime();
 
     assert!(rt.font_fetch_waits.is_empty());
     assert!(!rt.fonts_loading());
