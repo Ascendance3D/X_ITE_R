@@ -336,6 +336,9 @@ impl Default for BrowserActive {
 
 pub struct Runtime {
     pub scene: Scene,
+    /// The display load counts seen since the page last took them: at each [`Runtime::run_tasks`], where a frame's events are
+    /// over and its loads are not, so a load that starts and ends within one frame is seen (the page says "Loading n files").
+    pub loading_samples: Vec<i32>,
     pub frt: HashMap<FKey, FieldRt>,
     pub nrt: Vec<NodeRt>,
     tainted_fields: Vec<(FKey, Event)>,
@@ -704,6 +707,7 @@ impl Runtime {
             nrt: vec![],
             tainted_fields: vec![],
             tainted_nodes: vec![],
+            loading_samples: vec![],
             content_scale_armed: false,
             processing: false,
             parents: HashMap::new(),
@@ -1442,6 +1446,8 @@ impl Runtime {
     /// runs, after the microtasks that were queued before it (Inlines and textures asked for
     /// theirs at setup).
     pub fn run_tasks(&mut self) {
+        self.sample_display_load_count();
+
         loop {
             if let Some(task) = self.tasks.pop_front() {
                 match task {

@@ -922,3 +922,6 @@ const cases = { descriptions, splash, timings, timingsTouch, menuEntries, menuAc
 export const CASE_GROUPS = {
    browserUi: { context: { viewport: { width: 1000, height: 800 }, deviceScaleFactor: 1, hasTouch: true }, cases },
 };
+
+// The helpers of the cases, for ui02_case.mjs.
+export { vrml, wait, frames, holdTimers, flush, loadWorld, pageHelpers, PLAIN_WORLD };

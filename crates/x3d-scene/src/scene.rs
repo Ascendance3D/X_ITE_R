@@ -564,6 +564,14 @@ impl Scene {
         }
     }
 
+    /// X3DScene.getEncoding of a context's scene: `VRML`, `XML`, `JSON`, `SCRIPTED`, ...
+    pub fn encoding_of(&self, ctx: CtxId) -> &str {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.encoding,
+            None => &self.encoding,
+        }
+    }
+
     /// X3DExecutionContext.getSpecificationVersion of a context.
     pub fn spec_version_of(&self, ctx: CtxId) -> &str {
         match self.scene_infos.get(&self.scene_root(ctx)) {

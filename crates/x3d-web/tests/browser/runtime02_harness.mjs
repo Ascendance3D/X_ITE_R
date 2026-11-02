@@ -33,6 +33,7 @@ import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
 import { CASE_GROUPS as UI01_GROUPS } from "./ui01_case.mjs";
+import { CASE_GROUPS as UI02_GROUPS } from "./ui02_case.mjs";
 import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
@@ -90,6 +91,7 @@ const SUITES = {
    fields05: { dir: process .env .XR_FIELDS05_BASELINE ?? join (REPO, "oracle/web-browser-fields-05-baseline"), file: "fields05-baseline.json", groups: FIELDS05_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
    ui01: { dir: process .env .XR_UI01_BASELINE ?? join (REPO, "oracle/web-browser-ui-01-baseline"), file: "ui01-baseline.json", groups: UI01_GROUPS },
+   ui02: { dir: process .env .XR_UI02_BASELINE ?? join (REPO, "oracle/web-browser-ui-02-baseline"), file: "ui02-baseline.json", groups: UI02_GROUPS },
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
@@ -717,6 +719,7 @@ const GROUP_FILES = {
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
    browserUi: "ui01.test.mjs",
+   browserUi02: "ui02.test.mjs",
    canvasAttributes: "attributes01.test.mjs",
    canvasAttributesScaled: "attributes01.test.mjs",
    entryPoints: "entry01.test.mjs",

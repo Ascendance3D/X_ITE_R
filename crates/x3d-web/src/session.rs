@@ -276,6 +276,8 @@ impl Session {
             .expect("the empty scene parses");
 
         world.scene.profile = None;
+        // A new X3DScene (createScene, replaceWorld (null)) has the encoding SCRIPTED, as no parser made it.
+        world.scene.encoding = "SCRIPTED".into();
         world
     }
 
@@ -377,6 +379,8 @@ impl Session {
 
         rt.now = now;
         rt.replace_world();
+        // X3DNetworkingContext.resetLoadCount: what loaded while the browser was loading is not said.
+        rt.loading_samples.clear();
         // From now on the browser events of the world go to the page: an Anchor can replace it.
         rt.browser_events = Some(vec![]);
 
@@ -1615,6 +1619,15 @@ impl Session {
         }
     }
 
+    /// X3DNetworkingContext.getDisplayLoadCount of the world: the loads in progress that the page counts.
+    /// Each change since the last call, in order, ending with the count now.
+    pub fn display_load_counts(&mut self) -> Vec<i32> {
+        let rt = self.rt_mut();
+
+        rt.sample_display_load_count();
+        std::mem::take(&mut rt.loading_samples)
+    }
+
     /// The descriptions the engine set itself (a bound viewpoint, an over pointing sensor) since the last call.
     pub fn take_descriptions(&mut self) -> Vec<String> {
         std::mem::take(&mut self.rt_mut().description_events)
@@ -1674,6 +1687,31 @@ impl Session {
             });
 
         (info, rt.scene.meta_of(world).to_vec())
+    }
+
+    /// The Shift+F8 text of the bound viewpoint (`Viewer3d::viewpoint_text`): the node in the world's encoding.
+    pub fn viewpoint_text(&mut self) -> Option<String> {
+        self.viewer()?.viewpoint_text()
+    }
+
+    /// X3DScene.setEncoding of the world's scene (the page's createScene: SCRIPTED).
+    pub fn set_encoding(&mut self, encoding: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        match rt.scene.scene_infos.get_mut(&rt.scene.scene_root(world)) {
+            Some(i) => i.encoding = encoding.to_string(),
+            None => rt.scene.encoding = encoding.to_string(),
+        }
+    }
+
+    /// X3DScene.getEncoding of the world's scene.
+    pub fn encoding(&self) -> String {
+        match &self.stage {
+            Stage::Live(v) => v.rt.scene.encoding_of(v.rt.scene.world).to_string(),
+            Stage::Loading(rt, _) => rt.scene.encoding_of(rt.scene.world).to_string(),
+            Stage::Gone => "SCRIPTED".to_string(),
+        }
     }
 
     /// The bound viewpoint's user position, orientation and center of rotation (Shift+F8).

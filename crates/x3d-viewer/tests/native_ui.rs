@@ -917,6 +917,77 @@ fn debug_option_hands_ctrl_number_keys_to_x3d() {
     );
 }
 
+/// Shift+F8 of a GeoViewpoint and the encoding of the world (X3DCoreContext `[_keydown]`), compared with pinned X_ITE
+/// (`oracle/web-browser-ui-02-baseline`, cases `shiftF8Geo` and `shiftF8Encodings`).
+#[test]
+fn shift_f8_copies_a_geo_viewpoint_and_follows_the_encoding() {
+    big(|| {
+        let text = |name: &str, world: &str| {
+            let mut ui = Ui::open(name, world);
+
+            ui.seconds(1.0);
+            ui.v.viewpoint_text().expect("a viewpoint")
+        };
+
+        // GC: the position as it is, no centerOfRotation (the default 0 0 0 is not written), geoSystem written.
+        assert_eq!(
+            text(
+                "gc.wrl",
+                "#X3D V4.0 utf8\nPROFILE Full\nGeoViewpoint { description \"Geo\" geoSystem [ \"GC\" ] position 5000000 3000000 4000000 }\nShape { geometry Box { } }\n"
+            ),
+            "GeoViewpoint {\n  geoSystem \"GC\"\n  position 5000000 3000000 4000000\n  orientation 0.47552961264567 0.839875826769667 0.261687185595756 2.84740341944062\n}\n"
+        );
+
+        // GD/WE: the default geoSystem is not written; the position and the center are geographic coordinates again (X_ITE's
+        // digits differ after the 6th, from matrix noise).
+        let geo = text(
+            "geo.wrl",
+            "#X3D V4.0 utf8\nPROFILE Full\nGeoViewpoint { description \"Geo\" geoSystem [ \"GD\" \"WE\" ] position 10 20 1000000 orientation 0 1 0 0.3 centerOfRotation 10 20 0 fieldOfView 0.7 }\nShape { geometry Box { } }\n",
+        );
+
+        let lines: Vec<&str> = geo.lines().collect();
+        let numbers = |line: &str| -> Vec<f64> {
+            line.split_whitespace()
+                .skip(1)
+                .map(|n| n.parse().unwrap())
+                .collect()
+        };
+
+        assert_eq!(lines[0], "GeoViewpoint {");
+        assert!(lines[1].starts_with("  position "), "{geo}");
+
+        for (got, want) in numbers(lines[1]).iter().zip([10.0, 20.0, 1e6]) {
+            assert!((got - want).abs() < 1e-6, "{geo}");
+        }
+
+        for (got, want) in numbers(lines[2])
+            .iter()
+            .zip([0.0799367, 0.981942, 0.171463, 3.11368])
+        {
+            assert!((got - want).abs() < 1e-5, "{geo}");
+        }
+
+        assert!(geo.ends_with("  centerOfRotation 10 20 0\n  fieldOfView 0.7\n}\n"));
+
+        // A GeoOrigin is copied with its geoSystem (default, not written), geoCoords and rotateYUp.
+        let origin = text(
+            "origin.wrl",
+            "#X3D V4.0 utf8\nPROFILE Full\nGeoViewpoint { description \"Geo\" geoOrigin GeoOrigin { geoSystem [ \"GD\" \"WE\" ] geoCoords 10 20 0 rotateYUp TRUE } geoSystem [ \"GD\" \"WE\" ] position 10.5 20.5 5000 orientation 0 1 0 0.3 centerOfRotation 10 20 0 }\nShape { geometry Box { } }\n",
+        );
+
+        assert!(origin.starts_with("GeoViewpoint {\n  geoOrigin GeoOrigin {\n    geoCoords 10 20 0\n    rotateYUp TRUE\n  }\n  position 10.5 20.5 4999.99999999907\n  orientation -0.0244308583484375 0.999170532681367 -0.0325788241285392 0.301799429181076\n  centerOfRotation 10 20 0\n}\n"), "{origin}");
+
+        // The text is in the encoding the scene was parsed from.
+        assert_eq!(
+            text(
+                "enc.x3d",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<X3D profile=\"Full\" version=\"4.0\"><Scene><Viewpoint DEF=\"G\" description=\"G\" position=\"1 2 10\" orientation=\"0 1 0 0.5\" centerOfRotation=\"0 1 0\" fieldOfView=\"0.6\"/><Shape><Box/></Shape></Scene></X3D>"
+            ),
+            "<Viewpoint\n    position='1 2 10'\n    orientation='0 0.999999999999999 0 0.5'\n    centerOfRotation='0 1 0'\n    fieldOfView='0.6'/>\n"
+        );
+    });
+}
+
 #[test]
 fn shift_f8_copies_the_viewpoint_as_text() {
     big(|| {
