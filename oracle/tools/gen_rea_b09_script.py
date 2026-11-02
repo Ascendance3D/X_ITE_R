@@ -879,7 +879,7 @@ def _():
 
 
 # The order Scripts initialize in, unsorted, for the URLs FileLoader.loadDocumentAsync handles before its first await: Script URLs
-# and (dataAsString) data URLs that are not base64. scr-url-order-open (documented open) also has the candidates that fail or need
+# and (dataAsString) data URLs that are not base64. scr-url-order-open (decided in ADR 0007, issue #54: X_ITE's frame and order vary from run to run, so it has no baseline) also has the candidates that fail or need
 # a fetch: Chrome's microtask and task order for those (a rejected callback's hops, a base64 data URL fetched after files).
 @custom("scr-url-order-sync")
 def _():
@@ -897,6 +897,15 @@ def _():
 @custom("scr-url-order-open")
 def _():
     return url_world("scr url order", (), False)
+
+
+# The frame a fetched candidate (a file, a base64 data URL) completes in, one frame at a time: the reporter ticks every frame (the
+# worlds above tick every third), and the candidates that need no fetch (U03, U04, U12) are the reference points. Issue #54.
+@custom("scr-url-fetch-frame")
+def _():
+    keep = ("U03", "U04", "U05", "U06", "U08", "U09", "U12", "U16")
+    skip = tuple(n for n, _, _ in URL_CASES if n not in keep)
+    return url_world("scr url fetch frame", skip, False).replace("cycleInterval 0.05", "cycleInterval 0.016666666666666666")
 
 
 
