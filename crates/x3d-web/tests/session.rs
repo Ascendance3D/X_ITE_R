@@ -1670,6 +1670,49 @@ fn a_callback_in_the_route_chain_sees_and_makes_writes_in_order() {
     assert_eq!(s.take_field_changes(), []);
 }
 
+/// A callback in the route chain changes the root nodes (issue #202): the world holds the list at once, a node that is not in
+/// the world is refused with nothing changed, and the change sends no event inside the chain.
+#[test]
+fn a_callback_in_the_route_chain_changes_the_root_nodes() {
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    let mut s = load(CHAINED).unwrap();
+    let t = s.named_node("T").unwrap();
+    let t2 = s.named_node("T2").unwrap();
+    let results: Rc<RefCell<Vec<Result<(), String>>>> = Rc::default();
+    let out = results.clone();
+
+    s.observe_field(t, "translation", true).unwrap();
+    s.set_console_sink(Some(Box::new(|_| {})));
+    s.set_page_event_sink(Some(Box::new(move |rt, k, _| {
+        if k.0 != t {
+            return false;
+        }
+
+        x3d_web::chain::enter(rt, 11, || {
+            let run = |list| {
+                x3d_web::chain::with_runtime(11, |rt| x3d_web::chain::set_root_nodes(rt, list))
+                    .unwrap()
+            };
+
+            out.borrow_mut().push(run(vec![Some(t2)]));
+            out.borrow_mut().push(run(vec![Some(t2), Some(9999)]));
+        });
+        false
+    })));
+
+    s.set_field_data(t, "translation", &vec3(1.0, 0.0, 0.0))
+        .unwrap();
+    s.step(NOW + 0.1);
+
+    let results = results.borrow();
+
+    assert_eq!(results[0], Ok(()));
+    assert!(results[1].as_ref().unwrap_err().contains("9999"));
+    assert_eq!(s.root_nodes(), [Some(t2)]);
+}
+
 /// A sink that answers `true` (a callback threw) stops the event processing for good, as `halt_events`.
 #[test]
 fn a_callback_that_throws_in_the_route_chain_halts_the_events() {
