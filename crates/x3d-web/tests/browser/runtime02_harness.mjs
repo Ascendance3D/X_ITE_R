@@ -28,6 +28,7 @@ import { CASE_GROUPS as FIELDS02_GROUPS } from "./fields02_case.mjs";
 import { CASE_GROUPS as SCENETEXT01_GROUPS } from "./scenetext01_case.mjs";
 import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
+import { CASE_GROUPS as FIELDS05_GROUPS } from "./fields05_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
@@ -85,6 +86,7 @@ const SUITES = {
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   fields05: { dir: process .env .XR_FIELDS05_BASELINE ?? join (REPO, "oracle/web-browser-fields-05-baseline"), file: "fields05-baseline.json", groups: FIELDS05_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
@@ -673,6 +675,7 @@ const GROUP_FILES = {
    sceneTextInitial: "scenetext01.test.mjs",
    nodeOwnership: "fields03.test.mjs",
    fieldCascade: "fields04.test.mjs",
+   protoDeclarations: "fields05.test.mjs",
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
@@ -708,7 +711,7 @@ const withoutDetail = value =>
 };
 
 // The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
-export function referenceCases (file)
+export function referenceCases (file, { skip = false } = { })
 {
    const groups = Object .entries (CASE_GROUPS) .filter (([ groupName ]) => GROUP_FILES [groupName] === file);
 
@@ -739,7 +742,7 @@ export function referenceCases (file)
       if (!cases .length)
          continue;
 
-      describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, () =>
+      describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, { skip }, () =>
       {
          for (const [ name, run ] of cases)
          {

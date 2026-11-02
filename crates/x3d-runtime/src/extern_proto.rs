@@ -229,7 +229,7 @@ impl Runtime {
 
     /// X3DUrlObject.requestUnload (`load` became FALSE). X3DExternProtoDeclaration has no
     /// `unloadData`: the PROTO and the instances' bodies stay.
-    fn extern_request_unload(&mut self, e: ExternId) {
+    pub(crate) fn extern_request_unload(&mut self, e: ExternId) {
         if matches!(
             self.extern_load_state(e),
             LoadState::NotStarted | LoadState::Failed
