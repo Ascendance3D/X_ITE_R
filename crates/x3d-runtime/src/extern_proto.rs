@@ -1330,15 +1330,59 @@ impl Runtime {
     /// X3DBaseNode.addUserDefinedField on a PROTO declaration: a field of the same name goes first,
     /// the new one comes last.
     pub fn proto_add_user_field(&mut self, p: ProtoId, field: Field) {
+        let old = self.proto_field_names(p);
         let d = &mut self.scene.protos[p];
 
         d.fields.retain(|f| f.name != field.name);
         d.fields.push(field);
+        self.remap_proto_references(p, &old);
     }
 
     /// X3DBaseNode.removeUserDefinedField on a PROTO declaration (nothing when it has no such field).
     pub fn proto_remove_user_field(&mut self, p: ProtoId, name: &str) {
+        let old = self.proto_field_names(p);
+
         self.scene.protos[p].fields.retain(|f| f.name != name);
+        self.remap_proto_references(p, &old);
+    }
+
+    fn proto_field_names(&self, p: ProtoId) -> Vec<String> {
+        self.scene.protos[p]
+            .fields
+            .iter()
+            .map(|f| f.name.clone())
+            .collect()
+    }
+
+    /// The IS references of the body fields name interface fields by index: after the interface changed they follow
+    /// the field of the same name, and a reference to a field that is gone ends.
+    fn remap_proto_references(&mut self, p: ProtoId, old: &[String]) {
+        let new = self.proto_field_names(p);
+
+        for node in &mut self.scene.nodes {
+            for f in node
+                .fields
+                .iter_mut()
+                .chain(node.user_fields.iter_mut())
+                .chain(node.private_fields.iter_mut())
+            {
+                f.references.retain_mut(|r| {
+                    if r.proto != p {
+                        return true;
+                    }
+
+                    let Some(index) = old
+                        .get(r.index)
+                        .and_then(|name| new.iter().position(|n| n == name))
+                    else {
+                        return false;
+                    };
+
+                    r.index = index;
+                    true
+                });
+            }
+        }
     }
 
     /// The routes that end (`true`) or start (`false`) at a field of `inst`, in the order of their contexts.

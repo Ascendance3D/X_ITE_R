@@ -178,6 +178,34 @@ const pageError = error => error instanceof Error && error .constructor === Erro
 const FIELDS      = Symbol ("fields");      // field name → { field, data }
 const NAMES       = Symbol ("names");       // the names of the node's fields
 const DEFINITIONS = Symbol ("definitions"); // its FieldDefinitionArray
+const EPOCH       = Symbol ("epoch");       // the interfaceEpoch its field names were read in
+
+// A PROTO declaration whose interface changes changes the fields of its instances, in the call (updateInstances) or in a
+// later frame (requestUpdateInstances). Once a page has used a declaration, every frame and every such call starts a new
+// epoch, and a node reads its field names again the first time it is used in one.
+let interfaceEpoch = 0;
+let declarationsUsed = false;
+
+function checkInterface (ref, engine)
+{
+   if (ref [EPOCH] === interfaceEpoch)
+      return;
+
+   ref [EPOCH] = interfaceEpoch;
+
+   if (!ref [NAMES])
+      return;
+
+   const h     = ref [_node];
+   const names = Array .from (engine .fieldNames (h .scene, h .id));
+
+   if (names .length === ref [NAMES] .size && names .every ((name, i) => name === Array .from (ref [NAMES]) [i]))
+      return;
+
+   ref [NAMES]       = undefined;
+   ref [DEFINITIONS] = undefined;
+   ref [FIELDS] .clear ();
+}
 const USER_DATA   = Symbol ("userData");
 
 // The X3DNodeRefs of a browser: scene id → { generation, refs: node id → X3DNodeRef }.
@@ -245,6 +273,8 @@ Object .assign (Object .setPrototypeOf (X3DNodeRef .prototype, X3DChildObject .p
    getFieldDefinitions ()
    {
       const h = this [_node];
+
+      checkInterface (this, engineOf (h));
 
       return this [DEFINITIONS] ??= new FieldDefinitionArray (Array .from (engineOf (h) .fieldDefinitions (h .scene, h .id),
          ([ name, accessType, dataType, value ]) => value === undefined
@@ -439,6 +469,8 @@ function attachedField (ref, name)
    // X_ITE's SFNode proxy asks for a field first for every name, its own methods included: only a field name or the
    // `set_` or `_changed` name of one goes to the engine, which resolves those names as X3DBaseNode.getField does.
    // Both names give the same field object.
+   checkInterface (ref, engine);
+
    ref [NAMES] ??= new Set (engine .fieldNames (h .scene, h .id));
 
    if (!ref [NAMES] .has (name))
@@ -690,6 +722,9 @@ function syncScene (browser, scene)
 function processFieldEvents (browser, scene)
 {
    retireReleased (browser, scene);
+
+   if (declarationsUsed)
+      ++ interfaceEpoch;
 
    const table = nodeRefTables .get (browser) ?.get (scene);
 
@@ -1380,6 +1415,8 @@ class X3DInfoArray
       return new (this .constructor) (array);
    }
 
+   getTypeName () { return this .constructor .typeName ?? this .constructor .name; }
+
    get [Symbol .toStringTag] () { return this .getTypeName (); }
 }
 
@@ -1746,6 +1783,467 @@ for (const type of [ NamedNodesArray, ExportedNodesArray, ImportedNodesArray ])
    Object .defineProperty (type, "typeName", { value: type .name, enumerable: true });
 }
 
+// --- PROTO and EXTERNPROTO declarations -----------------------------------------------------------------------------------
+//
+// Prototype/X3DProtoDeclaration.js, X3DExternProtoDeclaration.js, X3DProtoDeclarationNode.js, ProtoDeclarationArray.js and
+// ExternProtoDeclarationArray.js of X_ITE, and the declaration members of X3DExecutionContext.js (issue #137). The engine owns
+// the declarations; a declaration object stands for one of them by its index in the scene's table (declIds, declInfo, declOp)
+// and is made once per (scene, kind, index), so `scene .protos .get ("A") === scene .protos .get ("A")`. A declaration that
+// is removed from its scene stays usable, as in X_ITE. After the scene's world is replaced every use throws the world-ownership
+// error of the node handles.
+//
+// Kept differences (API.md): the appinfo and documentation of a declaration are kept by the page and put into its text forms
+// here; the field objects of getField () and getUserDefinedFields () are copies (writing one does not change the declaration);
+// the body (getBody ()) is a read-only view; addUserDefinedField on an EXTERNPROTO does nothing.
+
+const declCache = new WeakMap (); // X3DScene → Map ("p" or "e" + index → declaration object)
+
+const xmlEscape = text => String (text) .replace (/&/g, "&amp;") .replace (/</g, "&lt;") .replace (/>/g, "&gt;") .replace (/"/g, "&quot;") .replace (/'/g, "&apos;");
+
+class X3DProtoDeclarationNode
+{
+   #scene;
+   #extern;
+   #index;
+   #appInfo = "";
+   #documentation = "";
+   #definitions = null;
+   #definitionsKey = null;
+   #userFields = null;
+   #fieldObjects = new Map ();
+
+   constructor (scene, extern, index)
+   {
+      declarationsUsed = true;
+
+      this .#scene  = scene;
+      this .#extern = extern;
+      this .#index  = index;
+   }
+
+   get [_node] () { return this .#scene [_node]; }
+
+   get index ()  { return this .#index; }
+   get scene ()  { return this .#scene; }
+
+   // The engine's description of the declaration.
+   info ()
+   {
+      const handle = this .#scene [_node];
+      const info   = engineOf (handle) .declInfo (handle .scene, this .#extern, this .#index);
+
+      if (info === undefined)
+         throw new Error ("X_ITE_R: the declaration is no longer known to its world.");
+
+      return info;
+   }
+
+   engine () { return engineOf (this .#scene [_node]); }
+
+   get isExternProto ()  { return this .#extern; }
+   get name ()           { return this .info () .name; }
+   get fields ()         { return this .getFieldDefinitions (); }
+   get appInfo ()        { return this .getAppInfo (); }
+   set appInfo (value)   { this .setAppInfo (value); }
+   get documentation ()  { return this .getDocumentation (); }
+   set documentation (value) { this .setDocumentation (value); }
+
+   getName ()               { return this .name; }
+   getBrowser ()            { return this .#scene .getBrowser (); }
+   getExecutionContext ()   { return this .#scene; }
+   canUserDefinedFields ()  { return true; }
+   getCloneCount ()         { return 0; }
+
+   getAppInfo ()            { return this .#appInfo; }
+   setAppInfo (value)       { this .#appInfo = String (value); }
+   getDocumentation ()      { return this .#documentation; }
+   setDocumentation (value) { this .#documentation = String (value); }
+
+   // The class's definitions (`metadata`), then the declared fields, rebuilt only when the interface changed.
+   getFieldDefinitions ()
+   {
+      const info = this .info ();
+      const key  = JSON .stringify (info .fields);
+
+      if (key !== this .#definitionsKey)
+      {
+         const handle = this .#scene [_node];
+
+         this .#definitionsKey = key;
+         this .#fieldObjects .clear ();
+
+         const fields = info .fields .map (([ name, accessType, typeName, value ]) =>
+         {
+            const field = fieldFromData (typeName, value, handle);
+
+            field .setName (name);
+            field .setAccessType (accessType);
+            this .#fieldObjects .set (name, field);
+
+            return field;
+         });
+
+         this .#userFields  = fields .slice (1);
+         this .#definitions = new FieldDefinitionArray (info .fields .map (([ name, accessType ], i) => new X3DFieldDefinition (accessType, name, fields [i])));
+      }
+
+      return this .#definitions;
+   }
+
+   // The declared fields (not `metadata`) as field objects, one per name until the interface changes.
+   getUserDefinedFields ()
+   {
+      this .getFieldDefinitions ();
+
+      return this .#userFields;
+   }
+
+   getField (name)
+   {
+      name = String (name);
+
+      this .getFieldDefinitions ();
+
+      const field = this .#fieldObjects .get (name);
+
+      if (field)
+         return field;
+
+      throw new Error (`Unknown field '${name}' in node class ${this .getTypeName ()}.`);
+   }
+
+   getFieldDefinition (name)
+   {
+      const definition = this .getFieldDefinitions () .get (String (name));
+
+      if (definition)
+         return definition;
+
+      throw new Error (`Unknown field '${name}' in node class ${this .getTypeName ()}.`);
+   }
+
+   // createInstance (executionContext): an instance in the declaration's context, not part of the scene.
+   createInstance (executionContext)
+   {
+      executionContext .getBrowser ();
+
+      const handle = this .#scene [_node];
+      const id     = engineOf (handle) .declNewInstance (handle .scene, this .#extern, this .#index);
+
+      return nodeObject (handle, id);
+   }
+
+   newInstance () { return this .createInstance (this .#scene); }
+
+   requestUpdateInstances () { this .#update (false); }
+   updateInstances ()        { this .#update (true); }
+
+   #update (now)
+   {
+      const handle = this .#scene [_node];
+
+      try { engineOf (handle) .declUpdateInstances (handle .scene, this .#extern, this .#index, now); }
+      catch (error) { throw engineError (error); }
+
+      ++ interfaceEpoch;
+   }
+
+   // X3DBaseNode.addUserDefinedField (accessType, name, field) and removeUserDefinedField (name) of a PROTO.
+   addUserDefinedField (accessType, name, field)
+   {
+      name = String (name);
+
+      field .setTainted (true);
+
+      const handle = this .#scene [_node];
+
+      if (this .#extern)
+         return;
+
+      try { engineOf (handle) .declUserField (handle .scene, this .#index, name, accessType, field .getTypeName (), fieldData (field, handle)); }
+      catch (error) { throw engineError (error); }
+
+      this .#update (true);
+   }
+
+   removeUserDefinedField (name)
+   {
+      const handle = this .#scene [_node];
+
+      if (this .#extern)
+         return;
+
+      try { engineOf (handle) .declUserField (handle .scene, this .#index, String (name), 0, "", null); }
+      catch (error) { throw engineError (error); }
+   }
+
+   #text (format)
+   {
+      const handle = this .#scene [_node];
+      let text;
+
+      try { text = engineOf (handle) .declString (handle .scene, this .#extern, this .#index, format); }
+      catch (error) { throw engineError (error); }
+
+      const appInfo       = this .getAppInfo ();
+      const documentation = this .getDocumentation ();
+
+      // The engine knows no appinfo or documentation: they go after the name of the declaration.
+      if (format === "xml")
+      {
+         let attributes = "";
+
+         if (appInfo)
+            attributes += ` appinfo='${xmlEscape (appInfo)}'`;
+
+         if (documentation)
+            attributes += ` documentation='${xmlEscape (documentation)}'`;
+
+         const tag = this .#extern ? "ExternProtoDeclare" : "ProtoDeclare";
+
+         if (attributes)
+            text = text .replace (new RegExp (`^(<${tag} name='[^']*')`), `$1${attributes}`);
+      }
+      else if (format === "json")
+      {
+         let lines = "";
+
+         if (appInfo)
+            lines += `,\n    "@appinfo": ${JSON .stringify (appInfo)}`;
+
+         if (documentation)
+            lines += `,\n    "@documentation": ${JSON .stringify (documentation)}`;
+
+         if (lines)
+            text = text .replace (/^(\n\{ "[A-Za-z]+":\n  \{\n    "@name": "(?:[^"\\]|\\.)*")/, `$1${lines}`);
+      }
+
+      return text;
+   }
+
+   toVRMLString () { return this .#text ("vrml"); }
+   toXMLString ()  { return this .#text ("xml"); }
+   toJSONString () { return this .#text ("json"); }
+}
+
+// The body of a PROTO: a read-only X3DExecutionContext view over the engine's context of the declaration.
+class X3DExecutionContext
+{
+   #declaration;
+   #ctx;
+   #rootNodes = null;
+   #namedNodes = null;
+
+   constructor (declaration, ctx)
+   {
+      this .#declaration = declaration;
+      this .#ctx         = ctx;
+   }
+
+   #handle () { return this .#declaration .scene [_node]; }
+
+   getTypeName ()         { return "X3DExecutionContext"; }
+   getOuterNode ()        { return this .#declaration; }
+   getLocalScene ()       { return this .#declaration .scene; }
+   getExecutionContext () { return this .#declaration .scene; }
+   getBrowser ()          { return this .#declaration .scene .getBrowser (); }
+   get isScene ()         { return false; }
+
+   get rootNodes ()
+   {
+      const handle = this .#handle ();
+      const ids    = engineOf (handle) .ctxRootNodes (handle .scene, this .#ctx);
+      const nodes  = Array .from (ids, id => id === 0xffffffff ? null : nodeObject (handle, id));
+
+      if (!this .#rootNodes)
+         this .#rootNodes = new Fields .MFNode ();
+
+      this .#rootNodes .assign (new Fields .MFNode (... nodes));
+
+      return this .#rootNodes;
+   }
+
+   getRootNodes () { return this .rootNodes; }
+
+   #named ()
+   {
+      const handle = this .#handle ();
+
+      return Array .from (engineOf (handle) .ctxNamedNodes (handle .scene, this .#ctx), id => nodeObject (handle, id));
+   }
+
+   get namedNodes () { return this .getNamedNodes (); }
+
+   getNamedNodes ()
+   {
+      return this .#namedNodes ??= new NamedNodesArray ([ ], () => this .#named ());
+   }
+
+   getNamedNode (name)
+   {
+      name = String (name);
+
+      const node = this .#named () .find (node => node .getNodeName () === name);
+
+      if (node)
+         return node;
+
+      throw new Error (`Unknown named node '${name}'.`);
+   }
+
+   toVRMLString ()  { return this .#print ("vrml"); }
+   toXMLString ()   { return this .#print ("xml"); }
+   toJSONString ()  { return this .#print ("json"); }
+
+   #print (format)
+   {
+      const handle = this .#handle ();
+
+      const text = engineOf (handle) .ctxString (handle .scene, this .#ctx, format);
+
+      // The engine prints a context as a scene: the file header (identifier, PROFILE, COMPONENT, UNIT, META) is not the body's.
+      return format === "vrml" ? text .replace (/^(?:(?:#X3D|PROFILE|COMPONENT|UNIT|META)[^\n]*\n|\n)*/, "") : text;
+   }
+}
+
+for (const key of Object .getOwnPropertyNames (X3DExecutionContext .prototype))
+   Object .defineProperty (X3DExecutionContext .prototype, key, { enumerable: false });
+
+class X3DProtoDeclaration extends X3DProtoDeclarationNode
+{
+   #body = null;
+
+   constructor (scene, index) { super (scene, false, index); }
+
+   getTypeName ()         { return "X3DProtoDeclaration"; }
+   getType ()             { return [ X3DConstants .X3DProtoDeclarationNode, X3DConstants .X3DProtoDeclaration ]; }
+   getProtoDeclaration () { return this; }
+
+   getBody ()
+   {
+      const handle = this [_node];
+      const ctx    = engineOf (handle) .declBody (handle .scene, this .index);
+
+      return this .#body ??= new X3DExecutionContext (this, ctx);
+   }
+}
+
+class X3DExternProtoDeclaration extends X3DProtoDeclarationNode
+{
+   constructor (scene, index) { super (scene, true, index); }
+
+   getTypeName () { return "X3DExternProtoDeclaration"; }
+   getType ()     { return [ X3DConstants .X3DProtoDeclarationNode, X3DConstants .X3DUrlObject, X3DConstants .X3DExternProtoDeclaration ]; }
+
+   get urls ()      { return new Fields .MFString (... this .info () .urls); }
+   get loadState () { return X3DConstants [this .info () .loadState]; }
+
+   getProtoDeclaration ()
+   {
+      const loaded = this .info () .loaded;
+
+      return loaded === undefined ? undefined : declarationOf (this .scene, false, loaded);
+   }
+
+   getAppInfo ()            { return this .getProtoDeclaration () ?.getAppInfo () || super .getAppInfo (); }
+   getDocumentation ()      { return this .getProtoDeclaration () ?.getDocumentation () || super .getDocumentation (); }
+
+   setAppInfo (value)       { const proto = this .getProtoDeclaration (); if (proto) proto .setAppInfo (value); else super .setAppInfo (value); }
+   setDocumentation (value) { const proto = this .getProtoDeclaration (); if (proto) proto .setDocumentation (value); else super .setDocumentation (value); }
+
+   // loadNow () loads again (the state is IN_PROGRESS at once); unloadNow () takes the file away.
+   async loadNow () { this .#op ("loadNow"); }
+   unloadNow ()     { this .#op ("unloadNow"); }
+
+   #op (what)
+   {
+      const handle = this [_node];
+
+      engineOf (handle) .externUrlOp (handle .scene, this .index, what, [ ], 0);
+   }
+}
+
+for (const type of [ X3DProtoDeclarationNode, X3DProtoDeclaration, X3DExternProtoDeclaration ])
+{
+   for (const key of Object .getOwnPropertyNames (type .prototype))
+   {
+      if (key !== "constructor" && !/^(isExternProto|name|fields|appInfo|documentation|urls|loadState)$/ .test (key))
+         Object .defineProperty (type .prototype, key, { enumerable: false });
+   }
+}
+
+Object .defineProperty (X3DProtoDeclaration, "typeName", { value: "X3DProtoDeclaration", enumerable: true });
+Object .defineProperty (X3DExternProtoDeclaration, "typeName", { value: "X3DExternProtoDeclaration", enumerable: true });
+
+// The declaration object of (scene, kind, index), made once.
+function declarationOf (scene, extern, index)
+{
+   let cache = declCache .get (scene);
+
+   if (!cache)
+      declCache .set (scene, cache = new Map ());
+
+   const key = `${extern ? "e" : "p"}${index}`;
+
+   let declaration = cache .get (key);
+
+   if (!declaration)
+      cache .set (key, declaration = extern ? new X3DExternProtoDeclaration (scene, index) : new X3DProtoDeclaration (scene, index));
+
+   return declaration;
+}
+
+// The live arrays of a scene's declarations, keyed by the name the declaration has now.
+class ProtoDeclarationArray extends X3DInfoArray
+{
+   constructor (values = [ ], list = null)
+   {
+      const array = super ([ ], X3DProtoDeclaration);
+
+      if (list)
+         liveDeclarationArray (array, list);
+
+      return array;
+   }
+
+}
+
+class ExternProtoDeclarationArray extends X3DInfoArray
+{
+   constructor (values = [ ], list = null)
+   {
+      const array = super ([ ], X3DExternProtoDeclaration);
+
+      if (list)
+         liveDeclarationArray (array, list);
+
+      return array;
+   }
+
+}
+
+function liveDeclarationArray (array, list)
+{
+   const read = () =>
+   {
+      const values = list ();
+      const index  = new Map ();
+
+      for (const value of values)
+         index .set (value .name, value);
+
+      return [ values, index ];
+   };
+
+   Object .defineProperty (array, _infoArray, { get: () => read () [0], set () { } });
+   Object .defineProperty (array, _infoIndex, { get: () => read () [1], set () { } });
+
+   return array;
+}
+
+for (const type of [ ProtoDeclarationArray, ExternProtoDeclarationArray ])
+   Object .defineProperty (type, "typeName", { value: type .name, enumerable: true });
+
 class X3DScene
 {
    #browser;
@@ -1766,6 +2264,76 @@ class X3DScene
    #engine ()
    {
       return this .#handle .scene === null ? null : engineOf (this .#handle);
+   }
+
+   getBrowser () { return this .#browser; }
+
+   // X3DExecutionContext: the PROTO and EXTERNPROTO declarations (issue #137), live arrays that hold one object per declaration.
+   #protos       = null;
+   #externprotos = null;
+
+   #declarations (extern)
+   {
+      const handle = this .#handle;
+
+      return handle .scene === null ? [ ] : Array .from (engineOf (handle) .declIds (handle .scene, extern), index => declarationOf (this, extern, index));
+   }
+
+   get protos ()       { return this .#protos ??= new ProtoDeclarationArray ([ ], () => this .#declarations (false)); }
+   get externprotos () { return this .#externprotos ??= new ExternProtoDeclarationArray ([ ], () => this .#declarations (true)); }
+
+   getProtoDeclarations ()       { return this .protos; }
+   getExternProtoDeclarations () { return this .externprotos; }
+
+   #declarationOf (extern, name)
+   {
+      const engine = this .#engine ();
+
+      if (!engine)
+         throw new Error (`${extern ? "Extern proto" : "Proto"} declaration '${name}' not found.`);
+
+      try { return declarationOf (this, extern, engine .declGet (this .#handle .scene, extern, String (name))); }
+      catch (error) { throw engineError (error); }
+   }
+
+   getProtoDeclaration (name)       { return this .#declarationOf (false, name); }
+   getExternProtoDeclaration (name) { return this .#declarationOf (true, name); }
+
+   // The index a declaration argument stands for: -1 for something that is no declaration of that kind, -2 for one of another scene.
+   #declOp (extern, op, name, declaration)
+   {
+      const type   = extern ? X3DExternProtoDeclaration : X3DProtoDeclaration;
+      const engine = this .#engine ();
+      const decl   = declaration instanceof type ? (declaration .scene === this && declaration .scene [_node] .generation === this .#handle .generation ? declaration .index : -2) : -1;
+
+      if (!engine)
+         throw new Error ("X_ITE_R: the browser is not ready; await browser .ready () first.");
+
+      try { engine .declOp (this .#handle .scene, extern, op, String (name), decl); }
+      catch (error) { throw engineError (error); }
+      finally
+      {
+         // The warnings of an add or update (a name that a built-in node has, an EXTERNPROTO it overrides).
+         for (const line of engine .takeLog (this .#handle .scene))
+            printLogLine (line);
+      }
+   }
+
+   addProtoDeclaration (name, proto)             { this .#declOp (false, "add", name, proto); }
+   updateProtoDeclaration (name, proto)          { this .#declOp (false, "update", name, proto); }
+   removeProtoDeclaration (name)                 { this .#declOp (false, "remove", name, undefined); }
+   addExternProtoDeclaration (name, externproto)    { this .#declOp (true, "add", name, externproto); }
+   updateExternProtoDeclaration (name, externproto) { this .#declOp (true, "update", name, externproto); }
+   removeExternProtoDeclaration (name)              { this .#declOp (true, "remove", name, undefined); }
+
+   getUniqueProtoName (name = "")       { return this .#uniqueName (false, name); }
+   getUniqueExternProtoName (name = "") { return this .#uniqueName (true, name); }
+
+   #uniqueName (extern, name)
+   {
+      const engine = this .#engine ();
+
+      return engine ? engine .declUniqueName (this .#handle .scene, extern, String (name)) : String (name);
    }
 
    get worldURL () { return this .#engine () ?.worldURL (this .#handle .scene) ?? this .#browser .baseURL; }
@@ -6542,6 +7110,10 @@ const X3D = Object .assign (function (onfulfilled, onrejected)
    X3DArrayField,
    X3DRoute,
    RouteArray,
+   X3DProtoDeclaration,
+   X3DExternProtoDeclaration,
+   ProtoDeclarationArray,
+   ExternProtoDeclarationArray,
    ComponentInfo,
    ComponentInfoArray,
    ProfileInfo,
