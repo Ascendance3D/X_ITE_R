@@ -1,0 +1,1410 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "domMutation.attributes": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "1 2 3",
+       "diffuse": "1 0 0",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "translation",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "1 0 0",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "upperName",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "1 0 0",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "color",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 1 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 1 0",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "colorLower",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "bad",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "short",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "unknown",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "outputOnly",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "remove",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 7 8 9\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "7 8 9",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "same",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "2 2 2"
+      }
+     }
+    ],
+    [
+     "many",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box {\n      size 3 3 3\n    }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "3 3 3"
+      }
+     }
+    ],
+    [
+     "defChange",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box {\n      size 3 3 3\n    }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "3 3 3"
+      }
+     }
+    ],
+    [
+     "useChange",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box {\n      size 3 3 3\n    }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "3 3 3"
+      }
+     }
+    ],
+    [
+     "container",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box {\n      size 3 3 3\n    }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "3 3 3"
+      }
+     }
+    ],
+    [
+     "outside",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 4 5 6\n  bboxCenter 1 1 1\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 0 0 1\n      }\n    }\n    geometry DEF B Box {\n      size 3 3 3\n    }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "4 5 6",
+       "diffuse": "0 0 1",
+       "size": "3 3 3"
+      }
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Group."
+   ]
+  },
+  "domMutation.adding": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "intoGroup",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "intoScene",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "tree",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group { }\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "upper",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children DEF Up Transform {\n    translation 1 1 1\n    children Shape {\n      geometry Box { }\n    }\n  }\n}\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "useAdded",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "unknownNode",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "text",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "toSceneNotShape",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "outsideScene",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n\nDEF Out Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up",
+       "Out"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "newScene",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n\nDEF Out Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up",
+       "Out"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "inDiv",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n\nDEF Out Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up",
+       "Out"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "head",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n\nDEF Out Group { }\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "B2",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up",
+       "Out"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "moved",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children [\n    DEF S Shape {\n      appearance Appearance {\n        material DEF M Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry DEF B Box { }\n    }\n    DEF Deep Group {\n      children DEF Deeper Transform {\n        children Shape {\n          geometry Cylinder { }\n        }\n      }\n    }\n  ]\n}\n\nDEF G Group {\n  children [\n    DEF Up Transform {\n      translation 1 1 1\n      children Shape {\n        geometry Box { }\n      }\n    }\n    USE S\n  ]\n}\n\nDEF Late Group { }\n\nDEF Out Group { }\n\nDEF B2 Box {\n  size 4 4 4\n}\n",
+      "roots": [
+       "Transform",
+       "Group",
+       "Group",
+       "Group",
+       "Box"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G",
+       "Late",
+       "Deep",
+       "Deeper",
+       "Up",
+       "Out",
+       "B2"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Group.",
+    "warning: XML Parser: Container field for node Box not found. Unknown field 'geometry' in node class Group.",
+    "warning: XML Parser: Container field for node Cone not found. Unknown field 'geometry' in node class Group.",
+    "error: Error: Unknown node type 'NOTHING'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "warning: XML Parser: Container field for node Material not found. Unknown field 'material' in node class Group.",
+    "error: Error: Unknown node type 'SCENE'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "error: Error: Unknown node type 'DIV'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "error: Error: Unknown node type 'META'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  "domMutation.removing": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n  children DEF S Shape {\n    appearance Appearance {\n      material DEF M Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry DEF B Box { }\n  }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "S",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "1 2 3"
+      }
+     }
+    ],
+    [
+     "shape",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Transform",
+       "Group"
+      ],
+      "named": [
+       "T",
+       "M",
+       "B",
+       "G"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "1 2 3"
+      }
+     }
+    ],
+    [
+     "group",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T Transform {\n  translation 1 2 3\n}\n",
+      "roots": [
+       "Transform"
+      ],
+      "named": [
+       "T",
+       "M",
+       "B"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "1 2 3"
+      }
+     }
+    ],
+    [
+     "transform",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+      "roots": [],
+      "named": [
+       "M",
+       "B"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "Error: Named node 'T' not found."
+      }
+     }
+    ],
+    [
+     "all",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+      "roots": [],
+      "named": [
+       "M",
+       "B"
+      ],
+      "routes": [],
+      "fields": {
+       "translation": "Error: Named node 'T' not found."
+      }
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Group."
+   ]
+  },
+  "domMutation.routes": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 2\n}\n\nROUTE Clock.fraction_changed TO Move.set_fraction\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Clock.fraction_changed -> Move.set_fraction"
+      ],
+      "fields": {
+       "amount": "2"
+      }
+     }
+    ],
+    [
+     "addRoute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 2\n}\n\nROUTE Clock.fraction_changed TO Move.set_fraction\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Clock.fraction_changed -> Move.set_fraction",
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "2"
+      }
+     }
+    ],
+    [
+     "badRoute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 2\n}\n\nROUTE Clock.fraction_changed TO Move.set_fraction\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Clock.fraction_changed -> Move.set_fraction",
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "2"
+      }
+     }
+    ],
+    [
+     "removeRoute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 2\n}\n\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "2"
+      }
+     }
+    ],
+    [
+     "fieldValue",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 5\n}\n\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "5"
+      }
+     }
+    ],
+    [
+     "addFieldValue",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 7\n}\n\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I"
+      ],
+      "routes": [
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "7"
+      }
+     }
+    ],
+    [
+     "addInstance",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 7\n}\n\nDEF I2 P { }\n\nROUTE Move.value_changed TO Box.set_translation\n",
+      "roots": [
+       "TimeSensor",
+       "PositionInterpolator",
+       "Transform",
+       "P",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Move",
+       "Box",
+       "I",
+       "I2"
+      ],
+      "routes": [
+       "Move.value_changed -> Box.set_translation"
+      ],
+      "fields": {
+       "amount": "7"
+      }
+     }
+    ],
+    [
+     "removeNodeWithRoute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Box Transform { }\n\nDEF I P {\n  amount 7\n}\n\nDEF I2 P { }\n",
+      "roots": [
+       "TimeSensor",
+       "Transform",
+       "P",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Box",
+       "I",
+       "I2"
+      ],
+      "routes": [],
+      "fields": {
+       "amount": "7"
+      }
+     }
+    ],
+    [
+     "removeInstance",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat amount 1\n]\n{\n  DEF Inner Group { }\n}\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Box Transform { }\n\nDEF I2 P { }\n",
+      "roots": [
+       "TimeSensor",
+       "Transform",
+       "P"
+      ],
+      "named": [
+       "Clock",
+       "Box",
+       "I2"
+      ],
+      "routes": [],
+      "fields": {
+       "amount": "Error: Named node 'I' not found."
+      }
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Unknown named or imported node 'Nope'.",
+    "error: Error: Unknown named or imported node 'Nope'."
+   ]
+  },
+  "domMutation.declarations": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF G Group { }\n",
+      "roots": [
+       "Group"
+      ],
+      "named": [
+       "G"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "proto",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n",
+      "roots": [
+       "Group"
+      ],
+      "named": [
+       "G"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "instance",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n\nDEF Qi Q { }\n",
+      "roots": [
+       "Group",
+       "Q"
+      ],
+      "named": [
+       "G",
+       "Qi"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "script",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n\nDEF Qi Q { }\n\nDEF Sc Script {\n  inputOutput SFInt32 a 3\n}\n",
+      "roots": [
+       "Group",
+       "Q",
+       "Script"
+      ],
+      "named": [
+       "G",
+       "Qi",
+       "Sc"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "scriptField",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n\nDEF Qi Q { }\n\nDEF Sc Script {\n  inputOutput SFInt32 a 9\n}\n",
+      "roots": [
+       "Group",
+       "Q",
+       "Script"
+      ],
+      "named": [
+       "G",
+       "Qi",
+       "Sc"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "extern",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nEXTERNPROTO Ex [ ]\n[ ]\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n\nDEF Qi Q { }\n\nDEF Sc Script {\n  inputOutput SFInt32 a 9\n}\n",
+      "roots": [
+       "Group",
+       "Q",
+       "Script"
+      ],
+      "named": [
+       "G",
+       "Qi",
+       "Sc"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ],
+    [
+     "removeProto",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nEXTERNPROTO Ex [ ]\n[ ]\n\nPROTO Q [\n  initializeOnly SFBool on TRUE\n]\n{\n  DEF QI Group { }\n}\n\nDEF G Group { }\n\nDEF Qi Q { }\n\nDEF Sc Script {\n  inputOutput SFInt32 a 9\n}\n",
+      "roots": [
+       "Group",
+       "Q",
+       "Script"
+      ],
+      "named": [
+       "G",
+       "Qi",
+       "Sc"
+      ],
+      "routes": [],
+      "fields": {}
+     }
+    ]
+   ],
+   "log": [
+    "warning: XML Parser: Bad ExternProtoDeclare statement. Expected url attribute with value."
+   ]
+  },
+  "domMutation.live": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform { }\n\nDEF B Transform { }\n\nROUTE A.translation_changed TO B.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "B"
+      ],
+      "routes": [
+       "A.translation_changed -> B.set_translation"
+      ],
+      "fields": {
+       "a": "0 0 0",
+       "b": "0 0 0",
+       "c": "Error: Named node 'C' not found.",
+       "cscale": "Error: Named node 'C' not found."
+      }
+     }
+    ],
+    [
+     "attribute",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n}\n\nDEF B Transform {\n  translation 1 2 3\n}\n\nROUTE A.translation_changed TO B.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "B"
+      ],
+      "routes": [
+       "A.translation_changed -> B.set_translation"
+      ],
+      "fields": {
+       "a": "1 2 3",
+       "b": "1 2 3",
+       "c": "Error: Named node 'C' not found.",
+       "cscale": "Error: Named node 'C' not found."
+      }
+     }
+    ],
+    [
+     "add",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 1 2 3\n}\n\nDEF B Transform {\n  translation 1 2 3\n}\n\nDEF C Transform { }\n\nROUTE A.translation_changed TO B.set_translation\nROUTE A.translation_changed TO C.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "B",
+       "C"
+      ],
+      "routes": [
+       "A.translation_changed -> B.set_translation",
+       "A.translation_changed -> C.set_translation"
+      ],
+      "fields": {
+       "a": "1 2 3",
+       "b": "1 2 3",
+       "c": "0 0 0",
+       "cscale": "1 1 1"
+      }
+     }
+    ],
+    [
+     "again",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 4 5 6\n}\n\nDEF B Transform {\n  translation 4 5 6\n}\n\nDEF C Transform {\n  translation 4 5 6\n}\n\nROUTE A.translation_changed TO B.set_translation\nROUTE A.translation_changed TO C.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "B",
+       "C"
+      ],
+      "routes": [
+       "A.translation_changed -> B.set_translation",
+       "A.translation_changed -> C.set_translation"
+      ],
+      "fields": {
+       "a": "4 5 6",
+       "b": "4 5 6",
+       "c": "4 5 6",
+       "cscale": "1 1 1"
+      }
+     }
+    ],
+    [
+     "removeB",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 4 5 6\n}\n\nDEF C Transform {\n  translation 4 5 6\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "C"
+      ],
+      "routes": [
+       "A.translation_changed -> C.set_translation"
+      ],
+      "fields": {
+       "a": "4 5 6",
+       "b": "Error: Named node 'B' not found.",
+       "c": "4 5 6",
+       "cscale": "1 1 1"
+      }
+     }
+    ],
+    [
+     "afterRemove",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 7 8 9\n}\n\nDEF C Transform {\n  translation 7 8 9\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "C"
+      ],
+      "routes": [
+       "A.translation_changed -> C.set_translation"
+      ],
+      "fields": {
+       "a": "7 8 9",
+       "b": "Error: Named node 'B' not found.",
+       "c": "7 8 9",
+       "cscale": "1 1 1"
+      }
+     }
+    ],
+    [
+     "scale",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Transform {\n  translation 7 8 9\n}\n\nDEF C Transform {\n  translation 7 8 9\n  rotation 0 0 1 1\n  scale 2 2 2\n}\n\nROUTE A.translation_changed TO C.set_translation\n",
+      "roots": [
+       "Transform",
+       "Transform"
+      ],
+      "named": [
+       "A",
+       "C"
+      ],
+      "routes": [
+       "A.translation_changed -> C.set_translation"
+      ],
+      "fields": {
+       "a": "7 8 9",
+       "b": "Error: Named node 'B' not found.",
+       "c": "7 8 9",
+       "cscale": "2 2 2"
+      }
+     }
+    ]
+   ],
+   "log": []
+  }
+ }
+}
