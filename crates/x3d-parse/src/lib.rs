@@ -236,7 +236,12 @@ fn golden_gate_input(
         if trimmed.starts_with('<') {
             if let Ok(root) = dom::parse_document(s) {
                 if root.name == "X3D" {
-                    return xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse);
+                    let mut scene =
+                        xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
+
+                    // DOMIntegration shows the element of an Inline's scene (`scene [_x3d]`): the page parses this text.
+                    scene.xml_source = Some(s.to_string());
+                    return Ok(scene);
                 }
 
                 // The same parsed document is SVGParser's input.
