@@ -634,18 +634,6 @@ impl WebBrowser {
         self.retired.len() as u32
     }
 
-    /// Parse the world `data` from `url` (FileLoader) and start its loads: the id of the new scene. The current world
-    /// stays. A world that does not parse is an error.
-    pub fn prepare(&mut self, data: &[u8], url: &str, now: f64) -> Result<u32, JsError> {
-        let cache = FetchCache::new();
-        let fetcher = Box::new(WebFetcher {
-            cache: cache.clone(),
-        });
-        let world = Session::parse(data, url, fetcher).map_err(|e| JsError::new(&e))?;
-
-        Ok(self.add(world, cache, now))
-    }
-
     /// X3DBrowser.loadURL (url) of the page: start the world's FileLoader with the candidates `urls`, resolved against
     /// `base`. The id of the load: [`WebBrowser::load_step`] goes on with it, [`WebBrowser::take_log`] gives its
     /// messages, [`WebBrowser::progress`] waits for its responses and [`WebBrowser::discard`] ends it.
