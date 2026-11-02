@@ -244,7 +244,7 @@ impl<'a> Sg<'a> {
         loop {
             let ctx = self.rt.scene.ctx(c);
 
-            if matches!(ctx.outer, Outer::Inline(_)) {
+            if matches!(ctx.outer, Outer::Inline(_)) && !self.rt.external_scenes.contains(&c) {
                 return true;
             }
 
