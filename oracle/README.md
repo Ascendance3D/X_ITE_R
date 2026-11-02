@@ -1353,3 +1353,7 @@ element and whether the menu is open, for the right button, a left click, a real
   (prepare the worktree as in "Recording from a worktree").
 - `crates/x3d-viewer/tests/rea_b54_script_fetch_frame.rs` checks X_ITE_R against ISO/IEC 19775-1 V4.0 29.2.3 and the recorded envelope;
   the decision is in `docs/adr/0007-script-no-dom.md`.
+
+## Owner decisions batch (issue #68)
+
+`oracle/synthetic-rea-b68-owner/` holds five worlds (BlendedVolumeStyle `ALPHA1`, `ALPHA2` and the CONSTANT twin; ShadedVolumeStyle with a `Material` and with a `PhysicalMaterial`) and `xite-runs.json`, the result of `node oracle/x_ite-shot.mjs oracle/synthetic-rea-b68-owner OUT` run five times against the pinned X_ITE (5 identical): `bl-iso1` and `sh-physicalmaterial` never draw (`TIMEOUT 45s`), `bl-iso2` draws the same picture as `bl-const`. Rust side: `crates/x3d-render/tests/render_b68_owner.rs`. Decisions: `docs/adr/0012-owner-decisions-batch.md`. The shot tool serves only paths under `oracle/`; it needs `oracle/x_ite-pin/node_modules` (a symlink, not committed).

@@ -1,0 +1,7 @@
+#X3D V4.1 utf8
+PROFILE Full
+COMPONENT Texturing3D:2
+COMPONENT VolumeRendering:4
+NavigationInfo { type [ "NONE" ] headlight TRUE }
+Viewpoint { position 0 0 4 }
+VolumeData { dimensions 2 2 2 renderStyle ShadedVolumeStyle { lighting TRUE material PhysicalMaterial { } } voxels PixelTexture3D { image [ 1 2 2 2 40 80 120 160 200 240 90 60 ] } }
