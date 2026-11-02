@@ -604,6 +604,9 @@ impl PointingGpu {
                     fog: None,
                     depth_projection: None,
                     pick_id: Some(s.id),
+                    collision: false,
+                    projection: None,
+                    slot: None,
                 })
                 .collect();
 
