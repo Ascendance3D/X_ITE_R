@@ -276,6 +276,8 @@ impl Session {
             .expect("the empty scene parses");
 
         world.scene.profile = None;
+        // A new X3DScene (createScene, replaceWorld (null)) has the encoding SCRIPTED, as no parser made it.
+        world.scene.encoding = "SCRIPTED".into();
         world
     }
 
@@ -311,8 +313,8 @@ impl Session {
         rt.page_url = world.url.clone();
         // The page calls its field callbacks (X3DField.addFieldCallback) after the frame; the Scripts' run in the cascade.
         rt.page_field_events = Some(vec![]);
-        // X_ITE 16.5.0 does not call a Script's `shutdown` when the world is replaced.
-        rt.replace_skips_shutdown = true;
+        // X_ITE 16.5.0 calls no Script's `shutdown` when the world is replaced, an Inline unloads or the browser is disposed.
+        // ISO/IEC 14772-1 4.12.3 asks for it in each (issue #292): `replace_skips_shutdown` stays false, as in the native viewer.
         // Browser.print of a Script: console.log of the page.
         rt.log_prints = true;
         // The page's objects of nodes are keyed by node id: it learns which ids were released.
@@ -377,6 +379,8 @@ impl Session {
 
         rt.now = now;
         rt.replace_world();
+        // X3DNetworkingContext.resetLoadCount: what loaded while the browser was loading is not said.
+        rt.loading_samples.clear();
         // From now on the browser events of the world go to the page: an Anchor can replace it.
         rt.browser_events = Some(vec![]);
 
@@ -516,7 +520,22 @@ impl Session {
     /// an `f32` is widened to `f64`, as a page reads an AudioParam's float value. `listener` is the nine values of
     /// the context's listener: position, forward and up.
     pub fn audio_graph_json(&self) -> Option<String> {
-        let audio = self.rt().audio.as_ref()?;
+        Some(audio_json(self.rt().audio.as_ref()?))
+    }
+
+    /// The graph of a page whose AudioContext outlives its worlds: the destination alone, as the context of X_ITE after
+    /// `replaceWorld` (the old world's nodes are gone; issue #293).
+    pub fn empty_audio_graph_json(clock: f64) -> String {
+        let mut engine =
+            x3d_runtime::sound::AudioEngine::new(x3d_runtime::sound::AudioMode::Silent);
+
+        engine.set_clock(clock);
+        audio_json(&engine)
+    }
+}
+
+fn audio_json(audio: &x3d_runtime::sound::AudioEngine) -> String {
+    {
         let g = audio.graph();
         let num = |v: f64| {
             if v.is_finite() {
@@ -573,7 +592,7 @@ impl Session {
             .map(|(a, o, b, i)| format!("[{a},{o},{b},{i}]"))
             .collect();
 
-        Some(format!(
+        format!(
             r#"{{"nodes":[{}],"connections":[{}],"destination":{},"currentTime":{},"sampleRate":{},"listener":[{}]}}"#,
             nodes.join(","),
             connections.join(","),
@@ -581,9 +600,11 @@ impl Session {
             num(g.current_time),
             num(g.sample_rate as f64),
             listener.join(","),
-        ))
+        )
     }
+}
 
+impl Session {
     /// The runtime, loading or live: the loads in flight (font files, decodes) of a world that is not live yet.
     pub fn runtime(&self) -> &Runtime {
         self.rt()
@@ -621,7 +642,16 @@ impl Session {
         let rt = self.rt_mut();
         let world = rt.scene.world;
 
-        rt.create_vrml_from_string_at(text, world, base)
+        let nodes = rt.create_vrml_from_string_at(text, world, base)?;
+
+        // The page is an external browser: the scene gets no execution context, so its bindables bind in the world.
+        if let Some(n) = nodes.iter().flatten().next() {
+            let ctx = rt.scene.node(*n).ctx;
+
+            rt.external_scenes.insert(ctx);
+        }
+
+        Ok(nodes)
     }
 
     /// X3DBrowser.createX3DFromURL (url, node, event) / createVrmlFromURL of a page (an external browser): FileLoader for
@@ -1698,6 +1728,15 @@ impl Session {
         }
     }
 
+    /// X3DNetworkingContext.getDisplayLoadCount of the world: the loads in progress that the page counts.
+    /// Each change since the last call, in order, ending with the count now.
+    pub fn display_load_counts(&mut self) -> Vec<i32> {
+        let rt = self.rt_mut();
+
+        rt.sample_display_load_count();
+        std::mem::take(&mut rt.loading_samples)
+    }
+
     /// The descriptions the engine set itself (a bound viewpoint, an over pointing sensor) since the last call.
     pub fn take_descriptions(&mut self) -> Vec<String> {
         std::mem::take(&mut self.rt_mut().description_events)
@@ -1757,6 +1796,31 @@ impl Session {
             });
 
         (info, rt.scene.meta_of(world).to_vec())
+    }
+
+    /// The Shift+F8 text of the bound viewpoint (`Viewer3d::viewpoint_text`): the node in the world's encoding.
+    pub fn viewpoint_text(&mut self) -> Option<String> {
+        self.viewer()?.viewpoint_text()
+    }
+
+    /// X3DScene.setEncoding of the world's scene (the page's createScene: SCRIPTED).
+    pub fn set_encoding(&mut self, encoding: &str) {
+        let rt = self.rt_mut();
+        let world = rt.scene.world;
+
+        match rt.scene.scene_infos.get_mut(&rt.scene.scene_root(world)) {
+            Some(i) => i.encoding = encoding.to_string(),
+            None => rt.scene.encoding = encoding.to_string(),
+        }
+    }
+
+    /// X3DScene.getEncoding of the world's scene.
+    pub fn encoding(&self) -> String {
+        match &self.stage {
+            Stage::Live(v) => v.rt.scene.encoding_of(v.rt.scene.world).to_string(),
+            Stage::Loading(rt, _) => rt.scene.encoding_of(rt.scene.world).to_string(),
+            Stage::Gone => "SCRIPTED".to_string(),
+        }
     }
 
     /// The bound viewpoint's user position, orientation and center of rotation (Shift+F8).

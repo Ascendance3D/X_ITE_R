@@ -2388,6 +2388,11 @@ class X3DScene
    get worldURL () { return this .#engine () ?.worldURL (this .#handle .scene) ?? this .#browser .baseURL; }
    getWorldURL () { return this .worldURL; }
 
+   // X3DScene.encoding: the format the scene was parsed from (`VRML`, `XML`, `JSON`, `GLTF`, ...), `SCRIPTED` for a scene
+   // that the page made. (`setEncoding` is not implemented.)
+   get encoding () { return this .#engine () ?.encoding (this .#handle .scene) ?? "SCRIPTED"; }
+   getEncoding () { return this .encoding; }
+
    // X3DScene.profile and components: those createScene gave, or those of the engine's scene (its PROFILE and COMPONENT
    // statements). The profile is the browser's ProfileInfo of that name, the components a ComponentInfoArray made once.
    #components = null;
@@ -3727,6 +3732,7 @@ class BrowserUI
          return;
 
       this .#loading = value;
+      this .#loadingDisplay = 0;
 
       const canvas = this .#browser .getCanvas ();
 
@@ -3756,6 +3762,23 @@ class BrowserUI
                   this .#splash .classList .add ("x_ite-private-hidden");
             }, 0);
          }
+      }
+   }
+
+   // X3DNetworkingContext [_set_loadCount] with the browser not loading: each change of the display load count (the engine's
+   // loading objects: Inlines, textures, Scripts, EXTERNPROTOs) says "Loading n file(s)", or "Loading done" at zero, as the
+   // browser's description. While the browser loads the splash screen shows the text instead, and resetLoadCount starts again.
+   #loadingDisplay = 0;
+
+   loadingCounts (counts)
+   {
+      for (const count of counts)
+      {
+         if (this .#loading || count === this .#loadingDisplay)
+            continue;
+
+         this .#loadingDisplay = count;
+         this .#browser .setDescription (count ? (count === 1 ? _("Loading %1 file") : _("Loading %1 files")) .replace ("%1", count) : _("Loading done"));
       }
    }
 
@@ -6449,6 +6472,7 @@ class X3DBrowser
       const id  = this .#engine .prepareString ("#X3D V4.0 utf8\n", String (location), now);
 
       this .#engine .loaded (id, now);
+      this .#engine .setEncoding (id, "SCRIPTED"); // A scene that no parser made.
       return this .#sceneOf (id);
    }
 
@@ -7270,6 +7294,9 @@ class X3DBrowser
       for (const type of [ "blur", "click", "contextmenu", "dblclick", "focus", "keydown", "keyup", "mousedown", "mouseup", "pointerup", "touchend", "touchstart", "wheel" ])
          on (canvas, type, () => this .#resumeAudio ());
 
+      // Script.loadData: the page ends, so the Scripts get `shutdown ()` (X_ITE listens for `unload` on the window too).
+      on (window, "unload", () => { if (this .#engine && !this .#chain) this .#unloadScripts (this .#engine); });
+
       // ContextMenu.initialize: the `contextmenu` event of the element.
       on (this .#element, "contextmenu", event => this .#ui .showMenu (event));
 
@@ -7503,44 +7530,15 @@ class X3DBrowser
       }
    }
 
-   // X3DCoreContext [_keydown] Shift+F8: the active viewpoint with its user position, orientation, center of rotation and field of
-   // view as a node of the world's encoding, to the clipboard. A GeoViewpoint is not done (API.md).
+   // X3DCoreContext [_keydown] Shift+F8: the active viewpoint (a Viewpoint, OrthoViewpoint or GeoViewpoint) with its user position,
+   // orientation, center of rotation and field of view as a node of the world's encoding, to the clipboard. The engine makes
+   // the text (the native viewer's Shift+F8 is the same function).
    #copyViewpoint ()
    {
-      const pose = this .#engine ?.userPose ();
+      const text = this .#engine ?.viewpointText ();
 
-      if (!pose)
+      if (text === undefined || text === null)
          return;
-
-      const active   = this .activeViewpoint;
-      const typeName = active ? active .getNodeTypeName () : "Viewpoint";
-
-      if (typeName !== "Viewpoint" && typeName !== "OrthoViewpoint")
-         return;
-
-      const scene = this .currentScene;
-      const vp    = scene .createNode (typeName);
-
-      vp .position         = new Fields .SFVec3f (pose [0], pose [1], pose [2]);
-      vp .orientation      = new Fields .SFRotation (pose [3], pose [4], pose [5], pose [6]);
-      vp .centerOfRotation = new Fields .SFVec3f (pose [7], pose [8], pose [9]);
-
-      if (active)
-         vp .fieldOfView = active .fieldOfView;
-
-      let text;
-
-      // The scene has no encoding property here: the world URL names it (VRML unless it says XML or JSON).
-      const url = String (scene .worldURL);
-
-      if (/model\/x3d\+xml|\.x3d(?:[?#]|$)|\.xml(?:[?#]|$)/i .test (url))
-         text = vp .toXMLString ();
-      else if (/model\/x3d\+json|\.x3dj(?:[?#]|$)|\.json(?:[?#]|$)/i .test (url))
-         text = vp .toJSONString ();
-      else
-         text = vp .toVRMLString ();
-
-      text += "\n";
 
       navigator .clipboard .writeText (text) .then (() =>
       {
@@ -7675,6 +7673,8 @@ class X3DBrowser
    // X3DSoundContext.startAudioElements for the AudioContext: resume () until it succeeds once.
    #resumeAudio ()
    {
+      this .#audioMirror ?.startElements ();
+
       if (!this .#audioWaiting)
          return;
 
@@ -7737,6 +7737,10 @@ class X3DBrowser
 
          try
          {
+            // The loads that started since the last frame, or that the last frame left, are what the browser's `_loadCount` event
+            // finds when the frame starts its events.
+            this .#ui .loadingCounts (engine .displayLoadCounts ());
+
             this .#audioClock (engine);
             this .#videoMirror ?.push ();
             engine .frame (time, width, height);
@@ -7889,6 +7893,23 @@ class X3DBrowser
       }
    }
 
+   // The Scripts of the current world get `shutdown ()` (the browser ends: `dispose ()`, the page's `unload`), and what they print
+   // goes to the console. A second call does nothing.
+   #unloadScripts (engine)
+   {
+      try
+      {
+         engine .unload ();
+
+         for (const line of engine .takeLog (engine .current) ?? [ ])
+            printLogLine (line);
+      }
+      catch (error)
+      {
+         console .error (error);
+      }
+   }
+
    // X3DBrowser.dispose (): the worlds are unloaded, their requests end, the input listeners go, the frame loop
    // stops and the engine is freed.
    dispose ()
@@ -7898,6 +7919,18 @@ class X3DBrowser
 
       this .#disposed = true;
       this .#dom ?.dispose ();
+
+      // X_ITE's loadURL goes on after `dispose ()`: when its file arrives, replaceWorld sends the browser's `shutdown` event (it
+      // does so for a browser with no load in flight never). The world that was loaded is not shut down by it.
+      if (this .#fileLoader)
+      {
+         requestAnimationFrame (() =>
+         {
+            this .#call (X3DConstants .SHUTDOWN_EVENT);
+            this .#dispatch ("shutdown");
+         });
+      }
+
       this .#fileLoader = null;
       this .#releaseInput ();
       this .#listeners .abort ();
@@ -7913,20 +7946,22 @@ class X3DBrowser
          const engine = this .#engine;
 
          this .#engine = null;
-         this .#afterChain (() => engine .free ());
+         this .#afterChain (() =>
+         {
+            // ISO/IEC 14772-1 4.12.3: the world is unloaded, so its Scripts get `shutdown ()` (X_ITE 16.5.0 calls none; issue #292).
+            this .#unloadScripts (engine);
+            engine .free ();
+         });
       }
 
-      // The AudioContext is the page's own (#audioClock makes it): it goes with the browser. Closing it twice is
-      // harmless, but it is closed once.
-      const context = this .#audioContext;
-
+      // The AudioContext is the page's own (#audioClock makes it). X_ITE never closes its AudioContext (its browser has no such
+      // step in dispose), so it is left to the page here too (issue #293); the nodes of the worlds are disconnected.
       this .#videoMirror ?.dispose ();
       this .#videoMirror  = null;
       this .#audioMirror ?.dispose ();
       this .#audioMirror  = null;
       this .#audioContext = null;
       this .#audioWaiting = false;
-      context ?.close () .catch (Function .prototype);
    }
 }
 

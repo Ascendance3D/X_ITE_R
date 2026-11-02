@@ -202,6 +202,14 @@ impl Model {
         }
 
         match op.name {
+            "mediaStream" => {
+                let mut node = ModelNode::new("MediaStreamAudioDestinationNode");
+
+                node.channel_count = Some(2);
+                node.channel_count_mode = Some("explicit");
+                node.channel_interpretation = Some("speakers");
+                self.nodes.insert(int(&a[0]), node);
+            }
             "release" | "releaseKeep" => {
                 let id = int(&a[0]);
 

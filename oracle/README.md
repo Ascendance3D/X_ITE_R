@@ -1158,6 +1158,20 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-ui-01-baseline --runs 5 --suite ui01
 ```
 
+## Web browser UI 02 (2026-11-01, issue #141): Shift+F8 for GeoViewpoint and encodings, "Loading n files", Debug keys
+- Five runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-ui-02-baseline --runs 5 --suite ui02
+```
+
+- `crates/x3d-web/tests/browser/ui02_case.mjs` (group `browserUi02`, test `ui02.test.mjs`) has four cases. `debugKeys`: the Ctrl+1 to Ctrl+5
+  and Ctrl+S notifications with `Debug` on and off. `shiftF8Geo`: the clipboard text of Shift+F8 for a GeoViewpoint (GD, UTM and GC, a GeoOrigin)
+  in VRML, XML and JSON; the numbers are compared digit for digit (X_ITE's user position carries matrix noise: 10 20 1000000 comes out as
+  9.99999999999995 20 999999.999999998; the engine reproduces it). `shiftF8Encodings`: the text follows `scene .encoding` (VRML, XML, JSON, SCRIPTED is XML), also for a world
+  made by `createX3DFromString` and by `createScene` (a Viewpoint pushed into its `rootNodes` is bound), an OrthoViewpoint and a world without a viewpoint. `loading`: every `setDescription` call
+  while Inlines, a bad Inline and a texture load ("Loading 1 file", "Loading 2 files", "Loading done"), with `Notifications` on and off.
+
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 
 - `x_ite-web-runtime-02.mjs --suite attributes01` runs the 10 cases of `crates/x3d-web/tests/browser/attributes01_case.mjs`

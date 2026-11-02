@@ -337,6 +337,12 @@ impl Default for BrowserActive {
 
 pub struct Runtime {
     pub scene: Scene,
+    /// Root contexts of scenes the page made (createVrmlFromString of an external browser): such a scene has no execution
+    /// context, so its bindables count in the world's lists (BindableList.getBound: `scene .getExecutionContext ()`).
+    pub external_scenes: std::collections::HashSet<CtxId>,
+    /// The display load counts seen since the page last took them: at each [`Runtime::run_tasks`], where a frame's events are
+    /// over and its loads are not, so a load that starts and ends within one frame is seen (the page says "Loading n files").
+    pub loading_samples: Vec<i32>,
     pub frt: HashMap<FKey, FieldRt>,
     pub nrt: Vec<NodeRt>,
     tainted_fields: Vec<(FKey, Event)>,
@@ -373,8 +379,9 @@ pub struct Runtime {
     /// of the cascade (see [`Runtime::deliver_ctx_events`]).
     pub(crate) page_root_nodes_unplaced: Vec<usize>,
     /// Replacing or unloading the world, unloading or reloading an Inline, or replacing the body of a PROTO instance, does not call the Scripts'
-    /// `shutdown ()`, as X_ITE 16.5.0 (the old scene or body is never disposed there). Set by the browser build; the
-    /// native build keeps the call (ISO/IEC 14772-1 4.12.3).
+    /// `shutdown ()`, as X_ITE 16.5.0 (the old scene or body is never disposed there). Neither the native nor the browser
+    /// build sets it any more: both keep the call (ISO/IEC 14772-1 4.12.3; the browser build since issue #292). The tests of
+    /// the two ways of the old behavior set it.
     pub replace_skips_shutdown: bool,
     /// Fields that the page gave a callback with X3DField.addFieldCallback (see [`Runtime::page_field_events`]).
     pub page_observed: std::collections::HashSet<FKey>,
@@ -708,6 +715,8 @@ impl Runtime {
             nrt: vec![],
             tainted_fields: vec![],
             tainted_nodes: vec![],
+            external_scenes: Default::default(),
+            loading_samples: vec![],
             content_scale_armed: false,
             processing: false,
             parents: HashMap::new(),
@@ -1447,6 +1456,8 @@ impl Runtime {
     /// runs, after the microtasks that were queued before it (Inlines and textures asked for
     /// theirs at setup).
     pub fn run_tasks(&mut self) {
+        self.sample_display_load_count();
+
         loop {
             if let Some(task) = self.tasks.pop_front() {
                 match task {

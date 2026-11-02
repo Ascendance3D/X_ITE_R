@@ -1885,8 +1885,11 @@ impl Runtime {
         let enabled = self.get_bool(node, "enabled");
         self.sound_emit(node, "isActive", FieldValue::SFBool(enabled));
 
-        // AudioDestination: start or stop the <audio> element (it plays the stream; here the
-        // stream feeds the output).
+        // AudioDestination: `browser .startAudioElement (this .audioElement)` (the page plays the stream in an
+        // `<audio>` element, audio_mirror.mjs); `stopAudioElement` when disabled.
+        if active && self.builtin_name(node) == Some("AudioDestination") {
+            self.audio().audio_element_start();
+        }
     }
 
     fn destination_set_gain(&mut self, node: NodeId) {
