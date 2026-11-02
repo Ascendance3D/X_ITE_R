@@ -264,6 +264,45 @@ struct PageLoad {
     log_seen: usize,
 }
 
+thread_local! {
+    /// The id the next world or load of any `WebBrowser` of this page gets. One counter for all browsers, so a world id names
+    /// one world in the whole page: the in-chain field operations ([`crate::chain`]) find their runtime by this id alone, and
+    /// two canvases never share one.
+    static NEXT_WORLD_ID: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
+}
+
+/// The node ids of a `rootNodes` list from the page: `null` and `undefined` are `None`; anything else must be an integer
+/// number in `0 ..= u32::MAX`, so a bad value never turns into a valid node id by `as` conversion.
+fn root_node_list(list: &js_sys::Array) -> Result<Vec<Option<u32>>, JsError> {
+    list.iter()
+        .map(|v| {
+            if v.is_null() || v.is_undefined() {
+                return Ok(None);
+            }
+
+            match v.as_f64() {
+                Some(n)
+                    if n.is_finite()
+                        && n.fract() == 0.0
+                        && (0.0..=f64::from(u32::MAX)).contains(&n) =>
+                {
+                    Ok(Some(n as u32))
+                }
+                _ => Err(JsError::new("rootNodes: a node id must be an integer")),
+            }
+        })
+        .collect()
+}
+
+fn next_world_id() -> u32 {
+    NEXT_WORLD_ID.with(|n| {
+        let id = n.get();
+
+        n.set(id + 1);
+        id
+    })
+}
+
 #[wasm_bindgen]
 pub struct WebBrowser {
     surface: wgpu::Surface<'static>,
@@ -291,7 +330,6 @@ pub struct WebBrowser {
     /// The last [`WebBrowser::take_video_ops`] told the page about video elements.
     video_known: bool,
     current: Option<u32>,
-    next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
     live: bool,
     /// The page's Script realm factory (`setScriptRealm`); none: no Script runs.
@@ -453,7 +491,6 @@ impl WebBrowser {
             audio_payloads: Default::default(),
             video_known: false,
             current: None,
-            next_id: 1,
             live: true,
             script_realm: None,
             log_sink: None,
@@ -493,7 +530,7 @@ impl WebBrowser {
         cache: Rc<RefCell<FetchCache>>,
         now: f64,
     ) -> u32 {
-        let id = self.next_id;
+        let id = next_world_id();
         let factory = self.script_realm.clone();
         let sink = self.log_sink.clone();
         let event_sink = self.field_event_sink.clone();
@@ -553,7 +590,6 @@ impl WebBrowser {
                 }
             });
 
-        self.next_id += 1;
         self.worlds.insert(id, World { session, cache });
         id
     }
@@ -621,9 +657,8 @@ impl WebBrowser {
         });
         let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", base)
             .map_err(|e| JsError::new(&format!("{e:?}")))?;
-        let id = self.next_id;
+        let id = next_world_id();
 
-        self.next_id += 1;
         self.loads.insert(
             id,
             PageLoad {
@@ -1157,7 +1192,7 @@ impl WebBrowser {
     /// `rootNodes .assign (list)` of scene `id` (see [`Session::set_root_nodes`]): `list` holds node ids and nulls.
     #[wasm_bindgen(js_name = setRootNodes)]
     pub fn set_root_nodes(&mut self, id: u32, list: js_sys::Array) -> Result<(), JsError> {
-        let list = list.iter().map(|v| v.as_f64().map(|n| n as u32)).collect();
+        let list = root_node_list(&list)?;
 
         self.session_mut(id)?
             .set_root_nodes(list)
@@ -2322,6 +2357,14 @@ pub fn chain_root_nodes(world: u32) -> Result<Vec<i64>, JsError> {
             .map(|n| n.map_or(-1, i64::from))
             .collect()
     })
+}
+
+/// `WebBrowser.setRootNodes` inside a field callback: `rootNodes .assign (list)` of the world, as a Script's does.
+#[wasm_bindgen(js_name = chainSetRootNodes)]
+pub fn chain_set_root_nodes(world: u32, list: js_sys::Array) -> Result<(), JsError> {
+    let list = root_node_list(&list)?;
+
+    chain_run(world, |rt| crate::chain::set_root_nodes(rt, list))?.map_err(|e| JsError::new(&e))
 }
 
 /// `WebBrowser.nodeValue` inside a field callback.
