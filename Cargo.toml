@@ -6,3 +6,9 @@ members = ["crates/*"]
 edition = "2024"
 license = "MIT"
 publish = false
+
+# Each integration test links the whole engine; full debug info made every
+# test binary about 450 MB and a build directory 50 to 80 GB. Line tables keep
+# backtraces readable. The test profile inherits from dev.
+[profile.dev]
+debug = "line-tables-only"
