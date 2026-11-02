@@ -82,6 +82,9 @@ pub struct ShapeInst {
     pub particle: bool,
     /// The particle's own geometry (POINT, LINE, TRIANGLE, QUAD, SPRITE); `None` draws `geometry`.
     pub particle_geometry: Option<Rc<x3d_render::geometry::Geometry>>,
+    /// A GaussianSplats node (`geometry` is the node itself): the pointing pass draws it with the splat program, and the
+    /// CPU ray cast has nothing to test (the pinned shape has no geometry either).
+    pub splats: Option<Rc<x3d_render::splats::SplatDraw>>,
 }
 
 /// The layer a walk covers (X3DLayerNode.traverse): its children, its viewport rectangle, and the
@@ -1420,6 +1423,7 @@ impl<'a> Walker<'a> {
                         depth,
                         particle: false,
                         particle_geometry: None,
+                        splats: None,
                     };
 
                     if pointing {
@@ -1427,6 +1431,51 @@ impl<'a> Walker<'a> {
                     } else {
                         self.scan.unpointed_shapes.push(inst);
                     }
+                }
+            }
+            // GaussianSplats.traverse POINTER (X3DShapeNode.traverse → addPointingShape of its private shape): the splat
+            // program draws the quads into the pointing buffer. set_pointingObject__: isEnabled () and pointerEvents, which
+            // the node copies to the shape when it initializes (default FALSE, unlike a Shape's). COLLISION
+            // (addCollisionShape): the same program draws them into the collision depth buffer; set_collisionObject__ is
+            // isEnabled () alone, so pointerEvents FALSE makes a collision object that is not a pointing object.
+            "GaussianSplats" if !self.camera && self.pick.is_none() && self.picking.is_none() => {
+                let pointing = sg.bool(n, "pointerEvents", false);
+
+                if !pointing && !collidable {
+                    return;
+                }
+
+                let Some((draw, bbox)) = x3d_render::traverse::splats_pointing(sg, n, mv) else {
+                    return;
+                };
+
+                let inst = ShapeInst {
+                    shape: me(),
+                    geometry: n,
+                    model_view: *mv,
+                    shape_model_view: *mv,
+                    instance: None,
+                    all_instances: None,
+                    explicit_bbox: Some(bbox),
+                    sensors: sensors.to_vec(),
+                    collidable,
+                    collisions: self.collision_stack.clone(),
+                    anchors: anchors.to_vec(),
+                    clip_planes: self.clip_planes.clone(),
+                    viewport: self.viewport(),
+                    skin: None,
+                    style: None,
+                    textures: (false, false),
+                    depth: None,
+                    particle: false,
+                    particle_geometry: None,
+                    splats: Some(draw),
+                };
+
+                if pointing {
+                    self.scan.shapes.push(inst);
+                } else {
+                    self.scan.unpointed_shapes.push(inst);
                 }
             }
             // ParticleSystem.traverse POINTER (X3DShapeNode.traverse → addPointingShape): one instanced draw of the
@@ -1495,6 +1544,7 @@ impl<'a> Walker<'a> {
                     depth: pointing_depth(sg, n),
                     particle: true,
                     particle_geometry: p.geometry.clone(),
+                    splats: None,
                 };
 
                 if collidable {
@@ -1843,6 +1893,7 @@ mod particle_run_tests {
             depth: None,
             particle: false,
             particle_geometry: None,
+            splats: None,
         }
     }
 

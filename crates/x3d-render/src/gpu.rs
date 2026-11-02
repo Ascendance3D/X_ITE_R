@@ -1040,7 +1040,7 @@ struct GpuTimer {
 const KEEP_FRAMES: u64 = 120;
 
 /// The shadow map texture format (GL DEPTH_COMPONENT24; read back rounded to 24 bits).
-const SHADOW_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+pub(crate) const SHADOW_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
 
 /// The shadow maps of a frame: one depth layer per light container, each map in the upper left
 /// corner of its layer.
@@ -2648,7 +2648,11 @@ impl Renderer {
         // Vertex buffers (the shared geometry cache).
         for map in &frame.shadow_maps {
             for view in &map.views {
-                for item in view.items.iter().filter(|i| i.thick_lines.is_none()) {
+                for item in view
+                    .items
+                    .iter()
+                    .filter(|i| i.thick_lines.is_none() && i.splats.is_none())
+                {
                     let g = &item.geometry;
                     let gp = Rc::as_ptr(g);
                     match self.geometries.get_mut(&gp) {
@@ -2679,6 +2683,53 @@ impl Renderer {
                 }
             }
         }
+
+        // GaussianSplats in the shadow maps: the quads drawn with the depth program under the light's projection.
+        let mut splat_inputs: Vec<crate::splats_gpu::SplatInput> = vec![];
+
+        for map in &frame.shadow_maps {
+            for view in &map.views {
+                for item in view.items.iter().filter(|i| i.splats.is_some()) {
+                    splat_inputs.push(crate::splats_gpu::SplatInput {
+                        draw: item.splats.as_ref().unwrap(),
+                        clip_planes: item
+                            .clip_planes
+                            .iter()
+                            .take(MAX_CLIP_PLANES)
+                            .copied()
+                            .collect(),
+                        viewport: view.viewport.map(|v| v as f64),
+                        fog: None,
+                        depth_projection: Some(f32x16(&view.projection)),
+                        pick_id: None,
+                        collision: false,
+                        projection: None,
+                        slot: None,
+                    });
+                }
+            }
+        }
+
+        let shadow_splats = if splat_inputs.is_empty() {
+            vec![]
+        } else {
+            self.splats.prepare(
+                &self.device,
+                &self.queue,
+                &self.frame_layout,
+                wgpu::TextureFormat::Rgba8Unorm,
+                1,
+                self.depth_mode.depth_format(),
+                false,
+                self.depth_mode == DepthMode::Logarithmic,
+                0.0,
+                &f32x16(&frame.projection),
+                frame_no,
+                &splat_inputs,
+            );
+            self.splats.take_prepared()
+        };
+        let mut next_splat = 0usize;
 
         let shadow = self.shadow.as_mut().unwrap();
         shadow.used = frame_no;
@@ -2718,6 +2769,14 @@ impl Renderer {
                 pass.set_scissor_rect(x, top, w, h);
 
                 for item in &view.items {
+                    if item.splats.is_some() {
+                        self.splats
+                            .draw_prepared(&mut pass, &shadow_splats[next_splat]);
+                        next_splat += 1;
+                        self.stats.shadow_draw_calls += 1;
+                        k += 1;
+                        continue;
+                    }
                     if let Some(lines) = &item.thick_lines {
                         let e = &self.thick[&Rc::as_ptr(lines)];
                         pass.set_pipeline(&self.thick_pipeline);
@@ -4765,6 +4824,11 @@ impl Renderer {
                         .collect(),
                     viewport: item.viewport.unwrap_or(layer_rect),
                     fog: item.fog.as_ref().or(frame.fog.as_ref()),
+                    depth_projection: None,
+                    pick_id: None,
+                    collision: false,
+                    projection: None,
+                    slot: None,
                 });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
@@ -5825,6 +5889,8 @@ impl Renderer {
             samples,
             self.depth_mode.depth_format(),
             self.depth_mode == DepthMode::Reversed,
+            self.depth_mode == DepthMode::Logarithmic,
+            fu.fog_range[2],
             &fu.projection,
             frame_no,
             &splat_inputs,

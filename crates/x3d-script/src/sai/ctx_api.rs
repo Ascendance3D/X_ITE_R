@@ -72,15 +72,6 @@ fn remove_imported(c: CtxId, name: &str) -> bool {
     true
 }
 
-/// A proto declaration record for scripts: (name, fields, has_metadata, urls).
-fn proto_ids(c: CtxId, extern_: bool) -> Vec<usize> {
-    if extern_ {
-        rt().scene.ctx(c).externprotos.values().to_vec()
-    } else {
-        rt().scene.ctx(c).protos.values().to_vec()
-    }
-}
-
 pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
     let c = ctx_of_script(num_arg(ctx, a, 0));
     let what = str_arg(ctx, a, 1);
@@ -459,7 +450,8 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
         "protoIds" => {
             let arr = Arr::new();
 
-            for (i, id) in proto_ids(c, a.first().is_some_and(coerce_bool))
+            for (i, id) in rt()
+                .decl_ids(c, a.first().is_some_and(coerce_bool))
                 .into_iter()
                 .enumerate()
             {
@@ -470,19 +462,10 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
         }
         "protoGet" => {
             let (extern_, name) = (a.first().is_some_and(coerce_bool), str_at(1));
-            let found = if extern_ {
-                rt().scene.ctx(c).externprotos.get(&name)
-            } else {
-                rt().scene.ctx(c).protos.get(&name)
-            };
 
-            match found {
-                Some(id) => Ok(J::Number(id as f64)),
-                None if extern_ => throw(
-                    ctx,
-                    &format!("Extern proto declaration '{name}' not found."),
-                ),
-                None => throw(ctx, &format!("Proto declaration '{name}' not found.")),
+            match rt().decl_get(c, extern_, &name) {
+                Ok(id) => Ok(J::Number(id as f64)),
+                Err(e) => throw(ctx, &e),
             }
         }
         "protoOp" => {
@@ -493,136 +476,19 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
                 .map(|v| coerce_f64(ctx, v))
                 .filter(|n| !n.is_nan())
                 .map(|n| n as usize);
-            let kind = if extern_ { "extern proto" } else { "proto" };
-            let decl_ctx = |i: usize| {
-                if extern_ {
-                    rt().scene.externprotos[i].ctx
-                } else {
-                    rt().scene.protos[i].ctx
-                }
-            };
-            let decl_name = |i: usize| {
-                if extern_ {
-                    rt().scene.externprotos[i].name.clone()
-                } else {
-                    rt().scene.protos[i].name.clone()
-                }
-            };
-            let has = |n: &str| {
-                if extern_ {
-                    rt().scene.ctx(c).externprotos.has(n)
-                } else {
-                    rt().scene.ctx(c).protos.has(n)
-                }
-            };
-            let current = |n: &str| {
-                if extern_ {
-                    rt().scene.ctx(c).externprotos.get(n)
-                } else {
-                    rt().scene.ctx(c).protos.get(n)
-                }
+            let op = match mode.as_str() {
+                "add" => x3d_runtime::DeclOp::Add,
+                "remove" => x3d_runtime::DeclOp::Remove,
+                _ => x3d_runtime::DeclOp::Update,
             };
 
-            if mode == "remove" {
-                if extern_ {
-                    rt().scene.ctx_mut(c).externprotos.remove(&name);
-                } else {
-                    rt().scene.ctx_mut(c).protos.remove(&name);
+            match rt().decl_op(c, extern_, op, &name, id) {
+                Ok(()) => {
+                    flush_warnings();
+                    Ok(J::Undefined)
                 }
-
-                rt().dynamic_dirty_mark();
-                sg(c);
-                return Ok(J::Undefined);
+                Err(e) => throw(ctx, &e),
             }
-
-            let verb = if mode == "add" { "add" } else { "update" };
-            let Some(id) = id else {
-                let class = if extern_ {
-                    "X3DExternProtoDeclaration"
-                } else {
-                    "X3DProtoDeclaration"
-                };
-                return throw(
-                    ctx,
-                    &format!("Couldn't {verb} {kind} declaration: {kind} must be of type {class}."),
-                );
-            };
-
-            if decl_ctx(id) != c {
-                return throw(
-                    ctx,
-                    &format!(
-                        "Couldn't {verb} {kind} declaration: {kind} does not belong to this execution context."
-                    ),
-                );
-            }
-
-            if mode == "add" {
-                if has(&name) {
-                    return throw(
-                        ctx,
-                        &format!(
-                            "Couldn't add {kind} declaration: {kind} '{name}' already in use."
-                        ),
-                    );
-                }
-
-                let own = decl_name(id);
-
-                if current(&own) == Some(id) {
-                    return throw(
-                        ctx,
-                        &format!("Couldn't add {kind} declaration: {kind} '{own}' already added."),
-                    );
-                }
-            }
-
-            if name.is_empty() {
-                return throw(
-                    ctx,
-                    &format!("Couldn't {verb} {kind} declaration: {kind} name is empty."),
-                );
-            }
-
-            if mode == "add" {
-                // The warnings of the add path (the scene layer words the update path).
-                let other = if extern_ {
-                    rt().scene.ctx(c).protos.has(&name)
-                } else {
-                    rt().scene.ctx(c).externprotos.has(&name)
-                };
-
-                if other {
-                    let text = if extern_ {
-                        format!(
-                            "Added extern proto '{name}' will be overridden by proto with same name."
-                        )
-                    } else {
-                        format!("Added proto '{name}' will override extern proto with same name.")
-                    };
-                    rt().log_warn(text);
-                }
-
-                if rt().scene.is_concrete_node(&name) {
-                    rt().log_warn(format!("Added {kind} '{name}', but will not override built-in node of same type if profile/components include this node."));
-                }
-
-                if extern_ {
-                    let _ = rt().scene.ctx_mut(c).externprotos.add(&name, id);
-                    rt().scene.externprotos[id].name = name.clone();
-                } else {
-                    let _ = rt().scene.ctx_mut(c).protos.add(&name, id);
-                    rt().scene.protos[id].name = name.clone();
-                }
-            } else if extern_ {
-                rt().scene.update_extern_proto_declaration(c, &name, id);
-            } else {
-                rt().scene.update_proto_declaration(c, &name, id);
-            }
-
-            flush_warnings();
-            sg(c);
-            Ok(J::Undefined)
         }
         // X3DProtoDeclarationNode.createInstance: (extern, id) in the context `c`.
         "protoNew" => {
@@ -698,40 +564,16 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
                 a.first().is_some_and(coerce_bool),
                 num_arg(ctx, a, 1) as usize,
             );
-            let r = &rt().scene;
-            let (name, ctxid, fields, has_metadata, urls) = if extern_ {
-                let d = &r.externprotos[id];
-                (
-                    d.name.clone(),
-                    d.ctx,
-                    d.fields.clone(),
-                    d.has_metadata,
-                    Some(d.url.clone()),
-                )
-            } else {
-                let d = &r.protos[id];
-                (
-                    d.name.clone(),
-                    d.ctx,
-                    d.fields.clone(),
-                    d.has_metadata,
-                    None,
-                )
-            };
+            let info = rt().decl_info(extern_, id);
             let o = Obj::new();
 
-            o.set("name", name.as_str());
-            o.set("ctx", ctxid as f64);
-            o.set("isExternProto", urls.is_some());
-            o.set("hasMetadata", has_metadata);
+            o.set("name", info.name.as_str());
+            o.set("ctx", info.ctx as f64);
+            o.set("isExternProto", info.is_extern);
+            o.set("hasMetadata", info.has_metadata);
 
             // X3DExternProtoDeclaration.loadState (X3DUrlObject.checkLoadState).
-            if extern_ {
-                let state = rt()
-                    .extern_states
-                    .get(&id)
-                    .map(|s| s.load_state)
-                    .unwrap_or_default();
+            if let Some(state) = info.load_state {
                 let name = match state {
                     x3d_runtime::nodes::LoadState::NotStarted => "NOT_STARTED_STATE",
                     x3d_runtime::nodes::LoadState::InProgress => "IN_PROGRESS_STATE",
@@ -742,46 +584,24 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
             }
 
             let fa = Arr::new();
-            let mut defs: Vec<(String, i32, &'static str, FieldValue)> = vec![];
 
-            if has_metadata {
-                defs.push((
-                    "metadata".into(),
-                    access::INPUT_OUTPUT as i32,
-                    "SFNode",
-                    FieldValue::SFNode(None),
-                ));
-            }
-
-            defs.extend(fields.iter().map(|f| {
-                (
-                    f.name.clone(),
-                    f.access as i32,
-                    f.ty().name(),
-                    f.value.clone(),
-                )
-            }));
-
-            for (j, (fname, access, ty, value)) in defs.into_iter().enumerate() {
+            for (j, f) in info.fields.into_iter().enumerate() {
                 let fo = Obj::new();
-                fo.set("name", fname.as_str());
-                fo.set("accessType", access);
-                fo.set("dataType", ty);
-                fo.set("value", new_value_js(value));
+                fo.set("name", f.name.as_str());
+                fo.set("accessType", f.access as i32);
+                fo.set("dataType", f.type_name);
+                fo.set("value", new_value_js(f.value));
                 fa.set(j, fo);
             }
 
             o.set("fields", fa);
 
-            if let Some(urls) = urls {
+            if let Some(urls) = info.urls {
                 o.set("urls", new_value_js(FieldValue::MFString(urls)));
             }
 
-            // X3DExternProtoDeclaration.getProtoDeclaration: the PROTO the load found.
-            if extern_ {
-                if let Some(Some(p)) = rt().extern_loaded.get(&id) {
-                    o.set("loaded", *p as f64);
-                }
+            if let Some(p) = info.loaded {
+                o.set("loaded", p as f64);
             }
 
             Ok(o.into())

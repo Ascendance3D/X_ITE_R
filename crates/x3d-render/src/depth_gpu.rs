@@ -77,6 +77,9 @@ pub struct DepthShape<'a> {
     pub per_instance_vertices: u32,
     /// x3d_Id: the shape's index among the collision shapes (of its first particle).
     pub id: f32,
+    /// A GaussianSplats shape (`geometry` is empty): the splat program draws it into the pass, with the viewport of the
+    /// display it was collected in (renderContext .viewport, which the quads' size is computed from).
+    pub splat: Option<(&'a Rc<crate::splats::SplatDraw>, [f64; 4])>,
 }
 
 impl DepthShape<'_> {
@@ -91,7 +94,7 @@ impl DepthShape<'_> {
 
     /// Whether the pass draws anything of it: one vertex or more (a triangle is three), and particles if it has them.
     fn draws(&self) -> bool {
-        self.count() > 0 && !self.instances.is_some_and(|m| m.is_empty())
+        self.splat.is_some() || (self.count() > 0 && !self.instances.is_some_and(|m| m.is_empty()))
     }
 }
 
@@ -160,6 +163,8 @@ pub struct DepthGpu {
     /// The instance matrices the instance buffer holds, in order (kept alive so the addresses identify them).
     instance_sources: Vec<Rc<Vec<Matrix4>>>,
     buffers: HashMap<usize, Buffer>,
+    /// The splat program of the collision depth buffer and its frame counter (what it keeps ages with the passes).
+    splat: crate::splats_gpu::SplatGpu,
     queries: u64,
     /// The device was lost under a readback: no more passes are drawn.
     lost: bool,
@@ -336,6 +341,7 @@ impl DepthGpu {
             instance_capacity: 64,
             instance_sources: vec![],
             buffers: HashMap::new(),
+            splat: Default::default(),
             queries: 0,
             lost: false,
             readback_failures: 0,
@@ -462,6 +468,11 @@ impl DepthGpu {
         let stamp = self.queries;
 
         for s in shapes {
+            // A splat shape has no vertex buffer.
+            if s.splat.is_some() {
+                continue;
+            }
+
             let key = Rc::as_ptr(s.geometry) as usize;
             let count = s.count();
 
@@ -678,6 +689,52 @@ impl DepthGpu {
             self.stats.upload_bytes += blob.len() as u64;
         }
 
+        // The splat shapes of every pass: one prepare for the batch, each (pass, shape) its own uniforms; the shape's index is
+        // the slot, so the passes share its sorted indices.
+        let splat_shapes: Vec<usize> = (0..shapes.len())
+            .filter(|&i| shapes[i].splat.is_some())
+            .collect();
+        let mut prepared = vec![];
+
+        if !splat_shapes.is_empty() {
+            let inputs: Vec<crate::splats_gpu::SplatInput> = (0..passes)
+                .flat_map(|q| splat_shapes.iter().map(move |&i| (q, i)))
+                .map(|(q, i)| {
+                    let s = &shapes[i];
+                    let (draw, viewport) = s.splat.unwrap();
+
+                    crate::splats_gpu::SplatInput {
+                        draw,
+                        clip_planes: s.clip_planes.to_vec(),
+                        viewport,
+                        fog: None,
+                        depth_projection: None,
+                        pick_id: Some(s.id),
+                        collision: true,
+                        projection: Some(projections[q]),
+                        slot: Some(i),
+                    }
+                })
+                .collect();
+
+            self.splat.prepare(
+                &self.device,
+                &self.queue,
+                &self.layout,
+                wgpu::TextureFormat::Rgba32Float,
+                1,
+                wgpu::TextureFormat::Depth24Plus,
+                false,
+                false,
+                0.0,
+                &projections[0],
+                stamp,
+                &inputs,
+            );
+            prepared = self.splat.take_prepared();
+            self.splat.prune(stamp);
+        }
+
         let mut encoder = self
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -726,6 +783,18 @@ impl DepthGpu {
                 let mut bound = usize::MAX;
 
                 for (i, s) in shapes.iter().enumerate() {
+                    if s.splat.is_some() {
+                        // Its draw is the (pass, shape) entry of the batch's one prepare.
+                        let at = q * splat_shapes.len()
+                            + splat_shapes.iter().position(|&k| k == i).unwrap();
+
+                        pass.set_bind_group(0, group, &[0]);
+                        self.splat.draw_prepared(&mut pass, &prepared[at]);
+                        // The next triangle shape binds its own pipeline.
+                        bound = usize::MAX;
+                        continue;
+                    }
+
                     let b = &self.buffers[&(Rc::as_ptr(s.geometry) as usize)];
 
                     if b.count == 0 {
