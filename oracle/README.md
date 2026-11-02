@@ -86,7 +86,7 @@ python3 -I -B tools/answer_keys.py guard . HEAD origin/master   # before a Git o
 
 `x_ite-pin/node_modules` is ignored (`.gitignore`), so a new worktree does not have it. Without it the
 pages under `x_ite-pin/src/` cannot load their scripts (`inline.html` lines 27-29), and every recorder case
-times out. Prepare a worktree under `~/Projects/cybertown/.worktrees/X_ITE_R/<lane>` like this, never in the
+times out (the `x_ite-anim*.mjs` drivers now stop at once with a message naming the missing link, instead of ending after a 30 s wait with an empty log). Prepare a worktree under `~/Projects/cybertown/.worktrees/X_ITE_R/<lane>` like this, never in the
 main checkout:
 
 ```
@@ -1304,3 +1304,11 @@ step-up threshold, avatarSize variants, speed, Gravity, centerOfRotation, trackb
 double click, WALK in a tilted Transform. `tools/rea_b24_nav.py record` records each case from the pinned X_ITE three times
 (identical, no pictures) into `rea-b24-nav-baseline/`; `crates/x3d-viewer/tests/rea_b24_nav.rs` compares Rust with it.
 The item lists of the five navigation subsystems are in `docs/reports/NAV_ITEM_LISTS.md`.
+
+## Native keys 01 (issue #80)
+
+`node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
+keyboard shortcut of X3DCoreContext (Ctrl+Plus Timings, the Debug keys Ctrl+1..5 and Ctrl+S, Home / End / Page Up / Page Down,
+the five modifier flags, Shift+F8 and its clipboard text), after every key: options, `isLive`, description, bound viewpoint, flags and
+clipboard. `crates/x3d-viewer/tests/native_keys_01.rs` replays the same keys on the native viewer and compares each step. The
+Shift+F8 case waits 4 s after the viewpoint change so the viewpoint transition has ended.
