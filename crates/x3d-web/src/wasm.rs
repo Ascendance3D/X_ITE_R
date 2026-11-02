@@ -1002,6 +1002,246 @@ impl WebBrowser {
         Ok(self.session_mut(id)?.create_proto(name))
     }
 
+    // --- PROTO and EXTERNPROTO declarations of scene `id`. A declaration is its index in `protos` (`extern_` false) or
+    // `externprotos` (true). ----------------------------------------------------------------------------------------
+
+    /// The declarations of the scene in the order of `getProtoDeclarations ()` / `getExternProtoDeclarations ()`.
+    #[wasm_bindgen(js_name = declIds)]
+    pub fn decl_ids(&self, id: u32, extern_: bool) -> Vec<u32> {
+        self.worlds.get(&id).map_or_else(Vec::new, |w| {
+            w.session
+                .decl_ids(extern_)
+                .into_iter()
+                .map(|i| i as u32)
+                .collect()
+        })
+    }
+
+    /// `getProtoDeclaration (name)` / `getExternProtoDeclaration (name)`: the index, or an error with X_ITE's text.
+    #[wasm_bindgen(js_name = declGet)]
+    pub fn decl_get(&self, id: u32, extern_: bool, name: &str) -> Result<u32, JsError> {
+        self.session(id)?
+            .decl_get(extern_, name)
+            .map(|i| i as u32)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `add`, `update` or `remove` of `(Extern)ProtoDeclaration (name, declaration)` (`op` is `add`, `update` or `remove`).
+    /// `decl` is the index of the declaration the page passes, `-1` for an argument that is no declaration of that kind
+    /// and `-2` for a declaration of another scene.
+    #[wasm_bindgen(js_name = declOp)]
+    pub fn decl_op(
+        &mut self,
+        id: u32,
+        extern_: bool,
+        op: &str,
+        name: &str,
+        decl: i32,
+    ) -> Result<(), JsError> {
+        let op = match op {
+            "add" => x3d_runtime::DeclOp::Add,
+            "remove" => x3d_runtime::DeclOp::Remove,
+            _ => x3d_runtime::DeclOp::Update,
+        };
+        let decl = match decl {
+            -1 => None,
+            -2 => Some(usize::MAX),
+            n => Some(n as usize),
+        };
+
+        self.session_mut(id)?
+            .decl_op(extern_, op, name, decl)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `getUniqueProtoName (name)` / `getUniqueExternProtoName (name)`.
+    #[wasm_bindgen(js_name = declUniqueName)]
+    pub fn decl_unique_name(&self, id: u32, extern_: bool, name: &str) -> Result<String, JsError> {
+        Ok(self.session(id)?.decl_unique_name(extern_, name))
+    }
+
+    /// What the SAI object of a declaration reads, or undefined for an index the scene does not have: an object with
+    /// `name`, `ctx` (the owning execution context), `hasMetadata`, `fields` (`[name, accessType, typeName, value]` each,
+    /// `metadata` first), and for an EXTERNPROTO `urls`, `loadState` (a constant name), `load`, `autoRefresh`,
+    /// `autoRefreshTimeLimit` and `loaded` (the index of the loaded PROTO, or undefined).
+    #[wasm_bindgen(js_name = declInfo)]
+    pub fn decl_info(&self, id: u32, extern_: bool, decl: u32) -> Result<JsValue, JsError> {
+        let Some(info) = self.session(id)?.decl_info(extern_, decl as usize) else {
+            return Ok(JsValue::UNDEFINED);
+        };
+        let o = js_sys::Object::new();
+        let set = |k: &str, v: JsValue| {
+            let _ = js_sys::Reflect::set(&o, &k.into(), &v);
+        };
+        let fields = js_sys::Array::new();
+
+        for f in &info.fields {
+            fields.push(&js_sys::Array::of4(
+                &f.name.as_str().into(),
+                &f64::from(f.access).into(),
+                &f.type_name.into(),
+                &data_js(&x3d_runtime::data::value_data(&f.value)),
+            ));
+        }
+
+        set("name", info.name.as_str().into());
+        set("ctx", (info.ctx as u32).into());
+        set("hasMetadata", info.has_metadata.into());
+        set("fields", fields.into());
+
+        if let Some(urls) = &info.urls {
+            set(
+                "urls",
+                urls.iter()
+                    .map(|u| JsValue::from(u.as_str()))
+                    .collect::<js_sys::Array>()
+                    .into(),
+            );
+        }
+
+        if let Some(state) = info.load_state {
+            use x3d_runtime::nodes::LoadState::*;
+
+            set(
+                "loadState",
+                match state {
+                    NotStarted => "NOT_STARTED_STATE",
+                    InProgress => "IN_PROGRESS_STATE",
+                    Complete => "COMPLETE_STATE",
+                    Failed => "FAILED_STATE",
+                }
+                .into(),
+            );
+        }
+
+        if let Some((load, refresh, limit)) = info.url_fields {
+            set("load", load.into());
+            set("autoRefresh", refresh.into());
+            set("autoRefreshTimeLimit", limit.into());
+        }
+
+        if let Some(p) = info.loaded {
+            set("loaded", (p as u32).into());
+        }
+
+        Ok(o.into())
+    }
+
+    /// `createInstance ()` / `newInstance ()` of a declaration: the node id of the instance, in the declaration's context,
+    /// not part of the scene.
+    #[wasm_bindgen(js_name = declNewInstance)]
+    pub fn decl_new_instance(
+        &mut self,
+        id: u32,
+        extern_: bool,
+        decl: u32,
+    ) -> Result<Option<u32>, JsError> {
+        Ok(self
+            .session_mut(id)?
+            .decl_new_instance(extern_, decl as usize))
+    }
+
+    /// `requestUpdateInstances ()` (`now` false) or `updateInstances ()` (`now` true).
+    #[wasm_bindgen(js_name = declUpdateInstances)]
+    pub fn decl_update_instances(
+        &mut self,
+        id: u32,
+        extern_: bool,
+        decl: u32,
+        now: bool,
+    ) -> Result<(), JsError> {
+        let s = self.session_mut(id)?;
+
+        if now {
+            s.decl_update_instances(extern_, decl as usize);
+        } else {
+            s.decl_request_update(extern_, decl as usize);
+        }
+
+        Ok(())
+    }
+
+    /// `addUserDefinedField (accessType, name, field)` of a PROTO (`type_name` and `data` as the page's field object holds
+    /// them) or `removeUserDefinedField (name)` (`type_name` empty).
+    #[wasm_bindgen(js_name = declUserField)]
+    pub fn decl_user_field(
+        &mut self,
+        id: u32,
+        decl: u32,
+        name: &str,
+        access: u8,
+        type_name: &str,
+        data: JsValue,
+    ) -> Result<(), JsError> {
+        let s = self.session_mut(id)?;
+
+        if type_name.is_empty() {
+            s.decl_remove_user_field(decl as usize, name);
+            return Ok(());
+        }
+
+        s.decl_add_user_field(decl as usize, name, access, type_name, &js_data(&data))
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `toVRMLString ()` / `toXMLString ()` / `toJSONString ()` of a declaration.
+    #[wasm_bindgen(js_name = declString)]
+    pub fn decl_string(
+        &self,
+        id: u32,
+        extern_: bool,
+        decl: u32,
+        format: &str,
+    ) -> Result<String, JsError> {
+        Ok(self
+            .session(id)?
+            .decl_string(extern_, decl as usize, format))
+    }
+
+    /// `body` of a PROTO: its execution context, or undefined.
+    #[wasm_bindgen(js_name = declBody)]
+    pub fn decl_body(&self, id: u32, decl: u32) -> Result<Option<u32>, JsError> {
+        Ok(self.session(id)?.decl_body(decl as usize).map(|c| c as u32))
+    }
+
+    /// The root nodes of an execution context of the scene (a PROTO body), `0xffffffff` for a null entry.
+    #[wasm_bindgen(js_name = ctxRootNodes)]
+    pub fn ctx_root_nodes(&self, id: u32, ctx: u32) -> Result<Vec<u32>, JsError> {
+        Ok(self
+            .session(id)?
+            .ctx_root_nodes(ctx as usize)
+            .into_iter()
+            .map(|n| n.unwrap_or(u32::MAX))
+            .collect())
+    }
+
+    /// The named nodes of an execution context of the scene in the order of `getNamedNodes ()`.
+    #[wasm_bindgen(js_name = ctxNamedNodes)]
+    pub fn ctx_named_nodes(&self, id: u32, ctx: u32) -> Result<Vec<u32>, JsError> {
+        Ok(self.session(id)?.ctx_named_nodes(ctx as usize))
+    }
+
+    /// `toVRMLString ()` / `toXMLString ()` / `toJSONString ()` of an execution context of the scene (a PROTO body).
+    #[wasm_bindgen(js_name = ctxString)]
+    pub fn ctx_string(&self, id: u32, ctx: u32, format: &str) -> Result<String, JsError> {
+        Ok(self.session(id)?.ctx_string(ctx as usize, format))
+    }
+
+    /// The `url`, `load`, `autoRefresh`, `autoRefreshTimeLimit` of an EXTERNPROTO and `loadNow` / `unloadNow` (`what`).
+    #[wasm_bindgen(js_name = externUrlOp)]
+    pub fn extern_url_op(
+        &mut self,
+        id: u32,
+        decl: u32,
+        what: &str,
+        urls: Vec<String>,
+        number: f64,
+    ) -> Result<bool, JsError> {
+        Ok(self
+            .session_mut(id)?
+            .extern_url_op(decl as usize, what, urls, number))
+    }
+
     /// The named nodes of scene `id` in the order of `getNamedNodes ()`.
     #[wasm_bindgen(js_name = namedNodeList)]
     pub fn named_node_list(&self, id: u32) -> Vec<u32> {
