@@ -264,6 +264,22 @@ struct PageLoad {
     log_seen: usize,
 }
 
+thread_local! {
+    /// The id the next world or load of any `WebBrowser` of this page gets. One counter for all browsers, so a world id names
+    /// one world in the whole page: the in-chain field operations ([`crate::chain`]) find their runtime by this id alone, and
+    /// two canvases never share one.
+    static NEXT_WORLD_ID: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
+}
+
+fn next_world_id() -> u32 {
+    NEXT_WORLD_ID.with(|n| {
+        let id = n.get();
+
+        n.set(id + 1);
+        id
+    })
+}
+
 #[wasm_bindgen]
 pub struct WebBrowser {
     surface: wgpu::Surface<'static>,
@@ -291,7 +307,6 @@ pub struct WebBrowser {
     /// The last [`WebBrowser::take_video_ops`] told the page about video elements.
     video_known: bool,
     current: Option<u32>,
-    next_id: u32,
     /// X3DBrowserContext.isLive: false between endUpdate and beginUpdate, also over a replaceWorld.
     live: bool,
     /// The page's Script realm factory (`setScriptRealm`); none: no Script runs.
@@ -453,7 +468,6 @@ impl WebBrowser {
             audio_payloads: Default::default(),
             video_known: false,
             current: None,
-            next_id: 1,
             live: true,
             script_realm: None,
             log_sink: None,
@@ -493,7 +507,7 @@ impl WebBrowser {
         cache: Rc<RefCell<FetchCache>>,
         now: f64,
     ) -> u32 {
-        let id = self.next_id;
+        let id = next_world_id();
         let factory = self.script_realm.clone();
         let sink = self.log_sink.clone();
         let event_sink = self.field_event_sink.clone();
@@ -553,7 +567,6 @@ impl WebBrowser {
                 }
             });
 
-        self.next_id += 1;
         self.worlds.insert(id, World { session, cache });
         id
     }
@@ -621,9 +634,8 @@ impl WebBrowser {
         });
         let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", base)
             .map_err(|e| JsError::new(&format!("{e:?}")))?;
-        let id = self.next_id;
+        let id = next_world_id();
 
-        self.next_id += 1;
         self.loads.insert(
             id,
             PageLoad {
@@ -2322,6 +2334,14 @@ pub fn chain_root_nodes(world: u32) -> Result<Vec<i64>, JsError> {
             .map(|n| n.map_or(-1, i64::from))
             .collect()
     })
+}
+
+/// `WebBrowser.setRootNodes` inside a field callback: `rootNodes .assign (list)` of the world, as a Script's does.
+#[wasm_bindgen(js_name = chainSetRootNodes)]
+pub fn chain_set_root_nodes(world: u32, list: js_sys::Array) -> Result<(), JsError> {
+    let list = list.iter().map(|v| v.as_f64().map(|n| n as u32)).collect();
+
+    chain_run(world, |rt| crate::chain::set_root_nodes(rt, list))?.map_err(|e| JsError::new(&e))
 }
 
 /// `WebBrowser.nodeValue` inside a field callback.
