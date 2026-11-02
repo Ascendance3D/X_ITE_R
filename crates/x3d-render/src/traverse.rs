@@ -868,6 +868,9 @@ pub struct DepthItem {
     /// displaySimpleInstancedThick: the transformed LINE triangles of a ParticleSystem, made on the GPU
     /// (thick_lines.wgsl) under their instance matrices, in the system's space. `geometry` is empty then.
     pub thick_lines: Option<Rc<x3d_runtime::particles::ThickLines>>,
+    /// A GaussianSplats node (GaussianSplatsShape.addDepthShape): the splat quads are drawn with the depth program; `geometry`
+    /// is empty then.
+    pub splats: Option<Rc<crate::splats::SplatDraw>>,
 }
 
 /// One renderObject.render (TraverseType.SHADOW) view of `items`. LINE particles with a gl.lineWidth above 1 px are the
@@ -1430,6 +1433,7 @@ pub struct Builder<'a> {
 mod traverse_shaders;
 #[path = "traverse_splats.rs"]
 mod traverse_splats;
+pub use traverse_splats::splats_pointing;
 
 /// One GeneratedCubeMapTexture.renderTexture: six frames drawn into the texture's faces before
 /// the frame that samples it (X3DRenderObject.draw: rendered textures first).
@@ -2916,6 +2920,16 @@ impl<'a> Builder<'a> {
                     None => Box3::EMPTY,
                 }
             }
+            // GaussianSplatsShape.getBBox (bbox, shadows): its castShadow is TRUE (see shadow_display).
+            "GaussianSplats" => {
+                let data = self.splat_data(sg, n);
+
+                if data.count == 0 && default_size(sg) {
+                    Box3::EMPTY
+                } else {
+                    Self::splats_bbox(sg, n, &data)
+                }
+            }
             "StaticGroup" => self.bbox_of(sg, &sg.nodes(n, "children"), depth, shadows),
             _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
                 if !default_size(sg) {
@@ -3001,6 +3015,7 @@ impl<'a> Builder<'a> {
                         instances: None,
                         line_width: 1.0,
                         thick_lines: None,
+                        splats: None,
                     });
                 }
             }
@@ -3042,6 +3057,7 @@ impl<'a> Builder<'a> {
                             instances: None,
                             line_width: 1.0,
                             thick_lines: Some(lines),
+                            splats: None,
                         });
                     }
                     return;
@@ -3054,6 +3070,7 @@ impl<'a> Builder<'a> {
                         instances: Some(instances),
                         line_width,
                         thick_lines: None,
+                        splats: None,
                     });
                 }
             }
@@ -3079,6 +3096,35 @@ impl<'a> Builder<'a> {
                         instances: Some(Rc::new(instances)),
                         line_width: 1.0,
                         thick_lines: None,
+                        splats: None,
+                    });
+                }
+            }
+            // GaussianSplatsShape.addDepthShape (X3DShapeNode.traverse SHADOW): the shape casts shadows when it is enabled
+            // (numSplats). Its castShadow starts TRUE and only follows the node's field through an event
+            // (GaussianSplats.initialize adds the field interest but copies the other fields only), so it is TRUE here.
+            "GaussianSplats" => {
+                let data = self.splat_data(sg, n);
+
+                if data.count > 0 {
+                    out.push(DepthItem {
+                        geometry: crate::volume::empty_geometry(),
+                        model_view: *mv,
+                        clip_planes: self
+                            .clip_planes
+                            .iter()
+                            .take(MAX_CLIP_PLANES)
+                            .copied()
+                            .collect(),
+                        instances: None,
+                        line_width: 1.0,
+                        thick_lines: None,
+                        splats: Some(Rc::new(crate::splats::SplatDraw {
+                            node: n,
+                            data,
+                            model_view: *mv,
+                            linear: false,
+                        })),
                     });
                 }
             }

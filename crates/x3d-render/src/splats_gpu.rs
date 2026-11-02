@@ -23,6 +23,12 @@ pub struct SplatInput<'a> {
     pub viewport: [f64; 4],
     /// The fog of the draw: the innermost LocalFog, else the layer's Fog.
     pub fog: Option<&'a crate::fog::FogParams>,
+    /// A shadow map's view: the projection of the light and the depth pipeline (GaussianSplats.fs.js X3D_DEPTH_PASS) in place
+    /// of the frame's projection and the color pipeline.
+    pub depth_projection: Option<[f32; 16]>,
+    /// The pointing pass (GaussianSplats.fs.js X3D_POINTING_PASS): the x3d_Id of the draw. The projection is `depth_projection`'s
+    /// place: the pointing pass's own.
+    pub pick_id: Option<f32>,
 }
 
 struct DataGpu {
@@ -49,20 +55,29 @@ struct PipelineKey {
     format: wgpu::TextureFormat,
     samples: u32,
     reversed: bool,
+    logarithmic: bool,
+    /// A shadow map draw: no color target, a depth format of its own.
+    depth: bool,
+    /// The pointing pass: 1 the first (vertex and id, normal), 2 the second (texCoord).
+    pick: u8,
 }
 
-struct Prepared {
+pub struct Prepared {
     pipeline: PipelineKey,
+    /// The pointing pass's second pipeline.
+    pipeline_b: Option<PipelineKey>,
     group: (usize, usize),
     offset: u32,
     instances: u32,
 }
 
-const UNIFORM_BYTES: usize = 64 + 64 + 16 + 16 + 16 + 16 + 6 * 16 + 5 * 16;
+const UNIFORM_BYTES: usize = 64 + 64 + 16 + 16 + 16 + 16 + 6 * 16 + 5 * 16 + 64 + 16;
 
 #[derive(Default)]
 pub struct SplatGpu {
     module: Option<(wgpu::ShaderModule, wgpu::BindGroupLayout)>,
+    /// The program in `module` has the logarithmic depth of `DepthMode::Logarithmic`.
+    module_log: bool,
     data: HashMap<usize, DataGpu>,
     indices: HashMap<(usize, usize), IndexGpu>,
     pipelines: HashMap<PipelineKey, (wgpu::RenderPipeline, u64)>,
@@ -85,7 +100,7 @@ fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
 }
 
 /// splats.wgsl with the frame structs, the tone map and the fog functions of x3d.wgsl filled in.
-pub fn assemble() -> String {
+pub fn assemble(logarithmic: bool) -> String {
     let x3d = include_str!("x3d.wgsl");
     let structs = between(x3d, "struct Light {", "struct DrawUniforms {");
     let tone = between(x3d, "// ToneMapping2.glsl linearToSRGB", "fn f_schlick(");
@@ -95,9 +110,37 @@ pub fn assemble() -> String {
         "@fragment\nfn fs_main(",
     );
 
-    SPLATS_WGSL
+    let mut src = SPLATS_WGSL
         .replace("//@FRAME_STRUCTS@", structs)
-        .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"))
+        .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"));
+
+    if logarithmic {
+        // The Logarithmic include of GaussianSplats.vs.js (`logarithmic (gl_Position)`) and .fs.js (`logarithmic ()`):
+        // depth = 1 + gl_Position.w, gl_FragDepth = log2 (depth) * x3d_LogarithmicFarFactor1_2 (travels in fog_range.z).
+        let mut patch = |a: &str, b: &str| {
+            assert_eq!(src.matches(a).count(), 1, "splat shader patch anchor {a:?}");
+            src = src.replacen(a, b, 1);
+        };
+
+        patch(
+            "    @location(4) tex_coord: vec2<f32>,\n}",
+            "    @location(4) tex_coord: vec2<f32>,\n    @location(5) log_depth: f32,\n}\n\nstruct FOut {\n    @location(0) color: vec4<f32>,\n    @builtin(frag_depth) depth: f32,\n}",
+        );
+        patch(
+            "    out.position = p;\n",
+            "    out.position = p;\n    out.log_depth = 1.0 + p.w;\n",
+        );
+        patch(
+            "fn fs_main(in: VOut) -> @location(0) vec4<f32> {",
+            "fn fs_main(in: VOut) -> FOut {",
+        );
+        patch(
+            "    return final_color;\n}",
+            "    return FOut(final_color, log2(in.log_depth) * u.extra.x);\n}",
+        );
+    }
+
+    src
 }
 
 fn matrix_f32(m: &Matrix4) -> [f32; 16] {
@@ -144,6 +187,19 @@ fn pad4(values: &[f32], per: usize) -> Vec<f32> {
     out
 }
 
+impl SplatInput<'_> {
+    /// The index and bind group keys of a shadow map's and a pointing pass's draws are apart from the frame's.
+    fn key_kind(&self) -> usize {
+        if self.pick_id.is_some() {
+            2 << 16
+        } else if self.depth_projection.is_some() {
+            1 << 16
+        } else {
+            0
+        }
+    }
+}
+
 impl SplatGpu {
     /// GPU objects held: data sets (five buffers each), sorted index buffers, pipelines, bind
     /// groups; 0 each after an unload.
@@ -156,14 +212,19 @@ impl SplatGpu {
         ]
     }
 
-    fn ensure_module(&mut self, device: &wgpu::Device) {
-        if self.module.is_some() {
+    fn ensure_module(&mut self, device: &wgpu::Device, logarithmic: bool) {
+        if self.module.is_some() && self.module_log == logarithmic {
             return;
         }
 
+        // Another depth mode: the program, its pipelines and the bind groups of the old layout go.
+        self.pipelines.clear();
+        self.groups.clear();
+        self.module_log = logarithmic;
+
         let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("splats"),
-            source: wgpu::ShaderSource::Wgsl(assemble().into()),
+            source: wgpu::ShaderSource::Wgsl(assemble(logarithmic).into()),
         });
         let storage_entry = |binding: u32| wgpu::BindGroupLayoutEntry {
             binding,
@@ -209,6 +270,8 @@ impl SplatGpu {
         samples: u32,
         depth_format: wgpu::TextureFormat,
         reversed: bool,
+        logarithmic: bool,
+        log_far_factor: f32,
         projection: &[f32; 16],
         frame_no: u64,
         inputs: &[SplatInput],
@@ -219,9 +282,8 @@ impl SplatGpu {
             return;
         }
 
-        self.ensure_module(device);
+        self.ensure_module(device, logarithmic);
 
-        let inv_projection = inverse_f32(projection);
         let mut blobs: Vec<Vec<u8>> = vec![];
         let mut ordinals: HashMap<usize, usize> = HashMap::new();
         let stride = (UNIFORM_BYTES as u64).next_multiple_of(256);
@@ -274,7 +336,7 @@ impl SplatGpu {
 
             // The sorted indices (GaussianSplatsShape.sortIndices).
             let mv = matrix_f32(&d.model_view);
-            let index_key = (data_key, ordinal);
+            let index_key = (data_key, ordinal + input.key_kind());
             let count = data.count;
             let fresh = !self
                 .indices
@@ -315,6 +377,9 @@ impl SplatGpu {
             }
 
             // The uniforms.
+            let projection = &input.depth_projection.unwrap_or(*projection);
+            let pick_id = input.pick_id.unwrap_or(0.0);
+            let inv_projection = inverse_f32(projection);
             let model_view_inverse = inverse_f32(&mv);
             let (viewport_w, viewport_h) = (input.viewport[2] as f32, input.viewport[3] as f32);
             let mut bytes: Vec<u8> = Vec::with_capacity(stride as usize);
@@ -394,6 +459,9 @@ impl SplatGpu {
                 None => bytes.extend_from_slice(&[0u8; 5 * 16]),
             }
 
+            f(projection, &mut bytes);
+            f(&[log_far_factor, pick_id, 0.0, 0.0], &mut bytes);
+
             debug_assert_eq!(bytes.len(), UNIFORM_BYTES);
             bytes.resize(stride as usize, 0);
             blobs.push(bytes);
@@ -421,13 +489,26 @@ impl SplatGpu {
         crate::transfer::upload(crate::transfer::Kind::Other, all.len());
 
         let (module, layout) = self.module.as_ref().unwrap();
-        let pipeline_key = PipelineKey {
+        // A shadow map's prepare holds only depth draws.
+        let depth = inputs.iter().any(|i| i.depth_projection.is_some());
+        // A pointing pass's prepare holds only pointing draws, which go through the buffer's two passes.
+        let pick = inputs.iter().any(|i| i.pick_id.is_some());
+        let key_of = |pick: u8| PipelineKey {
             format,
             samples,
             reversed,
+            logarithmic,
+            depth,
+            pick,
         };
+        let pipeline_key = key_of(pick as u8);
+        let pipeline_b = pick.then(|| key_of(2));
 
-        if !self.pipelines.contains_key(&pipeline_key) {
+        for pipeline_key in std::iter::once(pipeline_key).chain(pipeline_b) {
+            if self.pipelines.contains_key(&pipeline_key) {
+                continue;
+            }
+
             let blend = wgpu::BlendState {
                 // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
                 color: wgpu::BlendComponent {
@@ -443,15 +524,38 @@ impl SplatGpu {
             };
             let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("splats"),
-                bind_group_layouts: &[Some(frame_layout), Some(layout)],
+                // The program reads its projection from its own uniforms: a depth draw needs no frame group.
+                bind_group_layouts: &[(!depth).then_some(frame_layout), Some(layout)],
                 immediate_size: 0,
             });
+            let rgba32 = || {
+                Some(wgpu::ColorTargetState {
+                    format: wgpu::TextureFormat::Rgba32Float,
+                    blend: None,
+                    write_mask: wgpu::ColorWrites::ALL,
+                })
+            };
+            let targets = if pick {
+                if pipeline_key.pick == 1 {
+                    vec![rgba32(), rgba32()]
+                } else {
+                    vec![rgba32()]
+                }
+            } else if depth {
+                vec![]
+            } else {
+                vec![Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(blend),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })]
+            };
             let p = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: Some("splats"),
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module,
-                    entry_point: Some("vs_main"),
+                    entry_point: Some(if pick { "vs_pick" } else { "vs_main" }),
                     compilation_options: Default::default(),
                     buffers: &[],
                 },
@@ -463,10 +567,14 @@ impl SplatGpu {
                     ..Default::default()
                 },
                 depth_stencil: Some(wgpu::DepthStencilState {
-                    format: depth_format,
-                    // drawShapes: gl.depthMask (false) for the transparent shapes.
-                    depth_write_enabled: Some(false),
-                    depth_compare: Some(if reversed {
+                    format: if depth {
+                        crate::gpu::SHADOW_FORMAT
+                    } else {
+                        depth_format
+                    },
+                    // drawShapes: gl.depthMask (false) for the transparent shapes; a shadow map writes depth.
+                    depth_write_enabled: Some(depth || pick),
+                    depth_compare: Some(if reversed && !depth && !pick {
                         wgpu::CompareFunction::GreaterEqual
                     } else {
                         wgpu::CompareFunction::LessEqual
@@ -475,19 +583,25 @@ impl SplatGpu {
                     bias: Default::default(),
                 }),
                 multisample: wgpu::MultisampleState {
-                    count: samples,
+                    count: if depth || pick { 1 } else { samples },
                     mask: !0,
                     alpha_to_coverage_enabled: false,
                 },
                 fragment: Some(wgpu::FragmentState {
                     module,
-                    entry_point: Some("fs_main"),
+                    entry_point: Some(if pick {
+                        if pipeline_key.pick == 1 {
+                            "fs_pick_a"
+                        } else {
+                            "fs_pick_b"
+                        }
+                    } else if depth {
+                        "fs_depth"
+                    } else {
+                        "fs_main"
+                    }),
                     compilation_options: Default::default(),
-                    targets: &[Some(wgpu::ColorTargetState {
-                        format,
-                        blend: Some(blend),
-                        write_mask: wgpu::ColorWrites::ALL,
-                    })],
+                    targets: &targets,
                 }),
                 multiview_mask: None,
                 cache: None,
@@ -495,7 +609,9 @@ impl SplatGpu {
             self.pipelines.insert(pipeline_key, (p, frame_no));
         }
 
-        self.pipelines.get_mut(&pipeline_key).unwrap().1 = frame_no;
+        for key in std::iter::once(pipeline_key).chain(pipeline_b) {
+            self.pipelines.get_mut(&key).unwrap().1 = frame_no;
+        }
 
         let mut ordinals: HashMap<usize, usize> = HashMap::new();
 
@@ -506,7 +622,7 @@ impl SplatGpu {
                 *o += 1;
                 *o - 1
             };
-            let group_key = (data_key, ordinal);
+            let group_key = (data_key, ordinal + input.key_kind());
 
             match self.groups.get_mut(&group_key) {
                 Some(g) => g.1 = frame_no,
@@ -559,11 +675,39 @@ impl SplatGpu {
 
             self.prepared.push(Prepared {
                 pipeline: pipeline_key,
+                pipeline_b,
                 group: group_key,
                 offset: (stride * i as u64) as u32,
                 instances: input.draw.data.count as u32,
             });
         }
+    }
+
+    /// The draws the last [`SplatGpu::prepare`] recorded, taken out so that another prepare (the frame's after a shadow map's)
+    /// leaves them intact.
+    pub fn take_prepared(&mut self) -> Vec<Prepared> {
+        std::mem::take(&mut self.prepared)
+    }
+
+    /// Draw a prepared splat draw taken by [`SplatGpu::take_prepared`].
+    pub fn draw_prepared(&self, pass: &mut wgpu::RenderPass<'_>, p: &Prepared) {
+        self.draw_prepared_pass(pass, p, false);
+    }
+
+    /// [`SplatGpu::draw_prepared`] for the pointing buffer's second pass (`second`) or its first.
+    pub fn draw_prepared_pass(&self, pass: &mut wgpu::RenderPass<'_>, p: &Prepared, second: bool) {
+        if p.instances == 0 {
+            return;
+        }
+
+        let key = if second {
+            p.pipeline_b.as_ref().unwrap_or(&p.pipeline)
+        } else {
+            &p.pipeline
+        };
+        pass.set_pipeline(&self.pipelines[key].0);
+        pass.set_bind_group(1, &self.groups[&p.group].0, &[p.offset]);
+        pass.draw(0..6, 0..p.instances);
     }
 
     /// Draw prepared splats `i`.

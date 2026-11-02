@@ -1,0 +1,435 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "gs-basic.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b588c54eb5e7168518ef6f9410212991631106930be49e03ef7b584c75768afe",
+   "pngSha256": "ff0b2e96563d697f033484a7d8f62dcd0916ef10a545df400fc4f6c452f91c7e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-bbox-default.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7e1acf1390c61694a852d6651427da45c09eae4b158fba06cf8910d81f963e2b",
+   "pngSha256": "d311455cebb0a15783548078619cf2fef315ef38cc2158b2c95260367518be6f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-bbox.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ffd5cccab0485e7f408ba8ec2a87389134e1e30a1766e5bc459452b83df74117",
+   "pngSha256": "e9fd7ba6f5a170e675946a05765287ee9fd2549755b6556380fe1cb76f3d5d8b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-clip.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "86739703c5ddbcb212425f85791151e86c4b20712d0e310cb25921515a688678",
+   "pngSha256": "660d02d12accde2239d25ef3d180637121b700cc9c4959b99d70966a0e8deff8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-colorspace-unknown.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a80197ab65884849d1708f4da2aaa4f81d9d0c58a579301b14109782f903bb73",
+   "pngSha256": "6a5c9d5c68ee2d9b85f81f9d1a7f1e2947594bd96c96c11ba5a300c4fbe993fb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-edge.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4321c9c2a9519e26977cbe7e4f6fef09b06a5a9896793cfce47b7a5ee3bd86ad",
+   "pngSha256": "7a659f92cc219f97a0de54e3713739555a42a628d0f0a1f1ca6826e8544de8f7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-empty.wrl",
+   "ok": false,
+   "error": "TIMEOUT 45s",
+   "log": []
+  },
+  {
+   "file": "gs-fog-exp.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5f0dd31307d8258a85b495a54408914de8b15640de30eb8f5de3e25284d6fde9",
+   "pngSha256": "36c7dc8b6a8d286d593312368e65f4fdb9c943b4a2c7b4812fa825ff30a48a59",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-fog-linear.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4bd4247c56e275eee1135c637ecfecb134382026d9f673c8ecf7d5193a3d18f6",
+   "pngSha256": "28134bddecb414b13134cd53ef47431fb1ee7977bd915c28e1c3bb2ecb33aa2e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "285b1f1d279d6eb5e9012001d79087a4d8461b88c8599c4832538c7814327ddb",
+   "pngSha256": "1eb217df7df1a9f7a6ea35fb9e956be9254cb5f69510bb1c331e61221f5af845",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-linear.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c8fc628f23ceebfa488010f4afb565a71a801ac9ca3bd5a1dccf6fedad4f8e1c",
+   "pngSha256": "f2a52a5dc1689987405ca9b5d504150f6b0a3e6f7add4318187d4ec9d15efc57",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-near-far.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d921730122e1cb723cdf24953d2faabf11fb06051b365f7c95d639be66fbb1a3",
+   "pngSha256": "ac78b74fcbe4a5bad9c452dcbdcd33b3512df77c2a0a52d70f360f683873da09",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-nosh.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f31a3346981e0237637e2aee7f300ad60d7d1658ca3b2a74e7e29003d90b25fe",
+   "pngSha256": "7c62d5a67874002abdab65483365952f2bcfcb354bf797afc1f6a0600a93b018",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-opaque.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f9b3dae902333440f00fba2fe0862f9182803927cf6433dd022bd888b431728b",
+   "pngSha256": "8428095b2c389cf0c31f08d85ac6c5c5b9a67bd6ac470d6ee738655b59fde20f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d88b40062c564cc1fd4ec2c2f44595ee51a136f0a47731abab0667b7a2a5482e",
+   "pngSha256": "ddbe4154f490f5d25cb9894aca5fac67137f2f2011229115b5083e10fed0af4d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-overlap.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "54c2b0533d79fc3a42afa802efe8128efcdab0408cc80cc4da1e615ed103c331",
+   "pngSha256": "66584efe26c853073b0b406f0d68c93107d949b317476437fe7c4c9273aac0c5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ply.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6b221b3155edb6a5f5411590e2e889d1c1e03928dfd94cebd67e5074580c5386",
+   "pngSha256": "1f6c4172ae38cbcec10106aeaab6185117c26a185beb382b508bd72056f99dfc",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-random-3000.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a30183d7d4167bf3e81e2b3f08b57912552a944c79cc7850831a55062e34e550",
+   "pngSha256": "49472605d8d18792b0f80ccfd419d9413573a618ea789438357345cb519d6669",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-route.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "140ce4dec06a8da6f50f98554cd667dccd4a0a0557cdc0b71294e81c26440f20",
+   "pngSha256": "2aa5f232513f9c9dabf5b3910bc1de7c0075447d73d7af30edab219f1d903d54",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-runtime.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "930561eba5f3f446942a39951fcc71909d2c50f99bb76435340a87e45962d9e9",
+   "pngSha256": "1a69646695f2774159ec874fe95d8d9bca301a2d8a5a33e5e5bae54926c133cd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh-partial.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "df8d534d4e5b2395c9a53be545f6c23fac0dfd7fadcf56f47c68fed986e303f6",
+   "pngSha256": "492d8806633d3bb31f5acbf733873b9b3d8608846fda4b83fbcf3c4d491b4cfa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh0.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "19eef29cb1e9d1c00f211e59656398689502329f16266269542390e3fd381d3d",
+   "pngSha256": "5ff84cbf64ea05a068753bc139138ea60e075ffdb6a8a5c70dd7789037e3e44e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh1.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f06896b690292947bb3eebd2469f28ecd351f49a43e306e6d072de33488d96fc",
+   "pngSha256": "ae13f5522dc0b1d71342c7382bfbb26c5e74c68ea6bd86acf01a3854d02c1675",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e1127768b715d6d968ed90d47b052a81c08294fe0782cb68238b4c1347e62c57",
+   "pngSha256": "3fcea1098cbddda86490dcc49bd0c9da7d849f65fa41debb588d68a108613904",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view1.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "481d0bd35eb82bc192193b46634a36572ead444ab086e8a8311b8ff15c12c2f1",
+   "pngSha256": "1716946ed1721bfc2a05e0ab458b7ffab17142c76aac8f346eb85460596cf261",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3862d00f2cf35d3b818c1f2fffe5ae87f6faa0cee5ac49e119d573b677d3e76f",
+   "pngSha256": "b278b3ea7a0a64f1106ffae12468fc4bec6c793e141a2cb82df03962e31b5b1a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3-view3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2167bc366972ecafe1fe58ee599800c0baf08a0a15b07be76b41295de805b7bf",
+   "pngSha256": "c7abcd774d191df95328ae4ad2646d49fc76fa42a961be8bd68c926a44af789d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-sh3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "558f492d3f28c1d442357278156aaf82ae53f0588ba97d7ba4fe0709c6933d19",
+   "pngSha256": "a8e028d9b434a7dbccc3237b500a0278fe044e1ba6f40ad0b130d667e6d9d81e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-opacities.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "9c9a1e553f4166fa92efad05c2029766f14bde4197df4617b7cff42cc4149917",
+   "pngSha256": "6fd74eb01f99f4facc37b86de7fdbafde921fb91eb8430ba81c04f0abff1c9ba",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-scales.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "db05c15e12726633469313573597111f45a832a4886ea1680a0579d190d450c5",
+   "pngSha256": "a3539ee7a9c6a60107f7eb55140eb627803d3b43e54489fb49328b9d1ee827cb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-short-sh.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "33a587740175bc1b44c87f0a95bc37c695541f563ec2f118aaef5d35b89f5194",
+   "pngSha256": "e0959dd6471930b5dba6edbf249aba9bfd247d7c67f6bf63fd3e8efb0dfe4626",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-srgb.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a80197ab65884849d1708f4da2aaa4f81d9d0c58a579301b14109782f903bb73",
+   "pngSha256": "6a5c9d5c68ee2d9b85f81f9d1a7f1e2947594bd96c96c11ba5a300c4fbe993fb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-ties.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "377f6b04fe4ea12847b0b551e4d0fab688434975bd54f13dfe96cb2751d08f9a",
+   "pngSha256": "18d5db43ecfb43df64a04b7236f032f28738a25b28032c36a1cd4e08f70b6ffa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transform.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b61ef37f7c286c0b5abbebfc55fdaebc3474dfb6fb0c09dbb853d9b2335d985f",
+   "pngSha256": "5fc77c7625989d5778cc401299d360d4f02b6baf9d32f2e80c498486708da4b6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transmission.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3b7771edeaaa89ed9eb6bc421c2d70b8e242c5a901cf75ca1cc37bee6d0bf831",
+   "pngSha256": "c016321ce10d2a01709ad9d4020ecba28109e16e46a1c9adde69e47cbd9565c0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-transparent-mix.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "98acd733fb63e73bb641d93e0024d2deadeaf3ee86dee362f38beb288abe4533",
+   "pngSha256": "e8884a76185ead389f3b7c6e3911d55fa24a31505be59f03ff1c7e0aa0c903a0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-visible-false.wrl",
+   "ok": false,
+   "error": "TIMEOUT 45s",
+   "log": []
+  }
+ ]
+}

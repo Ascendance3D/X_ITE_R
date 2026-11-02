@@ -1,0 +1,95 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "gs-shadow-clip.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "be1a03b078bdafc5fa6d22ac6d5ee3318d020f4769945c923b6ada70622824d3",
+   "pngSha256": "21a67b2fed759ce535635d73fa0ad6a2de8013a25546097944b9c48335e354cc",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-dir.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cb86d82a4ef408a1cec50128265be9be88d7e4de51a552b261a20311d39aeeec",
+   "pngSha256": "c22d232f378c5ccc1aec8e128d69e9aa70a820cc083df853a22c8b26ac7574ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-point.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a005e9ad57e74d2ed90d6f4aa7f005e8b3a14c00e23ea71805428f1d67b210d3",
+   "pngSha256": "24f86815890db46634ffc1d9fb79db36e65704eddd55ca12b67d2920c6147598",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-spot.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b49265b7a12da6daad5845c3a84bfefd7a76614cc0a6bdd9371561e8327d1464",
+   "pngSha256": "27b0a0badeac71d4f1543f8895025904d6c58fa9e2b3f29e5abbf3aaab423072",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-xform.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "eda3db2c7357e9c574038a85e49e4d4690a0432b551f4eded66acb3418e7fda9",
+   "pngSha256": "c91b0b27d766ad5b8c426a483a1ac48a8bfc3fdc0ec0245bb8a663cb96c8d0f4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}
