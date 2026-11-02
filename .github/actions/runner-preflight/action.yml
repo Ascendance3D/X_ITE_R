@@ -13,7 +13,7 @@ runs:
         need() { if ! eval "$2" >/dev/null 2>&1; then echo "::error::preflight: $1 is missing on this runner"; fail=1; fi; }
         warn() { if ! eval "$2" >/dev/null 2>&1; then echo "::warning::preflight: $1"; fi; }
         need "an NVIDIA GPU (nvidia-smi -L)" "nvidia-smi -L"
-        need "a Vulkan ICD for the GPU (/usr/share/vulkan/icd.d or /etc/vulkan/icd.d)" "ls /usr/share/vulkan/icd.d/*nvidia* /etc/vulkan/icd.d/*nvidia*"
+        need "a Vulkan ICD for the GPU (/usr/share/vulkan/icd.d or /etc/vulkan/icd.d)" "compgen -G '/usr/share/vulkan/icd.d/*nvidia*' || compgen -G '/etc/vulkan/icd.d/*nvidia*'"
         need "cargo" "command -v cargo"
         need "rustup" "command -v rustup"
         need "Node 24 or newer" "node -e 'process.exit(parseInt(process.versions.node) >= 24 ? 0 : 1)'"
