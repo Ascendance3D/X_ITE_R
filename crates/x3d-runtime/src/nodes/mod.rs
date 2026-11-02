@@ -821,8 +821,11 @@ impl Runtime {
             Cb::ViewpointIsBound => {
                 // X3DViewpointNode.set_bound__: `getBrowser () .setDescription (this ._description)`.
                 if self.get_bool(node, "isBound") {
-                    if let Some(FieldValue::SFString(d)) = self.pre_value(node, "description") {
+                    if let Some(FieldValue::SFString(d)) =
+                        self.pre_value(node, "description").cloned()
+                    {
                         self.description = d.clone();
+                        self.description_events.push(d);
                     }
                 }
 

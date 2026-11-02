@@ -1148,6 +1148,13 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-options-01-baseline --ru
   byte-identical. It records the resting position (ProximitySensor `position_changed`) of a WALK viewer that starts 3 m above a floor, with the
   default, with Gravity 0 before the world and with the default set again (a negative value was dropped: the climb depends on the frame rate).
 
+## Web browser UI 01 (2026-11-01, issue #141): descriptions, splash screen, timings panel, context menu, Shift+F8
+- Five runs gave identical values (Chrome 156.0.8078.47). Prepare the worktree as in "Recording from a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-ui-01-baseline --runs 5 --suite ui01
+```
+
 ## Web browser attributes 01 (2026-10-28): canvas attributes, contentScale, maximumFrameRate, update
 
 - `x_ite-web-runtime-02.mjs --suite attributes01` runs the 10 cases of `crates/x3d-web/tests/browser/attributes01_case.mjs`
