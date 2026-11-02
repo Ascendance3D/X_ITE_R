@@ -8,7 +8,8 @@
 //! Same comparison as rea_batch10_screen.rs: scene text exact, poses within 1e-4, the sorted log exact, captured frames with at most
 //! 0.5% of the pixels more than 8 off (the limit is not widened). Without a GPU adapter the image part is skipped.
 //!
-//! KNOWN_GAPS lists cases the renderer cannot match yet; the test requires them to keep failing.
+//! PICK_ULPS lists the cases whose pickProbes differ from X_ITE's in the last float32 digits, each with the largest distance in
+//! float32 ulps that is allowed (the largest one seen) and why; every other probe value, and each probe's id, stays exact.
 //!
 //! The cases are split by prefix into two tests (before 2026-10-21 both were one test, rea_batch12_cases_match_x_ite):
 //! rea_batch12_pick_cases_match_x_ite (pk-*) needs a GPU: without one x3d-drive picks with the ray cast, whose float64 hits
@@ -17,6 +18,9 @@
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
+use common::ulps::within_ulps;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -29,15 +33,19 @@ static GPU: Mutex<()> = Mutex::new(());
 const PICK: &[&str] = &["pk-"];
 const VIEW_BILLBOARD: &[&str] = &["vw-", "bbb-"];
 
-/// (case name, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str)] = &[
+/// (case name, largest allowed float32 ulp distance of a pickProbes number, why Rust differs). The distance is measured on
+/// the float32 values; the hit ids and the shape of every probe must still be equal. The limit is the largest distance the
+/// recordings show (it fails if a probe moves further), not a round number.
+const PICK_ULPS: &[(&str, u64, &str)] = &[
     (
         "pk-points-style",
+        3,
         "PointProperties points: hit ids, points and normals are bit-exact, but gl_PointCoord (the hit texCoord) differs by 1 to 3 \
          float32 ulps at some pixels (584 of 2479 probes): the oracle GPU's GL point sprite coordinate is not reproduced exactly",
     ),
     (
         "pk-lines",
+        398,
         "lines: every probe hits the same line, but the interpolated hit point differs by up to 63 float32 ulps on aliased lines \
          (GL line rasterization vs. the quad emulation) and up to 398 ulps on a transformed thick line (X_ITE makes its \
          triangles by transform feedback in float32, Rust on the CPU in double)",
@@ -146,6 +154,7 @@ fn compare_case(
     script: &str,
     msaa: u32,
     text_tol: f64,
+    pick_ulps: u64,
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
@@ -210,11 +219,18 @@ fn compare_case(
             .and_then(Value::as_array)
             .cloned()
             .unwrap_or_default();
+        let mut seen = 0;
         let differ: Vec<usize> = (0..want.len().max(got.len()))
-            .filter(
-                |&i| !matches!((want.get(i), got.get(i)), (Some(a), Some(b)) if same_value(a, b)),
-            )
+            .filter(|&i| {
+                !matches!((want.get(i), got.get(i)), (Some(a), Some(b)) if within_ulps(a, b, pick_ulps, &mut seen))
+            })
             .collect();
+
+        if pick_ulps > 0 {
+            eprintln!(
+                "{name} MSAA {msaa}: pickProbes differ by at most {seen} float32 ulps (allowed {pick_ulps})"
+            );
+        }
 
         if !differ.is_empty() {
             let i = differ[0];
@@ -334,32 +350,22 @@ fn check_cases(prefixes: &[&str]) {
             continue;
         }
 
-        if let Some((_, why)) = KNOWN_GAPS.iter().find(|(gap, _)| *gap == name) {
-            let mut own = vec![];
-            compare_case(&root, name, world, script, msaa, text_tol, gpu, &mut own);
+        let pick_ulps = PICK_ULPS
+            .iter()
+            .find(|(case, ..)| *case == name)
+            .map_or(0, |(_, ulps, _)| *ulps);
 
-            if own.is_empty() {
-                failures.push(format!(
-                    "{name} MSAA {msaa}: matches X_ITE now; remove it from KNOWN_GAPS ({why})"
-                ));
-            } else {
-                eprintln!(
-                    "{name} MSAA {msaa}: known gap, {} differences ({why})",
-                    own.len()
-                );
-            }
-        } else {
-            compare_case(
-                &root,
-                name,
-                world,
-                script,
-                msaa,
-                text_tol,
-                gpu,
-                &mut failures,
-            );
-        }
+        compare_case(
+            &root,
+            name,
+            world,
+            script,
+            msaa,
+            text_tol,
+            pick_ulps,
+            gpu,
+            &mut failures,
+        );
 
         checked += 1;
     }
