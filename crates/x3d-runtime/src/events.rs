@@ -111,6 +111,14 @@ impl Runtime {
             }
         }
 
+        // GaussianSplats.initialize: `_castShadow .addFieldInterest (shapeNode ._castShadow)`.
+        if self.builtin_name(k.0) == Some("GaussianSplats") && self.field(k).name == "castShadow" {
+            if let FieldValue::SFBool(b) = self.value(k) {
+                let b = *b;
+                self.splat_cast_shadow.insert(k.0, b);
+            }
+        }
+
         // Process interests (snapshot, like X3DObject.processInterests over the current Map).
         let interests = self
             .frt

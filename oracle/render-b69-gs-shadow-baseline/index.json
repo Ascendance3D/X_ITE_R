@@ -57,6 +57,39 @@
    "canvasDisplay": "block"
   },
   {
+   "file": "gs-shadow-event-false.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "94cb5628e3f4d659443e39455a8c1f5c2fc6d461ea3f0db62a4b2414be93ea08",
+   "pngSha256": "45d5b8fd2f170c876714713da58c58cd2f4b392f7b2a1f0b79f023413974176d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-event-true.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "13729bbf066047c4a96b465088a59521a6f33303a5f9d4807100e86f6e5aeb0e",
+   "pngSha256": "399401d34f1168077ce136f9015a5ef2e764962accf990f7c6fde5811b2eb0ea",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "gs-shadow-field-false.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "13729bbf066047c4a96b465088a59521a6f33303a5f9d4807100e86f6e5aeb0e",
+   "pngSha256": "399401d34f1168077ce136f9015a5ef2e764962accf990f7c6fde5811b2eb0ea",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
    "file": "gs-shadow-point.wrl",
    "ok": true,
    "log": [],
@@ -89,5 +122,6 @@
    "splashVisible": false,
    "canvasDisplay": "block"
   }
- ]
+ ],
+ "note_castShadow": "gs-shadow-field-false, -event-false and -event-true (Refs #69): three identical recordings each (sha256 of the PNG equal); recorded after the other worlds with the same pin, Chrome and GPU"
 }
