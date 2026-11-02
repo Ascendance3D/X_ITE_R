@@ -51,6 +51,7 @@ pub mod release;
 pub mod script;
 pub mod sound;
 pub mod url_object;
+pub mod webm;
 
 use std::collections::HashMap;
 use x3d_fields::{FieldValue, NodeId, access};

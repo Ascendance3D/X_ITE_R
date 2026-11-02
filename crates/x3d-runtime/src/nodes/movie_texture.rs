@@ -331,6 +331,40 @@ impl MovieMedia {
         })
     }
 
+    /// A WebM with a VP9 video track, decoded here ([`crate::webm`]) where the page has no `<video>` element. The
+    /// frames play like a GIF's (GifMedia's mapping of `elapsedTime` to a frame, the frame times as delays): the sound
+    /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 track
+    /// that decodes, which the caller treats as a video the engine cannot show.
+    pub fn decode_webm(data: &[u8]) -> Option<MovieMedia> {
+        let video = crate::webm::decode(data).ok()?;
+        let n = video.frames.len();
+
+        frame_bytes(video.width, video.height, n).ok()?;
+
+        // A frame lasts until the next one starts; the last repeats the step before it.
+        let times: Vec<f64> = video.frames.iter().map(|f| f.time_ms).collect();
+        let delays: Vec<f64> = (0..n)
+            .map(|i| match times.get(i + 1) {
+                Some(next) => next - times[i],
+                None if i > 0 => times[i] - times[i - 1],
+                None => 0.0,
+            })
+            .collect();
+
+        Some(MovieMedia {
+            width: video.width,
+            height: video.height,
+            frames: video.frames.into_iter().map(|f| f.rgba).collect(),
+            delays,
+            kind: Kind::Gif {
+                cycle: 0.0,
+                looping: false,
+            },
+            playback_rate: 1.0,
+            shown: 0,
+        })
+    }
+
     /// apng-js parseAPNG, the frame images and PNGMedia (whose `player .stop ()` renders frame 0). The size, the
     /// frame count and the delays are those of parseAPNG. The browser decodes each frame image; the frames are
     /// those the `image` crate composites until it finds an error. A frame after that error keeps the picture
