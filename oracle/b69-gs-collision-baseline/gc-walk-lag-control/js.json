@@ -1,0 +1,3755 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 42,
+ "warmup": 8,
+ "seed": 69000002,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 13,
+   "time": 946684800.4333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 14,
+   "time": 946684800.4666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 15,
+   "time": 946684800.5,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 16,
+   "time": 946684800.5333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 17,
+   "time": 946684800.5666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 18,
+   "time": 946684800.6,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 19,
+   "time": 946684800.6333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 20,
+   "time": 946684800.6666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 21,
+   "time": 946684800.7,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 22,
+   "time": 946684800.7333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 23,
+   "time": 946684800.7666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 24,
+   "time": 946684800.8,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 25,
+   "time": 946684800.8333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 26,
+   "time": 946684800.8666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 27,
+   "time": 946684800.9,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 28,
+   "time": 946684800.9333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 29,
+   "time": 946684800.9666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 30,
+   "time": 946684801,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 31,
+   "time": 946684801.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 32,
+   "time": 946684801.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 33,
+   "time": 946684801.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 34,
+   "time": 946684801.1333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 35,
+   "time": 946684801.1666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 36,
+   "time": 946684801.2,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 37,
+   "time": 946684801.2333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 38,
+   "time": 946684801.2666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 39,
+   "time": 946684801.3,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 40,
+   "time": 946684801.3333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 41,
+   "time": 946684801.3666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 42,
+   "time": 946684801.4,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "42": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  }
+ },
+ "log": [
+  "frame 1: 0 emitter.animate calls",
+  "frame 1: 0 randomSeed uniform writes",
+  "frame 2: 0 emitter.animate calls",
+  "frame 2: 0 randomSeed uniform writes",
+  "frame 3: 0 emitter.animate calls",
+  "frame 3: 0 randomSeed uniform writes",
+  "frame 4: 0 emitter.animate calls",
+  "frame 4: 0 randomSeed uniform writes",
+  "frame 5: 0 emitter.animate calls",
+  "frame 5: 0 randomSeed uniform writes",
+  "frame 6: 0 emitter.animate calls",
+  "frame 6: 0 randomSeed uniform writes",
+  "frame 7: 0 emitter.animate calls",
+  "frame 7: 0 randomSeed uniform writes",
+  "frame 8: 0 emitter.animate calls",
+  "frame 8: 0 randomSeed uniform writes",
+  "frame 9: 0 emitter.animate calls",
+  "frame 9: 0 randomSeed uniform writes",
+  "frame 10: 0 emitter.animate calls",
+  "frame 10: 0 randomSeed uniform writes",
+  "frame 11: 0 emitter.animate calls",
+  "frame 11: 0 randomSeed uniform writes",
+  "frame 12: 0 emitter.animate calls",
+  "frame 12: 0 randomSeed uniform writes",
+  "frame 13: 0 emitter.animate calls",
+  "frame 13: 0 randomSeed uniform writes",
+  "frame 14: 0 emitter.animate calls",
+  "frame 14: 0 randomSeed uniform writes",
+  "frame 15: 0 emitter.animate calls",
+  "frame 15: 0 randomSeed uniform writes",
+  "frame 16: 0 emitter.animate calls",
+  "frame 16: 0 randomSeed uniform writes",
+  "frame 17: 0 emitter.animate calls",
+  "frame 17: 0 randomSeed uniform writes",
+  "frame 18: 0 emitter.animate calls",
+  "frame 18: 0 randomSeed uniform writes",
+  "frame 19: 0 emitter.animate calls",
+  "frame 19: 0 randomSeed uniform writes",
+  "frame 20: 0 emitter.animate calls",
+  "frame 20: 0 randomSeed uniform writes",
+  "frame 21: 0 emitter.animate calls",
+  "frame 21: 0 randomSeed uniform writes",
+  "frame 22: 0 emitter.animate calls",
+  "frame 22: 0 randomSeed uniform writes",
+  "frame 23: 0 emitter.animate calls",
+  "frame 23: 0 randomSeed uniform writes",
+  "frame 24: 0 emitter.animate calls",
+  "frame 24: 0 randomSeed uniform writes",
+  "frame 25: 0 emitter.animate calls",
+  "frame 25: 0 randomSeed uniform writes",
+  "frame 26: 0 emitter.animate calls",
+  "frame 26: 0 randomSeed uniform writes",
+  "frame 27: 0 emitter.animate calls",
+  "frame 27: 0 randomSeed uniform writes",
+  "frame 28: 0 emitter.animate calls",
+  "frame 28: 0 randomSeed uniform writes",
+  "frame 29: 0 emitter.animate calls",
+  "frame 29: 0 randomSeed uniform writes",
+  "frame 30: 0 emitter.animate calls",
+  "frame 30: 0 randomSeed uniform writes",
+  "frame 31: 0 emitter.animate calls",
+  "frame 31: 0 randomSeed uniform writes",
+  "frame 32: 0 emitter.animate calls",
+  "frame 32: 0 randomSeed uniform writes",
+  "frame 33: 0 emitter.animate calls",
+  "frame 33: 0 randomSeed uniform writes",
+  "frame 34: 0 emitter.animate calls",
+  "frame 34: 0 randomSeed uniform writes",
+  "frame 35: 0 emitter.animate calls",
+  "frame 35: 0 randomSeed uniform writes",
+  "frame 36: 0 emitter.animate calls",
+  "frame 36: 0 randomSeed uniform writes",
+  "frame 37: 0 emitter.animate calls",
+  "frame 37: 0 randomSeed uniform writes",
+  "frame 38: 0 emitter.animate calls",
+  "frame 38: 0 randomSeed uniform writes",
+  "frame 39: 0 emitter.animate calls",
+  "frame 39: 0 randomSeed uniform writes",
+  "frame 40: 0 emitter.animate calls",
+  "frame 40: 0 randomSeed uniform writes",
+  "frame 41: 0 emitter.animate calls",
+  "frame 41: 0 randomSeed uniform writes",
+  "frame 42: 0 emitter.animate calls",
+  "frame 42: 0 randomSeed uniform writes",
+  "animate called 0 times in 42 steps"
+ ],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 1,
+  "particleLifetime": 5,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "collisionProbes": {
+  "1": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896257,
+      -0.577350269189626,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896261,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.577350269189626,
+      -0.577350269189626,
+      0.5773502691896254
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896256,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896256,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792532,
+      -0.5773502691896256,
+      -0.8082903768654761
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896255,
+      -0.5773502691896258
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.3922686151164733,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.3922686151164733,
+    0
+   ],
+   "collisions": {}
+  },
+  "2": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.6630797815858718,
+      -0.11547005383792514,
+      0.7395889871534725
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7395889871534725,
+      -0.11547005383792514,
+      0.6630797815858717
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7395889871534725,
+      0.6630797815858718,
+      0.11547005383792527
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7395889871534723,
+      0.6630797815858718,
+      -0.11547005383792514
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792518,
+      0.6630797815858718,
+      -0.7395889871534723
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792518,
+      0.7395889871534724,
+      0.6630797815858718
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792518,
+      0.7395889871534727,
+      0.6630797815858718
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.49022391202186305,
+      0.7395889871534724,
+      0.4611817929659424
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792508,
+      0.7395889871534724,
+      0.6630797815858718
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.4903354420048066,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.4903354420048066,
+    0
+   ],
+   "collisions": {}
+  },
+  "3": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.007179514287773187,
+      0.19382332077125516,
+      -0.9810101808339171
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9810101808339171,
+      0.19382332077125503,
+      0.007179514287773029
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9810101808339171,
+      0.007179514287773061,
+      -0.19382332077125505
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9810101808339172,
+      0.007179514287773065,
+      0.19382332077125494
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.19382332077125494,
+      0.007179514287773066,
+      0.9810101808339172
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.1938233207712549,
+      -0.9810101808339172,
+      0.007179514287773321
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.19382332077125494,
+      -0.9810101808339172,
+      0.007179514287773386
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.15075094804433992,
+      -0.9810101808339172,
+      0.12203760389297165
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.19382332077125486,
+      -0.9810101808339172,
+      0.0071795142877733205
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.5992985466709178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.5992985466709178,
+    0
+   ],
+   "collisions": {}
+  },
+  "4": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.1282714508717273,
+      -0.789115853239798,
+      0.6007017604909176
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6007017604909178,
+      -0.7891158532397977,
+      -0.1282714508717271
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6007017604909177,
+      -0.12827145087172723,
+      0.7891158532397977
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.6007017604909178,
+      -0.12827145087172737,
+      -0.7891158532397977
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7891158532397978,
+      -0.12827145087172734,
+      -0.6007017604909177
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7891158532397977,
+      0.6007017604909177,
+      -0.12827145087172742
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7891158532397977,
+      0.6007017604909178,
+      -0.12827145087172745
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5543298120688017,
+      0.600701760490918,
+      -0.5760866726412607
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7891158532397977,
+      0.600701760490918,
+      -0.1282714508717274
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.7191579291148066,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.7191579291148066,
+    0
+   ],
+   "collisions": {}
+  },
+  "5": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7558197336892938,
+      0.5575242789157712,
+      -0.3433703664926468
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3433703664926472,
+      0.5575242789157708,
+      0.7558197336892938
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3433703664926471,
+      0.7558197336892938,
+      -0.5575242789157707
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.343370366492647,
+      0.7558197336892939,
+      0.5575242789157706
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5575242789157708,
+      0.7558197336892939,
+      0.343370366492647
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5575242789157707,
+      -0.34337036649264685,
+      0.7558197336892939
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5575242789157705,
+      -0.3433703664926469,
+      0.7558197336892939
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.0074724170809596195,
+      -0.34337036649264696,
+      0.9391703543008976
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5575242789157707,
+      -0.34337036649264707,
+      0.7558197336892938
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.8499135893364732,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.8499135893364732,
+    0
+   ],
+   "collisions": {}
+  },
+  "6": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.598136025654659,
+      -0.7281881334076942,
+      -0.33462716144728494
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3346271614472849,
+      -0.7281881334076941,
+      -0.5981360256546594
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3346271614472848,
+      -0.5981360256546594,
+      0.728188133407694
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.3346271614472848,
+      -0.5981360256546597,
+      -0.7281881334076937
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7281881334076938,
+      -0.5981360256546594,
+      0.3346271614472846
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7281881334076938,
+      -0.3346271614472847,
+      -0.5981360256546594
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7281881334076938,
+      -0.3346271614472847,
+      -0.5981360256546595
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.22366889133335968,
+      -0.33462716144728477,
+      -0.9154217005683439
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.728188133407694,
+      -0.33462716144728466,
+      -0.5981360256546594
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.9915655273359176,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.9915655273359176,
+    0
+   ],
+   "collisions": {}
+  },
+  "7": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7987488337297909,
+      0.09117988623496764,
+      0.594715502540061
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5947155025400611,
+      0.09117988623496759,
+      0.7987488337297909
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.594715502540061,
+      0.7987488337297909,
+      -0.09117988623496745
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5947155025400607,
+      0.7987488337297909,
+      0.09117988623496744
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09117988623496759,
+      0.798748833729791,
+      -0.5947155025400608
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09117988623496759,
+      0.594715502540061,
+      0.7987488337297909
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.0911798862349676,
+      0.5947155025400611,
+      0.7987488337297907
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4063053912499002,
+      0.5947155025400611,
+      0.6937069987248131
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09117988623496748,
+      0.5947155025400611,
+      0.7987488337297907
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.1441137431131398,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.1441137431131398,
+    0
+   ],
+   "collisions": {}
+  },
+  "8": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.20059305230127356,
+      -0.003476898205825549,
+      -0.9796684840022797
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9796684840022797,
+      -0.0034768982058255814,
+      -0.2005930523012737
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9796684840022797,
+      -0.20059305230127372,
+      0.0034768982058255493
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9796684840022797,
+      -0.20059305230127367,
+      -0.0034768982058255814
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.0034768982058257757,
+      -0.20059305230127358,
+      0.9796684840022797
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.003476898205825775,
+      -0.9796684840022797,
+      -0.20059305230127347
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.0034768982058258706,
+      -0.9796684840022797,
+      -0.20059305230127344
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.11757431281610345,
+      -0.9796684840022797,
+      -0.16256058076451424
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.003476898205825838,
+      -0.9796684840022797,
+      -0.2005930523012733
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.30755823666814,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.30755823666814,
+    0
+   ],
+   "collisions": {}
+  },
+  "9": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.08608884152388051,
+      -0.6633789558210601,
+      0.7433149213750766
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7433149213750768,
+      -0.6633789558210599,
+      0.08608884152388072
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7433149213750767,
+      0.08608884152388058,
+      0.6633789558210599
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7433149213750768,
+      0.08608884152388065,
+      -0.6633789558210597
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6633789558210598,
+      0.08608884152388054,
+      -0.7433149213750767
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6633789558210597,
+      0.7433149213750768,
+      0.08608884152388045
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6633789558210599,
+      0.7433149213750768,
+      0.08608884152388059
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.582356469571176,
+      0.7433149213750769,
+      -0.3291563002735314
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.6633789558210598,
+      0.7433149213750768,
+      0.08608884152388045
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.4818990080009178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.4818990080009178,
+    0
+   ],
+   "collisions": {}
+  },
+  "10": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.6024647757243298,
+      0.5429986321857334,
+      -0.5849689559761746
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5849689559761748,
+      0.5429986321857333,
+      0.6024647757243297
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5849689559761748,
+      0.6024647757243298,
+      -0.5429986321857332
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5849689559761746,
+      0.6024647757243299,
+      0.5429986321857331
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5429986321857332,
+      0.6024647757243298,
+      0.5849689559761746
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5429986321857332,
+      -0.5849689559761746,
+      0.60246477572433
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5429986321857333,
+      -0.5849689559761744,
+      0.6024647757243301
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.07292004031398865,
+      -0.5849689559761746,
+      0.8077709998909038
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5429986321857332,
+      -0.5849689559761745,
+      0.6024647757243299
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.6671360571114733,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.6671360571114733,
+    0
+   ],
+   "collisions": {}
+  },
+  "11": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.55414298344217,
+      -0.8294540302155379,
+      -0.0702251070558998
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.07022510705589956,
+      -0.8294540302155375,
+      -0.5541429834421704
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.07022510705589956,
+      -0.5541429834421704,
+      0.8294540302155374
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.07022510705589963,
+      -0.5541429834421706,
+      -0.8294540302155374
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8294540302155375,
+      -0.5541429834421702,
+      0.0702251070558995
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8294540302155375,
+      -0.07022510705589963,
+      -0.5541429834421704
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8294540302155377,
+      -0.07022510705589952,
+      -0.5541429834421704
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.331077434107128,
+      -0.07022510705589936,
+      -0.9409868048830587
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8294540302155375,
+      -0.07022510705589942,
+      -0.5541429834421703
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.8632693839998067,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.8632693839998067,
+    0
+   ],
+   "collisions": {}
+  },
+  "12": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8779897929954245,
+      0.2763057044205829,
+      0.3908824389768585
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.3908824389768583,
+      0.2763057044205826,
+      0.8779897929954247
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.39088243897685826,
+      0.8779897929954247,
+      -0.27630570442058255
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.39088243897685804,
+      0.8779897929954247,
+      0.2763057044205824
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.27630570442058255,
+      0.8779897929954246,
+      -0.39088243897685815
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.27630570442058255,
+      0.39088243897685837,
+      0.8779897929954245
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.2763057044205827,
+      0.3908824389768583,
+      0.8779897929954245
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.30574931226078844,
+      0.39088243897685826,
+      0.8681752570486891
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.27630570442058267,
+      0.39088243897685837,
+      0.8779897929954245
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -2.0702989886659178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -2.0702989886659178,
+    0
+   ],
+   "collisions": {}
+  },
+  "13": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.37808139414729564,
+      -0.2140879246157681,
+      -0.9006779779329294
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9006779779329294,
+      -0.2140879246157679,
+      -0.37808139414729575
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9006779779329294,
+      -0.3780813941472959,
+      0.21408792461576787
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9006779779329294,
+      -0.37808139414729613,
+      -0.21408792461576792
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.21408792461576823,
+      -0.37808139414729586,
+      0.9006779779329293
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2140879246157682,
+      -0.9006779779329294,
+      -0.37808139414729575
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2140879246157682,
+      -0.9006779779329294,
+      -0.37808139414729586
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.05557849679576287,
+      -0.9006779779329294,
+      -0.4309178700872976
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.21408792461576812,
+      -0.9006779779329294,
+      -0.37808139414729586
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -2.2882248711098065,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -2.2882248711098065,
+    0
+   ],
+   "collisions": {}
+  },
+  "14": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.30585813649768095,
+      -0.49369354585796627,
+      0.8140746176588202
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8140746176588203,
+      -0.4936935458579662,
+      0.3058581364976809
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.81407461765882,
+      0.30585813649768084,
+      0.49369354585796615
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8140746176588203,
+      0.30585813649768095,
+      -0.4936935458579661
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.49369354585796615,
+      0.3058581364976809,
+      -0.8140746176588202
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.49369354585796604,
+      0.8140746176588202,
+      0.3058581364976808
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.49369354585796615,
+      0.8140746176588203,
+      0.3058581364976808
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5784697185849813,
+      0.8140746176588202,
+      -0.05152961831663495
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.49369354585796615,
+      0.8140746176588203,
+      0.3058581364976808
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -2.5170470313314732,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -2.5170470313314732,
+    0
+   ],
+   "collisions": {}
+  },
+  "20": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.4097131791007824,
+      0.46774481222844805,
+      -0.783166586049548
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7831665860495481,
+      0.4677448122284478,
+      0.40971317910078214
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7831665860495481,
+      0.4097131791007824,
+      -0.46774481222844794
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7831665860495481,
+      0.40971317910078253,
+      0.46774481222844766
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.4677448122284479,
+      0.40971317910078253,
+      0.7831665860495481
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.46774481222844777,
+      -0.783166586049548,
+      0.4097131791007827
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.46774481222844766,
+      -0.783166586049548,
+      0.40971317910078275
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.1283679423222886,
+      -0.783166586049548,
+      0.6084174306176947
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.4677448122284477,
+      -0.7831665860495481,
+      0.40971317910078264
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -4.118801825994807,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -4.118801825994807,
+    0
+   ],
+   "collisions": {}
+  },
+  "21": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4491883933877135,
+      -0.8723611763001081,
+      0.1929138806049378
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.19291388060493792,
+      -0.8723611763001081,
+      -0.4491883933877136
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.19291388060493792,
+      -0.4491883933877138,
+      0.8723611763001081
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.19291388060493786,
+      -0.449188393387714,
+      -0.8723611763001079
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8723611763001079,
+      -0.4491883933877139,
+      -0.19291388060493803
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8723611763001079,
+      0.192913880604938,
+      -0.44918839338771394
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.872361176300108,
+      0.19291388060493797,
+      -0.4491883933877139
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.42837590500745826,
+      0.19291388060493805,
+      -0.8827674204902358
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8723611763001081,
+      0.19291388060493792,
+      -0.4491883933877138
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -4.423897930660918,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -4.423897930660918,
+    0
+   ],
+   "collisions": {}
+  },
+  "22": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.893926967165219,
+      0.42384414051657876,
+      0.14577627353090025
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.14577627353090022,
+      0.42384414051657865,
+      0.8939269671652192
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.1457762735309002,
+      0.8939269671652192,
+      -0.42384414051657854
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.1457762735309001,
+      0.8939269671652194,
+      0.42384414051657837
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.42384414051657854,
+      0.8939269671652192,
+      -0.14577627353090006
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.4238441405165785,
+      0.14577627353090017,
+      0.8939269671652192
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.42384414051657865,
+      0.14577627353090014,
+      0.8939269671652192
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.19728086788586843,
+      0.14577627353090017,
+      0.9694480580421228
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.42384414051657876,
+      0.1457762735309002,
+      0.8939269671652192
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -4.739890313104807,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -4.739890313104807,
+    0
+   ],
+   "collisions": {}
+  },
+  "40": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5098849504538716,
+      -0.4197351614744116,
+      -0.7508926231643926
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7508926231643929,
+      -0.41973516147441137,
+      -0.5098849504538716
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7508926231643928,
+      -0.5098849504538717,
+      0.41973516147441126
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7508926231643925,
+      -0.5098849504538718,
+      -0.41973516147441137
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4197351614744116,
+      -0.5098849504538717,
+      0.7508926231643926
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4197351614744116,
+      -0.7508926231643926,
+      -0.5098849504538716
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4197351614744116,
+      -0.7508926231643928,
+      -0.5098849504538717
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.02985715890720626,
+      -0.7508926231643925,
+      -0.6597490572477442
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4197351614744114,
+      -0.7508926231643926,
+      -0.5098849504538716
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -12.291016697094804,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -12.291016697094804,
+    0
+   ],
+   "collisions": {}
+  },
+  "41": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5119671793976304,
+      -0.2947831282591913,
+      0.8068410714095806
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8068410714095806,
+      -0.2947831282591913,
+      0.5119671793976305
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8068410714095804,
+      0.5119671793976304,
+      0.29478312825919134
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8068410714095804,
+      0.5119671793976305,
+      -0.2947831282591912
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.29478312825919123,
+      0.5119671793976304,
+      -0.8068410714095806
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2947831282591912,
+      0.8068410714095806,
+      0.5119671793976303
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2947831282591912,
+      0.8068410714095807,
+      0.5119671793976303
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5430068102459311,
+      0.8068410714095806,
+      0.2327038665625896
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2947831282591912,
+      0.8068410714095807,
+      0.5119671793976304
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -12.81403835731647,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -12.81403835731647,
+    0
+   ],
+   "collisions": {}
+  },
+  "42": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.19428988840675082,
+      0.33829254948908644,
+      -0.9207657629511787
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.920765762951179,
+      0.3382925494890864,
+      0.19428988840675077
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9207657629511787,
+      0.19428988840675085,
+      -0.3382925494890864
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9207657629511787,
+      0.1942898884067509,
+      0.3382925494890864
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3382925494890863,
+      0.19428988840675085,
+      0.9207657629511786
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.33829254948908627,
+      -0.9207657629511787,
+      0.19428988840675115
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.33829254948908627,
+      -0.9207657629511787,
+      0.1942898884067511
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.15406010654721847,
+      -0.9207657629511786,
+      0.3584074404188526
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3382925494890864,
+      -0.9207657629511786,
+      0.19428988840675113
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -13.347956295315914,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -13.347956295315914,
+    0
+   ],
+   "collisions": {}
+  }
+ },
+ "geometry": {},
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n",
+ "console": [],
+ "animateCalls": 0,
+ "fileF32": "js.f32"
+}
