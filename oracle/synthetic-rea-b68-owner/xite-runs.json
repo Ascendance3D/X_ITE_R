@@ -1,0 +1,171 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  512
+ ],
+ "runs": [
+  {
+   "bl-const.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "bl-iso1.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   },
+   "bl-iso2.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "sh-material.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "481b2425b8ee19c9b3551c9966368d1e741e3cfda120df0c8f7f24eb493f8f8a"
+   },
+   "sh-physicalmaterial.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   }
+  },
+  {
+   "bl-const.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "bl-iso1.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   },
+   "bl-iso2.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "sh-material.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "481b2425b8ee19c9b3551c9966368d1e741e3cfda120df0c8f7f24eb493f8f8a"
+   },
+   "sh-physicalmaterial.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   }
+  },
+  {
+   "bl-const.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "bl-iso1.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   },
+   "bl-iso2.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "sh-material.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "481b2425b8ee19c9b3551c9966368d1e741e3cfda120df0c8f7f24eb493f8f8a"
+   },
+   "sh-physicalmaterial.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   }
+  },
+  {
+   "bl-const.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "bl-iso1.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   },
+   "bl-iso2.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "sh-material.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "481b2425b8ee19c9b3551c9966368d1e741e3cfda120df0c8f7f24eb493f8f8a"
+   },
+   "sh-physicalmaterial.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   }
+  },
+  {
+   "bl-const.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "bl-iso1.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   },
+   "bl-iso2.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "ae47c9c441df57478502aeda419d22625b9adb713904e17445252999d94d859b"
+   },
+   "sh-material.wrl": {
+    "ok": true,
+    "error": null,
+    "log": [],
+    "rgbaSha256": "481b2425b8ee19c9b3551c9966368d1e741e3cfda120df0c8f7f24eb493f8f8a"
+   },
+   "sh-physicalmaterial.wrl": {
+    "ok": false,
+    "error": "TIMEOUT 45s",
+    "log": [],
+    "rgbaSha256": null
+   }
+  }
+ ]
+}

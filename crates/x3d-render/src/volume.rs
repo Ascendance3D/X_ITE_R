@@ -704,12 +704,17 @@ impl<'a, 'b> Gen<'a, 'b> {
          -> String {
             let w = format!("w{which}_{id}");
             match function.as_str() {
-                "ALPHA0" => format!("    let {w} = original.a;\n"),
-                // X_ITE writes `blendColor_ <id> .a` (a GLSL syntax error); these take the alpha
-                // of the blend color as the specification and the intent of the code say.
-                "ALPHA1" => format!("    let {w} = {bc}.a;\n"),
-                "ONE_MINUS_ALPHA0" => format!("    let {w} = 1.0 - original.a;\n"),
-                "ONE_MINUS_ALPHA1" => format!("    let {w} = 1.0 - {bc}.a;\n"),
+                // ISO/IEC 19775-1 V4.0 41.4.1 Table 41.3 names ALPHA1 (Ov, the original opacity) and ALPHA2 (Oblend, the
+                // opacity of the blend voxels), with ONE_MINUS_ of both. Pinned X_ITE instead knows ALPHA0 (original) and ALPHA1
+                // (blend) and takes ALPHA2 for CONSTANT; its ALPHA1 also writes `blendColor_ <id> .a`, a GLSL syntax error,
+                // so the page never draws. ALPHA0 is kept because X_ITE draws it (a recorded baseline); ALPHA1 and ALPHA2 follow
+                // the standard (ADR 0012).
+                "ALPHA0" | "ALPHA1" => format!("    let {w} = original.a;\n"),
+                "ALPHA2" => format!("    let {w} = {bc}.a;\n"),
+                "ONE_MINUS_ALPHA0" | "ONE_MINUS_ALPHA1" => {
+                    format!("    let {w} = 1.0 - original.a;\n")
+                }
+                "ONE_MINUS_ALPHA2" => format!("    let {w} = 1.0 - {bc}.a;\n"),
                 "TABLE" => match table {
                     Some(t) => format!(
                         "    let {w} = textureSampleLevel(t{t}, s{t}, vec2<f32>(original.a, {bc}.a), 0.0).r;\n"
