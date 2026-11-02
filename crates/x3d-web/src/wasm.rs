@@ -996,6 +996,53 @@ impl WebBrowser {
         ))
     }
 
+    /// What the elements of the XML text of scene `id` made, four numbers per element (see [`Session::xml_targets`]).
+    #[wasm_bindgen(js_name = xmlTargets)]
+    pub fn xml_targets(&self, id: u32) -> Vec<u32> {
+        self.worlds
+            .get(&id)
+            .map_or(vec![], |w| w.session.xml_targets())
+    }
+
+    /// DOMIntegration.processAddedNode for scene `id`: the XML of one element parsed into the context of node `parent`
+    /// (-1: among the root nodes of the world); what its elements made, as [`WebBrowser::xml_targets`].
+    #[wasm_bindgen(js_name = xmlChild)]
+    pub fn xml_child(&mut self, id: u32, parent: i32, text: &str) -> Result<Vec<u32>, JsError> {
+        let parent = u32::try_from(parent).ok();
+
+        self.session_mut(id)?
+            .xml_child(parent, text)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// DOMIntegration.processAttribute for scene `id`: the attribute `name="value"` read into the field of node `node`.
+    #[wasm_bindgen(js_name = xmlAttribute)]
+    pub fn xml_attribute(
+        &mut self,
+        id: u32,
+        node: u32,
+        name: &str,
+        value: &str,
+    ) -> Result<(), JsError> {
+        self.session_mut(id)?.xml_attribute(node, name, value);
+        Ok(())
+    }
+
+    /// DOMIntegration.processRemovedNode for scene `id`: X3DNode.dispose of `node`.
+    #[wasm_bindgen(js_name = disposeNode)]
+    pub fn dispose_node(&mut self, id: u32, node: u32) -> Result<(), JsError> {
+        self.session_mut(id)?.dispose_node(node);
+        Ok(())
+    }
+
+    /// Route `route` of context `ctx` of scene `id` is deleted.
+    #[wasm_bindgen(js_name = deleteRouteById)]
+    pub fn delete_route_by_id(&mut self, id: u32, ctx: u32, route: u32) -> Result<(), JsError> {
+        self.session_mut(id)?
+            .delete_route_in(ctx as usize, route as usize);
+        Ok(())
+    }
+
     /// The node id of a DEF name of scene `id`, or `undefined`.
     #[wasm_bindgen(js_name = namedNode)]
     pub fn named_node(&self, id: u32, name: &str) -> Option<u32> {

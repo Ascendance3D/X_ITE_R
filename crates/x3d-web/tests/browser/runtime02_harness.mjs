@@ -30,6 +30,7 @@ import { CASE_GROUPS as FIELDS03_GROUPS } from "./fields03_case.mjs";
 import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as FIELDS05_GROUPS } from "./fields05_case.mjs";
 import { CASE_GROUPS as DOM01_GROUPS } from "./dom01_case.mjs";
+import { CASE_GROUPS as DOM02_GROUPS } from "./dom02_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
@@ -88,6 +89,7 @@ const SUITES = {
    routes01: { dir: process .env .XR_ROUTES01_BASELINE ?? join (REPO, "oracle/web-browser-routes-01-baseline"), file: "routes01-baseline.json", groups: ROUTES01_GROUPS },
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
+   dom02: { dir: process .env .XR_DOM02_BASELINE ?? join (REPO, "oracle/web-browser-dom-02-baseline"), file: "dom02-baseline.json", groups: DOM02_GROUPS },
    dom01: { dir: process .env .XR_DOM01_BASELINE ?? join (REPO, "oracle/web-browser-dom-01-baseline"), file: "dom01-baseline.json", groups: DOM01_GROUPS },
    fields05: { dir: process .env .XR_FIELDS05_BASELINE ?? join (REPO, "oracle/web-browser-fields-05-baseline"), file: "fields05-baseline.json", groups: FIELDS05_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
@@ -712,6 +714,7 @@ const GROUP_FILES = {
    fieldCascade: "fields04.test.mjs",
    protoDeclarations: "fields05.test.mjs",
    domImport: "dom01.test.mjs",
+   domMutation: "dom02.test.mjs",
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
