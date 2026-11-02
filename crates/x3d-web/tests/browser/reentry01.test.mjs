@@ -504,9 +504,9 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
       }
    });
 
-   // Issue #132: the engine has no `prepare` export. It parsed a world without waiting for glTF buffers, X_ITE has no such
-   // call, and the page loads through `prepareString` and `loadURL`, which wait.
-   test ("the engine exports no prepare (it parsed a glTF without its buffers)", async () =>
+   // Issue #132: the engine has no `prepare` export (X_ITE has no such call); the page loads through `prepareString` and
+   // `loadURL`, which wait for their responses. The case checks the export surface only.
+   test ("the engine exports no prepare", async () =>
    {
       const page = await open ();
 
