@@ -83,6 +83,20 @@ fn want_of(p: &Value) -> Probe {
 
 #[test]
 fn splat_picks_match_pinned_x_ite() {
+    splat_picks(false);
+}
+
+/// Issue #69, the logarithmic depth pass: the same probes with the pinned page's `LogarithmicDepthBuffer` option on
+/// (oracle/b69-gs-pick-log-baseline, `LOG=1 oracle/tools/b69_gs_pick_record.py record NAME 0`, five byte-identical runs each) and the
+/// viewer in `DepthMode::Logarithmic`. Hit or miss is the same as without the option in all 2646 probes; X_ITE's own values move by at
+/// most 4.7e-5 (528 probes) under the option. The wgpu pointing pass has no logarithmic mode, and stays within VALUE_TOL of the
+/// pinned values (worst 7.1e-5, the standard-depth figure), so no mode is added to it.
+#[test]
+fn splat_picks_under_logarithmic_depth_match_pinned_x_ite() {
+    splat_picks(true);
+}
+
+fn splat_picks(log: bool) {
     let Some((d, q)) = device() else {
         return x3d_evidence::no_gpu("no adapter, skipped");
     };
@@ -105,8 +119,19 @@ fn splat_picks_match_pinned_x_ite() {
         let world = dir.join(format!("{name}.x3dv"));
         let script = json(dir.join(format!("scripts/{name}.json")));
         let points = script["pickProbes"]["points"].as_array().unwrap().clone();
-        let base0 = json(root().join(format!("oracle/b69-gs-pick-baseline/msaa0/{name}/js.json")));
-        let base4 = json(root().join(format!("oracle/b69-gs-pick-baseline/msaa4/{name}/js.json")));
+        let base0 = json(root().join(format!(
+            "oracle/{}/msaa0/{name}/js.json",
+            if log {
+                "b69-gs-pick-log-baseline"
+            } else {
+                "b69-gs-pick-baseline"
+            }
+        )));
+        let base4 = if log {
+            base0.clone()
+        } else {
+            json(root().join(format!("oracle/b69-gs-pick-baseline/msaa4/{name}/js.json")))
+        };
         let want: Vec<Probe> = base0["pickProbes"]["3"]
             .as_array()
             .unwrap()
@@ -130,6 +155,10 @@ fn splat_picks_match_pinned_x_ite() {
         let (device, queue, probe_points) = (d.clone(), q.clone(), points.clone());
         let got: Vec<Probe> = spawn_big_stack(move || {
             let mut v = EmbeddedViewer::new(device, queue, (512, 512));
+
+            if log {
+                v.set_depth_mode(x3d_viewer::embed::DepthMode::Logarithmic);
+            }
 
             v.load(
                 &world,
