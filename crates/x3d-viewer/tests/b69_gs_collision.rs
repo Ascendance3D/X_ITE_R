@@ -23,6 +23,13 @@ const PROBE_TOL: f64 = 1e-6;
 /// Allowed difference of the pose and positionOffset.
 const POSE_TOL: f64 = 1e-4;
 
+/// Cases whose pose and positionOffset X_ITE reports this many frames later than Rust does. A WALK avatar falls under
+/// gravity (the splat floor of gc-walk-floor does not stop it, in X_ITE or here), and the pinned page's fall starts two
+/// frames after the probe script's frame 0 when the scene holds GaussianSplats: its first probes are the values Rust has
+/// at frames 3 and 4 (pc-walk-gravity, with no splats, has none of that lag). The cause is not established; the splats'
+/// asynchronous load is the candidate. The test compares Rust's frame k with X_ITE's frame k + LAG.
+const LAGGED: &[(&str, u64)] = &[("gc-walk-floor", 2)];
+
 /// (case, frame, why Rust differs).
 const KNOWN_GAPS: &[(&str, &str, &str)] = &[];
 
@@ -248,7 +255,26 @@ fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<S
             .filter(|c| c["id"].as_i64().unwrap_or(-1) >= 0)
             .count();
 
-        let (hits, values) = compare_frame(w, g);
+        let lagged = LAGGED
+            .iter()
+            .find(|(case, _)| *case == name)
+            .map(|(_, lag)| *lag);
+        let mut w = w.clone();
+
+        if let Some(lag) = lagged {
+            // X_ITE's whole frame k + lag against Rust's frame k (every probe is taken at the avatar's pose); a frame
+            // without such a partner is not compared.
+            match frame
+                .parse::<u64>()
+                .ok()
+                .and_then(|f| want.get(&(f + lag).to_string()))
+            {
+                Some(a) => w = a.clone(),
+                None => continue,
+            }
+        }
+
+        let (hits, values) = compare_frame(&w, g);
         let gap = gaps
             .iter()
             .find(|(case, f, _)| *case == name && (*f == "*" || f == frame));

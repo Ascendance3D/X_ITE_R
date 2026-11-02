@@ -1556,6 +1556,7 @@ impl Viewer3d {
     /// The shapes the COLLISION traversal collected, whatever the viewer and the transitions say.
     fn collision_world_unconditional(&mut self) -> Option<World> {
         let mut shapes = vec![];
+        let collision_volume = self.collision_view_volume();
 
         // Shapes with pointerEvents FALSE are collision objects but not pointing objects: they follow the others.
         for s in self
@@ -1565,6 +1566,20 @@ impl Viewer3d {
             .chain(&self.scan_display.unpointed_shapes)
         {
             if !s.collidable {
+                continue;
+            }
+
+            // addCollisionShape: a GaussianSplats shape whose bbox sphere (its positions' box or bboxSize / bboxCenter) is
+            // outside the COLLISION traversal's view volume is not collected, whatever its splats are.
+            if s.splats.is_some()
+                && !s.explicit_bbox.is_some_and(|b| {
+                    x3d_render::traverse::bbox_in_view_volume(
+                        &collision_volume,
+                        &s.shape_model_view,
+                        &b,
+                    )
+                })
+            {
                 continue;
             }
 
@@ -1775,15 +1790,22 @@ impl Viewer3d {
         })
     }
 
-    /// The runs of [`Scan::particle_collisions`] with particles that X3DRenderObject.addCollisionShape keeps: it rejects a
-    /// ParticleSystem whose bbox sphere is outside the COLLISION traversal's view volume, X3DLayerNode.collision's
+    /// The COLLISION traversal's view volume, X3DLayerNode.collision's
     /// `ortho (-size, size, -size, size, -size, size)` with `size = max (collisionRadius * 2, avatarHeight * 2)` around
-    /// the viewer.
-    fn collision_particles(&self) -> Vec<usize> {
+    /// the viewer: X3DRenderObject.addCollisionShape rejects a shape whose bbox sphere is outside it.
+    fn collision_view_volume(&self) -> Matrix4 {
         let nav = self.nav_info();
         let size = (nav.collision_radius() * 2.0).max(nav.avatar_height() * 2.0);
         let mut volume = Matrix4::IDENTITY;
         crate::geom::Camera::ortho(-size, size, -size, size, -size, size, &mut volume);
+
+        volume
+    }
+
+    /// The runs of [`Scan::particle_collisions`] with particles that addCollisionShape keeps (their ParticleSystem's bbox
+    /// sphere meets [`Self::collision_view_volume`]).
+    fn collision_particles(&self) -> Vec<usize> {
+        let volume = self.collision_view_volume();
 
         (0..self.scan_display.particle_collisions.len())
             .filter(|&i| {

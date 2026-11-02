@@ -1,0 +1,3789 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 42,
+ "warmup": 8,
+ "seed": 69000002,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 13,
+   "time": 946684800.4333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 14,
+   "time": 946684800.4666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 15,
+   "time": 946684800.5,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 16,
+   "time": 946684800.5333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 17,
+   "time": 946684800.5666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 18,
+   "time": 946684800.6,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 19,
+   "time": 946684800.6333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 20,
+   "time": 946684800.6666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 21,
+   "time": 946684800.7,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 22,
+   "time": 946684800.7333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 23,
+   "time": 946684800.7666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 24,
+   "time": 946684800.8,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 25,
+   "time": 946684800.8333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 26,
+   "time": 946684800.8666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 27,
+   "time": 946684800.9,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 28,
+   "time": 946684800.9333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 29,
+   "time": 946684800.9666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 30,
+   "time": 946684801,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 31,
+   "time": 946684801.0333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 32,
+   "time": 946684801.0666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 33,
+   "time": 946684801.1,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 34,
+   "time": 946684801.1333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 35,
+   "time": 946684801.1666666,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 36,
+   "time": 946684801.2,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 37,
+   "time": 946684801.2333333,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 38,
+   "time": 946684801.2666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 39,
+   "time": 946684801.3,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 40,
+   "time": 946684801.3333334,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 41,
+   "time": 946684801.3666667,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 42,
+   "time": 946684801.4,
+   "randomSeed": null,
+   "numParticles": 0,
+   "deltaTime": 0,
+   "creationTime": 946684800,
+   "createParticles": false,
+   "isActive": false,
+   "maxParticles": 1,
+   "forces": [],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "42": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  }
+ },
+ "log": [
+  "frame 1: 0 emitter.animate calls",
+  "frame 1: 0 randomSeed uniform writes",
+  "frame 2: 0 emitter.animate calls",
+  "frame 2: 0 randomSeed uniform writes",
+  "frame 3: 0 emitter.animate calls",
+  "frame 3: 0 randomSeed uniform writes",
+  "frame 4: 0 emitter.animate calls",
+  "frame 4: 0 randomSeed uniform writes",
+  "frame 5: 0 emitter.animate calls",
+  "frame 5: 0 randomSeed uniform writes",
+  "frame 6: 0 emitter.animate calls",
+  "frame 6: 0 randomSeed uniform writes",
+  "frame 7: 0 emitter.animate calls",
+  "frame 7: 0 randomSeed uniform writes",
+  "frame 8: 0 emitter.animate calls",
+  "frame 8: 0 randomSeed uniform writes",
+  "frame 9: 0 emitter.animate calls",
+  "frame 9: 0 randomSeed uniform writes",
+  "frame 10: 0 emitter.animate calls",
+  "frame 10: 0 randomSeed uniform writes",
+  "frame 11: 0 emitter.animate calls",
+  "frame 11: 0 randomSeed uniform writes",
+  "frame 12: 0 emitter.animate calls",
+  "frame 12: 0 randomSeed uniform writes",
+  "frame 13: 0 emitter.animate calls",
+  "frame 13: 0 randomSeed uniform writes",
+  "frame 14: 0 emitter.animate calls",
+  "frame 14: 0 randomSeed uniform writes",
+  "frame 15: 0 emitter.animate calls",
+  "frame 15: 0 randomSeed uniform writes",
+  "frame 16: 0 emitter.animate calls",
+  "frame 16: 0 randomSeed uniform writes",
+  "frame 17: 0 emitter.animate calls",
+  "frame 17: 0 randomSeed uniform writes",
+  "frame 18: 0 emitter.animate calls",
+  "frame 18: 0 randomSeed uniform writes",
+  "frame 19: 0 emitter.animate calls",
+  "frame 19: 0 randomSeed uniform writes",
+  "frame 20: 0 emitter.animate calls",
+  "frame 20: 0 randomSeed uniform writes",
+  "frame 21: 0 emitter.animate calls",
+  "frame 21: 0 randomSeed uniform writes",
+  "frame 22: 0 emitter.animate calls",
+  "frame 22: 0 randomSeed uniform writes",
+  "frame 23: 0 emitter.animate calls",
+  "frame 23: 0 randomSeed uniform writes",
+  "frame 24: 0 emitter.animate calls",
+  "frame 24: 0 randomSeed uniform writes",
+  "frame 25: 0 emitter.animate calls",
+  "frame 25: 0 randomSeed uniform writes",
+  "frame 26: 0 emitter.animate calls",
+  "frame 26: 0 randomSeed uniform writes",
+  "frame 27: 0 emitter.animate calls",
+  "frame 27: 0 randomSeed uniform writes",
+  "frame 28: 0 emitter.animate calls",
+  "frame 28: 0 randomSeed uniform writes",
+  "frame 29: 0 emitter.animate calls",
+  "frame 29: 0 randomSeed uniform writes",
+  "frame 30: 0 emitter.animate calls",
+  "frame 30: 0 randomSeed uniform writes",
+  "frame 31: 0 emitter.animate calls",
+  "frame 31: 0 randomSeed uniform writes",
+  "frame 32: 0 emitter.animate calls",
+  "frame 32: 0 randomSeed uniform writes",
+  "frame 33: 0 emitter.animate calls",
+  "frame 33: 0 randomSeed uniform writes",
+  "frame 34: 0 emitter.animate calls",
+  "frame 34: 0 randomSeed uniform writes",
+  "frame 35: 0 emitter.animate calls",
+  "frame 35: 0 randomSeed uniform writes",
+  "frame 36: 0 emitter.animate calls",
+  "frame 36: 0 randomSeed uniform writes",
+  "frame 37: 0 emitter.animate calls",
+  "frame 37: 0 randomSeed uniform writes",
+  "frame 38: 0 emitter.animate calls",
+  "frame 38: 0 randomSeed uniform writes",
+  "frame 39: 0 emitter.animate calls",
+  "frame 39: 0 randomSeed uniform writes",
+  "frame 40: 0 emitter.animate calls",
+  "frame 40: 0 randomSeed uniform writes",
+  "frame 41: 0 emitter.animate calls",
+  "frame 41: 0 randomSeed uniform writes",
+  "frame 42: 0 emitter.animate calls",
+  "frame 42: 0 randomSeed uniform writes",
+  "animate called 0 times in 42 steps"
+ ],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nGaussianSplats {\n  positions [\n    -0.75 -1 -0.75,\n    -0.75 -1 -0.5,\n    -0.75 -1 -0.25,\n    -0.75 -1 0,\n    -0.75 -1 0.25,\n    -0.75 -1 0.5,\n    -0.75 -1 0.75,\n    -0.5 -1 -0.75,\n    -0.5 -1 -0.5,\n    -0.5 -1 -0.25,\n    -0.5 -1 0,\n    -0.5 -1 0.25,\n    -0.5 -1 0.5,\n    -0.5 -1 0.75,\n    -0.25 -1 -0.75,\n    -0.25 -1 -0.5,\n    -0.25 -1 -0.25,\n    -0.25 -1 0,\n    -0.25 -1 0.25,\n    -0.25 -1 0.5,\n    -0.25 -1 0.75,\n    0 -1 -0.75,\n    0 -1 -0.5,\n    0 -1 -0.25,\n    0 -1 0,\n    0 -1 0.25,\n    0 -1 0.5,\n    0 -1 0.75,\n    0.25 -1 -0.75,\n    0.25 -1 -0.5,\n    0.25 -1 -0.25,\n    0.25 -1 0,\n    0.25 -1 0.25,\n    0.25 -1 0.5,\n    0.25 -1 0.75,\n    0.5 -1 -0.75,\n    0.5 -1 -0.5,\n    0.5 -1 -0.25,\n    0.5 -1 0,\n    0.5 -1 0.25,\n    0.5 -1 0.5,\n    0.5 -1 0.75,\n    0.75 -1 -0.75,\n    0.75 -1 -0.5,\n    0.75 -1 -0.25,\n    0.75 -1 0,\n    0.75 -1 0.25,\n    0.75 -1 0.5,\n    0.75 -1 0.75\n  ]\n  orientations [\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1\n  ]\n  scales [\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18\n  ]\n  opacities [\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9\n  ]\n  sphericalHarmonicsDegree0Coef0 [\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4\n  ]\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 1,
+  "particleLifetime": 5,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "collisionProbes": {
+  "1": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896257,
+      -0.577350269189626,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896258,
+      -0.5773502691896258,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896262,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.577350269189626,
+      -0.577350269189626,
+      0.5773502691896254
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896256,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.22882379467314,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.22882379467314,
+    0
+   ],
+   "collisions": {}
+  },
+  "2": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.30509806600591777,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.30509806600591777,
+    0
+   ],
+   "collisions": {}
+  },
+  "3": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.3922686151164733,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.3922686151164733,
+    0
+   ],
+   "collisions": {}
+  },
+  "4": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.4903354420048066,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.4903354420048066,
+    0
+   ],
+   "collisions": {}
+  },
+  "5": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.5992985466709178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.5992985466709178,
+    0
+   ],
+   "collisions": {}
+  },
+  "6": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.7191579291148066,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.7191579291148066,
+    0
+   ],
+   "collisions": {}
+  },
+  "7": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.8499135893364732,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.8499135893364732,
+    0
+   ],
+   "collisions": {}
+  },
+  "8": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -0.9915655273359176,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -0.9915655273359176,
+    0
+   ],
+   "collisions": {}
+  },
+  "9": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "",
+     "distance": 0.14999997654581443,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8082903768654761,
+      -0.5773502691896257,
+      -0.11547005383792526
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.1441137431131398,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.1441137431131398,
+    0
+   ],
+   "collisions": {}
+  },
+  "10": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      0.09016696346674348,
+      -0.8115026712006892
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8115026712006892,
+      0.09016696346674354,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.811502671200689,
+      -0.5773502691896256,
+      -0.09016696346674365
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8115026712006889,
+      -0.577350269189626,
+      0.0901669634667435
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674358,
+      -0.5773502691896258,
+      0.811502671200689
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674356,
+      -0.8115026712006892,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674355,
+      -0.8115026712006892,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.41854373228717023,
+      -0.8115026712006891,
+      -0.4077800372716545
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.09016696346674355,
+      -0.8115026712006891,
+      -0.5773502691896257
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.30755823666814,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.30755823666814,
+    0
+   ],
+   "collisions": {}
+  },
+  "11": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.3027919754467757,
+      0.9529360921131064,
+      0.01515994568726374
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.015159945687263806,
+      0.952936092113106,
+      -0.3027919754467757
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.015159945687263806,
+      -0.3027919754467757,
+      -0.9529360921131063
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.015159945687263744,
+      -0.3027919754467757,
+      0.952936092113106
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9529360921131063,
+      -0.3027919754467756,
+      -0.015159945687263551
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9529360921131063,
+      0.015159945687263487,
+      -0.30279197544677566
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9529360921131063,
+      0.015159945687263488,
+      -0.30279197544677566
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9440240589585503,
+      0.015159945687263487,
+      0.32952807491044317
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9529360921131063,
+      0.01515994568726352,
+      -0.30279197544677566
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.4818990080009178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.4818990080009178,
+    0
+   ],
+   "collisions": {}
+  },
+  "12": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.1938031418178764,
+      0.33694586835058205,
+      -0.9213619397516877
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9213619397516878,
+      0.3369458683505818,
+      0.19380314181787625
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9213619397516876,
+      0.19380314181787628,
+      -0.3369458683505818
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9213619397516877,
+      0.19380314181787636,
+      0.3369458683505819
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3369458683505818,
+      0.19380314181787647,
+      0.9213619397516876
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3369458683505818,
+      -0.9213619397516876,
+      0.19380314181787658
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3369458683505818,
+      -0.9213619397516876,
+      0.19380314181787645
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.1532748095897396,
+      -0.9213619397516876,
+      0.35721003446465033
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3369458683505819,
+      -0.9213619397516876,
+      0.19380314181787642
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.6671360571114733,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.6671360571114733,
+    0
+   ],
+   "collisions": {}
+  },
+  "13": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8533714368920756,
+      0.43255120154134596,
+      -0.2909581563419246
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.2909581563419246,
+      0.43255120154134574,
+      -0.853371436892076
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.29095815634192457,
+      -0.8533714368920757,
+      -0.43255120154134596
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.29095815634192473,
+      -0.8533714368920758,
+      0.4325512015413459
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.432551201541346,
+      -0.8533714368920757,
+      0.2909581563419246
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.4325512015413459,
+      -0.29095815634192473,
+      -0.8533714368920756
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.43255120154134596,
+      -0.2909581563419246,
+      -0.8533714368920756
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8580638233683222,
+      -0.2909581563419247,
+      -0.4231664285888531
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.43255120154134596,
+      -0.29095815634192473,
+      -0.8533714368920756
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -1.8632693839998067,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -1.8632693839998067,
+    0
+   ],
+   "collisions": {}
+  },
+  "14": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.2792563370617059,
+      0.899796029336708,
+      -0.33523574362047537
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3352357436204756,
+      0.8997960293367078,
+      0.2792563370617057
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.33523574362047553,
+      0.27925633706170605,
+      -0.8997960293367078
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.3352357436204754,
+      0.2792563370617061,
+      0.8997960293367078
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8997960293367078,
+      0.2792563370617061,
+      0.3352357436204756
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8997960293367078,
+      -0.3352357436204756,
+      0.2792563370617062
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8997960293367078,
+      -0.3352357436204755,
+      0.2792563370617063
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5522830212323425,
+      -0.33523574362047553,
+      0.7632826872513896
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.8997960293367078,
+      -0.3352357436204756,
+      0.27925633706170633
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -2.0702989886659178,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -2.0702989886659178,
+    0
+   ],
+   "collisions": {}
+  },
+  "20": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.8967512439981902,
+      -0.435742397133404,
+      0.0772383954269725
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.07723839542697297,
+      -0.43574239713340385,
+      -0.8967512439981902
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.07723839542697294,
+      -0.8967512439981902,
+      0.43574239713340374
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.07723839542697289,
+      -0.8967512439981902,
+      -0.43574239713340357
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.43574239713340385,
+      -0.8967512439981902,
+      -0.07723839542697293
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4357423971334038,
+      0.07723839542697279,
+      -0.8967512439981902
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4357423971334038,
+      0.07723839542697279,
+      -0.8967512439981902
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.18945682869219097,
+      0.07723839542697275,
+      -0.9788464334785945
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.4357423971334038,
+      0.07723839542697265,
+      -0.8967512439981902
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -3.541298449995918,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -3.541298449995918,
+    0
+   ],
+   "collisions": {}
+  },
+  "21": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5998414627404922,
+      0.6188338915312601,
+      0.5071832353988281
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5071832353988284,
+      0.61883389153126,
+      0.5998414627404924
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5071832353988283,
+      0.5998414627404925,
+      -0.6188338915312599
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5071832353988281,
+      0.5998414627404928,
+      0.6188338915312597
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.61883389153126,
+      0.5998414627404925,
+      -0.5071832353988279
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.61883389153126,
+      0.5071832353988281,
+      0.5998414627404925
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.6188338915312601,
+      0.5071832353988281,
+      0.5998414627404923
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.13516223558071255,
+      0.5071832353988281,
+      0.85117350511115
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.6188338915312599,
+      0.5071832353988281,
+      0.5998414627404925
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -3.824601999106474,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -3.824601999106474,
+    0
+   ],
+   "collisions": {}
+  },
+  "22": {
+   "shapes": [
+    ""
+   ],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.04584171067476691,
+      -0.7110480684290748,
+      -0.7016474769752208
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7016474769752209,
+      -0.7110480684290745,
+      0.045841710674766785
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7016474769752208,
+      0.045841710674766716,
+      0.7110480684290745
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7016474769752209,
+      0.04584171067476679,
+      -0.7110480684290745
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7110480684290748,
+      0.045841710674766785,
+      0.7016474769752205
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7110480684290748,
+      -0.7016474769752206,
+      0.0458417106747669
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7110480684290748,
+      -0.7016474769752206,
+      0.045841710674766854
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5963434811481201,
+      -0.7016474769752206,
+      -0.38995547251763135
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7110480684290746,
+      -0.7016474769752207,
+      0.04584171067476672
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -4.118801825994807,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -4.118801825994807,
+    0
+   ],
+   "collisions": {}
+  },
+  "40": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5888230079850374,
+      0.30344242110766706,
+      0.7491396147179574
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7491396147179575,
+      0.30344242110766695,
+      -0.5888230079850373
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.7491396147179575,
+      -0.5888230079850373,
+      -0.3034424211076671
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7491396147179575,
+      -0.5888230079850375,
+      0.30344242110766717
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.30344242110766734,
+      -0.5888230079850375,
+      -0.7491396147179574
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.3034424211076673,
+      0.7491396147179573,
+      -0.5888230079850377
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.30344242110766717,
+      0.7491396147179572,
+      -0.5888230079850375
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5960477416771564,
+      0.7491396147179572,
+      -0.28899295372342976
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.30344242110766717,
+      0.7491396147179572,
+      -0.5888230079850377
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -11.277662209984804,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -11.277662209984804,
+    0
+   ],
+   "collisions": {}
+  },
+  "41": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.2992039665989337,
+      0.9526054965653884,
+      0.054952290988401056
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.05495229098840108,
+      0.9526054965653884,
+      -0.29920396659893367
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.05495229098840106,
+      -0.29920396659893356,
+      -0.9526054965653884
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.05495229098840116,
+      -0.29920396659893383,
+      0.9526054965653884
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9526054965653884,
+      -0.29920396659893356,
+      -0.05495229098840088
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9526054965653884,
+      0.05495229098840082,
+      -0.29920396659893367
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9526054965653884,
+      0.05495229098840087,
+      -0.2992039665989338
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9416067772116709,
+      0.05495229098840082,
+      0.332200124660086
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.9526054965653884,
+      0.05495229098840079,
+      -0.29920396659893345
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -11.778891314650915,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -11.778891314650915,
+    0
+   ],
+   "collisions": {}
+  },
+  "42": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.9239869472987864,
+      0.22348421275008096,
+      0.3103271304171557
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.310327130417156,
+      0.223484212750081,
+      -0.9239869472987863
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.31032713041715587,
+      -0.9239869472987863,
+      -0.22348421275008115
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.31032713041715587,
+      -0.9239869472987864,
+      0.22348421275008107
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.22348421275008126,
+      -0.9239869472987862,
+      -0.3103271304171558
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.2234842127500812,
+      0.31032713041715554,
+      -0.9239869472987864
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.2234842127500813,
+      0.3103271304171557,
+      -0.9239869472987863
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.7331795385793366,
+      0.31032713041715554,
+      -0.6050990301889805
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.22348421275008118,
+      0.31032713041715554,
+      -0.9239869472987864
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     -12.291016697094804,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "WALK"
+   },
+   "positionOffset": [
+    0,
+    -12.291016697094804,
+    0
+   ],
+   "collisions": {}
+  }
+ },
+ "geometry": {},
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT GaussianSplats : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  enabled FALSE\n  geometryType \"POINT\"\n  maxParticles 1\n}\n\nGaussianSplats {\n  positions [\n    -0.75 -1 -0.75,\n    -0.75 -1 -0.5,\n    -0.75 -1 -0.25,\n    -0.75 -1 0,\n    -0.75 -1 0.25,\n    -0.75 -1 0.5,\n    -0.75 -1 0.75,\n    -0.5 -1 -0.75,\n    -0.5 -1 -0.5,\n    -0.5 -1 -0.25,\n    -0.5 -1 0,\n    -0.5 -1 0.25,\n    -0.5 -1 0.5,\n    -0.5 -1 0.75,\n    -0.25 -1 -0.75,\n    -0.25 -1 -0.5,\n    -0.25 -1 -0.25,\n    -0.25 -1 0,\n    -0.25 -1 0.25,\n    -0.25 -1 0.5,\n    -0.25 -1 0.75,\n    0 -1 -0.75,\n    0 -1 -0.5,\n    0 -1 -0.25,\n    0 -1 0,\n    0 -1 0.25,\n    0 -1 0.5,\n    0 -1 0.75,\n    0.25 -1 -0.75,\n    0.25 -1 -0.5,\n    0.25 -1 -0.25,\n    0.25 -1 0,\n    0.25 -1 0.25,\n    0.25 -1 0.5,\n    0.25 -1 0.75,\n    0.5 -1 -0.75,\n    0.5 -1 -0.5,\n    0.5 -1 -0.25,\n    0.5 -1 0,\n    0.5 -1 0.25,\n    0.5 -1 0.5,\n    0.5 -1 0.75,\n    0.75 -1 -0.75,\n    0.75 -1 -0.5,\n    0.75 -1 -0.25,\n    0.75 -1 0,\n    0.75 -1 0.25,\n    0.75 -1 0.5,\n    0.75 -1 0.75\n  ]\n  orientations [\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1,\n    0 0 0 1\n  ]\n  scales [\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18,\n    0.18 0.02 0.18\n  ]\n  opacities [\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9,\n    0.9\n  ]\n  sphericalHarmonicsDegree0Coef0 [\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4,\n    0.2 0.6 0.4\n  ]\n}\n",
+ "console": [],
+ "animateCalls": 0,
+ "fileF32": "js.f32"
+}
