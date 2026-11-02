@@ -27,13 +27,11 @@ use std::process::Command;
 const STRIDE: usize = 28;
 
 /// (case, image pass, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str, &str)] = &[(
-    "pr-line",
-    "msaa4",
-    "MSAA line edges, not particles: the same 45 lines of frame 45 as a static IndexedLineSet differ from X_ITE by 1524 \
-     pixels (0.581%, max 115) with multisampling 4 and 93 (0.035%) without, as the particles do (1523 and 93); X_ITE draws GL \
-     lines, Rust its line emulation",
-)];
+///
+/// Empty since issue #261: `x3d-particles-drive` now mirrors the draw (`set_gl_sample_orientation`) like the other drive
+/// tools, which made the MSAA 4 pictures match, `pr-line` included (its former 0.581% was the mirrored sample pattern, not
+/// the line emulation).
+const KNOWN_GAPS: &[(&str, &str, &str)] = &[];
 
 fn f32s(path: &Path) -> Result<Vec<f32>, String> {
     let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
