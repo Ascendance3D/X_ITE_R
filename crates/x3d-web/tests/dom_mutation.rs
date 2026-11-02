@@ -52,7 +52,7 @@ fn an_added_element_joins_its_parent() {
     let mut s = load();
     let g = s.named_node("G").unwrap();
     let made = s
-        .xml_child(Some(g), "<Transform DEF='C' translation='1 2 3'/>")
+        .xml_child(Some(g), None, "<Transform DEF='C' translation='1 2 3'/>")
         .expect("parses");
 
     assert_eq!(made.len(), 4, "one element made one node");
@@ -60,7 +60,7 @@ fn an_added_element_joins_its_parent() {
     assert!(text(&mut s).contains("DEF C Transform"));
 
     // Without a parent the node is a root node of the world.
-    s.xml_child(None, "<Group DEF='R'/>").expect("parses");
+    s.xml_child(None, None, "<Group DEF='R'/>").expect("parses");
     assert_eq!(s.root_nodes().len(), 3);
 }
 
@@ -68,8 +68,9 @@ fn an_added_element_joins_its_parent() {
 fn an_added_route_is_connected() {
     let mut s = load();
 
-    s.xml_child(None, "<Transform DEF='C'/>").unwrap();
+    s.xml_child(None, None, "<Transform DEF='C'/>").unwrap();
     s.xml_child(
+        None,
         None,
         "<ROUTE fromNode='A' fromField='translation_changed' toNode='C' toField='set_translation'/>",
     )
@@ -113,4 +114,48 @@ fn a_disposed_node_leaves_everything_that_holds_it() {
     s.dispose_node(b);
     assert!(s.routes().is_empty(), "its routes are gone");
     assert_eq!(s.root_nodes(), [Some(a)]);
+}
+
+#[test]
+fn a_removed_scene_element_disposes_its_context() {
+    let mut s = load();
+
+    s.dispose_context(0);
+
+    assert!(s.named_node("A").is_none() && s.named_node("B").is_none());
+    assert!(s.routes().is_empty());
+    assert!(s.root_nodes().is_empty());
+}
+
+#[test]
+fn an_inline_reports_its_load_state_and_its_document() {
+    let data = "data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CGroup%20DEF%3D%27In%27%2F%3E%3C%2FScene%3E%3C%2FX3D%3E";
+    let world = format!(
+        "<X3D profile='Full'><Scene><Inline DEF='I' url='\"{data}\"'/><Inline DEF='J' load='false' url='\"{data}\"'/></Scene></X3D>"
+    );
+    let mut s = Session::load(
+        world.as_bytes(),
+        "http://example.test/w.x3d",
+        Box::new(NoFetch),
+        NOW,
+        64,
+        48,
+    )
+    .expect("loads");
+
+    for i in 0..50 {
+        s.poll_load(NOW + f64::from(i));
+        s.step(NOW + f64::from(i));
+    }
+
+    let (i, j) = (s.named_node("I").unwrap(), s.named_node("J").unwrap());
+
+    assert_eq!(s.load_state(i), Some(2), "COMPLETE_STATE");
+    assert_eq!(s.load_state(j), Some(0), "NOT_STARTED_STATE");
+    assert!(s.inline_xml(j).is_none());
+
+    let (xml, targets) = s.inline_xml(i).expect("the Inline's document");
+
+    assert!(xml.contains("DEF='In'"), "{xml}");
+    assert!(!targets.is_empty());
 }

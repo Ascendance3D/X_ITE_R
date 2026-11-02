@@ -754,9 +754,36 @@ function processFieldEvents (browser, scene)
    }
 }
 
+// DOMIntegration listens to the load state of its Inline nodes (X3DUrlObject `_loadState`, a private field): per browser the scene
+// and, per node, the function to call.
+const loadStateTaps = new WeakMap ();
+
+// The events of one field in a cycle are one event for X_ITE's interest: the node is looked at once, when the engine is free.
+function scheduleLoadState (tap, scene, node, data)
+{
+   // IN_PROGRESS_STATE does nothing to DOMIntegration, and X_ITE merges it with the state that follows in the same cycle.
+   if (data === 1)
+      return;
+
+   const fn = tap ?.scene === scene ? tap .nodes .get (node) : undefined;
+
+   if (!fn || tap .pending .has (node))
+      return;
+
+   tap .pending .add (node);
+
+   queueMicrotask (() =>
+   {
+      tap .pending .delete (node);
+      fn ();
+   });
+}
+
 function deliverFieldEvents (browser, scene, table, events, printUpTo)
 {
-   if (!table ?.refs .size && !table ?.rootNodes)
+   const tap = loadStateTaps .get (browser);
+
+   if (!table ?.refs .size && !table ?.rootNodes && !tap)
       return;
 
    syncScene (browser, scene);
@@ -794,7 +821,13 @@ function deliverFieldEvents (browser, scene, table, events, printUpTo)
          continue;
       }
 
-      const ref   = table .refs .get (events [i]);
+      if (events [i + 1] === "loadState")
+      {
+         scheduleLoadState (tap, scene, events [i], events [i + 2]);
+         continue;
+      }
+
+      const ref   = table ?.refs .get (events [i]);
       const entry = ref ?.[FIELDS] .get (events [i + 1]);
 
       if (!entry)
@@ -855,6 +888,13 @@ function deliverChainEvent (browser, scene, node, name, data)
    try
    {
       retireReleased (browser, scene);
+
+      // DOMIntegration: the engine is borrowed here, so the Inline element is looked at when the chain is over.
+      if (name === "loadState")
+      {
+         scheduleLoadState (loadStateTaps .get (browser), scene, node, data);
+         return false;
+      }
 
       const ref   = nodeRefTables .get (browser) ?.get (scene) ?.refs .get (node);
       const entry = ref ?.[FIELDS] .get (name);
@@ -4765,6 +4805,9 @@ let htmlTables = null;
 // The conversion of the `<X3D>` element that a scene was imported from (`importDocument`), see htmlToXML.
 const htmlImports = new WeakMap ();
 
+// The function DOMIntegration wants called with the scene of an `<X3D>` element once the engine has made it (before it is loaded).
+const importHooks = new WeakMap ();
+
 // HTMLSupport: node type names (exact or upper case) and field names (exact or lower case) of the pinned X_ITE.
 function htmlSupportTables ()
 {
@@ -5119,7 +5162,10 @@ class DOMIntegration
    #changes = null;
    #html = null;
    #handle = null;
+   #scene = null;
    #targets = new WeakMap ();
+   #bound = new WeakSet ();
+   #elements = new Map (); // node id → its element
 
    constructor (browser)
    {
@@ -5147,13 +5193,20 @@ class DOMIntegration
          this .#changes = null;
          this .#html    = null;
          this .#handle  = null;
+         this .#scene   = null;
          this .#targets = new WeakMap ();
+         this .#bound   = new WeakSet ();
+         this .#elements = new Map ();
+         loadStateTaps .delete (this .#browser);
 
          if (!rootElement)
          {
             this .#browser .replaceWorld (null);
             return;
          }
+
+         // The scene is known to the page as soon as the engine made it; its Inline elements are looked at then.
+         importHooks .set (rootElement, { prepared: scene => this .#prepared (rootElement, scene), started: () => this .#started (rootElement) });
 
          const scene = await this .#browser .importDocument (rootElement);
 
@@ -5163,13 +5216,10 @@ class DOMIntegration
          const html   = htmlImports .get (scene);
          const handle = scene [_node];
 
-         if (!html || rootElement !== this .#rootElement || !handle ?.browser)
+         if (!html || rootElement !== this .#rootElement || !handle ?.browser || handle .scene !== this .#handle ?.scene)
+         {
             return;
-
-         this .#html   = html;
-         this .#handle = handle;
-
-         this .#register (engineOf (handle) .xmlTargets (handle .scene), html .elements);
+         }
 
          this .#changes = new MutationObserver (mutations =>
          {
@@ -5178,11 +5228,43 @@ class DOMIntegration
          });
 
          this .#changes .observe (rootElement, { attributes: true, childList: true, subtree: true });
+
+         // Connect to node events.
+         this .#addEventDispatchersAll (rootElement);
       }
       catch (error)
       {
          console .error ("Error importing document:", error);
       }
+   }
+
+   // The engine made the scene of `rootElement`: what its elements made, and the Inline elements, which are loading.
+   #prepared (rootElement, scene)
+   {
+      const html   = htmlImports .get (scene);
+      const handle = scene [_node];
+
+      if (!html || rootElement !== this .#rootElement || !handle ?.browser)
+         return;
+
+      this .#html   = html;
+      this .#handle = handle;
+      this .#scene  = scene; // the page's scene object stays
+
+      this .#register (engineOf (handle) .xmlTargets (handle .scene), html .elements);
+   }
+
+   // The loads of the world started: add the Inline elements from the initial scene.
+   #started (rootElement)
+   {
+      const handle = this .#handle;
+
+      if (!handle || rootElement !== this .#rootElement)
+         return;
+
+      loadStateTaps .set (this .#browser, { scene: handle .scene, nodes: new Map (), pending: new Set () });
+
+      this .#processInlineElements (rootElement);
    }
 
    // What the elements of an XML text made, `[index, kind, a, b]` each, and the page elements of that text.
@@ -5192,8 +5274,13 @@ class DOMIntegration
       {
          const element = elements [targets [i]];
 
-         if (element)
-            this .#targets .set (element, { kind: targets [i + 1], a: targets [i + 2], b: targets [i + 3] });
+         if (!element)
+            continue;
+
+         this .#targets .set (element, { kind: targets [i + 1], a: targets [i + 2], b: targets [i + 3] });
+
+         if (targets [i + 1] === 0)
+            this .#elements .set (targets [i + 2], element);
       }
    }
 
@@ -5267,15 +5354,34 @@ class DOMIntegration
       }
    }
 
-   // XMLParser.childElement (element) with the node `parent` (-1: among the root nodes of the world) as the parent.
-   #child (element, parent)
+   // XMLParser.childElement (element) with the node `parent` (-1: among the root nodes of the context `ctx`, -1: of the world) as the
+   // parent. The elements are those of the page, or the ones the Inline's document made.
+   #child (element, parent, ctx = -1)
    {
       const { xml, elements } = htmlToXML (null, this .#html .state, element);
 
       if (xml === "")
          return;
 
-      this .#register (engineOf (this .#handle) .xmlChild (this .#handle .scene, parent, xml), elements);
+      const handle = this .#handle;
+
+      this .#register (engineOf (handle) .xmlChild (handle .scene, parent, ctx, xml), elements);
+
+      // A field element made a new field object for the node: the page's field objects are the new ones.
+      if (parent >= 0 && /^field$/i .test (element .nodeName))
+         this .#renewFields (parent);
+   }
+
+   // The field objects of node `id` are read again (a user-defined field was replaced).
+   #renewFields (id)
+   {
+      const ref = nodeRef (this .#handle, id);
+
+      ref [NAMES]       = undefined;
+      ref [DEFINITIONS] = undefined;
+      ref [FIELDS] .clear ();
+
+      // X_ITE does not connect the new field object to the element: it fires no event any more.
    }
 
    #processAddedNode (element)
@@ -5292,8 +5398,22 @@ class DOMIntegration
 
       const parent = element .parentNode;
 
-      // The root scene, a node, or else the world.
-      this .#child (element, /^(?:Scene|SCENE)$/ .test (parent .nodeName) ? -1 : this .#node (parent) ?? -1);
+      // The root scene or the scene of an Inline, a node, or else the world.
+      if (/^(?:Scene|SCENE)$/ .test (parent .nodeName))
+      {
+         const target = this .#targets .get (parent);
+
+         this .#child (element, -1, target ?.kind === 1 ? target .a : -1);
+      }
+      else
+      {
+         this .#child (element, this .#node (parent) ?? -1);
+      }
+
+      // Now after creating nodes need to look again for Inline elements, then attach event dispatchers.
+      this .#processInlineElements (element);
+      this .#addEventDispatchers (element);
+      this .#addEventDispatchersAll (element);
    }
 
    #processRemovedNode (element)
@@ -5309,16 +5429,169 @@ class DOMIntegration
       switch (target .kind)
       {
          case 0: engineOf (handle) .disposeNode (handle .scene, target .a); break;
+         case 1: engineOf (handle) .disposeContext (handle .scene, target .a); break;
          case 2: engineOf (handle) .deleteRouteById (handle .scene, target .a, target .b); break;
       }
 
       this .#targets .delete (element);
    }
 
+   // --- Inline elements ---------------------------------------------------------------------------------------------------
+
+   #processInlineElements (element)
+   {
+      if (/^(?:Inline|INLINE)$/ .test (element .nodeName))
+         this .#processInlineElement (element);
+
+      for (const inlineElement of element .querySelectorAll ("Inline"))
+         this .#processInlineElement (inlineElement);
+   }
+
+   #processInlineElement (element)
+   {
+      const node = this .#node (element);
+
+      if (node === undefined)
+         return;
+
+      const handle = this .#handle;
+      const tap    = loadStateTaps .get (this .#browser);
+
+      // `node ._loadState .addInterest ("appendInlineChildElement", this, element)`
+      tap .nodes .set (node, () => this .#guarded (() => this .#appendInlineChildElement (element)));
+
+      engineOf (handle) .observeField (handle .scene, node, "loadState", true);
+
+      this .#appendInlineChildElement (element);
+   }
+
+   // The work of a notification: the engine's lines follow it, and an error is the page's.
+   #guarded (fn)
+   {
+      try
+      {
+         if (this .#handle)
+            fn ();
+      }
+      catch (error)
+      {
+         console .error (error);
+      }
+   }
+
+   #appendInlineChildElement (element)
+   {
+      const node   = this .#node (element);
+      const handle = this .#handle;
+
+      if (node === undefined || !handle)
+         return;
+
+      const engine = engineOf (handle);
+      const state  = engine .loadState (handle .scene, node);
+
+      switch (state)
+      {
+         case 0: // NOT_STARTED_STATE
+         case 3: // FAILED_STATE
+         {
+            // Remove all child nodes.
+            while (element .firstChild)
+               element .removeChild (element .lastChild);
+
+            break;
+         }
+         case 2: // COMPLETE_STATE
+         {
+            // Remove all child nodes.
+            while (element .firstChild)
+               element .removeChild (element .lastChild);
+
+            // Add the scene as child node of the Inline element: the document the engine read.
+            const inline = engine .inlineXml (handle .scene, node);
+
+            if (!inline)
+               break;
+
+            const document = new DOMParser () .parseFromString (inline [0], "application/xml");
+            const x3d      = document .documentElement;
+
+            if (!x3d || document .getElementsByTagName ("parsererror") .length)
+               break;
+
+            this .#register (inline [1], Array .from (document .querySelectorAll ("*")));
+
+            element .append (x3d);
+
+            // Add Inline elements, and connect to node events.
+            this .#processInlineElements (x3d);
+            this .#addEventDispatchersAll (x3d);
+
+            break;
+         }
+      }
+
+      switch (state)
+      {
+         case 2:
+            element .dispatchEvent (new CustomEvent ("load", { detail: { node: nodeObject (handle, node) } }));
+            break;
+         case 3:
+            element .dispatchEvent (new CustomEvent ("error", { detail: { node: nodeObject (handle, node) } }));
+            break;
+      }
+   }
+
+   // --- Field events ------------------------------------------------------------------------------------------------------
+
+   #addEventDispatchersAll (element)
+   {
+      for (const childElement of element .querySelectorAll ("*"))
+         this .#addEventDispatchers (childElement);
+   }
+
+   #addEventDispatchers (element)
+   {
+      // Check for USE nodes; they do not emit events.
+      if (element .nodeName === "ROUTE" || this .#bound .has (element))
+         return;
+
+      const node = this .#node (element);
+
+      if (node === undefined)
+         return;
+
+      this .#bound .add (element);
+
+      const ref = nodeRef (this .#handle, node);
+
+      for (const definition of ref .getFieldDefinitions ())
+         this .#bindFieldCallback (ref, element, definition);
+   }
+
+   #bindFieldCallback (ref, element, definition)
+   {
+      if (definition .accessType !== X3DConstants .outputOnly && definition .accessType !== X3DConstants .inputOutput)
+         return;
+
+      attachedField (ref, definition .name) .addFieldCallback (this, value => this .#fieldCallback (element, definition .name, value));
+   }
+
+   #fieldCallback (element, name, value)
+   {
+      const node = this .#node (element);
+
+      if (node === undefined)
+         return;
+
+      element .dispatchEvent (new CustomEvent (name, { detail: { node: nodeObject (this .#handle, node), value } }));
+   }
+
    dispose ()
    {
       this .#observer .disconnect ();
       this .#changes ?.disconnect ();
+      loadStateTaps .delete (this .#browser);
    }
 }
 
@@ -5886,7 +6159,7 @@ class X3DBrowser
 
    // Wait until engine scene `id` has loaded what it holds the load for (FileLoader: its loadCount is 0).
    // `aborted ()` ends the wait; the scene is then released.
-   async #loaded (id, aborted)
+   async #loaded (id, aborted, started = null)
    {
       while (true)
       {
@@ -5900,6 +6173,15 @@ class X3DBrowser
          const loaded = this .#engine .loaded (id, Date .now () / 1000);
 
          this .#flushLog (id);
+
+         // The loads of the world have started: what DOMIntegration does when the world was replaced.
+         if (started)
+         {
+            const callback = started;
+
+            started = null;
+            callback ();
+         }
 
          if (loaded)
             return;
@@ -6076,6 +6358,7 @@ class X3DBrowser
       }
 
       this .#flushLog (id);
+
       await this .#loaded (id, () => this .#disposed);
       return this .#sceneOf (id);
    }
@@ -6375,6 +6658,7 @@ class X3DBrowser
 
       let text = null;
       let html = null;
+      let prepared = null;
 
       if (typeof dom === "string")
          text = dom;
@@ -6388,6 +6672,8 @@ class X3DBrowser
 
          html = htmlToXML (dom);
          text = html .xml;
+         prepared = importHooks .get (dom);
+         importHooks .delete (dom);
       }
       else if (dom instanceof Node)
          text = new XMLSerializer () .serializeToString (dom);
@@ -6403,17 +6689,18 @@ class X3DBrowser
       if (text === null)
          return this .#emptyScene ();
 
-      const scene = await this .#importText (text);
-
-      // DOMIntegration finds the node of an element with this.
-      if (html)
+      // DOMIntegration finds the node of an element with `htmlImports`.
+      const scene = await this .#importText (text, html && (scene =>
+      {
          htmlImports .set (scene, html);
+         prepared ?.prepared (scene);
+      }), prepared ?.started);
 
       return scene;
    }
 
    // The scene of text that createX3DFromString parses, with the page's URL as its world URL.
-   async #importText (text)
+   async #importText (text, prepared = null, started = null)
    {
       await this .#ready;
 
@@ -6432,7 +6719,10 @@ class X3DBrowser
       }
 
       this .#flushLog (id);
-      await this .#loaded (id, () => this .#disposed);
+
+      // DOMIntegration looks at the Inline elements of the world while their loads run, as X_ITE does.
+      prepared ?.(this .#sceneOf (id));
+      await this .#loaded (id, () => this .#disposed, started);
       return this .#sceneOf (id);
    }
 

@@ -588,8 +588,15 @@ impl Runtime {
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles.
             Err(x3d_parse::LoadError::NoHandler) => {
+                // A data URL is not named (`worldURL .startsWith ("data:")`).
+                let named = if url.scheme() == "data" {
+                    "'data:' URL".to_string()
+                } else {
+                    format!("'{url}'")
+                };
+
                 return Err(Some(format!(
-                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
+                    "Error: Couldn't parse X3D. No suitable file handler found for {named}."
                 )));
             }
             Err(e) => return Err(Some(format!("Error: {e}"))),

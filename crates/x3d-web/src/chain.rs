@@ -186,7 +186,14 @@ pub fn world_generation(rt: &Runtime) -> u64 {
 }
 
 pub fn observe_field(rt: &mut Runtime, node: NodeId, name: &str, on: bool) -> Result<(), String> {
-    let k = field_key(rt, node, name)?;
+    // DOMIntegration listens to `_loadState` of the Inline nodes, a private field.
+    let k = match field_key(rt, node, name) {
+        Ok(k) => k,
+        Err(e) if name == "loadState" && node_exists(rt, node) => {
+            rt.private_field(inner_node(rt, node), name).ok_or(e)?
+        }
+        Err(e) => return Err(e),
+    };
 
     if on {
         rt.page_observed.insert(k);
