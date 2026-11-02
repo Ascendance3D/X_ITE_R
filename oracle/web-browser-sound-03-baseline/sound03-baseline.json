@@ -3511,6 +3511,20 @@
     0
    ]
   },
+  "soundMore.loadTimeEvents": {
+   "events": [
+    "isActive true",
+    "duration_changed",
+    "elapsedTime"
+   ]
+  },
+  "soundMore.routeStart": {
+   "events": [
+    "isActive true",
+    "isActive false"
+   ],
+   "active": false
+  },
   "soundMore.lifecycle": {
    "steps": [
     {
