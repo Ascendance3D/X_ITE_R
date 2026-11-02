@@ -363,6 +363,52 @@ impl Runtime {
         self.extern_request_load(e);
     }
 
+    /// X3DNetworkingContext.getDisplayLoadCount: the url objects (Inlines, textures, Scripts, ...) and EXTERNPROTO
+    /// declarations of the world, its Inlines' scenes included, whose load is in progress.
+    pub fn display_load_count(&self) -> i32 {
+        let attached = |ctx: CtxId| self.ctx_attached(ctx);
+        let nodes = (0..self.scene.nodes.len() as NodeId)
+            .filter(|&n| {
+                self.url_load_state(n) == LoadState::InProgress && attached(self.scene.node(n).ctx)
+            })
+            .count();
+        let externs = self
+            .extern_states
+            .iter()
+            .filter(|(e, s)| {
+                s.load_state == LoadState::InProgress && attached(self.scene.externprotos[**e].ctx)
+            })
+            .count();
+
+        (nodes + externs) as i32
+    }
+
+    /// Remember a change of [`Runtime::display_load_count`] for the page (X3DNetworkingContext `[_set_loadCount]`).
+    pub fn sample_display_load_count(&mut self) {
+        let n = self.display_load_count();
+
+        if self.loading_samples.last().is_none_or(|last| *last != n) {
+            self.loading_samples.push(n);
+        }
+    }
+
+    fn ctx_attached(&self, ctx: CtxId) -> bool {
+        let mut root = self.scene.scene_root(ctx);
+
+        for _ in 0..64 {
+            if root == ROOT || root == self.scene.world {
+                return true;
+            }
+
+            match self.inline_scenes.iter().find(|(_, c)| **c == root) {
+                Some((inline, _)) => root = self.scene.scene_root(self.scene.node(*inline).ctx),
+                None => return false,
+            }
+        }
+
+        false
+    }
+
     /// Loading objects of the world scene (`scene ._loadCount`): the Inlines and EXTERNPROTO
     /// declarations whose load is in progress and whose scene is attached to the world.
     pub fn root_load_count(&self) -> i32 {

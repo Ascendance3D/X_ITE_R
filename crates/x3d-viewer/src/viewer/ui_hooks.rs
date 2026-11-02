@@ -754,8 +754,10 @@ impl Viewer3d {
         self.set_description("Viewpoint copied to clipboard.");
     }
 
-    /// The Shift+F8 text: a Viewpoint or OrthoViewpoint with the user's position, orientation, center of rotation and
-    /// field of view, in the encoding of the world's file, and a line feed. `None` for a GeoViewpoint.
+    /// The Shift+F8 text (X3DCoreContext `[_keydown]`): the active Viewpoint, OrthoViewpoint or GeoViewpoint with the
+    /// user's position, orientation, center of rotation and field of view (a GeoViewpoint's position and center of
+    /// rotation as geographic coordinates, with its `geoSystem` and a copy of its GeoOrigin), in the encoding of the
+    /// world's scene (`getEncoding ()`: VRML and ASCII as classic encoding, JSON, any other as XML), and a line feed.
     pub fn viewpoint_text(&mut self) -> Option<String> {
         let active = self.layer.viewpoint();
         let type_name = if active == crate::layer::DEFAULT_ORTHO {
@@ -766,7 +768,7 @@ impl Viewer3d {
             self.rt.builtin_name(active)?
         };
 
-        if !matches!(type_name, "Viewpoint" | "OrthoViewpoint") {
+        if !matches!(type_name, "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint") {
             return None;
         }
 
@@ -774,41 +776,97 @@ impl Viewer3d {
             .then(|| self.rt.pre_value(active, "fieldOfView").cloned())
             .flatten();
         let (p, o, c) = self.user_pose();
+        let geo = self.base().geo;
         let ctx = self.rt.scene.world;
         let node = self.rt.create_node_setup(ctx, type_name)?;
-        let set = |rt: &mut Runtime, name: &str, v: FieldValue| {
+        let mut made = vec![node];
+        // A negative zero is not the default value 0 of the field (and prints as such).
+        let nz = |v: Vector3| Vector3::new(v.x + 0.0, v.y + 0.0, v.z + 0.0);
+        let set = |rt: &mut Runtime, node: NodeId, name: &str, v: FieldValue| {
             if let Some(k) = rt.pre(node, name) {
+                // The field keeps its type (a GeoViewpoint's position is an SFVec3d).
+                let v = match (&v, rt.value(k)) {
+                    (FieldValue::SFVec3f(a), FieldValue::SFVec3d(_)) => FieldValue::SFVec3d(*a),
+                    _ => v,
+                };
+
                 rt.set_raw(k, v);
             }
         };
 
-        set(&mut self.rt, "position", FieldValue::SFVec3f(p));
-        set(&mut self.rt, "orientation", FieldValue::SFRotation(o));
-        set(&mut self.rt, "centerOfRotation", FieldValue::SFVec3f(c));
+        if let Some(g) = &geo {
+            // `geoOrigin`: a GeoOrigin node is copied (geoSystem, geoCoords, rotateYUp); any other value is dropped.
+            let origin = match self.rt.pre_value(active, "geoOrigin") {
+                Some(FieldValue::SFNode(Some(go))) => Some(*go),
+                _ => None,
+            };
 
-        if let Some(v) = fov {
-            set(&mut self.rt, "fieldOfView", v);
+            if let Some(go) = origin.filter(|go| self.rt.builtin_name(*go) == Some("GeoOrigin")) {
+                if let Some(copy) = self.rt.create_node_setup(ctx, "GeoOrigin") {
+                    for name in ["geoSystem", "geoCoords", "rotateYUp"] {
+                        if let Some(v) = self.rt.pre_value(go, name).cloned() {
+                            set(&mut self.rt, copy, name, v);
+                        }
+                    }
+
+                    set(
+                        &mut self.rt,
+                        node,
+                        "geoOrigin",
+                        FieldValue::SFNode(Some(copy)),
+                    );
+                    made.push(copy);
+                }
+            }
+
+            if let Some(v) = self.rt.pre_value(active, "geoSystem").cloned() {
+                set(&mut self.rt, node, "geoSystem", v);
+            }
+
+            set(
+                &mut self.rt,
+                node,
+                "position",
+                FieldValue::SFVec3f(nz(g.object.get_geo_coord(&p))),
+            );
+            set(
+                &mut self.rt,
+                node,
+                "centerOfRotation",
+                FieldValue::SFVec3f(nz(g.object.get_geo_coord(&c))),
+            );
+        } else {
+            set(&mut self.rt, node, "position", FieldValue::SFVec3f(p));
+            set(
+                &mut self.rt,
+                node,
+                "centerOfRotation",
+                FieldValue::SFVec3f(c),
+            );
         }
 
-        let url = self.rt.scene.world_url_of(ctx).to_lowercase();
-        let url = url.split(['?', '#']).next().unwrap_or("").to_string();
-        let mut text = if url.ends_with(".x3dj") || url.ends_with(".json") {
-            self.rt
+        set(&mut self.rt, node, "orientation", FieldValue::SFRotation(o));
+
+        if let Some(v) = fov {
+            set(&mut self.rt, node, "fieldOfView", v);
+        }
+
+        let mut text = match self.rt.scene.encoding_of(ctx) {
+            "VRML" | "ASCII" => self.rt.scene.node_to_vrml_string(node),
+            "JSON" => self
+                .rt
                 .scene
-                .field_value_to_json_string(&FieldValue::SFNode(Some(node)))
-        } else if url.ends_with(".wrl")
-            || url.ends_with(".wrz")
-            || url.ends_with(".x3dv")
-            || url.ends_with(".x3dvz")
-        {
-            self.rt.scene.node_to_vrml_string(node)
-        } else {
-            self.rt
+                .field_value_to_json_string(&FieldValue::SFNode(Some(node))),
+            _ => self
+                .rt
                 .scene
-                .field_value_to_xml_string(&FieldValue::SFNode(Some(node)))
+                .field_value_to_xml_string(&FieldValue::SFNode(Some(node))),
         };
 
-        self.rt.scene.release_node(node);
+        for n in made.into_iter().rev() {
+            self.rt.scene.release_node(n);
+        }
+
         text.push('\n');
         Some(text)
     }

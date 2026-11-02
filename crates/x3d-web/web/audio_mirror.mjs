@@ -22,6 +22,7 @@ export class AudioMirror
    #read;
    #queue = Promise .resolve ();
    #disposed = false;
+   #elements = new Map ();    // MediaStreamAudioDestinationNode -> the <audio> element that plays its stream
 
    // `context`: the page's AudioContext. `read .buffer (index)`: [ sampleRate, ... Float32Array ] of an op's `{ buffer }`
    // argument; `read .bytes (index)`: the Uint8Array of its `{ encoded }` argument (the file an AudioBuffer was decoded from).
@@ -95,10 +96,35 @@ export class AudioMirror
 
       for (const node of nodes ?.values () ?? [ ])
       {
+         this .#stopElement (node);
+
          if (node instanceof AudioScheduledSourceNode)
             quiet (() => node .stop ());
 
          quiet (() => node .disconnect ());
+      }
+   }
+
+   #stopElement (node)
+   {
+      const element = this .#elements .get (node);
+
+      if (!element)
+         return;
+
+      this .#elements .delete (node);
+      quiet (() => element .pause ());
+      element .srcObject = null;
+   }
+
+   // X3DSoundContext.startAudioElements: the `<audio>` elements that are not playing yet are played again (the autoplay
+   // policy refuses them until the page has a user activation).
+   startElements ()
+   {
+      for (const element of this .#elements .values ())
+      {
+         if (element .paused)
+            quiet (() => element .play () .catch (() => { }));
       }
    }
 
@@ -163,10 +189,31 @@ export class AudioMirror
          case "merger":      return make (context .createChannelMerger (a [0]));
          case "panner":      return make (context .createPanner ());
 
+         // AudioDestination: `new MediaStreamAudioDestinationNode (audioContext)`, whose stream an `<audio>` element plays
+         // (`audioElement .srcObject = node .stream`, played as X3DSoundContext.startAudioElement does).
+         // `browser .startAudioElement (audioElement)`: X3DSoundContext.startAudioElements tries every element that waits, and the
+         // context's `resume ()` is one of them while its first call is not settled.
+         case "elementStart":
+            quiet (() => context .resume () .catch (() => { }));
+            this .startElements ();
+            return;
+         case "mediaStream":
+         {
+            const stream  = new MediaStreamAudioDestinationNode (context, { channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" });
+            const element = new Audio ();
+
+            element .srcObject = stream .stream;
+            this .#elements .set (stream, element);
+            quiet (() => element .play () .catch (() => { }));
+
+            return make (stream);
+         }
+
          // Lifetime and connections. `release` has disconnected the node before (its own ops); `releaseKeep` leaves the
          // connections: a source told to stop plays on until then.
          case "release":
          case "releaseKeep":
+            this .#stopElement (nodes .get (id));
             nodes .delete (id);
             return;
          case "connect":      return node () .connect (this .#node (nodes, a [1]), a [0], a [2]);

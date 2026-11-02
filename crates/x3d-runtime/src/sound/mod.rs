@@ -198,6 +198,10 @@ pub struct AudioEngine {
     /// The MediaStreamAudioDestinationNodes: the graph pulls them (the oracle page connects its
     /// stand-in to the destination).
     stream_destinations: std::collections::HashSet<usize>,
+    /// The AudioDestination streams of a recording engine (the page's): the page makes a MediaStreamAudioDestinationNode for
+    /// each and plays its stream in an `<audio>` element, as X_ITE does. The engine keeps a gain that feeds its own output, which
+    /// [`AudioEngine::graph`] does not show.
+    page_streams: std::collections::HashSet<usize>,
     /// The buffer sources and oscillators told that the graph pulls them.
     pulled: std::collections::HashSet<usize>,
     /// `currentTime` from an outside audio context ([`AudioEngine::set_clock`]).
@@ -375,6 +379,7 @@ impl AudioEngine {
             convolver_normalize: Default::default(),
             listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0],
             stream_destinations: Default::default(),
+            page_streams: Default::default(),
             pulled: Default::default(),
             clock: None,
             serials: vec![],
@@ -403,6 +408,12 @@ impl AudioEngine {
     /// The calls recorded since the last call, oldest first.
     pub fn take_ops(&self) -> Vec<Op> {
         std::mem::take(&mut *self.ops.lock().unwrap())
+    }
+
+    /// `browser .startAudioElement (audioElement)` of an AudioDestination (op "elementStart"): the page plays the stream
+    /// elements and calls the context's `resume ()` again, as X3DSoundContext.startAudioElements does.
+    pub fn audio_element_start(&self) {
+        self.emit("elementStart", vec![]);
     }
 
     fn emit(&self, name: &'static str, args: Vec<Arg>) {
@@ -446,6 +457,7 @@ impl AudioEngine {
 
         if let Some(i) = self.nodes.iter().position(Option::is_none) {
             self.stream_destinations.remove(&i);
+            self.page_streams.remove(&i);
             self.pulled.remove(&i);
             self.sources.remove(&i);
             self.nodes[i] = Some(node);
@@ -484,6 +496,11 @@ impl AudioEngine {
                     ANode::StreamSource(_) => "MediaStreamAudioSourceNode",
                     ANode::Destination(_) => "AudioDestinationNode",
                 };
+                let kind = if self.page_streams.contains(&i) {
+                    "MediaStreamAudioDestinationNode"
+                } else {
+                    kind
+                };
                 let source = matches!(n, ANode::BufferSource(_));
 
                 Some(GraphNode {
@@ -502,7 +519,8 @@ impl AudioEngine {
                         ChannelInterpretation::Speakers => "speakers",
                         ChannelInterpretation::Discrete => "discrete",
                     },
-                    gain: matches!(n, ANode::Gain(..)).then(|| self.param_value(AId(i), "gain")),
+                    gain: (matches!(n, ANode::Gain(..)) && !self.page_streams.contains(&i))
+                        .then(|| self.param_value(AId(i), "gain")),
                     playback_rate: source.then(|| self.param_value(AId(i), "playbackRate")),
                     source: source.then(|| self.sources.get(&i).cloned().unwrap_or_default()),
                 })
@@ -514,6 +532,7 @@ impl AudioEngine {
             connections: self
                 .connections
                 .iter()
+                .filter(|c| !self.page_streams.contains(&c.0.0))
                 .map(|c| (c.0.0, c.1, c.2.0, c.3))
                 .collect(),
             destination: self.destination.0,
@@ -1685,6 +1704,28 @@ impl AudioEngine {
     /// "speakers". With an OfflineAudioContext (which a browser does not allow for this node) it
     /// is the stereo GainNode the oracle page substitutes, connected to the destination.
     pub fn stream_destination(&mut self, to_output: bool) -> AId {
+        if to_output && self.recording {
+            // The page makes the MediaStreamAudioDestinationNode (op "mediaStream"); the gain here only feeds the engine's own
+            // output and is not recorded.
+            self.recording = false;
+
+            let id = self.gain(1.0);
+
+            self.set_channel_count(id, 2);
+            self.set_channel_count_mode(id, "explicit");
+            self.set_channel_interpretation(id, "speakers");
+
+            let destination = self.destination;
+
+            self.connect(id, destination);
+            self.recording = true;
+            self.emit("mediaStream", vec![Arg::Int(id.0)]);
+            self.stream_destinations.insert(id.0);
+            self.page_streams.insert(id.0);
+            self.update_pull();
+            return id;
+        }
+
         if to_output || matches!(self.ctx, Ctx::Offline(_)) {
             let id = self.gain(1.0);
             self.set_channel_count(id, 2);
