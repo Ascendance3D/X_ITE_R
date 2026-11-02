@@ -1233,9 +1233,9 @@
     "rea_batch08_gs",
     "rea_b08_gs_reload"
    ],
-   "missing": "castShadow shadow pass, pointerEvents picking, collision, bboxDisplay, sphere culling, reversed/log depth; sort synchronous (X_ITE async)",
+   "missing": "sort synchronous (X_ITE async; owner decision); unknowns: the pinned particles page times out on worlds with explicit bboxSize/bboxCenter or visible FALSE (the bbox cull rule rests on source text), the pick pass has no logarithmic depth mode, the addCollisionShape sphere test and WALK gravity with splats are not reproduced, castShadow is always TRUE as in the pinned shape (the field is not followed), the log-depth pass has no MSAA 4 comparison",
    "oracle": "",
-   "notes": "not implemented; the name appears only in a parser/optimizer type list (scanner would count it as NOT_TESTED) | REA batch 08 (proposal 2026-10-18, pending local GPU gates):"
+   "notes": "not implemented; the name appears only in a parser/optimizer type list (scanner would count it as NOT_TESTED) | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #69 2026-11-01: castShadow shadow pass (#272, 5 synthetic worlds, MSAA 0 and 4, 0 pixels over 8), pointerEvents picking (#275, 6 worlds, 2646 probes, hit or miss identical, values within 7.1e-5), collision (#277, 6 worlds, hit state exact, distances within 1e-6) and logarithmic depth (#271, 35 worlds) match pinned X_ITE 16.5.0. pointerEvents defaults to FALSE and is copied once at initialize; the hit normal is always (0, 0, 1); collision does not depend on pointerEvents. bboxDisplay and sphere culling were already in master (#243), so the earlier missing text was stale. Status stays PARTIAL."
   },
   {
    "id": "node:Arc2D",
