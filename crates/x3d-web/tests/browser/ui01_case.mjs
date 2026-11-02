@@ -50,8 +50,58 @@ Group { children [
 const wait = (page, ms) => page .waitForTimeout (ms);
 const frames = page => page .evaluate (() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (() => requestAnimationFrame (() => requestAnimationFrame (() => r ())))))) ;
 
-async function loadWorld (page, url, ms = 300)
+// The timers the interface sets to hide things later are held by the page and run by the test (`flush`), so a slow machine cannot
+// run them between two reads: the notification's hide timer (5000 ms), the removal of a closed menu (1000 ms) and of the world
+// info overlay (300 ms, held while the overlay exists; the test's own waits, which pass a promise's resolve function, run). The delays asked for are recorded in `window .held`.
+function holdTimers ()
 {
+   if (window .held)
+      return;
+
+   const set   = window .setTimeout .bind (window);
+   const clear = window .clearTimeout .bind (window);
+
+   window .held = [ ];
+
+   window .setTimeout = (callback, delay, ... args) =>
+   {
+      if (typeof callback === "function" && !/\[native code\]/ .test (String (callback)) && (delay === 5000 || delay === 1000 || (delay === 300 && document .querySelector ("x3d-canvas") ?.shadowRoot ?.querySelector (".x_ite-private-world-info-overlay"))))
+      {
+         const entry = { delay, callback, done: false, id: set (() => { }, 2 ** 30) };
+
+         window .held .push (entry);
+         return entry .id;
+      }
+
+      return set (callback, delay, ... args);
+   };
+
+   window .clearTimeout = id =>
+   {
+      for (const entry of window .held)
+         if (entry .id === id)
+            entry .done = true;
+
+      clear (id);
+   };
+
+   // Runs the held timers of a delay (all of them without one), in the order they were set.
+   window .flushTimers = delay =>
+   {
+      for (const entry of window .held .filter (e => !e .done && (delay === undefined || e .delay === delay)))
+      {
+         entry .done = true;
+         clear (entry .id);
+         entry .callback ();
+      }
+   };
+}
+
+const flush = async (page, delay) => { await page .evaluate (delay => window .flushTimers (delay), delay); await frames (page); };
+
+async function loadWorld (page, url, ms = 300, flushMenus = true)
+{
+   await page .evaluate (holdTimers);
    await page .evaluate (pageLoadURL, [ url ]);
 
    const result = await page .evaluate (() => window .pending);
@@ -60,6 +110,10 @@ async function loadWorld (page, url, ms = 300)
       throw new Error (`the world did not load: ${result}\n${page .log .join ("\n")}`);
 
    await settle (page, ms);
+
+   // The menus closed in the world before are gone.
+   if (flushMenus)
+      await flush (page, 1000);
 }
 
 // In-page helpers: the shadow root, a tree of the open menu, the notification, the options.
@@ -206,18 +260,18 @@ async function descriptions (page)
 
    await at (200, 150);
    await at (201, 151);
-   await wait (page, 100);
+   await frames (page); await frames (page);
    await read ("overSensor");
 
    await page .evaluate (() => { window .ui .canvas () .browser .description = "after"; });
    await at (2, 2);
    await at (3, 3);
-   await wait (page, 100);
+   await frames (page); await frames (page);
    await read ("leftSensor");
 
    await at (200, 150);
    await at (201, 151);
-   await wait (page, 100);
+   await frames (page); await frames (page);
    await read ("overAgain");
 
    // A world without the sensor: the replaced world sets "" and the new bound viewpoint its description.
@@ -231,6 +285,13 @@ async function descriptions (page)
    // The Notifications option off: the description changes, nothing shows.
    await page .evaluate (() => { window .ui .setOption ("Notifications", false); window .ui .canvas () .browser .nextViewpoint (); });
    await read ("notificationsOff");
+
+   // The notification hides after the timer of 5000 ms the browser sets with each text; the timer is run here.
+   await page .evaluate (() => { window .ui .setOption ("Notifications", true); window .ui .canvas () .browser .description = "timer"; });
+   await frames (page);
+   out .timerShown = await page .evaluate (() => ({ notification: window .ui .notification (), delays: window .held .filter (e => !e .done) .map (e => e .delay) }));
+   await flush (page, 5000);
+   out .timerRun = await page .evaluate (() => ({ notification: window .ui .notification (), delays: window .held .filter (e => !e .done) .map (e => e .delay) }));
 
    return out;
 }
@@ -262,8 +323,23 @@ async function splash (page, env)
    const slow = `${env .base}/ui01-slow/world.wrl`;
    const body = "#VRML V2.0 utf8\nShape { geometry Box { } }\n";
 
-   await page .route (slow, async route => { await new Promise (r => setTimeout (r, 700)); await route .fulfill ({ status: 200, contentType: "model/vrml", body }); });
-   await page .route (`${env .base}/ui01-slow/missing.wrl`, async route => { await new Promise (r => setTimeout (r, 300)); await route .fulfill ({ status: 404, body: "no" }); });
+   // The slow and the missing file answer when the test says so: a request waits at a gate, so the state of the load is read while
+   // it runs, however slow the machine is.
+   const gates = [ ];
+   const reply = async (route, answer) => { await new Promise (r => gates .push (r)); await route .fulfill (answer); };
+   const open = async () => { await expectRequests (1); gates .splice (0) .forEach (r => r ()); };
+   const expectRequests = async n => { while (gates .length < n) await new Promise (r => setTimeout (r, 10)); };
+
+   await page .route (slow, route => reply (route, { status: 200, contentType: "model/vrml", body }));
+   await page .route (`${env .base}/ui01-slow/missing.wrl`, route => reply (route, { status: 404, body: "no" }));
+
+   // The splash screen has gone: its fade ends with display none.
+   const gone = () => page .waitForFunction (() =>
+   {
+      const splash = document .querySelector ("x3d-canvas") .shadowRoot .querySelector (".x_ite-private-splash-screen");
+
+      return !splash || getComputedStyle (splash) .display === "none";
+   });
 
    await settle (page, 100);
    out .initial = await splashState (page);
@@ -272,12 +348,15 @@ async function splash (page, env)
    out .optionOn = await splashState (page);
 
    await page .evaluate (pageLoadURL, [ slow ]);
-   await wait (page, 250);
+   await expectRequests (1);
+   await frames (page);
    out .loading = await splashState (page);
-   await wait (page, 150);
+   await frames (page);
    out .loading2 = await splashState (page);
+   await open ();
    out .result = await page .evaluate (() => window .pending);
-   await wait (page, 400);
+   await gone ();
+   await frames (page);
    out .loaded = await splashState (page);
 
    // The splash screen is hidden after the load: the text it showed ends with the load done.
@@ -285,42 +364,54 @@ async function splash (page, env)
 
    // A failing load.
    await page .evaluate (pageLoadURL, [ `${env .base}/ui01-slow/missing.wrl` ]);
-   await wait (page, 150);
+   await expectRequests (1);
+   await frames (page);
    out .failing = await splashState (page);
+   await open ();
    out .failedResult = await page .evaluate (() => window .pending);
-   await wait (page, 200);
+   await frames (page);
+   await frames (page);
    out .failed = await splashState (page);
    out .failedText = await page .evaluate (() => document .querySelector ("x3d-canvas") .shadowRoot .querySelector (".x_ite-private-spinner-text") .textContent);
 
    // A load that works replaces the failed splash.
    await page .evaluate (pageLoadURL, [ slow ]);
+   await open ();
    await page .evaluate (() => window .pending);
-   await wait (page, 300);
+   await gone ();
+   await frames (page);
    out .recovered = await splashState (page);
 
    // The option false: no splash screen, the canvas stays.
    await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("SplashScreen", false));
    await page .evaluate (pageLoadURL, [ slow ]);
-   await wait (page, 250);
+   await expectRequests (1);
+   await frames (page);
    out .offLoading = await splashState (page);
+   await open ();
    await page .evaluate (() => window .pending);
-   await wait (page, 300);
+   await frames (page);
    out .offLoaded = await splashState (page);
 
    // The option set while the splash screen shows.
    await page .evaluate (() => document .querySelector ("x3d-canvas") .browser .setBrowserOption ("SplashScreen", true));
    await page .evaluate (pageLoadURL, [ slow ]);
-   await wait (page, 250);
+   await expectRequests (1);
+   await frames (page);
    await page .evaluate (() => document .querySelector ("x3d-canvas") .setAttribute ("splashScreen", "false"));
-   await wait (page, 100);
+   await gone ();
+   await frames (page);
    out .attributeOff = await splashState (page);
+   await open ();
    await page .evaluate (() => window .pending);
-   await wait (page, 400);
+   await frames (page);
    out .attributeOffLoaded = await splashState (page);
 
    // replaceWorld shows it too.
    await page .evaluate (() => { const b = document .querySelector ("x3d-canvas") .browser; b .setBrowserOption ("SplashScreen", true); window .pending = b .replaceWorld (null) .then (() => "resolved"); });
-   await wait (page, 400);
+   await page .evaluate (() => window .pending);
+   await gone ();
+   await frames (page);
    out .replaced = await splashState (page);
 
    return out;
@@ -463,7 +554,7 @@ async function menuActions (page)
    await page .evaluate (() => { window .ui .setOption ("ContextMenu", true); window .ui .setOption ("Notifications", true); window .ui .setOption ("Debug", true); });
 
    const out = { };
-   const step = async (label, fn) => { await fn (); await wait (page, 500); out [label] = await state (page); };
+   const step = async (label, fn) => { await fn (); await frames (page); await flush (page, 1000); out [label] = await state (page); };
 
    await rightClick (page);
 
@@ -552,14 +643,14 @@ async function menuOpenClose (page)
    await frames (page);
    out .layerClick = { ... await state (page), events: await page .evaluate (() => window .opened .splice (0)), dom: await page .evaluate (() => window .downs .splice (0)) };
    out .layersAfter = await page .evaluate (() => window .ui .layers () .length);
-   await wait (page, 1200);
+   await flush (page, 1000);
    out .removed = await page .evaluate (() => window .ui .menus () .length);
 
    // A right click while the menu is open: the layer closes it, the new event opens it again at the new point.
    await rightClick (page, { x: 100, y: 100 });
    await rightClick (page, { x: 150, y: 120 });
    out .reopen = { ... await state (page), position: await page .evaluate (() => { const r = window .ui .menus () .at (-1) .getBoundingClientRect (); return [ Math .round (r .left), Math .round (r .top) ]; }) };
-   await wait (page, 1200);
+   await flush (page, 1000);
    out .reopenAfter = await state (page);
 
    // Escape and the arrow keys do nothing.
@@ -572,7 +663,7 @@ async function menuOpenClose (page)
    // An entry that is not a checkbox or radio closes the menu: About opens the provider's page.
    await clickItem (page, "About X_ITE");
    out .about = { ... await state (page), opened: await page .evaluate (() => window .window_open) };
-   await wait (page, 1200);
+   await flush (page, 1000);
    out .aboutAfter = await state (page);
 
    // The edge of the page: the menu stays inside the viewport.
@@ -600,7 +691,7 @@ async function menuOpenClose (page)
    out .userCheck = { ... await state (page), clicks: await page .evaluate (() => window .userClicks .slice ()) };
    await clickItem (page, "Custom Entry");
    out .userEntry = { ... await state (page), clicks: await page .evaluate (() => window .userClicks .slice ()) };
-   await wait (page, 1200);
+   await flush (page, 1000);
 
    // ContextMenu false: nothing opens, the event is still claimed.
    await page .evaluate (() => { window .ui .setOption ("ContextMenu", false); window .contextSeen = [ ]; window .ui .canvas () .addEventListener ("contextmenu", e => window .contextSeen .push (e .defaultPrevented)); });
@@ -637,7 +728,7 @@ async function menuWorldInfo (page)
    await rightClick (page);
    out .menuHas = await page .evaluate (() => !!window .ui .item ("Show World Info"));
    await clickItem (page, "Show World Info");
-   await wait (page, 100);
+   await frames (page);
    out .shown = await info ();
    out .menuClosed = (await state (page)) .layers;
 
@@ -656,7 +747,7 @@ async function menuWorldInfo (page)
    await page .mouse .click (box .x + 5, box .y + 5);
    await frames (page);
    out .closing = await info ();
-   await wait (page, 500);
+   await flush (page, 300);
    out .closed = await info ();
 
    // Opened twice: the first overlay stays.
@@ -664,10 +755,11 @@ async function menuWorldInfo (page)
    await clickItem (page, "Show World Info");
    await rightClick (page);
    await clickItem (page, "Show World Info");
-   await wait (page, 100);
+   await frames (page);
    out .twice = await info ();
    await page .mouse .click (box .x + 5, box .y + 5);
-   await wait (page, 500);
+   await frames (page);
+   await flush (page, 300);
    out .twiceClosed = await info ();
 
    // A world without a WorldInfo and META statements has no entry.
@@ -744,9 +836,9 @@ async function cleanup (page)
    // A world replaced while the world info and the menu are open.
    await rightClick (page);
    await page .evaluate (() => { window .ui .canvas () .browser .description = "x"; });
-   await loadWorld (page, PLAIN_WORLD);
+   await loadWorld (page, PLAIN_WORLD, 300, false);
    out .replaced = await counts ();
-   await wait (page, 1200);
+   await flush (page, 1000);
    out .replacedAfter = await counts ();
 
    // The element removed while the menu is open.
@@ -765,7 +857,7 @@ async function cleanup (page)
       const result = { before: left () };
 
       canvas .remove ();
-      await new Promise (r => setTimeout (r, 1200));
+      window .flushTimers (); await new Promise (r => setTimeout (r, 50));
       result .removed = left ();
 
       parent .prepend (canvas);
@@ -782,7 +874,7 @@ async function cleanup (page)
 
       canvas .browser .description = "last";
       canvas .browser .dispose ();
-      await new Promise (r => setTimeout (r, 1500));
+      window .flushTimers (); await new Promise (r => setTimeout (r, 50));
 
       return {
          canvasInside: shadow .contains (canvas .browser .getCanvas ()), menus: shadow .querySelectorAll ("ul.x_ite-private-menu, .context-menu-layer") .length,
