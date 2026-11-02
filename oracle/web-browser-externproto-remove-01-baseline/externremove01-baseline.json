@@ -1,0 +1,100 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "externRemove.inFlight": {
+   "results": {
+    "held": [
+     1007,
+     [
+      "Ext"
+     ]
+    ],
+    "remove": [
+     1007,
+     []
+    ],
+    "after": [
+     1008,
+     1008,
+     []
+    ]
+   },
+   "seq": [
+    "log: B1 initialize",
+    "page: loaded",
+    "page: reload",
+    "page: remove",
+    "page: released",
+    "log: B2 initialize"
+   ],
+   "served": 2
+  },
+  "externRemove.held": {
+   "results": {
+    "held": [
+     [],
+     1008
+    ],
+    "again": [
+     1008,
+     1008
+    ],
+    "create": [
+     "Ext",
+     "Ext",
+     "Ext"
+    ]
+   },
+   "seq": [
+    "log: B1 initialize",
+    "page: loaded",
+    "page: remove",
+    "page: reload",
+    "log: B2 initialize"
+   ],
+   "served": 2
+  },
+  "externRemove.beforeLoad": {
+   "results": {
+    "remove": [],
+    "load": [
+     1008,
+     1008
+    ]
+   },
+   "seq": [
+    "log: B1 initialize",
+    "page: loaded",
+    "page: remove",
+    "page: reload",
+    "log: B2 initialize"
+   ],
+   "served": 2
+  },
+  "externRemove.replaced": {
+   "results": {
+    "held": 1007,
+    "remove": [],
+    "world": [
+     "G"
+    ],
+    "after": null
+   },
+   "seq": [
+    "log: B1 initialize",
+    "page: loaded",
+    "page: reload",
+    "page: remove",
+    "page: replaceWorld",
+    "page: released",
+    "log: B2 initialize"
+   ],
+   "served": 2
+  }
+ }
+}

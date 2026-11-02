@@ -4,6 +4,10 @@ Use this procedure before any Git command that can write a tracked path in a che
 The main checkout holds ignored copies of answer keys (`oracle/answer-keys.tsv`) and empty key paths that older commits track as symlinks, so this procedure always applies there.
 The commands need GNU coreutils and findutils (`sha256sum -z`, `find -printf`, `cp --parents`, `stat -c`). On macOS, install the Homebrew `coreutils` and `findutils` packages and use their `g`-prefixed commands.
 
+## Backups root
+
+The backups root is on an external drive, never on the machine's system disk. Before any step that reads or writes it, check that the drive is mounted (`mountpoint -q <drive>` and `findmnt -no FSTYPE <drive>`), and that it has room for the copy. When the drive is not mounted, stop. Do not fall back to a local directory, and do not write into an empty mount-point directory. Copy with `rsync -aHAX` (ext4), verify with an `rsync -aHAXnci` dry run and file checksums, and never overwrite a dated directory. A private path (the store, a holding directory) stays out of the repository: name it only as `<backups root>`.
+
 ## Rules
 
 1. Before a command that can write a tracked path, record the sha256 of each path. After the command, check each path again. For a tracked symlink, record its target (`readlink`), not the bytes it points to.

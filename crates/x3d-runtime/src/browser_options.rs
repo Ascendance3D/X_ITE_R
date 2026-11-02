@@ -620,6 +620,12 @@ impl BrowserOptions {
         self.option("Gravity").as_f64()
     }
 
+    /// The `Cache` option: X3DExternProtoDeclaration.loadData gives it to its FileLoader as `cacheScene`, so with it off the
+    /// declaration's scene is not shared through the scene cache.
+    pub fn cache(&self) -> bool {
+        self.option("Cache").as_bool()
+    }
+
     /// X3DUrlObject.requestImmediateLoad: without LoadUrlObjects no url object of a world loads.
     pub fn load_url_objects(&self) -> bool {
         self.option("LoadUrlObjects").as_bool()

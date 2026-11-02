@@ -2190,7 +2190,7 @@ impl WebBrowser {
     }
 
     /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
-    /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad) and
+    /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad), `Cache` (X3DExternProtoDeclaration.loadData) and
     /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
     /// (X3DRenderObject.gravitate). The page gives the option's value already coerced to the field type. Returns whether
     /// the engine has the option.
@@ -2199,7 +2199,7 @@ impl WebBrowser {
         use x3d_runtime::browser_options::OptionValue;
 
         let value = match name {
-            "EnableInlineViewpoints" | "LoadUrlObjects" | "StraightenHorizon" => {
+            "EnableInlineViewpoints" | "LoadUrlObjects" | "StraightenHorizon" | "Cache" => {
                 OptionValue::Bool(flag)
             }
             "Gravity" => OptionValue::Double(number),
