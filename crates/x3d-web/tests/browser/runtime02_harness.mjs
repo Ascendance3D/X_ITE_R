@@ -721,7 +721,7 @@ const withoutDetail = value =>
 };
 
 // The reference cases of the groups that GROUP_FILES gives to `file`, the name of the calling test file.
-export function referenceCases (file)
+export function referenceCases (file, { skip = false } = { })
 {
    const groups = Object .entries (CASE_GROUPS) .filter (([ groupName ]) => GROUP_FILES [groupName] === file);
 
@@ -752,7 +752,7 @@ export function referenceCases (file)
       if (!cases .length)
          continue;
 
-      describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, () =>
+      describe (`${group .suite} ${groupName} cases, compared with pinned X_ITE`, { skip }, () =>
       {
          for (const [ name, run ] of cases)
          {
