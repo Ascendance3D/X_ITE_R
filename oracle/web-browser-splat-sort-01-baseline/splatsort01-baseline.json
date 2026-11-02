@@ -1,0 +1,83 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {
+  "splatSort.flip.before.png": [
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311"
+  ],
+  "splatSort.flip.after.png": [
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f"
+  ],
+  "splatSort.burst.before.png": [
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311"
+  ],
+  "splatSort.burst.after.png": [
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f",
+   "fc4529407e0779c9bb786ae8623619a253813ea2a4a6899bc6fee8c29618fa3f"
+  ],
+  "splatSort.back.before.png": [
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311"
+  ],
+  "splatSort.back.after.png": [
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311",
+   "18d90af5c44a58cb769dc6c79f488488c573e8af66b28e32ae1ccf3ed5f11311"
+  ]
+ },
+ "values": {
+  "splatSort.flip": {
+   "before": {
+    "picture": "splatSort.flip.before.png"
+   },
+   "trace": [
+    "post sort",
+    "draw 2",
+    "recv sorted",
+    "draw 2"
+   ],
+   "after": {
+    "picture": "splatSort.flip.after.png"
+   }
+  },
+  "splatSort.burst": {
+   "before": {
+    "picture": "splatSort.burst.before.png"
+   },
+   "after": {
+    "picture": "splatSort.burst.after.png"
+   }
+  },
+  "splatSort.back": {
+   "before": {
+    "picture": "splatSort.back.before.png"
+   },
+   "after": {
+    "picture": "splatSort.back.after.png"
+   }
+  }
+ }
+}
