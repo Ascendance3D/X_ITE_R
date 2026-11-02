@@ -134,6 +134,22 @@
     },
     "menus": 0,
     "layers": 0
+   },
+   "timerShown": {
+    "notification": {
+     "text": "timer",
+     "visibility": "visible"
+    },
+    "delays": [
+     5000
+    ]
+   },
+   "timerRun": {
+    "notification": {
+     "text": "timer",
+     "visibility": "hidden"
+    },
+    "delays": []
    }
   },
   "browserUi.splash": {
@@ -274,7 +290,7 @@
    "attributeOff": {
     "splash": true,
     "hidden": true,
-    "display": "block",
+    "display": "none",
     "canvasHidden": true,
     "title": "\n            X_ITEX3D\n         ",
     "hasProgressbar": true,
@@ -1927,7 +1943,7 @@
      "text": "Walk Viewer",
      "visibility": "visible"
     },
-    "menus": 2,
+    "menus": 1,
     "layers": 1
    },
    "walkMenu": [
@@ -1935,7 +1951,7 @@
     null,
     "Viewpoints",
     "Available Viewers",
-    "Straighten Horizon",
+    "Display Rubberband",
     null,
     "Primitive Quality",
     "Texture Quality",
@@ -2183,7 +2199,7 @@
      "text": "First",
      "visibility": "visible"
     },
-    "menus": 1,
+    "menus": 0,
     "layers": 0
    },
    "animAll_active": [
@@ -2203,7 +2219,7 @@
      "text": "First",
      "visibility": "visible"
     },
-    "menus": 1,
+    "menus": 0,
     "layers": 0
    },
    "animNone_active": [
@@ -2241,7 +2257,7 @@
     "description": "First",
     "notification": {
      "text": "First",
-     "visibility": "hidden"
+     "visibility": "visible"
     },
     "menus": 1,
     "layers": 1
