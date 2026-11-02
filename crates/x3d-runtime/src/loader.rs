@@ -877,6 +877,18 @@ impl Runtime {
                 self.fetcher.refresh(&r);
             }
 
+            // With the `Cache` option off an EXTERNPROTO asks for its file again at each load.
+            if let Task::ExternLoad(_, request) = *task
+                && r.scheme() != "data"
+                && !self.browser_options.cache()
+                && self
+                    .extern_refreshed
+                    .borrow_mut()
+                    .insert((request, offset + i))
+            {
+                self.fetcher.refresh(&r);
+            }
+
             // A MovieTexture video is requested by the page's video element, not by the engine: it is ready.
             if let Task::UrlLoad(node, _) = *task
                 && self.fetcher.plays_video()

@@ -41,6 +41,7 @@ import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
+import { CASE_GROUPS as EXTERNREMOVE01_GROUPS } from "./externremove01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as MOVIE01_GROUPS } from "./movie01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
@@ -105,6 +106,7 @@ const SUITES = {
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
    movie01: { dir: process .env .XR_MOVIE01_BASELINE ?? join (REPO, "oracle/web-browser-movie-01-baseline"), file: "movie01-baseline.json", groups: MOVIE01_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
+   externremove01: { dir: process .env .XR_EXTERNREMOVE01_BASELINE ?? join (REPO, "oracle/web-browser-externproto-remove-01-baseline"), file: "externremove01-baseline.json", groups: EXTERNREMOVE01_GROUPS },
 };
 
 for (const suite of Object .values (SUITES))
@@ -198,6 +200,13 @@ const DOM03_START_R = [ INLINE_EVENT ("load", "I1"), INLINE_EVENT ("error", "I2"
 
 const KNOWN_DIFFERENCES = {
    "domEvents.inline": [ [ [ "steps", 0, 1, "events" ], DOM03_START_X, DOM03_START_R ] ],
+   // The world is replaced while a removed declaration's load is in flight: X_ITE's old scene is still alive, so the response
+   // rebuilds the body of its instance and the Script prints; X_ITE_R's old world is gone with its requests (not part of #58).
+   "externRemove.replaced": [
+      [ [ "seq" ],
+        [ "log: B1 initialize", "page: loaded", "page: reload", "page: remove", "page: replaceWorld", "page: released", "log: B2 initialize" ],
+        [ "log: B1 initialize", "page: loaded", "page: reload", "page: remove", "page: replaceWorld", "page: released" ] ],
+   ],
    "browserUi.splash": UI01_DIFFERENCES,
    "browserUi.menuEntries": [
       [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
@@ -739,6 +748,7 @@ const GROUP_FILES = {
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",
+   externRemove: "externremove01.test.mjs",
    scriptLife: "scriptlife01.test.mjs",
    scriptReload: "scriptlife01.test.mjs",
    inlineRetry: "scriptlife01.test.mjs",

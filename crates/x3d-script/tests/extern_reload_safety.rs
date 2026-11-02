@@ -189,19 +189,22 @@ fn extern_recovers_when_the_resource_appears() {
     assert!(has_body(&t, 24, "Plain") && has_body(&t, 24, "Explicit"));
 }
 
-/// IMPLEMENTATION_SAFETY (X_ITE: the load of a removed declaration finishes and replaces the bodies).
+/// Issue #58 (X_ITE 16.5.0 `removeExternProtoDeclaration`: the name only, no dispose, no abort): the load of a removed
+/// declaration finishes and replaces the bodies of its instances; the console shows the new body starting.
 #[test]
-fn extern_removed_declaration_keeps_no_load() {
+fn extern_removed_declaration_load_finishes() {
     let t = trace("c20-remove-while-loading");
 
-    assert_eq!(count(&t, "B initialize"), 0);
-    assert_eq!(step(&t, 5)["externs"], json!([]));
-    assert_eq!(step(&t, 16)["loadCount"], json!(0));
+    assert_eq!(
+        step(&t, 5)["externs"],
+        json!([]),
+        "the name is gone at once"
+    );
+    assert!(count(&t, "B initialize") >= 1, "the load went on");
     assert!(
         has_body(&t, 16, "Plain") && has_body(&t, 16, "Explicit"),
-        "the instances keep their bodies"
+        "the instances have a body"
     );
-    assert_eq!(count(&t, "A poke 4"), 2, "the old bodies keep working");
 }
 
 /// IMPLEMENTATION_SAFETY: a reload deletes and re-adds routes, it does not duplicate them.

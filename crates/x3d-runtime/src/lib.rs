@@ -469,6 +469,9 @@ pub struct Runtime {
     /// createX3DFromURL / createVrmlFromURL requests of the page that embeds the browser (an external browser, no Script),
     /// by request id: the base URL of their FileLoader (FileLoader.getBaseURL for the X3DWorld) and their requests.
     pub page_browser_loads: HashMap<u64, browser_load::PageBrowserLoad>,
+    /// The candidates of an EXTERNPROTO load (request, index) that were asked for again because the `Cache` option is off
+    /// (X3DExternProtoDeclaration.loadData gives `cacheScene: false` to its FileLoader, so each load fetches).
+    pub(crate) extern_refreshed: std::cell::RefCell<std::collections::HashSet<(u64, usize)>>,
     /// The outcomes of the page's requests (see [`Runtime::browser_create_from_page_url`]), in the order they settled: the
     /// root context of the scene, or the rejection's message. [`Runtime::take_page_browser_settled`] hands them out.
     pub page_browser_settled: Vec<(u64, Result<CtxId, String>)>,
@@ -764,6 +767,7 @@ impl Runtime {
             browser_request_id: 0,
             script_generation: 0,
             page_browser_loads: HashMap::new(),
+            extern_refreshed: Default::default(),
             page_browser_settled: vec![],
             browser_url_requests: Default::default(),
             page_url_scenes: HashMap::new(),
