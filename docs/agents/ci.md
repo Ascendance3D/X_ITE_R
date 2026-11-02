@@ -77,3 +77,7 @@ Issue #187 split the two longest shards by measured times: `cases` into `cases-1
 - **Nightly run** (03:17 UTC, master) shows runner drift (driver or package updates) before a merge depends on it.
 - The runner's per-job hook wipes the workspace, so every run builds from scratch; the service's memory cap is in its systemd unit on the VM, not in this repository.
 
+
+## Shared build directories and stale artifacts
+
+Worktrees of different branches that build into one `CARGO_BUILD_BUILD_DIR` share artifacts for the workspace crates. Cargo then trusts a stale artifact whose mtime is newer than the sources of the branch you are building (a merge or checkout does not touch unchanged files), and the build fails with errors such as "unresolved import" for items that exist in the source. Touch the workspace sources (`find crates -name '*.rs' -exec touch {} +`) or use one build directory per branch.

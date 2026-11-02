@@ -518,6 +518,118 @@
     "error: Error: Unknown node type 'group'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
    ]
   },
+  "domEvents.inlineText": {
+   "steps": [
+    [
+     "start",
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "reload",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        true,
+        "node,value"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\" load=\"true\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "toXml",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/x3d+xml,%3CX3D%20profile%3D%27Full%27%3E%3CScene%3E%3CTransform%20DEF%3D%27In%27%20translation%3D%271%201%201%27%3E%3CShape%3E%3CBox%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E&quot;\" load=\"true\"><X3D profile=\"Full\"><Scene><Transform DEF=\"In\" translation=\"1 1 1\"><Shape><Box></Box></Shape></Transform></Scene></X3D></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ],
+    [
+     "toText",
+     null,
+     {
+      "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF I1 Inline {\n  url \"data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D\"\n}\n",
+      "events": [
+       [
+        "load",
+        "INLINE",
+        "I1",
+        "CustomEvent",
+        "Inline",
+        "I1",
+        "undefined",
+        "node"
+       ]
+      ],
+      "dom": "<x3d profile=\"Full\"><scene> <inline def=\"I1\" url=\"&quot;data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%20children%20DEF%20T%20Transform%20%7B%20%7D%20%7D&quot;\" load=\"true\"></inline> </scene></x3d>",
+      "read": {
+       "roots": "Inline",
+       "named": "I1",
+       "routes": "0",
+       "a": "Error: Named node 'Sc' not found.",
+       "b": "Error: Named node 'Sc' not found."
+      }
+     }
+    ]
+   ],
+   "log": []
+  },
   "domEvents.removeScene": {
    "steps": [
     [

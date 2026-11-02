@@ -127,6 +127,21 @@ function inline (page)
    ]);
 }
 
+const TEXT = "data:model/vrml," + encodeURIComponent ("#VRML V2.0 utf8\nGroup { children DEF T Transform { } }") .replace (/'/g, "%27");
+
+// An Inline whose file is not XML: X_ITE leaves the scene's X3D element unset, so the element gets no child (and an XML one
+// replaces it, a text one removes it again).
+function inlineText (page)
+{
+   return run (page, `<X3D profile='Full'><Scene>
+<Inline DEF='I1' url='"${TEXT}"'></Inline>
+</Scene></X3D>`, [ "load", "error", "children", "loadState" ], [
+      [ "reload", "x3d .querySelector ('[def=I1]') .setAttribute ('load', 'false'); x3d .querySelector ('[def=I1]') .setAttribute ('load', 'true')" ],
+      [ "toXml", "x3d .querySelector ('[def=I1]') .setAttribute ('url', '\"" + xml (INNER) + "\"')" ],
+      [ "toText", "x3d .querySelector ('[def=I1]') .setAttribute ('url', '\"" + TEXT + "\"')" ],
+   ]);
+}
+
 // A removed Scene element: X_ITE disposes the scene (node.dispose of the element's [_node], the X3DScene).
 function removeScene (page)
 {
@@ -154,5 +169,5 @@ function userField (page)
 }
 
 export const CASE_GROUPS = {
-   domEvents: { context: DESKTOP, cases: { events, inline, removeScene, userField } },
+   domEvents: { context: DESKTOP, cases: { events, inline, inlineText, removeScene, userField } },
 };
