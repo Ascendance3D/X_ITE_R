@@ -6807,11 +6807,28 @@ pub struct Gpu {
     pub renderer: Renderer,
 }
 
+/// The backend of a headless device for the value of `X3D_BACKEND` (or `X3D_POINTING_BACKEND`): Vulkan by default,
+/// which is where the answer keys were checked (RTX 3060 Ti); `gl`, `metal` or `dx12` run the same tests on another
+/// backend (issue #89). An unknown name is an error, so that a typo does not measure the default backend.
+pub fn headless_backends(name: Option<&str>) -> Result<wgpu::Backends, String> {
+    match name.map(|n| n.trim().to_lowercase()).as_deref() {
+        None | Some("" | "vulkan" | "vk") => Ok(wgpu::Backends::VULKAN),
+        Some("gl" | "gles" | "opengl") => Ok(wgpu::Backends::GL),
+        Some("metal" | "mtl") => Ok(wgpu::Backends::METAL),
+        Some("dx12" | "d3d12") => Ok(wgpu::Backends::DX12),
+        Some(other) => Err(format!(
+            "X3D_BACKEND={other:?}: expected vulkan, gl, metal or dx12"
+        )),
+    }
+}
+
 impl Gpu {
-    /// Vulkan adapter, high performance (the discrete GPU), no surface.
+    /// Adapter of the backend `X3D_BACKEND` names (Vulkan by default), high performance (the discrete GPU), no
+    /// surface.
     pub fn new() -> Result<Gpu, String> {
         let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
-        desc.backends = wgpu::Backends::VULKAN;
+        let backends = headless_backends(std::env::var("X3D_BACKEND").ok().as_deref())?;
+        desc.backends = backends;
         let instance = wgpu::Instance::new(desc);
         let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
             power_preference: wgpu::PowerPreference::HighPerformance,
@@ -6819,7 +6836,7 @@ impl Gpu {
             compatible_surface: None,
             ..Default::default()
         }))
-        .map_err(|e| format!("no Vulkan adapter: {e}"))?;
+        .map_err(|e| format!("no adapter for {backends:?}: {e}"))?;
         let adapter_info = adapter.get_info();
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
             label: Some("x3d-render"),
@@ -7191,5 +7208,26 @@ mod line_instance_tests {
 
         assert!(length(&b) > 0.0);
         assert_eq!(length(&a), length(&b));
+    }
+}
+
+#[cfg(test)]
+mod headless_backend_tests {
+    use super::headless_backends;
+    use wgpu::Backends;
+
+    #[test]
+    fn vulkan_is_the_default_and_the_others_are_named() {
+        assert_eq!(headless_backends(None), Ok(Backends::VULKAN));
+        assert_eq!(headless_backends(Some("")), Ok(Backends::VULKAN));
+        assert_eq!(headless_backends(Some("VK")), Ok(Backends::VULKAN));
+        assert_eq!(headless_backends(Some("gl")), Ok(Backends::GL));
+        assert_eq!(headless_backends(Some(" Metal ")), Ok(Backends::METAL));
+        assert_eq!(headless_backends(Some("dx12")), Ok(Backends::DX12));
+    }
+
+    #[test]
+    fn an_unknown_name_is_an_error() {
+        assert!(headless_backends(Some("vulcan")).is_err());
     }
 }

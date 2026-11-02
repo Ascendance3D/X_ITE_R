@@ -12,8 +12,8 @@
 //!   4.2e-6 in REA batch 06R); a hidden record must be hidden on both sides;
 //! * the images with the render oracle rule: at most 0.5% of the pixels more than 8 off in any channel.
 //!
-//! IMAGE_LIMITS lists the image passes with a wider limit than 0.5%, each with its own (the particle records of those cases are
-//! compared the same way). The limit is a recorded measurement with a little room, not a round number.
+//! KNOWN_GAPS lists image passes the renderer cannot match yet (the particle records of those cases are still compared);
+//! the test requires them to keep failing.
 //!
 //! Without a GPU adapter the image part is skipped. A case without a baseline is listed and skipped; the test fails
 //! when no case has one, so a missing baseline directory is not a silent pass. `REA_ONLY=<substring>` restricts the cases.
@@ -26,15 +26,12 @@ use std::process::Command;
 
 const STRIDE: usize = 28;
 
-/// (case, image pass, largest allowed percentage of pixels more than 8 off, why). The default is 0.5%.
-const IMAGE_LIMITS: &[(&str, &str, f64, &str)] = &[(
-    "pr-line",
-    "msaa4",
-    0.6,
-    "MSAA line edges, not particles: the same 45 lines of frame 45 as a static IndexedLineSet differ from X_ITE by 1524 \
-     pixels (0.581%, max 115) with multisampling 4 and 93 (0.035%) without, as the particles do (1523 and 93); X_ITE draws GL \
-     lines, Rust its line emulation: the coverage of an edge pixel under 4 samples is the GPU's rasterization rule",
-)];
+/// (case, image pass, why Rust differs).
+///
+/// Empty since issue #261: `x3d-particles-drive` now mirrors the draw (`set_gl_sample_orientation`) like the other drive
+/// tools, which made the MSAA 4 pictures match, `pr-line` included (its former 0.581% was the mirrored sample pattern, not
+/// the line emulation).
+const KNOWN_GAPS: &[(&str, &str, &str)] = &[];
 
 fn f32s(path: &Path) -> Result<Vec<f32>, String> {
     let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -138,7 +135,6 @@ fn compare_images(
     js_dir: &Path,
     rs_dir: &Path,
     frames: &[String],
-    limit_pct: f64,
     failures: &mut Vec<String>,
 ) {
     for frame in frames {
@@ -166,7 +162,7 @@ fn compare_images(
                     s.max_delta
                 );
 
-                if s.pixels_over as f64 * 100.0 > (w * h) as f64 * limit_pct {
+                if s.pixels_over * 1000 > (w * h) as usize * 5 {
                     failures.push(format!(
                         "{name} {}: frame {frame}: {} pixels over 8 ({:.3}%), max {}",
                         js_dir.display(),
@@ -276,19 +272,26 @@ fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> b
             continue;
         }
 
-        let limit_pct = IMAGE_LIMITS
+        if let Some((.., why)) = KNOWN_GAPS
             .iter()
-            .find(|(case, image_pass, ..)| *case == name && *image_pass == pass)
-            .map_or(0.5, |(_, _, pct, _)| *pct);
+            .find(|(gap, gap_pass, _)| *gap == name && *gap_pass == pass)
+        {
+            let mut own = vec![];
+            compare_images(name, &base.join(pass), &out.join(pass), &frames, &mut own);
 
-        compare_images(
-            name,
-            &base.join(pass),
-            &out.join(pass),
-            &frames,
-            limit_pct,
-            failures,
-        );
+            if own.is_empty() {
+                failures.push(format!(
+                    "{name} {pass}: matches X_ITE now; remove it from KNOWN_GAPS ({why})"
+                ));
+            } else {
+                eprintln!(
+                    "{name} {pass}: known gap, {} differences ({why})",
+                    own.len()
+                );
+            }
+        } else {
+            compare_images(name, &base.join(pass), &out.join(pass), &frames, failures);
+        }
     }
 
     let _ = std::fs::remove_dir_all(&out);
