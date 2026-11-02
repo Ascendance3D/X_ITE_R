@@ -27,6 +27,8 @@ pub(crate) struct Element {
     pub html: bool,
     /// An HTML `<script>` whose text is not well-formed XML (XMLParser.scriptElement throws).
     pub script_error: bool,
+    /// The number of the element in document order (`parse_document`: the root is 0); the key of `Scene::xml_targets`.
+    pub index: usize,
 }
 
 impl Element {
@@ -117,9 +119,13 @@ pub(crate) fn parse_document(text: &str) -> Result<Element, String> {
         }
     }
 
+    let counter = std::cell::Cell::new(0usize);
     let element_of = |e: &quick_xml::events::BytesStart| -> Result<Element, String> {
         let name = String::from_utf8_lossy(e.name().as_ref()).into_owned();
         let mut element = Element::new(&name);
+
+        element.index = counter.get();
+        counter.set(counter.get() + 1);
 
         for a in e.attributes().with_checks(true) {
             let a = a.map_err(|e| e.to_string())?;

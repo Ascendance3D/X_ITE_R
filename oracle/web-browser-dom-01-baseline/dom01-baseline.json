@@ -1,0 +1,500 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "domImport.inlineWorld": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"dom world\"\n\nDEF T Transform {\n  translation 1 2 3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box { }\n  }\n}\n\nDEF G Group { }\n",
+   "profile": "Full",
+   "components": [],
+   "roots": [
+    "Transform",
+    "Group"
+   ],
+   "named": [
+    "T",
+    "G"
+   ],
+   "pageWorld": true,
+   "log": [
+    "warning: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Group."
+   ]
+  },
+  "domImport.names": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF U Transform {\n  translation 1 0 0\n  children Group {\n    children Shape {\n      geometry Box {\n        size 1 2 3\n      }\n    }\n  }\n}\n\nUSE U\n\nWorldInfo {\n  title \"t\"\n  info [\n    \"a\",\n    \"b\"\n  ]\n}\n",
+   "profile": "Immersive",
+   "components": [],
+   "roots": [
+    "Transform",
+    "Transform",
+    "WorldInfo"
+   ],
+   "named": [
+    "U"
+   ],
+   "pageWorld": true,
+   "log": []
+  },
+  "domImport.structure": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geometry3D : 2\n\nUNIT length feet 0.3048\n\nMETA \"title\" \"head one\"\nMETA \"creator\" \"direct child\"\n\nWorldInfo {\n  title \"first\"\n}\n\nDEF second Group { }\n",
+   "profile": "Interchange",
+   "components": [
+    "Geometry3D 2"
+   ],
+   "roots": [
+    "WorldInfo",
+    "Group"
+   ],
+   "named": [
+    "second"
+   ],
+   "pageWorld": true,
+   "log": [
+    "warning: XML Parser: Bad meta statement. Expected content attribute."
+   ]
+  },
+  "domImport.protos": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nEXTERNPROTO Far [\n  inputOutput SFFloat size\n]\n\"nope.wrl#Far\"\n\nPROTO Pair_1 [\n  inputOutput SFFloat  Amount 1.5\n  inputOutput SFString label \"x\"\n]\n{\n  DEF Inner Transform {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          transparency IS Amount\n        }\n      }\n    }\n  }\n}\n\nPROTO Upper [\n  initializeOnly SFBool on TRUE\n]\n{\n  Group { }\n}\n\nPROTO Late [ ]\n{\n  Group { }\n}\n\nPROTO Again [ ]\n{\n}\n\nPROTO Pair [ ]\n{\n  Group { }\n}\n\nDEF I1 Pair_1 {\n  Amount 0.5\n}\n\nDEF I2 Pair_1 {\n  Amount 0.75\n  label \"y\"\n}\n\nDEF I3 Pair_1 { }\n\nUpper { }\n\nUpper {\n  on FALSE\n}\n\nFar { }\n",
+   "profile": "Full",
+   "components": [],
+   "roots": [
+    "Pair_1",
+    "Pair_1",
+    "Pair_1",
+    "Upper",
+    "Upper",
+    "Far"
+   ],
+   "named": [
+    "I1",
+    "I2",
+    "I3"
+   ],
+   "pageWorld": true,
+   "protos": [
+    "Pair_1",
+    "Upper",
+    "Late",
+    "Again",
+    "Pair"
+   ],
+   "externprotos": [
+    "Far"
+   ],
+   "log": [
+    "warning: XML Parser:  Unknown proto or externproto type 'Unknown'.",
+    "error: Error: Unknown proto or externproto type 'Unknown'.",
+    "warning: XML Parser:  Unknown proto or externproto type 'pair'.",
+    "error: Error: Unknown proto or externproto type 'pair'.",
+    "error: Error: Unknown node type 'LATE'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "error: Error: Unknown node type 'AGAIN2'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "warning: A proto named 'Pair' is already defined and will be overridden.",
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://HOST/PAGE/nope.wrl#Far'. Error: Not Found"
+   ]
+  },
+  "domImport.script": {
+   "named": [
+    "S",
+    "After"
+   ],
+   "roots": [
+    "Script",
+    "Group"
+   ],
+   "fields": [
+    [
+     "metadata",
+     7,
+     1021
+    ],
+    [
+     "description",
+     7,
+     1024
+    ],
+    [
+     "load",
+     7,
+     1010
+    ],
+    [
+     "url",
+     7,
+     1047
+    ],
+    [
+     "autoRefresh",
+     7,
+     1025
+    ],
+    [
+     "autoRefreshTimeLimit",
+     7,
+     1025
+    ],
+    [
+     "directOutput",
+     1,
+     1010
+    ],
+    [
+     "mustEvaluate",
+     1,
+     1010
+    ],
+    [
+     "go",
+     2,
+     1010
+    ]
+   ],
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF S Script {\n  inputOnly SFBool go\n\n  url \"\necmascript:\nfunction go (value) { out = value ? 1 : 0; }\n\"\n  directOutput TRUE\n}\n\nDEF After Group { }\n",
+   "elements": [
+    [
+     [
+      "#text",
+      3,
+      "// Content moved into childNodes."
+     ],
+     [
+      "field",
+      1,
+      ""
+     ],
+     [
+      "#cdata-section",
+      4,
+      "\necmascript:\nfunction go (value) { out = value ? 1 : 0; }\n"
+     ]
+    ],
+    [
+     [
+      "#text",
+      3,
+      "function f () { return 1 < 2; }"
+     ]
+    ]
+   ],
+   "log": [
+    "error: Error: Invalid XML."
+   ]
+  },
+  "domImport.wiring": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF Clock TimeSensor {\n  enabled FALSE\n  cycleInterval 4\n}\n\nDEF Move PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 0 0,\n    1 1 1\n  ]\n}\n\nDEF Box Transform {\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box { }\n  }\n}\n\nDEF Other Transform {\n  children Shape {\n    geometry Material { }\n  }\n}\n\nUSE Box\n\nUSE Box\n\nNULL\n\nGroup { }\n\nGroup {\n  children USE Box\n}\n\nROUTE Clock.fraction_changed TO Move.set_fraction\nROUTE Move.value_changed TO Box.set_translation\n",
+   "profile": "Full",
+   "components": [],
+   "roots": [
+    "TimeSensor",
+    "PositionInterpolator",
+    "Transform",
+    "Transform",
+    "Transform",
+    "Transform",
+    null,
+    "Group",
+    "Group"
+   ],
+   "named": [
+    "Clock",
+    "Move",
+    "Box",
+    "Other"
+   ],
+   "pageWorld": true,
+   "routes": [
+    "Clock.fraction_changed -> Move.set_fraction",
+    "Move.value_changed -> Box.set_translation"
+   ],
+   "log": [
+    "warning: XML Parser: DEF/USE mismatch, 'Box', Group != Transform.",
+    "error: Error: Unknown node type 'NOTHING'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "warning: XML Parser: DEF/USE mismatch, 'Box', Shape != Transform.",
+    "warning: XML Parser: Named or imported node 'Nowhere' not found."
+   ]
+  },
+  "domImport.values": {
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nWorldInfo {\n  title \"a & b \\\"c\\\" <d>\"\n  info [\n    \"one\",\n    \"two\nthree\",\n    \"four \"\n  ]\n}\n\nTransform {\n  rotation 0 1 0 1.5708\n  scale 1 2 3\n  children Shape {\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        -1\n      ]\n      coord Coordinate {\n        point [\n          0 0 0,\n          1 0 0,\n          0 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF V Viewpoint {\n  description \"main\"\n  position 0 0 8\n}\n\nDirectionalLight {\n  color 1 0.5 0\n  intensity 0.5\n  direction 0 -1 0\n}\n\nNavigationInfo {\n  speed 2\n}\n\nBackground {\n  skyAngle 1.5\n  skyColor [\n    0 0 1,\n    1 1 1\n  ]\n}\n\nDEF F Script {\n  initializeOnly MFNode v DEF InField Group { }\n}\n",
+   "profile": "Full",
+   "components": [],
+   "roots": [
+    "WorldInfo",
+    "Transform",
+    "Viewpoint",
+    "DirectionalLight",
+    "NavigationInfo",
+    "Background",
+    "Script"
+   ],
+   "named": [
+    "V",
+    "F",
+    "InField"
+   ],
+   "pageWorld": true,
+   "log": [
+    "warning: XML Parser:  Unknown proto or externproto type 'Missing'.",
+    "error: Error: Unknown proto or externproto type 'Missing'."
+   ]
+  },
+  "domImport.envelope": {
+   "result": [
+    {
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF A Group { }\n",
+     "profile": "Full",
+     "components": [],
+     "roots": [
+      "Group"
+     ],
+     "named": [
+      "A"
+     ],
+     "pageWorld": true
+    },
+    {
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF B Group { }\n",
+     "profile": "Interchange",
+     "components": [],
+     "roots": [
+      "Group"
+     ],
+     "named": [
+      "B"
+     ],
+     "pageWorld": true
+    },
+    {
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+     "profile": "Full",
+     "components": [],
+     "roots": [],
+     "named": [],
+     "pageWorld": true
+    },
+    {
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Core\n\nDEF C Group { }\n",
+     "profile": "Core",
+     "components": [],
+     "roots": [
+      "Group"
+     ],
+     "named": [
+      "C"
+     ],
+     "pageWorld": true
+    },
+    {
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF D Group { }\n",
+     "profile": "Immersive",
+     "components": [],
+     "roots": [
+      "Group"
+     ],
+     "named": [
+      "D"
+     ],
+     "pageWorld": true
+    }
+   ],
+   "log": [
+    "error: Error: Profile 'Nope' is not supported.",
+    "warning: Node type 'Group' does not match component/profile statements in 'http://HOST/PAGE/page.html'."
+   ]
+  },
+  "domImport.replacing": {
+   "steps": [
+    [
+     "empty",
+     [
+      [],
+      [],
+      []
+     ]
+    ],
+    [
+     "first",
+     [
+      [
+       "Group"
+      ],
+      [
+       "One"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "second",
+     [
+      [
+       "Transform"
+      ],
+      [
+       "Two"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "text",
+     [
+      [
+       "Transform"
+      ],
+      [
+       "Two"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "removeLast",
+     [
+      [
+       "Group"
+      ],
+      [
+       "One"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "removeAll",
+     [
+      [],
+      [],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "again",
+     [
+      [
+       "WorldInfo"
+      ],
+      [
+       "Three"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "sameElementMoved",
+     [
+      [
+       "WorldInfo"
+      ],
+      [
+       "Three"
+      ],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ],
+    [
+     "nested",
+     [
+      [],
+      [],
+      [
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT",
+       "SHUTDOWN_EVENT",
+       "INITIALIZED_EVENT"
+      ]
+     ]
+    ]
+   ],
+   "log": []
+  },
+  "domImport.importElement": {
+   "x3d": [
+    "X3DScene",
+    [
+     "Transform"
+    ],
+    "Immersive",
+    "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nTransform {\n  translation 1 2 3\n  children Shape {\n    geometry Box { }\n  }\n}\n"
+   ],
+   "section": [
+    "X3DScene",
+    [],
+    "Full",
+    "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n"
+   ],
+   "detached": [
+    "X3DScene",
+    [
+     "Transform"
+    ],
+    "Immersive",
+    "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nTransform {\n  translation 1 2 3\n  children Shape {\n    geometry Box { }\n  }\n}\n"
+   ],
+   "current": [],
+   "nothing": "TypeError: Cannot read properties of undefined (reading 'nodeName')",
+   "log": []
+  }
+ }
+}

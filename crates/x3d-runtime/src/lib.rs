@@ -34,6 +34,7 @@ pub mod browser_options;
 pub mod bullet;
 pub mod ctx_events;
 pub mod data;
+pub mod dom;
 pub mod events;
 pub mod extern_proto;
 pub mod font_library;

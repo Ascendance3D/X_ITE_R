@@ -668,6 +668,47 @@ impl Session {
         crate::chain::root_nodes(self.rt())
     }
 
+    /// What the elements of the XML text of the world made (XMLParser's `xmlElement [_node]`): four numbers per element,
+    /// `[index, kind, a, b]` with the element's number in document order and, by kind, 0: node `a`; 1: the scene (context
+    /// `a`); 2: route `b` of context `a`.
+    pub fn xml_targets(&self) -> Vec<u32> {
+        flatten_targets(&self.rt().scene.xml_targets)
+    }
+
+    /// DOMIntegration.processAddedNode: the XML `text` of one element is parsed into the world below `parent` (the context
+    /// of that node), or among the root nodes of the world without one. The result is what its elements made, as
+    /// [`Session::xml_targets`].
+    pub fn xml_child(&mut self, parent: Option<NodeId>, text: &str) -> Result<Vec<u32>, String> {
+        if parent.is_some_and(|p| !self.node_exists(p)) {
+            return Err("the parent node is not in the world".to_string());
+        }
+
+        let rt = self.rt_mut();
+        let ctx = parent.map_or(rt.scene.world, |p| rt.scene.node(p).ctx);
+
+        rt.xml_child_into(ctx, parent, text)
+            .map(|targets| flatten_targets(&targets))
+    }
+
+    /// DOMIntegration.processAttribute: XMLParser.nodeAttribute for the attribute `name="value"` of `node`.
+    pub fn xml_attribute(&mut self, node: NodeId, name: &str, value: &str) {
+        if self.node_exists(node) {
+            self.rt_mut().xml_attribute(node, name, value);
+        }
+    }
+
+    /// DOMIntegration.processRemovedNode: X3DNode.dispose of `node`.
+    pub fn dispose_node(&mut self, node: NodeId) {
+        if self.node_exists(node) {
+            self.rt_mut().dispose_node(node);
+        }
+    }
+
+    /// The route `id` of context `ctx` leaves it (X3DRoute.dispose of a removed `ROUTE` element).
+    pub fn delete_route_in(&mut self, ctx: usize, id: usize) {
+        self.rt_mut().delete_route_by_id(ctx, id);
+    }
+
     /// X3DExecutionContext.updateNamedNode (name, node) of the world: the node gets `name`, the node that had `name` loses it,
     /// and the node's earlier name is dropped. addNamedNode is the same call for a node that has no name (the page checks
     /// the arguments first, with X_ITE's error texts).
@@ -1803,4 +1844,21 @@ fn remove_imported(rt: &mut Runtime, ctx: x3d_scene::CtxId, name: &str) -> bool 
 
     rt.dynamic_dirty_mark();
     true
+}
+
+fn flatten_targets(targets: &[(usize, x3d_scene::XmlTarget)]) -> Vec<u32> {
+    use x3d_scene::XmlTarget;
+
+    targets
+        .iter()
+        .flat_map(|&(index, target)| {
+            let (kind, a, b) = match target {
+                XmlTarget::Node(n) => (0, n as usize, 0),
+                XmlTarget::Scene(c) => (1, c, 0),
+                XmlTarget::Route(c, id) => (2, c, id),
+            };
+
+            [index as u32, kind, a as u32, b as u32]
+        })
+        .collect()
 }
