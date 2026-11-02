@@ -49,6 +49,7 @@ struct PipelineKey {
     format: wgpu::TextureFormat,
     samples: u32,
     reversed: bool,
+    logarithmic: bool,
 }
 
 struct Prepared {
@@ -63,6 +64,8 @@ const UNIFORM_BYTES: usize = 64 + 64 + 16 + 16 + 16 + 16 + 6 * 16 + 5 * 16;
 #[derive(Default)]
 pub struct SplatGpu {
     module: Option<(wgpu::ShaderModule, wgpu::BindGroupLayout)>,
+    /// The program in `module` has the logarithmic depth of `DepthMode::Logarithmic`.
+    module_log: bool,
     data: HashMap<usize, DataGpu>,
     indices: HashMap<(usize, usize), IndexGpu>,
     pipelines: HashMap<PipelineKey, (wgpu::RenderPipeline, u64)>,
@@ -85,7 +88,7 @@ fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
 }
 
 /// splats.wgsl with the frame structs, the tone map and the fog functions of x3d.wgsl filled in.
-pub fn assemble() -> String {
+pub fn assemble(logarithmic: bool) -> String {
     let x3d = include_str!("x3d.wgsl");
     let structs = between(x3d, "struct Light {", "struct DrawUniforms {");
     let tone = between(x3d, "// ToneMapping2.glsl linearToSRGB", "fn f_schlick(");
@@ -95,9 +98,37 @@ pub fn assemble() -> String {
         "@fragment\nfn fs_main(",
     );
 
-    SPLATS_WGSL
+    let mut src = SPLATS_WGSL
         .replace("//@FRAME_STRUCTS@", structs)
-        .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"))
+        .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"));
+
+    if logarithmic {
+        // The Logarithmic include of GaussianSplats.vs.js (`logarithmic (gl_Position)`) and .fs.js (`logarithmic ()`):
+        // depth = 1 + gl_Position.w, gl_FragDepth = log2 (depth) * x3d_LogarithmicFarFactor1_2 (travels in fog_range.z).
+        let mut patch = |a: &str, b: &str| {
+            assert_eq!(src.matches(a).count(), 1, "splat shader patch anchor {a:?}");
+            src = src.replacen(a, b, 1);
+        };
+
+        patch(
+            "    @location(3) vertex: vec3<f32>,\n}",
+            "    @location(3) vertex: vec3<f32>,\n    @location(4) log_depth: f32,\n}\n\nstruct FOut {\n    @location(0) color: vec4<f32>,\n    @builtin(frag_depth) depth: f32,\n}",
+        );
+        patch(
+            "    out.position = p;\n",
+            "    out.position = p;\n    out.log_depth = 1.0 + p.w;\n",
+        );
+        patch(
+            "fn fs_main(in: VOut) -> @location(0) vec4<f32> {",
+            "fn fs_main(in: VOut) -> FOut {",
+        );
+        patch(
+            "    return final_color;\n}",
+            "    return FOut(final_color, log2(in.log_depth) * frame.fog_range.z);\n}",
+        );
+    }
+
+    src
 }
 
 fn matrix_f32(m: &Matrix4) -> [f32; 16] {
@@ -156,14 +187,19 @@ impl SplatGpu {
         ]
     }
 
-    fn ensure_module(&mut self, device: &wgpu::Device) {
-        if self.module.is_some() {
+    fn ensure_module(&mut self, device: &wgpu::Device, logarithmic: bool) {
+        if self.module.is_some() && self.module_log == logarithmic {
             return;
         }
 
+        // Another depth mode: the program, its pipelines and the bind groups of the old layout go.
+        self.pipelines.clear();
+        self.groups.clear();
+        self.module_log = logarithmic;
+
         let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("splats"),
-            source: wgpu::ShaderSource::Wgsl(assemble().into()),
+            source: wgpu::ShaderSource::Wgsl(assemble(logarithmic).into()),
         });
         let storage_entry = |binding: u32| wgpu::BindGroupLayoutEntry {
             binding,
@@ -209,6 +245,7 @@ impl SplatGpu {
         samples: u32,
         depth_format: wgpu::TextureFormat,
         reversed: bool,
+        logarithmic: bool,
         projection: &[f32; 16],
         frame_no: u64,
         inputs: &[SplatInput],
@@ -219,7 +256,7 @@ impl SplatGpu {
             return;
         }
 
-        self.ensure_module(device);
+        self.ensure_module(device, logarithmic);
 
         let inv_projection = inverse_f32(projection);
         let mut blobs: Vec<Vec<u8>> = vec![];
@@ -425,6 +462,7 @@ impl SplatGpu {
             format,
             samples,
             reversed,
+            logarithmic,
         };
 
         if !self.pipelines.contains_key(&pipeline_key) {
