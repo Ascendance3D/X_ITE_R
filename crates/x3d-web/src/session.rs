@@ -584,6 +584,11 @@ impl Session {
         ))
     }
 
+    /// The runtime, loading or live: the loads in flight (font files, decodes) of a world that is not live yet.
+    pub fn runtime(&self) -> &Runtime {
+        self.rt()
+    }
+
     fn rt(&self) -> &Runtime {
         match &self.stage {
             Stage::Loading(rt, _) => rt,
