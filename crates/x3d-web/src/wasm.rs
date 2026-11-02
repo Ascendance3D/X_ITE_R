@@ -271,6 +271,29 @@ thread_local! {
     static NEXT_WORLD_ID: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
 }
 
+/// The node ids of a `rootNodes` list from the page: `null` and `undefined` are `None`; anything else must be an integer
+/// number in `0 ..= u32::MAX`, so a bad value never turns into a valid node id by `as` conversion.
+fn root_node_list(list: &js_sys::Array) -> Result<Vec<Option<u32>>, JsError> {
+    list.iter()
+        .map(|v| {
+            if v.is_null() || v.is_undefined() {
+                return Ok(None);
+            }
+
+            match v.as_f64() {
+                Some(n)
+                    if n.is_finite()
+                        && n.fract() == 0.0
+                        && (0.0..=f64::from(u32::MAX)).contains(&n) =>
+                {
+                    Ok(Some(n as u32))
+                }
+                _ => Err(JsError::new("rootNodes: a node id must be an integer")),
+            }
+        })
+        .collect()
+}
+
 fn next_world_id() -> u32 {
     NEXT_WORLD_ID.with(|n| {
         let id = n.get();
@@ -1169,7 +1192,7 @@ impl WebBrowser {
     /// `rootNodes .assign (list)` of scene `id` (see [`Session::set_root_nodes`]): `list` holds node ids and nulls.
     #[wasm_bindgen(js_name = setRootNodes)]
     pub fn set_root_nodes(&mut self, id: u32, list: js_sys::Array) -> Result<(), JsError> {
-        let list = list.iter().map(|v| v.as_f64().map(|n| n as u32)).collect();
+        let list = root_node_list(&list)?;
 
         self.session_mut(id)?
             .set_root_nodes(list)
@@ -2339,7 +2362,7 @@ pub fn chain_root_nodes(world: u32) -> Result<Vec<i64>, JsError> {
 /// `WebBrowser.setRootNodes` inside a field callback: `rootNodes .assign (list)` of the world, as a Script's does.
 #[wasm_bindgen(js_name = chainSetRootNodes)]
 pub fn chain_set_root_nodes(world: u32, list: js_sys::Array) -> Result<(), JsError> {
-    let list = list.iter().map(|v| v.as_f64().map(|n| n as u32)).collect();
+    let list = root_node_list(&list)?;
 
     chain_run(world, |rt| crate::chain::set_root_nodes(rt, list))?.map_err(|e| JsError::new(&e))
 }
