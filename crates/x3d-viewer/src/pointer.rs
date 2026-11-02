@@ -315,6 +315,7 @@ fn gpu_pick(
     let sray = hit_ray(cam, px, py);
     let mut draws: Vec<PointingTriangle> = vec![];
     let mut blocks: Vec<Block> = vec![];
+    let mut splat_draws: Vec<x3d_render::pointing_gpu::PointingSplat> = vec![];
     // x3d_Id 0 is "no hit" in the cleared buffer (PointingBuffer.getHit), so the ids start at 1.
     let mut next = 1.0f32;
 
@@ -323,6 +324,29 @@ fn gpu_pick(
         let Some(g) = pointing_geometry(s, geometry, cam, x, y, pointing) else {
             continue;
         };
+
+        // A GaussianSplats shape goes through the splat program, in its place among the draws.
+        if let Some(splat) = &s.splats {
+            let base = pointing_draw_base(s, cam, x, y, next);
+
+            splat_draws.push(x3d_render::pointing_gpu::PointingSplat {
+                draw: splat.clone(),
+                at: draws.len(),
+                id: next,
+                projection: base.projection,
+                viewport: base.viewport,
+                layer_viewport: s.viewport,
+                clip_planes: s.clip_planes.clone(),
+            });
+            blocks.push(Block {
+                group,
+                geometry: g,
+                base: next,
+                count: 1,
+            });
+            next += 1.0;
+            continue;
+        }
 
         let (draw, count) = match group.run {
             // One instanced draw of the system: no ray cast, no record per particle.
@@ -347,7 +371,10 @@ fn gpu_pick(
         });
     }
 
-    let Some(sample) = gpu.sample_all(&draws).map_err(|_| ())? else {
+    let Some(sample) = gpu
+        .sample_with_splats(&draws, &splat_draws)
+        .map_err(|_| ())?
+    else {
         return Ok(None);
     };
     // The id names the draw and, inside a ParticleSystem's block, the particle.
@@ -507,6 +534,11 @@ fn cpu_candidates(
     let mut candidates: Vec<Candidate> = vec![];
 
     for (i, s) in shapes.iter().enumerate() {
+        // The CPU ray cast has no splats to test: only the pointing buffer picks a GaussianSplats shape.
+        if s.splats.is_some() {
+            continue;
+        }
+
         let Some(g) = pointing_geometry(s, geometry, cam, x, y, pointing) else {
             continue;
         };
@@ -540,12 +572,23 @@ fn pointing_geometry(
 
     // addPointingShape: a ParticleSystem whose bbox is outside the view volume is not drawn into the pointing buffer
     // (a Shape's bbox holds its geometry, so the ray tests below decide the same for it).
-    if s.particle
+    if (s.particle || s.splats.is_some())
         && !s.explicit_bbox.is_some_and(|b| {
             x3d_render::traverse::bbox_in_view_volume(&cam.projection, &s.shape_model_view, &b)
         })
     {
         return None;
+    }
+
+    // A GaussianSplats shape has no geometry: the box stands in for the hit's bounding box.
+    if s.splats.is_some() {
+        let (min, max) = s.explicit_bbox?;
+
+        return Some(Rc::new(Geometry {
+            min,
+            max,
+            ..Default::default()
+        }));
     }
 
     let g = geometry(s)?;
