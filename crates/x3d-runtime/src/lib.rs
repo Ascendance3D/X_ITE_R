@@ -574,6 +574,9 @@ pub struct Runtime {
     pub prints: Vec<String>,
     /// Browser.description (X3DBrowser.setDescription).
     pub description: String,
+    /// Every `setDescription` the engine made itself (a bound viewpoint, an over pointing sensor), in order, until the
+    /// embedder takes them: the page shows them as notifications (a set always counts, also of the same text).
+    pub description_events: Vec<String>,
     /// Requests scripts made of the browser (Browser.nextViewpoint …), drained by the viewer.
     pub browser_requests: Vec<String>,
     /// X3DBrowserContext's active layer, NavigationInfo and Viewpoint and its viewer type, as the viewer last bound them
@@ -806,6 +809,7 @@ impl Runtime {
             timeouts: vec![],
             prints: vec![],
             description: String::new(),
+            description_events: Vec::new(),
             browser_requests: vec![],
             browser_active: BrowserActive::default(),
             default_nodes: vec![],

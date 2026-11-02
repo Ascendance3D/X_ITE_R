@@ -2368,6 +2368,1815 @@ const RENDERING_UNSUPPORTED = [ "MaxTextureSize", "TextureUnits", "MaxLights", "
 // Shading.js: the names of the shading option; "POINTSET" is "POINT", any other text is GOURAUD.
 const SHADINGS = [ "POINT", "WIREFRAME", "FLAT", "GOURAUD", "PHONG" ];
 
+// --- The browser's own user interface (issue #141) -----------------------------------------------------------------
+// Browser/Core/ContextMenu.js, BrowserTimings.js and the splash screen of X3DCoreContext.js and X3DNetworkingContext.js of
+// X_ITE 16.5.0, in the shadow DOM of the element. The menu is X_ITE's own (it does not use the jQuery contextMenu library): a
+// `contextmenu` event of the element builds it, a mousedown or contextmenu on its layer closes it, an entry that is not a
+// checkbox or radio closes it when it is clicked. There are no menu keys. The rules are those of x_ite.css with the light
+// theme's variables; the images (logo, icons, backgrounds) are assets and are not drawn, so the checkbox and radio marks are
+// CSS shapes (API.md, "Known differences").
+
+const UI_CSS = String.raw`
+:host { --red: #e12b2b; --orange: #ff9230; --text-color: black; --text-color-dark: black; --text-shadow-color: white; --link-color: var(--red);
+  --progress-background: rgb(0, 0, 0); --splash-screen-background: rgb(252, 252, 252);
+  --gradient: linear-gradient(to bottom, rgba(247, 247, 252, 0.642) 0%, rgba(222, 221, 226, 0.6) 100%);
+  --border: 4px solid rgba(229, 229, 234, 0.66); --button-border: 1px solid rgba(255, 255, 255, 0.49); --tint-color: rgba(255, 255, 255, 0.37);
+  --tint-hover-color: rgba(255, 255, 255, 0.46); --table-tint-color: var(--tint-color); --icon-filter: invert(100%); }
+.x_ite-private-browser { position: relative; overflow: hidden; height: 100%; outline: none; }
+.x_ite-private-menu, .x_ite-private-menu * { all: revert; }
+
+.x_ite-private-browser-timings {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  backdrop-filter: blur(8px);
+  background: var(--gradient);
+  background-clip: padding-box;
+  border-top: var(--border);
+  border-right: var(--border);
+  border-top-right-radius: 12px;
+  padding: 8px 12px 10px 12px;
+  color: var(--text-color);
+  font-family: X_ITE PT Sans, sans-serif;
+  font-size: 9pt;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.x_ite-private-browser-timings :is(table, thead, tbody, tfoot, tr, th, td) {
+  box-sizing: border-box;
+  color: var(--text-color);
+  font-size: inherit;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.x_ite-private-browser-timings table {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+  empty-cells: show;
+}
+
+.x_ite-private-browser-timings thead th {
+  padding-top: 3px;
+  background-size: 17px 17px;
+  padding-left: 20px;
+  padding-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-color-dark);
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-browser-timings td:first-child {
+  padding-right: 10px;
+}
+
+.x_ite-private-browser-timings table.more tr.x_ite-private-more td {
+  padding-bottom: 5px;
+}
+
+.x_ite-private-browser-timings table.less tr.x_ite-private-more~tr {
+  display: none;
+}
+
+.x_ite-private-browser-timings td {
+  padding-bottom: 2px;
+}
+
+.x_ite-private-browser-timings td.pointer {
+  pointer-events: all;
+}
+
+.x_ite-private-browser-timings tfoot td:first-child {
+  padding-right: 0;
+}
+
+.x_ite-private-browser-timings tfoot td {
+  padding-top: 4px;
+}
+
+.x_ite-private-browser-timings button {
+  box-sizing: border-box;
+  border: var(--button-border);
+  border-radius: 10px;
+  width: 100%;
+  height: 14pt;
+  margin-top: 2px;
+  padding: 0;
+  background: var(--tint-color);
+  color: var(--text-color);
+  font-family: X_ITE PT Sans, sans-serif;
+  font-style: italic;
+  font-size: 9pt;
+  line-height: 1.1;
+  text-align: center;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.x_ite-private-browser-timings button:hover {
+  background-color: var(--tint-hover-color);
+}
+
+/* World Info */
+.x_ite-private-world-info-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.x_ite-private-world-info {
+  overflow-y: auto;
+  position: absolute;
+  inset: 0;
+  margin: 21pt;
+  backdrop-filter: blur(8px);
+  background: var(--gradient);
+  background-clip: padding-box;
+  border: var(--border);
+  border-radius: 15px;
+  padding: 21pt;
+  padding-top: 0;
+}
+
+.x_ite-private-world-info .x_ite-private-world-info-buttons {
+  border-bottom: 4px solid var(--table-tint-color);
+  margin-bottom: 12pt;
+}
+
+.x_ite-private-world-info button {
+  width: 100pt;
+  height: 21pt;
+  background: none;
+  border: none;
+  color: var(--text-color);
+}
+
+.x_ite-private-world-info button:hover {
+  background-color: var(--table-tint-color);
+}
+
+.x_ite-private-world-info button.active {
+  font-weight: bold;
+}
+
+.x_ite-private-world-info :is(.x_ite-private-world-info-top, .x_ite-private-world-info-title, .x_ite-private-world-info-info, p) {
+  box-sizing: border-box;
+  font-family: X_ITE PT Sans, sans-serif;
+  font-style: normal;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--text-color);
+}
+
+.x_ite-private-world-info .x_ite-private-world-info-top {
+  margin: 0.3em 0;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 9pt;
+}
+
+.x_ite-private-world-info .x_ite-private-world-info-title {
+  margin: 0.3em 0;
+  font-weight: bold;
+  font-size: 16pt;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.x_ite-private-world-info .x_ite-private-world-info-info,
+.x_ite-private-world-info .x_ite-private-world-info-info p {
+  margin: 0.5em 0 0.5em 0;
+  font-size: 11pt;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.x_ite-private-world-info table {
+  margin: 0.5em 0;
+  border-collapse: collapse;
+  line-height: 1.3;
+  width: 100%;
+}
+
+.x_ite-private-world-info tr:nth-child(odd) {
+  background-color: var(--table-tint-color);
+}
+
+.x_ite-private-world-info td {
+  padding: 4pt;
+  vertical-align: top;
+  font-family: X_ITE PT Sans, sans-serif;
+  font-size: 10pt;
+  color: var(--text-color);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.x_ite-private-world-info td:first-child {
+  min-width: 70px;
+}
+
+.x_ite-private-world-info a {
+  color: var(--link-color);
+}
+
+/* Context Menu */
+
+.x_ite-private-menu.context-menu-layer {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+}
+
+.x_ite-private-menu.context-menu-list,
+.x_ite-private-menu .context-menu-list {
+  display: none;
+  overscroll-behavior: none;
+  box-sizing: border-box;
+  min-width: 120px;
+  margin: 0;
+  margin-left: 1px;
+  border: 4px solid transparent;
+  border-radius: 12px;
+  padding: 5px 10px 6px 9px;
+  color: var(--text-color);
+  font-family: X_ITE PT Sans, sans-serif;
+  font-size: 10pt;
+  white-space: pre;
+  line-height: 1.2;
+  list-style-type: none;
+}
+
+.x_ite-private-menu.context-menu-list {
+  position: fixed;
+  z-index: 10000;
+  isolation: isolate;
+}
+
+.x_ite-private-menu .context-menu-list {
+  position: absolute;
+  top: -13px;
+}
+
+.x_ite-private-menu .context-menu-background {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  min-width: 120px;
+  margin: 0;
+  margin-left: 1px;
+  outline: none;
+  border: var(--border);
+  border-radius: 12px;
+  padding: 5px 10px 9px 9px;
+  background: var(--gradient);
+  backdrop-filter: blur(8px);
+  background-clip: padding-box;
+}
+
+.x_ite-private-menu .context-menu-item {
+  cursor: pointer;
+  position: relative;
+  border-radius: 12px;
+  margin: 0;
+  padding: 0px 2px;
+  font-size: 10pt;
+  line-height: 1;
+  text-align: left;
+}
+
+.x_ite-private-menu .context-menu-item {
+  margin: 0 4px 0 4px;
+}
+
+.x_ite-private-menu .context-menu-item:first-of-type {
+  margin-top: 4px;
+}
+
+.x_ite-private-menu .context-menu-item:last-of-type {
+  margin-bottom: 4px;
+}
+
+.x_ite-private-menu .context-menu-item:hover:not(.context-menu-not-selectable) {
+  background-color: var(--red);
+}
+
+.x_ite-private-menu .context-menu-item:hover > .context-menu-list {
+  display: block;
+}
+
+.x_ite-private-menu .context-menu-not-selectable {
+  cursor: default;
+}
+
+.x_ite-private-menu .context-menu-separator {
+  cursor: default;
+  margin: 2px 0;
+  border-top: 0;
+  border-bottom: 1px solid rgb(138, 138, 138);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.x_ite-private-menu .context-menu-separator+.context-menu-separator {
+  display: none !important;
+}
+
+.x_ite-private-menu .context-menu-submenu:after {
+  content: "";
+  position: absolute;
+  display: block;
+  right: 4px;
+  top: 8px;
+  margin-right: 2px;
+  /* CSS triangle */
+  border-style: solid;
+  border-width: 4px 0 4px 5px;
+  border-color: transparent transparent transparent #e8eaed; /* color from icons */
+  filter: var(--icon-filter);
+  width: 0;
+  height: 0;
+}
+
+.x_ite-private-menu .context-menu-item > span {
+  display: block;
+  width: 100%;
+  padding: 5px 24px;
+}
+
+.x_ite-private-menu label {
+  cursor: pointer;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 5px 24px;
+  width: 100%;
+  font-size: 10pt;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.x_ite-private-menu label span {
+  color: var(--text-color-dark);
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-menu label:has(>input[type=radio]:checked) {
+  font-weight: bold;
+}
+
+/* vertically align inside labels */
+.x_ite-private-menu label > * {
+  vertical-align: top;
+  font-size: 10pt;
+  line-height: 1;
+}
+
+.x_ite-private-menu input {
+  cursor: pointer;
+  appearance: none;
+}
+
+/* position checkboxes and radios like icons */
+.x_ite-private-menu input[type=checkbox],
+.x_ite-private-menu input[type=radio] {
+  display: inline-block;
+  position: absolute;
+  top: 3px;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  margin-left: -22px;
+  padding: 0;
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-menu input:checked {
+  filter: var(--orange-filter);
+}
+
+.x_ite-private-menu .context-menu-input:hover input:checked {
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-menu input[type=checkbox]:checked {
+}
+
+.x_ite-private-menu input[type=radio]:checked {
+}
+
+.x_ite-private-menu span {
+  padding-left: 0px;
+}
+
+/* Item styles */
+
+.x_ite-private-menu .context-menu-title {
+  font-weight: bold;
+}
+
+/* Icons */
+
+.x_ite-private-menu .context-menu-icon > span {
+  display: block;
+  background-repeat: no-repeat;
+  background-position: 2px 3px;
+  color: var(--text-color-dark);
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-menu .x_ite-private-icon-logo > span {
+  background-position: 2px 4px;
+  filter: none;
+  color: var(--text-color);
+}
+
+.x_ite-private-icon-viewpoint > span {
+}
+
+.x_ite-private-menu .x_ite-private-viewpoint input {
+  background-image: none;
+}
+
+.x_ite-private-menu .x_ite-private-viewpoint input:checked {
+}
+
+.x_ite-private-icon-viewer > span {
+}
+
+.x_ite-private-menu .x_ite-private-examine-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-menu .x_ite-private-walk-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-menu .x_ite-private-fly-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-menu .x_ite-private-plane-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-menu .x_ite-private-lookat-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-menu .x_ite-private-none-viewer :is(input, input:checked) {
+}
+
+.x_ite-private-icon-primitive-quality > span {
+}
+
+.x_ite-private-icon-texture-quality > span {
+}
+
+.x_ite-private-icon-shading > span {
+}
+
+.x_ite-private-icon-animations > span {
+}
+
+.x_ite-private-icon-play > span {
+}
+
+.x_ite-private-icon-stop > span {
+}
+
+.x_ite-private-icon-enter-fullscreen > span {
+}
+
+.x_ite-private-icon-leave-fullscreen > span {
+}
+
+.x_ite-private-icon-world-info > span {
+}
+
+.x_ite-private-icon-info > span {
+}
+
+/* Splash Screen and Spinner */
+
+.x_ite-private-splash-screen {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: var(--splash-screen-background);
+}
+
+.x_ite-private-spinner {
+  --offset-x: 100px;
+  --offset-y: -48px;
+  --size: 32px;
+  --padding: 8px;
+  --center-x: calc(458 / 1024 * var(--size) + var(--padding));
+  --center-y: calc(539 / 1024 * var(--size) + var(--padding));
+  position: absolute;
+  top: calc(50% - (var(--size) / 2) + calc(var(--size) / 2 - var(--center-y)) + var(--offset-y));
+  left: calc(50% - (var(--size) / 2) + calc(var(--size) / 2 - var(--center-x)) + var(--offset-x));
+  width: var(--size);
+  height: var(--size);
+  padding: var(--padding);
+  background-size: var(--size) var(--size);
+  animation: x_ite-spinner-animation 8s linear infinite;
+  transform-origin: var(--center-x) var(--center-y);
+}
+
+@keyframes x_ite-spinner-animation {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.x_ite-private-progress {
+  position: absolute;
+  top: calc(50% - 28pt - 11pt);
+  left: calc(50% - 100px);
+  width: 195px;
+}
+
+.x_ite-private-x_ite {
+  color: var(--text-color);
+  font-size: 32pt;
+  text-align: center;
+  text-shadow: 1px 1px 0 var(--text-shadow-color);
+  font-family: X_ITE PT Sans, sans-serif;
+}
+
+.x_ite-private-x_ite b {
+  font-family: X_ITE PT Sans, sans-serif;
+  font-weight: bold;
+}
+
+.x_ite-private-spinner-text {
+  color: var(--text-color);
+  font-size: 11pt;
+  text-align: center;
+  text-shadow: 1px 1px 0 var(--text-shadow-color);
+  font-family: X_ITE PT Sans, sans-serif;
+}
+
+.x_ite-private-progressbar {
+  overflow: hidden;
+  margin: 8px;
+  border-radius: 4px;
+  background: var(--progress-background);
+  height: 8px;
+}
+
+.x_ite-private-progressbar div {
+  width: 0%;
+  height: 100%;
+  background: var(--red);
+}
+
+/* Button Bar [No Sound, WebXR] */
+
+.x_ite-private-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center; /* Zentriert horizontal (Hauptachse) */
+  align-items: center;     /* Zentriert vertikal (Querachse) */
+  position: absolute;
+  padding: 0px 24px 0px 16px;
+  border: var(--border);
+  border-radius: 32px;
+  right: -16px;
+  bottom: 10px;
+  background: var(--gradient);
+  background-clip: padding-box;
+}
+
+.x_ite-private-buttons:is(:empty, :not(:has(:not(.x_ite-private-hidden)))) {
+  display: none;
+  opacity: 0;
+}
+
+.x_ite-private-button {
+  background-repeat: no-repeat;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  filter: var(--icon-filter);
+}
+
+.x_ite-private-button:hover {
+  scale: 1.2;
+}
+
+.x_ite-private-no-sound-button {
+  order: 1;
+}
+
+.x_ite-private-xr-button {
+  order: 2;
+}
+
+/* Animations */
+
+.x_ite-private-fade {
+  opacity: 1;
+  transition: display 300ms allow-discrete, opacity 300ms ease-in-out;
+}
+
+@starting-style {
+  .x_ite-private-fade {
+    opacity: 0;
+  }
+}
+
+.x_ite-private-hidden {
+  display: none;
+  opacity: 0;
+}
+
+.x_ite-private-splash-screen.x_ite-private-fade {
+  transition: none;
+}
+
+.x_ite-private-splash-screen.x_ite-private-hidden {
+  transition: display 200ms allow-discrete, opacity 200ms ease-in-out;
+}
+
+.x_ite-private-button.x_ite-private-fade {
+  transition: display 0s 300ms allow-discrete, opacity 300ms ease-in-out, scale 200ms ease-in-out;
+}
+
+/* Firefox specific animation rules, see:
+ * https://bugzilla.mozilla.org/show_bug.cgi?id=1882408
+ */
+
+/* X_ITE_R: the images are not drawn; the spinner, the marks of checkboxes and radios are CSS shapes. */
+.x_ite-private-spinner { border: 3px solid transparent; border-top-color: var(--red); border-radius: 50%; box-sizing: content-box; }
+.x_ite-private-menu input[type=checkbox], .x_ite-private-menu input[type=radio] { border: 2px solid var(--text-color); border-radius: 50%; box-sizing: border-box; width: 14px; height: 14px; margin-left: -20px; top: 5px; }
+.x_ite-private-menu input[type=checkbox] { border-radius: 3px; }
+.x_ite-private-menu input:checked { background: var(--orange); }
+`;
+
+const f0 = (() => { const format = new Intl .NumberFormat (navigator .language || navigator .userLanguage, { notation: "standard", minimumFractionDigits: 0, maximumFractionDigits: 0 }) .format; return value => format (Number .isFinite (value) ? value : 0); })();
+const f2 = (() => { const format = new Intl .NumberFormat (navigator .language || navigator .userLanguage, { notation: "standard", minimumFractionDigits: 2, maximumFractionDigits: 2 }) .format; return value => format (Number .isFinite (value) ? value : 0); })();
+
+// locale/gettext.js: X_ITE_R has the English texts only.
+const _ = text => text;
+
+class BrowserUI
+{
+   #browser;
+   #host;
+   #root;
+   #wrapper;
+   #disposed = false;
+   #timers = new Set ();
+
+   // Splash screen.
+   #splash;
+   #loading = false;
+
+   // BrowserTimings.
+   #timings;
+   #timingsParts;
+   // BrowserTimings.initialize: the type is flipped once before the first set_type__, so the panel starts as LESS.
+   #timingsType = "MORE";
+   #timingsOn = false;
+   #timingsLast = null;
+   #timingsSum = 0;
+   #timingsCount = 0;
+   #timingsSystem = 0;
+   #timingsEngine = 0;
+   #timingsReset = 0;
+
+   // ContextMenu.
+   #hide = null;
+   #userMenu = null;
+   #contextMenu;
+
+   // `host`: { engine (), viewpoints (), bind (id), activeViewpoint (), animations () }, the page-side access to the engine.
+   constructor (browser, host, root, wrapper, canvas)
+   {
+      this .#browser = browser;
+      this .#host    = host;
+      this .#root    = root;
+      this .#wrapper = wrapper;
+
+      // X3DCoreContext: the splash screen, a sibling of the surface.
+      wrapper .insertAdjacentHTML ("beforeend", /* html */ `
+<div class="x_ite-private-splash-screen x_ite-private-fade x_ite-private-hidden">
+   <div class="x_ite-private-spinner"></div>
+   <div class="x_ite-private-progress">
+      <div class="x_ite-private-x_ite">
+            ${browser .getName ()}<b>X3D</b>
+         </div>
+      <div class="x_ite-private-progressbar"><div></div></div>
+      <div class="x_ite-private-spinner-text"></div>
+   </div>
+</div>`);
+
+      this .#splash = wrapper .lastElementChild;
+
+      this .#initializeTimings ();
+
+      const menu = this;
+
+      // The ContextMenu node of X_ITE: the user's menu and `hide ()`.
+      this .#contextMenu = Object .create (null, { });
+      Object .defineProperties (this .#contextMenu,
+      {
+         getUserMenu: { value: () => this .#userMenu },
+         setUserMenu: { value: userMenu => { this .#userMenu = userMenu; } },
+         userMenu:    { get: () => this .#userMenu, set: userMenu => { this .#userMenu = userMenu; }, enumerable: true },
+         hide:        { value: () => menu .hideMenu () },
+         getTypeName: { value: () => "ContextMenu" },
+      });
+   }
+
+   get contextMenu () { return this .#contextMenu; }
+
+   #later (callback, delay)
+   {
+      const id = setTimeout (() => { this .#timers .delete (id); callback (); }, delay);
+
+      this .#timers .add (id);
+      return id;
+   }
+
+   // --- splash screen ---------------------------------------------------------------------------------------------
+
+   getSplashScreen () { return this .#splash; }
+
+   // X3DNetworkingContext.setBrowserLoading.
+   setBrowserLoading (value)
+   {
+      if (this .#disposed)
+         return;
+
+      this .#loading = value;
+
+      const canvas = this .#browser .getCanvas ();
+
+      if (value)
+      {
+         this .#root .querySelector (".x_ite-private-world-info") ?.remove ();
+
+         this .#setLoadText ("Loading 1 file", 0);
+
+         if (this .#browser .getBrowserOption ("SplashScreen"))
+         {
+            this .hideMenu ();
+            canvas .style .display = "none";
+            this .#splash .classList .remove ("x_ite-private-hidden");
+         }
+      }
+      else
+      {
+         if (this .#browser .getBrowserOption ("SplashScreen"))
+         {
+            canvas .style .display = "block";
+
+            // Defer until promises are resolved.
+            this .#later (() =>
+            {
+               if (!this .#loading)
+                  this .#splash .classList .add ("x_ite-private-hidden");
+            }, 0);
+         }
+      }
+   }
+
+   #setLoadText (text, percent)
+   {
+      this .#splash .querySelector (".x_ite-private-spinner-text") .textContent = text;
+      this .#splash .querySelector (".x_ite-private-progressbar div") .style .width = `${percent}%`;
+   }
+
+   // X3DBrowser.loadURL, no scene: "Failed loading world." in the splash screen (the canvas shows if there is no splash screen).
+   loadFailed ()
+   {
+      if (this .#disposed)
+         return;
+
+      if (!this .#browser .getBrowserOption ("SplashScreen"))
+         this .#browser .getCanvas () .style .display = "block";
+
+      this .#later (() => { this .#splash .querySelector (".x_ite-private-spinner-text") .textContent = _("Failed loading world."); }, 0);
+   }
+
+   // X3DBrowser.loadURL with a scene: the canvas shows at once if there is no splash screen.
+   loadSucceeded ()
+   {
+      if (!this .#browser .getBrowserOption ("SplashScreen"))
+         this .#browser .getCanvas () .style .display = "block";
+   }
+
+   // X3DCoreContext.attributeChangedCallback "splashscreen".
+   splashScreenAttribute ()
+   {
+      if (!this .#browser .getBrowserOption ("SplashScreen"))
+         this .#splash .classList .add ("x_ite-private-hidden");
+   }
+
+   // --- option changes --------------------------------------------------------------------------------------------
+
+   optionChanged (name)
+   {
+      if (name === "Timings")
+         this .#setTimingsEnabled ();
+   }
+
+   // --- BrowserTimings ----------------------------------------------------------------------------------------------
+
+   #initializeTimings ()
+   {
+      this .#wrapper .insertAdjacentHTML ("beforeend", /* html */ `
+<div class="x_ite-private-browser-timings x_ite-private-fade x_ite-private-hidden"><table>
+   <thead>
+      <tr>
+         <th colspan="2">${_("Browser Timings")}</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>${_("Frame rate")}:</td>
+         <td class="frame-rate"></td>
+      </tr>
+      <tr class="x_ite-private-more">
+         <td>${_("Speed")}:</td>
+         <td class="speed"></td>
+      </tr>
+      <tr>
+         <td>${_("Browser")}:</td>
+         <td class="browser-time"></td>
+      </tr>
+      <tr>
+         <td>${_("X3D total")}:</td>
+         <td class="x3d-total"></td>
+      </tr>
+      <tr>
+         <td>${_("Event Processing")}:</td>
+         <td class="event-processing"></td>
+      </tr>
+      <tr>
+         <td>${_("Pointer")}:</td>
+         <td class="pointer"></td>
+      </tr>
+      <tr>
+         <td>${_("Camera")}:</td>
+         <td class="camera"></td>
+      </tr>
+      <tr>
+         <td>${_("Picking")}:</td>
+         <td class="picking"></td>
+      </tr>
+      <tr>
+         <td>${_("Collision Detection")}:</td>
+         <td class="collision-detection"></td>
+      </tr>
+      <tr>
+         <td>${_("Rendering")}:</td>
+         <td class="rendering"></td>
+      </tr>
+      <tr>
+         <td>${_("Number of Primitives")}:</td>
+         <td class="primitives pointer" title="${_("Points; Lines; Triangles")}"></td>
+      </tr>
+      <tr>
+         <td>${_("Number of Shapes")}:</td>
+         <td class="shapes pointer" title="${_("Opaque Shapes + Transparent Shapes")}"></td>
+      </tr>
+      <tr>
+         <td>${_("Number of Sensors")}:</td>
+         <td class="sensors"></td>
+      </tr>
+   </tbody>
+   <tfoot>
+      <tr>
+         <td colspan="2"><button></button></td>
+      </tr>
+   </tfoot>
+</table></div>`);
+
+      const element = this .#wrapper .lastElementChild;
+      const q       = selector => element .querySelector (selector);
+
+      this .#timings      = element;
+      this .#timingsParts = {
+         table: q ("table"), frameRate: q (".frame-rate"), speed: q (".speed"), browserTime: q (".browser-time"),
+         x3dTotal: q (".x3d-total"), eventProcessing: q (".event-processing"), pointerTime: q (".pointer"), cameraTime: q (".camera"),
+         pickingTime: q (".picking"), collisionTime: q (".collision-detection"), renderTime: q (".rendering"),
+         numPrimitives: q (".primitives"), numShapes: q (".shapes"), sensors: q (".sensors"), button: q ("button"),
+      };
+
+      // BrowserTimings.initialize: the first type is LESS (X_ITE keeps the last one in localStorage; here it is the default).
+      const { button } = this .#timingsParts;
+      const signal     = this .#host .signal;
+
+      // X_ITE: a click on the panel leaves the focus in the browser, so the keys keep working when the panel hides.
+      button .addEventListener ("mousedown", event => { event .preventDefault (); this .#browser .getCanvas () .focus ({ preventScroll: true }); }, { signal });
+      button .addEventListener ("click",    () => this .#setTimingsType (), { signal });
+      // A tap gives touchend and then a click; X_ITE's panel changes once for a tap, so the touch is the tap here.
+      button .addEventListener ("touchend", event => { event .preventDefault (); this .#setTimingsType (); }, { signal });
+
+      this .#setTimingsType ();
+   }
+
+   #setTimingsEnabled ()
+   {
+      const element = this .#timings;
+
+      if (this .#browser .getBrowserOption ("Timings"))
+      {
+         element .classList .remove ("x_ite-private-hidden");
+         this .#timingsOn = true;
+         this .#resetTimings ();
+      }
+      else
+      {
+         element .classList .add ("x_ite-private-hidden");
+         this .#timingsOn = false;
+         ++ this .#timingsReset;
+      }
+   }
+
+   #setTimingsType ()
+   {
+      const { table, button } = this .#timingsParts;
+
+      if (this .#timingsType === "MORE")
+      {
+         this .#timingsType = "LESS";
+         table .classList .add ("less");
+         table .classList .remove ("more");
+         button .textContent = _("More Properties");
+      }
+      else
+      {
+         this .#timingsType = "MORE";
+         table .classList .add ("more");
+         table .classList .remove ("less");
+         button .textContent = _("Less Properties");
+      }
+
+      this .#buildTimings ();
+   }
+
+   // BrowserTimings.reset: after the next frame the stop watch starts again.
+   #resetTimings ()
+   {
+      const reset = ++ this .#timingsReset;
+
+      requestAnimationFrame (() =>
+      {
+         if (this .#disposed || reset !== this .#timingsReset)
+            return;
+
+         this .#timingsLast = null; this .#timingsSum = 0; this .#timingsCount = 0; this .#timingsSystem = 0; this .#timingsEngine = 0;
+         this .#buildTimings ();
+      });
+   }
+
+   // BrowserTimings.update, at each frame of the frame loop: `systemMs` is the time of the frame in the page, `engineMs` the
+   // time of the engine's frame (the stage that the page can measure).
+   frame (stamp, systemMs, engineMs)
+   {
+      if (!this .#timingsOn)
+         return;
+
+      if (this .#timingsLast !== null)
+      {
+         this .#timingsSum += stamp - this .#timingsLast;
+         ++ this .#timingsCount;
+      }
+
+      this .#timingsLast    = stamp;
+      this .#timingsSystem += systemMs;
+      this .#timingsEngine += engineMs;
+
+      if (this .#timingsSum > 1000)
+      {
+         this .#buildTimings ();
+         this .#timingsSum = 0; this .#timingsCount = 0; this .#timingsSystem = 0; this .#timingsEngine = 0;
+      }
+   }
+
+   #buildTimings ()
+   {
+      const p = this .#timingsParts;
+
+      if (this .#timingsCount)
+      {
+         p .frameRate .textContent = `${f2 (1000 / (this .#timingsSum / this .#timingsCount))} ${_("fps")}`;
+      }
+      else
+      {
+         p .frameRate .textContent = `${f2 (0)} ${_("fps")}`;
+      }
+
+      // The engine measures no speed, camera, picking, collision or counts: these rows show 0 (API.md).
+      p .speed .textContent = `${f2 (0)} ${_("m/s")}`;
+
+      if (this .#timingsType !== "MORE")
+         return;
+
+      const n = Math .max (this .#timingsCount, 1);
+
+      p .browserTime     .textContent = `${f2 (this .#timingsSystem / n)} ${_("ms")}`;
+      p .x3dTotal        .textContent = `${f2 (this .#timingsEngine / n)} ${_("ms")}`;
+      p .eventProcessing .textContent = `${f2 (0)} ${_("ms")}`;
+      p .pointerTime     .textContent = `${f2 (0)} ${_("ms")}`;
+      p .cameraTime      .textContent = `${f2 (0)} ${_("ms")}`;
+      p .pickingTime     .textContent = `${f2 (0)} ${_("ms")}`;
+      p .collisionTime   .textContent = `${f2 (0)} ${_("ms")}`;
+      p .renderTime      .textContent = `${f2 (0)} ${_("ms")}`;
+      p .numPrimitives   .textContent = `${f0 (0)}; ${f0 (0)}; ${f0 (0)}`;
+      p .numShapes       .textContent = `${f0 (0)} + ${f0 (0)}`;
+      p .sensors         .textContent = f0 (0);
+   }
+
+   // --- ContextMenu -----------------------------------------------------------------------------------------------
+
+   hideMenu ()
+   {
+      this .#hide ?.();
+   }
+
+   // ContextMenu.initialize: the `contextmenu` event of the element.
+   showMenu (event)
+   {
+      if (this .#disposed)
+         return;
+
+      const
+         root  = this .#root,
+         menu  = this .#build (),
+         level = 1;
+
+      event .preventDefault ();
+      this .hideMenu ();
+
+      if (!menu)
+         return;
+
+      // Layer
+
+      const layer = document .createElement ("div");
+
+      layer .classList .add ("context-menu-layer", menu .className);
+
+      layer .addEventListener ("mousedown",   () => this .hideMenu ());
+      layer .addEventListener ("contextmenu", () => this .hideMenu ());
+
+      root .append (layer);
+
+      this .#hide = () =>
+      {
+         this .#hide = null;
+
+         layer .remove ();
+
+         for (const child of ul .children)
+            child .classList .add ("x_ite-private-hidden");
+
+         this .#later (() => ul .remove (), 1_000);
+
+         return false;
+      };
+
+      // Menu
+
+      const ul = document .createElement ("ul");
+
+      ul .classList .add ("context-menu-root", "context-menu-list", menu .className);
+
+      ul .addEventListener ("contextmenu", () => this .hideMenu ());
+
+      root .append (ul);
+
+      const background = document .createElement ("div");
+
+      background .classList .add ("context-menu-background");
+
+      ul .append (background);
+
+      for (const k in menu .items)
+         ul .append (this .#createItem (menu .items [k], "context-menu-root", k, level + 1));
+
+      // Show
+      // Must animate children because of blurish background.
+
+      for (const child of ul .children)
+         child .classList .add ("x_ite-private-fade", "x_ite-private-hidden");
+
+      ul .style .display = "block";
+
+      for (const child of ul .children)
+         child .classList .remove ("x_ite-private-hidden");
+
+      // Reposition menu if to right or to low.
+
+      this .#offset (ul, { left: event .pageX, top: event .pageY });
+      this .#offset (ul, { left: event .pageX, top: event .pageY }); // Do it again.
+
+      const rect = ul .getBoundingClientRect ();
+
+      if (rect .left + ul .offsetWidth > window .innerWidth)
+         this .#offset (ul, { left: window .scrollX + Math .max (0, window .innerWidth - ul .offsetWidth) });
+
+      if (rect .top + ul .offsetHeight > window .innerHeight)
+         this .#offset (ul, { top: window .scrollY + Math .max (0, window .innerHeight - ul .offsetHeight) });
+
+      // Display submenus on the left or right side.
+      // If the submenu is higher than vh, add scrollbars.
+
+      const parentRect = ul .getBoundingClientRect ();
+
+      for (const submenu of ul .querySelectorAll ("ul"))
+      {
+         submenu .style .display = "block";
+
+         const
+            width        = submenu .clientWidth + ul .clientWidth,
+            position     = parentRect .left + width > window .innerWidth ? "right" : "left",
+            windowHeight = (window .visualViewport ?.height ?? window .innerHeight);
+
+         // Background
+         submenu .children [0] .style .height = `${submenu .clientHeight}px`;
+
+         submenu .style [position] = `${ul .clientWidth - 28}px`;
+
+         if (submenu .clientHeight >= windowHeight)
+         {
+            submenu .style .top       = `${-submenu .closest ("li") .getBoundingClientRect () .top}px`;
+            submenu .style .maxHeight = "100dvh";
+            submenu .style .overflowY = "scroll";
+         }
+         else
+         {
+            // Submenu goes out of page.
+
+            const bottom = submenu .getBoundingClientRect () .top + submenu .clientHeight - (window .scrollY + windowHeight - 20);
+
+            if (bottom > 0)
+            {
+               this .#offset (submenu, { top: submenu .getBoundingClientRect () .top - bottom });
+            }
+         }
+
+         submenu .style .display = "";
+      }
+   }
+
+   #createItem (item, parent, key, level)
+   {
+      const li = document .createElement ("li");
+
+      li .classList .add ("context-menu-item");
+
+      switch (typeof item)
+      {
+         case "string":
+         {
+            if (item .match (/^-+$/))
+               li .classList .add ("context-menu-separator", "context-menu-not-selectable");
+
+            break;
+         }
+         case "object":
+         {
+            if (typeof item .className === "string")
+               li .classList .add (... item .className .split (/\s+/) .filter (s => s));
+
+            switch (item .type)
+            {
+               case "radio":
+               case "checkbox":
+               {
+                  const
+                     label = document .createElement ("label"),
+                     input = document .createElement ("input");
+
+                  li    .append (label);
+                  label .append (input);
+
+                  input .setAttribute ("type", item .type);
+                  input .setAttribute ("name", `context-menu-input-${item .radio || parent}`);
+
+                  const span = document .createElement ("span");
+
+                  span .textContent = item .name;
+
+                  label .append (span);
+
+                  if (item .selected)
+                     input .setAttribute ("checked", "");
+
+                  li .classList .add ("context-menu-input");
+
+                  this .#addEvents (item, input, false);
+                  break;
+               }
+               default:
+               {
+                  if (item .name)
+                  {
+                     const span = document .createElement ("span");
+
+                     span .textContent = item .name;
+
+                     li .append (span);
+                  }
+
+                  this .#addEvents (item, li, true);
+                  break;
+               }
+            }
+
+            break;
+         }
+      }
+
+      if (typeof item .items === "object" && level < 3)
+      {
+         const ul = document .createElement ("ul");
+
+         ul .classList .add ("context-menu-list");
+
+         ul .style .zIndex = level;
+
+         li .append (ul);
+
+         const background = document .createElement ("div");
+
+         background .classList .add ("context-menu-background");
+
+         ul .append (background);
+
+         for (const k in item .items)
+            ul .append (this .#createItem (item .items [k], key, k, level + 1));
+
+         li .classList .add ("context-menu-submenu");
+      }
+
+      return li;
+   }
+
+   #addEvents (item, element, hide)
+   {
+      if (typeof item .callback === "function")
+      {
+         element .addEventListener ("click", item .callback);
+
+         if (hide)
+            element .addEventListener ("click", () => this .hideMenu ());
+      }
+
+      if (typeof item .events === "object")
+      {
+         for (const k in item .events)
+         {
+            if (typeof item .events [k] === "function")
+               element .addEventListener (k, item .events [k]);
+         }
+      }
+   }
+
+   #offset (element, { left, top })
+   {
+      const
+         rect    = element .getBoundingClientRect (),
+         cssTop  = parseFloat (element .style .top)  || 0,
+         cssLeft = parseFloat (element .style .left) || 0;
+
+      if (left !== undefined)
+         element .style .left = `${left - (rect .left + window .scrollX) + cssLeft}px`;
+
+      if (top !== undefined)
+         element .style .top = `${top - (rect .top + window .scrollY) + cssTop}px`;
+   }
+
+   #createUserMenu ()
+   {
+      const userMenu = { };
+
+      if (typeof this .#userMenu === "function")
+      {
+         let menu;
+
+         try { menu = this .#userMenu (this .#browser); } catch (error) { console .error (error); }
+
+         if (menu instanceof Object)
+         {
+            for (const key in menu)
+               userMenu [`user-${key}`] = menu [key];
+         }
+      }
+
+      return userMenu;
+   }
+
+   #build ()
+   {
+      const
+         browser    = this .#browser,
+         host       = this .#host,
+         element    = browser .getElement (),
+         fullscreen = document .fullscreenElement === element;
+
+      if (!browser .getBrowserOption ("ContextMenu"))
+         return;
+
+      const info = host .worldInfo ();
+
+      const menu = {
+         className: "x_ite-private-menu",
+         items: {
+            "title": {
+               name: `${browser .getName ()} v${browser .getVersion ()}`,
+               className: "context-menu-title context-menu-icon x_ite-private-icon-logo context-menu-not-selectable",
+            },
+            "separator0": "--------",
+            "viewpoints": {
+               name: _("Viewpoints"),
+               className: "context-menu-icon x_ite-private-icon-viewpoint",
+               items: this .#getViewpoints (),
+            },
+            "available-viewers": {
+               name: _("Available Viewers"),
+               className: "context-menu-icon x_ite-private-icon-viewer",
+               items: this .#getAvailableViewers (),
+            },
+            "straighten-horizon": {
+               name: _("Straighten Horizon"),
+               type: "checkbox",
+               selected: browser .getBrowserOption ("StraightenHorizon"),
+               callback: event =>
+               {
+                  const straightenHorizon = event .target .checked;
+
+                  browser .setBrowserOption ("StraightenHorizon", straightenHorizon);
+
+                  if (straightenHorizon)
+                     browser .setDescription (`${_("Straighten Horizon")}: ${_("on")}`);
+                  else
+                     browser .setDescription (`${_("Straighten Horizon")}: ${_("off")}`);
+               },
+            },
+            "display-rubberband": {
+               name: _("Display Rubberband"),
+               type: "checkbox",
+               selected: browser .getBrowserOption ("Rubberband"),
+               callback: event =>
+               {
+                  const rubberband = event .target .checked;
+
+                  browser .setBrowserOption ("Rubberband", rubberband);
+
+                  if (rubberband)
+                     browser .setDescription (`${_("Rubberband")}: ${_("on")}`);
+                  else
+                     browser .setDescription (`${_("Rubberband")}: ${_("off")}`);
+               },
+            },
+            "separator1": "--------",
+            "primitive-quality": {
+               name: _("Primitive Quality"),
+               className: "context-menu-icon x_ite-private-icon-primitive-quality",
+               items: this .#qualityItems ("primitive-quality", "PrimitiveQuality", _("Primitive Quality")),
+            },
+            "texture-quality": {
+               name: _("Texture Quality"),
+               className: "context-menu-icon x_ite-private-icon-texture-quality",
+               items: this .#qualityItems ("texture-quality", "TextureQuality", _("Texture Quality")),
+            },
+            "shading": {
+               name: _("Shading"),
+               className: "context-menu-icon x_ite-private-icon-shading",
+               items: Object .fromEntries ([ [ "point", "POINT", "Points" ], [ "wireframe", "WIREFRAME", "Wireframe" ], [ "flat", "FLAT", "Flat" ],
+                  [ "gouraud", "GOURAUD", "Gouraud" ], [ "phong", "PHONG", "Phong" ] ] .map (([ key, value, text ]) => [ key,
+               {
+                  name: _(text),
+                  type: "radio",
+                  radio: "shading",
+                  selected: browser .getBrowserOption ("Shading") === value,
+                  callback: () =>
+                  {
+                     browser .setBrowserOption ("Shading", value);
+                     browser .setDescription (`${_("Shading")}: ${_(text)}`);
+                  },
+               } ])),
+            },
+            "separator2": "--------",
+
+            // Insert custom user menu items.
+            ... this .#createUserMenu (),
+
+            "separator3": "--------",
+
+            ... this .#createAnimationsMenu (),
+
+            "browser-timings": {
+               name: _("Browser Timings"),
+               type: "checkbox",
+               selected: browser .getBrowserOption ("Timings"),
+               callback: event =>
+               {
+                  browser .setBrowserOption ("Timings", event .target .checked);
+               },
+            },
+            "fullscreen": {
+               name: fullscreen ? _("Leave Fullscreen") : _("Fullscreen"),
+               className: `context-menu-icon ${fullscreen ? "x_ite-private-icon-leave-fullscreen" : "x_ite-private-icon-enter-fullscreen"}`,
+               callback: () =>
+               {
+                  if (fullscreen)
+                     document .exitFullscreen () .catch (Function .prototype);
+                  else
+                     element .requestFullscreen ({ navigationUI: "hide" }) .catch (Function .prototype);
+               },
+            },
+            "separator4": "--------",
+            "world-info": {
+               name: _("Show World Info"),
+               className: "context-menu-icon x_ite-private-icon-world-info",
+               callback: () => this .#showWorldInfo (),
+            },
+            "about": {
+               name: _("About X_ITE"),
+               className: "context-menu-icon x_ite-private-icon-info",
+               callback ()
+               {
+                  window .open (PROVIDER_URL);
+               },
+            },
+         },
+      };
+
+      if (Object .keys (menu .items .viewpoints .items) .length === 0)
+         delete menu .items ["viewpoints"];
+
+      if (Object .keys (menu .items ["available-viewers"] .items) .length < 2)
+      {
+         delete menu .items ["available-viewers"];
+      }
+
+      if (!host .currentViewer () .match (/^(?:EXAMINE|FLY)$/))
+      {
+         delete menu .items ["straighten-horizon"];
+      }
+
+      if (!host .currentViewer () .match (/^(?:WALK|FLY)$/))
+      {
+         delete menu .items ["display-rubberband"];
+      }
+
+      if (!browser .getBrowserOption ("Debug"))
+      {
+         delete menu .items ["shading"];
+      }
+
+      if (!info .hasInfo && !info .meta .length)
+      {
+         delete menu .items ["world-info"];
+      }
+
+      return menu;
+   }
+
+   #qualityItems (radio, option, label)
+   {
+      const browser = this .#browser;
+
+      return Object .fromEntries ([ [ "high", "HIGH", "High" ], [ "medium", "MEDIUM", "Medium" ], [ "low", "LOW", "Low" ] ] .map (([ key, value, text ]) => [ key,
+      {
+         name: _(text),
+         type: "radio",
+         radio,
+         selected: browser .getBrowserOption (option) === value,
+         callback: () =>
+         {
+            browser .setBrowserOption (option, value);
+            browser .setDescription (`${label}: ${_(text .toLowerCase ())}`);
+         },
+      } ]));
+   }
+
+   #getViewpoints ()
+   {
+      const
+         host    = this .#host,
+         current = host .activeViewpoint (),
+         menu    = { };
+
+      for (const { id, name } of host .viewpoints ())
+      {
+         menu [`Viewpoint-${id}`] = {
+            name,
+            type: "radio",
+            radio: "viewpoints",
+            selected: id === current,
+            className: "x_ite-private-viewpoint",
+            callback: () =>
+            {
+               host .bind (id);
+            },
+         };
+      }
+
+      return menu;
+   }
+
+   #getAvailableViewers ()
+   {
+      const
+         browser       = this .#browser,
+         host          = this .#host,
+         currentViewer = host .currentViewer (),
+         menu          = { };
+
+      for (const viewer of host .availableViewers ())
+      {
+         menu [viewer] = {
+            name: _(this .#getViewerName (viewer)),
+            type: "radio",
+            radio: "viewers",
+            selected: viewer === currentViewer,
+            className: `x_ite-private-${viewer .toLowerCase ()}-viewer`,
+            callback: () =>
+            {
+               host .setViewer (viewer);
+               browser .setDescription (_(this .#getViewerName (viewer)));
+            },
+         };
+      }
+
+      return menu;
+   }
+
+   #getViewerName (viewer)
+   {
+      switch (viewer)
+      {
+         case "EXAMINE":
+            return _("Examine Viewer");
+         case "WALK":
+            return _("Walk Viewer");
+         case "FLY":
+            return _("Fly Viewer");
+         case "PLANE":
+            return _("Plane Viewer");
+         case "LOOKAT":
+            return _("Look At Viewer");
+         case "NONE":
+            return _("None Viewer");
+      }
+   }
+
+   #createAnimationsMenu ()
+   {
+      const animations = (() => { try { return this .#browser .currentScene .getExportedNode ("Animations"); } catch (error) { return null; } })();
+
+      if (!animations)
+         return { };
+
+      const timeSensors = (() =>
+      {
+         try { return Array .from (animations .children, group => group .children [0]); } catch (error) { return null; }
+      })()
+         ?.filter (node => node ?.getNodeTypeName ?.() === "TimeSensor");
+
+      if (!timeSensors ?.length)
+         return { };
+
+      return {
+         "animations": {
+            name: _("Animations"),
+            className: "context-menu-icon x_ite-private-icon-animations",
+            items: {
+               ... Object .fromEntries (timeSensors .map ((timeSensor, i) =>
+               {
+                  return [`animation-${i}`, {
+                     name: timeSensor .description,
+                     type: "checkbox",
+                     selected: timeSensor .isActive,
+                     callback ()
+                     {
+                        if (timeSensor .isActive)
+                        {
+                           timeSensor .stopTime = Date .now () / 1000;
+                        }
+                        else
+                        {
+                           timeSensor .loop      = true;
+                           timeSensor .startTime = Date .now () / 1000;
+                        }
+                     },
+                  }];
+               })),
+
+               "separator2": "--------",
+
+               "all": {
+                  name: _("All"),
+                  className: "context-menu-icon x_ite-private-icon-play",
+                  callback ()
+                  {
+                     for (const timeSensor of timeSensors)
+                     {
+                        timeSensor .loop      = true;
+                        timeSensor .startTime = Date .now () / 1000;
+                     }
+                  },
+               },
+               "none": {
+                  name: _("None"),
+                  className: "context-menu-icon x_ite-private-icon-stop",
+                  callback ()
+                  {
+                     for (const timeSensor of timeSensors)
+                        timeSensor .stopTime = Date .now () / 1000;
+                  },
+               },
+            },
+         },
+      };
+   }
+
+   // The "Show World Info" entry (ContextMenu.build "world-info").
+   #showWorldInfo ()
+   {
+      const browser = this .#browser;
+      const info    = this .#host .worldInfo ();
+
+      this .#root .querySelector (".x_ite-private-world-info") ?.remove ();
+
+      const
+         priv         = this .#wrapper,
+         overlay      = document .createElement ("div"),
+         div          = document .createElement ("div"),
+         content      = document .createElement ("div"),
+         hasWorldInfo = info .hasInfo && (info .title .length || info .info .length);
+
+      overlay .classList .add ("x_ite-private-world-info-overlay");
+      priv .append (overlay);
+
+      div .classList .add ("x_ite-private-world-info", "x_ite-private-fade", "x_ite-private-hidden");
+      overlay .append (div);
+
+      const buttons = document .createElement ("div");
+
+      buttons .classList .add ("x_ite-private-world-info-buttons");
+      div .append (buttons);
+
+      const linkify = (element, string) =>
+      {
+         const
+            email = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9]{2,})/ig,
+            link  = /(https?:\/\/[-a-zA-Z0-9@:%._+~#=]+\.[a-zA-Z0-9]{2,}\b[-a-zA-Z0-9()@:%_+.~#?&/=]*\b\/?)/ig;
+
+         const replaced_text = string
+            .replace (email, `<a href="mailto:$1" target="_blank">$1</a>`)
+            .replace (link, `<a href="$1" target="_blank">$1</a>`);
+
+         element .innerHTML = replaced_text;
+
+         for (const a of element .querySelectorAll ("a"))
+            a .addEventListener ("click", event => event .stopPropagation ());
+      };
+
+      const worldInfoButton = document .createElement ("button");
+
+      worldInfoButton .classList .add ("x_ite-private-browser-button");
+      worldInfoButton .style .width = "100pt";
+      worldInfoButton .textContent = _("World Info");
+      buttons .append (worldInfoButton);
+
+      worldInfoButton .addEventListener ("click", event =>
+      {
+         event .preventDefault ();
+         event .stopPropagation ();
+         event .stopImmediatePropagation ();
+
+         const
+            title = info .title,
+            lines = info .info;
+
+         buttons .querySelector ("button") .classList .remove ("active");
+         worldInfoButton .classList .add ("active");
+
+         content .replaceChildren ();
+
+         const top = document .createElement ("div");
+
+         top .classList .add ("x_ite-private-world-info-top");
+         top .textContent = _("World Info");
+         content .append (top);
+
+         if (title .length)
+         {
+            const t = document .createElement ("div");
+
+            t .classList .add ("x_ite-private-world-info-title");
+            t .textContent = title;
+
+            content .append (t);
+         }
+
+         for (const line of lines)
+         {
+            const l = document .createElement ("div");
+
+            l .classList .add ("x_ite-private-world-info-info");
+
+            linkify (l, line);
+
+            content .append (l);
+         }
+      });
+
+      const metaDataButton = document .createElement ("button");
+
+      metaDataButton .classList .add ("x_ite-private-browser-button");
+      metaDataButton .style .width = "100pt";
+      metaDataButton .textContent = _("Metadata");
+      buttons .append (metaDataButton);
+
+      metaDataButton .addEventListener ("click", event =>
+      {
+         event .preventDefault ();
+         event .stopPropagation ();
+         event .stopImmediatePropagation ();
+
+         buttons .querySelector ("button") .classList .remove ("active");
+         worldInfoButton .classList .add ("active");
+
+         content .replaceChildren ();
+
+         const top = document .createElement ("div");
+
+         top .classList .add ("x_ite-private-world-info-top");
+         top .textContent = _("Metadata");
+         content .append (top);
+
+         const table = document .createElement ("table");
+
+         content .append (table);
+
+         for (const [key, value] of info .meta)
+         {
+            const
+               tr  = document .createElement ("tr"),
+               td1 = document .createElement ("td"),
+               td2 = document .createElement ("td");
+
+            td1 .textContent = `${key}:`;
+
+            linkify (td2, value);
+
+            tr .append (td1, td2);
+            table .append (tr);
+         }
+      });
+
+      if (!hasWorldInfo)
+         worldInfoButton .style .display = "none";
+
+      if (!info .meta .length)
+         metaDataButton .style .display = "none";
+
+      if (hasWorldInfo)
+         worldInfoButton .click ();
+      else
+         metaDataButton .click ();
+
+      div .append (content);
+
+      div .classList .remove ("x_ite-private-hidden");
+
+      overlay .addEventListener ("click", () =>
+      {
+         div .classList .add ("x_ite-private-hidden");
+
+         this .#later (() => overlay .remove (), 300);
+      });
+   }
+
+   // X3DBrowser.dispose: the menu, the world info, the timers and the elements go.
+   dispose ()
+   {
+      if (this .#disposed)
+         return;
+
+      this .#hide ?.();
+      this .#disposed = true;
+
+      for (const id of this .#timers)
+         clearTimeout (id);
+
+      this .#timers .clear ();
+      this .#root .querySelectorAll (".x_ite-private-menu, .x_ite-private-world-info-overlay") .forEach (element => element .remove ());
+      this .#timings ?.remove ();
+      this .#splash ?.remove ();
+   }
+}
+
 class X3DBrowser
 {
    #element;
@@ -2416,7 +4225,12 @@ class X3DBrowser
       // X3DCoreContext: the browser's own element is focusable (tabindex 0) and takes the keyboard.
       this .#canvas .tabIndex = 0;
       this .#canvas .style .cssText = "display:block;width:100%;height:100%;outline:none;touch-action:none";
-      element .shadowRoot .append (this .#canvas);
+      // X3DCoreContext: `.x_ite-private-browser` holds the canvas and the user interface's overlays (BrowserUI).
+      const wrapper = document .createElement ("div");
+
+      wrapper .classList .add ("x_ite-private-browser");
+      element .shadowRoot .append (wrapper);
+      wrapper .append (this .#canvas);
 
       // Notification.initialize: `div.x_ite-private-notification > span`, in a zero-height box before the canvas that
       // stands for X_ITE's positioned surface; the rules are in the shadow <style> of X3DCanvasElement.
@@ -2429,6 +4243,20 @@ class X3DBrowser
       box .classList .add ("x_ite-private-notification-box");
       box .append (this .#notification);
       this .#canvas .before (box);
+
+      this .#ui = new BrowserUI (this,
+      {
+         signal: this .#listeners .signal,
+         worldInfo: () => this .#worldInfo (),
+         viewpoints: () => Array .from (this .#engine ?.userViewpoints () ?? [ ], id => ({ id, name: this .#engine .viewpointDescription (id) })),
+         activeViewpoint: () => this .#engine ?.activeViewpoint (),
+         bind: id => this .#engine ?.viewpointRequest (`bindViewpoint:${id}`),
+         currentViewer: () => this .#engine ?.currentViewer () ?? "NONE",
+         availableViewers: () => this .#engine ?.availableViewers () ?? [ ],
+         setViewer: viewer => this .#engine ?.setViewer (viewer),
+      },
+      element .shadowRoot, wrapper, this .#canvas);
+
 
       this .#ready = wasm .then (() => WebBrowser .create (this .#canvas)) .then (engine =>
       {
@@ -2473,6 +4301,8 @@ class X3DBrowser
          // then always replaces a world, so it starts with "shutdown".
          // A browser that is stopped from the start (update="false") never gets its frame: X_ITE fires nothing then, also
          // not when it starts later.
+         this .#ui .setBrowserLoading (false);
+
          if (this .#live)
          {
             this .#call (X3DConstants .INITIALIZED_EVENT);
@@ -2495,11 +4325,29 @@ class X3DBrowser
       });
    }
 
+   #ui;
+
+   // The WorldInfo and META statements of the world for the menu entry "Show World Info".
+   #worldInfo ()
+   {
+      const [ hasInfo, title, info, meta ] = this .#engine ?.worldInfo () ?? [ false, "", [ ], [ ] ];
+
+      return { hasInfo: !! hasInfo, title: title ?? "", info: Array .from (info ?? [ ]), meta: Array .from (meta ?? [ ], pair => Array .from (pair)) };
+   }
+
+   // X3DBrowser.getContextMenu: the ContextMenu node (its `userMenu` and `hide ()`).
+   getContextMenu () { return this .#ui .contextMenu; }
+
+   // X3DCoreContext.getElement: the <x3d-canvas>.
+   getElement () { return this .#element; }
+
    #fallback (message)
    {
       const slot = document .createElement ("slot");
 
       slot .textContent = message;
+      this .#ui ?.dispose ();
+      this .#canvas .parentNode ?.remove ();
       this .#canvas .remove ();
       this .#element .shadowRoot .append (slot);
    }
@@ -2648,6 +4496,8 @@ class X3DBrowser
       const field = X3DBrowser .#field (this .#options, name, "BrowserOptions", true);
 
       field .setValue (value);
+
+      this .#ui ?.optionChanged (field === this .#options .get ("Timings") ? "Timings" : name);
 
       // BrowserOptions.addInterest: the options with an effect that is not read when it is needed. ContentScale and
       // MaximumFrameRate are read by the frame loop; Mute and SoundIntensity go to the engine (the gain of its sound
@@ -2921,6 +4771,7 @@ class X3DBrowser
             this .#abortLoad (this .#fileLoader);
 
          this .#fileLoader = loader;
+         this .#ui .setBrowserLoading (true);
 
          this .#load (url, loader) .then (id =>
          {
@@ -2931,6 +4782,7 @@ class X3DBrowser
             }
 
             this .#fileLoader = null;
+            this .#ui .loadSucceeded ();
             this .#replaceWorld (id, true) .then (resolve, reject);
          },
          () =>
@@ -2940,6 +4792,7 @@ class X3DBrowser
 
             // The engine reported the candidates that failed (FileLoader.printError).
             this .#fileLoader = null;
+            this .#ui .loadFailed ();
             this .#call (X3DConstants .INITIALIZED_ERROR);
             this .#dispatch ("error");
             reject (new Error ("Couldn't load X3D file."));
@@ -3568,6 +5421,7 @@ class X3DBrowser
       return new Promise ((resolve, reject) =>
       {
          this .#reject ?.(new Error ("Replacing world aborted."));
+         this .#ui .setBrowserLoading (true);
          this .#reject         = reject;
          this .#replacing      = id;
          this .#replacingScene = scene;
@@ -3612,6 +5466,7 @@ class X3DBrowser
                this .#flushAudio (this .#engine);
                this .#scene = this .#sceneOf (id);
                this .#flushLog ();
+               this .setDescription ("");
             }
 
             await nextFrame ();
@@ -3623,6 +5478,7 @@ class X3DBrowser
             this .#replacing      = null;
             this .#replacingScene = null;
             this .#worldConstants ();
+            this .#ui .setBrowserLoading (false);
             this .#call (X3DConstants .INITIALIZED_EVENT);
             this .#dispatch ("initialized load");
             resolve ();
@@ -3936,6 +5792,9 @@ class X3DBrowser
       for (const type of [ "blur", "click", "contextmenu", "dblclick", "focus", "keydown", "keyup", "mousedown", "mouseup", "pointerup", "touchend", "touchstart", "wheel" ])
          on (canvas, type, () => this .#resumeAudio ());
 
+      // ContextMenu.initialize: the `contextmenu` event of the element.
+      on (this .#element, "contextmenu", event => this .#ui .showMenu (event));
+
       on (canvas, "pointerdown", event =>
       {
          if (!engine ())
@@ -3951,6 +5810,18 @@ class X3DBrowser
             this .#touches .set (event .pointerId, { pointer: this .#pointerOf (event) });
             this .#lastTouch = event .timeStamp;
             engine () .touch (0, this .#touchPoints (), this .#zoomWidth ());
+
+            // PointingDevice.touchstart: a long tap (1200 ms) shows the context menu if no sensor is under the finger (the
+            // pointer cursor stands for that here) and the finger stays within 7 pixels.
+            clearTimeout (this .#touchMenu);
+
+            if (this .#touches .size === 1 && engine () .cursor !== "pointer")
+            {
+               const start = [ event .pageX, event .pageY ];
+
+               this .#touchStart = start;
+               this .#touchMenu  = setTimeout (() => this .#ui .showMenu ({ preventDefault () { }, pageX: start [0], pageY: start [1] }), 1200);
+            }
          }
          else
          {
@@ -3975,6 +5846,9 @@ class X3DBrowser
             {
                touch .pointer    = this .#pointerOf (event);
                this .#touchMoved = true;
+
+               if (Math .hypot (this .#touchStart [0] - event .pageX, this .#touchStart [1] - event .pageY) > 7)
+                  clearTimeout (this .#touchMenu);
             }
 
             return;
@@ -4010,6 +5884,7 @@ class X3DBrowser
                return;
 
             this .#flushTouches ();
+            clearTimeout (this .#touchMenu);
             this .#touches .delete (event .pointerId);
             this .#lastTouch = event .timeStamp;
             engine () .touch (2, this .#touchPoints (), this .#zoomWidth ());
@@ -4080,6 +5955,9 @@ class X3DBrowser
    // keyCode of the event, not event .ctrlKey), so a keyup the page never saw leaves the key down. Shift and the other
    // modifiers are not kept: only Shift+F8 (not done) reads them.
    #controlKey = false;
+   #shiftKey = false;
+   #touchMenu = null;
+   #touchStart = [ 0, 0 ];
 
    // X3DCoreContext [_keydown] (event). The keys call event .preventDefault () where X_ITE does, and only there. Ctrl+1 to
    // Ctrl+5 (Shading) and Ctrl+S (begin/end update) act only if the Debug option is set; their `setDescription` notification
@@ -4098,6 +5976,7 @@ class X3DBrowser
 
       switch (event .keyCode)
       {
+         case 16: this .#shiftKey = true; break;
          case 17: this .#controlKey = true; break;
          case 49: shading ("POINT",     "Pointset");  break;
          case 50: shading ("WIREFRAME", "Wireframe"); break;
@@ -4129,6 +6008,16 @@ class X3DBrowser
             this .setBrowserOption ("Timings", ! this .getBrowserOption ("Timings"));
             break;
          }
+         case 119: // F8
+         {
+            if (this .#shiftKey)
+            {
+               event .preventDefault ();
+               this .#copyViewpoint ();
+            }
+
+            break;
+         }
          case 36: event .preventDefault (); this .firstViewpoint ();    break; // Home
          case 35: event .preventDefault (); this .lastViewpoint ();     break; // End
          case 33: event .preventDefault (); this .previousViewpoint (); break; // Page Up
@@ -4136,9 +6025,61 @@ class X3DBrowser
       }
    }
 
+   // X3DCoreContext [_keydown] Shift+F8: the active viewpoint with its user position, orientation, center of rotation and field of
+   // view as a node of the world's encoding, to the clipboard. A GeoViewpoint is not done (API.md).
+   #copyViewpoint ()
+   {
+      const pose = this .#engine ?.userPose ();
+
+      if (!pose)
+         return;
+
+      const active   = this .activeViewpoint;
+      const typeName = active ? active .getNodeTypeName () : "Viewpoint";
+
+      if (typeName !== "Viewpoint" && typeName !== "OrthoViewpoint")
+         return;
+
+      const scene = this .currentScene;
+      const vp    = scene .createNode (typeName);
+
+      vp .position         = new Fields .SFVec3f (pose [0], pose [1], pose [2]);
+      vp .orientation      = new Fields .SFRotation (pose [3], pose [4], pose [5], pose [6]);
+      vp .centerOfRotation = new Fields .SFVec3f (pose [7], pose [8], pose [9]);
+
+      if (active)
+         vp .fieldOfView = active .fieldOfView;
+
+      let text;
+
+      // The scene has no encoding property here: the world URL names it (VRML unless it says XML or JSON).
+      const url = String (scene .worldURL);
+
+      if (/model\/x3d\+xml|\.x3d(?:[?#]|$)|\.xml(?:[?#]|$)/i .test (url))
+         text = vp .toXMLString ();
+      else if (/model\/x3d\+json|\.x3dj(?:[?#]|$)|\.json(?:[?#]|$)/i .test (url))
+         text = vp .toJSONString ();
+      else
+         text = vp .toVRMLString ();
+
+      text += "\n";
+
+      navigator .clipboard .writeText (text) .then (() =>
+      {
+         this .setDescription (_("Viewpoint copied to clipboard."));
+
+         console .info ("Viewpoint copied to clipboard.");
+         console .debug (text);
+      },
+      Function .prototype);
+   }
+
    // X3DCoreContext [_keyup] (event): `event .which`.
    #browserKeyUp (event)
    {
+      if (event .which === 16)
+         this .#shiftKey = false;
+
       if (event .which === 17)
          this .#controlKey = false;
    }
@@ -4313,11 +6254,15 @@ class X3DBrowser
             this .#canvas .height = height;
          }
 
+         const begin = performance .now ();
+         let   frameMs = 0;
+
          try
          {
             this .#audioClock (engine);
             this .#videoMirror ?.push ();
             engine .frame (time, width, height);
+            frameMs = performance .now () - begin;
 
             // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
             // again, so a user activation from outside the canvas also unlocks the context. The resume () comes before the
@@ -4334,11 +6279,17 @@ class X3DBrowser
 
             processFieldEvents (this, engine .current);
             this .#sceneRequestsDone ();
+
+            // X3DViewpointNode.set_bound__, X3DPointingDeviceSensorNode.set_over__: `browser .setDescription (description)`.
+            for (const description of engine .takeDescriptions ())
+               this .setDescription (description);
          }
          catch (error)
          {
             console .error (error);
          }
+
+         this .#ui .frame (stamp, performance .now () - begin, frameMs);
 
          this .#afterEngine ();
       };
@@ -4355,7 +6306,22 @@ class X3DBrowser
    // X_ITE_R introspection for tests: whether a frame is scheduled and how many have run.
    get [Symbol .for ("X_ITE_R.frameLoop")] () { return { running: this .#frame !== 0, frames: this .#frames, processed: this .#processed, live: this .#live }; }
 
-   connectedCallback ()    { this .#start (); this .#checkUpdate (); }
+   connectedCallback ()
+   {
+      // The first world loads behind the splash screen (X3DBrowser.initialize); the attributes are read by now.
+      if (!this .#firstLoad)
+      {
+         this .#firstLoad = true;
+
+         if (!this .#engine)
+            this .#ui .setBrowserLoading (true);
+      }
+
+      this .#start ();
+      this .#checkUpdate ();
+   }
+
+   #firstLoad = false;
    disconnectedCallback () { this .#stop (); this .#releaseInput (); this .#checkUpdate (); }
 
    // X3DCoreContext.parseBooleanAttribute: only "true" and "false" are values; any other text is the default.
@@ -4389,7 +6355,7 @@ class X3DBrowser
          case "multisampling":                this .setBrowserOption ("Multisampling",                newValue); break;
          case "notifications":                this .setBrowserOption ("Notifications",                boolean ?? true);  break;
          case "orderindependenttransparency": this .setBrowserOption ("OrderIndependentTransparency", boolean ?? false); break;
-         case "splashscreen":                 this .setBrowserOption ("SplashScreen",                 boolean ?? true);  break;
+         case "splashscreen":                 this .setBrowserOption ("SplashScreen",                 boolean ?? true); this .#ui .splashScreenAttribute (); break;
          case "textcompression":              this .setBrowserOption ("TextCompression",              newValue || "CHAR_SPACING"); break;
          case "timings":                      this .setBrowserOption ("Timings",                      boolean ?? false); break;
          case "tonemapping":                  this .setBrowserOption ("ToneMapping",                  newValue || "NONE"); break;
@@ -4456,6 +6422,9 @@ class X3DBrowser
       this .#fileLoader = null;
       this .#releaseInput ();
       this .#listeners .abort ();
+      clearTimeout (this .#notificationTime);
+      clearTimeout (this .#touchMenu);
+      this .#ui .dispose ();
       this .#stop ();
       this .#setAutoUpdate ();
 
@@ -4488,7 +6457,8 @@ class X3DCanvasElement extends HTMLElement
       this .attachShadow ({ mode: "open", delegatesFocus: true });
       // The notification rules are those of x_ite.css (.x_ite-private-notification) with the light theme's variables
       // filled in; X_ITE's logo (an asset) is not drawn, its space is kept.
-      this .shadowRoot .innerHTML = `<style>:host { display: inline-block; width: 300px; height: 150px; }
+      this .shadowRoot .innerHTML = `<style>${UI_CSS}
+:host { display: inline-block; width: 300px; height: 150px; }
 .x_ite-private-notification-box { position: relative; height: 0; }
 .x_ite-private-notification { visibility: hidden; position: absolute; top: 20px; right: 0px; width: 0px; box-sizing: content-box;
   backdrop-filter: blur(8px); background: linear-gradient(to bottom, rgba(247, 247, 252, 0.642) 0%, rgba(222, 221, 226, 0.6) 100%);

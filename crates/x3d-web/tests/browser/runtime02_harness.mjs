@@ -31,6 +31,7 @@ import { CASE_GROUPS as FIELDS04_GROUPS } from "./fields04_case.mjs";
 import { CASE_GROUPS as ROUTES01_GROUPS } from "./routes01_case.mjs";
 import { CASE_GROUPS as VIEWPOINTS01_GROUPS } from "./viewpoints01_case.mjs";
 import { CASE_GROUPS as OPTIONS01_GROUPS } from "./options01_case.mjs";
+import { CASE_GROUPS as UI01_GROUPS } from "./ui01_case.mjs";
 import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
@@ -86,6 +87,7 @@ const SUITES = {
    viewpoints01: { dir: process .env .XR_VIEWPOINTS01_BASELINE ?? join (REPO, "oracle/web-browser-viewpoints-01-baseline"), file: "viewpoints01-baseline.json", groups: VIEWPOINTS01_GROUPS },
    fields04: { dir: process .env .XR_FIELDS04_BASELINE ?? join (REPO, "oracle/web-browser-fields-04-baseline"), file: "fields04-baseline.json", groups: FIELDS04_GROUPS },
    options01: { dir: process .env .XR_OPTIONS01_BASELINE ?? join (REPO, "oracle/web-browser-options-01-baseline"), file: "options01-baseline.json", groups: OPTIONS01_GROUPS },
+   ui01: { dir: process .env .XR_UI01_BASELINE ?? join (REPO, "oracle/web-browser-ui-01-baseline"), file: "ui01-baseline.json", groups: UI01_GROUPS },
    attributes01: { dir: process .env .XR_ATTRIBUTES01_BASELINE ?? join (REPO, "oracle/web-browser-attributes-01-baseline"), file: "attributes01-baseline.json", groups: ATTRIBUTES01_GROUPS },
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
@@ -164,7 +166,42 @@ const REPLACE_GUARD_LOGS =
    ... Array (10) .fill (REPLACE_EMPTY), ... Array (4) .fill (REPLACE_NODES), ... Array (3) .fill (REPLACE_EMPTY),
 ];
 
+// The browser user interface 01 cases (ui01_case.mjs; web/API.md, "Browser user interface"). X_ITE_R names itself: the menu title is
+// "X_ITE_R v0.1.0" and the splash screen shows "X_ITE_R" for "X_ITE"; its dispose () removes the interface's elements (X_ITE leaves
+// the menu, the splash screen and the timings panel in the shadow DOM); X_ITE's shadow root also holds the stylesheet <link>.
+const SPLASH_TITLE_X = "\n            X_ITEX3D\n         ";
+const SPLASH_TITLE_R = "\n            X_ITE_RX3D\n         ";
+const MENU_TITLE_X   = "X_ITE v16.5.0";
+const MENU_TITLE_R   = "X_ITE_R v0.1.0";
+
+const UI01_DIFFERENCES =
+[
+   ... [ "initial", "optionOn", "loading", "loading2", "loaded", "failing", "failed", "recovered", "offLoading", "offLoaded", "attributeOff", "attributeOffLoaded", "replaced" ]
+      .map (state => [ [ state, "title" ], SPLASH_TITLE_X, SPLASH_TITLE_R ]),
+];
+
 const KNOWN_DIFFERENCES = {
+   "browserUi.splash": UI01_DIFFERENCES,
+   "browserUi.menuEntries": [
+      [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
+      [ [ "withDebug", 0 ], MENU_TITLE_X, MENU_TITLE_R ],
+   ],
+   "browserUi.menuActions": [ [ [ "walkMenu", 0 ], MENU_TITLE_X, MENU_TITLE_R ] ],
+   "browserUi.menuOpenClose": [ [ [ "userMenu", 0 ], MENU_TITLE_X, MENU_TITLE_R ] ],
+   "browserUi.menuWorldInfo": [ [ [ "plainMenu", 0 ], MENU_TITLE_X, MENU_TITLE_R ] ],
+   // A tap on the canvas: X_ITE's touch handlers cancel the click that follows a tap (the panel's own touchend does the same here).
+   "browserUi.timingsTouch": [
+      [ [ "canvasTap" ], [ [ "pointerdown", false ], [ "touchstart", false ], [ "touchend", false ] ],
+        [ [ "pointerdown", false ], [ "touchstart", false ], [ "touchend", false ], [ "click", false ] ] ],
+   ],
+   "browserUi.cleanup": [
+      [ [ "removal", "back", "children" ],
+        [ "LINK.", "DIV.x_ite-private-browser", "DIV.context-menu-layer x_ite-private-menu", "UL.context-menu-root context-menu-list x_ite-private-menu" ],
+        [ "DIV.x_ite-private-browser", "DIV.context-menu-layer x_ite-private-menu", "UL.context-menu-root context-menu-list x_ite-private-menu" ] ],
+      [ [ "disposed", "menus" ], 2, 0 ],
+      [ [ "disposed", "timings" ], 1, 0 ],
+      [ [ "disposed", "splash" ], 1, 0 ],
+   ],
    // X_ITE logs nothing for the arguments of replaceWorldGuards: the lines are X_ITE_R's own (API.md, replaceWorld).
    "sceneCreate.replaceWorldGuards": [
       [ [ "logs" ], [], REPLACE_GUARD_LOGS ],
@@ -686,6 +723,7 @@ const GROUP_FILES = {
    routesApi: "routes01.test.mjs",
    viewpointsApi: "viewpoints01.test.mjs",
    browserOptions: "options01.test.mjs",
+   browserUi: "ui01.test.mjs",
    canvasAttributes: "attributes01.test.mjs",
    canvasAttributesScaled: "attributes01.test.mjs",
    entryPoints: "entry01.test.mjs",
