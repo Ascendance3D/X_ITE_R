@@ -214,9 +214,10 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
     let server = crate::server::Server::start(common.root.clone())
         .map_err(|e| format!("x3d-oracle: http server: {e}"))?;
     let base = format!("http://127.0.0.1:{}", server.port);
+    let oracle_args = crate::chrome::oracle_args()?;
     let mut page = Page::open(
         &common.chrome,
-        crate::chrome::ORACLE_ARGS,
+        &oracle_args.iter().map(String::as_str).collect::<Vec<_>>(),
         256,
         256,
         &base,

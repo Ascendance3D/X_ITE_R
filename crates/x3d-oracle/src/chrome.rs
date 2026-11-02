@@ -74,6 +74,37 @@ pub const ORACLE_ARGS: &[&str] = &[
     "--ignore-gpu-blocklist",
 ];
 
+/// [`ORACLE_ARGS`] with the ANGLE backend named by `X3D_ORACLE_ANGLE` (`gl` by default: the RTX baselines; `swiftshader`,
+/// `vulkan` or `gles` measure the same pinned X_ITE on another implementation, issue #89). An unknown name is an error:
+/// a typo must not record a baseline from the default backend.
+pub fn oracle_args() -> Result<Vec<String>, String> {
+    oracle_args_for(std::env::var("X3D_ORACLE_ANGLE").ok().as_deref())
+}
+
+pub fn oracle_args_for(angle: Option<&str>) -> Result<Vec<String>, String> {
+    let angle = angle
+        .map(str::trim)
+        .filter(|a| !a.is_empty())
+        .unwrap_or("gl");
+
+    if !["gl", "gles", "vulkan", "swiftshader"].contains(&angle) {
+        return Err(format!(
+            "X3D_ORACLE_ANGLE={angle:?}: expected gl, gles, vulkan or swiftshader"
+        ));
+    }
+
+    Ok(ORACLE_ARGS
+        .iter()
+        .map(|a| {
+            if *a == "--use-angle=gl" {
+                format!("--use-angle={angle}")
+            } else {
+                a.to_string()
+            }
+        })
+        .collect())
+}
+
 #[derive(Debug, Clone)]
 pub enum CdpError {
     /// The browser, context or page went away (pipe closed, target crashed or detached).
@@ -473,4 +504,27 @@ fn spawn_with_pipes(_cmd: Command) -> std::io::Result<Spawned> {
     Err(std::io::Error::other(
         "the --remote-debugging-pipe transport (fd 3 / fd 4) is implemented for Unix only; see crates/x3d-oracle/README.md",
     ))
+}
+
+#[cfg(test)]
+mod oracle_args_tests {
+    use super::*;
+
+    #[test]
+    fn the_default_backend_is_the_recorded_one() {
+        let args = oracle_args_for(None).unwrap();
+
+        assert_eq!(args, ORACLE_ARGS.to_vec());
+        assert_eq!(oracle_args_for(Some("")).unwrap(), args);
+        assert_eq!(oracle_args_for(Some("gl")).unwrap(), args);
+    }
+
+    #[test]
+    fn another_backend_changes_only_the_angle_argument() {
+        let args = oracle_args_for(Some("swiftshader")).unwrap();
+
+        assert!(args.contains(&"--use-angle=swiftshader".to_string()));
+        assert_eq!(args.len(), ORACLE_ARGS.len());
+        assert!(oracle_args_for(Some("metal")).is_err());
+    }
 }
