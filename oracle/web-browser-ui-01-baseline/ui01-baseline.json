@@ -1,0 +1,2743 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "browserUi.descriptions": {
+   "loaded": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Sensor View",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "manual": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "manual",
+    "notification": {
+     "text": "manual",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "overSensor": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "Touch me",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "leftSensor": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "after",
+    "notification": {
+     "text": "after",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "overAgain": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "after",
+    "notification": {
+     "text": "after",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "replaced": {
+    "bound": "V2",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Other",
+    "notification": {
+     "text": "Other",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "noDescription": {
+    "bound": "",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "",
+    "notification": {
+     "text": "Other",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "notificationsOff": {
+    "bound": "",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "",
+    "notification": {
+     "text": "Other",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "timerShown": {
+    "notification": {
+     "text": "timer",
+     "visibility": "visible"
+    },
+    "delays": [
+     5000
+    ]
+   },
+   "timerRun": {
+    "notification": {
+     "text": "timer",
+     "visibility": "hidden"
+    },
+    "delays": []
+   }
+  },
+  "browserUi.splash": {
+   "initial": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": false
+   },
+   "optionOn": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "loading": {
+    "splash": true,
+    "hidden": false,
+    "display": "block",
+    "canvasHidden": true,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "loading2": {
+    "splash": true,
+    "hidden": false,
+    "display": "block",
+    "canvasHidden": true,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "result": "resolved",
+   "loaded": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "afterText": "Loading 1 file",
+   "failing": {
+    "splash": true,
+    "hidden": false,
+    "display": "block",
+    "canvasHidden": true,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "failedResult": "Couldn't load X3D file.",
+   "failed": {
+    "splash": true,
+    "hidden": false,
+    "display": "block",
+    "canvasHidden": true,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "failedText": "Failed loading world.",
+   "recovered": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   },
+   "offLoading": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": false
+   },
+   "offLoaded": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": false
+   },
+   "attributeOff": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": true,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": false
+   },
+   "attributeOffLoaded": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": false
+   },
+   "replaced": {
+    "splash": true,
+    "hidden": true,
+    "display": "none",
+    "canvasHidden": false,
+    "title": "\n            X_ITEX3D\n         ",
+    "hasProgressbar": true,
+    "childClasses": [
+     "x_ite-private-spinner",
+     "x_ite-private-progress"
+    ],
+    "option": true
+   }
+  },
+  "browserUi.timings": {
+   "initial": {
+    "hidden": true,
+    "display": "none",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": false,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "BODY",
+     false
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "on": {
+    "hidden": false,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": true,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "BODY",
+     false
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "running": {
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "detail": {
+    "frameRate": 0
+   },
+   "more": {
+    "hidden": false,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "Less Properties",
+    "table": [
+     "more"
+    ],
+    "option": true,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row",
+     "table-row"
+    ],
+    "focus": [
+     "X3D-CANVAS",
+     true
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "moreRunning": {
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "less": {
+    "hidden": false,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": true,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "X3D-CANVAS",
+     true
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "keyOff": {
+    "hidden": true,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": false,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "X3D-CANVAS",
+     true
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "keyOn": {
+    "hidden": false,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": true,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "X3D-CANVAS",
+     true
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "pointerThrough": 1,
+   "off": {
+    "hidden": true,
+    "display": "block",
+    "head": "Browser Timings",
+    "rows": [
+     [
+      "Frame rate:",
+      "frame-rate",
+      "",
+      ""
+     ],
+     [
+      "Speed:",
+      "speed",
+      "",
+      "x_ite-private-more"
+     ],
+     [
+      "Browser:",
+      "browser-time",
+      "",
+      ""
+     ],
+     [
+      "X3D total:",
+      "x3d-total",
+      "",
+      ""
+     ],
+     [
+      "Event Processing:",
+      "event-processing",
+      "",
+      ""
+     ],
+     [
+      "Pointer:",
+      "pointer",
+      "",
+      ""
+     ],
+     [
+      "Camera:",
+      "camera",
+      "",
+      ""
+     ],
+     [
+      "Picking:",
+      "picking",
+      "",
+      ""
+     ],
+     [
+      "Collision Detection:",
+      "collision-detection",
+      "",
+      ""
+     ],
+     [
+      "Rendering:",
+      "rendering",
+      "",
+      ""
+     ],
+     [
+      "Number of Primitives:",
+      "primitives pointer",
+      "Points; Lines; Triangles",
+      ""
+     ],
+     [
+      "Number of Shapes:",
+      "shapes pointer",
+      "Opaque Shapes + Transparent Shapes",
+      ""
+     ],
+     [
+      "Number of Sensors:",
+      "sensors",
+      "",
+      ""
+     ]
+    ],
+    "button": "More Properties",
+    "table": [
+     "less"
+    ],
+    "option": false,
+    "numeric": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "rowDisplay": [
+     "table-row",
+     "table-row",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none",
+     "none"
+    ],
+    "focus": [
+     "X3D-CANVAS",
+     true
+    ],
+    "pointerEvents": [
+     "none",
+     "all"
+    ],
+    "position": [
+     "absolute",
+     "0px",
+     "0px"
+    ]
+   },
+   "attributeOn": false,
+   "attributeOff": true
+  },
+  "browserUi.timingsTouch": {
+   "before": "More Properties",
+   "afterTap": "Less Properties",
+   "afterSecondTap": "More Properties",
+   "canvasTap": [
+    [
+     "pointerdown",
+     false
+    ],
+    [
+     "touchstart",
+     false
+    ],
+    [
+     "touchend",
+     false
+    ]
+   ],
+   "menus": 0
+  },
+  "browserUi.menuEntries": {
+   "contextEvents": [
+    true,
+    "doc:true"
+   ],
+   "world": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "menu": [
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-title",
+      "context-menu-icon",
+      "x_ite-private-icon-logo",
+      "context-menu-not-selectable"
+     ],
+     "text": "X_ITE v16.5.0",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-separator",
+      "context-menu-not-selectable"
+     ],
+     "text": null,
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-viewpoint",
+      "context-menu-submenu"
+     ],
+     "text": "Viewpoints",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": [
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-viewpoint",
+        "context-menu-input"
+       ],
+       "text": "First",
+       "type": "radio",
+       "name": "context-menu-input-viewpoints",
+       "checked": true,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-viewpoint",
+        "context-menu-input"
+       ],
+       "text": "Second",
+       "type": "radio",
+       "name": "context-menu-input-viewpoints",
+       "checked": false,
+       "sub": null
+      }
+     ]
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-viewer",
+      "context-menu-submenu"
+     ],
+     "text": "Available Viewers",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": [
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-examine-viewer",
+        "context-menu-input"
+       ],
+       "text": "Examine Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": true,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-walk-viewer",
+        "context-menu-input"
+       ],
+       "text": "Walk Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-fly-viewer",
+        "context-menu-input"
+       ],
+       "text": "Fly Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-plane-viewer",
+        "context-menu-input"
+       ],
+       "text": "Plane Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-lookat-viewer",
+        "context-menu-input"
+       ],
+       "text": "Look At Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "x_ite-private-none-viewer",
+        "context-menu-input"
+       ],
+       "text": "None Viewer",
+       "type": "radio",
+       "name": "context-menu-input-viewers",
+       "checked": false,
+       "sub": null
+      }
+     ]
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-input"
+     ],
+     "text": "Straighten Horizon",
+     "type": "checkbox",
+     "name": "context-menu-input-context-menu-root",
+     "checked": true,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-separator",
+      "context-menu-not-selectable"
+     ],
+     "text": null,
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-primitive-quality",
+      "context-menu-submenu"
+     ],
+     "text": "Primitive Quality",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": [
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "High",
+       "type": "radio",
+       "name": "context-menu-input-primitive-quality",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Medium",
+       "type": "radio",
+       "name": "context-menu-input-primitive-quality",
+       "checked": true,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Low",
+       "type": "radio",
+       "name": "context-menu-input-primitive-quality",
+       "checked": false,
+       "sub": null
+      }
+     ]
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-texture-quality",
+      "context-menu-submenu"
+     ],
+     "text": "Texture Quality",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": [
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "High",
+       "type": "radio",
+       "name": "context-menu-input-texture-quality",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Medium",
+       "type": "radio",
+       "name": "context-menu-input-texture-quality",
+       "checked": true,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Low",
+       "type": "radio",
+       "name": "context-menu-input-texture-quality",
+       "checked": false,
+       "sub": null
+      }
+     ]
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-separator",
+      "context-menu-not-selectable"
+     ],
+     "text": null,
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-separator",
+      "context-menu-not-selectable"
+     ],
+     "text": null,
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-animations",
+      "context-menu-submenu"
+     ],
+     "text": "Animations",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": [
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Spin",
+       "type": "checkbox",
+       "name": "context-menu-input-animations",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-input"
+       ],
+       "text": "Wave",
+       "type": "checkbox",
+       "name": "context-menu-input-animations",
+       "checked": false,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-separator",
+        "context-menu-not-selectable"
+       ],
+       "text": null,
+       "type": null,
+       "name": null,
+       "checked": null,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-icon",
+        "x_ite-private-icon-play"
+       ],
+       "text": "All",
+       "type": null,
+       "name": null,
+       "checked": null,
+       "sub": null
+      },
+      {
+       "classes": [
+        "context-menu-item",
+        "context-menu-icon",
+        "x_ite-private-icon-stop"
+       ],
+       "text": "None",
+       "type": null,
+       "name": null,
+       "checked": null,
+       "sub": null
+      }
+     ]
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-input"
+     ],
+     "text": "Browser Timings",
+     "type": "checkbox",
+     "name": "context-menu-input-context-menu-root",
+     "checked": false,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-enter-fullscreen"
+     ],
+     "text": "Fullscreen",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-separator",
+      "context-menu-not-selectable"
+     ],
+     "text": null,
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-world-info"
+     ],
+     "text": "Show World Info",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    },
+    {
+     "classes": [
+      "context-menu-item",
+      "context-menu-icon",
+      "x_ite-private-icon-info"
+     ],
+     "text": "About X_ITE",
+     "type": null,
+     "name": null,
+     "checked": null,
+     "sub": null
+    }
+   ],
+   "escape": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "withDebug": [
+    "X_ITE v16.5.0",
+    null,
+    "Viewpoints",
+    "Available Viewers",
+    "Straighten Horizon",
+    null,
+    "Primitive Quality",
+    "Texture Quality",
+    null,
+    null,
+    "Animations",
+    "Browser Timings",
+    "Fullscreen",
+    null,
+    "Show World Info",
+    "About X_ITE"
+   ],
+   "closedOnReopen": 2
+  },
+  "browserUi.menuActions": {
+   "shading_points": {
+    "bound": "V1",
+    "shading": "POINT",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Shading: Points",
+    "notification": {
+     "text": "Shading: Points",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "shading_wireframe": {
+    "bound": "V1",
+    "shading": "WIREFRAME",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Shading: Wireframe",
+    "notification": {
+     "text": "Shading: Wireframe",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "shading_flat": {
+    "bound": "V1",
+    "shading": "FLAT",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Shading: Flat",
+    "notification": {
+     "text": "Shading: Flat",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "shading_gouraud": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Shading: Gouraud",
+    "notification": {
+     "text": "Shading: Gouraud",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "shading_phong": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Shading: Phong",
+    "notification": {
+     "text": "Shading: Phong",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "straightenOn": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": false,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Straighten Horizon: off",
+    "notification": {
+     "text": "Straighten Horizon: off",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "straightenOff": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Straighten Horizon: on",
+    "notification": {
+     "text": "Straighten Horizon: on",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "viewerWalk": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Walk Viewer",
+    "notification": {
+     "text": "Walk Viewer",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "menuAfterWalk": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Walk Viewer",
+    "notification": {
+     "text": "Walk Viewer",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "walkMenu": [
+    "X_ITE v16.5.0",
+    null,
+    "Viewpoints",
+    "Available Viewers",
+    "Display Rubberband",
+    null,
+    "Primitive Quality",
+    "Texture Quality",
+    "Shading",
+    null,
+    null,
+    "Animations",
+    "Browser Timings",
+    "Fullscreen",
+    null,
+    "Show World Info",
+    "About X_ITE"
+   ],
+   "rubberbandOff": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": false,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Rubberband: off",
+    "notification": {
+     "text": "Rubberband: off",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "rubberbandOn": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Rubberband: on",
+    "notification": {
+     "text": "Rubberband: on",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "viewerFly": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Fly Viewer",
+    "notification": {
+     "text": "Fly Viewer",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "viewerExamine": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Examine Viewer",
+    "notification": {
+     "text": "Examine Viewer",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "submenus": [
+    "Viewpoints",
+    "Available Viewers",
+    "Primitive Quality",
+    "Texture Quality",
+    "Shading",
+    "Animations"
+   ],
+   "primitiveLow": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "LOW",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Primitive Quality: low",
+    "notification": {
+     "text": "Primitive Quality: low",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "primitiveHigh": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Primitive Quality: high",
+    "notification": {
+     "text": "Primitive Quality: high",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "textureMedium": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Texture Quality: medium",
+    "notification": {
+     "text": "Texture Quality: medium",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "textureLow": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "Texture Quality: low",
+    "notification": {
+     "text": "Texture Quality: low",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "viewpointSecond": {
+    "bound": "V2",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "Second",
+    "notification": {
+     "text": "Second",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "viewpointFirst": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "menuStays": 1,
+   "timingsOn": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": true,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "timingsOff": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "animSpinOn": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "animSpinOn_active": [
+    true,
+    false
+   ],
+   "animAll": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "animAll_active": [
+    true,
+    true
+   ],
+   "animNone": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "animNone_active": [
+    false,
+    false
+   ],
+   "animWaveOn": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "animWaveOn_active": [
+    false,
+    true
+   ],
+   "animWaveOff": {
+    "bound": "V1",
+    "shading": "PHONG",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "HIGH",
+    "texture": "LOW",
+    "timings": false,
+    "description": "First",
+    "notification": {
+     "text": "First",
+     "visibility": "visible"
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "animWaveOff_active": [
+    false,
+    false
+   ]
+  },
+  "browserUi.menuOpenClose": {
+   "open": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 1,
+    "events": [
+     "over:true"
+    ],
+    "dom": [
+     [
+      "pointerdown",
+      false,
+      2
+     ],
+     [
+      "mousedown",
+      false,
+      2
+     ],
+     [
+      "contextmenu",
+      false,
+      2
+     ],
+     [
+      "mouseup",
+      false,
+      2
+     ]
+    ]
+   },
+   "layerClick": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 0,
+    "events": [],
+    "dom": [
+     [
+      "pointerdown",
+      false,
+      0
+     ],
+     [
+      "mousedown",
+      false,
+      0
+     ],
+     [
+      "mouseup",
+      false,
+      0
+     ]
+    ]
+   },
+   "layersAfter": 0,
+   "removed": 0,
+   "reopen": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 2,
+    "layers": 1,
+    "position": [
+     150,
+     120
+    ]
+   },
+   "reopenAfter": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "keys": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 1
+   },
+   "about": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 1,
+    "layers": 0,
+    "opened": [
+     "https://create3000.github.io/x_ite/"
+    ]
+   },
+   "aboutAfter": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 0,
+    "layers": 0
+   },
+   "edge": {
+    "right": true,
+    "bottom": true,
+    "left": true,
+    "top": true
+   },
+   "userMenu": [
+    "X_ITE v16.5.0",
+    null,
+    "Viewpoints",
+    "Available Viewers",
+    "Straighten Horizon",
+    null,
+    "Primitive Quality",
+    "Texture Quality",
+    null,
+    null,
+    "Browser Timings",
+    "Fullscreen",
+    null,
+    "About X_ITE"
+   ],
+   "userCheck": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 2,
+    "layers": 1,
+    "clicks": [
+     "two:false"
+    ]
+   },
+   "userEntry": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 2,
+    "layers": 0,
+    "clicks": [
+     "two:false",
+     "one"
+    ]
+   },
+   "optionOff": {
+    "bound": "V1",
+    "shading": "GOURAUD",
+    "straighten": true,
+    "rubberband": true,
+    "primitive": "MEDIUM",
+    "texture": "MEDIUM",
+    "timings": false,
+    "description": "Touch me",
+    "notification": {
+     "text": "",
+     "visibility": ""
+    },
+    "menus": 0,
+    "layers": 0,
+    "seen": [
+     true
+    ]
+   }
+  },
+  "browserUi.menuWorldInfo": {
+   "menuHas": true,
+   "shown": {
+    "overlays": 1,
+    "hidden": false,
+    "buttons": [
+     [
+      "World Info",
+      "x_ite-private-browser-button active",
+      ""
+     ],
+     [
+      "Metadata",
+      "x_ite-private-browser-button",
+      ""
+     ]
+    ],
+    "top": "World Info",
+    "title": "Menu World",
+    "infos": [
+     "line one",
+     "mail <a href=\"mailto:me@example.org\" target=\"_blank\">me@example.org</a>"
+    ],
+    "table": []
+   },
+   "menuClosed": 0,
+   "metadata": {
+    "overlays": 1,
+    "hidden": false,
+    "buttons": [
+     [
+      "World Info",
+      "x_ite-private-browser-button active",
+      ""
+     ],
+     [
+      "Metadata",
+      "x_ite-private-browser-button",
+      ""
+     ]
+    ],
+    "top": "Metadata",
+    "title": null,
+    "infos": [],
+    "table": [
+     "|creator:||Menu Test|",
+     "|reference:||see |https://example.org/page||"
+    ]
+   },
+   "worldInfoAgain": {
+    "overlays": 1,
+    "hidden": false,
+    "buttons": [
+     [
+      "World Info",
+      "x_ite-private-browser-button active",
+      ""
+     ],
+     [
+      "Metadata",
+      "x_ite-private-browser-button",
+      ""
+     ]
+    ],
+    "top": "World Info",
+    "title": "Menu World",
+    "infos": [
+     "line one",
+     "mail <a href=\"mailto:me@example.org\" target=\"_blank\">me@example.org</a>"
+    ],
+    "table": []
+   },
+   "closing": {
+    "overlays": 1,
+    "hidden": true,
+    "buttons": [
+     [
+      "World Info",
+      "x_ite-private-browser-button active",
+      ""
+     ],
+     [
+      "Metadata",
+      "x_ite-private-browser-button",
+      ""
+     ]
+    ],
+    "top": "World Info",
+    "title": "Menu World",
+    "infos": [
+     "line one",
+     "mail <a href=\"mailto:me@example.org\" target=\"_blank\">me@example.org</a>"
+    ],
+    "table": []
+   },
+   "closed": {
+    "overlays": 0,
+    "hidden": null,
+    "buttons": null,
+    "top": null,
+    "title": null,
+    "infos": null,
+    "table": null
+   },
+   "twice": {
+    "overlays": 2,
+    "hidden": false,
+    "buttons": [
+     [
+      "World Info",
+      "x_ite-private-browser-button active",
+      ""
+     ],
+     [
+      "Metadata",
+      "x_ite-private-browser-button",
+      ""
+     ]
+    ],
+    "top": "World Info",
+    "title": "Menu World",
+    "infos": [
+     "line one",
+     "mail <a href=\"mailto:me@example.org\" target=\"_blank\">me@example.org</a>"
+    ],
+    "table": []
+   },
+   "twiceClosed": {
+    "overlays": 1,
+    "hidden": null,
+    "buttons": null,
+    "top": null,
+    "title": null,
+    "infos": null,
+    "table": null
+   },
+   "plainHas": false,
+   "plainMenu": [
+    "X_ITE v16.5.0",
+    null,
+    "Straighten Horizon",
+    null,
+    "Primitive Quality",
+    "Texture Quality",
+    null,
+    null,
+    "Browser Timings",
+    "Fullscreen",
+    null,
+    "About X_ITE"
+   ]
+  },
+  "browserUi.shiftF8": {
+   "plainF8": {
+    "clipboard": "before",
+    "description": "A",
+    "infos": []
+   },
+   "shiftF8": {
+    "clipboard": "Viewpoint {\n  position 1 2 10\n  orientation 0 0.999999999999999 0 0.5\n  centerOfRotation 0 1 0\n  fieldOfView 0.6\n}\n",
+    "description": "Viewpoint copied to clipboard.",
+    "infos": [
+     "Viewpoint copied to clipboard."
+    ]
+   },
+   "second": {
+    "clipboard": "Viewpoint {\n  position 0 0 12\n}\n",
+    "description": "Viewpoint copied to clipboard.",
+    "infos": [
+     "Viewpoint copied to clipboard."
+    ]
+   },
+   "claimed": [
+    [
+     119,
+     false,
+     false
+    ],
+    [
+     16,
+     true,
+     false
+    ],
+    [
+     119,
+     true,
+     true
+    ]
+   ]
+  },
+  "browserUi.cleanup": {
+   "open": {
+    "menus": 1,
+    "overlays": 1
+   },
+   "replaced": {
+    "menus": 2,
+    "overlays": 1
+   },
+   "replacedAfter": {
+    "menus": 0,
+    "overlays": 1
+   },
+   "beforeRemoval": {
+    "menus": 2,
+    "overlays": 1
+   },
+   "removal": {
+    "before": 3,
+    "removed": 3,
+    "back": {
+     "children": [
+      "LINK.",
+      "DIV.x_ite-private-browser",
+      "DIV.context-menu-layer x_ite-private-menu",
+      "UL.context-menu-root context-menu-list x_ite-private-menu"
+     ]
+    }
+   },
+   "disposed": {
+    "canvasInside": true,
+    "menus": 2,
+    "timings": 1,
+    "splash": 1
+   }
+  }
+ }
+}

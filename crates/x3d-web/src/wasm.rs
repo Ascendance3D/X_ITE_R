@@ -1803,6 +1803,100 @@ impl WebBrowser {
         }
     }
 
+    /// The descriptions that the engine set itself since the last call, in order: a viewpoint that was bound
+    /// (X3DViewpointNode.set_bound__) and a pointing device sensor that is over (set_over__), each `browser .setDescription`.
+    #[wasm_bindgen(js_name = takeDescriptions)]
+    pub fn take_descriptions(&mut self) -> Vec<String> {
+        self.current_mut().map_or(vec![], |s| s.take_descriptions())
+    }
+
+    /// X3DLayerNode.getUserViewpoints of the active layer: the viewpoints with a description, as node ids.
+    #[wasm_bindgen(js_name = userViewpoints)]
+    pub fn user_viewpoints(&self) -> Vec<u32> {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or(vec![], |w| w.session.user_viewpoints())
+    }
+
+    /// `viewpoint .getDescriptions () .join (" » ")` of a viewpoint of the current world.
+    #[wasm_bindgen(js_name = viewpointDescription)]
+    pub fn viewpoint_description(&self, node: u32) -> String {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or(String::new(), |w| w.session.viewpoint_description(node))
+    }
+
+    /// `browser ._availableViewers` of the current world.
+    #[wasm_bindgen(js_name = availableViewers)]
+    pub fn available_viewers(&self) -> Vec<String> {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or(vec![], |w| w.session.available_viewers())
+    }
+
+    /// `browser .getCurrentViewer ()` of the current world.
+    #[wasm_bindgen(js_name = currentViewer)]
+    pub fn current_viewer(&self) -> String {
+        self.current
+            .and_then(|id| self.worlds.get(&id))
+            .map_or("NONE".to_string(), |w| w.session.viewer_field())
+    }
+
+    /// `browser ._viewer = kind` of the current world.
+    #[wasm_bindgen(js_name = setViewer)]
+    pub fn set_viewer(&mut self, kind: &str) {
+        if let Some(s) = self.current_mut() {
+            s.set_viewer(kind);
+        }
+    }
+
+    /// The world's first WorldInfo and META statements, for the "Show World Info" menu entry: `[hasWorldInfo, title,
+    /// info (an array), meta (an array of [key, value] arrays)]`.
+    #[wasm_bindgen(js_name = worldInfo)]
+    pub fn world_info(&self) -> js_sys::Array {
+        let out = js_sys::Array::new();
+
+        let Some(w) = self.current.and_then(|id| self.worlds.get(&id)) else {
+            return out;
+        };
+
+        let (info, meta) = w.session.world_info();
+        let lines = js_sys::Array::new();
+        let pairs = js_sys::Array::new();
+
+        for (k, v) in meta {
+            pairs.push(&js_sys::Array::of2(
+                &JsValue::from_str(&k),
+                &JsValue::from_str(&v),
+            ));
+        }
+
+        match info {
+            Some((title, list)) => {
+                for l in list {
+                    lines.push(&JsValue::from_str(&l));
+                }
+
+                out.push(&JsValue::TRUE);
+                out.push(&JsValue::from_str(&title));
+            }
+            None => {
+                out.push(&JsValue::FALSE);
+                out.push(&JsValue::from_str(""));
+            }
+        }
+
+        out.push(&lines);
+        out.push(&pairs);
+        out
+    }
+
+    /// The bound viewpoint's user position, orientation (axis, angle) and center of rotation, ten numbers (Shift+F8).
+    #[wasm_bindgen(js_name = userPose)]
+    pub fn user_pose(&mut self) -> Option<Vec<f64>> {
+        self.current_mut()?.user_pose().map(|p| p.to_vec())
+    }
+
     /// X3DBrowser.viewAll (transitionTime) of the active layer, or of the layer node `layer`.
     #[wasm_bindgen(js_name = viewAll)]
     pub fn view_all(&mut self, transition_time: f64, layer: Option<u32>) {

@@ -3104,6 +3104,7 @@ impl Viewer3d {
         if let Some(d) = out.description {
             // X3DPointingDeviceSensorNode.set_over__: `getBrowser () .setDescription (this ._description)`.
             self.rt.description = d.clone();
+            self.rt.description_events.push(d.clone());
             self.status_description = d.clone();
             self.notify(&d);
             self.status = d;
