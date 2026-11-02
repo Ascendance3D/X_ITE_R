@@ -151,7 +151,9 @@ pub struct World {
 /// covers in the 16x16 buffer of the orthographic view (l, r, b, t, near, far): (column, row, window z, camera space
 /// point). The segment is clipped to the near and far planes and its window x and y snapped to the sub-pixel grid, then
 /// GL's diamond-exit rule decides: a pixel is produced when the segment meets its diamond |x - xc| + |y - yc| < 1/2 and
-/// does not end inside it. z and the point are interpolated at the projection of the pixel center onto the segment.
+/// does not end inside it. z and the point are interpolated at the projection of the pixel center onto the segment, unclamped: the last pixel of
+/// the diamond-exit rule can lie past an end, and GL extrapolates there (clamping gave X_ITE's rea_b15 pc-line frame 45
+/// translation 4 an error of 6e-3; now 1.8e-8).
 fn line_fragments(
     a: Vector3,
     b: Vector3,
@@ -235,7 +237,7 @@ fn line_fragments(
 
             let length2 = dx * dx + dy * dy;
             let s = if length2 > 0.0 {
-                (((cx - ax) * dx + (cy - ay) * dy) / length2).clamp(0.0, 1.0)
+                ((cx - ax) * dx + (cy - ay) * dy) / length2
             } else {
                 0.0
             };

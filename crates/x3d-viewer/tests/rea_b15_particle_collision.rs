@@ -17,9 +17,9 @@
 //! * the pose and positionOffset within 1e-4 (rea_batch09_nav's pose limit);
 //! * isActive exactly and collideTime within 1e-9 of every named Collision node.
 //!
-//! KNOWN_GAPS lists (case, frame) pairs whose distances, normals and translations may differ; the hit states must still
-//! match there, and the test requires the gap to keep differing. The same cases also run through the CPU stand-in
-//! (`--cpu-pointing`, no adapter needed) against CPU_KNOWN_GAPS.
+//! PROBE_TOLERANCES lists (case, frame) pairs whose distances, normals and translations are compared with a wider limit than
+//! [`PROBE_TOL`] (the largest difference the recordings show, with the reason); the hit states must still match there. The same
+//! cases also run through the CPU stand-in (`--cpu-pointing`, no adapter needed) against CPU_KNOWN_GAPS.
 //!
 //! The GPU test needs an adapter and is skipped without one. `REA_ONLY=<substring>` restricts the
 //! cases.
@@ -34,14 +34,16 @@ const PROBE_TOL: f64 = 1e-6;
 /// Allowed difference of the pose and positionOffset.
 const POSE_TOL: f64 = 1e-4;
 
-/// (case, frame, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str, &str)] = &[(
+/// (case, frame, allowed absolute difference of a distance, normal or translation, why Rust differs). The recording of pc-line
+/// frame 45 shows 1.7e-5 at most (the distance along one direction; the translations match to 4.5e-8 since the line's last
+/// pixel is extrapolated, not clamped); the limit has room for another GPU's rounding of the vertex snapping.
+const PROBE_TOLERANCES: &[(&str, &str, f64, &str)] = &[(
     "pc-line",
     "45",
-    "LINE particles: one line leaves the depth buffer through its right edge, and X_ITE's depth of the last pixel it \
-     covers there is 1.7e-5 farther than the diamond-exit rasterization with 1/256 px vertex snapping gives (every other \
-     line fragment of the case matches); the closest object along (-0.6 0 -0.8) and the two translations it decides move \
-     with it",
+    2e-5,
+    "LINE particles: X_ITE's depth of the last pixel of one line at the right edge is 1.7e-5 farther than the diamond-exit \
+     rasterization with 1/256 px vertex snapping gives along direction 7 (every other line fragment of the case matches); the \
+     cause of this remainder is not found",
 )];
 
 /// The CPU stand-in samples triangles at the pixel centers instead of rasterizing them with vertex snapping and
@@ -50,7 +52,7 @@ const CPU_TRIANGLES: &str = "triangles: the CPU stand-in samples them at the pix
                              distances about 1e-5 off) and returns their geometric normal, not Depth2.fs's";
 
 /// (case, frame or `"*"` for every frame, why the CPU stand-in differs) of the `--cpu-pointing` runs. The POINT and
-/// LINE particles are drawn like on the GPU, so pc-point matches X_ITE and pc-line keeps the GPU's one gap; the hit
+/// LINE particles are drawn like on the GPU, so pc-point matches X_ITE and pc-line is within its PROBE_TOLERANCES; the hit
 /// states, shapes, poses and Collision nodes must match everywhere.
 const CPU_KNOWN_GAPS: &[(&str, &str, &str)] = &[
     ("pc-clip-plane", "*", CPU_TRIANGLES),
@@ -59,11 +61,6 @@ const CPU_KNOWN_GAPS: &[(&str, &str, &str)] = &[
     ("pc-disabled", "*", CPU_TRIANGLES),
     ("pc-geometry", "*", CPU_TRIANGLES),
     ("pc-hidden", "*", CPU_TRIANGLES),
-    (
-        "pc-line",
-        "45",
-        "LINE particles: the same diamond-exit rasterization as the GPU run, with its gap at the right edge",
-    ),
     ("pc-max-particles", "*", CPU_TRIANGLES),
     ("pc-quad-wall", "*", CPU_TRIANGLES),
     ("pc-sprite", "*", CPU_TRIANGLES),
@@ -101,7 +98,7 @@ fn diff(a: &Value, b: &Value) -> f64 {
 }
 
 /// Compare the probes of one frame: (hit or shape differences, value differences, first of each).
-fn compare_frame(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
+fn compare_frame(want: &Value, got: &Value, tol: f64) -> (Vec<String>, Vec<String>) {
     let mut hits = vec![];
     let mut values = vec![];
     let names = |v: &Value| {
@@ -148,7 +145,7 @@ fn compare_frame(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
         .abs();
         let dn = diff(&p["normal"], &q["normal"]);
 
-        if !(dd <= PROBE_TOL && dn <= PROBE_TOL) {
+        if !(dd <= tol && dn <= tol) {
             values.push(format!(
                 "direction {i}: X_ITE {p} / Rust {q} (distance {dd:.2e}, normal {dn:.2e})"
             ));
@@ -164,7 +161,7 @@ fn compare_frame(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
     {
         let d = diff(p, q);
 
-        if !(d <= PROBE_TOL) {
+        if !(d <= tol) {
             values.push(format!("translation {i}: X_ITE {p} / Rust {q} ({d:.2e})"));
         }
     }
@@ -292,7 +289,11 @@ fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<S
             .filter(|c| c["id"].as_i64().unwrap_or(-1) >= 0)
             .count();
 
-        let (hits, values) = compare_frame(w, g);
+        let tol = PROBE_TOLERANCES
+            .iter()
+            .find(|(case, f, ..)| *case == name && f == frame)
+            .map_or(PROBE_TOL, |(_, _, tol, _)| *tol);
+        let (hits, values) = compare_frame(w, g, tol);
         let gap = gaps
             .iter()
             .find(|(case, f, _)| *case == name && (*f == "*" || f == frame));
@@ -392,7 +393,7 @@ fn rea_b15_particle_collision_matches_x_ite() {
     }
 
     // Four drives at a time, like rea_b14_particle_pick (each holds a GPU device).
-    check_all(false, KNOWN_GAPS, 4);
+    check_all(false, &[], 4);
 }
 
 /// The same probes through the CPU stand-in (`--cpu-pointing` leaves the depth buffer off the GPU): runs without an
