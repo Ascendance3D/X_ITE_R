@@ -149,7 +149,11 @@ describe ("re-entry 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
             const after = { };
 
             for (const [ name, fn ] of Object .entries (calls))
-                  after [name] = attempt (fn) === undefined || typeof attempt (fn) !== "string" || ! attempt (fn) .includes ("not available");
+            {
+               const outcome = attempt (fn);
+
+               after [name] = typeof outcome !== "string" || ! outcome .includes ("not available");
+            }
 
             return { inside, after, live: liveAfterCallback };
          });
