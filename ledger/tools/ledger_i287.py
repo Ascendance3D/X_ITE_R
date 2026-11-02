@@ -6,7 +6,7 @@ import json, os, sys, collections, hashlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTH = os.path.join(HERE, "..", "ledger.json")
 SNAP = os.path.join(HERE, "..", "snapshots", "before-i287", "ledger.json")
-SNAP_SHA256 = "70a9328edfca3d22971a855f233090ff4304294d40ae40a9884a244304e82635"
+SNAP_SHA256 = "23035c281abb29600f01387f27fb267535e877db01cf2b11e58a2f2d27f3cb70"
 
 OLD = "no macOS Ctrl+click or touch long-press (#287); "
 NEW = ""

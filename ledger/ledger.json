@@ -7043,22 +7043,13 @@
    "component": "Browser",
    "upstream": "src/x_ite/Browser/DOMIntegration.js",
    "upstream_version": "16.5.0 @ 34cdf9f97",
-   "rust": [
-    "crates/x3d-web/web/x_ite_r.mjs",
-    "crates/x3d-web/src/wasm.rs",
-    "crates/x3d-web/tests/dom_mutation.rs"
-   ],
-   "status": "PARTIAL",
+   "rust": [],
+   "status": "DIFFERENT",
    "behavior": "",
-   "tests": [
-    "crates/x3d-web/tests/browser/dom01.test.mjs (10)",
-    "crates/x3d-web/tests/browser/dom02.test.mjs (6)",
-    "crates/x3d-web/tests/browser/dom03.test.mjs (5)",
-    "crates/x3d-web/tests/dom_mutation.rs (3)"
-   ],
-   "missing": "Browser build only: the order of the first load events of the Inline elements differs from X_ITE (X_ITE starts the DOM code while the world's loads run; here all loads are over first), listed in KNOWN_DIFFERENCES (domEvents.inline) and web/API.md. The native host has no DOM (ADR 0006).",
+   "tests": [],
+   "missing": "",
    "oracle": "",
-   "notes": "DOM-only feature; native host has no DOM | Issues #146, #291, #297, #299 2026-11-02: the browser build ports DOMIntegration (the canvas follows its X3D child, importDocument of an HTML element, attribute, child and removed-node changes, Inline children, load, error and field CustomEvents, user field refresh, disposal of a removed Scene element), each compared with pinned X_ITE 16.5.0. One scheduling difference is listed, so the status is PARTIAL. The native host has no DOM."
+   "notes": "DOM-only feature; native host has no DOM"
   },
   {
    "id": "sub:browser.webxr",

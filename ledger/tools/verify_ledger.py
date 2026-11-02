@@ -24,7 +24,7 @@ LEDGER = os.path.join(HERE, "..")
 SNAPS = os.path.join(LEDGER, "snapshots")
 AUTH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(LEDGER, "ledger.json")
 ALLOWED = {"COMPLETE", "PARTIAL", "DIFFERENT", "NOT_TESTED", "MISSING"}
-LEFT_DIFFERENT = {"node:PlaneSensor", "node:SphereSensor", "node:CylinderSensor", "node:TouchSensor", "sub:browser.dom-integration"}  # the four sensors: owner decision 2026-10-31, issue #67; dom-integration: PARTIAL since #299 (ledger_i299.py), the browser build ports it
+LEFT_DIFFERENT = {"node:PlaneSensor", "node:SphereSensor", "node:CylinderSensor", "node:TouchSensor"}  # owner decision 2026-10-31, issue #67
 BASELINE_B09 = {"COMPLETE": 245, "PARTIAL": 74, "DIFFERENT": 25, "NOT_TESTED": 0, "MISSING": 2}
 PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3dv|x3d|html|mjs|json|js|py|sh|md|png)\b)")
 
@@ -74,7 +74,6 @@ HISTORY = [
     ("before-i69", "ledger_i69.py C", lambda: _first("ledger_i69", "C")),
     ("before-i141", "ledger_i141.py C", lambda: _first("ledger_i141", "C")),
     ("before-i80", "ledger_i80.py C", lambda: _first("ledger_i80", "C")),
-    ("before-i299", "ledger_i299.py C", lambda: _first("ledger_i299", "C")),
     ("before-i287", "ledger_i287.py C", lambda: _first("ledger_i287", "C")),
 ]
 
@@ -114,7 +113,7 @@ for s in ALLOWED:
 
 snap = {i["id"]: i for i in load(os.path.join(SNAPS, "before-cloud", "ledger.json"))}
 diff = [k for k, v in snap.items() if v["status"] == "DIFFERENT" and k not in LEFT_DIFFERENT]
-if len(diff) != 20: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 20")
+if len(diff) != 21: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 21")
 for k in diff:
     if cur.get(k) != snap[k]: bad.append(f"DIFFERENT entry changed: {k}")
 
