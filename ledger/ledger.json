@@ -7033,9 +7033,9 @@
     "crates/x3d-viewer/src/keys.rs unit tests (10)",
     "oracle/synthetic-rea/key-sensors.wrl (x10_compare.py vs X_ITE 16.5.0: 342 PASS, 0 FAIL)"
    ],
-   "missing": "native: no Timings panel (#286); no macOS Ctrl+click or touch long-press (#287); browser: Shift+F8 for GeoViewpoint and the encoding and the Loading n files notifications are not compared; Wayland and macOS keyboard input not validated against X_ITE (#88)",
+   "missing": "native: no Timings panel (#286); browser: Shift+F8 for GeoViewpoint and the encoding and the Loading n files notifications are not compared; Wayland and macOS keyboard input not validated against X_ITE (#88)",
    "oracle": "",
-   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): PR #15 (lane feat/viewer-keyboard-input, merge 3606b2a, 2026-10-23) ported X3DCoreContext key handling: every native key reaches KeySensor / StringSensor through Viewer3d::key_event, Home / End / PageUp / PageDown change the viewpoint without a modifier, held keys are released on focus loss. PR #15 did not update the ledger; its body proposed PARTIAL. | Issues #141 and #80 2026-11-01: the browser context menu, notification, timings panel and Shift+F8 (#274, ui01, 5 identical recordings against pinned X_ITE 16.5.0) and the native context menu, notification overlay, World Info dialog, Ctrl+Plus, debug keys and Shift+F8 (#282, 19 tests with real mouse and key events) exist. commandKey and altGrKey are browser flags (key codes 91 and 225), not KeySensor fields, so the earlier KeySensor wording was wrong. Status stays PARTIAL. | Issue #80 2026-11-01: every native shortcut is compared with pinned X_ITE 16.5.0 (#288: native_keys_01, 7 tests; x10_compare key-sensors 342 PASS, 0 FAIL). commandKey and altGrKey are browser flags (getCommandKey, getAltGrKey, key codes 91 and 225), recorded and equal; KeySensor has no such fields. Status stays PARTIAL."
+   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): PR #15 (lane feat/viewer-keyboard-input, merge 3606b2a, 2026-10-23) ported X3DCoreContext key handling: every native key reaches KeySensor / StringSensor through Viewer3d::key_event, Home / End / PageUp / PageDown change the viewpoint without a modifier, held keys are released on focus loss. PR #15 did not update the ledger; its body proposed PARTIAL. | Issues #141 and #80 2026-11-01: the browser context menu, notification, timings panel and Shift+F8 (#274, ui01, 5 identical recordings against pinned X_ITE 16.5.0) and the native context menu, notification overlay, World Info dialog, Ctrl+Plus, debug keys and Shift+F8 (#282, 19 tests with real mouse and key events) exist. commandKey and altGrKey are browser flags (key codes 91 and 225), not KeySensor fields, so the earlier KeySensor wording was wrong. Status stays PARTIAL. | Issue #80 2026-11-01: every native shortcut is compared with pinned X_ITE 16.5.0 (#288: native_keys_01, 7 tests; x10_compare key-sensors 342 PASS, 0 FAIL). commandKey and altGrKey are browser flags (getCommandKey, getAltGrKey, key codes 91 and 225), recorded and equal; KeySensor has no such fields. Status stays PARTIAL. | Issue #287 2026-11-02 (#298): the native menu triggers match pinned X_ITE 16.5.0: macOS Ctrl+click (Platform::ctrl_click_is_context_menu; the contextmenu event of ContextMenu.js) and the touch long tap (PointingDevice.js: 1200 ms, 7 px tolerance, only on a hit without a sensor), compared with oracle/menu-triggers-01-baseline (19 cases, 5 identical runs; native_menu_triggers). A real macOS Ctrl+click and a real touch screen could not be run on the Linux host: the macOS event order is synthetic and the winit Touch mapping in window.rs is untested glue. Status stays PARTIAL."
   },
   {
    "id": "sub:browser.dom-integration",
@@ -7043,13 +7043,22 @@
    "component": "Browser",
    "upstream": "src/x_ite/Browser/DOMIntegration.js",
    "upstream_version": "16.5.0 @ 34cdf9f97",
-   "rust": [],
-   "status": "DIFFERENT",
+   "rust": [
+    "crates/x3d-web/web/x_ite_r.mjs",
+    "crates/x3d-web/src/wasm.rs",
+    "crates/x3d-web/tests/dom_mutation.rs"
+   ],
+   "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "",
+   "tests": [
+    "crates/x3d-web/tests/browser/dom01.test.mjs (10)",
+    "crates/x3d-web/tests/browser/dom02.test.mjs (6)",
+    "crates/x3d-web/tests/browser/dom03.test.mjs (5)",
+    "crates/x3d-web/tests/dom_mutation.rs (3)"
+   ],
+   "missing": "Browser build only: the order of the first load events of the Inline elements differs from X_ITE (X_ITE starts the DOM code while the world's loads run; here all loads are over first), listed in KNOWN_DIFFERENCES (domEvents.inline) and web/API.md. The native host has no DOM (ADR 0006).",
    "oracle": "",
-   "notes": "DOM-only feature; native host has no DOM"
+   "notes": "DOM-only feature; native host has no DOM | Issues #146, #291, #297, #299 2026-11-02: the browser build ports DOMIntegration (the canvas follows its X3D child, importDocument of an HTML element, attribute, child and removed-node changes, Inline children, load, error and field CustomEvents, user field refresh, disposal of a removed Scene element), each compared with pinned X_ITE 16.5.0. One scheduling difference is listed, so the status is PARTIAL. The native host has no DOM."
   },
   {
    "id": "sub:browser.webxr",
