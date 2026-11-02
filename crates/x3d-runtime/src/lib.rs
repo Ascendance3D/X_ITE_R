@@ -369,6 +369,10 @@ pub struct Runtime {
     pub field_observed: std::collections::HashSet<FKey>,
     /// Field callbacks due while the host was busy; they run when it is back.
     pub(crate) pending_field_events: Vec<FKey>,
+    /// GaussianSplats nodes whose `castShadow` field processed an event, with the value then: GaussianSplats.initialize adds
+    /// the field interest to the private GaussianSplatsShape but copies the other fields only, so the shape's castShadow
+    /// stays TRUE until such an event (see [`Runtime::splat_cast_shadow`]).
+    pub(crate) splat_cast_shadow: HashMap<NodeId, bool>,
     /// Field callbacks of a page (the browser build): when set, each event of a field in [`Runtime::page_observed`] is
     /// recorded here with the value it delivered, in event order, for the page to call its callbacks after the frame
     /// ([`Runtime::take_page_field_events`]). The Scripts' own callbacks ([`Runtime::field_observed`]) run in the cascade.
@@ -731,6 +735,7 @@ impl Runtime {
             ctx_events: Default::default(),
             field_observed: Default::default(),
             pending_field_events: vec![],
+            splat_cast_shadow: HashMap::new(),
             page_field_events: None,
             page_root_nodes_unplaced: vec![],
             replace_skips_shutdown: false,
@@ -1235,6 +1240,11 @@ impl Runtime {
 
         self.stamp_counter += 1;
         self.stamps[i] = self.stamp_counter;
+    }
+
+    /// The castShadow of a GaussianSplats node's private shape: TRUE until the node's field processes an event.
+    pub fn splat_cast_shadow(&self, node: NodeId) -> bool {
+        self.splat_cast_shadow.get(&node).copied().unwrap_or(true)
     }
 
     /// The stamp of the last field write on `node`; changes whenever a field of the node is set.
