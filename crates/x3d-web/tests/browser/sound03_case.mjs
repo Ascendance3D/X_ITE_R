@@ -343,6 +343,83 @@ export const soundCases = {
       return { ... l, listener: await listener (page) };
    },
 
+   // Issue #262: the order of an AudioClip's events when the clip starts while its world loads (`loop TRUE`: X3DTimeDependentNode
+   // starts it in initialize, the decode ends later). A Script in the world gets the events through routes, so it sees the first
+   // ones; it prints one line each (`elapsedTime` once in a row).
+   async loadTimeEvents (page, env)
+   {
+      await page .evaluate (installCapture, NODE_CLASSES);
+
+      const body = `${SOUND (WIDE, CLIP () .replace ("AudioClip", "DEF A AudioClip"))}
+DEF R Script
+{
+  inputOnly SFBool on_active
+  inputOnly SFBool on_paused
+  inputOnly SFTime on_duration
+  inputOnly SFTime on_elapsed
+  url "javascript:
+function on_active (v) { print ('isActive ' + v); }
+function on_paused (v) { print ('isPaused ' + v); }
+function on_duration (v) { print ('duration_changed'); }
+function on_elapsed (v) { print ('elapsedTime'); }
+"
+}
+ROUTE A.isActive TO R.on_active
+ROUTE A.isPaused TO R.on_paused
+ROUTE A.duration_changed TO R.on_duration
+ROUTE A.elapsedTime TO R.on_elapsed`;
+      const text = WORLD3 (FRONT, body, "Sound:2\nCOMPONENT Scripting:1") .replaceAll ('"BASE/', `"${env .base}/`);
+
+      return page .evaluate (async text =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const lines   = [ ];
+         const log     = console .log;
+
+         document .querySelector ("x3d-canvas") .setAttribute ("scripts", "true");
+         console .log = (... args) => lines .push (args .join (" ") .split ("\n") [0]);
+
+         await browser .replaceWorld (await browser .createX3DFromString (text));
+
+         for (let i = 0; i < 60; ++ i)
+            await new Promise (resolve => requestAnimationFrame (() => resolve ()));
+
+         console .log = log;
+
+         return { events: lines .filter ((line, i) => line !== "elapsedTime" || lines [i - 1] !== "elapsedTime") .slice (0, 8) };
+      },
+      text);
+   },
+
+   // Issue #262: a clip that does not loop, started by a TimeSensor route (cycleTime to startTime): it becomes active and ends
+   // when the clip has played, in the events `isActive true`, then `isActive false`.
+   async routeStart (page, env)
+   {
+      await page .evaluate (installCapture, NODE_CLASSES);
+
+      const text = WORLD3 (FRONT, `DEF TS TimeSensor { cycleInterval 0.2 }\n${SOUND (WIDE, CLIP ("loop FALSE") .replace ("AudioClip", "DEF A AudioClip"))}\nROUTE TS.cycleTime TO A.startTime`) .replaceAll ('"BASE/', `"${env .base}/`);
+      const c    = await sceneCase (page, env, text);
+
+      await c .loaded ();
+
+      return page .evaluate (async () =>
+      {
+         const browser = document .querySelector ("x3d-canvas") .browser;
+         const events  = [ ];
+         const A       = browser .currentScene .getNamedNode ("A");
+
+         for (const name of [ "isActive", "duration_changed" ])
+            A .addFieldCallback ("sound03", name, value => events .push (`${name} ${typeof value === "number" ? Number (value .toFixed (4)) : value}`));
+
+         browser .currentScene .getNamedNode ("TS") .startTime = browser .currentTime;
+
+         for (let i = 0; i < 150; ++ i)
+            await new Promise (resolve => requestAnimationFrame (() => resolve ()));
+
+         return { events, active: A .isActive };
+      });
+   },
+
    // The page's AudioContext over the life of the browser: a world with no gesture, the gesture, a second playing world, an
    // empty world, dispose ().
    async lifecycle (page, env)
