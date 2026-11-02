@@ -295,10 +295,6 @@ const KNOWN_DIFFERENCES = {
       // (REA batch 04 owner decision, crates/x3d-scene/src/nodes.rs): it comes last.
       [ [ "components" ], ["ComponentInfoArray", true, "ComponentInfoArray", 39, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1"]], ["ComponentInfoArray", true, "ComponentInfoArray", 40, ["CADGeometry:2", "Core:2", "CubeMapTexturing:3", "DIS:2", "EnvironmentalEffects:4", "EnvironmentalSensor:3", "EventUtilities:1", "Followers:1", "GaussianSplats:1", "Geometry2D:2", "Geometry3D:4", "Geospatial:2", "Grouping:3", "HAnim:3", "Interpolation:5", "KeyDeviceSensor:2", "Layering:1", "Layout:2", "Lighting:3", "Navigation:3", "Networking:4", "NURBS:4", "ParticleSystems:3", "Picking:3", "PointingDeviceSensor:1", "Shaders:1", "TextureProjection:2", "Rendering:5", "RigidBodyPhysics:2", "Scripting:1", "Shape:4", "Sound:3", "Text:2", "Texturing:4", "Texturing3D:2", "Time:2", "VolumeRendering:4", "WebXR:1", "X_ITE:1", "Annotation:2"]] ],
    ],
-   "sceneCreate.importDocumentHTML": [
-      // X_ITE's HTMLParser reads an HTML element (the X3D element of a page); X_ITE_R takes XML (string, XMLDocument, element) only.
-      [ [ "result" ], { ctor: "X3DScene", isWorld: false, roots: ["Transform", "Shape"], worldURL: "PAGE" }, "Error: X_ITE_R: Browser.importDocument: an HTML element is not supported; pass the XML string, an XMLDocument or an XML element." ],
-   ],
    "input.interrupted": [
       // X_ITE has no touchcancel handler: the TouchSensor stays active. X_ITE_R releases it (pointercancel).
       [ [ "touchCancelled", "LeftTouch.isActive" ], true, false ],
