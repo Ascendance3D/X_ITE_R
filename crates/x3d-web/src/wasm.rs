@@ -795,6 +795,15 @@ impl WebBrowser {
         })
     }
 
+    /// The browser ends (`dispose ()`, the page's `unload`): the Scripts of the current world get `shutdown ()`
+    /// (ISO/IEC 14772-1 4.12.3). What they print waits in the log of the current world.
+    pub fn unload(&mut self) {
+        if let Some(w) = self.current.and_then(|id| self.worlds.get_mut(&id)) {
+            w.session.unload();
+            self.retired_log.extend(w.session.take_log());
+        }
+    }
+
     /// X3DBrowser.replaceWorld with the loaded scene `id` at the browser time `now`: the current world goes (its
     /// shutdown, its requests), then the new one goes live and is drawn with its own rendering properties. The page
     /// fires `shutdown` before this call, while the old world is still current.
@@ -2805,6 +2814,26 @@ pub fn chain_type_name(world: u32, node: u32) -> Result<Option<String>, JsError>
 #[wasm_bindgen(js_name = chainNodeName)]
 pub fn chain_node_name(world: u32, node: u32) -> Result<Option<String>, JsError> {
     chain_run(world, |rt| crate::chain::node_name(rt, node))
+}
+
+/// `WebBrowser.parseField` inside a field callback (X3DField.fromVRMLString / fromXMLString (value, scene)).
+#[wasm_bindgen(js_name = chainParseField)]
+pub fn chain_parse_field(
+    world: u32,
+    type_name: &str,
+    text: &str,
+    xml: bool,
+    name: &str,
+    unit: Option<String>,
+) -> Result<JsValue, JsError> {
+    let ty = x3d_fields::FieldType::from_name(type_name)
+        .ok_or_else(|| JsError::new(&format!("unknown field type '{type_name}'")))?;
+
+    chain_run(world, |rt| {
+        crate::chain::parse_field(rt, ty, text, xml, name, unit)
+    })?
+    .map(|data| data_js(&data))
+    .map_err(|e| JsError::new(&e))
 }
 
 /// `WebBrowser.namedNode` inside a field callback.

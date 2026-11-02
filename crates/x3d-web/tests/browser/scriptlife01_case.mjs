@@ -225,6 +225,111 @@ function set_x (value) { print ('D set_x ' + value); n = 'not a number'; print (
 }
 `,
 
+   // Issue #202, item 1 (a callback that changes the world inside the route chain S -> R -> Q): the page's callback on
+   // S.x_changed adds and removes root nodes (chainRoots) or gives Q new code (chainUrl); R and Q read the world.
+   chainWorld: `#VRML V2.0 utf8
+DEF T Transform { }
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventOut SFInt32 x_changed
+  url "javascript:
+function set_x (value) { print ('S set_x ' + value); x_changed = value; print ('S after x_changed'); }
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  eventOut SFInt32 y_changed
+  url "javascript:
+function names (nodes) { var r = []; for (var i = 0; i < nodes .length; ++ i) r .push (nodes [i] ? nodes [i] .getNodeName () : 'NULL'); return r .join (','); }
+function set_y (value) { print ('R set_y ' + value + ' roots=' + names (Browser .currentScene .rootNodes)); y_changed = value; }
+"
+}
+DEF Q Script
+{
+  eventIn SFInt32 set_z
+  url "javascript: function initialize () { print ('Q1 initialize'); } function set_z (value) { print ('Q1 set_z ' + value + ' roots=' + Browser .currentScene .rootNodes .length); } function shutdown () { print ('Q1 shutdown'); }"
+}
+ROUTE S.x_changed TO R.set_y
+ROUTE R.y_changed TO Q.set_z
+`,
+
+   // Issue #202, item 2 (the output of an element that is disposed): a Script that removes its own <x3d-canvas> in the middle of
+   // its call and prints on, a route to a second Script, and a clock whose events print each frame.
+   disposeInCall: `#VRML V2.0 utf8
+DEF C TimeSensor { loop TRUE cycleInterval 0.05 }
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventIn SFTime tick
+  eventOut SFInt32 x_changed
+  field SFInt32 ticks 0
+  url "javascript:
+function set_x (value) { print ('S before dispose'); window .mark ('S before'); window .removeCanvas (); print ('S after dispose'); window .mark ('S after'); x_changed = value; print ('S end'); }
+function tick (time) { ticks = ticks + 1; if (ticks < 4) print ('S tick ' + ticks); }
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  url "javascript: function set_y (value) { print ('R set_y ' + value); }"
+}
+ROUTE C.cycleTime TO S.tick
+ROUTE S.x_changed TO R.set_y
+`,
+
+   // Issue #202, item 3 (the timing of the promise jobs): a handler that starts jobs, a job that sends an event and one that
+   // prints from a second job, and an async function.
+   promiseJobs: `#VRML V2.0 utf8
+DEF S Script
+{
+  eventIn SFInt32 set_x
+  eventIn SFInt32 set_a
+  eventOut SFInt32 x_changed
+  url "javascript:
+function set_x (value) {
+  print ('S set_x ' + value);
+  Promise .resolve () .then (function () { print ('job 1'); window .mark ('job 1'); x_changed = value + 1; Promise .resolve () .then (function () { print ('job 2'); }); });
+  print ('S set_x end');
+  window .mark ('S set_x end');
+}
+async function set_a (value) {
+  print ('async begin');
+  await null;
+  print ('async after await');
+  x_changed = value + 10;
+}
+"
+}
+DEF R Script
+{
+  eventIn SFInt32 set_y
+  url "javascript: function set_y (value) { print ('R set_y ' + value); }"
+}
+ROUTE S.x_changed TO R.set_y
+`,
+
+   // Issue #202, item 4 (a Script that is a root node): the Script is a root node of the world, and the page changes the root
+   // nodes. ISO/IEC 14772-1 allows a Script wherever a node statement is allowed, so the root nodes may hold one.
+   rootScript: `#VRML V2.0 utf8
+DEF A Transform { }
+DEF X Group { }
+DEF S Script
+{
+  eventIn SFTime read
+  eventIn SFTime add
+  field SFNode saved NULL
+  url "javascript:
+function names (nodes) { var r = []; for (var i = 0; i < nodes .length; ++ i) r .push (nodes [i] ? nodes [i] .getNodeTypeName () + ':' + nodes [i] .getNodeName () : 'NULL'); return r .join (','); }
+function initialize () { print ('S initialize ' + names (Browser .currentScene .rootNodes)); }
+function read () { print ('S read ' + names (Browser .currentScene .rootNodes)); }
+function add () { Browser .currentScene .addRootNode (Browser .currentScene .createNode ('Group')); print ('S add ' + names (Browser .currentScene .rootNodes)); }
+function shutdown () { print ('S shutdown'); }
+"
+}
+`,
+
    // The root nodes: a Script that reads and changes them on events, with a field callback of its own (the callback is
    // added in `initialize`), and a Group X to remove. Each case changes the root nodes in one way.
    rootNodes: `#VRML V2.0 utf8
@@ -527,6 +632,87 @@ async function scenario (page, name)
                out .final = String (T .translation);
                break;
             }
+            case "chainRoots":
+            case "chainUrl":
+            {
+               const S = node ("S");
+               const T = node ("T");
+
+               S .addFieldCallback ("page", "x_changed", v =>
+               {
+                  note (`x_changed ${v}`);
+
+                  if (name === "chainRoots")
+                  {
+                     out .added   = attempt (() => scene () .addRootNode (make ("DEF N Transform { }")));
+                     out .removed = attempt (() => scene () .removeRootNode (T));
+                  }
+                  else
+                     node ("Q") .url = new X3D .MFString ("javascript: function initialize () { print ('Q2 initialize'); } function set_z (value) { print ('Q2 set_z ' + value); } function shutdown () { print ('Q2 shutdown'); }");
+
+                  note ("x_changed done");
+               });
+
+               note ("set_x 1");
+               S .set_x = 1;
+               note ("after the assignment");
+               await spin (4);
+               out .final = names (scene () .rootNodes);
+               break;
+            }
+            case "disposeInCall":
+            {
+               window .removeCanvas = () => canvas .remove ();
+               await spin (3);
+               seq .length = 0;
+               note ("set_x 1");
+               node ("S") .set_x = 1;
+               note ("after the assignment");
+               await spin (12);
+               break;
+            }
+            case "promiseJobs":
+            {
+               note ("set_x 1");
+               node ("S") .set_x = 1;
+               note ("after the assignment");
+               await Promise .resolve ();
+               note ("page microtask");
+               await spin (3);
+               note ("set_a 1");
+               node ("S") .set_a = 1;
+               note ("after set_a");
+               await Promise .resolve ();
+               note ("page microtask");
+               await spin (3);
+               break;
+            }
+            case "rootScript":
+            {
+               scene () .rootNodes .addFieldCallback ("page", v => note (`rootNodes callback ${v .length} ${names (v)}`));
+               out .initial = names (scene () .rootNodes);
+               note ("page addRootNode");
+               out .add = attempt (() => scene () .addRootNode (make ("Group { }")));
+               await spin (3);
+               note ("page push");
+               out .push = attempt (() => scene () .rootNodes .push (make ("Transform { }")));
+               await spin (3);
+               note ("page removeRootNode");
+               out .remove = attempt (() => scene () .removeRootNode (node ("X")));
+               await spin (3);
+               note ("page rootNodes assign");
+               out .assign = attempt (() => { scene () .rootNodes = new X3D .MFNode (node ("S"), node ("A")); });
+               await spin (3);
+               note ("Script read");
+               node ("S") .read = 1;
+               await spin (3);
+               note ("Script add");
+               node ("S") .add = 2;
+               await spin (3);
+               out .final = names (scene () .rootNodes);
+               out .vrml  = scene () .toVRMLString () .replace (/\s+/g, " ") .trim () .replace (/ url "[^"]*"/, " url <code>");
+               break;
+            }
             case "initialize":
             {
                out .fields = [ node ("A") .n, Array .from (node ("A") .names) .join (), String (node ("A") .v), node ("B") .got, String (node ("T") .translation) ];
@@ -697,11 +883,11 @@ async function scenario (page, name)
    [ name, WORLDS [WORLD_OF (name)] ]);
 }
 
-// The Script of the root nodes cases is in a Group, not a root node: X_ITE 16.5.0 throws `array[i].set is not a
-// function` for a change of the root nodes while a Script is a root node itself, and the cases do not record that.
-const WORLD_OF = name => name .startsWith ("shutdown") ? "shutdown" : name .startsWith ("rootNodes") ? "rootNodes" : name .startsWith ("importJs") ? "importJson" : name .startsWith ("importXml") ? "importXml" : name;
+// The Script of the root nodes cases is in a Group; `rootScript` (issue #202) keeps the Script itself as a root node. The `array[i].set is
+// not a function` that was reported for that did not appear in X_ITE 16.5.0.
+const WORLD_OF = name => name .startsWith ("chain") ? "chainWorld" : name .startsWith ("shutdown") ? "shutdown" : name .startsWith ("rootNodes") ? "rootNodes" : name .startsWith ("importJs") ? "importJson" : name .startsWith ("importXml") ? "importXml" : name;
 
-const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => ![ "rootNodes", "importXml", "importJson" ] .includes (name)), "shutdownUrl", "shutdownDispose", "importJsString", "importJsObject", "importXmlString", "importXmlDocument", "importXmlElement", ... [ "Page", "Add", "Remove", "Set", "Push" ] .map (how => `rootNodes${how}`) ] .map (name => [ name, page => scenario (page, name) ]));
+const cases = Object .fromEntries ([ ... Object .keys (WORLDS) .filter (name => ![ "rootNodes", "importXml", "importJson", "chainWorld" ] .includes (name)), "chainRoots", "chainUrl", "shutdownUrl", "shutdownDispose", "importJsString", "importJsObject", "importXmlString", "importXmlDocument", "importXmlElement", ... [ "Page", "Add", "Remove", "Set", "Push" ] .map (how => `rootNodes${how}`) ] .map (name => [ name, page => scenario (page, name) ]));
 
 // --- The reload sets (issue #202, item 4) ---------------------------------------------------------------------------------
 //
