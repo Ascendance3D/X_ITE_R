@@ -113,6 +113,17 @@
     "page: replaceWorld, then dispose"
    ]
   },
+  "scriptShutdown.domRemove": {
+   "seq": [
+    "log: D initialize",
+    "event: shutdown (callback)",
+    "event: shutdown (element)",
+    "event: initialized (element)",
+    "page: remove the Script element",
+    "log: D shutdown",
+    "page: remove the Group element"
+   ]
+  },
   "scriptShutdown.unload": {
    "seq": [
     "log: A initialize",

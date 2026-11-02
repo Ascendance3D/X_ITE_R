@@ -56,6 +56,26 @@ async function scenario (page, name)
       {
          const inlineWorld = worlds .inline .replace ("INLINE_URL", data (innerA));
 
+         // (b3) The Script element is removed from the page (DOM integration): the world is the <X3D> element of the canvas.
+         if (name === "domRemove")
+         {
+            const code = "javascript: function initialize () { print ('D initialize'); } function shutdown () { print ('D shutdown'); }";
+
+            canvas .innerHTML = `<X3D profile='Full'><Scene><Script DEF='D' url="&quot;${code}&quot;"></Script><Group DEF='G'></Group></Scene></X3D>`;
+            await new Promise (r => setTimeout (r, 1000));
+            await spin (4);
+            note ("remove the Script element");
+            canvas .querySelector ("script") .remove ();
+            await spin (8);
+            note ("remove the Group element");
+            canvas .querySelector ("group") .remove ();
+            await spin (8);
+            out .seq = seq;
+            Object .assign (console, saved);
+
+            return JSON .parse (JSON .stringify (out));
+         }
+
          await load (name .startsWith ("inline") || name .startsWith ("replaceInline") ? inlineWorld : name .startsWith ("idle") ? worlds .idle : worlds .main);
 
          switch (name)
@@ -155,7 +175,7 @@ async function scenario (page, name)
    [ name, WORLDS, INNER_A, INNER_B ]);
 }
 
-const NAMES = [ "replaceWorld", "loadURL", "replaceInline", "removeRootNode", "inlineLoadFalse", "inlineUrl", "inlineRemove", "dispose", "disposeReplacing", "unload", "remove", "codeReplaced", "idleReplace" ];
+const NAMES = [ "replaceWorld", "loadURL", "replaceInline", "removeRootNode", "inlineLoadFalse", "inlineUrl", "inlineRemove", "dispose", "disposeReplacing", "domRemove", "unload", "remove", "codeReplaced", "idleReplace" ];
 
 export const CASE_GROUPS = {
    scriptShutdown: { context: DESKTOP, cases: Object .fromEntries (NAMES .map (name => [ name, page => scenario (page, name) ])) },

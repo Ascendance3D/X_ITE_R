@@ -150,6 +150,11 @@ impl Runtime {
             return;
         }
 
+        // Script.dispose: `unloadData` calls `shutdown ()` first (ISO/IEC 14772-1 4.12.3: the node is deleted).
+        if self.builtin_name(node) == Some("Script") {
+            self.script_close(node);
+        }
+
         let ctx = self.scene.node(node).ctx;
         let name = self.scene.node(node).name.clone();
 
