@@ -758,6 +758,9 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-fallback-01-baseline --r
   (`%ED%A0%80`). Where `decodeURIComponent` throws, X_ITE keeps the text as it is. `font.pending` now checks that the
   font request is in flight before its response is released. Three runs gave identical values (Chrome 156.0.8078.47).
   The 36 earlier values did not change.
+- Issue #144 (2026-11-01): `font.pending` and `audio.decodeFallbackHeld` were recorded again, 5 runs each, identical values
+  and equal to the committed ones (Chrome 156.0.8078.47). X_ITE_R's scene now holds its load for both (the two
+  `KNOWN_DIFFERENCES` entries are gone), so the baseline file is unchanged.
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-loadurl-01-baseline --runs 3 --suite loadurl01
