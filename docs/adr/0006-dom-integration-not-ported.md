@@ -12,7 +12,7 @@ Ledger entries: `sub:browser.dom-integration`.
 
 ## Decision
 
-Not ported to the native host. Whether the browser build should port it is issue #146's question, not this record's.
+Not ported to the native host. The browser build ports it (issue #146): since the first part of #146 the canvas follows its `<X3D>` child and `importDocument (htmlElement)` reads an HTML `<X3D>` element, both compared with pinned X_ITE (`tests/browser/dom01.test.mjs`). The mutations of the element and the Inline and CustomEvent parts follow in later PRs, so the entry `sub:browser.dom-integration` stays `DIFFERENT` until they are in.
 
 ## Consequences
 
