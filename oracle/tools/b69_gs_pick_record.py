@@ -15,12 +15,16 @@ root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 assert sys.argv[1] == "record"
 name, msaa = sys.argv[2], sys.argv[3]
 oracle = sys.argv[4] if len(sys.argv) > 4 else os.path.join(root, "target", "debug", "x3d-oracle")
+# LOG=1 in the environment: LogarithmicDepthBuffer on (X3D_ORACLE_LOG_DEPTH=1 for x3d-oracle); baselines go to b69-gs-pick-log-baseline.
+log = os.environ.get("LOG") == "1"
+if log:
+    os.environ["X3D_ORACLE_LOG_DEPTH"] = "1"
 world = os.path.join(root, "oracle", "synthetic-b69-gs-pick", name + ".x3dv")
 script = os.path.join(root, "oracle", "synthetic-b69-gs-pick", "scripts", name + ".json")
 extra = ["--aa", "--ms", "4"] if msaa == "4" else []
 runs = []
 for i in range(1, 6):
-    out = f"/tmp/b69-gs-pick-record/{name}-ms{msaa}-{i}"
+    out = f"/tmp/b69-gs-pick-record/{name}-ms{msaa}{"-log" if log else ""}-{i}"
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
     subprocess.run([oracle, "particles", world, script, "--out", os.path.join(out, "js.json"), "--png-dir", os.path.join(out, "png")] + extra,
@@ -31,7 +35,7 @@ same = all(filecmp.cmp(os.path.join(a, f), os.path.join(b, f), shallow=False) fo
 print(f"{name} msaa {msaa}: five X_ITE runs {'identical' if same else 'DIFFER'}")
 if not same:
     sys.exit(1)
-dest = os.path.join(root, "oracle", "b69-gs-pick-baseline", f"msaa{msaa}", name)
+dest = os.path.join(root, "oracle", "b69-gs-pick-log-baseline" if log else "b69-gs-pick-baseline", f"msaa{msaa}", name)
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
 for f in ("js.json", "js.f32"):
