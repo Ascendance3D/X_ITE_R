@@ -3686,7 +3686,12 @@ impl Renderer {
         let mut encoder = self
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("x3d") });
-        self.encode(&mut encoder, frame, target, format, width, height)?;
+        // With the GL sample orientation on (an oracle comparison, see the setter) the target holds the picture
+        // upside down, as the internal texture of `render_to_rgba` does before its readback reverses the rows.
+        self.flip_now = self.gl_sample_orientation && self.sample_count() > 1;
+        let encoded = self.encode(&mut encoder, frame, target, format, width, height);
+        self.flip_now = false;
+        encoded?;
         self.queue.submit([encoder.finish()]);
         self.after_submit();
         Ok(())
