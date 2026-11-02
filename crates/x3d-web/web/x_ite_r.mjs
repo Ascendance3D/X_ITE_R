@@ -6,7 +6,7 @@
 import init, {
    WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, htmlSupport, scriptOp,
    chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
-   chainTypeName, chainNodeName, chainNamedNode, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
+   chainTypeName, chainNodeName, chainNamedNode, chainParseField, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
 } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
@@ -133,6 +133,7 @@ const CHAIN_OPERATIONS = {
    typeName: (scene, node) => chainTypeName (scene, node),
    nodeName: (scene, node) => chainNodeName (scene, node),
    namedNode: (scene, name) => chainNamedNode (scene, name),
+   parseField: (scene, ... args) => chainParseField (scene, ... args),
    rootNodes: scene => chainRootNodes (scene),
    setRootNodes: (scene, list) => chainSetRootNodes (scene, list),
    nodeValue: (scene, node, name) => chainNodeValue (scene, node, name),
