@@ -241,6 +241,43 @@ if (SUITE === "sound04")
    }
 }
 
+// The navigation cases (nav*_case.mjs) move a viewpoint by real frame times: the runs agree within the tolerances of the
+// tests (runtime02_harness.mjs: 1e-3 for a number, 3% between runs for a key that ends in `Rate`, 1e-2 for `Dir`), not bit for bit. The
+// recording takes the mean of the runs for each number; everything else must be identical.
+if (SUITE .startsWith ("nav"))
+{
+   const merge = (list, key = "") =>
+   {
+      if (typeof list [0] === "number")
+      {
+         const mean   = list .reduce ((a, b) => a + b, 0) / list .length;
+         const spread = Math .max (... list) - Math .min (... list);
+         const limit  = key .endsWith ("Rate") ? 0.03 * Math .abs (mean) : key .endsWith ("Dir") ? 1e-2 : 1e-3;
+
+         if (!(spread <= limit))
+         {
+            console .error (`FAIL: ${key} differs by ${spread} between runs (limit ${limit}): ${list .join (" ")}`);
+            process .exit (1);
+         }
+
+         return Number (mean .toFixed (key .endsWith ("Rate") ? 4 : 6));
+      }
+
+      if (Array .isArray (list [0]))
+         return list [0] .map ((_, i) => merge (list .map (v => v [i]), key));
+
+      if (list [0] && typeof list [0] === "object")
+         return Object .fromEntries (Object .keys (list [0]) .map (k => [ k, merge (list .map (v => v [k]), k) ]));
+
+      return list [0];
+   };
+
+   const merged = merge (runs .map (r => r .values));
+
+   for (const r of runs)
+      r .values = JSON .parse (JSON .stringify (merged));
+}
+
 const json = runs .map (r => JSON .stringify (r .values));
 
 if (json .some (j => j !== json [0]))

@@ -725,16 +725,21 @@ function withValue (value, path, replacement)
 // The tolerance of the navigation poses (nav*_case.mjs), fixed before the first recording of each suite: every number is
 // equal within NAV_TOLERANCE (1e-3, absolute; the viewers' own tests compare at 1e-4, rea_b24_nav.rs, and a browser pose
 // passes through float32 fields and animation frames), except a number under a key that ends in `Rate`: a speed that
-// X_ITE integrates over the real frame times (WALK and FLY), equal within NAV_RATE_TOLERANCE (5%, relative).
+// X_ITE integrates over the real frame times (WALK and FLY), equal within NAV_RATE_TOLERANCE (5%, relative), and a number
+// under a key that ends in `Dir`: the direction of a path that is curved by a turn in progress, equal within
+// NAV_DIR_TOLERANCE (1e-2, absolute). X_ITE starts walking at the event; X_ITE_R at the next frame (up to 17 ms, 1% of a
+// 1.5 s hold), which turns a net displacement by up to 0.004 rad (nav02_case.mjs walkDiagonal; the first run at 1e-3
+// differed by 3.3e-3, so `Dir` was added, and only for that case).
 const NAV_TOLERANCE      = 1e-3;
 const NAV_RATE_TOLERANCE = 0.05;
+const NAV_DIR_TOLERANCE  = 1e-2;
 
 // The value with every number replaced by 0, for comparing the structure.
 const shape = value => typeof value === "number" ? 0 : Array .isArray (value) ? value .map (shape) : value && typeof value === "object" ? Object .fromEntries (Object .entries (value) .map (([ k, v ]) => [ k, shape (v) ])) : value;
 
 // The largest difference of two values of the same shape over their numbers, in units of the tolerance of each number.
 const navExcess = (a, b, key = "") => typeof a === "number"
-   ? Math .abs (a - b) / (key .endsWith ("Rate") ? NAV_RATE_TOLERANCE * Math .max (Math .abs (b), 1e-9) : NAV_TOLERANCE)
+   ? Math .abs (a - b) / (key .endsWith ("Rate") ? NAV_RATE_TOLERANCE * Math .max (Math .abs (b), 1e-9) : key .endsWith ("Dir") ? NAV_DIR_TOLERANCE : NAV_TOLERANCE)
    : Array .isArray (a) ? Math .max (0, ... a .map ((v, i) => navExcess (v, b [i], key)))
    : a && typeof a === "object" ? Math .max (0, ... Object .keys (a) .map (k => navExcess (a [k], b [k], k)))
    : 0;
@@ -926,7 +931,7 @@ export function referenceCases (file, { skip = false } = { })
                   if (group .suite .startsWith ("nav"))
                   {
                      assert .deepEqual (shape (compared), shape (theirs), `${key}: the poses are not the same steps`);
-                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate)`);
+                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate, ${NAV_DIR_TOLERANCE} for a Dir)`);
                      compared = theirs;
                   }
 
