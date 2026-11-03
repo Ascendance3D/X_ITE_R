@@ -158,9 +158,10 @@ impl Av1Decoder {
         }
     }
 
-    /// Refuses a unit that would make rav1d panic. rav1d's C interface cannot unwind (`extern "C"`), so a panic inside
-    /// it aborts the process; a frame that arrives before any accepted sequence header is such a case (decode.rs
-    /// unwraps the sequence header), and a damaged sequence header is checked by the parser before the decoder sees it.
+    /// Refuses a unit that rav1d is not meant to see: bad OBU framing, a frame before any accepted sequence header,
+    /// a sequence header that does not parse. rav1d's C interface cannot unwind, so a panic inside it aborts the
+    /// process; the one such path found (a corrupt tile) is fixed in vendor/rav1d, and tests/av1_safety.rs proves in
+    /// child processes that damaged files do not crash.
     fn check(&mut self, chunk: &[u8]) -> Result<(), Av1Error> {
         let (mut has_sequence, mut has_frame) = (false, false);
         let mut at = 0;

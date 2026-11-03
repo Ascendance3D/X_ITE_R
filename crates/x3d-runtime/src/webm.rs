@@ -1919,28 +1919,8 @@ mod tests {
         }
     }
 
-    /// KNOWN FAILURE, owner decision pending: rav1d's C interface is `extern "C"` and cannot unwind, and some
-    /// damaged streams make it panic in its own error path (decode.rs `on_error` unwraps a frame header that is
-    /// not there), which aborts the process: `catch_unwind` cannot stop it. `Av1Decoder::check` refuses the
-    /// damage it can recognize (OBU framing, a frame before any accepted sequence header). Run with
-    /// `--ignored` to see the abort; fixing it needs a patched rav1d (catch_unwind at its three FFI entry points)
-    /// or a decode in a separate process.
-    #[cfg(feature = "av1")]
-    #[test]
-    #[ignore = "rav1d aborts the process on some damaged streams (see the doc comment)"]
-    fn mutated_av1_files_never_panic() {
-        let (webm, _) = codec_fixture("av1-testsrc");
-        let mut rng = Rng(0xA71);
-
-        for _ in 0..40 {
-            let d = mutate(&webm, &mut rng);
-
-            assert!(
-                std::panic::catch_unwind(|| decode(&d, BUDGET)).is_ok(),
-                "panicked on a mutated file"
-            );
-        }
-    }
+    // Damaged streams are tried in child processes by tests/av1_safety.rs: rav1d aborts instead of unwinding on a
+    // panic, so an in-process catch_unwind test would prove nothing (vendor/rav1d/VENDOR.md).
 
     #[cfg(feature = "av1")]
     #[test]

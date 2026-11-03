@@ -16,3 +16,7 @@ debug = "line-tables-only"
 # vp9dec at opt-level 3 overflows the stack of rustc 1.95 (SIGSEGV in LLVM); 2 builds.
 [profile.release.package.vp9dec]
 opt-level = 2
+
+# rav1d 1.1.0 with the one-line fix of vendor/rav1d/VENDOR.md (a damaged AV1 tile aborts the process in upstream).
+[patch.crates-io]
+rav1d = { path = "vendor/rav1d" }
