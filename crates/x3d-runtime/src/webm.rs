@@ -150,8 +150,9 @@ impl Bits<'_> {
 
 /// The frames of a chunk: a superframe (VP9 Annex B) is its frames, any other chunk is one frame.
 fn frames_of(chunk: &[u8]) -> Vec<&[u8]> {
+    // Cut where `vp9dec::superframe::split_superframe` cuts (an empty chunk is one empty frame there as well).
     let Some(&last) = chunk.last() else {
-        return vec![];
+        return vec![chunk];
     };
 
     if last >> 5 == 0b110 {
@@ -406,7 +407,11 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
 
             width = f.width as u32;
             height = f.height as u32;
-            bytes = bytes.saturating_add(u64::from(width) * u64::from(height) * 4);
+            bytes = bytes.saturating_add(
+                u64::from(width)
+                    .saturating_mul(u64::from(height))
+                    .saturating_mul(4),
+            );
 
             if bytes > max_bytes {
                 return Err(WebmError::TooLarge);
@@ -1004,6 +1009,47 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// The size check looks at the frames `frames_of` cuts; the decoder decodes the frames it cuts itself. They must
+    /// be the same for every chunk, well formed or not: random chunks that end in each of the 32 marker bytes, with
+    /// the marker repeated where the index would start, sizes that do not add up, and counts and widths of every kind.
+    #[test]
+    fn frames_of_cuts_every_chunk_where_the_decoder_cuts_it() {
+        let mut rng = Rng(0x5EED);
+        let (mut split, mut whole) = (0, 0);
+
+        for i in 0..400_000 {
+            let n = rng.below(48);
+            let mut c: Vec<u8> = (0..n).map(|_| [0, 1, 2, 3, 7, 255][rng.below(6)]).collect();
+
+            if i % 3 != 0 && !c.is_empty() {
+                let marker = 0xC0 | rng.below(32) as u8;
+                let last = c.len() - 1;
+                let index = 2 + ((marker >> 3 & 3) as usize + 1) * ((marker & 7) as usize + 1);
+
+                c[last] = marker;
+
+                if i % 3 == 1 && c.len() >= index {
+                    let first = c.len() - index;
+
+                    c[first] = marker;
+                }
+            }
+
+            let ours = frames_of(&c);
+
+            assert_eq!(ours, vp9dec::superframe::split_superframe(&c), "{c:?}");
+
+            if ours.len() > 1 {
+                split += 1;
+            } else {
+                whole += 1;
+            }
+        }
+
+        // Both outcomes are well represented, so the comparison is not vacuous.
+        assert!(split > 1000 && whole > 1000, "{split} {whole}");
     }
 
     /// Superframe sizes are little-endian (VP9 Annex B): `[1, 0]` is 1 and `[0, 1]` is 256.
