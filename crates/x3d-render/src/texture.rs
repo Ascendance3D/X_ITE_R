@@ -1337,7 +1337,10 @@ mod ktx_tests {
 
         let mut bad_size = ktx2.clone();
         bad_size[20..24].copy_from_slice(&u32::MAX.to_le_bytes());
-        let _ = decode_ktx2(&bad_size);
+        assert!(
+            decode_ktx2(&bad_size).is_none(),
+            "u32::MAX width is rejected"
+        );
 
         // Both sides at u32::MAX: the pixel count times four overflows u64 (a debug-build panic without checked math).
         let mut both = ktx2.clone();
