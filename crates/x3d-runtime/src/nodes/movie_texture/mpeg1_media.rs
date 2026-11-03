@@ -8,7 +8,8 @@ impl MovieMedia {
     /// `<video>` element. ISO/IEC 19775-1 18.4.2 requires this format; a browser's `<video>` cannot play it (Chrome's
     /// `canPlayType("video/mpeg")` is empty), so the pinned X_ITE shows nothing for it: the loader keeps that as the
     /// compatibility option [`crate::Runtime::mpeg1_unplayable`]. The pictures play like a GIF's, every picture lasting
-    /// one picture period of the stream; the sound and reverse playback are not part of it.
+    /// one picture period of the stream. The sound is the Systems stream's MPEG audio track ([`mpeg1::audio`]); reverse
+    /// playback is not part of it.
     pub fn decode_mpeg1(data: &[u8]) -> Result<MovieMedia, Mpeg1Error> {
         let video = mpeg1::decode(data, MAX_DECODED_BYTES)?;
         let delay = 1000.0 / video.framerate;
@@ -24,8 +25,7 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
-            // No sound and no `currentTime` yet (the sound of a Systems stream is an open ISO criterion).
-            audio: crate::video_types::AudioTrack::None,
+            audio: mpeg1::audio::track(data, MAX_DECODED_BYTES),
             seekable: false,
             offset: 0.0,
             iso: Default::default(),
