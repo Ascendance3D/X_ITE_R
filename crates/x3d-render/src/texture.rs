@@ -414,7 +414,12 @@ pub fn decode_ktx2(data: &[u8]) -> Option<(u32, u32, Vec<u8>)> {
     // A damaged header can claim up to u32::MAX pixels per side; `basisu` multiplies the two in u32
     // (an overflow panic in a debug build) before it sizes the output. Refuse what cannot be an
     // image a texture holds (the same 2^28 bytes bound the other decoders here use for RGBA).
-    if w == 0 || h == 0 || u64::from(w) * u64::from(h) * 4 > (1 << 28) {
+    // Checked: w * h fits u64 for any two u32 values, but the final `* 4` does not (w == h == u32::MAX).
+    let rgba_bytes = u64::from(w)
+        .checked_mul(u64::from(h))
+        .and_then(|pixels| pixels.checked_mul(4));
+
+    if w == 0 || h == 0 || rgba_bytes.is_none_or(|bytes| bytes > (1 << 28)) {
         return None;
     }
 
@@ -1333,6 +1338,12 @@ mod ktx_tests {
         let mut bad_size = ktx2.clone();
         bad_size[20..24].copy_from_slice(&u32::MAX.to_le_bytes());
         let _ = decode_ktx2(&bad_size);
+
+        // Both sides at u32::MAX: the pixel count times four overflows u64 (a debug-build panic without checked math).
+        let mut both = ktx2.clone();
+        both[20..24].copy_from_slice(&u32::MAX.to_le_bytes());
+        both[24..28].copy_from_slice(&u32::MAX.to_le_bytes());
+        assert!(decode_ktx2(&both).is_none());
 
         for name in ["tex-lossy.webp", "tex-lossless.webp"] {
             let webp = std::fs::read(
