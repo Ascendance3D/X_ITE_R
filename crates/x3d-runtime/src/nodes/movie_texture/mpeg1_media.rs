@@ -24,6 +24,10 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
+            // No sound and no `currentTime` yet (the sound of a Systems stream is an open ISO criterion).
+            audio: crate::video_types::AudioTrack::None,
+            seekable: false,
+            offset: 0.0,
         })
     }
 }
