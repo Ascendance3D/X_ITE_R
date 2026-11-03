@@ -2,26 +2,93 @@ name: AI Code Review with MiniMax
 
 on:
   pull_request:
-    types: [labeled]
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
 
+# contents: read is for the job only. No step checks out or runs code from the pull request: the coverage gate and the
+# action read the diff through the GitHub API. Never switch this workflow to pull_request_target.
 permissions:
+  contents: read
   pull-requests: write
 
-# Each review reads the whole PR diff (pulls.listFiles), so a new push cancels the review of the commit it replaces:
-# the next review covers that commit's changes too. Each PR has its own group.
+# One review per pull request. A new push cancels the review of the head it replaces, so only the final head is reviewed
+# and no API call repeats for the same head.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  # A label event that starts no review gets its own group, so it cannot cancel a review in progress.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-${{ (github.event.action == 'labeled' && github.event.label.name != 'needs-minimax-review') && github.run_id || 'review' }}
   cancel-in-progress: true
 
-# On demand only (issue #180): CodeRabbit is the normal review. MiniMax reviews a PR when someone adds the label
-# needs-minimax-review, for example when CodeRabbit is rate-limited or skips the PR, or for a second review. To review
-# again after a push, remove the label and add it again. The Rust and Web test workflows do not run on "labeled".
+# Campaign policy (owner, 2026-11-02): MiniMax reviews every eligible pull request automatically. Before this campaign
+# (issue #180) it ran only on the label needs-minimax-review; that label still starts a review, for example to review a
+# draft. Eligible means: the head branch is in this repository (a fork gets no secret), and the pull request is not a
+# draft unless it carries the label (then every push is reviewed). Other label events start nothing. CodeRabbit stays as an additional reviewer.
 jobs:
   review:
     name: Review
-    if: github.event.label.name == 'needs-minimax-review'
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
+      && (
+        (github.event.action == 'labeled' && github.event.label.name == 'needs-minimax-review')
+        || (github.event.action != 'labeled' && (github.event.pull_request.draft == false || contains(github.event.pull_request.labels.*.name, 'needs-minimax-review')))
+      )
     runs-on: ubuntu-latest
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      MAX_DIFF_CHARS: "250000"
+      # Lock files are not reviewed. The gate lists them in the summary so the omission is visible.
+      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml"
     steps:
+      # Fails the job when the action would not send the whole diff to the model, instead of a review that looks complete.
+      # The action sends only files that have a patch, in order, and drops a file that does not fit under MAX_DIFF_CHARS.
+      # GitHub gives no patch for a binary file or for a text file whose diff is too large.
+      - name: Diff coverage gate
+        uses: actions/github-script@v9
+        with:
+          script: |
+            core.exportVariable('REVIEW_START', new Date(Date.now() - 2000).toISOString());
+            const limit = Number(process.env.MAX_DIFF_CHARS);
+            const patterns = process.env.EXCLUDE_PATTERNS.split(',').map(p => p.trim()).filter(Boolean);
+            const toRegExp = p => new RegExp('^' + p.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*\*/g, '\u0000').replace(/\*/g, '[^/]*').replace(/\u0000/g, '.*') + '$');
+            const matches = name => patterns.some(p => toRegExp(p).test(name) || toRegExp(p).test(name.split('/').pop()));
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner, repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number, per_page: 100,
+            });
+            const excluded = files.filter(f => matches(f.filename)).map(f => f.filename);
+            const kept = files.filter(f => !matches(f.filename));
+            // A patch that holds fewer changed lines than additions + deletions is cut short.
+            const patchLines = f => f.patch.split('\n').filter(l => /^[+-]/.test(l)).length;
+            const truncated = kept.filter(f => f.patch && patchLines(f) !== f.additions + f.deletions).map(f => f.filename);
+            const capped = files.length >= 3000; // the API lists at most 3000 files
+            const noPatchText = kept.filter(f => !f.patch && (f.additions + f.deletions) > 0).map(f => f.filename);
+            const noPatchBinary = kept.filter(f => !f.patch && (f.additions + f.deletions) === 0).map(f => f.filename);
+            let total = 0;
+            const over = [];
+            for (const f of kept.filter(f => f.patch)) {
+              const entry = `### ${f.filename} (${f.status})\n\`\`\`diff\n${f.patch}\n\`\`\``;
+              if (total + entry.length > limit) over.push(f.filename); else total += entry.length;
+            }
+            const list = a => a.length ? a.map(n => `  - ${n}`).join('\n') : '  (none)';
+            const lines = [
+              `Review identity: head ${process.env.HEAD_SHA}, run ${context.runId}, model ${process.env.MINIMAX_MODEL_NAME}`,
+              `Files in the pull request: ${files.length}. Diff characters sent: ${total} of ${limit}.`,
+              `Excluded by pattern (not reviewed):\n${list(excluded)}`,
+              `No patch, binary or empty change (not reviewed):\n${list(noPatchBinary)}`,
+              `No patch, text change too large for GitHub (NOT reviewed):\n${list(noPatchText)}`,
+              `Patch shorter than its change count (NOT fully reviewed):\n${list(truncated)}`,
+              `Over the character limit (NOT reviewed):\n${list(over)}`,
+            ];
+            if (capped) lines.push('The file list reached the API limit of 3000 files (NOT fully reviewed).');
+            await core.summary.addRaw('```\n' + lines.join('\n') + '\n```', true).write();
+            core.info(lines.join('\n'));
+            const missing = [...noPatchText, ...truncated, ...over];
+            if (capped) missing.push('(file list capped at 3000)');
+            if (missing.length > 0) {
+              core.setFailed(`The review would not cover ${missing.length} changed file(s): ${missing.join(', ')}. Split the pull request, or review those files by hand. No review was requested.`);
+            }
+        env:
+          MINIMAX_MODEL_NAME: ${{ vars.MINIMAX_MODEL }}
+
       - name: Code Review
         # Fork of tarmojussila/minimax-code-review adding reasoning-effort and timeout inputs.
         uses: Ascendance3D/minimax-code-review@v0.5.0
@@ -32,4 +99,32 @@ jobs:
           MINIMAX_REVIEWER_NAME: ${{ vars.MINIMAX_REVIEWER_NAME }}
           MINIMAX_REASONING_EFFORT: ${{ vars.MINIMAX_REASONING_EFFORT || 'medium' }}
           REQUEST_TIMEOUT_SECONDS: ${{ vars.REQUEST_TIMEOUT_SECONDS || '600' }}
-          MAX_DIFF_CHARS: "250000"
+          EXCLUDE_PATTERNS: ${{ env.EXCLUDE_PATTERNS }}
+          MAX_DIFF_CHARS: ${{ env.MAX_DIFF_CHARS }}
+
+      # The action keeps one comment per pull request and updates it in place, and the comment names no commit. This step
+      # stamps the comment with the head that the run reviewed, so a reader can match a review to an exact head.
+      - name: Stamp the review with its head
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const marker = '<!-- minimax-code-review -->';
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number, per_page: 100,
+            });
+            const mine = comments.find(c => c.body && c.body.includes(marker));
+            if (!mine) { core.setFailed('The action posted no review comment.'); return; }
+            // A comment older than this run is a review of an earlier head (the action skips an empty diff). Do not stamp it.
+            if (Date.parse(mine.updated_at) < Date.parse(process.env.REVIEW_START)) {
+              core.setFailed('The review comment was not updated by this run, so it does not review head ' + process.env.HEAD_SHA + '.');
+              return;
+            }
+            const stamp = `\n\n_Reviewed head: \`${process.env.HEAD_SHA}\`, run ${context.runId}, model ${process.env.MODEL}._`;
+            const body = mine.body.replace(/\n\n_Reviewed head: [^\n]*_/, '');
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner, repo: context.repo.repo, comment_id: mine.id,
+              body: body.replace(marker, stamp.trimStart() + '\n\n' + marker),
+            });
+        env:
+          MODEL: ${{ vars.MINIMAX_MODEL }}

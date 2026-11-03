@@ -55,7 +55,13 @@ To run the suites on a draft, do one of these:
 
 CodeRabbit is the normal review. It reviews a PR to the default branch. It skips a draft, and it skips a PR to another base (for example a stacked PR).
 
-MiniMax (`code-review.yml`) runs only on demand: add the label `needs-minimax-review` to the PR. Use it when CodeRabbit is rate-limited or skips the PR, or when you want a second review. To review again after a push, remove the label and add it again. Adding a label starts no Rust or browser suite.
+MiniMax (`code-review.yml`) reviews a PR automatically on `opened`, `synchronize`, `reopened` and `ready_for_review`, for a PR whose head branch is in this repository, whose author is the owner, a member or a collaborator, and that is not a draft (or carries the label). This is a campaign policy (owner, 2026-11-02), not a long-term one: before the campaign, MiniMax ran only on the label (issue #180). The label `needs-minimax-review` still starts a review, for example of a draft. Adding any other label starts nothing, and no label starts a Rust or browser suite.
+
+Rules of the MiniMax job:
+- It never checks out or runs code from the PR. The coverage gate and the action read the diff through the GitHub API. Do not move the workflow to `pull_request_target`. A fork PR gets no secret and no review. A user with write access can edit the workflow in a branch and read the secret, as with any `pull_request` workflow, so the author check limits who triggers a review, not what a trusted writer can do.
+- A new push cancels the review of the earlier head. The review comment ends with `Reviewed head: <sha>, run <id>, model <model>`. Match that SHA with the PR head before you rely on the review.
+- The `Diff coverage gate` step fails the job when the action would not send the whole diff: a text file with no patch or a cut-short patch, a file that does not fit under 250,000 characters, or a PR at the 3,000-file API limit. Binary files and lock files are listed in the job summary as not reviewed. When the gate fails, split the PR or review the listed files by hand. Do not call such a PR reviewed.
+- Open a PR with your own `gh` login. A PR created with the workflow `GITHUB_TOKEN` starts no workflow.
 
 To start CodeRabbit by hand, for example after its limit resets, comment `@coderabbitai review` on the PR.
 
