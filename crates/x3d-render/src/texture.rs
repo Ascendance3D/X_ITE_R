@@ -410,6 +410,14 @@ pub fn decode_ktx2(data: &[u8]) -> Option<(u32, u32, Vec<u8>)> {
     }
 
     let (w, h) = tex.base_dimensions();
+
+    // A damaged header can claim up to u32::MAX pixels per side; `basisu` multiplies the two in u32
+    // (an overflow panic in a debug build) before it sizes the output. Refuse what cannot be an
+    // image a texture holds (the same 2^28 bytes bound the other decoders here use for RGBA).
+    if w == 0 || h == 0 || u64::from(w) * u64::from(h) * 4 > (1 << 28) {
+        return None;
+    }
+
     let rgba = tex
         .transcode(0, basisu::TargetFormat::Rgba32, basisu::DecodeFlags::NONE)
         .ok()?;
@@ -1310,6 +1318,42 @@ mod ktx_tests {
     fn ktx2_cube_map_and_garbage_are_rejected() {
         assert!(decode_ktx2(&solid_uastc_ktx2([1, 2, 3, 255], 6)).is_none());
         assert!(decode_ktx2(b"not a ktx2 file").is_none());
+    }
+
+    /// #369: truncated and damaged KTX2 / WebP data (the glTF `KHR_texture_basisu` and
+    /// `EXT_texture_webp` payloads) is rejected without a panic, at every prefix length.
+    #[test]
+    fn truncated_ktx2_and_corrupt_webp_are_rejected() {
+        let ktx2 = solid_uastc_ktx2([10, 20, 30, 255], 1);
+
+        for n in 0..ktx2.len() {
+            assert!(decode_ktx2(&ktx2[..n]).is_none(), "ktx2 prefix {n}");
+        }
+
+        let mut bad_size = ktx2.clone();
+        bad_size[20..24].copy_from_slice(&u32::MAX.to_le_bytes());
+        let _ = decode_ktx2(&bad_size);
+
+        for name in ["tex-lossy.webp", "tex-lossless.webp"] {
+            let webp = std::fs::read(
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../oracle/synthetic-73-gltf-decoders")
+                    .join(name),
+            )
+            .unwrap();
+
+            assert!(decode_image(&webp).is_ok(), "{name} decodes");
+
+            for n in [0, 4, 12, 20, webp.len() / 2] {
+                assert!(decode_image(&webp[..n]).is_err(), "{name} prefix {n}");
+            }
+
+            let mut junk = webp[..20].to_vec();
+            junk.extend_from_slice(&[0xff; 40]);
+            assert!(decode_image(&junk).is_err(), "{name} junk body");
+        }
+
+        assert!(decode_image(b"RIFF\0\0\0\0WEBPVP8 garbage").is_err());
     }
 
     #[test]
