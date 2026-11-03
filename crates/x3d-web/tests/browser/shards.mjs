@@ -21,13 +21,18 @@ const DIR = dirname (fileURLToPath (import.meta.url));
 
 // The cases-* shards: about 439 s of tests each, by the mean file times of 3 runs of the old cases shard (runs
 // 40993357287, 40996523915, 40998734092: 860 s to 891 s in one shard). The viewpoints-* shards: by the case times of
-// the slowest of the same runs, 309 s, 452 s and 397 s.
+// the slowest of the same runs, 309 s, 452 s and 397 s. The cases-3 shard (issue #180, 9 hosted runs, run 41411495619 to
+// 41432854545): the three splatSort cases draw 100 to 160 frames each, the most of any case, and a frame takes 0.5 s to 1.2 s
+// on the hosted runner's SwiftShader (0.2 s on a 24-core machine; a whole case takes 2.3 s on an RTX): 55 s to 180 s a case,
+// 195 s to 431 s in all (median 342 s). With ui01 (124 s to 216 s) they were 1085 s to 1648 s of the cases-2 shard, whose rest
+// takes about 890 s to 1070 s. Now the longest shard of those runs is 1008 s (median) and 1037 s (longest), was 1540 s and 1648 s.
 export const SHARDS = {
    phone:  [ "runtime02_phone.test.mjs" ],
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs" ],
    input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs" ],
    "cases-1": [ "scripturl01.test.mjs", "script01.test.mjs", "attributes01.test.mjs", "gltfworld01.test.mjs", "options01.test.mjs", "fallback01.test.mjs", "routes01.test.mjs", "scenecreate01.test.mjs", "gltfworld02.test.mjs", "fields04.test.mjs", "sound01.test.mjs", "sound02.test.mjs", "sound03.test.mjs", "sound04.test.mjs", "movie01.test.mjs" ],
-   "cases-2": [ "runtime02.test.mjs", "dataurl01.test.mjs", "scenetext01.test.mjs", "degenerate01.test.mjs", "api.test.mjs", "entry01.test.mjs", "ui01.test.mjs", "fields01.test.mjs", "fields02.test.mjs", "fields03.test.mjs", "fields05.test.mjs", "dom01.test.mjs", "dom02.test.mjs", "dom03.test.mjs", "rootnodes01.test.mjs", "scriptlife01.test.mjs", "externremove01.test.mjs", "shutdown01.test.mjs", "ui02.test.mjs", "splatsort01.test.mjs", "reentry01.test.mjs" ],
+   "cases-2": [ "runtime02.test.mjs", "dataurl01.test.mjs", "scenetext01.test.mjs", "degenerate01.test.mjs", "api.test.mjs", "entry01.test.mjs", "fields01.test.mjs", "fields02.test.mjs", "fields03.test.mjs", "fields05.test.mjs", "dom01.test.mjs", "dom02.test.mjs", "dom03.test.mjs", "rootnodes01.test.mjs", "scriptlife01.test.mjs", "externremove01.test.mjs", "shutdown01.test.mjs", "ui02.test.mjs", "reentry01.test.mjs" ],
+   "cases-3": [ "splatsort01.test.mjs", "ui01.test.mjs" ],
    "viewpoints-1": [ { file: "viewpoints01.test.mjs", cases: [ "viewpointsApi.steps", "viewpointsApi.api" ] } ],
    "viewpoints-2": [ { file: "viewpoints01.test.mjs", cases: [ "viewpointsApi.update", "viewpointsApi.errors", "viewpointsApi.world" ] } ],
    "viewpoints-3": [ { file: "viewpoints01.test.mjs", cases: [ "viewpointsApi.bind", "viewpointsApi.change", "viewpointsApi.viewAll" ] } ],
