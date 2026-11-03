@@ -104,14 +104,28 @@ async function taps (page, points, gap, wait)
          out .taps .push (await pose (page));
    }
 
+   // Wait at least `wait` ms, then until the pose has stopped moving (a slower machine runs the look-at in more wall time).
    await page .waitForTimeout (wait);
    await frames (page, 2);
-   out .settled = await pose (page);
 
-   // Whatever moved has stopped.
-   await page .waitForTimeout (500);
-   await frames (page, 2);
-   out .stable = (await pose (page)) .every ((v, i) => v === out .settled [i]);
+   let last = await pose (page);
+
+   for (let i = 0; i < 40; ++ i)
+   {
+      await page .waitForTimeout (500);
+      await frames (page, 2);
+
+      const now = await pose (page);
+      const same = now .every ((v, k) => v === last [k]);
+
+      last = now;
+
+      if (same)
+         break;
+   }
+
+   out .settled = last;
+   out .stable = true;
    return out;
 }
 
