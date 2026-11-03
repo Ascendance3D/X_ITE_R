@@ -1127,11 +1127,50 @@ impl Fly {
                     self.add_roll(ROLL_ANGLE, cx);
                 }
             }
-            // The Fly / Walk viewers' touch handlers are not ported (they have no dblclick).
-            Input::DblClick { .. }
-            | Input::TouchStart(_)
-            | Input::TouchMove(_)
-            | Input::TouchEnd => {}
+            Input::TouchStart(t) => self.touchstart(t, cx),
+            Input::TouchMove(t) => self.touchmove(t, cx),
+            Input::TouchEnd => self.touchend(cx),
+            // The Fly / Walk viewers have no dblclick.
+            Input::DblClick { .. } => {}
+        }
+    }
+
+    /// X3DFlyViewer.touchstart: one finger flies or walks (button 0), two fingers look around.
+    fn touchstart(&mut self, t: Touches, cx: &mut Cx) {
+        match t.n {
+            1 => {
+                // Start fly or walk (button 0).
+                self.mousedown(0, t.p[0].0, t.p[0].1, cx);
+            }
+            2 => {
+                // End fly or walk (button 0).
+                self.touchend(cx);
+
+                // Start look around (button 0).
+                self.look_around = true;
+                let (x, y) = ((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0);
+                self.mousedown(0, x, y, cx);
+            }
+            _ => {
+                // End look around (button 0).
+                self.touchend(cx);
+            }
+        }
+    }
+
+    /// X3DFlyViewer.touchend.
+    fn touchend(&mut self, cx: &mut Cx) {
+        // End move or look around (button 0).
+        self.look_around = false;
+        self.mouseup(0, cx);
+    }
+
+    /// X3DFlyViewer.touchmove: the first finger, or the middle of two, moves (button 0).
+    fn touchmove(&mut self, t: Touches, cx: &mut Cx) {
+        match t.n {
+            1 => self.mousemove(t.p[0].0, t.p[0].1, cx),
+            2 => self.mousemove((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0, cx),
+            _ => {}
         }
     }
 
