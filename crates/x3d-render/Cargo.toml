@@ -10,7 +10,7 @@ description = "Offscreen wgpu renderer for X3D/VRML scenes, ported from X_ITE's 
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
-x3d-runtime = { path = "../x3d-runtime" }
+x3d-runtime = { path = "../x3d-runtime", default-features = false }
 x3d-script = { path = "../x3d-script", optional = true }
 x3d-text = { path = "../x3d-text" }
 url = "2"
@@ -31,10 +31,12 @@ web-time = "1"
 avif-rust = { version = "0.1.2", optional = true }
 
 [features]
-default = ["script", "avif"]
+default = ["script", "avif", "native-video"]
 # Script nodes in QuickJS, and the oracle loader that runs them (`load`, `render_file`). QuickJS is C
 # code that does not build for wasm32-unknown-unknown, so the browser build (x3d-web) turns it off.
 script = ["dep:x3d-script"]
+# The engine's own video decoders for a MovieTexture (x3d-runtime/native-video); the browser build leaves them out.
+native-video = ["x3d-runtime/native-video"]
 # AVIF texture decoding (avif-rust 0.1.2, MIT, pure Rust, builds for wasm32). Without it an AVIF image fails to
 # decode like any other undecodable image. Disable for a build that carries no AV1 decoder.
 avif = ["dep:avif-rust"]

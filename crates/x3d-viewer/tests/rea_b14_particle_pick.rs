@@ -28,10 +28,15 @@
 
 mod common;
 
-use common::ulps::within_ulps;
+use common::ulps::{software_tol, within_abs, within_ulps};
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::OnceLock;
+
+/// `X3D_TEST_SOFTWARE_TOL` as the test validated it at its start (none on a GPU); only the comparison with the X_ITE
+/// records uses it, the comparison with the port's own records stays strict.
+static SOFT: OnceLock<Option<f64>> = OnceLock::new();
 
 /// (case, largest allowed float32 ulp distance of a probe number, why Rust differs). The hit shapes (id, DEF name) must match,
 /// and so must every number that is not within the limit. The limit is the largest distance the recordings show, not a round
@@ -89,8 +94,10 @@ fn compare_probes(
     got: &Value,
     max_ulps: u64,
     seen: &mut u64,
+    soft: Option<f64>,
 ) -> (usize, usize, Option<String>) {
     let (mut values, mut selections, mut first) = (0, 0, None);
+    let mut seen_abs = 0.0;
 
     for (frame, w) in want.as_object().unwrap() {
         let w = w.as_array().unwrap();
@@ -112,7 +119,10 @@ fn compare_probes(
             }
 
             // Equal selection and every number within the allowed ulps: the case's documented tolerance, not a difference.
-            if selection(p) == selection(q) && within_ulps(p, q, max_ulps, seen) {
+            if selection(p) == selection(q)
+                && (within_ulps(p, q, max_ulps, seen)
+                    || soft.is_some_and(|t| within_abs(p, q, t, &mut seen_abs)))
+            {
                 continue;
             }
 
@@ -217,10 +227,15 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         .find(|(case, ..)| *case == name)
         .map_or(0, |(_, ulps, _)| *ulps);
     let mut seen = 0;
-    let (values, selections, first) =
-        compare_probes(want, &rs["pickProbesReference"], max_ulps, &mut seen);
+    let (values, selections, first) = compare_probes(
+        want,
+        &rs["pickProbesReference"],
+        max_ulps,
+        &mut seen,
+        *SOFT.get().unwrap_or(&None),
+    );
     let (own_values, own_selections, own_first) =
-        compare_probes(want, &rs["pickProbes"], 0, &mut 0);
+        compare_probes(want, &rs["pickProbes"], 0, &mut 0, None);
 
     if max_ulps > 0 {
         eprintln!(
@@ -251,6 +266,11 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 
 #[test]
 fn rea_b14_particle_pick_matches_x_ite() {
+    // Validate the setting before anything else (also before an adapter skip): a bad value, or the variable on a hardware
+    // adapter, fails the run. Read once; the comparisons below use this value.
+    let soft = software_tol();
+    SOFT.set(soft).ok();
+
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
         return x3d_evidence::no_gpu("no adapter: the pointing pass needs a GPU, skipped");
     }
@@ -309,4 +329,81 @@ fn rea_b14_particle_pick_matches_x_ite() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+/// A bad `X3D_TEST_SOFTWARE_TOL` fails even when the compared values match strictly, where the lazy read behind
+/// `within_ulps(..) || ..` would never run.
+#[test]
+fn an_invalid_software_tolerance_fails_even_when_the_values_match() {
+    let v = serde_json::json!({"point": [1.0, 2.0, 3.0]});
+    let mut seen = 0;
+
+    assert!(within_ulps(&v, &v, 0, &mut seen), "strictly equal values");
+
+    for bad in ["abc", "", "0", "-1e-4", "nan", "inf"] {
+        assert!(
+            common::ulps::parse_software_tol(Some(bad)).is_err(),
+            "{bad:?} must be refused"
+        );
+    }
+
+    assert_eq!(common::ulps::parse_software_tol(None), Ok(None));
+    assert_eq!(
+        common::ulps::parse_software_tol(Some(" 1e-4 ")),
+        Ok(Some(1e-4))
+    );
+}
+
+/// The variable is for a software adapter only (decided without a GPU).
+#[test]
+fn the_software_tolerance_is_refused_on_a_hardware_adapter() {
+    use common::ulps::{decide_software_tol, is_software_adapter};
+    use wgpu::DeviceType::{Cpu, DiscreteGpu, IntegratedGpu, Other, VirtualGpu};
+
+    assert!(is_software_adapter(Cpu, "anything"));
+    assert!(is_software_adapter(
+        DiscreteGpu,
+        "llvmpipe (LLVM 20.1.2, 256 bits)"
+    ));
+    assert!(is_software_adapter(Other, "Google SwiftShader"));
+    assert!(!is_software_adapter(
+        DiscreteGpu,
+        "NVIDIA GeForce RTX 3060 Ti"
+    ));
+    assert!(!is_software_adapter(VirtualGpu, "Apple Paravirtual device"));
+
+    assert_eq!(
+        decide_software_tol(Some(1e-4), Cpu, "llvmpipe"),
+        Ok(Some(1e-4))
+    );
+    assert_eq!(decide_software_tol(None, DiscreteGpu, "NVIDIA"), Ok(None));
+
+    for (ty, name) in [
+        (DiscreteGpu, "NVIDIA GeForce RTX 3060 Ti"),
+        (IntegratedGpu, "Intel"),
+        (VirtualGpu, "Apple Paravirtual device"),
+    ] {
+        let e = decide_software_tol(Some(1e-4), ty, name).unwrap_err();
+
+        assert!(
+            e.contains("X3D_TEST_SOFTWARE_TOL") && e.contains(name),
+            "{e}"
+        );
+    }
+}
+
+/// `within_abs` compares numbers, not types, and does not panic (a number that cannot convert to f64 fails the comparison).
+#[test]
+fn within_abs_compares_within_the_limit() {
+    let one = serde_json::json!(1.0);
+    let mut seen = 0.0;
+
+    assert!(within_abs(
+        &one,
+        &serde_json::json!(1.00001),
+        1e-4,
+        &mut seen
+    ));
+    assert!(!within_abs(&one, &serde_json::json!(1.1), 1e-4, &mut seen));
+    assert!(!within_abs(&one, &serde_json::json!("1"), 1e-4, &mut seen));
 }

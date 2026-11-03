@@ -31,24 +31,13 @@ const ID_SIMPLE_BLOCK: u64 = 0xA3;
 const ID_BLOCK_GROUP: u64 = 0xA0;
 const ID_BLOCK: u64 = 0xA1;
 
+pub use crate::video_types::{AudioTrack, WebmError};
+
 /// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
 /// VP9's highest levels (8192 x 4352 fits; the level tables are not in the local standards library, so this is a
 /// limit of this implementation, not a quotation). `vp9dec` allows 2^27 samples, about 400 MB per picture and up
 /// to eight pictures held as references; a size from a file is checked here first.
 pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
-
-/// Why a file is not decoded.
-#[derive(Debug)]
-pub enum WebmError {
-    NotWebm,
-    /// No video track with a codec that is decoded here (VP9, VP8, AV1).
-    NoVideoTrack,
-    Decode(String),
-    /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
-    /// RGBA pictures kept so far exceed the `max_bytes` of [`decode`] (refused before the next picture is kept). The
-    /// second limit does not bound the working memory of the decoder; the first does.
-    TooLarge,
-}
 
 /// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
 pub struct VideoFrame {
@@ -513,14 +502,23 @@ fn av1_codec_private(data: &[u8]) -> Vec<u8> {
 }
 
 #[cfg(feature = "av1")]
+/// A refusal for the declared size is [`WebmError::TooLarge`]; any other failure is a decode error.
+fn av1_error(e: av1::Av1Error) -> WebmError {
+    if e.is_oversize() {
+        WebmError::TooLarge
+    } else {
+        WebmError::Decode(e.to_string())
+    }
+}
+
+#[cfg(feature = "av1")]
 /// The AV1 temporal units of a file (rav1d, `crate::av1`). The sequence header of the CodecPrivate is fed first, as
 /// the Matroska mapping allows a key frame to omit it. A unit the decoder refuses ends the decode with an error.
 fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
     let mut decoder = av1::Av1Decoder::new(av1::Limits {
-        max_width: 16383,
-        max_height: 16383,
+        max_luma_samples: MAX_LUMA_SAMPLES,
     })
-    .map_err(|e| WebmError::Decode(e.to_string()))?;
+    .map_err(av1_error)?;
     let mut frames = vec![];
     let (mut width, mut height) = (0, 0);
     let mut bytes = 0u64;
@@ -587,7 +585,7 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
         // The sequence header alone gives no picture.
         std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.decode(config)))
             .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
-            .map_err(|e| WebmError::Decode(e.to_string()))?;
+            .map_err(av1_error)?;
     }
 
     for b in blocks {
@@ -595,14 +593,14 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
             decoder.decode(&data[b.start..b.end])
         }))
         .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
-        .map_err(|e| WebmError::Decode(e.to_string()))?;
+        .map_err(av1_error)?;
 
         push(pictures, &mut frames, &mut times)?;
     }
 
     let rest = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.finish()))
         .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
-        .map_err(|e| WebmError::Decode(e.to_string()))?;
+        .map_err(av1_error)?;
 
     push(rest, &mut frames, &mut times)?;
 
@@ -688,18 +686,6 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
         height,
         frames,
     })
-}
-
-/// The audio track of a WebM, as far as this build decodes it.
-pub enum AudioTrack {
-    /// The file has no audio track (a silent video: not an error).
-    None,
-    /// The track's codec has no decoder in this build (CodecID, e.g. `A_OPUS`).
-    Unsupported(String),
-    /// The track is there and does not decode.
-    Corrupt,
-    /// The planar samples at the track's own rate.
-    Decoded { channels: Vec<Vec<f32>>, rate: f32 },
 }
 
 /// The CodecID of the first audio track of `data`.
@@ -1849,8 +1835,7 @@ mod tests {
         assert_eq!(codec, Codec::Av1);
 
         let mut decoder = av1::Av1Decoder::new(av1::Limits {
-            max_width: 16383,
-            max_height: 16383,
+            max_luma_samples: MAX_LUMA_SAMPLES,
         })
         .unwrap();
         let private = av1_codec_private(webm);
@@ -1917,6 +1902,65 @@ mod tests {
                 "panicked on a cut at {cut}"
             );
         }
+    }
+
+    /// A WebM with one AV1 track whose CodecPrivate holds the sequence header OBU for `width` by `height`, and one block.
+    #[cfg(feature = "av1")]
+    fn webm_av1_declaring(width: u32, height: u32) -> Vec<u8> {
+        let mut private = vec![0x81, 0, 0, 0];
+
+        private.extend(av1::tests::sequence_header_obu(width, height));
+
+        let track = [
+            el(&[0xD7], &[1]),
+            el(&[0x83], &[1]),
+            el(&[0x86], b"V_AV1"),
+            el(&[0x63, 0xA2], &private),
+        ]
+        .concat();
+        // A temporal delimiter and a frame OBU with nothing valid in it.
+        let cluster = [
+            el(&[0xE7], &[0]),
+            el(
+                &[0xA3],
+                &[&[0x81, 0, 0, 0x80][..], &[0x12, 0, 0x32, 2, 0, 0]].concat(),
+            ),
+        ]
+        .concat();
+        let segment = [
+            el(&[0x16, 0x54, 0xAE, 0x6B], &el(&[0xAE], &track)),
+            el(&[0x1F, 0x43, 0xB6, 0x75], &cluster),
+        ]
+        .concat();
+
+        [
+            el(&[0x1A, 0x45, 0xDF, 0xA3], &[]),
+            el(&[0x18, 0x53, 0x80, 0x67], &segment),
+        ]
+        .concat()
+    }
+
+    /// BR1.8 for AV1, size: a sequence header that declares a picture beyond MAX_LUMA_SAMPLES is refused as too
+    /// large before the decoder allocates anything. 32768 by 32768 would need over a gigabyte for one picture.
+    #[cfg(feature = "av1")]
+    #[test]
+    fn an_av1_stream_declaring_an_oversized_picture_is_refused() {
+        for (w, h) in [(32768, 32768), (16384, 16384), (6000, 6000)] {
+            assert!(u64::from(w) * u64::from(h) > MAX_LUMA_SAMPLES);
+            assert!(
+                matches!(
+                    decode(&webm_av1_declaring(w, h), BUDGET),
+                    Err(WebmError::TooLarge)
+                ),
+                "{w}x{h}"
+            );
+        }
+
+        // Within the cap the declared size is no reason to refuse; the stream then fails on its (invalid) frame.
+        assert!(matches!(
+            decode(&webm_av1_declaring(64, 48), BUDGET),
+            Err(WebmError::Decode(_))
+        ));
     }
 
     // Damaged streams are tried in child processes by tests/av1_safety.rs: rav1d aborts instead of unwinding on a

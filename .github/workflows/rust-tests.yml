@@ -136,6 +136,14 @@ jobs:
       - name: GPU test lists
         run: python3 -I -B tools/check_gpu_test_lists.py
 
+      # No AAC decoder in Cargo.lock, and vendor/web-audio-api is the upstream crate plus the recorded manifest change
+      # (owner decision 2026-11-02, issue #90; vendor/web-audio-api/VENDOR.md). The second check downloads the crate from
+      # static.crates.io and refuses it unless its sha256 is the recorded one; --self-test proves it fails on tampering.
+      - name: AAC exclusion (lockfile and vendored crate)
+        run: |
+          python3 -I -B tools/check_no_aac.py
+          python3 -I -B tools/check_vendored_web_audio_api.py --self-test
+
       # Pins the path classification of tools/ci_changes.py (issue #180).
       - name: CI path classification
         run: python3 -I -B tools/test_ci_changes.py
@@ -268,6 +276,7 @@ jobs:
         if: success() || failure()
         run: |
           cargo build --release -p x3d-viewer --bin x3d-drive
+          python3 -I -B tools/check_no_aac.py --binary target/release/x3d-drive
           python3 -I -B oracle/tools/rea_b05.py check --target target/release --jobs 2 | tee rea_b05.log
           test "${PIPESTATUS[0]}" -eq 0
           tail -1 rea_b05.log >> "$GITHUB_STEP_SUMMARY"

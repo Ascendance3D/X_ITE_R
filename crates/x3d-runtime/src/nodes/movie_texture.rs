@@ -22,6 +22,8 @@
 
 use crate::*;
 
+mod mpeg1_media;
+
 /// The next token of a page video element: unique across the runtimes of a page.
 static NEXT_VIDEO_TOKEN: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
 
@@ -47,12 +49,28 @@ pub struct MovieMedia {
     /// The frame the texture holds (`updateTextureData (media .currentFrame)`).
     pub shown: usize,
     /// The audio track of a decoded WebM ([`crate::webm::audio`]); `AudioTrack::None` for every other media.
-    pub audio: crate::webm::AudioTrack,
+    pub audio: crate::video_types::AudioTrack,
     /// Does the media take a `currentTime` (a decoded WebM does; GifMedia ignores it, PNGMedia only stops)?
     seekable: bool,
     /// Seconds added to the clock of a decoded WebM by a seek.
     offset: f64,
+    /// The state of [`MovieTiming::Iso`]; unused in the pinned mode.
+    iso: IsoState,
 }
+
+/// What ISO timing remembers of a media: whether it has been active since it loaded (an inactive media that never
+/// played shows frame 0 or the last frame, one that played keeps the frame it stopped on), the movie time it
+/// shows, and its `<video>` seek requests.
+#[derive(Default)]
+struct IsoState {
+    played: bool,
+    time: f64,
+    seeks: MovieSeeks,
+}
+
+use super::movie_time::{
+    self as iso, IsoClock, MovieTiming, SeekLedger as MovieSeeks, frame_at, frame_starts,
+};
 
 enum Kind {
     /// GifMedia: `cycle` and `loop` of its closure.
@@ -89,6 +107,10 @@ pub enum VideoOp {
     Loop(u64, bool),
     /// MovieTexture.set_speed__: `playbackRate` and `preservesPitch`.
     Rate(u64, f64, bool),
+    /// [`MovieTiming::Iso`]: seek the paused element to `time` seconds (`currentTime = time`). `id` only grows; the page
+    /// answers [`Runtime::video_seeked`] with the id of the request whose picture it sends, and the engine drops any
+    /// answer that is not of the newest request.
+    Seek { token: u64, id: u64, time: f64 },
 }
 
 /// The apng-js Player (lib/index.js), without the canvas: frame `n` of [`MovieMedia::frames`] is the picture
@@ -334,9 +356,10 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            iso: IsoState::default(),
         })
     }
 
@@ -345,11 +368,13 @@ impl MovieMedia {
     /// sound of the file plays through the node's audio source ([`Runtime::movie_set_frames`]); a WebM takes
     /// `currentTime` ([`Runtime::movie_seek`]). An error when the file is not a WebM with a VP9 or VP8
     /// track that decodes; it says why (the caller logs it and treats the video as one the engine cannot show).
-    pub fn decode_webm(data: &[u8]) -> Result<MovieMedia, crate::webm::WebmError> {
+    #[cfg(feature = "native-video")]
+    pub fn decode_webm(data: &[u8]) -> Result<MovieMedia, crate::video_types::WebmError> {
         let video = crate::webm::decode(data, MAX_DECODED_BYTES)?;
         let n = video.frames.len();
 
-        frame_bytes(video.width, video.height, n).map_err(|_| crate::webm::WebmError::TooLarge)?;
+        frame_bytes(video.width, video.height, n)
+            .map_err(|_| crate::video_types::WebmError::TooLarge)?;
 
         // A frame lasts until the next one starts; the last repeats the step before it.
         let times: Vec<f64> = video.frames.iter().map(|f| f.time_ms).collect();
@@ -375,7 +400,15 @@ impl MovieMedia {
             audio: crate::webm::audio(data),
             seekable: true,
             offset: 0.0,
+            iso: IsoState::default(),
         })
+    }
+
+    /// Without the `native-video` feature the engine has no video decoder (the browser build plays the video in the
+    /// page's `<video>` element); a WebM is a video it cannot show.
+    #[cfg(not(feature = "native-video"))]
+    pub fn decode_webm(_data: &[u8]) -> Result<MovieMedia, crate::video_types::WebmError> {
+        Err(crate::video_types::WebmError::NoDecoder)
     }
 
     /// apng-js parseAPNG, the frame images and PNGMedia (whose `player .stop ()` renders frame 0). The size, the
@@ -425,9 +458,10 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            iso: IsoState::default(),
         };
 
         media.player_stop();
@@ -749,15 +783,15 @@ impl Runtime {
     /// and set_speed__.
     pub(crate) fn movie_set_frames(&mut self, node: NodeId, mut media: MovieMedia) {
         let (width, height, duration) = (media.width, media.height, media.duration());
-        let audio = std::mem::replace(&mut media.audio, crate::webm::AudioTrack::None);
+        let audio = std::mem::replace(&mut media.audio, crate::video_types::AudioTrack::None);
         let mut has_sound = false;
 
         // The previous media element's sound goes with it.
         self.movie_release_audio(node);
 
         match audio {
-            crate::webm::AudioTrack::None => {}
-            crate::webm::AudioTrack::Decoded { channels, rate } => {
+            crate::video_types::AudioTrack::None => {}
+            crate::video_types::AudioTrack::Decoded { channels, rate } => {
                 has_sound = true;
 
                 match self.audio().buffer_from_planar(channels, rate) {
@@ -775,13 +809,13 @@ impl Runtime {
             }
             // The track is there and cannot be played: hasSound is TRUE as the page's would be, the video keeps
             // rendering and plays silently, and the diagnostic says why (BR1.8).
-            crate::webm::AudioTrack::Unsupported(codec) => {
+            crate::video_types::AudioTrack::Unsupported(codec) => {
                 has_sound = true;
                 self.log_warn(format!(
                     "MovieTexture: the audio track of the video ({codec}) cannot be decoded by this build; the video plays silently."
                 ));
             }
-            crate::webm::AudioTrack::Corrupt => self.log_warn(
+            crate::video_types::AudioTrack::Corrupt => self.log_warn(
                 "MovieTexture: the audio track of the video does not decode; the video plays silently."
                     .to_string(),
             ),
@@ -885,6 +919,10 @@ impl Runtime {
 
     /// MovieTexture.set_speed__: playbackRate = speed × max (pitch, 0).
     pub(crate) fn movie_set_speed(&mut self, node: NodeId) {
+        if self.movie_timing == MovieTiming::Iso {
+            return self.movie_iso_set_speed(node, false);
+        }
+
         let rate = self.get_f64(node, "speed") * self.get_f64(node, "pitch").max(0.0);
 
         let pitch = self.get_f64(node, "pitch");
@@ -909,6 +947,69 @@ impl Runtime {
         }
     }
 
+    /// The ISO 18.4.2 `set_speed`: ignored while the node is active (`force`: the start takes the field's value), applied
+    /// while it is inactive. Negative rates are legal; the sound still plays at 1 (it cannot run backwards).
+    fn movie_iso_set_speed(&mut self, node: NodeId, force: bool) {
+        let active = self.get_bool(node, "isActive");
+
+        if active && !force {
+            return;
+        }
+
+        let rate = self.get_f64(node, "speed") * self.get_f64(node, "pitch").max(0.0);
+
+        self.media_set(node, |e, m| {
+            m.set_playback_rate(e, if rate < 0.0 { 1.0 } else { rate })
+        });
+
+        if let Some(m) = self.movie(node) {
+            m.set_playback_rate(rate);
+        }
+
+        if !active {
+            self.movie_iso_show_inactive(node);
+        }
+    }
+
+    /// An inactive media that never played shows frame 0 (`rate >= 0`) or the last frame (`rate < 0`), 8.2.4.
+    fn movie_iso_show_inactive(&mut self, node: NodeId) {
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        if m.iso.played {
+            return;
+        }
+
+        let t = iso::inactive_time(m.playback_rate, m.duration());
+
+        self.movie_iso_show(node, t, true);
+    }
+
+    /// Shows the movie time `t`: a frame list picks its frame, a `<video>` is asked to seek (`force`: the request
+    /// supersedes a seek in flight).
+    fn movie_iso_show(&mut self, node: NodeId, t: f64, force: bool) {
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        m.iso.time = t;
+
+        if let Some(token) = m.video_token() {
+            if let Some(id) = m.iso.seeks.request(t, force) {
+                self.video_ops.push(VideoOp::Seek { token, id, time: t });
+            }
+            return;
+        }
+
+        let frame = frame_at(&frame_starts(&m.delays), t);
+
+        if frame != m.shown {
+            m.shown = frame;
+            self.touch(node);
+        }
+    }
+
     /// X3DSoundSourceNode.set_start.
     pub(crate) fn movie_set_start(&mut self, node: NodeId) {
         if !self.movie_has_frames(node) {
@@ -917,6 +1018,33 @@ impl Runtime {
 
         if let Some(k) = self.pre(node, "elapsedTime") {
             self.set_value(k, FieldValue::SFTime(0.0));
+        }
+
+        if self.movie_timing == MovieTiming::Iso {
+            // The clause's clock starts here: the rate is the field's now, the first picture is time 0 (or the
+            // end of the movie for a negative rate).
+            self.movie_iso_set_speed(node, true);
+
+            if let Some(m) = self.movie(node) {
+                m.iso.played = true;
+
+                let t = iso::iso_time(IsoClock {
+                    elapsed: 0.0,
+                    rate: m.playback_rate,
+                    duration: m.duration(),
+                    looping: true,
+                })
+                .0;
+
+                self.movie_iso_show(node, t, true);
+            }
+
+            self.audio_element_started = true;
+            self.media_set(node, |e, m| {
+                m.set_current_time(e, 0.0);
+                m.play(e)
+            });
+            return;
         }
 
         let (elapsed, now) = (self.elapsed_value(node), self.now * 1000.0);
@@ -966,8 +1094,18 @@ impl Runtime {
     /// The playback position of the node's media in seconds (`currentTime`).
     pub fn movie_current_time(&mut self, node: NodeId) -> Option<f64> {
         let elapsed = self.elapsed_value(node);
+        let timing = self.movie_timing;
 
-        self.movie(node).map(|m| m.current_time(elapsed))
+        self.movie(node).map(|m| match timing {
+            MovieTiming::Iso => m.iso.time,
+            MovieTiming::Pinned => m.current_time(elapsed),
+        })
+    }
+
+    /// Chooses the ISO 19775-1 mapping (the default) or the pinned X_ITE 16.5.0 behavior for MovieTextures made or
+    /// changed from now on. Set it before the world loads.
+    pub fn set_movie_timing(&mut self, timing: MovieTiming) {
+        self.movie_timing = timing;
     }
 
     /// set_pause, set_stop: stopAudioElement.
@@ -992,7 +1130,8 @@ impl Runtime {
         if let Some(m) = self.movie(node) {
             m.play(elapsed, now);
 
-            if let Some(token) = m.video_token() {
+            // ISO timing: the engine drives the paused element by seeks; it is never played.
+            if let (Some(token), MovieTiming::Pinned) = (m.video_token(), self.movie_timing) {
                 self.video_ops.push(VideoOp::Play(token));
             }
 
@@ -1003,6 +1142,10 @@ impl Runtime {
     /// MovieTexture.set_time: X3DSoundSourceNode.set_time, then `updateTextureData (media .currentFrame)`. The
     /// apng-js tick of the frame runs first.
     pub(crate) fn movie_set_time(&mut self, node: NodeId) {
+        if self.movie_timing == MovieTiming::Iso {
+            return self.movie_iso_set_time(node);
+        }
+
         let now = self.now * 1000.0;
 
         let Some(m) = self.movie(node) else {
@@ -1045,6 +1188,90 @@ impl Runtime {
 
             self.add_node_event(node);
         }
+    }
+
+    /// The ISO 18.4.2 set_time: the movie time of the active node from its elapsed time, the frame of that time, and
+    /// the end of a play that does not loop.
+    fn movie_iso_set_time(&mut self, node: NodeId) {
+        if !self.movie_has_frames(node) {
+            return;
+        }
+
+        let t = self.time_elapsed_time(node);
+
+        if let Some(k) = self.pre(node, "elapsedTime") {
+            self.set_value(k, FieldValue::SFTime(t));
+        }
+
+        let looping = self.time_loop(node);
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        m.iso.played = true;
+
+        let (time, finished) = iso::iso_time(IsoClock {
+            elapsed: t,
+            rate: m.playback_rate,
+            duration: m.duration(),
+            looping,
+        });
+
+        self.movie_iso_show(node, time, false);
+
+        // set_end: the last picture of the play stays as the texture.
+        if finished && !looping {
+            self.time_stop_node(node);
+        }
+
+        self.add_node_event(node);
+    }
+
+    /// The page's video element `token` finished seek request `id`: `current_time` and the picture `rgba` (empty when
+    /// the page could not read it). An answer that is not of the newest request is obsolete and dropped, so an old
+    /// frame never overwrites a newer one. Returns whether the token is this runtime's.
+    pub fn video_seeked(&mut self, token: u64, id: u64, current_time: f64, rgba: Vec<u8>) -> bool {
+        let mut touched = None;
+        let mut found = false;
+
+        for (node, s) in self.sound.iter_mut() {
+            let Some(m) = s.movie.as_mut() else {
+                continue;
+            };
+
+            if m.video_token() != Some(token) {
+                continue;
+            }
+
+            found = true;
+
+            if !m.iso.seeks.accept(id) {
+                break;
+            }
+
+            if let Kind::Video {
+                current_time: c, ..
+            } = &mut m.kind
+            {
+                *c = current_time;
+            }
+
+            match m.frames.first_mut() {
+                Some(frame) if rgba.len() == frame.len() => {
+                    *frame = rgba;
+                    touched = Some(*node);
+                }
+                // No picture (unreadable, wrong size) or no frame to hold it: ask for this time again.
+                _ => m.iso.seeks.retry(),
+            }
+            break;
+        }
+
+        if let Some(node) = touched {
+            self.touch(node);
+        }
+
+        found
     }
 
     /// A MovieTexture candidate that is no GIF or PNG, in a browser build: the page's `<video>` element loads it
@@ -1130,9 +1357,10 @@ impl Runtime {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            iso: IsoState::default(),
         };
 
         self.movie_set_media_element(p.node, Some(media));
@@ -1191,6 +1419,11 @@ impl Runtime {
     /// (`rgba` is empty when it did not). The texture holds them from the next frame on (set_time). Returns whether
     /// the token is this runtime's.
     pub fn video_frame(&mut self, token: u64, current_time: f64, rgba: Vec<u8>) -> bool {
+        // ISO timing: the pictures come only from the engine's seeks ([`Runtime::video_seeked`]).
+        if self.movie_timing == MovieTiming::Iso {
+            return self.video_tokens().contains(&token);
+        }
+
         for s in self.sound.values_mut() {
             let Some(m) = s.movie.as_mut() else {
                 continue;

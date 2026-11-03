@@ -6,6 +6,10 @@
 //! (`createX3DFromString`, a `loadURL` in progress) and wait for [`WebBrowser::replace`]. Each world has its own
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
+use crate::device_request::{
+    Attempt, CHECKED_WGPU_VERSION, WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL,
+    request_with_compatibility,
+};
 use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -382,15 +386,36 @@ impl WebBrowser {
         let surface = instance
             .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
             .map_err(|e| JsError::new(&format!("create_surface: {e}")))?;
-        let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::HighPerformance,
-                force_fallback_adapter: false,
-                compatible_surface: Some(&surface),
-                ..Default::default()
-            })
-            .await
-            .map_err(|e| JsError::new(&format!("no WebGPU adapter: {e}")))?;
+        // Compatibility feature level first when wgpu can request it, else (and after a failure) the current request, once
+        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only.
+        let outcome = request_with_compatibility(WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, |attempt| {
+            let (instance, surface) = (&instance, &surface);
+
+            async move {
+                match attempt {
+                    Attempt::Compatibility => Err(format!(
+                        "wgpu {CHECKED_WGPU_VERSION} has no option for the compatibility feature level"
+                    )),
+                    Attempt::Current => instance
+                        .request_adapter(&wgpu::RequestAdapterOptions {
+                            power_preference: wgpu::PowerPreference::HighPerformance,
+                            force_fallback_adapter: false,
+                            compatible_surface: Some(surface),
+                            ..Default::default()
+                        })
+                        .await
+                        .map_err(|e| format!("no WebGPU adapter: {e}")),
+                }
+            }
+        })
+        .await
+        .map_err(|e| JsError::new(&e))?;
+
+        for line in &outcome.diagnostics {
+            web_sys::console::warn_1(&line.into());
+        }
+
+        let adapter = outcome.value;
         let limits = adapter.limits();
         let mut missing = vec![];
 
@@ -1835,7 +1860,7 @@ impl WebBrowser {
         let touches: Vec<(f64, f64)> = points.chunks_exact(2).map(|p| (p[0], p[1])).collect();
 
         if let Some(s) = self.current_mut() {
-            s.touch(event, &touches, zoom_width);
+            s.touch(event, &touches, zoom_width, js_sys::Date::now() / 1000.0);
         }
     }
 
@@ -2101,6 +2126,9 @@ impl WebBrowser {
                 VideoOp::Rewind(t) => call(&["rewind".into(), num(t)]),
                 VideoOp::Loop(t, v) => call(&["loop".into(), num(t), v.into()]),
                 VideoOp::Rate(t, r, p) => call(&["rate".into(), num(t), r.into(), p.into()]),
+                VideoOp::Seek { token, id, time } => {
+                    call(&["seek".into(), num(token), num(id), time.into()])
+                }
             });
         }
 
@@ -2180,6 +2208,42 @@ impl WebBrowser {
             if l.rt.video_frame(token, current_time, rgba.to_vec()) {
                 return;
             }
+        }
+    }
+
+    /// The page's video element `token` finished seek request `id` ([`x3d_runtime::Runtime::video_seeked`]): `current_time`
+    /// and the picture (`rgba` is empty when it could not be read). An answer older than the newest request is dropped.
+    #[wasm_bindgen(js_name = videoSeeked)]
+    pub fn video_seeked(&mut self, token: f64, id: f64, current_time: f64, rgba: &[u8]) {
+        let (token, id) = (token as u64, id as u64);
+
+        for w in self.worlds.values_mut() {
+            if w.session
+                .video_seeked(token, id, current_time, rgba.to_vec())
+            {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt.video_seeked(token, id, current_time, rgba.to_vec()) {
+                return;
+            }
+        }
+    }
+
+    /// The MovieTexture time of the worlds made from now on: `"iso"` (ISO/IEC 19775-1 18.4.2, the default) or `"pinned"`
+    /// (pinned X_ITE 16.5.0). Returns false for another word. Set it before the first world loads.
+    #[wasm_bindgen(js_name = setMovieTiming)]
+    pub fn set_movie_timing(name: &str) -> bool {
+        use x3d_runtime::nodes::movie_time::MovieTiming;
+
+        match MovieTiming::parse(name) {
+            Some(t) => {
+                MovieTiming::set_process_default(t);
+                true
+            }
+            None => false,
         }
     }
 

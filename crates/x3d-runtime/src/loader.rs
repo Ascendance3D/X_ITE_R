@@ -1331,13 +1331,24 @@ impl Runtime {
                     return self.movie_load_video(node, urls.clone(), index, file_url.clone());
                 }
 
+                // MPEG-1 (ISO/IEC 19775-1 18.4.2): decoded here; a failure is the usual unplayable-video error below.
+                if !self.mpeg1_unplayable
+                    && crate::mpeg1::has_mpeg1_extension(&path)
+                    && let Ok(data) = self.fetcher.fetch(&file_url)
+                {
+                    match nodes::movie_texture::MovieMedia::decode_mpeg1(&data) {
+                        Ok(media) => return self.movie_set_frames(node, media),
+                        Err(e) => self.log_warn(format!("MPEG-1 movie '{decoded}': {e}")),
+                    }
+                }
+
                 let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
                     .iter()
                     .any(|e| path.to_ascii_lowercase().ends_with(e));
 
                 if playable {
                     if let Ok(data) = self.fetcher.fetch(&file_url) {
-                        use crate::webm::WebmError;
+                        use crate::video_types::WebmError;
 
                         // A WebM with a VP9 or VP8 track is decoded; any other playable file is taken as playing.
                         if !path.to_ascii_lowercase().ends_with(".webm") {
@@ -1349,7 +1360,11 @@ impl Runtime {
                             // A video this build does not decode (another codec, a picture beyond the limits): it
                             // may play in the browser. No frame is shown, the scene goes on, the node stays
                             // IN_PROGRESS (as for every other undecoded video) and the log says why.
-                            Err(e @ (WebmError::NoVideoTrack | WebmError::TooLarge)) => {
+                            Err(
+                                e @ (WebmError::NoVideoTrack
+                                | WebmError::TooLarge
+                                | WebmError::NoDecoder),
+                            ) => {
                                 self.log_warn(format!(
                                     "MovieTexture: the video '{decoded}' is not decoded by this build ({e:?}); no frame is shown."
                                 ));

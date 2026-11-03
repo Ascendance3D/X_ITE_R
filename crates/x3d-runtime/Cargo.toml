@@ -7,9 +7,13 @@ publish.workspace = true
 description = "X3D scene runtime: event engine, PROTO instancing, loading; ported from X_ITE (MIT)."
 
 [features]
+default = ["native-video"]
+# The engine's own video decoders for a MovieTexture (webm.rs, vp8/, vp9dec). The browser build (x3d-web) turns it off:
+# there the page plays the video in a <video> element (`Fetcher::plays_video`) and these decoders are never called.
+native-video = ["dep:vp9dec"]
 # AV1 video in MovieTexture (rav1d, BSD-2-Clause). OFF by default until the owner decides how to contain rav1d's
 # abort on some damaged streams (BR1.8, see the PR that added it). CI runs the tests with `--features x3d-runtime/av1`.
-av1 = ["dep:rav1d"]
+av1 = ["native-video", "dep:rav1d"]
 # rav1d's hand-written assembly (needs nasm; not for wasm32).
 av1-asm = ["av1", "rav1d/asm"]
 
@@ -19,7 +23,8 @@ x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-text = { path = "../x3d-text" }
 # VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
-vp9dec = "0.1.1"
+# Optional: only the `native-video` feature builds it (the browser build has a <video> element and leaves it out).
+vp9dec = { version = "0.1.1", optional = true }
 # AV1 decode of a MovieTexture WebM (av1.rs, feature `av1`): BSD-2-Clause, a Rust port of dav1d (owner decision
 # 2026-11-02). Its `asm` default feature is off: it needs nasm at build time and does not exist on wasm32. Patent exposure is an unresolved release risk recorded in
 # docs/decoder-admission.md; this dependency is not a patent clearance.
@@ -41,6 +46,8 @@ rustfft = "6.4.1"
 web-time = "1"
 
 [dev-dependencies]
+# Reads the gzip-compressed ffmpeg reference planes of the MPEG-1 tests (already in the tree through x3d-parse).
+flate2 = "1"
 # VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
 vp9dec = "0.1.1"
 url = "2"
