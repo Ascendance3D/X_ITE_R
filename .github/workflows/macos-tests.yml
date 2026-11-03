@@ -68,6 +68,8 @@ env:
   #    open under issue #89.
   #  - rea_b08_gs_renders_match_x_ite and rea_b08_vs_renders_match_x_ite are no longer skipped: the tone map no longer takes pow of a
   #    negative base (a PR of issue #89), the cause of their differences on the virtualized device.
+  #  - splats_in_logarithmic_depth_match_x_ite is no longer skipped: a flat-colour Background cube is scaled to the view
+  #    (tests/background_ortho.rs), the cause of the missing Background of gs-ortho on the virtualized device.
   MACOS_HOSTED_SKIPS: >-
     test(late_connected_oscillator_keeps_its_phase)
     | test(same_rate_mp3_and_flac_are_bit_identical)
@@ -75,7 +77,6 @@ env:
     | test(rea_batch07_vol_cases_match_x_ite)
     | test(rea_i92_render_items_match_x_ite)
     | test(standard_and_log_match_x_ite)
-    | test(splats_in_logarithmic_depth_match_x_ite)
     | test(rea_b24_anchor_collision_instanced_match_x_ite)
     | test(log_shows_what_standard_cannot)
     | test(rea_b07_vol_renders_match_x_ite)
