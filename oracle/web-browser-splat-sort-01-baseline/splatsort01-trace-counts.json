@@ -1,0 +1,32 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "runs": 3,
+ "view": "Transform turned by a half turn about Y after 60 frames",
+ "traces": {
+  "2": [
+   "post sort",
+   "draw 2",
+   "recv sorted",
+   "draw 2"
+  ],
+  "441": [
+   "post sort",
+   "draw 441",
+   "recv sorted",
+   "draw 441"
+  ],
+  "3969": [
+   "post sort",
+   "draw 3969",
+   "recv sorted",
+   "draw 3969"
+  ],
+  "30000": [
+   "post sort",
+   "draw 30000",
+   "recv sorted",
+   "draw 30000"
+  ]
+ }
+}
