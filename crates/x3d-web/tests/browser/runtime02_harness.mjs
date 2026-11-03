@@ -41,6 +41,7 @@ import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
+import { CASE_GROUPS as NAV03_GROUPS } from "./nav03_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as SHUTDOWN01_GROUPS } from "./shutdown01_case.mjs";
 import { CASE_GROUPS as EXTERNREMOVE01_GROUPS } from "./externremove01_case.mjs";
@@ -105,6 +106,7 @@ const SUITES = {
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
+   nav03: { dir: process .env .XR_NAV03_BASELINE ?? join (REPO, "oracle/web-browser-nav-03-baseline"), file: "nav03-baseline.json", groups: NAV03_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
@@ -720,6 +722,28 @@ function withValue (value, path, replacement)
    return copy;
 }
 
+// The tolerance of the navigation poses (nav*_case.mjs), fixed before the first recording of each suite: every number is
+// equal within NAV_TOLERANCE (1e-3, absolute; the viewers' own tests compare at 1e-4, rea_b24_nav.rs, and a browser pose
+// passes through float32 fields and animation frames), except a number under a key that ends in `Rate`: a speed that
+// X_ITE integrates over the real frame times (WALK and FLY), equal within NAV_RATE_TOLERANCE (5%, relative), and a number
+// under a key that ends in `Dir`: the direction of a path that is curved by a turn in progress, equal within
+// NAV_DIR_TOLERANCE (1e-2, absolute). X_ITE starts walking at the event; X_ITE_R at the next frame (up to 17 ms, 1% of a
+// 1.5 s hold), which turns a net displacement by up to 0.004 rad (nav02_case.mjs walkDiagonal; the first run at 1e-3
+// differed by 3.3e-3, so `Dir` was added, and only for that case).
+const NAV_TOLERANCE      = 1e-3;
+const NAV_RATE_TOLERANCE = 0.05;
+const NAV_DIR_TOLERANCE  = 1e-2;
+
+// The value with every number replaced by 0, for comparing the structure.
+const shape = value => typeof value === "number" ? 0 : Array .isArray (value) ? value .map (shape) : value && typeof value === "object" ? Object .fromEntries (Object .entries (value) .map (([ k, v ]) => [ k, shape (v) ])) : value;
+
+// The largest difference of two values of the same shape over their numbers, in units of the tolerance of each number.
+const navExcess = (a, b, key = "") => typeof a === "number"
+   ? Math .abs (a - b) / (key .endsWith ("Rate") ? NAV_RATE_TOLERANCE * Math .max (Math .abs (b), 1e-9) : key .endsWith ("Dir") ? NAV_DIR_TOLERANCE : NAV_TOLERANCE)
+   : Array .isArray (a) ? Math .max (0, ... a .map ((v, i) => navExcess (v, b [i], key)))
+   : a && typeof a === "object" ? Math .max (0, ... Object .keys (a) .map (k => navExcess (a [k], b [k], k)))
+   : 0;
+
 // --- reference cases ----------------------------------------------------------------------------------------------
 
 // The reference case groups of each test file. A group in no file, or a file here that does not exist, fails every
@@ -769,6 +793,8 @@ const GROUP_FILES = {
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
+   navPlane: "nav03.test.mjs",
+   navLookAt: "nav03.test.mjs",
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",
@@ -900,6 +926,14 @@ export function referenceCases (file, { skip = false } = { })
                   {
                      assert .ok (Math .abs (compared .rms - theirs .rms) <= RMS_TOLERANCE, `${key}: rms ${compared .rms} against the recorded ${theirs .rms} (tolerance ${RMS_TOLERANCE})`);
                      compared .rms = theirs .rms;
+                  }
+
+                  // The poses of the navigation cases (nav*_case.mjs) are equal within the tolerances above.
+                  if (group .suite .startsWith ("nav"))
+                  {
+                     assert .deepEqual (shape (compared), shape (theirs), `${key}: the poses are not the same steps`);
+                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate, ${NAV_DIR_TOLERANCE} for a Dir)`);
+                     compared = theirs;
                   }
 
                   assert .deepEqual (compared, theirs, `${key}\n${page .log .join ("\n")}`);

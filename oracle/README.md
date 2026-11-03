@@ -1362,3 +1362,18 @@ element and whether the menu is open, for the right button, a left click, a real
 ## Owner decisions batch (issue #68)
 
 `oracle/synthetic-rea-b68-owner/` holds five worlds (BlendedVolumeStyle `ALPHA1`, `ALPHA2` and the CONSTANT twin; ShadedVolumeStyle with a `Material` and with a `PhysicalMaterial`) and `xite-runs.json`, the result of `node oracle/x_ite-shot.mjs oracle/synthetic-rea-b68-owner OUT` run five times against the pinned X_ITE (5 identical): `bl-iso1` and `sh-physicalmaterial` never draw (`TIMEOUT 45s`), `bl-iso2` draws the same picture as `bl-const`. Rust side: `crates/x3d-render/tests/render_b68_owner.rs`. Decisions: `docs/adr/0012-owner-decisions-batch.md`. The shot tool serves only paths under `oracle/`; it needs `oracle/x_ite-pin/node_modules` (a symlink, not committed).
+
+### Web browser navigation touch 03 (`web-browser-nav-03-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav03` runs the 12 cases of `crates/x3d-web/tests/browser/nav03_case.mjs` (issue
+  #370, ledger `sub:nav.plane` P09 and `sub:nav.lookat` L06) and records `web-browser-nav-03-baseline/nav03-baseline.json`
+  and 2 pictures: PLANE and LOOKAT with a synthetic Chrome DevTools touch, the viewpoint pose after every step. Two
+  fingers moving the same way, apart and together, the mode locked by the first moves, one finger dragging (no effect in
+  either viewer), a double tap on a box and on empty space (a look-at on the box in both), taps too far apart. PLANE's
+  zoom changes the field of view scale, which a page cannot read (it is not in the Viewpoint's `getFieldDefinitions`),
+  so the zoom cases also compare the picture (the thresholds of runtime 01). The tolerance, fixed before the first run,
+  is 1e-3 on every number. Three runs, identical values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-03-baseline --runs 3 --suite nav03
+```
