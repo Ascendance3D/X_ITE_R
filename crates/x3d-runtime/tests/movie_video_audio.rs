@@ -40,6 +40,9 @@ fn load(body: &str, extra: Vec<(String, Vec<u8>)>) -> Runtime {
     let scene = x3d_parse::parse_bytes(text.as_bytes(), "http://oracle/t.x3dv").unwrap();
     let mut rt = Runtime::new(scene, Box::new(Files(extra)));
 
+    // These cases are the pinned X_ITE 16.5.0 behavior (docs/movie-texture-timing.md), not the ISO default.
+    rt.set_movie_timing(x3d_runtime::nodes::movie_time::MovieTiming::Pinned);
+
     rt.load_world();
 
     for _ in 0..10 {

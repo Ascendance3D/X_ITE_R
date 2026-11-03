@@ -28,6 +28,7 @@ impl MovieMedia {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            iso: Default::default(),
         })
     }
 }
