@@ -80,6 +80,7 @@ jobs:
         id: shards
         run: |
           node --test crates/x3d-web/tests/browser/shards_check.mjs
+          node --test 'crates/x3d-web/tests/xr/*.test.mjs'
           echo "shards=$(node crates/x3d-web/tests/browser/shards.mjs matrix)" >> "$GITHUB_OUTPUT"
 
   build:

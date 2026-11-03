@@ -28,24 +28,13 @@ const ID_SIMPLE_BLOCK: u64 = 0xA3;
 const ID_BLOCK_GROUP: u64 = 0xA0;
 const ID_BLOCK: u64 = 0xA1;
 
+pub use crate::video_types::{AudioTrack, WebmError};
+
 /// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
 /// VP9's highest levels (8192 x 4352 fits; the level tables are not in the local standards library, so this is a
 /// limit of this implementation, not a quotation). `vp9dec` allows 2^27 samples, about 400 MB per picture and up
 /// to eight pictures held as references; a size from a file is checked here first.
 pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
-
-/// Why a file is not decoded.
-#[derive(Debug)]
-pub enum WebmError {
-    NotWebm,
-    /// No video track with a codec that is decoded here (VP9, VP8).
-    NoVideoTrack,
-    Decode(String),
-    /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
-    /// RGBA pictures kept so far exceed the `max_bytes` of [`decode`] (refused before the next picture is kept). The
-    /// second limit does not bound the working memory of the decoder; the first does.
-    TooLarge,
-}
 
 /// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
 pub struct VideoFrame {
@@ -536,6 +525,58 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
         height,
         frames,
     })
+}
+
+/// The CodecID of the first audio track of `data`.
+fn audio_codec(data: &[u8]) -> Option<Vec<u8>> {
+    let top = children(data, 0, data.len());
+    let &(_, seg_start, seg_end) = top.iter().find(|t| t.0 == ID_SEGMENT)?;
+
+    for (id, s, e) in children(data, seg_start, seg_end) {
+        if id != ID_TRACKS {
+            continue;
+        }
+
+        for (tid, ts, te) in children(data, s, e) {
+            if tid != ID_TRACK_ENTRY {
+                continue;
+            }
+
+            let (mut kind, mut codec) = (0, &data[0..0]);
+
+            for (cid, cs, ce) in children(data, ts, te) {
+                match cid {
+                    ID_TRACK_TYPE => kind = uint(&data[cs..ce]),
+                    ID_CODEC_ID => codec = &data[cs..ce],
+                    _ => {}
+                }
+            }
+
+            if kind == 2 {
+                return Some(codec.to_vec());
+            }
+        }
+    }
+
+    None
+}
+
+/// The audio track of a WebM. Vorbis is decoded (symphonia, already a dependency); Opus and any other codec are
+/// reported as unsupported, so a caller can say so instead of playing nothing silently. A panic in the decoder is a
+/// corrupt track.
+pub fn audio(data: &[u8]) -> AudioTrack {
+    let Some(codec) = audio_codec(data) else {
+        return AudioTrack::None;
+    };
+
+    if codec != b"A_VORBIS" {
+        return AudioTrack::Unsupported(String::from_utf8_lossy(&codec).into_owned());
+    }
+
+    match std::panic::catch_unwind(|| crate::sound::decode::decode_compressed_with(data, true)) {
+        Ok(Some((channels, rate))) => AudioTrack::Decoded { channels, rate },
+        _ => AudioTrack::Corrupt,
+    }
 }
 
 /// A track number: an EBML variable-length integer with the marker removed.
@@ -1532,7 +1573,7 @@ mod tests {
 
         d.truncate(40);
         assert!(decode(&d, BUDGET).is_err());
-        assert!(super::super::nodes::movie_texture::MovieMedia::decode_webm(b"x").is_none());
+        assert!(super::super::nodes::movie_texture::MovieMedia::decode_webm(b"x").is_err());
     }
 
     // ---- VP8 ----
@@ -1795,5 +1836,52 @@ mod tests {
             decode(&webm, BUDGET),
             Err(WebmError::NoVideoTrack)
         ));
+    }
+
+    // ---- audio track ----
+
+    fn codec_webm(name: &str) -> Vec<u8> {
+        std::fs::read(format!(
+            "{}/../../oracle/synthetic-movie-codecs/media/{name}.webm",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap()
+    }
+
+    fn reference_audio(name: &str) -> Vec<f32> {
+        std::fs::read(format!(
+            "{}/../../oracle/synthetic-movie-codecs/media/{name}.audio.f32",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap()
+        .chunks_exact(4)
+        .map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+        .collect()
+    }
+
+    /// The Vorbis track of a VP8 and of a VP9 WebM decodes to what ffmpeg's decoder gives: the same rate and length
+    /// and every sample within 2e-4 (two float decoders of the same stream).
+    #[test]
+    fn the_vorbis_track_of_a_webm_equals_the_reference_decode() {
+        for name in ["vp8-vorbis", "vp9-vorbis"] {
+            let webm = codec_webm(name);
+            let want = reference_audio(name);
+            let AudioTrack::Decoded { channels, rate } = audio(&webm) else {
+                panic!("{name}: not decoded");
+            };
+
+            assert_eq!(rate, 16000.0, "{name}");
+            assert_eq!(channels.len(), 1, "{name}");
+            assert_eq!(channels[0].len(), want.len(), "{name}: length");
+
+            let worst = channels[0]
+                .iter()
+                .zip(&want)
+                .map(|(a, b)| (a - b).abs())
+                .fold(0.0f32, f32::max);
+
+            assert!(worst < 2e-4, "{name}: worst sample difference {worst}");
+            assert!(channels[0].iter().any(|s| s.abs() > 0.1), "{name}: silent");
+        }
     }
 }

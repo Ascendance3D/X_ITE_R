@@ -79,6 +79,51 @@ Shape { appearance Appearance { texture MovieTexture { url "media/%s.webm" } } g
 """
 
 
+# Streams with an audio track (issue #90, video audio): name: (video codec, audio codec, audio rate).
+# A 440 Hz sine of 0.6 s, mono, with 6 pictures at 10 per second. `<name>.audio.f32` is ffmpeg's own decode of the
+# audio track (float32 little-endian samples at the track's rate), the reference of the Rust decoder.
+AV = {
+    "vp8-vorbis": ("libvpx", "libvorbis", 16000),
+    "vp9-vorbis": ("libvpx-vp9", "libvorbis", 16000),
+    # Opus is not decodable natively (no decoder is admitted): the stream exists to test the diagnostic.
+    "vp8-opus": ("libvpx", "libopus", 48000),
+}
+
+
+def make_ramp():
+    """vp8-ramp: eight uniform gray pictures at 10 per second, picture k with luma 16 + 28 k (so a decoder or a
+    browser shows which picture it is on); the timing reference of the playback comparison."""
+    out = os.path.join(media, "vp8-ramp.webm")
+    run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-t", "0.8", "-i", "color=c=black:s=64x48:r=10",
+         "-vf", "format=yuv420p,geq=lum='16+28*N':cb=128:cr=128", "-c:v", "libvpx", "-g", "4", "-crf", "10",
+         "-b:v", "0", "-an", "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact", out])
+    with open(os.path.join(media, "vp8-ramp.planes.tsv"), "w") as f:
+        f.write("\n".join(planes_hashes(out, 64, 48)) + "\n")
+    make_world("vp8-ramp")
+    print("vp8-ramp", os.path.getsize(out), "bytes")
+
+
+def make_av(name, spec):
+    vcodec, acodec, rate = spec
+    out = os.path.join(media, name + ".webm")
+    run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-t", "0.6", "-i", "testsrc2=size=64x48:rate=10",
+         "-f", "lavfi", "-t", "0.6", "-i", f"sine=frequency=440:sample_rate={rate}",
+         "-ac", "1", "-c:v", vcodec, "-g", "5", "-crf", "20", "-b:v", "0", "-pix_fmt", "yuv420p",
+         "-c:a", acodec, "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+         "-flags:a", "+bitexact", "-shortest", out])
+    if acodec == "libvorbis":
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", out, "-vn", "-f", "f32le", "-ac", "1", "-"],
+                             check=True, stdout=subprocess.PIPE).stdout
+        with open(os.path.join(media, name + ".audio.f32"), "wb") as f:
+            f.write(raw)
+    make_world_for(name)
+    print(name, os.path.getsize(out), "bytes")
+
+
+def make_world_for(name):
+    make_world(name)
+
+
 def make_world(name):
     """The still world of one stream: its first picture on an unlit rectangle (pinned X_ITE and the Rust renderer
     both show picture 0 before the node starts)."""
@@ -92,3 +137,8 @@ if __name__ == "__main__":
         if not only or name in only:
             make_vp8(name, spec)
             make_world(name)
+    if not only or "vp8-ramp" in only:
+        make_ramp()
+    for name, spec in AV.items():
+        if not only or name in only:
+            make_av(name, spec)
