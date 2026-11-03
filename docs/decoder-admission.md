@@ -32,7 +32,7 @@ PARTIAL).
 | `rav1d-safe` 0.6.0 | AV1 | AGPL-3.0-only OR commercial | License fails BR1.7. Not added. |
 | in-repo AV1 decoder | AV1 | MIT | Does not change the patent question, which attaches to the technique, not the implementation. Not started. |
 
-## VP8: status no-known-encumbrance
+## VP8: no known third-party claim, but OWNER DECISION required (revised after review)
 
 - Technique: Google holds and licenses the VP8 patents under the WebM Project's irrevocable, royalty-free patent
   license for the reference implementation and its derivatives.
@@ -45,8 +45,20 @@ PARTIAL).
 - No VP8 pool or assertion against implementers turned up in the search after that date.
 - Not established: whether the 2013 license moved unchanged when MPEG LA became Via Licensing Alliance in 2023. The
   sources found do not say.
-- Result: no-known-encumbrance, with that one open point. License of the vendored code: MIT plus the BSD-3-Clause
-  notice for the RFC tables, both permitted. VP8 meets BR1.7 and proceeds to Step 3.
+- Primary text of Google's grant (<https://www.webmproject.org/license/additional/>, read 2026-11-02): a perpetual,
+  worldwide, royalty-free, irrevocable (except on patent litigation) license to patent claims Google owns that are
+  "necessarily infringed by these implementations of WebM", where "these implementations" are the works "distributed by
+  Google as part of the WebM Project"; claims "infringed only as a consequence of further modification" are excluded. The
+  page says nothing about independently written decoders or about the 2013 MPEG LA agreement.
+- So the grant covers Google's own distributed implementations, not clearly an independent decoder such as the one
+  adapted here (not derived from libvpx). The 2013 agreement is known only from press releases (secondary), which say
+  Google may sublicense it to VP8 users; no license text was found.
+- Result: no third-party VP8 claim is known, but the patent position of an independent decoder rests on secondary
+  sources and an unconfirmed continuity question. BR1.7 admits without the owner only on a checked
+  no-known-encumbrance; this is not clean enough to claim that. VP8 is routed to the owner together with AV1, and
+  together with `vp9dec` (already a dependency; VP9 has the same shape: a Google grant for Google's implementation and a
+  Sisvel pool for VP9). Until the owner rules, PRs #353 and #355 are not merged. License of the vendored code: MIT plus
+  the BSD-3-Clause notice for the RFC tables, both permitted.
 
 ## AV1: status encumbered or disputed. OWNER DECISION required
 
