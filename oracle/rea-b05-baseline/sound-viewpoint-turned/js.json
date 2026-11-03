@@ -1,0 +1,142 @@
+{
+ "ok": true,
+ "poses": {
+  "80": {
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "orientation": [
+    1.0000000000000002,
+    0,
+    0,
+    0.9999999999999998
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "V",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF V Viewpoint {\n  position 0 0 0\n  orientation 1 0 0 1\n}\n\nSound {\n  location 0 0 -5\n  minBack 20\n  minFront 20\n  maxBack 40\n  maxFront 40\n  source DEF O AudioClip {\n    url \"media/tone48k-stereo.wav\"\n    loop TRUE\n    startTime 946684800.048\n  }\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 89\n\n  url \"javascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nDEF K Script {\n  initializeOnly SFNode  o USE V\n  inputOnly      SFTime  set_time\n  initializeOnly SFInt32 n 89\n\n  url \"javascript:\nfunction set_time (value) { ++ n;\n   if (n === 24) { o.orientation = new SFRotation (0, 1, 0, -1.5708); }\n   if (n === 36) { o.orientation = new SFRotation (1, 0, 0, 1.0); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\nROUTE T.time TO K.set_time\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720,
+  31488,
+  32256,
+  33024,
+  33792,
+  34560,
+  35328,
+  36096,
+  36864,
+  37632,
+  38400,
+  39168,
+  39936,
+  40704,
+  41472,
+  42240,
+  43008,
+  43776,
+  44544,
+  45312,
+  46080,
+  46848,
+  47616,
+  48384,
+  49152,
+  49920,
+  50688,
+  51456,
+  52224,
+  52992,
+  53760,
+  54528,
+  55296,
+  56064,
+  56832,
+  57600,
+  58368,
+  59136,
+  59904,
+  60672,
+  61440
+ ],
+ "console": [],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 61952,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}
