@@ -41,6 +41,7 @@ import { CASE_GROUPS as ATTRIBUTES01_GROUPS } from "./attributes01_case.mjs";
 import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
+import { CASE_GROUPS as NAV01_GROUPS } from "./nav01_case.mjs";
 import { CASE_GROUPS as NAV02_GROUPS } from "./nav02_case.mjs";
 import { CASE_GROUPS as NAV04_GROUPS } from "./nav04_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
@@ -107,6 +108,7 @@ const SUITES = {
    entry01: { dir: process .env .XR_ENTRY01_BASELINE ?? join (REPO, "oracle/web-browser-entry-01-baseline"), file: "entry01-baseline.json", groups: ENTRY01_GROUPS },
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
+   nav01: { dir: process .env .XR_NAV01_BASELINE ?? join (REPO, "oracle/web-browser-nav-01-baseline"), file: "nav01-baseline.json", groups: NAV01_GROUPS },
    nav02: { dir: process .env .XR_NAV02_BASELINE ?? join (REPO, "oracle/web-browser-nav-02-baseline"), file: "nav02-baseline.json", groups: NAV02_GROUPS },
    nav04: { dir: process .env .XR_NAV04_BASELINE ?? join (REPO, "oracle/web-browser-nav-04-baseline"), file: "nav04-baseline.json", groups: NAV04_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
@@ -795,6 +797,7 @@ const GROUP_FILES = {
    entryPoints: "entry01.test.mjs",
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
+   navExamine: "nav01.test.mjs",
    navWalkFly: "nav02.test.mjs",
    navPress: "nav04.test.mjs",
    sound: "sound01.test.mjs",

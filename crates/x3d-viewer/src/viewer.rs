@@ -468,6 +468,14 @@ impl Viewer3d {
             .scene
             .map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
+        // `X3D_MOVIE_TIMING=pinned` selects the pinned X_ITE 16.5.0 MovieTexture time; the default is ISO 19775-1
+        // (docs/movie-texture-timing.md).
+        if let Some(t) = std::env::var("X3D_MOVIE_TIMING")
+            .ok()
+            .and_then(|v| x3d_runtime::nodes::movie_time::MovieTiming::parse(&v))
+        {
+            rt.set_movie_timing(t);
+        }
         // The oracle page (oracle/x_ite-pin/src/anim.html) is the document the browser lives in.
         rt.page_url = format!("{ORACLE_PREFIX}x_ite-pin/src/anim.html");
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
@@ -2712,6 +2720,12 @@ impl Viewer3d {
     }
 
     // --- input -------------------------------------------------------------------------------
+
+    /// `Date .now ()` (seconds) at an input event. The viewers read the clock at the event (a double tap: two touch ends within
+    /// 300 ms or 400 ms), but `date_now` is that of the last frame, which on a slow machine is a few hundred ms old.
+    pub fn event_time(&mut self, now: f64) {
+        self.date_now = self.date_now.max(now);
+    }
 
     pub fn input(&mut self, ev: UiEvent) {
         // A slot released since the last frame may have been handed out again (a load that
