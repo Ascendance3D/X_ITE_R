@@ -17,6 +17,8 @@ use std::process::Command;
 
 const SENDER_PORTS: [u16; 2] = [41234, 41235];
 const LISTEN_PORT: u16 = 41236;
+/// The period of one round of the UDP sender (a datagram to each of two ports).
+const ROUND: std::time::Duration = std::time::Duration::from_millis(12);
 
 struct UdpVerdict {
     control: bool,
@@ -54,6 +56,9 @@ impl Udp {
         let listener = UdpSocket::bind(("127.0.0.1", listen_port)).unwrap();
         // Never block: a round that waits for the listener is a round the sender does not make. A short drive (a fast
         // machine) then gets a few rounds, and the floor of the check below cannot be met (physical Mac: 9 rounds).
+        // The rounds are paced by a fixed period instead (ROUND), not run as fast as the sleep allows: macOS limits
+        // the ICMP port unreachable replies to 250 a second, and a sender above that sees sends that no refusal
+        // follows (the check wants half of the sends refused). Two ports at 12 ms make 167 a second.
         listener.set_nonblocking(true).unwrap();
         let stop = Arc::new(AtomicBool::new(false));
         let flag = stop.clone();
@@ -91,6 +96,8 @@ impl Udp {
             let mut buf = [0u8; 4096];
             let mut round = 0u8;
 
+            let mut next = std::time::Instant::now();
+
             while !flag.load(Ordering::Relaxed) {
                 for (i, s) in senders.iter().enumerate() {
                     let kind = [1u8, 25, 26, 27][(round as usize + i) % 4];
@@ -110,7 +117,10 @@ impl Udp {
                 }
 
                 round = round.wrapping_add(1);
-                std::thread::sleep(std::time::Duration::from_millis(1));
+                // A tick every ROUND, not a sleep of ROUND after the work: a sleep that overshoots (the hosted
+                // macOS machine rounds 1 ms up to 9 ms) is made up for by the next tick.
+                next += ROUND;
+                std::thread::sleep(next.saturating_duration_since(std::time::Instant::now()));
             }
 
             UdpVerdict {
@@ -443,8 +453,9 @@ fn the_udp_sender_makes_many_rounds_in_a_short_drive() {
     };
     let udp = Udp::start_on([free(), free()], free());
 
-    // The 190 ms of the Mac drive: 9 rounds then, a hundred or more now.
-    std::thread::sleep(std::time::Duration::from_millis(190));
+    // A drive of 400 ms: the old sender (a 20 ms wait in every round) made 19 rounds or fewer in it (9 in the 190 ms of
+    // the Mac drive); a round every 12 ms makes 33.
+    std::thread::sleep(std::time::Duration::from_millis(400));
 
     let v = udp.finish();
 
@@ -453,8 +464,8 @@ fn the_udp_sender_makes_many_rounds_in_a_short_drive() {
 
     for (port, sent, refused) in &v.ports {
         assert!(
-            sent + refused >= 40,
-            "port {port}: {sent} sent and {refused} refused in 190 ms; a round must not wait"
+            sent + refused >= 25,
+            "port {port}: {sent} sent and {refused} refused in 400 ms; a round must not wait"
         );
         assert!(
             *refused >= 5 && *refused * 2 >= *sent,
