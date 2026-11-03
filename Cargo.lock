@@ -3193,7 +3193,6 @@ dependencies = [
  "lazy_static",
  "symphonia-bundle-flac 0.5.5",
  "symphonia-bundle-mp3 0.5.5",
- "symphonia-codec-aac 0.5.5",
  "symphonia-codec-adpcm 0.5.5",
  "symphonia-codec-alac 0.5.5",
  "symphonia-codec-pcm 0.5.5",
@@ -3215,7 +3214,6 @@ dependencies = [
  "lazy_static",
  "symphonia-bundle-flac 0.6.1",
  "symphonia-bundle-mp3 0.6.1",
- "symphonia-codec-aac 0.6.1",
  "symphonia-codec-adpcm 0.6.1",
  "symphonia-codec-alac 0.6.1",
  "symphonia-codec-pcm 0.6.1",
@@ -3273,29 +3271,6 @@ checksum = "98ea5ffc8716bff677dfb3b01b420c7b758de901a72b8c330bf2040ab74b4add"
 dependencies = [
  "lazy_static",
  "log",
- "symphonia-core 0.6.1",
-]
-
-[[package]]
-name = "symphonia-codec-aac"
-version = "0.5.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c263845aa86881416849c1729a54c7f55164f8b96111dba59de46849e73a790"
-dependencies = [
- "lazy_static",
- "log",
- "symphonia-core 0.5.5",
-]
-
-[[package]]
-name = "symphonia-codec-aac"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5bf8e39552d34a3c4c98333370e62f48c92456d2e814f273b5c3ad7c4a5f45c"
-dependencies = [
- "lazy_static",
- "log",
- "symphonia-common",
  "symphonia-core 0.6.1",
 ]
 
@@ -4068,8 +4043,6 @@ dependencies = [
 [[package]]
 name = "web-audio-api"
 version = "1.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "013903031fb735e7fd9aee7c159f3440a19c6969dc81365aec8c64caddcf39bc"
 dependencies = [
  "almost",
  "arc-swap",
