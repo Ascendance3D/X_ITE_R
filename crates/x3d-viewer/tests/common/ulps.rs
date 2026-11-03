@@ -52,11 +52,62 @@ pub fn within_ulps(a: &Value, b: &Value, max_ulps: u64, seen: &mut u64) -> bool 
 /// The absolute tolerance of a run on a software rasterizer (issue #89), or `None` on a GPU. A run sets
 /// `X3D_TEST_SOFTWARE_TOL` to the number (1e-4 in the classification record docs/particle-array-size-backends.md, fixed
 /// before the llvmpipe run that uses it): a software backend rounds the depth interpolation and the float math
-/// differently from the answer keys' discrete GPU. The default is strict. A bad value is a test failure, not a skip.
+/// differently from the answer keys' discrete GPU. The default is strict. A bad value is a test failure, not a skip, and so
+/// is the variable on a hardware adapter ([`decide_software_tol`]). A test calls this once at its start.
 pub fn software_tol() -> Option<f64> {
     let raw = std::env::var("X3D_TEST_SOFTWARE_TOL").ok();
+    let tol = parse_software_tol(raw.as_deref()).unwrap_or_else(|e| panic!("{e}"));
 
-    parse_software_tol(raw.as_deref()).unwrap_or_else(|e| panic!("{e}"))
+    if tol.is_none() {
+        return None;
+    }
+
+    // The adapter the pointing pass would take (x3d_render::pointing_gpu::PointingGpu::new_headless): the same backend
+    // choice and power preference. With no adapter the test skips anyway.
+    let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
+    desc.backends = x3d_render::gpu::headless_backends(
+        std::env::var("X3D_POINTING_BACKEND")
+            .or_else(|_| std::env::var("X3D_BACKEND"))
+            .ok()
+            .as_deref(),
+    )
+    .unwrap_or_else(|e| panic!("{e}"));
+    let instance = wgpu::Instance::new(desc);
+    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+        power_preference: wgpu::PowerPreference::HighPerformance,
+        ..Default::default()
+    }));
+    let Ok(adapter) = adapter else {
+        return tol;
+    };
+    let info = adapter.get_info();
+
+    decide_software_tol(tol, info.device_type, &info.name).unwrap_or_else(|e| panic!("{e}"))
+}
+
+/// Whether an adapter is a software rasterizer: the CPU device type, or a name that says so.
+pub fn is_software_adapter(device_type: wgpu::DeviceType, name: &str) -> bool {
+    let name = name.to_lowercase();
+
+    device_type == wgpu::DeviceType::Cpu
+        || ["llvmpipe", "swiftshader", "softpipe", "lavapipe"]
+            .iter()
+            .any(|n| name.contains(n))
+}
+
+/// `tol` as the run may use it: the variable is for a software adapter only. On a hardware adapter it is an error, so that
+/// a run on the discrete GPU cannot hide a real difference behind the software limit.
+pub fn decide_software_tol(
+    tol: Option<f64>,
+    device_type: wgpu::DeviceType,
+    name: &str,
+) -> Result<Option<f64>, String> {
+    match tol {
+        Some(t) if !is_software_adapter(device_type, name) => Err(format!(
+            "X3D_TEST_SOFTWARE_TOL={t:e} is set, but the adapter {name:?} ({device_type:?}) is not a software rasterizer: unset it for a hardware run"
+        )),
+        other => Ok(other),
+    }
 }
 
 /// The value of `X3D_TEST_SOFTWARE_TOL`: `None` when unset, an error when it is not a finite number above zero. A test calls
@@ -80,7 +131,11 @@ pub fn parse_software_tol(raw: Option<&str>) -> Result<Option<f64>, String> {
 pub fn within_abs(a: &Value, b: &Value, tol: f64, seen: &mut f64) -> bool {
     match (a, b) {
         (Value::Number(x), Value::Number(y)) => {
-            let d = (x.as_f64().unwrap() - y.as_f64().unwrap()).abs();
+            // A number that is not representable as f64 cannot be compared: it does not match (the failure text shows it).
+            let (Some(x), Some(y)) = (x.as_f64(), y.as_f64()) else {
+                return false;
+            };
+            let d = (x - y).abs();
 
             *seen = seen.max(d);
             d <= tol

@@ -24,6 +24,8 @@
 //! The GPU test needs an adapter and is skipped without one. `REA_ONLY=<substring>` restricts the
 //! cases.
 
+mod common;
+
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -32,18 +34,12 @@ use std::process::Command;
 const PROBE_TOL: f64 = 1e-6;
 
 /// [`PROBE_TOL`], or the larger `X3D_TEST_SOFTWARE_TOL` of a run on a software rasterizer (issue #89; 1e-4 in
-/// docs/particle-array-size-backends.md, fixed before the llvmpipe run). Hit states and shape names stay exact.
+/// docs/particle-array-size-backends.md, fixed before the llvmpipe run). Hit states and shape names stay exact. The value is
+/// read and checked once, at the start of the test (a bad value, or the variable on a hardware adapter, fails the run).
 fn probe_tol() -> f64 {
-    match std::env::var("X3D_TEST_SOFTWARE_TOL") {
-        Ok(v) => {
-            let t: f64 = v.trim().parse().unwrap_or_else(|_| {
-                panic!("X3D_TEST_SOFTWARE_TOL={v:?}: expected a positive number")
-            });
-            assert!(t.is_finite() && t > 0.0, "X3D_TEST_SOFTWARE_TOL={v:?}");
-            t.max(PROBE_TOL)
-        }
-        Err(_) => PROBE_TOL,
-    }
+    static TOL: std::sync::OnceLock<f64> = std::sync::OnceLock::new();
+
+    *TOL.get_or_init(|| common::ulps::software_tol().map_or(PROBE_TOL, |t| t.max(PROBE_TOL)))
 }
 
 /// Allowed difference of the pose and positionOffset.

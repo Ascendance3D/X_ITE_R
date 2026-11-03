@@ -31,8 +31,12 @@ of the pinned page needs Chromium on a Metal device (see "Not done").
 
 ### llvmpipe, classification (BR2.2)
 
-Tolerance fixed before the run: absolute **1e-4** on every number (`X3D_TEST_SOFTWARE_TOL`, off by default, so the RTX and CI
-runs stay strict); hit or miss, the selected particle and the shape name stay exact.
+Tolerance fixed before the run: absolute **1e-4** on every number (`X3D_TEST_SOFTWARE_TOL`). Final behavior: the variable is off by default, so the RTX and CI
+runs stay strict. A test reads it **once at its start**: a value that is not a finite number above zero fails the run (even when every
+compared value matches strictly), and so does the variable on a **hardware adapter** (a device type other than CPU, and a name
+without llvmpipe, SwiftShader, softpipe or lavapipe), checked against the adapter the pointing pass takes. It applies only to the
+comparison with the X_ITE records of `rea_b14` (the comparison with the port's own records stays strict) and to `rea_b15`; hit or
+miss, the selected particle and the shape name stay exact. The decision is unit-tested without a GPU.
 
 | test | result | classification |
 | --- | --- | --- |
