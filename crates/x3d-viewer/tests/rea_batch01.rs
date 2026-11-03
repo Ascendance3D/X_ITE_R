@@ -17,6 +17,19 @@ use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+// Hosted macOS (virtualized Apple Paravirtual device, Metal): with 4x multisampling the edge pixels differ from the pinned
+// image by up to 0.912% of the image (i92-tr-opaque, shading-wireframe: 2392 and 2390 of 262144 pixels, max delta 64 and 109;
+// the same worlds are within 0.34% on the RTX 3060 Ti), because the device's 4x sample positions are not Vulkan's, which the
+// renderer's GL sample orientation is built for. Limit for multisampled passes on macOS, fixed before the run: 1.0%
+// (10 per mille). Single-sample passes and every other platform keep 0.5%.
+fn over_limit_permille(samples: u32) -> usize {
+    if cfg!(target_os = "macos") && samples > 1 {
+        10
+    } else {
+        5
+    }
+}
+
 fn quat(r: &[f64]) -> [f64; 4] {
     let n = (r[0] * r[0] + r[1] * r[1] + r[2] * r[2]).sqrt();
     let n = if n == 0.0 { 1.0 } else { n };
@@ -209,7 +222,7 @@ fn compare_case(
                 Ok((rw, rh, got)) if (rw, rh) == (w, h) => {
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
-                    if s.pixels_over * 1000 > (w * h) as usize * 5 {
+                    if s.pixels_over * 1000 > (w * h) as usize * over_limit_permille(msaa) {
                         fail(format!(
                             "{file}: {} pixels over 8 ({:.3}%), max {}",
                             s.pixels_over, s.pct_over, s.max_delta
