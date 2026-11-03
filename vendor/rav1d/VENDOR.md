@@ -27,7 +27,7 @@ release build all ended with a decode result or an error (see Check it).
 ## The change
 
 One statement in `src/decode.rs` (`on_error`): `f.frame_hdr.as_ref().unwrap().refresh_context != 0` becomes
-`f.frame_hdr.as_ref().is_none_or(|h| h.refresh_context != 0)`, with a comment. When the header is already gone the
+`f.frame_hdr.as_ref().map_or(true, |h| h.refresh_context != 0)`, with a comment (`map_or`, not `is_none_or`: the crate declares `rust-version = "1.79"` and `is_none_or` needs 1.82). When the header is already gone the
 output CDF is released too, which is the safe direction. Everything else is byte-identical to the crate, except what is
 left out: `.github/`, `.gitlab-ci.yml`, `.gitignore` (upstream CI files that mean nothing here) and `.cargo-ok`.
 
