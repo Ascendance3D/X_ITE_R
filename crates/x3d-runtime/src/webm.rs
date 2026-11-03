@@ -28,24 +28,13 @@ const ID_SIMPLE_BLOCK: u64 = 0xA3;
 const ID_BLOCK_GROUP: u64 = 0xA0;
 const ID_BLOCK: u64 = 0xA1;
 
+pub use crate::video_types::{AudioTrack, WebmError};
+
 /// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
 /// VP9's highest levels (8192 x 4352 fits; the level tables are not in the local standards library, so this is a
 /// limit of this implementation, not a quotation). `vp9dec` allows 2^27 samples, about 400 MB per picture and up
 /// to eight pictures held as references; a size from a file is checked here first.
 pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
-
-/// Why a file is not decoded.
-#[derive(Debug)]
-pub enum WebmError {
-    NotWebm,
-    /// No video track with a codec that is decoded here (VP9, VP8).
-    NoVideoTrack,
-    Decode(String),
-    /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
-    /// RGBA pictures kept so far exceed the `max_bytes` of [`decode`] (refused before the next picture is kept). The
-    /// second limit does not bound the working memory of the decoder; the first does.
-    TooLarge,
-}
 
 /// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
 pub struct VideoFrame {
@@ -536,18 +525,6 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
         height,
         frames,
     })
-}
-
-/// The audio track of a WebM, as far as this build decodes it.
-pub enum AudioTrack {
-    /// The file has no audio track (a silent video: not an error).
-    None,
-    /// The track's codec has no decoder in this build (CodecID, e.g. `A_OPUS`).
-    Unsupported(String),
-    /// The track is there and does not decode.
-    Corrupt,
-    /// The planar samples at the track's own rate.
-    Decoded { channels: Vec<Vec<f32>>, rate: f32 },
 }
 
 /// The CodecID of the first audio track of `data`.
