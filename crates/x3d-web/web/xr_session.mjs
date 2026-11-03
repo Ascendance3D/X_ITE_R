@@ -96,7 +96,7 @@ export class XRSessionController {
         referenceSpace = await session.requestReferenceSpace("local");
         await prepare?.(session);
       } catch (error) {
-        await session.end?.().catch?.(() => {});
+        await endQuietly(session);
         throw error;
       }
 
@@ -128,7 +128,7 @@ export class XRSessionController {
       }
 
       // The session may already have ended (the "end" event): ending it again is not an error.
-      await Promise.resolve(session.end?.()).catch(() => {});
+      await endQuietly(session);
 
       for (const [name, handler] of this.listeners) {
         session.removeEventListener?.(name, handler);
@@ -268,6 +268,11 @@ export class XRSessionController {
 
   /** The first loop of X_ITE's xrUpdatePointers: the target-ray pose of every input source (`active` when it has one). */
   updateTargetRays() {
+    // Valid only once a frame has arrived; before the first frame, or after stop(), there is nothing to update.
+    if (!this.frame) {
+      return;
+    }
+
     for (const inputSource of this.inputSources ?? []) {
       const targetRayPose = this.frame.getPose(inputSource.targetRaySpace, this.referenceSpace);
 
@@ -313,5 +318,15 @@ export class XRSessionController {
     } else {
       hit.pulse = true;
     }
+  }
+}
+
+// End a session, ignoring a rejection and a synchronous throw alike: the session may already have ended, and the controller's
+// cleanup must run either way (MiniMax review of PR #366).
+async function endQuietly(session) {
+  try {
+    await session.end?.();
+  } catch {
+    // Already ended.
   }
 }

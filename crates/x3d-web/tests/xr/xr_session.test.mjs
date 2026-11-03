@@ -82,6 +82,35 @@ test("stop ends the session once and clears every piece of state; the session's 
   assert.equal(c.active, false);
 });
 
+test("stop clears every piece of state when end() throws synchronously or rejects (review of PR #366)", async () => {
+  for (const fail of [
+    () => { throw new Error("sync"); },
+    () => Promise.reject(new Error("async")),
+  ]) {
+    const xr = new MockXR();
+    const c = controller(xr);
+
+    await c.start();
+    xr.session.end = fail;
+    await c.stop();
+    assert.equal(c.active, false);
+    assert.equal(c.session, null);
+    assert.equal(c.listeners.length, 0);
+    assert.equal(c.pose, null);
+  }
+});
+
+test("updateTargetRays before the first frame, or after stop, does nothing", async () => {
+  const xr = new MockXR();
+  const c = controller(xr);
+
+  c.updateTargetRays();
+  await c.start();
+  c.updateTargetRays();
+  await c.stop();
+  c.updateTargetRays();
+});
+
 test("the visibility state decides whether the session is visible", async () => {
   const xr = new MockXR();
   const c = controller(xr);
