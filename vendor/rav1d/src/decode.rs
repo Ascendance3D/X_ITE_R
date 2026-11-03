@@ -4996,7 +4996,7 @@ pub fn rav1d_submit_frame(c: &Rav1dContext, state: &mut Rav1dState) -> Rav1dResu
         let _ = mem::take(&mut *fc.in_cdf.try_write().unwrap());
         // x3d patch (vendor/rav1d/VENDOR.md): `rav1d_decode_frame` has already cleared `f.frame_hdr` when it fails (its
         // exit path), so the unwrap that was here panicked, inside an `extern "C"` function, which aborts the process.
-        if f.frame_hdr.as_ref().is_none_or(|h| h.refresh_context != 0) {
+        if f.frame_hdr.as_ref().map_or(true, |h| h.refresh_context != 0) {
             let _ = mem::take(&mut f.out_cdf);
         }
         for i in 0..7 {
