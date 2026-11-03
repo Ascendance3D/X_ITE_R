@@ -1011,6 +1011,57 @@ mod tests {
         }
     }
 
+    /// Every frame of real libvpx files, inter frames included, goes through the header parser of `vp9dec` with the
+    /// reference sizes it keeps (updated by `refresh_frame_flags` after each frame). `coded_size` must agree: where it
+    /// reports a size, it is the one the decoder parsed; where it reports none (a size copied from a reference), the
+    /// decoder parsed a non-intra frame. A misread of `reset_frame_context` (two bits, VP9 section 6.2) or of any
+    /// other field before the `found_ref` bits would show here, because real inter frames set those bits.
+    #[test]
+    fn coded_size_agrees_with_the_decoder_on_the_frames_of_real_files() {
+        let sf = std::fs::read(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/data/vp9-superframe-2-frames.webm"
+        ))
+        .unwrap();
+        let (mut keys, mut inters) = (0, 0);
+
+        for d in [synthetic(), big(), sf] {
+            let mut persist = vp9dec::header::PersistentState::new();
+
+            for b in demux(&d).unwrap() {
+                for f in frames_of(&d[b.start..b.end]) {
+                    let (parsed, _) =
+                        vp9dec::header::parse_uncompressed_header(f, &persist).unwrap();
+                    let vp9dec::header::FrameHeader::New(h) = parsed else {
+                        panic!("show_existing_frame in a fixture");
+                    };
+
+                    match coded_size(f) {
+                        Some(s) => {
+                            assert_eq!(s, (h.width, h.height));
+                            keys += 1;
+                        }
+                        None => {
+                            assert!(!h.frame_is_intra);
+                            inters += 1;
+                        }
+                    }
+
+                    for (slot, size) in persist.ref_frame_sizes.iter_mut().enumerate() {
+                        if h.refresh_frame_flags >> slot & 1 == 1 {
+                            *size = (h.width, h.height);
+                        }
+                    }
+                }
+            }
+        }
+
+        assert!(
+            keys >= 3 && inters >= 10,
+            "{keys} key frames, {inters} inter frames"
+        );
+    }
+
     /// A superframe that an independent splitter cut first. The file is two libvpx frames (a key frame of 2845 bytes
     /// and an inter frame of 429) joined by an index in the layout of VP9 Annex B and libvpx (marker, the sizes in
     /// frame order, little-endian, marker); ffmpeg's `vp9_superframe_split` bitstream filter cuts it into packets of
