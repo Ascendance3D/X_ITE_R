@@ -1191,6 +1191,8 @@ pub struct Renderer {
     /// top-down Vulkan one. Only the offscreen readback path can undo that; see
     /// [`Renderer::set_gl_sample_orientation`].
     gl_sample_orientation: bool,
+    /// [`Renderer::set_xr_eye`].
+    xr_eye: Option<Matrix4>,
     /// True while `render_to_rgba` draws mirrored.
     flip_now: bool,
     depth_mode: DepthMode,
@@ -1288,6 +1290,25 @@ impl Renderer {
     /// Match the sample positions of the GL oracle in `render_to_rgba` (oracle comparisons only;
     /// the picture is identical up to which samples cover an edge pixel). The windowed path
     /// ignores it.
+    /// `x3d_EyeMatrix` of an XR view (see `xr`): applied to the vertex positions after the model-view matrix
+    /// (`eye * modelView`); the normal matrix stays the one of the model-view matrix alone, as in X_ITE. `None`
+    /// (the default) is the identity.
+    pub fn set_xr_eye(&mut self, eye: Option<Matrix4>) {
+        self.xr_eye = eye;
+    }
+
+    /// The model-view matrix of the vertex shaders: with an XR eye matrix, `eye * modelView`.
+    fn eye_model_view(&self, model_view: &Matrix4) -> [f32; 16] {
+        match &self.xr_eye {
+            Some(eye) => {
+                let mut m = *model_view;
+                m.mult_right(eye);
+                f32x16(&m)
+            }
+            None => f32x16(model_view),
+        }
+    }
+
     pub fn set_gl_sample_orientation(&mut self, on: bool) {
         if self.gl_sample_orientation != on {
             self.gl_sample_orientation = on;
@@ -2116,6 +2137,7 @@ impl Renderer {
             generated: HashMap::new(),
             msaa_color: None,
             gl_sample_orientation: false,
+            xr_eye: None,
             flip_now: false,
             depth_mode: DepthMode::Standard,
             shading: ShadingMode::Gouraud,
@@ -4276,7 +4298,7 @@ impl Renderer {
         for item in &frame.items {
             let mut d: ShadowDrawU = bytemuck::Zeroable::zeroed();
             d.projection = f32x16(&projection);
-            d.model_view = f32x16(&item.model_view);
+            d.model_view = self.eye_model_view(&item.model_view);
             for (k, p) in item.clip_planes.iter().take(MAX_CLIP_PLANES).enumerate() {
                 d.clip_planes[k] = p.map(|v| v as f32);
             }
@@ -4960,7 +4982,7 @@ impl Renderer {
             let mv = f32x16(&item.model_view);
             let normal = normal_matrix(&mv);
             let mut d: DrawU = bytemuck::Zeroable::zeroed();
-            d.model_view = mv;
+            d.model_view = self.eye_model_view(&item.model_view);
 
             if self.scatter_pass {
                 scatter_id += 1;

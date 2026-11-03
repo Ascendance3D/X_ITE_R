@@ -1,0 +1,22 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-lights.x3dv",
+ "script": "synthetic-xr/stereo-lights.json",
+ "runs": 3,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [],
+ "rgbaSha256": "7f5d8dc23d974179b6c0a02b8c87ddffaa79ead6df4913f8919105a17d131e66",
+ "pngSha256": "ef4ffe0a579e8f4329fd947fd5211e9a704b6e3c3a6eb7afe96de0c2f48ec90f"
+}
