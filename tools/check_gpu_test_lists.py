@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The GPU test list of gpu-tests.yml must equal GPU_TESTS of rust-tests.yml (names only, same order not required)."""
+"""The GPU test lists of gpu-tests.yml and macos-tests.yml must equal GPU_TESTS of rust-tests.yml (names only, same order not required)."""
 import re
 import sys
 from pathlib import Path
@@ -15,7 +15,9 @@ def names(path):
     return set(re.findall(r"test\(([^)]*)\)", block.group(1)))
 
 
-hosted, gpu = names("rust-tests.yml"), names("gpu-tests.yml")
-if hosted != gpu:
-    sys.exit(f"GPU test lists differ: only in rust-tests.yml {sorted(hosted - gpu)}; only in gpu-tests.yml {sorted(gpu - hosted)}")
+hosted = names("rust-tests.yml")
+for other in ("gpu-tests.yml", "macos-tests.yml"):
+    gpu = names(other)
+    if hosted != gpu:
+        sys.exit(f"GPU test lists differ: only in rust-tests.yml {sorted(hosted - gpu)}; only in {other} {sorted(gpu - hosted)}")
 print(f"GPU test lists agree: {len(gpu)} names")

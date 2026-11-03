@@ -83,3 +83,7 @@ Issue #180 measured the eight-shard layout again on six recent pull-request runs
 ## Shared build directories and stale artifacts
 
 Worktrees of different branches that build into one `CARGO_BUILD_BUILD_DIR` share artifacts for the workspace crates. Cargo then trusts a stale artifact whose mtime is newer than the sources of the branch you are building (a merge or checkout does not touch unchanged files), and the build fails with errors such as "unresolved import" for items that exist in the source. Touch the workspace sources (`find crates -name '*.rs' -exec touch {} +`) or use one build directory per branch.
+
+## macOS job
+
+`macos-tests.yml` (issue #87) builds the workspace and runs the non-GPU tests on the GitHub-hosted `macos-15` (arm64) runner. It runs for a PR that changes `crates/`, `Cargo.*`, `.config/` or the workflow, and by hand. It is not a required check. The runner is a virtual machine: a result from it is a build and test result, not a Metal or physical-Mac result. The job lists the tests it skips by name (`GPU_TESTS`, equal to `rust-tests.yml`) in the job summary.

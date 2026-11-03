@@ -1,0 +1,118 @@
+# Build and test on macOS 15 (issue #87), on a GitHub-hosted arm64 runner: the workspace builds, and the non-GPU tests
+# run. This is not a Metal or physical-Mac result. The hosted runner is a virtual machine; the "Graphics adapter" step
+# prints what it offers, and a result from it is labeled virtualized.
+#
+# The same tests are skipped by name as in rust-tests.yml (GPU_TESTS; keep the list equal, tools/check_gpu_test_lists.py
+# checks it), plus the tests that this job lists in the job summary when they skip for a missing adapter
+# (X3D_EVIDENCE_ALLOW). Not a required check: "Rust tests result" and "Web tests result" stay the required checks.
+name: macOS tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".config/**"
+      - "rust-toolchain*"
+      - ".github/workflows/macos-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  X3D_EVIDENCE: ci
+  X3D_EVIDENCE_ALLOW: no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
+  X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
+  X3D_QUIET_NO_GPU: "1"
+  GPU_TESTS: >-
+    test(x1_runtime_matches_x_ite)
+    | test(items_runtime_matches_x_ite)
+    | test(rea_batch09_nav_shard0_match_x_ite)
+    | test(rea_batch09_nav_shard1_match_x_ite)
+    | test(rea_batch09_nav_shard2_match_x_ite)
+    | test(rea_batch09_nav_shard3_match_x_ite)
+    | test(rea_batch09_inputs_cases_match_x_ite)
+    | test(rea_batch08_net_cases_match_x_ite)
+    | test(rea_batch12_pick_cases_match_x_ite)
+    | test(rea_b14_particle_pick_matches_x_ite)
+    | test(rea_b15_particle_collision_matches_x_ite)
+    | test(rea_b21_wide_lines_match_x_ite)
+    | test(rea_b22_two_layer_shadows_match_x_ite)
+    | test(rea_b24_nav_shard0_match_x_ite)
+    | test(rea_b24_nav_shard1_match_x_ite)
+    | test(rea_b24_nav_shard2_match_x_ite)
+
+jobs:
+  macos:
+    name: macOS 15 build and tests
+    # A draft pull request starts no job. ready_for_review starts a new run.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest@0.9.150
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: macos-test
+          cache-on-failure: true
+
+      - name: Machine
+        run: |
+          {
+            echo "### macOS runner"
+            sw_vers
+            uname -m
+            echo "CPUs: $(sysctl -n hw.ncpu), memory: $(( $(sysctl -n hw.memsize) / 1048576 )) MiB"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # Information only: what graphics device the virtual machine offers. It does not decide any result.
+      - name: Graphics adapter (information)
+        continue-on-error: true
+        run: |
+          { echo "### Graphics (virtualized runner; not a physical Mac)"; system_profiler SPDisplaysDataType 2>&1 | head -30; } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Build the workspace
+        run: cargo build --workspace --release --all-targets 2>&1 | tee build.log; test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Rust suite (GPU tests skipped)
+        run: |
+          rm -f "$X3D_EVIDENCE_LOG"
+          cargo nextest run --workspace --release --profile ci --no-fail-fast -E "not ($GPU_TESTS)" 2>&1 | tee suite.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Doctests
+        if: success() || failure()
+        run: |
+          cargo test --workspace --release --doc --no-fail-fast 2>&1 | tee doctests.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      # The skips by name: the GPU tests excluded above, and every evidence skip with its reason.
+      - name: Skips by name
+        if: always()
+        run: |
+          {
+            echo "### Skipped by name (GPU_TESTS, issue #66 rule)"
+            echo "$GPU_TESTS" | tr '|' '\n' | sed 's/^ *//; s/ *$//' | sed '/^$/d'
+            grep -E '^ *Summary \[' suite.log 2>/dev/null | sed 's/^ *//' || echo "no nextest Summary line"
+            grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' suite.log 2>/dev/null | sort -u || true
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          python3 -I -B tools/evidence_summary.py "$X3D_EVIDENCE_LOG" | tee -a "$GITHUB_STEP_SUMMARY"
+          test "${PIPESTATUS[0]}" -eq 0
