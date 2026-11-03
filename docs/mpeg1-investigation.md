@@ -42,7 +42,7 @@ contradict it. A web search for a primary MPEG-1 expiry statement found none.
 | Option | License | Verdict |
 | --- | --- | --- |
 | `oxideav-mpeg12video` 0.0.13 (pure Rust, MPEG-1 and MPEG-2 video) | MIT | License passes. Same publisher family as `oxideav-vp8`, whose own description says its history was rebuilt (see `docs/decoder-admission.md`); provenance not examined for this crate. Video only: no Systems demux, no audio. |
-| `southstar-codecs` 1.0.5 (port of pl_mpeg for MPEG-1 video and MP2) | `(LicenseRef-NSL-1.0 OR GPL-3.0-or-later) AND MIT` | Rejected: copyleft or non-standard license. |
+| `southstar-codecs` 1.0.5 (port of pl_mpeg for MPEG-1 video and MP2) | `(LicenseRef-NSL-1.0 OR GPL-3.0-or-later) AND MIT` | Rejected. In SPDX, `AND` binds both sides: the MIT part applies together with one choice of `(LicenseRef-NSL-1.0 OR GPL-3.0-or-later)`, so MIT alone is not an available option for the whole crate; the choices are a non-standard license (not read) or GPL-3.0-or-later (copyleft, not compatible with this MIT project's distribution as a library). The crate's license files were not read, so this verdict rests on the metadata expression. |
 | pl_mpeg (C, single file: Systems demux, MPEG-1 video, MP2 audio) | MIT | License passes; would be a port into Rust (the `southstar-codecs` port above shows it is possible). Carries the tables that the local library does not. |
 | libmpeg2, FFmpeg | GPL, LGPL | Rejected (BR1.7). |
 | In-repo decoder from ISO/IEC 11172-1, -2 and -3 | MIT | Needs the three standards, which the local library lacks. |
