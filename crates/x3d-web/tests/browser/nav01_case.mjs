@@ -86,20 +86,16 @@ async function gesture (page, start, moves)
 // Taps (touch start and end) at `points`, `gap` milliseconds apart; the pose after each, and after `wait` milliseconds.
 async function taps (page, points, gap, wait)
 {
-   const out = { start: await pose (page), taps: [ ] };
+   const out = { start: await pose (page) };
 
    for (const [ i, point ] of points .entries ())
    {
       if (i)
          await page .waitForTimeout (gap);
 
+      // Nothing else between the taps: on a slow runner a frame takes 0.3 s, longer than the 300 ms of a double tap.
       await touch (page, "touchStart", [ point ]);
       await touch (page, "touchEnd", [ ]);
-      await frames (page, 2);
-
-      // The pose after the first tap only: after the second the look-at runs, and its frames depend on the timing.
-      if (!i)
-         out .taps .push (await pose (page));
    }
 
    // Wait at least `wait` ms, then until the pose has stopped moving (a slower machine runs the look-at in more wall time).
