@@ -41,7 +41,7 @@ jobs:
       # ledger.json, a byte copy of the previous ledger that each ledger step stores (7000+ lines, no GitHub patch). The step's
       # tool refuses to run unless the copy matches the sha256 it names, and verify_ledger.py replays the chain, so the
       # change itself (ledger/ledger.json, the tool, verify_ledger.py) stays in the review.
-      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json,ledger/snapshots/*/ledger.json"
+      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json,**/snapshots/*/ledger.json"
     steps:
       # Fails the job when the action would not send the whole diff to the model, instead of a review that looks complete.
       # The action sends only files that have a patch, in order, and drops a file that does not fit under MAX_DIFF_CHARS.
