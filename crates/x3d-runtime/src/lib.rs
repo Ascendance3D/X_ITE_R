@@ -543,6 +543,8 @@ pub struct Runtime {
     pub fetch_resume: HashMap<loader::FetchKey, loader::FetchResume>,
     /// The calls for the page's `<video>` elements that MovieTextures made ([`Runtime::take_video_ops`]).
     pub video_ops: Vec<nodes::movie_texture::VideoOp>,
+    /// ISO 19775-1 18.4.2 time (the default) or the pinned X_ITE 16.5.0 behavior (docs/movie-texture-timing.md).
+    pub movie_timing: nodes::movie_time::MovieTiming,
     /// The video elements the page loads for a MovieTexture candidate, by token.
     pub(crate) pending_videos: HashMap<u64, nodes::movie_texture::PendingVideo>,
     /// The compatibility option for MPEG-1 movies (.mpg, .mpeg, .mpe, .m1v) of a MovieTexture. False (the default) decodes
@@ -817,6 +819,7 @@ impl Runtime {
             fetches: Default::default(),
             parked_fetches: vec![],
             video_ops: vec![],
+            movie_timing: nodes::movie_time::MovieTiming::process_default(),
             pending_videos: HashMap::new(),
             mpeg1_unplayable: false,
             fetch_resume: HashMap::new(),
