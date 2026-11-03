@@ -21,7 +21,7 @@
     0,
     -1
    ],
-   "speedRate": 0.35,
+   "speedRate": 0.3499,
    "axis": [
     0,
     0,
@@ -74,10 +74,10 @@
    "speedRate": 0,
    "axis": [
     0,
-    1,
+    -1,
     0
    ],
-   "angleRate": 2.1126,
+   "angleRate": 0.9775,
    "holdOk": true,
    "stopped": true
   },
@@ -96,7 +96,7 @@
     0,
     -1
    ],
-   "speedRate": 0.3501,
+   "speedRate": 0.3499,
    "axis": [
     0,
     0,
@@ -124,10 +124,10 @@
    "speedRate": 0,
    "axis": [
     0,
-    1,
+    -1,
     0
    ],
-   "angleRate": 2.1128,
+   "angleRate": 0.9771,
    "holdOk": true,
    "stopped": true
   },
@@ -142,17 +142,17 @@
     0
    ],
    "travelDir": [
-    0.945005,
+    0.848679,
     0,
-    -0.327057
+    -0.528909
    ],
-   "speedRate": 0.239,
+   "speedRate": 0.2454,
    "axis": [
     0,
     -1,
     0
    ],
-   "angleRate": 0.4485,
+   "angleRate": 0.4487,
    "holdOk": true,
    "stopped": true
   },

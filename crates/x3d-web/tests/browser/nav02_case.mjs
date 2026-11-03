@@ -28,7 +28,7 @@ Transform { translation 3 0 0 children Shape {
 `)}`;
 
 const CENTER = [ 200, 150 ];
-const HOLD   = 2000;
+const HOLD   = 1000;
 
 async function load (page, url)
 {
@@ -62,8 +62,11 @@ async function sample (page)
    return { pose: await pose (page), t: t / 1000 };
 }
 
-// The yaw of a pose (rotation about Y, as the axis and angle give it).
+// The yaw of a pose (rotation about Y, as the axis and angle give it; it wraps at a half turn, so only differences count).
 const yaw = p => p [4] * p [6];
+
+// The turn between two yaws, in (-PI, PI]: a turn of less than a half turn between the two samples (HOLD is short for that).
+const turn = (a, b) => Math .atan2 (Math .sin (b - a), Math .cos (b - a));
 
 // One finger down at `from`, moved to `to`, held for HOLD ms, lifted. The speeds of the hold between two samples, and the
 // direction of travel in the frame of the first sample.
@@ -98,7 +101,7 @@ async function hold (page, type, from, to, curved = false)
    out [curved ? "travelDir" : "travel"] = norm (local) < 1e-6 ? [ 0, 0, 0 ] : local .map (v => v / norm (local));
    out .speedRate = norm (d) / seconds;
    out .axis      = end .slice (3, 6);
-   out .angleRate = Math .abs (yaw (b .pose) - yaw (a .pose)) / seconds;
+   out .angleRate = Math .abs (turn (yaw (a .pose), yaw (b .pose))) / seconds;
    out .holdOk    = seconds > HOLD / 1000 * 0.8 && seconds < HOLD / 1000 * 3;
 
    // Nothing moves after the touch ends.
