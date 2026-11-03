@@ -8,10 +8,13 @@ use std::collections::HashMap;
 use x3d_fields::NodeId;
 use x3d_runtime::{Fetcher, Runtime, nodes::LoadState};
 
-struct Files(HashMap<String, Vec<u8>>);
+type Requests = std::rc::Rc<std::cell::RefCell<Vec<String>>>;
+
+struct Files(HashMap<String, Vec<u8>>, Requests);
 
 impl Fetcher for Files {
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+        self.1.borrow_mut().push(url.path().to_string());
         self.0
             .get(url.path())
             .cloned()
@@ -29,6 +32,15 @@ fn fixture(name: &str) -> Vec<u8> {
 
 /// A world with one MovieTexture `M` (url list `urls`) served from `files`.
 fn world(urls: &str, files: &[(&str, Vec<u8>)], unplayable: bool) -> Runtime {
+    world_with_requests(urls, files, unplayable).0
+}
+
+/// [`world`], and the paths the fetcher was asked for (the scene file itself is not fetched).
+fn world_with_requests(
+    urls: &str,
+    files: &[(&str, Vec<u8>)],
+    unplayable: bool,
+) -> (Runtime, Requests) {
     let text = format!(
         "#VRML V2.0 utf8\nShape {{ appearance Appearance {{ texture DEF M MovieTexture {{ url [{urls}] loop TRUE }} }} geometry Box {{}} }}"
     );
@@ -37,7 +49,8 @@ fn world(urls: &str, files: &[(&str, Vec<u8>)], unplayable: bool) -> Runtime {
         .iter()
         .map(|(n, d)| (format!("/{n}"), d.clone()))
         .collect();
-    let mut rt = Runtime::new(scene, Box::new(Files(files)));
+    let requests = Requests::default();
+    let mut rt = Runtime::new(scene, Box::new(Files(files, requests.clone())));
 
     rt.mpeg1_unplayable = unplayable;
     rt.load_world();
@@ -46,7 +59,7 @@ fn world(urls: &str, files: &[(&str, Vec<u8>)], unplayable: bool) -> Runtime {
         rt.run_tasks();
     }
 
-    rt
+    (rt, requests)
 }
 
 fn movie(rt: &Runtime) -> NodeId {
@@ -69,7 +82,9 @@ fn failed_with_the_usual_diagnostic(rt: &Runtime, file: &str) {
 fn the_compatibility_option_is_off_by_default() {
     let scene = x3d_parse::parse_bytes(b"#VRML V2.0 utf8\n", "http://oracle/t.wrl").unwrap();
 
-    assert!(!Runtime::new(scene, Box::new(Files(HashMap::new()))).mpeg1_unplayable);
+    assert!(
+        !Runtime::new(scene, Box::new(Files(HashMap::new(), Requests::default()))).mpeg1_unplayable
+    );
 }
 
 #[test]
@@ -168,4 +183,128 @@ fn a_missing_mpeg1_file_fails_and_the_scene_keeps_running() {
     }
 
     assert_eq!(rt.url_load_state(movie(&rt)), LoadState::Failed);
+}
+
+// ---- content identification: the extension decides whether to try, the bytes decide whether it is MPEG-1 ----
+
+#[test]
+fn a_zero_size_mpg_fails_with_the_usual_diagnostic() {
+    let rt = world("\"empty.mpg\"", &[("empty.mpg", vec![])], false);
+
+    failed_with_the_usual_diagnostic(&rt, "empty.mpg");
+    assert!(rt.log.iter().any(|l| l.contains("not an MPEG-1 stream")));
+}
+
+#[test]
+fn an_mpeg4_file_named_mpg_is_identified_by_its_bytes_and_refused() {
+    let mut mp4 = vec![0, 0, 0, 0x18];
+
+    mp4.extend_from_slice(b"ftypmp42\0\0\0\0mp42isom");
+
+    let rt = world("\"movie.mpg\"", &[("movie.mpg", mp4)], false);
+
+    failed_with_the_usual_diagnostic(&rt, "movie.mpg");
+    assert!(rt.log.iter().any(|l| l.contains("not an MPEG-1 stream")));
+}
+
+#[test]
+fn an_mpeg2_program_stream_named_mpg_is_refused_not_mistaken_for_mpeg1() {
+    let mut ps = vec![0, 0, 1, 0xBA, 0x44, 0, 4, 0, 4, 1, 1, 0x89, 0xC3, 0xF8];
+
+    ps.extend_from_slice(&[0, 0, 1, 0xE0, 0, 4, 0x80, 0, 0, 0]);
+
+    let rt = world("\"ps.mpg\"", &[("ps.mpg", ps)], false);
+
+    failed_with_the_usual_diagnostic(&rt, "ps.mpg");
+    assert!(
+        rt.log
+            .iter()
+            .any(|l| l.contains("MPEG-2 streams are not supported"))
+    );
+}
+
+/// Pinned behavior: an MPEG-1 stream under an extension that is not an MPEG-1 extension is NOT sniffed. The extension
+/// decides whether the decoder is tried; a `.wrl`, `.bin` or extension-less name is an unplayable video, as before this
+/// change, and the file is not even requested.
+#[test]
+fn an_mpeg1_stream_under_a_non_mpeg_extension_is_not_sniffed_and_not_requested() {
+    for name in ["clip.wrl", "clip.bin", "clip", "clip.mpg.txt", "clip.mpgx"] {
+        let (rt, requests) = world_with_requests(
+            &format!("\"{name}\""),
+            &[(name, fixture("ip-64x48.m1v"))],
+            false,
+        );
+
+        failed_with_the_usual_diagnostic(&rt, name);
+        assert!(
+            requests.borrow().is_empty(),
+            "{name}: requested {:?}",
+            requests.borrow()
+        );
+    }
+}
+
+/// The extension is matched on the path, so a query string or fragment after it does not hide it.
+#[test]
+fn the_extension_is_matched_on_the_path_not_the_query() {
+    let rt = world(
+        "\"clip.mpg?x=1#t\"",
+        &[("clip.mpg", fixture("ip-64x48.m1v"))],
+        false,
+    );
+
+    assert_eq!(rt.url_load_state(movie(&rt)), LoadState::Complete);
+}
+
+// ---- MFString fallback ----
+
+#[test]
+fn the_first_url_that_decodes_wins_and_later_urls_are_not_requested() {
+    let (rt, requests) = world_with_requests(
+        "\"first.mpg\" \"second.mpg\" \"third.m1v\"",
+        &[
+            ("first.mpg", fixture("sys-av-64x48.mpg")),
+            ("second.mpg", fixture("ip-64x48.m1v")),
+            ("third.m1v", fixture("ip-64x48.m1v")),
+        ],
+        false,
+    );
+
+    assert_eq!(rt.url_load_state(movie(&rt)), LoadState::Complete);
+    assert_eq!(*requests.borrow(), ["/first.mpg"]);
+}
+
+#[test]
+fn urls_are_tried_in_order_until_one_decodes() {
+    let (rt, requests) = world_with_requests(
+        "\"garbage.mpg\" \"missing.mpg\" \"ps.mpe\" \"good.m1v\" \"later.mpg\"",
+        &[
+            ("garbage.mpg", vec![9; 500]),
+            (
+                "ps.mpe",
+                vec![0, 0, 1, 0xBA, 0x44, 0, 4, 0, 4, 1, 1, 0x89, 0xC3, 0xF8],
+            ),
+            ("good.m1v", fixture("ip-64x48.m1v")),
+            ("later.mpg", fixture("ip-64x48.m1v")),
+        ],
+        false,
+    );
+
+    assert_eq!(rt.url_load_state(movie(&rt)), LoadState::Complete);
+    assert_eq!(
+        *requests.borrow(),
+        ["/garbage.mpg", "/missing.mpg", "/ps.mpe", "/good.m1v"]
+    );
+}
+
+#[test]
+fn when_every_url_fails_the_state_is_failed_and_each_was_tried() {
+    let (rt, requests) = world_with_requests(
+        "\"a.mpg\" \"b.m1v\"",
+        &[("a.mpg", vec![1]), ("b.m1v", vec![0, 0, 1, 0xB3])],
+        false,
+    );
+
+    assert_eq!(rt.url_load_state(movie(&rt)), LoadState::Failed);
+    assert_eq!(*requests.borrow(), ["/a.mpg", "/b.m1v"]);
 }

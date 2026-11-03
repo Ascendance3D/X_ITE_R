@@ -277,6 +277,26 @@ fn empty_tiny_and_garbage_inputs_are_errors() {
 }
 
 #[test]
+fn mpeg4_and_other_containers_are_not_mpeg1() {
+    let mut mp4 = vec![0, 0, 0, 0x18];
+
+    mp4.extend_from_slice(b"ftypmp42\0\0\0\0mp42isom");
+
+    for data in [
+        mp4.as_slice(),
+        b"\x1aE\xdf\xa3\x01\0\0\0\0\0\0\x1fwebm",
+        b"OggS\0\x02",
+        b"#VRML V2.0 utf8\nShape {}",
+        &[],
+    ] {
+        assert_eq!(
+            mpeg1::decode(data, 1 << 20).err(),
+            Some(Mpeg1Error::NotMpeg1)
+        );
+    }
+}
+
+#[test]
 fn every_truncation_of_every_fixture_returns_without_panic() {
     for name in [
         "ipb-64x48.m1v",

@@ -12,6 +12,17 @@ They are cited by identity only; **every clause number is pending the owner**. N
 Codec support is separate from reverse playback and from the ISO time model (another lane). This change only produces
 pictures with a picture period.
 
+## Status: partial. ISO 18.4.2 acceptance criteria that stay OPEN
+
+This change is **not** full MPEG-1 MovieTexture compliance and must not be described as such. Owner review (record 2673a574):
+
+- **MPEG-1 Systems audio decoding is NOT done.** The audio stream is detected only; `hasSound` stays false. The ISO 18.4.2 criterion
+  "MPEG1-Systems (audio and video)" is OPEN for the audio half.
+- **Browser build integration is NOT done.** In the browser build the page's `<video>` element loads the file and cannot play MPEG-1.
+  The ISO criterion is OPEN for the browser build.
+- Done: the picture (video) half of both formats in the native build, with the compatibility option. Clause numbers, reverse playback
+  and the ISO time model are also open (other lanes or the owner).
+
 ## What is implemented (this change)
 
 | Part | File | Notes |
@@ -21,7 +32,10 @@ pictures with a picture period.
 | API | `crates/x3d-runtime/src/mpeg1/mod.rs` | `decode_yuv`, `decode` (RGBA with a byte budget), `looks_like_mpeg1`, `has_mpeg1_extension`, `Mpeg1Error`. |
 | Node wiring | `nodes/movie_texture/mpeg1_media.rs` (child module, one `mod` line in `movie_texture.rs`), `loader.rs` (one branch in `movie_load`), `lib.rs` (`mpeg1_unplayable`) | `MovieMedia::decode_mpeg1`; frames play like a GIF's, each lasting one picture period (`1000 / framerate` ms). |
 
-Detection: a url whose path ends in `.mpg`, `.mpeg`, `.mpe` or `.m1v` is fetched and decoded; the decoder then checks the first
+Detection (pinned by tests): the **extension decides whether the decoder is tried, the bytes decide whether the file is MPEG-1**. An MPEG-1
+stream under a non-MPEG extension (`.wrl`, `.bin`, no extension, `.mpgx`, `.mpg.txt`) is **not sniffed and not even requested**: it is
+an unplayable video, as before this change. A `.mpg` holding garbage, zero bytes, MPEG-4, WebM, MPEG-2 or text is refused by its bytes.
+The extension is matched on the url path, so a query or fragment does not hide it. A url whose path ends in `.mpg`, `.mpeg`, `.mpe` or `.m1v` is fetched and decoded; the decoder then checks the first
 four bytes (a pack start code `00 00 01 BA`, or a sequence header `00 00 01 B3`). A url with another extension is not fetched to
 sniff it (that would add requests the existing flow does not make); extension-less MPEG-1 urls are a follow-up if the owner
 wants them.
@@ -197,12 +211,15 @@ written explicitly, so the path that reads a matrix from the header is exercised
 
 ## Tests
 
-`crates/x3d-runtime/tests/mpeg1_decode.rs` (decoder and demux, 20 tests): seven stream comparisons with ffmpeg, red-picture colour,
+`crates/x3d-runtime/tests/mpeg1_decode.rs` (decoder and demux, 21 tests; includes MPEG-4, WebM, Ogg and VRML text refused as not MPEG-1): seven stream comparisons with ffmpeg, red-picture colour,
 format and extension detection, demux equals the Systems decode, video-only is not a Systems stream, MPEG-2 pack / PES header / video
 refused, a Systems stream with no video packet, empty / tiny / garbage / zero-size / header-only inputs, truncation at many lengths
 of four fixtures, 1600 mutated streams (no panic), the byte budget, a stream cut inside a picture keeps the pictures before it.
 
-`crates/x3d-runtime/tests/mpeg1_movie_texture.rs` (node wiring, 7 tests): the option is off by default; a Systems movie and each of
+`crates/x3d-runtime/tests/mpeg1_movie_texture.rs` (node wiring, 15 tests; the fetcher records its requests): content identification (zero-size,
+MPEG-4, MPEG-2 pack named `.mpg`; MPEG-1 under `.wrl .bin` / none / `.mpgx` / `.mpg.txt` not sniffed and not requested; query after the
+extension), MFString fallback (first decodable url wins and later urls are not requested; a mix of garbage, missing, MPEG-2 and good
+urls is tried in order and stops at the first good one; all failing gives Failed with each tried), and: the option is off by default; a Systems movie and each of
 `.m1v .MPEG .mpe .mpg` load as frames of the right size; the compatibility option gives the pinned result (Failed, the usual
 diagnostic, no frames); garbage, MPEG-2 and truncated data fail with the usual diagnostic and the reason; a bad file falls through
 to the next url; a missing file fails and the scene keeps running.
