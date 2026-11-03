@@ -1870,7 +1870,9 @@ impl AudioEngine {
 
     fn decode_pcm(&self, bytes: &[u8]) -> Result<AudioBuffer, String> {
         let bytes = bytes.to_vec();
-        if let Some((channels, rate)) = decode::decode_wav(&bytes) {
+        if let Some((channels, rate)) =
+            decode::decode_wav(&bytes).or_else(|| decode::decode_compressed(&bytes))
+        {
             let context_rate = self.sample_rate();
             let channels: Vec<Vec<f32>> = if rate == context_rate {
                 channels
