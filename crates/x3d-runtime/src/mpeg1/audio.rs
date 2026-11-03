@@ -36,7 +36,7 @@ pub fn first_frame(es: &[u8]) -> Option<(usize, Layer)> {
         };
         let plausible = w[0] == 0xFF
             && w[1] & 0xE0 == 0xE0
-            && (w[1] >> 3) & 3 != 1
+            && (w[1] >> 3) & 3 == 3 // MPEG-1 audio only (not the MPEG-2 or 2.5 low sample rates)
             && w[2] >> 4 != 0x0F
             && (w[2] >> 2) & 3 != 3;
 
@@ -172,5 +172,19 @@ pub fn track(data: &[u8], max_bytes: u64) -> AudioTrack {
         Ok(Ok((channels, rate))) => AudioTrack::Decoded { channels, rate },
         Ok(Err(AudioError::LayerI)) => AudioTrack::Unsupported("MPEG-1 audio layer I".to_string()),
         _ => AudioTrack::Corrupt,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn only_mpeg_1_frame_headers_are_accepted() {
+        // FF FD 90 00: MPEG-1 (version bits 11), layer II (10), 44.1 kHz class bits valid.
+        assert_eq!(first_frame(&[0xFF, 0xFD, 0x90, 0x00]), Some((0, Layer::II)));
+        // FF F5 90 00: version bits 10 (MPEG-2), layer II; FF E5 90 00: version bits 00 (MPEG-2.5).
+        assert_eq!(first_frame(&[0xFF, 0xF5, 0x90, 0x00]), None);
+        assert_eq!(first_frame(&[0xFF, 0xE5, 0x90, 0x00]), None);
     }
 }
