@@ -14,7 +14,7 @@ physical device (owner approval: provide the second machine).
 | --- | --- | --- | --- |
 | Vulkan, discrete GPU | Linux workstation | NVIDIA GeForce RTX 3060 Ti | NVIDIA 595.99.02 |
 | Vulkan, software | same machine (`VK_ICD_FILENAMES` set to the Mesa `lvp_icd.json`) | llvmpipe (LLVM 20.1.2, 256 bits) | Mesa 25.2.8 |
-| Metal, virtualized | GitHub-hosted `macos-15` arm64 (run 41557728237, PR #342) | the virtual machine's paravirtual device | not recorded by the run |
+| Metal, virtualized | GitHub-hosted `macos-15` arm64 (runs 41557728237 and 41575177567) | "Apple Paravirtual device", backend Metal (printed by `b69_gs_pick`) | no driver string reported |
 
 ## Linux, NVIDIA (strict, answer keys present, `--profile ci`)
 
@@ -68,6 +68,10 @@ pass strictly on the RTX and on llvmpipe, and the logarithmic-depth tests failin
 or depth format handling on this device. Deciding needs a physical Mac, or a diagnostic job on the hosted runner that prints the
 adapter, its features and limits, and the depth formats it supports; neither exists yet. Until then the eleven are skipped by
 name in `macos-tests.yml` (comment there), and the criterion "the GPU tests run on Metal" stays open.
+
+Run 41577822925 (information step, same branch, virtualized device): `b69_gs_pick::splat_picks_match_pinned_x_ite` passes (4.5 s);
+`rea_b14_particle_pick_matches_x_ite` (318 s) and `rea_b15_particle_collision_matches_x_ite` (4.2 s) fail strictly. The step kept only
+the result lines, not the differences, so those two are **unclassified** too; the step is to print the failure text in the next run.
 
 No Linux failure exists: nothing on the NVIDIA GPU or on llvmpipe needs a classification.
 
