@@ -1256,9 +1256,13 @@ impl Runtime {
                 *c = current_time;
             }
 
-            if rgba.len() == m.frames[0].len() {
-                m.frames[0] = rgba;
-                touched = Some(*node);
+            match m.frames.first_mut() {
+                Some(frame) if rgba.len() == frame.len() => {
+                    *frame = rgba;
+                    touched = Some(*node);
+                }
+                // No picture (unreadable, wrong size) or no frame to hold it: ask for this time again.
+                _ => m.iso.seeks.retry(),
             }
             break;
         }

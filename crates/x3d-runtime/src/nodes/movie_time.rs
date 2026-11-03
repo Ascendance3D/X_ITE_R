@@ -168,6 +168,12 @@ impl SeekLedger {
         true
     }
 
+    /// The newest request produced no usable picture (the page could not read it): forget the time asked for, so the
+    /// next tick asks for it again instead of leaving the texture stale.
+    pub fn retry(&mut self) {
+        self.asked = None;
+    }
+
     /// The id of the newest request (0: none yet).
     pub fn newest(&self) -> u64 {
         self.newest

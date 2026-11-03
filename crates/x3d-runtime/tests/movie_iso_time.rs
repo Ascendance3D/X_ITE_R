@@ -414,6 +414,27 @@ fn an_obsolete_seek_result_never_overwrites_a_newer_picture() {
 }
 
 #[test]
+fn a_seek_answered_without_a_picture_is_asked_again_at_the_same_time() {
+    let (mut rt, token) = video_world(MovieTiming::Iso, "startTime 102 loop TRUE");
+    let ops = rt.take_video_ops();
+
+    answer(&mut rt, token, &ops, 5);
+
+    // The start asks for time 0; the page could not read the picture and answers empty.
+    at(&mut rt, 102.0);
+    let (id, time) = *seeks(&rt.take_video_ops()).last().expect("a seek request");
+
+    assert!(rt.video_seeked(token, id, time, vec![]));
+    assert_eq!(rt.movie_texture_frame(movie(&rt)).unwrap().2[0], 5);
+
+    // The next tick at the same time asks again (without the retry the identical request is suppressed).
+    at(&mut rt, 102.0);
+    let again = seeks(&rt.take_video_ops());
+
+    assert_eq!(again.last().map(|s| s.1), Some(time), "{again:?}");
+}
+
+#[test]
 fn pinned_video_keeps_playing_and_a_negative_speed_plays_at_one() {
     let (mut rt, token) = video_world(MovieTiming::Pinned, "startTime 102 speed -1 loop TRUE");
     let ops = rt.take_video_ops();
