@@ -14,7 +14,8 @@
 //!   none of the frames of its last packet in Chromium, which decode.rs reproduces.
 //! - Ogg Vorbis 48 kHz: samples within 9e-8.
 //! - Opus: Chromium decodes it, `web-audio-api` rejects it (KNOWN).
-//! - AAC in M4A: Chromium decodes it; the port (web-audio-api) does not match (KNOWN, `oracle/rea-b24-audio-decode-2-baseline`).
+//! - AAC in M4A: Chromium decodes it; the port excludes the AAC decoder by decision, so parity is UNSUPPORTED
+//!   (`oracle/rea-b24-audio-decode-2-baseline`, `aac_is_excluded_and_chromium_parity_is_unsupported`).
 
 use serde_json::Value;
 use sha2::{Digest, Sha256};
@@ -237,31 +238,80 @@ fn more_rates_and_g711_match_chromium() {
     assert!(m.exact, "{:e}", m.max_abs);
 }
 
-/// AAC in M4A: Chromium decodes all four files; the port does not match. web-audio-api reads the stream without
-/// seeking, so a file with the moov atom at its end fails, and it neither removes the 1024 priming frames nor
-/// resamples like Chromium (15604 against 14400 frames). symphonia does not give the edit list that FFmpeg uses to
-/// trim, and Chromium returns 14399 frames for the 48 kHz file where the file holds 14400, so this is not done here
-/// (AAC is also patent-encumbered; the decoder is built through web-audio-api only).
+/// AAC in M4A is excluded by decision (owner, 2026-11-02, issue #90), not by a code path: `Cargo.lock` holds no AAC decoder
+/// (see `vendor/web-audio-api/VENDOR.md`), so the four files fail to decode with `unsupported audio codec`, whatever their
+/// atom layout. Chromium (FFmpeg) decodes all four (`oracle/rea-b24-audio-decode-2-baseline`: 14400, 14400, 14400 and 14399
+/// frames), so parity for AAC is recorded as UNSUPPORTED, not complete. An earlier build decoded the faststart files to
+/// 15604 frames (the 1024 priming frames are not trimmed: symphonia gives no edit list) and failed on the moov-last file.
 #[test]
-fn known_aac_differs_from_chromium() {
+fn aac_is_excluded_and_chromium_parity_is_unsupported() {
+    let baseline: Value = serde_json::from_slice(
+        &std::fs::read(root().join("rea-b24-audio-decode-2-baseline/audio-decode-baseline.json"))
+            .unwrap(),
+    )
+    .unwrap();
     let engine = AudioEngine::new(AudioMode::Offline {
         channels: 2,
         sample_rate: 48000.0,
         length: 128,
     });
-    let moov_at_end =
-        std::fs::read(root().join("synthetic-rea-b24-audio-2/aac-44100-stereo.m4a")).unwrap();
-    assert!(
-        engine.decode(moov_at_end).is_err(),
-        "now decodes: compare it with the baseline"
-    );
 
-    for file in ["aac-44100-stereo-faststart.m4a", "aac-22050-mono.m4a"] {
-        let m = measure2(file);
-        assert_eq!(m.chrome_length, 14400, "{file}");
-        assert_ne!(m.rust_length, m.chrome_length, "{file} now has the length");
-        assert!(!m.exact, "{file}");
+    for file in [
+        "aac-44100-stereo.m4a",
+        "aac-44100-stereo-faststart.m4a",
+        "aac-22050-mono.m4a",
+        "aac-48000-stereo.m4a",
+    ] {
+        let chrome = baseline["results"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|r| r["file"] == file)
+            .unwrap_or_else(|| panic!("{file} not in the baseline"));
+        assert_eq!(chrome["ok"], true, "{file}: Chromium decodes it");
+
+        let bytes = std::fs::read(root().join("synthetic-rea-b24-audio-2").join(file)).unwrap();
+        let err = match engine.decode(bytes) {
+            Ok(b) => panic!(
+                "{file}: decodes ({} frames): the AAC decoder is back",
+                b.length()
+            ),
+            Err(e) => e,
+        };
+        if file != "aac-44100-stereo.m4a" {
+            // The moov-last file fails earlier, while the reader looks for the moov atom.
+            assert!(err.contains("unsupported"), "{file}: {err}");
+        }
     }
+}
+
+/// No AAC decoder is in the resolved dependency graph (native and wasm32 alike: Cargo.lock lists both), not merely refused
+/// at run time. The same check runs as `python3 -I tools/check_no_aac.py`.
+#[test]
+fn cargo_lock_has_no_aac_decoder() {
+    let lock = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../Cargo.lock"),
+    )
+    .unwrap();
+    let packages: Vec<&str> = lock
+        .lines()
+        .filter_map(|l| l.strip_prefix("name = \""))
+        .filter_map(|l| l.strip_suffix('"'))
+        .collect();
+    assert!(
+        packages.len() > 100,
+        "{} packages: lock not read",
+        packages.len()
+    );
+    assert!(
+        packages.contains(&"symphonia-core"),
+        "symphonia is gone: update this test"
+    );
+    let aac: Vec<&&str> = packages
+        .iter()
+        .filter(|n| n.split(['-', '_']).any(|w| w == "aac"))
+        .collect();
+    assert!(aac.is_empty(), "AAC decoder in Cargo.lock: {aac:?}");
 }
 
 /// Chromium (FFmpeg) decodes Opus; web-audio-api has no Opus decoder.
