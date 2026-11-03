@@ -48,3 +48,41 @@ pub fn within_ulps(a: &Value, b: &Value, max_ulps: u64, seen: &mut u64) -> bool 
         _ => a == b,
     }
 }
+
+/// The absolute tolerance of a run on a software rasterizer (issue #89), or `None` on a GPU. A run sets
+/// `X3D_TEST_SOFTWARE_TOL` to the number (1e-4 in the classification record docs/particle-array-size-backends.md, fixed
+/// before the llvmpipe run that uses it): a software backend rounds the depth interpolation and the float math
+/// differently from the answer keys' discrete GPU. The default is strict. A bad value is a test failure, not a skip.
+pub fn software_tol() -> Option<f64> {
+    let v = std::env::var("X3D_TEST_SOFTWARE_TOL").ok()?;
+
+    Some(
+        v.trim()
+            .parse::<f64>()
+            .ok()
+            .filter(|t| t.is_finite() && *t > 0.0)
+            .unwrap_or_else(|| panic!("X3D_TEST_SOFTWARE_TOL={v:?}: expected a positive number")),
+    )
+}
+
+/// `within_ulps` with an absolute tolerance on numbers: every number of `a` and `b` is within `tol`. `seen` takes the
+/// largest difference found.
+pub fn within_abs(a: &Value, b: &Value, tol: f64, seen: &mut f64) -> bool {
+    match (a, b) {
+        (Value::Number(x), Value::Number(y)) => {
+            let d = (x.as_f64().unwrap() - y.as_f64().unwrap()).abs();
+
+            *seen = seen.max(d);
+            d <= tol
+        }
+        (Value::Array(x), Value::Array(y)) => {
+            x.len() == y.len() && x.iter().zip(y).all(|(p, q)| within_abs(p, q, tol, seen))
+        }
+        (Value::Object(x), Value::Object(y)) => {
+            x.len() == y.len()
+                && x.iter()
+                    .all(|(k, p)| y.get(k).is_some_and(|q| within_abs(p, q, tol, seen)))
+        }
+        _ => a == b,
+    }
+}

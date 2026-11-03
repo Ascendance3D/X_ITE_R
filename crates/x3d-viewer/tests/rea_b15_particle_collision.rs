@@ -31,6 +31,21 @@ use std::process::Command;
 /// Allowed absolute difference of a probe's distance, normal and constrained translation.
 const PROBE_TOL: f64 = 1e-6;
 
+/// [`PROBE_TOL`], or the larger `X3D_TEST_SOFTWARE_TOL` of a run on a software rasterizer (issue #89; 1e-4 in
+/// docs/particle-array-size-backends.md, fixed before the llvmpipe run). Hit states and shape names stay exact.
+fn probe_tol() -> f64 {
+    match std::env::var("X3D_TEST_SOFTWARE_TOL") {
+        Ok(v) => {
+            let t: f64 = v.trim().parse().unwrap_or_else(|_| {
+                panic!("X3D_TEST_SOFTWARE_TOL={v:?}: expected a positive number")
+            });
+            assert!(t.is_finite() && t > 0.0, "X3D_TEST_SOFTWARE_TOL={v:?}");
+            t.max(PROBE_TOL)
+        }
+        Err(_) => PROBE_TOL,
+    }
+}
+
 /// Allowed difference of the pose and positionOffset.
 const POSE_TOL: f64 = 1e-4;
 
@@ -292,7 +307,7 @@ fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<S
         let tol = PROBE_TOLERANCES
             .iter()
             .find(|(case, f, ..)| *case == name && f == frame)
-            .map_or(PROBE_TOL, |(_, _, tol, _)| *tol);
+            .map_or(probe_tol(), |(_, _, tol, _)| tol.max(probe_tol()));
         let (hits, values) = compare_frame(w, g, tol);
         let gap = gaps
             .iter()

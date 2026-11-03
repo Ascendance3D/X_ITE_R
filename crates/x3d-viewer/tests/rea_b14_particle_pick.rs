@@ -28,7 +28,7 @@
 
 mod common;
 
-use common::ulps::within_ulps;
+use common::ulps::{software_tol, within_abs, within_ulps};
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -112,7 +112,10 @@ fn compare_probes(
             }
 
             // Equal selection and every number within the allowed ulps: the case's documented tolerance, not a difference.
-            if selection(p) == selection(q) && within_ulps(p, q, max_ulps, seen) {
+            if selection(p) == selection(q)
+                && (within_ulps(p, q, max_ulps, seen)
+                    || software_tol().is_some_and(|t| within_abs(p, q, t, &mut 0.0)))
+            {
                 continue;
             }
 
