@@ -86,7 +86,7 @@ async function gesture (page, start, moves)
 }
 
 // Taps (touch start and end) at `points`, `gap` milliseconds apart, and the settled pose after `wait` milliseconds.
-async function taps (page, points, gap, wait)
+async function taps (page, points, gap, wait, moves = false)
 {
    const out = { start: await pose (page) };
 
@@ -105,6 +105,14 @@ async function taps (page, points, gap, wait)
    await frames (page, 2);
 
    let last = await pose (page);
+
+   // A look-at that is expected waits for its pick (a frame or more on a slow runner) before it moves: wait for it to start.
+   for (let i = 0; moves && i < 40 && last .every ((v, k) => v === out .start [k]); ++ i)
+   {
+      await page .waitForTimeout (500);
+      await frames (page, 2);
+      last = await pose (page);
+   }
 
    for (let i = 0; i < 40; ++ i)
    {
@@ -171,7 +179,7 @@ const gestures = type => ({
    {
       await load (page, world (type));
 
-      const box = await taps (page, [ BOX, BOX ], 60, 2500);
+      const box = await taps (page, [ BOX, BOX ], 60, 2500, true);
 
       await load (page, world (type));
       return { box, empty: await taps (page, [ EMPTY, EMPTY ], 60, 2500) };
