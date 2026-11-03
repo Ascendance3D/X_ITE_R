@@ -23,6 +23,21 @@ const T0: f64 = 946684800.0;
 /// Largest difference of a hit value (point, normal, texCoord) that still counts as equal.
 const VALUE_TOL: f64 = 1e-4;
 
+/// The same on macOS (issue #89), fixed before the run that uses it. The hosted macOS 15 runner is a virtual machine
+/// with a paravirtual graphics device, not a physical GPU; its first run (PR #342) differed from the pinned baselines
+/// by up to 1.9e-4 in the hit distance of gs-pick-ortho (about 10.7 units, depth buffer rounding), with every hit or
+/// miss and every other value equal. 3e-4 keeps that case and leaves the structure of the answer (the hit set) exact.
+/// A physical Mac is not validated by it.
+const VALUE_TOL_MACOS: f64 = 3e-4;
+
+fn value_tol() -> f64 {
+    if cfg!(target_os = "macos") {
+        VALUE_TOL_MACOS
+    } else {
+        VALUE_TOL
+    }
+}
+
 const CASES: &[&str] = &[
     "gs-pick-basic",
     "gs-pick-default",
@@ -203,7 +218,7 @@ fn splat_picks(log: bool) {
                     exact += (diff == 0.0) as usize;
                     case_worst = case_worst.max(diff);
 
-                    if diff > VALUE_TOL {
+                    if diff > value_tol() {
                         misses += 1;
                         failures.push(format!("{name} #{i}: X_ITE {w:?} / Rust {g:?}"));
                     }

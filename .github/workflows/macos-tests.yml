@@ -56,16 +56,14 @@ env:
   #  - late_connected_oscillator_keeps_its_phase, same_rate_mp3_and_flac_are_bit_identical, vrml_audio_matches_x_ite:
   #    exact or tolerance-0 comparisons that arm64 misses by about 1e-7 (the last digits of a float) against the x86-64
   #    baselines. The tolerance is NOT widened: the difference is the finding.
-  #  - splat_picks_match_pinned_x_ite, splat_picks_under_logarithmic_depth_match_pinned_x_ite,
-  #    renderer_probes_and_device_starts_share_the_lock: they run on the virtual machine's paravirtual graphics device,
-  #    which is not a physical GPU (depth differs by 1.7e-4; probe and device start choose different adapters).
+  #  The three graphics tests of that run (splat_picks_match_pinned_x_ite, splat_picks_under_logarithmic_depth_match_pinned_x_ite,
+  #  renderer_probes_and_device_starts_share_the_lock) run again (issue #89, docs/gpu-failure-classification.md): the
+  #  headless device now asks for Metal on macOS (it asked for Vulkan only), and the splat pick tests carry a macOS
+  #  tolerance fixed before the run. The virtual machine's paravirtual graphics device is not a physical GPU.
   MACOS_HOSTED_SKIPS: >-
     test(late_connected_oscillator_keeps_its_phase)
     | test(same_rate_mp3_and_flac_are_bit_identical)
     | test(vrml_audio_matches_x_ite)
-    | test(splat_picks_match_pinned_x_ite)
-    | test(splat_picks_under_logarithmic_depth_match_pinned_x_ite)
-    | test(renderer_probes_and_device_starts_share_the_lock)
 
 jobs:
   macos:
