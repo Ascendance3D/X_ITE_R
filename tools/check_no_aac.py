@@ -26,7 +26,14 @@ VERSIONS = ("0.5.5", "0.6.1")
 
 
 def packages(lock_text):
-    return re.findall(r'\[\[package\]\]\nname = "([^"]+)"\nversion = "([^"]+)"', lock_text)
+    """(name, version) of every [[package]] block, whatever order Cargo writes the keys in."""
+    found = []
+    for block in lock_text.split("[[package]]")[1:]:
+        name = re.search(r'^name\s*=\s*"([^"]+)"', block, re.MULTILINE)
+        version = re.search(r'^version\s*=\s*"([^"]+)"', block, re.MULTILINE)
+        if name:
+            found.append((name.group(1), version.group(1) if version else ""))
+    return found
 
 
 def aac_packages(lock_text):
@@ -34,8 +41,14 @@ def aac_packages(lock_text):
 
 
 def check_binaries(paths):
+    if not paths:
+        print("ERROR: no artifact paths given (an unmatched glob would otherwise pass)", file=sys.stderr)
+        return 1
     bad = []
     for path in paths:
+        if not Path(path).is_file():
+            bad.append(f"{path}: not a file")
+            continue
         data = Path(path).read_bytes()
         if b"symphonia-bundle-mp3" not in data and b"symphonia_bundle_mp3" not in data:
             bad.append(f"{path}: no MP3 decoder path string (control): this check says nothing about the build")
