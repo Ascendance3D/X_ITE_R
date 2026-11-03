@@ -88,3 +88,22 @@ Pinned X_ITE 16.5.0 (`oracle/x_ite-pin`, `src/x_ite/Browser/GaussianSplats/Gauss
 ev_1d69a090391a33ce36dd9422fe885dd3c6a3ba5c0c9ceaa6c2ef0132377241db (summary
 ev_b28037c89221c266c643477fbf5bc96984e3fc5f91f0c01170e6aea2cc082087). Baselines for the splat pick cases are the existing
 `oracle/b69-gs-pick-baseline` (five byte-identical runs each); this change records no new baseline.
+
+## Hosted macOS diagnostic result (run 41583048922, "Apple Paravirtual device", Metal, virtualized)
+
+Information-only job; not physical validation. Artifact `macos-diag` (logs and rust/pinned PNGs). Adapter: `IntegratedGpu`, backend Metal,
+all depth formats and Rgba8/16F/32F support MSAA 4 and resolve; no GL adapter exists on the runner (`X3D_BACKEND=gl`: "no adapter", so the
+GL comparison could not be made and the 11 tests skip there).
+
+| group | evidence | classification |
+| --- | --- | --- |
+| `depth` x2, zfight worlds (`standard_and_log_match_x_ite`, `log_shows_what_standard_cannot`) | `Depth24Plus` resolves a 3e-8 depth difference at 0.1 on this device (float32 behavior); on the RTX it ties (24-bit behavior), as the pinned WebGL baseline does. Standard far-range: 61504 px wrong (a 250x250 block, red/green swapped); Logarithmic far-range: 0 px | **Hardware/platform constraint**: wgpu-hal maps `Depth24Plus` to `Depth32Float` here (no `Depth24Unorm_Stencil8` use). A tie that the pinned image depends on cannot occur. Proven for the format; the Logarithmic tilt-pair edge (2031 px, x 250..255) is the same cause by the same mechanism, not separately proven |
+| `render_b69_gs_log`, `rea_b08_gs` | gs-linear 30592 px over 8 (max 106), same with Standard and Logarithmic; gs-ortho 71% (max 72) | **Unclassified.** Not explained by the depth format; candidate Metal renderer defect or paravirtual behavior, not demonstrated |
+| `rea_b07_vol` | 0.6% to 1.1% of pixels, max 30 to 98, all cases | **Unclassified** |
+| `rea_b08_vs` | vs-transparent-ibl 9576 px (3.65%), max 255 | **Unclassified** |
+| `rea_b09_inputs` | texgen-modes 8.9%, texgen-params 7.5% (max 141, 169) | **Unclassified**; texture generation is plain shader math, so a device quirk is not the first guess |
+| `rea_batch07_vol`, `rea_i92_items`, `rea_batch01`, `rea_b24` | failing as listed; per-case numbers in `failing_eleven_metal.log` | **Unclassified** |
+
+None of the unclassified groups is claimed as a device constraint or as a renderer defect. The next step needs per-shader bisection on a
+Metal machine (for example render with the texgen shader forced to a constant); a physical Mac is the sound comparison. They remain
+skipped by name on the hosted runner.
