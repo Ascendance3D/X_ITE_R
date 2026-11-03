@@ -810,7 +810,7 @@ impl Runtime {
     // --- X3DSoundSourceNode -------------------------------------------------------------------
 
     /// X3DSoundSourceNode.set_gain__.
-    fn source_set_gain(&mut self, node: NodeId) {
+    pub(crate) fn source_set_gain(&mut self, node: NodeId) {
         let v = self.get_f64(node, "gain");
         let a = self.snd(node).audio_source.unwrap();
         self.audio().set_param(a, "gain", v);
@@ -850,7 +850,11 @@ impl Runtime {
         }
     }
 
-    fn media_set(&mut self, node: NodeId, f: impl FnOnce(&mut AudioEngine, &mut AudioElement)) {
+    pub(crate) fn media_set(
+        &mut self,
+        node: NodeId,
+        f: impl FnOnce(&mut AudioEngine, &mut AudioElement),
+    ) {
         let Some(mut m) = self.sound.get_mut(&node).and_then(|s| s.media.take()) else {
             return;
         };
@@ -2235,7 +2239,7 @@ impl Runtime {
             }
         }
 
-        // MovieTexture is an X3DSoundSourceNode too; its sound is not part of this port, so it only counts.
+        // MovieTexture is an X3DSoundSourceNode too: the audio track of a decoded video plays through its audioSource.
         let is_source =
             |n: &str| (SOURCES.contains(&n) && n != "ListenerPointSource") || n == "MovieTexture";
         // X3DCast sees through a PROTO instance to its inner node, as for `children`.
@@ -2614,6 +2618,11 @@ fn straighten(r: &mut x3d_fields::math::Rotation4) {
 }
 
 impl AudioElement {
+    /// The Web Audio node that plays the buffer.
+    pub fn source(&self) -> AId {
+        self.source
+    }
+
     /// AudioElement.create (audioContext, audioSource, audioBuffer).
     pub fn create(
         e: &mut AudioEngine,
