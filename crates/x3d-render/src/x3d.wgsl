@@ -834,12 +834,15 @@ fn get_texture_color(diffuse_color: vec4<f32>, specular_color: vec4<f32>, textur
 const M_PI: f32 = 3.1415926535897932384626433832795;
 
 // ToneMapping2.glsl linearToSRGB / sRGBToLinear (GAMMA 2.2).
+// pow with a negative base is undefined (GLSL and WGSL) and yields NaN. A NaN channel that is blended or stored must
+// contribute 0, as it does on the reference GPUs (a NaN source term adds nothing: device_math nan_color_storage on the
+// RTX and llvmpipe); the hosted macOS device stores it differently. max (color, 0) makes that value explicit.
 fn linear_to_srgb(color: vec3<f32>) -> vec3<f32> {
-    return pow(color, vec3<f32>(1.0 / 2.2));
+    return pow(max(color, vec3<f32>(0.0)), vec3<f32>(1.0 / 2.2));
 }
 
 fn srgb_to_linear(color: vec3<f32>) -> vec3<f32> {
-    return pow(color, vec3<f32>(2.2));
+    return pow(max(color, vec3<f32>(0.0)), vec3<f32>(2.2));
 }
 
 fn tone_map_aces_narkowicz(color: vec3<f32>) -> vec3<f32> {

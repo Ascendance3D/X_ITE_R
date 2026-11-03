@@ -380,6 +380,28 @@ fn infinity_and_nan_behavior() {
         }
     };
 
+    // pow with a negative or zero base (the tone map of a negative linear color): undefined in WGSL and GLSL.
+    let neg = [
+        (-0.5f32, 0.45454545f32),
+        (-0.01, 0.45454545),
+        (0.0, 0.45454545),
+        (-0.5, 2.2),
+        (-2.0, 2.0),
+        (-8.0, 0.33333334),
+    ];
+    for (name, body) in [
+        ("pow(x, y)", "pow(x, y)"),
+        ("exp2(y * log2(x))", "exp2(y * log2(x))"),
+    ] {
+        let got = run(&d, &q, body, &bits(&neg));
+        let line: Vec<String> = neg
+            .iter()
+            .zip(&got)
+            .map(|(&(x, y), &g)| format!("({x},{y}):{:?}[{g:08x}]", f32::from_bits(g)))
+            .collect();
+        println!("diag: negbase {name}: {}", line.join(" "));
+    }
+
     for (name, body) in expr {
         let got = run(&d, &q, body, &bits(&cases));
         let line: Vec<String> = cases
@@ -555,6 +577,174 @@ fn far_plane_clipping() {
         println!(
             "diag: clip huge triangle scale {s} (z=0.5, w=1): {}",
             format!("{} of 4096 pixels", covered(&d, &q, "0.5", "1.0", s))
+        );
+    }
+}
+
+/// What a NaN color channel becomes in an Rgba8Unorm target, with and without alpha blending (the splat pipeline's
+/// blend), over a cleared (0.2, 0.4, 0.6, 1): the tone map's pow of a negative linear color yields NaN, and the pinned
+/// image holds whatever the reference GPU stores for it. Two draws in a row show whether a NaN stays NaN.
+#[test]
+fn nan_color_storage() {
+    let Some((device, queue)) = device() else {
+        println!("diag: no adapter");
+        return;
+    };
+    let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+        label: None,
+        source: wgpu::ShaderSource::Wgsl(
+            "
+@vertex fn vs(@builtin(vertex_index) v: u32) -> @builtin(position) vec4<f32> {
+    let p = vec2<f32>(f32((v << 1u) & 2u), f32(v & 2u)) * 2.0 - 1.0;
+    return vec4<f32>(p, 0.5, 1.0);
+}
+@fragment fn fs_nan(@builtin(position) p: vec4<f32>) -> @location(0) vec4<f32> {
+    let n = sqrt(-1.0 - p.x);
+    return vec4<f32>(n, 0.5, 0.25, 0.5);
+}
+@fragment fn fs_after(@builtin(position) p: vec4<f32>) -> @location(0) vec4<f32> {
+    return vec4<f32>(0.9, 0.5, 0.25, 0.5);
+}
+@fragment fn fs_guard(@builtin(position) p: vec4<f32>) -> @location(0) vec4<f32> {
+    let n = sqrt(-1.0 - p.x);
+    return vec4<f32>(max(n, 0.0), 0.5, 0.25, 0.5);
+}
+"
+            .into(),
+        ),
+    });
+    let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        label: None,
+        bind_group_layouts: &[],
+        immediate_size: 0,
+    });
+    let pipeline = |entry: &str, blend: bool| {
+        device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: None,
+            layout: Some(&layout),
+            vertex: wgpu::VertexState {
+                module: &module,
+                entry_point: Some("vs"),
+                compilation_options: Default::default(),
+                buffers: &[],
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &module,
+                entry_point: Some(entry),
+                compilation_options: Default::default(),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format: wgpu::TextureFormat::Rgba8Unorm,
+                    blend: blend.then_some(wgpu::BlendState {
+                        color: wgpu::BlendComponent {
+                            src_factor: wgpu::BlendFactor::SrcAlpha,
+                            dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                            operation: wgpu::BlendOperation::Add,
+                        },
+                        alpha: wgpu::BlendComponent {
+                            src_factor: wgpu::BlendFactor::One,
+                            dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
+                            operation: wgpu::BlendOperation::Add,
+                        },
+                    }),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+            }),
+            primitive: Default::default(),
+            depth_stencil: None,
+            multisample: Default::default(),
+            multiview_mask: None,
+            cache: None,
+        })
+    };
+
+    for (name, draws) in [
+        ("nan, no blend", vec![("fs_nan", false)]),
+        ("nan, blend", vec![("fs_nan", true)]),
+        (
+            "nan then opaque-ish, blend",
+            vec![("fs_nan", true), ("fs_after", true)],
+        ),
+        ("guarded max(n, 0), blend", vec![("fs_guard", true)]),
+    ] {
+        let target = device.create_texture(&wgpu::TextureDescriptor {
+            label: None,
+            size: wgpu::Extent3d {
+                width: 64,
+                height: 64,
+                depth_or_array_layers: 1,
+            },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format: wgpu::TextureFormat::Rgba8Unorm,
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            view_formats: &[],
+        });
+        let view = target.create_view(&Default::default());
+        let read = device.create_buffer(&wgpu::BufferDescriptor {
+            label: None,
+            size: 64 * 64 * 4,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let mut enc = device.create_command_encoder(&Default::default());
+        {
+            let mut pass = enc.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    depth_slice: None,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: 0.2,
+                            g: 0.4,
+                            b: 0.6,
+                            a: 1.0,
+                        }),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+                multiview_mask: None,
+            });
+            for (entry, blend) in &draws {
+                pass.set_pipeline(&pipeline(entry, *blend));
+                pass.draw(0..3, 0..1);
+            }
+        }
+        enc.copy_texture_to_buffer(
+            wgpu::TexelCopyTextureInfo {
+                texture: &target,
+                mip_level: 0,
+                origin: wgpu::Origin3d::ZERO,
+                aspect: wgpu::TextureAspect::All,
+            },
+            wgpu::TexelCopyBufferInfo {
+                buffer: &read,
+                layout: wgpu::TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(64 * 4),
+                    rows_per_image: Some(64),
+                },
+            },
+            wgpu::Extent3d {
+                width: 64,
+                height: 64,
+                depth_or_array_layers: 1,
+            },
+        );
+        queue.submit([enc.finish()]);
+        let slice = read.slice(..);
+        slice.map_async(wgpu::MapMode::Read, |_| {});
+        device.poll(wgpu::PollType::wait_indefinitely()).unwrap();
+        let data = slice.get_mapped_range().unwrap();
+        let at = (32 * 64 + 32) * 4;
+        println!(
+            "diag: nanstore {name}: pixel (32,32) rgba8 = {:?}",
+            &data[at..at + 4]
         );
     }
 }
