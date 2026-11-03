@@ -1362,3 +1362,18 @@ element and whether the menu is open, for the right button, a left click, a real
 ## Owner decisions batch (issue #68)
 
 `oracle/synthetic-rea-b68-owner/` holds five worlds (BlendedVolumeStyle `ALPHA1`, `ALPHA2` and the CONSTANT twin; ShadedVolumeStyle with a `Material` and with a `PhysicalMaterial`) and `xite-runs.json`, the result of `node oracle/x_ite-shot.mjs oracle/synthetic-rea-b68-owner OUT` run five times against the pinned X_ITE (5 identical): `bl-iso1` and `sh-physicalmaterial` never draw (`TIMEOUT 45s`), `bl-iso2` draws the same picture as `bl-const`. Rust side: `crates/x3d-render/tests/render_b68_owner.rs`. Decisions: `docs/adr/0012-owner-decisions-batch.md`. The shot tool serves only paths under `oracle/`; it needs `oracle/x_ite-pin/node_modules` (a symlink, not committed).
+
+### Web browser navigation press 04 (`web-browser-nav-04-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav04` runs the 5 cases of `crates/x3d-web/tests/browser/nav04_case.mjs` (issue #370,
+  ledger `sub:nav.examine` E16) and records `web-browser-nav-04-baseline/nav04-baseline.json`: a layer whose Viewport
+  (`clipBoundary 0.25 0.75 0.25 0.75`) covers the middle of the canvas, and EXAMINE's `isPointerInRectangle`. A mouse press
+  outside or above the viewport rotates nothing and neither does the rest of that drag; a press inside rotates, and keeps
+  rotating when the pointer leaves the viewport; a wheel step outside does not zoom, inside it does; a finger down
+  outside rotates nothing, one inside rotates; two fingers pinching with their middle outside zoom nothing, inside they
+  zoom. The pose after every step; the tolerance, fixed before the first run, is 1e-3 on every number. Three runs,
+  identical values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-04-baseline --runs 3 --suite nav04
+```

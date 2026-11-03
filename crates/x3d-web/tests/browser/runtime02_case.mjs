@@ -1001,7 +1001,7 @@ export const CASE_GROUPS = {
 };
 
 // The helpers that the web resource fallback cases (fallback01_case.mjs) share.
-export { DESKTOP, loadMessages, pageLoad, served, settle };
+export { DESKTOP, fields, frames, loadMessages, pageLoad, served, settle, touch };
 
 // The values of a case with each picture (a Buffer) replaced by the name of its file, which goes into `pictures`.
 export function splitPictures (value, key, pictures)
