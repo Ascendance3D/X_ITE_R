@@ -1337,15 +1337,32 @@ impl Runtime {
 
                 if playable {
                     if let Ok(data) = self.fetcher.fetch(&file_url) {
-                        // A WebM with a VP9 track is decoded; any other playable file is taken as playing.
-                        if path.to_ascii_lowercase().ends_with(".webm")
-                            && let Some(media) =
-                                nodes::movie_texture::MovieMedia::decode_webm(&data)
-                        {
-                            return self.movie_set_frames(node, media);
+                        use crate::video_types::WebmError;
+
+                        // A WebM with a VP9 or VP8 track is decoded; any other playable file is taken as playing.
+                        if !path.to_ascii_lowercase().ends_with(".webm") {
+                            return;
                         }
 
-                        return;
+                        match nodes::movie_texture::MovieMedia::decode_webm(&data) {
+                            Ok(media) => return self.movie_set_frames(node, media),
+                            // A video this build does not decode (another codec, a picture beyond the limits): it
+                            // may play in the browser. No frame is shown, the scene goes on, the node stays
+                            // IN_PROGRESS (as for every other undecoded video) and the log says why.
+                            Err(
+                                e @ (WebmError::NoVideoTrack
+                                | WebmError::TooLarge
+                                | WebmError::NoDecoder),
+                            ) => {
+                                self.log_warn(format!(
+                                    "MovieTexture: the video '{decoded}' is not decoded by this build ({e:?}); no frame is shown."
+                                ));
+                                return;
+                            }
+                            // Not a WebM, or a stream that does not decode: the browser's video element fires
+                            // `error`, and the next candidate is tried.
+                            Err(WebmError::NotWebm | WebmError::Decode(_)) => {}
+                        }
                     }
                 }
 

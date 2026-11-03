@@ -51,6 +51,7 @@ pub mod release;
 pub mod script;
 pub mod sound;
 pub mod url_object;
+pub mod video_types;
 #[cfg(feature = "native-video")]
 pub mod vp8;
 #[cfg(feature = "native-video")]
