@@ -331,10 +331,10 @@ impl MovieMedia {
         })
     }
 
-    /// A WebM with a VP9 video track, decoded here ([`crate::webm`]) where the page has no `<video>` element. The
+    /// A WebM with a VP9 or VP8 video track, decoded here ([`crate::webm`]) where the page has no `<video>` element. The
     /// frames play like a GIF's (GifMedia's mapping of `elapsedTime` to a frame, the frame times as delays): the sound
-    /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 track
-    /// that decodes, which the caller treats as a video the engine cannot show.
+    /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 or VP8
+    /// track that decodes, which the caller treats as a video the engine cannot show.
     pub fn decode_webm(data: &[u8]) -> Option<MovieMedia> {
         let video = crate::webm::decode(data, MAX_DECODED_BYTES).ok()?;
         let n = video.frames.len();

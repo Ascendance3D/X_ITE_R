@@ -51,6 +51,7 @@ pub mod release;
 pub mod script;
 pub mod sound;
 pub mod url_object;
+pub mod vp8;
 pub mod webm;
 
 use std::collections::HashMap;
