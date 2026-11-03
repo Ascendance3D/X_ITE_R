@@ -84,7 +84,7 @@ async function gesture (page, start, moves)
 }
 
 // Taps (touch start and end) at `points`, `gap` milliseconds apart; the pose after each, and after `wait` milliseconds.
-async function taps (page, points, gap, wait)
+async function taps (page, points, gap, wait, moves = false)
 {
    const out = { start: await pose (page) };
 
@@ -103,6 +103,14 @@ async function taps (page, points, gap, wait)
    await frames (page, 2);
 
    let last = await pose (page);
+
+   // A look-at that is expected waits for its pick (a frame or more on a slow runner) before it moves: wait for it to start.
+   for (let i = 0; moves && i < 40 && last .every ((v, k) => v === out .start [k]); ++ i)
+   {
+      await page .waitForTimeout (500);
+      await frames (page, 2);
+      last = await pose (page);
+   }
 
    for (let i = 0; i < 40; ++ i)
    {
@@ -159,7 +167,7 @@ const examine = {
    async doubleTap (page)
    {
       await load (page, world ("EXAMINE"));
-      return taps (page, [ BOX, BOX ], 60, 2500);
+      return taps (page, [ BOX, BOX ], 60, 2500, true);
    },
 
    // Two taps 450 ms apart are two single taps: no look-at.

@@ -934,7 +934,7 @@ export function referenceCases (file, { skip = false } = { })
                   if (group .suite .startsWith ("nav"))
                   {
                      assert .deepEqual (shape (compared), shape (theirs), `${key}: the poses are not the same steps`);
-                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate, ${NAV_DIR_TOLERANCE} for a Dir)`);
+                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate, ${NAV_DIR_TOLERANCE} for a Dir)\n${JSON .stringify (compared)}\n${JSON .stringify (theirs)}\n${page .log .slice (-30) .join ("\n")}`);
                      compared = theirs;
                   }
 
