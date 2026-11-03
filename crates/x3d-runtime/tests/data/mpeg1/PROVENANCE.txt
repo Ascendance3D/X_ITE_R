@@ -1,0 +1,34 @@
+MPEG-1 test fixtures of crates/x3d-runtime (issue #90). Newly authored, synthetic; no third-party, Cybertown or blaxxun asset.
+Generated with ffmpeg 6.1.1-3ubuntu5+esm15 from lavfi sources only. The video fixtures and the first audio fixture are
+described in docs/mpeg1-implementation.md; this file records the audio fixtures added with the MPEG-1 Systems sound.
+
+Audio fixtures (inputs of crates/x3d-runtime/tests/mpeg1_audio.rs), run in this directory:
+
+  V="-f lavfi -i testsrc2=size=32x32:rate=25"
+  C="-frames:v 12 -t 0.5 -c:v mpeg1video -q:v 4 -g 6 -bf 0"
+  ffmpeg -v error -y $V -f lavfi -i "sine=frequency=440:sample_rate=48000" -f lavfi -i "sine=frequency=660:sample_rate=48000" \
+         -filter_complex "[1][2]amerge=inputs=2[a]" -map 0:v -map "[a]" $C -c:a mp2 -b:a 128k -f mpeg sys-av-stereo-48k.mpg
+  ffmpeg -v error -y $V -f lavfi -i "anoisesrc=color=pink:seed=7:amplitude=0.3:sample_rate=32000:duration=1" \
+         $C -c:a mp2 -b:a 96k -ac 2 -f mpeg sys-av-noise-32k.mpg
+  ffmpeg -v error -y $V -f lavfi -i "sine=frequency=880:sample_rate=44100" $C -c:a libmp3lame -b:a 64k -f mpeg sys-av-mp3-44k.mpg
+
+  sys-av-64x48.mpg  (older fixture, 44.1 kHz mono Layer II) is also used.
+
+Reference decodes (independent decoder, run offline; the interleaved little-endian f32 samples at the stream's own rate and
+channel count, no resampling or remix, gzip -9n):
+
+  ffmpeg -v error -y -c:a mp2float -i NAME.mpg -vn -f f32le -c:a pcm_f32le NAME.audio.f32     # then gzip -9nf
+  (sys-av-mp3-44k uses -c:a mp3float)
+
+Streams: sys-av-64x48 mono 44100 Hz Layer II, 26496 samples; sys-av-stereo-48k 2 ch 48000 Hz Layer II, 23040 per channel;
+sys-av-noise-32k 2 ch 32000 Hz Layer II, 16128 per channel; sys-av-mp3-44k mono 44100 Hz Layer III, 21888.
+
+SHA-256:
+b5e9a45db9e411504bd0e97237eb52ba9d7da9c9b6123203201fe80386ee7352  sys-av-64x48.mpg
+10ff76243836f46897ac662dc512a5e0652400c6269f4e78efd64dfb9078ac55  sys-av-mp3-44k.mpg
+eca79f3dce0ea1748fc6624ee0d6cb74208e8992ad1f9cb86b29213497e0a88a  sys-av-noise-32k.mpg
+79fce6e37fa8587e915d7035c8b443f8d73b770806643f7b691ab8882553d4fa  sys-av-stereo-48k.mpg
+bad8c8525286bd055c3120c8f6815531d28d6b9bbae071776bffb2273a695002  sys-av-64x48.audio.f32.gz
+63fe3028f9e63c94727780cd3f85a9493b754f9270a6e166d8a6e836cc9d2f71  sys-av-mp3-44k.audio.f32.gz
+ec19406f38f07d7a6b2873040d8f6c5db7719702c2bf6f2551c097dfc9420798  sys-av-noise-32k.audio.f32.gz
+95a7e3b1b5406bb1405f733a2b20d596815f8adf72814398e091c62faa0f7536  sys-av-stereo-48k.audio.f32.gz

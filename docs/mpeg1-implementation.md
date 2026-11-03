@@ -16,8 +16,9 @@ pictures with a picture period.
 
 This change is **not** full MPEG-1 MovieTexture compliance and must not be described as such. Owner review (record 2673a574):
 
-- **MPEG-1 Systems audio decoding is NOT done.** The audio stream is detected only; `hasSound` stays false. The ISO 18.4.2 criterion
-  "MPEG1-Systems (audio and video)" is OPEN for the audio half.
+- **MPEG-1 Systems audio decoding is done in the native build** (this change; see "Audio" below): the first audio stream of a
+  Systems stream is decoded (Layer II, and Layer III) and plays through the node (`hasSound` true). Layer I is reported
+  unsupported. Not done: the start offset between the audio and video streams is not applied.
 - **Browser build integration is NOT done.** In the browser build the page's `<video>` element loads the file and cannot play MPEG-1.
   The ISO criterion is OPEN for the browser build.
 - Done: the picture (video) half of both formats in the native build, with the compatibility option. Clause numbers, reverse playback
@@ -27,7 +28,7 @@ This change is **not** full MPEG-1 MovieTexture compliance and must not be descr
 
 | Part | File | Notes |
 | --- | --- | --- |
-| Systems demux | `crates/x3d-runtime/src/mpeg1/demux.rs` | Start-code scan; pack, system header, packets of the first video stream (0xE0-0xEF); detects an audio stream (0xC0-0xDF) but does not decode it. MPEG-2 pack and PES headers are refused. A packet cut off by the end of the file is taken as far as it goes. |
+| Systems demux | `crates/x3d-runtime/src/mpeg1/demux.rs` | Start-code scan; pack, system header, packets of the first video stream (0xE0-0xEF) and of the first audio stream (0xC0-0xDF), each concatenated into its elementary stream. MPEG-2 pack and PES headers are refused. A packet cut off by the end of the file is taken as far as it goes. |
 | Video decoder | `crates/x3d-runtime/src/mpeg1/video.rs`, `tables.rs` | I, P and B pictures, 4:2:0, custom quantizer matrices, any size up to 4095 x 4095 (not a multiple of 16, odd sizes), repeated sequence headers, display-order output. D pictures are skipped. MPEG-2 video is refused. |
 | API | `crates/x3d-runtime/src/mpeg1/mod.rs` | `decode_yuv`, `decode` (RGBA with a byte budget), `looks_like_mpeg1`, `has_mpeg1_extension`, `Mpeg1Error`. |
 | Node wiring | `nodes/movie_texture/mpeg1_media.rs` (child module, one `mod` line in `movie_texture.rs`), `loader.rs` (one branch in `movie_load`), `lib.rs` (`mpeg1_unplayable`) | `MovieMedia::decode_mpeg1`; frames play like a GIF's, each lasting one picture period (`1000 / framerate` ms). |
@@ -108,18 +109,39 @@ Found by comparing with ffmpeg (see "Tolerance"), each with a reason:
 - Pictures last `1000 / framerate` ms (the picture rate code of the sequence header, 23.976 to 60 Hz). Presentation time stamps of
   the Systems layer are read for the first video packet but not used for the schedule.
 
-## Audio (not in this change)
+## Audio
 
-The sound track of a Systems stream (MPEG-1 Layer I/II; Layer III is already decoded for AudioClip) is detected and **not
-decoded**; `MovieTexture.hasSound` stays false for these movies, as it does for the VP8/VP9 frames decoded natively on master.
-Reason, precisely: on master a natively decoded video has no sound path at all. The path that gives a decoded video its sound
-(`Sound` reading a MovieTexture, the audio track of the WebM decoded through `symphonia`) is the work of PR #361, which is not merged.
-Wiring MPEG-1 audio into a path that does not exist on master would invent its interface. The audio decode itself needs no new
-crate: `symphonia` 0.6.1 is already a dependency of `x3d-runtime` (MPL-2.0, pure Rust, features `mp3 flac ogg vorbis wav pcm
-all-meta`); its `mp1` and `mp2` features (the Layer I and II decoders live in `symphonia-bundle-mp3`, already compiled) are the only
-change needed, so `python3 -I tools/check_no_aac.py` (PR #357) is unaffected. The step is: demux the audio stream (the demuxer already
-sees it), decode with symphonia, hand the samples to the video audio path of #361. Compare against ffmpeg's Layer II decode
-with a fixed sample bound.
+`crates/x3d-runtime/src/mpeg1/audio.rs`. The demuxer concatenates the payloads of the first audio stream (stream id 0xC0 to 0xDF) of the
+Systems stream into an MPEG audio elementary stream (an audio frame may run across packets); `symphonia` 0.6.1 (already a dependency;
+its `mp2` feature is the only change, and the Layer II decoder lives in `symphonia-bundle-mp3`, which was already compiled for MP3 and
+for `web-audio-api`) decodes it, from the first valid frame header to the last whole frame, at the stream's own rate and channel count.
+`MovieMedia::decode_mpeg1` stores the result in `MovieMedia::audio` as the WebM Vorbis track is, so the existing path gives the movie
+`hasSound` and plays the samples through the Sound node. The decode needs no new crate and no `unsafe`; `tools/check_no_aac.py` is
+unaffected (`symphonia-codec-aac` is not enabled) and `tools/check_no_native_video.py --cargo` still passes (`mpeg1` was never part of
+the `native-video` feature).
+
+| Case | Result |
+| --- | --- |
+| no audio stream | `AudioTrack::None`: `hasSound` false, no diagnostic |
+| Layer II or III | `Decoded`: `hasSound` true, the sound plays |
+| Layer I | `Unsupported("MPEG-1 audio layer I")`: `hasSound` true as the page's would be, the pictures play, the log says why |
+| audio stream that does not decode (no frame header, garbage, empty packets, over the byte budget) | `Corrupt`: the pictures play, the log says the track does not decode |
+| a bad audio packet header | the packet is skipped (the sound loses it, the pictures do not) |
+| a frame that does not decode | skipped, as the reference decoder does |
+| a stream cut inside a frame | the frames before the cut play |
+| a sample rate change inside the audio | the sound ends there |
+| more than `MAX_DECODED_BYTES` of f32 samples | `Corrupt` |
+| second audio stream | not decoded (the first audio stream in the file is the sound) |
+
+Not done: the audio and video streams are not aligned by their time stamps (the picture schedule starts at 0 and so does the sound; in
+the fixtures the streams start 25 ms or less apart); Layer I (no decoder enabled: symphonia's `mp1` feature is a one-line change if it is
+wanted, but no fixture exists to test it, since ffmpeg has no Layer I encoder); MPEG-2 audio extensions.
+
+Tests (`crates/x3d-runtime/tests/mpeg1_audio.rs`, fixtures and commands in `tests/data/mpeg1/PROVENANCE.txt`): four Systems streams
+(Layer II mono 44.1 kHz, stereo 48 kHz, stereo 32 kHz noise, and Layer III mono 44.1 kHz) decode to the rate, channel count and length
+(whole frames) of ffmpeg 6.1.1's float decoder (`mp2float`, `mp3float`) and within a per-sample bound of 2e-4, **fixed before the first
+comparison** (the bound of the WebM Vorbis test). Measured worst differences: 4.8e-7, 5.3e-7, 4.1e-7 and 3.1e-7. This is a comparison of
+two decoders of the same streams, not a conformance test: ISO/IEC 11172-3 is not in the local library.
 
 ## Licensing, patents, security
 

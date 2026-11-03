@@ -245,6 +245,11 @@ fn compare_case(
                 Ok((rw, rh, got)) if (rw, rh) == (w, h) => {
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
+                    eprintln!(
+                        "{name} MSAA {msaa} {file}: {} pixels over 8 ({:.3}%), max {}",
+                        s.pixels_over, s.pct_over, s.max_delta
+                    );
+
                     if s.pixels_over * 1000 > (w * h) as usize * 5 {
                         fail(format!(
                             "{file}: {} pixels over 8 ({:.3}%), max {}",
@@ -316,4 +321,13 @@ fn movie_anim_cases_match_x_ite() {
 #[test]
 fn movie_load_errors_match_x_ite() {
     compare_baseline("movie-load-errors-baseline");
+}
+
+/// WebM pictures at fixed movie times (VP8 ramp, test pattern and parts, VP9), MSAA 0 and 4, against the pinned page
+/// (oracle/movie-video-baseline, five identical recordings; oracle/tools/gen_movie_video.py). The recorder sets the
+/// element's currentTime (`movieSeek`); `x3d-drive` calls `Runtime::movie_seek` at the same frame. Each node plays at
+/// speed 0, so the picture is the one the seek chose. AV1 is not in this world (the AV1 decoder is not in master yet).
+#[test]
+fn movie_video_frames_match_x_ite() {
+    compare_baseline("movie-video-baseline");
 }

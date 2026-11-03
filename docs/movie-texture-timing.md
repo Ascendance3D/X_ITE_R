@@ -102,14 +102,16 @@ In ISO mode the element is never played. Each frame the engine decides the media
 
 ## Known gaps
 
-- Sound: the decoded sound of a WebM cannot run backwards; in ISO mode it plays at rate 1 for a negative rate, and a `<video>`
-  element that is only seeked is silent (its sound is not driven in ISO mode). Seeking while looping is not sample-accurate.
+- Sound of a decoded WebM (native): it follows the ISO movie time. A negative rate is the AudioBufferSourceNode's negative
+  `playbackRate` started at the end of the buffer (tests/movie_iso_audio.rs, engine tests render it and read a falling ramp),
+  and a resume restarts the sound at the movie time of the pause. A `<video>` element that is only seeked is still silent
+  (its sound is not driven in ISO mode, browser only, not verifiable here). Seeking while looping is not sample-accurate.
 - Seek latency in the browser: the shown picture follows the clause's `t` by the time a seek takes (one request in flight at
   a time); a frame of lag at most per seek.
 - The clause's `t` is a cycle time (see the formulas); a reading with `t` taken literally as movie time differs only for
   `|speed| != 1`.
 - `Runtime::movie_seek` (the earlier seek API of PR #361) keeps its pinned behavior and is not wired into the ISO formulas.
-- A stop by `stopTime` leaves the frame of the last tick (at most one frame period before the stop).
+- A stop by `stopTime` or a pause by `pauseTime` keeps the picture of the movie time of the instant of the event (the timer fires between frames; `movie_iso_freeze`), not of the last frame before it.
 - MPEG-1 is the format the clause names; it is not decoded here (step 11 of the plan).
 - The browser tests (`movie01`) could not be run in this lane's environment; the CI Web job runs them.
 - The crate's lib test target does not build on the base `agentA/step7-video-audio` (`webm.rs` test items `codec_fixture`,
