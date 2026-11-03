@@ -5648,7 +5648,9 @@ class X3DBrowser
    #pointer = [ 0, 0 ];
    #touches = new Map ();
    #touchMoved = false;
+   #touchSeen = new Set ();
    #lastTouch = -Infinity;
+   #hasTouchEvents = "ontouchstart" in window;
    // X3DSoundContext: the page's AudioContext, and whether its resume () has not succeeded yet (X_ITE keeps it in
    // `_audioElements` until then).
    #audioContext = null;
@@ -7280,12 +7282,21 @@ class X3DBrowser
 
    // The touchmove of the touches that moved since the last one: Pointer Events report each touch on its own,
    // TouchEvent all of them together, once per frame; the viewers' two-touch gestures need them together.
-   #flushTouches ()
+   // A frame can fall between the pointermoves of two fingers (CI run 41620751198: the hosted runner's PLANE zoom saw
+   // the first finger of a step moved and the second not, x = -0.003346939 where the pinned x is 0), and X_ITE never
+   // sees that: its `touchmove` has every finger. So with touch events a move of some of the fingers waits (`force`
+   // is false) until the rest have moved, or the `touchmove` that carries them all has come; a finger that goes down or
+   // up flushes what there is (`force`).
+   #flushTouches (force = false)
    {
       if (!this .#touchMoved)
          return;
 
+      if (!force && this .#hasTouchEvents && this .#touches .size > 1 && ! Array .from (this .#touches .keys ()) .every (id => this .#touchSeen .has (id)))
+         return;
+
       this .#touchMoved = false;
+      this .#touchSeen .clear ();
       this .#engine ?.touch (1, this .#touchPoints (), this .#zoomWidth ());
    }
 
@@ -7321,7 +7332,7 @@ class X3DBrowser
 
          if (event .pointerType === "touch")
          {
-            this .#flushTouches ();
+            this .#flushTouches (true);
             this .#touches .set (event .pointerId, { pointer: this .#pointerOf (event) });
             this .#lastTouch = event .timeStamp;
             engine () .touch (0, this .#touchPoints (), this .#zoomWidth ());
@@ -7361,6 +7372,7 @@ class X3DBrowser
             {
                touch .pointer    = this .#pointerOf (event);
                this .#touchMoved = true;
+               this .#touchSeen .add (event .pointerId);
 
                if (Math .hypot (this .#touchStart [0] - event .pageX, this .#touchStart [1] - event .pageY) > 7)
                   clearTimeout (this .#touchMenu);
@@ -7388,6 +7400,29 @@ class X3DBrowser
          this .#afterEngine ();
       });
 
+      // TouchEvent.touches: every finger at its latest position in one event, in the order the fingers went down
+      // (Touch.identifier grows with it; the touches map is in pointerdown order). Chromium sends no touchmove for a
+      // first move inside the slop region, so a pointermove stays a move of its finger; the touchmove adds the fingers
+      // whose pointermove has not come. A count that does not match the pointers still down is no snapshot of them.
+      on (canvas, "touchmove", event =>
+      {
+         if (!engine () || !this .#touches .size)
+            return;
+
+         const fingers = Array .from (event .targetTouches) .sort ((a, b) => a .identifier - b .identifier);
+
+         if (fingers .length !== this .#touches .size)
+            return;
+
+         for (const [ i, [ id, touch ] ] of Array .from (this .#touches) .entries ())
+         {
+            touch .pointer = this .#pointerOf (fingers [i]);
+            this .#touchSeen .add (id);
+         }
+
+         this .#touchMoved = true;
+      }, { passive: true });
+
       const up = event =>
       {
          if (!engine ())
@@ -7398,7 +7433,7 @@ class X3DBrowser
             if (!this .#touches .has (event .pointerId))
                return;
 
-            this .#flushTouches ();
+            this .#flushTouches (true);
             clearTimeout (this .#touchMenu);
             this .#touches .delete (event .pointerId);
             this .#lastTouch = event .timeStamp;
@@ -7588,6 +7623,7 @@ class X3DBrowser
       {
          this .#touchMoved = false;
          this .#touches .clear ();
+         this .#touchSeen .clear ();
          engine ?.touch (2, [ ], this .#zoomWidth ());
       }
    }
