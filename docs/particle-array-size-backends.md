@@ -27,7 +27,7 @@ of the pinned page needs Chromium on a Metal device (see "Not done").
 | --- | --- | --- |
 | Vulkan, discrete (Linux) | NVIDIA GeForce RTX 3060 Ti, driver 595.99.02 | `rea_b14_particle_pick_matches_x_ite` pass (103 s), `rea_b15_particle_collision_matches_x_ite` pass (9 s); all 16 `GPU_TESTS` pass (160 s); `rea_b16` 27 and `rea_b17` 21 pass |
 | Vulkan, software (Linux) | llvmpipe (LLVM 20.1.2, 256 bits), Mesa 25.2.8, selected with `VK_ICD_FILENAMES` set to `lvp_icd.json` | see below; `rea_b16` 27 and `rea_b17` 21 pass, `b69_gs_pick` 2 pass (worst value difference 3.84e-5) |
-| Metal, virtualized (hosted `macos-15`) | the virtual machine's paravirtual device | `rea_b16` and `rea_b17` (CPU replay) pass in run 41557728237. The GPU tests were skipped by name. The "Particle GPU tests on the virtualized device (information)" step of `macos-tests.yml` runs `rea_b14`, `rea_b15` and the splat pick test on it and prints the adapter; its job summary is the record |
+| Metal, virtualized (hosted `macos-15`) | "Apple Paravirtual device", backend Metal | `rea_b16` and `rea_b17` (CPU replay) pass. `rea_b14_particle_pick` (318 s) and `rea_b15_particle_collision` (4.2 s) **fail strictly** (run 41577822925 of PR #351, the first run in which they start a device on macOS; before PR #351 they skipped as "no adapter" because the headless device asked for Vulkan). The differences were not kept by that run: **unclassified**. The information step of `macos-tests.yml` now keeps the failure text. This branch does not contain the Metal default of PR #351, so its own macOS run shows the old skip |
 
 ### llvmpipe, classification (BR2.2)
 
