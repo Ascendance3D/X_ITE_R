@@ -149,6 +149,52 @@ jobs:
               -E 'test(rea_b14_particle_pick_matches_x_ite) | test(rea_b15_particle_collision_matches_x_ite) | test(splat_picks_match_pinned_x_ite)' 2>&1 | tee particle-gpu.log | grep -E '^ +(PASS|FAIL|SIGABRT|TIMEOUT) |Summary \[|adapter "|^(pc|pp)-[a-z0-9-]+: |records: ' | cut -c1-300 | sort -u
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # Information only, never gating (issue #89): why do the eleven comparisons in MACOS_HOSTED_SKIPS differ on the virtual
+      # machine's device? Prints the adapter, its features, limits and depth formats, how Depth24Plus and Depth32Float
+      # resolve a 3e-8 depth difference, and the failing worlds against the pinned images (pixel counts over 8, worst delta,
+      # bounding box); then runs the eleven tests with their own failure text, once on the default backend (Metal) and once
+      # with X3D_BACKEND=gl when the runner offers an OpenGL adapter. Everything goes to the artifact macos-diag. A result
+      # from the virtual machine is never a physical-Mac result.
+      - name: Device diagnostics (information)
+        if: always()
+        continue-on-error: true
+        env:
+          X3D_DIAG_DIR: ${{ github.workspace }}/macos-diag
+          FAILING_ELEVEN: >-
+            test(rea_batch07_vol_cases_match_x_ite)
+            | test(rea_i92_render_items_match_x_ite)
+            | test(standard_and_log_match_x_ite)
+            | test(splats_in_logarithmic_depth_match_x_ite)
+            | test(rea_b24_anchor_collision_instanced_match_x_ite)
+            | test(log_shows_what_standard_cannot)
+            | test(rea_b07_vol_renders_match_x_ite)
+            | test(rea_b08_gs_renders_match_x_ite)
+            | test(rea_b08_vs_renders_match_x_ite)
+            | test(rea_batch01_cases_match_x_ite)
+            | test(rea_b09_inputs_renders_match_x_ite)
+        run: |
+          mkdir -p macos-diag
+          cargo test -p x3d-render --release --test device_diag -- --nocapture --test-threads=1 2>&1 | tee macos-diag/device_diag.log || true
+          X3D_BACKEND=gl X3D_DIAG_DIR="$X3D_DIAG_DIR/gl" cargo test -p x3d-render --release --test device_diag -- --nocapture --test-threads=1 2>&1 | tee macos-diag/device_diag_gl.log || true
+          cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture -E "$FAILING_ELEVEN" 2>&1 | tee macos-diag/failing_eleven_metal.log || true
+          X3D_BACKEND=gl cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture -E "$FAILING_ELEVEN" 2>&1 | tee macos-diag/failing_eleven_gl.log || true
+          {
+            echo "### Device diagnostics, virtualized macOS device (not a physical Mac)"
+            grep -hE '^diag: (adapter|format|depth|no |Standard|Logarithmic)' macos-diag/device_diag.log | cut -c1-400
+            echo "#### with X3D_BACKEND=gl"
+            grep -hE '^diag: (adapter|no |depth|Standard|Logarithmic)' macos-diag/device_diag_gl.log | cut -c1-400
+            echo "#### the eleven tests, Metal then GL"
+            grep -hE '^ +(PASS|FAIL) |Summary \[' macos-diag/failing_eleven_metal.log macos-diag/failing_eleven_gl.log | sed 's/^ *//' | sort -u
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-diag
+          path: macos-diag
+          if-no-files-found: ignore
+
       # The skips by name: the GPU tests excluded above, and every evidence skip with its reason.
       - name: Skips by name
         if: always()
