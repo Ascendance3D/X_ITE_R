@@ -31,6 +31,7 @@
  * `--suite entry01` records the entry point 01 cases (<out_dir>/entry01-baseline.json).
  * `--suite scenecreate01` records the scene creation 01 cases (<out_dir>/scenecreate01-baseline.json).
  * `--suite rootnodes01` records the root nodes 01 cases (<out_dir>/rootnodes01-baseline.json).
+ * `--suite nav01` records the navigation touch 01 cases (<out_dir>/nav01-baseline.json): synthetic touch scripts and the pose after each step.
  * `--suite nav04` records the navigation touch 01 cases (<out_dir>/nav04-baseline.json): synthetic touch scripts and the pose after each step.
  * `--suite sound01` records the sound 01 cases (<out_dir>/sound01-baseline.json).
  * `--suite sound04` records the sound 04 cases (<out_dir>/sound04-baseline.json): the level the page's output carries (RMS).
@@ -70,7 +71,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "dom03", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "ui02", "scenecreate01", "rootnodes01", "nav04", "scriptlife01", "externremove01", "shutdown01", "splatsort01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "dom03", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "ui02", "scenecreate01", "rootnodes01", "nav01", "nav04", "scriptlife01", "externremove01", "shutdown01", "splatsort01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);

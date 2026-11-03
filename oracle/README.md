@@ -1363,6 +1363,19 @@ element and whether the menu is open, for the right button, a left click, a real
 
 `oracle/synthetic-rea-b68-owner/` holds five worlds (BlendedVolumeStyle `ALPHA1`, `ALPHA2` and the CONSTANT twin; ShadedVolumeStyle with a `Material` and with a `PhysicalMaterial`) and `xite-runs.json`, the result of `node oracle/x_ite-shot.mjs oracle/synthetic-rea-b68-owner OUT` run five times against the pinned X_ITE (5 identical): `bl-iso1` and `sh-physicalmaterial` never draw (`TIMEOUT 45s`), `bl-iso2` draws the same picture as `bl-const`. Rust side: `crates/x3d-render/tests/render_b68_owner.rs`. Decisions: `docs/adr/0012-owner-decisions-batch.md`. The shot tool serves only paths under `oracle/`; it needs `oracle/x_ite-pin/node_modules` (a symlink, not committed).
 
+### Web browser navigation touch 01 (`web-browser-nav-01-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav01` runs the cases of `crates/x3d-web/tests/browser/nav01_case.mjs` (issue #370,
+  ledger `sub:nav.*`) and records `web-browser-nav-01-baseline/nav01-baseline.json`: synthetic Chrome DevTools touch
+  scripts in a touch context, the viewpoint pose (position, axis, angle) after every step. Examine (E15): a two-finger
+  pan (the same-way move mode, the mode locked by the first moves) and a double tap (look at the box under the finger;
+  two taps 450 ms apart and a double tap on empty space look at nothing). The tolerance, fixed before the first run, is
+  1e-3 on every number (`NAV01_TOLERANCE` in `runtime02_harness.mjs`). Each step waits 400 ms (twice MOVE_TIME), so
+  the poses do not depend on frame timing. Three runs gave identical values. Prepare the worktree as in "Recording from
+  a worktree".
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-01-baseline --runs 3 --suite nav01
 ### Web browser navigation press 04 (`web-browser-nav-04-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite nav04` runs the 5 cases of `crates/x3d-web/tests/browser/nav04_case.mjs` (issue #370,
