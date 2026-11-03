@@ -37,6 +37,8 @@ rustfft = "6.4.1"
 web-time = "1"
 
 [dev-dependencies]
+# Reads the gzip-compressed ffmpeg reference planes of the MPEG-1 tests (already in the tree through x3d-parse).
+flate2 = "1"
 # VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
 vp9dec = "0.1.1"
 url = "2"
