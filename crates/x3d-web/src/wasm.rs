@@ -6,6 +6,10 @@
 //! (`createX3DFromString`, a `loadURL` in progress) and wait for [`WebBrowser::replace`]. Each world has its own
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
+use crate::device_request::{
+    Attempt, CHECKED_WGPU_VERSION, WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL,
+    request_with_compatibility,
+};
 use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -382,15 +386,36 @@ impl WebBrowser {
         let surface = instance
             .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
             .map_err(|e| JsError::new(&format!("create_surface: {e}")))?;
-        let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::HighPerformance,
-                force_fallback_adapter: false,
-                compatible_surface: Some(&surface),
-                ..Default::default()
-            })
-            .await
-            .map_err(|e| JsError::new(&format!("no WebGPU adapter: {e}")))?;
+        // Compatibility feature level first when wgpu can request it, else (and after a failure) the current request, once
+        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only.
+        let outcome = request_with_compatibility(WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, |attempt| {
+            let (instance, surface) = (&instance, &surface);
+
+            async move {
+                match attempt {
+                    Attempt::Compatibility => Err(format!(
+                        "wgpu {CHECKED_WGPU_VERSION} has no option for the compatibility feature level"
+                    )),
+                    Attempt::Current => instance
+                        .request_adapter(&wgpu::RequestAdapterOptions {
+                            power_preference: wgpu::PowerPreference::HighPerformance,
+                            force_fallback_adapter: false,
+                            compatible_surface: Some(surface),
+                            ..Default::default()
+                        })
+                        .await
+                        .map_err(|e| format!("no WebGPU adapter: {e}")),
+                }
+            }
+        })
+        .await
+        .map_err(|e| JsError::new(&e))?;
+
+        for line in &outcome.diagnostics {
+            web_sys::console::warn_1(&line.into());
+        }
+
+        let adapter = outcome.value;
         let limits = adapter.limits();
         let mut missing = vec![];
 
