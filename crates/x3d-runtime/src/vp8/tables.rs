@@ -3,7 +3,7 @@
 //! The coefficient, motion vector, key-frame subblock-mode and quantizer
 //! tables are transcribed from the reference decoder published in RFC 6386
 //! section 20 (`vp8_prob_data.h`, `modemv_data.h`, `dequant_data.h`); see
-//! `THIRD_PARTY_NOTICES.md`.
+//! `THIRD_PARTY_NOTICES.md` at the repository root (RFC 6386 BSD-3-Clause notice and the zvidlib-vp8 MIT notice).
 
 // The intra modes, in the order the trees and contexts index them.
 pub(crate) const DC_PRED: u8 = 0;
