@@ -24,12 +24,23 @@
 //! The GPU test needs an adapter and is skipped without one. `REA_ONLY=<substring>` restricts the
 //! cases.
 
+mod common;
+
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// Allowed absolute difference of a probe's distance, normal and constrained translation.
 const PROBE_TOL: f64 = 1e-6;
+
+/// [`PROBE_TOL`], or the larger `X3D_TEST_SOFTWARE_TOL` of a run on a software rasterizer (issue #89; 1e-4 in
+/// docs/particle-array-size-backends.md, fixed before the llvmpipe run). Hit states and shape names stay exact. The value is
+/// read and checked once, at the start of the test (a bad value, or the variable on a hardware adapter, fails the run).
+fn probe_tol() -> f64 {
+    static TOL: std::sync::OnceLock<f64> = std::sync::OnceLock::new();
+
+    *TOL.get_or_init(|| common::ulps::software_tol().map_or(PROBE_TOL, |t| t.max(PROBE_TOL)))
+}
 
 /// Allowed difference of the pose and positionOffset.
 const POSE_TOL: f64 = 1e-4;
@@ -292,7 +303,7 @@ fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<S
         let tol = PROBE_TOLERANCES
             .iter()
             .find(|(case, f, ..)| *case == name && f == frame)
-            .map_or(PROBE_TOL, |(_, _, tol, _)| *tol);
+            .map_or(probe_tol(), |(_, _, tol, _)| tol.max(probe_tol()));
         let (hits, values) = compare_frame(w, g, tol);
         let gap = gaps
             .iter()
@@ -388,6 +399,9 @@ fn check_all(cpu: bool, gaps: Gaps, threads: usize) {
 
 #[test]
 fn rea_b15_particle_collision_matches_x_ite() {
+    // Validate X3D_TEST_SOFTWARE_TOL before anything else (also before an adapter skip): a bad value fails the run.
+    let _ = probe_tol();
+
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
         return x3d_evidence::no_gpu("no adapter: the collision depth buffer needs a GPU, skipped");
     }

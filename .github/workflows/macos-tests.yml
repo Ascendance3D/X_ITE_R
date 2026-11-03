@@ -146,7 +146,7 @@ jobs:
           {
             echo "### Particle GPU tests, virtualized macOS device (not a physical Mac)"
             cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture \
-              -E 'test(rea_b14_particle_pick_matches_x_ite) | test(rea_b15_particle_collision_matches_x_ite) | test(splat_picks_match_pinned_x_ite)' 2>&1 | tee particle-gpu.log | grep -E '^ +(PASS|FAIL|SIGABRT|TIMEOUT) |Summary \[|adapter "|^(pc|pp)-[a-z0-9-]+: |records: ' | cut -c1-300 | sort -u
+              -E 'test(rea_b14_particle_pick_matches_x_ite) | test(rea_b15_particle_collision_matches_x_ite) | test(splat_picks_match_pinned_x_ite)' 2>&1 | tee particle-gpu.log | grep -E '^ +(PASS|FAIL|SIGABRT|TIMEOUT) |Summary \[|adapter "|^(pc|pp)-[a-z0-9-]+: |records: |panicked at |^ +left: |^ +right: ' | cut -c1-300 | sort -u
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Information only, never gating (issue #89): why do the eleven comparisons in MACOS_HOSTED_SKIPS differ on the virtual

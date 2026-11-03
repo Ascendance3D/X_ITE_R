@@ -9,11 +9,13 @@
 //!
 //! Results (max abs difference over the common prefix; Chromium peak is about 0.4 to 0.5):
 //! - same rate as the context (MP3 48 kHz, FLAC 48 kHz 24 bit): bit-identical.
-//! - PCM WAV 44.1 kHz resampled (decode.rs, SincResampler): 3.3e-5, same length.
-//! - MP3, FLAC, Ogg at 22.05 or 44.1 kHz (web-audio-api's rubato resampler): KNOWN difference, 0.33 to 0.46
-//!   (mean 0.04 to 0.07), one frame longer than Chromium; Ogg is also up to 470 frames longer than Chromium.
-//! - Ogg Vorbis 48 kHz: samples within 9e-8, but Chromium returns 64 frames fewer.
+//! - PCM, A-law and mu-law WAV, and MP3, FLAC and Ogg Vorbis, at any other rate (decode.rs: the file's own rate and
+//!   frames, Chromium's SincResampler): same length, within 5e-5 (measured 1.2e-5 to 3.9e-5). Ogg Vorbis returns
+//!   none of the frames of its last packet in Chromium, which decode.rs reproduces.
+//! - Ogg Vorbis 48 kHz: samples within 9e-8.
 //! - Opus: Chromium decodes it, `web-audio-api` rejects it (KNOWN).
+//! - AAC in M4A: Chromium decodes it; the port excludes the AAC decoder by decision, so parity is UNSUPPORTED
+//!   (`oracle/rea-b24-audio-decode-2-baseline`, `aac_is_excluded_and_chromium_parity_is_unsupported`).
 
 use serde_json::Value;
 use sha2::{Digest, Sha256};
@@ -62,13 +64,30 @@ struct Measure {
     chrome_length: usize,
     /// Over the common prefix of every channel.
     max_abs: f32,
+    /// The largest absolute sample that the decoder produced: silence would pass a difference bound by luck.
+    peak: f32,
     exact: bool,
 }
 
 fn measure(file: &str) -> Measure {
+    measure_in(
+        "rea-b24-audio-decode-baseline",
+        "synthetic-rea-b24-audio",
+        file,
+    )
+}
+
+fn measure2(file: &str) -> Measure {
+    measure_in(
+        "rea-b24-audio-decode-2-baseline",
+        "synthetic-rea-b24-audio-2",
+        file,
+    )
+}
+
+fn measure_in(baseline_dir: &str, corpus: &str, file: &str) -> Measure {
     let baseline: Value = serde_json::from_slice(
-        &std::fs::read(root().join("rea-b24-audio-decode-baseline/audio-decode-baseline.json"))
-            .unwrap(),
+        &std::fs::read(root().join(baseline_dir).join("audio-decode-baseline.json")).unwrap(),
     )
     .unwrap();
     let entry = baseline["results"]
@@ -84,7 +103,7 @@ fn measure(file: &str) -> Measure {
         sample_rate: entry["contextSampleRate"].as_f64().unwrap() as f32,
         length: 128,
     });
-    let bytes = std::fs::read(root().join("synthetic-rea-b24-audio").join(file)).unwrap();
+    let bytes = std::fs::read(root().join(corpus).join(file)).unwrap();
     let buffer = engine
         .decode(bytes)
         .unwrap_or_else(|e| panic!("{file}: {e}"));
@@ -99,6 +118,7 @@ fn measure(file: &str) -> Measure {
     assert_eq!(buffer.number_of_channels(), channels, "{file} channels");
 
     let mut max_abs = 0.0f32;
+    let mut peak = 0.0f32;
     let mut exact = buffer.length() == chrome_length;
 
     for c in 0..channels {
@@ -122,7 +142,14 @@ fn measure(file: &str) -> Measure {
             exact &= g.to_bits() == w.to_bits();
             max_abs = max_abs.max((g - w).abs());
         }
+
+        peak = buffer
+            .get_channel_data(c)
+            .iter()
+            .fold(peak, |m, v| m.max(v.abs()));
     }
+
+    assert!(peak > 0.01, "{file}: the decoded audio is silent ({peak})");
 
     println!(
         "{file}: chrome {chrome_length} frames, rust {}, max abs difference {max_abs:e}",
@@ -132,6 +159,7 @@ fn measure(file: &str) -> Measure {
         rust_length: buffer.length(),
         chrome_length,
         max_abs,
+        peak,
         exact,
     }
 }
@@ -154,44 +182,136 @@ fn resampled_wav_is_within_5e_5_of_chromium() {
     assert!(m.max_abs > 0.0, "now exact: tighten the bound");
 }
 
-/// Ogg Vorbis at the context rate: the same samples (the float conversion differs in the last bit), but
-/// Chromium returns 64 frames fewer than the file holds.
+/// The bound of the SincResampler port, set by the PCM WAV case (3.3e-5) before the compressed formats used it.
+const RESAMPLED_BOUND: f32 = 5e-5;
+
+/// Ogg Vorbis at the context rate: the same samples (the float conversion differs in the last bit), and Chromium's
+/// length, 64 frames short of the file's: the end rule of decode.rs (the granule position less the first packet's
+/// lapped frames, within the last packet; `ogg_end_follows_the_granule_position`).
 #[test]
-fn known_ogg_48000_chromium_drops_the_last_64_frames() {
+fn ogg_48000_has_chromiums_length_and_samples() {
     let m = measure("ogg-48000-mono.ogg");
-    assert_eq!((m.rust_length, m.chrome_length), (14400, 14336));
+    assert_eq!((m.rust_length, m.chrome_length), (14336, 14336));
     assert!(m.max_abs <= 1e-7, "{:e}", m.max_abs);
 }
 
-/// MP3, FLAC and Ogg that web-audio-api resamples: KNOWN differences (max abs difference, Rust length,
-/// Chromium length). The resampler is rubato, Chromium's is SincResampler with the file's own frames (the WAV
-/// path does it that way); the fix needs the file's native rate and frames from the decoder, which
-/// web-audio-api does not expose. A file that now matches fails: remove it from the list.
-const KNOWN_RESAMPLED: &[(&str, usize, usize)] = &[
-    ("mp3-22050-mono.mp3", 14401, 14400),
-    ("mp3-44100-stereo.mp3", 14401, 14400),
-    ("flac-22050-mono.flac", 14401, 14400),
-    ("flac-44100-stereo.flac", 14401, 14400),
-    ("ogg-22050-mono.ogg", 14401, 13931),
-    ("ogg-44100-stereo.ogg", 14401, 14349),
-];
-
+/// MP3, FLAC and Ogg Vorbis at 22.05, 32, 44.1 kHz and others: the length of Chromium and its samples within the
+/// bound of the WAV case. Before decode.rs decoded them, `web-audio-api` resampled with rubato: max abs difference
+/// 0.33 to 0.46, one frame longer, and Ogg up to 470 frames longer.
 #[test]
-fn known_resampled_non_wav_differs_from_chromium() {
-    for &(file, rust_length, chrome_length) in KNOWN_RESAMPLED {
+fn resampled_compressed_files_match_chromium() {
+    for file in [
+        "mp3-22050-mono.mp3",
+        "mp3-44100-stereo.mp3",
+        "flac-22050-mono.flac",
+        "flac-44100-stereo.flac",
+        "ogg-22050-mono.ogg",
+        "ogg-44100-stereo.ogg",
+    ] {
         let m = measure(file);
-        assert_eq!(
-            (m.rust_length, m.chrome_length),
-            (rust_length, chrome_length),
-            "{file}"
-        );
-        assert!(
-            !m.exact,
-            "{file} now matches Chromium: remove it from KNOWN_RESAMPLED"
-        );
-        // Measured 0.33 to 0.46; a floor, so the entry is not satisfied by a near miss.
-        assert!(m.max_abs > 0.25, "{file}: {:e}", m.max_abs);
+        assert_eq!(m.rust_length, m.chrome_length, "{file}");
+        assert!(m.max_abs <= RESAMPLED_BOUND, "{file}: {:e}", m.max_abs);
+        assert!(m.max_abs > 0.0, "{file} now exact: tighten the bound");
     }
+}
+
+/// The second corpus (`synthetic-rea-b24-audio-2`, five identical recordings): other rates, A-law and mu-law.
+#[test]
+fn more_rates_and_g711_match_chromium() {
+    for file in [
+        "mp3-11025-mono.mp3",
+        "mp3-32000-stereo.mp3",
+        "flac-8000-mono.flac",
+        "ogg-32000-stereo.ogg",
+        "wav-alaw-44100-st.wav",
+        "wav-ulaw-44100-st.wav",
+        "wav-alaw-8000-mono.wav",
+        "wav-ulaw-8000-mono.wav",
+    ] {
+        let m = measure2(file);
+        assert_eq!(m.rust_length, m.chrome_length, "{file}");
+        assert!(m.max_abs <= RESAMPLED_BOUND, "{file}: {:e}", m.max_abs);
+    }
+
+    // At the context rate nothing is resampled.
+    let m = measure2("wav-ulaw-48000-mono.wav");
+    assert!(m.exact, "{:e}", m.max_abs);
+}
+
+/// AAC in M4A is excluded by decision (owner, 2026-11-02, issue #90), not by a code path: `Cargo.lock` holds no AAC decoder
+/// (see `vendor/web-audio-api/VENDOR.md`), so the four files fail to decode with `unsupported audio codec`, whatever their
+/// atom layout. Chromium (FFmpeg) decodes all four (`oracle/rea-b24-audio-decode-2-baseline`: 14400, 14400, 14400 and 14399
+/// frames), so parity for AAC is recorded as UNSUPPORTED, not complete. An earlier build decoded the faststart files to
+/// 15604 frames (the 1024 priming frames are not trimmed: symphonia gives no edit list) and failed on the moov-last file.
+#[test]
+fn aac_is_excluded_and_chromium_parity_is_unsupported() {
+    let baseline: Value = serde_json::from_slice(
+        &std::fs::read(root().join("rea-b24-audio-decode-2-baseline/audio-decode-baseline.json"))
+            .unwrap(),
+    )
+    .unwrap();
+    let engine = AudioEngine::new(AudioMode::Offline {
+        channels: 2,
+        sample_rate: 48000.0,
+        length: 128,
+    });
+
+    for file in [
+        "aac-44100-stereo.m4a",
+        "aac-44100-stereo-faststart.m4a",
+        "aac-22050-mono.m4a",
+        "aac-48000-stereo.m4a",
+    ] {
+        let chrome = baseline["results"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|r| r["file"] == file)
+            .unwrap_or_else(|| panic!("{file} not in the baseline"));
+        assert_eq!(chrome["ok"], true, "{file}: Chromium decodes it");
+
+        let bytes = std::fs::read(root().join("synthetic-rea-b24-audio-2").join(file)).unwrap();
+        let err = match engine.decode(bytes) {
+            Ok(b) => panic!(
+                "{file}: decodes ({} frames): the AAC decoder is back",
+                b.length()
+            ),
+            Err(e) => e,
+        };
+        if file != "aac-44100-stereo.m4a" {
+            // The moov-last file fails earlier, while the reader looks for the moov atom.
+            assert!(err.contains("unsupported"), "{file}: {err}");
+        }
+    }
+}
+
+/// No AAC decoder is in the resolved dependency graph (native and wasm32 alike: Cargo.lock lists both), not merely refused
+/// at run time. The same check runs as `python3 -I tools/check_no_aac.py`.
+#[test]
+fn cargo_lock_has_no_aac_decoder() {
+    let lock = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../Cargo.lock"),
+    )
+    .unwrap();
+    let packages: Vec<&str> = lock
+        .lines()
+        .filter_map(|l| l.strip_prefix("name = \""))
+        .filter_map(|l| l.strip_suffix('"'))
+        .collect();
+    assert!(
+        packages.len() > 100,
+        "{} packages: lock not read",
+        packages.len()
+    );
+    assert!(
+        packages.contains(&"symphonia-core"),
+        "symphonia is gone: update this test"
+    );
+    let aac: Vec<&&str> = packages
+        .iter()
+        .filter(|n| n.split(['-', '_']).any(|w| w == "aac"))
+        .collect();
+    assert!(aac.is_empty(), "AAC decoder in Cargo.lock: {aac:?}");
 }
 
 /// Chromium (FFmpeg) decodes Opus; web-audio-api has no Opus decoder.

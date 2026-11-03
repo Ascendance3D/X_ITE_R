@@ -1868,27 +1868,39 @@ impl AudioEngine {
         )
     }
 
+    /// An AudioBuffer of planar samples decoded at `rate`, resampled to the context's rate as Chromium's
+    /// decodeAudioData does (decode.rs). An empty buffer is an error (decodeAudioData rejects).
+    pub fn buffer_from_planar(
+        &self,
+        channels: Vec<Vec<f32>>,
+        rate: f32,
+    ) -> Result<AudioBuffer, String> {
+        let context_rate = self.sample_rate();
+        let channels: Vec<Vec<f32>> = if rate == context_rate {
+            channels
+        } else {
+            channels
+                .iter()
+                .map(|c| decode::resample(c, rate as f64, context_rate as f64))
+                .collect()
+        };
+        let length = channels.first().map_or(0, |c| c.len());
+
+        if length == 0 {
+            return Err("no audio frames".into());
+        }
+
+        let data: Vec<f32> = channels.concat();
+
+        Ok(self.create_buffer(channels.len(), length, context_rate, Some(&data)))
+    }
+
     fn decode_pcm(&self, bytes: &[u8]) -> Result<AudioBuffer, String> {
         let bytes = bytes.to_vec();
-        if let Some((channels, rate)) = decode::decode_wav(&bytes) {
-            let context_rate = self.sample_rate();
-            let channels: Vec<Vec<f32>> = if rate == context_rate {
-                channels
-            } else {
-                channels
-                    .iter()
-                    .map(|c| decode::resample(c, rate as f64, context_rate as f64))
-                    .collect()
-            };
-            let length = channels[0].len();
-
-            // A file without frames: decodeAudioData rejects (EncodingError).
-            if length == 0 {
-                return Err("no audio frames".into());
-            }
-
-            let data: Vec<f32> = channels.concat();
-            return Ok(self.create_buffer(channels.len(), length, context_rate, Some(&data)));
+        if let Some((channels, rate)) =
+            decode::decode_wav(&bytes).or_else(|| decode::decode_compressed(&bytes))
+        {
+            return self.buffer_from_planar(channels, rate);
         }
 
         self.base()
