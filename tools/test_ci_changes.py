@@ -89,7 +89,8 @@ class Classification(unittest.TestCase):
             self.assertEqual(after[p], (False, False), p)
 
     def test_tree_reference_pattern(self):
-        """The pattern finds a path that reaches ledger/ or evidence/ however it is written, and not a longer name."""
+        """The pattern finds forward-slash paths (absolute, ./ and ../ forms) and quoted names that reach ledger or evidence, and not a
+        longer name. It does not match Windows backslash paths: the suites run on Linux only."""
         for hit in ("ledger/x", "evidence/x", "../ledger/x", "../../evidence/x", "./ledger/x", "a/../../ledger/x",
                     'include_str!("../../../ledger/ledger.json")', '"/ledger/x"', '.join("ledger")', "'../evidence'"):
             self.assertTrue(re.search(TREE_REFERENCE, hit), hit)
@@ -106,6 +107,10 @@ class Classification(unittest.TestCase):
                                ":!tools/ci_changes.py", ":!tools/test_ci_changes.py"], cwd=c.ROOT, capture_output=True, text=True).stdout
         for line in refs.splitlines():
             path, _, rest = line.split(":", 2)
+            # Deliberately loose: a line that starts with a comment marker, a bare "*" (a block-comment body, but also any other
+            # line that starts with "*") or a "_comment" JSON key passes. Block comments written as /* ... */ on one line or a
+            # Python docstring are not recognized and fail the test. Both errors are false positives; a real reference is never
+            # let through, so a needed suite cannot be skipped by this test passing.
             self.assertTrue(rest.lstrip().startswith(("//", "#", "///", "//!", "*", '"_comment"')), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
