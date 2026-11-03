@@ -7087,11 +7087,14 @@
    "behavior": "",
    "tests": [
     "x10 rotate/zoom suites",
-    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)",
+    "crates/x3d-web/tests/browser/nav01.test.mjs (nav01_case.mjs: pan, panMode, doubleTap, slowTaps, doubleTapEmpty, against oracle/web-browser-nav-01-baseline (pinned X_ITE 16.5.0, 34cdf9f97, three identical recordings; recorder oracle/x_ite-web-runtime-02.mjs --suite nav01))",
+    "crates/x3d-web/tests/browser/nav04.test.mjs (nav04_case.mjs: a press, drag, wheel, touch drag and pinch outside and inside a Viewport, against oracle/web-browser-nav-04-baseline (pinned X_ITE 16.5.0, 34cdf9f97, three identical recordings; recorder oracle/x_ite-web-runtime-02.mjs --suite nav04))",
+    "crates/x3d-web/tests/browser/touchsnapshot01.test.mjs"
    ],
-   "missing": "not compared: two-finger touch pan and double tap (E15), a press outside the viewport (E16), the macOS scroll factor (E17); E14 (touch rotate and pinch) only in the x3d-web browser lane, E18 only through x10_compare.py on a private world",
+   "missing": "not compared: the macOS scroll factor (E17); E14 (touch rotate and pinch) only in the x3d-web browser lane, E18 only through x10_compare.py on a private world",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
-   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 13 of 18 items compared in committed tests; new cases: centerOfRotation, OrthoViewpoint, trackball rotation and spin, spin stopped by a wheel step."
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 13 of 18 items compared in committed tests; new cases: centerOfRotation, OrthoViewpoint, trackball rotation and spin, spin stopped by a wheel step. | Issue #370 2026-11-03 (PRs #372, #375, #395): E15 (two-finger touch pan, touch mode lock, double tap look at, slow taps, empty space) and E16 (a press, wheel and touch outside a layer's Viewport) are compared against pinned X_ITE in the browser lane; no implementation defect, no engine change. Pose numbers are compared at 1e-3, fixed before the first run. The input is synthetic DevTools touch and pointer events in headless Chromium; physical touch screens stay in #143 and macOS scroll factors in #88. The cases are in the browser lane (crates/x3d-web) only, there is no x3d-viewer test for them. #395 (touchsnapshot01.test.mjs): the page glue held a move of some fingers until the rest moved, as X_ITE's touchmove has every finger; before it the hosted runner saw the first finger of a PLANE zoom step moved and the second not (x = -0.003346939 where the pinned x is 0), after it the case ends where a pinch with both fingers moving ends; pointer-only input (no touch events) is unchanged."
   },
   {
    "id": "sub:nav.walk-fly",
@@ -7105,11 +7108,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)",
+    "crates/x3d-web/tests/browser/nav02.test.mjs (nav02_case.mjs: WALK and FLY one-finger forward, back, turn, diagonal and two-finger look-around, against oracle/web-browser-nav-02-baseline (pinned X_ITE 16.5.0, 34cdf9f97, three identical recordings; recorder oracle/x_ite-web-runtime-02.mjs --suite nav02))"
    ],
-   "missing": "not compared: Rubberband overlay (F15), touch (F16), ContentScale (F17), macOS roll angle (F18)",
+   "missing": "not compared: Rubberband overlay (F15), ContentScale (F17), macOS roll angle (F18)",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
-   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 14 of 18 items compared; new cases: StraightenHorizon false, FLY look-around past vertical, speed 0, 1 and 16, walk inside a tilted Transform."
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 14 of 18 items compared; new cases: StraightenHorizon false, FLY look-around past vertical, speed 0, 1 and 16, walk inside a tilted Transform. | Issue #370 2026-11-03 (PRs #373, #386, #395): F16 (touch) is compared in the browser lane. Defect found and fixed: X3DFlyViewer.touchstart, touchmove and touchend were not ported, so a finger did nothing in WALK and FLY; one finger now flies or walks, two fingers look around, a third ends it. X_ITE walks over real frame times, so a hold cannot be compared pose for pose: the cases compare the direction of travel and the speed and turn rate over the measured hold. Pose numbers are compared at 1e-3, fixed before the first run. The input is synthetic DevTools touch and pointer events in headless Chromium; physical touch screens stay in #143 and macOS scroll factors in #88. The cases are in the browser lane (crates/x3d-web) only, there is no x3d-viewer test for them. #395 (touchsnapshot01.test.mjs): the page glue held a move of some fingers until the rest moved, as X_ITE's touchmove has every finger; before it the hosted runner saw the first finger of a PLANE zoom step moved and the second not (x = -0.003346939 where the pinned x is 0), after it the case ends where a pinch with both fingers moving ends; pointer-only input (no touch events) is unchanged."
   },
   {
    "id": "sub:nav.plane",
@@ -7124,11 +7128,12 @@
    "behavior": "",
    "tests": [
     "x10 plane suite",
-    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)",
+    "crates/x3d-web/tests/browser/nav03.test.mjs (nav03_case.mjs navPlane: move, zoom, mode, oneFinger, doubleTap, slowTaps, against oracle/web-browser-nav-03-baseline (pinned X_ITE 16.5.0, 34cdf9f97, three identical recordings; recorder oracle/x_ite-web-runtime-02.mjs --suite nav03))"
    ],
-   "missing": "not compared: touch (P09), macOS scroll factor (P10)",
+   "missing": "not compared: macOS scroll factor (P10)",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
-   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 8 of 10 items compared; new cases: zoom-in limit (225 wheel steps), double click, Alt double click."
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 8 of 10 items compared; new cases: zoom-in limit (225 wheel steps), double click, Alt double click. | Issue #370 2026-11-03 (PRs #374, #382, #389, #395): P09 (two-finger pan, pinch zoom, double tap) is compared in the browser lane, all 6 navPlane cases with none skipped on the hosted runner (the page clock is held across the taps of a double tap). PLANE zoom changes fieldOfViewScale, which the Viewpoint node does not show, so the zoom cases also compare the picture. Pose numbers are compared at 1e-3, fixed before the first run. The input is synthetic DevTools touch and pointer events in headless Chromium; physical touch screens stay in #143 and macOS scroll factors in #88. The cases are in the browser lane (crates/x3d-web) only, there is no x3d-viewer test for them. #395 (touchsnapshot01.test.mjs): the page glue held a move of some fingers until the rest moved, as X_ITE's touchmove has every finger; before it the hosted runner saw the first finger of a PLANE zoom step moved and the second not (x = -0.003346939 where the pinned x is 0), after it the case ends where a pinch with both fingers moving ends; pointer-only input (no touch events) is unchanged."
   },
   {
    "id": "sub:nav.lookat",
@@ -7143,11 +7148,12 @@
    "behavior": "",
    "tests": [
     "x10 lookat suite",
-    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)"
+    "crates/x3d-viewer/tests/rea_b24_nav.rs (rea_b24_nav_shard0_match_x_ite, shard1, shard2: 40 cases, pose tolerance 1e-4, probe distance 1e-5; item lists in docs/reports/NAV_ITEM_LISTS.md)",
+    "crates/x3d-web/tests/browser/nav03.test.mjs (nav03_case.mjs navLookAt: move, zoom, mode, oneFinger, doubleTap, slowTaps, against oracle/web-browser-nav-03-baseline (pinned X_ITE 16.5.0, 34cdf9f97, three identical recordings; recorder oracle/x_ite-web-runtime-02.mjs --suite nav03))"
    ],
-   "missing": "not compared: touch (L06), macOS scroll factor (L07)",
+   "missing": "not compared: macOS scroll factor (L07)",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b24-nav-baseline (40 cases, 3 identical recordings), oracle/synthetic-rea-b24-nav",
-   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 5 of 7 items compared; new case: lookat around a Viewpoint centerOfRotation."
+   "notes": "Issue #91 2026-10-31: item list in docs/reports/NAV_ITEM_LISTS.md. 5 of 7 items compared; new case: lookat around a Viewpoint centerOfRotation. | Issue #370 2026-11-03 (PRs #374, #382, #389, #395): L06 (two-finger pan, pinch, double tap with DBL_TAP_TIME) is compared in the browser lane, all 6 navLookAt cases with none skipped on the hosted runner. Pose numbers are compared at 1e-3, fixed before the first run. The input is synthetic DevTools touch and pointer events in headless Chromium; physical touch screens stay in #143 and macOS scroll factors in #88. The cases are in the browser lane (crates/x3d-web) only, there is no x3d-viewer test for them. #395 (touchsnapshot01.test.mjs): the page glue held a move of some fingers until the rest moved, as X_ITE's touchmove has every finger; before it the hosted runner saw the first finger of a PLANE zoom step moved and the second not (x = -0.003346939 where the pinned x is 0), after it the case ends where a pinch with both fingers moving ends; pointer-only input (no touch events) is unchanged."
   },
   {
    "id": "sub:nav.none",
