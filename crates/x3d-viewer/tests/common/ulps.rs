@@ -63,7 +63,7 @@ pub fn software_tol() -> Option<f64> {
     }
 
     // The adapter the pointing pass would take (x3d_render::pointing_gpu::PointingGpu::new_headless): the same backend
-    // choice and power preference. With no adapter the test skips anyway.
+    // choice and power preference. Without one, the variable is an error (below).
     let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
     desc.backends = x3d_render::gpu::headless_backends(
         std::env::var("X3D_POINTING_BACKEND")
@@ -77,9 +77,11 @@ pub fn software_tol() -> Option<f64> {
         power_preference: wgpu::PowerPreference::HighPerformance,
         ..Default::default()
     }));
-    let Ok(adapter) = adapter else {
-        return tol;
-    };
+    // The variable says "this run is on a software rasterizer". With no adapter at all that cannot be checked, and a skip
+    // would hide the misconfiguration, so it is a failure (MiniMax review of PR #358).
+    let adapter = adapter.unwrap_or_else(|e| {
+        panic!("X3D_TEST_SOFTWARE_TOL is set, but no adapter could be requested to check that it is a software rasterizer: {e}")
+    });
     let info = adapter.get_info();
 
     decide_software_tol(tol, info.device_type, &info.name).unwrap_or_else(|e| panic!("{e}"))
