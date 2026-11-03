@@ -435,3 +435,69 @@ fn failing_worlds_against_the_pinned_images() {
         }
     }
 }
+
+/// Tiny synthetic worlds: is a Background drawn under an OrthoViewpoint (the gs-ortho case shows a black image where the
+/// pinned image has the sky color), with and without logarithmic depth, with the cube and the sphere form of the Background?
+#[test]
+fn background_probes() {
+    let Ok(mut g) = Gpu::new() else {
+        println!("diag: no adapter");
+        return;
+    };
+    let dir = std::env::temp_dir().join("x3d-device-diag-worlds");
+    std::fs::create_dir_all(&dir).unwrap();
+    let box_ = "Shape { geometry Box { size 1 1 1 } }";
+    let worlds = [
+        (
+            "ortho-cube-bg",
+            format!(
+                "#X3D V4.1 utf8\nPROFILE Interchange\nOrthoViewpoint {{ position 0 0 7 }}\nBackground {{ skyColor 0.2 0.2 0.28 }}\n{box_}\n"
+            ),
+        ),
+        (
+            "persp-cube-bg",
+            format!(
+                "#X3D V4.1 utf8\nPROFILE Interchange\nViewpoint {{ position 0 0 7 }}\nBackground {{ skyColor 0.2 0.2 0.28 }}\n{box_}\n"
+            ),
+        ),
+        (
+            "ortho-sphere-bg",
+            format!(
+                "#X3D V4.1 utf8\nPROFILE Interchange\nOrthoViewpoint {{ position 0 0 7 }}\nBackground {{ skyColor [0.2 0.2 0.28, 0.8 0.2 0.2] skyAngle 1.5 }}\n{box_}\n"
+            ),
+        ),
+        (
+            "ortho-small-far",
+            format!(
+                "#X3D V4.1 utf8\nPROFILE Interchange\nOrthoViewpoint {{ position 0 0 7 }}\nNavigationInfo {{ visibilityLimit 50 }}\nBackground {{ skyColor 0.2 0.2 0.28 }}\n{box_}\n"
+            ),
+        ),
+    ];
+
+    for (name, text) in worlds {
+        let path = dir.join(format!("{name}.x3dv"));
+        std::fs::write(&path, text).unwrap();
+
+        for mode in [DepthMode::Standard, DepthMode::Logarithmic] {
+            g.renderer.set_depth_mode(mode);
+            let shot = x3d_render::render_file(&mut g, &dir, &path, 128, 128);
+            g.renderer.set_depth_mode(DepthMode::Standard);
+
+            match shot {
+                Ok(s) => {
+                    let px = |x: usize, y: usize| {
+                        let i = (y * 128 + x) * 4;
+                        [s.rgba[i], s.rgba[i + 1], s.rgba[i + 2]]
+                    };
+                    println!(
+                        "diag: background {name} {mode:?}: corner {:?} edge {:?} center {:?}",
+                        px(2, 2),
+                        px(120, 64),
+                        px(64, 64)
+                    );
+                }
+                Err(e) => println!("diag: background {name} {mode:?}: render failed {e:?}"),
+            }
+        }
+    }
+}
