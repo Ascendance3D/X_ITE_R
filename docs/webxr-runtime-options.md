@@ -42,6 +42,28 @@ Tests (`crates/x3d-web/tests/xr`, `node --test 'tests/xr/*.test.mjs'`, no browse
   `navigator.xr`, the reference spaces, the listened events, the render state, the gamepads handed to the viewer, the framebuffer
   reshapes, and the viewer pose and every view matrix number for number.
 
+## Drawing the views of a pose (PR for issue #83, no headset)
+
+`crates/x3d-render/src/xr.rs` and `render_file_xr` draw a world once per view of an XR pose into the view's viewport, the way
+`X3DRenderObject.draw` does with `browser .getPose ()`: the view's projection matrix; the layer's view matrix starting with
+`pose .viewMatrix` (`X3DLayerNode.traverse`), which also moves the point, spot and directional lights (not the headlight);
+and `x3d_EyeMatrix` (`pose .cameraSpaceMatrix .multRight (view .viewMatrix)`) on the positions only (`Renderer::set_xr_eye`;
+the normal matrix stays the one of the model-view matrix). Reference: the pinned page `oracle/xr-shot.html` drives the pinned
+`X3DWebXRContext` itself through a mock session (`oracle/x_ite-xr-shot.mjs`, three identical runs per case; the mock replaces
+`navigator.xr`, `XRWebGLLayer` and `makeXRCompatible`, and its layer has no framebuffer of its own, so X_ITE draws each view
+into the canvas at the viewport that the script gives). `crates/x3d-render/tests/xr_views.rs` compares the Rust views with those
+pictures (at most 0.5% of the pixels more than 8 off): 7 cases (symmetric stereo, eyes turned in, off-axis frusta, a viewer pose
+that is not the identity, all together, point/spot/directional lights with a PhysicalMaterial, fog and a Background), 0 pixels
+over 8 on the RTX 3060 Ti and on lavapipe (software, at most 2 pixels over, max delta 204 on a silhouette edge). Controls: leaving
+out the eye offsets, swapping the views, dropping the eye rotation, the pose, or the off-axis frusta each takes the picture over
+the bound.
+
+This is the render half that every XR route needs (WebXR with the WebGPU layer, or a native OpenXR viewer). Not covered, and
+UNVERIFIED: shadow maps, projective textures, clip planes, points and lines (screen-space geometry), MSAA with views
+(the cases are MSAA 0), the Background of a layer other than the active one, and anything that needs a session: `XRGPUBinding` or `XRWebGLLayer` framebuffers, the device's real poses and frusta, input. This machine has
+no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBinding` only behind
+`--enable-features=WebXRWebGPUBinding`; no OpenXR loader or Monado is installed).
+
 ## Not implemented, and the specific blocker
 
 * **Drawing into the session.** X_ITE draws into an `XRWebGLLayer`. X_ITE_R draws with WebGPU, and the WebGPU layer for immersive
