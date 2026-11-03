@@ -11,6 +11,7 @@ pub mod interp;
 pub mod key_sensor;
 pub mod load_sensor;
 pub mod movie_texture;
+pub mod movie_time;
 pub mod nurbs;
 pub mod particle_systems;
 pub mod pick_sensor;
