@@ -331,10 +331,11 @@ impl MovieMedia {
         })
     }
 
-    /// A WebM with a VP9 video track, decoded here ([`crate::webm`]) where the page has no `<video>` element. The
+    /// A WebM with a VP9 or VP8 video track, decoded here ([`crate::webm`]) where the page has no `<video>` element. The
     /// frames play like a GIF's (GifMedia's mapping of `elapsedTime` to a frame, the frame times as delays): the sound
-    /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 track
-    /// that decodes, which the caller treats as a video the engine cannot show.
+    /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 or VP8
+    /// track that decodes, which the caller treats as a video the engine cannot show.
+    #[cfg(feature = "native-video")]
     pub fn decode_webm(data: &[u8]) -> Option<MovieMedia> {
         let video = crate::webm::decode(data, MAX_DECODED_BYTES).ok()?;
         let n = video.frames.len();
@@ -363,6 +364,13 @@ impl MovieMedia {
             playback_rate: 1.0,
             shown: 0,
         })
+    }
+
+    /// Without the `native-video` feature the engine has no video decoder (the browser build plays the video in the
+    /// page's `<video>` element); a WebM is a video it cannot show.
+    #[cfg(not(feature = "native-video"))]
+    pub fn decode_webm(_data: &[u8]) -> Option<MovieMedia> {
+        None
     }
 
     /// apng-js parseAPNG, the frame images and PNGMedia (whose `player .stop ()` renders frame 0). The size, the

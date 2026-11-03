@@ -8,6 +8,7 @@
 //! wasm-bindgen. Build the page module with `tools/build-web.sh`.
 
 pub mod chain;
+pub mod device_request;
 pub mod session;
 
 #[cfg(target_arch = "wasm32")]
