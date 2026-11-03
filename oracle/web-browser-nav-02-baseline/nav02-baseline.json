@@ -1,0 +1,258 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "navWalkFly.walkForward": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travel": [
+    0,
+    0,
+    -1
+   ],
+   "speedRate": 0.346,
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "angleRate": 0,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.walkBack": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travel": [
+    0,
+    0,
+    1
+   ],
+   "speedRate": 0.2769,
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "angleRate": 0,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.walkTurn": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travel": [
+    0,
+    0,
+    0
+   ],
+   "speedRate": 0,
+   "axis": [
+    0,
+    -1,
+    0
+   ],
+   "angleRate": 0.9667,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.flyForward": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travel": [
+    0,
+    0,
+    -1
+   ],
+   "speedRate": 0.3468,
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "angleRate": 0,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.flyTurn": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travel": [
+    0,
+    0,
+    0
+   ],
+   "speedRate": 0,
+   "axis": [
+    0,
+    -1,
+    0
+   ],
+   "angleRate": 0.9683,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.walkDiagonal": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "travelDir": [
+    0.902502,
+    0,
+    -0.430685
+   ],
+   "speedRate": 0.2399,
+   "axis": [
+    0,
+    -1,
+    0
+   ],
+   "angleRate": 0.4435,
+   "holdOk": true,
+   "stopped": true
+  },
+  "navWalkFly.lookAroundWalk": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "steps": [
+    [
+     0,
+     -0.000002,
+     10,
+     -0.5543,
+     -0.832202,
+     -0.013874,
+     0.060135
+    ],
+    [
+     0,
+     -0.000003,
+     10,
+     -0.551517,
+     -0.833116,
+     -0.041796,
+     0.181428
+    ],
+    [
+     0,
+     -0.000003,
+     10,
+     -0.263479,
+     -0.964083,
+     -0.033501,
+     0.262259
+    ]
+   ],
+   "end": [
+    0,
+    -0.000003,
+    10,
+    -0.263479,
+    -0.964083,
+    -0.033501,
+    0.262259
+   ]
+  },
+  "navWalkFly.lookAroundFly": {
+   "start": [
+    0,
+    0,
+    10,
+    0,
+    0,
+    1,
+    0
+   ],
+   "steps": [
+    [
+     0,
+     0,
+     10,
+     -0.5543,
+     -0.832202,
+     -0.013874,
+     0.060135
+    ],
+    [
+     0,
+     0,
+     10,
+     -0.551517,
+     -0.833116,
+     -0.041796,
+     0.181428
+    ],
+    [
+     0,
+     0,
+     10,
+     -0.263479,
+     -0.964083,
+     -0.033501,
+     0.262259
+    ]
+   ],
+   "end": [
+    0,
+    0,
+    10,
+    -0.263479,
+    -0.964083,
+    -0.033501,
+    0.262259
+   ]
+  }
+ }
+}

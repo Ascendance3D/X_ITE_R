@@ -31,6 +31,7 @@
  * `--suite entry01` records the entry point 01 cases (<out_dir>/entry01-baseline.json).
  * `--suite scenecreate01` records the scene creation 01 cases (<out_dir>/scenecreate01-baseline.json).
  * `--suite rootnodes01` records the root nodes 01 cases (<out_dir>/rootnodes01-baseline.json).
+ * `--suite nav02` records the navigation touch 02 cases (<out_dir>/nav02-baseline.json): WALK and FLY with synthetic touch.
  * `--suite sound01` records the sound 01 cases (<out_dir>/sound01-baseline.json).
  * `--suite sound04` records the sound 04 cases (<out_dir>/sound04-baseline.json): the level the page's output carries (RMS).
  * `--suite sound03` records the sound 03 cases (<out_dir>/sound03-baseline.json): Mute, SoundIntensity, pitch, ranges, priority,
@@ -69,7 +70,7 @@ const RUNS   = Number (opt ("--runs", "5"));
 const ONLY   = opt ("--only", null);
 const SUITE  = opt ("--suite", "runtime02");
 
-if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "dom03", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "ui02", "scenecreate01", "rootnodes01", "scriptlife01", "externremove01", "shutdown01", "splatsort01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
+if (![ "runtime02", "fallback01", "loadurl01", "dataurl01", "degenerate01", "gltfworld01", "gltfworld02", "fields01", "fields02", "fields03", "fields04", "fields05", "dom01", "dom02", "dom03", "routes01", "viewpoints01", "options01", "ui01", "attributes01", "scenetext01", "entry01", "scripturl01", "ui02", "scenecreate01", "rootnodes01", "nav02", "scriptlife01", "externremove01", "shutdown01", "splatsort01", "sound01", "sound03", "sound04", "movie01" ] .includes (SUITE))
    throw new Error (`unknown suite ${SUITE}`);
 
 const { CASE_GROUPS } = await import (`../crates/x3d-web/tests/browser/${SUITE}_case.mjs`);
@@ -238,6 +239,43 @@ if (SUITE === "sound04")
       for (const r of runs)
          r .values [key] .rms = Number (mean .toFixed (4));
    }
+}
+
+// The navigation cases (nav*_case.mjs) move a viewpoint by real frame times: the runs agree within the tolerances of the
+// tests (runtime02_harness.mjs: 1e-3 for a number, 3% between runs for a key that ends in `Rate`, 1e-2 for `Dir`), not bit for bit. The
+// recording takes the mean of the runs for each number; everything else must be identical.
+if (SUITE .startsWith ("nav"))
+{
+   const merge = (list, key = "") =>
+   {
+      if (typeof list [0] === "number")
+      {
+         const mean   = list .reduce ((a, b) => a + b, 0) / list .length;
+         const spread = Math .max (... list) - Math .min (... list);
+         const limit  = key .endsWith ("Rate") ? 0.03 * Math .abs (mean) : key .endsWith ("Dir") ? 1e-2 : 1e-3;
+
+         if (!(spread <= limit))
+         {
+            console .error (`FAIL: ${key} differs by ${spread} between runs (limit ${limit}): ${list .join (" ")}`);
+            process .exit (1);
+         }
+
+         return Number (mean .toFixed (key .endsWith ("Rate") ? 4 : 6));
+      }
+
+      if (Array .isArray (list [0]))
+         return list [0] .map ((_, i) => merge (list .map (v => v [i]), key));
+
+      if (list [0] && typeof list [0] === "object")
+         return Object .fromEntries (Object .keys (list [0]) .map (k => [ k, merge (list .map (v => v [k]), k) ]));
+
+      return list [0];
+   };
+
+   const merged = merge (runs .map (r => r .values));
+
+   for (const r of runs)
+      r .values = JSON .parse (JSON .stringify (merged));
 }
 
 const json = runs .map (r => JSON .stringify (r .values));

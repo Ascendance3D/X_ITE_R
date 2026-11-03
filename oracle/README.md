@@ -1362,3 +1362,19 @@ element and whether the menu is open, for the right button, a left click, a real
 ## Owner decisions batch (issue #68)
 
 `oracle/synthetic-rea-b68-owner/` holds five worlds (BlendedVolumeStyle `ALPHA1`, `ALPHA2` and the CONSTANT twin; ShadedVolumeStyle with a `Material` and with a `PhysicalMaterial`) and `xite-runs.json`, the result of `node oracle/x_ite-shot.mjs oracle/synthetic-rea-b68-owner OUT` run five times against the pinned X_ITE (5 identical): `bl-iso1` and `sh-physicalmaterial` never draw (`TIMEOUT 45s`), `bl-iso2` draws the same picture as `bl-const`. Rust side: `crates/x3d-render/tests/render_b68_owner.rs`. Decisions: `docs/adr/0012-owner-decisions-batch.md`. The shot tool serves only paths under `oracle/`; it needs `oracle/x_ite-pin/node_modules` (a symlink, not committed).
+
+### Web browser navigation touch 02 (`web-browser-nav-02-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav02` runs the cases of `crates/x3d-web/tests/browser/nav02_case.mjs` (issue #370,
+  ledger `sub:nav.walk-fly`, F16) and records `web-browser-nav-02-baseline/nav02-baseline.json`: WALK and FLY with a
+  synthetic Chrome DevTools touch. One finger held away from where it went down for 1.5 s (forward, back, turn, a
+  diagonal in WALK; forward and turn in FLY): the direction of travel, the speed and the turn rate (displacement and
+  angle over the measured seconds; keys that end in `Rate`), because X_ITE integrates over the real frame times; two
+  fingers looking around in both, the settled orientation after each step. The runs agree within the test tolerances,
+  not bit for bit (the recorder takes the mean): 1e-3 for a number, 3% between runs and 5% against X_ITE_R for a
+  `Rate`, 1e-2 for a `Dir` (the diagonal walk's net direction). WALK has gravity, so the world has a ground under the
+  viewpoint. Three runs.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-02-baseline --runs 3 --suite nav02
+```
