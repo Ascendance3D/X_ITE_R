@@ -2126,6 +2126,9 @@ impl WebBrowser {
                 VideoOp::Rewind(t) => call(&["rewind".into(), num(t)]),
                 VideoOp::Loop(t, v) => call(&["loop".into(), num(t), v.into()]),
                 VideoOp::Rate(t, r, p) => call(&["rate".into(), num(t), r.into(), p.into()]),
+                VideoOp::Seek { token, id, time } => {
+                    call(&["seek".into(), num(token), num(id), time.into()])
+                }
             });
         }
 
@@ -2205,6 +2208,42 @@ impl WebBrowser {
             if l.rt.video_frame(token, current_time, rgba.to_vec()) {
                 return;
             }
+        }
+    }
+
+    /// The page's video element `token` finished seek request `id` ([`x3d_runtime::Runtime::video_seeked`]): `current_time`
+    /// and the picture (`rgba` is empty when it could not be read). An answer older than the newest request is dropped.
+    #[wasm_bindgen(js_name = videoSeeked)]
+    pub fn video_seeked(&mut self, token: f64, id: f64, current_time: f64, rgba: &[u8]) {
+        let (token, id) = (token as u64, id as u64);
+
+        for w in self.worlds.values_mut() {
+            if w.session
+                .video_seeked(token, id, current_time, rgba.to_vec())
+            {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt.video_seeked(token, id, current_time, rgba.to_vec()) {
+                return;
+            }
+        }
+    }
+
+    /// The MovieTexture time of the worlds made from now on: `"iso"` (ISO/IEC 19775-1 18.4.2, the default) or `"pinned"`
+    /// (pinned X_ITE 16.5.0). Returns false for another word. Set it before the first world loads.
+    #[wasm_bindgen(js_name = setMovieTiming)]
+    pub fn set_movie_timing(name: &str) -> bool {
+        use x3d_runtime::nodes::movie_time::MovieTiming;
+
+        match MovieTiming::parse(name) {
+            Some(t) => {
+                MovieTiming::set_process_default(t);
+                true
+            }
+            None => false,
         }
     }
 

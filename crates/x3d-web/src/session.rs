@@ -485,6 +485,11 @@ impl Session {
         self.rt_mut().video_frame(token, current_time, rgba)
     }
 
+    /// A seek answer of the page's video element ([`Runtime::video_seeked`]); false when it is not this world's.
+    pub fn video_seeked(&mut self, token: u64, id: u64, current_time: f64, rgba: Vec<u8>) -> bool {
+        self.rt_mut().video_seeked(token, id, current_time, rgba)
+    }
+
     /// The page's audio clock (`audioContext .currentTime`) for the world's audio context, if it has one
     /// ([`x3d_runtime::sound::AudioEngine::set_clock`]).
     pub fn set_audio_clock(&mut self, time: f64) {

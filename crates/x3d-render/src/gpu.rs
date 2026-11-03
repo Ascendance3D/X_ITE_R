@@ -4686,6 +4686,33 @@ impl Renderer {
             let end = scratch_data.len() as u64 * 4;
             let mut d: DrawU = bytemuck::Zeroable::zeroed();
             d.model_view = f32x16(&bg.model_view);
+
+            // A single-colour cube (Background with one sky colour, no ground, no face texture) is scale invariant:
+            // its image does not depend on the cube's size as long as the cube covers the view. Under an orthographic
+            // projection with the far plane of the logarithmic mode (1e10) the cube's clip coordinates reach 1e9 and
+            // more, which the hosted macOS device clips wrongly (diag: a triangle of 1e7 covers 3657 of 4096 pixels,
+            // 1e6 and below all 4096; the Background was missing in gs-ortho). The pinned X_ITE scales by far, the
+            // result is the same: scale the cube to twice the view's half extent instead.
+            if bg.faces.is_empty() && bg.sphere.len() == 144 && frame.projection.0[11] != -1.0 {
+                let p = &frame.projection.0;
+                let half = |scale: f64, offset: f64| {
+                    ((1.0 - offset) / scale)
+                        .abs()
+                        .max(((-1.0 - offset) / scale).abs())
+                };
+                let wanted = 2.0 * half(p[0], p[12]).max(half(p[5], p[13]));
+                let m = &bg.model_view.0;
+                let current = (m[0] * m[0] + m[1] * m[1] + m[2] * m[2]).sqrt();
+
+                if wanted.is_finite() && wanted > 0.0 && wanted < current {
+                    let k = (wanted / current) as f32;
+
+                    for v in &mut d.model_view[..12] {
+                        *v *= k;
+                    }
+                }
+            }
+
             d.texture_matrices[0] = f32x16(&Matrix4::IDENTITY);
             d.emissive_transparency = [1.0, 1.0, 1.0, bg.transparency as f32];
             d.flags = [0, 0, 1, 0];

@@ -123,7 +123,9 @@ fn compare_case(
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
     let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-drive"));
+    // These baselines are the pinned X_ITE 16.5.0 timing, not the ISO 19775-1 default (docs/movie-texture-timing.md).
     cmd.current_dir(root)
+        .env("X3D_MOVIE_TIMING", "pinned")
         .args([world, script, "--oracle", "oracle"])
         .arg("--out")
         .arg(&rs_json)
