@@ -12,7 +12,7 @@
 // The input is Chrome DevTools touch events in a context with touch (no physical device, issue #143). The world is
 // synthetic, written for the tests.
 
-import { DESKTOP, fields, frames, settle, touch } from "./runtime02_case.mjs";
+import { DESKTOP, clock, fields, frameMs, frames, holdClock, settle, touch } from "./runtime02_case.mjs";
 import { pageLoadURL } from "./loadurl01_case.mjs";
 
 // WALK has gravity: a ground whose top is the avatar height (1.6, avatarSize) below the viewpoint keeps it level.
@@ -74,6 +74,14 @@ async function hold (page, type, from, to, curved = false)
 {
    await load (page, world (type));
 
+   // A frame of a software GPU takes 0.3 s: a diagonal hold would be a polygon of such steps, and its net direction depends on
+   // where the frames fall (CI run 41606136030). The page clock runs at 1/SLOW of the real one, so the page sees frames of
+   // about 20 ms, as on a GPU machine, and everything below is in seconds of that clock. A machine with fast frames runs at 1.
+   const slow = Math .max (1, Math .ceil (await frameMs (page) / 25 * 1.25));
+
+   await holdClock (page);
+   await clock (page, "rate", 1 / slow);
+
    const start = await pose (page);
 
    await touch (page, "touchStart", [ from ]);
@@ -83,15 +91,16 @@ async function hold (page, type, from, to, curved = false)
 
    const a = await sample (page);
 
-   await page .waitForTimeout (HOLD);
+   await page .waitForTimeout (HOLD * slow);
 
    const b = await sample (page);
 
    await touch (page, "touchEnd", [ ]);
    await frames (page, 3);
+   await clock (page, "rate", 1);
 
    const end     = await pose (page);
-   const seconds = b .t - a .t;
+   const seconds = (b .t - a .t) / slow;
    const d       = [ 0, 1, 2 ] .map (i => b .pose [i] - a .pose [i]);
    const c       = Math .cos (yaw (a .pose)), s = Math .sin (yaw (a .pose));
    const local   = [ c * d [0] - s * d [2], d [1], s * d [0] + c * d [2] ];
@@ -154,11 +163,6 @@ const cases = {
    lookAroundFly:  page => lookAround (page, "FLY"),
 };
 
-// A diagonal hold walks and turns at once, and each frame moves along the heading of the frame's start: with a frame of 0.3 s on
-// GitHub's hosted runner (a software GPU) the path is a coarse polygon whose net direction depends on where the frames fall
-// (CI run 41606136030: 9.6 times the tolerance, every other case equal). That case is skipped there and runs everywhere else.
-const SLOW_RUNNER = process .env .GITHUB_ACTIONS === "true" ? "a diagonal hold is a polygon of 0.3 s frames on the hosted runner, its net direction depends on the frame timing" : false;
-
 export const CASE_GROUPS = {
-   navWalkFly: { context: { ... DESKTOP, deviceScaleFactor: 2, hasTouch: true }, cases, skipCases: { walkDiagonal: SLOW_RUNNER } },
+   navWalkFly: { context: { ... DESKTOP, deviceScaleFactor: 2, hasTouch: true }, cases },
 };

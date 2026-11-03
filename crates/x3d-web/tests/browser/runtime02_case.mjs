@@ -144,26 +144,51 @@ export const holdClock = (page) => page .evaluate (() =>
       return;
 
    const real = Date .now .bind (Date);
-   const held = { offset: 0, frozen: null };
+   const held = { v0: real (), r0: real (), rate: 1, frozen: null };
 
-   Date .now = () => held .frozen ?? real () + held .offset;
+   Date .now = () => held .frozen ?? held .v0 + (real () - held .r0) * held .rate;
    window .heldClock = { held, real };
 });
 
+// "freeze" holds the clock, "advance" moves a held clock by `ms`, "release" lets it run again from where it was held, and
+// "rate" makes it run at `ms` times the speed of the real one (0.1: a second of the page is ten of the wall clock). A slow
+// software GPU draws a frame in 0.3 s or more; at a tenth of the speed the page sees frames of 30 ms, the frames of a GPU
+// machine, so everything that integrates over the frame time (a held WALK or FLY) takes the steps it takes there.
 export const clock = (page, action, ms = 0) => page .evaluate (([ action, ms ]) =>
 {
    const { held, real } = window .heldClock;
+   const now = () => held .frozen ?? held .v0 + (real () - held .r0) * held .rate;
 
    if (action === "freeze")
-      held .frozen ??= real () + held .offset;
+      held .frozen ??= now ();
    else if (action === "advance")
       held .frozen += ms;
    else if (action === "release" && held .frozen !== null)
    {
-      held .offset = held .frozen - real ();
+      held .v0 = held .frozen;
+      held .r0 = real ();
       held .frozen = null;
    }
+   else if (action === "rate")
+   {
+      held .v0 = now ();
+      held .r0 = real ();
+      held .rate = ms;
+   }
 }, [ action, ms ]);
+
+// The milliseconds a frame of the page takes (the mean of `n`).
+export const frameMs = (page, n = 6) => page .evaluate (async n =>
+{
+   await new Promise (requestAnimationFrame);
+
+   const begin = performance .now ();
+
+   for (let i = 0; i < n; ++ i)
+      await new Promise (requestAnimationFrame);
+
+   return (performance .now () - begin) / n;
+}, n);
 
 // ExamineViewer's MOVE_TIME: the PositionChaser of a zoom step reaches its destination in 0.2 s. A zoom step is a
 // fraction of the distance to the center of rotation *now*, so a step during the chase starts from a position that
