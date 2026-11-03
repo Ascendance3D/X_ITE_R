@@ -102,6 +102,7 @@ FAST_ONLY_FILES = {
     "tools/x3d-view-launch.sh",
     ".github/actionlint.yaml",
     ".github/workflows/gpu-tests.yml",
+    ".github/workflows/macos-tests.yml",
 }
 FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/", ".github/actions/runner-preflight/")
 
@@ -283,7 +284,7 @@ def self_test():
         ([".github/workflows/web-tests.yml"], False, True),
         ([".github/actions/browser-deps/action.yml"], False, True),
         ([".github/actions/other/action.yml"], True, True),
-        ([".github/actionlint.yaml", ".github/workflows/gpu-tests.yml"], False, False),
+        ([".github/actionlint.yaml", ".github/workflows/gpu-tests.yml", ".github/workflows/macos-tests.yml"], False, False),
         ([".github/actions/runner-preflight/action.yml"], False, False),
         (["tools/check_gpu_test_lists.py", "tools/test_ci_changes.py", "tools/gpu_evidence_allow.py", "tools/strict-suite.sh"], False, False),
         (["tools/fetch-dxc.sh", "tools/package-desktop.sh", "tools/x3d-view-launch.sh"], False, False),
