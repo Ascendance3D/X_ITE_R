@@ -93,7 +93,7 @@ New items this review proposes (each small, none started):
 3. Experiment: GStreamer backend spike on Linux (needs `libgstreamer1.0-dev` and `libgstreamer-plugins-base1.0-dev`; sudo is available here, not installed yet): MP4/H.264 first picture against the pinned page and VP8/VP9/AV1 WebM against the Rust backend. Output: tolerance table and the A/V-sync cost.
 4. Experiment: AVFoundation spike on macOS 15 (the hosted runner, labeled virtualized, and the owner's Mac for the physical result): which of WebM VP9, AV1, MP4 H.264 open, seek accuracy, `CVPixelBuffer` to Metal without a copy.
 5. Experiment: direct GPU import of the `<video>` frame in the browser build (WebGPU `importExternalTexture`) against the current `getImageData` path: picture equality and cost. It would remove the per-frame CPU readback; compare before adopting.
-6. Reverse play and the ISO time formula: implement in the Rust backend only as a recorded DIFFERENT-from-pinned feature, behind an explicit option, because the pinned page does not do it.
+6. Reverse play and the ISO time formula: superseded by the owner's conditions in section 8 (ISO behavior is the default; pinned behavior is a documented option).
 
 ## 7. Open questions and what would answer them
 
@@ -101,3 +101,45 @@ New items this review proposes (each small, none started):
 * GStreamer: negative-rate support and frame-accurate seek per decoder, and how much of the A/V clock work it saves. Answer: item 3.
 * Whether a native viewer should open H.264/MP4 at all in a first release. Product decision, not technical.
 * Patent position of delegating to OS decoders: expected to sit with the OS vendor or distribution, but that is a legal question for the release review, not settled here.
+
+## 8. Owner conditions of 2026-11-02 (approval with conditions) and their status
+
+### 8.1 ISO reverse playback (verified from the local ISO 19775-1 V4.0 text)
+
+* 18.4.2 MovieTexture: "A negative _speed_ implies that the movie will play backwards." An inactive node shows the last frame for a negative speed; an active node with negative speed shows the frame at movie time `t = duration - ((now - startTime) modulo |duration/speed|)`; for positive speed `t = (now - startTime) modulo (duration/speed)`; `speed = 0` shows frame 0; `set_speed` is ignored while the node is active; the node keeps the frame of the moment it became inactive.
+* Profiles: MovieTexture is listed in the Immersive and Full profiles (Part 1 `immersive.md` and `fullProfile.md`), and Table 18.11 gives it support level 4 with "all fields fully supported". The requirement therefore applies to X_ITE_R's supported profiles.
+* Today (read): the X_ITE_R browser path copies the pinned page, so a negative `speed` becomes `playbackRate` 1 with a logged error (`movie_set_speed`, `loader.rs`), and the engine's native path gives frame 0 for a negative time. Both differ from ISO. No ledger entry or owner decision approves that as a DIFFERENT; it is an open ISO violation that has to be fixed or authorized, not assumed.
+* Consequence for the design: a `<video>` element cannot satisfy the ISO formula (Chrome rejects negative rates). The default must be engine-selected frames: the engine computes `t` from the formula and asks the backend for the picture at `t`. In the browser the page seeks the element (or, better, decodes with WebCodecs) to `t`; natively the Rust or system backend does. The pinned behavior (element plays forward, negative speed becomes 1) stays as an explicit, documented option `movieTextureTiming = "pinned"` (name provisional) so the pinned comparisons keep running unchanged; those tests select the option. The ISO default must be proven by new tests (frame at `t` for negative, zero and positive speeds, loop and non-loop, inactive node frames), not by the pinned comparison.
+* The exact work: Agent A gets this as its next plan step (PR title "MovieTexture: ISO 19775-1 18.4.2 time and reverse play, pinned timing as an option"), after the queued Steps 7 to 10, with the ledger step in merge order. It changes defaults, so the existing `movie01` and `movie_anim` pinned comparisons must be re-pointed at the option and still pass byte for byte.
+
+### 8.2 Browser/WASM call graph (verified before any gating)
+
+* The only call of `webm::decode` is `MovieMedia::decode_webm` (`nodes/movie_texture.rs`), and its only caller is `loader.rs` (the `else` branch of `if self.fetcher.plays_video()`). `Cargo.toml` has `vp9dec` as a direct dependency of `x3d-runtime`; `rav1d` is not added yet.
+* The browser fetcher (`crates/x3d-web/src/wasm.rs`) returns `plays_video() == true` unconditionally, so that branch is unreachable in the browser runtime. The test fetcher in `crates/x3d-web/tests/async_loading.rs` also returns true. The compiler cannot prove it, so the code and `vp9dec` are still compiled in.
+* Baseline for the before/after measurement (this document's PR changes no code): `x3d_web.wasm` from the release build at master plus the AAC exclusion, `target/wasm32-unknown-unknown/release/deps/x3d_web.wasm`, 20,960,711 bytes before `wasm-opt`/wasm-bindgen; 86 `vp9dec` strings; `check_no_aac.py --binary` passes.
+* Gating plan (separate PR, after this document): cargo feature `native-video` on `x3d-runtime` (default on), `x3d-web` depends on `x3d-runtime` with `default-features = false`. Acceptance: (1) `cargo tree -p x3d-web --target wasm32-unknown-unknown -e normal -i vp9dec` finds nothing; (2) the wasm has no `vp9dec`/`vp8`/`rav1d` strings; (3) size and dependency count before and after are recorded in the PR body; (4) the complete browser suite (`tools/build-web.sh`, `npm test` in `crates/x3d-web`, all shards) passes unchanged; (5) native decoder tests and evidence stay and still run (`cargo nextest -p x3d-runtime`, the render tests with VP8/VP9/AV1 baselines).
+
+### 8.3 Minimal MediaSource contract
+
+One Rust trait in `x3d-runtime`, owned by the engine; backends implement it; the engine never touches a codec. All times are media seconds (f64); the engine owns the X3D time machinery and calls the backend, not the other way round.
+
+| Part | Contract |
+| --- | --- |
+| Loading | `open(url, bytes_or_handle) -> OpenResult`; asynchronous backends report through events. `OpenResult` carries `MediaInfo { duration (None until known), width, height, has_audio, has_video, frame_rate (nominal, optional) }`. `close()` releases everything. |
+| Capability report | `capabilities() -> Caps { video_codecs, audio_codecs, containers, can_seek_accurate, can_reverse, can_set_rate(min,max), provides_audio, picture_format (Rgba8 or Yuv420 + matrix) }`, per backend and per opened media, so the engine can choose a fallback instead of guessing. |
+| Transport | `play()`, `pause()`, `stop()` (position kept, picture kept per 18.4.2), `seek(t, accuracy: Exact or Keyframe)`, `set_rate(r)` where `r` may be negative if `can_reverse`, `set_loop(bool)`. The engine passes the effective rate (`speed` times pitch rule, or the ISO formula's rate); the backend does not interpret X3D fields. |
+| Frames | `picture_at(t) -> Picture { media_time, width, height, pixels, generation }` returns the latest frame at or before `t` (the ISO formula is "frame at movie time `t`"); `generation` changes only when the pixels do, so texture upload happens once per new frame. Backends that produce frames themselves (the element) expose the same call from their latest frame. |
+| Audio | A backend either `provides_audio` (the element and the system backends play their own audio) or hands PCM to the engine's audio graph (`audio_chunks(range) -> Pcm`) so `Sound` spatialization works; the capability says which. |
+| Timing | `position() -> media time` of the audio or video clock the backend considers current; `clock_kind() -> Audio, Video or Wall`. The engine uses it only for diagnostics and sync correction; X3D `elapsedTime` stays the engine's. |
+| Events | `Event::{Loaded(MediaInfo), FrameReady(generation), Ended, Seeked(t), Error(MediaError), CapabilityChanged}`, polled by the engine each frame. |
+| Errors | `MediaError { kind: Unsupported(codec), Malformed, Network, Decode, Backend(String) }`. `Unsupported` lets the engine fall back (system to Rust) and produces the same console diagnostics as today. |
+
+Rules: no method blocks the render loop; every backend passes the same contract test suite (a table of: open, seek to t, frame equals reference within tolerance, loop wrap, rate change, error on corrupt input), and the system backend stays optional (cargo feature off, runtime opt-in) until its acceptance tests pass on the target platform. The existing pinned reference comparisons are not moved or loosened: the element backend and the Rust backend run them as they do today.
+
+### 8.4 FFmpeg
+
+No change: development and oracle tool only (fixture generation, `ffprobe`, plane hashes). It is not a dependency, not linked, not redistributed. Using it in a release would need separate owner authorization.
+
+### 8.5 PR pipeline
+
+Nothing in the queue is interrupted; this review adds the ISO plan step (8.1), the gating PR (8.2) and the contract PR (8.3) to the media lane after Steps 7 to 10 and AV1.
