@@ -15,7 +15,9 @@ that is not a merge commit, or a git failure runs both suites.
   templates, the actionlint config), `oracle/README.md`, the tools that only "Fast checks" runs or that nothing in a pull
   request runs (the answer-key resolver and its tests, the reference-pin and candidate gates, `nightly.sh`,
   `check_gpu_test_lists.py`, `test_ci_changes.py`, `gpu_evidence_allow.py`, `strict-suite.sh`, `fetch-dxc.sh`, `package-desktop.sh`,
-  `x3d-view-launch.sh`), and the GPU workflow with its preflight action (they run on master and by hand only).
+  `x3d-view-launch.sh`, `audio-smoke.sh`, `wayland-smoke.sh`), the GPU workflow with its preflight action (they run on
+  master and by hand only), and the trees `ledger/` (the REA coverage ledger, its snapshots, history and tools) and
+  `evidence/` (committed lane logs). No Rust or browser test reads either tree; only comments name `evidence/`.
   `tools/test_ci_changes.py` pins each entry. Each is named; no Rust or
   browser test reads it. Neither suite runs. `.gitattributes` is not in the list: it changes checked-out bytes.
 - Browser only (the Rust suite is left out): the browser tests and npm files of crates/x3d-web (not the worlds in
@@ -25,8 +27,7 @@ that is not a merge commit, or a git failure runs both suites.
 - Native only (the browser suite is left out): a workspace crate that crates/x3d-web does not build with (its
   normal, build and target dependencies, followed through path dependencies), the other `oracle/` and `tools/`
   files except tools/build-web.sh and the synthetic Script worlds `oracle/synthetic-x6*`, `oracle/synthetic-inline-scripts*`,
-  `oracle/synthetic-externproto*` and `oracle/synthetic-followers*` (both suites read them), the
-  REA ledger tree `ledger/`, and the other workflows. The browser tests read crates/x3d-web,
+  `oracle/synthetic-externproto*` and `oracle/synthetic-followers*` (both suites read them), and the other workflows. The browser tests read crates/x3d-web,
   `oracle/web-browser-*` and the synthetic Script worlds named above.
 
 This script and its workflows are not in either list, so a change to them runs both suites.
@@ -100,10 +101,14 @@ FAST_ONLY_FILES = {
     "tools/fetch-dxc.sh",
     "tools/package-desktop.sh",
     "tools/x3d-view-launch.sh",
+    "tools/audio-smoke.sh",
+    "tools/wayland-smoke.sh",
     ".github/actionlint.yaml",
     ".github/workflows/gpu-tests.yml",
 }
-FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/", ".github/actions/runner-preflight/")
+# ledger/ and evidence/: no Rust or browser test, workflow or tool opens a file under them (searched crates/, oracle/tools,
+# tools/, .github/ and the oracle recorders); only comments name evidence/. tools/test_ci_changes.py pins both searches.
+FAST_ONLY_DIRS = (".github/ISSUE_TEMPLATE/", ".github/actions/runner-preflight/", "ledger/", "evidence/")
 
 
 def crate_dirs(root):
@@ -168,6 +173,8 @@ def is_native_only(p, crates, closure):
     if p in BOTH_FILES or p.startswith(BOTH_PREFIXES):
         return False
     parts = p.split("/")
+    # ledger/ is Fast-checks-only (FAST_ONLY_DIRS, tested first); this clause is the rule before issue #180 moved it, kept so
+    # that tools/test_ci_changes.py can remove the new entries and compare with the old classes.
     if p in NATIVE_ONLY_FILES or p.startswith(("oracle/", "tools/")) or (
             len(parts) > 1 and parts[0] == "ledger"):
         return True
@@ -296,8 +303,14 @@ def self_test():
         ([".github/workflows/new.yml"], True, True),
         (["crates/new-crate/src/lib.rs"], True, True),
         (["upstream"], True, True),
-        (["ledger/ledger.json", "ledger/tools/verify_ledger.py"], True, False),
+        (["ledger/ledger.json", "ledger/tools/verify_ledger.py", "ledger/snapshots/before-i339/ledger.json"], False, False),
+        (["ledger/history/b08-recovery/live_head.txt", "evidence/b06b08-final/gpu-identity.txt"], False, False),
+        (["ledger/ledger.json", "crates/vrml97/src/lib.rs"], True, False),
+        (["tools/audio-smoke.sh", "tools/wayland-smoke.sh"], False, False),
         (["ledger"], True, True),
+        (["evidence"], True, True),
+        (["ledgers/x.json"], True, True),
+        (["evidence-x/log.txt"], True, True),
         (["README.md", "crates/vrml97/src/lib.rs", "crates/x3d-web/tests/browser/api.test.mjs"], True, True),
     ]
     bad = 0

@@ -23,10 +23,12 @@ ADDED_FILES = {
     "tools/fetch-dxc.sh",
     "tools/package-desktop.sh",
     "tools/x3d-view-launch.sh",
+    "tools/audio-smoke.sh",
+    "tools/wayland-smoke.sh",
     ".github/actionlint.yaml",
     ".github/workflows/gpu-tests.yml",
 }
-ADDED_DIRS = (".github/actions/runner-preflight/",)
+ADDED_DIRS = (".github/actions/runner-preflight/", "ledger/", "evidence/")
 # Already neither-suite before #180 (issue #180 item 1 named them); pinned again so they cannot regress.
 METADATA = [".gitignore", ".coderabbit.yaml", "LICENSE", ".git-blame-ignore-revs", ".github/CODEOWNERS",
             ".github/pull_request_template.md", ".github/ISSUE_TEMPLATE/bug.yml", "tools/answer_keys.py",
@@ -53,7 +55,7 @@ def suites(p):
 
 class Classification(unittest.TestCase):
     def test_added_paths_run_no_suite(self):
-        for p in sorted(ADDED_FILES) + [d + "action.yml" for d in ADDED_DIRS]:
+        for p in sorted(ADDED_FILES) + [d + "action.yml" for d in ADDED_DIRS] + ["ledger/ledger.json", "evidence/x/y.log"]:
             self.assertEqual(suites(p), (False, False), p)
 
     def test_metadata_runs_no_suite(self):
@@ -75,10 +77,23 @@ class Classification(unittest.TestCase):
             c.FAST_ONLY_FILES, c.FAST_ONLY_DIRS = files, dirs
         after = {p: suites(p) for p in tracked()}
         moved = {p for p in before if before[p] != after[p]}
-        expected = {p for p in before if p in ADDED_FILES or p.startswith(ADDED_DIRS)}
+        # A Markdown file under an added tree was documentation (neither suite) before.
+        expected = {p for p in before if (p in ADDED_FILES or p.startswith(ADDED_DIRS)) and before[p] != (False, False)}
         self.assertEqual(moved, expected)
         for p in moved:
             self.assertEqual(after[p], (False, False), p)
+
+    def test_trees_are_not_opened_by_a_suite(self):
+        """ledger/ and evidence/ run no suite because no test, tool or workflow opens a file under them. A reference that is
+        not a comment (a path in code or a workflow step) fails this test: then the tree must reach the suite that reads it."""
+        pattern = r"(?<![\w/.-])(evidence|ledger)/|[\"'](ledger|evidence)[\"']"
+        refs = subprocess.run(["git", "grep", "-n", "-P", pattern, "--", "crates", "oracle/tools", "tools", ".github", ".config",
+                               "Cargo.toml", "oracle/*.mjs", "oracle/*.py", "oracle/*.sh"], cwd=c.ROOT, capture_output=True, text=True).stdout
+        for line in refs.splitlines():
+            path, _, rest = line.split(":", 2)
+            if path in ("tools/ci_changes.py", "tools/test_ci_changes.py"):
+                continue
+            self.assertTrue(rest.lstrip().startswith(("//", "#", "///", "//!", "*")), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
         """An added file that is gone would hide a stale entry; a reference from crates/ would mean a test reads it."""
