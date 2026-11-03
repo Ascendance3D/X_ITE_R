@@ -171,6 +171,16 @@ fn ogg_timed_pages(bytes: &[u8], serial: u32) -> usize {
 /// The planar samples of an MP3, FLAC or Ogg Vorbis file at the file's own rate (`web-audio-api` resamples
 /// by itself, which Chromium does not), or None for any other file.
 pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
+    decode_compressed_with(bytes, false)
+}
+
+/// [`decode_compressed`]; `drop_first_vorbis_packet`: the Vorbis track is in a Matroska or WebM file, whose demuxer
+/// gives no `trim_start`. The output of the first packet is the lapped half window that FFmpeg (Chromium's decoder)
+/// does not output, so it is dropped (measured: the result then equals FFmpeg's decode sample for sample).
+pub fn decode_compressed_with(
+    bytes: &[u8],
+    drop_first_vorbis_packet: bool,
+) -> Option<(Vec<Vec<f32>>, f32)> {
     use symphonia::core::codecs::audio::AudioDecoderOptions;
     use symphonia::core::codecs::audio::well_known::{
         CODEC_ID_FLAC, CODEC_ID_MP3, CODEC_ID_VORBIS,
@@ -243,7 +253,11 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
                 buffer.copy_to_vecs_planar::<f32>(&mut part);
 
                 if vorbis {
-                    let skip = packet.trim_start.get();
+                    let skip = if drop_first_vorbis_packet && raw == 0 && lead == 0 {
+                        part.first().map_or(0, |c| c.len()) as u64
+                    } else {
+                        packet.trim_start.get()
+                    };
 
                     lead += skip;
                     end_trim += packet.trim_end.get();
