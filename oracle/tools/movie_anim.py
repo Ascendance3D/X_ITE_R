@@ -10,7 +10,8 @@
       records and again before it writes; nothing is overwritten. Tests: oracle/tools/test_movie_anim.py.
 
 Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_movie_anim.py, MSAA 0 and 4) and
-load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0).
+load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0) and
+video (oracle/movie-video-baseline, WebM pictures at fixed movie times; oracle/tools/gen_movie_video.py, MSAA 0 and 4).
 A baseline is written only from an X_ITE run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs),
 never copied.
 """
@@ -20,6 +21,7 @@ root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 SETS = {
     "anim": ("movie-anim-baseline", "synthetic-movie-anim", ["movie-anim"], ["0", "4"]),
     "load-errors": ("movie-load-errors-baseline", "synthetic-movie-load-errors", ["movie-load-errors"], ["0"]),
+    "video": ("movie-video-baseline", "synthetic-movie-video", ["movie-video"], ["0", "4"]),
 }
 
 
