@@ -171,8 +171,26 @@ ffmpeg -v error -y -f lavfi -i testsrc2=size=50x38:rate=25 -frames:v 10 -c:v mpe
 $F -frames:v 6 -vf "scale=33:25,format=yuv420p" -c:v mpeg1video -q:v 4 -g 3 -bf 1 -an -f mpeg1video odd-33x25.m1v
 $F -frames:v 9 -c:v mpeg1video -q:v 4 -g 6 -bf 2 -an -intra_matrix 8,16,19,22,26,27,29,34,16,16,22,24,27,29,34,37,19,22,26,27,29,34,34,38,22,22,26,27,29,34,37,40,22,26,27,29,32,35,40,48,26,27,29,32,35,40,48,58,26,27,29,34,38,46,56,69,27,29,35,38,46,56,69,83 -f mpeg1video custom-matrix-64x48.m1v
 ffmpeg -v error -y -f lavfi -i color=c=red:size=32x32:rate=25 -frames:v 4 -c:v mpeg1video -q:v 2 -g 4 -bf 0 -an -f mpeg1video red-32x32.m1v
-for f in *.m1v *.mpg; do ffmpeg -v error -y -i $f -an -f rawvideo -pix_fmt yuv420p ${f%.*}.yuv; done   # the references
+for f in *.m1v *.mpg; do ffmpeg -v error -y -i $f -an -f rawvideo -pix_fmt yuv420p ${f%.*}.yuv; gzip -9n ${f%.*}.yuv; done   # the references
 ```
+
+The references are stored gzip-compressed (`gzip -9n`, deterministic; binary, so review tooling does not diff them as text) and the
+tests read them with `flate2` (already in the dependency tree through `x3d-parse`, MIT OR Apache-2.0; a dev-dependency of
+`x3d-runtime` only). SHA-256 of each `.yuv.gz`:
+
+```
+331382d468b7aca56fcec85ea82b9ede6d45541b7fed5f05cce4784cc50dcd90  custom-matrix-64x48.yuv.gz
+a0b4b6c0058e162e734541a23d1c17fde6a5d68106d01f4970af5661119e9f89  intra-64x48.yuv.gz
+c3f3531a50a221e9cfdd058f4951b5d37564b71df65ae453091318c6fd443d05  ip-64x48.yuv.gz
+a2be9f0e33019a81c3ebc1e5418b77e0313a07402332e47a6236a38b6bf88f3d  ipb-64x48.yuv.gz
+473b7f325db3754660654bd3bde3e6376a623a0becca7d7d3f5093c70fca8fbb  odd-33x25.yuv.gz
+3085bdb5c6152805619951eb976c1114db781dfaaf51041ec206ce450618f077  odd-50x38.yuv.gz
+151b670fa30215e94c42a74fb54cd1a60a7ca0c18ffb6879b37ee16b7fc72459  red-32x32.yuv.gz
+a2be9f0e33019a81c3ebc1e5418b77e0313a07402332e47a6236a38b6bf88f3d  sys-av-64x48.yuv.gz
+```
+
+(`ipb` and `sys-av` are the same pictures, hence the same hash.) The gzip bytes depend on the gzip version; the raw YUV is what
+ffmpeg 6.1.1 writes and is what the tests compare.
 
 (`testsrc2` rounds odd sizes to even, hence the `scale` filter for 33x25. The custom matrix in the fixture is the default intra matrix
 written explicitly, so the path that reads a matrix from the header is exercised with known values.)

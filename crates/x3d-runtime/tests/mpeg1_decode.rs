@@ -21,7 +21,7 @@
 //! ```
 //!
 //! The reference of each stream is `ffmpeg -i <file> -an -f rawvideo -pix_fmt yuv420p <name>.yuv` (ffmpeg's `mpeg1video`
-//! decoder), the `.yuv` beside it.
+//! decoder), stored gzip-compressed (`gzip -9n`) as `<name>.yuv.gz` beside it.
 //!
 //! # The bound
 //!
@@ -47,7 +47,10 @@ fn data(name: &str) -> Vec<u8> {
 /// Compares the decode of `stream` to its ffmpeg reference; returns the measured (worst, mean) difference.
 fn compare(stream: &str, width: usize, height: usize, pictures: usize) -> (i32, f64) {
     let yuv = mpeg1::decode_yuv(&data(stream), 1000).unwrap();
-    let reference = data(&format!("{}.yuv", stream.rsplit_once('.').unwrap().0));
+    let gz = data(&format!("{}.yuv.gz", stream.rsplit_once('.').unwrap().0));
+    let mut reference = vec![];
+
+    std::io::Read::read_to_end(&mut flate2::read::GzDecoder::new(&gz[..]), &mut reference).unwrap();
     let (cw, ch) = (width.div_ceil(2), height.div_ceil(2));
     let per = width * height + 2 * cw * ch;
 
