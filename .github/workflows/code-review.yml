@@ -35,8 +35,10 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       MAX_DIFF_CHARS: "250000"
-      # Lock files are not reviewed. The gate lists them in the summary so the omission is visible.
-      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml"
+      # Not reviewed: lock files, and the baselines that a recorder wrote (oracle/<name>-baseline/*.json; GitHub gives no patch
+      # for the large ones, and a person cannot read them). The gate lists every such file in the job summary, and the stamp
+      # on the review comment names them, so the omission is visible to a reader.
+      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json"
     steps:
       # Fails the job when the action would not send the whole diff to the model, instead of a review that looks complete.
       # The action sends only files that have a patch, in order, and drops a file that does not fit under MAX_DIFF_CHARS.
@@ -81,6 +83,7 @@ jobs:
             if (capped) lines.push('The file list reached the API limit of 3000 files (NOT fully reviewed).');
             await core.summary.addRaw('```\n' + lines.join('\n') + '\n```', true).write();
             core.info(lines.join('\n'));
+            core.exportVariable('NOT_REVIEWED', [...excluded, ...noPatchBinary].join('\n'));
             const missing = [...noPatchText, ...truncated, ...over];
             if (capped) missing.push('(file list capped at 3000)');
             if (missing.length > 0) {
@@ -120,7 +123,10 @@ jobs:
               core.setFailed('The review comment was not updated by this run, so it does not review head ' + process.env.HEAD_SHA + '.');
               return;
             }
-            const stamp = `\n\n_Reviewed head: \`${process.env.HEAD_SHA}\`, run ${context.runId}, model ${process.env.MODEL}._`;
+            const skipped = (process.env.NOT_REVIEWED || '').split('\n').filter(Boolean);
+            const shown = skipped.slice(0, 30).map(n => `\`${n}\``).join(', ') + (skipped.length > 30 ? ` and ${skipped.length - 30} more` : '');
+            const note = skipped.length ? ` Not reviewed (lock files, recorded baselines, binary files): ${shown}.` : '';
+            const stamp = `\n\n_Reviewed head: \`${process.env.HEAD_SHA}\`, run ${context.runId}, model ${process.env.MODEL}.${note}_`;
             const body = mine.body.replace(/\n\n_Reviewed head: [^\n]*_/, '');
             await github.rest.issues.updateComment({
               owner: context.repo.owner, repo: context.repo.repo, comment_id: mine.id,
