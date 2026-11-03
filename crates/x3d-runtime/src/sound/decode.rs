@@ -200,6 +200,11 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
                 rate = buffer.spec().rate();
                 buffer.copy_to_vecs_planar::<f32>(&mut part);
 
+                // A buffer without channels carries nothing (and has no `part[0]`): skip it.
+                if part.is_empty() {
+                    continue;
+                }
+
                 if channels.is_empty() {
                     channels = vec![vec![]; part.len()];
                 }
@@ -214,6 +219,9 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
 
                 last_frames = part[0].len();
             }
+            // A packet that does not decode (corrupt data, a cut-off last packet) is skipped, as FFmpeg skips it: the file
+            // yields the packets that did decode. The behavior on damaged files is not compared with Chromium (only
+            // that it neither panics nor loops, see the truncation test); any other error refuses the file.
             Err(Error::DecodeError(_) | Error::IoError(_)) => {}
             Err(_) => return None,
         }
@@ -221,7 +229,10 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
 
     // Chromium (FFmpeg) returns none of the frames of an Ogg Vorbis file's last packet: 215, 46, 64 and 128 frames
     // fewer for the four recorded files (oracle/rea-b24-audio-decode-baseline and -2-baseline), with or without a
-    // trim at the end of the stream. A file that is only one packet is kept whole (not recorded).
+    // trim at the end of the stream. The rule is "the last decoded packet of a Vorbis
+    // stream, always", not a property of the trim or of the metadata; it is applied to every Vorbis file, because the
+    // four recorded ones differ in size, rate, channel count and trim and all follow it. A file that is only one packet
+    // is kept whole (not recorded).
     if params.codec == CODEC_ID_VORBIS && channels.first().is_some_and(|c| c.len() > last_frames) {
         for c in &mut channels {
             c.truncate(c.len() - last_frames);
@@ -533,6 +544,44 @@ mod tests {
         // Not a compressed file, and a WAV (left to decode_wav).
         assert!(decode_compressed(b"not audio").is_none());
         assert!(decode_compressed(&wav(1, 16, 1, 8000, &[0, 0, 1, 0])).is_none());
+    }
+
+    /// Every cut of an MP3, a FLAC and an Ogg Vorbis file is refused or decodes to no more than the whole file, and
+    /// never panics (damaged files: the packets that decode are kept).
+    #[test]
+    fn a_truncated_compressed_file_never_panics() {
+        for (name, keeps_a_prefix) in [
+            ("mp3-44100-stereo.mp3", true),
+            ("flac-44100-stereo.flac", true),
+            // A cut Ogg file is refused by the demuxer (no panic is all that is asked of it).
+            ("ogg-44100-stereo.ogg", false),
+        ] {
+            let bytes = std::fs::read(
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../oracle/synthetic-rea-b24-audio")
+                    .join(name),
+            )
+            .unwrap();
+            let whole = decode_compressed(&bytes).unwrap().0[0].len();
+            let step = (bytes.len() / 60).max(1);
+            let mut kept = 0;
+
+            for cut in (0..bytes.len()).step_by(step) {
+                let r = std::panic::catch_unwind(|| decode_compressed(&bytes[..cut]));
+
+                assert!(r.is_ok(), "{name} cut at {cut}: panic");
+
+                if let Some((channels, _)) = r.unwrap() {
+                    assert!(channels[0].len() <= whole, "{name} cut at {cut}");
+                    kept += 1;
+                }
+            }
+
+            assert!(
+                kept > 0 || !keeps_a_prefix,
+                "{name}: no cut decodes, the test proves nothing"
+            );
+        }
     }
 
     #[test]

@@ -63,6 +63,8 @@ struct Measure {
     chrome_length: usize,
     /// Over the common prefix of every channel.
     max_abs: f32,
+    /// The largest absolute sample that the decoder produced: silence would pass a difference bound by luck.
+    peak: f32,
     exact: bool,
 }
 
@@ -115,6 +117,7 @@ fn measure_in(baseline_dir: &str, corpus: &str, file: &str) -> Measure {
     assert_eq!(buffer.number_of_channels(), channels, "{file} channels");
 
     let mut max_abs = 0.0f32;
+    let mut peak = 0.0f32;
     let mut exact = buffer.length() == chrome_length;
 
     for c in 0..channels {
@@ -138,7 +141,14 @@ fn measure_in(baseline_dir: &str, corpus: &str, file: &str) -> Measure {
             exact &= g.to_bits() == w.to_bits();
             max_abs = max_abs.max((g - w).abs());
         }
+
+        peak = buffer
+            .get_channel_data(c)
+            .iter()
+            .fold(peak, |m, v| m.max(v.abs()));
     }
+
+    assert!(peak > 0.01, "{file}: the decoded audio is silent ({peak})");
 
     println!(
         "{file}: chrome {chrome_length} frames, rust {}, max abs difference {max_abs:e}",
@@ -148,6 +158,7 @@ fn measure_in(baseline_dir: &str, corpus: &str, file: &str) -> Measure {
         rust_length: buffer.length(),
         chrome_length,
         max_abs,
+        peak,
         exact,
     }
 }
