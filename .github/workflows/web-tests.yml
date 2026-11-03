@@ -119,7 +119,7 @@ jobs:
         run: tools/build-web.sh
 
       # The shipped module holds no AAC decoder (owner decision 2026-11-02, issue #90): the Cargo.lock check is in "Fast checks";
-      # this one reads the built bytes.
+      # this one is a supplemental smoke check on the built bytes (crate path strings), not proof of absence.
       - name: No AAC decoder in the browser module
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: python3 -I -B tools/check_no_aac.py --binary crates/x3d-web/web/pkg/*.wasm

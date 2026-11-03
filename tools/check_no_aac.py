@@ -12,7 +12,9 @@ runs `cargo tree --locked -e normal,build,dev --target all -i symphonia-codec-aa
 would have been present (0.5.5, 0.6.1) and requires "did not match any packages".
 
     python3 -I tools/check_no_aac.py --binary <built file>...
-checks built artifacts (a release executable, the wasm module or the wasm-bindgen output): the crate paths of the AAC decoder
+is a SUPPLEMENTAL smoke check on built artifacts, not proof of absence (stripping, LTO or a different symbol name can hide or
+rename strings; the lockfile and `--cargo` checks are the authoritative ones). It checks a release executable, the wasm module
+or the wasm-bindgen output: the crate paths of the AAC decoder
 must not appear in the bytes, and the crate path of the MP3 decoder (symphonia-bundle-mp3, a codec that stays) must, so a
 build without embedded crate paths cannot pass by saying nothing."""
 import re
