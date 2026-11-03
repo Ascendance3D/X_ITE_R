@@ -45,8 +45,19 @@ STILL_REACH = {
 
 
 # A name ledger or evidence that ends a path component (or a quoted string) and does not continue a longer name: ledger/x,
-# ../ledger/x, ./evidence/x, "/ledger/x", join("ledger"). Not some_ledger/, x3d-evidence/, my.ledger/ or ledgers/.
-TREE_REFERENCE = r"(?<![\w.-])(evidence|ledger)[\"'/]"
+# ../ledger/x, ./evidence/x, "/ledger/x", join("ledger"), and JSON's escaped slash "ledger\/x". Not some_ledger/, x3d-evidence/,
+# my.ledger/ or ledgers/. A path assembled from components (join of "ledger" and a name that is not quoted next to it, a format
+# string, a variable) is outside what a text scan can find.
+TREE_REFERENCE = r"(?<![\w.-])(evidence|ledger)(?:\\?/|[\"'])"
+
+
+def is_comment_line(line):
+    """A hit passes only on a line that starts with a line-comment marker, is the body of a block comment ("* text", "*/" or a
+    lone "*"), or is the "_comment" JSON key of one known baseline. A line such as *open("ledger/x") starts with "*" and is
+    not a comment. Block comments written as /* ... */ on one line and Python docstrings are not recognized and fail the
+    test too: the check errs toward false positives, never toward letting a code reference through."""
+    text = line.lstrip()
+    return text.startswith(("//", "#", '"_comment"', "* ", "*/")) or text == "*"
 
 
 def tracked():
@@ -90,12 +101,19 @@ class Classification(unittest.TestCase):
 
     def test_tree_reference_pattern(self):
         """The pattern finds forward-slash paths (absolute, ./ and ../ forms) and quoted names that reach ledger or evidence, and not a
-        longer name. It does not match Windows backslash paths: the suites run on Linux only."""
+        longer name. It does not match Windows backslash paths (the suites run on Linux only), and a path assembled from
+        components (a join of parts, a format string, a variable) is outside the guarantee of any text scan."""
         for hit in ("ledger/x", "evidence/x", "../ledger/x", "../../evidence/x", "./ledger/x", "a/../../ledger/x",
-                    'include_str!("../../../ledger/ledger.json")', '"/ledger/x"', '.join("ledger")', "'../evidence'"):
+                    'include_str!("../../../ledger/ledger.json")', '"/ledger/x"', '.join("ledger")', "'../evidence'", '{"path": "ledger\\/x"}'):
             self.assertTrue(re.search(TREE_REFERENCE, hit), hit)
         for miss in ("some_ledger/x", "x3d-evidence/x", "crates/x3d-evidence/src", "my.ledger/x", "ledgers/x", "evidence-x/y", "evidence."):
             self.assertFalse(re.search(TREE_REFERENCE, miss), miss)
+
+    def test_comment_line(self):
+        for yes in ("// ledger/x", "/// evidence/x", "//! ledger/x", "# evidence/x", "  * ledger/x", "*/ ledger/x", "*", '"_comment": "evidence/x"'):
+            self.assertTrue(is_comment_line(yes), yes)
+        for no in ('*open("ledger/x")', '*ledger/x', 'let p = "ledger/x"; // evidence/x', 'x = "ledger/x"  # note', '/* ledger/x */', '"""ledger/x"""'):
+            self.assertFalse(is_comment_line(no), no)
 
     def test_trees_are_not_opened_by_a_suite(self):
         """ledger/ and evidence/ run no suite because nothing opens a file under them. The scan covers every tracked text file
@@ -107,11 +125,7 @@ class Classification(unittest.TestCase):
                                ":!tools/ci_changes.py", ":!tools/test_ci_changes.py"], cwd=c.ROOT, capture_output=True, text=True).stdout
         for line in refs.splitlines():
             path, _, rest = line.split(":", 2)
-            # Deliberately loose: a line that starts with a comment marker, a bare "*" (a block-comment body, but also any other
-            # line that starts with "*") or a "_comment" JSON key passes. Block comments written as /* ... */ on one line or a
-            # Python docstring are not recognized and fail the test. Both errors are false positives; a real reference is never
-            # let through, so a needed suite cannot be skipped by this test passing.
-            self.assertTrue(rest.lstrip().startswith(("//", "#", "///", "//!", "*", '"_comment"')), line)
+            self.assertTrue(is_comment_line(rest), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
         """An added file that is gone would hide a stale entry; a reference from crates/ would mean a test reads it."""
