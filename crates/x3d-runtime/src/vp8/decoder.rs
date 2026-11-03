@@ -143,7 +143,6 @@ pub(crate) struct Decoder {
     segment_map: Vec<u8>,
     /// Last, golden and altref, indexed by `LAST_FRAME..=ALTREF_FRAME`.
     references: [Option<Arc<Frame>>; 4],
-    output_wanted: bool,
 }
 
 fn malformed(message: impl Into<String>) -> Error {
@@ -163,17 +162,12 @@ impl Decoder {
             filter_deltas: FilterDeltas::default(),
             segment_map: Vec::new(),
             references: [None, None, None, None],
-            output_wanted: true,
         }
     }
 
     /// Forgets every reference, so decoding must restart at a key frame.
     pub(crate) fn reset(&mut self) {
         *self = Self::new(self.limits);
-    }
-
-    pub(crate) fn set_output_wanted(&mut self, wanted: bool) {
-        self.output_wanted = wanted;
     }
 
     /// Decodes one compressed frame, returning its picture unless the frame
@@ -351,7 +345,7 @@ impl Decoder {
             self.references[LAST_FRAME] = Some(frame.clone());
         }
 
-        Ok((shown && self.output_wanted).then(|| self.crop(&frame)))
+        Ok(shown.then(|| self.crop(&frame)))
     }
 
     fn start_key_frame(&mut self, width: usize, height: usize) -> Result<()> {
@@ -632,6 +626,8 @@ impl Decoder {
             macroblock.y_mode = header.read_tree(&Y_MODE_TREE, &self.probabilities.y_mode);
             if macroblock.y_mode == B_PRED {
                 for mode in &mut macroblock.b_modes {
+                    // Inter frames code B_PRED sub-modes with the fixed default table (RFC 6386 section 16.2); the
+                    // contextual KF_B_MODE_PROBS are for key frames only.
                     *mode = header.read_tree(&B_MODE_TREE, &DEFAULT_B_MODE_PROBS);
                 }
             } else {
@@ -952,7 +948,8 @@ pub(super) fn find_near_mvs(
         }
         counts[last] += weight;
     }
-    // Three distinct vectors: the third merges with the nearest if equal.
+    // Three distinct vectors: the third merges with the nearest if equal. This runs before counts[3] is reassigned
+    // to the SPLITMV count, as in libvpx vp8_find_near_mvs (cnt[CNT_SPLITMV] is first the third vector's count).
     if counts[3] > 0 && mvs[3] == mvs[1] {
         counts[1] += 1;
     }
