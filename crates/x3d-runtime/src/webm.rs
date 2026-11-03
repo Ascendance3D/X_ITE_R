@@ -4,6 +4,11 @@
 //! presentation times in milliseconds, and the frame size. Lacing is not supported (WebM video does not use it).
 //! Decoding is the `vp9dec` crate (MIT, no dependencies); the picture is converted to RGBA the way a browser's video
 //! texture upload does (see [`yuv_to_rgba`]).
+//!
+//! Limits. [`decode`] takes `max_bytes`, which caps the RGBA pictures that are *kept* (and is checked per picture,
+//! before its conversion). The decoder's own working memory (the reference pictures of `vp9dec`, about 1.5 u16 per
+//! luma sample each, up to eight held) is bounded by [`MAX_LUMA_SAMPLES`], which is checked from the frame headers
+//! before the decoder runs; it is not bounded by `max_bytes`. A fixed 8192 x 4352 picture measured 860 MB peak.
 
 use vp9dec::{Decoder, PlaneData};
 
@@ -380,7 +385,11 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
             }
         }
 
-        // The decoder is a third-party crate: a panic in it is a refused file, not a crash of the viewer.
+        // The decoder is a third-party crate: a panic in it is a refused file, not a crash of the viewer. This is a
+        // fallback, not a security boundary: it does nothing under `panic = "abort"` (the workspace sets none, in any
+        // profile), the default hook still prints the message, a panic in a loop-filter worker leaves the other workers
+        // spinning (`vp9dec` wavefront), and it cannot undo memory a decoder wrote through `unsafe`. The limits above and
+        // the header checks are what bound a hostile file.
         let shown =
             std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.decode_frame(chunk)))
                 .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
@@ -769,6 +778,152 @@ mod tests {
             decode(&webm_of(&[&sf]), BUDGET),
             Err(WebmError::TooLarge)
         ));
+    }
+
+    /// A header bit string as bytes (zero padded).
+    fn bytes_of(fields: &[(u32, usize)]) -> Vec<u8> {
+        let bits: Vec<bool> = fields
+            .iter()
+            .flat_map(|&(v, n)| (0..n).rev().map(move |i| v >> i & 1 == 1))
+            .collect();
+
+        bits.chunks(8)
+            .map(|c| {
+                c.iter()
+                    .enumerate()
+                    .fold(0u8, |a, (i, b)| a | (u8::from(*b) << (7 - i)))
+            })
+            .collect()
+    }
+
+    /// An inter frame (profile 0, shown, not error resilient) whose three `found_ref` bits are `found`: when none is
+    /// set, `frame_size_with_refs` codes the size itself.
+    fn inter_frame_header(found: [u32; 3], w: u32, h: u32) -> Vec<u8> {
+        let mut f = vec![
+            (2, 2), // frame_marker
+            (0, 2), // profile 0
+            (0, 1), // show_existing_frame
+            (1, 1), // non-key frame
+            (1, 1), // show_frame (so no intra_only bit)
+            (0, 1), // error_resilient_mode
+            (0, 2), // reset_frame_context
+            (0, 8), // refresh_frame_flags
+            (0, 4), // ref_frame_idx[0], sign_bias
+            (1, 4), // ref_frame_idx[1], sign_bias
+            (2, 4), // ref_frame_idx[2], sign_bias
+        ];
+
+        f.extend(found.iter().map(|&b| (b, 1)));
+
+        if found == [0, 0, 0] {
+            f.extend([(w - 1, 16), (h - 1, 16)]);
+        }
+
+        bytes_of(&f)
+    }
+
+    /// An intra-only frame (profile 0: no color config, hidden so `intra_only` is coded).
+    fn intra_only_header(w: u32, h: u32) -> Vec<u8> {
+        bytes_of(&[
+            (2, 2),
+            (0, 2),
+            (0, 1),
+            (1, 1), // non-key
+            (0, 1), // show_frame 0
+            (0, 1), // error_resilient_mode
+            (1, 1), // intra_only
+            (0, 2), // reset_frame_context
+            (0x49_8342, 24),
+            (0, 8), // refresh_frame_flags
+            (w - 1, 16),
+            (h - 1, 16),
+        ])
+    }
+
+    /// `frame_size_with_refs`: found_ref = 0 carries an explicit size, which the cap must see; found_ref = 1 copies the
+    /// size of a reference, which an earlier frame coded (and the cap saw).
+    #[test]
+    fn an_inter_or_intra_only_frame_with_an_explicit_oversized_size_is_refused() {
+        let big = inter_frame_header([0, 0, 0], 8192, 4353);
+
+        assert_eq!(coded_size(&big), Some((8192, 4353)));
+        assert_eq!(
+            coded_size(&inter_frame_header([0, 0, 0], 640, 480)),
+            Some((640, 480))
+        );
+
+        // Each of the three found_ref positions copies a reference size: nothing is coded.
+        for found in [[1, 0, 0], [0, 1, 0], [0, 0, 1]] {
+            assert_eq!(coded_size(&inter_frame_header(found, 1, 1)), None);
+        }
+
+        assert!(matches!(
+            decode(&webm_of(&[&big]), BUDGET),
+            Err(WebmError::TooLarge)
+        ));
+
+        let intra = intra_only_header(65536, 65536);
+
+        assert_eq!(coded_size(&intra), Some((65536, 65536)));
+        assert!(matches!(
+            decode(&webm_of(&[&intra]), BUDGET),
+            Err(WebmError::TooLarge)
+        ));
+
+        // An oversized inter frame after a valid key frame: the file is refused, not decoded as far as that frame.
+        let d = synthetic();
+        let blocks = demux(&d).unwrap();
+        let mut frames: Vec<&[u8]> = blocks.iter().map(|b| &d[b.start..b.end]).collect();
+
+        frames.push(&big);
+        assert!(matches!(
+            decode(&webm_of(&frames), BUDGET),
+            Err(WebmError::TooLarge)
+        ));
+    }
+
+    /// Superframe sizes are little-endian (VP9 Annex B): `[1, 0]` is 1 and `[0, 1]` is 256.
+    #[test]
+    fn superframe_sizes_are_little_endian() {
+        let mut second = key_frame_header(8192, 4353);
+
+        second.resize(256, 0);
+
+        let first = [0u8];
+        let marker = 0b1100_0000 | (1 << 3) | 1; // two frames, two size bytes
+        let mut sf = [&first[..], &second[..]].concat();
+
+        sf.extend([marker, 1, 0, 0, 1, marker]);
+
+        let frames = frames_of(&sf);
+
+        assert_eq!(frames.len(), 2);
+        assert_eq!((frames[0].len(), frames[1].len()), (1, 256));
+        assert_eq!(frames[1], &second[..]);
+        // Big-endian reading would give 256 then 1: the first frame would be the zero byte plus the header start.
+        assert_eq!(coded_size(frames[1]), Some((8192, 4353)));
+        assert!(matches!(
+            decode(&webm_of(&[&sf]), BUDGET),
+            Err(WebmError::TooLarge)
+        ));
+
+        // Three size bytes and a size that does not fit: the chunk stays whole.
+        let bad = [
+            &[0u8; 4][..],
+            &[
+                0b1100_0000 | (2 << 3) | 1,
+                9,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0b1100_0000 | (2 << 3) | 1,
+            ][..],
+        ]
+        .concat();
+
+        assert_eq!(frames_of(&bad), vec![&bad[..]]);
     }
 
     #[test]
