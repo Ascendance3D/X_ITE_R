@@ -50,6 +50,44 @@ const CASES: &[&str] = &[
     "sound-two-nodes",
     "sound-children",
     "sound-lifecycle",
+    // Output levels and timing (issue #90): AudioClip gain, Sound intensity (clamped to 0..1), pitch edges,
+    // enabled, loop, stopTime and startTime while playing, placement changed at run time, priority, a mono
+    // clip, and a turned viewpoint. Each changes a field at a tick and compares every output sample.
+    "clip-gain",
+    "clip-gain-runtime",
+    "sound-intensity-runtime",
+    "clip-gain-pitch-intensity",
+    "clip-pitch-edges",
+    "clip-enabled",
+    "sound-enabled",
+    "clip-loop-off",
+    "clip-stop-in-loop",
+    "clip-restart",
+    "sound-location-runtime",
+    "sound-priority",
+    "sound-mono-left",
+    "sound-viewpoint-turned",
+];
+
+/// The cases added for issue #90, with the shape of the pinned recording: the number of 768-sample frames
+/// (and the total) in which both channels are silent (RMS below 1e-6). A key recorded silent, or without the
+/// stop, mute or gap that its case is about, would match a silent Rust render and prove nothing. The numbers
+/// are read from the X_ITE recordings (oracle/rea-b05-baseline/NAME/js.audio.f32).
+const SHAPE: &[(&str, usize, usize)] = &[
+    ("clip-gain", 0, 40),
+    ("clip-gain-runtime", 5, 80),
+    ("sound-intensity-runtime", 11, 80),
+    ("clip-gain-pitch-intensity", 0, 40),
+    ("clip-pitch-edges", 3, 80),
+    ("clip-enabled", 11, 80),
+    ("sound-enabled", 8, 80),
+    ("clip-loop-off", 64, 80),
+    ("clip-stop-in-loop", 58, 80),
+    ("clip-restart", 48, 80),
+    ("sound-location-runtime", 44, 80),
+    ("sound-priority", 0, 40),
+    ("sound-mono-left", 0, 40),
+    ("sound-viewpoint-turned", 0, 80),
 ];
 
 // Not compared: `race-url-next-frame` (BLOCKED in rea_b05.py: under CPU load X_ITE resolved both decodes in one
@@ -170,10 +208,7 @@ fn compare(root: &Path, name: &str) -> (Vec<String>, bool, Option<usize>) {
 
 #[test]
 fn vrml_audio_matches_x_ite() {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .canonicalize()
-        .unwrap();
+    let root = root();
     let only = std::env::var("REA_ONLY").unwrap_or_default();
     let names: Vec<&str> = CASES
         .iter()
@@ -221,4 +256,69 @@ fn vrml_audio_matches_x_ite() {
         names.len(),
         failures.join("\n")
     );
+}
+
+fn root() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap()
+}
+
+/// A missing answer key fails, with its path. (`compare` would also fail on it, but only with an unwrap panic.)
+#[test]
+fn vrml_audio_oracle_keys_are_present() {
+    let root = root();
+    let missing: Vec<String> = CASES
+        .iter()
+        .flat_map(|n| {
+            [
+                format!("oracle/synthetic-rea-b05/{n}.wrl"),
+                format!("oracle/synthetic-rea-b05/scripts/{n}.json"),
+                format!("oracle/rea-b05-baseline/{n}/js.json"),
+                format!("oracle/rea-b05-baseline/{n}/js.audio.f32"),
+            ]
+        })
+        .filter(|p| !root.join(p).is_file())
+        .collect();
+    assert!(
+        missing.is_empty(),
+        "answer keys or worlds are missing: {missing:?}"
+    );
+}
+
+/// The pinned recordings of the issue #90 cases are not silent, and have the silent stretches that their
+/// mute, stop, loop and enabled changes make.
+#[test]
+fn vrml_audio_oracle_keys_have_the_recorded_shape() {
+    let root = root();
+    let mut bad = vec![];
+
+    for &(name, silent, total) in SHAPE {
+        let base = root.join(format!("oracle/rea-b05-baseline/{name}"));
+        let js: Value =
+            serde_json::from_str(&std::fs::read_to_string(base.join("js.json")).unwrap()).unwrap();
+        let channels = audio(&js, &base);
+        let frames = channels[0].len() / 768;
+        let quiet = (0..frames)
+            .filter(|f| {
+                channels.iter().all(|c| {
+                    let w = &c[f * 768..(f + 1) * 768];
+                    (w.iter().map(|v| v * v).sum::<f32>() / 768.0).sqrt() < 1e-6
+                })
+            })
+            .count();
+        let peak = channels
+            .iter()
+            .flatten()
+            .fold(0.0f32, |m, v| m.max(v.abs()));
+
+        if frames != total || quiet != silent || peak < 0.05 {
+            bad.push(format!(
+                "{name}: {quiet} of {frames} frames silent (expected {silent} of {total}), peak {peak}"
+            ));
+        }
+    }
+
+    assert!(bad.is_empty(), "{}", bad.join("\n"));
 }

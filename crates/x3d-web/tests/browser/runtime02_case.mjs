@@ -133,6 +133,63 @@ async function touch (page, type, points)
    });
 }
 
+// A page clock the test holds: while frozen, `Date .now ()` returns one value that only `advance` moves. X_ITE_R reads the
+// clock at every touch event (a double tap is two touch ends within 300 ms or 400 ms of it), and a DevTools touch event
+// waits for the frame in progress, so on a slow software GPU the wall time between two taps is the frame time, not the gap
+// the case means. Holding the clock across the taps makes the gap exactly what the case says, on every machine. `release`
+// continues from the held time (no jump), so animations and timers see a clock that never runs backward.
+export const holdClock = (page) => page .evaluate (() =>
+{
+   if (window .heldClock)
+      return;
+
+   const real = Date .now .bind (Date);
+   const held = { v0: real (), r0: real (), rate: 1, frozen: null };
+
+   Date .now = () => held .frozen ?? held .v0 + (real () - held .r0) * held .rate;
+   window .heldClock = { held, real };
+});
+
+// "freeze" holds the clock, "advance" moves a held clock by `ms`, "release" lets it run again from where it was held, and
+// "rate" makes it run at `ms` times the speed of the real one (0.1: a second of the page is ten of the wall clock). A slow
+// software GPU draws a frame in 0.3 s or more; at a tenth of the speed the page sees frames of 30 ms, the frames of a GPU
+// machine, so everything that integrates over the frame time (a held WALK or FLY) takes the steps it takes there.
+export const clock = (page, action, ms = 0) => page .evaluate (([ action, ms ]) =>
+{
+   const { held, real } = window .heldClock;
+   const now = () => held .frozen ?? held .v0 + (real () - held .r0) * held .rate;
+
+   if (action === "freeze")
+      held .frozen ??= now ();
+   else if (action === "advance")
+      held .frozen += ms;
+   else if (action === "release" && held .frozen !== null)
+   {
+      held .v0 = held .frozen;
+      held .r0 = real ();
+      held .frozen = null;
+   }
+   else if (action === "rate")
+   {
+      held .v0 = now ();
+      held .r0 = real ();
+      held .rate = ms;
+   }
+}, [ action, ms ]);
+
+// The milliseconds a frame of the page takes (the mean of `n`).
+export const frameMs = (page, n = 6) => page .evaluate (async n =>
+{
+   await new Promise (requestAnimationFrame);
+
+   const begin = performance .now ();
+
+   for (let i = 0; i < n; ++ i)
+      await new Promise (requestAnimationFrame);
+
+   return (performance .now () - begin) / n;
+}, n);
+
 // ExamineViewer's MOVE_TIME: the PositionChaser of a zoom step reaches its destination in 0.2 s. A zoom step is a
 // fraction of the distance to the center of rotation *now*, so a step during the chase starts from a position that
 // depends on frame timing. The zoom cases wait twice MOVE_TIME after each step: every step starts from a settled

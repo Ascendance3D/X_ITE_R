@@ -2,12 +2,13 @@
 //! (video-only) movie file formats as defined in ISO/IEC 11172-1". This module decodes the pictures of both: an MPEG-1
 //! Systems stream ([`demux`]) or a bare video elementary stream, with the video decoder in [`video`].
 //!
-//! The sound of a Systems stream is not decoded here (see docs/mpeg1-implementation.md for the reason and the plan).
-//! Reverse playback and the ISO time model are a different lane; this module only produces pictures with times.
+//! The sound of a Systems stream (MPEG audio, Layers II and III) is decoded by [`audio`]. Reverse playback and the ISO
+//! time model are a different lane; the picture decoding here only produces pictures with times.
 //!
 //! Safety: no `unsafe`. Every malformed, truncated or unsupported input ends in an [`Mpeg1Error`]; pictures decoded before
 //! a mid-stream error are kept ([`Video::stopped`]).
 
+pub mod audio;
 pub mod demux;
 mod tables;
 pub mod video;

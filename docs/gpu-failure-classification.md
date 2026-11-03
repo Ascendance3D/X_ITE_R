@@ -101,3 +101,40 @@ Pinned X_ITE 16.5.0 (`oracle/x_ite-pin`, `src/x_ite/Browser/GaussianSplats/Gauss
 ev_1d69a090391a33ce36dd9422fe885dd3c6a3ba5c0c9ceaa6c2ef0132377241db (summary
 ev_b28037c89221c266c643477fbf5bc96984e3fc5f91f0c01170e6aea2cc082087). Baselines for the splat pick cases are the existing
 `oracle/b69-gs-pick-baseline` (five byte-identical runs each); this change records no new baseline.
+
+## Hosted macOS diagnostic result (run 41583048922, "Apple Paravirtual device", Metal, virtualized)
+
+Information-only job; not physical validation. Artifact `macos-diag` (logs and rust/pinned PNGs). Adapter: `IntegratedGpu`, backend Metal,
+all depth formats and Rgba8/16F/32F support MSAA 4 and resolve; no GL adapter exists on the runner (`X3D_BACKEND=gl`: "no adapter", so the
+GL comparison could not be made and the 11 tests skip there).
+
+| group | evidence | classification |
+| --- | --- | --- |
+| `depth` x2, zfight worlds (`standard_and_log_match_x_ite`, `log_shows_what_standard_cannot`) | `Depth24Plus` resolves a 3e-8 depth difference at 0.1 on this device (float32 behavior); on the RTX it ties (24-bit behavior), as the pinned WebGL baseline does. Standard far-range: 61504 px wrong (a 250x250 block, red/green swapped); Logarithmic far-range: 0 px | **Hardware/platform constraint**: wgpu-hal maps `Depth24Plus` to `Depth32Float` here (no `Depth24Unorm_Stencil8` use). A tie that the pinned image depends on cannot occur. Proven for the format; the Logarithmic tilt-pair edge (2031 px, x 250..255) is the same cause by the same mechanism, not separately proven |
+| `render_b69_gs_log`, `rea_b08_gs` | gs-linear 30592 px over 8 (max 106), same with Standard and Logarithmic; gs-ortho 71% (max 72) | **Unclassified.** Not explained by the depth format; candidate Metal renderer defect or paravirtual behavior, not demonstrated |
+| `rea_b07_vol` | 0.6% to 1.1% of pixels, max 30 to 98, all cases | **Unclassified** |
+| `rea_b08_vs` | vs-transparent-ibl 9576 px (3.65%), max 255 | **Unclassified** |
+| `rea_b09_inputs` | texgen-modes 8.9%, texgen-params 7.5% (max 141, 169) | **Unclassified**; texture generation is plain shader math, so a device quirk is not the first guess |
+| `rea_batch07_vol`, `rea_i92_items`, `rea_batch01`, `rea_b24` | failing as listed; per-case numbers in `failing_eleven_metal.log` | **Unclassified** |
+
+None of the unclassified groups is claimed as a device constraint or as a renderer defect. The next step needs per-shader bisection on a
+Metal machine (for example render with the texgen shader forced to a constant); a physical Mac is the sound comparison. They remain
+skipped by name on the hosted runner.
+
+## Final classification of the eleven comparisons (runs 41589129511 and 41594226558, hosted macOS, virtualized)
+
+Supersedes the "Unclassified" rows above. Hosted macOS is a virtual machine with the "Apple Paravirtual device" (Metal); none of this
+is physical-Metal validation. The probes are `device_diag.rs` and `device_math.rs` (information only, never gating).
+
+| group | measured | classification | outcome |
+| --- | --- | --- | --- |
+| `gs-linear`, `vs-transparent-ibl` (`rea_b08_gs`, `rea_b08_vs`, `render_b69_gs_log`) | single colour channels of single splats and the refracting spheres differed (gs-linear 30592 px over 8, vs-transparent-ibl 9576). The tone map took `pow` of a negative linear color (NaN); on the RTX and llvmpipe a NaN source term blends as 0 (`nan_color_storage`) and the compiled Metal pipeline gave something else. With `pow (max (color, 0), ..)`: gs-linear max delta 4, vs-transparent-ibl 159 px over 8 (RTX: 145) | **implementation defect** (undefined `pow`) | fixed in PR #378; `rea_b08_gs` and `rea_b08_vs` un-skipped |
+| `gs-ortho` (`render_b69_gs_log`) | the Background was black (0,0,0, expected 51,51,71) in logarithmic depth under an OrthoViewpoint, standard depth fine, the sphere form fine; the cube is scaled by the far plane (1e10), so clip coordinates reach 1e9. A full-screen triangle with 1e6 covers 4096 of 4096 pixels, with 1e7 3657. The comparison also failed on llvmpipe at master (33.5% over 8) | **implementation defect** (relies on huge clip coordinates) | fixed in PR #379 (a flat cube is scaled to the view); `splats_in_logarithmic_depth_match_x_ite` un-skipped after #378 |
+| `texgen-modes`, `texgen-params` (`rea_b09_inputs`) | the four NOISE cubes: the hash chain `rand1` (`fract (sin (..) * 43758.5453)`, three deep) turns a few units in the last place of `sin` into a different value. On the lattice of its inputs, `sin` differs between the RTX and the macOS device in 74 of 81 values (largest 2.1e-5 absolute), the 3-deep chain in 81 of 81 (largest 0.92). `sin` itself is far from the CPU's on both (RTX worst 5675 ulps, macOS 5661 on the same input, near a zero crossing). The RTX differs from the pinned image too (404 px over 8, inside the test's limit); the macOS device differs by 23354 px (8.9%) | **device behavior** (`sin` precision, amplified by the hash) | a precision-safe hash cannot match the pinned image: that image is itself one GPU's noise. Skip stays, reason above; a tolerance would have to admit whole cubes, so none is added |
+| `i92-tr-opaque`, `shading-wireframe` (MSAA 4 only) | 2392 and 2390 px over 8 (0.912%), edge pixels, max delta 64 and 109; the single-sample passes pass; mirroring the target (`set_gl_sample_orientation`) helps on the macOS device (texgen-prims 0.46% against 0.94%) but does not reach the RTX result | **device behavior** (4x sample positions are not Vulkan's; wgpu cannot set them) | measured limit 1.0% for multisampled passes on macOS, fixed before the run: PR #380; both un-skipped there |
+| `depth` x2 (zfight) | `Depth24Plus` resolves a 3e-8 depth difference at 0.1 (float32 behavior); the RTX ties | **device behavior** (depth format precision) | skip stays |
+| `rea_b24_anchor_collision_instanced` | `pickProbes` are compared bit for bit; the first differing probe (#332) differs by 6e-8 relative in `point`, `texCoord` (same id, same normal), 516 of 2601 probes differ, and the text of three events follows. Consistent with the depth format difference above (the pick point is unprojected from the depth buffer); not isolated by a probe of its own | **numeric difference, cause consistent with the depth format, not proven** | skip stays; no tolerance (the comparison is exact by design) |
+| `rea_b07_vol`, `rea_batch07_vol` | 0.58% to 1.14% of the pixels over 8 (max 30 to 112), only along the contours of the volume styles (4x amplified difference image); the same worlds are within 0.002% on the RTX | **numeric difference, cause not isolated** | skip stays; a limit would not be a measured one for an unexplained cause |
+
+Open for a physical Mac: whether the `sin` precision, the 4x sample positions, the depth format and the clip precision above are properties of the
+paravirtual device or of Metal on Apple silicon.

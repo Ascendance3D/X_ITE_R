@@ -65,6 +65,13 @@ pub struct MovieMedia {
 struct IsoState {
     played: bool,
     time: f64,
+    /// Seconds added to the node's `elapsedTime` before the clause's formula is applied: a seek moves the movie time
+    /// by moving the origin of the formula (`movie_iso_seek`). 0 after every start.
+    shift: f64,
+    /// The movie time shown while the rate is 0 (the formula has no motion then): 0 after every start, or a seek.
+    rest: f64,
+    /// The `elapsedTime` at the last pause or stop (a seek during a pause measures from it).
+    frozen: f64,
     seeks: MovieSeeks,
 }
 
@@ -539,6 +546,21 @@ impl MovieMedia {
         (self.seekable && !t.is_nan()).then(|| t.clamp(0.0, self.duration()))
     }
 
+    /// The ISO movie time of an active node and whether the play is over (`iso::iso_time` of the elapsed time moved by
+    /// the seeks; at rate 0 the held time).
+    fn iso_at(&self, elapsed: f64, looping: bool) -> (f64, bool) {
+        if self.playback_rate == 0.0 {
+            return (self.iso.rest, false);
+        }
+
+        iso::iso_time(IsoClock {
+            elapsed: elapsed + self.iso.shift,
+            rate: self.playback_rate,
+            duration: self.duration(),
+            looping,
+        })
+    }
+
     /// Moves the clock so that `current_time (elapsed)` is `target` (a value of [`Self::seek_target`]).
     pub fn seek_to(&mut self, target: f64, elapsed: f64) {
         if self.seekable {
@@ -948,7 +970,8 @@ impl Runtime {
     }
 
     /// The ISO 18.4.2 `set_speed`: ignored while the node is active (`force`: the start takes the field's value), applied
-    /// while it is inactive. Negative rates are legal; the sound still plays at 1 (it cannot run backwards).
+    /// while it is inactive. Negative rates are legal: the sound of a decoded video plays backwards at `|rate|` (an
+    /// AudioBufferSourceNode with a negative `playbackRate` reads its buffer backwards, so no reversed copy is made).
     fn movie_iso_set_speed(&mut self, node: NodeId, force: bool) {
         let active = self.get_bool(node, "isActive");
 
@@ -958,9 +981,7 @@ impl Runtime {
 
         let rate = self.get_f64(node, "speed") * self.get_f64(node, "pitch").max(0.0);
 
-        self.media_set(node, |e, m| {
-            m.set_playback_rate(e, if rate < 0.0 { 1.0 } else { rate })
-        });
+        self.media_set(node, |e, m| m.set_playback_rate(e, rate));
 
         if let Some(m) = self.movie(node) {
             m.set_playback_rate(rate);
@@ -1027,21 +1048,22 @@ impl Runtime {
 
             if let Some(m) = self.movie(node) {
                 m.iso.played = true;
+                m.iso.shift = 0.0;
+                m.iso.rest = 0.0;
+                m.iso.frozen = 0.0;
 
-                let t = iso::iso_time(IsoClock {
-                    elapsed: 0.0,
-                    rate: m.playback_rate,
-                    duration: m.duration(),
-                    looping: true,
-                })
-                .0;
+                let t = m.iso_at(0.0, true).0;
 
                 self.movie_iso_show(node, t, true);
             }
 
+            // The sound starts at the movie time of the first picture: 0, or the end for a negative rate (it then
+            // reads the buffer backwards).
+            let start = self.movie(node).map_or(0.0, |m| m.iso.time);
+
             self.audio_element_started = true;
             self.media_set(node, |e, m| {
-                m.set_current_time(e, 0.0);
+                m.set_current_time(e, start);
                 m.play(e)
             });
             return;
@@ -1073,6 +1095,10 @@ impl Runtime {
     /// and PNGMedia only stops, so those, and a NaN, are not seeks: nothing moves and a diagnostic is logged.
     /// Returns the position that was set.
     pub fn movie_seek(&mut self, node: NodeId, t: f64) -> Option<f64> {
+        if self.movie_timing == MovieTiming::Iso {
+            return self.movie_iso_seek(node, t);
+        }
+
         let elapsed = self.elapsed_value(node);
         let target = self.movie(node).and_then(|m| m.seek_target(t));
 
@@ -1087,6 +1113,61 @@ impl Runtime {
             m.seek_to(target, elapsed);
         }
 
+        self.media_set(node, |e, m| m.set_current_time(e, target));
+        Some(target)
+    }
+
+    /// ISO timing: moves the movie to the time `t` (clamped to [0, duration]; the engine chooses every picture, so any
+    /// media with pictures can seek, a GIF too; a NaN is no time and logs). Returns the time set.
+    ///
+    /// - Active (or paused): the origin of the clause's formula moves so that the movie time of this instant is `t`
+    ///   and the play goes on from there at the frozen rate: `loop` wraps, a node without `loop` ends after the rest
+    ///   of the movie (`duration - t` forward, `t` backward, divided by `|rate|`), `stopTime` still stops it. A pause
+    ///   keeps the new picture and resumes from it.
+    /// - Inactive: the picture of `t` is shown and stays (the frame of the movie time at which the node became
+    ///   inactive). The next start begins at the start of the movie again (18.4.2).
+    /// - Rate 0: the formula does not move, so `t` is the held picture.
+    ///
+    /// The sound follows (its offset is the movie time, backwards for a negative rate).
+    fn movie_iso_seek(&mut self, node: NodeId, t: f64) -> Option<f64> {
+        let active = self.get_bool(node, "isActive");
+        let paused = self.get_bool(node, "isPaused");
+        let elapsed = if paused {
+            self.movie(node).map_or(0.0, |m| m.iso.frozen)
+        } else {
+            self.time_elapsed_time(node)
+        };
+        let target = self
+            .movie(node)
+            .and_then(|m| (!t.is_nan()).then(|| t.clamp(0.0, m.duration())));
+
+        let Some(target) = target else {
+            self.log_warn(format!(
+                "MovieTexture: the media cannot seek to {t}; the request is ignored."
+            ));
+            return None;
+        };
+
+        if let Some(m) = self.movie(node) {
+            let (rate, duration) = (m.playback_rate, m.duration());
+
+            m.iso.played = true;
+            m.iso.rest = target;
+
+            if active && rate != 0.0 {
+                // The elapsed time at which the formula gives `target`: forward t / |rate|, backward
+                // (duration - t) / |rate|.
+                let want = if rate > 0.0 {
+                    target / rate
+                } else {
+                    (duration - target) / -rate
+                };
+
+                m.iso.shift = want - elapsed;
+            }
+        }
+
+        self.movie_iso_show(node, target, true);
         self.media_set(node, |e, m| m.set_current_time(e, target));
         Some(target)
     }
@@ -1108,8 +1189,34 @@ impl Runtime {
         self.movie_timing = timing;
     }
 
+    /// ISO 18.4.2: "the frame corresponding to the time at which the MovieTexture became inactive will remain". A pause
+    /// or stop is a timer event between two frames, so the picture is chosen for the movie time of that instant, not
+    /// of the last frame before it.
+    fn movie_iso_freeze(&mut self, node: NodeId) {
+        if self.movie_timing != MovieTiming::Iso {
+            return;
+        }
+
+        let elapsed = self.time_elapsed_time(node);
+        let looping = self.time_loop(node);
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        if !m.iso.played || !(elapsed >= 0.0) {
+            return;
+        }
+
+        m.iso.frozen = elapsed;
+
+        let (time, _) = m.iso_at(elapsed, looping);
+
+        self.movie_iso_show(node, time, true);
+    }
+
     /// set_pause, set_stop: stopAudioElement.
     pub(crate) fn movie_pause(&mut self, node: NodeId) {
+        self.movie_iso_freeze(node);
         self.media_set(node, |e, m| m.pause(e));
 
         if let Some(m) = self.movie(node) {
@@ -1125,7 +1232,19 @@ impl Runtime {
     pub(crate) fn movie_resume(&mut self, node: NodeId) {
         let (elapsed, now) = (self.elapsed_value(node), self.now * 1000.0);
 
-        self.media_set(node, |e, m| m.play(e));
+        // ISO timing: the engine's movie time is the position; the element's own clock ignores the rate.
+        let resume_at = match self.movie_timing {
+            MovieTiming::Iso => self.movie(node).map(|m| m.iso.time),
+            MovieTiming::Pinned => None,
+        };
+
+        self.media_set(node, |e, m| {
+            if let Some(t) = resume_at {
+                m.set_current_time(e, t);
+            }
+
+            m.play(e)
+        });
 
         if let Some(m) = self.movie(node) {
             m.play(elapsed, now);
@@ -1210,12 +1329,7 @@ impl Runtime {
 
         m.iso.played = true;
 
-        let (time, finished) = iso::iso_time(IsoClock {
-            elapsed: t,
-            rate: m.playback_rate,
-            duration: m.duration(),
-            looping,
-        });
+        let (time, finished) = m.iso_at(t, looping);
 
         self.movie_iso_show(node, time, false);
 
