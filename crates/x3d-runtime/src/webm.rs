@@ -319,9 +319,10 @@ fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
                     }
                 }
 
-                if kind == 1 && codec == b"V_VP9" {
+                // The first supported video track wins; a later one never replaces it.
+                if track.is_none() && kind == 1 && codec == b"V_VP9" {
                     track = Some((number, Codec::Vp9));
-                } else if kind == 1 && codec == b"V_VP8" {
+                } else if track.is_none() && kind == 1 && codec == b"V_VP8" {
                     track = Some((number, Codec::Vp8));
                 }
             }
@@ -1588,6 +1589,73 @@ mod tests {
                     .map(|p| (b.time_ms, p))
             })
             .collect()
+    }
+
+    /// A truncated entropy partition reads zero bits past its end, as libvpx does (vp8/bool_decoder.rs): every cut of a
+    /// VP8 file, which cuts a frame's partitions short, gives a decode result or an error, never a panic.
+    #[test]
+    fn a_truncated_vp8_partition_decodes_or_errors_but_never_panics() {
+        for (name, _, _) in VP8_FIXTURES {
+            let (webm, _) = codec_fixture(name);
+            let step = (webm.len() / 60).max(1);
+
+            for cut in (0..webm.len()).step_by(step) {
+                let d = &webm[..cut];
+
+                assert!(
+                    std::panic::catch_unwind(|| decode(d, BUDGET)).is_ok(),
+                    "{name}: panicked on a cut at {cut} of {}",
+                    webm.len()
+                );
+            }
+        }
+    }
+
+    /// A WebM with two video tracks, number 1 coded `first` and number 2 coded `second`, and one block on each.
+    fn webm_two_video_tracks(first: &[u8], second: &[u8]) -> Vec<u8> {
+        let entry = |n: u8, codec: &[u8]| {
+            el(
+                &[0xAE],
+                &[el(&[0xD7], &[n]), el(&[0x83], &[1]), el(&[0x86], codec)].concat(),
+            )
+        };
+        let cluster = [
+            el(&[0xE7], &[0]),
+            el(&[0xA3], &[0x81, 0, 0, 0x80, 1, 2, 3]),
+            el(&[0xA3], &[0x82, 0, 0, 0x80, 4, 5, 6]),
+        ]
+        .concat();
+        let segment = [
+            el(
+                &[0x16, 0x54, 0xAE, 0x6B],
+                &[entry(1, first), entry(2, second)].concat(),
+            ),
+            el(&[0x1F, 0x43, 0xB6, 0x75], &cluster),
+        ]
+        .concat();
+
+        [
+            el(&[0x1A, 0x45, 0xDF, 0xA3], &[]),
+            el(&[0x18, 0x53, 0x80, 0x67], &segment),
+        ]
+        .concat()
+    }
+
+    /// The first supported video track is the one decoded; a later supported track never replaces it.
+    #[test]
+    fn the_first_supported_video_track_wins() {
+        let d = webm_two_video_tracks(b"V_VP8", b"V_VP9");
+        let (codec, blocks) = demux(&d).unwrap();
+
+        assert_eq!(codec, Codec::Vp8);
+        assert_eq!(blocks.len(), 1);
+        assert_eq!(&d[blocks[0].start..blocks[0].end], &[1, 2, 3]);
+
+        let d = webm_two_video_tracks(b"V_VP9", b"V_VP8");
+        let (codec, blocks) = demux(&d).unwrap();
+
+        assert_eq!(codec, Codec::Vp9);
+        assert_eq!(&d[blocks[0].start..blocks[0].end], &[1, 2, 3]);
     }
 
     /// BR1.1: every picture of every stream equals what ffmpeg's decoder (bit-exact with libvpx) outputs, plane by
