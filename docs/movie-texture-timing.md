@@ -102,8 +102,10 @@ In ISO mode the element is never played. Each frame the engine decides the media
 
 ## Known gaps
 
-- Sound: the decoded sound of a WebM cannot run backwards; in ISO mode it plays at rate 1 for a negative rate, and a `<video>`
-  element that is only seeked is silent (its sound is not driven in ISO mode). Seeking while looping is not sample-accurate.
+- Sound of a decoded WebM (native): it follows the ISO movie time. A negative rate is the AudioBufferSourceNode's negative
+  `playbackRate` started at the end of the buffer (tests/movie_iso_audio.rs, engine tests render it and read a falling ramp),
+  and a resume restarts the sound at the movie time of the pause. A `<video>` element that is only seeked is still silent
+  (its sound is not driven in ISO mode, browser only, not verifiable here). Seeking while looping is not sample-accurate.
 - Seek latency in the browser: the shown picture follows the clause's `t` by the time a seek takes (one request in flight at
   a time); a frame of lag at most per seek.
 - The clause's `t` is a cycle time (see the formulas); a reading with `t` taken literally as movie time differs only for
