@@ -39,7 +39,9 @@ pub enum WebmError {
     NotWebm,
     NoVp9Track,
     Decode(String),
-    /// A picture or the decoded frames exceed the limits ([`MAX_LUMA_SAMPLES`], the byte budget of [`decode`]).
+    /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
+    /// RGBA pictures kept so far exceed the `max_bytes` of [`decode`] (refused before the next picture is kept). The
+    /// second limit does not bound the working memory of the decoder; the first does.
     TooLarge,
 }
 
@@ -389,7 +391,9 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
         // fallback, not a security boundary: it does nothing under `panic = "abort"` (the workspace sets none, in any
         // profile), the default hook still prints the message, a panic in a loop-filter worker leaves the other workers
         // spinning (`vp9dec` wavefront), and it cannot undo memory a decoder wrote through `unsafe`. The limits above and
-        // the header checks are what bound a hostile file.
+        // the header checks are what bound a hostile file. Only the decoder call is inside it: the code after it (the
+        // plane match and `yuv_to_rgba`) is this crate's own, indexes only within the picture the decoder reports, and
+        // is covered by the mutation tests below.
         let shown =
             std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.decode_frame(chunk)))
                 .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
@@ -1090,6 +1094,46 @@ mod tests {
                 std::fs::write(std::path::Path::new(&dir).join(format!("p{i}.webm")), d).unwrap();
             }
         }
+    }
+
+    #[test]
+    fn a_valid_superframe_decodes_like_its_frames_decoded_one_after_the_other() {
+        // `vp9dec` splits a superframe itself (`Decoder::decode_frame` calls `split_superframe`); this proves that
+        // `frames_of` cuts it in the same places and that the whole chunk, not a piece, is what reaches the decoder.
+        let d = synthetic();
+        let blocks = demux(&d).unwrap();
+        let (a, b) = (
+            &d[blocks[0].start..blocks[0].end],
+            &d[blocks[1].start..blocks[1].end],
+        );
+
+        assert_eq!(frames_of(a).len(), 1);
+        assert_eq!(frames_of(b).len(), 1);
+
+        // Two sizes of 4 bytes each: marker 0b110_11_001.
+        let marker = 0b1101_1001u8;
+        let mut sf = [a, b].concat();
+
+        sf.push(marker);
+        sf.extend((a.len() as u32).to_le_bytes());
+        sf.extend((b.len() as u32).to_le_bytes());
+        sf.push(marker);
+
+        assert_eq!(frames_of(&sf), vec![a, b]);
+        assert_eq!(
+            vp9dec::superframe::split_superframe(&sf),
+            vec![a, b],
+            "the splitter of the decoder cuts the same frames"
+        );
+
+        let apart = decode(&webm_of(&[a, b]), BUDGET).unwrap();
+        let together = decode(&webm_of(&[&sf]), BUDGET).unwrap();
+
+        assert_eq!(apart.frames.len(), 2);
+        // The decoder surfaces the last shown picture of a chunk, which is the second frame.
+        assert_eq!(together.frames.len(), 1);
+        assert_eq!((together.width, together.height), (128, 128));
+        assert_eq!(together.frames[0].rgba, apart.frames[1].rgba);
     }
 
     #[test]
