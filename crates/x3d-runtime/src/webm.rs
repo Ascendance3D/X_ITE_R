@@ -138,7 +138,9 @@ impl Bits<'_> {
         let mut v = 0u32;
 
         for _ in 0..n {
-            let byte = *self.d.get(self.at / 8)?;
+            // Past the end every bit is 0, as in the bit reader of `vp9dec`: a header cut off inside the picture size is
+            // parsed by the decoder with the missing bits zero, and the check must see the size the decoder sees.
+            let byte = self.d.get(self.at / 8).copied().unwrap_or(0);
 
             v = (v << 1) | u32::from(byte >> (7 - self.at % 8) & 1);
             self.at += 1;
@@ -188,7 +190,7 @@ fn frames_of(chunk: &[u8]) -> Vec<&[u8]> {
 }
 
 /// The picture size that the uncompressed header of one VP9 frame codes itself (a key frame, an intra-only frame, an
-/// inter frame that does not copy the size of a reference), `None` for any other frame or one that is cut off. A size
+/// inter frame that does not copy the size of a reference), `None` for any other frame. A size
 /// copied from a reference was coded by an earlier frame, so checking the coded ones checks them all.
 fn coded_size(frame: &[u8]) -> Option<(u32, u32)> {
     let mut r = Bits { d: frame, at: 0 };
@@ -1009,6 +1011,81 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// The invariant behind the cap: whatever the bytes of a frame header, if the decoder's own header parser accepts
+    /// the frame and finds a picture larger than `MAX_LUMA_SAMPLES`, then `coded_size` reports that very size (so
+    /// `decode` refuses the frame before the decoder runs). Random single-frame headers of every kind (key frames of
+    /// the four profiles and the color spaces, inter frames of every `found_ref` pattern, intra-only frames), with
+    /// random bit flips and cut-offs. The reference slots all hold sizes within the cap, as they do in `decode`, where
+    /// a frame larger than the cap is never decoded and so never becomes a reference.
+    #[test]
+    fn no_header_the_decoder_parses_as_oversized_escapes_the_cap() {
+        let mut rng = Rng(0xCA9);
+        let mut persist = vp9dec::header::PersistentState::new();
+
+        persist.ref_frame_sizes = [(1920, 1080); 8];
+
+        let (mut oversized, mut accepted) = (0, 0);
+
+        for i in 0..300_000 {
+            let (w, h) = if rng.below(2) == 0 {
+                (1 + rng.below(65536) as u32, 1 + rng.below(65536) as u32)
+            } else {
+                (8192, 4350 + rng.below(8) as u32)
+            };
+            let mut f = match i % 4 {
+                0 => key_frame_header_of(rng.below(4) as u32, [0, 2, 7][rng.below(3)], w, h),
+                1 => inter_frame_header_with(
+                    [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]][rng.below(4)],
+                    w,
+                    h,
+                    rng.below(2) == 0,
+                ),
+                2 => intra_only_header(w, h),
+                _ => key_frame_header(w, h),
+            };
+
+            f.extend([0u8; 8]);
+
+            for _ in 0..rng.below(4) {
+                let at = rng.below(f.len());
+
+                f[at] ^= 1 << rng.below(8);
+            }
+
+            if rng.below(8) == 0 {
+                f.truncate(rng.below(f.len()));
+            }
+
+            let Ok((vp9dec::header::FrameHeader::New(parsed), _)) =
+                vp9dec::header::parse_uncompressed_header(&f, &persist)
+            else {
+                continue;
+            };
+
+            accepted += 1;
+
+            if u64::from(parsed.width) * u64::from(parsed.height) > MAX_LUMA_SAMPLES {
+                oversized += 1;
+
+                assert_eq!(
+                    coded_size(&f),
+                    Some((parsed.width, parsed.height)),
+                    "{f:02X?}"
+                );
+                assert!(matches!(
+                    decode(&webm_of(&[&f]), BUDGET),
+                    Err(WebmError::TooLarge)
+                ));
+            }
+        }
+
+        // Not vacuous: many frames parse, and many of those are oversized.
+        assert!(
+            accepted > 50_000 && oversized > 5_000,
+            "{accepted} {oversized}"
+        );
     }
 
     /// Every frame of real libvpx files, inter frames included, goes through the header parser of `vp9dec` with the
