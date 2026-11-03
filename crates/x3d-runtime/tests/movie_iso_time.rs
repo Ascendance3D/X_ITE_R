@@ -493,3 +493,234 @@ fn a_pause_between_two_frames_keeps_the_picture_of_the_instant_of_the_pause() {
     at(&mut rt, 103.5);
     assert_eq!(shown(&rt), 3);
 }
+
+// ---- Runtime::movie_seek in ISO timing: the seek moves the origin of the clause's formula ----
+
+fn seek(rt: &mut Runtime, t: f64) -> Option<f64> {
+    let m = movie(rt);
+
+    rt.movie_seek(m, t)
+}
+
+/// An active, looping node: the movie goes on from the seeked time at the same rate and wraps.
+#[test]
+fn a_seek_of_an_active_node_continues_from_that_time_and_wraps() {
+    let mut rt = load("anim4.gif", "startTime 102 loop TRUE", MovieTiming::Iso);
+
+    at(&mut rt, 102.2);
+    assert_eq!(shown(&rt), 1);
+    assert_eq!(seek(&mut rt, 0.65), Some(0.65));
+    assert_eq!(shown(&rt), 3);
+    // 0.1 s later: t = 0.75, 0.3 s later t = 0.95 (both frame 3; unseeked they would be frames 1 and 2).
+    at(&mut rt, 102.3);
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 102.5);
+    assert_eq!(shown(&rt), 3);
+    // 0.4 s later: 1.05 wraps to 0.05.
+    at(&mut rt, 102.6);
+    assert_eq!(shown(&rt), 0);
+    assert!(active(&rt));
+}
+
+/// Without `loop` the rest of the movie is what remains of the play: the node ends on the last frame after
+/// `(duration - t) / speed`, and the end is the node's `isActive` FALSE.
+#[test]
+fn a_seek_shortens_or_extends_the_play_of_a_node_without_loop() {
+    let mut rt = load("anim4.gif", "startTime 102", MovieTiming::Iso);
+
+    at(&mut rt, 102.2);
+    seek(&mut rt, 0.9);
+    at(&mut rt, 102.25);
+    assert!(active(&rt));
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 102.35);
+    assert!(!active(&rt));
+    assert_eq!(shown(&rt), 3);
+
+    // Backwards in time: a seek to the start restarts the whole movie.
+    let mut rt = load("anim4.gif", "startTime 102", MovieTiming::Iso);
+
+    at(&mut rt, 102.8);
+    seek(&mut rt, 0.0);
+    assert_eq!(shown(&rt), 0);
+    at(&mut rt, 103.5);
+    assert!(active(&rt), "0.7 s into the second pass");
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 103.9);
+    assert!(!active(&rt));
+}
+
+#[test]
+fn a_seek_of_a_node_playing_backwards_continues_backwards() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 speed -1 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.1);
+    assert_eq!(shown(&rt), 3);
+    seek(&mut rt, 0.25);
+    assert_eq!(shown(&rt), 1);
+    at(&mut rt, 102.2);
+    assert_eq!(shown(&rt), 1);
+    // t = 0.25 - 0.2 = 0.05
+    at(&mut rt, 102.3);
+    assert_eq!(shown(&rt), 0);
+    // Wrapped to the end: 0.25 - 0.4 = -0.15, that is 0.85.
+    at(&mut rt, 102.5);
+    assert_eq!(shown(&rt), 3);
+}
+
+/// `time` is a movie time: at speed 2 the movie goes on at twice the clock's rate from the seeked time.
+#[test]
+fn a_seek_goes_on_at_the_rate_of_the_node() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 speed 2 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.1);
+    seek(&mut rt, 0.32);
+    assert_eq!(shown(&rt), 2);
+    // 0.1 s of the clock is 0.2 s of the movie: t = 0.52
+    at(&mut rt, 102.2);
+    assert_eq!(shown(&rt), 2);
+    // t = 0.72
+    at(&mut rt, 102.3);
+    assert_eq!(shown(&rt), 3);
+}
+
+/// A pause keeps the seeked picture and the node resumes from it, with the paused time not counted.
+#[test]
+fn a_seek_during_a_pause_resumes_from_the_seeked_time() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 pauseTime 102.2 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.3);
+    assert!(rt.get_bool(movie(&rt), "isPaused"));
+    assert_eq!(shown(&rt), 1);
+    seek(&mut rt, 0.7);
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 102.4);
+    assert_eq!(shown(&rt), 3, "still paused");
+    set(&mut rt, "resumeTime", FieldValue::SFTime(102.5));
+    at(&mut rt, 102.6);
+    // 0.1 s after the resume: t = 0.8.
+    assert_eq!(shown(&rt), 3);
+    // 0.5 s after the resume: t = 1.2 wraps to 0.2 (without the seek it would be 0.7, frame 3).
+    at(&mut rt, 103.0);
+    assert_eq!(shown(&rt), 1);
+}
+
+/// An inactive node shows the seeked picture and keeps it; a start begins at the start of the movie again.
+#[test]
+fn a_seek_of_an_inactive_node_shows_the_picture_and_a_start_begins_again() {
+    let mut rt = load("anim4.gif", "startTime 102", MovieTiming::Iso);
+
+    assert_eq!(shown(&rt), 0);
+    assert_eq!(seek(&mut rt, 0.35), Some(0.35));
+    assert_eq!(shown(&rt), 2);
+    // A frame does not undo it (the inactive picture rule does not apply to a node that was seeked).
+    rt.now = 101.5;
+    rt.frame();
+    assert_eq!(shown(&rt), 2);
+    at(&mut rt, 102.05);
+    assert!(active(&rt));
+    assert_eq!(shown(&rt), 0);
+
+    // After the play ended the seeked picture remains.
+    at(&mut rt, 103.5);
+    assert!(!active(&rt));
+    assert_eq!(seek(&mut rt, 0.15), Some(0.15));
+    assert_eq!(shown(&rt), 1);
+    at(&mut rt, 105.0);
+    assert_eq!(shown(&rt), 1);
+}
+
+#[test]
+fn the_stop_time_still_stops_a_seeked_node() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 stopTime 102.4 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.2);
+    seek(&mut rt, 0.5);
+    at(&mut rt, 102.5);
+    assert!(!active(&rt));
+    // At the stop (0.2 s after the seek) the movie was at t = 0.7: frame 3 (starts 0.6) stays, where the unseeked
+    // node would have stopped at t = 0.4, frame 2.
+    assert_eq!(shown(&rt), 3);
+}
+
+/// Speed 0 does not move the movie; a seek is the held picture.
+#[test]
+fn a_seek_at_speed_zero_holds_the_picture() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 speed 0 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.2);
+    assert_eq!(shown(&rt), 0);
+    seek(&mut rt, 0.65);
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 102.9);
+    assert_eq!(shown(&rt), 3);
+}
+
+#[test]
+fn a_seek_is_clamped_to_the_movie_and_a_nan_is_refused() {
+    let mut rt = load("anim4.gif", "", MovieTiming::Iso);
+
+    assert_eq!(seek(&mut rt, -5.0), Some(0.0));
+    assert_eq!(seek(&mut rt, 100.0), Some(1.0));
+    assert_eq!(shown(&rt), 3);
+    assert_eq!(seek(&mut rt, f64::NAN), None);
+    assert!(rt.log.iter().any(|l| l.contains("cannot seek")));
+    assert_eq!(shown(&rt), 3);
+}
+
+/// A `<video>`: the seek is a request to the page for the time asked, and the answer is the picture.
+#[test]
+fn a_seek_of_a_video_asks_the_page_for_that_time() {
+    let (mut rt, token) = video_world(MovieTiming::Iso, "startTime 102 loop TRUE");
+    let _ = rt.take_video_ops();
+
+    at(&mut rt, 102.0);
+    let _ = rt.take_video_ops();
+    at(&mut rt, 102.5);
+    let _ = rt.take_video_ops();
+    assert_eq!(seek(&mut rt, 1.5), Some(1.5));
+
+    let ops = rt.take_video_ops();
+
+    assert_eq!(seeks(&ops).last().map(|s| s.1), Some(1.5), "{ops:?}");
+    answer(&mut rt, token, &ops, 9);
+    assert!((rt.movie_current_time(movie(&rt)).unwrap() - 1.5).abs() < 1e-9);
+    // 0.25 s later the formula continues from 1.5 (not from the 0.75 it would have been at).
+    at(&mut rt, 102.75);
+
+    let ops = rt.take_video_ops();
+
+    assert!(
+        seeks(&ops).iter().any(|s| (s.1 - 1.75).abs() < 0.03),
+        "{ops:?}"
+    );
+}
+
+/// Pinned timing keeps the earlier seek of #361: a GIF cannot seek.
+#[test]
+fn pinned_timing_keeps_its_seek_rules() {
+    let mut rt = load("anim4.gif", "startTime 102 loop TRUE", MovieTiming::Pinned);
+
+    at(&mut rt, 102.2);
+    assert_eq!(seek(&mut rt, 0.65), None);
+}
