@@ -70,8 +70,25 @@ def make_vp8(name, spec):
     print(name, os.path.getsize(out), "bytes")
 
 
+WORLD = """#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type "NONE" headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+Viewpoint { position 0 0 4 }
+Shape { appearance Appearance { texture MovieTexture { url "media/%s.webm" } } geometry Rectangle2D { size 3 2 } }
+"""
+
+
+def make_world(name):
+    """The still world of one stream: its first picture on an unlit rectangle (pinned X_ITE and the Rust renderer
+    both show picture 0 before the node starts)."""
+    with open(os.path.join(root, name + ".wrl"), "w") as f:
+        f.write(WORLD % name)
+
+
 if __name__ == "__main__":
     only = sys.argv[1:]
     for name, spec in VP8.items():
         if not only or name in only:
             make_vp8(name, spec)
+            make_world(name)
