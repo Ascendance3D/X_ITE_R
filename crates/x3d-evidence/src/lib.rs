@@ -826,7 +826,8 @@ mod tests {
 
         let _ = std::fs::remove_dir_all(&d);
         std::fs::create_dir_all(d.join("oracle")).unwrap();
-        d
+        // macOS: the temp dir is /var/folders/..., a symlink to /private/var/...; the code under test resolves it.
+        d.canonicalize().unwrap()
     }
 
     fn sha(bytes: &[u8]) -> String {
