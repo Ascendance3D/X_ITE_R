@@ -1376,4 +1376,17 @@ element and whether the menu is open, for the right button, a left click, a real
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-01-baseline --runs 3 --suite nav01
+### Web browser navigation press 04 (`web-browser-nav-04-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav04` runs the 5 cases of `crates/x3d-web/tests/browser/nav04_case.mjs` (issue #370,
+  ledger `sub:nav.examine` E16) and records `web-browser-nav-04-baseline/nav04-baseline.json`: a layer whose Viewport
+  (`clipBoundary 0.25 0.75 0.25 0.75`) covers the middle of the canvas, and EXAMINE's `isPointerInRectangle`. A mouse press
+  outside or above the viewport rotates nothing and neither does the rest of that drag; a press inside rotates, and keeps
+  rotating when the pointer leaves the viewport; a wheel step outside does not zoom, inside it does; a finger down
+  outside rotates nothing, one inside rotates; two fingers pinching with their middle outside zoom nothing, inside they
+  zoom. The pose after every step; the tolerance, fixed before the first run, is 1e-3 on every number. Three runs,
+  identical values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-04-baseline --runs 3 --suite nav04
 ```

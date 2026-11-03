@@ -42,6 +42,7 @@ import { CASE_GROUPS as ENTRY01_GROUPS } from "./entry01_case.mjs";
 import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as NAV01_GROUPS } from "./nav01_case.mjs";
+import { CASE_GROUPS as NAV04_GROUPS } from "./nav04_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as SHUTDOWN01_GROUPS } from "./shutdown01_case.mjs";
 import { CASE_GROUPS as EXTERNREMOVE01_GROUPS } from "./externremove01_case.mjs";
@@ -107,6 +108,7 @@ const SUITES = {
    scenecreate01: { dir: process .env .XR_SCENECREATE01_BASELINE ?? join (REPO, "oracle/web-browser-scene-create-01-baseline"), file: "scenecreate01-baseline.json", groups: SCENECREATE01_GROUPS },
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
    nav01: { dir: process .env .XR_NAV01_BASELINE ?? join (REPO, "oracle/web-browser-nav-01-baseline"), file: "nav01-baseline.json", groups: NAV01_GROUPS },
+   nav04: { dir: process .env .XR_NAV04_BASELINE ?? join (REPO, "oracle/web-browser-nav-04-baseline"), file: "nav04-baseline.json", groups: NAV04_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
@@ -794,6 +796,7 @@ const GROUP_FILES = {
    sceneCreate: "scenecreate01.test.mjs",
    rootNodes: "rootnodes01.test.mjs",
    navExamine: "nav01.test.mjs",
+   navPress: "nav04.test.mjs",
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",
    soundLevel: "sound04.test.mjs",

@@ -13,6 +13,12 @@ publish = false
 [profile.dev]
 debug = "line-tables-only"
 
+# web-audio-api 1.7.0 with two feature lists narrowed so that no AAC decoder (symphonia-codec-aac, 0.5.5 and 0.6.1) is in
+# the dependency graph of any build. Upstream offers no feature to do this (its aac/m4a/mp3 features are empty). Source,
+# modification and how to check it: vendor/web-audio-api/VENDOR.md (owner direction 2026-11-02, issue #90).
+[patch.crates-io]
+web-audio-api = { path = "vendor/web-audio-api" }
+
 # vp9dec at opt-level 3 overflows the stack of rustc 1.95 (SIGSEGV in LLVM); 2 builds.
 [profile.release.package.vp9dec]
 opt-level = 2
