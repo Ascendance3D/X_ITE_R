@@ -43,6 +43,7 @@ import { CASE_GROUPS as SCENECREATE01_GROUPS } from "./scenecreate01_case.mjs";
 import { CASE_GROUPS as ROOTNODES01_GROUPS } from "./rootnodes01_case.mjs";
 import { CASE_GROUPS as NAV01_GROUPS } from "./nav01_case.mjs";
 import { CASE_GROUPS as NAV02_GROUPS } from "./nav02_case.mjs";
+import { CASE_GROUPS as NAV03_GROUPS } from "./nav03_case.mjs";
 import { CASE_GROUPS as NAV04_GROUPS } from "./nav04_case.mjs";
 import { CASE_GROUPS as SCRIPTLIFE01_GROUPS } from "./scriptlife01_case.mjs";
 import { CASE_GROUPS as SHUTDOWN01_GROUPS } from "./shutdown01_case.mjs";
@@ -110,6 +111,7 @@ const SUITES = {
    rootnodes01: { dir: process .env .XR_ROOTNODES01_BASELINE ?? join (REPO, "oracle/web-browser-rootnodes-01-baseline"), file: "rootnodes01-baseline.json", groups: ROOTNODES01_GROUPS },
    nav01: { dir: process .env .XR_NAV01_BASELINE ?? join (REPO, "oracle/web-browser-nav-01-baseline"), file: "nav01-baseline.json", groups: NAV01_GROUPS },
    nav02: { dir: process .env .XR_NAV02_BASELINE ?? join (REPO, "oracle/web-browser-nav-02-baseline"), file: "nav02-baseline.json", groups: NAV02_GROUPS },
+   nav03: { dir: process .env .XR_NAV03_BASELINE ?? join (REPO, "oracle/web-browser-nav-03-baseline"), file: "nav03-baseline.json", groups: NAV03_GROUPS },
    nav04: { dir: process .env .XR_NAV04_BASELINE ?? join (REPO, "oracle/web-browser-nav-04-baseline"), file: "nav04-baseline.json", groups: NAV04_GROUPS },
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
@@ -799,6 +801,8 @@ const GROUP_FILES = {
    rootNodes: "rootnodes01.test.mjs",
    navExamine: "nav01.test.mjs",
    navWalkFly: "nav02.test.mjs",
+   navPlane: "nav03.test.mjs",
+   navLookAt: "nav03.test.mjs",
    navPress: "nav04.test.mjs",
    sound: "sound01.test.mjs",
    soundMore: "sound03.test.mjs",

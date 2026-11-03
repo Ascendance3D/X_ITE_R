@@ -1394,6 +1394,21 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-01-baseline --runs 3
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-02-baseline --runs 3 --suite nav02
 ```
 
+### Web browser navigation touch 03 (`web-browser-nav-03-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav03` runs the 12 cases of `crates/x3d-web/tests/browser/nav03_case.mjs` (issue
+  #370, ledger `sub:nav.plane` P09 and `sub:nav.lookat` L06) and records `web-browser-nav-03-baseline/nav03-baseline.json`
+  and 2 pictures: PLANE and LOOKAT with a synthetic Chrome DevTools touch, the viewpoint pose after every step. Two
+  fingers moving the same way, apart and together, the mode locked by the first moves, one finger dragging (no effect in
+  either viewer), a double tap on a box and on empty space (a look-at on the box in both), taps too far apart. PLANE's
+  zoom changes the field of view scale, which a page cannot read (it is not in the Viewpoint's `getFieldDefinitions`),
+  so the zoom cases also compare the picture (the thresholds of runtime 01). The tolerance, fixed before the first run,
+  is 1e-3 on every number. Three runs, identical values.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-03-baseline --runs 3 --suite nav03
+```
+
 ### Web browser navigation press 04 (`web-browser-nav-04-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite nav04` runs the 5 cases of `crates/x3d-web/tests/browser/nav04_case.mjs` (issue #370,
