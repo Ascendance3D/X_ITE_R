@@ -185,7 +185,8 @@ fn resampled_wav_is_within_5e_5_of_chromium() {
 const RESAMPLED_BOUND: f32 = 5e-5;
 
 /// Ogg Vorbis at the context rate: the same samples (the float conversion differs in the last bit), and Chromium's
-/// 64 frames fewer, the last packet, which decode.rs leaves out too.
+/// length, 64 frames short of the file's: the end rule of decode.rs (the granule position less the first packet's
+/// lapped frames, within the last packet; `ogg_end_follows_the_granule_position`).
 #[test]
 fn ogg_48000_has_chromiums_length_and_samples() {
     let m = measure("ogg-48000-mono.ogg");

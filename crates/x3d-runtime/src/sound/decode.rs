@@ -142,6 +142,32 @@ fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Opti
     Some(out)
 }
 
+/// The number of pages of the Ogg logical stream `serial` with a granule position above zero: the pages that
+/// finish audio packets (the header pages have granule position 0, and a page without a granule position -1).
+fn ogg_timed_pages(bytes: &[u8], serial: u32) -> usize {
+    let mut at = 0;
+    let mut pages = 0;
+
+    while let Some(head) = bytes.get(at..at + 27) {
+        if &head[..4] != b"OggS" {
+            break;
+        }
+
+        let Some(table) = bytes.get(at + 27..at + 27 + head[26] as usize) else {
+            break;
+        };
+        let granule = i64::from_le_bytes(head[6..14].try_into().unwrap());
+
+        if u32::from_le_bytes(head[14..18].try_into().unwrap()) == serial && granule > 0 {
+            pages += 1;
+        }
+
+        at += 27 + table.len() + table.iter().map(|&n| n as usize).sum::<usize>();
+    }
+
+    pages
+}
+
 /// The planar samples of an MP3, FLAC or Ogg Vorbis file at the file's own rate (`web-audio-api` resamples
 /// by itself, which Chromium does not), or None for any other file.
 pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
@@ -169,19 +195,34 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
     let track = format.default_track(TrackType::Audio)?;
     let id = track.id;
     let params = track.codec_params.as_ref()?.audio()?.clone();
+    // The frames the container says the stream holds: for Ogg, the granule position of the last page.
+    let stream_frames = track.num_frames.unwrap_or(0);
 
     if ![CODEC_ID_MP3, CODEC_ID_FLAC, CODEC_ID_VORBIS].contains(&params.codec) {
         return None;
     }
 
     let mut decoder = symphonia::default::get_codecs()
-        .make_audio_decoder(&params, &AudioDecoderOptions::default())
+        // Ogg Vorbis is cut below by Chromium's rule, from the whole packets; symphonia's own cut would lose frames
+        // that Chromium keeps.
+        .make_audio_decoder(
+            &params,
+            &AudioDecoderOptions::default().gapless(params.codec != CODEC_ID_VORBIS),
+        )
         .ok()?;
     let mut channels: Vec<Vec<f32>> = vec![];
     let mut rate = 0u32;
     let mut part = Vec::new();
-    // The frames of the last decoded packet.
-    let mut last_frames = 0usize;
+    // Ogg Vorbis timing, in frames. `lead`: the lapped frames of the first packet, which the demuxer marks for
+    // discarding (`Packet::trim_start`) and which are dropped here. `raw`: the frames kept so far. `last_raw`: the
+    // frames of the last decoded packet.
+    let vorbis = params.codec == CODEC_ID_VORBIS;
+    let mut lead = 0u64;
+    let mut raw = 0u64;
+    let mut last_raw = 0u64;
+    // The frames that the demuxer's end trim (`Packet::trim_end`: the packets' end against the last page's granule
+    // position) removes.
+    let mut end_trim = 0u64;
 
     loop {
         let packet = match format.next_packet() {
@@ -198,7 +239,19 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
         match decoder.decode(&packet) {
             Ok(buffer) => {
                 rate = buffer.spec().rate();
+
                 buffer.copy_to_vecs_planar::<f32>(&mut part);
+
+                if vorbis {
+                    let skip = packet.trim_start.get();
+
+                    lead += skip;
+                    end_trim += packet.trim_end.get();
+
+                    for c in &mut part {
+                        c.drain(..(skip as usize).min(c.len()));
+                    }
+                }
 
                 // A buffer without channels carries nothing (and has no `part[0]`): skip it.
                 if part.is_empty() {
@@ -217,7 +270,8 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
                     c.extend_from_slice(p);
                 }
 
-                last_frames = part[0].len();
+                last_raw = part[0].len() as u64;
+                raw += last_raw;
             }
             // A packet that does not decode (corrupt data, a cut-off last packet) is skipped, as FFmpeg skips it: the file
             // yields the packets that did decode. The behavior on damaged files is not compared with Chromium (only
@@ -227,19 +281,38 @@ pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
         }
     }
 
-    // Chromium (FFmpeg) returns none of the frames of an Ogg Vorbis file's last packet: 215, 46, 64 and 128 frames
-    // fewer for the four recorded files (oracle/rea-b24-audio-decode-baseline and -2-baseline), with or without a
-    // trim at the end of the stream. The rule is "the last decoded packet of a Vorbis
-    // stream, always", not a property of the trim or of the metadata; it is applied to every Vorbis file, because the
-    // four recorded ones differ in size, rate, channel count and trim and all follow it. A file that is only one packet
-    // is kept whole (not recorded).
-    if params.codec == CODEC_ID_VORBIS && channels.first().is_some_and(|c| c.len() > last_frames) {
+    // Ogg Vorbis: where Chromium (FFmpeg) ends the stream. It follows the container's timing (the page granule
+    // positions) and not "the last packet": an end trim like symphonia's, kept within [start of the last packet,
+    // end of it], with one difference when all the audio is on one page. Measured in the pinned Chromium
+    // (151.0.7922.34, decodeAudioData at the file's own rate): the 4 recorded Ogg files and 171 more, which are
+    // libvorbis files (mono and stereo, 11 ms to 7.3 s, 16 to 48 kHz, one to eight audio pages) and the recorded
+    // or libvorbis files with a granule position rewritten. 166 of the 171 give Chromium's length. The five that do
+    // not are a last page without a granule position (-1: refused here) and a first audio page with granule
+    // position 0 (counted as no audio page here); both are invalid streams. `ogg_end_follows_the_granule_position`
+    // keeps the cases that are in the repository.
+    //
+    // - Audio on several pages: the end is the frames less the end trim, `raw - end_trim`. A granule position
+    //   of an earlier page moves the end too (the trim is measured from where that page puts the start).
+    // - Audio on one page (the recorded files, any file under about half a second): the start is anchored to the
+    //   first packet's lapped frames, so the end is `granule - lead`, also past the frames, up to `raw`.
+    //
+    // The four recorded files are one page and end 64 to 215 frames before the end of the last packet, which only
+    // looks like "the last packet is dropped".
+    if vorbis {
+        let end = if ogg_timed_pages(bytes, id) == 1 {
+            stream_frames.saturating_sub(lead)
+        } else {
+            raw.saturating_sub(end_trim)
+        };
+        let end = end.clamp(raw - last_raw, raw);
+
         for c in &mut channels {
-            c.truncate(c.len() - last_frames);
+            c.truncate(end as usize);
         }
     }
 
-    (!channels.is_empty() && rate > 0).then_some((channels, rate as f32))
+    // No frames is no decoded file (Chromium refuses an Ogg file that ends up with none).
+    (channels.first().is_some_and(|c| !c.is_empty()) && rate > 0).then_some((channels, rate as f32))
 }
 
 const KERNEL_SIZE: usize = 32;
@@ -580,6 +653,142 @@ mod tests {
             assert!(
                 kept > 0 || !keeps_a_prefix,
                 "{name}: no cut decodes, the test proves nothing"
+            );
+        }
+    }
+
+    /// The bytes of an Ogg file with the granule position of one page replaced (`from_end` 0 is the last page) and the
+    /// page's CRC redone.
+    fn with_granule(bytes: &[u8], from_end: usize, granule: i64) -> Vec<u8> {
+        fn crc(page: &[u8]) -> u32 {
+            let mut crc = 0u32;
+
+            for &b in page {
+                crc ^= u32::from(b) << 24;
+
+                for _ in 0..8 {
+                    crc = if crc & 0x8000_0000 != 0 {
+                        (crc << 1) ^ 0x04c1_1db7
+                    } else {
+                        crc << 1
+                    };
+                }
+            }
+
+            crc
+        }
+
+        let mut out = bytes.to_vec();
+        let mut at = 0;
+        let mut pages = vec![];
+
+        while at < out.len() {
+            assert_eq!(&out[at..at + 4], b"OggS");
+            pages.push(at);
+
+            let segments = out[at + 26] as usize;
+            let body: usize = out[at + 27..at + 27 + segments]
+                .iter()
+                .map(|&n| n as usize)
+                .sum();
+
+            at += 27 + segments + body;
+        }
+
+        let start = pages[pages.len() - 1 - from_end];
+        let end = pages
+            .get(pages.len() - from_end)
+            .copied()
+            .unwrap_or(out.len());
+
+        out[start + 6..start + 14].copy_from_slice(&granule.to_le_bytes());
+        out[start + 22..start + 26].fill(0);
+
+        let crc = crc(&out[start..end]).to_le_bytes();
+
+        out[start + 22..start + 26].copy_from_slice(&crc);
+        out
+    }
+
+    /// The end of an Ogg Vorbis stream follows the page granule positions, not "the last packet": the lengths are
+    /// those of the pinned Chromium (151.0.7922.34, headless, decodeAudioData at the file's own rate) for the files
+    /// with a granule position rewritten.
+    ///
+    /// The recorded files are one audio page. Their frames before any trim are 13312 (44.1 kHz stereo) and 6656
+    /// (22.05 kHz mono), their last packets 128 and 256 frames and their first packets' lapped frames 128 and 256:
+    /// the end is `granule - lapped`, kept in [start of the last packet, end of it]. The recorded granule positions
+    /// are in the lower clamp, which is the "last packet dropped" of those files.
+    #[test]
+    fn ogg_end_follows_the_granule_position() {
+        let recorded = |name: &str| {
+            std::fs::read(
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../oracle/synthetic-rea-b24-audio")
+                    .join(name),
+            )
+            .unwrap()
+        };
+        // A 1.4 s 330 Hz sine tone at 22.05 kHz, mono, made with libvorbis for this test (no historical asset):
+        // two audio pages (granule positions 22016 and 30870), 31232 frames before any trim, last packet 512 frames.
+        // With the granule positions kept, the end is the last page's: 30870.
+        let two_pages = std::fs::read(
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("tests/data/audio/ogg-22050-mono-2-audio-pages.ogg"),
+        )
+        .unwrap();
+
+        // (file, page from the end, granule position, length)
+        let mut cases = vec![];
+
+        for (granule, length) in [
+            (0, 13184),
+            (13000, 13184),
+            (13230, 13184),
+            (13312, 13184),
+            (13376, 13248),
+            (13440, 13312),
+            (20000, 13312),
+        ] {
+            cases.push(("ogg-44100-stereo.ogg", 0, granule, length));
+        }
+
+        for (granule, length) in [
+            (1, 6400),
+            (6615, 6400),
+            (6900, 6644),
+            (7040, 6656),
+            (20000, 6656),
+        ] {
+            cases.push(("ogg-22050-mono.ogg", 0, granule, length));
+        }
+
+        for (from_end, granule, length) in [
+            (0, 5000, 30720),
+            (0, 30000, 30720),
+            (0, 30870, 30870),
+            (0, 31000, 31000),
+            (0, 31500, 31232),
+            // An earlier page's granule position moves the end by the same amount.
+            (1, 21500, 31232),
+            (1, 22016, 30870),
+            (1, 22200, 30720),
+        ] {
+            cases.push(("two pages", from_end, granule, length));
+        }
+
+        for (name, from_end, granule, length) in cases {
+            let bytes = if name == "two pages" {
+                two_pages.clone()
+            } else {
+                recorded(name)
+            };
+            let (channels, _) =
+                decode_compressed(&with_granule(&bytes, from_end, granule)).unwrap();
+
+            assert_eq!(
+                channels[0].len(),
+                length,
+                "{name} page -{from_end} granule {granule}"
             );
         }
     }
