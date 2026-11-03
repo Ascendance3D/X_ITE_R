@@ -100,7 +100,8 @@ async function hold (page, type, from, to, curved = false)
    // A path curved by a turn in progress (`curved`) has the direction of its net displacement in a `Dir` key (looser).
    out [curved ? "travelDir" : "travel"] = norm (local) < 1e-6 ? [ 0, 0, 0 ] : local .map (v => v / norm (local));
    out .speedRate = norm (d) / seconds;
-   out .axis      = end .slice (3, 6);
+   // The sense of the turn (the axis itself flips at a half turn).
+   out .turns     = Math .abs (turn (yaw (a .pose), yaw (b .pose))) < 1e-3 ? 0 : Math .sign (turn (yaw (a .pose), yaw (b .pose)));
    out .angleRate = Math .abs (turn (yaw (a .pose), yaw (b .pose))) / seconds;
    out .holdOk    = seconds > HOLD / 1000 * 0.8 && seconds < HOLD / 1000 * 3;
 

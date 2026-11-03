@@ -22,11 +22,7 @@
     -1
    ],
    "speedRate": 0.3499,
-   "axis": [
-    0,
-    0,
-    1
-   ],
+   "turns": 0,
    "angleRate": 0,
    "holdOk": true,
    "stopped": true
@@ -47,11 +43,7 @@
     1
    ],
    "speedRate": 0.28,
-   "axis": [
-    0,
-    0,
-    1
-   ],
+   "turns": 0,
    "angleRate": 0,
    "holdOk": true,
    "stopped": true
@@ -72,12 +64,8 @@
     0
    ],
    "speedRate": 0,
-   "axis": [
-    0,
-    -1,
-    0
-   ],
-   "angleRate": 0.9775,
+   "turns": -1,
+   "angleRate": 0.9777,
    "holdOk": true,
    "stopped": true
   },
@@ -96,12 +84,8 @@
     0,
     -1
    ],
-   "speedRate": 0.3499,
-   "axis": [
-    0,
-    0,
-    1
-   ],
+   "speedRate": 0.35,
+   "turns": 0,
    "angleRate": 0,
    "holdOk": true,
    "stopped": true
@@ -122,12 +106,8 @@
     0
    ],
    "speedRate": 0,
-   "axis": [
-    0,
-    -1,
-    0
-   ],
-   "angleRate": 0.9771,
+   "turns": -1,
+   "angleRate": 0.9775,
    "holdOk": true,
    "stopped": true
   },
@@ -147,11 +127,7 @@
     -0.528909
    ],
    "speedRate": 0.2454,
-   "axis": [
-    0,
-    -1,
-    0
-   ],
+   "turns": -1,
    "angleRate": 0.4487,
    "holdOk": true,
    "stopped": true
@@ -178,7 +154,7 @@
     ],
     [
      0,
-     -0.000002,
+     -0.000004,
      10,
      -0.551517,
      -0.833116,
@@ -187,7 +163,7 @@
     ],
     [
      0,
-     -0.000002,
+     -0.000004,
      10,
      -0.263479,
      -0.964083,
@@ -197,7 +173,7 @@
    ],
    "end": [
     0,
-    -0.000002,
+    -0.000004,
     10,
     -0.263479,
     -0.964083,
