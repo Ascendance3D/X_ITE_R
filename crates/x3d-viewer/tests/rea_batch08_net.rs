@@ -444,14 +444,17 @@ fn rea_batch08_net_cases_match_x_ite() {
 fn the_udp_sender_makes_many_rounds_in_a_short_drive() {
     use std::net::UdpSocket;
 
-    let free = || {
-        UdpSocket::bind(("127.0.0.1", 0))
-            .unwrap()
-            .local_addr()
-            .unwrap()
-            .port()
-    };
-    let udp = Udp::start_on([free(), free()], free());
+    // Three ports that are distinct: all three sockets stay bound until every port is read, so no bind can be handed a port
+    // another one just released (they are released together, right before the sender binds them).
+    let held: Vec<UdpSocket> = (0..3)
+        .map(|_| UdpSocket::bind(("127.0.0.1", 0)).unwrap())
+        .collect();
+    let ports: Vec<u16> = held
+        .iter()
+        .map(|s| s.local_addr().unwrap().port())
+        .collect();
+    drop(held);
+    let udp = Udp::start_on([ports[0], ports[1]], ports[2]);
 
     // A drive of 400 ms: the old sender (a 20 ms wait in every round) made 19 rounds or fewer in it (9 in the 190 ms of
     // the Mac drive); a round every 12 ms makes 33.
