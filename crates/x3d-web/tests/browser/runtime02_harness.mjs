@@ -722,16 +722,22 @@ function withValue (value, path, replacement)
    return copy;
 }
 
-// The tolerance of the navigation poses (nav01_case.mjs): every position, axis and angle number equal within 1e-3. It was
-// fixed before the first recording (the viewers' own tests compare at 1e-4, rea_b24_nav.rs; a browser pose passes through
-// float32 fields and animation frames).
-const NAV01_TOLERANCE = 1e-3;
+// The tolerance of the navigation poses (nav*_case.mjs), fixed before the first recording of each suite: every number is
+// equal within NAV_TOLERANCE (1e-3, absolute; the viewers' own tests compare at 1e-4, rea_b24_nav.rs, and a browser pose
+// passes through float32 fields and animation frames), except a number under a key that ends in `Rate`: a speed that
+// X_ITE integrates over the real frame times (WALK and FLY), equal within NAV_RATE_TOLERANCE (5%, relative).
+const NAV_TOLERANCE      = 1e-3;
+const NAV_RATE_TOLERANCE = 0.05;
 
 // The value with every number replaced by 0, for comparing the structure.
 const shape = value => typeof value === "number" ? 0 : Array .isArray (value) ? value .map (shape) : value && typeof value === "object" ? Object .fromEntries (Object .entries (value) .map (([ k, v ]) => [ k, shape (v) ])) : value;
 
-// The largest difference of two values of the same shape, over their numbers.
-const maxDifference = (a, b) => typeof a === "number" ? Math .abs (a - b) : Array .isArray (a) ? Math .max (0, ... a .map ((v, i) => maxDifference (v, b [i]))) : a && typeof a === "object" ? Math .max (0, ... Object .keys (a) .map (k => maxDifference (a [k], b [k]))) : 0;
+// The largest difference of two values of the same shape over their numbers, in units of the tolerance of each number.
+const navExcess = (a, b, key = "") => typeof a === "number"
+   ? Math .abs (a - b) / (key .endsWith ("Rate") ? NAV_RATE_TOLERANCE * Math .max (Math .abs (b), 1e-9) : NAV_TOLERANCE)
+   : Array .isArray (a) ? Math .max (0, ... a .map ((v, i) => navExcess (v, b [i], key)))
+   : a && typeof a === "object" ? Math .max (0, ... Object .keys (a) .map (k => navExcess (a [k], b [k], k)))
+   : 0;
 
 // --- reference cases ----------------------------------------------------------------------------------------------
 
@@ -916,11 +922,11 @@ export function referenceCases (file, { skip = false } = { })
                      compared .rms = theirs .rms;
                   }
 
-                  // The poses of the navigation cases (nav01_case.mjs) are equal within NAV01_TOLERANCE, fixed before the first run.
-                  if (group .suite === "nav01")
+                  // The poses of the navigation cases (nav*_case.mjs) are equal within the tolerances above.
+                  if (group .suite .startsWith ("nav"))
                   {
                      assert .deepEqual (shape (compared), shape (theirs), `${key}: the poses are not the same steps`);
-                     assert .ok (maxDifference (compared, theirs) <= NAV01_TOLERANCE, `${key}: poses differ by ${maxDifference (compared, theirs)} (tolerance ${NAV01_TOLERANCE})`);
+                     assert .ok (navExcess (compared, theirs) <= 1, `${key}: poses differ by ${navExcess (compared, theirs)} times the tolerance (${NAV_TOLERANCE}, ${NAV_RATE_TOLERANCE} for a Rate)`);
                      compared = theirs;
                   }
 

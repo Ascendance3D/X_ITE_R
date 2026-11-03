@@ -3,7 +3,7 @@
 // records the values; nav01.test.mjs runs them against X_ITE_R and compares (runtime02_harness.mjs).
 //
 // The tolerance is fixed before the first run: every number of a pose (position, orientation axis and angle) is equal
-// within POSE_TOLERANCE (runtime02_harness.mjs, NAV01_TOLERANCE). The values are recorded unrounded.
+// within 1e-3 (runtime02_harness.mjs, NAV_TOLERANCE). The values are recorded unrounded.
 //
 // The input is Chrome DevTools touch events in a context with touch (the emulation of runtime02_case.mjs: no physical
 // device, issue #143). The world is synthetic, written for the tests.
