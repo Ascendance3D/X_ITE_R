@@ -52,7 +52,9 @@ contradict it. A web search for a primary MPEG-1 expiry statement found none (ch
 Not implemented in this step. The constraint is not a patent or a license: it is a conflict between two goals, and the
 owner decides it.
 
-OWNER DECISION: either
+OWNER DECISION (2026-11-02, record a0acb58b): option (b) is authorized. The ISO-required MPEG-1 functionality is to be implemented; mandatory ISO behavior is not to be classified as an approved difference because pinned X_ITE or Chromium lacks it; pinned behavior stays available under a documented compatibility option; MPEG-1 codec support is separate from MovieTexture reverse playback. The text below is the analysis that preceded the decision.
+
+Options as analyzed: either
 (a) keep parity with the pinned X_ITE, which cannot play MPEG-1 in Chrome (current behavior). This is a known
     non-conformance with the clause ("shall support" MPEG-1). A ledger DIFFERENT would only record it; it does not make X_ITE_R
     conformant and takes effect only if the owner authorizes it in writing. Matching a browser's limitation is not evidence that
