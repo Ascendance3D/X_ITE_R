@@ -1452,3 +1452,30 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-03-baseline --runs 3
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-04-baseline --runs 3 --suite nav04
 ```
+
+## AudioClip and Sound output levels and timing (issue #90)
+
+`oracle/rea-b05-baseline/NAME/{js.json,js.audio.f32}` holds, for the 14 worlds added to `oracle/synthetic-rea-b05`
+(written by `oracle/tools/gen_rea_audio_repair.py`; media: the existing synthetic tones), the sound that the pinned X_ITE
+16.5.0 (`34cdf9f97`, headless Chrome, `OfflineAudioContext`, one 768-sample block per frame) renders. They cover what
+no earlier key compared:
+
+| world | field changes |
+| --- | --- |
+| `clip-gain`, `clip-gain-runtime`, `clip-gain-pitch-intensity` | `AudioClip.gain` 0.5, 2, 0; changed to 0.25, 0, 3, -1, 1 while playing; with `pitch` and `Sound.intensity` |
+| `sound-intensity-runtime` | `Sound.intensity` changed to 0.5, 0, 1.5 (clamped), -0.5 (clamped), 0.25 |
+| `clip-pitch-edges` | `pitch` 4, then 0, -1, 1.5, 0.25 |
+| `clip-enabled`, `sound-enabled` | `enabled` FALSE and TRUE while playing |
+| `clip-loop-off`, `clip-stop-in-loop`, `clip-restart` | `loop` set FALSE while playing; `stopTime` inside a loop; `startTime` set while active and after the end |
+| `sound-location-runtime`, `sound-priority`, `sound-mono-left`, `sound-viewpoint-turned` | `location`, `direction` and the ranges changed while playing; `priority`; a 22.05 kHz mono clip at the left; a turned and re-turned Viewpoint |
+
+Each was recorded four times (three recordings and the one that wrote the key) with identical scene text, log, Script
+prints, suspend frames and samples. `rea_b05.py check` and `cargo test -p x3d-viewer --test vrml_audio_oracle` compare
+every sample (tolerance 0). The test fails when a key or world is missing, and `vrml_audio_oracle_keys_have_the_recorded_shape`
+fails when a key is not what was recorded (frame count, silent frames, peak).
+
+```
+python3 -I oracle/tools/gen_rea_audio_repair.py
+XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests python3 -I oracle/tools/rea_b05.py baseline clip-gain   # NAME: rewrites its key; git diff shows a changed one
+python3 -I oracle/tools/rea_b05.py check --target target/release
+```

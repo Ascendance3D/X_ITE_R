@@ -260,6 +260,90 @@ function set_time (value) {{ ++ n;
 ROUTE T.time TO K.set_time
 """ + watch("O") + start("O")
 
+# --- Output levels and timing (issue #90, AudioClip / Sound audio-output oracle) ---------------------
+# Each world runs 80 frames (about 1.3 s, five loops of the 0.25 s clip) so that field changes at a
+# tick are heard; K is a Script that changes fields at the given ticks (one tick is one frame).
+
+LONG = {"frames": 80, "dump": [80]}
+SCRIPTS = {}
+
+
+def ticks(node, decl, steps, x3d=False, extra=""):
+    """A Script K that sets fields of `node` (DEF name, USE'd) at the given ticks: steps = {tick: "js"}."""
+    body = "".join(f"   if (n === {t}) {{ {js} }}\n" for t, js in sorted(steps.items()))
+    if x3d:
+        return f"""DEF K Script {{ directOutput TRUE initializeOnly SFNode o USE {node} {extra}inputOnly SFTime set_time initializeOnly SFInt32 n 0 url "ecmascript:
+function set_time (value) {{ ++ n;
+{body}}}
+" }}
+ROUTE T.time TO K.set_time
+"""
+    return f"""DEF K Script {{ directOutput TRUE field SFNode o USE {node} {extra}eventIn SFTime set_time field SFInt32 n 0 url "javascript:
+function set_time (value) {{ ++ n;
+{body}}}
+" }}
+ROUTE T.time TO K.set_time
+"""
+
+
+def sound(loc, clip_text, extra=""):
+    return f"Sound {{ {BIG} location {loc} {extra}source {clip_text} }}\n"
+
+
+# AudioClip.gain: a static gain below and above 1, and zero (X_ITE mutes the element at 0).
+CASES["clip-gain"] = VRML + VIEW + sound("0 0 -5", clip(WAV, "gain 0.5 ")) + sound("3 0 0", f"DEF O2 AudioClip {{ url {WAV} loop TRUE gain 2 }}") \
+    + sound("-3 0 0", f"DEF O3 AudioClip {{ url {WAV} loop TRUE gain 0 }}") + start("O", "O2", "O3")
+
+# AudioClip.gain changed while the clip plays: down, to zero, up past 1, negative.
+CASES["clip-gain-runtime"] = VRML + VIEW + sound("0 0 -5", clip(WAV)) + ticks("O", "", {
+    20: "o.gain = 0.25;", 26: "o.gain = 0;", 32: "o.gain = 3;", 38: "o.gain = -1;", 44: "o.gain = 1;"}) + start("O")
+SCRIPTS["clip-gain-runtime"] = LONG
+
+# Sound.intensity changed while the clip plays: the engine clamps it to 0..1.
+CASES["sound-intensity-runtime"] = VRML + VIEW + f"DEF SND Sound {{ {BIG} location 0 0 -5 source {clip(WAV)} }}\n" + ticks("SND", "", {
+    20: "o.intensity = 0.5;", 26: "o.intensity = 0;", 32: "o.intensity = 1.5;", 38: "o.intensity = -0.5;", 44: "o.intensity = 0.25;"}) + start("O")
+SCRIPTS["sound-intensity-runtime"] = LONG
+
+# gain, pitch and intensity together, off centre.
+CASES["clip-gain-pitch-intensity"] = VRML + VIEW + f"Sound {{ {BIG} location 3 0 -2 intensity 0.6 source {clip(WAV, 'gain 1.5 pitch 1.5 ')} }}\n" + start("O")
+
+# pitch beyond the ordinary: 4, then 0 (X_ITE clamps playbackRate at 0), negative, then back to 1.5.
+CASES["clip-pitch-edges"] = VRML + VIEW + sound("0 0 -5", clip(WAV, "pitch 4 " + ST)) + ticks("O", "", {
+    20: "o.pitch = 0;", 26: "o.pitch = -1;", 32: "o.pitch = 1.5;", 38: "o.pitch = 0.25;"}) + watch("O", elapsed=True) + start("O")
+SCRIPTS["clip-pitch-edges"] = LONG
+
+# AudioClip.enabled and Sound.enabled switched off and on while a looping clip plays.
+CASES["clip-enabled"] = X3D + VIEW + sound("0 0 -5", clip(WAV, ST)) + ticks("O", "", {20: "o.enabled = false;", 28: "o.enabled = true;"}, x3d=True) \
+    + x3d_watch("O", elapsed=True) + x3d_start("O")
+SCRIPTS["clip-enabled"] = LONG
+CASES["sound-enabled"] = X3D + VIEW + f"DEF SND Sound {{ {BIG} location 0 0 -5 source {clip(WAV)} }}\n" + ticks("SND", "", {20: "o.enabled = false;", 28: "o.enabled = true;"}, x3d=True) \
+    + x3d_start("O")
+SCRIPTS["sound-enabled"] = LONG
+
+# loop: switched off while playing (the clip plays to its end), a stopTime inside a loop, and a start while active.
+CASES["clip-loop-off"] = VRML + VIEW + sound("0 0 -5", clip(WAV, ST)) + ticks("O", "", {24: "o.loop = false;"}) + watch("O", elapsed=True) + start("O")
+SCRIPTS["clip-loop-off"] = LONG
+CASES["clip-stop-in-loop"] = VRML + VIEW + sound("0 0 -5", clip(WAV, ST)) + ticks("O", "", {34: "o.stopTime = value;"}) + watch("O", elapsed=True) + start("O")
+SCRIPTS["clip-stop-in-loop"] = LONG
+CASES["clip-restart"] = VRML + VIEW + sound("0 0 -5", f"DEF O AudioClip {{ url {WAV} stopTime 1 }}") + ticks("O", "", {
+    20: "o.startTime = value;", 44: "o.startTime = value;"}) + watch("O", elapsed=True) + start("O")
+SCRIPTS["clip-restart"] = LONG
+
+# Sound placement changed while the clip plays: location, direction and the ranges.
+CASES["sound-location-runtime"] = VRML + VIEW + f"DEF SND Sound {{ {BIG} location 3 0 0 source {clip(WAV)} }}\n" + ticks("SND", "", {
+    20: "o.location = new SFVec3f (-3, 0, 0);", 28: "o.direction = new SFVec3f (1, 0, 0);",
+    36: "o.maxFront = 6; o.minFront = 2;", 44: "o.location = new SFVec3f (0, 0, -30);"}) + start("O")
+SCRIPTS["sound-location-runtime"] = LONG
+
+# Sound.priority is stored and has no audible effect in X_ITE.
+CASES["sound-priority"] = VRML + VIEW + sound("3 0 0", clip(WAV), "priority 1 ") + sound("-3 0 0", f"DEF O2 AudioClip {{ url {WAV} loop TRUE }}", "priority 0.2 ") + start("O", "O2")
+
+# A mono clip (22.05 kHz) at the sides, and the viewpoint turned: the listener orientation.
+CASES["sound-mono-left"] = VRML + VIEW + sound("-3 0 0", f"DEF O AudioClip {{ url \"media/tone22k-mono.wav\" loop TRUE }}") + start("O")
+CASES["sound-viewpoint-turned"] = VRML + "DEF V Viewpoint { position 0 0 0 orientation 0 1 0 1.5708 }\n" + sound("0 0 -5", clip(WAV)) + ticks("V", "", {
+    24: "o.orientation = new SFRotation (0, 1, 0, -1.5708);", 36: "o.orientation = new SFRotation (1, 0, 0, 1.0);"}) + start("O")
+SCRIPTS["sound-viewpoint-turned"] = LONG
+
 SCRIPT = {"dt": 0.016, "frames": 40, "warmup": 8, "dump": [40], "audio": {"sampleRate": 48000, "channels": 2}, "console": True}
 
 def order(text):
@@ -276,6 +360,6 @@ def order(text):
 for name, text in CASES.items():
     text = order(text)
     open(os.path.join(out, name + ".wrl"), "w").write(text)
-    json.dump(SCRIPT, open(os.path.join(out, "scripts", name + ".json"), "w"))
+    json.dump({**SCRIPT, **SCRIPTS.get(name, {})}, open(os.path.join(out, "scripts", name + ".json"), "w"))
 
 print(f"{len(CASES)} worlds written to {os.path.relpath(out, root)}")
