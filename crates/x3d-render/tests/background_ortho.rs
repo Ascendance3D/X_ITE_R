@@ -17,8 +17,7 @@ fn world(viewpoint: &str, extra: &str) -> String {
 #[test]
 fn flat_background_fills_an_orthographic_view_in_both_depth_modes() {
     let Ok(mut g) = Gpu::new() else {
-        eprintln!("no adapter");
-        return;
+        return x3d_evidence::no_gpu("no adapter");
     };
     let dir = std::env::temp_dir().join(format!("x3d-background-ortho-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
