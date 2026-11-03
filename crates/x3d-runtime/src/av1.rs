@@ -15,9 +15,8 @@ use rav1d::include::dav1d::dav1d::{Dav1dContext, Dav1dSettings};
 use rav1d::include::dav1d::headers::Dav1dSequenceHeader;
 use rav1d::include::dav1d::picture::Dav1dPicture;
 use rav1d::src::lib::{
-    dav1d_close, dav1d_data_create, dav1d_data_unref, dav1d_default_settings, dav1d_flush,
-    dav1d_get_picture, dav1d_open, dav1d_parse_sequence_header, dav1d_picture_unref,
-    dav1d_send_data,
+    dav1d_close, dav1d_data_create, dav1d_data_unref, dav1d_default_settings, dav1d_get_picture,
+    dav1d_open, dav1d_parse_sequence_header, dav1d_picture_unref, dav1d_send_data,
 };
 use std::mem::MaybeUninit;
 use std::ptr::NonNull;
@@ -145,6 +144,7 @@ impl Av1Decoder {
         let mut failure = None;
 
         while data.sz > 0 {
+            let (size_before, pictures_before) = (data.sz, out.len());
             // SAFETY: the context is open; `data` is valid to read and write.
             let r =
                 unsafe { dav1d_send_data(self.context.clone(), Some(NonNull::from(&mut data))) };
@@ -160,6 +160,13 @@ impl Av1Decoder {
                     failure = Some(e);
                     break;
                 }
+            }
+
+            // EAGAIN means "drain the pictures, then send again". If nothing was taken from the input and no
+            // picture came out, another send cannot differ, so the loop would never end.
+            if r.0 == EAGAIN && data.sz == size_before && out.len() == pictures_before {
+                failure = Some(Av1Error("the decoder made no progress".into()));
+                break;
             }
         }
 
@@ -301,17 +308,13 @@ impl Av1Decoder {
         }
     }
 
-    /// Ends the stream: the pictures the decoder still holds.
+    /// Ends the stream: the pictures the decoder still holds. `dav1d_get_picture` drains them. `dav1d_flush` is not
+    /// called, because it discards the pictures that are still held (it is for a seek).
     pub fn finish(&mut self) -> Result<Vec<Picture>, Av1Error> {
         let mut out = vec![];
 
         self.collect(&mut out)?;
         Ok(out)
-    }
-
-    pub fn flush(&mut self) {
-        // SAFETY: the context is open.
-        unsafe { dav1d_flush(self.context.clone().expect("open")) };
     }
 }
 
