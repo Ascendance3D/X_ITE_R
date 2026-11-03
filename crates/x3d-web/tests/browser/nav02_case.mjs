@@ -28,7 +28,7 @@ Transform { translation 3 0 0 children Shape {
 `)}`;
 
 const CENTER = [ 200, 150 ];
-const HOLD   = 1500;
+const HOLD   = 2000;
 
 async function load (page, url)
 {
@@ -52,7 +52,21 @@ async function pose (page)
 
 const norm = v => Math .hypot (... v);
 
-// One finger down at `from`, moved to `to`, held for HOLD ms, lifted. The speeds of the hold.
+// The pose and the time (the timestamp of the second animation frame, in seconds) at which it was read. X_ITE starts walking at
+// the touch event and X_ITE_R at the next frame, and on a slow runner a frame takes 0.3 s, so the speeds are taken between two
+// samples of a hold already under way, not from the touch start: the rate between them does not depend on the start latency.
+async function sample (page)
+{
+   const t = await page .evaluate (async () => { await new Promise (requestAnimationFrame); return new Promise (requestAnimationFrame); });
+
+   return { pose: await pose (page), t: t / 1000 };
+}
+
+// The yaw of a pose (rotation about Y, as the axis and angle give it).
+const yaw = p => p [4] * p [6];
+
+// One finger down at `from`, moved to `to`, held for HOLD ms, lifted. The speeds of the hold between two samples, and the
+// direction of travel in the frame of the first sample.
 async function hold (page, type, from, to, curved = false)
 {
    await load (page, world (type));
@@ -61,28 +75,31 @@ async function hold (page, type, from, to, curved = false)
 
    await touch (page, "touchStart", [ from ]);
    await frames (page, 2);
-
-   const t0 = Date .now ();
-
    await touch (page, "touchMove", [ to ]);
-   await page .waitForTimeout (HOLD);
-   await touch (page, "touchEnd", [ ]);
-
-   const seconds = (Date .now () - t0) / 1000;
-
    await frames (page, 3);
 
-   const end   = await pose (page);
-   const moved = [ 0, 1, 2 ] .map (i => end [i] - start [i]);
-   const angle = end [6] - start [6];
-   const out   = { start };
+   const a = await sample (page);
+
+   await page .waitForTimeout (HOLD);
+
+   const b = await sample (page);
+
+   await touch (page, "touchEnd", [ ]);
+   await frames (page, 3);
+
+   const end     = await pose (page);
+   const seconds = b .t - a .t;
+   const d       = [ 0, 1, 2 ] .map (i => b .pose [i] - a .pose [i]);
+   const c       = Math .cos (yaw (a .pose)), s = Math .sin (yaw (a .pose));
+   const local   = [ c * d [0] - s * d [2], d [1], s * d [0] + c * d [2] ];
+   const out     = { start };
 
    // A path curved by a turn in progress (`curved`) has the direction of its net displacement in a `Dir` key (looser).
-   out [curved ? "travelDir" : "travel"] = norm (moved) < 1e-6 ? [ 0, 0, 0 ] : moved .map (v => v / norm (moved));
-   out .speedRate   = norm (moved) / seconds;
-   out .axis        = end .slice (3, 6);
-   out .angleRate   = Math .abs (angle) / seconds;
-   out .holdOk      = seconds > 1.2 && seconds < 3;
+   out [curved ? "travelDir" : "travel"] = norm (local) < 1e-6 ? [ 0, 0, 0 ] : local .map (v => v / norm (local));
+   out .speedRate = norm (d) / seconds;
+   out .axis      = end .slice (3, 6);
+   out .angleRate = Math .abs (yaw (b .pose) - yaw (a .pose)) / seconds;
+   out .holdOk    = seconds > HOLD / 1000 * 0.8 && seconds < HOLD / 1000 * 3;
 
    // Nothing moves after the touch ends.
    await page .waitForTimeout (400);
