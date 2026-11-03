@@ -673,18 +673,46 @@ mod tests {
 
     /// The uncompressed header start of a profile 0 key frame that codes `w` x `h`.
     fn key_frame_header(w: u32, h: u32) -> Vec<u8> {
+        key_frame_header_of(0, 2, w, h)
+    }
+
+    /// The uncompressed header start of a key frame of `profile` (0 to 3) with `color_space`, laid out as in
+    /// VP9 section 6.2: `color_space` is coded for every profile, `bit_depth` only for profiles 2 and 3, and the
+    /// subsampling bits only for profiles 1 and 3 (RGB codes one reserved bit instead of `color_range`).
+    fn key_frame_header_of(profile: u32, color_space: u32, w: u32, h: u32) -> Vec<u8> {
         let mut bits: Vec<bool> = vec![];
         let mut put = |v: u32, n: usize| bits.extend((0..n).rev().map(|i| v >> i & 1 == 1));
 
         put(2, 2); // frame_marker
-        put(0, 2); // profile 0
+        put(profile & 1, 1); // profile_low_bit
+        put(profile >> 1, 1); // profile_high_bit
+
+        if profile == 3 {
+            put(0, 1); // reserved_zero
+        }
+
         put(0, 1); // show_existing_frame
         put(0, 1); // key frame
         put(1, 1); // show_frame
         put(0, 1); // error_resilient_mode
         put(0x49_8342, 24); // sync code
-        put(2, 3); // color_space
-        put(0, 1); // color_range
+
+        if profile >= 2 {
+            put(1, 1); // ten_or_twelve_bit
+        }
+
+        put(color_space, 3);
+
+        if color_space != 7 {
+            put(0, 1); // color_range
+
+            if profile == 1 || profile == 3 {
+                put(0, 3); // subsampling_x, subsampling_y, reserved_zero
+            }
+        } else if profile == 1 || profile == 3 {
+            put(0, 1); // reserved_zero
+        }
+
         put(w - 1, 16);
         put(h - 1, 16);
 
@@ -695,6 +723,45 @@ mod tests {
                     .fold(0u8, |a, (i, b)| a | (u8::from(*b) << (7 - i)))
             })
             .collect()
+    }
+
+    #[test]
+    fn the_size_is_read_from_key_frames_of_every_profile_and_color_space() {
+        for profile in 0..4 {
+            for color_space in [0, 2, 7] {
+                let h = key_frame_header_of(profile, color_space, 640, 360);
+
+                assert_eq!(
+                    coded_size(&h),
+                    Some((640, 360)),
+                    "profile {profile} color_space {color_space}"
+                );
+                assert_eq!(
+                    coded_size(&key_frame_header_of(profile, color_space, 8192, 4353)),
+                    Some((8192, 4353))
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn the_size_is_read_from_real_key_frames_of_profiles_1_2_and_3() {
+        // libvpx output: 4:4:4 (profile 1), 10-bit 4:2:0 (profile 2) and 10-bit 4:4:4 (profile 3).
+        for p in 1..4 {
+            let d = std::fs::read(format!(
+                "{}/tests/data/vp9-profile{p}-96x80.webm",
+                env!("CARGO_MANIFEST_DIR")
+            ))
+            .unwrap();
+            let blocks = demux(&d).unwrap();
+
+            assert!(!blocks.is_empty(), "profile {p}");
+            assert_eq!(
+                coded_size(&d[blocks[0].start..blocks[0].end]),
+                Some((96, 80)),
+                "profile {p}"
+            );
+        }
     }
 
     #[test]
