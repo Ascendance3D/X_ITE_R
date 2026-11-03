@@ -136,6 +136,19 @@ jobs:
           cargo test --workspace --release --doc --no-fail-fast 2>&1 | tee doctests.log
           test "${PIPESTATUS[0]}" -eq 0
 
+      # Information only (issue #89): the particle GPU tests that need no private answer key, on the virtual machine's
+      # graphics device, with the adapter each prints. Virtualized evidence; not a physical Mac and not a Metal-device
+      # validation. They are in GPU_TESTS, so the suite step above skips them; a failure here is recorded, not a check.
+      - name: Particle GPU tests on the virtualized device (information)
+        if: success() || failure()
+        continue-on-error: true
+        run: |
+          {
+            echo "### Particle GPU tests, virtualized macOS device (not a physical Mac)"
+            cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture \
+              -E 'test(rea_b14_particle_pick_matches_x_ite) | test(rea_b15_particle_collision_matches_x_ite) | test(splat_picks_match_pinned_x_ite)' 2>&1 | tee particle-gpu.log | grep -E '^ +(PASS|FAIL|SIGABRT|TIMEOUT) |Summary \[|adapter "' | sort -u
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
       # The skips by name: the GPU tests excluded above, and every evidence skip with its reason.
       - name: Skips by name
         if: always()
