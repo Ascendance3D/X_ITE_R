@@ -4,7 +4,7 @@
 Run by "Fast checks". It pins the classifications issue #180 added, and proves that no other tracked path changed class:
 the baseline is the classifier with the #180 entries removed, so every path that reached a suite before still reaches
 it, and the only paths that leave a suite are the pinned ones."""
-import functools, subprocess, sys, unittest
+import functools, re, subprocess, sys, unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -42,6 +42,11 @@ STILL_REACH = {
     ".github/workflows/rust-tests.yml": (True, False),
     ".github/workflows/web-tests.yml": (False, True),
 }
+
+
+# A name ledger or evidence that ends a path component (or a quoted string) and does not continue a longer name: ledger/x,
+# ../ledger/x, ./evidence/x, "/ledger/x", join("ledger"). Not some_ledger/, x3d-evidence/, my.ledger/ or ledgers/.
+TREE_REFERENCE = r"(?<![\w.-])(evidence|ledger)[\"'/]"
 
 
 def tracked():
@@ -83,17 +88,25 @@ class Classification(unittest.TestCase):
         for p in moved:
             self.assertEqual(after[p], (False, False), p)
 
+    def test_tree_reference_pattern(self):
+        """The pattern finds a path that reaches ledger/ or evidence/ however it is written, and not a longer name."""
+        for hit in ("ledger/x", "evidence/x", "../ledger/x", "../../evidence/x", "./ledger/x", "a/../../ledger/x",
+                    'include_str!("../../../ledger/ledger.json")', '"/ledger/x"', '.join("ledger")', "'../evidence'"):
+            self.assertTrue(re.search(TREE_REFERENCE, hit), hit)
+        for miss in ("some_ledger/x", "x3d-evidence/x", "crates/x3d-evidence/src", "my.ledger/x", "ledgers/x", "evidence-x/y", "evidence."):
+            self.assertFalse(re.search(TREE_REFERENCE, miss), miss)
+
     def test_trees_are_not_opened_by_a_suite(self):
-        """ledger/ and evidence/ run no suite because no test, tool or workflow opens a file under them. A reference that is
-        not a comment (a path in code or a workflow step) fails this test: then the tree must reach the suite that reads it."""
-        pattern = r"(?<![\w/.-])(evidence|ledger)/|[\"'](ledger|evidence)[\"']"
-        refs = subprocess.run(["git", "grep", "-n", "-P", pattern, "--", "crates", "oracle/tools", "tools", ".github", ".config",
-                               "Cargo.toml", "oracle/*.mjs", "oracle/*.py", "oracle/*.sh"], cwd=c.ROOT, capture_output=True, text=True).stdout
+        """ledger/ and evidence/ run no suite because nothing opens a file under them. The scan covers every tracked text file
+        except the two trees, docs/ and Markdown (documentation that no suite follows) and the classifier itself: all of crates/,
+        oracle/ (every subdirectory, the pinned X_ITE sources and the baselines included), tools/, .github/, .config/ and the
+        root files. A hit that is not a comment fails: a path in code, a workflow step or a data file's path must make the
+        tree reach the suite that reads it."""
+        refs = subprocess.run(["git", "grep", "-n", "-I", "-P", TREE_REFERENCE, "--", ".", ":!ledger", ":!evidence", ":!docs", ":!*.md",
+                               ":!tools/ci_changes.py", ":!tools/test_ci_changes.py"], cwd=c.ROOT, capture_output=True, text=True).stdout
         for line in refs.splitlines():
             path, _, rest = line.split(":", 2)
-            if path in ("tools/ci_changes.py", "tools/test_ci_changes.py"):
-                continue
-            self.assertTrue(rest.lstrip().startswith(("//", "#", "///", "//!", "*")), line)
+            self.assertTrue(rest.lstrip().startswith(("//", "#", "///", "//!", "*", '"_comment"')), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
         """An added file that is gone would hide a stale entry; a reference from crates/ would mean a test reads it."""
