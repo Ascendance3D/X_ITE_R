@@ -1376,6 +1376,24 @@ element and whether the menu is open, for the right button, a left click, a real
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-01-baseline --runs 3 --suite nav01
+```
+
+### Web browser navigation touch 02 (`web-browser-nav-02-baseline/`)
+
+- `x_ite-web-runtime-02.mjs --suite nav02` runs the cases of `crates/x3d-web/tests/browser/nav02_case.mjs` (issue #370,
+  ledger `sub:nav.walk-fly`, F16) and records `web-browser-nav-02-baseline/nav02-baseline.json`: WALK and FLY with a
+  synthetic Chrome DevTools touch. One finger held away from where it went down for 1.5 s (forward, back, turn, a
+  diagonal in WALK; forward and turn in FLY): the direction of travel, the speed and the turn rate (displacement and
+  angle over the measured seconds; keys that end in `Rate`), because X_ITE integrates over the real frame times; two
+  fingers looking around in both, the settled orientation after each step. The runs agree within the test tolerances,
+  not bit for bit (the recorder takes the mean): 1e-3 for a number, 3% between runs and 5% against X_ITE_R for a
+  `Rate`, 1e-2 for a `Dir` (the diagonal walk's net direction). WALK has gravity, so the world has a ground under the
+  viewpoint. Three runs.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-02-baseline --runs 3 --suite nav02
+```
+
 ### Web browser navigation press 04 (`web-browser-nav-04-baseline/`)
 
 - `x_ite-web-runtime-02.mjs --suite nav04` runs the 5 cases of `crates/x3d-web/tests/browser/nav04_case.mjs` (issue #370,
