@@ -7,7 +7,6 @@
 //!
 //! Lines start with `diag:` so that a job can pick them out.
 
-use std::path::PathBuf;
 use x3d_render::gpu::headless_backends;
 
 fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
@@ -405,13 +404,13 @@ fn infinity_and_nan_behavior() {
 }
 
 /// Draw a full-screen triangle at clip z = k * w and report whether any pixel was written (the triangle is not clipped).
-fn covered(device: &wgpu::Device, queue: &wgpu::Queue, z: &str, w: &str) -> bool {
+fn covered(device: &wgpu::Device, queue: &wgpu::Queue, z: &str, w: &str, s: &str) -> usize {
     let source = format!(
         "
 @vertex fn vs(@builtin(vertex_index) v: u32) -> @builtin(position) vec4<f32> {{
     let p = vec2<f32>(f32((v << 1u) & 2u), f32(v & 2u)) * 2.0 - 1.0;
     let w = {w};
-    return vec4<f32>(p * w, {z}, w);
+    return vec4<f32>(p * {s} * w, {z}, w);
 }}
 @fragment fn fs() -> @location(0) vec4<f32> {{ return vec4<f32>(1.0); }}
 "
@@ -514,7 +513,7 @@ fn covered(device: &wgpu::Device, queue: &wgpu::Queue, z: &str, w: &str) -> bool
     slice.map_async(wgpu::MapMode::Read, |_| {});
     device.poll(wgpu::PollType::wait_indefinitely()).unwrap();
     let data = slice.get_mapped_range().unwrap();
-    data.chunks_exact(4).any(|p| p[0] > 0)
+    data.chunks_exact(4).filter(|p| p[0] > 0).count()
 }
 
 #[test]
@@ -541,12 +540,21 @@ fn far_plane_clipping() {
     ] {
         println!(
             "diag: clip z={z} w={w}: {}",
-            if covered(&d, &q, z, w) {
-                "drawn"
-            } else {
-                "clipped"
-            }
+            format!("{} of 4096 pixels", covered(&d, &q, z, w, "1.0"))
         );
     }
-    let _ = PathBuf::new();
+    for s in [
+        "10.0",
+        "100.0",
+        "1000.0",
+        "10000.0",
+        "100000.0",
+        "1000000.0",
+        "10000000.0",
+    ] {
+        println!(
+            "diag: clip huge triangle scale {s} (z=0.5, w=1): {}",
+            format!("{} of 4096 pixels", covered(&d, &q, "0.5", "1.0", s))
+        );
+    }
 }
