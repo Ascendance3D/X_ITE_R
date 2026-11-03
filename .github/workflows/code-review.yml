@@ -41,7 +41,11 @@ jobs:
       # ledger.json, a byte copy of the previous ledger that each ledger step stores (7000+ lines, no GitHub patch). The step's
       # tool refuses to run unless the copy matches the sha256 it names, and verify_ledger.py replays the chain, so the
       # change itself (ledger/ledger.json, the tool, verify_ledger.py) stays in the review.
-      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json,ledger/snapshots/*/ledger.json"
+      # Also not reviewed (owner decision 2026-11-02): vendor/web-audio-api/src and resources, byte-identical to the upstream
+      # crate web-audio-api 1.7.0. "Fast checks" runs tools/check_vendored_web_audio_api.py, which downloads the crate, checks
+      # its sha256 and fails on any difference, so an unexpected change there fails the build instead of passing unseen. Our own
+      # changes stay in the review: vendor/web-audio-api/Cargo.toml, VENDOR.md, LICENSE and README.md, and every tool and test.
+      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json,ledger/snapshots/*/ledger.json,vendor/web-audio-api/src/**,vendor/web-audio-api/resources/**"
     steps:
       # Fails the job when the action would not send the whole diff to the model, instead of a review that looks complete.
       # The action sends only files that have a patch, in order, and drops a file that does not fit under MAX_DIFF_CHARS.
