@@ -174,13 +174,13 @@ jobs:
             | test(rea_b09_inputs_renders_match_x_ite)
         run: |
           mkdir -p macos-diag
-          cargo test -p x3d-render --release --test device_diag -- --nocapture --test-threads=1 2>&1 | tee macos-diag/device_diag.log || true
+          cargo test -p x3d-render --release --test device_diag --test device_math -- --nocapture --test-threads=1 2>&1 | tee macos-diag/device_diag.log || true
           X3D_BACKEND=gl X3D_DIAG_DIR="$X3D_DIAG_DIR/gl" cargo test -p x3d-render --release --test device_diag -- --nocapture --test-threads=1 2>&1 | tee macos-diag/device_diag_gl.log || true
           cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture -E "$FAILING_ELEVEN" 2>&1 | tee macos-diag/failing_eleven_metal.log || true
           X3D_BACKEND=gl cargo nextest run --workspace --release --profile ci --no-fail-fast --no-capture -E "$FAILING_ELEVEN" 2>&1 | tee macos-diag/failing_eleven_gl.log || true
           {
             echo "### Device diagnostics, virtualized macOS device (not a physical Mac)"
-            grep -hE '^diag: (adapter|format|depth|no |Standard|Logarithmic)' macos-diag/device_diag.log | cut -c1-400
+            grep -hE '^diag: (adapter|format|depth|no |Standard|Logarithmic|math|special|clip|tiles)' macos-diag/device_diag.log | cut -c1-400
             echo "#### with X3D_BACKEND=gl"
             grep -hE '^diag: (adapter|no |depth|Standard|Logarithmic)' macos-diag/device_diag_gl.log | cut -c1-400
             echo "#### the eleven tests, Metal then GL"

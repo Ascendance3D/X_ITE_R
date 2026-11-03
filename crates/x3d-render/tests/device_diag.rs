@@ -263,6 +263,28 @@ fn differing(w: u32, a: &[u8], b: &[u8]) -> String {
     )
 }
 
+/// Pixels more than 8 off per tile of an 8 x 8 grid, one line per tile row (where in the image the difference is).
+fn tiles(w: u32, h: u32, a: &[u8], b: &[u8]) -> String {
+    let mut grid = [[0u32; 8]; 8];
+
+    for (i, (p, q)) in a.chunks_exact(4).zip(b.chunks_exact(4)).enumerate() {
+        if (0..3).any(|c| p[c].abs_diff(q[c]) > 8) {
+            let (x, y) = (i as u32 % w, i as u32 / w);
+            grid[(y * 8 / h) as usize][(x * 8 / w) as usize] += 1;
+        }
+    }
+
+    grid.iter()
+        .map(|r| {
+            r.iter()
+                .map(|n| format!("{n:5}"))
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
+        .collect::<Vec<_>>()
+        .join(" / ")
+}
+
 /// The failing worlds, rendered, compared and saved (Rust image, pinned image) when `X3D_DIAG_DIR` is set.
 #[test]
 fn failing_worlds_against_the_pinned_images() {
@@ -327,6 +349,48 @@ fn failing_worlds_against_the_pinned_images() {
             "gs-ortho.wrl",
             "gs-ortho.wrl.png",
         ),
+        (
+            DepthMode::Standard,
+            "render-b69-gs-log-baseline",
+            "synthetic-rea-b08-gs",
+            "gs-ortho.wrl",
+            "gs-ortho.wrl.png",
+        ),
+        (
+            DepthMode::Standard,
+            "render-rea-b09-inputs-baseline",
+            "synthetic-rea-b09-inputs",
+            "texgen-modes.wrl",
+            "texgen-modes.wrl.png",
+        ),
+        (
+            DepthMode::Standard,
+            "render-rea-b09-inputs-baseline",
+            "synthetic-rea-b09-inputs",
+            "texgen-params.wrl",
+            "texgen-params.wrl.png",
+        ),
+        (
+            DepthMode::Standard,
+            "render-rea-b08-vs-baseline",
+            "synthetic-rea-b08-vs",
+            "vs-transparent-ibl.wrl",
+            "vs-transparent-ibl.wrl.png",
+        ),
+        (
+            DepthMode::Standard,
+            "render-rea-b07-vol-baseline",
+            "synthetic-rea-b07-vol/static",
+            "sg-enabled.wrl",
+            "sg-enabled.wrl.png",
+        ),
+        (
+            DepthMode::Standard,
+            "render-rea-b07-vol-baseline",
+            "synthetic-rea-b07-vol/static",
+            "vx-opaque-all-styles.wrl",
+            "vx-opaque-all-styles.wrl.png",
+        ),
     ];
 
     for (mode, baseline, world, file, png) in cases {
@@ -351,6 +415,10 @@ fn failing_worlds_against_the_pinned_images() {
             .collect();
         let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
+        println!(
+            "diag: tiles {mode:?} {world}/{file}: {}",
+            tiles(w, h, &rgba, &want)
+        );
         println!(
             "diag: {mode:?} {world}/{file}: over {} ({:.3}%), max delta {}; {}",
             s.pixels_over,
