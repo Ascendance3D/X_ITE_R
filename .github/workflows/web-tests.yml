@@ -118,6 +118,15 @@ jobs:
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: tools/build-web.sh
 
+      # The browser module carries no native video decoder (owner decision 2026-11-02, docs/media-architecture.md 8.2):
+      # the page plays a MovieTexture in a <video> element. The dependency graph is the authoritative check; the string
+      # scan of the built bytes is a supplemental smoke check.
+      - name: No native video decoder in the browser module
+        if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
+        run: |
+          python3 -I -B tools/check_no_native_video.py --self-test
+          python3 -I -B tools/check_no_native_video.py --cargo --binary crates/x3d-web/web/pkg/*.wasm
+
       # The shards of this run take the module from here. The key holds the run ID, so no other run reads it, and a
       # re-run of a shard alone finds it.
       - uses: actions/cache/save@v6

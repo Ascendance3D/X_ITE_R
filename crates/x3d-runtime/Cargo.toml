@@ -6,13 +6,20 @@ license.workspace = true
 publish.workspace = true
 description = "X3D scene runtime: event engine, PROTO instancing, loading; ported from X_ITE (MIT)."
 
+[features]
+default = ["native-video"]
+# The engine's own video decoders for a MovieTexture (webm.rs, vp8/, vp9dec). The browser build (x3d-web) turns it off:
+# there the page plays the video in a <video> element (`Fetcher::plays_video`) and these decoders are never called.
+native-video = ["dep:vp9dec"]
+
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-text = { path = "../x3d-text" }
 # VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
-vp9dec = "0.1.1"
+# Optional: only the `native-video` feature builds it (the browser build has a <video> element and leaves it out).
+vp9dec = { version = "0.1.1", optional = true }
 url = "2"
 percent-encoding = "2"
 # Image headers only (X3DTexture2DNode width and height); the same crate x3d-render decodes with.
