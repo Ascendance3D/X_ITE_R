@@ -37,8 +37,11 @@ jobs:
       MAX_DIFF_CHARS: "250000"
       # Not reviewed: lock files, and the baselines that a recorder wrote (oracle/<name>-baseline/*.json; GitHub gives no patch
       # for the large ones, and a person cannot read them). The gate lists every such file in the job summary, and the stamp
-      # on the review comment names them, so the omission is visible to a reader.
-      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json"
+      # on the review comment names them, so the omission is visible to a reader. Also not reviewed: ledger/snapshots/<name>/
+      # ledger.json, a byte copy of the previous ledger that each ledger step stores (7000+ lines, no GitHub patch). The step's
+      # tool refuses to run unless the copy matches the sha256 it names, and verify_ledger.py replays the chain, so the
+      # change itself (ledger/ledger.json, the tool, verify_ledger.py) stays in the review.
+      EXCLUDE_PATTERNS: "*.lock,package-lock.json,yarn.lock,pnpm-lock.yaml,oracle/*-baseline/*.json,ledger/snapshots/*/ledger.json"
     steps:
       # Fails the job when the action would not send the whole diff to the model, instead of a review that looks complete.
       # The action sends only files that have a patch, in order, and drops a file that does not fit under MAX_DIFF_CHARS.
