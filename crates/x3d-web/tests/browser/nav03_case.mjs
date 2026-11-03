@@ -196,7 +196,13 @@ const gestures = type => ({
 // A device pixel ratio of 1, so the pictures of the zoom cases have the size of the canvas in both engines.
 const context = { ... DESKTOP, hasTouch: true };
 
+// A double tap is two taps within 300 ms (400 ms in LOOKAT) of the clock of the page. On GitHub's hosted runner (a software
+// GPU) one frame takes 0.3 s or more, and a DevTools touch event waits for the frame in progress, so the second tap lands
+// after the window in X_ITE as well as in X_ITE_R (CI run 41605751679: the pose did not move in 42 s). That case is skipped
+// there and runs everywhere else (a GPU machine, XR_CASE=...).
+const SLOW_RUNNER = process .env .GITHUB_ACTIONS === "true" ? "a double tap needs two taps within 300 ms, a frame of the hosted runner takes longer" : false;
+
 export const CASE_GROUPS = {
-   navPlane:  { context, cases: gestures ("PLANE") },
-   navLookAt: { context, cases: gestures ("LOOKAT") },
+   navPlane:  { context, cases: gestures ("PLANE"), skipCases: { doubleTap: SLOW_RUNNER } },
+   navLookAt: { context, cases: gestures ("LOOKAT"), skipCases: { doubleTap: SLOW_RUNNER } },
 };
