@@ -118,6 +118,12 @@ jobs:
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: tools/build-web.sh
 
+      # The shipped module holds no AAC decoder (owner decision 2026-11-02, issue #90): the Cargo.lock check is in "Fast checks";
+      # this one reads the built bytes.
+      - name: No AAC decoder in the browser module
+        if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
+        run: python3 -I -B tools/check_no_aac.py --binary crates/x3d-web/web/pkg/*.wasm
+
       # The shards of this run take the module from here. The key holds the run ID, so no other run reads it, and a
       # re-run of a shard alone finds it.
       - uses: actions/cache/save@v6

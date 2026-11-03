@@ -9,7 +9,12 @@ not compiled into any build. A code path that refuses AAC is not enough; the pac
 Also checks that Cargo.lock agrees with `cargo tree`'s view when cargo is on PATH and `--cargo` is given:
     python3 -I tools/check_no_aac.py --cargo
 runs `cargo tree --locked -e normal,build,dev --target all -i symphonia-codec-aac@<version>` for each version that
-would have been present (0.5.5, 0.6.1) and requires "did not match any packages"."""
+would have been present (0.5.5, 0.6.1) and requires "did not match any packages".
+
+    python3 -I tools/check_no_aac.py --binary <built file>...
+checks built artifacts (a release executable, the wasm module or the wasm-bindgen output): the crate paths of the AAC decoder
+must not appear in the bytes, and the crate path of the MP3 decoder (symphonia-bundle-mp3, a codec that stays) must, so a
+build without embedded crate paths cannot pass by saying nothing."""
 import re
 import subprocess
 import sys
@@ -28,7 +33,22 @@ def aac_packages(lock_text):
     return [(n, v) for n, v in packages(lock_text) if AAC_NAME.search(n)]
 
 
+def check_binaries(paths):
+    bad = []
+    for path in paths:
+        data = Path(path).read_bytes()
+        if b"symphonia-bundle-mp3" not in data and b"symphonia_bundle_mp3" not in data:
+            bad.append(f"{path}: no MP3 decoder path string (control): this check says nothing about the build")
+        for needle in (b"symphonia-codec-aac", b"symphonia_codec_aac"):
+            if needle in data:
+                bad.append(f"{path}: contains {needle.decode()}")
+    print("\n".join(bad) or f"OK: {len(paths)} artifact(s) hold the control string and no AAC decoder path")
+    return 1 if bad else 0
+
+
 def main(argv):
+    if "--binary" in argv:
+        return check_binaries([a for a in argv if not a.startswith("--")])
     args = [a for a in argv if not a.startswith("--")]
     lock = Path(args[0]) if args else ROOT / "Cargo.lock"
     found = aac_packages(lock.read_text())
