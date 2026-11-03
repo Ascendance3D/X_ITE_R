@@ -41,6 +41,8 @@ pub struct Picture {
     pub matrix: u32,
     /// Whether the samples span 0..=255 (the sequence header's `color_range`) instead of 16..=235 / 16..=240.
     pub full_range: bool,
+    /// The bits per sample of the decoded picture (8, 10 or 12); `planes` holds the samples shifted down to 8 bits.
+    pub bit_depth: u8,
 }
 
 /// What a decoder may allocate for one picture.
@@ -386,6 +388,7 @@ fn copy_picture(p: &Dav1dPicture) -> Result<Picture, Av1Error> {
         planes: [y, u, v],
         matrix,
         full_range,
+        bit_depth: bpc as u8,
     })
 }
 

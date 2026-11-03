@@ -561,16 +561,29 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                 2 => (true, false),
                 _ => (false, false),
             };
-            // ISO/IEC 23091-4 matrix_coefficients: 5 and 6 are BT.601; 1 and 2 (unspecified) are BT.709, which a
-            // browser applies to an untagged picture.
-            let matrix = if matches!(p.matrix, 5 | 6) {
+            // ISO/IEC 23091-4 matrix_coefficients: 5 and 6 are BT.601 and 1 is BT.709. An untagged picture (2) is
+            // converted by the pinned page (Chrome) with BT.709 for 8 bit 4:2:0 and with BT.601 for every other
+            // layout and for samples of more than 8 bits (measured with the synthetic av1-10bit and av1-444 streams
+            // of oracle/movie-video-av1-baseline: pure colors come out with BT.601, with BT.709 up to 90 levels off).
+            let untagged_601 = p.matrix == 2 && (p.layout != 1 || p.bit_depth > 8);
+            let matrix = if matches!(p.matrix, 5 | 6) || untagged_601 {
                 BT601
             } else {
                 BT709
             };
 
             frames.push(VideoFrame {
-                rgba: yuv_to_rgba(p.width, p.height, sx, sy, &y, &u, &v, matrix),
+                rgba: yuv_to_rgba_with(
+                    p.width,
+                    p.height,
+                    sx,
+                    sy,
+                    &y,
+                    &u,
+                    &v,
+                    matrix,
+                    p.bit_depth == 8,
+                ),
                 time_ms: times.next().unwrap_or(0.0),
             });
         }
@@ -782,6 +795,22 @@ fn yuv_to_rgba(
     v: &[u8],
     m: Matrix,
 ) -> Vec<u8> {
+    yuv_to_rgba_with(w, h, sx, sy, y, u, v, m, true)
+}
+
+/// [`yuv_to_rgba`] with the chroma taken from the nearest sample (`linear` false) instead of interpolated.
+#[allow(clippy::too_many_arguments)]
+fn yuv_to_rgba_with(
+    w: usize,
+    h: usize,
+    sx: bool,
+    sy: bool,
+    y: &[u8],
+    u: &[u8],
+    v: &[u8],
+    m: Matrix,
+    linear: bool,
+) -> Vec<u8> {
     let cw = if sx { w.div_ceil(2) } else { w };
     let ch = if sy { h.div_ceil(2) } else { h };
     let mut out = Vec::with_capacity(w * h * 4);
@@ -789,6 +818,12 @@ fn yuv_to_rgba(
 
     // The chroma plane `p` at luma position (i, j), bilinear between the chroma sample centers.
     let chroma = |p: &[u8], i: usize, j: usize| -> f32 {
+        if !linear {
+            let (xi, yi) = (if sx { i / 2 } else { i }, if sy { j / 2 } else { j });
+
+            return p[yi.min(ch - 1) * cw + xi.min(cw - 1)] as f32;
+        }
+
         let fx = if sx {
             (i as f32 + 0.5) / 2.0 - 0.5
         } else {
