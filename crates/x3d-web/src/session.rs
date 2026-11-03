@@ -1595,10 +1595,12 @@ impl Session {
 
     /// A touch event with the touches still down (`event .touches`, the first two count), at pointer coordinates.
     /// `zoom_width` is `window .innerWidth` at pointer scale (ExamineViewer's pinch zoom factor).
-    pub fn touch(&mut self, event: Touch, touches: &[(f64, f64)], zoom_width: f64) {
+    pub fn touch(&mut self, event: Touch, touches: &[(f64, f64)], zoom_width: f64, now: f64) {
         let Some(v) = self.viewer() else {
             return;
         };
+
+        v.event_time(now);
         let mut t = Touches {
             n: touches.len(),
             p: [(0.0, 0.0); 2],
