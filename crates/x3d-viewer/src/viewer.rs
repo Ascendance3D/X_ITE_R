@@ -2721,6 +2721,12 @@ impl Viewer3d {
 
     // --- input -------------------------------------------------------------------------------
 
+    /// `Date .now ()` (seconds) at an input event. The viewers read the clock at the event (a double tap: two touch ends within
+    /// 300 ms or 400 ms), but `date_now` is that of the last frame, which on a slow machine is a few hundred ms old.
+    pub fn event_time(&mut self, now: f64) {
+        self.date_now = self.date_now.max(now);
+    }
+
     pub fn input(&mut self, ev: UiEvent) {
         // A slot released since the last frame may have been handed out again (a load that
         // completed, a Script that created nodes): the pointer must not reach the new node.
