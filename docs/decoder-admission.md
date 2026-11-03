@@ -93,6 +93,29 @@ is the broader one. Recorded separately, as a third-party assertion and not a gr
 (secondary reports only). The VP8 cross-license does not cover VP9. VP9 is kept and maintained by owner ruling; the assertion
 stays an unresolved release risk.
 
+### Exact sources and checksums (read 2026-11-02 from the local cargo cache of the crates.io downloads)
+
+| Crate | sha256 of the `.crate` file | Upstream (from the crate's metadata) |
+| --- | --- | --- |
+| `zvidlib-vp8` 0.5.0 | `ed40a5ba17bf2b7db9b9ae08a9c5669753332be34f3b346439a1c1188aa3834a` | `https://github.com/lsegal/zvidlib`, path `crates/zvidlib-vp8`, commit `bcb92a6ab080d58fc34bafbf05455b2a8cfc1010` (`.cargo_vcs_info.json`); MIT, copyright 2026 Loren Segal |
+| `vp9dec` 0.1.1 | `85dc9eb9e26fa02ce81898998c5e1ccc718f14bfc485c7a4518f464bba57d338` | `https://github.com/ChanyaVRC/vp9dec`; MIT |
+| `rav1d` 1.1.0 | `1932f060d5e7bd49dc9f8b272c1dc5e9ce0ffe141c28be900265d3989b36c9ed` | BSD-2-Clause (`COPYING`); not yet in the tree |
+| `southstar-codecs` 1.0.5 | `a4db934e3f06ab7add39a68ff975656daa3ea681575ec3681a71393264233a31` | rejected (see the MPEG-1 record) |
+| `oxideav-vp8` 0.2.7 | `506f2495a728488c2fee1ee54bc7f819ca934dc3246369b4100c83848f057852` | rejected, provenance unclear |
+
+### Provenance of the VP8 tables
+
+The vendored VP8 decoder in PR #353 is adapted from `zvidlib-vp8` 0.5.0 (above). That crate's own `THIRD_PARTY_NOTICES.md`
+states that its coefficient, motion-vector, key-frame sub-block mode and quantizer tables are transcribed from the reference
+decoder published in RFC 6386 section 20 (`vp8_prob_data.h`, `modemv_data.h`, `dequant_data.h`), and carries the RFC's
+BSD-3-Clause notice (Copyright 2010, 2011 Google Inc.). The crate's test fixtures come from the libvpx project. This is the
+upstream author's statement; this repository did not compare the tables with the RFC text (RFC 6386 is not in the local
+standards library and specs are not fetched from the web). What this repository did verify is behavior: the decoder is
+bit-exact with an independent decoder (ffmpeg) on six synthetic streams, and the decoded planes match the reference hashes in
+`oracle/synthetic-movie-codecs/media/*.planes.tsv`. **Open item:** PR #353 must carry the BSD-3-Clause notice itself as a file
+in the repository (its `tables.rs` header points to a `THIRD_PARTY_NOTICES.md`); that file is not in the branch yet and is a
+precondition of merging #353.
+
 ### VP8 summary
 
 * Google grants: as above, two documents, one implementation-specific and one for implementations of the specification.
