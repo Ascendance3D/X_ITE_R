@@ -13,13 +13,14 @@ permissions:
 # One review per pull request. A new push cancels the review of the head it replaces, so only the final head is reviewed
 # and no API call repeats for the same head.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  # A label event that starts no review gets its own group, so it cannot cancel a review in progress.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-${{ (github.event.action == 'labeled' && github.event.label.name != 'needs-minimax-review') && github.run_id || 'review' }}
   cancel-in-progress: true
 
 # Campaign policy (owner, 2026-11-02): MiniMax reviews every eligible pull request automatically. Before this campaign
 # (issue #180) it ran only on the label needs-minimax-review; that label still starts a review, for example to review a
 # draft. Eligible means: the head branch is in this repository (a fork gets no secret), and the pull request is not a
-# draft unless the label asks for it. Other label events start nothing. CodeRabbit stays as an additional reviewer.
+# draft unless it carries the label (then every push is reviewed). Other label events start nothing. CodeRabbit stays as an additional reviewer.
 jobs:
   review:
     name: Review
@@ -28,7 +29,7 @@ jobs:
       && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
       && (
         (github.event.action == 'labeled' && github.event.label.name == 'needs-minimax-review')
-        || (github.event.action != 'labeled' && github.event.pull_request.draft == false)
+        || (github.event.action != 'labeled' && (github.event.pull_request.draft == false || contains(github.event.pull_request.labels.*.name, 'needs-minimax-review')))
       )
     runs-on: ubuntu-latest
     env:
@@ -44,7 +45,7 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            core.exportVariable('REVIEW_START', new Date().toISOString());
+            core.exportVariable('REVIEW_START', new Date(Date.now() - 2000).toISOString());
             const limit = Number(process.env.MAX_DIFF_CHARS);
             const patterns = process.env.EXCLUDE_PATTERNS.split(',').map(p => p.trim()).filter(Boolean);
             const toRegExp = p => new RegExp('^' + p.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*\*/g, '\u0000').replace(/\*/g, '[^/]*').replace(/\u0000/g, '.*') + '$');
@@ -55,6 +56,10 @@ jobs:
             });
             const excluded = files.filter(f => matches(f.filename)).map(f => f.filename);
             const kept = files.filter(f => !matches(f.filename));
+            // A patch that holds fewer changed lines than additions + deletions is cut short.
+            const patchLines = f => f.patch.split('\n').filter(l => /^[+-]/.test(l)).length;
+            const truncated = kept.filter(f => f.patch && patchLines(f) !== f.additions + f.deletions).map(f => f.filename);
+            const capped = files.length >= 3000; // the API lists at most 3000 files
             const noPatchText = kept.filter(f => !f.patch && (f.additions + f.deletions) > 0).map(f => f.filename);
             const noPatchBinary = kept.filter(f => !f.patch && (f.additions + f.deletions) === 0).map(f => f.filename);
             let total = 0;
@@ -70,11 +75,14 @@ jobs:
               `Excluded by pattern (not reviewed):\n${list(excluded)}`,
               `No patch, binary or empty change (not reviewed):\n${list(noPatchBinary)}`,
               `No patch, text change too large for GitHub (NOT reviewed):\n${list(noPatchText)}`,
+              `Patch shorter than its change count (NOT fully reviewed):\n${list(truncated)}`,
               `Over the character limit (NOT reviewed):\n${list(over)}`,
             ];
+            if (capped) lines.push('The file list reached the API limit of 3000 files (NOT fully reviewed).');
             await core.summary.addRaw('```\n' + lines.join('\n') + '\n```', true).write();
             core.info(lines.join('\n'));
-            const missing = [...noPatchText, ...over];
+            const missing = [...noPatchText, ...truncated, ...over];
+            if (capped) missing.push('(file list capped at 3000)');
             if (missing.length > 0) {
               core.setFailed(`The review would not cover ${missing.length} changed file(s): ${missing.join(', ')}. Split the pull request, or review those files by hand. No review was requested.`);
             }
