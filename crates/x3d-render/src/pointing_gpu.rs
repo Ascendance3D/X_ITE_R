@@ -252,7 +252,7 @@ pub struct PointingGpu {
 const ROW: u64 = 256;
 
 impl PointingGpu {
-    /// A headless Vulkan device of its own (the discrete GPU), like [`crate::gpu::Gpu::new`].
+    /// A headless device of its own (the discrete GPU; Vulkan, or Metal on macOS), like [`crate::gpu::Gpu::new`].
     pub fn new_headless() -> Result<PointingGpu, String> {
         let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
         desc.backends = crate::gpu::headless_backends(
@@ -268,7 +268,7 @@ impl PointingGpu {
             compatible_surface: None,
             ..Default::default()
         }))
-        .map_err(|e| format!("no Vulkan adapter: {e}"))?;
+        .map_err(|e| format!("no adapter for the headless backend: {e}"))?;
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
             label: Some("x3d-pointing"),
             ..Default::default()

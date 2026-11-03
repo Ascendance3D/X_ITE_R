@@ -22,6 +22,8 @@
 
 use crate::*;
 
+mod mpeg1_media;
+
 /// The next token of a page video element: unique across the runtimes of a page.
 static NEXT_VIDEO_TOKEN: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
 
@@ -47,7 +49,7 @@ pub struct MovieMedia {
     /// The frame the texture holds (`updateTextureData (media .currentFrame)`).
     pub shown: usize,
     /// The audio track of a decoded WebM ([`crate::webm::audio`]); `AudioTrack::None` for every other media.
-    pub audio: crate::webm::AudioTrack,
+    pub audio: crate::video_types::AudioTrack,
     /// Does the media take a `currentTime` (a decoded WebM does; GifMedia ignores it, PNGMedia only stops)?
     seekable: bool,
     /// Seconds added to the clock of a decoded WebM by a seek.
@@ -354,7 +356,7 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
             iso: IsoState::default(),
@@ -366,11 +368,13 @@ impl MovieMedia {
     /// sound of the file plays through the node's audio source ([`Runtime::movie_set_frames`]); a WebM takes
     /// `currentTime` ([`Runtime::movie_seek`]). An error when the file is not a WebM with a VP9 or VP8
     /// track that decodes; it says why (the caller logs it and treats the video as one the engine cannot show).
-    pub fn decode_webm(data: &[u8]) -> Result<MovieMedia, crate::webm::WebmError> {
+    #[cfg(feature = "native-video")]
+    pub fn decode_webm(data: &[u8]) -> Result<MovieMedia, crate::video_types::WebmError> {
         let video = crate::webm::decode(data, MAX_DECODED_BYTES)?;
         let n = video.frames.len();
 
-        frame_bytes(video.width, video.height, n).map_err(|_| crate::webm::WebmError::TooLarge)?;
+        frame_bytes(video.width, video.height, n)
+            .map_err(|_| crate::video_types::WebmError::TooLarge)?;
 
         // A frame lasts until the next one starts; the last repeats the step before it.
         let times: Vec<f64> = video.frames.iter().map(|f| f.time_ms).collect();
@@ -398,6 +402,13 @@ impl MovieMedia {
             offset: 0.0,
             iso: IsoState::default(),
         })
+    }
+
+    /// Without the `native-video` feature the engine has no video decoder (the browser build plays the video in the
+    /// page's `<video>` element); a WebM is a video it cannot show.
+    #[cfg(not(feature = "native-video"))]
+    pub fn decode_webm(_data: &[u8]) -> Result<MovieMedia, crate::video_types::WebmError> {
+        Err(crate::video_types::WebmError::NoDecoder)
     }
 
     /// apng-js parseAPNG, the frame images and PNGMedia (whose `player .stop ()` renders frame 0). The size, the
@@ -447,7 +458,7 @@ impl MovieMedia {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
             iso: IsoState::default(),
@@ -772,15 +783,15 @@ impl Runtime {
     /// and set_speed__.
     pub(crate) fn movie_set_frames(&mut self, node: NodeId, mut media: MovieMedia) {
         let (width, height, duration) = (media.width, media.height, media.duration());
-        let audio = std::mem::replace(&mut media.audio, crate::webm::AudioTrack::None);
+        let audio = std::mem::replace(&mut media.audio, crate::video_types::AudioTrack::None);
         let mut has_sound = false;
 
         // The previous media element's sound goes with it.
         self.movie_release_audio(node);
 
         match audio {
-            crate::webm::AudioTrack::None => {}
-            crate::webm::AudioTrack::Decoded { channels, rate } => {
+            crate::video_types::AudioTrack::None => {}
+            crate::video_types::AudioTrack::Decoded { channels, rate } => {
                 has_sound = true;
 
                 match self.audio().buffer_from_planar(channels, rate) {
@@ -798,13 +809,13 @@ impl Runtime {
             }
             // The track is there and cannot be played: hasSound is TRUE as the page's would be, the video keeps
             // rendering and plays silently, and the diagnostic says why (BR1.8).
-            crate::webm::AudioTrack::Unsupported(codec) => {
+            crate::video_types::AudioTrack::Unsupported(codec) => {
                 has_sound = true;
                 self.log_warn(format!(
                     "MovieTexture: the audio track of the video ({codec}) cannot be decoded by this build; the video plays silently."
                 ));
             }
-            crate::webm::AudioTrack::Corrupt => self.log_warn(
+            crate::video_types::AudioTrack::Corrupt => self.log_warn(
                 "MovieTexture: the audio track of the video does not decode; the video plays silently."
                     .to_string(),
             ),
@@ -1342,7 +1353,7 @@ impl Runtime {
             },
             playback_rate: 1.0,
             shown: 0,
-            audio: crate::webm::AudioTrack::None,
+            audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
             iso: IsoState::default(),
