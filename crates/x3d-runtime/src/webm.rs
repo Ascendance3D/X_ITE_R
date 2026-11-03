@@ -1907,4 +1907,266 @@ mod tests {
             assert!(channels[0].iter().any(|s| s.abs() > 0.1), "{name}: silent");
         }
     }
+
+    // ---- VP8 ----
+
+    fn codec_fixture(name: &str) -> (Vec<u8>, Vec<Vec<String>>) {
+        let dir = concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../oracle/synthetic-movie-codecs/media/"
+        );
+        let webm = std::fs::read(format!("{dir}{name}.webm")).unwrap();
+        let hashes = std::fs::read_to_string(format!("{dir}{name}.planes.tsv")).unwrap();
+
+        (
+            webm,
+            hashes
+                .lines()
+                .map(|l| l.split('\t').skip(1).map(String::from).collect())
+                .collect(),
+        )
+    }
+
+    fn sha(bytes: &[u8]) -> String {
+        use sha2::{Digest, Sha256};
+
+        Sha256::digest(bytes)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect()
+    }
+
+    const VP8_FIXTURES: [(&str, usize, usize); 6] = [
+        ("vp8-testsrc", 96, 64),
+        ("vp8-crop", 50, 34),
+        ("vp8-parts", 128, 80),
+        ("vp8-profile1", 64, 48),
+        ("vp8-profile2", 64, 48),
+        ("vp8-profile3", 64, 48),
+    ];
+
+    fn vp8_pictures(webm: &[u8]) -> Vec<(f64, vp8::Picture)> {
+        let (codec, blocks) = demux(webm).unwrap();
+        let mut decoder = vp8::Vp8Decoder::new(vp8::Limits {
+            max_width: 16383,
+            max_height: 16383,
+            max_allocation_bytes: 1 << 30,
+        });
+
+        assert_eq!(codec, Codec::Vp8);
+
+        blocks
+            .iter()
+            .filter_map(|b| {
+                decoder
+                    .decode(&webm[b.start..b.end])
+                    .unwrap()
+                    .map(|p| (b.time_ms, p))
+            })
+            .collect()
+    }
+
+    /// A truncated entropy partition reads zero bits past its end, as libvpx does (vp8/bool_decoder.rs): every cut of a
+    /// VP8 file, which cuts a frame's partitions short, gives a decode result or an error, never a panic.
+    #[test]
+    fn a_truncated_vp8_partition_decodes_or_errors_but_never_panics() {
+        for (name, _, _) in VP8_FIXTURES {
+            let (webm, _) = codec_fixture(name);
+            let step = (webm.len() / 60).max(1);
+
+            for cut in (0..webm.len()).step_by(step) {
+                let d = &webm[..cut];
+
+                assert!(
+                    std::panic::catch_unwind(|| decode(d, BUDGET)).is_ok(),
+                    "{name}: panicked on a cut at {cut} of {}",
+                    webm.len()
+                );
+            }
+        }
+    }
+
+    /// A WebM with two video tracks, number 1 coded `first` and number 2 coded `second`, and one block on each.
+    fn webm_two_video_tracks(first: &[u8], second: &[u8]) -> Vec<u8> {
+        let entry = |n: u8, codec: &[u8]| {
+            el(
+                &[0xAE],
+                &[el(&[0xD7], &[n]), el(&[0x83], &[1]), el(&[0x86], codec)].concat(),
+            )
+        };
+        let cluster = [
+            el(&[0xE7], &[0]),
+            el(&[0xA3], &[0x81, 0, 0, 0x80, 1, 2, 3]),
+            el(&[0xA3], &[0x82, 0, 0, 0x80, 4, 5, 6]),
+        ]
+        .concat();
+        let segment = [
+            el(
+                &[0x16, 0x54, 0xAE, 0x6B],
+                &[entry(1, first), entry(2, second)].concat(),
+            ),
+            el(&[0x1F, 0x43, 0xB6, 0x75], &cluster),
+        ]
+        .concat();
+
+        [
+            el(&[0x1A, 0x45, 0xDF, 0xA3], &[]),
+            el(&[0x18, 0x53, 0x80, 0x67], &segment),
+        ]
+        .concat()
+    }
+
+    /// The first supported video track is the one decoded; a later supported track never replaces it.
+    #[test]
+    fn the_first_supported_video_track_wins() {
+        let d = webm_two_video_tracks(b"V_VP8", b"V_VP9");
+        let (codec, blocks) = demux(&d).unwrap();
+
+        assert_eq!(codec, Codec::Vp8);
+        assert_eq!(blocks.len(), 1);
+        assert_eq!(&d[blocks[0].start..blocks[0].end], &[1, 2, 3]);
+
+        let d = webm_two_video_tracks(b"V_VP9", b"V_VP8");
+        let (codec, blocks) = demux(&d).unwrap();
+
+        assert_eq!(codec, Codec::Vp9);
+        assert_eq!(&d[blocks[0].start..blocks[0].end], &[1, 2, 3]);
+    }
+
+    /// BR1.1: every picture of every stream equals what ffmpeg's decoder (bit-exact with libvpx) outputs, plane by
+    /// plane. The streams cover key and inter frames, hidden frames, a size that is not a multiple of 16, four
+    /// token partitions and bitstream versions 1 to 3 (bilinear prediction, simple loop filter, full-pixel chroma).
+    #[test]
+    fn vp8_pictures_equal_the_reference_decoder_plane_by_plane() {
+        for (name, w, h) in VP8_FIXTURES {
+            let (webm, expected) = codec_fixture(name);
+            let pictures = vp8_pictures(&webm);
+
+            assert_eq!(pictures.len(), expected.len(), "{name}: picture count");
+
+            for (i, ((_, p), want)) in pictures.iter().zip(&expected).enumerate() {
+                assert_eq!((p.width, p.height), (w, h), "{name} {i}");
+
+                for (k, plane) in p.planes.iter().enumerate() {
+                    assert_eq!(&sha(plane), &want[k], "{name}: picture {i}, plane {k}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn a_vp8_webm_decodes_to_rgba_pictures_with_their_times() {
+        let (webm, expected) = codec_fixture("vp8-testsrc");
+        let v = decode(&webm, BUDGET).unwrap();
+
+        assert_eq!(
+            (v.width, v.height, v.frames.len()),
+            (96, 64, expected.len())
+        );
+        assert_eq!(v.frames[0].time_ms, 0.0);
+        assert!(v.frames.windows(2).all(|w| w[0].time_ms < w[1].time_ms));
+        assert!(v.frames.iter().all(|f| f.rgba.len() == 96 * 64 * 4));
+        assert!(
+            v.frames
+                .iter()
+                .all(|f| f.rgba.chunks(4).all(|p| p[3] == 255))
+        );
+        // The pictures are not all one color: testsrc2 draws bars and a moving counter.
+        assert_ne!(v.frames[0].rgba, v.frames[v.frames.len() - 1].rgba);
+    }
+
+    #[test]
+    fn a_vp8_webm_through_the_node_loader_gives_a_playable_movie() {
+        let (webm, expected) = codec_fixture("vp8-crop");
+        let media = super::super::nodes::movie_texture::MovieMedia::decode_webm(&webm).unwrap();
+
+        assert_eq!((media.width, media.height), (50, 34));
+        assert_eq!(media.frames.len(), expected.len());
+    }
+
+    #[test]
+    fn the_vp8_key_frame_size_is_the_fourteen_bit_value() {
+        let (webm, _) = codec_fixture("vp8-crop");
+        let (_, blocks) = demux(&webm).unwrap();
+        let key = &webm[blocks[0].start..blocks[0].end];
+
+        assert_eq!(vp8::key_frame_size(key), Some((50, 34)));
+        // The scaling bits above the 14 are dropped.
+        let mut scaled = key.to_vec();
+
+        scaled[7] |= 0xC0;
+        scaled[9] |= 0x40;
+        assert_eq!(vp8::key_frame_size(&scaled), Some((50, 34)));
+        // An inter frame (bit 0 of the tag set) and a short frame code no size.
+        let mut inter = key.to_vec();
+
+        inter[0] |= 1;
+        assert_eq!(vp8::key_frame_size(&inter), None);
+        assert_eq!(vp8::key_frame_size(&key[..9]), None);
+    }
+
+    #[test]
+    fn a_vp8_picture_larger_than_the_limit_is_refused_before_it_is_decoded() {
+        let (mut webm, _) = codec_fixture("vp8-crop");
+        let (_, blocks) = demux(&webm).unwrap();
+        let at = blocks[0].start;
+
+        // 16383 x 16383 = 268 million luma samples: more than MAX_LUMA_SAMPLES.
+        webm[at + 6..at + 8].copy_from_slice(&16383u16.to_le_bytes());
+        webm[at + 8..at + 10].copy_from_slice(&16383u16.to_le_bytes());
+        assert!(matches!(decode(&webm, BUDGET), Err(WebmError::TooLarge)));
+    }
+
+    #[test]
+    fn vp8_pictures_may_not_take_more_than_the_budget() {
+        let (webm, _) = codec_fixture("vp8-testsrc");
+
+        assert!(matches!(
+            decode(&webm, 96 * 64 * 4 * 2),
+            Err(WebmError::TooLarge)
+        ));
+    }
+
+    /// BR1.8: a truncated, corrupt or reordered VP8 file is an error (the caller keeps the scene running and logs),
+    /// never a panic, and a file that starts with an inter frame is refused.
+    #[test]
+    fn corrupt_vp8_files_never_panic() {
+        for (name, _, _) in VP8_FIXTURES {
+            let (webm, _) = codec_fixture(name);
+
+            for cut in (0..webm.len()).step_by(webm.len() / 40 + 1) {
+                let _ = decode(&webm[..cut], BUDGET);
+            }
+
+            let mut rng = Rng(0x5EED_0000 + webm.len() as u64);
+
+            for _ in 0..25 {
+                let d = mutate(&webm, &mut rng);
+                let _ = decode(&d, BUDGET);
+            }
+        }
+    }
+
+    #[test]
+    fn a_vp8_file_whose_first_frame_is_an_inter_frame_is_refused() {
+        let (webm, _) = codec_fixture("vp8-testsrc");
+        let (_, blocks) = demux(&webm).unwrap();
+        let mut d = webm.clone();
+        let at = blocks[0].start;
+
+        d[at] |= 1;
+        assert!(matches!(decode(&d, BUDGET), Err(WebmError::Decode(_))));
+    }
+
+    #[test]
+    fn a_webm_with_only_an_unsupported_codec_has_no_video_track() {
+        let (mut webm, _) = codec_fixture("vp8-crop");
+        let at = webm.windows(5).position(|w| w == b"V_VP8").unwrap();
+
+        webm[at + 4] = b'7';
+        assert!(matches!(
+            decode(&webm, BUDGET),
+            Err(WebmError::NoVideoTrack)
+        ));
+    }
 }
