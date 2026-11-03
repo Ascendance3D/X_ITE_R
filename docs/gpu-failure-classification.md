@@ -75,6 +75,19 @@ the result lines, not the differences, so those two are **unclassified** too; th
 
 No Linux failure exists: nothing on the NVIDIA GPU or on llvmpipe needs a classification.
 
+## Physical Mac (Apple M1, Metal) run of 2026-11-02, as reported on issue #89
+
+Source: the issue #89 comment of 2026-11-03 (master `fa7e8e49`, `X3D_BACKEND=metal`; macOS 27.0.1, which is not macOS 15). The raw logs are the
+owner's; this repository holds only what the comment states, so everything below is classified from that text and stays **UNVERIFIED on
+physical hardware** until a Mac run repeats it. 16 GPU tests: 4 passed, 12 failed.
+
+| failing group | stated result | classification |
+| --- | --- | --- |
+| `rea_batch08_net_cases_match_x_ite` | UDP ports 41234 to 41236: sent 5, refused 4 | **test defect**, fixed in the PR of this change: the sender of the `--udp` cases waited up to 20 ms for the listener in every round, so a short drive gave 9 rounds, and a refusal needs an earlier datagram (the check wants 5 refusals per port, so under 10 rounds it can never pass). The listener read no longer waits. Reproduced without a Mac: with the old wait, `the_udp_sender_makes_many_rounds_in_a_short_drive` reads "5 sent and 4 refused in 190 ms" (the numbers of the Mac run); without it, over 40 rounds. The fix is checked on the macOS job (the test has no GPU or key) and not on a physical Mac |
+| collision distances (`rea_b15_particle_collision`, `rea_b24_nav_shard0/1/2`) | 1e-6 to 5.8e-4; one probe returns another shape id | **not classified.** Same class as lavapipe (issue #89, 2e-5 to 6.5e-5 on lavapipe: the interpolation of the recording GPU); the other shape id is not explained and is not claimed as numeric |
+| pointing events (`rea_batch09_nav_shard0..3`, `rea_batch09_inputs_cases`, `rea_batch12_pick_cases`, `rea_b14_particle_pick`) | scene text differs from the first touched frame | **not classified**; the comparison is exact text. Same class as lavapipe, not separated. A per-backend limit is a decision of the owner (issue #89, comment of 2026-11-02), not made here |
+| non-GPU image comparisons | `depth` x2, `render_b69_gs_log`, `render_rea_b08_gs`, `render_rea_b08_vs`, others | the gs-linear, gs-ortho and vs-transparent-ibl differences were fixed after `fa7e8e49` (PRs #378 and #379) and checked only on the virtualized device; **UNVERIFIED on the M1** |
+
 ## What stays open
 
 * A physical Mac (Metal on Apple silicon or discrete hardware) is not available to this work. The 16 `GPU_TESTS` have never run on
