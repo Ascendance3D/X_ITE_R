@@ -41,6 +41,34 @@ The GaussianSplats pick and collision tests, `gpu_start`, `rea_b16_bounded_physi
 | `audio_pull::late_connected_oscillator_keeps_its_phase`, `rea_b24_audio_decode::same_rate_mp3_and_flac_are_bit_identical`, `vrml_audio_oracle::vrml_audio_matches_x_ite` | hosted macOS | not a GPU test (issue #88, owner of the audio lane) | listed only so that the 11 failures of the run are accounted for; they stay skipped by name |
 | `x3d-evidence` unit tests (5) | hosted macOS | not a GPU test | listed for the same reason; not touched here |
 
+### Eleven comparisons that the fix made visible (hosted macOS, run 41575177567 of PR #351)
+
+With the headless device on Metal, the tests that start through `Gpu::new()` ran on the virtual machine for the first time. 1276 of
+1287 tests passed; the two splat pick tests and `renderer_probes_and_device_starts_share_the_lock` now pass (the numeric
+difference and the defect above are closed on the virtualized device). Eleven rendering comparisons fail:
+
+| test | largest difference reported |
+| --- | --- |
+| `depth::standard_and_log_match_x_ite` | standard tilt pair: 2590 pixels over 8 |
+| `depth::log_shows_what_standard_cannot` | a pixel is red where it must be green (wrong depth order) |
+| `render_b69_gs_log::splats_in_logarithmic_depth_match_x_ite` | gs-ortho 71% of the pixels over 8, max 72; gs-linear 11.7%, max 106 |
+| `render_rea_b08_gs::rea_b08_gs_renders_match_x_ite` | gs-linear 11.7% over 8, max 106 |
+| `render_rea_b08_vs::rea_b08_vs_renders_match_x_ite` | vs-transparent-ibl 3.7%, max 255 |
+| `render_rea_b09_inputs::rea_b09_inputs_renders_match_x_ite` | texgen-modes 8.9%, max 141; texgen-params 7.5%, max 169 |
+| `render_rea_i92_items::rea_i92_render_items_match_x_ite` | i92-tr-opaque MSAA 4: 0.9%, max 64 |
+| `render_rea_b07_vol::rea_b07_vol_renders_match_x_ite` | 0.6% to 1.1% over 8, max 98 |
+| `rea_batch07_vol::rea_batch07_vol_cases_match_x_ite` | 14 failures, 0.6% over 8, max 112 |
+| `rea_batch01::rea_batch01_cases_match_x_ite` | shading-wireframe MSAA 4: 0.9%, max 109 |
+| `rea_b24_anchor_collision_instanced::rea_b24_anchor_collision_instanced_match_x_ite` | 14 failures, 516 of 2601 pick probes differ |
+
+Classification: **unclassified, and not claimed as a hardware constraint.** These are structure-level differences (wrong depth order,
+whole regions), not rounding, so they are outside any numeric tolerance. The evidence does not yet say whether the cause is the
+virtual machine's paravirtual graphics device (a limit of the device) or a Metal-specific defect of the renderer: the same worlds
+pass strictly on the RTX and on llvmpipe, and the logarithmic-depth tests failing together points at depth output (`frag_depth`)
+or depth format handling on this device. Deciding needs a physical Mac, or a diagnostic job on the hosted runner that prints the
+adapter, its features and limits, and the depth formats it supports; neither exists yet. Until then the eleven are skipped by
+name in `macos-tests.yml` (comment there), and the criterion "the GPU tests run on Metal" stays open.
+
 No Linux failure exists: nothing on the NVIDIA GPU or on llvmpipe needs a classification.
 
 ## What stays open
@@ -48,8 +76,7 @@ No Linux failure exists: nothing on the NVIDIA GPU or on llvmpipe needs a classi
 * A physical Mac (Metal on Apple silicon or discrete hardware) is not available to this work. The 16 `GPU_TESTS` have never run on
   Metal, virtualized or not: the macOS job skips them by name. Running them on the virtual machine is a possible next step, but
   its result is virtualized evidence only.
-* After the backend default is fixed, tests that skipped on macOS as "no adapter" now run there. The first run after this change
-  may show failures that were hidden; they are to be classified from that run.
+* The eleven comparisons above are unclassified: they need a physical Mac or a diagnostic job (specific missing resource).
 
 ## REA evidence
 
