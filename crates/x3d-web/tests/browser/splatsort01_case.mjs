@@ -122,6 +122,10 @@ async function scenario (page, env, name)
    return out;
 }
 
+// The frames of a case are the cost: 100 (flip), 110 (burst) and 160 (back), each drawn by SwiftShader on CI (0.5 s to 1.2 s a
+// frame on the hosted runner, 2.4 times apart between runners: back took 77 s to 180 s in 9 passing runs and timed out at the
+// default 180 s in a 10th, run 41408590062). The cap is 2.5 times the slowest run, as for the viewpoints cases; a hung case still fails
+// with its name, and no tolerance or frame count changes.
 export const CASE_GROUPS = {
-   splatSort: { context: DESKTOP, cases: Object .fromEntries ([ "flip", "burst", "back" ] .map (name => [ name, (page, env) => scenario (page, env, name) ])) },
+   splatSort: { context: DESKTOP, timeout: 450_000, cases: Object .fromEntries ([ "flip", "burst", "back" ] .map (name => [ name, (page, env) => scenario (page, env, name) ])) },
 };
