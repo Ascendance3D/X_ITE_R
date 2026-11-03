@@ -38,7 +38,9 @@ fn native_video_first_pictures_match_x_ite() {
     names.sort();
     assert!(!names.is_empty(), "no baselines found");
 
-    // A world without its reference fails: an absent answer key never passes.
+    // A world without its reference fails: an absent answer key never passes. The baseline PNGs are named after the
+    // world file, so their stem already carries the `.wrl` (`vp8-crop.wrl.png`). A missing .webm makes `render_file`
+    // fail and the unwrap below panic: the test fails, it does not skip.
     for e in std::fs::read_dir(root.join("synthetic-movie-codecs")).unwrap() {
         let world = e.unwrap().file_name().into_string().unwrap();
 
