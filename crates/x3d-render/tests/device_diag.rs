@@ -501,3 +501,59 @@ fn background_probes() {
         }
     }
 }
+
+/// 4x multisampling: the comparisons that fail on the hosted macOS device only fail with multisampling. The renderer mirrors
+/// the target when `set_gl_sample_orientation` is on, to put Vulkan's sample pattern where GL's is. Render the msaa4 worlds
+/// with the mirroring on and off, and 1 sample, and count the pixels over 8 against the pinned multisampled image.
+#[test]
+fn msaa_orientation() {
+    let Ok(mut g) = Gpu::new() else {
+        println!("diag: no adapter");
+        return;
+    };
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../oracle")
+        .canonicalize()
+        .unwrap();
+
+    for (world, png) in [
+        (
+            "synthetic-rea-i92-render-items/i92-tr-opaque.wrl",
+            "rea-i92-render-items-baseline/msaa4/i92-tr-opaque.wrl.png",
+        ),
+        (
+            "synthetic-rea-b09-inputs/texgen-prims.wrl",
+            "render-msaa4-rea-b09-inputs-baseline/texgen-prims.wrl.png",
+        ),
+    ] {
+        let Ok((w, h, want)) = x3d_render::compare::load_png(&root.join(png)) else {
+            println!("diag: msaa {world}: no baseline {png}");
+            continue;
+        };
+
+        for (samples, orientation) in [(4u32, true), (4, false), (0, false)] {
+            g.renderer.set_sample_count(samples);
+            g.renderer.set_gl_sample_orientation(orientation);
+            let shot = x3d_render::render_file(&mut g, &root, &root.join(world), w, h);
+
+            if let Ok(shot) = shot {
+                let rgba: Vec<u8> = shot
+                    .rgba
+                    .chunks_exact(4)
+                    .flat_map(|p| [p[0], p[1], p[2], 255])
+                    .collect();
+                let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
+                println!(
+                    "diag: msaa {world} samples {samples} (reported {}) gl-orientation {orientation}: over {} ({:.3}%), max delta {}",
+                    g.renderer.sample_count(),
+                    s.pixels_over,
+                    s.pct_over,
+                    s.max_delta
+                );
+            }
+        }
+    }
+
+    g.renderer.set_sample_count(0);
+    g.renderer.set_gl_sample_orientation(false);
+}
