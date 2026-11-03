@@ -52,3 +52,10 @@ Tests (`crates/x3d-web/tests/xr`, `node --test 'tests/xr/*.test.mjs'`, no browse
 * **Wiring to the public API.** `getRenderingProperty("XRSession")` and the `xrSessionMode` option still behave as documented in
   `web/API.md` (no XR); they change when the draw path exists.
 * **A native OpenXR session:** see the proposed choice.
+
+## Known difference from the pinned X_ITE
+
+`XRFrame.getViewerPose()` returns `null` when the device has no pose for the frame (tracking lost). The pinned `xrUpdatePose` reads
+`originalPose.transform` and would throw. `XRSessionController.updatePose` holds the last good pose and views, sets `tracking` to
+false until a frame has a pose, still applies the frame's planes and gamepads, and keeps the session (tested on the emulated device,
+not on hardware). This is a deliberate robustness difference, not a copy of the pinned behavior.
