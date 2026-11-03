@@ -125,6 +125,12 @@ class Classification(unittest.TestCase):
                                ":!tools/ci_changes.py", ":!tools/test_ci_changes.py"], cwd=c.ROOT, capture_output=True, text=True).stdout
         for line in refs.splitlines():
             path, _, rest = line.split(":", 2)
+            # The review gate's EXCLUDE_PATTERNS names ledger/snapshots/*/ledger.json to leave the generated copies out of the
+            # text review; that is a path pattern, not a read, so it needs no suite.
+            # Only that one glob is exempt: with it removed, the line must hold no other reference to either tree.
+            if path == ".github/workflows/code-review.yml" and "EXCLUDE_PATTERNS:" in rest and not re.search(
+                    TREE_REFERENCE, rest.replace("ledger/snapshots/*/ledger.json", "")):
+                continue
             self.assertTrue(is_comment_line(rest), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
