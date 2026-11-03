@@ -336,7 +336,7 @@ impl MovieMedia {
     /// of the file and a browser's seeking are not part of it. `None` when the file is not a WebM with a VP9 track
     /// that decodes, which the caller treats as a video the engine cannot show.
     pub fn decode_webm(data: &[u8]) -> Option<MovieMedia> {
-        let video = crate::webm::decode(data).ok()?;
+        let video = crate::webm::decode(data, MAX_DECODED_BYTES).ok()?;
         let n = video.frames.len();
 
         frame_bytes(video.width, video.height, n).ok()?;
