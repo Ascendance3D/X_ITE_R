@@ -6813,10 +6813,19 @@ pub struct Gpu {
 }
 
 /// The backend of a headless device for the value of `X3D_BACKEND` (or `X3D_POINTING_BACKEND`): Vulkan by default,
-/// which is where the answer keys were checked (RTX 3060 Ti); `gl`, `metal` or `dx12` run the same tests on another
-/// backend (issue #89). An unknown name is an error, so that a typo does not measure the default backend.
+/// which is where the answer keys were checked (RTX 3060 Ti), and Metal by default on macOS, which has no Vulkan
+/// driver (issue #89: with Vulkan only, a macOS host found no adapter for the headless device while every other start
+/// found Metal); `gl`, `metal` or `dx12` run the same tests on another backend (issue #89). An unknown name is an
+/// error, so that a typo does not measure the default backend.
 pub fn headless_backends(name: Option<&str>) -> Result<wgpu::Backends, String> {
+    headless_backends_on(std::env::consts::OS, name)
+}
+
+/// [`headless_backends`] for the operating system `os` (a `std::env::consts::OS` value), so that a test on one host can
+/// check the default of another.
+pub fn headless_backends_on(os: &str, name: Option<&str>) -> Result<wgpu::Backends, String> {
     match name.map(|n| n.trim().to_lowercase()).as_deref() {
+        None | Some("") if os == "macos" => Ok(wgpu::Backends::METAL),
         None | Some("" | "vulkan" | "vk") => Ok(wgpu::Backends::VULKAN),
         Some("gl" | "gles" | "opengl") => Ok(wgpu::Backends::GL),
         Some("metal" | "mtl") => Ok(wgpu::Backends::METAL),
@@ -6828,7 +6837,7 @@ pub fn headless_backends(name: Option<&str>) -> Result<wgpu::Backends, String> {
 }
 
 impl Gpu {
-    /// Adapter of the backend `X3D_BACKEND` names (Vulkan by default), high performance (the discrete GPU), no
+    /// Adapter of the backend `X3D_BACKEND` names (Vulkan by default, Metal on macOS), high performance (the discrete GPU), no
     /// surface.
     pub fn new() -> Result<Gpu, String> {
         let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
@@ -7218,21 +7227,56 @@ mod line_instance_tests {
 
 #[cfg(test)]
 mod headless_backend_tests {
-    use super::headless_backends;
+    use super::{headless_backends, headless_backends_on};
     use wgpu::Backends;
 
     #[test]
     fn vulkan_is_the_default_and_the_others_are_named() {
-        assert_eq!(headless_backends(None), Ok(Backends::VULKAN));
-        assert_eq!(headless_backends(Some("")), Ok(Backends::VULKAN));
-        assert_eq!(headless_backends(Some("VK")), Ok(Backends::VULKAN));
-        assert_eq!(headless_backends(Some("gl")), Ok(Backends::GL));
-        assert_eq!(headless_backends(Some(" Metal ")), Ok(Backends::METAL));
-        assert_eq!(headless_backends(Some("dx12")), Ok(Backends::DX12));
+        assert_eq!(headless_backends_on("linux", None), Ok(Backends::VULKAN));
+        assert_eq!(
+            headless_backends_on("linux", Some("")),
+            Ok(Backends::VULKAN)
+        );
+        assert_eq!(headless_backends_on("windows", None), Ok(Backends::VULKAN));
+        assert_eq!(
+            headless_backends_on("linux", Some("VK")),
+            Ok(Backends::VULKAN)
+        );
+        assert_eq!(headless_backends_on("linux", Some("gl")), Ok(Backends::GL));
+        assert_eq!(
+            headless_backends_on("linux", Some(" Metal ")),
+            Ok(Backends::METAL)
+        );
+        assert_eq!(
+            headless_backends_on("linux", Some("dx12")),
+            Ok(Backends::DX12)
+        );
+    }
+
+    /// Issue #89: the hosted macOS run failed `renderer_probes_and_device_starts_share_the_lock` because the headless
+    /// device asked for Vulkan, which macOS does not have, while the other starts found Metal.
+    #[test]
+    fn macos_defaults_to_metal_and_still_accepts_a_named_backend() {
+        assert_eq!(headless_backends_on("macos", None), Ok(Backends::METAL));
+        assert_eq!(headless_backends_on("macos", Some("")), Ok(Backends::METAL));
+        assert_eq!(
+            headless_backends_on("macos", Some("vulkan")),
+            Ok(Backends::VULKAN)
+        );
+        assert_eq!(headless_backends_on("macos", Some("gl")), Ok(Backends::GL));
+    }
+
+    #[test]
+    fn the_host_default_is_the_one_for_the_host_os() {
+        assert_eq!(
+            headless_backends(None),
+            headless_backends_on(std::env::consts::OS, None)
+        );
     }
 
     #[test]
     fn an_unknown_name_is_an_error() {
         assert!(headless_backends(Some("vulcan")).is_err());
+        assert!(headless_backends_on("macos", Some("vulcan")).is_err());
     }
 }
