@@ -127,7 +127,9 @@ class Classification(unittest.TestCase):
             path, _, rest = line.split(":", 2)
             # The review gate's EXCLUDE_PATTERNS names ledger/snapshots/*/ledger.json to leave the generated copies out of the
             # text review; that is a path pattern, not a read, so it needs no suite.
-            if path == ".github/workflows/code-review.yml" and "EXCLUDE_PATTERNS:" in rest:
+            # Only that one glob is exempt: with it removed, the line must hold no other reference to either tree.
+            if path == ".github/workflows/code-review.yml" and "EXCLUDE_PATTERNS:" in rest and not re.search(
+                    TREE_REFERENCE, rest.replace("ledger/snapshots/*/ledger.json", "")):
                 continue
             self.assertTrue(is_comment_line(rest), line)
 
