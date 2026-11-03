@@ -7,6 +7,8 @@ publish.workspace = true
 description = "Interactive X3D/VRML viewer: live frame loop, navigation, pointer sensors; ported from X_ITE (MIT)."
 
 [features]
+# AV1 video in MovieTexture (x3d-runtime's `av1`, rav1d). Off by default.
+av1 = ["x3d-runtime/av1"]
 default = ["gpu", "script"]
 # Script nodes in QuickJS and the file loaders (`Viewer3d::load*`). QuickJS is C code that does not
 # build for wasm32-unknown-unknown: the browser build (x3d-web) turns this off and loads through

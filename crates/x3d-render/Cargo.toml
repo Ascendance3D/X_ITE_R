@@ -38,6 +38,8 @@ script = ["dep:x3d-script"]
 # AVIF texture decoding (avif-rust 0.1.2, MIT, pure Rust, builds for wasm32). Without it an AVIF image fails to
 # decode like any other undecodable image. Disable for a build that carries no AV1 decoder.
 avif = ["dep:avif-rust"]
+# AV1 video in MovieTexture (x3d-runtime's `av1`, rav1d). Off by default; the AV1 render tests need it.
+av1 = ["x3d-runtime/av1"]
 
 [[bin]]
 name = "x3d-shot"

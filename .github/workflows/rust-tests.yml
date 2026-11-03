@@ -227,13 +227,13 @@ jobs:
       - name: Rust suite (GPU tests skipped)
         run: |
           rm -f "$X3D_EVIDENCE_LOG"
-          cargo nextest run --workspace --release --profile ci --no-fail-fast -E "not ($GPU_TESTS) and not binary_id(x3d-viewer::rea_batch08_net)" 2>&1 | tee suite.log
+          cargo nextest run --workspace --release --features x3d-runtime/av1,x3d-render/av1 --profile ci --no-fail-fast -E "not ($GPU_TESTS) and not binary_id(x3d-viewer::rea_batch08_net)" 2>&1 | tee suite.log
           status=${PIPESTATUS[0]}
           # The second run rewrites junit.xml; keep the first run's file.
           cp target/nextest/ci/junit.xml target/nextest/ci/junit-main.xml 2>/dev/null || true
           # rea_batch08_net binds the fixed UDP ports 41234 to 41236 (.config/nextest.toml). Another runner on the same
           # machine may run it now, so it runs alone under a machine-wide lock (flock); the lock is held for this binary only.
-          flock /tmp/xite-ci-udp-41234.lock cargo nextest run --workspace --release --profile ci --no-fail-fast --no-tests=pass -E "not ($GPU_TESTS) and binary_id(x3d-viewer::rea_batch08_net)" 2>&1 | tee -a suite.log
+          flock /tmp/xite-ci-udp-41234.lock cargo nextest run --workspace --release --features x3d-runtime/av1,x3d-render/av1 --profile ci --no-fail-fast --no-tests=pass -E "not ($GPU_TESTS) and binary_id(x3d-viewer::rea_batch08_net)" 2>&1 | tee -a suite.log
           test "${PIPESTATUS[0]}" -eq 0 && test "$status" -eq 0
 
       - name: Doctests

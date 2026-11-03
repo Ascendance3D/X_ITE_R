@@ -10,6 +10,7 @@
 //! luma sample each, up to eight held) is bounded by [`MAX_LUMA_SAMPLES`], which is checked from the frame headers
 //! before the decoder runs; it is not bounded by `max_bytes`. A fixed 8192 x 4352 picture measured 860 MB peak.
 
+#[cfg(feature = "av1")]
 use crate::av1;
 use crate::vp8;
 use vp9dec::{Decoder, PlaneData};
@@ -130,6 +131,7 @@ fn children(d: &[u8], start: usize, end: usize) -> Vec<(u64, usize, usize)> {
 enum Codec {
     Vp9,
     Vp8,
+    #[cfg(feature = "av1")]
     Av1,
 }
 
@@ -327,8 +329,12 @@ fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
                     track = Some((number, Codec::Vp9));
                 } else if track.is_none() && kind == 1 && codec == b"V_VP8" {
                     track = Some((number, Codec::Vp8));
-                } else if track.is_none() && kind == 1 && codec == b"V_AV1" {
-                    track = Some((number, Codec::Av1));
+                } else if cfg!(feature = "av1") && track.is_none() && kind == 1 && codec == b"V_AV1"
+                {
+                    #[cfg(feature = "av1")]
+                    {
+                        track = Some((number, Codec::Av1));
+                    }
                 }
             }
         }
@@ -394,6 +400,7 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
     match codec {
         Codec::Vp9 => decode_vp9(data, &blocks, max_bytes),
         Codec::Vp8 => decode_vp8(data, &blocks, max_bytes),
+        #[cfg(feature = "av1")]
         Codec::Av1 => decode_av1(data, &blocks, max_bytes),
     }
 }
@@ -471,6 +478,7 @@ fn decode_vp8(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
     })
 }
 
+#[cfg(feature = "av1")]
 /// The CodecPrivate (`av1C`) of the first `V_AV1` video track: its `configOBUs` carry the sequence header.
 fn av1_codec_private(data: &[u8]) -> Vec<u8> {
     let top = children(data, 0, data.len());
@@ -504,6 +512,7 @@ fn av1_codec_private(data: &[u8]) -> Vec<u8> {
     vec![]
 }
 
+#[cfg(feature = "av1")]
 /// The AV1 temporal units of a file (rav1d, `crate::av1`). The sequence header of the CodecPrivate is fed first, as
 /// the Matroska mapping allows a key frame to omit it. A unit the decoder refuses ends the decode with an error.
 fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
@@ -1820,6 +1829,7 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "av1")]
     /// AV1 streams: (name, width, height, layout 1 = 4:2:0 / 3 = 4:4:4). Planes as libaom outputs them (8 bit; the
     /// 10 bit stream with its two low bits dropped). `av1-grain` has film grain synthesis, `av1-parts` has tiles,
     /// `av1-svt` is made by a second encoder.
@@ -1832,6 +1842,7 @@ mod tests {
         ("av1-grain", 64, 48, 1),
     ];
 
+    #[cfg(feature = "av1")]
     fn av1_pictures(webm: &[u8]) -> Vec<av1::Picture> {
         let (codec, blocks) = demux(webm).unwrap();
 
@@ -1855,6 +1866,7 @@ mod tests {
 
     /// BR1.1: every picture of every AV1 stream equals what libaom, the AOMedia reference decoder, outputs, plane by
     /// plane: 8 and 10 bit, 4:2:0 and 4:4:4, tiles, a second encoder, and film grain.
+    #[cfg(feature = "av1")]
     #[test]
     fn av1_pictures_equal_the_reference_decoder_plane_by_plane() {
         for (name, w, h, layout) in AV1_FIXTURES {
@@ -1873,6 +1885,7 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "av1")]
     #[test]
     fn an_av1_webm_decodes_to_rgba_pictures_with_their_times() {
         let (webm, _) = codec_fixture("av1-testsrc");
@@ -1890,6 +1903,7 @@ mod tests {
     }
 
     /// BR1.8 for AV1, truncation: every cut of a file gives pictures or an error, never a panic.
+    #[cfg(feature = "av1")]
     #[test]
     fn a_truncated_av1_file_never_panics() {
         let (webm, _) = codec_fixture("av1-testsrc");
@@ -1911,6 +1925,7 @@ mod tests {
     /// damage it can recognize (OBU framing, a frame before any accepted sequence header). Run with
     /// `--ignored` to see the abort; fixing it needs a patched rav1d (catch_unwind at its three FFI entry points)
     /// or a decode in a separate process.
+    #[cfg(feature = "av1")]
     #[test]
     #[ignore = "rav1d aborts the process on some damaged streams (see the doc comment)"]
     fn mutated_av1_files_never_panic() {
@@ -1927,6 +1942,7 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "av1")]
     #[test]
     fn an_av1_webm_beyond_the_byte_budget_is_refused() {
         let (webm, _) = codec_fixture("av1-testsrc");
@@ -1934,6 +1950,18 @@ mod tests {
         assert!(matches!(
             decode(&webm, 96 * 64 * 4 * 3),
             Err(WebmError::TooLarge)
+        ));
+    }
+
+    /// Without the `av1` feature an AV1 track is a video this build does not decode: no rav1d is linked.
+    #[cfg(not(feature = "av1"))]
+    #[test]
+    fn an_av1_track_is_not_decoded_without_the_feature() {
+        let (webm, _) = codec_fixture("av1-testsrc");
+
+        assert!(matches!(
+            decode(&webm, BUDGET),
+            Err(WebmError::NoVideoTrack)
         ));
     }
 
