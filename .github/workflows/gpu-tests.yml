@@ -1,5 +1,5 @@
 # The GPU tests that the hosted runner cannot run (GPU_TESTS in rust-tests.yml), on the organization's GPU runner
-# (gh-runner-ascendance3d-3: labels self-hosted, Linux, X64, proxmox, gpu; runner group xite-ci).
+# (gh-runner-ascendance3d-gpu: labels self-hosted, Linux, X64, proxmox, gpu; runner group xite-ci).
 #
 # This workflow never runs for a pull request. A pull request from a fork would execute its code on the runner host, so
 # the triggers are a push to master, a nightly run and a manual run, and pull request jobs stay on GitHub-hosted runners (CLAUDE.md).
@@ -59,9 +59,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ./.github/actions/runner-preflight
-
+      # The runner has no cargo, rustup or Node 24 of its own (issue #162). Install them in the runner user's home, without
+      # sudo, before the preflight: rust-toolchain installs rustup when it is missing, and setup-node uses the tool cache.
       - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - uses: ./.github/actions/runner-preflight
 
       - name: Allowed absent keys
         run: echo "X3D_EVIDENCE_ALLOW=$(python3 -I -B tools/gpu_evidence_allow.py)" >> "$GITHUB_ENV"
@@ -103,11 +109,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ./.github/actions/runner-preflight
-
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
           targets: wasm32-unknown-unknown
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: crates/x3d-web/package-lock.json
+
+      - uses: ./.github/actions/runner-preflight
 
       # wasm-bindgen's CLI must be the exact version of the wasm-bindgen crate in Cargo.lock.
       - name: wasm-bindgen CLI
@@ -117,12 +129,6 @@ jobs:
 
       - name: Build the browser module
         run: tools/build-web.sh
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: crates/x3d-web/package-lock.json
 
       - name: npm packages and Playwright's Chromium
         working-directory: crates/x3d-web
