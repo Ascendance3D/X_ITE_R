@@ -870,25 +870,33 @@ mod tests {
     /// An inter frame (profile 0, shown, not error resilient) whose three `found_ref` bits are `found`: when none is
     /// set, `frame_size_with_refs` codes the size itself.
     fn inter_frame_header(found: [u32; 3], w: u32, h: u32) -> Vec<u8> {
+        inter_frame_header_with(found, w, h, false)
+    }
+
+    /// As [`inter_frame_header`]; with `always_size`, the width and height bits follow even when a `found_ref` bit
+    /// is set (the decoder must not read them then).
+    fn inter_frame_header_with(found: [u32; 3], w: u32, h: u32, always_size: bool) -> Vec<u8> {
         let mut f = vec![
-            (2, 2), // frame_marker
-            (0, 2), // profile 0
-            (0, 1), // show_existing_frame
-            (1, 1), // non-key frame
-            (1, 1), // show_frame (so no intra_only bit)
-            (0, 1), // error_resilient_mode
-            (0, 2), // reset_frame_context
-            (0, 8), // refresh_frame_flags
-            (0, 4), // ref_frame_idx[0], sign_bias
-            (1, 4), // ref_frame_idx[1], sign_bias
-            (2, 4), // ref_frame_idx[2], sign_bias
+            (2, 2),      // frame_marker
+            (0, 2),      // profile 0
+            (0, 1),      // show_existing_frame
+            (1, 1),      // non-key frame
+            (1, 1),      // show_frame (so no intra_only bit)
+            (0, 1),      // error_resilient_mode
+            (0, 2),      // reset_frame_context
+            (0, 8),      // refresh_frame_flags
+            (0 << 1, 4), // ref_frame_idx[0] = 0, sign_bias 0
+            (1 << 1, 4), // ref_frame_idx[1] = 1
+            (2 << 1, 4), // ref_frame_idx[2] = 2
         ];
 
         f.extend(found.iter().map(|&b| (b, 1)));
 
-        if found == [0, 0, 0] {
+        if found == [0, 0, 0] || always_size {
             f.extend([(w - 1, 16), (h - 1, 16)]);
         }
+
+        f.push((0, 32)); // padding, so that the decoder's header parser does not run out of bits
 
         bytes_of(&f)
     }
@@ -923,7 +931,7 @@ mod tests {
             Some((640, 480))
         );
 
-        // Each of the three found_ref positions copies a reference size: nothing is coded.
+        // The first found_ref bit that is set copies that reference's size and ends the loop: nothing is coded.
         for found in [[1, 0, 0], [0, 1, 0], [0, 0, 1]] {
             assert_eq!(coded_size(&inter_frame_header(found, 1, 1)), None);
         }
@@ -951,6 +959,51 @@ mod tests {
             decode(&webm_of(&frames), BUDGET),
             Err(WebmError::TooLarge)
         ));
+    }
+
+    /// `frame_size_with_refs` (VP9 section 6.2.5) stops at the first `found_ref` bit that is set and copies the size
+    /// of that reference; only when all three are clear is a size coded. This compares `coded_size` with the header
+    /// parser of `vp9dec` for every pattern, with an explicit size placed after the bits to catch a parser that reads
+    /// it when it should not (`[0, 1, 0]` and `[0, 0, 1]` copy a size; a size after them is not a size).
+    #[test]
+    fn coded_size_agrees_with_the_decoder_on_every_found_ref_pattern() {
+        let mut persist = vp9dec::header::PersistentState::new();
+
+        persist.ref_frame_sizes = [
+            (111, 11),
+            (222, 22),
+            (333, 33),
+            (0, 0),
+            (0, 0),
+            (0, 0),
+            (0, 0),
+            (0, 0),
+        ];
+
+        for n in 0..8u32 {
+            let found = [n >> 2 & 1, n >> 1 & 1, n & 1];
+            let frame = inter_frame_header_with(found, 8192, 4353, true);
+            let (parsed, _) = vp9dec::header::parse_uncompressed_header(&frame, &persist).unwrap();
+            let vp9dec::header::FrameHeader::New(h) = parsed else {
+                panic!("not a new frame");
+            };
+
+            match coded_size(&frame) {
+                Some(s) => {
+                    assert_eq!(found, [0, 0, 0], "{found:?}");
+                    assert_eq!(s, (h.width, h.height), "{found:?}");
+                    assert_eq!(s, (8192, 4353));
+                }
+                None => {
+                    assert_ne!(found, [0, 0, 0], "{found:?}");
+
+                    // The decoder copied the size of the first reference whose bit is set, not the coded one.
+                    let first = found.iter().position(|&b| b == 1).unwrap();
+
+                    assert_eq!((h.width, h.height), persist.ref_frame_sizes[first]);
+                }
+            }
+        }
     }
 
     /// Superframe sizes are little-endian (VP9 Annex B): `[1, 0]` is 1 and `[0, 1]` is 256.
