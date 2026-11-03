@@ -99,7 +99,7 @@ def main(argv):
     bad, n = compare(files, VENDOR)
     print("\n".join(bad) or f"OK: {n} files identical to {NAME}, Cargo.toml = crate + the recorded change")
     if "--self-test" in argv:
-        bad = bad or ["self-test failed"] * self_test(files)
+        bad = bad + ["self-test failed"] * self_test(files)  # always run, even when the comparison already failed
     return 1 if bad else 0
 
 
