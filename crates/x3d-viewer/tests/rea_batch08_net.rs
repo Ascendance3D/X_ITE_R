@@ -470,9 +470,12 @@ fn the_udp_sender_makes_many_rounds_in_a_short_drive() {
             sent + refused >= 25,
             "port {port}: {sent} sent and {refused} refused in 400 ms; a round must not wait"
         );
+        // The share of refusals is not checked here. A connected UDP socket keeps one pending error, so ICMP replies that
+        // arrive between two sends make one refusal; on a loaded hosted macOS machine the job read "sent 32 refused 11" in
+        // 43 rounds. The share is a property of the OS, not of the sender; `compare_case` checks it for the real cases.
         assert!(
-            *refused >= 5 && *refused * 2 >= *sent,
-            "port {port}: sent {sent} refused {refused}"
+            *refused >= 5,
+            "port {port}: sent {sent} refused {refused}; a closed port must refuse"
         );
     }
 }
