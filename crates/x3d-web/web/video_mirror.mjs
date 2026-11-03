@@ -6,6 +6,12 @@
 // first frame is in or it failed, makes the engine's play, pause, rewind, loop and rate calls on it, and gives the engine
 // the pictures and the `currentTime` (WebBrowser.takeVideoOps, videoLoaded, videoFailed, videoFrame).
 //
+// Two timings (docs/movie-texture-timing.md). Pinned: the element plays and the page sends its pictures and times
+// (videoFrame). ISO 19775-1 18.4.2 (the default): the element never plays; the engine decides the media time and sends
+// `seek` calls with an id that only grows, this module seeks the paused element and answers each with the id of the request
+// (videoSeeked). One seek runs at a time and only the newest waiting request starts after it; the engine drops an answer
+// whose id is older than its newest request, so an obsolete picture never overwrites a newer one.
+//
 // The picture is read with a 2D canvas (drawImage of the element, getImageData) when it changed. The sound of the element
 // plays through the element itself, not through the engine's Web Audio graph (web/API.md).
 
@@ -69,7 +75,7 @@ export class VideoMirror
 
       for (const [ token, entry ] of this .#videos)
       {
-         if (!entry .loaded)
+         if (!entry .loaded || entry .engineDriven)
             continue;
 
          const { video } = entry;
@@ -177,11 +183,69 @@ export class VideoMirror
          case "loop":
             video .loop = args [0];
             break;
+         case "seek":
+            this .#seek (token, entry, args [0], args [1]);
+            break;
          case "rate":
             try { video .playbackRate = args [0]; } catch { video .playbackRate = 1; }
             video .preservesPitch = args [1];
             break;
       }
+   }
+
+   // ISO timing: seek the paused element to `time` and answer with `id`.
+   #seek (token, entry, id, time)
+   {
+      entry .engineDriven = true;
+      entry .wantPlay     = false;
+      entry .seekWanted   = { id, time };
+
+      if (!entry .seeking)
+         this .#runSeek (token, entry);
+   }
+
+   #runSeek (token, entry)
+   {
+      const request = entry .seekWanted;
+
+      if (!request)
+         return;
+
+      const { video } = entry;
+
+      entry .seekWanted = null;
+      entry .seeking    = request;
+
+      let done = false;
+
+      const finish = () =>
+      {
+         if (done)
+            return;
+
+         done = true;
+         video .removeEventListener ("seeked", finish);
+         entry .seeking = null;
+
+         if (this .#videos .get (token) !== entry)
+            return;
+
+         // A newer request waits: this picture is obsolete (the engine would drop its id), so it is not even read.
+         if (entry .seekWanted)
+            return this .#runSeek (token, entry);
+
+         const pixels = video .readyState >= 2 ? this .#pixels (video) : EMPTY;
+
+         this .#engine () ?.videoSeeked (token, request .id, video .currentTime, pixels);
+      };
+
+      video .addEventListener ("seeked", finish);
+      video .pause ();
+      video .currentTime = request .time;
+
+      // A seek to the time the element is at fires no `seeked` in some browsers.
+      if (!video .seeking)
+         queueMicrotask (finish);
    }
 
    #release (entry)
