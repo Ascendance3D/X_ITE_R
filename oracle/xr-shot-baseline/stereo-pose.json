@@ -1,0 +1,22 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-shapes.x3dv",
+ "script": "synthetic-xr/stereo-pose.json",
+ "runs": 3,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [],
+ "rgbaSha256": "d14475be6c151eac4a0f6a7a559c9cd57f7b9abefd2dcc5a2511bbed234128f3",
+ "pngSha256": "c450c3406c23c938abdc377ef658a2c67496d19658dcbf5bba771506edf5dbb7"
+}

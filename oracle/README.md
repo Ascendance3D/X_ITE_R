@@ -1479,3 +1479,23 @@ python3 -I oracle/tools/gen_rea_audio_repair.py
 XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests python3 -I oracle/tools/rea_b05.py baseline clip-gain   # NAME: rewrites its key; git diff shows a changed one
 python3 -I oracle/tools/rea_b05.py check --target target/release
 ```
+
+## XR views against the pinned WebXR context (issue #83)
+
+`oracle/xr-shot.html` + `oracle/x_ite-xr-shot.mjs` draw a world with the pinned X_ITE 16.5.0 through its own `X3DWebXRContext`,
+on a mock session: no headset, no XR runtime. The mock replaces `navigator.xr` (`isSessionSupported`, `requestSession`),
+`XRWebGLLayer` (no framebuffer of its own: X_ITE draws every view into the canvas at the viewport that the script gives) and
+`gl.makeXRCompatible`, hands out one viewer pose with the script's views (projection matrix, transform, inverse, viewport), and runs
+`browser .xrStartSession ()` and the pinned frame callback. The page is served at a URL inside `x_ite-pin/src` (X_ITE resolves its
+assets relative to the page) but is not a file of the pin (`tools/verify-candidate.sh` digests that directory).
+
+```
+python3 -I oracle/tools/gen_xr_shot.py                  # oracle/synthetic-xr/NAME.json: size, pose, views (column-major, as WebXR)
+XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests node oracle/x_ite-xr-shot.mjs oracle/synthetic-xr/NAME.json /tmp/xr-out --runs 3
+cp /tmp/xr-out/NAME.{png,json} oracle/xr-shot-baseline/  # written only when all runs are identical
+```
+
+Keys `oracle/xr-shot-baseline/NAME.png` (synthetic worlds `oracle/synthetic-xr/*.x3dv`; the JSON beside each has the page's
+requests of the mock, the renderer and the hashes) are compared by `cargo nextest run -p x3d-render --test xr_views`. A missing
+key fails; no adapter fails in strict mode and records a skip otherwise. `XR_CASES=a,b` runs other cases, `XR_DUMP=dir` writes the
+Rust pictures.
