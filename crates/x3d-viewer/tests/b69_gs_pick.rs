@@ -23,6 +23,65 @@ const T0: f64 = 946684800.0;
 /// Largest difference of a hit value (point, normal, texCoord) that still counts as equal.
 const VALUE_TOL: f64 = 1e-4;
 
+/// The limit of the hit distance (the z of the hit point, index 2 of a probe) on macOS (issue #89), fixed before the run that
+/// uses it. The hosted macOS 15 runner is a virtual machine with a paravirtual graphics device, not a physical GPU; its first
+/// run (PR #342) differed from the pinned baselines by 1.7e-4 to 1.9e-4 in the hit distance of gs-pick-ortho (about 10.7
+/// units, depth buffer rounding), with every hit or miss and every other component equal. Only the distance gets this limit;
+/// every other component (x, y, the normal, the texture coordinate) keeps VALUE_TOL on every platform. A physical Mac is not
+/// validated by it.
+const DISTANCE_TOL_MACOS: f64 = 3e-4;
+
+/// Index of the hit distance in a probe (`flat`: point x, y, z, normal, texCoord).
+const DISTANCE: usize = 2;
+
+/// The limit of component `i` of a probe.
+fn tol_of(i: usize) -> f64 {
+    if i == DISTANCE && cfg!(target_os = "macos") {
+        DISTANCE_TOL_MACOS
+    } else {
+        VALUE_TOL
+    }
+}
+
+/// The first component of two equal-hit probes that is outside its limit, and the largest difference of all.
+fn compare_probe(w: &[f64; 10], g: &[f64; 10]) -> (bool, f64) {
+    let mut worst = 0f64;
+    let mut ok = true;
+
+    for (i, (a, b)) in w.iter().zip(g).enumerate() {
+        let d = (a - b).abs();
+
+        worst = worst.max(d);
+        ok &= d <= tol_of(i);
+    }
+
+    (ok, worst)
+}
+
+#[test]
+fn only_the_distance_gets_the_macos_limit() {
+    let base = [0.0f64; 10];
+
+    for i in 0..10 {
+        let mut off = base;
+
+        off[i] = 2e-4;
+        let (ok, _) = compare_probe(&base, &off);
+
+        assert_eq!(
+            ok,
+            i == DISTANCE && cfg!(target_os = "macos"),
+            "component {i} off by 2e-4"
+        );
+
+        off[i] = 4e-4;
+        assert!(
+            !compare_probe(&base, &off).0,
+            "component {i} off by 4e-4 is never accepted"
+        );
+    }
+}
+
 const CASES: &[&str] = &[
     "gs-pick-basic",
     "gs-pick-default",
@@ -194,16 +253,12 @@ fn splat_picks(log: bool) {
                 (Some(w), Some(g)) => {
                     hits += 1;
                     case_hits += 1;
-                    let diff = w
-                        .iter()
-                        .zip(g)
-                        .map(|(a, b)| (a - b).abs())
-                        .fold(0.0, f64::max);
+                    let (within, diff) = compare_probe(w, g);
 
                     exact += (diff == 0.0) as usize;
                     case_worst = case_worst.max(diff);
 
-                    if diff > VALUE_TOL {
+                    if !within {
                         misses += 1;
                         failures.push(format!("{name} #{i}: X_ITE {w:?} / Rust {g:?}"));
                     }
