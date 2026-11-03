@@ -22,12 +22,20 @@ const ID_SIMPLE_BLOCK: u64 = 0xA3;
 const ID_BLOCK_GROUP: u64 = 0xA0;
 const ID_BLOCK: u64 = 0xA1;
 
+/// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
+/// VP9's highest levels (8192 x 4352 fits; the level tables are not in the local standards library, so this is a
+/// limit of this implementation, not a quotation). `vp9dec` allows 2^27 samples, about 400 MB per picture and up
+/// to eight pictures held as references; a size from a file is checked here first.
+pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
+
 /// Why a file is not decoded.
 #[derive(Debug)]
 pub enum WebmError {
     NotWebm,
     NoVp9Track,
     Decode(String),
+    /// A picture or the decoded frames exceed the limits ([`MAX_LUMA_SAMPLES`], the byte budget of [`decode`]).
+    TooLarge,
 }
 
 /// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
@@ -92,6 +100,12 @@ fn children(d: &[u8], start: usize, end: usize) -> Vec<(u64, usize, usize)> {
             break;
         };
         let body = at + head;
+
+        // A header that ends beyond the parent is cut off: no body to read (and `body..stop` would be reversed).
+        if body > end {
+            break;
+        }
+
         let stop = size.map_or(end, |s| body.saturating_add(s)).min(end);
 
         out.push((id, body, stop));
@@ -107,8 +121,149 @@ struct Block {
     end: usize,
 }
 
-/// Demux `data`: the width/height are known only after decoding.
-pub fn decode(data: &[u8]) -> Result<Video, WebmError> {
+struct Bits<'a> {
+    d: &'a [u8],
+    at: usize,
+}
+
+impl Bits<'_> {
+    fn bits(&mut self, n: usize) -> Option<u32> {
+        let mut v = 0u32;
+
+        for _ in 0..n {
+            let byte = *self.d.get(self.at / 8)?;
+
+            v = (v << 1) | u32::from(byte >> (7 - self.at % 8) & 1);
+            self.at += 1;
+        }
+
+        Some(v)
+    }
+}
+
+/// The frames of a chunk: a superframe (VP9 Annex B) is its frames, any other chunk is one frame.
+fn frames_of(chunk: &[u8]) -> Vec<&[u8]> {
+    let Some(&last) = chunk.last() else {
+        return vec![];
+    };
+
+    if last >> 5 == 0b110 {
+        let count = (last & 7) as usize + 1;
+        let size_bytes = ((last >> 3) & 3) as usize + 1;
+        let index = 2 + size_bytes * count;
+
+        if chunk.len() >= index && chunk[chunk.len() - index] == last {
+            let mut out = vec![];
+            let (mut at, mut pos) = (0usize, chunk.len() - index + 1);
+
+            for _ in 0..count {
+                let size = chunk[pos..pos + size_bytes]
+                    .iter()
+                    .rev()
+                    .fold(0usize, |a, b| (a << 8) | *b as usize);
+
+                pos += size_bytes;
+
+                let Some(end) = at.checked_add(size).filter(|e| *e <= chunk.len() - index) else {
+                    return vec![chunk];
+                };
+
+                out.push(&chunk[at..end]);
+                at = end;
+            }
+
+            return out;
+        }
+    }
+
+    vec![chunk]
+}
+
+/// The picture size that the uncompressed header of one VP9 frame codes itself (a key frame, an intra-only frame, an
+/// inter frame that does not copy the size of a reference), `None` for any other frame or one that is cut off. A size
+/// copied from a reference was coded by an earlier frame, so checking the coded ones checks them all.
+fn coded_size(frame: &[u8]) -> Option<(u32, u32)> {
+    let mut r = Bits { d: frame, at: 0 };
+
+    if r.bits(2)? != 2 {
+        return None;
+    }
+
+    let profile = r.bits(1)? | (r.bits(1)? << 1);
+
+    if profile == 3 {
+        r.bits(1)?;
+    }
+
+    if r.bits(1)? == 1 {
+        return None; // show_existing_frame
+    }
+
+    let key = r.bits(1)? == 0;
+    let show_frame = r.bits(1)?;
+    let error_resilient = r.bits(1)?;
+
+    let color_config = |r: &mut Bits| -> Option<()> {
+        if profile >= 2 {
+            r.bits(1)?;
+        }
+
+        if r.bits(3)? != 7 {
+            r.bits(1)?;
+
+            if profile == 1 || profile == 3 {
+                r.bits(3)?;
+            }
+        } else if profile == 1 || profile == 3 {
+            r.bits(1)?;
+        }
+
+        Some(())
+    };
+    let size = |r: &mut Bits| -> Option<(u32, u32)> { Some((r.bits(16)? + 1, r.bits(16)? + 1)) };
+
+    if key {
+        r.bits(24)?;
+        color_config(&mut r)?;
+
+        return size(&mut r);
+    }
+
+    let intra_only = if show_frame == 0 {
+        r.bits(1)? == 1
+    } else {
+        false
+    };
+
+    if error_resilient == 0 {
+        r.bits(2)?;
+    }
+
+    if intra_only {
+        r.bits(24)?;
+
+        if profile > 0 {
+            color_config(&mut r)?;
+        }
+
+        r.bits(8)?;
+
+        return size(&mut r);
+    }
+
+    r.bits(8 + 3 * 4)?;
+
+    for _ in 0..3 {
+        if r.bits(1)? == 1 {
+            return None; // found_ref: the size of a reference
+        }
+    }
+
+    size(&mut r)
+}
+
+/// The blocks of the first VP9 video track of `data`, in file order.
+fn demux(data: &[u8]) -> Result<Vec<Block>, WebmError> {
     let top = children(data, 0, data.len());
 
     if top.first().map(|t| t.0) != Some(ID_EBML) {
@@ -202,14 +357,34 @@ pub fn decode(data: &[u8]) -> Result<Video, WebmError> {
         }
     }
 
+    Ok(blocks)
+}
+
+/// Demux `data`: the width/height are known only after decoding. The pictures are RGBA in memory, so `max_bytes` is
+/// the most that all of them may take together; a picture larger than [`MAX_LUMA_SAMPLES`] is not decoded.
+pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
+    let blocks = demux(data)?;
     let mut decoder = Decoder::new();
     let mut frames = vec![];
     let (mut width, mut height) = (0, 0);
+    let mut bytes = 0u64;
 
     for b in &blocks {
-        let shown = decoder
-            .decode_frame(&data[b.start..b.end])
-            .map_err(|e| WebmError::Decode(format!("{e:?}")))?;
+        let chunk = &data[b.start..b.end];
+
+        for f in frames_of(chunk) {
+            if let Some((w, h)) = coded_size(f)
+                && u64::from(w) * u64::from(h) > MAX_LUMA_SAMPLES
+            {
+                return Err(WebmError::TooLarge);
+            }
+        }
+
+        // The decoder is a third-party crate: a panic in it is a refused file, not a crash of the viewer.
+        let shown =
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.decode_frame(chunk)))
+                .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
+                .map_err(|e| WebmError::Decode(format!("{e:?}")))?;
 
         for f in shown.into_iter().filter_map(|d| d.frame) {
             let (PlaneData::U8(y), PlaneData::U8(u), PlaneData::U8(v)) = (&f.y, &f.u, &f.v) else {
@@ -218,6 +393,12 @@ pub fn decode(data: &[u8]) -> Result<Video, WebmError> {
 
             width = f.width as u32;
             height = f.height as u32;
+            bytes = bytes.saturating_add(u64::from(width) * u64::from(height) * 4);
+
+            if bytes > max_bytes {
+                return Err(WebmError::TooLarge);
+            }
+
             frames.push(VideoFrame {
                 rgba: yuv_to_rgba(
                     f.width as usize,
@@ -319,6 +500,9 @@ fn yuv_to_rgba(w: usize, h: usize, sx: bool, sy: bool, y: &[u8], u: &[u8], v: &[
 mod tests {
     use super::*;
 
+    /// The byte budget of MovieTexture.
+    const BUDGET: u64 = 512 << 20;
+
     fn synthetic() -> Vec<u8> {
         std::fs::read(concat!(
             env!("CARGO_MANIFEST_DIR"),
@@ -327,9 +511,368 @@ mod tests {
         .unwrap()
     }
 
+    /// Deterministic generator for the mutation tests (SplitMix64).
+    struct Rng(u64);
+
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 = self.0.wrapping_add(0x9E37_79B9_7F4A_7C15);
+            let mut z = self.0;
+            z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+            z ^ (z >> 31)
+        }
+
+        fn below(&mut self, n: usize) -> usize {
+            (self.next() % n.max(1) as u64) as usize
+        }
+    }
+
+    /// One mutated copy of `base`: bit flips, random bytes, a run of random bytes, a truncation or a removed span.
+    fn mutate(base: &[u8], rng: &mut Rng) -> Vec<u8> {
+        let mut d = base.to_vec();
+
+        for _ in 0..1 + rng.below(4) {
+            match rng.below(6) {
+                0 | 1 => {
+                    let at = rng.below(d.len());
+                    d[at] ^= 1 << rng.below(8);
+                }
+                2 => {
+                    let at = rng.below(d.len());
+                    d[at] = rng.next() as u8;
+                }
+                3 => {
+                    let at = rng.below(d.len());
+                    let n = rng.below(16).min(d.len() - at);
+                    for b in &mut d[at..at + n] {
+                        *b = rng.next() as u8;
+                    }
+                }
+                4 => {
+                    let keep = rng.below(d.len());
+                    d.truncate(keep.max(1));
+                }
+                _ => {
+                    let at = rng.below(d.len());
+                    let n = rng.below(32).min(d.len() - at);
+                    d.drain(at..at + n);
+                    if d.is_empty() {
+                        d.push(0);
+                    }
+                }
+            }
+        }
+
+        d
+    }
+
+    /// One copy of `base` with the bytes of one block (a VP9 frame, mostly its first 24 bytes) mutated.
+    fn mutate_block(base: &[u8], rng: &mut Rng) -> Vec<u8> {
+        let blocks = demux(base).unwrap();
+        let b = &blocks[rng.below(blocks.len())];
+        let mut d = base.to_vec();
+        let len = b.end - b.start;
+
+        for _ in 0..1 + rng.below(3) {
+            let span = if rng.below(4) == 0 { len } else { len.min(24) };
+            let at = b.start + rng.below(span);
+
+            if rng.below(2) == 0 {
+                d[at] ^= 1 << rng.below(8);
+            } else {
+                d[at] = rng.next() as u8;
+            }
+        }
+
+        d
+    }
+
+    /// Decodes `n` mutations of the synthetic file; returns the inputs that panicked, with the panic message.
+    fn panics_in(base: &[u8], seed: u64, n: usize) -> Vec<(String, Vec<u8>)> {
+        let mut rng = Rng(seed);
+        let mut bad = vec![];
+
+        for i in 0..n {
+            if i % 250 == 249 && std::env::var_os("WEBM_FUZZ_DUMP").is_some() {
+                eprintln!("{} done, {} panics", i + 1, bad.len());
+            }
+
+            let d = if i % 2 == 0 {
+                mutate(base, &mut rng)
+            } else {
+                mutate_block(base, &mut rng)
+            };
+            let r = std::panic::catch_unwind(|| decode(&d, BUDGET).map(|v| v.frames.len()));
+
+            if let Err(e) = r {
+                let msg = e
+                    .downcast_ref::<String>()
+                    .cloned()
+                    .or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string()))
+                    .unwrap_or_default();
+
+                bad.push((msg, d));
+            }
+        }
+
+        bad
+    }
+
+    fn big() -> Vec<u8> {
+        std::fs::read(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/data/vp9-1024x576-4-tile-columns.webm"
+        ))
+        .unwrap()
+    }
+
+    /// An EBML element with an 8-byte size.
+    fn el(id: &[u8], body: &[u8]) -> Vec<u8> {
+        let mut v = id.to_vec();
+
+        v.push(1);
+        v.extend_from_slice(&(body.len() as u64).to_be_bytes()[1..]);
+        v.extend_from_slice(body);
+        v
+    }
+
+    /// A WebM with one VP9 track (number 1) whose blocks are `frames`, 100 ms apart.
+    fn webm_of(frames: &[&[u8]]) -> Vec<u8> {
+        let track = [el(&[0xD7], &[1]), el(&[0x83], &[1]), el(&[0x86], b"V_VP9")].concat();
+        let mut cluster = el(&[0xE7], &[0]);
+
+        for (i, f) in frames.iter().enumerate() {
+            let t = (i as i16 * 100).to_be_bytes();
+            let body = [&[0x81, t[0], t[1], 0x80][..], f].concat();
+
+            cluster.extend(el(&[0xA3], &body));
+        }
+
+        let segment = [
+            el(&[0x16, 0x54, 0xAE, 0x6B], &el(&[0xAE], &track)),
+            el(&[0x1F, 0x43, 0xB6, 0x75], &cluster),
+        ]
+        .concat();
+
+        [
+            el(&[0x1A, 0x45, 0xDF, 0xA3], &[]),
+            el(&[0x18, 0x53, 0x80, 0x67], &segment),
+        ]
+        .concat()
+    }
+
+    /// The uncompressed header start of a profile 0 key frame that codes `w` x `h`.
+    fn key_frame_header(w: u32, h: u32) -> Vec<u8> {
+        let mut bits: Vec<bool> = vec![];
+        let mut put = |v: u32, n: usize| bits.extend((0..n).rev().map(|i| v >> i & 1 == 1));
+
+        put(2, 2); // frame_marker
+        put(0, 2); // profile 0
+        put(0, 1); // show_existing_frame
+        put(0, 1); // key frame
+        put(1, 1); // show_frame
+        put(0, 1); // error_resilient_mode
+        put(0x49_8342, 24); // sync code
+        put(2, 3); // color_space
+        put(0, 1); // color_range
+        put(w - 1, 16);
+        put(h - 1, 16);
+
+        bits.chunks(8)
+            .map(|c| {
+                c.iter()
+                    .enumerate()
+                    .fold(0u8, |a, (i, b)| a | (u8::from(*b) << (7 - i)))
+            })
+            .collect()
+    }
+
+    #[test]
+    fn an_element_header_that_ends_beyond_its_parent_is_skipped_not_sliced() {
+        // A cluster of one byte holding a Timecode id; the size byte of that element lies after the cluster. Before
+        // this was guarded, `data[body..stop]` was reversed and decoding panicked.
+        let mut d = webm_of(&[]);
+        let at = d
+            .windows(4)
+            .position(|w| w == [0x1F, 0x43, 0xB6, 0x75])
+            .unwrap();
+
+        d.truncate(at);
+        d.extend(el(&[0x1F, 0x43, 0xB6, 0x75], &[]));
+
+        let n = d.len();
+
+        d[n - 8..].copy_from_slice(&[0x01, 0, 0, 0, 0, 0, 0, 1]); // cluster size 1
+        d.extend_from_slice(&[0xE7, 0x81, 0x05]);
+
+        // The tracks sit before the cluster: patch the segment size to cover the added bytes.
+        let seg = d
+            .windows(4)
+            .position(|w| w == [0x18, 0x53, 0x80, 0x67])
+            .unwrap();
+        let len = (d.len() - seg - 12) as u64;
+
+        d[seg + 5..seg + 12].copy_from_slice(&len.to_be_bytes()[1..]);
+        assert!(matches!(decode(&d, BUDGET), Err(WebmError::Decode(_))));
+    }
+
+    #[test]
+    fn the_coded_size_of_every_block_of_the_fixtures_is_read() {
+        for (d, size) in [(synthetic(), (128, 128)), (big(), (1024, 576))] {
+            let blocks = demux(&d).unwrap();
+
+            assert_eq!(coded_size(&d[blocks[0].start..blocks[0].end]), Some(size));
+            // The other blocks are inter frames that copy the size of a reference, or key frames again.
+            for b in &blocks {
+                for f in frames_of(&d[b.start..b.end]) {
+                    assert!(matches!(coded_size(f), None | Some(_)));
+
+                    if let Some(s) = coded_size(f) {
+                        assert_eq!(s, size);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn a_picture_larger_than_the_limit_is_refused_before_it_is_decoded() {
+        let at_limit = key_frame_header(8192, 4352);
+        let too_big = key_frame_header(8192, 4353);
+        let huge = key_frame_header(65536, 65536);
+
+        assert_eq!(coded_size(&at_limit), Some((8192, 4352)));
+        const { assert!(8192u64 * 4352 <= MAX_LUMA_SAMPLES && 8192u64 * 4353 > MAX_LUMA_SAMPLES) };
+
+        for f in [&too_big, &huge] {
+            assert!(
+                matches!(decode(&webm_of(&[f]), BUDGET), Err(WebmError::TooLarge)),
+                "{:?}",
+                coded_size(f)
+            );
+        }
+
+        // The header alone is not a picture: within the limit the decoder is reached and refuses the cut-off frame.
+        assert!(matches!(
+            decode(&webm_of(&[&at_limit]), BUDGET),
+            Err(WebmError::Decode(_))
+        ));
+        // A superframe is checked frame by frame: the index is [marker, size, marker] after two frames.
+        let mut sf = [&at_limit[..], &too_big[..]].concat();
+        let marker = 0b1100_0000 | 1; // two frames, one size byte
+        let sizes = [at_limit.len() as u8, too_big.len() as u8];
+
+        sf.extend([marker, sizes[0], sizes[1], marker]);
+        assert_eq!(frames_of(&sf), vec![&at_limit[..], &too_big[..]]);
+        assert!(matches!(
+            decode(&webm_of(&[&sf]), BUDGET),
+            Err(WebmError::TooLarge)
+        ));
+    }
+
+    #[test]
+    fn the_pictures_may_not_take_more_than_the_budget() {
+        let d = synthetic();
+        let one = 128 * 128 * 4;
+
+        assert!(matches!(decode(&d, 3 * one), Err(WebmError::TooLarge)));
+        assert!(matches!(decode(&d, 10 * one - 1), Err(WebmError::TooLarge)));
+        assert_eq!(decode(&d, 10 * one).unwrap().frames.len(), 10);
+    }
+
+    /// Every cut of the file, container and frames alike, is an error or fewer pictures, never a panic.
+    #[test]
+    fn a_truncated_file_never_panics() {
+        for d in [synthetic(), big()] {
+            let step = (d.len() / 40).max(1);
+            let mut ok = 0;
+
+            for cut in (0..d.len()).step_by(step).chain([d.len() - 1]) {
+                match std::panic::catch_unwind(|| decode(&d[..cut], BUDGET)) {
+                    Ok(Ok(_)) => ok += 1,
+                    Ok(Err(_)) => {}
+                    Err(_) => panic!("panicked on a file cut at {cut} of {}", d.len()),
+                }
+            }
+
+            assert!(ok > 0, "no cut decoded a picture");
+        }
+    }
+
+    #[test]
+    fn mutated_files_never_panic() {
+        let bad = panics_in(&synthetic(), 7, 120);
+
+        assert!(
+            bad.is_empty(),
+            "{:?}",
+            bad.iter().map(|b| &b.0).collect::<Vec<_>>()
+        );
+    }
+
+    /// 1024 x 576, four tile columns: the tile-parallel decode and the loop-filter wavefront run.
+    #[test]
+    fn mutated_multi_tile_files_never_panic() {
+        let bad = panics_in(&big(), 9, 25);
+
+        assert!(
+            bad.is_empty(),
+            "{:?}",
+            bad.iter().map(|b| &b.0).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    #[ignore = "measurement: WEBM_FILE=<path>, run in release with /usr/bin/time -v"]
+    fn decode_a_file() {
+        let d = std::fs::read(std::env::var_os("WEBM_FILE").unwrap()).unwrap();
+        let t = std::time::Instant::now();
+        let r = decode(&d, BUDGET);
+
+        eprintln!(
+            "{:?} in {:?}",
+            r.map(|v| (v.width, v.height, v.frames.len())),
+            t.elapsed()
+        );
+    }
+
+    #[test]
+    #[ignore = "exploration: WEBM_FUZZ_ITERS mutations from WEBM_FUZZ_SEED"]
+    fn explore_mutations() {
+        let n = std::env::var("WEBM_FUZZ_ITERS")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(2000);
+        let seed = std::env::var("WEBM_FUZZ_SEED")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(1);
+        let base = match std::env::var_os("WEBM_FUZZ_BASE") {
+            Some(p) => std::fs::read(p).unwrap(),
+            None => synthetic(),
+        };
+        let bad = panics_in(&base, seed, n);
+        let mut kinds = std::collections::BTreeMap::new();
+
+        for (m, _) in &bad {
+            *kinds.entry(m.clone()).or_insert(0) += 1;
+        }
+
+        eprintln!("{} of {n} panicked", bad.len());
+        for (m, c) in &kinds {
+            eprintln!("{c:5}  {m}");
+        }
+        if let Some(dir) = std::env::var_os("WEBM_FUZZ_DUMP") {
+            for (i, (_, d)) in bad.iter().enumerate().take(20) {
+                std::fs::write(std::path::Path::new(&dir).join(format!("p{i}.webm")), d).unwrap();
+            }
+        }
+    }
+
     #[test]
     fn the_synthetic_webm_decodes_to_ten_frames_of_128_by_128() {
-        let v = decode(&synthetic()).unwrap();
+        let v = decode(&synthetic(), BUDGET).unwrap();
 
         assert_eq!((v.width, v.height, v.frames.len()), (128, 128, 10));
         assert_eq!(
@@ -347,12 +890,15 @@ mod tests {
 
     #[test]
     fn data_that_is_not_a_vp9_webm_is_refused() {
-        assert!(matches!(decode(b"not a webm"), Err(WebmError::NotWebm)));
+        assert!(matches!(
+            decode(b"not a webm", BUDGET),
+            Err(WebmError::NotWebm)
+        ));
         // The EBML header and a segment with no tracks.
         let mut d = synthetic();
 
         d.truncate(40);
-        assert!(decode(&d).is_err());
+        assert!(decode(&d, BUDGET).is_err());
         assert!(super::super::nodes::movie_texture::MovieMedia::decode_webm(b"x").is_none());
     }
 }
