@@ -14,12 +14,15 @@ crate-type = ["cdylib", "rlib"]
 default = ["avif"]
 # AVIF texture decoding in x3d-render; disable for a build without an AV1 decoder.
 avif = ["x3d-render/avif"]
+# NOT a default: the page plays a MovieTexture in a <video> element (`Fetcher::plays_video`), so the browser module carries
+# no native video decoder. Native tests of this crate get the decoders from the workspace build's feature unification.
+native-video = ["x3d-runtime/native-video", "x3d-viewer/native-video"]
 
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
-x3d-runtime = { path = "../x3d-runtime" }
+x3d-runtime = { path = "../x3d-runtime", default-features = false }
 # No QuickJS (`script`): it is C code that does not build for wasm32-unknown-unknown. The Scripts run in the page's own
 # engine instead (x3d-script without its `quickjs` feature, src/script.rs).
 x3d-render = { path = "../x3d-render", default-features = false }
