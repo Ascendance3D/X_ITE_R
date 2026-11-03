@@ -468,6 +468,14 @@ impl Viewer3d {
             .scene
             .map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
+        // `X3D_MOVIE_TIMING=pinned` selects the pinned X_ITE 16.5.0 MovieTexture time; the default is ISO 19775-1
+        // (docs/movie-texture-timing.md).
+        if let Some(t) = std::env::var("X3D_MOVIE_TIMING")
+            .ok()
+            .and_then(|v| x3d_runtime::nodes::movie_time::MovieTiming::parse(&v))
+        {
+            rt.set_movie_timing(t);
+        }
         // The oracle page (oracle/x_ite-pin/src/anim.html) is the document the browser lives in.
         rt.page_url = format!("{ORACLE_PREFIX}x_ite-pin/src/anim.html");
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));

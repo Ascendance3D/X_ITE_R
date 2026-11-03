@@ -5700,7 +5700,17 @@ class X3DBrowser
       element .shadowRoot, wrapper, this .#canvas);
 
 
-      this .#ready = wasm .then (() => WebBrowser .create (this .#canvas)) .then (engine =>
+      this .#ready = wasm .then (() =>
+      {
+         // The MovieTexture time: ISO/IEC 19775-1 18.4.2 by default, `movietiming="pinned"` for the pinned X_ITE 16.5.0
+         // behavior (docs/movie-texture-timing.md). It applies to the worlds made after it is set.
+         const timing = element .getAttribute ("movietiming");
+
+         if (timing !== null)
+            WebBrowser .setMovieTiming (timing);
+
+         return WebBrowser .create (this .#canvas);
+      }) .then (engine =>
       {
          if (this .#disposed)
          {

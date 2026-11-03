@@ -834,12 +834,16 @@ fn get_texture_color(diffuse_color: vec4<f32>, specular_color: vec4<f32>, textur
 const M_PI: f32 = 3.1415926535897932384626433832795;
 
 // ToneMapping2.glsl linearToSRGB / sRGBToLinear (GAMMA 2.2).
+// pow with a negative base is undefined (GLSL and WGSL). A channel of a negative linear color (spherical harmonics can
+// give one) came out as NaN on the reference GPUs, where a NaN source term blends and stores as 0 (RTX and llvmpipe), and as
+// something else in the compiled Metal pipeline (hosted macOS: gs-linear differed in single channels, vs-transparent-ibl in
+// its refracting spheres). max (color, 0) makes the 0 explicit and the same everywhere.
 fn linear_to_srgb(color: vec3<f32>) -> vec3<f32> {
-    return pow(color, vec3<f32>(1.0 / 2.2));
+    return pow(max(color, vec3<f32>(0.0)), vec3<f32>(1.0 / 2.2));
 }
 
 fn srgb_to_linear(color: vec3<f32>) -> vec3<f32> {
-    return pow(color, vec3<f32>(2.2));
+    return pow(max(color, vec3<f32>(0.0)), vec3<f32>(2.2));
 }
 
 fn tone_map_aces_narkowicz(color: vec3<f32>) -> vec3<f32> {
