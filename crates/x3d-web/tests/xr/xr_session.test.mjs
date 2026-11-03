@@ -229,3 +229,37 @@ test("multRight is the product this * other", () => {
   assert.deepEqual([...multRight(identity.slice(), a)], [...a]);
   assert.deepEqual([...multRight(a.slice(), shift)].slice(0, 4), [1 + 4, 2, 3, 4]);
 });
+
+test("emulated device: a frame without a viewer pose (tracking lost) keeps the last good pose and the session valid, then recovers", async () => {
+  const xr = new MockXR();
+  const handed = [];
+  const c = controller(xr, { gamepads: (g) => handed.push(g.length), getNearFar: () => ({ depthNear: 1, depthFar: 2 }) });
+  const good = frame({ viewer: [1, 2, 3], views: [{ at: [0, 0, 0], viewport: { x: 0, y: 0, width: 10, height: 10 } }] });
+  const lost = { getViewerPose: () => null, getPose: () => null };
+
+  await c.start();
+  c.frameUpdate(good);
+  assert.equal(c.tracking, true);
+  const before = JSON.stringify([...c.pose.cameraSpaceMatrix]);
+  const views = c.pose.views.length;
+
+  assert.doesNotThrow(() => c.frameUpdate(lost));
+  assert.equal(c.tracking, false);
+  assert.equal(JSON.stringify([...c.pose.cameraSpaceMatrix]), before, "the last good pose is held");
+  assert.equal(c.pose.views.length, views);
+  assert.equal(c.active, true, "the session stays valid");
+  assert.deepEqual(xr.session.renderStates.at(-1), { depthNear: 1, depthFar: 2 }, "the planes are still set");
+  assert.equal(handed.length, 2, "the gamepads are still handed over");
+
+  c.frameUpdate(good);
+  assert.equal(c.tracking, true);
+});
+
+test("emulated device: a lost pose before any good frame leaves the identity pose and no views", async () => {
+  const c = controller(new MockXR());
+
+  await c.start();
+  c.frameUpdate({ getViewerPose: () => null, getPose: () => null });
+  assert.equal(c.pose.views.length, 0);
+  assert.deepEqual([...c.pose.viewMatrix], [...translation(0, 0, 0)]);
+});

@@ -66,6 +66,7 @@ export class XRSessionController {
     this.gamepads = [];
     this.pose = null;
     this.frame = null;
+    this.tracking = false;
     this.listeners = [];
   }
 
@@ -140,6 +141,7 @@ export class XRSessionController {
       this.visible = false;
       this.inputSources = null;
       this.frame = null;
+      this.tracking = false;
       this.gamepads.length = 0;
       this.options.log?.("session-end");
     });
@@ -213,6 +215,18 @@ export class XRSessionController {
   updatePose() {
     const original = this.frame.getViewerPose(this.referenceSpace);
     const pose = this.pose;
+
+    // WebXR returns null when the device cannot give a pose for this frame (tracking lost, the reference space not yet
+    // located). The pinned X_ITE reads `originalPose.transform` and would throw. Here the last good pose and views stay
+    // as they were, `tracking` turns false until a frame has a pose, and the frame's other updates (planes, gamepads)
+    // still happen: a pose that is held, not an invented one, and the session stays valid (it ends only by the user agent's
+    // `end` event or `stop`).
+    if (!original) {
+      this.tracking = false;
+      return -1;
+    }
+
+    this.tracking = true;
 
     pose.cameraSpaceMatrix.set(original.transform.matrix);
     pose.viewMatrix.set(original.transform.inverse.matrix);
