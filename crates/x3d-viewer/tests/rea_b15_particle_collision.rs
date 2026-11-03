@@ -403,6 +403,9 @@ fn check_all(cpu: bool, gaps: Gaps, threads: usize) {
 
 #[test]
 fn rea_b15_particle_collision_matches_x_ite() {
+    // Validate X3D_TEST_SOFTWARE_TOL before anything else (also before an adapter skip): a bad value fails the run.
+    let _ = probe_tol();
+
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
         return x3d_evidence::no_gpu("no adapter: the collision depth buffer needs a GPU, skipped");
     }

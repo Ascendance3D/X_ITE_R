@@ -54,15 +54,25 @@ pub fn within_ulps(a: &Value, b: &Value, max_ulps: u64, seen: &mut u64) -> bool 
 /// before the llvmpipe run that uses it): a software backend rounds the depth interpolation and the float math
 /// differently from the answer keys' discrete GPU. The default is strict. A bad value is a test failure, not a skip.
 pub fn software_tol() -> Option<f64> {
-    let v = std::env::var("X3D_TEST_SOFTWARE_TOL").ok()?;
+    let raw = std::env::var("X3D_TEST_SOFTWARE_TOL").ok();
 
-    Some(
-        v.trim()
-            .parse::<f64>()
-            .ok()
-            .filter(|t| t.is_finite() && *t > 0.0)
-            .unwrap_or_else(|| panic!("X3D_TEST_SOFTWARE_TOL={v:?}: expected a positive number")),
-    )
+    parse_software_tol(raw.as_deref()).unwrap_or_else(|e| panic!("{e}"))
+}
+
+/// The value of `X3D_TEST_SOFTWARE_TOL`: `None` when unset, an error when it is not a finite number above zero. A test calls
+/// [`software_tol`] once at its start, so that a bad setting fails the run even when every compared value matches strictly
+/// (a lazy read behind `within_ulps(..) || ..` would never run then).
+pub fn parse_software_tol(raw: Option<&str>) -> Result<Option<f64>, String> {
+    let Some(v) = raw else {
+        return Ok(None);
+    };
+
+    v.trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|t| t.is_finite() && *t > 0.0)
+        .map(Some)
+        .ok_or_else(|| format!("X3D_TEST_SOFTWARE_TOL={v:?}: expected a positive number"))
 }
 
 /// `within_ulps` with an absolute tolerance on numbers: every number of `a` and `b` is within `tol`. `seen` takes the

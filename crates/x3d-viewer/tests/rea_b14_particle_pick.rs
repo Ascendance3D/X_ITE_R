@@ -254,6 +254,9 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
 
 #[test]
 fn rea_b14_particle_pick_matches_x_ite() {
+    // Validate the setting before anything else (also before an adapter skip): a bad value fails the run.
+    let _ = software_tol();
+
     if x3d_render::pointing_gpu::PointingGpu::new_headless().is_err() {
         return x3d_evidence::no_gpu("no adapter: the pointing pass needs a GPU, skipped");
     }
@@ -311,5 +314,28 @@ fn rea_b14_particle_pick_matches_x_ite() {
         "{} failures:\n{}",
         failures.len(),
         failures.join("\n")
+    );
+}
+
+/// A bad `X3D_TEST_SOFTWARE_TOL` fails even when the compared values match strictly, where the lazy read behind
+/// `within_ulps(..) || ..` would never run.
+#[test]
+fn an_invalid_software_tolerance_fails_even_when_the_values_match() {
+    let v = serde_json::json!({"point": [1.0, 2.0, 3.0]});
+    let mut seen = 0;
+
+    assert!(within_ulps(&v, &v, 0, &mut seen), "strictly equal values");
+
+    for bad in ["abc", "", "0", "-1e-4", "nan", "inf"] {
+        assert!(
+            common::ulps::parse_software_tol(Some(bad)).is_err(),
+            "{bad:?} must be refused"
+        );
+    }
+
+    assert_eq!(common::ulps::parse_software_tol(None), Ok(None));
+    assert_eq!(
+        common::ulps::parse_software_tol(Some(" 1e-4 ")),
+        Ok(Some(1e-4))
     );
 }
