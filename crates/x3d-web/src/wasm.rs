@@ -1860,7 +1860,7 @@ impl WebBrowser {
         let touches: Vec<(f64, f64)> = points.chunks_exact(2).map(|p| (p[0], p[1])).collect();
 
         if let Some(s) = self.current_mut() {
-            s.touch(event, &touches, zoom_width);
+            s.touch(event, &touches, zoom_width, js_sys::Date::now() / 1000.0);
         }
     }
 
