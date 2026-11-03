@@ -111,7 +111,7 @@ In ISO mode the element is never played. Each frame the engine decides the media
 - The clause's `t` is a cycle time (see the formulas); a reading with `t` taken literally as movie time differs only for
   `|speed| != 1`.
 - `Runtime::movie_seek` (the earlier seek API of PR #361) keeps its pinned behavior and is not wired into the ISO formulas.
-- A stop by `stopTime` leaves the frame of the last tick (at most one frame period before the stop).
+- A stop by `stopTime` or a pause by `pauseTime` keeps the picture of the movie time of the instant of the event (the timer fires between frames; `movie_iso_freeze`), not of the last frame before it.
 - MPEG-1 is the format the clause names; it is not decoded here (step 11 of the plan).
 - The browser tests (`movie01`) could not be run in this lane's environment; the CI Web job runs them.
 - The crate's lib test target does not build on the base `agentA/step7-video-audio` (`webm.rs` test items `codec_fixture`,

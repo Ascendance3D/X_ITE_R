@@ -163,11 +163,11 @@ fn a_resume_continues_the_sound_at_the_movie_time_of_the_pause() {
     at(&mut rt, 102.6);
     assert!(playing(&mut rt).is_none(), "paused: no sound plays");
 
-    // The movie time of the last tick before the pause: 0.4 s of the clock at speed 0.5 (a pause leaves the frame
-    // of the last tick, see docs/movie-texture-timing.md). The sound's own clock would say 0.4 or 0.5 here.
+    // The movie time of the instant of the pause: 0.5 s of the clock at speed 0.5 (not of the last frame before it, at
+    // 102.4). The sound's own clock would say 0.5 s here.
     let paused_at = rt.movie_current_time(movie(&rt)).unwrap();
 
-    assert!((paused_at - 0.2).abs() < 0.02, "{paused_at}");
+    assert!((paused_at - 0.25).abs() < 1e-9, "{paused_at}");
     set(&mut rt, "resumeTime", FieldValue::SFTime(103.0));
     at(&mut rt, 103.1);
 

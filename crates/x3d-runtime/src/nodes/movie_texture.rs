@@ -1111,8 +1111,37 @@ impl Runtime {
         self.movie_timing = timing;
     }
 
+    /// ISO 18.4.2: "the frame corresponding to the time at which the MovieTexture became inactive will remain". A pause
+    /// or stop is a timer event between two frames, so the picture is chosen for the movie time of that instant, not
+    /// of the last frame before it.
+    fn movie_iso_freeze(&mut self, node: NodeId) {
+        if self.movie_timing != MovieTiming::Iso {
+            return;
+        }
+
+        let elapsed = self.time_elapsed_time(node);
+        let looping = self.time_loop(node);
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        if !m.iso.played || !(elapsed >= 0.0) {
+            return;
+        }
+
+        let (time, _) = iso::iso_time(IsoClock {
+            elapsed,
+            rate: m.playback_rate,
+            duration: m.duration(),
+            looping,
+        });
+
+        self.movie_iso_show(node, time, true);
+    }
+
     /// set_pause, set_stop: stopAudioElement.
     pub(crate) fn movie_pause(&mut self, node: NodeId) {
+        self.movie_iso_freeze(node);
         self.media_set(node, |e, m| m.pause(e));
 
         if let Some(m) = self.movie(node) {
