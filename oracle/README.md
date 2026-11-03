@@ -1233,6 +1233,35 @@ python3 -I oracle/tools/gen_movie_anim.py
 python3 -I oracle/tools/movie_anim.py record 5
 ```
 
+### MovieTexture WebM pictures at fixed movie times (2026-11-03, issue #90)
+
+- `tools/gen_movie_video.py` writes `synthetic-movie-video/` (a world of four unlit quads and its event script). The media are
+  the synthetic WebM streams of `synthetic-movie-codecs/media` (ffmpeg test patterns; see `tools/gen_movie_codecs.py`):
+  `vp8-ramp` (uniform gray pictures), `vp8-testsrc` (inter frames, key frames every 6), `vp8-parts` and `vp9-vorbis`. Every
+  node plays at `speed 0`, so the video element holds its picture; the script starts the nodes with a key press and the event
+  `movieSeek` (`node`, `time`) puts them at 0.25, 0.55, 0.05 and 0.35 s (the middle of a 0.1 s picture; the last two are
+  backward seeks), three frames before each capture.
+- `movieSeek` in `x_ite-anim.mjs` and `x_ite-anim-msaa.mjs`: the harness pauses the node's video element, sets `currentTime`
+  and waits until the element is not seeking and is at that time (the answers are in `movieSeeks` of the result). In
+  `x3d-drive` (`crates/x3d-viewer/src/script.rs`) the same event calls `Runtime::movie_seek`. Nothing in X_ITE is changed.
+  Both recorders' servers now answer byte ranges (`206`): without them Chrome does not seek the element. Requests without a
+  `Range` header get the same body as before; the earlier `movie-anim` recordings (MSAA 0 and 4) were re-recorded and are
+  byte-identical to the stored baseline.
+- `tools/movie_anim.py record 5 video` wrote `movie-video-baseline/` (MSAA 0 and 4). The five runs of 2026-11-03 were
+  identical (js.json and every PNG). The baseline holds only synthetic worlds and media, so it is committed (it is not one of
+  the private answer keys of `answer-keys.tsv`).
+- `crates/x3d-viewer/tests/movie_anim.rs::movie_video_frames_match_x_ite` compares `x3d-drive` (pinned timing) on the GPU path:
+  at most 0.5% of the pixels more than 8 off. Measured 2026-11-03 (RTX 3060 Ti): 0 pixels over 8, max delta 1, on all five
+  frames at MSAA 0 and at MSAA 4. A control with one seek time changed fails the test (6.35% over 8). No adapter: the test
+  fails in strict mode and records a `no-gpu-adapter` skip otherwise. A missing baseline directory fails.
+- Not in the world: AV1 (the decoder is a separate pull request; its still frames are in `render-movie-codecs-baseline`).
+  The animated middle frames of an APNG stay unrecorded (apng-js runs on the wall clock, see above).
+
+```
+python3 -I oracle/tools/gen_movie_video.py
+python3 -I oracle/tools/movie_anim.py record 5 video
+```
+
 ### MovieTexture PNG load errors (2026-10-30, PR #190 review)
 
 - `tools/gen_movie_load_errors.py` writes `synthetic-movie-load-errors/`: 8 × 8 PNG media (static, not a PNG, acTL
@@ -1422,6 +1451,33 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-03-baseline --runs 3
 
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-nav-04-baseline --runs 3 --suite nav04
+```
+
+## AudioClip and Sound output levels and timing (issue #90)
+
+`oracle/rea-b05-baseline/NAME/{js.json,js.audio.f32}` holds, for the 14 worlds added to `oracle/synthetic-rea-b05`
+(written by `oracle/tools/gen_rea_audio_repair.py`; media: the existing synthetic tones), the sound that the pinned X_ITE
+16.5.0 (`34cdf9f97`, headless Chrome, `OfflineAudioContext`, one 768-sample block per frame) renders. They cover what
+no earlier key compared:
+
+| world | field changes |
+| --- | --- |
+| `clip-gain`, `clip-gain-runtime`, `clip-gain-pitch-intensity` | `AudioClip.gain` 0.5, 2, 0; changed to 0.25, 0, 3, -1, 1 while playing; with `pitch` and `Sound.intensity` |
+| `sound-intensity-runtime` | `Sound.intensity` changed to 0.5, 0, 1.5 (clamped), -0.5 (clamped), 0.25 |
+| `clip-pitch-edges` | `pitch` 4, then 0, -1, 1.5, 0.25 |
+| `clip-enabled`, `sound-enabled` | `enabled` FALSE and TRUE while playing |
+| `clip-loop-off`, `clip-stop-in-loop`, `clip-restart` | `loop` set FALSE while playing; `stopTime` inside a loop; `startTime` set while active and after the end |
+| `sound-location-runtime`, `sound-priority`, `sound-mono-left`, `sound-viewpoint-turned` | `location`, `direction` and the ranges changed while playing; `priority`; a 22.05 kHz mono clip at the left; a turned and re-turned Viewpoint |
+
+Each was recorded four times (three recordings and the one that wrote the key) with identical scene text, log, Script
+prints, suspend frames and samples. `rea_b05.py check` and `cargo test -p x3d-viewer --test vrml_audio_oracle` compare
+every sample (tolerance 0). The test fails when a key or world is missing, and `vrml_audio_oracle_keys_have_the_recorded_shape`
+fails when a key is not what was recorded (frame count, silent frames, peak).
+
+```
+python3 -I oracle/tools/gen_rea_audio_repair.py
+XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests python3 -I oracle/tools/rea_b05.py baseline clip-gain   # NAME: rewrites its key; git diff shows a changed one
+python3 -I oracle/tools/rea_b05.py check --target target/release
 ```
 
 ## XR views against the pinned WebXR context (issue #83)

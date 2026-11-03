@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+DEF V Viewpoint { position 0 0 0 orientation 0 1 0 1.5708 }
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF O AudioClip { url "media/tone48k-stereo.wav" loop TRUE } }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  eventIn SFTime set_time
+  eventOut SFTime start
+  field SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+DEF K Script { directOutput TRUE field SFNode o USE V eventIn SFTime set_time field SFInt32 n 0 url "javascript:
+function set_time (value) { ++ n;
+   if (n === 24) { o.orientation = new SFRotation (0, 1, 0, -1.5708); }
+   if (n === 36) { o.orientation = new SFRotation (1, 0, 0, 1.0); }
+}
+" }
+ROUTE T.time TO K.set_time
