@@ -86,7 +86,14 @@ fn native_video_first_pictures_match_x_ite() {
             s.pixels_over, s.pct_over, s.max_delta
         );
 
-        if !shot.log.is_empty() || !shot.unsupported.is_empty() {
+        // KNOWN difference (BR1.7, BR1.8): Chrome decodes the Opus track, no Opus decoder is admitted here, so the
+        // video plays silently and the one diagnostic says so. The picture is still compared.
+        let opus = name == "vp8-opus.wrl"
+            && shot.log.len() == 1
+            && shot.log[0].contains("A_OPUS")
+            && shot.log[0].contains("silently");
+
+        if !opus && (!shot.log.is_empty() || !shot.unsupported.is_empty()) {
             failures.push(format!(
                 "{name}: X_ITE logged nothing, Rust logged {:?} / unsupported {:?}",
                 shot.log, shot.unsupported
