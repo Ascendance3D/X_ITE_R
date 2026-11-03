@@ -457,3 +457,39 @@ fn pinned_video_keeps_playing_and_a_negative_speed_plays_at_one() {
     at(&mut rt, 102.1);
     assert_eq!(rt.movie_texture_frame(movie(&rt)).unwrap().2[0], 7);
 }
+
+/// "The frame corresponding to the time at which the MovieTexture became inactive will remain": the stop is a timer
+/// event between two frames, and the picture is the one of that instant. The frames start at 0, 0.1, 0.3 and 0.6 s.
+#[test]
+fn a_stop_between_two_frames_keeps_the_picture_of_the_instant_of_the_stop() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 stopTime 102.65 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.55);
+    assert!(active(&rt));
+    assert_eq!(shown(&rt), 2);
+    // The last tick before the stop was at 102.55 (frame 2); the stop is at 102.65 (t = 0.65, frame 3).
+    at(&mut rt, 102.7);
+    assert!(!active(&rt));
+    assert_eq!(shown(&rt), 3);
+}
+
+#[test]
+fn a_pause_between_two_frames_keeps_the_picture_of_the_instant_of_the_pause() {
+    let mut rt = load(
+        "anim4.gif",
+        "startTime 102 pauseTime 102.65 loop TRUE",
+        MovieTiming::Iso,
+    );
+
+    at(&mut rt, 102.55);
+    assert_eq!(shown(&rt), 2);
+    at(&mut rt, 102.9);
+    assert!(rt.get_bool(movie(&rt), "isPaused"));
+    assert_eq!(shown(&rt), 3);
+    at(&mut rt, 103.5);
+    assert_eq!(shown(&rt), 3);
+}
