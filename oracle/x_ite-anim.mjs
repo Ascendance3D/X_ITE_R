@@ -29,10 +29,10 @@ const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
 // the page never sets `window.ready` and the run ended only after a 30 s wait with an empty log; say so at once instead.
 if (!existsSync (join (ROOT, "x_ite-pin", "node_modules")))
    throw new Error ("oracle/x_ite-pin/node_modules is missing: link it first (ln -s ~/Projects/cybertown/X_ITE/x_ite/node_modules oracle/x_ite-pin/node_modules, see oracle/README.md, Recording from a worktree)");
-const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
+const { chromium } = createRequire (join (process .env .XITE_TESTS ?? join (ROOT, "../../../x_ite-tests"), "/")) ("playwright");
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css",
-   ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif" };
+   ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webm": "video/webm" };
 
 const argv = process .argv .slice (2);
 const opt  = (name, def) => { const i = argv .indexOf (name); return i >= 0 ? argv [i + 1] : def; };
@@ -58,7 +58,28 @@ const server = createServer (async (req, res) =>
    try
    {
       const body = await readFile (path);
-      res .writeHead (200, { "Content-Type": TYPES [extname (path) .toLowerCase ()] ?? "model/vrml", "Cache-Control": "no-store" });
+      const type = TYPES [extname (path) .toLowerCase ()] ?? "model/vrml";
+      // A video element can only seek in a file whose server answers byte ranges (issue #90: movieSeek). The other
+      // requests of these recordings carry no Range header and get the whole body, as before.
+      const range = /^bytes=(\d*)-(\d*)$/ .exec (req .headers .range ?? "");
+
+      if (range && (range [1] || range [2]))
+      {
+         const start = range [1] ? Number (range [1]) : Math .max (body .length - Number (range [2]), 0);
+         const end   = range [1] && range [2] ? Math .min (Number (range [2]), body .length - 1) : body .length - 1;
+
+         if (start > end || start >= body .length)
+         {
+            res .writeHead (416, { "Content-Range": `bytes */${body .length}`, "Cache-Control": "no-store" });
+            return res .end ();
+         }
+
+         res .writeHead (206, { "Content-Type": type, "Cache-Control": "no-store", "Accept-Ranges": "bytes",
+            "Content-Range": `bytes ${start}-${end}/${body .length}`, "Content-Length": end - start + 1 });
+         return res .end (body .subarray (start, end + 1));
+      }
+
+      res .writeHead (200, { "Content-Type": type, "Cache-Control": "no-store", "Accept-Ranges": "bytes" });
       res .end (body);
    }
    catch { res .writeHead (404, { "Cache-Control": "no-store" }); res .end (); }
@@ -485,6 +506,43 @@ try
             case "resize":
                await page .evaluate (([ w, h ]) => { const c = document .getElementById ("c"); c .style .width = w + "px"; c .style .height = h + "px"; }, [ e .width, e .height ]);
                await page .evaluate (() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r))));
+               break;
+            // Issue #90: a MovieTexture's video element is put at movie time e .time (e .node: a DEF name) and the harness
+            // waits for the seek to finish. The node should play at speed 0, so the element holds the picture; nothing in
+            // X_ITE is changed. x3d-drive calls Runtime::movie_seek.
+            case "movieSeek":
+               (result .movieSeeks ??= [ ]) .push (await page .evaluate (async ([ name, time ]) =>
+               {
+                  const media = document .getElementById ("c") .browser .currentScene .getNamedNode (name) .getValue () .getMediaElement ();
+
+                  if (!media ?.addEventListener)
+                     throw new Error (`movieSeek: ${name} has no video element`);
+
+                  // The element is paused, so the seek finishes (a seek of a playing element at playbackRate 0 does not), and
+                  // an earlier seek (the start of the node rewinds the element) cannot be taken for this one: the wait is for
+                  // an element that is not seeking and is at the time asked for. setTimeout is virtual here, so the wait
+                  // yields through a MessageChannel and gives up after 5 s of real time.
+                  media .pause ();
+                  media .currentTime = time;
+
+                  const yieldTask = () => new Promise (resolve =>
+                  {
+                     const channel = new MessageChannel ();
+                     channel .port1 .onmessage = () => resolve ();
+                     channel .port2 .postMessage (0);
+                  });
+                  const begin = performance .now ();
+
+                  while (media .seeking || Math .abs (media .currentTime - time) > 1e-6)
+                  {
+                     if (performance .now () - begin > 5000)
+                        throw new Error (`movieSeek: ${name} did not reach ${time}`);
+
+                     await yieldTask ();
+                  }
+
+                  return { node: name, time, currentTime: media .currentTime, paused: media .paused, playbackRate: media .playbackRate, readyState: media .readyState };
+               }, [ e .node, e .time ]));
                break;
             case "key":       await page .keyboard .press (e .key); break;
             case "keydown":   await page .keyboard .down (e .key); break;

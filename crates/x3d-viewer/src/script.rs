@@ -2,7 +2,7 @@
 //!
 //! The same JSON event list drives the X_ITE oracle (oracle/x_ite-anim.mjs), so both sides see
 //! identical input. Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (a press:
-//! keydown + keyup of a Playwright key name), keydown, keyup, mods (shift, ctrl, alt), viewer (name). Pointer coordinates are pixels with
+//! keydown + keyup of a Playwright key name), keydown, keyup, mods (shift, ctrl, alt), viewer (name), movieSeek (node, time). Pointer coordinates are pixels with
 //! the origin at the bottom left of the canvas.
 //!
 //! X_ITE reads the pointer from MouseEvent pageX / pageY (getPointerFromEvent), and Chrome gives a mouse event whole CSS
@@ -98,6 +98,18 @@ pub fn apply(v: &mut Viewer3d, e: &Value) {
         "keyup" => v.input(UiEvent::KeyUp {
             key: e["key"].as_str().unwrap_or("").to_string(),
         }),
+        // Issue #90: `Runtime::movie_seek` of the MovieTexture DEF `node` (the oracle sets the video element's
+        // currentTime and waits for the seek).
+        "movieSeek" => {
+            let name = e["node"].as_str().unwrap_or("");
+
+            match v.rt.scene.get_named_node(x3d_scene::ROOT, name) {
+                Some(node) => {
+                    v.rt.movie_seek(node, f("time"));
+                }
+                None => eprintln!("movieSeek: no node {name}"),
+            }
+        }
         "viewer" => v.set_viewer(e["name"].as_str().unwrap_or("EXAMINE")),
         other => eprintln!("unknown event type {other}"),
     }
