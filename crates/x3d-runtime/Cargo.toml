@@ -29,7 +29,7 @@ image = { version = "0.25", default-features = false, features = ["png", "jpeg",
 web-audio-api = "1.7.0"
 # The file's own sample rate and frames for MP3, FLAC and Ogg Vorbis (sound/decode.rs), which web-audio-api resamples
 # itself. The same crate and version web-audio-api already builds with "all"; no feature beyond that set.
-symphonia = { version = "0.6.1", default-features = false, features = ["mp3", "flac", "ogg", "vorbis", "wav", "pcm", "mkv", "all-meta"] }
+symphonia = { version = "0.6.1", default-features = false, features = ["mp2", "mp3", "flac", "ogg", "vorbis", "wav", "pcm", "mkv", "all-meta"] }
 # FFTFrame (sound/fft_frame.rs): the FFT of Chromium's FFTFrame, also in web-audio-api's tree.
 rustfft = "6.4.1"
 # Instant and SystemTime that also work on wasm32-unknown-unknown (std panics there); std's own types on
