@@ -28,7 +28,7 @@ const runs   = runsAt >= 0 ? Number (args .splice (runsAt, 2) [1]) : 1;
 const [ corpusArg, outArg ] = args;
 const corpus = normalize (join (process .cwd (), corpusArg));
 const files  = (await readdir (corpus))
-   .filter (f => /\.(wav|mp3|ogg|flac|opus)$/i .test (f))
+   .filter (f => /\.(wav|mp3|ogg|flac|opus|m4a)$/i .test (f))
    .sort ();
 
 const server = createServer (async (req, res) =>

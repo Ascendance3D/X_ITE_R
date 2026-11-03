@@ -1,16 +1,17 @@
-//! decodeAudioData as in Chromium, for PCM WAV files.
+//! decodeAudioData as in Chromium, for PCM, A-law and mu-law WAV files and for MP3, FLAC and Ogg Vorbis files.
 //!
 //! Chromium decodes with FFmpeg (`media/filters/audio_file_reader.cc`) and converts the samples
 //! to float with `media/base/audio_sample_types.h`: integer formats scale negative and positive
 //! values by different factors. A file whose rate is not the context's is resampled with
 //! `media::SincResampler` (request size 64, so a 32-tap kernel) by Blink's
-//! `AudioBus::CreateBySampleRateConverting`. `web-audio-api` (symphonia, rubato) differs in both.
-//! Other formats are left to `web-audio-api`.
+//! `AudioBus::CreateBySampleRateConverting`. `web-audio-api` (symphonia, rubato) differs in both. MP3, FLAC and
+//! Ogg Vorbis are decoded here with symphonia at the file's own rate and resampled the same way; other formats are
+//! left to `web-audio-api`.
 //!
 //! Chromium is BSD-3-Clause, Copyright The Chromium Authors.
 
-/// The decoded channels and the file's sample rate, or None if the bytes are not a PCM WAV file
-/// that FFmpeg reads as U8, S16, S32 (24 and 32 bit) or float.
+/// The decoded channels and the file's sample rate, or None if the bytes are not a WAV file
+/// that FFmpeg reads as U8, S16, S32 (24 and 32 bit), float, A-law or mu-law.
 pub fn decode_wav(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
     if bytes.len() < 12 || &bytes[0..4] != b"RIFF" || &bytes[8..12] != b"WAVE" {
         return None;
@@ -51,6 +52,33 @@ pub fn decode_wav(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
     None
 }
 
+/// FFmpeg's `alaw_to_linear` (G.711 A-law to 16-bit).
+fn alaw(a: u8) -> i16 {
+    let a = a ^ 0x55;
+    let mut t = ((a & 0x0f) as i32) << 4;
+    let seg = ((a & 0x70) >> 4) as u32;
+
+    match seg {
+        0 => t += 8,
+        1 => t += 0x108,
+        _ => {
+            t += 0x108;
+            t <<= seg - 1;
+        }
+    }
+
+    (if a & 0x80 != 0 { t } else { -t }) as i16
+}
+
+/// FFmpeg's `ulaw_to_linear` (G.711 mu-law to 16-bit).
+fn mulaw(u: u8) -> i16 {
+    let u = !u;
+    let mut t = (((u & 0x0f) as i32) << 3) + 0x84;
+
+    t <<= (u & 0x70) >> 4;
+    (if u & 0x80 != 0 { 0x84 - t } else { t - 0x84 }) as i16
+}
+
 fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Option<Vec<Vec<f32>>> {
     if channels == 0 || rate == 0 {
         return None;
@@ -84,7 +112,7 @@ fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Opti
     };
 
     let width = match (tag, bits) {
-        (1, 8) => 1,
+        (1, 8) | (6, 8) | (7, 8) => 1,
         (1, 16) => 2,
         (1, 24) => 3,
         (1, 32) | (3, 32) => 4,
@@ -99,6 +127,9 @@ fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Opti
             let b = &data[p..p + width];
             o.push(match (tag, bits) {
                 (1, 8) => u8f(b[0]),
+                // pcm_alaw and pcm_mulaw decode to S16.
+                (6, _) => s16(alaw(b[0])),
+                (7, _) => s16(mulaw(b[0])),
                 (1, 16) => s16(i16::from_le_bytes([b[0], b[1]])),
                 // pcm_s24le decodes to S32 (value << 8).
                 (1, 24) => s32(i32::from_le_bytes([0, b[0], b[1], b[2]])),
@@ -109,6 +140,95 @@ fn convert(data: &[u8], tag: u16, channels: usize, rate: u32, bits: u16) -> Opti
     }
 
     Some(out)
+}
+
+/// The planar samples of an MP3, FLAC or Ogg Vorbis file at the file's own rate (`web-audio-api` resamples
+/// by itself, which Chromium does not), or None for any other file.
+pub fn decode_compressed(bytes: &[u8]) -> Option<(Vec<Vec<f32>>, f32)> {
+    use symphonia::core::codecs::audio::AudioDecoderOptions;
+    use symphonia::core::codecs::audio::well_known::{
+        CODEC_ID_FLAC, CODEC_ID_MP3, CODEC_ID_VORBIS,
+    };
+    use symphonia::core::errors::Error;
+    use symphonia::core::formats::probe::Hint;
+    use symphonia::core::formats::{FormatOptions, TrackType};
+    use symphonia::core::meta::MetadataOptions;
+
+    let source = symphonia::core::io::MediaSourceStream::new(
+        Box::new(std::io::Cursor::new(bytes.to_vec())),
+        Default::default(),
+    );
+    let mut format = symphonia::default::get_probe()
+        .probe(
+            &Hint::new(),
+            source,
+            FormatOptions::default(),
+            MetadataOptions::default(),
+        )
+        .ok()?;
+    let track = format.default_track(TrackType::Audio)?;
+    let id = track.id;
+    let params = track.codec_params.as_ref()?.audio()?.clone();
+
+    if ![CODEC_ID_MP3, CODEC_ID_FLAC, CODEC_ID_VORBIS].contains(&params.codec) {
+        return None;
+    }
+
+    let mut decoder = symphonia::default::get_codecs()
+        .make_audio_decoder(&params, &AudioDecoderOptions::default())
+        .ok()?;
+    let mut channels: Vec<Vec<f32>> = vec![];
+    let mut rate = 0u32;
+    let mut part = Vec::new();
+    // The frames of the last decoded packet.
+    let mut last_frames = 0usize;
+
+    loop {
+        let packet = match format.next_packet() {
+            Ok(Some(p)) => p,
+            Ok(None) => break,
+            Err(Error::IoError(e)) if e.kind() == std::io::ErrorKind::UnexpectedEof => break,
+            Err(_) => return None,
+        };
+
+        if packet.track_id != id {
+            continue;
+        }
+
+        match decoder.decode(&packet) {
+            Ok(buffer) => {
+                rate = buffer.spec().rate();
+                buffer.copy_to_vecs_planar::<f32>(&mut part);
+
+                if channels.is_empty() {
+                    channels = vec![vec![]; part.len()];
+                }
+
+                if part.len() != channels.len() {
+                    return None;
+                }
+
+                for (c, p) in channels.iter_mut().zip(&part) {
+                    c.extend_from_slice(p);
+                }
+
+                last_frames = part[0].len();
+            }
+            Err(Error::DecodeError(_) | Error::IoError(_)) => {}
+            Err(_) => return None,
+        }
+    }
+
+    // Chromium (FFmpeg) returns none of the frames of an Ogg Vorbis file's last packet: 215, 46, 64 and 128 frames
+    // fewer for the four recorded files (oracle/rea-b24-audio-decode-baseline and -2-baseline), with or without a
+    // trim at the end of the stream. A file that is only one packet is kept whole (not recorded).
+    if params.codec == CODEC_ID_VORBIS && channels.first().is_some_and(|c| c.len() > last_frames) {
+        for c in &mut channels {
+            c.truncate(c.len() - last_frames);
+        }
+    }
+
+    (!channels.is_empty() && rate > 0).then_some((channels, rate as f32))
 }
 
 const KERNEL_SIZE: usize = 32;
@@ -392,6 +512,27 @@ mod tests {
             channels[0],
             vec![-1.0, -1.0 / 32768.0, 0.0, 1.0 / 32767.0, 1.0]
         );
+    }
+
+    #[test]
+    fn g711_follows_ffmpeg() {
+        // alaw_to_linear: 0x55 and 0xD5 are the smallest steps (-8 and +8), 0xAA and 0x2A the largest (+-32256).
+        assert_eq!([alaw(0x55), alaw(0xD5)], [-8, 8]);
+        assert_eq!([alaw(0xAA), alaw(0x2A)], [32256, -32256]);
+        // ulaw_to_linear: 0xFF and 0x7F are zero, 0x00 and 0x80 the largest (+-32124).
+        assert_eq!([mulaw(0xFF), mulaw(0x7F)], [0, 0]);
+        assert_eq!([mulaw(0x80), mulaw(0x00)], [32124, -32124]);
+
+        let (channels, rate) = decode_wav(&wav(6, 8, 1, 8000, &[0xD5, 0x55])).unwrap();
+        assert_eq!(rate, 8000.0);
+        assert_eq!(channels[0], vec![8.0 / 32767.0, -8.0 / 32768.0]);
+    }
+
+    #[test]
+    fn files_that_are_not_mp3_flac_or_vorbis_are_left_alone() {
+        // Not a compressed file, and a WAV (left to decode_wav).
+        assert!(decode_compressed(b"not audio").is_none());
+        assert!(decode_compressed(&wav(1, 16, 1, 8000, &[0, 0, 1, 0])).is_none());
     }
 
     #[test]

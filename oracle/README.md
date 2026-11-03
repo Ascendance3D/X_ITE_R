@@ -1294,6 +1294,11 @@ replays every world and fails on a missing reference, an error log or a picture 
   worktree" above; `--runs 5` fails unless the five recordings are byte-identical.
 - `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio oracle/rea-b24-audio-decode-baseline/audio-decode-baseline.json --runs 5`
 - `crates/x3d-runtime/tests/rea_b24_audio_decode.rs` compares the port; its header lists the per-format results.
+- Second corpus (issue #90, 2026-11-02): `synthetic-rea-b24-audio-2/` (13 files, ffmpeg 440 Hz sine plus seeded white noise
+  `seed=7`, 0.3 s, clean-room: AAC in M4A with the moov atom at the end and first, A-law and mu-law WAV at 8, 44.1 and 48 kHz,
+  MP3 11.025 and 32 kHz, FLAC 8 kHz, Ogg Vorbis 32 kHz) recorded into `rea-b24-audio-decode-2-baseline/audio-decode-baseline.json`
+  with `node oracle/x_ite-audio-decode.mjs oracle/synthetic-rea-b24-audio-2 oracle/rea-b24-audio-decode-2-baseline/audio-decode-baseline.json --runs 5`
+  (five byte-identical recordings, Chromium 151.0.7922.34). The recorder now also reads `.m4a`. The first baseline is unchanged.
 
 ## AudioDestination mediaDeviceID (issue #81)
 
