@@ -1011,6 +1011,33 @@ mod tests {
         }
     }
 
+    /// A superframe that an independent splitter cut first. The file is two libvpx frames (a key frame of 2845 bytes
+    /// and an inter frame of 429) joined by an index in the layout of VP9 Annex B and libvpx (marker, the sizes in
+    /// frame order, little-endian, marker); ffmpeg's `vp9_superframe_split` bitstream filter cuts it into packets of
+    /// 2845 and 429 bytes. Run `ffmpeg -i vp9-superframe-2-frames.webm -c copy -bsf:v vp9_superframe_split -f ivf -`
+    /// to reproduce that.
+    #[test]
+    fn a_superframe_is_cut_where_ffmpeg_cuts_it() {
+        let d = std::fs::read(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/data/vp9-superframe-2-frames.webm"
+        ))
+        .unwrap();
+        let blocks = demux(&d).unwrap();
+
+        assert_eq!(blocks.len(), 1);
+
+        let chunk = &d[blocks[0].start..blocks[0].end];
+        let lens: Vec<usize> = frames_of(chunk).iter().map(|f| f.len()).collect();
+
+        assert_eq!(lens, [2845, 429]);
+        assert_eq!(coded_size(frames_of(chunk)[0]), Some((128, 96)));
+
+        let v = decode(&d, BUDGET).unwrap();
+
+        assert_eq!((v.width, v.height, v.frames.len()), (128, 96, 1));
+    }
+
     /// The size check looks at the frames `frames_of` cuts; the decoder decodes the frames it cuts itself. They must
     /// be the same for every chunk, well formed or not: random chunks that end in each of the 32 marker bytes, with
     /// the marker repeated where the index would start, sizes that do not add up, and counts and widths of every kind.
